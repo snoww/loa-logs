@@ -3,7 +3,7 @@
     import { bossHpBarColors } from "$lib/constants/colors";
     import type { Entity } from "$lib/types";
     import { abbreviateNumber } from "$lib/utils/numbers";
-    import { cubicInOut, cubicOut, linear } from "svelte/easing";
+    import { linear } from "svelte/easing";
     import { tweened } from "svelte/motion";
 
 
@@ -11,11 +11,11 @@
 
     let bossHPBars = 0;
     let bossCurrentBars = 0;
-    let bossPreviousBars = bossCurrentBars;
+    let bossPreviousBars = 0;
     let bossCurrentPercentage = 0;
     let colorIndex = 0
-    let bossBarColor = bossHpBarColors[colorIndex];
-    const tweenBossHpBar = tweened(0, {
+    let bossBarColor = [bossHpBarColors[colorIndex], bossHpBarColors[colorIndex + 1]];
+    const tweenBossHpBar = tweened(100, {
         duration: 200,
         easing: linear
     });
@@ -27,22 +27,33 @@
             // hard coding valtan ghost (hell)
             bossHPBars = 40;
         }
+
         bossCurrentPercentage = (boss.currentHp / boss.maxHp) * 100;
         if (bossHPBars !== 0 && !boss.isDead) {
-            let bossHpPerBar = boss.maxHp / bossHPBars;
-            bossCurrentBars = Math.floor((boss.currentHp / boss.maxHp) * bossHPBars);
-            if (bossCurrentBars !== bossPreviousBars) {
-                tweenBossHpBar.set(100);
+            if (boss.currentHp === boss.maxHp) {
+                bossCurrentBars = bossHPBars;
                 bossPreviousBars = bossCurrentBars;
-                colorIndex = (colorIndex + 1) % bossHpBarColors.length ;
-                bossBarColor = bossHpBarColors[colorIndex];
+            } else {
+                bossCurrentBars = Math.ceil((boss.currentHp / boss.maxHp) * bossHPBars);
             }
-            tweenBossHpBar.set(((boss.currentHp % bossHpPerBar) / bossHpPerBar) * 100);
+            if (bossPreviousBars === 0) {
+                bossPreviousBars = bossCurrentBars;
+            }
+            if (bossCurrentBars < bossPreviousBars) {
+                bossPreviousBars = bossCurrentBars;
+                colorIndex++;
+                bossBarColor = [bossHpBarColors[(colorIndex) % bossHpBarColors.length], bossHpBarColors[(colorIndex + 1) % bossHpBarColors.length]];
+            }
+            if (boss.currentHp !== boss.maxHp) {
+                let bossHpPerBar = boss.maxHp / bossHPBars;
+                tweenBossHpBar.set(((boss.currentHp % bossHpPerBar) / bossHpPerBar) * 100);                
+            }
         } else if (!boss.isDead) {
             tweenBossHpBar.set(bossCurrentPercentage);
         }
 
         if (boss.isDead) {
+            colorIndex = 0;
             boss.currentHp = 0;
             bossCurrentPercentage = 0;
             bossCurrentBars = 0;
@@ -52,17 +63,17 @@
 
 </script>
 
-<div class="bg-zinc-900/[.6] border border-black">
+<div class="bg-zinc-900/[.3] border border-black">
     {#if bossHPBars !== 0}
-        <div class="absolute h-8 z-0 " style="background-color: {bossBarColor};width: {$tweenBossHpBar}%;"></div>
-        {#if bossCurrentBars === 0}
-            <div class="absolute h-8 -z-10 w-full bg-zinc-900"></div>
+        <div class="absolute h-7 -z-10 " style="background-color: {bossBarColor[0]};width: {$tweenBossHpBar}%;"></div>
+        {#if bossCurrentBars <= 1}
+            <div class="absolute h-7 -z-20 w-full bg-zinc-900"></div>
         {:else}
-            <div class="absolute h-8 -z-10 w-full" style="background-color: {bossBarColor};"></div>
+            <div class="absolute h-7 -z-20 w-full" style="background-color: {bossBarColor[1]};"></div>
         {/if}
     {:else}
-        <div class="absolute h-8 -z-10 w-full bg-zinc-900"></div>
-        <div class="absolute h-8 z-0 bg-red-800" style="width: {$tweenBossHpBar}%;"></div>
+        <div class="absolute h-7 -z-10 w-full bg-zinc-900"></div>
+        <div class="absolute h-7 z-0 bg-red-800" style="width: {$tweenBossHpBar}%;"></div>
     {/if}
     <div class="relative flex justify-center py-1">
         <div class="tracking-tighter">
@@ -72,13 +83,11 @@
             </div>
         </div>
         {#if bossHPBars !== 0}
-            {#if boss.currentHp === 0}
+            {#if boss.currentHp <= 0}
                 <div class="absolute right-0 pr-2">Dead</div>
-            {:else}
+            {:else if bossCurrentBars > 1}
                 <div class="absolute right-0 pr-2">{bossCurrentBars}x</div>
             {/if}
-        {:else}
-            <div class="absolute right-0 pr-2">{bossCurrentPercentage.toFixed(2)}%</div>
         {/if}
     </div>
 </div>

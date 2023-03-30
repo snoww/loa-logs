@@ -8,7 +8,7 @@ use std::time::{Duration, Instant};
 
 use parser::models::*;
 
-use tauri::{Manager, Window, api::process::{Command, CommandEvent}};
+use tauri::{Manager, Window, api::process::{Command, CommandEvent}, LogicalSize, Size};
 
 fn main() {
     tauri::Builder::default()
@@ -18,6 +18,8 @@ fn main() {
             {
               window.open_devtools();
             }
+            window.set_size(Size::Logical(LogicalSize { width: 550.0, height: 350.0 })).unwrap();
+
 
             tauri::async_runtime::spawn(async move {
                 // let (mut rx, _child) = Command::new_sidecar("meter-core")
@@ -42,6 +44,12 @@ fn main() {
                             let mut clone = encounter.clone();
                             let window = window.clone();
                             tauri::async_runtime::spawn(async move {
+                                if !clone.current_boss_name.is_empty() {
+                                    clone.current_boss = clone.entities.get(&clone.current_boss_name).cloned();
+                                    if clone.current_boss.is_none() {
+                                        clone.current_boss_name = String::new();
+                                    }
+                                }
                                 clone.entities.retain(|_, v| v.entity_type == EntityType::PLAYER && v.max_hp > 0);
                                 window.emit("rust-event", Some(clone))
                                     .expect("failed to emit event");
@@ -55,6 +63,7 @@ fn main() {
             Ok(())
         })
         // .invoke_handler(tauri::generate_handler![init_process])
+        .plugin(tauri_plugin_window_state::Builder::default().build())
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

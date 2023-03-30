@@ -19,11 +19,11 @@
         console.log('the component has mounted');
         setInterval(() => {
             time = +Date.now();
-        }, 500);
+        }, 1000);
 
         (async () => {
             rustEventUnlisten = await listen('rust-event', (event: EncounterEvent) => {
-                console.log(+Date.now(), event.payload);
+                // console.log(+Date.now(), event.payload);
                 // console.log(event.payload.currentBoss);
                 encounterEvent = event.payload;
                 // loaLog = Date.now() + " " + event.payload;
@@ -48,15 +48,16 @@
     let currentBoss: Entity | null = null;
 
     $: {
-        // console.log(entities);
         if (encounter) {
-            if (encounter.reset) {
-                setTimeout(() => {}, 5000);
-            }
-            entities = Object.values(encounter.entities)
-                .filter((players) => players.damageStats.damageDealt > 0)
-                .sort((a, b) => b.damageStats.damageDealt - a.damageStats.damageDealt);
+            // if (encounter.reset) {
+            //     setTimeout(() => {}, 5000);
+            // }
             if (encounter.fightStart !== 0) {
+                entities = Object.values(encounter.entities)
+                    .filter((players) => players.damageStats.damageDealt > 0)
+                    .sort((a, b) => b.damageStats.damageDealt - a.damageStats.damageDealt);
+                topDamageDealt = encounter.encounterDamageStats.topDamageDealt;
+                playerDamagePercentages = entities.map(player => (player.damageStats.damageDealt / topDamageDealt) * 100);            
                 if (!encounter.reset) {
                     duration = time - encounter.fightStart;
                 }
@@ -67,13 +68,12 @@
                     encounterDuration = millisToMinutesAndSeconds(duration);
                     dps = totalDamageDealt / (duration / 1000);
                 }
+                totalDamageDealt = encounter.encounterDamageStats.totalDamageDealt;
             }
+            
             if (encounter.currentBoss !== undefined) {
                 currentBoss = encounter.currentBoss;
             }
-            topDamageDealt = encounter.encounterDamageStats.topDamageDealt;
-            playerDamagePercentages = entities.map(player => (player.damageStats.damageDealt / topDamageDealt) * 100);            
-            totalDamageDealt = encounter.encounterDamageStats.totalDamageDealt;
         }
     }
 </script>
@@ -82,16 +82,16 @@
 {#if currentBoss !== null}
     <BossInfo boss={currentBoss}/>
 {/if}
-<table class="border-collapse table-auto w-full text-sm">
+<table class="border-collapse table-auto w-full">
     <thead>
         <tr class="bg-zinc-900">
-            <th class="w-1/2 text-left px-2">Name</th>
-            <th class="">DMG</th>
-            <th class="">DPS</th>
-            <th class="">D%</th>
-            <th class="">CRIT</th>
-            <th class="">F.A</th>
-            <th class="">B.A</th>
+            <th class="text-left px-2 font-normal">Name</th>
+            <!-- <th class="">DMG</th> -->
+            <th class="font-normal w-14">DPS</th>
+            <th class="font-normal w-14">D%</th>
+            <th class="font-normal w-14">CRIT</th>
+            <th class="font-normal w-14">F.A</th>
+            <th class="font-normal w-14">B.A</th>
         </tr>
     </thead>
     <tbody>
@@ -104,6 +104,6 @@
                 totalDamageDealt={totalDamageDealt}
             />
         </tr>
-    {/each}
+        {/each}
     </tbody>
 </table>

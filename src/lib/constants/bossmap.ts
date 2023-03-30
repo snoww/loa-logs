@@ -12,4 +12,5 @@ export const bosses: BossBarMap = {
     "Saydon": 160,
     "Kakul": 140,
     "Kakul-Saydon": 180,
+    "Encore-Desiring Kakul-Saydon": 75,
 };

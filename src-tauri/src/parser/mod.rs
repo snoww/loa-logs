@@ -1,4 +1,4 @@
-use std::{cmp::max, collections::HashMap};
+use std::{cmp::max, collections::HashMap, time::Duration, thread};
 
 use chrono::{DateTime, Utc};
 use lazy_static::lazy_static;
@@ -114,7 +114,7 @@ pub fn parse_line(encounters: &mut Option<Vec<Encounter>>, reset: &mut bool, enc
 fn reset(encounter: &mut Encounter, clone: &Encounter) {
     encounter.fight_start = 0;
     encounter.entities = HashMap::new();
-    encounter.current_boss = None;
+    encounter.current_boss_name = "".to_string();
     encounter.encounter_damage_stats = EncounterDamageStats::new();
     encounter.reset = false;
     if !clone.local_player.is_empty() {
@@ -137,6 +137,7 @@ fn reset(encounter: &mut Encounter, clone: &Encounter) {
 fn soft_reset(encounter: &mut Encounter) {
     let clone = encounter.clone();
     reset(encounter, &clone);
+    encounter.current_boss_name = clone.current_boss_name.clone();
     for (key, entity) in clone.entities {
         encounter.entities.insert(key, Entity {
             last_update: Utc::now().timestamp_millis(),
@@ -196,7 +197,9 @@ fn on_init_env(encounters: &mut Option<Vec<Encounter>>, reset: &mut bool, encoun
         });
     }
     if encounters.is_none() {
-        encounter.entities.retain(|_, v| v.name == encounter.local_player || v.damage_stats.damage_dealt >= 0);
+        encounter.entities.retain(|_, v| v.name == encounter.local_player || v.damage_stats.damage_dealt > 0);
+        thread::sleep(Duration::from_millis(6000));
+        soft_reset(encounter);
     } else {
         split_encounter(encounters, encounter, false)
     }
@@ -291,24 +294,50 @@ fn on_new_npc(encounter: &mut Encounter, timestamp: i64, line: &[&str]) {
         npc.current_hp = new_npc.current_hp;
         npc.max_hp = new_npc.max_hp;
         npc.last_update = timestamp;
+        if let Some((_, npc_info)) = NPC.get_key_value(&new_npc.npc_id) {
+            if npc_info.grade == "boss" || npc_info.grade == "raid" || npc_info.grade == "epic_raid" || npc_info.grade == "commander" {
+                npc.entity_type = EntityType::BOSS;
+            } else {
+                npc.entity_type = EntityType::NPC;
+            }
+        }
     } else {
+        let mut entity_type = EntityType::NPC;
+        if let Some((_, npc_info)) = NPC.get_key_value(&new_npc.npc_id) {
+            if npc_info.grade == "boss" || npc_info.grade == "raid" || npc_info.grade == "epic_raid" || npc_info.grade == "commander" {
+                entity_type = EntityType::BOSS;
+            }
+        }
         encounter.entities.insert(new_npc.name.to_string(), Entity {
             id: new_npc.id.to_string(),
             npc_id: new_npc.npc_id,
             name: new_npc.name.to_string(),
             current_hp: new_npc.current_hp,
             max_hp: new_npc.max_hp,
-            entity_type: EntityType::NPC,
+            entity_type,
             last_update: timestamp,
             ..Default::default()
         });
     }
-
-    if encounter.current_boss.is_none() || new_npc.max_hp > encounter.current_boss.as_ref().unwrap().max_hp {
+    
+    if encounter.current_boss_name.is_empty() {
         if let Some((_, npc)) = NPC.get_key_value(&new_npc.npc_id) {
             if npc.grade == "boss" || npc.grade == "raid" || npc.grade == "epic_raid" || npc.grade == "commander" {
-                encounter.current_boss = encounter.entities.get(new_npc.name).cloned();
+                encounter.current_boss_name = new_npc.name.to_string();
             }
+        }
+    } else if !encounter.current_boss_name.is_empty() {
+        // if for some reason current_boss_name is not in the entities list, reset it
+        if let Some(boss) = encounter.entities.get(&encounter.current_boss_name.to_string()) {
+            if new_npc.max_hp > boss.max_hp {
+                if let Some((_, npc)) = NPC.get_key_value(&new_npc.npc_id) {
+                    if npc.grade == "boss" || npc.grade == "raid" || npc.grade == "epic_raid" || npc.grade == "commander" {
+                        encounter.current_boss_name = new_npc.name.to_string();
+                    }
+                }
+            }
+        } else {
+            encounter.current_boss_name = "".to_string();
         }
     }
 }
@@ -322,15 +351,16 @@ fn on_death(encounter: &mut Encounter, timestamp: i64, line: &[&str]) {
     };
 
     if let Some(entity) = encounter.entities.get_mut(new_death.name) {
+        // the entity that died has the same name as another entity, but with different id?
+        if entity.id != new_death.id {
+            return;
+        }
         let deaths: i64;
         if entity.is_dead { deaths = entity.damage_stats.deaths } else { deaths = 1 }
         entity.is_dead = true;
         entity.damage_stats.deaths = deaths;
         entity.damage_stats.death_time = timestamp;
         entity.last_update = timestamp;
-        if encounter.current_boss.is_some() && encounter.current_boss.as_ref().unwrap().id == entity.id {
-            encounter.current_boss = Some(entity.clone());
-        }
     } else {
         encounter.entities.insert(new_death.name.to_string(), Entity {
             id: new_death.id.to_string(),
@@ -528,50 +558,16 @@ fn on_damage(reset: &mut bool, encounter: &mut Encounter, timestamp: i64, line: 
         encounter.encounter_damage_stats.top_damage_taken = max(encounter.encounter_damage_stats.top_damage_taken, target_entity.damage_stats.damage_taken);
     }
 
-    // set current_boss
-    // currently we are assuming that what the local_player is hitting is the boss
-    // doing some guess work
-    // todo only change if is live meter
-
-    // if the player opened meter late and we don't know who the local player is
-    if encounter.local_player.is_empty() && target_entity.entity_type == EntityType::NPC {
-        if encounter.current_boss.is_some() {
-            let current_boss = encounter.current_boss.as_ref().unwrap();
-            if current_boss.npc_id != target_entity.npc_id {
-                if current_boss.max_hp > target_entity.max_hp {
-                    if let Some((_, npc)) = NPC.get_key_value(&target_entity.npc_id) {
-                        if npc.grade == "boss" || npc.grade == "raid" || npc.grade == "epic_raid" || npc.grade == "commander" {
-                            encounter.current_boss = Some(target_entity.clone());
-                        }
-                    }
-                }
-            } else {
-                encounter.current_boss = Some(target_entity.clone());
-            }
-        } else {
-            if let Some((_, npc)) = NPC.get_key_value(&target_entity.npc_id) {
-                if npc.grade == "boss" || npc.grade == "raid" || npc.grade == "epic_raid" || npc.grade == "commander" {
-                    encounter.current_boss = Some(target_entity.clone());
-                }
-            }
-        }
-    } else if source_entity.name == encounter.local_player && (target_entity.entity_type == EntityType::NPC || target_entity.entity_type == EntityType::UNKNOWN) {
+    // update current_boss
+    if target_entity.entity_type == EntityType::BOSS {
+        encounter.current_boss_name = target_entity.name.to_string();
+    } else if target_entity.entity_type == EntityType::UNKNOWN {
         // hard coding this for valtan ghost
         // if we know the local player, we assume what he is hitting is the boss and we track that instead
         // dunno if want to do this
-        // if target_entity.max_hp > 1_000_000_000 {
-            if target_entity.npc_id != 0 {
-                if let Some((_, npc)) = NPC.get_key_value(&target_entity.npc_id) {
-                    if npc.grade == "boss" || npc.grade == "raid" || npc.grade == "epic_raid" || npc.grade == "commander" {
-                        encounter.current_boss = Some(target_entity.clone());
-                    }
-                }
-            } else {
-                if target_entity.max_hp > 1_000_000_000 {
-                    encounter.current_boss = Some(target_entity.clone());
-                }
-            }
-        // }
+        if target_entity.max_hp > 1_000_000_000 {
+            encounter.current_boss_name = target_entity.name.to_string();
+        }
     }
 
     encounter.entities.insert(source_entity.name.to_string(), source_entity);

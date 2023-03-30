@@ -13,7 +13,7 @@
     
 </script>
 
-<TitleBar />
+<!-- <TitleBar /> -->
 <div class="h-screen">
     <DamageMeter />
 </div>
