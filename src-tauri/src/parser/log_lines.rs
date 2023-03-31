@@ -1,3 +1,5 @@
+use serde::Serialize;
+
 use super::models::EntityType;
 
 #[derive(Debug)]
@@ -91,7 +93,7 @@ pub struct LogCounterAttack<'a> {
     pub target_name: &'a str,
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone, Serialize)]
 pub enum RaidResult {
     UNKNOWN,
     RAID_RESULT,

@@ -1,4 +1,4 @@
-import type { bossMap as BossBarMap } from "$lib/types";
+import type { BossMap as BossBarMap } from "$lib/types";
 
 export const bosses: BossBarMap = {
     "Dark Mountain Predator": 50,

@@ -23,6 +23,13 @@
           { "name": "lib/meter-core", "sidecar": true },
           { "name": "lib/loa-fake-log", "sidecar": true }
         ]
+      },
+      "fs": {
+        "all": true,
+        "scope": ["**"]
+      },
+      "path": {
+        "all": true
       }
     },
     "bundle": {

@@ -95,6 +95,11 @@ export interface ClassColors {
     }
 }
 
-export interface bossMap {
+export interface BossMap {
     [key: string]: number;
+}
+
+export enum MeterState {
+    LIVE,
+    PLAYER
 }

@@ -11,7 +11,7 @@ module.exports = {
     },
     fontSize: {
       xxs: '0.875rem', // 14px
-      '3xs': '0.675rem',
+      '3xs': '0.75rem',
     },
   },
   plugins: []

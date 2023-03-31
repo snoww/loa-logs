@@ -7,6 +7,7 @@ pub(crate) mod models;
 use models::*;
 mod log_lines;
 use log_lines::*;
+use tauri::Window;
 
 lazy_static! {
     static ref NPC: HashMap<i32, Npc> = {
@@ -20,7 +21,7 @@ pub fn parse_log(lines: Vec<String>) -> Result<Vec<Encounter>, String> {
     let mut encounters = Some(encounters);
     let mut encounter = Encounter::new();
     for line in lines {
-        parse_line(&mut encounters, &mut false, &mut encounter, line);
+        parse_line(None, &mut encounters, &mut false, &mut encounter, line);
     }
     
     let mut encounters = encounters.unwrap().clone();
@@ -60,7 +61,7 @@ pub fn parse_log(lines: Vec<String>) -> Result<Vec<Encounter>, String> {
     Ok(encounters)
 }
 
-pub fn parse_line(encounters: &mut Option<Vec<Encounter>>, reset: &mut bool, encounter: &mut Encounter, line: String) {
+pub fn parse_line(window: Option<&Window>, encounters: &mut Option<Vec<Encounter>>, reset: &mut bool, encounter: &mut Encounter, line: String) {
     println!("{}", line);
     if line.is_empty() {
         return;
@@ -96,8 +97,8 @@ pub fn parse_line(encounters: &mut Option<Vec<Encounter>>, reset: &mut bool, enc
 
     match log_type {
         0 => on_message(encounter, timestamp, &line_split),
-        1 => on_init_env(encounters, reset, encounter, timestamp, &line_split),
-        2 => on_phase_transition(encounters, reset, encounter, &line_split),
+        1 => on_init_env(window, encounters, encounter, timestamp, &line_split),
+        2 => on_phase_transition(window, encounters, reset, encounter, &line_split),
         3 => on_new_pc(encounter, timestamp, &line_split),
         4 => on_new_npc(encounter, timestamp, &line_split),
         5 => on_death(encounter, timestamp, &line_split),
@@ -174,7 +175,7 @@ fn on_message(_encounter: &mut Encounter, _timestamp: i64, line: &[&str]) {
     println!("Message: {:?}", line);
 }
 
-fn on_init_env(encounters: &mut Option<Vec<Encounter>>, reset: &mut bool, encounter: &mut Encounter, timestamp: i64, line: &[&str]) {
+fn on_init_env(window: Option<&Window>, encounters: &mut Option<Vec<Encounter>>, encounter: &mut Encounter, timestamp: i64, line: &[&str]) {
     let init_env = LogInitEnv { 
         player_id: line[2]
     };
@@ -196,6 +197,7 @@ fn on_init_env(encounters: &mut Option<Vec<Encounter>>, reset: &mut bool, encoun
             ..Default::default()
         });
     }
+    // is live
     if encounters.is_none() {
         encounter.entities.retain(|_, v| v.name == encounter.local_player || v.damage_stats.damage_dealt > 0);
         thread::sleep(Duration::from_millis(6000));
@@ -203,17 +205,28 @@ fn on_init_env(encounters: &mut Option<Vec<Encounter>>, reset: &mut bool, encoun
     } else {
         split_encounter(encounters, encounter, false)
     }
+
+    if window.is_some() {
+        window.unwrap().emit("zone-change", "")
+            .expect("failed to emit zone-change");
+    }
 }
 
-fn on_phase_transition(encounters: &mut Option<Vec<Encounter>>, reset: &mut bool, encounter: &mut Encounter, _line: &[&str]) {
-    // let phase_transition = LogPhaseTransition { 
-    //     raid_result: match line[2].parse::<i32>().unwrap() {
-    //         0 => RaidResult::RAID_RESULT,
-    //         1 => RaidResult::GUARDIAN_DEAD,
-    //         2 => RaidResult::RAID_END,
-    //         _ => RaidResult::UNKNOWN,
-    //     }
-    // };
+fn on_phase_transition(window: Option<&Window>, encounters: &mut Option<Vec<Encounter>>, reset: &mut bool, encounter: &mut Encounter, line: &[&str]) {
+    let phase_transition = LogPhaseTransition { 
+        raid_result: match line[2].parse::<i32>().unwrap() {
+            0 => RaidResult::RAID_RESULT,
+            1 => RaidResult::GUARDIAN_DEAD,
+            2 => RaidResult::RAID_END,
+            _ => RaidResult::UNKNOWN,
+        }
+    };
+
+    if window.is_some() {
+        window.unwrap().emit("phase-transition", phase_transition.raid_result)
+            .expect("failed to emit phase-transition");
+    }
+
     if encounters.is_none() {
         *reset = true;
         encounter.reset = true;
@@ -390,7 +403,7 @@ fn on_skill_start(encounter: &mut Encounter, timestamp: i64, line: &[&str]) {
             name: skill_start.name.to_string(),
             last_update: timestamp,
             skill_stats: SkillStats {
-                casts: 1,
+                casts: 0,
                 ..Default::default()
             },
             skills: HashMap::from([(
@@ -398,7 +411,7 @@ fn on_skill_start(encounter: &mut Encounter, timestamp: i64, line: &[&str]) {
                 Skill {
                     id: skill_start.skill_id,
                     name: skill_start.skill_name.to_string(),
-                    casts: 1,
+                    casts: 0,
                     ..Default::default()
                 }
             )]),
@@ -412,7 +425,7 @@ fn on_skill_start(encounter: &mut Encounter, timestamp: i64, line: &[&str]) {
         .or_insert_with(|| Skill {
             id: skill_start.skill_id,
             name: skill_start.skill_name.to_string(),
-            casts: 1,
+            casts: 0,
             ..Default::default()
         });
     skill.casts += 1;
@@ -565,7 +578,7 @@ fn on_damage(reset: &mut bool, encounter: &mut Encounter, timestamp: i64, line: 
         // hard coding this for valtan ghost
         // if we know the local player, we assume what he is hitting is the boss and we track that instead
         // dunno if want to do this
-        if target_entity.max_hp > 1_000_000_000 {
+        if target_entity.max_hp > 1865513010 || target_entity.max_hp == 529402339 || target_entity.max_hp == 285632921 {
             encounter.current_boss_name = target_entity.name.to_string();
         }
     }

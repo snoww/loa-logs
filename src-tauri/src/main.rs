@@ -22,14 +22,14 @@ fn main() {
 
 
             tauri::async_runtime::spawn(async move {
-                // let (mut rx, _child) = Command::new_sidecar("meter-core")
-                //     .expect("failed to start `meter-core` ")
-                //     .spawn()
-                //     .expect("Failed to spawn sidecar");
-                let (mut rx, _child) = Command::new_sidecar("loa-fake-log")
+                let (mut rx, _child) = Command::new_sidecar("meter-core")
                     .expect("failed to start `meter-core` ")
                     .spawn()
                     .expect("Failed to spawn sidecar");
+                // let (mut rx, _child) = Command::new_sidecar("loa-fake-log")
+                //     .expect("failed to start `meter-core` ")
+                //     .spawn()
+                //     .expect("Failed to spawn sidecar");
 
                 let mut encounter = Encounter::new();
                 let mut none: Option<Vec<Encounter>> = None;
@@ -38,7 +38,7 @@ fn main() {
                 let mut reset = false;
                 while let Some(event) = rx.recv().await {
                     if let CommandEvent::Stdout(line) = event {
-                        parser::parse_line(&mut none, &mut reset, &mut encounter, line);
+                        parser::parse_line(Some(&window), &mut none, &mut reset, &mut encounter, line);
                         let elapsed = last_time.elapsed();
                         if elapsed >= duration {
                             let mut clone = encounter.clone();
@@ -50,9 +50,9 @@ fn main() {
                                         clone.current_boss_name = String::new();
                                     }
                                 }
-                                clone.entities.retain(|_, v| v.entity_type == EntityType::PLAYER && v.max_hp > 0);
-                                window.emit("rust-event", Some(clone))
-                                    .expect("failed to emit event");
+                                clone.entities.retain(|_, v| v.entity_type == EntityType::PLAYER && v.skill_stats.hits > 0);
+                                window.emit("encounter-update", Some(clone))
+                                    .expect("failed to emit encounter-update");
                             });
                             last_time = Instant::now();
                         }

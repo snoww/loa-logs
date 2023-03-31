@@ -6,7 +6,7 @@
     export let dps: number;
 </script>
 
-<div class="px-2 py-1 bg-zinc-900/[.6] text-sm">
+<div class="px-2 py-1 bg-zinc-900/[.6] text-sm fixed top-0 left-0 h-7 w-full">
     <div data-tauri-drag-region class="flex justify-between">
         <div data-tauri-drag-region class="flex space-x-2">
             <div data-tauri-drag-region>

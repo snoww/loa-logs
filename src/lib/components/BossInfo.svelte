@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { bosses } from "$lib/constants/bossmap";
+    import { bosses } from "$lib/constants/bossMap";
     import { bossHpBarColors } from "$lib/constants/colors";
     import type { Entity } from "$lib/types";
     import { abbreviateNumber } from "$lib/utils/numbers";
@@ -23,8 +23,8 @@
     $: {
         if (Object.hasOwn(bosses, boss.name)) {
             bossHPBars = bosses[boss.name];
-        } else if (boss.maxHp === 1865513010) {
-            // hard coding valtan ghost (hell)
+        } else if (boss.maxHp === 1865513010 || boss.maxHp === 529402339 || boss.maxHp === 285632921) {
+            // hard coding valtan ghost (hell, hard, normal)
             bossHPBars = 40;
         }
 
@@ -63,7 +63,7 @@
 
 </script>
 
-<div class="bg-zinc-900/[.3] border border-black">
+<div class="bg-zinc-900/[.3] h-7 border border-black">
     {#if bossHPBars !== 0}
         <div class="absolute h-7 -z-10 " style="background-color: {bossBarColor[0]};width: {$tweenBossHpBar}%;"></div>
         {#if bossCurrentBars <= 1}
