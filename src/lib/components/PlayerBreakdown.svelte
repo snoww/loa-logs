@@ -44,7 +44,7 @@
         <th class="font-normal w-14">DMG</th>
         <th class="font-normal w-14">DPS</th>
         <th class="font-normal w-14">D%</th>
-        <th class="font-normal w-14">CRIT</th>
+        <th class="font-normal w-14">Crit</th>
         {#if hasFrontAttacks}
         <th class="font-normal w-14">F.A</th>
         {/if}

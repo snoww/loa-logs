@@ -1,3 +1,5 @@
+use std::collections::HashSet;
+
 use serde::Serialize;
 
 use super::models::EntityType;
@@ -74,6 +76,8 @@ pub struct LogDamage<'a> {
     pub damage_mod: i32,
     pub current_hp: i64,
     pub max_hp: i64,
+    pub effects_on_source: HashSet<i32>,
+    pub effects_on_target: HashSet<i32>,
 }
 
 #[derive(Debug)]

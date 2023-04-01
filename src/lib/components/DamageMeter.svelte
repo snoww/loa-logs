@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { MeterState, type Encounter, type EncounterEvent, type Entity } from '$lib/types';
+    import { MeterState, MeterTab, type Encounter, type EncounterEvent, type Entity } from '$lib/types';
     import { millisToMinutesAndSeconds } from '$lib/utils/numbers';
     import { listen, type UnlistenFn } from '@tauri-apps/api/event';
     import { onDestroy, onMount } from 'svelte';
@@ -8,6 +8,7 @@
     import BossInfo from './BossInfo.svelte';
     import DamageMeterPlayerRow from './DamageMeterPlayerRow.svelte';
     import PlayerBreakdown from './PlayerBreakdown.svelte';
+    import Footer from './Footer.svelte';
 
     let time = +Date.now();
     let encounter: Encounter | null = null;
@@ -19,6 +20,8 @@
             time = +Date.now();
         }, 1000);
 
+
+
         (async () => {
             let encounterUpdateEvent = await listen('encounter-update', (event: EncounterEvent) => {
                 console.log(+Date.now(), event.payload);
@@ -28,14 +31,16 @@
             });
             let zoneChangeEvent = await listen('zone-change', (event) => {
                 console.log("zone change event")
-                state = MeterState.LIVE;
-                player = null;
-                playerName = "";
-                encounter = null;
-                entities = [];
-                encounterDuration = "00:00";
-                totalDamageDealt = 0;
-                dps = 0;
+                setTimeout(() => {
+                    state = MeterState.PARTY;
+                    player = null;
+                    playerName = "";
+                    encounter = null;
+                    entities = [];
+                    encounterDuration = "00:00";
+                    totalDamageDealt = 0;
+                    dps = 0;
+                }, 6000);
             });
             let phaseTransitionEvent = await listen('phase-transition', (event) => {
                 console.log("phase transition event")
@@ -64,7 +69,8 @@
     let totalDamageDealt = 0;
     let dps = 0;
     let currentBoss: Entity | null = null;
-    let state = MeterState.LIVE;
+    let state = MeterState.PARTY;
+    let tab = MeterTab.DAMAGE;
     let player: Entity | null = null;
     let playerName = "";
 
@@ -102,7 +108,7 @@
 
             } else {
                 player = null;
-                state = MeterState.LIVE;
+                state = MeterState.PARTY;
             }
         }
     }
@@ -115,7 +121,7 @@
 
     function handleRightClick() {
         if (state === MeterState.PLAYER) {
-            state = MeterState.LIVE;
+            state = MeterState.PARTY;
             player = null;
             playerName = "";
         }
@@ -129,12 +135,12 @@
     <BossInfo boss={currentBoss}/>
 </div>
 {/if}
-<div class="relative top-7 overflow-y-scroll" style="height: calc(100vh - 1.7rem);">
+<div class="relative top-7 overflow-y-scroll" style="height: calc(100vh - 5rem);">
     <table class="table-fixed w-full">
-        {#if state === MeterState.LIVE}
+        {#if state === MeterState.PARTY}
         <thead class="top-0 sticky">
             <tr class="bg-zinc-900">
-                <th class="text-left px-2 font-normal w-full">Name</th>
+                <th class="text-left px-2 font-normal w-full"></th>
                 <!-- <th class="">DMG</th> -->
                 <th class="font-normal w-14">DPS</th>
                 <th class="font-normal w-14">D%</th>
@@ -160,3 +166,4 @@
         {/if}
     </table>
 </div>
+<Footer bind:tab={tab}/>

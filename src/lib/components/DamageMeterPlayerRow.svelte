@@ -5,7 +5,9 @@
     import { tweened } from "svelte/motion";
     import { HexToRgba } from "$lib/utils/colors";
     import { abbreviateNumberSplit } from "$lib/utils/numbers";
-
+    import { join, resourceDir } from '@tauri-apps/api/path';
+    import { convertFileSrc } from '@tauri-apps/api/tauri';
+    import { onMount } from "svelte";
 
     export let entity: Entity;
     export let percentage: number;
@@ -34,12 +36,34 @@
         if (entity.class) {
             playerName += ` (${entity.class})`;
         }
+        if (entity.isDead) {
+            playerName = "💀 " + playerName;
+        }
+    }
+
+    async function getImagePath() {
+        let classId;
+        if (entity.classId > 100) {
+            classId = `${entity.classId}.png`;
+        } else {
+            classId = `${1}/101.png`;
+        }
+        return convertFileSrc(await join(await resourceDir(), 'images', 'classes', classId));
     }
     
 </script>
 
-<td class="px-2 truncate">
-    {playerName}
+<td class="px-1 truncate">
+    <div class="flex space-x-1">
+        {#await getImagePath()}
+            <img class="h-5 w-5" src="" alt={entity.class} />
+        {:then path} 
+            <img class="h-5 w-5" src={path} alt={entity.class} />
+        {/await}
+        <div>
+            {playerName}
+        </div>
+    </div>
 </td>
 <!-- <td class="px-1 text-center">
     {damageDealt[0]}<span class="text-3xs text-gray-300">{damageDealt[1]}</span>

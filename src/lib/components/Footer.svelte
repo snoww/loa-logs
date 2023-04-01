@@ -1,0 +1,45 @@
+<script lang="ts">
+    import { MeterTab } from '$lib/types';
+    import { getVersion } from '@tauri-apps/api/app';
+    export let tab: MeterTab;
+
+    function setTab(newTab: MeterTab) {
+        tab = newTab;
+    }
+
+</script>
+
+<div class="fixed bottom-0 h-6 bg-zinc-800/[.8] w-full text-gray-300" id="footer">
+    <div class="flex justify-between">
+        <div class="flex items-center">
+            <button class="px-2 border-0 border-b-[3px] border-zinc-800 h-6 {tab === MeterTab.DAMAGE ? "border-zinc-600": ""}"
+                on:click={() => setTab(MeterTab.DAMAGE)}>
+                Damage
+            </button>
+            <button class="px-2 border-0 border-b-[3px] border-zinc-800 h-6 {tab === MeterTab.TANK ? "border-zinc-600": ""}"
+                on:click={() => setTab(MeterTab.TANK)}>
+                Tank
+            </button>
+            <button class="px-2 border-0 border-b-[3px] border-zinc-800 h-6 {tab === MeterTab.PARTY_BUFFS ? "border-zinc-600": ""}"
+                on:click={() => setTab(MeterTab.PARTY_BUFFS)}>
+                Party Buffs
+            </button>
+            <button class="px-2 border-0 border-b-[3px] border-zinc-800 h-6 {tab === MeterTab.SELF_BUFFS ? "border-zinc-600": ""}"
+                on:click={() => setTab(MeterTab.SELF_BUFFS)}>
+                Self Buffs
+            </button>
+        </div>
+        <div class="flex items-end">
+            <div class="h-6">
+                LOA Logs
+            </div>
+            <div class="h-6 ml-1 mr-2 text-xs text-gray-500">
+                {#await getVersion()}
+                v
+                {:then version}
+                v{version}
+                {/await}
+            </div>
+        </div>
+    </div>
+</div>

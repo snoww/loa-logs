@@ -25,11 +25,17 @@
         ]
       },
       "fs": {
-        "all": true,
+        "readFile": true,
         "scope": ["**"]
       },
       "path": {
         "all": true
+      },
+      "protocol": {
+        "asset": true,
+        "assetScope": [
+          "$RESOURCE/images/**/*.png"
+        ]
       }
     },
     "bundle": {
@@ -44,12 +50,11 @@
         "lib/loa-fake-log"
       ],
       "resources": [
-        "meter-data/Npc.json"
+        "meter-data/*.json",
+        "images/**/*.png"
       ],
       "icon": [
-        "icons/32x32.png",
-        "icons/128x128.png",
-        "icons/128x128@2x.png",
+        "icons/45x45.png",
         "icons/icon.icns",
         "icons/icon.ico"
       ],
@@ -71,7 +76,7 @@
       }
     },
     "security": {
-      "csp": null
+      "csp": "default-src 'self'; img-src 'self' asset: https://asset.localhost"
     },
     "updater": {
       "active": false

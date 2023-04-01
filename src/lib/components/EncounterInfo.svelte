@@ -1,12 +1,10 @@
 <script lang="ts">
-    import { getVersion } from '@tauri-apps/api/app';
-
     export let encounterDuration: string;
     export let totalDamageDealt: number;
     export let dps: number;
 </script>
 
-<div class="px-2 py-1 bg-zinc-900/[.6] text-sm fixed top-0 left-0 h-7 w-full">
+<div class="px-2 py-1 bg-zinc-900/[.6] text-sm fixed top-0 left-0 h-7 w-full" id="header">
     <div data-tauri-drag-region class="flex justify-between">
         <div data-tauri-drag-region class="flex space-x-2">
             <div data-tauri-drag-region>
@@ -26,20 +24,6 @@
                 </div>
                 <div data-tauri-drag-region >
                     {dps.toLocaleString("en", { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
-                </div>
-            </div>
-        </div>
-        <div data-tauri-drag-region>
-            <div class="flex items-end">
-                <div data-tauri-drag-region>
-                    LOA Logs
-                </div>
-                <div data-tauri-drag-region class="ml-1 text-xs text-gray-500">
-                    {#await getVersion()}
-                    v
-                    {:then version}
-                    v{version}
-                    {/await}
                 </div>
             </div>
         </div>

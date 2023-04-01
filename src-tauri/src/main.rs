@@ -14,6 +14,8 @@ fn main() {
     tauri::Builder::default()
         .setup(|app| {
             let window = app.get_window("main").unwrap();
+            window.set_always_on_top(true)
+                .expect("failed to set windows always on top");
             #[cfg(debug_assertions)] // only include this code on debug builds
             {
               window.open_devtools();
@@ -31,7 +33,7 @@ fn main() {
                 //     .spawn()
                 //     .expect("Failed to spawn sidecar");
 
-                let mut encounter = Encounter::new();
+                let mut encounter: Encounter = Default::default();
                 let mut none: Option<Vec<Encounter>> = None;
                 let mut last_time = Instant::now();
                 let duration = Duration::from_millis(100);

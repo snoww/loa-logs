@@ -1,4 +1,4 @@
-use std::{cmp::max, collections::HashMap, time::Duration, thread};
+use std::{cmp::max, collections::{HashMap, HashSet}, time::Duration, thread};
 
 use chrono::{DateTime, Utc};
 use lazy_static::lazy_static;
@@ -7,11 +7,23 @@ pub(crate) mod models;
 use models::*;
 mod log_lines;
 use log_lines::*;
-use tauri::Window;
+use tauri::{Window, Wry};
 
 lazy_static! {
-    static ref NPC: HashMap<i32, Npc> = {
+    static ref NPC_DATA: HashMap<i32, Npc> = {
         let json_str = include_str!(r"C:\Users\Snow\Documents\projects\loa-logs\src-tauri\meter-data\Npc.json");
+        serde_json::from_str(json_str).unwrap()
+    };
+    static ref SKILL_DATA: HashMap<i32, SkillData> = {
+        let json_str = include_str!(r"C:\Users\Snow\Documents\projects\loa-logs\src-tauri\meter-data\Skill.json");
+        serde_json::from_str(json_str).unwrap()
+    };
+    static ref SKILL_EFFECT_DATA: HashMap<i32, SkillEffectData> = {
+        let json_str = include_str!(r"C:\Users\Snow\Documents\projects\loa-logs\src-tauri\meter-data\SkillEffect.json");
+        serde_json::from_str(json_str).unwrap()
+    };
+    static ref SKILL_BUFF_DATA: HashMap<i32, SkillBuffData> = {
+        let json_str = include_str!(r"C:\Users\Snow\Documents\projects\loa-logs\src-tauri\meter-data\SkillBuff.json");
         serde_json::from_str(json_str).unwrap()
     };
 }
@@ -19,7 +31,7 @@ lazy_static! {
 pub fn parse_log(lines: Vec<String>) -> Result<Vec<Encounter>, String> {
     let encounters: Vec<Encounter> = Vec::new();
     let mut encounters = Some(encounters);
-    let mut encounter = Encounter::new();
+    let mut encounter: Encounter = Default::default();
     for line in lines {
         parse_line(None, &mut encounters, &mut false, &mut encounter, line);
     }
@@ -61,7 +73,7 @@ pub fn parse_log(lines: Vec<String>) -> Result<Vec<Encounter>, String> {
     Ok(encounters)
 }
 
-pub fn parse_line(window: Option<&Window>, encounters: &mut Option<Vec<Encounter>>, reset: &mut bool, encounter: &mut Encounter, line: String) {
+pub fn parse_line(window: Option<&Window<Wry>>, encounters: &mut Option<Vec<Encounter>>, reset: &mut bool, encounter: &mut Encounter, line: String) {
     println!("{}", line);
     if line.is_empty() {
         return;
@@ -116,7 +128,7 @@ fn reset(encounter: &mut Encounter, clone: &Encounter) {
     encounter.fight_start = 0;
     encounter.entities = HashMap::new();
     encounter.current_boss_name = "".to_string();
-    encounter.encounter_damage_stats = EncounterDamageStats::new();
+    encounter.encounter_damage_stats = Default::default();
     encounter.reset = false;
     if !clone.local_player.is_empty() {
         if let Some(player) = clone.entities.get(&clone.local_player) {
@@ -175,7 +187,7 @@ fn on_message(_encounter: &mut Encounter, _timestamp: i64, line: &[&str]) {
     println!("Message: {:?}", line);
 }
 
-fn on_init_env(window: Option<&Window>, encounters: &mut Option<Vec<Encounter>>, encounter: &mut Encounter, timestamp: i64, line: &[&str]) {
+fn on_init_env(window: Option<&Window<Wry>>, encounters: &mut Option<Vec<Encounter>>, encounter: &mut Encounter, timestamp: i64, line: &[&str]) {
     let init_env = LogInitEnv { 
         player_id: line[2]
     };
@@ -200,6 +212,7 @@ fn on_init_env(window: Option<&Window>, encounters: &mut Option<Vec<Encounter>>,
     // is live
     if encounters.is_none() {
         encounter.entities.retain(|_, v| v.name == encounter.local_player || v.damage_stats.damage_dealt > 0);
+        encounter.current_boss_name = "".to_string();
         thread::sleep(Duration::from_millis(6000));
         soft_reset(encounter);
     } else {
@@ -212,7 +225,7 @@ fn on_init_env(window: Option<&Window>, encounters: &mut Option<Vec<Encounter>>,
     }
 }
 
-fn on_phase_transition(window: Option<&Window>, encounters: &mut Option<Vec<Encounter>>, reset: &mut bool, encounter: &mut Encounter, line: &[&str]) {
+fn on_phase_transition(window: Option<&Window<Wry>>, encounters: &mut Option<Vec<Encounter>>, reset: &mut bool, encounter: &mut Encounter, line: &[&str]) {
     let phase_transition = LogPhaseTransition { 
         raid_result: match line[2].parse::<i32>().unwrap() {
             0 => RaidResult::RAID_RESULT,
@@ -251,7 +264,7 @@ fn on_new_pc(encounter: &mut Encounter, timestamp: i64, line: &[&str]) {
         class_id: line[4].parse::<i32>().unwrap_or_default(),
         class: if line[5].is_empty() { "Unknown Class" } else { line[5] },
         level: line[6].parse::<i32>().unwrap_or_default(),
-        gear_score: gear_score,
+        gear_score,
         current_hp: line[8].parse::<i64>().unwrap_or_default(),
         max_hp: line[9].parse::<i64>().unwrap_or_default(),
         entity_type: EntityType::PLAYER
@@ -307,7 +320,7 @@ fn on_new_npc(encounter: &mut Encounter, timestamp: i64, line: &[&str]) {
         npc.current_hp = new_npc.current_hp;
         npc.max_hp = new_npc.max_hp;
         npc.last_update = timestamp;
-        if let Some((_, npc_info)) = NPC.get_key_value(&new_npc.npc_id) {
+        if let Some((_, npc_info)) = NPC_DATA.get_key_value(&new_npc.npc_id) {
             if npc_info.grade == "boss" || npc_info.grade == "raid" || npc_info.grade == "epic_raid" || npc_info.grade == "commander" {
                 npc.entity_type = EntityType::BOSS;
             } else {
@@ -316,7 +329,7 @@ fn on_new_npc(encounter: &mut Encounter, timestamp: i64, line: &[&str]) {
         }
     } else {
         let mut entity_type = EntityType::NPC;
-        if let Some((_, npc_info)) = NPC.get_key_value(&new_npc.npc_id) {
+        if let Some((_, npc_info)) = NPC_DATA.get_key_value(&new_npc.npc_id) {
             if npc_info.grade == "boss" || npc_info.grade == "raid" || npc_info.grade == "epic_raid" || npc_info.grade == "commander" {
                 entity_type = EntityType::BOSS;
             }
@@ -334,7 +347,7 @@ fn on_new_npc(encounter: &mut Encounter, timestamp: i64, line: &[&str]) {
     }
     
     if encounter.current_boss_name.is_empty() {
-        if let Some((_, npc)) = NPC.get_key_value(&new_npc.npc_id) {
+        if let Some((_, npc)) = NPC_DATA.get_key_value(&new_npc.npc_id) {
             if npc.grade == "boss" || npc.grade == "raid" || npc.grade == "epic_raid" || npc.grade == "commander" {
                 encounter.current_boss_name = new_npc.name.to_string();
             }
@@ -343,7 +356,7 @@ fn on_new_npc(encounter: &mut Encounter, timestamp: i64, line: &[&str]) {
         // if for some reason current_boss_name is not in the entities list, reset it
         if let Some(boss) = encounter.entities.get(&encounter.current_boss_name.to_string()) {
             if new_npc.max_hp > boss.max_hp {
-                if let Some((_, npc)) = NPC.get_key_value(&new_npc.npc_id) {
+                if let Some((_, npc)) = NPC_DATA.get_key_value(&new_npc.npc_id) {
                     if npc.grade == "boss" || npc.grade == "raid" || npc.grade == "epic_raid" || npc.grade == "commander" {
                         encounter.current_boss_name = new_npc.name.to_string();
                     }
@@ -399,36 +412,50 @@ fn on_skill_start(encounter: &mut Encounter, timestamp: i64, line: &[&str]) {
     };
 
     let mut entity = encounter.entities.entry(skill_start.name.to_string())
-        .or_insert_with(|| Entity {
-            name: skill_start.name.to_string(),
-            last_update: timestamp,
-            skill_stats: SkillStats {
-                casts: 0,
-                ..Default::default()
-            },
-            skills: HashMap::from([(
-                skill_start.skill_name.to_string(),
-                Skill {
-                    id: skill_start.skill_id,
-                    name: skill_start.skill_name.to_string(),
+        .or_insert_with(|| {
+            let (skill_name, skill_icon) = get_skill_name_and_icon(skill_start.skill_id, 0, skill_start.skill_name.to_string());
+            Entity {
+                name: skill_start.name.to_string(),
+                last_update: timestamp,
+                skill_stats: SkillStats {
                     casts: 0,
                     ..Default::default()
-                }
-            )]),
-            ..Default::default()
-        });
+                },
+                skills: HashMap::from([(
+                    skill_start.skill_id,
+                    Skill {
+                        id: skill_start.skill_id,
+                        name: skill_name.to_string(),
+                        icon: skill_icon.to_string(),
+                        casts: 0,
+                        ..Default::default()
+                    }
+                )]),
+                ..Default::default()
+            }});
     
     entity.last_update = timestamp;
     entity.is_dead = false;
     entity.skill_stats.casts += 1;
-    let mut skill = entity.skills.entry(skill_start.skill_name.to_string())
-        .or_insert_with(|| Skill {
-            id: skill_start.skill_id,
-            name: skill_start.skill_name.to_string(),
-            casts: 0,
-            ..Default::default()
-        });
-    skill.casts += 1;
+    // if skills have different ids but the same name, we group them together
+    // dunno if this is right approach xd
+    let skill = entity.skills.get_mut(&skill_start.skill_id);
+    if skill.is_none() {
+        if let Some(skill) = entity.skills.values_mut().find(|s| s.name == skill_start.skill_name.to_string()) {
+            skill.casts += 1;
+        } else {
+            let (skill_name, skill_icon) = get_skill_name_and_icon(skill_start.skill_id, 0, skill_start.skill_name.to_string());
+            entity.skills.insert(skill_start.skill_id, Skill {
+                id: skill_start.skill_id,
+                name: skill_name.to_string(),
+                icon: skill_icon.to_string(),
+                casts: 1,
+                ..Default::default()
+            });
+        }
+    } else {
+        skill.unwrap().casts += 1;
+    }
 }
 
 fn on_skill_stage(_encounter: &mut Encounter, _line: &[&str]) {
@@ -450,8 +477,23 @@ fn on_damage(reset: &mut bool, encounter: &mut Encounter, timestamp: i64, line: 
         damage: line[10].parse::<i64>().unwrap_or_default(),
         damage_mod: i32::from_str_radix(line[11], 16).unwrap_or_default(),
         current_hp: line[12].parse::<i64>().unwrap_or_default(),
-        max_hp: line[13].parse::<i64>().unwrap_or_default()
+        max_hp: line[13].parse::<i64>().unwrap_or_default(),
+        effects_on_source: HashSet::new(),
+        effects_on_target: HashSet::new()
     };
+
+    if line.len() >= 17 {
+        for buff in line[14].split(',').step_by(2) {
+            if !buff.is_empty() {
+                damage.effects_on_source.insert(buff.parse::<i32>().unwrap_or_default());
+            }
+        }
+        for buff in line[15].split(',').step_by(2) {
+            if !buff.is_empty() {
+                damage.effects_on_target.insert(buff.parse::<i32>().unwrap_or_default());
+            }
+        }
+    }
 
     let hit_flag = match damage.damage_mod & 0xf {
         0 => HitFlag::NORMAL,
@@ -526,12 +568,23 @@ fn on_damage(reset: &mut bool, encounter: &mut Encounter, timestamp: i64, line: 
         damage.skill_name = damage.skill_effect;
     }
 
-    let skill = source_entity.skills.entry(damage.skill_name.to_string())
-        .or_insert_with(|| Skill {
-            id: damage.skill_id,
-            name: damage.skill_name.to_string(),
-            ..Default::default()
-        });
+    let skill = source_entity.skills.contains_key(&damage.skill_id);
+    let mut skill_id = damage.skill_id;
+    if !skill {
+        if let Some(skill) = source_entity.skills.values().find(|&s| s.name == damage.skill_name.to_string()) {
+            skill_id = skill.id;
+        } else {
+            let (skill_name, skill_icon) = get_skill_name_and_icon(damage.skill_id, damage.skill_effect_id, damage.skill_name.to_string());
+            source_entity.skills.insert(damage.skill_id, Skill {
+                id: damage.skill_id,
+                name: skill_name.to_string(),
+                icon: skill_icon.to_string(),
+                ..Default::default()
+            });
+        }
+    }
+
+    let skill = source_entity.skills.get_mut(&skill_id).unwrap();
 
     if damage.skill_name == "Bleed" && hit_flag == HitFlag::DAMAGE_SHARE {
         return;
@@ -564,6 +617,62 @@ fn on_damage(reset: &mut bool, encounter: &mut Encounter, timestamp: i64, line: 
     if source_entity.entity_type == EntityType::PLAYER {
         encounter.encounter_damage_stats.total_damage_dealt += damage.damage;
         encounter.encounter_damage_stats.top_damage_dealt = max(encounter.encounter_damage_stats.top_damage_dealt, source_entity.damage_stats.damage_dealt);
+
+        let mut is_buffed_by_support = false;
+        let mut is_debuffed_by_support = false;
+        for buff_id in damage.effects_on_source.iter() {
+            if !encounter.encounter_damage_stats.unknown_buffs.contains(buff_id) && !encounter.encounter_damage_stats.buffs.contains_key(buff_id) {
+                if let Some(status_effect) = get_status_effect_data(*buff_id) {
+                    encounter.encounter_damage_stats.buffs.insert(*buff_id, status_effect);
+                }
+            }
+            let status_effect = encounter.encounter_damage_stats.buffs.get(buff_id);
+            if status_effect.is_some() && !is_buffed_by_support {
+                let status_effect = status_effect.unwrap();
+                if status_effect.source.skill.is_some() {
+                    let skill = status_effect.source.skill.as_ref().unwrap();
+                    is_buffed_by_support = (status_effect.buff_category == "classskill" ||
+                                        status_effect.buff_category == "identity" ||
+                                        status_effect.buff_category == "ability" ) &&
+                                        status_effect.target == StatusEffectTarget::PARTY &&
+                                        is_support_class_id(skill.class_id);
+                }
+            }
+        }
+        for buff_id in damage.effects_on_target.iter() {
+            // maybe problem
+            if !encounter.encounter_damage_stats.unknown_buffs.contains(buff_id) && !encounter.encounter_damage_stats.debuffs.contains_key(buff_id) {
+                if let Some(status_effect) = get_status_effect_data(*buff_id) {
+                    encounter.encounter_damage_stats.debuffs.insert(*buff_id, status_effect);
+                }
+            }
+            let status_effect = encounter.encounter_damage_stats.debuffs.get(buff_id);
+            if status_effect.is_some() && !is_debuffed_by_support {
+                let status_effect = status_effect.unwrap();
+                if status_effect.source.skill.is_some() {
+                    let skill = status_effect.source.skill.as_ref().unwrap();
+                    is_debuffed_by_support = (status_effect.buff_category == "classskill" ||
+                                        status_effect.buff_category == "identity" ||
+                                        status_effect.buff_category == "ability" ) &&
+                                        status_effect.target == StatusEffectTarget::PARTY &&
+                                        is_support_class_id(skill.class_id);
+                }
+            }
+        }
+
+        skill.buffed_by_support += if is_buffed_by_support { damage.damage } else { 0 };
+        skill.debuffed_by_support += if is_debuffed_by_support { damage.damage } else { 0 };
+        source_entity.damage_stats.buffed_by_support += if is_buffed_by_support { damage.damage } else { 0 };
+        source_entity.damage_stats.debuffed_by_support += if is_debuffed_by_support { damage.damage } else { 0 };
+
+        for buff_id in damage.effects_on_source.iter() {
+            skill.buffed_by.entry(*buff_id).and_modify(|e| *e += damage.damage).or_insert(damage.damage);
+            source_entity.damage_stats.buffed_by.entry(*buff_id).and_modify(|e| *e += damage.damage).or_insert(damage.damage);
+        }
+        for buff_id in damage.effects_on_target.iter() {
+            skill.debuffed_by.entry(*buff_id).and_modify(|e| *e += damage.damage).or_insert(damage.damage);
+            source_entity.damage_stats.debuffed_by.entry(*buff_id).and_modify(|e| *e += damage.damage).or_insert(damage.damage);
+        }
     } 
 
     if target_entity.entity_type == EntityType::PLAYER {
@@ -575,10 +684,10 @@ fn on_damage(reset: &mut bool, encounter: &mut Encounter, timestamp: i64, line: 
     if target_entity.entity_type == EntityType::BOSS {
         encounter.current_boss_name = target_entity.name.to_string();
     } else if target_entity.entity_type == EntityType::UNKNOWN {
-        // hard coding this for valtan ghost
+        // hard coding this for valtan ghost, and trixion boss
         // if we know the local player, we assume what he is hitting is the boss and we track that instead
         // dunno if want to do this
-        if target_entity.max_hp > 1865513010 || target_entity.max_hp == 529402339 || target_entity.max_hp == 285632921 {
+        if target_entity.max_hp > 1865513010 || target_entity.max_hp == 529402339 || target_entity.max_hp == 285632921 || target_entity.max_hp == 999_999_999 {
             encounter.current_boss_name = target_entity.name.to_string();
         }
     }
@@ -605,16 +714,181 @@ fn on_counterattack(encounter: &mut Encounter, line: &[&str]) {
         target_name: if line[5].is_empty() { "Unknown Entity" } else { line[5] }
     };
 
-    let skill = encounter.entities.entry(counter.name.to_string())
+    let entity = encounter.entities.entry(counter.name.to_string())
         .or_insert_with(|| Entity {
             id: counter.id.to_string(),
             name: counter.name.to_string(),
+            entity_type: EntityType::PLAYER,
             skill_stats: SkillStats {
                 counters: 1,
                 ..Default::default()
             },
             ..Default::default()
         });
-    skill.skill_stats.counters += 1;
+    entity.skill_stats.counters += 1;
 }
 
+fn is_support_class_id(class_id: i32) -> bool {
+    class_id == 105 || class_id == 204 || class_id == 603
+}
+
+fn get_status_effect_data(buff_id: i32) -> Option<StatusEffect> {
+    let buff = SKILL_BUFF_DATA.get(&buff_id);
+    if buff.is_none() || buff.unwrap().icon_show_type == "none" {
+        return None;
+    }
+
+    let buff = buff.unwrap();
+    let buffs = vec![501, 502, 503, 504, 505];
+    let buff_category: String;
+    if buff.buff_category == "ability" && buffs.contains(&buff.unique_group) {
+        buff_category = "dropsofether".to_string();
+    } else {
+        buff_category = buff.buff_category.to_string();
+    }
+    let mut status_effect = StatusEffect {
+        target: {
+            if buff.target == "none" {
+                StatusEffectTarget::OTHER
+            } else if buff.target == "self" {
+                StatusEffectTarget::SELF
+            } else {
+                StatusEffectTarget::PARTY
+            }
+        },
+        category: buff.category.to_string(),
+        buff_category: buff_category.to_string(),
+        buff_type: get_status_effect_buff_type_flags(buff),
+        unique_group: buff.unique_group,
+        source: StatusEffectSource { 
+            name: buff.name.to_string(), 
+            desc: buff.desc.to_string(), 
+            icon: buff.icon.to_string(), 
+            ..Default::default() 
+        }
+    };
+
+    if buff_category == "classkill" || buff_category == "identity" {
+        if buff.source_skill.is_some() {
+            let buff_source_skill = SKILL_DATA.get(&buff.source_skill.unwrap());
+            if buff_source_skill.is_some() {
+                status_effect.source.skill = buff_source_skill.cloned();
+            }
+        } else {
+            let skill_id = ((buff_id as f32 / 100.0).floor() * 10.0) as i32;
+            let buff_source_skill = SKILL_DATA.get(&skill_id);
+            if buff_source_skill.is_some() {
+                status_effect.source.skill = buff_source_skill.cloned();
+            } else {
+                let skill_id = ((buff.unique_group as f32 / 100.0).floor() * 10.0) as i32;
+                let buff_source_skill = SKILL_DATA.get(&skill_id);
+                status_effect.source.skill = buff_source_skill.cloned();
+            }
+        }
+    } else if buff_category == "ability" && buff.unique_group != 0 {
+        if buff.source_skill.is_some() {
+            let buff_source_skill = SKILL_DATA.get(&buff.source_skill.unwrap());
+            if buff_source_skill.is_some() {
+                status_effect.source.skill = buff_source_skill.cloned();
+            }
+        } else {
+            let skill_id = ((buff_id as f32 / 100.0).floor() * 10.0) as i32;
+            let buff_source_skill = SKILL_DATA.get(&skill_id);
+            if buff_source_skill.is_some() {
+                status_effect.source.skill = buff_source_skill.cloned();
+            } else {
+                let skill_id = ((buff.unique_group as f32 / 100.0).floor() * 10.0) as i32;
+                let buff_source_skill = SKILL_DATA.get(&skill_id);
+                status_effect.source.skill = buff_source_skill.cloned();
+            }
+        }
+    } else if buff_category == "set" && buff.set_name.is_some() {
+        status_effect.source.set_name = buff.set_name.clone();
+    }
+
+    Some(status_effect)
+} 
+
+fn get_status_effect_buff_type_flags(buff: &SkillBuffData) -> u32 {
+    let dmg_buffs = vec![
+        "weaken_defense",
+        "weaken_resistance",
+        "skill_damage_amplify",
+        "beattacked_damage_amplify",
+        "skill_damage_amplify_attack",
+        "directional_attack_amplify",
+        "instant_stat_amplify",
+        "attack_power_amplify",
+        "instant_stat_amplify_by_contents",
+    ];
+    let move_buffs = vec!["move_speed_down", "all_speed_down"];
+    let cd_buffs = String::from("reset_cooldown");
+    let stagger_buffs = vec!["change_ai_point", "ai_point_amplify"];
+    let resource_buffs = String::from("increase_identity_gauge");
+    
+    let mut buff_type = StatusEffectBuffTypeFlags::NONE;
+    if dmg_buffs.contains(&buff.buff_type.as_str()) {
+        buff_type |= StatusEffectBuffTypeFlags::DMG;
+    } else if move_buffs.contains(&buff.buff_type.as_str()) {
+        buff_type |= StatusEffectBuffTypeFlags::MOVESPEED;
+    } else if buff.buff_type == cd_buffs {
+        buff_type |= StatusEffectBuffTypeFlags::COOLDOWN;
+    } else if stagger_buffs.contains(&buff.buff_type.as_str()) {
+        buff_type |= StatusEffectBuffTypeFlags::STAGGER;
+    } else if buff.buff_type == resource_buffs {
+        buff_type |= StatusEffectBuffTypeFlags::RESOURCE;
+    }
+    buff_type.bits()
+}
+
+fn get_skill_name_and_icon(skill_id: i32, skill_effect_id: i32, skill_name: String) -> (String, String) {
+    if skill_id == 0 && skill_effect_id == 0 {
+        return ("Bleed".to_string(), "buff_168.png".to_string());
+    } else if skill_id == 0 {
+        if let Some(effect) = SKILL_EFFECT_DATA.get(&skill_effect_id) {
+            if effect.item_name.is_some() {
+                return (effect.item_name.as_ref().unwrap().to_string(), effect.icon.as_ref().unwrap().to_string());
+            }
+            if effect.source_skill.is_some() {
+                if let Some(skill) = SKILL_DATA.get(&effect.source_skill.unwrap()) {
+                    return (skill.name.to_string(), skill.icon.to_string());
+                }
+            } else {
+                if let Some(skill) = SKILL_DATA.get(&((skill_effect_id as f32 / 10.0).floor() as i32)) {
+                    return (skill.name.to_string(), skill.icon.to_string());
+                }
+            }
+            return (effect.comment.to_string(), "".to_string());
+        } else {
+            return (skill_name, "".to_string());
+        }
+    } else {
+        let mut skill = SKILL_DATA.get(&skill_id);
+        if skill.is_none() {
+            skill = SKILL_DATA.get(&(skill_id - (skill_id as f32 % 10.0) as i32));
+            if skill.is_none() {
+                return (skill_name, "".to_string());
+            }
+        }
+        let skill = skill.unwrap();
+        if skill.summon_source_skill.is_some() {
+            let skill = SKILL_DATA.get(&skill.summon_source_skill.unwrap());
+            if skill.is_some() {
+                let skill = skill.unwrap();
+                return (skill.name.to_string() + " (Summon)", skill.icon.to_string());
+            } else {
+                return (skill_name, "".to_string());
+            }
+        } else if skill.source_skill.is_some() {
+            let skill = SKILL_DATA.get(&skill.source_skill.unwrap());
+            if skill.is_some() {
+                let skill = skill.unwrap();
+                return (skill.name.to_string(), skill.icon.to_string());
+            } else {
+                return (skill_name, "".to_string());
+            }
+        } else {
+            return (skill.name.to_string(), skill.icon.to_string());
+        }
+    }
+}

@@ -42,7 +42,7 @@ export interface Entity {
     currentHp: number;
     maxHp: number;
     isDead: boolean;
-    skills: {[skillName: string]: Skill};
+    skills: {[skillId: number]: Skill};
     damageStats: DamageStats;
     skillStats: SkillStats;
 }
@@ -50,6 +50,7 @@ export interface Entity {
 export interface Skill {
     id: number;
     name: string;
+    icon: string;
     totalDamage: number;
     maxDamage: number;
     casts: number;
@@ -100,6 +101,13 @@ export interface BossMap {
 }
 
 export enum MeterState {
-    LIVE,
+    PARTY,
     PLAYER
+}
+
+export enum MeterTab {
+    DAMAGE,
+    TANK,
+    PARTY_BUFFS,
+    SELF_BUFFS,
 }

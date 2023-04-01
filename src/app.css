@@ -3,8 +3,8 @@
 @tailwind utilities;
 
 @layer base {
-    @font-face {
-      font-family: 'Inter';
-      src: url('../fonts/Inter-Regular.woff');
-    }
+  @font-face {
+    font-family: 'Inter';
+    src: url('../fonts/Inter-Regular.woff');
+  }
 }
