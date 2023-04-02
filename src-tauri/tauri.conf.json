@@ -84,12 +84,14 @@
     "windows": [
       {
         "fullscreen": false,
-        "height": 600,
+        "width": 550,
+        "height": 350,
         "resizable": true,
         "title": "LOA Logs",
-        "width": 800,
         "decorations": false,
-        "transparent": true
+        "transparent": true,
+        "minWidth": 400,
+        "minHeight": 200
       }
     ]
   }

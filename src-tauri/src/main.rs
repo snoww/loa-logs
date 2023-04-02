@@ -20,7 +20,7 @@ fn main() {
             {
               window.open_devtools();
             }
-            window.set_size(Size::Logical(LogicalSize { width: 550.0, height: 350.0 })).unwrap();
+            window.set_size(Size::Logical(LogicalSize { width: 500.0, height: 300.0 })).unwrap();
 
 
             tauri::async_runtime::spawn(async move {
@@ -53,10 +53,12 @@ fn main() {
                                     }
                                 }
                                 clone.entities.retain(|_, v| v.entity_type == EntityType::PLAYER && v.skill_stats.hits > 0);
-                                window.emit("encounter-update", Some(clone))
-                                    .expect("failed to emit encounter-update");
+                                if clone.current_boss.is_some() || clone.entities.len() > 0 {
+                                    window.emit("encounter-update", Some(clone))
+                                        .expect("failed to emit encounter-update");
+                                }
+                                last_time = Instant::now();
                             });
-                            last_time = Instant::now();
                         }
                     }
                 }

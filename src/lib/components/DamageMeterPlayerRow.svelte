@@ -5,9 +5,8 @@
     import { tweened } from "svelte/motion";
     import { HexToRgba } from "$lib/utils/colors";
     import { abbreviateNumberSplit } from "$lib/utils/numbers";
-    import { join, resourceDir } from '@tauri-apps/api/path';
-    import { convertFileSrc } from '@tauri-apps/api/tauri';
-    import { onMount } from "svelte";
+    import { convertFileSrc } from "@tauri-apps/api/tauri";
+    import { join, resourceDir } from "@tauri-apps/api/path";
 
     export let entity: Entity;
     export let percentage: number;
@@ -30,7 +29,12 @@
             color = classColors[entity.class].color;
         }
         damageDealt = abbreviateNumberSplit(entity.damageStats.damageDealt);
-        dps = abbreviateNumberSplit(entity.damageStats.damageDealt / (duration / 1000));
+        
+        if (duration > 0) {
+            dps = abbreviateNumberSplit(entity.damageStats.damageDealt / (duration / 1000));
+        } else {
+            dps = ["0", ""];
+        }
 
         playerName = entity.name;
         if (entity.class) {
@@ -41,26 +45,26 @@
         }
     }
 
-    async function getImagePath() {
-        let classId;
+    async function getClassIconPath() {
+        let path;
         if (entity.classId > 100) {
-            classId = `${entity.classId}.png`;
+            path = `${entity.classId}.png`;
         } else {
-            classId = `${1}/101.png`;
+            path = `${1}/101.png`;
         }
-        return convertFileSrc(await join(await resourceDir(), 'images', 'classes', classId));
+        return convertFileSrc(await join(await resourceDir(), 'images', 'classes', path));
     }
-    
+        
 </script>
 
-<td class="px-1 truncate">
+<td class="px-1">
     <div class="flex space-x-1">
-        {#await getImagePath()}
+        {#await getClassIconPath()}
             <img class="h-5 w-5" src="" alt={entity.class} />
         {:then path} 
             <img class="h-5 w-5" src={path} alt={entity.class} />
         {/await}
-        <div>
+        <div class="truncate">
             {playerName}
         </div>
     </div>

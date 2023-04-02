@@ -47,14 +47,14 @@
 </script>
 
 
-<td class="px-1 truncate">
+<td class="px-1">
     <div class="flex space-x-1 items-center">
         {#await getSkillIconPath()}
             <img class="h-5 w-5" src="" alt={skill.name} />
         {:then path} 
             <img class="h-5 w-5" src={path} alt={skill.name} />
         {/await}
-        <div>
+        <div class="truncate">
             {skill.name}
         </div>
     </div>

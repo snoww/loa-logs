@@ -11,19 +11,19 @@ use tauri::{Window, Wry};
 
 lazy_static! {
     static ref NPC_DATA: HashMap<i32, Npc> = {
-        let json_str = include_str!(r"C:\Users\Snow\Documents\projects\loa-logs\src-tauri\meter-data\Npc.json");
+        let json_str = include_str!("../../meter-data/Npc.json");
         serde_json::from_str(json_str).unwrap()
     };
     static ref SKILL_DATA: HashMap<i32, SkillData> = {
-        let json_str = include_str!(r"C:\Users\Snow\Documents\projects\loa-logs\src-tauri\meter-data\Skill.json");
+        let json_str = include_str!("../../meter-data/Skill.json");
         serde_json::from_str(json_str).unwrap()
     };
     static ref SKILL_EFFECT_DATA: HashMap<i32, SkillEffectData> = {
-        let json_str = include_str!(r"C:\Users\Snow\Documents\projects\loa-logs\src-tauri\meter-data\SkillEffect.json");
+        let json_str = include_str!("../../meter-data/SkillEffect.json");
         serde_json::from_str(json_str).unwrap()
     };
     static ref SKILL_BUFF_DATA: HashMap<i32, SkillBuffData> = {
-        let json_str = include_str!(r"C:\Users\Snow\Documents\projects\loa-logs\src-tauri\meter-data\SkillBuff.json");
+        let json_str = include_str!("../../meter-data/SkillBuff.json");
         serde_json::from_str(json_str).unwrap()
     };
 }
@@ -485,12 +485,12 @@ fn on_damage(reset: &mut bool, encounter: &mut Encounter, timestamp: i64, line: 
     if line.len() >= 17 {
         for buff in line[14].split(',').step_by(2) {
             if !buff.is_empty() {
-                damage.effects_on_source.insert(buff.parse::<i32>().unwrap_or_default());
+                damage.effects_on_target.insert(buff.parse::<i32>().unwrap_or_default());
             }
         }
         for buff in line[15].split(',').step_by(2) {
             if !buff.is_empty() {
-                damage.effects_on_target.insert(buff.parse::<i32>().unwrap_or_default());
+                damage.effects_on_source.insert(buff.parse::<i32>().unwrap_or_default());
             }
         }
     }
@@ -579,6 +579,7 @@ fn on_damage(reset: &mut bool, encounter: &mut Encounter, timestamp: i64, line: 
                 id: damage.skill_id,
                 name: skill_name.to_string(),
                 icon: skill_icon.to_string(),
+                casts: 1,
                 ..Default::default()
             });
         }
@@ -775,12 +776,12 @@ fn get_status_effect_data(buff_id: i32) -> Option<StatusEffect> {
                 status_effect.source.skill = buff_source_skill.cloned();
             }
         } else {
-            let skill_id = ((buff_id as f32 / 100.0).floor() * 10.0) as i32;
+            let skill_id = (buff_id as f32 / 10.0) as i32;
             let buff_source_skill = SKILL_DATA.get(&skill_id);
             if buff_source_skill.is_some() {
                 status_effect.source.skill = buff_source_skill.cloned();
             } else {
-                let skill_id = ((buff.unique_group as f32 / 100.0).floor() * 10.0) as i32;
+                let skill_id = (buff.unique_group as f32 / 10.0) as i32;
                 let buff_source_skill = SKILL_DATA.get(&skill_id);
                 status_effect.source.skill = buff_source_skill.cloned();
             }
@@ -792,12 +793,12 @@ fn get_status_effect_data(buff_id: i32) -> Option<StatusEffect> {
                 status_effect.source.skill = buff_source_skill.cloned();
             }
         } else {
-            let skill_id = ((buff_id as f32 / 100.0).floor() * 10.0) as i32;
+            let skill_id = (buff_id as f32 / 10.0) as i32;
             let buff_source_skill = SKILL_DATA.get(&skill_id);
             if buff_source_skill.is_some() {
                 status_effect.source.skill = buff_source_skill.cloned();
             } else {
-                let skill_id = ((buff.unique_group as f32 / 100.0).floor() * 10.0) as i32;
+                let skill_id = (buff.unique_group as f32 / 10.0) as i32;
                 let buff_source_skill = SKILL_DATA.get(&skill_id);
                 status_effect.source.skill = buff_source_skill.cloned();
             }

@@ -9,6 +9,8 @@
     import DamageMeterPlayerRow from './DamageMeterPlayerRow.svelte';
     import PlayerBreakdown from './PlayerBreakdown.svelte';
     import Footer from './Footer.svelte';
+    import Buffs from './Buffs.svelte';
+    import { join, resourceDir } from '@tauri-apps/api/path';
 
     let time = +Date.now();
     let encounter: Encounter | null = null;
@@ -25,6 +27,7 @@
         (async () => {
             let encounterUpdateEvent = await listen('encounter-update', (event: EncounterEvent) => {
                 console.log(+Date.now(), event.payload);
+                // console.log(JSON.stringify(event.payload));
                 // console.log(event.payload.currentBoss);
                 encounter = event.payload;
                 // loaLog = Date.now() + " " + event.payload;
@@ -135,35 +138,47 @@
     <BossInfo boss={currentBoss}/>
 </div>
 {/if}
-<div class="relative top-7 overflow-y-scroll" style="height: calc(100vh - 5rem);">
+{#await resourceDir() then path}
+<div class="relative top-7 overflow-scroll" style="height: calc(100vh - 1.5rem - 1.75rem);">
     <table class="table-fixed w-full">
-        {#if state === MeterState.PARTY}
-        <thead class="top-0 sticky">
-            <tr class="bg-zinc-900">
-                <th class="text-left px-2 font-normal w-full"></th>
-                <!-- <th class="">DMG</th> -->
-                <th class="font-normal w-14">DPS</th>
-                <th class="font-normal w-14">D%</th>
-                <th class="font-normal w-14">CRIT</th>
-                <th class="font-normal w-14">F.A</th>
-                <th class="font-normal w-14">B.A</th>
-            </tr>
-        </thead>
-        <tbody>
-            {#each entities as entity, i (entity.id)}
-            <tr class="h-7 px-2 py-1" animate:flip="{{duration: 200}}" on:click={() => inspectPlayer(entity.name)}>
-                <DamageMeterPlayerRow
-                    entity={entity}
-                    percentage={playerDamagePercentages[i]}
-                    duration={duration}
-                    totalDamageDealt={totalDamageDealt}
-                />
-            </tr>
-            {/each}
-        </tbody>
-        {:else if state === MeterState.PLAYER && player !== null}
-            <PlayerBreakdown player={player} duration={duration}/>
+        {#if tab === MeterTab.DAMAGE}
+            {#if state === MeterState.PARTY}
+            <thead class="top-0 sticky h-6">
+                <tr class="bg-zinc-900">
+                    <th class="text-left px-2 font-normal w-full"></th>
+                    <!-- <th class="">DMG</th> -->
+                    <th class="font-normal w-14">DPS</th>
+                    <th class="font-normal w-14">D%</th>
+                    <th class="font-normal w-14">CRIT</th>
+                    <th class="font-normal w-14">F.A</th>
+                    <th class="font-normal w-14">B.A</th>
+                </tr>
+            </thead>
+            <tbody>
+                {#each entities as entity, i (entity.id)}
+                <tr class="h-7 px-2 py-1" animate:flip="{{duration: 200}}" on:click={() => inspectPlayer(entity.name)}>
+                    <DamageMeterPlayerRow
+                        entity={entity}
+                        percentage={playerDamagePercentages[i]}
+                        duration={duration}
+                        totalDamageDealt={totalDamageDealt}
+                    />
+                </tr>
+                {/each}
+            </tbody>
+            {:else if state === MeterState.PLAYER && player !== null}
+                <PlayerBreakdown player={player} duration={duration}/>
+            {/if}
+        {:else if tab === MeterTab.PARTY_BUFFS}
+            {#if state === MeterState.PARTY}
+                <Buffs tab={tab} encounterDamageStats={encounter?.encounterDamageStats} players={entities} percentages={playerDamagePercentages} path={path}/>
+            {/if}
+        {:else if tab === MeterTab.SELF_BUFFS}
+            {#if state === MeterState.PARTY}
+                <Buffs tab={tab} encounterDamageStats={encounter?.encounterDamageStats} players={entities} percentages={playerDamagePercentages} path={path}/>
+            {/if}
         {/if}
     </table>
 </div>
+{/await}
 <Footer bind:tab={tab}/>

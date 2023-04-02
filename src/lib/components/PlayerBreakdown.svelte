@@ -38,7 +38,7 @@
     }
 </script>
 
-<thead class="top-0 sticky">
+<thead class="top-0 sticky h-6">
     <tr class="bg-zinc-900">
         <th class="text-left px-2 font-normal w-full">Skill</th>
         <th class="font-normal w-14">DMG</th>

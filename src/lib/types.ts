@@ -9,7 +9,7 @@ export interface Encounter {
     localPlayer: string;
     entities: {[key: string]: Entity};
     currentBossName: string;
-    currentBoss?: Entity;
+    currentBoss: Entity | null;
     encounterDamageStats: EncounterDamageStats;
     duration: number;
     reset: boolean;
@@ -22,7 +22,9 @@ export interface EncounterDamageStats {
     topDamageTaken: number,
     dps: number,
     dpsIntervals: { [key: number]: number },
-    mostDamageTakenEntity: MostDamageTakenEntity
+    mostDamageTakenEntity: MostDamageTakenEntity,
+    buffs: { [key: number]: StatusEffect },
+    debuffs: { [key: number]: StatusEffect },
 }
 
 export interface MostDamageTakenEntity {
@@ -53,6 +55,10 @@ export interface Skill {
     icon: string;
     totalDamage: number;
     maxDamage: number;
+    buffedBy: { [key: number]: number };
+    debuffedBy: { [key: number]: number };
+    buffedBySupport: number;
+    debuffedBySupport: number;
     casts: number;
     hits: number;
     crits: number;
@@ -65,6 +71,10 @@ export interface Skill {
 export interface DamageStats {
     damageDealt: number;
     damageTaken: number;
+    buffedBy: { [key: number]: number };
+    debuffedBy: { [key: number]: number };
+    buffedBySupport: number;
+    debuffedBySupport: number;
     deaths: number;
     deathTime: number;
     dps: number;
@@ -80,13 +90,48 @@ interface SkillStats {
     counters: number;
 }
 
+export interface StatusEffect {
+    [x: string]: any;
+    target: StatusEffectTarget;
+    category: string,
+    buffCategory: string,
+    buffType: number,
+    uniqueGroup: number,
+    source: StatusEffectSource
+}
+
+export enum StatusEffectTarget {
+    OTHER = "OTHER",
+    SELF = "SELF",
+    PARTY = "PARTY",
+}
+
+export interface StatusEffectSource {
+    name: string,
+    desc: string,
+    icon: string,
+    skill: SkillData | null,
+    set_name: string | null
+}
+
+export interface SkillData {
+    id: number,
+    name: string,
+    desc: string,
+    classId: number,
+    icon: string,
+    summonIds: Array<number> | null,
+    summonSourceSkill: Array<number> | null,
+    sourceSkill: number | null,
+}
+
 export enum EntityType {
-    UNKNOWN,
-    MONSTER,
-    BOSS,
-    GUARDIAN,
-    PLAYER,
-    NPC
+    UNKNOWN = "UNKNOWN",
+    MONSTER = "MONSTER",
+    BOSS = "BOSS",
+    GUARDIAN = "GUARDIAN",
+    PLAYER = "PLAYER",
+    NPC = "NPC",
 }
 
 export interface ClassColors {
@@ -110,4 +155,8 @@ export enum MeterTab {
     TANK,
     PARTY_BUFFS,
     SELF_BUFFS,
+}
+
+export interface ClassMap {
+    [key: number]: string;
 }
