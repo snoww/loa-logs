@@ -84,7 +84,7 @@
 {#if groupedSynergies.size > 0}
 {#each synergyPercentages as percentage}
     <td class="px-1 text-center">
-        {percentage}<span class="text-3xs text-gray-300">%</span>
+        {percentage}<span class="text-3xs text-gray-300" class:hidden={!percentage}>%</span>
     </td>
 {/each}
 {/if}

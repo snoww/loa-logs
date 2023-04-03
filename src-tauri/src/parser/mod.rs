@@ -1,6 +1,7 @@
-use std::{cmp::max, collections::{HashMap, HashSet}, time::Duration, thread};
+use std::{cmp::max, time::Duration, thread};
 
 use chrono::{DateTime, Utc};
+use hashbrown::{HashMap, HashSet};
 use lazy_static::lazy_static;
 
 pub(crate) mod models;
@@ -8,25 +9,6 @@ use models::*;
 mod log_lines;
 use log_lines::*;
 use tauri::{Window, Wry};
-
-lazy_static! {
-    static ref NPC_DATA: HashMap<i32, Npc> = {
-        let json_str = include_str!("../../meter-data/Npc.json");
-        serde_json::from_str(json_str).unwrap()
-    };
-    static ref SKILL_DATA: HashMap<i32, SkillData> = {
-        let json_str = include_str!("../../meter-data/Skill.json");
-        serde_json::from_str(json_str).unwrap()
-    };
-    static ref SKILL_EFFECT_DATA: HashMap<i32, SkillEffectData> = {
-        let json_str = include_str!("../../meter-data/SkillEffect.json");
-        serde_json::from_str(json_str).unwrap()
-    };
-    static ref SKILL_BUFF_DATA: HashMap<i32, SkillBuffData> = {
-        let json_str = include_str!("../../meter-data/SkillBuff.json");
-        serde_json::from_str(json_str).unwrap()
-    };
-}
 
 pub fn parse_log(lines: Vec<String>) -> Result<Vec<Encounter>, String> {
     let encounters: Vec<Encounter> = Vec::new();
@@ -740,9 +722,8 @@ fn get_status_effect_data(buff_id: i32) -> Option<StatusEffect> {
     }
 
     let buff = buff.unwrap();
-    let buffs = vec![501, 502, 503, 504, 505];
     let buff_category: String;
-    if buff.buff_category == "ability" && buffs.contains(&buff.unique_group) {
+    if buff.buff_category == "ability" && [501, 502, 503, 504, 505].contains(&buff.unique_group) {
         buff_category = "dropsofether".to_string();
     } else {
         buff_category = buff.buff_category.to_string();
@@ -769,34 +750,17 @@ fn get_status_effect_data(buff_id: i32) -> Option<StatusEffect> {
         }
     };
 
-    if buff_category == "classkill" || buff_category == "identity" {
+    if buff_category == "classskill" || buff_category == "identity" || (buff_category == "ability" && buff.unique_group != 0) {
         if buff.source_skill.is_some() {
             let buff_source_skill = SKILL_DATA.get(&buff.source_skill.unwrap());
             if buff_source_skill.is_some() {
                 status_effect.source.skill = buff_source_skill.cloned();
             }
         } else {
-            let skill_id = (buff_id as f32 / 10.0) as i32;
-            let buff_source_skill = SKILL_DATA.get(&skill_id);
-            if buff_source_skill.is_some() {
-                status_effect.source.skill = buff_source_skill.cloned();
-            } else {
-                let skill_id = (buff.unique_group as f32 / 10.0) as i32;
-                let buff_source_skill = SKILL_DATA.get(&skill_id);
-                status_effect.source.skill = buff_source_skill.cloned();
-            }
-        }
-    } else if buff_category == "ability" && buff.unique_group != 0 {
-        if buff.source_skill.is_some() {
-            let buff_source_skill = SKILL_DATA.get(&buff.source_skill.unwrap());
-            if buff_source_skill.is_some() {
-                status_effect.source.skill = buff_source_skill.cloned();
-            }
-        } else {
-            let skill_id = (buff_id as f32 / 10.0) as i32;
-            let buff_source_skill = SKILL_DATA.get(&skill_id);
-            if buff_source_skill.is_some() {
-                status_effect.source.skill = buff_source_skill.cloned();
+            if let Some(buff_source_skill) = SKILL_DATA.get(&((buff_id as f32 / 10.0) as i32)) {
+                status_effect.source.skill = Some(buff_source_skill.clone());
+            } else if let Some(buff_source_skill) = SKILL_DATA.get(&(((buff_id as f32 / 100.0).floor() * 10.0) as i32)) {
+                    status_effect.source.skill = Some(buff_source_skill.clone());
             } else {
                 let skill_id = (buff.unique_group as f32 / 10.0) as i32;
                 let buff_source_skill = SKILL_DATA.get(&skill_id);
@@ -811,7 +775,7 @@ fn get_status_effect_data(buff_id: i32) -> Option<StatusEffect> {
 } 
 
 fn get_status_effect_buff_type_flags(buff: &SkillBuffData) -> u32 {
-    let dmg_buffs = vec![
+    let dmg_buffs = [
         "weaken_defense",
         "weaken_resistance",
         "skill_damage_amplify",
@@ -822,23 +786,126 @@ fn get_status_effect_buff_type_flags(buff: &SkillBuffData) -> u32 {
         "attack_power_amplify",
         "instant_stat_amplify_by_contents",
     ];
-    let move_buffs = vec!["move_speed_down", "all_speed_down"];
-    let cd_buffs = String::from("reset_cooldown");
-    let stagger_buffs = vec!["change_ai_point", "ai_point_amplify"];
-    let resource_buffs = String::from("increase_identity_gauge");
     
     let mut buff_type = StatusEffectBuffTypeFlags::NONE;
     if dmg_buffs.contains(&buff.buff_type.as_str()) {
         buff_type |= StatusEffectBuffTypeFlags::DMG;
-    } else if move_buffs.contains(&buff.buff_type.as_str()) {
+    } else if ["move_speed_down", "all_speed_down"].contains(&buff.buff_type.as_str()) {
         buff_type |= StatusEffectBuffTypeFlags::MOVESPEED;
-    } else if buff.buff_type == cd_buffs {
+    } else if buff.buff_type == "reset_cooldown" {
         buff_type |= StatusEffectBuffTypeFlags::COOLDOWN;
-    } else if stagger_buffs.contains(&buff.buff_type.as_str()) {
+    } else if ["change_ai_point", "ai_point_amplify"].contains(&buff.buff_type.as_str()) {
         buff_type |= StatusEffectBuffTypeFlags::STAGGER;
-    } else if buff.buff_type == resource_buffs {
+    } else if buff.buff_type == "increase_identity_gauge" {
         buff_type |= StatusEffectBuffTypeFlags::RESOURCE;
     }
+
+    for option in buff.passive_option.iter() {
+        if option.option_type == "stat" {
+            let stat = STAT_TYPE_MAP.get(option.key_stat.as_str());
+            if stat.is_none() {
+                continue;
+            }
+            let stat = stat.unwrap().to_owned();
+            if stat == STAT_TYPE_MAP["mastery"] || 
+                    stat == STAT_TYPE_MAP["mastery_x"] || 
+                    stat == STAT_TYPE_MAP["paralyzation_point_rate"] {
+                buff_type |= StatusEffectBuffTypeFlags::STAGGER;
+            } else if stat == STAT_TYPE_MAP["rapidity"] || 
+                        stat == STAT_TYPE_MAP["rapidity_x"] || 
+                        stat == STAT_TYPE_MAP["cooldown_reduction"] {
+                buff_type |= StatusEffectBuffTypeFlags::COOLDOWN;
+            } else if stat == STAT_TYPE_MAP["max_mp"] || 
+                        stat == STAT_TYPE_MAP["max_mp_x"] ||
+                        stat == STAT_TYPE_MAP["max_mp_x_x"] ||
+                        stat == STAT_TYPE_MAP["normal_mp_recovery"] ||
+                        stat == STAT_TYPE_MAP["combat_mp_recovery"] ||
+                        stat == STAT_TYPE_MAP["normal_mp_recovery_rate"] ||
+                        stat == STAT_TYPE_MAP["combat_mp_recovery_rate"] ||
+                        stat == STAT_TYPE_MAP["resource_recovery_rate"] {
+                buff_type |= StatusEffectBuffTypeFlags::RESOURCE;
+            } else if stat == STAT_TYPE_MAP["con"] || 
+                        stat == STAT_TYPE_MAP["con_x"] ||
+                        stat == STAT_TYPE_MAP["max_hp"] ||
+                        stat == STAT_TYPE_MAP["max_hp_x"] ||
+                        stat == STAT_TYPE_MAP["max_hp_x_x"] ||
+                        stat == STAT_TYPE_MAP["normal_hp_recovery"] ||
+                        stat == STAT_TYPE_MAP["combat_hp_recovery"] ||
+                        stat == STAT_TYPE_MAP["normal_hp_recovery_rate"] ||
+                        stat == STAT_TYPE_MAP["combat_hp_recovery_rate"] ||
+                        stat == STAT_TYPE_MAP["self_recovery_rate"] ||
+                        stat == STAT_TYPE_MAP["drain_hp_dam_rate"] ||
+                        stat == STAT_TYPE_MAP["vitality"] {
+                buff_type |= StatusEffectBuffTypeFlags::HP;
+            } else if STAT_TYPE_MAP["move_speed"] <= stat && stat <= STAT_TYPE_MAP["vehicle_move_speed_rate"] {
+                buff_type |= StatusEffectBuffTypeFlags::MOVESPEED;
+            } 
+            if stat == STAT_TYPE_MAP["attack_speed"] || 
+                stat == STAT_TYPE_MAP["attack_speed_rate"] ||
+                stat == STAT_TYPE_MAP["rapidity"] ||
+                stat == STAT_TYPE_MAP["rapidity_x"] {
+                buff_type |= StatusEffectBuffTypeFlags::ATKSPEED;
+            } else if stat == STAT_TYPE_MAP["critical_hit_rate"] || 
+                stat == STAT_TYPE_MAP["criticalhit"] ||
+                stat == STAT_TYPE_MAP["criticalhit_x"] {
+                buff_type |= StatusEffectBuffTypeFlags::CRIT;
+            } else if STAT_TYPE_MAP["attack_power_sub_rate_1"] <= stat && stat <= STAT_TYPE_MAP["skill_damage_sub_rate_2"] ||
+                        STAT_TYPE_MAP["fire_dam_rate"] <= stat && stat <= STAT_TYPE_MAP["elements_dam_rate"] ||
+                        stat == STAT_TYPE_MAP["str"] || 
+                        stat == STAT_TYPE_MAP["agi"] ||
+                        stat == STAT_TYPE_MAP["int"] ||
+                        stat == STAT_TYPE_MAP["str_x"] ||
+                        stat == STAT_TYPE_MAP["agi_x"] ||
+                        stat == STAT_TYPE_MAP["int_x"] ||
+                        stat == STAT_TYPE_MAP["char_attack_dam"] ||
+                        stat == STAT_TYPE_MAP["attack_power_rate"] ||
+                        stat == STAT_TYPE_MAP["skill_damage_rate"] ||
+                        stat == STAT_TYPE_MAP["attack_power_rate_x"] ||
+                        stat == STAT_TYPE_MAP["skill_damage_rate_x"] ||
+                        stat == STAT_TYPE_MAP["hit_rate"] ||
+                        stat == STAT_TYPE_MAP["dodge_rate"] ||
+                        stat == STAT_TYPE_MAP["critical_dam_rate"] ||
+                        stat == STAT_TYPE_MAP["awakening_dam_rate"] ||
+                        stat == STAT_TYPE_MAP["attack_power_addend"] ||
+                        stat == STAT_TYPE_MAP["weapon_dam"] {
+                if buff.category == "buff" && option.value >= 0 || buff.category == "debuff" && option.value <= 0 {
+                    buff_type |= StatusEffectBuffTypeFlags::DMG;
+                } else {
+                    buff_type |= StatusEffectBuffTypeFlags::DEFENSE;
+                }
+            }
+        } else if option.option_type == "skill_critical_ratio" {
+            buff_type |= StatusEffectBuffTypeFlags::CRIT;
+        } else if ["skill_damage", "class_option", "skill_group_damage", "skill_critical_damage", "skill_penetration"].contains(&option.option_type.as_str()) {
+            if buff.category == "buff" && option.value >= 0 || buff.category == "debuff" && option.value <= 0 {
+                buff_type |= StatusEffectBuffTypeFlags::DMG;
+            } else {
+                buff_type |= StatusEffectBuffTypeFlags::DEFENSE;
+            }
+        } else if ["skill_cooldown_reduction", "skill_group_cooldown_reduction"].contains(&option.option_type.as_str()) {
+            buff_type |= StatusEffectBuffTypeFlags::COOLDOWN;
+        } else if ["skill_mana_reduction", "mana_reduction"].contains(&option.option_type.as_str()) {
+            buff_type |= StatusEffectBuffTypeFlags::RESOURCE;
+        } else if option.option_type == "combat_effect" {
+            if let Some(combat_effect) = COMBAT_EFFECT_DATA.get(&option.key_index) {
+                for action in combat_effect.actions.iter() {
+                    if ["modify_damage",
+                        "modify_final_damage",
+                        "modify_critical_multiplier",
+                        "modify_penetration",
+                        "modify_penetration_when_critical",
+                        "modify_penetration_addend",
+                        "modify_penetration_addend_when_critical",
+                        "modify_damage_shield_multiplier"].contains(&action.action_type.as_str()) {
+                        buff_type |= StatusEffectBuffTypeFlags::DMG;
+                    } else if action.action_type == "modify_critical_ratio" {
+                        buff_type |= StatusEffectBuffTypeFlags::CRIT;
+                    }
+                }
+            }
+        }
+    }
+
     buff_type.bits()
 }
 
@@ -892,4 +959,8 @@ fn get_skill_name_and_icon(skill_id: i32, skill_effect_id: i32, skill_name: Stri
             return (skill.name.to_string(), skill.icon.to_string());
         }
     }
+}
+
+fn save_to_db(encounter: &Encounter) {
+    
 }

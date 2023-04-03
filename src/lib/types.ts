@@ -111,7 +111,7 @@ export interface StatusEffectSource {
     desc: string,
     icon: string,
     skill: SkillData | null,
-    set_name: string | null
+    setName: string | null
 }
 
 export interface SkillData {
@@ -159,4 +159,19 @@ export enum MeterTab {
 
 export interface ClassMap {
     [key: number]: string;
+}
+
+export enum StatusEffectBuffTypeFlags {
+    NONE = 0,
+    DMG = 1,
+    CRIT = 2,
+    ATKSPEED = 4,
+    MOVESPEED = 8,
+    HP = 16,
+    DEFENSE = 32,
+    RESOURCE = 64,
+    COOLDOWN = 128,
+    STAGGER = 256,
+    SHIELD = 512,
+    ANY = 262144
 }

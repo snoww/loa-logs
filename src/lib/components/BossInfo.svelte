@@ -52,7 +52,7 @@
             tweenBossHpBar.set(bossCurrentPercentage);
         }
 
-        if (boss.isDead) {
+        if (boss.isDead || boss.currentHp < 0) {
             colorIndex = 0;
             boss.currentHp = 0;
             bossCurrentPercentage = 0;

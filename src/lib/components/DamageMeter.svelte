@@ -10,7 +10,7 @@
     import PlayerBreakdown from './PlayerBreakdown.svelte';
     import Footer from './Footer.svelte';
     import Buffs from './Buffs.svelte';
-    import { join, resourceDir } from '@tauri-apps/api/path';
+    import { resourceDir } from '@tauri-apps/api/path';
 
     let time = +Date.now();
     let encounter: Encounter | null = null;
@@ -26,7 +26,7 @@
 
         (async () => {
             let encounterUpdateEvent = await listen('encounter-update', (event: EncounterEvent) => {
-                console.log(+Date.now(), event.payload);
+                // console.log(+Date.now(), event.payload);
                 // console.log(JSON.stringify(event.payload));
                 // console.log(event.payload.currentBoss);
                 encounter = event.payload;

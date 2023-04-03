@@ -8,7 +8,8 @@ use std::time::{Duration, Instant};
 
 use parser::models::*;
 
-use tauri::{Manager, Window, api::process::{Command, CommandEvent}, LogicalSize, Size};
+use tauri::{Manager, api::process::{Command, CommandEvent}, LogicalSize, Size};
+use window_vibrancy::apply_blur;
 
 fn main() {
     tauri::Builder::default()
@@ -20,8 +21,10 @@ fn main() {
             {
               window.open_devtools();
             }
-            window.set_size(Size::Logical(LogicalSize { width: 500.0, height: 300.0 })).unwrap();
+            window.set_size(Size::Logical(LogicalSize { width: 500.0, height: 350.0 })).unwrap();
 
+            #[cfg(target_os = "windows")]
+            apply_blur(&window, Some((10, 10, 10, 50))).expect("Unsupported platform! 'apply_blur' is only supported on Windows");
 
             tauri::async_runtime::spawn(async move {
                 let (mut rx, _child) = Command::new_sidecar("meter-core")
@@ -53,13 +56,13 @@ fn main() {
                                     }
                                 }
                                 clone.entities.retain(|_, v| v.entity_type == EntityType::PLAYER && v.skill_stats.hits > 0);
-                                if clone.current_boss.is_some() || clone.entities.len() > 0 {
+                                if clone.entities.len() > 0 {
                                     window.emit("encounter-update", Some(clone))
                                         .expect("failed to emit encounter-update");
                                 }
-                                last_time = Instant::now();
                             });
                         }
+                        last_time = Instant::now();
                     }
                 }
             });

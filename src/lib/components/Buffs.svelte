@@ -2,11 +2,13 @@
     import { classesMap } from '$lib/constants/classes';
     import {
         MeterTab,
+        StatusEffectBuffTypeFlags,
         StatusEffectTarget,
         type EncounterDamageStats,
         type Entity,
         type StatusEffect
     } from '$lib/types';
+    import { defaultBuffFilter } from '$lib/utils/buffs';
     import { join, resourceDir } from '@tauri-apps/api/path';
     import { convertFileSrc } from '@tauri-apps/api/tauri';
     import { flip } from 'svelte/animate';
@@ -19,10 +21,11 @@
     export let percentages: Array<number> = [];
     export let path: string;
 
-    let groupedSynergies = new Map<string, Map<number, StatusEffect>>();
+    let groupedSynergies: Map<string, Map<number, StatusEffect>> = new Map();
     let focusedPlayer: Entity | null = null;
 
     $: {
+        groupedSynergies = new Map<string, Map<number, StatusEffect>>();
         if (encounterDamageStats) {
             Object.entries(encounterDamageStats.buffs).forEach(([id, buff]) => {
                 if (buff.category === "buff") {
@@ -40,8 +43,9 @@
                     filterStatusEffects(debuff, Number(id), focusedPlayer);
                 }
             });
-            groupedSynergies = groupedSynergies;
-        }       
+            groupedSynergies = new Map([...groupedSynergies.entries()].sort());
+            // console.log(groupedSynergies);
+        }
     }
 
     function filterStatusEffects(
@@ -49,7 +53,7 @@
         id: number,
         focusedPlayer: Entity | null
     ) {
-            // Party synergies
+        // Party synergies
         if (['classskill', 'identity', 'ability'].includes(buff.buffCategory) &&
             buff.target === StatusEffectTarget.PARTY) {
             if (tab === MeterTab.PARTY_BUFFS) {
@@ -64,7 +68,7 @@
             }
         } else if (['set'].includes(buff.buffCategory)) {
             if (tab === MeterTab.SELF_BUFFS && !focusedPlayer) {
-                groupedSynergiesAdd(`set_${buff.source.set_name}`, id, buff);
+                groupedSynergiesAdd(`set_${buff.source.setName}`, id, buff);
             }
         } else if (['classskill', 'identity', 'ability'].includes(buff.buffCategory)) {
             // self & other identity, classskill, engravings
@@ -75,7 +79,7 @@
                 } else {
                     if (focusedPlayer.classId !== buff.source.skill?.classId)
                         return; // We hide other classes self buffs (classskill & identity)
-                    key = `${classesMap[buff.source.skill?.classId ?? 0]}_${buff.uniquegroup ? buff.uniquegroup : buff.source.skill?.name}`;
+                    key = `${classesMap[buff.source.skill?.classId ?? 0]}_${buff.uniqueGroup ? buff.uniqueGroup : buff.source.skill?.name}`;
                 }
                 groupedSynergiesAdd(key, id, buff);
             }
@@ -85,6 +89,11 @@
     }
     
     function groupedSynergiesAdd(key: string, id: number, buff: StatusEffect) {
+        // by default, only show dmg, crit, atk spd, cd buffs.
+        if (!defaultBuffFilter(buff.buffType)) {
+            return;
+        }
+        key = key.replace(" ", "").toLowerCase();
         if (groupedSynergies.has(key)) {
             groupedSynergies.get(key)?.set(id, buff);
         } else {
@@ -110,7 +119,7 @@
             {#each [...groupedSynergies] as [id, synergies] (id)}
                 <BuffHeader {synergies} />
             {:else}
-                <th class="font-normal w-20">No buffs</th>
+                <th class="font-normal w-20">No Buffs</th>
             {/each}
     </tr>
 </thead>

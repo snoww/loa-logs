@@ -1,5 +1,4 @@
-use std::collections::HashSet;
-
+use hashbrown::HashSet;
 use serde::Serialize;
 
 use super::models::EntityType;
@@ -88,7 +87,6 @@ pub struct LogHeal {
     pub current_hp: i64,
 }
 
-
 #[derive(Debug)]
 pub struct LogCounterAttack<'a> {
     pub id: &'a str,
@@ -112,7 +110,7 @@ pub enum HitOption {
     BACK_ATTACK,
     FRONTAL_ATTACK,
     FLANK_ATTACK,
-    MAX
+    MAX,
 }
 
 #[derive(Debug, PartialEq)]
