@@ -14,6 +14,19 @@ pub enum EntityType {
     NPC,
 }
 
+impl ToString for EntityType {
+    fn to_string(&self) -> String {
+        match self {
+            EntityType::UNKNOWN => "UNKNOWN".to_string(),
+            EntityType::MONSTER => "MONSTER".to_string(),
+            EntityType::BOSS => "BOSS".to_string(),
+            EntityType::GUARDIAN => "GUARDIAN".to_string(),
+            EntityType::PLAYER => "PLAYER".to_string(),
+            EntityType::NPC => "NPC".to_string(),
+        }
+    }
+}
+
 #[derive(Debug, Serialize, Clone, Default)]
 #[serde(rename_all = "camelCase")]
 pub struct Encounter {

@@ -97,10 +97,10 @@ pub struct LogCounterAttack<'a> {
 
 #[derive(Debug, PartialEq, Clone, Serialize)]
 pub enum RaidResult {
-    UNKNOWN,
     RAID_RESULT,
     GUARDIAN_DEAD,
     RAID_END,
+    UNKNOWN,
 }
 
 #[derive(Debug, PartialEq)]

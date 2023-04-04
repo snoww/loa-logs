@@ -40,13 +40,14 @@
                     playerName = "";
                     encounter = null;
                     entities = [];
+                    currentBoss = null;
                     encounterDuration = "00:00";
                     totalDamageDealt = 0;
                     dps = 0;
                 }, 6000);
             });
             let phaseTransitionEvent = await listen('phase-transition', (event) => {
-                console.log("phase transition event")
+                console.log("phase transition event: ", event.payload)
             });
 
             events.push(

@@ -2,13 +2,14 @@ use std::{cmp::max, time::Duration, thread};
 
 use chrono::{DateTime, Utc};
 use hashbrown::{HashMap, HashSet};
-use lazy_static::lazy_static;
-
 pub(crate) mod models;
 use models::*;
 mod log_lines;
 use log_lines::*;
+use rusqlite::{Connection, params, Transaction};
+use serde_json::json;
 use tauri::{Window, Wry};
+use tokio::task;
 
 pub fn parse_log(lines: Vec<String>) -> Result<Vec<Encounter>, String> {
     let encounters: Vec<Encounter> = Vec::new();
@@ -40,7 +41,7 @@ pub fn parse_log(lines: Vec<String>) -> Result<Vec<Encounter>, String> {
                 continue;
             }
             
-            entity.damage_stats.dps = (entity.damage_stats.damage_taken as f64 / duration_seconds) as i64;
+            entity.damage_stats.dps = (entity.damage_stats.damage_dealt as f64 / duration_seconds) as i64;
             for (_, mut skill) in entity.skills.iter_mut() {
                 skill.dps = (skill.total_damage as f64 / duration_seconds) as i64;
             }
@@ -85,8 +86,14 @@ pub fn parse_line(window: Option<&Window<Wry>>, encounters: &mut Option<Vec<Enco
     }
 
     // if there is no id associated with the log line, we can ignore it. i think.
-    if line_split[2] == "0" {
+    if line_split[2] == "0" && log_type != 2 {
         return;
+    }
+
+    if *reset {
+        soft_reset(encounter);
+        *reset = false;
+        encounter.reset = false
     }
 
     match log_type {
@@ -98,7 +105,7 @@ pub fn parse_line(window: Option<&Window<Wry>>, encounters: &mut Option<Vec<Enco
         5 => on_death(encounter, timestamp, &line_split),
         6 => on_skill_start(encounter, timestamp, &line_split),
         7 => on_skill_stage(encounter, &line_split),
-        8 => on_damage(reset, encounter, timestamp, &line_split),
+        8 => on_damage(encounter, timestamp, &line_split),
         9 => on_heal(encounter, &line_split),
         10 => on_buff(encounter, &line_split),
         12 => on_counterattack(encounter, &line_split),
@@ -132,7 +139,8 @@ fn reset(encounter: &mut Encounter, clone: &Encounter) {
 fn soft_reset(encounter: &mut Encounter) {
     let clone = encounter.clone();
     reset(encounter, &clone);
-    encounter.current_boss_name = clone.current_boss_name.clone();
+    encounter.current_boss_name = clone.current_boss_name.to_string();
+
     for (key, entity) in clone.entities {
         encounter.entities.insert(key, Entity {
             last_update: Utc::now().timestamp_millis(),
@@ -192,18 +200,16 @@ fn on_init_env(window: Option<&Window<Wry>>, encounters: &mut Option<Vec<Encount
         });
     }
     // is live
-    if encounters.is_none() {
-        encounter.entities.retain(|_, v| v.name == encounter.local_player || v.damage_stats.damage_dealt > 0);
+    if encounters.is_none() && window.is_some() {
+        encounter.entities.retain(|_, v| v.name == encounter.local_player || (v.damage_stats.damage_dealt > 0 && v.max_hp > 0));
+        window.unwrap().emit("zone-change", Some(encounter.clone()))
+            .expect("failed to emit zone-change");
+
         encounter.current_boss_name = "".to_string();
         thread::sleep(Duration::from_millis(6000));
         soft_reset(encounter);
     } else {
         split_encounter(encounters, encounter, false)
-    }
-
-    if window.is_some() {
-        window.unwrap().emit("zone-change", "")
-            .expect("failed to emit zone-change");
     }
 }
 
@@ -218,14 +224,15 @@ fn on_phase_transition(window: Option<&Window<Wry>>, encounters: &mut Option<Vec
     };
 
     if window.is_some() {
-        window.unwrap().emit("phase-transition", phase_transition.raid_result)
+        window.unwrap().emit("phase-transition", phase_transition.raid_result.clone())
             .expect("failed to emit phase-transition");
     }
 
-    if encounters.is_none() {
+    if encounters.is_none() && phase_transition.raid_result == RaidResult::RAID_RESULT {
         *reset = true;
         encounter.reset = true;
-    } else {
+        save_to_db(&encounter);
+    } else if encounters.is_some() {
         split_encounter(encounters, encounter, true)
     }
 }
@@ -337,7 +344,7 @@ fn on_new_npc(encounter: &mut Encounter, timestamp: i64, line: &[&str]) {
     } else if !encounter.current_boss_name.is_empty() {
         // if for some reason current_boss_name is not in the entities list, reset it
         if let Some(boss) = encounter.entities.get(&encounter.current_boss_name.to_string()) {
-            if new_npc.max_hp > boss.max_hp {
+            if boss.current_hp == boss.max_hp || boss.is_dead {
                 if let Some((_, npc)) = NPC_DATA.get_key_value(&new_npc.npc_id) {
                     if npc.grade == "boss" || npc.grade == "raid" || npc.grade == "epic_raid" || npc.grade == "commander" {
                         encounter.current_boss_name = new_npc.name.to_string();
@@ -443,7 +450,7 @@ fn on_skill_start(encounter: &mut Encounter, timestamp: i64, line: &[&str]) {
 fn on_skill_stage(_encounter: &mut Encounter, _line: &[&str]) {
 }
 
-fn on_damage(reset: &mut bool, encounter: &mut Encounter, timestamp: i64, line: &[&str]) {
+fn on_damage(encounter: &mut Encounter, timestamp: i64, line: &[&str]) {
     if line.len() < 13 {
         return;
     }
@@ -502,12 +509,6 @@ fn on_damage(reset: &mut bool, encounter: &mut Encounter, timestamp: i64, line: 
         3 => HitOption::MAX,
         _ => { return; }
     };
-
-    if *reset {
-        soft_reset(encounter);
-        *reset = false;
-        encounter.reset = false
-    }
 
     if hit_flag == HitFlag::INVINCIBLE {
         return;
@@ -962,5 +963,123 @@ fn get_skill_name_and_icon(skill_id: i32, skill_effect_id: i32, skill_name: Stri
 }
 
 fn save_to_db(encounter: &Encounter) {
-    
+    let mut encounter = encounter.clone();
+    task::spawn(async move {
+        if encounter.current_boss_name.is_empty() 
+            && !encounter.entities.values()
+                .any(|e| e.entity_type == EntityType::PLAYER && e.skill_stats.hits > 1) {
+            return;
+        }
+
+        println!("saving to db");
+
+        let mut conn = Connection::open(r"C:\Users\Snow\Documents\projects\loa-logs\src-tauri\target\debug\encounters.db").expect("failed to open database");
+        let tx = conn.transaction().expect("failed to create transaction");    
+
+        insert_data(&tx, &mut encounter);
+        
+        tx.commit().expect("failed to commit transaction");
+        println!("saved to db");
+    });
+}
+
+fn insert_data(tx: &Transaction, encounter: &mut Encounter) {
+    let mut encounter_stmt = tx.prepare("
+    INSERT INTO encounter (
+        last_combat_packet,
+        fight_start,
+        local_player,
+        current_boss,
+        duration,
+        total_damage_dealt,
+        top_damage_dealt,
+        total_damage_taken,
+        top_damage_taken,
+        dps,
+        buffs,
+        debuffs
+    ) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12)").expect("failed to prepare encounter statement");
+
+    encounter.duration = encounter.last_combat_packet - encounter.fight_start;
+    let duration_seconds = encounter.duration as f64 / 1000 as f64;
+    encounter.encounter_damage_stats.dps = (encounter.encounter_damage_stats.total_damage_dealt as f64 / duration_seconds) as i64;
+
+    encounter_stmt.execute(params![
+        encounter.last_combat_packet,
+        encounter.fight_start,
+        encounter.local_player,
+        encounter.current_boss_name,
+        encounter.duration,
+        encounter.encounter_damage_stats.total_damage_dealt,
+        encounter.encounter_damage_stats.top_damage_dealt,
+        encounter.encounter_damage_stats.total_damage_taken,
+        encounter.encounter_damage_stats.top_damage_taken,
+        encounter.encounter_damage_stats.dps,
+        json!(encounter.encounter_damage_stats.buffs),
+        json!(encounter.encounter_damage_stats.debuffs)
+    ])
+    .expect("failed to insert encounter");
+
+    let last_insert_id = tx.last_insert_rowid();
+
+    let mut entity_stmt = tx.prepare("
+    INSERT INTO entity (
+        name,
+        encounter_id,
+        npc_id,
+        entity_type,
+        class_id,
+        class,
+        gear_score,
+        current_hp,
+        max_hp,
+        is_dead,
+        skills,
+        damage_stats,
+        skill_stats
+    ) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13)")
+    .expect("failed to prepare entity statement");
+
+    for (_key, mut entity) in encounter.entities.iter_mut() {
+        if entity.entity_type != EntityType::PLAYER || entity.skill_stats.hits < 1 {
+            continue;
+        }
+
+        entity.damage_stats.dps = (entity.damage_stats.damage_dealt as f64 / duration_seconds) as i64;
+        for (_, mut skill) in entity.skills.iter_mut() {
+            skill.dps = (skill.total_damage as f64 / duration_seconds) as i64;
+        }
+        entity_stmt.execute(params![
+            entity.name,
+            last_insert_id,
+            entity.npc_id,
+            entity.entity_type.to_string(),
+            entity.class_id,
+            entity.class,
+            entity.gear_score,
+            entity.current_hp,
+            entity.max_hp,
+            entity.is_dead,
+            json!(entity.skills),
+            json!(entity.damage_stats),
+            json!(entity.skill_stats)
+        ]).expect("failed to insert entity");
+    }
+    if let Some(boss) = encounter.entities.get(&encounter.current_boss_name.to_string()) {
+        entity_stmt.execute(params![
+            boss.name,
+            last_insert_id,
+            boss.npc_id,
+            boss.entity_type.to_string(),
+            boss.class_id,
+            boss.class,
+            boss.gear_score,
+            boss.current_hp,
+            boss.max_hp,
+            boss.is_dead,
+            json!(boss.skills),
+            json!(boss.damage_stats),
+            json!(boss.skill_stats)
+        ]).expect("failed to insert entity");
+    }
 }
