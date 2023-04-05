@@ -53,7 +53,7 @@
             events.push(
                 encounterUpdateEvent, 
                 zoneChangeEvent,
-                phaseTransitionEvent
+                phaseTransitionEvent,
             );
             // encounter = JSON.parse(await readTextFile(await documentDir() + 'projects\\loa-log-parser\\2023-03-11-02-39-58-Demon-Beast-Commander-Valtan.json'));
             // console.log(encounter);
@@ -149,7 +149,7 @@
                     <th class="text-left px-2 font-normal w-full"></th>
                     <!-- <th class="">DMG</th> -->
                     <th class="font-normal w-14">DPS</th>
-                    <th class="font-normal w-14">D%</th>
+                    <th class="font-normal w-14" class:hidden={entities.length == 1}>D%</th>
                     <th class="font-normal w-14">CRIT</th>
                     <th class="font-normal w-14">F.A</th>
                     <th class="font-normal w-14">B.A</th>

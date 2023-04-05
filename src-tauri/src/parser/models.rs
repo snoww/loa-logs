@@ -3,7 +3,7 @@ use hashbrown::{HashMap, HashSet};
 use lazy_static::lazy_static;
 use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Default, Serialize, PartialEq, Clone)]
+#[derive(Debug, Default, Serialize, Deserialize, PartialEq, Clone)]
 pub enum EntityType {
     #[default]
     UNKNOWN,
@@ -49,7 +49,7 @@ pub struct EncounterDamageStats {
     pub total_damage_taken: i64,
     pub top_damage_taken: i64,
     pub dps: i64,
-    pub dps_intervals: HashMap<i32, i64>,
+    pub dps_intervals: Vec<(i32, i64)>,
     pub most_damage_taken_entity: MostDamageTakenEntity,
     pub buffs: HashMap<i32, StatusEffect>,
     pub debuffs: HashMap<i32, StatusEffect>,
@@ -64,7 +64,7 @@ pub struct MostDamageTakenEntity {
     pub damage_taken: i64,
 }
 
-#[derive(Debug, Default, Serialize, Clone)]
+#[derive(Debug, Default, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Entity {
     pub last_update: i64,
@@ -83,7 +83,7 @@ pub struct Entity {
     pub skill_stats: SkillStats,
 }
 
-#[derive(Debug, Default, Serialize, Clone)]
+#[derive(Debug, Default, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Skill {
     pub id: i32,
@@ -101,10 +101,10 @@ pub struct Skill {
     pub back_attacks: i64,
     pub front_attacks: i64,
     pub dps: i64,
-    pub dps_intervals: HashMap<i32, i64>,
+    pub cast_log: Vec<i32>,
 }
 
-#[derive(Debug, Default, Serialize, Clone)]
+#[derive(Debug, Default, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct DamageStats {
     pub damage_dealt: i64,
@@ -116,10 +116,11 @@ pub struct DamageStats {
     pub deaths: i64,
     pub death_time: i64,
     pub dps: i64,
-    pub dps_intervals: HashMap<i32, i64>,
+    pub dps_intervals: Vec<(i32, i64)>,
+    // pub dps_rolling_10s_avg: Vec<(i32, i64)>,
 }
 
-#[derive(Debug, Default, Serialize, Clone)]
+#[derive(Debug, Default, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct SkillStats {
     pub casts: i64,
@@ -145,14 +146,14 @@ pub struct SkillData {
     pub id: i32,
     pub name: String,
     pub desc: String,
-    #[serde(rename(deserialize = "classid"))]
+    #[serde(alias = "classid", alias = "classId")]
     pub class_id: i32,
     pub icon: String,
-    #[serde(rename(deserialize = "summonids"))]
+    #[serde(alias = "summonids", alias = "summonIds")]
     pub summon_ids: Option<Vec<i32>>,
-    #[serde(rename(deserialize = "summonsourceskill"))]
+    #[serde(alias = "summonsourceskill", alias = "summonSourceSkill")]
     pub summon_source_skill: Option<i32>,
-    #[serde(rename(deserialize = "sourceskill"))]
+    #[serde(alias = "sourceskill", alias = "sourceSkill")]
     pub source_skill: Option<i32>,
 }
 
@@ -214,7 +215,7 @@ pub struct PassiveOption {
     pub value: i32,
 }
 
-#[derive(Debug, Clone, Serialize, Default)]
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
 #[serde(rename_all = "camelCase")]
 pub struct StatusEffect {
     pub target: StatusEffectTarget,
@@ -225,7 +226,7 @@ pub struct StatusEffect {
     pub source: StatusEffectSource,
 }
 
-#[derive(Debug, Clone, Serialize, Default, PartialEq)]
+#[derive(Debug, Clone, Serialize, Deserialize, Default, PartialEq)]
 pub enum StatusEffectTarget {
     #[default]
     OTHER,
@@ -233,7 +234,7 @@ pub enum StatusEffectTarget {
     SELF,
 }
 
-#[derive(Debug, Clone, Serialize, Default)]
+#[derive(Debug, Clone, Serialize, Default, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct StatusEffectSource {
     pub name: String,

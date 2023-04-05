@@ -7,6 +7,7 @@
     import { abbreviateNumberSplit } from "$lib/utils/numbers";
     import { convertFileSrc } from "@tauri-apps/api/tauri";
     import { join, resourceDir } from "@tauri-apps/api/path";
+    import { isValidName } from "$lib/utils/strings";
 
     export let entity: Entity;
     export let percentage: number;
@@ -23,12 +24,14 @@
     let damageDealt: (string | number)[];
     let dps: (string | number)[];
     let playerName: string;
+    let damagePercentage: number;
     $: {
         tweenedValue.set(percentage);
         if (Object.hasOwn(classColors, entity.class)){
             color = classColors[entity.class].color;
         }
         damageDealt = abbreviateNumberSplit(entity.damageStats.damageDealt);
+        damagePercentage = entity.damageStats.damageDealt / totalDamageDealt * 100;
         
         if (duration > 0) {
             dps = abbreviateNumberSplit(entity.damageStats.damageDealt / (duration / 1000));
@@ -37,8 +40,17 @@
         }
 
         playerName = entity.name;
-        if (entity.class) {
-            playerName += ` (${entity.class})`;
+        // todo use settings
+        if (!isValidName(playerName)) {
+            playerName = "";
+            // playerName += " ("
+            if (entity.gearScore >= 0) {
+                playerName += entity.gearScore + " ";
+            }
+            if (entity.class) {
+                playerName += entity.class;
+            }
+            // playerName += ")";
         }
         if (entity.isDead) {
             playerName = "💀 " + playerName;
@@ -75,8 +87,8 @@
 <td class="px-1 text-center">
     {dps[0]}<span class="text-3xs text-gray-300">{dps[1]}</span>
 </td>
-<td class="px-1 text-center">
-    {(entity.damageStats.damageDealt / totalDamageDealt * 100).toFixed(1)}<span class="text-xs text-gray-300">%</span>
+<td class="px-1 text-center" class:hidden={damagePercentage >= 100}>
+    {damagePercentage.toFixed(1)}<span class="text-xs text-gray-300">%</span>
 </td>
 <td class="px-1 text-center">
     {(entity.skillStats.crits / entity.skillStats.hits * 100).toFixed(1)}<span class="text-3xs text-gray-300">%</span>

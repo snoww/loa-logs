@@ -7,12 +7,13 @@ module.exports = {
     extend: {
       fontFamily: {
         sans: ['Inter', ...defaultTheme.fontFamily.sans]
+      },
+      fontSize: {
+        xxs: '0.875rem', // 14px
+        '3xs': '0.75rem',
+        ...defaultTheme.fontSize
       }
     },
-    fontSize: {
-      xxs: '0.875rem', // 14px
-      '3xs': '0.75rem',
-    }
   },
   plugins: []
 };

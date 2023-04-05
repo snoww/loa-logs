@@ -15,7 +15,13 @@
       "all": false,
       "window": {
         "startDragging": true,
-        "setAlwaysOnTop": true
+        "setAlwaysOnTop": true,
+        "show": true,
+        "hide": true,
+        "maximize": true,
+        "minimize": true,
+        "unminimize": true,
+        "unmaximize": true
       },
       "shell": {
         "sidecar": true,
