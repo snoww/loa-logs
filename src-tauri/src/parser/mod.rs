@@ -827,17 +827,6 @@ impl Parser<'_> {
         // update current_boss
         if target_entity.entity_type == EntityType::BOSS {
             self.encounter.current_boss_name = target_entity.name.to_string();
-        } else if target_entity.entity_type == EntityType::UNKNOWN {
-            // hard coding this for valtan ghost, and trixion boss
-            // if we know the local player, we assume what he is hitting is the boss and we track that instead
-            // dunno if want to do this
-            if target_entity.max_hp > 1865513010
-                || target_entity.max_hp == 529402339
-                || target_entity.max_hp == 285632921
-                || target_entity.max_hp == 999_999_999
-            {
-                self.encounter.current_boss_name = target_entity.name.to_string();
-            }
         }
 
         self.encounter
