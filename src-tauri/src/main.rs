@@ -78,7 +78,7 @@ fn main() {
                                         clone.current_boss_name = String::new();
                                     }
                                 }
-                                clone.entities.retain(|_, v| v.entity_type == EntityType::PLAYER && v.skill_stats.hits > 0);
+                                clone.entities.retain(|_, v| v.entity_type == EntityType::PLAYER && v.skill_stats.hits > 0 && v.max_hp > 0);
                                 if !clone.entities.is_empty() {
                                     // don't need to send these to the live meter
                                     clone.entities.values_mut()
@@ -164,13 +164,12 @@ fn main() {
             }
             _ => {}
         })
-        .invoke_handler(tauri::generate_handler![load_encounters])
+        .invoke_handler(tauri::generate_handler![load_encounters, load_encounters_preview])
         .run(tauri::generate_context!())
         .expect("error while running application");
 }
 
-
-fn setup_db(resource_path: &mut PathBuf) -> Result<(), String> {
+fn get_db_connection(resource_path: &mut PathBuf) -> Result<Connection, String> {
     resource_path.push("encounters.db");
     let conn = match Connection::open(resource_path) {
         Ok(conn) => conn,
@@ -178,7 +177,12 @@ fn setup_db(resource_path: &mut PathBuf) -> Result<(), String> {
             return Err(e.to_string());
         }
     };
+    Ok(conn)
+}
 
+
+fn setup_db(resource_path: &mut PathBuf) -> Result<(), String> {
+    let conn = get_db_connection(resource_path)?;
     match conn.execute_batch("
         CREATE TABLE IF NOT EXISTS entity (
             name TEXT,
@@ -221,7 +225,6 @@ fn setup_db(resource_path: &mut PathBuf) -> Result<(), String> {
             total_damage_taken INTEGER,
             top_damage_taken INTEGER,
             dps INTEGER,
-            dps_intervals TEXT,
             buffs TEXT,
             debuffs TEXT
         );
@@ -242,16 +245,70 @@ fn setup_db(resource_path: &mut PathBuf) -> Result<(), String> {
 }
 
 #[tauri::command]
+fn load_encounters_preview(window: tauri::Window, page: i32) -> EncountersOverview {
+    let mut path = window.app_handle().path_resolver().resource_dir().expect("could not get resource dir");
+    let conn = get_db_connection(&mut path).expect("could not get db connection");
+
+    let mut stmt = conn.prepare_cached("
+    SELECT
+        e.id,
+        e.fight_start,
+        e.current_boss,
+        e.duration,
+        (
+            SELECT GROUP_CONCAT(ordered_classes.class_id, ',')
+            FROM (
+                SELECT en.class_id
+                FROM entity en
+                WHERE en.encounter_id = e.id
+                ORDER BY json_extract(en.damage_stats, '$.dps') DESC
+            ) AS ordered_classes
+        ) AS classes
+    FROM
+        encounter e
+    ORDER BY
+        e.fight_start DESC
+    LIMIT 6
+    OFFSET ?
+    ")
+    .unwrap();
+
+    let offset = (page - 1) * 6;
+
+    let encounter_iter = stmt.query_map([offset], |row| {
+        let classes = match row.get(4) {
+            Ok(classes) => classes,
+            Err(_) => "".to_string()
+        };
+
+        Ok(EncounterPreview {
+            id: row.get(0)?,
+            fight_start: row.get(1)?,
+            boss_name: row.get(2)?,
+            duration: row.get(3)?,
+            classes: classes.split(",").map(|s| s.parse::<i32>().unwrap()).collect()
+        })
+    }).expect("could not query encounters");
+
+    let mut encounters: Vec<EncounterPreview> = Vec::new();
+    for encounter in encounter_iter {
+        encounters.push(encounter.unwrap());
+    }
+
+    let count: i32 = conn.query_row_and_then("SELECT COUNT(*) FROM encounter", [], |row| {
+        row.get(0)
+    }).expect("could not get encounter count");
+
+    EncountersOverview {
+        encounters,
+        total_encounters: count
+    }
+}
+
+#[tauri::command]
 fn load_encounters(window: tauri::Window) -> Vec<Encounter> {
     let mut path = window.app_handle().path_resolver().resource_dir().expect("could not get resource dir");
-    path.push("encounters.db");
-    let conn = match Connection::open(path) {
-        Ok(conn) => conn,
-        Err(e) => {
-            println!("cannot find path: {}", e);
-            panic!("")
-        }
-    };
+    let conn = get_db_connection(&mut path).expect("could not get db connection");
 
     let mut stmt = conn.prepare_cached("
         SELECT last_combat_packet, fight_start, local_player, current_boss, duration, total_damage_dealt, top_damage_dealt, total_damage_taken, top_damage_taken, dps, dps_intervals, buffs, debuffs
@@ -261,16 +318,6 @@ fn load_encounters(window: tauri::Window) -> Vec<Encounter> {
         ")
         .unwrap();
     let results = stmt.query_map(params![], |row| {
-        
-        let dps_intervals_str = match row.get(10) {
-            Ok(dps_intervals_str) =>dps_intervals_str,
-            Err(_) => "".to_string()
-        };
-        let dps_intervals = match serde_json::from_str::<Vec<(i32, i64)>>(dps_intervals_str.as_str()) {
-            Ok(v) => v,
-            Err(_) => Vec::new()
-        };
-
         let buff_str = match row.get(11) {
             Ok(buff_str) => buff_str,
             Err(_) => "".to_string()
@@ -301,7 +348,6 @@ fn load_encounters(window: tauri::Window) -> Vec<Encounter> {
                 total_damage_taken: row.get(7)?,
                 top_damage_taken: row.get(8)?,
                 dps: row.get(9)?,
-                dps_intervals,
                 buffs,
                 debuffs,
                 ..Default::default()

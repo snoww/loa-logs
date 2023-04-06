@@ -15,6 +15,19 @@ export interface Encounter {
     reset: boolean;
 }
 
+export interface EncountersOverview {
+    encounters: Array<EncounterPreview>;
+    totalEncounters: number;
+}
+
+export interface EncounterPreview {
+    id: number;
+    fightStart: number;
+    bossName: string;
+    duration: number;
+    classes: Array<number>;
+}
+
 export interface EncounterDamageStats {
     totalDamageDealt: number,
     topDamageDealt: number,

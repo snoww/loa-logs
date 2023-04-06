@@ -1277,7 +1277,7 @@ fn insert_data(tx: &Transaction, encounter: &mut Encounter) {
         .expect("failed to prepare entity statement");
 
     for (_key, mut entity) in encounter.entities.iter_mut() {
-        if entity.entity_type != EntityType::PLAYER || entity.skill_stats.hits < 1 {
+        if entity.entity_type != EntityType::PLAYER || entity.skill_stats.hits < 1 || entity.max_hp == 0 {
             continue;
         }
 

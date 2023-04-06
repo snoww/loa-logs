@@ -8,3 +8,12 @@
     src: url('../fonts/Inter-Regular.woff');
   }
 }
+
+@layer components {
+  #logs-table::-webkit-scrollbar {
+    @apply block right-0 w-2 h-2 bg-zinc-800;
+  }
+  #logs-table::-webkit-scrollbar-thumb {
+    @apply bg-zinc-700 rounded-md;
+  }
+}

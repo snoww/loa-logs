@@ -51,7 +51,6 @@ pub struct EncounterDamageStats {
     pub total_damage_taken: i64,
     pub top_damage_taken: i64,
     pub dps: i64,
-    pub dps_intervals: Vec<(i32, i64)>,
     pub most_damage_taken_entity: MostDamageTakenEntity,
     pub buffs: HashMap<i32, StatusEffect>,
     pub debuffs: HashMap<i32, StatusEffect>,
@@ -321,6 +320,23 @@ impl RollingAverage {
         let count = self.data.len();
         total_sum as f64 / count as f64
     }
+}
+
+#[derive(Debug, Default, Serialize, Deserialize, Clone)]
+#[serde(rename_all = "camelCase")]
+pub struct EncounterPreview {
+    pub id: i32,
+    pub fight_start: i64,
+    pub boss_name: String,
+    pub duration: i32,
+    pub classes: Vec<i32>,
+}
+
+#[derive(Debug, Default, Serialize, Deserialize, Clone)]
+#[serde(rename_all = "camelCase")]
+pub struct EncountersOverview {
+    pub encounters: Vec<EncounterPreview>,
+    pub total_encounters: i32,
 }
 
 lazy_static! {

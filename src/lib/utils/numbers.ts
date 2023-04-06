@@ -40,3 +40,30 @@ export function millisToMinutesAndSeconds(millis: number) {
 
   return String(minutes).padStart(2, "0") + ":" + String(sec).padStart(2, "0");
 }
+
+export function formatDurationFromMs(durationMs: number): string {
+  const seconds = Math.floor(durationMs / 1000);
+  const remainingSeconds = seconds % 60;
+  const minutes = Math.floor(seconds / 60);
+  return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+}
+
+export function formatTimestamp(timestampMs: number): string {
+  const timestampDate = new Date(timestampMs);
+  const today = new Date();
+  const yesterday = new Date(today);
+  yesterday.setDate(yesterday.getDate() - 1);
+  const dateFormat: Intl.DateTimeFormatOptions = {
+    hour: 'numeric',
+    minute: '2-digit'
+  };
+  let formattedDate = timestampDate.toLocaleString(undefined, dateFormat);
+  if (timestampDate.toDateString() === today.toDateString()) {
+    formattedDate = `Today ${formattedDate}`;
+  } else if (timestampDate.toDateString() === yesterday.toDateString()) {
+    formattedDate = `Yesterday ${formattedDate}`;
+  } else {
+    formattedDate = timestampDate.toLocaleString(undefined, { year: '2-digit', month: '2-digit', day: '2-digit', hour: 'numeric', minute: '2-digit' }).replace(',', ' ');
+  }
+  return formattedDate;
+}
