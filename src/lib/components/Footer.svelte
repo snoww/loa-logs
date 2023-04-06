@@ -16,10 +16,11 @@
                 on:click={() => setTab(MeterTab.DAMAGE)}>
                 Damage
             </button>
-            <button class="px-2 border-0 border-b-[3px] h-6 {tab === MeterTab.TANK ? "border-zinc-500": "border-zinc-800"}"
+            <!-- idk if tank stats is useful or not, so not gonna include for now -->
+            <!-- <button class="px-2 border-0 border-b-[3px] h-6 {tab === MeterTab.TANK ? "border-zinc-500": "border-zinc-800"}"
                 on:click={() => setTab(MeterTab.TANK)}>
                 Tank
-            </button>
+            </button> -->
             <button class="px-2 border-0 border-b-[3px] h-6 {tab === MeterTab.PARTY_BUFFS ? "border-zinc-500": "border-zinc-800"} truncate"
                 on:click={() => setTab(MeterTab.PARTY_BUFFS)}>
                 Party Syn
@@ -29,11 +30,11 @@
                 Self Syn
             </button>
         </div>
-        <div class="flex items-end">
+        <div class="flex items-center">
             <div class="h-6">
                 LOA Logs
             </div>
-            <div class="h-6 ml-1 mr-2 text-xs text-gray-500">
+            <div class="ml-1 mr-2 text-xs text-gray-500">
                 {#await getVersion()}
                 v
                 {:then version}

@@ -7,7 +7,7 @@ mod parser;
 use std::{time::{Duration, Instant}, path::PathBuf};
 
 use hashbrown::HashMap;
-use parser::models::*;
+use parser::{models::*, Parser};
 
 use rusqlite::{Connection, params};
 use tauri::{Manager, api::process::{Command, CommandEvent}, LogicalSize, Size, SystemTray, CustomMenuItem, SystemTrayMenu, SystemTrayMenuItem, WindowBuilder, SystemTrayEvent, Window};
@@ -60,18 +60,16 @@ fn main() {
                 //     .expect("failed to start `meter-core` ")
                 //     .spawn()
                 //     .expect("Failed to spawn sidecar");
-
-                let mut encounter: Encounter = Default::default();
-                let mut none: Option<Vec<Encounter>> = None;
+                let mut parser = Parser::new(&meter_window);
                 let mut last_time = Instant::now();
                 let duration = Duration::from_millis(100);
-                let mut reset = false;
                 while let Some(event) = rx.recv().await {
                     if let CommandEvent::Stdout(line) = event {
-                        parser::parse_line(Some(&meter_window), &mut none, &mut reset, &mut encounter, line);
+                        parser.parse_line(line);
                         let elapsed = last_time.elapsed();
-                        if elapsed >= duration || reset {
-                            let mut clone = encounter.clone();
+                        // if raid end, we send regardless of window
+                        if elapsed >= duration || parser.raid_end {
+                            let mut clone = parser.encounter.clone();
                             let window = meter_window.clone();
                             tauri::async_runtime::spawn(async move {
                                 if !clone.current_boss_name.is_empty() {
@@ -81,11 +79,15 @@ fn main() {
                                     }
                                 }
                                 clone.entities.retain(|_, v| v.entity_type == EntityType::PLAYER && v.skill_stats.hits > 0);
-                                if clone.entities.len() > 0 {
+                                if !clone.entities.is_empty() {
                                     // don't need to send these to the live meter
                                     clone.entities.values_mut()
                                         .for_each(|e| {
-                                            e.damage_stats.dps_intervals = Vec::new();
+                                            e.damage_stats.damage_log = Vec::new();
+                                            e.skills.values_mut()
+                                                .for_each(|s| {
+                                                    s.cast_log = Vec::new();
+                                                });
                                         });
                                     window.emit("encounter-update", Some(clone))
                                         .expect("failed to emit encounter-update");
@@ -112,11 +114,9 @@ fn main() {
         })
         .plugin(tauri_plugin_window_state::Builder::default().build())
         .on_window_event(|event| match event.event() {
-            tauri::WindowEvent::CloseRequested { api, .. } => {
-                if event.window().label() == "logs" {
-                    event.window().hide().unwrap();
-                    api.prevent_close();
-                }
+            tauri::WindowEvent::CloseRequested { api, .. } if event.window().label() == "logs" => {
+                event.window().hide().unwrap();
+                api.prevent_close();
             }
             _ => {}
         })
@@ -262,27 +262,32 @@ fn load_encounters(window: tauri::Window) -> Vec<Encounter> {
         .unwrap();
     let results = stmt.query_map(params![], |row| {
         
-        let dps_intervals_str: Option<String> = row.get(10)?;
-        let mut dps_intervals: Vec<(i32, i64)> = Vec::new();
-        if dps_intervals_str.is_some() {
-            let dps_intervals_str = dps_intervals_str.unwrap();
-            // this will break most likely
-            dps_intervals = serde_json::from_str(&dps_intervals_str).unwrap();
-        }
+        let dps_intervals_str = match row.get(10) {
+            Ok(dps_intervals_str) =>dps_intervals_str,
+            Err(_) => "".to_string()
+        };
+        let dps_intervals = match serde_json::from_str::<Vec<(i32, i64)>>(dps_intervals_str.as_str()) {
+            Ok(v) => v,
+            Err(_) => Vec::new()
+        };
 
-        let buff_str: Option<String> = row.get(11)?;
-        let mut buffs: HashMap<i32, StatusEffect> = HashMap::new();
-        if buff_str.is_some() {
-            let buff_str = buff_str.unwrap();
-            buffs = serde_json::from_str(&buff_str).unwrap();
-        }
+        let buff_str = match row.get(11) {
+            Ok(buff_str) => buff_str,
+            Err(_) => "".to_string()
+        };
+        let buffs = match serde_json::from_str::<HashMap<i32, StatusEffect>>(buff_str.as_str()) {
+            Ok(v) => v,
+            Err(_) => HashMap::new()
+        };
 
-        let debuff_str: Option<String> = row.get(12)?;
-        let mut debuffs: HashMap<i32, StatusEffect> = HashMap::new();
-        if debuff_str.is_some() {
-            let debuff_str = debuff_str.unwrap();
-            debuffs = serde_json::from_str(&debuff_str).unwrap();
-        }
+        let debuff_str = match row.get(12) {
+            Ok(debuff_str) => debuff_str,
+            Err(_) => "".to_string()
+        };
+        let debuffs = match serde_json::from_str::<HashMap<i32, StatusEffect>>(debuff_str.as_str()) {
+            Ok(v) => v,
+            Err(_) => HashMap::new()
+        };
 
         Ok(Encounter {
             last_combat_packet: row.get(0)?,

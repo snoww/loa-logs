@@ -44,7 +44,7 @@
         if (!isValidName(playerName)) {
             playerName = "";
             // playerName += " ("
-            if (entity.gearScore >= 0) {
+            if (entity.gearScore > 0) {
                 playerName += entity.gearScore + " ";
             }
             if (entity.class) {

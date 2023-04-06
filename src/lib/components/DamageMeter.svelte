@@ -49,11 +49,16 @@
             let phaseTransitionEvent = await listen('phase-transition', (event) => {
                 console.log("phase transition event: ", event.payload)
             });
+            let raidEndEvent = await listen('raid-end', (event: EncounterEvent) => {
+                console.log("raid-end, updating encounter")
+                encounter = event.payload;
+            });
 
             events.push(
                 encounterUpdateEvent, 
                 zoneChangeEvent,
                 phaseTransitionEvent,
+                raidEndEvent
             );
             // encounter = JSON.parse(await readTextFile(await documentDir() + 'projects\\loa-log-parser\\2023-03-11-02-39-58-Demon-Beast-Commander-Valtan.json'));
             // console.log(encounter);

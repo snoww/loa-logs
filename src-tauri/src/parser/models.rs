@@ -1,3 +1,5 @@
+use std::{time::{Duration, Instant}, collections::VecDeque};
+
 use bitflags::bitflags;
 use hashbrown::{HashMap, HashSet};
 use lazy_static::lazy_static;
@@ -116,8 +118,10 @@ pub struct DamageStats {
     pub deaths: i64,
     pub death_time: i64,
     pub dps: i64,
-    pub dps_intervals: Vec<(i32, i64)>,
-    // pub dps_rolling_10s_avg: Vec<(i32, i64)>,
+    #[serde(skip)]
+    pub damage_log: Vec<(i64, i64)>,
+    pub dps_average: Vec<(i32, i64)>,
+    pub dps_rolling_10s_avg: Vec<(i32, i64)>,
 }
 
 #[derive(Debug, Default, Serialize, Deserialize, Clone)]
@@ -283,6 +287,40 @@ pub struct CombatEffectAction {
     #[serde(rename(deserialize = "type"))]
     pub action_type: String,
     pub actor: String,
+}
+
+pub struct RollingAverage {
+    window: i64,
+    data: VecDeque<(i64, i64)>,
+}
+
+impl RollingAverage {
+    pub fn new(window: i64) -> Self {
+        Self {
+            window,
+            data: VecDeque::new(),
+        }
+    }
+
+    pub fn add(&mut self, timestamp: i64, damage_dealt: i64) {
+        // Remove elements older than the window
+        while let Some(&(t, _)) = self.data.front() {
+            if timestamp - t > self.window {
+                self.data.pop_front();
+            } else {
+                break;
+            }
+        }
+
+        // Add the new element
+        self.data.push_back((timestamp, damage_dealt));
+    }
+
+    pub fn average(&self) -> f64 {
+        let total_sum: i64 = self.data.iter().map(|(_, damage)| damage).sum();
+        let count = self.data.len();
+        total_sum as f64 / count as f64
+    }
 }
 
 lazy_static! {
