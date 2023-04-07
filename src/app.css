@@ -10,10 +10,13 @@
 }
 
 @layer components {
-  #logs-table::-webkit-scrollbar {
+  #logs-table::-webkit-scrollbar, #log-breakdown::-webkit-scrollbar, #buff-table::-webkit-scrollbar {
     @apply block right-0 w-2 h-2 bg-zinc-800;
   }
-  #logs-table::-webkit-scrollbar-thumb {
-    @apply bg-zinc-700 rounded-md;
+  #logs-table::-webkit-scrollbar-thumb, #log-breakdown::-webkit-scrollbar-thumb, #buff-table::-webkit-scrollbar-thumb {
+    @apply bg-zinc-600 rounded-md;
+  }
+  #log-table::-webkit-scrollbar-corner, #log-breakdown::-webkit-scrollbar-corner, #buff-table::-webkit-scrollbar-corner {
+    @apply bg-zinc-800;
   }
 }

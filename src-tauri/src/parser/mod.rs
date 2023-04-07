@@ -28,7 +28,7 @@ impl Parser<'_> {
     }
 
     pub fn parse_line(&mut self, line: String) {
-        println!("{}", line);
+        // println!("{}", line);
         if line.is_empty() {
             return;
         }
@@ -174,7 +174,6 @@ impl Parser<'_> {
             .expect("failed to emit zone-change");
 
         self.encounter.current_boss_name = "".to_string();
-        thread::sleep(Duration::from_millis(6000));
         self.soft_reset();
     }
 
@@ -1235,13 +1234,19 @@ fn insert_data(tx: &Transaction, encounter: &mut Encounter) {
     let duration_seconds = encounter.duration as f64 / 1000_f64;
     encounter.encounter_damage_stats.dps =
         (encounter.encounter_damage_stats.total_damage_dealt as f64 / duration_seconds) as i64;
+    
+    let boss_name = encounter.entities
+        .iter()
+        .filter(|&(_, e)| e.entity_type != EntityType::PLAYER)
+        .max_by(|&(_, e1), &(_, e2)| e1.damage_stats.damage_taken.cmp(&e2.damage_stats.damage_taken))
+        .unwrap();
 
     encounter_stmt
         .execute(params![
             encounter.last_combat_packet,
             encounter.fight_start,
             encounter.local_player,
-            encounter.current_boss_name,
+            boss_name.0,
             encounter.duration,
             encounter.encounter_damage_stats.total_damage_dealt,
             encounter.encounter_damage_stats.top_damage_dealt,
@@ -1271,8 +1276,9 @@ fn insert_data(tx: &Transaction, encounter: &mut Encounter) {
         is_dead,
         skills,
         damage_stats,
-        skill_stats
-    ) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13)",
+        skill_stats,
+        last_update
+    ) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14)",
         )
         .expect("failed to prepare entity statement");
 
@@ -1316,7 +1322,8 @@ fn insert_data(tx: &Transaction, encounter: &mut Encounter) {
                 entity.is_dead,
                 json!(entity.skills),
                 json!(entity.damage_stats),
-                json!(entity.skill_stats)
+                json!(entity.skill_stats),
+                entity.last_update
             ])
             .expect("failed to insert entity");
     }

@@ -26,8 +26,7 @@
       "shell": {
         "sidecar": true,
         "scope": [
-          { "name": "lib/meter-core", "sidecar": true },
-          { "name": "lib/loa-fake-log", "sidecar": true }
+          { "name": "lib/meter-core", "sidecar": true }
         ]
       },
       "fs": {
@@ -52,8 +51,7 @@
         "depends": []
       },
       "externalBin": [
-        "lib/meter-core",
-        "lib/loa-fake-log"
+        "lib/meter-core"
       ],
       "resources": [
         "meter-data/*.json",

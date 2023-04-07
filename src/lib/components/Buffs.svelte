@@ -28,20 +28,16 @@
         groupedSynergies = new Map<string, Map<number, StatusEffect>>();
         if (encounterDamageStats) {
             Object.entries(encounterDamageStats.buffs).forEach(([id, buff]) => {
-                if (buff.category === "buff") {
-                    if (buff.source && buff.source.icon && !buff.source.icon.startsWith('http')) {
-                        buff.source.icon = getIconPath(buff);
-                    }
-                    filterStatusEffects(buff, Number(id), focusedPlayer);
+                if (buff.source && buff.source.icon && !buff.source.icon.startsWith('http')) {
+                    buff.source.icon = getIconPath(buff);
                 }
+                filterStatusEffects(buff, Number(id), focusedPlayer);
             });
             Object.entries(encounterDamageStats.debuffs).forEach(([id, debuff]) => {
-                if (debuff.category === "debuff") {
-                    if (debuff.source && debuff.source.icon && !debuff.source.icon.startsWith('http')) {
-                        debuff.source.icon = getIconPath(debuff);
-                    }
-                    filterStatusEffects(debuff, Number(id), focusedPlayer);
+                if (debuff.source && debuff.source.icon && !debuff.source.icon.startsWith('http')) {
+                    debuff.source.icon = getIconPath(debuff);
                 }
+                filterStatusEffects(debuff, Number(id), focusedPlayer);
             });
             groupedSynergies = new Map([...groupedSynergies.entries()].sort());
             // console.log(groupedSynergies);

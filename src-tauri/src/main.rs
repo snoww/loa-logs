@@ -164,7 +164,7 @@ fn main() {
             }
             _ => {}
         })
-        .invoke_handler(tauri::generate_handler![load_encounters, load_encounters_preview])
+        .invoke_handler(tauri::generate_handler![load_encounters, load_encounters_preview, load_encounter])
         .run(tauri::generate_context!())
         .expect("error while running application");
 }
@@ -198,12 +198,13 @@ fn setup_db(resource_path: &mut PathBuf) -> Result<(), String> {
             skills TEXT,
             damage_stats TEXT,
             skill_stats TEXT,
+            last_update INTEGER,
             PRIMARY KEY (name, encounter_id),
             FOREIGN KEY (encounter_id) REFERENCES encounter (id) ON DELETE CASCADE
         );
-        CREATE INDEX encounter_fight_start_index
+        CREATE INDEX IF NOT EXISTS encounter_fight_start_index
         ON encounter (fight_start desc);
-        CREATE INDEX encounter_current_boss_index
+        CREATE INDEX IF NOT EXISTS encounter_current_boss_index
         ON encounter (current_boss);
         ") {
         Ok(_) => (),
@@ -228,11 +229,11 @@ fn setup_db(resource_path: &mut PathBuf) -> Result<(), String> {
             buffs TEXT,
             debuffs TEXT
         );
-        CREATE INDEX entity_encounter_id_index
+        CREATE INDEX IF NOT EXISTS entity_encounter_id_index
         ON entity (encounter_id desc);
-        CREATE INDEX entity_name_index
+        CREATE INDEX IF NOT EXISTS entity_name_index
         ON entity (name);
-        CREATE INDEX entity_class_index
+        CREATE INDEX IF NOT EXISTS entity_class_index
         ON entity (class);
         ") {
         Ok(_) => (),
@@ -286,7 +287,7 @@ fn load_encounters_preview(window: tauri::Window, page: i32) -> EncountersOvervi
             fight_start: row.get(1)?,
             boss_name: row.get(2)?,
             duration: row.get(3)?,
-            classes: classes.split(",").map(|s| s.parse::<i32>().unwrap()).collect()
+            classes: classes.split(',').map(|s| s.parse::<i32>().unwrap()).collect()
         })
     }).expect("could not query encounters");
 
@@ -362,4 +363,139 @@ fn load_encounters(window: tauri::Window) -> Vec<Encounter> {
     }
 
     encounters
+}
+
+#[tauri::command]
+fn load_encounter(window: tauri::Window, id: String) -> Encounter {
+    let mut path = window.app_handle().path_resolver().resource_dir().expect("could not get resource dir");
+    let conn = get_db_connection(&mut path).expect("could not get db connection");
+    let mut encounter_stmt = conn.prepare_cached("
+    SELECT last_combat_packet,
+       fight_start,
+       local_player,
+       current_boss,
+       duration,
+       total_damage_dealt,
+       top_damage_dealt,
+       total_damage_taken,
+       top_damage_taken,
+       dps,
+       buffs,
+       debuffs
+    FROM encounter
+    WHERE id = ?
+    ;").unwrap();
+
+    let mut encounter = match encounter_stmt.query_row(params![id], |row| {
+        let buff_str = match row.get(10) {
+            Ok(buff_str) => buff_str,
+            Err(_) => "".to_string()
+        };
+
+        let buffs = match serde_json::from_str::<HashMap<i32, StatusEffect>>(buff_str.as_str()) {
+            Ok(v) => v,
+            Err(_) => HashMap::new()
+        };
+
+        let debuff_str = match row.get(11) {
+            Ok(debuff_str) => debuff_str,
+            Err(_) => "".to_string()
+        };
+        let debuffs = match serde_json::from_str::<HashMap<i32, StatusEffect>>(debuff_str.as_str()) {
+            Ok(v) => v,
+            Err(_) => HashMap::new()
+        };
+
+        Ok(Encounter {
+            last_combat_packet: row.get(0)?,
+            fight_start: row.get(1)?,
+            local_player: row.get(2)?,
+            current_boss_name: row.get(3)?,
+            duration: row.get(4)?,
+            encounter_damage_stats: EncounterDamageStats {
+                total_damage_dealt: row.get(5)?,
+                top_damage_dealt: row.get(6)?,
+                total_damage_taken: row.get(7)?,
+                top_damage_taken: row.get(8)?,
+                dps: row.get(9)?,
+                buffs,
+                debuffs,
+                ..Default::default()
+            },
+            ..Default::default()
+        })
+    }) {
+        Ok(v) => v,
+        Err(_) => return Encounter::default()
+    };
+
+    let mut entity_stmt = conn.prepare_cached("
+    SELECT name,
+        class_id,
+        class,
+        gear_score,
+        current_hp,
+        max_hp,
+        is_dead,
+        skills,
+        damage_stats,
+        skill_stats,
+        last_update
+    FROM entity
+    WHERE encounter_id = ?;
+    ").unwrap();
+
+    let entity_iter = entity_stmt.query_map(params![id], |row| {
+        let skill_str = match row.get(7) {
+            Ok(skill_str) => skill_str,
+            Err(_) => "".to_string()
+        };
+        let skills = match serde_json::from_str::<HashMap<i32, Skill>>(skill_str.as_str()) {
+            Ok(v) => v,
+            Err(_) => HashMap::new()
+        };
+
+        let damage_stats_str = match row.get(8) {
+            Ok(damage_stats_str) => damage_stats_str,
+            Err(_) => "".to_string()
+        };
+        let damage_stats = match serde_json::from_str::<DamageStats>(damage_stats_str.as_str()) {
+            Ok(v) => v,
+            Err(_) => DamageStats::default()
+        };
+
+        let skill_stats_str = match row.get(9) {
+            Ok(skill_stats_str) => skill_stats_str,
+            Err(_) => "".to_string()
+        };
+        let skill_stats = match serde_json::from_str::<SkillStats>(skill_stats_str.as_str()) {
+            Ok(v) => v,
+            Err(_) => SkillStats::default()
+        };
+
+        Ok(Entity {
+            name: row.get(0)?,
+            class_id: row.get(1)?,
+            class: row.get(2)?,
+            gear_score: row.get(3)?,
+            current_hp: row.get(4)?,
+            max_hp: row.get(5)?,
+            is_dead: row.get(6)?,
+            skills,
+            damage_stats,
+            skill_stats,
+            last_update: row.get(10)?,
+            ..Default::default()
+        })
+    }).unwrap();
+
+    let mut entities: HashMap<String, Entity> = HashMap::new();
+    for entity in entity_iter {
+        let entity = entity.unwrap();
+        entities.insert(entity.name.to_string(), entity);
+    }
+
+    encounter.entities = entities;
+
+    encounter
 }
