@@ -18,7 +18,7 @@ tauri-build = { version = "1.2.1", features = [] }
 chrono = "0.4.24"
 serde_json = "1.0"
 serde = { version = "1.0", features = ["derive"] }
-tauri = { version = "1.2.4", features = ["fs-read-file", "path-all", "process-command-api", "protocol-asset", "shell-sidecar", "system-tray", "window-hide", "window-maximize", "window-minimize", "window-set-always-on-top", "window-show", "window-start-dragging", "window-unmaximize", "window-unminimize"] }
+tauri = { version = "1.2.4", features = ["clipboard-write-text", "fs-read-file", "path-all", "process-command-api", "protocol-asset", "shell-open", "shell-sidecar", "system-tray", "window-hide", "window-maximize", "window-minimize", "window-set-always-on-top", "window-show", "window-start-dragging", "window-unmaximize", "window-unminimize"] }
 lazy_static = "1.4.0"
 tauri-plugin-window-state = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "dev" }
 bitflags = "2.0.2"

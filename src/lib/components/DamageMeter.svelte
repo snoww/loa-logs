@@ -11,29 +11,30 @@
     import Footer from './Footer.svelte';
     import Buffs from './Buffs.svelte';
     import { resourceDir } from '@tauri-apps/api/path';
+    import { Alert } from 'flowbite-svelte'
+    import { fade } from 'svelte/transition';
 
     let time = +Date.now();
     let encounter: Encounter | null = null;
     let events: Array<UnlistenFn> = [];
 
+    let zoneChangeAlert = false;
+    let phaseTransitionAlert = false;
+    let raidEndAlert = false;
+
     onMount(() => {
-        console.log('the component has mounted');
         setInterval(() => {
             time = +Date.now();
         }, 1000);
 
-
-
         (async () => {
             let encounterUpdateEvent = await listen('encounter-update', (event: EncounterEvent) => {
                 // console.log(+Date.now(), event.payload);
-                // console.log(JSON.stringify(event.payload));
-                // console.log(event.payload.currentBoss);
                 encounter = event.payload;
-                // loaLog = Date.now() + " " + event.payload;
             });
             let zoneChangeEvent = await listen('zone-change', (event) => {
                 console.log("zone change event")
+                zoneChangeAlert = true;
                 setTimeout(() => {
                     state = MeterState.PARTY;
                     player = null;
@@ -44,14 +45,23 @@
                     encounterDuration = "00:00";
                     totalDamageDealt = 0;
                     dps = 0;
+                    zoneChangeAlert = false
                 }, 6000);
             });
             let phaseTransitionEvent = await listen('phase-transition', (event) => {
                 console.log("phase transition event: ", event.payload)
+                // phaseTransitionAlert = true;
+                // setTimeout(() => {
+                //     phaseTransitionAlert = false;
+                // }, 3000);
             });
             let raidEndEvent = await listen('raid-end', (event: EncounterEvent) => {
                 console.log("raid-end, updating encounter")
                 encounter = event.payload;
+                raidEndAlert = true;
+                setTimeout(() => {
+                    raidEndAlert = false;
+                }, 3000);
             });
 
             events.push(
@@ -66,7 +76,6 @@
     });
 
     onDestroy(() => {
-        console.log('the component has unmounted, wow');
         events.forEach((unlisten) => unlisten());
     });
 
@@ -85,18 +94,13 @@
 
     $: {
         if (encounter) {
-            // if (encounter.reset) {
-            //     setTimeout(() => {}, 5000);
-            // }
             if (encounter.fightStart !== 0) {
                 entities = Object.values(encounter.entities)
                     .filter((players) => players.damageStats.damageDealt > 0)
                     .sort((a, b) => b.damageStats.damageDealt - a.damageStats.damageDealt);
                 topDamageDealt = encounter.encounterDamageStats.topDamageDealt;
                 playerDamagePercentages = entities.map(player => (player.damageStats.damageDealt / topDamageDealt) * 100);            
-                if (!encounter.reset) {
-                    duration = time - encounter.fightStart;
-                }
+                duration = time - encounter.fightStart;
                 if (duration < 0) {
                     encounterDuration = millisToMinutesAndSeconds(0);
                     dps = 0;
@@ -123,7 +127,6 @@
     }
 
     function inspectPlayer(name: string) {
-        console.log("inspecting player");
         state = MeterState.PLAYER;
         playerName = name;
     }
@@ -189,6 +192,33 @@
             {/if}
         {/if}
     </table>
+    {#if zoneChangeAlert}
+        <div transition:fade>
+            <Alert color="none" class="bg-pink-800 bg-opacity-80 w-48 mx-auto absolute inset-x-0 bottom-1 py-2" dismissable on:close={() => zoneChangeAlert = false}>
+                <span slot="icon"><svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path></svg>
+                </span>
+                Changing Zone
+            </Alert>
+        </div>
+    {/if}
+    {#if phaseTransitionAlert}
+    <div transition:fade>
+        <Alert color="none" class="bg-pink-800 bg-opacity-80 w-52 mx-auto absolute inset-x-0 bottom-1 py-2" dismissable on:close={() => phaseTransitionAlert = false}>
+            <span slot="icon"><svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path></svg>
+            </span>
+            Phase Transition
+        </Alert>
+    </div>
+    {/if}
+    {#if raidEndAlert}
+    <div transition:fade>
+        <Alert color="none" class="bg-pink-800 bg-opacity-80 w-48 mx-auto absolute inset-x-0 bottom-1 py-2" dismissable on:close={() => raidEndAlert = false}>
+            <span slot="icon"><svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path></svg>
+            </span>
+            Raid Ending
+        </Alert>
+    </div>
+    {/if}
 </div>
 {/await}
 <Footer bind:tab={tab}/>

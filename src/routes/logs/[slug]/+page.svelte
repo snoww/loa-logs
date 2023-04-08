@@ -2,12 +2,13 @@
     import { page } from '$app/stores';
     import LogDamageMeter from '$lib/components/logs/LogsDamageMeter.svelte';
     import type { Encounter } from '$lib/types';
+    import { formatTimestamp, millisToMinutesAndSeconds } from '$lib/utils/numbers';
     import type { PageData } from './$types';
 
     export let data: PageData;
 
     let encounter: Encounter;
-    let currentPage: number;
+    let currentPage: number = 1;
 
     $: {
         encounter = data.encounter;
@@ -18,8 +19,8 @@
     }
 </script>
 
-<div class="bg-zinc-800 h-screen overflow-y-scroll pb-20" id="log-breakdown">
-    <div class="px-8 pt-2">
+<div class="bg-zinc-800 h-screen overflow-y-scroll pb-20 pt-4" id="log-breakdown">
+    <div class="px-8 flex items-center">
         <div class="flex items-center justify-between py-4">
             <a href="/logs?page={currentPage}" class="p-2 rounded-md bg-pink-900 hover:bg-pink-800 inline-flex">
                 <span class="sr-only">Back</span>
@@ -27,11 +28,16 @@
                 <span class="mx-1 text-gray-200">Back</span>
             </a>
         </div>
-        <div class="flex justify-between">
+        <div class="flex justify-between w-full items-center">
             <div class="text-xl font-bold tracking-tight text-gray-300 pl-2">
-                #{(+data.id).toLocaleString()} - {encounter.currentBossName}
+                #{(+data.id).toLocaleString()}: {encounter.currentBossName}
+            </div>
+            <div class="text-base">
+                {formatTimestamp(encounter.fightStart)}
             </div>
         </div>
-        <LogDamageMeter encounter={encounter} />
+    </div>
+    <div class="px-8">
+        <LogDamageMeter id={data.id} encounter={encounter} />
     </div>
 </div>

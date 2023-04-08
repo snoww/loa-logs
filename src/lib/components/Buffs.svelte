@@ -31,6 +31,9 @@
         groupedSynergies = new Map<string, Map<number, StatusEffect>>();
         if (encounterDamageStats) {
             Object.entries(encounterDamageStats.buffs).forEach(([id, buff]) => {
+                if (focusedPlayer && !Object.hasOwn(focusedPlayer.damageStats.buffedBy, id)) {
+                    return;
+                }
                 if (buff.source && buff.source.icon && !buff.source.icon.startsWith('http')) {
                     buff.source.icon = getIconPath(buff);
                 }
@@ -42,6 +45,9 @@
                 filterStatusEffects(buff, Number(id), focusedPlayer);
             });
             Object.entries(encounterDamageStats.debuffs).forEach(([id, debuff]) => {
+                if (focusedPlayer && !Object.hasOwn(focusedPlayer.damageStats.debuffedBy, id)) {
+                    return;
+                }
                 if (debuff.source && debuff.source.icon && !debuff.source.icon.startsWith('http')) {
                     debuff.source.icon = getIconPath(debuff);
                 }
@@ -53,7 +59,7 @@
                 filterStatusEffects(debuff, Number(id), focusedPlayer);
             });
             groupedSynergies = new Map([...groupedSynergies.entries()].sort());
-            // console.log(groupedSynergies);
+            console.log(groupedSynergies);
         }
     }
 
@@ -126,7 +132,7 @@
     }
 </script>
 
-<thead class="top-0 sticky h-6 z-50">
+<thead class="top-0 sticky h-6 z-40">
     <tr class="bg-zinc-900">
         <th class="w-7"></th>
         <th class="text-left px-2 font-normal w-full"></th>

@@ -1,10 +1,10 @@
 <script lang="ts">
     import { page } from "$app/stores";
-    import type { Encounter, EncounterPreview, EncountersOverview } from "$lib/types";
+    import LogSidebar from "$lib/components/logs/LogSidebar.svelte";
+    import type { EncounterPreview, EncountersOverview } from "$lib/types";
     import { formatDurationFromMs, formatTimestamp, millisToMinutesAndSeconds } from "$lib/utils/numbers";
     import { join, resourceDir } from "@tauri-apps/api/path";
     import { convertFileSrc, invoke } from "@tauri-apps/api/tauri";
-    import { onMount } from "svelte";
     import { Tooltip } from 'flowbite-svelte';
 
 
@@ -78,25 +78,34 @@
         });
     }
 
+    let hidden: boolean = true;
+
     $: {
         if ($page.url.searchParams.has('page')) {
             currentPage = parseInt($page.url.searchParams.get('page')!);
-        }
-        
+        }   
     }
-</script>
 
-<div class="bg-zinc-800 h-screen">
+</script>
+<LogSidebar bind:hidden={hidden}/>
+<div class="bg-zinc-800 h-screen pt-2">
     <div class="px-8 pt-5">
         <div class="flex justify-between">
-            <div class="text-xl font-bold tracking-tight text-gray-300 pl-2">
-                Past Encounters
+            <div class="flex space-x-2 ml-2">
+                <div class="">
+                    <button on:click={() => (hidden = false)} class="block mt-px">
+                        <svg class="fill-gray-300 w-6 h-6 hover:fill-pink-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960"><path d="M107 841v-91.5h746.5V841H107Zm0-219.5V530h746.5v91.5H107Zm0-219V310h746.5v92.5H107Z"/></svg>
+                    </button>
+                </div>
+                <div class="text-xl font-bold tracking-tight text-gray-300 pl-2">
+                    Past Encounters
+                </div>
             </div>
             <button class="px-2 py-1 rounded-md bg-pink-900 hover:bg-pink-800 mr-4" on:click={() => refresh()}>
                 Refresh
             </button>
         </div>
-        <div class="mt-5 relative overflow-x-hidden overflow-y-scroll" style="height: calc(100vh - 8rem);" id="logs-table">
+        <div class="mt-4 relative overflow-x-hidden overflow-y-scroll" style="height: calc(100vh - 8.25rem);" id="logs-table">
             <table class="w-full text-left text-gray-400 table-fixed" id="table">
                 <thead class="text-xs uppercase bg-zinc-900 top-0 sticky">
                     <tr>

@@ -5,7 +5,7 @@
     export let dps: number;
 </script>
 
-<div class="px-2 pt-2 text-sm" id="header">
+<div class="px-1 text-sm" id="header">
     <div class="flex space-x-2">
         <div>
             {encounterDuration}

@@ -17,11 +17,12 @@ fn main() {
     let quit = CustomMenuItem::new("quit".to_string(), "Quit");
     let show_logs = CustomMenuItem::new("show-logs".to_string(), "Show Logs");
     let show_meter = CustomMenuItem::new("show-meter".to_string(), "Show Meter");
-    let hide = CustomMenuItem::new("hide".to_string(), "Hide Meter");
+    let hide_meter = CustomMenuItem::new("hide".to_string(), "Hide Meter");
     let tray_menu = SystemTrayMenu::new()
         .add_item(show_logs)
+        .add_native_item(SystemTrayMenuItem::Separator)
         .add_item(show_meter)
-        .add_item(hide)
+        .add_item(hide_meter)
         .add_native_item(SystemTrayMenuItem::Separator)
         .add_item(quit);
 
@@ -113,12 +114,14 @@ fn main() {
             Ok(())
         })
         .plugin(tauri_plugin_window_state::Builder::default().build())
-        .on_window_event(|event| match event.event() {
-            tauri::WindowEvent::CloseRequested { api, .. } if event.window().label() == "logs" => {
+        .on_window_event(|event| if let tauri::WindowEvent::CloseRequested { api, .. } = event.event() {
+            if event.window().label() == "logs" {
                 event.window().hide().unwrap();
                 api.prevent_close();
             }
-            _ => {}
+            if event.window().label() == "main" {
+                std::process::exit(0);
+            }
         })
         .system_tray(system_tray)
         .on_system_tray_event(|app, event| match event {
@@ -164,7 +167,7 @@ fn main() {
             }
             _ => {}
         })
-        .invoke_handler(tauri::generate_handler![load_encounters, load_encounters_preview, load_encounter])
+        .invoke_handler(tauri::generate_handler![load_encounters, load_encounters_preview, load_encounter, open_most_recent_encounter, delete_encounter])
         .run(tauri::generate_context!())
         .expect("error while running application");
 }
@@ -498,4 +501,40 @@ fn load_encounter(window: tauri::Window, id: String) -> Encounter {
     encounter.entities = entities;
 
     encounter
+}
+
+#[tauri::command]
+fn open_most_recent_encounter(window: tauri::Window) {
+    let mut path = window.app_handle().path_resolver().resource_dir().expect("could not get resource dir");
+    let conn = get_db_connection(&mut path).expect("could not get db connection");
+    let mut stmt = conn.prepare_cached("
+    SELECT id
+    FROM encounter
+    ORDER BY fight_start DESC
+    LIMIT 1;
+    ").unwrap();
+
+    let id: i32 = stmt.query_row(params![], |row| {
+        row.get(0)
+    }).unwrap();
+
+    if let Some(logs) = window.app_handle().get_window("logs") {
+        logs.eval(&format!("window.location.href = '/logs/{}'", id)).expect("failed to set window url");
+        logs.unminimize().unwrap();
+        logs.show().unwrap();
+        logs.set_focus().unwrap();
+    }
+}
+
+#[tauri::command]
+fn delete_encounter(window: tauri::Window, id: String) {
+    let mut path = window.app_handle().path_resolver().resource_dir().expect("could not get resource dir");
+    let conn = get_db_connection(&mut path).expect("could not get db connection");
+    conn.execute("PRAGMA foreign_keys = ON;", params![]).unwrap();
+    let mut stmt = conn.prepare_cached("
+        DELETE FROM encounter
+        WHERE id = ?;
+    ").unwrap();
+
+    stmt.execute(params![id]).unwrap();
 }

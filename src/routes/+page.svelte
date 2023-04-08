@@ -14,6 +14,6 @@
 </script>
 
 <!-- <TitleBar /> -->
-<div class="h-screen">
+<div class="h-screen" id="live-meter">
     <DamageMeter />
 </div>

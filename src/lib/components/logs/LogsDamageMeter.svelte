@@ -2,12 +2,13 @@
     import { MeterState, MeterTab, type Entity, type Encounter } from "$lib/types";
     import { millisToMinutesAndSeconds } from "$lib/utils/numbers";
     import { join, resourceDir } from "@tauri-apps/api/path";
-    import { convertFileSrc } from "@tauri-apps/api/tauri";
+    import { convertFileSrc, invoke } from "@tauri-apps/api/tauri";
     import LogsDamageMeterRow from "./LogsDamageMeterRow.svelte";
     import LogPlayerBreakdown from "./LogPlayerBreakdown.svelte";
     import LogEncounterInfo from "./LogEncounterInfo.svelte";
     import LogBuffs from "./LogBuffs.svelte";
 
+    export let id: string;
     export let encounter: Encounter;
 
     let entities: Array<Entity> = [];
@@ -22,6 +23,8 @@
     let state = MeterState.PARTY;
     let tab = MeterTab.DAMAGE;
     let playerName = "";
+
+    let deleteConfirm = false;
 
 
     $: {       
@@ -60,7 +63,6 @@
     }
 
     function inspectPlayer(name: string) {
-        console.log("inspecting player");
         state = MeterState.PLAYER;
         playerName = name;
     }
@@ -73,22 +75,54 @@
         }
     }
 
+    async function deleteEncounter() {
+        await invoke("delete_encounter", { id: id });
+        document.location.href = "/logs";
+    }
+
 </script>
 
 <svelte:window on:contextmenu|preventDefault/>
 <LogEncounterInfo encounterDuration={millisToMinutesAndSeconds(encounter.duration)} 
                     totalDamageDealt={encounter.encounterDamageStats.totalDamageDealt} 
                     dps={encounter.encounterDamageStats.dps}/>
-<div class="flex mt-2">
-    <button class="px-2 rounded-sm py-1" class:bg-pink-900={tab == MeterTab.DAMAGE} class:bg-gray-700={tab != MeterTab.DAMAGE} on:click={() => tab = MeterTab.DAMAGE}>
-        Damage
+<div class="mt-2 flex justify-between">
+    <div class="flex divide-x divide-gray-600">
+        <button class="px-2 rounded-sm py-1" class:bg-pink-900={tab == MeterTab.DAMAGE} class:bg-gray-700={tab != MeterTab.DAMAGE} on:click={() => tab = MeterTab.DAMAGE}>
+            Damage
+        </button>
+        <button class="px-2 rounded-sm py-1" class:bg-pink-900={tab == MeterTab.PARTY_BUFFS} class:bg-gray-700={tab != MeterTab.PARTY_BUFFS} on:click={() => tab = MeterTab.PARTY_BUFFS}>
+            Party Synergy
+        </button>
+        <button class="px-2 rounded-sm py-1" class:bg-pink-900={tab == MeterTab.SELF_BUFFS} class:bg-gray-700={tab != MeterTab.SELF_BUFFS} on:click={() => tab = MeterTab.SELF_BUFFS}>
+            Self Synergy
+        </button>
+    </div>
+    <button class="bg-red-900 hover:bg-red-800 rounded-md px-2 mb-1" on:click={() => deleteConfirm = true}>
+        Delete
     </button>
-    <button class="px-2 rounded-sm py-1" class:bg-pink-900={tab == MeterTab.PARTY_BUFFS} class:bg-gray-700={tab != MeterTab.PARTY_BUFFS} on:click={() => tab = MeterTab.PARTY_BUFFS}>
-        Party Synergy
-    </button>
-    <button class="px-2 rounded-sm py-1" class:bg-pink-900={tab == MeterTab.SELF_BUFFS} class:bg-gray-700={tab != MeterTab.SELF_BUFFS} on:click={() => tab = MeterTab.SELF_BUFFS}>
-        Self Synergy
-    </button>
+    <div class="fixed inset-0 z-40 bg-zinc-900 bg-opacity-80" class:hidden={!deleteConfirm}></div>
+    <div class="fixed top-0 left-0 right-0 h-modal z-50 w-full p-4 justify-center items-center" class:hidden={!deleteConfirm} class:flex={deleteConfirm}>
+        <div class="flex relative max-w-md w-full max-h-full">
+            <div class="bg-zinc-800 text-gray-400 rounded-lg border-gray-700 shadow-md relative flex flex-col mx-auto">
+                <button type="button" class="focus:outline-none whitespace-normal rounded-lg p-1.5 hover:bg-zinc-600 ml-auto absolute top-3 right-2.5" aria-label="Close modal" on:click={() => deleteConfirm = false}>
+                    <span class="sr-only">Close modal</span> <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                </button> 
+                <div id="modal" class="p-6 space-y-6 flex-1 overflow-y-auto overscroll-contain">
+                    <div class="text-center">
+                        <svg aria-hidden="true" class="mx-auto mb-4 w-14 h-14 text-gray-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" class="s-Qbr4I8QhaoSZ"></path></svg> 
+                        <h3 class="mb-5 text-lg font-normal text-gray-400">Are you sure you want to delete this encounter?</h3> 
+                        <button type="button" class="text-center font-medium focus:outline-none inline-flex items-center justify-center px-5 py-2.5 text-sm text-white bg-red-700 hover:bg-red-800 rounded-lg mr-2" on:click={deleteEncounter}>
+                            Yes, I'm sure
+                        </button> 
+                        <button type="button" class="text-center font-medium focus:outline-none inline-flex items-center justify-center px-5 py-2.5 text-sm bg-gray-800 text-gray-400 focus:text-white hover:text-white hover:bg-zinc-700 bg-transparent rounded-lg" on:click={() => deleteConfirm = false}>
+                            No, cancel
+                        </button>
+                    </div>
+                </div> 
+            </div>
+        </div>
+    </div>
 </div>
 <div class="relative top-0 px" id="buff-table">
     <table class="table-fixed w-full relative">

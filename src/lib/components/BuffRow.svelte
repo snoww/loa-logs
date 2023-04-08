@@ -1,12 +1,13 @@
 <script lang="ts">
     import { classColors } from "$lib/constants/colors";
-    import type { Entity, StatusEffect } from "$lib/types";
+    import { Buff, BuffDetails, type Entity, type StatusEffect } from "$lib/types";
     import { HexToRgba } from "$lib/utils/colors";
-    import { abbreviateNumberSplit } from "$lib/utils/numbers";
     import { join, resourceDir } from "@tauri-apps/api/path";
     import { convertFileSrc } from "@tauri-apps/api/tauri";
     import { cubicOut } from "svelte/easing";
     import { tweened } from "svelte/motion";
+    import { Tooltip } from 'flowbite-svelte';
+    import BuffTooltipDetail from "./shared/BuffTooltipDetail.svelte";
 
 
     export let player: Entity;
@@ -15,7 +16,7 @@
 
     let color = "#ffffff"
     let playerName: string;
-    let synergyPercentages: Array<string>;
+    let synergyPercentageDetails: Array<BuffDetails>;
 
     const tweenedValue = tweened(0, {
         duration: 400,
@@ -37,22 +38,24 @@
         }
 
         if (groupedSynergies.size > 0) {
-            synergyPercentages = [];
+            synergyPercentageDetails = [];
             groupedSynergies.forEach((synergies, _) => {
                 let synergyDamage = 0;
-                synergies.forEach((_, id) => {
+                let buff = new BuffDetails();
+                synergies.forEach((syn, id) => {
                     if (player.damageStats.buffedBy[id]) {
+                        buff.buffs.push(new Buff(syn.source.icon, (player.damageStats.buffedBy[id] / player.damageStats.damageDealt * 100).toFixed(1), syn.source.skill?.icon));
                         synergyDamage += player.damageStats.buffedBy[id];
                     } else if (player.damageStats.debuffedBy[id]) {
+                        buff.buffs.push(new Buff(syn.source.icon, (player.damageStats.debuffedBy[id] / player.damageStats.damageDealt * 100).toFixed(1), syn.source.skill?.icon));
                         synergyDamage += player.damageStats.debuffedBy[id];
                     }
                 });
 
-                if (synergyDamage == 0) {
-                    synergyPercentages.push("");
-                } else {
-                    synergyPercentages.push((synergyDamage / player.damageStats.damageDealt * 100).toFixed(1));
+                if (synergyDamage > 0) {
+                    buff.percentage = (synergyDamage / player.damageStats.damageDealt * 100).toFixed(1);
                 }
+                synergyPercentageDetails.push(buff);
             });
         }        
     }
@@ -82,9 +85,14 @@
     </div>
 </td>
 {#if groupedSynergies.size > 0}
-{#each synergyPercentages as percentage}
+{#each synergyPercentageDetails as synergy}
     <td class="px-1 text-center">
-        {percentage}<span class="text-3xs text-gray-300" class:hidden={!percentage}>%</span>
+        <div>
+            {synergy.percentage}<span class="text-3xs text-gray-300" class:hidden={!synergy.percentage}>%</span>
+        </div>
+        <Tooltip placement="bottom" defaultClass="bg-zinc-900 p-2 text-gray-300 z-50">
+            <BuffTooltipDetail buffDetails={synergy} />
+        </Tooltip>
     </td>
 {/each}
 {/if}
