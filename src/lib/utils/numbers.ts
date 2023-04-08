@@ -63,7 +63,7 @@ export function formatTimestamp(timestampMs: number): string {
   } else if (timestampDate.toDateString() === yesterday.toDateString()) {
     formattedDate = `Yesterday ${formattedDate}`;
   } else {
-    formattedDate = timestampDate.toLocaleString(undefined, { year: '2-digit', month: '2-digit', day: '2-digit', hour: 'numeric', minute: '2-digit' }).replace(',', ' ');
+    formattedDate = timestampDate.toLocaleString(undefined, { year: 'numeric', month: '2-digit', day: '2-digit', hour: 'numeric', minute: '2-digit' }).replace(',', ' ');
   }
   return formattedDate;
 }

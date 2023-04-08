@@ -10,6 +10,7 @@
 
     export let player: Entity | null;
     export let duration: number;
+    export let handleRightClick: () => void;
 
     let color = "#ffffff";
     let skills: Array<Skill> = [];
@@ -54,7 +55,7 @@
         <th class="font-normal w-14">Casts</th>
     </tr>
 </thead>
-<tbody>
+<tbody on:contextmenu|preventDefault={handleRightClick}>
     {#if player}
     {#each skills as skill, i (skill.id)}
     <tr class="h-7 px-2 py-1 text-3xs" animate:flip="{{duration: 200}}">

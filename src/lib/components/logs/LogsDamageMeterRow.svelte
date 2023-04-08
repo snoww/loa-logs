@@ -16,7 +16,7 @@
     let dps: (string | number)[];
     let damagePercentage: number;
     let playerName: string;
-    let deadFor: string;
+    let deadFor: string;    
 
     let color = "#ffffff"
 
@@ -44,7 +44,7 @@
     if (entity.isDead) {
         playerName = "💀 " + playerName;
         
-        deadFor = ((end - entity.lastUpdate) / 1000).toFixed(0) + "s";
+        deadFor = ((end - entity.damageStats.deathTime) / 1000).toFixed(0) + "s";
     }
 </script>
 

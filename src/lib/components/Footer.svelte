@@ -9,7 +9,7 @@
 
 </script>
 
-<div class="fixed bottom-0 h-6 bg-zinc-800/[.8] w-full text-gray-300" id="footer">
+<div class="fixed bottom-0 h-6 bg-zinc-800/[.8] w-full text-gray-300 z-30" id="footer">
     <div class="flex justify-between">
         <div class="flex items-center">
             <button class="px-2 border-0 border-b-[3px] h-6 {tab === MeterTab.DAMAGE ? "border-zinc-500": "border-zinc-800"}"

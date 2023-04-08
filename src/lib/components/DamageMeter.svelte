@@ -137,7 +137,7 @@
     }
 </script>
 
-<svelte:window on:contextmenu|preventDefault={handleRightClick}/>
+<svelte:window on:contextmenu|preventDefault/>
 <EncounterInfo encounterDuration={encounterDuration} totalDamageDealt={totalDamageDealt} dps={dps}/>
 {#if currentBoss !== null}
 <div class="relative top-7">
@@ -145,11 +145,11 @@
 </div>
 {/if}
 {#await resourceDir() then path}
-<div class="relative top-7 overflow-scroll" style="height: calc(100vh - 1.5rem - 1.75rem);">
-    <table class="table-fixed w-full">
+<div class="relative top-7 overflow-scroll" style="height: calc(100vh - 1.5rem - 1.75rem {currentBoss !== null ? " - 1.75rem" : ""});">
+    <table class="table-fixed w-full relative">
         {#if tab === MeterTab.DAMAGE}
             {#if state === MeterState.PARTY}
-            <thead class="top-0 sticky h-6">
+            <thead class="top-0 sticky h-6" on:contextmenu|preventDefault={() => {console.log("titlebar clicked")}}>
                 <tr class="bg-zinc-900">
                     <th class="text-left px-2 font-normal w-full"></th>
                     <!-- <th class="">DMG</th> -->
@@ -173,15 +173,19 @@
                 {/each}
             </tbody>
             {:else if state === MeterState.PLAYER && player !== null}
-                <PlayerBreakdown player={player} duration={duration}/>
+                <PlayerBreakdown player={player} duration={duration} handleRightClick={handleRightClick}/>
             {/if}
         {:else if tab === MeterTab.PARTY_BUFFS}
             {#if state === MeterState.PARTY}
-                <Buffs tab={tab} encounterDamageStats={encounter?.encounterDamageStats} players={entities} percentages={playerDamagePercentages} path={path}/>
+                <Buffs tab={tab} encounterDamageStats={encounter?.encounterDamageStats} players={entities} percentages={playerDamagePercentages} path={path} handleRightClick={handleRightClick} inspectPlayer={inspectPlayer}/>
+            {:else}
+                <Buffs tab={tab} encounterDamageStats={encounter?.encounterDamageStats} players={entities} percentages={playerDamagePercentages} path={path} focusedPlayer={player} handleRightClick={handleRightClick} inspectPlayer={inspectPlayer}/>
             {/if}
         {:else if tab === MeterTab.SELF_BUFFS}
             {#if state === MeterState.PARTY}
-                <Buffs tab={tab} encounterDamageStats={encounter?.encounterDamageStats} players={entities} percentages={playerDamagePercentages} path={path}/>
+                <Buffs tab={tab} encounterDamageStats={encounter?.encounterDamageStats} players={entities} percentages={playerDamagePercentages} path={path} focusedPlayer={player} handleRightClick={handleRightClick} inspectPlayer={inspectPlayer}/>
+            {:else}
+                <Buffs tab={tab} encounterDamageStats={encounter?.encounterDamageStats} players={entities} percentages={playerDamagePercentages} path={path} focusedPlayer={player} handleRightClick={handleRightClick} inspectPlayer={inspectPlayer}/>
             {/if}
         {/if}
     </table>

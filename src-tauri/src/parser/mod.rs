@@ -8,7 +8,7 @@ mod log_lines;
 use log_lines::*;
 use rusqlite::{params, Connection, Transaction};
 use serde_json::json;
-use tauri::{Window, Wry};
+use tauri::{Window, Wry, Manager};
 use tokio::task;
 
 #[derive(Debug)]
@@ -881,9 +881,12 @@ impl Parser<'_> {
 
     fn save_to_db(&self) {
         let mut encounter = self.encounter.clone();
+        let mut path = self.window.app_handle().path_resolver().resource_dir().expect("could not get resource dir");
+        path.push("encounters.db");
         task::spawn(async move {
             if encounter.fight_start == 0
                 || encounter.current_boss_name.is_empty()
+                || !encounter.entities.contains_key(&encounter.current_boss_name)
                 || !encounter
                     .entities
                     .values()
@@ -894,10 +897,7 @@ impl Parser<'_> {
 
             println!("saving to db - {}", encounter.current_boss_name);
 
-            let mut conn = Connection::open(
-                r"C:\Users\Snow\Documents\projects\loa-logs\src-tauri\target\debug\encounters.db",
-            )
-            .expect("failed to open database");
+            let mut conn = Connection::open(path).expect("failed to open database");
             let tx = conn.transaction().expect("failed to create transaction");
 
             insert_data(&tx, &mut encounter);
@@ -1235,18 +1235,18 @@ fn insert_data(tx: &Transaction, encounter: &mut Encounter) {
     encounter.encounter_damage_stats.dps =
         (encounter.encounter_damage_stats.total_damage_dealt as f64 / duration_seconds) as i64;
     
-    let boss_name = encounter.entities
-        .iter()
-        .filter(|&(_, e)| e.entity_type != EntityType::PLAYER)
-        .max_by(|&(_, e1), &(_, e2)| e1.damage_stats.damage_taken.cmp(&e2.damage_stats.damage_taken))
-        .unwrap();
+    // let boss_name = encounter.entities
+    //     .iter()
+    //     .filter(|&(_, e)| e.entity_type != EntityType::PLAYER)
+    //     .max_by(|&(_, e1), &(_, e2)| e1.damage_stats.damage_taken.cmp(&e2.damage_stats.damage_taken))
+    //     .unwrap();
 
     encounter_stmt
         .execute(params![
             encounter.last_combat_packet,
             encounter.fight_start,
             encounter.local_player,
-            boss_name.0,
+            encounter.current_boss_name,
             encounter.duration,
             encounter.encounter_damage_stats.total_damage_dealt,
             encounter.encounter_damage_stats.top_damage_dealt,

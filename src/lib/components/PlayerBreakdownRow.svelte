@@ -35,6 +35,9 @@
     }
     
     async function getSkillIconPath() {
+        if (skill.icon.startsWith("http")) {
+            return skill.icon;
+        }
         let fileName;
         if (skill.icon) {
             fileName = skill.icon;

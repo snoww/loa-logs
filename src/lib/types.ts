@@ -188,3 +188,27 @@ export enum StatusEffectBuffTypeFlags {
     SHIELD = 512,
     ANY = 262144
 }
+
+export class BuffDetails {
+    percentage: string;
+    buffs: Array<Buff>;
+    id: string;
+
+    constructor() {
+        this.percentage = "";
+        this.buffs = [];
+        this.id = "";
+    }
+}
+
+export class Buff {
+    icon: string;
+    sourceIcon?: string;
+    percentage: string;
+
+    constructor(icon: string, percentage: string, sourceIcon?: string) {
+        this.icon = icon;
+        this.sourceIcon = sourceIcon;
+        this.percentage = percentage;
+    }
+}

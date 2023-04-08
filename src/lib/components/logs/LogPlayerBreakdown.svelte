@@ -8,6 +8,7 @@
 
     export let player: Entity;
     export let duration: number;
+    export let handleRightClick: () => void;
 
     let color = "#ffffff";
     let skills: Array<Skill> = [];
@@ -50,7 +51,7 @@
     }    
 </script>
 
-<thead class="top-0 sticky h-6 z-30">
+<thead class="h-6 z-30" on:contextmenu|preventDefault={() => {console.log("titlebar clicked")}}>
     <tr class="bg-zinc-900">
         <th class="text-left px-2 font-normal w-full">Skill</th>
         <th class="font-normal w-14">DMG</th>
@@ -66,7 +67,7 @@
         <th class="font-normal w-14">Casts</th>
     </tr>
 </thead>
-<tbody>
+<tbody on:contextmenu|preventDefault={handleRightClick}>
     {#await processSkills() then skills}
     {#each skills as skill, i (skill.id)}
     <tr class="h-7 px-2 py-1 text-3xs">

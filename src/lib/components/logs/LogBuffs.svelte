@@ -6,28 +6,58 @@
     import { convertFileSrc } from "@tauri-apps/api/tauri";
     import LogBuffHeader from "./LogBuffHeader.svelte";
     import LogBuffRow from "./LogBuffRow.svelte";
+    import LogBuffBreakdown from "./LogBuffBreakdown.svelte";
 
     export let tab: MeterTab;
     export let encounterDamageStats: EncounterDamageStats;
     export let players: Array<Entity>;
     export let percentages: Array<number> = [];
     export let classIconsCache: { [key: number]: string };
-    let focusedPlayer: Entity | null = null;
+    export let focusedPlayer: Entity | null = null;
+    export let handleRightClick: () => void;
+    export let inspectPlayer: (name: string) => void;
+
+    let resourcePath: string | null = null;
 
 
     async function processBuffs() {        
         let groupedSynergies: Map<string, Map<number, StatusEffect>> = new Map();
         for (const [id, buff] of Object.entries(encounterDamageStats.buffs)) {
-            if (buff.source && buff.source.icon && !buff.source.icon.startsWith('http')) {
-                buff.source.icon = await getIconPath(buff);
+            if (focusedPlayer && !Object.hasOwn(focusedPlayer.damageStats.buffedBy, id)) {
+                continue;
             }
+            if (buff.category === 'buff') {
+            if (buff.source && buff.source.icon && !buff.source.icon.startsWith('http')) {
+                buff.source.icon = await getPath(buff.source.icon);
+            } else if (buff.source && !buff.source.icon) {
+                buff.source.icon = await getPath("unknown.png");
+            }
+            if (buff.source.skill && buff.source.skill.icon && !buff.source.skill.icon.startsWith('http')) {
+                buff.source.skill.icon = await getPath(buff.source.skill.icon);
+            } else if (buff.source.skill && !buff.source.skill.icon) {
+                buff.source.skill.icon = await getPath("unknown.png");
+            }
+            
             filterStatusEffects(groupedSynergies, buff, Number(id), focusedPlayer);
         }
+        }
         for (const [id, debuff] of Object.entries(encounterDamageStats.debuffs)) {
-            if (debuff.source && debuff.source.icon && !debuff.source.icon.startsWith('http')) {
-                debuff.source.icon = await getIconPath(debuff);
+            if (focusedPlayer && !Object.hasOwn(focusedPlayer.damageStats.debuffedBy, id)) {
+                continue;
             }
-            filterStatusEffects(groupedSynergies, debuff, Number(id), focusedPlayer);
+            if (debuff.category === "debuff") {
+                if (debuff.source && debuff.source.icon && !debuff.source.icon.startsWith('http')) {
+                    debuff.source.icon = await getPath(debuff.source.icon);
+                } else if (debuff.source && !debuff.source.icon) {
+                    debuff.source.icon = await getPath("unknown.png");
+                }
+                if (debuff.source.skill && debuff.source.skill.icon && !debuff.source.skill.icon.startsWith('http')) {
+                    debuff.source.skill.icon = await getPath(debuff.source.skill.icon);
+                } else if (debuff.source.skill && !debuff.source.skill.icon) {
+                    debuff.source.skill.icon = await getPath("unknown.png");
+                }
+                filterStatusEffects(groupedSynergies, debuff, Number(id), focusedPlayer);
+            }
         }
         groupedSynergies = new Map([...groupedSynergies.entries()].sort());
         return groupedSynergies
@@ -76,9 +106,12 @@
     
     function groupedSynergiesAdd(map: Map<string, Map<number, StatusEffect>>, key: string, id: number, buff: StatusEffect) {
         // by default, only show dmg, crit, atk spd, cd buffs.
-        if (!defaultBuffFilter(buff.buffType)) {
-            // console.log(buff);
-            return;
+        // show all arcana cards for fun
+        if (!focusedPlayer || focusedPlayer.classId !== 202) {
+            if (!defaultBuffFilter(buff.buffType)) {
+                // console.log(buff);   
+                return;
+            }
         }
         key = key.replaceAll(" ", "").toLowerCase();
         if (map.has(key)) {
@@ -88,34 +121,33 @@
         }
     }
 
-    async function getIconPath(synergy: StatusEffect) {
-        let fileName;
-        if (synergy.source && synergy.source.icon) {
-            fileName = synergy.source.icon;
-        } else {
-            fileName = "unknown.png";
-        }
-        return convertFileSrc(await join(await resourceDir(), 'images', 'skills', fileName));
+    async function getPath(icon: string) {
+        return convertFileSrc(await join(await resourceDir(), 'images', 'skills', icon));
     }
 </script>
 
 {#await processBuffs() then groupedSynergies}
-<thead class="top-0 sticky h-6" id="buff-head">
+<thead class="relative h-6 z-50" id="buff-head">
     <tr class="bg-zinc-900">
-        <th class="w-7"></th>
+        <th class="w-7 px-2 font-normal"></th>
         <th class="text-left px-2 font-normal w-full"></th>
-            {#each [...groupedSynergies] as [id, synergies] (id)}
-                <LogBuffHeader {synergies} />
-            {:else}
-                <th class="font-normal w-20">No Buffs</th>
-            {/each}
+        {#each [...groupedSynergies] as [id, synergies] (id)}
+            <LogBuffHeader {synergies} />
+        {:else}
+            <th class="font-normal w-20">No Buffs</th>
+        {/each}
     </tr>
 </thead>
-<tbody>
+<tbody on:contextmenu|preventDefault={handleRightClick}>
+    {#if !focusedPlayer}
     {#each players as player, i (player.name)}
-        <tr class="h-7 px-2 py-1">
+        <tr class="h-7 px-2 py-1" on:click={() => inspectPlayer(player.name)}>
             <LogBuffRow {player} groupedSynergies={groupedSynergies} percentage={percentages[i]} classIconsCache={classIconsCache}/>
         </tr>
     {/each}
+    {:else}
+        <LogBuffBreakdown groupedSynergies={groupedSynergies} player={focusedPlayer}/>
+    {/if}
 </tbody>
+
 {/await}

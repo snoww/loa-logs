@@ -5,6 +5,8 @@
     import { join, resourceDir } from "@tauri-apps/api/path";
     import { convertFileSrc, invoke } from "@tauri-apps/api/tauri";
     import { onMount } from "svelte";
+    import { Tooltip } from 'flowbite-svelte';
+
 
     let encounters: Array<EncounterPreview> = [];
     let totalEncounters: number = 0;
@@ -90,7 +92,7 @@
             <div class="text-xl font-bold tracking-tight text-gray-300 pl-2">
                 Past Encounters
             </div>
-            <button class="px-2 rounded-md bg-pink-900 hover:bg-pink-800 mr-4" on:click={() => refresh()}>
+            <button class="px-2 py-1 rounded-md bg-pink-900 hover:bg-pink-800 mr-4" on:click={() => refresh()}>
                 Refresh
             </button>
         </div>
@@ -98,8 +100,8 @@
             <table class="w-full text-left text-gray-400 table-fixed" id="table">
                 <thead class="text-xs uppercase bg-zinc-900 top-0 sticky">
                     <tr>
-                        <th scope="col" class="px-3 py-3 w-[12%]">
-                            Date
+                        <th scope="col" class="px-3 py-3 w-[7%]">
+                            ID
                         </th>
                         <th scope="col" class="px-3 py-3 w-[30%]">
                             Encounter
@@ -117,7 +119,10 @@
                     {#each encounters as encounter (encounter.fightStart)}
                         <tr class="border-b border-gray-700">
                             <td class="px-3 py-3">
-                                {formatTimestamp(encounter.fightStart)}
+                                <div>
+                                    #{encounter.id}
+                                </div>
+                                <Tooltip defaultClass="bg-pink-800 p-2 text-gray-300">{formatTimestamp(encounter.fightStart)}</Tooltip>
                             </td>
                             <td class="px-3 py-3 font-bold text-gray-300 w-full truncate">
                                 <a href="/logs/{encounter.id}?page={currentPage}" class="hover:underline">

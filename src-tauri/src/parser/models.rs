@@ -119,7 +119,9 @@ pub struct DamageStats {
     pub dps: i64,
     #[serde(skip)]
     pub damage_log: Vec<(i64, i64)>,
+    #[serde(default)]
     pub dps_average: Vec<(i32, i64)>,
+    #[serde(default)]
     pub dps_rolling_10s_avg: Vec<(i32, i64)>,
 }
 
