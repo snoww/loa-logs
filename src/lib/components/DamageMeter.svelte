@@ -21,6 +21,7 @@
     let zoneChangeAlert = false;
     let phaseTransitionAlert = false;
     let raidEndAlert = false;
+    let active = true;
 
     onMount(() => {
         setInterval(() => {
@@ -31,10 +32,12 @@
             let encounterUpdateEvent = await listen('encounter-update', (event: EncounterEvent) => {
                 // console.log(+Date.now(), event.payload);
                 encounter = event.payload;
+                active = true;
             });
             let zoneChangeEvent = await listen('zone-change', (event) => {
                 console.log("zone change event")
                 zoneChangeAlert = true;
+                active = false;
                 setTimeout(() => {
                     state = MeterState.PARTY;
                     player = null;
@@ -91,6 +94,7 @@
     let tab = MeterTab.DAMAGE;
     let player: Entity | null = null;
     let playerName = "";
+    let lastCombatPacket = 0;
 
     $: {
         if (encounter) {
@@ -99,16 +103,20 @@
                     .filter((players) => players.damageStats.damageDealt > 0)
                     .sort((a, b) => b.damageStats.damageDealt - a.damageStats.damageDealt);
                 topDamageDealt = encounter.encounterDamageStats.topDamageDealt;
-                playerDamagePercentages = entities.map(player => (player.damageStats.damageDealt / topDamageDealt) * 100);            
-                duration = time - encounter.fightStart;
-                if (duration < 0) {
-                    encounterDuration = millisToMinutesAndSeconds(0);
-                    dps = 0;
-                } else {
-                    encounterDuration = millisToMinutesAndSeconds(duration);
-                    dps = totalDamageDealt / (duration / 1000);
+                playerDamagePercentages = entities.map(player => (player.damageStats.damageDealt / topDamageDealt) * 100);
+                
+                if (active) {
+                    duration = time - encounter.fightStart;
+                    if (duration < 0) {
+                        encounterDuration = millisToMinutesAndSeconds(0);
+                        dps = 0;
+                    } else {
+                        encounterDuration = millisToMinutesAndSeconds(duration);
+                        dps = totalDamageDealt / (duration / 1000);
+                    }
                 }
                 totalDamageDealt = encounter.encounterDamageStats.totalDamageDealt;
+                lastCombatPacket = encounter.lastCombatPacket;
             }
             
             if (encounter.currentBoss !== undefined) {
@@ -156,8 +164,12 @@
                 <tr class="bg-zinc-900">
                     <th class="text-left px-2 font-normal w-full"></th>
                     <!-- <th class="">DMG</th> -->
+                    <!-- {#if entities.some(entity => entity.damageStats.deathTime > 0);}
+                    {/if} -->
                     <th class="font-normal w-14">DPS</th>
-                    <th class="font-normal w-14" class:hidden={entities.length == 1}>D%</th>
+                    {#if entities.length > 1}
+                    <th class="font-normal w-14">D%</th>
+                    {/if}
                     <th class="font-normal w-14">CRIT</th>
                     <th class="font-normal w-14">F.A</th>
                     <th class="font-normal w-14">B.A</th>
@@ -171,6 +183,7 @@
                         percentage={playerDamagePercentages[i]}
                         duration={duration}
                         totalDamageDealt={totalDamageDealt}
+                        lastCombatPacket={lastCombatPacket}
                     />
                 </tr>
                 {/each}

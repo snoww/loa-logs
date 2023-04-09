@@ -59,7 +59,7 @@
                 filterStatusEffects(debuff, Number(id), focusedPlayer);
             });
             groupedSynergies = new Map([...groupedSynergies.entries()].sort());
-            console.log(groupedSynergies);
+            // console.log(groupedSynergies);
         }
     }
 

@@ -5,8 +5,6 @@
 
 
     export let buff: StatusEffect;
-    console.log(buff);
-
 </script>
 
 <div class="font-normal text-sm">

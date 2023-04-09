@@ -13,6 +13,7 @@
     export let percentage: number;
     export let duration: number;
     export let totalDamageDealt: number;
+    export let lastCombatPacket: number;
 
     let color = "#ffffff"
 
@@ -25,6 +26,8 @@
     let dps: (string | number)[];
     let playerName: string;
     let damagePercentage: number;
+    let deadFor: string;
+
     $: {
         tweenedValue.set(percentage);
         if (Object.hasOwn(classColors, entity.class)){
@@ -54,7 +57,8 @@
         }
         if (entity.isDead) {
             playerName = "💀 " + playerName;
-        }
+            deadFor = ((lastCombatPacket - entity.damageStats.deathTime) / 1000).toFixed(0) + "s";
+        }        
     }
 
     async function getClassIconPath() {
@@ -87,9 +91,11 @@
 <td class="px-1 text-center">
     {dps[0]}<span class="text-3xs text-gray-300">{dps[1]}</span>
 </td>
-<td class="px-1 text-center" class:hidden={damagePercentage >= 100}>
+{#if damagePercentage < 100}
+<td class="px-1 text-center">
     {damagePercentage.toFixed(1)}<span class="text-xs text-gray-300">%</span>
 </td>
+{/if}
 <td class="px-1 text-center">
     {(entity.skillStats.crits / entity.skillStats.hits * 100).toFixed(1)}<span class="text-3xs text-gray-300">%</span>
 </td>

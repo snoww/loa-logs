@@ -22,7 +22,7 @@ let hidden: boolean = true;
                 </div>
             </div>
         </div>
-        <p class="px-4 mt-4 text-base">
+        <p class="px-4 mt-12 text-base">
             LOA Logs is a "blazingly fast" open source Lost Ark DPS meter (<a class="text-pink-400 hover:underline" href="https://github.com/snoww/loa-logs" target="_blank">Github</a>),
             written in Rust by <a class="text-pink-400 hover:underline" href="https://github.com/snoww" target="_blank">Snow</a>. 
             This project is a very opinionated flavor of <a class="text-pink-400 hover:underline" href="https://github.com/lost-ark-dev/loa-details" target="_blank">LOA Details</a> by Herysia and Mathi, but should share very similar user interfaces and settings. 

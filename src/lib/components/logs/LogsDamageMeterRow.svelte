@@ -56,9 +56,11 @@
         </div>
     </div>
 </td>
-<td class="px-1 text-center relative z-10" class:hidden={!anyDead}>
+{#if anyDead}
+<td class="px-1 text-center relative z-10">
     {entity.isDead ? deadFor : ""}
 </td>
+{/if}
 <td class="px-1 text-center relative z-10">
     {damageDealt[0]}<span class="text-3xs text-gray-300">{damageDealt[1]}</span>
 </td>

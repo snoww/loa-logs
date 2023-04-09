@@ -107,8 +107,9 @@
     <button class="bg-red-900 hover:bg-red-800 rounded-md px-2 mb-1 shadow-md" on:click={() => deleteConfirm = true}>
         Delete
     </button>
-    <div class="fixed inset-0 z-50 bg-zinc-900 bg-opacity-80" class:hidden={!deleteConfirm}></div>
-    <div class="fixed top-0 left-0 right-0 h-modal z-50 w-full p-4 justify-center items-center" class:hidden={!deleteConfirm} class:flex={deleteConfirm}>
+    {#if deleteConfirm}
+    <div class="fixed inset-0 z-50 bg-zinc-900 bg-opacity-80"></div>
+    <div class="fixed top-0 left-0 right-0 h-modal z-50 w-full p-4 justify-center items-center">
         <div class="flex relative max-w-md w-full max-h-full">
             <div class="bg-zinc-800 text-gray-400 rounded-lg border-gray-700 shadow-md relative flex flex-col mx-auto">
                 <button type="button" class="focus:outline-none whitespace-normal rounded-lg p-1.5 hover:bg-zinc-600 ml-auto absolute top-3 right-2.5" aria-label="Close modal" on:click={() => deleteConfirm = false}>
@@ -129,6 +130,7 @@
             </div>
         </div>
     </div>
+    {/if}
 </div>
 <div class="relative top-0 px" id="buff-table">
     <table class="table-fixed w-full relative">
@@ -137,10 +139,14 @@
             <thead class="h-6 z-30" on:contextmenu|preventDefault={() => {console.log("titlebar clicked")}}>
                 <tr class="bg-zinc-900">
                     <th class="text-left px-2 font-normal w-full"></th>
-                    <th class="font-normal w-20" class:hidden={!anyDead}>Dead for</th>
+                    {#if anyDead}
+                    <th class="font-normal w-20">Dead for</th>
+                    {/if}
                     <th class="font-normal w-14">DMG</th>
                     <th class="font-normal w-14">DPS</th>
-                    <th class="font-normal w-14" class:hidden={entities.length == 1}>D%</th>
+                    {#if entities.length > 1}
+                    <th class="font-normal w-14">D%</th>
+                    {/if}
                     <th class="font-normal w-14">CRIT</th>
                     <th class="font-normal w-14">F.A</th>
                     <th class="font-normal w-14">B.A</th>

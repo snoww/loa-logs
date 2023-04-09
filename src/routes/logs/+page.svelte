@@ -157,7 +157,11 @@
             </table>
         </div>
         <div class="flex items-center justify-between py-4">
+            {#if encounters}
             <span class="text-sm text-gray-400">Showing <span class="font-semibold dark:text-white">{(currentPage - 1) * rowsPerPage + 1}-{Math.min((currentPage - 1) * rowsPerPage + 1 + rowsPerPage - 1, totalEncounters)}</span> of <span class="font-semibold text-white">{totalEncounters}</span></span>
+            {:else}
+            <span class="text-sm text-gray-400">Showing <span class="font-semibold dark:text-white">0</span> of <span class="font-semibold text-white">{totalEncounters}</span></span>
+            {/if}
             <ul class="inline-flex items-center -space-x-px">
                 <li>
                     <button class="block px-3 ml-0" on:click={() => firstPage()}>
