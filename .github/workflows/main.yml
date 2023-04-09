@@ -47,9 +47,8 @@ jobs:
         with:
           # tauri-action replaces \_\_VERSION\_\_ with the app version
           tagName: ${{ github.ref_name }}
-          releaseName: "Release LOA Logs v__VERSION__"
+          releaseName: "v__VERSION__"
           releaseBody: |
             ${{steps.build_changelog.outputs.changelog}}
-            See the assets to download this version and install.
           releaseDraft: true
           prerelease: false
