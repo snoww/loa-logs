@@ -35,9 +35,9 @@ fn main() {
                 .expect("failed to set windows always on top");
             #[cfg(debug_assertions)] // only include this code on debug builds
             {
-              meter_window.open_devtools();
+                meter_window.open_devtools();
             }
-
+            
             meter_window.set_size(Size::Logical(LogicalSize { width: 500.0, height: 350.0 })).unwrap();
 
             #[cfg(target_os = "windows")]
@@ -47,8 +47,6 @@ fn main() {
                 Ok(_) => (),
                 Err(e) => {
                     println!("error setting up database: {}", e);
-                    meter_window.emit("error", Some(e))
-                        .expect("failed to emit encounter-update");
                 }
             }
 
@@ -167,7 +165,7 @@ fn main() {
             }
             _ => {}
         })
-        .invoke_handler(tauri::generate_handler![load_encounters, load_encounters_preview, load_encounter, open_most_recent_encounter, delete_encounter])
+        .invoke_handler(tauri::generate_handler![load_encounters_preview, load_encounter, open_most_recent_encounter, delete_encounter])
         .run(tauri::generate_context!())
         .expect("error while running application");
 }
@@ -186,6 +184,34 @@ fn get_db_connection(resource_path: &mut PathBuf) -> Result<Connection, String> 
 
 fn setup_db(resource_path: &mut PathBuf) -> Result<(), String> {
     let conn = get_db_connection(resource_path)?;
+
+    match conn.execute_batch("
+        CREATE TABLE IF NOT EXISTS encounter (
+            id INTEGER PRIMARY KEY,
+            last_combat_packet INTEGER,
+            fight_start INTEGER,
+            local_player TEXT,
+            current_boss TEXT,
+            duration INTEGER,
+            total_damage_dealt INTEGER,
+            top_damage_dealt INTEGER,
+            total_damage_taken INTEGER,
+            top_damage_taken INTEGER,
+            dps INTEGER,
+            buffs TEXT,
+            debuffs TEXT
+        );
+        CREATE INDEX IF NOT EXISTS encounter_fight_start_index
+        ON encounter (fight_start desc);
+        CREATE INDEX IF NOT EXISTS encounter_current_boss_index
+        ON encounter (current_boss);
+        ") {
+        Ok(_) => (),
+        Err(e) => {
+            return Err(e.to_string());
+        }
+    }
+
     match conn.execute_batch("
         CREATE TABLE IF NOT EXISTS entity (
             name TEXT,
@@ -205,33 +231,6 @@ fn setup_db(resource_path: &mut PathBuf) -> Result<(), String> {
             PRIMARY KEY (name, encounter_id),
             FOREIGN KEY (encounter_id) REFERENCES encounter (id) ON DELETE CASCADE
         );
-        CREATE INDEX IF NOT EXISTS encounter_fight_start_index
-        ON encounter (fight_start desc);
-        CREATE INDEX IF NOT EXISTS encounter_current_boss_index
-        ON encounter (current_boss);
-        ") {
-        Ok(_) => (),
-        Err(e) => {
-            return Err(e.to_string());
-        }
-    }
-
-    match conn.execute_batch("
-        CREATE TABLE IF NOT EXISTS encounter (
-            id INTEGER PRIMARY KEY,
-            last_combat_packet INTEGER,
-            fight_start INTEGER,
-            local_player TEXT,
-            current_boss TEXT,
-            duration INTEGER,
-            total_damage_dealt INTEGER,
-            top_damage_dealt INTEGER,
-            total_damage_taken INTEGER,
-            top_damage_taken INTEGER,
-            dps INTEGER,
-            buffs TEXT,
-            debuffs TEXT
-        );
         CREATE INDEX IF NOT EXISTS entity_encounter_id_index
         ON entity (encounter_id desc);
         CREATE INDEX IF NOT EXISTS entity_name_index
@@ -249,7 +248,7 @@ fn setup_db(resource_path: &mut PathBuf) -> Result<(), String> {
 }
 
 #[tauri::command]
-fn load_encounters_preview(window: tauri::Window, page: i32) -> EncountersOverview {
+fn load_encounters_preview(window: tauri::Window, page: i32, page_size: i32) -> EncountersOverview {
     let mut path = window.app_handle().path_resolver().resource_dir().expect("could not get resource dir");
     let conn = get_db_connection(&mut path).expect("could not get db connection");
 
@@ -272,14 +271,14 @@ fn load_encounters_preview(window: tauri::Window, page: i32) -> EncountersOvervi
         encounter e
     ORDER BY
         e.fight_start DESC
-    LIMIT 6
+    LIMIT ?
     OFFSET ?
     ")
     .unwrap();
 
-    let offset = (page - 1) * 6;
+    let offset = (page - 1) * page_size;
 
-    let encounter_iter = stmt.query_map([offset], |row| {
+    let encounter_iter = stmt.query_map([page_size, offset], |row| {
         let classes = match row.get(4) {
             Ok(classes) => classes,
             Err(_) => "".to_string()
@@ -307,65 +306,6 @@ fn load_encounters_preview(window: tauri::Window, page: i32) -> EncountersOvervi
         encounters,
         total_encounters: count
     }
-}
-
-#[tauri::command]
-fn load_encounters(window: tauri::Window) -> Vec<Encounter> {
-    let mut path = window.app_handle().path_resolver().resource_dir().expect("could not get resource dir");
-    let conn = get_db_connection(&mut path).expect("could not get db connection");
-
-    let mut stmt = conn.prepare_cached("
-        SELECT last_combat_packet, fight_start, local_player, current_boss, duration, total_damage_dealt, top_damage_dealt, total_damage_taken, top_damage_taken, dps, dps_intervals, buffs, debuffs
-        FROM encounter
-        ORDER BY fight_start DESC
-        LIMIT 10
-        ")
-        .unwrap();
-    let results = stmt.query_map(params![], |row| {
-        let buff_str = match row.get(11) {
-            Ok(buff_str) => buff_str,
-            Err(_) => "".to_string()
-        };
-        let buffs = match serde_json::from_str::<HashMap<i32, StatusEffect>>(buff_str.as_str()) {
-            Ok(v) => v,
-            Err(_) => HashMap::new()
-        };
-
-        let debuff_str = match row.get(12) {
-            Ok(debuff_str) => debuff_str,
-            Err(_) => "".to_string()
-        };
-        let debuffs = match serde_json::from_str::<HashMap<i32, StatusEffect>>(debuff_str.as_str()) {
-            Ok(v) => v,
-            Err(_) => HashMap::new()
-        };
-
-        Ok(Encounter {
-            last_combat_packet: row.get(0)?,
-            fight_start: row.get(1)?,
-            local_player: row.get(2)?,
-            current_boss_name: row.get(3)?,
-            duration: row.get(4)?,
-            encounter_damage_stats: EncounterDamageStats {
-                total_damage_dealt: row.get(5)?,
-                top_damage_dealt: row.get(6)?,
-                total_damage_taken: row.get(7)?,
-                top_damage_taken: row.get(8)?,
-                dps: row.get(9)?,
-                buffs,
-                debuffs,
-                ..Default::default()
-            },
-            ..Default::default()
-        })
-    }).unwrap();
-
-    let mut encounters: Vec<Encounter> = Vec::new();
-    for encounter in results {
-        encounters.push(encounter.unwrap());
-    }
-
-    encounters
 }
 
 #[tauri::command]
@@ -519,7 +459,7 @@ fn open_most_recent_encounter(window: tauri::Window) {
     }).unwrap();
 
     if let Some(logs) = window.app_handle().get_window("logs") {
-        logs.eval(&format!("window.location.href = '/logs/{}'", id)).expect("failed to set window url");
+        logs.eval(&format!("window.location.href = '/logs/encounter?id={}'", id)).expect("failed to set window url");
         logs.unminimize().unwrap();
         logs.show().unwrap();
         logs.set_focus().unwrap();

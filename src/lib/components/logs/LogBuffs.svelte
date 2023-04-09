@@ -17,9 +17,6 @@
     export let handleRightClick: () => void;
     export let inspectPlayer: (name: string) => void;
 
-    let resourcePath: string | null = null;
-
-
     async function processBuffs() {        
         let groupedSynergies: Map<string, Map<number, StatusEffect>> = new Map();
         for (const [id, buff] of Object.entries(encounterDamageStats.buffs)) {
@@ -127,7 +124,7 @@
 </script>
 
 {#await processBuffs() then groupedSynergies}
-<thead class="relative h-6 z-50" id="buff-head">
+<thead class="relative h-6 z-40" id="buff-head">
     <tr class="bg-zinc-900">
         <th class="w-7 px-2 font-normal"></th>
         <th class="text-left px-2 font-normal w-full"></th>

@@ -1,8 +1,5 @@
 <script lang="ts">
-import LogSidebar from '$lib/components/logs/LogSidebar.svelte';
-import type { PageData } from '../about copy/$types';
-    
-    export let data: PageData;
+    import LogSidebar from '$lib/components/logs/LogSidebar.svelte';
 
     let hidden: boolean = true;
 

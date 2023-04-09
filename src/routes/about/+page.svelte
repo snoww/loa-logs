@@ -1,11 +1,9 @@
 <script lang="ts">
 import LogSidebar from '$lib/components/logs/LogSidebar.svelte';
-    import { getVersion } from '@tauri-apps/api/app';
+import { getVersion } from '@tauri-apps/api/app';
 import type { PageData } from './$types';
     
-    export let data: PageData;
-
-    let hidden: boolean = true;
+let hidden: boolean = true;
 
 </script>
 
@@ -30,6 +28,9 @@ import type { PageData } from './$types';
             This project is a very opinionated flavor of <a class="text-pink-400 hover:underline" href="https://github.com/lost-ark-dev/loa-details" target="_blank">LOA Details</a> by Herysia and Mathi, but should share very similar user interfaces and settings. 
             The packet sniffing is still done by LOA Details' <a class="text-pink-400 hover:underline" href="https://github.com/lost-ark-dev/meter-core" target="_blank"><code>meter-core</code></a> under the hood, 
             but the data processing is done using Rust. There are future plans to port the packet sniffing part to Rust as well.
+        </p>
+        <p class="px-4 mt-4 text-base">
+            Features: Stylized Boss HP Bar, Simple UI, Fast logging performance, Log sharing, Small log sizes, Encounter filtering, DPS charts, Fight replay, and more.
         </p>
         <p class="px-4 mt-4 text-base">
             If you have any problems or suggestions, please open an <a class="text-pink-400 hover:underline" href="https://github.com/snoww/loa-logs/issues" target="_blank">issue</a> or send a DM on Discord.

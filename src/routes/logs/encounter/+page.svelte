@@ -2,24 +2,28 @@
     import { page } from '$app/stores';
     import LogDamageMeter from '$lib/components/logs/LogsDamageMeter.svelte';
     import type { Encounter } from '$lib/types';
-    import { formatTimestamp, millisToMinutesAndSeconds } from '$lib/utils/numbers';
-    import type { PageData } from './$types';
-
-    export let data: PageData;
+    import { formatTimestamp } from '$lib/utils/numbers';
+    import { invoke } from '@tauri-apps/api/tauri';
+    import { onMount } from 'svelte';
 
     let encounter: Encounter;
     let currentPage: number = 1;
+    let id: string;
 
-    $: {
-        encounter = data.encounter;
-        
+    onMount(() => {        
         if ($page.url.searchParams.has('page')) {
             currentPage = parseInt($page.url.searchParams.get('page')!);
         }
+    })
+
+    async function loadEncounter() {
+        id = $page.url.searchParams.get('id')!;
+        encounter = await invoke("load_encounter", { id: id });
     }
 </script>
 
 <div class="bg-zinc-800 h-screen overflow-y-scroll pb-20 pt-4" id="log-breakdown">
+    {#await loadEncounter() then _}
     <div class="px-8 flex items-center">
         <div class="flex items-center justify-between py-4">
             <a href="/logs?page={currentPage}" class="p-2 rounded-md bg-pink-900 hover:bg-pink-800 inline-flex">
@@ -30,7 +34,7 @@
         </div>
         <div class="flex justify-between w-full items-center">
             <div class="text-xl font-bold tracking-tight text-gray-300 pl-2">
-                #{(+data.id).toLocaleString()}: {encounter.currentBossName}
+                #{(id).toLocaleString()}: {encounter.currentBossName}
             </div>
             <div class="text-base">
                 {formatTimestamp(encounter.fightStart)}
@@ -38,6 +42,7 @@
         </div>
     </div>
     <div class="px-8">
-        <LogDamageMeter id={data.id} encounter={encounter} />
+        <LogDamageMeter id={id} encounter={encounter} />
     </div>
+    {/await}
 </div>

@@ -36,6 +36,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@fontsource/inter": "^4.5.15",
 		"@popperjs/core": "^2.11.7",
 		"@tauri-apps/api": "^1.2.0",
 		"classnames": "^2.3.2",

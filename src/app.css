@@ -3,13 +3,16 @@
 @tailwind utilities;
 
 @layer base {
-  @font-face {
-    font-family: 'Inter';
-    src: url('../fonts/Inter-Regular.woff');
-  }
 }
 
 @layer components {
+  * {
+		-ms-overflow-style: none;
+    	scrollbar-width: none;
+	}
+	*::-webkit-scrollbar { 
+		display: none;
+	}
   #logs-table::-webkit-scrollbar, #log-breakdown::-webkit-scrollbar, #buff-table::-webkit-scrollbar {
     @apply block right-0 w-2 h-2 bg-zinc-800;
   }

@@ -7,6 +7,7 @@
     import LogPlayerBreakdown from "./LogPlayerBreakdown.svelte";
     import LogEncounterInfo from "./LogEncounterInfo.svelte";
     import LogBuffs from "./LogBuffs.svelte";
+    import { page } from "$app/stores";
 
     export let id: string;
     export let encounter: Encounter;
@@ -77,7 +78,12 @@
 
     async function deleteEncounter() {
         await invoke("delete_encounter", { id: id });
-        document.location.href = "/logs";
+        if ($page.url.searchParams.has('page')) {
+            let currentPage = parseInt($page.url.searchParams.get('page')!);
+            document.location.href = `/logs?page=${currentPage}`;
+        } else {
+            document.location.href = "/logs";
+        }
     }
 
 </script>
@@ -101,7 +107,7 @@
     <button class="bg-red-900 hover:bg-red-800 rounded-md px-2 mb-1" on:click={() => deleteConfirm = true}>
         Delete
     </button>
-    <div class="fixed inset-0 z-40 bg-zinc-900 bg-opacity-80" class:hidden={!deleteConfirm}></div>
+    <div class="fixed inset-0 z-50 bg-zinc-900 bg-opacity-80" class:hidden={!deleteConfirm}></div>
     <div class="fixed top-0 left-0 right-0 h-modal z-50 w-full p-4 justify-center items-center" class:hidden={!deleteConfirm} class:flex={deleteConfirm}>
         <div class="flex relative max-w-md w-full max-h-full">
             <div class="bg-zinc-800 text-gray-400 rounded-lg border-gray-700 shadow-md relative flex flex-col mx-auto">

@@ -4,7 +4,8 @@
     import { removeUnknownHtmlTags } from "$lib/utils/strings";
 
 
-    export let buff: StatusEffect;    
+    export let buff: StatusEffect;
+    console.log(buff);
 
 </script>
 
@@ -16,8 +17,27 @@
         {buff.source.skill.name}
     </div>
     {:else if buff.source.name}
-    <div class="text-left">
-        {buff.source.name}:
+    <div class="flex">
+        {#if buff.buffCategory === "set"}
+        <div class="pr-1">
+            {"[Set] " + buff.source.setName}:
+        </div>
+        {:else if buff.buffCategory === "bracelet"}
+        <div class="pr-1">
+            {"[Bracelet]"}
+        </div>
+        {:else if buff.buffCategory === "battleitem"}
+        <div class="pr-1">
+            {"[Battle Item]"}
+        </div>
+        {:else if buff.buffCategory === "dropsofether"}
+        <div class="pr-1">
+            {"[Drops of Ether]"}
+        </div>
+        {/if}
+        <div>
+            {@html removeUnknownHtmlTags(buff.source.name)}
+        </div>
     </div>
     {/if}
     <div class="flex tracking-tight">

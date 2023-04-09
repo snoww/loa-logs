@@ -2,20 +2,25 @@
     import { page } from "$app/stores";
     import LogSidebar from "$lib/components/logs/LogSidebar.svelte";
     import type { EncounterPreview, EncountersOverview } from "$lib/types";
-    import { formatDurationFromMs, formatTimestamp, millisToMinutesAndSeconds } from "$lib/utils/numbers";
+    import { formatDurationFromMs, formatTimestamp } from "$lib/utils/numbers";
     import { join, resourceDir } from "@tauri-apps/api/path";
     import { convertFileSrc, invoke } from "@tauri-apps/api/tauri";
     import { Tooltip } from 'flowbite-svelte';
+    import { onMount } from "svelte";
 
 
     let encounters: Array<EncounterPreview> = [];
     let totalEncounters: number = 0;
     let currentPage = 1;
-    const rowsPerPage = 6;
+    const rowsPerPage = 10;
     let classIconsCache: { [key: number]: string } = {}
 
     async function loadEncounters(page: number = 1): Promise<Array<EncounterPreview>> {
-        let overview: EncountersOverview = await invoke("load_encounters_preview", { page: page });
+        if ($page.url.searchParams.has('page')) {
+            page = parseInt($page.url.searchParams.get('page')!);
+            $page.url.searchParams.delete('page');
+        }
+        let overview: EncountersOverview = await invoke("load_encounters_preview", { page: page, pageSize: rowsPerPage });
         encounters = overview.encounters;
         totalEncounters = overview.totalEncounters;
         currentPage = page;
@@ -80,12 +85,6 @@
 
     let hidden: boolean = true;
 
-    $: {
-        if ($page.url.searchParams.has('page')) {
-            currentPage = parseInt($page.url.searchParams.get('page')!);
-        }   
-    }
-
 </script>
 <LogSidebar bind:hidden={hidden}/>
 <div class="bg-zinc-800 h-screen pt-2">
@@ -124,7 +123,7 @@
                     </tr>
                 </thead>
                 <tbody class="tracking-tight bg-neutral-800">
-                    {#await loadEncounters(currentPage) then _}
+                    {#await loadEncounters() then _}
                     {#each encounters as encounter (encounter.fightStart)}
                         <tr class="border-b border-gray-700">
                             <td class="px-3 py-3">
@@ -134,7 +133,7 @@
                                 <Tooltip defaultClass="bg-pink-800 p-2 text-gray-300">{formatTimestamp(encounter.fightStart)}</Tooltip>
                             </td>
                             <td class="px-3 py-3 font-bold text-gray-300 w-full truncate">
-                                <a href="/logs/{encounter.id}?page={currentPage}" class="hover:underline">
+                                <a href="/logs/encounter/?id={encounter.id}&page={currentPage}" class="hover:underline">
                                     {encounter.bossName}
                                 </a>
                             </td>
@@ -167,17 +166,17 @@
                 </li>
                 <li>
                     <button class="block px-3 ml-0" on:click={() => previousPage()}>
-                        <span class="sr-only">First</span>
+                        <span class="sr-only">Back</span>
                         <svg class="w-5 h-5 fill-gray-400 hover:fill-pink-800" xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960"><path d="m560.5 837-262-262 262-262 65 65.5L429 575l196.5 196.5-65 65.5Z"/></svg></button>
                 </li>
                 <li>
                     <button class="block px-3 ml-0" on:click={() => nextPage()}>
-                        <span class="sr-only">First</span>
+                        <span class="sr-only">Next</span>
                         <svg class="w-5 h-5 fill-gray-400 hover:fill-pink-800" xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960"><path d="m375.5 837-65-65.5L507 575 310.5 378.5l65-65.5 262 262-262 262Z"/></svg></button>
                 </li>
                 <li>
                     <button class="block px-3 ml-0" on:click={() => lastPage()}>
-                        <span class="sr-only">First</span>
+                        <span class="sr-only">Last</span>
                         <svg class="w-5 h-5 fill-gray-400 hover:fill-pink-800" xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960"><path d="m273.5 831.5-65.5-65 191-191-191-191 65.5-65 256 256-256 256ZM643 837V314.5h91.5V837H643Z"/></svg></button>
                 </li>
             </ul>

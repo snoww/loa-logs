@@ -970,6 +970,18 @@ fn get_status_effect_data(buff_id: i32) -> Option<StatusEffect> {
         }
     } else if buff_category == "set" && buff.set_name.is_some() {
         status_effect.source.set_name = buff.set_name.clone();
+    } else if buff_category == "battleitem" {
+        if let Some(buff_source_item) = SKILL_EFFECT_DATA.get(&buff_id) {
+            if let Some(item_name) = buff_source_item.item_name.as_ref() {
+                status_effect.source.name = item_name.to_string();
+            }
+            if let Some(item_desc) = buff_source_item.item_desc.as_ref() {
+                status_effect.source.desc = item_desc.to_string();
+            }
+            if let Some(icon) = buff_source_item.icon.as_ref() {
+                status_effect.source.icon = icon.to_string();
+            }
+        }
     }
 
     Some(status_effect)
