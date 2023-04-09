@@ -65,9 +65,8 @@ fn main() {
                 while let Some(event) = rx.recv().await {
                     if let CommandEvent::Stdout(line) = event {
                         parser.parse_line(line);
-                        let elapsed = last_time.elapsed();
                         // if raid end, we send regardless of window
-                        if elapsed >= duration || parser.raid_end {
+                        if last_time.elapsed() >= duration || parser.raid_end {
                             let mut clone = parser.encounter.clone();
                             let window = meter_window.clone();
                             tauri::async_runtime::spawn(async move {

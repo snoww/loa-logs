@@ -106,7 +106,7 @@
     function groupedSynergiesAdd(key: string, id: number, buff: StatusEffect) {
         // by default, only show dmg, crit, atk spd, cd buffs.
         if (!defaultBuffFilter(buff.buffType)) {
-            // console.log(buff);   
+            // console.log(buff);
             return;
         }
         key = key.replace(" ", "").toLowerCase();

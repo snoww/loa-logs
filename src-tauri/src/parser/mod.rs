@@ -1015,7 +1015,8 @@ fn get_status_effect_buff_type_flags(buff: &SkillBuffData) -> u32 {
 
     for option in buff.passive_option.iter() {
         let key_stat_str = option.key_stat.as_str();
-        if option.option_type == "stat" {
+        let option_type = option.option_type.as_str();
+        if option_type == "stat" {
             let stat = STAT_TYPE_MAP.get(key_stat_str);
             if stat.is_none() {
                 continue;
@@ -1115,7 +1116,7 @@ fn get_status_effect_buff_type_flags(buff: &SkillBuffData) -> u32 {
                     buff_type |= StatusEffectBuffTypeFlags::DEFENSE;
                 }
             }
-        } else if option.option_type == "skill_critical_ratio" {
+        } else if option_type == "skill_critical_ratio" {
             buff_type |= StatusEffectBuffTypeFlags::CRIT;
         } else if [
             "skill_damage",
@@ -1124,7 +1125,7 @@ fn get_status_effect_buff_type_flags(buff: &SkillBuffData) -> u32 {
             "skill_critical_damage",
             "skill_penetration",
         ]
-        .contains(&key_stat_str)
+        .contains(&option_type)
         {
             if buff.category == "buff" && option.value >= 0
                 || buff.category == "debuff" && option.value <= 0
@@ -1134,12 +1135,12 @@ fn get_status_effect_buff_type_flags(buff: &SkillBuffData) -> u32 {
                 buff_type |= StatusEffectBuffTypeFlags::DEFENSE;
             }
         } else if ["skill_cooldown_reduction", "skill_group_cooldown_reduction"]
-            .contains(&key_stat_str)
+            .contains(&option_type)
         {
             buff_type |= StatusEffectBuffTypeFlags::COOLDOWN;
-        } else if ["skill_mana_reduction", "mana_reduction"].contains(&key_stat_str) {
+        } else if ["skill_mana_reduction", "mana_reduction"].contains(&option_type) {
             buff_type |= StatusEffectBuffTypeFlags::RESOURCE;
-        } else if option.option_type == "combat_effect" {
+        } else if option_type == "combat_effect" {
             if let Some(combat_effect) = COMBAT_EFFECT_DATA.get(&option.key_index) {
                 for action in combat_effect.actions.iter() {
                     if [

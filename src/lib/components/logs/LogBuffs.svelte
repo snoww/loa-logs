@@ -106,7 +106,7 @@
         // show all arcana cards for fun
         if (!focusedPlayer || focusedPlayer.classId !== 202) {
             if (!defaultBuffFilter(buff.buffType)) {
-                // console.log(buff);   
+                // console.log(buff);
                 return;
             }
         }
