@@ -4,11 +4,14 @@
     import { HexToRgba } from "$lib/utils/colors";
     import { Tooltip } from 'flowbite-svelte';
     import BuffTooltipDetail from "../shared/BuffTooltipDetail.svelte";
+    import { formatPlayerName } from "$lib/utils/strings";
+    import type { Writable } from "svelte/store";
 
     export let player: Entity;
     export let groupedSynergies: Map<string, Map<number, StatusEffect>>;
     export let percentage: number;
     export let classIconsCache: { [key: number]: string };
+    export let hideNames: Writable<boolean>;
 
     let color = "#ffffff"
     let playerName: string;
@@ -18,12 +21,8 @@
         color = classColors[player.class].color;
     }
 
-    playerName = player.name;
-    if (player.class) {
-        playerName += ` (${player.class})`;
-    }
-    if (player.isDead) {
-        playerName = "💀 " + playerName;
+    $: {
+        playerName = formatPlayerName(player, $hideNames);
     }
 
     if (groupedSynergies.size > 0) {
@@ -46,8 +45,7 @@
             }
             synergyPercentageDetails.push(buff);
         });
-    }   
-
+    }
 </script>
 
 <td class="pl-1 relative z-10">

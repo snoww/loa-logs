@@ -3,7 +3,8 @@
     import type { Entity } from "$lib/types";
     import { HexToRgba } from "$lib/utils/colors";
     import { abbreviateNumberSplit } from "$lib/utils/numbers";
-    import { isValidName } from "$lib/utils/strings";
+    import { formatPlayerName } from "$lib/utils/strings";
+    import type { Writable } from "svelte/store";
 
     export let entity: Entity;
     export let percentage: number;
@@ -11,6 +12,7 @@
     export let totalDamageDealt: number;
     export let anyDead: boolean;
     export let end: number;
+    export let hideNames: Writable<boolean>;
 
     let damageDealt: (string | number)[];
     let dps: (string | number)[];
@@ -28,22 +30,10 @@
     
     dps = abbreviateNumberSplit(entity.damageStats.dps);
 
-    playerName = entity.name;
-    // todo use settings
-    if (!isValidName(playerName)) {
-        playerName = "";
-        // playerName += " ("
-        if (entity.gearScore > 0) {
-            playerName += entity.gearScore + " ";
-        }
-        if (entity.class) {
-            playerName += entity.class;
-        }
-        // playerName += ")";
+    $: {
+        playerName = formatPlayerName(entity, $hideNames)
     }
-    if (entity.isDead) {
-        playerName = "💀 " + playerName;
-        
+    if (entity.isDead) {       
         deadFor = ((end - entity.damageStats.deathTime) / 1000).toFixed(0) + "s";
     }
 </script>
@@ -51,7 +41,7 @@
 <td class="px-1 relative z-10">
     <div class="flex space-x-1">
         <img class="h-5 w-5" src={icon} alt={entity.class} />
-        <div class="truncate">
+        <div class="truncate pl-px">
             {playerName}
         </div>
     </div>

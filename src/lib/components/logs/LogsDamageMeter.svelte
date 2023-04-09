@@ -8,11 +8,12 @@
     import LogEncounterInfo from "./LogEncounterInfo.svelte";
     import LogBuffs from "./LogBuffs.svelte";
     import { page } from "$app/stores";
+    import { writable } from "svelte/store";
 
     export let id: string;
     export let encounter: Encounter;
 
-    let entities: Array<Entity> = [];
+    let players: Array<Entity> = [];
     let player: Entity | null = null;
     let playerDamagePercentages: Array<number> = [];
     let topDamageDealt = 0;
@@ -26,16 +27,17 @@
     let playerName = "";
 
     let deleteConfirm = false;
+    let hideNames = writable(false);
 
 
     $: {       
         if (encounter) {
-            entities = Object.values(encounter.entities)
+            players = Object.values(encounter.entities)
                 .filter((players) => players.damageStats.damageDealt > 0)
                 .sort((a, b) => b.damageStats.damageDealt - a.damageStats.damageDealt);
             topDamageDealt = encounter.encounterDamageStats.topDamageDealt;
-            playerDamagePercentages = entities.map(player => (player.damageStats.damageDealt / topDamageDealt) * 100);
-            anyDead = entities.some(player => player.isDead);
+            playerDamagePercentages = players.map(player => (player.damageStats.damageDealt / topDamageDealt) * 100);
+            anyDead = players.some(player => player.isDead);
         }
         
         if (playerName) {
@@ -45,7 +47,7 @@
         } else {
             player = null;
             state = MeterState.PARTY;
-        }       
+        }        
     }
 
     async function getClassIconPath(classId: number) {       
@@ -103,6 +105,13 @@
         <button class="px-2 rounded-sm py-1" class:bg-pink-900={tab == MeterTab.SELF_BUFFS} class:bg-gray-700={tab != MeterTab.SELF_BUFFS} on:click={() => tab = MeterTab.SELF_BUFFS}>
             Self Synergy
         </button>
+        <div class="flex items-center px-2 space-x-2 bg-gray-700 rounded">
+            <span class="text-sm font-medium">Hide Names</span>
+            <label class="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" value="" class="sr-only peer" on:click={() => hideNames.update(h => !h)}>
+                <div class="w-9 h-5 peer-focus:outline-none peer-focus:ring-pink-800 rounded-full peer bg-gray-800 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all border-gray-600 peer-checked:bg-pink-800"></div>
+              </label>
+        </div>
     </div>
     <button class="bg-red-900 hover:bg-red-800 rounded-md px-2 mb-1 shadow-md" on:click={() => deleteConfirm = true}>
         Delete
@@ -144,7 +153,7 @@
                     {/if}
                     <th class="font-normal w-14">DMG</th>
                     <th class="font-normal w-14">DPS</th>
-                    {#if entities.length > 1}
+                    {#if players.length > 1}
                     <th class="font-normal w-14">D%</th>
                     {/if}
                     <th class="font-normal w-14">CRIT</th>
@@ -153,33 +162,34 @@
                 </tr>
             </thead>
             <tbody>
-                {#each entities as entity, i (entity.name)}
-                <tr class="h-7 px-2 py-1" on:click={() => inspectPlayer(entity.name)}>
-                    {#await getClassIconPath(entity.classId) then path}
-                        <LogsDamageMeterRow entity={entity} 
+                {#each players as player, i (player.name)}
+                <tr class="h-7 px-2 py-1" on:click={() => inspectPlayer(player.name)}>
+                    {#await getClassIconPath(player.classId) then path}
+                        <LogsDamageMeterRow entity={player} 
                                             percentage={playerDamagePercentages[i]} 
                                             icon={path} 
                                             totalDamageDealt={encounter.encounterDamageStats.totalDamageDealt} 
-                                            anyDead={anyDead} 
-                                            end={encounter.lastCombatPacket}/>
+                                            {anyDead} 
+                                            end={encounter.lastCombatPacket}
+                                            {hideNames}/>
                     {/await}
                 </tr>
                 {/each}
             </tbody>
             {:else if state === MeterState.PLAYER && player !== null}
-               <LogPlayerBreakdown player={player} duration={encounter.duration} handleRightClick={handleRightClick}/>
+               <LogPlayerBreakdown {player} duration={encounter.duration} {handleRightClick}/>
             {/if}
         {:else if tab === MeterTab.PARTY_BUFFS}
             {#if state === MeterState.PARTY}
-                <LogBuffs tab={tab} encounterDamageStats={encounter.encounterDamageStats} players={entities} percentages={playerDamagePercentages} classIconsCache={classIconsCache} handleRightClick={handleRightClick} inspectPlayer={inspectPlayer}/>
+                <LogBuffs {tab} encounterDamageStats={encounter.encounterDamageStats} {players} percentages={playerDamagePercentages} {classIconsCache} {handleRightClick} {inspectPlayer} {hideNames}/>
             {:else}
-                <LogBuffs tab={tab} encounterDamageStats={encounter.encounterDamageStats} players={entities} percentages={playerDamagePercentages} classIconsCache={classIconsCache} focusedPlayer={player} handleRightClick={handleRightClick} inspectPlayer={inspectPlayer}/>
+                <LogBuffs {tab} encounterDamageStats={encounter.encounterDamageStats} {players} percentages={playerDamagePercentages} {classIconsCache} focusedPlayer={player} {handleRightClick} {inspectPlayer} {hideNames}/>
             {/if}
         {:else if tab === MeterTab.SELF_BUFFS}
             {#if state === MeterState.PARTY}
-                <LogBuffs tab={tab} encounterDamageStats={encounter.encounterDamageStats} players={entities} percentages={playerDamagePercentages} classIconsCache={classIconsCache} handleRightClick={handleRightClick} inspectPlayer={inspectPlayer}/>
+                <LogBuffs {tab} encounterDamageStats={encounter.encounterDamageStats} {players} percentages={playerDamagePercentages} {classIconsCache} {handleRightClick} {inspectPlayer} {hideNames}/>
             {:else}
-                <LogBuffs tab={tab} encounterDamageStats={encounter.encounterDamageStats} players={entities} percentages={playerDamagePercentages} classIconsCache={classIconsCache} focusedPlayer={player} handleRightClick={handleRightClick} inspectPlayer={inspectPlayer}/>
+                <LogBuffs {tab} encounterDamageStats={encounter.encounterDamageStats} {players} percentages={playerDamagePercentages} {classIconsCache} focusedPlayer={player} {handleRightClick} {inspectPlayer} {hideNames}/>
             {/if}
         {/if}
     </table>
