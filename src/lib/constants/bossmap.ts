@@ -5,6 +5,7 @@ export const bosses: BossBarMap = {
     "Destroyer Lucas": 50,
     "Leader Lugaru": 50,
     "Demon Beast Commander Valtan": 160,
+    "Ravaged Tyrant of Beasts": 40,
     "Incubus Morphe": 60,
     "Nightmarish Morphe": 60,
     "Covetous Devourer Vykas": 160,
