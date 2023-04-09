@@ -9,6 +9,7 @@
     import LogBuffs from "./LogBuffs.svelte";
     import { page } from "$app/stores";
     import { writable } from "svelte/store";
+    import { hideNames } from "$lib/utils/stores";
 
     export let id: string;
     export let encounter: Encounter;
@@ -27,8 +28,6 @@
     let playerName = "";
 
     let deleteConfirm = false;
-    let hideNames = writable(false);
-
 
     $: {       
         if (encounter) {
@@ -171,7 +170,7 @@
                                             totalDamageDealt={encounter.encounterDamageStats.totalDamageDealt} 
                                             {anyDead} 
                                             end={encounter.lastCombatPacket}
-                                            {hideNames}/>
+                                           />
                     {/await}
                 </tr>
                 {/each}
@@ -181,15 +180,15 @@
             {/if}
         {:else if tab === MeterTab.PARTY_BUFFS}
             {#if state === MeterState.PARTY}
-                <LogBuffs {tab} encounterDamageStats={encounter.encounterDamageStats} {players} percentages={playerDamagePercentages} {classIconsCache} {handleRightClick} {inspectPlayer} {hideNames}/>
+                <LogBuffs {tab} encounterDamageStats={encounter.encounterDamageStats} {players} percentages={playerDamagePercentages} {classIconsCache} {handleRightClick} {inspectPlayer}/>
             {:else}
-                <LogBuffs {tab} encounterDamageStats={encounter.encounterDamageStats} {players} percentages={playerDamagePercentages} {classIconsCache} focusedPlayer={player} {handleRightClick} {inspectPlayer} {hideNames}/>
+                <LogBuffs {tab} encounterDamageStats={encounter.encounterDamageStats} {players} percentages={playerDamagePercentages} {classIconsCache} focusedPlayer={player} {handleRightClick} {inspectPlayer}/>
             {/if}
         {:else if tab === MeterTab.SELF_BUFFS}
             {#if state === MeterState.PARTY}
-                <LogBuffs {tab} encounterDamageStats={encounter.encounterDamageStats} {players} percentages={playerDamagePercentages} {classIconsCache} {handleRightClick} {inspectPlayer} {hideNames}/>
+                <LogBuffs {tab} encounterDamageStats={encounter.encounterDamageStats} {players} percentages={playerDamagePercentages} {classIconsCache} {handleRightClick} {inspectPlayer}/>
             {:else}
-                <LogBuffs {tab} encounterDamageStats={encounter.encounterDamageStats} {players} percentages={playerDamagePercentages} {classIconsCache} focusedPlayer={player} {handleRightClick} {inspectPlayer} {hideNames}/>
+                <LogBuffs {tab} encounterDamageStats={encounter.encounterDamageStats} {players} percentages={playerDamagePercentages} {classIconsCache} focusedPlayer={player} {handleRightClick} {inspectPlayer}/>
             {/if}
         {/if}
     </table>

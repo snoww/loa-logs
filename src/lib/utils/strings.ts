@@ -15,14 +15,12 @@ export function formatPlayerName(player: Entity,  hideNames = false): string {
     // todo use settings
     if (!isValidName(playerName) || hideNames) {
         playerName = "";
-        // playerName += " ("
-        if (player.gearScore > 0) {
-            playerName += player.gearScore + " ";
-        }
+        // if (player.gearScore > 0) {
+        //     playerName += player.gearScore + " ";
+        // }
         if (player.class) {
             playerName += player.class;
         }
-        // playerName += ")";
     }
     if (player.isDead) {
         playerName = "💀 " + playerName;

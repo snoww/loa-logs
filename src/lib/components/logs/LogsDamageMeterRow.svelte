@@ -3,8 +3,8 @@
     import type { Entity } from "$lib/types";
     import { HexToRgba } from "$lib/utils/colors";
     import { abbreviateNumberSplit } from "$lib/utils/numbers";
+    import { hideNames } from "$lib/utils/stores";
     import { formatPlayerName } from "$lib/utils/strings";
-    import type { Writable } from "svelte/store";
 
     export let entity: Entity;
     export let percentage: number;
@@ -12,7 +12,6 @@
     export let totalDamageDealt: number;
     export let anyDead: boolean;
     export let end: number;
-    export let hideNames: Writable<boolean>;
 
     let damageDealt: (string | number)[];
     let dps: (string | number)[];

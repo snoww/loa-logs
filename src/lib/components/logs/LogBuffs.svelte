@@ -7,7 +7,6 @@
     import LogBuffHeader from "./LogBuffHeader.svelte";
     import LogBuffRow from "./LogBuffRow.svelte";
     import LogBuffBreakdown from "./LogBuffBreakdown.svelte";
-    import type { Writable } from "svelte/store";
 
     export let tab: MeterTab;
     export let encounterDamageStats: EncounterDamageStats;
@@ -17,7 +16,6 @@
     export let focusedPlayer: Entity | null = null;
     export let handleRightClick: () => void;
     export let inspectPlayer: (name: string) => void;
-    export let hideNames: Writable<boolean>;
 
     async function processBuffs() {        
         let groupedSynergies: Map<string, Map<number, StatusEffect>> = new Map();
@@ -141,7 +139,7 @@
     {#if !focusedPlayer}
     {#each players as player, i (player.name)}
         <tr class="h-7 px-2 py-1" on:click={() => inspectPlayer(player.name)}>
-            <LogBuffRow {player} {groupedSynergies} percentage={percentages[i]} {classIconsCache} {hideNames}/>
+            <LogBuffRow {player} {groupedSynergies} percentage={percentages[i]} {classIconsCache}/>
         </tr>
     {/each}
     {:else}

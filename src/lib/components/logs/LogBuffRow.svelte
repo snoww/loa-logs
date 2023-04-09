@@ -5,13 +5,12 @@
     import { Tooltip } from 'flowbite-svelte';
     import BuffTooltipDetail from "../shared/BuffTooltipDetail.svelte";
     import { formatPlayerName } from "$lib/utils/strings";
-    import type { Writable } from "svelte/store";
+    import { hideNames } from "$lib/utils/stores";
 
     export let player: Entity;
     export let groupedSynergies: Map<string, Map<number, StatusEffect>>;
     export let percentage: number;
     export let classIconsCache: { [key: number]: string };
-    export let hideNames: Writable<boolean>;
 
     let color = "#ffffff"
     let playerName: string;
