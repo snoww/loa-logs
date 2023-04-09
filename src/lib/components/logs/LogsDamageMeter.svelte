@@ -104,7 +104,7 @@
             Self Synergy
         </button>
     </div>
-    <button class="bg-red-900 hover:bg-red-800 rounded-md px-2 mb-1" on:click={() => deleteConfirm = true}>
+    <button class="bg-red-900 hover:bg-red-800 rounded-md px-2 mb-1 shadow-md" on:click={() => deleteConfirm = true}>
         Delete
     </button>
     <div class="fixed inset-0 z-50 bg-zinc-900 bg-opacity-80" class:hidden={!deleteConfirm}></div>

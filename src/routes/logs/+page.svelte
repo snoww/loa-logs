@@ -100,7 +100,7 @@
                     Past Encounters
                 </div>
             </div>
-            <button class="px-2 py-1 rounded-md bg-pink-900 hover:bg-pink-800 mr-4" on:click={() => refresh()}>
+            <button class="px-2 py-1 rounded-md bg-pink-900 hover:bg-pink-800 mr-4 shadow-md" on:click={() => refresh()}>
                 Refresh
             </button>
         </div>

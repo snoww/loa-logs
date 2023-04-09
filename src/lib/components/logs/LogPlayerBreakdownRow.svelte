@@ -57,6 +57,6 @@
 <td class="px-1 text-center relative z-10">
     {skill.casts.toLocaleString()}
 </td>
-<div class="absolute left-0 h-7 px-2 py-1 z-0"
+<div class="absolute left-0 h-7 px-2 py-1 z-0 shadow-md"
     style="background-color: {HexToRgba(color, 0.6)}; width: {damagePercentage}%"
 ></div>
