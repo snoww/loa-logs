@@ -21,5 +21,8 @@
                 </div>
             </div>
         </div>
+        <p class="px-4 mt-12 text-base">
+            WORK IN PROGRESS :(
+        </p>
     </div>
 </div>
