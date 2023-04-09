@@ -43,7 +43,7 @@
                     player = null;
                     playerName = "";
                     encounter = null;
-                    entities = [];
+                    players = [];
                     currentBoss = null;
                     encounterDuration = "00:00";
                     totalDamageDealt = 0;
@@ -82,7 +82,7 @@
         events.forEach((unlisten) => unlisten());
     });
 
-    let entities: Array<Entity> = [];
+    let players: Array<Entity> = [];
     let playerDamagePercentages: Array<number> = [];
     let topDamageDealt = 0;
     let encounterDuration = "00:00";
@@ -99,11 +99,11 @@
     $: {
         if (encounter) {
             if (encounter.fightStart !== 0) {
-                entities = Object.values(encounter.entities)
+                players = Object.values(encounter.entities)
                     .filter((players) => players.damageStats.damageDealt > 0)
                     .sort((a, b) => b.damageStats.damageDealt - a.damageStats.damageDealt);
                 topDamageDealt = encounter.encounterDamageStats.topDamageDealt;
-                playerDamagePercentages = entities.map(player => (player.damageStats.damageDealt / topDamageDealt) * 100);
+                playerDamagePercentages = players.map(player => (player.damageStats.damageDealt / topDamageDealt) * 100);
                 
                 if (active) {
                     duration = time - encounter.fightStart;
@@ -149,7 +149,7 @@
 </script>
 
 <svelte:window on:contextmenu|preventDefault/>
-<EncounterInfo encounterDuration={encounterDuration} totalDamageDealt={totalDamageDealt} dps={dps}/>
+<EncounterInfo {encounterDuration} {totalDamageDealt} {dps}/>
 {#if currentBoss !== null}
 <div class="relative top-7">
     <BossInfo boss={currentBoss}/>
@@ -167,7 +167,7 @@
                     <!-- {#if entities.some(entity => entity.damageStats.deathTime > 0);}
                     {/if} -->
                     <th class="font-normal w-14">DPS</th>
-                    {#if entities.length > 1}
+                    {#if players.length > 1}
                     <th class="font-normal w-14">D%</th>
                     {/if}
                     <th class="font-normal w-14">CRIT</th>
@@ -176,32 +176,32 @@
                 </tr>
             </thead>
             <tbody>
-                {#each entities as entity, i (entity.id)}
+                {#each players as entity, i (entity.id)}
                 <tr class="h-7 px-2 py-1" animate:flip="{{duration: 200}}" on:click={() => inspectPlayer(entity.name)}>
                     <DamageMeterPlayerRow
-                        entity={entity}
+                        {entity}
                         percentage={playerDamagePercentages[i]}
-                        duration={duration}
-                        totalDamageDealt={totalDamageDealt}
-                        lastCombatPacket={lastCombatPacket}
+                        {duration}
+                        {totalDamageDealt}
+                        {lastCombatPacket}
                     />
                 </tr>
                 {/each}
             </tbody>
             {:else if state === MeterState.PLAYER && player !== null}
-                <PlayerBreakdown player={player} duration={duration} handleRightClick={handleRightClick}/>
+                <PlayerBreakdown player={player} duration={duration} {handleRightClick}/>
             {/if}
         {:else if tab === MeterTab.PARTY_BUFFS}
             {#if state === MeterState.PARTY}
-                <Buffs tab={tab} encounterDamageStats={encounter?.encounterDamageStats} players={entities} percentages={playerDamagePercentages} path={path} handleRightClick={handleRightClick} inspectPlayer={inspectPlayer}/>
+                <Buffs {tab} encounterDamageStats={encounter?.encounterDamageStats} {players} percentages={playerDamagePercentages} {path} {handleRightClick} {inspectPlayer}/>
             {:else}
-                <Buffs tab={tab} encounterDamageStats={encounter?.encounterDamageStats} players={entities} percentages={playerDamagePercentages} path={path} focusedPlayer={player} handleRightClick={handleRightClick} inspectPlayer={inspectPlayer}/>
+                <Buffs {tab} encounterDamageStats={encounter?.encounterDamageStats} {players} percentages={playerDamagePercentages} {path} focusedPlayer={player} {handleRightClick} {inspectPlayer}/>
             {/if}
         {:else if tab === MeterTab.SELF_BUFFS}
             {#if state === MeterState.PARTY}
-                <Buffs tab={tab} encounterDamageStats={encounter?.encounterDamageStats} players={entities} percentages={playerDamagePercentages} path={path} focusedPlayer={player} handleRightClick={handleRightClick} inspectPlayer={inspectPlayer}/>
+                <Buffs {tab} encounterDamageStats={encounter?.encounterDamageStats} {players} percentages={playerDamagePercentages} {path} focusedPlayer={player} {handleRightClick} {inspectPlayer}/>
             {:else}
-                <Buffs tab={tab} encounterDamageStats={encounter?.encounterDamageStats} players={entities} percentages={playerDamagePercentages} path={path} focusedPlayer={player} handleRightClick={handleRightClick} inspectPlayer={inspectPlayer}/>
+                <Buffs {tab} encounterDamageStats={encounter?.encounterDamageStats} {players} percentages={playerDamagePercentages} {path} focusedPlayer={player} {handleRightClick} {inspectPlayer}/>
             {/if}
         {/if}
     </table>

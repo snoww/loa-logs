@@ -147,10 +147,10 @@
     {#if !focusedPlayer}
     {#each players as player, i (player.id)}
         <tr class="h-7 px-2 py-1" animate:flip={{ duration: 200 }} on:click={() => inspectPlayer(player.name)}>
-            <BuffRow {player} groupedSynergies={groupedSynergies} percentage={percentages[i]} />
+            <BuffRow {player} {groupedSynergies} percentage={percentages[i]} />
         </tr>
     {/each}
     {:else}
-        <BuffSkillBreakdown groupedSynergies={groupedSynergies} player={focusedPlayer} path={path}/>
+        <BuffSkillBreakdown {groupedSynergies} player={focusedPlayer} {path}/>
     {/if}
 </tbody>

@@ -60,10 +60,10 @@
     {#each skills as skill, i (skill.id)}
     <tr class="h-7 px-2 py-1 text-3xs" animate:flip="{{duration: 200}}">
         <PlayerBreakdownRow
-            skill={skill}
-            color={color}
-            hasFrontAttacks={hasFrontAttacks}
-            hasBackAttacks={hasBackAttacks} 
+            {skill}
+            {color}
+            {hasFrontAttacks}
+            {hasBackAttacks} 
             abbreviatedSkillDamage={abbreviatedSkillDamage[i]}
             playerDamageDealt={player.damageStats.damageDealt}
             damagePercentage={skillDamagePercentages[i]}
