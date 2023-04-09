@@ -10,7 +10,7 @@ use hashbrown::HashMap;
 use parser::{models::*, Parser};
 
 use rusqlite::{Connection, params};
-use tauri::{Manager, api::process::{Command, CommandEvent}, LogicalSize, Size, SystemTray, CustomMenuItem, SystemTrayMenu, SystemTrayMenuItem, WindowBuilder, SystemTrayEvent, Window};
+use tauri::{Manager, api::process::{Command, CommandEvent }, LogicalSize, Size, SystemTray, CustomMenuItem, SystemTrayMenu, SystemTrayMenuItem, WindowBuilder, SystemTrayEvent};
 use window_vibrancy::apply_blur;
 
 fn main() {
