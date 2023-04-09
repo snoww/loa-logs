@@ -3,12 +3,11 @@
     import { millisToMinutesAndSeconds } from "$lib/utils/numbers";
     import { join, resourceDir } from "@tauri-apps/api/path";
     import { convertFileSrc, invoke } from "@tauri-apps/api/tauri";
-    import LogsDamageMeterRow from "./LogsDamageMeterRow.svelte";
+    import LogDamageMeterRow from "./LogDamageMeterRow.svelte";
     import LogPlayerBreakdown from "./LogPlayerBreakdown.svelte";
     import LogEncounterInfo from "./LogEncounterInfo.svelte";
     import LogBuffs from "./LogBuffs.svelte";
     import { page } from "$app/stores";
-    import { writable } from "svelte/store";
     import { hideNames } from "$lib/utils/stores";
 
     export let id: string;
@@ -164,7 +163,7 @@
                 {#each players as player, i (player.name)}
                 <tr class="h-7 px-2 py-1" on:click={() => inspectPlayer(player.name)}>
                     {#await getClassIconPath(player.classId) then path}
-                        <LogsDamageMeterRow entity={player} 
+                        <LogDamageMeterRow entity={player} 
                                             percentage={playerDamagePercentages[i]} 
                                             icon={path} 
                                             totalDamageDealt={encounter.encounterDamageStats.totalDamageDealt} 

@@ -86,6 +86,8 @@
     let hidden: boolean = true;
 
 </script>
+
+<svelte:window on:contextmenu|preventDefault/>
 <LogSidebar bind:hidden={hidden}/>
 <div class="bg-zinc-800 h-screen pt-2">
     <div class="px-8 pt-5">
@@ -156,12 +158,9 @@
                 </tbody>
             </table>
         </div>
+        {#if encounters.length > 0}
         <div class="flex items-center justify-between py-4">
-            {#if encounters}
             <span class="text-sm text-gray-400">Showing <span class="font-semibold dark:text-white">{(currentPage - 1) * rowsPerPage + 1}-{Math.min((currentPage - 1) * rowsPerPage + 1 + rowsPerPage - 1, totalEncounters)}</span> of <span class="font-semibold text-white">{totalEncounters}</span></span>
-            {:else}
-            <span class="text-sm text-gray-400">Showing <span class="font-semibold dark:text-white">0</span> of <span class="font-semibold text-white">{totalEncounters}</span></span>
-            {/if}
             <ul class="inline-flex items-center -space-x-px">
                 <li>
                     <button class="block px-3 ml-0" on:click={() => firstPage()}>
@@ -185,5 +184,6 @@
                 </li>
             </ul>
         </div>
+        {/if}
     </div>
 </div>

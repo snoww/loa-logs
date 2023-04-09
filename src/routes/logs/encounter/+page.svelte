@@ -1,6 +1,6 @@
 <script lang="ts">
     import { page } from '$app/stores';
-    import LogDamageMeter from '$lib/components/logs/LogsDamageMeter.svelte';
+    import LogDamageMeter from '$lib/components/logs/LogDamageMeter.svelte';
     import type { Encounter } from '$lib/types';
     import { formatTimestamp } from '$lib/utils/numbers';
     import { invoke } from '@tauri-apps/api/tauri';

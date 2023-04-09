@@ -5,6 +5,7 @@
 
 </script>
 
+<svelte:window on:contextmenu|preventDefault/>
 <LogSidebar bind:hidden={hidden} />
 <div class="bg-zinc-800 h-screen pt-2">
     <div class="px-8 pt-5">
