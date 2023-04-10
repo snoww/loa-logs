@@ -15,7 +15,8 @@ use tokio::task;
 pub struct Parser<'a> {
     pub window: &'a Window<Wry>,
     pub encounter: Encounter,
-    pub raid_end: bool
+    pub raid_end: bool,
+    pub saved: bool
 }
 
 impl Parser<'_> {
@@ -23,12 +24,17 @@ impl Parser<'_> {
         Parser {
             window,
             encounter: Encounter::default(),
-            raid_end: false
+            raid_end: false,
+            saved: false
         }
     }
 
     pub fn parse_line(&mut self, line: String) {
-        // println!("{}", line);
+        #[cfg(debug_assertions)]
+        {
+            println!("{}", line);
+        }
+
         if line.is_empty() {
             return;
         }
@@ -63,6 +69,7 @@ impl Parser<'_> {
         if self.raid_end {
             self.raid_end = false;
             self.soft_reset();
+            self.saved = false;
         }
 
         match log_type {
@@ -169,6 +176,11 @@ impl Parser<'_> {
             v.name == self.encounter.local_player
                 || (v.damage_stats.damage_dealt > 0 && v.max_hp > 0)
         });
+
+        if !self.saved && !self.encounter.current_boss_name.is_empty() {
+            self.save_to_db();
+        }
+
         self.window
             .emit("zone-change", Some(self.encounter.clone()))
             .expect("failed to emit zone-change");
@@ -196,6 +208,7 @@ impl Parser<'_> {
         {
             self.save_to_db();
             self.raid_end = true;
+            self.saved = true;
         }
     }
 

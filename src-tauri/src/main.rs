@@ -33,7 +33,7 @@ fn main() {
             let meter_window = app.get_window("main").unwrap();
             meter_window.set_always_on_top(true)
                 .expect("failed to set windows always on top");
-            #[cfg(debug_assertions)] // only include this code on debug builds
+            #[cfg(debug_assertions)]
             {
                 meter_window.open_devtools();
             }
@@ -103,7 +103,7 @@ fn main() {
                 .build()
                 .expect("failed to create log window");
             logs_window.set_size(Size::Logical(LogicalSize { width: 800.0, height: 500.0 })).unwrap();
-            #[cfg(debug_assertions)] // only include this code on debug builds
+            #[cfg(debug_assertions)]
             {
                 logs_window.open_devtools();
             }

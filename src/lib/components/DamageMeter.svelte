@@ -53,14 +53,12 @@
             });
             let phaseTransitionEvent = await listen('phase-transition', (event) => {
                 console.log("phase transition event: ", event.payload)
-                // phaseTransitionAlert = true;
-                // setTimeout(() => {
-                //     phaseTransitionAlert = false;
-                // }, 3000);
+                active = false;
             });
             let raidEndEvent = await listen('raid-end', (event: EncounterEvent) => {
                 console.log("raid-end, updating encounter")
                 encounter = event.payload;
+                active = false;
                 raidEndAlert = true;
                 setTimeout(() => {
                     raidEndAlert = false;
