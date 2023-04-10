@@ -401,18 +401,12 @@ fn load_encounter(window: tauri::Window, id: String) -> Encounter {
 
         let damage_stats_str = match row.get(8) {
             Ok(damage_stats_str) => damage_stats_str,
-            Err(e) => {
-                println!("could not parse dmg_stats: {}", e);
-                "".to_string()
-            }
+            Err(_) => "".to_string()
         };
 
         let damage_stats = match serde_json::from_str::<DamageStats>(damage_stats_str.as_str()) {
             Ok(v) => v,
-            Err(e) => {
-                println!("could not deserialize: {}", e);
-                DamageStats::default()
-            }
+            Err(_) => DamageStats::default()
         };
 
         let skill_stats_str = match row.get(9) {

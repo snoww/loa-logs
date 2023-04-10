@@ -17,7 +17,17 @@ LOA Logs require the same prerequisites as LOA Details. You must install Npcap.
 Follow instructions [here](https://github.com/lost-ark-dev/loa-details#requirements).
 
 ## Screenshots
+### In-game Overlay
 ![log_image](https://cdn.discordapp.com/attachments/537415745198489633/1094551714629173268/image.png)
 
+### Past Encounters
 <img src="https://cdn.discordapp.com/attachments/537415745198489633/1094550514152263720/LOA_Logs_Cfivu6fpBy.png" width="500"/>
+
+### Damage Breakdown
 <img src="https://cdn.discordapp.com/attachments/537415745198489633/1094550514466832464/LOA_Logs_8GoaTFKkDu.png" width="500"/>
+
+### Skill Cast Log
+<img src="https://cdn.discordapp.com/attachments/537415745198489633/1095046175171813436/image.png" width="500"/>
+
+### DPS Log
+<img src="https://cdn.discordapp.com/attachments/537415745198489633/1095046510149902416/image.png" width="500"/>
