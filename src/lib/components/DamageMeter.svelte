@@ -21,7 +21,6 @@
     let zoneChangeAlert = false;
     let phaseTransitionAlert = false;
     let raidEndAlert = false;
-    let active = true;
 
     onMount(() => {
         setInterval(() => {
@@ -30,14 +29,12 @@
 
         (async () => {
             let encounterUpdateEvent = await listen('encounter-update', (event: EncounterEvent) => {
-                // console.log(+Date.now(), event.payload);
+                console.log(+Date.now(), event.payload);
                 encounter = event.payload;
-                active = true;
             });
             let zoneChangeEvent = await listen('zone-change', (event) => {
                 console.log("zone change event")
                 zoneChangeAlert = true;
-                active = false;
                 setTimeout(() => {
                     state = MeterState.PARTY;
                     player = null;
@@ -53,12 +50,10 @@
             });
             let phaseTransitionEvent = await listen('phase-transition', (event) => {
                 console.log("phase transition event: ", event.payload)
-                active = false;
             });
             let raidEndEvent = await listen('raid-end', (event: EncounterEvent) => {
                 console.log("raid-end, updating encounter")
                 encounter = event.payload;
-                active = false;
                 raidEndAlert = true;
                 setTimeout(() => {
                     raidEndAlert = false;
@@ -103,15 +98,16 @@
                 topDamageDealt = encounter.encounterDamageStats.topDamageDealt;
                 playerDamagePercentages = players.map(player => (player.damageStats.damageDealt / topDamageDealt) * 100);
                 
-                if (active) {
+                if (encounter.currentBoss && !encounter.currentBoss.isDead || !encounter.currentBoss) {
                     duration = time - encounter.fightStart;
-                    if (duration < 0) {
-                        encounterDuration = millisToMinutesAndSeconds(0);
-                        dps = 0;
-                    } else {
-                        encounterDuration = millisToMinutesAndSeconds(duration);
-                        dps = totalDamageDealt / (duration / 1000);
-                    }
+                }
+                
+                if (duration < 0) {
+                    encounterDuration = millisToMinutesAndSeconds(0);
+                    dps = 0;
+                } else {
+                    encounterDuration = millisToMinutesAndSeconds(duration);
+                    dps = totalDamageDealt / (duration / 1000);
                 }
                 totalDamageDealt = encounter.encounterDamageStats.totalDamageDealt;
                 lastCombatPacket = encounter.lastCombatPacket;
@@ -128,7 +124,7 @@
             } else {
                 player = null;
                 state = MeterState.PARTY;
-            }
+            }            
         }
     }
 

@@ -121,18 +121,17 @@ impl Parser<'_> {
     fn soft_reset(&mut self) {
         let clone = self.encounter.clone();
         self.reset(&clone);
-        self.encounter.current_boss_name = clone.current_boss_name.to_string();
-        for (key, entity) in clone.entities {
+        self.encounter.current_boss_name = "".to_string();
+        for (key, entity) in clone.entities.iter().filter(|(_, e)| e.entity_type == EntityType::PLAYER && e.skill_stats.hits > 0 && e.max_hp > 0) {
             self.encounter.entities.insert(
-                key,
+                key.to_string(),
                 Entity {
                     last_update: Utc::now().timestamp_millis(),
-                    name: entity.name,
-                    id: entity.id,
-                    npc_id: entity.npc_id,
-                    class: entity.class,
+                    name: entity.name.to_string(),
+                    id: entity.id.to_string(),
+                    class: entity.class.to_string(),
                     class_id: entity.class_id,
-                    entity_type: entity.entity_type,
+                    entity_type: entity.entity_type.to_owned(),
                     gear_score: entity.gear_score,
                     max_hp: entity.max_hp,
                     current_hp: entity.current_hp,
