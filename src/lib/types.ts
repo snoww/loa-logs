@@ -78,7 +78,7 @@ export interface Skill {
     backAttacks: number;
     frontAttacks: number;
     dps: number;
-    dpsIntervals: { [key: number]: number };
+    castLog: Array<number>;
 }
 
 export interface DamageStats {
@@ -91,7 +91,8 @@ export interface DamageStats {
     deaths: number;
     deathTime: number;
     dps: number;
-    dpsIntervals: { [key: number]: number };
+    dpsAverage: [number, number];
+    dpsRolling10sAvg: [number, number];
 }
 
 interface SkillStats {
@@ -168,6 +169,12 @@ export enum MeterTab {
     TANK,
     PARTY_BUFFS,
     SELF_BUFFS,
+}
+
+export enum ChartType {
+    AVERAGE_DPS,
+    ROLLING_DPS,
+    SKILL_LOG
 }
 
 export interface ClassMap {

@@ -28,3 +28,10 @@ export function formatPlayerName(player: Entity,  hideNames = false): string {
 
     return playerName;
 }
+
+export function truncateString(str: string, len = 10): string {
+    if (str.length > len) {
+        return str.slice(0, len) + "...";
+    }
+    return str;
+}

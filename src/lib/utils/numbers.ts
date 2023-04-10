@@ -48,6 +48,12 @@ export function formatDurationFromMs(durationMs: number): string {
   return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
 }
 
+export function formatDurationFromS(seconds: number): string {
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = seconds % 60;
+  return `${minutes.toString().padStart(1, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+}
+
 export function formatTimestamp(timestampMs: number): string {
   const timestampDate = new Date(timestampMs);
   const today = new Date();

@@ -33,7 +33,7 @@
         playerName = formatPlayerName(entity, $hideNames)
     }
     if (entity.isDead) {       
-        deadFor = ((end - entity.damageStats.deathTime) / 1000).toFixed(0) + "s";
+        deadFor = (((end - entity.damageStats.deathTime) / 1000).toFixed(0) + "s").replace('-', '');
     }
 </script>
 

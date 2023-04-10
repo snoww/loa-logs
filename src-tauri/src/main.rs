@@ -82,6 +82,8 @@ fn main() {
                                     clone.entities.values_mut()
                                         .for_each(|e| {
                                             e.damage_stats.damage_log = Vec::new();
+                                            e.damage_stats.dps_average = Vec::new();
+                                            e.damage_stats.dps_rolling_10s_avg = Vec::new();
                                             e.skills.values_mut()
                                                 .for_each(|s| {
                                                     s.cast_log = Vec::new();
@@ -280,7 +282,7 @@ fn load_encounters_preview(window: tauri::Window, page: i32, page_size: i32) -> 
     let encounter_iter = stmt.query_map([page_size, offset], |row| {
         let classes = match row.get(4) {
             Ok(classes) => classes,
-            Err(_) => "".to_string()
+            Err(_) => "101".to_string()
         };
 
         Ok(EncounterPreview {
@@ -399,11 +401,18 @@ fn load_encounter(window: tauri::Window, id: String) -> Encounter {
 
         let damage_stats_str = match row.get(8) {
             Ok(damage_stats_str) => damage_stats_str,
-            Err(_) => "".to_string()
+            Err(e) => {
+                println!("could not parse dmg_stats: {}", e);
+                "".to_string()
+            }
         };
+
         let damage_stats = match serde_json::from_str::<DamageStats>(damage_stats_str.as_str()) {
             Ok(v) => v,
-            Err(_) => DamageStats::default()
+            Err(e) => {
+                println!("could not deserialize: {}", e);
+                DamageStats::default()
+            }
         };
 
         let skill_stats_str = match row.get(9) {

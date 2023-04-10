@@ -1,6 +1,6 @@
 <script lang="ts">
-    import { MeterState, MeterTab, type Entity, type Encounter } from "$lib/types";
-    import { millisToMinutesAndSeconds } from "$lib/utils/numbers";
+    import { MeterState, MeterTab, type Entity, type Encounter, ChartType, type Skill } from "$lib/types";
+    import { abbreviateNumber, formatDurationFromS, millisToMinutesAndSeconds } from "$lib/utils/numbers";
     import { join, resourceDir } from "@tauri-apps/api/path";
     import { convertFileSrc, invoke } from "@tauri-apps/api/tauri";
     import LogDamageMeterRow from "./LogDamageMeterRow.svelte";
@@ -9,6 +9,9 @@
     import LogBuffs from "./LogBuffs.svelte";
     import { page } from "$app/stores";
     import { hideNames } from "$lib/utils/stores";
+    import { chartable, defaultOptions, type ChartOptions, type EChartsOptions } from "$lib/utils/charts";
+    import { classColors } from "$lib/constants/colors";
+    import { writable } from "svelte/store";
 
     export let id: string;
     export let encounter: Encounter;
@@ -24,28 +27,161 @@
 
     let state = MeterState.PARTY;
     let tab = MeterTab.DAMAGE;
+    let chartType = ChartType.AVERAGE_DPS;
     let playerName = "";
 
     let deleteConfirm = false;
 
+    let avgDpsOptions: EChartsOptions = {};
+    let rollingDpsOptions: EChartsOptions = {};
+    let skillLogOptions: EChartsOptions = {};
+
     $: {       
-        if (encounter) {
+        if (encounter) {           
             players = Object.values(encounter.entities)
                 .filter((players) => players.damageStats.damageDealt > 0)
                 .sort((a, b) => b.damageStats.damageDealt - a.damageStats.damageDealt);
             topDamageDealt = encounter.encounterDamageStats.topDamageDealt;
             playerDamagePercentages = players.map(player => (player.damageStats.damageDealt / topDamageDealt) * 100);
             anyDead = players.some(player => player.isDead);
-        }
-        
-        if (playerName) {
-            player = encounter.entities[playerName];
-            state = MeterState.PLAYER;
+ 
+            if (playerName) {
+                player = encounter.entities[playerName];
+                state = MeterState.PLAYER;
 
-        } else {
-            player = null;
-            state = MeterState.PARTY;
-        }        
+            } else {
+                player = null;
+                state = MeterState.PARTY;
+            }
+
+            if (players[0].damageStats && players[0].damageStats.dpsAverage.length > 0 && players[0].damageStats.dpsRolling10sAvg.length > 0)
+            {
+                let legendNames: Array<string> = [];
+                if ($hideNames) {
+                    let map: {[key: string]: number} = {}
+                    let count = players.map(e => {
+                        return map[e.class] = (typeof map[e.class] === "undefined") ? 1 : map[e.class] + 1;
+                    })
+                    legendNames = players.map((e, i) => {
+                        if (map[e.class] === 1) {
+                            return e.class;
+                        } else {
+                            return e.class + "(" + count[i] + ")";
+                        }
+                    })
+                } else {
+                    legendNames = players.map((e) => e.name);
+                }
+
+                if (chartType === ChartType.AVERAGE_DPS) {
+                    avgDpsOptions = {
+                        ...defaultOptions,
+                        legend: {
+                            data: legendNames,
+                            textStyle: {
+                                color: 'white'
+                            },
+                            type: 'scroll',
+                            width: '90%',
+                            pageIconInactiveColor: "#313131",
+                            pageIconColor: "#aaa",
+                            pageTextStyle: {
+                                color: "#aaa"
+                            },
+                        },
+                        xAxis: { 
+                            type: 'category',
+                            splitLine: {
+                                show: false
+                            },
+                            data: Array.from({length: players[0].damageStats.dpsAverage.length}, (_, i) => formatDurationFromS(i * 5)),
+                            boundaryGap: false,
+                            axisLabel: {
+                                color: 'white'
+                            }
+                        },
+                        yAxis: {
+                            type: 'value',
+                            splitLine: {
+                                show: true,
+                                lineStyle: {
+                                    color: '#333'
+                                }
+                            },
+                            axisLabel: {
+                                color: 'white',
+                                formatter: function(value: number) {
+                                    return abbreviateNumber(value);
+                                }
+                            }
+                        },
+                        series: players.map((player, i) => {
+                            return {
+                                name: legendNames[i],
+                                color: classColors[player.class].color,
+                                type: 'line',
+                                data: player.damageStats.dpsAverage.map((dps) => dps * Math.random()),
+                                showSymbol: false,
+                                smooth: 0.1
+                            }
+                        })
+                    };
+                } else if (chartType === ChartType.ROLLING_DPS) {
+                    rollingDpsOptions = {
+                        ...defaultOptions,
+                        legend: {
+                            data: legendNames,
+                            textStyle: {
+                                    color: 'white'
+                                },
+                                type: 'scroll',
+                                width: '90%',
+                                pageIconInactiveColor: "#313131",
+                                pageIconColor: "#aaa",
+                                pageTextStyle: {
+                                    color: "#aaa"
+                                },
+                        },
+                        xAxis: { 
+                            type: 'category',
+                            splitLine: {
+                                show: false
+                            },
+                            data: Array.from({length: players[0].damageStats.dpsRolling10sAvg.length}, (_, i) => formatDurationFromS(i)),
+                            boundaryGap: false,
+                            axisLabel: {
+                                color: 'white'
+                            }
+                        },
+                        yAxis: {
+                            type: 'value',
+                            splitLine: {
+                                show: true,
+                                lineStyle: {
+                                    color: '#333'
+                                }
+                            },
+                            axisLabel: {
+                                color: 'white',
+                                formatter: function(value: number) {
+                                    return abbreviateNumber(value);
+                                }
+                            }
+                        },
+                        series: players.map((player, i) => {
+                            return {
+                                name: legendNames[i],
+                                color: classColors[player.class].color,
+                                type: 'line',
+                                data: player.damageStats.dpsRolling10sAvg,
+                                showSymbol: false,
+                                smooth: 0.1
+                            }
+                        })
+                    }
+                }
+            }
+        }
     }
 
     async function getClassIconPath(classId: number) {       
@@ -66,6 +202,7 @@
     function inspectPlayer(name: string) {
         state = MeterState.PLAYER;
         playerName = name;
+        chartType = ChartType.SKILL_LOG;
     }
 
     function handleRightClick() {
@@ -73,6 +210,7 @@
             state = MeterState.PARTY;
             player = null;
             playerName = "";
+            chartType = ChartType.AVERAGE_DPS;
         }
     }
 
@@ -84,6 +222,128 @@
         } else {
             document.location.href = "/logs";
         }
+    }
+
+    async function getSkillChartOptions(player: Entity) {
+        let sortedSkills = Object.values(player.skills).filter(skill => skill.castLog.length > 0).sort((a, b) => a.totalDamage - b.totalDamage)
+        let skills = sortedSkills.map(skill => skill.name);
+        for (let skill of sortedSkills) {
+            let fileName = skill.icon;
+            if (!skill.icon.startsWith("http")) {
+                if (skill.icon) {
+                    fileName = skill.icon;
+                } else {
+                    fileName = "unknown.png";
+                }
+                skill.icon = convertFileSrc(await join(await resourceDir(), 'images', 'skills', fileName));
+            }
+        }
+        skillLogOptions = {
+            ...defaultOptions,
+            grid: {
+                left: '5%',
+                right: '5%',
+                bottom: '18%',
+                top: '10%',
+                containLabel: true
+            },
+            dataZoom: [
+                {
+                    type: 'slider',
+                    fillerColor: 'rgba(80,80,80,.5)',
+                    borderColor: "rgba(80,80,80,.5)",
+                    handleStyle: {
+                        color: 'rgba(80,80,80,.5)',
+                    },
+                    moveHandleStyle: {
+                        color: 'rgba(136,136,136)',
+                    },
+                    start: 0,
+                    endValue: "1:00" 
+                },
+                {
+                    type: 'inside',
+                    xAxisIndex: [0],
+                    throttle: 50,
+                },
+                {
+                    type: 'inside',
+                    yAxisIndex: [0],
+                    throttle: 50,
+                    zoomOnMouseWheel: false,
+                },
+
+            ],
+            tooltip: {
+                trigger: "axis",
+                formatter: function (params: any[]) {
+                    let output = `<span style="font-weight: 800">${params[0].name}</span>`
+                    params.forEach(p => {
+                        output += `<br/>${p.seriesName}`
+                    })
+                    
+                    return output;
+                }
+            },
+            legend: {
+                data: [...skills].reverse(),
+                textStyle: {
+                    color: 'white'
+                },
+                type: 'scroll',
+                width: '90%',
+                pageIconInactiveColor: "#313131",
+                pageIconColor: "#aaa",
+                pageTextStyle: {
+                    color: "#aaa"
+                },
+                itemWidth: 20,
+                itemHeight: 20,
+            },
+            xAxis: { 
+                type: 'category',
+                splitLine: {
+                    show: false
+                },
+                data: Array.from({length: (encounter.lastCombatPacket - encounter.fightStart) / 1000}, (_, i) => formatDurationFromS(i)),
+                boundaryGap: false,
+                axisLabel: {
+                    color: 'white'
+                },
+                
+            },
+            yAxis: {
+                type: 'category',
+                splitLine: {
+                    show: true,
+                    lineStyle: {
+                        color: '#333'
+                    }
+                },
+                axisLabel: {
+                    show: false,
+                },
+                data: skills.map((skill) => {
+                    return {
+                        value: skill
+                    }
+                }),
+            },
+            series: sortedSkills.map((skill) => {
+                return {
+                    name: skill.name,
+                    type: 'scatter',
+                    symbol: 'image://' + skill.icon,
+                    symbolSize: [20, 20],
+                    symbolKeepAspect: true,
+                    data: skill.castLog.map((cast) => {
+                        return [formatDurationFromS(cast), skill.name]
+                    })
+                }
+            })
+        }
+
+        return skillLogOptions;
     }
 
 </script>
@@ -117,7 +377,7 @@
     {#if deleteConfirm}
     <div class="fixed inset-0 z-50 bg-zinc-900 bg-opacity-80"></div>
     <div class="fixed top-0 left-0 right-0 h-modal z-50 w-full p-4 justify-center items-center">
-        <div class="flex relative max-w-md w-full max-h-full">
+        <div class="flex relative max-w-md w-full max-h-full mx-auto top-[25%]">
             <div class="bg-zinc-800 text-gray-400 rounded-lg border-gray-700 shadow-md relative flex flex-col mx-auto">
                 <button type="button" class="focus:outline-none whitespace-normal rounded-lg p-1.5 hover:bg-zinc-600 ml-auto absolute top-3 right-2.5" aria-label="Close modal" on:click={() => deleteConfirm = false}>
                     <span class="sr-only">Close modal</span> <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
@@ -191,4 +451,47 @@
             {/if}
         {/if}
     </table>
+</div>
+<div class="mt-4">
+    <div class="font-bold text-lg">
+        Charts
+    </div>
+    <div class="flex divide-x divide-gray-600 mt-2">
+        {#if playerName === ""}
+        <button class="px-2 rounded-sm py-1" class:bg-pink-900={chartType == ChartType.AVERAGE_DPS} class:bg-gray-700={chartType != ChartType.AVERAGE_DPS} on:click={() => chartType = ChartType.AVERAGE_DPS}>
+            Average DPS
+        </button>
+        <button class="px-2 rounded-sm py-1" class:bg-pink-900={chartType == ChartType.ROLLING_DPS} class:bg-gray-700={chartType != ChartType.ROLLING_DPS} on:click={() => chartType = ChartType.ROLLING_DPS}>
+            10s DPS Window
+        </button>
+        {:else}
+        <button class="px-2 rounded-sm py-1" class:bg-pink-900={chartType == ChartType.SKILL_LOG} class:bg-gray-700={chartType != ChartType.SKILL_LOG} on:click={() => chartType = ChartType.SKILL_LOG}>
+            Skill Casts
+        </button>
+        {/if}
+    </div>
+    {#if chartType == ChartType.AVERAGE_DPS}
+        {#if $hideNames}
+        <div class="w-full h-[300px] mt-2" use:chartable={avgDpsOptions}>
+        </div>
+        {:else}
+        <div class="w-full h-[300px] mt-2" use:chartable={avgDpsOptions}>
+        </div>
+        {/if}
+    {:else if chartType == ChartType.ROLLING_DPS}
+    {#if $hideNames}
+    <div class="w-full h-[300px] mt-2" use:chartable={rollingDpsOptions}>
+    </div>
+    {:else}
+    <div class="w-full h-[300px] mt-2" use:chartable={rollingDpsOptions}>
+    </div>
+    {/if}
+    {:else if chartType == ChartType.SKILL_LOG}
+    {#if player}
+    {#await getSkillChartOptions(player) then options}
+    <div class="w-full h-[400px] mt-2" use:chartable={options}>
+    </div>
+    {/await}
+    {/if}
+    {/if}
 </div>

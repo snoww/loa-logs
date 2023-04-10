@@ -57,7 +57,7 @@
         }
         if (entity.isDead) {
             playerName = "💀 " + playerName;
-            deadFor = ((lastCombatPacket - entity.damageStats.deathTime) / 1000).toFixed(0) + "s";
+            deadFor = (((lastCombatPacket - entity.damageStats.deathTime) / 1000).toFixed(0) + "s").replace('-', '');
         }        
     }
 

@@ -1,4 +1,4 @@
-use std::{cmp::max, thread, time::Duration};
+use std::cmp::{max, Ordering};
 
 use chrono::{DateTime, Utc};
 use hashbrown::{HashMap, HashSet};
@@ -11,12 +11,15 @@ use serde_json::json;
 use tauri::{Window, Wry, Manager};
 use tokio::task;
 
+const WINDOW_MS: i64 = 5_000;
+const WINDOW_S: i64 = 5;
+
 #[derive(Debug)]
 pub struct Parser<'a> {
     pub window: &'a Window<Wry>,
     pub encounter: Encounter,
     pub raid_end: bool,
-    pub saved: bool
+    saved: bool,
 }
 
 impl Parser<'_> {
@@ -25,7 +28,7 @@ impl Parser<'_> {
             window,
             encounter: Encounter::default(),
             raid_end: false,
-            saved: false
+            saved: false,
         }
     }
 
@@ -88,7 +91,7 @@ impl Parser<'_> {
             _ => {}
         }
     }
-
+            
     fn reset(&mut self, clone: &Encounter) {
         self.encounter.fight_start = 0;
         self.encounter.entities = HashMap::new();
@@ -903,7 +906,7 @@ impl Parser<'_> {
                 || !encounter
                     .entities
                     .values()
-                    .any(|e| e.entity_type == EntityType::PLAYER && e.skill_stats.hits > 1)
+                    .any(|e| e.entity_type == EntityType::PLAYER && e.skill_stats.hits > 1 && e.max_hp > 0)
             {
                 return;
             }
@@ -970,14 +973,14 @@ fn get_status_effect_data(buff_id: i32) -> Option<StatusEffect> {
             if buff_source_skill.is_some() {
                 status_effect.source.skill = buff_source_skill.cloned();
             }
-        } else if let Some(buff_source_skill) = SKILL_DATA.get(&((buff_id as f32 / 10.0) as i32)) {
+        } else if let Some(buff_source_skill) = SKILL_DATA.get(&(buff_id / 10)) {
             status_effect.source.skill = Some(buff_source_skill.clone());
         } else if let Some(buff_source_skill) =
-            SKILL_DATA.get(&(((buff_id as f32 / 100.0).floor() * 10.0) as i32))
+            SKILL_DATA.get(&((buff_id / 100) * 10))
         {
             status_effect.source.skill = Some(buff_source_skill.clone());
         } else {
-            let skill_id = (buff.unique_group as f32 / 10.0) as i32;
+            let skill_id = buff.unique_group / 10;
             let buff_source_skill = SKILL_DATA.get(&skill_id);
             status_effect.source.skill = buff_source_skill.cloned();
         }
@@ -1200,7 +1203,7 @@ fn get_skill_name_and_icon(
                     return (skill.name.to_string(), skill.icon.to_string());
                 }
             } else if let Some(skill) =
-                SKILL_DATA.get(&((skill_effect_id as f32 / 10.0).floor() as i32))
+                SKILL_DATA.get(&(skill_effect_id / 10))
             {
                 return (skill.name.to_string(), skill.icon.to_string());
             }
@@ -1211,7 +1214,7 @@ fn get_skill_name_and_icon(
     } else {
         let mut skill = SKILL_DATA.get(&skill_id);
         if skill.is_none() {
-            skill = SKILL_DATA.get(&(skill_id - (skill_id as f32 % 10.0) as i32));
+            skill = SKILL_DATA.get(&(skill_id - (skill_id % 10)));
             if skill.is_none() {
                 return (skill_name, "".to_string());
             }
@@ -1257,9 +1260,8 @@ fn insert_data(tx: &Transaction, encounter: &mut Encounter) {
         .expect("failed to prepare encounter statement");
 
     encounter.duration = encounter.last_combat_packet - encounter.fight_start;
-    let duration_seconds = encounter.duration as f64 / 1000_f64;
-    encounter.encounter_damage_stats.dps =
-        (encounter.encounter_damage_stats.total_damage_dealt as f64 / duration_seconds) as i64;
+    let duration_seconds = encounter.duration / 1000;
+    encounter.encounter_damage_stats.dps = encounter.encounter_damage_stats.total_damage_dealt / duration_seconds;
     
     // let boss_name = encounter.entities
     //     .iter()
@@ -1308,32 +1310,32 @@ fn insert_data(tx: &Transaction, encounter: &mut Encounter) {
         )
         .expect("failed to prepare entity statement");
 
-    for (_key, mut entity) in encounter.entities.iter_mut() {
-        if entity.entity_type != EntityType::PLAYER || entity.skill_stats.hits < 1 || entity.max_hp == 0 {
-            continue;
-        }
+    let fight_start = encounter.fight_start;
+    let fight_end = encounter.last_combat_packet;
 
-        let mut total_damage: i64 = 0;
-        let mut rolling_avg = RollingAverage::new(10_000);
-        let fight_start = encounter.fight_start;
-        for (i, (timestamp, damage_dealt)) in entity.damage_stats.damage_log.iter().enumerate() {
-            let adjusted_timestamp = timestamp - fight_start;
-            rolling_avg.add(adjusted_timestamp, *damage_dealt);
-            let avg = rolling_avg.average();
-    
-            entity.damage_stats.dps_rolling_10s_avg.push((i as i32, avg.round() as i64));
-            total_damage += damage_dealt;
-        
-            if i % 5 == 0 { // Calculate cumulative DPS every 5 iterations
-                let cumulative_avg_dps = total_damage as f64 / (adjusted_timestamp as f64 / 1000.0);
-                entity.damage_stats.dps_average.push((i as i32 + 1, cumulative_avg_dps.round() as i64));
+    for (_key, mut entity) in encounter.entities.iter_mut()
+        .filter(|(_, e)| e.entity_type == EntityType::PLAYER && e.skill_stats.hits >= 1 && e.max_hp > 0) 
+    {
+        let intervals = generate_intervals(fight_start, fight_end);
+        if !intervals.is_empty() {
+            for interval in intervals {                
+                let start = fight_start + interval - WINDOW_MS;
+                let end = fight_start + interval + WINDOW_MS;
+                
+                let damage = sum_in_range(&entity.damage_stats.damage_log, start, end);
+                entity.damage_stats.dps_rolling_10s_avg.push(damage / WINDOW_S);
             }
         }
 
-        entity.damage_stats.dps = (entity.damage_stats.damage_dealt as f64 / duration_seconds) as i64;
+        let fight_start_sec = encounter.fight_start / 1000;
+        let fight_end_sec = encounter.last_combat_packet / 1000;
+        entity.damage_stats.dps_average = calculate_average_dps(&entity.damage_stats.damage_log, fight_start_sec, fight_end_sec);
+
+        entity.damage_stats.dps = entity.damage_stats.damage_dealt / duration_seconds;
         for (_, mut skill) in entity.skills.iter_mut() {
-            skill.dps = (skill.total_damage as f64 / duration_seconds) as i64;
+            skill.dps = skill.total_damage / duration_seconds;
         }
+
         entity_stmt
             .execute(params![
                 entity.name,
@@ -1370,4 +1372,57 @@ fn insert_data(tx: &Transaction, encounter: &mut Encounter) {
     //         json!(boss.skill_stats)
     //     ]).expect("failed to insert entity");
     // }
+}
+
+fn generate_intervals(start: i64, end: i64) -> Vec<i64> {
+    if start >= end {
+        return Vec::new();
+    }
+
+    (0..end - start).step_by(1_000).collect()
+}
+
+fn sum_in_range(vec: &Vec<(i64, i64)>, start: i64, end: i64) -> i64 {
+    let start_idx = binary_search_left(vec, start);
+    let end_idx = binary_search_left(vec, end + 1);
+
+    vec[start_idx..end_idx].iter().map(|&(_, second)| second).sum()
+}
+
+fn binary_search_left(vec: &Vec<(i64, i64)>, target: i64) -> usize {
+    let mut left = 0;
+    let mut right = vec.len();
+
+    while left < right {
+        let mid = left + (right - left) / 2;
+        match vec[mid].0.cmp(&target) {
+            Ordering::Less => left = mid + 1,
+            _ => right = mid,
+        }
+    }
+
+    left
+}
+
+fn calculate_average_dps(data: &[(i64, i64)], start_time: i64, end_time: i64) -> Vec<i64> {
+    let step = 5;
+    let mut results = vec![0; ((end_time - start_time) / step + 1) as usize];
+    let mut current_sum = 0;
+    let mut data_iter = data.iter();
+    let mut current_data = data_iter.next();
+
+    for t in (start_time..=end_time).step_by(step as usize) {
+        while let Some((timestamp, value)) = current_data {
+            if *timestamp / 1000 <= t {
+                current_sum += value;
+                current_data = data_iter.next();
+            } else {
+                break;
+            }
+        }
+
+        results[((t - start_time) / step) as usize] = current_sum / (t - start_time + 1);
+    }
+
+    results
 }
