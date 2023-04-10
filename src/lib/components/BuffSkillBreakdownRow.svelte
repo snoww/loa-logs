@@ -57,16 +57,16 @@
 </td>
 {#if groupedSynergies.size > 0}
 {#each synergyPercentageDetails as synergy (synergy.id)}
-    {#if synergy.percentage}
     <td class="px-1 text-center">
+        {#if synergy.percentage}
         <div class="relative z-20">
             {synergy.percentage}<span class="text-3xs text-gray-300">%</span>
         </div>
         <Tooltip placement="bottom" defaultClass="bg-zinc-900 p-2 text-gray-300 z-50">
             <BuffTooltipDetail buffDetails={synergy} />
         </Tooltip>
+        {/if}
     </td>
-    {/if}
 {/each}
 {/if}
 <div class="absolute left-0 h-7 px-2 py-1 z-0"
