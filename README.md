@@ -30,4 +30,4 @@ Follow instructions [here](https://github.com/lost-ark-dev/loa-details#requireme
 <img src="https://cdn.discordapp.com/attachments/537415745198489633/1095046175171813436/image.png" width="500"/>
 
 ### DPS Log
-<img src="https://cdn.discordapp.com/attachments/537415745198489633/1095046510149902416/image.png" width="500"/>
+<img src="https://cdn.discordapp.com/attachments/537415745198489633/1095048314614984785/image.png" width="500"/>
