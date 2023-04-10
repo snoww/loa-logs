@@ -56,9 +56,11 @@
 <td class="px-1 text-center relative z-10">
     {dps[0]}<span class="text-3xs text-gray-300">{dps[1]}</span>
 </td>
+{#if damagePercentage < 100}
 <td class="px-1 text-center relative z-10">
     {damagePercentage.toFixed(1)}<span class="text-xs text-gray-300">%</span>
 </td>
+{/if}
 <td class="px-1 text-center relative z-10">
     {(entity.skillStats.crits / entity.skillStats.hits * 100).toFixed(1)}<span class="text-3xs text-gray-300">%</span>
 </td>
