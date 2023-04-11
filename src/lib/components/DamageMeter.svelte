@@ -29,7 +29,7 @@
 
         (async () => {
             let encounterUpdateEvent = await listen('encounter-update', (event: EncounterEvent) => {
-                console.log(+Date.now(), event.payload);
+                // console.log(+Date.now(), event.payload);
                 encounter = event.payload;
             });
             let zoneChangeEvent = await listen('zone-change', (event) => {
@@ -90,7 +90,7 @@
     let lastCombatPacket = 0;
 
     $: {
-        if (encounter) {
+        if (encounter) {            
             if (encounter.fightStart !== 0) {
                 players = Object.values(encounter.entities)
                     .filter((players) => players.damageStats.damageDealt > 0)
