@@ -42,30 +42,29 @@ impl Parser<'_> {
             return;
         }
 
-        let line_split: Vec<&str> = line.trim().split('|').collect();
-        if line_split.len() < 2 || line_split[0].is_empty() {
-            return;
-        }
-
-        let log_type = match line_split[0].parse::<i32>() {
-            Ok(t) => t,
-            Err(_) => {
+        let mut line_split = line.trim().split('|');
+        
+        let log_type = match line_split.next().and_then(|s| s.parse::<i32>().ok()) {
+            Some(t) => t,
+            None => {
                 println!("Could not parse log type");
                 return;
             }
         };
 
-        let timestamp = match line_split[1].parse::<DateTime<Utc>>() {
-            Ok(t) => t.timestamp_millis(),
-            Err(_) => {
+        let timestamp = match line_split.next().and_then(|s| s.parse::<DateTime<Utc>>().ok()) {
+            Some(t) => t.timestamp_millis(),
+            None => {
                 println!("Could not parse timestamp");
                 return;
             }
         };
 
         // if there is no id associated with the log line, we can ignore it. i think.
-        if line_split[2] == "0" && log_type != 2 {
-            return;
+        if let (Some(id), false) = (line_split.next(), log_type == 2) {
+            if id == "0" {
+                return;
+            }
         }
 
         // we reset our encounter only when we receive next incoming line
@@ -74,7 +73,8 @@ impl Parser<'_> {
             self.soft_reset();
             self.saved = false;
         }
-
+        
+        let line_split: Vec<&str> = line_split.collect();
         match log_type {
             0 => self.on_message(timestamp, &line_split),
             1 => self.on_init_env(timestamp, &line_split),
