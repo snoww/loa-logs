@@ -15,7 +15,7 @@
 
     let damageDealt: (string | number)[];
     let dps: (string | number)[];
-    let damagePercentage: number;
+    let damagePercentage: string;
     let playerName: string;
     let deadFor: string;    
 
@@ -25,7 +25,7 @@
         color = classColors[entity.class].color;
     }
     damageDealt = abbreviateNumberSplit(entity.damageStats.damageDealt);
-    damagePercentage = entity.damageStats.damageDealt / totalDamageDealt * 100;
+    damagePercentage = (entity.damageStats.damageDealt / totalDamageDealt * 100).toFixed(1);
     
     dps = abbreviateNumberSplit(entity.damageStats.dps);
 
@@ -56,9 +56,9 @@
 <td class="px-1 text-center relative z-10">
     {dps[0]}<span class="text-3xs text-gray-300">{dps[1]}</span>
 </td>
-{#if damagePercentage < 100}
+{#if damagePercentage !== "100.0"}
 <td class="px-1 text-center relative z-10">
-    {damagePercentage.toFixed(1)}<span class="text-xs text-gray-300">%</span>
+    {damagePercentage}<span class="text-xs text-gray-300">%</span>
 </td>
 {/if}
 <td class="px-1 text-center relative z-10">
