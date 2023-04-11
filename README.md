@@ -1,6 +1,6 @@
 # <img src="https://cdn.discordapp.com/attachments/537415745198489633/1094617120538644622/icon.png" width="30"/> LOA Logs
 
-![GitHub](https://img.shields.io/github/downloads/snoww/loa-logs/total?style=for-the-badge)
+[![GitHub](https://img.shields.io/github/downloads/snoww/loa-logs/total?style=for-the-badge)](https://github.com/snoww/loa-logs/releases/latest)
 
 
 ![GitHub](https://img.shields.io/github/v/release/snoww/loa-logs?style=flat-square)
