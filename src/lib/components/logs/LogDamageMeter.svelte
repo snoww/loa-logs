@@ -120,7 +120,7 @@
                                 name: legendNames[i],
                                 color: classColors[player.class].color,
                                 type: 'line',
-                                data: player.damageStats.dpsAverage.map((dps) => dps * Math.random()),
+                                data: player.damageStats.dpsAverage,
                                 showSymbol: false,
                                 smooth: 0.1
                             }
