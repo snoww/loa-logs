@@ -193,20 +193,14 @@ impl Parser<'_> {
 
     fn on_phase_transition(&mut self, line: &[&str]) {
         let phase_transition = LogPhaseTransition {
-            raid_result: match line[2].parse::<i32>().unwrap() {
-                0 => RaidResult::RAID_RESULT,
-                1 => RaidResult::GUARDIAN_DEAD,
-                2 => RaidResult::RAID_END,
-                _ => RaidResult::UNKNOWN,
-            },
+            raid_result: line[2].parse::<i32>().unwrap_or_default()
         };
 
         self.window
-            .emit("phase-transition", phase_transition.raid_result.clone())
+            .emit("phase-transition", phase_transition.raid_result)
             .expect("failed to emit phase-transition");
-
-        if phase_transition.raid_result == RaidResult::RAID_END
-            || phase_transition.raid_result == RaidResult::RAID_RESULT
+            
+        if phase_transition.raid_result == 0 || phase_transition.raid_result == 2
         {
             self.save_to_db();
             self.raid_end = true;
@@ -628,6 +622,9 @@ impl Parser<'_> {
 
         if self.encounter.fight_start == 0 {
             self.encounter.fight_start = timestamp;
+            self.window
+                .emit("raid-start", timestamp)
+                .expect("failed to emit raid-start");
         }
 
         target_entity.current_hp = damage.current_hp;
@@ -895,21 +892,21 @@ impl Parser<'_> {
     }
 
     fn save_to_db(&self) {
+        if self.encounter.fight_start == 0
+            || self.encounter.current_boss_name.is_empty()
+            || !self.encounter.entities.contains_key(&self.encounter.current_boss_name)
+            || !self.encounter
+                .entities
+                .values()
+                .any(|e| e.entity_type == EntityType::PLAYER && e.skill_stats.hits > 1 && e.max_hp > 0)
+        {
+            return;
+        }
         let mut encounter = self.encounter.clone();
         let mut path = self.window.app_handle().path_resolver().resource_dir().expect("could not get resource dir");
         path.push("encounters.db");
-        task::spawn(async move {
-            if encounter.fight_start == 0
-                || encounter.current_boss_name.is_empty()
-                || !encounter.entities.contains_key(&encounter.current_boss_name)
-                || !encounter
-                    .entities
-                    .values()
-                    .any(|e| e.entity_type == EntityType::PLAYER && e.skill_stats.hits > 1 && e.max_hp > 0)
-            {
-                return;
-            }
 
+        task::spawn(async move {
             println!("saving to db - {}", encounter.current_boss_name);
 
             let mut conn = Connection::open(path).expect("failed to open database");

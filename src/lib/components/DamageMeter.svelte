@@ -20,7 +20,8 @@
 
     let zoneChangeAlert = false;
     let phaseTransitionAlert = false;
-    let raidEndAlert = false;
+    let bossDeadAlert = false;
+    let raidInProgress = true;
 
     onMount(() => {
         setInterval(() => {
@@ -33,7 +34,7 @@
                 encounter = event.payload;
             });
             let zoneChangeEvent = await listen('zone-change', (event) => {
-                console.log("zone change event")
+                // console.log("zone change event")
                 zoneChangeAlert = true;
                 setTimeout(() => {
                     state = MeterState.PARTY;
@@ -48,26 +49,34 @@
                     zoneChangeAlert = false
                 }, 6000);
             });
-            let phaseTransitionEvent = await listen('phase-transition', (event) => {
-                console.log("phase transition event: ", event.payload)
+            let raidStartEvent = await listen('raid-start', (event) => {
+                // console.log("raid start event: ", event.payload);
+                raidInProgress = true;
             });
-            let raidEndEvent = await listen('raid-end', (event: EncounterEvent) => {
-                console.log("raid-end, updating encounter")
-                encounter = event.payload;
-                raidEndAlert = true;
-                setTimeout(() => {
-                    raidEndAlert = false;
-                }, 3000);
+            let phaseTransitionEvent = await listen('phase-transition', (event) => {
+                let phaseCode = event.payload;
+                // console.log(Date.now() + ": phase transition event: ", event.payload)
+                if (phaseCode === 1) {
+                    bossDeadAlert = true;
+                    setTimeout(() => {
+                        bossDeadAlert = false;
+                    }, 3000);
+                } 
+                else if (phaseCode === 2 && raidInProgress) {
+                    phaseTransitionAlert = true;
+                    setTimeout(() => {
+                        phaseTransitionAlert = false;
+                    }, 3000);
+                }
+                raidInProgress = false;
             });
 
             events.push(
                 encounterUpdateEvent, 
                 zoneChangeEvent,
                 phaseTransitionEvent,
-                raidEndEvent
+                raidStartEvent
             );
-            // encounter = JSON.parse(await readTextFile(await documentDir() + 'projects\\loa-log-parser\\2023-03-11-02-39-58-Demon-Beast-Commander-Valtan.json'));
-            // console.log(encounter);
         })();
     });
 
@@ -91,7 +100,7 @@
 
     $: {
         if (encounter) {            
-            if (encounter.fightStart !== 0) {
+            if (encounter.fightStart !== 0 && raidInProgress) {
                 players = Object.values(encounter.entities)
                     .filter((players) => players.damageStats.damageDealt > 0)
                     .sort((a, b) => b.damageStats.damageDealt - a.damageStats.damageDealt);
@@ -212,20 +221,20 @@
 {/if}
 {#if phaseTransitionAlert}
 <div transition:fade>
-<Alert color="none" class="bg-pink-800 bg-opacity-80 w-52 mx-auto absolute inset-x-0 bottom-8 py-2 z-50" dismissable on:close={() => phaseTransitionAlert = false}>
-    <span slot="icon"><svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path></svg>
-    </span>
-    Phase Transition
-</Alert>
+    <Alert color="none" class="bg-pink-800 bg-opacity-80 w-52 mx-auto absolute inset-x-0 bottom-8 py-2 z-50" dismissable on:close={() => phaseTransitionAlert = false}>
+        <span slot="icon"><svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path></svg>
+        </span>
+        Wipe/Phase Clear
+    </Alert>
 </div>
 {/if}
-{#if raidEndAlert}
+{#if bossDeadAlert}
 <div transition:fade>
-<Alert color="none" class="bg-pink-800 bg-opacity-80 w-48 mx-auto absolute inset-x-0 bottom-8 py-2 z-50" dismissable on:close={() => raidEndAlert = false}>
-    <span slot="icon"><svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path></svg>
-    </span>
-    Raid Ending
-</Alert>
+    <Alert color="none" class="bg-pink-800 bg-opacity-80 w-48 mx-auto absolute inset-x-0 bottom-8 py-2 z-50" dismissable on:close={() => bossDeadAlert = false}>
+        <span slot="icon"><svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path></svg>
+        </span>
+        Boss Dead
+    </Alert>
 </div>
 {/if}
 <Footer bind:tab={tab}/>

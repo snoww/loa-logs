@@ -10,7 +10,7 @@ pub struct LogInitEnv<'a> {
 
 #[derive(Debug)]
 pub struct LogPhaseTransition {
-    pub raid_result: RaidResult,
+    pub raid_result: i32,
 }
 
 #[derive(Debug)]
