@@ -1495,7 +1495,7 @@
   "59961": {
     "id": 59961,
     "name": "Sprinkle Water",
-    "desc": "Sprinkle the origin spring water to give the blessing of renewal.",
+    "desc": "Sprinkle the Origin Fountain water to give the blessing of renewal.",
     "classid": 0,
     "icon": "vehicle_315.png"
   },
@@ -21849,6 +21849,241 @@
   "41514604": { "id": 41514604, "name": "엔드_퀸_투명몬스터_해일_4", "desc": "", "classid": 0, "icon": "" },
   "41514605": { "id": 41514605, "name": "엔드_퀸_투명몬스터_해일_5", "desc": "", "classid": 0, "icon": "" },
   "41514606": { "id": 41514606, "name": "엔드_퀸_투명몬스터_해일_6", "desc": "", "classid": 0, "icon": "" },
+  "4219601": { "id": 4219601, "name": "하누마탄_전방 스트레이트", "desc": "", "classid": 0, "icon": "" },
+  "4219602": { "id": 4219602, "name": "하누마탄_전방 훅", "desc": "", "classid": 0, "icon": "" },
+  "4219603": { "id": 4219603, "name": "하누마탄_백스핀 블로우", "desc": "", "classid": 0, "icon": "" },
+  "4219604": { "id": 4219604, "name": "하누마탄_전방 잽", "desc": "", "classid": 0, "icon": "" },
+  "4219605": { "id": 4219605, "name": "하누마탄_후방 대쉬", "desc": "", "classid": 0, "icon": "" },
+  "4219606": { "id": 4219606, "name": "하누마탄_전방 대쉬 후 공격", "desc": "", "classid": 0, "icon": "" },
+  "4219607": { "id": 4219607, "name": "하누마탄_점프 후 내려찍기", "desc": "", "classid": 0, "icon": "" },
+  "4219608": { "id": 4219608, "name": "하누마탄_다리 갑주_1_전방 지진파", "desc": "", "classid": 0, "icon": "" },
+  "4219609": { "id": 4219609, "name": "하누마탄_다리 갑주_2_순보 공격", "desc": "", "classid": 0, "icon": "" },
+  "4219610": { "id": 4219610, "name": "하누마탄_다리 갑주_3_백스탭_지진파", "desc": "", "classid": 0, "icon": "" },
+  "4219611": {
+    "id": 4219611,
+    "name": "하누마탄_다리 갑주_4_전방 대쉬 후 공격_지진파",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4219612": { "id": 4219612, "name": "하누마탄_다리 갑주_5_순보_지진파", "desc": "", "classid": 0, "icon": "" },
+  "4219613": { "id": 4219613, "name": "하누마탄_광역 대지 분출 (광역기)_카운터", "desc": "", "classid": 0, "icon": "" },
+  "4219614": { "id": 4219614, "name": "하누마탄_발구르기 (필살기)_저지", "desc": "", "classid": 0, "icon": "" },
+  "4219615": {
+    "id": 4219615,
+    "name": "하누마탄_발구르기 (필살기)_화염_저지_저지 성공시 부위파괴",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4219616": {
+    "id": 4219616,
+    "name": "하누마탄_발구르기 (필살기)_냉기_저지_저지 성공시 부위파괴",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4219617": { "id": 4219617, "name": "하누마탄_머리 갑주_1_기공탄", "desc": "", "classid": 0, "icon": "" },
+  "4219618": { "id": 4219618, "name": "하누마탄_머리 갑주_2_기공파", "desc": "", "classid": 0, "icon": "" },
+  "4219619": { "id": 4219619, "name": "하누마탄_머리 갑주_3_전방위 기공포", "desc": "", "classid": 0, "icon": "" },
+  "4219620": { "id": 4219620, "name": "하누마탄_머리 갑주_4_환영 남기기", "desc": "", "classid": 0, "icon": "" },
+  "4219621": { "id": 4219621, "name": "하누마탄_머리 갑주_5_백스탭_기공파", "desc": "", "classid": 0, "icon": "" },
+  "4219622": {
+    "id": 4219622,
+    "name": "하누마탄_원기옥 (광역기)_저지(반격)_카운터",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4219623": {
+    "id": 4219623,
+    "name": "하누마탄_원기옥 (광역기)_저지 성공시 공격스킬",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4219624": { "id": 4219624, "name": "하누마탄_필살 환영 공격 (필살기)_저지", "desc": "", "classid": 0, "icon": "" },
+  "4219625": {
+    "id": 4219625,
+    "name": "하누마탄_필살 환영 공격 (필살기)_화염_저지",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4219626": {
+    "id": 4219626,
+    "name": "하누마탄_필살 환영 공격 (필살기)_냉기_저지",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4219627": {
+    "id": 4219627,
+    "name": "하누마탄_필살 환영 공격 (필살기)_저지당함_카운터",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4219628": {
+    "id": 4219628,
+    "name": "하누마탄_필살 환영 공격 (필살기)_화염_저지당함_카운터",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4219629": {
+    "id": 4219629,
+    "name": "하누마탄_필살 환영 공격 (필살기)_냉기_저지당함_카운터",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4219630": {
+    "id": 4219630,
+    "name": "하누마탄_팔 갑주_1_대쉬 어퍼 후 양손 내려찍기",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4219631": { "id": 4219631, "name": "하누마탄_팔 갑주_2_대지 격파", "desc": "", "classid": 0, "icon": "" },
+  "4219632": { "id": 4219632, "name": "하누마탄_팔 갑주_3_전진 강타", "desc": "", "classid": 0, "icon": "" },
+  "4219633": { "id": 4219633, "name": "하누마탄_팔 갑주_4_백스탭_전진 강타", "desc": "", "classid": 0, "icon": "" },
+  "4219634": {
+    "id": 4219634,
+    "name": "하누마탄_팔 갑주_5_전방 대쉬 후 공격_어퍼 후 양손 내려치기",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4219635": {
+    "id": 4219635,
+    "name": "하누마탄_잡은 후 마구 내려치기 (잡기)_카운터",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4219636": {
+    "id": 4219636,
+    "name": "하누마탄_잡은 후 마구 내려치기 (잡기)_저지성공_놓치기",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4219637": { "id": 4219637, "name": "하누마탄_뎀프시 롤 (필살기)_카운터", "desc": "", "classid": 0, "icon": "" },
+  "4219638": { "id": 4219638, "name": "하누마탄_뎀프시 롤 (필살기)_화염_카운터", "desc": "", "classid": 0, "icon": "" },
+  "4219639": { "id": 4219639, "name": "하누마탄_뎀프시 롤 (필살기)_냉기_카운터", "desc": "", "classid": 0, "icon": "" },
+  "4219640": { "id": 4219640, "name": "하누마탄_그로기_부위파괴 가능_다리 갑주", "desc": "", "classid": 0, "icon": "" },
+  "4219641": { "id": 4219641, "name": "하누마탄_그로기_부위파괴 가능_머리 갑주", "desc": "", "classid": 0, "icon": "" },
+  "4219642": { "id": 4219642, "name": "하누마탄_그로기_부위파괴 가능_팔 갑주", "desc": "", "classid": 0, "icon": "" },
+  "4219643": { "id": 4219643, "name": "하누마탄_부위파괴_다리 갑주 파괴", "desc": "", "classid": 0, "icon": "" },
+  "4219644": { "id": 4219644, "name": "하누마탄_부위파괴_머리 갑주 파괴", "desc": "", "classid": 0, "icon": "" },
+  "4219645": { "id": 4219645, "name": "하누마탄_부위파괴_팔 갑주 파괴", "desc": "", "classid": 0, "icon": "" },
+  "4219646": { "id": 4219646, "name": "하누마탄_그로기_찐무력", "desc": "", "classid": 0, "icon": "" },
+  "4219647": { "id": 4219647, "name": "하누마탄_각성_진동 강화_2족>4족(일반)", "desc": "", "classid": 0, "icon": "" },
+  "4219648": {
+    "id": 4219648,
+    "name": "하누마탄_각성_진동 강화_2족>4족(공격)_1차 강화",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4219649": {
+    "id": 4219649,
+    "name": "하누마탄_각성_진동 강화_4족(자버프용)_2차 강화",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4219650": { "id": 4219650, "name": "하누마탄_선회_2족_좌", "desc": "", "classid": 0, "icon": "" },
+  "4219651": { "id": 4219651, "name": "하누마탄_선회_2족_우", "desc": "", "classid": 0, "icon": "" },
+  "4219652": { "id": 4219652, "name": "하누마탄_선회_4족_좌", "desc": "", "classid": 0, "icon": "" },
+  "4219653": { "id": 4219653, "name": "하누마탄_선회_4족_우", "desc": "", "classid": 0, "icon": "" },
+  "4219654": { "id": 4219654, "name": "하누마탄_지역이동_시작", "desc": "", "classid": 0, "icon": "" },
+  "4219655": { "id": 4219655, "name": "하누마탄_지역이동_도착", "desc": "", "classid": 0, "icon": "" },
+  "4219656": { "id": 4219656, "name": "하누마탄_각성_전방 앞찍기_약", "desc": "", "classid": 0, "icon": "" },
+  "4219657": { "id": 4219657, "name": "하누마탄_각성_전방 앞찍기_강", "desc": "", "classid": 0, "icon": "" },
+  "4219658": { "id": 4219658, "name": "하누마탄_각성_도약 진동 내려찍기", "desc": "", "classid": 0, "icon": "" },
+  "4219659": { "id": 4219659, "name": "하누마탄_각성_후방 점프 (4족용)", "desc": "", "classid": 0, "icon": "" },
+  "4219660": { "id": 4219660, "name": "하누마탄_각성_전진하며 마구 내려찍기", "desc": "", "classid": 0, "icon": "" },
+  "4219661": { "id": 4219661, "name": "하누마탄_각성_진동탄", "desc": "", "classid": 0, "icon": "" },
+  "4219662": { "id": 4219662, "name": "하누마탄_각성_주변 마구 내려치기", "desc": "", "classid": 0, "icon": "" },
+  "4219663": { "id": 4219663, "name": "하누마탄_각성_제자리 뛰며 진동 발산", "desc": "", "classid": 0, "icon": "" },
+  "4219664": { "id": 4219664, "name": "하누마탄_각성_잡고 진동 주입하기 (잡기)", "desc": "", "classid": 0, "icon": "" },
+  "4219665": {
+    "id": 4219665,
+    "name": "하누마탄_각성_잡고 진동 주입하기 (잡기)_저지성공_놓치기",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4219666": {
+    "id": 4219666,
+    "name": "하누마탄_각성_땅잡고 진동 보내기 (필살기)",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4219667": { "id": 4219667, "name": "하누마탄_각성_초진동 움켜쥐기 (필살기)", "desc": "", "classid": 0, "icon": "" },
+  "4219668": { "id": 4219668, "name": "하누마탄_거대화_전방 앞찍기_약", "desc": "", "classid": 0, "icon": "" },
+  "4219669": { "id": 4219669, "name": "하누마탄_거대화_전방 앞찍기_강", "desc": "", "classid": 0, "icon": "" },
+  "4219670": { "id": 4219670, "name": "하누마탄_거대화_도약 진동 내려찍기", "desc": "", "classid": 0, "icon": "" },
+  "4219671": { "id": 4219671, "name": "하누마탄_거대화_후방 점프 (4족용)", "desc": "", "classid": 0, "icon": "" },
+  "4219672": { "id": 4219672, "name": "하누마탄_거대화_전진하며 마구 내려찍기", "desc": "", "classid": 0, "icon": "" },
+  "4219673": { "id": 4219673, "name": "하누마탄_거대화_진동탄", "desc": "", "classid": 0, "icon": "" },
+  "4219674": { "id": 4219674, "name": "하누마탄_거대화_주변 마구 내려치기", "desc": "", "classid": 0, "icon": "" },
+  "4219675": { "id": 4219675, "name": "하누마탄_거대화_제자리 뛰며 진동 발산", "desc": "", "classid": 0, "icon": "" },
+  "4219676": {
+    "id": 4219676,
+    "name": "하누마탄_거대화_잡고 진동 주입하기 (잡기)",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4219677": {
+    "id": 4219677,
+    "name": "하누마탄_거대화_잡고 진동 주입하기 (잡기)_저지성공_놓치기",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4219678": {
+    "id": 4219678,
+    "name": "하누마탄_거대화_땅잡고 진동 보내기 (필살기)",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4219679": {
+    "id": 4219679,
+    "name": "하누마탄_거대화_초진동 움켜쥐기 (필살기)",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4219680": {
+    "id": 4219680,
+    "name": "하누마탄_잡은 후 마구 내려치기 (잡기)_놓기_PC사망",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4219681": {
+    "id": 4219681,
+    "name": "하누마탄_각성_잡고 진동 주입하기 (잡기)_놓기_PC사망",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4219682": {
+    "id": 4219682,
+    "name": "하누마탄_거대화_잡고 진동 주입하기 (잡기)_놓기_PC사망",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4219697": { "id": 4219697, "name": "하누마탄_대기 상태", "desc": "", "classid": 0, "icon": "" },
+  "4219698": { "id": 4219698, "name": "하누마탄_전투 종료 스킬_일반", "desc": "", "classid": 0, "icon": "" },
+  "4219699": { "id": 4219699, "name": "하누마탄_전투 종료 스킬_각성", "desc": "", "classid": 0, "icon": "" },
   "4138829": {
     "id": 4138829,
     "name": "칼엘리고스_카운터 공격_2페이즈_성공 시 부위파괴가능 상태",
@@ -25008,7 +25243,7 @@
   "25050": {
     "id": 25050,
     "name": "Wind Cut",
-    "desc": "Quickly slash forward and create a gust of blades that lasts <FONT COLOR='#ffff99'>1.5s</FONT>, which inflicts up to <FONT COLOR='#00ccff'><$CALC ((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)* (<$TABLE_SKILLEFFECT ValueF 250501/>/10000)+((<$TABLE_SKILLEFFECT ValueA 250501/> + <$TABLE_SKILLEFFECT ValueB 250501/>)/2))*5/></FONT> and pulls foes close. Pushed foes are launched back in the air.",
+    "desc": "Quickly slash forward and create a gust of blades that lasts <FONT COLOR='#ffff99'>1.5s</FONT>, which inflicts up to <FONT COLOR='#00ccff'><$CALC ((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)* (<$TABLE_SKILLEFFECT ValueF 250501/>/10000)+((<$TABLE_SKILLEFFECT ValueA 250501/> + <$TABLE_SKILLEFFECT ValueB 250501/>)/2))*5/></FONT> Damage and pulls foes close. Pushed foes are launched back in the air.",
     "classid": 402,
     "icon": "bl_skill_01_6.png"
   },
@@ -25505,7 +25740,7 @@
   "22090": {
     "id": 22090,
     "name": "Seismic Strike",
-    "desc": "Inflict <$MACRO magic @1:220902/> Damage every<FONT COLOR='#ffff99'> 1s</FONT> up to <FONT COLOR='#ffff99'>5</FONT> times to foes within the earthquake's range.",
+    "desc": "Inflict <$MACRO magic @1:220902/> Damage every <FONT COLOR='#ffff99'>1s</FONT> up to <FONT COLOR='#ffff99'>5</FONT> times to foes within the earthquake's range.",
     "classid": 302,
     "icon": "bm_skill_01_9.png"
   },
@@ -25840,14 +26075,14 @@
   "24050": {
     "id": 24050,
     "name": "World Decimation",
-    "desc": "Perform an attack at the target location. Raise your hands above your head and concentrate energy for <FONT COLOR='#ffff99'>3s</FONT>, and then drop it on the selected area, inflicting <$MACRO magic @1:240501/> Damage to foes.",
+    "desc": "Perform an attack at the target location. Raise your hands above your head and concentrate energy for <FONT COLOR='#ffff99'>3</FONT>s, and then drop it on the selected area, inflicting <$MACRO magic @1:240501/> Damage to foes.",
     "classid": 304,
     "icon": "so_skill_01_3.png"
   },
   "24070": {
     "id": 24070,
     "name": "Venomous Fist",
-    "desc": "Throw your palms forward to inflict <$MACRO physic @1:240700/> Damage over <FONT COLOR='#ffff99'>9 hits </FONT>, then <$MACRO physic @1:240701/> Damage as you pull in foes. There is a <FONT COLOR='#ffff99'>30%</FONT> chance that foes will be Poisoned for <FONT COLOR='#ffff99'>3s</FONT> upon hit.",
+    "desc": "Throw your palms forward to inflict <$MACRO physic @1:240700/> Damage over <FONT COLOR='#ffff99'>9 hits</FONT>, then <$MACRO physic @1:240701/> Damage as you pull in foes. There is a <FONT COLOR='#ffff99'>30%</FONT> chance that foes will be Poisoned for <FONT COLOR='#ffff99'>3s</FONT> upon being hit.",
     "classid": 304,
     "icon": "so_skill_01_4.png"
   },
@@ -26540,7 +26775,7 @@
   "29100": {
     "id": 29100,
     "name": "Meteor Stream",
-    "desc": "Fire a volley of bullets into the arir, then control them to crash into the target location, inflicting <$MACRO physic @1:291001/> Damage and launching foes into the air.",
+    "desc": "Fire a volley of bullets into the air, then control them to crash into the target location, inflicting <$MACRO physic @1:291001/> Damage and launching foes into the air.",
     "classid": 503,
     "icon": "dh_skill_01_0.png"
   },
@@ -27695,7 +27930,7 @@
   "11090": {
     "id": 11090,
     "name": "Winged Spirit",
-    "desc": "Summon a Wind Elemental in a hawk form at the target location. Hold for up to <FONT COLOR='#ffff99'>4s</FONT> to inflict up to <FONT COLOR='#00ccff'><$CALC ((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)* (<$TABLE_SKILLEFFECT ValueF 111900/>/10000)+((<$TABLE_SKILLEFFECT ValueA 111900/> + <$TABLE_SKILLEFFECT ValueB 111900/>)/2))*8/></FONT> Damage.",
+    "desc": "Summon a Wind Elemental in a hawk form at the target location. Hold for up to <FONT COLOR='#ffff99'>4</FONT>s to inflict up to <FONT COLOR='#00ccff'><$CALC ((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)* (<$TABLE_SKILLEFFECT ValueF 111900/>/10000)+((<$TABLE_SKILLEFFECT ValueA 111900/> + <$TABLE_SKILLEFFECT ValueB 111900/>)/2))*8/></FONT> Damage.",
     "classid": 201,
     "icon": "sm_skill_01_16.png"
   },
@@ -28086,7 +28321,7 @@
   "20080": {
     "id": 20080,
     "name": "Jahia & Ligheas",
-    "desc": "Summon Water Elementals Jahia & Ligheas, inflicting up to <FONT COLOR='#00ccff'><$CALC ((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)* (<$TABLE_SKILLEFFECT ValueF 200801/>/10000)+((<$TABLE_SKILLEFFECT ValueA 200801/> + <$TABLE_SKILLEFFECT ValueB 200801/>)/2))*4/></FONT> Water Elemental Damage to all nearby foes. Afterwards, temporarily freeze the whirlpool, freezing foes for <$MACRO bufftime @1:200803/>s inflicting <$MACRO magic @1:200802/> [Water] Damage.\nComplete the Awakening quest to learn this skill.",
+    "desc": "Summon Water Elementals Jahia & Ligheas, inflicting up to <FONT COLOR='#00ccff'><$CALC ((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)* (<$TABLE_SKILLEFFECT ValueF 200801/>/10000)+((<$TABLE_SKILLEFFECT ValueA 200801/> + <$TABLE_SKILLEFFECT ValueB 200801/>)/2))*4/></FONT> [Water] Damage to all nearby foes. Afterwards, temporarily freeze the whirlpool, freezing foes for <$MACRO bufftime @1:200803/>s inflicting <$MACRO magic @1:200802/> [Water] Damage.\nComplete the Awakening quest to learn this skill.",
     "classid": 203,
     "icon": "sm_skill_01_13.png"
   },
@@ -28170,7 +28405,7 @@
   "20110": {
     "id": 20110,
     "name": "Pauru",
-    "desc": "Hurl a ball of fire at the target location to inflict <$MACRO magic @1:201102/> [Fire] Damage and summon the Fire Elemental Pauru. Pauru attacks nearby foes for <FONT COLOR='#ffff99'>15s</FONT>, inflicting <$MACRO magic @1:90017353/> [Fire] Damage with its basic attack.",
+    "desc": "Hurl a ball of fire at the target location to inflict <$MACRO magic @1:201102/> [Fire] Damage and summon the Fire Elemental Pauru. Pauru attacks nearby foes for <FONT COLOR='#ffff99'>15</FONT>s, inflicting <$MACRO magic @1:90017353/> [Fire] Damage with its basic attack.",
     "classid": 203,
     "icon": "sm_skill_01_37.png"
   },
@@ -28244,7 +28479,7 @@
   "20130": {
     "id": 20130,
     "name": "Maririn",
-    "desc": "Summon Maririn. Maririn attacks nearby foes for <FONT COLOR='#ffff99'>20s</FONT>, inflicting <$MACRO physic @1:90017360/> Damage with its basic attack.",
+    "desc": "Summon Maririn, who attacks nearby foes for <FONT COLOR='#ffff99'>20</FONT>s, inflicting <$MACRO physic @1:90017360/> Damage with its basic attack.",
     "classid": 203,
     "icon": "sm_skill_01_39.png"
   },
@@ -28276,7 +28511,7 @@
   "20160": {
     "id": 20160,
     "name": "Shurdi",
-    "desc": "Summon Shurdi, a small Light Elemental. Shurdi moves with you for <FONT COLOR='#ffff99'>20s</FONT>, inflicting <$MACRO magic @1:90000371/> Damage on nearby foes.",
+    "desc": "Summon Shurdi, a small Light Elemental. Shurdi moves with you for <FONT COLOR='#ffff99'>20</FONT>s, inflicting <$MACRO magic @1:90000371/> Damage on nearby foes.",
     "classid": 203,
     "icon": "sm_skill_01_25.png"
   },
@@ -28441,7 +28676,7 @@
   "20180": {
     "id": 20180,
     "name": "Sticky Moss Swamp",
-    "desc": "Summon a sticky, mossy swamp at the target location after <FONT COLOR='#ffff99'>0.5s</FONT>. The swamp lasts for <FONT COLOR='#ffff99'>5s</FONT>, inflicting <$MACRO magic @1:201801/> Damage every 1s. Foe Move Speed -<FONT COLOR='#99ff99'><$MACRO buffstat0_100 @1:201802/>%</FONT> for <FONT COLOR='#ffff99'>2s</FONT>.",
+    "desc": "Summon a sticky, mossy swamp at the target location after <FONT COLOR='#ffff99'>0.5</FONT>s. The swamp lasts for <FONT COLOR='#ffff99'>5</FONT>s, inflicting <$MACRO magic @1:201801/> Damage every 1s. Foe Move Speed -<FONT COLOR='#99ff99'><$MACRO buffstat0_100 @1:201802/>%</FONT> for <FONT COLOR='#ffff99'>2</FONT>s.",
     "classid": 203,
     "icon": "sm_skill_01_3.png"
   },
@@ -28476,35 +28711,35 @@
   "20220": {
     "id": 20220,
     "name": "Winged Spirit",
-    "desc": "Summon a Wind Elemental in a hawk form at the target location. Hold for up to <FONT COLOR='#ffff99'>4s</FONT> to inflict <FONT COLOR='#00ccff'><$CALC ((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)* (<$TABLE_SKILLEFFECT ValueF 202200/>/10000)+((<$TABLE_SKILLEFFECT ValueA 202200/> + <$TABLE_SKILLEFFECT ValueB 202200/>)/2))*8/></FONT> over </FONT>8<FONT COLOR='#ffff99'> hits.",
+    "desc": "Summon a Wind Elemental in a hawk form at the target location. Hold for up to <FONT COLOR='#ffff99'>4</FONT>s to inflict <FONT COLOR='#00ccff'><$CALC ((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)* (<$TABLE_SKILLEFFECT ValueF 202200/>/10000)+((<$TABLE_SKILLEFFECT ValueA 202200/> + <$TABLE_SKILLEFFECT ValueB 202200/>)/2))*8/></FONT> over </FONT>8<FONT COLOR='#ffff99'> hits.",
     "classid": 203,
     "icon": "sm_skill_01_16.png"
   },
   "20230": {
     "id": 20230,
     "name": "Electricity Release",
-    "desc": "Cast a condensed ball of electrical current to inflict <$MACRO magic @1:202301/> [Lightning] Damage before creating an electrical current zone that inflicts <FONT COLOR='#00ccff'><$CALC ((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)* (<$TABLE_SKILLEFFECT ValueF 202311/>/10000)+((<$TABLE_SKILLEFFECT ValueA 202311/> + <$TABLE_SKILLEFFECT ValueB 202311/>)/2))*2/></FONT> [Lightning] Damage over <FONT COLOR='#ffff99'>1s</FONT>.",
+    "desc": "Cast a condensed ball of electrical current to inflict <$MACRO magic @1:202301/> [Lightning] Damage. On hit, creates an electrical current zone that inflicts <FONT COLOR='#00ccff'><$CALC ((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)* (<$TABLE_SKILLEFFECT ValueF 202311/>/10000)+((<$TABLE_SKILLEFFECT ValueA 202311/> + <$TABLE_SKILLEFFECT ValueB 202311/>)/2))*2/></FONT> [Lightning] Damage over <FONT COLOR='#ffff99'>1s</FONT>.",
     "classid": 203,
     "icon": "sm_skill_01_17.png"
   },
   "20231": {
     "id": 20231,
     "name": "Electricity Release",
-    "desc": "Cast a condensed ball of electrical current to inflict <$MACRO magic @1:202301/> [Lightning] Damage before creating an electrical current zone that inflicts <FONT COLOR='#00ccff'><$CALC ((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)* (<$TABLE_SKILLEFFECT ValueF 202311/>/10000)+((<$TABLE_SKILLEFFECT ValueA 202311/> + <$TABLE_SKILLEFFECT ValueB 202311/>)/2))*2/></FONT> [Lightning] Damage over <FONT COLOR='#ffff99'>1s</FONT>.",
+    "desc": "Cast a condensed ball of electrical current to inflict <$MACRO magic @1:202301/> [Lightning] Damage. On hit, creates an electrical current zone that inflicts <FONT COLOR='#00ccff'><$CALC ((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)* (<$TABLE_SKILLEFFECT ValueF 202311/>/10000)+((<$TABLE_SKILLEFFECT ValueA 202311/> + <$TABLE_SKILLEFFECT ValueB 202311/>)/2))*2/></FONT> [Lightning] Damage over <FONT COLOR='#ffff99'>1s</FONT>.",
     "classid": 203,
     "icon": "sm_skill_01_17.png"
   },
   "20240": {
     "id": 20240,
     "name": "Earth Collapse",
-    "desc": "Cause a powerful earthquake at the target location, launching foes into the air inflicting <$MACRO magic @1:202401/> Earth Damage.",
+    "desc": "Cause a powerful earthquake at the target location, launching foes into the air and inflicting <$MACRO magic @1:202401/> [Earth] Damage.",
     "classid": 203,
     "icon": "sm_skill_01_18.png"
   },
   "20250": {
     "id": 20250,
     "name": "Water Elemental",
-    "desc": "Summon a Water Elemental inflicting up to <$MACRO magic @1:202510/> [Water] Damage. The summoned Water Elemental inflicts up to <FONT COLOR='#00ccff'><$CALC ((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)* (<$TABLE_SKILLEFFECT ValueF 202501/>/10000)+((<$TABLE_SKILLEFFECT ValueA 202501/> + <$TABLE_SKILLEFFECT ValueB 202501/>)/2))*5/></FONT> [Water] Elemental Damage for <FONT COLOR='#ffff99'>2s</FONT>.\nCan <FONT COLOR='#ffff99'>Counterattack</FONT> with summon attack.",
+    "desc": "Summon a Water Elemental inflicting up to <$MACRO magic @1:202510/> [Water] Damage. The summoned Water Elemental inflicts up to <FONT COLOR='#00ccff'><$CALC ((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)* (<$TABLE_SKILLEFFECT ValueF 202501/>/10000)+((<$TABLE_SKILLEFFECT ValueA 202501/> + <$TABLE_SKILLEFFECT ValueB 202501/>)/2))*5/></FONT> [Water] Elemental Damage for <FONT COLOR='#ffff99'>2</FONT>s.\nCan <FONT COLOR='#ffff99'>Counterattack</FONT> with summon attack.",
     "classid": 203,
     "icon": "sm_skill_01_19.png"
   },
@@ -28518,7 +28753,7 @@
   "20270": {
     "id": 20270,
     "name": "Electric Storm",
-    "desc": "Concentrate energy for <FONT COLOR='#ffff99'>1.5s</FONT> and create an electric storm at the target location. The storm lasts for <FONT COLOR='#ffff99'>5s</FONT>, inflicting <FONT COLOR='#00ccff'><$CALC ((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)* (<$TABLE_SKILLEFFECT ValueF 202701/>/10000)+((<$TABLE_SKILLEFFECT ValueA 202701/> + <$TABLE_SKILLEFFECT ValueB 202701/>)/2))*10/></FONT> [Lightning] Damage over </FONT>10<FONT COLOR='#ffff99'> hits.",
+    "desc": "Concentrate energy for <FONT COLOR='#ffff99'>1.5</FONT>s and create an electric storm at the target location. The storm lasts for <FONT COLOR='#ffff99'>5</FONT>s, inflicting <FONT COLOR='#00ccff'><$CALC ((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)* (<$TABLE_SKILLEFFECT ValueF 202701/>/10000)+((<$TABLE_SKILLEFFECT ValueA 202701/> + <$TABLE_SKILLEFFECT ValueB 202701/>)/2))*10/></FONT> [Lightning] Damage over <FONT COLOR='#ffff99'>10</FONT> hits.",
     "classid": 203,
     "icon": "sm_skill_01_21.png"
   },
@@ -28539,14 +28774,14 @@
   "20290": {
     "id": 20290,
     "name": "Kelsion",
-    "desc": "Summon Kelsion, lightning incarnate, who launches foes in the air inflicting <$MACRO physic @1:202902/> [Lightning] Damage. Kelsion attacks surrounding foes for <FONT COLOR='#ffff99'>20s</FONT>.",
+    "desc": "Summon Kelsion, lightning incarnate, who launches foes in the air, inflicting <$MACRO physic @1:202902/> [Lightning] Damage. Kelsion attacks surrounding foes for <FONT COLOR='#ffff99'>20</FONT>s.",
     "classid": 203,
     "icon": "sm_skill_01_23.png"
   },
   "20291": {
     "id": 20291,
     "name": "Kelsion",
-    "desc": "Summon Kelsion, lightning incarnate, who launches foes in the air inflicting <$MACRO physic @1:202902/> [Lightning] Damage. Kelsion attacks surrounding foes for <FONT COLOR='#ffff99'>20s</FONT>.",
+    "desc": "Summon Kelsion, lightning incarnate, who launches foes in the air, inflicting <$MACRO physic @1:202902/> [Lightning] Damage. Kelsion attacks surrounding foes for <FONT COLOR='#ffff99'>20</FONT>s.",
     "classid": 203,
     "icon": "",
     "summonsourceskill": 20290
@@ -28554,7 +28789,7 @@
   "20292": {
     "id": 20292,
     "name": "Kelsion",
-    "desc": "Summon Kelsion, lightning incarnate, who launches foes in the air inflicting <$MACRO physic @1:202902/> [Lightning] Damage. Kelsion attacks surrounding foes for <FONT COLOR='#ffff99'>20s</FONT>.",
+    "desc": "Summon Kelsion, lightning incarnate, who launches foes in the air, inflicting <$MACRO physic @1:202902/> [Lightning] Damage. Kelsion attacks surrounding foes for <FONT COLOR='#ffff99'>20</FONT>s.",
     "classid": 203,
     "icon": "",
     "summonsourceskill": 20290
@@ -28562,15 +28797,15 @@
   "20293": {
     "id": 20293,
     "name": "Kelsion",
-    "desc": "Summon Kelsion, lightning incarnate, who launches foes in the air inflicting <$MACRO physic @1:202902/> [Lightning] Damage. Kelsion attacks surrounding foes for <FONT COLOR='#ffff99'>20s</FONT>.",
+    "desc": "Summon Kelsion, lightning incarnate, who launches foes in the air, inflicting <$MACRO physic @1:202902/> [Lightning] Damage. Kelsion attacks surrounding foes for <FONT COLOR='#ffff99'>20</FONT>s.",
     "classid": 203,
     "icon": "",
     "summonsourceskill": 20290
   },
   "20294": {
     "id": 20294,
-    "name": "Kelsion - Thunderstroke",
-    "desc": "Command Kelsion to call forth thunderbolts.\nKelsion drops thunderbolts onto foes, knocking them down inflicting <$MACRO physic @1:90000443/> [Lightning] Damage.",
+    "name": "Kelsion - Thundercrack",
+    "desc": "Command Kelsion to call forth Thundercracks.\nKelsion drops thunderbolts onto foes, knocking them down inflicting <$MACRO physic @1:90000443/> [Lightning] Damage.",
     "classid": 203,
     "icon": "sm_skill_01_32.png"
   },
@@ -28584,14 +28819,14 @@
   "20310": {
     "id": 20310,
     "name": "Akir",
-    "desc": "Summon the ancient Elemental Akir at a target location within <FONT COLOR='#ffff99'>14 meters</FONT>. Akir pulls nearby foes close, inflicting up to <FONT COLOR='#00ccff'><$CALC ((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)*(<$TABLE_SKILLEFFECT ValueF 203101/>/10000)+((<$TABLE_SKILLEFFECT ValueA 203101/> + <$TABLE_SKILLEFFECT ValueB 203101/>)/2))*3/></FONT>[Lightning] Damage, then lets out a fierce roar that inflicts<$MACRO magic @1:203102/> [Lightning] Damage.\nThis skill can be learned after completing the Second Awakening Quest.",
+    "desc": "Summon the Ancient Elemental Akir at a target location within <FONT COLOR='#ffff99'>14 meters</FONT>. Akir pulls nearby foes close, inflicting up to <FONT COLOR='#00ccff'><$CALC ((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)*(<$TABLE_SKILLEFFECT ValueF 203101/>/10000)+((<$TABLE_SKILLEFFECT ValueA 203101/> + <$TABLE_SKILLEFFECT ValueB 203101/>)/2))*3/></FONT> [Lightning] Damage, then lets out a fierce roar that inflicts <$MACRO magic @1:203102/> [Lightning] Damage.\nThis skill can be learned after completing the Second Awakening Quest.",
     "classid": 203,
     "icon": "sm_skill_01_35.png"
   },
   "20311": {
     "id": 20311,
     "name": "Akir",
-    "desc": "Summon the ancient Elemental Akir at a target location within <FONT COLOR='#ffff99'>14 meters</FONT>. Akir pulls nearby foes close, inflicting up to <FONT COLOR='#00ccff'><$CALC ((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)*(<$TABLE_SKILLEFFECT ValueF 203104/>/10000)+((<$TABLE_SKILLEFFECT ValueA 203104/> + <$TABLE_SKILLEFFECT ValueB 203104/>)/2))*3/></FONT>[Lightning] Damage, then lets out a fierce roar and thunder that inflicts<$MACRO magic @1:203105/> [Lightning] Damage.\nThis skill can be learned after completing the Second Awakening Quest.",
+    "desc": "Summon the Ancient Elemental Akir at a target location within <FONT COLOR='#ffff99'>14 meters</FONT>. Akir pulls nearby foes close, inflicting up to <FONT COLOR='#00ccff'><$CALC ((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)*(<$TABLE_SKILLEFFECT ValueF 203104/>/10000)+((<$TABLE_SKILLEFFECT ValueA 203104/> + <$TABLE_SKILLEFFECT ValueB 203104/>)/2))*3/></FONT> [Lightning] Damage, then lets out a fierce roar and thunder that inflicts<$MACRO magic @1:203105/> [Lightning] Damage.\n This skill can be learned after completing the Second Awakening Quest.",
     "classid": 203,
     "icon": "sm_skill_01_35.png"
   },
@@ -28986,7 +29221,7 @@
   "21280": {
     "id": 21280,
     "name": "Oratorio",
-    "desc": "Play the giant harp and sing with angels, inflicting up to <FONT COLOR='#00ccff'><$CALC ((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)* (<$TABLE_SKILLEFFECT ValueF 212800/>/10000)+((<$TABLE_SKILLEFFECT ValueA 212800/> + <$TABLE_SKILLEFFECT ValueB 212800/>)/2))*6/></FONT> [Holy] Damage.\nExplosion causes <$MACRO magic @1:212802/> [Holy] Damage and foe Crit Resistance -<FONT COLOR='#99ff99'><$CALC <$TABLE_SKILLBUFF ValueA 212801 1 21280/>/100/>%</FONT> against attacks from all party members for <$MACRO bufftime @1:212801/>s.",
+    "desc": "Play the giant harp and sing with angels, inflicting up to <FONT COLOR='#00ccff'><$CALC ((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)* (<$TABLE_SKILLEFFECT ValueF 212800/>/10000)+((<$TABLE_SKILLEFFECT ValueA 212800/> + <$TABLE_SKILLEFFECT ValueB 212800/>)/2))*6/></FONT> [Holy] Damage.\nThe explosion causes <$MACRO magic @1:212802/> [Holy] Damage and foe Crit Resistance -<FONT COLOR='#99ff99'><$CALC <$TABLE_SKILLBUFF ValueA 212801 1 21280/>/100/>%</FONT> against attacks from all party members for <$MACRO bufftime @1:212801/>s.",
     "classid": 204,
     "icon": "bd_skill_01_25.png"
   },
@@ -29735,7 +29970,7 @@
   "37270": {
     "id": 37270,
     "name": "Punishing Strike",
-    "desc": "Calls forth a giant Thunderstroke at the cursor location within <FONT COLOR='#ffff99'>16 meters</FONT>, inflicting <$MACRO magic @1:372701/> [Lightning] Damage to foes.",
+    "desc": "Calls forth a giant Thundercrack at the cursor location within <FONT COLOR='#ffff99'>16 meters</FONT>, inflicting <$MACRO magic @1:372701/> [Lightning] Damage to foes.",
     "classid": 205,
     "icon": "scs_skill_01_14.png"
   },
@@ -29763,7 +29998,7 @@
   "37300": {
     "id": 37300,
     "name": "Lightning Bolt",
-    "desc": "Fires lightning towards the designated location. <FONT COLOR='#ffff99'>50</FONT> degree directional change is possible while holding. Inflicts a total of <FONT COLOR='#00ccff'><$CALC ((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)*(<$TABLE_SKILLEFFECT ValueF 373000/>/10000)+((<$TABLE_SKILLEFFECT ValueA 373000/> + <$TABLE_SKILLEFFECT ValueB 373000/>)/2))*5/></FONT> [Lightning] Damage to foes in a straight line over <FONT COLOR='#ffff99'>5</FONT> times for a maximum of <FONT COLOR='#ffff99'>2s</FONT>.",
+    "desc": "Fires lightning towards the designated location. A <FONT COLOR='#ffff99'>50</FONT> degree directional change is possible while holding. Inflicts a total of <FONT COLOR='#00ccff'><$CALC ((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)*(<$TABLE_SKILLEFFECT ValueF 373000/>/10000)+((<$TABLE_SKILLEFFECT ValueA 373000/> + <$TABLE_SKILLEFFECT ValueB 373000/>)/2))*5/></FONT> [Lightning] Damage to foes in a straight line over <FONT COLOR='#ffff99'>5</FONT> times for a maximum of <FONT COLOR='#ffff99'>2</FONT>s.",
     "classid": 205,
     "icon": "scs_skill_01_13.png"
   },
@@ -30192,8 +30427,8 @@
   },
   "17140": {
     "id": 17140,
-    "name": "Guardian's Thunderbolt",
-    "desc": "Call forth a lightning strike from the sky to inflict <$MACRO magic @1:171400/> [Lightning] Damage to foes in a <FONT COLOR='#ffff99'>5-meter</FONT> radius, electrocuting them for <$MACRO bufftime @1:171401/>s.",
+    "name": "Guardian's Thundercrack",
+    "desc": "Call forth a Thundercrack from the sky to inflict <$MACRO magic @1:171400/> [Lightning] Damage to foes in a <FONT COLOR='#ffff99'>5-meter</FONT> radius, electrocuting them for <$MACRO bufftime @1:171401/>s.",
     "classid": 104,
     "icon": "gl_skill_01_16.png"
   },
@@ -30570,7 +30805,7 @@
   "45610": {
     "id": 45610,
     "name": "Spinning Sword",
-    "desc": "Swing your greatsword as you move, inflicting <FONT COLOR='#ffbb00'><$CALC ((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)*(<$TABLE_SKILLEFFECT ValueF 456100/>/10000)+((<$TABLE_SKILLEFFECT ValueA 456100/> + <$TABLE_SKILLEFFECT ValueB 456100/>)/2))*2/></FONT> Damage. Ignore collisions with adventurers and normal monsters while moving.",
+    "desc": "Swing your greatsword as you move, inflicting <FONT COLOR='#ffbb00'><$CALC ((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)*(<$TABLE_SKILLEFFECT ValueF 456100/>/10000)+((<$TABLE_SKILLEFFECT ValueA 456100/> + <$TABLE_SKILLEFFECT ValueB 456100/>)/2))*2/></FONT> Damage. Ignore collisions with Adventurers and Normal monsters while moving.",
     "classid": 112,
     "icon": "bk_skill_01_21.png"
   },
@@ -30605,7 +30840,7 @@
   "45730": {
     "id": 45730,
     "name": "Brutal Impact",
-    "desc": "Condense the energy of rage into your greatsword and put your weight into it as you strike the ground. Deal <$MACRO physic @1:457301/> Damage before Charging, and <$MACRO physic @1:457302/> Damage when Overcharged.",
+    "desc": "Condense your rage's energy into your greatsword and put your weight into it as you strike the ground. Deal <$MACRO physic @1:457301/> Damage before Charging, and <$MACRO physic @1:457302/> Damage when Overcharged.",
     "classid": 112,
     "icon": "bk_skill_01_31.png"
   },
@@ -30619,14 +30854,14 @@
   "45800": {
     "id": 45800,
     "name": "Execute",
-    "desc": "Concentrate your fury into your greatsword to product a giant blade of rage. Perform an upward slash to deal <$MACRO physic @1:458000/> Damage, then jump up and slash <FONT COLOR='#ffff99'>4</FONT> times to deal <FONT COLOR='#ffbb00'><$CALC ((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)*(<$TABLE_SKILLEFFECT ValueF 458010/>/10000)+((<$TABLE_SKILLEFFECT ValueA 458010/> + <$TABLE_SKILLEFFECT ValueB 458010/>)/2))*4/></FONT> total Damage before striking down. Each slash of the sword will leave a Sword Wound on the ground. All Sword Wounds explode with the last strike, dealing <$MACRO physic @1:458020/> Damage and launching foes into the air.\nIn Burst Mode, outgoing Damage +<FONT COLOR='#99ff99'>20%</FONT>.",
+    "desc": "Concentrate your fury into your greatsword to produce a giant blade of rage. Perform an upward slash to deal <$MACRO physic @1:458000/> Damage, then jump up and slash <FONT COLOR='#ffff99'>4</FONT> times to deal <FONT COLOR='#ffbb00'><$CALC ((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)*(<$TABLE_SKILLEFFECT ValueF 458010/>/10000)+((<$TABLE_SKILLEFFECT ValueA 458010/> + <$TABLE_SKILLEFFECT ValueB 458010/>)/2))*4/></FONT> total Damage before striking down. Each slash of the sword will leave a Sword Wound on the ground. All Sword Wounds explode with the last strike, dealing <$MACRO physic @1:458020/> Damage and launching foes into the air.\nIn Burst Mode, outgoing Damage +<FONT COLOR='#99ff99'>20%</FONT>.",
     "classid": 112,
     "icon": "bk_skill_01_33.png"
   },
   "45810": {
     "id": 45810,
     "name": "Ragna Break",
-    "desc": "Enter a state of extreme fury that manifests as a Flame Demon. Gather this furious energy into your greatsword and strike the earth, dealing <$MACRO physic @1:458100/> Damage and launch foes into the air.",
+    "desc": "Enter a state of extreme fury that manifests as a Flame Demon. Gather this furious energy into your greatsword and strike the earth, dealing <$MACRO physic @1:458100/> Damage and launching foes into the air.",
     "classid": 112,
     "icon": "bk_skill_01_34.png"
   },
@@ -30672,7 +30907,7 @@
   },
   "32110": {
     "id": 32110,
-    "name": "Unfold",
+    "name": "Spread",
     "desc": "Rapidly charge forward, piercing the target in front and inflicting <$MACRO physic @1:321101/> Damage. On hit, open the umbrella, inflicting <$MACRO physic @1:321102/> Damage.",
     "classid": 603,
     "icon": "wa_skill_01_4.png"
@@ -30701,7 +30936,7 @@
   "32150": {
     "id": 32150,
     "name": "Rainstorm",
-    "desc": "Create a rain shower at the target location within <FONT COLOR='#ffff99'>10 meters</FONT>. Inflicts a total of <FONT COLOR='#00ccff'><$CALC ((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)*(<$TABLE_SKILLEFFECT ValueF 321501/>/10000)+((<$TABLE_SKILLEFFECT ValueA 321501/> + <$TABLE_SKILLEFFECT ValueB 321501/>)/2))*6/></FONT> [Water] Damage to the foes over <FONT COLOR='#ffff99'>6</FONT> times for up to <FONT COLOR='#ffff99'>3s</FONT>.",
+    "desc": "Create a Rainstorm at the target location within <FONT COLOR='#ffff99'>10 meters</FONT>. Inflicts a total of <FONT COLOR='#00ccff'><$CALC ((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)*(<$TABLE_SKILLEFFECT ValueF 321501/>/10000)+((<$TABLE_SKILLEFFECT ValueA 321501/> + <$TABLE_SKILLEFFECT ValueB 321501/>)/2))*6/></FONT> [Water] Damage to the foes over <FONT COLOR='#ffff99'>6</FONT> times for up to <FONT COLOR='#ffff99'>3s</FONT>.",
     "classid": 603,
     "icon": "wa_skill_01_13.png"
   },
@@ -30777,7 +31012,7 @@
   },
   "32260": {
     "id": 32260,
-    "name": "Cutting Wind",
+    "name": "Piercing Wind",
     "desc": "Instantly take position and unleash the Footwork Skill, inflicting <$MACRO physic @1:322600/> Damage and blasting the foe away.",
     "classid": 603,
     "icon": "wa_skill_01_12.png"
@@ -31202,7 +31437,7 @@
   "42150": {
     "id": 42150,
     "name": "Demon's Strength",
-    "desc": "Unleash the inherent power of the demon like a scream.",
+    "desc": "Unleash the inherent power of the Demon like a scream.",
     "classid": 0,
     "icon": "po_skill_01_16.png"
   },
@@ -32963,28 +33198,28 @@
   "40781": {
     "id": 40781,
     "name": "Repeating Slash",
-    "desc": "Swing your weapon as you charge. This skill can be used up to 4 times in succession, inflicting Damage equal to <FONT COLOR='#99ff99'>65%</FONT> of the foe's Max HP.",
+    "desc": "Swing your weapon as you charge. This skill can be used up to 4 times in succession, inflicting Damage equal to <FONT COLOR='#99ff99'>65%</FONT> of the foe's Max Vitality.",
     "classid": 0,
     "icon": "buff_23.png"
   },
   "40782": {
     "id": 40782,
     "name": "Everburning Flame",
-    "desc": "Set the ground ablaze for 10s, inflicting Burn, a stacking debuff that inflicts Damage equal to <FONT COLOR='#99ff99'>2%</FONT> of foe's Max HP.",
+    "desc": "Set the ground ablaze for <FONT COLOR='#99ff99'>10</FONT>s, inflicting Burn, a stacking debuff that inflicts Damage equal to <FONT COLOR='#99ff99'>2%</FONT> of the foe's Max Vitality.",
     "classid": 0,
     "icon": "buff_265.png"
   },
   "40783": {
     "id": 40783,
     "name": "Sylmael Shield",
-    "desc": "Bless nearby allies with Sylmael energy. <FONT COLOR='#99ff99'>Push immunity</FONT>, <FONT COLOR='#99ff99'>Status Ailment immunity</FONT>, incoming Damage - <FONT COLOR='#99ff99'>40%</FONT>, and Atk. Power +<FONT COLOR='#99ff99'>40%</FONT> for nearby allies for up to <FONT COLOR='#99ff99'>15s</FONT>.",
+    "desc": "Bless nearby allies with Sylmael energy. <FONT COLOR='#99ff99'>Push immunity</FONT>, <FONT COLOR='#99ff99'>Status Ailment immunity</FONT>, incoming Damage -<FONT COLOR='#99ff99'>40%</FONT>, and Atk. Power +<FONT COLOR='#99ff99'>40%</FONT> for nearby allies for up to <FONT COLOR='#99ff99'>15</FONT>s.",
     "classid": 0,
     "icon": "buff_393.png"
   },
   "40784": {
     "id": 40784,
     "name": "Everburning Flame",
-    "desc": "Set the ground ablaze for 10s, inflicting Burn, a stacking debuff that inflicts Damage equal to <FONT COLOR='#99ff99'>2%</FONT> of foe's Max HP.",
+    "desc": "Set the ground ablaze for <FONT COLOR='#99ff99'>10</FONT>s, inflicting Burn, a stacking debuff that inflicts Damage equal to <FONT COLOR='#99ff99'>2%</FONT> of the foe's Max Vitality.",
     "classid": 0,
     "icon": "buff_265.png"
   },
@@ -34863,6 +35098,28 @@
     "classid": 0,
     "icon": "vehicle_65.png"
   },
+  "98150": { "id": 98150, "name": "Sprint", "desc": "Quickly run forward.", "classid": 0, "icon": "vehicle_60.png" },
+  "98151": {
+    "id": 98151,
+    "name": "Proof of Glory",
+    "desc": "Use the power of magick to prove yourself.",
+    "classid": 0,
+    "icon": "vehicle_63.png"
+  },
+  "98152": {
+    "id": 98152,
+    "name": "Magick Fireworks",
+    "desc": "Shoot Vern's special magick fireworks into the sky.",
+    "classid": 0,
+    "icon": "vehicle_64.png"
+  },
+  "98153": {
+    "id": 98153,
+    "name": "Spotlight",
+    "desc": "The red carpet rolls out and the spotlight shines on you.",
+    "classid": 0,
+    "icon": "vehicle_65.png"
+  },
   "98000": {
     "id": 98000,
     "name": "Flaming Flamethrower",
@@ -34909,7 +35166,7 @@
   "98103": {
     "id": 98103,
     "name": "Domination Shot",
-    "desc": "Shoot an arrow of Sylmael energy, causing Stun.",
+    "desc": "Rain down arrows of Sylmael energy, causing Stun.",
     "classid": 0,
     "icon": "vehicle_78.png"
   },
@@ -34924,7 +35181,7 @@
   "98106": {
     "id": 98106,
     "name": "Domination Shot",
-    "desc": "Shoot an arrow of Sylmael energy, causing Stun.",
+    "desc": "Rain down arrows of Sylmael energy, causing Stun.",
     "classid": 0,
     "icon": "vehicle_78.png"
   },
