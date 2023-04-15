@@ -12,6 +12,7 @@
     import { chartable, defaultOptions, type ChartOptions, type EChartsOptions } from "$lib/utils/charts";
     import { classColors } from "$lib/constants/colors";
     import { writable } from "svelte/store";
+    import { settings } from "$lib/utils/settings";
 
     export let id: string;
     export let encounter: Encounter;
@@ -284,7 +285,7 @@
                     
                     return output;
                 }
-            },
+            } as any,
             legend: {
                 data: [...skills].reverse(),
                 textStyle: {
@@ -406,17 +407,30 @@
             <thead class="h-6 z-30" on:contextmenu|preventDefault={() => {console.log("titlebar clicked")}}>
                 <tr class="bg-zinc-900">
                     <th class="text-left px-2 font-normal w-full"></th>
-                    {#if anyDead}
+                    {#if anyDead && $settings.logs.deathTime}
                     <th class="font-normal w-20">Dead for</th>
                     {/if}
+                    {#if $settings.logs.damage}
                     <th class="font-normal w-14">DMG</th>
+                    {/if}
+                    {#if $settings.logs.dps}
                     <th class="font-normal w-14">DPS</th>
-                    {#if players.length > 1}
+                    {/if}
+                    {#if players.length > 1 && $settings.logs.damagePercent}
                     <th class="font-normal w-14">D%</th>
                     {/if}
+                    {#if $settings.logs.critRate}
                     <th class="font-normal w-14">CRIT</th>
+                    {/if}
+                    {#if $settings.logs.frontAtk}
                     <th class="font-normal w-14">F.A</th>
+                    {/if}
+                    {#if $settings.logs.backAtk}
                     <th class="font-normal w-14">B.A</th>
+                    {/if}
+                    {#if $settings.logs.counters}
+                    <th class="font-normal w-[70px]">Counters</th>
+                    {/if}
                 </tr>
             </thead>
             <tbody>

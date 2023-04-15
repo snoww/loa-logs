@@ -110,14 +110,14 @@
     "windows": [
       {
         "fullscreen": false,
-        "width": 550,
+        "width": 500,
         "height": 350,
         "resizable": true,
         "title": "LOA Logs",
         "decorations": false,
         "transparent": true,
         "minWidth": 400,
-        "minHeight": 200
+        "minHeight": 250
       }
     ]
   }

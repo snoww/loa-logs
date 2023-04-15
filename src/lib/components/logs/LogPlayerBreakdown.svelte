@@ -5,6 +5,7 @@
     import { join, resourceDir } from "@tauri-apps/api/path";
     import { convertFileSrc } from "@tauri-apps/api/tauri";
     import LogPlayerBreakdownRow from "./LogPlayerBreakdownRow.svelte";
+    import { settings } from "$lib/utils/settings";
 
     export let player: Entity;
     export let duration: number;
@@ -54,17 +55,36 @@
 <thead class="h-6 z-30" on:contextmenu|preventDefault={() => {console.log("titlebar clicked")}}>
     <tr class="bg-zinc-900">
         <th class="text-left px-2 font-normal w-full"></th>
+        {#if $settings.logs.breakdown.damage}
         <th class="font-normal w-14">DMG</th>
+        {/if}
+        {#if $settings.logs.breakdown.dps}
         <th class="font-normal w-14">DPS</th>
+        {/if}
+        {#if $settings.logs.breakdown.damagePercent}
         <th class="font-normal w-14">D%</th>
+        {/if}
+        {#if $settings.logs.breakdown.critRate}
         <th class="font-normal w-14">Crit</th>
-        {#if hasFrontAttacks}
+        {/if}
+        {#if hasFrontAttacks && $settings.logs.breakdown.frontAtk}
         <th class="font-normal w-14">F.A</th>
         {/if}
-        {#if hasBackAttacks}
+        {#if hasBackAttacks && $settings.logs.breakdown.backAtk}
         <th class="font-normal w-14">B.A</th>
         {/if}
-        <th class="font-normal w-14">Casts</th>
+        {#if $settings.logs.breakdown.avgDamage}
+        <th class="font-normal w-14">Avg</th>
+        {/if}
+        {#if $settings.logs.breakdown.maxDamage}
+        <th class="font-normal w-14">Max</th>
+        {/if}
+        {#if $settings.logs.breakdown.casts}
+        <th class="font-normal w-16">Casts/m</th>
+        {/if}
+        {#if $settings.logs.breakdown.hits}
+        <th class="font-normal w-14">Hits/m</th>
+        {/if}
     </tr>
 </thead>
 <tbody on:contextmenu|preventDefault={handleRightClick}>
@@ -80,6 +100,7 @@
             playerDamageDealt={player.damageStats.damageDealt}
             damagePercentage={skillDamagePercentages[i]}
             skillDps={skillDps[i]}
+            duration={duration}
             />
     </tr>
     {/each}

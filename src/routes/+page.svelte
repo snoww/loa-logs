@@ -1,7 +1,7 @@
 
 <script lang="ts">
     import DamageMeter from "$lib/components/DamageMeter.svelte";
-    import TitleBar from "$lib/components/TitleBar.svelte";
+    import { defaultSettings, settings, settingsStore } from "$lib/utils/settings";
     import { appWindow } from '@tauri-apps/api/window';
     import { onMount } from 'svelte';
 
@@ -9,6 +9,11 @@
         (async () => {
             await appWindow.setAlwaysOnTop(true);
         })();
+
+        if ($settings == undefined) {
+            $settings = settingsStore("settings", defaultSettings);
+        }
+    
 	});
     
 </script>

@@ -21,6 +21,7 @@ serde = { version = "1.0", features = ["derive"] }
 tauri = { version = "1.2.4", features = ["clipboard-write-text", "fs-read-file", "path-all", "process-command-api", "protocol-asset", "shell-open", "shell-sidecar", "system-tray", "updater", "window-hide", "window-maximize", "window-minimize", "window-set-always-on-top", "window-show", "window-start-dragging", "window-unmaximize", "window-unminimize"] }
 lazy_static = "1.4.0"
 tauri-plugin-window-state = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "dev" }
+tauri-plugin-single-instance = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "dev" }
 bitflags = "2.0.2"
 window-vibrancy = "0.3.2"
 hashbrown = { version = "0.13.2", features = ["serde"] }

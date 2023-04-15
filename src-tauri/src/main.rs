@@ -38,10 +38,10 @@ fn main() {
                 meter_window.open_devtools();
             }
             
-            meter_window.set_size(Size::Logical(LogicalSize { width: 500.0, height: 350.0 })).unwrap();
-
             #[cfg(target_os = "windows")]
-            apply_blur(&meter_window, Some((10, 10, 10, 50))).expect("Unsupported platform! 'apply_blur' is only supported on Windows");
+            {
+                apply_blur(&meter_window, Some((10, 10, 10, 50))).expect("Unsupported platform! 'apply_blur' is only supported on Windows");
+            }
             let mut resource_path = app.path_resolver().resource_dir().expect("could not get resource dir");
             match setup_db(&mut resource_path) {
                 Ok(_) => (),
@@ -55,10 +55,6 @@ fn main() {
                     .expect("failed to start `meter-core` ")
                     .spawn()
                     .expect("Failed to spawn sidecar");
-                // let (mut rx, _child) = Command::new_sidecar("loa-fake-log")
-                //     .expect("failed to start `meter-core` ")
-                //     .spawn()
-                //     .expect("Failed to spawn sidecar");
                 let mut parser = Parser::new(&meter_window);
                 let mut last_time = Instant::now();
                 let duration = Duration::from_millis(100);
@@ -101,10 +97,10 @@ fn main() {
 
             let logs_window = WindowBuilder::new(app, "logs", tauri::WindowUrl::App("/logs".into()))
                 .title("LOA Logs")
-                .min_inner_size(500.0, 300.0)
+                .min_inner_size(650.0, 300.0)
+                .inner_size(800.0, 500.0)
                 .build()
                 .expect("failed to create log window");
-            logs_window.set_size(Size::Logical(LogicalSize { width: 800.0, height: 500.0 })).unwrap();
             #[cfg(debug_assertions)]
             {
                 logs_window.open_devtools();
@@ -113,6 +109,7 @@ fn main() {
             Ok(())
         })
         .plugin(tauri_plugin_window_state::Builder::default().build())
+        .plugin(tauri_plugin_single_instance::init(|_app, _argv, _cwd| {}))
         .on_window_event(|event| if let tauri::WindowEvent::CloseRequested { api, .. } = event.event() {
             if event.window().label() == "logs" {
                 event.window().hide().unwrap();

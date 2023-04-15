@@ -3,6 +3,7 @@
     import type { Entity } from "$lib/types";
     import { HexToRgba } from "$lib/utils/colors";
     import { abbreviateNumberSplit } from "$lib/utils/numbers";
+    import { settings } from "$lib/utils/settings";
     import { hideNames } from "$lib/utils/stores";
     import { formatPlayerName } from "$lib/utils/strings";
 
@@ -45,31 +46,46 @@
         </div>
     </div>
 </td>
-{#if anyDead}
+{#if anyDead && $settings.logs.deathTime}
 <td class="px-1 text-center relative z-10">
     {entity.isDead ? deadFor : ""}
 </td>
 {/if}
+{#if $settings.logs.damage}
 <td class="px-1 text-center relative z-10">
     {damageDealt[0]}<span class="text-3xs text-gray-300">{damageDealt[1]}</span>
 </td>
+{/if}
+{#if $settings.logs.dps}
 <td class="px-1 text-center relative z-10">
     {dps[0]}<span class="text-3xs text-gray-300">{dps[1]}</span>
 </td>
-{#if damagePercentage !== "100.0"}
+{/if}
+{#if damagePercentage !== "100.0" && $settings.logs.damagePercent}
 <td class="px-1 text-center relative z-10">
     {damagePercentage}<span class="text-xs text-gray-300">%</span>
 </td>
 {/if}
+{#if $settings.logs.critRate}
 <td class="px-1 text-center relative z-10">
     {(entity.skillStats.crits / entity.skillStats.hits * 100).toFixed(1)}<span class="text-3xs text-gray-300">%</span>
 </td>
+{/if}
+{#if $settings.logs.frontAtk}
 <td class="px-1 text-center relative z-10">
     {(entity.skillStats.frontAttacks / entity.skillStats.hits * 100).toFixed(1)}<span class="text-3xs text-gray-300">%</span>
 </td>
+{/if}
+{#if $settings.logs.backAtk}
 <td class="px-1 text-center relative z-10">
     {(entity.skillStats.backAttacks / entity.skillStats.hits * 100).toFixed(1)}<span class="text-3xs text-gray-300">%</span>
 </td>
+{/if}
+{#if $settings.logs.counters}
+<td class="px-1 text-center relative z-10">
+    {entity.skillStats.counters}<span class="text-3xs text-gray-300"></span>
+</td>
+{/if}
 <div class="absolute left-0 h-7 px-2 py-1 z-0 shadow-md"
     style="background-color: {HexToRgba(color, 0.6)}; width: {percentage}%"
 ></div>

@@ -89,7 +89,7 @@
 
 <svelte:window on:contextmenu|preventDefault/>
 <LogSidebar bind:hidden={hidden}/>
-<div class="bg-zinc-800 h-screen pt-2">
+<div class="bg-zinc-800 h-screen">
     <div class="px-8 pt-5">
         <div class="flex justify-between">
             <div class="flex space-x-2 ml-2">
@@ -106,7 +106,7 @@
                 Refresh
             </button>
         </div>
-        <div class="mt-4 relative overflow-x-hidden overflow-y-scroll" style="height: calc(100vh - 8.25rem);" id="logs-table">
+        <div class="mt-5 relative overflow-x-hidden overflow-y-scroll" style="height: calc(100vh - 8.25rem);" id="logs-table">
             <table class="w-full text-left text-gray-400 table-fixed" id="table">
                 <thead class="text-xs uppercase bg-zinc-900 top-0 sticky">
                     <tr>

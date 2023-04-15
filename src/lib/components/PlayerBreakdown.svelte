@@ -41,7 +41,7 @@
 
 <thead class="top-0 sticky h-6">
     <tr class="bg-zinc-900">
-        <th class="text-left px-2 font-normal w-full">Skill</th>
+        <th class="text-left px-2 font-normal w-full"></th>
         <th class="font-normal w-14">DMG</th>
         <th class="font-normal w-14">DPS</th>
         <th class="font-normal w-14">D%</th>
