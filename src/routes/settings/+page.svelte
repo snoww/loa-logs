@@ -1,6 +1,6 @@
 <script lang="ts">
     import LogSidebar from '$lib/components/logs/LogSidebar.svelte';
-    import { Tabs, TabItem, Kbd } from 'flowbite-svelte';
+    import { Tabs, TabItem } from 'flowbite-svelte';
     import SettingItem from '$lib/components/settings/SettingItem.svelte';
     import { formatDurationFromS } from '$lib/utils/numbers';
     import { registerShortcut, settings } from '$lib/utils/settings';
