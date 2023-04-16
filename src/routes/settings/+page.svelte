@@ -42,7 +42,7 @@
     </div>
     <div class="px-8">
         <Tabs style="underline" contentClass="" defaultClass="flex flex-wrap space-x-2">
-            <TabItem title="General" activeClasses="p-4 text-pink-500 border-b border-pink-500" inactiveClasses="p-4 hover:text-gray-200 text-gray-400">
+            <TabItem open title="General" activeClasses="p-4 text-pink-500 border-b border-pink-500" inactiveClasses="p-4 hover:text-gray-200 text-gray-400">
                 <div class="flex flex-col space-y-4 divide-y-[1px]">
                     <div class="mt-4 px-2 flex flex-col space-y-2">
                         <SettingItem name="Show Names" description="Show player names if it's loaded. If disabled, it will show the class name (e.g. Arcanist)" bind:setting={$settings.general.showNames} />
@@ -87,7 +87,7 @@
                             <div class="flex justify-between px-2 items-center">
                                 <div class="pb-2">
                                     <div class="text-gray-100">Minimum Encounter Duration</div>
-                                    <div class="text-xs text-gray-300">Set the minimum time for an encounter for it to be saved to the database</div>
+                                    <div class="text-xs text-gray-300">Only show encounters that are longer than the specified duration</div>
                                 </div>
                                 <div class="bg-zinc-700 px-2 py-1 rounded">
                                     {formatDurationFromS($settings.logs.minEncounterDuration)}
@@ -129,7 +129,7 @@
                     </div>
                 </div>
             </TabItem>
-            <TabItem open title="Shortcuts" activeClasses="p-4 text-pink-500 border-b border-pink-500" inactiveClasses="p-4 hover:text-gray-200 text-gray-400">
+            <TabItem title="Shortcuts" activeClasses="p-4 text-pink-500 border-b border-pink-500" inactiveClasses="p-4 hover:text-gray-200 text-gray-400">
                 <div class="flex flex-col space-y-4 divide-y-[1px]">
                     <div class="mt-4 px-2 flex flex-col space-y-2">
                         <div class="flex justify-between">
