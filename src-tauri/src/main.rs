@@ -251,7 +251,7 @@ fn setup_db(resource_path: &mut PathBuf) -> Result<(), String> {
 }
 
 #[tauri::command]
-fn load_encounters_preview(window: tauri::Window, page: i32, page_size: i32, min_duration: i32) -> EncountersOverview {
+fn load_encounters_preview(window: tauri::Window, page: i32, page_size: i32, min_duration: i32, search: String) -> EncountersOverview {
     let mut path = window.app_handle().path_resolver().resource_dir().expect("could not get resource dir");
     let conn = get_db_connection(&mut path).expect("could not get db connection");
 
@@ -272,7 +272,7 @@ fn load_encounters_preview(window: tauri::Window, page: i32, page_size: i32, min
         ) AS classes
     FROM
         encounter e
-    WHERE e.duration > ?
+    WHERE e.duration > ? AND current_boss LIKE '%' || ? || '%'
     ORDER BY
         e.fight_start DESC
     LIMIT ?
@@ -283,7 +283,7 @@ fn load_encounters_preview(window: tauri::Window, page: i32, page_size: i32, min
     let offset = (page - 1) * page_size;
     let min_duration = min_duration * 1000;
 
-    let encounter_iter = stmt.query_map([min_duration, page_size, offset], |row| {
+    let encounter_iter = stmt.query_map([min_duration.to_string(), search.to_string(), page_size.to_string(), offset.to_string()], |row| {
         let classes = match row.get(4) {
             Ok(classes) => classes,
             Err(_) => "101".to_string()
@@ -303,7 +303,11 @@ fn load_encounters_preview(window: tauri::Window, page: i32, page_size: i32, min
         encounters.push(encounter.unwrap());
     }
 
-    let count: i32 = conn.query_row_and_then("SELECT COUNT(*) FROM encounter", [], |row| {
+    let count: i32 = conn.query_row_and_then("
+    SELECT COUNT(*) 
+    FROM encounter 
+    WHERE duration > ? AND current_boss LIKE '%' || ? || '%'
+    ", [min_duration.to_string(), search.to_string()], |row| {
         row.get(0)
     }).expect("could not get encounter count");
 

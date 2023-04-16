@@ -1,6 +1,7 @@
 <script lang="ts">
     import { page } from "$app/stores";
     import LogSidebar from "$lib/components/logs/LogSidebar.svelte";
+    import TableFilter from "$lib/components/table/TableFilter.svelte";
     import type { EncounterPreview, EncountersOverview } from "$lib/types";
     import { formatDurationFromMs, formatTimestamp } from "$lib/utils/numbers";
     import { settings } from "$lib/utils/settings";
@@ -14,12 +15,38 @@
     const rowsPerPage = 10;
     let classIconsCache: { [key: number]: string } = {}
 
+    let search = "";
+
+    $: {
+        searchEncounters(search);        
+    }
+
+    async function searchEncounters(query: string, page: number = 1) {
+        if (query === "") {
+            $page.url.searchParams.delete('search');
+            await loadEncounters();
+            return;
+        }
+        if (currentPage !== 1) {
+            currentPage = 1
+            searchEncounters(query, 1)
+        }
+        $page.url.searchParams.set('search', query);
+        let overview: EncountersOverview = await invoke("load_encounters_preview", { page: page, pageSize: rowsPerPage, minDuration: $settings.logs.minEncounterDuration, search: query });
+        encounters = overview.encounters;
+        totalEncounters = overview.totalEncounters;
+    }
+
     async function loadEncounters(page: number = 1): Promise<Array<EncounterPreview>> {
         if ($page.url.searchParams.has('page')) {
             page = parseInt($page.url.searchParams.get('page')!);
             $page.url.searchParams.delete('page');
         }
-        let overview: EncountersOverview = await invoke("load_encounters_preview", { page: page, pageSize: rowsPerPage, minDuration: $settings.logs.minEncounterDuration });
+        let search = ""
+        if ($page.url.searchParams.has('search')) {
+            search = $page.url.searchParams.get('search')!;
+        }
+        let overview: EncountersOverview = await invoke("load_encounters_preview", { page: page, pageSize: rowsPerPage, minDuration: $settings.logs.minEncounterDuration, search: search });
         encounters = overview.encounters;
         totalEncounters = overview.totalEncounters;
         currentPage = page;
@@ -105,7 +132,10 @@
                 Refresh
             </button>
         </div>
-        <div class="mt-5 relative overflow-x-hidden overflow-y-scroll" style="height: calc(100vh - 8.25rem);" id="logs-table">
+        <div class="mt-5 pb-2">
+            <TableFilter bind:search={search}/>
+        </div>
+        <div class="relative overflow-x-hidden overflow-y-scroll" style="height: calc(100vh - 8.25rem - 2.5rem);" id="logs-table">
             <table class="w-full text-left text-gray-400 table-fixed" id="table">
                 <thead class="text-xs uppercase bg-zinc-900 top-0 sticky">
                     <tr>
@@ -150,7 +180,7 @@
                             </td>
                         </tr>
                     {:else}
-                        <div class="w-screen bg-neutral-800 p-2">No encounters recorded so far.</div>
+                        <div class="w-screen bg-neutral-800 p-2">No encounters recorded.</div>
                         <div class="w-screen bg-neutral-800 p-2">Meter should be turned on at character select for best accuracy.</div>
                     {/each}
                     {/await}
