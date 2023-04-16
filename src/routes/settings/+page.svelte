@@ -3,9 +3,7 @@
     import { Tabs, TabItem, Kbd } from 'flowbite-svelte';
     import SettingItem from '$lib/components/settings/SettingItem.svelte';
     import { formatDurationFromS } from '$lib/utils/numbers';
-    import { settings } from '$lib/utils/settings';
-    import { register, unregisterAll } from '@tauri-apps/api/globalShortcut';
-    import { invoke } from '@tauri-apps/api/tauri';
+    import { registerShortcut, settings } from '$lib/utils/settings';
 
 
     let hidden: boolean = true;
@@ -18,20 +16,11 @@
     ];
 
     $: {
-        console.log($settings.shortcuts.hideMeter.modifier, $settings.shortcuts.hideMeter.key);
         (async () => {
-            registerShortcut($settings.shortcuts.hideMeter.modifier, $settings.shortcuts.hideMeter.key);
+            registerShortcut($settings.shortcuts.hideMeter.modifier, $settings.shortcuts.hideMeter.key);            
         })();
-        
-        
-    }
-
-    async function registerShortcut(modifier: string, key: string) {
-        await unregisterAll();
-        let shortcut = modifier + '+' + key;
-        await register(shortcut, async () => {
-            await invoke("toggle_meter_window");
-        });
+        (async () => {
+        })();     
     }
 
 </script>
@@ -87,7 +76,6 @@
                             <SettingItem name="Skill Max Damage" description="Show the maximum damage dealt by the skill" bind:setting={$settings.meter.breakdown.maxDamage} />
                             <SettingItem name="Skill Casts/min" description="Show the casts per minute of the skill (note: cancelled skills still count as cast)" bind:setting={$settings.meter.breakdown.casts} />
                             <SettingItem name="Skill Hits/min" description="Show the hits per minute of the skill (note: each tick of a multi-hit skill is counted as a hit)" bind:setting={$settings.meter.breakdown.hits} />
-
                         </div>
                     </div>
                 </div>

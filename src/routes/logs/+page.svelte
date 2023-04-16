@@ -3,11 +3,10 @@
     import LogSidebar from "$lib/components/logs/LogSidebar.svelte";
     import type { EncounterPreview, EncountersOverview } from "$lib/types";
     import { formatDurationFromMs, formatTimestamp } from "$lib/utils/numbers";
+    import { settings } from "$lib/utils/settings";
     import { join, resourceDir } from "@tauri-apps/api/path";
     import { convertFileSrc, invoke } from "@tauri-apps/api/tauri";
     import { Tooltip } from 'flowbite-svelte';
-    import { onMount } from "svelte";
-
 
     let encounters: Array<EncounterPreview> = [];
     let totalEncounters: number = 0;
@@ -20,7 +19,7 @@
             page = parseInt($page.url.searchParams.get('page')!);
             $page.url.searchParams.delete('page');
         }
-        let overview: EncountersOverview = await invoke("load_encounters_preview", { page: page, pageSize: rowsPerPage });
+        let overview: EncountersOverview = await invoke("load_encounters_preview", { page: page, pageSize: rowsPerPage, minDuration: $settings.logs.minEncounterDuration });
         encounters = overview.encounters;
         totalEncounters = overview.totalEncounters;
         currentPage = page;

@@ -1,5 +1,3 @@
-use std::collections::VecDeque;
-
 use bitflags::bitflags;
 use hashbrown::{HashMap, HashSet};
 use lazy_static::lazy_static;

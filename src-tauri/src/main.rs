@@ -10,7 +10,7 @@ use hashbrown::HashMap;
 use parser::{models::*, Parser};
 
 use rusqlite::{Connection, params};
-use tauri::{Manager, api::process::{Command, CommandEvent }, LogicalSize, Size, SystemTray, CustomMenuItem, SystemTrayMenu, SystemTrayMenuItem, WindowBuilder, SystemTrayEvent};
+use tauri::{Manager, api::process::{Command, CommandEvent }, SystemTray, CustomMenuItem, SystemTrayMenu, SystemTrayMenuItem, WindowBuilder, SystemTrayEvent};
 use tauri_plugin_window_state::{AppHandleExt, WindowExt, StateFlags};
 use window_vibrancy::apply_blur;
 
@@ -251,7 +251,7 @@ fn setup_db(resource_path: &mut PathBuf) -> Result<(), String> {
 }
 
 #[tauri::command]
-fn load_encounters_preview(window: tauri::Window, page: i32, page_size: i32) -> EncountersOverview {
+fn load_encounters_preview(window: tauri::Window, page: i32, page_size: i32, min_duration: i32) -> EncountersOverview {
     let mut path = window.app_handle().path_resolver().resource_dir().expect("could not get resource dir");
     let conn = get_db_connection(&mut path).expect("could not get db connection");
 
@@ -272,6 +272,7 @@ fn load_encounters_preview(window: tauri::Window, page: i32, page_size: i32) -> 
         ) AS classes
     FROM
         encounter e
+    WHERE e.duration > ?
     ORDER BY
         e.fight_start DESC
     LIMIT ?
@@ -280,8 +281,9 @@ fn load_encounters_preview(window: tauri::Window, page: i32, page_size: i32) -> 
     .unwrap();
 
     let offset = (page - 1) * page_size;
+    let min_duration = min_duration * 1000;
 
-    let encounter_iter = stmt.query_map([page_size, offset], |row| {
+    let encounter_iter = stmt.query_map([min_duration, page_size, offset], |row| {
         let classes = match row.get(4) {
             Ok(classes) => classes,
             Err(_) => "101".to_string()

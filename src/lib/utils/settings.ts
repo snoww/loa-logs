@@ -1,3 +1,5 @@
+import { invoke } from '@tauri-apps/api';
+import { register, unregisterAll } from '@tauri-apps/api/globalShortcut';
 import { writable } from 'svelte/store';
 
 export const defaultSettings = {
@@ -81,3 +83,11 @@ const settingsStore = (key: string) => {
 };
 
 export const settings = settingsStore("settings");
+
+export async function registerShortcut(modifier: string, key: string) {
+    await unregisterAll();
+    const shortcut = modifier + '+' + key;
+    await register(shortcut, async () => {
+        await invoke("toggle_meter_window");
+    });
+}
