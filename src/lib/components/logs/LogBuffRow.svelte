@@ -5,7 +5,7 @@
     import { Tooltip } from 'flowbite-svelte';
     import BuffTooltipDetail from "../shared/BuffTooltipDetail.svelte";
     import { formatPlayerName } from "$lib/utils/strings";
-    import { hideNames } from "$lib/utils/stores";
+    import { settings } from "$lib/utils/settings";
 
     export let player: Entity;
     export let groupedSynergies: Map<string, Map<number, StatusEffect>>;
@@ -21,7 +21,7 @@
     }
 
     $: {
-        playerName = formatPlayerName(player, $hideNames);
+        playerName = formatPlayerName(player, $settings.general.showNames);
     }
 
     if (groupedSynergies.size > 0) {

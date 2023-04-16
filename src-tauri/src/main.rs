@@ -11,6 +11,7 @@ use parser::{models::*, Parser};
 
 use rusqlite::{Connection, params};
 use tauri::{Manager, api::process::{Command, CommandEvent }, LogicalSize, Size, SystemTray, CustomMenuItem, SystemTrayMenu, SystemTrayMenuItem, WindowBuilder, SystemTrayEvent};
+use tauri_plugin_window_state::{AppHandleExt, WindowExt, StateFlags};
 use window_vibrancy::apply_blur;
 
 fn main() {
@@ -33,6 +34,8 @@ fn main() {
             let meter_window = app.get_window("main").unwrap();
             meter_window.set_always_on_top(true)
                 .expect("failed to set windows always on top");
+            meter_window.restore_state(StateFlags::all())
+                .expect("failed to restore window state");
             #[cfg(debug_assertions)]
             {
                 meter_window.open_devtools();
@@ -116,6 +119,7 @@ fn main() {
                 api.prevent_close();
             }
             if event.window().label() == "main" {
+                event.window().app_handle().save_window_state(StateFlags::all()).expect("failed to save window state");
                 std::process::exit(0);
             }
         })
@@ -134,6 +138,7 @@ fn main() {
             SystemTrayEvent::MenuItemClick { id, .. } => {
                 match id.as_str() {
                     "quit" => {
+                        app.save_window_state(StateFlags::all()).expect("failed to save window state");
                         std::process::exit(0);
                     }
                     "hide" => {
@@ -163,7 +168,7 @@ fn main() {
             }
             _ => {}
         })
-        .invoke_handler(tauri::generate_handler![load_encounters_preview, load_encounter, open_most_recent_encounter, delete_encounter])
+        .invoke_handler(tauri::generate_handler![load_encounters_preview, load_encounter, open_most_recent_encounter, delete_encounter, toggle_meter_window])
         .run(tauri::generate_context!())
         .expect("error while running application");
 }
@@ -476,4 +481,15 @@ fn delete_encounter(window: tauri::Window, id: String) {
     ").unwrap();
 
     stmt.execute(params![id]).unwrap();
+}
+
+#[tauri::command]
+fn toggle_meter_window(window: tauri::Window) {
+    if let Some(meter) = window.app_handle().get_window("main") {
+        if meter.is_visible().unwrap() {
+            meter.hide().unwrap();
+        } else {
+            meter.show().unwrap();
+        }
+    }
 }

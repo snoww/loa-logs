@@ -8,10 +8,8 @@
     import LogEncounterInfo from "./LogEncounterInfo.svelte";
     import LogBuffs from "./LogBuffs.svelte";
     import { page } from "$app/stores";
-    import { hideNames } from "$lib/utils/stores";
     import { chartable, defaultOptions, type ChartOptions, type EChartsOptions } from "$lib/utils/charts";
     import { classColors } from "$lib/constants/colors";
-    import { writable } from "svelte/store";
     import { settings } from "$lib/utils/settings";
 
     export let id: string;
@@ -58,7 +56,7 @@
             if (players[0].damageStats && players[0].damageStats.dpsAverage.length > 0 && players[0].damageStats.dpsRolling10sAvg.length > 0)
             {
                 let legendNames: Array<string> = [];
-                if ($hideNames) {
+                if (!$settings.general.showNames) {
                     let map: {[key: string]: number} = {}
                     let count = players.map(e => {
                         return map[e.class] = (typeof map[e.class] === "undefined") ? 1 : map[e.class] + 1;
@@ -365,9 +363,9 @@
             Self Synergy
         </button>
         <div class="flex items-center px-2 space-x-2 bg-gray-700 rounded">
-            <span class="text-sm font-medium">Hide Names</span>
+            <span class="text-sm font-medium">Show Names</span>
             <label class="relative inline-flex items-center cursor-pointer">
-                <input type="checkbox" value="" class="sr-only peer" on:click={() => hideNames.update(h => !h)}>
+                <input type="checkbox" value="" class="sr-only peer" bind:checked={$settings.general.showNames}>
                 <div class="w-9 h-5 peer-focus:outline-none peer-focus:ring-pink-800 rounded-full peer bg-gray-800 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all border-gray-600 peer-checked:bg-pink-800"></div>
               </label>
         </div>
@@ -485,7 +483,7 @@
         {/if}
     </div>
     {#if chartType == ChartType.AVERAGE_DPS}
-        {#if $hideNames}
+        {#if !$settings.general.showNames}
         <div class="w-full h-[300px] mt-2" use:chartable={avgDpsOptions}>
         </div>
         {:else}
@@ -493,7 +491,7 @@
         </div>
         {/if}
     {:else if chartType == ChartType.ROLLING_DPS}
-    {#if $hideNames}
+    {#if !$settings.general.showNames}
     <div class="w-full h-[300px] mt-2" use:chartable={rollingDpsOptions}>
     </div>
     {:else}

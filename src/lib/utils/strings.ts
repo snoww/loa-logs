@@ -10,14 +10,13 @@ export function removeUnknownHtmlTags(input: string){
     return input;
 }
   
-export function formatPlayerName(player: Entity,  hideNames = false): string {
+export function formatPlayerName(player: Entity,  showNames = true): string {
     let playerName = player.name;
-    // todo use settings
-    if (!isValidName(playerName) || hideNames) {
+    if (!isValidName(playerName) || !showNames) {
         playerName = "";
-        // if (player.gearScore > 0) {
-        //     playerName += player.gearScore + " ";
-        // }
+        if (player.gearScore > 0) {
+            playerName += player.gearScore + " ";
+        }
         if (player.class) {
             playerName += player.class;
         }

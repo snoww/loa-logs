@@ -2,11 +2,12 @@ import { writable } from 'svelte/store';
 
 export const defaultSettings = {
     "general": {
+        "showNames": true,
     },
     "shortcuts": {
         "hideMeter": {
-            "value": "CommandOrControl+Down",
-            "default": "CommandOrControl+Down"
+            "modifier": "Ctrl",
+            "key": "ArrowDown",
         }
     },
     "meter": {
@@ -21,6 +22,7 @@ export const defaultSettings = {
         "counters": false,
         "breakdown": {
             "damage": true,
+            "dps": true,
             "damagePercent": true,
             "critRate": true,
             "frontAtk": true,
@@ -43,6 +45,7 @@ export const defaultSettings = {
         "minEncounterDuration": 30,
         "breakdown": {
             "damage": true,
+            "dps": true,
             "damagePercent": true,
             "critRate": true,
             "frontAtk": true,
@@ -55,21 +58,26 @@ export const defaultSettings = {
     }
 };
 
-export const settingsStore = (key: string, initial: object) => {
-    if (localStorage.getItem(key) === null) {
-        localStorage.setItem(key, JSON.stringify(initial));
+const settingsStore = (key: string) => {
+    const storedSettings = localStorage.getItem(key);
+    const value = storedSettings ? JSON.parse(storedSettings) : defaultSettings;
+    const store = writable(value);
+    if (typeof window !== 'undefined') {
+        window.addEventListener('storage', (event) => {
+            if (event.key === key) {
+                const newValue = JSON.parse(event.newValue || "");
+                store.set(newValue);
+            }
+        });
     }
-    const saved = JSON.parse(localStorage.getItem(key) || JSON.stringify(defaultSettings));
-
-    const { subscribe, set, update } = writable(saved);
     return {
-        subscribe,
+        subscribe: store.subscribe,
         set: (value: object) => {
             localStorage.setItem(key, JSON.stringify(value));
-            return set(value);
+            store.set(value);
         },
-        update
+        update: store.update
     };
 };
 
-export const settings = settingsStore("settings", defaultSettings);
+export const settings = settingsStore("settings");

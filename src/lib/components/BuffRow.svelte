@@ -8,6 +8,9 @@
     import { tweened } from "svelte/motion";
     import { Tooltip } from 'flowbite-svelte';
     import BuffTooltipDetail from "./shared/BuffTooltipDetail.svelte";
+    import { format } from "echarts";
+    import { settings } from "$lib/utils/settings";
+    import { formatPlayerName } from "$lib/utils/strings";
 
 
     export let player: Entity;
@@ -29,13 +32,7 @@
             color = classColors[player.class].color;
         }
 
-        playerName = player.name;
-        if (player.class) {
-            playerName += ` (${player.class})`;
-        }
-        if (player.isDead) {
-            playerName = "💀 " + playerName;
-        }
+        playerName = formatPlayerName(player, $settings.general.showNames);
 
         if (groupedSynergies.size > 0) {
             synergyPercentageDetails = [];

@@ -13,6 +13,7 @@
     import { resourceDir } from '@tauri-apps/api/path';
     import { Alert } from 'flowbite-svelte'
     import { fade } from 'svelte/transition';
+    import { settings } from '$lib/utils/settings';
 
     let time = +Date.now();
     let encounter: Encounter | null = null;
@@ -97,6 +98,7 @@
     let player: Entity | null = null;
     let playerName = "";
     let lastCombatPacket = 0;
+    let anyDead: boolean = false;
 
     $: {
         if (encounter) {            
@@ -104,6 +106,7 @@
                 players = Object.values(encounter.entities)
                     .filter((players) => players.damageStats.damageDealt > 0)
                     .sort((a, b) => b.damageStats.damageDealt - a.damageStats.damageDealt);
+                anyDead = players.some(player => player.isDead);
                 topDamageDealt = encounter.encounterDamageStats.topDamageDealt;
                 playerDamagePercentages = players.map(player => (player.damageStats.damageDealt / topDamageDealt) * 100);
                 
@@ -120,6 +123,7 @@
                 }
                 totalDamageDealt = encounter.encounterDamageStats.totalDamageDealt;
                 lastCombatPacket = encounter.lastCombatPacket;
+                
             }
             
             if (encounter.currentBoss !== undefined) {
@@ -134,7 +138,7 @@
                 player = null;
                 state = MeterState.PARTY;
             }            
-        }
+        }        
     }
 
     function inspectPlayer(name: string) {
@@ -153,7 +157,7 @@
 
 <svelte:window on:contextmenu|preventDefault/>
 <EncounterInfo {encounterDuration} {totalDamageDealt} {dps}/>
-{#if currentBoss !== null}
+{#if currentBoss !== null && $settings.meter.bossHp}
 <div class="relative top-7">
     <BossInfo boss={currentBoss}/>
 </div>
@@ -166,16 +170,30 @@
             <thead class="top-0 sticky h-6" on:contextmenu|preventDefault={() => {console.log("titlebar clicked")}}>
                 <tr class="bg-zinc-900">
                     <th class="text-left px-2 font-normal w-full"></th>
-                    <!-- <th class="">DMG</th> -->
-                    <!-- {#if entities.some(entity => entity.damageStats.deathTime > 0);}
-                    {/if} -->
+                    {#if anyDead && $settings.meter.deathTime}
+                    <th class="font-normal w-20">Dead for</th>
+                    {/if}
+                    {#if $settings.meter.damage}
+                    <th class="font-normal w-14">DMG</th>
+                    {/if}
+                    {#if $settings.meter.dps}
                     <th class="font-normal w-14">DPS</th>
-                    {#if players.length > 1}
+                    {/if}
+                    {#if players.length > 1 && $settings.meter.damagePercent}
                     <th class="font-normal w-14">D%</th>
                     {/if}
+                    {#if $settings.meter.critRate}
                     <th class="font-normal w-14">CRIT</th>
+                    {/if}
+                    {#if $settings.meter.frontAtk}
                     <th class="font-normal w-14">F.A</th>
+                    {/if}
+                    {#if $settings.meter.backAtk}
                     <th class="font-normal w-14">B.A</th>
+                    {/if}
+                    {#if $settings.meter.counters}
+                    <th class="font-normal w-[70px]">Counters</th>
+                    {/if}
                 </tr>
             </thead>
             <tbody>
@@ -187,6 +205,7 @@
                         {duration}
                         {totalDamageDealt}
                         {lastCombatPacket}
+                        {anyDead}
                     />
                 </tr>
                 {/each}

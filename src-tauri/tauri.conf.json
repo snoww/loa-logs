@@ -45,6 +45,9 @@
         "assetScope": [
           "$RESOURCE/images/**/*.png"
         ]
+      },
+      "globalShortcut": {
+        "all": true
       }
     },
     "bundle": {

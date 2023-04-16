@@ -31,7 +31,7 @@
     dps = abbreviateNumberSplit(entity.damageStats.dps);
 
     $: {
-        playerName = formatPlayerName(entity, $hideNames)
+        playerName = formatPlayerName(entity, $settings.general.showNames);
     }
     if (entity.isDead) {       
         deadFor = (((end - entity.damageStats.deathTime) / 1000).toFixed(0) + "s").replace('-', '');
