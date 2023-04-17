@@ -168,7 +168,7 @@ fn main() {
             }
             _ => {}
         })
-        .invoke_handler(tauri::generate_handler![load_encounters_preview, load_encounter, open_most_recent_encounter, delete_encounter, toggle_meter_window])
+        .invoke_handler(tauri::generate_handler![load_encounters_preview, load_encounter, open_most_recent_encounter, delete_encounter, toggle_meter_window, open_url])
         .run(tauri::generate_context!())
         .expect("error while running application");
 }
@@ -497,5 +497,15 @@ fn toggle_meter_window(window: tauri::Window) {
         } else {
             meter.show().unwrap();
         }
+    }
+}
+
+#[tauri::command]
+fn open_url(window: tauri::Window, url: String) {
+    if let Some(logs) = window.app_handle().get_window("logs") {
+        logs.emit("redirect-url", url).unwrap();
+
+        logs.unminimize().unwrap();
+        logs.show().unwrap();
     }
 }

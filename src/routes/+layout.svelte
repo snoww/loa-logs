@@ -23,13 +23,21 @@
             }
         });
 
+        if ($settings.general.accentColor === undefined) {
+            $settings.general.accentColor = "theme-pink";
+        }
+
         if (location.pathname !== "/") {
             (async () => {
                 let encounterUpdateEvent = await listen('show-latest-encounter', (event) => {                    
                     goto("/logs/encounter?id=" + event.payload);
                 });
+                let openUrlEvent = await listen('redirect-url', (event) => {                    
+                    goto("/" + event.payload);
+                });
     
                 events.add(encounterUpdateEvent);
+                events.add(openUrlEvent);
             })();
         }
 
