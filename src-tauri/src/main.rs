@@ -469,10 +469,10 @@ fn open_most_recent_encounter(window: tauri::Window) {
     }).unwrap();
 
     if let Some(logs) = window.app_handle().get_window("logs") {
-        logs.eval(&format!("window.location.href = '/logs/encounter?id={}'", id)).expect("failed to set window url");
+        logs.emit("show-latest-encounter", id.to_string()).unwrap();
+
         logs.unminimize().unwrap();
         logs.show().unwrap();
-        logs.set_focus().unwrap();
     }
 }
 

@@ -5,6 +5,7 @@
     import { formatDurationFromS } from '$lib/utils/numbers';
     import { registerShortcut, settings } from '$lib/utils/settings';
 
+    let dropdownOpen = false;
 
     let hidden: boolean = true;
     const keys = [
@@ -19,9 +20,19 @@
         (async () => {
             registerShortcut($settings.shortcuts.hideMeter.modifier, $settings.shortcuts.hideMeter.key);            
         })();
-        (async () => {
-        })();     
     }
+
+    const handleDropdownClick = () => {
+        dropdownOpen = !dropdownOpen
+    }
+
+    const handleDropdownFocusLoss = (event: FocusEvent) => {
+        const relatedTarget = event.relatedTarget as HTMLElement;
+        const currentTarget = event.currentTarget as HTMLElement;
+
+        if (currentTarget.contains(relatedTarget)) return;
+        dropdownOpen = false;
+    };
 
 </script>
 
@@ -32,7 +43,7 @@
         <div class="flex space-x-2 ml-2">
             <div class="">
                 <button on:click={() => (hidden = false)} class="block mt-px">
-                    <svg class="fill-gray-300 w-6 h-6 hover:fill-pink-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960"><path d="M107 841v-91.5h746.5V841H107Zm0-219.5V530h746.5v91.5H107Zm0-219V310h746.5v92.5H107Z"/></svg>
+                    <svg class="fill-gray-300 w-6 h-6 hover:fill-accent-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960"><path d="M107 841v-91.5h746.5V841H107Zm0-219.5V530h746.5v91.5H107Zm0-219V310h746.5v92.5H107Z"/></svg>
                 </button>
             </div>
             <div class="text-xl font-bold text-gray-300 pl-2">
@@ -42,14 +53,54 @@
     </div>
     <div class="px-8">
         <Tabs style="underline" contentClass="" defaultClass="flex flex-wrap space-x-2">
-            <TabItem open title="General" activeClasses="p-4 text-pink-500 border-b border-pink-500" inactiveClasses="p-4 hover:text-gray-200 text-gray-400">
+            <TabItem open title="General" activeClasses="p-4 text-accent-500 border-b border-accent-500" inactiveClasses="p-4 hover:text-gray-200 text-gray-400">
                 <div class="flex flex-col space-y-4 divide-y-[1px]">
                     <div class="mt-4 px-2 flex flex-col space-y-2">
                         <SettingItem name="Show Names" description="Show player names if it's loaded. If disabled, it will show the class name (e.g. Arcanist)" bind:setting={$settings.general.showNames} />
+                        <div class="pt-2" on:focusout={handleDropdownFocusLoss}>
+                            <div class="flex font-medium items-center">
+                                <button id="" class="font-medium rounded-lg text-sm px-2 py-2 text-center inline-flex items-center bg-accent-800" type="button" on:click={handleDropdownClick}>
+                                    <svg class="w-4 h-4 fill-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960"><path d="M480 996q-86.035 0-162.566-33.158t-133.825-90.451q-57.293-57.294-90.451-133.802Q60 662.08 60 576.062 60 487 93.196 410.724q33.196-76.275 91.5-133.25Q243 220.5 320.769 187.75 398.538 155 487.189 155q83.023 0 157.706 28.207 74.683 28.207 131.885 77.88 57.202 49.672 90.711 118.242Q901 447.9 901 527q0 112.5-62.75 184.5t-175.664 72H605.5q-17 0-29.5 13.25T563.5 827q0 25.447 10 36.224 10 10.776 10 32.276 0 40-28.55 70.25T480 996Zm0-420Zm-222.5 24.5q19.7 0 34.1-14.4Q306 571.7 306 552q0-19.7-14.4-34.1-14.4-14.4-34.1-14.4-19.7 0-34.1 14.4Q209 532.3 209 552q0 19.7 14.4 34.1 14.4 14.4 34.1 14.4Zm121-162q20.2 0 34.6-14.4 14.4-14.4 14.4-34.1 0-20.7-14.4-34.6-14.4-13.9-34.1-13.9-20.7 0-34.6 13.9-13.9 13.9-13.9 34.1 0 20.2 13.9 34.6 13.9 14.4 34.1 14.4Zm203.5 0q20.2 0 34.6-14.4Q631 409.7 631 390q0-20.7-14.4-34.6-14.4-13.9-34.1-13.9-20.7 0-34.6 13.9-13.9 13.9-13.9 34.1 0 20.2 13.9 34.6 13.9 14.4 34.1 14.4Zm123.5 162q19.7 0 34.1-14.4Q754 571.7 754 552q0-19.7-14.4-34.1-14.4-14.4-34.1-14.4-20.7 0-34.6 14.4Q657 532.3 657 552q0 19.7 13.9 34.1 13.9 14.4 34.6 14.4Zm-229.342 304q7.592 0 11.717-3.545Q492 897.41 492 888.938 492 874.5 477.25 865q-14.75-9.5-14.75-47.5 0-48.674 32.73-87.087Q527.96 692 576.25 692h86.25q74 0 110-43.75t36-115.25q0-131-97.843-208.25t-223.16-77.25q-140.595 0-238.296 95.919T151.5 576.479q0 136.521 95.211 232.271t229.447 95.75Z"/></svg>
+                                </button>
+                                <div class="ml-5">
+                                    <div class="text-gray-100">Accent Color</div>
+                                    <div class="text-xs text-gray-300">
+                                        Set the accent color for the app
+                                    </div>
+                                </div>
+                            </div>
+                            {#if dropdownOpen}
+                            <div id="dropdown" class="mt-2 z-10 cursor-pointer shadow w-24 rounded-lg">
+                                <ul class="text-sm text-gray-200" aria-labelledby="dropdownDefaultButton">
+                                  <li>
+                                    <button class="block text-left w-full px-4 py-2 bg-red-800 rounded-t-lg" on:click={() => {$settings.general.accentColor = "theme-red"; dropdownOpen = false}}>Red</button>
+                                  </li>
+                                  <li>
+                                    <button class="block text-left w-full px-4 py-2 bg-pink-800" on:click={() => {$settings.general.accentColor = "theme-pink"; dropdownOpen = false}}>Pink</button>
+                                  </li>
+                                  <li>
+                                    <button class="block text-left w-full px-4 py-2 bg-purple-800" on:click={() => {$settings.general.accentColor = "theme-purple"; dropdownOpen = false}}>Purple</button>
+                                  </li>
+                                  <li>
+                                    <button class="block text-left w-full px-4 py-2 bg-sky-800" on:click={() => {$settings.general.accentColor = "theme-blue"; dropdownOpen = false}}>Blue</button>
+                                  </li>
+                                  <li>
+                                    <button class="block text-left w-full px-4 py-2 bg-green-800" on:click={() => {$settings.general.accentColor = "theme-green"; dropdownOpen = false}}>Green</button>
+                                  </li>
+                                  <li>
+                                    <button class="block text-left w-full px-4 py-2 bg-yellow-400" on:click={() => {$settings.general.accentColor = "theme-yellow"; dropdownOpen = false}}>Yellow</button>
+                                  </li>
+                                  <li>
+                                    <button class="block text-left w-full px-4 py-2 bg-orange-500 rounded-b-lg" on:click={() => {$settings.general.accentColor = "theme-orange"; dropdownOpen = false}}>Orange</button>
+                                  </li>
+                                </ul>
+                            </div>
+                            {/if}
+                        </div>
                     </div>
                 </div>
             </TabItem>
-            <TabItem title="Live Meter" activeClasses="p-4 text-pink-500 border-b border-pink-500" inactiveClasses="p-4 hover:text-gray-200 text-gray-400">
+            <TabItem title="Live Meter" activeClasses="p-4 text-accent-500 border-b border-accent-500" inactiveClasses="p-4 hover:text-gray-200 text-gray-400">
                 <div class="flex flex-col space-y-4 divide-y-[1px]">
                     <div class="mt-4 px-2 flex flex-col space-y-2">
                         <SettingItem name="Boss HP" description="Show the HP bar for the current boss" bind:setting={$settings.meter.bossHp} />
@@ -80,7 +131,7 @@
                     </div>
                 </div>
             </TabItem>
-            <TabItem title="Logs" activeClasses="p-4 text-pink-500 border-b border-pink-500" inactiveClasses="p-4 hover:text-gray-200 text-gray-400">
+            <TabItem title="Logs" activeClasses="p-4 text-accent-500 border-b border-accent-500" inactiveClasses="p-4 hover:text-gray-200 text-gray-400">
                 <div class="flex flex-col space-y-4 divide-y-[1px]">
                     <div class="mt-4 px-2 flex flex-col space-y-2">
                         <label class="font-medium flex flex-col pt-2 pb-4">
@@ -93,7 +144,7 @@
                                     {formatDurationFromS($settings.logs.minEncounterDuration)}
                                 </div>
                             </div>
-                            <input type="range" bind:value={$settings.logs.minEncounterDuration} class="accent-pink-700" list="markers" min=0 max=300 step=10/>
+                            <input type="range" bind:value={$settings.logs.minEncounterDuration} class="accent-accent-700" list="markers" min=0 max=300 step=10/>
                             <datalist id="markers">
                                 {#each Array.from({length: 11}, (_, i) => i * 30) as i}
                                     <option value="{i}"></option>
@@ -129,17 +180,17 @@
                     </div>
                 </div>
             </TabItem>
-            <TabItem title="Shortcuts" activeClasses="p-4 text-pink-500 border-b border-pink-500" inactiveClasses="p-4 hover:text-gray-200 text-gray-400">
+            <TabItem title="Shortcuts" activeClasses="p-4 text-accent-500 border-b border-accent-500" inactiveClasses="p-4 hover:text-gray-200 text-gray-400">
                 <div class="flex flex-col space-y-4 divide-y-[1px]">
                     <div class="mt-4 px-2 flex flex-col space-y-2">
                         <div class="flex justify-between">
                             <label class="font-medium flex items-center" for="modifiers">
-                                <div class="ml-5">
+                                <div class="">
                                     <div class="text-gray-100">Show/Hide Meter</div>
                                 </div>
                             </label>
                             <div class="flex space-x-2 items-center">
-                                <select id="modifiers" bind:value={$settings.shortcuts.hideMeter.modifier} class="border text-sm rounded-lg block w-20 p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500">
+                                <select id="modifiers" bind:value={$settings.shortcuts.hideMeter.modifier} class="border text-sm rounded-lg block w-20 p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-accent-500 focus:border-accent-500">
                                     <option value="Ctrl">Ctrl</option>
                                     <option value="Alt">Alt</option>
                                     <option value="Shift"><kbd>Shift</kbd></option>
@@ -147,7 +198,7 @@
                                 <div>
                                     +
                                 </div>
-                                <select id="keys" bind:value={$settings.shortcuts.hideMeter.key} class="border text-sm rounded-lg block p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500">
+                                <select id="keys" bind:value={$settings.shortcuts.hideMeter.key} class="border text-sm rounded-lg block p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-accent-500 focus:border-accent-500">
                                     {#each keys as key}
                                         <option value={key}>{key.toUpperCase()}</option>
                                     {/each}

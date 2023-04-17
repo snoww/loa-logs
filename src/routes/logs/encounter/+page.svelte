@@ -26,7 +26,7 @@
     {#await loadEncounter() then _}
     <div class="px-8 flex items-center sticky top-0 z-50 bg-zinc-800 w-full shadow-md">
         <div class="flex items-center justify-between py-4 ">
-            <a href="/logs?page={currentPage}" class="p-2 rounded-md bg-pink-900 hover:bg-pink-800 inline-flex">
+            <a href="/logs?page={currentPage}" class="p-2 rounded-md bg-accent-900 hover:bg-accent-800 inline-flex">
                 <span class="sr-only">Back</span>
                 <svg class="w-5 h-5 fill-gray-200" xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960"><path d="M480 903 153 576l327-327.5 65.5 64.5-216 217h478v91.5h-478l216 216L480 903Z"/></svg>
                 <span class="mx-1 text-gray-200">Back</span>

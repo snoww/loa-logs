@@ -11,6 +11,7 @@
     import { chartable, defaultOptions, type ChartOptions, type EChartsOptions } from "$lib/utils/charts";
     import { classColors } from "$lib/constants/colors";
     import { settings } from "$lib/utils/settings";
+    import { goto } from "$app/navigation";
 
     export let id: string;
     export let encounter: Encounter;
@@ -217,9 +218,9 @@
         await invoke("delete_encounter", { id: id });
         if ($page.url.searchParams.has('page')) {
             let currentPage = parseInt($page.url.searchParams.get('page')!);
-            document.location.href = `/logs?page=${currentPage}`;
+            goto(`/logs?page=${currentPage}`);
         } else {
-            document.location.href = "/logs";
+            goto("/logs");
         }
     }
 
@@ -353,20 +354,20 @@
                     dps={encounter.encounterDamageStats.dps}/>
 <div class="mt-2 flex justify-between">
     <div class="flex divide-x divide-gray-600">
-        <button class="px-2 rounded-sm py-1" class:bg-pink-900={tab == MeterTab.DAMAGE} class:bg-gray-700={tab != MeterTab.DAMAGE} on:click={() => tab = MeterTab.DAMAGE}>
+        <button class="px-2 rounded-sm py-1" class:bg-accent-900={tab == MeterTab.DAMAGE} class:bg-gray-700={tab != MeterTab.DAMAGE} on:click={() => tab = MeterTab.DAMAGE}>
             Damage
         </button>
-        <button class="px-2 rounded-sm py-1" class:bg-pink-900={tab == MeterTab.PARTY_BUFFS} class:bg-gray-700={tab != MeterTab.PARTY_BUFFS} on:click={() => tab = MeterTab.PARTY_BUFFS}>
+        <button class="px-2 rounded-sm py-1" class:bg-accent-900={tab == MeterTab.PARTY_BUFFS} class:bg-gray-700={tab != MeterTab.PARTY_BUFFS} on:click={() => tab = MeterTab.PARTY_BUFFS}>
             Party Synergy
         </button>
-        <button class="px-2 rounded-sm py-1" class:bg-pink-900={tab == MeterTab.SELF_BUFFS} class:bg-gray-700={tab != MeterTab.SELF_BUFFS} on:click={() => tab = MeterTab.SELF_BUFFS}>
+        <button class="px-2 rounded-sm py-1" class:bg-accent-900={tab == MeterTab.SELF_BUFFS} class:bg-gray-700={tab != MeterTab.SELF_BUFFS} on:click={() => tab = MeterTab.SELF_BUFFS}>
             Self Synergy
         </button>
         <div class="flex items-center px-2 space-x-2 bg-gray-700 rounded">
             <span class="text-sm font-medium">Show Names</span>
             <label class="relative inline-flex items-center cursor-pointer">
                 <input type="checkbox" value="" class="sr-only peer" bind:checked={$settings.general.showNames}>
-                <div class="w-9 h-5 peer-focus:outline-none peer-focus:ring-pink-800 rounded-full peer bg-gray-800 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all border-gray-600 peer-checked:bg-pink-800"></div>
+                <div class="w-9 h-5 peer-focus:outline-none rounded-full peer bg-gray-800 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all border-gray-600 peer-checked:bg-accent-800"></div>
               </label>
         </div>
     </div>
@@ -470,14 +471,14 @@
     </div>
     <div class="flex divide-x divide-gray-600 mt-2">
         {#if playerName === ""}
-        <button class="px-2 rounded-sm py-1" class:bg-pink-900={chartType == ChartType.AVERAGE_DPS} class:bg-gray-700={chartType != ChartType.AVERAGE_DPS} on:click={() => chartType = ChartType.AVERAGE_DPS}>
+        <button class="px-2 rounded-sm py-1" class:bg-accent-900={chartType == ChartType.AVERAGE_DPS} class:bg-gray-700={chartType != ChartType.AVERAGE_DPS} on:click={() => chartType = ChartType.AVERAGE_DPS}>
             Average DPS
         </button>
-        <button class="px-2 rounded-sm py-1" class:bg-pink-900={chartType == ChartType.ROLLING_DPS} class:bg-gray-700={chartType != ChartType.ROLLING_DPS} on:click={() => chartType = ChartType.ROLLING_DPS}>
+        <button class="px-2 rounded-sm py-1" class:bg-accent-900={chartType == ChartType.ROLLING_DPS} class:bg-gray-700={chartType != ChartType.ROLLING_DPS} on:click={() => chartType = ChartType.ROLLING_DPS}>
             10s DPS Window
         </button>
         {:else}
-        <button class="px-2 rounded-sm py-1" class:bg-pink-900={chartType == ChartType.SKILL_LOG} class:bg-gray-700={chartType != ChartType.SKILL_LOG} on:click={() => chartType = ChartType.SKILL_LOG}>
+        <button class="px-2 rounded-sm py-1" class:bg-accent-900={chartType == ChartType.SKILL_LOG} class:bg-gray-700={chartType != ChartType.SKILL_LOG} on:click={() => chartType = ChartType.SKILL_LOG}>
             Skill Casts
         </button>
         {/if}

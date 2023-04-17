@@ -15,6 +15,7 @@
     const rowsPerPage = 10;
     let classIconsCache: { [key: number]: string } = {}
 
+
     let search = "";
 
     $: {
@@ -121,14 +122,14 @@
             <div class="flex space-x-2 ml-2">
                 <div class="">
                     <button on:click={() => (hidden = false)} class="block mt-px">
-                        <svg class="fill-gray-300 w-6 h-6 hover:fill-pink-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960"><path d="M107 841v-91.5h746.5V841H107Zm0-219.5V530h746.5v91.5H107Zm0-219V310h746.5v92.5H107Z"/></svg>
+                        <svg class="fill-gray-300 w-6 h-6 hover:fill-accent-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960"><path d="M107 841v-91.5h746.5V841H107Zm0-219.5V530h746.5v91.5H107Zm0-219V310h746.5v92.5H107Z"/></svg>
                     </button>
                 </div>
                 <div class="text-xl font-bold tracking-tight text-gray-300 pl-2">
                     Past Encounters
                 </div>
             </div>
-            <button class="px-2 py-1 rounded-md bg-pink-900 hover:bg-pink-800 mr-4 shadow-md" on:click={() => refresh()}>
+            <button class="px-2 py-1 rounded-md bg-accent-900 hover:bg-accent-800 mr-4 shadow-md" on:click={() => refresh()}>
                 Refresh
             </button>
         </div>
@@ -161,10 +162,10 @@
                                 <div>
                                     #{encounter.id}
                                 </div>
-                                <Tooltip defaultClass="bg-pink-800 p-2 text-gray-300">{formatTimestamp(encounter.fightStart)}</Tooltip>
+                                <Tooltip defaultClass="bg-accent-800 p-2 text-gray-300">{formatTimestamp(encounter.fightStart)}</Tooltip>
                             </td>
                             <td class="px-3 py-3 font-bold text-gray-300 w-full truncate">
-                                <a href="/logs/encounter/?id={encounter.id}&page={currentPage}" class="hover:underline">
+                                <a href="/logs/encounter/?id={encounter.id}&page={currentPage}" class="hover:underline hover:text-accent-500">
                                     {encounter.bossName}
                                 </a>
                             </td>
@@ -194,22 +195,22 @@
                 <li>
                     <button class="block px-3 ml-0" on:click={() => firstPage()}>
                         <span class="sr-only">First</span>
-                        <svg class="w-5 h-5 fill-gray-400 hover:fill-pink-800" xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960"><path d="M226 837V314.5h91.5V837H226Zm459.5-3.5L431 579l254.5-254.5 65.5 65L561.5 579 751 768.5l-65.5 65Z"/></svg></button>
+                        <svg class="w-5 h-5 fill-gray-400 hover:fill-accent-800" xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960"><path d="M226 837V314.5h91.5V837H226Zm459.5-3.5L431 579l254.5-254.5 65.5 65L561.5 579 751 768.5l-65.5 65Z"/></svg></button>
                 </li>
                 <li>
                     <button class="block px-3 ml-0" on:click={() => previousPage()}>
                         <span class="sr-only">Back</span>
-                        <svg class="w-5 h-5 fill-gray-400 hover:fill-pink-800" xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960"><path d="m560.5 837-262-262 262-262 65 65.5L429 575l196.5 196.5-65 65.5Z"/></svg></button>
+                        <svg class="w-5 h-5 fill-gray-400 hover:fill-accent-800" xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960"><path d="m560.5 837-262-262 262-262 65 65.5L429 575l196.5 196.5-65 65.5Z"/></svg></button>
                 </li>
                 <li>
                     <button class="block px-3 ml-0" on:click={() => nextPage()}>
                         <span class="sr-only">Next</span>
-                        <svg class="w-5 h-5 fill-gray-400 hover:fill-pink-800" xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960"><path d="m375.5 837-65-65.5L507 575 310.5 378.5l65-65.5 262 262-262 262Z"/></svg></button>
+                        <svg class="w-5 h-5 fill-gray-400 hover:fill-accent-800" xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960"><path d="m375.5 837-65-65.5L507 575 310.5 378.5l65-65.5 262 262-262 262Z"/></svg></button>
                 </li>
                 <li>
                     <button class="block px-3 ml-0" on:click={() => lastPage()}>
                         <span class="sr-only">Last</span>
-                        <svg class="w-5 h-5 fill-gray-400 hover:fill-pink-800" xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960"><path d="m273.5 831.5-65.5-65 191-191-191-191 65.5-65 256 256-256 256ZM643 837V314.5h91.5V837H643Z"/></svg></button>
+                        <svg class="w-5 h-5 fill-gray-400 hover:fill-accent-800" xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960"><path d="m273.5 831.5-65.5-65 191-191-191-191 65.5-65 256 256-256 256ZM643 837V314.5h91.5V837H643Z"/></svg></button>
                 </li>
             </ul>
         </div>

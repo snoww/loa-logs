@@ -5,6 +5,7 @@ import { writable } from 'svelte/store';
 export const defaultSettings = {
     "general": {
         "showNames": true,
+        "accentColor": "theme-pink"
     },
     "shortcuts": {
         "hideMeter": {

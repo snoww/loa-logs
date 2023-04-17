@@ -2,7 +2,109 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
+@layer utilities {
+  .theme-red {
+    --accent-500: theme('backgroundColor.red.500');
+    --accent-800: theme('backgroundColor.red.700');
+    --accent-900: theme('backgroundColor.red.800');
+    --text-accent-500: theme('textColor.red.500');
+    --fill-accent-500: theme('fill.red.500');
+    --fill-accent-800: theme('fill.red.800');
+    --border-accent-500: theme('borderColor.red.500');
+    --accent-accent-700: theme('accentColor.red.700');
+    --ring-accent-500: theme('ringColor.red.500');
+  }
+  .theme-pink {
+    --accent-500: theme('backgroundColor.pink.500');
+    --accent-800: theme('backgroundColor.pink.800');
+    --accent-900: theme('backgroundColor.pink.900');
+    --text-accent-500: theme('textColor.pink.500');
+    --fill-accent-500: theme('fill.pink.500');
+    --fill-accent-800: theme('fill.pink.800');
+    --border-accent-500: theme('borderColor.pink.500');
+    --accent-accent-700: theme('accentColor.pink.700');
+    --ring-accent-500: theme('ringColor.pink.500');
+  }
+  .theme-purple {
+    --accent-500: theme('backgroundColor.purple.500');
+    --accent-800: theme('backgroundColor.purple.800');
+    --accent-900: theme('backgroundColor.purple.900');
+    --text-accent-500: theme('textColor.purple.500');
+    --fill-accent-500: theme('fill.purple.500');
+    --fill-accent-800: theme('fill.purple.800');
+    --border-accent-500: theme('borderColor.purple.500');
+    --accent-accent-700: theme('accentColor.purple.700');
+    --ring-accent-500: theme('ringColor.purple.500');
+  }
+  .theme-blue {
+    --accent-500: theme('backgroundColor.sky.500');
+    --accent-800: theme('backgroundColor.sky.800');
+    --accent-900: theme('backgroundColor.sky.900');
+    --text-accent-500: theme('textColor.sky.500');
+    --fill-accent-500: theme('fill.sky.500');
+    --fill-accent-800: theme('fill.sky.800');
+    --border-accent-500: theme('borderColor.sky.500');
+    --accent-accent-700: theme('accentColor.sky.700');
+    --ring-accent-500: theme('ringColor.sky.500');
+  }
+  .theme-green {
+    --accent-500: theme('backgroundColor.green.500');
+    --accent-800: theme('backgroundColor.green.800');
+    --accent-900: theme('backgroundColor.green.900');
+    --text-accent-500: theme('textColor.green.500');
+    --fill-accent-500: theme('fill.green.500');
+    --fill-accent-800: theme('fill.green.800');
+    --border-accent-500: theme('borderColor.green.500');
+    --accent-accent-700: theme('accentColor.green.700');
+    --ring-accent-500: theme('ringColor.green.500');
+  }
+  .theme-yellow {
+    --accent-500: theme('backgroundColor.yellow.200');
+    --accent-800: theme('backgroundColor.yellow.400');
+    --accent-900: theme('backgroundColor.yellow.500');
+    --text-accent-500: theme('textColor.yellow.200');
+    --fill-accent-500: theme('fill.yellow.200');
+    --fill-accent-800: theme('fill.yellow.500');
+    --border-accent-500: theme('borderColor.yellow.200');
+    --accent-accent-700: theme('accentColor.yellow.400');
+    --ring-accent-500: theme('ringColor.yellow.200');
+  }
+  .theme-orange {
+    --accent-500: theme('backgroundColor.orange.400');
+    --accent-800: theme('backgroundColor.orange.500');
+    --accent-900: theme('backgroundColor.orange.600');
+    --text-accent-500: theme('textColor.orange.400');
+    --fill-accent-500: theme('fill.orange.400');
+    --fill-accent-800: theme('fill.orange.500');
+    --border-accent-500: theme('borderColor.orange.400');
+    --accent-accent-700: theme('accentColor.orange.400');
+    --ring-accent-500: theme('ringColor.orange.400');
+  }
+
+  .bg-accent-500 {
+    background-color: var(--accent-500);
+  }
+  .bg-accent-800 {
+    background-color: var(--accent-800);
+  }
+  .bg-accent-900 {
+    background-color: var(--accent-900);
+  }
+  .text-accent-500 {
+    color: var(--text-accent-500);
+  }
+  .fill-accent-500 {
+    fill: var(--fill-accent-500);
+  }
+  .fill-accent-800 {
+    fill: var(--fill-accent-800);
+  }
+  .border-accent-500 {
+    border-color: var(--border-accent-500);
+  }
+  .accent-accent-700 {
+    accent-color: var(--accent-accent-700);
+  }
 }
 
 @layer components {
@@ -13,6 +115,7 @@
 	*::-webkit-scrollbar { 
 		display: none;
 	}
+
   .custom-scroll::-webkit-scrollbar, #logs-table::-webkit-scrollbar, #log-breakdown::-webkit-scrollbar, #buff-table::-webkit-scrollbar {
     @apply block right-0 w-2 h-2 bg-zinc-800;
   }
