@@ -11,6 +11,14 @@ export const defaultSettings = {
         "hideMeter": {
             "modifier": "Ctrl",
             "key": "ArrowDown",
+        },
+        "showLogs": {
+            "modifier": "Ctrl",
+            "key": "ArrowUp",
+        },
+        "showLatestEncounter": {
+            "modifier": "Ctrl",
+            "key": "ArrowRight",
         }
     },
     "meter": {
@@ -85,10 +93,16 @@ const settingsStore = (key: string) => {
 
 export const settings = settingsStore("settings");
 
-export async function registerShortcut(modifier: string, key: string) {
+export async function registerShortcuts(shortcuts: any) {
     await unregisterAll();
-    const shortcut = modifier + '+' + key;
-    await register(shortcut, async () => {
+    
+    await register(shortcuts.hideMeter.modifier + "+" + shortcuts.hideMeter.key, async () => {
         await invoke("toggle_meter_window");
     });
+    await register(shortcuts.showLogs.modifier + "+" + shortcuts.showLogs.key, async () => {
+        await invoke("open_url", { url: "logs" });
+    });
+    await register(shortcuts.showLatestEncounter.modifier + "+" + shortcuts.showLatestEncounter.key, async () => {
+        await invoke("open_most_recent_encounter");
+    });   
 }

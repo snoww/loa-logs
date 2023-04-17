@@ -3,7 +3,7 @@
     import { Tabs, TabItem } from 'flowbite-svelte';
     import SettingItem from '$lib/components/settings/SettingItem.svelte';
     import { formatDurationFromS } from '$lib/utils/numbers';
-    import { registerShortcut, settings } from '$lib/utils/settings';
+    import { registerShortcuts, settings } from '$lib/utils/settings';
 
     let dropdownOpen = false;
 
@@ -18,7 +18,7 @@
 
     $: {
         (async () => {
-            registerShortcut($settings.shortcuts.hideMeter.modifier, $settings.shortcuts.hideMeter.key);            
+            registerShortcuts($settings.shortcuts);       
         })();
     }
 
@@ -199,6 +199,50 @@
                                     +
                                 </div>
                                 <select id="keys" bind:value={$settings.shortcuts.hideMeter.key} class="border text-sm rounded-lg block p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-accent-500 focus:border-accent-500">
+                                    {#each keys as key}
+                                        <option value={key}>{key.toUpperCase()}</option>
+                                    {/each}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="flex justify-between">
+                            <label class="font-medium flex items-center" for="modifiers">
+                                <div class="">
+                                    <div class="text-gray-100">Show/Hide Logs</div>
+                                </div>
+                            </label>
+                            <div class="flex space-x-2 items-center">
+                                <select id="modifiers" bind:value={$settings.shortcuts.showLogs.modifier} class="border text-sm rounded-lg block w-20 p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-accent-500 focus:border-accent-500">
+                                    <option value="Ctrl">Ctrl</option>
+                                    <option value="Alt">Alt</option>
+                                    <option value="Shift"><kbd>Shift</kbd></option>
+                                </select>
+                                <div>
+                                    +
+                                </div>
+                                <select id="keys" bind:value={$settings.shortcuts.showLogs.key} class="border text-sm rounded-lg block p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-accent-500 focus:border-accent-500">
+                                    {#each keys as key}
+                                        <option value={key}>{key.toUpperCase()}</option>
+                                    {/each}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="flex justify-between">
+                            <label class="font-medium flex items-center" for="modifiers">
+                                <div class="">
+                                    <div class="text-gray-100">Show Most Recent Encounter</div>
+                                </div>
+                            </label>
+                            <div class="flex space-x-2 items-center">
+                                <select id="modifiers" bind:value={$settings.shortcuts.showLatestEncounter.modifier} class="border text-sm rounded-lg block w-20 p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-accent-500 focus:border-accent-500">
+                                    <option value="Ctrl">Ctrl</option>
+                                    <option value="Alt">Alt</option>
+                                    <option value="Shift"><kbd>Shift</kbd></option>
+                                </select>
+                                <div>
+                                    +
+                                </div>
+                                <select id="keys" bind:value={$settings.shortcuts.showLatestEncounter.key} class="border text-sm rounded-lg block p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-accent-500 focus:border-accent-500">
                                     {#each keys as key}
                                         <option value={key}>{key.toUpperCase()}</option>
                                     {/each}

@@ -10,7 +10,6 @@
     import { settings } from '$lib/utils/settings';
     import { appWindow } from "@tauri-apps/api/window";
 
-
     let events: Set<UnlistenFn> = new Set();
     
     NProgress.configure({ template: '<div class="bar !bg-gray-500" role="bar"><div class="peg !shadow-gray-500"></div></div>'});
@@ -23,10 +22,6 @@
                 NProgress.done();
             }
         });
-
-        if ($settings.general.accentColor === undefined) {
-            $settings.general.accentColor = "theme-pink";
-        }
 
         if (location.pathname !== "/") {
             (async () => {

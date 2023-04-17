@@ -1,16 +1,17 @@
 
 <script lang="ts">
     import DamageMeter from "$lib/components/DamageMeter.svelte";
-    import { registerShortcut, settings } from "$lib/utils/settings";
+    import { defaultSettings, registerShortcuts, settings } from "$lib/utils/settings";
     import { appWindow } from '@tauri-apps/api/window';
     import { onMount } from 'svelte';
+    import merge from 'lodash-es/merge';
 
     onMount(() => {
-        settings.set($settings);
+        settings.set(merge(defaultSettings, $settings));
         
         (async () => {
             await appWindow.setAlwaysOnTop(true);
-            registerShortcut($settings.shortcuts.hideMeter.modifier, $settings.shortcuts.hideMeter.key);
+            registerShortcuts($settings.shortcuts);       
         })();
 	});
     
