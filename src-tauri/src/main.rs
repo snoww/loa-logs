@@ -4,7 +4,7 @@
 )]
 
 mod parser;
-use std::{time::{Duration, Instant}, path::PathBuf, thread};
+use std::{time::{Duration, Instant}, path::PathBuf};
 
 use hashbrown::HashMap;
 use parser::{models::*, Parser};
@@ -307,7 +307,7 @@ fn load_encounters_preview(window: tauri::Window, page: i32, page_size: i32, min
     SELECT COUNT(*) 
     FROM encounter 
     WHERE duration > ? AND current_boss LIKE '%' || ? || '%'
-    ", [min_duration.to_string(), search.to_string()], |row| {
+    ", [min_duration.to_string(), search], |row| {
         row.get(0)
     }).expect("could not get encounter count");
 
