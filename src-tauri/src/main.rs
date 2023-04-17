@@ -4,7 +4,7 @@
 )]
 
 mod parser;
-use std::{time::{Duration, Instant}, path::PathBuf};
+use std::{time::{Duration, Instant}, path::PathBuf, thread};
 
 use hashbrown::HashMap;
 use parser::{models::*, Parser};
@@ -470,9 +470,6 @@ fn open_most_recent_encounter(window: tauri::Window) {
 
     if let Some(logs) = window.app_handle().get_window("logs") {
         logs.emit("show-latest-encounter", id.to_string()).unwrap();
-
-        logs.unminimize().unwrap();
-        logs.show().unwrap();
     }
 }
 
@@ -504,8 +501,5 @@ fn toggle_meter_window(window: tauri::Window) {
 fn open_url(window: tauri::Window, url: String) {
     if let Some(logs) = window.app_handle().get_window("logs") {
         logs.emit("redirect-url", url).unwrap();
-
-        logs.unminimize().unwrap();
-        logs.show().unwrap();
     }
 }

@@ -8,6 +8,7 @@
     import 'nprogress/nprogress.css';
     import { goto } from "$app/navigation";
     import { settings } from '$lib/utils/settings';
+    import { appWindow } from "@tauri-apps/api/window";
 
 
     let events: Set<UnlistenFn> = new Set();
@@ -29,11 +30,13 @@
 
         if (location.pathname !== "/") {
             (async () => {
-                let encounterUpdateEvent = await listen('show-latest-encounter', (event) => {                    
-                    goto("/logs/encounter?id=" + event.payload);
+                let encounterUpdateEvent = await listen('show-latest-encounter', async (event) => {                    
+                    await goto("/logs/encounter?id=" + event.payload);
+                    await showWindow();
                 });
-                let openUrlEvent = await listen('redirect-url', (event) => {                    
-                    goto("/" + event.payload);
+                let openUrlEvent = await listen('redirect-url', async (event) => {                    
+                    await goto("/" + event.payload);
+                    await showWindow();
                 });
     
                 events.add(encounterUpdateEvent);
@@ -46,10 +49,15 @@
         };
     });
 
-
     onDestroy(() => {
         events.forEach((unlisten) => unlisten());
     });
+
+    async function showWindow() {
+        await appWindow.show();
+        await appWindow.unminimize();
+        await appWindow.setFocus();
+    }
 </script>
 
 <div class="{$settings.general.accentColor}">

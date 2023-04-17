@@ -21,7 +21,8 @@
         "maximize": true,
         "minimize": true,
         "unminimize": true,
-        "unmaximize": true
+        "unmaximize": true,
+        "setFocus": true
       },
       "clipboard": {
         "writeText": true
