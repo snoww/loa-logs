@@ -464,12 +464,19 @@ fn open_most_recent_encounter(window: tauri::Window) {
     LIMIT 1;
     ").unwrap();
 
-    let id: i32 = stmt.query_row(params![], |row| {
+    let id_result: Result<i32, rusqlite::Error> = stmt.query_row(params![], |row| {
         row.get(0)
-    }).unwrap();
+    });
 
     if let Some(logs) = window.app_handle().get_window("logs") {
-        logs.emit("show-latest-encounter", id.to_string()).unwrap();
+        match id_result {
+            Ok(id) => {
+                logs.emit("show-latest-encounter", id.to_string()).unwrap();
+            },
+            Err(_) => {
+                logs.emit("redirect-url", "logs").unwrap();
+            },
+        }
     }
 }
 
