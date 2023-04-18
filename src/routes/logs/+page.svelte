@@ -16,7 +16,7 @@
     let classIconsCache: { [key: number]: string } = {}
 
 
-    let search = "";
+    let search: string = "";
 
     $: {
         searchEncounters(search);        
@@ -25,8 +25,6 @@
     async function searchEncounters(query: string, page: number = 1) {
         if (query === "") {
             $page.url.searchParams.delete('search');
-            await loadEncounters();
-            return;
         }
         if (currentPage !== 1) {
             currentPage = 1
@@ -51,6 +49,7 @@
         encounters = overview.encounters;
         totalEncounters = overview.totalEncounters;
         currentPage = page;
+                
         return encounters;
     }
 

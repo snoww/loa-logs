@@ -3,6 +3,7 @@
     import { HexToRgba } from "$lib/utils/colors";
     import { Tooltip } from 'flowbite-svelte';
     import BuffTooltipDetail from "../shared/BuffTooltipDetail.svelte";
+    import { takingScreenshot } from "$lib/utils/stores";
 
     export let skill: Skill;
     export let color: string;
@@ -57,6 +58,6 @@
     </td>
 {/each}
 {/if}
-<div class="absolute left-0 h-7 px-2 py-1 z-0 shadow-md"
+<div class="absolute left-0 h-7 px-2 py-1 z-0" class:shadow-md={!$takingScreenshot}
     style="background-color: {HexToRgba(color, 0.6)}; width: {damagePercentage}%"
 ></div>

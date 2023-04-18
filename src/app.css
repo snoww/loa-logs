@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  img {
+    @apply inline-block;
+  }
+}
+
 @layer utilities {
   .theme-red {
     --accent-500: theme('backgroundColor.red.500');

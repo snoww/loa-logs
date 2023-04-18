@@ -6,6 +6,7 @@
     import BuffTooltipDetail from "../shared/BuffTooltipDetail.svelte";
     import { formatPlayerName } from "$lib/utils/strings";
     import { settings } from "$lib/utils/settings";
+    import { takingScreenshot } from "$lib/utils/stores";
 
     export let player: Entity;
     export let groupedSynergies: Map<string, Map<number, StatusEffect>>;
@@ -69,6 +70,6 @@
     </td>
 {/each}
 {/if}
-<div class="absolute left-0 h-7 px-2 py-1 z-0 shadow-md"
+<div class="absolute left-0 h-7 px-2 py-1 z-0" class:shadow-md={!$takingScreenshot}
     style="background-color: {HexToRgba(color, 0.6)}; width: {percentage}%"
 ></div>

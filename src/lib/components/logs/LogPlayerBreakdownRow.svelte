@@ -3,6 +3,7 @@
     import { HexToRgba } from "$lib/utils/colors";
     import { abbreviateNumberSplit } from "$lib/utils/numbers";
     import { settings } from "$lib/utils/settings";
+    import { takingScreenshot } from "$lib/utils/stores";
     import { Tooltip } from "flowbite-svelte";
 
     export let skill: Skill;
@@ -106,6 +107,6 @@
     </Tooltip>
 </td>
 {/if}
-<div class="absolute left-0 h-7 px-2 py-1 shadow-md"
+<div class="absolute left-0 h-7 px-2 py-1" class:shadow-md={!$takingScreenshot}
     style="background-color: {HexToRgba(color, 0.6)}; width: {damagePercentage}%"
 ></div>

@@ -18,6 +18,6 @@
     
 </script>
 
-<div class="h-screen" id="live-meter">
+<div class="h-screen overflow-hidden" id="live-meter">
     <DamageMeter />
 </div>

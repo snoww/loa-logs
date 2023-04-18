@@ -9,6 +9,7 @@
     import { goto } from "$app/navigation";
     import { settings } from '$lib/utils/settings';
     import { appWindow } from "@tauri-apps/api/window";
+    import merge from 'lodash-es/merge';
 
     let events: Set<UnlistenFn> = new Set();
     
@@ -26,7 +27,7 @@
         if (location.pathname !== "/") {
             (async () => {
                 let encounterUpdateEvent = await listen('show-latest-encounter', async (event) => {                    
-                    await goto("/logs/encounter?id=" + event.payload);
+                    await goto("/logs/encounter?id=" + event.payload);                    
                     await showWindow();
                 });
                 let openUrlEvent = await listen('redirect-url', async (event) => {                    
@@ -44,7 +45,7 @@
         };
     });
 
-    onDestroy(() => {
+    onDestroy(() => {      
         events.forEach((unlisten) => unlisten());
     });
 

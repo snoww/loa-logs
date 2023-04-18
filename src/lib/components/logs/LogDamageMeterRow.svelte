@@ -4,7 +4,7 @@
     import { HexToRgba } from "$lib/utils/colors";
     import { abbreviateNumberSplit } from "$lib/utils/numbers";
     import { settings } from "$lib/utils/settings";
-    import { hideNames } from "$lib/utils/stores";
+    import { takingScreenshot } from "$lib/utils/stores";
     import { formatPlayerName } from "$lib/utils/strings";
 
     export let entity: Entity;
@@ -86,6 +86,6 @@
     {entity.skillStats.counters}<span class="text-3xs text-gray-300"></span>
 </td>
 {/if}
-<div class="absolute left-0 h-7 px-2 py-1 z-0 shadow-md"
+<div class="absolute left-0 h-7 px-2 py-1 z-0" class:shadow-md={!$takingScreenshot}
     style="background-color: {HexToRgba(color, 0.6)}; width: {percentage}%"
 ></div>

@@ -39,7 +39,7 @@
 <svelte:window on:contextmenu|preventDefault/>
 <LogSidebar bind:hidden={hidden} />
 <div class="bg-zinc-800 h-screen pb-8 overflow-y-scroll custom-scroll">
-    <div class="flex justify-between py-5 px-8 sticky top-0 bg-zinc-800 shadow-md">
+    <div class="flex justify-between py-5 px-8 sticky top-0 bg-zinc-800 shadow-md h-16">
         <div class="flex space-x-2 ml-2">
             <div class="">
                 <button on:click={() => (hidden = false)} class="block mt-px">
