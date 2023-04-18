@@ -9,7 +9,6 @@
     import { goto } from "$app/navigation";
     import { settings } from '$lib/utils/settings';
     import { appWindow } from "@tauri-apps/api/window";
-    import merge from 'lodash-es/merge';
 
     let events: Set<UnlistenFn> = new Set();
     

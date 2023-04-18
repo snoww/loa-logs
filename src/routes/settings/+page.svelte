@@ -4,6 +4,8 @@
     import SettingItem from '$lib/components/settings/SettingItem.svelte';
     import { formatDurationFromS } from '$lib/utils/numbers';
     import { registerShortcuts, settings } from '$lib/utils/settings';
+    import { onMount } from 'svelte';
+    import { backNavStore, pageStore, searchStore } from '$lib/utils/stores';
 
     let dropdownOpen = false;
 
@@ -33,6 +35,13 @@
         if (currentTarget.contains(relatedTarget)) return;
         dropdownOpen = false;
     };
+
+    onMount(() => {
+        // dunno if this is good lol XD
+        $pageStore = 1;
+        $backNavStore = false;
+        $searchStore = '';
+    });
 
 </script>
 

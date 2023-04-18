@@ -3,19 +3,18 @@
     import LogDamageMeter from '$lib/components/logs/LogDamageMeter.svelte';
     import type { Encounter } from '$lib/types';
     import { formatTimestamp } from '$lib/utils/numbers';
-    import { screenshotAlert, screenshotError } from '$lib/utils/stores';
+    import { backNavStore, pageStore, screenshotAlert, screenshotError, searchStore } from '$lib/utils/stores';
     import { invoke } from '@tauri-apps/api/tauri';
     import { Alert } from 'flowbite-svelte';
     import { onMount } from 'svelte';
     import { fade } from 'svelte/transition';
 
-    let currentPage: number = 1;
     let id: string;
     let promise: Promise<Encounter>;
 
-    onMount(() => {         
-        if ($page.url.searchParams.has('page')) {
-            currentPage = parseInt($page.url.searchParams.get('page')!);
+    onMount(() => {
+        if ($searchStore.length > 0) {
+            $backNavStore = true;
         }
     })
 
@@ -29,7 +28,7 @@
     {#await promise then encounter}
     <div class="px-8 flex items-center sticky top-0 z-50 bg-zinc-800 w-full shadow-md h-16">
         <div class="flex items-center justify-between py-4 ">
-            <a href="/logs?page={currentPage}" class="p-2 rounded-md bg-accent-900 hover:bg-accent-800 inline-flex">
+            <a href="/logs" class="p-2 rounded-md bg-accent-900 hover:bg-accent-800 inline-flex">
                 <span class="sr-only">Back</span>
                 <svg class="w-5 h-5 fill-gray-200" xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960"><path d="M480 903 153 576l327-327.5 65.5 64.5-216 217h478v91.5h-478l216 216L480 903Z"/></svg>
                 <span class="mx-1 text-gray-200">Back</span>

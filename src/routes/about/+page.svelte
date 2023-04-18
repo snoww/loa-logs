@@ -1,9 +1,17 @@
 <script lang="ts">
-import LogSidebar from '$lib/components/logs/LogSidebar.svelte';
-import { getVersion } from '@tauri-apps/api/app';
-import type { PageData } from './$types';
-    
-let hidden: boolean = true;
+    import LogSidebar from '$lib/components/logs/LogSidebar.svelte';
+    import { backNavStore, pageStore, searchStore } from '$lib/utils/stores';
+    import { getVersion } from '@tauri-apps/api/app';
+    import { onMount } from 'svelte';
+        
+    let hidden: boolean = true;
+
+    onMount(() => {
+        // dunno if this is good lol XD
+        $pageStore = 1;
+        $backNavStore = false;
+        $searchStore = '';
+    });
 
 </script>
 

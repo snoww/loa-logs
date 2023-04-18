@@ -1,55 +1,37 @@
 <script lang="ts">
-    import { page } from "$app/stores";
     import LogSidebar from "$lib/components/logs/LogSidebar.svelte";
     import TableFilter from "$lib/components/table/TableFilter.svelte";
     import type { EncounterPreview, EncountersOverview } from "$lib/types";
     import { formatDurationFromMs, formatTimestamp } from "$lib/utils/numbers";
     import { settings } from "$lib/utils/settings";
+    import { backNavStore, pageStore, searchStore } from "$lib/utils/stores";
     import { join, resourceDir } from "@tauri-apps/api/path";
     import { convertFileSrc, invoke } from "@tauri-apps/api/tauri";
     import { Tooltip } from 'flowbite-svelte';
+    import NProgress from 'nprogress';
+    import 'nprogress/nprogress.css';
 
     let encounters: Array<EncounterPreview> = [];
     let totalEncounters: number = 0;
-    let currentPage = 1;
     const rowsPerPage = 10;
     let classIconsCache: { [key: number]: string } = {}
 
+    $: {       
+        if ($searchStore.length > 0) {
+            if ($backNavStore) {
+                $backNavStore = false;
+            } else {
+                $pageStore = 1;
+            }
+        }
 
-    let search: string = "";
-
-    $: {
-        searchEncounters(search);        
+        loadEncounters();
     }
 
-    async function searchEncounters(query: string, page: number = 1) {
-        if (query === "") {
-            $page.url.searchParams.delete('search');
-        }
-        if (currentPage !== 1) {
-            currentPage = 1
-            searchEncounters(query, 1)
-        }
-        $page.url.searchParams.set('search', query);
-        let overview: EncountersOverview = await invoke("load_encounters_preview", { page: page, pageSize: rowsPerPage, minDuration: $settings.logs.minEncounterDuration, search: query });
+    async function loadEncounters(): Promise<Array<EncounterPreview>> {        
+        let overview: EncountersOverview = await invoke("load_encounters_preview", { page: $pageStore, pageSize: rowsPerPage, minDuration: $settings.logs.minEncounterDuration, search: $searchStore });
         encounters = overview.encounters;
-        totalEncounters = overview.totalEncounters;
-    }
-
-    async function loadEncounters(page: number = 1): Promise<Array<EncounterPreview>> {
-        if ($page.url.searchParams.has('page')) {
-            page = parseInt($page.url.searchParams.get('page')!);
-            $page.url.searchParams.delete('page');
-        }
-        let search = ""
-        if ($page.url.searchParams.has('search')) {
-            search = $page.url.searchParams.get('search')!;
-        }
-        let overview: EncountersOverview = await invoke("load_encounters_preview", { page: page, pageSize: rowsPerPage, minDuration: $settings.logs.minEncounterDuration, search: search });
-        encounters = overview.encounters;
-        totalEncounters = overview.totalEncounters;
-        currentPage = page;
-                
+        totalEncounters = overview.totalEncounters;                
         return encounters;
     }
 
@@ -69,35 +51,40 @@
     }
 
     async function refresh() {
-        await loadEncounters();
-        scrollToTopOfTable()
+        $searchStore = "";
+        $pageStore = 1;
+        $backNavStore = false;
+        NProgress.start();
+        let promise = loadEncounters();
+        await promise;
+        NProgress.done();
     }
 
     async function nextPage() {
-        if (currentPage * rowsPerPage < totalEncounters) {
-            currentPage++;
-            await loadEncounters(currentPage);
+        if ($pageStore * rowsPerPage < totalEncounters) {
+            $pageStore++;
+            await loadEncounters();
             scrollToTopOfTable()
         }
     }
 
     async function previousPage() {
-        if (currentPage > 1) {
-            currentPage--;
-            await loadEncounters(currentPage);
+        if ($pageStore > 1) {
+            $pageStore--;
+            await loadEncounters();
             scrollToTopOfTable()
         }
     }
 
     async function firstPage() {
-        currentPage = 1;
-        await loadEncounters(currentPage);
+        $pageStore = 1;
+        await loadEncounters();
         scrollToTopOfTable()
     }
 
     async function lastPage() {
-        currentPage = Math.ceil(totalEncounters / rowsPerPage);
-        await loadEncounters(currentPage);
+        $pageStore = Math.ceil(totalEncounters / rowsPerPage);
+        await loadEncounters();
         scrollToTopOfTable()
     }
 
@@ -116,8 +103,7 @@
 <svelte:window on:contextmenu|preventDefault/>
 <LogSidebar bind:hidden={hidden}/>
 <div class="bg-zinc-800 h-screen">
-    <div class="px-8 pt-5">
-        <div class="flex justify-between">
+        <div class="px-8 flex justify-between shadow-md py-5 h-16 items-center">
             <div class="flex space-x-2 ml-2">
                 <div class="">
                     <button on:click={() => (hidden = false)} class="block mt-px">
@@ -132,10 +118,11 @@
                 Refresh
             </button>
         </div>
-        <div class="mt-5 pb-2">
-            <TableFilter bind:search={search}/>
+    <div class="px-8">
+        <div class="py-2">
+            <TableFilter bind:search={$searchStore}/>
         </div>
-        <div class="relative overflow-x-hidden overflow-y-scroll" style="height: calc(100vh - 8.25rem - 2.5rem);" id="logs-table">
+        <div class="relative overflow-x-hidden overflow-y-auto" style="height: calc(100vh - 8.25rem - 2.5rem);" id="logs-table">
             <table class="w-full text-left text-gray-400 table-fixed" id="table">
                 <thead class="text-xs uppercase bg-zinc-900 top-0 sticky">
                     <tr>
@@ -154,17 +141,16 @@
                     </tr>
                 </thead>
                 <tbody class="tracking-tight bg-neutral-800">
-                    {#await loadEncounters() then _}
                     {#each encounters as encounter (encounter.fightStart)}
                         <tr class="border-b border-gray-700">
-                            <td class="px-3 py-3">
+                            <td class="px-2 py-3">
                                 <div>
                                     #{encounter.id}
                                 </div>
                                 <Tooltip defaultClass="bg-accent-800 p-2 text-gray-300">{formatTimestamp(encounter.fightStart)}</Tooltip>
                             </td>
                             <td class="px-3 py-3 font-bold text-gray-300 w-full truncate">
-                                <a href="/logs/encounter/?id={encounter.id}&page={currentPage}" class="hover:underline hover:text-accent-500">
+                                <a href="/logs/encounter/?id={encounter.id}" class="hover:underline hover:text-accent-500">
                                     {encounter.bossName}
                                 </a>
                             </td>
@@ -183,13 +169,12 @@
                         <div class="w-screen bg-neutral-800 p-2">No encounters recorded.</div>
                         <div class="w-screen bg-neutral-800 p-2">Meter should be turned on at character select for best accuracy.</div>
                     {/each}
-                    {/await}
                 </tbody>
             </table>
         </div>
         {#if encounters.length > 0}
         <div class="flex items-center justify-between py-4">
-            <span class="text-sm text-gray-400">Showing <span class="font-semibold dark:text-white">{(currentPage - 1) * rowsPerPage + 1}-{Math.min((currentPage - 1) * rowsPerPage + 1 + rowsPerPage - 1, totalEncounters)}</span> of <span class="font-semibold text-white">{totalEncounters}</span></span>
+            <span class="text-sm text-gray-400">Showing <span class="font-semibold dark:text-white">{($pageStore - 1) * rowsPerPage + 1}-{Math.min(($pageStore - 1) * rowsPerPage + 1 + rowsPerPage - 1, totalEncounters)}</span> of <span class="font-semibold text-white">{totalEncounters}</span></span>
             <ul class="inline-flex items-center -space-x-px">
                 <li>
                     <button class="block px-3 ml-0" on:click={() => firstPage()}>
