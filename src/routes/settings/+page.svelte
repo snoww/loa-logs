@@ -21,7 +21,7 @@
     $: {
         (async () => {
             registerShortcuts($settings.shortcuts);       
-        })();
+        })();        
     }
 
     const handleDropdownClick = () => {

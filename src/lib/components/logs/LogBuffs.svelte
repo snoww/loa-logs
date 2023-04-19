@@ -2,8 +2,6 @@
     import { classesMap } from "$lib/constants/classes";
     import { StatusEffectTarget, type EncounterDamageStats, type Entity, MeterTab, type StatusEffect } from "$lib/types";
     import { defaultBuffFilter } from "$lib/utils/buffs";
-    import { join, resourceDir } from "@tauri-apps/api/path";
-    import { convertFileSrc } from "@tauri-apps/api/tauri";
     import LogBuffHeader from "./LogBuffHeader.svelte";
     import LogBuffRow from "./LogBuffRow.svelte";
     import LogBuffBreakdown from "./LogBuffBreakdown.svelte";
@@ -12,53 +10,28 @@
     export let encounterDamageStats: EncounterDamageStats;
     export let players: Array<Entity>;
     export let percentages: Array<number> = [];
-    export let classIconsCache: { [key: number]: string };
     export let focusedPlayer: Entity | null = null;
     export let handleRightClick: () => void;
     export let inspectPlayer: (name: string) => void;
 
-    async function processBuffs() {        
-        let groupedSynergies: Map<string, Map<number, StatusEffect>> = new Map();
-        for (const [id, buff] of Object.entries(encounterDamageStats.buffs)) {
-            if (focusedPlayer && !Object.hasOwn(focusedPlayer.damageStats.buffedBy, id)) {
-                continue;
-            }
-            if (buff.category === 'buff') {
-            if (buff.source && buff.source.icon && !buff.source.icon.startsWith('http')) {
-                buff.source.icon = await getPath(buff.source.icon);
-            } else if (buff.source && !buff.source.icon) {
-                buff.source.icon = await getPath("unknown.png");
-            }
-            if (buff.source.skill && buff.source.skill.icon && !buff.source.skill.icon.startsWith('http')) {
-                buff.source.skill.icon = await getPath(buff.source.skill.icon);
-            } else if (buff.source.skill && !buff.source.skill.icon) {
-                buff.source.skill.icon = await getPath("unknown.png");
-            }
-            
+    let groupedSynergies: Map<string, Map<number, StatusEffect>> = new Map();
+    for (const [id, buff] of Object.entries(encounterDamageStats.buffs)) {
+        if (focusedPlayer && !Object.hasOwn(focusedPlayer.damageStats.buffedBy, id)) {
+            continue;
+        }
+        if (buff.category === 'buff') {
             filterStatusEffects(groupedSynergies, buff, Number(id), focusedPlayer);
         }
-        }
-        for (const [id, debuff] of Object.entries(encounterDamageStats.debuffs)) {
-            if (focusedPlayer && !Object.hasOwn(focusedPlayer.damageStats.debuffedBy, id)) {
-                continue;
-            }
-            if (debuff.category === "debuff") {
-                if (debuff.source && debuff.source.icon && !debuff.source.icon.startsWith('http')) {
-                    debuff.source.icon = await getPath(debuff.source.icon);
-                } else if (debuff.source && !debuff.source.icon) {
-                    debuff.source.icon = await getPath("unknown.png");
-                }
-                if (debuff.source.skill && debuff.source.skill.icon && !debuff.source.skill.icon.startsWith('http')) {
-                    debuff.source.skill.icon = await getPath(debuff.source.skill.icon);
-                } else if (debuff.source.skill && !debuff.source.skill.icon) {
-                    debuff.source.skill.icon = await getPath("unknown.png");
-                }
-                filterStatusEffects(groupedSynergies, debuff, Number(id), focusedPlayer);
-            }
-        }
-        groupedSynergies = new Map([...groupedSynergies.entries()].sort());
-        return groupedSynergies
     }
+    for (const [id, debuff] of Object.entries(encounterDamageStats.debuffs)) {
+        if (focusedPlayer && !Object.hasOwn(focusedPlayer.damageStats.debuffedBy, id)) {
+            continue;
+        }
+        if (debuff.category === "debuff") {
+            filterStatusEffects(groupedSynergies, debuff, Number(id), focusedPlayer);
+        }
+    }
+    groupedSynergies = new Map([...groupedSynergies.entries()].sort());
 
     function filterStatusEffects(
         groupedSynergies: Map<string, Map<number, StatusEffect>>,
@@ -117,13 +90,8 @@
             map.set(key, new Map([[id, buff]]));
         }
     }
-
-    async function getPath(icon: string) {
-        return convertFileSrc(await join(await resourceDir(), 'images', 'skills', icon));
-    }
 </script>
 
-{#await processBuffs() then groupedSynergies}
 <thead class="relative h-6 z-40" id="buff-head">
     <tr class="bg-zinc-900">
         <th class="w-7 px-2 font-normal"></th>
@@ -139,12 +107,10 @@
     {#if !focusedPlayer}
     {#each players as player, i (player.name)}
         <tr class="h-7 px-2 py-1" on:click={() => inspectPlayer(player.name)}>
-            <LogBuffRow {player} {groupedSynergies} percentage={percentages[i]} {classIconsCache}/>
+            <LogBuffRow {player} {groupedSynergies} percentage={percentages[i]}/>
         </tr>
     {/each}
     {:else}
         <LogBuffBreakdown {groupedSynergies} player={focusedPlayer}/>
     {/if}
 </tbody>
-
-{/await}

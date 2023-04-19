@@ -3,10 +3,9 @@
     import TableFilter from "$lib/components/table/TableFilter.svelte";
     import type { EncounterPreview, EncountersOverview } from "$lib/types";
     import { formatDurationFromMs, formatTimestamp } from "$lib/utils/numbers";
-    import { settings } from "$lib/utils/settings";
+    import { classIconCache, settings } from "$lib/utils/settings";
     import { backNavStore, pageStore, searchStore } from "$lib/utils/stores";
-    import { join, resourceDir } from "@tauri-apps/api/path";
-    import { convertFileSrc, invoke } from "@tauri-apps/api/tauri";
+    import { invoke } from "@tauri-apps/api";
     import { Tooltip } from 'flowbite-svelte';
     import NProgress from 'nprogress';
     import 'nprogress/nprogress.css';
@@ -14,7 +13,6 @@
     let encounters: Array<EncounterPreview> = [];
     let totalEncounters: number = 0;
     const rowsPerPage = 10;
-    let classIconsCache: { [key: number]: string } = {}
 
     $: {       
         if ($searchStore.length > 0) {
@@ -26,6 +24,7 @@
         }
 
         loadEncounters();
+        
     }
 
     async function loadEncounters(): Promise<Array<EncounterPreview>> {        
@@ -33,21 +32,6 @@
         encounters = overview.encounters;
         totalEncounters = overview.totalEncounters;                
         return encounters;
-    }
-
-    async function getClassIconPath(classId: number) {
-        if (classId in classIconsCache) {
-            return classIconsCache[classId];
-        }
-        let path;
-        if (classId > 100) {
-            path = `${classId}.png`;
-        } else {
-            path = `${1}/101.png`;
-        }
-        let resolvedPath = convertFileSrc(await join(await resourceDir(), 'images', 'classes', path));
-        classIconsCache[classId] = resolvedPath;
-        return resolvedPath;
     }
 
     async function refresh() {
@@ -156,9 +140,7 @@
                             </td>
                             <td class="px-3 py-3">
                                 {#each encounter.classes as classId }
-                                    {#await getClassIconPath(classId) then path }
-                                        <img src={path} alt="class-{classId}" class="w-8 h-8 inline-block" />
-                                    {/await}
+                                    <img src={$classIconCache[classId]} alt="class-{classId}" class="w-8 h-8 inline-block" />
                                 {/each}
                             </td>
                             <td class="px-3 py-3 text-center">

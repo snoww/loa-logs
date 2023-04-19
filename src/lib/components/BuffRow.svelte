@@ -2,14 +2,11 @@
     import { classColors } from "$lib/constants/colors";
     import { Buff, BuffDetails, type Entity, type StatusEffect } from "$lib/types";
     import { HexToRgba } from "$lib/utils/colors";
-    import { join, resourceDir } from "@tauri-apps/api/path";
-    import { convertFileSrc } from "@tauri-apps/api/tauri";
     import { cubicOut } from "svelte/easing";
     import { tweened } from "svelte/motion";
     import { Tooltip } from 'flowbite-svelte';
     import BuffTooltipDetail from "./shared/BuffTooltipDetail.svelte";
-    import { format } from "echarts";
-    import { settings } from "$lib/utils/settings";
+    import { classIconCache, settings } from "$lib/utils/settings";
     import { formatPlayerName } from "$lib/utils/strings";
 
 
@@ -57,24 +54,10 @@
         }        
     }
 
-    async function getClassIconPath() {
-        let path;
-        if (player.classId > 100) {
-            path = `${player.classId}.png`;
-        } else {
-            path = `${1}/101.png`;
-        }
-        return convertFileSrc(await join(await resourceDir(), 'images', 'classes', path));
-    }
-
 </script>
 
 <td class="pl-1">
-    {#await getClassIconPath()}
-        <img class="h-5 w-5" src="" alt={player.class} />
-    {:then path} 
-        <img class="h-5 w-5" src={path} alt={player.class} />
-    {/await}
+    <img class="h-5 w-5 table-cell" src={$classIconCache[player.classId]} alt={player.class} />
 </td>
 <td class="">
     <div class="truncate">

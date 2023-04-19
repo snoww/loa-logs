@@ -2,8 +2,9 @@
     import type { Skill } from "$lib/types";
     import { HexToRgba } from "$lib/utils/colors";
     import { abbreviateNumberSplit } from "$lib/utils/numbers";
-    import { settings } from "$lib/utils/settings";
+    import { settings, skillIcon } from "$lib/utils/settings";
     import { takingScreenshot } from "$lib/utils/stores";
+    import { getSkillIcon } from "$lib/utils/strings";
     import { Tooltip } from "flowbite-svelte";
 
     export let skill: Skill;
@@ -31,7 +32,7 @@
 
 <td class="px-1 relative z-10">
     <div class="flex space-x-1 items-center">
-        <img class="h-5 w-5" src={skill.icon} alt={skill.name} />
+        <img class="h-5 w-5" src={$skillIcon.path + getSkillIcon(skill.icon)} alt={skill.name} />
         <div class="truncate">
             {skill.name}
         </div>

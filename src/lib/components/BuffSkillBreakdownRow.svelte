@@ -5,6 +5,8 @@
     import BuffTooltipDetail from "./shared/BuffTooltipDetail.svelte";
     import { tweened } from "svelte/motion";
     import { cubicOut } from "svelte/easing";
+    import { skillIcon } from "$lib/utils/settings";
+    import { getSkillIcon } from "$lib/utils/strings";
 
     export let skill: Skill;
     export let color: string;
@@ -14,10 +16,9 @@
     let synergyPercentageDetails: Array<BuffDetails>;
 
     const tweenedValue = tweened(0, {
-    duration: 400,
-    easing: cubicOut
+        duration: 400,
+        easing: cubicOut
     })
-
 
     $: {
         if (groupedSynergies.size > 0) {    
@@ -48,9 +49,9 @@
 </script>
 
 <td class="pl-1 relative z-10">
-    <img class="h-5 w-5" src={skill.icon} alt={skill.name} />
+    <img class="h-5 w-5" src={$skillIcon.path + getSkillIcon(skill.icon)} alt={skill.name} />
 </td>
-<td class="relative z-10 -left-px">
+<td class="relative z-10">
     <div class="truncate">
         {skill.name}
     </div>

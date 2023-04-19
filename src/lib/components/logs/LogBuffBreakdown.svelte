@@ -1,8 +1,6 @@
 <script lang="ts">
     import { classColors } from "$lib/constants/colors";
     import type { Entity, StatusEffect } from "$lib/types";
-    import { join, resourceDir } from "@tauri-apps/api/path";
-    import { convertFileSrc } from "@tauri-apps/api/tauri";
     import LogBuffBreakdownRow from "./LogBuffBreakdownRow.svelte";
 
     export let groupedSynergies: Map<string, Map<number, StatusEffect>>;
@@ -12,21 +10,8 @@
     let skillDamagePercentages: Array<number> = [];
 
 
-    async function processSkills() {
+    function processSkills() {
         let skills = Object.values(player.skills).sort((a, b) => b.totalDamage - a.totalDamage);
-
-        for (let skill of skills) {
-            if (skill.icon.startsWith("http")) {
-                continue;
-            }
-            let fileName;
-            if (skill.icon) {
-                fileName = skill.icon;
-            } else {
-                fileName = "unknown.png";
-            }
-            skill.icon = convertFileSrc(await join(await resourceDir(), 'images', 'skills', fileName));
-        }
         if (Object.hasOwn(classColors, player.class)){
             color = classColors[player.class].color;
         }

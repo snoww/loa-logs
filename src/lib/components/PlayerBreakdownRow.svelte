@@ -2,9 +2,8 @@
     import type { Skill } from "$lib/types";
     import { HexToRgba } from "$lib/utils/colors";
     import { abbreviateNumberSplit } from "$lib/utils/numbers";
-    import { settings } from "$lib/utils/settings";
-    import { join, resourceDir } from "@tauri-apps/api/path";
-    import { convertFileSrc } from "@tauri-apps/api/tauri";
+    import { settings, skillIcon } from "$lib/utils/settings";
+    import { getSkillIcon } from "$lib/utils/strings";
     import { Tooltip } from "flowbite-svelte";
     import { cubicOut } from "svelte/easing";
     import { tweened } from "svelte/motion";
@@ -37,29 +36,12 @@
             baPercentage = (skill.backAttacks / skill.hits * 100).toFixed(1);
         }        
     }
-    
-    async function getSkillIconPath() {
-        if (skill.icon.startsWith("http")) {
-            return skill.icon;
-        }
-        let fileName;
-        if (skill.icon) {
-            fileName = skill.icon;
-        } else {
-            fileName = "unknown.png";
-        }
-        return convertFileSrc(await join(await resourceDir(), 'images', 'skills', fileName));
-    }
 
 </script>
 
 
 <td class="pl-1">
-    {#await getSkillIconPath()}
-        <img class="h-5 w-5" src="" alt={skill.name} />
-    {:then path} 
-        <img class="h-5 w-5" src={path} alt={skill.name} />
-    {/await}
+    <img class="h-5 w-5" src={$skillIcon.path + getSkillIcon(skill.icon)} alt={skill.name} />
 </td>
 <td>
     <div class="truncate">

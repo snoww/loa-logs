@@ -4,6 +4,8 @@
     import { Tooltip } from 'flowbite-svelte';
     import BuffTooltipDetail from "../shared/BuffTooltipDetail.svelte";
     import { takingScreenshot } from "$lib/utils/stores";
+    import { skillIcon } from "$lib/utils/settings";
+    import { getSkillIcon } from "$lib/utils/strings";
 
     export let skill: Skill;
     export let color: string;
@@ -31,13 +33,13 @@
                 buff.percentage = (synergyDamage / skill.totalDamage * 100).toFixed(1);
             }
             synergyPercentageDetails.push(buff);
-        });        
+        });
     }   
 
 </script>
 
 <td class="pl-1 relative z-10">
-    <img class="h-5 w-5" src={skill.icon} alt={skill.name} />
+    <img class="h-5 w-5" src={$skillIcon.path + getSkillIcon(skill.icon)} alt={skill.name} />
 </td>
 <td class="relative z-10 -left-px">
     <div class="truncate">

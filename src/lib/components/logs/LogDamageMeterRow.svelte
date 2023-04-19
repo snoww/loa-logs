@@ -3,13 +3,12 @@
     import type { Entity } from "$lib/types";
     import { HexToRgba } from "$lib/utils/colors";
     import { abbreviateNumberSplit } from "$lib/utils/numbers";
-    import { settings } from "$lib/utils/settings";
+    import { classIconCache, settings } from "$lib/utils/settings";
     import { takingScreenshot } from "$lib/utils/stores";
     import { formatPlayerName } from "$lib/utils/strings";
 
     export let entity: Entity;
     export let percentage: number;
-    export let icon: string;
     export let totalDamageDealt: number;
     export let anyDead: boolean;
     export let end: number;
@@ -40,7 +39,7 @@
 
 <td class="px-1 relative z-10">
     <div class="flex space-x-1">
-        <img class="h-5 w-5" src={icon} alt={entity.class} />
+        <img class="h-5 w-5" src={$classIconCache[entity.classId]} alt={entity.class} />
         <div class="truncate pl-px">
             {playerName}
         </div>

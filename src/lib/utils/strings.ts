@@ -34,3 +34,7 @@ export function truncateString(str: string, len = 10): string {
     }
     return str;
 }
+
+export function getSkillIcon(skillIcon: string): string {
+    return encodeURIComponent("\\" + ((skillIcon !== '') ? skillIcon : 'unknown.png'));
+}

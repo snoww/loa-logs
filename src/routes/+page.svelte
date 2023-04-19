@@ -1,17 +1,24 @@
 
 <script lang="ts">
     import DamageMeter from "$lib/components/DamageMeter.svelte";
-    import { defaultSettings, registerShortcuts, settings } from "$lib/utils/settings";
+    import { classIconCache, defaultSettings, registerShortcuts, settings, skillIcon } from "$lib/utils/settings";
     import { appWindow } from '@tauri-apps/api/window';
     import { onMount } from 'svelte';
     import merge from 'lodash-es/merge';
+    import { join, resourceDir } from "@tauri-apps/api/path";
+    import { convertFileSrc } from "@tauri-apps/api/tauri";
+    import { classesMap } from "$lib/constants/classes";
 
     onMount(() => {
         settings.set(merge(defaultSettings, $settings));
         
         (async () => {
             await appWindow.setAlwaysOnTop(true);
-            registerShortcuts($settings.shortcuts);       
+            registerShortcuts($settings.shortcuts);
+            skillIcon.set({ path: convertFileSrc(await join(await resourceDir(), 'images', 'skills'))})
+            Object.keys(classesMap).forEach(async key => {
+                $classIconCache[key] = convertFileSrc(await join(await resourceDir(), 'images', 'classes', key + ".png"));
+            });
         })();
 	});
     

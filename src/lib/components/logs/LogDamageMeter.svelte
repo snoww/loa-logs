@@ -1,8 +1,7 @@
 <script lang="ts">
     import { MeterState, MeterTab, type Entity, type Encounter, ChartType, type Skill } from "$lib/types";
     import { abbreviateNumber, formatDurationFromS, millisToMinutesAndSeconds } from "$lib/utils/numbers";
-    import { join, resourceDir } from "@tauri-apps/api/path";
-    import { convertFileSrc, invoke } from "@tauri-apps/api/tauri";
+    import { invoke } from "@tauri-apps/api/tauri";
     import LogDamageMeterRow from "./LogDamageMeterRow.svelte";
     import LogPlayerBreakdown from "./LogPlayerBreakdown.svelte";
     import LogEncounterInfo from "./LogEncounterInfo.svelte";
@@ -10,7 +9,7 @@
     import { page } from "$app/stores";
     import { chartable, defaultOptions, type ChartOptions, type EChartsOptions } from "$lib/utils/charts";
     import { classColors } from "$lib/constants/colors";
-    import { settings } from "$lib/utils/settings";
+    import { settings, skillIcon } from "$lib/utils/settings";
     import { goto } from "$app/navigation";
     import html2canvas from 'html2canvas';
     import { screenshotAlert, screenshotError, takingScreenshot } from "$lib/utils/stores";
@@ -22,7 +21,6 @@
     let player: Entity | null = null;
     let playerDamagePercentages: Array<number> = [];
     let topDamageDealt = 0;
-    let classIconsCache: { [key: number]: string } = {};
     
     let anyDead: boolean;
 
@@ -181,24 +179,114 @@
                             }
                         })
                     }
+                } else if (chartType === ChartType.SKILL_LOG && player) {
+                    let sortedSkills = Object.values(player.skills).filter(skill => skill.castLog.length > 0).sort((a, b) => a.totalDamage - b.totalDamage)
+                    let skills = sortedSkills.map(skill => skill.name);
+                    skillLogOptions = {
+                        ...defaultOptions,
+                        grid: {
+                            left: '5%',
+                            right: '5%',
+                            bottom: '18%',
+                            top: '10%',
+                            containLabel: true
+                        },
+                        dataZoom: [
+                            {
+                                type: 'slider',
+                                fillerColor: 'rgba(80,80,80,.5)',
+                                borderColor: "rgba(80,80,80,.5)",
+                                handleStyle: {
+                                    color: 'rgba(80,80,80,.5)',
+                                },
+                                moveHandleStyle: {
+                                    color: 'rgba(136,136,136)',
+                                }
+                            },
+                            {
+                                type: 'inside',
+                                xAxisIndex: [0],
+                                throttle: 50,
+                            },
+                            {
+                                type: 'inside',
+                                yAxisIndex: [0],
+                                throttle: 50,
+                                zoomOnMouseWheel: false,
+                            },
+
+                        ],
+                        tooltip: {
+                            trigger: "axis",
+                            formatter: function (params: any[]) {
+                                let output = `<span style="font-weight: 800">${params[0].name}</span>`
+                                params.forEach(p => {
+                                    output += `<br/>${p.seriesName}`
+                                })
+                                
+                                return output;
+                            }
+                        } as any,
+                        legend: {
+                            data: [...skills].reverse(),
+                            textStyle: {
+                                color: 'white'
+                            },
+                            type: 'scroll',
+                            width: '90%',
+                            pageIconInactiveColor: "#313131",
+                            pageIconColor: "#aaa",
+                            pageTextStyle: {
+                                color: "#aaa"
+                            },
+                            itemWidth: 20,
+                            itemHeight: 20,
+                        },
+                        xAxis: { 
+                            type: 'category',
+                            splitLine: {
+                                show: false
+                            },
+                            data: Array.from({length: (encounter.lastCombatPacket - encounter.fightStart) / 1000}, (_, i) => formatDurationFromS(i)),
+                            boundaryGap: false,
+                            axisLabel: {
+                                color: 'white'
+                            },
+                            
+                        },
+                        yAxis: {
+                            type: 'category',
+                            splitLine: {
+                                show: true,
+                                lineStyle: {
+                                    color: '#333'
+                                }
+                            },
+                            axisLabel: {
+                                show: false,
+                            },
+                            data: skills.map((skill) => {
+                                return {
+                                    value: skill
+                                }
+                            }),
+                        },
+                        series: sortedSkills.map((skill) => {
+                            return {
+                                name: skill.name,
+                                type: 'scatter',
+                                symbol: 'image://' + $skillIcon.path + encodeURIComponent("\\" + skill.icon ?? "unknown.png"),
+                                symbolSize: [20, 20],
+                                symbolKeepAspect: true,
+                                data: skill.castLog.map((cast) => {
+                                    return [formatDurationFromS(cast), skill.name]
+                                })
+                            }
+                        })
+                    }
                 }
             }
         }
-    }
-
-    async function getClassIconPath(classId: number) {       
-        if (classId in classIconsCache) {
-            return classIconsCache[classId];
-        }
-        let path;
-        if (classId > 100) {
-            path = `${classId}.png`;
-        } else {
-            path = `${1}/101.png`;
-        }
-        let resolvedPath = convertFileSrc(await join(await resourceDir(), 'images', 'classes', path));
-        classIconsCache[classId] = resolvedPath;
-        return resolvedPath;
     }
 
     function inspectPlayer(name: string) {
@@ -226,128 +314,6 @@
         }
     }
 
-    async function getSkillChartOptions(player: Entity) {
-        let sortedSkills = Object.values(player.skills).filter(skill => skill.castLog.length > 0).sort((a, b) => a.totalDamage - b.totalDamage)
-        let skills = sortedSkills.map(skill => skill.name);
-        for (let skill of sortedSkills) {
-            let fileName = skill.icon;
-            if (!skill.icon.startsWith("http")) {
-                if (skill.icon) {
-                    fileName = skill.icon;
-                } else {
-                    fileName = "unknown.png";
-                }
-                skill.icon = convertFileSrc(await join(await resourceDir(), 'images', 'skills', fileName));
-            }
-        }
-        skillLogOptions = {
-            ...defaultOptions,
-            grid: {
-                left: '5%',
-                right: '5%',
-                bottom: '18%',
-                top: '10%',
-                containLabel: true
-            },
-            dataZoom: [
-                {
-                    type: 'slider',
-                    fillerColor: 'rgba(80,80,80,.5)',
-                    borderColor: "rgba(80,80,80,.5)",
-                    handleStyle: {
-                        color: 'rgba(80,80,80,.5)',
-                    },
-                    moveHandleStyle: {
-                        color: 'rgba(136,136,136)',
-                    },
-                    start: 0,
-                    endValue: "1:00" 
-                },
-                {
-                    type: 'inside',
-                    xAxisIndex: [0],
-                    throttle: 50,
-                },
-                {
-                    type: 'inside',
-                    yAxisIndex: [0],
-                    throttle: 50,
-                    zoomOnMouseWheel: false,
-                },
-
-            ],
-            tooltip: {
-                trigger: "axis",
-                formatter: function (params: any[]) {
-                    let output = `<span style="font-weight: 800">${params[0].name}</span>`
-                    params.forEach(p => {
-                        output += `<br/>${p.seriesName}`
-                    })
-                    
-                    return output;
-                }
-            } as any,
-            legend: {
-                data: [...skills].reverse(),
-                textStyle: {
-                    color: 'white'
-                },
-                type: 'scroll',
-                width: '90%',
-                pageIconInactiveColor: "#313131",
-                pageIconColor: "#aaa",
-                pageTextStyle: {
-                    color: "#aaa"
-                },
-                itemWidth: 20,
-                itemHeight: 20,
-            },
-            xAxis: { 
-                type: 'category',
-                splitLine: {
-                    show: false
-                },
-                data: Array.from({length: (encounter.lastCombatPacket - encounter.fightStart) / 1000}, (_, i) => formatDurationFromS(i)),
-                boundaryGap: false,
-                axisLabel: {
-                    color: 'white'
-                },
-                
-            },
-            yAxis: {
-                type: 'category',
-                splitLine: {
-                    show: true,
-                    lineStyle: {
-                        color: '#333'
-                    }
-                },
-                axisLabel: {
-                    show: false,
-                },
-                data: skills.map((skill) => {
-                    return {
-                        value: skill
-                    }
-                }),
-            },
-            series: sortedSkills.map((skill) => {
-                return {
-                    name: skill.name,
-                    type: 'scatter',
-                    symbol: 'image://' + skill.icon,
-                    symbolSize: [20, 20],
-                    symbolKeepAspect: true,
-                    data: skill.castLog.map((cast) => {
-                        return [formatDurationFromS(cast), skill.name]
-                    })
-                }
-            })
-        }
-
-        return skillLogOptions;
-    }
-
     let dropdownOpen = false;
 
     const handleDropdownClick = () => {
@@ -370,7 +336,7 @@
         setTimeout(async () => {
             const canvas = await html2canvas(targetDiv, {
                 useCORS: true,
-                backgroundColor: "#333333",
+                backgroundColor: "#27272A",
             });
 
             canvas.toBlob(async (blob) => {
@@ -502,15 +468,12 @@
                 <tbody>
                     {#each players as player, i (player.name)}
                     <tr class="h-7 px-2 py-1" on:click={() => inspectPlayer(player.name)}>
-                        {#await getClassIconPath(player.classId) then path}
                             <LogDamageMeterRow entity={player} 
                                                 percentage={playerDamagePercentages[i]} 
-                                                icon={path} 
                                                 totalDamageDealt={encounter.encounterDamageStats.totalDamageDealt} 
                                                 {anyDead} 
                                                 end={encounter.lastCombatPacket}
                                                />
-                        {/await}
                     </tr>
                     {/each}
                 </tbody>
@@ -519,15 +482,15 @@
                 {/if}
             {:else if tab === MeterTab.PARTY_BUFFS}
                 {#if state === MeterState.PARTY}
-                    <LogBuffs {tab} encounterDamageStats={encounter.encounterDamageStats} {players} percentages={playerDamagePercentages} {classIconsCache} {handleRightClick} {inspectPlayer}/>
+                    <LogBuffs {tab} encounterDamageStats={encounter.encounterDamageStats} {players} percentages={playerDamagePercentages} {handleRightClick} {inspectPlayer}/>
                 {:else}
-                    <LogBuffs {tab} encounterDamageStats={encounter.encounterDamageStats} {players} percentages={playerDamagePercentages} {classIconsCache} focusedPlayer={player} {handleRightClick} {inspectPlayer}/>
+                    <LogBuffs {tab} encounterDamageStats={encounter.encounterDamageStats} {players} percentages={playerDamagePercentages} focusedPlayer={player} {handleRightClick} {inspectPlayer}/>
                 {/if}
             {:else if tab === MeterTab.SELF_BUFFS}
                 {#if state === MeterState.PARTY}
-                    <LogBuffs {tab} encounterDamageStats={encounter.encounterDamageStats} {players} percentages={playerDamagePercentages} {classIconsCache} {handleRightClick} {inspectPlayer}/>
+                    <LogBuffs {tab} encounterDamageStats={encounter.encounterDamageStats} {players} percentages={playerDamagePercentages} {handleRightClick} {inspectPlayer}/>
                 {:else}
-                    <LogBuffs {tab} encounterDamageStats={encounter.encounterDamageStats} {players} percentages={playerDamagePercentages} {classIconsCache} focusedPlayer={player} {handleRightClick} {inspectPlayer}/>
+                    <LogBuffs {tab} encounterDamageStats={encounter.encounterDamageStats} {players} percentages={playerDamagePercentages} focusedPlayer={player} {handleRightClick} {inspectPlayer}/>
                 {/if}
             {/if}
         </table>
@@ -569,10 +532,8 @@
     {/if}
     {:else if chartType == ChartType.SKILL_LOG}
     {#if player}
-    {#await getSkillChartOptions(player) then options}
-    <div class="w-full h-[400px] mt-2" use:chartable={options}>
+    <div class="w-full h-[400px] mt-2" use:chartable={skillLogOptions}>
     </div>
-    {/await}
     {/if}
     {/if}
 </div>

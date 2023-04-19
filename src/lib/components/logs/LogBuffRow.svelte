@@ -5,13 +5,12 @@
     import { Tooltip } from 'flowbite-svelte';
     import BuffTooltipDetail from "../shared/BuffTooltipDetail.svelte";
     import { formatPlayerName } from "$lib/utils/strings";
-    import { settings } from "$lib/utils/settings";
+    import { classIconCache, settings } from "$lib/utils/settings";
     import { takingScreenshot } from "$lib/utils/stores";
 
     export let player: Entity;
     export let groupedSynergies: Map<string, Map<number, StatusEffect>>;
     export let percentage: number;
-    export let classIconsCache: { [key: number]: string };
 
     let color = "#ffffff"
     let playerName: string;
@@ -46,10 +45,11 @@
             synergyPercentageDetails.push(buff);
         });
     }
+    
 </script>
 
-<td class="pl-1 relative z-10">
-    <img class="h-5 w-5" src={classIconsCache[player.classId]} alt={player.class} />
+<td class="relative z-10 pl-1">
+    <img class="h-5 w-5 table-cell" src={$classIconCache[player.classId]} alt={player.class} />
 </td>
 <td class="relative z-10">
     <div class="truncate">

@@ -9,8 +9,6 @@
         type StatusEffect
     } from '$lib/types';
     import { defaultBuffFilter } from '$lib/utils/buffs';
-    import { join, resourceDir } from '@tauri-apps/api/path';
-    import { convertFileSrc } from '@tauri-apps/api/tauri';
     import { flip } from 'svelte/animate';
     import BuffHeader from './BuffHeader.svelte';
     import BuffRow from './BuffRow.svelte';
@@ -20,7 +18,6 @@
     export let encounterDamageStats: EncounterDamageStats | undefined;
     export let players: Array<Entity>;
     export let percentages: Array<number> = [];
-    export let path: string;
     export let focusedPlayer: Entity | null = null;
     export let handleRightClick: () => void;
     export let inspectPlayer: (name: string) => void;
@@ -34,32 +31,15 @@
                 if (focusedPlayer && !Object.hasOwn(focusedPlayer.damageStats.buffedBy, id)) {
                     return;
                 }
-                if (buff.source && buff.source.icon && !buff.source.icon.startsWith('http')) {
-                    buff.source.icon = getIconPath(buff);
-                }
-                if (buff.source.skill && buff.source.skill.icon && !buff.source.skill.icon.startsWith('http')) {
-                    buff.source.skill.icon = getSkillIconPath(buff.source.skill.icon);
-                } else if (buff.source.skill && !buff.source.skill.icon) {
-                    buff.source.skill.icon = getSkillIconPath("unknown.png");
-                }
                 filterStatusEffects(buff, Number(id), focusedPlayer);
             });
             Object.entries(encounterDamageStats.debuffs).forEach(([id, debuff]) => {
                 if (focusedPlayer && !Object.hasOwn(focusedPlayer.damageStats.debuffedBy, id)) {
                     return;
                 }
-                if (debuff.source && debuff.source.icon && !debuff.source.icon.startsWith('http')) {
-                    debuff.source.icon = getIconPath(debuff);
-                }
-                if (debuff.source.skill && debuff.source.skill.icon && !debuff.source.skill.icon.startsWith('http')) {
-                    debuff.source.skill.icon = getSkillIconPath(debuff.source.skill.icon);
-                } else if (debuff.source.skill && !debuff.source.skill.icon) {
-                    debuff.source.skill.icon = getSkillIconPath("unknown.png");
-                }
                 filterStatusEffects(debuff, Number(id), focusedPlayer);
             });
             groupedSynergies = new Map([...groupedSynergies.entries()].sort());
-            // console.log(groupedSynergies);
         }
     }
 
@@ -116,25 +96,11 @@
             groupedSynergies.set(key, new Map([[id, buff]]));
         }
     }
-
-    function getIconPath(synergy: StatusEffect) {
-        let fileName;
-        if (synergy.source && synergy.source.icon) {
-            fileName = synergy.source.icon;
-        } else {
-            fileName = "unknown.png";
-        }
-        return convertFileSrc(path + 'images\\skills\\' + fileName);
-    }
-
-    function getSkillIconPath(skillIcon: string) {
-        return convertFileSrc(path + 'images\\skills\\' + skillIcon);
-    }
 </script>
 
 <thead class="top-0 sticky h-6 z-40">
     <tr class="bg-zinc-900">
-        <th class="w-7"></th>
+        <th class="w-7 px-2 font-normal"></th>
         <th class="text-left px-2 font-normal w-full"></th>
             {#each [...groupedSynergies] as [id, synergies] (id)}
                 <BuffHeader {synergies} />
@@ -151,6 +117,6 @@
         </tr>
     {/each}
     {:else}
-        <BuffSkillBreakdown {groupedSynergies} player={focusedPlayer} {path}/>
+        <BuffSkillBreakdown {groupedSynergies} player={focusedPlayer}/>
     {/if}
 </tbody>

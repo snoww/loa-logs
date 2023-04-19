@@ -69,7 +69,7 @@ export const defaultSettings = {
     }
 };
 
-const settingsStore = (key: string) => {
+const settingsStore = (key: string, defaultSettings: object) => {
     const storedSettings = localStorage.getItem(key);
     const value = storedSettings ? JSON.parse(storedSettings) : defaultSettings;
     const store = writable(value);
@@ -91,7 +91,7 @@ const settingsStore = (key: string) => {
     };
 };
 
-export const settings = settingsStore("settings");
+export const settings = settingsStore("settings", defaultSettings);
 
 export async function registerShortcuts(shortcuts: any) {
     await unregisterAll();
@@ -106,3 +106,6 @@ export async function registerShortcuts(shortcuts: any) {
         await invoke("open_most_recent_encounter");
     });   
 }
+
+export const skillIcon = settingsStore("skillIcon", {});
+export const classIconCache = settingsStore("classIconCache", {});

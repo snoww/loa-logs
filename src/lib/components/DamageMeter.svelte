@@ -162,7 +162,6 @@
     <BossInfo boss={currentBoss}/>
 </div>
 {/if}
-{#await resourceDir() then path}
 <div class="relative top-7 overflow-scroll" style="height: calc(100vh - 1.5rem - 1.75rem {currentBoss !== null ? " - 1.75rem" : ""});">
     <table class="table-fixed w-full relative">
         {#if tab === MeterTab.DAMAGE}
@@ -215,20 +214,19 @@
             {/if}
         {:else if tab === MeterTab.PARTY_BUFFS}
             {#if state === MeterState.PARTY}
-                <Buffs {tab} encounterDamageStats={encounter?.encounterDamageStats} {players} percentages={playerDamagePercentages} {path} {handleRightClick} {inspectPlayer}/>
+                <Buffs {tab} encounterDamageStats={encounter?.encounterDamageStats} {players} percentages={playerDamagePercentages} {handleRightClick} {inspectPlayer}/>
             {:else}
-                <Buffs {tab} encounterDamageStats={encounter?.encounterDamageStats} {players} percentages={playerDamagePercentages} {path} focusedPlayer={player} {handleRightClick} {inspectPlayer}/>
+                <Buffs {tab} encounterDamageStats={encounter?.encounterDamageStats} {players} percentages={playerDamagePercentages} focusedPlayer={player} {handleRightClick} {inspectPlayer}/>
             {/if}
         {:else if tab === MeterTab.SELF_BUFFS}
             {#if state === MeterState.PARTY}
-                <Buffs {tab} encounterDamageStats={encounter?.encounterDamageStats} {players} percentages={playerDamagePercentages} {path} focusedPlayer={player} {handleRightClick} {inspectPlayer}/>
+                <Buffs {tab} encounterDamageStats={encounter?.encounterDamageStats} {players} percentages={playerDamagePercentages} focusedPlayer={player} {handleRightClick} {inspectPlayer}/>
             {:else}
-                <Buffs {tab} encounterDamageStats={encounter?.encounterDamageStats} {players} percentages={playerDamagePercentages} {path} focusedPlayer={player} {handleRightClick} {inspectPlayer}/>
+                <Buffs {tab} encounterDamageStats={encounter?.encounterDamageStats} {players} percentages={playerDamagePercentages} focusedPlayer={player} {handleRightClick} {inspectPlayer}/>
             {/if}
         {/if}
     </table>
 </div>
-{/await}
 {#if zoneChangeAlert}
 <div transition:fade>
     <Alert color="none" class="bg-accent-800 bg-opacity-80 w-48 mx-auto absolute inset-x-0 bottom-8 py-2 z-50" dismissable on:close={() => zoneChangeAlert = false}>

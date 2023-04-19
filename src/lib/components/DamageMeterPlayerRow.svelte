@@ -5,10 +5,8 @@
     import { tweened } from "svelte/motion";
     import { HexToRgba } from "$lib/utils/colors";
     import { abbreviateNumberSplit } from "$lib/utils/numbers";
-    import { convertFileSrc } from "@tauri-apps/api/tauri";
-    import { join, resourceDir } from "@tauri-apps/api/path";
-    import { formatPlayerName, isValidName } from "$lib/utils/strings";
-    import { settings } from "$lib/utils/settings";
+    import { formatPlayerName } from "$lib/utils/strings";
+    import { classIconCache, settings } from "$lib/utils/settings";
 
     export let entity: Entity;
     export let percentage: number;
@@ -49,27 +47,13 @@
             deadFor = (((lastCombatPacket - entity.damageStats.deathTime) / 1000).toFixed(0) + "s").replace('-', '');
         }             
     }
-
-    async function getClassIconPath() {
-        let path;
-        if (entity.classId > 100) {
-            path = `${entity.classId}.png`;
-        } else {
-            path = `${1}/101.png`;
-        }
-        return convertFileSrc(await join(await resourceDir(), 'images', 'classes', path));
-    }    
         
 </script>
 
 <td class="px-1">
     <div class="flex space-x-1">
-        {#await getClassIconPath()}
-            <img class="h-5 w-5" src="" alt={entity.class} />
-        {:then path} 
-            <img class="h-5 w-5" src={path} alt={entity.class} />
-        {/await}
-        <div class="truncate">
+        <img class="h-5 w-5" src={$classIconCache[entity.classId]} alt={entity.class} />
+        <div class="truncate pl-px">
             {playerName}
         </div>
     </div>
