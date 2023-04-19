@@ -1,7 +1,33 @@
-import * as echarts from 'echarts';
+import * as echarts from 'echarts/core';
 
-export { echarts };
-export type EChartsOptions = echarts.EChartsOption
+import { LineChart, ScatterChart } from 'echarts/charts';
+
+import {
+    TitleComponent,
+    TooltipComponent,
+    DataZoomComponent,
+    GridComponent,
+    DatasetComponent,
+    ToolboxComponent,
+    LegendComponent
+} from 'echarts/components';
+
+import { CanvasRenderer } from 'echarts/renderers';
+
+echarts.use([
+    TitleComponent, 
+    TooltipComponent, 
+    DataZoomComponent, 
+    GridComponent, 
+    ToolboxComponent, 
+    DatasetComponent, 
+    LegendComponent, 
+    CanvasRenderer, 
+    LineChart, 
+    ScatterChart
+]);
+
+export type EChartsOptions = echarts.EChartsCoreOption
 export type EChartsTheme = string | object
 export type EChartsRenderer = 'canvas' | 'svg'
 export type ChartOptions = {
@@ -16,7 +42,7 @@ const DEFAULT_OPTIONS: Partial<ChartOptions> = {
 };
 
 
-export function chartable(element: HTMLElement, options: EChartsOptions) {      
+export function chartable(element: HTMLElement, options: EChartsOptions) {
     const { theme, renderer } = {
         ...DEFAULT_OPTIONS,
     };
@@ -40,7 +66,7 @@ export function chartable(element: HTMLElement, options: EChartsOptions) {
     };
 }
 
-export const defaultOptions: EChartsOptions =  {
+export const defaultOptions: EChartsOptions = {
     textStyle: {
         fontFamily: 'Inter',
     },

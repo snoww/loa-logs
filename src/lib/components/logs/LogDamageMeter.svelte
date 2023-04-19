@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { MeterState, MeterTab, type Entity, type Encounter, ChartType, type Skill } from "$lib/types";
+    import { MeterState, MeterTab, type Entity, type Encounter, ChartType } from "$lib/types";
     import { abbreviateNumber, formatDurationFromS, millisToMinutesAndSeconds } from "$lib/utils/numbers";
     import { invoke } from "@tauri-apps/api/tauri";
     import LogDamageMeterRow from "./LogDamageMeterRow.svelte";
@@ -7,12 +7,13 @@
     import LogEncounterInfo from "./LogEncounterInfo.svelte";
     import LogBuffs from "./LogBuffs.svelte";
     import { page } from "$app/stores";
-    import { chartable, defaultOptions, type ChartOptions, type EChartsOptions } from "$lib/utils/charts";
+    import { chartable, defaultOptions, type EChartsOptions } from "$lib/utils/charts";
     import { classColors } from "$lib/constants/colors";
     import { settings, skillIcon } from "$lib/utils/settings";
     import { goto } from "$app/navigation";
     import html2canvas from 'html2canvas';
     import { screenshotAlert, screenshotError, takingScreenshot } from "$lib/utils/stores";
+    import { getSkillIcon } from "$lib/utils/strings";
 
     export let id: string;
     export let encounter: Encounter;
@@ -185,7 +186,7 @@
                     skillLogOptions = {
                         ...defaultOptions,
                         grid: {
-                            left: '5%',
+                            left: '2%',
                             right: '5%',
                             bottom: '18%',
                             top: '10%',
@@ -275,7 +276,7 @@
                             return {
                                 name: skill.name,
                                 type: 'scatter',
-                                symbol: 'image://' + $skillIcon.path + encodeURIComponent("\\" + skill.icon ?? "unknown.png"),
+                                symbol: 'image://' + $skillIcon.path + getSkillIcon(skill.icon),
                                 symbolSize: [20, 20],
                                 symbolKeepAspect: true,
                                 data: skill.castLog.map((cast) => {
