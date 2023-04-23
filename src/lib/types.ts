@@ -95,13 +95,23 @@ export interface DamageStats {
     dpsRolling10sAvg: [number, number];
 }
 
-interface SkillStats {
+export interface SkillStats {
     casts: number;
     hits: number;
     crits: number;
     backAttacks: number;
     frontAttacks: number;
     counters: number;
+    identityStats?: string 
+}
+
+export type IdentityLogTypeValue = number | [number, number] | [number, number, number]
+export type IdentityLogType = Array<[number, IdentityLogTypeValue]>
+
+export interface IdentityStats {
+    log: IdentityLogType;
+    average: number;
+    cardDraws?: { [key: number]: number }
 }
 
 export interface StatusEffect {
@@ -169,12 +179,14 @@ export enum MeterTab {
     TANK,
     PARTY_BUFFS,
     SELF_BUFFS,
+    IDENTITY
 }
 
 export enum ChartType {
     AVERAGE_DPS,
     ROLLING_DPS,
-    SKILL_LOG
+    SKILL_LOG,
+    IDENTITY
 }
 
 export interface ClassMap {

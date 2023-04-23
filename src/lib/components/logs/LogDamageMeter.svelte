@@ -14,6 +14,7 @@
     import html2canvas from 'html2canvas';
     import { screenshotAlert, screenshotError, takingScreenshot } from "$lib/utils/stores";
     import { getSkillIcon } from "$lib/utils/strings";
+    import LogIdentity from "./identity/LogIdentity.svelte";
 
     export let id: string;
     export let encounter: Encounter;
@@ -22,6 +23,7 @@
     let player: Entity | null = null;
     let playerDamagePercentages: Array<number> = [];
     let topDamageDealt = 0;
+    let localPlayer: Entity | null = null;
     
     let anyDead: boolean;
 
@@ -45,11 +47,14 @@
             topDamageDealt = encounter.encounterDamageStats.topDamageDealt;
             playerDamagePercentages = players.map(player => (player.damageStats.damageDealt / topDamageDealt) * 100);
             anyDead = players.some(player => player.isDead);
+
+            if (encounter.localPlayer) {
+                localPlayer = encounter.entities[encounter.localPlayer];
+            }
  
             if (playerName) {
                 player = encounter.entities[playerName];
                 state = MeterState.PLAYER;
-
             } else {
                 player = null;
                 state = MeterState.PARTY;
@@ -296,6 +301,35 @@
         chartType = ChartType.SKILL_LOG;
     }
 
+    function damageTab() {
+        tab = MeterTab.DAMAGE;
+        setChartView();
+    }
+
+    function partySynergyTab() {
+        tab = MeterTab.PARTY_BUFFS;
+        setChartView();
+    }
+
+    function selfSynergyTab() {
+        tab = MeterTab.SELF_BUFFS;
+        setChartView();
+    }
+
+    function identityTab() {
+        if (!localPlayer) return
+        tab = MeterTab.IDENTITY;
+        chartType = ChartType.IDENTITY
+    }
+
+    function setChartView() {
+        if (state === MeterState.PARTY) {
+            chartType = ChartType.AVERAGE_DPS;
+        } else if (state === MeterState.PLAYER) {
+            chartType = ChartType.SKILL_LOG;
+        }
+    }
+
     function handleRightClick() {
         if (state === MeterState.PLAYER) {
             state = MeterState.PARTY;
@@ -372,15 +406,20 @@
     {#if !$takingScreenshot}
     <div class="mt-2 flex justify-between" style="width: calc(100vw - 4.5rem);">
         <div class="flex divide-x divide-gray-600">
-            <button class="px-2 rounded-sm py-1" class:bg-accent-900={tab == MeterTab.DAMAGE} class:bg-gray-700={tab != MeterTab.DAMAGE} on:click={() => tab = MeterTab.DAMAGE}>
+            <button class="px-2 rounded-sm py-1" class:bg-accent-900={tab == MeterTab.DAMAGE} class:bg-gray-700={tab != MeterTab.DAMAGE} on:click={damageTab}>
                 Damage
             </button>
-            <button class="px-2 rounded-sm py-1" class:bg-accent-900={tab == MeterTab.PARTY_BUFFS} class:bg-gray-700={tab != MeterTab.PARTY_BUFFS} on:click={() => tab = MeterTab.PARTY_BUFFS}>
+            <button class="px-2 rounded-sm py-1" class:bg-accent-900={tab == MeterTab.PARTY_BUFFS} class:bg-gray-700={tab != MeterTab.PARTY_BUFFS} on:click={partySynergyTab}>
                 Party Synergy
             </button>
-            <button class="px-2 rounded-sm py-1" class:bg-accent-900={tab == MeterTab.SELF_BUFFS} class:bg-gray-700={tab != MeterTab.SELF_BUFFS} on:click={() => tab = MeterTab.SELF_BUFFS}>
+            <button class="px-2 rounded-sm py-1" class:bg-accent-900={tab == MeterTab.SELF_BUFFS} class:bg-gray-700={tab != MeterTab.SELF_BUFFS} on:click={selfSynergyTab}>
                 Self Synergy
             </button>
+            {#if localPlayer && localPlayer.skillStats.identityStats}
+            <button class="px-2 rounded-sm py-1" class:bg-accent-900={tab == MeterTab.IDENTITY} class:bg-gray-700={tab != MeterTab.IDENTITY} on:click={identityTab}>
+                Identity
+            </button>
+            {/if}
             <div class="bg-gray-700 flex items-center relative rounded-sm" on:focusout={handleDropdownFocusLoss}>
                 <button on:click={handleDropdownClick} class="px-2 h-full">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
@@ -433,6 +472,7 @@
         {/if}
     </div>
     {/if}
+    {#if tab !== MeterTab.IDENTITY}
     <div class="relative top-0 px" id="buff-table">
         <table class="table-fixed w-full relative">
             {#if tab === MeterTab.DAMAGE}
@@ -496,26 +536,34 @@
             {/if}
         </table>
     </div>
+    {:else if tab === MeterTab.IDENTITY && localPlayer !== null}
+        <LogIdentity localPlayer={localPlayer}/>
+    {/if}
 </div>
+{#if tab !== MeterTab.IDENTITY}
 <div class="mt-4">
     <div class="font-bold text-lg">
         Charts
     </div>
     <div class="flex divide-x divide-gray-600 mt-2">
-        {#if playerName === ""}
+        {#if playerName === "" && state === MeterState.PARTY}
         <button class="px-2 rounded-sm py-1" class:bg-accent-900={chartType == ChartType.AVERAGE_DPS} class:bg-gray-700={chartType != ChartType.AVERAGE_DPS} on:click={() => chartType = ChartType.AVERAGE_DPS}>
             Average DPS
         </button>
         <button class="px-2 rounded-sm py-1" class:bg-accent-900={chartType == ChartType.ROLLING_DPS} class:bg-gray-700={chartType != ChartType.ROLLING_DPS} on:click={() => chartType = ChartType.ROLLING_DPS}>
             10s DPS Window
         </button>
-        {:else}
+        {:else if playerName !== "" && state === MeterState.PLAYER}
         <button class="px-2 rounded-sm py-1" class:bg-accent-900={chartType == ChartType.SKILL_LOG} class:bg-gray-700={chartType != ChartType.SKILL_LOG} on:click={() => chartType = ChartType.SKILL_LOG}>
             Skill Casts
         </button>
+        {:else if localPlayer}
+        <button class="px-2 rounded-sm py-1" class:bg-accent-900={chartType === ChartType.IDENTITY} class:bg-gray-700={chartType != ChartType.IDENTITY} on:click={() => chartType = ChartType.IDENTITY}>
+            Identity Gain
+        </button>
         {/if}
     </div>
-    {#if chartType == ChartType.AVERAGE_DPS}
+    {#if chartType === ChartType.AVERAGE_DPS}
         {#if !$settings.general.showNames}
         <div class="w-full h-[300px] mt-2" use:chartable={avgDpsOptions}>
         </div>
@@ -523,18 +571,19 @@
         <div class="w-full h-[300px] mt-2" use:chartable={avgDpsOptions}>
         </div>
         {/if}
-    {:else if chartType == ChartType.ROLLING_DPS}
-    {#if !$settings.general.showNames}
-    <div class="w-full h-[300px] mt-2" use:chartable={rollingDpsOptions}>
-    </div>
-    {:else}
-    <div class="w-full h-[300px] mt-2" use:chartable={rollingDpsOptions}>
-    </div>
-    {/if}
-    {:else if chartType == ChartType.SKILL_LOG}
-    {#if player}
-    <div class="w-full h-[400px] mt-2" use:chartable={skillLogOptions}>
-    </div>
-    {/if}
+    {:else if chartType === ChartType.ROLLING_DPS}
+        {#if !$settings.general.showNames}
+        <div class="w-full h-[300px] mt-2" use:chartable={rollingDpsOptions}>
+        </div>
+        {:else}
+        <div class="w-full h-[300px] mt-2" use:chartable={rollingDpsOptions}>
+        </div>
+        {/if}
+    {:else if chartType === ChartType.SKILL_LOG}
+        {#if player}
+        <div class="w-full h-[400px] mt-2" use:chartable={skillLogOptions}>
+        </div>
+        {/if}
     {/if}
 </div>
+{/if}

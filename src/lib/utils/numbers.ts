@@ -1,3 +1,5 @@
+import type { IdentityLogType, IdentityLogTypeValue } from "$lib/types";
+
 export function tryParseInt(intString: string | number, defaultValue = 0) {
   if (typeof intString === "number") {
     if (isNaN(intString)) return defaultValue;
@@ -72,4 +74,26 @@ export function formatTimestamp(timestampMs: number): string {
     formattedDate = timestampDate.toLocaleString(undefined, { year: 'numeric', month: '2-digit', day: '2-digit', hour: 'numeric', minute: '2-digit' }).replace(',', ' ');
   }
   return formattedDate;
+}
+
+export function fillMissingElapsedTimes(data: IdentityLogType): IdentityLogType {
+  const filledData: IdentityLogType = [];
+  let lastValue: IdentityLogTypeValue;
+
+  data.forEach((item, index) => {
+    const [elapsedTime, value] = item;
+
+    if (index > 0) {
+      const [prevElapsedTime] = data[index - 1];
+      
+      for (let i = prevElapsedTime + 1; i < elapsedTime; i++) {
+        filledData.push([i, lastValue]);
+      }
+    }
+
+    filledData.push(item);
+    lastValue = value;
+  });
+
+  return filledData;
 }

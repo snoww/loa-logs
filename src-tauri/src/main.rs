@@ -81,6 +81,7 @@ fn main() {
                                     clone.entities.values_mut()
                                         .for_each(|e| {
                                             e.damage_stats.damage_log = Vec::new();
+                                            e.damage_stats.identity_log = Vec::new();
                                             e.damage_stats.dps_average = Vec::new();
                                             e.damage_stats.dps_rolling_10s_avg = Vec::new();
                                             e.skills.values_mut()

@@ -95,6 +95,15 @@ pub struct LogCounterAttack<'a> {
     pub target_name: &'a str,
 }
 
+#[derive(Debug)]
+pub struct LogIdentityGain<'a> {
+    pub id: &'a str,
+    pub name: &'a str,
+    pub gauge_1: i32,
+    pub gauge_2: i32,
+    pub gauge_3: i32,
+}
+
 #[derive(Debug, PartialEq, Clone, Serialize)]
 pub enum RaidResult {
     RAID_RESULT,

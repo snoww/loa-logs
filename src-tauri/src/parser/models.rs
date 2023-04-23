@@ -120,10 +120,10 @@ pub struct DamageStats {
     pub dps: i64,
     #[serde(skip)]
     pub damage_log: Vec<(i64, i64)>,
-    // #[serde(default)]
+    #[serde(skip)]
+    pub identity_log: Vec<(i64, (i32, i32, i32))>,
     #[serde_as(deserialize_as = "DefaultOnError")]
     pub dps_average: Vec<i64>,
-    // #[serde(default)]
     #[serde_as(deserialize_as = "DefaultOnError")]
     pub dps_rolling_10s_avg: Vec<i64>,
 }
@@ -137,7 +137,35 @@ pub struct SkillStats {
     pub back_attacks: i64,
     pub front_attacks: i64,
     pub counters: i64,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub identity_stats: Option<String>
 }
+
+#[derive(Debug, Default, Serialize, Deserialize, Clone)]
+#[serde(rename_all = "camelCase")]
+pub struct IdentityArcanist {
+    // timestamp, (percentage, card, card)
+    pub log: Vec<(i32, (f32, i32, i32))>,
+    pub average: f64,
+    pub card_draws: HashMap<i32, i32>
+}
+
+#[derive(Debug, Default, Serialize, Deserialize, Clone)]
+#[serde(rename_all = "camelCase")]
+pub struct IdentityArtistBard {
+    // timestamp, (percentage, bubble)
+    pub log: Vec<(i32, (f32, i32))>,
+    pub average: f64,
+}
+
+#[derive(Debug, Default, Serialize, Deserialize, Clone)]
+#[serde(rename_all = "camelCase")]
+pub struct IdentityGeneric {
+    // timestamp, percentage
+    pub log: Vec<(i32, f32)>,
+    pub average: f64,
+}
+
 
 #[derive(Debug, Default, Deserialize, Clone)]
 pub struct Npc {
