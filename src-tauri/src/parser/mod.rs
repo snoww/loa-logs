@@ -936,14 +936,16 @@ impl Parser<'_> {
         if let Some(boss) = self.encounter.entities.get_mut(&self.encounter.current_boss_name) {
             if boss.id == stagger.id {
                 if stagger.current_stagger == stagger.max_stagger {
-                    self.encounter.encounter_damage_stats.total_stagger += stagger.max_stagger;
-                    self.prev_stagger = 0;
-                } else {
-                    self.prev_stagger = stagger.current_stagger;
+                    let staggered_in = (timestamp - self.encounter.encounter_damage_stats.stagger_start) / 1000;
+                    self.encounter.encounter_damage_stats.stagger_intervals.push((staggered_in as i32, stagger.max_stagger))
+                } else if stagger.current_stagger != 0 && self.prev_stagger == 0 {
+                    self.encounter.encounter_damage_stats.stagger_start = timestamp;
                 }
-
-                let stagger_percent = (1.0 - (stagger.current_stagger as f32 / stagger.max_stagger as f32)) * 100.0;
+                
+                self.prev_stagger = stagger.current_stagger;
+                
                 let relative_timestamp = (timestamp - self.encounter.fight_start) / 1000;
+                let stagger_percent = (1.0 - (stagger.current_stagger as f32 / stagger.max_stagger as f32)) * 100.0;
                 self.encounter.encounter_damage_stats.stagger_log.push((relative_timestamp as i32, stagger_percent));
 
                 if stagger.max_stagger > self.encounter.encounter_damage_stats.max_stagger {
@@ -1325,11 +1327,26 @@ fn insert_data(tx: &Transaction, encounter: &mut Encounter, prev_stagger: i32) {
 
     let mut misc: Option<EncounterMisc> = None;
 
-    if encounter.encounter_damage_stats.total_stagger > 0 && !encounter.encounter_damage_stats.stagger_log.is_empty() {
-        let duration = encounter.encounter_damage_stats.stagger_log.last().unwrap().0 - encounter.encounter_damage_stats.stagger_log.first().unwrap().0;
-        if duration > 0 {
+    if !encounter.encounter_damage_stats.stagger_log.is_empty() {
+        if prev_stagger > 0 && prev_stagger != encounter.encounter_damage_stats.max_stagger {
+            // never finished staggering the boss, calculate average from whatever stagger has been done
+            let stagger_start_s = ((encounter.encounter_damage_stats.stagger_start - encounter.fight_start) / 1000) as i32;
+            let stagger_duration = encounter.encounter_damage_stats.stagger_log.last().unwrap().0 - stagger_start_s;
+            if stagger_duration > 0 {
+                encounter.encounter_damage_stats.stagger_intervals.push((stagger_duration, prev_stagger));
+            }
+        }
+
+        let (total_stagger_time, total_stagger_dealt) = encounter.encounter_damage_stats.stagger_intervals
+            .iter()
+            .fold((0, 0), |(total_time, total_stagger), (time, stagger)| {
+                (total_time + time, total_stagger + stagger)
+            });
+        
+        if total_stagger_time > 0 {
             let stagger = StaggerStats {
-                average: ((encounter.encounter_damage_stats.total_stagger + prev_stagger) as f64 / duration as f64) / encounter.encounter_damage_stats.max_stagger as f64 * 100.0,
+                average: (total_stagger_dealt as f64 / total_stagger_time as f64) / encounter.encounter_damage_stats.max_stagger as f64 * 100.0,
+                staggers_per_min: (total_stagger_dealt as f64 / (total_stagger_time as f64 / 60.0)) / encounter.encounter_damage_stats.max_stagger as f64,
                 log: encounter.encounter_damage_stats.stagger_log.clone(),
             };
             misc = Some(EncounterMisc {

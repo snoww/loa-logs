@@ -59,9 +59,11 @@ pub struct EncounterDamageStats {
     #[serde(skip)]
     pub stagger_log: Vec<(i32, f32)>,
     #[serde(skip)]
-    pub total_stagger: i32,
+    pub stagger_intervals: Vec<(i32, i32)>,
     #[serde(skip)]
     pub max_stagger: i32,
+    #[serde(skip)]
+    pub stagger_start: i64,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub misc: Option<EncounterMisc>,
 }
@@ -178,6 +180,8 @@ pub struct IdentityGeneric {
 #[serde(rename_all = "camelCase")]
 pub struct StaggerStats {
     pub average: f64,
+    #[serde(default)]
+    pub staggers_per_min: f64,
     pub log: Vec<(i32, f32)>,
 }
 

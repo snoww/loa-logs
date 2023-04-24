@@ -13,7 +13,7 @@
     import { goto } from "$app/navigation";
     import html2canvas from 'html2canvas';
     import { screenshotAlert, screenshotError, takingScreenshot } from "$lib/utils/stores";
-    import { getSkillIcon } from "$lib/utils/strings";
+    import { getSkillIcon, isValidName } from "$lib/utils/strings";
     import LogIdentity from "./identity/LogIdentity.svelte";
     import LogStagger from "./stagger/LogStagger.svelte";
 
@@ -41,7 +41,7 @@
     let skillLogOptions: EChartsOptions = {};
 
     $: {        
-        if (encounter) {                
+        if (encounter) {            
             players = Object.values(encounter.entities)
                 .filter((players) => players.damageStats.damageDealt > 0)
                 .sort((a, b) => b.damageStats.damageDealt - a.damageStats.damageDealt);
@@ -77,7 +77,7 @@
                         }
                     })
                 } else {
-                    legendNames = players.map((e) => e.name);
+                    legendNames = players.map((e) => isValidName(e.name) ? e.name : e.class);
                 }
 
                 if (chartType === ChartType.AVERAGE_DPS) {

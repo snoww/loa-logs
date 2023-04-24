@@ -47,7 +47,8 @@ export interface EncounterMisc {
 
 export interface StaggerStats {
     log: Array<[number, number]>,
-    average: number
+    average: number,
+    staggersPerMin: number
 }
 
 export interface MostDamageTakenEntity {

@@ -88,6 +88,11 @@
         <div>
             Average Stagger: <span class="font-bold">{staggerStats.average.toFixed(1)}%/s</span>
         </div>
+        {#if staggerStats.staggersPerMin}
+        <div>
+            Staggers per Minute: <span class="font-bold">{staggerStats.staggersPerMin.toFixed(1)}</span>
+        </div>
+        {/if}
     </div>
     {/if}
     <div class="mt-4">
