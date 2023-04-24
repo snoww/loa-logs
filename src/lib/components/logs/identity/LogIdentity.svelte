@@ -13,11 +13,7 @@
 {#if localPlayer.class === "Arcanist"}
     <Arcana {identityStats} />
 {:else if localPlayer.class === "Artist" || localPlayer.class === "Bard" }
-<div>
     <ArtistBard className={localPlayer.class} {identityStats} />
-</div>
 {:else}
-<div>
     <GenericClass className={localPlayer.class} {identityStats} />
-</div>
 {/if}

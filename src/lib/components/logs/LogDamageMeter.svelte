@@ -1,6 +1,6 @@
 <script lang="ts">
     import { MeterState, MeterTab, type Entity, type Encounter, ChartType } from "$lib/types";
-    import { abbreviateNumber, formatDurationFromS, millisToMinutesAndSeconds } from "$lib/utils/numbers";
+    import { abbreviateNumber, formatDurationFromMs, formatDurationFromS, millisToMinutesAndSeconds } from "$lib/utils/numbers";
     import { invoke } from "@tauri-apps/api/tauri";
     import LogDamageMeterRow from "./LogDamageMeterRow.svelte";
     import LogPlayerBreakdown from "./LogPlayerBreakdown.svelte";
@@ -41,9 +41,7 @@
     let skillLogOptions: EChartsOptions = {};
 
     $: {        
-        if (encounter) {      
-            console.log(encounter);
-                 
+        if (encounter) {                
             players = Object.values(encounter.entities)
                 .filter((players) => players.damageStats.damageDealt > 0)
                 .sort((a, b) => b.damageStats.damageDealt - a.damageStats.damageDealt);
@@ -125,13 +123,37 @@
                             }
                         },
                         series: players.map((player, i) => {
+                            let markLine = {}
+                            if (player.isDead) {
+                                let rounded = Math.ceil((player.damageStats.deathTime - encounter.fightStart) / 1000 / 5) * 5                                   
+                                markLine = {
+                                    label: {
+                                        formatter: '💀' + legendNames[i],
+                                        position: 'end',
+                                        textBorderColor: 'white',
+                                        color: 'white'
+                                    },
+                                    symbol: 'none',
+                                    silent: true,
+                                    data: [
+                                        {
+                                            name: 'Dead',
+                                            xAxis: formatDurationFromS(rounded)
+                                        }
+                                    ],
+                                    lineStyle: {
+                                        color: classColors[player.class].color,
+                                    }
+                                }
+                            }
                             return {
                                 name: legendNames[i],
                                 color: classColors[player.class].color,
                                 type: 'line',
                                 data: player.damageStats.dpsAverage,
                                 showSymbol: false,
-                                smooth: 0.1
+                                smooth: 0.1,
+                                markLine: markLine
                             }
                         })
                     };
@@ -178,13 +200,37 @@
                             }
                         },
                         series: players.map((player, i) => {
+                            let markLine = {}
+                            if (player.isDead) {
+                                let rounded = Math.ceil((player.damageStats.deathTime - encounter.fightStart) / 1000 / 5) * 5                                   
+                                markLine = {
+                                    label: {
+                                        formatter: '💀' + legendNames[i],
+                                        position: 'end',
+                                        textBorderColor: 'white',
+                                        color: 'white'
+                                    },
+                                    symbol: 'none',
+                                    silent: true,
+                                    data: [
+                                        {
+                                            name: 'Dead',
+                                            xAxis: formatDurationFromS(rounded)
+                                        }
+                                    ],
+                                    lineStyle: {
+                                        color: classColors[player.class].color,
+                                    }
+                                }
+                            }
                             return {
                                 name: legendNames[i],
                                 color: classColors[player.class].color,
                                 type: 'line',
                                 data: player.damageStats.dpsRolling10sAvg,
                                 showSymbol: false,
-                                smooth: 0.1
+                                smooth: 0.1,
+                                markLine: markLine
                             }
                         })
                     }
@@ -490,7 +536,7 @@
     {:else if tab === MeterTab.STAGGER && encounter.encounterDamageStats.misc && encounter.encounterDamageStats.misc.staggerStats}
         <LogStagger staggerStats={encounter.encounterDamageStats.misc.staggerStats}/>
     {:else}
-        <div class="relative top-0 px" id="buff-table">
+        <div class="relative top-0 px overflow-x-auto" id="buff-table">
             <table class="table-fixed w-full relative">
                 {#if tab === MeterTab.DAMAGE}
                     {#if state === MeterState.PARTY}
@@ -576,23 +622,23 @@
     </div>
     {#if chartType === ChartType.AVERAGE_DPS}
         {#if !$settings.general.showNames}
-        <div class="w-full h-[300px] mt-2" use:chartable={avgDpsOptions}>
+        <div class="h-[300px] mt-2" use:chartable={avgDpsOptions} style="width: calc(100vw - 4.5rem);">
         </div>
         {:else}
-        <div class="w-full h-[300px] mt-2" use:chartable={avgDpsOptions}>
+        <div class="h-[300px] mt-2" use:chartable={avgDpsOptions} style="width: calc(100vw - 4.5rem);">
         </div>
         {/if}
     {:else if chartType === ChartType.ROLLING_DPS}
         {#if !$settings.general.showNames}
-        <div class="w-full h-[300px] mt-2" use:chartable={rollingDpsOptions}>
+        <div class="h-[300px] mt-2" use:chartable={rollingDpsOptions} style="width: calc(100vw - 4.5rem);">
         </div>
         {:else}
-        <div class="w-full h-[300px] mt-2" use:chartable={rollingDpsOptions}>
+        <div class="h-[300px] mt-2" use:chartable={rollingDpsOptions} style="width: calc(100vw - 4.5rem);">
         </div>
         {/if}
     {:else if chartType === ChartType.SKILL_LOG}
         {#if player}
-        <div class="w-full h-[400px] mt-2" use:chartable={skillLogOptions}>
+        <div class="h-[400px] mt-2" use:chartable={skillLogOptions} style="width: calc(100vw - 4.5rem);">
         </div>
         {/if}
     {/if}

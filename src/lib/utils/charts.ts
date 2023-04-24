@@ -9,7 +9,8 @@ import {
     GridComponent,
     DatasetComponent,
     ToolboxComponent,
-    LegendComponent
+    LegendComponent,  
+    MarkLineComponent,
 } from 'echarts/components';
 
 import { CanvasRenderer } from 'echarts/renderers';
@@ -21,7 +22,8 @@ echarts.use([
     GridComponent, 
     ToolboxComponent, 
     DatasetComponent, 
-    LegendComponent, 
+    LegendComponent,
+    MarkLineComponent,
     CanvasRenderer, 
     LineChart, 
     ScatterChart
@@ -74,7 +76,7 @@ export const defaultOptions: EChartsOptions = {
         left: '2%',
         right: '5%',
         bottom: '16%',
-        top: '10%',
+        top: '15%',
         containLabel: true
     },
     tooltip: {

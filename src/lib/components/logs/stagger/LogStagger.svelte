@@ -94,7 +94,7 @@
         <div class="font-bold text-lg">
             Stagger Log
         </div>
-        <div class="w-full h-[200px] mt-2" use:chartable={staggerLogOptions}>
+        <div class="h-[200px] mt-2" use:chartable={staggerLogOptions} style="width: calc(100vw - 4.5rem);">
         </div>
     </div>
 </div>

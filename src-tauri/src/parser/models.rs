@@ -62,6 +62,7 @@ pub struct EncounterDamageStats {
     pub total_stagger: i32,
     #[serde(skip)]
     pub max_stagger: i32,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub misc: Option<EncounterMisc>,
 }
 
@@ -183,6 +184,7 @@ pub struct StaggerStats {
 #[derive(Debug, Default, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct EncounterMisc {
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub stagger_stats: Option<StaggerStats>
 }
 

@@ -117,7 +117,7 @@
         <div class="font-bold text-lg">
             Identity Log
         </div>
-        <div class="w-full h-[250px] mt-2" use:chartable={identityLogOptions}>
+        <div class="h-[250px] mt-2" use:chartable={identityLogOptions} style="width: calc(100vw - 4.5rem);">
         </div>
     </div>
 </div>

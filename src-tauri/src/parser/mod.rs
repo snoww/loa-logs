@@ -1323,15 +1323,19 @@ fn insert_data(tx: &Transaction, encounter: &mut Encounter, prev_stagger: i32) {
     let duration_seconds = encounter.duration / 1000;
     encounter.encounter_damage_stats.dps = encounter.encounter_damage_stats.total_damage_dealt / duration_seconds;
 
-    let mut misc = EncounterMisc::default();
+    let mut misc: Option<EncounterMisc> = None;
 
     if encounter.encounter_damage_stats.total_stagger > 0 && !encounter.encounter_damage_stats.stagger_log.is_empty() {
-        let stagger = StaggerStats {
-            average: ((encounter.encounter_damage_stats.total_stagger + prev_stagger) as f64 / duration_seconds as f64) / encounter.encounter_damage_stats.max_stagger as f64 * 100.0,
-            log: encounter.encounter_damage_stats.stagger_log.clone(),
-        };
-    
-        misc.stagger_stats = Some(stagger);
+        let duration = encounter.encounter_damage_stats.stagger_log.last().unwrap().0 - encounter.encounter_damage_stats.stagger_log.first().unwrap().0;
+        if duration > 0 {
+            let stagger = StaggerStats {
+                average: ((encounter.encounter_damage_stats.total_stagger + prev_stagger) as f64 / duration as f64) / encounter.encounter_damage_stats.max_stagger as f64 * 100.0,
+                log: encounter.encounter_damage_stats.stagger_log.clone(),
+            };
+            misc = Some(EncounterMisc {
+                stagger_stats: Some(stagger),
+            });
+        }
     }
     
     // let boss_name = encounter.entities
