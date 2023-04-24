@@ -10,7 +10,7 @@ import {
     DatasetComponent,
     ToolboxComponent,
     LegendComponent,  
-    MarkLineComponent,
+    MarkPointComponent,
 } from 'echarts/components';
 
 import { CanvasRenderer } from 'echarts/renderers';
@@ -23,7 +23,7 @@ echarts.use([
     ToolboxComponent, 
     DatasetComponent, 
     LegendComponent,
-    MarkLineComponent,
+    MarkPointComponent,
     CanvasRenderer, 
     LineChart, 
     ScatterChart

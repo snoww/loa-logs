@@ -1,6 +1,6 @@
 <script lang="ts">
     import { MeterState, MeterTab, type Entity, type Encounter, ChartType } from "$lib/types";
-    import { abbreviateNumber, formatDurationFromMs, formatDurationFromS, millisToMinutesAndSeconds } from "$lib/utils/numbers";
+    import { abbreviateNumber, formatDurationFromS, millisToMinutesAndSeconds } from "$lib/utils/numbers";
     import { invoke } from "@tauri-apps/api/tauri";
     import LogDamageMeterRow from "./LogDamageMeterRow.svelte";
     import LogPlayerBreakdown from "./LogPlayerBreakdown.svelte";
@@ -123,27 +123,19 @@
                             }
                         },
                         series: players.map((player, i) => {
-                            let markLine = {}
+                            let markPoint = {}
                             if (player.isDead) {
-                                let rounded = Math.ceil((player.damageStats.deathTime - encounter.fightStart) / 1000 / 5) * 5                                   
-                                markLine = {
-                                    label: {
-                                        formatter: '💀' + legendNames[i],
-                                        position: 'end',
-                                        textBorderColor: 'white',
-                                        color: 'white'
-                                    },
-                                    symbol: 'none',
-                                    silent: true,
+                                let rounded = Math.ceil((player.damageStats.deathTime - encounter.fightStart) / 1000 / 5) * 5;
+                                let index = Math.floor(rounded / 5);
+                                
+                                markPoint = {
                                     data: [
                                         {
-                                            name: 'Dead',
-                                            xAxis: formatDurationFromS(rounded)
+                                            name: "Death",
+                                            value: "💀",
+                                            coord: [index, player.damageStats.dpsAverage[index]],
                                         }
-                                    ],
-                                    lineStyle: {
-                                        color: classColors[player.class].color,
-                                    }
+                                    ]                                    
                                 }
                             }
                             return {
@@ -153,7 +145,7 @@
                                 data: player.damageStats.dpsAverage,
                                 showSymbol: false,
                                 smooth: 0.1,
-                                markLine: markLine
+                                markPoint: markPoint
                             }
                         })
                     };
@@ -200,27 +192,17 @@
                             }
                         },
                         series: players.map((player, i) => {
-                            let markLine = {}
+                            let markPoint = {}
                             if (player.isDead) {
-                                let rounded = Math.ceil((player.damageStats.deathTime - encounter.fightStart) / 1000 / 5) * 5                                   
-                                markLine = {
-                                    label: {
-                                        formatter: '💀' + legendNames[i],
-                                        position: 'end',
-                                        textBorderColor: 'white',
-                                        color: 'white'
-                                    },
-                                    symbol: 'none',
-                                    silent: true,
+                                let index = Math.ceil((player.damageStats.deathTime - encounter.fightStart) / 1000);                                
+                                markPoint = {
                                     data: [
                                         {
-                                            name: 'Dead',
-                                            xAxis: formatDurationFromS(rounded)
+                                            name: "Death",
+                                            value: "💀",
+                                            coord: [index, player.damageStats.dpsRolling10sAvg[index]],
                                         }
-                                    ],
-                                    lineStyle: {
-                                        color: classColors[player.class].color,
-                                    }
+                                    ]                                    
                                 }
                             }
                             return {
@@ -230,7 +212,7 @@
                                 data: player.damageStats.dpsRolling10sAvg,
                                 showSymbol: false,
                                 smooth: 0.1,
-                                markLine: markLine
+                                markPoint: markPoint
                             }
                         })
                     }
