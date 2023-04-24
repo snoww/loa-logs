@@ -163,7 +163,7 @@
     {/if}
     <div class="mt-4">
         <div class="font-bold text-lg">
-            Charts
+            Identity Log
         </div>
         <div class="w-full h-[220px] mt-2" use:chartable={identityLogOptions}>
         </div>

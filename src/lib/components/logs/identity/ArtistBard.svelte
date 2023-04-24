@@ -7,7 +7,7 @@
     export let className: string
     export let identityStats: IdentityStats;
 
-    let data = fillMissingElapsedTimes(identityStats.log);    
+    let data = fillMissingElapsedTimes(identityStats.log);
 
     let identityLogOptions: EChartsOptions = {
         ...defaultOptions,
@@ -67,6 +67,7 @@
             axisLabel: {
                 formatter: '{value}%',
             },
+            max: 300
         },
         tooltip: {
             trigger: "axis",
@@ -95,12 +96,13 @@
                 let bubbles = (item as [number, [number, number]])[1];
                 return bubbles[1].toLocaleString(); 
             }),
-        }]
+        }
+        ]
     };    
 
 </script>
 
-<div class="relative top-0 px" id="buff-table">
+<div class="relative top-0 px">
     {#if identityStats.average}
     <div class="mt-4">
         <div class="font-bold text-lg mb-2">
@@ -113,7 +115,7 @@
     {/if}
     <div class="mt-4">
         <div class="font-bold text-lg">
-            Charts
+            Identity Log
         </div>
         <div class="w-full h-[250px] mt-2" use:chartable={identityLogOptions}>
         </div>

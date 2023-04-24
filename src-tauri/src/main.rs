@@ -80,8 +80,6 @@ fn main() {
                                     // don't need to send these to the live meter
                                     clone.entities.values_mut()
                                         .for_each(|e| {
-                                            e.damage_stats.damage_log = Vec::new();
-                                            e.damage_stats.identity_log = Vec::new();
                                             e.damage_stats.dps_average = Vec::new();
                                             e.damage_stats.dps_rolling_10s_avg = Vec::new();
                                             e.skills.values_mut()
@@ -216,6 +214,12 @@ fn setup_db(resource_path: &mut PathBuf) -> Result<(), String> {
         }
     }
 
+    let mut stmt = conn.prepare("SELECT COUNT(*) FROM pragma_table_info('encounter') WHERE name='misc'").unwrap();
+    let column_count: u32 = stmt.query_row([], |row| row.get(0)).unwrap();
+    if column_count == 0 {
+        conn.execute("ALTER TABLE encounter ADD COLUMN misc TEXT", []).expect("failed to add column");
+    }
+
     match conn.execute_batch("
         CREATE TABLE IF NOT EXISTS entity (
             name TEXT,
@@ -334,7 +338,8 @@ fn load_encounter(window: tauri::Window, id: String) -> Encounter {
        top_damage_taken,
        dps,
        buffs,
-       debuffs
+       debuffs,
+       misc
     FROM encounter
     WHERE id = ?
     ;").unwrap();
@@ -359,6 +364,15 @@ fn load_encounter(window: tauri::Window, id: String) -> Encounter {
             Err(_) => HashMap::new()
         };
 
+        let misc_str = match row.get(12) {
+            Ok(misc_str) => misc_str,
+            Err(_) => "".to_string()
+        };
+        let misc = match serde_json::from_str::<EncounterMisc>(misc_str.as_str()) {
+            Ok(v) => Some(v),
+            Err(_) => None
+        };
+
         Ok(Encounter {
             last_combat_packet: row.get(0)?,
             fight_start: row.get(1)?,
@@ -373,6 +387,7 @@ fn load_encounter(window: tauri::Window, id: String) -> Encounter {
                 dps: row.get(9)?,
                 buffs,
                 debuffs,
+                misc,
                 ..Default::default()
             },
             ..Default::default()

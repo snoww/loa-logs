@@ -15,6 +15,7 @@
     import { screenshotAlert, screenshotError, takingScreenshot } from "$lib/utils/stores";
     import { getSkillIcon } from "$lib/utils/strings";
     import LogIdentity from "./identity/LogIdentity.svelte";
+    import LogStagger from "./stagger/LogStagger.svelte";
 
     export let id: string;
     export let encounter: Encounter;
@@ -40,7 +41,9 @@
     let skillLogOptions: EChartsOptions = {};
 
     $: {        
-        if (encounter) {           
+        if (encounter) {      
+            console.log(encounter);
+                 
             players = Object.values(encounter.entities)
                 .filter((players) => players.damageStats.damageDealt > 0)
                 .sort((a, b) => b.damageStats.damageDealt - a.damageStats.damageDealt);
@@ -319,7 +322,12 @@
     function identityTab() {
         if (!localPlayer) return
         tab = MeterTab.IDENTITY;
-        chartType = ChartType.IDENTITY
+        chartType = ChartType.IDENTITY;
+    }
+
+    function staggerTab() {
+        tab = MeterTab.STAGGER;
+        chartType = ChartType.STAGGER;
     }
 
     function setChartView() {
@@ -420,6 +428,11 @@
                 Identity
             </button>
             {/if}
+            {#if encounter.encounterDamageStats.misc && encounter.encounterDamageStats.misc.staggerStats}
+            <button class="px-2 rounded-sm py-1" class:bg-accent-900={tab == MeterTab.STAGGER} class:bg-gray-700={tab != MeterTab.STAGGER} on:click={staggerTab}>
+                Stagger
+            </button>
+            {/if}
             <div class="bg-gray-700 flex items-center relative rounded-sm" on:focusout={handleDropdownFocusLoss}>
                 <button on:click={handleDropdownClick} class="px-2 h-full">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
@@ -472,75 +485,77 @@
         {/if}
     </div>
     {/if}
-    {#if tab !== MeterTab.IDENTITY}
-    <div class="relative top-0 px" id="buff-table">
-        <table class="table-fixed w-full relative">
-            {#if tab === MeterTab.DAMAGE}
-                {#if state === MeterState.PARTY}
-                <thead class="h-6 z-30" on:contextmenu|preventDefault={() => {console.log("titlebar clicked")}}>
-                    <tr class="bg-zinc-900">
-                        <th class="text-left px-2 font-normal w-full"></th>
-                        {#if anyDead && $settings.logs.deathTime}
-                        <th class="font-normal w-20">Dead for</th>
-                        {/if}
-                        {#if $settings.logs.damage}
-                        <th class="font-normal w-14">DMG</th>
-                        {/if}
-                        {#if $settings.logs.dps}
-                        <th class="font-normal w-14">DPS</th>
-                        {/if}
-                        {#if players.length > 1 && $settings.logs.damagePercent}
-                        <th class="font-normal w-14">D%</th>
-                        {/if}
-                        {#if $settings.logs.critRate}
-                        <th class="font-normal w-14">CRIT</th>
-                        {/if}
-                        {#if $settings.logs.frontAtk}
-                        <th class="font-normal w-14">F.A</th>
-                        {/if}
-                        {#if $settings.logs.backAtk}
-                        <th class="font-normal w-14">B.A</th>
-                        {/if}
-                        {#if $settings.logs.counters}
-                        <th class="font-normal w-[70px]">Counters</th>
-                        {/if}
-                    </tr>
-                </thead>
-                <tbody>
-                    {#each players as player, i (player.name)}
-                    <tr class="h-7 px-2 py-1" on:click={() => inspectPlayer(player.name)}>
-                            <LogDamageMeterRow entity={player} 
-                                                percentage={playerDamagePercentages[i]} 
-                                                totalDamageDealt={encounter.encounterDamageStats.totalDamageDealt} 
-                                                {anyDead} 
-                                                end={encounter.lastCombatPacket}
-                                               />
-                    </tr>
-                    {/each}
-                </tbody>
-                {:else if state === MeterState.PLAYER && player !== null}
-                   <LogPlayerBreakdown {player} duration={encounter.duration} {handleRightClick}/>
-                {/if}
-            {:else if tab === MeterTab.PARTY_BUFFS}
-                {#if state === MeterState.PARTY}
-                    <LogBuffs {tab} encounterDamageStats={encounter.encounterDamageStats} {players} percentages={playerDamagePercentages} {handleRightClick} {inspectPlayer}/>
-                {:else}
-                    <LogBuffs {tab} encounterDamageStats={encounter.encounterDamageStats} {players} percentages={playerDamagePercentages} focusedPlayer={player} {handleRightClick} {inspectPlayer}/>
-                {/if}
-            {:else if tab === MeterTab.SELF_BUFFS}
-                {#if state === MeterState.PARTY}
-                    <LogBuffs {tab} encounterDamageStats={encounter.encounterDamageStats} {players} percentages={playerDamagePercentages} {handleRightClick} {inspectPlayer}/>
-                {:else}
-                    <LogBuffs {tab} encounterDamageStats={encounter.encounterDamageStats} {players} percentages={playerDamagePercentages} focusedPlayer={player} {handleRightClick} {inspectPlayer}/>
-                {/if}
-            {/if}
-        </table>
-    </div>
-    {:else if tab === MeterTab.IDENTITY && localPlayer !== null}
+    {#if tab === MeterTab.IDENTITY && localPlayer !== null}
         <LogIdentity localPlayer={localPlayer}/>
+    {:else if tab === MeterTab.STAGGER && encounter.encounterDamageStats.misc && encounter.encounterDamageStats.misc.staggerStats}
+        <LogStagger staggerStats={encounter.encounterDamageStats.misc.staggerStats}/>
+    {:else}
+        <div class="relative top-0 px" id="buff-table">
+            <table class="table-fixed w-full relative">
+                {#if tab === MeterTab.DAMAGE}
+                    {#if state === MeterState.PARTY}
+                    <thead class="h-6 z-30" on:contextmenu|preventDefault={() => {console.log("titlebar clicked")}}>
+                        <tr class="bg-zinc-900">
+                            <th class="text-left px-2 font-normal w-full"></th>
+                            {#if anyDead && $settings.logs.deathTime}
+                            <th class="font-normal w-20">Dead for</th>
+                            {/if}
+                            {#if $settings.logs.damage}
+                            <th class="font-normal w-14">DMG</th>
+                            {/if}
+                            {#if $settings.logs.dps}
+                            <th class="font-normal w-14">DPS</th>
+                            {/if}
+                            {#if players.length > 1 && $settings.logs.damagePercent}
+                            <th class="font-normal w-14">D%</th>
+                            {/if}
+                            {#if $settings.logs.critRate}
+                            <th class="font-normal w-14">CRIT</th>
+                            {/if}
+                            {#if $settings.logs.frontAtk}
+                            <th class="font-normal w-14">F.A</th>
+                            {/if}
+                            {#if $settings.logs.backAtk}
+                            <th class="font-normal w-14">B.A</th>
+                            {/if}
+                            {#if $settings.logs.counters}
+                            <th class="font-normal w-[70px]">Counters</th>
+                            {/if}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {#each players as player, i (player.name)}
+                        <tr class="h-7 px-2 py-1" on:click={() => inspectPlayer(player.name)}>
+                                <LogDamageMeterRow entity={player} 
+                                                    percentage={playerDamagePercentages[i]} 
+                                                    totalDamageDealt={encounter.encounterDamageStats.totalDamageDealt} 
+                                                    {anyDead} 
+                                                    end={encounter.lastCombatPacket}
+                                                />
+                        </tr>
+                        {/each}
+                    </tbody>
+                    {:else if state === MeterState.PLAYER && player !== null}
+                    <LogPlayerBreakdown {player} duration={encounter.duration} {handleRightClick}/>
+                    {/if}
+                {:else if tab === MeterTab.PARTY_BUFFS}
+                    {#if state === MeterState.PARTY}
+                        <LogBuffs {tab} encounterDamageStats={encounter.encounterDamageStats} {players} percentages={playerDamagePercentages} {handleRightClick} {inspectPlayer}/>
+                    {:else}
+                        <LogBuffs {tab} encounterDamageStats={encounter.encounterDamageStats} {players} percentages={playerDamagePercentages} focusedPlayer={player} {handleRightClick} {inspectPlayer}/>
+                    {/if}
+                {:else if tab === MeterTab.SELF_BUFFS}
+                    {#if state === MeterState.PARTY}
+                        <LogBuffs {tab} encounterDamageStats={encounter.encounterDamageStats} {players} percentages={playerDamagePercentages} {handleRightClick} {inspectPlayer}/>
+                    {:else}
+                        <LogBuffs {tab} encounterDamageStats={encounter.encounterDamageStats} {players} percentages={playerDamagePercentages} focusedPlayer={player} {handleRightClick} {inspectPlayer}/>
+                    {/if}
+                {/if}
+            </table>
+        </div>
     {/if}
 </div>
-{#if tab !== MeterTab.IDENTITY}
+{#if tab !== MeterTab.IDENTITY && tab !== MeterTab.STAGGER}
 <div class="mt-4">
     <div class="font-bold text-lg">
         Charts
@@ -556,10 +571,6 @@
         {:else if playerName !== "" && state === MeterState.PLAYER}
         <button class="px-2 rounded-sm py-1" class:bg-accent-900={chartType == ChartType.SKILL_LOG} class:bg-gray-700={chartType != ChartType.SKILL_LOG} on:click={() => chartType = ChartType.SKILL_LOG}>
             Skill Casts
-        </button>
-        {:else if localPlayer}
-        <button class="px-2 rounded-sm py-1" class:bg-accent-900={chartType === ChartType.IDENTITY} class:bg-gray-700={chartType != ChartType.IDENTITY} on:click={() => chartType = ChartType.IDENTITY}>
-            Identity Gain
         </button>
         {/if}
     </div>

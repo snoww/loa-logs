@@ -38,6 +38,16 @@ export interface EncounterDamageStats {
     mostDamageTakenEntity: MostDamageTakenEntity,
     buffs: { [key: number]: StatusEffect },
     debuffs: { [key: number]: StatusEffect },
+    misc?: EncounterMisc
+}
+
+export interface EncounterMisc {
+    staggerStats: StaggerStats
+}
+
+export interface StaggerStats {
+    log: Array<[number, number]>,
+    average: number
 }
 
 export interface MostDamageTakenEntity {
@@ -179,14 +189,16 @@ export enum MeterTab {
     TANK,
     PARTY_BUFFS,
     SELF_BUFFS,
-    IDENTITY
+    IDENTITY,
+    STAGGER
 }
 
 export enum ChartType {
     AVERAGE_DPS,
     ROLLING_DPS,
     SKILL_LOG,
-    IDENTITY
+    IDENTITY,
+    STAGGER
 }
 
 export interface ClassMap {

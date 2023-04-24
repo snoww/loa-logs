@@ -104,6 +104,13 @@ pub struct LogIdentityGain<'a> {
     pub gauge_3: i32,
 }
 
+#[derive(Debug)]
+pub struct LogStaggerChange<'a> {
+    pub id: &'a str,
+    pub current_stagger: i32,
+    pub max_stagger: i32,
+}
+
 #[derive(Debug, PartialEq, Clone, Serialize)]
 pub enum RaidResult {
     RAID_RESULT,

@@ -20,6 +20,8 @@ pub struct Parser<'a> {
     pub encounter: Encounter,
     pub raid_end: bool,
     saved: bool,
+
+    prev_stagger: i32,
 }
 
 impl Parser<'_> {
@@ -29,6 +31,8 @@ impl Parser<'_> {
             encounter: Encounter::default(),
             raid_end: false,
             saved: false,
+
+            prev_stagger: 0,
         }
     }
 
@@ -89,16 +93,19 @@ impl Parser<'_> {
             10 => self.on_buff(&line_split),
             12 => self.on_counterattack(&line_split),
             20 => self.on_identity_gain(timestamp, &line_split),
+            21 => self.on_stagger_change(timestamp, &line_split),
             _ => {}
         }
     }
-            
+
+    // reset everything except local player
     fn reset(&mut self, clone: &Encounter) {
         self.encounter.fight_start = 0;
         self.encounter.entities = HashMap::new();
         self.encounter.current_boss_name = "".to_string();
         self.encounter.encounter_damage_stats = Default::default();
         self.encounter.reset = false;
+        self.prev_stagger = 0;
         if !clone.local_player.is_empty() {
             if let Some(player) = clone.entities.get(&clone.local_player) {
                 self.encounter.local_player = clone.local_player.to_string();
@@ -119,6 +126,7 @@ impl Parser<'_> {
         }
     }
 
+    // keep all entities, reset all stats
     fn soft_reset(&mut self) {
         let clone = self.encounter.clone();
         self.reset(&clone);
@@ -914,6 +922,37 @@ impl Parser<'_> {
         }
     }
 
+    fn on_stagger_change(&mut self, timestamp: i64, line_split: &[&str]) {
+        let stagger = LogStaggerChange {
+            id: line_split[2],
+            current_stagger: line_split[3].parse::<i32>().unwrap_or(0),
+            max_stagger: line_split[4].parse::<i32>().unwrap_or(0),
+        };
+
+        if self.encounter.current_boss_name.is_empty() || self.encounter.fight_start == 0 {
+            return;
+        }
+
+        if let Some(boss) = self.encounter.entities.get_mut(&self.encounter.current_boss_name) {
+            if boss.id == stagger.id {
+                if stagger.current_stagger == stagger.max_stagger {
+                    self.encounter.encounter_damage_stats.total_stagger += stagger.max_stagger;
+                    self.prev_stagger = 0;
+                } else {
+                    self.prev_stagger = stagger.current_stagger;
+                }
+
+                let stagger_percent = (1.0 - (stagger.current_stagger as f32 / stagger.max_stagger as f32)) * 100.0;
+                let relative_timestamp = (timestamp - self.encounter.fight_start) / 1000;
+                self.encounter.encounter_damage_stats.stagger_log.push((relative_timestamp as i32, stagger_percent));
+
+                if stagger.max_stagger > self.encounter.encounter_damage_stats.max_stagger {
+                    self.encounter.encounter_damage_stats.max_stagger = stagger.max_stagger;
+                }
+            }
+        }
+    }
+
     fn save_to_db(&self) {
         if self.encounter.fight_start == 0
             || self.encounter.current_boss_name.is_empty()
@@ -928,6 +967,7 @@ impl Parser<'_> {
         let mut encounter = self.encounter.clone();
         let mut path = self.window.app_handle().path_resolver().resource_dir().expect("could not get resource dir");
         path.push("encounters.db");
+        let prev_stagger = self.prev_stagger;
 
         task::spawn(async move {
             println!("saving to db - {}", encounter.current_boss_name);
@@ -935,7 +975,7 @@ impl Parser<'_> {
             let mut conn = Connection::open(path).expect("failed to open database");
             let tx = conn.transaction().expect("failed to create transaction");
 
-            insert_data(&tx, &mut encounter);
+            insert_data(&tx, &mut encounter, prev_stagger);
 
             tx.commit().expect("failed to commit transaction");
             println!("saved to db");
@@ -1257,7 +1297,7 @@ fn get_skill_name_and_icon(
     }
 }
 
-fn insert_data(tx: &Transaction, encounter: &mut Encounter) {
+fn insert_data(tx: &Transaction, encounter: &mut Encounter, prev_stagger: i32) {
     let mut encounter_stmt = tx
         .prepare(
             "
@@ -1273,14 +1313,26 @@ fn insert_data(tx: &Transaction, encounter: &mut Encounter) {
         top_damage_taken,
         dps,
         buffs,
-        debuffs
-    ) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12)",
+        debuffs,
+        misc
+    ) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13)",
         )
         .expect("failed to prepare encounter statement");
 
     encounter.duration = encounter.last_combat_packet - encounter.fight_start;
     let duration_seconds = encounter.duration / 1000;
     encounter.encounter_damage_stats.dps = encounter.encounter_damage_stats.total_damage_dealt / duration_seconds;
+
+    let mut misc = EncounterMisc::default();
+
+    if encounter.encounter_damage_stats.total_stagger > 0 && !encounter.encounter_damage_stats.stagger_log.is_empty() {
+        let stagger = StaggerStats {
+            average: ((encounter.encounter_damage_stats.total_stagger + prev_stagger) as f64 / duration_seconds as f64) / encounter.encounter_damage_stats.max_stagger as f64 * 100.0,
+            log: encounter.encounter_damage_stats.stagger_log.clone(),
+        };
+    
+        misc.stagger_stats = Some(stagger);
+    }
     
     // let boss_name = encounter.entities
     //     .iter()
@@ -1301,7 +1353,8 @@ fn insert_data(tx: &Transaction, encounter: &mut Encounter) {
             encounter.encounter_damage_stats.top_damage_taken,
             encounter.encounter_damage_stats.dps,
             json!(encounter.encounter_damage_stats.buffs),
-            json!(encounter.encounter_damage_stats.debuffs)
+            json!(encounter.encounter_damage_stats.debuffs),
+            json!(misc)
         ])
         .expect("failed to insert encounter");
 

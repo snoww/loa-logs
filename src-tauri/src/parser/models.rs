@@ -56,6 +56,13 @@ pub struct EncounterDamageStats {
     pub debuffs: HashMap<i32, StatusEffect>,
     #[serde(skip)]
     pub unknown_buffs: HashSet<i32>,
+    #[serde(skip)]
+    pub stagger_log: Vec<(i32, f32)>,
+    #[serde(skip)]
+    pub total_stagger: i32,
+    #[serde(skip)]
+    pub max_stagger: i32,
+    pub misc: Option<EncounterMisc>,
 }
 
 #[derive(Debug, Serialize, Clone, Default)]
@@ -166,6 +173,18 @@ pub struct IdentityGeneric {
     pub average: f64,
 }
 
+#[derive(Debug, Default, Serialize, Deserialize, Clone)]
+#[serde(rename_all = "camelCase")]
+pub struct StaggerStats {
+    pub average: f64,
+    pub log: Vec<(i32, f32)>,
+}
+
+#[derive(Debug, Default, Serialize, Deserialize, Clone)]
+#[serde(rename_all = "camelCase")]
+pub struct EncounterMisc {
+    pub stagger_stats: Option<StaggerStats>
+}
 
 #[derive(Debug, Default, Deserialize, Clone)]
 pub struct Npc {

@@ -1,15 +1,12 @@
 <script lang="ts">
-    import { classColors } from "$lib/constants/colors";
-    import type { IdentityStats } from "$lib/types";
+    import type { StaggerStats } from "$lib/types";
     import { chartable, defaultOptions, type EChartsOptions } from "$lib/utils/charts";
     import { fillMissingElapsedTimes, formatDurationFromS } from "$lib/utils/numbers";
+    export let staggerStats: StaggerStats;
 
-    export let className: string
-    export let identityStats: IdentityStats;
-    
-    let data = fillMissingElapsedTimes(identityStats.log);
+    let data = fillMissingElapsedTimes(staggerStats.log);
 
-    let identityLogOptions: EChartsOptions = {
+    let staggerLogOptions: EChartsOptions = {
         ...defaultOptions,
         grid: {
             left: '2%',
@@ -73,33 +70,31 @@
             }
         },
         series: {
-            color: classColors[className].color,
+            color: "#8365c7",
             type: 'line',
             data: data.map((item) => (item as [number, number])[1]),
             showSymbol: false,
             smooth: 0.1,
         }
-    };    
-
+    }; 
+    
 </script>
-
 <div class="relative top-0 px">
-    {#if identityStats.average}
+    {#if staggerStats.average}
     <div class="mt-4">
         <div class="font-bold text-lg mb-2">
             Stats
         </div>
         <div>
-            Average Identity Gain: <span class="font-bold">{identityStats.average.toFixed(1)}%/s</span>
+            Average Stagger: <span class="font-bold">{staggerStats.average.toFixed(1)}%/s</span>
         </div>
     </div>
     {/if}
     <div class="mt-4">
         <div class="font-bold text-lg">
-            Identity Log
+            Stagger Log
         </div>
-        <div class="w-full h-[200px] mt-2" use:chartable={identityLogOptions}>
+        <div class="w-full h-[200px] mt-2" use:chartable={staggerLogOptions}>
         </div>
     </div>
 </div>
-
