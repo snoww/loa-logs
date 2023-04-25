@@ -14,7 +14,7 @@ export const bosses: BossBarMap = {
     "Kakul": 140,
     "Kakul-Saydon": 180,
     "Encore-Desiring Kakul-Saydon": 77,
-    "Gehenna Helkasirs": 110,
+    "Gehenna Helkasirs": 120,
     "Ashtarot": 170,
     "Primordial Nightmare": 190,
     "Brelshaza, Monarch of Nightmares": 200,

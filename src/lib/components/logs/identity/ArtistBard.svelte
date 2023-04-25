@@ -111,6 +111,9 @@
         <div>
             Average Identity Gain: <span class="font-bold">{identityStats.average.toFixed(1)}%/s</span>
         </div>
+        <div>
+            Bubbles per min: <span class="font-bold">{(identityStats.average / 100 * 60).toFixed(1)} bubbles/min</span>
+        </div>
     </div>
     {/if}
     <div class="mt-4">

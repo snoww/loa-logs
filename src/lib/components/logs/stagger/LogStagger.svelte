@@ -1,7 +1,7 @@
 <script lang="ts">
     import type { StaggerStats } from "$lib/types";
     import { chartable, defaultOptions, type EChartsOptions } from "$lib/utils/charts";
-    import { fillMissingElapsedTimes, formatDurationFromS } from "$lib/utils/numbers";
+    import { fillMissingElapsedTimes, formatDurationFromS, formatMinutes } from "$lib/utils/numbers";
     export let staggerStats: StaggerStats;
 
     let data = fillMissingElapsedTimes(staggerStats.log);
@@ -90,7 +90,7 @@
         </div>
         {#if staggerStats.staggersPerMin}
         <div>
-            Staggers per Minute: <span class="font-bold">{staggerStats.staggersPerMin.toFixed(1)}</span>
+            <span class="font-bold">{staggerStats.staggersPerMin.toFixed(1)}</span> staggers/min, or <span class="font-bold">{formatMinutes(1 / staggerStats.staggersPerMin)}</span> per stagger
         </div>
         {/if}
     </div>

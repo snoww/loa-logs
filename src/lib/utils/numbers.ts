@@ -97,3 +97,21 @@ export function fillMissingElapsedTimes(data: IdentityLogType): IdentityLogType 
 
   return filledData;
 }
+
+export function formatMinutes(minutesDecimal: number): string {
+  // Convert minutes to seconds
+  const totalSeconds = Math.round(minutesDecimal * 60);
+
+  // Calculate the number of whole minutes and the remaining seconds
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+
+  // Format the result as a readable string
+  let result = "";
+  if (minutes > 0) {
+    result = `${minutes}m`;
+  }
+  result += `${seconds}s`;
+
+  return result;
+}
