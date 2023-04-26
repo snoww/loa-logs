@@ -6,6 +6,7 @@
     import { registerShortcuts, settings } from '$lib/utils/settings';
     import { onMount } from 'svelte';
     import { backNavStore, pageStore, searchStore } from '$lib/utils/stores';
+    import { relaunch } from '@tauri-apps/api/process';
 
     let dropdownOpen = false;
 
@@ -35,6 +36,12 @@
         if (currentTarget.contains(relatedTarget)) return;
         dropdownOpen = false;
     };
+
+    async function restartApp() {
+        setTimeout(() => {
+            relaunch();
+        }, 500);
+    }
 
     onMount(() => {
         // dunno if this is good lol XD
@@ -66,6 +73,15 @@
                 <div class="flex flex-col space-y-4 divide-y-[1px]">
                     <div class="mt-4 px-2 flex flex-col space-y-2">
                         <SettingItem name="Show Names" description="Show player names if it's loaded. If disabled, it will show the class name (e.g. Arcanist)" bind:setting={$settings.general.showNames} />
+                        <div class="">
+                            <label class="font-medium flex items-center">
+                                <input type="checkbox" bind:checked={$settings.general.blur} on:change={restartApp} class="rounded h-5 w-5 text-accent-500 bg-zinc-700 focus:ring-0 focus:ring-offset-0" />
+                                <div class="ml-5">
+                                    <div class="text-gray-100">Blur Meter Background</div>
+                                    <div class="text-xs text-gray-300">Makes live meter translucent. Turn this off if experiencing lag (requires restart)</div>
+                                </div>
+                            </label>
+                        </div>
                         <div class="pt-2" on:focusout={handleDropdownFocusLoss}>
                             <div class="flex font-medium items-center">
                                 <button id="" class="font-medium rounded-lg text-sm px-2 py-2 text-center inline-flex items-center bg-accent-800" type="button" on:click={handleDropdownClick}>

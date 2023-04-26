@@ -363,6 +363,82 @@ pub struct EncountersOverview {
     pub total_encounters: i32,
 }
 
+#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase", default)]
+pub struct Settings {
+    pub general: GeneralSettings,
+    pub shortcuts: Shortcuts,
+    pub meter: MeterTabs,
+    pub logs: LogTabs,
+}
+
+#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct GeneralSettings {
+    pub show_names: bool,
+    pub accent_color: String,
+    pub blur: bool,
+}
+
+#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct Shortcuts {
+    pub hide_meter: Shortcut,
+    pub show_logs: Shortcut,
+    pub show_latest_encounter: Shortcut,
+}
+
+#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct Shortcut {
+    pub modifier: String,
+    pub key: String,
+}
+
+#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct LogTabs {
+    pub damage: bool,
+    pub dps: bool,
+    pub damage_percent: bool,
+    pub death_time: bool,
+    pub crit_rate: bool,
+    pub front_atk: bool,
+    pub back_atk: bool,
+    pub counters: bool,
+    pub breakdown: BreakdownTabs,
+}
+
+#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct MeterTabs {
+    pub boss_hp: bool,
+    pub damage: bool,
+    pub dps: bool,
+    pub damage_percent: bool,
+    pub death_time: bool,
+    pub crit_rate: bool,
+    pub front_atk: bool,
+    pub back_atk: bool,
+    pub counters: bool,
+    pub breakdown: BreakdownTabs,
+}
+
+#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct BreakdownTabs {
+    pub damage: bool,
+    pub dps: bool,
+    pub damage_percent: bool,
+    pub crit_rate: bool,
+    pub front_atk: bool,
+    pub back_atk: bool,
+    pub avg_damage: bool,
+    pub max_damage: bool,
+    pub casts: bool,
+    pub hits: bool,
+}
+
 lazy_static! {
     pub static ref NPC_DATA: HashMap<i32, Npc> = {
         let json_str = include_str!("../../meter-data/Npc.json");

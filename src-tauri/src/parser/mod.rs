@@ -986,7 +986,7 @@ impl Parser<'_> {
 }
 
 fn is_support_class_id(class_id: i32) -> bool {
-    class_id == 105 || class_id == 204 || class_id == 603
+    class_id == 105 || class_id == 204 || class_id == 602
 }
 
 fn get_status_effect_data(buff_id: i32) -> Option<StatusEffect> {

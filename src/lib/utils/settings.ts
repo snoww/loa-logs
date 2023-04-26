@@ -5,7 +5,8 @@ import { writable } from 'svelte/store';
 export const defaultSettings = {
     "general": {
         "showNames": true,
-        "accentColor": "theme-pink"
+        "accentColor": "theme-pink",
+        "blur": true,
     },
     "shortcuts": {
         "hideMeter": {
@@ -85,6 +86,9 @@ const settingsStore = (key: string, defaultSettings: object) => {
         subscribe: store.subscribe,
         set: (value: object) => {
             localStorage.setItem(key, JSON.stringify(value));
+            if (key === "settings") {
+                invoke("save_settings", { settings: value });
+            }
             store.set(value);
         },
         update: store.update

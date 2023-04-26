@@ -4,7 +4,7 @@
 )]
 
 mod parser;
-use std::{time::{Duration, Instant}, path::PathBuf};
+use std::{time::{Duration, Instant}, path::{PathBuf, Path}, fs::File, io::{Write, Read}};
 
 use hashbrown::HashMap;
 use parser::{models::*, Parser};
@@ -31,6 +31,9 @@ fn main() {
 
     tauri::Builder::default()
         .setup(|app| {
+            let resource_path = app.path_resolver().resource_dir().expect("could not get resource dir");
+            let settings = read_settings(&resource_path).ok();
+
             let meter_window = app.get_window("main").unwrap();
             meter_window.set_always_on_top(true)
                 .expect("failed to set windows always on top");
@@ -43,10 +46,16 @@ fn main() {
             
             #[cfg(target_os = "windows")]
             {
-                apply_blur(&meter_window, Some((10, 10, 10, 50))).expect("Unsupported platform! 'apply_blur' is only supported on Windows");
+                if let Some(settings) = settings {
+                    if settings.general.blur {
+                        apply_blur(&meter_window, Some((10, 10, 10, 50))).ok();
+                    }
+                } else {
+                    apply_blur(&meter_window, Some((10, 10, 10, 50))).ok();
+                }
             }
-            let mut resource_path = app.path_resolver().resource_dir().expect("could not get resource dir");
-            match setup_db(&mut resource_path) {
+
+            match setup_db(resource_path) {
                 Ok(_) => (),
                 Err(e) => {
                     println!("error setting up database: {}", e);
@@ -167,14 +176,15 @@ fn main() {
             }
             _ => {}
         })
-        .invoke_handler(tauri::generate_handler![load_encounters_preview, load_encounter, open_most_recent_encounter, delete_encounter, toggle_meter_window, open_url])
+        .invoke_handler(tauri::generate_handler![load_encounters_preview, load_encounter, open_most_recent_encounter, delete_encounter, toggle_meter_window, open_url, save_settings])
         .run(tauri::generate_context!())
         .expect("error while running application");
 }
 
-fn get_db_connection(resource_path: &mut PathBuf) -> Result<Connection, String> {
-    resource_path.push("encounters.db");
-    let conn = match Connection::open(resource_path) {
+fn get_db_connection(resource_path: &Path) -> Result<Connection, String> {
+    let mut path = resource_path.to_path_buf();
+    path.push("encounters.db");
+    let conn = match Connection::open(path) {
         Ok(conn) => conn,
         Err(e) => {
             return Err(e.to_string());
@@ -184,8 +194,8 @@ fn get_db_connection(resource_path: &mut PathBuf) -> Result<Connection, String> 
 }
 
 
-fn setup_db(resource_path: &mut PathBuf) -> Result<(), String> {
-    let conn = get_db_connection(resource_path)?;
+fn setup_db(resource_path: PathBuf) -> Result<(), String> {
+    let conn = get_db_connection(&resource_path)?;
 
     match conn.execute_batch("
         CREATE TABLE IF NOT EXISTS encounter (
@@ -257,8 +267,8 @@ fn setup_db(resource_path: &mut PathBuf) -> Result<(), String> {
 
 #[tauri::command]
 fn load_encounters_preview(window: tauri::Window, page: i32, page_size: i32, min_duration: i32, search: String) -> EncountersOverview {
-    let mut path = window.app_handle().path_resolver().resource_dir().expect("could not get resource dir");
-    let conn = get_db_connection(&mut path).expect("could not get db connection");
+    let path = window.app_handle().path_resolver().resource_dir().expect("could not get resource dir");
+    let conn = get_db_connection(&path).expect("could not get db connection");
 
     let mut stmt = conn.prepare_cached("
     SELECT
@@ -324,8 +334,8 @@ fn load_encounters_preview(window: tauri::Window, page: i32, page_size: i32, min
 
 #[tauri::command]
 fn load_encounter(window: tauri::Window, id: String) -> Encounter {
-    let mut path = window.app_handle().path_resolver().resource_dir().expect("could not get resource dir");
-    let conn = get_db_connection(&mut path).expect("could not get db connection");
+    let path = window.app_handle().path_resolver().resource_dir().expect("could not get resource dir");
+    let conn = get_db_connection(&path).expect("could not get db connection");
     let mut encounter_stmt = conn.prepare_cached("
     SELECT last_combat_packet,
        fight_start,
@@ -471,8 +481,8 @@ fn load_encounter(window: tauri::Window, id: String) -> Encounter {
 
 #[tauri::command]
 fn open_most_recent_encounter(window: tauri::Window) {
-    let mut path = window.app_handle().path_resolver().resource_dir().expect("could not get resource dir");
-    let conn = get_db_connection(&mut path).expect("could not get db connection");
+    let path = window.app_handle().path_resolver().resource_dir().expect("could not get resource dir");
+    let conn = get_db_connection(&path).expect("could not get db connection");
     let mut stmt = conn.prepare_cached("
     SELECT id
     FROM encounter
@@ -498,8 +508,8 @@ fn open_most_recent_encounter(window: tauri::Window) {
 
 #[tauri::command]
 fn delete_encounter(window: tauri::Window, id: String) {
-    let mut path = window.app_handle().path_resolver().resource_dir().expect("could not get resource dir");
-    let conn = get_db_connection(&mut path).expect("could not get db connection");
+    let path = window.app_handle().path_resolver().resource_dir().expect("could not get resource dir");
+    let conn = get_db_connection(&path).expect("could not get db connection");
     conn.execute("PRAGMA foreign_keys = ON;", params![]).unwrap();
     let mut stmt = conn.prepare_cached("
         DELETE FROM encounter
@@ -525,4 +535,22 @@ fn open_url(window: tauri::Window, url: String) {
     if let Some(logs) = window.app_handle().get_window("logs") {
         logs.emit("redirect-url", url).unwrap();
     }
+}
+
+#[tauri::command]
+fn save_settings(window: tauri::Window, settings: Settings) {
+    let mut path: PathBuf = window.app_handle().path_resolver().resource_dir().expect("could not get resource dir");
+    path.push("settings.json");
+    let mut file = File::create(path).expect("could not create settings file");
+    file.write_all(serde_json::to_string_pretty(&settings).unwrap().as_bytes()).expect("could not write to settings file");
+}
+
+fn read_settings(resource_path: &Path) -> Result<Settings, Box<dyn std::error::Error>> {
+    let mut path = resource_path.to_path_buf();
+    path.push("settings.json");
+    let mut file = File::open(path)?;
+    let mut contents = String::new();
+    file.read_to_string(&mut contents)?;
+    let settings = serde_json::from_str(&contents)?;
+    Ok(settings)
 }
