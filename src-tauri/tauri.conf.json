@@ -31,7 +31,16 @@
         "open": true,
         "sidecar": true,
         "scope": [
-          { "name": "lib/meter-core", "sidecar": true }
+          { 
+            "name": "lib/meter-core", 
+            "sidecar": true,
+            "args": [
+              "--mode",
+              {
+                "validator": "\\S+"
+              }
+            ]
+           }
         ]
       },
       "process": {

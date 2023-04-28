@@ -43,12 +43,17 @@ fn main() {
             {
                 meter_window.open_devtools();
             }
+
+            let mut packet_mode = "pcap".to_string();
             
             #[cfg(target_os = "windows")]
             {
                 if let Some(settings) = settings {
                     if settings.general.blur {
                         apply_blur(&meter_window, Some((10, 10, 10, 50))).ok();
+                    }
+                    if settings.general.raw_socket {
+                        packet_mode = "raw".to_string();
                     }
                 } else {
                     apply_blur(&meter_window, Some((10, 10, 10, 50))).ok();
@@ -64,7 +69,8 @@ fn main() {
 
             tauri::async_runtime::spawn(async move {
                 let (mut rx, _child) = Command::new_sidecar("meter-core")
-                    .expect("failed to start `meter-core` ")
+                    .expect("failed to start `meter-core`")
+                    .args(["--mode", &packet_mode])
                     .spawn()
                     .expect("Failed to spawn sidecar");
                 let mut parser = Parser::new(&meter_window);
@@ -102,6 +108,13 @@ fn main() {
                             });
                         }
                         last_time = Instant::now();
+                    } else if let CommandEvent::Stderr(line) = event {
+                        if line == "not admin" {
+                            std::thread::sleep(Duration::from_secs(3));
+                            let window = meter_window.clone();
+                            window.emit("admin", "")
+                                .expect("failed to emit admin error");
+                        }
                     }
                 }
             });

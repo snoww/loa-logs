@@ -6,6 +6,8 @@ export const defaultSettings = {
     "general": {
         "showNames": true,
         "accentColor": "theme-pink",
+        "rawSocket": false,
+        "port": 6040,
         "blur": true,
     },
     "shortcuts": {

@@ -82,6 +82,7 @@
                                 </div>
                             </label>
                         </div>
+                        <SettingItem name="VPN Support (beta)" description="Enables raw socket capture. (manually restart as ADMIN)" bind:setting={$settings.general.rawSocket} />
                         <div class="pt-2" on:focusout={handleDropdownFocusLoss}>
                             <div class="flex font-medium items-center">
                                 <button id="" class="font-medium rounded-lg text-sm px-2 py-2 text-center inline-flex items-center bg-accent-800" type="button" on:click={handleDropdownClick}>

@@ -377,6 +377,8 @@ pub struct Settings {
 pub struct GeneralSettings {
     pub show_names: bool,
     pub accent_color: String,
+    pub raw_socket: bool,
+    pub port: i32,
     pub blur: bool,
 }
 
