@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { Entity } from "$lib/types";
+    import { EntityType, type Entity } from "$lib/types";
     import { classColors } from "$lib/constants/colors";
     import { cubicOut } from "svelte/easing";
     import { tweened } from "svelte/motion";
@@ -52,10 +52,17 @@
 
 <td class="px-1">
     <div class="flex space-x-1">
+        {#if $settings.general.showEsther && entity.entityType === EntityType.ESTHER}
+        <img class="h-5 w-5" src={$classIconCache[entity.name]} alt={entity.name} />
+        <div class="truncate pl-px">
+            {entity.name}
+        </div>
+        {:else}
         <img class="h-5 w-5" src={$classIconCache[entity.classId]} alt={entity.class} />
         <div class="truncate pl-px">
             {playerName}
         </div>
+        {/if}
     </div>
 </td>
 {#if anyDead && $settings.meter.deathTime}

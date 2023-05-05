@@ -300,6 +300,8 @@ impl Parser<'_> {
             entity_type: EntityType::UNKNOWN,
         };
 
+        let entity_type = get_npc_entity_type(new_npc.npc_id);
+
         if let Some(npc) = self.encounter.entities.get_mut(new_npc.name) {
             npc.id = new_npc.id.to_string();
             npc.npc_id = new_npc.npc_id;
@@ -307,7 +309,7 @@ impl Parser<'_> {
             npc.current_hp = new_npc.current_hp;
             npc.max_hp = new_npc.max_hp;
             npc.last_update = timestamp;
-            npc.entity_type = get_npc_entity_type(new_npc.npc_id);
+            npc.entity_type = entity_type.clone();
         } else {
             self.encounter.entities.insert(
                 new_npc.name.to_string(),
@@ -317,29 +319,29 @@ impl Parser<'_> {
                     name: new_npc.name.to_string(),
                     current_hp: new_npc.current_hp,
                     max_hp: new_npc.max_hp,
-                    entity_type: get_npc_entity_type(new_npc.npc_id),
+                    entity_type: entity_type.clone(),
                     last_update: timestamp,
                     ..Default::default()
                 },
             );
         }
 
-        // get the npc that we just added
-        if let Some(npc) = self.encounter.entities.get(new_npc.name) {
-            if npc.entity_type == EntityType::BOSS {
-                if self.encounter.current_boss_name.is_empty() {
-                    self.encounter.current_boss_name = npc.name.to_string();
-                } else if let Some(boss) = self
-                    .encounter
-                    .entities
-                    .get(&self.encounter.current_boss_name.to_string())
-                {
-                    if npc.max_hp >= boss.max_hp && boss.is_dead {
+        if entity_type == EntityType::BOSS {
+            // get the npc that we just added
+            if let Some(npc) = self.encounter.entities.get(new_npc.name) {
+                    if self.encounter.current_boss_name.is_empty() {
+                        self.encounter.current_boss_name = npc.name.to_string();
+                    } else if let Some(boss) = self
+                        .encounter
+                        .entities
+                        .get(&self.encounter.current_boss_name.to_string())
+                    {
+                        if npc.max_hp >= boss.max_hp && boss.is_dead {
+                            self.encounter.current_boss_name = npc.name.to_string();
+                        }
+                    } else {
                         self.encounter.current_boss_name = npc.name.to_string();
                     }
-                } else {
-                    self.encounter.current_boss_name = npc.name.to_string();
-                }
             }
         }
     }
@@ -952,12 +954,17 @@ impl Parser<'_> {
 }
 
 fn get_npc_entity_type(npc_id: i32) -> EntityType {
+    if let Some(_esther) = get_esther_from_npc_id(npc_id) {
+        return EntityType::ESTHER;
+    }
+
     if let Some((_, npc_info)) = NPC_DATA.get_key_value(&npc_id) {
         if npc_info.grade == "boss"
             || npc_info.grade == "raid"
             || npc_info.grade == "epic_raid"
             || npc_info.grade == "commander"
             && !npc_info.name.contains('_')
+            && npc_info.name.chars().all(|c| c.is_alphabetic() || c.is_whitespace())
         {
             EntityType::BOSS
         } else {
@@ -1390,7 +1397,7 @@ fn insert_data(tx: &Transaction, encounter: &mut Encounter, prev_stagger: i32) {
     let fight_end = encounter.last_combat_packet;
 
     for (_key, mut entity) in encounter.entities.iter_mut()
-        .filter(|(_, e)| e.entity_type == EntityType::PLAYER && e.skill_stats.hits >= 1 && e.max_hp > 0) 
+        .filter(|(_, e)| (e.entity_type == EntityType::PLAYER && e.skill_stats.hits >= 1 && e.max_hp > 0) || e.entity_type == EntityType::ESTHER) 
     {
         let intervals = generate_intervals(fight_start, fight_end);
         if !intervals.is_empty() {
@@ -1609,4 +1616,11 @@ fn calculate_average_dps(data: &[(i64, i64)], start_time: i64, end_time: i64) ->
     }
 
     results
+}
+
+fn get_esther_from_npc_id(npc_id: i32) -> Option<Esther> {
+    ESTHER_DATA
+        .iter()
+        .find(|esther| esther.npc_ids.contains(&npc_id))
+        .cloned()
 }

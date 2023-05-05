@@ -2,11 +2,11 @@
     import { classesMap } from '$lib/constants/classes';
     import {
         MeterTab,
-        StatusEffectBuffTypeFlags,
         StatusEffectTarget,
         type EncounterDamageStats,
         type Entity,
-        type StatusEffect
+        type StatusEffect,
+        EntityType
     } from '$lib/types';
     import { defaultBuffFilter } from '$lib/utils/buffs';
     import { flip } from 'svelte/animate';
@@ -25,6 +25,7 @@
     let groupedSynergies: Map<string, Map<number, StatusEffect>> = new Map();
 
     $: {
+        players = players.filter((player) => player.entityType === EntityType.PLAYER);
         groupedSynergies = new Map<string, Map<number, StatusEffect>>();
         if (encounterDamageStats) {
             Object.entries(encounterDamageStats.buffs).forEach(([id, buff]) => {

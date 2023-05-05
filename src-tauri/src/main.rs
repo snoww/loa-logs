@@ -90,7 +90,7 @@ fn main() {
                                         clone.current_boss_name = String::new();
                                     }
                                 }
-                                clone.entities.retain(|_, v| v.entity_type == EntityType::PLAYER && v.skill_stats.hits > 0 && v.max_hp > 0);
+                                clone.entities.retain(|_, v| (v.entity_type == EntityType::PLAYER && v.skill_stats.hits > 0 && v.max_hp > 0) || v.entity_type == EntityType::ESTHER);
                                 if !clone.entities.is_empty() {
                                     // don't need to send these to the live meter
                                     clone.entities.values_mut()
@@ -294,7 +294,7 @@ fn load_encounters_preview(window: tauri::Window, page: i32, page_size: i32, min
             FROM (
                 SELECT en.class_id
                 FROM entity en
-                WHERE en.encounter_id = e.id
+                WHERE en.encounter_id = e.id AND en.entity_type = 'PLAYER'
                 ORDER BY json_extract(en.damage_stats, '$.dps') DESC
             ) AS ordered_classes
         ) AS classes

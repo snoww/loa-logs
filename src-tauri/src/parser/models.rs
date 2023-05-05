@@ -14,6 +14,7 @@ pub enum EntityType {
     GUARDIAN,
     PLAYER,
     NPC,
+    ESTHER,
 }
 
 impl ToString for EntityType {
@@ -25,6 +26,7 @@ impl ToString for EntityType {
             EntityType::GUARDIAN => "GUARDIAN".to_string(),
             EntityType::PLAYER => "PLAYER".to_string(),
             EntityType::NPC => "NPC".to_string(),
+            EntityType::ESTHER => "ESTHER".to_string(),
         }
     }
 }
@@ -199,6 +201,15 @@ pub struct Npc {
     pub grade: String,
     #[serde(rename = "type")]
     pub npc_type: String,
+}
+
+#[derive(Debug, Default, Deserialize, Clone)]
+pub struct Esther {
+    pub name: String,
+    pub icon: String,
+    pub skills: Vec<i32>,
+    #[serde(alias = "npcs")]
+    pub npc_ids: Vec<i32>,
 }
 
 #[derive(Debug, Default, Serialize, Deserialize, Clone)]
@@ -376,6 +387,7 @@ pub struct Settings {
 #[serde(rename_all = "camelCase")]
 pub struct GeneralSettings {
     pub show_names: bool,
+    pub show_esther: bool,
     pub accent_color: String,
     pub raw_socket: bool,
     pub port: i32,
@@ -460,6 +472,10 @@ lazy_static! {
     };
     pub static ref COMBAT_EFFECT_DATA: HashMap<i32, CombatEffectData> = {
         let json_str = include_str!("../../meter-data/CombatEffect.json");
+        serde_json::from_str(json_str).unwrap()
+    };
+    pub static ref ESTHER_DATA: Vec<Esther> = {
+        let json_str = include_str!("../../meter-data/Esther.json");
         serde_json::from_str(json_str).unwrap()
     };
     pub static ref STAT_TYPE_MAP: HashMap<&'static str, u32> = {

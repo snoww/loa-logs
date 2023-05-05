@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { MeterState, MeterTab, type Encounter, type EncounterEvent, type Entity } from '$lib/types';
+    import { MeterState, MeterTab, type Encounter, type EncounterEvent, type Entity, EntityType } from '$lib/types';
     import { millisToMinutesAndSeconds } from '$lib/utils/numbers';
     import { listen, type UnlistenFn } from '@tauri-apps/api/event';
     import { onDestroy, onMount } from 'svelte';
@@ -107,9 +107,15 @@
     $: {
         if (encounter) {            
             if (encounter.fightStart !== 0 && raidInProgress) {
-                players = Object.values(encounter.entities)
-                    .filter((players) => players.damageStats.damageDealt > 0)
-                    .sort((a, b) => b.damageStats.damageDealt - a.damageStats.damageDealt);
+                if ($settings.general.showEsther) {
+                    players = Object.values(encounter.entities)
+                        .filter((e) => e.damageStats.damageDealt > 0 || e.entityType === EntityType.ESTHER)
+                        .sort((a, b) => b.damageStats.damageDealt - a.damageStats.damageDealt);
+                } else {
+                    players = Object.values(encounter.entities)
+                        .filter((players) => players.damageStats.damageDealt > 0)
+                        .sort((a, b) => b.damageStats.damageDealt - a.damageStats.damageDealt);
+                }
                 anyDead = players.some(player => player.isDead);
                 topDamageDealt = encounter.encounterDamageStats.topDamageDealt;
                 playerDamagePercentages = players.map(player => (player.damageStats.damageDealt / topDamageDealt) * 100);

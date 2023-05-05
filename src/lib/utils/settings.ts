@@ -5,6 +5,7 @@ import { writable } from 'svelte/store';
 export const defaultSettings = {
     "general": {
         "showNames": true,
+        "showEsther": true,
         "accentColor": "theme-pink",
         "rawSocket": false,
         "port": 6040,

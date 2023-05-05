@@ -8,6 +8,7 @@
     import { join, resourceDir } from "@tauri-apps/api/path";
     import { convertFileSrc } from "@tauri-apps/api/tauri";
     import { classesMap } from "$lib/constants/classes";
+    import { estherMap } from "$lib/constants/esthers";
 
     onMount(() => {
         settings.set(merge(defaultSettings, $settings));
@@ -19,6 +20,9 @@
             Object.keys(classesMap).forEach(async key => {
                 $classIconCache[key] = convertFileSrc(await join(await resourceDir(), 'images', 'classes', key + ".png"));
             });
+            for (const [key, value] of Object.entries(estherMap)) {
+                $classIconCache[key] = convertFileSrc(await join(await resourceDir(), 'images', 'classes', value + ".png"));
+            }
         })();
 	});
     
