@@ -65,7 +65,7 @@
 
 </script>
 
-<div class="bg-zinc-900/[.3] h-7 border border-black">
+<div class="bg-zinc-900/[.3] h-7 border-y border-black">
     {#if bossHPBars !== 0}
         <div class="absolute h-7 -z-10 " style="background-color: {bossBarColor[0]};width: {$tweenBossHpBar}%;"></div>
         {#if bossCurrentBars <= 1}
@@ -79,10 +79,7 @@
     {/if}
     <div class="relative flex justify-center py-1">
         <div class="tracking-tighter">
-            <div>
-                {boss.name} <span>{abbreviateNumber(boss.currentHp)}/{abbreviateNumber(boss.maxHp)}<span class="pl-1">({bossCurrentPercentage.toFixed(1)}%)</span></span>
-                <!-- {boss.name} <span>{boss.currentHp.toLocaleString()}/{boss.maxHp.toLocaleString()}<span class="pl-1">({bossCurrentPercentage.toFixed(1)}%)</span></span> -->
-            </div>
+            {boss.name} <span>{abbreviateNumber(boss.currentHp)}/{abbreviateNumber(boss.maxHp)}<span class="pl-1">({bossCurrentPercentage.toFixed(1)}%)</span></span>
         </div>
         {#if bossHPBars !== 0}
             {#if boss.currentHp <= 0}

@@ -161,13 +161,13 @@ export interface SkillData {
 }
 
 export enum EntityType {
-    UNKNOWN,
-    MONSTER,
-    BOSS,
-    GUARDIAN,
-    PLAYER,
-    NPC,
-    ESTHER,
+    UNKNOWN = "UNKNOWN",
+    MONSTER = "MONSTER",
+    BOSS = "BOSS",
+    GUARDIAN = "GUARDIAN",
+    PLAYER = "PLAYER",
+    NPC = "NPC",
+    ESTHER = "ESTHER",
 }
 
 export interface ClassColors {

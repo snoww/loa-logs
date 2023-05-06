@@ -20,8 +20,8 @@
             Object.keys(classesMap).forEach(async key => {
                 $classIconCache[key] = convertFileSrc(await join(await resourceDir(), 'images', 'classes', key + ".png"));
             });
-            for (const [key, value] of Object.entries(estherMap)) {
-                $classIconCache[key] = convertFileSrc(await join(await resourceDir(), 'images', 'classes', value + ".png"));
+            for (const esther of estherMap) {
+                $classIconCache[esther.name] = convertFileSrc(await join(await resourceDir(), 'images', 'classes', esther.icon));
             }
         })();
 	});

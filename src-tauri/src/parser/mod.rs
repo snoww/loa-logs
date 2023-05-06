@@ -1397,27 +1397,28 @@ fn insert_data(tx: &Transaction, encounter: &mut Encounter, prev_stagger: i32) {
     let fight_end = encounter.last_combat_packet;
 
     for (_key, mut entity) in encounter.entities.iter_mut()
-        .filter(|(_, e)| (e.entity_type == EntityType::PLAYER && e.skill_stats.hits >= 1 && e.max_hp > 0) || e.entity_type == EntityType::ESTHER) 
+        .filter(|(_, e)| (e.entity_type == EntityType::PLAYER || e.entity_type == EntityType::ESTHER) && e.skill_stats.hits >= 1 && e.max_hp > 0) 
     {
-        let intervals = generate_intervals(fight_start, fight_end);
-        if !intervals.is_empty() {
-            for interval in intervals {                
-                let start = fight_start + interval - WINDOW_MS;
-                let end = fight_start + interval + WINDOW_MS;
-                
-                let damage = sum_in_range(&entity.damage_stats.damage_log, start, end);
-                entity.damage_stats.dps_rolling_10s_avg.push(damage / WINDOW_S);
+        if entity.entity_type == EntityType::PLAYER {
+            let intervals = generate_intervals(fight_start, fight_end);
+            if !intervals.is_empty() {
+                for interval in intervals {                
+                    let start = fight_start + interval - WINDOW_MS;
+                    let end = fight_start + interval + WINDOW_MS;
+                    
+                    let damage = sum_in_range(&entity.damage_stats.damage_log, start, end);
+                    entity.damage_stats.dps_rolling_10s_avg.push(damage / WINDOW_S);
+                }
+            }
+            let fight_start_sec = encounter.fight_start / 1000;
+            let fight_end_sec = encounter.last_combat_packet / 1000;
+            entity.damage_stats.dps_average = calculate_average_dps(&entity.damage_stats.damage_log, fight_start_sec, fight_end_sec);
+    
+            for (_, mut skill) in entity.skills.iter_mut() {
+                skill.dps = skill.total_damage / duration_seconds;
             }
         }
-
-        let fight_start_sec = encounter.fight_start / 1000;
-        let fight_end_sec = encounter.last_combat_packet / 1000;
-        entity.damage_stats.dps_average = calculate_average_dps(&entity.damage_stats.damage_log, fight_start_sec, fight_end_sec);
-
         entity.damage_stats.dps = entity.damage_stats.damage_dealt / duration_seconds;
-        for (_, mut skill) in entity.skills.iter_mut() {
-            skill.dps = skill.total_damage / duration_seconds;
-        }
 
         if entity.name == encounter.local_player && entity.damage_stats.identity_log.len() >= 2 {
             let mut total_identity_gain = 0;

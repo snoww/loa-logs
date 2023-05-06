@@ -25,6 +25,10 @@
     let groupedSynergies: Map<string, Map<number, StatusEffect>> = new Map();
 
     $: {
+        if (focusedPlayer && focusedPlayer.entityType === EntityType.ESTHER) {
+            focusedPlayer = null;
+            handleRightClick();
+        }
         players = players.filter((player) => player.entityType === EntityType.PLAYER);
         groupedSynergies = new Map<string, Map<number, StatusEffect>>();
         if (encounterDamageStats) {

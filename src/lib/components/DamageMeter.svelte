@@ -35,7 +35,7 @@
                 // console.log(+Date.now(), event.payload);
                 encounter = event.payload;
             });
-            let zoneChangeEvent = await listen('zone-change', (event) => {
+            let zoneChangeEvent = await listen('zone-change', (event: any) => {
                 // console.log("zone change event")
                 zoneChangeAlert = true;
                 setTimeout(() => {
@@ -51,11 +51,11 @@
                     zoneChangeAlert = false
                 }, 6000);
             });
-            let raidStartEvent = await listen('raid-start', (event) => {
+            let raidStartEvent = await listen('raid-start', (event: any) => {
                 // console.log("raid start event: ", event.payload);
                 raidInProgress = true;
             });
-            let phaseTransitionEvent = await listen('phase-transition', (event) => {
+            let phaseTransitionEvent = await listen('phase-transition', (event: any) => {
                 let phaseCode = event.payload;
                 // console.log(Date.now() + ": phase transition event: ", event.payload)
                 if (phaseCode === 1) {
@@ -71,7 +71,7 @@
                 }
                 raidInProgress = false;
             });
-            let adminError = await listen('admin', (_) => {
+            let adminError = await listen('admin', (event: any) => {
                 adminAlert = true;
             });
 
@@ -109,11 +109,11 @@
             if (encounter.fightStart !== 0 && raidInProgress) {
                 if ($settings.general.showEsther) {
                     players = Object.values(encounter.entities)
-                        .filter((e) => e.damageStats.damageDealt > 0 || e.entityType === EntityType.ESTHER)
+                        .filter((e) => e.damageStats.damageDealt > 0 && (e.entityType === EntityType.ESTHER || e.entityType === EntityType.PLAYER))
                         .sort((a, b) => b.damageStats.damageDealt - a.damageStats.damageDealt);
                 } else {
                     players = Object.values(encounter.entities)
-                        .filter((players) => players.damageStats.damageDealt > 0)
+                        .filter((e) => e.damageStats.damageDealt > 0 && e.entityType === EntityType.PLAYER)
                         .sort((a, b) => b.damageStats.damageDealt - a.damageStats.damageDealt);
                 }
                 anyDead = players.some(player => player.isDead);
@@ -177,7 +177,7 @@
         {#if tab === MeterTab.DAMAGE}
             {#if state === MeterState.PARTY}
             <thead class="top-0 sticky h-6" on:contextmenu|preventDefault={() => {console.log("titlebar clicked")}}>
-                <tr class="bg-zinc-900">
+                <tr class="bg-zinc-900 tracking-tighter">
                     <th class="text-left px-2 font-normal w-full"></th>
                     {#if anyDead && $settings.meter.deathTime}
                     <th class="font-normal w-20">Dead for</th>
@@ -220,7 +220,7 @@
                 {/each}
             </tbody>
             {:else if state === MeterState.PLAYER && player !== null}
-                <PlayerBreakdown player={player} duration={duration} {handleRightClick}/>
+                <PlayerBreakdown entity={player} duration={duration} {handleRightClick}/>
             {/if}
         {:else if tab === MeterTab.PARTY_BUFFS}
             {#if state === MeterState.PARTY}

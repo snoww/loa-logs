@@ -5,7 +5,7 @@
     import { tweened } from "svelte/motion";
     import { HexToRgba } from "$lib/utils/colors";
     import { abbreviateNumberSplit } from "$lib/utils/numbers";
-    import { formatPlayerName } from "$lib/utils/strings";
+    import { formatPlayerName, getEstherFromNpcId } from "$lib/utils/strings";
     import { classIconCache, settings } from "$lib/utils/settings";
 
     export let entity: Entity;
@@ -24,7 +24,7 @@
 
     let damageDealt: (string | number)[];
     let dps: (string | number)[];
-    let playerName: string;
+    let name: string;
     let damagePercentage: string;
     let deadFor: string;
 
@@ -41,8 +41,12 @@
         } else {
             dps = ["0", ""];
         }
-
-        playerName = formatPlayerName(entity, $settings.general.showNames);
+        if (entity.entityType === EntityType.ESTHER) {
+            name = getEstherFromNpcId(entity.npcId);
+            color = "#4dc8d0";
+        } else {
+            name = formatPlayerName(entity, $settings.general.showNames);
+        }
         if (entity.isDead) {
             deadFor = (((lastCombatPacket - entity.damageStats.deathTime) / 1000).toFixed(0) + "s").replace('-', '');
         }             
@@ -53,14 +57,14 @@
 <td class="px-1">
     <div class="flex space-x-1">
         {#if $settings.general.showEsther && entity.entityType === EntityType.ESTHER}
-        <img class="h-5 w-5" src={$classIconCache[entity.name]} alt={entity.name} />
+        <img class="h-5 w-5" src={$classIconCache[name]} alt={name} />
         <div class="truncate pl-px">
-            {entity.name}
+            {name}
         </div>
         {:else}
         <img class="h-5 w-5" src={$classIconCache[entity.classId]} alt={entity.class} />
         <div class="truncate pl-px">
-            {playerName}
+            {name}
         </div>
         {/if}
     </div>

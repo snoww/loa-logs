@@ -1,11 +1,11 @@
 <script lang="ts">
     import { classColors } from "$lib/constants/colors";
-    import type { Entity, Skill } from "$lib/types";
+    import { EntityType, type Entity, type Skill } from "$lib/types";
     import { abbreviateNumberSplit } from "$lib/utils/numbers";
     import LogPlayerBreakdownRow from "./LogPlayerBreakdownRow.svelte";
-    import { settings, skillIcon } from "$lib/utils/settings";
+    import { settings } from "$lib/utils/settings";
 
-    export let player: Entity;
+    export let entity: Entity;
     export let duration: number;
     export let handleRightClick: () => void;
 
@@ -18,10 +18,12 @@
     let hasBackAttacks = true;
     let hasFrontAttacks = true;
 
-    skills = Object.values(player.skills).sort((a, b) => b.totalDamage - a.totalDamage);
+    skills = Object.values(entity.skills).sort((a, b) => b.totalDamage - a.totalDamage);
     
-    if (Object.hasOwn(classColors, player.class)){
-        color = classColors[player.class].color;
+    if (Object.hasOwn(classColors, entity.class)){
+        color = classColors[entity.class].color;
+    } else if (entity.entityType === EntityType.ESTHER) {
+        color = "#4dc8d0";
     }
 
     if (skills.length > 0) {
@@ -47,7 +49,7 @@
         <th class="font-normal w-14">D%</th>
         {/if}
         {#if $settings.logs.breakdown.critRate}
-        <th class="font-normal w-14">Crit</th>
+        <th class="font-normal w-14">CRIT</th>
         {/if}
         {#if hasFrontAttacks && $settings.logs.breakdown.frontAtk}
         <th class="font-normal w-14">F.A</th>
@@ -78,7 +80,7 @@
             {hasFrontAttacks}
             {hasBackAttacks} 
             abbreviatedSkillDamage={abbreviatedSkillDamage[i]}
-            playerDamageDealt={player.damageStats.damageDealt}
+            playerDamageDealt={entity.damageStats.damageDealt}
             damagePercentage={skillDamagePercentages[i]}
             skillDps={skillDps[i]}
             duration={duration}

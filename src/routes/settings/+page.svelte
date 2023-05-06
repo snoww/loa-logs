@@ -73,6 +73,7 @@
                 <div class="flex flex-col space-y-4 divide-y-[1px]">
                     <div class="mt-4 px-2 flex flex-col space-y-2">
                         <SettingItem name="Show Names" description="Show player names if it's loaded. If disabled, it will show the class name (e.g. Arcanist)" bind:setting={$settings.general.showNames} />
+                        <SettingItem name="Show Esther" description="Show damage dealt by Esther skills in meter and log view." bind:setting={$settings.general.showEsther} />
                         <div class="">
                             <label class="font-medium flex items-center">
                                 <input type="checkbox" bind:checked={$settings.general.blur} on:change={restartApp} class="rounded h-5 w-5 text-accent-500 bg-zinc-700 focus:ring-0 focus:ring-offset-0" />

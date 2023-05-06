@@ -1,6 +1,6 @@
 <script lang="ts">
     import { classesMap } from "$lib/constants/classes";
-    import { StatusEffectTarget, type EncounterDamageStats, type Entity, MeterTab, type StatusEffect } from "$lib/types";
+    import { StatusEffectTarget, type EncounterDamageStats, type Entity, MeterTab, type StatusEffect, EntityType } from "$lib/types";
     import { defaultBuffFilter } from "$lib/utils/buffs";
     import LogBuffHeader from "./LogBuffHeader.svelte";
     import LogBuffRow from "./LogBuffRow.svelte";
@@ -14,6 +14,11 @@
     export let handleRightClick: () => void;
     export let inspectPlayer: (name: string) => void;
 
+    if (focusedPlayer && focusedPlayer.entityType === EntityType.ESTHER) {
+        focusedPlayer = null;
+        handleRightClick();
+    }
+    players = players.filter((player) => player.entityType === EntityType.PLAYER);
     let groupedSynergies: Map<string, Map<number, StatusEffect>> = new Map();
     for (const [id, buff] of Object.entries(encounterDamageStats.buffs)) {
         if (focusedPlayer && !Object.hasOwn(focusedPlayer.damageStats.buffedBy, id)) {

@@ -1,3 +1,4 @@
+import { estherMap } from "$lib/constants/esthers";
 import type { Entity } from "$lib/types";
 
 export function isValidName(word: string){
@@ -37,4 +38,12 @@ export function truncateString(str: string, len = 10): string {
 
 export function getSkillIcon(skillIcon: string): string {
     return encodeURIComponent("\\" + ((skillIcon !== '') ? skillIcon : 'unknown.png'));
+}
+
+export function getEstherFromNpcId(npcId: number): string {
+    for (const esther of estherMap) {
+        if (esther.npcs.includes(npcId)) return esther.name;
+    }
+
+    return "Unknown";
 }

@@ -4,7 +4,7 @@
 )]
 
 mod parser;
-use std::{time::{Duration, Instant}, path::{PathBuf, Path}, fs::File, io::{Write, Read}};
+use std::{time::{Duration, Instant}, path::{PathBuf, Path}, fs::File, io::{Write, Read}, str::FromStr};
 
 use hashbrown::HashMap;
 use parser::{models::*, Parser};
@@ -90,7 +90,7 @@ fn main() {
                                         clone.current_boss_name = String::new();
                                     }
                                 }
-                                clone.entities.retain(|_, v| (v.entity_type == EntityType::PLAYER && v.skill_stats.hits > 0 && v.max_hp > 0) || v.entity_type == EntityType::ESTHER);
+                                clone.entities.retain(|_, v| (v.entity_type == EntityType::PLAYER || v.entity_type == EntityType::ESTHER) && v.skill_stats.hits > 0 && v.max_hp > 0);
                                 if !clone.entities.is_empty() {
                                     // don't need to send these to the live meter
                                     clone.entities.values_mut()
@@ -431,7 +431,9 @@ fn load_encounter(window: tauri::Window, id: String) -> Encounter {
         skills,
         damage_stats,
         skill_stats,
-        last_update
+        last_update,
+        entity_type,
+        npc_id
     FROM entity
     WHERE encounter_id = ?;
     ").unwrap();
@@ -465,6 +467,11 @@ fn load_encounter(window: tauri::Window, id: String) -> Encounter {
             Err(_) => SkillStats::default()
         };
 
+        let entity_type = match row.get(11) {
+            Ok(entity_type) => entity_type,
+            Err(_) => "".to_string()
+        };
+
         Ok(Entity {
             name: row.get(0)?,
             class_id: row.get(1)?,
@@ -477,6 +484,8 @@ fn load_encounter(window: tauri::Window, id: String) -> Encounter {
             damage_stats,
             skill_stats,
             last_update: row.get(10)?,
+            entity_type: EntityType::from_str(entity_type.as_str()).unwrap(),
+            npc_id: row.get(12)?,
             ..Default::default()
         })
     }).unwrap();

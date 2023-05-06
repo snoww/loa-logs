@@ -1,3 +1,5 @@
+use std::str::FromStr;
+
 use bitflags::bitflags;
 use hashbrown::{HashMap, HashSet};
 use lazy_static::lazy_static;
@@ -27,6 +29,23 @@ impl ToString for EntityType {
             EntityType::PLAYER => "PLAYER".to_string(),
             EntityType::NPC => "NPC".to_string(),
             EntityType::ESTHER => "ESTHER".to_string(),
+        }
+    }
+}
+
+impl FromStr for EntityType {
+    type Err = ();
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "UNKNOWN" => Ok(EntityType::UNKNOWN),
+            "MONSTER" => Ok(EntityType::MONSTER),
+            "BOSS" => Ok(EntityType::BOSS),
+            "GUARDIAN" => Ok(EntityType::GUARDIAN),
+            "PLAYER" => Ok(EntityType::PLAYER),
+            "NPC" => Ok(EntityType::NPC),
+            "ESTHER" => Ok(EntityType::ESTHER),
+            _ => Ok(EntityType::UNKNOWN),
         }
     }
 }

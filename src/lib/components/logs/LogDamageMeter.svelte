@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { MeterState, MeterTab, type Entity, type Encounter, ChartType } from "$lib/types";
+    import { MeterState, MeterTab, type Entity, type Encounter, ChartType, EntityType } from "$lib/types";
     import { abbreviateNumber, formatDurationFromS, millisToMinutesAndSeconds } from "$lib/utils/numbers";
     import { invoke } from "@tauri-apps/api/tauri";
     import LogDamageMeterRow from "./LogDamageMeterRow.svelte";
@@ -41,10 +41,16 @@
     let skillLogOptions: EChartsOptions = {};
 
     $: {        
-        if (encounter) {            
-            players = Object.values(encounter.entities)
-                .filter((players) => players.damageStats.damageDealt > 0)
-                .sort((a, b) => b.damageStats.damageDealt - a.damageStats.damageDealt);
+        if (encounter) {
+            if ($settings.general.showEsther) {
+                players = Object.values(encounter.entities)
+                    .filter((e) => e.damageStats.damageDealt > 0 && (e.entityType === EntityType.ESTHER || e.entityType === EntityType.PLAYER))
+                    .sort((a, b) => b.damageStats.damageDealt - a.damageStats.damageDealt);
+            } else {
+                players = Object.values(encounter.entities)
+                    .filter((e) => e.damageStats.damageDealt > 0 && e.entityType === EntityType.PLAYER)
+                    .sort((a, b) => b.damageStats.damageDealt - a.damageStats.damageDealt);
+            }            
             topDamageDealt = encounter.encounterDamageStats.topDamageDealt;
             playerDamagePercentages = players.map(player => (player.damageStats.damageDealt / topDamageDealt) * 100);
             anyDead = players.some(player => player.isDead);
@@ -61,15 +67,15 @@
                 state = MeterState.PARTY;
             }
 
-            if (players.length > 0 && players[0].damageStats && players[0].damageStats.dpsAverage.length > 0 && players[0].damageStats.dpsRolling10sAvg.length > 0)
+            if (players.length > 0 && players[0].entityType === EntityType.PLAYER && players[0].damageStats && players[0].damageStats.dpsAverage.length > 0 && players[0].damageStats.dpsRolling10sAvg.length > 0)
             {
                 let legendNames: Array<string> = [];
                 if (!$settings.general.showNames) {
                     let map: {[key: string]: number} = {}
-                    let count = players.map(e => {
+                    let count = players.filter(e => e.entityType === EntityType.PLAYER).map(e => {
                         return map[e.class] = (typeof map[e.class] === "undefined") ? 1 : map[e.class] + 1;
                     })
-                    legendNames = players.map((e, i) => {
+                    legendNames = players.filter(e => e.entityType === EntityType.PLAYER).map((e, i) => {
                         if (map[e.class] === 1) {
                             return e.class;
                         } else {
@@ -77,7 +83,7 @@
                         }
                     })
                 } else {
-                    legendNames = players.map((e) => isValidName(e.name) ? e.name : e.class);
+                    legendNames = players.filter(e => e.entityType === EntityType.PLAYER).map((e) => isValidName(e.name) ? e.name : e.class);
                 }
 
                 if (chartType === ChartType.AVERAGE_DPS) {
@@ -122,7 +128,7 @@
                                 }
                             }
                         },
-                        series: players.map((player, i) => {
+                        series: players.filter(e => e.entityType === EntityType.PLAYER).map((player, i) => {
                             let markPoint = {}
                             if (player.isDead) {
                                 let rounded = Math.ceil((player.damageStats.deathTime - encounter.fightStart) / 1000 / 5) * 5;
@@ -191,7 +197,7 @@
                                 }
                             }
                         },
-                        series: players.map((player, i) => {
+                        series: players.filter(e => e.entityType === EntityType.PLAYER).map((player, i) => {
                             let markPoint = {}
                             if (player.isDead) {
                                 let index = Math.ceil((player.damageStats.deathTime - encounter.fightStart) / 1000);                                
@@ -216,7 +222,7 @@
                             }
                         })
                     }
-                } else if (chartType === ChartType.SKILL_LOG && player) {
+                } else if (chartType === ChartType.SKILL_LOG && player && player.entityType === EntityType.PLAYER) {
                     let sortedSkills = Object.values(player.skills).filter(skill => skill.castLog.length > 0).sort((a, b) => a.totalDamage - b.totalDamage)
                     let skills = sortedSkills.map(skill => skill.name);
                     skillLogOptions = {
@@ -564,7 +570,7 @@
                         {/each}
                     </tbody>
                     {:else if state === MeterState.PLAYER && player !== null}
-                    <LogPlayerBreakdown {player} duration={encounter.duration} {handleRightClick}/>
+                    <LogPlayerBreakdown entity={player} duration={encounter.duration} {handleRightClick}/>
                     {/if}
                 {:else if tab === MeterTab.PARTY_BUFFS}
                     {#if state === MeterState.PARTY}
@@ -619,7 +625,7 @@
         </div>
         {/if}
     {:else if chartType === ChartType.SKILL_LOG}
-        {#if player}
+        {#if player && player.entityType === EntityType.PLAYER}
         <div class="h-[400px] mt-2" use:chartable={skillLogOptions} style="width: calc(100vw - 4.5rem);">
         </div>
         {/if}

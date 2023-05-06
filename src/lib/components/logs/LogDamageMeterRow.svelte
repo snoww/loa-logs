@@ -1,11 +1,11 @@
 <script lang="ts">
     import { classColors } from "$lib/constants/colors";
-    import type { Entity } from "$lib/types";
+    import { EntityType, type Entity } from "$lib/types";
     import { HexToRgba } from "$lib/utils/colors";
     import { abbreviateNumberSplit } from "$lib/utils/numbers";
     import { classIconCache, settings } from "$lib/utils/settings";
     import { takingScreenshot } from "$lib/utils/stores";
-    import { formatPlayerName } from "$lib/utils/strings";
+    import { formatPlayerName, getEstherFromNpcId } from "$lib/utils/strings";
 
     export let entity: Entity;
     export let percentage: number;
@@ -16,7 +16,7 @@
     let damageDealt: (string | number)[];
     let dps: (string | number)[];
     let damagePercentage: string;
-    let playerName: string;
+    let name: string;
     let deadFor: string;    
 
     let color = "#ffffff"
@@ -30,7 +30,12 @@
     dps = abbreviateNumberSplit(entity.damageStats.dps);
 
     $: {
-        playerName = formatPlayerName(entity, $settings.general.showNames);
+        if (entity.entityType === EntityType.ESTHER) {
+            name = getEstherFromNpcId(entity.npcId);
+            color = "#4dc8d0";
+        } else {
+            name = formatPlayerName(entity, $settings.general.showNames);
+        }
     }
     if (entity.isDead) {       
         deadFor = (((end - entity.damageStats.deathTime) / 1000).toFixed(0) + "s").replace('-', '');
@@ -39,10 +44,17 @@
 
 <td class="px-1 relative z-10">
     <div class="flex space-x-1">
+        {#if $settings.general.showEsther && entity.entityType === EntityType.ESTHER}
+        <img class="h-5 w-5" src={$classIconCache[name]} alt={name} />
+        <div class="truncate pl-px">
+            {name}
+        </div>
+        {:else}
         <img class="h-5 w-5" src={$classIconCache[entity.classId]} alt={entity.class} />
         <div class="truncate pl-px">
-            {playerName}
+            {name}
         </div>
+        {/if}
     </div>
 </td>
 {#if anyDead && $settings.logs.deathTime}
