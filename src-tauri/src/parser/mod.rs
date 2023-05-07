@@ -326,12 +326,7 @@ impl Parser<'_> {
             );
         }
 
-        // guessing that no real boss has less than 10k hp
-        // some raid check objects that are bosses have 10k hp
-        if entity_type == EntityType::BOSS 
-            && new_npc.max_hp > 10_000
-            && new_npc.name.chars().all(|c| c.is_alphabetic() || c.is_whitespace())
-        {
+        if entity_type == EntityType::BOSS {
             // get the npc that we just added
             if let Some(npc) = self.encounter.entities.get(new_npc.name) {
                 if self.encounter.current_boss_name.is_empty() {
@@ -967,10 +962,12 @@ fn get_npc_entity_type(npc: &LogNewNpc) -> EntityType {
     }
 
     if let Some((_, npc_info)) = NPC_DATA.get_key_value(&npc.npc_id) {
-        if npc_info.grade == "boss"
+        if (npc_info.grade == "boss"
             || npc_info.grade == "raid"
             || npc_info.grade == "epic_raid"
-            || npc_info.grade == "commander"
+            || npc_info.grade == "commander")
+            && npc.max_hp > 10_000
+            && npc.name.chars().all(|c| c.is_alphabetic() || c.is_whitespace())
         {
             EntityType::BOSS
         } else {
