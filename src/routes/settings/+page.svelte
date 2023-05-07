@@ -84,6 +84,15 @@
                             </label>
                         </div>
                         <SettingItem name="VPN Support (beta)" description="Enables raw socket capture. (manually restart as ADMIN)" bind:setting={$settings.general.rawSocket} />
+                        <div>
+                            <label class="font-medium flex items-center">
+                                <input type="number" class="bg-zinc-700 w-24 h-8 rounded-md  text-gray-300" bind:value={$settings.general.port} placeholder={$settings.general.port}/>
+                                <div class="ml-5">
+                                    <div class="text-gray-100">Port</div>
+                                    <div class="text-xs text-gray-300">Set custom port for raw socket mode. Default is 6040.</div>
+                                </div>
+                            </label>
+                        </div>
                         <div class="pt-2" on:focusout={handleDropdownFocusLoss}>
                             <div class="flex font-medium items-center">
                                 <button id="" class="font-medium rounded-lg text-sm px-2 py-2 text-center inline-flex items-center bg-accent-800" type="button" on:click={handleDropdownClick}>

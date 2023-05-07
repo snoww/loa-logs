@@ -45,6 +45,7 @@ fn main() {
             }
 
             let mut packet_mode = "pcap".to_string();
+            let mut port = 6040;
             
             #[cfg(target_os = "windows")]
             {
@@ -54,6 +55,9 @@ fn main() {
                     }
                     if settings.general.raw_socket {
                         packet_mode = "raw".to_string();
+                    }
+                    if settings.general.port > 0 {
+                        port = settings.general.port;
                     }
                 } else {
                     apply_blur(&meter_window, Some((10, 10, 10, 50))).ok();
@@ -70,7 +74,7 @@ fn main() {
             tauri::async_runtime::spawn(async move {
                 let (mut rx, _child) = Command::new_sidecar("meter-core")
                     .expect("failed to start `meter-core`")
-                    .args(["--mode", &packet_mode])
+                    .args(["--mode", &packet_mode, "--port", &port.to_string()])
                     .spawn()
                     .expect("Failed to spawn sidecar");
                 let mut parser = Parser::new(&meter_window);
