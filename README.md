@@ -10,7 +10,7 @@ LOA Logs is a "blazingly fast" open source Lost Ark DPS meter, written in Rust b
 
 This project is an opinionated flavor of [LOA Details](https://github.com/lost-ark-dev/loa-details) by Herysia and Mathi, but should share very similar user interfaces and settings. The packet sniffing is still done by LOA Details' [`meter-core`](https://github.com/lost-ark-dev/meter-core) under the hood, but the data processing is done using Rust. There are future plans to port the packet sniffing part to Rust as well.
 
-This project was tailored specifically with hell-raiding in mind.
+This project was designed specifically with hell-raiding in mind.
 
 ## Download
 [https://github.com/snoww/loa-logs/releases](https://github.com/snoww/loa-logs/releases)
