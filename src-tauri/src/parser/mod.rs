@@ -300,7 +300,7 @@ impl Parser<'_> {
             entity_type: EntityType::UNKNOWN,
         };
 
-        let entity_type = get_npc_entity_type(new_npc.npc_id);
+        let entity_type = get_npc_entity_type(&new_npc);
 
         if let Some(npc) = self.encounter.entities.get_mut(new_npc.name) {
             npc.id = new_npc.id.to_string();
@@ -326,22 +326,30 @@ impl Parser<'_> {
             );
         }
 
-        if entity_type == EntityType::BOSS {
+        // guessing that no real boss has less than 10k hp
+        // some raid check objects that are bosses have 10k hp
+        if entity_type == EntityType::BOSS 
+            && new_npc.max_hp > 10_000
+            && new_npc.name.chars().all(|c| c.is_alphabetic() || c.is_whitespace())
+        {
             // get the npc that we just added
             if let Some(npc) = self.encounter.entities.get(new_npc.name) {
-                    if self.encounter.current_boss_name.is_empty() {
-                        self.encounter.current_boss_name = npc.name.to_string();
-                    } else if let Some(boss) = self
-                        .encounter
-                        .entities
-                        .get(&self.encounter.current_boss_name.to_string())
-                    {
-                        if npc.max_hp >= boss.max_hp && boss.is_dead {
-                            self.encounter.current_boss_name = npc.name.to_string();
-                        }
-                    } else {
+                if self.encounter.current_boss_name.is_empty() {
+                    self.encounter.current_boss_name = npc.name.to_string();
+                } 
+                // get the current boss
+                else if let Some(boss) = self
+                    .encounter
+                    .entities
+                    .get(&self.encounter.current_boss_name.to_string())
+                {
+                    // check if the new npc has more hp than the current boss or if the current boss is dead
+                    if npc.max_hp >= boss.max_hp || boss.is_dead {
                         self.encounter.current_boss_name = npc.name.to_string();
                     }
+                } else {
+                    self.encounter.current_boss_name = npc.name.to_string();
+                }
             }
         }
     }
@@ -953,18 +961,16 @@ impl Parser<'_> {
     }
 }
 
-fn get_npc_entity_type(npc_id: i32) -> EntityType {
-    if let Some(_esther) = get_esther_from_npc_id(npc_id) {
+fn get_npc_entity_type(npc: &LogNewNpc) -> EntityType {
+    if let Some(_esther) = get_esther_from_npc_id(npc.npc_id) {
         return EntityType::ESTHER;
     }
 
-    if let Some((_, npc_info)) = NPC_DATA.get_key_value(&npc_id) {
-        if (npc_info.grade == "boss"
+    if let Some((_, npc_info)) = NPC_DATA.get_key_value(&npc.npc_id) {
+        if npc_info.grade == "boss"
             || npc_info.grade == "raid"
             || npc_info.grade == "epic_raid"
-            || npc_info.grade == "commander")
-            && !npc_info.name.contains('_')
-            && npc_info.name.chars().all(|c| c.is_alphabetic() || c.is_whitespace())
+            || npc_info.grade == "commander"
         {
             EntityType::BOSS
         } else {
