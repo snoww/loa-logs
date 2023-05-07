@@ -959,10 +959,10 @@ fn get_npc_entity_type(npc_id: i32) -> EntityType {
     }
 
     if let Some((_, npc_info)) = NPC_DATA.get_key_value(&npc_id) {
-        if npc_info.grade == "boss"
+        if (npc_info.grade == "boss"
             || npc_info.grade == "raid"
             || npc_info.grade == "epic_raid"
-            || npc_info.grade == "commander"
+            || npc_info.grade == "commander")
             && !npc_info.name.contains('_')
             && npc_info.name.chars().all(|c| c.is_alphabetic() || c.is_whitespace())
         {
