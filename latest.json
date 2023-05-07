@@ -1,0 +1,11 @@
+{
+    "version": "v1.1.8",
+    "notes": "updated boss detection logic\n- added esther skill damage to meter and logs (toggleable in options)\nread full release notes on GitHub",
+    "pub_date": "2023-05-07T02:58:21Z",
+    "platforms": {
+        "windows-x86_64": {
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.1.8/LOA.Logs_1.1.8_x64_en-US.msi.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlExc1Q3NGh5VitlRUZROTIvbXpFcmlNNWFCcTV3ODV1NHdVY3NEVEZMZmtiL2V2OTlVYW9VcEhFVkNDQ3FOVlFESTRkMmhFQ3RuWHVEUm84V0NMQWdNPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjgzNDI4MTM2CWZpbGU6TE9BIExvZ3NfMS4xLjhfeDY0X2VuLVVTLm1zaS56aXAKblhEL1UybldKdENCeHFUaC9GWkZWNlNZaDFjZnpKYmt6KzBianZ1MWlXR3NpbmdDMG9Qa0VOKzhmRnZsV0Nxc3h3KytVc0dEU0lGQytwa2lGYkxoQmc9PQo="
+        }
+    }
+}

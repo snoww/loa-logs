@@ -115,7 +115,7 @@
     "updater": {
       "active": true, 
       "endpoints": [
-        "https://gist.github.com/snoww/459dde806fd09a359946b27c2ff32880/raw"
+        "https://raw.githubusercontent.com/snoww/loa-logs/master/latest.json"
       ],
       "dialog": true,
       "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDZEODU5MzNEODY0ODg0REEKUldUYWhFaUdQWk9GYlczc3VSODJPK01RRTlYUER6NzU0eDE1WDYwcmJsY1d4d2EwblZHNlJ4dW8K",
