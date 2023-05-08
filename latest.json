@@ -1,11 +1,11 @@
 {
-    "version": "v1.1.9",
-    "notes": "fix bug where certain bosses are not being detected\nread full release notes on GitHub",
-    "pub_date": "2023-05-07T04:59:03Z",
+    "version": "v1.1.10",
+    "notes": "- added button to reset current session\n- add field to set custom port for raw socket\n- fixed bug relating to brel g5 not being detected\nsend bug reports or feature requests to Snow#7777",
+    "pub_date": "2023-05-08T06:56:55Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.1.9/LOA.Logs_1.1.9_x64_en-US.msi.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmRjemlVRE1FTHZ5b0UvaGRnQXh5MHpFMXBkODBWalF1MldDWlEvSG4zT3kxVEFUaDZOV3pCZzQyU2dIQytnMVdzVS92VTE2cWxrd2xJeUNaZDV4VndzPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjgzNDM1NDIzCWZpbGU6TE9BIExvZ3NfMS4xLjlfeDY0X2VuLVVTLm1zaS56aXAKQzhob25xcGlxVXM0ZjJZUWowWXYxc0JFLzJ6Z3F0dnlXMjdGcXphVTZBQUdQbGQzcU1HNUQrZGxWUnhzWWlNK0xEcGtZNVI3RjRTcnZUUTFhUlZUQXc9PQo="
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.1.10/LOA.Logs_1.1.10_x64_en-US.msi.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlpiWVhIUXNJcUg4d2NTaXR1RGgrQmtHQ3NnWkplZ3pYNDVSOW80eXRsbVp1YVY4cGVERUsyNG5icUh4RWFLSlpIVVBuUXdDRHB5c1JmWGFWTVd2RWdjPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjgzNTI3ODU5CWZpbGU6TE9BIExvZ3NfMS4xLjEwX3g2NF9lbi1VUy5tc2kuemlwCjlhc29BODd5ZzUrOUhJWTlmWDZuZkpFNUtrSlJlWGorNGpaQmhZVGU5VVJheGdaWWc2dXVGdlQrTzEzV3ZZWGlNVENXWkhVaS93dnQycE50bWlWbEJnPT0K"
         }
     }
 }
