@@ -86,7 +86,7 @@
                         <SettingItem name="VPN Support (beta)" description="Enables raw socket capture. (manually restart as ADMIN)" bind:setting={$settings.general.rawSocket} />
                         <div>
                             <label class="font-medium flex items-center">
-                                <input type="number" class="bg-zinc-700 w-24 h-8 rounded-md  text-gray-300" bind:value={$settings.general.port} placeholder={$settings.general.port}/>
+                                <input type="number" class="bg-zinc-700 w-24 h-8 rounded-md text-sm text-gray-300" bind:value={$settings.general.port} placeholder={$settings.general.port}/>
                                 <div class="ml-5">
                                     <div class="text-gray-100">Port</div>
                                     <div class="text-xs text-gray-300">Set custom port for raw socket mode. Default is 6040.</div>

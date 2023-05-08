@@ -55,9 +55,9 @@ fn main() {
                     }
                     if settings.general.raw_socket {
                         packet_mode = "raw".to_string();
-                    }
-                    if settings.general.port > 0 {
-                        port = settings.general.port;
+                        if settings.general.port > 0 {
+                            port = settings.general.port;
+                        }
                     }
                 } else {
                     apply_blur(&meter_window, Some((10, 10, 10, 50))).ok();
@@ -161,7 +161,7 @@ fn main() {
             }
             if event.window().label() == "main" {
                 event.window().app_handle().save_window_state(StateFlags::all()).expect("failed to save window state");
-                std::process::exit(0);
+                event.window().app_handle().exit(0);
             }
         })
         .system_tray(system_tray)
@@ -180,7 +180,7 @@ fn main() {
                 match id.as_str() {
                     "quit" => {
                         app.save_window_state(StateFlags::all()).expect("failed to save window state");
-                        std::process::exit(0);
+                        app.exit(0);
                     }
                     "hide" => {
                         if let Some(meter) = app.get_window("main") {
@@ -209,7 +209,16 @@ fn main() {
             }
             _ => {}
         })
-        .invoke_handler(tauri::generate_handler![load_encounters_preview, load_encounter, open_most_recent_encounter, delete_encounter, toggle_meter_window, open_url, save_settings])
+        .invoke_handler(tauri::generate_handler![
+            load_encounters_preview, 
+            load_encounter, 
+            open_most_recent_encounter, 
+            delete_encounter, 
+            toggle_meter_window, 
+            open_url, 
+            save_settings,
+            get_settings,
+        ])
         .run(tauri::generate_context!())
         .expect("error while running application");
 }
@@ -595,4 +604,10 @@ fn read_settings(resource_path: &Path) -> Result<Settings, Box<dyn std::error::E
     file.read_to_string(&mut contents)?;
     let settings = serde_json::from_str(&contents)?;
     Ok(settings)
+}
+
+#[tauri::command]
+fn get_settings(window: tauri::Window) -> Option<Settings> {
+    let path = window.app_handle().path_resolver().resource_dir().expect("could not get resource dir");
+    read_settings(&path).ok()
 }

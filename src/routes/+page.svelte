@@ -9,11 +9,16 @@
     import { convertFileSrc } from "@tauri-apps/api/tauri";
     import { classesMap } from "$lib/constants/classes";
     import { estherMap } from "$lib/constants/esthers";
+    import { invoke } from "@tauri-apps/api";
 
-    onMount(() => {
-        settings.set(merge(defaultSettings, $settings));
-        
+    onMount(() => {        
         (async () => {
+            let data = await invoke("get_settings");
+            if (data) {
+                settings.set(merge(defaultSettings, $settings, data));
+            } else {
+                settings.set(merge(defaultSettings, $settings));
+            }
             await appWindow.setAlwaysOnTop(true);
             registerShortcuts($settings.shortcuts);
             skillIcon.set({ path: convertFileSrc(await join(await resourceDir(), 'images', 'skills'))})
