@@ -27,7 +27,8 @@
     let localPlayer: Entity | null = null;
     
     let anyDead: boolean;
-
+    let anyFrontAtk: boolean = false;
+    let anyBackAtk: boolean = false;
 
     let state = MeterState.PARTY;
     let tab = MeterTab.DAMAGE;
@@ -54,6 +55,8 @@
             topDamageDealt = encounter.encounterDamageStats.topDamageDealt;
             playerDamagePercentages = players.map(player => (player.damageStats.damageDealt / topDamageDealt) * 100);
             anyDead = players.some(player => player.isDead);
+            anyFrontAtk = players.some(player => player.skillStats.frontAttacks > 0);
+            anyBackAtk = players.some(player => player.skillStats.backAttacks > 0);
 
             if (encounter.localPlayer) {
                 localPlayer = encounter.entities[encounter.localPlayer];
@@ -546,10 +549,10 @@
                             {#if $settings.logs.critRate}
                             <th class="font-normal w-14">CRIT</th>
                             {/if}
-                            {#if $settings.logs.frontAtk}
+                            {#if anyFrontAtk && $settings.logs.frontAtk}
                             <th class="font-normal w-14">F.A</th>
                             {/if}
-                            {#if $settings.logs.backAtk}
+                            {#if anyBackAtk && $settings.logs.backAtk}
                             <th class="font-normal w-14">B.A</th>
                             {/if}
                             {#if $settings.logs.counters}
@@ -563,7 +566,9 @@
                                 <LogDamageMeterRow entity={player} 
                                                     percentage={playerDamagePercentages[i]} 
                                                     totalDamageDealt={encounter.encounterDamageStats.totalDamageDealt} 
-                                                    {anyDead} 
+                                                    {anyDead}
+                                                    {anyFrontAtk}
+                                                    {anyBackAtk}
                                                     end={encounter.lastCombatPacket}
                                                 />
                         </tr>

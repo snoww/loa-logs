@@ -98,16 +98,12 @@
 {/if}
 {#if anyFrontAtk && $settings.meter.frontAtk}
 <td class="px-1 text-center">
-    {#if entity.skillStats.frontAttacks > 0}
     {(entity.skillStats.frontAttacks / entity.skillStats.hits * 100).toFixed(1)}<span class="text-3xs text-gray-300">%</span>
-    {/if}
 </td>
 {/if}
 {#if anyBackAtk && $settings.meter.backAtk}
 <td class="px-1 text-center">
-    {#if entity.skillStats.backAttacks > 0}
     {(entity.skillStats.backAttacks / entity.skillStats.hits * 100).toFixed(1)}<span class="text-3xs text-gray-300">%</span>
-    {/if}
 </td>
 {/if}
 {#if $settings.meter.counters}

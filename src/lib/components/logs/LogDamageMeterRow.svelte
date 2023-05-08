@@ -11,6 +11,8 @@
     export let percentage: number;
     export let totalDamageDealt: number;
     export let anyDead: boolean;
+    export let anyFrontAtk: boolean;
+    export let anyBackAtk: boolean;
     export let end: number;
 
     let damageDealt: (string | number)[];
@@ -82,12 +84,12 @@
     {(entity.skillStats.crits / entity.skillStats.hits * 100).toFixed(1)}<span class="text-3xs text-gray-300">%</span>
 </td>
 {/if}
-{#if $settings.logs.frontAtk}
+{#if anyFrontAtk && $settings.logs.frontAtk}
 <td class="px-1 text-center relative z-10">
     {(entity.skillStats.frontAttacks / entity.skillStats.hits * 100).toFixed(1)}<span class="text-3xs text-gray-300">%</span>
 </td>
 {/if}
-{#if $settings.logs.backAtk}
+{#if anyBackAtk && $settings.logs.backAtk}
 <td class="px-1 text-center relative z-10">
     {(entity.skillStats.backAttacks / entity.skillStats.hits * 100).toFixed(1)}<span class="text-3xs text-gray-300">%</span>
 </td>
