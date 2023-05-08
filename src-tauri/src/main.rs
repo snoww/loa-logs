@@ -4,7 +4,7 @@
 )]
 
 mod parser;
-use std::{time::{Duration, Instant}, path::{PathBuf, Path}, fs::File, io::{Write, Read}, str::FromStr};
+use std::{time::{Duration, Instant}, path::{PathBuf, Path}, fs::File, io::{Write, Read}, str::FromStr, sync::{Arc, Mutex}};
 
 use hashbrown::HashMap;
 use parser::{models::*, Parser};
@@ -70,7 +70,6 @@ fn main() {
                     println!("error setting up database: {}", e);
                 }
             }
-
             tauri::async_runtime::spawn(async move {
                 let (mut rx, _child) = Command::new_sidecar("meter-core")
                     .expect("failed to start `meter-core`")
@@ -80,8 +79,25 @@ fn main() {
                 let mut parser = Parser::new(&meter_window);
                 let mut last_time = Instant::now();
                 let duration = Duration::from_millis(100);
+
+                let reset = Arc::new(Mutex::new(false));
+                let reset_clone = reset.clone();
+                let meter_window_clone = meter_window.clone();
+                meter_window.listen_global("reset-request", move |_event| {
+                    if let Ok(ref mut reset) = reset_clone.try_lock() {
+                        **reset = true;
+                        meter_window_clone.emit("reset-encounter", "").ok();
+                    }
+                });
+
                 while let Some(event) = rx.recv().await {
                     if let CommandEvent::Stdout(line) = event {
+                        if let Ok(ref mut reset) = reset.try_lock() {
+                            if **reset {
+                                parser.soft_reset();
+                                **reset = false;
+                            }
+                        }
                         parser.parse_line(line);
                         // if raid end, we send regardless of window
                         if last_time.elapsed() >= duration || parser.raid_end {

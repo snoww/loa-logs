@@ -127,7 +127,7 @@ impl Parser<'_> {
     }
 
     // keep all entities, reset all stats
-    fn soft_reset(&mut self) {
+    pub fn soft_reset(&mut self) {
         let clone = self.encounter.clone();
         self.reset(&clone);
         self.encounter.current_boss_name = "".to_string();
@@ -967,7 +967,8 @@ fn get_npc_entity_type(npc: &LogNewNpc) -> EntityType {
             || npc_info.grade == "epic_raid"
             || npc_info.grade == "commander")
             && npc.max_hp > 10_000
-            && npc.name.chars().all(|c| c.is_alphabetic() || c.is_whitespace() || c == '\'' || c == '-')
+            && !npc.name.contains('_')
+            && npc.name.chars().all(|c| c.is_alphabetic() || c.is_ascii())
         {
             EntityType::BOSS
         } else {

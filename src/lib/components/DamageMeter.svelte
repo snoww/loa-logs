@@ -10,7 +10,6 @@
     import PlayerBreakdown from './PlayerBreakdown.svelte';
     import Footer from './Footer.svelte';
     import Buffs from './Buffs.svelte';
-    import { resourceDir } from '@tauri-apps/api/path';
     import { Alert } from 'flowbite-svelte'
     import { fade } from 'svelte/transition';
     import { settings } from '$lib/utils/settings';
@@ -20,6 +19,7 @@
     let events: Array<UnlistenFn> = [];
 
     let zoneChangeAlert = false;
+    let resettingAlert = false;
     let phaseTransitionAlert = false;
     let bossDeadAlert = false;
     let raidInProgress = true;
@@ -52,8 +52,25 @@
                 }, 6000);
             });
             let raidStartEvent = await listen('raid-start', (event: any) => {
-                // console.log("raid start event: ", event.payload);
+                state = MeterState.PARTY;
+                player = null;
+                playerName = "";
                 raidInProgress = true;
+            });
+            let resetEncounterEvent = await listen('reset-encounter', (event: any) => {                
+                state = MeterState.PARTY;
+                player = null;
+                playerName = "";
+                encounter = null;
+                players = [];
+                currentBoss = null;
+                encounterDuration = "00:00";
+                totalDamageDealt = 0;
+                dps = 0;
+                resettingAlert = true;
+                setTimeout(() => {
+                    resettingAlert = false;
+                }, 1500);
             });
             let phaseTransitionEvent = await listen('phase-transition', (event: any) => {
                 let phaseCode = event.payload;
@@ -78,6 +95,7 @@
             events.push(
                 encounterUpdateEvent, 
                 zoneChangeEvent,
+                resetEncounterEvent,
                 phaseTransitionEvent,
                 raidStartEvent,
                 adminError
@@ -105,7 +123,7 @@
     let anyDead: boolean = false;
 
     $: {
-        if (encounter) {            
+        if (encounter) {           
             if (encounter.fightStart !== 0 && raidInProgress) {
                 if ($settings.general.showEsther) {
                     players = Object.values(encounter.entities)
@@ -243,6 +261,15 @@
         <span slot="icon"><svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path></svg>
         </span>
         Changing Zone
+    </Alert>
+</div>
+{/if}
+{#if resettingAlert}
+<div transition:fade>
+    <Alert color="none" class="bg-accent-800 bg-opacity-80 w-40 mx-auto absolute inset-x-0 bottom-8 py-2 z-50" dismissable on:close={() => zoneChangeAlert = false}>
+        <span slot="icon"><svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path></svg>
+        </span>
+        Resetting
     </Alert>
 </div>
 {/if}

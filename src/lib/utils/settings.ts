@@ -1,4 +1,5 @@
 import { invoke } from '@tauri-apps/api';
+import { emit } from '@tauri-apps/api/event';
 import { register, unregisterAll } from '@tauri-apps/api/globalShortcut';
 import { writable } from 'svelte/store';
 
@@ -23,6 +24,10 @@ export const defaultSettings = {
         "showLatestEncounter": {
             "modifier": "Ctrl",
             "key": "ArrowRight",
+        },
+        "resetSession": {
+            "modifier": "",
+            "key": "",
         }
     },
     "meter": {
@@ -103,15 +108,26 @@ export const settings = settingsStore("settings", defaultSettings);
 export async function registerShortcuts(shortcuts: any) {
     await unregisterAll();
     
-    await register(shortcuts.hideMeter.modifier + "+" + shortcuts.hideMeter.key, async () => {
-        await invoke("toggle_meter_window");
-    });
-    await register(shortcuts.showLogs.modifier + "+" + shortcuts.showLogs.key, async () => {
-        await invoke("open_url", { url: "logs" });
-    });
-    await register(shortcuts.showLatestEncounter.modifier + "+" + shortcuts.showLatestEncounter.key, async () => {
-        await invoke("open_most_recent_encounter");
-    });   
+    if (shortcuts.hideMeter.modifier && shortcuts.hideMeter.key) {
+        await register(shortcuts.hideMeter.modifier + "+" + shortcuts.hideMeter.key, async () => {
+            await invoke("toggle_meter_window");
+        });
+    }
+    if (shortcuts.showLogs.modifier && shortcuts.showLogs.key) {
+        await register(shortcuts.showLogs.modifier + "+" + shortcuts.showLogs.key, async () => {
+            await invoke("open_url", { url: "logs" });
+        });
+    }
+    if (shortcuts.showLatestEncounter.modifier && shortcuts.showLatestEncounter.key) {
+        await register(shortcuts.showLatestEncounter.modifier + "+" + shortcuts.showLatestEncounter.key, async () => {
+            await invoke("open_most_recent_encounter");
+        });   
+    }
+    if (shortcuts.resetSession.modifier && shortcuts.resetSession.key) {
+        await register(shortcuts.resetSession.modifier + "+" + shortcuts.resetSession.key, async () => {
+            await emit("reset-request");
+        });
+    }
 }
 
 export const skillIcon = settingsStore("skillIcon", {});

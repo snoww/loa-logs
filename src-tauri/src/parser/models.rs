@@ -419,6 +419,7 @@ pub struct Shortcuts {
     pub hide_meter: Shortcut,
     pub show_logs: Shortcut,
     pub show_latest_encounter: Shortcut,
+    pub reset_session: Shortcut,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
