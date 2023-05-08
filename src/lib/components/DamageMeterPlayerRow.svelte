@@ -14,6 +14,8 @@
     export let totalDamageDealt: number;
     export let lastCombatPacket: number;
     export let anyDead: boolean;
+    export let anyFrontAtk: boolean;
+    export let anyBackAtk: boolean;
 
     let color = "#ffffff"
 
@@ -94,14 +96,18 @@
     {(entity.skillStats.crits / entity.skillStats.hits * 100).toFixed(1)}<span class="text-3xs text-gray-300">%</span>
 </td>
 {/if}
-{#if $settings.meter.frontAtk}
+{#if anyFrontAtk && $settings.meter.frontAtk}
 <td class="px-1 text-center">
+    {#if entity.skillStats.frontAttacks > 0}
     {(entity.skillStats.frontAttacks / entity.skillStats.hits * 100).toFixed(1)}<span class="text-3xs text-gray-300">%</span>
+    {/if}
 </td>
 {/if}
-{#if $settings.meter.backAtk}
+{#if anyBackAtk && $settings.meter.backAtk}
 <td class="px-1 text-center">
+    {#if entity.skillStats.backAttacks > 0}
     {(entity.skillStats.backAttacks / entity.skillStats.hits * 100).toFixed(1)}<span class="text-3xs text-gray-300">%</span>
+    {/if}
 </td>
 {/if}
 {#if $settings.meter.counters}

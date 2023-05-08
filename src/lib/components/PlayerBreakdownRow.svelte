@@ -79,17 +79,17 @@
 </td>
 {/if}
 {#if $settings.meter.breakdown.avgDamage}
-<td class="px-1 text-center relative z-10">
+<td class="px-1 text-center">
     {abbreviateNumberSplit(skill.totalDamage / skill.hits)[0]}<span class="text-3xs text-gray-300">{abbreviateNumberSplit(skill.totalDamage / skill.hits)[1]}</span>
 </td>
 {/if}
 {#if $settings.meter.breakdown.maxDamage}
-<td class="px-1 text-center relative z-10">
+<td class="px-1 text-center">
     {abbreviateNumberSplit(skill.maxDamage)[0]}<span class="text-3xs text-gray-300">{abbreviateNumberSplit(skill.maxDamage)[1]}</span>
 </td>
 {/if}
 {#if $settings.meter.breakdown.casts}
-<td class="px-1 text-center relative z-10">
+<td class="px-1 text-center">
     <div class="">
         {(skill.casts / (duration / 1000 / 60)).toFixed(1)}
     </div>
@@ -101,7 +101,7 @@
 </td>
 {/if}
 {#if $settings.meter.breakdown.hits}
-<td class="px-1 text-center relative z-10">
+<td class="px-1 text-center">
     {#if skill.hits === 0}
     <div class="">
         0

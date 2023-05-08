@@ -121,6 +121,8 @@
     let playerName = "";
     let lastCombatPacket = 0;
     let anyDead: boolean = false;
+    let anyFrontAtk: boolean = false;
+    let anyBackAtk: boolean = false;
 
     $: {
         if (encounter) {           
@@ -135,6 +137,8 @@
                         .sort((a, b) => b.damageStats.damageDealt - a.damageStats.damageDealt);
                 }
                 anyDead = players.some(player => player.isDead);
+                anyFrontAtk = players.some(player => player.skillStats.frontAttacks > 0);
+                anyBackAtk = players.some(player => player.skillStats.backAttacks > 0);
                 topDamageDealt = encounter.encounterDamageStats.topDamageDealt;
                 playerDamagePercentages = players.map(player => (player.damageStats.damageDealt / topDamageDealt) * 100);
                 
@@ -212,10 +216,10 @@
                     {#if $settings.meter.critRate}
                     <th class="font-normal w-14">CRIT</th>
                     {/if}
-                    {#if $settings.meter.frontAtk}
+                    {#if anyFrontAtk && $settings.meter.frontAtk}
                     <th class="font-normal w-14">F.A</th>
                     {/if}
-                    {#if $settings.meter.backAtk}
+                    {#if anyBackAtk && $settings.meter.backAtk}
                     <th class="font-normal w-14">B.A</th>
                     {/if}
                     {#if $settings.meter.counters}
@@ -233,6 +237,8 @@
                         {totalDamageDealt}
                         {lastCombatPacket}
                         {anyDead}
+                        {anyFrontAtk}
+                        {anyBackAtk}
                     />
                 </tr>
                 {/each}
