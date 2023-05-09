@@ -24,6 +24,7 @@
     let player: Entity | null = null;
     let playerDamagePercentages: Array<number> = [];
     let topDamageDealt = 0;
+    let totalDamageDealt = 0;
     let localPlayer: Entity | null = null;
     
     let anyDead: boolean;
@@ -57,6 +58,14 @@
             anyDead = players.some(player => player.isDead);
             anyFrontAtk = players.some(player => player.skillStats.frontAttacks > 0);
             anyBackAtk = players.some(player => player.skillStats.backAttacks > 0);
+            if ($settings.general.showEsther) {
+                totalDamageDealt = encounter.encounterDamageStats.totalDamageDealt
+                    + players
+                        .filter((e) => e.damageStats.damageDealt > 0 && e.entityType === EntityType.ESTHER)
+                        .reduce((a, b) => a + b.damageStats.damageDealt, 0);
+            } else {
+                totalDamageDealt = encounter.encounterDamageStats.totalDamageDealt;
+            }
 
             if (encounter.localPlayer) {
                 localPlayer = encounter.entities[encounter.localPlayer];
@@ -446,7 +455,7 @@
 <svelte:window on:contextmenu|preventDefault/>
 <div bind:this={targetDiv} class:p-4={$takingScreenshot}>
     <LogEncounterInfo bossName={encounter.currentBossName} encounterDuration={millisToMinutesAndSeconds(encounter.duration)} 
-                        totalDamageDealt={encounter.encounterDamageStats.totalDamageDealt} 
+                        {totalDamageDealt}
                         dps={encounter.encounterDamageStats.dps}/>
     {#if !$takingScreenshot}
     <div class="mt-2 flex justify-between" style="width: calc(100vw - 4.5rem);">
@@ -565,7 +574,7 @@
                         <tr class="h-7 px-2 py-1" on:click={() => inspectPlayer(player.name)}>
                                 <LogDamageMeterRow entity={player} 
                                                     percentage={playerDamagePercentages[i]} 
-                                                    totalDamageDealt={encounter.encounterDamageStats.totalDamageDealt} 
+                                                    {totalDamageDealt} 
                                                     {anyDead}
                                                     {anyFrontAtk}
                                                     {anyBackAtk}

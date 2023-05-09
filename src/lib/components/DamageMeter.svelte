@@ -153,9 +153,16 @@
                     encounterDuration = millisToMinutesAndSeconds(duration);
                     dps = totalDamageDealt / (duration / 1000);
                 }
-                totalDamageDealt = encounter.encounterDamageStats.totalDamageDealt;
+                if ($settings.general.showEsther) {
+                    totalDamageDealt = encounter.encounterDamageStats.totalDamageDealt
+                        + players
+                            .filter((e) => e.damageStats.damageDealt > 0 && e.entityType === EntityType.ESTHER)
+                            .reduce((a, b) => a + b.damageStats.damageDealt, 0);
+                } else {
+                    totalDamageDealt = encounter.encounterDamageStats.totalDamageDealt;
+                }
+
                 lastCombatPacket = encounter.lastCombatPacket;
-                
             }
             
             if (encounter.currentBoss !== undefined) {
