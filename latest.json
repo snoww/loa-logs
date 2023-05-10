@@ -1,11 +1,11 @@
 {
-    "version": "v1.1.11",
-    "notes": "- hide front/back attack columns if there are none\n- fix settings getting reset on update\n- fix background app not shutting down when closing meter\nsend bug reports or feature requests to Snow#7777",
-    "pub_date": "2023-05-08T22:43:50Z",
+    "version": "v1.1.12",
+    "notes": "",
+    "pub_date": "2023-05-10T19:09:45Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.1.11/LOA.Logs_1.1.11_x64_en-US.msi.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlNEenZjZGh5ckhZMTNRL3hwTk8zMkNuV2JSZnBnK3hiT1VDYnFZaENhMXQvZ2p0RStDcEJydmlqc2dTak5xT2QrYWVEYmw2clora05mVDA4R2dFWXdnPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjgzNTg1MzEyCWZpbGU6TE9BIExvZ3NfMS4xLjExX3g2NF9lbi1VUy5tc2kuemlwCmE2UHo2OE0rNUtoVFM2ckZ6RFNnMHFROU9tclRiQWJobllnREhHWjBBTVNvSk9mZ0pPN0I0MXFUMGZDaXREbWQ4OS9pQlBIRFJVa2dYZUtQUVZqcEF3PT0K"
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.1.12/LOA.Logs_1.1.12_x64-setup.exe",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmJWWU5QY21IZVk2d1pYMkZsUEhxbThDQTM3M2Fud2w1bFNpb2IyWlVFSWZIMVNva1pJZE1pMUQ0TU1qaWdRRHNyc2toOVM2azUvbUtWeWVNVHNvUlE0PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjgzNzQ1NTgwCWZpbGU6TE9BIExvZ3NfMS4xLjEyX3g2NC1zZXR1cC5uc2lzLnppcAovelJLNnZ0aHh6WE9LaU9Qb3oyQXd2U1dmOFh2RUhTTGpGaVZ0VjJxUG9yL1pzSnVBeWlqbUMrdU8rKzZXdWtiNkFETit5SVREUEtoUVNBalhaU2FCZz09Cg=="
         }
     }
 }
