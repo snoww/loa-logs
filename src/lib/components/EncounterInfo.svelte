@@ -1,4 +1,6 @@
 <script lang="ts">
+    import { abbreviateNumber } from "$lib/utils/numbers";
+import { settings } from "$lib/utils/settings";
     import { emit } from "@tauri-apps/api/event";
     import { invoke } from "@tauri-apps/api/tauri";
     import { appWindow } from "@tauri-apps/api/window";
@@ -56,17 +58,29 @@
                 <div data-tauri-drag-region>
                     T. DMG
                 </div>
+                {#if $settings.meter.abbreviateHeader}
+                <div data-tauri-drag-region>
+                    {abbreviateNumber(totalDamageDealt)}
+                </div>
+                {:else}
                 <div data-tauri-drag-region>
                     {totalDamageDealt.toLocaleString()}
                 </div>
+                {/if}
             </div>
             <div class="flex space-x-1 tracking-tighter text-gray-400">
                 <div data-tauri-drag-region>
                     T. DPS
                 </div>
+                {#if $settings.meter.abbreviateHeader}
+                <div data-tauri-drag-region >
+                    {abbreviateNumber(dps)}
+                </div>
+                {:else}
                 <div data-tauri-drag-region >
                     {dps.toLocaleString("en", { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
                 </div>
+                {/if}
             </div>
         </div>
         <div data-tauri-drag-region class="flex space-x-px items-center max-[419px]:hidden">

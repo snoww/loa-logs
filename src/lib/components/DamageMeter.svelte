@@ -6,7 +6,7 @@
     import { flip } from 'svelte/animate';
     import EncounterInfo from './EncounterInfo.svelte';
     import BossInfo from './BossInfo.svelte';
-    import DamageMeterPlayerRow from './DamageMeterPlayerRow.svelte';
+    import DamageMeterPlayerRow from './DamageMeterRow.svelte';
     import PlayerBreakdown from './PlayerBreakdown.svelte';
     import Footer from './Footer.svelte';
     import Buffs from './Buffs.svelte';

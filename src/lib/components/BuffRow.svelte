@@ -14,7 +14,8 @@
     export let groupedSynergies: Map<string, Map<number, StatusEffect>>;
     export let percentage: number;
 
-    let color = "#ffffff"
+    let color = "#ffffff";
+    let alpha = 0.6;
     let playerName: string;
     let synergyPercentageDetails: Array<BuffDetails>;
 
@@ -51,7 +52,13 @@
                 }
                 synergyPercentageDetails.push(buff);
             });
-        }        
+        }
+
+        if (!$settings.meter.showClassColors) {
+            alpha = 0;
+        } else {
+            alpha = 0.6;
+        }
     }
 
 </script>
@@ -79,5 +86,5 @@
 {/each}
 {/if}
 <div class="absolute left-0 h-7 px-2 py-1 -z-10"
-    style="background-color: {HexToRgba(color, 0.6)}; width: {$tweenedValue}%"
+    style="background-color: {HexToRgba(color, alpha)}; width: {$tweenedValue}%"
 ></div>

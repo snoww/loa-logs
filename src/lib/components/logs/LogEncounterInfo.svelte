@@ -1,4 +1,6 @@
 <script lang="ts">
+    import { abbreviateNumber } from "$lib/utils/numbers";
+import { settings } from "$lib/utils/settings";
     import { takingScreenshot } from "$lib/utils/stores";
     import { getVersion } from "@tauri-apps/api/app";
 
@@ -30,17 +32,29 @@
                 <div>
                     Total DMG:
                 </div>
+                {#if $settings.logs.abbreviateHeader}
+                <div class="text-white">
+                    {abbreviateNumber(totalDamageDealt)}
+                </div>
+                {:else}
                 <div class="text-white">
                     {totalDamageDealt.toLocaleString()}
                 </div>
+                {/if}
             </div>
             <div class="flex space-x-1 tracking-tighter text-gray-300">
                 <div>
                     Total DPS:
                 </div>
+                {#if $settings.logs.abbreviateHeader}
+                <div class="text-white">
+                    {abbreviateNumber(dps)}
+                </div>
+                {:else}
                 <div class="text-white">
                     {dps.toLocaleString("en", { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
                 </div>
+                {/if}
             </div>
         </div>
         {#if $takingScreenshot}

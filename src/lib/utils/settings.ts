@@ -32,6 +32,8 @@ export const defaultSettings = {
     },
     "meter": {
         "bossHp": true,
+        "abbreviateHeader": true,
+        "showClassColors": true,
         "damage": false,
         "dps": true,
         "damagePercent": true,
@@ -54,6 +56,7 @@ export const defaultSettings = {
         }
     },
     "logs": {
+        "abbreviateHeader": false,
         "damage": true,
         "dps": true,
         "damagePercent": true,

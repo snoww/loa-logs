@@ -18,6 +18,7 @@
     export let anyBackAtk: boolean;
 
     let color = "#ffffff"
+    let alpha = 0.6;
 
     const tweenedValue = tweened(0, {
         duration: 400,
@@ -51,7 +52,12 @@
         }
         if (entity.isDead) {
             deadFor = (((lastCombatPacket - entity.damageStats.deathTime) / 1000).toFixed(0) + "s").replace('-', '');
-        }             
+        }
+        if (!$settings.meter.showClassColors) {
+            alpha = 0;
+        } else {
+            alpha = 0.6;
+        }
     }
         
 </script>
@@ -112,5 +118,5 @@
 </td>
 {/if}
 <div class="absolute left-0 h-7 px-2 py-1 -z-10"
-    style="background-color: {HexToRgba(color, 0.6)}; width: {$tweenedValue}%"
+    style="background-color: {HexToRgba(color, alpha)}; width: {$tweenedValue}%"
 ></div>

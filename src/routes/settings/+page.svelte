@@ -140,6 +140,8 @@
                 <div class="flex flex-col space-y-4 divide-y-[1px]">
                     <div class="mt-4 px-2 flex flex-col space-y-2">
                         <SettingItem name="Boss HP" description="Show the HP bar for the current boss" bind:setting={$settings.meter.bossHp} />
+                        <SettingItem name="Abbreviate Header" description="Abbreviates the Total DMG and Total DPS numbers in the header" bind:setting={$settings.meter.abbreviateHeader} />
+                        <SettingItem name="Show Class Colors" description="Shows class colors in the meter. Width of the bar shows relative % damage dealt." bind:setting={$settings.meter.showClassColors} />
                         <SettingItem name="Death Time" description="Show how long a party member has died" bind:setting={$settings.meter.deathTime} />
                         <SettingItem name="Damage" description="Show the damage dealt by player in the current encounter" bind:setting={$settings.meter.damage} />
                         <SettingItem name="DPS" description="Show the current damage per second" bind:setting={$settings.meter.dps} />
@@ -187,6 +189,7 @@
                                 {/each}
                             </datalist>
                         </label>
+                        <SettingItem name="Abbreviate Header" description="Abbreviates the Total DMG and Total DPS numbers in the header" bind:setting={$settings.logs.abbreviateHeader} />
                         <SettingItem name="Death Time" description="Show how long a party member has died" bind:setting={$settings.logs.deathTime} />
                         <SettingItem name="Damage" description="Show the damage dealt by the player in the current encounter" bind:setting={$settings.logs.damage} />
                         <SettingItem name="Damage %" description="Show the damage percentage of the player relative to the entire raid" bind:setting={$settings.logs.damagePercent} />

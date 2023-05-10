@@ -432,6 +432,7 @@ pub struct Shortcut {
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct LogTabs {
+    pub abbreviate_header: bool,
     pub damage: bool,
     pub dps: bool,
     pub damage_percent: bool,
@@ -447,6 +448,8 @@ pub struct LogTabs {
 #[serde(rename_all = "camelCase")]
 pub struct MeterTabs {
     pub boss_hp: bool,
+    pub abbreviate_header: bool,
+    pub show_class_colors: bool,
     pub damage: bool,
     pub dps: bool,
     pub damage_percent: bool,
