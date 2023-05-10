@@ -65,6 +65,12 @@
         {#if hasBackAttacks && $settings.meter.breakdown.backAtk}
         <th class="font-normal w-14">B.A</th>
         {/if}
+        {#if anySupportBuff && $settings.meter.breakdown.percentBuffBySup}
+        <th class="font-normal w-14">Buff%</th>
+        {/if}
+        {#if anySupportBrand && $settings.meter.breakdown.percentBrand}
+        <th class="font-normal w-16">Brand%</th>
+        {/if}
         {#if $settings.meter.breakdown.avgDamage}
         <th class="font-normal w-14">Avg</th>
         {/if}

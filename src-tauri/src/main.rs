@@ -131,7 +131,7 @@ fn main() {
                 }
             });
 
-            let logs_window = WindowBuilder::new(app, "logs", tauri::WindowUrl::App("/logs".into()))
+            let _logs_window = WindowBuilder::new(app, "logs", tauri::WindowUrl::App("/logs".into()))
                 .title("LOA Logs")
                 .min_inner_size(650.0, 300.0)
                 .inner_size(800.0, 500.0)
@@ -139,7 +139,7 @@ fn main() {
                 .expect("failed to create log window");
             #[cfg(debug_assertions)]
             {
-                logs_window.open_devtools();
+                _logs_window.open_devtools();
             }
 
             Ok(())
@@ -237,7 +237,7 @@ fn get_db_connection(resource_path: &Path) -> Result<Connection, String> {
 
 
 fn setup_db(resource_path: PathBuf) -> Result<(), String> {
-    let mut path = resource_path.to_path_buf();
+    let mut path = resource_path;
     path.push("encounters.db");
     let conn = match Connection::open(path) {
         Ok(conn) => conn,
@@ -655,7 +655,7 @@ fn copy_db(window: tauri::Window) -> Result<(), String> {
 fn open_folder(path: String) {
     let mut path = path;
     if path.contains("USERPROFILE") {
-        if let Some(user_dir) = std::env::var("USERPROFILE").ok() {
+        if let Ok(user_dir) = std::env::var("USERPROFILE") {
             path = path.replace("USERPROFILE", user_dir.as_str());
         }
     }
