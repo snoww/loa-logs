@@ -4,7 +4,7 @@
     "pub_date": "2023-05-10T19:09:45Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.1.12/LOA.Logs_1.1.12_x64-setup.exe",
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.1.12/LOA.Logs_1.1.12_x64-setup.nsis.zip",
             "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmJWWU5QY21IZVk2d1pYMkZsUEhxbThDQTM3M2Fud2w1bFNpb2IyWlVFSWZIMVNva1pJZE1pMUQ0TU1qaWdRRHNyc2toOVM2azUvbUtWeWVNVHNvUlE0PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjgzNzQ1NTgwCWZpbGU6TE9BIExvZ3NfMS4xLjEyX3g2NC1zZXR1cC5uc2lzLnppcAovelJLNnZ0aHh6WE9LaU9Qb3oyQXd2U1dmOFh2RUhTTGpGaVZ0VjJxUG9yL1pzSnVBeWlqbUMrdU8rKzZXdWtiNkFETit5SVREUEtoUVNBalhaU2FCZz09Cg=="
         }
     }
