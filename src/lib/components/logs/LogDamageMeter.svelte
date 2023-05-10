@@ -30,6 +30,8 @@
     let anyDead: boolean;
     let anyFrontAtk: boolean = false;
     let anyBackAtk: boolean = false;
+    let anySupportBuff: boolean = false;
+    let anySupportBrand: boolean = false;
 
     let state = MeterState.PARTY;
     let tab = MeterTab.DAMAGE;
@@ -42,7 +44,7 @@
     let rollingDpsOptions: EChartsOptions = {};
     let skillLogOptions: EChartsOptions = {};
 
-    $: {        
+    $: {
         if (encounter) {
             if ($settings.general.showEsther) {
                 players = Object.values(encounter.entities)
@@ -58,6 +60,8 @@
             anyDead = players.some(player => player.isDead);
             anyFrontAtk = players.some(player => player.skillStats.frontAttacks > 0);
             anyBackAtk = players.some(player => player.skillStats.backAttacks > 0);
+            anySupportBuff = players.some(player => player.damageStats.buffedBySupport > 0);
+            anySupportBrand = players.some(player => player.damageStats.debuffedBySupport > 0);
             if ($settings.general.showEsther) {
                 totalDamageDealt = encounter.encounterDamageStats.totalDamageDealt
                     + players
@@ -564,6 +568,12 @@
                             {#if anyBackAtk && $settings.logs.backAtk}
                             <th class="font-normal w-14">B.A</th>
                             {/if}
+                            {#if anySupportBuff && $settings.logs.percentBuffBySup}
+                            <th class="font-normal w-14">Buff%</th>
+                            {/if}
+                            {#if anySupportBrand && $settings.logs.percentBrand}
+                            <th class="font-normal w-16">Brand%</th>
+                            {/if}
                             {#if $settings.logs.counters}
                             <th class="font-normal w-[70px]">Counters</th>
                             {/if}
@@ -578,6 +588,8 @@
                                                     {anyDead}
                                                     {anyFrontAtk}
                                                     {anyBackAtk}
+                                                    {anySupportBuff}
+                                                    {anySupportBrand}
                                                     end={encounter.lastCombatPacket}
                                                 />
                         </tr>

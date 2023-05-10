@@ -123,6 +123,8 @@
     let anyDead: boolean = false;
     let anyFrontAtk: boolean = false;
     let anyBackAtk: boolean = false;
+    let anySupportBuff: boolean = false;
+    let anySupportBrand: boolean = false;
 
     $: {
         if (encounter) {           
@@ -139,6 +141,8 @@
                 anyDead = players.some(player => player.isDead);
                 anyFrontAtk = players.some(player => player.skillStats.frontAttacks > 0);
                 anyBackAtk = players.some(player => player.skillStats.backAttacks > 0);
+                anySupportBuff = players.some(player => player.damageStats.buffedBySupport > 0);
+                anySupportBrand = players.some(player => player.damageStats.debuffedBySupport > 0);
                 topDamageDealt = encounter.encounterDamageStats.topDamageDealt;
                 playerDamagePercentages = players.map(player => (player.damageStats.damageDealt / topDamageDealt) * 100);
                 
@@ -229,6 +233,12 @@
                     {#if anyBackAtk && $settings.meter.backAtk}
                     <th class="font-normal w-14">B.A</th>
                     {/if}
+                    {#if anySupportBuff && $settings.meter.percentBuffBySup}
+                    <th class="font-normal w-14">Buff%</th>
+                    {/if}
+                    {#if anySupportBrand && $settings.meter.percentBrand}
+                    <th class="font-normal w-16">Brand%</th>
+                    {/if}
                     {#if $settings.meter.counters}
                     <th class="font-normal w-[70px]">Counters</th>
                     {/if}
@@ -246,6 +256,8 @@
                         {anyDead}
                         {anyFrontAtk}
                         {anyBackAtk}
+                        {anySupportBuff}
+                        {anySupportBrand}
                     />
                 </tr>
                 {/each}

@@ -13,6 +13,8 @@
     export let color: string;
     export let hasFrontAttacks: boolean;
     export let hasBackAttacks: boolean;
+    export let anySupportBuff: boolean;
+    export let anySupportBrand: boolean;
     export let abbreviatedSkillDamage: (string | number)[];
     export let skillDps: (string | number)[];
     export let playerDamageDealt: number;
@@ -76,6 +78,24 @@
 {#if hasBackAttacks && $settings.meter.breakdown.backAtk}
 <td class="px-1 text-center">
     {baPercentage}<span class="text-3xs text-gray-300">%</span>
+</td>
+{/if}
+{#if anySupportBuff && $settings.meter.breakdown.percentBuffBySup}
+<td class="px-1 text-center relative z-10">
+    {#if skill.totalDamage > 0}
+    {(skill.buffedBySupport / skill.totalDamage * 100).toFixed(1)}<span class="text-3xs text-gray-300">%</span>
+    {:else}
+    0.0<span class="text-3xs text-gray-300">%</span>
+    {/if}
+</td>
+{/if}
+{#if anySupportBrand && $settings.meter.breakdown.percentBrand}
+<td class="px-1 text-center relative z-10">
+    {#if skill.totalDamage > 0}
+    {(skill.debuffedBySupport / skill.totalDamage * 100).toFixed(1)}<span class="text-3xs text-gray-300">%</span>
+    {:else}
+    0.0<span class="text-3xs text-gray-300">%</span>
+    {/if}
 </td>
 {/if}
 {#if $settings.meter.breakdown.avgDamage}

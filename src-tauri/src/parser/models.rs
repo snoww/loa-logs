@@ -441,6 +441,8 @@ pub struct LogTabs {
     pub crit_rate: bool,
     pub front_atk: bool,
     pub back_atk: bool,
+    pub percent_buff_by_sup: bool,
+    pub percent_brand: bool,
     pub counters: bool,
     pub breakdown: BreakdownTabs,
 }
@@ -458,6 +460,8 @@ pub struct MeterTabs {
     pub crit_rate: bool,
     pub front_atk: bool,
     pub back_atk: bool,
+    pub percent_buff_by_sup: bool,
+    pub percent_brand: bool,
     pub counters: bool,
     pub breakdown: BreakdownTabs,
 }
@@ -471,6 +475,8 @@ pub struct BreakdownTabs {
     pub crit_rate: bool,
     pub front_atk: bool,
     pub back_atk: bool,
+    pub percent_buff_by_sup: bool,
+    pub percent_brand: bool,
     pub avg_damage: bool,
     pub max_damage: bool,
     pub casts: bool,

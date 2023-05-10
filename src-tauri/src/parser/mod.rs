@@ -703,14 +703,6 @@ impl Parser<'_> {
                         .contains_key(buff_id)
                 {
                     if let Some(status_effect) = get_status_effect_data(*buff_id) {
-                        if !is_buffed_by_support && status_effect.source.skill.is_some() {
-                            let skill = status_effect.source.skill.as_ref().unwrap();
-                            is_buffed_by_support = (status_effect.buff_category == "classskill"
-                                || status_effect.buff_category == "identity"
-                                || status_effect.buff_category == "ability")
-                                && status_effect.target == StatusEffectTarget::PARTY
-                                && is_support_class_id(skill.class_id);
-                        }
                         self.encounter
                             .encounter_damage_stats
                             .buffs
@@ -722,38 +714,51 @@ impl Parser<'_> {
                             .insert(*buff_id);
                     }
                 }
+                if !is_buffed_by_support {
+                    if let Some(buff) = self.encounter.encounter_damage_stats.buffs.get(buff_id) {
+                        if let Some(skill) = buff.source.skill.as_ref() {
+                            is_buffed_by_support = (buff.buff_category == "classskill"
+                                                || buff.buff_category == "identity"
+                                                || buff.buff_category == "ability")
+                                && buff.target == StatusEffectTarget::PARTY
+                                && is_support_class_id(skill.class_id);
+                        }
+                    }
+                }
             }
-            for buff_id in damage.effects_on_target.iter() {
-                // maybe problem
+            for debuff_id in damage.effects_on_target.iter() {
                 if !self
                     .encounter
                     .encounter_damage_stats
                     .unknown_buffs
-                    .contains(buff_id)
+                    .contains(debuff_id)
                     && !self
                         .encounter
                         .encounter_damage_stats
                         .debuffs
-                        .contains_key(buff_id)
+                        .contains_key(debuff_id)
                 {
-                    if let Some(status_effect) = get_status_effect_data(*buff_id) {
-                        if !is_buffed_by_support && status_effect.source.skill.is_some() {
-                            let skill = status_effect.source.skill.as_ref().unwrap();
-                            is_debuffed_by_support = (status_effect.buff_category == "classskill"
-                                || status_effect.buff_category == "identity"
-                                || status_effect.buff_category == "ability")
-                                && status_effect.target == StatusEffectTarget::PARTY
-                                && is_support_class_id(skill.class_id);
-                        }
+                    if let Some(status_effect) = get_status_effect_data(*debuff_id) {
                         self.encounter
                             .encounter_damage_stats
                             .debuffs
-                            .insert(*buff_id, status_effect);
+                            .insert(*debuff_id, status_effect);
                     } else {
                         self.encounter
                             .encounter_damage_stats
                             .unknown_buffs
-                            .insert(*buff_id);
+                            .insert(*debuff_id);
+                    }
+                }
+                if !is_debuffed_by_support {
+                    if let Some(debuff) = self.encounter.encounter_damage_stats.buffs.get(debuff_id) {
+                        if let Some(skill) = debuff.source.skill.as_ref() {
+                            is_debuffed_by_support = (debuff.buff_category == "classskill"
+                                                || debuff.buff_category == "identity"
+                                                || debuff.buff_category == "ability")
+                                && debuff.target == StatusEffectTarget::PARTY
+                                && is_support_class_id(skill.class_id);
+                        }
                     }
                 }
             }

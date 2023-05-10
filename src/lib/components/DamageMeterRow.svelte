@@ -16,8 +16,10 @@
     export let anyDead: boolean;
     export let anyFrontAtk: boolean;
     export let anyBackAtk: boolean;
+    export let anySupportBuff: boolean;
+    export let anySupportBrand: boolean;
 
-    let color = "#ffffff"
+    let color = "#ffffff";
     let alpha = 0.6;
 
     const tweenedValue = tweened(0, {
@@ -110,6 +112,16 @@
 {#if anyBackAtk && $settings.meter.backAtk}
 <td class="px-1 text-center">
     {(entity.skillStats.backAttacks / entity.skillStats.hits * 100).toFixed(1)}<span class="text-3xs text-gray-300">%</span>
+</td>
+{/if}
+{#if anySupportBuff && $settings.meter.percentBuffBySup}
+<td class="px-1 text-center relative z-10">
+    {(entity.damageStats.buffedBySupport / entity.damageStats.damageDealt * 100).toFixed(1)}<span class="text-3xs text-gray-300">%</span>
+</td>
+{/if}
+{#if anySupportBrand && $settings.meter.percentBrand}
+<td class="px-1 text-center relative z-10">
+    {(entity.damageStats.debuffedBySupport / entity.damageStats.damageDealt * 100).toFixed(1)}<span class="text-3xs text-gray-300">%</span>
 </td>
 {/if}
 {#if $settings.meter.counters}

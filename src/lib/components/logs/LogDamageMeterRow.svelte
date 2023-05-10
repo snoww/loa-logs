@@ -13,6 +13,8 @@
     export let anyDead: boolean;
     export let anyFrontAtk: boolean;
     export let anyBackAtk: boolean;
+    export let anySupportBuff: boolean;
+    export let anySupportBrand: boolean;
     export let end: number;
 
     let damageDealt: (string | number)[];
@@ -21,7 +23,7 @@
     let name: string;
     let deadFor: string;    
 
-    let color = "#ffffff"
+    let color = "#ffffff";   
 
     if (Object.hasOwn(classColors, entity.class)){
         color = classColors[entity.class].color;
@@ -92,6 +94,16 @@
 {#if anyBackAtk && $settings.logs.backAtk}
 <td class="px-1 text-center relative z-10">
     {(entity.skillStats.backAttacks / entity.skillStats.hits * 100).toFixed(1)}<span class="text-3xs text-gray-300">%</span>
+</td>
+{/if}
+{#if anySupportBuff && $settings.logs.percentBuffBySup}
+<td class="px-1 text-center relative z-10">
+    {(entity.damageStats.buffedBySupport / entity.damageStats.damageDealt * 100).toFixed(1)}<span class="text-3xs text-gray-300">%</span>
+</td>
+{/if}
+{#if anySupportBrand && $settings.logs.percentBrand}
+<td class="px-1 text-center relative z-10">
+    {(entity.damageStats.debuffedBySupport / entity.damageStats.damageDealt * 100).toFixed(1)}<span class="text-3xs text-gray-300">%</span>
 </td>
 {/if}
 {#if $settings.logs.counters}

@@ -148,6 +148,8 @@
                         <SettingItem name="Crit Rate" description="Show the critical strike rate" bind:setting={$settings.meter.critRate} />
                         <SettingItem name="Front Attack" description="Show the front attack percentage" bind:setting={$settings.meter.frontAtk} />
                         <SettingItem name="Back Attack" description="Show the back attack percentage" bind:setting={$settings.meter.backAtk} />
+                        <SettingItem name="Support Buff Percent" description="Show the percentage of damage buffed by support" bind:setting={$settings.meter.percentBuffBySup} />
+                        <SettingItem name="Support Brand Percent" description="Show the percentage of damage buffed by support's brand skill (e.g. Bard Sound Shock)" bind:setting={$settings.meter.percentBrand} />
                         <SettingItem name="Counters" description="Show the number of counters hit" bind:setting={$settings.meter.counters} />
                     </div>
                     <div class="pt-4">
@@ -161,6 +163,8 @@
                             <SettingItem name="Skill Crit Rate" description="Show the critical strike rate of the skill" bind:setting={$settings.meter.breakdown.critRate} />
                             <SettingItem name="Skill Front Attack" description="Show the front attack percentage of the skill" bind:setting={$settings.meter.breakdown.frontAtk} />
                             <SettingItem name="Skill Back Attack" description="Show the back attack percentage of the skill" bind:setting={$settings.meter.breakdown.backAtk} />    
+                            <SettingItem name="Support Buff Percent" description="Show the percentage of damage buffed by support" bind:setting={$settings.meter.breakdown.percentBuffBySup} />
+                            <SettingItem name="Support Brand Percent" description="Show the percentage of damage buffed by support's brand skill (e.g. Bard Sound Shock)" bind:setting={$settings.meter.breakdown.percentBrand} />
                             <SettingItem name="Skill Average Damage" description="Show the average damage dealt by the skill" bind:setting={$settings.meter.breakdown.avgDamage} />
                             <SettingItem name="Skill Max Damage" description="Show the maximum damage dealt by the skill" bind:setting={$settings.meter.breakdown.maxDamage} />
                             <SettingItem name="Skill Casts/min" description="Show the casts per minute of the skill (note: cancelled skills still count as cast)" bind:setting={$settings.meter.breakdown.casts} />
@@ -197,6 +201,8 @@
                         <SettingItem name="Crit Rate" description="Show the critical strike rate" bind:setting={$settings.logs.critRate} />
                         <SettingItem name="Front Attack" description="Show the front attack percentage" bind:setting={$settings.logs.frontAtk} />
                         <SettingItem name="Back Attack" description="Show the back attack percentage" bind:setting={$settings.logs.backAtk} />
+                        <SettingItem name="Support Buff Percent" description="Show the percentage of damage buffed by support" bind:setting={$settings.logs.percentBuffBySup} />
+                        <SettingItem name="Support Brand Percent" description="Show the percentage of damage buffed by support's brand skill (e.g. Bard Sound Shock)" bind:setting={$settings.logs.percentBrand} />
                         <SettingItem name="Counters" description="Show the number of counters hit" bind:setting={$settings.logs.counters} />
                     </div>
                     <div class="pt-4">
@@ -210,6 +216,8 @@
                             <SettingItem name="Skill Crit Rate" description="Show the critical strike rate of the skill" bind:setting={$settings.logs.breakdown.critRate} />
                             <SettingItem name="Skill Front Attack" description="Show the front attack percentage of the skill" bind:setting={$settings.logs.breakdown.frontAtk} />
                             <SettingItem name="Skill Back Attack" description="Show the back attack percentage of the skill" bind:setting={$settings.logs.breakdown.backAtk} />    
+                            <SettingItem name="Support Buff Percent" description="Show the percentage of damage buffed by support" bind:setting={$settings.logs.breakdown.percentBuffBySup} />
+                            <SettingItem name="Support Brand Percent" description="Show the percentage of damage buffed by support's brand skill (e.g. Bard Sound Shock)" bind:setting={$settings.logs.breakdown.percentBrand} />
                             <SettingItem name="Skill Average Damage" description="Show the average damage dealt by the skill" bind:setting={$settings.logs.breakdown.avgDamage} />
                             <SettingItem name="Skill Max Damage" description="Show the maximum damage dealt by the skill" bind:setting={$settings.logs.breakdown.maxDamage} />
                             <SettingItem name="Skill Casts/min" description="Show the casts per minute of the skill (note: cancelled skills still count as cast)" bind:setting={$settings.logs.breakdown.casts} />

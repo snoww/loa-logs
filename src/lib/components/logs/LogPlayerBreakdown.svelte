@@ -15,8 +15,10 @@
     let abbreviatedSkillDamage: Array<(string | number)[]> = [];
     let skillDps: Array<(string | number)[]> = [];
     
-    let hasBackAttacks = true;
-    let hasFrontAttacks = true;
+    let hasBackAttacks = false;
+    let hasFrontAttacks = false;
+    let anySupportBrand = false;
+    let anySupportBuff = false;
 
     skills = Object.values(entity.skills).sort((a, b) => b.totalDamage - a.totalDamage);
     
@@ -33,6 +35,8 @@
         skillDps = skills.map(skill => abbreviateNumberSplit(skill.totalDamage / (duration / 1000)));
         hasBackAttacks = skills.some(skill => skill.backAttacks > 0);
         hasFrontAttacks = skills.some(skill => skill.frontAttacks > 0);
+        anySupportBuff = skills.some(skill => skill.buffedBySupport > 0);
+        anySupportBrand = skills.some(skill => skill.debuffedBySupport > 0);
     }
 </script>
 
@@ -57,6 +61,12 @@
         {#if hasBackAttacks && $settings.logs.breakdown.backAtk}
         <th class="font-normal w-14">B.A</th>
         {/if}
+        {#if anySupportBuff && $settings.logs.breakdown.percentBuffBySup}
+        <th class="font-normal w-14">Buff%</th>
+        {/if}
+        {#if anySupportBrand && $settings.logs.breakdown.percentBrand}
+        <th class="font-normal w-16">Brand%</th>
+        {/if}
         {#if $settings.logs.breakdown.avgDamage}
         <th class="font-normal w-14">Avg</th>
         {/if}
@@ -79,6 +89,8 @@
             {color}
             {hasFrontAttacks}
             {hasBackAttacks} 
+            {anySupportBuff}
+            {anySupportBrand}
             abbreviatedSkillDamage={abbreviatedSkillDamage[i]}
             playerDamageDealt={entity.damageStats.damageDealt}
             damagePercentage={skillDamagePercentages[i]}

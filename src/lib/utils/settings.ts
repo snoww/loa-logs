@@ -42,6 +42,8 @@ export const defaultSettings = {
         "frontAtk": true,
         "backAtk": true,
         "counters": false,
+        "percentBuffBySup": false,
+        "percentBrand": false,
         "breakdown": {
             "damage": true,
             "dps": true,
@@ -53,6 +55,8 @@ export const defaultSettings = {
             "maxDamage": false,
             "casts": true,
             "hits": false,
+            "percentBuffBySup": false,
+            "percentBrand": false,
         }
     },
     "logs": {
@@ -66,6 +70,8 @@ export const defaultSettings = {
         "backAtk": true,
         "counters": false,
         "minEncounterDuration": 30,
+        "percentBuffBySup": false,
+        "percentBrand": false,
         "breakdown": {
             "damage": true,
             "dps": true,
@@ -77,6 +83,8 @@ export const defaultSettings = {
             "maxDamage": false,
             "casts": true,
             "hits": false,
+            "percentBuffBySup": false,
+            "percentBrand": false,
         }
     }
 };

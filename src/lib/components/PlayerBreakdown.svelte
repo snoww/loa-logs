@@ -18,6 +18,8 @@
     
     let hasBackAttacks = true;
     let hasFrontAttacks = true;
+    let anySupportBrand = false;
+    let anySupportBuff = false;
 
     $: {
         if (entity) {
@@ -34,7 +36,9 @@
                 skillDps = skills.map(skill => abbreviateNumberSplit(skill.totalDamage / (duration / 1000)));
                 hasBackAttacks = skills.some(skill => skill.backAttacks > 0);
                 hasFrontAttacks = skills.some(skill => skill.frontAttacks > 0);
-            }            
+                anySupportBuff = skills.some(skill => skill.buffedBySupport > 0);
+                anySupportBrand = skills.some(skill => skill.debuffedBySupport > 0);
+            }
         }
     }
 </script>
@@ -84,6 +88,8 @@
             {color}
             {hasFrontAttacks}
             {hasBackAttacks} 
+            {anySupportBuff}
+            {anySupportBrand}
             abbreviatedSkillDamage={abbreviatedSkillDamage[i]}
             playerDamageDealt={entity.damageStats.damageDealt}
             damagePercentage={skillDamagePercentages[i]}
