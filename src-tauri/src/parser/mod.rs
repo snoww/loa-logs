@@ -751,7 +751,7 @@ impl Parser<'_> {
                     }
                 }
                 if !is_debuffed_by_support {
-                    if let Some(debuff) = self.encounter.encounter_damage_stats.buffs.get(debuff_id) {
+                    if let Some(debuff) = self.encounter.encounter_damage_stats.debuffs.get(debuff_id) {
                         if let Some(skill) = debuff.source.skill.as_ref() {
                             is_debuffed_by_support = (debuff.buff_category == "classskill"
                                                 || debuff.buff_category == "identity"
@@ -797,16 +797,16 @@ impl Parser<'_> {
                     .and_modify(|e| *e += damage.damage)
                     .or_insert(damage.damage);
             }
-            for buff_id in damage.effects_on_target.iter() {
+            for debuff_id in damage.effects_on_target.iter() {
                 skill
                     .debuffed_by
-                    .entry(*buff_id)
+                    .entry(*debuff_id)
                     .and_modify(|e| *e += damage.damage)
                     .or_insert(damage.damage);
                 source_entity
                     .damage_stats
                     .debuffed_by
-                    .entry(*buff_id)
+                    .entry(*debuff_id)
                     .and_modify(|e| *e += damage.damage)
                     .or_insert(damage.damage);
             }
