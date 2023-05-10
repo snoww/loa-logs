@@ -18,7 +18,7 @@
 <svelte:window on:contextmenu|preventDefault/>
 <LogSidebar bind:hidden={hidden} />
 <div class="bg-zinc-800 h-screen pt-2">
-    <div class="px-8 pt-5">
+    <div class="px-8 pt-5 tracking-tight">
         <div class="flex justify-between">
             <div class="flex space-x-2 ml-2">
                 <div class="">
@@ -32,17 +32,17 @@
             </div>
         </div>
         <p class="px-4 mt-12 text-base">
-            LOA Logs is a "blazingly fast" open source Lost Ark DPS meter (<a class="text-accent-500 hover:underline" href="https://github.com/snoww/loa-logs" target="_blank">Github</a>),
+            LOA Logs is a "blazingly fast" open source Lost Ark DPS meter (<a class="text-accent-500 hover:underline" href="https://github.com/snoww/loa-logs" target="_blank">github.com/snoww/loa-logs</a>),
             written in Rust by <a class="text-accent-500 hover:underline" href="https://github.com/snoww" target="_blank">Snow</a>. 
-            This project is a very opinionated flavor of <a class="text-accent-500 hover:underline" href="https://github.com/lost-ark-dev/loa-details" target="_blank">LOA Details</a> by Herysia and Mathi, but should share very similar user interfaces and settings. 
+            his project is an opinionated flavor of <a class="text-accent-500 hover:underline" href="https://github.com/lost-ark-dev/loa-details" target="_blank">LOA Details</a> by Herysia and Mathi, but should share very similar user interfaces and settings. 
             The packet sniffing is still done by LOA Details' <a class="text-accent-500 hover:underline" href="https://github.com/lost-ark-dev/meter-core" target="_blank"><code>meter-core</code></a> under the hood, 
             but the data processing is done using Rust. There are future plans to port the packet sniffing part to Rust as well.
         </p>
         <p class="px-4 mt-4 text-base">
-            Features: Stylized Boss HP Bar, Simple UI, Fast logging performance, Log sharing, Small log sizes, Encounter filtering, DPS charts, Fight replay, and more.
+            This project was designed specifically for hell-raiding.
         </p>
         <p class="px-4 mt-4 text-base">
-            If you have any problems or suggestions, please open an <a class="text-accent-500 hover:underline" href="https://github.com/snoww/loa-logs/issues" target="_blank">issue</a> or send a DM on Discord.
+            If you have any problems or suggestions, please open an <a class="text-accent-500 hover:underline" href="https://github.com/snoww/loa-logs/issues" target="_blank">issue</a> or send a DM on Discord to Snow#7777.
         </p>
 
         <p class="px-4 mt-4">
