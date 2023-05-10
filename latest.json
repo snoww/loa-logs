@@ -1,6 +1,6 @@
 {
     "version": "v1.1.12",
-    "notes": "",
+    "notes": "- updated meter for slayer patch\n- added option to show support buff %, and brand % in dmg tab directly\n- added option to abbrev dmg numbers in header\n- added option to disable class colors\n- no longer requires restart to change meter blur\n- fix damage % when using sidereals while solo bussing\nsend bug reports or feature requests to Snow#7777",
     "pub_date": "2023-05-10T19:09:45Z",
     "platforms": {
         "windows-x86_64": {
