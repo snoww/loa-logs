@@ -6,8 +6,7 @@ export const classColors: ClassColors = {
     Destroyer: { color: "#7b9aa2", defaultColor: "#7b9aa2" }, // 103
     Gunlancer: { color: "#E1907E", defaultColor: "#E1907E" }, // 104
     Paladin: { color: "#ff9900", defaultColor: "#ff9900" }, // 105
-    // "Female Warrior", 111
-    // "berserker_female", 112
+    Slayer: { color: "#db6a42", defaultColor: "#db6a42" }, // 112
     Mage: { color: "#df2871", defaultColor: "#df2871" }, // 201
     Arcanist: { color: "#b38915", defaultColor: "#b38915" }, // 202
     Summoner: { color: "#22aa99", defaultColor: "#22aa99" }, // 203

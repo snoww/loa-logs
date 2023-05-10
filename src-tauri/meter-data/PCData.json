@@ -5,7 +5,7 @@
   "103": "Destroyer",
   "104": "Gunlancer",
   "105": "Paladin",
-  "111": "Female Warrior",
+  "111": "Warrior (Female)",
   "112": "Slayer",
   "201": "Mage",
   "202": "Arcanist",
@@ -23,6 +23,7 @@
   "402": "Deathblade",
   "403": "Shadowhunter",
   "404": "Reaper",
+  "405": "soul_eater",
   "501": "Gunner (Male)",
   "502": "Sharpshooter",
   "503": "Deadeye",
@@ -32,6 +33,6 @@
   "512": "Gunslinger",
   "601": "Specialist",
   "602": "Artist",
-  "603": "Aeromancer",
+  "603": "weather_artist",
   "604": "Alchemist"
 }

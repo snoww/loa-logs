@@ -37,7 +37,7 @@
         tweenedValue.set(percentage);
         if (Object.hasOwn(classColors, entity.class)){
             color = classColors[entity.class].color;
-        }
+        }        
         damageDealt = abbreviateNumberSplit(entity.damageStats.damageDealt);
         damagePercentage = (entity.damageStats.damageDealt / totalDamageDealt * 100).toFixed(1);        
         
