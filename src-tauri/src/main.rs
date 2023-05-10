@@ -219,7 +219,8 @@ fn main() {
             save_settings,
             get_settings,
             check_old_db_location_exists,
-            copy_db
+            copy_db,
+            open_folder
         ])
         .run(tauri::generate_context!())
         .expect("error while running application");
@@ -228,6 +229,9 @@ fn main() {
 fn get_db_connection(resource_path: &Path) -> Result<Connection, String> {
     let mut path = resource_path.to_path_buf();
     path.push("encounters.db");
+    if !path.exists() {
+        setup_db(path.clone())?;
+    }
     let conn = match Connection::open(path) {
         Ok(conn) => conn,
         Err(e) => {
@@ -239,7 +243,14 @@ fn get_db_connection(resource_path: &Path) -> Result<Connection, String> {
 
 
 fn setup_db(resource_path: PathBuf) -> Result<(), String> {
-    let conn = get_db_connection(&resource_path)?;
+    let mut path = resource_path.to_path_buf();
+    path.push("encounters.db");
+    let conn = match Connection::open(path) {
+        Ok(conn) => conn,
+        Err(e) => {
+            return Err(e.to_string());
+        }
+    };
 
     match conn.execute_batch("
         CREATE TABLE IF NOT EXISTS encounter (
@@ -617,7 +628,7 @@ fn get_settings(window: tauri::Window) -> Option<Settings> {
 
 #[tauri::command]
 fn check_old_db_location_exists() -> bool {
-    let user_dir = std::env::var("HOME");
+    let user_dir = std::env::var("USERPROFILE");
     match user_dir {
         Ok(user_dir) => {
             let old_path = PathBuf::from(format!("{}/AppData/Local/Programs/LOA Logs/encounters.db", user_dir));
@@ -629,7 +640,7 @@ fn check_old_db_location_exists() -> bool {
 
 #[tauri::command]
 fn copy_db(window: tauri::Window) -> Result<(), String> {
-    let user_dir = std::env::var("HOME");
+    let user_dir = std::env::var("USERPROFILE");
     match user_dir {
         Ok(user_dir) => {
             let old_path = PathBuf::from(format!("{}/AppData/Local/Programs/LOA Logs/encounters.db", user_dir));    
@@ -644,4 +655,19 @@ fn copy_db(window: tauri::Window) -> Result<(), String> {
         },
         Err(_) => Err("Could not get user dir".to_string())
     }
+}
+
+#[tauri::command]
+fn open_folder(path: String) {
+    let mut path = path;
+    if path.contains("USERPROFILE") {
+        if let Some(user_dir) = std::env::var("USERPROFILE").ok() {
+            path = path.replace("USERPROFILE", user_dir.as_str());
+        }
+    }
+    println!("{}", path);
+    Command::new("explorer")
+        .args([path.as_str()])
+        .spawn()
+        .ok();
 }

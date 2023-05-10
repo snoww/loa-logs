@@ -98,6 +98,10 @@
         }, 2000);
     }
 
+    async function openFolder(path: string) {
+        await invoke("open_folder", { path: path });
+    }
+
 </script>
 
 <svelte:window on:contextmenu|preventDefault/>
@@ -165,14 +169,17 @@
                         </tr>
                     {:else}
                         <div class="w-screen bg-neutral-800 p-2">No encounters recorded.</div>
-                        <div class="w-screen bg-neutral-800 p-2">Meter should be turned on at character select for best accuracy.</div>
-                        <div class="w-screen bg-neutral-800 p-2">!!! NOTICE !!!</div>
-                        <div class="w-screen bg-neutral-800 px-2">The default install directory of the app has changed.</div>
-                        <div class="w-screen bg-neutral-800 px-2">If you had logs previously, you must manually copy the <span class="font-mono">encounters.db</span> to the new install location. :( sorry</div>
-                        <div class="w-screen bg-neutral-800 px-2">Old: <span class="font-mono">C:\Users\USERNAME\AppData\Local\Programs\LOA Logs</span></div>
-                        <div class="w-screen bg-neutral-800 px-2">New: <span class="font-mono">C:\Users\USERNAME\AppData\Local\LOA Logs</span></div>
+                        <div class="w-screen bg-neutral-800 p-2">Meter should be turned on at character select (before entering raid at latest) for best accuracy.</div>
+                        <div class="w-screen h-px bg-neutral-700"></div>
+                        <div class="w-screen bg-neutral-800 p-2 font-bold text-lg">!!! NOTICE !!!</div>
+                        <div class="w-screen bg-neutral-800 px-2">The default install directory of the app has changed after v1.1.12</div>
+                        <div class="w-screen bg-neutral-800 px-2">If you had logs previously, you must manually copy the <span class="font-mono">encounters.db</span> to the new install location. :( sorry!</div>
+                        <!-- svelte-ignore a11y-click-events-have-key-events -->
+                        <div class="w-screen bg-neutral-800 px-2">Old Default: <span class="font-mono text-white hover:underline cursor-pointer" on:click={() => openFolder("USERPROFILE\\AppData\\Local\\Programs\\LOA Logs")}>C:\Users\USERNAME\AppData\Local\Programs\LOA Logs</span></div>
+                        <!-- svelte-ignore a11y-click-events-have-key-events -->
+                        <div class="w-screen bg-neutral-800 px-2">New Default: <span class="font-mono text-white hover:underline cursor-pointer" on:click={() => openFolder("USERPROFILE\\AppData\\Local\\LOA Logs")}>C:\Users\USERNAME\AppData\Local\LOA Logs</span></div>
                         {#if oldDbExists}
-                        <div class="w-screen bg-neutral-800 p-2"><button class="p-2 rounded-md bg-accent-800 text-white" on:click={copyDb}>I'm too lazy. Help me copy please.</button></div>
+                        <div class="w-screen bg-neutral-800 p-2"><button class="p-2 rounded-md bg-accent-900 text-white hover:bg-accent-800" on:click={copyDb}>I'm too lazy. Help me copy please.</button></div>
                         {/if}
                     {/each}
                 </tbody>

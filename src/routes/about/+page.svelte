@@ -34,7 +34,7 @@
         <p class="px-4 mt-12 text-base">
             LOA Logs is a "blazingly fast" open source Lost Ark DPS meter (<a class="text-accent-500 hover:underline" href="https://github.com/snoww/loa-logs" target="_blank">github.com/snoww/loa-logs</a>),
             written in Rust by <a class="text-accent-500 hover:underline" href="https://github.com/snoww" target="_blank">Snow</a>. 
-            his project is an opinionated flavor of <a class="text-accent-500 hover:underline" href="https://github.com/lost-ark-dev/loa-details" target="_blank">LOA Details</a> by Herysia and Mathi, but should share very similar user interfaces and settings. 
+            This project is an opinionated flavor of <a class="text-accent-500 hover:underline" href="https://github.com/lost-ark-dev/loa-details" target="_blank">LOA Details</a> by Herysia and Mathi, but should share very similar user interfaces and settings. 
             The packet sniffing is still done by LOA Details' <a class="text-accent-500 hover:underline" href="https://github.com/lost-ark-dev/meter-core" target="_blank"><code>meter-core</code></a> under the hood, 
             but the data processing is done using Rust. There are future plans to port the packet sniffing part to Rust as well.
         </p>
