@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { goto } from "$app/navigation";
     import LogSidebar from "$lib/components/logs/LogSidebar.svelte";
     import TableFilter from "$lib/components/table/TableFilter.svelte";
     import type { EncounterPreview, EncountersOverview } from "$lib/types";
@@ -14,6 +15,8 @@
     let totalEncounters: number = 0;
     const rowsPerPage = 10;
 
+    let oldDbExists = false;
+
     $: {       
         if ($searchStore.length > 0) {
             if ($backNavStore) {
@@ -24,7 +27,7 @@
         }
 
         loadEncounters();
-        
+        checkOldDbExists();
     }
 
     async function loadEncounters(): Promise<Array<EncounterPreview>> {        
@@ -81,6 +84,19 @@
     }
 
     let hidden: boolean = true;
+
+    async function checkOldDbExists() {
+        oldDbExists = await invoke("check_old_db_location_exists");
+    }
+
+    async function copyDb() {
+        NProgress.start();
+        await invoke("copy_db");
+        NProgress.done();
+        setTimeout(async () => {
+            await refresh()
+        }, 2000);
+    }
 
 </script>
 
@@ -150,6 +166,14 @@
                     {:else}
                         <div class="w-screen bg-neutral-800 p-2">No encounters recorded.</div>
                         <div class="w-screen bg-neutral-800 p-2">Meter should be turned on at character select for best accuracy.</div>
+                        <div class="w-screen bg-neutral-800 p-2">!!! NOTICE !!!</div>
+                        <div class="w-screen bg-neutral-800 px-2">The default install directory of the app has changed.</div>
+                        <div class="w-screen bg-neutral-800 px-2">If you had logs previously, you must manually copy the <span class="font-mono">encounters.db</span> to the new install location. :( sorry</div>
+                        <div class="w-screen bg-neutral-800 px-2">Old: <span class="font-mono">C:\Users\USERNAME\AppData\Local\Programs\LOA Logs</span></div>
+                        <div class="w-screen bg-neutral-800 px-2">New: <span class="font-mono">C:\Users\USERNAME\AppData\Local\LOA Logs</span></div>
+                        {#if oldDbExists}
+                        <div class="w-screen bg-neutral-800 p-2"><button class="p-2 rounded-md bg-accent-800 text-white" on:click={copyDb}>I'm too lazy. Help me copy please.</button></div>
+                        {/if}
                     {/each}
                 </tbody>
             </table>

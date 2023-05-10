@@ -218,6 +218,8 @@ fn main() {
             open_url, 
             save_settings,
             get_settings,
+            check_old_db_location_exists,
+            copy_db
         ])
         .run(tauri::generate_context!())
         .expect("error while running application");
@@ -610,4 +612,36 @@ fn read_settings(resource_path: &Path) -> Result<Settings, Box<dyn std::error::E
 fn get_settings(window: tauri::Window) -> Option<Settings> {
     let path = window.app_handle().path_resolver().resource_dir().expect("could not get resource dir");
     read_settings(&path).ok()
+}
+
+
+#[tauri::command]
+fn check_old_db_location_exists() -> bool {
+    let user_dir = std::env::var("HOME");
+    match user_dir {
+        Ok(user_dir) => {
+            let old_path = PathBuf::from(format!("{}/AppData/Local/Programs/LOA Logs/encounters.db", user_dir));
+            old_path.exists()
+        },
+        Err(_) => false
+    }
+}
+
+#[tauri::command]
+fn copy_db(window: tauri::Window) -> Result<(), String> {
+    let user_dir = std::env::var("HOME");
+    match user_dir {
+        Ok(user_dir) => {
+            let old_path = PathBuf::from(format!("{}/AppData/Local/Programs/LOA Logs/encounters.db", user_dir));    
+            let mut new_path = window.app_handle().path_resolver().resource_dir().expect("could not get resource dir");
+            new_path.push("encounters.db");
+            match std::fs::copy(old_path, new_path) {
+                Ok(_) => Ok(()),
+                Err(e) => {
+                    println!("Error copying db: {}", e);
+                    Err(e.to_string())}
+            }
+        },
+        Err(_) => Err("Could not get user dir".to_string())
+    }
 }

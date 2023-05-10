@@ -48,6 +48,7 @@
       },
       "fs": {
         "readFile": true,
+        "copyFile": true,
         "scope": ["**"]
       },
       "path": {
@@ -92,7 +93,10 @@
         "signingIdentity": null
       },
       "shortDescription": "DPS Meter for Lost Ark",
-      "targets": "all",
+      "targets": [
+        "nsis",
+        "updater"
+      ],
       "windows": {
         "webviewInstallMode": {
           "type": "embedBootstrapper"
@@ -100,8 +104,9 @@
         "certificateThumbprint": null,
         "digestAlgorithm": "sha256",
         "timestampUrl": "",
-        "wix": {
-          "template": "wix/main.wxs"
+        "nsis": {
+          "license": "../LICENSE",
+          "installerIcon": "icons/icon.ico"
         }
       }
     },

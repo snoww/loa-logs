@@ -8,6 +8,7 @@ use serde_with::serde_as;
 use serde_with::DefaultOnError;
 
 #[derive(Debug, Default, Serialize, Deserialize, PartialEq, Clone)]
+#[allow(non_camel_case_types)]
 pub enum EntityType {
     #[default]
     UNKNOWN,

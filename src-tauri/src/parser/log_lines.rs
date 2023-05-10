@@ -1,5 +1,4 @@
 use hashbrown::HashSet;
-use serde::Serialize;
 
 use super::models::EntityType;
 
@@ -111,15 +110,8 @@ pub struct LogStaggerChange<'a> {
     pub max_stagger: i32,
 }
 
-#[derive(Debug, PartialEq, Clone, Serialize)]
-pub enum RaidResult {
-    RAID_RESULT,
-    GUARDIAN_DEAD,
-    RAID_END,
-    UNKNOWN,
-}
-
 #[derive(Debug, PartialEq)]
+#[allow(non_camel_case_types)]
 #[repr(i32)]
 pub enum HitOption {
     NONE,
@@ -130,6 +122,7 @@ pub enum HitOption {
 }
 
 #[derive(Debug, PartialEq)]
+#[allow(non_camel_case_types)]
 #[repr(u32)]
 pub enum HitFlag {
     NORMAL,
