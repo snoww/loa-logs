@@ -12,7 +12,7 @@ use parser::{models::*, Parser};
 use rusqlite::{Connection, params};
 use tauri::{Manager, api::process::{Command, CommandEvent }, SystemTray, CustomMenuItem, SystemTrayMenu, SystemTrayMenuItem, WindowBuilder, SystemTrayEvent};
 use tauri_plugin_window_state::{AppHandleExt, WindowExt, StateFlags};
-use window_vibrancy::apply_blur;
+use window_vibrancy::{apply_blur, clear_blur};
 
 fn main() {
     let quit = CustomMenuItem::new("quit".to_string(), "Quit");
@@ -47,20 +47,12 @@ fn main() {
             let mut packet_mode = "pcap".to_string();
             let mut port = 6040;
             
-            #[cfg(target_os = "windows")]
-            {
-                if let Some(settings) = settings {
-                    if settings.general.blur {
-                        apply_blur(&meter_window, Some((10, 10, 10, 50))).ok();
+            if let Some(settings) = settings {
+                if settings.general.raw_socket {
+                    packet_mode = "raw".to_string();
+                    if settings.general.port > 0 {
+                        port = settings.general.port;
                     }
-                    if settings.general.raw_socket {
-                        packet_mode = "raw".to_string();
-                        if settings.general.port > 0 {
-                            port = settings.general.port;
-                        }
-                    }
-                } else {
-                    apply_blur(&meter_window, Some((10, 10, 10, 50))).ok();
                 }
             }
 
@@ -220,7 +212,9 @@ fn main() {
             get_settings,
             check_old_db_location_exists,
             copy_db,
-            open_folder
+            open_folder,
+            disable_blur,
+            enable_blur
         ])
         .run(tauri::generate_context!())
         .expect("error while running application");
@@ -670,4 +664,18 @@ fn open_folder(path: String) {
         .args([path.as_str()])
         .spawn()
         .ok();
+}
+
+#[tauri::command]
+fn disable_blur(window: tauri::Window) {
+    if let Some(meter_window) = window.app_handle().get_window("main") {
+        clear_blur(&meter_window).ok();
+    }
+}
+
+#[tauri::command]
+fn enable_blur(window: tauri::Window) {
+    if let Some(meter_window) = window.app_handle().get_window("main") {
+        apply_blur(&meter_window, Some((10, 10, 10, 50))).ok();
+    }
 }

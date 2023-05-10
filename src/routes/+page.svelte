@@ -19,6 +19,11 @@
             } else {
                 settings.set(merge(defaultSettings, $settings));
             }
+            if ($settings.general.blur) {
+                await invoke("enable_blur");
+            } else {
+                await invoke("disable_blur");
+            }
             await appWindow.setAlwaysOnTop(true);
             registerShortcuts($settings.shortcuts);
             skillIcon.set({ path: convertFileSrc(await join(await resourceDir(), 'images', 'skills'))})

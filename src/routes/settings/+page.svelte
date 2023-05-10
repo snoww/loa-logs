@@ -7,6 +7,7 @@
     import { onMount } from 'svelte';
     import { backNavStore, pageStore, searchStore } from '$lib/utils/stores';
     import { relaunch } from '@tauri-apps/api/process';
+    import { invoke } from '@tauri-apps/api/tauri';
 
     let dropdownOpen = false;
 
@@ -37,10 +38,12 @@
         dropdownOpen = false;
     };
 
-    async function restartApp() {
-        setTimeout(() => {
-            relaunch();
-        }, 500);
+    async function toggleBlur() {
+        if ($settings.general.blur) {
+            await invoke("enable_blur");
+        } else {
+            await invoke("disable_blur");
+        }
     }
 
     onMount(() => {
@@ -76,10 +79,10 @@
                         <SettingItem name="Show Esther" description="Show damage dealt by Esther skills in meter and log view." bind:setting={$settings.general.showEsther} />
                         <div class="">
                             <label class="font-medium flex items-center">
-                                <input type="checkbox" bind:checked={$settings.general.blur} on:change={restartApp} class="rounded h-5 w-5 text-accent-500 bg-zinc-700 focus:ring-0 focus:ring-offset-0" />
+                                <input type="checkbox" bind:checked={$settings.general.blur} on:change={toggleBlur} class="rounded h-5 w-5 text-accent-500 bg-zinc-700 focus:ring-0 focus:ring-offset-0" />
                                 <div class="ml-5">
                                     <div class="text-gray-100">Blur Meter Background</div>
-                                    <div class="text-xs text-gray-300">Makes live meter translucent. Turn this off if experiencing lag (requires restart)</div>
+                                    <div class="text-xs text-gray-300">Makes live meter translucent. Turn this off if experiencing lag.</div>
                                 </div>
                             </label>
                         </div>
