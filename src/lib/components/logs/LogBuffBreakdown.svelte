@@ -28,9 +28,7 @@
 
 {#await processSkills() then skills}
 {#each skills as skill, i (skill.id)}
-<tr class="h-7 px-2 py-1 text-3xs">
     <LogBuffBreakdownRow {groupedSynergies} {skill} {color} damagePercentage={skillDamagePercentages[i]} />
-</tr>
 {/each}
     
 {/await}

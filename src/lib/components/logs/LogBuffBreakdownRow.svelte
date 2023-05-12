@@ -38,23 +38,25 @@
 
 </script>
 
-<td class="pl-1 relative z-10">
-    <img class="h-5 w-5" src={$skillIcon.path + getSkillIcon(skill.icon)} alt={skill.name} use:tooltip={{content: skill.name}}/>
-</td>
-<td class="relative z-10 -left-px">
-    <div class="truncate">
-        {skill.name}
-    </div>
-</td>
-{#if groupedSynergies.size > 0}
-{#each synergyPercentageDetails as synergy}
-    <td class="px-1 text-center">
-        {#if synergy.percentage}
-        <BuffTooltipDetail {synergy} />
-        {/if}
+<tr class="h-7 px-2 py-1 text-3xs">
+    <td class="pl-1 relative z-10">
+        <img class="h-5 w-5" src={$skillIcon.path + getSkillIcon(skill.icon)} alt={skill.name} use:tooltip={{content: skill.name}}/>
     </td>
-{/each}
-{/if}
-<div class="absolute left-0 h-7 px-2 py-1 z-0" class:shadow-md={!$takingScreenshot}
-    style="background-color: {HexToRgba(color, 0.6)}; width: {damagePercentage}%"
-></div>
+    <td class="relative z-10 -left-px">
+        <div class="truncate">
+            {skill.name}
+        </div>
+    </td>
+    {#if groupedSynergies.size > 0}
+    {#each synergyPercentageDetails as synergy}
+        <td class="px-1 text-center">
+            {#if synergy.percentage}
+            <BuffTooltipDetail {synergy} />
+            {/if}
+        </td>
+    {/each}
+    {/if}
+    <div class="absolute left-0 h-7 px-2 py-1 z-0" class:shadow-md={!$takingScreenshot}
+        style="background-color: {HexToRgba(color, 0.6)}; width: {damagePercentage}%"
+    ></div>
+</tr>

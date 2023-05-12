@@ -65,19 +65,16 @@
         
 </script>
 
-<td class="px-1">
-    <div class="flex space-x-1">
-        {#if $settings.general.showEsther && entity.entityType === EntityType.ESTHER}
-        <img class="h-5 w-5" src={$classIconCache[name]} alt={name} use:tooltip={{content: name}}/>
-        <div class="truncate pl-px">
-            {name}
-        </div>
-        {:else}
-        <img class="h-5 w-5" src={$classIconCache[entity.classId]} alt={entity.class} use:tooltip={{content: entity.class}}/>
-        <div class="truncate pl-px">
-            {name}
-        </div>
-        {/if}
+<td class="pl-1">
+    {#if $settings.general.showEsther && entity.entityType === EntityType.ESTHER}
+    <img class="h-5 w-5 table-cell" src={$classIconCache[name]} alt={name} use:tooltip={{content: name}}/>
+    {:else}
+    <img class="h-5 w-5 table-cell" src={$classIconCache[entity.classId]} alt={entity.class} use:tooltip={{content: entity.class}}/>
+    {/if}
+</td>
+<td class="">
+    <div class="truncate">
+        {name}
     </div>
 </td>
 {#if anyDead && $settings.meter.deathTime}

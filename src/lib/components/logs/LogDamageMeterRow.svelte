@@ -47,71 +47,68 @@
     }
 </script>
 
-<td class="px-1 relative z-10">
-    <div class="flex space-x-1">
-        {#if $settings.general.showEsther && entity.entityType === EntityType.ESTHER}
-        <img class="h-5 w-5" src={$classIconCache[name]} alt={name} use:tooltip={{content: name}}/>
-        <div class="truncate pl-px">
-            {name}
-        </div>
-        {:else}
-        <img class="h-5 w-5" src={$classIconCache[entity.classId]} alt={entity.class} use:tooltip={{content: entity.class}}/>
-        <div class="truncate pl-px">
-            {name}
-        </div>
-        {/if}
+<td class="pl-1">
+    {#if $settings.general.showEsther && entity.entityType === EntityType.ESTHER}
+    <img class="h-5 w-5 table-cell" src={$classIconCache[name]} alt={name} use:tooltip={{content: name}}/>
+    {:else}
+    <img class="h-5 w-5 table-cell" src={$classIconCache[entity.classId]} alt={entity.class} use:tooltip={{content: entity.class}}/>
+    {/if}
+</td>
+<td class="">
+    <div class="truncate">
+        {name}
     </div>
 </td>
 {#if anyDead && $settings.logs.deathTime}
-<td class="px-1 text-center relative z-10">
+<td class="px-1 text-center">
     {entity.isDead ? deadFor : ""}
 </td>
 {/if}
 {#if $settings.logs.damage}
-<td class="px-1 text-center relative z-10">
+<td class="px-1 text-center">
     {damageDealt[0]}<span class="text-3xs text-gray-300">{damageDealt[1]}</span>
 </td>
 {/if}
 {#if $settings.logs.dps}
-<td class="px-1 text-center relative z-10">
+<td class="px-1 text-center">
     {dps[0]}<span class="text-3xs text-gray-300">{dps[1]}</span>
 </td>
 {/if}
 {#if damagePercentage !== "100.0" && $settings.logs.damagePercent}
-<td class="px-1 text-center relative z-10">
+<td class="px-1 text-center">
     {damagePercentage}<span class="text-xs text-gray-300">%</span>
 </td>
 {/if}
 {#if $settings.logs.critRate}
-<td class="px-1 text-center relative z-10">
+<td class="px-1 text-center">
     {(entity.skillStats.crits / entity.skillStats.hits * 100).toFixed(1)}<span class="text-3xs text-gray-300">%</span>
 </td>
 {/if}
 {#if anyFrontAtk && $settings.logs.frontAtk}
-<td class="px-1 text-center relative z-10">
+<td class="px-1 text-center">
     {(entity.skillStats.frontAttacks / entity.skillStats.hits * 100).toFixed(1)}<span class="text-3xs text-gray-300">%</span>
 </td>
 {/if}
 {#if anyBackAtk && $settings.logs.backAtk}
-<td class="px-1 text-center relative z-10">
+<td class="px-1 text-center">
     {(entity.skillStats.backAttacks / entity.skillStats.hits * 100).toFixed(1)}<span class="text-3xs text-gray-300">%</span>
 </td>
 {/if}
 {#if anySupportBuff && $settings.logs.percentBuffBySup}
-<td class="px-1 text-center relative z-10">
+<td class="px-1 text-center">
     {(entity.damageStats.buffedBySupport / entity.damageStats.damageDealt * 100).toFixed(1)}<span class="text-3xs text-gray-300">%</span>
 </td>
 {/if}
 {#if anySupportBrand && $settings.logs.percentBrand}
-<td class="px-1 text-center relative z-10">
+<td class="px-1 text-center">
     {(entity.damageStats.debuffedBySupport / entity.damageStats.damageDealt * 100).toFixed(1)}<span class="text-3xs text-gray-300">%</span>
 </td>
 {/if}
 {#if $settings.logs.counters}
-<td class="px-1 text-center relative z-10">
+<td class="px-1 text-center">
     {entity.skillStats.counters}<span class="text-3xs text-gray-300"></span>
 </td>
 {/if}
-<div class="absolute left-0 h-7 px-2 py-1 z-0" class:shadow-md={!$takingScreenshot}
+<div class="absolute left-0 h-7 px-2 py-1 -z-10" class:shadow-md={!$takingScreenshot}
     style="background-color: {HexToRgba(color, 0.6)}; width: {percentage}%"
 ></div>

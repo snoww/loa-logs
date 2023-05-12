@@ -211,6 +211,7 @@
             {#if state === MeterState.PARTY}
             <thead class="top-0 sticky h-6" on:contextmenu|preventDefault={() => {console.log("titlebar clicked")}}>
                 <tr class="bg-zinc-900 tracking-tighter">
+                    <th class="w-7 px-2 font-normal"></th>
                     <th class="text-left px-2 font-normal w-full"></th>
                     {#if anyDead && $settings.meter.deathTime}
                     <th class="font-normal w-20">Dead for</th>
