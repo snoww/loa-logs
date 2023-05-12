@@ -1,11 +1,11 @@
 <script lang="ts">
     import { Buff, BuffDetails, type Skill, type StatusEffect } from "$lib/types";
     import { HexToRgba } from "$lib/utils/colors";
-    import { Tooltip } from 'flowbite-svelte';
-    import BuffTooltipDetail from "../shared/BuffTooltipDetail.svelte";
     import { takingScreenshot } from "$lib/utils/stores";
     import { skillIcon } from "$lib/utils/settings";
     import { getSkillIcon } from "$lib/utils/strings";
+    import { generateTooltipContent, tooltip } from "$lib/utils/tooltip";
+    import BuffTooltipDetail from "../shared/BuffTooltipDetail.svelte";
 
     export let skill: Skill;
     export let color: string;
@@ -50,12 +50,7 @@
 {#each synergyPercentageDetails as synergy}
     <td class="px-1 text-center">
         {#if synergy.percentage}
-        <div class="relative z-20">
-            {synergy.percentage}<span class="text-3xs text-gray-300">%</span>
-        </div>
-        <Tooltip placement="bottom" defaultClass="bg-zinc-900 p-2 text-gray-300 z-50">
-            <BuffTooltipDetail buffDetails={synergy} />
-        </Tooltip>
+        <BuffTooltipDetail {synergy} />
         {/if}
     </td>
 {/each}

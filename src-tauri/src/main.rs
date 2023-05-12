@@ -260,7 +260,8 @@ fn setup_db(resource_path: PathBuf) -> Result<(), String> {
             top_damage_taken INTEGER,
             dps INTEGER,
             buffs TEXT,
-            debuffs TEXT
+            debuffs TEXT,
+            misc TEXT
         );
         CREATE INDEX IF NOT EXISTS encounter_fight_start_index
         ON encounter (fight_start desc);

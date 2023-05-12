@@ -2,11 +2,11 @@
     import { classColors } from "$lib/constants/colors";
     import { Buff, BuffDetails, type Entity, type StatusEffect } from "$lib/types";
     import { HexToRgba } from "$lib/utils/colors";
-    import { Tooltip } from 'flowbite-svelte';
-    import BuffTooltipDetail from "../shared/BuffTooltipDetail.svelte";
     import { formatPlayerName } from "$lib/utils/strings";
     import { classIconCache, settings } from "$lib/utils/settings";
     import { takingScreenshot } from "$lib/utils/stores";
+    import BuffTooltipDetail from "../shared/BuffTooltipDetail.svelte";
+
 
     export let player: Entity;
     export let groupedSynergies: Map<string, Map<number, StatusEffect>>;
@@ -60,12 +60,7 @@
 {#each synergyPercentageDetails as synergy}
     <td class="px-1 text-center text-3xs">
         {#if synergy.percentage}
-        <div class="relative z-20">
-            {synergy.percentage}<span class="text-3xs text-gray-300">%</span>
-        </div>
-        <Tooltip placement="bottom" defaultClass="bg-zinc-900 p-2 text-gray-300 z-50">
-            <BuffTooltipDetail buffDetails={synergy} />
-        </Tooltip>
+        <BuffTooltipDetail {synergy} />
         {/if}
     </td>
 {/each}

@@ -47,6 +47,8 @@
 		"flowbite-svelte": "^0.34.7",
 		"html2canvas": "^1.4.1",
 		"lodash-es": "^4.17.21",
-		"nprogress": "^0.2.0"
+		"nprogress": "^0.2.0",
+		"svelte-tippy": "^1.3.2",
+		"tippy.js": "^6.3.7"
 	}
 }

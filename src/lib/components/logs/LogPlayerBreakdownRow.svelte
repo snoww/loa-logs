@@ -5,7 +5,7 @@
     import { settings, skillIcon } from "$lib/utils/settings";
     import { takingScreenshot } from "$lib/utils/stores";
     import { getSkillIcon } from "$lib/utils/strings";
-    import { Tooltip } from "flowbite-svelte";
+    import { tooltip } from "$lib/utils/tooltip";
 
     export let skill: Skill;
     export let color: string;
@@ -100,14 +100,9 @@
 {/if}
 {#if $settings.logs.breakdown.casts}
 <td class="px-1 text-center relative z-10">
-    <div class="">
+    <div use:tooltip={{content: `<div class="py-1">${skill.casts.toLocaleString() + " " + (skill.casts === 1 ? "cast" : "casts")}</div>`}}>
         {(skill.casts / (duration / 1000 / 60)).toFixed(1)}
     </div>
-    <Tooltip placement="top" class="bg-zinc-900 text-gray-300 text-xs" style="custom">
-        <div class="truncate">
-            {skill.casts.toLocaleString() + " " + (skill.casts === 1 ? "cast" : "casts")}
-        </div>
-    </Tooltip>
 </td>
 {/if}
 {#if $settings.logs.breakdown.hits}
@@ -117,15 +112,10 @@
         0
     </div>
     {:else}
-    <div class="">
+    <div use:tooltip={{content: `<div class="py-1">${skill.hits.toLocaleString() + " " + (skill.hits === 1 ? "hit" : "hits")}</div>`}}>
         {(skill.hits / (duration / 1000 / 60)).toFixed(1)}
     </div>
     {/if}
-    <Tooltip placement="top" class="bg-zinc-900 text-gray-300 text-xs" style="custom">
-        <div class="truncate">
-            {skill.hits.toLocaleString() + " " + (skill.hits === 1 ? "hit" : "hits")}
-        </div>
-    </Tooltip>
 </td>
 {/if}
 <div class="absolute left-0 h-7 px-2 py-1" class:shadow-md={!$takingScreenshot}

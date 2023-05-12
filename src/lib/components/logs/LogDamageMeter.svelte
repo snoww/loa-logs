@@ -540,7 +540,7 @@
     {:else if tab === MeterTab.STAGGER && encounter.encounterDamageStats.misc && encounter.encounterDamageStats.misc.staggerStats}
         <LogStagger staggerStats={encounter.encounterDamageStats.misc.staggerStats}/>
     {:else}
-        <div class="relative top-0 px overflow-x-auto" id="buff-table">
+        <div class="relative top-0 px overflow-x-auto overflow-y-visible">
             <table class="table-fixed w-full relative">
                 {#if tab === MeterTab.DAMAGE}
                     {#if state === MeterState.PARTY}

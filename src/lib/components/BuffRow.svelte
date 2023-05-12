@@ -4,7 +4,6 @@
     import { HexToRgba } from "$lib/utils/colors";
     import { cubicOut } from "svelte/easing";
     import { tweened } from "svelte/motion";
-    import { Tooltip } from 'flowbite-svelte';
     import BuffTooltipDetail from "./shared/BuffTooltipDetail.svelte";
     import { classIconCache, settings } from "$lib/utils/settings";
     import { formatPlayerName } from "$lib/utils/strings";
@@ -75,12 +74,7 @@
 {#each synergyPercentageDetails as synergy}
     <td class="px-1 text-center">
         {#if synergy.percentage}
-        <div>
-            {synergy.percentage}<span class="text-3xs text-gray-300">%</span>
-        </div>
-        <Tooltip placement="bottom" defaultClass="bg-zinc-900 p-2 text-gray-300 z-50">
-            <BuffTooltipDetail buffDetails={synergy} />
-        </Tooltip>
+        <BuffTooltipDetail {synergy} />
         {/if}
     </td>
 {/each}
