@@ -203,7 +203,8 @@ fn main() {
         })
         .invoke_handler(tauri::generate_handler![
             load_encounters_preview, 
-            load_encounter, 
+            load_encounter,
+            get_encounter_count,
             open_most_recent_encounter, 
             delete_encounter, 
             toggle_meter_window, 
@@ -335,11 +336,11 @@ fn load_encounters_preview(window: tauri::Window, page: i32, page_size: i32, min
                 ORDER BY json_extract(en.damage_stats, '$.dps') DESC
             ) AS ordered_classes
         ) AS classes
-    FROM
-        encounter e
-    WHERE e.duration > ? AND current_boss LIKE '%' || ? || '%'
-    ORDER BY
-        e.fight_start DESC
+    FROM encounter e
+    JOIN entity ent ON e.id = ent.encounter_id
+    WHERE e.duration > ? AND ((current_boss LIKE '%' || ? || '%') OR (ent.class LIKE '%' || ? || '%') OR (ent.name LIKE '%' || ? || '%'))
+    GROUP BY encounter_id
+    ORDER BY e.fight_start DESC
     LIMIT ?
     OFFSET ?
     ")
@@ -348,7 +349,14 @@ fn load_encounters_preview(window: tauri::Window, page: i32, page_size: i32, min
     let offset = (page - 1) * page_size;
     let min_duration = min_duration * 1000;
 
-    let encounter_iter = stmt.query_map([min_duration.to_string(), search.to_string(), page_size.to_string(), offset.to_string()], |row| {
+    let encounter_iter = stmt.query_map([
+            min_duration.to_string(), 
+            search.to_string(), 
+            search.to_string(), 
+            search.to_string(), 
+            page_size.to_string(), 
+            offset.to_string()
+            ], |row| {
         let classes = match row.get(4) {
             Ok(classes) => classes,
             Err(_) => "".to_string()
@@ -375,10 +383,13 @@ fn load_encounters_preview(window: tauri::Window, page: i32, page_size: i32, min
     }
 
     let count: i32 = conn.query_row_and_then("
-    SELECT COUNT(*) 
-    FROM encounter 
-    WHERE duration > ? AND current_boss LIKE '%' || ? || '%'
-    ", [min_duration.to_string(), search], |row| {
+    SElECT COUNT(*)
+    FROM (SELECT encounter_id
+        FROM encounter e
+        JOIN entity ent ON e.id = ent.encounter_id
+        WHERE duration > ? AND ((current_boss LIKE '%' || ? || '%') OR (ent.class LIKE '%' || ? || '%') OR (ent.name LIKE '%' || ? || '%'))
+        GROUP BY encounter_id)
+    ", [min_duration.to_string(), search.to_string(), search.to_string(), search.to_string()], |row| {
         row.get(0)
     }).expect("could not get encounter count");
 
@@ -542,6 +553,22 @@ fn load_encounter(window: tauri::Window, id: String) -> Encounter {
     encounter.entities = entities;
 
     encounter
+}
+
+#[tauri::command]
+fn get_encounter_count(window: tauri::Window) -> i32 {
+    let path = window.app_handle().path_resolver().resource_dir().expect("could not get resource dir");
+    let conn = get_db_connection(&path).expect("could not get db connection");
+    let mut stmt = conn.prepare_cached("SELECT COUNT(*) FROM encounter;").unwrap();
+
+    let count: Result<i32, rusqlite::Error> = stmt.query_row(params![], |row| {
+        row.get(0)
+    });
+
+    match count {
+        Ok(count) => count,
+        Err(_) => 0
+    }
 }
 
 #[tauri::command]
