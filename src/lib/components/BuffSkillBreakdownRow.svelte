@@ -1,12 +1,12 @@
 <script lang="ts">
     import { Buff, BuffDetails, type Skill, type StatusEffect } from "$lib/types";
     import { HexToRgba } from "$lib/utils/colors";
-    import { Tooltip } from 'flowbite-svelte';
     import BuffTooltipDetail from "./shared/BuffTooltipDetail.svelte";
     import { tweened } from "svelte/motion";
     import { cubicOut } from "svelte/easing";
     import { skillIcon } from "$lib/utils/settings";
     import { getSkillIcon } from "$lib/utils/strings";
+    import { tooltip } from "$lib/utils/tooltip";
 
     export let skill: Skill;
     export let color: string;
@@ -49,7 +49,7 @@
 </script>
 
 <td class="pl-1 relative z-10">
-    <img class="h-5 w-5" src={$skillIcon.path + getSkillIcon(skill.icon)} alt={skill.name} />
+    <img class="h-5 w-5" src={$skillIcon.path + getSkillIcon(skill.icon)} alt={skill.name} use:tooltip={{content: skill.name}}/>
 </td>
 <td class="relative z-10">
     <div class="truncate">

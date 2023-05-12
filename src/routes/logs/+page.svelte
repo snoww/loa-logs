@@ -6,8 +6,8 @@
     import { formatDurationFromMs, formatTimestamp } from "$lib/utils/numbers";
     import { classIconCache, settings } from "$lib/utils/settings";
     import { backNavStore, pageStore, searchStore } from "$lib/utils/stores";
+    import { tooltip } from "$lib/utils/tooltip";
     import { invoke } from "@tauri-apps/api";
-    import { Tooltip } from 'flowbite-svelte';
     import NProgress from 'nprogress';
     import 'nprogress/nprogress.css';
 
@@ -148,10 +148,9 @@
                     {#each encounters as encounter (encounter.fightStart)}
                         <tr class="border-b border-gray-700">
                             <td class="px-2 py-3">
-                                <div>
+                                <div use:tooltip={{content: formatTimestamp(encounter.fightStart)}}>
                                     #{encounter.id}
                                 </div>
-                                <Tooltip defaultClass="bg-accent-800 p-2 text-gray-300">{formatTimestamp(encounter.fightStart)}</Tooltip>
                             </td>
                             <td class="px-3 py-3 font-bold text-gray-300 w-full truncate">
                                 <a href="/logs/encounter/?id={encounter.id}" class="hover:underline hover:text-accent-500">

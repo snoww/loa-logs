@@ -6,6 +6,7 @@
     import { classIconCache, settings } from "$lib/utils/settings";
     import { takingScreenshot } from "$lib/utils/stores";
     import { formatPlayerName, getEstherFromNpcId } from "$lib/utils/strings";
+    import { tooltip } from "$lib/utils/tooltip";
 
     export let entity: Entity;
     export let percentage: number;
@@ -49,12 +50,12 @@
 <td class="px-1 relative z-10">
     <div class="flex space-x-1">
         {#if $settings.general.showEsther && entity.entityType === EntityType.ESTHER}
-        <img class="h-5 w-5" src={$classIconCache[name]} alt={name} />
+        <img class="h-5 w-5" src={$classIconCache[name]} alt={name} use:tooltip={{content: name}}/>
         <div class="truncate pl-px">
             {name}
         </div>
         {:else}
-        <img class="h-5 w-5" src={$classIconCache[entity.classId]} alt={entity.class} />
+        <img class="h-5 w-5" src={$classIconCache[entity.classId]} alt={entity.class} use:tooltip={{content: entity.class}}/>
         <div class="truncate pl-px">
             {name}
         </div>

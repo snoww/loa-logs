@@ -11,8 +11,24 @@ export const tooltip = createTippy({
     arrow: roundArrow,
     placement: 'bottom',
     animation: 'perspective-subtle',
-    theme: 'test'
-  });
+    theme: 'buff'
+});
+
+export const menuTooltip = createTippy({
+    allowHTML: true,
+    arrow: roundArrow,
+    placement: 'bottom',
+    animation: 'perspective-subtle',
+    theme: 'menu'
+});
+
+export const skillTooltip = createTippy({
+    allowHTML: true,
+    arrow: roundArrow,
+    placement: 'bottom',
+    animation: 'perspective-subtle',
+    theme: 'buff'
+});
 
 export function generateTooltipContent(buffs: BuffDetails, iconPath: string) {
     let str = `<div class="font-normal text-xs flex flex-col space-y-1 -mx-1">`;

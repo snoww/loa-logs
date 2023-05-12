@@ -5,7 +5,6 @@
     import { settings, skillIcon } from "$lib/utils/settings";
     import { getSkillIcon } from "$lib/utils/strings";
     import { tooltip } from "$lib/utils/tooltip";
-    import { Tooltip } from "flowbite-svelte";
     import { cubicOut } from "svelte/easing";
     import { tweened } from "svelte/motion";
 
@@ -44,7 +43,7 @@
 
 
 <td class="pl-1">
-    <img class="h-5 w-5" src={$skillIcon.path + getSkillIcon(skill.icon)} alt={skill.name} />
+    <img class="h-5 w-5" src={$skillIcon.path + getSkillIcon(skill.icon)} alt={skill.name} use:tooltip={{content: skill.name}}/>
 </td>
 <td>
     <div class="truncate">

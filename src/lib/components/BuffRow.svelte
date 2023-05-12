@@ -7,6 +7,7 @@
     import BuffTooltipDetail from "./shared/BuffTooltipDetail.svelte";
     import { classIconCache, settings } from "$lib/utils/settings";
     import { formatPlayerName } from "$lib/utils/strings";
+    import { tooltip } from "$lib/utils/tooltip";
 
 
     export let player: Entity;
@@ -63,7 +64,7 @@
 </script>
 
 <td class="pl-1">
-    <img class="h-5 w-5 table-cell" src={$classIconCache[player.classId]} alt={player.class} />
+    <img class="h-5 w-5 table-cell" src={$classIconCache[player.classId]} alt={player.class} use:tooltip={{content: player.class}}/>
 </td>
 <td class="">
     <div class="truncate">

@@ -1,10 +1,10 @@
 <script lang="ts">
     import { abbreviateNumber } from "$lib/utils/numbers";
-import { settings } from "$lib/utils/settings";
+    import { settings } from "$lib/utils/settings";
+    import { menuTooltip } from "$lib/utils/tooltip";
     import { emit } from "@tauri-apps/api/event";
     import { invoke } from "@tauri-apps/api/tauri";
     import { appWindow } from "@tauri-apps/api/window";
-    import { Tooltip } from 'flowbite-svelte';
 
     export let encounterDuration: string;
     export let totalDamageDealt: number;
@@ -85,22 +85,16 @@ import { settings } from "$lib/utils/settings";
         </div>
         <div data-tauri-drag-region class="flex space-x-px items-center max-[419px]:hidden">
             <button class="" on:click={openLogWindow}>
-                <div>
+                <div use:menuTooltip={{content: 'Open Recent'}}>
                     <svg class="w-5 h-5 fill-gray-400 hover:fill-gray-50" xmlns="http://www.w3.org/2000/svg" height="48" viewBox="0 96 960 960" width="48"><path d="M475.946 956.5Q316 956.5 206.545 845.323 97.091 734.147 98.5 574.5H190q1.152 120.8 83.513 205.65Q355.873 865 475.825 865q120.675 0 206.425-85.834Q768 693.331 768 571.184q0-119.148-85.937-201.666Q596.127 287 475.5 287q-59.675 0-112.087 24Q311 335 270.5 376H353v70.5H129.5V225H198v94.5q54-58 125.194-91.5 71.195-33.5 152.456-33.5 78.85 0 148.632 30.13 69.782 30.13 122.49 81.511 52.709 51.381 82.718 120.054 30.01 68.673 30.01 147.739t-30.01 148.805q-30.009 69.739-82.5 121.75Q694.5 896.5 624.76 926.5q-69.74 30-148.814 30Zm123.554-214L448 592.565V375.5h68.5v187L650 692l-50.5 50.5Z"/></svg>
                 </div>
-                <Tooltip placement="bottom" defaultClass="bg-zinc-700 p-2 text-gray-300">
-                    Open Recent
-                </Tooltip>
             </button>
             <div class="flex items-center" on:focusout={handleDropdownFocusLoss}>
-                <button on:click={handleDropdownClick} class="px-1 h-full">
+                <button on:click={handleDropdownClick} class="px-1 h-full" use:menuTooltip={{content: 'Show More'}}>
                     <svg class="w-4 h-4 stroke-gray-400 hover:stroke-gray-50" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M19 9l-7 7-7-7"></path></svg>
                 </button>
-                <Tooltip placement="bottom" defaultClass="bg-zinc-700 p-2 text-gray-300">
-                    Show More
-                </Tooltip>
                 {#if dropdownOpen}
-                <div class="absolute top-7 right-2 z-50 bg-zinc-700/90 rounded-md">
+                <div class="absolute top-7 right-2 z-50 bg-zinc-700 rounded-md">
                     <div class="flex flex-col space-y-px p-1 text-gray-400">
                         <button class="hover:text-gray-50" on:click={() => {resetSession(); dropdownOpen = false}}>
                             <div class="flex space-x-1">
@@ -125,24 +119,18 @@ import { settings } from "$lib/utils/settings";
                 {/if}
             </div>
             <button on:click={() => appWindow.hide()}>
-                <div>
+                <div use:menuTooltip={{content: 'Minimize'}}>
                     <svg class="w-5 h-5 fill-gray-400 hover:fill-gray-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                         <path d="M20 14H4v-4h16"/>
                     </svg>
                 </div>
-                <Tooltip placement="bottom" defaultClass="bg-zinc-700 p-2 text-gray-300">
-                    Minimize
-                </Tooltip>
             </button>
         </div>
         <div data-tauri-drag-region class="flex space-x-px items-center min-[420px]:hidden">
             <div class="flex items-center" on:focusout={handleMiniDropdownFocusLoss}>
-                <button on:click={handleMiniDropdownClick} class="px-2 h-full">
+                <button on:click={handleMiniDropdownClick} class="px-2 h-full" use:menuTooltip={{content: 'Show More'}}>
                     <svg class="w-4 h-4 stroke-gray-400 hover:stroke-gray-50" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M19 9l-7 7-7-7"></path></svg>
                 </button>
-                <Tooltip placement="bottom" defaultClass="bg-zinc-700 p-2 text-gray-300">
-                    Show More
-                </Tooltip>
                 {#if miniDropdownOpen}
                 <div class="absolute top-7 right-2 z-50 bg-zinc-700/90 rounded-md">
                     <div class="flex flex-col space-y-px p-1 text-gray-400">
@@ -175,14 +163,11 @@ import { settings } from "$lib/utils/settings";
                 {/if}
             </div>
             <button on:click={() => appWindow.hide()}>
-                <div>
+                <div use:menuTooltip={{content: 'Minimize'}}>
                     <svg class="w-5 h-5 fill-gray-400 hover:fill-gray-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                         <path d="M20 14H4v-4h16"/>
                     </svg>
                 </div>
-                <Tooltip placement="bottom" defaultClass="bg-zinc-700 p-2 text-gray-300">
-                    Minimize
-                </Tooltip>
             </button>
         </div>
     </div>

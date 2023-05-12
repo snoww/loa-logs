@@ -34,7 +34,7 @@
 
 <td class="px-1 relative z-10">
     <div class="flex space-x-1 items-center">
-        <img class="h-5 w-5" src={$skillIcon.path + getSkillIcon(skill.icon)} alt={skill.name} />
+        <img class="h-5 w-5" src={$skillIcon.path + getSkillIcon(skill.icon)} alt={skill.name} use:tooltip={{content: skill.name}}/>
         <div class="truncate">
             {skill.name}
         </div>
