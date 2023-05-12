@@ -31,7 +31,7 @@ export const skillTooltip = createTippy({
 });
 
 export function generateTooltipContent(buffs: BuffDetails, iconPath: string) {
-    let str = `<div class="font-normal text-xs flex flex-col space-y-1 -mx-1">`;
+    let str = `<div class="font-normal text-xs flex flex-col space-y-1 -mx-px py-px">`;
     for (const buff of buffs.buffs) {
         if (buff.sourceIcon) {
             str += `<div class="flex items-center">`;
