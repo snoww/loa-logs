@@ -327,9 +327,9 @@ fn load_encounters_preview(window: tauri::Window, page: i32, page_size: i32, min
         e.current_boss,
         e.duration,
         (
-            SELECT GROUP_CONCAT(ordered_classes.class_id, ',')
+            SELECT GROUP_CONCAT(ordered_classes.class_info, ',')
             FROM (
-                SELECT en.class_id
+                SELECT en.class_id || ':' || en.name AS class_info
                 FROM entity en
                 WHERE en.encounter_id = e.id AND en.entity_type = 'PLAYER'
                 ORDER BY json_extract(en.damage_stats, '$.dps') DESC
@@ -351,15 +351,21 @@ fn load_encounters_preview(window: tauri::Window, page: i32, page_size: i32, min
     let encounter_iter = stmt.query_map([min_duration.to_string(), search.to_string(), page_size.to_string(), offset.to_string()], |row| {
         let classes = match row.get(4) {
             Ok(classes) => classes,
-            Err(_) => "101".to_string()
+            Err(_) => "".to_string()
         };
+
+        let (classes, names) = classes.split(',').map(|s| {
+            let info: Vec<&str> = s.split(':').collect();
+            (info[0].parse::<i32>().unwrap_or(101), info[1].to_string())
+        }).unzip();
 
         Ok(EncounterPreview {
             id: row.get(0)?,
             fight_start: row.get(1)?,
             boss_name: row.get(2)?,
             duration: row.get(3)?,
-            classes: classes.split(',').map(|s| s.parse::<i32>().unwrap()).collect()
+            classes,
+            names
         })
     }).expect("could not query encounters");
 

@@ -385,6 +385,7 @@ pub struct EncounterPreview {
     pub boss_name: String,
     pub duration: i32,
     pub classes: Vec<i32>,
+    pub names: Vec<String>,
 }
 
 #[derive(Debug, Default, Serialize, Deserialize, Clone)]

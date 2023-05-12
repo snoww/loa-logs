@@ -26,6 +26,7 @@ export interface EncounterPreview {
     bossName: string;
     duration: number;
     classes: Array<number>;
+    names: Array<string>;
 }
 
 export interface EncounterDamageStats {
