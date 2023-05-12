@@ -2,6 +2,24 @@
 @tailwind components;
 @tailwind utilities;
 
+.tippy-box[data-theme='buff'] {
+  @apply inline-block px-2 py-1 font-medium rounded-lg shadow-sm text-xs;
+  @apply text-gray-200 bg-zinc-900;
+}
+
+.tippy-box[data-theme='buff'] > .tippy-svg-arrow {
+  @apply fill-zinc-900;
+}
+
+.tippy-box[data-theme='menu'] {
+  @apply inline-block px-2 py-1 text-sm font-medium rounded-lg shadow-sm;
+  @apply text-gray-200 bg-zinc-700;
+}
+
+.tippy-box[data-theme='menu'] > .tippy-svg-arrow {
+  @apply fill-zinc-700;
+}
+
 @layer base {
   img {
     @apply inline-block;
