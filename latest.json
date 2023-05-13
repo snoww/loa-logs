@@ -1,11 +1,11 @@
 {
-    "version": "v1.1.13",
-    "notes": "NOTE: auto-updater kinda buggy atm (click ignore if error pops up)\n- new and improved tooltips for (almost) everything\n- added player name tooltips for logs\n- added class, player name search\n- fix buffs and brands in skill breakdown\nsend bug reports or feature requests to Snow#7777",
-    "pub_date": "2023-05-12T08:49:34Z",
+    "version": "v1.1.14",
+    "notes": "NOTE: auto-updater kinda buggy atm (click ignore if error pops up)\n- fix buff skill breakdown columns overlapping\n- new and improved tooltips for (almost) everything\n- added player name tooltips for logs\n- added class, player name search\n- fix buffs and brands in skill breakdown\nsend bug reports or feature requests to Snow#7777",
+    "pub_date": "2023-05-13T01:50:28Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.1.13/LOA.Logs_1.1.13_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmRjL3NTelRFNWlTTE9DNTZEa1h3NVRvQStFL0JmVk83a0owajdwZXQ1R2FrcjcvRDZvdXhnM0M1QzMvWGtNamVXVktHeXp0dlNWbkoybDBXUDJnUmdVPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjgzOTQwMjM0CWZpbGU6TE9BIExvZ3NfMS4xLjEzX3g2NC1zZXR1cC5uc2lzLnppcApqa1U2RXFqQXpMVEtjR2xYMGQ1UkJDdWdVSHdrVHdDeWE3UEVDZzJiR1RiQWc3NG1JTFVzNXAyd1l0NFVydkNUbFdJYmllMk1CTFhpTWRVckVQQ0hCdz09Cg=="
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.1.14/LOA.Logs_1.1.14_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmZVVFhPTk5lQkQ5djR2ckVKSng5bmJTak1QbDZJeUgvc2Nwd3Z0UzVyV3BaVzJEY0hLMUxrbjdtM0hCM3pwTVFnM05QT2NwQ0lta3NyS2xEZ05OV0FvPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjgzOTQyNTg2CWZpbGU6TE9BIExvZ3NfMS4xLjE0X3g2NC1zZXR1cC5uc2lzLnppcAo0bGNwZkNnam9lY0F1Z0tlbEt4aUlGaHUzalVoR0hndjFEdG95V2lXSlNNeDJmNkZGYklrczJ3eFZQcUpDNzMxclJoaGs3VUtrVWNLTHY4OTVhQStDUT09Cg=="
         }
     }
 }
