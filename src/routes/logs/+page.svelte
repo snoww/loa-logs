@@ -14,6 +14,7 @@
     let encounters: Array<EncounterPreview> = [];
     let totalEncounters: number = 0;
     const rowsPerPage = 10;
+    const maxSearchLength = 30;
 
     let oldDbExists = false;
 
@@ -31,7 +32,7 @@
     }
 
     async function loadEncounters(): Promise<Array<EncounterPreview>> {        
-        let overview: EncountersOverview = await invoke("load_encounters_preview", { page: $pageStore, pageSize: rowsPerPage, minDuration: $settings.logs.minEncounterDuration, search: $searchStore });        
+        let overview: EncountersOverview = await invoke("load_encounters_preview", { page: $pageStore, pageSize: rowsPerPage, minDuration: $settings.logs.minEncounterDuration, search: $searchStore.substring(0, maxSearchLength) });        
         encounters = overview.encounters;
         totalEncounters = overview.totalEncounters;
         return encounters;
@@ -131,7 +132,7 @@
         </div>
     <div class="px-8">
         <div class="py-2">
-            <TableFilter bind:search={$searchStore}/>
+            <TableFilter/>
         </div>
         <div class="relative overflow-x-hidden overflow-y-auto" style="height: calc(100vh - 8.25rem - 2.5rem);" id="logs-table">
             <table class="w-full text-left text-gray-400 table-fixed" id="table">
