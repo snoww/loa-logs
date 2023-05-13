@@ -106,12 +106,13 @@
 <thead class="top-0 sticky h-6 z-40">
     <tr class="bg-zinc-900">
         <th class="w-7 px-2 font-normal"></th>
-        <th class="text-left px-2 font-normal w-full"></th>
-            {#each [...groupedSynergies] as [id, synergies] (id)}
-                <BuffHeader {synergies} />
-            {:else}
-                <th class="font-normal w-20">No Buffs</th>
-            {/each}
+        <th class="text-left px-2 font-normal w-20"></th>
+        <th class="w-full"></th>
+        {#each [...groupedSynergies] as [id, synergies] (id)}
+            <BuffHeader {synergies} />
+        {:else}
+            <th class="font-normal w-20">No Buffs</th>
+        {/each}
     </tr>
 </thead>
 <tbody on:contextmenu|preventDefault={handleRightClick}>

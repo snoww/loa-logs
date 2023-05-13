@@ -54,7 +54,7 @@
     <img class="h-5 w-5 table-cell" src={$classIconCache[entity.classId]} alt={entity.class} use:tooltip={{content: entity.class}}/>
     {/if}
 </td>
-<td class="">
+<td colspan="2">
     <div class="truncate">
         {name}
     </div>

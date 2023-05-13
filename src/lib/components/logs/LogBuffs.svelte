@@ -100,7 +100,8 @@
 <thead class="relative h-6 z-40" id="buff-head">
     <tr class="bg-zinc-900">
         <th class="w-7 px-2 font-normal"></th>
-        <th class="text-left px-2 font-normal w-full"></th>
+        <th class="text-left px-2 font-normal w-20"></th>
+        <th class="w-full"></th>
         {#each [...groupedSynergies] as [id, synergies] (id)}
             <LogBuffHeader {synergies} />
         {:else}

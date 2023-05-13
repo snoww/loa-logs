@@ -66,7 +66,7 @@
 <td class="pl-1">
     <img class="h-5 w-5 table-cell" src={$classIconCache[player.classId]} alt={player.class} use:tooltip={{content: player.class}}/>
 </td>
-<td class="">
+<td colspan="2">
     <div class="truncate">
         {playerName}
     </div>
