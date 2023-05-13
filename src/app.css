@@ -12,7 +12,7 @@
 }
 
 .tippy-box[data-theme='menu'] {
-  @apply inline-block px-2 py-1 text-sm font-medium rounded-lg shadow-sm;
+  @apply inline-block px-2 py-1 text-sm font-medium rounded-lg shadow-md;
   @apply text-gray-200 bg-zinc-700;
 }
 

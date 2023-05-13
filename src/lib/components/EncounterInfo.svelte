@@ -94,7 +94,7 @@
                     <svg class="w-4 h-4 stroke-gray-400 hover:stroke-gray-50" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M19 9l-7 7-7-7"></path></svg>
                 </button>
                 {#if dropdownOpen}
-                <div class="absolute top-7 right-2 z-50 bg-zinc-700 rounded-md">
+                <div class="absolute top-6 right-2 z-50 bg-zinc-700 rounded-md shadow-md">
                     <div class="flex flex-col space-y-px p-1 text-gray-400">
                         <button class="hover:text-gray-50" on:click={() => {resetSession(); dropdownOpen = false}}>
                             <div class="flex space-x-1">
@@ -132,7 +132,7 @@
                     <svg class="w-4 h-4 stroke-gray-400 hover:stroke-gray-50" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M19 9l-7 7-7-7"></path></svg>
                 </button>
                 {#if miniDropdownOpen}
-                <div class="absolute top-7 right-2 z-50 bg-zinc-700/90 rounded-md">
+                <div class="absolute top-6 right-2 z-50 bg-zinc-700 rounded-md shadow-md">
                     <div class="flex flex-col space-y-px p-1 text-gray-400">
                         <button class="hover:text-gray-50" on:click={openLogWindow}>
                             <div class="flex space-x-1">

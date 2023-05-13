@@ -52,7 +52,7 @@
     <td class="pl-1 relative z-10">
         <img class="h-5 w-5" src={$skillIcon.path + getSkillIcon(skill.icon)} alt={skill.name} use:tooltip={{content: skill.name}}/>
     </td>
-    <td class="relative z-10">
+    <td class="relative z-10" colspan="2">
         <div class="truncate">
             {skill.name}
         </div>
