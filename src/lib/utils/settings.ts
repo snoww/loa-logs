@@ -32,6 +32,7 @@ export const defaultSettings = {
     },
     "meter": {
         "bossHp": true,
+        "splitBossHpBar": false,
         "abbreviateHeader": true,
         "showClassColors": true,
         "damage": false,

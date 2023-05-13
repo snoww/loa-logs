@@ -127,7 +127,7 @@
         <tbody class="relative z-10">
             {#each cards as [card, count], i}
             <tr class="h-6 px-2 py-1 text-3xs">
-                <td class="px-1 relative z-10">
+                <td class="px-1">
                     <div class="flex space-x-1 items-center">
                         <img class="h-5 w-5" src={$skillIcon.path + getSkillIcon(cardIconMap[card])} alt={cardMap[card]} />
                         <div class="truncate pl-px">

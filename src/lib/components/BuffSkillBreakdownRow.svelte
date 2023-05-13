@@ -49,10 +49,10 @@
 </script>
 
 <tr class="h-7 px-2 py-1 text-3xs">
-    <td class="pl-1 relative z-10">
+    <td class="pl-1">
         <img class="h-5 w-5" src={$skillIcon.path + getSkillIcon(skill.icon)} alt={skill.name} use:tooltip={{content: skill.name}}/>
     </td>
-    <td class="relative z-10" colspan="2">
+    <td colspan="2">
         <div class="truncate">
             {skill.name}
         </div>
@@ -66,7 +66,7 @@
         </td>
     {/each}
     {/if}
-    <div class="absolute left-0 h-7 px-2 py-1 z-0"
+    <div class="absolute left-0 h-7 px-2 py-1 -z-10"
         style="background-color: {HexToRgba(color, 0.6)}; width: {$tweenedValue}%"
     ></div>
 </tr>

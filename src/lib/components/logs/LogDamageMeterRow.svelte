@@ -61,7 +61,9 @@
 </td>
 {#if anyDead && $settings.logs.deathTime}
 <td class="px-1 text-center">
-    {entity.isDead ? deadFor : ""}
+    {#if entity.isDead}
+        {deadFor}
+    {/if}
 </td>
 {/if}
 {#if $settings.logs.damage}

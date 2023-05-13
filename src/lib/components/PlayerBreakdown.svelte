@@ -45,8 +45,9 @@
 
 <thead class="top-0 sticky h-6">
     <tr class="bg-zinc-900 tracking-tighter">
-        <th class="w-7"></th>
-        <th class="text-left px-2 font-normal w-full"></th>
+        <th class="w-7 px-2 font-normal"></th>
+        <th class="text-left px-2 font-normal w-14"></th>
+        <th class="w-full"></th>
         {#if $settings.meter.breakdown.damage}
         <th class="font-normal w-14">DMG</th>
         {/if}
@@ -85,7 +86,7 @@
         {/if}
     </tr>
 </thead>
-<tbody on:contextmenu|preventDefault={handleRightClick}>
+<tbody on:contextmenu|preventDefault={handleRightClick} class="relative z-10">
     {#if entity}
     {#each skills as skill, i (skill.id)}
     <tr class="h-7 px-2 py-1 text-3xs" animate:flip="{{duration: 200}}">

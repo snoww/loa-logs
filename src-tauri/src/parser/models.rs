@@ -452,6 +452,7 @@ pub struct LogTabs {
 #[serde(rename_all = "camelCase")]
 pub struct MeterTabs {
     pub boss_hp: bool,
+    pub split_boss_hp_bar: bool,
     pub abbreviate_header: bool,
     pub show_class_colors: bool,
     pub damage: bool,

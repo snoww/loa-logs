@@ -45,7 +45,7 @@
 <td class="pl-1">
     <img class="h-5 w-5" src={$skillIcon.path + getSkillIcon(skill.icon)} alt={skill.name} use:tooltip={{content: skill.name}}/>
 </td>
-<td>
+<td class="-left-px" colspan="2">
     <div class="truncate">
         {skill.name}
     </div>
@@ -81,7 +81,7 @@
 </td>
 {/if}
 {#if anySupportBuff && $settings.meter.breakdown.percentBuffBySup}
-<td class="px-1 text-center relative z-10">
+<td class="px-1 text-center">
     {#if skill.totalDamage > 0}
     {(skill.buffedBySupport / skill.totalDamage * 100).toFixed(1)}<span class="text-3xs text-gray-300">%</span>
     {:else}
@@ -90,7 +90,7 @@
 </td>
 {/if}
 {#if anySupportBrand && $settings.meter.breakdown.percentBrand}
-<td class="px-1 text-center relative z-10">
+<td class="px-1 text-center">
     {#if skill.totalDamage > 0}
     {(skill.debuffedBySupport / skill.totalDamage * 100).toFixed(1)}<span class="text-3xs text-gray-300">%</span>
     {:else}

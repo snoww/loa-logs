@@ -78,8 +78,10 @@
     </div>
 </td>
 {#if anyDead && $settings.meter.deathTime}
-<td class="px-1 text-center relative z-10">
-    {entity.isDead ? deadFor : ""}
+<td class="px-1 text-center">
+    {#if entity.isDead}
+        {deadFor}
+    {/if}
 </td>
 {/if}
 {#if $settings.meter.damage}
@@ -113,12 +115,12 @@
 </td>
 {/if}
 {#if anySupportBuff && $settings.meter.percentBuffBySup}
-<td class="px-1 text-center relative z-10">
+<td class="px-1 text-center">
     {(entity.damageStats.buffedBySupport / entity.damageStats.damageDealt * 100).toFixed(1)}<span class="text-3xs text-gray-300">%</span>
 </td>
 {/if}
 {#if anySupportBrand && $settings.meter.percentBrand}
-<td class="px-1 text-center relative z-10">
+<td class="px-1 text-center">
     {(entity.damageStats.debuffedBySupport / entity.damageStats.damageDealt * 100).toFixed(1)}<span class="text-3xs text-gray-300">%</span>
 </td>
 {/if}

@@ -59,17 +59,23 @@ export function generateHeaderTooltip(buff: StatusEffect, iconPath: string) {
         str += `</div>`;
     } else {
         str += `<div class="flex">`;
-        str += `<div class="pr-1">`;
         if (buff.buffCategory === "set") {
+            str += `<div class="pr-1">`;
             str += "[Set] " + buff.source.setName;
+            str += `</div>`;
         } else if (buff.buffCategory === "bracelet") {
+            str += `<div class="pr-1">`;
             str += "[Bracelet]";
+            str += `</div>`;
         } else if (buff.buffCategory === "battleitem") {
+            str += `<div class="pr-1">`;
             str += "[Battle Item]";
+            str += `</div>`;
         } else if (buff.buffCategory === "dropsofether") {
+            str += `<div class="pr-1">`;
             str += "[Drops of Ether]";
+            str += `</div>`;
         }
-        str += `</div>`;
         str += removeUnknownHtmlTags(buff.source.name);
         str += `</div>`;
     }

@@ -109,7 +109,7 @@
         {/each}
     </tr>
 </thead>
-<tbody on:contextmenu|preventDefault={handleRightClick}>
+<tbody on:contextmenu|preventDefault={handleRightClick} class="relative z-10">
     {#if !focusedPlayer}
     {#each players as player, i (player.name)}
         <tr class="h-7 px-2 py-1" on:click={() => inspectPlayer(player.name)}>

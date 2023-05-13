@@ -3,6 +3,7 @@
     import { bossHpBarColors } from "$lib/constants/colors";
     import type { Entity } from "$lib/types";
     import { abbreviateNumber } from "$lib/utils/numbers";
+    import { settings } from "$lib/utils/settings";
     import { linear } from "svelte/easing";
     import { tweened } from "svelte/motion";
 
@@ -72,6 +73,16 @@
             <div class="absolute h-7 -z-20 w-full bg-zinc-900"></div>
         {:else}
             <div class="absolute h-7 -z-20 w-full" style="background-color: {bossBarColor[1]};"></div>
+        {/if}
+        {#if $settings.meter.splitBossHpBar}
+        <div class="absolute h-7 w-full">
+            <div class="grid grid-cols-4 divide-x-2 divide-zinc-800/60 h-7">
+                <div> </div>
+                <div> </div>
+                <div> </div>
+                <div> </div>
+            </div>
+        </div>
         {/if}
     {:else}
         <div class="absolute h-7 -z-10 w-full bg-zinc-900"></div>

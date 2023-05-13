@@ -18,5 +18,7 @@ export const bosses: BossBarMap = {
     "Ashtarot": 170,
     "Primordial Nightmare": 190,
     "Brelshaza, Monarch of Nightmares": 200,
+    "Imagined Primordial Nightmare": 20,
+    "Psuedospace Primordial Nightmare": 20,
     "Phantom Legion Commander Brelshaza": 250,
 };

@@ -143,6 +143,7 @@
                 <div class="flex flex-col space-y-4 divide-y-[1px]">
                     <div class="mt-4 px-2 flex flex-col space-y-2">
                         <SettingItem name="Boss HP" description="Show the HP bar for the current boss" bind:setting={$settings.meter.bossHp} />
+                        <SettingItem name="Split Boss HP Bar" description="Add vertical bars to the boss hp at 25%, 50%, and 75% intervals." bind:setting={$settings.meter.splitBossHpBar} />
                         <SettingItem name="Abbreviate Header" description="Abbreviates the Total DMG and Total DPS numbers in the header" bind:setting={$settings.meter.abbreviateHeader} />
                         <SettingItem name="Show Class Colors" description="Shows class colors in the meter. Width of the bar shows relative % damage dealt." bind:setting={$settings.meter.showClassColors} />
                         <SettingItem name="Death Time" description="Show how long a party member has died" bind:setting={$settings.meter.deathTime} />
