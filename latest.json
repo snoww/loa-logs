@@ -1,11 +1,11 @@
 {
-    "version": "v1.1.12",
-    "notes": "- updated meter for slayer patch\n- added option to show support buff %, and brand % in dmg tab directly\n- added option to abbrev dmg numbers in header\n- added option to disable class colors\n- no longer requires restart to change meter blur\n- fix damage % when using sidereals while solo bussing\nsend bug reports or feature requests to Snow#7777",
-    "pub_date": "2023-05-10T19:09:45Z",
+    "version": "v1.1.13",
+    "notes": "NOTE: updater kinda buggy atm, sorry! (click ignore when error pops up)\b- new and improved tooltips for (almost) everything\n- added player name tooltips for logs\n- added class, player name search\n- fix buffs and brands in skill breakdown\nsend bug reports or feature requests to Snow#7777",
+    "pub_date": "2023-05-12T08:49:34Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.1.12/LOA.Logs_1.1.12_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmJWWU5QY21IZVk2d1pYMkZsUEhxbThDQTM3M2Fud2w1bFNpb2IyWlVFSWZIMVNva1pJZE1pMUQ0TU1qaWdRRHNyc2toOVM2azUvbUtWeWVNVHNvUlE0PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjgzNzQ1NTgwCWZpbGU6TE9BIExvZ3NfMS4xLjEyX3g2NC1zZXR1cC5uc2lzLnppcAovelJLNnZ0aHh6WE9LaU9Qb3oyQXd2U1dmOFh2RUhTTGpGaVZ0VjJxUG9yL1pzSnVBeWlqbUMrdU8rKzZXdWtiNkFETit5SVREUEtoUVNBalhaU2FCZz09Cg=="
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.1.13/LOA.Logs_1.1.13_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmRjL3NTelRFNWlTTE9DNTZEa1h3NVRvQStFL0JmVk83a0owajdwZXQ1R2FrcjcvRDZvdXhnM0M1QzMvWGtNamVXVktHeXp0dlNWbkoybDBXUDJnUmdVPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjgzOTQwMjM0CWZpbGU6TE9BIExvZ3NfMS4xLjEzX3g2NC1zZXR1cC5uc2lzLnppcApqa1U2RXFqQXpMVEtjR2xYMGQ1UkJDdWdVSHdrVHdDeWE3UEVDZzJiR1RiQWc3NG1JTFVzNXAyd1l0NFVydkNUbFdJYmllMk1CTFhpTWRVckVQQ0hCdz09Cg=="
         }
     }
 }
