@@ -1,6 +1,6 @@
 {
     "version": "v1.1.13",
-    "notes": "NOTE: updater kinda buggy atm, sorry! (click ignore when error pops up)\b- new and improved tooltips for (almost) everything\n- added player name tooltips for logs\n- added class, player name search\n- fix buffs and brands in skill breakdown\nsend bug reports or feature requests to Snow#7777",
+    "notes": "NOTE: auto-updater kinda buggy atm (click ignore if error pops up)\n- new and improved tooltips for (almost) everything\n- added player name tooltips for logs\n- added class, player name search\n- fix buffs and brands in skill breakdown\nsend bug reports or feature requests to Snow#7777",
     "pub_date": "2023-05-12T08:49:34Z",
     "platforms": {
         "windows-x86_64": {
