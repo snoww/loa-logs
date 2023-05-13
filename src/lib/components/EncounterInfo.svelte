@@ -54,7 +54,7 @@
             <div data-tauri-drag-region>
                 {encounterDuration}
             </div>
-            <div data-tauri-drag-region class="flex space-x-1 tracking-tighter text-gray-400">
+            <div data-tauri-drag-region class="flex space-x-1 tracking-tighter text-gray-400" use:menuTooltip={{content: "Total Damage"}}>
                 <div data-tauri-drag-region>
                     T. DMG
                 </div>
@@ -68,7 +68,7 @@
                 </div>
                 {/if}
             </div>
-            <div class="flex space-x-1 tracking-tighter text-gray-400">
+            <div class="flex space-x-1 tracking-tighter text-gray-400" use:menuTooltip={{content: "Total DPS"}}>
                 <div data-tauri-drag-region>
                     T. DPS
                 </div>

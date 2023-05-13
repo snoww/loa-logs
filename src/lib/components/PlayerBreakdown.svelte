@@ -5,6 +5,7 @@
     import { flip } from 'svelte/animate';
     import PlayerBreakdownRow from "./PlayerBreakdownRow.svelte";
     import { settings } from "$lib/utils/settings";
+    import { tooltip } from "$lib/utils/tooltip";
 
     export let entity: Entity | null;
     export let duration: number;
@@ -43,46 +44,46 @@
     }
 </script>
 
-<thead class="top-0 sticky h-6">
+<thead class="top-0 sticky h-6 z-40">
     <tr class="bg-zinc-900 tracking-tighter">
         <th class="w-7 px-2 font-normal"></th>
         <th class="text-left px-2 font-normal w-14"></th>
         <th class="w-full"></th>
         {#if $settings.meter.breakdown.damage}
-        <th class="font-normal w-14">DMG</th>
+        <th class="font-normal w-12" use:tooltip={{content: "Damage Dealt"}}>DMG</th>
         {/if}
         {#if $settings.meter.breakdown.dps}
-        <th class="font-normal w-14">DPS</th>
+        <th class="font-normal w-12" use:tooltip={{content: "Damage per second"}}>DPS</th>
         {/if}
         {#if $settings.meter.breakdown.damagePercent}
-        <th class="font-normal w-14">D%</th>
+        <th class="font-normal w-10" use:tooltip={{content: "Damage %"}}>D%</th>
         {/if}
         {#if $settings.meter.breakdown.critRate}
-        <th class="font-normal w-14">CRIT</th>
+        <th class="font-normal w-12" use:tooltip={{content: "Crit %"}}>CRIT</th>
         {/if}
         {#if hasFrontAttacks && $settings.meter.breakdown.frontAtk}
-        <th class="font-normal w-14">F.A</th>
+        <th class="font-normal w-12" use:tooltip={{content: "Front Attack %"}}>F.A</th>
         {/if}
         {#if hasBackAttacks && $settings.meter.breakdown.backAtk}
-        <th class="font-normal w-14">B.A</th>
+        <th class="font-normal w-12" use:tooltip={{content: "Back Attack %"}}>B.A</th>
         {/if}
         {#if anySupportBuff && $settings.meter.breakdown.percentBuffBySup}
-        <th class="font-normal w-14">Buff%</th>
+        <th class="font-normal w-12" use:tooltip={{content: "% Damage buffed by Support"}}>Buff%</th>
         {/if}
         {#if anySupportBrand && $settings.meter.breakdown.percentBrand}
-        <th class="font-normal w-16">Brand%</th>
+        <th class="font-normal w-12" use:tooltip={{content: "% Damage buffed by Brand"}}>B%</th>
         {/if}
         {#if $settings.meter.breakdown.avgDamage}
-        <th class="font-normal w-14">Avg</th>
+        <th class="font-normal w-12" use:tooltip={{content: "Skill Average Damage"}}>Avg</th>
         {/if}
         {#if $settings.meter.breakdown.maxDamage}
-        <th class="font-normal w-14">Max</th>
+        <th class="font-normal w-12" use:tooltip={{content: "Skill Max Damage"}}>Max</th>
         {/if}
         {#if $settings.meter.breakdown.casts}
-        <th class="font-normal w-16">Casts/m</th>
+        <th class="font-normal w-10" use:tooltip={{content: "Casts per minute"}}>CPM</th>
         {/if}
         {#if $settings.meter.breakdown.hits}
-        <th class="font-normal w-14">Hits/m</th>
+        <th class="font-normal w-10" use:tooltip={{content: "Hits per minute"}}>HPM</th>
         {/if}
     </tr>
 </thead>

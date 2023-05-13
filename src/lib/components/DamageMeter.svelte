@@ -13,6 +13,7 @@
     import { Alert } from 'flowbite-svelte'
     import { fade } from 'svelte/transition';
     import { settings } from '$lib/utils/settings';
+    import { tooltip } from '$lib/utils/tooltip';
 
     let time = +Date.now();
     let encounter: Encounter | null = null;
@@ -127,7 +128,7 @@
     let anySupportBrand: boolean = false;
 
     $: {
-        if (encounter) {           
+        if (encounter) {                 
             if (encounter.fightStart !== 0 && raidInProgress) {
                 if ($settings.general.showEsther) {
                     players = Object.values(encounter.entities)
@@ -209,40 +210,40 @@
     <table class="table-fixed w-full relative">
         {#if tab === MeterTab.DAMAGE}
             {#if state === MeterState.PARTY}
-            <thead class="top-0 sticky h-6" on:contextmenu|preventDefault={() => {console.log("titlebar clicked")}}>
+            <thead class="top-0 sticky h-6 z-40" on:contextmenu|preventDefault={() => {console.log("titlebar clicked")}}>
                 <tr class="bg-zinc-900 tracking-tighter">
                     <th class="w-7 px-2 font-normal"></th>
                     <th class="text-left px-2 font-normal w-14"></th>
                     <th class="w-full"></th>
                     {#if anyDead && $settings.meter.deathTime}
-                    <th class="font-normal w-20">Dead for</th>
+                    <th class="font-normal w-14" use:tooltip={{content: "Dead for"}}>Dead</th>
                     {/if}
                     {#if $settings.meter.damage}
-                    <th class="font-normal w-14">DMG</th>
+                    <th class="font-normal w-12" use:tooltip={{content: "Damage Dealt"}}>DMG</th>
                     {/if}
                     {#if $settings.meter.dps}
-                    <th class="font-normal w-14">DPS</th>
+                    <th class="font-normal w-12" use:tooltip={{content: "Damage per second"}}>DPS</th>
                     {/if}
                     {#if players.length > 1 && $settings.meter.damagePercent}
-                    <th class="font-normal w-14">D%</th>
+                    <th class="font-normal w-12" use:tooltip={{content: "Damage %"}}>D%</th>
                     {/if}
                     {#if $settings.meter.critRate}
-                    <th class="font-normal w-14">CRIT</th>
+                    <th class="font-normal w-12" use:tooltip={{content: "Crit %"}}>CRIT</th>
                     {/if}
                     {#if anyFrontAtk && $settings.meter.frontAtk}
-                    <th class="font-normal w-14">F.A</th>
+                    <th class="font-normal w-12" use:tooltip={{content: "Front Attack %"}}>F.A</th>
                     {/if}
                     {#if anyBackAtk && $settings.meter.backAtk}
-                    <th class="font-normal w-14">B.A</th>
+                    <th class="font-normal w-12" use:tooltip={{content: "Back Attack %"}}>B.A</th>
                     {/if}
                     {#if anySupportBuff && $settings.meter.percentBuffBySup}
-                    <th class="font-normal w-14">Buff%</th>
+                    <th class="font-normal w-12" use:tooltip={{content: "% Damage buffed by Support"}}>Buff%</th>
                     {/if}
                     {#if anySupportBrand && $settings.meter.percentBrand}
-                    <th class="font-normal w-16">Brand%</th>
+                    <th class="font-normal w-12" use:tooltip={{content: "% Damage buffed by Brand"}}>B%</th>
                     {/if}
                     {#if $settings.meter.counters}
-                    <th class="font-normal w-[70px]">Counters</th>
+                    <th class="font-normal w-12" use:tooltip={{content: "Counters"}}>CTR</th>
                     {/if}
                 </tr>
             </thead>
