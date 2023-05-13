@@ -2,7 +2,7 @@
     import { bosses } from "$lib/constants/bossMap";
     import { bossHpBarColors } from "$lib/constants/colors";
     import type { Entity } from "$lib/types";
-    import { abbreviateNumber } from "$lib/utils/numbers";
+    import { abbreviateNumberSplit } from "$lib/utils/numbers";
     import { settings } from "$lib/utils/settings";
     import { linear } from "svelte/easing";
     import { tweened } from "svelte/motion";
@@ -21,7 +21,13 @@
         easing: linear
     });
 
+    let bossCurrentHp: (string | number)[];
+    let bossMaxHp: (string | number)[];
+
     $: {
+        bossCurrentHp = abbreviateNumberSplit(boss.currentHp);
+        bossMaxHp = abbreviateNumberSplit(boss.maxHp);
+
         if (Object.hasOwn(bosses, boss.name)) {           
             bossHPBars = bosses[boss.name];
         } else if (boss.maxHp === 1865513010 || boss.maxHp === 529402339 || boss.maxHp === 285632921) {
@@ -88,16 +94,29 @@
         <div class="absolute h-7 -z-10 w-full bg-zinc-900"></div>
         <div class="absolute h-7 z-0 bg-red-800" style="width: {$tweenBossHpBar}%;"></div>
     {/if}
-    <div class="relative flex justify-center py-1">
-        <div class="tracking-tighter">
-            {boss.name} <span>{abbreviateNumber(boss.currentHp)}/{abbreviateNumber(boss.maxHp)}<span class="pl-1">({bossCurrentPercentage.toFixed(1)}%)</span></span>
+    <div class="relative tracking-tighter">
+        <div class="flex justify-center items-center px-12 h-7 space-x-1 pb-px">
+            <div class="truncate">
+                {boss.name}
+            </div>
+            <div>
+                {bossCurrentHp[0]}<span class="text-xs">{bossCurrentHp[1]}</span>/{bossMaxHp[0]}<span class="text-xs">{bossMaxHp[1]}</span><span class="pl-1">({bossCurrentPercentage.toFixed(1)}<span class="text-xs">%</span>)</span>
+            </div>
         </div>
         {#if bossHPBars !== 0}
-            {#if boss.currentHp <= 0}
-                <div class="absolute right-0 pr-2">Dead</div>
-            {:else if bossCurrentBars > 1}
-                <div class="absolute right-0 pr-2">{bossCurrentBars}x</div>
-            {/if}
+        {#if boss.currentHp <= 0}
+            <div class="absolute inset-y-0 right-0 pr-2 h-7 pb-px">
+                <div class="flex justify-center items-center h-7">
+                    Dead
+                </div>
+            </div>
+        {:else if bossCurrentBars > 1}
+            <div class="absolute inset-y-0 right-0 pr-2 h-7 pb-px">
+                <div class="flex justify-center items-center h-7">
+                    {bossCurrentBars}x
+                </div>
+            </div>
+        {/if}
         {/if}
     </div>
 </div>

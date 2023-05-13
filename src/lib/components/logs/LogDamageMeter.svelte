@@ -16,6 +16,7 @@
     import { getSkillIcon, isValidName } from "$lib/utils/strings";
     import LogIdentity from "./identity/LogIdentity.svelte";
     import LogStagger from "./stagger/LogStagger.svelte";
+    import { tooltip } from "$lib/utils/tooltip";
 
     export let id: string;
     export let encounter: Encounter;
@@ -550,34 +551,34 @@
                             <th class="text-left px-2 font-normal w-14"></th>
                             <th class="w-full"></th>
                             {#if anyDead && $settings.logs.deathTime}
-                            <th class="font-normal w-20">Dead for</th>
+                            <th class="font-normal w-16" use:tooltip={{content: "Dead for"}}>Dead for</th>
                             {/if}
                             {#if $settings.logs.damage}
-                            <th class="font-normal w-14">DMG</th>
+                            <th class="font-normal w-14" use:tooltip={{content: "Damage Dealt"}}>DMG</th>
                             {/if}
                             {#if $settings.logs.dps}
-                            <th class="font-normal w-14">DPS</th>
+                            <th class="font-normal w-14" use:tooltip={{content: "Damage per second"}}>DPS</th>
                             {/if}
                             {#if players.length > 1 && $settings.logs.damagePercent}
-                            <th class="font-normal w-14">D%</th>
+                            <th class="font-normal w-12" use:tooltip={{content: "Damage %"}}>D%</th>
                             {/if}
                             {#if $settings.logs.critRate}
-                            <th class="font-normal w-14">CRIT</th>
+                            <th class="font-normal w-12" use:tooltip={{content: "Crit %"}}>CRIT</th>
                             {/if}
                             {#if anyFrontAtk && $settings.logs.frontAtk}
-                            <th class="font-normal w-14">F.A</th>
+                            <th class="font-normal w-12" use:tooltip={{content: "Front Attack %"}}>F.A</th>
                             {/if}
                             {#if anyBackAtk && $settings.logs.backAtk}
-                            <th class="font-normal w-14">B.A</th>
+                            <th class="font-normal w-12" use:tooltip={{content: "Back Attack %"}}>B.A</th>
                             {/if}
                             {#if anySupportBuff && $settings.logs.percentBuffBySup}
-                            <th class="font-normal w-14">Buff%</th>
+                            <th class="font-normal w-12" use:tooltip={{content: "% Damage buffed by Support"}}>Buff%</th>
                             {/if}
                             {#if anySupportBrand && $settings.logs.percentBrand}
-                            <th class="font-normal w-16">Brand%</th>
+                            <th class="font-normal w-12" use:tooltip={{content: "% Damage buffed by Brand"}}>B%</th>
                             {/if}
                             {#if $settings.logs.counters}
-                            <th class="font-normal w-[70px]">Counters</th>
+                            <th class="font-normal w-12" use:tooltip={{content: "Counters"}}>CTR</th>
                             {/if}
                         </tr>
                     </thead>

@@ -40,34 +40,16 @@
                 // console.log("zone change event")
                 zoneChangeAlert = true;
                 setTimeout(() => {
-                    state = MeterState.PARTY;
-                    player = null;
-                    playerName = "";
-                    encounter = null;
-                    players = [];
-                    currentBoss = null;
-                    encounterDuration = "00:00";
-                    totalDamageDealt = 0;
-                    dps = 0;
-                    zoneChangeAlert = false
+                    reset();
+                    zoneChangeAlert = false;
                 }, 6000);
             });
             let raidStartEvent = await listen('raid-start', (event: any) => {
-                state = MeterState.PARTY;
-                player = null;
-                playerName = "";
+                reset();
                 raidInProgress = true;
             });
             let resetEncounterEvent = await listen('reset-encounter', (event: any) => {                
-                state = MeterState.PARTY;
-                player = null;
-                playerName = "";
-                encounter = null;
-                players = [];
-                currentBoss = null;
-                encounterDuration = "00:00";
-                totalDamageDealt = 0;
-                dps = 0;
+                reset();
                 resettingAlert = true;
                 setTimeout(() => {
                     resettingAlert = false;
@@ -197,6 +179,23 @@
             playerName = "";
         }
     }
+
+    function reset() {
+        state = MeterState.PARTY;
+        player = null;
+        playerName = "";
+        encounter = null;
+        players = [];
+        currentBoss = null;
+        encounterDuration = "00:00";
+        totalDamageDealt = 0;
+        dps = 0;
+        anyDead = false;
+        anyFrontAtk = false;
+        anyBackAtk = false;
+        anySupportBuff = false;
+        anySupportBrand = false;
+    }
 </script>
 
 <svelte:window on:contextmenu|preventDefault/>
@@ -219,10 +218,10 @@
                     <th class="font-normal w-14" use:tooltip={{content: "Dead for"}}>Dead</th>
                     {/if}
                     {#if $settings.meter.damage}
-                    <th class="font-normal w-12" use:tooltip={{content: "Damage Dealt"}}>DMG</th>
+                    <th class="font-normal w-14" use:tooltip={{content: "Damage Dealt"}}>DMG</th>
                     {/if}
                     {#if $settings.meter.dps}
-                    <th class="font-normal w-12" use:tooltip={{content: "Damage per second"}}>DPS</th>
+                    <th class="font-normal w-14" use:tooltip={{content: "Damage per second"}}>DPS</th>
                     {/if}
                     {#if players.length > 1 && $settings.meter.damagePercent}
                     <th class="font-normal w-12" use:tooltip={{content: "Damage %"}}>D%</th>
