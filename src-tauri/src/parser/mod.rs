@@ -492,6 +492,7 @@ impl Parser<'_> {
                 0,
                 skill_start.skill_name.to_string(),
             );
+            self.cast_log.entry(entity.name.to_string()).or_default().entry(skill_start.skill_id).or_default().push(duration);
             entity.skills.insert(
                 skill_start.skill_id,
                 Skill {
@@ -654,6 +655,12 @@ impl Parser<'_> {
                     damage.skill_effect_id,
                     damage.skill_name.to_string(),
                 );
+                let duration = if self.encounter.fight_start == 0 {
+                    0
+                } else {
+                    ((timestamp - self.encounter.fight_start) / 1000) as i32
+                };
+                self.cast_log.entry(source_entity.name.to_string()).or_default().entry(damage.skill_id).or_default().push(duration);
                 source_entity.skills.insert(
                     damage.skill_id,
                     Skill {
@@ -1483,7 +1490,7 @@ fn insert_data(tx: &Transaction,
                 };
                 let stats: String = match entity.class.as_str() {
                     "Arcanist" => {
-                        let mut cards: HashMap::<i32, i32> = HashMap::new();
+                        let mut cards: HashMap<i32, i32> = HashMap::new();
                         let mut log: Vec<(i32, (f32, i32, i32))> = Vec::new();
                         for i in 1..data.len() {
                             let (t1, i1) = data[i - 1];
