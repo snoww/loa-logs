@@ -84,15 +84,19 @@
                 state = MeterState.PARTY;
             }
 
-            if (players.length > 0 && players[0].entityType === EntityType.PLAYER && players[0].damageStats && players[0].damageStats.dpsAverage.length > 0 && players[0].damageStats.dpsRolling10sAvg.length > 0)
+            let chartablePlayers = players = Object.values(encounter.entities)
+                    .filter((e) => e.damageStats.damageDealt > 0 && e.entityType === EntityType.PLAYER)
+                    .sort((a, b) => b.damageStats.damageDealt - a.damageStats.damageDealt);
+
+            if (chartablePlayers.length > 0 && chartablePlayers[0].damageStats && chartablePlayers[0].damageStats.dpsAverage.length > 0 && chartablePlayers[0].damageStats.dpsRolling10sAvg.length > 0)
             {
                 let legendNames: Array<string> = [];
                 if (!$settings.general.showNames) {
                     let map: {[key: string]: number} = {}
-                    let count = players.filter(e => e.entityType === EntityType.PLAYER).map(e => {
+                    let count = chartablePlayers.filter(e => e.entityType === EntityType.PLAYER).map(e => {
                         return map[e.class] = (typeof map[e.class] === "undefined") ? 1 : map[e.class] + 1;
                     })
-                    legendNames = players.filter(e => e.entityType === EntityType.PLAYER).map((e, i) => {
+                    legendNames = chartablePlayers.filter(e => e.entityType === EntityType.PLAYER).map((e, i) => {
                         if (map[e.class] === 1) {
                             return e.class;
                         } else {
@@ -100,7 +104,7 @@
                         }
                     })
                 } else {
-                    legendNames = players.filter(e => e.entityType === EntityType.PLAYER).map((e) => isValidName(e.name) ? e.name : e.class);
+                    legendNames = chartablePlayers.filter(e => e.entityType === EntityType.PLAYER).map((e) => isValidName(e.name) ? e.name : e.class);
                 }
 
                 if (chartType === ChartType.AVERAGE_DPS) {
@@ -124,7 +128,7 @@
                             splitLine: {
                                 show: false
                             },
-                            data: Array.from({length: players[0].damageStats.dpsAverage.length}, (_, i) => formatDurationFromS(i * 5)),
+                            data: Array.from({length: chartablePlayers[0].damageStats.dpsAverage.length}, (_, i) => formatDurationFromS(i * 5)),
                             boundaryGap: false,
                             axisLabel: {
                                 color: 'white'
@@ -145,7 +149,7 @@
                                 }
                             }
                         },
-                        series: players.filter(e => e.entityType === EntityType.PLAYER).map((player, i) => {
+                        series: chartablePlayers.filter(e => e.entityType === EntityType.PLAYER).map((player, i) => {
                             let markPoint = {}
                             if (player.isDead) {
                                 let rounded = Math.ceil((player.damageStats.deathTime - encounter.fightStart) / 1000 / 5) * 5;
@@ -193,7 +197,7 @@
                             splitLine: {
                                 show: false
                             },
-                            data: Array.from({length: players[0].damageStats.dpsRolling10sAvg.length}, (_, i) => formatDurationFromS(i)),
+                            data: Array.from({length: chartablePlayers[0].damageStats.dpsRolling10sAvg.length}, (_, i) => formatDurationFromS(i)),
                             boundaryGap: false,
                             axisLabel: {
                                 color: 'white'
@@ -214,7 +218,7 @@
                                 }
                             }
                         },
-                        series: players.filter(e => e.entityType === EntityType.PLAYER).map((player, i) => {
+                        series: chartablePlayers.filter(e => e.entityType === EntityType.PLAYER).map((player, i) => {
                             let markPoint = {}
                             if (player.isDead) {
                                 let index = Math.ceil((player.damageStats.deathTime - encounter.fightStart) / 1000);                                
