@@ -6,6 +6,7 @@
     import { getSkillIcon } from "$lib/utils/strings";
     import { generateTooltipContent, tooltip } from "$lib/utils/tooltip";
     import BuffTooltipDetail from "../shared/BuffTooltipDetail.svelte";
+    import { round } from "$lib/utils/numbers";
 
     export let skill: Skill;
     export let color: string;
@@ -21,16 +22,16 @@
             let buff = new BuffDetails();
             synergies.forEach((syn, id) => {
                 if (skill.buffedBy[id]) {
-                    buff.buffs.push(new Buff(syn.source.icon, (skill.buffedBy[id] / skill.totalDamage * 100).toFixed(1), syn.source.skill?.icon));
+                    buff.buffs.push(new Buff(syn.source.icon, round(skill.buffedBy[id] / skill.totalDamage * 100), syn.source.skill?.icon));
                     synergyDamage += skill.buffedBy[id];
                 } else if (skill.debuffedBy[id]) {
-                    buff.buffs.push(new Buff(syn.source.icon, (skill.debuffedBy[id] / skill.totalDamage * 100).toFixed(1), syn.source.skill?.icon));
+                    buff.buffs.push(new Buff(syn.source.icon, round(skill.debuffedBy[id] / skill.totalDamage * 100), syn.source.skill?.icon));
                     synergyDamage += skill.debuffedBy[id];
                 }
             });
 
             if (synergyDamage > 0) {
-                buff.percentage = (synergyDamage / skill.totalDamage * 100).toFixed(1);
+                buff.percentage = round(synergyDamage / skill.totalDamage * 100);
             }
             synergyPercentageDetails.push(buff);
         });

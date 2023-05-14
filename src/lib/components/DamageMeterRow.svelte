@@ -4,7 +4,7 @@
     import { cubicOut } from "svelte/easing";
     import { tweened } from "svelte/motion";
     import { HexToRgba } from "$lib/utils/colors";
-    import { abbreviateNumberSplit } from "$lib/utils/numbers";
+    import { abbreviateNumberSplit, round } from "$lib/utils/numbers";
     import { formatPlayerName, getEstherFromNpcId } from "$lib/utils/strings";
     import { classIconCache, settings } from "$lib/utils/settings";
     import { tooltip } from "$lib/utils/tooltip";
@@ -54,7 +54,7 @@
             name = formatPlayerName(entity, $settings.general.showNames);
         }
         if (entity.isDead) {
-            deadFor = (((lastCombatPacket - entity.damageStats.deathTime) / 1000).toFixed(0) + "s").replace('-', '');
+            deadFor = Math.abs((lastCombatPacket - entity.damageStats.deathTime) / 1000).toFixed(0) + "s";
         }
         if (!$settings.meter.showClassColors) {
             alpha = 0;
@@ -101,27 +101,27 @@
 {/if}
 {#if $settings.meter.critRate}
 <td class="px-1 text-center">
-    {(entity.skillStats.crits / entity.skillStats.hits * 100).toFixed(1)}<span class="text-3xs text-gray-300">%</span>
+    {round(entity.skillStats.crits / entity.skillStats.hits * 100)}<span class="text-3xs text-gray-300">%</span>
 </td>
 {/if}
 {#if anyFrontAtk && $settings.meter.frontAtk}
 <td class="px-1 text-center">
-    {(entity.skillStats.frontAttacks / entity.skillStats.hits * 100).toFixed(1)}<span class="text-3xs text-gray-300">%</span>
+    {round(entity.skillStats.frontAttacks / entity.skillStats.hits * 100)}<span class="text-3xs text-gray-300">%</span>
 </td>
 {/if}
 {#if anyBackAtk && $settings.meter.backAtk}
 <td class="px-1 text-center">
-    {(entity.skillStats.backAttacks / entity.skillStats.hits * 100).toFixed(1)}<span class="text-3xs text-gray-300">%</span>
+    {round(entity.skillStats.backAttacks / entity.skillStats.hits * 100)}<span class="text-3xs text-gray-300">%</span>
 </td>
 {/if}
 {#if anySupportBuff && $settings.meter.percentBuffBySup}
 <td class="px-1 text-center">
-    {(entity.damageStats.buffedBySupport / entity.damageStats.damageDealt * 100).toFixed(1)}<span class="text-3xs text-gray-300">%</span>
+    {round(entity.damageStats.buffedBySupport / entity.damageStats.damageDealt * 100)}<span class="text-3xs text-gray-300">%</span>
 </td>
 {/if}
 {#if anySupportBrand && $settings.meter.percentBrand}
 <td class="px-1 text-center">
-    {(entity.damageStats.debuffedBySupport / entity.damageStats.damageDealt * 100).toFixed(1)}<span class="text-3xs text-gray-300">%</span>
+    {round(entity.damageStats.debuffedBySupport / entity.damageStats.damageDealt * 100)}<span class="text-3xs text-gray-300">%</span>
 </td>
 {/if}
 {#if $settings.meter.counters}

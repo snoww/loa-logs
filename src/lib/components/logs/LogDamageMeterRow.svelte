@@ -2,7 +2,7 @@
     import { classColors } from "$lib/constants/colors";
     import { EntityType, type Entity } from "$lib/types";
     import { HexToRgba } from "$lib/utils/colors";
-    import { abbreviateNumberSplit } from "$lib/utils/numbers";
+    import { abbreviateNumberSplit, round } from "$lib/utils/numbers";
     import { classIconCache, settings } from "$lib/utils/settings";
     import { takingScreenshot } from "$lib/utils/stores";
     import { formatPlayerName, getEstherFromNpcId } from "$lib/utils/strings";
@@ -83,27 +83,27 @@
 {/if}
 {#if $settings.logs.critRate}
 <td class="px-1 text-center">
-    {(entity.skillStats.crits / entity.skillStats.hits * 100).toFixed(1)}<span class="text-3xs text-gray-300">%</span>
+    {round(entity.skillStats.crits / entity.skillStats.hits * 100)}<span class="text-3xs text-gray-300">%</span>
 </td>
 {/if}
 {#if anyFrontAtk && $settings.logs.frontAtk}
 <td class="px-1 text-center">
-    {(entity.skillStats.frontAttacks / entity.skillStats.hits * 100).toFixed(1)}<span class="text-3xs text-gray-300">%</span>
+    {round(entity.skillStats.frontAttacks / entity.skillStats.hits * 100)}<span class="text-3xs text-gray-300">%</span>
 </td>
 {/if}
 {#if anyBackAtk && $settings.logs.backAtk}
 <td class="px-1 text-center">
-    {(entity.skillStats.backAttacks / entity.skillStats.hits * 100).toFixed(1)}<span class="text-3xs text-gray-300">%</span>
+    {round(entity.skillStats.backAttacks / entity.skillStats.hits * 100)}<span class="text-3xs text-gray-300">%</span>
 </td>
 {/if}
 {#if anySupportBuff && $settings.logs.percentBuffBySup}
 <td class="px-1 text-center">
-    {(entity.damageStats.buffedBySupport / entity.damageStats.damageDealt * 100).toFixed(1)}<span class="text-3xs text-gray-300">%</span>
+    {round(entity.damageStats.buffedBySupport / entity.damageStats.damageDealt * 100)}<span class="text-3xs text-gray-300">%</span>
 </td>
 {/if}
 {#if anySupportBrand && $settings.logs.percentBrand}
 <td class="px-1 text-center">
-    {(entity.damageStats.debuffedBySupport / entity.damageStats.damageDealt * 100).toFixed(1)}<span class="text-3xs text-gray-300">%</span>
+    {round(entity.damageStats.debuffedBySupport / entity.damageStats.damageDealt * 100)}<span class="text-3xs text-gray-300">%</span>
 </td>
 {/if}
 {#if $settings.logs.counters}

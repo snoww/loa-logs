@@ -18,6 +18,17 @@ export function tryParseInt(intString: string | number, defaultValue = 0) {
   return intNum;
 }
 
+export function round(num: number, decimalPlaces = 1): string {
+  const r = num.toFixed(decimalPlaces);
+  if (r === "100.0") {
+    return "100";
+  }
+  return r;
+  // const p = Math.pow(10, decimalPlaces || 0);
+  // const n = (num * p) * (1 + Number.EPSILON);
+  // return Math.round(n) / p;
+}
+
 export function abbreviateNumber(n: number) {
   if (n >= 1e3 && n < 1e6) return (n / 1e3).toFixed(1) + "k";
   if (n >= 1e6 && n < 1e9) return +(n / 1e6).toFixed(1) + "m";

@@ -7,6 +7,7 @@
     import { takingScreenshot } from "$lib/utils/stores";
     import BuffTooltipDetail from "../shared/BuffTooltipDetail.svelte";
     import { tooltip } from "$lib/utils/tooltip";
+    import { round } from "$lib/utils/numbers";
 
 
     export let player: Entity;
@@ -32,16 +33,16 @@
             let buff = new BuffDetails();
             synergies.forEach((syn, id) => {
                 if (player.damageStats.buffedBy[id]) {
-                    buff.buffs.push(new Buff(syn.source.icon, (player.damageStats.buffedBy[id] / player.damageStats.damageDealt * 100).toFixed(1), syn.source.skill?.icon));
+                    buff.buffs.push(new Buff(syn.source.icon, round(player.damageStats.buffedBy[id] / player.damageStats.damageDealt * 100), syn.source.skill?.icon));
                     synergyDamage += player.damageStats.buffedBy[id];
                 } else if (player.damageStats.debuffedBy[id]) {
-                    buff.buffs.push(new Buff(syn.source.icon, (player.damageStats.debuffedBy[id] / player.damageStats.damageDealt * 100).toFixed(1), syn.source.skill?.icon));
+                    buff.buffs.push(new Buff(syn.source.icon, round(player.damageStats.debuffedBy[id] / player.damageStats.damageDealt * 100), syn.source.skill?.icon));
                     synergyDamage += player.damageStats.debuffedBy[id];
                 }
             });
 
             if (synergyDamage > 0) {
-                buff.percentage = (synergyDamage / player.damageStats.damageDealt * 100).toFixed(1);
+                buff.percentage = round(synergyDamage / player.damageStats.damageDealt * 100);
             }
             synergyPercentageDetails.push(buff);
         });
