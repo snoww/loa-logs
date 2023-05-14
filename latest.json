@@ -1,11 +1,11 @@
 {
-    "version": "v1.1.14",
-    "notes": "NOTE: auto-updater kinda buggy atm (click ignore if error pops up)\n- fix buff skill breakdown columns overlapping\n- new and improved tooltips for (almost) everything\n- added player name tooltips for logs\n- added class, player name search\n- fix buffs and brands in skill breakdown\nsend bug reports or feature requests to Snow#7777",
-    "pub_date": "2023-05-13T01:50:28Z",
+    "version": "v1.1.15",
+    "notes": "Auto-updater is bugged atm, manual install required. (click ignore if error pops up)\n- added pause feature (note: the meter will not have any data if its paused before raid start)\n- fixed battle items showing as aeromancer skills\n- fixed long boss names overlapping with hp bar\nsend bug reports or feature requests to Snow#7777",
+    "pub_date": "2023-05-14T04:32:08Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.1.14/LOA.Logs_1.1.14_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmZVVFhPTk5lQkQ5djR2ckVKSng5bmJTak1QbDZJeUgvc2Nwd3Z0UzVyV3BaVzJEY0hLMUxrbjdtM0hCM3pwTVFnM05QT2NwQ0lta3NyS2xEZ05OV0FvPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjgzOTQyNTg2CWZpbGU6TE9BIExvZ3NfMS4xLjE0X3g2NC1zZXR1cC5uc2lzLnppcAo0bGNwZkNnam9lY0F1Z0tlbEt4aUlGaHUzalVoR0hndjFEdG95V2lXSlNNeDJmNkZGYklrczJ3eFZQcUpDNzMxclJoaGs3VUtrVWNLTHY4OTVhQStDUT09Cg=="
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.1.15/LOA.Logs_1.1.15_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlVMTWozc0lhTGI2d3pLS25rMEtjWnNVTllJeWRKblgyYVQ2blRxbmlZcmZvSUMyMkhQUmpWY2hnWkdwSEJtLzZWekJTSTJIV2FieGMwbUFGOEZqdkFBPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjg0MDM4NDg3CWZpbGU6TE9BIExvZ3NfMS4xLjE1X3g2NC1zZXR1cC5uc2lzLnppcApmV3RWSUZrQzlUdkZ1RTJtVGN6QVJ5c3EyazdGcnN2M3JqTUFVTUczYUhqMjd1Sk9ZS2k0cWdVNW5RdXRpa0VTSkl3NVp0UG9sbmczY29ZaitTa0ZCZz09Cg=="
         }
     }
 }
