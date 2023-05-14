@@ -100,12 +100,22 @@
     {/if}
     {#if $settings.logs.breakdown.casts}
     <td class="px-1 text-center">
+        {skill.casts.toLocaleString()}
+    </td>
+    {/if}
+    {#if $settings.logs.breakdown.cpm}
+    <td class="px-1 text-center">
         <div use:tooltip={{content: `<div class="py-1">${skill.casts.toLocaleString() + " " + (skill.casts === 1 ? "cast" : "casts")}</div>`}}>
             {round(skill.casts / (duration / 1000 / 60))}
         </div>
     </td>
     {/if}
     {#if $settings.logs.breakdown.hits}
+    <td class="px-1 text-center">
+        {skill.hits.toLocaleString()}
+    </td>
+    {/if}
+    {#if $settings.logs.breakdown.hpm}
     <td class="px-1 text-center">
         {#if skill.hits === 0}
         <div class="">

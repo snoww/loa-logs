@@ -59,7 +59,9 @@ export const defaultSettings = {
             avgDamage: false,
             maxDamage: false,
             casts: true,
+            cpm: true,
             hits: false,
+            hpm: false,
             percentBuffBySup: false,
             percentBrand: false,
         }
@@ -87,7 +89,9 @@ export const defaultSettings = {
             avgDamage: false,
             maxDamage: false,
             casts: true,
+            cpm: true,
             hits: false,
+            hpm: false,
             percentBuffBySup: false,
             percentBrand: false,
         }

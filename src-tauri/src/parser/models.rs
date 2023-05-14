@@ -475,7 +475,9 @@ pub struct BreakdownTabs {
     pub avg_damage: bool,
     pub max_damage: bool,
     pub casts: bool,
+    pub cpm: bool,
     pub hits: bool,
+    pub hpm: bool,
 }
 
 lazy_static! {

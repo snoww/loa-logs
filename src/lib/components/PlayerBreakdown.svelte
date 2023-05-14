@@ -80,9 +80,15 @@
         <th class="font-normal w-12" use:tooltip={{content: "Skill Max Damage"}}>Max</th>
         {/if}
         {#if $settings.meter.breakdown.casts}
+        <th class="font-normal w-10" use:tooltip={{content: "Total Casts"}}>Casts</th>
+        {/if}
+        {#if $settings.meter.breakdown.cpm}
         <th class="font-normal w-10" use:tooltip={{content: "Casts per minute"}}>CPM</th>
         {/if}
         {#if $settings.meter.breakdown.hits}
+        <th class="font-normal w-10" use:tooltip={{content: "Total Hits"}}>Hits</th>
+        {/if}
+        {#if $settings.meter.breakdown.hpm}
         <th class="font-normal w-10" use:tooltip={{content: "Hits per minute"}}>HPM</th>
         {/if}
     </tr>

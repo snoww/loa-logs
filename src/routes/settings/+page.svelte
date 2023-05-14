@@ -171,8 +171,10 @@
                             <SettingItem name="Support Brand %" description="Show the percentage of damage of the skill buffed by support's brand skill (e.g. Bard's Sound Shock)" bind:setting={$settings.meter.breakdown.percentBrand} />
                             <SettingItem name="Skill Average Damage" description="Show the average damage dealt by the skill" bind:setting={$settings.meter.breakdown.avgDamage} />
                             <SettingItem name="Skill Max Damage" description="Show the maximum damage dealt by the skill" bind:setting={$settings.meter.breakdown.maxDamage} />
-                            <SettingItem name="Skill Casts/min" description="Show the casts per minute of the skill (note: cancelled skills still count as cast)" bind:setting={$settings.meter.breakdown.casts} />
-                            <SettingItem name="Skill Hits/min" description="Show the hits per minute of the skill (note: each tick of a multi-hit skill is counted as a hit)" bind:setting={$settings.meter.breakdown.hits} />
+                            <SettingItem name="Skill Casts" description="Show the total number of casts of the skill (note: cancelled skills still count as cast)" bind:setting={$settings.meter.breakdown.casts} />
+                            <SettingItem name="Skill Casts/min" description="Show the casts per minute of the skill" bind:setting={$settings.meter.breakdown.cpm} />
+                            <SettingItem name="Skill Hits" description="Show the hits of the skill (note: each tick of a multi-hit skill is counted as a hit)" bind:setting={$settings.meter.breakdown.hits} />
+                            <SettingItem name="Skill Hits/min" description="Show the hits per minute of the skill" bind:setting={$settings.meter.breakdown.hpm} />
                         </div>
                     </div>
                 </div>
@@ -224,9 +226,10 @@
                             <SettingItem name="Support Brand %" description="Show the percentage of damage of the skill buffed by support's brand skill (e.g. Bard's Sound Shock)" bind:setting={$settings.logs.breakdown.percentBrand} />
                             <SettingItem name="Skill Average Damage" description="Show the average damage dealt by the skill" bind:setting={$settings.logs.breakdown.avgDamage} />
                             <SettingItem name="Skill Max Damage" description="Show the maximum damage dealt by the skill" bind:setting={$settings.logs.breakdown.maxDamage} />
-                            <SettingItem name="Skill Casts/min" description="Show the casts per minute of the skill (note: cancelled skills still count as cast)" bind:setting={$settings.logs.breakdown.casts} />
-                            <SettingItem name="Skill Hits/min" description="Show the hits per minute of the skill (note: each tick of a multi-hit skill is counted as a hit)" bind:setting={$settings.logs.breakdown.hits} />
-
+                            <SettingItem name="Skill Casts" description="Show the total number of casts of the skill (note: cancelled skills still count as cast)" bind:setting={$settings.logs.breakdown.casts} />
+                            <SettingItem name="Skill Casts/min" description="Show the casts per minute of the skill" bind:setting={$settings.logs.breakdown.cpm} />
+                            <SettingItem name="Skill Hits" description="Show the hits of the skill (note: each tick of a multi-hit skill is counted as a hit)" bind:setting={$settings.logs.breakdown.hits} />
+                            <SettingItem name="Skill Hits/min" description="Show the hits per minute of the skill" bind:setting={$settings.logs.breakdown.hpm} />
                         </div>
                     </div>
                 </div>
