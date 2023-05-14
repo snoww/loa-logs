@@ -118,16 +118,6 @@ fn main() {
                                 }
                                 clone.entities.retain(|_, v| (v.entity_type == EntityType::PLAYER || v.entity_type == EntityType::ESTHER) && v.skill_stats.hits > 0 && v.max_hp > 0);
                                 if !clone.entities.is_empty() {
-                                    // don't need to send these to the live meter
-                                    clone.entities.values_mut()
-                                        .for_each(|e| {
-                                            e.damage_stats.dps_average = Vec::new();
-                                            e.damage_stats.dps_rolling_10s_avg = Vec::new();
-                                            e.skills.values_mut()
-                                                .for_each(|s| {
-                                                    s.cast_log = Vec::new();
-                                                });
-                                        });
                                     window.emit("encounter-update", Some(clone))
                                         .expect("failed to emit encounter-update");
                                 }

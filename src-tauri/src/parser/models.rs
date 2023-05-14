@@ -79,10 +79,6 @@ pub struct EncounterDamageStats {
     #[serde(skip)]
     pub unknown_buffs: HashSet<i32>,
     #[serde(skip)]
-    pub stagger_log: Vec<(i32, f32)>,
-    #[serde(skip)]
-    pub stagger_intervals: Vec<(i32, i32)>,
-    #[serde(skip)]
     pub max_stagger: i32,
     #[serde(skip)]
     pub stagger_start: i64,
@@ -150,10 +146,6 @@ pub struct DamageStats {
     pub deaths: i64,
     pub death_time: i64,
     pub dps: i64,
-    #[serde(skip)]
-    pub damage_log: Vec<(i64, i64)>,
-    #[serde(skip)]
-    pub identity_log: Vec<(i64, (i32, i32, i32))>,
     #[serde_as(deserialize_as = "DefaultOnError")]
     pub dps_average: Vec<i64>,
     #[serde_as(deserialize_as = "DefaultOnError")]

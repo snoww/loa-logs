@@ -22,6 +22,13 @@ pub struct Parser<'a> {
     saved: bool,
 
     prev_stagger: i32,
+
+    damage_log: HashMap<String, Vec<(i64, i64)>>,
+    identity_log: HashMap<String, Vec<(i64, (i32, i32, i32))>>,
+    cast_log: HashMap<String, HashMap<i32, Vec<i32>>>,
+
+    stagger_log: Vec<(i32, f32)>,
+    stagger_intervals: Vec<(i32, i32)>
 }
 
 impl Parser<'_> {
@@ -33,6 +40,11 @@ impl Parser<'_> {
             saved: false,
 
             prev_stagger: 0,
+            damage_log: HashMap::new(),
+            identity_log: HashMap::new(),
+            cast_log: HashMap::new(),
+            stagger_log: Vec::new(),
+            stagger_intervals: Vec::new()
         }
     }
 
@@ -106,6 +118,13 @@ impl Parser<'_> {
         self.encounter.encounter_damage_stats = Default::default();
         self.encounter.reset = false;
         self.prev_stagger = 0;
+
+        self.damage_log = HashMap::new();
+        self.identity_log = HashMap::new();
+        self.cast_log = HashMap::new();
+        self.stagger_log = Vec::new();
+        self.stagger_intervals = Vec::new();
+
         if !clone.local_player.is_empty() {
             if let Some(player) = clone.entities.get(&clone.local_player) {
                 self.encounter.local_player = clone.local_player.to_string();
@@ -459,14 +478,14 @@ impl Parser<'_> {
         // dunno if this is right approach xd
         if let Some(skill) = entity.skills.get_mut(&skill_start.skill_id) {
             skill.casts += 1;
-            skill.cast_log.push(duration);
+            self.cast_log.entry(entity.name.to_string()).or_default().entry(skill_start.skill_id).or_default().push(duration);
         } else if let Some(skill) = entity
             .skills
             .values_mut()
             .find(|s| s.name == *skill_start.skill_name)
         {
             skill.casts += 1;
-            skill.cast_log.push(duration)
+            self.cast_log.entry(entity.name.to_string()).or_default().entry(skill_start.skill_id).or_default().push(duration);
         } else {
             let (skill_name, skill_icon) = get_skill_name_and_icon(
                 skill_start.skill_id,
@@ -480,7 +499,6 @@ impl Parser<'_> {
                     name: skill_name,
                     icon: skill_icon,
                     casts: 1,
-                    cast_log: vec![duration],
                     ..Default::default()
                 },
             );
@@ -686,7 +704,7 @@ impl Parser<'_> {
                 source_entity.damage_stats.damage_dealt,
             );
 
-            source_entity.damage_stats.damage_log.push((timestamp, damage.damage));
+            self.damage_log.entry(source_entity.name.to_string()).or_default().push((timestamp, damage.damage));
 
             let mut is_buffed_by_support = false;
             let mut is_debuffed_by_support = false;
@@ -894,7 +912,7 @@ impl Parser<'_> {
         }
         
         if let Some(entity) = self.encounter.entities.get_mut(&self.encounter.local_player) {
-            entity.damage_stats.identity_log.push((timestamp, (identity.gauge_1, identity.gauge_2, identity.gauge_3)));
+            self.identity_log.entry(entity.name.to_string()).or_default().push((timestamp, (identity.gauge_1, identity.gauge_2, identity.gauge_3)));
         }
     }
 
@@ -913,7 +931,7 @@ impl Parser<'_> {
             if boss.id == stagger.id {
                 if stagger.current_stagger == stagger.max_stagger {
                     let staggered_in = (timestamp - self.encounter.encounter_damage_stats.stagger_start) / 1000;
-                    self.encounter.encounter_damage_stats.stagger_intervals.push((staggered_in as i32, stagger.max_stagger))
+                    self.stagger_intervals.push((staggered_in as i32, stagger.max_stagger))
                 } else if stagger.current_stagger != 0 && self.prev_stagger == 0 {
                     self.encounter.encounter_damage_stats.stagger_start = timestamp;
                 }
@@ -922,7 +940,7 @@ impl Parser<'_> {
                 
                 let relative_timestamp = (timestamp - self.encounter.fight_start) / 1000;
                 let stagger_percent = (1.0 - (stagger.current_stagger as f32 / stagger.max_stagger as f32)) * 100.0;
-                self.encounter.encounter_damage_stats.stagger_log.push((relative_timestamp as i32, stagger_percent));
+                self.stagger_log.push((relative_timestamp as i32, stagger_percent));
 
                 if stagger.max_stagger > self.encounter.encounter_damage_stats.max_stagger {
                     self.encounter.encounter_damage_stats.max_stagger = stagger.max_stagger;
@@ -947,13 +965,19 @@ impl Parser<'_> {
         path.push("encounters.db");
         let prev_stagger = self.prev_stagger;
 
+        let damage_log = self.damage_log.clone();
+        let identity_log = self.identity_log.clone();
+        let cast_log = self.cast_log.clone();
+        let stagger_log = self.stagger_log.clone();
+        let stagger_intervals = self.stagger_intervals.clone();
+
         task::spawn(async move {
             println!("saving to db - {}", encounter.current_boss_name);
 
             let mut conn = Connection::open(path).expect("failed to open database");
             let tx = conn.transaction().expect("failed to create transaction");
 
-            insert_data(&tx, &mut encounter, prev_stagger);
+            insert_data(&tx, &mut encounter, prev_stagger, damage_log, identity_log, cast_log, stagger_log, stagger_intervals);
 
             tx.commit().expect("failed to commit transaction");
             println!("saved to db");
@@ -1298,7 +1322,16 @@ fn get_skill_name_and_icon(
     }
 }
 
-fn insert_data(tx: &Transaction, encounter: &mut Encounter, prev_stagger: i32) {
+#[allow(clippy::too_many_arguments)]
+fn insert_data(tx: &Transaction, 
+        encounter: &mut Encounter, 
+        prev_stagger: i32, 
+        damage_log: HashMap<String, Vec<(i64, i64)>>, 
+        identity_log: HashMap<String, Vec<(i64, (i32, i32, i32))>>,
+        cast_log: HashMap<String, HashMap<i32, Vec<i32>>>,
+        stagger_log: Vec<(i32, f32)>,
+        mut stagger_intervals: Vec<(i32, i32)>
+    ) {
     let mut encounter_stmt = tx
         .prepare(
             "
@@ -1326,17 +1359,17 @@ fn insert_data(tx: &Transaction, encounter: &mut Encounter, prev_stagger: i32) {
 
     let mut misc: Option<EncounterMisc> = None;
 
-    if !encounter.encounter_damage_stats.stagger_log.is_empty() {
+    if !stagger_log.is_empty() {
         if prev_stagger > 0 && prev_stagger != encounter.encounter_damage_stats.max_stagger {
             // never finished staggering the boss, calculate average from whatever stagger has been done
             let stagger_start_s = ((encounter.encounter_damage_stats.stagger_start - encounter.fight_start) / 1000) as i32;
-            let stagger_duration = encounter.encounter_damage_stats.stagger_log.last().unwrap().0 - stagger_start_s;
+            let stagger_duration = stagger_log.last().unwrap().0 - stagger_start_s;
             if stagger_duration > 0 {
-                encounter.encounter_damage_stats.stagger_intervals.push((stagger_duration, prev_stagger));
+                stagger_intervals.push((stagger_duration, prev_stagger));
             }
         }
 
-        let (total_stagger_time, total_stagger_dealt) = encounter.encounter_damage_stats.stagger_intervals
+        let (total_stagger_time, total_stagger_dealt) = stagger_intervals
             .iter()
             .fold((0, 0), |(total_time, total_stagger), (time, stagger)| {
                 (total_time + time, total_stagger + stagger)
@@ -1346,7 +1379,7 @@ fn insert_data(tx: &Transaction, encounter: &mut Encounter, prev_stagger: i32) {
             let stagger = StaggerStats {
                 average: (total_stagger_dealt as f64 / total_stagger_time as f64) / encounter.encounter_damage_stats.max_stagger as f64 * 100.0,
                 staggers_per_min: (total_stagger_dealt as f64 / (total_stagger_time as f64 / 60.0)) / encounter.encounter_damage_stats.max_stagger as f64,
-                log: encounter.encounter_damage_stats.stagger_log.clone(),
+                log: stagger_log,
             };
             misc = Some(EncounterMisc {
                 stagger_stats: Some(stagger),
@@ -1410,131 +1443,143 @@ fn insert_data(tx: &Transaction, encounter: &mut Encounter, prev_stagger: i32) {
     {
         if entity.entity_type == EntityType::PLAYER {
             let intervals = generate_intervals(fight_start, fight_end);
-            if !intervals.is_empty() {
-                for interval in intervals {                
-                    let start = fight_start + interval - WINDOW_MS;
-                    let end = fight_start + interval + WINDOW_MS;
-                    
-                    let damage = sum_in_range(&entity.damage_stats.damage_log, start, end);
-                    entity.damage_stats.dps_rolling_10s_avg.push(damage / WINDOW_S);
+            if let Some(damage_log) = damage_log.get(&entity.name) {
+                if !intervals.is_empty() {
+                    for interval in intervals {                
+                        let start = fight_start + interval - WINDOW_MS;
+                        let end = fight_start + interval + WINDOW_MS;
+                        
+                        let damage = sum_in_range(damage_log, start, end);
+                        entity.damage_stats.dps_rolling_10s_avg.push(damage / WINDOW_S);
+                    }
+                }
+                let fight_start_sec = encounter.fight_start / 1000;
+                let fight_end_sec = encounter.last_combat_packet / 1000;
+                entity.damage_stats.dps_average = calculate_average_dps(damage_log, fight_start_sec, fight_end_sec);
+        
+                for (_, mut skill) in entity.skills.iter_mut() {
+                    skill.dps = skill.total_damage / duration_seconds;
                 }
             }
-            let fight_start_sec = encounter.fight_start / 1000;
-            let fight_end_sec = encounter.last_combat_packet / 1000;
-            entity.damage_stats.dps_average = calculate_average_dps(&entity.damage_stats.damage_log, fight_start_sec, fight_end_sec);
-    
-            for (_, mut skill) in entity.skills.iter_mut() {
-                skill.dps = skill.total_damage / duration_seconds;
+
+            for (_, cast_log) in cast_log.iter().filter(|&(s, _)| *s == entity.name) {
+                for (skill, log) in cast_log {
+                    entity.skills.entry(*skill).and_modify(|e| {
+                        e.cast_log = log.to_owned();
+                    });
+                }
             }
         }
         entity.damage_stats.dps = entity.damage_stats.damage_dealt / duration_seconds;
 
-        if entity.name == encounter.local_player && entity.damage_stats.identity_log.len() >= 2 {
-            let mut total_identity_gain = 0;
-            let data = &entity.damage_stats.identity_log;
-            let duration_seconds = (data[data.len() - 1].0 - data[0].0) / 1000;
-            let max = match entity.class.as_str() {
-                "Summoner" => 7_000.0,
-                _ => 10_000.0
-            };
-            let stats: String = match entity.class.as_str() {
-                "Arcanist" => {
-                    let mut cards: HashMap::<i32, i32> = HashMap::new();
-                    let mut log: Vec<(i32, (f32, i32, i32))> = Vec::new();
-                    for i in 1..data.len() {
-                        let (t1, i1) = data[i - 1];
-                        let (t2, i2) = data[i];
-
-                        // don't count clown cards draws as card draws
-                        if i2.1 != 0 && i2.1 != i1.1 && i1.1 != 19284 {
-                            cards.entry(i2.1).and_modify(|e| *e += 1).or_insert(1);
+        if let Some(identity_log) = identity_log.get(&entity.name) {
+            if entity.name == encounter.local_player && identity_log.len() >= 2 {
+                let mut total_identity_gain = 0;
+                let data = identity_log;
+                let duration_seconds = (data[data.len() - 1].0 - data[0].0) / 1000;
+                let max = match entity.class.as_str() {
+                    "Summoner" => 7_000.0,
+                    _ => 10_000.0
+                };
+                let stats: String = match entity.class.as_str() {
+                    "Arcanist" => {
+                        let mut cards: HashMap::<i32, i32> = HashMap::new();
+                        let mut log: Vec<(i32, (f32, i32, i32))> = Vec::new();
+                        for i in 1..data.len() {
+                            let (t1, i1) = data[i - 1];
+                            let (t2, i2) = data[i];
+    
+                            // don't count clown cards draws as card draws
+                            if i2.1 != 0 && i2.1 != i1.1 && i1.1 != 19284 {
+                                cards.entry(i2.1).and_modify(|e| *e += 1).or_insert(1);
+                            }
+                            if i2.2 != 0 && i2.2 != i1.2 && i1.2 != 19284 {
+                                cards.entry(i2.2).and_modify(|e| *e += 1).or_insert(1);
+                            }
+    
+                            if t2 > t1 && i2.0 > i1.0 {
+                                total_identity_gain += i2.0 - i1.0;
+                            }
+    
+                            let relative_time = ((t2 - fight_start) as f32 / 1000.0) as i32;
+                            // calculate percentage, round to 2 decimal places
+                            let percentage = if i2.0 >= max as i32 {
+                                100.0
+                            } else {
+                                (((i2.0 as f32 / max) * 100.0) * 100.0).round() / 100.0
+                            };
+                            log.push((relative_time, (percentage, i2.1, i2.2)));
                         }
-                        if i2.2 != 0 && i2.2 != i1.2 && i1.2 != 19284 {
-                            cards.entry(i2.2).and_modify(|e| *e += 1).or_insert(1);
-                        }
-
-                        if t2 > t1 && i2.0 > i1.0 {
-                            total_identity_gain += i2.0 - i1.0;
-                        }
-
-                        let relative_time = ((t2 - fight_start) as f32 / 1000.0) as i32;
-                        // calculate percentage, round to 2 decimal places
-                        let percentage = if i2.0 >= max as i32 {
-                            100.0
-                        } else {
-                            (((i2.0 as f32 / max) * 100.0) * 100.0).round() / 100.0
+    
+                        let avg_per_s = (total_identity_gain as f64 / duration_seconds as f64) / max as f64 * 100.0;
+                        let identity_stats = IdentityArcanist {
+                            average: avg_per_s,
+                            card_draws: cards,
+                            log,
                         };
-                        log.push((relative_time, (percentage, i2.1, i2.2)));
+    
+                        serde_json::to_string(&identity_stats).unwrap()
                     }
-
-                    let avg_per_s = (total_identity_gain as f64 / duration_seconds as f64) / max as f64 * 100.0;
-                    let identity_stats = IdentityArcanist {
-                        average: avg_per_s,
-                        card_draws: cards,
-                        log,
-                    };
-
-                    serde_json::to_string(&identity_stats).unwrap()
-                }
-                "Artist" | "Bard" => {
-                    let mut log: Vec<(i32, (f32, i32))> = Vec::new();
-
-                    for i in 1..data.len() {
-                        let (t1, i1) = data[i - 1];
-                        let (t2, i2) = data[i];
-
-                        if t2 <= t1 {
-                            continue;
+                    "Artist" | "Bard" => {
+                        let mut log: Vec<(i32, (f32, i32))> = Vec::new();
+    
+                        for i in 1..data.len() {
+                            let (t1, i1) = data[i - 1];
+                            let (t2, i2) = data[i];
+    
+                            if t2 <= t1 {
+                                continue;
+                            }
+    
+                            if i2.0 > i1.0 {
+                                total_identity_gain += i2.0 - i1.0;
+                            }
+    
+                            let relative_time = ((t2 - fight_start) as f32 / 1000.0) as i32;
+                            // since bard and artist have 3 bubbles, i.1 is the number of bubbles
+                            // we scale percentage to 3 bubbles
+                            // current bubble + max * number of bubbles
+                            let percentage: f32 = ((((i2.0 as f32 + max * i2.1 as f32) / max) * 100.0) * 100.0).round() / 100.0;
+                            log.push((relative_time, (percentage, i2.1)));
                         }
-
-                        if i2.0 > i1.0 {
-                            total_identity_gain += i2.0 - i1.0;
-                        }
-
-                        let relative_time = ((t2 - fight_start) as f32 / 1000.0) as i32;
-                        // since bard and artist have 3 bubbles, i.1 is the number of bubbles
-                        // we scale percentage to 3 bubbles
-                        // current bubble + max * number of bubbles
-                        let percentage: f32 = ((((i2.0 as f32 + max * i2.1 as f32) / max) * 100.0) * 100.0).round() / 100.0;
-                        log.push((relative_time, (percentage, i2.1)));
+    
+                        let avg_per_s = (total_identity_gain as f64 / duration_seconds as f64) / max as f64 * 100.0;
+                        let identity_stats = IdentityArtistBard {
+                            average: avg_per_s,
+                            log,
+                        };
+                        serde_json::to_string(&identity_stats).unwrap()
                     }
-
-                    let avg_per_s = (total_identity_gain as f64 / duration_seconds as f64) / max as f64 * 100.0;
-                    let identity_stats = IdentityArtistBard {
-                        average: avg_per_s,
-                        log,
-                    };
-                    serde_json::to_string(&identity_stats).unwrap()
-                }
-                _ => {
-                    let mut log: Vec<(i32, f32)> = Vec::new();
-                    for i in 1..data.len() {
-                        let (t1, i1) = data[i - 1];
-                        let (t2, i2) = data[i];
-
-                        if t2 <= t1 {
-                            continue;
+                    _ => {
+                        let mut log: Vec<(i32, f32)> = Vec::new();
+                        for i in 1..data.len() {
+                            let (t1, i1) = data[i - 1];
+                            let (t2, i2) = data[i];
+    
+                            if t2 <= t1 {
+                                continue;
+                            }
+    
+                            if i2.0 > i1.0 {
+                                total_identity_gain += i2.0 - i1.0;
+                            }
+    
+                            let relative_time = ((t2 - fight_start) as f32 / 1000.0) as i32;
+                            let percentage = (((i2.0 as f32 / max) * 100.0) * 100.0).round() / 100.0;
+                            log.push((relative_time, percentage));
                         }
-
-                        if i2.0 > i1.0 {
-                            total_identity_gain += i2.0 - i1.0;
-                        }
-
-                        let relative_time = ((t2 - fight_start) as f32 / 1000.0) as i32;
-                        let percentage = (((i2.0 as f32 / max) * 100.0) * 100.0).round() / 100.0;
-                        log.push((relative_time, percentage));
+    
+                        let avg_per_s = (total_identity_gain as f64 / duration_seconds as f64) / max as f64 * 100.0;
+                        let identity_stats = IdentityGeneric {
+                            average: avg_per_s,
+                            log,
+                        };
+                        serde_json::to_string(&identity_stats).unwrap()
                     }
-
-                    let avg_per_s = (total_identity_gain as f64 / duration_seconds as f64) / max as f64 * 100.0;
-                    let identity_stats = IdentityGeneric {
-                        average: avg_per_s,
-                        log,
-                    };
-                    serde_json::to_string(&identity_stats).unwrap()
-                }
-            };
-
-            entity.skill_stats.identity_stats = Some(stats);
+                };
+    
+                entity.skill_stats.identity_stats = Some(stats);
+            }            
         }
 
         entity_stmt
