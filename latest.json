@@ -1,6 +1,6 @@
 {
     "version": "v1.1.15",
-    "notes": "Auto-updater is bugged atm, manual install required. (click ignore if error pops up)\n- added pause feature (note: the meter will not have any data if its paused before raid start)\n- fixed battle items showing as aeromancer skills\n- fixed long boss names overlapping with hp bar\nsend bug reports or feature requests to Snow#7777",
+    "notes": "!!!NOTE!!!: auto-updater is bugged atm, manual install required. (click 'IGNORE' if error pops up)\n- added pause feature (note: meter will not have any data if paused before raid start)\n- added hp bar split option (at 25%, 50%, and 75%)\n- fixed battle items showing as aeromancer skills\n- fixed long boss names overlapping with hp bar\nsend bug reports or feature requests to Snow#7777",
     "pub_date": "2023-05-14T04:32:08Z",
     "platforms": {
         "windows-x86_64": {
