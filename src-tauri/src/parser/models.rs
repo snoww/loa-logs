@@ -422,6 +422,7 @@ pub struct Shortcuts {
     pub show_logs: Shortcut,
     pub show_latest_encounter: Shortcut,
     pub reset_session: Shortcut,
+    pub pause_session: Shortcut,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]

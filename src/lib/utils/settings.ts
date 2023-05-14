@@ -4,88 +4,92 @@ import { register, unregisterAll } from '@tauri-apps/api/globalShortcut';
 import { writable } from 'svelte/store';
 
 export const defaultSettings = {
-    "general": {
-        "showNames": true,
-        "showEsther": true,
-        "accentColor": "theme-pink",
-        "rawSocket": false,
-        "port": 6040,
-        "blur": true,
+    general: {
+        showNames: true,
+        showEsther: true,
+        accentColor: "theme-pink",
+        rawSocket: false,
+        port: 6040,
+        blur: true,
     },
-    "shortcuts": {
-        "hideMeter": {
-            "modifier": "Ctrl",
-            "key": "ArrowDown",
+    shortcuts: {
+        hideMeter: {
+            modifier: "Ctrl",
+            key: "ArrowDown",
         },
-        "showLogs": {
-            "modifier": "Ctrl",
-            "key": "ArrowUp",
+        showLogs: {
+            modifier: "Ctrl",
+            key: "ArrowUp",
         },
-        "showLatestEncounter": {
-            "modifier": "Ctrl",
-            "key": "ArrowRight",
+        showLatestEncounter: {
+            modifier: "Ctrl",
+            key: "ArrowRight",
         },
-        "resetSession": {
-            "modifier": "",
-            "key": "",
+        resetSession: {
+            modifier: "",
+            key: "",
+        },
+        pauseSession: {
+            modifier: "",
+            key: "",
         }
     },
-    "meter": {
-        "bossHp": true,
-        "splitBossHpBar": false,
-        "abbreviateHeader": true,
-        "showClassColors": true,
-        "damage": false,
-        "dps": true,
-        "damagePercent": true,
-        "deathTime": false,
-        "critRate": true,
-        "frontAtk": true,
-        "backAtk": true,
-        "counters": false,
-        "percentBuffBySup": false,
-        "percentBrand": false,
-        "breakdown": {
-            "damage": true,
-            "dps": true,
-            "damagePercent": true,
-            "critRate": true,
-            "frontAtk": true,
-            "backAtk": true,
-            "avgDamage": false,
-            "maxDamage": false,
-            "casts": true,
-            "hits": false,
-            "percentBuffBySup": false,
-            "percentBrand": false,
+    meter: {
+        bossHp: true,
+        splitBossHpBar: false,
+        abbreviateHeader: true,
+        showClassColors: true,
+        damage: false,
+        dps: true,
+        damagePercent: true,
+        deathTime: false,
+        critRate: true,
+        frontAtk: true,
+        backAtk: true,
+        counters: false,
+        percentBuffBySup: false,
+        percentBrand: false,
+        breakdown: {
+            damage: true,
+            dps: true,
+            damagePercent: true,
+            critRate: true,
+            frontAtk: true,
+            backAtk: true,
+            avgDamage: false,
+            maxDamage: false,
+            casts: true,
+            hits: false,
+            percentBuffBySup: false,
+            percentBrand: false,
         }
     },
-    "logs": {
-        "abbreviateHeader": false,
-        "damage": true,
-        "dps": true,
-        "damagePercent": true,
-        "deathTime": true,
-        "critRate": true,
-        "frontAtk": true,
-        "backAtk": true,
-        "counters": false,
-        "minEncounterDuration": 30,
-        "percentBuffBySup": false,
-        "percentBrand": false,
-        "breakdown": {
-            "damage": true,
-            "dps": true,
-            "damagePercent": true,
-            "critRate": true,
-            "frontAtk": true,
-            "backAtk": true,
-            "avgDamage": false,
-            "maxDamage": false,
-            "casts": true,
-            "hits": false,
-            "percentBuffBySup": false,
-            "percentBrand": false,
+    logs: {
+        abbreviateHeader: false,
+        damage: true,
+        dps: true,
+        damagePercent: true,
+        deathTime: true,
+        critRate: true,
+        frontAtk: true,
+        backAtk: true,
+        counters: false,
+        minEncounterDuration: 30,
+        percentBuffBySup: false,
+        percentBrand: false,
+        breakdown: {
+            damage: true,
+            dps: true,
+            damagePercent: true,
+            critRate: true,
+            frontAtk: true,
+            backAtk: true,
+            avgDamage: false,
+            maxDamage: false,
+            casts: true,
+            hits: false,
+            percentBuffBySup: false,
+            percentBrand: false,
         }
     }
 };
@@ -138,6 +142,11 @@ export async function registerShortcuts(shortcuts: any) {
     if (shortcuts.resetSession.modifier && shortcuts.resetSession.key) {
         await register(shortcuts.resetSession.modifier + "+" + shortcuts.resetSession.key, async () => {
             await emit("reset-request");
+        });
+    }
+    if (shortcuts.pauseSession.modifier && shortcuts.pauseSession.key) {
+        await register(shortcuts.pauseSession.modifier + "+" + shortcuts.pauseSession.key, async () => {
+            await emit("pause-request");
         });
     }
 }

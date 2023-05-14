@@ -73,12 +73,21 @@ fn main() {
                 let duration = Duration::from_millis(100);
 
                 let reset = Arc::new(Mutex::new(false));
+                let pause = Arc::new(Mutex::new(false));
                 let reset_clone = reset.clone();
+                let pause_clone = pause.clone();
                 let meter_window_clone = meter_window.clone();
                 meter_window.listen_global("reset-request", move |_event| {
                     if let Ok(ref mut reset) = reset_clone.try_lock() {
                         **reset = true;
                         meter_window_clone.emit("reset-encounter", "").ok();
+                    }
+                });
+                let meter_window_clone = meter_window.clone();
+                meter_window.listen_global("pause-request", move |_event| {
+                    if let Ok(ref mut pause) = pause_clone.try_lock() {
+                        **pause = !(**pause);
+                        meter_window_clone.emit("pause-encounter", "").ok();
                     }
                 });
 
@@ -88,6 +97,11 @@ fn main() {
                             if **reset {
                                 parser.soft_reset();
                                 **reset = false;
+                            }
+                        }
+                        if let Ok(ref mut pause) = pause.try_lock() {
+                            if **pause {
+                                continue;
                             }
                         }
                         parser.parse_line(line);

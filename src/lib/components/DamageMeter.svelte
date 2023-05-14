@@ -21,6 +21,7 @@
 
     let zoneChangeAlert = false;
     let resettingAlert = false;
+    let pauseAlert = false;
     let phaseTransitionAlert = false;
     let bossDeadAlert = false;
     let raidInProgress = true;
@@ -55,6 +56,10 @@
                     resettingAlert = false;
                 }, 1500);
             });
+            let pauseEncounterEvent = await listen('pause-encounter', (event: any) => {
+                paused = !paused;
+                pauseAlert = !pauseAlert;
+            });
             let phaseTransitionEvent = await listen('phase-transition', (event: any) => {
                 let phaseCode = event.payload;
                 // console.log(Date.now() + ": phase transition event: ", event.payload)
@@ -79,6 +84,7 @@
                 encounterUpdateEvent, 
                 zoneChangeEvent,
                 resetEncounterEvent,
+                pauseEncounterEvent,
                 phaseTransitionEvent,
                 raidStartEvent,
                 adminError
@@ -109,9 +115,11 @@
     let anySupportBuff: boolean = false;
     let anySupportBrand: boolean = false;
 
+    let paused = false;
+
     $: {
         if (encounter) {                 
-            if (encounter.fightStart !== 0 && raidInProgress) {
+            if (encounter.fightStart !== 0 && raidInProgress && !paused) {
                 if ($settings.general.showEsther) {
                     players = Object.values(encounter.entities)
                         .filter((e) => e.damageStats.damageDealt > 0 && (e.entityType === EntityType.ESTHER || e.entityType === EntityType.PLAYER))
@@ -293,10 +301,20 @@
 {/if}
 {#if resettingAlert}
 <div transition:fade>
-    <Alert color="none" class="bg-accent-800 bg-opacity-80 w-40 mx-auto absolute inset-x-0 bottom-8 py-2 z-50" dismissable on:close={() => zoneChangeAlert = false}>
+    <Alert color="none" class="bg-accent-800 bg-opacity-80 w-40 mx-auto absolute inset-x-0 bottom-8 py-2 z-50" dismissable on:close={() => resettingAlert = false}>
         <span slot="icon"><svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path></svg>
         </span>
         Resetting
+    </Alert>
+</div>
+{/if}
+{#if pauseAlert}
+<div transition:fade>
+    <Alert color="none" class="bg-accent-800 bg-opacity-80 w-32 mx-auto absolute inset-x-0 bottom-8 py-2 z-50" on:close={() => pauseAlert = false}>
+        <span slot="icon">
+            <svg class="w-5 h-5" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960"><path d="M555 852V300h172.5v552H555Zm-322 0V300h172.5v552H233Z"/></svg>
+        </span>
+        Paused
     </Alert>
 </div>
 {/if}
