@@ -603,15 +603,15 @@
                     {/if}
                 {:else if tab === MeterTab.PARTY_BUFFS}
                     {#if state === MeterState.PARTY}
-                        <LogBuffs {tab} encounterDamageStats={encounter.encounterDamageStats} {players} percentages={playerDamagePercentages} {handleRightClick} {inspectPlayer}/>
+                        <LogBuffs {tab} encounterDamageStats={encounter.encounterDamageStats} {players} {handleRightClick} {inspectPlayer}/>
                     {:else}
-                        <LogBuffs {tab} encounterDamageStats={encounter.encounterDamageStats} {players} percentages={playerDamagePercentages} focusedPlayer={player} {handleRightClick} {inspectPlayer}/>
+                        <LogBuffs {tab} encounterDamageStats={encounter.encounterDamageStats} {players} focusedPlayer={player} {handleRightClick} {inspectPlayer}/>
                     {/if}
                 {:else if tab === MeterTab.SELF_BUFFS}
                     {#if state === MeterState.PARTY}
-                        <LogBuffs {tab} encounterDamageStats={encounter.encounterDamageStats} {players} percentages={playerDamagePercentages} {handleRightClick} {inspectPlayer}/>
+                        <LogBuffs {tab} encounterDamageStats={encounter.encounterDamageStats} {players} {handleRightClick} {inspectPlayer}/>
                     {:else}
-                        <LogBuffs {tab} encounterDamageStats={encounter.encounterDamageStats} {players} percentages={playerDamagePercentages} focusedPlayer={player} {handleRightClick} {inspectPlayer}/>
+                        <LogBuffs {tab} encounterDamageStats={encounter.encounterDamageStats} {players} focusedPlayer={player} {handleRightClick} {inspectPlayer}/>
                     {/if}
                 {/if}
             </table>

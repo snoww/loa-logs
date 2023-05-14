@@ -17,12 +17,12 @@
     export let tab: MeterTab;
     export let encounterDamageStats: EncounterDamageStats | undefined;
     export let players: Array<Entity>;
-    export let percentages: Array<number> = [];
     export let focusedPlayer: Entity | null = null;
     export let handleRightClick: () => void;
     export let inspectPlayer: (name: string) => void;
 
     let groupedSynergies: Map<string, Map<number, StatusEffect>> = new Map();
+    let percentages = Array<number>();
 
     $: {
         if (focusedPlayer && focusedPlayer.entityType === EntityType.ESTHER) {
@@ -32,6 +32,7 @@
         players = players.filter((player) => player.entityType === EntityType.PLAYER);
         groupedSynergies = new Map<string, Map<number, StatusEffect>>();
         if (encounterDamageStats) {
+            percentages = players.map(player => (player.damageStats.damageDealt / encounterDamageStats!.topDamageDealt) * 100);
             Object.entries(encounterDamageStats.buffs).forEach(([id, buff]) => {
                 if (focusedPlayer && !Object.hasOwn(focusedPlayer.damageStats.buffedBy, id)) {
                     return;
