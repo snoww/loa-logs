@@ -1,11 +1,11 @@
 {
-    "version": "v1.1.16",
-    "notes": "!!!NOTE!!!: auto-updater is bugged atm, manual install required. (click 'IGNORE' if error pops up)\n- add columns for raw casts/hits\n- fix charts not displaying anything when sidereal did top damage\n- fix % damage bar showing incorrect width in buffs tab\n- fix first cast of skills not being tracked in skill log\nsend bug reports or feature requests to Snow#7777",
-    "pub_date": "2023-05-15T05:05:44Z",
+    "version": "v1.1.17",
+    "notes": "- temp fix for auto-updater, will work on v1.1.18 (surely)\n- fix esther not showing in logs when its enabled\nsend bug reports or feature requests to Snow#7777",
+    "pub_date": "2023-05-15T19:49:18Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.1.16/LOA.Logs_1.1.16_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlNvK0lnUFdCNnN1RnhTZmtsUW5YU0ExQ3R1VHZRdGpJaU5qcC9yVG1VWnNEUnIvMGZBRjRyVkkxdlFYSGlHV08ycHM4ZmNqcEkwRVREUVF6QWtIcEFRPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjg0MTI3MDE5CWZpbGU6TE9BIExvZ3NfMS4xLjE2X3g2NC1zZXR1cC5uc2lzLnppcApSQXpWdkwrQnFEUjlxeUFySzlsZEJBdWFJR2Nyc2pMYWVxbWt2ZlRYWDJXQXdCdzdoWkZOeHljS2NFcWQ3bi9ZM05KTEtPV0wzYnkwVFROdm0xOEVCQT09Cg=="
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.1.17/LOA.Logs_1.1.17_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlNLcTNjNG9lSnVZMk81eHdqM0RQeGhGeitJY1BxTTJXMmdpK2w0SlBMaTFTR0NkVTVWQUlwT2lpOC84ZjREcStHd2Z2cTRPVWdzOWp3NEVpK05rRUFRPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjg0MTc5ODI3CWZpbGU6TE9BIExvZ3NfMS4xLjE3X3g2NC1zZXR1cC5uc2lzLnppcApLV0MrNWJ4S04rMTdLVURQQUM0Q29VcTJJcFRFeXAvVTZrcTg1dkNsdGN0d01yMmdnZ3BjMUl4MzRGQ0ozOHRVc1RDRGdoVFc2MUlWMVlwVi9icHlCUT09Cg=="
         }
     }
 }
