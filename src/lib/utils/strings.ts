@@ -1,17 +1,17 @@
 import { estherMap } from "$lib/constants/esthers";
 import type { Entity } from "$lib/types";
 
-export function isValidName(word: string){
+export function isValidName(word: string) {
     return /^\p{Lu}/u.test(word);
 }
 
-export function removeUnknownHtmlTags(input: string){
+export function removeUnknownHtmlTags(input: string) {
     input = input.replace(/<\$TABLE_SKILLFEATURE[^>]*\/>/g, "??");
     input = input.replace(/<\$CALC[^>]*\/>/g, "??");
     return input;
 }
-  
-export function formatPlayerName(player: Entity,  showNames = true): string {
+
+export function formatPlayerName(player: Entity, showNames = true): string {
     let playerName = player.name;
     if (!isValidName(playerName) || !showNames) {
         playerName = "";
@@ -37,7 +37,7 @@ export function truncateString(str: string, len = 10): string {
 }
 
 export function getSkillIcon(skillIcon: string): string {
-    return encodeURIComponent("\\" + ((skillIcon !== '') ? skillIcon : 'unknown.png'));
+    return encodeURIComponent("\\" + (skillIcon !== "" ? skillIcon : "unknown.png"));
 }
 
 export function getEstherFromNpcId(npcId: number): string {

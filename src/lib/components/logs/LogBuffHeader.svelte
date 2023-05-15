@@ -11,7 +11,6 @@
             width = `${synergies.size * 1.5 + 1}rem`;
         }
     }
-
 </script>
 
 <th class="" style="width: {width}">

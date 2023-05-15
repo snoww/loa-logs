@@ -12,13 +12,13 @@
 
     $: {
         skills = Object.values(player.skills).sort((a, b) => b.totalDamage - a.totalDamage);
-        if (Object.hasOwn(classColors, player.class)){
+        if (Object.hasOwn(classColors, player.class)) {
             color = classColors[player.class].color;
         }
-    
+
         if (skills.length > 0) {
             let mostDamageSkill = skills[0].totalDamage;
-            skillDamagePercentages = skills.map(skill => (skill.totalDamage / mostDamageSkill) * 100);
+            skillDamagePercentages = skills.map((skill) => (skill.totalDamage / mostDamageSkill) * 100);
         }
     }
 </script>
@@ -26,4 +26,3 @@
 {#each skills as skill, i (skill.id)}
     <BuffSkillBreakdownRow {groupedSynergies} {skill} {color} damagePercentage={skillDamagePercentages[i]} />
 {/each}
-    

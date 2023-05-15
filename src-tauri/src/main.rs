@@ -4,14 +4,25 @@
 )]
 
 mod parser;
-use std::{time::{Duration, Instant}, path::{PathBuf, Path}, fs::File, io::{Write, Read}, str::FromStr, sync::{Arc, Mutex}};
+use std::{
+    fs::File,
+    io::{Read, Write},
+    path::{Path, PathBuf},
+    str::FromStr,
+    sync::{Arc, Mutex},
+    time::{Duration, Instant},
+};
 
 use hashbrown::HashMap;
 use parser::{models::*, Parser};
 
-use rusqlite::{Connection, params};
-use tauri::{Manager, api::process::{Command, CommandEvent }, SystemTray, CustomMenuItem, SystemTrayMenu, SystemTrayMenuItem, WindowBuilder, SystemTrayEvent};
-use tauri_plugin_window_state::{AppHandleExt, WindowExt, StateFlags};
+use rusqlite::{params, Connection};
+use tauri::{
+    api::process::{Command, CommandEvent},
+    CustomMenuItem, Manager, SystemTray, SystemTrayEvent, SystemTrayMenu, SystemTrayMenuItem,
+    WindowBuilder,
+};
+use tauri_plugin_window_state::{AppHandleExt, StateFlags, WindowExt};
 use window_vibrancy::{apply_blur, clear_blur};
 
 fn main() {
@@ -31,13 +42,18 @@ fn main() {
 
     tauri::Builder::default()
         .setup(|app| {
-            let resource_path = app.path_resolver().resource_dir().expect("could not get resource dir");
+            let resource_path = app
+                .path_resolver()
+                .resource_dir()
+                .expect("could not get resource dir");
             let settings = read_settings(&resource_path).ok();
 
             let meter_window = app.get_window("main").unwrap();
-            meter_window.set_always_on_top(true)
+            meter_window
+                .set_always_on_top(true)
                 .expect("failed to set windows always on top");
-            meter_window.restore_state(StateFlags::all())
+            meter_window
+                .restore_state(StateFlags::all())
                 .expect("failed to restore window state");
             #[cfg(debug_assertions)]
             {
@@ -46,7 +62,7 @@ fn main() {
 
             let mut packet_mode = "pcap".to_string();
             let mut port = 6040;
-            
+
             if let Some(settings) = settings {
                 if settings.general.raw_socket {
                     packet_mode = "raw".to_string();
@@ -111,14 +127,21 @@ fn main() {
                             let window = meter_window.clone();
                             tauri::async_runtime::spawn(async move {
                                 if !clone.current_boss_name.is_empty() {
-                                    clone.current_boss = clone.entities.get(&clone.current_boss_name).cloned();
+                                    clone.current_boss =
+                                        clone.entities.get(&clone.current_boss_name).cloned();
                                     if clone.current_boss.is_none() {
                                         clone.current_boss_name = String::new();
                                     }
                                 }
-                                clone.entities.retain(|_, v| (v.entity_type == EntityType::PLAYER || v.entity_type == EntityType::ESTHER) && v.skill_stats.hits > 0 && v.max_hp > 0);
+                                clone.entities.retain(|_, v| {
+                                    (v.entity_type == EntityType::PLAYER
+                                        || v.entity_type == EntityType::ESTHER)
+                                        && v.skill_stats.hits > 0
+                                        && v.max_hp > 0
+                                });
                                 if !clone.entities.is_empty() {
-                                    window.emit("encounter-update", Some(clone))
+                                    window
+                                        .emit("encounter-update", Some(clone))
                                         .expect("failed to emit encounter-update");
                                 }
                             });
@@ -128,19 +151,21 @@ fn main() {
                         if line == "not admin" {
                             std::thread::sleep(Duration::from_secs(3));
                             let window = meter_window.clone();
-                            window.emit("admin", "")
+                            window
+                                .emit("admin", "")
                                 .expect("failed to emit admin error");
                         }
                     }
                 }
             });
 
-            let _logs_window = WindowBuilder::new(app, "logs", tauri::WindowUrl::App("/logs".into()))
-                .title("LOA Logs")
-                .min_inner_size(650.0, 300.0)
-                .inner_size(800.0, 500.0)
-                .build()
-                .expect("failed to create log window");
+            let _logs_window =
+                WindowBuilder::new(app, "logs", tauri::WindowUrl::App("/logs".into()))
+                    .title("LOA Logs")
+                    .min_inner_size(650.0, 300.0)
+                    .inner_size(800.0, 500.0)
+                    .build()
+                    .expect("failed to create log window");
             #[cfg(debug_assertions)]
             {
                 _logs_window.open_devtools();
@@ -150,14 +175,20 @@ fn main() {
         })
         .plugin(tauri_plugin_window_state::Builder::default().build())
         .plugin(tauri_plugin_single_instance::init(|_app, _argv, _cwd| {}))
-        .on_window_event(|event| if let tauri::WindowEvent::CloseRequested { api, .. } = event.event() {
-            if event.window().label() == "logs" {
-                event.window().hide().unwrap();
-                api.prevent_close();
-            }
-            if event.window().label() == "main" {
-                event.window().app_handle().save_window_state(StateFlags::all()).expect("failed to save window state");
-                event.window().app_handle().exit(0);
+        .on_window_event(|event| {
+            if let tauri::WindowEvent::CloseRequested { api, .. } = event.event() {
+                if event.window().label() == "logs" {
+                    event.window().hide().unwrap();
+                    api.prevent_close();
+                }
+                if event.window().label() == "main" {
+                    event
+                        .window()
+                        .app_handle()
+                        .save_window_state(StateFlags::all())
+                        .expect("failed to save window state");
+                    event.window().app_handle().exit(0);
+                }
             }
         })
         .system_tray(system_tray)
@@ -172,47 +203,46 @@ fn main() {
                     meter.unminimize().unwrap();
                 }
             }
-            SystemTrayEvent::MenuItemClick { id, .. } => {
-                match id.as_str() {
-                    "quit" => {
-                        app.save_window_state(StateFlags::all()).expect("failed to save window state");
-                        app.exit(0);
-                    }
-                    "hide" => {
-                        if let Some(meter) = app.get_window("main") {
-                            meter.hide().unwrap();
-                        }
-                    }
-                    "show-meter" => {
-                        if let Some(meter) = app.get_window("main") {
-                            meter.show().unwrap();
-                        }
-                    }
-                    "show-logs" => {
-                        if let Some(logs) = app.get_window("logs") {
-                            logs.show().unwrap();
-                            logs.unminimize().unwrap();
-                        } else {
-                            WindowBuilder::new(app, "logs", tauri::WindowUrl::App("/logs".into()))
-                                .title("LOA Logs")
-                                .min_inner_size(500.0, 300.0)
-                                .build()
-                                .expect("failed to create log window");
-                        }
-                    }
-                    _ => {}
+            SystemTrayEvent::MenuItemClick { id, .. } => match id.as_str() {
+                "quit" => {
+                    app.save_window_state(StateFlags::all())
+                        .expect("failed to save window state");
+                    app.exit(0);
                 }
-            }
+                "hide" => {
+                    if let Some(meter) = app.get_window("main") {
+                        meter.hide().unwrap();
+                    }
+                }
+                "show-meter" => {
+                    if let Some(meter) = app.get_window("main") {
+                        meter.show().unwrap();
+                    }
+                }
+                "show-logs" => {
+                    if let Some(logs) = app.get_window("logs") {
+                        logs.show().unwrap();
+                        logs.unminimize().unwrap();
+                    } else {
+                        WindowBuilder::new(app, "logs", tauri::WindowUrl::App("/logs".into()))
+                            .title("LOA Logs")
+                            .min_inner_size(500.0, 300.0)
+                            .build()
+                            .expect("failed to create log window");
+                    }
+                }
+                _ => {}
+            },
             _ => {}
         })
         .invoke_handler(tauri::generate_handler![
-            load_encounters_preview, 
+            load_encounters_preview,
             load_encounter,
             get_encounter_count,
-            open_most_recent_encounter, 
-            delete_encounter, 
-            toggle_meter_window, 
-            open_url, 
+            open_most_recent_encounter,
+            delete_encounter,
+            toggle_meter_window,
+            open_url,
             save_settings,
             get_settings,
             check_old_db_location_exists,
@@ -240,7 +270,6 @@ fn get_db_connection(resource_path: &Path) -> Result<Connection, String> {
     Ok(conn)
 }
 
-
 fn setup_db(resource_path: PathBuf) -> Result<(), String> {
     let mut path = resource_path;
     path.push("encounters.db");
@@ -251,7 +280,8 @@ fn setup_db(resource_path: PathBuf) -> Result<(), String> {
         }
     };
 
-    match conn.execute_batch("
+    match conn.execute_batch(
+        "
         CREATE TABLE IF NOT EXISTS encounter (
             id INTEGER PRIMARY KEY,
             last_combat_packet INTEGER,
@@ -272,20 +302,25 @@ fn setup_db(resource_path: PathBuf) -> Result<(), String> {
         ON encounter (fight_start desc);
         CREATE INDEX IF NOT EXISTS encounter_current_boss_index
         ON encounter (current_boss);
-        ") {
+        ",
+    ) {
         Ok(_) => (),
         Err(e) => {
             return Err(e.to_string());
         }
     }
 
-    let mut stmt = conn.prepare("SELECT COUNT(*) FROM pragma_table_info('encounter') WHERE name='misc'").unwrap();
+    let mut stmt = conn
+        .prepare("SELECT COUNT(*) FROM pragma_table_info('encounter') WHERE name='misc'")
+        .unwrap();
     let column_count: u32 = stmt.query_row([], |row| row.get(0)).unwrap();
     if column_count == 0 {
-        conn.execute("ALTER TABLE encounter ADD COLUMN misc TEXT", []).expect("failed to add column");
+        conn.execute("ALTER TABLE encounter ADD COLUMN misc TEXT", [])
+            .expect("failed to add column");
     }
 
-    match conn.execute_batch("
+    match conn.execute_batch(
+        "
         CREATE TABLE IF NOT EXISTS entity (
             name TEXT,
             encounter_id INTEGER NOT NULL,
@@ -310,7 +345,8 @@ fn setup_db(resource_path: PathBuf) -> Result<(), String> {
         ON entity (name);
         CREATE INDEX IF NOT EXISTS entity_class_index
         ON entity (class);
-        ") {
+        ",
+    ) {
         Ok(_) => (),
         Err(e) => {
             return Err(e.to_string());
@@ -321,8 +357,18 @@ fn setup_db(resource_path: PathBuf) -> Result<(), String> {
 }
 
 #[tauri::command]
-fn load_encounters_preview(window: tauri::Window, page: i32, page_size: i32, min_duration: i32, search: String) -> EncountersOverview {
-    let path = window.app_handle().path_resolver().resource_dir().expect("could not get resource dir");
+fn load_encounters_preview(
+    window: tauri::Window,
+    page: i32,
+    page_size: i32,
+    min_duration: i32,
+    search: String,
+) -> EncountersOverview {
+    let path = window
+        .app_handle()
+        .path_resolver()
+        .resource_dir()
+        .expect("could not get resource dir");
     let conn = get_db_connection(&path).expect("could not get db connection");
 
     let mut stmt = conn.prepare_cached("
@@ -353,33 +399,41 @@ fn load_encounters_preview(window: tauri::Window, page: i32, page_size: i32, min
     let offset = (page - 1) * page_size;
     let min_duration = min_duration * 1000;
 
-    let encounter_iter = stmt.query_map([
-            min_duration.to_string(), 
-            search.to_string(), 
-            search.to_string(), 
-            search.to_string(), 
-            page_size.to_string(), 
-            offset.to_string()
-            ], |row| {
-        let classes = match row.get(4) {
-            Ok(classes) => classes,
-            Err(_) => "".to_string()
-        };
+    let encounter_iter = stmt
+        .query_map(
+            [
+                min_duration.to_string(),
+                search.to_string(),
+                search.to_string(),
+                search.to_string(),
+                page_size.to_string(),
+                offset.to_string(),
+            ],
+            |row| {
+                let classes = match row.get(4) {
+                    Ok(classes) => classes,
+                    Err(_) => "".to_string(),
+                };
 
-        let (classes, names) = classes.split(',').map(|s| {
-            let info: Vec<&str> = s.split(':').collect();
-            (info[0].parse::<i32>().unwrap_or(101), info[1].to_string())
-        }).unzip();
+                let (classes, names) = classes
+                    .split(',')
+                    .map(|s| {
+                        let info: Vec<&str> = s.split(':').collect();
+                        (info[0].parse::<i32>().unwrap_or(101), info[1].to_string())
+                    })
+                    .unzip();
 
-        Ok(EncounterPreview {
-            id: row.get(0)?,
-            fight_start: row.get(1)?,
-            boss_name: row.get(2)?,
-            duration: row.get(3)?,
-            classes,
-            names
-        })
-    }).expect("could not query encounters");
+                Ok(EncounterPreview {
+                    id: row.get(0)?,
+                    fight_start: row.get(1)?,
+                    boss_name: row.get(2)?,
+                    duration: row.get(3)?,
+                    classes,
+                    names,
+                })
+            },
+        )
+        .expect("could not query encounters");
 
     let mut encounters: Vec<EncounterPreview> = Vec::new();
     for encounter in encounter_iter {
@@ -399,15 +453,21 @@ fn load_encounters_preview(window: tauri::Window, page: i32, page_size: i32, min
 
     EncountersOverview {
         encounters,
-        total_encounters: count
+        total_encounters: count,
     }
 }
 
 #[tauri::command]
 fn load_encounter(window: tauri::Window, id: String) -> Encounter {
-    let path = window.app_handle().path_resolver().resource_dir().expect("could not get resource dir");
+    let path = window
+        .app_handle()
+        .path_resolver()
+        .resource_dir()
+        .expect("could not get resource dir");
     let conn = get_db_connection(&path).expect("could not get db connection");
-    let mut encounter_stmt = conn.prepare_cached("
+    let mut encounter_stmt = conn
+        .prepare_cached(
+            "
     SELECT last_combat_packet,
        fight_start,
        local_player,
@@ -423,35 +483,38 @@ fn load_encounter(window: tauri::Window, id: String) -> Encounter {
        misc
     FROM encounter
     WHERE id = ?
-    ;").unwrap();
+    ;",
+        )
+        .unwrap();
 
     let mut encounter = match encounter_stmt.query_row(params![id], |row| {
         let buff_str = match row.get(10) {
             Ok(buff_str) => buff_str,
-            Err(_) => "".to_string()
+            Err(_) => "".to_string(),
         };
 
         let buffs = match serde_json::from_str::<HashMap<i32, StatusEffect>>(buff_str.as_str()) {
             Ok(v) => v,
-            Err(_) => HashMap::new()
+            Err(_) => HashMap::new(),
         };
 
         let debuff_str = match row.get(11) {
             Ok(debuff_str) => debuff_str,
-            Err(_) => "".to_string()
+            Err(_) => "".to_string(),
         };
-        let debuffs = match serde_json::from_str::<HashMap<i32, StatusEffect>>(debuff_str.as_str()) {
+        let debuffs = match serde_json::from_str::<HashMap<i32, StatusEffect>>(debuff_str.as_str())
+        {
             Ok(v) => v,
-            Err(_) => HashMap::new()
+            Err(_) => HashMap::new(),
         };
 
         let misc_str = match row.get(12) {
             Ok(misc_str) => misc_str,
-            Err(_) => "".to_string()
+            Err(_) => "".to_string(),
         };
         let misc = match serde_json::from_str::<EncounterMisc>(misc_str.as_str()) {
             Ok(v) => Some(v),
-            Err(_) => None
+            Err(_) => None,
         };
 
         Ok(Encounter {
@@ -475,10 +538,12 @@ fn load_encounter(window: tauri::Window, id: String) -> Encounter {
         })
     }) {
         Ok(v) => v,
-        Err(_) => return Encounter::default()
+        Err(_) => return Encounter::default(),
     };
 
-    let mut entity_stmt = conn.prepare_cached("
+    let mut entity_stmt = conn
+        .prepare_cached(
+            "
     SELECT name,
         class_id,
         class,
@@ -494,59 +559,64 @@ fn load_encounter(window: tauri::Window, id: String) -> Encounter {
         npc_id
     FROM entity
     WHERE encounter_id = ?;
-    ").unwrap();
+    ",
+        )
+        .unwrap();
 
-    let entity_iter = entity_stmt.query_map(params![id], |row| {
-        let skill_str = match row.get(7) {
-            Ok(skill_str) => skill_str,
-            Err(_) => "".to_string()
-        };
-        let skills = match serde_json::from_str::<HashMap<i32, Skill>>(skill_str.as_str()) {
-            Ok(v) => v,
-            Err(_) => HashMap::new()
-        };
+    let entity_iter = entity_stmt
+        .query_map(params![id], |row| {
+            let skill_str = match row.get(7) {
+                Ok(skill_str) => skill_str,
+                Err(_) => "".to_string(),
+            };
+            let skills = match serde_json::from_str::<HashMap<i32, Skill>>(skill_str.as_str()) {
+                Ok(v) => v,
+                Err(_) => HashMap::new(),
+            };
 
-        let damage_stats_str = match row.get(8) {
-            Ok(damage_stats_str) => damage_stats_str,
-            Err(_) => "".to_string()
-        };
+            let damage_stats_str = match row.get(8) {
+                Ok(damage_stats_str) => damage_stats_str,
+                Err(_) => "".to_string(),
+            };
 
-        let damage_stats = match serde_json::from_str::<DamageStats>(damage_stats_str.as_str()) {
-            Ok(v) => v,
-            Err(_) => DamageStats::default()
-        };
+            let damage_stats = match serde_json::from_str::<DamageStats>(damage_stats_str.as_str())
+            {
+                Ok(v) => v,
+                Err(_) => DamageStats::default(),
+            };
 
-        let skill_stats_str = match row.get(9) {
-            Ok(skill_stats_str) => skill_stats_str,
-            Err(_) => "".to_string()
-        };
-        let skill_stats = match serde_json::from_str::<SkillStats>(skill_stats_str.as_str()) {
-            Ok(v) => v,
-            Err(_) => SkillStats::default()
-        };
+            let skill_stats_str = match row.get(9) {
+                Ok(skill_stats_str) => skill_stats_str,
+                Err(_) => "".to_string(),
+            };
+            let skill_stats = match serde_json::from_str::<SkillStats>(skill_stats_str.as_str()) {
+                Ok(v) => v,
+                Err(_) => SkillStats::default(),
+            };
 
-        let entity_type = match row.get(11) {
-            Ok(entity_type) => entity_type,
-            Err(_) => "".to_string()
-        };
+            let entity_type = match row.get(11) {
+                Ok(entity_type) => entity_type,
+                Err(_) => "".to_string(),
+            };
 
-        Ok(Entity {
-            name: row.get(0)?,
-            class_id: row.get(1)?,
-            class: row.get(2)?,
-            gear_score: row.get(3)?,
-            current_hp: row.get(4)?,
-            max_hp: row.get(5)?,
-            is_dead: row.get(6)?,
-            skills,
-            damage_stats,
-            skill_stats,
-            last_update: row.get(10)?,
-            entity_type: EntityType::from_str(entity_type.as_str()).unwrap(),
-            npc_id: row.get(12)?,
-            ..Default::default()
+            Ok(Entity {
+                name: row.get(0)?,
+                class_id: row.get(1)?,
+                class: row.get(2)?,
+                gear_score: row.get(3)?,
+                current_hp: row.get(4)?,
+                max_hp: row.get(5)?,
+                is_dead: row.get(6)?,
+                skills,
+                damage_stats,
+                skill_stats,
+                last_update: row.get(10)?,
+                entity_type: EntityType::from_str(entity_type.as_str()).unwrap(),
+                npc_id: row.get(12)?,
+                ..Default::default()
+            })
         })
-    }).unwrap();
+        .unwrap();
 
     let mut entities: HashMap<String, Entity> = HashMap::new();
     for entity in entity_iter {
@@ -561,56 +631,75 @@ fn load_encounter(window: tauri::Window, id: String) -> Encounter {
 
 #[tauri::command]
 fn get_encounter_count(window: tauri::Window) -> i32 {
-    let path = window.app_handle().path_resolver().resource_dir().expect("could not get resource dir");
+    let path = window
+        .app_handle()
+        .path_resolver()
+        .resource_dir()
+        .expect("could not get resource dir");
     let conn = get_db_connection(&path).expect("could not get db connection");
-    let mut stmt = conn.prepare_cached("SELECT COUNT(*) FROM encounter;").unwrap();
+    let mut stmt = conn
+        .prepare_cached("SELECT COUNT(*) FROM encounter;")
+        .unwrap();
 
-    let count: Result<i32, rusqlite::Error> = stmt.query_row(params![], |row| {
-        row.get(0)
-    });
+    let count: Result<i32, rusqlite::Error> = stmt.query_row(params![], |row| row.get(0));
 
     match count {
         Ok(count) => count,
-        Err(_) => 0
+        Err(_) => 0,
     }
 }
 
 #[tauri::command]
 fn open_most_recent_encounter(window: tauri::Window) {
-    let path = window.app_handle().path_resolver().resource_dir().expect("could not get resource dir");
+    let path = window
+        .app_handle()
+        .path_resolver()
+        .resource_dir()
+        .expect("could not get resource dir");
     let conn = get_db_connection(&path).expect("could not get db connection");
-    let mut stmt = conn.prepare_cached("
+    let mut stmt = conn
+        .prepare_cached(
+            "
     SELECT id
     FROM encounter
     ORDER BY fight_start DESC
     LIMIT 1;
-    ").unwrap();
+    ",
+        )
+        .unwrap();
 
-    let id_result: Result<i32, rusqlite::Error> = stmt.query_row(params![], |row| {
-        row.get(0)
-    });
+    let id_result: Result<i32, rusqlite::Error> = stmt.query_row(params![], |row| row.get(0));
 
     if let Some(logs) = window.app_handle().get_window("logs") {
         match id_result {
             Ok(id) => {
                 logs.emit("show-latest-encounter", id.to_string()).unwrap();
-            },
+            }
             Err(_) => {
                 logs.emit("redirect-url", "logs").unwrap();
-            },
+            }
         }
     }
 }
 
 #[tauri::command]
 fn delete_encounter(window: tauri::Window, id: String) {
-    let path = window.app_handle().path_resolver().resource_dir().expect("could not get resource dir");
+    let path = window
+        .app_handle()
+        .path_resolver()
+        .resource_dir()
+        .expect("could not get resource dir");
     let conn = get_db_connection(&path).expect("could not get db connection");
-    conn.execute("PRAGMA foreign_keys = ON;", params![]).unwrap();
-    let mut stmt = conn.prepare_cached("
+    conn.execute("PRAGMA foreign_keys = ON;", params![])
+        .unwrap();
+    let mut stmt = conn
+        .prepare_cached(
+            "
         DELETE FROM encounter
         WHERE id = ?;
-    ").unwrap();
+    ",
+        )
+        .unwrap();
 
     stmt.execute(params![id]).unwrap();
 }
@@ -635,10 +724,15 @@ fn open_url(window: tauri::Window, url: String) {
 
 #[tauri::command]
 fn save_settings(window: tauri::Window, settings: Settings) {
-    let mut path: PathBuf = window.app_handle().path_resolver().resource_dir().expect("could not get resource dir");
+    let mut path: PathBuf = window
+        .app_handle()
+        .path_resolver()
+        .resource_dir()
+        .expect("could not get resource dir");
     path.push("settings.json");
     let mut file = File::create(path).expect("could not create settings file");
-    file.write_all(serde_json::to_string_pretty(&settings).unwrap().as_bytes()).expect("could not write to settings file");
+    file.write_all(serde_json::to_string_pretty(&settings).unwrap().as_bytes())
+        .expect("could not write to settings file");
 }
 
 fn read_settings(resource_path: &Path) -> Result<Settings, Box<dyn std::error::Error>> {
@@ -653,20 +747,26 @@ fn read_settings(resource_path: &Path) -> Result<Settings, Box<dyn std::error::E
 
 #[tauri::command]
 fn get_settings(window: tauri::Window) -> Option<Settings> {
-    let path = window.app_handle().path_resolver().resource_dir().expect("could not get resource dir");
+    let path = window
+        .app_handle()
+        .path_resolver()
+        .resource_dir()
+        .expect("could not get resource dir");
     read_settings(&path).ok()
 }
-
 
 #[tauri::command]
 fn check_old_db_location_exists() -> bool {
     let user_dir = std::env::var("USERPROFILE");
     match user_dir {
         Ok(user_dir) => {
-            let old_path = PathBuf::from(format!("{}/AppData/Local/Programs/LOA Logs/encounters.db", user_dir));
+            let old_path = PathBuf::from(format!(
+                "{}/AppData/Local/Programs/LOA Logs/encounters.db",
+                user_dir
+            ));
             old_path.exists()
-        },
-        Err(_) => false
+        }
+        Err(_) => false,
     }
 }
 
@@ -675,17 +775,25 @@ fn copy_db(window: tauri::Window) -> Result<(), String> {
     let user_dir = std::env::var("USERPROFILE");
     match user_dir {
         Ok(user_dir) => {
-            let old_path = PathBuf::from(format!("{}/AppData/Local/Programs/LOA Logs/encounters.db", user_dir));    
-            let mut new_path = window.app_handle().path_resolver().resource_dir().expect("could not get resource dir");
+            let old_path = PathBuf::from(format!(
+                "{}/AppData/Local/Programs/LOA Logs/encounters.db",
+                user_dir
+            ));
+            let mut new_path = window
+                .app_handle()
+                .path_resolver()
+                .resource_dir()
+                .expect("could not get resource dir");
             new_path.push("encounters.db");
             match std::fs::copy(old_path, new_path) {
                 Ok(_) => Ok(()),
                 Err(e) => {
                     println!("Error copying db: {}", e);
-                    Err(e.to_string())}
+                    Err(e.to_string())
+                }
             }
-        },
-        Err(_) => Err("Could not get user dir".to_string())
+        }
+        Err(_) => Err("Could not get user dir".to_string()),
     }
 }
 
@@ -698,10 +806,7 @@ fn open_folder(path: String) {
         }
     }
     println!("{}", path);
-    Command::new("explorer")
-        .args([path.as_str()])
-        .spawn()
-        .ok();
+    Command::new("explorer").args([path.as_str()]).spawn().ok();
 }
 
 #[tauri::command]

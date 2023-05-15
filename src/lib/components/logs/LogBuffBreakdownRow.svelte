@@ -15,33 +15,48 @@
 
     let synergyPercentageDetails: Array<BuffDetails>;
 
-    if (groupedSynergies.size > 0) {       
+    if (groupedSynergies.size > 0) {
         synergyPercentageDetails = [];
         groupedSynergies.forEach((synergies, _) => {
             let synergyDamage = 0;
             let buff = new BuffDetails();
             synergies.forEach((syn, id) => {
                 if (skill.buffedBy[id]) {
-                    buff.buffs.push(new Buff(syn.source.icon, round(skill.buffedBy[id] / skill.totalDamage * 100), syn.source.skill?.icon));
+                    buff.buffs.push(
+                        new Buff(
+                            syn.source.icon,
+                            round((skill.buffedBy[id] / skill.totalDamage) * 100),
+                            syn.source.skill?.icon
+                        )
+                    );
                     synergyDamage += skill.buffedBy[id];
                 } else if (skill.debuffedBy[id]) {
-                    buff.buffs.push(new Buff(syn.source.icon, round(skill.debuffedBy[id] / skill.totalDamage * 100), syn.source.skill?.icon));
+                    buff.buffs.push(
+                        new Buff(
+                            syn.source.icon,
+                            round((skill.debuffedBy[id] / skill.totalDamage) * 100),
+                            syn.source.skill?.icon
+                        )
+                    );
                     synergyDamage += skill.debuffedBy[id];
                 }
             });
 
             if (synergyDamage > 0) {
-                buff.percentage = round(synergyDamage / skill.totalDamage * 100);
+                buff.percentage = round((synergyDamage / skill.totalDamage) * 100);
             }
             synergyPercentageDetails.push(buff);
         });
-    }   
-
+    }
 </script>
 
 <tr class="h-7 px-2 py-1 text-3xs">
     <td class="pl-1">
-        <img class="h-5 w-5" src={$skillIcon.path + getSkillIcon(skill.icon)} alt={skill.name} use:tooltip={{content: skill.name}}/>
+        <img
+            class="h-5 w-5"
+            src={$skillIcon.path + getSkillIcon(skill.icon)}
+            alt={skill.name}
+            use:tooltip={{ content: skill.name }} />
     </td>
     <td class="-left-px" colspan="2">
         <div class="truncate">
@@ -49,15 +64,16 @@
         </div>
     </td>
     {#if groupedSynergies.size > 0}
-    {#each synergyPercentageDetails as synergy}
-        <td class="px-1 text-center">
-            {#if synergy.percentage}
-            <BuffTooltipDetail {synergy} />
-            {/if}
-        </td>
-    {/each}
+        {#each synergyPercentageDetails as synergy}
+            <td class="px-1 text-center">
+                {#if synergy.percentage}
+                    <BuffTooltipDetail {synergy} />
+                {/if}
+            </td>
+        {/each}
     {/if}
-    <div class="absolute left-0 h-7 px-2 py-1 -z-10" class:shadow-md={!$takingScreenshot}
-        style="background-color: {HexToRgba(color, 0.6)}; width: {damagePercentage}%"
-    ></div>
+    <div
+        class="absolute left-0 -z-10 h-7 px-2 py-1"
+        class:shadow-md={!$takingScreenshot}
+        style="background-color: {HexToRgba(color, 0.6)}; width: {damagePercentage}%" />
 </tr>

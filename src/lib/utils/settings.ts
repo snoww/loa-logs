@@ -1,7 +1,7 @@
-import { invoke } from '@tauri-apps/api';
-import { emit } from '@tauri-apps/api/event';
-import { register, unregisterAll } from '@tauri-apps/api/globalShortcut';
-import { writable } from 'svelte/store';
+import { invoke } from "@tauri-apps/api";
+import { emit } from "@tauri-apps/api/event";
+import { register, unregisterAll } from "@tauri-apps/api/globalShortcut";
+import { writable } from "svelte/store";
 
 export const defaultSettings = {
     general: {
@@ -10,28 +10,28 @@ export const defaultSettings = {
         accentColor: "theme-pink",
         rawSocket: false,
         port: 6040,
-        blur: true,
+        blur: true
     },
     shortcuts: {
         hideMeter: {
             modifier: "Ctrl",
-            key: "ArrowDown",
+            key: "ArrowDown"
         },
         showLogs: {
             modifier: "Ctrl",
-            key: "ArrowUp",
+            key: "ArrowUp"
         },
         showLatestEncounter: {
             modifier: "Ctrl",
-            key: "ArrowRight",
+            key: "ArrowRight"
         },
         resetSession: {
             modifier: "",
-            key: "",
+            key: ""
         },
         pauseSession: {
             modifier: "",
-            key: "",
+            key: ""
         }
     },
     meter: {
@@ -63,7 +63,7 @@ export const defaultSettings = {
             hits: false,
             hpm: false,
             percentBuffBySup: false,
-            percentBrand: false,
+            percentBrand: false
         }
     },
     logs: {
@@ -93,7 +93,7 @@ export const defaultSettings = {
             hits: false,
             hpm: false,
             percentBuffBySup: false,
-            percentBrand: false,
+            percentBrand: false
         }
     }
 };
@@ -102,8 +102,8 @@ const settingsStore = (key: string, defaultSettings: object) => {
     const storedSettings = localStorage.getItem(key);
     const value = storedSettings ? JSON.parse(storedSettings) : defaultSettings;
     const store = writable(value);
-    if (typeof window !== 'undefined') {
-        window.addEventListener('storage', (event) => {
+    if (typeof window !== "undefined") {
+        window.addEventListener("storage", (event) => {
             if (event.key === key) {
                 const newValue = JSON.parse(event.newValue || "");
                 store.set(newValue);
@@ -127,7 +127,7 @@ export const settings = settingsStore("settings", defaultSettings);
 
 export async function registerShortcuts(shortcuts: any) {
     await unregisterAll();
-    
+
     if (shortcuts.hideMeter.modifier && shortcuts.hideMeter.key) {
         await register(shortcuts.hideMeter.modifier + "+" + shortcuts.hideMeter.key, async () => {
             await invoke("toggle_meter_window");
@@ -141,7 +141,7 @@ export async function registerShortcuts(shortcuts: any) {
     if (shortcuts.showLatestEncounter.modifier && shortcuts.showLatestEncounter.key) {
         await register(shortcuts.showLatestEncounter.modifier + "+" + shortcuts.showLatestEncounter.key, async () => {
             await invoke("open_most_recent_encounter");
-        });   
+        });
     }
     if (shortcuts.resetSession.modifier && shortcuts.resetSession.key) {
         await register(shortcuts.resetSession.modifier + "+" + shortcuts.resetSession.key, async () => {

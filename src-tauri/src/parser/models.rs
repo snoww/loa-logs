@@ -162,7 +162,7 @@ pub struct SkillStats {
     pub front_attacks: i64,
     pub counters: i64,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub identity_stats: Option<String>
+    pub identity_stats: Option<String>,
 }
 
 #[derive(Debug, Default, Serialize, Deserialize, Clone)]
@@ -171,7 +171,7 @@ pub struct IdentityArcanist {
     // timestamp, (percentage, card, card)
     pub log: Vec<(i32, (f32, i32, i32))>,
     pub average: f64,
-    pub card_draws: HashMap<i32, i32>
+    pub card_draws: HashMap<i32, i32>,
 }
 
 #[derive(Debug, Default, Serialize, Deserialize, Clone)]
@@ -203,7 +203,7 @@ pub struct StaggerStats {
 #[serde(rename_all = "camelCase")]
 pub struct EncounterMisc {
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub stagger_stats: Option<StaggerStats>
+    pub stagger_stats: Option<StaggerStats>,
 }
 
 #[derive(Debug, Default, Deserialize, Clone)]

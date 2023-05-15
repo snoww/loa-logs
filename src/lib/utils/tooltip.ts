@@ -1,33 +1,33 @@
 import type { BuffDetails, StatusEffect } from "$lib/types";
 import { createTippy } from "svelte-tippy";
-import 'tippy.js/animations/perspective-subtle.css';
-import 'tippy.js/dist/svg-arrow.css';
+import "tippy.js/animations/perspective-subtle.css";
+import "tippy.js/dist/svg-arrow.css";
 import { getSkillIcon, removeUnknownHtmlTags } from "./strings";
-import {roundArrow} from 'tippy.js';
+import { roundArrow } from "tippy.js";
 import { classesMap } from "$lib/constants/classes";
 
 export const tooltip = createTippy({
     allowHTML: true,
     arrow: roundArrow,
-    placement: 'bottom',
-    animation: 'perspective-subtle',
-    theme: 'buff'
+    placement: "bottom",
+    animation: "perspective-subtle",
+    theme: "buff"
 });
 
 export const menuTooltip = createTippy({
     allowHTML: true,
     arrow: roundArrow,
-    placement: 'bottom',
-    animation: 'perspective-subtle',
-    theme: 'menu'
+    placement: "bottom",
+    animation: "perspective-subtle",
+    theme: "menu"
 });
 
 export const skillTooltip = createTippy({
     allowHTML: true,
     arrow: roundArrow,
-    placement: 'bottom',
-    animation: 'perspective-subtle',
-    theme: 'buff'
+    placement: "bottom",
+    animation: "perspective-subtle",
+    theme: "buff"
 });
 
 export function generateTooltipContent(buffs: BuffDetails, iconPath: string) {
@@ -35,7 +35,9 @@ export function generateTooltipContent(buffs: BuffDetails, iconPath: string) {
     for (const buff of buffs.buffs) {
         if (buff.sourceIcon) {
             str += `<div class="flex items-center">`;
-            str += `<img src=${iconPath + getSkillIcon(buff.sourceIcon)} alt="buff_source_icon" class="w-5 h-5 rounded mr-1"/>`;
+            str += `<img src=${
+                iconPath + getSkillIcon(buff.sourceIcon)
+            } alt="buff_source_icon" class="w-5 h-5 rounded mr-1"/>`;
             str += `${buff.percentage}<span class="text-3xs text-gray-300">%</span>`;
             str += `</div>`;
         } else {
@@ -54,7 +56,9 @@ export function generateHeaderTooltip(buff: StatusEffect, iconPath: string) {
     if (buff.source.skill) {
         str += `<div class="flex">`;
         str += `${classesMap[buff.source.skill.classId]}:`;
-        str += `<img src=${iconPath + getSkillIcon(buff.source.skill.icon)} alt=${buff.source.skill.name} class="w-5 h-5 mx-1"/>`;
+        str += `<img src=${iconPath + getSkillIcon(buff.source.skill.icon)} alt=${
+            buff.source.skill.name
+        } class="w-5 h-5 mx-1"/>`;
         str += buff.source.skill.name;
         str += `</div>`;
     } else {

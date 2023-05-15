@@ -11,13 +11,12 @@
             width = `${synergies.size * 1.5 + 1}rem`;
         }
     }
-
 </script>
 
 <th class="" style="width: {width}">
     <div class="flex justify-center space-x-1">
         {#each [...synergies] as [id, synergy] (id)}
-        <BuffTooltip {synergy} />
+            <BuffTooltip {synergy} />
         {/each}
     </div>
 </th>

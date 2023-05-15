@@ -8,7 +8,7 @@ mod log_lines;
 use log_lines::*;
 use rusqlite::{params, Connection, Transaction};
 use serde_json::json;
-use tauri::{Window, Wry, Manager};
+use tauri::{Manager, Window, Wry};
 use tokio::task;
 
 const WINDOW_MS: i64 = 5_000;
@@ -28,7 +28,7 @@ pub struct Parser<'a> {
     cast_log: HashMap<String, HashMap<i32, Vec<i32>>>,
 
     stagger_log: Vec<(i32, f32)>,
-    stagger_intervals: Vec<(i32, i32)>
+    stagger_intervals: Vec<(i32, i32)>,
 }
 
 impl Parser<'_> {
@@ -44,7 +44,7 @@ impl Parser<'_> {
             identity_log: HashMap::new(),
             cast_log: HashMap::new(),
             stagger_log: Vec::new(),
-            stagger_intervals: Vec::new()
+            stagger_intervals: Vec::new(),
         }
     }
 
@@ -221,15 +221,14 @@ impl Parser<'_> {
 
     fn on_phase_transition(&mut self, line: &[&str]) {
         let phase_transition = LogPhaseTransition {
-            raid_result: line[2].parse::<i32>().unwrap_or_default()
+            raid_result: line[2].parse::<i32>().unwrap_or_default(),
         };
 
         self.window
             .emit("phase-transition", phase_transition.raid_result)
             .expect("failed to emit phase-transition");
-            
-        if phase_transition.raid_result == 0 || phase_transition.raid_result == 2
-        {
+
+        if phase_transition.raid_result == 0 || phase_transition.raid_result == 2 {
             self.save_to_db();
             self.raid_end = true;
             self.saved = true;
@@ -350,7 +349,7 @@ impl Parser<'_> {
             if let Some(npc) = self.encounter.entities.get(new_npc.name) {
                 if self.encounter.current_boss_name.is_empty() {
                     self.encounter.current_boss_name = npc.name.to_string();
-                } 
+                }
                 // get the current boss
                 else if let Some(boss) = self
                     .encounter
@@ -478,21 +477,36 @@ impl Parser<'_> {
         // dunno if this is right approach xd
         if let Some(skill) = entity.skills.get_mut(&skill_start.skill_id) {
             skill.casts += 1;
-            self.cast_log.entry(entity.name.to_string()).or_default().entry(skill_start.skill_id).or_default().push(duration);
+            self.cast_log
+                .entry(entity.name.to_string())
+                .or_default()
+                .entry(skill_start.skill_id)
+                .or_default()
+                .push(duration);
         } else if let Some(skill) = entity
             .skills
             .values_mut()
             .find(|s| s.name == *skill_start.skill_name)
         {
             skill.casts += 1;
-            self.cast_log.entry(entity.name.to_string()).or_default().entry(skill_start.skill_id).or_default().push(duration);
+            self.cast_log
+                .entry(entity.name.to_string())
+                .or_default()
+                .entry(skill_start.skill_id)
+                .or_default()
+                .push(duration);
         } else {
             let (skill_name, skill_icon) = get_skill_name_and_icon(
                 skill_start.skill_id,
                 0,
                 skill_start.skill_name.to_string(),
             );
-            self.cast_log.entry(entity.name.to_string()).or_default().entry(skill_start.skill_id).or_default().push(duration);
+            self.cast_log
+                .entry(entity.name.to_string())
+                .or_default()
+                .entry(skill_start.skill_id)
+                .or_default()
+                .push(duration);
             entity.skills.insert(
                 skill_start.skill_id,
                 Skill {
@@ -660,7 +674,12 @@ impl Parser<'_> {
                 } else {
                     ((timestamp - self.encounter.fight_start) / 1000) as i32
                 };
-                self.cast_log.entry(source_entity.name.to_string()).or_default().entry(damage.skill_id).or_default().push(duration);
+                self.cast_log
+                    .entry(source_entity.name.to_string())
+                    .or_default()
+                    .entry(damage.skill_id)
+                    .or_default()
+                    .push(duration);
                 source_entity.skills.insert(
                     damage.skill_id,
                     Skill {
@@ -711,7 +730,10 @@ impl Parser<'_> {
                 source_entity.damage_stats.damage_dealt,
             );
 
-            self.damage_log.entry(source_entity.name.to_string()).or_default().push((timestamp, damage.damage));
+            self.damage_log
+                .entry(source_entity.name.to_string())
+                .or_default()
+                .push((timestamp, damage.damage));
 
             let mut is_buffed_by_support = false;
             let mut is_debuffed_by_support = false;
@@ -743,8 +765,8 @@ impl Parser<'_> {
                     if let Some(buff) = self.encounter.encounter_damage_stats.buffs.get(buff_id) {
                         if let Some(skill) = buff.source.skill.as_ref() {
                             is_buffed_by_support = (buff.buff_category == "classskill"
-                                                || buff.buff_category == "identity"
-                                                || buff.buff_category == "ability")
+                                || buff.buff_category == "identity"
+                                || buff.buff_category == "ability")
                                 && buff.target == StatusEffectTarget::PARTY
                                 && is_support_class_id(skill.class_id);
                         }
@@ -776,11 +798,13 @@ impl Parser<'_> {
                     }
                 }
                 if !is_debuffed_by_support {
-                    if let Some(debuff) = self.encounter.encounter_damage_stats.debuffs.get(debuff_id) {
+                    if let Some(debuff) =
+                        self.encounter.encounter_damage_stats.debuffs.get(debuff_id)
+                    {
                         if let Some(skill) = debuff.source.skill.as_ref() {
                             is_debuffed_by_support = (debuff.buff_category == "classskill"
-                                                || debuff.buff_category == "identity"
-                                                || debuff.buff_category == "ability")
+                                || debuff.buff_category == "identity"
+                                || debuff.buff_category == "ability")
                                 && debuff.target == StatusEffectTarget::PARTY
                                 && is_support_class_id(skill.class_id);
                         }
@@ -917,9 +941,19 @@ impl Parser<'_> {
         if self.encounter.local_player.is_empty() || self.encounter.fight_start == 0 {
             return;
         }
-        
-        if let Some(entity) = self.encounter.entities.get_mut(&self.encounter.local_player) {
-            self.identity_log.entry(entity.name.to_string()).or_default().push((timestamp, (identity.gauge_1, identity.gauge_2, identity.gauge_3)));
+
+        if let Some(entity) = self
+            .encounter
+            .entities
+            .get_mut(&self.encounter.local_player)
+        {
+            self.identity_log
+                .entry(entity.name.to_string())
+                .or_default()
+                .push((
+                    timestamp,
+                    (identity.gauge_1, identity.gauge_2, identity.gauge_3),
+                ));
         }
     }
 
@@ -934,20 +968,28 @@ impl Parser<'_> {
             return;
         }
 
-        if let Some(boss) = self.encounter.entities.get_mut(&self.encounter.current_boss_name) {
+        if let Some(boss) = self
+            .encounter
+            .entities
+            .get_mut(&self.encounter.current_boss_name)
+        {
             if boss.id == stagger.id {
                 if stagger.current_stagger == stagger.max_stagger {
-                    let staggered_in = (timestamp - self.encounter.encounter_damage_stats.stagger_start) / 1000;
-                    self.stagger_intervals.push((staggered_in as i32, stagger.max_stagger))
+                    let staggered_in =
+                        (timestamp - self.encounter.encounter_damage_stats.stagger_start) / 1000;
+                    self.stagger_intervals
+                        .push((staggered_in as i32, stagger.max_stagger))
                 } else if stagger.current_stagger != 0 && self.prev_stagger == 0 {
                     self.encounter.encounter_damage_stats.stagger_start = timestamp;
                 }
-                
+
                 self.prev_stagger = stagger.current_stagger;
-                
+
                 let relative_timestamp = (timestamp - self.encounter.fight_start) / 1000;
-                let stagger_percent = (1.0 - (stagger.current_stagger as f32 / stagger.max_stagger as f32)) * 100.0;
-                self.stagger_log.push((relative_timestamp as i32, stagger_percent));
+                let stagger_percent =
+                    (1.0 - (stagger.current_stagger as f32 / stagger.max_stagger as f32)) * 100.0;
+                self.stagger_log
+                    .push((relative_timestamp as i32, stagger_percent));
 
                 if stagger.max_stagger > self.encounter.encounter_damage_stats.max_stagger {
                     self.encounter.encounter_damage_stats.max_stagger = stagger.max_stagger;
@@ -959,16 +1001,23 @@ impl Parser<'_> {
     fn save_to_db(&self) {
         if self.encounter.fight_start == 0
             || self.encounter.current_boss_name.is_empty()
-            || !self.encounter.entities.contains_key(&self.encounter.current_boss_name)
-            || !self.encounter
+            || !self
+                .encounter
                 .entities
-                .values()
-                .any(|e| e.entity_type == EntityType::PLAYER && e.skill_stats.hits > 1 && e.max_hp > 0)
+                .contains_key(&self.encounter.current_boss_name)
+            || !self.encounter.entities.values().any(|e| {
+                e.entity_type == EntityType::PLAYER && e.skill_stats.hits > 1 && e.max_hp > 0
+            })
         {
             return;
         }
         let mut encounter = self.encounter.clone();
-        let mut path = self.window.app_handle().path_resolver().resource_dir().expect("could not get resource dir");
+        let mut path = self
+            .window
+            .app_handle()
+            .path_resolver()
+            .resource_dir()
+            .expect("could not get resource dir");
         path.push("encounters.db");
         let prev_stagger = self.prev_stagger;
 
@@ -984,7 +1033,16 @@ impl Parser<'_> {
             let mut conn = Connection::open(path).expect("failed to open database");
             let tx = conn.transaction().expect("failed to create transaction");
 
-            insert_data(&tx, &mut encounter, prev_stagger, damage_log, identity_log, cast_log, stagger_log, stagger_intervals);
+            insert_data(
+                &tx,
+                &mut encounter,
+                prev_stagger,
+                damage_log,
+                identity_log,
+                cast_log,
+                stagger_log,
+                stagger_intervals,
+            );
 
             tx.commit().expect("failed to commit transaction");
             println!("saved to db");
@@ -1066,9 +1124,7 @@ fn get_status_effect_data(buff_id: i32) -> Option<StatusEffect> {
             }
         } else if let Some(buff_source_skill) = SKILL_DATA.get(&(buff_id / 10)) {
             status_effect.source.skill = Some(buff_source_skill.clone());
-        } else if let Some(buff_source_skill) =
-            SKILL_DATA.get(&((buff_id / 100) * 10))
-        {
+        } else if let Some(buff_source_skill) = SKILL_DATA.get(&((buff_id / 100) * 10)) {
             status_effect.source.skill = Some(buff_source_skill.clone());
         } else {
             let skill_id = buff.unique_group / 10;
@@ -1293,9 +1349,7 @@ fn get_skill_name_and_icon(
                 if let Some(skill) = SKILL_DATA.get(&effect.source_skill.unwrap()) {
                     return (skill.name.to_string(), skill.icon.to_string());
                 }
-            } else if let Some(skill) =
-                SKILL_DATA.get(&(skill_effect_id / 10))
-            {
+            } else if let Some(skill) = SKILL_DATA.get(&(skill_effect_id / 10)) {
                 return (skill.name.to_string(), skill.icon.to_string());
             }
             return (effect.comment.to_string(), "".to_string());
@@ -1330,15 +1384,16 @@ fn get_skill_name_and_icon(
 }
 
 #[allow(clippy::too_many_arguments)]
-fn insert_data(tx: &Transaction, 
-        encounter: &mut Encounter, 
-        prev_stagger: i32, 
-        damage_log: HashMap<String, Vec<(i64, i64)>>, 
-        identity_log: HashMap<String, Vec<(i64, (i32, i32, i32))>>,
-        cast_log: HashMap<String, HashMap<i32, Vec<i32>>>,
-        stagger_log: Vec<(i32, f32)>,
-        mut stagger_intervals: Vec<(i32, i32)>
-    ) {
+fn insert_data(
+    tx: &Transaction,
+    encounter: &mut Encounter,
+    prev_stagger: i32,
+    damage_log: HashMap<String, Vec<(i64, i64)>>,
+    identity_log: HashMap<String, Vec<(i64, (i32, i32, i32))>>,
+    cast_log: HashMap<String, HashMap<i32, Vec<i32>>>,
+    stagger_log: Vec<(i32, f32)>,
+    mut stagger_intervals: Vec<(i32, i32)>,
+) {
     let mut encounter_stmt = tx
         .prepare(
             "
@@ -1362,30 +1417,37 @@ fn insert_data(tx: &Transaction,
 
     encounter.duration = encounter.last_combat_packet - encounter.fight_start;
     let duration_seconds = encounter.duration / 1000;
-    encounter.encounter_damage_stats.dps = encounter.encounter_damage_stats.total_damage_dealt / duration_seconds;
+    encounter.encounter_damage_stats.dps =
+        encounter.encounter_damage_stats.total_damage_dealt / duration_seconds;
 
     let mut misc: Option<EncounterMisc> = None;
 
     if !stagger_log.is_empty() {
         if prev_stagger > 0 && prev_stagger != encounter.encounter_damage_stats.max_stagger {
             // never finished staggering the boss, calculate average from whatever stagger has been done
-            let stagger_start_s = ((encounter.encounter_damage_stats.stagger_start - encounter.fight_start) / 1000) as i32;
+            let stagger_start_s = ((encounter.encounter_damage_stats.stagger_start
+                - encounter.fight_start)
+                / 1000) as i32;
             let stagger_duration = stagger_log.last().unwrap().0 - stagger_start_s;
             if stagger_duration > 0 {
                 stagger_intervals.push((stagger_duration, prev_stagger));
             }
         }
 
-        let (total_stagger_time, total_stagger_dealt) = stagger_intervals
-            .iter()
-            .fold((0, 0), |(total_time, total_stagger), (time, stagger)| {
+        let (total_stagger_time, total_stagger_dealt) = stagger_intervals.iter().fold(
+            (0, 0),
+            |(total_time, total_stagger), (time, stagger)| {
                 (total_time + time, total_stagger + stagger)
-            });
-        
+            },
+        );
+
         if total_stagger_time > 0 {
             let stagger = StaggerStats {
-                average: (total_stagger_dealt as f64 / total_stagger_time as f64) / encounter.encounter_damage_stats.max_stagger as f64 * 100.0,
-                staggers_per_min: (total_stagger_dealt as f64 / (total_stagger_time as f64 / 60.0)) / encounter.encounter_damage_stats.max_stagger as f64,
+                average: (total_stagger_dealt as f64 / total_stagger_time as f64)
+                    / encounter.encounter_damage_stats.max_stagger as f64
+                    * 100.0,
+                staggers_per_min: (total_stagger_dealt as f64 / (total_stagger_time as f64 / 60.0))
+                    / encounter.encounter_damage_stats.max_stagger as f64,
                 log: stagger_log,
             };
             misc = Some(EncounterMisc {
@@ -1393,7 +1455,7 @@ fn insert_data(tx: &Transaction,
             });
         }
     }
-    
+
     // let boss_name = encounter.entities
     //     .iter()
     //     .filter(|&(_, e)| e.entity_type != EntityType::PLAYER)
@@ -1445,25 +1507,31 @@ fn insert_data(tx: &Transaction,
     let fight_start = encounter.fight_start;
     let fight_end = encounter.last_combat_packet;
 
-    for (_key, mut entity) in encounter.entities.iter_mut()
-        .filter(|(_, e)| (e.entity_type == EntityType::PLAYER || e.entity_type == EntityType::ESTHER) && e.skill_stats.hits >= 1 && e.max_hp > 0) 
-    {
+    for (_key, mut entity) in encounter.entities.iter_mut().filter(|(_, e)| {
+        (e.entity_type == EntityType::PLAYER || e.entity_type == EntityType::ESTHER)
+            && e.skill_stats.hits >= 1
+            && e.max_hp > 0
+    }) {
         if entity.entity_type == EntityType::PLAYER {
             let intervals = generate_intervals(fight_start, fight_end);
             if let Some(damage_log) = damage_log.get(&entity.name) {
                 if !intervals.is_empty() {
-                    for interval in intervals {                
+                    for interval in intervals {
                         let start = fight_start + interval - WINDOW_MS;
                         let end = fight_start + interval + WINDOW_MS;
-                        
+
                         let damage = sum_in_range(damage_log, start, end);
-                        entity.damage_stats.dps_rolling_10s_avg.push(damage / WINDOW_S);
+                        entity
+                            .damage_stats
+                            .dps_rolling_10s_avg
+                            .push(damage / WINDOW_S);
                     }
                 }
                 let fight_start_sec = encounter.fight_start / 1000;
                 let fight_end_sec = encounter.last_combat_packet / 1000;
-                entity.damage_stats.dps_average = calculate_average_dps(damage_log, fight_start_sec, fight_end_sec);
-        
+                entity.damage_stats.dps_average =
+                    calculate_average_dps(damage_log, fight_start_sec, fight_end_sec);
+
                 for (_, mut skill) in entity.skills.iter_mut() {
                     skill.dps = skill.total_damage / duration_seconds;
                 }
@@ -1486,7 +1554,7 @@ fn insert_data(tx: &Transaction,
                 let duration_seconds = (data[data.len() - 1].0 - data[0].0) / 1000;
                 let max = match entity.class.as_str() {
                     "Summoner" => 7_000.0,
-                    _ => 10_000.0
+                    _ => 10_000.0,
                 };
                 let stats: String = match entity.class.as_str() {
                     "Arcanist" => {
@@ -1495,7 +1563,7 @@ fn insert_data(tx: &Transaction,
                         for i in 1..data.len() {
                             let (t1, i1) = data[i - 1];
                             let (t2, i2) = data[i];
-    
+
                             // don't count clown cards draws as card draws
                             if i2.1 != 0 && i2.1 != i1.1 && i1.1 != 19284 {
                                 cards.entry(i2.1).and_modify(|e| *e += 1).or_insert(1);
@@ -1503,11 +1571,11 @@ fn insert_data(tx: &Transaction,
                             if i2.2 != 0 && i2.2 != i1.2 && i1.2 != 19284 {
                                 cards.entry(i2.2).and_modify(|e| *e += 1).or_insert(1);
                             }
-    
+
                             if t2 > t1 && i2.0 > i1.0 {
                                 total_identity_gain += i2.0 - i1.0;
                             }
-    
+
                             let relative_time = ((t2 - fight_start) as f32 / 1000.0) as i32;
                             // calculate percentage, round to 2 decimal places
                             let percentage = if i2.0 >= max as i32 {
@@ -1517,40 +1585,47 @@ fn insert_data(tx: &Transaction,
                             };
                             log.push((relative_time, (percentage, i2.1, i2.2)));
                         }
-    
-                        let avg_per_s = (total_identity_gain as f64 / duration_seconds as f64) / max as f64 * 100.0;
+
+                        let avg_per_s = (total_identity_gain as f64 / duration_seconds as f64)
+                            / max as f64
+                            * 100.0;
                         let identity_stats = IdentityArcanist {
                             average: avg_per_s,
                             card_draws: cards,
                             log,
                         };
-    
+
                         serde_json::to_string(&identity_stats).unwrap()
                     }
                     "Artist" | "Bard" => {
                         let mut log: Vec<(i32, (f32, i32))> = Vec::new();
-    
+
                         for i in 1..data.len() {
                             let (t1, i1) = data[i - 1];
                             let (t2, i2) = data[i];
-    
+
                             if t2 <= t1 {
                                 continue;
                             }
-    
+
                             if i2.0 > i1.0 {
                                 total_identity_gain += i2.0 - i1.0;
                             }
-    
+
                             let relative_time = ((t2 - fight_start) as f32 / 1000.0) as i32;
                             // since bard and artist have 3 bubbles, i.1 is the number of bubbles
                             // we scale percentage to 3 bubbles
                             // current bubble + max * number of bubbles
-                            let percentage: f32 = ((((i2.0 as f32 + max * i2.1 as f32) / max) * 100.0) * 100.0).round() / 100.0;
+                            let percentage: f32 =
+                                ((((i2.0 as f32 + max * i2.1 as f32) / max) * 100.0) * 100.0)
+                                    .round()
+                                    / 100.0;
                             log.push((relative_time, (percentage, i2.1)));
                         }
-    
-                        let avg_per_s = (total_identity_gain as f64 / duration_seconds as f64) / max as f64 * 100.0;
+
+                        let avg_per_s = (total_identity_gain as f64 / duration_seconds as f64)
+                            / max as f64
+                            * 100.0;
                         let identity_stats = IdentityArtistBard {
                             average: avg_per_s,
                             log,
@@ -1562,21 +1637,24 @@ fn insert_data(tx: &Transaction,
                         for i in 1..data.len() {
                             let (t1, i1) = data[i - 1];
                             let (t2, i2) = data[i];
-    
+
                             if t2 <= t1 {
                                 continue;
                             }
-    
+
                             if i2.0 > i1.0 {
                                 total_identity_gain += i2.0 - i1.0;
                             }
-    
+
                             let relative_time = ((t2 - fight_start) as f32 / 1000.0) as i32;
-                            let percentage = (((i2.0 as f32 / max) * 100.0) * 100.0).round() / 100.0;
+                            let percentage =
+                                (((i2.0 as f32 / max) * 100.0) * 100.0).round() / 100.0;
                             log.push((relative_time, percentage));
                         }
-    
-                        let avg_per_s = (total_identity_gain as f64 / duration_seconds as f64) / max as f64 * 100.0;
+
+                        let avg_per_s = (total_identity_gain as f64 / duration_seconds as f64)
+                            / max as f64
+                            * 100.0;
                         let identity_stats = IdentityGeneric {
                             average: avg_per_s,
                             log,
@@ -1584,9 +1662,9 @@ fn insert_data(tx: &Transaction,
                         serde_json::to_string(&identity_stats).unwrap()
                     }
                 };
-    
+
                 entity.skill_stats.identity_stats = Some(stats);
-            }            
+            }
         }
 
         entity_stmt
@@ -1639,7 +1717,10 @@ fn sum_in_range(vec: &Vec<(i64, i64)>, start: i64, end: i64) -> i64 {
     let start_idx = binary_search_left(vec, start);
     let end_idx = binary_search_left(vec, end + 1);
 
-    vec[start_idx..end_idx].iter().map(|&(_, second)| second).sum()
+    vec[start_idx..end_idx]
+        .iter()
+        .map(|&(_, second)| second)
+        .sum()
 }
 
 fn binary_search_left(vec: &Vec<(i64, i64)>, target: i64) -> usize {

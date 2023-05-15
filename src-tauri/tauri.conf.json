@@ -8,7 +8,7 @@
   },
   "package": {
     "productName": "LOA Logs",
-    "version": "1.1.16"
+    "version": "1.1.17"
   },
   "tauri": {
     "allowlist": {
@@ -125,7 +125,10 @@
       "dialog": true,
       "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDZEODU5MzNEODY0ODg0REEKUldUYWhFaUdQWk9GYlczc3VSODJPK01RRTlYUER6NzU0eDE1WDYwcmJsY1d4d2EwblZHNlJ4dW8K",
       "windows": {
-        "installMode": "passive"
+        "installMode": "passive",
+        "installerArgs": [
+          "/S"
+        ]
       }
     },
     "windows": [

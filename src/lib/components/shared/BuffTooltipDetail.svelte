@@ -3,9 +3,9 @@
     import { skillIcon } from "$lib/utils/settings";
     import { generateTooltipContent, tooltip } from "$lib/utils/tooltip";
 
-    export let synergy: BuffDetails
-
+    export let synergy: BuffDetails;
 </script>
-<div class="relative z-20" use:tooltip={{content: generateTooltipContent(synergy, $skillIcon.path)}}>
+
+<div class="relative z-20" use:tooltip={{ content: generateTooltipContent(synergy, $skillIcon.path) }}>
     {synergy.percentage}<span class="text-3xs text-gray-300">%</span>
 </div>

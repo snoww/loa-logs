@@ -15,7 +15,7 @@ export const cardMap: { [key: string]: string } = {
     "19284": "Clown",
     "19285": "Joy",
     "19286": "Chancellor",
-    "19287": "Sovereign",
+    "19287": "Sovereign"
 };
 
 export const cardIconMap: { [key: string]: string } = {
@@ -35,5 +35,5 @@ export const cardIconMap: { [key: string]: string } = {
     "19284": "AR_CardDeck_ToolTip_15.png",
     "19285": "AR_CardDeck_ToolTip_16.png",
     "19286": "AR_CardDeck_ToolTip_17.png",
-    "19287": "AR_CardDeck_ToolTip_14.png",
+    "19287": "AR_CardDeck_ToolTip_14.png"
 };

@@ -10,7 +10,6 @@
     import { tooltip } from "$lib/utils/tooltip";
     import { round } from "$lib/utils/numbers";
 
-
     export let player: Entity;
     export let groupedSynergies: Map<string, Map<number, StatusEffect>>;
     export let percentage: number;
@@ -27,7 +26,7 @@
 
     $: {
         tweenedValue.set(percentage);
-        if (Object.hasOwn(classColors, player.class)){
+        if (Object.hasOwn(classColors, player.class)) {
             color = classColors[player.class].color;
         }
 
@@ -40,16 +39,28 @@
                 let buff = new BuffDetails();
                 synergies.forEach((syn, id) => {
                     if (player.damageStats.buffedBy[id]) {
-                        buff.buffs.push(new Buff(syn.source.icon, round(player.damageStats.buffedBy[id] / player.damageStats.damageDealt * 100), syn.source.skill?.icon));
+                        buff.buffs.push(
+                            new Buff(
+                                syn.source.icon,
+                                round((player.damageStats.buffedBy[id] / player.damageStats.damageDealt) * 100),
+                                syn.source.skill?.icon
+                            )
+                        );
                         synergyDamage += player.damageStats.buffedBy[id];
                     } else if (player.damageStats.debuffedBy[id]) {
-                        buff.buffs.push(new Buff(syn.source.icon, round(player.damageStats.debuffedBy[id] / player.damageStats.damageDealt * 100), syn.source.skill?.icon));
+                        buff.buffs.push(
+                            new Buff(
+                                syn.source.icon,
+                                round((player.damageStats.debuffedBy[id] / player.damageStats.damageDealt) * 100),
+                                syn.source.skill?.icon
+                            )
+                        );
                         synergyDamage += player.damageStats.debuffedBy[id];
                     }
                 });
 
                 if (synergyDamage > 0) {
-                    buff.percentage = round(synergyDamage / player.damageStats.damageDealt * 100);
+                    buff.percentage = round((synergyDamage / player.damageStats.damageDealt) * 100);
                 }
                 synergyPercentageDetails.push(buff);
             });
@@ -61,11 +72,14 @@
             alpha = 0.6;
         }
     }
-
 </script>
 
 <td class="pl-1">
-    <img class="h-5 w-5 table-cell" src={$classIconCache[player.classId]} alt={player.class} use:tooltip={{content: player.class}}/>
+    <img
+        class="table-cell h-5 w-5"
+        src={$classIconCache[player.classId]}
+        alt={player.class}
+        use:tooltip={{ content: player.class }} />
 </td>
 <td colspan="2">
     <div class="truncate">
@@ -73,14 +87,14 @@
     </div>
 </td>
 {#if groupedSynergies.size > 0}
-{#each synergyPercentageDetails as synergy}
-    <td class="px-1 text-center">
-        {#if synergy.percentage}
-        <BuffTooltipDetail {synergy} />
-        {/if}
-    </td>
-{/each}
+    {#each synergyPercentageDetails as synergy}
+        <td class="px-1 text-center">
+            {#if synergy.percentage}
+                <BuffTooltipDetail {synergy} />
+            {/if}
+        </td>
+    {/each}
 {/if}
-<div class="absolute left-0 h-7 px-2 py-1 -z-10"
-    style="background-color: {HexToRgba(color, alpha)}; width: {$tweenedValue}%"
-></div>
+<div
+    class="absolute left-0 -z-10 h-7 px-2 py-1"
+    style="background-color: {HexToRgba(color, alpha)}; width: {$tweenedValue}%" />

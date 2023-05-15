@@ -36,12 +36,12 @@
 
     $: {
         tweenedValue.set(percentage);
-        if (Object.hasOwn(classColors, entity.class)){
+        if (Object.hasOwn(classColors, entity.class)) {
             color = classColors[entity.class].color;
-        }        
+        }
         damageDealt = abbreviateNumberSplit(entity.damageStats.damageDealt);
-        damagePercentage = (entity.damageStats.damageDealt / totalDamageDealt * 100).toFixed(1);        
-        
+        damagePercentage = ((entity.damageStats.damageDealt / totalDamageDealt) * 100).toFixed(1);
+
         if (duration > 0) {
             dps = abbreviateNumberSplit(entity.damageStats.damageDealt / (duration / 1000));
         } else {
@@ -62,14 +62,17 @@
             alpha = 0.6;
         }
     }
-        
 </script>
 
 <td class="pl-1">
     {#if $settings.general.showEsther && entity.entityType === EntityType.ESTHER}
-    <img class="h-5 w-5 table-cell" src={$classIconCache[name]} alt={name} use:tooltip={{content: name}}/>
+        <img class="table-cell h-5 w-5" src={$classIconCache[name]} alt={name} use:tooltip={{ content: name }} />
     {:else}
-    <img class="h-5 w-5 table-cell" src={$classIconCache[entity.classId]} alt={entity.class} use:tooltip={{content: entity.class}}/>
+        <img
+            class="table-cell h-5 w-5"
+            src={$classIconCache[entity.classId]}
+            alt={entity.class}
+            use:tooltip={{ content: entity.class }} />
     {/if}
 </td>
 <td colspan="2">
@@ -78,57 +81,61 @@
     </div>
 </td>
 {#if anyDead && $settings.meter.deathTime}
-<td class="px-1 text-center">
-    {#if entity.isDead}
-        {deadFor}
-    {/if}
-</td>
+    <td class="px-1 text-center">
+        {#if entity.isDead}
+            {deadFor}
+        {/if}
+    </td>
 {/if}
 {#if $settings.meter.damage}
-<td class="px-1 text-center">
-    {damageDealt[0]}<span class="text-3xs text-gray-300">{damageDealt[1]}</span>
-</td>
+    <td class="px-1 text-center">
+        {damageDealt[0]}<span class="text-3xs text-gray-300">{damageDealt[1]}</span>
+    </td>
 {/if}
 {#if $settings.meter.dps}
-<td class="px-1 text-center">
-    {dps[0]}<span class="text-3xs text-gray-300">{dps[1]}</span>
-</td>
+    <td class="px-1 text-center">
+        {dps[0]}<span class="text-3xs text-gray-300">{dps[1]}</span>
+    </td>
 {/if}
 {#if damagePercentage !== "100.0" && $settings.meter.damagePercent}
-<td class="px-1 text-center">
-    {damagePercentage}<span class="text-xs text-gray-300">%</span>
-</td>
+    <td class="px-1 text-center">
+        {damagePercentage}<span class="text-xs text-gray-300">%</span>
+    </td>
 {/if}
 {#if $settings.meter.critRate}
-<td class="px-1 text-center">
-    {round(entity.skillStats.crits / entity.skillStats.hits * 100)}<span class="text-3xs text-gray-300">%</span>
-</td>
+    <td class="px-1 text-center">
+        {round((entity.skillStats.crits / entity.skillStats.hits) * 100)}<span class="text-3xs text-gray-300">%</span>
+    </td>
 {/if}
 {#if anyFrontAtk && $settings.meter.frontAtk}
-<td class="px-1 text-center">
-    {round(entity.skillStats.frontAttacks / entity.skillStats.hits * 100)}<span class="text-3xs text-gray-300">%</span>
-</td>
+    <td class="px-1 text-center">
+        {round((entity.skillStats.frontAttacks / entity.skillStats.hits) * 100)}<span class="text-3xs text-gray-300"
+            >%</span>
+    </td>
 {/if}
 {#if anyBackAtk && $settings.meter.backAtk}
-<td class="px-1 text-center">
-    {round(entity.skillStats.backAttacks / entity.skillStats.hits * 100)}<span class="text-3xs text-gray-300">%</span>
-</td>
+    <td class="px-1 text-center">
+        {round((entity.skillStats.backAttacks / entity.skillStats.hits) * 100)}<span class="text-3xs text-gray-300"
+            >%</span>
+    </td>
 {/if}
 {#if anySupportBuff && $settings.meter.percentBuffBySup}
-<td class="px-1 text-center">
-    {round(entity.damageStats.buffedBySupport / entity.damageStats.damageDealt * 100)}<span class="text-3xs text-gray-300">%</span>
-</td>
+    <td class="px-1 text-center">
+        {round((entity.damageStats.buffedBySupport / entity.damageStats.damageDealt) * 100)}<span
+            class="text-3xs text-gray-300">%</span>
+    </td>
 {/if}
 {#if anySupportBrand && $settings.meter.percentBrand}
-<td class="px-1 text-center">
-    {round(entity.damageStats.debuffedBySupport / entity.damageStats.damageDealt * 100)}<span class="text-3xs text-gray-300">%</span>
-</td>
+    <td class="px-1 text-center">
+        {round((entity.damageStats.debuffedBySupport / entity.damageStats.damageDealt) * 100)}<span
+            class="text-3xs text-gray-300">%</span>
+    </td>
 {/if}
 {#if $settings.meter.counters}
-<td class="px-1 text-center">
-    {entity.skillStats.counters}<span class="text-3xs text-gray-300"></span>
-</td>
+    <td class="px-1 text-center">
+        {entity.skillStats.counters}<span class="text-3xs text-gray-300" />
+    </td>
 {/if}
-<div class="absolute left-0 h-7 px-2 py-1 -z-10"
-    style="background-color: {HexToRgba(color, alpha)}; width: {$tweenedValue}%"
-></div>
+<div
+    class="absolute left-0 -z-10 h-7 px-2 py-1"
+    style="background-color: {HexToRgba(color, alpha)}; width: {$tweenedValue}%" />

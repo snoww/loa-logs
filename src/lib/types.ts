@@ -7,7 +7,7 @@ export interface Encounter {
     lastCombatPacket: number;
     fightStart: number;
     localPlayer: string;
-    entities: {[key: string]: Entity};
+    entities: { [key: string]: Entity };
     currentBossName: string;
     currentBoss: Entity | null;
     encounterDamageStats: EncounterDamageStats;
@@ -30,31 +30,31 @@ export interface EncounterPreview {
 }
 
 export interface EncounterDamageStats {
-    totalDamageDealt: number,
-    topDamageDealt: number,
-    totalDamageTaken: number,
-    topDamageTaken: number,
-    dps: number,
-    dpsIntervals: { [key: number]: number },
-    mostDamageTakenEntity: MostDamageTakenEntity,
-    buffs: { [key: number]: StatusEffect },
-    debuffs: { [key: number]: StatusEffect },
-    misc?: EncounterMisc
+    totalDamageDealt: number;
+    topDamageDealt: number;
+    totalDamageTaken: number;
+    topDamageTaken: number;
+    dps: number;
+    dpsIntervals: { [key: number]: number };
+    mostDamageTakenEntity: MostDamageTakenEntity;
+    buffs: { [key: number]: StatusEffect };
+    debuffs: { [key: number]: StatusEffect };
+    misc?: EncounterMisc;
 }
 
 export interface EncounterMisc {
-    staggerStats: StaggerStats
+    staggerStats: StaggerStats;
 }
 
 export interface StaggerStats {
-    log: Array<[number, number]>,
-    average: number,
-    staggersPerMin: number
+    log: Array<[number, number]>;
+    average: number;
+    staggersPerMin: number;
 }
 
 export interface MostDamageTakenEntity {
-    name: string,
-    damageTaken: number
+    name: string;
+    damageTaken: number;
 }
 
 export interface Entity {
@@ -69,7 +69,7 @@ export interface Entity {
     currentHp: number;
     maxHp: number;
     isDead: boolean;
-    skills: {[skillId: number]: Skill};
+    skills: { [skillId: number]: Skill };
     damageStats: DamageStats;
     skillStats: SkillStats;
 }
@@ -114,51 +114,51 @@ export interface SkillStats {
     backAttacks: number;
     frontAttacks: number;
     counters: number;
-    identityStats?: string 
+    identityStats?: string;
 }
 
-export type IdentityLogTypeValue = number | [number, number] | [number, number, number]
-export type IdentityLogType = Array<[number, IdentityLogTypeValue]>
+export type IdentityLogTypeValue = number | [number, number] | [number, number, number];
+export type IdentityLogType = Array<[number, IdentityLogTypeValue]>;
 
 export interface IdentityStats {
     log: IdentityLogType;
     average: number;
-    cardDraws?: { [key: number]: number }
+    cardDraws?: { [key: number]: number };
 }
 
 export interface StatusEffect {
     [x: string]: any;
     target: StatusEffectTarget;
-    category: string,
-    buffCategory: string,
-    buffType: number,
-    uniqueGroup: number,
-    source: StatusEffectSource
+    category: string;
+    buffCategory: string;
+    buffType: number;
+    uniqueGroup: number;
+    source: StatusEffectSource;
 }
 
 export enum StatusEffectTarget {
     OTHER = "OTHER",
     SELF = "SELF",
-    PARTY = "PARTY",
+    PARTY = "PARTY"
 }
 
 export interface StatusEffectSource {
-    name: string,
-    desc: string,
-    icon: string,
-    skill: SkillData | null,
-    setName: string | null
+    name: string;
+    desc: string;
+    icon: string;
+    skill: SkillData | null;
+    setName: string | null;
 }
 
 export interface SkillData {
-    id: number,
-    name: string,
-    desc: string,
-    classId: number,
-    icon: string,
-    summonIds: Array<number> | null,
-    summonSourceSkill: Array<number> | null,
-    sourceSkill: number | null,
+    id: number;
+    name: string;
+    desc: string;
+    classId: number;
+    icon: string;
+    summonIds: Array<number> | null;
+    summonSourceSkill: Array<number> | null;
+    sourceSkill: number | null;
 }
 
 export enum EntityType {
@@ -168,14 +168,14 @@ export enum EntityType {
     GUARDIAN = "GUARDIAN",
     PLAYER = "PLAYER",
     NPC = "NPC",
-    ESTHER = "ESTHER",
+    ESTHER = "ESTHER"
 }
 
 export interface ClassColors {
     [key: string]: {
-        color: string,
-        defaultColor: string
-    }
+        color: string;
+        defaultColor: string;
+    };
 }
 
 export interface BossMap {

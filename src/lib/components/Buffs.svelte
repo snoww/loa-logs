@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { classesMap } from '$lib/constants/classes';
+    import { classesMap } from "$lib/constants/classes";
     import {
         MeterTab,
         StatusEffectTarget,
@@ -7,12 +7,12 @@
         type Entity,
         type StatusEffect,
         EntityType
-    } from '$lib/types';
-    import { defaultBuffFilter } from '$lib/utils/buffs';
-    import { flip } from 'svelte/animate';
-    import BuffHeader from './BuffHeader.svelte';
-    import BuffRow from './BuffRow.svelte';
-    import BuffSkillBreakdown from './BuffSkillBreakdown.svelte';
+    } from "$lib/types";
+    import { defaultBuffFilter } from "$lib/utils/buffs";
+    import { flip } from "svelte/animate";
+    import BuffHeader from "./BuffHeader.svelte";
+    import BuffRow from "./BuffRow.svelte";
+    import BuffSkillBreakdown from "./BuffSkillBreakdown.svelte";
 
     export let tab: MeterTab;
     export let encounterDamageStats: EncounterDamageStats | undefined;
@@ -32,7 +32,9 @@
         players = players.filter((player) => player.entityType === EntityType.PLAYER);
         groupedSynergies = new Map<string, Map<number, StatusEffect>>();
         if (encounterDamageStats) {
-            percentages = players.map(player => (player.damageStats.damageDealt / encounterDamageStats!.topDamageDealt) * 100);
+            percentages = players.map(
+                (player) => (player.damageStats.damageDealt / encounterDamageStats!.topDamageDealt) * 100
+            );
             Object.entries(encounterDamageStats.buffs).forEach(([id, buff]) => {
                 if (focusedPlayer && !Object.hasOwn(focusedPlayer.damageStats.buffedBy, id)) {
                     return;
@@ -49,38 +51,39 @@
         }
     }
 
-    function filterStatusEffects(
-        buff: StatusEffect,
-        id: number,
-        focusedPlayer: Entity | null
-    ) {
+    function filterStatusEffects(buff: StatusEffect, id: number, focusedPlayer: Entity | null) {
         // Party synergies
-        if (['classskill', 'identity', 'ability'].includes(buff.buffCategory) &&
-            buff.target === StatusEffectTarget.PARTY) {
+        if (
+            ["classskill", "identity", "ability"].includes(buff.buffCategory) &&
+            buff.target === StatusEffectTarget.PARTY
+        ) {
             if (tab === MeterTab.PARTY_BUFFS) {
-                const key = `${classesMap[buff.source.skill?.classId ?? 0]}_${buff.uniqueGroup ? buff.uniqueGroup : buff.source.skill?.name}`;
+                const key = `${classesMap[buff.source.skill?.classId ?? 0]}_${
+                    buff.uniqueGroup ? buff.uniqueGroup : buff.source.skill?.name
+                }`;
                 groupedSynergiesAdd(key, id, buff);
-            }     
+            }
         }
         // Self synergies
-        else if (['pet', 'cook', 'battleitem', 'dropsofether', 'bracelet'].includes(buff.buffCategory)) {
+        else if (["pet", "cook", "battleitem", "dropsofether", "bracelet"].includes(buff.buffCategory)) {
             if (tab === MeterTab.SELF_BUFFS && !focusedPlayer) {
                 groupedSynergiesAdd(buff.buffCategory, id, buff);
             }
-        } else if (['set'].includes(buff.buffCategory)) {
+        } else if (["set"].includes(buff.buffCategory)) {
             if (tab === MeterTab.SELF_BUFFS && !focusedPlayer) {
                 groupedSynergiesAdd(`set_${buff.source.setName}`, id, buff);
             }
-        } else if (['classskill', 'identity', 'ability'].includes(buff.buffCategory)) {
+        } else if (["classskill", "identity", "ability"].includes(buff.buffCategory)) {
             // self & other identity, classskill, engravings
             if (tab === MeterTab.SELF_BUFFS && focusedPlayer) {
                 let key;
-                if (buff.buffCategory === 'ability') {
+                if (buff.buffCategory === "ability") {
                     key = `${buff.uniqueGroup ? buff.uniqueGroup : id}`;
                 } else {
-                    if (focusedPlayer.classId !== buff.source.skill?.classId)
-                        return; // We hide other classes self buffs (classskill & identity)
-                    key = `${classesMap[buff.source.skill?.classId ?? 0]}_${buff.uniqueGroup ? buff.uniqueGroup : buff.source.skill?.name}`;
+                    if (focusedPlayer.classId !== buff.source.skill?.classId) return; // We hide other classes self buffs (classskill & identity)
+                    key = `${classesMap[buff.source.skill?.classId ?? 0]}_${
+                        buff.uniqueGroup ? buff.uniqueGroup : buff.source.skill?.name
+                    }`;
                 }
                 groupedSynergiesAdd(key, id, buff);
             }
@@ -88,7 +91,7 @@
             // ignore
         }
     }
-    
+
     function groupedSynergiesAdd(key: string, id: number, buff: StatusEffect) {
         // by default, only show dmg, crit, atk spd, cd buffs.
         if (!defaultBuffFilter(buff.buffType)) {
@@ -104,11 +107,11 @@
     }
 </script>
 
-<thead class="top-0 sticky h-6 z-40">
+<thead class="sticky top-0 z-40 h-6">
     <tr class="bg-zinc-900">
-        <th class="w-7 px-2 font-normal"></th>
-        <th class="text-left px-2 font-normal w-14"></th>
-        <th class="w-full"></th>
+        <th class="w-7 px-2 font-normal" />
+        <th class="w-14 px-2 text-left font-normal" />
+        <th class="w-full" />
         {#each [...groupedSynergies] as [id, synergies] (id)}
             <BuffHeader {synergies} />
         {:else}
@@ -118,12 +121,12 @@
 </thead>
 <tbody on:contextmenu|preventDefault={handleRightClick}>
     {#if !focusedPlayer}
-    {#each players as player, i (player.id)}
-        <tr class="h-7 px-2 py-1" animate:flip={{ duration: 200 }} on:click={() => inspectPlayer(player.name)}>
-            <BuffRow {player} {groupedSynergies} percentage={percentages[i]} />
-        </tr>
-    {/each}
+        {#each players as player, i (player.id)}
+            <tr class="h-7 px-2 py-1" animate:flip={{ duration: 200 }} on:click={() => inspectPlayer(player.name)}>
+                <BuffRow {player} {groupedSynergies} percentage={percentages[i]} />
+            </tr>
+        {/each}
     {:else}
-        <BuffSkillBreakdown {groupedSynergies} player={focusedPlayer}/>
+        <BuffSkillBreakdown {groupedSynergies} player={focusedPlayer} />
     {/if}
 </tbody>

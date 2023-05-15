@@ -33,7 +33,7 @@ export const classColors: ClassColors = {
     Specialist: { color: "#000000", defaultColor: "#000000" }, // 601
     Artist: { color: "#a34af0", defaultColor: "#a34af0" }, // 602
     Aeromancer: { color: "#084ba3", defaultColor: "#084ba3" }, // 603
-    Alchemist: { color: "#3a945e", defaultColor: "#3a945e" }, // 604
+    Alchemist: { color: "#3a945e", defaultColor: "#3a945e" } // 604
 };
 
 export const bossHpBarColors = ["#798816", "#E7B826", "#D16F23", "#9F3930", "#582469", "#2B3A63", "#246977"];
