@@ -57,7 +57,7 @@
                     .sort((a, b) => b.damageStats.damageDealt - a.damageStats.damageDealt);
             }            
             topDamageDealt = encounter.encounterDamageStats.topDamageDealt;
-            playerDamagePercentages = players.map(player => (player.damageStats.damageDealt / topDamageDealt) * 100);
+            playerDamagePercentages = players.map(player => (player.damageStats.damageDealt / topDamageDealt) * 100);            
             anyDead = players.some(player => player.isDead);
             anyFrontAtk = players.some(player => player.skillStats.frontAttacks > 0);
             anyBackAtk = players.some(player => player.skillStats.backAttacks > 0);
@@ -84,7 +84,7 @@
                 state = MeterState.PARTY;
             }
 
-            let chartablePlayers = players = Object.values(encounter.entities)
+            let chartablePlayers = Object.values(encounter.entities)
                     .filter((e) => e.damageStats.damageDealt > 0 && e.entityType === EntityType.PLAYER)
                     .sort((a, b) => b.damageStats.damageDealt - a.damageStats.damageDealt);
 

@@ -24,7 +24,7 @@
     let name: string;
     let deadFor: string;    
 
-    let color = "#ffffff";   
+    let color = "#ffffff";    
 
     if (Object.hasOwn(classColors, entity.class)){
         color = classColors[entity.class].color;
