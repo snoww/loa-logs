@@ -29,9 +29,6 @@
 
         if (Object.hasOwn(bosses, boss.name)) {
             bossHPBars = bosses[boss.name];
-        } else if (boss.maxHp === 1865513010 || boss.maxHp === 529402339 || boss.maxHp === 285632921) {
-            // hard coding valtan ghost (hell, hard, normal)
-            bossHPBars = 40;
         } else {
             bossHPBars = 0;
         }
