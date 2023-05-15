@@ -1,11 +1,11 @@
 {
-    "version": "v1.1.15",
-    "notes": "!!!NOTE!!!: auto-updater is bugged atm, manual install required. (click 'IGNORE' if error pops up)\n- added pause feature (note: meter will not have any data if paused before raid start)\n- added hp bar split option (at 25%, 50%, and 75%)\n- fixed battle items showing as aeromancer skills\n- fixed long boss names overlapping with hp bar\nsend bug reports or feature requests to Snow#7777",
-    "pub_date": "2023-05-14T04:32:08Z",
+    "version": "v1.1.16",
+    "notes": "!!!NOTE!!!: auto-updater is bugged atm, manual install required. (click 'IGNORE' if error pops up)\n- add columns for raw casts/hits\n- fix charts not displaying anything when sidereal did top damage\n- fix % damage bar showing incorrect width in buffs tab\n- fix first cast of skills not being tracked in skill log\nsend bug reports or feature requests to Snow#7777",
+    "pub_date": "2023-05-15T05:05:44Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.1.15/LOA.Logs_1.1.15_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlVMTWozc0lhTGI2d3pLS25rMEtjWnNVTllJeWRKblgyYVQ2blRxbmlZcmZvSUMyMkhQUmpWY2hnWkdwSEJtLzZWekJTSTJIV2FieGMwbUFGOEZqdkFBPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjg0MDM4NDg3CWZpbGU6TE9BIExvZ3NfMS4xLjE1X3g2NC1zZXR1cC5uc2lzLnppcApmV3RWSUZrQzlUdkZ1RTJtVGN6QVJ5c3EyazdGcnN2M3JqTUFVTUczYUhqMjd1Sk9ZS2k0cWdVNW5RdXRpa0VTSkl3NVp0UG9sbmczY29ZaitTa0ZCZz09Cg=="
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.1.16/LOA.Logs_1.1.16_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlNvK0lnUFdCNnN1RnhTZmtsUW5YU0ExQ3R1VHZRdGpJaU5qcC9yVG1VWnNEUnIvMGZBRjRyVkkxdlFYSGlHV08ycHM4ZmNqcEkwRVREUVF6QWtIcEFRPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjg0MTI3MDE5CWZpbGU6TE9BIExvZ3NfMS4xLjE2X3g2NC1zZXR1cC5uc2lzLnppcApSQXpWdkwrQnFEUjlxeUFySzlsZEJBdWFJR2Nyc2pMYWVxbWt2ZlRYWDJXQXdCdzdoWkZOeHljS2NFcWQ3bi9ZM05KTEtPV0wzYnkwVFROdm0xOEVCQT09Cg=="
         }
     }
 }
