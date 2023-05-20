@@ -1,11 +1,11 @@
 {
-    "version": "v1.1.17",
-    "notes": "- temp fix for auto-updater, will work on v1.1.18 (surely)\n- fix esther not showing in logs when its enabled\nsend bug reports or feature requests to Snow#7777",
-    "pub_date": "2023-05-15T19:49:18Z",
+    "version": "v1.1.18",
+    "notes": "- fix rare issue where boss hp gets stuck on vykas frog\n- search page now resets after clearing search with button\nwip: better search filters, pure rust packet sniffer is almost done\nsend bug reports or feature requests to Snow#7777",
+    "pub_date": "2023-05-20T05:06:16Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.1.17/LOA.Logs_1.1.17_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlNLcTNjNG9lSnVZMk81eHdqM0RQeGhGeitJY1BxTTJXMmdpK2w0SlBMaTFTR0NkVTVWQUlwT2lpOC84ZjREcStHd2Z2cTRPVWdzOWp3NEVpK05rRUFRPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjg0MTc5ODI3CWZpbGU6TE9BIExvZ3NfMS4xLjE3X3g2NC1zZXR1cC5uc2lzLnppcApLV0MrNWJ4S04rMTdLVURQQUM0Q29VcTJJcFRFeXAvVTZrcTg1dkNsdGN0d01yMmdnZ3BjMUl4MzRGQ0ozOHRVc1RDRGdoVFc2MUlWMVlwVi9icHlCUT09Cg=="
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.1.18/LOA.Logs_1.1.18_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlpJbGV4OFM2QWVPbDJQMGhkTHZQOGhMb0p6WU5pOVJycjBzNVgwTEFnUzFPOEovQkZpNU1vZFB1K2R5WDNKRDFIQ01vUVNoeHhiYkpxMmxTeExNOHdZPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjg0NTU4Mzg5CWZpbGU6TE9BIExvZ3NfMS4xLjE4X3g2NC1zZXR1cC5uc2lzLnppcAowL3N2R211dGNsbUM4aFgyeWhYVjU4OEYydGExeGVxRHV5OTlEZEFvV28vd0E2VHB3eGNwUkNsVWlmbFpjNTExV3ZpTUtKMnl2V0dqUWhtQWdEbitCQT09Cg=="
         }
     }
 }
