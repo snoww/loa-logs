@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { searchStore } from "$lib/utils/stores";
+    import { pageStore, searchStore } from "$lib/utils/stores";
 </script>
 
 <div class="flex items-center justify-between">
@@ -27,6 +27,7 @@
                     class="absolute inset-y-0 right-0 flex items-center pr-2"
                     on:click={() => {
                         searchStore.set("");
+                        pageStore.set(1);
                     }}>
                     <svg
                         class="h-5 w-5 fill-gray-400 hover:fill-gray-200"
