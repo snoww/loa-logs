@@ -11759,7 +11759,7 @@
   "480255": { "id": 480255, "name": "비아키스 환영", "grade": "boss", "type": "monster" },
   "480256": { "id": 480256, "name": "욕망의 탐식자 비아키스", "grade": "boss", "type": "monster" },
   "480257": { "id": 480257, "name": "욕망의 탐식자 비아키스", "grade": "boss", "type": "monster" },
-  "480258": { "id": 480258, "name": "Giant Covetous Lump", "grade": "boss", "type": "monster" },
+  "480258": { "id": 480258, "name": "Giant Covetous Lump", "grade": "seed", "type": "monster" },
   "480259": { "id": 480259, "name": "Covetous Monster", "grade": "normal", "type": "monster" },
   "480260": { "id": 480260, "name": "Covetous Monster", "grade": "normal", "type": "monster" },
   "480261": { "id": 480261, "name": "Covetous Monster", "grade": "normal", "type": "monster" },
