@@ -92,10 +92,9 @@ impl StatusTracker {
             StatusEffectTargetType::Local => &mut self.local_status_effect_registry,
             StatusEffectTargetType::Party => &mut self.party_status_effect_registry,
         };
-        match registry.get_mut(&target_id) {
-            Some(ser) => ser.remove(&instance_id),
-            None => return,
-        };
+        if let Some(ser) = registry.get_mut(&target_id) {
+            ser.remove(&instance_id);
+        }
     }
 
     pub fn update_status_duration(
@@ -184,14 +183,14 @@ impl StatusTracker {
         } else {
             false
         };
-        println!("use_party_for_target: {:?}", use_party_for_target);
+        // println!("use_party_for_target: {:?}", use_party_for_target);
         let source_party_id = self
             .party_tracker
             .borrow()
             .entity_id_to_party_id
             .get(&source_entity.id)
             .cloned();
-        println!("use_party_for_target: {:?}, source_party_id: {:?}", use_party_for_target, source_party_id);
+        // println!("use_party_for_target: {:?}, source_party_id: {:?}", use_party_for_target, source_party_id);
         let target_effects = match (use_party_for_target, source_party_id) {
             (true, Some(source_party_id)) => self.get_status_effects_from_party(
                 target_entity.character_id,
@@ -217,9 +216,9 @@ impl StatusTracker {
             .map(|x| (x.status_effect_id, x.source_id))
             .collect();
         // println!("status_effects_on_target: {:?}", status_effects_on_target);
-        println!(
-            "status_effects_on_source: {:?}, status_effects_on_target: {:?}",
-            status_effects_on_source, status_effects_on_target);
+        // println!(
+        //     "status_effects_on_source: {:?}, status_effects_on_target: {:?}",
+        //     status_effects_on_source, status_effects_on_target);
         (status_effects_on_source, status_effects_on_target)
     }
 
@@ -356,24 +355,15 @@ pub fn build_status_effect(
     let mut name = "Unknown".to_string();
     if let Some(effect) = SKILL_BUFF_DATA.get(&(se_data.status_effect_id as i32)) {
         name = effect.name.to_string();
-        match effect.category.as_str() {
-            "debuff" => status_effect_category = Debuff,
-            _ => {}
-        }
+        if effect.category.as_str() == "debuff" { status_effect_category = Debuff }
         match effect.buff_category.as_str() {
             "bracelet" => buff_category = Bracelet,
             "etc" => buff_category = Etc,
             "battleitem" => buff_category = BattleItem,
             _ => {}
         }
-        match effect.icon_show_type.as_str() {
-            "all" => show_type = All,
-            _ => {}
-        }
-        match effect.buff_type.as_str() {
-            "shield" => status_effect_type = StatusEffectType::Shield,
-            _ => {}
-        }
+        if effect.icon_show_type.as_str() == "all" { show_type = All }
+        if effect.buff_type.as_str() == "shield" { status_effect_type = StatusEffectType::Shield }
     }
 
     StatusEffect {
