@@ -11,7 +11,7 @@ use pcap_test::packets::structures::StatusEffectData;
 use std::cell::RefCell;
 use std::rc::Rc;
 
-const TIMEOUT_DELAY_MS: f32 = 1000.;
+const TIMEOUT_DELAY_MS: i64 = 1000;
 
 pub type StatusEffectRegistry = HashMap<u32, StatusEffect>;
 
@@ -60,13 +60,14 @@ impl StatusTracker {
 
         let ser = registry.get_mut(&se.target_id).unwrap();
 
-        if let Some(old_effect) = ser.get_mut(&se.instance_id) {
-            if let Some(_expire_time) = old_effect.expire_at {
-                old_effect.expire_at = None;
-            }
-        } else if se.status_effect_type == StatusEffectType::Shield {
-            //
-        }
+        // if let Some(old_effect) = ser.get_mut(&se.instance_id) {
+        //     if let Some(_expire_time) = old_effect.expire_at {
+        //         old_effect.expire_at = None;
+        //     }
+        // } else if se.status_effect_type == StatusEffectType::Shield {
+        //     //
+        // }
+        // println!("inserting -> {:?}:{:?} -> {:?} -> {:?}", se.name, se.instance_id, se.target_type, se.target_id);
         add_status_effect_timeout(&mut se);
         ser.insert(se.instance_id, se.clone());
     }
@@ -82,21 +83,19 @@ impl StatusTracker {
     pub fn remove_status_effect(
         &mut self,
         target_id: u64,
-        status_effect_id: u32,
+        instance_id: u32,
         sett: StatusEffectTargetType,
         // reason: Option<u32>,
     ) {
+        // println!("removing status effect -> {:?} -> {:?}", instance_id, sett);
         let registry = match sett {
             StatusEffectTargetType::Local => &mut self.local_status_effect_registry,
             StatusEffectTargetType::Party => &mut self.party_status_effect_registry,
         };
-        let ser = match registry.get_mut(&target_id) {
-            Some(ser) => ser,
+        match registry.get_mut(&target_id) {
+            Some(ser) => ser.remove(&instance_id),
             None => return,
         };
-        if let Some(_se) = ser.get(&status_effect_id) {
-            registry.remove(&target_id);
-        }
     }
 
     pub fn update_status_duration(
@@ -119,43 +118,41 @@ impl StatusTracker {
         if let Some(se) = ser.get_mut(&instance_id) {
             if let Some(expire_at) = se.expire_at {
                 let time = Utc.timestamp_millis_opt(timestamp as i64).unwrap();
-                if time > expire_at {
-                    registry.remove(&target_id);
-                } else {
-                    se.expire_at = Some(time);
-                    se.end_tick = timestamp;
-                }
+                println!("updating status duration, old: {:?}", expire_at);
+                se.expire_at = Some(time);
+                se.end_tick = timestamp;
+                println!("new: {:?}, end_tick: {:?}", se.expire_at, se.end_tick);
             }
         }
     }
 
-    // pub fn sync_status_effect(&mut self, instance_id: u32, character_id: u64, object_id: u64, value: u32, local_character_id: u64) {
-    //     let use_party = self.should_use_party_status_effect(character_id, local_character_id);
-    //     let (target_id, sett) = if use_party {
-    //         (character_id, StatusEffectTargetType::Party)
-    //     } else {
-    //         (object_id, StatusEffectTargetType::Local)
-    //     };
-    //     if target_id == 0 {
-    //         return;
-    //     }
-    //     let registry = match sett {
-    //         StatusEffectTargetType::Local => &mut self.local_status_effect_registry,
-    //         StatusEffectTargetType::Party => &mut self.party_status_effect_registry,
-    //     };
-    //
-    //     let ser = match registry.get_mut(&target_id) {
-    //         Some(ser) => ser,
-    //         None => return,
-    //     };
-    //
-    //     let se = match ser.get_mut(&instance_id) {
-    //         Some(se) => se,
-    //         None => return,
-    //     };
-    //
-    //     se.value = value;
-    // }
+/*    pub fn sync_status_effect(&mut self, instance_id: u32, character_id: u64, object_id: u64, value: u32, local_character_id: u64) {
+        let use_party = self.should_use_party_status_effect(character_id, local_character_id);
+        let (target_id, sett) = if use_party {
+            (character_id, StatusEffectTargetType::Party)
+        } else {
+            (object_id, StatusEffectTargetType::Local)
+        };
+        if target_id == 0 {
+            return;
+        }
+        let registry = match sett {
+            StatusEffectTargetType::Local => &mut self.local_status_effect_registry,
+            StatusEffectTargetType::Party => &mut self.party_status_effect_registry,
+        };
+
+        let ser = match registry.get_mut(&target_id) {
+            Some(ser) => ser,
+            None => return,
+        };
+
+        let se = match ser.get_mut(&instance_id) {
+            Some(se) => se,
+            None => return,
+        };
+
+        se.value = value;
+    }*/
 
     pub fn get_status_effects(
         &mut self,
@@ -180,27 +177,38 @@ impl StatusTracker {
             .iter()
             .map(|x| (x.status_effect_id, x.source_id))
             .collect();
+        // println!("status_effects_on_source: {:?}", status_effects_on_source);
 
         let use_party_for_target = if source_entity.entity_type == EntityType::PLAYER {
             self.should_use_party_status_effect(source_entity.id, local_character_id)
         } else {
             false
         };
+        println!("use_party_for_target: {:?}", use_party_for_target);
         let source_party_id = self
             .party_tracker
             .borrow()
             .entity_id_to_party_id
             .get(&source_entity.id)
             .cloned();
-
+        println!("use_party_for_target: {:?}, source_party_id: {:?}", use_party_for_target, source_party_id);
         let target_effects = match (use_party_for_target, source_party_id) {
             (true, Some(source_party_id)) => self.get_status_effects_from_party(
                 target_entity.character_id,
                 StatusEffectTargetType::Party,
                 source_party_id,
             ),
-            _ => self.actually_get_status_effects(
+            (false, Some(source_party_id)) => self.get_status_effects_from_party(
+                target_entity.id,
+                StatusEffectTargetType::Local,
+                source_party_id,
+            ),
+            (true, None) => self.actually_get_status_effects(
                 target_entity.character_id,
+                StatusEffectTargetType::Party,
+            ),
+            (false, None) => self.actually_get_status_effects(
+                target_entity.id,
                 StatusEffectTargetType::Local,
             ),
         };
@@ -208,6 +216,10 @@ impl StatusTracker {
             .iter()
             .map(|x| (x.status_effect_id, x.source_id))
             .collect();
+        // println!("status_effects_on_target: {:?}", status_effects_on_target);
+        println!(
+            "status_effects_on_source: {:?}, status_effects_on_target: {:?}",
+            status_effects_on_source, status_effects_on_target);
         (status_effects_on_source, status_effects_on_target)
     }
 
@@ -225,11 +237,10 @@ impl StatusTracker {
             Some(ser) => ser,
             None => return Vec::new(),
         };
-
         let timestamp = Utc::now();
         ser.retain(|_, se| {
             se.expire_at
-                .map_or(true, |expire_at| expire_at >= timestamp)
+                .map_or(false, |expire_at| expire_at >= timestamp)
         });
         ser.values().cloned().collect()
     }
@@ -253,7 +264,7 @@ impl StatusTracker {
         let timestamp = Utc::now();
         ser.retain(|_, se| {
             se.expire_at
-                .map_or(true, |expire_at| expire_at >= timestamp)
+                .map_or(false, |expire_at| expire_at >= timestamp)
         });
         let party_tracker = self.party_tracker.borrow();
         ser.values()
@@ -304,18 +315,12 @@ fn is_valid_for_raid(status_effect: &StatusEffect) -> bool {
 
 pub fn add_status_effect_timeout(se: &mut StatusEffect) {
     if se.expiration_delay > 0. && se.expiration_delay < 604800. {
-        let start_date = if se.timestamp > se.occur_time {
-            se.timestamp
-        } else {
-            se.occur_time
-        };
-
         let expiration_delay = (se.expiration_delay * 1000.) as i64;
-        let timeout_delay = start_date
-            + Duration::milliseconds(expiration_delay + (TIMEOUT_DELAY_MS as i64))
-            - se.timestamp;
+        let timeout_delay = Duration::milliseconds(expiration_delay + TIMEOUT_DELAY_MS);
 
         se.expire_at = Some(se.timestamp + timeout_delay);
+        // println!("===\nstatus_id: {:?}, start_date: {:?}, expiration_delay: {:?}, timeout_delay: {:?}, expire_at: {:?}", se.status_effect_id,
+        //          start_date, expiration_delay, timeout_delay, se.expire_at);
     }
 }
 
@@ -352,17 +357,17 @@ pub fn build_status_effect(
     if let Some(effect) = SKILL_BUFF_DATA.get(&(se_data.status_effect_id as i32)) {
         name = effect.name.to_string();
         match effect.category.as_str() {
-            "debuff" => status_effect_category = StatusEffectCategory::Debuff,
+            "debuff" => status_effect_category = Debuff,
             _ => {}
         }
         match effect.buff_category.as_str() {
-            "bracelet" => buff_category = StatusEffectBuffCategory::Bracelet,
-            "etc" => buff_category = StatusEffectBuffCategory::Etc,
-            "battleitem" => buff_category = StatusEffectBuffCategory::BattleItem,
+            "bracelet" => buff_category = Bracelet,
+            "etc" => buff_category = Etc,
+            "battleitem" => buff_category = BattleItem,
             _ => {}
         }
         match effect.icon_show_type.as_str() {
-            "all" => show_type = StatusEffectShowType::All,
+            "all" => show_type = All,
             _ => {}
         }
         match effect.buff_type.as_str() {

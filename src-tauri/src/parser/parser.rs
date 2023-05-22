@@ -5,7 +5,7 @@ use hashbrown::{HashMap, HashSet};
 use pcap_test::packets::definitions::{PKTIdentityGaugeChangeNotify, PKTParalyzationStateNotify};
 use rusqlite::{params, Connection, Transaction};
 use serde_json::json;
-// use tauri::{Manager, Window, Wry};
+use tauri::{Manager, Window, Wry};
 use crate::parser::entity_tracker::Entity;
 use crate::parser::models::*;
 use tokio::task;
@@ -14,8 +14,8 @@ const WINDOW_MS: i64 = 5_000;
 const WINDOW_S: i64 = 5;
 
 #[derive(Debug)]
-pub struct Parser /*<'a>*/ {
-    // pub window: &'a Window<Wry>,
+pub struct Parser {
+    pub window: Window<Wry>,
     pub encounter: Encounter,
     pub raid_end: bool,
     saved: bool,
@@ -30,10 +30,10 @@ pub struct Parser /*<'a>*/ {
     stagger_intervals: Vec<(i32, i32)>,
 }
 
-impl Parser /*<'_>*/ {
-    pub fn new(/*window: &Window<Wry>*/) -> Parser {
+impl Parser {
+    pub fn new(window: Window<Wry>) -> Parser {
         Parser {
-            // window,
+            window,
             encounter: Encounter::default(),
             raid_end: false,
             saved: false,
@@ -199,18 +199,18 @@ impl Parser /*<'_>*/ {
                 || (e.damage_stats.damage_dealt > 0 && e.max_hp > 0)
         });
 
-        // self.window
-        //     .emit("zone-change", Some(self.encounter.clone()))
-        //     .expect("failed to emit zone-change");
+        self.window
+            .emit("zone-change", Some(self.encounter.clone()))
+            .expect("failed to emit zone-change");
 
         self.encounter.current_boss_name = "".to_string();
         self.soft_reset();
     }
 
     pub fn on_phase_transition(&mut self, phase_code: i32) {
-        // self.window
-        //     .emit("phase-transition", phase_code)
-        //     .expect("failed to emit phase-transition");
+        self.window
+            .emit("phase-transition", phase_code)
+            .expect("failed to emit phase-transition");
 
         if phase_code == 0 || phase_code == 2 {
             // self.save_to_db();
@@ -406,6 +406,7 @@ impl Parser /*<'_>*/ {
     pub fn on_damage(
         &mut self,
         dmg_src_entity: &Entity,
+        proj_entity: &Entity,
         dmg_target_entity: &Entity,
         damage: i64,
         skill_id: i32,
@@ -453,6 +454,11 @@ impl Parser /*<'_>*/ {
             return;
         }
 
+        let mut skill_effect_id = skill_effect_id;
+        if is_battle_item(skill_effect_id, "attack") && proj_entity.entity_type == EntityType::PROJECTILE {
+            skill_effect_id = proj_entity.skill_effect_id as i32;
+        }
+
         let mut source_entity = self
             .encounter
             .entities
@@ -491,10 +497,10 @@ impl Parser /*<'_>*/ {
             damage += target_current_hp;
         }
 
-        let skill = source_entity.skills.contains_key(&skill_id);
+        let has_skill = source_entity.skills.contains_key(&skill_id);
         let skill_name = get_skill_name(skill_id);
         let mut skill_id = skill_id;
-        if !skill {
+        if !has_skill {
             if let Some(skill) = source_entity
                 .skills
                 .values()
@@ -888,6 +894,15 @@ fn encounter_entity_from_entity(entity: &Entity) -> EncounterEntity {
 
 fn is_support_class_id(class_id: u32) -> bool {
     class_id == 105 || class_id == 204 || class_id == 602
+}
+
+fn is_battle_item(skill_effect_id: i32, item_type: &str) -> bool {
+    if let Some(item) = SKILL_EFFECT_DATA.get(&skill_effect_id) {
+        if let Some(category) = item.item_category.as_ref() {
+            return category == "useup_battle_item_common_attack";
+        }
+    }
+    false
 }
 
 fn get_status_effect_data(buff_id: i32) -> Option<StatusEffect> {

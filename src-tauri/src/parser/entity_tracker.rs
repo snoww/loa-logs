@@ -126,20 +126,24 @@ impl EntityTracker {
         let entity = Entity {
             id: pkt.pc_struct.player_id,
             entity_type: PLAYER,
-            name: pkt.pc_struct.name,
+            name: pkt.pc_struct.name.clone(),
             class_id: pkt.pc_struct.class_id as u32,
             gear_level: f32::trunc(pkt.pc_struct.gear_level * 100.) / 100.,
             character_id: pkt.pc_struct.character_id,
             ..Default::default()
         };
         self.entities.insert(entity.id, entity.clone());
+        let old_entity_id = self.id_tracker.borrow_mut().get_entity_id(pkt.pc_struct.character_id);
+        if let Some(old_entity_id) = old_entity_id {
+            self.party_tracker.borrow_mut().change_entity_id(old_entity_id, entity.id);
+        }
         self.id_tracker
             .borrow_mut()
             .add_mapping(pkt.pc_struct.character_id, pkt.pc_struct.player_id);
         self.party_tracker
             .borrow_mut()
             .complete_entry(pkt.pc_struct.character_id, pkt.pc_struct.player_id);
-        // self.status_tracker.borrow_mut().new_pc(&pkt);
+        self.status_tracker.borrow_mut().new_pc(&pkt, self.local_player_id);
         entity
     }
 
@@ -205,23 +209,23 @@ impl EntityTracker {
         }
     }
 
-    // pub fn new_projectile(&mut self, pkt: PKTNewProjectile) {
-    //     let projectile = Entity {
-    //         id: pkt.projectile_info.projectile_id,
-    //         entity_type: PROJECTILE,
-    //         name: format!("{:x}", pkt.projectile_info.projectile_id),
-    //         owner_id: pkt.projectile_info.owner_id,
-    //         skill_id: pkt.projectile_info.skill_id,
-    //         skill_effect_id: pkt.projectile_info.skill_effect,
-    //         ..Default::default()
-    //     };
-    //     self.entities.insert(projectile.id, projectile);
-    // }
+    pub fn new_projectile(&mut self, pkt: PKTNewProjectile) {
+        let projectile = Entity {
+            id: pkt.projectile_info.projectile_id,
+            entity_type: PROJECTILE,
+            name: format!("{:x}", pkt.projectile_info.projectile_id),
+            owner_id: pkt.projectile_info.owner_id,
+            skill_id: pkt.projectile_info.skill_id,
+            skill_effect_id: pkt.projectile_info.skill_effect,
+            ..Default::default()
+        };
+        self.entities.insert(projectile.id, projectile);
+    }
 
     pub fn party_info(&mut self, pkt: PKTPartyInfo) {
         let local_player = self.entities.get(&self.local_player_id).unwrap();
         if pkt.member_datas.len() == 1 {
-            if let Some(first) = pkt.member_datas.iter().nth(0) {
+            if let Some(first) = pkt.member_datas.get(0) {
                 if first.name == local_player.name {
                     self.party_tracker
                         .borrow_mut()

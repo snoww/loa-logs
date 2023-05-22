@@ -101,6 +101,13 @@ impl PartyTracker {
         }
     }
 
+    pub fn change_entity_id(&mut self, old: u64, new: u64) {
+        if let Some(party_id) = self.entity_id_to_party_id.get(&old).cloned() {
+            self.entity_id_to_party_id.remove(&old);
+            self.entity_id_to_party_id.insert(new, party_id);
+        }
+    }
+
     pub fn complete_entry(&mut self, character_id: u64, entity_id: u64) {
         let char_party_id = self.character_id_to_party_id.get(&character_id).cloned();
         let entity_party_id = self.entity_id_to_party_id.get(&entity_id).cloned();
