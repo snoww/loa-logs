@@ -7,7 +7,7 @@ use serde::{Deserialize, Serialize};
 use serde_with::serde_as;
 use serde_with::DefaultOnError;
 
-#[derive(Debug, Default, Serialize, Deserialize, PartialEq, Clone)]
+#[derive(Debug, Default, Serialize, Deserialize, PartialEq, Copy, Clone)]
 #[allow(non_camel_case_types)]
 pub enum EntityType {
     #[default]
@@ -18,6 +18,8 @@ pub enum EntityType {
     PLAYER,
     NPC,
     ESTHER,
+    PROJECTILE,
+    SUMMON,
 }
 
 impl ToString for EntityType {
@@ -30,6 +32,8 @@ impl ToString for EntityType {
             EntityType::PLAYER => "PLAYER".to_string(),
             EntityType::NPC => "NPC".to_string(),
             EntityType::ESTHER => "ESTHER".to_string(),
+            EntityType::PROJECTILE => "PROJECTILE".to_string(),
+            EntityType::SUMMON => "SUMMON".to_string(),
         }
     }
 }
@@ -57,9 +61,9 @@ pub struct Encounter {
     pub last_combat_packet: i64,
     pub fight_start: i64,
     pub local_player: String,
-    pub entities: HashMap<String, Entity>,
+    pub entities: HashMap<String, EncounterEntity>,
     pub current_boss_name: String,
-    pub current_boss: Option<Entity>,
+    pub current_boss: Option<EncounterEntity>,
     pub encounter_damage_stats: EncounterDamageStats,
     pub duration: i64,
     pub reset: bool,
@@ -95,15 +99,14 @@ pub struct MostDamageTakenEntity {
 
 #[derive(Debug, Default, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
-pub struct Entity {
-    pub last_update: i64,
-    pub id: String,
-    pub npc_id: i32,
+pub struct EncounterEntity {
+    pub id: u64,
+    pub npc_id: u32,
     pub name: String,
     pub entity_type: EntityType,
-    pub class_id: i32,
+    pub class_id: u32,
     pub class: String,
-    pub gear_score: f64,
+    pub gear_score: f32,
     pub current_hp: i64,
     pub max_hp: i64,
     pub is_dead: bool,
@@ -221,7 +224,7 @@ pub struct Esther {
     pub icon: String,
     pub skills: Vec<i32>,
     #[serde(alias = "npcs")]
-    pub npc_ids: Vec<i32>,
+    pub npc_ids: Vec<u32>,
 }
 
 #[derive(Debug, Default, Serialize, Deserialize, Clone)]
@@ -231,7 +234,7 @@ pub struct SkillData {
     pub name: String,
     pub desc: String,
     #[serde(alias = "classid", alias = "classId")]
-    pub class_id: i32,
+    pub class_id: u32,
     pub icon: String,
     #[serde(alias = "summonids", alias = "summonIds")]
     pub summon_ids: Option<Vec<i32>>,
@@ -250,6 +253,8 @@ pub struct SkillEffectData {
     pub stagger: i32,
     #[serde(rename(deserialize = "sourceskill"))]
     pub source_skill: Option<i32>,
+    #[serde(rename(deserialize = "directionalmask"))]
+    pub directional_mask: i32,
     #[serde(rename(deserialize = "itemname"))]
     pub item_name: Option<String>,
     #[serde(skip, rename(deserialize = "itemdesc"))]
@@ -480,8 +485,39 @@ pub struct BreakdownTabs {
     pub hpm: bool,
 }
 
+#[derive(Debug, PartialEq)]
+#[allow(non_camel_case_types)]
+#[repr(i32)]
+pub enum HitOption {
+    NONE,
+    BACK_ATTACK,
+    FRONTAL_ATTACK,
+    FLANK_ATTACK,
+    MAX,
+}
+
+#[derive(Debug, PartialEq)]
+#[allow(non_camel_case_types)]
+#[repr(u32)]
+pub enum HitFlag {
+    NORMAL,
+    CRITICAL,
+    MISS,
+    INVINCIBLE,
+    DOT,
+    IMMUNE,
+    IMMUNE_SILENCED,
+    FONT_SILENCED,
+    DOT_CRITICAL,
+    DODGE,
+    REFLECT,
+    DAMAGE_SHARE,
+    DODGE_HIT,
+    MAX,
+}
+
 lazy_static! {
-    pub static ref NPC_DATA: HashMap<i32, Npc> = {
+    pub static ref NPC_DATA: HashMap<u32, Npc> = {
         let json_str = include_str!("../../meter-data/Npc.json");
         serde_json::from_str(json_str).unwrap()
     };

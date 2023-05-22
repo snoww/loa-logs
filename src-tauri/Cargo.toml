@@ -26,8 +26,10 @@ bitflags = "2.2.1"
 window-vibrancy = "0.3.2"
 hashbrown = { version = "0.13.2", features = ["serde"] }
 rusqlite = { version = "0.29.0", features = ["bundled", "serde_json"] }
-tokio = "1.28.0"
+tokio = { version = "1.28.1", features = ["full"] }
 serde_with = "2.3.3"
+pcap-test = { path = "C:\\Users\\Snow\\Documents\\projects\\pcap-test" }
+anyhow = "1.0.71"
 
 
 [features]
