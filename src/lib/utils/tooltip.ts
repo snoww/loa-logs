@@ -63,9 +63,9 @@ export function generateHeaderTooltip(buff: StatusEffect, iconPath: string) {
         str += `</div>`;
     } else {
         str += `<div class="flex">`;
-        if (buff.buffCategory === "set") {
+        if (buff.buffCategory === "set" && buff.source.setName) {
             str += `<div class="pr-1">`;
-            str += "[Set] " + buff.source.setName;
+            str += "[Set] " + buff.source.setName + ":";
             str += `</div>`;
         } else if (buff.buffCategory === "bracelet") {
             str += `<div class="pr-1">`;
