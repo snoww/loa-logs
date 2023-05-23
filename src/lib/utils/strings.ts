@@ -14,18 +14,18 @@ export function removeUnknownHtmlTags(input: string) {
 export function formatPlayerName(player: Entity, showNames = true): string {
     let playerName = player.name;
     if (!isValidName(playerName) || !showNames) {
-        playerName = "";
-        if (player.gearScore > 0) {
-            playerName += player.gearScore + " ";
-        }
         if (player.class) {
-            playerName += player.class;
+            playerName = player.class;
+        } else {
+            playerName = "";
         }
+    }
+    if (player.gearScore > 0) {
+        playerName = player.gearScore + " " + playerName;
     }
     if (player.isDead) {
         playerName = "💀 " + playerName;
     }
-
     return playerName;
 }
 
