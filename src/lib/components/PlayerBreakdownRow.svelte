@@ -111,7 +111,7 @@
             >{abbreviateNumberSplit(skill.maxDamage)[1]}</span>
     </td>
 {/if}
-{#if $settings.logs.breakdown.casts}
+{#if $settings.meter.breakdown.casts}
     <td class="px-1 text-center">
         {skill.casts.toLocaleString()}
     </td>
@@ -128,7 +128,7 @@
         </div>
     </td>
 {/if}
-{#if $settings.logs.breakdown.hits}
+{#if $settings.meter.breakdown.hits}
     <td class="px-1 text-center">
         {skill.hits.toLocaleString()}
     </td>
