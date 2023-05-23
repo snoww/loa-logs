@@ -123,11 +123,6 @@ impl EncounterState {
             self.encounter.entities.insert(entity.name.clone(), entity);
         }
 
-        println!(
-            "parser init env: {:?}",
-            self.encounter.entities.get(&self.encounter.local_player)
-        );
-
         if !self.saved && !self.encounter.current_boss_name.is_empty() {
             self.save_to_db();
         }

@@ -80,27 +80,27 @@ pub fn start(window: Window<Wry>) -> Result<()> {
             }
             Pkt::DeathNotify => {
                 let pkt = PKTDeathNotify::new(&data)?;
-                debug_print(&pkt);
+                debug_print("", &pkt);
                 if let Some(entity) = entity_tracker.entities.get(&pkt.target_id) {
                     state.on_death(entity);
                 }
             }
             Pkt::IdentityGaugeChangeNotify => {
                 let pkt = PKTIdentityGaugeChangeNotify::new(&data)?;
-                debug_print(&pkt);
+                debug_print("", &pkt);
                 state.on_identity_gain(pkt);
             }
             Pkt::InitEnv => {
                 let pkt = PKTInitEnv::new(&data)?;
-                debug_print(&pkt);
                 let entity = entity_tracker.init_env(pkt);
+                debug_print("init env", &entity);
                 state.on_init_env(entity);
             }
             Pkt::InitPC => {
                 let pkt = PKTInitPC::new(&data)?;
-                debug_print(&pkt);
                 let (hp, max_hp) = get_current_and_max_hp(&pkt.stat_pair);
                 let entity = entity_tracker.init_pc(pkt);
+                debug_print("init pc", &entity);
 
                 state.on_init_pc(entity, hp, max_hp)
             }
@@ -110,23 +110,23 @@ pub fn start(window: Window<Wry>) -> Result<()> {
             }
             Pkt::NewPC => {
                 let pkt = PKTNewPC::new(&data)?;
-                debug_print(&pkt);
                 let (hp, max_hp) = get_current_and_max_hp(&pkt.pc_struct.stat_pair);
                 let entity = entity_tracker.new_pc(pkt);
+                debug_print("new pc", &entity);
                 state.on_new_pc(entity, hp, max_hp);
             }
             Pkt::NewNpc => {
                 let pkt = PKTNewNpc::new(&data)?;
-                debug_print(&pkt);
                 let (hp, max_hp) = get_current_and_max_hp(&pkt.npc_data.stat_pair);
                 let entity = entity_tracker.new_npc(pkt, max_hp);
+                debug_print("new npc", &entity);
                 state.on_new_npc(entity, hp, max_hp);
             }
             Pkt::NewNpcSummon => {
                 let pkt = PKTNewNpcSummon::new(&data)?;
-                debug_print(&pkt);
                 let (hp, max_hp) = get_current_and_max_hp(&pkt.npc_data.stat_pair);
                 let entity = entity_tracker.new_npc_summon(pkt, max_hp);
+                debug_print("new summon", &entity);
                 state.on_new_npc(entity, hp, max_hp);
             }
             Pkt::NewProjectile => {
@@ -339,9 +339,9 @@ pub fn start(window: Window<Wry>) -> Result<()> {
     Ok(())
 }
 
-fn debug_print<T: Debug>(x: &T) {
+fn debug_print<T: Debug>(desc: &str, x: &T) {
     #[cfg(debug_assertions)]
     {
-        println!("{:?}", x);
+        println!("{}: {:?}", desc, x);
     }
 }
