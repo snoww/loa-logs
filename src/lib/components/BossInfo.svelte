@@ -24,6 +24,9 @@
     let bossMaxHp: (string | number)[];
 
     $: {
+        if (boss.currentHp < 0) {
+            boss.currentHp = 0;
+        }
         bossCurrentHp = abbreviateNumberSplit(boss.currentHp);
         bossMaxHp = abbreviateNumberSplit(boss.maxHp);
 

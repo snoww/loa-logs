@@ -23,6 +23,10 @@ impl IdTracker {
     pub fn get_character_id(&self, entity_id: u64) -> Option<u64> {
         self.entity_id_to_character_id.get(&entity_id).copied()
     }
+    
+    pub fn get_local_character_id(&self, entity_id: u64) -> u64 {
+        self.entity_id_to_character_id.get(&entity_id).copied().unwrap_or_default()
+    }
 
     pub fn get_entity_id(&self, character_id: u64) -> Option<u64> {
         self.character_id_to_entity_id.get(&character_id).copied()

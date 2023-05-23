@@ -172,16 +172,16 @@ pub struct SkillStats {
 #[serde(rename_all = "camelCase")]
 pub struct IdentityArcanist {
     // timestamp, (percentage, card, card)
-    pub log: Vec<(i32, (f32, i32, i32))>,
+    pub log: Vec<(i32, (f32, u32, u32))>,
     pub average: f64,
-    pub card_draws: HashMap<i32, i32>,
+    pub card_draws: HashMap<u32, u32>,
 }
 
 #[derive(Debug, Default, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct IdentityArtistBard {
     // timestamp, (percentage, bubble)
-    pub log: Vec<(i32, (f32, i32))>,
+    pub log: Vec<(i32, (f32, u32))>,
     pub average: f64,
 }
 

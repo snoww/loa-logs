@@ -1,5 +1,6 @@
 import { estherMap } from "$lib/constants/esthers";
 import type { Entity } from "$lib/types";
+import { round2 } from "./numbers";
 
 export function isValidName(word: string) {
     return /^\p{Lu}/u.test(word);
@@ -16,7 +17,7 @@ export function formatPlayerName(player: Entity, showNames = true): string {
     if (!isValidName(playerName) || !showNames) {
         playerName = "";
         if (player.gearScore > 0) {
-            playerName += player.gearScore + " ";
+            playerName += round2(player.gearScore, 2) + " ";
         }
         if (player.class) {
             playerName += player.class;

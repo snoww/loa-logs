@@ -59,7 +59,7 @@ export interface MostDamageTakenEntity {
 
 export interface Entity {
     lastUpdate: number;
-    id: string;
+    id: number;
     npcId: number;
     name: string;
     entityType: EntityType;

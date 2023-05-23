@@ -81,86 +81,85 @@ async fn main() -> Result<()> {
                 }
             }
             tokio::task::spawn(async move {
-                // let window = Rc::new(RefCell::new(meter_window.clone()));
                 parser::start(meter_window.clone()).expect("failed to start parser");
-                // let (mut rx, _child) = Command::new_sidecar("meter-core")
-                //     .expect("failed to start `meter-core`")
-                //     .args(["--mode", &packet_mode, "--port", &port.to_string()])
-                //     .spawn()
-                //     .expect("Failed to spawn sidecar");
-                // let mut parser = Parser::new(&meter_window);
-                // let mut last_time = Instant::now();
-                // let duration = Duration::from_millis(100);
+/*                 let (mut rx, _child) = Command::new_sidecar("meter-core")
+                    .expect("failed to start `meter-core`")
+                    .args(["--mode", &packet_mode, "--port", &port.to_string()])
+                    .spawn()
+                    .expect("Failed to spawn sidecar");
+                let mut parser = Parser::new(&meter_window);
+                let mut last_time = Instant::now();
+                let duration = Duration::from_millis(100);
 
-                // let reset = Arc::new(Mutex::new(false));
-                // let pause = Arc::new(Mutex::new(false));
-                // let reset_clone = reset.clone();
-                // let pause_clone = pause.clone();
-                // let meter_window_clone = meter_window.clone();
-                // meter_window.listen_global("reset-request", move |_event| {
-                //     if let Ok(ref mut reset) = reset_clone.try_lock() {
-                //         **reset = true;
-                //         meter_window_clone.emit("reset-encounter", "").ok();
-                //     }
-                // });
-                // let meter_window_clone = meter_window.clone();
-                // meter_window.listen_global("pause-request", move |_event| {
-                //     if let Ok(ref mut pause) = pause_clone.try_lock() {
-                //         **pause = !(**pause);
-                //         meter_window_clone.emit("pause-encounter", "").ok();
-                //     }
-                // });
+                let reset = Arc::new(Mutex::new(false));
+                let pause = Arc::new(Mutex::new(false));
+                let reset_clone = reset.clone();
+                let pause_clone = pause.clone();
+                let meter_window_clone = meter_window.clone();
+                meter_window.listen_global("reset-request", move |_event| {
+                    if let Ok(ref mut reset) = reset_clone.try_lock() {
+                        **reset = true;
+                        meter_window_clone.emit("reset-encounter", "").ok();
+                    }
+                });
+                let meter_window_clone = meter_window.clone();
+                meter_window.listen_global("pause-request", move |_event| {
+                    if let Ok(ref mut pause) = pause_clone.try_lock() {
+                        **pause = !(**pause);
+                        meter_window_clone.emit("pause-encounter", "").ok();
+                    }
+                });
 
-                // while let Some(event) = rx.recv().await {
-                //     if let CommandEvent::Stdout(line) = event {
-                //         if let Ok(ref mut reset) = reset.try_lock() {
-                //             if **reset {
-                //                 parser.soft_reset();
-                //                 **reset = false;
-                //             }
-                //         }
-                //         if let Ok(ref mut pause) = pause.try_lock() {
-                //             if **pause {
-                //                 continue;
-                //             }
-                //         }
-                //         parser.parse_line(line);
-                //         // if raid end, we send regardless of window
-                //         if last_time.elapsed() >= duration || parser.raid_end {
-                //             let mut clone = parser.encounter.clone();
-                //             let window = meter_window.clone();
-                //             tauri::async_runtime::spawn(async move {
-                //                 if !clone.current_boss_name.is_empty() {
-                //                     clone.current_boss =
-                //                         clone.entities.get(&clone.current_boss_name).cloned();
-                //                     if clone.current_boss.is_none() {
-                //                         clone.current_boss_name = String::new();
-                //                     }
-                //                 }
-                //                 clone.entities.retain(|_, v| {
-                //                     (v.entity_type == EntityType::PLAYER
-                //                         || v.entity_type == EntityType::ESTHER)
-                //                         && v.skill_stats.hits > 0
-                //                         && v.max_hp > 0
-                //                 });
-                //                 if !clone.entities.is_empty() {
-                //                     window
-                //                         .emit("encounter-update", Some(clone))
-                //                         .expect("failed to emit encounter-update");
-                //                 }
-                //             });
-                //         }
-                //         last_time = Instant::now();
-                //     } else if let CommandEvent::Stderr(line) = event {
-                //         if line == "not admin" {
-                //             std::thread::sleep(Duration::from_secs(3));
-                //             let window = meter_window.clone();
-                //             window
-                //                 .emit("admin", "")
-                //                 .expect("failed to emit admin error");
-                //         }
-                //     }
-                // }
+                while let Some(event) = rx.recv().await {
+                    if let CommandEvent::Stdout(line) = event {
+                        if let Ok(ref mut reset) = reset.try_lock() {
+                            if **reset {
+                                parser.soft_reset();
+                                **reset = false;
+                            }
+                        }
+                        if let Ok(ref mut pause) = pause.try_lock() {
+                            if **pause {
+                                continue;
+                            }
+                        }
+                        parser.parse_line(line);
+                        // if raid end, we send regardless of window
+                        if last_time.elapsed() >= duration || parser.raid_end {
+                            let mut clone = parser.encounter.clone();
+                            let window = meter_window.clone();
+                            tauri::async_runtime::spawn(async move {
+                                if !clone.current_boss_name.is_empty() {
+                                    clone.current_boss =
+                                        clone.entities.get(&clone.current_boss_name).cloned();
+                                    if clone.current_boss.is_none() {
+                                        clone.current_boss_name = String::new();
+                                    }
+                                }
+                                clone.entities.retain(|_, v| {
+                                    (v.entity_type == EntityType::PLAYER
+                                        || v.entity_type == EntityType::ESTHER)
+                                        && v.skill_stats.hits > 0
+                                        && v.max_hp > 0
+                                });
+                                if !clone.entities.is_empty() {
+                                    window
+                                        .emit("encounter-update", Some(clone))
+                                        .expect("failed to emit encounter-update");
+                                }
+                            });
+                        }
+                        last_time = Instant::now();
+                    } else if let CommandEvent::Stderr(line) = event {
+                        if line == "not admin" {
+                            std::thread::sleep(Duration::from_secs(3));
+                            let window = meter_window.clone();
+                            window
+                                .emit("admin", "")
+                                .expect("failed to emit admin error");
+                        }
+                    }
+                } */
             });
 
             let _logs_window =

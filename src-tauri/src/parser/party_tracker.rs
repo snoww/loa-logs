@@ -1,6 +1,5 @@
 use crate::parser::id_tracker::IdTracker;
 use hashbrown::{HashMap, HashSet};
-use pcap_test::packets::definitions::PKTPartyInfo;
 use std::cell::RefCell;
 use std::rc::Rc;
 
@@ -55,6 +54,7 @@ impl PartyTracker {
                 .unwrap_or(0);
         }
         if character_id > 0 {
+            // println!("character_id: {}, entity_id: {}", character_id, entity_id);
             self.character_id_to_party_id.insert(character_id, party_id);
             if let Some(name) = name {
                 self.character_name_to_character_id
@@ -76,28 +76,41 @@ impl PartyTracker {
     }
 
     pub fn remove_party_mappings(&mut self, party_instance_id: u32) {
-        if let Some((_raid_id, party_instances)) = self
-            .raid_instance_to_party_instance
-            .iter()
-            .find(|(_, party_instance)| party_instance.contains(&party_instance_id))
-        {
-            let to_remove: Vec<_> = self
-                .character_id_to_party_id
-                .iter()
-                .filter_map(|(character_id, party_id)| {
-                    if party_instances.contains(party_id) {
-                        self.character_name_to_character_id
-                            .retain(|_, v| v != character_id);
-                        Some(*character_id)
-                    } else {
-                        None
-                    }
-                })
-                .collect();
+        // Get the raid_id associated with the party_instance_id
+        let raid_id = self.raid_instance_to_party_instance.iter()
+            .find_map(|(&raid_id, party_instances)| 
+                if party_instances.contains(&party_instance_id) {
+                    Some(raid_id)
+                } else {
+                    None
+                }
+            );
+            
+        // If raid_id is found, get the associated party_ids, otherwise create a HashSet with the party_instance_id
+        let party_ids = raid_id.and_then(|raid_id| self.raid_instance_to_party_instance.get(&raid_id))
+            .cloned()
+            .unwrap_or_else(|| {
+                let mut ids = HashSet::new();
+                ids.insert(party_instance_id);
+                ids
+            });
 
-            for character_id in to_remove {
-                self.character_id_to_party_id.remove(&character_id);
-            }
+        // Collect the character_ids and entity_ids associated with the party_ids into HashSet
+        let character_ids: HashSet<_> = self.character_id_to_party_id.iter()
+            .filter_map(|(&character_id, &party_id)| if party_ids.contains(&party_id) { Some(character_id) } else { None })
+            .collect();
+
+        let entity_ids: HashSet<_> = self.entity_id_to_party_id.iter()
+            .filter_map(|(&entity_id, &party_id)| if party_ids.contains(&party_id) { Some(entity_id) } else { None })
+            .collect();
+
+        // Remove the entries from the HashMaps
+        for character_id in character_ids {
+            self.character_id_to_party_id.remove(&character_id);
+            self.character_name_to_character_id.retain(|_, c_id| c_id != &character_id);
+        }
+        for entity_id in entity_ids {
+            self.entity_id_to_party_id.remove(&entity_id);
         }
     }
 

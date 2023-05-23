@@ -113,45 +113,43 @@ impl StatusTracker {
             Some(ser) => ser,
             None => return,
         };
-
+        
         if let Some(se) = ser.get_mut(&instance_id) {
             if let Some(expire_at) = se.expire_at {
-                let time = Utc.timestamp_millis_opt(timestamp as i64).unwrap();
-                println!("updating status duration, old: {:?}", expire_at);
-                se.expire_at = Some(time);
+                let extension_ms = (timestamp - se.end_tick) as i64;
+                se.expire_at = Some(expire_at + Duration::milliseconds(extension_ms));
                 se.end_tick = timestamp;
-                println!("new: {:?}, end_tick: {:?}", se.expire_at, se.end_tick);
             }
         }
     }
 
-/*    pub fn sync_status_effect(&mut self, instance_id: u32, character_id: u64, object_id: u64, value: u32, local_character_id: u64) {
-        let use_party = self.should_use_party_status_effect(character_id, local_character_id);
-        let (target_id, sett) = if use_party {
-            (character_id, StatusEffectTargetType::Party)
-        } else {
-            (object_id, StatusEffectTargetType::Local)
-        };
-        if target_id == 0 {
-            return;
-        }
-        let registry = match sett {
-            StatusEffectTargetType::Local => &mut self.local_status_effect_registry,
-            StatusEffectTargetType::Party => &mut self.party_status_effect_registry,
-        };
+    /*    pub fn sync_status_effect(&mut self, instance_id: u32, character_id: u64, object_id: u64, value: u32, local_character_id: u64) {
+            let use_party = self.should_use_party_status_effect(character_id, local_character_id);
+            let (target_id, sett) = if use_party {
+                (character_id, StatusEffectTargetType::Party)
+            } else {
+                (object_id, StatusEffectTargetType::Local)
+            };
+            if target_id == 0 {
+                return;
+            }
+            let registry = match sett {
+                StatusEffectTargetType::Local => &mut self.local_status_effect_registry,
+                StatusEffectTargetType::Party => &mut self.party_status_effect_registry,
+            };
 
-        let ser = match registry.get_mut(&target_id) {
-            Some(ser) => ser,
-            None => return,
-        };
+            let ser = match registry.get_mut(&target_id) {
+                Some(ser) => ser,
+                None => return,
+            };
 
-        let se = match ser.get_mut(&instance_id) {
-            Some(se) => se,
-            None => return,
-        };
+            let se = match ser.get_mut(&instance_id) {
+                Some(se) => se,
+                None => return,
+            };
 
-        se.value = value;
-    }*/
+            se.value = value;
+        }*/
 
     pub fn get_status_effects(
         &mut self,
@@ -159,17 +157,18 @@ impl StatusTracker {
         target_entity: &Entity,
         local_character_id: u64,
     ) -> (Vec<(u32, u64)>, Vec<(u32, u64)>) {
-        let (use_party_for_source) = if source_entity.entity_type == EntityType::PLAYER {
-            self.should_use_party_status_effect(source_entity.id, local_character_id)
+        let use_party_for_source = if source_entity.entity_type == EntityType::PLAYER {
+            self.should_use_party_status_effect(source_entity.character_id, local_character_id)
         } else {
             false
         };
-
+        // println!("use_party_for_source: {:?}", use_party_for_source);
         let (source_id, source_type) = if use_party_for_source {
-            (source_entity.id, StatusEffectTargetType::Party)
+            (source_entity.character_id, StatusEffectTargetType::Party)
         } else {
             (source_entity.id, StatusEffectTargetType::Local)
         };
+        // println!("source_id: {:?}, source_type: {:?}", source_id, source_type);
 
         let source_effects = self.actually_get_status_effects(source_id, source_type);
         let status_effects_on_source: Vec<(u32, u64)> = source_effects
@@ -179,7 +178,7 @@ impl StatusTracker {
         // println!("status_effects_on_source: {:?}", status_effects_on_source);
 
         let use_party_for_target = if source_entity.entity_type == EntityType::PLAYER {
-            self.should_use_party_status_effect(source_entity.id, local_character_id)
+            self.should_use_party_status_effect(target_entity.character_id, local_character_id)
         } else {
             false
         };
@@ -232,6 +231,7 @@ impl StatusTracker {
             StatusEffectTargetType::Party => &mut self.party_status_effect_registry,
         };
 
+        // println!("registry: {:?}", registry);
         let ser = match registry.get_mut(&target_id) {
             Some(ser) => ser,
             None => return Vec::new(),
@@ -239,7 +239,7 @@ impl StatusTracker {
         let timestamp = Utc::now();
         ser.retain(|_, se| {
             se.expire_at
-                .map_or(false, |expire_at| expire_at >= timestamp)
+                .map_or(true, |expire_at| expire_at > timestamp)
         });
         ser.values().cloned().collect()
     }
@@ -254,26 +254,27 @@ impl StatusTracker {
             StatusEffectTargetType::Local => &mut self.local_status_effect_registry,
             StatusEffectTargetType::Party => &mut self.party_status_effect_registry,
         };
-
+        // println!("registry: {:?}", registry);
         let ser = match registry.get_mut(&target_id) {
             Some(ser) => ser,
             None => return Vec::new(),
         };
 
         let timestamp = Utc::now();
+        // println!("ser before: {:?}", ser);
         ser.retain(|_, se| {
             se.expire_at
-                .map_or(false, |expire_at| expire_at >= timestamp)
+                .map_or(true, |expire_at| expire_at > timestamp)
         });
         let party_tracker = self.party_tracker.borrow();
         ser.values()
             .filter(|x| {
                 is_valid_for_raid(x)
                     || &party_id
-                        == party_tracker
-                            .entity_id_to_party_id
-                            .get(&x.source_id)
-                            .unwrap_or(&0)
+                    == party_tracker
+                    .entity_id_to_party_id
+                    .get(&x.source_id)
+                    .unwrap_or(&0)
             })
             .cloned()
             .collect()
@@ -284,16 +285,17 @@ impl StatusTracker {
         let local_player_party_id = party_tracker
             .character_id_to_party_id
             .get(&local_character_id);
-        let affected_player_party_id = party_tracker.character_id_to_party_id.get(&character_id);
+        let affected_player_party_id = party_tracker
+            .character_id_to_party_id
+            .get(&character_id);
+        // println!("party character_id_to_party_id: {:?}", party_tracker.character_id_to_party_id);
+        // println!("character_id: {}, local_character_id: {}", character_id, local_character_id);
+        // println!(
+        //     "local_player_party_id: {:?}, affected_player_party_id: {:?}",
+        //     local_player_party_id, affected_player_party_id);
 
-        match (local_player_party_id, affected_player_party_id) {
-            (Some(local_id), Some(affected_id)) => {
-                if character_id == local_character_id {
-                    false
-                } else {
-                    local_id == affected_id
-                }
-            }
+        match (local_player_party_id, affected_player_party_id, character_id == local_character_id) {
+            (Some(local_party), Some(affected_party), false) => local_party == affected_party,
             _ => false,
         }
     }

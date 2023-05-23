@@ -24,9 +24,12 @@ export function round(num: number, decimalPlaces = 1): string {
         return "100";
     }
     return r;
-    // const p = Math.pow(10, decimalPlaces || 0);
-    // const n = (num * p) * (1 + Number.EPSILON);
-    // return Math.round(n) / p;
+}
+
+export function round2(num: number, decimalPlaces = 1): number {
+    const p = Math.pow(10, decimalPlaces || 0);
+    const n = (num * p) * (1 + Number.EPSILON);
+    return Math.round(n) / p;
 }
 
 export function abbreviateNumber(n: number) {

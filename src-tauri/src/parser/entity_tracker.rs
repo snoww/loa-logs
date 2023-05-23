@@ -19,6 +19,8 @@ pub struct EntityTracker {
     pub entities: HashMap<u64, Entity>,
 
     pub local_player_id: u64,
+    // only using this to track migration_execute packet
+    local_character_id: u64,
 }
 
 impl EntityTracker {
@@ -33,6 +35,7 @@ impl EntityTracker {
             party_tracker,
             entities: HashMap::new(),
             local_player_id: 0,
+            local_character_id: 0,
         }
     }
 
@@ -54,7 +57,7 @@ impl EntityTracker {
                 name: "You".to_string(),
                 class_id: 0,
                 gear_level: 0.0,
-                character_id: 0,
+                character_id: self.local_character_id,
                 ..Default::default()
             },
         };
@@ -85,7 +88,7 @@ impl EntityTracker {
             entity_type: PLAYER,
             name: pkt.name,
             class_id: pkt.class_id as u32,
-            gear_level: f32::trunc(pkt.gear_level * 100.) / 100.,
+            gear_level: truncate_gear_level(pkt.gear_level),
             character_id: pkt.character_id,
             ..Default::default()
         };
@@ -110,15 +113,30 @@ impl EntityTracker {
     }
 
     pub fn migration_execute(&mut self, pkt: PKTMigrationExecute) {
-        if self.local_player_id != 0 {
+        if self.id_tracker.borrow().get_local_character_id(self.local_player_id) != 0 {
             return;
         }
-        self.entities.entry(self.local_player_id).and_modify(|e| {
-            if pkt.account_character_id1 < pkt.account_character_id2 {
-                e.character_id = pkt.account_character_id1;
-            } else {
-                e.character_id = pkt.account_character_id2;
-            }
+
+        let char_id = if pkt.account_character_id1 < pkt.account_character_id2 {
+            pkt.account_character_id1
+        } else {
+            pkt.account_character_id2
+        };
+
+        if self.local_player_id == 0 {
+            self.local_character_id = char_id;
+            return;
+        }
+
+        self.entities.entry(self.local_player_id)
+            .and_modify(|e| {
+                e.character_id = char_id;
+            })
+            .or_insert_with(|| Entity {
+            entity_type: PLAYER,
+            name: "You".to_string(),
+            character_id: char_id,
+            ..Default::default()
         });
     }
 
@@ -128,12 +146,12 @@ impl EntityTracker {
             entity_type: PLAYER,
             name: pkt.pc_struct.name.clone(),
             class_id: pkt.pc_struct.class_id as u32,
-            gear_level: f32::trunc(pkt.pc_struct.gear_level * 100.) / 100.,
+            gear_level: truncate_gear_level(pkt.pc_struct.gear_level),
             character_id: pkt.pc_struct.character_id,
             ..Default::default()
         };
         self.entities.insert(entity.id, entity.clone());
-        let old_entity_id = self.id_tracker.borrow_mut().get_entity_id(pkt.pc_struct.character_id);
+        let old_entity_id = self.id_tracker.borrow().get_entity_id(pkt.pc_struct.character_id);
         if let Some(old_entity_id) = old_entity_id {
             self.party_tracker.borrow_mut().change_entity_id(old_entity_id, entity.id);
         }
@@ -143,12 +161,14 @@ impl EntityTracker {
         self.party_tracker
             .borrow_mut()
             .complete_entry(pkt.pc_struct.character_id, pkt.pc_struct.player_id);
-        self.status_tracker.borrow_mut().new_pc(&pkt, self.local_player_id);
+        // println!("party status: {:?}", self.party_tracker.borrow().character_id_to_party_id);
+        let local_character_id = self.id_tracker.borrow().get_local_character_id(self.local_player_id);
+        self.status_tracker.borrow_mut().new_pc(&pkt, local_character_id);
         entity
     }
 
-    pub fn new_npc(&mut self, pkt: PKTNewNpc) -> Entity {
-        let (entity_type, name) = get_npc_entity_type_and_name(&pkt.npc_data);
+    pub fn new_npc(&mut self, pkt: PKTNewNpc, max_hp: i64) -> Entity {
+        let (entity_type, name) = get_npc_entity_type_and_name(&pkt.npc_data, max_hp);
         let npc = Entity {
             id: pkt.npc_data.object_id,
             entity_type,
@@ -162,8 +182,8 @@ impl EntityTracker {
         npc
     }
 
-    pub fn new_npc_summon(&mut self, pkt: PKTNewNpcSummon) -> Entity {
-        let (_entity_type, name) = get_npc_entity_type_and_name(&pkt.npc_data);
+    pub fn new_npc_summon(&mut self, pkt: PKTNewNpcSummon, max_hp: i64) -> Entity {
+        let (_entity_type, name) = get_npc_entity_type_and_name(&pkt.npc_data, max_hp);
         let npc = Entity {
             id: pkt.npc_data.object_id,
             entity_type: SUMMON,
@@ -185,17 +205,17 @@ impl EntityTracker {
             } else {
                 sed.source_id
             };
-            if let Some(entity) = self.entities.get(&source_id) {
-                let status_effect = build_status_effect(
-                    sed,
-                    pkt.character_id,
-                    entity.id,
-                    StatusEffectTargetType::Party,
-                );
-                self.status_tracker
-                    .borrow_mut()
-                    .register_status_effect(status_effect);
-            }
+            let entity = self.get_source_entity(source_id);
+            // println!("entity: {:?}", entity);
+            let status_effect = build_status_effect(
+                sed,
+                pkt.character_id,
+                entity.id,
+                StatusEffectTargetType::Party,
+            );
+            self.status_tracker
+                .borrow_mut()
+                .register_status_effect(status_effect);
         }
     }
 
@@ -223,10 +243,23 @@ impl EntityTracker {
     }
 
     pub fn party_info(&mut self, pkt: PKTPartyInfo) {
-        let local_player = self.entities.get(&self.local_player_id).unwrap();
+        let local_player = match self.entities.get(&self.local_player_id) {
+            Some(local_player) => local_player,
+            None => return,
+        };
+
         if pkt.member_datas.len() == 1 {
             if let Some(first) = pkt.member_datas.get(0) {
                 if first.name == local_player.name {
+                    if let Some(local_player) = self.entities.get_mut(&self.local_player_id) {
+                        local_player.class_id = first.class_id as u32;
+                        local_player.gear_level = truncate_gear_level(first.gear_level);
+                        local_player.character_id = first.character_id;
+                        self.id_tracker.borrow_mut().add_mapping(
+                            first.character_id,
+                            self.local_player_id
+                        );
+                    }
                     self.party_tracker
                         .borrow_mut()
                         .remove(pkt.party_instance_id, first.name.to_string());
@@ -235,27 +268,40 @@ impl EntityTracker {
             }
         }
 
-        let local_player_id = local_player.character_id;
+        let local_player_name = local_player.name.clone();
+        let local_character_id = local_player.character_id;
         self.party_tracker
             .borrow_mut()
             .remove_party_mappings(pkt.party_instance_id);
         for member in pkt.member_datas {
-            if member.character_id == local_player_id {
-                self.party_tracker
-                    .borrow_mut()
-                    .set_name(member.name.clone());
+            if member.name == local_player_name || member.character_id == local_character_id {
+                if let Some(local_player) = self.entities.get_mut(&self.local_player_id) {
+                    local_player.class_id = member.class_id as u32;
+                    local_player.gear_level = truncate_gear_level(member.gear_level);
+                    if member.character_id == local_character_id {
+                        self.party_tracker
+                            .borrow_mut()
+                            .set_name(member.name.clone());
+                        local_player.name = member.name.clone();
+                    } else {
+                        local_player.character_id = member.character_id;
+                        self.id_tracker.borrow_mut().add_mapping(
+                            member.character_id,
+                            self.local_player_id
+                        );
+                    }
+                }
             }
-            let entity = self
+            let entity_id = self
                 .id_tracker
-                .borrow_mut()
+                .borrow()
                 .get_entity_id(member.character_id);
 
-            if let Some(entity_id) = entity
+            if let Some(entity_id) = entity_id
             {
                 if let Some(entity) = self.entities.get_mut(&entity_id) {
                     if entity.entity_type == PLAYER && entity.name == member.name {
-                        entity.gear_level = member.gear_level;
-                        entity.name = member.name.to_string();
+                        entity.gear_level = truncate_gear_level(member.gear_level);
                         entity.class_id = member.class_id as u32;
                     }
                 }
@@ -265,7 +311,7 @@ impl EntityTracker {
                     pkt.party_instance_id,
                     member.character_id,
                     entity_id,
-                    Some(member.name.to_string()),
+                    Some(member.name.clone()),
                 );
             } else {
                 self.party_tracker.borrow_mut().add(
@@ -273,7 +319,7 @@ impl EntityTracker {
                     pkt.party_instance_id,
                     member.character_id,
                     0,
-                    Some(member.name.to_string()),
+                    Some(member.name.clone()),
                 );
             }
         }
@@ -383,7 +429,7 @@ pub fn get_current_and_max_hp(stat_pair: &Vec<StatPair>) -> (i64, i64) {
     (hp, max_hp)
 }
 
-fn get_npc_entity_type_and_name(npc: &NpcData) -> (EntityType, String) {
+fn get_npc_entity_type_and_name(npc: &NpcData, max_hp: i64) -> (EntityType, String) {
     if let Some(esther) = get_esther_from_npc_id(npc.type_id) {
         return (ESTHER, esther.name);
     }
@@ -393,9 +439,9 @@ fn get_npc_entity_type_and_name(npc: &NpcData) -> (EntityType, String) {
             || npc_info.grade == "raid"
             || npc_info.grade == "epic_raid"
             || npc_info.grade == "commander")
-            // && npc.max_hp > 10_000 // todo
+            && max_hp > 10_000
             && !npc_info.name.contains('_')
-            && npc_info.name.chars().all(|c| c.is_alphabetic() || c.is_ascii())
+            && npc_info.name.chars().all(|c| c.is_ascii())
         {
             (BOSS, npc_info.name.clone())
         } else {
@@ -419,6 +465,10 @@ fn get_skill_class_id(skill_id: u32) -> u32 {
     } else {
         0
     }
+}
+
+fn truncate_gear_level(gear_level: f32) -> f32 {
+    f32::trunc(gear_level * 100.) / 100.
 }
 
 #[derive(Debug, Default, Clone)]

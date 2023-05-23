@@ -18,7 +18,7 @@ pub struct Parser {
     pub window: Window<Wry>,
     pub encounter: Encounter,
     pub raid_end: bool,
-    saved: bool,
+    pub saved: bool,
 
     prev_stagger: i32,
 
@@ -46,68 +46,6 @@ impl Parser {
             stagger_intervals: Vec::new(),
         }
     }
-
-    // pub fn parse_line(&mut self, line: String) {
-    //     #[cfg(debug_assertions)]
-    //     {
-    //         println!("{}", line);
-    //     }
-    //
-    //     if line.is_empty() {
-    //         return;
-    //     }
-    //
-    //     let line_split: Vec<&str> = line.trim().split('|').collect();
-    //     if line_split.len() < 2 || line_split[0].is_empty() {
-    //         return;
-    //     }
-    //
-    //     let log_type = match line_split[0].parse::<i32>() {
-    //         Ok(t) => t,
-    //         Err(_) => {
-    //             println!("Could not parse log type");
-    //             return;
-    //         }
-    //     };
-    //
-    //     let timestamp = match line_split[1].parse::<DateTime<Utc>>() {
-    //         Ok(t) => t.timestamp_millis(),
-    //         Err(_) => {
-    //             println!("Could not parse timestamp");
-    //             return;
-    //         }
-    //     };
-    //
-    //     // if there is no id associated with the log line, we can ignore it. i think.
-    //     if line_split[2] == "0" && log_type != 2 {
-    //         return;
-    //     }
-    //
-    //     // we reset our encounter only when we receive next incoming line
-    //     if self.raid_end {
-    //         self.raid_end = false;
-    //         self.soft_reset();
-    //         self.saved = false;
-    //     }
-    //
-    //     match log_type {
-    //         0 => self.on_message(timestamp, &line_split),
-    //         1 => self.on_init_env(timestamp, &line_split),
-    //         2 => self.on_phase_transition(&line_split),
-    //         3 => self.on_new_pc(timestamp, &line_split),
-    //         4 => self.on_new_npc(timestamp, &line_split),
-    //         5 => self.on_death(timestamp, &line_split),
-    //         6 => self.on_skill_start(timestamp, &line_split),
-    //         7 => self.on_skill_stage(&line_split),
-    //         8 => self.on_damage(timestamp, &line_split),
-    //         9 => self.on_heal(&line_split),
-    //         10 => self.on_buff(&line_split),
-    //         12 => self.on_counterattack(&line_split),
-    //         20 => self.on_identity_gain(timestamp, &line_split),
-    //         21 => self.on_stagger_change(timestamp, &line_split),
-    //         _ => {}
-    //     }
-    // }
 
     // reset everything except local player
     fn reset(&mut self, clone: &Encounter) {
@@ -191,7 +129,7 @@ impl Parser {
         println!("parser init env: {:?}", self.encounter.entities.get(&self.encounter.local_player));
 
         if !self.saved && !self.encounter.current_boss_name.is_empty() {
-            // self.save_to_db();
+            self.save_to_db();
         }
 
         self.encounter.entities.retain(|_, e| {
@@ -213,7 +151,7 @@ impl Parser {
             .expect("failed to emit phase-transition");
 
         if phase_code == 0 || phase_code == 2 {
-            // self.save_to_db();
+            self.save_to_db();
             self.raid_end = true;
             self.saved = true;
         }
@@ -232,7 +170,7 @@ impl Parser {
     }
 
     pub fn on_new_pc(&mut self, entity: Entity, hp: i64, max_hp: i64) {
-        if let Some(player) = self.encounter.entities.get_mut(&entity.name.to_string()) {
+        if let Some(player) = self.encounter.entities.get_mut(&entity.name) {
             player.id = entity.id;
             player.class_id = entity.class_id;
             player.class = get_class_from_id(entity.class_id);
@@ -485,9 +423,9 @@ impl Parser {
 
         if self.encounter.fight_start == 0 {
             self.encounter.fight_start = timestamp;
-            // self.window
-            //     .emit("raid-start", timestamp)
-            //     .expect("failed to emit raid-start");
+            self.window
+                .emit("raid-start", timestamp)
+                .expect("failed to emit raid-start");
         }
 
         target_entity.current_hp = target_current_hp;
@@ -497,9 +435,9 @@ impl Parser {
             damage += target_current_hp;
         }
 
+        let mut skill_id = if skill_id != 0 { skill_id } else { skill_effect_id };
         let has_skill = source_entity.skills.contains_key(&skill_id);
         let skill_name = get_skill_name(skill_id);
-        let mut skill_id = skill_id;
         if !has_skill {
             if let Some(skill) = source_entity
                 .skills
@@ -537,14 +475,8 @@ impl Parser {
         let skill = source_entity.skills.get_mut(&skill_id).unwrap();
 
         let is_crit = hit_flag == HitFlag::CRITICAL || hit_flag == HitFlag::DOT_CRITICAL;
-        let directional_mask = match SKILL_EFFECT_DATA.get(&skill_id) {
-            Some(mask) => mask.directional_mask - 1,
-            None => -1,
-        };
-        let is_back_atk = (directional_mask == 0 || directional_mask == 2)
-            && hit_option == HitOption::BACK_ATTACK;
-        let is_front_atk = (directional_mask == 1 || directional_mask == 2)
-            && hit_option == HitOption::FRONTAL_ATTACK;
+        let is_back_atk = hit_option == HitOption::BACK_ATTACK;
+        let is_front_atk = hit_option == HitOption::FRONTAL_ATTACK;
 
         skill.total_damage += damage;
         if damage > skill.max_damage {
@@ -797,87 +729,64 @@ impl Parser {
                 self.stagger_log
                     .push((relative_timestamp as i32, stagger_percent));
 
-                if max_stagger as i32 > self.encounter.encounter_damage_stats.max_stagger {
+                if max_stagger > self.encounter.encounter_damage_stats.max_stagger {
                     self.encounter.encounter_damage_stats.max_stagger = max_stagger;
                 }
             }
         }
     }
 
-    // fn save_to_db(&self) {
-    //     if self.encounter.fight_start == 0
-    //         || self.encounter.current_boss_name.is_empty()
-    //         || !self
-    //         .encounter
-    //         .entities
-    //         .contains_key(&self.encounter.current_boss_name)
-    //         || !self.encounter.entities.values().any(|e| {
-    //         e.entity_type == EntityType::PLAYER && e.skill_stats.hits > 1 && e.max_hp > 0
-    //     })
-    //     {
-    //         return;
-    //     }
-    //     let mut encounter = self.encounter.clone();
-    //     let mut path = self
-    //         .window
-    //         .app_handle()
-    //         .path_resolver()
-    //         .resource_dir()
-    //         .expect("could not get resource dir");
-    //     path.push("encounters.db");
-    //     let prev_stagger = self.prev_stagger;
-    //
-    //     let damage_log = self.damage_log.clone();
-    //     let identity_log = self.identity_log.clone();
-    //     let cast_log = self.cast_log.clone();
-    //     let stagger_log = self.stagger_log.clone();
-    //     let stagger_intervals = self.stagger_intervals.clone();
-    //
-    //     task::spawn(async move {
-    //         println!("saving to db - {}", encounter.current_boss_name);
-    //
-    //         let mut conn = Connection::open(path).expect("failed to open database");
-    //         let tx = conn.transaction().expect("failed to create transaction");
-    //
-    //         insert_data(
-    //             &tx,
-    //             &mut encounter,
-    //             prev_stagger,
-    //             damage_log,
-    //             identity_log,
-    //             cast_log,
-    //             stagger_log,
-    //             stagger_intervals,
-    //         );
-    //
-    //         tx.commit().expect("failed to commit transaction");
-    //         println!("saved to db");
-    //     });
-    // }
+    fn save_to_db(&self) {
+        if self.encounter.fight_start == 0
+            || self.encounter.current_boss_name.is_empty()
+            || !self
+            .encounter
+            .entities
+            .contains_key(&self.encounter.current_boss_name)
+            || !self.encounter.entities.values().any(|e| {
+            e.entity_type == EntityType::PLAYER && e.skill_stats.hits > 1 && e.max_hp > 0
+        })
+        {
+            return;
+        }
+        let mut encounter = self.encounter.clone();
+        let mut path = self
+            .window
+            .app_handle()
+            .path_resolver()
+            .resource_dir()
+            .expect("could not get resource dir");
+        path.push("encounters.db");
+        let prev_stagger = self.prev_stagger;
+    
+        let damage_log = self.damage_log.clone();
+        let identity_log = self.identity_log.clone();
+        let cast_log = self.cast_log.clone();
+        let stagger_log = self.stagger_log.clone();
+        let stagger_intervals = self.stagger_intervals.clone();
+    
+        task::spawn(async move {
+            println!("saving to db - {}", encounter.current_boss_name);
+    
+            let mut conn = Connection::open(path).expect("failed to open database");
+            let tx = conn.transaction().expect("failed to create transaction");
+    
+            insert_data(
+                &tx,
+                &mut encounter,
+                prev_stagger,
+                damage_log,
+                identity_log,
+                cast_log,
+                stagger_log,
+                stagger_intervals,
+            );
+    
+            tx.commit().expect("failed to commit transaction");
+            println!("saved to db");
+        });
+    }
 }
-
-// fn get_npc_entity_type(npc: &LogNewNpc) -> EntityType {
-//     if let Some(_esther) = get_esther_from_npc_id(npc.npc_id) {
-//         return EntityType::ESTHER;
-//     }
-//
-//     if let Some((_, npc_info)) = NPC_DATA.get_key_value(&npc.npc_id) {
-//         if (npc_info.grade == "boss"
-//             || npc_info.grade == "raid"
-//             || npc_info.grade == "epic_raid"
-//             || npc_info.grade == "commander")
-//             && npc.max_hp > 10_000
-//             && !npc.name.contains('_')
-//             && npc.name.chars().all(|c| c.is_alphabetic() || c.is_ascii())
-//         {
-//             EntityType::BOSS
-//         } else {
-//             EntityType::NPC
-//         }
-//     } else {
-//         EntityType::NPC
-//     }
-// }
 
 fn encounter_entity_from_entity(entity: &Entity) -> EncounterEntity {
     EncounterEntity {
@@ -1205,12 +1114,10 @@ fn get_skill_name_and_icon(
             } else {
                 (skill.name.to_string(), skill.icon.to_string())
             }
+        } else if let Some(skill) = SKILL_DATA.get(&(skill_id - (skill_id % 10))) {
+            (skill.name.to_string(), skill.icon.to_string())
         } else {
-            if let Some(skill) = SKILL_DATA.get(&(skill_id - (skill_id % 10))) {
-                (skill.name.to_string(), skill.icon.to_string())
-            } else {
-                (skill_name, "".to_string())
-            }
+            (skill_name, "".to_string())
         };
     }
 }
@@ -1229,13 +1136,13 @@ fn insert_data(
     encounter: &mut Encounter,
     prev_stagger: i32,
     damage_log: HashMap<String, Vec<(i64, i64)>>,
-    identity_log: HashMap<String, Vec<(i64, (i32, i32, i32))>>,
+    identity_log: HashMap<String, Vec<(i64, (u32, u32, u32))>>,
     cast_log: HashMap<String, HashMap<i32, Vec<i32>>>,
     stagger_log: Vec<(i32, f32)>,
     mut stagger_intervals: Vec<(i32, i32)>,
 ) {
     let mut encounter_stmt = tx
-        .prepare(
+        .prepare_cached(
             "
     INSERT INTO encounter (
         last_combat_packet,
@@ -1323,7 +1230,7 @@ fn insert_data(
     let last_insert_id = tx.last_insert_rowid();
 
     let mut entity_stmt = tx
-        .prepare(
+        .prepare_cached(
             "
     INSERT INTO entity (
         name,
@@ -1339,8 +1246,7 @@ fn insert_data(
         skills,
         damage_stats,
         skill_stats,
-        last_update
-    ) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14)",
+    ) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13)",
         )
         .expect("failed to prepare entity statement");
 
@@ -1398,8 +1304,8 @@ fn insert_data(
                 };
                 let stats: String = match entity.class.as_str() {
                     "Arcanist" => {
-                        let mut cards: HashMap<i32, i32> = HashMap::new();
-                        let mut log: Vec<(i32, (f32, i32, i32))> = Vec::new();
+                        let mut cards: HashMap<u32, u32> = HashMap::new();
+                        let mut log: Vec<(i32, (f32, u32, u32))> = Vec::new();
                         for i in 1..data.len() {
                             let (t1, i1) = data[i - 1];
                             let (t2, i2) = data[i];
@@ -1418,7 +1324,7 @@ fn insert_data(
 
                             let relative_time = ((t2 - fight_start) as f32 / 1000.0) as i32;
                             // calculate percentage, round to 2 decimal places
-                            let percentage = if i2.0 >= max as i32 {
+                            let percentage = if i2.0 >= max as u32 {
                                 100.0
                             } else {
                                 (((i2.0 as f32 / max) * 100.0) * 100.0).round() / 100.0
@@ -1438,7 +1344,7 @@ fn insert_data(
                         serde_json::to_string(&identity_stats).unwrap()
                     }
                     "Artist" | "Bard" => {
-                        let mut log: Vec<(i32, (f32, i32))> = Vec::new();
+                        let mut log: Vec<(i32, (f32, u32))> = Vec::new();
 
                         for i in 1..data.len() {
                             let (t1, i1) = data[i - 1];
