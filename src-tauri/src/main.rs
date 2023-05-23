@@ -8,10 +8,7 @@ use std::{
     fs::File,
     io::{Read, Write},
     path::{Path, PathBuf},
-    rc::Rc,
     str::FromStr,
-    sync::{Arc, Mutex},
-    time::{Duration, Instant},
 };
 
 use anyhow::Result;
@@ -20,7 +17,7 @@ use parser::models::*;
 
 use rusqlite::{params, Connection};
 use tauri::{
-    api::process::{Command, CommandEvent},
+    api::process::{Command},
     CustomMenuItem, Manager, SystemTray, SystemTrayEvent, SystemTrayMenu, SystemTrayMenuItem,
     WindowBuilder,
 };

@@ -2,8 +2,8 @@ use std::cmp::{max, Ordering};
 
 use crate::parser::entity_tracker::Entity;
 use crate::parser::models::*;
-use chrono::{DateTime, Utc};
-use hashbrown::{HashMap, HashSet};
+use chrono::{Utc};
+use hashbrown::{HashMap};
 use pcap_test::packets::definitions::{PKTIdentityGaugeChangeNotify, PKTParalyzationStateNotify};
 use rusqlite::{params, Connection, Transaction};
 use serde_json::json;
@@ -808,7 +808,7 @@ fn is_support_class_id(class_id: u32) -> bool {
     class_id == 105 || class_id == 204 || class_id == 602
 }
 
-fn is_battle_item(skill_effect_id: i32, item_type: &str) -> bool {
+fn is_battle_item(skill_effect_id: i32, _item_type: &str) -> bool {
     if let Some(item) = SKILL_EFFECT_DATA.get(&skill_effect_id) {
         if let Some(category) = item.item_category.as_ref() {
             return category == "useup_battle_item_common_attack";

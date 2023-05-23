@@ -3,7 +3,7 @@ use crate::parser::models::EntityType::*;
 use crate::parser::models::{EntityType, Esther, ESTHER_DATA, NPC_DATA, SKILL_DATA, STAT_TYPE_MAP};
 use crate::parser::party_tracker::PartyTracker;
 use crate::parser::status_tracker::{build_status_effect, StatusEffectTargetType, StatusTracker};
-use chrono::Utc;
+
 use hashbrown::HashMap;
 use pcap_test::packets::common::StatPair;
 use pcap_test::packets::definitions::*;
