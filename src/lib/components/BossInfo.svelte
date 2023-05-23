@@ -9,6 +9,7 @@
 
     export let boss: Entity;
 
+    let bossHp = 0;
     let bossHPBars = 0;
     let bossCurrentBars = 0;
     let bossPreviousBars = 0;
@@ -25,9 +26,11 @@
 
     $: {
         if (boss.currentHp < 0) {
-            boss.currentHp = 0;
+            bossHp = 0;
+        } else {
+            bossHp = boss.currentHp;
         }
-        bossCurrentHp = abbreviateNumberSplit(boss.currentHp);
+        bossCurrentHp = abbreviateNumberSplit(bossHp);
         bossMaxHp = abbreviateNumberSplit(boss.maxHp);
 
         if (Object.hasOwn(bosses, boss.name)) {
@@ -36,13 +39,13 @@
             bossHPBars = 0;
         }
 
-        bossCurrentPercentage = (boss.currentHp / boss.maxHp) * 100;
+        bossCurrentPercentage = (bossHp / boss.maxHp) * 100;
         if (bossHPBars !== 0 && !boss.isDead) {
-            if (boss.currentHp === boss.maxHp) {
+            if (bossHp === boss.maxHp) {
                 bossCurrentBars = bossHPBars;
                 bossPreviousBars = bossCurrentBars;
             } else {
-                bossCurrentBars = Math.ceil((boss.currentHp / boss.maxHp) * bossHPBars);
+                bossCurrentBars = Math.ceil((bossHp / boss.maxHp) * bossHPBars);
             }
             if (bossPreviousBars === 0) {
                 bossPreviousBars = bossCurrentBars;
@@ -55,17 +58,16 @@
                     bossHpBarColors[(colorIndex + 1) % bossHpBarColors.length]
                 ];
             }
-            if (boss.currentHp !== boss.maxHp) {
+            if (bossHp !== boss.maxHp) {
                 let bossHpPerBar = boss.maxHp / bossHPBars;
-                tweenBossHpBar.set(((boss.currentHp % bossHpPerBar) / bossHpPerBar) * 100);
+                tweenBossHpBar.set(((bossHp % bossHpPerBar) / bossHpPerBar) * 100);
             }
         } else if (!boss.isDead) {
             tweenBossHpBar.set(bossCurrentPercentage);
         }
 
-        if (boss.isDead || boss.currentHp < 0) {
+        if (boss.isDead || bossHp < 0) {
             colorIndex = 0;
-            boss.currentHp = 0;
             bossCurrentPercentage = 0;
             bossCurrentBars = 0;
             tweenBossHpBar.set(0);
@@ -107,7 +109,7 @@
             </div>
         </div>
         {#if bossHPBars !== 0}
-            {#if boss.currentHp <= 0}
+            {#if bossHp <= 0}
                 <div class="absolute inset-y-0 right-0 h-7 pb-px pr-2">
                     <div class="flex h-7 items-center justify-center">Dead</div>
                 </div>

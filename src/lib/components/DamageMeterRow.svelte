@@ -32,6 +32,7 @@
     let dps: (string | number)[];
     let name: string;
     let damagePercentage: string;
+    let damagePercentageRaw: number;
     let deadFor: string;
 
     $: {
@@ -40,7 +41,8 @@
             color = classColors[entity.class].color;
         }
         damageDealt = abbreviateNumberSplit(entity.damageStats.damageDealt);
-        damagePercentage = ((entity.damageStats.damageDealt / totalDamageDealt) * 100).toFixed(1);
+        damagePercentageRaw = (entity.damageStats.damageDealt / totalDamageDealt) * 100;
+        damagePercentage = damagePercentageRaw.toFixed(1);
 
         if (duration > 0) {
             dps = abbreviateNumberSplit(entity.damageStats.damageDealt / (duration / 1000));
@@ -97,7 +99,7 @@
         {dps[0]}<span class="text-3xs text-gray-300">{dps[1]}</span>
     </td>
 {/if}
-{#if damagePercentage !== "100.0" && $settings.meter.damagePercent}
+{#if damagePercentageRaw < 100 && $settings.meter.damagePercent}
     <td class="px-1 text-center">
         {damagePercentage}<span class="text-xs text-gray-300">%</span>
     </td>
