@@ -30,7 +30,7 @@
             color = classColors[player.class].color;
         }
 
-        playerName = formatPlayerName(player, $settings.general.showNames);
+        playerName = formatPlayerName(player, $settings.general.showNames, $settings.general.showGearScore);
 
         if (groupedSynergies.size > 0) {
             synergyPercentageDetails = [];
