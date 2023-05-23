@@ -6,8 +6,8 @@ use crate::parser::status_tracker::StatusEffectCategory::Debuff;
 use crate::parser::status_tracker::StatusEffectShowType::All;
 use chrono::{DateTime, Duration, TimeZone, Utc};
 use hashbrown::HashMap;
-use pcap_test::packets::definitions::PKTNewPC;
-use pcap_test::packets::structures::StatusEffectData;
+use meter_core::packets::definitions::PKTNewPC;
+use meter_core::packets::structures::StatusEffectData;
 use std::cell::RefCell;
 use std::rc::Rc;
 

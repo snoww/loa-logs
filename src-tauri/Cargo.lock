@@ -87,7 +87,7 @@ dependencies = [
  "chrono",
  "hashbrown 0.13.2",
  "lazy_static",
- "pcap-test",
+ "meter-core",
  "rusqlite",
  "serde",
  "serde_json",
@@ -1913,6 +1913,21 @@ dependencies = [
 ]
 
 [[package]]
+name = "meter-core"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "chrono",
+ "ffi-opaque",
+ "hashbrown 0.13.2",
+ "libc",
+ "lz4_flex",
+ "pnet",
+ "snap",
+ "tokio",
+]
+
+[[package]]
 name = "minisign-verify"
 version = "0.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1926,18 +1941,6 @@ checksum = "e7810e0be55b428ada41041c41f32c9f1a42817901b4ccf45fa3d4b6561e74c7"
 dependencies = [
  "adler",
  "simd-adler32",
-]
-
-[[package]]
-name = "mio"
-version = "0.8.6"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5b9d9a46eff5b4ff64b45a9e316a6d1e0bc719ef429cbec4dc630684212bfdf9"
-dependencies = [
- "libc",
- "log",
- "wasi 0.11.0+wasi-snapshot-preview1",
- "windows-sys 0.45.0",
 ]
 
 [[package]]
@@ -2281,21 +2284,6 @@ name = "pathdiff"
 version = "0.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8835116a5c179084a830efb3adc117ab007512b535bc1a21c991d3b32a6b44dd"
-
-[[package]]
-name = "pcap-test"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "chrono",
- "ffi-opaque",
- "hashbrown 0.13.2",
- "libc",
- "lz4_flex",
- "pnet",
- "snap",
- "tokio",
-]
 
 [[package]]
 name = "percent-encoding"
@@ -3116,15 +3104,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "signal-hook-registry"
-version = "1.4.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d8229b473baa5980ac72ef434c4415e70c4b5e71b423043adb4ba059f89c99a1"
-dependencies = [
- "libc",
-]
-
-[[package]]
 name = "simd-adler32"
 version = "0.3.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3708,13 +3687,8 @@ checksum = "0aa32867d44e6f2ce3385e89dceb990188b8bb0fb25b0cf576647a6f98ac5105"
 dependencies = [
  "autocfg",
  "bytes",
- "libc",
- "mio",
  "num_cpus",
- "parking_lot",
  "pin-project-lite",
- "signal-hook-registry",
- "socket2",
  "tokio-macros",
  "windows-sys 0.48.0",
 ]

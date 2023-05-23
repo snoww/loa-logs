@@ -1,22 +1,23 @@
-pub mod entity_tracker;
-pub mod id_tracker;
+pub mod encounter_state;
+mod entity_tracker;
+mod id_tracker;
 pub mod models;
-pub mod parser;
-pub mod party_tracker;
-pub mod status_tracker;
+mod party_tracker;
+mod status_tracker;
 
+use crate::parser::encounter_state::EncounterState;
 use crate::parser::entity_tracker::{get_current_and_max_hp, EntityTracker};
 use crate::parser::id_tracker::IdTracker;
 use crate::parser::models::EntityType;
-use crate::parser::parser::Parser;
 use crate::parser::party_tracker::PartyTracker;
 use crate::parser::status_tracker::{StatusEffectTargetType, StatusTracker};
 use anyhow::Result;
 use chrono::Utc;
-use pcap_test::packets::definitions::*;
-use pcap_test::packets::opcodes::Pkt;
-use pcap_test::start_capture;
+use meter_core::packets::definitions::*;
+use meter_core::packets::opcodes::Pkt;
+use meter_core::start_capture;
 use std::cell::RefCell;
+use std::fmt::Debug;
 use std::rc::Rc;
 use std::sync::{Arc, Mutex};
 use std::time::{Duration, Instant};
@@ -32,10 +33,10 @@ pub fn start(window: Window<Wry>) -> Result<()> {
         id_tracker.clone(),
         party_tracker.clone(),
     );
-    let mut parser = Parser::new(window.clone());
+    let mut state = EncounterState::new(window.clone());
     let rt = Runtime::new().unwrap();
     let _guard = rt.enter();
-    let rx = start_capture();
+    let rx = start_capture(None, None);
     let mut last_update = Instant::now();
     let duration = Duration::from_millis(100);
 
@@ -61,7 +62,7 @@ pub fn start(window: Window<Wry>) -> Result<()> {
     while let Ok((op, data)) = rx.recv() {
         if let Ok(ref mut reset) = reset.try_lock() {
             if **reset {
-                parser.soft_reset();
+                state.soft_reset();
                 **reset = false;
             }
         }
@@ -74,99 +75,85 @@ pub fn start(window: Window<Wry>) -> Result<()> {
             Pkt::CounterAttackNotify => {
                 let pkt = PKTCounterAttackNotify::new(&data)?;
                 if let Some(entity) = entity_tracker.entities.get(&pkt.source_id) {
-                    parser.on_counterattack(entity);
+                    state.on_counterattack(entity);
                 }
-                // println!("{:?}", pkt);
             }
             Pkt::DeathNotify => {
                 let pkt = PKTDeathNotify::new(&data)?;
+                debug_print(&pkt);
                 if let Some(entity) = entity_tracker.entities.get(&pkt.target_id) {
-                    parser.on_death(entity);
+                    state.on_death(entity);
                 }
-                // println!("{:?}", pkt);
             }
             Pkt::IdentityGaugeChangeNotify => {
                 let pkt = PKTIdentityGaugeChangeNotify::new(&data)?;
-                parser.on_identity_gain(pkt);
-                // println!("{:?}", pkt);
+                debug_print(&pkt);
+                state.on_identity_gain(pkt);
             }
             Pkt::InitEnv => {
                 let pkt = PKTInitEnv::new(&data)?;
+                debug_print(&pkt);
                 let entity = entity_tracker.init_env(pkt);
-                println!("init env {:?}", &entity);
-                parser.on_init_env(entity);
-                // println!("{:?}", pkt);
+                state.on_init_env(entity);
             }
             Pkt::InitPC => {
-                println!("init pc");
                 let pkt = PKTInitPC::new(&data)?;
+                debug_print(&pkt);
                 let (hp, max_hp) = get_current_and_max_hp(&pkt.stat_pair);
                 let entity = entity_tracker.init_pc(pkt);
-                println!("init pc {:?}", &entity);
 
-                parser.on_init_pc(entity, hp, max_hp)
-                // println!("{:?}", pkt);
+                state.on_init_pc(entity, hp, max_hp)
             }
             Pkt::MigrationExecute => {
                 let pkt = PKTMigrationExecute::new(&data)?;
                 entity_tracker.migration_execute(pkt);
-
-                // println!("{:?}", pkt);
             }
             Pkt::NewPC => {
                 let pkt = PKTNewPC::new(&data)?;
+                debug_print(&pkt);
                 let (hp, max_hp) = get_current_and_max_hp(&pkt.pc_struct.stat_pair);
                 let entity = entity_tracker.new_pc(pkt);
-                // println!("new pc {:?}", &entity);
-                parser.on_new_pc(entity, hp, max_hp);
-                // println!("{:?}", pkt);
+                state.on_new_pc(entity, hp, max_hp);
             }
             Pkt::NewNpc => {
                 let pkt = PKTNewNpc::new(&data)?;
+                debug_print(&pkt);
                 let (hp, max_hp) = get_current_and_max_hp(&pkt.npc_data.stat_pair);
                 let entity = entity_tracker.new_npc(pkt, max_hp);
-                // println!("new npc {:?}", &entity);
-                parser.on_new_npc(entity, hp, max_hp);
-                // println!("{:?}", pkt);
+                state.on_new_npc(entity, hp, max_hp);
             }
             Pkt::NewNpcSummon => {
                 let pkt = PKTNewNpcSummon::new(&data)?;
+                debug_print(&pkt);
                 let (hp, max_hp) = get_current_and_max_hp(&pkt.npc_data.stat_pair);
                 let entity = entity_tracker.new_npc_summon(pkt, max_hp);
-                parser.on_new_npc(entity, hp, max_hp);
-                // println!("{:?}", pkt);
+                state.on_new_npc(entity, hp, max_hp);
             }
             Pkt::NewProjectile => {
                 let pkt = PKTNewProjectile::new(&data)?;
                 entity_tracker.new_projectile(pkt);
-                // println!("{:?}", pkt);
             }
             Pkt::ParalyzationStateNotify => {
                 let pkt = PKTParalyzationStateNotify::new(&data)?;
-                parser.on_stagger_change(pkt);
-                // println!("{:?}", pkt);
+                state.on_stagger_change(pkt);
             }
             Pkt::PartyInfo => {
                 let pkt = PKTPartyInfo::new(&data)?;
                 entity_tracker.party_info(pkt);
-                // println!("{:?}", pkt);
             }
             Pkt::PartyLeaveResult => {
                 let pkt = PKTPartyLeaveResult::new(&data)?;
                 party_tracker
                     .borrow_mut()
                     .remove(pkt.party_instance_id, pkt.name);
-                // println!("{:?}", pkt);
             }
             Pkt::PartyStatusEffectAddNotify => {
                 let pkt = PKTPartyStatusEffectAddNotify::new(&data)?;
                 entity_tracker.party_status_effect_add(pkt);
-                // println!("{:?}", pkt);
             }
             Pkt::PartyStatusEffectRemoveNotify => {
                 let pkt = PKTPartyStatusEffectRemoveNotify::new(&data)?;
                 entity_tracker.party_status_effect_remove(pkt);
-                // println!("{:?}", pkt);
             }
             Pkt::PartyStatusEffectResultNotify => {
                 let pkt = PKTPartyStatusEffectResultNotify::new(&data)?;
@@ -177,15 +164,12 @@ pub fn start(window: Window<Wry>) -> Result<()> {
                     0,
                     None,
                 );
-                // println!("{:?}", pkt);
             }
             Pkt::RaidBossKillNotify => {
-                parser.on_phase_transition(1);
-                // println!("{:?}", pkt);
+                state.on_phase_transition(1);
             }
             Pkt::RaidResult => {
-                parser.on_phase_transition(0);
-                // println!("{:?}", pkt);
+                state.on_phase_transition(0);
             }
             Pkt::RemoveObject => {
                 let pkt = PKTRemoveObject::new(&data)?;
@@ -194,7 +178,6 @@ pub fn start(window: Window<Wry>) -> Result<()> {
                         .borrow_mut()
                         .remove_local_object(upo.object_id);
                 }
-                // println!("{:?}", pkt);
             }
             Pkt::SkillCastNotify => {
                 // identity skills
@@ -206,18 +189,15 @@ pub fn start(window: Window<Wry>) -> Result<()> {
                 // entity = entity_tracker.guess_is_player(entity, pkt.skill_id);
                 // println!("skill cast notify {:?}", &entity);
                 // parser.on_skill_start(entity, pkt.skill_id as i32, Utc::now().timestamp_millis());
-                // println!("{:?}", pkt);
             }
             Pkt::SkillStartNotify => {
                 let pkt = PKTSkillStartNotify::new(&data)?;
                 let mut entity = entity_tracker.get_source_entity(pkt.source_id);
                 entity = entity_tracker.guess_is_player(entity, pkt.skill_id);
-                parser.on_skill_start(entity, pkt.skill_id as i32, Utc::now().timestamp_millis());
-                // println!("{:?}", pkt);
+                state.on_skill_start(entity, pkt.skill_id as i32, Utc::now().timestamp_millis());
             }
             Pkt::SkillStageNotify => {
                 // let pkt = PKTSkillStageNotify::new(&data);
-                // println!("{:?}", pkt);
             }
             Pkt::SkillDamageAbnormalMoveNotify => {
                 let pkt = PKTSkillDamageAbnormalMoveNotify::new(&data)?;
@@ -232,7 +212,7 @@ pub fn start(window: Window<Wry>) -> Result<()> {
                     let (se_on_source, se_on_target) = status_tracker
                         .borrow_mut()
                         .get_status_effects(&owner, &target_entity, local_character_id);
-                    parser.on_damage(
+                    state.on_damage(
                         &owner,
                         &source_entity,
                         &target_entity,
@@ -246,7 +226,6 @@ pub fn start(window: Window<Wry>) -> Result<()> {
                         se_on_target,
                     );
                 }
-                // println!("{:?}", pkt);
             }
             Pkt::SkillDamageNotify => {
                 let pkt = PKTSkillDamageNotify::new(&data)?;
@@ -261,7 +240,7 @@ pub fn start(window: Window<Wry>) -> Result<()> {
                     let (se_on_source, se_on_target) = status_tracker
                         .borrow_mut()
                         .get_status_effects(&owner, &target_entity, local_character_id);
-                    parser.on_damage(
+                    state.on_damage(
                         &owner,
                         &source_entity,
                         &target_entity,
@@ -275,13 +254,11 @@ pub fn start(window: Window<Wry>) -> Result<()> {
                         se_on_target,
                     );
                 }
-                // println!("{:?}", pkt);
             }
             Pkt::StatusEffectAddNotify => {
                 let pkt = PKTStatusEffectAddNotify::new(&data)?;
                 entity_tracker
                     .build_and_register_status_effect(&pkt.status_effect_data, pkt.object_id)
-                // println!("{:?}", pkt);
             }
             Pkt::StatusEffectDurationNotify => {
                 let pkt = PKTStatusEffectDurationNotify::new(&data)?;
@@ -291,7 +268,6 @@ pub fn start(window: Window<Wry>) -> Result<()> {
                     pkt.expiration_tick,
                     StatusEffectTargetType::Local,
                 );
-                // println!("{:?}", pkt);
             }
             Pkt::StatusEffectRemoveNotify => {
                 let pkt = PKTStatusEffectRemoveNotify::new(&data)?;
@@ -302,40 +278,34 @@ pub fn start(window: Window<Wry>) -> Result<()> {
                         StatusEffectTargetType::Local,
                     );
                 }
-                // println!("{:?}", pkt);
             }
             Pkt::TriggerBossBattleStatus => {
-                parser.on_phase_transition(2);
-                // let pkt = PKTTriggerBossBattleStatus::new(&data)?;
-                // println!("{:?}", pkt);
+                state.on_phase_transition(2);
             }
             Pkt::TriggerStartNotify => {
                 // let pkt = PKTTriggerStartNotify::new(&data)?;
-                // println!("{:?}", pkt);
             }
             Pkt::ZoneObjectUnpublishNotify => {
                 let pkt = PKTZoneObjectUnpublishNotify::new(&data)?;
                 status_tracker
                     .borrow_mut()
                     .remove_local_object(pkt.object_id);
-                // println!("{:?}", pkt);
             }
             Pkt::StatusEffectSyncDataNotify => {
                 // let pkt = PKTStatusEffectSyncDataNotify::new(&data);
-                // println!("{:?}", pkt);
                 // shields
             }
             Pkt::TroopMemberUpdateMinNotify => {
                 // let pkt = PKTTroopMemberUpdateMinNotify::new(&data);
-                // println!("{:?}", pkt);
                 // shields
             }
             _ => {
                 continue;
             }
         }
-        if last_update.elapsed() >= duration || parser.raid_end {
-            let mut clone = parser.encounter.clone();
+
+        if last_update.elapsed() >= duration || state.raid_end {
+            let mut clone = state.encounter.clone();
             let window = window.clone();
             tokio::task::spawn(async move {
                 if !clone.current_boss_name.is_empty() {
@@ -355,15 +325,23 @@ pub fn start(window: Window<Wry>) -> Result<()> {
                         .expect("failed to emit encounter-update");
                 }
             });
+
             last_update = Instant::now();
         }
 
-        if parser.raid_end {
-            parser.soft_reset();
-            parser.raid_end = false;
-            parser.saved = false;
+        if state.raid_end {
+            state.soft_reset();
+            state.raid_end = false;
+            state.saved = false;
         }
     }
 
     Ok(())
+}
+
+fn debug_print<T: Debug>(x: &T) {
+    #[cfg(debug_assertions)]
+    {
+        println!("{:?}", x);
+    }
 }

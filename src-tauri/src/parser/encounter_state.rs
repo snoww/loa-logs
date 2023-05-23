@@ -2,9 +2,9 @@ use std::cmp::{max, Ordering};
 
 use crate::parser::entity_tracker::Entity;
 use crate::parser::models::*;
-use chrono::{Utc};
-use hashbrown::{HashMap};
-use pcap_test::packets::definitions::{PKTIdentityGaugeChangeNotify, PKTParalyzationStateNotify};
+use chrono::Utc;
+use hashbrown::HashMap;
+use meter_core::packets::definitions::{PKTIdentityGaugeChangeNotify, PKTParalyzationStateNotify};
 use rusqlite::{params, Connection, Transaction};
 use serde_json::json;
 use tauri::{Manager, Window, Wry};
@@ -14,7 +14,7 @@ const WINDOW_MS: i64 = 5_000;
 const WINDOW_S: i64 = 5;
 
 #[derive(Debug)]
-pub struct Parser {
+pub struct EncounterState {
     pub window: Window<Wry>,
     pub encounter: Encounter,
     pub raid_end: bool,
@@ -30,9 +30,9 @@ pub struct Parser {
     stagger_intervals: Vec<(i32, i32)>,
 }
 
-impl Parser {
-    pub fn new(window: Window<Wry>) -> Parser {
-        Parser {
+impl EncounterState {
+    pub fn new(window: Window<Wry>) -> EncounterState {
+        EncounterState {
             window,
             encounter: Encounter::default(),
             raid_end: false,
@@ -1248,7 +1248,7 @@ fn insert_data(
         is_dead,
         skills,
         damage_stats,
-        skill_stats,
+        skill_stats
     ) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13)",
         )
         .expect("failed to prepare entity statement");

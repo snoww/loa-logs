@@ -5,9 +5,9 @@ use crate::parser::party_tracker::PartyTracker;
 use crate::parser::status_tracker::{build_status_effect, StatusEffectTargetType, StatusTracker};
 
 use hashbrown::HashMap;
-use pcap_test::packets::common::StatPair;
-use pcap_test::packets::definitions::*;
-use pcap_test::packets::structures::{NpcData, StatusEffectData};
+use meter_core::packets::common::StatPair;
+use meter_core::packets::definitions::*;
+use meter_core::packets::structures::{NpcData, StatusEffectData};
 use std::cell::RefCell;
 use std::rc::Rc;
 
