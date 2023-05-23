@@ -51,7 +51,7 @@
             name = getEstherFromNpcId(entity.npcId);
             color = "#4dc8d0";
         } else {
-            name = formatPlayerName(entity, $settings.general.showNames);
+            name = formatPlayerName(entity, $settings.general.showNames, $settings.general.showGearScore);
         }
         if (entity.isDead) {
             deadFor = Math.abs((lastCombatPacket - entity.damageStats.deathTime) / 1000).toFixed(0) + "s";
