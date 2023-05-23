@@ -43,10 +43,21 @@ impl EntityTracker {
         if self.local_player_id == 0 {
             self.local_player_id = pkt.player_id;
         } else {
-            let party_id = self.party_tracker.borrow_mut().entity_id_to_party_id.get(&self.local_player_id).cloned();
+            let party_id = self
+                .party_tracker
+                .borrow_mut()
+                .entity_id_to_party_id
+                .get(&self.local_player_id)
+                .cloned();
             if let Some(party_id) = party_id {
-                self.party_tracker.borrow_mut().entity_id_to_party_id.remove(&self.local_player_id);
-                self.party_tracker.borrow_mut().entity_id_to_party_id.insert(pkt.player_id, party_id);
+                self.party_tracker
+                    .borrow_mut()
+                    .entity_id_to_party_id
+                    .remove(&self.local_player_id);
+                self.party_tracker
+                    .borrow_mut()
+                    .entity_id_to_party_id
+                    .insert(pkt.player_id, party_id);
             }
         }
 
@@ -113,7 +124,12 @@ impl EntityTracker {
     }
 
     pub fn migration_execute(&mut self, pkt: PKTMigrationExecute) {
-        if self.id_tracker.borrow().get_local_character_id(self.local_player_id) != 0 {
+        if self
+            .id_tracker
+            .borrow()
+            .get_local_character_id(self.local_player_id)
+            != 0
+        {
             return;
         }
 
@@ -128,16 +144,17 @@ impl EntityTracker {
             return;
         }
 
-        self.entities.entry(self.local_player_id)
+        self.entities
+            .entry(self.local_player_id)
             .and_modify(|e| {
                 e.character_id = char_id;
             })
             .or_insert_with(|| Entity {
-            entity_type: PLAYER,
-            name: "You".to_string(),
-            character_id: char_id,
-            ..Default::default()
-        });
+                entity_type: PLAYER,
+                name: "You".to_string(),
+                character_id: char_id,
+                ..Default::default()
+            });
     }
 
     pub fn new_pc(&mut self, pkt: PKTNewPC) -> Entity {
@@ -151,9 +168,14 @@ impl EntityTracker {
             ..Default::default()
         };
         self.entities.insert(entity.id, entity.clone());
-        let old_entity_id = self.id_tracker.borrow().get_entity_id(pkt.pc_struct.character_id);
+        let old_entity_id = self
+            .id_tracker
+            .borrow()
+            .get_entity_id(pkt.pc_struct.character_id);
         if let Some(old_entity_id) = old_entity_id {
-            self.party_tracker.borrow_mut().change_entity_id(old_entity_id, entity.id);
+            self.party_tracker
+                .borrow_mut()
+                .change_entity_id(old_entity_id, entity.id);
         }
         self.id_tracker
             .borrow_mut()
@@ -162,8 +184,13 @@ impl EntityTracker {
             .borrow_mut()
             .complete_entry(pkt.pc_struct.character_id, pkt.pc_struct.player_id);
         // println!("party status: {:?}", self.party_tracker.borrow().character_id_to_party_id);
-        let local_character_id = self.id_tracker.borrow().get_local_character_id(self.local_player_id);
-        self.status_tracker.borrow_mut().new_pc(&pkt, local_character_id);
+        let local_character_id = self
+            .id_tracker
+            .borrow()
+            .get_local_character_id(self.local_player_id);
+        self.status_tracker
+            .borrow_mut()
+            .new_pc(&pkt, local_character_id);
         entity
     }
 
@@ -255,10 +282,9 @@ impl EntityTracker {
                         local_player.class_id = first.class_id as u32;
                         local_player.gear_level = truncate_gear_level(first.gear_level);
                         local_player.character_id = first.character_id;
-                        self.id_tracker.borrow_mut().add_mapping(
-                            first.character_id,
-                            self.local_player_id
-                        );
+                        self.id_tracker
+                            .borrow_mut()
+                            .add_mapping(first.character_id, self.local_player_id);
                     }
                     self.party_tracker
                         .borrow_mut()
@@ -285,20 +311,15 @@ impl EntityTracker {
                         local_player.name = member.name.clone();
                     } else {
                         local_player.character_id = member.character_id;
-                        self.id_tracker.borrow_mut().add_mapping(
-                            member.character_id,
-                            self.local_player_id
-                        );
+                        self.id_tracker
+                            .borrow_mut()
+                            .add_mapping(member.character_id, self.local_player_id);
                     }
                 }
             }
-            let entity_id = self
-                .id_tracker
-                .borrow()
-                .get_entity_id(member.character_id);
+            let entity_id = self.id_tracker.borrow().get_entity_id(member.character_id);
 
-            if let Some(entity_id) = entity_id
-            {
+            if let Some(entity_id) = entity_id {
                 if let Some(entity) = self.entities.get_mut(&entity_id) {
                     if entity.entity_type == PLAYER && entity.name == member.name {
                         entity.gear_level = truncate_gear_level(member.gear_level);

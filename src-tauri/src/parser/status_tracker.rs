@@ -113,7 +113,7 @@ impl StatusTracker {
             Some(ser) => ser,
             None => return,
         };
-        
+
         if let Some(se) = ser.get_mut(&instance_id) {
             if let Some(expire_at) = se.expire_at {
                 let extension_ms = (timestamp - se.end_tick) as i64;
@@ -124,32 +124,32 @@ impl StatusTracker {
     }
 
     /*    pub fn sync_status_effect(&mut self, instance_id: u32, character_id: u64, object_id: u64, value: u32, local_character_id: u64) {
-            let use_party = self.should_use_party_status_effect(character_id, local_character_id);
-            let (target_id, sett) = if use_party {
-                (character_id, StatusEffectTargetType::Party)
-            } else {
-                (object_id, StatusEffectTargetType::Local)
-            };
-            if target_id == 0 {
-                return;
-            }
-            let registry = match sett {
-                StatusEffectTargetType::Local => &mut self.local_status_effect_registry,
-                StatusEffectTargetType::Party => &mut self.party_status_effect_registry,
-            };
+        let use_party = self.should_use_party_status_effect(character_id, local_character_id);
+        let (target_id, sett) = if use_party {
+            (character_id, StatusEffectTargetType::Party)
+        } else {
+            (object_id, StatusEffectTargetType::Local)
+        };
+        if target_id == 0 {
+            return;
+        }
+        let registry = match sett {
+            StatusEffectTargetType::Local => &mut self.local_status_effect_registry,
+            StatusEffectTargetType::Party => &mut self.party_status_effect_registry,
+        };
 
-            let ser = match registry.get_mut(&target_id) {
-                Some(ser) => ser,
-                None => return,
-            };
+        let ser = match registry.get_mut(&target_id) {
+            Some(ser) => ser,
+            None => return,
+        };
 
-            let se = match ser.get_mut(&instance_id) {
-                Some(se) => se,
-                None => return,
-            };
+        let se = match ser.get_mut(&instance_id) {
+            Some(se) => se,
+            None => return,
+        };
 
-            se.value = value;
-        }*/
+        se.value = value;
+    }*/
 
     pub fn get_status_effects(
         &mut self,
@@ -205,10 +205,9 @@ impl StatusTracker {
                 target_entity.character_id,
                 StatusEffectTargetType::Party,
             ),
-            (false, None) => self.actually_get_status_effects(
-                target_entity.id,
-                StatusEffectTargetType::Local,
-            ),
+            (false, None) => {
+                self.actually_get_status_effects(target_entity.id, StatusEffectTargetType::Local)
+            }
         };
         let status_effects_on_target: Vec<(u32, u64)> = target_effects
             .iter()
@@ -237,10 +236,7 @@ impl StatusTracker {
             None => return Vec::new(),
         };
         let timestamp = Utc::now();
-        ser.retain(|_, se| {
-            se.expire_at
-                .map_or(true, |expire_at| expire_at > timestamp)
-        });
+        ser.retain(|_, se| se.expire_at.map_or(true, |expire_at| expire_at > timestamp));
         ser.values().cloned().collect()
     }
 
@@ -262,19 +258,16 @@ impl StatusTracker {
 
         let timestamp = Utc::now();
         // println!("ser before: {:?}", ser);
-        ser.retain(|_, se| {
-            se.expire_at
-                .map_or(true, |expire_at| expire_at > timestamp)
-        });
+        ser.retain(|_, se| se.expire_at.map_or(true, |expire_at| expire_at > timestamp));
         let party_tracker = self.party_tracker.borrow();
         ser.values()
             .filter(|x| {
                 is_valid_for_raid(x)
                     || &party_id
-                    == party_tracker
-                    .entity_id_to_party_id
-                    .get(&x.source_id)
-                    .unwrap_or(&0)
+                        == party_tracker
+                            .entity_id_to_party_id
+                            .get(&x.source_id)
+                            .unwrap_or(&0)
             })
             .cloned()
             .collect()
@@ -285,16 +278,18 @@ impl StatusTracker {
         let local_player_party_id = party_tracker
             .character_id_to_party_id
             .get(&local_character_id);
-        let affected_player_party_id = party_tracker
-            .character_id_to_party_id
-            .get(&character_id);
+        let affected_player_party_id = party_tracker.character_id_to_party_id.get(&character_id);
         // println!("party character_id_to_party_id: {:?}", party_tracker.character_id_to_party_id);
         // println!("character_id: {}, local_character_id: {}", character_id, local_character_id);
         // println!(
         //     "local_player_party_id: {:?}, affected_player_party_id: {:?}",
         //     local_player_party_id, affected_player_party_id);
 
-        match (local_player_party_id, affected_player_party_id, character_id == local_character_id) {
+        match (
+            local_player_party_id,
+            affected_player_party_id,
+            character_id == local_character_id,
+        ) {
             (Some(local_party), Some(affected_party), false) => local_party == affected_party,
             _ => false,
         }
@@ -357,15 +352,21 @@ pub fn build_status_effect(
     let mut name = "Unknown".to_string();
     if let Some(effect) = SKILL_BUFF_DATA.get(&(se_data.status_effect_id as i32)) {
         name = effect.name.to_string();
-        if effect.category.as_str() == "debuff" { status_effect_category = Debuff }
+        if effect.category.as_str() == "debuff" {
+            status_effect_category = Debuff
+        }
         match effect.buff_category.as_str() {
             "bracelet" => buff_category = Bracelet,
             "etc" => buff_category = Etc,
             "battleitem" => buff_category = BattleItem,
             _ => {}
         }
-        if effect.icon_show_type.as_str() == "all" { show_type = All }
-        if effect.buff_type.as_str() == "shield" { status_effect_type = StatusEffectType::Shield }
+        if effect.icon_show_type.as_str() == "all" {
+            show_type = All
+        }
+        if effect.buff_type.as_str() == "shield" {
+            status_effect_type = StatusEffectType::Shield
+        }
     }
 
     StatusEffect {
@@ -381,7 +382,6 @@ pub fn build_status_effect(
         show_type,
         expiration_delay: se_data.total_time,
         expire_at: None,
-        occur_time: se_data.occur_time,
         end_tick: se_data.end_tick,
         name,
         timestamp: Utc::now(),
@@ -439,7 +439,6 @@ pub struct StatusEffect {
     status_effect_type: StatusEffectType,
     expiration_delay: f32,
     expire_at: Option<DateTime<Utc>>,
-    occur_time: DateTime<Utc>,
     end_tick: u64,
     timestamp: DateTime<Utc>,
     name: String,

@@ -8,9 +8,10 @@ use std::{
     fs::File,
     io::{Read, Write},
     path::{Path, PathBuf},
+    rc::Rc,
     str::FromStr,
     sync::{Arc, Mutex},
-    time::{Duration, Instant}, cell::RefCell, rc::Rc,
+    time::{Duration, Instant},
 };
 
 use anyhow::Result;
@@ -82,7 +83,7 @@ async fn main() -> Result<()> {
             }
             tokio::task::spawn(async move {
                 parser::start(meter_window.clone()).expect("failed to start parser");
-/*                 let (mut rx, _child) = Command::new_sidecar("meter-core")
+                /*                 let (mut rx, _child) = Command::new_sidecar("meter-core")
                     .expect("failed to start `meter-core`")
                     .args(["--mode", &packet_mode, "--port", &port.to_string()])
                     .spawn()

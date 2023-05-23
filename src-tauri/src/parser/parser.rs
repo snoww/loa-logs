@@ -1,13 +1,13 @@
 use std::cmp::{max, Ordering};
 
+use crate::parser::entity_tracker::Entity;
+use crate::parser::models::*;
 use chrono::{DateTime, Utc};
 use hashbrown::{HashMap, HashSet};
 use pcap_test::packets::definitions::{PKTIdentityGaugeChangeNotify, PKTParalyzationStateNotify};
 use rusqlite::{params, Connection, Transaction};
 use serde_json::json;
 use tauri::{Manager, Window, Wry};
-use crate::parser::entity_tracker::Entity;
-use crate::parser::models::*;
 use tokio::task;
 
 const WINDOW_MS: i64 = 5_000;
@@ -120,13 +120,13 @@ impl Parser {
         } else {
             let entity = encounter_entity_from_entity(&entity);
             self.encounter.local_player = entity.name.clone();
-            self.encounter.entities.insert(
-                entity.name.clone(),
-                entity
-            );
+            self.encounter.entities.insert(entity.name.clone(), entity);
         }
 
-        println!("parser init env: {:?}", self.encounter.entities.get(&self.encounter.local_player));
+        println!(
+            "parser init env: {:?}",
+            self.encounter.entities.get(&self.encounter.local_player)
+        );
 
         if !self.saved && !self.encounter.current_boss_name.is_empty() {
             self.save_to_db();
@@ -163,10 +163,9 @@ impl Parser {
         let mut player = encounter_entity_from_entity(&entity);
         player.current_hp = hp;
         player.max_hp = max_hp;
-        self.encounter.entities.insert(
-            player.name.to_string(),
-            player
-        );
+        self.encounter
+            .entities
+            .insert(player.name.to_string(), player);
     }
 
     pub fn on_new_pc(&mut self, entity: Entity, hp: i64, max_hp: i64) {
@@ -181,10 +180,9 @@ impl Parser {
             let mut player = encounter_entity_from_entity(&entity);
             player.current_hp = hp;
             player.max_hp = max_hp;
-            self.encounter.entities.insert(
-                player.name.to_string(),
-                player
-            );
+            self.encounter
+                .entities
+                .insert(player.name.to_string(), player);
         }
     }
 
@@ -249,10 +247,9 @@ impl Parser {
                 death_time: Utc::now().timestamp_millis(),
                 ..Default::default()
             };
-            self.encounter.entities.insert(
-                dead_entity.name.to_string(),
-                entity
-            );
+            self.encounter
+                .entities
+                .insert(dead_entity.name.to_string(), entity);
         }
     }
 
@@ -273,12 +270,12 @@ impl Parser {
                 entity.skills = HashMap::from([(
                     skill_id,
                     Skill {
-                    id: skill_id,
-                    name: skill_name,
-                    icon: skill_icon,
-                    casts: 0,
-                    ..Default::default()
-                },
+                        id: skill_id,
+                        name: skill_name,
+                        icon: skill_icon,
+                        casts: 0,
+                        ..Default::default()
+                    },
                 )]);
                 entity
             });
@@ -393,7 +390,9 @@ impl Parser {
         }
 
         let mut skill_effect_id = skill_effect_id;
-        if is_battle_item(skill_effect_id, "attack") && proj_entity.entity_type == EntityType::PROJECTILE {
+        if is_battle_item(skill_effect_id, "attack")
+            && proj_entity.entity_type == EntityType::PROJECTILE
+        {
             skill_effect_id = proj_entity.skill_effect_id as i32;
         }
 
@@ -435,7 +434,11 @@ impl Parser {
             damage += target_current_hp;
         }
 
-        let mut skill_id = if skill_id != 0 { skill_id } else { skill_effect_id };
+        let mut skill_id = if skill_id != 0 {
+            skill_id
+        } else {
+            skill_effect_id
+        };
         let has_skill = source_entity.skills.contains_key(&skill_id);
         let skill_name = get_skill_name(skill_id);
         if !has_skill {
@@ -740,12 +743,12 @@ impl Parser {
         if self.encounter.fight_start == 0
             || self.encounter.current_boss_name.is_empty()
             || !self
-            .encounter
-            .entities
-            .contains_key(&self.encounter.current_boss_name)
+                .encounter
+                .entities
+                .contains_key(&self.encounter.current_boss_name)
             || !self.encounter.entities.values().any(|e| {
-            e.entity_type == EntityType::PLAYER && e.skill_stats.hits > 1 && e.max_hp > 0
-        })
+                e.entity_type == EntityType::PLAYER && e.skill_stats.hits > 1 && e.max_hp > 0
+            })
         {
             return;
         }
@@ -758,19 +761,19 @@ impl Parser {
             .expect("could not get resource dir");
         path.push("encounters.db");
         let prev_stagger = self.prev_stagger;
-    
+
         let damage_log = self.damage_log.clone();
         let identity_log = self.identity_log.clone();
         let cast_log = self.cast_log.clone();
         let stagger_log = self.stagger_log.clone();
         let stagger_intervals = self.stagger_intervals.clone();
-    
+
         task::spawn(async move {
             println!("saving to db - {}", encounter.current_boss_name);
-    
+
             let mut conn = Connection::open(path).expect("failed to open database");
             let tx = conn.transaction().expect("failed to create transaction");
-    
+
             insert_data(
                 &tx,
                 &mut encounter,
@@ -781,7 +784,7 @@ impl Parser {
                 stagger_log,
                 stagger_intervals,
             );
-    
+
             tx.commit().expect("failed to commit transaction");
             println!("saved to db");
         });
