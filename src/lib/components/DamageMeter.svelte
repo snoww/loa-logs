@@ -119,7 +119,7 @@
 
     $: {
         if (encounter) {
-            if (encounter.fightStart !== 0 && raidInProgress && !paused) {
+            if (encounter.fightStart !== 0 && !paused) {
                 if ($settings.general.showEsther) {
                     players = Object.values(encounter.entities)
                         .filter(
@@ -143,7 +143,7 @@
                     (player) => (player.damageStats.damageDealt / topDamageDealt) * 100
                 );
 
-                if ((encounter.currentBoss && !encounter.currentBoss.isDead) || !encounter.currentBoss) {
+                if (((encounter.currentBoss && !encounter.currentBoss.isDead) || !encounter.currentBoss) && raidInProgress) {
                     duration = time - encounter.fightStart;
                 }
 

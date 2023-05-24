@@ -4,7 +4,7 @@
     import type { Entity } from "$lib/types";
     import { abbreviateNumberSplit } from "$lib/utils/numbers";
     import { settings } from "$lib/utils/settings";
-    import { tooltip } from "$lib/utils/tooltip";
+    import { menuTooltip } from "$lib/utils/tooltip";
     import { linear } from "svelte/easing";
     import { tweened } from "svelte/motion";
 
@@ -98,8 +98,8 @@
         <div class="absolute -z-10 h-7 w-full bg-zinc-900" />
         <div class="absolute z-0 h-7 bg-red-800" style="width: {$tweenBossHpBar}%;" />
     {/if}
-    <div class="relative tracking-tighter" use:tooltip={{content: boss.name}}>
-        <div class="flex h-7 items-center justify-center space-x-1  pl-5 pr-12 pb-px">
+    <div class="relative tracking-tighter">
+        <div class="box-border flex h-7 items-center justify-center space-x-1 px-12 pb-px" use:menuTooltip={{content: boss.name}}>
             <div class="truncate">
                 {boss.name}
             </div>
