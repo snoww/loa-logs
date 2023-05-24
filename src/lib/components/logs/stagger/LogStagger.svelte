@@ -81,7 +81,7 @@
 <div class="px relative top-0">
     {#if staggerStats.average}
         <div class="mt-4">
-            <div class="mb-2 text-lg font-bold">Stats</div>
+            <div class="mb-2 text-lg font-bold">Encounter Stagger Stats</div>
             <div>
                 Average Stagger: <span class="font-bold">{staggerStats.average.toFixed(1)}%/s</span>
             </div>

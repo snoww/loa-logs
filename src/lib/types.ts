@@ -7,7 +7,7 @@ export interface Encounter {
     lastCombatPacket: number;
     fightStart: number;
     localPlayer: string;
-    entities: { [key: string]: Entity };
+    entities: { [key: number]: Entity };
     currentBossName: string;
     currentBoss: Entity | null;
     encounterDamageStats: EncounterDamageStats;

@@ -87,7 +87,6 @@ pub fn start(window: Window<Wry>) -> Result<()> {
             }
             Pkt::IdentityGaugeChangeNotify => {
                 let pkt = PKTIdentityGaugeChangeNotify::new(&data)?;
-                debug_print("", &pkt);
                 state.on_identity_gain(pkt);
             }
             Pkt::InitEnv => {
@@ -306,10 +305,11 @@ pub fn start(window: Window<Wry>) -> Result<()> {
 
         if last_update.elapsed() >= duration || state.raid_end {
             let mut clone = state.encounter.clone();
+            let current_boss_id = state.current_boss_id;
             let window = window.clone();
             tokio::task::spawn(async move {
-                if !clone.current_boss_name.is_empty() {
-                    clone.current_boss = clone.entities.get(&clone.current_boss_name).cloned();
+                if current_boss_id != 0 {
+                    clone.current_boss = clone.entities.get(&current_boss_id).cloned();
                     if clone.current_boss.is_none() {
                         clone.current_boss_name = String::new();
                     }
@@ -342,6 +342,6 @@ pub fn start(window: Window<Wry>) -> Result<()> {
 fn debug_print<T: Debug>(desc: &str, x: &T) {
     #[cfg(debug_assertions)]
     {
-        println!("{}: {:?}", desc, x);
+        println!("{:?}|{}: {:?}", Utc::now(), desc, x);
     }
 }

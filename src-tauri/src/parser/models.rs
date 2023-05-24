@@ -61,7 +61,7 @@ pub struct Encounter {
     pub last_combat_packet: i64,
     pub fight_start: i64,
     pub local_player: String,
-    pub entities: HashMap<String, EncounterEntity>,
+    pub entities: HashMap<u64, EncounterEntity>,
     pub current_boss_name: String,
     pub current_boss: Option<EncounterEntity>,
     pub encounter_damage_stats: EncounterDamageStats,

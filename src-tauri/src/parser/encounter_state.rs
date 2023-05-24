@@ -20,6 +20,9 @@ pub struct EncounterState {
     pub raid_end: bool,
     pub saved: bool,
 
+    pub local_player_id: u64,
+    pub current_boss_id: u64,
+
     prev_stagger: i32,
 
     damage_log: HashMap<String, Vec<(i64, i64)>>,
@@ -38,6 +41,9 @@ impl EncounterState {
             raid_end: false,
             saved: false,
 
+            local_player_id: 0,
+            current_boss_id: 0,
+
             prev_stagger: 0,
             damage_log: HashMap::new(),
             identity_log: HashMap::new(),
@@ -52,6 +58,7 @@ impl EncounterState {
         self.encounter.fight_start = 0;
         self.encounter.entities = HashMap::new();
         self.encounter.current_boss_name = "".to_string();
+        self.current_boss_id = 0;
         self.encounter.encounter_damage_stats = Default::default();
         self.encounter.reset = false;
         self.prev_stagger = 0;
@@ -63,10 +70,10 @@ impl EncounterState {
         self.stagger_intervals = Vec::new();
 
         if !clone.local_player.is_empty() {
-            if let Some(player) = clone.entities.get(&clone.local_player) {
+            if let Some(player) = clone.entities.get(&self.local_player_id) {
                 self.encounter.local_player = clone.local_player.to_string();
                 self.encounter.entities.insert(
-                    player.name.to_string(),
+                    player.id,
                     EncounterEntity {
                         id: player.id,
                         name: player.name.to_string(),
@@ -88,6 +95,7 @@ impl EncounterState {
         let clone = self.encounter.clone();
         self.reset(&clone);
         self.encounter.current_boss_name = "".to_string();
+        self.current_boss_id = 0;
         for (key, entity) in clone.entities {
             self.encounter.entities.insert(
                 key,
@@ -111,7 +119,7 @@ impl EncounterState {
         if let Some(local_player) = self
             .encounter
             .entities
-            .get_mut(&self.encounter.local_player)
+            .get_mut(&self.local_player_id)
         {
             local_player.id = entity.id;
             local_player.name = entity.name.clone();
@@ -120,7 +128,7 @@ impl EncounterState {
         } else {
             let entity = encounter_entity_from_entity(&entity);
             self.encounter.local_player = entity.name.clone();
-            self.encounter.entities.insert(entity.name.clone(), entity);
+            self.encounter.entities.insert(entity.id, entity);
         }
 
         if !self.saved && !self.encounter.current_boss_name.is_empty() {
@@ -153,18 +161,19 @@ impl EncounterState {
     }
 
     pub fn on_init_pc(&mut self, entity: Entity, hp: i64, max_hp: i64) {
-        self.encounter.entities.remove(&self.encounter.local_player);
+        self.encounter.entities.remove(&self.local_player_id);
         self.encounter.local_player = entity.name.to_string();
+        self.local_player_id = entity.id;
         let mut player = encounter_entity_from_entity(&entity);
         player.current_hp = hp;
         player.max_hp = max_hp;
         self.encounter
             .entities
-            .insert(player.name.to_string(), player);
+            .insert(player.id, player);
     }
 
     pub fn on_new_pc(&mut self, entity: Entity, hp: i64, max_hp: i64) {
-        if let Some(player) = self.encounter.entities.get_mut(&entity.name) {
+        if let Some(player) = self.encounter.entities.get_mut(&entity.id) {
             player.id = entity.id;
             player.class_id = entity.class_id;
             player.class = get_class_from_id(entity.class_id);
@@ -177,15 +186,15 @@ impl EncounterState {
             player.max_hp = max_hp;
             self.encounter
                 .entities
-                .insert(player.name.to_string(), player);
+                .insert(player.id, player);
         }
     }
 
     pub fn on_new_npc(&mut self, entity: Entity, hp: i64, max_hp: i64) {
-        let entity_name = entity.name.to_string();
+        let entity_name = entity.name.clone();
         self.encounter
             .entities
-            .entry(entity_name.clone())
+            .entry(entity.id)
             .and_modify(|e| {
                 e.id = entity.id;
                 e.npc_id = entity.npc_id;
@@ -201,31 +210,34 @@ impl EncounterState {
                 npc
             });
 
-        if let Some(npc) = self.encounter.entities.get(&entity_name) {
+        if let Some(npc) = self.encounter.entities.get(&entity.id) {
             if npc.entity_type == EntityType::BOSS {
                 // get the npc that we just added
                 if self.encounter.current_boss_name.is_empty() {
                     self.encounter.current_boss_name = entity_name;
+                    self.current_boss_id = entity.id;
                 }
                 // get the current boss
                 else if let Some(boss) = self
                     .encounter
                     .entities
-                    .get(&self.encounter.current_boss_name)
+                    .get(&self.current_boss_id)
                 {
                     // check if the new npc has more hp than the current boss or if the current boss is dead
                     if npc.max_hp >= boss.max_hp || boss.is_dead {
                         self.encounter.current_boss_name = entity_name;
+                        self.current_boss_id = entity.id;
                     }
                 } else {
                     self.encounter.current_boss_name = entity_name;
+                    self.current_boss_id = entity.id;
                 }
             }
         }
     }
 
     pub fn on_death(&mut self, dead_entity: &Entity) {
-        if let Some(entity) = self.encounter.entities.get_mut(&dead_entity.name) {
+        if let Some(entity) = self.encounter.entities.get_mut(&dead_entity.id) {
             let deaths = if entity.is_dead {
                 entity.damage_stats.deaths + 1
             } else {
@@ -244,7 +256,7 @@ impl EncounterState {
             };
             self.encounter
                 .entities
-                .insert(dead_entity.name.to_string(), entity);
+                .insert(dead_entity.id, entity);
         }
     }
 
@@ -253,7 +265,7 @@ impl EncounterState {
         let mut entity = self
             .encounter
             .entities
-            .entry(source_entity.name.to_string())
+            .entry(source_entity.id)
             .or_insert_with(|| {
                 let (skill_name, skill_icon) =
                     get_skill_name_and_icon(skill_id, 0, skill_name.clone());
@@ -394,14 +406,14 @@ impl EncounterState {
         let mut source_entity = self
             .encounter
             .entities
-            .entry(dmg_src_entity.name.to_string())
+            .entry(dmg_src_entity.id)
             .or_insert_with(|| encounter_entity_from_entity(dmg_src_entity))
             .to_owned();
 
         let mut target_entity = self
             .encounter
             .entities
-            .entry(dmg_target_entity.name.to_string())
+            .entry(dmg_target_entity.id)
             .or_insert_with(|| {
                 let mut target_entity = encounter_entity_from_entity(dmg_target_entity);
                 target_entity.current_hp = target_current_hp;
@@ -409,9 +421,6 @@ impl EncounterState {
                 target_entity
             })
             .to_owned();
-
-        source_entity.id = dmg_src_entity.id;
-        target_entity.id = dmg_target_entity.id;
 
         let timestamp = Utc::now().timestamp_millis();
 
@@ -637,14 +646,15 @@ impl EncounterState {
         // update current_boss
         if target_entity.entity_type == EntityType::BOSS {
             self.encounter.current_boss_name = target_entity.name.to_string();
+            self.current_boss_id = target_entity.id;
         }
 
         self.encounter
             .entities
-            .insert(source_entity.name.to_string(), source_entity);
+            .insert(source_entity.id, source_entity);
         self.encounter
             .entities
-            .insert(target_entity.name.to_string(), target_entity);
+            .insert(target_entity.id, target_entity);
 
         self.encounter.last_combat_packet = timestamp;
     }
@@ -661,7 +671,7 @@ impl EncounterState {
         let entity = self
             .encounter
             .entities
-            .entry(source_entity.name.to_string())
+            .entry(source_entity.id)
             .or_insert_with(|| {
                 let mut entity = encounter_entity_from_entity(source_entity);
                 entity.skill_stats = SkillStats {
@@ -674,14 +684,14 @@ impl EncounterState {
     }
 
     pub fn on_identity_gain(&mut self, pkt: PKTIdentityGaugeChangeNotify) {
-        if self.encounter.local_player.is_empty() || self.encounter.fight_start == 0 {
+        if self.local_player_id == 0 || self.encounter.fight_start == 0 {
             return;
         }
 
         if let Some(entity) = self
             .encounter
             .entities
-            .get_mut(&self.encounter.local_player)
+            .get_mut(&self.local_player_id)
         {
             self.identity_log
                 .entry(entity.name.to_string())
@@ -698,14 +708,14 @@ impl EncounterState {
     }
 
     pub fn on_stagger_change(&mut self, pkt: PKTParalyzationStateNotify) {
-        if self.encounter.current_boss_name.is_empty() || self.encounter.fight_start == 0 {
+        if self.current_boss_id == 0 || self.encounter.fight_start == 0 {
             return;
         }
 
         if let Some(boss) = self
             .encounter
             .entities
-            .get_mut(&self.encounter.current_boss_name)
+            .get_mut(&self.current_boss_id)
         {
             let timestamp = Utc::now().timestamp_millis();
             let current_stagger = pkt.paralyzation_point as i32;
@@ -736,11 +746,11 @@ impl EncounterState {
 
     fn save_to_db(&self) {
         if self.encounter.fight_start == 0
-            || self.encounter.current_boss_name.is_empty()
+            || self.current_boss_id == 0
             || !self
                 .encounter
                 .entities
-                .contains_key(&self.encounter.current_boss_name)
+                .contains_key(&self.current_boss_id)
             || !self.encounter.entities.values().any(|e| {
                 e.entity_type == EntityType::PLAYER && e.skill_stats.hits > 1 && e.max_hp > 0
             })

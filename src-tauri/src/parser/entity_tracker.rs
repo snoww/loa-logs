@@ -210,10 +210,15 @@ impl EntityTracker {
     }
 
     pub fn new_npc_summon(&mut self, pkt: PKTNewNpcSummon, max_hp: i64) -> Entity {
-        let (_entity_type, name) = get_npc_entity_type_and_name(&pkt.npc_data, max_hp);
+        let (entity_type, name) = get_npc_entity_type_and_name(&pkt.npc_data, max_hp);
+        let entity_type = if entity_type == NPC {
+            SUMMON
+        } else {
+            entity_type
+        };
         let npc = Entity {
             id: pkt.npc_data.object_id,
-            entity_type: SUMMON,
+            entity_type,
             name,
             npc_id: pkt.npc_data.type_id,
             owner_id: pkt.owner_id,

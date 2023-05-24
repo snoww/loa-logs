@@ -1,7 +1,7 @@
 <script lang="ts">
     import { cardIconMap, cardMap } from "$lib/constants/cards";
     import { classColors } from "$lib/constants/colors";
-    import type { IdentityStats } from "$lib/types";
+    import type { Entity, IdentityStats } from "$lib/types";
     import { chartable, defaultOptions, type EChartsOptions } from "$lib/utils/charts";
     import { HexToRgba } from "$lib/utils/colors";
     import { fillMissingElapsedTimes, formatDurationFromS } from "$lib/utils/numbers";
@@ -38,9 +38,7 @@
                 },
                 moveHandleStyle: {
                     color: "rgba(136,136,136)"
-                },
-                start: 0,
-                endValue: "0:30"
+                }
             },
             {
                 type: "inside",
@@ -161,7 +159,7 @@
     </table>
     {#if identityStats.average}
         <div class="mt-4">
-            <div class="mb-2 text-lg font-bold">Stats</div>
+            <div class="mb-2 text-lg font-bold">Arcana Identity Stats</div>
             <div>
                 Total Cards Drawn: <span class="font-bold">{totalDraws.toLocaleString()}</span>
             </div>

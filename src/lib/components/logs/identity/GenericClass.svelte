@@ -84,7 +84,7 @@
 <div class="px relative top-0">
     {#if identityStats.average}
         <div class="mt-4">
-            <div class="mb-2 text-lg font-bold">Stats</div>
+            <div class="mb-2 text-lg font-bold">{className} Identity Stats</div>
             <div>
                 Average Identity Gain: <span class="font-bold">{identityStats.average.toFixed(1)}%/s</span>
             </div>

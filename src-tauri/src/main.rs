@@ -371,7 +371,7 @@ fn load_encounters_preview(
         JOIN entity ent ON e.id = ent.encounter_id
         WHERE duration > ? AND ((current_boss LIKE '%' || ? || '%') OR (ent.class LIKE '%' || ? || '%') OR (ent.name LIKE '%' || ? || '%'))
         GROUP BY encounter_id)
-    ", [min_duration.to_string(), search.to_string(), search.to_string(), search.to_string()], |row| {
+    ", [min_duration.to_string(), search.to_string(), search.to_string(), search], |row| {
         row.get(0)
     }).expect("could not get encounter count");
 
@@ -541,10 +541,13 @@ fn load_encounter(window: tauri::Window, id: String) -> Encounter {
         })
         .unwrap();
 
-    let mut entities: HashMap<String, EncounterEntity> = HashMap::new();
+    let mut entities: HashMap<u64, EncounterEntity> = HashMap::new();
+    let mut i = 1;
     for entity in entity_iter {
-        let entity = entity.unwrap();
-        entities.insert(entity.name.to_string(), entity);
+        let mut entity = entity.unwrap();
+        entity.id = i;
+        entities.insert(i, entity);
+        i += 1;
     }
 
     encounter.entities = entities;
@@ -566,10 +569,7 @@ fn get_encounter_count(window: tauri::Window) -> i32 {
 
     let count: Result<i32, rusqlite::Error> = stmt.query_row(params![], |row| row.get(0));
 
-    match count {
-        Ok(count) => count,
-        Err(_) => 0,
-    }
+    count.unwrap_or(0)
 }
 
 #[tauri::command]

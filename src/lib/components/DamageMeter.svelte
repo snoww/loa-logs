@@ -107,7 +107,7 @@
     let state = MeterState.PARTY;
     let tab = MeterTab.DAMAGE;
     let player: Entity | null = null;
-    let playerName = "";
+    let playerId = 0;
     let lastCombatPacket = 0;
     let anyDead: boolean = false;
     let anyFrontAtk: boolean = false;
@@ -171,8 +171,8 @@
                 currentBoss = encounter.currentBoss;
             }
 
-            if (playerName) {
-                player = encounter.entities[playerName];
+            if (playerId > 0) {
+                player = encounter.entities[playerId];
                 state = MeterState.PLAYER;
             } else {
                 player = null;
@@ -181,23 +181,33 @@
         }
     }
 
-    function inspectPlayer(name: string) {
+    function inspectPlayer(id: number) {
         state = MeterState.PLAYER;
-        playerName = name;
+        playerId = id;
+        scrollToTopOfTable();
     }
 
     function handleRightClick() {
         if (state === MeterState.PLAYER) {
             state = MeterState.PARTY;
             player = null;
-            playerName = "";
+            playerId = 0;
+        }
+
+        scrollToTopOfTable();
+    }
+
+    function scrollToTopOfTable() {
+        let rows = document.querySelector("#live-meter-table")?.querySelectorAll("tr");
+        if (rows && rows.length > 1) {
+            rows[0].scrollIntoView({ behavior: "smooth", block: "center" });
         }
     }
 
     function reset() {
         state = MeterState.PARTY;
         player = null;
-        playerName = "";
+        playerId = 0;
         encounter = null;
         players = [];
         currentBoss = null;
@@ -222,7 +232,7 @@
 <div
     class="relative top-7 overflow-scroll"
     style="height: calc(100vh - 1.5rem - 1.75rem {currentBoss !== null ? ' - 1.75rem' : ''});">
-    <table class="relative w-full table-fixed">
+    <table class="relative w-full table-fixed" id="live-meter-table">
         {#if tab === MeterTab.DAMAGE}
             {#if state === MeterState.PARTY}
                 <thead
@@ -272,7 +282,7 @@
                         <tr
                             class="h-7 px-2 py-1"
                             animate:flip={{ duration: 200 }}
-                            on:click={() => inspectPlayer(entity.name)}>
+                            on:click={() => inspectPlayer(entity.id)}>
                             <DamageMeterPlayerRow
                                 {entity}
                                 percentage={playerDamagePercentages[i]}

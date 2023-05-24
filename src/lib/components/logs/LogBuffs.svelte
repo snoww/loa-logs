@@ -18,7 +18,7 @@
     export let players: Array<Entity>;
     export let focusedPlayer: Entity | null = null;
     export let handleRightClick: () => void;
-    export let inspectPlayer: (name: string) => void;
+    export let inspectPlayer: (id: number) => void;
 
     if (focusedPlayer && focusedPlayer.entityType === EntityType.ESTHER) {
         focusedPlayer = null;
@@ -130,8 +130,8 @@
 </thead>
 <tbody on:contextmenu|preventDefault={handleRightClick} class="relative z-10">
     {#if !focusedPlayer}
-        {#each players as player, i (player.name)}
-            <tr class="h-7 px-2 py-1" on:click={() => inspectPlayer(player.name)}>
+        {#each players as player, i (player.id)}
+            <tr class="h-7 px-2 py-1" on:click={() => inspectPlayer(player.id)}>
                 <LogBuffRow {player} {groupedSynergies} percentage={percentages[i]} />
             </tr>
         {/each}

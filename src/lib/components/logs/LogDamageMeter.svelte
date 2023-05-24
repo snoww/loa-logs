@@ -37,7 +37,7 @@
     let state = MeterState.PARTY;
     let tab = MeterTab.DAMAGE;
     let chartType = ChartType.AVERAGE_DPS;
-    let playerName = "";
+    let playerId = 0;
 
     let deleteConfirm = false;
 
@@ -78,11 +78,11 @@
             }
 
             if (encounter.localPlayer) {
-                localPlayer = encounter.entities[encounter.localPlayer];
+                localPlayer = Object.values(encounter.entities).find((e) => e.name === encounter.localPlayer) || null;
             }
 
-            if (playerName) {
-                player = encounter.entities[playerName];
+            if (playerId > 0) {
+                player = encounter.entities[playerId];
                 state = MeterState.PLAYER;
             } else {
                 player = null;
@@ -383,9 +383,9 @@
         }
     }
 
-    function inspectPlayer(name: string) {
+    function inspectPlayer(id: number) {
         state = MeterState.PLAYER;
-        playerName = name;
+        playerId = id;
         chartType = ChartType.SKILL_LOG;
     }
 
@@ -427,7 +427,7 @@
         if (state === MeterState.PLAYER) {
             state = MeterState.PARTY;
             player = null;
-            playerName = "";
+            playerId = 0;
             chartType = ChartType.AVERAGE_DPS;
         }
     }
@@ -703,7 +703,7 @@
                         </thead>
                         <tbody class="relative z-10">
                             {#each players as player, i (player.name)}
-                                <tr class="h-7 px-2 py-1" on:click={() => inspectPlayer(player.name)}>
+                                <tr class="h-7 px-2 py-1" on:click={() => inspectPlayer(player.id)}>
                                     <LogDamageMeterRow
                                         entity={player}
                                         percentage={playerDamagePercentages[i]}
@@ -763,7 +763,7 @@
     <div class="mt-4">
         <div class="text-lg font-bold">Charts</div>
         <div class="mt-2 flex divide-x divide-gray-600">
-            {#if playerName === "" && state === MeterState.PARTY}
+            {#if playerId === 0 && state === MeterState.PARTY}
                 <button
                     class="rounded-sm px-2 py-1"
                     class:bg-accent-900={chartType == ChartType.AVERAGE_DPS}
@@ -778,7 +778,7 @@
                     on:click={() => (chartType = ChartType.ROLLING_DPS)}>
                     10s DPS Window
                 </button>
-            {:else if playerName !== "" && state === MeterState.PLAYER}
+            {:else if playerId !== 0 && state === MeterState.PLAYER}
                 <button
                     class="rounded-sm px-2 py-1"
                     class:bg-accent-900={chartType == ChartType.SKILL_LOG}
