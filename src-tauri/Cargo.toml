@@ -15,6 +15,7 @@ rust-version = "1.59"
 tauri-build = { version = "1.3.0", features = [] }
 
 [dependencies]
+anyhow = "1.0.71"
 chrono = "0.4.24"
 serde_json = "1.0"
 serde = { version = "1.0", features = ["derive"] }
@@ -28,8 +29,7 @@ hashbrown = { version = "0.13.2", features = ["serde"] }
 rusqlite = { version = "0.29.0", features = ["bundled", "serde_json"] }
 tokio = { version = "1.28.1", features = ["rt", "macros"] }
 serde_with = "2.3.3"
-meter-core = { path = "D:\\projects\\meter-core-rs" }
-anyhow = "1.0.71"
+meter-core = { git = "https://github.com/snoww/meter-core-rs.git", branch = "main" }
 
 
 [features]
