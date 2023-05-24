@@ -554,7 +554,6 @@ fn load_encounter(window: tauri::Window, id: String) -> Encounter {
         skills,
         damage_stats,
         skill_stats,
-        last_update,
         entity_type,
         npc_id
     FROM entity
@@ -594,7 +593,7 @@ fn load_encounter(window: tauri::Window, id: String) -> Encounter {
                 Err(_) => SkillStats::default(),
             };
 
-            let entity_type = match row.get(11) {
+            let entity_type = match row.get(10) {
                 Ok(entity_type) => entity_type,
                 Err(_) => "".to_string(),
             };
@@ -610,9 +609,8 @@ fn load_encounter(window: tauri::Window, id: String) -> Encounter {
                 skills,
                 damage_stats,
                 skill_stats,
-                last_update: row.get(10)?,
                 entity_type: EntityType::from_str(entity_type.as_str()).unwrap(),
-                npc_id: row.get(12)?,
+                npc_id: row.get(11)?,
                 ..Default::default()
             })
         })
