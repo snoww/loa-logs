@@ -541,13 +541,10 @@ fn load_encounter(window: tauri::Window, id: String) -> Encounter {
         })
         .unwrap();
 
-    let mut entities: HashMap<u64, EncounterEntity> = HashMap::new();
-    let mut i = 1;
+    let mut entities: HashMap<String, EncounterEntity> = HashMap::new();
     for entity in entity_iter {
-        let mut entity = entity.unwrap();
-        entity.id = i;
-        entities.insert(i, entity);
-        i += 1;
+        let entity = entity.unwrap();
+        entities.insert(entity.name.to_string(), entity);
     }
 
     encounter.entities = entities;

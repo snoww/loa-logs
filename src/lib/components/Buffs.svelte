@@ -19,7 +19,7 @@
     export let players: Array<Entity>;
     export let focusedPlayer: Entity | null = null;
     export let handleRightClick: () => void;
-    export let inspectPlayer: (id: number) => void;
+    export let inspectPlayer: (name: string) => void;
 
     let groupedSynergies: Map<string, Map<number, StatusEffect>> = new Map();
     let percentages = Array<number>();
@@ -122,7 +122,7 @@
 <tbody on:contextmenu|preventDefault={handleRightClick}>
     {#if !focusedPlayer}
         {#each players as player, i (player.id)}
-            <tr class="h-7 px-2 py-1" animate:flip={{ duration: 200 }} on:click={() => inspectPlayer(player.id)}>
+            <tr class="h-7 px-2 py-1" animate:flip={{ duration: 200 }} on:click={() => inspectPlayer(player.name)}>
                 <BuffRow {player} {groupedSynergies} percentage={percentages[i]} />
             </tr>
         {/each}

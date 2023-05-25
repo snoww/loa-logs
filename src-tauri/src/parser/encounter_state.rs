@@ -20,9 +20,6 @@ pub struct EncounterState {
     pub raid_end: bool,
     pub saved: bool,
 
-    pub local_player_id: u64,
-    pub current_boss_id: u64,
-
     prev_stagger: i32,
 
     damage_log: HashMap<String, Vec<(i64, i64)>>,
@@ -41,9 +38,6 @@ impl EncounterState {
             raid_end: false,
             saved: false,
 
-            local_player_id: 0,
-            current_boss_id: 0,
-
             prev_stagger: 0,
             damage_log: HashMap::new(),
             identity_log: HashMap::new(),
@@ -58,7 +52,6 @@ impl EncounterState {
         self.encounter.fight_start = 0;
         self.encounter.entities = HashMap::new();
         self.encounter.current_boss_name = "".to_string();
-        self.current_boss_id = 0;
         self.encounter.encounter_damage_stats = Default::default();
         self.encounter.reset = false;
         self.prev_stagger = 0;
@@ -70,14 +63,14 @@ impl EncounterState {
         self.stagger_intervals = Vec::new();
 
         if !clone.local_player.is_empty() {
-            if let Some(player) = clone.entities.get(&self.local_player_id) {
-                self.encounter.local_player = clone.local_player.to_string();
+            if let Some(player) = clone.entities.get(&clone.local_player) {
+                self.encounter.local_player = clone.local_player.clone();
                 self.encounter.entities.insert(
-                    player.id,
+                    player.name.clone(),
                     EncounterEntity {
                         id: player.id,
-                        name: player.name.to_string(),
-                        class: player.class.to_string(),
+                        name: player.name.clone(),
+                        class: player.class.clone(),
                         class_id: player.class_id,
                         current_hp: player.current_hp,
                         max_hp: player.max_hp,
@@ -95,7 +88,6 @@ impl EncounterState {
         let clone = self.encounter.clone();
         self.reset(&clone);
         self.encounter.current_boss_name = "".to_string();
-        self.current_boss_id = 0;
         for (key, entity) in clone.entities {
             self.encounter.entities.insert(
                 key,
@@ -119,16 +111,16 @@ impl EncounterState {
         if let Some(local_player) = self
             .encounter
             .entities
-            .get_mut(&self.local_player_id)
+            .get_mut(&self.encounter.local_player)
         {
             local_player.id = entity.id;
             local_player.name = entity.name.clone();
             local_player.class_id = entity.class_id;
-            local_player.class = get_class_from_id(entity.class_id);
+            local_player.class = get_class_from_id(&entity.class_id);
         } else {
             let entity = encounter_entity_from_entity(&entity);
             self.encounter.local_player = entity.name.clone();
-            self.encounter.entities.insert(entity.id, entity);
+            self.encounter.entities.insert(entity.name.clone(), entity);
         }
 
         if !self.saved && !self.encounter.current_boss_name.is_empty() {
@@ -161,22 +153,21 @@ impl EncounterState {
     }
 
     pub fn on_init_pc(&mut self, entity: Entity, hp: i64, max_hp: i64) {
-        self.encounter.entities.remove(&self.local_player_id);
-        self.encounter.local_player = entity.name.to_string();
-        self.local_player_id = entity.id;
+        self.encounter.entities.remove(&self.encounter.local_player);
+        self.encounter.local_player = entity.name.clone();
         let mut player = encounter_entity_from_entity(&entity);
         player.current_hp = hp;
         player.max_hp = max_hp;
         self.encounter
             .entities
-            .insert(player.id, player);
+            .insert(player.name.clone(), player);
     }
 
     pub fn on_new_pc(&mut self, entity: Entity, hp: i64, max_hp: i64) {
-        if let Some(player) = self.encounter.entities.get_mut(&entity.id) {
+        if let Some(player) = self.encounter.entities.get_mut(&entity.name) {
             player.id = entity.id;
             player.class_id = entity.class_id;
-            player.class = get_class_from_id(entity.class_id);
+            player.class = get_class_from_id(&entity.class_id);
             player.gear_score = entity.gear_level;
             player.current_hp = hp;
             player.max_hp = max_hp;
@@ -186,7 +177,7 @@ impl EncounterState {
             player.max_hp = max_hp;
             self.encounter
                 .entities
-                .insert(player.id, player);
+                .insert(player.name.clone(), player);
         }
     }
 
@@ -194,7 +185,7 @@ impl EncounterState {
         let entity_name = entity.name.clone();
         self.encounter
             .entities
-            .entry(entity.id)
+            .entry(entity_name.clone())
             .and_modify(|e| {
                 e.id = entity.id;
                 e.npc_id = entity.npc_id;
@@ -210,34 +201,31 @@ impl EncounterState {
                 npc
             });
 
-        if let Some(npc) = self.encounter.entities.get(&entity.id) {
+        if let Some(npc) = self.encounter.entities.get(&entity_name) {
             if npc.entity_type == EntityType::BOSS {
                 // get the npc that we just added
                 if self.encounter.current_boss_name.is_empty() {
                     self.encounter.current_boss_name = entity_name;
-                    self.current_boss_id = entity.id;
                 }
                 // get the current boss
                 else if let Some(boss) = self
                     .encounter
                     .entities
-                    .get(&self.current_boss_id)
+                    .get(&self.encounter.current_boss_name)
                 {
                     // check if the new npc has more hp than the current boss or if the current boss is dead
                     if npc.max_hp >= boss.max_hp || boss.is_dead {
                         self.encounter.current_boss_name = entity_name;
-                        self.current_boss_id = entity.id;
                     }
                 } else {
                     self.encounter.current_boss_name = entity_name;
-                    self.current_boss_id = entity.id;
                 }
             }
         }
     }
 
     pub fn on_death(&mut self, dead_entity: &Entity) {
-        if let Some(entity) = self.encounter.entities.get_mut(&dead_entity.id) {
+        if let Some(entity) = self.encounter.entities.get_mut(&dead_entity.name) {
             let deaths = if entity.is_dead {
                 entity.damage_stats.deaths + 1
             } else {
@@ -256,19 +244,19 @@ impl EncounterState {
             };
             self.encounter
                 .entities
-                .insert(dead_entity.id, entity);
+                .insert(dead_entity.name.clone(), entity);
         }
     }
 
     pub fn on_skill_start(&mut self, source_entity: Entity, skill_id: i32, timestamp: i64) {
-        let skill_name = get_skill_name(skill_id);
+        let skill_name = get_skill_name(&skill_id);
         let mut entity = self
             .encounter
             .entities
-            .entry(source_entity.id)
+            .entry(source_entity.name.clone())
             .or_insert_with(|| {
                 let (skill_name, skill_icon) =
-                    get_skill_name_and_icon(skill_id, 0, skill_name.clone());
+                    get_skill_name_and_icon(&skill_id,& 0, skill_name.clone());
                 let mut entity = encounter_entity_from_entity(&source_entity);
                 entity.skill_stats = SkillStats {
                     casts: 0,
@@ -289,7 +277,7 @@ impl EncounterState {
 
         if entity.entity_type == EntityType::PLAYER && entity.class_id == 0 {
             entity.class_id = source_entity.class_id;
-            entity.class = get_class_from_id(source_entity.class_id);
+            entity.class = get_class_from_id(&source_entity.class_id);
             entity.entity_type = source_entity.entity_type;
         }
 
@@ -307,7 +295,7 @@ impl EncounterState {
         if let Some(skill) = entity.skills.get_mut(&skill_id) {
             skill.casts += 1;
             self.cast_log
-                .entry(entity.name.to_string())
+                .entry(entity.name.clone())
                 .or_default()
                 .entry(skill_id)
                 .or_default()
@@ -319,15 +307,15 @@ impl EncounterState {
         {
             skill.casts += 1;
             self.cast_log
-                .entry(entity.name.to_string())
+                .entry(entity.name.clone())
                 .or_default()
                 .entry(skill_id)
                 .or_default()
                 .push(duration);
         } else {
-            let (skill_name, skill_icon) = get_skill_name_and_icon(skill_id, 0, skill_name.clone());
+            let (skill_name, skill_icon) = get_skill_name_and_icon(&skill_id, &0, skill_name.clone());
             self.cast_log
-                .entry(entity.name.to_string())
+                .entry(entity.name.clone())
                 .or_default()
                 .entry(skill_id)
                 .or_default()
@@ -345,6 +333,7 @@ impl EncounterState {
         }
     }
 
+    #[allow(clippy::too_many_arguments)]
     pub fn on_damage(
         &mut self,
         dmg_src_entity: &Entity,
@@ -406,14 +395,14 @@ impl EncounterState {
         let mut source_entity = self
             .encounter
             .entities
-            .entry(dmg_src_entity.id)
+            .entry(dmg_src_entity.name.clone())
             .or_insert_with(|| encounter_entity_from_entity(dmg_src_entity))
             .to_owned();
 
         let mut target_entity = self
             .encounter
             .entities
-            .entry(dmg_target_entity.id)
+            .entry(dmg_target_entity.name.clone())
             .or_insert_with(|| {
                 let mut target_entity = encounter_entity_from_entity(dmg_target_entity);
                 target_entity.current_hp = target_current_hp;
@@ -421,6 +410,9 @@ impl EncounterState {
                 target_entity
             })
             .to_owned();
+
+        source_entity.id = dmg_src_entity.id;
+        target_entity.id = dmg_target_entity.id;
 
         let timestamp = Utc::now().timestamp_millis();
 
@@ -444,7 +436,7 @@ impl EncounterState {
             skill_effect_id
         };
         let has_skill = source_entity.skills.contains_key(&skill_id);
-        let skill_name = get_skill_name(skill_id);
+        let skill_name = get_skill_name(&skill_id);
         if !has_skill {
             if let Some(skill) = source_entity
                 .skills
@@ -454,14 +446,14 @@ impl EncounterState {
                 skill_id = skill.id;
             } else {
                 let (skill_name, skill_icon) =
-                    get_skill_name_and_icon(skill_id, skill_effect_id, skill_name.clone());
+                    get_skill_name_and_icon(&skill_id, &skill_effect_id, skill_name.clone());
                 let duration = if self.encounter.fight_start == 0 {
                     0
                 } else {
                     ((timestamp - self.encounter.fight_start) / 1000) as i32
                 };
                 self.cast_log
-                    .entry(source_entity.name.to_string())
+                    .entry(source_entity.name.clone())
                     .or_default()
                     .entry(skill_id)
                     .or_default()
@@ -511,7 +503,7 @@ impl EncounterState {
             );
 
             self.damage_log
-                .entry(source_entity.name.to_string())
+                .entry(source_entity.name.clone())
                 .or_default()
                 .push((timestamp, damage));
 
@@ -645,16 +637,15 @@ impl EncounterState {
 
         // update current_boss
         if target_entity.entity_type == EntityType::BOSS {
-            self.encounter.current_boss_name = target_entity.name.to_string();
-            self.current_boss_id = target_entity.id;
+            self.encounter.current_boss_name = target_entity.name.clone();
         }
 
         self.encounter
             .entities
-            .insert(source_entity.id, source_entity);
+            .insert(source_entity.name.clone(), source_entity);
         self.encounter
             .entities
-            .insert(target_entity.id, target_entity);
+            .insert(target_entity.name.clone(), target_entity);
 
         self.encounter.last_combat_packet = timestamp;
     }
@@ -671,7 +662,7 @@ impl EncounterState {
         let entity = self
             .encounter
             .entities
-            .entry(source_entity.id)
+            .entry(source_entity.name.clone())
             .or_insert_with(|| {
                 let mut entity = encounter_entity_from_entity(source_entity);
                 entity.skill_stats = SkillStats {
@@ -684,17 +675,17 @@ impl EncounterState {
     }
 
     pub fn on_identity_gain(&mut self, pkt: PKTIdentityGaugeChangeNotify) {
-        if self.local_player_id == 0 || self.encounter.fight_start == 0 {
+        if self.encounter.local_player.is_empty() || self.encounter.fight_start == 0 {
             return;
         }
 
         if let Some(entity) = self
             .encounter
             .entities
-            .get_mut(&self.local_player_id)
+            .get_mut(&self.encounter.local_player)
         {
             self.identity_log
-                .entry(entity.name.to_string())
+                .entry(entity.name.clone())
                 .or_default()
                 .push((
                     Utc::now().timestamp_millis(),
@@ -708,14 +699,14 @@ impl EncounterState {
     }
 
     pub fn on_stagger_change(&mut self, pkt: PKTParalyzationStateNotify) {
-        if self.current_boss_id == 0 || self.encounter.fight_start == 0 {
+        if self.encounter.current_boss_name.is_empty() || self.encounter.fight_start == 0 {
             return;
         }
 
         if let Some(boss) = self
             .encounter
             .entities
-            .get_mut(&self.current_boss_id)
+            .get_mut(&self.encounter.current_boss_name)
         {
             let timestamp = Utc::now().timestamp_millis();
             let current_stagger = pkt.paralyzation_point as i32;
@@ -746,11 +737,11 @@ impl EncounterState {
 
     fn save_to_db(&self) {
         if self.encounter.fight_start == 0
-            || self.current_boss_id == 0
+            || self.encounter.current_boss_name.is_empty()
             || !self
                 .encounter
                 .entities
-                .contains_key(&self.current_boss_id)
+                .contains_key(&self.encounter.current_boss_name)
             || !self.encounter.entities.values().any(|e| {
                 e.entity_type == EntityType::PLAYER && e.skill_stats.hits > 1 && e.max_hp > 0
             })
@@ -803,7 +794,7 @@ fn encounter_entity_from_entity(entity: &Entity) -> EncounterEntity {
         entity_type: entity.entity_type,
         npc_id: entity.npc_id,
         class_id: entity.class_id,
-        class: get_class_from_id(entity.class_id),
+        class: get_class_from_id(&entity.class_id),
         gear_score: entity.gear_level,
         ..Default::default()
     }
@@ -834,7 +825,7 @@ fn get_status_effect_data(buff_id: i32) -> Option<StatusEffect> {
     {
         "dropsofether".to_string()
     } else {
-        buff.buff_category.to_string()
+        buff.buff_category.clone()
     };
     let mut status_effect = StatusEffect {
         target: {
@@ -846,14 +837,14 @@ fn get_status_effect_data(buff_id: i32) -> Option<StatusEffect> {
                 StatusEffectTarget::PARTY
             }
         },
-        category: buff.category.to_string(),
-        buff_category: buff_category.to_string(),
+        category: buff.category.clone(),
+        buff_category: buff_category.clone(),
         buff_type: get_status_effect_buff_type_flags(buff),
         unique_group: buff.unique_group,
         source: StatusEffectSource {
-            name: buff.name.to_string(),
-            desc: buff.desc.to_string(),
-            icon: buff.icon.to_string(),
+            name: buff.name.clone(),
+            desc: buff.desc.clone(),
+            icon: buff.icon.clone(),
             ..Default::default()
         },
     };
@@ -881,13 +872,13 @@ fn get_status_effect_data(buff_id: i32) -> Option<StatusEffect> {
     } else if buff_category == "battleitem" {
         if let Some(buff_source_item) = SKILL_EFFECT_DATA.get(&buff_id) {
             if let Some(item_name) = buff_source_item.item_name.as_ref() {
-                status_effect.source.name = item_name.to_string();
+                status_effect.source.name = item_name.clone();
             }
             if let Some(item_desc) = buff_source_item.item_desc.as_ref() {
-                status_effect.source.desc = item_desc.to_string();
+                status_effect.source.desc = item_desc.clone();
             }
             if let Some(icon) = buff_source_item.icon.as_ref() {
-                status_effect.source.icon = icon.to_string();
+                status_effect.source.icon = icon.clone();
             }
         }
     }
@@ -1076,63 +1067,63 @@ fn get_status_effect_buff_type_flags(buff: &SkillBuffData) -> u32 {
 }
 
 fn get_skill_name_and_icon(
-    skill_id: i32,
-    skill_effect_id: i32,
+    skill_id: &i32,
+    skill_effect_id: &i32,
     skill_name: String,
 ) -> (String, String) {
-    if skill_id == 0 && skill_effect_id == 0 {
+    if *skill_id == 0 && *skill_effect_id == 0 {
         ("Bleed".to_string(), "buff_168.png".to_string())
-    } else if skill_effect_id != 0 {
-        return if let Some(effect) = SKILL_EFFECT_DATA.get(&skill_effect_id) {
+    } else if *skill_effect_id != 0 {
+        return if let Some(effect) = SKILL_EFFECT_DATA.get(skill_effect_id) {
             if let Some(item_name) = effect.item_name.as_ref() {
                 return (
-                    item_name.to_string(),
+                    item_name.clone(),
                     effect
                         .icon
                         .as_ref()
                         .unwrap_or(&String::from(""))
-                        .to_string(),
+                        .clone(),
                 );
             }
             if let Some(source_skill) = effect.source_skill {
                 if let Some(skill) = SKILL_DATA.get(&source_skill) {
-                    return (skill.name.to_string(), skill.icon.to_string());
+                    return (skill.name.clone(), skill.icon.clone());
                 }
             } else if let Some(skill) = SKILL_DATA.get(&(skill_effect_id / 10)) {
-                return (skill.name.to_string(), skill.icon.to_string());
+                return (skill.name.clone(), skill.icon.clone());
             }
-            (effect.comment.to_string(), "".to_string())
+            (effect.comment.clone(), "".to_string())
         } else {
             (skill_name, "".to_string())
         };
     } else {
-        return if let Some(skill) = SKILL_DATA.get(&skill_id) {
+        return if let Some(skill) = SKILL_DATA.get(skill_id) {
             if let Some(summon_source_skill) = skill.summon_source_skill {
                 if let Some(skill) = SKILL_DATA.get(&summon_source_skill) {
-                    (skill.name.to_string() + " (Summon)", skill.icon.to_string())
+                    (skill.name.clone() + " (Summon)", skill.icon.clone())
                 } else {
                     (skill_name, "".to_string())
                 }
             } else if let Some(source_skill) = skill.source_skill {
                 if let Some(skill) = SKILL_DATA.get(&source_skill) {
-                    (skill.name.to_string(), skill.icon.to_string())
+                    (skill.name.clone(), skill.icon.clone())
                 } else {
                     (skill_name, "".to_string())
                 }
             } else {
-                (skill.name.to_string(), skill.icon.to_string())
+                (skill.name.clone(), skill.icon.clone())
             }
         } else if let Some(skill) = SKILL_DATA.get(&(skill_id - (skill_id % 10))) {
-            (skill.name.to_string(), skill.icon.to_string())
+            (skill.name.clone(), skill.icon.clone())
         } else {
             (skill_name, "".to_string())
         };
     }
 }
 
-fn get_skill_name(skill_id: i32) -> String {
-    if let Some(skill) = SKILL_DATA.get(&skill_id) {
-        skill.name.to_string()
+fn get_skill_name(skill_id: &i32) -> String {
+    if let Some(skill) = SKILL_DATA.get(skill_id) {
+        skill.name.clone()
     } else {
         "".to_string()
     }
@@ -1514,7 +1505,7 @@ fn calculate_average_dps(data: &[(i64, i64)], start_time: i64, end_time: i64) ->
     results
 }
 
-fn get_class_from_id(class_id: u32) -> String {
+fn get_class_from_id(class_id: &u32) -> String {
     let class = match class_id {
         0 => "",
         101 => "Warrior (Male)",

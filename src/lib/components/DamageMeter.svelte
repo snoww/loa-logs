@@ -107,7 +107,7 @@
     let state = MeterState.PARTY;
     let tab = MeterTab.DAMAGE;
     let player: Entity | null = null;
-    let playerId = 0;
+    let playerName = "";
     let lastCombatPacket = 0;
     let anyDead: boolean = false;
     let anyFrontAtk: boolean = false;
@@ -171,8 +171,8 @@
                 currentBoss = encounter.currentBoss;
             }
 
-            if (playerId > 0) {
-                player = encounter.entities[playerId];
+            if (playerName) {
+                player = encounter.entities[playerName];
                 state = MeterState.PLAYER;
             } else {
                 player = null;
@@ -181,9 +181,9 @@
         }
     }
 
-    function inspectPlayer(id: number) {
+    function inspectPlayer(name: string) {
         state = MeterState.PLAYER;
-        playerId = id;
+        playerName = name;
         scrollToTopOfTable();
     }
 
@@ -191,7 +191,7 @@
         if (state === MeterState.PLAYER) {
             state = MeterState.PARTY;
             player = null;
-            playerId = 0;
+            playerName = "";
         }
 
         scrollToTopOfTable();
@@ -207,7 +207,7 @@
     function reset() {
         state = MeterState.PARTY;
         player = null;
-        playerId = 0;
+        playerName = "";
         encounter = null;
         players = [];
         currentBoss = null;
@@ -282,7 +282,7 @@
                         <tr
                             class="h-7 px-2 py-1"
                             animate:flip={{ duration: 200 }}
-                            on:click={() => inspectPlayer(entity.id)}>
+                            on:click={() => inspectPlayer(entity.name)}>
                             <DamageMeterPlayerRow
                                 {entity}
                                 percentage={playerDamagePercentages[i]}
