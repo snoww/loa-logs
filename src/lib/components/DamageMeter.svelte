@@ -14,6 +14,7 @@
     import { fade } from "svelte/transition";
     import { settings } from "$lib/utils/settings";
     import { tooltip } from "$lib/utils/tooltip";
+    import { writable } from "svelte/store";
 
     let time = +Date.now();
     let encounter: Encounter | null = null;
@@ -24,7 +25,7 @@
     let pauseAlert = false;
     let phaseTransitionAlert = false;
     let bossDeadAlert = false;
-    let raidInProgress = true;
+    let raidInProgress = writable(true);
     let adminAlert = false;
 
     onMount(() => {
@@ -47,7 +48,7 @@
             });
             let raidStartEvent = await listen("raid-start", (event: any) => {
                 reset();
-                raidInProgress = true;
+                $raidInProgress = true;
             });
             let resetEncounterEvent = await listen("reset-encounter", (event: any) => {
                 reset();
@@ -57,7 +58,7 @@
                 }, 1500);
             });
             let pauseEncounterEvent = await listen("pause-encounter", (event: any) => {
-                paused = !paused;
+                $paused = !$paused;
                 pauseAlert = !pauseAlert;
             });
             let phaseTransitionEvent = await listen("phase-transition", (event: any) => {
@@ -74,7 +75,7 @@
                         phaseTransitionAlert = false;
                     }, 3000);
                 }
-                raidInProgress = false;
+                $raidInProgress = false;
             });
             let adminError = await listen("admin", (event: any) => {
                 adminAlert = true;
@@ -115,11 +116,11 @@
     let anySupportBuff: boolean = false;
     let anySupportBrand: boolean = false;
 
-    let paused = false;
+    let paused = writable(false);
 
     $: {
         if (encounter) {
-            if (encounter.fightStart !== 0 && !paused) {
+            if (encounter.fightStart !== 0 && !$paused) {
                 if ($settings.general.showEsther) {
                     players = Object.values(encounter.entities)
                         .filter(
@@ -143,7 +144,7 @@
                     (player) => (player.damageStats.damageDealt / topDamageDealt) * 100
                 );
 
-                if (((encounter.currentBoss && !encounter.currentBoss.isDead) || !encounter.currentBoss) && raidInProgress) {
+                if (((encounter.currentBoss && !encounter.currentBoss.isDead) || !encounter.currentBoss) && $raidInProgress) {
                     duration = time - encounter.fightStart;
                 }
 

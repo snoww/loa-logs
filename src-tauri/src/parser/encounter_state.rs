@@ -88,7 +88,7 @@ impl EncounterState {
         let clone = self.encounter.clone();
         self.reset(&clone);
         self.encounter.current_boss_name = "".to_string();
-        for (key, entity) in clone.entities {
+        for (key, entity) in clone.entities.into_iter().filter(|(_, e)| e.entity_type == EntityType::PLAYER) {
             self.encounter.entities.insert(
                 key,
                 EncounterEntity {
@@ -196,9 +196,16 @@ impl EncounterState {
             .entities
             .entry(entity_name.clone())
             .and_modify(|e| {
-                e.id = entity.id;
-                e.current_hp = hp;
-                e.max_hp = max_hp;
+                if e.npc_id == entity.npc_id && entity.entity_type == EntityType::BOSS {
+                    e.id = entity.id;
+                    e.current_hp = hp;
+                    e.max_hp = max_hp;
+                } else if entity.entity_type != EntityType::BOSS {
+                    e.npc_id = entity.npc_id;
+                    e.id = entity.id;
+                    e.current_hp = hp;
+                    e.max_hp = max_hp;
+                }
             })
             .or_insert_with(|| {
                 let mut npc = encounter_entity_from_entity(&entity);

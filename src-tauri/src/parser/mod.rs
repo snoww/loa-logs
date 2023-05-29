@@ -176,9 +176,11 @@ pub fn start(window: Window<Wry>, ip: String, port: u16) -> Result<()> {
             }
             Pkt::RaidBossKillNotify => {
                 state.on_phase_transition(1);
+                debug_print("phase", &1);
             }
             Pkt::RaidResult => {
                 state.on_phase_transition(0);
+                debug_print("phase", &0);
             }
             Pkt::RemoveObject => {
                 let pkt = PKTRemoveObject::new(&data)?;
@@ -288,6 +290,7 @@ pub fn start(window: Window<Wry>, ip: String, port: u16) -> Result<()> {
             }
             Pkt::TriggerBossBattleStatus => {
                 state.on_phase_transition(2);
+                debug_print("phase", &2);
             }
             Pkt::TriggerStartNotify => {
                 // let pkt = PKTTriggerStartNotify::new(&data)?;
