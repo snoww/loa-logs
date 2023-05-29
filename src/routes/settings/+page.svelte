@@ -96,6 +96,10 @@
                             description="Show player names if it's loaded. If disabled, it will show the class name (e.g. Arcanist)"
                             bind:setting={$settings.general.showNames} />
                         <SettingItem
+                            name="Show Gear Score"
+                            description="Show player's item level if it's loaded."
+                            bind:setting={$settings.general.showGearScore} />
+                        <SettingItem
                             name="Show Esther"
                             description="Show damage dealt by Esther skills in meter and log view."
                             bind:setting={$settings.general.showEsther} />

@@ -405,6 +405,7 @@ pub struct Settings {
 #[serde(rename_all = "camelCase")]
 pub struct GeneralSettings {
     pub show_names: bool,
+    pub show_gear_score: bool,
     pub show_esther: bool,
     pub accent_color: String,
     pub raw_socket: bool,
