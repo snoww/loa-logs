@@ -24,7 +24,7 @@ use std::time::{Duration, Instant};
 use tauri::{Manager, Window, Wry};
 use tokio::runtime::Runtime;
 
-pub fn start(window: Window<Wry>) -> Result<()> {
+pub fn start(window: Window<Wry>, ip: String, port: u16) -> Result<()> {
     let id_tracker = Rc::new(RefCell::new(IdTracker::new()));
     let party_tracker = Rc::new(RefCell::new(PartyTracker::new(id_tracker.clone())));
     let status_tracker = Rc::new(RefCell::new(StatusTracker::new(party_tracker.clone())));
@@ -36,7 +36,13 @@ pub fn start(window: Window<Wry>) -> Result<()> {
     let mut state = EncounterState::new(window.clone());
     let rt = Runtime::new().unwrap();
     let _guard = rt.enter();
-    let rx = start_capture(None, None);
+    let rx = match start_capture(ip, port) {
+        Ok(rx) => rx,
+        Err(e) => {
+            println!("Error starting capture: {}", e);
+            return Ok(());
+        }
+    };
     let mut last_update = Instant::now();
     let duration = Duration::from_millis(100);
 
@@ -139,6 +145,10 @@ pub fn start(window: Window<Wry>) -> Result<()> {
             Pkt::PartyInfo => {
                 let pkt = PKTPartyInfo::new(&data)?;
                 entity_tracker.party_info(pkt);
+                let local_player_id = entity_tracker.local_player_id;
+                if let Some(entity) = entity_tracker.entities.get(&local_player_id) {
+                    state.update_local_player(&entity.name);
+                }
             }
             Pkt::PartyLeaveResult => {
                 let pkt = PKTPartyLeaveResult::new(&data)?;
@@ -270,13 +280,11 @@ pub fn start(window: Window<Wry>) -> Result<()> {
             }
             Pkt::StatusEffectRemoveNotify => {
                 let pkt = PKTStatusEffectRemoveNotify::new(&data)?;
-                for se_id in pkt.status_effect_ids {
-                    status_tracker.borrow_mut().remove_status_effect(
-                        pkt.object_id,
-                        se_id,
-                        StatusEffectTargetType::Local,
-                    );
-                }
+                status_tracker.borrow_mut().remove_status_effects(
+                    pkt.object_id,
+                    pkt.status_effect_ids,
+                    StatusEffectTargetType::Local,
+                );
             }
             Pkt::TriggerBossBattleStatus => {
                 state.on_phase_transition(2);
@@ -313,10 +321,10 @@ pub fn start(window: Window<Wry>) -> Result<()> {
                         clone.current_boss_name = String::new();
                     }
                 }
-                clone.entities.retain(|_, v| {
-                    (v.entity_type == EntityType::PLAYER || v.entity_type == EntityType::ESTHER)
-                        && v.skill_stats.hits > 0
-                        && v.max_hp > 0
+                clone.entities.retain(|_, e| {
+                    (e.entity_type == EntityType::PLAYER || e.entity_type == EntityType::ESTHER)
+                        && e.damage_stats.damage_dealt > 0
+                        && e.max_hp > 0
                 });
                 if !clone.entities.is_empty() {
                     window

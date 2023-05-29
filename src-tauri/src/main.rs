@@ -59,16 +59,20 @@ async fn main() -> Result<()> {
                 meter_window.open_devtools();
             }
 
-            let mut packet_mode = "pcap".to_string();
+            let ip: String;
             let mut port = 6040;
 
             if let Some(settings) = settings {
-                if settings.general.raw_socket {
-                    packet_mode = "raw".to_string();
+                if settings.general.auto_iface {
+                    ip = meter_core::get_most_common_ip().unwrap();
+                } else {
+                    ip = settings.general.ip;
                     if settings.general.port > 0 {
                         port = settings.general.port;
                     }
                 }
+            } else {
+                ip = meter_core::get_most_common_ip().unwrap();
             }
 
             match setup_db(resource_path) {
@@ -78,7 +82,7 @@ async fn main() -> Result<()> {
                 }
             }
             tokio::task::spawn(async move {
-                parser::start(meter_window.clone()).expect("failed to start parser");
+                parser::start(meter_window, ip, port).expect("failed to start parser");
             });
 
             let _logs_window =
@@ -171,7 +175,8 @@ async fn main() -> Result<()> {
             copy_db,
             open_folder,
             disable_blur,
-            enable_blur
+            enable_blur,
+            get_network_interfaces
         ])
         .run(tauri::generate_context!())
         .expect("error while running application");
@@ -673,6 +678,11 @@ fn get_settings(window: tauri::Window) -> Option<Settings> {
         .resource_dir()
         .expect("could not get resource dir");
     read_settings(&path).ok()
+}
+
+#[tauri::command]
+fn get_network_interfaces() -> Vec<(String, String)> {
+    meter_core::get_network_interfaces()
 }
 
 #[tauri::command]

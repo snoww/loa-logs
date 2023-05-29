@@ -1,71 +1,19 @@
 <script lang="ts">
     import LogSidebar from "$lib/components/logs/LogSidebar.svelte";
-    import { Tabs, TabItem } from "flowbite-svelte";
+    import { Tabs, TabItem, Alert } from "flowbite-svelte";
     import SettingItem from "$lib/components/settings/SettingItem.svelte";
     import { formatDurationFromS } from "$lib/utils/numbers";
-    import { registerShortcuts, settings } from "$lib/utils/settings";
+    import { keyboardKeys, registerShortcuts, settings } from "$lib/utils/settings";
     import { onMount } from "svelte";
-    import { backNavStore, pageStore, searchStore } from "$lib/utils/stores";
-    import { relaunch } from "@tauri-apps/api/process";
+    import { backNavStore, ifaceChangedStore, pageStore, searchStore } from "$lib/utils/stores";
     import { invoke } from "@tauri-apps/api/tauri";
 
-    let dropdownOpen = false;
+    let colorDropdownOpen = false;
+    let networkDropdownOpen = false;
+
+    let networkInterfaces: [string, string][];
 
     let hidden: boolean = true;
-    const keys = [
-        "a",
-        "b",
-        "c",
-        "d",
-        "e",
-        "f",
-        "g",
-        "h",
-        "i",
-        "j",
-        "k",
-        "l",
-        "m",
-        "n",
-        "o",
-        "p",
-        "q",
-        "r",
-        "s",
-        "t",
-        "u",
-        "v",
-        "w",
-        "x",
-        "y",
-        "z",
-        "0",
-        "1",
-        "2",
-        "3",
-        "4",
-        "5",
-        "6",
-        "7",
-        "8",
-        "9",
-        "F1",
-        "F2",
-        "F3",
-        "F4",
-        "F5",
-        "F6",
-        "F7",
-        "F8",
-        "F9",
-        "F10",
-        "F11",
-        "F12",
-        "ArrowUp",
-        "ArrowDown",
-        "ArrowLeft",
-        "ArrowRight"
-    ];
 
     $: {
         (async () => {
@@ -73,16 +21,28 @@
         })();
     }
 
-    const handleDropdownClick = () => {
-        dropdownOpen = !dropdownOpen;
+    const handleColorDropdownClick = () => {
+        colorDropdownOpen = !colorDropdownOpen;
     };
 
-    const handleDropdownFocusLoss = (event: FocusEvent) => {
+    const handleColorDropdownFocusLoss = (event: FocusEvent) => {
         const relatedTarget = event.relatedTarget as HTMLElement;
         const currentTarget = event.currentTarget as HTMLElement;
 
         if (currentTarget.contains(relatedTarget)) return;
-        dropdownOpen = false;
+        colorDropdownOpen = false;
+    };
+
+    const handleNetDropdownClick = () => {
+        networkDropdownOpen = !networkDropdownOpen;
+    };
+
+    const handleNetDropdownFocusLoss = (event: FocusEvent) => {
+        const relatedTarget = event.relatedTarget as HTMLElement;
+        const currentTarget = event.currentTarget as HTMLElement;
+
+        if (currentTarget.contains(relatedTarget)) return;
+        networkDropdownOpen = false;
     };
 
     async function toggleBlur() {
@@ -98,6 +58,9 @@
         $pageStore = 1;
         $backNavStore = false;
         $searchStore = "";
+        (async () => {
+            networkInterfaces = await invoke("get_network_interfaces");
+        })();
     });
 </script>
 
@@ -152,31 +115,77 @@
                             </label>
                         </div>
                         <SettingItem
-                            name="VPN Support (beta)"
-                            description="Enables raw socket capture. (manually restart as ADMIN)"
-                            bind:setting={$settings.general.rawSocket} />
-                        <div>
-                            <label class="flex items-center font-medium">
-                                <input
-                                    type="number"
-                                    class="h-8 w-24 rounded-md bg-zinc-700 text-sm text-gray-300"
-                                    bind:value={$settings.general.port}
-                                    placeholder={$settings.general.port} />
-                                <div class="ml-5">
-                                    <div class="text-gray-100">Port</div>
-                                    <div class="text-xs text-gray-300">
-                                        Set custom port for raw socket mode. Default is 6040.
+                            name="Auto Network Selection"
+                            description="Automatically select network interface. If using a VPN, turn this off and select the VPN network."
+                            bind:setting={$settings.general.autoIface} />
+                        {#if !$settings.general.autoIface}
+                            <div class="relative" on:focusout={handleNetDropdownFocusLoss}>
+                                <div class="flex items-center font-medium">
+                                    <div class="">
+                                        <div class="text-gray-100">Select Network Interface</div>
+                                        <div class="text-xs text-gray-300">
+                                            Select your network interface from the list that Lost Ark is running on.
+                                        </div>
                                     </div>
                                 </div>
-                            </label>
-                        </div>
-                        <div class="pt-2" on:focusout={handleDropdownFocusLoss}>
+                                <div class="flex items-baseline space-x-2">
+                                    <div>Interface:</div>
+                                    <!-- svelte-ignore a11y-click-events-have-key-events -->
+                                    <div
+                                        class="mt-2 w-80 truncate rounded bg-zinc-700 p-1"
+                                        on:click={handleNetDropdownClick}>
+                                        <div class="px-2">
+                                            {#if $settings.general.ifDesc}
+                                                {$settings.general.ifDesc}
+                                            {:else}
+                                                No interface selected. Using default.
+                                            {/if}
+                                        </div>
+                                    </div>
+                                </div>
+                                {#if networkDropdownOpen}
+                                    <div
+                                        id="dropdown"
+                                        class="absolute left-[4.5rem] z-10 mt-1 flex w-80 cursor-pointer flex-col rounded bg-zinc-600 shadow">
+                                        {#each networkInterfaces as iface (iface)}
+                                            <button
+                                                class="truncate rounded px-2 py-1 text-left text-sm text-gray-200 hover:bg-gray-700"
+                                                aria-labelledby="dropdownDefaultButton"
+                                                on:click={() => {
+                                                    $settings.general.ifDesc = iface[0];
+                                                    $settings.general.ip = iface[1];
+                                                    networkDropdownOpen = false;
+                                                    $ifaceChangedStore = true;
+                                                }}>
+                                                {iface[0]}
+                                            </button>
+                                        {/each}
+                                    </div>
+                                {/if}
+                            </div>
+                            <div>
+                                <label class="flex items-center font-medium">
+                                    <input
+                                        type="number"
+                                        class="h-8 w-24 rounded-md bg-zinc-700 text-sm text-gray-300"
+                                        bind:value={$settings.general.port}
+                                        placeholder={$settings.general.port} />
+                                    <div class="ml-5">
+                                        <div class="text-gray-100">Port</div>
+                                        <div class="text-xs text-gray-300">
+                                            Set custom port if not using default. Default is 6040.
+                                        </div>
+                                    </div>
+                                </label>
+                            </div>
+                        {/if}
+                        <div class="pt-2" on:focusout={handleColorDropdownFocusLoss}>
                             <div class="flex items-center font-medium">
                                 <button
                                     id=""
                                     class="bg-accent-800 inline-flex items-center rounded-lg px-2 py-2 text-center text-sm font-medium"
                                     type="button"
-                                    on:click={handleDropdownClick}>
+                                    on:click={handleColorDropdownClick}>
                                     <svg
                                         class="h-4 w-4 fill-white"
                                         xmlns="http://www.w3.org/2000/svg"
@@ -189,7 +198,7 @@
                                     <div class="text-xs text-gray-300">Set the accent color for the app</div>
                                 </div>
                             </div>
-                            {#if dropdownOpen}
+                            {#if colorDropdownOpen}
                                 <div id="dropdown" class="z-10 mt-2 w-24 cursor-pointer rounded-lg shadow">
                                     <ul class="text-sm text-gray-200" aria-labelledby="dropdownDefaultButton">
                                         <li>
@@ -197,7 +206,7 @@
                                                 class="block w-full rounded-t-lg bg-red-800 px-4 py-2 text-left"
                                                 on:click={() => {
                                                     $settings.general.accentColor = "theme-red";
-                                                    dropdownOpen = false;
+                                                    colorDropdownOpen = false;
                                                 }}>Red</button>
                                         </li>
                                         <li>
@@ -205,7 +214,7 @@
                                                 class="block w-full bg-pink-800 px-4 py-2 text-left"
                                                 on:click={() => {
                                                     $settings.general.accentColor = "theme-pink";
-                                                    dropdownOpen = false;
+                                                    colorDropdownOpen = false;
                                                 }}>Pink</button>
                                         </li>
                                         <li>
@@ -213,7 +222,7 @@
                                                 class="block w-full bg-purple-800 px-4 py-2 text-left"
                                                 on:click={() => {
                                                     $settings.general.accentColor = "theme-purple";
-                                                    dropdownOpen = false;
+                                                    colorDropdownOpen = false;
                                                 }}>Purple</button>
                                         </li>
                                         <li>
@@ -221,7 +230,7 @@
                                                 class="block w-full bg-sky-800 px-4 py-2 text-left"
                                                 on:click={() => {
                                                     $settings.general.accentColor = "theme-blue";
-                                                    dropdownOpen = false;
+                                                    colorDropdownOpen = false;
                                                 }}>Blue</button>
                                         </li>
                                         <li>
@@ -229,7 +238,7 @@
                                                 class="block w-full bg-green-800 px-4 py-2 text-left"
                                                 on:click={() => {
                                                     $settings.general.accentColor = "theme-green";
-                                                    dropdownOpen = false;
+                                                    colorDropdownOpen = false;
                                                 }}>Green</button>
                                         </li>
                                         <li>
@@ -237,7 +246,7 @@
                                                 class="block w-full bg-yellow-400 px-4 py-2 text-left"
                                                 on:click={() => {
                                                     $settings.general.accentColor = "theme-yellow";
-                                                    dropdownOpen = false;
+                                                    colorDropdownOpen = false;
                                                 }}>Yellow</button>
                                         </li>
                                         <li>
@@ -245,7 +254,7 @@
                                                 class="block w-full rounded-b-lg bg-orange-500 px-4 py-2 text-left"
                                                 on:click={() => {
                                                     $settings.general.accentColor = "theme-orange";
-                                                    dropdownOpen = false;
+                                                    colorDropdownOpen = false;
                                                 }}>Orange</button>
                                         </li>
                                     </ul>
@@ -543,7 +552,7 @@
                                     id="keys"
                                     bind:value={$settings.shortcuts.hideMeter.key}
                                     class="focus:ring-accent-500 focus:border-accent-500 block rounded-lg border border-gray-600 bg-gray-700 p-2.5 text-sm text-white placeholder-gray-400">
-                                    {#each keys as key}
+                                    {#each keyboardKeys as key}
                                         <option value={key}>{key.toUpperCase()}</option>
                                     {/each}
                                 </select>
@@ -569,7 +578,7 @@
                                     id="keys"
                                     bind:value={$settings.shortcuts.showLogs.key}
                                     class="focus:ring-accent-500 focus:border-accent-500 block rounded-lg border border-gray-600 bg-gray-700 p-2.5 text-sm text-white placeholder-gray-400">
-                                    {#each keys as key}
+                                    {#each keyboardKeys as key}
                                         <option value={key}>{key.toUpperCase()}</option>
                                     {/each}
                                 </select>
@@ -595,7 +604,7 @@
                                     id="keys"
                                     bind:value={$settings.shortcuts.showLatestEncounter.key}
                                     class="focus:ring-accent-500 focus:border-accent-500 block rounded-lg border border-gray-600 bg-gray-700 p-2.5 text-sm text-white placeholder-gray-400">
-                                    {#each keys as key}
+                                    {#each keyboardKeys as key}
                                         <option value={key}>{key.toUpperCase()}</option>
                                     {/each}
                                 </select>
@@ -621,7 +630,7 @@
                                     id="keys"
                                     bind:value={$settings.shortcuts.resetSession.key}
                                     class="focus:ring-accent-500 focus:border-accent-500 block rounded-lg border border-gray-600 bg-gray-700 p-2.5 text-sm text-white placeholder-gray-400">
-                                    {#each keys as key}
+                                    {#each keyboardKeys as key}
                                         <option value={key}>{key.toUpperCase()}</option>
                                     {/each}
                                 </select>
@@ -647,7 +656,7 @@
                                     id="keys"
                                     bind:value={$settings.shortcuts.pauseSession.key}
                                     class="focus:ring-accent-500 focus:border-accent-500 block rounded-lg border border-gray-600 bg-gray-700 p-2.5 text-sm text-white placeholder-gray-400">
-                                    {#each keys as key}
+                                    {#each keyboardKeys as key}
                                         <option value={key}>{key.toUpperCase()}</option>
                                     {/each}
                                 </select>
@@ -658,4 +667,23 @@
             </TabItem>
         </Tabs>
     </div>
+    {#if $ifaceChangedStore}
+        <div>
+            <Alert color="none" class="absolute inset-x-0 bottom-10 z-50 mx-auto w-72 bg-red-800 py-2">
+                <span slot="icon"
+                    ><svg
+                        aria-hidden="true"
+                        class="h-5 w-5"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                        xmlns="http://www.w3.org/2000/svg"
+                        ><path
+                            fill-rule="evenodd"
+                            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                            clip-rule="evenodd" /></svg>
+                </span>
+                Network Interface Changed. Please fully Restart the App.
+            </Alert>
+        </div>
+    {/if}
 </div>

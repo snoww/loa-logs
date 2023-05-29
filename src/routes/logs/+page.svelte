@@ -5,9 +5,10 @@
     import type { EncounterPreview, EncountersOverview } from "$lib/types";
     import { formatDurationFromMs, formatTimestamp } from "$lib/utils/numbers";
     import { classIconCache, settings } from "$lib/utils/settings";
-    import { backNavStore, pageStore, searchStore } from "$lib/utils/stores";
+    import { backNavStore, ifaceChangedStore, pageStore, searchStore } from "$lib/utils/stores";
     import { tooltip } from "$lib/utils/tooltip";
     import { invoke } from "@tauri-apps/api";
+    import { Alert } from "flowbite-svelte";
     import NProgress from "nprogress";
     import "nprogress/nprogress.css";
 
@@ -290,4 +291,23 @@
             </div>
         {/if}
     </div>
+    {#if $ifaceChangedStore}
+    <div>
+        <Alert color="none" class="absolute inset-x-0 bottom-10 z-50 mx-auto w-72 bg-red-800 py-2">
+            <span slot="icon"
+                ><svg
+                    aria-hidden="true"
+                    class="h-5 w-5"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                    xmlns="http://www.w3.org/2000/svg"
+                    ><path
+                        fill-rule="evenodd"
+                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                        clip-rule="evenodd" /></svg>
+            </span>
+            Network Interface Changed. Please fully Restart the App.
+        </Alert>
+    </div>
+{/if}
 </div>

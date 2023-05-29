@@ -8,3 +8,5 @@ export const screenshotError = writable(false);
 export const pageStore = writable(1);
 export const searchStore = writable("");
 export const backNavStore = writable(false);
+
+export const ifaceChangedStore = writable(false);

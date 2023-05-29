@@ -408,7 +408,10 @@ pub struct GeneralSettings {
     pub show_esther: bool,
     pub accent_color: String,
     pub raw_socket: bool,
-    pub port: i32,
+    pub auto_iface: bool,
+    pub if_desc: String,
+    pub ip: String,
+    pub port: u16,
     pub blur: bool,
 }
 
