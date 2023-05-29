@@ -107,6 +107,17 @@ impl EncounterState {
         }
     }
 
+    pub fn update_local_player(&mut self, name: &str) {
+        if self.encounter.local_player == name {
+            return;
+        }
+
+        if let Some(local) = self.encounter.entities.remove(&self.encounter.local_player) {
+            self.encounter.local_player = name.to_string();
+            self.encounter.entities.insert(self.encounter.local_player.clone(), local);
+        }
+    }
+
     pub fn on_init_env(&mut self, entity: Entity) {
         if let Some(local_player) = self
             .encounter
@@ -145,7 +156,7 @@ impl EncounterState {
             .emit("phase-transition", phase_code)
             .expect("failed to emit phase-transition");
 
-        if phase_code == 0 || phase_code == 2 {
+        if (phase_code == 0 || phase_code == 2) && !self.encounter.current_boss_name.is_empty() {
             self.save_to_db();
             self.raid_end = true;
             self.saved = true;
@@ -166,8 +177,6 @@ impl EncounterState {
     pub fn on_new_pc(&mut self, entity: Entity, hp: i64, max_hp: i64) {
         if let Some(player) = self.encounter.entities.get_mut(&entity.name) {
             player.id = entity.id;
-            player.class_id = entity.class_id;
-            player.class = get_class_from_id(&entity.class_id);
             player.gear_score = entity.gear_level;
             player.current_hp = hp;
             player.max_hp = max_hp;
@@ -188,9 +197,6 @@ impl EncounterState {
             .entry(entity_name.clone())
             .and_modify(|e| {
                 e.id = entity.id;
-                e.npc_id = entity.npc_id;
-                e.entity_type = entity.entity_type;
-                e.name = entity_name.clone();
                 e.current_hp = hp;
                 e.max_hp = max_hp;
             })
@@ -226,6 +232,9 @@ impl EncounterState {
 
     pub fn on_death(&mut self, dead_entity: &Entity) {
         if let Some(entity) = self.encounter.entities.get_mut(&dead_entity.name) {
+            if entity.id != dead_entity.id {
+                return;
+            }
             let deaths = if entity.is_dead {
                 entity.damage_stats.deaths + 1
             } else {
@@ -412,7 +421,6 @@ impl EncounterState {
             .to_owned();
 
         source_entity.id = dmg_src_entity.id;
-        target_entity.id = dmg_target_entity.id;
 
         let timestamp = Utc::now().timestamp_millis();
 
@@ -423,8 +431,12 @@ impl EncounterState {
                 .expect("failed to emit raid-start");
         }
 
-        target_entity.current_hp = target_current_hp;
-        target_entity.max_hp = target_max_hp;
+        // test
+        if target_entity.id == dmg_target_entity.id {
+            target_entity.current_hp = target_current_hp;
+            target_entity.max_hp = target_max_hp;
+        }
+
         let mut damage = damage;
         if target_entity.entity_type != EntityType::PLAYER && target_current_hp < 0 {
             damage += target_current_hp;
@@ -435,9 +447,9 @@ impl EncounterState {
         } else {
             skill_effect_id
         };
-        let has_skill = source_entity.skills.contains_key(&skill_id);
+
         let skill_name = get_skill_name(&skill_id);
-        if !has_skill {
+        if !source_entity.skills.contains_key(&skill_id) {
             if let Some(skill) = source_entity
                 .skills
                 .values()
@@ -473,10 +485,6 @@ impl EncounterState {
 
         let skill = source_entity.skills.get_mut(&skill_id).unwrap();
 
-        let is_crit = hit_flag == HitFlag::CRITICAL || hit_flag == HitFlag::DOT_CRITICAL;
-        let is_back_atk = hit_option == HitOption::BACK_ATTACK;
-        let is_front_atk = hit_option == HitOption::FRONTAL_ATTACK;
-
         skill.total_damage += damage;
         if damage > skill.max_damage {
             skill.max_damage = damage;
@@ -486,14 +494,20 @@ impl EncounterState {
         target_entity.damage_stats.damage_taken += damage;
 
         source_entity.skill_stats.hits += 1;
-        source_entity.skill_stats.crits += if is_crit { 1 } else { 0 };
-        source_entity.skill_stats.back_attacks += if is_back_atk { 1 } else { 0 };
-        source_entity.skill_stats.front_attacks += if is_front_atk { 1 } else { 0 };
-
         skill.hits += 1;
-        skill.crits += if is_crit { 1 } else { 0 };
-        skill.back_attacks += if is_back_atk { 1 } else { 0 };
-        skill.front_attacks += if is_front_atk { 1 } else { 0 };
+
+        if hit_flag == HitFlag::CRITICAL || hit_flag == HitFlag::DOT_CRITICAL {
+            source_entity.skill_stats.crits += 1;
+            skill.crits += 1;
+        }
+        if hit_option == HitOption::BACK_ATTACK {
+            source_entity.skill_stats.back_attacks += 1;
+            skill.back_attacks += 1;
+        }
+        if hit_option == HitOption::FRONTAL_ATTACK {
+            source_entity.skill_stats.front_attacks += 1;
+            skill.front_attacks += 1;
+        }
 
         if source_entity.entity_type == EntityType::PLAYER {
             self.encounter.encounter_damage_stats.total_damage_dealt += damage;
@@ -592,36 +606,38 @@ impl EncounterState {
                 }
             }
 
-            skill.buffed_by_support += if is_buffed_by_support { damage } else { 0 };
-            skill.debuffed_by_support += if is_debuffed_by_support { damage } else { 0 };
-            source_entity.damage_stats.buffed_by_support +=
-                if is_buffed_by_support { damage } else { 0 };
-            source_entity.damage_stats.debuffed_by_support +=
-                if is_debuffed_by_support { damage } else { 0 };
+            if is_buffed_by_support {
+                skill.buffed_by_support += damage;
+                source_entity.damage_stats.buffed_by_support += damage;
+            }
+            if is_debuffed_by_support {
+                skill.debuffed_by_support += damage;
+                source_entity.damage_stats.debuffed_by_support += damage;
+            }
 
-            for buff_id in se_on_source.iter() {
+            for buff_id in se_on_source.into_iter() {
                 skill
                     .buffed_by
-                    .entry(*buff_id)
+                    .entry(buff_id)
                     .and_modify(|e| *e += damage)
                     .or_insert(damage);
                 source_entity
                     .damage_stats
                     .buffed_by
-                    .entry(*buff_id)
+                    .entry(buff_id)
                     .and_modify(|e| *e += damage)
                     .or_insert(damage);
             }
-            for debuff_id in se_on_target.iter() {
+            for debuff_id in se_on_target.into_iter() {
                 skill
                     .debuffed_by
-                    .entry(*debuff_id)
+                    .entry(debuff_id)
                     .and_modify(|e| *e += damage)
                     .or_insert(damage);
                 source_entity
                     .damage_stats
                     .debuffed_by
-                    .entry(*debuff_id)
+                    .entry(debuff_id)
                     .and_modify(|e| *e += damage)
                     .or_insert(damage);
             }
@@ -634,9 +650,8 @@ impl EncounterState {
                 target_entity.damage_stats.damage_taken,
             );
         }
-
         // update current_boss
-        if target_entity.entity_type == EntityType::BOSS {
+        else if target_entity.entity_type == EntityType::BOSS {
             self.encounter.current_boss_name = target_entity.name.clone();
         }
 

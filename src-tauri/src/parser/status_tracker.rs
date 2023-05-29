@@ -59,15 +59,6 @@ impl StatusTracker {
         registry.entry(se.target_id).or_insert_with(HashMap::new);
 
         let ser = registry.get_mut(&se.target_id).unwrap();
-
-        // if let Some(old_effect) = ser.get_mut(&se.instance_id) {
-        //     if let Some(_expire_time) = old_effect.expire_at {
-        //         old_effect.expire_at = None;
-        //     }
-        // } else if se.status_effect_type == StatusEffectType::Shield {
-        //     //
-        // }
-        // println!("inserting -> {:?}:{:?} -> {:?} -> {:?}", se.name, se.instance_id, se.target_type, se.target_id);
         add_status_effect_timeout(&mut se);
         ser.insert(se.instance_id, se.clone());
     }
@@ -80,20 +71,20 @@ impl StatusTracker {
         self.party_status_effect_registry.remove(&object_id);
     }
 
-    pub fn remove_status_effect(
+    pub fn remove_status_effects(
         &mut self,
         target_id: u64,
-        instance_id: u32,
+        instance_id: Vec<u32>,
         sett: StatusEffectTargetType,
-        // reason: Option<u32>,
     ) {
-        // println!("removing status effect -> {:?} -> {:?}", instance_id, sett);
         let registry = match sett {
             StatusEffectTargetType::Local => &mut self.local_status_effect_registry,
             StatusEffectTargetType::Party => &mut self.party_status_effect_registry,
         };
         if let Some(ser) = registry.get_mut(&target_id) {
-            ser.remove(&instance_id);
+            for id in instance_id {
+                ser.remove(&id);
+            }
         }
     }
 
@@ -194,12 +185,12 @@ impl StatusTracker {
             (true, Some(source_party_id)) => self.get_status_effects_from_party(
                 target_entity.character_id,
                 StatusEffectTargetType::Party,
-                source_party_id,
+                &source_party_id,
             ),
             (false, Some(source_party_id)) => self.get_status_effects_from_party(
                 target_entity.id,
                 StatusEffectTargetType::Local,
-                source_party_id,
+                &source_party_id,
             ),
             (true, None) => self.actually_get_status_effects(
                 target_entity.character_id,
@@ -244,7 +235,7 @@ impl StatusTracker {
         &mut self,
         target_id: u64,
         sett: StatusEffectTargetType,
-        party_id: u32,
+        party_id: &u32,
     ) -> Vec<StatusEffect> {
         let registry = match sett {
             StatusEffectTargetType::Local => &mut self.local_status_effect_registry,
@@ -263,11 +254,12 @@ impl StatusTracker {
         ser.values()
             .filter(|x| {
                 is_valid_for_raid(x)
-                    || &party_id
+                    || *party_id
                         == party_tracker
                             .entity_id_to_party_id
                             .get(&x.source_id)
-                            .unwrap_or(&0)
+                            .cloned()
+                            .unwrap_or(0)
             })
             .cloned()
             .collect()

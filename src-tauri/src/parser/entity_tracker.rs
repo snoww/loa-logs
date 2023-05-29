@@ -184,10 +184,14 @@ impl EntityTracker {
             .borrow_mut()
             .complete_entry(pkt.pc_struct.character_id, pkt.pc_struct.player_id);
         // println!("party status: {:?}", self.party_tracker.borrow().character_id_to_party_id);
-        let local_character_id = self
-            .id_tracker
-            .borrow()
-            .get_local_character_id(self.local_player_id);
+        let local_character_id = if self.local_character_id != 0 {
+            self.local_character_id
+        } else {
+            self
+                .id_tracker
+                .borrow()
+                .get_local_character_id(self.local_player_id)
+        };
         self.status_tracker
             .borrow_mut()
             .new_pc(&pkt, local_character_id);
@@ -252,13 +256,11 @@ impl EntityTracker {
     }
 
     pub fn party_status_effect_remove(&mut self, pkt: PKTPartyStatusEffectRemoveNotify) {
-        for se_id in pkt.status_effect_ids {
-            self.status_tracker.borrow_mut().remove_status_effect(
-                pkt.character_id,
-                se_id,
-                StatusEffectTargetType::Party,
-            );
-        }
+        self.status_tracker.borrow_mut().remove_status_effects(
+            pkt.character_id,
+            pkt.status_effect_ids,
+            StatusEffectTargetType::Party,
+        );
     }
 
     pub fn new_projectile(&mut self, pkt: PKTNewProjectile) {

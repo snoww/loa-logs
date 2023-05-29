@@ -112,8 +112,15 @@
     </td>
 {/if}
 {#if $settings.meter.breakdown.casts}
-    <td class="px-1 text-center">
-        {skill.casts.toLocaleString()}
+    <td
+        class="px-1 text-center"
+        use:tooltip={{
+            content: `<div class="py-1">${
+                skill.casts.toLocaleString() + " " + (skill.casts === 1 ? "cast" : "casts")
+            }</div>`
+        }}>
+        {abbreviateNumberSplit(skill.casts)[0]}<span class="text-3xs text-gray-300"
+            >{abbreviateNumberSplit(skill.casts)[1]}</span>
     </td>
 {/if}
 {#if $settings.meter.breakdown.cpm}
@@ -129,8 +136,15 @@
     </td>
 {/if}
 {#if $settings.meter.breakdown.hits}
-    <td class="px-1 text-center">
-        {skill.hits.toLocaleString()}
+    <td
+        class="px-1 text-center"
+        use:tooltip={{
+            content: `<div class="py-1">${
+                skill.hits.toLocaleString() + " " + (skill.hits === 1 ? "hit" : "hits")
+            }</div>`
+        }}>
+        {abbreviateNumberSplit(skill.hits)[0]}<span class="text-3xs text-gray-300"
+            >{abbreviateNumberSplit(skill.hits)[1]}</span>
     </td>
 {/if}
 {#if $settings.meter.breakdown.hpm}

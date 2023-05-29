@@ -4295,7 +4295,7 @@
   "572404": { "id": 572404, "name": "투명 몬스터", "grade": "boss", "type": "monster" },
   "572405": { "id": 572405, "name": "Golden Choco", "grade": "lucky", "type": "monster" },
   "480601": { "id": 480601, "name": "Saydon", "grade": "commander", "type": "monster" },
-  "480602": { "id": 480602, "name": "Circus Ball", "grade": "boss", "type": "monster" },
+  "480602": { "id": 480602, "name": "Circus Ball", "grade": "normal", "type": "monster" },
   "480603": { "id": 480603, "name": "Saydon", "grade": "boss", "type": "monster" },
   "480604": { "id": 480604, "name": "Saydon", "grade": "boss", "type": "monster" },
   "480605": { "id": 480605, "name": "Saydon", "grade": "boss", "type": "monster" },
