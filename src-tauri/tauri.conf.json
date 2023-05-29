@@ -28,20 +28,7 @@
         "all": true
       },
       "shell": {
-        "open": true,
-        "sidecar": true,
-        "scope": [
-          { 
-            "name": "lib/meter-core", 
-            "sidecar": true,
-            "args": [
-              "--mode",
-              {
-                "validator": "\\S+"
-              }
-            ]
-           }
-        ]
+        "open": true
       },
       "process": {
         "relaunch": true
@@ -67,13 +54,7 @@
     "bundle": {
       "active": true,
       "category": "Utility",
-      "copyright": "",
-      "deb": {
-        "depends": []
-      },
-      "externalBin": [
-        "lib/meter-core"
-      ],
+      "copyright": "GNU General Public License v3.0",
       "resources": [
         "meter-data/*.json",
         "images/**/*.png"
@@ -84,7 +65,7 @@
         "icons/icon.ico"
       ],
       "identifier": "xyz.snow",
-      "longDescription": "DPS Meter for Lost Ark written in Rust. A flavor of LOA Details.",
+      "longDescription": "Modern DPS Meter for Lost Ark written in Rust.",
       "macOS": {
         "entitlements": null,
         "exceptionDomain": "",
