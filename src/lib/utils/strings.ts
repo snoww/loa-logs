@@ -22,7 +22,7 @@ export function formatPlayerName(player: Entity, showNames = true, showGearScore
         }
     }
     if (showGearScore && player.gearScore > 0) {
-        playerName = round2(player.gearScore) + " " + playerName;
+        playerName = round2(player.gearScore, 2) + " " + playerName;
     }
     if (player.isDead) {
         playerName = "💀 " + playerName;

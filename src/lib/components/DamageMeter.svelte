@@ -200,8 +200,8 @@
 
     function scrollToTopOfTable() {
         let rows = document.querySelector("#live-meter-table")?.querySelectorAll("tr");
-        if (rows && rows.length > 1) {
-            rows[0].scrollIntoView({ behavior: "smooth", block: "center" });
+        if (rows && rows.length > 2) {
+            rows[1].scrollIntoView({ behavior: "smooth", block: "center" });
         }
     }
 
