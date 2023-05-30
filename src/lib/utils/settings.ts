@@ -14,7 +14,8 @@ export const defaultSettings = {
         ifDesc: "",
         ip: "",
         port: 6040,
-        blur: true
+        blur: true,
+        transparent: true
     },
     shortcuts: {
         hideMeter: {

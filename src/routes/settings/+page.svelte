@@ -113,11 +113,15 @@
                                 <div class="ml-5">
                                     <div class="text-gray-100">Blur Meter Background</div>
                                     <div class="text-xs text-gray-300">
-                                        Makes live meter translucent. Turn this off if experiencing lag.
+                                        Adds background blur effect to live meter. Turn this off if experiencing lag in Windows 11.
                                     </div>
                                 </div>
                             </label>
                         </div>
+                        <SettingItem
+                            name="Transparent Meter"
+                            description="Toggle transparent background for live meter."
+                            bind:setting={$settings.general.transparent} />
                         <SettingItem
                             name="Auto Network Selection"
                             description="Automatically select network interface. If using a VPN, turn this off and select the VPN network."
