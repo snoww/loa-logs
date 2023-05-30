@@ -187,8 +187,7 @@ impl EntityTracker {
         let local_character_id = if self.local_character_id != 0 {
             self.local_character_id
         } else {
-            self
-                .id_tracker
+            self.id_tracker
                 .borrow()
                 .get_local_character_id(self.local_player_id)
         };

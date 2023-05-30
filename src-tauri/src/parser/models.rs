@@ -168,6 +168,8 @@ pub struct SkillStats {
     pub identity_stats: Option<String>,
 }
 
+pub type IdentityLog = Vec<(i64, (u32, u32, u32))>;
+
 #[derive(Debug, Default, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct IdentityArcanist {
@@ -207,6 +209,7 @@ pub struct StaggerStats {
 pub struct EncounterMisc {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub stagger_stats: Option<StaggerStats>,
+    pub boss_hp_log: HashMap<String, Vec<(i32, i64)>>,
 }
 
 #[derive(Debug, Default, Deserialize, Clone)]
@@ -414,6 +417,7 @@ pub struct GeneralSettings {
     pub ip: String,
     pub port: u16,
     pub blur: bool,
+    pub transparent: bool,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
