@@ -107,14 +107,27 @@ impl EncounterState {
         }
     }
 
-    pub fn update_local_player(&mut self, name: &str) {
-        if self.encounter.local_player == name {
+    pub fn update_local_player(&mut self, entity: &Entity) {
+        if self.encounter.local_player == entity.name {
             return;
         }
 
-        if let Some(local) = self.encounter.entities.remove(&self.encounter.local_player) {
-            self.encounter.local_player = name.to_string();
+        if let Some(mut local) = self.encounter.entities.remove(&self.encounter.local_player) {
+            self.encounter.local_player = entity.name.to_string();
+            local.name = entity.name.to_string();
             self.encounter.entities.insert(self.encounter.local_player.clone(), local);
+        } else {
+            let old_local = self.encounter.entities.iter()
+                .find(|(_, e)| e.id == entity.id)
+                .map(|(key, _)| key.clone());
+    
+            if let Some(old_local) = old_local {
+                let mut new_local = self.encounter.entities[&old_local].clone();
+                new_local.name = entity.name.to_string();
+                self.encounter.entities.remove(&old_local);
+                self.encounter.local_player = entity.name.to_string();
+                self.encounter.entities.insert(self.encounter.local_player.clone(), new_local);
+            }
         }
     }
 
@@ -140,7 +153,7 @@ impl EncounterState {
 
         self.encounter.entities.retain(|_, e| {
             e.name == self.encounter.local_player
-                || (e.damage_stats.damage_dealt > 0 && e.max_hp > 0)
+                || e.damage_stats.damage_dealt > 0
         });
 
         self.window
@@ -156,10 +169,12 @@ impl EncounterState {
             .emit("phase-transition", phase_code)
             .expect("failed to emit phase-transition");
 
-        if (phase_code == 0 || phase_code == 2) && !self.encounter.current_boss_name.is_empty() {
-            self.save_to_db();
+        if phase_code == 0 || phase_code == 2 {
+            if !self.encounter.current_boss_name.is_empty() {
+                self.save_to_db();
+                self.saved = true;
+            }
             self.raid_end = true;
-            self.saved = true;
         }
     }
 
@@ -196,11 +211,7 @@ impl EncounterState {
             .entities
             .entry(entity_name.clone())
             .and_modify(|e| {
-                if e.npc_id == entity.npc_id && entity.entity_type == EntityType::BOSS {
-                    e.id = entity.id;
-                    e.current_hp = hp;
-                    e.max_hp = max_hp;
-                } else if entity.entity_type != EntityType::BOSS {
+                if (e.npc_id as i32 - entity.npc_id as i32).abs() < 50 || entity.entity_type != EntityType::BOSS {
                     e.npc_id = entity.npc_id;
                     e.id = entity.id;
                     e.current_hp = hp;
@@ -765,7 +776,7 @@ impl EncounterState {
                 .entities
                 .contains_key(&self.encounter.current_boss_name)
             || !self.encounter.entities.values().any(|e| {
-                e.entity_type == EntityType::PLAYER && e.skill_stats.hits > 1 && e.max_hp > 0
+                e.entity_type == EntityType::PLAYER && e.damage_stats.damage_dealt > 0
             })
         {
             return;
@@ -1276,8 +1287,7 @@ fn insert_data(
 
     for (_key, mut entity) in encounter.entities.iter_mut().filter(|(_, e)| {
         (e.entity_type == EntityType::PLAYER || e.entity_type == EntityType::ESTHER)
-            && e.skill_stats.hits >= 1
-            && e.max_hp > 0
+            && e.damage_stats.damage_dealt > 0
     }) {
         if entity.entity_type == EntityType::PLAYER {
             let intervals = generate_intervals(fight_start, fight_end);

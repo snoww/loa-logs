@@ -147,7 +147,7 @@ pub fn start(window: Window<Wry>, ip: String, port: u16) -> Result<()> {
                 entity_tracker.party_info(pkt);
                 let local_player_id = entity_tracker.local_player_id;
                 if let Some(entity) = entity_tracker.entities.get(&local_player_id) {
-                    state.update_local_player(&entity.name);
+                    state.update_local_player(entity);
                 }
             }
             Pkt::PartyLeaveResult => {
@@ -324,10 +324,18 @@ pub fn start(window: Window<Wry>, ip: String, port: u16) -> Result<()> {
                         clone.current_boss_name = String::new();
                     }
                 }
+                // let ent: Vec<_> = clone.entities.iter().filter_map(|(_, e)| {
+                //     if e.entity_type == EntityType::PLAYER {
+                //             Some((e.id, e.name.clone(), e.class.clone()))
+                //     } else {
+                //         None
+                //     }
+                // }).collect();
+                // debug_print("local_player", &clone.local_player);
+                // debug_print("entities", &ent);
                 clone.entities.retain(|_, e| {
                     (e.entity_type == EntityType::PLAYER || e.entity_type == EntityType::ESTHER)
                         && e.damage_stats.damage_dealt > 0
-                        && e.max_hp > 0
                 });
                 if !clone.entities.is_empty() {
                     window
