@@ -66,7 +66,6 @@ pub struct Encounter {
     pub current_boss: Option<EncounterEntity>,
     pub encounter_damage_stats: EncounterDamageStats,
     pub duration: i64,
-    pub reset: bool,
 }
 
 #[derive(Debug, Serialize, Clone, Default)]

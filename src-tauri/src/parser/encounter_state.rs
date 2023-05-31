@@ -56,12 +56,12 @@ impl EncounterState {
         self.encounter.entities = HashMap::new();
         self.encounter.current_boss_name = "".to_string();
         self.encounter.encounter_damage_stats = Default::default();
-        self.encounter.reset = false;
         self.prev_stagger = 0;
 
         self.damage_log = HashMap::new();
         self.identity_log = HashMap::new();
         self.cast_log = HashMap::new();
+        self.boss_hp_log = HashMap::new();
         self.stagger_log = Vec::new();
         self.stagger_intervals = Vec::new();
 
@@ -331,6 +331,7 @@ impl EncounterState {
 
         // if skills have different ids but the same name, we group them together
         // dunno if this is right approach xd
+        let mut skill_id = skill_id;
         if let Some(skill) = entity.skills.get_mut(&skill_id) {
             skill.casts += 1;
         } else if let Some(skill) = entity
@@ -339,6 +340,7 @@ impl EncounterState {
             .find(|s| s.name == skill_name.clone())
         {
             skill.casts += 1;
+            skill_id = skill.id;
         } else {
             let (skill_name, skill_icon) =
                 get_skill_name_and_icon(&skill_id, &0, skill_name.clone());
