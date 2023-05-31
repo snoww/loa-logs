@@ -1,14 +1,6 @@
 <script lang="ts">
-    import { classesMap } from "$lib/constants/classes";
-    import {
-        MeterTab,
-        StatusEffectTarget,
-        type EncounterDamageStats,
-        type Entity,
-        type StatusEffect,
-        EntityType
-    } from "$lib/types";
-    import { defaultBuffFilter } from "$lib/utils/buffs";
+    import { MeterTab, type EncounterDamageStats, type Entity, type StatusEffect, EntityType } from "$lib/types";
+    import { filterStatusEffects } from "$lib/utils/buffs";
     import { flip } from "svelte/animate";
     import BuffHeader from "./BuffHeader.svelte";
     import BuffRow from "./BuffRow.svelte";
@@ -39,70 +31,15 @@
                 if (focusedPlayer && !Object.hasOwn(focusedPlayer.damageStats.buffedBy, id)) {
                     return;
                 }
-                filterStatusEffects(buff, Number(id), focusedPlayer);
+                filterStatusEffects(groupedSynergies, buff, Number(id), focusedPlayer, tab);
             });
             Object.entries(encounterDamageStats.debuffs).forEach(([id, debuff]) => {
                 if (focusedPlayer && !Object.hasOwn(focusedPlayer.damageStats.debuffedBy, id)) {
                     return;
                 }
-                filterStatusEffects(debuff, Number(id), focusedPlayer);
+                filterStatusEffects(groupedSynergies, debuff, Number(id), focusedPlayer, tab);
             });
             groupedSynergies = new Map([...groupedSynergies.entries()].sort());
-        }
-    }
-
-    function filterStatusEffects(buff: StatusEffect, id: number, focusedPlayer: Entity | null) {
-        // Party synergies
-        if (
-            ["classskill", "identity", "ability"].includes(buff.buffCategory) &&
-            buff.target === StatusEffectTarget.PARTY
-        ) {
-            if (tab === MeterTab.PARTY_BUFFS) {
-                const key = `${classesMap[buff.source.skill?.classId ?? 0]}_${
-                    buff.uniqueGroup ? buff.uniqueGroup : buff.source.skill?.name
-                }`;
-                groupedSynergiesAdd(key, id, buff);
-            }
-        }
-        // Self synergies
-        else if (["pet", "cook", "battleitem", "dropsofether", "bracelet"].includes(buff.buffCategory)) {
-            if (tab === MeterTab.SELF_BUFFS && !focusedPlayer) {
-                groupedSynergiesAdd(buff.buffCategory, id, buff);
-            }
-        } else if (["set"].includes(buff.buffCategory)) {
-            if (tab === MeterTab.SELF_BUFFS && !focusedPlayer) {
-                groupedSynergiesAdd(`set_${buff.source.setName}`, id, buff);
-            }
-        } else if (["classskill", "identity", "ability"].includes(buff.buffCategory)) {
-            // self & other identity, classskill, engravings
-            if (tab === MeterTab.SELF_BUFFS && focusedPlayer) {
-                let key;
-                if (buff.buffCategory === "ability") {
-                    key = `${buff.uniqueGroup ? buff.uniqueGroup : id}`;
-                } else {
-                    if (focusedPlayer.classId !== buff.source.skill?.classId) return; // We hide other classes self buffs (classskill & identity)
-                    key = `${classesMap[buff.source.skill?.classId ?? 0]}_${
-                        buff.uniqueGroup ? buff.uniqueGroup : buff.source.skill?.name
-                    }`;
-                }
-                groupedSynergiesAdd(key, id, buff);
-            }
-        } else {
-            // ignore
-        }
-    }
-
-    function groupedSynergiesAdd(key: string, id: number, buff: StatusEffect) {
-        // by default, only show dmg, crit, atk spd, cd buffs.
-        if (!defaultBuffFilter(buff.buffType)) {
-            // console.log(buff);
-            return;
-        }
-        key = key.replace(" ", "").toLowerCase();
-        if (groupedSynergies.has(key)) {
-            groupedSynergies.get(key)?.set(id, buff);
-        } else {
-            groupedSynergies.set(key, new Map([[id, buff]]));
         }
     }
 </script>

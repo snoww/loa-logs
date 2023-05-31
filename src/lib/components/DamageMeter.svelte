@@ -10,11 +10,10 @@
     import PlayerBreakdown from "./PlayerBreakdown.svelte";
     import Footer from "./Footer.svelte";
     import Buffs from "./Buffs.svelte";
-    import { Alert } from "flowbite-svelte";
-    import { fade } from "svelte/transition";
     import { settings } from "$lib/utils/settings";
     import { tooltip } from "$lib/utils/tooltip";
     import { writable } from "svelte/store";
+    import Notification from "./shared/Notification.svelte";
 
     let time = +Date.now();
     let encounter: Encounter | null = null;
@@ -26,7 +25,6 @@
     let phaseTransitionAlert = false;
     let bossDeadAlert = false;
     let raidInProgress = writable(true);
-    let adminAlert = false;
 
     onMount(() => {
         setInterval(() => {
@@ -77,9 +75,6 @@
                 }
                 $raidInProgress = false;
             });
-            let adminError = await listen("admin", (event: any) => {
-                adminAlert = true;
-            });
 
             events.push(
                 encounterUpdateEvent,
@@ -87,8 +82,7 @@
                 resetEncounterEvent,
                 pauseEncounterEvent,
                 phaseTransitionEvent,
-                raidStartEvent,
-                adminError
+                raidStartEvent
             );
         })();
     });
@@ -144,7 +138,10 @@
                     (player) => (player.damageStats.damageDealt / topDamageDealt) * 100
                 );
 
-                if (((encounter.currentBoss && !encounter.currentBoss.isDead) || !encounter.currentBoss) && $raidInProgress) {
+                if (
+                    ((encounter.currentBoss && !encounter.currentBoss.isDead) || !encounter.currentBoss) &&
+                    $raidInProgress
+                ) {
                     duration = time - encounter.fightStart;
                 }
 
@@ -340,128 +337,18 @@
     </table>
 </div>
 {#if zoneChangeAlert}
-    <div transition:fade>
-        <Alert
-            color="none"
-            class="bg-accent-800 absolute inset-x-0 bottom-8 z-50 mx-auto w-48 bg-opacity-80 py-2"
-            dismissable
-            on:close={() => (zoneChangeAlert = false)}>
-            <span slot="icon"
-                ><svg
-                    aria-hidden="true"
-                    class="h-5 w-5"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                    xmlns="http://www.w3.org/2000/svg"
-                    ><path
-                        fill-rule="evenodd"
-                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
-                        clip-rule="evenodd" /></svg>
-            </span>
-            Changing Zone
-        </Alert>
-    </div>
+    <Notification bind:showAlert={zoneChangeAlert} text="Changing Zone" width={"12rem"} />
 {/if}
 {#if resettingAlert}
-    <div transition:fade>
-        <Alert
-            color="none"
-            class="bg-accent-800 absolute inset-x-0 bottom-8 z-50 mx-auto w-40 bg-opacity-80 py-2"
-            dismissable
-            on:close={() => (resettingAlert = false)}>
-            <span slot="icon"
-                ><svg
-                    aria-hidden="true"
-                    class="h-5 w-5"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                    xmlns="http://www.w3.org/2000/svg"
-                    ><path
-                        fill-rule="evenodd"
-                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
-                        clip-rule="evenodd" /></svg>
-            </span>
-            Resetting
-        </Alert>
-    </div>
+    <Notification bind:showAlert={resettingAlert} text="Resetting" width={"10rem"} />
 {/if}
 {#if pauseAlert}
-    <div transition:fade>
-        <Alert
-            color="none"
-            class="bg-accent-800 absolute inset-x-0 bottom-8 z-50 mx-auto w-32 bg-opacity-80 py-2"
-            on:close={() => (pauseAlert = false)}>
-            <span slot="icon">
-                <svg class="h-5 w-5" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960"
-                    ><path d="M555 852V300h172.5v552H555Zm-322 0V300h172.5v552H233Z" /></svg>
-            </span>
-            Paused
-        </Alert>
-    </div>
+    <Notification bind:showAlert={pauseAlert} text="Paused" width={"8rem"} />
 {/if}
 {#if phaseTransitionAlert}
-    <div transition:fade>
-        <Alert
-            color="none"
-            class="bg-accent-800 absolute inset-x-0 bottom-8 z-50 mx-auto w-52 bg-opacity-80 py-2"
-            dismissable
-            on:close={() => (phaseTransitionAlert = false)}>
-            <span slot="icon"
-                ><svg
-                    aria-hidden="true"
-                    class="h-5 w-5"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                    xmlns="http://www.w3.org/2000/svg"
-                    ><path
-                        fill-rule="evenodd"
-                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
-                        clip-rule="evenodd" /></svg>
-            </span>
-            Wipe/Phase Clear
-        </Alert>
-    </div>
+    <Notification bind:showAlert={phaseTransitionAlert} text="Wipe/Phase Clear" width={"13rem"} />
 {/if}
 {#if bossDeadAlert}
-    <div transition:fade>
-        <Alert
-            color="none"
-            class="bg-accent-800 absolute inset-x-0 bottom-8 z-50 mx-auto w-48 bg-opacity-80 py-2"
-            dismissable
-            on:close={() => (bossDeadAlert = false)}>
-            <span slot="icon"
-                ><svg
-                    aria-hidden="true"
-                    class="h-5 w-5"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                    xmlns="http://www.w3.org/2000/svg"
-                    ><path
-                        fill-rule="evenodd"
-                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
-                        clip-rule="evenodd" /></svg>
-            </span>
-            Boss Dead
-        </Alert>
-    </div>
-{/if}
-{#if adminAlert}
-    <div transition:fade>
-        <Alert color="none" class="absolute inset-x-0 bottom-8 z-50 mx-auto w-56 bg-red-700 py-2">
-            <span slot="icon"
-                ><svg
-                    aria-hidden="true"
-                    class="h-5 w-5"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                    xmlns="http://www.w3.org/2000/svg"
-                    ><path
-                        fill-rule="evenodd"
-                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
-                        clip-rule="evenodd" /></svg>
-            </span>
-            Please restart as Admin
-        </Alert>
-    </div>
+    <Notification bind:showAlert={bossDeadAlert} text="Boss Dead" width={"12rem"} />
 {/if}
 <Footer bind:tab />

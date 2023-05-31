@@ -1,14 +1,6 @@
 <script lang="ts">
-    import { classesMap } from "$lib/constants/classes";
-    import {
-        StatusEffectTarget,
-        type EncounterDamageStats,
-        type Entity,
-        MeterTab,
-        type StatusEffect,
-        EntityType
-    } from "$lib/types";
-    import { defaultBuffFilter } from "$lib/utils/buffs";
+    import { type EncounterDamageStats, type Entity, MeterTab, type StatusEffect, EntityType } from "$lib/types";
+    import { filterStatusEffects } from "$lib/utils/buffs";
     import LogBuffHeader from "./LogBuffHeader.svelte";
     import LogBuffRow from "./LogBuffRow.svelte";
     import LogBuffBreakdown from "./LogBuffBreakdown.svelte";
@@ -34,7 +26,7 @@
             continue;
         }
         if (buff.category === "buff") {
-            filterStatusEffects(groupedSynergies, buff, Number(id), focusedPlayer);
+            filterStatusEffects(groupedSynergies, buff, Number(id), focusedPlayer, tab);
         }
     }
     for (const [id, debuff] of Object.entries(encounterDamageStats.debuffs)) {
@@ -42,78 +34,10 @@
             continue;
         }
         if (debuff.category === "debuff") {
-            filterStatusEffects(groupedSynergies, debuff, Number(id), focusedPlayer);
+            filterStatusEffects(groupedSynergies, debuff, Number(id), focusedPlayer, tab);
         }
     }
     groupedSynergies = new Map([...groupedSynergies.entries()].sort());
-
-    function filterStatusEffects(
-        groupedSynergies: Map<string, Map<number, StatusEffect>>,
-        buff: StatusEffect,
-        id: number,
-        focusedPlayer: Entity | null
-    ) {
-        // Party synergies
-        if (
-            ["classskill", "identity", "ability"].includes(buff.buffCategory) &&
-            buff.target === StatusEffectTarget.PARTY
-        ) {
-            if (tab === MeterTab.PARTY_BUFFS) {
-                const key = `${classesMap[buff.source.skill?.classId ?? 0]}_${
-                    buff.uniqueGroup ? buff.uniqueGroup : buff.source.skill?.name
-                }`;
-                groupedSynergiesAdd(groupedSynergies, key, id, buff);
-            }
-        }
-        // Self synergies
-        else if (["pet", "cook", "battleitem", "dropsofether", "bracelet"].includes(buff.buffCategory)) {
-            if (tab === MeterTab.SELF_BUFFS && !focusedPlayer) {
-                groupedSynergiesAdd(groupedSynergies, buff.buffCategory, id, buff);
-            }
-        } else if (["set"].includes(buff.buffCategory)) {
-            if (tab === MeterTab.SELF_BUFFS && !focusedPlayer) {
-                groupedSynergiesAdd(groupedSynergies, `set_${buff.source.setName}`, id, buff);
-            }
-        } else if (["classskill", "identity", "ability"].includes(buff.buffCategory)) {
-            // self & other identity, classskill, engravings
-            if (tab === MeterTab.SELF_BUFFS && focusedPlayer) {
-                let key;
-                if (buff.buffCategory === "ability") {
-                    key = `${buff.uniqueGroup ? buff.uniqueGroup : id}`;
-                } else {
-                    if (focusedPlayer.classId !== buff.source.skill?.classId) return; // We hide other classes self buffs (classskill & identity)
-                    key = `${classesMap[buff.source.skill?.classId ?? 0]}_${
-                        buff.uniqueGroup ? buff.uniqueGroup : buff.source.skill?.name
-                    }`;
-                }
-                groupedSynergiesAdd(groupedSynergies, key, id, buff);
-            }
-        } else {
-            // ignore
-        }
-    }
-
-    function groupedSynergiesAdd(
-        map: Map<string, Map<number, StatusEffect>>,
-        key: string,
-        id: number,
-        buff: StatusEffect
-    ) {
-        // by default, only show dmg, crit, atk spd, cd buffs.
-        // show all arcana cards for fun
-        if (!focusedPlayer || focusedPlayer.classId !== 202) {
-            if (!defaultBuffFilter(buff.buffType)) {
-                // console.log(buff);
-                return;
-            }
-        }
-        key = key.replaceAll(" ", "").toLowerCase();
-        if (map.has(key)) {
-            map.get(key)?.set(id, buff);
-        } else {
-            map.set(key, new Map([[id, buff]]));
-        }
-    }
 </script>
 
 <thead class="relative z-40 h-6" id="buff-head">
