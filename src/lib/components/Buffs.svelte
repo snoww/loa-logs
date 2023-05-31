@@ -64,6 +64,6 @@
             </tr>
         {/each}
     {:else}
-        <BuffSkillBreakdown {groupedSynergies} player={focusedPlayer} />
+        <BuffSkillBreakdown {groupedSynergies} player={focusedPlayer} {tab}/>
     {/if}
 </tbody>

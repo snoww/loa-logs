@@ -28,8 +28,6 @@
         color = classColors[player.class].color;
     }
 
-    console.log(skills);
-
     if (skills.length > 0) {
         let mostDamageSkill = skills[0].totalDamage;
         skillDamagePercentages = skills.map((skill) => (skill.totalDamage / mostDamageSkill) * 100);
@@ -37,7 +35,6 @@
     let buffSummary: BuffDetails[];
     if (tab === MeterTab.SELF_BUFFS) {
         buffSummary = getSynergyPercentageDetailsSum(groupedSynergies, skills, player.damageStats.damageDealt);
-        console.log(buffSummary);
     }
 </script>
 
