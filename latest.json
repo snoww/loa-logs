@@ -1,11 +1,11 @@
 {
-    "version": "v1.1.18",
-    "notes": "- fix rare issue where boss hp gets stuck on vykas frog\n- search page now resets after clearing search with button\nwip: better search filters, pure rust packet sniffer is almost done\nsend bug reports or feature requests to Snow#7777",
-    "pub_date": "2023-05-20T05:06:16Z",
+    "version": "v1.2.0-beta.1",
+    "notes": "OPTIONAL BETA UPDATE\n- completely ported and rewritten the packet sniffer and processor for rust\n  - massive performance and memory improvements\n- better vpn tracking, allow manual interface selection\n- added self-buff summaries (e.g. total damage % during igniter, or total adrenaline uptime)\n- added option to turn off transparency for live meter (this was problematic when win11 users needed to turn off blur, but want a darker background)\nfull patch notes on github\nnote: this is a beta release, please report bugs to Snow#7777",
+    "pub_date": "2023-05-31T07:50:50Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.1.18/LOA.Logs_1.1.18_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlpJbGV4OFM2QWVPbDJQMGhkTHZQOGhMb0p6WU5pOVJycjBzNVgwTEFnUzFPOEovQkZpNU1vZFB1K2R5WDNKRDFIQ01vUVNoeHhiYkpxMmxTeExNOHdZPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjg0NTU4Mzg5CWZpbGU6TE9BIExvZ3NfMS4xLjE4X3g2NC1zZXR1cC5uc2lzLnppcAowL3N2R211dGNsbUM4aFgyeWhYVjU4OEYydGExeGVxRHV5OTlEZEFvV28vd0E2VHB3eGNwUkNsVWlmbFpjNTExV3ZpTUtKMnl2V0dqUWhtQWdEbitCQT09Cg=="
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.2.0-beta.1/LOA.Logs_1.2.0-beta.1_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlkxeDc2RC92dFFiclFHcHhZNHdTRm8rY2h0R3cyYzBRc005a2RDNTFhNVZ4MDl0ZGJGUklqc3NSWHA2SEptL0YwaHVlTG56RFJ1Y0w1empxUWM4ekE0PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjg1NTE3MjYxCWZpbGU6TE9BIExvZ3NfMS4yLjAtYmV0YS4xX3g2NC1zZXR1cC5uc2lzLnppcAp0Y2ZMWXdFV09tdlVCZVNvMGhiREVOQlVkSjFQUFBiUVFiTVdCc29tVmtqWGxpZTB3WEkxQUxzSmVidDFLMFJ0SVg3cThwOFZ5blFVREsrU3VLUGtBZz09Cg=="
         }
     }
 }
