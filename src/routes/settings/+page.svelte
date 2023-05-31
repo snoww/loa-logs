@@ -113,7 +113,8 @@
                                 <div class="ml-5">
                                     <div class="text-gray-100">Blur Meter Background</div>
                                     <div class="text-xs text-gray-300">
-                                        Adds background blur effect to live meter. Turn this off if experiencing lag in Windows 11.
+                                        Adds background blur effect to live meter. Turn this off if experiencing lag in
+                                        Windows 11.
                                     </div>
                                 </div>
                             </label>

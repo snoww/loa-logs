@@ -10,7 +10,7 @@ export const defaultSettings = {
         showEsther: true,
         accentColor: "theme-pink",
         rawSocket: false,
-        autoIface: true, 
+        autoIface: true,
         ifDesc: "",
         ip: "",
         port: 6040,

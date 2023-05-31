@@ -42,6 +42,8 @@
     });
 </script>
 
-<div class="h-screen overflow-hidden {$settings.general.transparent ? "bg-zinc-800/[.2]" : "bg-zinc-800/[.9]"}" id="live-meter">
+<div
+    class="h-screen overflow-hidden {$settings.general.transparent ? 'bg-zinc-800/[.2]' : 'bg-zinc-800/[.9]'}"
+    id="live-meter">
     <DamageMeter />
 </div>
