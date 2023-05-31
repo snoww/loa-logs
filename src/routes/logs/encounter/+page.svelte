@@ -6,15 +6,13 @@
     import {
         backNavStore,
         ifaceChangedStore,
-        pageStore,
         screenshotAlert,
         screenshotError,
         searchStore
     } from "$lib/utils/stores";
     import { invoke } from "@tauri-apps/api/tauri";
-    import { Alert } from "flowbite-svelte";
     import { onMount } from "svelte";
-    import { fade } from "svelte/transition";
+    import Notification from "$lib/components/shared/Notification.svelte";
 
     let id: string;
     let promise: Promise<Encounter>;
@@ -60,68 +58,12 @@
         </div>
     {/await}
     {#if $screenshotAlert}
-        <div transition:fade>
-            <Alert
-                color="none"
-                class="bg-accent-800 absolute inset-x-0 bottom-6 z-50 mx-auto w-80 py-2"
-                dismissable
-                on:close={() => ($screenshotAlert = false)}>
-                <span slot="icon"
-                    ><svg
-                        aria-hidden="true"
-                        class="h-5 w-5"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                        xmlns="http://www.w3.org/2000/svg"
-                        ><path
-                            fill-rule="evenodd"
-                            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
-                            clip-rule="evenodd" /></svg>
-                </span>
-                Screenshot Copied to Clipboard
-            </Alert>
-        </div>
+    <Notification bind:showAlert={$screenshotError} text={"Screenshot Copied to Clipboard"} width="20rem"/>
     {/if}
     {#if $screenshotError}
-        <div transition:fade>
-            <Alert
-                color="none"
-                class="absolute inset-x-0 bottom-6 z-50 mx-auto w-72 bg-red-800 py-2"
-                dismissable
-                on:close={() => ($screenshotError = false)}>
-                <span slot="icon"
-                    ><svg
-                        aria-hidden="true"
-                        class="h-5 w-5"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                        xmlns="http://www.w3.org/2000/svg"
-                        ><path
-                            fill-rule="evenodd"
-                            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
-                            clip-rule="evenodd" /></svg>
-                </span>
-                Error Taking Screenshot
-            </Alert>
-        </div>
+    <Notification bind:showAlert={$screenshotError} text={"Error Taking Screenshot"} width="18rem" isError={true}/>
     {/if}
     {#if $ifaceChangedStore}
-        <div>
-            <Alert color="none" class="absolute inset-x-0 bottom-10 z-50 mx-auto w-72 bg-red-800 py-2">
-                <span slot="icon"
-                    ><svg
-                        aria-hidden="true"
-                        class="h-5 w-5"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                        xmlns="http://www.w3.org/2000/svg"
-                        ><path
-                            fill-rule="evenodd"
-                            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
-                            clip-rule="evenodd" /></svg>
-                </span>
-                Network Interface Changed. Please fully Restart the App.
-            </Alert>
-        </div>
+    <Notification bind:showAlert={$ifaceChangedStore} text={"Network Interface Changed. Please fully Restart the App."} dismissable={false} width="18rem" isError={true}/>
     {/if}
 </div>

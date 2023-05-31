@@ -6,12 +6,13 @@
     export let text = "";
     export let dismissable = true;
     export let width: string;
+    export let isError = false;
 </script>
 
 <div transition:fade>
     <Alert
         color="none"
-        class="bg-accent-800 absolute inset-x-0 bottom-8 z-50 mx-auto bg-opacity-80 py-2"
+        class="{isError ? "bg-red-800" : "bg-accent-800"} absolute inset-x-0 bottom-8 z-50 mx-auto bg-opacity-80 py-2"
         style={`width: ${width};`}
         {dismissable}
         on:close={() => (showAlert = false)}>
