@@ -125,3 +125,38 @@ export function getSynergyPercentageDetails(groupedSynergies: Map<string, Map<nu
 
     return synergyPercentageDetails;
 }
+
+export function getSynergyPercentageDetailsSum(groupedSynergies: Map<string, Map<number, StatusEffect>>, skills: Skill[], totalDamage: number) {
+    const synergyPercentageDetails: BuffDetails[] = [];
+    groupedSynergies.forEach((synergies, key) => {
+        let synergyDamage = 0;
+        const buffs = new BuffDetails();
+        buffs.id = key;
+        synergies.forEach((syn, id) => {
+            const buff = new Buff(
+                syn.source.icon,
+                "",
+                syn.source.skill?.icon
+            );
+            let totalBuffed = 0;
+            for (const skill of skills) {
+                if (skill.buffedBy[id]) {
+                    totalBuffed += skill.buffedBy[id];
+                    synergyDamage += skill.buffedBy[id];
+                } else if (skill.debuffedBy[id]) {
+                    totalBuffed += skill.debuffedBy[id];
+                    synergyDamage += skill.debuffedBy[id];
+                }
+            }
+            buff.percentage = round((totalBuffed / totalDamage) * 100);
+            buffs.buffs.push(buff);
+        });
+
+        if (synergyDamage > 0) {
+            buffs.percentage = round((synergyDamage / totalDamage) * 100);
+        }
+        synergyPercentageDetails.push(buffs);
+    });
+
+    return synergyPercentageDetails;
+}

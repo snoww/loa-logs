@@ -60,6 +60,6 @@
             </tr>
         {/each}
     {:else}
-        <LogBuffBreakdown {groupedSynergies} player={focusedPlayer} />
+        <LogBuffBreakdown {groupedSynergies} player={focusedPlayer} {tab}/>
     {/if}
 </tbody>
