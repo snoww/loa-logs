@@ -1,11 +1,11 @@
 {
-    "version": "v1.2.0-beta.1",
-    "notes": "OPTIONAL BETA UPDATE\n- completely ported and rewritten the packet sniffer and processor for rust\n  - massive performance and memory improvements\n- better vpn tracking, allow manual interface selection\n- added self-buff summaries (e.g. total damage % during igniter, or total adrenaline uptime)\n- added option to turn off transparency for live meter (this was problematic when win11 users needed to turn off blur, but want a darker background)\nfull patch notes on github\nnote: this is a beta release, please report bugs to Snow#7777",
-    "pub_date": "2023-05-31T07:50:50Z",
+    "version": "v1.1.19",
+    "notes": "- add option to show or hide player's item level\n- fix issue where skill total hits/casts were not being shown correctly in live meter\nsend bug reports or feature requests to Snow#7777",
+    "pub_date": "2023-05-24T04:50:50Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.2.0-beta.1/LOA.Logs_1.2.0-beta.1_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlRESUtsZ0grQ0hTVUdsNjd6dWVYeHpFTS9nSStIZXYzL1lDMjV0Y3N6ajN5QVByQUUrSGFodlExbzdVc0xrU04wRS9Yb0tjUVRDWEVRa3Irenk2ZHdBPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjg1NTIxMTE0CWZpbGU6TE9BIExvZ3NfMS4yLjAtYmV0YS4xX3g2NC1zZXR1cC5uc2lzLnppcAplYm1Tb0RhT21jNTNQNTUxb3VPL20ra1A0eEpveTQzbTErcjJoVjljTFRFWUdIcU1VNkJKWTJ4VFhmOTBabm53VVZUKzhxTDVOaE1SNE5zMFlGWWNEUT09Cg=="
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.1.19/LOA.Logs_1.1.19_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlJwTlkxWjdnaGZpOFVIZGdQcFU5QUM3VjJYdEI5Q1hJcnRVSjZuWTJHVll4SnlTbGVzQUNaRUxJYlpGM1ZSNFVwSE1pM1p1UURiZnJOVG1KZVdFV2dZPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjg0OTAzNDIwCWZpbGU6TE9BIExvZ3NfMS4xLjE5X3g2NC1zZXR1cC5uc2lzLnppcApPMXA0aTNmQmRIMXdBWmlzRXZxVnlmc01JYXQ0czFiTE5qQkdXTFY4L21nMzdNMEZjcU5DditDQzBXbnBRNDRyckFoZnRTcnM4dzEwTitoc1ZFWjNDZz09Cg=="
         }
     }
 }
