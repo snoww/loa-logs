@@ -65,7 +65,7 @@
         "icons/icon.ico"
       ],
       "identifier": "xyz.snow",
-      "longDescription": "Modern DPS Meter for Lost Ark written in Rust.",
+      "longDescription": "LOA Logs - Modern DPS Meter for Lost Ark written in Rust.",
       "macOS": {
         "entitlements": null,
         "exceptionDomain": "",
@@ -73,7 +73,7 @@
         "providerShortName": null,
         "signingIdentity": null
       },
-      "shortDescription": "DPS Meter for Lost Ark",
+      "shortDescription": "LOA Logs - DPS Meter for Lost Ark",
       "targets": [
         "nsis",
         "updater"
@@ -106,7 +106,11 @@
       "dialog": true,
       "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDZEODU5MzNEODY0ODg0REEKUldUYWhFaUdQWk9GYlczc3VSODJPK01RRTlYUER6NzU0eDE1WDYwcmJsY1d4d2EwblZHNlJ4dW8K",
       "windows": {
-        "installMode": "passive"
+        "installMode": "basicUi",
+        "installerArgs": [
+          "/P",
+          "/R"
+        ]
       }
     },
     "windows": [
