@@ -220,9 +220,7 @@ impl EncounterState {
             .entities
             .entry(entity_name.clone())
             .and_modify(|e| {
-                if (e.npc_id as i32 - entity.npc_id as i32).abs() < 50
-                    || entity.entity_type != EntityType::BOSS
-                {
+                if entity.entity_type != EntityType::BOSS && e.entity_type != EntityType::BOSS {
                     e.npc_id = entity.npc_id;
                     e.id = entity.id;
                     e.current_hp = hp;
