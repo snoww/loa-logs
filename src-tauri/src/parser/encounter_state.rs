@@ -4,6 +4,7 @@ use crate::parser::entity_tracker::Entity;
 use crate::parser::models::*;
 use chrono::Utc;
 use hashbrown::HashMap;
+use log::info;
 use meter_core::packets::definitions::{PKTIdentityGaugeChangeNotify, PKTParalyzationStateNotify};
 use rusqlite::{params, Connection, Transaction};
 use serde_json::json;
@@ -822,7 +823,7 @@ impl EncounterState {
         let stagger_intervals = self.stagger_intervals.clone();
 
         task::spawn(async move {
-            println!("saving to db - {}", encounter.current_boss_name);
+            info!("saving to db - {}", encounter.current_boss_name);
 
             let mut conn = Connection::open(path).expect("failed to open database");
             let tx = conn.transaction().expect("failed to create transaction");
@@ -840,7 +841,7 @@ impl EncounterState {
             );
 
             tx.commit().expect("failed to commit transaction");
-            println!("saved to db");
+            info!("saved to db");
         });
     }
 }
