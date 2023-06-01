@@ -80,8 +80,10 @@ dependencies = [
  "anyhow",
  "bitflags 2.3.1",
  "chrono",
+ "flexi_logger",
  "hashbrown 0.13.2",
  "lazy_static",
+ "log",
  "meter-core",
  "rusqlite",
  "serde",
@@ -937,6 +939,19 @@ checksum = "3b9429470923de8e8cbd4d2dc513535400b4b3fef0319fb5c4e1f520a7bef743"
 dependencies = [
  "crc32fast",
  "miniz_oxide",
+]
+
+[[package]]
+name = "flexi_logger"
+version = "0.25.5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "37e7b68b1f7ce9c62856598e99cd6742b9cedb6186b47aa989a82640f20bfa9b"
+dependencies = [
+ "chrono",
+ "glob",
+ "lazy_static",
+ "log",
+ "thiserror",
 ]
 
 [[package]]
@@ -1858,13 +1873,14 @@ dependencies = [
 [[package]]
 name = "meter-core"
 version = "0.1.0"
-source = "git+https://github.com/snoww/meter-core-rs.git?branch=main#3ede6c6c7cfa1f395c17583c5bedf62773abfd5f"
+source = "git+https://github.com/snoww/meter-core-rs.git?branch=main#c700ec46ee2a9e950664f15485b89e9b2af84c27"
 dependencies = [
  "anyhow",
  "chrono",
  "ffi-opaque",
  "hashbrown 0.13.2",
  "libc",
+ "log",
  "lz4_flex",
  "pnet",
  "snap",
@@ -2101,9 +2117,9 @@ dependencies = [
 
 [[package]]
 name = "openssl"
-version = "0.10.53"
+version = "0.10.54"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "12df40a956736488b7b44fe79fe12d4f245bb5b3f5a1f6095e499760015be392"
+checksum = "69b3f656a17a6cbc115b5c7a40c616947d213ba182135b014d6051b73ab6f019"
 dependencies = [
  "bitflags 1.3.2",
  "cfg-if",

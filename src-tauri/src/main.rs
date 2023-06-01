@@ -12,7 +12,11 @@ use std::{
 };
 
 use anyhow::Result;
+use flexi_logger::{
+    Cleanup, Criterion, Duplicate, FileSpec, Logger, Naming, WriteMode, DeferredNow,
+};
 use hashbrown::HashMap;
+use log::{info, warn, Record};
 use parser::models::*;
 
 use rusqlite::{params, Connection};
@@ -25,6 +29,25 @@ use window_vibrancy::{apply_blur, clear_blur};
 
 #[tokio::main]
 async fn main() -> Result<()> {
+    let mut logger = Logger::try_with_str("info")?
+        .log_to_file(FileSpec::default().suppress_timestamp().basename("loa_logs"))
+        .use_utc()
+        .write_mode(WriteMode::BufferAndFlush)
+        .append()
+        .format(default_format_with_time)
+        .rotate(
+            Criterion::Size(1_000_000),
+            Naming::Timestamps,
+            Cleanup::KeepLogFiles(2),
+        );
+
+    #[cfg(debug_assertions)]
+    {
+        logger = logger.duplicate_to_stdout(Duplicate::All);
+    }
+
+    logger.start()?;
+
     let quit = CustomMenuItem::new("quit".to_string(), "Quit");
     let show_logs = CustomMenuItem::new("show-logs".to_string(), "Show Logs");
     let show_meter = CustomMenuItem::new("show-meter".to_string(), "Show Meter");
@@ -65,20 +88,26 @@ async fn main() -> Result<()> {
             if let Some(settings) = settings {
                 if settings.general.auto_iface {
                     ip = meter_core::get_most_common_ip().unwrap();
+                    info!("auto_iface enabled, using ip: {}", ip);
                 } else {
                     ip = settings.general.ip;
                     if settings.general.port > 0 {
                         port = settings.general.port;
                     }
+                    info!(
+                        "manual interface, using ip: {}, port: {}",
+                        ip, port
+                    )
                 }
             } else {
                 ip = meter_core::get_most_common_ip().unwrap();
+                info!("settings not found, auto_iface enabled, using ip: {}", ip);
             }
 
             match setup_db(resource_path) {
                 Ok(_) => (),
                 Err(e) => {
-                    println!("error setting up database: {}", e);
+                    warn!("error setting up database: {}", e);
                 }
             }
             tokio::task::spawn(async move {
@@ -682,7 +711,9 @@ fn get_settings(window: tauri::Window) -> Option<Settings> {
 
 #[tauri::command]
 fn get_network_interfaces() -> Vec<(String, String)> {
-    meter_core::get_network_interfaces()
+    let interfaces = meter_core::get_network_interfaces();
+    info!("get_network_interfaces: {:?}", interfaces);
+    interfaces
 }
 
 #[tauri::command]
@@ -718,7 +749,7 @@ fn copy_db(window: tauri::Window) -> Result<(), String> {
             match std::fs::copy(old_path, new_path) {
                 Ok(_) => Ok(()),
                 Err(e) => {
-                    println!("Error copying db: {}", e);
+                    warn!("copy_db: Error copying db: {}", e);
                     Err(e.to_string())
                 }
             }
@@ -735,7 +766,7 @@ fn open_folder(path: String) {
             path = path.replace("USERPROFILE", user_dir.as_str());
         }
     }
-    println!("{}", path);
+    info!("open_folder: {}", path);
     Command::new("explorer").args([path.as_str()]).spawn().ok();
 }
 
@@ -751,4 +782,19 @@ fn enable_blur(window: tauri::Window) {
     if let Some(meter_window) = window.app_handle().get_window("main") {
         apply_blur(&meter_window, Some((10, 10, 10, 50))).ok();
     }
+}
+
+fn default_format_with_time(
+    w: &mut dyn std::io::Write,
+    now: &mut DeferredNow,
+    record: &Record,
+) -> Result<(), std::io::Error> {
+    write!(
+        w,
+        "[{}] {} [{}] {}",
+        now.format("%Y-%m-%dT%H:%M:%S%.6fZ"),
+        record.level(),
+        record.module_path().unwrap_or("<unnamed>"),
+        record.args()
+    )
 }

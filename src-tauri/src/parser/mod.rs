@@ -13,6 +13,7 @@ use crate::parser::party_tracker::PartyTracker;
 use crate::parser::status_tracker::{StatusEffectTargetType, StatusTracker};
 use anyhow::Result;
 use chrono::Utc;
+use log::{warn, info};
 use meter_core::packets::definitions::*;
 use meter_core::packets::opcodes::Pkt;
 use meter_core::start_capture;
@@ -39,7 +40,7 @@ pub fn start(window: Window<Wry>, ip: String, port: u16) -> Result<()> {
     let rx = match start_capture(ip, port) {
         Ok(rx) => rx,
         Err(e) => {
-            println!("Error starting capture: {}", e);
+            warn!("Error starting capture: {}", e);
             return Ok(());
         }
     };
@@ -357,9 +358,9 @@ pub fn start(window: Window<Wry>, ip: String, port: u16) -> Result<()> {
     Ok(())
 }
 
-fn debug_print<T: Debug>(desc: &str, x: &T) {
+fn debug_print<T: Debug>(_desc: &str, _x: &T) {
     #[cfg(debug_assertions)]
     {
-        println!("{:?}|{}: {:?}", Utc::now(), desc, x);
+        info!("{}: {:?}", _desc, _x);
     }
 }
