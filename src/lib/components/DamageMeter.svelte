@@ -14,6 +14,7 @@
     import { tooltip } from "$lib/utils/tooltip";
     import { writable } from "svelte/store";
     import Notification from "./shared/Notification.svelte";
+    import { isSolo } from "$lib/utils/stores";
 
     let time = +Date.now();
     let encounter: Encounter | null = null;
@@ -128,6 +129,7 @@
                         .filter((e) => e.damageStats.damageDealt > 0 && e.entityType === EntityType.PLAYER)
                         .sort((a, b) => b.damageStats.damageDealt - a.damageStats.damageDealt);
                 }
+                $isSolo = players.length === 1;
                 anyDead = players.some((player) => player.isDead);
                 anyFrontAtk = players.some((player) => player.skillStats.frontAttacks > 0);
                 anyBackAtk = players.some((player) => player.skillStats.backAttacks > 0);
@@ -251,7 +253,7 @@
                         {#if $settings.meter.dps}
                             <th class="w-14 font-normal" use:tooltip={{ content: "Damage per second" }}>DPS</th>
                         {/if}
-                        {#if players.length > 1 && $settings.meter.damagePercent}
+                        {#if !$isSolo && $settings.meter.damagePercent}
                             <th class="w-12 font-normal" use:tooltip={{ content: "Damage %" }}>D%</th>
                         {/if}
                         {#if $settings.meter.critRate}

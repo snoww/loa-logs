@@ -4,6 +4,7 @@
     import { HexToRgba } from "$lib/utils/colors";
     import { abbreviateNumberSplit, round } from "$lib/utils/numbers";
     import { classIconCache, settings } from "$lib/utils/settings";
+    import { isSolo } from "$lib/utils/stores";
     import { formatPlayerName, getEstherFromNpcId } from "$lib/utils/strings";
     import { tooltip } from "$lib/utils/tooltip";
 
@@ -24,15 +25,13 @@
 
     let damageDealt: (string | number)[];
     let damagePercentage: string;
-    let damagePercentageRaw: number;
     let name: string;
     let color = "#ffffff";
     let deadFor: string;
 
     $: {
         damageDealt = abbreviateNumberSplit(entity.damageStats.damageDealt);
-        damagePercentageRaw = (entity.damageStats.damageDealt / totalDamageDealt) * 100;
-        damagePercentage = damagePercentageRaw.toFixed(1);
+        damagePercentage = ((entity.damageStats.damageDealt / totalDamageDealt) * 100).toFixed(1);
 
         if (Object.hasOwn(classColors, entity.class)) {
             color = classColors[entity.class].color;
@@ -82,7 +81,7 @@
         {dps[0]}<span class="text-3xs text-gray-300">{dps[1]}</span>
     </td>
 {/if}
-{#if damagePercentageRaw < 100 && meterSettings.damagePercent}
+{#if !$isSolo && meterSettings.damagePercent}
     <td class="px-1 text-center">
         {damagePercentage}<span class="text-xs text-gray-300">%</span>
     </td>

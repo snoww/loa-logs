@@ -10,3 +10,4 @@ export const searchStore = writable("");
 export const backNavStore = writable(false);
 
 export const ifaceChangedStore = writable(false);
+export const isSolo = writable(false);
