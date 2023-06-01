@@ -674,11 +674,14 @@ impl EncounterState {
             self.encounter.current_boss_name = target_entity.name.clone();
 
             let log = self
-                .boss_hp_log
-                .entry(target_entity.name.clone())
-                .or_default();
-            if log.is_empty() || log[log.len() - 1].0 != relative_timestamp_s {
+            .boss_hp_log
+            .entry(target_entity.name.clone())
+            .or_default();
+        
+            if log.is_empty() || log.last().unwrap().0 != relative_timestamp_s {
                 log.push((relative_timestamp_s, target_entity.current_hp));
+            } else {
+                log.last_mut().unwrap().1 = target_entity.current_hp;
             }
         }
 
