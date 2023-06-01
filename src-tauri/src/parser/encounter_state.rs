@@ -716,8 +716,21 @@ impl EncounterState {
     }
 
     pub fn on_identity_gain(&mut self, pkt: PKTIdentityGaugeChangeNotify) {
-        if self.encounter.local_player.is_empty() || self.encounter.fight_start == 0 {
+        if self.encounter.fight_start == 0 {
             return;
+        }
+        
+        if self.encounter.local_player.is_empty() {
+            if let Some((_, entity)) = self
+                .encounter
+                .entities
+                .iter()
+                .find(|(_, e)| e.id == pkt.player_id)
+            {
+                self.encounter.local_player = entity.name.clone();
+            } else {
+                return;
+            }
         }
 
         if let Some(entity) = self
