@@ -3,8 +3,9 @@
 [![GitHub](https://img.shields.io/github/downloads/snoww/loa-logs/total?style=for-the-badge)](https://github.com/snoww/loa-logs/releases/latest)
 
 
-![GitHub](https://img.shields.io/github/v/release/snoww/loa-logs?style=flat-square)
-![GitHub](https://img.shields.io/github/license/snoww/loa-logs?style=flat-square)
+[![Github](https://img.shields.io/github/v/release/snoww/loa-logs?include_prereleases&label=pre-release&style=flat-square)](https://github.com/snoww/loa-logs/releases)
+[![GitHub](https://img.shields.io/github/v/release/snoww/loa-logs?style=flat-square)](https://github.com/snoww/loa-logs/releases)
+[![GitHub](https://img.shields.io/github/license/snoww/loa-logs?style=flat-square)](https://github.com/snoww/loa-logs/blob/master/LICENSE)
 
 LOA Logs is a "blazingly fast" open source Lost Ark DPS meter, written in Rust by [Snow](https://github.com/snoww). 
 
