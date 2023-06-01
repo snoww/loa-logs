@@ -1858,7 +1858,7 @@ dependencies = [
 [[package]]
 name = "meter-core"
 version = "0.1.0"
-source = "git+https://github.com/snoww/meter-core-rs.git?branch=main#22ec964310700f9ba047d1241662f065860bd9a7"
+source = "git+https://github.com/snoww/meter-core-rs.git?branch=main#3ede6c6c7cfa1f395c17583c5bedf62773abfd5f"
 dependencies = [
  "anyhow",
  "chrono",
