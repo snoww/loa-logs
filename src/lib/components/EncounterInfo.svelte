@@ -5,10 +5,13 @@
     import { emit } from "@tauri-apps/api/event";
     import { invoke } from "@tauri-apps/api/tauri";
     import { appWindow } from "@tauri-apps/api/window";
+    import { writable } from "svelte/store";
 
     export let encounterDuration: string;
     export let totalDamageDealt: number;
     export let dps: number;
+
+    let paused = writable(false);
 
     async function openLogWindow() {
         await invoke("open_most_recent_encounter");
@@ -21,6 +24,7 @@
     }
     async function pauseSession() {
         await emit("pause-request");
+        $paused = !$paused;
     }
 
     let dropdownOpen = false;
@@ -99,6 +103,29 @@
                             d="M475.946 956.5Q316 956.5 206.545 845.323 97.091 734.147 98.5 574.5H190q1.152 120.8 83.513 205.65Q355.873 865 475.825 865q120.675 0 206.425-85.834Q768 693.331 768 571.184q0-119.148-85.937-201.666Q596.127 287 475.5 287q-59.675 0-112.087 24Q311 335 270.5 376H353v70.5H129.5V225H198v94.5q54-58 125.194-91.5 71.195-33.5 152.456-33.5 78.85 0 148.632 30.13 69.782 30.13 122.49 81.511 52.709 51.381 82.718 120.054 30.01 68.673 30.01 147.739t-30.01 148.805q-30.009 69.739-82.5 121.75Q694.5 896.5 624.76 926.5q-69.74 30-148.814 30Zm123.554-214L448 592.565V375.5h68.5v187L650 692l-50.5 50.5Z" /></svg>
                 </div>
             </button>
+            <button
+                on:click={pauseSession}
+                use:menuTooltip={{ content: !$paused ? "Pause Session" : "Resume Session" }}>
+                {#if !$paused}
+                    <svg
+                        class="h-5 w-5 fill-gray-400 hover:fill-gray-50"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 96 960 960"><path d="M555 852V300h172.5v552H555Zm-322 0V300h172.5v552H233Z" /></svg>
+                {:else}
+                    <svg
+                        class="h-5 w-5 fill-gray-400 hover:fill-gray-50"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 -960 960 960"><path d="M298.5-162.5v-641l503 320.5-503 320.5Z" /></svg>
+                {/if}
+            </button>
+            <button on:click={resetSession} use:menuTooltip={{ content: "Reset Session" }}>
+                <svg
+                    class="h-5 w-5 fill-gray-400 hover:fill-gray-50"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 96 960 960"
+                    ><path
+                        d="M452.5 955q-132-10-222.5-107.25T139.5 617.5q0-79 35.75-149T275.5 352l65.5 65q-51 32-80.5 86T231 617.5q0 97 63.25 166.25T452.5 862.5V955Zm57.5 0v-92.5q96.5-10 158.5-79t62-166q0-99-67-170.75T497 369h-24l65 66-49 49.5-166-166 166-167 49 49-76 76h25q140 0 238 100.5t98 240.5Q823 751 732.25 848T510 955Z" /></svg>
+            </button>
             <div class="flex items-center" on:focusout={handleDropdownFocusLoss}>
                 <button on:click={handleDropdownClick} class="h-full px-1" use:menuTooltip={{ content: "Show More" }}>
                     <svg
@@ -115,7 +142,7 @@
                 {#if dropdownOpen}
                     <div class="absolute right-2 top-6 z-50 rounded-md bg-zinc-700 shadow-md">
                         <div class="flex flex-col space-y-px p-1 text-gray-400">
-                            <button
+                            <!--                             <button
                                 class="hover:text-gray-50"
                                 on:click={() => {
                                     pauseSession();
@@ -145,7 +172,7 @@
                                             d="M452.5 955q-132-10-222.5-107.25T139.5 617.5q0-79 35.75-149T275.5 352l65.5 65q-51 32-80.5 86T231 617.5q0 97 63.25 166.25T452.5 862.5V955Zm57.5 0v-92.5q96.5-10 158.5-79t62-166q0-99-67-170.75T497 369h-24l65 66-49 49.5-166-166 166-167 49 49-76 76h25q140 0 238 100.5t98 240.5Q823 751 732.25 848T510 955Z" /></svg>
                                     <div>Reset</div>
                                 </div>
-                            </button>
+                            </button> -->
                             <button class="hover:text-gray-50">
                                 <div class="flex space-x-1">
                                     <svg
@@ -221,12 +248,21 @@
                                     dropdownOpen = false;
                                 }}>
                                 <div class="flex space-x-1">
-                                    <svg
-                                        class="h-5 w-5 fill-gray-400"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 96 960 960"
-                                        ><path d="M555 852V300h172.5v552H555Zm-322 0V300h172.5v552H233Z" /></svg>
-                                    <div>Pause</div>
+                                    {#if !$paused}
+                                        <svg
+                                            class="h-5 w-5 fill-gray-400"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            viewBox="0 96 960 960"
+                                            ><path d="M555 852V300h172.5v552H555Zm-322 0V300h172.5v552H233Z" /></svg>
+                                        <div>Pause</div>
+                                    {:else}
+                                        <svg
+                                            class="h-5 w-5 fill-gray-400 hover:fill-gray-50"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            viewBox="0 -960 960 960"
+                                            ><path d="M298.5-162.5v-641l503 320.5-503 320.5Z" /></svg>
+                                        <div>Resume</div>
+                                    {/if}
                                 </div>
                             </button>
                             <button

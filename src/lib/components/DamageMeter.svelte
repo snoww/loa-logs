@@ -343,7 +343,7 @@
     <Notification bind:showAlert={resettingAlert} text="Resetting" width={"10rem"} />
 {/if}
 {#if pauseAlert}
-    <Notification bind:showAlert={pauseAlert} text="Paused" width={"8rem"} />
+    <Notification bind:showAlert={pauseAlert} text="Paused" width={"8rem"} dismissable={false} />
 {/if}
 {#if phaseTransitionAlert}
     <Notification bind:showAlert={phaseTransitionAlert} text="Wipe/Phase Clear" width={"13rem"} />
