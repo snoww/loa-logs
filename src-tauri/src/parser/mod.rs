@@ -21,6 +21,7 @@ use tokio::runtime::Runtime;
 use std::cell::RefCell;
 use std::fmt::Debug;
 use std::rc::Rc;
+use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::{Arc, Mutex};
 use std::thread;
 use std::time::{Duration, Instant};
@@ -67,36 +68,34 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool) -> Re
     let mut last_update = Instant::now();
     let duration = Duration::from_millis(100);
 
-    let reset = Arc::new(Mutex::new(false));
-    let pause = Arc::new(Mutex::new(false));
-    let reset_clone = reset.clone();
-    let pause_clone = pause.clone();
+    let reset = Arc::new(AtomicBool::new(false));
+    let pause = Arc::new(AtomicBool::new(false));
+
     let meter_window_clone = window.clone();
-    window.listen_global("reset-request", move |_event| {
-        if let Ok(ref mut reset) = reset_clone.try_lock() {
-            **reset = true;
+    window.listen_global("reset-request", {
+        let reset_clone = reset.clone();
+        let meter_window_clone = meter_window_clone.clone();
+        move |_event| {
+            reset_clone.store(true, Ordering::Relaxed);
             meter_window_clone.emit("reset-encounter", "").ok();
         }
     });
-    let meter_window_clone = window.clone();
-    window.listen_global("pause-request", move |_event| {
-        if let Ok(ref mut pause) = pause_clone.try_lock() {
-            **pause = !(**pause);
+    
+    window.listen_global("pause-request", {
+        let pause_clone = pause.clone();
+        move |_event| {
+            pause_clone.fetch_xor(true, Ordering::Relaxed);
             meter_window_clone.emit("pause-encounter", "").ok();
         }
     });
 
     while let Ok((op, data)) = rx.recv() {
-        if let Ok(ref mut reset) = reset.try_lock() {
-            if **reset {
-                state.soft_reset();
-                **reset = false;
-            }
+        if reset.load(Ordering::Relaxed) {
+            state.soft_reset();
+            reset.store(false, Ordering::Relaxed);
         }
-        if let Ok(ref mut pause) = pause.try_lock() {
-            if **pause {
-                continue;
-            }
+        if pause.load(Ordering::Relaxed) {
+            continue;
         }
         match op {
             Pkt::CounterAttackNotify => {
