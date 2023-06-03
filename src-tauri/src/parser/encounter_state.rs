@@ -674,10 +674,10 @@ impl EncounterState {
             self.encounter.current_boss_name = target_entity.name.clone();
 
             let log = self
-            .boss_hp_log
-            .entry(target_entity.name.clone())
-            .or_default();
-        
+                .boss_hp_log
+                .entry(target_entity.name.clone())
+                .or_default();
+
             if log.is_empty() || log.last().unwrap().0 != relative_timestamp_s {
                 log.push((relative_timestamp_s, target_entity.current_hp));
             } else {
@@ -694,15 +694,7 @@ impl EncounterState {
 
         self.encounter.last_combat_packet = timestamp;
     }
-    //
-    // fn on_heal(&mut self, _line: &[&str]) {
-    //     println!("Heal");
-    // }
-    //
-    // fn on_buff(&mut self, _line: &[&str]) {
-    //     println!("Buff");
-    // }
-    //
+    
     pub fn on_counterattack(&mut self, source_entity: &Entity) {
         let entity = self
             .encounter
@@ -723,7 +715,7 @@ impl EncounterState {
         if self.encounter.fight_start == 0 {
             return;
         }
-        
+
         if self.encounter.local_player.is_empty() {
             if let Some((_, entity)) = self
                 .encounter

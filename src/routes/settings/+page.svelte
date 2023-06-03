@@ -124,10 +124,20 @@
                             name="Transparent Meter"
                             description="Toggle transparent background for live meter."
                             bind:setting={$settings.general.transparent} />
-                        <SettingItem
-                            name="Auto Network Selection"
-                            description="Automatically select network interface. If using a VPN, turn this off and select the VPN network."
-                            bind:setting={$settings.general.autoIface} />
+                        <div>
+                            <label class="flex items-center font-medium">
+                                <input
+                                    type="checkbox"
+                                    bind:checked={$settings.general.autoIface}
+                                    on:change={() => {$ifaceChangedStore = true;}}
+                                    class="text-accent-500 h-5 w-5 rounded bg-zinc-700 focus:ring-0 focus:ring-offset-0" />
+                                <div class="ml-5">
+                                    <div class="text-gray-100">Auto Network Selection</div>
+                                    <div class="text-xs text-gray-300">
+                                        Automatically select network interface. If using a VPN, turn this off and select the VPN interface.                                    </div>
+                                </div>
+                            </label>
+                        </div>
                         {#if !$settings.general.autoIface}
                             <div class="relative" on:focusout={handleNetDropdownFocusLoss}>
                                 <div class="flex items-center font-medium">
@@ -184,6 +194,21 @@
                                         <div class="text-gray-100">Port</div>
                                         <div class="text-xs text-gray-300">
                                             Set custom port if not using default. Default is 6040.
+                                        </div>
+                                    </div>
+                                </label>
+                            </div>
+                            <div>
+                                <label class="flex items-center font-medium">
+                                    <input
+                                        type="checkbox"
+                                        bind:checked={$settings.general.rawSocket}
+                                        on:change={() => {$ifaceChangedStore = true;}}
+                                        class="text-accent-500 h-5 w-5 rounded bg-zinc-700 focus:ring-0 focus:ring-offset-0" />
+                                    <div class="ml-5">
+                                        <div class="text-gray-100">Raw Socket</div>
+                                        <div class="text-xs text-gray-300">
+                                            Enables raw socket capture. (manually restart as Admin)
                                         </div>
                                     </div>
                                 </label>
@@ -678,6 +703,11 @@
         </Tabs>
     </div>
     {#if $ifaceChangedStore}
-        <Notification bind:showAlert={$ifaceChangedStore} text={"Network Interface Changed. Please fully Restart the App."} dismissable={false} width="18rem" isError={true}/>
+        <Notification
+            bind:showAlert={$ifaceChangedStore}
+            text={"Network Interface Changed. Please fully Restart the App."}
+            dismissable={false}
+            width="18rem"
+            isError={true} />
     {/if}
 </div>

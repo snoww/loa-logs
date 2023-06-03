@@ -4,7 +4,7 @@ use crate::parser::party_tracker::PartyTracker;
 use crate::parser::status_tracker::StatusEffectBuffCategory::{BattleItem, Bracelet, Etc};
 use crate::parser::status_tracker::StatusEffectCategory::Debuff;
 use crate::parser::status_tracker::StatusEffectShowType::All;
-use chrono::{DateTime, Duration, TimeZone, Utc};
+use chrono::{DateTime, Duration, Utc};
 use hashbrown::HashMap;
 use meter_core::packets::definitions::PKTNewPC;
 use meter_core::packets::structures::StatusEffectData;

@@ -13,7 +13,7 @@ use std::{
 
 use anyhow::Result;
 use flexi_logger::{
-    Cleanup, Criterion, Duplicate, FileSpec, Logger, Naming, WriteMode, DeferredNow,
+    Cleanup, Criterion, DeferredNow, Duplicate, FileSpec, Logger, Naming, WriteMode,
 };
 use hashbrown::HashMap;
 use log::{info, warn, Record};
@@ -30,7 +30,11 @@ use window_vibrancy::{apply_blur, clear_blur};
 #[tokio::main]
 async fn main() -> Result<()> {
     let mut logger = Logger::try_with_str("info, tao=off")?
-        .log_to_file(FileSpec::default().suppress_timestamp().basename("loa_logs"))
+        .log_to_file(
+            FileSpec::default()
+                .suppress_timestamp()
+                .basename("loa_logs"),
+        )
         .use_utc()
         .write_mode(WriteMode::BufferAndFlush)
         .append()
@@ -47,6 +51,8 @@ async fn main() -> Result<()> {
     }
 
     logger.start()?;
+
+    info!("starting app");
 
     let quit = CustomMenuItem::new("quit".to_string(), "Quit");
     let show_logs = CustomMenuItem::new("show-logs".to_string(), "Show Logs");
@@ -82,6 +88,7 @@ async fn main() -> Result<()> {
                 meter_window.open_devtools();
             }
 
+            let mut raw_socket = false;
             let ip: String;
             let mut port = 6040;
 
@@ -94,10 +101,11 @@ async fn main() -> Result<()> {
                     if settings.general.port > 0 {
                         port = settings.general.port;
                     }
-                    info!(
-                        "manual interface, using ip: {}, port: {}",
-                        ip, port
-                    )
+                    info!("manual interface, using ip: {}, port: {}", ip, port);
+                    raw_socket = settings.general.raw_socket;
+                    if raw_socket {
+                        info!("raw socket enabled");
+                    }
                 }
             } else {
                 ip = meter_core::get_most_common_ip().unwrap();
@@ -111,7 +119,7 @@ async fn main() -> Result<()> {
                 }
             }
             tokio::task::spawn(async move {
-                parser::start(meter_window, ip, port).expect("failed to start parser");
+                parser::start(meter_window, ip, port, raw_socket).expect("failed to start parser");
             });
 
             let _logs_window =

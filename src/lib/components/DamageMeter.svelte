@@ -25,6 +25,7 @@
     let pauseAlert = false;
     let phaseTransitionAlert = false;
     let bossDeadAlert = false;
+    let adminAlert = false;
     let raidInProgress = writable(true);
 
     onMount(() => {
@@ -76,6 +77,9 @@
                 }
                 $raidInProgress = false;
             });
+            let adminErrorEvent = await listen("admin", (event: any) => {
+                adminAlert = true;
+            });
 
             events.push(
                 encounterUpdateEvent,
@@ -83,7 +87,8 @@
                 resetEncounterEvent,
                 pauseEncounterEvent,
                 phaseTransitionEvent,
-                raidStartEvent
+                raidStartEvent,
+                adminErrorEvent
             );
         })();
     });
@@ -352,5 +357,8 @@
 {/if}
 {#if bossDeadAlert}
     <Notification bind:showAlert={bossDeadAlert} text="Boss Dead" width={"12rem"} />
+{/if}
+{#if adminAlert}
+    <Notification bind:showAlert={adminAlert} text="Please restart as Admin" width={"16em"} dismissable={false} isError={true} />
 {/if}
 <Footer bind:tab />

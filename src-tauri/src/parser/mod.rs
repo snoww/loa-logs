@@ -16,16 +16,17 @@ use chrono::Utc;
 use log::{warn, info};
 use meter_core::packets::definitions::*;
 use meter_core::packets::opcodes::Pkt;
-use meter_core::start_capture;
+use meter_core::{start_capture, start_raw_capture};
+use tokio::runtime::Runtime;
 use std::cell::RefCell;
 use std::fmt::Debug;
 use std::rc::Rc;
 use std::sync::{Arc, Mutex};
+use std::thread;
 use std::time::{Duration, Instant};
 use tauri::{Manager, Window, Wry};
-use tokio::runtime::Runtime;
 
-pub fn start(window: Window<Wry>, ip: String, port: u16) -> Result<()> {
+pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool) -> Result<()> {
     let id_tracker = Rc::new(RefCell::new(IdTracker::new()));
     let party_tracker = Rc::new(RefCell::new(PartyTracker::new(id_tracker.clone())));
     let status_tracker = Rc::new(RefCell::new(StatusTracker::new(party_tracker.clone())));
@@ -37,13 +38,32 @@ pub fn start(window: Window<Wry>, ip: String, port: u16) -> Result<()> {
     let mut state = EncounterState::new(window.clone());
     let rt = Runtime::new().unwrap();
     let _guard = rt.enter();
-    let rx = match start_capture(ip, port) {
-        Ok(rx) => rx,
-        Err(e) => {
-            warn!("Error starting capture: {}", e);
-            return Ok(());
+    let rx = if raw_socket {
+        if !meter_core::check_is_admin() {
+            warn!("Not running as admin, cannot use raw socket");
+            loop {
+                window.emit("admin", "")?;
+                thread::sleep(Duration::from_millis(5000));
+            }
+        }
+        meter_core::add_firewall()?;
+        match start_raw_capture(ip, port) {
+            Ok(rx) => rx,
+            Err(e) => {
+                warn!("Error starting capture: {}", e);
+                return Ok(());
+            }
+        }
+    } else {
+        match start_capture(ip, port) {
+            Ok(rx) => rx,
+            Err(e) => {
+                warn!("Error starting capture: {}", e);
+                return Ok(());
+            }
         }
     };
+
     let mut last_update = Instant::now();
     let duration = Duration::from_millis(100);
 
@@ -67,6 +87,7 @@ pub fn start(window: Window<Wry>, ip: String, port: u16) -> Result<()> {
     });
 
     while let Ok((op, data)) = rx.recv() {
+        info!("{:?}", op);
         if let Ok(ref mut reset) = reset.try_lock() {
             if **reset {
                 state.soft_reset();
@@ -106,6 +127,7 @@ pub fn start(window: Window<Wry>, ip: String, port: u16) -> Result<()> {
                 let pkt = PKTInitPC::new(&data)?;
                 let (hp, max_hp) = get_current_and_max_hp(&pkt.stat_pair);
                 let entity = entity_tracker.init_pc(pkt);
+                info!("local player: {:?}, {:?}", entity.name, entity.character_id);
                 debug_print("init pc", &entity);
 
                 state.on_init_pc(entity, hp, max_hp)
