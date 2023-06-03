@@ -87,7 +87,6 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool) -> Re
     });
 
     while let Ok((op, data)) = rx.recv() {
-        info!("{:?}", op);
         if let Ok(ref mut reset) = reset.try_lock() {
             if **reset {
                 state.soft_reset();
