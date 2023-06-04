@@ -1,7 +1,7 @@
 {
     "version": "v1.2.0-beta.7",
     "notes": "BETA UPDATE (more stable now)\nbeta.7\n- added boss HP % to DPS charts (only on new encounters)\nbeta.6\n- added raw socket support (should fix ExitLag issues)\nbeta.1\n- rewrote packet sniffer and processor in rust\nfull patch notes on github\nnote: this is a beta release, please report bugs to Snow#7777",
-    "pub_date": "2023-06-02:42:00Z",
+    "pub_date": "2023-06-04T03:58:50.638Z",
     "platforms": {
         "windows-x86_64": {
             "url": "https://github.com/snoww/loa-logs/releases/download/v1.2.0-beta.7/LOA.Logs_1.2.0-beta.7_x64-setup.nsis.zip",
