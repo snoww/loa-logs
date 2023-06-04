@@ -8,7 +8,7 @@ use std::{
     fs::File,
     io::{Read, Write},
     path::{Path, PathBuf},
-    str::FromStr,
+    str::FromStr, net::Ipv4Addr,
 };
 
 use anyhow::Result;
@@ -89,7 +89,7 @@ async fn main() -> Result<()> {
             }
 
             let mut raw_socket = false;
-            let ip: String;
+            let mut ip: String;
             let mut port = 6040;
 
             if let Some(settings) = settings {
@@ -98,10 +98,16 @@ async fn main() -> Result<()> {
                     info!("auto_iface enabled, using ip: {}", ip);
                 } else {
                     ip = settings.general.ip;
+                    if ip.parse::<Ipv4Addr>().is_ok() {
+                        info!("manual interface, using ip: {}", ip);
+                    } else {
+                        ip = meter_core::get_most_common_ip().unwrap();
+                        warn!("manual interface using default ip: {}", ip);
+                    }
                     if settings.general.port > 0 {
                         port = settings.general.port;
+                        info!("using port: {}", port);
                     }
-                    info!("manual interface, using ip: {}, port: {}", ip, port);
                     raw_socket = settings.general.raw_socket;
                     if raw_socket {
                         info!("raw socket enabled");

@@ -167,6 +167,17 @@
                                     <div
                                         id="dropdown"
                                         class="absolute left-[4.5rem] z-10 mt-1 flex w-80 cursor-pointer flex-col rounded bg-zinc-600 shadow">
+                                        <button
+                                                class="truncate rounded px-2 py-1 text-left text-sm text-gray-200 hover:bg-gray-700"
+                                                aria-labelledby="dropdownDefaultButton"
+                                                on:click={() => {
+                                                    $settings.general.ifDesc = "Default Network Interface";
+                                                    $settings.general.ip = "";
+                                                    networkDropdownOpen = false;
+                                                    $ifaceChangedStore = true;
+                                                }}>
+                                                Default Network Interface
+                                            </button>
                                         {#each networkInterfaces as iface (iface)}
                                             <button
                                                 class="truncate rounded px-2 py-1 text-left text-sm text-gray-200 hover:bg-gray-700"
