@@ -1,11 +1,11 @@
 {
     "version": "v1.2.0-beta.6",
-    "notes": "OPTIONAL BETA UPDATE (EXPERIMENTAL)\nbeta.6\n- added raw socket support (should fix ExitLag issues)\nbeta.5\n- added pause/reset button to top bar when meter window is large enough\n- fix bug where damage % will show when solo\n- improve local player guessing\nbeta.1\n- rewrote packet sniffer and processor in rust\n- added self-buff summaries\nfull patch notes on github\nnote: this is a beta release, please report bugs to Snow#7777",
+    "notes": "BETA UPDATE (more stable now)\nbeta.7\n- added boss HP % to DPS charts (only on new encounters)\nbeta.6\n- added raw socket support (should fix ExitLag issues)\nbeta.1\n- rewrote packet sniffer and processor in rust\nfull patch notes on github\nnote: this is a beta release, please report bugs to Snow#7777",
     "pub_date": "2023-06-01T17:27:50Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.2.0-beta.6/LOA.Logs_1.2.0-beta.6_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmFOamxvNU1TZEVuUU90ZHIvb3BFNzhKMy8xNVhEU21palVJMjlNMTFiSjZhRGFBelBsNkdSQ2FRMmVaQlFmaWpwQmhZd2ZHTkVUbWxwbFpNYmUrT2dnPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjg1NzY0NjA0CWZpbGU6TE9BIExvZ3NfMS4yLjAtYmV0YS42X3g2NC1zZXR1cC5uc2lzLnppcApqUk5oYncvaXhFUE44YzJ2NDdFYlpWS0o3ZklFaURQTnpTMlI3T0JZQWlSWUdPSkY3NFowY1NRWjFUSHlCNGUyRitnZWc2VmdGeStWZU15Tzl0UndCZz09Cg=="
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.2.0-beta.7/LOA.Logs_1.2.0-beta.7_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmR0akd2WVFoazZHcUMvcSt6dW9Ha3k3akpWUHFiWTU1dHRnckFjc05UZG5xQzJ2Nk5tUzFVdUw5QUFzRk1LWTF4eGo1NlQ0SEtqNjFRQXI3VjQ4R2dZPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjg1ODQ2MDI5CWZpbGU6TE9BIExvZ3NfMS4yLjAtYmV0YS43X3g2NC1zZXR1cC5uc2lzLnppcApCVVZmd3ZscENLYVlGV21OYXkxYjhMN2JETDhGbThSaDNMODZsd1NOcmlwUDlmaVZhejAvRGowSk9yVXdGZEhwTFBYTlVDQ2NtTVZNaGV4YXZ1MThBQT09Cg=="
         }
     }
 }
