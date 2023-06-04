@@ -140,10 +140,6 @@ async fn main() -> Result<()> {
         .plugin(tauri_plugin_single_instance::init(|_app, _argv, _cwd| {}))
         .on_window_event(|event| {
             if let tauri::WindowEvent::CloseRequested { api, .. } = event.event() {
-                if event.window().label() == "logs" {
-                    event.window().hide().unwrap();
-                    api.prevent_close();
-                }
                 if event.window().label() == "main" {
                     event
                         .window()
@@ -152,6 +148,10 @@ async fn main() -> Result<()> {
                         .expect("failed to save window state");
                     event.window().app_handle().exit(0);
                 }
+                if event.window().label() == "logs" {
+                    event.window().hide().unwrap();
+                }
+                api.prevent_close();
             }
         })
         .system_tray(system_tray)

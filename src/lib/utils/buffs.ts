@@ -33,7 +33,6 @@ export function groupedSynergiesAdd(
     // show all arcana cards for fun
     if (!focusedPlayer || focusedPlayer.classId !== 202) {
         if (!defaultBuffFilter(buff.buffType)) {
-            // console.log(buff);
             return;
         }
     }
@@ -84,8 +83,10 @@ export function filterStatusEffects(
             }
             groupedSynergiesAdd(groupedSynergies, key, id, buff, focusedPlayer);
         }
-    } else {
-        // ignore
+    } else if (["etc"].includes(buff.buffCategory)) {
+        if (tab === MeterTab.SELF_BUFFS && focusedPlayer) {
+            groupedSynergiesAdd(groupedSynergies, `etc_${buff.source.name}`, id, buff, focusedPlayer);
+        }
     }
 }
 
