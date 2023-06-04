@@ -36,7 +36,6 @@ export function getBossHpSeries(bosses: [string, BossHpLog[]][], legendNames: st
         .map((entry, i) => {
             legendNames.push(entry[0]);
             const resample = resampleData(entry[1], interval, len);
-            console.log(entry[0], resample);
             const data = resample.map((e) => {
                 return [formatDurationFromS(e.time), round2(e.p * 100, 1)];
             });
