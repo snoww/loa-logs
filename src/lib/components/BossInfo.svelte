@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { bosses } from "$lib/constants/bossMap";
+    import { bosses } from "$lib/constants/bossHpBars";
     import { bossHpBarColors } from "$lib/constants/colors";
     import type { Entity } from "$lib/types";
     import { abbreviateNumberSplit } from "$lib/utils/numbers";

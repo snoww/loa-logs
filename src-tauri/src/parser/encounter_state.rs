@@ -27,7 +27,7 @@ pub struct EncounterState {
     identity_log: HashMap<String, IdentityLog>,
     cast_log: HashMap<String, HashMap<i32, Vec<i32>>>,
 
-    boss_hp_log: HashMap<String, Vec<(i32, i64)>>,
+    boss_hp_log: HashMap<String, Vec<BossHpLog>>,
 
     stagger_log: Vec<(i32, f32)>,
     stagger_intervals: Vec<(i32, i32)>,
@@ -678,10 +678,23 @@ impl EncounterState {
                 .entry(target_entity.name.clone())
                 .or_default();
 
-            if log.is_empty() || log.last().unwrap().0 != relative_timestamp_s {
-                log.push((relative_timestamp_s, target_entity.current_hp));
+            let current_hp = if target_entity.current_hp >= 0 {
+                target_entity.current_hp
             } else {
-                log.last_mut().unwrap().1 = target_entity.current_hp;
+                0
+            };
+            let hp_percent = if target_entity.max_hp != 0 {
+                current_hp as f32 / target_entity.max_hp as f32
+            } else {
+                0.0
+            };
+
+            if log.is_empty() || log.last().unwrap().time != relative_timestamp_s {
+                log.push(BossHpLog::new(relative_timestamp_s, current_hp, hp_percent));
+            } else {
+                let last = log.last_mut().unwrap();
+                last.hp = current_hp;
+                last.p = hp_percent;
             }
         }
 
@@ -694,7 +707,7 @@ impl EncounterState {
 
         self.encounter.last_combat_packet = timestamp;
     }
-    
+
     pub fn on_counterattack(&mut self, source_entity: &Entity) {
         let entity = self
             .encounter
@@ -1187,7 +1200,7 @@ fn insert_data(
     damage_log: HashMap<String, Vec<(i64, i64)>>,
     identity_log: HashMap<String, IdentityLog>,
     cast_log: HashMap<String, HashMap<i32, Vec<i32>>>,
-    boss_hp_log: HashMap<String, Vec<(i32, i64)>>,
+    boss_hp_log: HashMap<String, Vec<BossHpLog>>,
     stagger_log: Vec<(i32, f32)>,
     mut stagger_intervals: Vec<(i32, i32)>,
 ) {

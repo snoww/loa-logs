@@ -1,4 +1,4 @@
-import type { IdentityLogType, IdentityLogTypeValue } from "$lib/types";
+import { BossHpLog, type IdentityLogType, type IdentityLogTypeValue } from "$lib/types";
 
 export function tryParseInt(intString: string | number, defaultValue = 0) {
     if (typeof intString === "number") {
@@ -136,4 +136,31 @@ export function formatMinutes(minutesDecimal: number): string {
     result += `${seconds}s`;
 
     return result;
+}
+
+export function resampleData(data: Array<BossHpLog>, interval = 5, length: number) {
+    const resampledData: Array<BossHpLog> = [];
+    let last = null;
+    const lastTime = data[data.length - 1].time;
+    
+    const dataMap = data.reduce((map, obj) => {
+        map.set(obj.time, obj);
+        return map;
+    }, new Map<number, BossHpLog>());
+
+    for(let i = 0; i < length; i++) {
+        const time = i * interval;
+        if (time > lastTime) {
+            break;
+        }
+        if (dataMap.has(time)) {
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            last = dataMap.get(time)!;
+        } else if (last === null) {
+            continue;
+        }
+        resampledData.push(new BossHpLog(time, last.hp, last.p));
+    }
+
+    return resampledData;
 }

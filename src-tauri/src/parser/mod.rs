@@ -22,7 +22,7 @@ use std::cell::RefCell;
 use std::fmt::Debug;
 use std::rc::Rc;
 use std::sync::atomic::{AtomicBool, Ordering};
-use std::sync::{Arc, Mutex};
+use std::sync::Arc;
 use std::thread;
 use std::time::{Duration, Instant};
 use tauri::{Manager, Window, Wry};

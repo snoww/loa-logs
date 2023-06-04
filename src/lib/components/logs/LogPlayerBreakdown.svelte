@@ -8,7 +8,6 @@
 
     export let entity: Entity;
     export let duration: number;
-    export let handleRightClick: () => void;
 
     let color = "#ffffff";
     let skills: Array<Skill> = [];
@@ -55,7 +54,7 @@
             {anySupportBrand} />
     </tr>
 </thead>
-<tbody on:contextmenu|preventDefault={handleRightClick} class="relative z-10">
+<tbody class="relative z-10">
     {#each skills as skill, i (skill.id)}
         <LogPlayerBreakdownRow
             {skill}

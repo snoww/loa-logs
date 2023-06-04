@@ -44,6 +44,19 @@ export interface EncounterDamageStats {
 
 export interface EncounterMisc {
     staggerStats: StaggerStats;
+    bossHpLog: { [key: string]: Array<BossHpLog> };
+}
+
+export class BossHpLog {
+    time: number;
+    hp: number;
+    p: number;
+
+    constructor(time: number, hp: number, p: number) {
+        this.time = time;
+        this.hp = hp;
+        this.p = p;
+    }
 }
 
 export interface StaggerStats {

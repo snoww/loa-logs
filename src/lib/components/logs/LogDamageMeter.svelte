@@ -1,22 +1,29 @@
 <script lang="ts">
     import { MeterState, MeterTab, type Entity, type Encounter, ChartType, EntityType } from "$lib/types";
-    import { abbreviateNumber, formatDurationFromS, millisToMinutesAndSeconds } from "$lib/utils/numbers";
+    import { millisToMinutesAndSeconds } from "$lib/utils/numbers";
     import { invoke } from "@tauri-apps/api/tauri";
     import LogDamageMeterRow from "./LogDamageMeterRow.svelte";
     import LogPlayerBreakdown from "./LogPlayerBreakdown.svelte";
     import LogEncounterInfo from "./LogEncounterInfo.svelte";
     import LogBuffs from "./LogBuffs.svelte";
     import { page } from "$app/stores";
-    import { chartable, defaultOptions, type EChartsOptions } from "$lib/utils/charts";
-    import { classColors } from "$lib/constants/colors";
+    import { chartable, type EChartsOptions } from "$lib/utils/charts";
     import { settings, skillIcon } from "$lib/utils/settings";
     import { goto } from "$app/navigation";
     import html2canvas from "html2canvas";
     import { screenshotAlert, screenshotError, takingScreenshot } from "$lib/utils/stores";
-    import { getSkillIcon, isValidName } from "$lib/utils/strings";
     import LogIdentity from "./identity/LogIdentity.svelte";
     import LogStagger from "./stagger/LogStagger.svelte";
     import { tooltip } from "$lib/utils/tooltip";
+    import {
+        getAverageDpsChart,
+        getAveragePlayerSeries,
+        getBossHpSeries,
+        getLegendNames,
+        getRollingDpsChart,
+        getRollingPlayerSeries,
+        getSkillLogChart
+    } from "$lib/utils/dpsCharts";
 
     export let id: string;
     export let encounter: Encounter;
@@ -41,9 +48,7 @@
 
     let deleteConfirm = false;
 
-    let avgDpsOptions: EChartsOptions = {};
-    let rollingDpsOptions: EChartsOptions = {};
-    let skillLogOptions: EChartsOptions = {};
+    let chartOptions: EChartsOptions = {};
 
     $: {
         if (encounter) {
@@ -99,285 +104,33 @@
                 chartablePlayers[0].damageStats.dpsAverage.length > 0 &&
                 chartablePlayers[0].damageStats.dpsRolling10sAvg.length > 0
             ) {
-                let legendNames: Array<string> = [];
-                if (!$settings.general.showNames) {
-                    let map: { [key: string]: number } = {};
-                    let count = chartablePlayers
-                        .filter((e) => e.entityType === EntityType.PLAYER)
-                        .map((e) => {
-                            return (map[e.class] = typeof map[e.class] === "undefined" ? 1 : map[e.class] + 1);
-                        });
-                    legendNames = chartablePlayers
-                        .filter((e) => e.entityType === EntityType.PLAYER)
-                        .map((e, i) => {
-                            if (map[e.class] === 1) {
-                                return e.class;
-                            } else {
-                                return e.class + "(" + count[i] + ")";
-                            }
-                        });
-                } else {
-                    legendNames = chartablePlayers
-                        .filter((e) => e.entityType === EntityType.PLAYER)
-                        .map((e) => (isValidName(e.name) ? e.name : e.class));
-                }
-
+                let legendNames = getLegendNames(chartablePlayers, $settings.general.showNames);
+                let bossHpLogs = Object.entries(encounter.encounterDamageStats.misc?.bossHpLog || {});
                 if (chartType === ChartType.AVERAGE_DPS) {
-                    avgDpsOptions = {
-                        ...defaultOptions,
-                        legend: {
-                            data: legendNames,
-                            textStyle: {
-                                color: "white"
-                            },
-                            type: "scroll",
-                            width: "90%",
-                            pageIconInactiveColor: "#313131",
-                            pageIconColor: "#aaa",
-                            pageTextStyle: {
-                                color: "#aaa"
-                            }
-                        },
-                        xAxis: {
-                            type: "category",
-                            splitLine: {
-                                show: false
-                            },
-                            data: Array.from({ length: chartablePlayers[0].damageStats.dpsAverage.length }, (_, i) =>
-                                formatDurationFromS(i * 5)
-                            ),
-                            boundaryGap: false,
-                            axisLabel: {
-                                color: "white"
-                            }
-                        },
-                        yAxis: {
-                            type: "value",
-                            splitLine: {
-                                show: true,
-                                lineStyle: {
-                                    color: "#333"
-                                }
-                            },
-                            axisLabel: {
-                                color: "white",
-                                formatter: function (value: number) {
-                                    return abbreviateNumber(value);
-                                }
-                            }
-                        },
-                        series: chartablePlayers
-                            .filter((e) => e.entityType === EntityType.PLAYER)
-                            .map((player, i) => {
-                                let markPoint = {};
-                                if (player.isDead) {
-                                    let rounded =
-                                        Math.ceil((player.damageStats.deathTime - encounter.fightStart) / 1000 / 5) * 5;
-                                    let index = Math.floor(rounded / 5);
-
-                                    markPoint = {
-                                        data: [
-                                            {
-                                                name: "Death",
-                                                value: "💀",
-                                                coord: [index, player.damageStats.dpsAverage[index]]
-                                            }
-                                        ]
-                                    };
-                                }
-                                return {
-                                    name: legendNames[i],
-                                    color: classColors[player.class].color,
-                                    type: "line",
-                                    data: player.damageStats.dpsAverage,
-                                    showSymbol: false,
-                                    smooth: 0.1,
-                                    markPoint: markPoint
-                                };
-                            })
-                    };
+                    let chartPlayers = getAveragePlayerSeries(chartablePlayers, legendNames, encounter.fightStart);
+                    let bossChart = getBossHpSeries(
+                        bossHpLogs,
+                        legendNames,
+                        chartablePlayers[0].damageStats.dpsAverage.length,
+                        5
+                    );
+                    chartOptions = getAverageDpsChart(chartablePlayers, legendNames, chartPlayers, bossChart);
                 } else if (chartType === ChartType.ROLLING_DPS) {
-                    rollingDpsOptions = {
-                        ...defaultOptions,
-                        legend: {
-                            data: legendNames,
-                            textStyle: {
-                                color: "white"
-                            },
-                            type: "scroll",
-                            width: "90%",
-                            pageIconInactiveColor: "#313131",
-                            pageIconColor: "#aaa",
-                            pageTextStyle: {
-                                color: "#aaa"
-                            }
-                        },
-                        xAxis: {
-                            type: "category",
-                            splitLine: {
-                                show: false
-                            },
-                            data: Array.from(
-                                { length: chartablePlayers[0].damageStats.dpsRolling10sAvg.length },
-                                (_, i) => formatDurationFromS(i)
-                            ),
-                            boundaryGap: false,
-                            axisLabel: {
-                                color: "white"
-                            }
-                        },
-                        yAxis: {
-                            type: "value",
-                            splitLine: {
-                                show: true,
-                                lineStyle: {
-                                    color: "#333"
-                                }
-                            },
-                            axisLabel: {
-                                color: "white",
-                                formatter: function (value: number) {
-                                    return abbreviateNumber(value);
-                                }
-                            }
-                        },
-                        series: chartablePlayers
-                            .filter((e) => e.entityType === EntityType.PLAYER)
-                            .map((player, i) => {
-                                let markPoint = {};
-                                if (player.isDead) {
-                                    let index = Math.ceil((player.damageStats.deathTime - encounter.fightStart) / 1000);
-                                    markPoint = {
-                                        data: [
-                                            {
-                                                name: "Death",
-                                                value: "💀",
-                                                coord: [index, player.damageStats.dpsRolling10sAvg[index]]
-                                            }
-                                        ]
-                                    };
-                                }
-                                return {
-                                    name: legendNames[i],
-                                    color: classColors[player.class].color,
-                                    type: "line",
-                                    data: player.damageStats.dpsRolling10sAvg,
-                                    showSymbol: false,
-                                    smooth: 0.1,
-                                    markPoint: markPoint
-                                };
-                            })
-                    };
+                    let chartPlayers = getRollingPlayerSeries(chartablePlayers, legendNames, encounter.fightStart);
+                    let bossChart = getBossHpSeries(
+                        bossHpLogs,
+                        legendNames,
+                        chartablePlayers[0].damageStats.dpsRolling10sAvg.length,
+                        1
+                    );
+                    chartOptions = getRollingDpsChart(chartablePlayers, legendNames, chartPlayers, bossChart);
                 } else if (chartType === ChartType.SKILL_LOG && player && player.entityType === EntityType.PLAYER) {
-                    let sortedSkills = Object.values(player.skills)
-                        .filter((skill) => skill.castLog.length > 0)
-                        .sort((a, b) => a.totalDamage - b.totalDamage);
-                    let skills = sortedSkills.map((skill) => skill.name);
-                    skillLogOptions = {
-                        ...defaultOptions,
-                        grid: {
-                            left: "2%",
-                            right: "5%",
-                            bottom: "18%",
-                            top: "10%",
-                            containLabel: true
-                        },
-                        dataZoom: [
-                            {
-                                type: "slider",
-                                fillerColor: "rgba(80,80,80,.5)",
-                                borderColor: "rgba(80,80,80,.5)",
-                                handleStyle: {
-                                    color: "rgba(80,80,80,.5)"
-                                },
-                                moveHandleStyle: {
-                                    color: "rgba(136,136,136)"
-                                }
-                            },
-                            {
-                                type: "inside",
-                                xAxisIndex: [0],
-                                throttle: 50
-                            },
-                            {
-                                type: "inside",
-                                yAxisIndex: [0],
-                                throttle: 50,
-                                zoomOnMouseWheel: false
-                            }
-                        ],
-                        tooltip: {
-                            trigger: "axis",
-                            formatter: function (params: any[]) {
-                                let output = `<span style="font-weight: 800">${params[0].name}</span>`;
-                                params.forEach((p) => {
-                                    output += `<br/>${p.seriesName}`;
-                                });
-
-                                return output;
-                            }
-                        } as any,
-                        legend: {
-                            data: [...skills].reverse(),
-                            textStyle: {
-                                color: "white"
-                            },
-                            type: "scroll",
-                            width: "90%",
-                            pageIconInactiveColor: "#313131",
-                            pageIconColor: "#aaa",
-                            pageTextStyle: {
-                                color: "#aaa"
-                            },
-                            itemWidth: 20,
-                            itemHeight: 20
-                        },
-                        xAxis: {
-                            type: "category",
-                            splitLine: {
-                                show: false
-                            },
-                            data: Array.from(
-                                {
-                                    length: (encounter.lastCombatPacket - encounter.fightStart) / 1000
-                                },
-                                (_, i) => formatDurationFromS(i)
-                            ),
-                            boundaryGap: false,
-                            axisLabel: {
-                                color: "white"
-                            }
-                        },
-                        yAxis: {
-                            type: "category",
-                            splitLine: {
-                                show: true,
-                                lineStyle: {
-                                    color: "#333"
-                                }
-                            },
-                            axisLabel: {
-                                show: false
-                            },
-                            data: skills.map((skill) => {
-                                return {
-                                    value: skill
-                                };
-                            })
-                        },
-                        series: sortedSkills.map((skill) => {
-                            return {
-                                name: skill.name,
-                                type: "scatter",
-                                symbol: "image://" + $skillIcon.path + getSkillIcon(skill.icon),
-                                symbolSize: [20, 20],
-                                symbolKeepAspect: true,
-                                data: skill.castLog.map((cast) => {
-                                    return [formatDurationFromS(cast), skill.name];
-                                })
-                            };
-                        })
-                    };
+                    chartOptions = getSkillLogChart(
+                        player,
+                        $skillIcon.path,
+                        encounter.lastCombatPacket,
+                        encounter.fightStart
+                    );
                 }
             }
         }
@@ -490,7 +243,7 @@
 </script>
 
 <svelte:window on:contextmenu|preventDefault />
-<div bind:this={targetDiv} class:p-4={$takingScreenshot}>
+<div bind:this={targetDiv} class:p-4={$takingScreenshot} on:contextmenu|preventDefault={handleRightClick}>
     <LogEncounterInfo
         bossName={encounter.currentBossName}
         encounterDuration={millisToMinutesAndSeconds(encounter.duration)}
@@ -718,7 +471,7 @@
                             {/each}
                         </tbody>
                     {:else if state === MeterState.PLAYER && player !== null}
-                        <LogPlayerBreakdown entity={player} duration={encounter.duration} {handleRightClick} />
+                        <LogPlayerBreakdown entity={player} duration={encounter.duration} />
                     {/if}
                 {:else if tab === MeterTab.PARTY_BUFFS}
                     {#if state === MeterState.PARTY}
@@ -726,7 +479,6 @@
                             {tab}
                             encounterDamageStats={encounter.encounterDamageStats}
                             {players}
-                            {handleRightClick}
                             {inspectPlayer} />
                     {:else}
                         <LogBuffs
@@ -734,7 +486,6 @@
                             encounterDamageStats={encounter.encounterDamageStats}
                             {players}
                             focusedPlayer={player}
-                            {handleRightClick}
                             {inspectPlayer} />
                     {/if}
                 {:else if tab === MeterTab.SELF_BUFFS}
@@ -743,7 +494,6 @@
                             {tab}
                             encounterDamageStats={encounter.encounterDamageStats}
                             {players}
-                            {handleRightClick}
                             {inspectPlayer} />
                     {:else}
                         <LogBuffs
@@ -751,7 +501,6 @@
                             encounterDamageStats={encounter.encounterDamageStats}
                             {players}
                             focusedPlayer={player}
-                            {handleRightClick}
                             {inspectPlayer} />
                     {/if}
                 {/if}
@@ -760,7 +509,7 @@
     {/if}
 </div>
 {#if tab !== MeterTab.IDENTITY && tab !== MeterTab.STAGGER}
-    <div class="mt-4">
+    <div class="mt-4" on:contextmenu|preventDefault={handleRightClick}>
         <div class="text-lg font-bold">Charts</div>
         <div class="mt-2 flex divide-x divide-gray-600">
             {#if playerName === "" && state === MeterState.PARTY}
@@ -790,19 +539,19 @@
         </div>
         {#if chartType === ChartType.AVERAGE_DPS}
             {#if !$settings.general.showNames}
-                <div class="mt-2 h-[300px]" use:chartable={avgDpsOptions} style="width: calc(100vw - 4.5rem);" />
+                <div class="mt-2 h-[300px]" use:chartable={chartOptions} style="width: calc(100vw - 4.5rem);" />
             {:else}
-                <div class="mt-2 h-[300px]" use:chartable={avgDpsOptions} style="width: calc(100vw - 4.5rem);" />
+                <div class="mt-2 h-[300px]" use:chartable={chartOptions} style="width: calc(100vw - 4.5rem);" />
             {/if}
         {:else if chartType === ChartType.ROLLING_DPS}
             {#if !$settings.general.showNames}
-                <div class="mt-2 h-[300px]" use:chartable={rollingDpsOptions} style="width: calc(100vw - 4.5rem);" />
+                <div class="mt-2 h-[300px]" use:chartable={chartOptions} style="width: calc(100vw - 4.5rem);" />
             {:else}
-                <div class="mt-2 h-[300px]" use:chartable={rollingDpsOptions} style="width: calc(100vw - 4.5rem);" />
+                <div class="mt-2 h-[300px]" use:chartable={chartOptions} style="width: calc(100vw - 4.5rem);" />
             {/if}
         {:else if chartType === ChartType.SKILL_LOG}
             {#if player && player.entityType === EntityType.PLAYER}
-                <div class="mt-2 h-[400px]" use:chartable={skillLogOptions} style="width: calc(100vw - 4.5rem);" />
+                <div class="mt-2 h-[400px]" use:chartable={chartOptions} style="width: calc(100vw - 4.5rem);" />
             {/if}
         {/if}
     </div>

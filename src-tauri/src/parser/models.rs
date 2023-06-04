@@ -205,10 +205,27 @@ pub struct StaggerStats {
 
 #[derive(Debug, Default, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
+#[serde_as]
 pub struct EncounterMisc {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub stagger_stats: Option<StaggerStats>,
-    pub boss_hp_log: HashMap<String, Vec<(i32, i64)>>,
+    #[serde_as(deserialize_as = "DefaultOnError")]
+    pub boss_hp_log: HashMap<String, Vec<BossHpLog>>,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, Default)]
+#[serde(rename_all = "camelCase")]
+pub struct BossHpLog {
+    pub time: i32,
+    pub hp: i64,
+    #[serde(default)]
+    pub p: f32,
+}
+
+impl BossHpLog {
+    pub fn new(time: i32, hp: i64, p: f32) -> Self {
+        Self { time, hp, p }
+    }
 }
 
 #[derive(Debug, Default, Deserialize, Clone)]
