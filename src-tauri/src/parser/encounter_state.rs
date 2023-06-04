@@ -121,8 +121,8 @@ impl EncounterState {
         }
 
         if let Some(mut local) = self.encounter.entities.remove(&self.encounter.local_player) {
-            self.encounter.local_player = entity.name.to_string();
-            local.name = entity.name.to_string();
+            self.encounter.local_player = entity.name.clone();
+            local.name = entity.name.clone();
             self.encounter
                 .entities
                 .insert(self.encounter.local_player.clone(), local);
@@ -136,9 +136,9 @@ impl EncounterState {
 
             if let Some(old_local) = old_local {
                 let mut new_local = self.encounter.entities[&old_local].clone();
-                new_local.name = entity.name.to_string();
+                new_local.name = entity.name.clone();
                 self.encounter.entities.remove(&old_local);
-                self.encounter.local_player = entity.name.to_string();
+                self.encounter.local_player = entity.name.clone();
                 self.encounter
                     .entities
                     .insert(self.encounter.local_player.clone(), new_local);
@@ -147,20 +147,20 @@ impl EncounterState {
     }
 
     pub fn on_init_env(&mut self, entity: Entity) {
-        if let Some(local_player) = self
-            .encounter
-            .entities
-            .get_mut(&self.encounter.local_player)
+        if let Some(mut local_player) = self.encounter.entities.remove(&self.encounter.local_player)
         {
             local_player.id = entity.id;
             local_player.name = entity.name.clone();
             local_player.class_id = entity.class_id;
             local_player.class = get_class_from_id(&entity.class_id);
+            self.encounter
+                .entities
+                .insert(entity.name.clone(), local_player);
         } else {
             let entity = encounter_entity_from_entity(&entity);
-            self.encounter.local_player = entity.name.clone();
             self.encounter.entities.insert(entity.name.clone(), entity);
         }
+        self.encounter.local_player = entity.name;
 
         if !self.saved && !self.encounter.current_boss_name.is_empty() {
             self.save_to_db();
@@ -1563,7 +1563,7 @@ fn calculate_average_dps(data: &[(i64, i64)], start_time: i64, end_time: i64) ->
     results
 }
 
-fn get_class_from_id(class_id: &u32) -> String {
+pub fn get_class_from_id(class_id: &u32) -> String {
     let class = match class_id {
         0 => "",
         101 => "Warrior (Male)",

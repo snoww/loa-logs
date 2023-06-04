@@ -5,7 +5,7 @@ pub mod models;
 mod party_tracker;
 mod status_tracker;
 
-use crate::parser::encounter_state::EncounterState;
+use crate::parser::encounter_state::{EncounterState, get_class_from_id};
 use crate::parser::entity_tracker::{get_current_and_max_hp, EntityTracker};
 use crate::parser::id_tracker::IdTracker;
 use crate::parser::models::EntityType;
@@ -125,7 +125,7 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool) -> Re
                 let pkt = PKTInitPC::new(&data)?;
                 let (hp, max_hp) = get_current_and_max_hp(&pkt.stat_pair);
                 let entity = entity_tracker.init_pc(pkt);
-                info!("local player: {:?}, {:?}", entity.name, entity.character_id);
+                info!("local player: {:?}, class: {:?}, ilvl: {:?}, id: {:?}", entity.name, get_class_from_id(&entity.class_id), entity.gear_level, entity.character_id);
                 debug_print("init pc", &entity);
 
                 state.on_init_pc(entity, hp, max_hp)
