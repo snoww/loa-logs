@@ -1,6 +1,6 @@
 <script lang="ts">
     import { MiniSkill, type Skill } from "$lib/types";
-    import { getFirstSkills } from "$lib/utils/dpsCharts";
+    import { getOpenerSkills } from "$lib/utils/dpsCharts";
     import { skillIcon } from "$lib/utils/settings";
     import { getSkillIcon } from "$lib/utils/strings";
     import { tooltip } from "$lib/utils/tooltip";
@@ -20,19 +20,18 @@
             return new MiniSkill(skill.name, skill.icon, [...skill.castLog]);
         });
 
-    console.log(skills);
 
-    let firstTenSkills = getFirstSkills(skillsArray, 10);
+    let openerSkills = getOpenerSkills(skillsArray, 10);
 </script>
 
 <div class="mt-2 mb-4">
     <div class="text-lg font-bold">Opener Rotation</div>
     <div class="flex flex-wrap pt-2 items-center" style="width: calc(100vw - 4.5rem);">
-        {#each firstTenSkills as skill, i (i)}
+        {#each openerSkills as skill, i (i)}
             <div use:tooltip={{ content: skill.name }}>
                 <img class="m-1 h-10 w-10 rounded-sm" src={$skillIcon.path + getSkillIcon(skill.icon)} alt={skill.name} />
             </div>
-            {#if i < firstTenSkills.length - 1}
+            {#if i < openerSkills.length - 1}
             <svg class="mx-2 h-5 w-5 fill-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"><path d="m305.5-62.5-78-79 341-340.5-341-341 78-78.5L725-482 305.5-62.5Z"/></svg>
             {/if}
         {/each}

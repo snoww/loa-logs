@@ -418,7 +418,7 @@ export function getSkillLogChart(player: Entity, skillIconPath: string, lastComb
     };
 }
 
-export function getFirstSkills(skills: MiniSkill[], x: number): OpenerSkill[] {
+export function getOpenerSkills(skills: MiniSkill[], x: number): OpenerSkill[] {
     const comparator = (a: MiniSkill, b: MiniSkill) => a.castLog[0] - b.castLog[0];
 
     const minHeap = new Heap(comparator);

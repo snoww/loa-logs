@@ -183,7 +183,12 @@
             player = null;
             playerName = "";
             chartType = ChartType.AVERAGE_DPS;
+            scrollToTop();
         }
+    }
+
+    function scrollToTop() {
+        targetDiv.scrollIntoView({ behavior: "smooth", block: "start", inline: "start" });
     }
 
     async function deleteEncounter() {
@@ -244,7 +249,7 @@
 </script>
 
 <svelte:window on:contextmenu|preventDefault />
-<div bind:this={targetDiv} class:p-4={$takingScreenshot} on:contextmenu|preventDefault={handleRightClick}>
+<div bind:this={targetDiv} class="scroll-mt-2" class:p-4={$takingScreenshot} on:contextmenu|preventDefault={handleRightClick}>
     <LogEncounterInfo
         bossName={encounter.currentBossName}
         encounterDuration={millisToMinutesAndSeconds(encounter.duration)}
@@ -513,36 +518,38 @@
     <div class="mt-4" on:contextmenu|preventDefault={handleRightClick}>
         {#if chartType === ChartType.SKILL_LOG}
             {#if player && player.entityType === EntityType.PLAYER}
-                <OpenerSkills skills={player.skills}/>
+                <OpenerSkills skills={player.skills} />
             {/if}
         {/if}
-        <div class="text-lg font-bold">Charts</div>
-        <div class="mt-2 flex divide-x divide-gray-600">
-            {#if playerName === "" && state === MeterState.PARTY}
-                <button
-                    class="rounded-sm px-2 py-1"
-                    class:bg-accent-900={chartType == ChartType.AVERAGE_DPS}
-                    class:bg-gray-700={chartType != ChartType.AVERAGE_DPS}
-                    on:click={() => (chartType = ChartType.AVERAGE_DPS)}>
-                    Average DPS
-                </button>
-                <button
-                    class="rounded-sm px-2 py-1"
-                    class:bg-accent-900={chartType == ChartType.ROLLING_DPS}
-                    class:bg-gray-700={chartType != ChartType.ROLLING_DPS}
-                    on:click={() => (chartType = ChartType.ROLLING_DPS)}>
-                    10s DPS Window
-                </button>
-            {:else if playerName !== "" && state === MeterState.PLAYER}
-                <button
-                    class="rounded-sm px-2 py-1"
-                    class:bg-accent-900={chartType == ChartType.SKILL_LOG}
-                    class:bg-gray-700={chartType != ChartType.SKILL_LOG}
-                    on:click={() => (chartType = ChartType.SKILL_LOG)}>
-                    Skill Casts
-                </button>
-            {/if}
-        </div>
+        {#if player?.entityType !== EntityType.ESTHER}
+            <div class="text-lg font-bold">Charts</div>
+            <div class="mt-2 flex divide-x divide-gray-600">
+                {#if playerName === "" && state === MeterState.PARTY}
+                    <button
+                        class="rounded-sm px-2 py-1"
+                        class:bg-accent-900={chartType == ChartType.AVERAGE_DPS}
+                        class:bg-gray-700={chartType != ChartType.AVERAGE_DPS}
+                        on:click={() => (chartType = ChartType.AVERAGE_DPS)}>
+                        Average DPS
+                    </button>
+                    <button
+                        class="rounded-sm px-2 py-1"
+                        class:bg-accent-900={chartType == ChartType.ROLLING_DPS}
+                        class:bg-gray-700={chartType != ChartType.ROLLING_DPS}
+                        on:click={() => (chartType = ChartType.ROLLING_DPS)}>
+                        10s DPS Window
+                    </button>
+                {:else if playerName !== "" && state === MeterState.PLAYER}
+                    <button
+                        class="rounded-sm px-2 py-1"
+                        class:bg-accent-900={chartType == ChartType.SKILL_LOG}
+                        class:bg-gray-700={chartType != ChartType.SKILL_LOG}
+                        on:click={() => (chartType = ChartType.SKILL_LOG)}>
+                        Skill Casts
+                    </button>
+                {/if}
+            </div>
+        {/if}
         {#if chartType === ChartType.AVERAGE_DPS}
             {#if !$settings.general.showNames}
                 <div class="mt-2 h-[300px]" use:chartable={chartOptions} style="width: calc(100vw - 4.5rem);" />
