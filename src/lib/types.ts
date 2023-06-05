@@ -259,3 +259,25 @@ export class Buff {
         this.percentage = percentage;
     }
 }
+
+export class MiniSkill {
+    name: string;
+    icon: string;
+    castLog: Array<number>;
+
+    constructor(name: string, icon: string, castLog: Array<number>) {
+        this.name = name;
+        this.icon = icon;
+        this.castLog = castLog;
+    }
+}
+
+export class OpenerSkill {
+    name: string;
+    icon: string;
+
+    constructor(name: string, icon: string) {
+        this.name = name;
+        this.icon = icon;
+    }
+}

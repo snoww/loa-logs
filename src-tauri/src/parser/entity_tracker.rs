@@ -378,7 +378,7 @@ impl EntityTracker {
     }
 
     pub fn guess_is_player(&mut self, mut entity: Entity, skill_id: u32) -> Entity {
-        let class_id = get_skill_class_id(skill_id);
+        let class_id = get_skill_class_id(&(skill_id as i32));
         if class_id != 0 {
             if entity.entity_type == PLAYER {
                 if entity.class_id == class_id {
@@ -486,8 +486,8 @@ fn get_esther_from_npc_id(npc_id: u32) -> Option<Esther> {
         .cloned()
 }
 
-fn get_skill_class_id(skill_id: u32) -> u32 {
-    if let Some(skill) = SKILL_DATA.get(&(skill_id as i32)) {
+pub fn get_skill_class_id(skill_id: &i32) -> u32 {
+    if let Some(skill) = SKILL_DATA.get(skill_id) {
         skill.class_id
     } else {
         0

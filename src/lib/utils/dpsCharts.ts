@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { classColors } from "$lib/constants/colors";
-import { EntityType, type Entity, BossHpLog } from "$lib/types";
+import { EntityType, type Entity, BossHpLog, type Skill, OpenerSkill, MiniSkill } from "$lib/types";
+import Heap from "heap-js";
 import { defaultOptions } from "./charts";
 import { abbreviateNumber, formatDurationFromS, resampleData, round2 } from "./numbers";
 import { getSkillIcon, isValidName } from "./strings";
@@ -32,7 +33,10 @@ const colors = ["#cc338b", "#A020F0", "#FFA500", "#800000"];
 
 export function getBossHpSeries(bosses: [string, BossHpLog[]][], legendNames: string[], len: number, interval: number) {
     return bosses
-        .filter((e) => e[1].length > 0)
+        .filter((e) => e[1].length > 1)
+        .sort((a, b) => {
+            return a[1][0].time - b[1][0].time;
+        })
         .map((entry, i) => {
             legendNames.push(entry[0]);
             const resample = resampleData(entry[1], interval, len);
@@ -412,4 +416,37 @@ export function getSkillLogChart(player: Entity, skillIconPath: string, lastComb
             };
         })
     };
+}
+
+export function getFirstSkills(skills: MiniSkill[], x: number): OpenerSkill[] {
+    const comparator = (a: MiniSkill, b: MiniSkill) => a.castLog[0] - b.castLog[0];
+
+    const minHeap = new Heap(comparator);
+    for (const skill of skills) {
+        minHeap.push(skill);
+    }
+
+    const result: OpenerSkill[] = [];
+
+    while (result.length < x && minHeap.size() > 0) {
+        // Pop the object with the smallest cast_log[0]
+        const skill = minHeap.pop();
+        if (skill === undefined) {
+            break;
+        }
+
+        // Push the object's name to the result array
+        result.push(new OpenerSkill(skill.name, skill.icon));
+
+        // Remove the first element from the object's cast_log
+        skill.castLog.shift();
+
+        // If the object's cast_log still has elements, re-insert it into the heap
+        if (skill.castLog.length > 0) {
+            minHeap.push(skill);
+        }
+    }
+
+    // Return the first x names
+    return result.slice(0, x);
 }

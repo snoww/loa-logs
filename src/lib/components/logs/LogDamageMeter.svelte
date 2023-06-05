@@ -24,6 +24,7 @@
         getRollingPlayerSeries,
         getSkillLogChart
     } from "$lib/utils/dpsCharts";
+    import OpenerSkills from "./OpenerSkills.svelte";
 
     export let id: string;
     export let encounter: Encounter;
@@ -510,6 +511,11 @@
 </div>
 {#if tab !== MeterTab.IDENTITY && tab !== MeterTab.STAGGER}
     <div class="mt-4" on:contextmenu|preventDefault={handleRightClick}>
+        {#if chartType === ChartType.SKILL_LOG}
+            {#if player && player.entityType === EntityType.PLAYER}
+                <OpenerSkills skills={player.skills}/>
+            {/if}
+        {/if}
         <div class="text-lg font-bold">Charts</div>
         <div class="mt-2 flex divide-x divide-gray-600">
             {#if playerName === "" && state === MeterState.PARTY}

@@ -315,10 +315,9 @@ impl EncounterState {
                 entity
             });
 
-        if entity.entity_type == EntityType::PLAYER && entity.class_id == 0 {
+        if entity.class_id == 0 && source_entity.entity_type == EntityType::PLAYER && source_entity.class_id > 0 {
             entity.class_id = source_entity.class_id;
             entity.class = get_class_from_id(&source_entity.class_id);
-            entity.entity_type = source_entity.entity_type;
         }
 
         entity.is_dead = false;
@@ -453,7 +452,6 @@ impl EncounterState {
                 .expect("failed to emit raid-start");
         }
 
-        // test
         if target_entity.id == dmg_target_entity.id {
             target_entity.current_hp = target_current_hp;
             target_entity.max_hp = target_max_hp;
@@ -470,7 +468,10 @@ impl EncounterState {
             skill_effect_id
         };
 
-        let skill_name = get_skill_name(&skill_id);
+        let mut skill_name = get_skill_name(&skill_id);
+        if skill_name.is_empty() {
+            skill_name = get_skill_name_and_icon(&skill_id, &skill_effect_id, "".to_string()).0;
+        }
         let relative_timestamp_s = ((timestamp - self.encounter.fight_start) / 1000) as i32;
 
         if !source_entity.skills.contains_key(&skill_id) {
