@@ -1,11 +1,11 @@
 {
-    "version": "v1.2.0-beta.7",
-    "notes": "BETA UPDATE (more stable now)\nbeta.7\n- added boss HP % to DPS charts (only on new encounters)\nbeta.6\n- added raw socket support (should fix ExitLag issues)\nbeta.1\n- rewrote packet sniffer and processor in rust\nfull patch notes on github\nnote: this is a beta release, please report bugs to Snow#7777",
-    "pub_date": "2023-06-04T03:58:50.638Z",
+    "version": "v1.2.0",
+    "notes": "#### NEW FEATURES\n- added skill opener rotation view (you can learn from other players' opener combo)\n- added charts for boss hp %\n- added death icons to chart hover\n- added self-buff summaries\n- buffs like conviction/judgement are now shown in self syn when a player is selected\n- added pause/reset button to top bar when meter window is large enough\n- added option to turn off transparency for live meter\n- added option to show player gear score\n#### BACKEND CHANGES\n- completely ported and rewritten the packet sniffer and processor for rust\n  - massive performance improvements, lower cpu and memory usage\n  - reduced installer size by 26%\n- better vpn tracking, allow manual interface selection without admin\n- added custom raw socket support (requires admin)\nfull patch notes on github\n please report bugs to Snow#7777",
+    "pub_date": "2023-06-05T03:36:29.797Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.2.0-beta.7/LOA.Logs_1.2.0-beta.7_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmRMMExTTFBMbzRPdmlvWDBJUm5WNDNONjg4WWV5NUdtd0RFN1lxZTRTejR6R2ViMEFzMHpaVkowOUNwVm1TbmRpcW5mMzhZYU81c2RPcnRyaklUNVFRPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjg1ODQ2NTM0CWZpbGU6TE9BIExvZ3NfMS4yLjAtYmV0YS43X3g2NC1zZXR1cC5uc2lzLnppcAo0WlE1c1B6VXJkVENPQTJxeDc4ZTVjajhqR29XdDVPcXUraFh6aXdMN1NsZDBNK1ZDZEMzUkNJNVFRblBSOEtTajJoWXVIRVZYTWlncm1Xdm95ckVCdz09Cg=="
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.2.0/LOA.Logs_1.2.0_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmZIc29JRldRZHZIT1VhRzU4ZEROYVUvVDNhdWhuT2s1cjZWa2NrMUxRMXdlaTBuWE5relljV2NZOUIvcWhtSUFKMSt4eXlhS3o5VER2U21JdEhPUWdFPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjg1OTM0MzcwCWZpbGU6TE9BIExvZ3NfMS4yLjBfeDY0LXNldHVwLm5zaXMuemlwCjNIdVZwY1duek1hOWUyVWpNaFIvMm1aamhWd2c0aVFkV3FQQmZLMXRlOFc1bjNIbmxUcVZuc0NCV0FSUW1NOGw4NW1Nd3dUUE81ZGxkM3I3NExReENnPT0K"
         }
     }
 }
