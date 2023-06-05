@@ -20,7 +20,7 @@ export function getLegendNames(chartablePlayers: Entity[], showNames: boolean) {
                 if (map[e.class] === 1) {
                     return e.class;
                 } else {
-                    return e.class + "(" + count[i] + ")";
+                    return e.class + " " + count[i];
                 }
             });
     }
