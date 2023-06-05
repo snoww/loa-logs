@@ -11,7 +11,6 @@
         .sort((a, b) => b.totalDamage - a.totalDamage)
         .filter(
             (skill) =>
-                skill.totalDamage > 0 &&
                 !skill.name.includes("(Summon)") &&
                 skill.name !== "Weapon Attack" &&
                 skill.name !== "Bleed" &&
@@ -26,9 +25,9 @@
     let firstTenSkills = getFirstSkills(skillsArray, 10);
 </script>
 
-<div class="my-2">
+<div class="mt-2 mb-4">
     <div class="text-lg font-bold">Opener Rotation</div>
-    <div class="flex flex-wrap pt-2 items-center">
+    <div class="flex flex-wrap pt-2 items-center" style="width: calc(100vw - 4.5rem);">
         {#each firstTenSkills as skill, i (i)}
             <div use:tooltip={{ content: skill.name }}>
                 <img class="m-1 h-10 w-10 rounded-sm" src={$skillIcon.path + getSkillIcon(skill.icon)} alt={skill.name} />
