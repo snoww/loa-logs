@@ -19,6 +19,7 @@
         getAverageDpsChart,
         getAveragePlayerSeries,
         getBossHpSeries,
+        getDeathTimes,
         getLegendNames,
         getRollingDpsChart,
         getRollingPlayerSeries,
@@ -106,6 +107,7 @@
                 chartablePlayers[0].damageStats.dpsRolling10sAvg.length > 0
             ) {
                 let legendNames = getLegendNames(chartablePlayers, $settings.general.showNames);
+                let deathTimes = getDeathTimes(chartablePlayers, legendNames, encounter.fightStart);
                 let bossHpLogs = Object.entries(encounter.encounterDamageStats.misc?.bossHpLog || {});
                 if (chartType === ChartType.AVERAGE_DPS) {
                     let chartPlayers = getAveragePlayerSeries(chartablePlayers, legendNames, encounter.fightStart);
@@ -115,7 +117,7 @@
                         chartablePlayers[0].damageStats.dpsAverage.length,
                         5
                     );
-                    chartOptions = getAverageDpsChart(chartablePlayers, legendNames, chartPlayers, bossChart);
+                    chartOptions = getAverageDpsChart(chartablePlayers, legendNames, chartPlayers, bossChart, deathTimes);
                 } else if (chartType === ChartType.ROLLING_DPS) {
                     let chartPlayers = getRollingPlayerSeries(chartablePlayers, legendNames, encounter.fightStart);
                     let bossChart = getBossHpSeries(
@@ -124,7 +126,7 @@
                         chartablePlayers[0].damageStats.dpsRolling10sAvg.length,
                         1
                     );
-                    chartOptions = getRollingDpsChart(chartablePlayers, legendNames, chartPlayers, bossChart);
+                    chartOptions = getRollingDpsChart(chartablePlayers, legendNames, chartPlayers, bossChart, deathTimes);
                 } else if (chartType === ChartType.SKILL_LOG && player && player.entityType === EntityType.PLAYER) {
                     chartOptions = getSkillLogChart(
                         player,

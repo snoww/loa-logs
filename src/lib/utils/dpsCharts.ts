@@ -3,7 +3,7 @@ import { classColors } from "$lib/constants/colors";
 import { EntityType, type Entity, BossHpLog, type Skill, OpenerSkill, MiniSkill } from "$lib/types";
 import Heap from "heap-js";
 import { defaultOptions } from "./charts";
-import { abbreviateNumber, formatDurationFromS, resampleData, round2 } from "./numbers";
+import { abbreviateNumber, formatDurationFromS, resampleData, round2, timeToSeconds } from "./numbers";
 import { getSkillIcon, isValidName } from "./strings";
 
 export function getLegendNames(chartablePlayers: Entity[], showNames: boolean) {
@@ -27,6 +27,16 @@ export function getLegendNames(chartablePlayers: Entity[], showNames: boolean) {
     return chartablePlayers
         .filter((e) => e.entityType === EntityType.PLAYER)
         .map((e) => (isValidName(e.name) ? e.name : e.class));
+}
+
+export function getDeathTimes(chartablePlayers: Entity[], legendNames: string[], fightStart: number) {
+    const deathTimes: { [key: string]: number } = {};
+    chartablePlayers.forEach((player, i) => {
+        if (player.isDead) {
+            deathTimes[legendNames[i]] = (player.damageStats.deathTime - fightStart) / 1000;
+        }
+    });
+    return deathTimes;
 }
 
 const colors = ["#cc338b", "#A020F0", "#FFA500", "#800000"];
@@ -124,7 +134,8 @@ export function getAverageDpsChart(
     chartablePlayers: Entity[],
     legendNames: string[],
     chartPlayers: any[],
-    chartBosses: any[]
+    chartBosses: any[],
+    deathTimes: { [key: string]: number }
 ) {
     return {
         ...defaultOptions,
@@ -144,7 +155,8 @@ export function getAverageDpsChart(
         tooltip: {
             trigger: "axis",
             formatter: function (params: any[]) {
-                let tooltipStr = `<div>${params[0].name}</div><div style="min-width: 10rem">`;
+                const time = params[0].name;
+                let tooltipStr = `<div>${time}</div><div style="min-width: 10rem">`;
                 const playerTooltips: string[] = [];
                 const bossTooltips: string[] = [];
                 params.forEach((param) => {
@@ -156,6 +168,9 @@ export function getAverageDpsChart(
                             `<div style="display:flex; justify-content: space-between;"><div style="padding-right: 1rem;font-weight: 600;">${label}</div><div style="font-weight: 600;">${value}</div></div>`
                         );
                     } else {
+                        if (deathTimes[label] && deathTimes[label] < timeToSeconds(time)) {
+                            label = "💀 " + label;
+                        }
                         value = abbreviateNumber(value);
                         label =
                             `<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:${param.color}"></span>` +
@@ -217,7 +232,8 @@ export function getRollingDpsChart(
     chartablePlayers: Entity[],
     legendNames: string[],
     chartPlayers: any[],
-    chartBosses: any[]
+    chartBosses: any[],
+    deathTimes: { [key: string]: number }
 ) {
     return {
         ...defaultOptions,
@@ -237,7 +253,8 @@ export function getRollingDpsChart(
         tooltip: {
             trigger: "axis",
             formatter: function (params: any[]) {
-                let tooltipStr = `<div>${params[0].name}</div><div style="min-width: 10rem">`;
+                const time = params[0].name;
+                let tooltipStr = `<div>${time}</div><div style="min-width: 10rem">`;
                 const playerTooltips: string[] = [];
                 const bossTooltips: string[] = [];
                 params.forEach((param) => {
@@ -249,6 +266,9 @@ export function getRollingDpsChart(
                             `<div style="display:flex; justify-content: space-between;"><div style="padding-right: 1rem;font-weight: 600;">${label}</div><div style="font-weight: 600;">${value}</div></div>`
                         );
                     } else {
+                        if (deathTimes[label] && deathTimes[label] < timeToSeconds(time)) {
+                            label = "💀 " + label;
+                        }
                         value = abbreviateNumber(value);
                         label =
                             `<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:${param.color}"></span>` +

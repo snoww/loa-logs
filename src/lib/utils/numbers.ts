@@ -164,3 +164,10 @@ export function resampleData(data: Array<BossHpLog>, interval = 5, length: numbe
 
     return resampledData;
 }
+
+export function timeToSeconds(time: string): number {
+    const split = time.split(':');
+    const minutes = +split[0];
+    const seconds = +split[1];
+    return minutes * 60 + seconds;
+}
