@@ -17,7 +17,6 @@ use log::{warn, info};
 use meter_core::packets::definitions::*;
 use meter_core::packets::opcodes::Pkt;
 use meter_core::{start_capture, start_raw_capture};
-use tokio::runtime::Runtime;
 use std::cell::RefCell;
 use std::fmt::Debug;
 use std::rc::Rc;
@@ -37,8 +36,6 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool) -> Re
         party_tracker.clone(),
     );
     let mut state = EncounterState::new(window.clone());
-    let rt = Runtime::new().unwrap();
-    let _guard = rt.enter();
     let rx = if raw_socket {
         if !meter_core::check_is_admin() {
             warn!("Not running as admin, cannot use raw socket");

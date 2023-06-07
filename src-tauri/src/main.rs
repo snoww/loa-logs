@@ -124,7 +124,7 @@ async fn main() -> Result<()> {
                     warn!("error setting up database: {}", e);
                 }
             }
-            tokio::task::spawn(async move {
+            tokio::task::spawn_blocking(move || {
                 parser::start(meter_window, ip, port, raw_socket).expect("failed to start parser");
             });
 
