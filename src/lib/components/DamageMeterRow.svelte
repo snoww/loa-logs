@@ -16,6 +16,7 @@
     export let anyBackAtk: boolean;
     export let anySupportBuff: boolean;
     export let anySupportBrand: boolean;
+    export let isSolo: boolean;
 
     let alpha = 0.6;
 
@@ -55,4 +56,5 @@
     {dps}
     {alpha}
     width={$tweenedValue}
-    meterSettings={$settings.meter} />
+    meterSettings={$settings.meter}
+    {isSolo} />

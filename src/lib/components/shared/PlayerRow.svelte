@@ -4,7 +4,6 @@
     import { HexToRgba } from "$lib/utils/colors";
     import { abbreviateNumberSplit, round } from "$lib/utils/numbers";
     import { classIconCache, settings } from "$lib/utils/settings";
-    import { isSolo } from "$lib/utils/stores";
     import { formatPlayerName, getEstherFromNpcId } from "$lib/utils/strings";
     import { tooltip } from "$lib/utils/tooltip";
 
@@ -22,6 +21,7 @@
     export let width: number;
     export let meterSettings: any;
     export let shadow: boolean = false;
+    export let isSolo: boolean;
 
     let damageDealt: (string | number)[];
     let damagePercentage: string;
@@ -81,7 +81,7 @@
         {dps[0]}<span class="text-3xs text-gray-300">{dps[1]}</span>
     </td>
 {/if}
-{#if !$isSolo && meterSettings.damagePercent}
+{#if !isSolo && meterSettings.damagePercent}
     <td class="px-1 text-center">
         {damagePercentage}<span class="text-xs text-gray-300">%</span>
     </td>

@@ -14,6 +14,7 @@
     export let anySupportBuff: boolean;
     export let anySupportBrand: boolean;
     export let end: number;
+    export let isSolo: boolean;
 
     let dps = abbreviateNumberSplit(entity.damageStats.dps);
 </script>
@@ -30,4 +31,5 @@
     {dps}
     width={percentage}
     meterSettings={$settings.logs}
-    shadow={!$takingScreenshot} />
+    shadow={!$takingScreenshot}
+    {isSolo} />

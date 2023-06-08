@@ -43,6 +43,8 @@
     let anySupportBuff: boolean = false;
     let anySupportBrand: boolean = false;
 
+    let isSolo = true;
+
     let state = MeterState.PARTY;
     let tab = MeterTab.DAMAGE;
     let chartType = ChartType.AVERAGE_DPS;
@@ -67,6 +69,7 @@
                     .filter((e) => e.damageStats.damageDealt > 0 && e.entityType === EntityType.PLAYER)
                     .sort((a, b) => b.damageStats.damageDealt - a.damageStats.damageDealt);
             }
+            isSolo = players.length === 1;
             topDamageDealt = encounter.encounterDamageStats.topDamageDealt;
             playerDamagePercentages = players.map((player) => (player.damageStats.damageDealt / topDamageDealt) * 100);
             anyDead = players.some((player) => player.isDead);
@@ -437,7 +440,7 @@
                                 {#if $settings.logs.dps}
                                     <th class="w-14 font-normal" use:tooltip={{ content: "Damage per second" }}>DPS</th>
                                 {/if}
-                                {#if players.length > 1 && $settings.logs.damagePercent}
+                                {#if !isSolo && $settings.logs.damagePercent}
                                     <th class="w-12 font-normal" use:tooltip={{ content: "Damage %" }}>D%</th>
                                 {/if}
                                 {#if $settings.logs.critRate}
@@ -474,7 +477,8 @@
                                         {anyBackAtk}
                                         {anySupportBuff}
                                         {anySupportBrand}
-                                        end={encounter.lastCombatPacket} />
+                                        end={encounter.lastCombatPacket}
+                                        {isSolo} />
                                 </tr>
                             {/each}
                         </tbody>
