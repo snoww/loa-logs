@@ -1146,7 +1146,7 @@ fn get_skill_name_and_icon(
             if let Some(item_name) = effect.item_name.as_ref() {
                 return (
                     item_name.clone(),
-                    effect.icon.as_ref().unwrap_or(&String::from("")).clone(),
+                    effect.icon.as_ref().cloned().unwrap_or_default(),
                 );
             }
             if let Some(source_skill) = effect.source_skill {
@@ -1186,11 +1186,7 @@ fn get_skill_name_and_icon(
 }
 
 fn get_skill_name(skill_id: &i32) -> String {
-    if let Some(skill) = SKILL_DATA.get(skill_id) {
-        skill.name.clone()
-    } else {
-        "".to_string()
-    }
+    SKILL_DATA.get(skill_id).map_or("".to_string(), |skill| skill.name.clone())
 }
 
 #[allow(clippy::too_many_arguments)]

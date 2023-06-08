@@ -7,8 +7,9 @@ mod parser;
 use std::{
     fs::File,
     io::{Read, Write},
+    net::Ipv4Addr,
     path::{Path, PathBuf},
-    str::FromStr, net::Ipv4Addr,
+    str::FromStr,
 };
 
 use anyhow::Result;
@@ -375,17 +376,14 @@ fn load_encounters_preview(
         .query_map(
             [
                 min_duration.to_string(),
-                search.to_string(),
-                search.to_string(),
-                search.to_string(),
+                search.clone(),
+                search.clone(),
+                search.clone(),
                 page_size.to_string(),
                 offset.to_string(),
             ],
             |row| {
-                let classes = match row.get(4) {
-                    Ok(classes) => classes,
-                    Err(_) => "".to_string(),
-                };
+                let classes = row.get(4).unwrap_or_else(|_| "".to_string());
 
                 let (classes, names) = classes
                     .split(',')
@@ -419,7 +417,7 @@ fn load_encounters_preview(
         JOIN entity ent ON e.id = ent.encounter_id
         WHERE duration > ? AND ((current_boss LIKE '%' || ? || '%') OR (ent.class LIKE '%' || ? || '%') OR (ent.name LIKE '%' || ? || '%'))
         GROUP BY encounter_id)
-    ", [min_duration.to_string(), search.to_string(), search.to_string(), search], |row| {
+    ", [min_duration.to_string(), search.clone(), search.clone(), search], |row| {
         row.get(0)
     }).expect("could not get encounter count");
 
@@ -459,59 +457,42 @@ fn load_encounter(window: tauri::Window, id: String) -> Encounter {
         )
         .unwrap();
 
-    let mut encounter = match encounter_stmt.query_row(params![id], |row| {
-        let buff_str = match row.get(10) {
-            Ok(buff_str) => buff_str,
-            Err(_) => "".to_string(),
-        };
+    let mut encounter = encounter_stmt
+        .query_row(params![id], |row| {
+            let buff_str = row.get(10).unwrap_or_else(|_| "".to_string());
+            let buffs = serde_json::from_str::<HashMap<i32, StatusEffect>>(buff_str.as_str())
+                .unwrap_or_else(|_| HashMap::new());
 
-        let buffs = match serde_json::from_str::<HashMap<i32, StatusEffect>>(buff_str.as_str()) {
-            Ok(v) => v,
-            Err(_) => HashMap::new(),
-        };
+            let debuff_str = row.get(11).unwrap_or_else(|_| "".to_string());
+            let debuffs = serde_json::from_str::<HashMap<i32, StatusEffect>>(debuff_str.as_str())
+                .unwrap_or_else(|_| HashMap::new());
 
-        let debuff_str = match row.get(11) {
-            Ok(debuff_str) => debuff_str,
-            Err(_) => "".to_string(),
-        };
-        let debuffs = match serde_json::from_str::<HashMap<i32, StatusEffect>>(debuff_str.as_str())
-        {
-            Ok(v) => v,
-            Err(_) => HashMap::new(),
-        };
+            let misc_str = row.get(12).unwrap_or_else(|_| "".to_string());
+            let misc = serde_json::from_str::<EncounterMisc>(misc_str.as_str())
+                .map(Some)
+                .unwrap_or_else(|_| None);
 
-        let misc_str = match row.get(12) {
-            Ok(misc_str) => misc_str,
-            Err(_) => "".to_string(),
-        };
-        let misc = match serde_json::from_str::<EncounterMisc>(misc_str.as_str()) {
-            Ok(v) => Some(v),
-            Err(_) => None,
-        };
-
-        Ok(Encounter {
-            last_combat_packet: row.get(0)?,
-            fight_start: row.get(1)?,
-            local_player: row.get(2)?,
-            current_boss_name: row.get(3)?,
-            duration: row.get(4)?,
-            encounter_damage_stats: EncounterDamageStats {
-                total_damage_dealt: row.get(5)?,
-                top_damage_dealt: row.get(6)?,
-                total_damage_taken: row.get(7)?,
-                top_damage_taken: row.get(8)?,
-                dps: row.get(9)?,
-                buffs,
-                debuffs,
-                misc,
+            Ok(Encounter {
+                last_combat_packet: row.get(0)?,
+                fight_start: row.get(1)?,
+                local_player: row.get(2)?,
+                current_boss_name: row.get(3)?,
+                duration: row.get(4)?,
+                encounter_damage_stats: EncounterDamageStats {
+                    total_damage_dealt: row.get(5)?,
+                    top_damage_dealt: row.get(6)?,
+                    total_damage_taken: row.get(7)?,
+                    top_damage_taken: row.get(8)?,
+                    dps: row.get(9)?,
+                    buffs,
+                    debuffs,
+                    misc,
+                    ..Default::default()
+                },
                 ..Default::default()
-            },
-            ..Default::default()
+            })
         })
-    }) {
-        Ok(v) => v,
-        Err(_) => return Encounter::default(),
-    };
+        .unwrap_or_else(|_| Encounter::default());
 
     let mut entity_stmt = conn
         .prepare_cached(
@@ -537,39 +518,20 @@ fn load_encounter(window: tauri::Window, id: String) -> Encounter {
 
     let entity_iter = entity_stmt
         .query_map(params![id], |row| {
-            let skill_str = match row.get(7) {
-                Ok(skill_str) => skill_str,
-                Err(_) => "".to_string(),
-            };
-            let skills = match serde_json::from_str::<HashMap<i32, Skill>>(skill_str.as_str()) {
-                Ok(v) => v,
-                Err(_) => HashMap::new(),
-            };
+            let skill_str = row.get(7).unwrap_or_else(|_| "".to_string());
+            let skills = serde_json::from_str::<HashMap<i32, Skill>>(skill_str.as_str())
+                .unwrap_or_else(|_| HashMap::new());
 
-            let damage_stats_str = match row.get(8) {
-                Ok(damage_stats_str) => damage_stats_str,
-                Err(_) => "".to_string(),
-            };
+            let damage_stats_str = row.get(8).unwrap_or_else(|_| "".to_string());
 
-            let damage_stats = match serde_json::from_str::<DamageStats>(damage_stats_str.as_str())
-            {
-                Ok(v) => v,
-                Err(_) => DamageStats::default(),
-            };
+            let damage_stats = serde_json::from_str::<DamageStats>(damage_stats_str.as_str())
+                .unwrap_or_else(|_| DamageStats::default());
 
-            let skill_stats_str = match row.get(9) {
-                Ok(skill_stats_str) => skill_stats_str,
-                Err(_) => "".to_string(),
-            };
-            let skill_stats = match serde_json::from_str::<SkillStats>(skill_stats_str.as_str()) {
-                Ok(v) => v,
-                Err(_) => SkillStats::default(),
-            };
+            let skill_stats_str = row.get(9).unwrap_or_else(|_| "".to_string());
+            let skill_stats = serde_json::from_str::<SkillStats>(skill_stats_str.as_str())
+                .unwrap_or_else(|_| SkillStats::default());
 
-            let entity_type = match row.get(11) {
-                Ok(entity_type) => entity_type,
-                Err(_) => "".to_string(),
-            };
+            let entity_type = row.get(11).unwrap_or_else(|_| "".to_string());
 
             Ok(EncounterEntity {
                 name: row.get(0)?,
@@ -582,7 +544,8 @@ fn load_encounter(window: tauri::Window, id: String) -> Encounter {
                 skills,
                 damage_stats,
                 skill_stats,
-                entity_type: EntityType::from_str(entity_type.as_str()).unwrap(),
+                entity_type: EntityType::from_str(entity_type.as_str())
+                    .unwrap_or(EntityType::UNKNOWN),
                 npc_id: row.get(12)?,
                 ..Default::default()
             })
@@ -590,8 +553,7 @@ fn load_encounter(window: tauri::Window, id: String) -> Encounter {
         .unwrap();
 
     let mut entities: HashMap<String, EncounterEntity> = HashMap::new();
-    for entity in entity_iter {
-        let entity = entity.unwrap();
+    for entity in entity_iter.flatten() {
         entities.insert(entity.name.to_string(), entity);
     }
 
