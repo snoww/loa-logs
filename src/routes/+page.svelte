@@ -26,7 +26,6 @@
                 await invoke("disable_blur");
             }            
             await appWindow.setAlwaysOnTop(true);
-            // await appWindow.setIgnoreCursorEvents(false);
             registerShortcuts($settings.shortcuts);
             skillIcon.set({
                 path: convertFileSrc(await join(await resourceDir(), "images", "skills"))

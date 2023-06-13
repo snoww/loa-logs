@@ -154,8 +154,7 @@ async fn main() -> Result<()> {
                         .save_window_state(StateFlags::all())
                         .expect("failed to save window state");
                     event.window().app_handle().exit(0);
-                }
-                if event.window().label() == "logs" {
+                } else if event.window().label() == "logs" {
                     event.window().hide().unwrap();
                 }
                 api.prevent_close();
@@ -171,6 +170,7 @@ async fn main() -> Result<()> {
                 if let Some(meter) = app.get_window("main") {
                     meter.show().unwrap();
                     meter.unminimize().unwrap();
+                    meter.set_ignore_cursor_events(false).unwrap()
                 }
             }
             SystemTrayEvent::MenuItemClick { id, .. } => match id.as_str() {
@@ -187,6 +187,8 @@ async fn main() -> Result<()> {
                 "show-meter" => {
                     if let Some(meter) = app.get_window("main") {
                         meter.show().unwrap();
+                        meter.unminimize().unwrap();
+                        meter.set_ignore_cursor_events(false).unwrap()
                     }
                 }
                 "show-logs" => {
