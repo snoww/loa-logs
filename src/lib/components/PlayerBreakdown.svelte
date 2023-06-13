@@ -1,10 +1,9 @@
 <script lang="ts">
-    import { classColors } from "$lib/constants/colors";
     import { EntityType, type Entity, type Skill } from "$lib/types";
     import { abbreviateNumberSplit } from "$lib/utils/numbers";
     import { flip } from "svelte/animate";
     import PlayerBreakdownRow from "./PlayerBreakdownRow.svelte";
-    import { settings } from "$lib/utils/settings";
+    import { colors, settings } from "$lib/utils/settings";
     import PlayerBreakdownHeader from "./shared/PlayerBreakdownHeader.svelte";
 
     export let entity: Entity | null;
@@ -24,8 +23,8 @@
 
     $: {
         if (entity) {
-            if (Object.hasOwn(classColors, entity.class)) {
-                color = classColors[entity.class].color;
+            if (Object.hasOwn($colors, entity.class)) {
+                color = $colors[entity.class].color;
             } else if (entity.entityType === EntityType.ESTHER) {
                 color = "#4dc8d0";
             }

@@ -1,9 +1,8 @@
 <script lang="ts">
-    import { classColors } from "$lib/constants/colors";
     import { Buff, BuffDetails, type Entity, type StatusEffect } from "$lib/types";
     import { HexToRgba } from "$lib/utils/colors";
     import { formatPlayerName } from "$lib/utils/strings";
-    import { classIconCache, settings } from "$lib/utils/settings";
+    import { colors, classIconCache, settings } from "$lib/utils/settings";
     import { takingScreenshot } from "$lib/utils/stores";
     import BuffTooltipDetail from "../shared/BuffTooltipDetail.svelte";
     import { tooltip } from "$lib/utils/tooltip";
@@ -17,8 +16,8 @@
     let playerName: string;
     let synergyPercentageDetails: Array<BuffDetails>;
 
-    if (Object.hasOwn(classColors, player.class)) {
-        color = classColors[player.class].color;
+    if (Object.hasOwn($colors, player.class)) {
+        color = $colors[player.class].color;
     }
 
     $: {

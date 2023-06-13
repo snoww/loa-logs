@@ -146,7 +146,7 @@
                 );
 
                 if (
-                    ((encounter.currentBoss && !encounter.currentBoss.isDead) || !encounter.currentBoss) &&
+                    // ((encounter.currentBoss && !encounter.currentBoss.isDead) || !encounter.currentBoss) &&
                     $raidInProgress
                 ) {
                     duration = time - encounter.fightStart;

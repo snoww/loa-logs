@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { classColors } from "$lib/constants/colors";
-import { EntityType, type Entity, BossHpLog, type Skill, OpenerSkill, MiniSkill } from "$lib/types";
+import { EntityType, type Entity, BossHpLog, OpenerSkill, MiniSkill } from "$lib/types";
 import Heap from "heap-js";
 import { defaultOptions } from "./charts";
 import { abbreviateNumber, formatDurationFromS, resampleData, round2, timeToSeconds } from "./numbers";
@@ -68,7 +67,7 @@ export function getBossHpSeries(bosses: [string, BossHpLog[]][], legendNames: st
         });
 }
 
-export function getAveragePlayerSeries(chartablePlayers: Entity[], legendNames: string[], fightStart: number) {
+export function getAveragePlayerSeries(chartablePlayers: Entity[], legendNames: string[], fightStart: number, classColors: any) {
     return chartablePlayers
         .filter((e) => e.entityType === EntityType.PLAYER)
         .map((player: Entity, i: number) => {
@@ -101,7 +100,7 @@ export function getAveragePlayerSeries(chartablePlayers: Entity[], legendNames: 
         });
 }
 
-export function getRollingPlayerSeries(chartablePlayers: Entity[], legendNames: string[], fightStart: number) {
+export function getRollingPlayerSeries(chartablePlayers: Entity[], legendNames: string[], fightStart: number, classColors: any) {
     return chartablePlayers
         .filter((e) => e.entityType === EntityType.PLAYER)
         .map((player, i) => {

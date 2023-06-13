@@ -1,11 +1,10 @@
 <script lang="ts">
     import { cardIconMap, cardMap } from "$lib/constants/cards";
-    import { classColors } from "$lib/constants/colors";
-    import type { Entity, IdentityStats } from "$lib/types";
+    import type { IdentityStats } from "$lib/types";
     import { chartable, defaultOptions, type EChartsOptions } from "$lib/utils/charts";
     import { HexToRgba } from "$lib/utils/colors";
     import { fillMissingElapsedTimes, formatDurationFromS } from "$lib/utils/numbers";
-    import { skillIcon } from "$lib/utils/settings";
+    import { colors, skillIcon } from "$lib/utils/settings";
     import { takingScreenshot } from "$lib/utils/stores";
     import { getSkillIcon } from "$lib/utils/strings";
 
@@ -85,7 +84,7 @@
         },
         series: [
             {
-                color: classColors["Arcanist"].color,
+                color: $colors["Arcanist"].color,
                 type: "line",
                 data: data.map((item) => (item as [number, [number, number, number]])[1][0]),
                 showSymbol: false,
@@ -150,7 +149,7 @@
                         class="absolute left-0 -z-10 h-6 px-2 py-1"
                         class:shadow-md={!$takingScreenshot}
                         style="background-color: {HexToRgba(
-                            classColors['Arcanist'].color,
+                            $colors['Arcanist'].color,
                             0.6
                         )}; width: {relativeDrawPercentages[i]}%" />
                 </tr>

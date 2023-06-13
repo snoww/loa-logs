@@ -1,3 +1,4 @@
+import { classColors } from "$lib/constants/colors";
 import { invoke } from "@tauri-apps/api";
 import { emit } from "@tauri-apps/api/event";
 import { register, unregisterAll } from "@tauri-apps/api/globalShortcut";
@@ -129,6 +130,7 @@ const settingsStore = (key: string, defaultSettings: object) => {
 };
 
 export const settings = settingsStore("settings", defaultSettings);
+export const colors = settingsStore("classColors", classColors);
 
 export async function registerShortcuts(shortcuts: any) {
     await unregisterAll();

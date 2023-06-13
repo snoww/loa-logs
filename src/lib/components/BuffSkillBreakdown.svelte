@@ -1,9 +1,8 @@
 <script lang="ts">
-    import { classColors } from "$lib/constants/colors";
     import { MeterTab, type Entity, type Skill, type StatusEffect, BuffDetails } from "$lib/types";
     import { getSynergyPercentageDetailsSum } from "$lib/utils/buffs";
     import { HexToRgba } from "$lib/utils/colors";
-    import { classIconCache, settings } from "$lib/utils/settings";
+    import { colors, classIconCache, settings } from "$lib/utils/settings";
     import { formatPlayerName } from "$lib/utils/strings";
     import { tooltip } from "$lib/utils/tooltip";
     import BuffSkillBreakdownRow from "./BuffSkillBreakdownRow.svelte";
@@ -23,8 +22,8 @@
         playerName = formatPlayerName(player, $settings.general.showNames, $settings.general.showGearScore, false);
 
         skills = Object.values(player.skills).sort((a, b) => b.totalDamage - a.totalDamage);
-        if (Object.hasOwn(classColors, player.class)) {
-            color = classColors[player.class].color;
+        if (Object.hasOwn($colors, player.class)) {
+            color = $colors[player.class].color;
         }
 
         if (skills.length > 0) {

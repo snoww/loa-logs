@@ -3,11 +3,13 @@
     import { Tabs, TabItem } from "flowbite-svelte";
     import SettingItem from "$lib/components/settings/SettingItem.svelte";
     import { formatDurationFromS } from "$lib/utils/numbers";
-    import { keyboardKeys, registerShortcuts, settings } from "$lib/utils/settings";
+    import { classIconCache, colors, keyboardKeys, registerShortcuts, settings } from "$lib/utils/settings";
     import { onMount } from "svelte";
     import { backNavStore, ifaceChangedStore, pageStore, searchStore } from "$lib/utils/stores";
     import { invoke } from "@tauri-apps/api/tauri";
     import Notification from "$lib/components/shared/Notification.svelte";
+    import { classColors } from "$lib/constants/colors";
+    import { classNameToClassId } from "$lib/constants/classes";
 
     let colorDropdownOpen = false;
     let networkDropdownOpen = false;
@@ -63,6 +65,10 @@
             networkInterfaces = await invoke("get_network_interfaces");
         })();
     });
+
+    const resetDefaultColor = (className: string) => {
+        $colors[className].color = classColors[className].defaultColor;
+    }
 </script>
 
 <svelte:window on:contextmenu|preventDefault />
@@ -86,7 +92,6 @@
     <div class="px-8">
         <Tabs style="underline" contentClass="" defaultClass="flex flex-wrap space-x-2">
             <TabItem
-                open
                 title="General"
                 activeClasses="p-4 text-accent-500 border-b border-accent-500"
                 inactiveClasses="p-4 hover:text-gray-200 text-gray-400">
@@ -708,6 +713,33 @@
                                 </select>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </TabItem>
+            <TabItem
+            open
+                title="Class Colors"
+                activeClasses="p-4 text-accent-500 border-b border-accent-500"
+                inactiveClasses="p-4 hover:text-gray-200 text-gray-400">
+                <div class="flex flex-col space-y-2 divide-y-[1px]">
+                    <div class="mt-4 flex flex-col space-y-1 px-2">
+                        {#each Object.entries($colors) as classColor (classColor[0])}
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <div class="flex space-x-1 items-center">
+                                    <img
+                                        class="h-8 w-8"
+                                        src={$classIconCache[classNameToClassId[classColor[0]]]}
+                                        alt={classColor[0]} />
+                                    <div class="text-gray-100">{classColor[0]}</div>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <input class="cursor-pointer bg-zinc-800" type="color" id={classColor[0]} bind:value={classColor[1].color} on:change={(event) => { if (event) $colors[classColor[0]].color = event.currentTarget.value}}>
+                                <button class="text-xs bg-zinc-600 hover:bg-zinc-700 rounded-md p-1" on:click={() => resetDefaultColor(classColor[0])}>Reset</button>
+                            </div>
+                        </div>
+                        {/each}
                     </div>
                 </div>
             </TabItem>

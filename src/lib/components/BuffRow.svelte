@@ -1,11 +1,10 @@
 <script lang="ts">
-    import { classColors } from "$lib/constants/colors";
     import { Buff, BuffDetails, type Entity, type StatusEffect } from "$lib/types";
     import { HexToRgba } from "$lib/utils/colors";
     import { cubicOut } from "svelte/easing";
     import { tweened } from "svelte/motion";
     import BuffTooltipDetail from "./shared/BuffTooltipDetail.svelte";
-    import { classIconCache, settings } from "$lib/utils/settings";
+    import { colors, classIconCache, settings } from "$lib/utils/settings";
     import { formatPlayerName } from "$lib/utils/strings";
     import { tooltip } from "$lib/utils/tooltip";
     import { round } from "$lib/utils/numbers";
@@ -26,8 +25,8 @@
 
     $: {
         tweenedValue.set(percentage);
-        if (Object.hasOwn(classColors, player.class)) {
-            color = classColors[player.class].color;
+        if (Object.hasOwn($colors, player.class)) {
+            color = $colors[player.class].color;
         }
 
         playerName = formatPlayerName(player, $settings.general.showNames, $settings.general.showGearScore);

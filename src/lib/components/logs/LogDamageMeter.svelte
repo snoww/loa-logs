@@ -8,7 +8,7 @@
     import LogBuffs from "./LogBuffs.svelte";
     import { page } from "$app/stores";
     import { chartable, type EChartsOptions } from "$lib/utils/charts";
-    import { settings, skillIcon } from "$lib/utils/settings";
+    import { colors, settings, skillIcon } from "$lib/utils/settings";
     import { goto } from "$app/navigation";
     import html2canvas from "html2canvas";
     import { screenshotAlert, screenshotError, takingScreenshot } from "$lib/utils/stores";
@@ -113,7 +113,7 @@
                 let deathTimes = getDeathTimes(chartablePlayers, legendNames, encounter.fightStart);
                 let bossHpLogs = Object.entries(encounter.encounterDamageStats.misc?.bossHpLog || {});
                 if (chartType === ChartType.AVERAGE_DPS) {
-                    let chartPlayers = getAveragePlayerSeries(chartablePlayers, legendNames, encounter.fightStart);
+                    let chartPlayers = getAveragePlayerSeries(chartablePlayers, legendNames, encounter.fightStart, $colors);
                     let bossChart = getBossHpSeries(
                         bossHpLogs,
                         legendNames,
@@ -122,7 +122,7 @@
                     );
                     chartOptions = getAverageDpsChart(chartablePlayers, legendNames, chartPlayers, bossChart, deathTimes);
                 } else if (chartType === ChartType.ROLLING_DPS) {
-                    let chartPlayers = getRollingPlayerSeries(chartablePlayers, legendNames, encounter.fightStart);
+                    let chartPlayers = getRollingPlayerSeries(chartablePlayers, legendNames, encounter.fightStart, $colors);
                     let bossChart = getBossHpSeries(
                         bossHpLogs,
                         legendNames,

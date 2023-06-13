@@ -1,9 +1,8 @@
 <script lang="ts">
-    import { classColors } from "$lib/constants/colors";
     import { EntityType, type Entity, type Skill } from "$lib/types";
     import { abbreviateNumberSplit } from "$lib/utils/numbers";
     import LogPlayerBreakdownRow from "./LogPlayerBreakdownRow.svelte";
-    import { settings } from "$lib/utils/settings";
+    import { colors, settings } from "$lib/utils/settings";
     import PlayerBreakdownHeader from "../shared/PlayerBreakdownHeader.svelte";
 
     export let entity: Entity;
@@ -22,8 +21,8 @@
 
     skills = Object.values(entity.skills).sort((a, b) => b.totalDamage - a.totalDamage);
 
-    if (Object.hasOwn(classColors, entity.class)) {
-        color = classColors[entity.class].color;
+    if (Object.hasOwn($colors, entity.class)) {
+        color = $colors[entity.class].color;
     } else if (entity.entityType === EntityType.ESTHER) {
         color = "#4dc8d0";
     }

@@ -1,9 +1,8 @@
 <script lang="ts">
-    import { classColors } from "$lib/constants/colors";
     import { EntityType, type Entity } from "$lib/types";
     import { HexToRgba } from "$lib/utils/colors";
     import { abbreviateNumberSplit, round } from "$lib/utils/numbers";
-    import { classIconCache, settings } from "$lib/utils/settings";
+    import { colors, classIconCache, settings } from "$lib/utils/settings";
     import { formatPlayerName, getEstherFromNpcId } from "$lib/utils/strings";
     import { tooltip } from "$lib/utils/tooltip";
 
@@ -33,8 +32,8 @@
         damageDealt = abbreviateNumberSplit(entity.damageStats.damageDealt);
         damagePercentage = ((entity.damageStats.damageDealt / totalDamageDealt) * 100).toFixed(1);
 
-        if (Object.hasOwn(classColors, entity.class)) {
-            color = classColors[entity.class].color;
+        if (Object.hasOwn($colors, entity.class)) {
+            color = $colors[entity.class].color;
         }
         if (entity.entityType === EntityType.ESTHER) {
             name = getEstherFromNpcId(entity.npcId);

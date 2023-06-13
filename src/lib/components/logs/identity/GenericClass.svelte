@@ -1,8 +1,8 @@
 <script lang="ts">
-    import { classColors } from "$lib/constants/colors";
     import type { IdentityStats } from "$lib/types";
     import { chartable, defaultOptions, type EChartsOptions } from "$lib/utils/charts";
     import { fillMissingElapsedTimes, formatDurationFromS } from "$lib/utils/numbers";
+    import { colors } from "$lib/utils/settings";
 
     export let className: string;
     export let identityStats: IdentityStats;
@@ -72,7 +72,7 @@
             }
         },
         series: {
-            color: classColors[className].color,
+            color: $colors[className].color,
             type: "line",
             data: data.map((item) => (item as [number, number])[1]),
             showSymbol: false,
