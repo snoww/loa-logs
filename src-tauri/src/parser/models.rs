@@ -467,6 +467,7 @@ pub struct LogTabs {
     pub percent_buff_by_sup: bool,
     pub percent_brand: bool,
     pub counters: bool,
+    pub min_encounter_duration: i32,
     pub breakdown: BreakdownTabs,
 }
 
@@ -507,6 +508,14 @@ pub struct BreakdownTabs {
     pub cpm: bool,
     pub hits: bool,
     pub hpm: bool,
+}
+
+#[derive(Default, Debug, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct EncounterDbInfo {
+    pub size: String,
+    pub total_encounters: i32,
+    pub total_encounters_filtered: i32,
 }
 
 #[derive(Debug, PartialEq)]

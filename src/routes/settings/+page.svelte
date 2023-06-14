@@ -10,18 +10,24 @@
     import Notification from "$lib/components/shared/Notification.svelte";
     import { classColors } from "$lib/constants/colors";
     import { classNameToClassId } from "$lib/constants/classes";
+    import type { EncounterDbInfo } from "$lib/types";
+    import { tooltip } from "$lib/utils/tooltip";
 
     let colorDropdownOpen = false;
     let networkDropdownOpen = false;
 
     let networkInterfaces: [string, string][];
+    let encounterDbInfo: EncounterDbInfo | undefined;
 
     let hidden: boolean = true;
+    let deleteConfirm = false;
 
     $: {
         (async () => {
             registerShortcuts($settings.shortcuts);
         })();
+
+        encounterDbInfo = undefined;
     }
 
     const handleColorDropdownClick = () => {
@@ -63,11 +69,26 @@
         $searchStore = "";
         (async () => {
             networkInterfaces = await invoke("get_network_interfaces");
+            encounterDbInfo = await invoke("get_db_info", { minDuration: $settings.logs.minEncounterDuration });
         })();
     });
 
     const resetDefaultColor = (className: string) => {
         $colors[className].color = classColors[className].defaultColor;
+    };
+
+    async function getDbInfo() {
+        encounterDbInfo = await invoke("get_db_info", { minDuration: $settings.logs.minEncounterDuration });
+    }
+
+    async function openDbFolder() {
+        await invoke("open_db_path");
+    }
+
+    async function deleteEncounterBelowMinDuration() {
+        await invoke("delete_encounters_below_min_duration", { minDuration: $settings.logs.minEncounterDuration });
+        encounterDbInfo = await invoke("get_db_info", { minDuration: $settings.logs.minEncounterDuration });
+        deleteConfirm = false;
     }
 </script>
 
@@ -92,9 +113,10 @@
     <div class="px-8">
         <Tabs style="underline" contentClass="" defaultClass="flex flex-wrap space-x-2">
             <TabItem
+                open
                 title="General"
-                activeClasses="p-4 text-accent-500 border-b border-accent-500"
-                inactiveClasses="p-4 hover:text-gray-200 text-gray-400">
+                activeClasses="py-4 px-3 text-accent-500 border-b border-accent-500"
+                inactiveClasses="py-4 px-3 hover:text-gray-200 text-gray-400">
                 <div class="flex flex-col space-y-4 divide-y-[1px]">
                     <div class="mt-4 flex flex-col space-y-2 px-2">
                         <SettingItem
@@ -134,12 +156,16 @@
                                 <input
                                     type="checkbox"
                                     bind:checked={$settings.general.autoIface}
-                                    on:change={() => {$ifaceChangedStore = true;}}
+                                    on:change={() => {
+                                        $ifaceChangedStore = true;
+                                    }}
                                     class="text-accent-500 h-5 w-5 rounded bg-zinc-700 focus:ring-0 focus:ring-offset-0" />
                                 <div class="ml-5">
                                     <div class="text-gray-100">Auto Network Selection</div>
                                     <div class="text-xs text-gray-300">
-                                        Automatically select network interface. If using a VPN, turn this off and select the VPN interface.                                    </div>
+                                        Automatically select network interface. If using a VPN, turn this off and select
+                                        the VPN interface.
+                                    </div>
                                 </div>
                             </label>
                         </div>
@@ -173,16 +199,16 @@
                                         id="dropdown"
                                         class="absolute left-[4.5rem] z-10 mt-1 flex w-80 cursor-pointer flex-col rounded bg-zinc-600 shadow">
                                         <button
-                                                class="truncate rounded px-2 py-1 text-left text-sm text-gray-200 hover:bg-gray-700"
-                                                aria-labelledby="dropdownDefaultButton"
-                                                on:click={() => {
-                                                    $settings.general.ifDesc = "Default Network Interface";
-                                                    $settings.general.ip = "";
-                                                    networkDropdownOpen = false;
-                                                    $ifaceChangedStore = true;
-                                                }}>
-                                                Default Network Interface
-                                            </button>
+                                            class="truncate rounded px-2 py-1 text-left text-sm text-gray-200 hover:bg-gray-700"
+                                            aria-labelledby="dropdownDefaultButton"
+                                            on:click={() => {
+                                                $settings.general.ifDesc = "Default Network Interface";
+                                                $settings.general.ip = "";
+                                                networkDropdownOpen = false;
+                                                $ifaceChangedStore = true;
+                                            }}>
+                                            Default Network Interface
+                                        </button>
                                         {#each networkInterfaces as iface (iface)}
                                             <button
                                                 class="truncate rounded px-2 py-1 text-left text-sm text-gray-200 hover:bg-gray-700"
@@ -219,7 +245,9 @@
                                     <input
                                         type="checkbox"
                                         bind:checked={$settings.general.rawSocket}
-                                        on:change={() => {$ifaceChangedStore = true;}}
+                                        on:change={() => {
+                                            $ifaceChangedStore = true;
+                                        }}
                                         class="text-accent-500 h-5 w-5 rounded bg-zinc-700 focus:ring-0 focus:ring-offset-0" />
                                     <div class="ml-5">
                                         <div class="text-gray-100">Raw Socket</div>
@@ -317,8 +345,8 @@
             </TabItem>
             <TabItem
                 title="Live Meter"
-                activeClasses="p-4 text-accent-500 border-b border-accent-500"
-                inactiveClasses="p-4 hover:text-gray-200 text-gray-400">
+                activeClasses="py-4 px-3 text-accent-500 border-b border-accent-500"
+                inactiveClasses="py-4 px-3 hover:text-gray-200 text-gray-400">
                 <div class="flex flex-col space-y-4 divide-y-[1px]">
                     <div class="mt-4 flex flex-col space-y-2 px-2">
                         <SettingItem
@@ -439,8 +467,8 @@
             </TabItem>
             <TabItem
                 title="Logs"
-                activeClasses="p-4 text-accent-500 border-b border-accent-500"
-                inactiveClasses="p-4 hover:text-gray-200 text-gray-400">
+                activeClasses="py-4 px-3 text-accent-500 border-b border-accent-500"
+                inactiveClasses="py-4 px-3 hover:text-gray-200 text-gray-400">
                 <div class="flex flex-col space-y-4 divide-y-[1px]">
                     <div class="mt-4 flex flex-col space-y-2 px-2">
                         <label class="flex flex-col pb-4 pt-2 font-medium">
@@ -579,8 +607,8 @@
             </TabItem>
             <TabItem
                 title="Shortcuts"
-                activeClasses="p-4 text-accent-500 border-b border-accent-500"
-                inactiveClasses="p-4 hover:text-gray-200 text-gray-400">
+                activeClasses="py-4 px-3 text-accent-500 border-b border-accent-500"
+                inactiveClasses="py-4 px-3 hover:text-gray-200 text-gray-400">
                 <div class="flex flex-col space-y-4 divide-y-[1px]">
                     <div class="mt-4 flex flex-col space-y-2 px-2">
                         <div class="flex justify-between">
@@ -717,16 +745,14 @@
                 </div>
             </TabItem>
             <TabItem
-            open
                 title="Class Colors"
-                activeClasses="p-4 text-accent-500 border-b border-accent-500"
-                inactiveClasses="p-4 hover:text-gray-200 text-gray-400">
-                <div class="flex flex-col space-y-2 divide-y-[1px]">
-                    <div class="mt-4 flex flex-col space-y-1 px-2">
-                        {#each Object.entries($colors) as classColor (classColor[0])}
+                activeClasses="py-4 px-3 text-accent-500 border-b border-accent-500"
+                inactiveClasses="py-4 px-3 hover:text-gray-200 text-gray-400">
+                <div class="mt-4 flex flex-col space-y-1 px-2">
+                    {#each Object.entries($colors) as classColor (classColor[0])}
                         <div class="flex items-center justify-between">
                             <div>
-                                <div class="flex space-x-1 items-center">
+                                <div class="flex items-center space-x-1">
                                     <img
                                         class="h-8 w-8"
                                         src={$classIconCache[classNameToClassId[classColor[0]]]}
@@ -735,12 +761,68 @@
                                 </div>
                             </div>
                             <div class="flex items-center space-x-2">
-                                <input class="cursor-pointer bg-zinc-800" type="color" id={classColor[0]} bind:value={classColor[1].color} on:change={(event) => { if (event) $colors[classColor[0]].color = event.currentTarget.value}}>
-                                <button class="text-xs bg-zinc-600 hover:bg-zinc-700 rounded-md p-1" on:click={() => resetDefaultColor(classColor[0])}>Reset</button>
+                                <input
+                                    class="cursor-pointer bg-zinc-800"
+                                    type="color"
+                                    id={classColor[0]}
+                                    bind:value={classColor[1].color}
+                                    on:change={(event) => {
+                                        if (event) $colors[classColor[0]].color = event.currentTarget.value;
+                                    }} />
+                                <button
+                                    class="rounded-md bg-zinc-600 p-1 text-xs hover:bg-zinc-700"
+                                    on:click={() => resetDefaultColor(classColor[0])}>Reset</button>
                             </div>
                         </div>
-                        {/each}
+                    {/each}
+                </div>
+            </TabItem>
+            <TabItem
+                title="Database"
+                activeClasses="py-4 px-3 text-accent-500 border-b border-accent-500"
+                inactiveClasses="py-4 px-3 hover:text-gray-200 text-gray-400"
+                on:click={getDbInfo}>
+                <div class="mt-4 flex flex-col space-y-2 px-2">
+                    <div class="flex items-center space-x-4">
+                        <div>Database Folder:</div>
+                        <button class="rounded-md bg-zinc-600 p-1 hover:bg-zinc-700" on:click={openDbFolder}>
+                            Open
+                        </button>
                     </div>
+                    {#if encounterDbInfo}
+                        <div class="flex items-center space-x-2">
+                            <div>Database Size:</div>
+                            <div class="font-mono">
+                                {encounterDbInfo.size}
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <div use:tooltip={{ content: "Total encounters" }}>Total Encounters Saved:</div>
+                            <div class="font-mono">
+                                {encounterDbInfo.totalEncounters.toLocaleString()}
+                            </div>
+                        </div>
+                        {#if encounterDbInfo.totalEncounters - encounterDbInfo.totalEncountersFiltered > 0}
+                            <div class="flex items-center space-x-2">
+                                <div use:tooltip={{ content: "Total encounters > minimum duration" }}>
+                                    Total Encounters Filtered:
+                                </div>
+                                <div class="font-mono">
+                                    {encounterDbInfo.totalEncountersFiltered.toLocaleString()}
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-4">
+                                <div>Delete Encounters Below Minimum Duration:</div>
+                                <button
+                                    class="rounded-md bg-red-800 p-1 hover:bg-red-900"
+                                    on:click={() => {
+                                        deleteConfirm = true;
+                                    }}>
+                                    Delete
+                                </button>
+                            </div>
+                        {/if}
+                    {/if}
                 </div>
             </TabItem>
         </Tabs>
@@ -752,5 +834,60 @@
             dismissable={false}
             width="18rem"
             isError={true} />
+    {/if}
+    {#if deleteConfirm && encounterDbInfo}
+        <div class="fixed inset-0 z-50 bg-zinc-900 bg-opacity-80" />
+        <div class="fixed left-0 right-0 top-0 z-50 h-modal w-full items-center justify-center p-4">
+            <div class="relative top-[25%] mx-auto flex max-h-full w-full max-w-md">
+                <div
+                    class="relative mx-auto flex flex-col rounded-lg border-gray-700 bg-zinc-800 text-gray-400 shadow-md">
+                    <button
+                        type="button"
+                        class="absolute right-2.5 top-3 ml-auto whitespace-normal rounded-lg p-1.5 hover:bg-zinc-600 focus:outline-none"
+                        aria-label="Close modal"
+                        on:click={() => (deleteConfirm = false)}>
+                        <span class="sr-only">Close modal</span>
+                        <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"
+                            ><path
+                                fill-rule="evenodd"
+                                d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                                clip-rule="evenodd" /></svg>
+                    </button>
+                    <div id="modal" class="flex-1 space-y-6 overflow-y-auto overscroll-contain p-6">
+                        <div class="text-center">
+                            <svg
+                                aria-hidden="true"
+                                class="mx-auto mb-4 h-14 w-14 text-gray-200"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg"
+                                ><path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                                    class="s-Qbr4I8QhaoSZ" /></svg>
+                            <h3 class="mb-5 text-lg font-normal text-gray-400">
+                                Are you sure you want to delete {encounterDbInfo.totalEncounters -
+                                    encounterDbInfo.totalEncountersFiltered} encounters? (might take a while)
+                            </h3>
+                            <button
+                                type="button"
+                                class="mr-2 inline-flex items-center justify-center rounded-lg bg-red-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-red-800 focus:outline-none"
+                                on:click={deleteEncounterBelowMinDuration}>
+                                Yes, I'm sure
+                            </button>
+                            <button
+                                type="button"
+                                class="inline-flex items-center justify-center rounded-lg bg-gray-800 bg-transparent px-5 py-2.5 text-center text-sm font-medium text-gray-400 hover:bg-zinc-700 hover:text-white focus:text-white focus:outline-none"
+                                on:click={() => (deleteConfirm = false)}>
+                                No, cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     {/if}
 </div>

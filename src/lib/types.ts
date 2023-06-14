@@ -281,3 +281,9 @@ export class OpenerSkill {
         this.icon = icon;
     }
 }
+
+export interface EncounterDbInfo {
+    size: string;
+    totalEncounters: number;
+    totalEncountersFiltered: number;
+}

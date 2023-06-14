@@ -5,7 +5,7 @@
 
 mod parser;
 use std::{
-    fs::File,
+    fs::{self, File},
     io::{Read, Write},
     net::Ipv4Addr,
     path::{Path, PathBuf},
@@ -220,6 +220,9 @@ async fn main() -> Result<()> {
             check_old_db_location_exists,
             copy_db,
             open_folder,
+            open_db_path,
+            delete_encounters_below_min_duration,
+            get_db_info,
             disable_blur,
             enable_blur,
             get_network_interfaces
@@ -746,6 +749,82 @@ fn open_folder(path: String) {
     }
     info!("open_folder: {}", path);
     Command::new("explorer").args([path.as_str()]).spawn().ok();
+}
+
+#[tauri::command]
+fn open_db_path(window: tauri::Window) {
+    let path = window
+        .app_handle()
+        .path_resolver()
+        .resource_dir()
+        .expect("could not get resource dir");
+    info!("open_db_path: {}", path.display());
+    Command::new("explorer")
+        .args([path.to_str().unwrap()])
+        .spawn()
+        .ok();
+}
+
+#[tauri::command]
+fn delete_encounters_below_min_duration(window: tauri::Window, min_duration: i64) {
+    let path = window
+        .app_handle()
+        .path_resolver()
+        .resource_dir()
+        .expect("could not get resource dir");
+    let conn = get_db_connection(&path).expect("could not get db connection");
+    conn.execute(
+        "
+        DELETE FROM encounter
+        WHERE duration < ?;
+    ",
+        params![min_duration * 1000],
+    )
+    .unwrap();
+    conn.execute("VACUUM;", params![]).unwrap();
+}
+
+#[tauri::command]
+fn get_db_info(window: tauri::Window, min_duration: i64) -> EncounterDbInfo {
+    let mut path = window
+        .app_handle()
+        .path_resolver()
+        .resource_dir()
+        .expect("could not get resource dir");
+    let conn = get_db_connection(&path).expect("could not get db connection");
+    let encounter_count = conn
+        .query_row(
+            "SELECT COUNT(*) FROM encounter;",
+            [],
+            |row| row.get(0),
+        )
+        .unwrap();
+    let encounter_filtered_count = conn
+        .query_row(
+            "SELECT COUNT(*) FROM encounter WHERE duration >= ?;",
+            params![min_duration * 1000],
+            |row| row.get(0),
+        )
+        .unwrap();
+
+    path.push("encounters.db");
+    let metadata = fs::metadata(path).expect("could not get db metadata");
+
+    let size_in_bytes = metadata.len();
+    let size_in_kb = size_in_bytes as f64 / 1024.0;
+    let size_in_mb = size_in_kb / 1024.0;
+
+    let size_str = if size_in_mb < 1.0 {
+        format!("{:.2} KB", size_in_kb)
+    } else {
+        format!("{:.2} MB", size_in_mb)
+    };
+
+    EncounterDbInfo {
+        size: size_str,
+        total_encounters: encounter_count,
+        total_encounters_filtered: encounter_filtered_count,
+    }
 }
 
 #[tauri::command]
