@@ -5004,7 +5004,8 @@
     "112": "reset_epic_gate_checkpoint",
     "113": "add_paid_jumping_token",
     "114": "extend_pet_skill",
-    "115": "refill_battle_slot"
+    "115": "refill_battle_slot",
+    "116": "add_universe_event_jumping_token"
   },
   "gameconditionevaltype": { "0": "and", "1": "or" },
   "gameconditiontarget": { "0": "pc", "1": "context" },

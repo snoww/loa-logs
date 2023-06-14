@@ -140,7 +140,7 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool) -> Re
             }
             Pkt::NewNpc => {
                 let pkt = PKTNewNpc::new(&data)?;
-                let (hp, max_hp) = get_current_and_max_hp(&pkt.npc_data.stat_pair);
+                let (hp, max_hp) = get_current_and_max_hp(&pkt.npc_struct.stat_pair);
                 let entity = entity_tracker.new_npc(pkt, max_hp);
                 debug_print("new npc", &entity);
                 state.on_new_npc(entity, hp, max_hp);

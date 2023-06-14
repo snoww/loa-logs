@@ -126,7 +126,9 @@ async fn main() -> Result<()> {
                 }
             }
             tokio::task::spawn_blocking(move || {
-                parser::start(meter_window, ip, port, raw_socket).expect("failed to start parser");
+                parser::start(meter_window, ip, port, raw_socket).map_err(|e| {
+                    warn!("error starting parser: {}", e);
+                })
             });
 
             let _logs_window =

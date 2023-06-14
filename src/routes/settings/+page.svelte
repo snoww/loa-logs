@@ -69,6 +69,7 @@
         $searchStore = "";
         (async () => {
             networkInterfaces = await invoke("get_network_interfaces");
+            networkInterfaces = networkInterfaces.filter((iface) => iface[1] !== "0.0.0.0");
             encounterDbInfo = await invoke("get_db_info", { minDuration: $settings.logs.minEncounterDuration });
         })();
     });

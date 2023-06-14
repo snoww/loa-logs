@@ -163,7 +163,7 @@ impl EntityTracker {
             entity_type: PLAYER,
             name: pkt.pc_struct.name.clone(),
             class_id: pkt.pc_struct.class_id as u32,
-            gear_level: truncate_gear_level(pkt.pc_struct.gear_level),
+            gear_level: truncate_gear_level(pkt.pc_struct.max_item_level),
             character_id: pkt.pc_struct.character_id,
             ..Default::default()
         };
@@ -198,17 +198,17 @@ impl EntityTracker {
     }
 
     pub fn new_npc(&mut self, pkt: PKTNewNpc, max_hp: i64) -> Entity {
-        let (entity_type, name) = get_npc_entity_type_and_name(&pkt.npc_data, max_hp);
+        let (entity_type, name) = get_npc_entity_type_and_name(&pkt.npc_struct, max_hp);
         let npc = Entity {
-            id: pkt.npc_data.object_id,
+            id: pkt.npc_struct.object_id,
             entity_type,
             name,
-            npc_id: pkt.npc_data.type_id,
+            npc_id: pkt.npc_struct.type_id,
             ..Default::default()
         };
         self.entities.insert(npc.id, npc.clone());
         self.status_tracker.borrow_mut().remove_local_object(npc.id);
-        self.build_and_register_status_effects(pkt.npc_data.status_effect_datas, npc.id);
+        self.build_and_register_status_effects(pkt.npc_struct.status_effect_datas, npc.id);
         npc
     }
 
