@@ -374,6 +374,13 @@ bitflags! {
 #[derive(Debug, Default, Deserialize, Clone)]
 pub struct CombatEffectData {
     pub id: i32,
+    pub effects: Vec<CombatEffectDetail>,
+}
+
+#[derive(Debug, Default, Deserialize, Clone)]
+pub struct CombatEffectDetail {
+    pub ratio: i32,
+    pub cooldown: i32,
     pub conditions: Vec<CombatEffectCondition>,
     pub actions: Vec<CombatEffectAction>,
 }

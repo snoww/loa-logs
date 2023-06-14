@@ -1109,22 +1109,24 @@ fn get_status_effect_buff_type_flags(buff: &SkillBuffData) -> u32 {
             buff_type |= StatusEffectBuffTypeFlags::RESOURCE;
         } else if option_type == "combat_effect" {
             if let Some(combat_effect) = COMBAT_EFFECT_DATA.get(&option.key_index) {
-                for action in combat_effect.actions.iter() {
-                    if [
-                        "modify_damage",
-                        "modify_final_damage",
-                        "modify_critical_multiplier",
-                        "modify_penetration",
-                        "modify_penetration_when_critical",
-                        "modify_penetration_addend",
-                        "modify_penetration_addend_when_critical",
-                        "modify_damage_shield_multiplier",
-                    ]
-                    .contains(&action.action_type.as_str())
-                    {
-                        buff_type |= StatusEffectBuffTypeFlags::DMG;
-                    } else if action.action_type == "modify_critical_ratio" {
-                        buff_type |= StatusEffectBuffTypeFlags::CRIT;
+                for effect in combat_effect.effects.iter() {
+                    for action in effect.actions.iter() {
+                        if [
+                            "modify_damage",
+                            "modify_final_damage",
+                            "modify_critical_multiplier",
+                            "modify_penetration",
+                            "modify_penetration_when_critical",
+                            "modify_penetration_addend",
+                            "modify_penetration_addend_when_critical",
+                            "modify_damage_shield_multiplier",
+                        ]
+                        .contains(&action.action_type.as_str())
+                        {
+                            buff_type |= StatusEffectBuffTypeFlags::DMG;
+                        } else if action.action_type == "modify_critical_ratio" {
+                            buff_type |= StatusEffectBuffTypeFlags::CRIT;
+                        }
                     }
                 }
             }
