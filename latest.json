@@ -1,11 +1,11 @@
 {
-    "version": "v1.2.1",
-    "notes": "v1.2.1\n#### BUG FIXES\n- fix issue for certain vm users, where meter did not update even when receiving data\nv1.2.0\n#### NEW FEATURES\n- added skill opener rotation view (you can learn from other players' opener combo)\n- added charts for boss hp %\n- added death icons to chart hover\n- added self-buff summaries\n- buffs like conviction/judgement are now shown in self syn when a player is selected\n- added pause/reset button to top bar when meter window is large enough\n- added option to turn off transparency for live meter\n- added option to show player gear score\nfull patch notes on github\n please report bugs to Snow#7777",
-    "pub_date": "2023-06-07T18:39:34.150Z",
+    "version": "v1.2.2",
+    "notes": "v1.2.2\n#### NEW FEATURES\n- updated meter for elgacia patch\n- added database info in settings\n- added options to customize class colors\n- added clickthrough feature for meter window (regain control by clicking taskbar icon)\n#### BUG FIXES\n- another fix for damage % showing incorrectly for solo\nfull patch notes on github\n please report bugs to Snow#7777",
+    "pub_date": "2023-06-14T21:52:10.603Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.2.1/LOA.Logs_1.2.1_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlZwQXpjM05KNzBLVDV5dEpyOEs4N1dhdTRieDI2ZTVxRWg1eHI3ZktyRUNnQ29FRzIvZDF2Qm82TVRRL1dEZW10YVVmY2U4SUl6WmEzVEtIL25IendFPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjg2MTYxNzYxCWZpbGU6TE9BIExvZ3NfMS4yLjFfeDY0LXNldHVwLm5zaXMuemlwCm1ibjhhdjVyWjRXeW0xS2VjdUpicnpxTWhzTDNkMWh0ZDBwRnFueEVXK2lSNDROOURwWWlybVJiSUlVQzF5K0lRT3dKYnBJMWZTb1h1S093ajZsekRRPT0K"
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.2.2/LOA.Logs_1.2.2_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlpyK2lNM3dBNzJ1SmM0NE0yaEFKK3BHNDJqZzV6WW5LOHplS0Vvdk9RcGZWU25OMFFkdFVYNzFOS0RRWW1Nd0JpeEwxcXkwWS9TVFFHVHpIOE9RU3d3PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjg2Nzc5NDY0CWZpbGU6TE9BIExvZ3NfMS4yLjJfeDY0LXNldHVwLm5zaXMuemlwCmdpUkhCWG1vQTZmQlhCQ1NabU0wakRsaHFPTjg4bmgxYmhraEVGSkduczJaMDZGa1J0cXc5L1VFVjZhaWlaSWFXZ3B4Sk9MeEFOSVhCR0hYQUMrT0JnPT0K"
         }
     }
 }
