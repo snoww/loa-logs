@@ -58,7 +58,7 @@
         setTimeout(() => {
             dropdownOpen = false;
             miniDropdownOpen = false;
-        }, 250);
+        }, 500);
     };
 </script>
 
