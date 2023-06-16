@@ -19,7 +19,10 @@ pub struct EncounterState {
     pub window: Window<Wry>,
     pub encounter: Encounter,
     pub raid_end: bool,
+    pub boss_dead_update: bool,
     pub saved: bool,
+
+    pub raid_clear: bool,
 
     prev_stagger: i32,
 
@@ -39,6 +42,8 @@ impl EncounterState {
             window,
             encounter: Encounter::default(),
             raid_end: false,
+            raid_clear: false,
+            boss_dead_update: false,
             saved: false,
 
             prev_stagger: 0,
@@ -51,13 +56,16 @@ impl EncounterState {
         }
     }
 
-    // reset everything except local player
-    fn reset(&mut self, clone: &Encounter) {
+    // keep all player entities, reset all stats
+    pub fn soft_reset(&mut self) {
+        let clone = self.encounter.clone();
+
         self.encounter.fight_start = 0;
         self.encounter.entities = HashMap::new();
         self.encounter.current_boss_name = "".to_string();
         self.encounter.encounter_damage_stats = Default::default();
         self.prev_stagger = 0;
+        self.raid_clear = false;
 
         self.damage_log = HashMap::new();
         self.identity_log = HashMap::new();
@@ -66,32 +74,6 @@ impl EncounterState {
         self.stagger_log = Vec::new();
         self.stagger_intervals = Vec::new();
 
-        if !clone.local_player.is_empty() {
-            if let Some(player) = clone.entities.get(&clone.local_player) {
-                self.encounter.local_player = clone.local_player.clone();
-                self.encounter.entities.insert(
-                    player.name.clone(),
-                    EncounterEntity {
-                        id: player.id,
-                        name: player.name.clone(),
-                        class: player.class.clone(),
-                        class_id: player.class_id,
-                        current_hp: player.current_hp,
-                        max_hp: player.max_hp,
-                        entity_type: EntityType::PLAYER,
-                        gear_score: player.gear_score,
-                        ..Default::default()
-                    },
-                );
-            }
-        }
-    }
-
-    // keep all entities, reset all stats
-    pub fn soft_reset(&mut self) {
-        let clone = self.encounter.clone();
-        self.reset(&clone);
-        self.encounter.current_boss_name = "".to_string();
         for (key, entity) in clone
             .entities
             .into_iter()
@@ -115,18 +97,23 @@ impl EncounterState {
         }
     }
 
+    // update local player as we get more info
     pub fn update_local_player(&mut self, entity: &Entity) {
         if self.encounter.local_player == entity.name {
             return;
         }
 
+        // we replace the existing local player if it exists, since its name might have changed (from hex or "You" to character name)
         if let Some(mut local) = self.encounter.entities.remove(&self.encounter.local_player) {
+            // update local player name, insert back into encounter
             self.encounter.local_player = entity.name.clone();
             local.name = entity.name.clone();
             self.encounter
                 .entities
                 .insert(self.encounter.local_player.clone(), local);
         } else {
+            // cannot find old local player by name, so we look by local player's entity id
+            // this can happen when the user started meter late
             let old_local = self
                 .encounter
                 .entities
@@ -134,6 +121,7 @@ impl EncounterState {
                 .find(|(_, e)| e.id == entity.id)
                 .map(|(key, _)| key.clone());
 
+            // if we find the old local player, we update its name and insert back into encounter
             if let Some(old_local) = old_local {
                 let mut new_local = self.encounter.entities[&old_local].clone();
                 new_local.name = entity.name.clone();
@@ -146,7 +134,9 @@ impl EncounterState {
         }
     }
 
+    
     pub fn on_init_env(&mut self, entity: Entity) {
+        // replace or insert local player
         if let Some(mut local_player) = self.encounter.entities.remove(&self.encounter.local_player)
         {
             local_player.id = entity.id;
@@ -162,16 +152,18 @@ impl EncounterState {
         }
         self.encounter.local_player = entity.name;
 
+        // if not already saved to db, we save again
         if !self.saved && !self.encounter.current_boss_name.is_empty() {
             self.save_to_db();
         }
 
+        // remove unrelated entities
         self.encounter.entities.retain(|_, e| {
             e.name == self.encounter.local_player || e.damage_stats.damage_dealt > 0
         });
 
         self.window
-            .emit("zone-change", Some(self.encounter.clone()))
+            .emit("zone-change", "")
             .expect("failed to emit zone-change");
 
         self.encounter.current_boss_name = "".to_string();
@@ -192,6 +184,7 @@ impl EncounterState {
         }
     }
 
+    // replace local player
     pub fn on_init_pc(&mut self, entity: Entity, hp: i64, max_hp: i64) {
         self.encounter.entities.remove(&self.encounter.local_player);
         self.encounter.local_player = entity.name.clone();
@@ -201,20 +194,27 @@ impl EncounterState {
         self.encounter.entities.insert(player.name.clone(), player);
     }
 
+    // add or update player to encounter
     pub fn on_new_pc(&mut self, entity: Entity, hp: i64, max_hp: i64) {
-        if let Some(player) = self.encounter.entities.get_mut(&entity.name) {
-            player.id = entity.id;
-            player.gear_score = entity.gear_level;
-            player.current_hp = hp;
-            player.max_hp = max_hp;
-        } else {
-            let mut player = encounter_entity_from_entity(&entity);
-            player.current_hp = hp;
-            player.max_hp = max_hp;
-            self.encounter.entities.insert(player.name.clone(), player);
-        }
+        self.encounter
+            .entities
+            .entry(entity.name.clone())
+            .and_modify(|player| {
+                player.id = entity.id;
+                player.gear_score = entity.gear_level;
+                player.current_hp = hp;
+                player.max_hp = max_hp;
+            })
+            .or_insert_with(|| {
+                let mut player = encounter_entity_from_entity(&entity);
+                player.current_hp = hp;
+                player.max_hp = max_hp;
+                player
+            });
     }
 
+    // add or update npc to encounter
+    // we set current boss if npc matches criteria
     pub fn on_new_npc(&mut self, entity: Entity, hp: i64, max_hp: i64) {
         let entity_name = entity.name.clone();
         self.encounter
@@ -237,55 +237,39 @@ impl EncounterState {
 
         if let Some(npc) = self.encounter.entities.get(&entity_name) {
             if npc.entity_type == EntityType::BOSS {
-                // get the npc that we just added
-                if self.encounter.current_boss_name.is_empty() {
-                    self.encounter.current_boss_name = entity_name;
-                }
-                // get the current boss
-                else if let Some(boss) = self
+                // if current encounter has no boss, we set the boss
+                // if current encounter has a boss, we check if new boss has more max hp, or if current boss is dead
+                self.encounter.current_boss_name = self
                     .encounter
                     .entities
                     .get(&self.encounter.current_boss_name)
-                {
-                    // check if the new npc has more hp than the current boss
-                    if npc.max_hp >= boss.max_hp || boss.is_dead {
-                        self.encounter.current_boss_name = entity_name;
-                    }
-                } else {
-                    self.encounter.current_boss_name = entity_name;
-                }
+                    .map_or(true, |boss| npc.max_hp >= boss.max_hp || boss.is_dead)
+                    .then(|| entity_name)
+                    .unwrap_or(self.encounter.current_boss_name.clone());
             }
         }
     }
 
     pub fn on_death(&mut self, dead_entity: &Entity) {
-        if let Some(entity) = self.encounter.entities.get_mut(&dead_entity.name) {
-            if entity.id != dead_entity.id {
-                return;
-            }
-            if entity.entity_type == EntityType::BOSS && entity.npc_id != dead_entity.npc_id {
-                return;
-            }
-            let deaths = if entity.is_dead {
-                entity.damage_stats.deaths + 1
-            } else {
-                1
-            };
-            entity.is_dead = true;
-            entity.damage_stats.deaths = deaths;
-            entity.damage_stats.death_time = Utc::now().timestamp_millis();
-        } else {
-            let mut entity = encounter_entity_from_entity(dead_entity);
-            entity.is_dead = true;
-            entity.damage_stats = DamageStats {
-                deaths: 1,
-                death_time: Utc::now().timestamp_millis(),
-                ..Default::default()
-            };
-            self.encounter
-                .entities
-                .insert(dead_entity.name.clone(), entity);
+        let mut entity = self
+            .encounter
+            .entities
+            .entry(dead_entity.name.clone())
+            .or_insert_with(|| encounter_entity_from_entity(dead_entity));
+
+        if entity.id != dead_entity.id
+            || (entity.entity_type == EntityType::BOSS && entity.npc_id != dead_entity.npc_id)
+        {
+            return;
         }
+        if entity.entity_type == EntityType::BOSS && entity.name == self.encounter.current_boss_name
+        {
+            self.boss_dead_update = true;
+        }
+        entity.current_hp = 0;
+        entity.is_dead = true;
+        entity.damage_stats.deaths += 1;
+        entity.damage_stats.death_time = Utc::now().timestamp_millis();
     }
 
     pub fn on_skill_start(&mut self, source_entity: Entity, skill_id: i32, timestamp: i64) {
@@ -315,7 +299,10 @@ impl EncounterState {
                 entity
             });
 
-        if entity.class_id == 0 && source_entity.entity_type == EntityType::PLAYER && source_entity.class_id > 0 {
+        if entity.class_id == 0
+            && source_entity.entity_type == EntityType::PLAYER
+            && source_entity.class_id > 0
+        {
             entity.class_id = source_entity.class_id;
             entity.class = get_class_from_id(&source_entity.class_id);
         }
@@ -814,6 +801,17 @@ impl EncounterState {
         {
             return;
         }
+
+        if let Some(current_boss) = self
+            .encounter
+            .entities
+            .get(&self.encounter.current_boss_name)
+        {
+            if current_boss.current_hp == current_boss.max_hp {
+                return;
+            }
+        }
+
         let mut encounter = self.encounter.clone();
         let mut path = self
             .window
@@ -830,6 +828,7 @@ impl EncounterState {
         let boss_hp_log = self.boss_hp_log.clone();
         let stagger_log = self.stagger_log.clone();
         let stagger_intervals = self.stagger_intervals.clone();
+        let raid_clear = self.raid_clear;
 
         task::spawn(async move {
             info!("saving to db - {}", encounter.current_boss_name);
@@ -847,6 +846,7 @@ impl EncounterState {
                 boss_hp_log,
                 stagger_log,
                 stagger_intervals,
+                raid_clear,
             );
 
             tx.commit().expect("failed to commit transaction");
@@ -1188,7 +1188,9 @@ fn get_skill_name_and_icon(
 }
 
 fn get_skill_name(skill_id: &i32) -> String {
-    SKILL_DATA.get(skill_id).map_or("".to_string(), |skill| skill.name.clone())
+    SKILL_DATA
+        .get(skill_id)
+        .map_or("".to_string(), |skill| skill.name.clone())
 }
 
 #[allow(clippy::too_many_arguments)]
@@ -1202,6 +1204,7 @@ fn insert_data(
     boss_hp_log: HashMap<String, Vec<BossHpLog>>,
     stagger_log: Vec<(i32, f32)>,
     mut stagger_intervals: Vec<(i32, i32)>,
+    raid_clear: bool,
 ) {
     let mut encounter_stmt = tx
         .prepare_cached(
@@ -1231,6 +1234,7 @@ fn insert_data(
 
     let mut misc: EncounterMisc = EncounterMisc {
         boss_hp_log,
+        raid_clear,
         ..Default::default()
     };
 

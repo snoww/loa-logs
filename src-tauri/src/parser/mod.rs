@@ -194,6 +194,7 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool) -> Re
             }
             Pkt::RaidBossKillNotify => {
                 state.on_phase_transition(1);
+                state.raid_clear = true;
                 debug_print("phase", &1);
             }
             Pkt::RaidResult => {
@@ -311,7 +312,18 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool) -> Re
                 debug_print("phase", &2);
             }
             Pkt::TriggerStartNotify => {
-                // let pkt = PKTTriggerStartNotify::new(&data)?;
+                let pkt = PKTTriggerStartNotify::new(&data)?;
+                match pkt.trigger_signal_type {
+                    57 | 59 | 61 | 63 | 74 | 76 => {
+                        state.raid_clear = true;
+                        debug_print("phase", &"clear".to_string())
+                    }
+                    58 | 60 | 62 | 64 | 75 | 77 => {
+                        state.raid_clear = false;
+                        debug_print("phase", &"wipe".to_string())
+                    }
+                    _ => {}
+                }
             }
             Pkt::ZoneObjectUnpublishNotify => {
                 let pkt = PKTZoneObjectUnpublishNotify::new(&data)?;
@@ -332,7 +344,10 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool) -> Re
             }
         }
 
-        if last_update.elapsed() >= duration || state.raid_end {
+        if last_update.elapsed() >= duration || state.raid_end || state.boss_dead_update {
+            if state.boss_dead_update {
+                state.boss_dead_update = false;
+            }
             let mut clone = state.encounter.clone();
             let window = window.clone();
             tokio::task::spawn(async move {
@@ -342,15 +357,6 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool) -> Re
                         clone.current_boss_name = String::new();
                     }
                 }
-                // let ent: Vec<_> = clone.entities.iter().filter_map(|(_, e)| {
-                //     if e.entity_type == EntityType::PLAYER {
-                //             Some((e.id, e.name.clone(), e.class.clone()))
-                //     } else {
-                //         None
-                //     }
-                // }).collect();
-                // debug_print("local_player", &clone.local_player);
-                // debug_print("entities", &ent);
                 clone.entities.retain(|_, e| {
                     (e.entity_type == EntityType::PLAYER || e.entity_type == EntityType::ESTHER)
                         && e.damage_stats.damage_dealt > 0
