@@ -2,7 +2,7 @@
 import { EntityType, type Entity, BossHpLog, OpenerSkill, MiniSkill } from "$lib/types";
 import Heap from "heap-js";
 import { defaultOptions } from "./charts";
-import { abbreviateNumber, formatDurationFromS, resampleData, round2, timeToSeconds } from "./numbers";
+import { abbreviateNumber, formatDurationFromMs, formatDurationFromS, resampleData, round2, timeToSeconds } from "./numbers";
 import { getSkillIcon, isValidName } from "./strings";
 
 export function getLegendNames(chartablePlayers: Entity[], showNames: boolean) {
@@ -330,6 +330,17 @@ export function getSkillLogChart(player: Entity, skillIconPath: string, lastComb
         .filter((skill) => skill.castLog.length > 0)
         .sort((a, b) => a.totalDamage - b.totalDamage);
     const skills = sortedSkills.map((skill) => skill.name);
+
+    // changed timestamps to milliseconds
+    // need to guess if seconds or milliseconds cus of data inconsistency
+    let isMilliseconds = true;
+    const topSkillIndex = sortedSkills.length - 1;
+    if (sortedSkills[topSkillIndex].castLog.length > 1 && sortedSkills[topSkillIndex].castLog[1] < 100) {
+        isMilliseconds = false;
+    } else if (sortedSkills.length > 1 && sortedSkills[topSkillIndex - 1].castLog[0] < 100) {
+        isMilliseconds = false;
+    }
+
     return {
         ...defaultOptions,
         grid: {
@@ -430,6 +441,9 @@ export function getSkillLogChart(player: Entity, skillIconPath: string, lastComb
                 symbolSize: [20, 20],
                 symbolKeepAspect: true,
                 data: skill.castLog.map((cast) => {
+                    if (isMilliseconds) {
+                        return [formatDurationFromMs(cast), skill.name];
+                    }
                     return [formatDurationFromS(cast), skill.name];
                 })
             };

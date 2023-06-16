@@ -3,7 +3,7 @@
     import { getOpenerSkills } from "$lib/utils/dpsCharts";
     import { skillIcon } from "$lib/utils/settings";
     import { getSkillIcon } from "$lib/utils/strings";
-    import { tooltip } from "$lib/utils/tooltip";
+    import { menuTooltip, tooltip } from "$lib/utils/tooltip";
 
     export let skills: { [skillId: number]: Skill };
 
@@ -13,6 +13,7 @@
             (skill) =>
                 !skill.name.includes("(Summon)") &&
                 skill.name !== "Weapon Attack" &&
+                !skill.name.includes("Basic Attack") &&
                 skill.name !== "Bleed" &&
                 skill.castLog.length > 0
         )
@@ -21,11 +22,15 @@
         });
 
 
-    let openerSkills = getOpenerSkills(skillsArray, 10);
+    let openerSkills = getOpenerSkills(skillsArray, 15);
 </script>
 
 <div class="mt-2 mb-4">
-    <div class="text-lg font-bold">Opener Rotation</div>
+    <div class="text-lg font-bold flex justify-start">
+        <div use:menuTooltip={{content: "First 15 skills casted"}}>
+            Opener Rotation
+        </div>
+    </div>
     <div class="flex flex-wrap pt-2 items-center" style="width: calc(100vw - 4.5rem);">
         {#each openerSkills as skill, i (i)}
             <div use:tooltip={{ content: skill.name }}>

@@ -134,7 +134,6 @@ impl EncounterState {
         }
     }
 
-    
     pub fn on_init_env(&mut self, entity: Entity) {
         // replace or insert local player
         if let Some(mut local_player) = self.encounter.entities.remove(&self.encounter.local_player)
@@ -310,10 +309,10 @@ impl EncounterState {
         entity.is_dead = false;
         entity.skill_stats.casts += 1;
 
-        let relative_timestamp_s = if self.encounter.fight_start == 0 {
+        let relative_timestamp = if self.encounter.fight_start == 0 {
             0
         } else {
-            ((timestamp - self.encounter.fight_start) / 1000) as i32
+            (timestamp - self.encounter.fight_start) as i32
         };
 
         // if skills have different ids but the same name, we group them together
@@ -347,7 +346,7 @@ impl EncounterState {
             .or_default()
             .entry(skill_id)
             .or_default()
-            .push(relative_timestamp_s);
+            .push(relative_timestamp);
     }
 
     #[allow(clippy::too_many_arguments)]
@@ -459,7 +458,7 @@ impl EncounterState {
         if skill_name.is_empty() {
             skill_name = get_skill_name_and_icon(&skill_id, &skill_effect_id, "".to_string()).0;
         }
-        let relative_timestamp_s = ((timestamp - self.encounter.fight_start) / 1000) as i32;
+        let relative_timestamp = (timestamp - self.encounter.fight_start) as i32;
 
         if !source_entity.skills.contains_key(&skill_id) {
             if let Some(skill) = source_entity
@@ -476,7 +475,7 @@ impl EncounterState {
                     .or_default()
                     .entry(skill_id)
                     .or_default()
-                    .push(relative_timestamp_s);
+                    .push(relative_timestamp);
                 source_entity.skills.insert(
                     skill_id,
                     Skill {
@@ -677,6 +676,8 @@ impl EncounterState {
                 0.0
             };
 
+            let relative_timestamp_s = relative_timestamp / 1000;
+
             if log.is_empty() || log.last().unwrap().time != relative_timestamp_s {
                 log.push(BossHpLog::new(relative_timestamp_s, current_hp, hp_percent));
             } else {
@@ -774,10 +775,10 @@ impl EncounterState {
 
                 self.prev_stagger = current_stagger;
 
-                let relative_timestamp = (timestamp - self.encounter.fight_start) / 1000;
+                let relative_timestamp_s = (timestamp - self.encounter.fight_start) / 1000;
                 let stagger_percent = (1.0 - (current_stagger as f32 / max_stagger as f32)) * 100.0;
                 self.stagger_log
-                    .push((relative_timestamp as i32, stagger_percent));
+                    .push((relative_timestamp_s as i32, stagger_percent));
 
                 if max_stagger > self.encounter.encounter_damage_stats.max_stagger {
                     self.encounter.encounter_damage_stats.max_stagger = max_stagger;
@@ -1234,7 +1235,7 @@ fn insert_data(
 
     let mut misc: EncounterMisc = EncounterMisc {
         boss_hp_log,
-        raid_clear,
+        raid_clear: if raid_clear { Some(true) } else { None },
         ..Default::default()
     };
 

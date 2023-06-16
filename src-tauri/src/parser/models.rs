@@ -211,8 +211,8 @@ pub struct EncounterMisc {
     pub stagger_stats: Option<StaggerStats>,
     #[serde_as(deserialize_as = "DefaultOnError")]
     pub boss_hp_log: HashMap<String, Vec<BossHpLog>>,
-    #[serde_as(deserialize_as = "DefaultOnError")]
-    pub raid_clear: bool
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub raid_clear: Option<bool>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
