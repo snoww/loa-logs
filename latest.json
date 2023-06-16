@@ -1,11 +1,11 @@
 {
-    "version": "v1.2.2",
-    "notes": "v1.2.2\n#### NEW FEATURES\n- updated meter for elgacia patch\n- added database info in settings\n- added options to customize class colors\n- added clickthrough feature for meter window (regain control by clicking taskbar icon)\n#### BUG FIXES\n- another fix for damage % showing incorrectly for solo\nfull patch notes on github\n please report bugs to Snow#7777",
+    "version": "v1.2.3",
+    "notes": "v1.2.3\n#### BUG FIXES AND IMPROVEMENTS\n- fix transparency setting causing meter to appear dark everywhere\n- fix clickthrough dropdown disappearing too fast\n- improved boss dead detection\n- improved opener rotation accuracy when skills are casted too fast\nfull patch notes on github\n please report bugs to Snow#7777",
     "pub_date": "2023-06-14T21:52:10.603Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.2.2/LOA.Logs_1.2.2_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlpyK2lNM3dBNzJ1SmM0NE0yaEFKK3BHNDJqZzV6WW5LOHplS0Vvdk9RcGZWU25OMFFkdFVYNzFOS0RRWW1Nd0JpeEwxcXkwWS9TVFFHVHpIOE9RU3d3PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjg2Nzc5NDY0CWZpbGU6TE9BIExvZ3NfMS4yLjJfeDY0LXNldHVwLm5zaXMuemlwCmdpUkhCWG1vQTZmQlhCQ1NabU0wakRsaHFPTjg4bmgxYmhraEVGSkduczJaMDZGa1J0cXc5L1VFVjZhaWlaSWFXZ3B4Sk9MeEFOSVhCR0hYQUMrT0JnPT0K"
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.2.3/LOA.Logs_1.2.3_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmNBdGxKMXV5ZHlvdFlNakFHWTJQQlFoVWN4dlZsamxRUVBBVjByNmlKQ2ljSzBqWkVtdEhJWTdJTTFZaUcwVk1DVFljQWxwWkN5ck00MWlLY09hVndJPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjg2OTU2OTI0CWZpbGU6TE9BIExvZ3NfMS4yLjNfeDY0LXNldHVwLm5zaXMuemlwCkpPcjVxTC9vYUR4cjNPK2xCSTlSVmpWVWRsZ1pUR1N6QkY1OUhyY0dvcU1veTcwS2IvUjVrWDFCbFc4ZTRiQnFwV2FjdEk2TXFzT2d0SGlKQkZwbERRPT0K"
         }
     }
 }
