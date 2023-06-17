@@ -1,7 +1,7 @@
 {
     "version": "v1.2.3",
     "notes": "v1.2.3\n#### BUG FIXES AND IMPROVEMENTS\n- fix transparency setting causing meter to appear dark everywhere\n- fix clickthrough dropdown disappearing too fast\n- improved boss dead detection\n- improved opener rotation accuracy when skills are casted too fast\nfull patch notes on github\n please report bugs to Snow#7777",
-    "pub_date": "2023-06-14T21:52:10.603Z",
+    "pub_date": "2023-06-16T23:39:53.458Z",
     "platforms": {
         "windows-x86_64": {
             "url": "https://github.com/snoww/loa-logs/releases/download/v1.2.3/LOA.Logs_1.2.3_x64-setup.nsis.zip",
