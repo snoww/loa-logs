@@ -54,11 +54,13 @@
         miniDropdownOpen = false;
     };
     const enableClickThrough = () => {
+        document.body.style.pointerEvents = 'none';
         appWindow.setIgnoreCursorEvents(true);
+        dropdownOpen = false;
+        miniDropdownOpen = false;
         setTimeout(() => {
-            dropdownOpen = false;
-            miniDropdownOpen = false;
-        }, 500);
+            document.body.style.pointerEvents = 'auto';
+        }, 1500);
     };
 </script>
 
