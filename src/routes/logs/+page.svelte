@@ -4,7 +4,7 @@
     import type { EncounterPreview, EncountersOverview } from "$lib/types";
     import { formatDurationFromMs, formatTimestamp } from "$lib/utils/numbers";
     import { classIconCache, settings } from "$lib/utils/settings";
-    import { backNavStore, ifaceChangedStore, pageStore, searchStore } from "$lib/utils/stores";
+    import { backNavStore, ifaceChangedStore, pageStore, searchStore, selectedBosses, selectedClasses } from "$lib/utils/stores";
     import { tooltip } from "$lib/utils/tooltip";
     import { invoke } from "@tauri-apps/api";
     import NProgress from "nprogress";
@@ -16,7 +16,8 @@
     const rowsPerPage = 10;
     const maxSearchLength = 30;
 
-    let oldDbExists = false;
+    let bosses: string[] = [];
+    let classes: string[] = [];
 
     $: {
         if ($searchStore.length > 0) {
@@ -26,9 +27,9 @@
                 $pageStore = 1;
             }
         }
-
+        bosses = Array.from($selectedBosses) as string[];
+        classes = Array.from($selectedClasses) as string[];
         loadEncounters();
-        checkOldDbExists();
     }
 
     async function loadEncounters(): Promise<Array<EncounterPreview>> {
@@ -36,7 +37,9 @@
             page: $pageStore,
             pageSize: rowsPerPage,
             minDuration: $settings.logs.minEncounterDuration,
-            search: $searchStore.substring(0, maxSearchLength)
+            search: $searchStore.substring(0, maxSearchLength),
+            bosses: bosses,
+            classes: classes
         });
         encounters = overview.encounters;
         totalEncounters = overview.totalEncounters;
@@ -93,29 +96,9 @@
     }
 
     let hidden: boolean = true;
-
-    async function checkOldDbExists() {
-        oldDbExists = await invoke("check_old_db_location_exists");
-    }
-
-    async function getEncounterCount(): Promise<number> {
-        return await invoke("get_encounter_count");
-    }
-
-    async function copyDb() {
-        NProgress.start();
-        await invoke("copy_db");
-        NProgress.done();
-        setTimeout(async () => {
-            await refresh();
-        }, 2000);
-    }
-
-    async function openFolder(path: string) {
-        await invoke("open_folder", { path: path });
-    }
 </script>
 
+<!-- svelte-ignore missing-declaration -->
 <svelte:window on:contextmenu|preventDefault />
 <LogSidebar bind:hidden />
 <div class="h-screen bg-zinc-800">
@@ -197,38 +180,6 @@
                                 accuracy.
                             </div>
                         {/if}
-                        {#await getEncounterCount() then count}
-                            {#if count === 0 && oldDbExists}
-                                <div class="w-screen h-px bg-gray-700" />
-                                <div class="w-screen bg-neutral-800 p-2 font-bold text-lg">!!! NOTICE !!!</div>
-                                <div class="w-screen bg-neutral-800 px-2">
-                                    The default install directory of the app has changed after v1.1.12
-                                </div>
-                                <div class="w-screen bg-neutral-800 px-2">
-                                    If you had logs previously, you must manually copy the <span class="font-mono"
-                                        >encounters.db</span> to the new install location. :( sorry!
-                                </div>
-                                <!-- svelte-ignore a11y-click-events-have-key-events -->
-                                <div class="w-screen bg-neutral-800 px-2">
-                                    Old Default: <span
-                                        class="font-mono text-white hover:underline cursor-pointer"
-                                        on:click={() => openFolder("USERPROFILE\\AppData\\Local\\Programs\\LOA Logs")}
-                                        >C:\Users\USERNAME\AppData\Local\Programs\LOA Logs</span>
-                                </div>
-                                <!-- svelte-ignore a11y-click-events-have-key-events -->
-                                <div class="w-screen bg-neutral-800 px-2">
-                                    New Default: <span
-                                        class="font-mono text-white hover:underline cursor-pointer"
-                                        on:click={() => openFolder("USERPROFILE\\AppData\\Local\\LOA Logs")}
-                                        >C:\Users\USERNAME\AppData\Local\LOA Logs</span>
-                                </div>
-                                <div class="w-screen bg-neutral-800 p-2">
-                                    <button
-                                        class="p-2 rounded-md bg-accent-900 text-white hover:bg-accent-800"
-                                        on:click={copyDb}>I'm too lazy. Help me copy please.</button>
-                                </div>
-                            {/if}
-                        {/await}
                     {/each}
                 </tbody>
             </table>

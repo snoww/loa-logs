@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { bosses } from "$lib/constants/bossHpBars";
+    import { bossHpMap } from "$lib/constants/bossHpBars";
     import { bossHpBarColors } from "$lib/constants/colors";
     import type { Entity } from "$lib/types";
     import { abbreviateNumberSplit } from "$lib/utils/numbers";
@@ -34,8 +34,8 @@
         bossCurrentHp = abbreviateNumberSplit(bossHp);
         bossMaxHp = abbreviateNumberSplit(boss.maxHp);
 
-        if (Object.hasOwn(bosses, boss.name)) {
-            bossHPBars = bosses[boss.name];
+        if (Object.hasOwn(bossHpMap, boss.name)) {
+            bossHPBars = bossHpMap[boss.name];
         } else {
             bossHPBars = 0;
         }

@@ -20,7 +20,7 @@ use hashbrown::HashMap;
 use log::{info, warn, Record};
 use parser::models::*;
 
-use rusqlite::{params, Connection};
+use rusqlite::{params, params_from_iter, Connection};
 use tauri::{
     api::process::Command, CustomMenuItem, Manager, SystemTray, SystemTrayEvent, SystemTrayMenu,
     SystemTrayMenuItem, WindowBuilder,
@@ -84,10 +84,10 @@ async fn main() -> Result<()> {
             meter_window
                 .restore_state(StateFlags::all())
                 .expect("failed to restore window state");
-            #[cfg(debug_assertions)]
-            {
-                meter_window.open_devtools();
-            }
+            // #[cfg(debug_assertions)]
+            // {
+            //     meter_window.open_devtools();
+            // }
 
             let mut raw_socket = false;
             let mut ip: String;
@@ -138,10 +138,10 @@ async fn main() -> Result<()> {
                     .inner_size(800.0, 500.0)
                     .build()
                     .expect("failed to create log window");
-            #[cfg(debug_assertions)]
-            {
-                _logs_window.open_devtools();
-            }
+            // #[cfg(debug_assertions)]
+            // {
+            //     _logs_window.open_devtools();
+            // }
 
             Ok(())
         })
@@ -219,8 +219,6 @@ async fn main() -> Result<()> {
             open_url,
             save_settings,
             get_settings,
-            check_old_db_location_exists,
-            copy_db,
             open_folder,
             open_db_path,
             delete_encounters_below_min_duration,
@@ -343,6 +341,8 @@ fn load_encounters_preview(
     page_size: i32,
     min_duration: i32,
     search: String,
+    bosses: Vec<String>,
+    classes: Vec<String>,
 ) -> EncountersOverview {
     let path = window
         .app_handle()
@@ -351,65 +351,84 @@ fn load_encounters_preview(
         .expect("could not get resource dir");
     let conn = get_db_connection(&path).expect("could not get db connection");
 
-    let mut stmt = conn.prepare_cached("
-    SELECT
-        e.id,
-        e.fight_start,
-        e.current_boss,
-        e.duration,
-        (
-            SELECT GROUP_CONCAT(ordered_classes.class_info, ',')
-            FROM (
-                SELECT en.class_id || ':' || en.name AS class_info
-                FROM entity en
-                WHERE en.encounter_id = e.id AND en.entity_type = 'PLAYER'
-                ORDER BY json_extract(en.damage_stats, '$.dps') DESC
-            ) AS ordered_classes
-        ) AS classes
+    let min_duration = min_duration * 1000;
+
+    let mut params = vec![
+        min_duration.to_string(),
+        search.clone(),
+        search.clone(),
+        search,
+    ];
+
+    let boss_filter = if !bosses.is_empty() {
+        let placeholders: Vec<String> = bosses.iter().map(|_| "?".to_string()).collect();
+        bosses.into_iter().for_each(|boss| params.push(boss));
+        format!("AND (current_boss IN ({}))", placeholders.join(","))
+    } else {
+        "".to_string()
+    };
+
+    let class_filter = if !classes.is_empty() {
+        let placeholders: Vec<String> = classes.iter().map(|_| "?".to_string()).collect();
+        classes.into_iter().for_each(|class| params.push(class));
+        format!("AND (class IN ({}))", placeholders.join(","))
+    } else {
+        "".to_string()
+    };
+
+    let count_params = params.clone();
+
+    let query = format!("SELECT
+    e.id,
+    e.fight_start,
+    e.current_boss,
+    e.duration,
+    (
+        SELECT GROUP_CONCAT(ordered_classes.class_info, ',')
+        FROM (
+            SELECT en.class_id || ':' || en.name AS class_info
+            FROM entity en
+            WHERE en.encounter_id = e.id AND en.entity_type = 'PLAYER'
+            ORDER BY json_extract(en.damage_stats, '$.dps') DESC
+        ) AS ordered_classes
+    ) AS classes
     FROM encounter e
     JOIN entity ent ON e.id = ent.encounter_id
     WHERE e.duration > ? AND ((current_boss LIKE '%' || ? || '%') OR (ent.class LIKE '%' || ? || '%') OR (ent.name LIKE '%' || ? || '%'))
+        {} {}
     GROUP BY encounter_id
     ORDER BY e.fight_start DESC
     LIMIT ?
-    OFFSET ?
-    ")
-    .unwrap();
+    OFFSET ?", boss_filter, class_filter);
+
+    let mut stmt = conn.prepare_cached(&query).unwrap();
 
     let offset = (page - 1) * page_size;
-    let min_duration = min_duration * 1000;
+
+    params.push(page_size.to_string());
+    params.push(offset.to_string());
 
     let encounter_iter = stmt
-        .query_map(
-            [
-                min_duration.to_string(),
-                search.clone(),
-                search.clone(),
-                search.clone(),
-                page_size.to_string(),
-                offset.to_string(),
-            ],
-            |row| {
-                let classes = row.get(4).unwrap_or_else(|_| "".to_string());
+        .query_map(params_from_iter(params), |row| {
+            let classes = row.get(4).unwrap_or_else(|_| "".to_string());
 
-                let (classes, names) = classes
-                    .split(',')
-                    .map(|s| {
-                        let info: Vec<&str> = s.split(':').collect();
-                        (info[0].parse::<i32>().unwrap_or(101), info[1].to_string())
-                    })
-                    .unzip();
-
-                Ok(EncounterPreview {
-                    id: row.get(0)?,
-                    fight_start: row.get(1)?,
-                    boss_name: row.get(2)?,
-                    duration: row.get(3)?,
-                    classes,
-                    names,
+            let (classes, names) = classes
+                .split(',')
+                .map(|s| {
+                    let info: Vec<&str> = s.split(':').collect();
+                    (info[0].parse::<i32>().unwrap_or(101), info[1].to_string())
                 })
-            },
-        )
+                .unzip();
+
+            Ok(EncounterPreview {
+                id: row.get(0)?,
+                fight_start: row.get(1)?,
+                boss_name: row.get(2)?,
+                duration: row.get(3)?,
+                classes,
+                names,
+            })
+        })
         .expect("could not query encounters");
 
     let mut encounters: Vec<EncounterPreview> = Vec::new();
@@ -417,16 +436,19 @@ fn load_encounters_preview(
         encounters.push(encounter.unwrap());
     }
 
-    let count: i32 = conn.query_row_and_then("
+    let query = format!("
     SElECT COUNT(*)
     FROM (SELECT encounter_id
         FROM encounter e
         JOIN entity ent ON e.id = ent.encounter_id
         WHERE duration > ? AND ((current_boss LIKE '%' || ? || '%') OR (ent.class LIKE '%' || ? || '%') OR (ent.name LIKE '%' || ? || '%'))
+            {} {}
         GROUP BY encounter_id)
-    ", [min_duration.to_string(), search.clone(), search.clone(), search], |row| {
-        row.get(0)
-    }).expect("could not get encounter count");
+        ", boss_filter, class_filter);
+
+    let count: i32 = conn
+        .query_row_and_then(&query, params_from_iter(count_params), |row| row.get(0))
+        .expect("could not get encounter count");
 
     EncountersOverview {
         encounters,
@@ -700,48 +722,6 @@ fn get_network_interfaces() -> Vec<(String, String)> {
 }
 
 #[tauri::command]
-fn check_old_db_location_exists() -> bool {
-    let user_dir = std::env::var("USERPROFILE");
-    match user_dir {
-        Ok(user_dir) => {
-            let old_path = PathBuf::from(format!(
-                "{}/AppData/Local/Programs/LOA Logs/encounters.db",
-                user_dir
-            ));
-            old_path.exists()
-        }
-        Err(_) => false,
-    }
-}
-
-#[tauri::command]
-fn copy_db(window: tauri::Window) -> Result<(), String> {
-    let user_dir = std::env::var("USERPROFILE");
-    match user_dir {
-        Ok(user_dir) => {
-            let old_path = PathBuf::from(format!(
-                "{}/AppData/Local/Programs/LOA Logs/encounters.db",
-                user_dir
-            ));
-            let mut new_path = window
-                .app_handle()
-                .path_resolver()
-                .resource_dir()
-                .expect("could not get resource dir");
-            new_path.push("encounters.db");
-            match std::fs::copy(old_path, new_path) {
-                Ok(_) => Ok(()),
-                Err(e) => {
-                    warn!("copy_db: Error copying db: {}", e);
-                    Err(e.to_string())
-                }
-            }
-        }
-        Err(_) => Err("Could not get user dir".to_string()),
-    }
-}
-
-#[tauri::command]
 fn open_folder(path: String) {
     let mut path = path;
     if path.contains("USERPROFILE") {
@@ -795,11 +775,7 @@ fn get_db_info(window: tauri::Window, min_duration: i64) -> EncounterDbInfo {
         .expect("could not get resource dir");
     let conn = get_db_connection(&path).expect("could not get db connection");
     let encounter_count = conn
-        .query_row(
-            "SELECT COUNT(*) FROM encounter;",
-            [],
-            |row| row.get(0),
-        )
+        .query_row("SELECT COUNT(*) FROM encounter;", [], |row| row.get(0))
         .unwrap();
     let encounter_filtered_count = conn
         .query_row(

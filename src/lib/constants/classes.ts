@@ -75,3 +75,29 @@ export const classNameToClassId: { [key: string]: number } = {
     "Aeromancer": 603,
     "Alchemist": 604
 };
+
+export const classList = [
+    "Berserker",
+    "Destroyer",
+    "Gunlancer",
+    "Paladin",
+    "Slayer",
+    "Arcanist",
+    "Summoner",
+    "Bard",
+    "Sorceress",
+    "Wardancer",
+    "Scrapper",
+    "Soulfist",
+    "Glaivier",
+    "Striker",
+    "Deathblade",
+    "Shadowhunter",
+    "Reaper",
+    "Sharpshooter",
+    "Deadeye",
+    "Artillerist",
+    "Machinist",
+    "Gunslinger",
+    "Artist",
+];

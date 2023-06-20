@@ -1,6 +1,6 @@
 import type { BossMap } from "$lib/types";
 
-export const bosses: BossMap = {
+export const bossHpMap: BossMap = {
     "Dark Mountain Predator": 50,
     "Destroyer Lucas": 50,
     "Leader Lugaru": 50,
