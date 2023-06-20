@@ -1,11 +1,11 @@
 {
-    "version": "v1.2.3",
-    "notes": "v1.2.3\n#### BUG FIXES AND IMPROVEMENTS\n- fix transparency setting causing meter to appear dark everywhere\n- fix clickthrough dropdown disappearing too fast\n- improved boss dead detection\n- improved opener rotation accuracy when skills are casted too fast\nfull patch notes on github\n please report bugs to Snow#7777",
-    "pub_date": "2023-06-16T23:39:53.458Z",
+    "version": "v1.2.4",
+    "notes": "v1.2.4\n#### NEW FEATURES\n- added better search filters for bosses and classes\n- added setting to show all buffs\n#### BUG FIXES AND IMPROVEMENTS\n- fixed issue where tooltip shows up after enabling clickthrough\nfull patch notes on github\n please report bugs to Snow#7777",
+    "pub_date": "2023-06-20T23:17:28.494Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.2.3/LOA.Logs_1.2.3_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmNBdGxKMXV5ZHlvdFlNakFHWTJQQlFoVWN4dlZsamxRUVBBVjByNmlKQ2ljSzBqWkVtdEhJWTdJTTFZaUcwVk1DVFljQWxwWkN5ck00MWlLY09hVndJPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjg2OTU2OTI0CWZpbGU6TE9BIExvZ3NfMS4yLjNfeDY0LXNldHVwLm5zaXMuemlwCkpPcjVxTC9vYUR4cjNPK2xCSTlSVmpWVWRsZ1pUR1N6QkY1OUhyY0dvcU1veTcwS2IvUjVrWDFCbFc4ZTRiQnFwV2FjdEk2TXFzT2d0SGlKQkZwbERRPT0K"
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.2.4/LOA.Logs_1.2.4_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlcrWVJwd3JGVDhxeHB2VGZXUW9KZ3IxUnBwT0dYYkFLM1k1S2V3VWM0Q2YwNnBaVU9jVFJqcDNHWlJNV09FSWYyOC9IOTZoNzZaeERCUGFrSFlNTGdvPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjg3MzAyNjAyCWZpbGU6TE9BIExvZ3NfMS4yLjRfeDY0LXNldHVwLm5zaXMuemlwCk1FTVZTSTF5Mld1M1hyTjFWSGo2eW51eUR1ZzhtakNNQkNwakdVcnZQYmV5aGJlT2x2QUw5ei95TkgrUVo3UFAvRFZFb05hejVpSHhtMnoyOXF5d0JBPT0K"
         }
     }
 }
