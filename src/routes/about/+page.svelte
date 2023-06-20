@@ -16,28 +16,28 @@
 
 <svelte:window on:contextmenu|preventDefault />
 <LogSidebar bind:hidden />
-<div class="h-screen bg-zinc-800 pt-2">
-    <div class="px-8 pt-5 tracking-tight">
-        <div class="flex justify-between">
-            <div class="ml-2 flex space-x-2">
-                <div class="">
-                    <button on:click={() => (hidden = false)} class="mt-px block">
-                        <svg
-                            class="hover:fill-accent-500 h-6 w-6 fill-gray-300"
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 96 960 960"
-                            ><path
-                                d="M107 841v-91.5h746.5V841H107Zm0-219.5V530h746.5v91.5H107Zm0-219V310h746.5v92.5H107Z" /></svg>
-                    </button>
-                </div>
-                <div class="pl-2 text-xl font-bold tracking-tight text-gray-300">About</div>
+<div class="custom-scroll h-screen overflow-y-scroll bg-zinc-800 pb-8">
+    <div class="sticky top-0 flex h-16 justify-between bg-zinc-800 px-8 py-5 shadow-md">
+        <div class="ml-2 flex space-x-2">
+            <div class="">
+                <button on:click={() => (hidden = false)} class="mt-px block">
+                    <svg
+                        class="hover:fill-accent-500 h-6 w-6 fill-gray-300"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 96 960 960"
+                        ><path
+                            d="M107 841v-91.5h746.5V841H107Zm0-219.5V530h746.5v91.5H107Zm0-219V310h746.5v92.5H107Z" /></svg>
+                </button>
             </div>
+            <div class="pl-2 text-xl font-bold text-gray-300">About</div>
         </div>
-        <p class="mt-12 px-4 text-base">
+    </div>
+    <div class="mx-8 my-4">
+        <p class="px-4 text-base">
             LOA Logs is a "blazingly fast" open source Lost Ark DPS meter (<a
                 class="text-accent-500 hover:underline"
                 href="https://github.com/snoww/loa-logs"
-                target="_blank">github.com/snoww/loa-logs</a
+                target="_blank">snoww/loa-logs</a
             >), written in Rust by
             <a class="text-accent-500 hover:underline" href="https://github.com/snoww" target="_blank">Snow</a>. This
             project is an opinionated flavor of
@@ -45,18 +45,23 @@
                 class="text-accent-500 hover:underline"
                 href="https://github.com/lost-ark-dev/loa-details"
                 target="_blank">LOA Details</a>
-            by Herysia and Mathi, but should share very similar user interfaces and settings. The packet sniffing is still
-            done by LOA Details'
+            by Herysia and Mathi, but should share very similar user interfaces and settings. The packet sniffing and processing
+            has been completely ported over to Rust, with
+            <a class="text-accent-500 hover:underline" href="https://github.com/snoww/meter-core-rs" target="_blank"
+                ><code>meter-core-rs</code></a
+            >. A huge thanks to Herysia and Henjuro for their work on the original
             <a class="text-accent-500 hover:underline" href="https://github.com/lost-ark-dev/meter-core" target="_blank"
-                ><code>meter-core</code></a> under the hood, but the data processing is done using Rust. There are future
-            plans to port the packet sniffing part to Rust as well.
+                ><code>meter-core</code></a
+            >. This gives the meter huge performance improvements with low memory usage compared the TypeScript
+            implementation.
         </p>
         <p class="mt-4 px-4 text-base">This project was designed specifically for hell-raiding.</p>
         <p class="mt-4 px-4 text-base">
             If you have any problems or suggestions, please open an <a
                 class="text-accent-500 hover:underline"
                 href="https://github.com/snoww/loa-logs/issues"
-                target="_blank">issue</a> or send a DM on Discord to Snow#7777.
+                target="_blank">issue</a>
+            or send a DM on Discord to <code class="text-accent-500">snow.w</code>
         </p>
 
         <p class="mt-4 px-4">
@@ -66,6 +71,6 @@
             {:then version}
                 v{version}
             {/await}
-        </p>
+        </p> 
     </div>
 </div>
