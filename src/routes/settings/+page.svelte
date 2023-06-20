@@ -112,12 +112,12 @@
         </div>
     </div>
     <div class="px-8">
-        <Tabs style="underline" contentClass="" defaultClass="flex flex-wrap space-x-2">
+        <Tabs style="underline" contentClass="" defaultClass="flex flex-wrap space-x-1">
             <TabItem
                 open
                 title="General"
-                activeClasses="py-4 px-3 text-accent-500 border-b border-accent-500"
-                inactiveClasses="py-4 px-3 hover:text-gray-200 text-gray-400">
+                activeClasses="py-4 px-2 text-accent-500 border-b border-accent-500"
+                inactiveClasses="py-4 px-2 hover:text-gray-200 text-gray-400">
                 <div class="flex flex-col space-y-4 divide-y-[1px]">
                     <div class="mt-4 flex flex-col space-y-2 px-2">
                         <SettingItem
@@ -346,8 +346,8 @@
             </TabItem>
             <TabItem
                 title="Live Meter"
-                activeClasses="py-4 px-3 text-accent-500 border-b border-accent-500"
-                inactiveClasses="py-4 px-3 hover:text-gray-200 text-gray-400">
+                activeClasses="py-4 px-2 text-accent-500 border-b border-accent-500"
+                inactiveClasses="py-4 px-2 hover:text-gray-200 text-gray-400">
                 <div class="flex flex-col space-y-4 divide-y-[1px]">
                     <div class="mt-4 flex flex-col space-y-2 px-2">
                         <SettingItem
@@ -468,8 +468,8 @@
             </TabItem>
             <TabItem
                 title="Logs"
-                activeClasses="py-4 px-3 text-accent-500 border-b border-accent-500"
-                inactiveClasses="py-4 px-3 hover:text-gray-200 text-gray-400">
+                activeClasses="py-4 px-2 text-accent-500 border-b border-accent-500"
+                inactiveClasses="py-4 px-2 hover:text-gray-200 text-gray-400">
                 <div class="flex flex-col space-y-4 divide-y-[1px]">
                     <div class="mt-4 flex flex-col space-y-2 px-2">
                         <label class="flex flex-col pb-4 pt-2 font-medium">
@@ -607,9 +607,22 @@
                 </div>
             </TabItem>
             <TabItem
+                title="Buffs"
+                activeClasses="py-4 px-2 text-accent-500 border-b border-accent-500"
+                inactiveClasses="py-4 px-2 hover:text-gray-200 text-gray-400">
+                <div class="flex flex-col space-y-4 divide-y-[1px]">
+                    <div class="mt-4 flex flex-col space-y-2 px-2">
+                        <SettingItem
+                            name="Offensive Buffs Only"
+                            description="Only show Damage, Crit, Atk Speed, and Cooldown buffs. Disabling this will show all buffs."
+                            bind:setting={$settings.buffs.default} />
+                    </div>
+                </div>
+            </TabItem>
+            <TabItem
                 title="Shortcuts"
-                activeClasses="py-4 px-3 text-accent-500 border-b border-accent-500"
-                inactiveClasses="py-4 px-3 hover:text-gray-200 text-gray-400">
+                activeClasses="py-4 px-2 text-accent-500 border-b border-accent-500"
+                inactiveClasses="py-4 px-2 hover:text-gray-200 text-gray-400">
                 <div class="flex flex-col space-y-4 divide-y-[1px]">
                     <div class="mt-4 flex flex-col space-y-2 px-2">
                         <div class="flex justify-between">
@@ -747,8 +760,8 @@
             </TabItem>
             <TabItem
                 title="Class Colors"
-                activeClasses="py-4 px-3 text-accent-500 border-b border-accent-500"
-                inactiveClasses="py-4 px-3 hover:text-gray-200 text-gray-400">
+                activeClasses="py-4 px-2 text-accent-500 border-b border-accent-500"
+                inactiveClasses="py-4 px-2 hover:text-gray-200 text-gray-400">
                 <div class="mt-4 flex flex-col space-y-1 px-2">
                     {#each Object.entries($colors) as classColor (classColor[0])}
                         <div class="flex items-center justify-between">
@@ -780,8 +793,8 @@
             </TabItem>
             <TabItem
                 title="Database"
-                activeClasses="py-4 px-3 text-accent-500 border-b border-accent-500"
-                inactiveClasses="py-4 px-3 hover:text-gray-200 text-gray-400"
+                activeClasses="py-4 px-2 text-accent-500 border-b border-accent-500"
+                inactiveClasses="py-4 px-2 hover:text-gray-200 text-gray-400"
                 on:click={getDbInfo}>
                 <div class="mt-4 flex flex-col space-y-2 px-2">
                     <div class="flex items-center space-x-4">

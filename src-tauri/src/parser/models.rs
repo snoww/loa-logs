@@ -427,6 +427,7 @@ pub struct Settings {
     pub shortcuts: Shortcuts,
     pub meter: MeterTabs,
     pub logs: LogTabs,
+    pub buffs: BuffSettings,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -517,6 +518,12 @@ pub struct BreakdownTabs {
     pub cpm: bool,
     pub hits: bool,
     pub hpm: bool,
+}
+
+#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct BuffSettings {
+    pub default: bool,
 }
 
 #[derive(Default, Debug, Serialize)]

@@ -101,6 +101,9 @@ export const defaultSettings = {
             percentBuffBySup: false,
             percentBrand: false
         }
+    },
+    buffs: {
+        default: true,
     }
 };
 

@@ -5,6 +5,7 @@
     import BuffHeader from "./BuffHeader.svelte";
     import BuffRow from "./BuffRow.svelte";
     import BuffSkillBreakdown from "./BuffSkillBreakdown.svelte";
+    import { settings } from "$lib/utils/settings";
 
     export let tab: MeterTab;
     export let encounterDamageStats: EncounterDamageStats | undefined;
@@ -31,13 +32,13 @@
                 if (focusedPlayer && !Object.hasOwn(focusedPlayer.damageStats.buffedBy, id)) {
                     return;
                 }
-                filterStatusEffects(groupedSynergies, buff, Number(id), focusedPlayer, tab);
+                filterStatusEffects(groupedSynergies, buff, Number(id), focusedPlayer, tab, $settings.buffs.default);
             });
             Object.entries(encounterDamageStats.debuffs).forEach(([id, debuff]) => {
                 if (focusedPlayer && !Object.hasOwn(focusedPlayer.damageStats.debuffedBy, id)) {
                     return;
                 }
-                filterStatusEffects(groupedSynergies, debuff, Number(id), focusedPlayer, tab);
+                filterStatusEffects(groupedSynergies, debuff, Number(id), focusedPlayer, tab, $settings.buffs.default);
             });
             groupedSynergies = new Map([...groupedSynergies.entries()].sort());
         }

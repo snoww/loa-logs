@@ -4,6 +4,7 @@
     import LogBuffHeader from "./LogBuffHeader.svelte";
     import LogBuffRow from "./LogBuffRow.svelte";
     import LogBuffBreakdown from "./LogBuffBreakdown.svelte";
+    import { settings } from "$lib/utils/settings";
 
     export let tab: MeterTab;
     export let encounterDamageStats: EncounterDamageStats;
@@ -13,8 +14,8 @@
 
     if (focusedPlayer && focusedPlayer.entityType === EntityType.ESTHER) {
         focusedPlayer = null;
-        handleRightClick();
     }
+
     players = players.filter((player) => player.entityType === EntityType.PLAYER);
     let percentages = players.map(
         (player) => (player.damageStats.damageDealt / encounterDamageStats.topDamageDealt) * 100
@@ -25,7 +26,7 @@
             continue;
         }
         if (buff.category === "buff") {
-            filterStatusEffects(groupedSynergies, buff, Number(id), focusedPlayer, tab);
+            filterStatusEffects(groupedSynergies, buff, Number(id), focusedPlayer, tab, $settings.buffs.default);
         }
     }
     for (const [id, debuff] of Object.entries(encounterDamageStats.debuffs)) {
@@ -33,7 +34,7 @@
             continue;
         }
         if (debuff.category === "debuff") {
-            filterStatusEffects(groupedSynergies, debuff, Number(id), focusedPlayer, tab);
+            filterStatusEffects(groupedSynergies, debuff, Number(id), focusedPlayer, tab, $settings.buffs.default);
         }
     }
     groupedSynergies = new Map([...groupedSynergies.entries()].sort());

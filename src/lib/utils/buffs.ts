@@ -27,12 +27,13 @@ export function groupedSynergiesAdd(
     key: string,
     id: number,
     buff: StatusEffect,
-    focusedPlayer: Entity | null
+    focusedPlayer: Entity | null,
+    buffFilter = true
 ) {
     // by default, only show dmg, crit, atk spd, cd buffs.
     // show all arcana cards for fun
     if (!focusedPlayer || focusedPlayer.classId !== 202) {
-        if (!defaultBuffFilter(buff.buffType)) {
+        if (buffFilter && !defaultBuffFilter(buff.buffType)) {
             return;
         }
     }
@@ -49,7 +50,8 @@ export function filterStatusEffects(
     buff: StatusEffect,
     id: number,
     focusedPlayer: Entity | null,
-    tab: MeterTab
+    tab: MeterTab,
+    buffFilter = true
 ) {
     // Party synergies
     if (["classskill", "identity", "ability"].includes(buff.buffCategory) && buff.target === StatusEffectTarget.PARTY) {
@@ -57,17 +59,17 @@ export function filterStatusEffects(
             const key = `${classesMap[buff.source.skill?.classId ?? 0]}_${
                 buff.uniqueGroup ? buff.uniqueGroup : buff.source.skill?.name
             }`;
-            groupedSynergiesAdd(groupedSynergies, key, id, buff, focusedPlayer);
+            groupedSynergiesAdd(groupedSynergies, key, id, buff, focusedPlayer, buffFilter);
         }
     }
     // Self synergies
     else if (["pet", "cook", "battleitem", "dropsofether", "bracelet"].includes(buff.buffCategory)) {
         if (tab === MeterTab.SELF_BUFFS && !focusedPlayer) {
-            groupedSynergiesAdd(groupedSynergies, buff.buffCategory, id, buff, focusedPlayer);
+            groupedSynergiesAdd(groupedSynergies, buff.buffCategory, id, buff, focusedPlayer, buffFilter);
         }
     } else if (["set"].includes(buff.buffCategory)) {
         if (tab === MeterTab.SELF_BUFFS && !focusedPlayer) {
-            groupedSynergiesAdd(groupedSynergies, `set_${buff.source.setName}`, id, buff, focusedPlayer);
+            groupedSynergiesAdd(groupedSynergies, `set_${buff.source.setName}`, id, buff, focusedPlayer, buffFilter);
         }
     } else if (["classskill", "identity", "ability"].includes(buff.buffCategory)) {
         // self & other identity, classskill, engravings
@@ -76,16 +78,16 @@ export function filterStatusEffects(
             if (buff.buffCategory === "ability") {
                 key = `${buff.uniqueGroup ? buff.uniqueGroup : id}`;
             } else {
-                if (focusedPlayer.classId !== buff.source.skill?.classId) return; // We hide other classes self buffs (classskill & identity)
+                if (focusedPlayer.classId !== buff.source.skill?.classId) return; // We hide other classes self buffs (class_skill & identity)
                 key = `${classesMap[buff.source.skill?.classId ?? 0]}_${
                     buff.uniqueGroup ? buff.uniqueGroup : buff.source.skill?.name
                 }`;
             }
-            groupedSynergiesAdd(groupedSynergies, key, id, buff, focusedPlayer);
+            groupedSynergiesAdd(groupedSynergies, key, id, buff, focusedPlayer, buffFilter);
         }
     } else if (["etc"].includes(buff.buffCategory)) {
         if (tab === MeterTab.SELF_BUFFS && focusedPlayer) {
-            groupedSynergiesAdd(groupedSynergies, `etc_${buff.source.name}`, id, buff, focusedPlayer);
+            groupedSynergiesAdd(groupedSynergies, `etc_${buff.source.name}`, id, buff, focusedPlayer, buffFilter);
         }
     }
 }
