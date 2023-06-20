@@ -34,7 +34,7 @@
                             filterMenu = !filterMenu;
                         }}>
                         <svg
-                            class="h-5 w-5 fill-gray-400 hover:fill-gray-200"
+                            class="h-5 w-5 {$selectedBosses.size > 0 || $selectedClasses.size > 0 ? "fill-accent-500" : "fill-gray-400 hover:fill-gray-200"}"
                             xmlns="http://www.w3.org/2000/svg"
                             viewBox="0 -960 960 960"
                             ><path
