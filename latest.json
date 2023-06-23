@@ -1,11 +1,11 @@
 {
-    "version": "v1.2.4",
-    "notes": "v1.2.4\n#### NEW FEATURES\n- added better search filters for bosses and classes\n- added setting to show all buffs\n#### BUG FIXES AND IMPROVEMENTS\n- fixed issue where tooltip shows up after enabling clickthrough\nfull patch notes on github\n please report bugs to Snow#7777",
-    "pub_date": "2023-06-20T23:17:28.494Z",
+    "version": "v1.2.5",
+    "notes": "v1.2.4\n- updated meter for ark pass s4 patch\nfull patch notes on github\n please report bugs to Snow#7777",
+    "pub_date": "2023-06-23T01:38:45.136Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.2.4/LOA.Logs_1.2.4_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlcrWVJwd3JGVDhxeHB2VGZXUW9KZ3IxUnBwT0dYYkFLM1k1S2V3VWM0Q2YwNnBaVU9jVFJqcDNHWlJNV09FSWYyOC9IOTZoNzZaeERCUGFrSFlNTGdvPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjg3MzAyNjAyCWZpbGU6TE9BIExvZ3NfMS4yLjRfeDY0LXNldHVwLm5zaXMuemlwCk1FTVZTSTF5Mld1M1hyTjFWSGo2eW51eUR1ZzhtakNNQkNwakdVcnZQYmV5aGJlT2x2QUw5ei95TkgrUVo3UFAvRFZFb05hejVpSHhtMnoyOXF5d0JBPT0K"
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.2.5/LOA.Logs_1.2.5_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlcrTUJza3VrZm9MdklDTmVXaDBUY1Z5VmVxMzVmY1hJZCs0dXI0OW4vTmk0V3dkL0tXcDVKYjN5OEhJU2lRTmtYWVl4VEE0T092LzhlQW9LZHNPeWc4PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjg3NDg0MDkzCWZpbGU6TE9BIExvZ3NfMS4yLjVfeDY0LXNldHVwLm5zaXMuemlwClVTY1NYYlpGUkNTbmY2cGxxS3dFNkRHakM0RXBCM29LOUdZZFowK2NLK3NsQkFjWDU1Z054ci9HOWltU2ZDS0RyQTNOQ2l4WlBaZkZPbWE5NnVwYkJRPT0K"
         }
     }
 }
