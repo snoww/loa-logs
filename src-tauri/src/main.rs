@@ -41,7 +41,7 @@ async fn main() -> Result<()> {
         .append()
         .format(default_format_with_time)
         .rotate(
-            Criterion::Size(1_000_000),
+            Criterion::Size(5_000_000),
             Naming::Timestamps,
             Cleanup::KeepLogFiles(2),
         );

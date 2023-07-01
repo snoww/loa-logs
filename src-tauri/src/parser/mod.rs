@@ -104,8 +104,8 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool) -> Re
             }
             Pkt::DeathNotify => {
                 if let Some(pkt) = parse_pkt(&data, PKTDeathNotify::new, "PKTDeathNotify") {
-                    debug_print("", &pkt);
                     if let Some(entity) = entity_tracker.entities.get(&pkt.target_id) {
+                        debug_print("death", &(&entity.name, entity.entity_type, entity.id));
                         state.on_death(entity);
                     }
                 }
@@ -370,15 +370,23 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool) -> Re
         }
 
         if last_update.elapsed() >= duration || state.raid_end || state.boss_dead_update {
+            let boss_dead = state.boss_dead_update;
             if state.boss_dead_update {
+                debug_print("boss_dead_update", &true);
                 state.boss_dead_update = false;
             }
             let mut clone = state.encounter.clone();
             let window = window.clone();
             tokio::task::spawn(async move {
                 if !clone.current_boss_name.is_empty() {
-                    clone.current_boss = clone.entities.get(&clone.current_boss_name).cloned();
-                    if clone.current_boss.is_none() {
+                    let current_boss = clone.entities.get(&clone.current_boss_name).cloned();
+                    if let Some(mut current_boss) = current_boss {
+                        if boss_dead {
+                            current_boss.is_dead = true;
+                            current_boss.current_hp = 0;
+                        }
+                        clone.current_boss = Some(current_boss);
+                    } else {
                         clone.current_boss_name = String::new();
                     }
                 }

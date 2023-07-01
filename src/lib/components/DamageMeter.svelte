@@ -360,6 +360,11 @@
     <Notification bind:showAlert={bossDeadAlert} text="Boss Dead" width={"12rem"} />
 {/if}
 {#if adminAlert}
-    <Notification bind:showAlert={adminAlert} text="Please restart as Admin" width={"16em"} dismissable={false} isError={true} />
+    <Notification
+        bind:showAlert={adminAlert}
+        text="Please restart as Admin"
+        width={"16em"}
+        dismissable={false}
+        isError={true} />
 {/if}
 <Footer bind:tab />

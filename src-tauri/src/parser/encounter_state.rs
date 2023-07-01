@@ -261,7 +261,7 @@ impl EncounterState {
         {
             return;
         }
-        if entity.entity_type == EntityType::BOSS && entity.name == self.encounter.current_boss_name
+        if entity.entity_type == EntityType::BOSS && entity.name == self.encounter.current_boss_name && !entity.is_dead
         {
             self.boss_dead_update = true;
         }

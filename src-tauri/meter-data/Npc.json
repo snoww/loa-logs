@@ -3853,7 +3853,7 @@
     "type": "monster",
     "pushimmune": true
   },
-  "4221691": { "id": 4221691, "name": "Ground Explosion", "grade": "boss", "type": "monster", "pushimmune": true },
+  "4221691": { "id": 4221691, "name": "Ground Explosion", "grade": "normal", "type": "monster", "pushimmune": true },
   "4221692": {
     "id": 4221692,
     "name": "Obtaining a Sidereal Meter",
