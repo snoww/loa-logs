@@ -1,6 +1,6 @@
 # <img src="https://cdn.discordapp.com/attachments/537415745198489633/1094617120538644622/icon.png" width="30"/> LOA Logs
 
-[![GitHub](https://img.shields.io/github/downloads/snoww/loa-logs/total?style=for-the-badge)](https://github.com/snoww/loa-logs/releases/latest)
+[![GitHub](https://img.shields.io/github/downloads/snoww/loa-logs/total?style=for-the-badge&color=%23ff9800)](https://github.com/snoww/loa-logs/releases/latest)
 
 
 [![GitHub](https://img.shields.io/github/v/release/snoww/loa-logs?style=flat-square)](https://github.com/snoww/loa-logs/releases)
@@ -8,8 +8,7 @@
 
 LOA Logs is a "blazingly fast" open source Lost Ark DPS meter, written in Rust by [Snow](https://github.com/snoww). 
 
-This project is an opinionated flavor of [LOA Details](https://github.com/lost-ark-dev/loa-details) by Herysia and Mathi, but should share very similar user interfaces and settings. The packet sniffing and processing has been completely ported over to Rust, with [`meter-core-rs`](https://github.com/snoww/meter-core-rs). A huge thanks to Herysia and Henjuro for their work on the original [`meter-core`](https://github.com/lost-ark-dev/meter-core). This gives the meter huge performance improvements with low memory usage compared the TypeScript implementation.
-
+This project is an opinionated flavor of [LOA Details](https://github.com/lost-ark-dev/loa-details) by Herysia and Mathi, but should share very similar user interfaces and settings. The packet sniffing and processing has been completely ported over to Rust, with [`meter-core-rs`](https://github.com/snoww/meter-core-rs). The Rust port could not be made without Herysia and Henjuro's work on [`meter-core`](https://github.com/lost-ark-dev/meter-core). If you wish to support their development, you can do so by supporting their [Patreon](https://patreon.com/Herysia).
 
 This project was designed specifically with hell-raiding in mind.
 
@@ -47,6 +46,10 @@ A: You opened the meter too late, and it wasn't able to get your character infor
 Q: There are too many/too few columns in the meter.
 
 A: You can change whatever column you want to show in the settings. TIP: you can `SHIFT+SCROLL` to scroll horizontally.
+
+Q: Are you going to implement rDPS like LOA Details?
+
+A: No, it is not planned whatsoever. If you wish to have rDPS, please use [LOA Details](https://github.com/lost-ark-dev/loa-details), they have spent a lot of effort getting it to work. You can have both tools running at the same time if you wish.
 
 Q: Help, my issue isn't listed here.
 
