@@ -1,3 +1,4 @@
+import { SearchFilter } from "$lib/types";
 import { writable } from "svelte/store";
 
 export const takingScreenshot = writable(false);
@@ -11,5 +12,4 @@ export const backNavStore = writable(false);
 
 export const ifaceChangedStore = writable(false);
 
-export const selectedBosses = writable(new Set());
-export const selectedClasses = writable(new Set());
+export const searchFilter = writable(new SearchFilter());

@@ -287,3 +287,17 @@ export interface EncounterDbInfo {
     totalEncounters: number;
     totalEncountersFiltered: number;
 }
+
+export class SearchFilter {
+    bossFilter: Set<string>;
+    classFilter: Set<string>;
+    minDuration: number;
+    maxDuration: number;
+
+    constructor(minDuration = -1) {
+        this.bossFilter = new Set();
+        this.classFilter = new Set();
+        this.minDuration = minDuration;
+        this.maxDuration = -1;
+    }
+}

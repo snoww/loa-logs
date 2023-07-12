@@ -48,7 +48,7 @@
                     </div>
                 {:else}
                     <div class="text-white">
-                        {dps.toLocaleString("en", {
+                        {dps.toLocaleString(undefined, {
                             minimumFractionDigits: 0,
                             maximumFractionDigits: 0
                         })}

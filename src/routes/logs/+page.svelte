@@ -4,7 +4,7 @@
     import type { EncounterPreview, EncountersOverview } from "$lib/types";
     import { formatDurationFromMs, formatTimestamp } from "$lib/utils/numbers";
     import { classIconCache, settings } from "$lib/utils/settings";
-    import { backNavStore, ifaceChangedStore, pageStore, searchStore, selectedBosses, selectedClasses } from "$lib/utils/stores";
+    import { backNavStore, ifaceChangedStore, pageStore, searchFilter, searchStore } from "$lib/utils/stores";
     import { tooltip } from "$lib/utils/tooltip";
     import { invoke } from "@tauri-apps/api";
     import NProgress from "nprogress";
@@ -27,8 +27,8 @@
                 $pageStore = 1;
             }
         }
-        bosses = Array.from($selectedBosses) as string[];
-        classes = Array.from($selectedClasses) as string[];
+        bosses = Array.from($searchFilter.bossFilter) as string[];
+        classes = Array.from($searchFilter.classFilter) as string[];
         loadEncounters();
     }
 
@@ -36,7 +36,7 @@
         let overview: EncountersOverview = await invoke("load_encounters_preview", {
             page: $pageStore,
             pageSize: rowsPerPage,
-            minDuration: $settings.logs.minEncounterDuration,
+            minDuration: $searchFilter.minDuration !== -1 ? $searchFilter.minDuration : $settings.logs.minEncounterDuration,
             search: $searchStore.substring(0, maxSearchLength),
             bosses: bosses,
             classes: classes

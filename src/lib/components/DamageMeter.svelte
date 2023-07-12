@@ -40,9 +40,11 @@
             let zoneChangeEvent = await listen("zone-change", (event: any) => {
                 // console.log("zone change event")
                 zoneChangeAlert = true;
+                $raidInProgress = false;
                 setTimeout(() => {
                     reset();
                     zoneChangeAlert = false;
+                    $raidInProgress = true;
                 }, 6000);
             });
             let raidStartEvent = await listen("raid-start", (event: any) => {

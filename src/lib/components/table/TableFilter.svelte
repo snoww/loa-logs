@@ -1,7 +1,9 @@
 <script lang="ts">
     import { bossList } from "$lib/constants/bosses";
     import { classList } from "$lib/constants/classes";
-    import { pageStore, searchStore, selectedBosses, selectedClasses } from "$lib/utils/stores";
+    import { SearchFilter } from "$lib/types";
+    import { settings } from "$lib/utils/settings";
+    import { pageStore, searchStore, searchFilter } from "$lib/utils/stores";
     import { tooltip } from "$lib/utils/tooltip";
     import { onMount } from "svelte";
 
@@ -10,7 +12,12 @@
 
     let filterDiv: HTMLDivElement;
 
+
     onMount(() => {
+        if ($searchFilter.minDuration === -1) {
+            $searchFilter.minDuration = $settings.logs.minEncounterDuration;
+        }
+
         const clickOutside = (event: MouseEvent) => {
             if (!filterDiv.contains(event.target as Node)) {
                 filterMenu = false;
@@ -34,7 +41,11 @@
                             filterMenu = !filterMenu;
                         }}>
                         <svg
-                            class="h-5 w-5 {$selectedBosses.size > 0 || $selectedClasses.size > 0 ? "fill-accent-500" : "fill-gray-400 hover:fill-gray-200"}"
+                            class="h-5 w-5 {$searchFilter.bossFilter.size > 0 ||
+                            $searchFilter.classFilter.size > 0 ||
+                            $searchFilter.minDuration !== $settings.logs.minEncounterDuration
+                                ? 'fill-accent-500'
+                                : 'fill-gray-400 hover:fill-gray-200'}"
                             xmlns="http://www.w3.org/2000/svg"
                             viewBox="0 -960 960 960"
                             ><path
@@ -64,12 +75,20 @@
                                         }}>
                                         Classes
                                     </button>
+                                    <button
+                                        class="border-b px-1 {filterTab === 'Duration'
+                                            ? 'border-zinc-200'
+                                            : 'border-zinc-700 text-gray-400'}"
+                                        on:click={() => {
+                                            filterTab = "Duration";
+                                        }}>
+                                        Duration
+                                    </button>
                                 </div>
                                 <button
                                     class="mx-2 rounded bg-zinc-800 px-1 text-xs hover:bg-zinc-600"
                                     on:click={() => {
-                                        selectedBosses.set(new Set());
-                                        selectedClasses.set(new Set());
+                                        searchFilter.set(new SearchFilter($settings.logs.minEncounterDuration));
                                     }}>
                                     Reset All
                                 </button>
@@ -78,46 +97,71 @@
                                 <div class="flex h-36 flex-wrap overflow-auto px-2 py-1 text-xs">
                                     {#each bossList as boss (boss)}
                                         <button
-                                            class="m-1 truncate rounded border border-gray-500 p-1 {$selectedBosses.has(
+                                            class="m-1 truncate rounded border border-gray-500 p-1 {$searchFilter.bossFilter.has(
                                                 boss
                                             )
                                                 ? 'bg-gray-800'
                                                 : ''}"
                                             on:click={() => {
-                                                let newSet = new Set($selectedBosses);
+                                                let newSet = new Set($searchFilter.bossFilter);
                                                 if (newSet.has(boss)) {
                                                     newSet.delete(boss);
                                                 } else {
                                                     newSet.add(boss);
                                                 }
-                                                selectedBosses.set(newSet);
+                                                $searchFilter.bossFilter = newSet;
                                             }}>
                                             {boss}
                                         </button>
                                     {/each}
                                 </div>
-                            {/if}
-                            {#if filterTab === "Classes"}
+                            {:else if filterTab === "Classes"}
                                 <div class="flex h-36 flex-wrap overflow-auto px-2 py-1 text-xs">
                                     {#each classList.sort() as className (className)}
                                         <button
-                                            class="m-1 truncate rounded border border-gray-500 p-1 {$selectedClasses.has(
+                                            class="m-1 truncate rounded border border-gray-500 p-1 {$searchFilter.classFilter.has(
                                                 className
                                             )
                                                 ? 'bg-gray-800'
                                                 : ''}"
                                             on:click={() => {
-                                                let newSet = new Set($selectedClasses);
+                                                let newSet = new Set($searchFilter.classFilter);
                                                 if (newSet.has(className)) {
                                                     newSet.delete(className);
                                                 } else {
                                                     newSet.add(className);
                                                 }
-                                                selectedClasses.set(newSet);
+                                                $searchFilter.classFilter = newSet;
                                             }}>
                                             {className}
                                         </button>
                                     {/each}
+                                </div>
+                            {:else if filterTab === "Duration"}
+                                <div class="flex h-36 flex-wrap overflow-auto px-2 py-1 text-xs">
+                                    <div class="w-96 p-2">
+                                        <div class="flex items-center justify-between">
+                                            <label class="flex items-center font-medium">
+                                                <div class="mr-2">
+                                                    <div class="text-gray-100">Min Duration:</div>
+                                                </div>
+                                                <input
+                                                    type="number"
+                                                    min="0"
+                                                    class="h-6 w-20 rounded-md bg-zinc-700 text-xs text-gray-300"
+                                                    bind:value={$searchFilter.minDuration}
+                                                    placeholder={$settings.logs.minEncounterDuration} />
+                                                <div class="ml-2">seconds</div>
+                                            </label>
+                                            <button
+                                                class="mx-2 h-6 rounded bg-zinc-800 px-1 text-xs hover:bg-zinc-600"
+                                                on:click={() => {
+                                                    $searchFilter.minDuration = $settings.logs.minEncounterDuration;
+                                                }}>
+                                                Reset
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
                             {/if}
                         </div>
@@ -135,8 +179,7 @@
                     on:click={() => {
                         searchStore.set("");
                         pageStore.set(1);
-                        selectedBosses.set(new Set());
-                        selectedClasses.set(new Set());
+                        $searchFilter = new SearchFilter($settings.logs.minEncounterDuration);
                     }}>
                     <svg
                         class="h-5 w-5 fill-gray-400 hover:fill-gray-200"

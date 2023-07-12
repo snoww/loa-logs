@@ -355,6 +355,10 @@
                             description="Show the HP bar for the current boss"
                             bind:setting={$settings.meter.bossHp} />
                         <SettingItem
+                            name="Boss HP Bars"
+                            description="Show boss HP bars (e.g. x65), turn off to show HP percentage for all bosses"
+                            bind:setting={$settings.meter.bossHpBar} />
+                        <SettingItem
                             name="Split Boss HP Bar"
                             description="Add vertical bars to the boss hp at 25%, 50%, and 75% intervals."
                             bind:setting={$settings.meter.splitBossHpBar} />

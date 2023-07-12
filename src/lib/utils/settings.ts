@@ -42,6 +42,7 @@ export const defaultSettings = {
     },
     meter: {
         bossHp: true,
+        bossHpBar: true,
         splitBossHpBar: false,
         abbreviateHeader: true,
         showClassColors: true,

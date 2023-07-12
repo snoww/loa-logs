@@ -93,7 +93,7 @@
                     </div>
                 {:else}
                     <div data-tauri-drag-region>
-                        {dps.toLocaleString("en", {
+                        {dps.toLocaleString(undefined, {
                             minimumFractionDigits: 0,
                             maximumFractionDigits: 0
                         })}
