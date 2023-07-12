@@ -1,11 +1,11 @@
 {
-    "version": "v1.2.6",
-    "notes": "v1.2.6\n#### BUG FIXES AND IMPROVEMENTS\n- meter should no longer crash and become unresponsive on parsing error\n- better logs for debugging purposes\nfull patch notes on github\n please report bugs to Snow#7777",
-    "pub_date": "2023-06-24T22:39:09.379Z",
+    "version": "v1.2.7",
+    "notes": "v1.2.7\n#### NEW FEATURES\n- updated meter for hell clown\n- added sort by min duration\n- added option to always show boss hp %\n#### BUG FIXES AND IMPROVEMENTS\n- reduced min height of meter window (#11)\n- increased log size\nfull patch notes on github\nplease report bugs to Snow#7777",
+    "pub_date": "2023-07-12T20:41:26.330Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.2.6/LOA.Logs_1.2.6_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlZ6dHVEUEtoYVgxcmZmQUxIeFhxdDJ3YzR4UUNFUC9wVUxpcW1kUUttWHFvTmluVEg2UnlhcTVLM0NqV3l0M2paMS84aS9MTld4b0Y1Q2JhVFRQTXdrPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjg3NjQ2MDY2CWZpbGU6TE9BIExvZ3NfMS4yLjZfeDY0LXNldHVwLm5zaXMuemlwCnJpMkNWWUZ0dFhYZXpOTWJqSndqbUNneXp2RTZIbmNac0FpZCs5cnowKytCOHJsWU0zekVRSTFNOUpIRFJxeWd4WkpjRDZWK1VVN1BCODZ0d1c4bkN3PT0K"
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.2.7/LOA.Logs_1.2.7_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmFZUGlVT3ZWVllvUHd5dTRKRndreStjNFBNbzRDL1p5dzhyOWdVcmhUL2VpSVpuM0lhYjBGTGhRQzRmeGpqNGZJNFEza3FtSG1rQWNGOU5MQlhFUVFNPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjg5MTk0MTU3CWZpbGU6TE9BIExvZ3NfMS4yLjdfeDY0LXNldHVwLm5zaXMuemlwCmd0VTNEU2pSVitjVFRDWG4wWnhlTWtaMTlkVmNtWWJWVWVvdmxHalZOOUlaUndzUmp4akJ1RGZIbGRoN1VzQk5BUnVnQlB2VUVyb3ZwUldQRjljcUFBPT0K"
         }
     }
 }
