@@ -261,7 +261,10 @@ impl EncounterState {
         {
             return;
         }
-        if entity.entity_type == EntityType::BOSS && entity.name == self.encounter.current_boss_name && !entity.is_dead
+        if entity.entity_type == EntityType::BOSS
+            && dead_entity.entity_type == EntityType::BOSS
+            && entity.name == self.encounter.current_boss_name
+            && !entity.is_dead
         {
             self.boss_dead_update = true;
         }
@@ -659,6 +662,8 @@ impl EncounterState {
         // update current_boss
         else if target_entity.entity_type == EntityType::BOSS {
             self.encounter.current_boss_name = target_entity.name.clone();
+            target_entity.id = dmg_target_entity.id;
+            target_entity.npc_id = dmg_target_entity.npc_id;
 
             let log = self
                 .boss_hp_log
