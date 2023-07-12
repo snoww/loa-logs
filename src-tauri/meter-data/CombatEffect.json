@@ -22169,6 +22169,34 @@
       }
     ]
   },
+  "422146155": {
+    "id": 422146155,
+    "effects": [
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "hp_less", "actor": "target", "arg": 20 },
+          { "type": "hp_greater", "actor": "target", "arg": 10 }
+        ],
+        "actions": [{ "type": "modify_paralyzation_point", "actor": "target", "args": [-9900, 0, 0, 0, 0, 0] }]
+      }
+    ]
+  },
+  "422146156": {
+    "id": 422146156,
+    "effects": [
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "hp_less", "actor": "target", "arg": 40 },
+          { "type": "hp_greater", "actor": "target", "arg": 30 }
+        ],
+        "actions": [{ "type": "modify_paralyzation_point", "actor": "target", "args": [-9900, 0, 0, 0, 0, 0] }]
+      }
+    ]
+  },
   "260560": {
     "id": 260560,
     "effects": [

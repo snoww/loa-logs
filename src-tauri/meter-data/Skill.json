@@ -3486,7 +3486,15 @@
   "4224511": { "id": 4224511, "name": "환영 아브렐슈드_저지 성공", "desc": "", "classid": 0, "icon": "" },
   "4224512": { "id": 4224512, "name": "환영 아브렐슈드_소멸", "desc": "", "classid": 0, "icon": "" },
   "4224513": { "id": 4224513, "name": "환영 아브렐슈드_중력장 만들기", "desc": "", "classid": 0, "icon": "" },
-  "4224514": { "id": 4224514, "name": "환영 아브렐슈드_큐브 중력장 생성", "desc": "", "classid": 0, "icon": "" },
+  "4224514": { "id": 4224514, "name": "환영 아브렐슈드_큐브 중력장 생성_1", "desc": "", "classid": 0, "icon": "" },
+  "4224515": { "id": 4224515, "name": "환영 아브렐슈드_큐브 중력장 생성_2", "desc": "", "classid": 0, "icon": "" },
+  "4224516": { "id": 4224516, "name": "환영 아브렐슈드_큐브 중력장 생성_3", "desc": "", "classid": 0, "icon": "" },
+  "4224517": { "id": 4224517, "name": "환영 아브렐슈드_큐브 중력장 생성_4", "desc": "", "classid": 0, "icon": "" },
+  "4224518": { "id": 4224518, "name": "환영 아브렐슈드_큐브 중력장 생성_5", "desc": "", "classid": 0, "icon": "" },
+  "4224519": { "id": 4224519, "name": "환영 아브렐슈드_큐브 중력장 생성_6", "desc": "", "classid": 0, "icon": "" },
+  "4224520": { "id": 4224520, "name": "환영 아브렐슈드_큐브 중력장 생성_7", "desc": "", "classid": 0, "icon": "" },
+  "4224521": { "id": 4224521, "name": "환영 아브렐슈드_큐브 중력장 생성_8", "desc": "", "classid": 0, "icon": "" },
+  "4224522": { "id": 4224522, "name": "환영 아브렐슈드_큐브 중력장 생성_중앙", "desc": "", "classid": 0, "icon": "" },
   "4139351": { "id": 4139351, "name": "소형 블랙홀_생성연출", "desc": "", "classid": 0, "icon": "" },
   "4139352": { "id": 4139352, "name": "소형 블랙홀_잡기", "desc": "", "classid": 0, "icon": "" },
   "4139353": { "id": 4139353, "name": "소형 블랙홀_잡기해제", "desc": "", "classid": 0, "icon": "" },
@@ -4584,6 +4592,18 @@
   "4221647": { "id": 4221647, "name": "몽환 5관문_문양발판2", "desc": "", "classid": 0, "icon": "" },
   "4221648": { "id": 4221648, "name": "몽환 5관문_문양발판3", "desc": "", "classid": 0, "icon": "" },
   "4221649": { "id": 4221649, "name": "몽환 5관문_문양발판4", "desc": "", "classid": 0, "icon": "" },
+  "42216461": { "id": 42216461, "name": "헬_몽환 5관문_문양발판1_90도", "desc": "", "classid": 0, "icon": "" },
+  "42216462": { "id": 42216462, "name": "헬_몽환 5관문_문양발판1_180도", "desc": "", "classid": 0, "icon": "" },
+  "42216463": { "id": 42216463, "name": "헬_몽환 5관문_문양발판1_270도", "desc": "", "classid": 0, "icon": "" },
+  "42216471": { "id": 42216471, "name": "헬_몽환 5관문_문양발판2_90도", "desc": "", "classid": 0, "icon": "" },
+  "42216472": { "id": 42216472, "name": "헬_몽환 5관문_문양발판2_180도", "desc": "", "classid": 0, "icon": "" },
+  "42216473": { "id": 42216473, "name": "헬_몽환 5관문_문양발판2_270도", "desc": "", "classid": 0, "icon": "" },
+  "42216481": { "id": 42216481, "name": "헬_몽환 5관문_문양발판3_90도", "desc": "", "classid": 0, "icon": "" },
+  "42216482": { "id": 42216482, "name": "헬_몽환 5관문_문양발판3_180도", "desc": "", "classid": 0, "icon": "" },
+  "42216483": { "id": 42216483, "name": "헬_몽환 5관문_문양발판3_270도", "desc": "", "classid": 0, "icon": "" },
+  "42216491": { "id": 42216491, "name": "헬_몽환 5관문_문양발판4_90도", "desc": "", "classid": 0, "icon": "" },
+  "42216492": { "id": 42216492, "name": "헬_몽환 5관문_문양발판4_180도", "desc": "", "classid": 0, "icon": "" },
+  "42216493": { "id": 42216493, "name": "헬_몽환 5관문_문양발판4_270도", "desc": "", "classid": 0, "icon": "" },
   "4221650": { "id": 4221650, "name": "몽환 5관문_메테오_블랙홀", "desc": "", "classid": 0, "icon": "" },
   "4221699": { "id": 4221699, "name": "몽화 6관문_작은 중력홀3_HP15 이하", "desc": "", "classid": 0, "icon": "" },
   "4221680": { "id": 4221680, "name": "몽환 프롤로그_바위 낙하(사각형)", "desc": "", "classid": 0, "icon": "" },
@@ -4687,6 +4707,76 @@
     "classid": 0,
     "icon": ""
   },
+  "42216060": {
+    "id": 42216060,
+    "name": "몽화 6관문_우주 페이즈_카운터 메테오 생성_6번",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "42216061": {
+    "id": 42216061,
+    "name": "몽화 6관문_우주 페이즈_카운터 메테오 생성_7번",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "42216062": {
+    "id": 42216062,
+    "name": "몽화 6관문_우주 페이즈_카운터 메테오 생성_8번",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "42216063": {
+    "id": 42216063,
+    "name": "몽화 6관문_우주 페이즈_카운터 메테오 생성_9번",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "42216064": {
+    "id": 42216064,
+    "name": "몽화 6관문_우주 페이즈_카운터 메테오 생성_10번",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "42216065": {
+    "id": 42216065,
+    "name": "몽화 6관문_우주 페이즈_카운터 메테오 생성_6번_교차",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "42216066": {
+    "id": 42216066,
+    "name": "몽화 6관문_우주 페이즈_카운터 메테오 생성_7번_교차",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "42216067": {
+    "id": 42216067,
+    "name": "몽화 6관문_우주 페이즈_카운터 메테오 생성_8번_교차",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "42216068": {
+    "id": 42216068,
+    "name": "몽화 6관문_우주 페이즈_카운터 메테오 생성_9번_교차",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "42216069": {
+    "id": 42216069,
+    "name": "몽화 6관문_우주 페이즈_카운터 메테오 생성_10번_교차",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
   "42216020": {
     "id": 42216020,
     "name": "몽화 6관문_우주 페이즈_우주 발사체 생성",
@@ -4743,6 +4833,7 @@
   "42233993": { "id": 42233993, "name": "몽환 중력장_지점 폭발", "desc": "", "classid": 0, "icon": "" },
   "42233994": { "id": 42233994, "name": "몽환 중력장_자살", "desc": "", "classid": 0, "icon": "" },
   "42233995": { "id": 42233995, "name": "몽환 중력장_스폰", "desc": "", "classid": 0, "icon": "" },
+  "42234000": { "id": 42234000, "name": "몽환 중력장_자살_가짜", "desc": "", "classid": 0, "icon": "" },
   "4224501": { "id": 4224501, "name": "거대 환영_당기기", "desc": "", "classid": 0, "icon": "" },
   "4224502": { "id": 4224502, "name": "거대 환영_휘두르기", "desc": "", "classid": 0, "icon": "" },
   "4224503": { "id": 4224503, "name": "거대 환영_카운터 충격", "desc": "", "classid": 0, "icon": "" },
@@ -4845,8 +4936,11 @@
   "4221492": { "id": 4221492, "name": "악몽 아브렐슈드_회전하며 기운 휘두르기", "desc": "", "classid": 0, "icon": "" },
   "4221493": { "id": 4221493, "name": "악몽 아브렐슈드_0줄_시작", "desc": "", "classid": 0, "icon": "" },
   "4221494": { "id": 4221494, "name": "악몽 아브렐슈드_피아노_시작", "desc": "", "classid": 0, "icon": "" },
+  "4221495": { "id": 4221495, "name": "악몽 아브렐슈드_0줄_공간 가르기", "desc": "", "classid": 0, "icon": "" },
+  "4221496": { "id": 4221496, "name": "악몽 아브렐슈드_0줄_마력 발사", "desc": "", "classid": 0, "icon": "" },
   "42214941": { "id": 42214941, "name": "악몽 아브렐슈드_피아노_무력화", "desc": "", "classid": 0, "icon": "" },
   "42214942": { "id": 42214942, "name": "악몽 아브렐슈드_피아노_전멸", "desc": "", "classid": 0, "icon": "" },
+  "42214943": { "id": 42214943, "name": "악몽 아브렐슈드_피아노_큰피해", "desc": "", "classid": 0, "icon": "" },
   "4221497": { "id": 4221497, "name": "악몽 아브렐슈드_데미지 분산", "desc": "", "classid": 0, "icon": "" },
   "4221498": { "id": 4221498, "name": "악몽 아브렐슈드_장판 흩어지기", "desc": "", "classid": 0, "icon": "" },
   "4221499": { "id": 4221499, "name": "악몽 아브렐슈드_공간 양단", "desc": "", "classid": 0, "icon": "" },
@@ -4900,29 +4994,21 @@
   "42214630": { "id": 42214630, "name": "헬_악몽 아브렐슈드_악몽_저지_시작1", "desc": "", "classid": 0, "icon": "" },
   "42214631": { "id": 42214631, "name": "헬_악몽 아브렐슈드_악몽_저지_시작2", "desc": "", "classid": 0, "icon": "" },
   "4222710": { "id": 4222710, "name": "악몽 아브렐슈드_구체_빔 연결", "desc": "", "classid": 0, "icon": "" },
-  "4222711": { "id": 4222711, "name": "악몽 아브렐슈드_구체_낫_PC위치", "desc": "", "classid": 0, "icon": "" },
-  "4222712": { "id": 4222712, "name": "악몽 아브렐슈드_구체_낫_랜덤", "desc": "", "classid": 0, "icon": "" },
-  "4222713": { "id": 4222713, "name": "악몽 아브렐슈드_구체_낫_패턴", "desc": "", "classid": 0, "icon": "" },
-  "4222714": { "id": 4222714, "name": "악몽 아브렐슈드_구체_자폭병 소환", "desc": "", "classid": 0, "icon": "" },
-  "4222715": { "id": 4222715, "name": "악몽 아브렐슈드_구체_사망", "desc": "", "classid": 0, "icon": "" },
+  "4222711": { "id": 4222711, "name": "악몽 아브렐슈드_구체_사망", "desc": "", "classid": 0, "icon": "" },
+  "4222712": { "id": 4222712, "name": "악몽 아브렐슈드_구체_자폭(시간)", "desc": "", "classid": 0, "icon": "" },
+  "4222713": { "id": 4222713, "name": "악몽 아브렐슈드_구체_스폰", "desc": "", "classid": 0, "icon": "" },
   "4223810": { "id": 4223810, "name": "악몽 아브렐슈드_사각_빔 연결", "desc": "", "classid": 0, "icon": "" },
-  "4223811": { "id": 4223811, "name": "악몽 아브렐슈드_사각_낫_PC위치", "desc": "", "classid": 0, "icon": "" },
-  "4223812": { "id": 4223812, "name": "악몽 아브렐슈드_사각_낫_랜덤", "desc": "", "classid": 0, "icon": "" },
-  "4223813": { "id": 4223813, "name": "악몽 아브렐슈드_사각_낫_패턴", "desc": "", "classid": 0, "icon": "" },
-  "4223814": { "id": 4223814, "name": "악몽 아브렐슈드_사각_자폭병 소환", "desc": "", "classid": 0, "icon": "" },
-  "4223815": { "id": 4223815, "name": "악몽 아브렐슈드_사각_사망", "desc": "", "classid": 0, "icon": "" },
+  "4223811": { "id": 4223811, "name": "악몽 아브렐슈드_사각_사망", "desc": "", "classid": 0, "icon": "" },
+  "4223812": { "id": 4223812, "name": "악몽 아브렐슈드_사각_자폭(시간)", "desc": "", "classid": 0, "icon": "" },
+  "4223813": { "id": 4223813, "name": "악몽 아브렐슈드_사각_스폰", "desc": "", "classid": 0, "icon": "" },
   "4223910": { "id": 4223910, "name": "악몽 아브렐슈드_팔각_빔 연결", "desc": "", "classid": 0, "icon": "" },
-  "4223911": { "id": 4223911, "name": "악몽 아브렐슈드_팔각_낫_PC위치", "desc": "", "classid": 0, "icon": "" },
-  "4223912": { "id": 4223912, "name": "악몽 아브렐슈드_팔각_낫_랜덤", "desc": "", "classid": 0, "icon": "" },
-  "4223913": { "id": 4223913, "name": "악몽 아브렐슈드_팔각_낫_패턴", "desc": "", "classid": 0, "icon": "" },
-  "4223914": { "id": 4223914, "name": "악몽 아브렐슈드_팔각_자폭병 소환", "desc": "", "classid": 0, "icon": "" },
-  "4223915": { "id": 4223915, "name": "악몽 아브렐슈드_팔각_사망", "desc": "", "classid": 0, "icon": "" },
+  "4223911": { "id": 4223911, "name": "악몽 아브렐슈드_팔각_사망", "desc": "", "classid": 0, "icon": "" },
+  "4223912": { "id": 4223912, "name": "악몽 아브렐슈드_팔각_자폭(시간)", "desc": "", "classid": 0, "icon": "" },
+  "4223913": { "id": 4223913, "name": "악몽 아브렐슈드_팔각_스폰", "desc": "", "classid": 0, "icon": "" },
   "4223710": { "id": 4223710, "name": "악몽 아브렐슈드_별_빔 연결", "desc": "", "classid": 0, "icon": "" },
-  "4223711": { "id": 4223711, "name": "악몽 아브렐슈드_별_낫_PC위치", "desc": "", "classid": 0, "icon": "" },
-  "4223712": { "id": 4223712, "name": "악몽 아브렐슈드_별_낫_랜덤", "desc": "", "classid": 0, "icon": "" },
-  "4223713": { "id": 4223713, "name": "악몽 아브렐슈드_별_낫_패턴", "desc": "", "classid": 0, "icon": "" },
-  "4223714": { "id": 4223714, "name": "악몽 아브렐슈드_별_자폭병 소환", "desc": "", "classid": 0, "icon": "" },
-  "4223715": { "id": 4223715, "name": "악몽 아브렐슈드_별_사망", "desc": "", "classid": 0, "icon": "" },
+  "4223711": { "id": 4223711, "name": "악몽 아브렐슈드_별_사망", "desc": "", "classid": 0, "icon": "" },
+  "4223712": { "id": 4223712, "name": "악몽 아브렐슈드_별_자폭(시간)", "desc": "", "classid": 0, "icon": "" },
+  "4223713": { "id": 4223713, "name": "악몽 아브렐슈드_별_스폰", "desc": "", "classid": 0, "icon": "" },
   "42214521": { "id": 42214521, "name": "하드_악몽 아브렐슈드_메테오 시작", "desc": "", "classid": 0, "icon": "" },
   "42214531": {
     "id": 42214531,
@@ -36664,7 +36750,7 @@
   "20310": {
     "id": 20310,
     "name": "Akir",
-    "desc": "Summon the Ancient Elemental Akir. Akir pulls nearby foes close to it, inflicting up to <FONT COLOR='#00ccff'><$CALC ((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)*(<$TABLE_SKILLEFFECT ValueF 203101/>/10000)+((<$TABLE_SKILLEFFECT ValueA 203101/> + <$TABLE_SKILLEFFECT ValueB 203101/>)/2))*3/></FONT> [Lightning] Damage, then lets out a fierce roar that inflicts <$MACRO magic @1:203102/> [Lightning] Damage and electrocutes foes for 4s.\nThis skill can be learned after completing the second Awakening Quest.",
+    "desc": "Summon the Ancient Elemental Akir to a target within <FONT COLOR='#ffff99'>14m</FONT>. Akir pulls nearby foes close to it, inflicting up to <FONT COLOR='#00ccff'><$CALC ((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)*(<$TABLE_SKILLEFFECT ValueF 203101/>/10000)+((<$TABLE_SKILLEFFECT ValueA 203101/> + <$TABLE_SKILLEFFECT ValueB 203101/>)/2))*3/></FONT> [Lightning] Damage, then lets out a fierce roar that inflicts <$MACRO magic @1:203102/> [Lightning] Damage and electrocutes foes for 4s.\nThis skill can be learned after completing the second Awakening Quest.",
     "classid": 203,
     "icon": "sm_skill_01_35.png",
     "identitycategory": "summoner_ancient",
@@ -36673,7 +36759,7 @@
   "20311": {
     "id": 20311,
     "name": "Akir",
-    "desc": "Summon the Ancient Elemental Akir. Akir pulls nearby foes close to it, inflicting up to <FONT COLOR='#00ccff'><$CALC ((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)*(<$TABLE_SKILLEFFECT ValueF 203104/>/10000)+((<$TABLE_SKILLEFFECT ValueA 203104/> + <$TABLE_SKILLEFFECT ValueB 203104/>)/2))*3/></FONT> [Lightning] Damage, then lets out a fierce roar that inflicts <$MACRO magic @1:203105/> [Lightning] Damage and electrocutes foes for 4s.\nThis skill can be learned after completing the second Awakening Quest.",
+    "desc": "Summon the Ancient Elemental Akir to a target within <FONT COLOR='#ffff99'>14m</FONT>. Akir pulls nearby foes close to it, inflicting up to <FONT COLOR='#00ccff'><$CALC ((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)*(<$TABLE_SKILLEFFECT ValueF 203104/>/10000)+((<$TABLE_SKILLEFFECT ValueA 203104/> + <$TABLE_SKILLEFFECT ValueB 203104/>)/2))*3/></FONT> [Lightning] Damage, then lets out a fierce roar that inflicts <$MACRO magic @1:203105/> [Lightning] Damage and electrocutes foes for 4s.\nThis skill can be learned after completing the second Awakening Quest.",
     "classid": 203,
     "icon": "sm_skill_01_35.png",
     "identitycategory": "summoner_ancient",
@@ -39400,7 +39486,7 @@
   "18140": {
     "id": 18140,
     "name": "Endure Pain",
-    "desc": "Let out a roar, inflicting <$MACRO Magic @1:181401/> Damage to foes within a <FONT COLOR='#ffff99'>6 meter</FONT> range. Upon using the skill, gain a buff that makes you immune to Pushes and incoming Damage -<FONT COLOR='#99ff99'><$CALC <$TABLE_SKILLBUFF PassiveOptionValue0 181400/>/100/>%</FONT> for <FONT COLOR='#ffff99'><$CALC <$TABLE_SKILLBUFF Duration 181400/>/1000 /></FONT>s. On hit, obtain <FONT COLOR='#ffff99'>3</FONT> Gravity Cores.",
+    "desc": "Let out a roar, inflicting <$MACRO Magic @1:181401/> Damage to foes within a <FONT COLOR='#ffff99'>6-meter</FONT> range. Upon using the skill, gain a buff that makes you immune to Pushes and incoming Damage -<FONT COLOR='#99ff99'><$CALC <$TABLE_SKILLBUFF PassiveOptionValue0 181400/>/100/>%</FONT> for <FONT COLOR='#ffff99'><$CALC <$TABLE_SKILLBUFF Duration 181400/>/1000 /></FONT>s. On hit, obtain <FONT COLOR='#ffff99'>3</FONT> Gravity Cores.",
     "classid": 103,
     "icon": "dt_skill_01_9.png",
     "identitycategory": "destroyer_focus",
@@ -42336,7 +42422,7 @@
   "40890": {
     "id": 40890,
     "name": "Ice Energy",
-    "desc": "Naruni gathers ice energy for <FONT COLOR='#ffff99'><$CALC %1 <$TABLE_SKILLBUFF DURATION 426212 />/1000/></FONT>s and releases it within a <FONT COLOR='#ffff99'>3</FONT> meter radius. After release, become frozen for <FONT COLOR='#ffff99'><$CALC %1 <$TABLE_SKILLBUFF DURATION 426210 />/1000/></FONT>s, which prevents you from being attacked. Targets hit by the ice energy are inflicted with Frost, slowing them.",
+    "desc": "Naruni gathers ice energy for <FONT COLOR='#ffff99'><$CALC %1 <$TABLE_SKILLBUFF DURATION 426212 />/1000/></FONT>s and releases it within a <FONT COLOR='#ffff99'>3</FONT>-meter radius. After release, become frozen for <FONT COLOR='#ffff99'><$CALC %1 <$TABLE_SKILLBUFF DURATION 426210 />/1000/></FONT>s, which prevents you from being attacked. Targets hit by the ice energy are inflicted with Frost, slowing them.",
     "classid": 0,
     "icon": "po_skill_01_78.png"
   },
@@ -43264,7 +43350,7 @@
   "96783": { "id": 96783, "name": "Sprint", "desc": "Quickly sprint forward.", "classid": 0, "icon": "vehicle_62.png" },
   "95800": {
     "id": 95800,
-    "name": "Victory Pose",
+    "name": "VictoryPose",
     "desc": "The beetle threateningly lifts its head, basking in the victory.",
     "classid": 0,
     "icon": "vehicle_63.png"
@@ -43356,7 +43442,7 @@
   },
   "96000": {
     "id": 96000,
-    "name": "Victory Pose",
+    "name": "VictoryPose",
     "desc": "Terpeion lifts its forelegs with its wings spread wide.",
     "classid": 0,
     "icon": "vehicle_63.png"
@@ -43496,7 +43582,7 @@
   },
   "96620": {
     "id": 96620,
-    "name": "Cool Pose",
+    "name": "CoolPose",
     "desc": "The Snowflake Reindeer strikes a pose.",
     "classid": 0,
     "icon": "vehicle_65.png"
@@ -43595,7 +43681,7 @@
   },
   "96704": {
     "id": 96704,
-    "name": "Magick Dance",
+    "name": "MagickDance",
     "desc": "Chamkuri dances with joy.",
     "classid": 0,
     "icon": "vehicle_65.png"
@@ -43886,6 +43972,28 @@
     "desc": "Ride the waves with a surfboard.\nGo under the waves to move even faster.",
     "classid": 0,
     "icon": "vehicle_204.png"
+  },
+  "97720": {
+    "id": 97720,
+    "name": "Battle Maneuver",
+    "desc": "Move quickly with an unknown power.\nCross over different dimensions. ",
+    "classid": 0,
+    "icon": "vehicle_60.png"
+  },
+  "97721": { "id": 97721, "name": "Howl", "desc": "Lift your head and howl. ", "classid": 0, "icon": "vehicle_63.png" },
+  "97722": {
+    "id": 97722,
+    "name": "Battle Stance",
+    "desc": "Maximize the unknown strength to prepare for battle.\nFeel the mysterious power coursing through you. ",
+    "classid": 0,
+    "icon": "vehicle_64.png"
+  },
+  "97723": {
+    "id": 97723,
+    "name": "Fox Orb",
+    "desc": "Use the power of the orb to blast off into the sky. ",
+    "classid": 0,
+    "icon": "vehicle_65.png"
   },
   "97730": {
     "id": 97730,
@@ -44364,7 +44472,7 @@
   },
   "98124": {
     "id": 98124,
-    "name": "Summon a meteor",
+    "name": "Summon a Meteor",
     "desc": "Borrow strength from the Guardians and summon a powerful meteor.",
     "classid": 0,
     "icon": "vehicle_65.png"
@@ -44545,14 +44653,14 @@
   },
   "99000": {
     "id": 99000,
-    "name": "Vern's Spear",
+    "name": "VernsSpear",
     "desc": "Obtain \"Messenger's Demon Spear\" to use the skill. Use the skill again to launch the spear. Hit the Perfect Zone to launch a spear that inflicts even more powerful Damage.",
     "classid": 0,
     "icon": "vehicle_160.png"
   },
   "99001": {
     "id": 99001,
-    "name": "Vern's Shield",
+    "name": "VernsShield",
     "desc": "The cannon opens, spreads, and closes its wings to generate a protective energy. When you're at the energy veil, you and party members receive <FONT COLOR='#99ff99'>50%</FONT> less Damage and become immune to Paralysis and Pushes.",
     "classid": 0,
     "icon": "vehicle_159.png"
