@@ -1,11 +1,11 @@
 {
-    "version": "v1.2.8",
-    "notes": "v1.2.8\n#### HOTFIX\n- fixed bard brand uptime tracking\n- fixed stagger tracking\nv1.2.7\n#### NEW FEATURES\n- updated meter for hell clown\n- added sort by min duration\n- added option to always show boss hp %\n#### BUG FIXES AND IMPROVEMENTS\n- reduced min height of meter window (#11)\n- increased log size\nfull patch notes on github\nplease report bugs to Snow#7777",
-    "pub_date": "2023-07-13T00:49:08.823Z",
+    "version": "v1.2.9",
+    "notes": "v1.2.9\n#### HOTFIX\n- fixed summons not tracking\n- fixed bard brand uptime tracking\n- fixed stagger tracking\nv1.2.7\n#### NEW FEATURES\n- updated meter for hell clown\n- added sort by min duration\n- added option to always show boss hp %\n#### BUG FIXES AND IMPROVEMENTS\n- reduced min height of meter window (#11)\n- increased log size\nfull patch notes on github\nplease report bugs to Snow#7777",
+    "pub_date": "2023-07-13T04:02:14.116Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.2.8/LOA.Logs_1.2.8_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlNSdUlyWEhWcXErd0tUT1l2aDJMcmlrcDZLK2REYVM2YlpVZllRQ1E0ZmdDQXRHYXF0b0NFMy9lL3dUdnl4ZlV5NGVXRExOeFdlTDJoS2dTekZjWVFvPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjg5MjA5MjY3CWZpbGU6TE9BIExvZ3NfMS4yLjhfeDY0LXNldHVwLm5zaXMuemlwCmhuSWxJeGgvZE5jSFVPcGFvcmV5bis3VjBRVlRMOVRUWnU0cS9qNzZHSnZVWi9PdUFqVmhUa2FBU3RadGc1RGIvL2pjOXdFRnVmVExsZ0s0THBuVUJRPT0K"
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.2.9/LOA.Logs_1.2.9_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlJZNzJHdHNXY3YzaklsMzR0VXJTcEtNem9PMXZqWGJaRWRneWdBMTZpb2EzOWJoTVg0RmZQVkhpZzczT3RMSTBYWVNXby8wYXM4ZFgvQ1d4UENOckFnPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjg5MjIwOTYyCWZpbGU6TE9BIExvZ3NfMS4yLjlfeDY0LXNldHVwLm5zaXMuemlwCjFyOWRNZXlPamx1UGw4QTlqRUt3Y2FTTmxiUDMzNm50b2FjSUtIM3YvcUdydzY1VG11Z2lrbVBqeldGZHNaYXdhNFpvWDN5T2ZrM1duMnpQeUFsSkR3PT0K"
         }
     }
 }
