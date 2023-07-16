@@ -2,14 +2,15 @@
     import LogSidebar from "$lib/components/logs/LogSidebar.svelte";
     import TableFilter from "$lib/components/table/TableFilter.svelte";
     import type { EncounterPreview, EncountersOverview } from "$lib/types";
-    import { formatDurationFromMs, formatTimestamp } from "$lib/utils/numbers";
+    import { formatDurationFromMs, formatTimestamp, formatTimestampDate, formatTimestampTime } from "$lib/utils/numbers";
     import { classIconCache, settings } from "$lib/utils/settings";
-    import { backNavStore, ifaceChangedStore, pageStore, searchFilter, searchStore } from "$lib/utils/stores";
+    import { backNavStore, ifaceChangedStore, pageStore, searchFilter, searchStore, selectedEncounters } from "$lib/utils/stores";
     import { tooltip } from "$lib/utils/tooltip";
     import { invoke } from "@tauri-apps/api";
     import NProgress from "nprogress";
     import "nprogress/nprogress.css";
     import Notification from "$lib/components/shared/Notification.svelte";
+    import { writable } from "svelte/store";
 
     let encounters: Array<EncounterPreview> = [];
     let totalEncounters: number = 0;
@@ -18,6 +19,8 @@
 
     let bosses: string[] = [];
     let classes: string[] = [];
+
+    let selectMode = false;
 
     $: {
         if ($searchStore.length > 0) {
@@ -124,7 +127,7 @@
     </div>
     <div class="px-8">
         <div class="py-2">
-            <TableFilter />
+            <TableFilter bind:selectMode refreshFn={refresh}/>
         </div>
         <div
             class="relative overflow-y-auto overflow-x-hidden"
@@ -134,21 +137,44 @@
                 <thead class="sticky top-0 bg-zinc-900 text-xs uppercase">
                     <tr>
                         <th scope="col" class="w-[7%] px-3 py-3"> ID </th>
-                        <th scope="col" class="w-[30%] px-3 py-3"> Encounter </th>
+                        <th scope="col" class="w-[25%] px-3 py-3"> Encounter </th>
                         <th scope="col" class="px-3 py-3"> Classes </th>
-                        <th scope="col" class="w-[12%] px-3 py-3"> Duration </th>
+                        <th scope="col" class="w-[8%] px-3 py-3"> Dur </th>
+                        <th scope="col" class="w-[15%] px-3 py-3 text-right"> Date </th>
                     </tr>
                 </thead>
                 <tbody class="bg-neutral-800 tracking-tight">
                     {#each encounters as encounter (encounter.fightStart)}
-                        <tr class="border-b border-gray-700" id="encounter-{encounter.id}">
+                        <tr class="border-b border-gray-700 hover:bg-zinc-700" id="encounter-{encounter.id}">
                             <td class="px-2 py-3">
+                                {#if selectMode}
+                                <div>
+                                    <input
+                                        type="checkbox"
+                                        class="text-accent-500 h-5 w-5 rounded bg-zinc-700 focus:ring-0 focus:ring-offset-0"
+                                        checked={$selectedEncounters.has(encounter.id)}
+                                        on:change={() => {
+                                            if ($selectedEncounters.has(encounter.id)) {
+                                                selectedEncounters.update((set) => {
+                                                    set.delete(encounter.id);
+                                                    return set;
+                                                });
+                                            } else {
+                                                selectedEncounters.update((set) => {
+                                                    set.add(encounter.id);
+                                                    return set;
+                                                });
+                                            }
+                                        }} />
+                                </div>
+                                {:else}
                                 <div
                                     use:tooltip={{
                                         content: formatTimestamp(encounter.fightStart)
                                     }}>
                                     #{encounter.id}
                                 </div>
+                                {/if}
                             </td>
                             <td class="w-full truncate px-3 py-3 font-bold text-gray-300">
                                 <a
@@ -157,17 +183,21 @@
                                     {encounter.bossName}
                                 </a>
                             </td>
-                            <td class="px-3 py-3">
+                            <td class="px-3 py-3 flex truncate">
                                 {#each encounter.classes as classId, i}
                                     <img
                                         src={$classIconCache[classId]}
                                         alt="class-{classId}"
-                                        class="inline-block h-8 w-8"
+                                        class="ih-8 w-8"
                                         use:tooltip={{ content: encounter.names[i] }} />
                                 {/each}
                             </td>
-                            <td class="px-3 py-3 text-center">
+                            <td class="px-3 py-3">
                                 {formatDurationFromMs(encounter.duration)}
+                            </td>
+                            <td class="px-3 py-3 text-xs text-right">
+                                {formatTimestampDate(encounter.fightStart)}
+                                {formatTimestampTime(encounter.fightStart)}
                             </td>
                         </tr>
                     {:else}

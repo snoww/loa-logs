@@ -81,9 +81,9 @@ export function formatTimestamp(timestampMs: number): string {
     };
     let formattedDate = timestampDate.toLocaleString(undefined, dateFormat);
     if (timestampDate.toDateString() === today.toDateString()) {
-        formattedDate = `Today ${formattedDate}`;
+        formattedDate = `Today @ ${formattedDate}`;
     } else if (timestampDate.toDateString() === yesterday.toDateString()) {
-        formattedDate = `Yesterday ${formattedDate}`;
+        formattedDate = `Yesterday @ ${formattedDate}`;
     } else {
         formattedDate = timestampDate
             .toLocaleString(undefined, {
@@ -96,6 +96,20 @@ export function formatTimestamp(timestampMs: number): string {
             .replace(",", " ");
     }
     return formattedDate;
+}
+
+export function formatTimestampDate(timestampMs: number): string {
+    return new Date(timestampMs).toLocaleString(undefined, {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+    });
+}
+export function formatTimestampTime(timestampMs: number): string {
+    return new Date(timestampMs).toLocaleString(undefined, {
+        hour: "numeric",
+        minute: "2-digit"
+    });
 }
 
 export function fillMissingElapsedTimes(data: IdentityLogType): IdentityLogType {

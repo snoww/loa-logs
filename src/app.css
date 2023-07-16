@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 .tippy-box[data-theme="buff"] {
-    @apply inline-block rounded-lg px-2 py-1 text-xs font-medium shadow-sm;
+    @apply inline-block rounded-lg px-2 py-1 text-xs font-medium shadow-lg;
     @apply bg-zinc-900 text-gray-200;
 }
 
@@ -12,7 +12,7 @@
 }
 
 .tippy-box[data-theme="menu"] {
-    @apply inline-block rounded-lg px-2 py-1 text-sm font-medium shadow-md;
+    @apply inline-block rounded-lg px-2 py-1 text-sm font-medium shadow-lg;
     @apply bg-zinc-700 text-gray-200;
 }
 

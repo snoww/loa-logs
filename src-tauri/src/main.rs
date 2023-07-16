@@ -215,6 +215,7 @@ async fn main() -> Result<()> {
             get_encounter_count,
             open_most_recent_encounter,
             delete_encounter,
+            delete_encounters,
             toggle_meter_window,
             open_url,
             save_settings,
@@ -660,7 +661,36 @@ fn delete_encounter(window: tauri::Window, id: String) {
         )
         .unwrap();
 
+    info!("deleting encounter: {}", id);
+
     stmt.execute(params![id]).unwrap();
+}
+
+#[tauri::command]
+fn delete_encounters(window: tauri::Window, ids: Vec<i32>) {
+    let path = window
+        .app_handle()
+        .path_resolver()
+        .resource_dir()
+        .expect("could not get resource dir");
+    let conn = get_db_connection(&path).expect("could not get db connection");
+    conn.execute("PRAGMA foreign_keys = ON;", params![])
+        .unwrap();
+
+    let placeholders: Vec<String> = ids.iter().map(|_| "?".to_string()).collect();
+    let placeholders_str = placeholders.join(",");
+    
+    let sql = format!(
+        "DELETE FROM encounter WHERE id IN ({})",
+        placeholders_str
+    );
+    let mut stmt = conn
+        .prepare_cached(&sql)
+        .unwrap();
+
+    info!("deleting encounters: {:?}", ids);
+
+    stmt.execute(params_from_iter(ids)).unwrap();
 }
 
 #[tauri::command]

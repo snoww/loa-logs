@@ -13,3 +13,5 @@ export const backNavStore = writable(false);
 export const ifaceChangedStore = writable(false);
 
 export const searchFilter = writable(new SearchFilter());
+
+export const selectedEncounters = writable(new Set<number>());
