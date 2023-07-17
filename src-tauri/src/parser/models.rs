@@ -422,6 +422,17 @@ pub struct EncountersOverview {
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", default)]
+pub struct SearchFilter {
+    pub bosses: Vec<String>,
+    pub classes: Vec<String>,
+    pub min_duration: i32,
+    pub max_duration: i32,
+    pub cleared: bool,
+    pub favorites: bool,
+}
+
+#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase", default)]
 pub struct Settings {
     pub general: GeneralSettings,
     pub shortcuts: Shortcuts,

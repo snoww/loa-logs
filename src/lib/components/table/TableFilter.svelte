@@ -64,9 +64,10 @@
                             filterMenu = !filterMenu;
                         }}>
                         <svg
-                            class="h-5 w-5 {$searchFilter.bossFilter.size > 0 ||
-                            $searchFilter.classFilter.size > 0 ||
-                            $searchFilter.minDuration !== $settings.logs.minEncounterDuration
+                            class="h-5 w-5 {$searchFilter.bosses.size > 0 ||
+                            $searchFilter.classes.size > 0 ||
+                            $searchFilter.minDuration !== $settings.logs.minEncounterDuration ||
+                            $searchFilter.cleared
                                 ? 'fill-accent-500'
                                 : 'fill-gray-400 hover:fill-gray-200'}"
                             xmlns="http://www.w3.org/2000/svg"
@@ -117,44 +118,67 @@
                                 </button>
                             </div>
                             {#if filterTab === "Encounters"}
-                                <div class="flex h-36 flex-wrap overflow-auto px-2 py-1 text-xs">
-                                    {#each bossList as boss (boss)}
-                                        <button
-                                            class="m-1 truncate rounded border border-gray-500 p-1 {$searchFilter.bossFilter.has(
-                                                boss
-                                            )
-                                                ? 'bg-gray-800'
-                                                : ''}"
-                                            on:click={() => {
-                                                let newSet = new Set($searchFilter.bossFilter);
-                                                if (newSet.has(boss)) {
-                                                    newSet.delete(boss);
-                                                } else {
-                                                    newSet.add(boss);
-                                                }
-                                                $searchFilter.bossFilter = newSet;
-                                            }}>
-                                            {boss}
-                                        </button>
-                                    {/each}
+                                <div class="h-36 overflow-auto px-2 py-1 text-xs">
+                                    <div class="flex items-center px-2 py-1 text-xs space-x-4">
+                                        <label class="flex items-center">
+                                            <div class="mr-1 text-gray-100">
+                                                Raid Cleared
+                                            </div>
+                                            <input
+                                                type="checkbox"
+                                                bind:checked={$searchFilter.cleared}
+                                                class="text-accent-500 h-4 w-4 rounded bg-zinc-700 focus:ring-0 focus:ring-offset-0" />
+                                        </label>
+                                        <!-- TODO -->
+                                        <!-- <label class="flex items-center">
+                                            <div class="mr-1 text-gray-100">
+                                                Favorites
+                                            </div>
+                                            <input
+                                                type="checkbox"
+                                                bind:checked={$searchFilter.favorites}
+                                                class="text-accent-500 h-4 w-4 rounded bg-zinc-700 focus:ring-0 focus:ring-offset-0" />
+                                        </label> -->
+                                    </div>
+                                    <div class="flex flex-wrap ">
+                                        {#each bossList as boss (boss)}
+                                            <button
+                                                class="m-1 truncate rounded border border-gray-500 p-1 {$searchFilter.bosses.has(
+                                                    boss
+                                                )
+                                                    ? 'bg-gray-800'
+                                                    : ''}"
+                                                on:click={() => {
+                                                    let newSet = new Set($searchFilter.bosses);
+                                                    if (newSet.has(boss)) {
+                                                        newSet.delete(boss);
+                                                    } else {
+                                                        newSet.add(boss);
+                                                    }
+                                                    $searchFilter.bosses = newSet;
+                                                }}>
+                                                {boss}
+                                            </button>
+                                        {/each}
+                                    </div>
                                 </div>
                             {:else if filterTab === "Classes"}
                                 <div class="flex h-36 flex-wrap overflow-auto px-2 py-1 text-xs">
                                     {#each classList.sort() as className (className)}
                                         <button
-                                            class="m-1 truncate rounded border border-gray-500 p-1 {$searchFilter.classFilter.has(
+                                            class="m-1 truncate rounded border border-gray-500 p-1 {$searchFilter.classes.has(
                                                 className
                                             )
                                                 ? 'bg-gray-800'
                                                 : ''}"
                                             on:click={() => {
-                                                let newSet = new Set($searchFilter.classFilter);
+                                                let newSet = new Set($searchFilter.classes);
                                                 if (newSet.has(className)) {
                                                     newSet.delete(className);
                                                 } else {
                                                     newSet.add(className);
                                                 }
-                                                $searchFilter.classFilter = newSet;
+                                                $searchFilter.classes = newSet;
                                             }}>
                                             {className}
                                         </button>

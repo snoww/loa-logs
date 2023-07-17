@@ -340,10 +340,8 @@ fn load_encounters_preview(
     window: tauri::Window,
     page: i32,
     page_size: i32,
-    min_duration: i32,
     search: String,
-    bosses: Vec<String>,
-    classes: Vec<String>,
+    filter: SearchFilter
 ) -> EncountersOverview {
     let path = window
         .app_handle()
@@ -352,7 +350,7 @@ fn load_encounters_preview(
         .expect("could not get resource dir");
     let conn = get_db_connection(&path).expect("could not get db connection");
 
-    let min_duration = min_duration * 1000;
+    let min_duration = filter.min_duration * 1000;
 
     let mut params = vec![
         min_duration.to_string(),
@@ -361,18 +359,24 @@ fn load_encounters_preview(
         search,
     ];
 
-    let boss_filter = if !bosses.is_empty() {
-        let placeholders: Vec<String> = bosses.iter().map(|_| "?".to_string()).collect();
-        bosses.into_iter().for_each(|boss| params.push(boss));
+    let boss_filter = if !filter.bosses.is_empty() {
+        let placeholders: Vec<String> = filter.bosses.iter().map(|_| "?".to_string()).collect();
+        filter.bosses.into_iter().for_each(|boss| params.push(boss));
         format!("AND (current_boss IN ({}))", placeholders.join(","))
     } else {
         "".to_string()
     };
 
-    let class_filter = if !classes.is_empty() {
-        let placeholders: Vec<String> = classes.iter().map(|_| "?".to_string()).collect();
-        classes.into_iter().for_each(|class| params.push(class));
+    let class_filter = if !filter.classes.is_empty() {
+        let placeholders: Vec<String> = filter.classes.iter().map(|_| "?".to_string()).collect();
+        filter.classes.into_iter().for_each(|class| params.push(class));
         format!("AND (class IN ({}))", placeholders.join(","))
+    } else {
+        "".to_string()
+    };
+
+    let raid_clear_filter = if filter.cleared {
+        "AND json_extract(misc, '$.raidClear') IS NOT NULL".to_string()
     } else {
         "".to_string()
     };
@@ -396,11 +400,11 @@ fn load_encounters_preview(
     FROM encounter e
     JOIN entity ent ON e.id = ent.encounter_id
     WHERE e.duration > ? AND ((current_boss LIKE '%' || ? || '%') OR (ent.class LIKE '%' || ? || '%') OR (ent.name LIKE '%' || ? || '%'))
-        {} {}
+        {} {} {}
     GROUP BY encounter_id
     ORDER BY e.fight_start DESC
     LIMIT ?
-    OFFSET ?", boss_filter, class_filter);
+    OFFSET ?", boss_filter, class_filter, raid_clear_filter);
 
     let mut stmt = conn.prepare_cached(&query).unwrap();
 
@@ -443,9 +447,9 @@ fn load_encounters_preview(
         FROM encounter e
         JOIN entity ent ON e.id = ent.encounter_id
         WHERE duration > ? AND ((current_boss LIKE '%' || ? || '%') OR (ent.class LIKE '%' || ? || '%') OR (ent.name LIKE '%' || ? || '%'))
-            {} {}
+            {} {} {}
         GROUP BY encounter_id)
-        ", boss_filter, class_filter);
+        ", boss_filter, class_filter, raid_clear_filter);
 
     let count: i32 = conn
         .query_row_and_then(&query, params_from_iter(count_params), |row| row.get(0))

@@ -289,15 +289,19 @@ export interface EncounterDbInfo {
 }
 
 export class SearchFilter {
-    bossFilter: Set<string>;
-    classFilter: Set<string>;
+    bosses: Set<string>;
+    classes: Set<string>;
     minDuration: number;
     maxDuration: number;
+    favorites: boolean;
+    cleared: boolean;
 
     constructor(minDuration = -1) {
-        this.bossFilter = new Set();
-        this.classFilter = new Set();
+        this.bosses = new Set();
+        this.classes = new Set();
         this.minDuration = minDuration;
         this.maxDuration = -1;
+        this.favorites = false;
+        this.cleared = false;
     }
 }

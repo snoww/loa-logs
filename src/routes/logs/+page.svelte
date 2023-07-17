@@ -1,7 +1,7 @@
 <script lang="ts">
     import LogSidebar from "$lib/components/logs/LogSidebar.svelte";
     import TableFilter from "$lib/components/table/TableFilter.svelte";
-    import type { EncounterPreview, EncountersOverview } from "$lib/types";
+    import type { EncounterPreview, EncountersOverview, SearchFilter } from "$lib/types";
     import { formatDurationFromMs, formatTimestamp, formatTimestampDate, formatTimestampTime } from "$lib/utils/numbers";
     import { classIconCache, settings } from "$lib/utils/settings";
     import { backNavStore, ifaceChangedStore, pageStore, searchFilter, searchStore, selectedEncounters } from "$lib/utils/stores";
@@ -10,7 +10,6 @@
     import NProgress from "nprogress";
     import "nprogress/nprogress.css";
     import Notification from "$lib/components/shared/Notification.svelte";
-    import { writable } from "svelte/store";
 
     let encounters: Array<EncounterPreview> = [];
     let totalEncounters: number = 0;
@@ -30,8 +29,8 @@
                 $pageStore = 1;
             }
         }
-        bosses = Array.from($searchFilter.bossFilter) as string[];
-        classes = Array.from($searchFilter.classFilter) as string[];
+        bosses = Array.from($searchFilter.bosses) as string[];
+        classes = Array.from($searchFilter.classes) as string[];
         loadEncounters();
     }
 
@@ -39,10 +38,14 @@
         let overview: EncountersOverview = await invoke("load_encounters_preview", {
             page: $pageStore,
             pageSize: rowsPerPage,
-            minDuration: $searchFilter.minDuration !== -1 ? $searchFilter.minDuration : $settings.logs.minEncounterDuration,
             search: $searchStore.substring(0, maxSearchLength),
-            bosses: bosses,
-            classes: classes
+            filter: {
+                minDuration: $searchFilter.minDuration !== -1 ? $searchFilter.minDuration : $settings.logs.minEncounterDuration,
+                bosses: Array.from($searchFilter.bosses),
+                classes: Array.from($searchFilter.classes),
+                cleared: $searchFilter.cleared,
+                favorites: $searchFilter.favorites,
+            }
         });
         encounters = overview.encounters;
         totalEncounters = overview.totalEncounters;
