@@ -1,11 +1,11 @@
 {
-    "version": "v1.2.9",
-    "notes": "v1.2.9\n#### HOTFIX\n- fixed summons not tracking\n- fixed bard brand uptime tracking\n- fixed stagger tracking\nv1.2.7\n#### NEW FEATURES\n- updated meter for hell clown\n- added sort by min duration\n- added option to always show boss hp %\n#### BUG FIXES AND IMPROVEMENTS\n- reduced min height of meter window (#11)\n- increased log size\nfull patch notes on github\nplease report bugs to Snow#7777",
-    "pub_date": "2023-07-13T04:02:14.116Z",
+    "version": "v1.2.10",
+    "notes": "v1.2.10\n#### NEW FEATURES\n- added date column in encounter list\n- added feature to bulk select and delete encounters\n- added feature to filter by cleared raids\nfull patch notes on github\nplease report bugs to snow.w",
+    "pub_date": "2023-07-17T00:44:12.818Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.2.9/LOA.Logs_1.2.9_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlJZNzJHdHNXY3YzaklsMzR0VXJTcEtNem9PMXZqWGJaRWRneWdBMTZpb2EzOWJoTVg0RmZQVkhpZzczT3RMSTBYWVNXby8wYXM4ZFgvQ1d4UENOckFnPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjg5MjIwOTYyCWZpbGU6TE9BIExvZ3NfMS4yLjlfeDY0LXNldHVwLm5zaXMuemlwCjFyOWRNZXlPamx1UGw4QTlqRUt3Y2FTTmxiUDMzNm50b2FjSUtIM3YvcUdydzY1VG11Z2lrbVBqeldGZHNaYXdhNFpvWDN5T2ZrM1duMnpQeUFsSkR3PT0K"
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.2.10/LOA.Logs_1.2.10_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmZ6UUZTQkNSdDg4d2o3VGRHSHJQRlZScUtueUFKdXFBb0NuLzhsNXcrelk5b3BxRk5XZ3hrS0doa0l6Q1EzWm5adE15L3padlV4c0NaWDBaTmd5SXdBPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjg5NTU0NDEwCWZpbGU6TE9BIExvZ3NfMS4yLjEwX3g2NC1zZXR1cC5uc2lzLnppcAp4YTJERVloRFI2djJOR2hBYnVhSi9NTW5mQy9wTjZvWHZkSDY3RzFtNE1kaUl0NnBZL0xyZ3pmd2Y3SVJlVm5TYTVUR2NUNEpjWlIwVkFMeEhINVpBQT09Cg=="
         }
     }
 }
