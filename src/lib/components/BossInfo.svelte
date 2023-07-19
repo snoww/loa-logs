@@ -62,6 +62,8 @@
             if (bossHp !== boss.maxHp) {
                 let bossHpPerBar = boss.maxHp / bossHPBars;
                 tweenBossHpBar.set(((bossHp % bossHpPerBar) / bossHpPerBar) * 100);
+            } else {
+                tweenBossHpBar.set(100);
             }
         } else if (!boss.isDead) {
             tweenBossHpBar.set(bossCurrentPercentage);
