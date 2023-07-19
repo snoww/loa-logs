@@ -1,11 +1,11 @@
 {
-    "version": "v1.2.11",
-    "notes": "v1.2.11\n#### NEW FEATURES\n- added screenshot button to live meter (note: only captures the size of the window)\nfull patch notes on github\nplease report bugs to snow.w",
-    "pub_date": "2023-07-19T05:44:42.889Z",
+    "version": "v1.2.12",
+    "notes": "v1.2.12 Hotfix\n- fix meter not resetting automatically\nv1.2.11\n#### NEW FEATURES\n- added screenshot button to live meter (note: only captures the size of the window)\nfull patch notes on github\nplease report bugs to snow.w",
+    "pub_date": "2023-07-19T17:35:41.939Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.2.11/LOA.Logs_1.2.11_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlloQ29uYzZIbEswZUVoN3dnUDFaekMzS1RIbG1xSm5FZ3dpZGxqR1BQMFdGU3dqODBmdEdNQTBaNlB2dTRnZWN4YkNoL1pPTnVWQlBPcmkwVUZTTWdNPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjg5NzQ1MDIyCWZpbGU6TE9BIExvZ3NfMS4yLjExX3g2NC1zZXR1cC5uc2lzLnppcAp0S2xidDZiMktmZHNkTkNQbGt0bUwveEd2MU13OFNJV3c3d2hLL0x6TERvMDVYanlxSWhxNHkyTGp5Z1RrMng2ZU1RaytvSkRWSFlEQTh0UzhGbXFCQT09Cg=="
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.2.12/LOA.Logs_1.2.12_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlZtU3lWMWgyM2czcTZSUTZtdTVGcXUrczRWVnM4MmZZQVZJRHg1UzhnckZ1UUVXam9QRU5EcDd3M0NtSFk3RXo4TGFxZ0xUMEF2dFIrMVYreDl5YUFjPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjg5Nzg4MDQ3CWZpbGU6TE9BIExvZ3NfMS4yLjEyX3g2NC1zZXR1cC5uc2lzLnppcApGcUs4MlB5ZE45bmRYYzduanNGamRJRGFQeDlQaXpoRzZmQ21XRVZud3RzQUpPKzU4ZU5rbjBxb2VGS0JWQU1WcTdoQ1hZb01jQmhBaVhpT2VrSkhBQT09Cg=="
         }
     }
 }

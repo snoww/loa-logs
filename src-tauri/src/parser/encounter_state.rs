@@ -174,7 +174,7 @@ impl EncounterState {
             .emit("phase-transition", phase_code)
             .expect("failed to emit phase-transition");
 
-        if phase_code == 0 || phase_code == 2 {
+        if phase_code == 0 || phase_code == 2 || phase_code == 3 {
             if !self.encounter.current_boss_name.is_empty() {
                 self.save_to_db();
                 self.saved = true;
