@@ -333,7 +333,11 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool) -> Re
                 }
             }
             Pkt::TriggerBossBattleStatus => {
-                state.on_phase_transition(2);
+                if state.encounter.fight_start == 0 || state.encounter.current_boss.is_none() {
+                    state.on_phase_transition(3);
+                } else {
+                    state.on_phase_transition(2);
+                }
                 debug_print!("phase", &2);
             }
             Pkt::TriggerStartNotify => {
