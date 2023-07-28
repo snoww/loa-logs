@@ -1,7 +1,7 @@
 {
     "version": "v1.2.13",
     "notes": "v1.2.13\n#### BUG FIXES\n- fixed boss hp bar not working on first pull of clown\n- fixed party buffs not working in 8 man content\nfull patch notes on github\nplease report bugs to snow.w",
-    "pub_date": "2023-07-19T17:35:41.939Z",
+    "pub_date": "2023-07-28T06:46:09.715Z",
     "platforms": {
         "windows-x86_64": {
             "url": "https://github.com/snoww/loa-logs/releases/download/v1.2.13/LOA.Logs_1.2.13_x64-setup.nsis.zip",
