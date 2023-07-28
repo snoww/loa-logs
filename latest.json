@@ -1,6 +1,6 @@
 {
     "version": "v1.2.13",
-    "notes": "v1.2.13\n#### BUG FIXES\n- fixed boss hp bar not working on first pull of clown\n- fixed party buffs not working in 8 man content\nfull patch notes on github\nplease report bugs to snow.w",
+    "notes": "v1.2.13\n#### BUG FIXES\n- fixed boss hp bar not updating on first pull of clown\n- fixed party buffs not working properly in 8 man raids\nfull patch notes on github\nplease report bugs to snow.w",
     "pub_date": "2023-07-28T06:46:09.715Z",
     "platforms": {
         "windows-x86_64": {
