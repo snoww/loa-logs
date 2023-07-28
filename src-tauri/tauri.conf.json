@@ -8,7 +8,7 @@
   },
   "package": {
     "productName": "LOA Logs",
-    "version": "1.2.12"
+    "version": "1.2.13"
   },
   "tauri": {
     "allowlist": {
@@ -74,7 +74,7 @@
         "providerShortName": null,
         "signingIdentity": null
       },
-      "shortDescription": "LOA Logs - DPS Meter for Lost Ark",
+      "shortDescription": "LOA Logs",
       "targets": [
         "nsis",
         "updater"
