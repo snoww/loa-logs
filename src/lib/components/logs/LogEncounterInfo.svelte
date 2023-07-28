@@ -16,9 +16,15 @@
             {bossName}
         </div>
         {#await getVersion() then version}
+            {#if !$settings.general.hideLogo}
             <div class="">
                 LOA Logs v{version}
             </div>
+            {:else}
+            <div class="font-mono text-xs">
+                v{version}
+            </div>
+            {/if}
         {/await}
     </div>
 {/if}
@@ -56,7 +62,7 @@
                 {/if}
             </div>
         </div>
-        {#if $takingScreenshot}
+        {#if $takingScreenshot && !$settings.general.hideLogo}
             <div class="font-mono text-xs">
                 {"github.com/snoww/loa-logs"}
             </div>
