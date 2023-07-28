@@ -402,7 +402,7 @@
         <Notification bind:showAlert={phaseTransitionAlert} text="Wipe/Phase Clear" width={"13rem"} />
     {/if}
     {#if phaseStartAlert}
-        <Notification bind:showAlert={phaseStartAlert} text="Phase Start" width={"13rem"} />
+        <Notification bind:showAlert={phaseStartAlert} text="Raid Start" width={"12rem"} />
     {/if}
     {#if bossDeadAlert}
         <Notification bind:showAlert={bossDeadAlert} text="Boss Dead" width={"12rem"} />

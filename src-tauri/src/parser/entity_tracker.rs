@@ -193,7 +193,7 @@ impl EntityTracker {
         };
         self.status_tracker
             .borrow_mut()
-            .new_pc(&pkt, local_character_id);
+            .new_pc(pkt, local_character_id);
         entity
     }
 

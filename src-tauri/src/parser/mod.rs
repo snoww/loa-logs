@@ -90,7 +90,7 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool) -> Re
 
     while let Ok((op, data)) = rx.recv() {
         if reset.load(Ordering::Relaxed) {
-            state.soft_reset();
+            state.soft_reset(true);
             reset.store(false, Ordering::Relaxed);
         }
         if pause.load(Ordering::Relaxed) {
@@ -333,12 +333,13 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool) -> Re
                 }
             }
             Pkt::TriggerBossBattleStatus => {
-                if state.encounter.fight_start == 0 || state.encounter.current_boss.is_none() {
+                if state.encounter.fight_start == 0 || state.encounter.current_boss_name.is_empty() {
                     state.on_phase_transition(3);
+                    debug_print!("phase", &3);
                 } else {
                     state.on_phase_transition(2);
+                    debug_print!("phase", &2);
                 }
-                debug_print!("phase", &2);
             }
             Pkt::TriggerStartNotify => {
                 if let Some(pkt) = parse_pkt(&data, PKTTriggerStartNotify::new, "PKTTriggerStartNotify") {
@@ -411,7 +412,7 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool) -> Re
         }
 
         if state.raid_end {
-            state.soft_reset();
+            state.soft_reset(true);
             state.raid_end = false;
             state.saved = false;
         }

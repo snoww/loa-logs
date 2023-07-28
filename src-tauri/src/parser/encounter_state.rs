@@ -57,7 +57,7 @@ impl EncounterState {
     }
 
     // keep all player entities, reset all stats
-    pub fn soft_reset(&mut self) {
+    pub fn soft_reset(&mut self, keep_bosses: bool) {
         let clone = self.encounter.clone();
 
         self.encounter.fight_start = 0;
@@ -77,13 +77,14 @@ impl EncounterState {
         for (key, entity) in clone
             .entities
             .into_iter()
-            .filter(|(_, e)| e.entity_type == EntityType::PLAYER)
+            .filter(|(_, e)| e.entity_type == EntityType::PLAYER || (keep_bosses && e.entity_type == EntityType::BOSS))
         {
             self.encounter.entities.insert(
                 key,
                 EncounterEntity {
                     name: entity.name,
                     id: entity.id,
+                    npc_id: entity.npc_id,
                     class: entity.class,
                     class_id: entity.class_id,
                     entity_type: entity.entity_type,
@@ -165,8 +166,7 @@ impl EncounterState {
             .emit("zone-change", "")
             .expect("failed to emit zone-change");
 
-        self.encounter.current_boss_name = "".to_string();
-        self.soft_reset();
+        self.soft_reset(false);
     }
 
     pub fn on_phase_transition(&mut self, phase_code: i32) {

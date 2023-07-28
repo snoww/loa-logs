@@ -30,7 +30,7 @@ impl StatusTracker {
         }
     }
 
-    pub fn new_pc(&mut self, pkt: &PKTNewPC, local_character_id: u64) {
+    pub fn new_pc(&mut self, pkt: PKTNewPC, local_character_id: u64) {
         let use_party_status_effects =
             self.should_use_party_status_effect(pkt.pc_struct.character_id, local_character_id);
         if use_party_status_effects {
@@ -43,9 +43,9 @@ impl StatusTracker {
         } else {
             (pkt.pc_struct.player_id, StatusEffectTargetType::Local)
         };
-        for sed in pkt.pc_struct.status_effect_datas.iter() {
+        for sed in pkt.pc_struct.status_effect_datas.into_iter() {
             let source_id = sed.source_id;
-            let status_effect = build_status_effect(sed.clone(), target_id, source_id, target_type);
+            let status_effect = build_status_effect(sed, target_id, source_id, target_type);
             self.register_status_effect(status_effect);
         }
     }
@@ -60,7 +60,7 @@ impl StatusTracker {
 
         let ser = registry.get_mut(&se.target_id).unwrap();
         add_status_effect_timeout(&mut se);
-        ser.insert(se.instance_id, se.clone());
+        ser.insert(se.instance_id, se);
     }
 
     pub fn remove_local_object(&mut self, object_id: u64) {
@@ -226,8 +226,7 @@ impl StatusTracker {
             Some(ser) => ser,
             None => return Vec::new(),
         };
-        let timestamp = Utc::now();
-        ser.retain(|_, se| se.expire_at.map_or(true, |expire_at| expire_at > timestamp));
+        ser.retain(|_, se| se.expire_at.map_or(true, |expire_at| expire_at > Utc::now()));
         ser.values().cloned().collect()
     }
 
