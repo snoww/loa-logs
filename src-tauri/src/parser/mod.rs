@@ -76,6 +76,7 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool) -> Re
         let meter_window_clone = meter_window_clone.clone();
         move |_event| {
             reset_clone.store(true, Ordering::Relaxed);
+            info!("resetting meter");
             meter_window_clone.emit("reset-encounter", "").ok();
         }
     });
@@ -83,7 +84,12 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool) -> Re
     window.listen_global("pause-request", {
         let pause_clone = pause.clone();
         move |_event| {
-            pause_clone.fetch_xor(true, Ordering::Relaxed);
+            let prev = pause_clone.fetch_xor(true, Ordering::Relaxed);
+            if prev {
+                info!("unpausing meter");
+            } else {
+                info!("pausing meter");
+            }
             meter_window_clone.emit("pause-encounter", "").ok();
         }
     });

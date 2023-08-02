@@ -44653,14 +44653,14 @@
   },
   "99000": {
     "id": 99000,
-    "name": "VernsSpear",
+    "name": "Vern's Spear",
     "desc": "Obtain \"Messenger's Demon Spear\" to use the skill. Use the skill again to launch the spear. Hit the Perfect Zone to launch a spear that inflicts even more powerful Damage.",
     "classid": 0,
     "icon": "vehicle_160.png"
   },
   "99001": {
     "id": 99001,
-    "name": "VernsShield",
+    "name": "Vern's Shield",
     "desc": "The cannon opens, spreads, and closes its wings to generate a protective energy. When you're at the energy veil, you and party members receive <FONT COLOR='#99ff99'>50%</FONT> less Damage and become immune to Paralysis and Pushes.",
     "classid": 0,
     "icon": "vehicle_159.png"
