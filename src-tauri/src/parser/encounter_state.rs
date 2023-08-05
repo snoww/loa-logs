@@ -511,11 +511,15 @@ impl EncounterState {
         }
         if hit_option == HitOption::BACK_ATTACK {
             source_entity.skill_stats.back_attacks += 1;
+            source_entity.damage_stats.back_attack_damage += damage;
             skill.back_attacks += 1;
+            skill.back_attack_damage += damage;
         }
         if hit_option == HitOption::FRONTAL_ATTACK {
             source_entity.skill_stats.front_attacks += 1;
+            source_entity.damage_stats.front_attack_damage += damage;
             skill.front_attacks += 1;
+            skill.front_attack_damage += damage;
         }
 
         if source_entity.entity_type == EntityType::PLAYER {

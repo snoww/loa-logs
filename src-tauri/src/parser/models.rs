@@ -115,7 +115,7 @@ pub struct EncounterEntity {
 }
 
 #[derive(Debug, Default, Serialize, Deserialize, Clone)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", default)]
 pub struct Skill {
     pub id: i32,
     pub name: String,
@@ -131,13 +131,15 @@ pub struct Skill {
     pub crits: i64,
     pub back_attacks: i64,
     pub front_attacks: i64,
+    pub back_attack_damage: i64,
+    pub front_attack_damage: i64,
     pub dps: i64,
     pub cast_log: Vec<i32>,
 }
 
 #[serde_as]
 #[derive(Debug, Default, Serialize, Deserialize, Clone)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", default)]
 pub struct DamageStats {
     pub damage_dealt: i64,
     pub damage_taken: i64,
@@ -145,6 +147,8 @@ pub struct DamageStats {
     pub debuffed_by: HashMap<i32, i64>,
     pub buffed_by_support: i64,
     pub debuffed_by_support: i64,
+    pub back_attack_damage: i64,
+    pub front_attack_damage: i64,
     pub deaths: i64,
     pub death_time: i64,
     pub dps: i64,
@@ -447,6 +451,7 @@ pub struct GeneralSettings {
     pub show_names: bool,
     pub show_gear_score: bool,
     pub show_esther: bool,
+    pub positional_dmg_percent: bool,
     pub hide_logo: bool,
     pub accent_color: String,
     pub raw_socket: bool,

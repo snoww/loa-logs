@@ -2,7 +2,7 @@
     import type { Skill } from "$lib/types";
     import { HexToRgba } from "$lib/utils/colors";
     import { abbreviateNumberSplit, round } from "$lib/utils/numbers";
-    import { skillIcon } from "$lib/utils/settings";
+    import { settings, skillIcon } from "$lib/utils/settings";
     import { getSkillIcon } from "$lib/utils/strings";
     import { tooltip } from "$lib/utils/tooltip";
 
@@ -27,8 +27,13 @@
     $: {
         if (skill.hits !== 0) {
             critPercentage = round((skill.crits / skill.hits) * 100);
-            faPercentage = round((skill.frontAttacks / skill.hits) * 100);
-            baPercentage = round((skill.backAttacks / skill.hits) * 100);
+            if (meterSettings.breakdown.positionalDmgPercent && (skill.frontAttackDamage > 0 || skill.backAttackDamage > 0)) {
+                faPercentage = round((skill.frontAttackDamage / skill.totalDamage) * 100);
+                baPercentage = round((skill.backAttackDamage / skill.totalDamage) * 100);
+            } else {
+                faPercentage = round((skill.frontAttacks / skill.hits) * 100);
+                baPercentage = round((skill.backAttacks / skill.hits) * 100);
+            }
         }
     }
 </script>

@@ -28,9 +28,24 @@
     let color = "#ffffff";
     let deadFor: string;
 
+    let critPercentage = "0.0";
+    let baPercentage = "0.0";
+    let faPercentage = "0.0";
+
     $: {
         damageDealt = abbreviateNumberSplit(entity.damageStats.damageDealt);
         damagePercentage = ((entity.damageStats.damageDealt / totalDamageDealt) * 100).toFixed(1);
+
+        if (entity.skillStats.hits !== 0) {
+            critPercentage = round((entity.skillStats.crits / entity.skillStats.hits) * 100);
+            if (meterSettings.positionalDmgPercent && (entity.damageStats.frontAttackDamage > 0 || entity.damageStats.backAttackDamage > 0)) {
+                faPercentage = round((entity.damageStats.frontAttackDamage / entity.damageStats.damageDealt) * 100);
+                baPercentage = round((entity.damageStats.backAttackDamage / entity.damageStats.damageDealt) * 100);
+            } else {
+                faPercentage = round((entity.skillStats.frontAttacks / entity.skillStats.hits) * 100);
+                baPercentage = round((entity.skillStats.backAttacks / entity.skillStats.hits) * 100);
+            }
+        }
 
         if (Object.hasOwn($colors, entity.class)) {
             color = $colors[entity.class].color;
@@ -87,18 +102,18 @@
 {/if}
 {#if meterSettings.critRate}
     <td class="px-1 text-center">
-        {round((entity.skillStats.crits / entity.skillStats.hits) * 100)}<span class="text-3xs text-gray-300">%</span>
+        {critPercentage}<span class="text-3xs text-gray-300">%</span>
     </td>
 {/if}
 {#if anyFrontAtk && meterSettings.frontAtk}
     <td class="px-1 text-center">
-        {round((entity.skillStats.frontAttacks / entity.skillStats.hits) * 100)}<span class="text-3xs text-gray-300"
+        {faPercentage}<span class="text-3xs text-gray-300"
             >%</span>
     </td>
 {/if}
 {#if anyBackAtk && meterSettings.backAtk}
     <td class="px-1 text-center">
-        {round((entity.skillStats.backAttacks / entity.skillStats.hits) * 100)}<span class="text-3xs text-gray-300"
+        {baPercentage}<span class="text-3xs text-gray-300"
             >%</span>
     </td>
 {/if}

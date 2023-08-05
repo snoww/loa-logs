@@ -55,6 +55,7 @@ export const defaultSettings = {
         frontAtk: true,
         backAtk: true,
         counters: false,
+        positionalDmgPercent: false,
         percentBuffBySup: false,
         percentBrand: false,
         breakdown: {
@@ -70,6 +71,7 @@ export const defaultSettings = {
             cpm: true,
             hits: false,
             hpm: false,
+            positionalDmgPercent: false,
             percentBuffBySup: false,
             percentBrand: false
         }
@@ -85,6 +87,7 @@ export const defaultSettings = {
         backAtk: true,
         counters: false,
         minEncounterDuration: 30,
+        positionalDmgPercent: false,
         percentBuffBySup: false,
         percentBrand: false,
         breakdown: {
@@ -100,6 +103,7 @@ export const defaultSettings = {
             cpm: true,
             hits: false,
             hpm: false,
+            positionalDmgPercent: false,
             percentBuffBySup: false,
             percentBrand: false
         }
