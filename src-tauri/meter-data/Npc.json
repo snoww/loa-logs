@@ -3709,9 +3709,9 @@
     "type": "monster",
     "pushimmune": true
   },
-  "480906": { "id": 480906, "name": "Death Monument", "grade": "boss", "type": "monster", "pushimmune": true },
-  "480907": { "id": 480907, "name": "Decay Monument", "grade": "boss", "type": "monster", "pushimmune": true },
-  "480908": { "id": 480908, "name": "Execution Blade", "grade": "boss", "type": "monster", "pushimmune": true },
+  "480906": { "id": 480906, "name": "Death Monument", "grade": "normal", "type": "monster", "pushimmune": true },
+  "480907": { "id": 480907, "name": "Decay Monument", "grade": "normal", "type": "monster", "pushimmune": true },
+  "480908": { "id": 480908, "name": "Execution Blade", "grade": "normal", "type": "monster", "pushimmune": true },
   "480909": { "id": 480909, "name": "Decomposed Mutant", "grade": "named", "type": "monster", "pushimmune": true },
   "480910": { "id": 480910, "name": "Giant Plague Worm", "grade": "commander", "type": "monster", "pushimmune": true },
   "480911": { "id": 480911, "name": "Giant Plague Slime", "grade": "seed", "type": "monster", "pushimmune": true },
@@ -3722,11 +3722,11 @@
   "480916": { "id": 480916, "name": "Servant of Grief", "grade": "seed", "type": "monster", "pushimmune": true },
   "480917": { "id": 480917, "name": "Grief Corpse Bug", "grade": "normal", "type": "monster" },
   "480918": { "id": 480918, "name": "Gluttonous Power", "grade": "named", "type": "monster", "pushimmune": true },
-  "480919": { "id": 480919, "name": "Decaying Kin", "grade": "boss", "type": "monster", "pushimmune": true },
+  "480919": { "id": 480919, "name": "Decaying Kin", "grade": "normal", "type": "monster", "pushimmune": true },
   "480920": { "id": 480920, "name": "Griefbringer Maurug", "grade": "boss", "type": "monster", "pushimmune": true },
-  "480921": { "id": 480921, "name": "Decay Monument", "grade": "boss", "type": "monster", "pushimmune": true },
-  "480922": { "id": 480922, "name": "Decay Monument", "grade": "boss", "type": "monster", "pushimmune": true },
-  "480923": { "id": 480923, "name": "Decay Monument", "grade": "boss", "type": "monster", "pushimmune": true },
+  "480921": { "id": 480921, "name": "Decay Monument", "grade": "normal", "type": "monster", "pushimmune": true },
+  "480922": { "id": 480922, "name": "Decay Monument", "grade": "normal", "type": "monster", "pushimmune": true },
+  "480923": { "id": 480923, "name": "Decay Monument", "grade": "normal", "type": "monster", "pushimmune": true },
   "480924": { "id": 480924, "name": "Self-Destructing Bug", "grade": "normal", "type": "monster" },
   "480925": { "id": 480925, "name": "Self-Destructing Bug", "grade": "normal", "type": "monster" },
   "480926": { "id": 480926, "name": "Self-Destructing Bug", "grade": "normal", "type": "monster" },
@@ -3844,7 +3844,7 @@
     "type": "monster",
     "pushimmune": true
   },
-  "480999": { "id": 480999, "name": "Decaying Kin", "grade": "boss", "type": "monster", "pushimmune": true },
+  "480999": { "id": 480999, "name": "Decaying Kin", "grade": "normal", "type": "monster", "pushimmune": true },
   "481051": {
     "id": 481051,
     "name": "Lord of Degradation Akkan",
@@ -3866,9 +3866,9 @@
     "type": "monster",
     "pushimmune": true
   },
-  "481054": { "id": 481054, "name": "Decaying Kin", "grade": "boss", "type": "monster", "pushimmune": true },
-  "481055": { "id": 481055, "name": "Decaying Kin", "grade": "boss", "type": "monster", "pushimmune": true },
-  "481056": { "id": 481056, "name": "Decaying Kin", "grade": "boss", "type": "monster", "pushimmune": true },
+  "481054": { "id": 481054, "name": "Decaying Kin", "grade": "normal", "type": "monster", "pushimmune": true },
+  "481055": { "id": 481055, "name": "Decaying Kin", "grade": "normal", "type": "monster", "pushimmune": true },
+  "481056": { "id": 481056, "name": "Decaying Kin", "grade": "normal", "type": "monster", "pushimmune": true },
   "481057": {
     "id": 481057,
     "name": "Lord of Degradation Akkan",
@@ -3899,7 +3899,7 @@
     "pushimmune": true
   },
   "481062": { "id": 481062, "name": "Decomposed Mutant", "grade": "named", "type": "monster", "pushimmune": true },
-  "481063": { "id": 481063, "name": "Decaying Kin", "grade": "boss", "type": "monster", "pushimmune": true },
+  "481063": { "id": 481063, "name": "Decaying Kin", "grade": "normal", "type": "monster", "pushimmune": true },
   "481065": {
     "id": 481065,
     "name": "2관문_3관문_재시작 프랍제거",
@@ -3949,8 +3949,8 @@
     "type": "monster",
     "pushimmune": true
   },
-  "481072": { "id": 481072, "name": "Decaying Kin", "grade": "boss", "type": "monster", "pushimmune": true },
-  "481073": { "id": 481073, "name": "Decaying Kin", "grade": "boss", "type": "monster", "pushimmune": true },
+  "481072": { "id": 481072, "name": "Decaying Kin", "grade": "normal", "type": "monster", "pushimmune": true },
+  "481073": { "id": 481073, "name": "Decaying Kin", "grade": "normal", "type": "monster", "pushimmune": true },
   "481085": {
     "id": 481085,
     "name": "Lord of Degradation Akkan",

@@ -225,6 +225,12 @@ impl EncounterState {
                     e.id = entity.id;
                     e.current_hp = hp;
                     e.max_hp = max_hp;
+                } else if entity.entity_type == EntityType::BOSS && e.entity_type == EntityType::NPC {
+                    e.entity_type = EntityType::BOSS;
+                    e.npc_id = entity.npc_id;
+                    e.id = entity.id;
+                    e.current_hp = hp;
+                    e.max_hp = max_hp;
                 }
             })
             .or_insert_with(|| {
