@@ -1,6 +1,6 @@
 {
-    "version": "v1.2.15",
-    "notes": "v1.2.15\n#### NEW FEATURES\n- update meter for akkan patch\n- added option to show back/front attack % as a damage % instead of hit %\nfull patch notes on github\nplease report bugs to snow.w",
+    "version": "v1.2.16",
+    "notes": "v1.2.16\n#### BUG FIXES- fix boss not showing in akkan g2\n- fix esther not showing properly\nv1.2.15\n#### NEW FEATURES\n- update meter for akkan patch\n- added option to show back/front attack % as a damage % instead of hit %\nfull patch notes on github\nplease report bugs to snow.w",
     "pub_date": "2023-08-17T01:04:56.813Z",
     "platforms": {
         "windows-x86_64": {
