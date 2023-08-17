@@ -75,6 +75,7 @@ export const bosses = {
         ],
         "Akkan": [
             "Griefbringer Maurug",
+            "Evolved Maurug",
             "Lord of Degradation Akkan",
             "Plague Legion Commander Akkan",
             "Lord of Kartheon Akkan"
