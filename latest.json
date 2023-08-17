@@ -1,11 +1,11 @@
 {
-    "version": "v1.2.14",
-    "notes": "v1.2.14\n#### NEW FEATURES\n- update meter for august 2nd patch\n- added option to hide meter name in screenshots\nfull patch notes on github\nplease report bugs to snow.w",
-    "pub_date": "2023-08-02T21:52:30.813Z",
+    "version": "v1.2.15",
+    "notes": "v1.2.15\n#### NEW FEATURES\n- update meter for akkan patch\n- added option to show back/front attack % as a damage % instead of hit %\nfull patch notes on github\nplease report bugs to snow.w",
+    "pub_date": "2023-08-17T01:04:56.813Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.2.14/LOA.Logs_1.2.14_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmZ5OXJHYXdBVmYrNEJyaEhIUU11KzBxQS9kSjl5bExMdkZWT3puVEk3SFNwWk4yYTJSaVJ1dWVUdGk2WnZ3NXlDdisxYk90Q3dMUUlGazgrOEVSNVFnPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjkxMDE1NjE4CWZpbGU6TE9BIExvZ3NfMS4yLjE0X3g2NC1zZXR1cC5uc2lzLnppcApwSjQyNWNZOVhOQTJNZGd0V2UwYjcyR0lidVA1Ym1Pc3lQb0lob3JyMzEwTFVrU0VUWU9XS1BKT1JmMzR0eVpXZ2g5RlM1MEZqTVRYM01WU2FxN3hEdz09Cg=="
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.2.15/LOA.Logs_1.2.15_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmEvVS9kZlBJbGJTSVJyejNYa1FMdEJqZ2RjN2lpQXFCNlFzaTdXSGJvUnhiQlh6VUNObnN3UTlSWVk2Ym9ybWNMbkxSYkRBL3RWZEFjcDB3L3E0OHdBPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjkyMjM0MTQ3CWZpbGU6TE9BIExvZ3NfMS4yLjE1X3g2NC1zZXR1cC5uc2lzLnppcApCZlVEYWpyWEdpd29mM25idmtXR1VkYVgrajdEclBtUDI1Z2tLVS82Vk1oMGFQNnNQRmY0U1Bhd3BraUFKNW9tN0kyaG1DYjkyQlI3WVZlVFFwU3pDUT09Cg=="
         }
     }
 }

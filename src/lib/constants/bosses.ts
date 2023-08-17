@@ -73,6 +73,12 @@ export const bosses = {
             "Brelshaza, Monarch of Nightmares",
             "Phantom Legion Commander Brelshaza",
         ],
+        "Akkan": [
+            "Griefbringer Maurug",
+            "Lord of Degradation Akkan",
+            "Plague Legion Commander Akkan",
+            "Lord of Kartheon Akkan"
+        ]
     },
     "Abyssal Dungeons": {
         "Kayangel": [
