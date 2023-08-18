@@ -100,4 +100,5 @@ export const classList = [
     "Machinist",
     "Gunslinger",
     "Artist",
+    "Aeromancer"
 ];

@@ -28,6 +28,13 @@ export const bossList = [
     "Brelshaza, Monarch of Nightmares",
     "Phantom Legion Commander Brelshaza",
 
+    // akkan
+    "Griefbringer Maurug",
+    "Evolved Maurug",
+    "Lord of Degradation Akkan",
+    "Plague Legion Commander Akkan",
+    "Lord of Kartheon Akkan",
+
     // abyssal dungeons
     // kayangel
     "Tienis",

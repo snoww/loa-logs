@@ -1,11 +1,11 @@
 {
-    "version": "v1.2.18",
-    "notes": "### v1.2.18\n#### BUG FIXES\n- fixed issue with summons having incorrect owner id (e.g. harp of rhythm should track properly)\nfull patch notes on github\nplease report bugs to snow.w",
+    "version": "v1.2.19",
+    "notes": "v1.2.19\nv1.2.18\n#### BUG FIXES\n- fixed issue with summons having incorrect owner id (e.g. harp of rhythm should track properly)\nfull patch notes on github\nplease report bugs to snow.w",
     "pub_date": "2023-08-18T22:49:03.088Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.2.18/LOA.Logs_1.2.18_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmF3TFlYeDdKeWhUblJ5UXltejVpU1gvdk9icUhNRTJuUVJ2a3VUUUV2TmZFSkVHQmNXNUU1WmxTVWxJNzJhQVE4N3k1bi9NdnlzdHgwRU0zeG45MUFZPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjkyMzk4OTExCWZpbGU6TE9BIExvZ3NfMS4yLjE4X3g2NC1zZXR1cC5uc2lzLnppcApsN08yV21uQ3pVejlDZVRwNDNuV2tRK1MrNTdxMkE0ck02UjVTckR3WnN5MSt1bVFiVU5tZXdMZWdvSWRMaWV6cmU1TCtQNnhWZ0l2UzlwRDFDMzFDQT09Cg=="
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.2.19/LOA.Logs_1.2.19_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmNkN2dSQXVFV24xTFRCb2gxS2dHUm9yREZEV3pNRnNpYzBvbkYxYUg1QTFOcEh2bVZ2cm9HR05hbjNOdHlrQWFaK2YzNFRlcGtLWDlGTVdyb3RCU3c0PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjkyNDAwMjUwCWZpbGU6TE9BIExvZ3NfMS4yLjE5X3g2NC1zZXR1cC5uc2lzLnppcApYTHJzbGZTOW5Cd2xyZGdMbnpybWlJOU8rUnlZSlZXdlpUYjUxdWlqdjRRa2hYNFhnRkdBK3FhMGFrQWNhbkowbk9iMytCMHEzWjlUcFQ5MklHcGVCZz09Cg=="
         }
     }
 }
