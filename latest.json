@@ -1,11 +1,11 @@
 {
-    "version": "v1.2.17",
-    "notes": "v1.2.17\n#### BUG FIXES\n- fixed issue with buffs not tracking properly\n- fixed issues with mobs in akkan counting as bosses\nv1.2.16\n#### BUG FIXES- fix boss not showing in akkan g2\n- fix esther not showing properly\nv1.2.15\n#### NEW FEATURES\n- update meter for akkan patch\n- added option to show back/front attack % as a damage % instead of hit %\nfull patch notes on github\nplease report bugs to snow.w",
-    "pub_date": "2023-08-17T09:40:10.595Z",
+    "version": "v1.2.18",
+    "notes": "### v1.2.18\n#### BUG FIXES\n- fixed issue with summons having incorrect owner id (e.g. harp of rhythm should track properly)\nfull patch notes on github\nplease report bugs to snow.w",
+    "pub_date": "2023-08-18T22:49:03.088Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.2.17/LOA.Logs_1.2.17_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlNFS0M4dXBlVzVBaEdnOGU2dmpMMzRXQ3FOckk1bDFMN21qRUFpbFc5ZVE1dVlvV3QzdGpFZ0ttRTI3OWlEYUxRWk9ha2dVZ2RmaTVWNlA0ODY3Y0FJPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjkyMjY1MjY1CWZpbGU6TE9BIExvZ3NfMS4yLjE3X3g2NC1zZXR1cC5uc2lzLnppcApFVU5mRVdxRFNmNEF1ZVZRU3JYTFU0cnlsQmNwejZTUG5NbDJ1c0FoVmJZUDhabS9VbnB0MTI2WmNidHAraC9WQW5vV2FhMklsb1J0OTU4OTV0NVhEQT09Cg=="
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.2.18/LOA.Logs_1.2.18_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmF3TFlYeDdKeWhUblJ5UXltejVpU1gvdk9icUhNRTJuUVJ2a3VUUUV2TmZFSkVHQmNXNUU1WmxTVWxJNzJhQVE4N3k1bi9NdnlzdHgwRU0zeG45MUFZPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjkyMzk4OTExCWZpbGU6TE9BIExvZ3NfMS4yLjE4X3g2NC1zZXR1cC5uc2lzLnppcApsN08yV21uQ3pVejlDZVRwNDNuV2tRK1MrNTdxMkE0ck02UjVTckR3WnN5MSt1bVFiVU5tZXdMZWdvSWRMaWV6cmU1TCtQNnhWZ0l2UzlwRDFDMzFDQT09Cg=="
         }
     }
 }
