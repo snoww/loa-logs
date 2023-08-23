@@ -9,6 +9,7 @@ export const defaultSettings = {
         showNames: true,
         showGearScore: false,
         showEsther: true,
+        positionalDmgPercent: false,
         hideLogo: false,
         accentColor: "theme-pink",
         rawSocket: false,
