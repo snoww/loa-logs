@@ -446,7 +446,7 @@ pub struct Settings {
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", default)]
 pub struct GeneralSettings {
     pub show_names: bool,
     pub show_gear_score: bool,
@@ -465,7 +465,7 @@ pub struct GeneralSettings {
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", default)]
 pub struct Shortcuts {
     pub hide_meter: Shortcut,
     pub show_logs: Shortcut,
@@ -475,14 +475,14 @@ pub struct Shortcuts {
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", default)]
 pub struct Shortcut {
     pub modifier: String,
     pub key: String,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", default)]
 pub struct LogTabs {
     pub abbreviate_header: bool,
     pub damage: bool,
@@ -500,7 +500,7 @@ pub struct LogTabs {
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", default)]
 pub struct MeterTabs {
     pub boss_hp: bool,
     pub boss_hp_bar: bool,
@@ -521,7 +521,7 @@ pub struct MeterTabs {
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", default)]
 pub struct BreakdownTabs {
     pub damage: bool,
     pub dps: bool,
@@ -540,7 +540,7 @@ pub struct BreakdownTabs {
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", default)]
 pub struct BuffSettings {
     pub default: bool,
 }

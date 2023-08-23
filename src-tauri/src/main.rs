@@ -53,7 +53,6 @@ async fn main() -> Result<()> {
 
     logger.start()?;
 
-    info!("starting app");
 
     let quit = CustomMenuItem::new("quit".to_string(), "Quit");
     let show_logs = CustomMenuItem::new("show-logs".to_string(), "Show Logs");
@@ -71,6 +70,8 @@ async fn main() -> Result<()> {
 
     tauri::Builder::default()
         .setup(|app| {
+            info!("starting app v{}", app.package_info().version.to_string());
+
             let resource_path = app
                 .path_resolver()
                 .resource_dir()

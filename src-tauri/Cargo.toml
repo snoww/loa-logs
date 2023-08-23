@@ -29,7 +29,7 @@ hashbrown = { version = "0.13.2", features = ["serde"] }
 rusqlite = { version = "0.29.0", features = ["bundled", "serde_json"] }
 tokio = { version = "1.28.1", features = ["rt", "macros"] }
 serde_with = "2.3.3"
-meter-core = { git = "https://github.com/snoww/meter-core-rs.git", branch = "main" }
+meter-core = { path = "D:\\projects\\meter-core-rs\\" }
 log = "0.4.18"
 flexi_logger = { version = "0.25", default_features = false }
 

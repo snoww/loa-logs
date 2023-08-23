@@ -9,7 +9,7 @@
     export let isError = false;
 </script>
 
-<div transition:fade>
+<div transition:fade|global>
     <Alert
         color="none"
         class="{isError ? "bg-red-800" : "bg-accent-800"} absolute inset-x-0 bottom-8 z-50 mx-auto bg-opacity-80 py-2"
