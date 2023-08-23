@@ -1,11 +1,11 @@
 {
-    "version": "v1.2.19",
-    "notes": "v1.2.19\nv1.2.18\n#### BUG FIXES\n- fixed issue with summons having incorrect owner id (e.g. harp of rhythm should track properly)\nfull patch notes on github\nplease report bugs to snow.w",
-    "pub_date": "2023-08-18T22:49:03.088Z",
+    "version": "v1.2.20",
+    "notes": "v1.2.20\n#### NEW FEATURES\n- screenshots now show the date of the encounter (toggleable in settings)\n#### BUG FIXES\n- fix settings not saving correctly\n- fix more ads counting as bosses in akkan\n- another fix for tooltips showing after clickthrough\nfull patch notes on github\nplease report bugs to snow.w",
+    "pub_date": "2023-08-23T18:22:37.328Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.2.19/LOA.Logs_1.2.19_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmNkN2dSQXVFV24xTFRCb2gxS2dHUm9yREZEV3pNRnNpYzBvbkYxYUg1QTFOcEh2bVZ2cm9HR05hbjNOdHlrQWFaK2YzNFRlcGtLWDlGTVdyb3RCU3c0PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjkyNDAwMjUwCWZpbGU6TE9BIExvZ3NfMS4yLjE5X3g2NC1zZXR1cC5uc2lzLnppcApYTHJzbGZTOW5Cd2xyZGdMbnpybWlJOU8rUnlZSlZXdlpUYjUxdWlqdjRRa2hYNFhnRkdBK3FhMGFrQWNhbkowbk9iMytCMHEzWjlUcFQ5MklHcGVCZz09Cg=="
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.2.20/LOA.Logs_1.2.20_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlgycVVuSnNDalhKMUQ1Y2FIamx4OFQxdlhuMXFzYnAvWTQ2MHBWSHFSWjVPMENKanNGT2ROam8rNDRTOWN1OGNjRHljYWdyS0liNm1tRDc2RS9XYVFJPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjkyODE0Nzg1CWZpbGU6TE9BIExvZ3NfMS4yLjIwX3g2NC1zZXR1cC5uc2lzLnppcApVNDdONVdra082MGdEblNId2xFbjBEUnVwRTRWWWtsT1BUMENRYkxQWWUvRXlsTi91aC9RWjhPYzhVcFQxQkhUWUhyVFNiZ3VWRXBCaHpmOHF5bDRDdz09Cg=="
         }
     }
 }
