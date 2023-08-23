@@ -3,6 +3,7 @@ import { invoke } from "@tauri-apps/api";
 import { emit } from "@tauri-apps/api/event";
 import { register, unregisterAll } from "@tauri-apps/api/globalShortcut";
 import { writable } from "svelte/store";
+import { hideAll } from "tippy.js";
 
 export const defaultSettings = {
     general: {
@@ -146,6 +147,7 @@ export async function registerShortcuts(shortcuts: any) {
 
     if (shortcuts.hideMeter.modifier && shortcuts.hideMeter.key) {
         await register(shortcuts.hideMeter.modifier + "+" + shortcuts.hideMeter.key, async () => {
+            hideAll();
             await invoke("toggle_meter_window");
         });
     }
