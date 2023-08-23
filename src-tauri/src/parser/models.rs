@@ -451,7 +451,6 @@ pub struct GeneralSettings {
     pub show_names: bool,
     pub show_gear_score: bool,
     pub show_esther: bool,
-    pub positional_dmg_percent: bool,
     pub show_date: bool,
     pub hide_logo: bool,
     pub accent_color: String,
