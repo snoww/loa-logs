@@ -390,7 +390,7 @@
         </table>
     </div>
     {#if zoneChangeAlert}
-        <Notification bind:showAlert={zoneChangeAlert} text="Changing Zone" width={"12rem"} />
+        <Notification bind:showAlert={zoneChangeAlert} text="Changing Zone" width={"14rem"} />
     {/if}
     {#if resettingAlert}
         <Notification bind:showAlert={resettingAlert} text="Resetting" width={"10rem"} />
@@ -399,7 +399,7 @@
         <Notification bind:showAlert={pauseAlert} text="Paused" width={"8rem"} dismissable={false} />
     {/if}
     {#if phaseTransitionAlert}
-        <Notification bind:showAlert={phaseTransitionAlert} text="Wipe/Phase Clear" width={"13rem"} />
+        <Notification bind:showAlert={phaseTransitionAlert} text="Wipe/Phase Clear" width={"15rem"} />
     {/if}
     {#if phaseStartAlert}
         <Notification bind:showAlert={phaseStartAlert} text="Raid Start" width={"12rem"} />

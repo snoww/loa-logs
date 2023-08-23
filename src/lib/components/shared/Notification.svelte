@@ -12,7 +12,7 @@
 <div transition:fade|global>
     <Alert
         color="none"
-        class="{isError ? "bg-red-800" : "bg-accent-800"} absolute inset-x-0 bottom-8 z-50 mx-auto bg-opacity-80 py-2"
+        class="{isError ? "bg-red-800" : "bg-accent-800"} absolute inset-x-0 bottom-8 z-50 mx-auto bg-opacity-80 py-2 h-10"
         style={`width: ${width};`}
         {dismissable}
         on:close={() => (showAlert = false)}>
