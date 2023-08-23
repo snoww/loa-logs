@@ -11,6 +11,7 @@ export const defaultSettings = {
         showGearScore: false,
         showEsther: true,
         hideLogo: false,
+        showDate: true,
         accentColor: "theme-pink",
         rawSocket: false,
         autoIface: true,

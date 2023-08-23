@@ -98,7 +98,10 @@ export function formatTimestamp(timestampMs: number): string {
     return formattedDate;
 }
 
-export function formatTimestampDate(timestampMs: number): string {
+export function formatTimestampDate(timestampMs: number, iso = false): string {
+    if (iso) {
+        return new Date(timestampMs).toISOString().split("T")[0];
+    }
     return new Date(timestampMs).toLocaleString(undefined, {
         year: "numeric",
         month: "2-digit",

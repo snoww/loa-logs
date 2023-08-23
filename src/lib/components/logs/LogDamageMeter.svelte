@@ -1,6 +1,6 @@
 <script lang="ts">
     import { MeterState, MeterTab, type Entity, type Encounter, ChartType, EntityType } from "$lib/types";
-    import { millisToMinutesAndSeconds } from "$lib/utils/numbers";
+    import { formatTimestampDate, millisToMinutesAndSeconds } from "$lib/utils/numbers";
     import { invoke } from "@tauri-apps/api/tauri";
     import LogDamageMeterRow from "./LogDamageMeterRow.svelte";
     import LogPlayerBreakdown from "./LogPlayerBreakdown.svelte";
@@ -257,6 +257,7 @@
 <div bind:this={targetDiv} class="scroll-mt-2" class:p-4={$takingScreenshot} on:contextmenu|preventDefault={handleRightClick}>
     <LogEncounterInfo
         bossName={encounter.currentBossName}
+        date={formatTimestampDate(encounter.fightStart, true)}
         encounterDuration={millisToMinutesAndSeconds(encounter.duration)}
         {totalDamageDealt}
         dps={encounter.encounterDamageStats.dps} />

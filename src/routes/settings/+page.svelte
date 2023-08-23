@@ -133,6 +133,10 @@
                             description="Show damage dealt by Esther skills in meter and log view."
                             bind:setting={$settings.general.showEsther} />
                         <SettingItem
+                            name="Show Date in Screenshot"
+                            description={'Shows the date of the encounter when taking screenshot'}
+                            bind:setting={$settings.general.showDate} />
+                        <SettingItem
                             name="Hide Logo in Screenshot"
                             description={'Hides the meter name "LOA Logs" in the screenshot.'}
                             bind:setting={$settings.general.hideLogo} />

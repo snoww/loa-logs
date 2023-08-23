@@ -452,6 +452,7 @@ pub struct GeneralSettings {
     pub show_gear_score: bool,
     pub show_esther: bool,
     pub positional_dmg_percent: bool,
+    pub show_date: bool,
     pub hide_logo: bool,
     pub accent_color: String,
     pub raw_socket: bool,
