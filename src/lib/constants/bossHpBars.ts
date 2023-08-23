@@ -22,6 +22,7 @@ export const bossHpMap: BossMap = {
     "Pseudospace Primordial Nightmare": 20,
     "Phantom Legion Commander Brelshaza": 250,
     "Griefbringer Maurug": 150,
+    "Evolved Maurug": 30,
     "Lord of Degradation Akkan": 190,
     "Plague Legion Commander Akkan": 220,
     "Lord of Kartheon Akkan": 300

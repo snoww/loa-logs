@@ -262,11 +262,13 @@ impl EncounterState {
             .entry(dead_entity.name.clone())
             .or_insert_with(|| encounter_entity_from_entity(dead_entity));
 
-        if entity.id != dead_entity.id
+        if (dead_entity.entity_type != EntityType::PLAYER || dead_entity.entity_type != EntityType::BOSS)
+            || entity.id != dead_entity.id
             || (entity.entity_type == EntityType::BOSS && entity.npc_id != dead_entity.npc_id)
         {
             return;
         }
+
         if entity.entity_type == EntityType::BOSS
             && dead_entity.entity_type == EntityType::BOSS
             && entity.name == self.encounter.current_boss_name
@@ -274,6 +276,7 @@ impl EncounterState {
         {
             self.boss_dead_update = true;
         }
+        
         entity.current_hp = 0;
         entity.is_dead = true;
         entity.damage_stats.deaths += 1;
