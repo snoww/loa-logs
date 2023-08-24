@@ -58,7 +58,7 @@
         </div>
     {/await}
     {#if $screenshotAlert}
-    <Notification bind:showAlert={$screenshotError} text={"Screenshot Copied to Clipboard"} width="20rem"/>
+    <Notification bind:showAlert={$screenshotError} text={"Screenshot Copied to Clipboard"} dismissable={false} width="18rem"/>
     {/if}
     {#if $screenshotError}
     <Notification bind:showAlert={$screenshotError} text={"Error Taking Screenshot"} width="18rem" isError={true}/>
