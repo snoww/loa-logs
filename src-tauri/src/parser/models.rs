@@ -208,7 +208,7 @@ pub struct StaggerStats {
 }
 
 #[derive(Debug, Default, Serialize, Deserialize, Clone)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", default)]
 #[serde_as]
 pub struct EncounterMisc {
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -448,13 +448,17 @@ pub struct Settings {
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", default)]
 pub struct GeneralSettings {
+    #[serde(default = "default_true")]
     pub show_names: bool,
     pub show_gear_score: bool,
+    #[serde(default = "default_true")]
     pub show_esther: bool,
+    #[serde(default = "default_true")]
     pub show_date: bool,
     pub hide_logo: bool,
     pub accent_color: String,
     pub raw_socket: bool,
+    #[serde(default = "default_true")]
     pub auto_iface: bool,
     pub if_desc: String,
     pub ip: String,
@@ -492,6 +496,8 @@ pub struct LogTabs {
     pub front_atk: bool,
     pub back_atk: bool,
     pub percent_buff_by_sup: bool,
+    #[serde(default = "default_true")]
+    pub positional_dmg_percent: bool,
     pub percent_brand: bool,
     pub counters: bool,
     pub min_encounter_duration: i32,
@@ -514,6 +520,8 @@ pub struct MeterTabs {
     pub front_atk: bool,
     pub back_atk: bool,
     pub percent_buff_by_sup: bool,
+    #[serde(default = "default_true")]
+    pub positional_dmg_percent: bool,
     pub percent_brand: bool,
     pub counters: bool,
     pub breakdown: BreakdownTabs,
@@ -536,6 +544,8 @@ pub struct BreakdownTabs {
     pub cpm: bool,
     pub hits: bool,
     pub hpm: bool,
+    #[serde(default = "default_true")]
+    pub positional_dmg_percent: bool,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -737,4 +747,9 @@ lazy_static! {
         map.insert("weapon_dam", 151);
         map
     };
+}
+
+
+fn default_true() -> bool {
+    true
 }
