@@ -1,6 +1,6 @@
 {
     "version": "v1.2.21",
-    "notes": "v1.2.21\n#### BUG FIXES\n- fix a couple of missing settings in file\n- fix notification popup size\nfull patch notes on github\nplease report bugs to snow.w",
+    "notes": "v1.2.21\n#### BUG FIXES\n- fixed meter not working with exitlag\n- fix settings not saving to file correctly\n- fix notification popup size\nfull patch notes on github\nplease report bugs to snow.w",
     "pub_date": "2023-08-24T06:11:01.400Z",
     "platforms": {
         "windows-x86_64": {
