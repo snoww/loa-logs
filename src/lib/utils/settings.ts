@@ -148,8 +148,8 @@ export async function registerShortcuts(shortcuts: any) {
 
     if (shortcuts.hideMeter.modifier && shortcuts.hideMeter.key) {
         await register(shortcuts.hideMeter.modifier + "+" + shortcuts.hideMeter.key, async () => {
-            hideAll();
             await invoke("toggle_meter_window");
+            hideAll();
         });
     }
     if (shortcuts.showLogs.modifier && shortcuts.showLogs.key) {
