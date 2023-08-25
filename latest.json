@@ -1,11 +1,11 @@
 {
-    "version": "v1.2.21",
-    "notes": "v1.2.21\n#### BUG FIXES\n- fixed meter not working with exitlag\n- fix settings not saving to file correctly\n- fix notification popup size\nfull patch notes on github\nplease report bugs to snow.w",
-    "pub_date": "2023-08-24T06:11:01.400Z",
+    "version": "v1.2.22",
+    "notes": "v1.2.22\n#### BUG FIXES\n- fixed meter not tracking deaths\nfull patch notes on github\nplease report bugs to snow.w",
+    "pub_date": "2023-08-25T11:32:44.654Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.2.21/LOA.Logs_1.2.21_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmVuTDdTUUFiNlpkM1lHWlA4V2JWZ291d1NrSUtTcWwwOGxQa1FXVWVScHlpK3NwNlMzdy9RZ0dEeFJreEozblpTMTNKNldsYjQ0YnNSN3ZqbURSc2dJPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjkyODU3Mjc4CWZpbGU6TE9BIExvZ3NfMS4yLjIxX3g2NC1zZXR1cC5uc2lzLnppcApoUkl3SEs0V2pOWW56NFhrVDdzcUM5b3A1YXZ5ODZxcDNCS3VnOUk2WHU5anhTaXlLYTllYk9tT3QvYTBoQ3FTZUVmeWpDNFU0WGJnNVlTOGVJb0JCZz09Cg=="
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.2.22/LOA.Logs_1.2.22_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmRiRTcybmhXdTJicmJNUkZsY2N0T3RIcmYvY1VEQTdHTzJMcGFWaG5XQnZyRDRDcVFxMlFxYnI5ZEdvcStsWVJ5cENleUhrL3pqbkJFOFp5RktyWkF3PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjkyOTYyOTkyCWZpbGU6TE9BIExvZ3NfMS4yLjIyX3g2NC1zZXR1cC5uc2lzLnppcAo5K1c1T0dxaVZ2MFRReThPNGVHMGNxOTlqa1h5YVhDSEdqN1E2OWFxN0FyOXVrbnRLcG9YSTRhWkhodEtwOWZzL3cwTmx6MHlBVXdhRmZLOWluNkxCdz09Cg=="
         }
     }
 }
