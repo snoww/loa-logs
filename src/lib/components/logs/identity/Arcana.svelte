@@ -9,6 +9,7 @@
     import { getSkillIcon } from "$lib/utils/strings";
 
     export let identityStats: IdentityStats;
+    export let duration: number;
 
     let cards = Object.entries(identityStats.cardDraws!).sort((a, b) => b[1] - a[1]);
     let totalDraws = cards.reduce((acc, [_, count]) => acc + count, 0);
@@ -167,7 +168,7 @@
             </div>
             <div>
                 Draws per min: <span class="font-bold"
-                    >{((identityStats.average / 100) * 60).toFixed(1)} cards/min</span>
+                    >{(totalDraws / (duration / 1000 / 60)).toFixed(1)} cards/min</span>
             </div>
         </div>
     {/if}

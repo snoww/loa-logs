@@ -5,12 +5,13 @@
     import GenericClass from "./GenericClass.svelte";
 
     export let localPlayer: Entity;
+    export let duration: number;
 
     let identityStats: IdentityStats = JSON.parse(localPlayer.skillStats.identityStats!);
 </script>
 
 {#if localPlayer.class === "Arcanist"}
-    <Arcana {identityStats} />
+    <Arcana {identityStats} {duration}/>
 {:else if localPlayer.class === "Artist" || localPlayer.class === "Bard"}
     <ArtistBard className={localPlayer.class} {identityStats} />
 {:else}
