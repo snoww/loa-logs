@@ -13,15 +13,9 @@
 
 {#if $takingScreenshot}
     <div class="flex items-center justify-between px-1">
-        {#if $settings.general.showDate}
         <div>
             <span class="font-bold">{bossName}</span><span class="ml-2 text-xs font-mono">{date}</span>
         </div>
-        {:else}
-        <div class="font-bold">
-            {bossName}
-        </div>
-        {/if}
         {#await getVersion() then version}
             {#if !$settings.general.hideLogo}
             <div class="">
