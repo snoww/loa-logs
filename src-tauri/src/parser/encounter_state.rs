@@ -262,7 +262,7 @@ impl EncounterState {
             .entry(dead_entity.name.clone())
             .or_insert_with(|| encounter_entity_from_entity(dead_entity));
 
-        if (dead_entity.entity_type != EntityType::PLAYER || dead_entity.entity_type != EntityType::BOSS)
+        if (dead_entity.entity_type != EntityType::PLAYER && dead_entity.entity_type != EntityType::BOSS)
             || entity.id != dead_entity.id
             || (entity.entity_type == EntityType::BOSS && entity.npc_id != dead_entity.npc_id)
         {
