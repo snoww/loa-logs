@@ -100,11 +100,27 @@ async fn main() -> Result<()> {
                     info!("auto_iface enabled, using ip: {}", ip);
                 } else {
                     ip = settings.general.ip;
-                    if ip.parse::<Ipv4Addr>().is_ok() {
-                        info!("manual interface, using ip: {}", ip);
+                    let interface = settings.general.if_desc;
+                    info!(
+                        "manual interface set, ip: {} and interface: {}",
+                        ip, interface
+                    );
+                    let os_interfaces = get_network_interfaces();
+                    let right_name: Vec<&(String, String)> = os_interfaces
+                        .iter()
+                        .filter(|iface| iface.0 == interface)
+                        .collect();
+                    if right_name.len() > 0 {
+                        let perfect_match =
+                            right_name.clone().into_iter().find(|iface| iface.1 == ip);
+                        if perfect_match.is_none() {
+                            //in case of multiple interfaces with same name, try the first one
+                            ip = right_name[0].1.clone(); //get the up to date ip
+                            warn!("ip for manual interface was wrong, using ip: {}", ip);
+                        }
                     } else {
                         ip = meter_core::get_most_common_ip().unwrap();
-                        warn!("manual interface using default ip: {}", ip);
+                        warn!("manually set interface not found, using default ip: {}", ip);
                     }
                     if settings.general.port > 0 {
                         port = settings.general.port;
