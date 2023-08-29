@@ -171,6 +171,21 @@ pub struct SkillStats {
     pub identity_stats: Option<String>,
 }
 
+#[derive(Debug, Serialize, Clone, Default)]
+#[serde(rename_all = "camelCase")]
+pub struct Identity {
+    pub gauge1: u32,
+    pub gauge2: u32,
+    pub gauge3: u32,
+}
+
+#[derive(Debug, Serialize, Clone, Default)]
+#[serde(rename_all = "camelCase")]
+pub struct Stagger {
+    pub current: u32,
+    pub max: u32,
+}
+
 pub type IdentityLog = Vec<(i64, (u32, u32, u32))>;
 
 #[derive(Debug, Default, Serialize, Deserialize, Clone)]
@@ -455,6 +470,7 @@ pub struct GeneralSettings {
     pub show_esther: bool,
     #[serde(default = "default_true")]
     pub show_date: bool,
+    pub show_details: bool,
     pub hide_logo: bool,
     pub accent_color: String,
     pub raw_socket: bool,

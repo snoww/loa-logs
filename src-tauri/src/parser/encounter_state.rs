@@ -731,7 +731,7 @@ impl EncounterState {
         entity.skill_stats.counters += 1;
     }
 
-    pub fn on_identity_gain(&mut self, pkt: PKTIdentityGaugeChangeNotify) {
+    pub fn on_identity_gain(&mut self, pkt: &PKTIdentityGaugeChangeNotify) {
         if self.encounter.fight_start == 0 {
             return;
         }
@@ -768,7 +768,7 @@ impl EncounterState {
         }
     }
 
-    pub fn on_stagger_change(&mut self, pkt: PKTParalyzationStateNotify) {
+    pub fn on_stagger_change(&mut self, pkt: &PKTParalyzationStateNotify) {
         if self.encounter.current_boss_name.is_empty() || self.encounter.fight_start == 0 {
             return;
         }

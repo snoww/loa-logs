@@ -16,6 +16,7 @@
     import Notification from "./shared/Notification.svelte";
     import { takingScreenshot, screenshotAlert, screenshotError } from "$lib/utils/stores";
     import html2canvas from "html2canvas";
+    import Details from "./Details.svelte";
 
     let time = +Date.now();
     let encounter: Encounter | null = null;
@@ -386,6 +387,8 @@
                         {handleRightClick}
                         {inspectPlayer} />
                 {/if}
+            {:else if tab === MeterTab.DETAILS}
+                <Details/>
             {/if}
         </table>
     </div>

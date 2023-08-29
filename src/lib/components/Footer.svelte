@@ -1,5 +1,6 @@
 <script lang="ts">
     import { MeterTab } from "$lib/types";
+    import { settings } from "$lib/utils/settings";
     import { getVersion } from "@tauri-apps/api/app";
     export let tab: MeterTab;
 
@@ -37,6 +38,15 @@
                 on:click={() => setTab(MeterTab.SELF_BUFFS)}>
                 Self Syn
             </button>
+            {#if $settings.general.showDetails}
+            <button
+                class="h-6 border-0 border-b-[3px] px-2 {tab === MeterTab.DETAILS
+                    ? 'border-zinc-500'
+                    : 'border-zinc-800'} truncate"
+                on:click={() => setTab(MeterTab.DETAILS)}>
+                Details
+            </button>
+            {/if}
         </div>
         <div class="flex items-center">
             <div class="h-6">LOA Logs</div>

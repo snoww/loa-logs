@@ -11,7 +11,7 @@ mod maros;
 use crate::parser::encounter_state::{EncounterState, get_class_from_id};
 use crate::parser::entity_tracker::{get_current_and_max_hp, EntityTracker};
 use crate::parser::id_tracker::IdTracker;
-use crate::parser::models::EntityType;
+use crate::parser::models::{Identity, Stagger, EntityType};
 use crate::parser::party_tracker::PartyTracker;
 use crate::parser::status_tracker::{StatusEffectTargetType, StatusTracker};
 use anyhow::Result;
@@ -70,6 +70,8 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool) -> Re
     let reset = Arc::new(AtomicBool::new(false));
     let pause = Arc::new(AtomicBool::new(false));
 
+    let emit_details = Arc::new(AtomicBool::new(false));
+
     let meter_window_clone = window.clone();
     window.listen_global("reset-request", {
         let reset_clone = reset.clone();
@@ -91,6 +93,18 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool) -> Re
                 info!("pausing meter");
             }
             meter_window_clone.emit("pause-encounter", "").ok();
+        }
+    });
+
+    window.listen_global("emit-details-request", {
+        let emit_clone = emit_details.clone();
+        move |_event| {
+            let prev = emit_clone.fetch_xor(true, Ordering::Relaxed);
+            if prev {
+                info!("stopped sending details");
+            } else {
+                info!("sending details");
+            }
         }
     });
 
@@ -120,7 +134,16 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool) -> Re
             }
             Pkt::IdentityGaugeChangeNotify => {
                 if let Some(pkt) = parse_pkt(&data, PKTIdentityGaugeChangeNotify::new, "PKTIdentityGaugeChangeNotify") {
-                    state.on_identity_gain(pkt);
+                    state.on_identity_gain(&pkt);
+                    if emit_details.load(Ordering::Relaxed) {
+                        window
+                            .emit("identity-update", Identity {
+                                gauge1: pkt.identity_gauge1,
+                                gauge2: pkt.identity_gauge2,
+                                gauge3: pkt.identity_gauge3,
+                            })
+                            .expect("failed to emit identity-update");
+                    }
                 }
             }
             Pkt::InitEnv => {
@@ -176,7 +199,15 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool) -> Re
             }
             Pkt::ParalyzationStateNotify => {
                 if let Some(pkt) = parse_pkt(&data, PKTParalyzationStateNotify::new, "PKTParalyzationStateNotify") {
-                    state.on_stagger_change(pkt);
+                    state.on_stagger_change(&pkt);
+                    if emit_details.load(Ordering::Relaxed) {
+                        window
+                            .emit("stagger-update", Stagger {
+                                current: pkt.paralyzation_point,
+                                max: pkt.paralyzation_max_point,
+                            })
+                            .expect("failed to emit stagger-update");
+                    }
                 }
             }
             Pkt::PartyInfo => {
@@ -353,10 +384,12 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool) -> Re
                     match pkt.trigger_signal_type {
                         57 | 59 | 61 | 63 | 74 | 76 => {
                             state.raid_clear = true;
+                            state.on_phase_transition(2);
                             debug_print!("phase", &"clear".to_string())
                         }
                         58 | 60 | 62 | 64 | 75 | 77 => {
                             state.raid_clear = false;
+                            state.on_phase_transition(2);
                             debug_print!("phase", &"wipe".to_string())
                         }
                         _ => {}

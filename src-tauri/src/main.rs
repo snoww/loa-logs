@@ -110,7 +110,7 @@ async fn main() -> Result<()> {
                         .iter()
                         .filter(|iface| iface.0 == interface)
                         .collect();
-                    if right_name.len() > 0 {
+                    if !right_name.is_empty() {
                         let perfect_match =
                             right_name.clone().into_iter().find(|iface| iface.1 == ip);
                         if perfect_match.is_none() {

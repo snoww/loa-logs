@@ -137,6 +137,10 @@
                             description={'Shows the date of the encounter when taking screenshot'}
                             bind:setting={$settings.general.showDate} /> -->
                         <SettingItem
+                            name="Show Details Tab"
+                            description={'Shows an additional tab in meter for raw identity and stagger data.'}
+                            bind:setting={$settings.general.showDetails} />
+                        <SettingItem
                             name="Hide Logo in Screenshot"
                             description={'Hides the meter name "LOA Logs" in the screenshot.'}
                             bind:setting={$settings.general.hideLogo} />

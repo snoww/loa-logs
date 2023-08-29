@@ -178,6 +178,17 @@ export interface SkillData {
     sourceSkill: number | null;
 }
 
+export interface IdentityEvent {
+    gauge1: number;
+    gauge2: number;
+    gauge3: number;
+}
+
+export interface StaggerEvent {
+    current: number;
+    max: number;
+}
+
 export enum EntityType {
     UNKNOWN = "UNKNOWN",
     MONSTER = "MONSTER",
@@ -210,7 +221,8 @@ export enum MeterTab {
     PARTY_BUFFS,
     SELF_BUFFS,
     IDENTITY,
-    STAGGER
+    STAGGER,
+    DETAILS
 }
 
 export enum ChartType {
