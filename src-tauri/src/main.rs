@@ -7,7 +7,6 @@ mod parser;
 use std::{
     fs::{self, File},
     io::{Read, Write},
-    net::Ipv4Addr,
     path::{Path, PathBuf},
     str::FromStr,
 };
@@ -53,7 +52,6 @@ async fn main() -> Result<()> {
 
     logger.start()?;
 
-
     let quit = CustomMenuItem::new("quit".to_string(), "Quit");
     let show_logs = CustomMenuItem::new("show-logs".to_string(), "Show Logs");
     let show_meter = CustomMenuItem::new("show-meter".to_string(), "Show Meter");
@@ -95,6 +93,7 @@ async fn main() -> Result<()> {
             let mut port = 6040;
 
             if let Some(settings) = settings {
+                info!("settings loaded");
                 if settings.general.auto_iface {
                     ip = meter_core::get_most_common_ip().unwrap();
                     info!("auto_iface enabled, using ip: {}", ip);
@@ -128,7 +127,9 @@ async fn main() -> Result<()> {
                     }
                     raw_socket = settings.general.raw_socket;
                     if raw_socket {
-                        info!("raw socket enabled");
+                        info!("using raw socket");
+                    } else {
+                        info!("using npcap");
                     }
                 }
             } else {
@@ -166,6 +167,8 @@ async fn main() -> Result<()> {
         .plugin(tauri_plugin_single_instance::init(|_app, _argv, _cwd| {}))
         .on_window_event(|event| {
             if let tauri::WindowEvent::CloseRequested { api, .. } = event.event() {
+                api.prevent_close();
+
                 if event.window().label() == "main" {
                     event
                         .window()
@@ -176,7 +179,6 @@ async fn main() -> Result<()> {
                 } else if event.window().label() == "logs" {
                     event.window().hide().unwrap();
                 }
-                api.prevent_close();
             }
         })
         .system_tray(system_tray)
@@ -358,7 +360,7 @@ fn load_encounters_preview(
     page: i32,
     page_size: i32,
     search: String,
-    filter: SearchFilter
+    filter: SearchFilter,
 ) -> EncountersOverview {
     let path = window
         .app_handle()
@@ -386,7 +388,10 @@ fn load_encounters_preview(
 
     let class_filter = if !filter.classes.is_empty() {
         let placeholders: Vec<String> = filter.classes.iter().map(|_| "?".to_string()).collect();
-        filter.classes.into_iter().for_each(|class| params.push(class));
+        filter
+            .classes
+            .into_iter()
+            .for_each(|class| params.push(class));
         format!("AND (class IN ({}))", placeholders.join(","))
     } else {
         "".to_string()
@@ -700,14 +705,9 @@ fn delete_encounters(window: tauri::Window, ids: Vec<i32>) {
 
     let placeholders: Vec<String> = ids.iter().map(|_| "?".to_string()).collect();
     let placeholders_str = placeholders.join(",");
-    
-    let sql = format!(
-        "DELETE FROM encounter WHERE id IN ({})",
-        placeholders_str
-    );
-    let mut stmt = conn
-        .prepare_cached(&sql)
-        .unwrap();
+
+    let sql = format!("DELETE FROM encounter WHERE id IN ({})", placeholders_str);
+    let mut stmt = conn.prepare_cached(&sql).unwrap();
 
     info!("deleting encounters: {:?}", ids);
 
