@@ -342,10 +342,11 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool) -> Re
                 if state.encounter.fight_start == 0 || state.encounter.current_boss_name.is_empty() {
                     state.on_phase_transition(3);
                     debug_print!("phase", &3);
-                } else {
-                    state.on_phase_transition(2);
-                    debug_print!("phase", &2);
                 }
+                //  else {
+                //     state.on_phase_transition(2);
+                //     debug_print!("phase", &2);
+                // }
             }
             Pkt::TriggerStartNotify => {
                 if let Some(pkt) = parse_pkt(&data, PKTTriggerStartNotify::new, "PKTTriggerStartNotify") {
