@@ -1,11 +1,11 @@
 {
-    "version": "v1.2.23",
-    "notes": "v1.2.23\n#### NEW FEATURES\n- new optional details tab (can enabled in settings > general)\n- details tab shows raw identity and raw stagger values from the game\n#### BUG FIXES\n- added missing buff icons (e.g. glaiver new synergy)\n- fixed clearing akkan not counting as raid cleared (using new raid clear logic)\n- improved interface selections for vpn users (#23)\nfull patch notes on github\nplease report bugs to snow.w",
+    "version": "v1.2.24",
+    "notes": "v1.2.24\n#### BUG FIXES\n- fixed first pull of clown g1 not resetting\nv1.2.23\n#### NEW FEATURES\n- new optional details tab\n- details tab shows raw identity and raw stagger values from the game\n#### BUG FIXES\n- added missing buff icons (e.g. glaiver new synergy)\n- fixed calculation of draws per minute for arcana identity\n- fixed clearing akkan not counting as raid cleared\n- improved interface selections for vpn users\nfull patch notes on github\nplease report bugs to snow.w",
     "pub_date": "2023-08-25T11:32:44.654Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.2.23/LOA.Logs_1.2.23_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlhMZWhXay9aaC9sVFBsQjM4a3lIZ04xVE80TmpTSnZiT0tQQTVGTFppeDI2NERBT0VKWUlHdm1UaTdCTTRDWTludWNWbnN2U3dtbFdEK1lVMWpKSlFZPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjkzMzUwMDE5CWZpbGU6TE9BIExvZ3NfMS4yLjIzX3g2NC1zZXR1cC5uc2lzLnppcApkdC9WTEYyWmJ5bE1hNjRwVnZkUnhsbFRUczNqYlJ2TlRQVEczUVFoVnJaTmk4UjM1dzJIRHJXSFNOV04wRHFYT3VJMW9HamJabGt5c09QeXpMZWtCdz09Cg=="
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.2.24/LOA.Logs_1.2.24_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmZLZ1ZORGhTbnZRVW1lQVZTc25tczlDZEIyQUZsQmM4SXg3MzhpeVRlck1PTXMyVzRyQXYzNGFXQnRHd0k5MHJCa0d6dUR3MUljTWRoVXlSMnUyN1FBPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjkzMzU1NTIyCWZpbGU6TE9BIExvZ3NfMS4yLjI0X3g2NC1zZXR1cC5uc2lzLnppcApYTnlhSHNMcDFoYkFyK1ZJdzFXM0ZiWHBTdTZ0byt5VGlPSnhYSnZJRVJyZ2ZCTWFRRDRpM0pwRHZrSVRYTFRZeTN0Sy9PM3MzczdPTkltdW1UTytBQT09Cg=="
         }
     }
 }
