@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { cardIds } from "$lib/constants/cards";
     import { MeterTab, type Entity, type StatusEffect, BuffDetails } from "$lib/types";
     import { getSynergyPercentageDetailsSum } from "$lib/utils/buffs";
     import { HexToRgba } from "$lib/utils/colors";
@@ -23,6 +24,9 @@
     let skillDamagePercentages: Array<number> = [];
 
     let skills = Object.values(player.skills).sort((a, b) => b.totalDamage - a.totalDamage);
+    if (player.class === "Arcanist") {
+        skills = skills.filter((skill) => !cardIds.includes(skill.id));
+    }
     if (Object.hasOwn($colors, player.class)) {
         color = $colors[player.class].color;
     }

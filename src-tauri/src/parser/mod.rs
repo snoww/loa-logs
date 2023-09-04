@@ -266,15 +266,14 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool) -> Re
                 }
             }
             Pkt::SkillCastNotify => {
-                // identity skills
-                // idk if i want to use this
-                // only gets sent on certain identity casts
-                // e.g. arcana cards, sorc ignite (only turning off)
-                // let pkt = PKTSkillCastNotify::new(&data)?;
-                // let mut entity = entity_tracker.get_source_entity(pkt.caster);
-                // entity = entity_tracker.guess_is_player(entity, pkt.skill_id);
-                // println!("skill cast notify {:?}", &entity);
-                // parser.on_skill_start(entity, pkt.skill_id as i32, Utc::now().timestamp_millis());
+                if let Some(pkt) = parse_pkt(&data, PKTSkillCastNotify::new, "PKTSkillCastNotify") {
+                    let mut entity = entity_tracker.get_source_entity(pkt.caster);
+                    if entity.class_id != 202 {
+                        continue;
+                    }
+                    entity = entity_tracker.guess_is_player(entity, pkt.skill_id);
+                    state.on_skill_start(entity, pkt.skill_id as i32, Utc::now().timestamp_millis());
+                }
             }
             Pkt::SkillStartNotify => {
                 if let Some(pkt) = parse_pkt(&data, PKTSkillStartNotify::new, "PKTSkillStartNotify") {

@@ -4,6 +4,7 @@
     import LogPlayerBreakdownRow from "./LogPlayerBreakdownRow.svelte";
     import { colors, settings } from "$lib/utils/settings";
     import PlayerBreakdownHeader from "../shared/PlayerBreakdownHeader.svelte";
+    import { cardIds } from "$lib/constants/cards";
 
     export let entity: Entity;
     export let duration: number;
@@ -20,6 +21,9 @@
     let anySupportBuff = false;
 
     skills = Object.values(entity.skills).sort((a, b) => b.totalDamage - a.totalDamage);
+    if (entity.class === "Arcanist") {
+        skills = skills.filter((skill) => !cardIds.includes(skill.id));
+    }
 
     if (Object.hasOwn($colors, entity.class)) {
         color = $colors[entity.class].color;

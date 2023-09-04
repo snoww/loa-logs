@@ -1385,30 +1385,31 @@ fn insert_data(
                     "Arcanist" => {
                         let mut cards: HashMap<u32, u32> = HashMap::new();
                         let mut log: Vec<(i32, (f32, u32, u32))> = Vec::new();
+                        println!("{:?}", data);
                         for i in 1..data.len() {
-                            let (t1, i1) = data[i - 1];
-                            let (t2, i2) = data[i];
+                            let (t1, prev) = data[i - 1];
+                            let (t2, curr) = data[i];
 
                             // don't count clown cards draws as card draws
-                            if i2.1 != 0 && i2.1 != i1.1 && i1.1 != 19284 {
-                                cards.entry(i2.1).and_modify(|e| *e += 1).or_insert(1);
+                            if curr.1 != 0 && curr.1 != prev.1 && prev.1 != 19284 {
+                                cards.entry(curr.1).and_modify(|e| *e += 1).or_insert(1);
                             }
-                            if i2.2 != 0 && i2.2 != i1.2 && i1.2 != 19284 {
-                                cards.entry(i2.2).and_modify(|e| *e += 1).or_insert(1);
+                            if curr.2 != 0 && curr.2 != prev.2 && prev.2 != 19284 {
+                                cards.entry(curr.2).and_modify(|e| *e += 1).or_insert(1);
                             }
 
-                            if t2 > t1 && i2.0 > i1.0 {
-                                total_identity_gain += i2.0 - i1.0;
+                            if t2 > t1 && curr.0 > prev.0 {
+                                total_identity_gain += curr.0 - prev.0;
                             }
 
                             let relative_time = ((t2 - fight_start) as f32 / 1000.0) as i32;
                             // calculate percentage, round to 2 decimal places
-                            let percentage = if i2.0 >= max as u32 {
+                            let percentage = if curr.0 >= max as u32 {
                                 100.0
                             } else {
-                                (((i2.0 as f32 / max) * 100.0) * 100.0).round() / 100.0
+                                (((curr.0 as f32 / max) * 100.0) * 100.0).round() / 100.0
                             };
-                            log.push((relative_time, (percentage, i2.1, i2.2)));
+                            log.push((relative_time, (percentage, curr.1, curr.2)));
                         }
 
                         let avg_per_s = (total_identity_gain as f64 / duration_seconds as f64)

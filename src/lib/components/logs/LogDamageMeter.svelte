@@ -26,6 +26,7 @@
         getSkillLogChart
     } from "$lib/utils/dpsCharts";
     import OpenerSkills from "./OpenerSkills.svelte";
+    import ArcanistCardTable from "../shared/ArcanistCardTable.svelte";
 
     export let id: string;
     export let encounter: Encounter;
@@ -113,23 +114,45 @@
                 let deathTimes = getDeathTimes(chartablePlayers, legendNames, encounter.fightStart);
                 let bossHpLogs = Object.entries(encounter.encounterDamageStats.misc?.bossHpLog || {});
                 if (chartType === ChartType.AVERAGE_DPS) {
-                    let chartPlayers = getAveragePlayerSeries(chartablePlayers, legendNames, encounter.fightStart, $colors);
+                    let chartPlayers = getAveragePlayerSeries(
+                        chartablePlayers,
+                        legendNames,
+                        encounter.fightStart,
+                        $colors
+                    );
                     let bossChart = getBossHpSeries(
                         bossHpLogs,
                         legendNames,
                         chartablePlayers[0].damageStats.dpsAverage.length,
                         5
                     );
-                    chartOptions = getAverageDpsChart(chartablePlayers, legendNames, chartPlayers, bossChart, deathTimes);
+                    chartOptions = getAverageDpsChart(
+                        chartablePlayers,
+                        legendNames,
+                        chartPlayers,
+                        bossChart,
+                        deathTimes
+                    );
                 } else if (chartType === ChartType.ROLLING_DPS) {
-                    let chartPlayers = getRollingPlayerSeries(chartablePlayers, legendNames, encounter.fightStart, $colors);
+                    let chartPlayers = getRollingPlayerSeries(
+                        chartablePlayers,
+                        legendNames,
+                        encounter.fightStart,
+                        $colors
+                    );
                     let bossChart = getBossHpSeries(
                         bossHpLogs,
                         legendNames,
                         chartablePlayers[0].damageStats.dpsRolling10sAvg.length,
                         1
                     );
-                    chartOptions = getRollingDpsChart(chartablePlayers, legendNames, chartPlayers, bossChart, deathTimes);
+                    chartOptions = getRollingDpsChart(
+                        chartablePlayers,
+                        legendNames,
+                        chartPlayers,
+                        bossChart,
+                        deathTimes
+                    );
                 } else if (chartType === ChartType.SKILL_LOG && player && player.entityType === EntityType.PLAYER) {
                     chartOptions = getSkillLogChart(
                         player,
@@ -254,7 +277,11 @@
 </script>
 
 <svelte:window on:contextmenu|preventDefault />
-<div bind:this={targetDiv} class="scroll-mt-2" class:p-4={$takingScreenshot} on:contextmenu|preventDefault={handleRightClick}>
+<div
+    bind:this={targetDiv}
+    class="scroll-mt-2"
+    class:p-4={$takingScreenshot}
+    on:contextmenu|preventDefault={handleRightClick}>
     <LogEncounterInfo
         bossName={encounter.currentBossName}
         date={formatTimestampDate(encounter.fightStart, true)}
@@ -304,10 +331,15 @@
                     </button>
                 {/if}
                 <button
-                    class="rounded-sm px-2 py-1 bg-gray-700"
-                    use:tooltip={{content: "Take Screenshot"}}
+                    class="rounded-sm bg-gray-700 px-2 py-1"
+                    use:tooltip={{ content: "Take Screenshot" }}
                     on:click={captureScreenshot}>
-                    <svg class="w-5 h-5 fill-zinc-300 hover:fill-accent-800" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"><path d="M479.5-269.5q71.75 0 119.625-47.875T647-437q0-71-47.875-118.75T479.5-603.5q-71.75 0-119.125 47.75T313-437q0 71.75 47.375 119.625T479.5-269.5Zm0-57.5q-47 0-78-31.145T370.5-437q0-47 31-78t78-31q47 0 78.5 31t31.5 78.25q0 47.25-31.5 78.5T479.5-327Zm-328 227.5q-38.019 0-64.76-26.741Q60-152.981 60-191v-491.5q0-37.431 26.74-64.966Q113.482-775 151.5-775h132l83.057-97.5H594.5l82 97.5h132q37.431 0 64.966 27.534Q901-719.931 901-682.5V-191q0 38.019-27.534 64.759Q845.931-99.5 808.5-99.5h-657Zm657-91.5v-491.5H635L552.5-780H408.451L325.5-682.5h-174V-191h657ZM480-436.5Z"/></svg>
+                    <svg
+                        class="hover:fill-accent-800 h-5 w-5 fill-zinc-300"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 -960 960 960"
+                        ><path
+                            d="M479.5-269.5q71.75 0 119.625-47.875T647-437q0-71-47.875-118.75T479.5-603.5q-71.75 0-119.125 47.75T313-437q0 71.75 47.375 119.625T479.5-269.5Zm0-57.5q-47 0-78-31.145T370.5-437q0-47 31-78t78-31q47 0 78.5 31t31.5 78.25q0 47.25-31.5 78.5T479.5-327Zm-328 227.5q-38.019 0-64.76-26.741Q60-152.981 60-191v-491.5q0-37.431 26.74-64.966Q113.482-775 151.5-775h132l83.057-97.5H594.5l82 97.5h132q37.431 0 64.966 27.534Q901-719.931 901-682.5V-191q0 38.019-27.534 64.759Q845.931-99.5 808.5-99.5h-657Zm657-91.5v-491.5H635L552.5-780H408.451L325.5-682.5h-174V-191h657ZM480-436.5Z" /></svg>
                 </button>
                 <div class="relative flex items-center rounded-sm bg-gray-700" on:focusout={handleDropdownFocusLoss}>
                     <button on:click={handleDropdownClick} class="h-full px-2">
@@ -421,14 +453,14 @@
         </div>
     {/if}
     {#if tab === MeterTab.IDENTITY && localPlayer !== null}
-        <LogIdentity {localPlayer} duration={encounter.duration}/>
+        <LogIdentity {localPlayer} duration={encounter.duration} />
     {:else if tab === MeterTab.STAGGER && encounter.encounterDamageStats.misc && encounter.encounterDamageStats.misc.staggerStats}
         <LogStagger staggerStats={encounter.encounterDamageStats.misc.staggerStats} />
     {:else}
         <div class="px relative top-0 overflow-x-auto overflow-y-visible">
-            <table class="relative w-full table-fixed">
-                {#if tab === MeterTab.DAMAGE}
-                    {#if state === MeterState.PARTY}
+            {#if tab === MeterTab.DAMAGE}
+                {#if state === MeterState.PARTY}
+                    <table class="relative w-full table-fixed">
                         <thead
                             class="z-30 h-6"
                             on:contextmenu|preventDefault={() => {
@@ -489,41 +521,54 @@
                                 </tr>
                             {/each}
                         </tbody>
-                    {:else if state === MeterState.PLAYER && player !== null}
+                    </table>
+                {:else if state === MeterState.PLAYER && player !== null}
+                    <table class="relative w-full table-fixed">
                         <LogPlayerBreakdown entity={player} duration={encounter.duration} />
-                    {/if}
-                {:else if tab === MeterTab.PARTY_BUFFS}
-                    {#if state === MeterState.PARTY}
-                        <LogBuffs
-                            {tab}
-                            encounterDamageStats={encounter.encounterDamageStats}
-                            {players}
-                            {inspectPlayer} />
-                    {:else}
-                        <LogBuffs
-                            {tab}
-                            encounterDamageStats={encounter.encounterDamageStats}
-                            {players}
-                            focusedPlayer={player}
-                            {inspectPlayer} />
-                    {/if}
-                {:else if tab === MeterTab.SELF_BUFFS}
-                    {#if state === MeterState.PARTY}
-                        <LogBuffs
-                            {tab}
-                            encounterDamageStats={encounter.encounterDamageStats}
-                            {players}
-                            {inspectPlayer} />
-                    {:else}
-                        <LogBuffs
-                            {tab}
-                            encounterDamageStats={encounter.encounterDamageStats}
-                            {players}
-                            focusedPlayer={player}
-                            {inspectPlayer} />
-                    {/if}
+                    </table>
+                    <table class="relative w-full table-fixed">
+                        <ArcanistCardTable {player} duration={encounter.duration} />
+                    </table>
                 {/if}
-            </table>
+            {:else if tab === MeterTab.PARTY_BUFFS}
+                {#if state === MeterState.PARTY}
+                    <table class="relative w-full table-fixed">
+                        <LogBuffs
+                            {tab}
+                            encounterDamageStats={encounter.encounterDamageStats}
+                            {players}
+                            {inspectPlayer} />
+                    </table>
+                {:else}
+                    <table class="relative w-full table-fixed">
+                        <LogBuffs
+                            {tab}
+                            encounterDamageStats={encounter.encounterDamageStats}
+                            {players}
+                            focusedPlayer={player}
+                            {inspectPlayer} />
+                    </table>
+                {/if}
+            {:else if tab === MeterTab.SELF_BUFFS}
+                {#if state === MeterState.PARTY}
+                    <table class="relative w-full table-fixed">
+                        <LogBuffs
+                            {tab}
+                            encounterDamageStats={encounter.encounterDamageStats}
+                            {players}
+                            {inspectPlayer} />
+                    </table>
+                {:else}
+                    <table class="relative w-full table-fixed">
+                        <LogBuffs
+                            {tab}
+                            encounterDamageStats={encounter.encounterDamageStats}
+                            {players}
+                            focusedPlayer={player}
+                            {inspectPlayer} />
+                    </table>
+                {/if}
+            {/if}
         </div>
     {/if}
 </div>
