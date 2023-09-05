@@ -4,6 +4,7 @@ import Heap from "heap-js";
 import { defaultOptions } from "./charts";
 import { abbreviateNumber, formatDurationFromMs, formatDurationFromS, resampleData, round2, timeToSeconds } from "./numbers";
 import { getSkillIcon, isValidName } from "./strings";
+import { bossHpMap } from "$lib/constants/bossHpBars";
 
 export function getLegendNames(chartablePlayers: Entity[], showNames: boolean) {
     if (!showNames) {
@@ -163,6 +164,11 @@ export function getAverageDpsChart(
                     let value = param.value;
                     if (param.seriesIndex >= Object.keys(chartablePlayers).length) {
                         value = value[1] + "%";
+                        if (Object.hasOwn(bossHpMap, label)) {
+                            const bossMaxHpBars = bossHpMap[label];
+                            const bossHpBars = Math.floor(bossMaxHpBars * (parseFloat(value) / 100));
+                            value = bossHpBars + "x (" + value + ")";
+                        }
                         bossTooltips.push(
                             `<div style="display:flex; justify-content: space-between;"><div style="padding-right: 1rem;font-weight: 600;">${label}</div><div style="font-weight: 600;">${value}</div></div>`
                         );
@@ -261,6 +267,11 @@ export function getRollingDpsChart(
                     let value = param.value;
                     if (param.seriesIndex >= Object.keys(chartablePlayers).length) {
                         value = value[1] + "%";
+                        if (Object.hasOwn(bossHpMap, label)) {
+                            const bossMaxHpBars = bossHpMap[label];
+                            const bossHpBars = Math.floor(bossMaxHpBars * (parseFloat(value) / 100));
+                            value = bossHpBars + "x (" + value + ")";
+                        }
                         bossTooltips.push(
                             `<div style="display:flex; justify-content: space-between;"><div style="padding-right: 1rem;font-weight: 600;">${label}</div><div style="font-weight: 600;">${value}</div></div>`
                         );
