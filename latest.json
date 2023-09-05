@@ -1,7 +1,7 @@
 {
     "version": "v1.2.25",
     "notes": "v1.2.25\n#### NEW FEATURES\n- reworked arcana card tracking, can now track other arcanas in the raid group\n- card draws now show in skill damage breakdown instead of identity\n- added self summary when focused on skill breakdown in logs\n- added boss hp bar in charts when hovering\nfull patch notes on github\nplease report bugs to snow.w",
-    "pub_date": "2023-08-25T11:32:44.654Z",
+    "pub_date": "2023-09-05T06:43:01.496Z",
     "platforms": {
         "windows-x86_64": {
             "url": "https://github.com/snoww/loa-logs/releases/download/v1.2.25/LOA.Logs_1.2.25_x64-setup.nsis.zip",
