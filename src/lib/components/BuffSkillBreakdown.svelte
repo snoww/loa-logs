@@ -34,13 +34,13 @@
             let mostDamageSkill = skills[0].totalDamage;
             skillDamagePercentages = skills.map((skill) => (skill.totalDamage / mostDamageSkill) * 100);
         }
-        if (tab === MeterTab.SELF_BUFFS) {
+        if (tab === MeterTab.SELF_BUFFS || tab === MeterTab.PARTY_BUFFS) {
             buffSummary = getSynergyPercentageDetailsSum(groupedSynergies, skills, player.damageStats.damageDealt);
         }
     }
 </script>
 
-{#if tab === MeterTab.SELF_BUFFS}
+{#if tab === MeterTab.SELF_BUFFS || tab === MeterTab.PARTY_BUFFS}
     <tr class="h-7 px-2 py-1 text-3xs">
         <td class="pl-1">
             <img

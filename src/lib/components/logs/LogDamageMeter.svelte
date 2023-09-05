@@ -14,7 +14,7 @@
     import { screenshotAlert, screenshotError, takingScreenshot } from "$lib/utils/stores";
     import LogIdentity from "./identity/LogIdentity.svelte";
     import LogStagger from "./stagger/LogStagger.svelte";
-    import { menuTooltip, tooltip } from "$lib/utils/tooltip";
+    import { tooltip } from "$lib/utils/tooltip";
     import {
         getAverageDpsChart,
         getAveragePlayerSeries,
@@ -524,11 +524,13 @@
                     </table>
                 {:else if state === MeterState.PLAYER && player !== null}
                     <table class="relative w-full table-fixed">
-                        <LogPlayerBreakdown entity={player} duration={encounter.duration} />
+                        <LogPlayerBreakdown entity={player} duration={encounter.duration} {totalDamageDealt} />
                     </table>
-                    <table class="relative w-full table-fixed">
-                        <ArcanistCardTable {player} duration={encounter.duration} />
-                    </table>
+                    {#if player.class === "Arcanist"}
+                        <table class="relative w-full table-fixed">
+                            <ArcanistCardTable {player} duration={encounter.duration} />
+                        </table>
+                    {/if}
                 {/if}
             {:else if tab === MeterTab.PARTY_BUFFS}
                 {#if state === MeterState.PARTY}

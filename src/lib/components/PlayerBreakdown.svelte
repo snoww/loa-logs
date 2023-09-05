@@ -5,6 +5,7 @@
     import PlayerBreakdownRow from "./PlayerBreakdownRow.svelte";
     import { colors, settings } from "$lib/utils/settings";
     import PlayerBreakdownHeader from "./shared/PlayerBreakdownHeader.svelte";
+    import { cardIds } from "$lib/constants/cards";
 
     export let entity: Entity | null;
     export let duration: number;
@@ -29,6 +30,9 @@
                 color = "#4dc8d0";
             }
             skills = Object.values(entity.skills).sort((a, b) => b.totalDamage - a.totalDamage);
+            if (entity.class === "Arcanist") {
+                skills = skills.filter((skill) => !cardIds.includes(skill.id));
+            }
             if (skills.length > 0) {
                 let mostDamageSkill = skills[0].totalDamage;
                 skillDamagePercentages = skills.map((skill) => (skill.totalDamage / mostDamageSkill) * 100);
