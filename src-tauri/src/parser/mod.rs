@@ -370,14 +370,11 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool) -> Re
             }
             Pkt::TriggerBossBattleStatus => {
                 // need to hard code clown because it spawns before the trigger is sent???
-                if state.encounter.fight_start == 0 || state.encounter.current_boss_name.is_empty() || state.encounter.current_boss_name == "Saydon" {
+                if state.encounter.fight_start == 0 || state.encounter.current_boss_name.is_empty() || state.encounter.current_boss_name == "Saydon" 
+                    || (state.encounter.fight_start > 0 && state.encounter.current_boss_name.is_empty()) {
                     state.on_phase_transition(3);
                     debug_print!("phase", &3);
                 }
-                //  else {
-                //     state.on_phase_transition(2);
-                //     debug_print!("phase", &2);
-                // }
             }
             Pkt::TriggerStartNotify => {
                 if let Some(pkt) = parse_pkt(&data, PKTTriggerStartNotify::new, "PKTTriggerStartNotify") {

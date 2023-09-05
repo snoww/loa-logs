@@ -1385,7 +1385,6 @@ fn insert_data(
                     "Arcanist" => {
                         let mut cards: HashMap<u32, u32> = HashMap::new();
                         let mut log: Vec<(i32, (f32, u32, u32))> = Vec::new();
-                        println!("{:?}", data);
                         for i in 1..data.len() {
                             let (t1, prev) = data[i - 1];
                             let (t2, curr) = data[i];
