@@ -87,6 +87,7 @@
     </tr>
 </thead>
 <tbody class="relative z-10">
+    {#if entity.entityType !== EntityType.ESTHER}
     <tr class="h-7 px-2 py-1 text-3xs">
         <td class="pl-1">
             <img
@@ -210,6 +211,7 @@
             style="background-color: {HexToRgba(color, 0.6)}; width: 100%" />
         
     </tr>
+    {/if}
     {#each skills as skill, i (skill.id)}
         <LogPlayerBreakdownRow
             {skill}

@@ -370,8 +370,8 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool) -> Re
             }
             Pkt::TriggerBossBattleStatus => {
                 // need to hard code clown because it spawns before the trigger is sent???
-                if state.encounter.fight_start == 0 || state.encounter.current_boss_name.is_empty() || state.encounter.current_boss_name == "Saydon" 
-                    || (state.encounter.fight_start > 0 && state.encounter.current_boss_name.is_empty()) {
+                if state.encounter.current_boss_name.is_empty() || state.encounter.fight_start == 0
+                    || state.encounter.current_boss_name == "Saydon" {
                     state.on_phase_transition(3);
                     debug_print!("phase", &3);
                 }
@@ -382,12 +382,12 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool) -> Re
                         57 | 59 | 61 | 63 | 74 | 76 => {
                             state.raid_clear = true;
                             state.on_phase_transition(2);
-                            debug_print!("phase", &"clear".to_string())
+                            debug_print!("raid", &"clear".to_string())
                         }
                         58 | 60 | 62 | 64 | 75 | 77 => {
                             state.raid_clear = false;
                             state.on_phase_transition(2);
-                            debug_print!("phase", &"wipe".to_string())
+                            debug_print!("raid", &"wipe".to_string())
                         }
                         _ => {}
                     }
