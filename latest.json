@@ -1,10 +1,10 @@
 {
-    "version": "v1.2.24",
-    "notes": "v1.2.24\n#### BUG FIXES\n- fixed first pull of clown g1 not resetting\nv1.2.23\n#### NEW FEATURES\n- new optional details tab\n- details tab shows raw identity and raw stagger values from the game\n#### BUG FIXES\n- added missing buff icons (e.g. glaiver new synergy)\n- fixed calculation of draws per minute for arcana identity\n- fixed clearing akkan not counting as raid cleared\n- improved interface selections for vpn users\nfull patch notes on github\nplease report bugs to snow.w",
+    "version": "v1.2.25",
+    "notes": "v1.2.25\n#### NEW FEATURES\n- reworked arcana card tracking, can now track other arcanas in the raid group\n- card draws now show in skill damage breakdown instead of identity\n- added self summary when focused on skill breakdown in logs\n- added boss hp bar in charts when hovering\nfull patch notes on github\nplease report bugs to snow.w",
     "pub_date": "2023-08-25T11:32:44.654Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.2.24/LOA.Logs_1.2.24_x64-setup.nsis.zip",
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.2.25/LOA.Logs_1.2.25_x64-setup.nsis.zip",
             "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmZLZ1ZORGhTbnZRVW1lQVZTc25tczlDZEIyQUZsQmM4SXg3MzhpeVRlck1PTXMyVzRyQXYzNGFXQnRHd0k5MHJCa0d6dUR3MUljTWRoVXlSMnUyN1FBPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjkzMzU1NTIyCWZpbGU6TE9BIExvZ3NfMS4yLjI0X3g2NC1zZXR1cC5uc2lzLnppcApYTnlhSHNMcDFoYkFyK1ZJdzFXM0ZiWHBTdTZ0byt5VGlPSnhYSnZJRVJyZ2ZCTWFRRDRpM0pwRHZrSVRYTFRZeTN0Sy9PM3MzczdPTkltdW1UTytBQT09Cg=="
         }
     }
