@@ -1,11 +1,11 @@
 {
-    "version": "v1.2.25",
-    "notes": "v1.2.25\n#### NEW FEATURES\n- reworked arcana card tracking, can now track other arcanas in the raid group\n- card draws now show in skill damage breakdown instead of identity\n- added self summary when focused on skill breakdown in logs\n- added boss hp bar in charts when hovering\nfull patch notes on github\nplease report bugs to snow.w",
-    "pub_date": "2023-09-05T06:43:01.496Z",
+    "version": "v1.2.26",
+    "notes": "v1.2.26\n#### BUG FIXES\n- fixed old arcana logs being broken\nv1.2.25\n#### NEW FEATURES\n- reworked arcana card tracking, can now track other arcanas in the raid group\n- card draws now show in skill damage breakdown instead of identity\n- added self summary when focused on skill breakdown in logs\n- added boss hp bar in charts when hovering\nfull patch notes on github\nplease report bugs to snow.w",
+    "pub_date": "2023-09-05T20:25:00.224Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.2.25/LOA.Logs_1.2.25_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlo5dkFNdExhUWg4MVNUeklDT0t3S09xRmRQQzh2WkdJTVd4cVJySFJtR3NmbUZXNndIWnMxbitoZHV6THd0WnYrMDdxV2c1VndZRHllSVJMb3h2bFFVPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjkzODk2MTA1CWZpbGU6TE9BIExvZ3NfMS4yLjI1X3g2NC1zZXR1cC5uc2lzLnppcApGM3lUWGFTekdWb2hWcWFVQlk4YlJiSmhGYmFxb0FtdmttTFNnL2dQYVFMbkYzQUlPSTFxQ3ltWHA4WHNZK3plMVZNVUpkMnpJZURMekRjSlJWZHRDQT09Cg=="
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.2.26/LOA.Logs_1.2.26_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmUwbklqRlJXQi81MzlJV1ZlWVNjaWRhSUl5Nk14cEk4VklSWHFiZVFJc3RndklMYldVZWNDRzJMK2k2anhXR2crUjFPZUx4MmR4ZEdIRVZkRkhGZmdvPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjkzOTQ1NDMxCWZpbGU6TE9BIExvZ3NfMS4yLjI2X3g2NC1zZXR1cC5uc2lzLnppcApvUC91RWd4dGxNb29pWC9kUkpzQ3hGU3EzV29IbjViTFQ4TjhCY3VJTW9WR1VLdm1lR2dORTdrNkg2aFIyTUtXTG1rcmQxdHVlNlM3eFVVWFF0R3BEQT09Cg=="
         }
     }
 }
