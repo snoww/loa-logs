@@ -393,22 +393,22 @@
         </table>
     </div>
     {#if zoneChangeAlert}
-        <Notification bind:showAlert={zoneChangeAlert} text="Changing Zone" width={"14rem"} />
+        <Notification bind:showAlert={zoneChangeAlert} text="Changing Zone" width={"11rem"} dismissable={false} />
     {/if}
     {#if resettingAlert}
-        <Notification bind:showAlert={resettingAlert} text="Resetting" width={"10rem"} />
+        <Notification bind:showAlert={resettingAlert} text="Resetting" width={"9rem"} dismissable={false} />
     {/if}
     {#if pauseAlert}
         <Notification bind:showAlert={pauseAlert} text="Paused" width={"8rem"} dismissable={false} />
     {/if}
     {#if phaseTransitionAlert}
-        <Notification bind:showAlert={phaseTransitionAlert} text="Wipe/Phase Clear" width={"15rem"} />
+        <Notification bind:showAlert={phaseTransitionAlert} text="Wipe/Phase Clear" width={"12rem"} dismissable={false} />
     {/if}
     {#if phaseStartAlert}
-        <Notification bind:showAlert={phaseStartAlert} text="Raid Start" width={"12rem"} />
+        <Notification bind:showAlert={phaseStartAlert} text="Raid Start" width={"9rem"} dismissable={false} />
     {/if}
     {#if bossDeadAlert}
-        <Notification bind:showAlert={bossDeadAlert} text="Boss Dead" width={"12rem"} />
+        <Notification bind:showAlert={bossDeadAlert} text="Boss Dead" width={"10rem"} dismissable={false} />
     {/if}
     {#if adminAlert}
         <Notification
@@ -419,10 +419,10 @@
             isError={true} />
     {/if}
     {#if $screenshotAlert}
-        <Notification bind:showAlert={$screenshotError} text={"Screenshot Copied to Clipboard"} width="20rem"/>
+        <Notification bind:showAlert={$screenshotError} text={"Screenshot Copied to Clipboard"} width="18rem" dismissable={false} />
     {/if}
     {#if $screenshotError}
-        <Notification bind:showAlert={$screenshotError} text={"Error Taking Screenshot"} width="18rem" isError={true}/>
+        <Notification bind:showAlert={$screenshotError} text={"Error Taking Screenshot"} width="15rem" isError={true} dismissable={false} />
     {/if}
     <Footer bind:tab />
 </div>
