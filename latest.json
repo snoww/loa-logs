@@ -1,7 +1,7 @@
 {
     "version": "v1.2.27",
     "notes": "v1.2.27\n#### BUG FIXES\n-#### BUG FIXES\n- fixed valtan g2 not resetting properly after first pull (and other bosses)\n- fixed some spells damage not tracking (e.g. sorc frost call rule enhancement tripod)\nfull patch notes on github\nplease report bugs to snow.w",
-    "pub_date": "2023-09-10T06:38:07.176",
+    "pub_date": "2023-09-10T06:38:07.176Z",
     "platforms": {
         "windows-x86_64": {
             "url": "https://github.com/snoww/loa-logs/releases/download/v1.2.27/LOA.Logs_1.2.27_x64-setup.nsis.zip",
