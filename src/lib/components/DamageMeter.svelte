@@ -25,8 +25,8 @@
     let zoneChangeAlert = false;
     let resettingAlert = false;
     let pauseAlert = false;
-    let phaseTransitionAlert = false;
-    let phaseStartAlert = false;
+    let raidClear = false;
+    let raidWipe = false;
     let bossDeadAlert = false;
     let adminAlert = false;
     let raidInProgress = writable(true);
@@ -75,14 +75,14 @@
                         bossDeadAlert = false;
                     }, 3000);
                 } else if (phaseCode === 2 && raidInProgress) {
-                    phaseTransitionAlert = true;
+                    raidClear = true;
                     setTimeout(() => {
-                        phaseTransitionAlert = false;
+                        raidClear = false;
                     }, 3000);
-                } else if (phaseCode === 3 && raidInProgress) {
-                    phaseStartAlert = true;
+                } else if (phaseCode === 4 && raidInProgress) {
+                    raidWipe = true;
                     setTimeout(() => {
-                        phaseStartAlert = false;
+                        raidWipe = false;
                     }, 3000);
                 }
                 $raidInProgress = false;
@@ -401,11 +401,11 @@
     {#if pauseAlert}
         <Notification bind:showAlert={pauseAlert} text="Paused" width={"8rem"} dismissable={false} />
     {/if}
-    {#if phaseTransitionAlert}
-        <Notification bind:showAlert={phaseTransitionAlert} text="Wipe/Phase Clear" width={"12rem"} dismissable={false} />
+    {#if raidClear}
+        <Notification bind:showAlert={raidClear} text="Phase Clear" width={"9.5rem"} dismissable={false} />
     {/if}
-    {#if phaseStartAlert}
-        <Notification bind:showAlert={phaseStartAlert} text="Raid Start" width={"9rem"} dismissable={false} />
+    {#if raidWipe}
+        <Notification bind:showAlert={raidWipe} text="Phase Wipe" width={"9rem"} dismissable={false} />
     {/if}
     {#if bossDeadAlert}
         <Notification bind:showAlert={bossDeadAlert} text="Boss Dead" width={"10rem"} dismissable={false} />

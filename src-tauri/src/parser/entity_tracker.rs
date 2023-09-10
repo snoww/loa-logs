@@ -275,6 +275,19 @@ impl EntityTracker {
         self.entities.insert(projectile.id, projectile);
     }
 
+    pub fn new_trap(&mut self, pkt: PKTNewTrap) {
+        let trap = Entity {
+            id: pkt.trap_data.object_id,
+            entity_type: PROJECTILE,
+            name: format!("{:x}", pkt.trap_data.object_id),
+            owner_id: pkt.trap_data.owner_id,
+            skill_id: pkt.trap_data.skill_id,
+            skill_effect_id: pkt.trap_data.skill_effect,
+            ..Default::default()
+        };
+        self.entities.insert(trap.id, trap);
+    }
+
     pub fn party_info(&mut self, pkt: PKTPartyInfo) {
         let local_player = match self.entities.get(&self.local_player_id) {
             Some(local_player) => local_player,

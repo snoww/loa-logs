@@ -66,6 +66,7 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool) -> Re
 
     let mut last_update = Instant::now();
     let duration = Duration::from_millis(100);
+    let mut raid_end_cd: Instant = Instant::now();
 
     let reset = Arc::new(AtomicBool::new(false));
     let pause = Arc::new(AtomicBool::new(false));
@@ -197,6 +198,11 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool) -> Re
                     entity_tracker.new_projectile(pkt);
                 }
             }
+            Pkt::NewTrap => {
+                if let Some(pkt) = parse_pkt(&data, PKTNewTrap::new, "PKTNewTrap") {
+                    entity_tracker.new_trap(pkt);
+                }
+            }
             Pkt::ParalyzationStateNotify => {
                 if let Some(pkt) = parse_pkt(&data, PKTParalyzationStateNotify::new, "PKTParalyzationStateNotify") {
                     state.on_stagger_change(&pkt);
@@ -254,11 +260,13 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool) -> Re
             }
             Pkt::RaidResult => {
                 state.on_phase_transition(0);
+                raid_end_cd = Instant::now();
                 debug_print!("phase", &0);
             }
             Pkt::RemoveObject => {
                 if let Some(pkt) = parse_pkt(&data, PKTRemoveObject::new, "PKTRemoveObject") {
                     for upo in pkt.unpublished_objects {
+                        entity_tracker.entities.remove(&upo.object_id);
                         status_tracker
                             .borrow_mut()
                             .remove_local_object(upo.object_id);
@@ -268,11 +276,10 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool) -> Re
             Pkt::SkillCastNotify => {
                 if let Some(pkt) = parse_pkt(&data, PKTSkillCastNotify::new, "PKTSkillCastNotify") {
                     let mut entity = entity_tracker.get_source_entity(pkt.caster);
-                    if entity.class_id != 202 {
-                        continue;
+                    if entity.class_id == 202 {
+                        entity = entity_tracker.guess_is_player(entity, pkt.skill_id);
+                        state.on_skill_start(entity, pkt.skill_id as i32, Utc::now().timestamp_millis());
                     }
-                    entity = entity_tracker.guess_is_player(entity, pkt.skill_id);
-                    state.on_skill_start(entity, pkt.skill_id as i32, Utc::now().timestamp_millis());
                 }
             }
             Pkt::SkillStartNotify => {
@@ -286,6 +293,10 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool) -> Re
                 // let pkt = PKTSkillStageNotify::new(&data);
             }
             Pkt::SkillDamageAbnormalMoveNotify => {
+                if Instant::now() - raid_end_cd < Duration::from_secs(5) {
+                    debug_print!("ignoring damage", "");
+                    continue;
+                }
                 if let Some(pkt) = parse_pkt(&data, PKTSkillDamageAbnormalMoveNotify::new, "PKTSkillDamageAbnormalMoveNotify") {
                     let owner = entity_tracker.get_source_entity(pkt.source_id);
                     let local_character_id = id_tracker
@@ -315,6 +326,11 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool) -> Re
                 }
             }
             Pkt::SkillDamageNotify => {
+                // use this to make sure damage packets are not tracked after a raid just wiped
+                if Instant::now() - raid_end_cd < Duration::from_secs(5) {
+                    debug_print!("ignoring damage", "");
+                    continue;
+                }
                 if let Some(pkt) = parse_pkt(&data, PKTSkillDamageNotify::new, "PktSkillDamageNotify") {
                     let owner = entity_tracker.get_source_entity(pkt.source_id);
                     let local_character_id = id_tracker
@@ -370,11 +386,14 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool) -> Re
             }
             Pkt::TriggerBossBattleStatus => {
                 // need to hard code clown because it spawns before the trigger is sent???
+                debug_print!("TriggerBossBattleStatus:encounter_state", &(&state.encounter.current_boss_name, state.encounter.fight_start));
                 if state.encounter.current_boss_name.is_empty() || state.encounter.fight_start == 0
                     || state.encounter.current_boss_name == "Saydon" {
                     state.on_phase_transition(3);
-                    debug_print!("phase", &3);
+                    debug_print!("resetting encounter", "");
                 }
+
+                debug_print!("TriggerBossBattleStatus:raid_end", state.resetting);
             }
             Pkt::TriggerStartNotify => {
                 if let Some(pkt) = parse_pkt(&data, PKTTriggerStartNotify::new, "PKTTriggerStartNotify") {
@@ -382,11 +401,13 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool) -> Re
                         57 | 59 | 61 | 63 | 74 | 76 => {
                             state.raid_clear = true;
                             state.on_phase_transition(2);
+                            raid_end_cd = Instant::now();
                             debug_print!("raid", &"clear".to_string())
                         }
                         58 | 60 | 62 | 64 | 75 | 77 => {
                             state.raid_clear = false;
-                            state.on_phase_transition(2);
+                            state.on_phase_transition(4);
+                            raid_end_cd = Instant::now();
                             debug_print!("raid", &"wipe".to_string())
                         }
                         _ => {}
@@ -413,7 +434,7 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool) -> Re
             }
         }
 
-        if last_update.elapsed() >= duration || state.raid_end || state.boss_dead_update {
+        if last_update.elapsed() >= duration || state.resetting || state.boss_dead_update {
             let boss_dead = state.boss_dead_update;
             if state.boss_dead_update {
                 debug_print!("boss_dead_update", &true);
@@ -448,9 +469,9 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool) -> Re
             last_update = Instant::now();
         }
 
-        if state.raid_end {
+        if state.resetting {
             state.soft_reset(true);
-            state.raid_end = false;
+            state.resetting = false;
             state.saved = false;
         }
     }

@@ -18,7 +18,7 @@ const WINDOW_S: i64 = 5;
 pub struct EncounterState {
     pub window: Window<Wry>,
     pub encounter: Encounter,
-    pub raid_end: bool,
+    pub resetting: bool,
     pub boss_dead_update: bool,
     pub saved: bool,
 
@@ -41,7 +41,7 @@ impl EncounterState {
         EncounterState {
             window,
             encounter: Encounter::default(),
-            raid_end: false,
+            resetting: false,
             raid_clear: false,
             boss_dead_update: false,
             saved: false,
@@ -174,12 +174,15 @@ impl EncounterState {
             .emit("phase-transition", phase_code)
             .expect("failed to emit phase-transition");
 
-        if phase_code == 0 || phase_code == 2 || phase_code == 3 {
-            if !self.encounter.current_boss_name.is_empty() {
-                self.save_to_db();
-                self.saved = true;
+        match phase_code {
+            0 | 2 | 3 | 4 => {
+                if !self.encounter.current_boss_name.is_empty() {
+                    self.save_to_db();
+                    self.saved = true;
+                }
+                self.resetting = true;
             }
-            self.raid_end = true;
+            _ => (),
         }
     }
 
@@ -1160,9 +1163,9 @@ fn get_skill_name_and_icon(
     skill_effect_id: &i32,
     skill_name: String,
 ) -> (String, String) {
-    if *skill_id == 0 && *skill_effect_id == 0 {
+    if (*skill_id == 0) && (*skill_effect_id == 0) {
         ("Bleed".to_string(), "buff_168.png".to_string())
-    } else if *skill_effect_id != 0 {
+    } else if (*skill_effect_id != 0) && (*skill_effect_id == *skill_id) {
         return if let Some(effect) = SKILL_EFFECT_DATA.get(skill_effect_id) {
             if let Some(item_name) = effect.item_name.as_ref() {
                 return (
