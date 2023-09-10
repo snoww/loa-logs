@@ -3713,7 +3713,7 @@
   "480907": { "id": 480907, "name": "Decay Monument", "grade": "normal", "type": "monster", "pushimmune": true },
   "480908": { "id": 480908, "name": "Execution Blade", "grade": "normal", "type": "monster", "pushimmune": true },
   "480909": { "id": 480909, "name": "Decomposed Mutant", "grade": "named", "type": "monster", "pushimmune": true },
-  "480910": { "id": 480910, "name": "Giant Plague Worm", "grade": "commander", "type": "monster", "pushimmune": true },
+  "480910": { "id": 480910, "name": "Giant Plague Worm", "grade": "normal", "type": "monster", "pushimmune": true },
   "480911": { "id": 480911, "name": "Giant Plague Slime", "grade": "seed", "type": "monster", "pushimmune": true },
   "480912": { "id": 480912, "name": "Imprisoned Villagers", "grade": "normal", "type": "monster", "pushimmune": true },
   "480913": { "id": 480913, "name": "Plague Spore", "grade": "normal", "type": "monster", "pushimmune": true },
