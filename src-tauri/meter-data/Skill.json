@@ -5311,6 +5311,7 @@
   "4221674": { "id": 4221674, "name": "몽환 6관문_마법진 생성_샨디면역", "desc": "", "classid": 0, "icon": "" },
   "4221675": { "id": 4221675, "name": "몽환 6관문_우주 고리 생성", "desc": "", "classid": 0, "icon": "" },
   "4221676": { "id": 4221676, "name": "거대 블랙홀_파편 생성2", "desc": "", "classid": 0, "icon": "" },
+  "4221677": { "id": 4221677, "name": "거대 블랙홀_파편 생성2_헬 난이도", "desc": "", "classid": 0, "icon": "" },
   "42216761": { "id": 42216761, "name": "거대 블랙홀_파편 생성1", "desc": "", "classid": 0, "icon": "" },
   "42216762": { "id": 42216762, "name": "거대 화이트홀", "desc": "", "classid": 0, "icon": "" },
   "42216763": { "id": 42216763, "name": "거대 블랙홀", "desc": "", "classid": 0, "icon": "" },
@@ -39601,7 +39602,7 @@
   },
   "26120": {
     "id": 26120,
-    "name": "Death Side",
+    "name": "Deathscythe",
     "desc": "Quickly move <FONT COLOR='#ffff99'>3 meters</FONT> toward the target location and slash at foes <FONT COLOR='#ffff99'>2</FONT> times for <$MACRO physic @1:261200/> Damage. Use the skill again to perform another slash and inflict <$MACRO physic @1:261201/> Damage, knocking foes down.",
     "classid": 404,
     "icon": "rp_skill_01_9.png",
@@ -40821,7 +40822,7 @@
   "10120": {
     "id": 10120,
     "name": "Tempest Slash",
-    "desc": "Charge <FONT COLOR='#ffff99'>4 meters</FONT> toward the target location and slash at foes, inflicting <$MACRO physic @1:101200/> Damage and launching them into the air. Use as a combo to deliver a spinning attack, inflicting <$MACRO physic @1:101201/> and <$MACRO physic @1:101201/> Damage before landing a downward blow, inflicting<$MACRO physic @1:101202/> Damage.",
+    "desc": "Charge <FONT COLOR='#ffff99'>4 meters</FONT> toward the target location and slash at foes, inflicting <$MACRO physic @1:101200/> Damage and launching them into the air. Use as a combo to deliver a spinning attack, inflicting <$MACRO physic @1:101201/> and <$MACRO physic @1:101201/> Damage before landing a downward blow, inflicting <$MACRO physic @1:101202/> Damage.",
     "classid": 101,
     "icon": "bk_skill_01_12.png",
     "identitycategory": "berserker_normal",
@@ -41070,7 +41071,7 @@
   "16190": {
     "id": 16190,
     "name": "Tempest Slash",
-    "desc": "Charge <FONT COLOR='#ffff99'>4 meters</FONT> toward the target location and slash at foes, inflicting <$MACRO physic @1:161900/> Damage and launching them into the air. Use as a combo to deliver a spinning attack, inflicting <$MACRO physic @1:161901/> and <$MACRO physic @1:161901/> Damage before landing a downward blow, inflicting<$MACRO physic @1:161902/> Damage.",
+    "desc": "Charge <FONT COLOR='#ffff99'>4 meters</FONT> toward the target location and slash at foes, inflicting <$MACRO physic @1:161900/> Damage and launching them into the air. Use as a combo to deliver a spinning attack, inflicting <$MACRO physic @1:161901/> and <$MACRO physic @1:161901/> Damage before landing a downward blow, inflicting <$MACRO physic @1:161902/> Damage.",
     "classid": 102,
     "icon": "bk_skill_01_12.png",
     "identitycategory": "berserker_normal",
@@ -41622,7 +41623,7 @@
   "18070": {
     "id": 18070,
     "name": "Full Swing",
-    "desc": "Strike behind you with your hammer and spin <FONT COLOR='#ffff99'>360</FONT> degrees, attacking surrounding foes <FONT COLOR='#ffff99'>3</FONT> times in total, inflicting <$MACRO physic @1:180700/>, <$MACRO physic @1:180701/>, <$MACRO physic @1:180702/> Damage. Overcharge to inflict <$MACRO physic @1:180703/> Damage.",
+    "desc": "Strike behind you with your hammer and spin <FONT COLOR='#ffff99'>360</FONT> degrees, attacking surrounding foes <FONT COLOR='#ffff99'>3</FONT> times in total, inflicting <$MACRO physic @1:180700/>, <$MACRO physic @1:180701/>, and <$MACRO physic @1:180702/> Damage. Overcharge to inflict <$MACRO physic @1:180703/> Damage.",
     "classid": 103,
     "icon": "dt_skill_01_7.png",
     "identitycategory": "destroyer_release",
@@ -43317,14 +43318,14 @@
   "42784": {
     "id": 42784,
     "name": "BAM!",
-    "desc": "Strikes down powerfully. 'Lo Yahoo'",
+    "desc": "Strikes down powerfully. \"Lo Yahoo\"",
     "classid": 0,
     "icon": "po_skill_01_90.png"
   },
   "42785": {
     "id": 42785,
     "name": "Zoom!",
-    "desc": "Jumps forward. 'It is that fun'",
+    "desc": "Jumps forward. \"It is that fun\"",
     "classid": 0,
     "icon": "po_skill_01_91.png"
   },

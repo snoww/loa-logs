@@ -2030,6 +2030,28 @@
       }
     ]
   },
+  "581210": {
+    "id": 581210,
+    "effects": [
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [{ "type": "npc_grade_greater", "actor": "target", "arg": 1 }],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [5000, 0, 0, 0, 0, 0] }]
+      }
+    ]
+  },
+  "583110": {
+    "id": 583110,
+    "effects": [
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [{ "type": "npc_grade_greater", "actor": "target", "arg": 1 }],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [5000, 0, 0, 0, 0, 0] }]
+      }
+    ]
+  },
   "582210": {
     "id": 582210,
     "effects": [
@@ -2044,6 +2066,12 @@
   "583111": {
     "id": 583111,
     "effects": [
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [{ "type": "npc_grade_greater", "actor": "target", "arg": 1 }],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [5000, 0, 0, 0, 0, 0] }]
+      },
       {
         "ratio": 5000,
         "cooldown": 0,
