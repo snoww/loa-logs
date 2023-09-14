@@ -1,11 +1,11 @@
 {
-    "version": "v1.2.27",
-    "notes": "v1.2.27\n-#### BUG FIXES\n- fixed valtan g2 not resetting properly after first pull (and other bosses)\n- fixed some spells damage not tracking (e.g. sorc frost call rule enhancement tripod)\nfull patch notes on github\nplease report bugs to snow.w",
-    "pub_date": "2023-09-10T08:32:00.775Z",
+    "version": "v1.2.28",
+    "notes": "v1.2.28\n- update meter for september patch\nfull patch notes on github\nplease report bugs on discord",
+    "pub_date": "2023-09-14T00:24:42.503Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.2.27/LOA.Logs_1.2.27_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmFkY0VXdlIzZGxocjROWnlKbVVvZ0FLTWRkMVo3VlFmeDNZaHBzREhkbHo1WkV4QVBJSWZ3TXJSZStDM0E0Q3pLM1ppQ1I1Y201WU1EUmJndlI4M0FnPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjk0MzI3NjA2CWZpbGU6TE9BIExvZ3NfMS4yLjI3X3g2NC1zZXR1cC5uc2lzLnppcApITlNUNFVJZW1Yd0IrcUhnazc1TEJCeEVnS1phaEZveWxyVkwrNm1KOFdCV1NoREdQQ1dWejI5YzBKTzVvVzM1TkZWR2syMWJqRnA5c21TSVhWOXZDUT09Cg=="
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.2.28/LOA.Logs_1.2.28_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlRZcXZZaEdGZzNNQk1sUFlWM3pjbXQvVkVoUWZBZmtNQXJiUlBNR3NiV1NwMWI0WHUxSUFUWWtEazVmc212UFQ3RGlUSHZuMUtxR1pRVHVhVVRzVkFFPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjk0NjUwOTU5CWZpbGU6TE9BIExvZ3NfMS4yLjI4X3g2NC1zZXR1cC5uc2lzLnppcApTanlMN3g0YXlXanJpdkc0RUo1Vk5UWXBtdTBhME1wR0kvZHRMNm5jSXhDRU1nMkZ3a2p0Y29QMWV4eUwvQ2JJMHlCaXgwWlpNSUNvWHVzeTZyRmdEUT09Cg=="
         }
     }
 }
