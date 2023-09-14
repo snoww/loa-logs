@@ -1,11 +1,11 @@
 {
-    "version": "v1.2.29",
-    "notes": "v1.2.29\n- fix summons\n- update meter for september patch\nfull patch notes on github\nplease report bugs on discord",
-    "pub_date": "2023-09-14T02:41:28.233Z",
+    "version": "v1.2.30",
+    "notes": "v1.2.30\n#### BUG FIXESn\n- fix ads counting as bosses in akkan when they shouldn't (sry)\n- update meter for september patch\nfull patch notes on github\nplease report bugs on discord.gg/sbSa3pkDF5",
+    "pub_date": "2023-09-14T05:50:44.025Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.2.29/LOA.Logs_1.2.29_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlcrbUR6S25hQXBQN0lSeGlJRmd2Z21ZNFE4bkt2M3hYeU51VkxHUjZLRjdoRE9zbHZFZEZrdzBuSnJmN0dLZ2FLZ1luZERYcE5mUm5GWnhtNGFCSlE4PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjk0NjU5MjQyCWZpbGU6TE9BIExvZ3NfMS4yLjI5X3g2NC1zZXR1cC5uc2lzLnppcApLMjhaZzUyZHhnNGUxRDNwR3hwaHdoTHMxVUtMbzJrc0h5U0hoZjZFbWZNLzZOT0hBMFhaRlRWTHZBS2laN1N4SUxSQU5uaVlMeG1vSGsxMStNNHpBUT09Cg=="
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.2.30/LOA.Logs_1.2.30_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlN2aE9XUHJlRExDZ0s5Q1JsTGZHbVhjV0ttY21FNGF1Nkk5ckRGU3U0RmZzOXB5QlBlYlQyNk5haUhrMGZGY3JyQ2VJaXhhcEdiM09KbXQxT0x1WmdNPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjk0NjY5NzI5CWZpbGU6TE9BIExvZ3NfMS4yLjMwX3g2NC1zZXR1cC5uc2lzLnppcApTOCtMa3N3UnY0YmFidzNTaklVY2JFZ1RQeFN4d3ArMW5pZWtTOUZ1VG5MVEhFbDFSTi9vNm9MOEZaQkdaYVkvRlRaSXJMRk1lWk43a1NrdjZMN2VBUT09Cg=="
         }
     }
 }
