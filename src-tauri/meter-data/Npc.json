@@ -10170,9 +10170,9 @@
   "494618": { "id": 494618, "name": "Wildfire Orb", "grade": "seed", "type": "monster", "pushimmune": true },
   "494619": { "id": 494619, "name": "Freeze Orb", "grade": "seed", "type": "monster", "pushimmune": true },
   "494620": { "id": 494620, "name": "Nature Orb", "grade": "seed", "type": "monster", "pushimmune": true },
-  "494621": { "id": 494621, "name": "Flame Guardian", "grade": "boss", "type": "monster", "pushimmune": true },
-  "494622": { "id": 494622, "name": "Frost Guardian", "grade": "boss", "type": "monster", "pushimmune": true },
-  "494623": { "id": 494623, "name": "Nature Guardian", "grade": "boss", "type": "monster", "pushimmune": true },
+  "494621": { "id": 494621, "name": "Flame Guardian", "grade": "normal", "type": "monster", "pushimmune": true },
+  "494622": { "id": 494622, "name": "Frost Guardian", "grade": "normal", "type": "monster", "pushimmune": true },
+  "494623": { "id": 494623, "name": "Nature Guardian", "grade": "normal", "type": "monster", "pushimmune": true },
   "494624": { "id": 494624, "name": "Wildfire Orb", "grade": "seed", "type": "monster", "pushimmune": true },
   "494625": { "id": 494625, "name": "Freeze Orb", "grade": "seed", "type": "monster", "pushimmune": true },
   "494626": { "id": 494626, "name": "Nature Orb", "grade": "seed", "type": "monster", "pushimmune": true },
@@ -10185,25 +10185,25 @@
   "494663": { "id": 494663, "name": "Lauriel", "grade": "boss", "type": "monster", "pushimmune": true },
   "494664": { "id": 494664, "name": "Lauriel", "grade": "boss", "type": "monster", "pushimmune": true },
   "494665": { "id": 494665, "name": "Lauriel", "grade": "boss", "type": "monster", "pushimmune": true },
-  "494666": { "id": 494666, "name": "Light Crystal", "grade": "boss", "type": "monster", "pushimmune": true },
+  "494666": { "id": 494666, "name": "Light Crystal", "grade": "normal", "type": "monster", "pushimmune": true },
   "494667": {
     "id": 494667,
     "name": "Crystallized Aggregated Light",
-    "grade": "boss",
+    "grade": "normal",
     "type": "monster",
     "pushimmune": true
   },
   "494668": {
     "id": 494668,
     "name": "Crystallized Aggregated Light",
-    "grade": "boss",
+    "grade": "normal",
     "type": "monster",
     "pushimmune": true
   },
   "494669": {
     "id": 494669,
     "name": "Crystallized Aggregated Light",
-    "grade": "boss",
+    "grade": "normal",
     "type": "monster",
     "pushimmune": true
   },
