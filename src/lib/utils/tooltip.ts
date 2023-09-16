@@ -85,7 +85,7 @@ export function generateHeaderTooltip(buff: StatusEffect, iconPath: string) {
     }
     str += `<div class="flex tracking-tight items-center">`;
     str += `<img src=${iconPath + getSkillIcon(buff.source.icon)} alt=${buff.name} class="w-5 h-5 mr-1"/>`;
-    str += `<div class="truncate">`;
+    str += `<div class="">`;
     str += removeUnknownHtmlTags(buff.source.desc);
     str += `</div></div></div>`;
 
