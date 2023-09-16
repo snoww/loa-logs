@@ -113,6 +113,7 @@
                                     class="mx-2 rounded bg-zinc-800 px-1 text-xs hover:bg-zinc-600"
                                     on:click={() => {
                                         searchFilter.set(new SearchFilter($settings.logs.minEncounterDuration));
+                                        $pageStore = 1;
                                     }}>
                                     Reset All
                                 </button>
@@ -156,6 +157,7 @@
                                                         newSet.add(boss);
                                                     }
                                                     $searchFilter.bosses = newSet;
+                                                    $pageStore = 1;
                                                 }}>
                                                 {boss}
                                             </button>
@@ -179,6 +181,7 @@
                                                     newSet.add(className);
                                                 }
                                                 $searchFilter.classes = newSet;
+                                                $pageStore = 1;
                                             }}>
                                             {className}
                                         </button>
