@@ -28,6 +28,8 @@ use std::thread;
 use std::time::{Duration, Instant};
 use tauri::{Manager, Window, Wry};
 
+use self::models::{TripodIndex, TripodLevel};
+
 pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool) -> Result<()> {
     let id_tracker = Rc::new(RefCell::new(IdTracker::new()));
     let party_tracker = Rc::new(RefCell::new(PartyTracker::new(id_tracker.clone())));
@@ -278,7 +280,7 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool) -> Re
                     let mut entity = entity_tracker.get_source_entity(pkt.caster);
                     if entity.class_id == 202 {
                         entity = entity_tracker.guess_is_player(entity, pkt.skill_id);
-                        state.on_skill_start(entity, pkt.skill_id as i32, Utc::now().timestamp_millis());
+                        state.on_skill_start(entity, pkt.skill_id as i32, None, None, Utc::now().timestamp_millis());
                     }
                 }
             }
@@ -286,7 +288,17 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool) -> Re
                 if let Some(pkt) = parse_pkt(&data, PKTSkillStartNotify::new, "PKTSkillStartNotify") {
                     let mut entity = entity_tracker.get_source_entity(pkt.source_id);
                     entity = entity_tracker.guess_is_player(entity, pkt.skill_id);
-                    state.on_skill_start(entity, pkt.skill_id as i32, Utc::now().timestamp_millis());
+                    let tripod_index = pkt.skill_option_data.tripod_index.map(|tripod_index| TripodIndex {
+                            first: tripod_index.first,
+                            second: tripod_index.second,
+                            third: tripod_index.third,
+                        });
+                    let tripod_level = pkt.skill_option_data.tripod_level.map(|tripod_level| TripodLevel {
+                            first: tripod_level.first,
+                            second: tripod_level.second,
+                            third: tripod_level.third,
+                        });
+                    state.on_skill_start(entity, pkt.skill_id as i32, tripod_index, tripod_level, Utc::now().timestamp_millis());
                 }
             }
             Pkt::SkillStageNotify => {

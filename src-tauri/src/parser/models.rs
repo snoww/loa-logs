@@ -135,6 +135,24 @@ pub struct Skill {
     pub front_attack_damage: i64,
     pub dps: i64,
     pub cast_log: Vec<i32>,
+    pub tripod_index: Option<TripodIndex>,
+    pub tripod_level: Option<TripodLevel>,
+}
+
+#[derive(Debug, Default, Serialize, Deserialize, Clone, Copy)]
+#[serde(rename_all = "camelCase", default)]
+pub struct TripodLevel {
+    pub first: u16,
+    pub second: u16,
+    pub third: u16,
+}
+
+#[derive(Debug, Default, Serialize, Deserialize, Clone, Copy)]
+#[serde(rename_all = "camelCase", default)]
+pub struct TripodIndex {
+    pub first: u8,
+    pub second: u8,
+    pub third: u8,
 }
 
 #[serde_as]

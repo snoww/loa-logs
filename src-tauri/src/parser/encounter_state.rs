@@ -286,7 +286,7 @@ impl EncounterState {
         entity.damage_stats.death_time = Utc::now().timestamp_millis();
     }
 
-    pub fn on_skill_start(&mut self, source_entity: Entity, skill_id: i32, timestamp: i64) {
+    pub fn on_skill_start(&mut self, source_entity: Entity, skill_id: i32, tripod_index: Option<TripodIndex>, tripod_level: Option<TripodLevel>, timestamp: i64) {
         let skill_name = get_skill_name(&skill_id);
         let mut entity = self
             .encounter
@@ -306,6 +306,8 @@ impl EncounterState {
                         id: skill_id,
                         name: skill_name,
                         icon: skill_icon,
+                        tripod_index,
+                        tripod_level,
                         casts: 0,
                         ..Default::default()
                     },
@@ -351,6 +353,8 @@ impl EncounterState {
                     id: skill_id,
                     name: skill_name,
                     icon: skill_icon,
+                    tripod_index,
+                    tripod_level,
                     casts: 1,
                     ..Default::default()
                 },
