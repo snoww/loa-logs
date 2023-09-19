@@ -155,7 +155,7 @@ export async function registerShortcuts(shortcuts: any) {
     }
     if (shortcuts.showLogs.modifier && shortcuts.showLogs.key) {
         await register(shortcuts.showLogs.modifier + "+" + shortcuts.showLogs.key, async () => {
-            await invoke("open_url", { url: "logs" });
+            await invoke("toggle_logs_window");
         });
     }
     if (shortcuts.showLatestEncounter.modifier && shortcuts.showLatestEncounter.key) {

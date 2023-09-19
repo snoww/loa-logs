@@ -236,6 +236,7 @@ async fn main() -> Result<()> {
             delete_encounter,
             delete_encounters,
             toggle_meter_window,
+            toggle_logs_window,
             open_url,
             save_settings,
             get_settings,
@@ -721,6 +722,18 @@ fn toggle_meter_window(window: tauri::Window) {
             meter.hide().unwrap();
         } else {
             meter.show().unwrap();
+        }
+    }
+}
+
+#[tauri::command]
+fn toggle_logs_window(window: tauri::Window) {
+    if let Some(logs) = window.app_handle().get_window("logs") {
+        if logs.is_visible().unwrap() {
+            logs.hide().unwrap();
+        } else {
+            logs.emit("redirect-url", "logs").unwrap();
+            logs.show().unwrap();
         }
     }
 }
