@@ -4167,65 +4167,65 @@
     "type": "monster",
     "pushimmune": true
   },
-  "4221671": { "id": 4221671, "name": "Ground Explosion", "grade": "boss", "type": "monster", "pushimmune": true },
-  "4221672": { "id": 4221672, "name": "Ground Explosion", "grade": "boss", "type": "monster", "pushimmune": true },
-  "4221673": { "id": 4221673, "name": "Ground Explosion", "grade": "boss", "type": "monster", "pushimmune": true },
-  "4221674": { "id": 4221674, "name": "Ground Explosion", "grade": "boss", "type": "monster", "pushimmune": true },
-  "4221675": { "id": 4221675, "name": "Ground Explosion", "grade": "boss", "type": "monster", "pushimmune": true },
-  "4221676": { "id": 4221676, "name": "Ground Explosion", "grade": "boss", "type": "monster", "pushimmune": true },
-  "4221677": { "id": 4221677, "name": "Ground Explosion", "grade": "boss", "type": "monster", "pushimmune": true },
-  "4221678": { "id": 4221678, "name": "Light's Protection", "grade": "boss", "type": "monster", "pushimmune": true },
-  "4221679": { "id": 4221679, "name": "Ground Explosion", "grade": "boss", "type": "monster", "pushimmune": true },
+  "4221671": { "id": 4221671, "name": "Ground Explosion", "grade": "normal", "type": "monster", "pushimmune": true },
+  "4221672": { "id": 4221672, "name": "Ground Explosion", "grade": "normal", "type": "monster", "pushimmune": true },
+  "4221673": { "id": 4221673, "name": "Ground Explosion", "grade": "normal", "type": "monster", "pushimmune": true },
+  "4221674": { "id": 4221674, "name": "Ground Explosion", "grade": "normal", "type": "monster", "pushimmune": true },
+  "4221675": { "id": 4221675, "name": "Ground Explosion", "grade": "normal", "type": "monster", "pushimmune": true },
+  "4221676": { "id": 4221676, "name": "Ground Explosion", "grade": "normal", "type": "monster", "pushimmune": true },
+  "4221677": { "id": 4221677, "name": "Ground Explosion", "grade": "normal", "type": "monster", "pushimmune": true },
+  "4221678": { "id": 4221678, "name": "Light's Protection", "grade": "normal", "type": "monster", "pushimmune": true },
+  "4221679": { "id": 4221679, "name": "Ground Explosion", "grade": "normal", "type": "monster", "pushimmune": true },
   "4221680": {
     "id": 4221680,
     "name": "Summoned Protection Tile",
-    "grade": "boss",
+    "grade": "normal",
     "type": "monster",
     "pushimmune": true
   },
-  "4221681": { "id": 4221681, "name": "Ground Explosion", "grade": "boss", "type": "monster", "pushimmune": true },
-  "4221682": { "id": 4221682, "name": "Ground Explosion", "grade": "boss", "type": "monster", "pushimmune": true },
-  "4221683": { "id": 4221683, "name": "Ground Explosion", "grade": "boss", "type": "monster", "pushimmune": true },
-  "4221684": { "id": 4221684, "name": "Ground Explosion", "grade": "boss", "type": "monster", "pushimmune": true },
+  "4221681": { "id": 4221681, "name": "Ground Explosion", "grade": "normal", "type": "monster", "pushimmune": true },
+  "4221682": { "id": 4221682, "name": "Ground Explosion", "grade": "normal", "type": "monster", "pushimmune": true },
+  "4221683": { "id": 4221683, "name": "Ground Explosion", "grade": "normal", "type": "monster", "pushimmune": true },
+  "4221684": { "id": 4221684, "name": "Ground Explosion", "grade": "normal", "type": "monster", "pushimmune": true },
   "4221685": {
     "id": 4221685,
     "name": "For checking combined conditions.",
-    "grade": "boss",
+    "grade": "normal",
     "type": "monster",
     "pushimmune": true
   },
   "4221686": {
     "id": 4221686,
     "name": "Grant Masking Buff to Sector 1",
-    "grade": "boss",
+    "grade": "normal",
     "type": "monster",
     "pushimmune": true
   },
   "4221687": {
     "id": 4221687,
     "name": "Grant Masking Buff to Sector 2",
-    "grade": "boss",
+    "grade": "normal",
     "type": "monster",
     "pushimmune": true
   },
   "4221688": {
     "id": 4221688,
     "name": "Grant Masking Buff to Sector 3",
-    "grade": "boss",
+    "grade": "normal",
     "type": "monster",
     "pushimmune": true
   },
   "4221689": {
     "id": 4221689,
     "name": "Grant Masking Buff to Sector 4",
-    "grade": "boss",
+    "grade": "normal",
     "type": "monster",
     "pushimmune": true
   },
   "4221690": {
     "id": 4221690,
     "name": "Grant Challenge_Boss Timing Masking Buff",
-    "grade": "boss",
+    "grade": "normal",
     "type": "monster",
     "pushimmune": true
   },
@@ -4233,7 +4233,7 @@
   "4221692": {
     "id": 4221692,
     "name": "Obtaining a Sidereal Meter",
-    "grade": "boss",
+    "grade": "normal",
     "type": "monster",
     "pushimmune": true
   },
