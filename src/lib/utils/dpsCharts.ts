@@ -5,6 +5,7 @@ import { defaultOptions } from "./charts";
 import { abbreviateNumber, formatDurationFromMs, formatDurationFromS, resampleData, round2, timeToSeconds } from "./numbers";
 import { getSkillIcon, isValidName } from "./strings";
 import { bossHpMap } from "$lib/constants/bossHpBars";
+import { classesMap } from "$lib/constants/classes";
 
 export function getLegendNames(chartablePlayers: Entity[], showNames: boolean) {
     if (!showNames) {
@@ -90,7 +91,7 @@ export function getAveragePlayerSeries(chartablePlayers: Entity[], legendNames: 
 
             return {
                 name: legendNames[i],
-                color: classColors[player.class].color,
+                color: classColors[classesMap[player.classId]].color,
                 type: "line",
                 data: player.damageStats.dpsAverage,
                 showSymbol: false,
@@ -120,7 +121,7 @@ export function getRollingPlayerSeries(chartablePlayers: Entity[], legendNames: 
             }
             return {
                 name: legendNames[i],
-                color: classColors[player.class].color,
+                color: classColors[classesMap[player.classId]].color,
                 type: "line",
                 data: player.damageStats.dpsRolling10sAvg,
                 showSymbol: false,

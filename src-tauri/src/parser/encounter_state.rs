@@ -115,6 +115,7 @@ impl EncounterState {
             self.encounter.local_player = entity.name.clone();
             local.name = entity.name.clone();
             local.class_id = entity.class_id;
+            local.class = get_class_from_id(&entity.class_id);
             local.gear_score = entity.gear_level;
             self.encounter
                 .entities
@@ -134,6 +135,7 @@ impl EncounterState {
                 let mut new_local = self.encounter.entities[&old_local].clone();
                 new_local.name = entity.name.clone();
                 new_local.class_id = entity.class_id;
+                new_local.class = get_class_from_id(&entity.class_id);
                 new_local.gear_score = entity.gear_level;
                 self.encounter.entities.remove(&old_local);
                 self.encounter.local_player = entity.name.clone();
