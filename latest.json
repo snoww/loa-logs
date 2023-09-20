@@ -1,11 +1,11 @@
 {
-    "version": "v1.2.31",
-    "notes": "v1.2.31\n#### NEW FEATURES\n- update meter for mokoko kindergarten patch\n#### BUG FIXES & IMPROVEMENTS\n- show full tooltips for buffs\n- \"show logs\" shortcut \nnow correctly toggles log window (#30)\n- tracking party info, tripod data in logs for future use\nfull patch notes on github\nplease report bugs on discord.gg/sbSa3pkDF5",
-    "pub_date": "2023-09-20T21:13:55.228Z",
+    "version": "v1.2.32",
+    "notes": "v1.2.32\n- small bug fix when viewing logs\nv1.2.31\n#### NEW FEATURES\n- update meter for mokoko kindergarten patch\n#### BUG FIXES & IMPROVEMENTS\n- show full tooltips for buffs\n- \"show logs\" shortcut \nnow correctly toggles log window (#30)\nfull patch notes on github\nplease report bugs on discord.gg/sbSa3pkDF5",
+    "pub_date": "2023-09-20T22:59:18.944Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.2.31/LOA.Logs_1.2.31_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmVnalVDOS9GSW1CckdrMzdWTnZhWTVlTmlydzFvN2NZcnE1cFNmQzRYK1BCWHB6RnNlQzNUdXFuN1F4S1NCSXFGT0lFemdzSXJoVldXaWhybmJrTXdvPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjk1MjQ0MjY4CWZpbGU6TE9BIExvZ3NfMS4yLjMxX3g2NC1zZXR1cC5uc2lzLnppcAptckYvRWp1YU51VXdUU3NNOEZWT1hYRUhORzZ4Si94U1JxbkVxNThKMW1Ecmk1MmFmb0lHQzFoNWgzKzFjNk1nMXJFWnJDeU8wOTV3TW1VM3RENG1EQT09Cg=="
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.2.32/LOA.Logs_1.2.32_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlhFVlFveklZUGlCRkRITEJ4ZkZhQndJZUNWZ1FaTTV2cFZZR2dXTUFtYk9ENzV0MmJreGkyNVJUeXlubjRXL2ZPSmVGVzBHYTlHZm0yamFhT3FvMndvPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjk1MjUwNjg2CWZpbGU6TE9BIExvZ3NfMS4yLjMyX3g2NC1zZXR1cC5uc2lzLnppcApGK3lLMTJlYkVGb2ppK2RVSmZ2MUx0SFA3VkVBR24yOUJMcFZpeVV0OFdydld2OFUwYTBTQmRYdnlPR1d5bzhFZ242dEk4SUpZOHF2cWRUNHY4S05CQT09Cg=="
         }
     }
 }
