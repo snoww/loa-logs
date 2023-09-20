@@ -250,6 +250,8 @@ pub struct EncounterMisc {
     pub boss_hp_log: HashMap<String, Vec<BossHpLog>>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub raid_clear: Option<bool>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub party_info: Option<HashMap<i32, Vec<String>>>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]

@@ -16,6 +16,7 @@ use crate::parser::party_tracker::PartyTracker;
 use crate::parser::status_tracker::{StatusEffectTargetType, StatusTracker};
 use anyhow::Result;
 use chrono::Utc;
+use hashbrown::HashMap;
 use log::{warn, info};
 use meter_core::packets::definitions::*;
 use meter_core::packets::opcodes::Pkt;
@@ -151,6 +152,7 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool) -> Re
             }
             Pkt::InitEnv => {
                 if let Some(pkt) = parse_pkt(&data, PKTInitEnv::new, "PKTInitEnv") {
+                    party_tracker.borrow_mut().reset_party_mappings();
                     let entity = entity_tracker.init_env(pkt);
                     debug_print!("init env", &entity);
                     state.on_init_env(entity);
@@ -261,6 +263,7 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool) -> Re
                 debug_print!("phase", &1);
             }
             Pkt::RaidResult => {
+                update_party(&party_tracker, &mut entity_tracker, &mut state);
                 state.on_phase_transition(0);
                 raid_end_cd = Instant::now();
                 debug_print!("phase", &0);
@@ -411,12 +414,14 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool) -> Re
                 if let Some(pkt) = parse_pkt(&data, PKTTriggerStartNotify::new, "PKTTriggerStartNotify") {
                     match pkt.trigger_signal_type {
                         57 | 59 | 61 | 63 | 74 | 76 => {
+                            update_party(&party_tracker, &mut entity_tracker, &mut state);
                             state.raid_clear = true;
                             state.on_phase_transition(2);
                             raid_end_cd = Instant::now();
                             debug_print!("raid", &"clear".to_string())
                         }
                         58 | 60 | 62 | 64 | 75 | 77 => {
+                            update_party(&party_tracker, &mut entity_tracker, &mut state);
                             state.raid_clear = false;
                             state.on_phase_transition(4);
                             raid_end_cd = Instant::now();
@@ -490,6 +495,25 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool) -> Re
 
     Ok(())
 }
+
+fn update_party(party_tracker: &Rc<RefCell<PartyTracker>>, entity_tracker: &mut EntityTracker, state: &mut EncounterState) {
+    let mut parties: HashMap<u32, i32> = HashMap::new();
+    let mut party_info: HashMap<i32, Vec<String>> = HashMap::new();
+    let mut i = 0;
+
+    for (entity_id, party_id) in party_tracker.borrow().entity_id_to_party_id.iter() {
+        if !parties.contains_key(party_id) {
+            parties.insert(*party_id, i);
+            party_info.insert(i, Vec::new());
+            i += 1;
+        }
+        if entity_tracker.entities.contains_key(entity_id) {
+            party_info.get_mut(&parties[party_id]).unwrap().push(entity_tracker.entities[entity_id].name.clone());
+        }
+    }
+    state.party_info = party_info;
+}
+
 
 fn parse_pkt<T, F>(data: &[u8], new_fn: F, pkt_name: &str) -> Option<T>
 where

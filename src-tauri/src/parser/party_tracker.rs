@@ -75,6 +75,12 @@ impl PartyTracker {
         }
     }
 
+    pub fn reset_party_mappings(&mut self) {
+        self.character_id_to_party_id.clear();
+        self.entity_id_to_party_id.clear();
+        self.raid_instance_to_party_instance.clear();
+    }
+
     pub fn remove_party_mappings(&mut self, party_instance_id: u32) {
         // Get the raid_id associated with the party_instance_id
         let raid_id =

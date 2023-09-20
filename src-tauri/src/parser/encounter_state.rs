@@ -34,6 +34,8 @@ pub struct EncounterState {
 
     stagger_log: Vec<(i32, f32)>,
     stagger_intervals: Vec<(i32, i32)>,
+
+    pub party_info: HashMap<i32, Vec<String>>,
 }
 
 impl EncounterState {
@@ -53,6 +55,8 @@ impl EncounterState {
             cast_log: HashMap::new(),
             stagger_log: Vec::new(),
             stagger_intervals: Vec::new(),
+
+            party_info: HashMap::new(),
         }
     }
 
@@ -73,6 +77,7 @@ impl EncounterState {
         self.boss_hp_log = HashMap::new();
         self.stagger_log = Vec::new();
         self.stagger_intervals = Vec::new();
+        self.party_info = HashMap::new();
 
         for (key, entity) in clone
             .entities
@@ -109,6 +114,8 @@ impl EncounterState {
             // update local player name, insert back into encounter
             self.encounter.local_player = entity.name.clone();
             local.name = entity.name.clone();
+            local.class_id = entity.class_id;
+            local.gear_score = entity.gear_level;
             self.encounter
                 .entities
                 .insert(self.encounter.local_player.clone(), local);
@@ -126,6 +133,8 @@ impl EncounterState {
             if let Some(old_local) = old_local {
                 let mut new_local = self.encounter.entities[&old_local].clone();
                 new_local.name = entity.name.clone();
+                new_local.class_id = entity.class_id;
+                new_local.gear_score = entity.gear_level;
                 self.encounter.entities.remove(&old_local);
                 self.encounter.local_player = entity.name.clone();
                 self.encounter
@@ -855,6 +864,7 @@ impl EncounterState {
         let stagger_log = self.stagger_log.clone();
         let stagger_intervals = self.stagger_intervals.clone();
         let raid_clear = self.raid_clear;
+        let party_info = self.party_info.clone();
 
         task::spawn(async move {
             info!("saving to db - {}", encounter.current_boss_name);
@@ -873,6 +883,7 @@ impl EncounterState {
                 stagger_log,
                 stagger_intervals,
                 raid_clear,
+                party_info,
             );
 
             tx.commit().expect("failed to commit transaction");
@@ -1231,6 +1242,7 @@ fn insert_data(
     stagger_log: Vec<(i32, f32)>,
     mut stagger_intervals: Vec<(i32, i32)>,
     raid_clear: bool,
+    party_info: HashMap<i32, Vec<String>>,
 ) {
     let mut encounter_stmt = tx
         .prepare_cached(
@@ -1261,6 +1273,11 @@ fn insert_data(
     let mut misc: EncounterMisc = EncounterMisc {
         boss_hp_log,
         raid_clear: if raid_clear { Some(true) } else { None },
+        party_info: if party_info.is_empty() {
+            None
+        } else {
+            Some(party_info)
+        },
         ..Default::default()
     };
 
