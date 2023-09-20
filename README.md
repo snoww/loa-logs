@@ -61,7 +61,7 @@ A: No. If you wish to see rDPS, please use [LOA Details](https://github.com/lost
 
 **Q: Help, my issue isn't listed here.**
 
-A: Create an issue here on GitHub, or send me a DM on Discord.
+A: Create an issue here on GitHub, or send a message in the #loa-logs channel on Discord. [(invite)](https://discord.gg/sbSa3pkDF5)
 
 **Q: Is it really "blazingly fast"?**
 
@@ -73,22 +73,28 @@ A: [Yes.](https://cdn.discordapp.com/attachments/537415745198489633/113441770473
 ### In-game Overlay (optional Boss HP bar)
 ![log_image](https://cdn.discordapp.com/attachments/537415745198489633/1100293328995614750/image.png)
 
-### Past Encounters
-<img src="https://cdn.discordapp.com/attachments/537415745198489633/1100229380652929044/image.png" width="500"/>
-
 ### Damage Breakdown with DPS Charts
-<img src="https://cdn.discordapp.com/attachments/537415745198489633/1100220743846989935/image.png" width="500"/>
+<img src="https://media.discordapp.net/attachments/1122373187775246427/1152471960991846630/LOA_Logs_J2USnnRtjc.png" width="500"/>
 
 ### Skill Breakdown
-<img src="https://cdn.discordapp.com/attachments/537415745198489633/1100230099640524861/image.png" width="500"/>
+<img src="https://cdn.discordapp.com/attachments/1122373187775246427/1152474569089749042/image.png" width="600"/>
+
+### Arcana Card Tracking
+<img src="https://media.discordapp.net/attachments/1122373187775246427/1152471963206418462/LOA_Logs_OyD9TjdeIo.png" width="500"/>
 
 ### Buff Uptime Tracking
-<img src="https://cdn.discordapp.com/attachments/537415745198489633/1100220998378324068/image.png" width="500"/>
+<img src="https://media.discordapp.net/attachments/1122373187775246427/1152471962866700318/LOA_Logs_bptNRfnIHu.png" width="800"/>
+
+### Opener Rotation
+<img src="https://cdn.discordapp.com/attachments/1122373187775246427/1152471962287865896/LOA_Logs_U5gvJHAGB7.png" width="600"/>
+
+### Past Encounters
+<img src="https://media.discordapp.net/attachments/1122373187775246427/1152471961998479370/LOA_Logs_1kVnLts5cq.png" width="500"/>
+
+#### Search Filters
+<img src="https://media.discordapp.net/attachments/1122373187775246427/1152471961268650004/LOA_Logs_fD1dlhOsPw.png" width="400"/>
 
 ### Identity Tracking (only for yourself)
-#### Arcana Card Tracking
-<img src="https://cdn.discordapp.com/attachments/537415745198489633/1100220506231287818/image.png" width="500"/>
-
 #### Bard/Artist Bubble Tracking
 <img src="https://cdn.discordapp.com/attachments/537415745198489633/1100239509754490931/image.png" width="500"/>
 
@@ -96,4 +102,4 @@ A: [Yes.](https://cdn.discordapp.com/attachments/537415745198489633/113441770473
 <img src="https://cdn.discordapp.com/attachments/537415745198489633/1100300320392871986/image.png" width="500"/>
 
 ### Skill Cast Log
-<img src="https://cdn.discordapp.com/attachments/537415745198489633/1095046175171813436/image.png" width="500"/>
+<img src="https://cdn.discordapp.com/attachments/1122373187775246427/1152471962535346226/LOA_Logs_zRCzuitke7.png" width="600"/>
