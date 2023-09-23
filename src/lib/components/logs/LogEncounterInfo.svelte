@@ -5,6 +5,7 @@
     import { getVersion } from "@tauri-apps/api/app";
 
     export let bossName: string;
+    export let difficulty: string | undefined;
     export let date: string;
     export let encounterDuration: string;
     export let totalDamageDealt: number;
@@ -14,7 +15,13 @@
 {#if $takingScreenshot}
     <div class="flex items-center justify-between px-1">
         <div>
-            <span class="font-bold">{bossName}</span><span class="ml-2 text-xs font-mono">{date}</span>
+            <span class="font-bold">
+            {#if $settings.general.showDifficulty && difficulty}
+                [{difficulty}] {bossName}
+            {:else}
+                {bossName}
+            {/if}
+            </span><span class="ml-2 text-xs font-mono">{date}</span>
         </div>
         {#await getVersion() then version}
             {#if !$settings.general.hideLogo}

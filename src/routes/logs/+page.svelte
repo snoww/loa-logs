@@ -1,10 +1,22 @@
 <script lang="ts">
     import LogSidebar from "$lib/components/logs/LogSidebar.svelte";
     import TableFilter from "$lib/components/table/TableFilter.svelte";
-    import type { EncounterPreview, EncountersOverview, SearchFilter } from "$lib/types";
-    import { formatDurationFromMs, formatTimestamp, formatTimestampDate, formatTimestampTime } from "$lib/utils/numbers";
+    import type { EncounterPreview, EncountersOverview } from "$lib/types";
+    import {
+        formatDurationFromMs,
+        formatTimestamp,
+        formatTimestampDate,
+        formatTimestampTime
+    } from "$lib/utils/numbers";
     import { classIconCache, settings } from "$lib/utils/settings";
-    import { backNavStore, ifaceChangedStore, pageStore, searchFilter, searchStore, selectedEncounters } from "$lib/utils/stores";
+    import {
+        backNavStore,
+        ifaceChangedStore,
+        pageStore,
+        searchFilter,
+        searchStore,
+        selectedEncounters
+    } from "$lib/utils/stores";
     import { tooltip } from "$lib/utils/tooltip";
     import { invoke } from "@tauri-apps/api";
     import NProgress from "nprogress";
@@ -40,11 +52,12 @@
             pageSize: rowsPerPage,
             search: $searchStore.substring(0, maxSearchLength),
             filter: {
-                minDuration: $searchFilter.minDuration !== -1 ? $searchFilter.minDuration : $settings.logs.minEncounterDuration,
+                minDuration:
+                    $searchFilter.minDuration !== -1 ? $searchFilter.minDuration : $settings.logs.minEncounterDuration,
                 bosses: Array.from($searchFilter.bosses),
                 classes: Array.from($searchFilter.classes),
                 cleared: $searchFilter.cleared,
-                favorites: $searchFilter.favorites,
+                favorites: $searchFilter.favorites
             }
         });
         encounters = overview.encounters;
@@ -130,7 +143,7 @@
     </div>
     <div class="px-8">
         <div class="py-2">
-            <TableFilter bind:selectMode refreshFn={refresh}/>
+            <TableFilter bind:selectMode refreshFn={refresh} />
         </div>
         <div
             class="relative overflow-y-auto overflow-x-hidden"
@@ -151,42 +164,46 @@
                         <tr class="border-b border-gray-700 hover:bg-zinc-700" id="encounter-{encounter.id}">
                             <td class="px-2 py-3">
                                 {#if selectMode}
-                                <div>
-                                    <input
-                                        type="checkbox"
-                                        class="text-accent-500 h-5 w-5 rounded bg-zinc-700 focus:ring-0 focus:ring-offset-0"
-                                        checked={$selectedEncounters.has(encounter.id)}
-                                        on:change={() => {
-                                            if ($selectedEncounters.has(encounter.id)) {
-                                                selectedEncounters.update((set) => {
-                                                    set.delete(encounter.id);
-                                                    return set;
-                                                });
-                                            } else {
-                                                selectedEncounters.update((set) => {
-                                                    set.add(encounter.id);
-                                                    return set;
-                                                });
-                                            }
-                                        }} />
-                                </div>
+                                    <div>
+                                        <input
+                                            type="checkbox"
+                                            class="text-accent-500 h-5 w-5 rounded bg-zinc-700 focus:ring-0 focus:ring-offset-0"
+                                            checked={$selectedEncounters.has(encounter.id)}
+                                            on:change={() => {
+                                                if ($selectedEncounters.has(encounter.id)) {
+                                                    selectedEncounters.update((set) => {
+                                                        set.delete(encounter.id);
+                                                        return set;
+                                                    });
+                                                } else {
+                                                    selectedEncounters.update((set) => {
+                                                        set.add(encounter.id);
+                                                        return set;
+                                                    });
+                                                }
+                                            }} />
+                                    </div>
                                 {:else}
-                                <div
-                                    use:tooltip={{
-                                        content: formatTimestamp(encounter.fightStart)
-                                    }}>
-                                    #{encounter.id}
-                                </div>
+                                    <div
+                                        use:tooltip={{
+                                            content: formatTimestamp(encounter.fightStart)
+                                        }}>
+                                        #{encounter.id}
+                                    </div>
                                 {/if}
                             </td>
                             <td class="w-full truncate px-3 py-3 font-bold text-gray-300">
                                 <a
                                     href="/logs/encounter/?id={encounter.id}"
                                     class="hover:text-accent-500 hover:underline">
-                                    {encounter.bossName}
+                                    {#if encounter.difficulty && $settings.general.showDifficulty}
+                                        [{encounter.difficulty}] {encounter.bossName}
+                                    {:else}
+                                        {encounter.bossName}
+                                    {/if}
                                 </a>
                             </td>
-                            <td class="px-3 py-3 flex truncate">
+                            <td class="flex truncate px-3 py-3">
                                 {#each encounter.classes as classId, i}
                                     <img
                                         src={$classIconCache[classId]}
@@ -198,7 +215,7 @@
                             <td class="px-3 py-3">
                                 {formatDurationFromMs(encounter.duration)}
                             </td>
-                            <td class="px-3 py-3 text-xs text-right">
+                            <td class="px-3 py-3 text-right text-xs">
                                 {formatTimestampDate(encounter.fightStart)}
                                 {formatTimestampTime(encounter.fightStart)}
                             </td>
@@ -275,6 +292,11 @@
         {/if}
     </div>
     {#if $ifaceChangedStore}
-        <Notification bind:showAlert={$ifaceChangedStore} text={"Network Interface Changed. Please fully Restart the App."} dismissable={false} width="18rem" isError={true}/>
+        <Notification
+            bind:showAlert={$ifaceChangedStore}
+            text={"Network Interface Changed. Please fully Restart the App."}
+            dismissable={false}
+            width="18rem"
+            isError={true} />
     {/if}
 </div>

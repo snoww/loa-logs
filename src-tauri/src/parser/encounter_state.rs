@@ -36,6 +36,7 @@ pub struct EncounterState {
     stagger_intervals: Vec<(i32, i32)>,
 
     pub party_info: HashMap<i32, Vec<String>>,
+    pub raid_difficulty: String,
 }
 
 impl EncounterState {
@@ -57,6 +58,7 @@ impl EncounterState {
             stagger_intervals: Vec::new(),
 
             party_info: HashMap::new(),
+            raid_difficulty: "".to_string(),
         }
     }
 
@@ -867,6 +869,7 @@ impl EncounterState {
         let stagger_intervals = self.stagger_intervals.clone();
         let raid_clear = self.raid_clear;
         let party_info = self.party_info.clone();
+        let raid_difficulty = self.raid_difficulty.clone();
 
         task::spawn(async move {
             info!("saving to db - {}", encounter.current_boss_name);
@@ -886,6 +889,7 @@ impl EncounterState {
                 stagger_intervals,
                 raid_clear,
                 party_info,
+                raid_difficulty,
             );
 
             tx.commit().expect("failed to commit transaction");
@@ -1245,6 +1249,7 @@ fn insert_data(
     mut stagger_intervals: Vec<(i32, i32)>,
     raid_clear: bool,
     party_info: HashMap<i32, Vec<String>>,
+    raid_difficulty: String,
 ) {
     let mut encounter_stmt = tx
         .prepare_cached(
@@ -1262,7 +1267,8 @@ fn insert_data(
         dps,
         buffs,
         debuffs,
-        misc
+        misc,
+        difficulty
     ) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13)",
         )
         .expect("failed to prepare encounter statement");
@@ -1329,7 +1335,8 @@ fn insert_data(
             encounter.encounter_damage_stats.dps,
             json!(encounter.encounter_damage_stats.buffs),
             json!(encounter.encounter_damage_stats.debuffs),
-            json!(misc)
+            json!(misc),
+            raid_difficulty
         ])
         .expect("failed to insert encounter");
 

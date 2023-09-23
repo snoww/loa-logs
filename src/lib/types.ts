@@ -13,6 +13,7 @@ export interface Encounter {
     encounterDamageStats: EncounterDamageStats;
     duration: number;
     reset: boolean;
+    difficulty?: string;
 }
 
 export interface EncountersOverview {
@@ -27,6 +28,7 @@ export interface EncounterPreview {
     duration: number;
     classes: Array<number>;
     names: Array<string>;
+    difficulty?: string;
 }
 
 export interface EncounterDamageStats {

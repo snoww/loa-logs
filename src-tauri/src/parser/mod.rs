@@ -153,6 +153,7 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool) -> Re
             Pkt::InitEnv => {
                 if let Some(pkt) = parse_pkt(&data, PKTInitEnv::new, "PKTInitEnv") {
                     party_tracker.borrow_mut().reset_party_mappings();
+                    state.raid_difficulty = "".to_string();
                     let entity = entity_tracker.init_env(pkt);
                     debug_print!("init env", &entity);
                     state.on_init_env(entity);
@@ -401,14 +402,12 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool) -> Re
             }
             Pkt::TriggerBossBattleStatus => {
                 // need to hard code clown because it spawns before the trigger is sent???
-                debug_print!("TriggerBossBattleStatus:encounter_state", &(&state.encounter.current_boss_name, state.encounter.fight_start));
                 if state.encounter.current_boss_name.is_empty() || state.encounter.fight_start == 0
                     || state.encounter.current_boss_name == "Saydon" {
                     state.on_phase_transition(3);
                     debug_print!("resetting encounter", "");
                 }
 
-                debug_print!("TriggerBossBattleStatus:raid_end", state.resetting);
             }
             Pkt::TriggerStartNotify => {
                 if let Some(pkt) = parse_pkt(&data, PKTTriggerStartNotify::new, "PKTTriggerStartNotify") {
@@ -426,6 +425,28 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool) -> Re
                             state.on_phase_transition(4);
                             raid_end_cd = Instant::now();
                             debug_print!("raid", &"wipe".to_string())
+                        }
+                        _ => {}
+                    }
+                }
+            }
+            Pkt::ZoneMemberLoadStatusNotify => {
+                if let Some(pkt) = parse_pkt(&data, PKTZoneMemberLoadStatusNotify::new, "PKTZoneMemberLoadStatusNotify") {
+                    match pkt.zone_level {
+                        0 => {
+                            state.raid_difficulty = "Normal".to_string();
+                        }
+                        1 => {
+                            state.raid_difficulty = "Hard".to_string();
+                        }
+                        2 => {
+                            state.raid_difficulty = "Inferno".to_string();
+                        }
+                        3 => {
+                            state.raid_difficulty = "Challenge".to_string();
+                        }
+                        4 => {
+                            state.raid_difficulty = "Special".to_string();
                         }
                         _ => {}
                     }

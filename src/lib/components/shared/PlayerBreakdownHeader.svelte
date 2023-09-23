@@ -36,7 +36,10 @@
     <th class="w-12 font-normal" use:tooltip={{ content: "% Damage buffed by Brand" }}>B%</th>
 {/if}
 {#if meterSettings.breakdown.avgDamage}
-    <th class="w-12 font-normal" use:tooltip={{ content: "Skill Average Damage" }}>Avg</th>
+    <th class="w-12 font-normal" use:tooltip={{ content: "Skill Average Damage per Hit" }}>APH</th>
+{/if}
+{#if meterSettings.breakdown.avgDamage}
+    <th class="w-12 font-normal" use:tooltip={{ content: "Skill Average Damage per Cast" }}>APC</th>
 {/if}
 {#if meterSettings.breakdown.maxDamage}
     <th class="w-12 font-normal" use:tooltip={{ content: "Skill Max Damage" }}>Max</th>

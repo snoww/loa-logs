@@ -96,7 +96,7 @@
 <svelte:window on:contextmenu|preventDefault />
 <LogSidebar bind:hidden />
 <div class="custom-scroll h-screen overflow-y-scroll bg-zinc-800 pb-8">
-    <div class="sticky top-0 flex h-16 justify-between bg-zinc-800 px-8 py-5 shadow-md">
+    <div class="sticky top-0 flex h-16 justify-between bg-zinc-800 px-8 py-5 shadow-md z-50">
         <div class="ml-2 flex space-x-2">
             <div class="">
                 <button on:click={() => (hidden = false)} class="mt-px block">
@@ -120,6 +120,88 @@
                 inactiveClasses="py-4 px-2 hover:text-gray-200 text-gray-400">
                 <div class="flex flex-col space-y-4 divide-y-[1px]">
                     <div class="mt-4 flex flex-col space-y-2 px-2">
+                        <div class="pt-2 relative" on:focusout={handleColorDropdownFocusLoss}>
+                            <div class="flex items-center font-medium">
+                                <button
+                                    id=""
+                                    class="bg-accent-800 inline-flex items-center rounded-lg px-2 py-2 text-center text-sm font-medium"
+                                    type="button"
+                                    on:click={handleColorDropdownClick}>
+                                    <svg
+                                        class="h-4 w-4 fill-white"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 96 960 960"
+                                        ><path
+                                            d="M480 996q-86.035 0-162.566-33.158t-133.825-90.451q-57.293-57.294-90.451-133.802Q60 662.08 60 576.062 60 487 93.196 410.724q33.196-76.275 91.5-133.25Q243 220.5 320.769 187.75 398.538 155 487.189 155q83.023 0 157.706 28.207 74.683 28.207 131.885 77.88 57.202 49.672 90.711 118.242Q901 447.9 901 527q0 112.5-62.75 184.5t-175.664 72H605.5q-17 0-29.5 13.25T563.5 827q0 25.447 10 36.224 10 10.776 10 32.276 0 40-28.55 70.25T480 996Zm0-420Zm-222.5 24.5q19.7 0 34.1-14.4Q306 571.7 306 552q0-19.7-14.4-34.1-14.4-14.4-34.1-14.4-19.7 0-34.1 14.4Q209 532.3 209 552q0 19.7 14.4 34.1 14.4 14.4 34.1 14.4Zm121-162q20.2 0 34.6-14.4 14.4-14.4 14.4-34.1 0-20.7-14.4-34.6-14.4-13.9-34.1-13.9-20.7 0-34.6 13.9-13.9 13.9-13.9 34.1 0 20.2 13.9 34.6 13.9 14.4 34.1 14.4Zm203.5 0q20.2 0 34.6-14.4Q631 409.7 631 390q0-20.7-14.4-34.6-14.4-13.9-34.1-13.9-20.7 0-34.6 13.9-13.9 13.9-13.9 34.1 0 20.2 13.9 34.6 13.9 14.4 34.1 14.4Zm123.5 162q19.7 0 34.1-14.4Q754 571.7 754 552q0-19.7-14.4-34.1-14.4-14.4-34.1-14.4-20.7 0-34.6 14.4Q657 532.3 657 552q0 19.7 13.9 34.1 13.9 14.4 34.6 14.4Zm-229.342 304q7.592 0 11.717-3.545Q492 897.41 492 888.938 492 874.5 477.25 865q-14.75-9.5-14.75-47.5 0-48.674 32.73-87.087Q527.96 692 576.25 692h86.25q74 0 110-43.75t36-115.25q0-131-97.843-208.25t-223.16-77.25q-140.595 0-238.296 95.919T151.5 576.479q0 136.521 95.211 232.271t229.447 95.75Z" /></svg>
+                                </button>
+                                <div class="ml-5">
+                                    <div class="text-gray-100">Accent Color</div>
+                                    <div class="text-xs text-gray-300">Set the accent color for the app</div>
+                                </div>
+                            </div>
+                            {#if colorDropdownOpen}
+                                <div id="dropdown" class="absolute mt-2 w-28 -left-1 cursor-pointer rounded-lg shadow">
+                                    <ul class="text-sm text-gray-200" aria-labelledby="dropdownDefaultButton">
+                                        <li>
+                                            <button
+                                                class="block w-full rounded-t-lg bg-red-800 px-4 py-2 text-left"
+                                                on:click={() => {
+                                                    $settings.general.accentColor = "theme-red";
+                                                    colorDropdownOpen = false;
+                                                }}>Red</button>
+                                        </li>
+                                        <li>
+                                            <button
+                                                class="block w-full bg-pink-800 px-4 py-2 text-left"
+                                                on:click={() => {
+                                                    $settings.general.accentColor = "theme-pink";
+                                                    colorDropdownOpen = false;
+                                                }}>Pink</button>
+                                        </li>
+                                        <li>
+                                            <button
+                                                class="block w-full bg-purple-800 px-4 py-2 text-left"
+                                                on:click={() => {
+                                                    $settings.general.accentColor = "theme-purple";
+                                                    colorDropdownOpen = false;
+                                                }}>Purple</button>
+                                        </li>
+                                        <li>
+                                            <button
+                                                class="block w-full bg-sky-800 px-4 py-2 text-left"
+                                                on:click={() => {
+                                                    $settings.general.accentColor = "theme-blue";
+                                                    colorDropdownOpen = false;
+                                                }}>Blue</button>
+                                        </li>
+                                        <li>
+                                            <button
+                                                class="block w-full bg-green-800 px-4 py-2 text-left"
+                                                on:click={() => {
+                                                    $settings.general.accentColor = "theme-green";
+                                                    colorDropdownOpen = false;
+                                                }}>Green</button>
+                                        </li>
+                                        <li>
+                                            <button
+                                                class="block w-full bg-yellow-400 px-4 py-2 text-left"
+                                                on:click={() => {
+                                                    $settings.general.accentColor = "theme-yellow";
+                                                    colorDropdownOpen = false;
+                                                }}>Yellow</button>
+                                        </li>
+                                        <li>
+                                            <button
+                                                class="block w-full rounded-b-lg bg-orange-500 px-4 py-2 text-left"
+                                                on:click={() => {
+                                                    $settings.general.accentColor = "theme-orange";
+                                                    colorDropdownOpen = false;
+                                                }}>Orange</button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            {/if}
+                        </div>
                         <SettingItem
                             name="Show Names"
                             description="Show player names if it's loaded. If disabled, it will show the class name (e.g. Arcanist)"
@@ -132,13 +214,17 @@
                             name="Show Esther"
                             description="Show damage dealt by Esther skills in meter and log view."
                             bind:setting={$settings.general.showEsther} />
+                        <SettingItem
+                            name="Show Raid Difficulty"
+                            description={"Shows the difficulty of the raid."}
+                            bind:setting={$settings.general.showDifficulty} />
                         <!-- <SettingItem
                             name="Show Date in Screenshot"
                             description={'Shows the date of the encounter when taking screenshot'}
                             bind:setting={$settings.general.showDate} /> -->
                         <SettingItem
                             name="Show Details Tab"
-                            description={'Shows an additional tab in meter for raw identity and stagger data.'}
+                            description={"Shows an additional tab in meter for raw identity and stagger data."}
                             bind:setting={$settings.general.showDetails} />
                         <SettingItem
                             name="Hide Logo in Screenshot"
@@ -271,88 +357,6 @@
                                 </label>
                             </div>
                         {/if}
-                        <div class="pt-2" on:focusout={handleColorDropdownFocusLoss}>
-                            <div class="flex items-center font-medium">
-                                <button
-                                    id=""
-                                    class="bg-accent-800 inline-flex items-center rounded-lg px-2 py-2 text-center text-sm font-medium"
-                                    type="button"
-                                    on:click={handleColorDropdownClick}>
-                                    <svg
-                                        class="h-4 w-4 fill-white"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 96 960 960"
-                                        ><path
-                                            d="M480 996q-86.035 0-162.566-33.158t-133.825-90.451q-57.293-57.294-90.451-133.802Q60 662.08 60 576.062 60 487 93.196 410.724q33.196-76.275 91.5-133.25Q243 220.5 320.769 187.75 398.538 155 487.189 155q83.023 0 157.706 28.207 74.683 28.207 131.885 77.88 57.202 49.672 90.711 118.242Q901 447.9 901 527q0 112.5-62.75 184.5t-175.664 72H605.5q-17 0-29.5 13.25T563.5 827q0 25.447 10 36.224 10 10.776 10 32.276 0 40-28.55 70.25T480 996Zm0-420Zm-222.5 24.5q19.7 0 34.1-14.4Q306 571.7 306 552q0-19.7-14.4-34.1-14.4-14.4-34.1-14.4-19.7 0-34.1 14.4Q209 532.3 209 552q0 19.7 14.4 34.1 14.4 14.4 34.1 14.4Zm121-162q20.2 0 34.6-14.4 14.4-14.4 14.4-34.1 0-20.7-14.4-34.6-14.4-13.9-34.1-13.9-20.7 0-34.6 13.9-13.9 13.9-13.9 34.1 0 20.2 13.9 34.6 13.9 14.4 34.1 14.4Zm203.5 0q20.2 0 34.6-14.4Q631 409.7 631 390q0-20.7-14.4-34.6-14.4-13.9-34.1-13.9-20.7 0-34.6 13.9-13.9 13.9-13.9 34.1 0 20.2 13.9 34.6 13.9 14.4 34.1 14.4Zm123.5 162q19.7 0 34.1-14.4Q754 571.7 754 552q0-19.7-14.4-34.1-14.4-14.4-34.1-14.4-20.7 0-34.6 14.4Q657 532.3 657 552q0 19.7 13.9 34.1 13.9 14.4 34.6 14.4Zm-229.342 304q7.592 0 11.717-3.545Q492 897.41 492 888.938 492 874.5 477.25 865q-14.75-9.5-14.75-47.5 0-48.674 32.73-87.087Q527.96 692 576.25 692h86.25q74 0 110-43.75t36-115.25q0-131-97.843-208.25t-223.16-77.25q-140.595 0-238.296 95.919T151.5 576.479q0 136.521 95.211 232.271t229.447 95.75Z" /></svg>
-                                </button>
-                                <div class="ml-5">
-                                    <div class="text-gray-100">Accent Color</div>
-                                    <div class="text-xs text-gray-300">Set the accent color for the app</div>
-                                </div>
-                            </div>
-                            {#if colorDropdownOpen}
-                                <div id="dropdown" class="z-10 mt-2 w-24 cursor-pointer rounded-lg shadow">
-                                    <ul class="text-sm text-gray-200" aria-labelledby="dropdownDefaultButton">
-                                        <li>
-                                            <button
-                                                class="block w-full rounded-t-lg bg-red-800 px-4 py-2 text-left"
-                                                on:click={() => {
-                                                    $settings.general.accentColor = "theme-red";
-                                                    colorDropdownOpen = false;
-                                                }}>Red</button>
-                                        </li>
-                                        <li>
-                                            <button
-                                                class="block w-full bg-pink-800 px-4 py-2 text-left"
-                                                on:click={() => {
-                                                    $settings.general.accentColor = "theme-pink";
-                                                    colorDropdownOpen = false;
-                                                }}>Pink</button>
-                                        </li>
-                                        <li>
-                                            <button
-                                                class="block w-full bg-purple-800 px-4 py-2 text-left"
-                                                on:click={() => {
-                                                    $settings.general.accentColor = "theme-purple";
-                                                    colorDropdownOpen = false;
-                                                }}>Purple</button>
-                                        </li>
-                                        <li>
-                                            <button
-                                                class="block w-full bg-sky-800 px-4 py-2 text-left"
-                                                on:click={() => {
-                                                    $settings.general.accentColor = "theme-blue";
-                                                    colorDropdownOpen = false;
-                                                }}>Blue</button>
-                                        </li>
-                                        <li>
-                                            <button
-                                                class="block w-full bg-green-800 px-4 py-2 text-left"
-                                                on:click={() => {
-                                                    $settings.general.accentColor = "theme-green";
-                                                    colorDropdownOpen = false;
-                                                }}>Green</button>
-                                        </li>
-                                        <li>
-                                            <button
-                                                class="block w-full bg-yellow-400 px-4 py-2 text-left"
-                                                on:click={() => {
-                                                    $settings.general.accentColor = "theme-yellow";
-                                                    colorDropdownOpen = false;
-                                                }}>Yellow</button>
-                                        </li>
-                                        <li>
-                                            <button
-                                                class="block w-full rounded-b-lg bg-orange-500 px-4 py-2 text-left"
-                                                on:click={() => {
-                                                    $settings.general.accentColor = "theme-orange";
-                                                    colorDropdownOpen = false;
-                                                }}>Orange</button>
-                                        </li>
-                                    </ul>
-                                </div>
-                            {/if}
-                        </div>
                     </div>
                 </div>
             </TabItem>

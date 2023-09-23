@@ -284,6 +284,7 @@
     on:contextmenu|preventDefault={handleRightClick}>
     <LogEncounterInfo
         bossName={encounter.currentBossName}
+        difficulty={encounter.difficulty}
         date={formatTimestampDate(encounter.fightStart, true)}
         encounterDuration={millisToMinutesAndSeconds(encounter.duration)}
         {totalDamageDealt}

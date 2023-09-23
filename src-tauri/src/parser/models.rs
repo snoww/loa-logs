@@ -66,6 +66,7 @@ pub struct Encounter {
     pub current_boss: Option<EncounterEntity>,
     pub encounter_damage_stats: EncounterDamageStats,
     pub duration: i64,
+    pub difficulty: Option<String>,
 }
 
 #[derive(Debug, Serialize, Clone, Default)]
@@ -450,6 +451,7 @@ pub struct EncounterPreview {
     pub duration: i32,
     pub classes: Vec<i32>,
     pub names: Vec<String>,
+    pub difficulty: Option<String>,
 }
 
 #[derive(Debug, Default, Serialize, Deserialize, Clone)]
@@ -490,6 +492,8 @@ pub struct GeneralSettings {
     pub show_esther: bool,
     #[serde(default = "default_true")]
     pub show_date: bool,
+    #[serde(default = "default_true")]
+    pub show_difficulty: bool,
     pub show_details: bool,
     pub hide_logo: bool,
     pub accent_color: String,

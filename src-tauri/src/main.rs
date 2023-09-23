@@ -295,7 +295,8 @@ fn setup_db(resource_path: PathBuf) -> Result<(), String> {
             dps INTEGER,
             buffs TEXT,
             debuffs TEXT,
-            misc TEXT
+            misc TEXT,
+            difficulty TEXT
         );
         CREATE INDEX IF NOT EXISTS encounter_fight_start_index
         ON encounter (fight_start desc);
@@ -315,6 +316,15 @@ fn setup_db(resource_path: PathBuf) -> Result<(), String> {
     let column_count: u32 = stmt.query_row([], |row| row.get(0)).unwrap();
     if column_count == 0 {
         conn.execute("ALTER TABLE encounter ADD COLUMN misc TEXT", [])
+            .expect("failed to add column");
+    }
+
+    let mut stmt = conn
+    .prepare("SELECT COUNT(*) FROM pragma_table_info('encounter') WHERE name='difficulty'")
+    .unwrap();
+    let column_count: u32 = stmt.query_row([], |row| row.get(0)).unwrap();
+    if column_count == 0 {
+        conn.execute("ALTER TABLE encounter ADD COLUMN difficulty TEXT", [])
             .expect("failed to add column");
     }
 
@@ -411,6 +421,7 @@ fn load_encounters_preview(
     e.fight_start,
     e.current_boss,
     e.duration,
+    e.difficulty,
     (
         SELECT GROUP_CONCAT(ordered_classes.class_info, ',')
         FROM (
@@ -438,7 +449,7 @@ fn load_encounters_preview(
 
     let encounter_iter = stmt
         .query_map(params_from_iter(params), |row| {
-            let classes = row.get(4).unwrap_or_else(|_| "".to_string());
+            let classes = row.get(5).unwrap_or_else(|_| "".to_string());
 
             let (classes, names) = classes
                 .split(',')
@@ -455,6 +466,7 @@ fn load_encounters_preview(
                 duration: row.get(3)?,
                 classes,
                 names,
+                difficulty: row.get(4)?,
             })
         })
         .expect("could not query encounters");
@@ -507,7 +519,8 @@ fn load_encounter(window: tauri::Window, id: String) -> Encounter {
        dps,
        buffs,
        debuffs,
-       misc
+       misc,
+       difficulty
     FROM encounter
     WHERE id = ?
     ;",
@@ -546,6 +559,7 @@ fn load_encounter(window: tauri::Window, id: String) -> Encounter {
                     misc,
                     ..Default::default()
                 },
+                difficulty: row.get(13)?,
                 ..Default::default()
             })
         })

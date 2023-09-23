@@ -3,16 +3,11 @@
     import LogDamageMeter from "$lib/components/logs/LogDamageMeter.svelte";
     import type { Encounter } from "$lib/types";
     import { formatTimestamp } from "$lib/utils/numbers";
-    import {
-        backNavStore,
-        ifaceChangedStore,
-        screenshotAlert,
-        screenshotError,
-        searchStore
-    } from "$lib/utils/stores";
+    import { backNavStore, ifaceChangedStore, screenshotAlert, screenshotError, searchStore } from "$lib/utils/stores";
     import { invoke } from "@tauri-apps/api/tauri";
     import { onMount } from "svelte";
     import Notification from "$lib/components/shared/Notification.svelte";
+    import { settings } from "$lib/utils/settings";
 
     let id: string;
     let promise: Promise<Encounter>;
@@ -42,7 +37,11 @@
             </div>
             <div class="flex w-full items-center justify-between">
                 <div class="truncate pl-2 text-xl font-bold tracking-tight text-gray-300">
-                    #{id.toLocaleString()}: {encounter.currentBossName}
+                    {#if $settings.general.showDifficulty && encounter.difficulty}
+                        #{id.toLocaleString()}: [{encounter.difficulty}] {encounter.currentBossName}
+                    {:else}
+                        #{id.toLocaleString()}: {encounter.currentBossName}
+                    {/if}
                 </div>
                 <div class="text-base">
                     {formatTimestamp(encounter.fightStart)}
@@ -58,12 +57,21 @@
         </div>
     {/await}
     {#if $screenshotAlert}
-    <Notification bind:showAlert={$screenshotError} text={"Screenshot Copied to Clipboard"} dismissable={false} width="18rem"/>
+        <Notification
+            bind:showAlert={$screenshotError}
+            text={"Screenshot Copied to Clipboard"}
+            dismissable={false}
+            width="18rem" />
     {/if}
     {#if $screenshotError}
-    <Notification bind:showAlert={$screenshotError} text={"Error Taking Screenshot"} width="18rem" isError={true}/>
+        <Notification bind:showAlert={$screenshotError} text={"Error Taking Screenshot"} width="18rem" isError={true} />
     {/if}
     {#if $ifaceChangedStore}
-    <Notification bind:showAlert={$ifaceChangedStore} text={"Network Interface Changed. Please fully Restart the App."} dismissable={false} width="18rem" isError={true}/>
+        <Notification
+            bind:showAlert={$ifaceChangedStore}
+            text={"Network Interface Changed. Please fully Restart the App."}
+            dismissable={false}
+            width="18rem"
+            isError={true} />
     {/if}
 </div>
