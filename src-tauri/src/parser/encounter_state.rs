@@ -1269,7 +1269,7 @@ fn insert_data(
         debuffs,
         misc,
         difficulty
-    ) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13)",
+    ) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14)",
         )
         .expect("failed to prepare encounter statement");
 
@@ -1369,6 +1369,7 @@ fn insert_data(
     for (_key, mut entity) in encounter.entities.iter_mut().filter(|(_, e)| {
         (e.entity_type == EntityType::PLAYER || e.entity_type == EntityType::ESTHER)
             && e.damage_stats.damage_dealt > 0
+            && e.class_id != 0
     }) {
         if entity.entity_type == EntityType::PLAYER {
             let intervals = generate_intervals(fight_start, fight_end);
