@@ -62,12 +62,12 @@
                     .filter(
                         (e) =>
                             e.damageStats.damageDealt > 0 &&
-                            (e.entityType === EntityType.ESTHER || e.entityType === EntityType.PLAYER)
+                            (e.entityType === EntityType.ESTHER || (e.entityType === EntityType.PLAYER && e.classId != 0))
                     )
                     .sort((a, b) => b.damageStats.damageDealt - a.damageStats.damageDealt);
             } else {
                 players = Object.values(encounter.entities)
-                    .filter((e) => e.damageStats.damageDealt > 0 && e.entityType === EntityType.PLAYER)
+                    .filter((e) => e.damageStats.damageDealt > 0 && (e.entityType === EntityType.PLAYER && e.classId != 0))
                     .sort((a, b) => b.damageStats.damageDealt - a.damageStats.damageDealt);
             }
             isSolo = players.length === 1;
@@ -101,7 +101,7 @@
             }
 
             let chartablePlayers = Object.values(encounter.entities)
-                .filter((e) => e.damageStats.damageDealt > 0 && e.entityType === EntityType.PLAYER)
+                .filter((e) => e.damageStats.damageDealt > 0 && e.entityType === EntityType.PLAYER && e.classId != 0)
                 .sort((a, b) => b.damageStats.damageDealt - a.damageStats.damageDealt);
 
             if (

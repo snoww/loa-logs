@@ -1367,9 +1367,8 @@ fn insert_data(
     let fight_end = encounter.last_combat_packet;
 
     for (_key, mut entity) in encounter.entities.iter_mut().filter(|(_, e)| {
-        (e.entity_type == EntityType::PLAYER || e.entity_type == EntityType::ESTHER)
+        ((e.entity_type == EntityType::PLAYER && e.class_id != 0) || e.entity_type == EntityType::ESTHER)
             && e.damage_stats.damage_dealt > 0
-            && e.class_id != 0
     }) {
         if entity.entity_type == EntityType::PLAYER {
             let intervals = generate_intervals(fight_start, fight_end);
