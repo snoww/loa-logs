@@ -1,7 +1,7 @@
 {
     "version": "v1.2.33",
-    "notes": "v1.2.33\n#### NEW FEATURES\n- added average dps per cast (this is useful for skills with multi-hit, e.g. summoner akir)\n- added option to show raid difficulty (normal, hard, inferno, challenge)\nfull patch notes on github\nplease report bugs on discord.gg/sbSa3pkDF5",
-    "pub_date": "2023-09-20T22:59:18.944Z",
+    "notes": "v1.2.33\n#### NEW FEATURES\n- added average damage per cast (this is useful for skills with multi-hit, e.g. summoner akir)\n- added option to show raid difficulty (normal, hard, inferno, challenge)\nfull patch notes on github\nplease report bugs on discord.gg/sbSa3pkDF5",
+    "pub_date": "2023-09-25T03:15:09.069Z",
     "platforms": {
         "windows-x86_64": {
             "url": "https://github.com/snoww/loa-logs/releases/download/v1.2.33/LOA.Logs_1.2.33_x64-setup.nsis.zip",
