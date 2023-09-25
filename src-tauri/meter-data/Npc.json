@@ -4229,7 +4229,7 @@
     "type": "monster",
     "pushimmune": true
   },
-  "4221691": { "id": 4221691, "name": "Ground Explosion", "grade": "boss", "type": "monster", "pushimmune": true },
+  "4221691": { "id": 4221691, "name": "Ground Explosion", "grade": "normal", "type": "monster", "pushimmune": true },
   "4221692": {
     "id": 4221692,
     "name": "Obtaining a Sidereal Meter",
@@ -4240,9 +4240,9 @@
   "4221693": { "id": 4221693, "name": "게헤나 헬카서스", "grade": "boss", "type": "monster", "pushimmune": true },
   "480808": { "id": 480808, "name": "Prokel", "grade": "boss", "type": "monster" },
   "480809": { "id": 480809, "name": "Prokel's Spiritual Echo", "grade": "boss", "type": "monster", "pushimmune": true },
-  "422361201": { "id": 422361201, "name": "Teleporter", "grade": "boss", "type": "monster", "pushimmune": true },
-  "422361202": { "id": 422361202, "name": "Teleporter", "grade": "boss", "type": "monster", "pushimmune": true },
-  "422361203": { "id": 422361203, "name": "Teleporter", "grade": "boss", "type": "monster", "pushimmune": true },
+  "422361201": { "id": 422361201, "name": "Teleporter", "grade": "normal", "type": "monster", "pushimmune": true },
+  "422361202": { "id": 422361202, "name": "Teleporter", "grade": "normal", "type": "monster", "pushimmune": true },
+  "422361203": { "id": 422361203, "name": "Teleporter", "grade": "normal", "type": "monster", "pushimmune": true },
   "422362401": {
     "id": 422362401,
     "name": "Prokel's Spiritual Echo",
