@@ -147,6 +147,9 @@
             <td class="px-1 text-center">
                 -
             </td>
+            <td class="px-1 text-center">
+                -
+            </td>
         {/if}
         {#if $settings.logs.breakdown.maxDamage}
             <td class="px-1 text-center">
