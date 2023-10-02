@@ -593,6 +593,7 @@ pub struct BreakdownTabs {
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", default)]
 pub struct BuffSettings {
+    #[serde(default = "default_true")]
     pub default: bool,
 }
 
