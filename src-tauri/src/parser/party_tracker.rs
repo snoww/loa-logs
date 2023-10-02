@@ -8,7 +8,7 @@ pub struct PartyTracker {
 
     pub character_id_to_party_id: HashMap<u64, u32>,
     pub entity_id_to_party_id: HashMap<u64, u32>,
-    raid_instance_to_party_instance: HashMap<u32, HashSet<u32>>,
+    raid_instance_to_party_ids: HashMap<u32, HashSet<u32>>,
     character_name_to_character_id: HashMap<String, u64>,
     name: Option<String>,
 }
@@ -19,7 +19,7 @@ impl PartyTracker {
             id_tracker,
             character_id_to_party_id: HashMap::new(),
             entity_id_to_party_id: HashMap::new(),
-            raid_instance_to_party_instance: HashMap::new(),
+            raid_instance_to_party_ids: HashMap::new(),
             character_name_to_character_id: HashMap::new(),
             name: None,
         }
@@ -43,13 +43,13 @@ impl PartyTracker {
         if character_id > 0 && entity_id == 0 {
             entity_id = self
                 .id_tracker
-                .borrow_mut()
+                .borrow()
                 .get_entity_id(character_id)
                 .unwrap_or(0);
         } else if character_id == 0 && entity_id > 0 {
             character_id = self
                 .id_tracker
-                .borrow_mut()
+                .borrow()
                 .get_character_id(entity_id)
                 .unwrap_or(0);
         }
@@ -78,66 +78,14 @@ impl PartyTracker {
     pub fn reset_party_mappings(&mut self) {
         self.character_id_to_party_id.clear();
         self.entity_id_to_party_id.clear();
-        self.raid_instance_to_party_instance.clear();
+        self.raid_instance_to_party_ids.clear();
     }
 
-    pub fn remove_party_mappings(&mut self, party_instance_id: u32) {
-        // Get the raid_id associated with the party_instance_id
-        let raid_id =
-            self.raid_instance_to_party_instance
-                .iter()
-                .find_map(|(&raid_id, party_instances)| {
-                    if party_instances.contains(&party_instance_id) {
-                        Some(raid_id)
-                    } else {
-                        None
-                    }
-                });
-
-        // If raid_id is found, get the associated party_ids, otherwise create a HashSet with the party_instance_id
-        let party_ids = raid_id
-            .and_then(|raid_id| self.raid_instance_to_party_instance.get(&raid_id))
-            .cloned()
-            .unwrap_or_else(|| {
-                let mut ids = HashSet::new();
-                ids.insert(party_instance_id);
-                ids
-            });
-
-        // Collect the character_ids and entity_ids associated with the party_ids into HashSet
-        let character_ids: HashSet<_> = self
-            .character_id_to_party_id
-            .iter()
-            .filter_map(|(&character_id, &party_id)| {
-                if party_ids.contains(&party_id) {
-                    Some(character_id)
-                } else {
-                    None
-                }
-            })
-            .collect();
-
-        let entity_ids: HashSet<_> = self
-            .entity_id_to_party_id
-            .iter()
-            .filter_map(|(&entity_id, &party_id)| {
-                if party_ids.contains(&party_id) {
-                    Some(entity_id)
-                } else {
-                    None
-                }
-            })
-            .collect();
-
-        // Remove the entries from the HashMaps
-        for character_id in character_ids {
-            self.character_id_to_party_id.remove(&character_id);
-            self.character_name_to_character_id
-                .retain(|_, c_id| c_id != &character_id);
-        }
-        for entity_id in entity_ids {
-            self.entity_id_to_party_id.remove(&entity_id);
-        }
+    pub fn remove_party_mappings(&mut self, party_id: u32) {
+        self.character_id_to_party_id
+            .retain(|_, &mut p_id| p_id != party_id);
+        self.entity_id_to_party_id
+            .retain(|_, &mut p_id| p_id != party_id);
     }
 
     pub fn change_entity_id(&mut self, old: u64, new: u64) {
@@ -164,7 +112,7 @@ impl PartyTracker {
 
     fn register_party_id(&mut self, raid_instance_id: u32, party_id: u32) {
         let party_instance = self
-            .raid_instance_to_party_instance
+            .raid_instance_to_party_ids
             .entry(raid_instance_id)
             .or_insert(HashSet::new());
         party_instance.insert(party_id);

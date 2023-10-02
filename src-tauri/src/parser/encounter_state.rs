@@ -35,7 +35,7 @@ pub struct EncounterState {
     stagger_log: Vec<(i32, f32)>,
     stagger_intervals: Vec<(i32, i32)>,
 
-    pub party_info: HashMap<i32, Vec<String>>,
+    pub party_info: Vec<Vec<String>>,
     pub raid_difficulty: String,
 }
 
@@ -57,7 +57,7 @@ impl EncounterState {
             stagger_log: Vec::new(),
             stagger_intervals: Vec::new(),
 
-            party_info: HashMap::new(),
+            party_info: Vec::new(),
             raid_difficulty: "".to_string(),
         }
     }
@@ -79,13 +79,12 @@ impl EncounterState {
         self.boss_hp_log = HashMap::new();
         self.stagger_log = Vec::new();
         self.stagger_intervals = Vec::new();
-        self.party_info = HashMap::new();
+        self.party_info = Vec::new();
 
-        for (key, entity) in clone
-            .entities
-            .into_iter()
-            .filter(|(_, e)| e.entity_type == EntityType::PLAYER || (keep_bosses && e.entity_type == EntityType::BOSS))
-        {
+        for (key, entity) in clone.entities.into_iter().filter(|(_, e)| {
+            e.entity_type == EntityType::PLAYER
+                || (keep_bosses && e.entity_type == EntityType::BOSS)
+        }) {
             self.encounter.entities.insert(
                 key,
                 EncounterEntity {
@@ -241,7 +240,8 @@ impl EncounterState {
                     e.id = entity.id;
                     e.current_hp = hp;
                     e.max_hp = max_hp;
-                } else if entity.entity_type == EntityType::BOSS && e.entity_type == EntityType::NPC {
+                } else if entity.entity_type == EntityType::BOSS && e.entity_type == EntityType::NPC
+                {
                     e.entity_type = EntityType::BOSS;
                     e.npc_id = entity.npc_id;
                     e.id = entity.id;
@@ -272,13 +272,14 @@ impl EncounterState {
     }
 
     pub fn on_death(&mut self, dead_entity: &Entity) {
-        let mut entity = self
+        let entity = self
             .encounter
             .entities
             .entry(dead_entity.name.clone())
             .or_insert_with(|| encounter_entity_from_entity(dead_entity));
 
-        if (dead_entity.entity_type != EntityType::PLAYER && dead_entity.entity_type != EntityType::BOSS)
+        if (dead_entity.entity_type != EntityType::PLAYER
+            && dead_entity.entity_type != EntityType::BOSS)
             || entity.id != dead_entity.id
             || (entity.entity_type == EntityType::BOSS && entity.npc_id != dead_entity.npc_id)
         {
@@ -292,16 +293,23 @@ impl EncounterState {
         {
             self.boss_dead_update = true;
         }
-        
+
         entity.current_hp = 0;
         entity.is_dead = true;
         entity.damage_stats.deaths += 1;
         entity.damage_stats.death_time = Utc::now().timestamp_millis();
     }
 
-    pub fn on_skill_start(&mut self, source_entity: Entity, skill_id: i32, tripod_index: Option<TripodIndex>, tripod_level: Option<TripodLevel>, timestamp: i64) {
+    pub fn on_skill_start(
+        &mut self,
+        source_entity: Entity,
+        skill_id: i32,
+        tripod_index: Option<TripodIndex>,
+        tripod_level: Option<TripodLevel>,
+        timestamp: i64,
+    ) {
         let skill_name = get_skill_name(&skill_id);
-        let mut entity = self
+        let entity = self
             .encounter
             .entities
             .entry(source_entity.name.clone())
@@ -596,11 +604,11 @@ impl EncounterState {
                 if !is_buffed_by_support {
                     if let Some(buff) = self.encounter.encounter_damage_stats.buffs.get(buff_id) {
                         if let Some(skill) = buff.source.skill.as_ref() {
-                            is_buffed_by_support = (buff.buff_category == "classskill"
-                                || buff.buff_category == "identity"
-                                || buff.buff_category == "ability")
-                                && buff.target == StatusEffectTarget::PARTY
-                                && is_support_class_id(skill.class_id);
+                            is_buffed_by_support = is_support_class_id(skill.class_id)
+                                && (buff.buff_category == "classskill"
+                                    || buff.buff_category == "identity"
+                                    || buff.buff_category == "ability")
+                                && buff.target == StatusEffectTarget::PARTY;
                         }
                     }
                 }
@@ -638,11 +646,11 @@ impl EncounterState {
                         self.encounter.encounter_damage_stats.debuffs.get(debuff_id)
                     {
                         if let Some(skill) = debuff.source.skill.as_ref() {
-                            is_debuffed_by_support = (debuff.buff_category == "classskill"
-                                || debuff.buff_category == "identity"
-                                || debuff.buff_category == "ability")
-                                && debuff.target == StatusEffectTarget::PARTY
-                                && is_support_class_id(skill.class_id);
+                            is_debuffed_by_support = is_support_class_id(skill.class_id)
+                                && (debuff.buff_category == "classskill"
+                                    || debuff.buff_category == "identity"
+                                    || debuff.buff_category == "ability")
+                                && debuff.target == StatusEffectTarget::PARTY;
                         }
                     }
                 }
@@ -825,7 +833,7 @@ impl EncounterState {
         }
     }
 
-    fn save_to_db(&self) {
+    pub fn save_to_db(&self) {
         if self.encounter.fight_start == 0
             || self.encounter.current_boss_name.is_empty()
             || !self
@@ -1248,7 +1256,7 @@ fn insert_data(
     stagger_log: Vec<(i32, f32)>,
     mut stagger_intervals: Vec<(i32, i32)>,
     raid_clear: bool,
-    party_info: HashMap<i32, Vec<String>>,
+    party_info: Vec<Vec<String>>,
     raid_difficulty: String,
 ) {
     let mut encounter_stmt = tx
@@ -1284,7 +1292,13 @@ fn insert_data(
         party_info: if party_info.is_empty() {
             None
         } else {
-            Some(party_info)
+            Some(
+                party_info
+                    .into_iter()
+                    .enumerate()
+                    .map(|(index, party)| (index as i32, party))
+                    .collect(),
+            )
         },
         ..Default::default()
     };
@@ -1367,7 +1381,8 @@ fn insert_data(
     let fight_end = encounter.last_combat_packet;
 
     for (_key, mut entity) in encounter.entities.iter_mut().filter(|(_, e)| {
-        ((e.entity_type == EntityType::PLAYER && e.class_id != 0) || e.entity_type == EntityType::ESTHER)
+        ((e.entity_type == EntityType::PLAYER && e.class_id != 0 && (e.max_hp > 0))
+            || e.entity_type == EntityType::ESTHER)
             && e.damage_stats.damage_dealt > 0
     }) {
         if entity.entity_type == EntityType::PLAYER {

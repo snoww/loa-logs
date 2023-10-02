@@ -73,6 +73,7 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool) -> Re
 
     let reset = Arc::new(AtomicBool::new(false));
     let pause = Arc::new(AtomicBool::new(false));
+    let save = Arc::new(AtomicBool::new(false));
 
     let emit_details = Arc::new(AtomicBool::new(false));
 
@@ -84,6 +85,16 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool) -> Re
             reset_clone.store(true, Ordering::Relaxed);
             info!("resetting meter");
             meter_window_clone.emit("reset-encounter", "").ok();
+        }
+    });
+
+    window.listen_global("save-request", {
+        let save_clone = save.clone();
+        let meter_window_clone = meter_window_clone.clone();
+        move |_event| {
+            save_clone.store(true, Ordering::Relaxed);
+            info!("manual saving encounter");
+            meter_window_clone.emit("save-encounter", "").ok();
         }
     });
     
@@ -119,6 +130,12 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool) -> Re
         }
         if pause.load(Ordering::Relaxed) {
             continue;
+        }
+        if save.load(Ordering::Relaxed) {
+            save.store(false, Ordering::Relaxed);
+            state.save_to_db();
+            state.saved = true;
+            state.resetting = true;
         }
         match op {
             Pkt::CounterAttackNotify => {
@@ -407,7 +424,6 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool) -> Re
                     state.on_phase_transition(3);
                     debug_print!("resetting encounter", "");
                 }
-
             }
             Pkt::TriggerStartNotify => {
                 if let Some(pkt) = parse_pkt(&data, PKTTriggerStartNotify::new, "PKTTriggerStartNotify") {
@@ -417,14 +433,12 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool) -> Re
                             state.raid_clear = true;
                             state.on_phase_transition(2);
                             raid_end_cd = Instant::now();
-                            debug_print!("raid", &"clear".to_string())
                         }
                         58 | 60 | 62 | 64 | 75 | 77 => {
                             update_party(&party_tracker, &mut entity_tracker, &mut state);
                             state.raid_clear = false;
                             state.on_phase_transition(4);
                             raid_end_cd = Instant::now();
-                            debug_print!("raid", &"wipe".to_string())
                         }
                         _ => {}
                     }
@@ -518,21 +532,22 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool) -> Re
 }
 
 fn update_party(party_tracker: &Rc<RefCell<PartyTracker>>, entity_tracker: &mut EntityTracker, state: &mut EncounterState) {
-    let mut parties: HashMap<u32, i32> = HashMap::new();
-    let mut party_info: HashMap<i32, Vec<String>> = HashMap::new();
-    let mut i = 0;
+    // let mut parties: HashMap<u32, i32> = HashMap::new();
+    let mut party_info: HashMap<u32, Vec<String>> = HashMap::new();
 
-    for (entity_id, party_id) in party_tracker.borrow().entity_id_to_party_id.iter() {
-        if !parties.contains_key(party_id) {
-            parties.insert(*party_id, i);
-            party_info.insert(i, Vec::new());
-            i += 1;
-        }
-        if entity_tracker.entities.contains_key(entity_id) {
-            party_info.get_mut(&parties[party_id]).unwrap().push(entity_tracker.entities[entity_id].name.clone());
-        }
+    for (entity_id, party_id) in party_tracker.borrow().entity_id_to_party_id.iter() {   
+        party_info
+        .entry(*party_id)
+        .or_insert_with(Vec::new)
+        .extend(entity_tracker.entities.get(entity_id).map(|entity| entity.name.clone()));
     }
-    state.party_info = party_info;
+    let mut sorted_parties = party_info
+        .into_iter()
+        .collect::<Vec<(u32, Vec<String>)>>();
+    sorted_parties.sort_by_key(|&(party_id, _)| party_id);
+    let normalized_parties = sorted_parties.into_iter().map(|(_, members)| members).collect();
+
+    state.party_info = normalized_parties;
 }
 
 

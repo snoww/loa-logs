@@ -296,6 +296,7 @@ impl EntityTracker {
 
         if pkt.member_datas.len() == 1 {
             if let Some(first) = pkt.member_datas.get(0) {
+                // self.party_tracker.borrow_mut().reset_party_mappings();
                 if first.name == local_player.name {
                     if let Some(local_player) = self.entities.get_mut(&self.local_player_id) {
                         local_player.class_id = first.class_id as u32;
@@ -305,9 +306,6 @@ impl EntityTracker {
                             .borrow_mut()
                             .add_mapping(first.character_id, self.local_player_id);
                     }
-                    self.party_tracker
-                        .borrow_mut()
-                        .remove(pkt.party_instance_id, first.name.to_string());
                     return;
                 }
             }
