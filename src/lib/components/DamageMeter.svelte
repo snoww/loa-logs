@@ -25,6 +25,7 @@
     let zoneChangeAlert = false;
     let resettingAlert = false;
     let pauseAlert = false;
+    let saveAlert = false;
     let raidClear = false;
     let raidWipe = false;
     let bossDeadAlert = false;
@@ -66,6 +67,13 @@
                 $paused = !$paused;
                 pauseAlert = !pauseAlert;
             });
+            let saveEncounterEvent = await listen("save-encounter", (event: any) => {
+                reset();
+                saveAlert = true;
+                setTimeout(() => {
+                    saveAlert = false;
+                }, 1500);
+            });
             let phaseTransitionEvent = await listen("phase-transition", (event: any) => {
                 let phaseCode = event.payload;
                 // console.log(Date.now() + ": phase transition event: ", event.payload)
@@ -96,6 +104,7 @@
                 zoneChangeEvent,
                 resetEncounterEvent,
                 pauseEncounterEvent,
+                saveEncounterEvent,
                 phaseTransitionEvent,
                 raidStartEvent,
                 adminErrorEvent
@@ -400,6 +409,9 @@
     {/if}
     {#if pauseAlert}
         <Notification bind:showAlert={pauseAlert} text="Paused" width={"8rem"} dismissable={false} />
+    {/if}
+    {#if saveAlert}
+        <Notification bind:showAlert={saveAlert} text="Saving" width={"8rem"} dismissable={false} />
     {/if}
     {#if raidClear}
         <Notification bind:showAlert={raidClear} text="Phase Clear" width={"9.5rem"} dismissable={false} />

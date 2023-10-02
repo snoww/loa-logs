@@ -53,10 +53,15 @@ export function filterStatusEffects(
     tab: MeterTab,
     buffFilter = true
 ) {
+    let key = "";
     // Party synergies
     if (["classskill", "identity", "ability"].includes(buff.buffCategory) && buff.target === StatusEffectTarget.PARTY) {
         if (tab === MeterTab.PARTY_BUFFS) {
-            const key = `${classesMap[buff.source.skill?.classId ?? 0]}_${
+            if (buff.source.skill && [105, 204, 602].includes(buff.source.skill.classId)) {
+                // put support buffs at the start when sorting
+                key = "_";
+            }
+            key += `${classesMap[buff.source.skill?.classId ?? 0]}_${
                 buff.uniqueGroup ? buff.uniqueGroup : buff.source.skill?.name
             }`;
             groupedSynergiesAdd(groupedSynergies, key, id, buff, focusedPlayer, buffFilter);
@@ -65,16 +70,21 @@ export function filterStatusEffects(
     // Self synergies
     else if (["pet", "cook", "battleitem", "dropsofether", "bracelet"].includes(buff.buffCategory)) {
         if (tab === MeterTab.SELF_BUFFS && !focusedPlayer) {
-            groupedSynergiesAdd(groupedSynergies, buff.buffCategory, id, buff, focusedPlayer, buffFilter);
+            if (buff.buffCategory === "bracelet") {
+                // put bracelets buffs at the end
+                key = `zzbracelet_${buff.source.name}`;
+            } else {
+                key = buff.buffCategory;
+            }
+            groupedSynergiesAdd(groupedSynergies, key, id, buff, focusedPlayer, buffFilter);
         }
     } else if (["set"].includes(buff.buffCategory)) {
         if (tab === MeterTab.SELF_BUFFS && !focusedPlayer) {
             groupedSynergiesAdd(groupedSynergies, `set_${buff.source.setName}`, id, buff, focusedPlayer, buffFilter);
         }
     } else if (["classskill", "identity", "ability"].includes(buff.buffCategory)) {
-        // self & other identity, classskill, engravings
+        // self & other identity, class skill, engravings
         if (tab === MeterTab.SELF_BUFFS && focusedPlayer) {
-            let key;
             if (buff.buffCategory === "ability") {
                 key = `${buff.uniqueGroup ? buff.uniqueGroup : id}`;
             } else {

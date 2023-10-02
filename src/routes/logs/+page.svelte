@@ -195,7 +195,8 @@
                             <td class="w-full truncate px-3 py-3 font-bold text-gray-300">
                                 <a
                                     href="/logs/encounter/?id={encounter.id}"
-                                    class="hover:text-accent-500 hover:underline">
+                                    class="hover:text-accent-500 hover:underline"
+                                    use:tooltip={{ content: encounter.bossName }}>
                                     {#if encounter.difficulty && $settings.general.showDifficulty}
                                         [{encounter.difficulty}] {encounter.bossName}
                                     {:else}
@@ -208,7 +209,7 @@
                                     <img
                                         src={$classIconCache[classId]}
                                         alt="class-{classId}"
-                                        class="ih-8 w-8"
+                                        class="h-8 w-8"
                                         use:tooltip={{ content: encounter.names[i] }} />
                                 {/each}
                             </td>

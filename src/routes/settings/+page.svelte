@@ -531,6 +531,10 @@
                             description="Abbreviates the Total DMG and Total DPS numbers in the header"
                             bind:setting={$settings.logs.abbreviateHeader} />
                         <SettingItem
+                            name="Split Party Buffs"
+                            description="Split players into their respective parties for party buffs"
+                            bind:setting={$settings.logs.splitPartyBuffs} />
+                        <SettingItem
                             name="Death Time"
                             description="Show how long a party member has died"
                             bind:setting={$settings.logs.deathTime} />

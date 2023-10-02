@@ -8,7 +8,7 @@
     import { invoke } from "@tauri-apps/api/tauri";
     import { appWindow } from "@tauri-apps/api/window";
     import { writable } from "svelte/store";
-    import tippy, { hideAll } from 'tippy.js';
+    import tippy, { hideAll } from "tippy.js";
 
     export let encounterDuration: string;
     export let totalDamageDealt: number;
@@ -29,6 +29,9 @@
     async function pauseSession() {
         await emit("pause-request");
         $paused = !$paused;
+    }
+    async function saveSession() {
+        await emit("save-request");
     }
 
     let dropdownOpen = false;
@@ -141,6 +144,14 @@
                         viewBox="0 96 960 960"
                         ><path
                             d="M452.5 955q-132-10-222.5-107.25T139.5 617.5q0-79 35.75-149T275.5 352l65.5 65q-51 32-80.5 86T231 617.5q0 97 63.25 166.25T452.5 862.5V955Zm57.5 0v-92.5q96.5-10 158.5-79t62-166q0-99-67-170.75T497 369h-24l65 66-49 49.5-166-166 166-167 49 49-76 76h25q140 0 238 100.5t98 240.5Q823 751 732.25 848T510 955Z" /></svg>
+                </button>
+                <button use:menuTooltip={{ content: "Manual Save" }} on:click={saveSession}>
+                    <svg
+                        class="h-5 w-5 fill-gray-400 hover:fill-gray-50"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 -960 960 960"
+                        ><path
+                            d="M861.5-691.5V-191q0 38.019-27.034 64.759Q807.431-99.5 769-99.5H191q-38.019 0-64.759-26.741Q99.5-152.981 99.5-191v-578q0-38.431 26.741-65.466Q152.981-861.5 191-861.5h500.5l170 170ZM769-651.186 651.186-769H191v578h578v-460.186ZM479.765-257.5q41.985 0 71.61-29.39Q581-316.279 581-358.265q0-41.985-29.39-71.61-29.389-29.625-71.375-29.625-41.985 0-71.61 29.39Q379-400.721 379-358.735q0 41.985 29.39 71.61 29.389 29.625 71.375 29.625ZM244.5-575.5H598v-140H244.5v140ZM191-651.186V-191v-578 117.814Z" /></svg>
                 </button>
                 <button use:menuTooltip={{ content: "Take Screenshot" }} on:click={screenshotFn}>
                     <svg
@@ -320,6 +331,17 @@
                                         <div>Reset</div>
                                     </div>
                                 </button>
+                                <button class="hover:text-gray-50" on:click={saveSession}>
+                                    <div class="flex space-x-1">
+                                        <svg
+                                            class="h-5 w-5 fill-gray-400"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            viewBox="0 -960 960 960"
+                                            ><path
+                                                d="M861.5-691.5V-191q0 38.019-27.034 64.759Q807.431-99.5 769-99.5H191q-38.019 0-64.759-26.741Q99.5-152.981 99.5-191v-578q0-38.431 26.741-65.466Q152.981-861.5 191-861.5h500.5l170 170ZM769-651.186 651.186-769H191v578h578v-460.186ZM479.765-257.5q41.985 0 71.61-29.39Q581-316.279 581-358.265q0-41.985-29.39-71.61-29.389-29.625-71.375-29.625-41.985 0-71.61 29.39Q379-400.721 379-358.735q0 41.985 29.39 71.61 29.389 29.625 71.375 29.625ZM244.5-575.5H598v-140H244.5v140ZM191-651.186V-191v-578 117.814Z" /></svg>
+                                        <div>Save</div>
+                                    </div>
+                                </button>
                                 <button class="hover:text-gray-50" on:click={screenshotFn}>
                                     <div class="flex space-x-1">
                                         <svg
@@ -382,7 +404,7 @@
         {:else}
             <div class="flex items-center">
                 {#if !$settings.general.hideLogo}
-                <div class="h-6">LOA Logs</div>
+                    <div class="h-6">LOA Logs</div>
                 {/if}
                 <div class="ml-1 text-xs text-gray-500">
                     {#await getVersion()}

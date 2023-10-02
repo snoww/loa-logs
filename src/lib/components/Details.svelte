@@ -44,7 +44,7 @@
     <div>
         <div class="font-bold">Raw Stagger</div>
         <div class="font-mono text-lg">
-            {stagger.current} / {stagger.max}
+            {stagger.max - stagger.current} / {stagger.max}
             {staggerPercent}
         </div>
     </div>

@@ -47,6 +47,7 @@ export interface EncounterDamageStats {
 export interface EncounterMisc {
     staggerStats: StaggerStats;
     bossHpLog: { [key: string]: Array<BossHpLog> };
+    partyInfo?: { [key: string]: Array<string> };
 }
 
 export class BossHpLog {

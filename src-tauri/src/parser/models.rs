@@ -528,6 +528,8 @@ pub struct Shortcut {
 #[serde(rename_all = "camelCase", default)]
 pub struct LogTabs {
     pub abbreviate_header: bool,
+    #[serde(default = "default_true")]
+    pub split_party_buffs: bool,
     pub damage: bool,
     pub dps: bool,
     pub damage_percent: bool,

@@ -62,12 +62,15 @@
                     .filter(
                         (e) =>
                             e.damageStats.damageDealt > 0 &&
-                            (e.entityType === EntityType.ESTHER || (e.entityType === EntityType.PLAYER && e.classId != 0))
+                            (e.entityType === EntityType.ESTHER ||
+                                (e.entityType === EntityType.PLAYER && e.classId != 0))
                     )
                     .sort((a, b) => b.damageStats.damageDealt - a.damageStats.damageDealt);
             } else {
                 players = Object.values(encounter.entities)
-                    .filter((e) => e.damageStats.damageDealt > 0 && (e.entityType === EntityType.PLAYER && e.classId != 0))
+                    .filter(
+                        (e) => e.damageStats.damageDealt > 0 && e.entityType === EntityType.PLAYER && e.classId != 0
+                    )
                     .sort((a, b) => b.damageStats.damageDealt - a.damageStats.damageDealt);
             }
             isSolo = players.length === 1;
@@ -279,7 +282,7 @@
 <svelte:window on:contextmenu|preventDefault />
 <div
     bind:this={targetDiv}
-    class="scroll-mt-2"
+    class="scroll-ml-8 scroll-mt-2"
     class:p-4={$takingScreenshot}
     on:contextmenu|preventDefault={handleRightClick}>
     <LogEncounterInfo
@@ -535,41 +538,25 @@
                 {/if}
             {:else if tab === MeterTab.PARTY_BUFFS}
                 {#if state === MeterState.PARTY}
-                    <table class="relative w-full table-fixed">
-                        <LogBuffs
-                            {tab}
-                            encounterDamageStats={encounter.encounterDamageStats}
-                            {players}
-                            {inspectPlayer} />
-                    </table>
+                    <LogBuffs {tab} encounterDamageStats={encounter.encounterDamageStats} {players} {inspectPlayer} />
                 {:else}
-                    <table class="relative w-full table-fixed">
-                        <LogBuffs
-                            {tab}
-                            encounterDamageStats={encounter.encounterDamageStats}
-                            {players}
-                            focusedPlayer={player}
-                            {inspectPlayer} />
-                    </table>
+                    <LogBuffs
+                        {tab}
+                        encounterDamageStats={encounter.encounterDamageStats}
+                        {players}
+                        focusedPlayer={player}
+                        {inspectPlayer} />
                 {/if}
             {:else if tab === MeterTab.SELF_BUFFS}
                 {#if state === MeterState.PARTY}
-                    <table class="relative w-full table-fixed">
-                        <LogBuffs
-                            {tab}
-                            encounterDamageStats={encounter.encounterDamageStats}
-                            {players}
-                            {inspectPlayer} />
-                    </table>
+                    <LogBuffs {tab} encounterDamageStats={encounter.encounterDamageStats} {players} {inspectPlayer} />
                 {:else}
-                    <table class="relative w-full table-fixed">
-                        <LogBuffs
-                            {tab}
-                            encounterDamageStats={encounter.encounterDamageStats}
-                            {players}
-                            focusedPlayer={player}
-                            {inspectPlayer} />
-                    </table>
+                    <LogBuffs
+                        {tab}
+                        encounterDamageStats={encounter.encounterDamageStats}
+                        {players}
+                        focusedPlayer={player}
+                        {inspectPlayer} />
                 {/if}
             {/if}
         </div>
