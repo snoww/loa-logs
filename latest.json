@@ -1,11 +1,11 @@
 {
-    "version": "v1.2.34",
-    "notes": "### v1.2.34\n#### BUG FIXES\n- fix summary row missing average damage per cast\nv1.2.33\n#### NEW FEATURES\n- added average damage per cast (this is useful for skills with multi-hit, e.g. summoner akir)\n- added option to show raid difficulty (normal, hard, inferno, challenge)\nfull patch notes on github\nplease report bugs on discord.gg/sbSa3pkDF5",
-    "pub_date": "2023-09-25T03:15:09.069Z",
+    "version": "v1.2.35",
+    "notes": "### v1.2.35\n#### NEW FEATURES\n- party buffs in logs are now grouped by party (configurable in options)\n- added button to manually save encounters\n#### BUG FIXES\n- glaiver shackling blue dragon is no longer considered party buff\nfull patch notes on github\nplease report bugs on discord.gg/sbSa3pkDF5",
+    "pub_date": "2023-10-02T17:31:13.379Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.2.34/LOA.Logs_1.2.34_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmUzRGMzc25ONmluYTVUWGcrbDBNV0xsVEU5MHc4bzNVOGdKMjcrazk2VVVFSEF3L3grenp1ZlQ1WjFSL3BWdXhyeS9SY0lHb3pJQlBOYmFlRzkrSWc0PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjk1NjMwMTk2CWZpbGU6TE9BIExvZ3NfMS4yLjM0X3g2NC1zZXR1cC5uc2lzLnppcApuOEpWdlpQL05HUFZaaGdaSkducExwditaQVRuY1phS1BBaHhBNHpyczBEb2l3M2RxUHZJYm1raDR4TlBwdEExVTZlY1FiNnJMMVhNMmFNcXJqVm1Cdz09Cg=="
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.2.35/LOA.Logs_1.2.35_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmJ0enMzNHNDMXVRRHRNcFFVYTBlNmJqT1BYTmFBZHgxbGpOdlAxTlRURVlwaDIramN2eGw4VVFtQUVDWml2Y1dUZjdRb3pOQ09PeHZ4TkIrR0xreUFVPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjk2MjY3MjQyCWZpbGU6TE9BIExvZ3NfMS4yLjM1X3g2NC1zZXR1cC5uc2lzLnppcApydFphSWFuTmV5SjVWMFVzaGNTZEdaK2FXWmcwRWJUZko2NU1oOWJ6K3ppVlJpUUt3b0t6STl0aEtLY3Z3dHJlMjJ5eTk1WW9RdFg4TmRRNDJLSXVEQT09Cg=="
         }
     }
 }
