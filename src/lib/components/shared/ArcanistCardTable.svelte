@@ -26,13 +26,13 @@
 </script>
 
 {#if cards.length > 0}
-    <div class="mt-4 font-bold">Card Draw Distribution</div>
+    <div class="mt-4 font-medium">Card Draw Distribution</div>
     <div class="mt-1 text-sm">
         <div>
-            Total Cards Drawn: <span class="font-bold">{totalDraws.toLocaleString()}</span>
+            Total Cards Drawn: <span class="font-semibold">{totalDraws.toLocaleString()}</span>
         </div>
         <div class="">
-            Draws per min: <span class="font-bold">{(totalDraws / (duration / 1000 / 60)).toFixed(1)} cards/min</span>
+            Draws per min: <span class="font-semibold">{(totalDraws / (duration / 1000 / 60)).toFixed(1)} cards/min</span>
         </div>
     </div>
     <table class="relative mt-2 w-full table-fixed">

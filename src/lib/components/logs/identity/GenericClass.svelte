@@ -84,18 +84,18 @@
 <div class="px relative top-0">
     {#if identityStats.average}
         <div class="mt-4">
-            <div class="mb-2 text-lg font-bold">{className} Identity Stats</div>
+            <div class="mb-2 text-lg font-medium tracking-tight">{className} Identity Stats</div>
             <div>
-                Average Identity Gain: <span class="font-bold">{identityStats.average.toFixed(1)}%/s</span>
+                Average Identity Gain: <span class="font-medium">{identityStats.average.toFixed(1)}%/s</span>
             </div>
             <div>
-                Identity per min: <span class="font-bold"
+                Identity per min: <span class="font-medium"
                     >{((identityStats.average / 100) * 60).toFixed(1)} per min</span>
             </div>
         </div>
     {/if}
     <div class="mt-4">
-        <div class="text-lg font-bold">Identity Log</div>
+        <div class="text-lg font-medium">Identity Log</div>
         <div class="mt-2 h-[200px]" use:chartable={identityLogOptions} style="width: calc(100vw - 4.5rem);" />
     </div>
 </div>

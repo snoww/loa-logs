@@ -108,7 +108,7 @@
                             d="M107 841v-91.5h746.5V841H107Zm0-219.5V530h746.5v91.5H107Zm0-219V310h746.5v92.5H107Z" /></svg>
                 </button>
             </div>
-            <div class="pl-2 text-xl font-bold text-gray-300">Settings</div>
+            <div class="pl-2 text-xl text-gray-300 tracking-tight">Settings</div>
         </div>
     </div>
     <div class="px-8">
@@ -121,10 +121,10 @@
                 <div class="flex flex-col space-y-4 divide-y-[1px]">
                     <div class="mt-4 flex flex-col space-y-2 px-2">
                         <div class="pt-2 relative" on:focusout={handleColorDropdownFocusLoss}>
-                            <div class="flex items-center font-medium">
+                            <div class="flex items-center">
                                 <button
                                     id=""
-                                    class="bg-accent-800 inline-flex items-center rounded-lg px-2 py-2 text-center text-sm font-medium"
+                                    class="bg-accent-800 inline-flex items-center rounded-lg px-2 py-2 text-center text-sm"
                                     type="button"
                                     on:click={handleColorDropdownClick}>
                                     <svg
@@ -231,7 +231,7 @@
                             description={'Hides the meter name "LOA Logs" in the screenshot.'}
                             bind:setting={$settings.general.hideLogo} />
                         <div class="">
-                            <label class="flex items-center font-medium">
+                            <label class="flex items-center">
                                 <input
                                     type="checkbox"
                                     bind:checked={$settings.general.blur}
@@ -251,7 +251,7 @@
                             description="Toggle transparent background for live meter."
                             bind:setting={$settings.general.transparent} />
                         <div>
-                            <label class="flex items-center font-medium">
+                            <label class="flex items-center">
                                 <input
                                     type="checkbox"
                                     bind:checked={$settings.general.autoIface}
@@ -270,7 +270,7 @@
                         </div>
                         {#if !$settings.general.autoIface}
                             <div class="relative" on:focusout={handleNetDropdownFocusLoss}>
-                                <div class="flex items-center font-medium">
+                                <div class="flex items-center">
                                     <div class="">
                                         <div class="text-gray-100">Select Network Interface</div>
                                         <div class="text-xs text-gray-300">
@@ -325,7 +325,7 @@
                                 {/if}
                             </div>
                             <div>
-                                <label class="flex items-center font-medium">
+                                <label class="flex items-center">
                                     <input
                                         type="number"
                                         class="h-8 w-24 rounded-md bg-zinc-700 text-sm text-gray-300"
@@ -340,7 +340,7 @@
                                 </label>
                             </div>
                             <div>
-                                <label class="flex items-center font-medium">
+                                <label class="flex items-center">
                                     <input
                                         type="checkbox"
                                         bind:checked={$settings.general.rawSocket}
@@ -500,7 +500,7 @@
                 inactiveClasses="py-4 px-2 hover:text-gray-200 text-gray-400">
                 <div class="flex flex-col space-y-4 divide-y-[1px]">
                     <div class="mt-4 flex flex-col space-y-2 px-2">
-                        <label class="flex flex-col pb-4 pt-2 font-medium">
+                        <label class="flex flex-col pb-4 pt-2">
                             <div class="flex items-center justify-between px-2">
                                 <div class="pb-2">
                                     <div class="text-gray-100">Minimum Encounter Duration</div>
@@ -666,7 +666,7 @@
                 <div class="flex flex-col space-y-4 divide-y-[1px]">
                     <div class="mt-4 flex flex-col space-y-2 px-2">
                         <div class="flex justify-between">
-                            <label class="flex items-center font-medium" for="modifiers">
+                            <label class="flex items-center" for="modifiers">
                                 <div class="">
                                     <div class="text-gray-100">Show/Hide Meter</div>
                                 </div>
@@ -692,7 +692,7 @@
                             </div>
                         </div>
                         <div class="flex justify-between">
-                            <label class="flex items-center font-medium" for="modifiers">
+                            <label class="flex items-center" for="modifiers">
                                 <div class="">
                                     <div class="text-gray-100">Show/Hide Logs</div>
                                 </div>
@@ -718,7 +718,7 @@
                             </div>
                         </div>
                         <div class="flex justify-between">
-                            <label class="flex items-center font-medium" for="modifiers">
+                            <label class="flex items-center" for="modifiers">
                                 <div class="">
                                     <div class="text-gray-100">Show Most Recent Encounter</div>
                                 </div>
@@ -744,7 +744,7 @@
                             </div>
                         </div>
                         <div class="flex justify-between">
-                            <label class="flex items-center font-medium" for="modifiers">
+                            <label class="flex items-center" for="modifiers">
                                 <div class="">
                                     <div class="text-gray-100">Reset Session</div>
                                 </div>
@@ -770,7 +770,7 @@
                             </div>
                         </div>
                         <div class="flex justify-between">
-                            <label class="flex items-center font-medium" for="modifiers">
+                            <label class="flex items-center" for="modifiers">
                                 <div class="">
                                     <div class="text-gray-100">Toggle Pause</div>
                                 </div>
@@ -928,13 +928,13 @@
                             </h3>
                             <button
                                 type="button"
-                                class="mr-2 inline-flex items-center justify-center rounded-lg bg-red-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-red-800 focus:outline-none"
+                                class="mr-2 inline-flex items-center justify-center rounded-lg bg-red-700 px-5 py-2.5 text-center text-sm text-white hover:bg-red-800 focus:outline-none"
                                 on:click={deleteEncounterBelowMinDuration}>
                                 Yes, I'm sure
                             </button>
                             <button
                                 type="button"
-                                class="inline-flex items-center justify-center rounded-lg bg-gray-800 bg-transparent px-5 py-2.5 text-center text-sm font-medium text-gray-400 hover:bg-zinc-700 hover:text-white focus:text-white focus:outline-none"
+                                class="inline-flex items-center justify-center rounded-lg bg-gray-800 bg-transparent px-5 py-2.5 text-center text-sm text-gray-400 hover:bg-zinc-700 hover:text-white focus:text-white focus:outline-none"
                                 on:click={() => (deleteConfirm = false)}>
                                 No, cancel
                             </button>

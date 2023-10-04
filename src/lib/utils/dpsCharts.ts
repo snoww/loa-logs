@@ -379,7 +379,7 @@ export function getSkillLogChart(player: Entity, skillIconPath: string, lastComb
         tooltip: {
             trigger: "axis",
             formatter: function (params: any[]) {
-                let output = `<span style="font-weight: 800">${params[0].name}</span>`;
+                let output = `<span style="font-weight: 600">${params[0].name}</span>`;
                 params.forEach((p) => {
                     output += `<br/>${p.seriesName}`;
                 });

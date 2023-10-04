@@ -1,5 +1,5 @@
 <script lang="ts">
-    import "@fontsource/inter";
+    import "@fontsource-variable/inter";
     import "../app.css";
     import { onDestroy, onMount } from "svelte";
     import { listen, type UnlistenFn } from "@tauri-apps/api/event";

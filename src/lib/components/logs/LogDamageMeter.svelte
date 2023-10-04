@@ -282,7 +282,9 @@
 <svelte:window on:contextmenu|preventDefault />
 <div
     bind:this={targetDiv}
-    class="scroll-ml-8 scroll-mt-2"
+    role="button"
+    tabindex="0"
+    class="scroll-ml-8 scroll-mt-2 text-gray-100"
     class:p-4={$takingScreenshot}
     on:contextmenu|preventDefault={handleRightClick}>
     <LogEncounterInfo
@@ -563,14 +565,14 @@
     {/if}
 </div>
 {#if tab !== MeterTab.IDENTITY && tab !== MeterTab.STAGGER}
-    <div class="mt-4" on:contextmenu|preventDefault={handleRightClick}>
+    <div class="mt-4" on:contextmenu|preventDefault={handleRightClick} role="button" tabindex="0">
         {#if chartType === ChartType.SKILL_LOG}
             {#if player && player.entityType === EntityType.PLAYER}
                 <OpenerSkills skills={player.skills} />
             {/if}
         {/if}
         {#if player?.entityType !== EntityType.ESTHER}
-            <div class="text-lg font-bold">Charts</div>
+            <div class="text-lg font-medium">Charts</div>
             <div class="mt-2 flex divide-x divide-gray-600">
                 {#if playerName === "" && state === MeterState.PARTY}
                     <button

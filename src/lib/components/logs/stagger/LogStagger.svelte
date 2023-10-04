@@ -81,21 +81,21 @@
 <div class="px relative top-0">
     {#if staggerStats.average}
         <div class="mt-4">
-            <div class="mb-2 text-lg font-bold">Encounter Stagger Stats</div>
+            <div class="mb-2 text-lg font-medium tracking-tight">Encounter Stagger Stats</div>
             <div>
-                Average Stagger: <span class="font-bold">{staggerStats.average.toFixed(1)}%/s</span>
+                Average Stagger: <span class="font-medium">{staggerStats.average.toFixed(1)}%/s</span>
             </div>
             {#if staggerStats.staggersPerMin}
                 <div>
-                    <span class="font-bold">{staggerStats.staggersPerMin.toFixed(1)}</span>
+                    <span class="font-medium">{staggerStats.staggersPerMin.toFixed(1)}</span>
                     staggers/min, or
-                    <span class="font-bold">{formatMinutes(1 / staggerStats.staggersPerMin)}</span> per stagger
+                    <span class="font-medium">{formatMinutes(1 / staggerStats.staggersPerMin)}</span> per stagger
                 </div>
             {/if}
         </div>
     {/if}
     <div class="mt-4">
-        <div class="text-lg font-bold">Stagger Log</div>
+        <div class="text-lg font-medium tracking-tight">Stagger Log</div>
         <div class="mt-2 h-[200px]" use:chartable={staggerLogOptions} style="width: calc(100vw - 4.5rem);" />
     </div>
 </div>

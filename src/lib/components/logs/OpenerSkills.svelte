@@ -26,7 +26,7 @@
 </script>
 
 <div class="mt-2 mb-4">
-    <div class="text-lg font-bold flex justify-start">
+    <div class="text-lg font-medium flex justify-start">
         <div use:menuTooltip={{content: "First 15 skills casted"}}>
             Opener Rotation
         </div>

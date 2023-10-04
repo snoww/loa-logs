@@ -5,7 +5,7 @@
 </script>
 
 <div class="">
-    <label class="flex items-center font-medium">
+    <label class="flex items-cente">
         <input
             type="checkbox"
             bind:checked={setting}

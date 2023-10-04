@@ -40,7 +40,7 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"@fontsource/inter": "^5.0.2",
+		"@fontsource-variable/inter": "^5.0.12",
 		"@popperjs/core": "^2.11.7",
 		"@tauri-apps/api": "^1.4.0",
 		"classnames": "^2.3.2",

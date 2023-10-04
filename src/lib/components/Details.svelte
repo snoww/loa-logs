@@ -36,13 +36,13 @@
 
 <div class="flex flex-col space-y-4 p-4">
     <div>
-        <div class="font-bold">Raw Identity</div>
+        <div class="font-medium">Raw Identity</div>
         <div class="font-mono text-lg">
             {identity.gauge1} / {identity.gauge2} / {identity.gauge3}
         </div>
     </div>
     <div>
-        <div class="font-bold">Raw Stagger</div>
+        <div class="font-medium">Raw Stagger</div>
         <div class="font-mono text-lg">
             {stagger.max - stagger.current} / {stagger.max}
             {staggerPercent}

@@ -36,14 +36,14 @@
                 </a>
             </div>
             <div class="flex w-full items-center justify-between">
-                <div class="truncate pl-2 text-xl font-bold tracking-tight text-gray-300">
+                <div class="truncate pl-2 text-xl tracking-tighter">
                     {#if $settings.general.showDifficulty && encounter.difficulty}
                         #{id.toLocaleString()}: [{encounter.difficulty}] {encounter.currentBossName}
                     {:else}
                         #{id.toLocaleString()}: {encounter.currentBossName}
                     {/if}
                 </div>
-                <div class="text-base">
+                <div class="text-base tracking-tight">
                     {formatTimestamp(encounter.fightStart)}
                 </div>
             </div>

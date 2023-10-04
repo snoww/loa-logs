@@ -15,7 +15,7 @@
 {#if $takingScreenshot}
     <div class="flex items-center justify-between px-1">
         <div>
-            <span class="font-bold">
+            <span class="font-medium">
             {#if $settings.general.showDifficulty && difficulty}
                 [{difficulty}] {bossName}
             {:else}

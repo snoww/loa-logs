@@ -28,9 +28,6 @@
     const rowsPerPage = 10;
     const maxSearchLength = 30;
 
-    let bosses: string[] = [];
-    let classes: string[] = [];
-
     let selectMode = false;
 
     $: {
@@ -41,8 +38,6 @@
                 $pageStore = 1;
             }
         }
-        bosses = Array.from($searchFilter.bosses) as string[];
-        classes = Array.from($searchFilter.classes) as string[];
         loadEncounters();
     }
 
@@ -117,7 +112,6 @@
     let hidden: boolean = true;
 </script>
 
-<!-- svelte-ignore missing-declaration -->
 <svelte:window on:contextmenu|preventDefault />
 <LogSidebar bind:hidden />
 <div class="h-screen bg-zinc-800">
@@ -133,7 +127,7 @@
                             d="M107 841v-91.5h746.5V841H107Zm0-219.5V530h746.5v91.5H107Zm0-219V310h746.5v92.5H107Z" /></svg>
                 </button>
             </div>
-            <div class="pl-2 text-xl font-bold tracking-tight text-gray-300">Past Encounters</div>
+            <div class="pl-2 text-xl font-medium tracking-tight text-gray-300">Past Encounters</div>
         </div>
         <button
             class="bg-accent-900 hover:bg-accent-800 mr-4 rounded-md px-2 py-1 shadow-md"
@@ -192,7 +186,7 @@
                                     </div>
                                 {/if}
                             </td>
-                            <td class="w-full truncate px-3 py-3 font-bold text-gray-300">
+                            <td class="w-full truncate px-3 py-3 font-medium text-gray-300">
                                 <a
                                     href="/logs/encounter/?id={encounter.id}"
                                     class="hover:text-accent-500 hover:underline"

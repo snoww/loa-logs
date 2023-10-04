@@ -29,7 +29,7 @@
                             d="M107 841v-91.5h746.5V841H107Zm0-219.5V530h746.5v91.5H107Zm0-219V310h746.5v92.5H107Z" /></svg>
                 </button>
             </div>
-            <div class="pl-2 text-xl font-bold text-gray-300">About</div>
+            <div class="pl-2 text-xl text-gray-300 font-medium tracking-tight">About</div>
         </div>
     </div>
     <div class="mx-8 my-4">

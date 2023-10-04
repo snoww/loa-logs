@@ -9,7 +9,7 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Inter', ...defaultTheme.fontFamily.sans]
+        sans: ['Inter Variable', ...defaultTheme.fontFamily.sans]
       },
       fontSize: {
         xxs: '0.875rem', // 14px

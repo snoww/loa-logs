@@ -140,7 +140,6 @@
             });
         }
     }
-    console.log(parties)
 
     $: {
         partyWidths = {};
@@ -164,7 +163,7 @@
             <table class="table-fixed" style="width: {partyWidths[partyId]};">
                 <thead class="z-40 h-6" id="buff-head">
                     <tr class="bg-zinc-900">
-                        <th class="w-7 whitespace-nowrap px-2 font-normal">Party {+partyId + 1}</th>
+                        <th class="w-7 whitespace-nowrap px-2 font-normal tracking-tight">Party {+partyId + 1}</th>
                         <th class="w-20 px-2 text-left font-normal" />
                         <th class="w-full" />
                         {#each [...synergies] as synergy (synergy)}

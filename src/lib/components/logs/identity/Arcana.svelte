@@ -110,18 +110,18 @@
 <div class="px relative top-0" id="buff-table">
     {#if identityStats.average}
         <div class="mt-4">
-            <div class="mb-2 text-lg font-bold">Arcana Identity Stats</div>
+            <div class="mb-2 text-lg font-medium tracking-tight">Arcana Identity Stats</div>
             <div>
-                Total Cards Drawn: <span class="font-bold">{totalDraws.toLocaleString()}</span>
+                Total Cards Drawn: <span class="font-medium">{totalDraws.toLocaleString()}</span>
             </div>
             <div>
-                Draws per min: <span class="font-bold"
+                Draws per min: <span class="font-medium"
                     >{(totalDraws / (duration / 1000 / 60)).toFixed(1)} cards/min</span>
             </div>
         </div>
     {/if}
     <div class="mt-4">
-        <div class="text-lg font-bold">Identity Log</div>
+        <div class="text-lg font-medium tracking-tight">Identity Log</div>
         <div class="mt-2 h-[220px]" use:chartable={identityLogOptions} style="width: calc(100vw - 4.5rem);" />
     </div>
 </div>
