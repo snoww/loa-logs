@@ -15,6 +15,7 @@
     export let playerDamageDealt: number;
     export let damagePercentage: number;
     export let duration: number;
+    export let index: number;
 </script>
 
 <tr class="h-7 px-2 py-1 text-3xs">
@@ -31,5 +32,6 @@
         {duration}
         width={damagePercentage}
         meterSettings={$settings.logs}
-        shadow={!$takingScreenshot} />
+        shadow={!$takingScreenshot} 
+        {index}/>
 </tr>

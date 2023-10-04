@@ -26,7 +26,7 @@
 
     if (groupedSynergies.size > 0) {
         synergyPercentageDetails = [];
-        groupedSynergies.forEach((synergies, _) => {
+        groupedSynergies.forEach((synergies) => {
             let synergyDamage = 0;
             let buff = new BuffDetails();
             synergies.forEach((syn, id) => {

@@ -67,5 +67,5 @@
     </tr>
 {/if}
 {#each skills as skill, i (skill.id)}
-    <BuffSkillBreakdownRow {groupedSynergies} {skill} {color} damagePercentage={skillDamagePercentages[i]} />
+    <BuffSkillBreakdownRow {groupedSynergies} {skill} {color} damagePercentage={skillDamagePercentages[i]} index={i} />
 {/each}

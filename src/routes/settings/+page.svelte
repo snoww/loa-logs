@@ -204,7 +204,7 @@
                         </div>
                         <SettingItem
                             name="Show Names"
-                            description="Show player names if it's loaded. If disabled, it will show the class name (e.g. Arcanist)"
+                            description="Show player names if it's loaded. If disabled, it will show the class name (e.g. Arcanist)."
                             bind:setting={$settings.general.showNames} />
                         <SettingItem
                             name="Show Gear Score"
@@ -218,6 +218,10 @@
                             name="Show Raid Difficulty"
                             description={"Shows the difficulty of the raid."}
                             bind:setting={$settings.general.showDifficulty} />
+                        <SettingItem
+                            name="Split Lines"
+                            description={"Split breakdown lines with alternating background colors for better readability."}
+                            bind:setting={$settings.general.splitLines} />
                         <!-- <SettingItem
                             name="Show Date in Screenshot"
                             description={'Shows the date of the encounter when taking screenshot'}

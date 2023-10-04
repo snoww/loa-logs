@@ -8,6 +8,7 @@
     export let color: string;
     export let damagePercentage: number;
     export let groupedSynergies: Map<string, Map<number, StatusEffect>>;
+    export let index: number;
 
     const tweenedValue = tweened(0, {
         duration: 400,
@@ -19,4 +20,4 @@
     }
 </script>
 
-<BuffSkillBreakdownRow {skill} {color} {groupedSynergies} width={$tweenedValue} />
+<BuffSkillBreakdownRow {skill} {color} {groupedSynergies} width={$tweenedValue} {index}/>

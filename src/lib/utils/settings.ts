@@ -14,6 +14,7 @@ export const defaultSettings = {
         showDate: true,
         showDifficulty: true,
         showDetails: false,
+        splitLines: false,
         accentColor: "theme-pink",
         rawSocket: false,
         autoIface: true,

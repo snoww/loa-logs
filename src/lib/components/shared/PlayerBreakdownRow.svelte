@@ -1,8 +1,8 @@
 <script lang="ts">
     import type { Skill } from "$lib/types";
-    import { HexToRgba } from "$lib/utils/colors";
+    import { HexToRgba, RGBLinearShade } from "$lib/utils/colors";
     import { abbreviateNumberSplit, round } from "$lib/utils/numbers";
-    import { skillIcon } from "$lib/utils/settings";
+    import { settings, skillIcon } from "$lib/utils/settings";
     import { getSkillIcon } from "$lib/utils/strings";
     import { tooltip } from "$lib/utils/tooltip";
 
@@ -20,6 +20,7 @@
 
     export let meterSettings: any;
     export let shadow: boolean = false;
+    export let index: number;
 
     let critPercentage = "0.0";
     let baPercentage = "0.0";
@@ -174,4 +175,4 @@
 <div
     class="absolute left-0 -z-10 h-7 px-2 py-1"
     class:shadow-md={shadow}
-    style="background-color: {HexToRgba(color, 0.6)}; width: {width}%" />
+    style="background-color: {((index % 2 === 1) && $settings.general.splitLines) ? RGBLinearShade(HexToRgba(color, 0.6)) : HexToRgba(color, 0.6)}; width: {width}%" />

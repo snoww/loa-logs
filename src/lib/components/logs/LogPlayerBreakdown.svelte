@@ -8,7 +8,7 @@
     import { tooltip } from "$lib/utils/tooltip";
     import { formatPlayerName } from "$lib/utils/strings";
     import { takingScreenshot } from "$lib/utils/stores";
-    import { HexToRgba } from "$lib/utils/colors";
+    import { HexToRgba, RGBLinearShade } from "$lib/utils/colors";
 
     export let entity: Entity;
     export let duration: number;
@@ -211,7 +211,7 @@
         <div
             class="absolute left-0 -z-10 h-7 px-2 py-1"
             class:shadow-md={!$takingScreenshot}
-            style="background-color: {HexToRgba(color, 0.6)}; width: 100%" />
+            style="background-color: {$settings.general.splitLines ? RGBLinearShade(HexToRgba(color, 0.6)) : HexToRgba(color, 0.6)}; width: 100%" />
         
     </tr>
     {/if}
@@ -227,6 +227,7 @@
             playerDamageDealt={entity.damageStats.damageDealt}
             damagePercentage={skillDamagePercentages[i]}
             skillDps={skillDps[i]}
-            {duration} />
+            {duration} 
+            index={i}/>
     {/each}
 </tbody>

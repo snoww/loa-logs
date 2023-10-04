@@ -1,8 +1,8 @@
 <script lang="ts">
     import type { BuffDetails, Skill, StatusEffect } from "$lib/types";
     import { getSynergyPercentageDetails } from "$lib/utils/buffs";
-    import { HexToRgba } from "$lib/utils/colors";
-    import { skillIcon } from "$lib/utils/settings";
+    import { HexToRgba, RGBLinearShade } from "$lib/utils/colors";
+    import { settings, skillIcon } from "$lib/utils/settings";
     import { getSkillIcon } from "$lib/utils/strings";
     import { tooltip } from "$lib/utils/tooltip";
     import BuffTooltipDetail from "./BuffTooltipDetail.svelte";
@@ -12,6 +12,7 @@
     export let groupedSynergies: Map<string, Map<number, StatusEffect>>;
     export let width: number;
     export let shadow = false;
+    export let index: number;
 
     let synergyPercentageDetails: Array<BuffDetails>;
 
@@ -47,5 +48,5 @@
     <div
         class="absolute left-0 -z-10 h-7 px-2 py-1"
         class:shadow-md={shadow}
-        style="background-color: {HexToRgba(color, 0.6)}; width: {width}%" />
-</tr>
+        style="background-color: {((index % 2 === 1) && $settings.general.splitLines) ? RGBLinearShade(HexToRgba(color, 0.6)) : HexToRgba(color, 0.6)}; width: {width}%" />
+    </tr>

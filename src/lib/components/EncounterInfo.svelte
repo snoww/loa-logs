@@ -8,7 +8,7 @@
     import { invoke } from "@tauri-apps/api/tauri";
     import { appWindow } from "@tauri-apps/api/window";
     import { writable } from "svelte/store";
-    import tippy, { hideAll } from "tippy.js";
+    import { hideAll } from "tippy.js";
 
     export let encounterDuration: string;
     export let totalDamageDealt: number;

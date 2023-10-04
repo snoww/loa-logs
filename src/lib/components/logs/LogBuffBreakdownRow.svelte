@@ -7,6 +7,7 @@
     export let color: string;
     export let damagePercentage: number;
     export let groupedSynergies: Map<string, Map<number, StatusEffect>>;
+    export let index: number;
 </script>
 
-<BuffSkillBreakdownRow {skill} {color} {groupedSynergies} width={damagePercentage} shadow={!$takingScreenshot} />
+<BuffSkillBreakdownRow {skill} {color} {groupedSynergies} width={damagePercentage} shadow={!$takingScreenshot} {index}/>

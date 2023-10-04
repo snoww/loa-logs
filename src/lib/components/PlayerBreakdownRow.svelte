@@ -16,6 +16,7 @@
     export let playerDamageDealt: number;
     export let damagePercentage: number;
     export let duration: number;
+    export let index: number;
 
     const tweenedValue = tweened(0, {
         duration: 400,
@@ -39,4 +40,6 @@
     {playerDamageDealt}
     {duration}
     width={$tweenedValue}
-    meterSettings={$settings.meter} />
+    meterSettings={$settings.meter}
+    {index}
+    />

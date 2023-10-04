@@ -72,7 +72,8 @@
                     playerDamageDealt={entity.damageStats.damageDealt}
                     damagePercentage={skillDamagePercentages[i]}
                     skillDps={skillDps[i]}
-                    {duration} />
+                    {duration} 
+                    index={i}/>
             </tr>
         {/each}
     {/if}

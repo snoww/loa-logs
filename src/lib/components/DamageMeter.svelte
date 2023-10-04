@@ -42,7 +42,7 @@
                 // console.log(+Date.now(), event.payload);
                 encounter = event.payload;
             });
-            let zoneChangeEvent = await listen("zone-change", (event: any) => {
+            let zoneChangeEvent = await listen("zone-change", () => {
                 // console.log("zone change event")
                 zoneChangeAlert = true;
                 $raidInProgress = false;
@@ -52,22 +52,22 @@
                     $raidInProgress = true;
                 }, 6000);
             });
-            let raidStartEvent = await listen("raid-start", (event: any) => {
+            let raidStartEvent = await listen("raid-start", () => {
                 reset();
                 $raidInProgress = true;
             });
-            let resetEncounterEvent = await listen("reset-encounter", (event: any) => {
+            let resetEncounterEvent = await listen("reset-encounter", () => {
                 reset();
                 resettingAlert = true;
                 setTimeout(() => {
                     resettingAlert = false;
                 }, 1500);
             });
-            let pauseEncounterEvent = await listen("pause-encounter", (event: any) => {
+            let pauseEncounterEvent = await listen("pause-encounter", () => {
                 $paused = !$paused;
                 pauseAlert = !pauseAlert;
             });
-            let saveEncounterEvent = await listen("save-encounter", (event: any) => {
+            let saveEncounterEvent = await listen("save-encounter", () => {
                 reset();
                 saveAlert = true;
                 setTimeout(() => {
@@ -95,7 +95,7 @@
                 }
                 $raidInProgress = false;
             });
-            let adminErrorEvent = await listen("admin", (event: any) => {
+            let adminErrorEvent = await listen("admin", () => {
                 adminAlert = true;
             });
 

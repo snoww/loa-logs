@@ -1,8 +1,8 @@
 <script lang="ts">
     import { cardIds } from "$lib/constants/cards";
-    import { HexToRgba } from "$lib/utils/colors";
+    import { HexToRgba, RGBLinearShade } from "$lib/utils/colors";
     import { getSkillIcon } from "$lib/utils/strings";
-    import { colors, skillIcon } from "$lib/utils/settings";
+    import { colors, settings, skillIcon } from "$lib/utils/settings";
     import { takingScreenshot } from "$lib/utils/stores";
     import type { Entity } from "$lib/types";
 
@@ -32,10 +32,11 @@
             Total Cards Drawn: <span class="font-semibold">{totalDraws.toLocaleString()}</span>
         </div>
         <div class="">
-            Draws per min: <span class="font-semibold">{(totalDraws / (duration / 1000 / 60)).toFixed(1)} cards/min</span>
+            Draws per min: <span class="font-semibold"
+                >{(totalDraws / (duration / 1000 / 60)).toFixed(1)} cards/min</span>
         </div>
     </div>
-    <table class="relative mt-2 w-full table-fixed">
+    <table class="relative mt-2 table-fixed" style="width: calc(100vw - 4rem)">
         <thead class="z-30 h-6">
             <tr class="bg-zinc-900">
                 <th class="w-full px-2 text-left font-normal" />
@@ -63,10 +64,9 @@
                     <div
                         class="absolute left-0 -z-10 h-6 px-2 py-1"
                         class:shadow-md={!$takingScreenshot}
-                        style="background-color: {HexToRgba(
-                            $colors['Arcanist'].color,
-                            0.6
-                        )}; width: {relativeDrawPercentages[i]}%" />
+                        style="background-color: {i % 2 === 1 && $settings.general.splitLines
+                            ? RGBLinearShade(HexToRgba($colors['Arcanist'].color, 0.6))
+                            : HexToRgba($colors['Arcanist'].color, 0.6)}; width: {relativeDrawPercentages[i]}%" />
                 </tr>
             {/each}
         </tbody>
