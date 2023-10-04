@@ -32,7 +32,7 @@
             <div class="pl-2 text-xl text-gray-300 font-medium tracking-tight">About</div>
         </div>
     </div>
-    <div class="mx-8 my-4">
+    <div class="mx-8 my-4 text-gray-200 tracking-tight">
         <p class="px-4 text-base">
             LOA Logs is a "blazingly fast" open source Lost Ark DPS meter (<a
                 class="text-accent-500 hover:underline"
@@ -61,7 +61,9 @@
                 class="text-accent-500 hover:underline"
                 href="https://github.com/snoww/loa-logs/issues"
                 target="_blank">issue</a>
-            or send a DM on Discord to <code class="text-accent-500">snow.w</code>
+            or send a message in the <code>#loa-logs</code> channel on Discord at <a class="text-accent-500 hover:underline" href="https://discord.gg/sbSa3pkDF5" target="_blank"
+            ><code>discord.gg/sbSa3pkDF5</code></a
+        >
         </p>
 
         <p class="mt-4 px-4">

@@ -96,7 +96,7 @@
 <svelte:window on:contextmenu|preventDefault />
 <LogSidebar bind:hidden />
 <div class="custom-scroll h-screen overflow-y-scroll bg-zinc-800 pb-8">
-    <div class="sticky top-0 flex h-16 justify-between bg-zinc-800 px-8 py-5 shadow-md z-50">
+    <div class="sticky top-0 flex h-16 justify-between bg-zinc-800 px-8 py-5 shadow-md z-10">
         <div class="ml-2 flex space-x-2">
             <div class="">
                 <button on:click={() => (hidden = false)} class="mt-px block">
@@ -282,6 +282,8 @@
                                     <div>Interface:</div>
                                     <!-- svelte-ignore a11y-click-events-have-key-events -->
                                     <div
+                                        role="button"
+                                        tabindex="0"
                                         class="mt-2 w-80 truncate rounded bg-zinc-700 p-1"
                                         on:click={handleNetDropdownClick}>
                                         <div class="px-2">
