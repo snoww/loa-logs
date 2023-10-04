@@ -151,7 +151,8 @@ export function getAverageDpsChart(
             pageIconColor: "#aaa",
             pageTextStyle: {
                 color: "#aaa"
-            }
+            },
+            selector: true
         },
         tooltip: {
             trigger: "axis",
@@ -254,7 +255,8 @@ export function getRollingDpsChart(
             pageIconColor: "#aaa",
             pageTextStyle: {
                 color: "#aaa"
-            }
+            },
+            selector: true
         },
         tooltip: {
             trigger: "axis",
@@ -400,7 +402,8 @@ export function getSkillLogChart(player: Entity, skillIconPath: string, lastComb
                 color: "#aaa"
             },
             itemWidth: 20,
-            itemHeight: 20
+            itemHeight: 20,
+            selector: true
         },
         xAxis: {
             type: "category",
