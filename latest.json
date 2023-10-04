@@ -1,11 +1,11 @@
 {
-    "version": "v1.2.36",
-    "notes": "### v1.2.36\n#### NEW FEATURES\n- added option to alternate background colors in breakdown for better readability (General > Split Lines, on by default)\n- added chart options to hide all lines in legend\n#### BUG FIXES & IMPROVEMENTS\n- added tooltips to show raw damage dealt\n- fixed some issues with font weights\nfull patch notes on github\nplease report bugs on discord.gg/sbSa3pkDF5",
-    "pub_date": "2023-10-04T11:53:56.586Z",
+    "version": "v1.2.37",
+    "notes": "### v1.2.37\n#### NEW FEATURES\n- added option to alternate background colors in breakdown for better readability (General > Split Lines, on by default)\n- added chart options to hide all lines in legend\n#### BUG FIXES & IMPROVEMENTS\n- added tooltips to show raw damage dealt\n- fixed some issues with fonts\nfull patch notes on github\nplease report bugs on discord.gg/sbSa3pkDF5",
+    "pub_date": "2023-10-04T12:12:53.794Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.2.36/LOA.Logs_1.2.36_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlhESml3WlRKb1NIejNmMUlGMi83T0N5c09xSHZob1JzUWdRWmorOWpiS2hoZUNGM2tNcDVYVFQ3a0c3SklkODQ0bGo1VVZmSklDZEFadUVidnR2VlFBPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjk2NDE5ODcxCWZpbGU6TE9BIExvZ3NfMS4yLjM2X3g2NC1zZXR1cC5uc2lzLnppcAoxOXR4a2U5aTUwcEZFZXpaY2E3Q0FmcnljOUNCM3IxaEJ0RTBJSU93eHRNb1gvUStJRjBISmRaaUNGU2Uxb3hZRThXdzJJWDVQdjFuR1I5dVNTcXBEQT09Cg=="
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.2.37/LOA.Logs_1.2.37_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYllMYlZ0R1Q0UUhyRFNzK2dQTEVFSW5jOVk5QWJ3ZTlHU3kvV3pPZWt0TW5NaGp1aEZjODRqd3J4Y1c5cHBsWEIzeEFvZFJpTDdnUTMwUUhZUWZjQlFJPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjk2NDIxNTIzCWZpbGU6TE9BIExvZ3NfMS4yLjM3X3g2NC1zZXR1cC5uc2lzLnppcApsaXY4MVp1dEdHb3p2bUV6ZUd1ZktqRHpla1lIbGFSTm9HRGM2QTluL0xPMVdoYmFwNzg1eTZ5NGRkK2VXdmI2RkF4Mjc1cUVWcEtwZk5Kek5BTitBUT09Cg=="
         }
     }
 }
