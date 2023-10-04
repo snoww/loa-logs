@@ -102,7 +102,7 @@
             </div>
         </td>
         {#if $settings.logs.breakdown.damage}
-            <td class="px-1 text-center">
+            <td class="px-1 text-center" use:tooltip={{ content: entity.damageStats.damageDealt.toLocaleString() }}>
                 {damageDealt[0]}<span class="text-3xs text-gray-300">{damageDealt[1]}</span>
             </td>
         {/if}

@@ -280,10 +280,9 @@
 </script>
 
 <svelte:window on:contextmenu|preventDefault />
+<!-- svelte-ignore a11y-no-static-element-interactions -->
 <div
     bind:this={targetDiv}
-    role="button"
-    tabindex="0"
     class="scroll-ml-8 scroll-mt-2 text-gray-100"
     class:p-4={$takingScreenshot}
     on:contextmenu|preventDefault={handleRightClick}>
@@ -565,7 +564,8 @@
     {/if}
 </div>
 {#if tab !== MeterTab.IDENTITY && tab !== MeterTab.STAGGER}
-    <div class="mt-4" on:contextmenu|preventDefault={handleRightClick} role="button" tabindex="0">
+    <!-- svelte-ignore a11y-no-static-element-interactions -->
+    <div class="mt-4" on:contextmenu|preventDefault={handleRightClick}>
         {#if chartType === ChartType.SKILL_LOG}
             {#if player && player.entityType === EntityType.PLAYER}
                 <OpenerSkills skills={player.skills} />
