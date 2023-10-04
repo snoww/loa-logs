@@ -1,5 +1,5 @@
 {
-    "version": "v1.2.37",
+    "version": "v1.2.35",
     "notes": "### v1.2.37\n#### NEW FEATURES\n- added option to alternate background colors in breakdown for better readability (General > Split Lines, on by default)\n- added chart options to hide all lines in legend\n#### BUG FIXES & IMPROVEMENTS\n- added tooltips to show raw damage dealt\n- fixed some issues with fonts\nfull patch notes on github\nplease report bugs on discord.gg/sbSa3pkDF5",
     "pub_date": "2023-10-04T12:12:53.794Z",
     "platforms": {
