@@ -1,10 +1,10 @@
 {
-    "version": "v1.2.35",
-    "notes": "### v1.2.37\n#### NEW FEATURES\n- added option to alternate background colors in breakdown for better readability (General > Split Lines, on by default)\n- added chart options to hide all lines in legend\n#### BUG FIXES & IMPROVEMENTS\n- added tooltips to show raw damage dealt\n- fixed some issues with fonts\nfull patch notes on github\nplease report bugs on discord.gg/sbSa3pkDF5",
+    "version": "v1.2.38",
+    "notes": "@@@@ AUTO UPDATER BROKEN @@@@\nPLEASE DOWNLOAD AND INSTALL VERSION 1.2.38 MANUALLY TO FIX\nsorry x.x\nfull patch notes on github\nplease report bugs on discord.gg/sbSa3pkDF5",
     "pub_date": "2023-10-04T12:12:53.794Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.2.37/LOA.Logs_1.2.37_x64-setup.nsis.zip",
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.2.38/LOA.Logs_1.2.38_x64-setup.nsis.zip",
             "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlhnUE9SQy8weDQ3YTdiaG14VE00TGNqMFI5c0RsM1lyNGp5MTlSSjZuclh6cnk5UXlNZnZzTjdIaEYxTU1wQnJUd3Vsc1hZY0p6eDdjVVJsM21ZUVFNPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjk2NDI4MjQ5CWZpbGU6TE9BIExvZ3NfMS4yLjM3X3g2NC1zZXR1cC5uc2lzLnppcApIQmdBUFBCUkM1amgwNVNrQ2I5RVVMVHMrRm9Lb25hM1oxMlVyNFdSSnArbkM1RXJqYlhvc1BLc1VzckVMUWpKKzFQcVhmK0ZyOXVmcmltU0FvbjBDZz09Cg=="
         }
     }
