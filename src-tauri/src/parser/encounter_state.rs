@@ -11,6 +11,8 @@ use serde_json::json;
 use tauri::{Manager, Window, Wry};
 use tokio::task;
 
+use super::status_tracker::StatusEffectType;
+
 const WINDOW_MS: i64 = 5_000;
 const WINDOW_S: i64 = 5;
 
@@ -605,9 +607,7 @@ impl EncounterState {
                     if let Some(buff) = self.encounter.encounter_damage_stats.buffs.get(buff_id) {
                         if let Some(skill) = buff.source.skill.as_ref() {
                             is_buffed_by_support = is_support_class_id(skill.class_id)
-                                && (buff.buff_category == "classskill"
-                                    || buff.buff_category == "identity"
-                                    || buff.buff_category == "ability")
+                                && buff.buff_type & StatusEffectBuffTypeFlags::DMG.bits() != 0
                                 && buff.target == StatusEffectTarget::PARTY;
                         }
                     }
@@ -647,9 +647,7 @@ impl EncounterState {
                     {
                         if let Some(skill) = debuff.source.skill.as_ref() {
                             is_debuffed_by_support = is_support_class_id(skill.class_id)
-                                && (debuff.buff_category == "classskill"
-                                    || debuff.buff_category == "identity"
-                                    || debuff.buff_category == "ability")
+                                && debuff.buff_type & StatusEffectBuffTypeFlags::DMG.bits() != 0
                                 && debuff.target == StatusEffectTarget::PARTY;
                         }
                     }
