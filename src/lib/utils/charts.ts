@@ -69,7 +69,7 @@ export function chartable(element: HTMLElement, options: EChartsOptions) {
 
 export const defaultOptions: EChartsOptions = {
     textStyle: {
-        fontFamily: "Inter"
+        fontFamily: "Inter Variable"
     },
     grid: {
         left: "2%",
