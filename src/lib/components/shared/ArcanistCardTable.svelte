@@ -46,7 +46,7 @@
         </thead>
         <tbody class="relative z-10">
             {#each cards as card, i}
-                <tr class="h-6 px-2 py-1 text-3xs">
+                <tr class="h-6 px-2 py-1 text-3xs {$settings.general.underlineHovered ? 'hover:underline' : ''}">
                     <td class="px-1">
                         <div class="flex items-center space-x-1">
                             <img class="h-5 w-5" src={$skillIcon.path + getSkillIcon(card.icon)} alt={card.name} />

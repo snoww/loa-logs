@@ -511,7 +511,7 @@
                         </thead>
                         <tbody class="relative z-10">
                             {#each players as player, i (player.name)}
-                                <tr class="h-7 px-2 py-1" on:click={() => inspectPlayer(player.name)}>
+                                <tr class="h-7 px-2 py-1 {$settings.general.underlineHovered ? 'hover:underline' : ''}" on:click={() => inspectPlayer(player.name)}>
                                     <LogDamageMeterRow
                                         entity={player}
                                         percentage={playerDamagePercentages[i]}

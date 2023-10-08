@@ -102,7 +102,7 @@
                     {#each parties[i] as player, playerIndex (player.name)}
                         {@const playerBuffs = partyBuffs.get(partyId)?.get(player.name) ?? []}
                         <tr
-                            class="h-7 px-2 py-1"
+                            class="h-7 px-2 py-1 {$settings.general.underlineHovered ? 'hover:underline' : ''}"
                             animate:flip={{ duration: 200 }}
                             on:click={() => inspectPlayer(player.name)}>
                             <PartyBuffRow {player} {playerBuffs} percentage={partyPercentages[i][playerIndex]} />
@@ -130,7 +130,7 @@
             {#if !focusedPlayer}
                 {#each players as player, i (player.id)}
                     <tr
-                        class="h-7 px-2 py-1"
+                        class="h-7 px-2 py-1 {$settings.general.underlineHovered ? 'hover:underline' : ''}"
                         animate:flip={{ duration: 200 }}
                         on:click={() => inspectPlayer(player.name)}>
                         <BuffRow {player} {groupedSynergies} percentage={percentages[i]} />

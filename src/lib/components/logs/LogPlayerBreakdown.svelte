@@ -88,7 +88,7 @@
 </thead>
 <tbody class="relative z-10">
     {#if entity.entityType !== EntityType.ESTHER}
-    <tr class="h-7 px-2 py-1 text-3xs">
+    <tr class="h-7 px-2 py-1 text-3xs {$settings.general.underlineHovered ? 'hover:underline' : ''}">
         <td class="pl-1">
             <img
                 class="table-cell h-5 w-5"

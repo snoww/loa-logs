@@ -15,6 +15,7 @@ export const defaultSettings = {
         showDifficulty: true,
         showDetails: false,
         splitLines: false,
+        underlineHovered: false,
         accentColor: "theme-pink",
         rawSocket: false,
         autoIface: true,

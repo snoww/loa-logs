@@ -18,7 +18,7 @@
     export let index: number;
 </script>
 
-<tr class="h-7 px-2 py-1 text-3xs">
+<tr class="h-7 px-2 py-1 text-3xs {$settings.general.underlineHovered ? 'hover:underline' : ''}">
     <PlayerBreakdownRow
         {skill}
         {color}

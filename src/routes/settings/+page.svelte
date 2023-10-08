@@ -222,6 +222,10 @@
                             name="Split Lines"
                             description={"Split breakdown lines with alternating background colors for better readability."}
                             bind:setting={$settings.general.splitLines} />
+                        <SettingItem
+                            name="Underline Hovered"
+                            description="Underlines the text in the row when hovering over it for better readability."
+                            bind:setting={$settings.general.underlineHovered} />
                         <!-- <SettingItem
                             name="Show Date in Screenshot"
                             description={'Shows the date of the encounter when taking screenshot'}

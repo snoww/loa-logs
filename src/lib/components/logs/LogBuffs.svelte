@@ -97,7 +97,7 @@
                 <tbody class="relative z-10">
                     {#each parties[i] as player, playerIndex (player.name)}
                         {@const playerBuffs = partyBuffs.get(partyId)?.get(player.name) ?? []}
-                        <tr class="h-7 px-2 py-1" on:click={() => inspectPlayer(player.name)}>
+                        <tr class="h-7 px-2 py-1 {$settings.general.underlineHovered ? 'hover:underline' : ''}" on:click={() => inspectPlayer(player.name)}>
                             <LogPartyBuffRow {player} {playerBuffs} percentage={partyPercentages[i][playerIndex]} />
                         </tr>
                     {/each}
@@ -122,7 +122,7 @@
         <tbody class="relative z-10">
             {#if !focusedPlayer}
                 {#each players as player, i (player.name)}
-                    <tr class="h-7 px-2 py-1" on:click={() => inspectPlayer(player.name)}>
+                    <tr class="h-7 px-2 py-1 {$settings.general.underlineHovered ? 'hover:underline' : ''}" on:click={() => inspectPlayer(player.name)}>
                         <LogBuffRow {player} {groupedSynergies} percentage={percentages[i]} />
                     </tr>
                 {/each}

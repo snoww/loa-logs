@@ -50,7 +50,7 @@
         use:tooltip={{ content: skill.name }} />
 </td>
 <td class="-left-px" colspan="2">
-    <div class="truncate">
+    <div class="truncate" use:tooltip={{ content: skill.name }}>
         {skill.name}
     </div>
 </td>
@@ -175,4 +175,6 @@
 <div
     class="absolute left-0 -z-10 h-7 px-2 py-1"
     class:shadow-md={shadow}
-    style="background-color: {((index % 2 === 1) && $settings.general.splitLines) ? RGBLinearShade(HexToRgba(color, 0.6)) : HexToRgba(color, 0.6)}; width: {width}%" />
+    style="background-color: {index % 2 === 1 && $settings.general.splitLines
+        ? RGBLinearShade(HexToRgba(color, 0.6))
+        : HexToRgba(color, 0.6)}; width: {width}%" />
