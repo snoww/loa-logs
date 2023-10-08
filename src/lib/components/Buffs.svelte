@@ -10,7 +10,7 @@
         type PartyInfo
 
     } from "$lib/types";
-    import { calculatePartyWidth, filterStatusEffects, getPartyBuffs } from "$lib/utils/buffs";
+    import { filterStatusEffects, getPartyBuffs } from "$lib/utils/buffs";
     import { flip } from "svelte/animate";
     import BuffRow from "./BuffRow.svelte";
     import BuffSkillBreakdown from "./BuffSkillBreakdown.svelte";
@@ -34,9 +34,6 @@
     let partyPercentages = new Array<number[]>();
 
     let partyBuffs = new Map<string, Map<string, Array<BuffDetails>>>();
-
-    let vw: number;
-    let partyWidths: { [key: string]: string };
 
     $: {
         if (focusedPlayer && focusedPlayer.entityType === EntityType.ESTHER) {
@@ -62,31 +59,26 @@
                 filterStatusEffects(groupedSynergies, debuff, Number(id), focusedPlayer, tab, $settings.buffs.default);
             });
             groupedSynergies = new Map([...groupedSynergies.entries()].sort());
-        }
-
-        if ($settings.meter.splitPartyBuffs && encounterPartyInfo && !focusedPlayer) {
-            const partyBuffsObj = getPartyBuffs(
-                players,
-                encounterDamageStats!.topDamageDealt,
-                encounterPartyInfo,
-                groupedSynergies
-            );
-            parties = partyBuffsObj.parties;
-            partyGroupedSynergies = partyBuffsObj.partyGroupedSynergies;
-            partyPercentages = partyBuffsObj.partyPercentages;
-            partyBuffs = partyBuffsObj.partyBuffs;
-
-            const remToPx = parseFloat(getComputedStyle(document.documentElement).fontSize);
-            partyWidths = calculatePartyWidth(partyGroupedSynergies, remToPx, vw);
+            if ($settings.meter.splitPartyBuffs && encounterPartyInfo && !focusedPlayer) {
+                const partyBuffsObj = getPartyBuffs(
+                    players,
+                    encounterDamageStats.topDamageDealt,
+                    encounterPartyInfo,
+                    groupedSynergies
+                );
+                parties = partyBuffsObj.parties;
+                partyGroupedSynergies = partyBuffsObj.partyGroupedSynergies;
+                partyPercentages = partyBuffsObj.partyPercentages;
+                partyBuffs = partyBuffsObj.partyBuffs;
+            }
         }
     }
 </script>
 
-<svelte:window bind:innerWidth={vw} />
 {#if $settings.meter.splitPartyBuffs && parties.length > 1 && tab === MeterTab.PARTY_BUFFS && !focusedPlayer}
-    <div class="flex flex-col space-y-2">
+    <div class="flex flex-col">
         {#each [...partyGroupedSynergies] as [partyId, synergies], i (partyId)}
-            <table class="table-fixed" style="width: {partyWidths[partyId]};" id="live-meter-table">
+            <table class="table-fixed w-full" id="live-meter-table">
                 <thead class="z-40 h-6" id="buff-head">
                     <tr class="bg-zinc-900">
                         <th class="w-7 whitespace-nowrap px-2 font-normal tracking-tight">Party {+partyId + 1}</th>

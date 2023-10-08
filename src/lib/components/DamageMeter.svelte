@@ -29,7 +29,7 @@
 
     let time = +Date.now();
     let encounter: Encounter | null = null;
-    let party: PartyInfo | undefined;
+    let parties: PartyInfo | undefined;
     let events: Array<UnlistenFn> = [];
 
     let zoneChangeAlert = false;
@@ -53,7 +53,9 @@
                 encounter = event.payload;
             });
             let partyUpdateEvent = await listen("party-update", (event: PartyEvent) => {
-                party = event.payload;
+                if (event.payload) {
+                    parties = event.payload;
+                }
             });
             let zoneChangeEvent = await listen("zone-change", () => {
                 // console.log("zone change event")
@@ -249,6 +251,7 @@
         playerName = "";
         encounter = null;
         players = [];
+        parties = undefined;
         currentBoss = null;
         encounterDuration = "00:00";
         totalDamageDealt = 0;
@@ -355,7 +358,7 @@
                     <tbody>
                         {#each players as entity, i (entity.id)}
                             <tr
-                                class="h-7 px-2 py-1"
+                                class="h-7 px-2 py-1 {$settings.general.underlineHovered ? 'hover:underline' : ''}"
                                 animate:flip={{ duration: 200 }}
                                 on:click={() => inspectPlayer(entity.name)}>
                                 <DamageMeterPlayerRow
@@ -387,7 +390,7 @@
                     {players}
                     {handleRightClick}
                     {inspectPlayer}
-                    encounterPartyInfo={party} />
+                    encounterPartyInfo={parties} />
             {:else}
                 <Buffs
                     {tab}
@@ -396,7 +399,7 @@
                     focusedPlayer={player}
                     {handleRightClick}
                     {inspectPlayer}
-                    encounterPartyInfo={party} />
+                    encounterPartyInfo={parties} />
             {/if}
         {:else if tab === MeterTab.SELF_BUFFS}
             {#if state === MeterState.PARTY}
@@ -407,7 +410,7 @@
                     focusedPlayer={player}
                     {handleRightClick}
                     {inspectPlayer}
-                    encounterPartyInfo={party} />
+                    encounterPartyInfo={parties} />
             {:else}
                 <Buffs
                     {tab}
@@ -416,7 +419,7 @@
                     focusedPlayer={player}
                     {handleRightClick}
                     {inspectPlayer}
-                    encounterPartyInfo={party} />
+                    encounterPartyInfo={parties} />
             {/if}
         {:else if tab === MeterTab.DETAILS}
             <Details />

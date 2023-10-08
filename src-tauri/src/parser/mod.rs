@@ -123,6 +123,8 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool) -> Re
         }
     });
 
+    let mut party_freeze = false;
+
     while let Ok((op, data)) = rx.recv() {
         if reset.load(Ordering::Relaxed) {
             state.soft_reset(true);
@@ -281,6 +283,7 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool) -> Re
                 debug_print!("phase", &1);
             }
             Pkt::RaidResult => {
+                party_freeze = true;
                 state.party_info = update_party(&party_tracker, &mut entity_tracker);
                 state.on_phase_transition(0);
                 raid_end_cd = Instant::now();
@@ -429,12 +432,14 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool) -> Re
                 if let Some(pkt) = parse_pkt(&data, PKTTriggerStartNotify::new, "PKTTriggerStartNotify") {
                     match pkt.trigger_signal_type {
                         57 | 59 | 61 | 63 | 74 | 76 => {
+                            party_freeze = true;
                             state.party_info = update_party(&party_tracker, &mut entity_tracker);
                             state.raid_clear = true;
                             state.on_phase_transition(2);
                             raid_end_cd = Instant::now();
                         }
                         58 | 60 | 62 | 64 | 75 | 77 => {
+                            party_freeze = true;
                             state.party_info = update_party(&party_tracker, &mut entity_tracker);
                             state.raid_clear = false;
                             state.on_phase_transition(4);
@@ -495,7 +500,11 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool) -> Re
             let mut clone = state.encounter.clone();
             let window = window.clone();
 
-            let party  = update_party(&party_tracker, &mut entity_tracker);
+            let party = if !party_freeze {
+                update_party(&party_tracker, &mut entity_tracker)
+            } else {
+                Vec::new()
+            };
             let party_info: Option<HashMap<i32, Vec<String>>> = if party.len() > 1 {
                 Some(party
                     .into_iter()
@@ -523,15 +532,17 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool) -> Re
                     (e.entity_type == EntityType::PLAYER || e.entity_type == EntityType::ESTHER)
                         && e.damage_stats.damage_dealt > 0
                 });
+
                 if !clone.entities.is_empty() {
                     window
                         .emit("encounter-update", Some(clone))
                         .expect("failed to emit encounter-update");
-                }
-                if party_info.is_some() {
-                    window
-                        .emit("party-update", party_info)
-                        .expect("failed to emit party-update");
+
+                    if party_info.is_some() {
+                        window
+                            .emit("party-update", party_info)
+                            .expect("failed to emit party-update");
+                    }
                 }
 
             });
@@ -543,6 +554,7 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool) -> Re
             state.soft_reset(true);
             state.resetting = false;
             state.saved = false;
+            party_freeze = false;
         }
     }
 

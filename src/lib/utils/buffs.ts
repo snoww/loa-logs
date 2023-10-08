@@ -82,7 +82,8 @@ export function filterStatusEffects(
         }
     } else if (["set"].includes(buff.buffCategory)) {
         if (tab === MeterTab.SELF_BUFFS && !focusedPlayer) {
-            groupedSynergiesAdd(groupedSynergies, `set_${buff.source.setName}`, id, buff, focusedPlayer, buffFilter);
+            // put set buffs at the start
+            groupedSynergiesAdd(groupedSynergies, `_set_${buff.source.setName}`, id, buff, focusedPlayer, buffFilter);
         }
     } else if (["classskill", "identity", "ability"].includes(buff.buffCategory)) {
         // self & other identity, class skill, engravings
@@ -278,7 +279,7 @@ export function calculatePartyWidth(partyGroupedSynergies: Map<string, Set<strin
         if (widthPx > currentVw - 2 * remToPx) {
             partyWidths[partyId] = `${widthRem}rem`;
         } else {
-            partyWidths[partyId] = "calc(100vw - 4.5rem)";
+            partyWidths[partyId] = `calc(100vw - 4.5rem)`;
         }
     });
 
