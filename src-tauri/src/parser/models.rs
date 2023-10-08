@@ -556,6 +556,8 @@ pub struct MeterTabs {
     pub split_boss_hp_bar: bool,
     pub abbreviate_header: bool,
     pub show_class_colors: bool,
+    #[serde(default = "default_true")]
+    pub split_party_buffs: bool,
     pub damage: bool,
     pub dps: bool,
     pub damage_percent: bool,

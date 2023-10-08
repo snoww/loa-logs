@@ -1,5 +1,14 @@
 <script lang="ts">
-    import { MeterState, MeterTab, type Encounter, type EncounterEvent, type Entity, EntityType } from "$lib/types";
+    import {
+        MeterState,
+        MeterTab,
+        type Encounter,
+        type EncounterEvent,
+        type Entity,
+        EntityType,
+        type PartyInfo,
+        type PartyEvent
+    } from "$lib/types";
     import { millisToMinutesAndSeconds } from "$lib/utils/numbers";
     import { listen, type UnlistenFn } from "@tauri-apps/api/event";
     import { onDestroy, onMount } from "svelte";
@@ -20,6 +29,7 @@
 
     let time = +Date.now();
     let encounter: Encounter | null = null;
+    let party: PartyInfo | undefined;
     let events: Array<UnlistenFn> = [];
 
     let zoneChangeAlert = false;
@@ -41,6 +51,9 @@
             let encounterUpdateEvent = await listen("encounter-update", (event: EncounterEvent) => {
                 // console.log(+Date.now(), event.payload);
                 encounter = event.payload;
+            });
+            let partyUpdateEvent = await listen("party-update", (event: PartyEvent) => {
+                party = event.payload;
             });
             let zoneChangeEvent = await listen("zone-change", () => {
                 // console.log("zone change event")
@@ -101,6 +114,7 @@
 
             events.push(
                 encounterUpdateEvent,
+                partyUpdateEvent,
                 zoneChangeEvent,
                 resetEncounterEvent,
                 pauseEncounterEvent,
@@ -283,7 +297,7 @@
 
 <svelte:window on:contextmenu|preventDefault />
 <div bind:this={targetDiv}>
-    <EncounterInfo {encounterDuration} {totalDamageDealt} {dps} screenshotFn={captureScreenshot}/>
+    <EncounterInfo {encounterDuration} {totalDamageDealt} {dps} screenshotFn={captureScreenshot} />
     {#if currentBoss !== null && $settings.meter.bossHp}
         <div class="relative top-7">
             <BossInfo boss={currentBoss} />
@@ -292,9 +306,9 @@
     <div
         class="relative top-7 overflow-scroll"
         style="height: calc(100vh - 1.5rem - 1.75rem {currentBoss !== null ? ' - 1.75rem' : ''});">
-        <table class="relative w-full table-fixed" id="live-meter-table">
-            {#if tab === MeterTab.DAMAGE}
-                {#if state === MeterState.PARTY}
+        {#if tab === MeterTab.DAMAGE}
+            {#if state === MeterState.PARTY}
+                <table class="relative w-full table-fixed" id="live-meter-table">
                     <thead
                         class="sticky top-0 z-40 h-6"
                         on:contextmenu|preventDefault={() => {
@@ -330,7 +344,8 @@
                                     >Buff%</th>
                             {/if}
                             {#if anySupportBrand && $settings.meter.percentBrand}
-                                <th class="w-12 font-normal" use:tooltip={{ content: "% Damage buffed by Brand" }}>B%</th>
+                                <th class="w-12 font-normal" use:tooltip={{ content: "% Damage buffed by Brand" }}
+                                    >B%</th>
                             {/if}
                             {#if $settings.meter.counters}
                                 <th class="w-12 font-normal" use:tooltip={{ content: "Counters" }}>CTR</th>
@@ -358,48 +373,54 @@
                             </tr>
                         {/each}
                     </tbody>
-                {:else if state === MeterState.PLAYER && player !== null}
+                </table>
+            {:else if state === MeterState.PLAYER && player !== null}
+                <table class="relative w-full table-fixed" id="live-meter-table">
                     <PlayerBreakdown entity={player} {duration} {handleRightClick} />
-                {/if}
-            {:else if tab === MeterTab.PARTY_BUFFS}
-                {#if state === MeterState.PARTY}
-                    <Buffs
-                        {tab}
-                        encounterDamageStats={encounter?.encounterDamageStats}
-                        {players}
-                        {handleRightClick}
-                        {inspectPlayer} />
-                {:else}
-                    <Buffs
-                        {tab}
-                        encounterDamageStats={encounter?.encounterDamageStats}
-                        {players}
-                        focusedPlayer={player}
-                        {handleRightClick}
-                        {inspectPlayer} />
-                {/if}
-            {:else if tab === MeterTab.SELF_BUFFS}
-                {#if state === MeterState.PARTY}
-                    <Buffs
-                        {tab}
-                        encounterDamageStats={encounter?.encounterDamageStats}
-                        {players}
-                        focusedPlayer={player}
-                        {handleRightClick}
-                        {inspectPlayer} />
-                {:else}
-                    <Buffs
-                        {tab}
-                        encounterDamageStats={encounter?.encounterDamageStats}
-                        {players}
-                        focusedPlayer={player}
-                        {handleRightClick}
-                        {inspectPlayer} />
-                {/if}
-            {:else if tab === MeterTab.DETAILS}
-                <Details/>
+                </table>
             {/if}
-        </table>
+        {:else if tab === MeterTab.PARTY_BUFFS}
+            {#if state === MeterState.PARTY}
+                <Buffs
+                    {tab}
+                    encounterDamageStats={encounter?.encounterDamageStats}
+                    {players}
+                    {handleRightClick}
+                    {inspectPlayer}
+                    encounterPartyInfo={party} />
+            {:else}
+                <Buffs
+                    {tab}
+                    encounterDamageStats={encounter?.encounterDamageStats}
+                    {players}
+                    focusedPlayer={player}
+                    {handleRightClick}
+                    {inspectPlayer}
+                    encounterPartyInfo={party} />
+            {/if}
+        {:else if tab === MeterTab.SELF_BUFFS}
+            {#if state === MeterState.PARTY}
+                <Buffs
+                    {tab}
+                    encounterDamageStats={encounter?.encounterDamageStats}
+                    {players}
+                    focusedPlayer={player}
+                    {handleRightClick}
+                    {inspectPlayer}
+                    encounterPartyInfo={party} />
+            {:else}
+                <Buffs
+                    {tab}
+                    encounterDamageStats={encounter?.encounterDamageStats}
+                    {players}
+                    focusedPlayer={player}
+                    {handleRightClick}
+                    {inspectPlayer}
+                    encounterPartyInfo={party} />
+            {/if}
+        {:else if tab === MeterTab.DETAILS}
+            <Details />
+        {/if}
     </div>
     {#if zoneChangeAlert}
         <Notification bind:showAlert={zoneChangeAlert} text="Changing Zone" width={"11rem"} dismissable={false} />
@@ -431,10 +452,19 @@
             isError={true} />
     {/if}
     {#if $screenshotAlert}
-        <Notification bind:showAlert={$screenshotError} text={"Screenshot Copied to Clipboard"} width="18rem" dismissable={false} />
+        <Notification
+            bind:showAlert={$screenshotError}
+            text={"Screenshot Copied to Clipboard"}
+            width="18rem"
+            dismissable={false} />
     {/if}
     {#if $screenshotError}
-        <Notification bind:showAlert={$screenshotError} text={"Error Taking Screenshot"} width="15rem" isError={true} dismissable={false} />
+        <Notification
+            bind:showAlert={$screenshotError}
+            text={"Error Taking Screenshot"}
+            width="15rem"
+            isError={true}
+            dismissable={false} />
     {/if}
     <Footer bind:tab />
 </div>

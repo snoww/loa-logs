@@ -5,17 +5,14 @@
         MeterTab,
         type StatusEffect,
         EntityType,
-        BuffDetails,
-        Buff
+        BuffDetails
     } from "$lib/types";
-    import { filterStatusEffects } from "$lib/utils/buffs";
-    import LogBuffHeader from "./LogBuffHeader.svelte";
+    import { calculatePartyWidth, filterStatusEffects, getPartyBuffs } from "$lib/utils/buffs";
     import LogPartyBuffRow from "./LogPartyBuffRow.svelte";
     import LogBuffBreakdown from "./LogBuffBreakdown.svelte";
     import { settings } from "$lib/utils/settings";
-    import LogPartyBuffHeader from "./LogPartyBuffHeader.svelte";
     import LogBuffRow from "./LogBuffRow.svelte";
-    import { round } from "$lib/utils/numbers";
+    import BuffHeader from "../shared/BuffHeader.svelte";
 
     export let tab: MeterTab;
     export let encounterDamageStats: EncounterDamageStats;
@@ -60,99 +57,24 @@
     let vw: number;
     let partyWidths: { [key: string]: string };
 
-    if ($settings.logs.splitPartyBuffs && encounterDamageStats.misc?.partyInfo) {
-        let partyInfo = Object.entries(encounterDamageStats.misc.partyInfo);
-        if (partyInfo.length >= 2) {
-            for (const [partyIdStr, names] of partyInfo) {
-                const partyId = Number(partyIdStr);
-                for (const name of names) {
-                    const player = players.find((player) => player.name === name);
-                    if (player) {
-                        parties[partyId] = parties[partyId] || [];
-                        parties[partyId].push(player);
-                    }
-                }
-                if (parties[partyId]) {
-                    parties[partyId].sort((a, b) => b.damageStats.damageDealt - a.damageStats.damageDealt);
-                    partyPercentages[partyId] = parties[partyId].map(
-                        (player) => (player.damageStats.damageDealt / encounterDamageStats.topDamageDealt) * 100
-                    );
-                }
-            }
-        } else {
-            parties[0] = players;
-        }
-
-        if (!focusedPlayer && groupedSynergies.size > 0 && parties.length > 1) {
-            parties.forEach((party, partyId) => {
-                partyGroupedSynergies.set(partyId.toString(), new Set<string>());
-                let partySyns = partyGroupedSynergies.get(partyId.toString())!;
-                for (const player of party) {
-                    groupedSynergies.forEach((synergies, key) => {
-                        synergies.forEach((_, id) => {
-                            if (player.damageStats.buffedBy[id] || player.damageStats.debuffedBy[id]) {
-                                partySyns.add(key);
-                            }
-                        });
-                    });
-                }
-            });
-
-            parties.forEach((party, partyId) => {
-                partyBuffs.set(partyId.toString(), new Map<string, Array<BuffDetails>>());
-                for (const player of party) {
-                    partyBuffs.get(partyId.toString())!.set(player.name, []);
-                    let playerBuffs = partyBuffs.get(partyId.toString())!.get(player.name)!;
-                    partyGroupedSynergies.get(partyId.toString())?.forEach((key) => {
-                        let buffDetails = new BuffDetails();
-                        buffDetails.id = key;
-                        let buffDamage = 0;
-                        let buffs = groupedSynergies.get(key) || new Map();
-                        buffs.forEach((syn, id) => {
-                            if (player.damageStats.buffedBy[id]) {
-                                buffDetails.buffs.push(
-                                    new Buff(
-                                        syn.source.icon,
-                                        round((player.damageStats.buffedBy[id] / player.damageStats.damageDealt) * 100),
-                                        syn.source.skill?.icon
-                                    )
-                                );
-                                buffDamage += player.damageStats.buffedBy[id];
-                            } else if (player.damageStats.debuffedBy[id]) {
-                                buffDetails.buffs.push(
-                                    new Buff(
-                                        syn.source.icon,
-                                        round(
-                                            (player.damageStats.debuffedBy[id] / player.damageStats.damageDealt) * 100
-                                        ),
-                                        syn.source.skill?.icon
-                                    )
-                                );
-                                buffDamage += player.damageStats.debuffedBy[id];
-                            }
-                        });
-                        if (buffDamage > 0) {
-                            buffDetails.percentage = round((buffDamage / player.damageStats.damageDealt) * 100);
-                        }
-                        playerBuffs.push(buffDetails);
-                    });
-                }
-            });
-        }
+    if ($settings.logs.splitPartyBuffs && encounterDamageStats.misc?.partyInfo && !focusedPlayer) {
+        const partyBuffsObj = getPartyBuffs(
+            players,
+            encounterDamageStats.topDamageDealt,
+            encounterDamageStats.misc.partyInfo,
+            groupedSynergies
+        );
+        parties = partyBuffsObj.parties;
+        partyGroupedSynergies = partyBuffsObj.partyGroupedSynergies;
+        partyPercentages = partyBuffsObj.partyPercentages;
+        partyBuffs = partyBuffsObj.partyBuffs;
     }
 
     $: {
-        partyWidths = {};
-        let remToPx = parseFloat(getComputedStyle(document.documentElement).fontSize);
-        partyGroupedSynergies.forEach((synergies, partyId) => {
-            const widthRem = synergies.size * 3.5 + 10;
-            const widthPx = widthRem * remToPx;
-            if (widthPx > vw - 2 * remToPx) {
-                partyWidths[partyId] = `${widthRem}rem`;
-            } else {
-                partyWidths[partyId] = "calc(100vw - 4.5rem)";
-            }
-        });
+        if (partyGroupedSynergies.size > 0) {
+            const remToPx = parseFloat(getComputedStyle(document.documentElement).fontSize);
+            partyWidths = calculatePartyWidth(partyGroupedSynergies, remToPx, vw);
+        }
     }
 </script>
 
@@ -168,7 +90,7 @@
                         <th class="w-full" />
                         {#each [...synergies] as synergy (synergy)}
                             {@const syns = groupedSynergies.get(synergy) || new Map()}
-                            <LogPartyBuffHeader synergies={syns} />
+                            <BuffHeader synergies={syns} />
                         {/each}
                     </tr>
                 </thead>
@@ -191,7 +113,7 @@
                 <th class="w-20 px-2 text-left font-normal" />
                 <th class="w-full" />
                 {#each [...groupedSynergies] as [id, synergies] (id)}
-                    <LogBuffHeader {synergies} />
+                    <BuffHeader {synergies} />
                 {:else}
                     <th class="font-normal w-20">No Buffs</th>
                 {/each}

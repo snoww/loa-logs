@@ -7,7 +7,9 @@ import {
     MeterTab,
     Buff,
     BuffDetails,
-    type Skill
+    type Skill,
+    type PartyBuffs,
+    type PartyInfo
 } from "$lib/types";
 import { round } from "./numbers";
 
@@ -139,18 +141,18 @@ export function getSynergyPercentageDetails(groupedSynergies: Map<string, Map<nu
     return synergyPercentageDetails;
 }
 
-export function getSynergyPercentageDetailsSum(groupedSynergies: Map<string, Map<number, StatusEffect>>, skills: Skill[], totalDamage: number) {
+export function getSynergyPercentageDetailsSum(
+    groupedSynergies: Map<string, Map<number, StatusEffect>>,
+    skills: Skill[],
+    totalDamage: number
+) {
     const synergyPercentageDetails: BuffDetails[] = [];
     groupedSynergies.forEach((synergies, key) => {
         let synergyDamage = 0;
         const buffs = new BuffDetails();
         buffs.id = key;
         synergies.forEach((syn, id) => {
-            const buff = new Buff(
-                syn.source.icon,
-                "",
-                syn.source.skill?.icon
-            );
+            const buff = new Buff(syn.source.icon, "", syn.source.skill?.icon);
             let totalBuffed = 0;
             for (const skill of skills) {
                 if (skill.buffedBy[id]) {
@@ -172,4 +174,113 @@ export function getSynergyPercentageDetailsSum(groupedSynergies: Map<string, Map
     });
 
     return synergyPercentageDetails;
+}
+
+export function getPartyBuffs(
+    players: Array<Entity>,
+    topDamageDealt: number,
+    encounterPartyInfo: PartyInfo,
+    groupedSynergies: Map<string, Map<number, StatusEffect>>
+): PartyBuffs {
+    const parties = new Array<Array<Entity>>();
+    const partyGroupedSynergies = new Map<string, Set<string>>();
+    const partyPercentages = new Array<number[]>();
+
+    const partyBuffs = new Map<string, Map<string, Array<BuffDetails>>>();
+
+    const partyInfo = Object.entries(encounterPartyInfo);
+    if (partyInfo.length >= 2) {
+        for (const [partyIdStr, names] of partyInfo) {
+            const partyId = Number(partyIdStr);
+            for (const name of names) {
+                const player = players.find((player) => player.name === name);
+                if (player) {
+                    parties[partyId] = parties[partyId] || [];
+                    parties[partyId].push(player);
+                }
+            }
+            if (parties[partyId]) {
+                parties[partyId].sort((a, b) => b.damageStats.damageDealt - a.damageStats.damageDealt);
+                partyPercentages[partyId] = parties[partyId].map(
+                    (player) => (player.damageStats.damageDealt / topDamageDealt) * 100
+                );
+            }
+        }
+    } else {
+        parties[0] = players;
+    }
+
+    if (groupedSynergies.size > 0 && parties.length > 1) {
+        parties.forEach((party, partyId) => {
+            partyGroupedSynergies.set(partyId.toString(), new Set<string>());
+            const partySyns = partyGroupedSynergies.get(partyId.toString())!;
+            for (const player of party) {
+                groupedSynergies.forEach((synergies, key) => {
+                    synergies.forEach((_, id) => {
+                        if (player.damageStats.buffedBy[id] || player.damageStats.debuffedBy[id]) {
+                            partySyns.add(key);
+                        }
+                    });
+                });
+            }
+        });
+
+        parties.forEach((party, partyId) => {
+            partyBuffs.set(partyId.toString(), new Map<string, Array<BuffDetails>>());
+            for (const player of party) {
+                partyBuffs.get(partyId.toString())!.set(player.name, []);
+                const playerBuffs = partyBuffs.get(partyId.toString())!.get(player.name)!;
+                partyGroupedSynergies.get(partyId.toString())?.forEach((key) => {
+                    const buffDetails = new BuffDetails();
+                    buffDetails.id = key;
+                    let buffDamage = 0;
+                    const buffs = groupedSynergies.get(key) || new Map();
+                    buffs.forEach((syn, id) => {
+                        if (player.damageStats.buffedBy[id]) {
+                            buffDetails.buffs.push(
+                                new Buff(
+                                    syn.source.icon,
+                                    round((player.damageStats.buffedBy[id] / player.damageStats.damageDealt) * 100),
+                                    syn.source.skill?.icon
+                                )
+                            );
+                            buffDamage += player.damageStats.buffedBy[id];
+                        } else if (player.damageStats.debuffedBy[id]) {
+                            buffDetails.buffs.push(
+                                new Buff(
+                                    syn.source.icon,
+                                    round(
+                                        (player.damageStats.debuffedBy[id] / player.damageStats.damageDealt) * 100
+                                    ),
+                                    syn.source.skill?.icon
+                                )
+                            );
+                            buffDamage += player.damageStats.debuffedBy[id];
+                        }
+                    });
+                    if (buffDamage > 0) {
+                        buffDetails.percentage = round((buffDamage / player.damageStats.damageDealt) * 100);
+                    }
+                    playerBuffs.push(buffDetails);
+                });
+            }
+        });
+    }
+
+    return { parties, partyGroupedSynergies, partyPercentages, partyBuffs };
+}
+
+export function calculatePartyWidth(partyGroupedSynergies: Map<string, Set<string>>, remToPx: number, currentVw: number) {
+    const partyWidths: { [key: string]: string } = {};
+    partyGroupedSynergies.forEach((synergies, partyId) => {
+        const widthRem = synergies.size * 3.5 + 10;
+        const widthPx = widthRem * remToPx;
+        if (widthPx > currentVw - 2 * remToPx) {
+            partyWidths[partyId] = `${widthRem}rem`;
+        } else {
+            partyWidths[partyId] = "calc(100vw - 4.5rem)";
+        }
+    });
+
+    return partyWidths;
 }

@@ -51,6 +51,7 @@ export const defaultSettings = {
         bossHpBar: true,
         splitBossHpBar: false,
         abbreviateHeader: true,
+        splitPartyBuffs: true,
         showClassColors: true,
         damage: false,
         dps: true,

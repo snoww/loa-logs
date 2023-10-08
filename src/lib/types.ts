@@ -3,6 +3,11 @@ export interface EncounterEvent {
     payload: Encounter;
 }
 
+export interface PartyEvent {
+    event: string;
+    payload?: PartyInfo;
+}
+
 export interface Encounter {
     lastCombatPacket: number;
     fightStart: number;
@@ -47,7 +52,11 @@ export interface EncounterDamageStats {
 export interface EncounterMisc {
     staggerStats: StaggerStats;
     bossHpLog: { [key: string]: Array<BossHpLog> };
-    partyInfo?: { [key: string]: Array<string> };
+    partyInfo?: PartyInfo;
+}
+
+export interface PartyInfo {
+    [key: string]: Array<string>
 }
 
 export class BossHpLog {
@@ -323,4 +332,11 @@ export class SearchFilter {
         this.favorites = false;
         this.cleared = false;
     }
+}
+
+export interface PartyBuffs {
+    parties: Array<Array<Entity>>,
+    partyGroupedSynergies: Map<string, Set<string>>,
+    partyPercentages: Array<number[]>,
+    partyBuffs: Map<string, Map<string, Array<BuffDetails>>>,
 }

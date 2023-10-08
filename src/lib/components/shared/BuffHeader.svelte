@@ -1,6 +1,6 @@
 <script lang="ts">
     import type { StatusEffect } from "$lib/types";
-    import LogBuffTooltip from "../shared/BuffTooltip.svelte";
+    import BuffTooltip from "./BuffTooltip.svelte";
 
     export let synergies: Map<number, StatusEffect>;
 
@@ -16,7 +16,7 @@
 <th class="" style="width: {width}">
     <div class="flex justify-center space-x-1">
         {#each [...synergies] as [id, synergy] (id)}
-            <LogBuffTooltip {synergy} />
+            <BuffTooltip {synergy} />
         {/each}
     </div>
 </th>

@@ -281,7 +281,7 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool) -> Re
                 debug_print!("phase", &1);
             }
             Pkt::RaidResult => {
-                update_party(&party_tracker, &mut entity_tracker, &mut state);
+                state.party_info = update_party(&party_tracker, &mut entity_tracker);
                 state.on_phase_transition(0);
                 raid_end_cd = Instant::now();
                 debug_print!("phase", &0);
@@ -429,13 +429,13 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool) -> Re
                 if let Some(pkt) = parse_pkt(&data, PKTTriggerStartNotify::new, "PKTTriggerStartNotify") {
                     match pkt.trigger_signal_type {
                         57 | 59 | 61 | 63 | 74 | 76 => {
-                            update_party(&party_tracker, &mut entity_tracker, &mut state);
+                            state.party_info = update_party(&party_tracker, &mut entity_tracker);
                             state.raid_clear = true;
                             state.on_phase_transition(2);
                             raid_end_cd = Instant::now();
                         }
                         58 | 60 | 62 | 64 | 75 | 77 => {
-                            update_party(&party_tracker, &mut entity_tracker, &mut state);
+                            state.party_info = update_party(&party_tracker, &mut entity_tracker);
                             state.raid_clear = false;
                             state.on_phase_transition(4);
                             raid_end_cd = Instant::now();
@@ -494,6 +494,18 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool) -> Re
             }
             let mut clone = state.encounter.clone();
             let window = window.clone();
+
+            let party  = update_party(&party_tracker, &mut entity_tracker);
+            let party_info: Option<HashMap<i32, Vec<String>>> = if party.len() > 1 {
+                Some(party
+                    .into_iter()
+                    .enumerate()
+                    .map(|(index, party)| (index as i32, party))
+                    .collect())
+            } else {
+                None
+            };
+
             tokio::task::spawn(async move {
                 if !clone.current_boss_name.is_empty() {
                     let current_boss = clone.entities.get(&clone.current_boss_name).cloned();
@@ -516,6 +528,12 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool) -> Re
                         .emit("encounter-update", Some(clone))
                         .expect("failed to emit encounter-update");
                 }
+                if party_info.is_some() {
+                    window
+                        .emit("party-update", party_info)
+                        .expect("failed to emit party-update");
+                }
+
             });
 
             last_update = Instant::now();
@@ -531,8 +549,7 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool) -> Re
     Ok(())
 }
 
-fn update_party(party_tracker: &Rc<RefCell<PartyTracker>>, entity_tracker: &mut EntityTracker, state: &mut EncounterState) {
-    // let mut parties: HashMap<u32, i32> = HashMap::new();
+fn update_party(party_tracker: &Rc<RefCell<PartyTracker>>, entity_tracker: &mut EntityTracker) -> Vec<Vec<String>> {
     let mut party_info: HashMap<u32, Vec<String>> = HashMap::new();
 
     for (entity_id, party_id) in party_tracker.borrow().entity_id_to_party_id.iter() {   
@@ -545,9 +562,7 @@ fn update_party(party_tracker: &Rc<RefCell<PartyTracker>>, entity_tracker: &mut 
         .into_iter()
         .collect::<Vec<(u32, Vec<String>)>>();
     sorted_parties.sort_by_key(|&(party_id, _)| party_id);
-    let normalized_parties = sorted_parties.into_iter().map(|(_, members)| members).collect();
-
-    state.party_info = normalized_parties;
+    sorted_parties.into_iter().map(|(_, members)| members).collect()
 }
 
 

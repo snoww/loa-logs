@@ -393,6 +393,10 @@
                             description="Shows class colors in the meter. Width of the bar shows relative % damage dealt."
                             bind:setting={$settings.meter.showClassColors} />
                         <SettingItem
+                            name="Split Party Buffs"
+                            description="Split players into their respective parties for party buffs"
+                            bind:setting={$settings.meter.splitPartyBuffs} />
+                        <SettingItem
                             name="Death Time"
                             description="Show how long a party member has died"
                             bind:setting={$settings.meter.deathTime} />
