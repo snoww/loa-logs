@@ -22,7 +22,7 @@ use parser::models::*;
 use rusqlite::{params, params_from_iter, Connection};
 use tauri::{
     api::process::Command, CustomMenuItem, Manager, SystemTray, SystemTrayEvent, SystemTrayMenu,
-    SystemTrayMenuItem, WindowBuilder,
+    SystemTrayMenuItem, WindowBuilder, Position, Size, LogicalSize, LogicalPosition,
 };
 use tauri_plugin_window_state::{AppHandleExt, StateFlags, WindowExt};
 use window_vibrancy::{apply_blur, clear_blur};
@@ -56,11 +56,18 @@ async fn main() -> Result<()> {
     let show_logs = CustomMenuItem::new("show-logs".to_string(), "Show Logs");
     let show_meter = CustomMenuItem::new("show-meter".to_string(), "Show Meter");
     let hide_meter = CustomMenuItem::new("hide".to_string(), "Hide Meter");
+    let load_saved_pos = CustomMenuItem::new("load".to_string(), "Load Saved");
+    let save_current_pos = CustomMenuItem::new("save".to_string(), "Save Position");
+    let reset = CustomMenuItem::new("reset".to_string(), "Reset Window");
     let tray_menu = SystemTrayMenu::new()
         .add_item(show_logs)
         .add_native_item(SystemTrayMenuItem::Separator)
         .add_item(show_meter)
         .add_item(hide_meter)
+        .add_native_item(SystemTrayMenuItem::Separator)
+        .add_item(save_current_pos)
+        .add_item(load_saved_pos)
+        .add_item(reset)
         .add_native_item(SystemTrayMenuItem::Separator)
         .add_item(quit);
 
@@ -210,6 +217,22 @@ async fn main() -> Result<()> {
                         meter.show().unwrap();
                         meter.unminimize().unwrap();
                         meter.set_ignore_cursor_events(false).unwrap()
+                    }
+                }           
+                "load" => {
+                    if let Some(meter) = app.get_window("main") {
+                        meter.restore_state(StateFlags::all()).unwrap();
+                    }
+                }
+                "save" => {
+                    if let Some(meter) = app.get_window("main") {
+                        meter.app_handle().save_window_state(StateFlags::all()).unwrap();
+                    }
+                }
+                "reset" => {
+                    if let Some(meter) = app.get_window("main") {
+                        meter.set_size(Size::Logical(LogicalSize { width: 500.0, height: 350.0 })).unwrap();
+                        meter.set_position(Position::Logical(LogicalPosition { x: 100.0, y: 100.0})).unwrap();
                     }
                 }
                 "show-logs" => {
