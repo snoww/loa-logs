@@ -60,7 +60,7 @@
                 filterStatusEffects(groupedSynergies, debuff, Number(id), focusedPlayer, tab, $settings.buffs.default);
             });
             groupedSynergies = new Map([...groupedSynergies.entries()].sort());
-            if ($settings.meter.splitPartyBuffs && encounterPartyInfo && !focusedPlayer) {
+            if ($settings.meter.splitPartyBuffs && encounterPartyInfo && Object.keys(encounterPartyInfo).length > 1 && !focusedPlayer) {
                 const partyBuffsObj = getPartyBuffs(
                     players,
                     encounterDamageStats.topDamageDealt,
@@ -68,7 +68,7 @@
                     groupedSynergies
                 );
 
-                if (localPlayer) {
+                if (localPlayer && $settings.meter.pinSelfParty) {
                     localPlayerInP1 = encounterPartyInfo[0].some((player) => player === localPlayer);
                 }
 
