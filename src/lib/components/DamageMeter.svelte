@@ -307,7 +307,7 @@
         </div>
     {/if}
     <div
-        class="relative top-7 overflow-scroll"
+        class="relative top-7 overflow-scroll scroll-ml-8 scroll-mt-2"
         style="height: calc(100vh - 1.5rem - 1.75rem {currentBoss !== null ? ' - 1.75rem' : ''});">
         {#if tab === MeterTab.DAMAGE}
             {#if state === MeterState.PARTY}
@@ -390,7 +390,8 @@
                     {players}
                     {handleRightClick}
                     {inspectPlayer}
-                    encounterPartyInfo={parties} />
+                    encounterPartyInfo={parties}
+                    localPlayer={encounter?.localPlayer} />
             {:else}
                 <Buffs
                     {tab}
@@ -399,7 +400,8 @@
                     focusedPlayer={player}
                     {handleRightClick}
                     {inspectPlayer}
-                    encounterPartyInfo={parties} />
+                    encounterPartyInfo={parties}
+                    localPlayer={encounter?.localPlayer} />
             {/if}
         {:else if tab === MeterTab.SELF_BUFFS}
             {#if state === MeterState.PARTY}
@@ -410,7 +412,8 @@
                     focusedPlayer={player}
                     {handleRightClick}
                     {inspectPlayer}
-                    encounterPartyInfo={parties} />
+                    encounterPartyInfo={parties}
+                    localPlayer={encounter?.localPlayer} />
             {:else}
                 <Buffs
                     {tab}
@@ -419,7 +422,8 @@
                     focusedPlayer={player}
                     {handleRightClick}
                     {inspectPlayer}
-                    encounterPartyInfo={parties} />
+                    encounterPartyInfo={parties}
+                    localPlayer={encounter?.localPlayer} />
             {/if}
         {:else if tab === MeterTab.DETAILS}
             <Details />

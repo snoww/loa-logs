@@ -401,6 +401,10 @@
                             description="Split players into their respective parties for party buffs"
                             bind:setting={$settings.meter.splitPartyBuffs} />
                         <SettingItem
+                            name="Pin Player Party"
+                            description="Pin the local player's party to the top of the meter in the when party buffs are split."
+                            bind:setting={$settings.meter.pinSelfParty} />
+                        <SettingItem
                             name="Death Time"
                             description="Show how long a party member has died"
                             bind:setting={$settings.meter.deathTime} />

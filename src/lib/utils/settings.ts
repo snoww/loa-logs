@@ -53,6 +53,7 @@ export const defaultSettings = {
         splitBossHpBar: false,
         abbreviateHeader: true,
         splitPartyBuffs: true,
+        pinSelfParty: true,
         showClassColors: true,
         damage: false,
         dps: true,

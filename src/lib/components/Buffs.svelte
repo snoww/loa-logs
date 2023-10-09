@@ -6,9 +6,7 @@
         type StatusEffect,
         EntityType,
         BuffDetails,
-
         type PartyInfo
-
     } from "$lib/types";
     import { filterStatusEffects, getPartyBuffs } from "$lib/utils/buffs";
     import { flip } from "svelte/animate";
@@ -25,15 +23,18 @@
     export let handleRightClick: () => void;
     export let inspectPlayer: (name: string) => void;
     export let encounterPartyInfo: PartyInfo | undefined;
+    export let localPlayer: string | undefined;
 
     let groupedSynergies: Map<string, Map<number, StatusEffect>> = new Map();
     let percentages = Array<number>();
 
     let parties = new Array<Array<Entity>>();
-    let partyGroupedSynergies = new Map<string, Set<string>>();
+    let partyGroupedSynergies = new Array<[string, Set<string>]>();
     let partyPercentages = new Array<number[]>();
 
     let partyBuffs = new Map<string, Map<string, Array<BuffDetails>>>();
+
+    let localPlayerInP1 = true;
 
     $: {
         if (focusedPlayer && focusedPlayer.entityType === EntityType.ESTHER) {
@@ -66,8 +67,13 @@
                     encounterPartyInfo,
                     groupedSynergies
                 );
+
+                if (localPlayer) {
+                    localPlayerInP1 = encounterPartyInfo[0].some((player) => player === localPlayer);
+                }
+
                 parties = partyBuffsObj.parties;
-                partyGroupedSynergies = partyBuffsObj.partyGroupedSynergies;
+                partyGroupedSynergies = [...partyBuffsObj.partyGroupedSynergies];
                 partyPercentages = partyBuffsObj.partyPercentages;
                 partyBuffs = partyBuffsObj.partyBuffs;
             }
@@ -75,10 +81,10 @@
     }
 </script>
 
-{#if $settings.meter.splitPartyBuffs && parties.length > 1 && tab === MeterTab.PARTY_BUFFS && !focusedPlayer}
-    <div class="flex flex-col">
-        {#each [...partyGroupedSynergies] as [partyId, synergies], i (partyId)}
-            <table class="table-fixed w-full" id="live-meter-table">
+{#if $settings.meter.splitPartyBuffs && parties.length > 1 && partyGroupedSynergies.length > 1 && parties.length === partyGroupedSynergies.length && tab === MeterTab.PARTY_BUFFS && !focusedPlayer}
+    <div class="flex flex-col" class:flex-col-reverse={!localPlayerInP1} id="live-meter-table">
+        {#each partyGroupedSynergies as [partyId, synergies], i (partyId)}
+            <table class="w-full table-fixed">
                 <thead class="z-40 h-6" id="buff-head">
                     <tr class="bg-zinc-900">
                         <th class="w-7 whitespace-nowrap px-2 font-normal tracking-tight">Party {+partyId + 1}</th>

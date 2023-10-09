@@ -559,6 +559,8 @@ pub struct MeterTabs {
     pub show_class_colors: bool,
     #[serde(default = "default_true")]
     pub split_party_buffs: bool,
+    #[serde(default = "default_true")]
+    pub pin_self_party: bool,
     pub damage: bool,
     pub dps: bool,
     pub damage_percent: bool,

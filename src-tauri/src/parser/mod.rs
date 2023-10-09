@@ -69,6 +69,8 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool) -> Re
 
     let mut last_update = Instant::now();
     let duration = Duration::from_millis(100);
+    let mut last_party_update = Instant::now();
+    let party_duration = Duration::from_millis(1000);
     let mut raid_end_cd: Instant = Instant::now();
 
     let reset = Arc::new(AtomicBool::new(false));
@@ -500,17 +502,18 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool) -> Re
             let mut clone = state.encounter.clone();
             let window = window.clone();
 
-            let party = if !party_freeze {
-                update_party(&party_tracker, &mut entity_tracker)
-            } else {
-                Vec::new()
-            };
-            let party_info: Option<HashMap<i32, Vec<String>>> = if party.len() > 1 {
-                Some(party
-                    .into_iter()
-                    .enumerate()
-                    .map(|(index, party)| (index as i32, party))
-                    .collect())
+            let party_info: Option<HashMap<i32, Vec<String>>>  = if last_party_update.elapsed() >= party_duration && !party_freeze {
+                last_party_update = Instant::now();
+                let party = update_party(&party_tracker, &mut entity_tracker);
+                if party.len() > 1 {
+                    Some(party
+                        .into_iter()
+                        .enumerate()
+                        .map(|(index, party)| (index as i32, party))
+                        .collect())
+                } else {
+                    None
+                }
             } else {
                 None
             };
@@ -544,7 +547,6 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool) -> Re
                             .expect("failed to emit party-update");
                     }
                 }
-
             });
 
             last_update = Instant::now();
