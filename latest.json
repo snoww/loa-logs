@@ -1,11 +1,11 @@
 {
-    "version": "v1.2.38",
-    "notes": "@@@@ AUTO UPDATER BROKEN @@@@\nPLEASE DOWNLOAD AND INSTALL VERSION 1.2.38 MANUALLY TO FIX\nsorry x.x\nfull patch notes on github\nplease report bugs on discord.gg/sbSa3pkDF5",
-    "pub_date": "2023-10-04T12:12:53.794Z",
+    "version": "v1.2.39",
+    "notes": "@@@@ README @@@@\nIF YOU ARE ON v1.2.35, YOU NEED TO INSTALL v1.2.39 MANUALLY\n@@@@ README @@@@\n### v1.2.39\n#### NEW FEATURES\n- split party buffs now works in live meter (settings > live meter > split party buffs)\n- reworked how buff% and brand% is calculated (should now accurately reflect swords/identity, and brand uptime)\n- added option to underline row when hovering (settings > general > underline hovered)\nfull patch notes on github\nsend bug reports/suggestions to discord.gg/sbSa3pkDF5",
+    "pub_date": "2023-10-09T04:52:56.921Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.2.38/LOA.Logs_1.2.38_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYldUWkpoQlE4ZS9KUWxLK1FSUkNWekxQYUo3MUxzV0sxT0RqZTZma1g3eDV1WTZPekZkbUdLOCt1YVhNNUx2N2FLbHVQL0l3blBpRVJxR1hpQWVlTUFjPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjk2NDM1MzQ0CWZpbGU6TE9BIExvZ3NfMS4yLjM4X3g2NC1zZXR1cC5uc2lzLnppcApualhMNTF4UFEzSFJKcmhrVG1taHV2L3h5QkpPNlBtWjJlRDRZemwvSUNQS1J4SFAyQlZ3NlBSc1dBUnE0dXN1NHU4Yjl6RHdJbmJ3Y0ZBblN1ZG9Cdz09Cg=="
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.2.39/LOA.Logs_1.2.39_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlROYTFVdndzT2NGOUtnRTQwNWcwZzgzSEJjWXMwM01qSnJZVXpRRnk3Zy9KSStSYjBkZDhvOW5Md0FtaVRudTV2WGh6MERIcDdxK0FqSzh6eEUxU2dzPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjk2ODI3NDM0CWZpbGU6TE9BIExvZ3NfMS4yLjM5X3g2NC1zZXR1cC5uc2lzLnppcApTYyt5eVV6RlMvTnJ2bENpUWNZS3hHYStRdEk4ajdMaDM2R0RpQkt4SU82UnZreUxpd3QrT01XWmpLL3JIYk1MZmhBYW02MHB3c1l6THdXclVEWHdCQT09Cg=="
         }
     }
 }
