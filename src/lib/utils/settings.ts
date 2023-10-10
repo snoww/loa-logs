@@ -45,6 +45,10 @@ export const defaultSettings = {
         pauseSession: {
             modifier: "",
             key: ""
+        },
+        manualSave: {
+            modifier: "",
+            key: ""
         }
     },
     meter: {
@@ -177,6 +181,11 @@ export async function registerShortcuts(shortcuts: any) {
     if (shortcuts.pauseSession.modifier && shortcuts.pauseSession.key) {
         await register(shortcuts.pauseSession.modifier + "+" + shortcuts.pauseSession.key, async () => {
             await emit("pause-request");
+        });
+    }
+    if (shortcuts.manualSave.modifier && shortcuts.manualSave.key) {
+        await register(shortcuts.manualSave.modifier + "+" + shortcuts.manualSave.key, async () => {
+            await emit("save-request");
         });
     }
 }

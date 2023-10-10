@@ -96,7 +96,7 @@
 <svelte:window on:contextmenu|preventDefault />
 <LogSidebar bind:hidden />
 <div class="custom-scroll h-screen overflow-y-scroll bg-zinc-800 pb-8">
-    <div class="sticky top-0 flex h-16 justify-between bg-zinc-800 px-8 py-5 shadow-md z-10">
+    <div class="sticky top-0 z-10 flex h-16 justify-between bg-zinc-800 px-8 py-5 shadow-md">
         <div class="ml-2 flex space-x-2">
             <div class="">
                 <button on:click={() => (hidden = false)} class="mt-px block">
@@ -108,7 +108,7 @@
                             d="M107 841v-91.5h746.5V841H107Zm0-219.5V530h746.5v91.5H107Zm0-219V310h746.5v92.5H107Z" /></svg>
                 </button>
             </div>
-            <div class="pl-2 text-xl text-gray-300 tracking-tight">Settings</div>
+            <div class="pl-2 text-xl tracking-tight text-gray-300">Settings</div>
         </div>
     </div>
     <div class="px-8">
@@ -120,7 +120,7 @@
                 inactiveClasses="py-4 px-2 hover:text-gray-200 text-gray-400">
                 <div class="flex flex-col space-y-4 divide-y-[1px]">
                     <div class="mt-4 flex flex-col space-y-2 px-2">
-                        <div class="pt-2 relative" on:focusout={handleColorDropdownFocusLoss}>
+                        <div class="relative pt-2" on:focusout={handleColorDropdownFocusLoss}>
                             <div class="flex items-center">
                                 <button
                                     id=""
@@ -140,7 +140,7 @@
                                 </div>
                             </div>
                             {#if colorDropdownOpen}
-                                <div id="dropdown" class="absolute mt-2 w-28 -left-1 cursor-pointer rounded-lg shadow">
+                                <div id="dropdown" class="absolute -left-1 mt-2 w-28 cursor-pointer rounded-lg shadow">
                                     <ul class="text-sm text-gray-200" aria-labelledby="dropdownDefaultButton">
                                         <li>
                                             <button
@@ -806,6 +806,32 @@
                                 <select
                                     id="keys"
                                     bind:value={$settings.shortcuts.pauseSession.key}
+                                    class="focus:ring-accent-500 focus:border-accent-500 block rounded-lg border border-gray-600 bg-gray-700 p-2.5 text-sm text-white placeholder-gray-400">
+                                    {#each keyboardKeys as key}
+                                        <option value={key}>{key.toUpperCase()}</option>
+                                    {/each}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="flex justify-between">
+                            <label class="flex items-center" for="modifiers">
+                                <div class="">
+                                    <div class="text-gray-100">Manual Save</div>
+                                </div>
+                            </label>
+                            <div class="flex items-center space-x-2">
+                                <select
+                                    id="modifiers"
+                                    bind:value={$settings.shortcuts.manualSave.modifier}
+                                    class="focus:ring-accent-500 focus:border-accent-500 block w-20 rounded-lg border border-gray-600 bg-gray-700 p-2.5 text-sm text-white placeholder-gray-400">
+                                    <option value="Ctrl">Ctrl</option>
+                                    <option value="Alt">Alt</option>
+                                    <option value="Shift"><kbd>Shift</kbd></option>
+                                </select>
+                                <div>+</div>
+                                <select
+                                    id="keys"
+                                    bind:value={$settings.shortcuts.manualSave.key}
                                     class="focus:ring-accent-500 focus:border-accent-500 block rounded-lg border border-gray-600 bg-gray-700 p-2.5 text-sm text-white placeholder-gray-400">
                                     {#each keyboardKeys as key}
                                         <option value={key}>{key.toUpperCase()}</option>
