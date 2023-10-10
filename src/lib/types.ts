@@ -112,6 +112,7 @@ export interface Skill {
     casts: number;
     hits: number;
     crits: number;
+    critDamage: number;
     backAttacks: number;
     frontAttacks: number;
     backAttackDamage: number;
@@ -129,6 +130,7 @@ export interface DamageStats {
     debuffedBySupport: number;
     backAttackDamage: number;
     frontAttackDamage: number;
+    critDamage: number;
     deaths: number;
     deathTime: number;
     dps: number;

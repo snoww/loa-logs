@@ -546,7 +546,9 @@ impl EncounterState {
 
         if hit_flag == HitFlag::CRITICAL || hit_flag == HitFlag::DOT_CRITICAL {
             source_entity.skill_stats.crits += 1;
+            source_entity.damage_stats.crit_damage += damage;
             skill.crits += 1;
+            skill.crit_damage += damage;
         }
         if hit_option == HitOption::BACK_ATTACK {
             source_entity.skill_stats.back_attacks += 1;

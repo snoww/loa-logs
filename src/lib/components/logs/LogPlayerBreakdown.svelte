@@ -39,8 +39,13 @@
     let faPercentage = "0.0";
 
     if (entity.skillStats.hits !== 0) {
+        if ($settings.logs.critDamagePercent && entity.damageStats.damageDealt > 0) {
+            critPercentage = round((entity.damageStats.critDamage / entity.damageStats.damageDealt) * 100);
+        } else if ($settings.logs.critRate) {
+            critPercentage = round((entity.skillStats.crits / entity.skillStats.hits) * 100);
+        }
         critPercentage = round((entity.skillStats.crits / entity.skillStats.hits) * 100);
-        if ($settings.logs.breakdown.positionalDmgPercent && (entity.damageStats.frontAttackDamage > 0 || entity.damageStats.backAttackDamage > 0)) {
+        if ($settings.logs.positionalDmgPercent && (entity.damageStats.frontAttackDamage > 0 || entity.damageStats.backAttackDamage > 0)) {
             faPercentage = round((entity.damageStats.frontAttackDamage / entity.damageStats.damageDealt) * 100);
             baPercentage = round((entity.damageStats.backAttackDamage / entity.damageStats.damageDealt) * 100);
         } else {

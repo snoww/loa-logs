@@ -27,9 +27,14 @@
     let faPercentage = "0.0";
     $: {
         if (skill.hits !== 0) {
-            critPercentage = round((skill.crits / skill.hits) * 100);
+            if (meterSettings.critDamage && skill.critDamage > 0) {
+                critPercentage = round((skill.critDamage / skill.totalDamage) * 100);
+            } else {
+                critPercentage = round((skill.crits / skill.hits) * 100);
+            }
+            
             if (
-                meterSettings.breakdown.positionalDmgPercent &&
+                meterSettings.positionalDmgPercent &&
                 (skill.frontAttackDamage > 0 || skill.backAttackDamage > 0)
             ) {
                 faPercentage = round((skill.frontAttackDamage / skill.totalDamage) * 100);

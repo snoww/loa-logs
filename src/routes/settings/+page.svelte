@@ -429,6 +429,10 @@
                             description="Show the back attack percentage"
                             bind:setting={$settings.meter.backAtk} />
                         <SettingItem
+                            name="Crit Damage %"
+                            description="Show crit percentage as % of total damage instead of % of hits"
+                            bind:setting={$settings.meter.critDmgPercent} />
+                        <SettingItem
                             name="Positional Damage %"
                             description="Show front/back attack percentage as % of total damage instead of % of hits"
                             bind:setting={$settings.meter.positionalDmgPercent} />
@@ -472,10 +476,6 @@
                                 name="Skill Back Attack"
                                 description="Show the back attack percentage of the skill"
                                 bind:setting={$settings.meter.breakdown.backAtk} />
-                            <SettingItem
-                                name="Positional Damage %"
-                                description="Show front/back attack percentage as % of total damage instead of % of hits"
-                                bind:setting={$settings.meter.breakdown.positionalDmgPercent} />
                             <SettingItem
                                 name="Support Buff %"
                                 description="Show the percentage of damage of the skill buffed by support"
@@ -581,6 +581,10 @@
                             description="Show the back attack percentage"
                             bind:setting={$settings.logs.backAtk} />
                         <SettingItem
+                            name="Crit Damage %"
+                            description="Show crit damage percentage as % of total damage instead of % of hits"
+                            bind:setting={$settings.logs.critDmgPercent} />
+                        <SettingItem
                             name="Positional Damage %"
                             description="Show front/back attack percentage as % of total damage instead of % of hits"
                             bind:setting={$settings.logs.positionalDmgPercent} />
@@ -624,10 +628,6 @@
                                 name="Skill Back Attack"
                                 description="Show the back attack percentage of the skill"
                                 bind:setting={$settings.logs.breakdown.backAtk} />
-                            <SettingItem
-                                name="Positional Damage %"
-                                description="Show front/back attack percentage as % of total damage instead of % of hits"
-                                bind:setting={$settings.logs.breakdown.positionalDmgPercent} />
                             <SettingItem
                                 name="Support Buff %"
                                 description="Show the percentage of damage of the skill buffed by support"
