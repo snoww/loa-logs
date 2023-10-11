@@ -1,11 +1,11 @@
 {
-    "version": "v1.2.40",
-    "notes": "@@@@ README @@@@\nIF YOU ARE ON v1.2.35, YOU NEED TO INSTALL v1.2.40 MANUALLY\n@@@@ README @@@@\n### v1.2.40\n#### NEW FEATURES\n- meter updated for october patch\n- added option to show crit dmg column\n- added shortcut option to manually save encounter\n- added qol updates to save/load/reset meter position\n#### BUG FIXES\n- fixed pin party setting not working\nfull patch notes on github\nsend bug reports/suggestions to discord.gg/sbSa3pkDF5",
-    "pub_date": "2023-10-11T19:00:32.373Z",
+    "version": "v1.2.41",
+    "notes": "@@@@ README @@@@\nIF YOU ARE ON v1.2.35, YOU NEED TO INSTALL v1.2.41 MANUALLY\n@@@@ README @@@@\n### v1.2.41\n#### BUG FIXES\n- fix counters not tracking\n### v1.2.40\n#### NEW FEATURES\n- meter updated for october patch\n- added option for crit dmg column\n- added shortcut option to manually save encounter\n- added qol updates to save/load/reset meter position\nfull patch notes on github\nsend bug reports/suggestions to discord.gg/sbSa3pkDF5",
+    "pub_date": "2023-10-11T22:00:32.373Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.2.40/LOA.Logs_1.2.40_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmIxVjVzMmVNNENrN1dVZUJQTFNyY0cvMVlzTFpzc3E3azAzYUNXRmxDTWdvWkUvdE5QMEE5aUU3bWdpMXV6WkcweHNBMHpUUUVtTEM0b2JUeGZRK0E0PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjk3MDUwODIyCWZpbGU6TE9BIExvZ3NfMS4yLjQwX3g2NC1zZXR1cC5uc2lzLnppcApESnRMNDlRYkZnaWRJNldGTmNkL0Q5bU5wN0VNR0pLamRlb0tUYzlMK24vb25rUnVvWjUvWWhuM1FoOGlJRmZIdWJ0VjF1d3J0QXNFYmZ3ekROTkpCdz09Cg=="
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.2.41/LOA.Logs_1.2.41_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmY2SHUxa0dhalJjcG5NV1YxNUhqdGwxdnUvbUV6clJzQ0dkZ3IrTmt0eXMwbXE4T3VaQUxFNm5RNjgrWlRWeFJicysrbDBmaXdQbjlCM2IxcGRlY2dJPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjk3MDYxNjU3CWZpbGU6TE9BIExvZ3NfMS4yLjQxX3g2NC1zZXR1cC5uc2lzLnppcApMV0JoNzBZVUhDeWRQT0hqMHd4L3Nub2RZbVBlSjBRUGZvTkNXWWtGK1BKMXBkbkNnSk15QjJhbTU2UDlLNzBUNzhja2VqaVBKQ00zZG42OVpaclFDUT09Cg=="
         }
     }
 }

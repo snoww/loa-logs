@@ -575,7 +575,6 @@ pub struct MeterTabs {
     pub percent_buff_by_sup: bool,
     #[serde(default = "default_true")]
     pub positional_dmg_percent: bool,
-    pub crit_dmg_percent: bool,
     pub percent_brand: bool,
     pub counters: bool,
     pub breakdown: BreakdownTabs,
