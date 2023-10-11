@@ -29,6 +29,7 @@
     let deadFor: string;
 
     let critPercentage = "0.0";
+    let critDmgPercentage = "0.0";
     let baPercentage = "0.0";
     let faPercentage = "0.0";
 
@@ -37,11 +38,8 @@
         damagePercentage = ((entity.damageStats.damageDealt / totalDamageDealt) * 100).toFixed(1);
 
         if (entity.skillStats.hits !== 0) {
-            if (meterSettings.critDmgPercent && entity.damageStats.critDamage > 0) {
-                critPercentage = round((entity.damageStats.critDamage / entity.damageStats.damageDealt) * 100);
-            } else {
-                critPercentage = round((entity.skillStats.crits / entity.skillStats.hits) * 100);
-            }
+            critDmgPercentage = round((entity.damageStats.critDamage / entity.damageStats.damageDealt) * 100);
+            critPercentage = round((entity.skillStats.crits / entity.skillStats.hits) * 100);
             if (meterSettings.positionalDmgPercent && (entity.damageStats.frontAttackDamage > 0 || entity.damageStats.backAttackDamage > 0)) {
                 faPercentage = round((entity.damageStats.frontAttackDamage / entity.damageStats.damageDealt) * 100);
                 baPercentage = round((entity.damageStats.backAttackDamage / entity.damageStats.damageDealt) * 100);
@@ -107,6 +105,11 @@
 {#if meterSettings.critRate}
     <td class="px-1 text-center">
         {critPercentage}<span class="text-3xs text-gray-300">%</span>
+    </td>
+{/if}
+{#if meterSettings.critDmg}
+    <td class="px-1 text-center">
+        {critDmgPercentage}<span class="text-3xs text-gray-300">%</span>
     </td>
 {/if}
 {#if anyFrontAtk && meterSettings.frontAtk}

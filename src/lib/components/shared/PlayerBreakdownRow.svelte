@@ -23,15 +23,13 @@
     export let index: number;
 
     let critPercentage = "0.0";
+    let critDmgPercentage = "0.0";
     let baPercentage = "0.0";
     let faPercentage = "0.0";
     $: {
         if (skill.hits !== 0) {
-            if (meterSettings.critDmgPercent && skill.critDamage > 0) {
-                critPercentage = round((skill.critDamage / skill.totalDamage) * 100);
-            } else {
-                critPercentage = round((skill.crits / skill.hits) * 100);
-            }
+            critDmgPercentage = round((skill.critDamage / skill.totalDamage) * 100);
+            critPercentage = round((skill.crits / skill.hits) * 100);
             if (
                 meterSettings.positionalDmgPercent &&
                 (skill.frontAttackDamage > 0 || skill.backAttackDamage > 0)
@@ -76,6 +74,11 @@
 {#if meterSettings.breakdown.critRate}
     <td class="px-1 text-center">
         {critPercentage}<span class="text-3xs text-gray-300">%</span>
+    </td>
+{/if}
+{#if meterSettings.breakdown.critDmg}
+    <td class="px-1 text-center">
+        {critDmgPercentage}<span class="text-3xs text-gray-300">%</span>
     </td>
 {/if}
 {#if hasFrontAttacks && meterSettings.breakdown.frontAtk}

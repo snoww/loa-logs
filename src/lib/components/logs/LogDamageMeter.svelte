@@ -490,6 +490,9 @@
                                 {#if $settings.logs.critRate}
                                     <th class="w-12 font-normal" use:tooltip={{ content: "Crit %" }}>CRIT</th>
                                 {/if}
+                                {#if $settings.logs.critDmg}
+                                    <th class="w-12 font-normal" use:tooltip={{ content: "% Damage that Crit" }}>CDMG</th>
+                                {/if}
                                 {#if anyFrontAtk && $settings.logs.frontAtk}
                                     <th class="w-12 font-normal" use:tooltip={{ content: "Front Attack %" }}>F.A</th>
                                 {/if}

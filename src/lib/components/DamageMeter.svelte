@@ -307,7 +307,7 @@
         </div>
     {/if}
     <div
-        class="relative top-7 overflow-scroll scroll-ml-8 scroll-mt-2"
+        class="relative top-7 scroll-ml-8 scroll-mt-2 overflow-scroll"
         style="height: calc(100vh - 1.5rem - 1.75rem {currentBoss !== null ? ' - 1.75rem' : ''});">
         {#if tab === MeterTab.DAMAGE}
             {#if state === MeterState.PARTY}
@@ -335,6 +335,9 @@
                             {/if}
                             {#if $settings.meter.critRate}
                                 <th class="w-12 font-normal" use:tooltip={{ content: "Crit %" }}>CRIT</th>
+                            {/if}
+                            {#if $settings.meter.critDmg}
+                                <th class="w-12 font-normal" use:tooltip={{ content: "% Damage that Crit" }}>CDMG</th>
                             {/if}
                             {#if anyFrontAtk && $settings.meter.frontAtk}
                                 <th class="w-12 font-normal" use:tooltip={{ content: "Front Attack %" }}>F.A</th>

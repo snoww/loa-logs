@@ -35,17 +35,17 @@
     let damagePercentage = ((entity.damageStats.damageDealt / totalDamageDealt) * 100).toFixed(1);
 
     let critPercentage = "0.0";
+    let critDmgPercentage = "0.0";
     let baPercentage = "0.0";
     let faPercentage = "0.0";
 
     if (entity.skillStats.hits !== 0) {
-        if ($settings.logs.critDmgPercent && entity.damageStats.damageDealt > 0) {
-            critPercentage = round((entity.damageStats.critDamage / entity.damageStats.damageDealt) * 100);
-        } else if ($settings.logs.critRate) {
-            critPercentage = round((entity.skillStats.crits / entity.skillStats.hits) * 100);
-        }
+        critDmgPercentage = round((entity.damageStats.critDamage / entity.damageStats.damageDealt) * 100);
         critPercentage = round((entity.skillStats.crits / entity.skillStats.hits) * 100);
-        if ($settings.logs.positionalDmgPercent && (entity.damageStats.frontAttackDamage > 0 || entity.damageStats.backAttackDamage > 0)) {
+        if (
+            $settings.logs.positionalDmgPercent &&
+            (entity.damageStats.frontAttackDamage > 0 || entity.damageStats.backAttackDamage > 0)
+        ) {
             faPercentage = round((entity.damageStats.frontAttackDamage / entity.damageStats.damageDealt) * 100);
             baPercentage = round((entity.damageStats.backAttackDamage / entity.damageStats.damageDealt) * 100);
         } else {
@@ -93,132 +93,140 @@
 </thead>
 <tbody class="relative z-10">
     {#if entity.entityType !== EntityType.ESTHER}
-    <tr class="h-7 px-2 py-1 text-3xs {$settings.general.underlineHovered ? 'hover:underline' : ''}">
-        <td class="pl-1">
-            <img
-                class="table-cell h-5 w-5"
-                src={$classIconCache[entity.classId]}
-                alt={entity.class}
-                use:tooltip={{ content: entity.class }} />
-        </td>
-        <td colspan="2">
-            <div class="truncate" use:tooltip={{ content: playerName }}>
-                {playerName}
-            </div>
-        </td>
-        {#if $settings.logs.breakdown.damage}
-            <td class="px-1 text-center" use:tooltip={{ content: entity.damageStats.damageDealt.toLocaleString() }}>
-                {damageDealt[0]}<span class="text-3xs text-gray-300">{damageDealt[1]}</span>
+        <tr class="h-7 px-2 py-1 text-3xs {$settings.general.underlineHovered ? 'hover:underline' : ''}">
+            <td class="pl-1">
+                <img
+                    class="table-cell h-5 w-5"
+                    src={$classIconCache[entity.classId]}
+                    alt={entity.class}
+                    use:tooltip={{ content: entity.class }} />
             </td>
-        {/if}
-        {#if $settings.logs.breakdown.dps}
-            <td class="px-1 text-center">
-                {dps[0]}<span class="text-3xs text-gray-300">{dps[1]}</span>
-            </td>
-        {/if}
-        {#if $settings.logs.breakdown.damagePercent}
-            <td class="px-1 text-center">
-                {damagePercentage}<span class="text-xs text-gray-300">%</span>
-            </td>
-        {/if}
-        {#if $settings.logs.breakdown.critRate}
-            <td class="px-1 text-center">
-                {critPercentage}<span class="text-3xs text-gray-300">%</span>
-            </td>
-        {/if}
-        {#if hasFrontAttacks && $settings.logs.breakdown.frontAtk}
-            <td class="px-1 text-center">
-                {faPercentage}<span class="text-3xs text-gray-300">%</span>
-            </td>
-        {/if}
-        {#if hasBackAttacks && $settings.logs.breakdown.backAtk}
-            <td class="px-1 text-center">
-                {baPercentage}<span class="text-3xs text-gray-300">%</span>
-            </td>
-        {/if}
-        {#if anySupportBuff && $settings.logs.breakdown.percentBuffBySup}
-            <td class="px-1 text-center">
-                {round((entity.damageStats.buffedBySupport / entity.damageStats.damageDealt) * 100)}<span
-                    class="text-3xs text-gray-300">%</span>
-            </td>
-        {/if}
-        {#if anySupportBrand && $settings.logs.breakdown.percentBrand}
-            <td class="px-1 text-center">
-                {round((entity.damageStats.debuffedBySupport / entity.damageStats.damageDealt) * 100)}<span
-                    class="text-3xs text-gray-300">%</span>
-            </td>
-        {/if}
-        {#if $settings.logs.breakdown.avgDamage}
-            <td class="px-1 text-center">
-                -
-            </td>
-            <td class="px-1 text-center">
-                -
-            </td>
-        {/if}
-        {#if $settings.logs.breakdown.maxDamage}
-            <td class="px-1 text-center">
-                -
-            </td>
-        {/if}
-        {#if $settings.logs.breakdown.casts}
-            <td
-                class="px-1 text-center"
-                use:tooltip={{
-                    content: `<div class="py-1">${
-                        entity.skillStats.casts.toLocaleString() + " " + (entity.skillStats.casts === 1 ? "cast" : "casts")
-                    }</div>`
-                }}>
-                {abbreviateNumberSplit(entity.skillStats.casts)[0]}<span class="text-3xs text-gray-300"
-                    >{abbreviateNumberSplit(entity.skillStats.casts)[1]}</span>
-            </td>
-        {/if}
-        {#if $settings.logs.breakdown.cpm}
-            <td class="px-1 text-center">
-                <div
-                    use:tooltip={{
-                        content: `<div class="py-1">${
-                            entity.skillStats.casts.toLocaleString() + " " + (entity.skillStats.casts === 1 ? "cast" : "casts")
-                        }</div>`
-                    }}>
-                    {round(entity.skillStats.casts / (duration / 1000 / 60))}
+            <td colspan="2">
+                <div class="truncate" use:tooltip={{ content: playerName }}>
+                    {playerName}
                 </div>
             </td>
-        {/if}
-        {#if $settings.logs.breakdown.hits}
-            <td
-                class="px-1 text-center"
-                use:tooltip={{
-                    content: `<div class="py-1">${
-                        entity.skillStats.hits.toLocaleString() + " " + (entity.skillStats.hits === 1 ? "hit" : "hits")
-                    }</div>`
-                }}>
-                {abbreviateNumberSplit(entity.skillStats.hits)[0]}<span class="text-3xs text-gray-300"
-                    >{abbreviateNumberSplit(entity.skillStats.hits)[1]}</span>
-            </td>
-        {/if}
-        {#if $settings.logs.breakdown.hpm}
-            <td class="px-1 text-center">
-                {#if entity.skillStats.hits === 0}
-                    <div class="">0</div>
-                {:else}
+            {#if $settings.logs.breakdown.damage}
+                <td class="px-1 text-center" use:tooltip={{ content: entity.damageStats.damageDealt.toLocaleString() }}>
+                    {damageDealt[0]}<span class="text-3xs text-gray-300">{damageDealt[1]}</span>
+                </td>
+            {/if}
+            {#if $settings.logs.breakdown.dps}
+                <td class="px-1 text-center">
+                    {dps[0]}<span class="text-3xs text-gray-300">{dps[1]}</span>
+                </td>
+            {/if}
+            {#if $settings.logs.breakdown.damagePercent}
+                <td class="px-1 text-center">
+                    {damagePercentage}<span class="text-xs text-gray-300">%</span>
+                </td>
+            {/if}
+            {#if $settings.logs.breakdown.critRate}
+                <td class="px-1 text-center">
+                    {critPercentage}<span class="text-3xs text-gray-300">%</span>
+                </td>
+            {/if}
+            {#if $settings.logs.breakdown.critDmg}
+                <td class="px-1 text-center">
+                    {critDmgPercentage}<span class="text-3xs text-gray-300">%</span>
+                </td>
+            {/if}
+            {#if hasFrontAttacks && $settings.logs.breakdown.frontAtk}
+                <td class="px-1 text-center">
+                    {faPercentage}<span class="text-3xs text-gray-300">%</span>
+                </td>
+            {/if}
+            {#if hasBackAttacks && $settings.logs.breakdown.backAtk}
+                <td class="px-1 text-center">
+                    {baPercentage}<span class="text-3xs text-gray-300">%</span>
+                </td>
+            {/if}
+            {#if anySupportBuff && $settings.logs.breakdown.percentBuffBySup}
+                <td class="px-1 text-center">
+                    {round((entity.damageStats.buffedBySupport / entity.damageStats.damageDealt) * 100)}<span
+                        class="text-3xs text-gray-300">%</span>
+                </td>
+            {/if}
+            {#if anySupportBrand && $settings.logs.breakdown.percentBrand}
+                <td class="px-1 text-center">
+                    {round((entity.damageStats.debuffedBySupport / entity.damageStats.damageDealt) * 100)}<span
+                        class="text-3xs text-gray-300">%</span>
+                </td>
+            {/if}
+            {#if $settings.logs.breakdown.avgDamage}
+                <td class="px-1 text-center"> - </td>
+                <td class="px-1 text-center"> - </td>
+            {/if}
+            {#if $settings.logs.breakdown.maxDamage}
+                <td class="px-1 text-center"> - </td>
+            {/if}
+            {#if $settings.logs.breakdown.casts}
+                <td
+                    class="px-1 text-center"
+                    use:tooltip={{
+                        content: `<div class="py-1">${
+                            entity.skillStats.casts.toLocaleString() +
+                            " " +
+                            (entity.skillStats.casts === 1 ? "cast" : "casts")
+                        }</div>`
+                    }}>
+                    {abbreviateNumberSplit(entity.skillStats.casts)[0]}<span class="text-3xs text-gray-300"
+                        >{abbreviateNumberSplit(entity.skillStats.casts)[1]}</span>
+                </td>
+            {/if}
+            {#if $settings.logs.breakdown.cpm}
+                <td class="px-1 text-center">
                     <div
                         use:tooltip={{
                             content: `<div class="py-1">${
-                                entity.skillStats.hits.toLocaleString() + " " + (entity.skillStats.hits === 1 ? "hit" : "hits")
+                                entity.skillStats.casts.toLocaleString() +
+                                " " +
+                                (entity.skillStats.casts === 1 ? "cast" : "casts")
                             }</div>`
                         }}>
-                        {round(entity.skillStats.hits / (duration / 1000 / 60))}
+                        {round(entity.skillStats.casts / (duration / 1000 / 60))}
                     </div>
-                {/if}
-            </td>
-        {/if}
-        <div
-            class="absolute left-0 -z-10 h-7 px-2 py-1"
-            class:shadow-md={!$takingScreenshot}
-            style="background-color: {$settings.general.splitLines ? RGBLinearShade(HexToRgba(color, 0.6)) : HexToRgba(color, 0.6)}; width: 100%" />
-        
-    </tr>
+                </td>
+            {/if}
+            {#if $settings.logs.breakdown.hits}
+                <td
+                    class="px-1 text-center"
+                    use:tooltip={{
+                        content: `<div class="py-1">${
+                            entity.skillStats.hits.toLocaleString() +
+                            " " +
+                            (entity.skillStats.hits === 1 ? "hit" : "hits")
+                        }</div>`
+                    }}>
+                    {abbreviateNumberSplit(entity.skillStats.hits)[0]}<span class="text-3xs text-gray-300"
+                        >{abbreviateNumberSplit(entity.skillStats.hits)[1]}</span>
+                </td>
+            {/if}
+            {#if $settings.logs.breakdown.hpm}
+                <td class="px-1 text-center">
+                    {#if entity.skillStats.hits === 0}
+                        <div class="">0</div>
+                    {:else}
+                        <div
+                            use:tooltip={{
+                                content: `<div class="py-1">${
+                                    entity.skillStats.hits.toLocaleString() +
+                                    " " +
+                                    (entity.skillStats.hits === 1 ? "hit" : "hits")
+                                }</div>`
+                            }}>
+                            {round(entity.skillStats.hits / (duration / 1000 / 60))}
+                        </div>
+                    {/if}
+                </td>
+            {/if}
+            <div
+                class="absolute left-0 -z-10 h-7 px-2 py-1"
+                class:shadow-md={!$takingScreenshot}
+                style="background-color: {$settings.general.splitLines
+                    ? RGBLinearShade(HexToRgba(color, 0.6))
+                    : HexToRgba(color, 0.6)}; width: 100%" />
+        </tr>
     {/if}
     {#each skills as skill, i (skill.id)}
         <LogPlayerBreakdownRow
@@ -232,7 +240,7 @@
             playerDamageDealt={entity.damageStats.damageDealt}
             damagePercentage={skillDamagePercentages[i]}
             skillDps={skillDps[i]}
-            {duration} 
-            index={i}/>
+            {duration}
+            index={i} />
     {/each}
 </tbody>

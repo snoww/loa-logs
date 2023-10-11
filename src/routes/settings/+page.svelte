@@ -421,6 +421,10 @@
                             description="Show the critical strike rate"
                             bind:setting={$settings.meter.critRate} />
                         <SettingItem
+                            name="Crit Damage"
+                            description="Show percentage of damage that crit"
+                            bind:setting={$settings.meter.critDmg} />
+                        <SettingItem
                             name="Front Attack"
                             description="Show the front attack percentage"
                             bind:setting={$settings.meter.frontAtk} />
@@ -428,10 +432,6 @@
                             name="Back Attack"
                             description="Show the back attack percentage"
                             bind:setting={$settings.meter.backAtk} />
-                        <SettingItem
-                            name="Crit Damage %"
-                            description="Show crit percentage as % of total damage instead of % of hits"
-                            bind:setting={$settings.meter.critDmgPercent} />
                         <SettingItem
                             name="Positional Damage %"
                             description="Show front/back attack percentage as % of total damage instead of % of hits"
@@ -468,6 +468,10 @@
                                 name="Skill Crit Rate"
                                 description="Show the critical strike rate of the skill"
                                 bind:setting={$settings.meter.breakdown.critRate} />
+                            <SettingItem
+                                name="Skill Crit Damage"
+                                description="Show the percentage of damage that crit for the skill"
+                                bind:setting={$settings.meter.breakdown.critDmg} />
                             <SettingItem
                                 name="Skill Front Attack"
                                 description="Show the front attack percentage of the skill"
@@ -573,6 +577,10 @@
                             description="Show the critical strike rate"
                             bind:setting={$settings.logs.critRate} />
                         <SettingItem
+                            name="Crit Damage"
+                            description="Show percentage of damage that crit"
+                            bind:setting={$settings.logs.critDmg} />
+                        <SettingItem
                             name="Front Attack"
                             description="Show the front attack percentage"
                             bind:setting={$settings.logs.frontAtk} />
@@ -620,6 +628,10 @@
                                 name="Skill Crit Rate"
                                 description="Show the critical strike rate of the skill"
                                 bind:setting={$settings.logs.breakdown.critRate} />
+                            <SettingItem
+                                name="Skill Crit Damage"
+                                description="Show the percentage of damage that crit for the skill"
+                                bind:setting={$settings.logs.breakdown.critDmg} />
                             <SettingItem
                                 name="Skill Front Attack"
                                 description="Show the front attack percentage of the skill"
