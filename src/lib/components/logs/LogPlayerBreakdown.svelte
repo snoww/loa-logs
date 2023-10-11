@@ -39,7 +39,7 @@
     let faPercentage = "0.0";
 
     if (entity.skillStats.hits !== 0) {
-        if ($settings.logs.critDamagePercent && entity.damageStats.damageDealt > 0) {
+        if ($settings.logs.critDmgPercent && entity.damageStats.damageDealt > 0) {
             critPercentage = round((entity.damageStats.critDamage / entity.damageStats.damageDealt) * 100);
         } else if ($settings.logs.critRate) {
             critPercentage = round((entity.skillStats.crits / entity.skillStats.hits) * 100);

@@ -27,7 +27,7 @@
     let faPercentage = "0.0";
     $: {
         if (skill.hits !== 0) {
-            if (meterSettings.critDamage && skill.critDamage > 0) {
+            if (meterSettings.critDmgPercent && skill.critDamage > 0) {
                 critPercentage = round((skill.critDamage / skill.totalDamage) * 100);
             } else {
                 critPercentage = round((skill.crits / skill.hits) * 100);

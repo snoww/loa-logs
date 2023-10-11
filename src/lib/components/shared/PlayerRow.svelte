@@ -37,7 +37,7 @@
         damagePercentage = ((entity.damageStats.damageDealt / totalDamageDealt) * 100).toFixed(1);
 
         if (entity.skillStats.hits !== 0) {
-            if (meterSettings.critDamagePercent && entity.damageStats.critDamage > 0) {
+            if (meterSettings.critDmgPercent && entity.damageStats.critDamage > 0) {
                 critPercentage = round((entity.damageStats.critDamage / entity.damageStats.damageDealt) * 100);
             } else {
                 critPercentage = round((entity.skillStats.crits / entity.skillStats.hits) * 100);

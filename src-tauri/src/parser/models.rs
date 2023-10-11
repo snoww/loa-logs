@@ -545,6 +545,7 @@ pub struct LogTabs {
     pub percent_buff_by_sup: bool,
     #[serde(default = "default_true")]
     pub positional_dmg_percent: bool,
+    pub crit_dmg_percent: bool,
     pub percent_brand: bool,
     pub counters: bool,
     pub min_encounter_duration: i32,
@@ -573,6 +574,7 @@ pub struct MeterTabs {
     pub percent_buff_by_sup: bool,
     #[serde(default = "default_true")]
     pub positional_dmg_percent: bool,
+    pub crit_dmg_percent: bool,
     pub percent_brand: bool,
     pub counters: bool,
     pub breakdown: BreakdownTabs,
@@ -595,8 +597,6 @@ pub struct BreakdownTabs {
     pub cpm: bool,
     pub hits: bool,
     pub hpm: bool,
-    #[serde(default = "default_true")]
-    pub positional_dmg_percent: bool,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
