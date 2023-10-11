@@ -1380,7 +1380,7 @@ fn insert_data(
     let fight_start = encounter.fight_start;
     let fight_end = encounter.last_combat_packet;
 
-    for (_key, mut entity) in encounter.entities.iter_mut().filter(|(_, e)| {
+    for (_key, entity) in encounter.entities.iter_mut().filter(|(_, e)| {
         ((e.entity_type == EntityType::PLAYER && e.class_id != 0 && (e.max_hp > 0))
             || e.entity_type == EntityType::ESTHER)
             && e.damage_stats.damage_dealt > 0
@@ -1405,7 +1405,7 @@ fn insert_data(
                 entity.damage_stats.dps_average =
                     calculate_average_dps(damage_log, fight_start_sec, fight_end_sec);
 
-                for (_, mut skill) in entity.skills.iter_mut() {
+                for (_, skill) in entity.skills.iter_mut() {
                     skill.dps = skill.total_damage / duration_seconds;
                 }
             }
