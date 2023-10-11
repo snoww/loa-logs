@@ -32,7 +32,6 @@
             } else {
                 critPercentage = round((skill.crits / skill.hits) * 100);
             }
-            
             if (
                 meterSettings.positionalDmgPercent &&
                 (skill.frontAttackDamage > 0 || skill.backAttackDamage > 0)
