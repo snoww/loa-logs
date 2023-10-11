@@ -233,6 +233,10 @@ async fn main() -> Result<()> {
                     if let Some(meter) = app.get_window("main") {
                         meter.set_size(Size::Logical(LogicalSize { width: 500.0, height: 350.0 })).unwrap();
                         meter.set_position(Position::Logical(LogicalPosition { x: 100.0, y: 100.0})).unwrap();
+                        meter.show().unwrap();
+                        meter.unminimize().unwrap();
+                        meter.set_focus().unwrap();
+                        meter.set_ignore_cursor_events(false).unwrap();
                     }
                 }
                 "show-logs" => {
