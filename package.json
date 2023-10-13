@@ -17,7 +17,7 @@
 		"@sveltejs/adapter-auto": "^2.0.0",
 		"@sveltejs/adapter-static": "^2.0.2",
 		"@sveltejs/kit": "^1.20.4",
-		"@tauri-apps/cli": "^1.4.0",
+		"@tauri-apps/cli": "^1.5.2",
 		"@types/lodash-es": "^4.17.7",
 		"@types/nprogress": "^0.2.0",
 		"@typescript-eslint/eslint-plugin": "^6.7.3",
@@ -42,7 +42,7 @@
 	"dependencies": {
 		"@fontsource-variable/inter": "^5.0.12",
 		"@popperjs/core": "^2.11.7",
-		"@tauri-apps/api": "^1.4.0",
+		"@tauri-apps/api": "^1.5.0",
 		"classnames": "^2.3.2",
 		"flowbite": "^1.6.4",
 		"flowbite-svelte": "^0.44.18",
