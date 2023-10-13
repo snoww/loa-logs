@@ -4,6 +4,7 @@
 )]
 
 mod parser;
+mod resources;
 use std::{
     fs::{self, File},
     io::{Read, Write},
@@ -29,7 +30,7 @@ use window_vibrancy::{apply_blur, clear_blur};
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let mut logger = Logger::try_with_str("info, tao=off")?
+    let mut logger = Logger::try_with_str("info")?
         .log_to_file(
             FileSpec::default()
                 .suppress_timestamp()
@@ -81,6 +82,11 @@ async fn main() -> Result<()> {
                 .path_resolver()
                 .resource_dir()
                 .expect("could not get resource dir");
+
+            #[cfg(not(debug_assertions))] {
+                resources::Resources::new(resource_path.clone()).extract()?;
+            }
+
             let settings = read_settings(&resource_path).ok();
 
             let meter_window = app.get_window("main").unwrap();
@@ -150,11 +156,6 @@ async fn main() -> Result<()> {
                     warn!("error setting up database: {}", e);
                 }
             }
-            tokio::task::spawn_blocking(move || {
-                parser::start(meter_window, ip, port, raw_socket).map_err(|e| {
-                    warn!("unexpected error occurred in parser: {}", e);
-                })
-            });
 
             let _logs_window =
                 WindowBuilder::new(app, "logs", tauri::WindowUrl::App("/logs".into()))
@@ -163,6 +164,13 @@ async fn main() -> Result<()> {
                     .inner_size(800.0, 500.0)
                     .build()
                     .expect("failed to create log window");
+
+            tokio::task::spawn_blocking(move || {
+                parser::start(meter_window, ip, port, raw_socket).map_err(|e| {
+                    warn!("unexpected error occurred in parser: {}", e);
+                })
+            });
+
             // #[cfg(debug_assertions)]
             // {
             //     _logs_window.open_devtools();
@@ -273,7 +281,8 @@ async fn main() -> Result<()> {
             get_db_info,
             disable_blur,
             enable_blur,
-            get_network_interfaces
+            get_network_interfaces,
+            write_log
         ])
         .run(tauri::generate_context!())
         .expect("error while running application");
@@ -763,6 +772,7 @@ fn toggle_meter_window(window: tauri::Window) {
             meter.hide().unwrap();
         } else {
             meter.show().unwrap();
+            meter.set_ignore_cursor_events(false).unwrap();
         }
     }
 }
@@ -922,6 +932,11 @@ fn enable_blur(window: tauri::Window) {
     if let Some(meter_window) = window.app_handle().get_window("main") {
         apply_blur(&meter_window, Some((10, 10, 10, 50))).ok();
     }
+}
+
+#[tauri::command]
+fn write_log(message: String) {
+    info!("{}", message);
 }
 
 fn default_format_with_time(

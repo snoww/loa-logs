@@ -13,6 +13,7 @@
 
     onMount(() => {
         (async () => {
+            await invoke("write_log", { message: "setting up live meter" });
             let data = await invoke("get_settings");
             if (data) {
                 settings.set(merge(defaultSettings, $settings, data));
@@ -40,6 +41,7 @@
                     await join(await resourceDir(), "images", "classes", esther.icon)
                 );
             }
+            await invoke("write_log", { message: "finished meter setup" });
         })();
     });
 </script>
