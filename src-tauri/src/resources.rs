@@ -10,7 +10,7 @@ pub struct Resources {
 impl Resources {
     pub fn new(path: PathBuf) -> Self {
         Self {
-            resource_path: path.join("resources.zip"),
+            resource_path: path.join("assets/resources.zip"),
         }
     }
 
