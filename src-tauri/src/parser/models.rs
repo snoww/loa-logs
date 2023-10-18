@@ -474,6 +474,7 @@ pub struct SearchFilter {
     pub max_duration: i32,
     pub cleared: bool,
     pub favorite: bool,
+    pub difficulty: String,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]

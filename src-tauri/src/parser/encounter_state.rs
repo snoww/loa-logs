@@ -1276,8 +1276,9 @@ fn insert_data(
         buffs,
         debuffs,
         misc,
-        difficulty
-    ) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14)",
+        difficulty,
+        cleared
+    ) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15)",
         )
         .expect("failed to prepare encounter statement");
 
@@ -1350,7 +1351,8 @@ fn insert_data(
             json!(encounter.encounter_damage_stats.buffs),
             json!(encounter.encounter_damage_stats.debuffs),
             json!(misc),
-            raid_difficulty
+            raid_difficulty,
+            raid_clear
         ])
         .expect("failed to insert encounter");
 

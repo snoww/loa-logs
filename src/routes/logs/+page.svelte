@@ -22,6 +22,7 @@
     import NProgress from "nprogress";
     import "nprogress/nprogress.css";
     import Notification from "$lib/components/shared/Notification.svelte";
+    import { encounterMap } from "$lib/constants/encounters";
 
     let encounters: Array<EncounterPreview> = [];
     let totalEncounters: number = 0;
@@ -44,6 +45,13 @@
 
     async function loadEncounters(): Promise<Array<EncounterPreview>> {
         NProgress.start();
+        let bosses = Array.from($searchFilter.bosses);
+        if ($searchFilter.encounters.size > 0) {
+            for (const encounter of $searchFilter.encounters) {
+                const raid = encounter.substring(0, encounter.indexOf(" "));
+                bosses.push(...encounterMap[raid][encounter]);
+            }
+        }
         let overview: EncountersOverview = await invoke("load_encounters_preview", {
             page: $pageStore,
             pageSize: rowsPerPage,
@@ -51,10 +59,11 @@
             filter: {
                 minDuration:
                     $searchFilter.minDuration !== -1 ? $searchFilter.minDuration : $settings.logs.minEncounterDuration,
-                bosses: Array.from($searchFilter.bosses),
+                bosses: bosses,
                 classes: Array.from($searchFilter.classes),
                 cleared: $searchFilter.cleared,
-                favorite: $searchFilter.favorite
+                favorite: $searchFilter.favorite,
+                difficulty: $searchFilter.difficulty
             }
         });
         encounters = overview.encounters;

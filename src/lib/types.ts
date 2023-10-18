@@ -322,19 +322,23 @@ export interface EncounterDbInfo {
 
 export class SearchFilter {
     bosses: Set<string>;
+    encounters: Set<string>;
     classes: Set<string>;
     minDuration: number;
     maxDuration: number;
     favorite: boolean;
     cleared: boolean;
+    difficulty: string;
 
     constructor(minDuration = -1) {
         this.bosses = new Set();
+        this.encounters = new Set();
         this.classes = new Set();
         this.minDuration = minDuration;
         this.maxDuration = -1;
         this.favorite = false;
         this.cleared = false;
+        this.difficulty = "";
     }
 }
 

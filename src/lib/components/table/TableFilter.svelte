@@ -1,6 +1,7 @@
 <script lang="ts">
     import { bossList } from "$lib/constants/bosses";
     import { classList } from "$lib/constants/classes";
+    import { difficultyMap, encounterMap } from "$lib/constants/encounters";
     import { SearchFilter } from "$lib/types";
     import { settings } from "$lib/utils/settings";
     import { pageStore, searchStore, searchFilter, selectedEncounters } from "$lib/utils/stores";
@@ -24,15 +25,24 @@
         }
 
         const clickOutside = (event: MouseEvent) => {
-            if (filterDiv && !filterDiv.contains(event.target as Node)) {
-                filterMenu = false;
+            if (filterDiv && filterDiv.contains(event.target as Node)) {
+                return;
             }
+            if (isFilterButton(event.target as HTMLElement)) {
+                return;
+            }
+
+            filterMenu = false;
         };
         document.addEventListener("click", clickOutside);
         return () => {
             document.removeEventListener("click", clickOutside);
         };
     });
+
+    const isFilterButton = (element: HTMLElement) => {
+        return element.classList.contains("filter-button");
+    };
 
     function toggleSelectMode() {
         selectMode = !selectMode;
@@ -64,6 +74,8 @@
                         }}>
                         <svg
                             class="h-5 w-5 {$searchFilter.bosses.size > 0 ||
+                            $searchFilter.encounters.size > 0 ||
+                            $searchFilter.difficulty ||
                             $searchFilter.classes.size > 0 ||
                             $searchFilter.favorite ||
                             $searchFilter.minDuration !== $settings.logs.minEncounterDuration ||
@@ -89,6 +101,15 @@
                                             filterTab = "Encounters";
                                         }}>
                                         Encounters
+                                    </button>
+                                    <button
+                                        class="border-b px-1 {filterTab === 'Bosses'
+                                            ? 'border-zinc-200'
+                                            : 'border-zinc-700 text-gray-400'}"
+                                        on:click={() => {
+                                            filterTab = "Bosses";
+                                        }}>
+                                        Bosses
                                     </button>
                                     <button
                                         class="border-b px-1 {filterTab === 'Classes'
@@ -119,6 +140,70 @@
                                 </button>
                             </div>
                             {#if filterTab === "Encounters"}
+                                <div class="h-36 overflow-auto px-2 py-1 text-xs">
+                                    <div class="flex items-center space-x-4 px-2 py-1 text-xs">
+                                        <label class="flex items-center">
+                                            <div class="mr-2 text-gray-100">Raid Cleared</div>
+                                            <input
+                                                type="checkbox"
+                                                bind:checked={$searchFilter.cleared}
+                                                class="text-accent-500 h-4 w-4 rounded bg-zinc-700 focus:ring-0 focus:ring-offset-0" />
+                                        </label>
+                                        <label class="flex items-center">
+                                            <div class="mr-2 text-gray-100">Favorites</div>
+                                            <input
+                                                type="checkbox"
+                                                bind:checked={$searchFilter.favorite}
+                                                class="text-accent-500 h-4 w-4 rounded bg-zinc-700 focus:ring-0 focus:ring-offset-0" />
+                                        </label>
+                                    </div>
+                                    <div class="flex flex-wrap">
+                                        {#each difficultyMap as difficulty (difficulty)}
+                                            <button
+                                                class="m-1 truncate rounded border border-gray-500 px-1 {$searchFilter.difficulty ===
+                                                difficulty
+                                                    ? 'bg-gray-800'
+                                                    : ''}"
+                                                on:click={() => {
+                                                    if ($searchFilter.difficulty === difficulty) {
+                                                        $searchFilter.difficulty = "";
+                                                    } else {
+                                                        $searchFilter.difficulty = difficulty;
+                                                    }
+                                                    $pageStore = 1;
+                                                }}>
+                                                {difficulty}
+                                            </button>
+                                        {/each}
+                                    </div>
+                                    <div class="flex flex-col">
+                                        {#each Object.entries(encounterMap).reverse() as raid (raid)}
+                                            <div class="flex flex-wrap">
+                                                {#each Object.keys(raid[1]) as encounter (encounter)}
+                                                    <button
+                                                        class="filter-button m-1 truncate rounded border border-gray-500 p-1 {$searchFilter.encounters.has(
+                                                            encounter
+                                                        )
+                                                            ? 'bg-gray-800'
+                                                            : ''}"
+                                                        on:click={() => {
+                                                            let newSet = new Set($searchFilter.encounters);
+                                                            if (newSet.has(encounter)) {
+                                                                newSet.delete(encounter);
+                                                            } else {
+                                                                newSet.add(encounter);
+                                                            }
+                                                            $searchFilter.encounters = newSet;
+                                                            $pageStore = 1;
+                                                        }}>
+                                                        {encounter}
+                                                    </button>
+                                                {/each}
+                                            </div>
+                                        {/each}
+                                    </div>
+                                </div>
+                            {:else if filterTab === "Bosses"}
                                 <div class="h-36 overflow-auto px-2 py-1 text-xs">
                                     <div class="flex items-center space-x-4 px-2 py-1 text-xs">
                                         <label class="flex items-center">

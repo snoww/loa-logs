@@ -345,7 +345,9 @@ fn setup_db(resource_path: PathBuf) -> Result<(), String> {
             debuffs TEXT,
             misc TEXT,
             difficulty TEXT
-            favorite BOOLEAN NOT NULL DEFAULT 0
+            favorite BOOLEAN NOT NULL DEFAULT 0,
+            cleared BOOLEAN,
+            version INTEGER NOT NULL DEFAULT 1
         );
         CREATE INDEX IF NOT EXISTS encounter_fight_start_index
         ON encounter (fight_start desc);
@@ -386,7 +388,14 @@ fn setup_db(resource_path: PathBuf) -> Result<(), String> {
             "ALTER TABLE encounter ADD COLUMN favorite BOOLEAN DEFAULT 0",
             [],
         )
-        .expect("failed to add column");
+        .expect("failed to add columns");
+        conn.execute(
+            "ALTER TABLE encounter ADD COLUMN version INTEGER DEFAULT 1",
+            [],
+        )
+        .expect("failed to add columns");
+        conn.execute("ALTER TABLE encounter ADD COLUMN cleared BOOLEAN", [])
+            .expect("failed to add columns");
         conn.execute(
             "CREATE INDEX IF NOT EXISTS encounter_favorite_index ON encounter (favorite);",
             [],
@@ -486,6 +495,12 @@ fn load_encounters_preview(
         "".to_string()
     };
 
+    let difficulty_filter = if !filter.difficulty.is_empty() {
+        format!("AND difficulty = '{}'", filter.difficulty)
+    } else {
+        "".to_string()
+    };
+
     let count_params = params.clone();
 
     let query = format!("SELECT
@@ -507,11 +522,11 @@ fn load_encounters_preview(
     FROM encounter e
     JOIN entity ent ON e.id = ent.encounter_id
     WHERE e.duration > ? AND ((current_boss LIKE '%' || ? || '%') OR (ent.class LIKE '%' || ? || '%') OR (ent.name LIKE '%' || ? || '%'))
-        {} {} {} {}
+        {} {} {} {} {}
     GROUP BY encounter_id
     ORDER BY e.fight_start DESC
     LIMIT ?
-    OFFSET ?", boss_filter, class_filter, raid_clear_filter, favorite_filter);
+    OFFSET ?", boss_filter, class_filter, raid_clear_filter, favorite_filter, difficulty_filter);
 
     let mut stmt = conn.prepare_cached(&query).unwrap();
 
@@ -556,9 +571,9 @@ fn load_encounters_preview(
         FROM encounter e
         JOIN entity ent ON e.id = ent.encounter_id
         WHERE duration > ? AND ((current_boss LIKE '%' || ? || '%') OR (ent.class LIKE '%' || ? || '%') OR (ent.name LIKE '%' || ? || '%'))
-            {} {} {} {}
+            {} {} {} {} {}
         GROUP BY encounter_id)
-        ", boss_filter, class_filter, raid_clear_filter, favorite_filter);
+        ", boss_filter, class_filter, raid_clear_filter, favorite_filter, difficulty_filter);
 
     let count: i32 = conn
         .query_row_and_then(&query, params_from_iter(count_params), |row| row.get(0))
