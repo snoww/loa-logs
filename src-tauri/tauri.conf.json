@@ -8,7 +8,7 @@
   },
   "package": {
     "productName": "LOA Logs",
-    "version": "1.2.41"
+    "version": "1.3.1"
   },
   "tauri": {
     "allowlist": {
@@ -62,8 +62,7 @@
       "category": "Utility",
       "copyright": "GNU General Public License v3.0",
       "resources": [
-        "meter-data/*.json",
-        "images/**/*.png"
+        "./assets/resources.zip"
       ],
       "icon": [
         "icons/45x45.png",
