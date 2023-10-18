@@ -22,8 +22,8 @@ use parser::models::*;
 
 use rusqlite::{params, params_from_iter, Connection};
 use tauri::{
-    api::process::Command, CustomMenuItem, Manager, SystemTray, SystemTrayEvent, SystemTrayMenu,
-    SystemTrayMenuItem, WindowBuilder, Position, Size, LogicalSize, LogicalPosition,
+    api::process::Command, CustomMenuItem, LogicalPosition, LogicalSize, Manager, Position, Size,
+    SystemTray, SystemTrayEvent, SystemTrayMenu, SystemTrayMenuItem, WindowBuilder,
 };
 use tauri_plugin_window_state::{AppHandleExt, StateFlags, WindowExt};
 use window_vibrancy::{apply_blur, clear_blur};
@@ -83,7 +83,8 @@ async fn main() -> Result<()> {
                 .resource_dir()
                 .expect("could not get resource dir");
 
-            #[cfg(not(debug_assertions))] {
+            #[cfg(not(debug_assertions))]
+            {
                 resources::Resources::new(resource_path.clone()).extract()?;
             }
 
@@ -226,7 +227,7 @@ async fn main() -> Result<()> {
                         meter.unminimize().unwrap();
                         meter.set_ignore_cursor_events(false).unwrap()
                     }
-                }           
+                }
                 "load" => {
                     if let Some(meter) = app.get_window("main") {
                         meter.restore_state(StateFlags::all()).unwrap();
@@ -234,13 +235,23 @@ async fn main() -> Result<()> {
                 }
                 "save" => {
                     if let Some(meter) = app.get_window("main") {
-                        meter.app_handle().save_window_state(StateFlags::all()).unwrap();
+                        meter
+                            .app_handle()
+                            .save_window_state(StateFlags::all())
+                            .unwrap();
                     }
                 }
                 "reset" => {
                     if let Some(meter) = app.get_window("main") {
-                        meter.set_size(Size::Logical(LogicalSize { width: 500.0, height: 350.0 })).unwrap();
-                        meter.set_position(Position::Logical(LogicalPosition { x: 100.0, y: 100.0})).unwrap();
+                        meter
+                            .set_size(Size::Logical(LogicalSize {
+                                width: 500.0,
+                                height: 350.0,
+                            }))
+                            .unwrap();
+                        meter
+                            .set_position(Position::Logical(LogicalPosition { x: 100.0, y: 100.0 }))
+                            .unwrap();
                         meter.show().unwrap();
                         meter.unminimize().unwrap();
                         meter.set_focus().unwrap();
@@ -282,7 +293,8 @@ async fn main() -> Result<()> {
             disable_blur,
             enable_blur,
             get_network_interfaces,
-            write_log
+            write_log,
+            toggle_encounter_favorite
         ])
         .run(tauri::generate_context!())
         .expect("error while running application");
@@ -333,6 +345,7 @@ fn setup_db(resource_path: PathBuf) -> Result<(), String> {
             debuffs TEXT,
             misc TEXT,
             difficulty TEXT
+            favorite BOOLEAN NOT NULL DEFAULT 0
         );
         CREATE INDEX IF NOT EXISTS encounter_fight_start_index
         ON encounter (fight_start desc);
@@ -356,12 +369,29 @@ fn setup_db(resource_path: PathBuf) -> Result<(), String> {
     }
 
     let mut stmt = conn
-    .prepare("SELECT COUNT(*) FROM pragma_table_info('encounter') WHERE name='difficulty'")
-    .unwrap();
+        .prepare("SELECT COUNT(*) FROM pragma_table_info('encounter') WHERE name='difficulty'")
+        .unwrap();
     let column_count: u32 = stmt.query_row([], |row| row.get(0)).unwrap();
     if column_count == 0 {
         conn.execute("ALTER TABLE encounter ADD COLUMN difficulty TEXT", [])
             .expect("failed to add column");
+    }
+
+    let mut stmt = conn
+        .prepare("SELECT COUNT(*) FROM pragma_table_info('encounter') WHERE name='favorite'")
+        .unwrap();
+    let column_count: u32 = stmt.query_row([], |row| row.get(0)).unwrap();
+    if column_count == 0 {
+        conn.execute(
+            "ALTER TABLE encounter ADD COLUMN favorite BOOLEAN DEFAULT 0",
+            [],
+        )
+        .expect("failed to add column");
+        conn.execute(
+            "CREATE INDEX IF NOT EXISTS encounter_favorite_index ON encounter (favorite);",
+            [],
+        )
+        .expect("failed to add index");
     }
 
     match conn.execute_batch(
@@ -450,6 +480,12 @@ fn load_encounters_preview(
         "".to_string()
     };
 
+    let favorite_filter = if filter.favorite {
+        "AND favorite = 1".to_string()
+    } else {
+        "".to_string()
+    };
+
     let count_params = params.clone();
 
     let query = format!("SELECT
@@ -458,6 +494,7 @@ fn load_encounters_preview(
     e.current_boss,
     e.duration,
     e.difficulty,
+    e.favorite,
     (
         SELECT GROUP_CONCAT(ordered_classes.class_info, ',')
         FROM (
@@ -470,11 +507,11 @@ fn load_encounters_preview(
     FROM encounter e
     JOIN entity ent ON e.id = ent.encounter_id
     WHERE e.duration > ? AND ((current_boss LIKE '%' || ? || '%') OR (ent.class LIKE '%' || ? || '%') OR (ent.name LIKE '%' || ? || '%'))
-        {} {} {}
+        {} {} {} {}
     GROUP BY encounter_id
     ORDER BY e.fight_start DESC
     LIMIT ?
-    OFFSET ?", boss_filter, class_filter, raid_clear_filter);
+    OFFSET ?", boss_filter, class_filter, raid_clear_filter, favorite_filter);
 
     let mut stmt = conn.prepare_cached(&query).unwrap();
 
@@ -485,7 +522,7 @@ fn load_encounters_preview(
 
     let encounter_iter = stmt
         .query_map(params_from_iter(params), |row| {
-            let classes = row.get(5).unwrap_or_else(|_| "".to_string());
+            let classes = row.get(6).unwrap_or_else(|_| "".to_string());
 
             let (classes, names) = classes
                 .split(',')
@@ -503,6 +540,7 @@ fn load_encounters_preview(
                 classes,
                 names,
                 difficulty: row.get(4)?,
+                favorite: row.get(5)?,
             })
         })
         .expect("could not query encounters");
@@ -518,9 +556,9 @@ fn load_encounters_preview(
         FROM encounter e
         JOIN entity ent ON e.id = ent.encounter_id
         WHERE duration > ? AND ((current_boss LIKE '%' || ? || '%') OR (ent.class LIKE '%' || ? || '%') OR (ent.name LIKE '%' || ? || '%'))
-            {} {} {}
+            {} {} {} {}
         GROUP BY encounter_id)
-        ", boss_filter, class_filter, raid_clear_filter);
+        ", boss_filter, class_filter, raid_clear_filter, favorite_filter);
 
     let count: i32 = conn
         .query_row_and_then(&query, params_from_iter(count_params), |row| row.get(0))
@@ -556,7 +594,8 @@ fn load_encounter(window: tauri::Window, id: String) -> Encounter {
        buffs,
        debuffs,
        misc,
-       difficulty
+       difficulty,
+       favorite
     FROM encounter
     WHERE id = ?
     ;",
@@ -596,6 +635,7 @@ fn load_encounter(window: tauri::Window, id: String) -> Encounter {
                     ..Default::default()
                 },
                 difficulty: row.get(13)?,
+                favorite: row.get(14)?,
                 ..Default::default()
             })
         })
@@ -717,6 +757,28 @@ fn open_most_recent_encounter(window: tauri::Window) {
             }
         }
     }
+}
+
+#[tauri::command]
+fn toggle_encounter_favorite(window: tauri::Window, id: i32) {
+    let path = window
+        .app_handle()
+        .path_resolver()
+        .resource_dir()
+        .expect("could not get resource dir");
+
+    let conn = get_db_connection(&path).expect("could not get db connection");
+    let mut stmt = conn
+        .prepare_cached(
+            "
+    UPDATE encounter
+    SET favorite = NOT favorite
+    WHERE id = ?;
+    ",
+        )
+        .unwrap();
+
+    stmt.execute(params![id]).unwrap();
 }
 
 #[tauri::command]

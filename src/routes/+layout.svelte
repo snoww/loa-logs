@@ -38,6 +38,7 @@
 
                 events.add(encounterUpdateEvent);
                 events.add(openUrlEvent);
+
             })();
         }
 

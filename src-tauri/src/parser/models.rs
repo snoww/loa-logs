@@ -67,6 +67,7 @@ pub struct Encounter {
     pub encounter_damage_stats: EncounterDamageStats,
     pub duration: i64,
     pub difficulty: Option<String>,
+    pub favorite: bool,
 }
 
 #[derive(Debug, Serialize, Clone, Default)]
@@ -454,6 +455,7 @@ pub struct EncounterPreview {
     pub classes: Vec<i32>,
     pub names: Vec<String>,
     pub difficulty: Option<String>,
+    pub favorite: bool,
 }
 
 #[derive(Debug, Default, Serialize, Deserialize, Clone)]
@@ -471,7 +473,7 @@ pub struct SearchFilter {
     pub min_duration: i32,
     pub max_duration: i32,
     pub cleared: bool,
-    pub favorites: bool,
+    pub favorite: bool,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]

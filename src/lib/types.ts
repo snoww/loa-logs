@@ -19,6 +19,7 @@ export interface Encounter {
     duration: number;
     reset: boolean;
     difficulty?: string;
+    favorite: boolean;
 }
 
 export interface EncountersOverview {
@@ -34,6 +35,7 @@ export interface EncounterPreview {
     classes: Array<number>;
     names: Array<string>;
     difficulty?: string;
+    favorite: boolean;
 }
 
 export interface EncounterDamageStats {
@@ -323,7 +325,7 @@ export class SearchFilter {
     classes: Set<string>;
     minDuration: number;
     maxDuration: number;
-    favorites: boolean;
+    favorite: boolean;
     cleared: boolean;
 
     constructor(minDuration = -1) {
@@ -331,7 +333,7 @@ export class SearchFilter {
         this.classes = new Set();
         this.minDuration = minDuration;
         this.maxDuration = -1;
-        this.favorites = false;
+        this.favorite = false;
         this.cleared = false;
     }
 }

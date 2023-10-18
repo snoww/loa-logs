@@ -1,5 +1,4 @@
 <script lang="ts">
-    import { goto } from "$app/navigation";
     import { bossList } from "$lib/constants/bosses";
     import { classList } from "$lib/constants/classes";
     import { SearchFilter } from "$lib/types";
@@ -66,6 +65,7 @@
                         <svg
                             class="h-5 w-5 {$searchFilter.bosses.size > 0 ||
                             $searchFilter.classes.size > 0 ||
+                            $searchFilter.favorite ||
                             $searchFilter.minDuration !== $settings.logs.minEncounterDuration ||
                             $searchFilter.cleared
                                 ? 'fill-accent-500'
@@ -120,28 +120,23 @@
                             </div>
                             {#if filterTab === "Encounters"}
                                 <div class="h-36 overflow-auto px-2 py-1 text-xs">
-                                    <div class="flex items-center px-2 py-1 text-xs space-x-4">
+                                    <div class="flex items-center space-x-4 px-2 py-1 text-xs">
                                         <label class="flex items-center">
-                                            <div class="mr-1 text-gray-100">
-                                                Raid Cleared
-                                            </div>
+                                            <div class="mr-2 text-gray-100">Raid Cleared</div>
                                             <input
                                                 type="checkbox"
                                                 bind:checked={$searchFilter.cleared}
                                                 class="text-accent-500 h-4 w-4 rounded bg-zinc-700 focus:ring-0 focus:ring-offset-0" />
                                         </label>
-                                        <!-- TODO -->
-                                        <!-- <label class="flex items-center">
-                                            <div class="mr-1 text-gray-100">
-                                                Favorites
-                                            </div>
+                                        <label class="flex items-center">
+                                            <div class="mr-2 text-gray-100">Favorites</div>
                                             <input
                                                 type="checkbox"
-                                                bind:checked={$searchFilter.favorites}
+                                                bind:checked={$searchFilter.favorite}
                                                 class="text-accent-500 h-4 w-4 rounded bg-zinc-700 focus:ring-0 focus:ring-offset-0" />
-                                        </label> -->
+                                        </label>
                                     </div>
-                                    <div class="flex flex-wrap ">
+                                    <div class="flex flex-wrap">
                                         {#each bossList as boss (boss)}
                                             <button
                                                 class="m-1 truncate rounded border border-gray-500 p-1 {$searchFilter.bosses.has(
@@ -241,72 +236,79 @@
             {/if}
         </div>
     </div>
-    <div class="flex space-x-2 items-center">
+    <div class="flex items-center space-x-2">
         {#if selectMode && $selectedEncounters.size > 0}
-        <button class="p-1 rounded-md flex items-center text-xs bg-red-900" on:click={() => {deleteConfirm = true}}>
-            <svg class="w-5 h-5 fill-zinc-300" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"><path d="M254.5-100q-39.181 0-65.841-26.366Q162-152.731 162-191.5v-549h-57.5v-91.333H332V-879h295.5v47H856v91.5h-57.5v549q0 38.019-27.034 64.759Q744.431-100 706-100H254.5ZM706-740.5H254.5v549H706v-549ZM356.5-269H431v-396.5h-74.5V-269Zm173 0H605v-396.5h-75.5V-269Zm-275-471.5v549-549Z"/></svg>
-        </button>
+            <button
+                class="flex items-center rounded-md bg-red-900 p-1 text-xs"
+                on:click={() => {
+                    deleteConfirm = true;
+                }}>
+                <svg class="h-5 w-5 fill-zinc-300" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"
+                    ><path
+                        d="M254.5-100q-39.181 0-65.841-26.366Q162-152.731 162-191.5v-549h-57.5v-91.333H332V-879h295.5v47H856v91.5h-57.5v549q0 38.019-27.034 64.759Q744.431-100 706-100H254.5ZM706-740.5H254.5v549H706v-549ZM356.5-269H431v-396.5h-74.5V-269Zm173 0H605v-396.5h-75.5V-269Zm-275-471.5v549-549Z" /></svg>
+            </button>
         {/if}
-        <button class="p-1 rounded-md flex items-center text-xs {selectMode ? "bg-accent-800" : "bg-zinc-700"}" on:click={toggleSelectMode}>
-            <svg class="w-5 h-5 fill-zinc-300" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"><path d="M191-99.5q-37.744 0-64.622-26.878T99.5-191v-578q0-38.156 26.878-65.328Q153.256-861.5 191-861.5h578q15.545 0 34.773 8.5Q823-844.5 833-836l-71 71v-4H191v578h578v-330l92.5-92.5V-191q0 37.744-27.172 64.622T769-99.5H191ZM467-296 247-516l48-48.5 172.158 172 392.342-392 47 49.5L467-296Z"/></svg>
-            <div class="px-1">
-                Select
-            </div>
+        <button
+            class="flex items-center rounded-md p-1 text-xs {selectMode ? 'bg-accent-800' : 'bg-zinc-700'}"
+            on:click={toggleSelectMode}>
+            <svg class="h-5 w-5 fill-zinc-300" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"
+                ><path
+                    d="M191-99.5q-37.744 0-64.622-26.878T99.5-191v-578q0-38.156 26.878-65.328Q153.256-861.5 191-861.5h578q15.545 0 34.773 8.5Q823-844.5 833-836l-71 71v-4H191v578h578v-330l92.5-92.5V-191q0 37.744-27.172 64.622T769-99.5H191ZM467-296 247-516l48-48.5 172.158 172 392.342-392 47 49.5L467-296Z" /></svg>
+            <div class="px-1">Select</div>
         </button>
     </div>
 </div>
 
 {#if deleteConfirm}
-<div class="fixed inset-0 z-50 bg-zinc-900 bg-opacity-80" />
-        <div class="fixed left-0 right-0 top-0 z-50 h-modal w-full items-center justify-center p-4">
-            <div class="relative top-[25%] mx-auto flex max-h-full w-full max-w-md">
-                <div
-                    class="relative mx-auto flex flex-col rounded-lg border-gray-700 bg-zinc-800 text-gray-400 shadow-md">
-                    <button
-                        type="button"
-                        class="absolute right-2.5 top-3 ml-auto whitespace-normal rounded-lg p-1.5 hover:bg-zinc-600 focus:outline-none"
-                        aria-label="Close modal"
-                        on:click={() => (deleteConfirm = false)}>
-                        <span class="sr-only">Close modal</span>
-                        <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"
+    <div class="fixed inset-0 z-50 bg-zinc-900 bg-opacity-80" />
+    <div class="fixed left-0 right-0 top-0 z-50 h-modal w-full items-center justify-center p-4">
+        <div class="relative top-[25%] mx-auto flex max-h-full w-full max-w-md">
+            <div class="relative mx-auto flex flex-col rounded-lg border-gray-700 bg-zinc-800 text-gray-400 shadow-md">
+                <button
+                    type="button"
+                    class="absolute right-2.5 top-3 ml-auto whitespace-normal rounded-lg p-1.5 hover:bg-zinc-600 focus:outline-none"
+                    aria-label="Close modal"
+                    on:click={() => (deleteConfirm = false)}>
+                    <span class="sr-only">Close modal</span>
+                    <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"
+                        ><path
+                            fill-rule="evenodd"
+                            d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                            clip-rule="evenodd" /></svg>
+                </button>
+                <div id="modal" class="flex-1 space-y-6 overflow-y-auto overscroll-contain p-6">
+                    <div class="text-center">
+                        <svg
+                            aria-hidden="true"
+                            class="mx-auto mb-4 h-14 w-14 text-gray-200"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg"
                             ><path
-                                fill-rule="evenodd"
-                                d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                                clip-rule="evenodd" /></svg>
-                    </button>
-                    <div id="modal" class="flex-1 space-y-6 overflow-y-auto overscroll-contain p-6">
-                        <div class="text-center">
-                            <svg
-                                aria-hidden="true"
-                                class="mx-auto mb-4 h-14 w-14 text-gray-200"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                                xmlns="http://www.w3.org/2000/svg"
-                                ><path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    stroke-width="2"
-                                    d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                                    class="s-Qbr4I8QhaoSZ" /></svg>
-                            <h3 class="mb-5 text-lg font-normal text-gray-400">
-                                Are you sure you want to delete {$selectedEncounters.size} encounters?
-                            </h3>
-                            <button
-                                type="button"
-                                class="mr-2 inline-flex items-center justify-center rounded-lg bg-red-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-red-800 focus:outline-none"
-                                on:click={deleteSelected}>
-                                Yes, I'm sure
-                            </button>
-                            <button
-                                type="button"
-                                class="inline-flex items-center justify-center rounded-lg bg-gray-800 bg-transparent px-5 py-2.5 text-center text-sm font-medium text-gray-400 hover:bg-zinc-700 hover:text-white focus:text-white focus:outline-none"
-                                on:click={() => (deleteConfirm = false)}>
-                                No, cancel
-                            </button>
-                        </div>
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                                class="s-Qbr4I8QhaoSZ" /></svg>
+                        <h3 class="mb-5 text-lg font-normal text-gray-400">
+                            Are you sure you want to delete {$selectedEncounters.size} encounters?
+                        </h3>
+                        <button
+                            type="button"
+                            class="mr-2 inline-flex items-center justify-center rounded-lg bg-red-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-red-800 focus:outline-none"
+                            on:click={deleteSelected}>
+                            Yes, I'm sure
+                        </button>
+                        <button
+                            type="button"
+                            class="inline-flex items-center justify-center rounded-lg bg-gray-800 bg-transparent px-5 py-2.5 text-center text-sm font-medium text-gray-400 hover:bg-zinc-700 hover:text-white focus:text-white focus:outline-none"
+                            on:click={() => (deleteConfirm = false)}>
+                            No, cancel
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 {/if}

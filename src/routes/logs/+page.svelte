@@ -38,10 +38,12 @@
                 $pageStore = 1;
             }
         }
+        $searchFilter = $searchFilter;
         loadEncounters();
     }
 
     async function loadEncounters(): Promise<Array<EncounterPreview>> {
+        NProgress.start();
         let overview: EncountersOverview = await invoke("load_encounters_preview", {
             page: $pageStore,
             pageSize: rowsPerPage,
@@ -52,11 +54,12 @@
                 bosses: Array.from($searchFilter.bosses),
                 classes: Array.from($searchFilter.classes),
                 cleared: $searchFilter.cleared,
-                favorites: $searchFilter.favorites
+                favorite: $searchFilter.favorite
             }
         });
         encounters = overview.encounters;
         totalEncounters = overview.totalEncounters;
+        NProgress.done();
         return encounters;
     }
 
@@ -64,10 +67,7 @@
         $searchStore = "";
         $pageStore = 1;
         $backNavStore = false;
-        NProgress.start();
-        let promise = loadEncounters();
-        await promise;
-        NProgress.done();
+        await loadEncounters();
     }
 
     async function nextPage() {
@@ -186,16 +186,26 @@
                                     </div>
                                 {/if}
                             </td>
-                            <td class="w-full truncate px-3 py-3 font-medium text-gray-300">
+                            <td class="w-full truncate px-3 py-3 font-medium">
                                 <a
                                     href="/logs/encounter/?id={encounter.id}"
-                                    class="hover:text-accent-500 hover:underline"
+                                    class="hover:text-accent-500 flex items-center hover:underline"
                                     use:tooltip={{ content: encounter.bossName }}>
-                                    {#if encounter.difficulty && $settings.general.showDifficulty}
-                                        [{encounter.difficulty}] {encounter.bossName}
-                                    {:else}
-                                        {encounter.bossName}
+                                    {#if encounter.favorite}
+                                        <svg
+                                            class="h-5 w-5 mr-1 fill-yellow-400 flex-shrink-0"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            viewBox="0 -960 960 960"
+                                            ><path
+                                                d="m235-82.5 64.5-279.093L83-549l286-25 111-263 111.5 263L877-549 660.484-361.593 725.436-82.5 480.218-230.61 235-82.5Z" /></svg>
                                     {/if}
+                                    <div class="truncate">
+                                        {#if encounter.difficulty && $settings.general.showDifficulty}
+                                            [{encounter.difficulty}] {encounter.bossName}
+                                        {:else}
+                                            {encounter.bossName}
+                                        {/if}
+                                    </div>
                                 </a>
                             </td>
                             <td class="flex truncate px-3 py-3">

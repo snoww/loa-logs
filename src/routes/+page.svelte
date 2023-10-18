@@ -41,6 +41,7 @@
                     await join(await resourceDir(), "images", "classes", esther.icon)
                 );
             }
+
             await invoke("write_log", { message: "finished meter setup" });
         })();
     });
