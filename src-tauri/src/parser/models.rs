@@ -513,7 +513,9 @@ pub struct GeneralSettings {
     pub port: u16,
     pub blur: bool,
     pub transparent: bool,
+    #[serde(default = "default_aot")]
     pub scale: String,
+    #[serde(default = "default_true")]
     pub always_on_top: bool,
 }
 
@@ -810,4 +812,8 @@ lazy_static! {
 
 fn default_true() -> bool {
     true
+}
+
+fn default_aot() -> String {
+    "1".to_string()
 }
