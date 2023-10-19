@@ -56,6 +56,17 @@
         await appWindow.unminimize();
         await appWindow.setFocus();
     }
+    
+    $: {
+        if ($settings.general.scale === "1") {
+            document.documentElement.style.setProperty("font-size", "medium");
+        } else if ($settings.general.scale === "2") {
+            document.documentElement.style.setProperty("font-size", "large");
+        } else if ($settings.general.scale === "3") {
+            document.documentElement.style.setProperty("font-size", "x-large");
+        }
+    }
+
 </script>
 
 <div class={$settings.general.accentColor}>

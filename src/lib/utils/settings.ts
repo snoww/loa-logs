@@ -23,7 +23,8 @@ export const defaultSettings = {
         ip: "",
         port: 6040,
         blur: true,
-        transparent: true
+        transparent: true,
+        scale: "1",
     },
     shortcuts: {
         hideMeter: {

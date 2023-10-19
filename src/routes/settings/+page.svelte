@@ -9,6 +9,7 @@
     import BuffSettings from "$lib/components/settings/BuffSettings.svelte";
     import ShortcutSettings from "$lib/components/settings/ShortcutSettings.svelte";
     import ColorSettings from "$lib/components/settings/ColorSettings.svelte";
+    import AccessibilitySettings from "$lib/components/settings/AccessibilitySettings.svelte";
     import DatabaseSettings from "$lib/components/settings/DatabaseSettings.svelte";
 
     let currentTab = 0;
@@ -41,7 +42,7 @@
         </div>
     </div>
     <div class="px-8">
-        <div class="flex">
+        <div class="flex flex-wrap">
             <button
                 class="border-b px-3 py-4 {currentTab === 0
                     ? 'text-accent-500 border-accent-500'
@@ -89,6 +90,13 @@
                     ? 'text-accent-500 border-accent-500'
                     : 'border-zinc-500 text-gray-400 hover:text-gray-200'}"
                 on:click={() => (currentTab = 6)}>
+                Accessibility
+            </button>
+            <button
+                class="border-b px-3 py-4 {currentTab === 7
+                    ? 'text-accent-500 border-accent-500'
+                    : 'border-zinc-500 text-gray-400 hover:text-gray-200'}"
+                on:click={() => (currentTab = 7)}>
                 Database
             </button>
         </div>
@@ -105,6 +113,8 @@
         {:else if currentTab === 5}
             <ColorSettings />
         {:else if currentTab === 6}
+            <AccessibilitySettings />
+        {:else if currentTab === 7}
             <DatabaseSettings />
         {/if}
     </div>

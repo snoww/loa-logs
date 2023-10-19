@@ -33,14 +33,6 @@
         networkDropdownOpen = false;
     };
 
-    async function toggleBlur() {
-        if ($settings.general.blur) {
-            await invoke("enable_blur");
-        } else {
-            await invoke("disable_blur");
-        }
-    }
-
     onMount(() => {
         (async () => {
             networkInterfaces = await invoke("get_network_interfaces");
@@ -147,14 +139,6 @@
             name="Show Raid Difficulty"
             description={"Shows the difficulty of the raid."}
             bind:setting={$settings.general.showDifficulty} />
-        <SettingItem
-            name="Split Lines"
-            description={"Split breakdown lines with alternating background colors for better readability."}
-            bind:setting={$settings.general.splitLines} />
-        <SettingItem
-            name="Underline Hovered"
-            description="Underlines the text in the row when hovering over it for better readability."
-            bind:setting={$settings.general.underlineHovered} />
         <!-- <SettingItem
             name="Show Date in Screenshot"
             description={'Shows the date of the encounter when taking screenshot'}
@@ -167,25 +151,6 @@
             name="Hide Logo in Screenshot"
             description={'Hides the meter name "LOA Logs" in the screenshot.'}
             bind:setting={$settings.general.hideLogo} />
-        <div class="">
-            <label class="flex items-center">
-                <input
-                    type="checkbox"
-                    bind:checked={$settings.general.blur}
-                    on:change={toggleBlur}
-                    class="text-accent-500 h-5 w-5 rounded bg-zinc-700 focus:ring-0 focus:ring-offset-0" />
-                <div class="ml-5">
-                    <div class="text-gray-100">Blur Meter Background</div>
-                    <div class="text-xs text-gray-300">
-                        Adds background blur effect to live meter. Turn this off if experiencing lag in Windows 11.
-                    </div>
-                </div>
-            </label>
-        </div>
-        <SettingItem
-            name="Transparent Meter"
-            description="Toggle transparent background for live meter."
-            bind:setting={$settings.general.transparent} />
         <div>
             <label class="flex items-center">
                 <input

@@ -18,16 +18,16 @@ export const encounterMap: { [key: string]: { [key: string]: Array<string> }} = 
         "Brelshaza G3": ["Primordial Nightmare"],
         "Brelshaza G4": ["Phantom Legion Commander Brelshaza"]
     },
+    Kayangel: {
+        "Kayangel G1": ["Tienis"],
+        "Kayangel G2": ["Prunya"],
+        "Kayangel G3": ["Lauriel"]
+    },
     Akkan: {
         "Akkan G1": ["Griefbringer Maurug", "Evolved Maurug"],
         "Akkan G2": ["Lord of Degradation Akkan"],
         "Akkan G3": ["Plague Legion Commander Akkan", "Lord of Kartheon Akkan"]
     },
-    Kayangel: {
-        "Kayangel G1": ["Tienis"],
-        "Kayangel G2": ["Prunya"],
-        "Kayangel G3": ["Lauriel"]
-    }
 };
 
 export const difficultyMap: Array<string> = ["Normal", "Hard", "Inferno"];

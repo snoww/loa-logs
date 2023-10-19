@@ -513,6 +513,7 @@ pub struct GeneralSettings {
     pub port: u16,
     pub blur: bool,
     pub transparent: bool,
+    pub scale: String,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
