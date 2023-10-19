@@ -5,7 +5,7 @@
     "platforms": {
         "windows-x86_64": {
             "url": "https://github.com/snoww/loa-logs/releases/download/v1.3.2/LOA.Logs_1.3.2_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmY4Tkl4UzJBOG5kd3hacjVXNWFZcHVhMnFpSmVTbUFBUWdXUnEycWQ2VHEzNlpadVI3Vkg1QW5OeEw1WnpwQ3pidHVLQUZySWhKemIzVHV1eXVGcmdFPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjk3NzU0MTcyCWZpbGU6TE9BIExvZ3NfMS4zLjJfeDY0LXNldHVwLm5zaXMuemlwCjdobnEyYnAwTC91d0tkMFlGSEdCcW5TY0pNdlYvSHZqa0dqakRHa2RrVVFKalRPVHVLY0ZxWVNnVnBLRHZkd0lMcVVqMmJPcjFmTjUvcVhHdVVKM0NRPT0K"
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmIxejBxL3FLUkZOVlRFeXhOc29UY1p0NERXRy90QXhuS1ZENFBkd3pORXN3SHplZEt0NmtXeldZUmVqL080Z0czVjh3amRPNC9PMXhlTW90SnA5eUE0PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjk3NzU0NzgzCWZpbGU6TE9BIExvZ3NfMS4zLjJfeDY0LXNldHVwLm5zaXMuemlwCks5RGorWUl6TnZvTk1ZSGtJOVU4U2JLMTdFcDdFSXhLd2s0WDllMGNOcHBXdXlFTDh3Y25oU0pLbWpUNDBDWlFkNTl0RjVqMWx3SllKcjY2b25vMkRnPT0K"
         }
     }
 }
