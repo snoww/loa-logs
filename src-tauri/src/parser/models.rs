@@ -513,7 +513,7 @@ pub struct GeneralSettings {
     pub port: u16,
     pub blur: bool,
     pub transparent: bool,
-    #[serde(default = "default_aot")]
+    #[serde(default = "default_scale")]
     pub scale: String,
     #[serde(default = "default_true")]
     pub always_on_top: bool,
@@ -814,6 +814,6 @@ fn default_true() -> bool {
     true
 }
 
-fn default_aot() -> String {
+fn default_scale() -> String {
     "1".to_string()
 }
