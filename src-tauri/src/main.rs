@@ -347,7 +347,7 @@ fn setup_db(resource_path: PathBuf) -> Result<(), String> {
             difficulty TEXT
             favorite BOOLEAN NOT NULL DEFAULT 0,
             cleared BOOLEAN,
-            version INTEGER NOT NULL DEFAULT 1
+            version INTEGER NOT NULL DEFAULT 2
         );
         CREATE INDEX IF NOT EXISTS encounter_fight_start_index
         ON encounter (fight_start desc);
@@ -418,6 +418,7 @@ fn setup_db(resource_path: PathBuf) -> Result<(), String> {
             is_dead INTEGER,
             skills TEXT,
             damage_stats TEXT,
+            dps INTEGER,
             skill_stats TEXT,
             last_update INTEGER,
             PRIMARY KEY (name, encounter_id),
@@ -437,7 +438,73 @@ fn setup_db(resource_path: PathBuf) -> Result<(), String> {
         }
     }
 
+    let mut stmt = conn
+        .prepare("SELECT COUNT(*) FROM pragma_table_info('entity') WHERE name='dps'")
+        .unwrap();
+    let column_count: u32 = stmt.query_row([], |row| row.get(0)).unwrap();
+    if column_count == 0 {
+        conn.execute("ALTER TABLE entity ADD COLUMN dps INTEGER", [])
+            .expect("failed to add integer column");
+    }
+
+    update_db(&conn);
+
     Ok(())
+}
+
+fn update_db(conn: &Connection) {
+    let count: i32 = conn
+        .query_row_and_then(
+            "SElECT COUNT(*) FROM encounter WHERE cleared IS NULL",
+            [],
+            |row| row.get(0),
+        )
+        .expect("could not get encounter count");
+    if count > 0 {
+        match conn.execute(
+            "
+        UPDATE encounter
+        SET cleared = CASE
+                WHEN json_extract(misc, '$.raidClear') IS NULL THEN 0
+                ELSE 1
+                END
+        WHERE cleared IS NULL
+        ",
+            [],
+        ) {
+            Ok(updated) => {
+                info!("updated {} encounters", updated);
+            }
+            Err(e) => {
+                warn!("failed to update cleared status: {}", e);
+            }
+        }
+    }
+
+    let count: i32 = conn
+        .query_row_and_then(
+            "SElECT COUNT(*) FROM entity WHERE dps IS NULL",
+            [],
+            |row| row.get(0),
+        )
+        .expect("could not get entity count");
+    if count > 0 {
+        match conn.execute(
+            "
+        UPDATE entity
+        SET dps = json_extract(damage_stats, '$.dps')
+        WHERE dps IS NULL
+        ",
+            [],
+        ) {
+            Ok(updated) => {
+                info!("updated {} entities", updated);
+            }
+            Err(e) => {
+                warn!("failed to extract dps from entities: {}", e);
+            }
+        }
+    }
 }
 
 #[tauri::command]
@@ -484,7 +551,7 @@ fn load_encounters_preview(
     };
 
     let raid_clear_filter = if filter.cleared {
-        "AND json_extract(misc, '$.raidClear') IS NOT NULL".to_string()
+        "AND cleared = 1".to_string()
     } else {
         "".to_string()
     };
@@ -516,7 +583,7 @@ fn load_encounters_preview(
             SELECT en.class_id || ':' || en.name AS class_info
             FROM entity en
             WHERE en.encounter_id = e.id AND en.entity_type = 'PLAYER'
-            ORDER BY json_extract(en.damage_stats, '$.dps') DESC
+            ORDER BY dps DESC
         ) AS ordered_classes
     ) AS classes
     FROM encounter e

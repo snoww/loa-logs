@@ -1374,8 +1374,9 @@ fn insert_data(
         is_dead,
         skills,
         damage_stats,
-        skill_stats
-    ) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13)",
+        skill_stats,
+        dps
+    ) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14)",
         )
         .expect("failed to prepare entity statement");
 
@@ -1557,6 +1558,7 @@ fn insert_data(
                 json!(entity.skills),
                 json!(entity.damage_stats),
                 json!(entity.skill_stats),
+                entity.damage_stats.dps
             ])
             .expect("failed to insert entity");
     }
