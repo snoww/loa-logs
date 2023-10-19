@@ -1,11 +1,11 @@
 {
-    "version": "v1.3.1",
-    "notes": "### v1.3.1\n#### NEW FEATURES\n- improved installer speed by ~650% (from 1m20s to around 10s)\n- added the ability to favorite encounters\n- can now filter by favorites, raid difficulty\n- added filter menu for encounters\nfull patch notes on github\nsend bug reports/suggestions to discord.gg/sbSa3pkDF5",
-    "pub_date": "2023-10-18T21:40:01.982Z",
+    "version": "v1.3.2",
+    "notes": "### v1.3.2\n#### NEW FEATURES\n- added ui scale option (settings > accessibility)\n- added option to set always on top\n#### BUG FIXES & IMPROVEMENTS\n- increased speed of filtering encounters\n- added two delete functions in database settings\n- fixed log window not remembering size and location\n- fixed split lines not working on summary row in live meter\nfull patch notes on github\nsend bug reports/suggestions to discord.gg/sbSa3pkDF5",
+    "pub_date": "2023-10-19T22:24:01.353Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.3.1/LOA.Logs_1.3.1_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmJUbUNBbjNJZ05ieHJxeVZiS0xGd3pyNXVtamplK1BwbHkwMXdXcjd2d0pMbDlZSHpOTEpJSmRYNzNFNkJCbUhwcUxUbG5kL2RwSFRXNTZHRlN2elE0PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjk3NjIxMTAwCWZpbGU6TE9BIExvZ3NfMS4zLjFfeDY0LXNldHVwLm5zaXMuemlwCitoMkR4eXZEbHhFNjJmNDNEdWFrZzVtSFdJMHVWbXBMN1ZJTXF6V3RnZHZKNnJ2djZPeXp2QjhzQi95QU8xcHZEV0UwSXBHUm4xenVJZVJuK2dPM0J3PT0K"
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.3.2/LOA.Logs_1.3.2_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmY4Tkl4UzJBOG5kd3hacjVXNWFZcHVhMnFpSmVTbUFBUWdXUnEycWQ2VHEzNlpadVI3Vkg1QW5OeEw1WnpwQ3pidHVLQUZySWhKemIzVHV1eXVGcmdFPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjk3NzU0MTcyCWZpbGU6TE9BIExvZ3NfMS4zLjJfeDY0LXNldHVwLm5zaXMuemlwCjdobnEyYnAwTC91d0tkMFlGSEdCcW5TY0pNdlYvSHZqa0dqakRHa2RrVVFKalRPVHVLY0ZxWVNnVnBLRHZkd0lMcVVqMmJPcjFmTjUvcVhHdVVKM0NRPT0K"
         }
     }
 }
