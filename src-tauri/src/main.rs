@@ -297,7 +297,9 @@ async fn main() -> Result<()> {
             write_log,
             toggle_encounter_favorite,
             delete_all_encounters,
-            delete_all_uncleared_encounters
+            delete_all_uncleared_encounters,
+            enable_aot,
+            disable_aot,
         ])
         .run(tauri::generate_context!())
         .expect("error while running application");
@@ -1108,6 +1110,20 @@ fn disable_blur(window: tauri::Window) {
 fn enable_blur(window: tauri::Window) {
     if let Some(meter_window) = window.app_handle().get_window("main") {
         apply_blur(&meter_window, Some((10, 10, 10, 50))).ok();
+    }
+}
+
+#[tauri::command]
+fn enable_aot(window: tauri::Window) {
+    if let Some(meter_window) = window.app_handle().get_window("main") {
+        meter_window.set_always_on_top(true).ok();
+    }
+}
+
+#[tauri::command]
+fn disable_aot(window: tauri::Window) {
+    if let Some(meter_window) = window.app_handle().get_window("main") {
+        meter_window.set_always_on_top(false).ok();
     }
 }
 

@@ -514,6 +514,7 @@ pub struct GeneralSettings {
     pub blur: bool,
     pub transparent: bool,
     pub scale: String,
+    pub always_on_top: bool,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]

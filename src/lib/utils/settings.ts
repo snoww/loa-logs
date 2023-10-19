@@ -25,6 +25,7 @@ export const defaultSettings = {
         blur: true,
         transparent: true,
         scale: "1",
+        alwaysOnTop: true,
     },
     shortcuts: {
         hideMeter: {

@@ -1,6 +1,13 @@
 <script lang="ts">
     import DamageMeter from "$lib/components/DamageMeter.svelte";
-    import { classIconCache, colors, defaultSettings, registerShortcuts, settings, skillIcon } from "$lib/utils/settings";
+    import {
+        classIconCache,
+        colors,
+        defaultSettings,
+        registerShortcuts,
+        settings,
+        skillIcon
+    } from "$lib/utils/settings";
     import { appWindow } from "@tauri-apps/api/window";
     import { onMount } from "svelte";
     import merge from "lodash-es/merge";
@@ -25,7 +32,12 @@
                 await invoke("enable_blur");
             } else {
                 await invoke("disable_blur");
-            }            
+            }
+            if ($settings.general.alwaysOnTop) {
+                await appWindow.setAlwaysOnTop(true);
+            } else {
+                await appWindow.setAlwaysOnTop(false);
+            }
             await appWindow.setAlwaysOnTop(true);
             registerShortcuts($settings.shortcuts);
             skillIcon.set({
@@ -55,7 +67,6 @@
             document.documentElement.style.setProperty("font-size", "x-large");
         }
     }
-    
 </script>
 
 <div

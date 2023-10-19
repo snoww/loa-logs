@@ -8,7 +8,7 @@
     let colorDropdownOpen = false;
     let networkDropdownOpen = false;
     let networkInterfaces: [string, string][];
-    
+
     const handleColorDropdownFocusLoss = (event: FocusEvent) => {
         const relatedTarget = event.relatedTarget as HTMLElement;
         const currentTarget = event.currentTarget as HTMLElement;
@@ -40,6 +40,13 @@
         })();
     });
 
+    async function toggleAlwaysOnTop() {
+        if ($settings.general.alwaysOnTop) {
+            await invoke("enable_aot");
+        } else {
+            await invoke("disable_aot");
+        }
+    }
 </script>
 
 <div class="flex flex-col space-y-4 divide-y-[1px]">
@@ -147,6 +154,21 @@
             name="Show Details Tab"
             description={"Shows an additional tab in meter for raw identity and stagger data."}
             bind:setting={$settings.general.showDetails} />
+        <div class="">
+            <label class="flex items-center">
+                <input
+                    type="checkbox"
+                    bind:checked={$settings.general.alwaysOnTop}
+                    on:change={toggleAlwaysOnTop}
+                    class="text-accent-500 h-5 w-5 rounded bg-zinc-700 focus:ring-0 focus:ring-offset-0" />
+                <div class="ml-5">
+                    <div class="text-gray-100">Always on Top</div>
+                    <div class="text-xs text-gray-300">
+                        Sets the live meter to always be on top of other windows.
+                    </div>
+                </div>
+            </label>
+        </div>
         <SettingItem
             name="Hide Logo in Screenshot"
             description={'Hides the meter name "LOA Logs" in the screenshot.'}
