@@ -30,7 +30,7 @@ use window_vibrancy::{apply_blur, clear_blur};
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let mut logger = Logger::try_with_str("info")?
+    let mut logger = Logger::try_with_str("info, tao=off")?
         .log_to_file(
             FileSpec::default()
                 .suppress_timestamp()
