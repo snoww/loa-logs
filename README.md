@@ -45,7 +45,7 @@ A: There could be two possible reasons. 1. The meter needs Microsoft Edge Webvie
 
 **Q: The meter window lags a lot when dragging around.**
 
-A: Are you on Windows 11? Disable blur in the settings. If you wish to have a dark background with blur disabled, also disable the transparency setting to have a pseudo dark mode.
+A: Are you on Windows 11? Disable blur in the settings (settings > accessibility). If you wish to have a dark background with blur disabled, also disable the transparency setting to have a pseudo dark mode.
 
 **Q: Why isn't my item level shown next to my name when others have it?**
 
