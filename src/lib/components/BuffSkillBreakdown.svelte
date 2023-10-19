@@ -2,7 +2,7 @@
     import { cardIds } from "$lib/constants/cards";
     import { MeterTab, type Entity, type Skill, type StatusEffect, BuffDetails } from "$lib/types";
     import { getSynergyPercentageDetailsSum } from "$lib/utils/buffs";
-    import { HexToRgba } from "$lib/utils/colors";
+    import { HexToRgba, RGBLinearShade } from "$lib/utils/colors";
     import { colors, classIconCache, settings } from "$lib/utils/settings";
     import { formatPlayerName } from "$lib/utils/strings";
     import { tooltip } from "$lib/utils/tooltip";
@@ -63,7 +63,7 @@
                 </td>
             {/each}
         {/if}
-        <div class="absolute left-0 -z-10 h-7 w-full px-2 py-1" style="background-color: {HexToRgba(color, 0.6)}" />
+        <div class="absolute left-0 -z-10 h-7 w-full px-2 py-1" style="background-color: {$settings.general.splitLines ? RGBLinearShade(HexToRgba(color, 0.6)) : HexToRgba(color, 0.6)}" />
     </tr>
 {/if}
 {#each skills as skill, i (skill.id)}
