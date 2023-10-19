@@ -158,13 +158,14 @@ async fn main() -> Result<()> {
                 }
             }
 
-            let _logs_window =
+            let logs_window =
                 WindowBuilder::new(app, "logs", tauri::WindowUrl::App("/logs".into()))
                     .title("LOA Logs")
                     .min_inner_size(650.0, 300.0)
                     .inner_size(800.0, 500.0)
                     .build()
                     .expect("failed to create log window");
+            logs_window.restore_state(StateFlags::all()).unwrap();
 
             tokio::task::spawn_blocking(move || {
                 parser::start(meter_window, ip, port, raw_socket).map_err(|e| {
@@ -294,7 +295,9 @@ async fn main() -> Result<()> {
             enable_blur,
             get_network_interfaces,
             write_log,
-            toggle_encounter_favorite
+            toggle_encounter_favorite,
+            delete_all_encounters,
+            delete_all_uncleared_encounters
         ])
         .run(tauri::generate_context!())
         .expect("error while running application");
@@ -482,11 +485,9 @@ fn update_db(conn: &Connection) {
     }
 
     let count: i32 = conn
-        .query_row_and_then(
-            "SElECT COUNT(*) FROM entity WHERE dps IS NULL",
-            [],
-            |row| row.get(0),
-        )
+        .query_row_and_then("SElECT COUNT(*) FROM entity WHERE dps IS NULL", [], |row| {
+            row.get(0)
+        })
         .expect("could not get entity count");
     if count > 0 {
         match conn.execute(
@@ -1023,6 +1024,38 @@ fn delete_encounters_below_min_duration(window: tauri::Window, min_duration: i64
     )
     .unwrap();
     conn.execute("VACUUM;", params![]).unwrap();
+}
+
+#[tauri::command]
+fn delete_all_uncleared_encounters(window: tauri::Window) {
+    let path = window
+        .app_handle()
+        .path_resolver()
+        .resource_dir()
+        .expect("could not get resource dir");
+    let conn = get_db_connection(&path).expect("could not get db connection");
+    conn.execute(
+        "
+        DELETE FROM encounter
+        WHERE cleared = 0;
+    ",
+        [],
+    )
+    .unwrap();
+    conn.execute("VACUUM;", params![]).unwrap();
+}
+
+#[tauri::command]
+fn delete_all_encounters(window: tauri::Window) {
+    let path = window
+        .app_handle()
+        .path_resolver()
+        .resource_dir()
+        .expect("could not get resource dir");
+    let conn = get_db_connection(&path).expect("could not get db connection");
+
+    conn.execute("DELETE FROM encounter", []).unwrap();
+    conn.execute("VACUUM", []).unwrap();
 }
 
 #[tauri::command]

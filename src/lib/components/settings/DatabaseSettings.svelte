@@ -4,9 +4,13 @@
     import { tooltip } from "$lib/utils/tooltip";
     import { invoke } from "@tauri-apps/api";
     import { onMount } from "svelte";
+    import NProgress from "nprogress";
 
-    let encounterDbInfo: EncounterDbInfo | undefined;
+    let encounterDbInfo: EncounterDbInfo;
     let deleteConfirm = false;
+    let deleteInProgress = false;
+    let deleteMsg = "";
+    let deleteFn: (() => void) | undefined;
 
     async function openDbFolder() {
         await invoke("open_db_path");
@@ -18,14 +22,34 @@
         })();
     });
 
-    $: {
-        encounterDbInfo = undefined;
-    }
-
     async function deleteEncounterBelowMinDuration() {
+        NProgress.start();
+        deleteInProgress = true;
         await invoke("delete_encounters_below_min_duration", { minDuration: $settings.logs.minEncounterDuration });
         encounterDbInfo = await invoke("get_db_info", { minDuration: $settings.logs.minEncounterDuration });
         deleteConfirm = false;
+        deleteInProgress = false;
+        NProgress.done();
+    }
+
+    async function deleteAllUnclearedEncounters() {
+        NProgress.start();
+        deleteInProgress = true;
+        await invoke("delete_all_uncleared_encounters");
+        encounterDbInfo = await invoke("get_db_info", { minDuration: $settings.logs.minEncounterDuration });
+        deleteConfirm = false;
+        deleteInProgress = false;
+        NProgress.done();
+    }
+
+    async function deleteAllEncounters() {
+        NProgress.start();
+        deleteInProgress = true;
+        await invoke("delete_all_encounters");
+        encounterDbInfo = await invoke("get_db_info", { minDuration: $settings.logs.minEncounterDuration });
+        deleteConfirm = false;
+        deleteInProgress = false;
+        NProgress.done();
     }
 </script>
 
@@ -60,6 +84,38 @@
                     class="rounded-md bg-red-800 p-1 hover:bg-red-900"
                     on:click={() => {
                         deleteConfirm = true;
+                        deleteMsg = `Are you sure you want to delete ${(
+                            encounterDbInfo.totalEncounters - encounterDbInfo.totalEncountersFiltered
+                        ).toLocaleString()} encounters? (might take a while)`;
+                        deleteFn = deleteEncounterBelowMinDuration;
+                    }}>
+                    Delete
+                </button>
+            </div>
+        {/if}
+        {#if encounterDbInfo.totalEncounters > 0}
+        <div class="flex items-center space-x-4">
+            <div>Delete all uncleared encounters:</div>
+            <button
+                class="rounded-md bg-red-800 p-1 hover:bg-red-900"
+                on:click={() => {
+                    deleteConfirm = true;
+                    deleteMsg = `Are you sure you want to delete all encounters that were not cleared?`;
+                    deleteFn = deleteAllUnclearedEncounters;
+                }}>
+                Delete
+            </button>
+        </div>
+    {/if}
+        {#if encounterDbInfo.totalEncounters > 0}
+            <div class="flex items-center space-x-4">
+                <div>Delete all encounters:</div>
+                <button
+                    class="rounded-md bg-red-800 p-1 hover:bg-red-900"
+                    on:click={() => {
+                        deleteConfirm = true;
+                        deleteMsg = `Are you sure you want to delete ALL ${encounterDbInfo.totalEncounters.toLocaleString()} encounters? (this is unreversable)`;
+                        deleteFn = deleteAllEncounters;
                     }}>
                     Delete
                 </button>
@@ -74,6 +130,7 @@
             <div class="relative mx-auto flex flex-col rounded-lg border-gray-700 bg-zinc-800 text-gray-400 shadow-md">
                 <button
                     type="button"
+                    class:invisible={deleteInProgress}
                     class="absolute right-2.5 top-3 ml-auto whitespace-normal rounded-lg p-1.5 hover:bg-zinc-600 focus:outline-none"
                     aria-label="Close modal"
                     on:click={() => (deleteConfirm = false)}>
@@ -100,21 +157,26 @@
                                 d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                                 class="s-Qbr4I8QhaoSZ" /></svg>
                         <h3 class="mb-5 text-lg font-normal text-gray-400">
-                            Are you sure you want to delete {encounterDbInfo.totalEncounters -
-                                encounterDbInfo.totalEncountersFiltered} encounters? (might take a while)
+                            {deleteMsg}
                         </h3>
-                        <button
-                            type="button"
-                            class="mr-2 inline-flex items-center justify-center rounded-lg bg-red-700 px-5 py-2.5 text-center text-sm text-white hover:bg-red-800 focus:outline-none"
-                            on:click={deleteEncounterBelowMinDuration}>
-                            Yes, I'm sure
-                        </button>
-                        <button
-                            type="button"
-                            class="inline-flex items-center justify-center rounded-lg bg-gray-800 bg-transparent px-5 py-2.5 text-center text-sm text-gray-400 hover:bg-zinc-700 hover:text-white focus:text-white focus:outline-none"
-                            on:click={() => (deleteConfirm = false)}>
-                            No, cancel
-                        </button>
+                        {#if !deleteInProgress}
+                            <button
+                                type="button"
+                                class="mr-2 inline-flex items-center justify-center rounded-lg bg-red-700 px-5 py-2.5 text-center text-sm text-white hover:bg-red-800 focus:outline-none"
+                                on:click={deleteFn}>
+                                Yes, I'm sure
+                            </button>
+                            <button
+                                type="button"
+                                class="inline-flex items-center justify-center rounded-lg bg-gray-800 bg-transparent px-5 py-2.5 text-center text-sm text-gray-400 hover:bg-zinc-700 hover:text-white focus:text-white focus:outline-none"
+                                on:click={() => (deleteConfirm = false)}>
+                                No, cancel
+                            </button>
+                        {:else}
+                            <div>
+                                Deleting...
+                            </div>
+                        {/if}
                     </div>
                 </div>
             </div>
