@@ -279,6 +279,24 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool) -> Re
                     );
                 }
             }
+            Pkt::RaidBegin => {
+                if let Some(pkt) = parse_pkt(&data, PKTRaidBegin::new, "PKTRaidBegin") {
+                    debug_print!("raid begin", pkt.raid_id);
+                    match pkt.raid_id {
+                        308226 | 308227 => {
+                            state.raid_difficulty = "Trial".to_string();
+                        }
+                        308428 | 308429 | 308420 | 308410 | 308411 | 308414 | 308422 | 308424
+                        | 308421 | 308412 | 308423 | 308426 | 308416 | 308419 | 308415 | 308437
+                        | 308417 | 308418 | 308425 | 308430 => {
+                            state.raid_difficulty = "Challenge".to_string();
+                        }
+                        _ => {
+                            state.raid_difficulty = "".to_string();
+                        }
+                    }
+                }
+            }
             Pkt::RaidBossKillNotify => {
                 state.on_phase_transition(1);
                 state.raid_clear = true;
@@ -453,6 +471,10 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool) -> Re
             }
             Pkt::ZoneMemberLoadStatusNotify => {
                 if let Some(pkt) = parse_pkt(&data, PKTZoneMemberLoadStatusNotify::new, "PKTZoneMemberLoadStatusNotify") {
+                    if !state.raid_difficulty.is_empty() {
+                        continue;
+                    }
+
                     match pkt.zone_level {
                         0 => {
                             state.raid_difficulty = "Normal".to_string();
