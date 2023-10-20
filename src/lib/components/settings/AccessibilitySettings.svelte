@@ -20,6 +20,7 @@
                     id="modifiers"
                     bind:value={$settings.general.scale}
                     class="focus:ring-accent-500 focus:border-accent-500 yx-2 block w-28 rounded-lg border border-gray-600 bg-gray-700 py-1 text-sm text-white placeholder-gray-400">
+                    <option value="0">Small</option>
                     <option value="1">Normal</option>
                     <option value="2">Large</option>
                     <option value="3">Largest</option>

@@ -64,6 +64,8 @@
             document.documentElement.style.setProperty("font-size", "large");
         } else if ($settings.general.scale === "3") {
             document.documentElement.style.setProperty("font-size", "x-large");
+        } else if ($settings.general.scale === "0") {
+            document.documentElement.style.setProperty("font-size", "small");
         }
     }
 
