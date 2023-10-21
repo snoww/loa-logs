@@ -27,6 +27,10 @@ Download [here](https://npcap.com/#download).
 
 A: There can be multiple reasons. 1. Did you install Npcap? 2. Are you using a traditional VPN (e.g. NordVPN)? You need to disable auto-interface, and select the network interface for your VPN (should be named similar to your vpn name). If that doesn't work, enable raw socket mode. You must restart the meter as admin. 3. Are you using ExitLag? ExitLag should work on auto-interface, since its not really a VPN. However, if its not working on auto interface, you need to enable raw socket mode. You must restart the meter as admin.
 
+**Q: ExitLag not working even with the settings above**
+
+A: ExitLag recently updated their settings which changed how they redirect packets. Change your ExitLag settings to *Packet redirection method > Legacy - NDIS*.
+
 **Q: Should I run it in a VM?**
 
 A: I do not run it in a VM with full 10 gems equipped on my character. There is always a risk of getting banned, even in a VM. You can run it in a VM if you want, the meter should work the same.
@@ -83,7 +87,7 @@ A: [Yes.](https://cdn.discordapp.com/attachments/537415745198489633/113441770473
 <img src="https://media.discordapp.net/attachments/1122373187775246427/1152471963206418462/LOA_Logs_OyD9TjdeIo.png" width="500"/>
 
 ### Buff Uptime Tracking
-<img src="https://media.discordapp.net/attachments/1122373187775246427/1152471962866700318/LOA_Logs_bptNRfnIHu.png" width="800"/>
+<img src="https://cdn.discordapp.com/attachments/220646943498567680/1165156286279729162/image.png" width="800"/>
 
 ### Opener Rotation
 <img src="https://cdn.discordapp.com/attachments/1122373187775246427/1152471962287865896/LOA_Logs_U5gvJHAGB7.png" width="600"/>
