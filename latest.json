@@ -1,11 +1,11 @@
 {
-    "version": "v1.3.2",
-    "notes": "### v1.3.2\n#### NEW FEATURES\n- added ui scale option (settings > accessibility)\n- added option to set always on top\n#### BUG FIXES & IMPROVEMENTS\n- increased speed of filtering encounters\n- added two delete functions in database settings\n- fixed log window not remembering size and location\n- fixed split lines not working on summary row in live meter\nfull patch notes on github\nsend bug reports/suggestions to discord.gg/sbSa3pkDF5",
-    "pub_date": "2023-10-19T22:24:01.353Z",
+    "version": "v1.3.3",
+    "notes": "### v1.3.3\n#### BUG FIXES & IMPROVEMENTS\n- attempt to fix missing header in log window\n- fixed difficulty labeling for challenge guardians\n- fixed difficulty labeling for hell achates and caliligos\n- added a smaller ui scale option\nfull patch notes on github\nsend bug reports/suggestions to discord.gg/sbSa3pkDF5",
+    "pub_date": "2023-10-21T05:17:05.183Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.3.2/LOA.Logs_1.3.2_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmIxejBxL3FLUkZOVlRFeXhOc29UY1p0NERXRy90QXhuS1ZENFBkd3pORXN3SHplZEt0NmtXeldZUmVqL080Z0czVjh3amRPNC9PMXhlTW90SnA5eUE0PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjk3NzU0NzgzCWZpbGU6TE9BIExvZ3NfMS4zLjJfeDY0LXNldHVwLm5zaXMuemlwCks5RGorWUl6TnZvTk1ZSGtJOVU4U2JLMTdFcDdFSXhLd2s0WDllMGNOcHBXdXlFTDh3Y25oU0pLbWpUNDBDWlFkNTl0RjVqMWx3SllKcjY2b25vMkRnPT0K"
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.3.3/LOA.Logs_1.3.3_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmYzVHhEVHRkWmpjYXBqSGhETFMrY0Jkd21LaXhNclBlS29ZUVR2bkdvTXJYNEIvNUhOenYweHpWbjhnWU1vWndpeXNobDliYm5PRk9Wb3VQcUxDU2dFPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjk3ODY0NzY0CWZpbGU6TE9BIExvZ3NfMS4zLjNfeDY0LXNldHVwLm5zaXMuemlwCkZTTDFvbkZuVkdHTFhrNjVBWHRIZ0RPWlN0M3NQZkJ5T2E4U3diV3FrK05HZ1NpSDhYeWJHRXc2VUczWVFzRFY2UGxDMTFpdkxVQ2F6eHN1Q1lLL0RBPT0K"
         }
     }
 }
