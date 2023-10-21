@@ -166,6 +166,7 @@ async fn main() -> Result<()> {
                     .build()
                     .expect("failed to create log window");
             logs_window.restore_state(StateFlags::all()).unwrap();
+            logs_window.set_decorations(true).unwrap();
 
             tokio::task::spawn_blocking(move || {
                 parser::start(meter_window, ip, port, raw_socket).map_err(|e| {
