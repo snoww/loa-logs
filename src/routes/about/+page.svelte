@@ -29,10 +29,10 @@
                             d="M107 841v-91.5h746.5V841H107Zm0-219.5V530h746.5v91.5H107Zm0-219V310h746.5v92.5H107Z" /></svg>
                 </button>
             </div>
-            <div class="pl-2 text-xl text-gray-300 font-medium tracking-tight">About</div>
+            <div class="pl-2 text-xl font-medium tracking-tight text-gray-300">About</div>
         </div>
     </div>
-    <div class="mx-8 my-4 text-gray-200 tracking-tight">
+    <div class="mx-8 my-4 tracking-tight text-gray-200">
         <p class="px-4 text-base">
             LOA Logs is a "blazingly fast" open source Lost Ark DPS meter (<a
                 class="text-accent-500 hover:underline"
@@ -61,10 +61,17 @@
                 class="text-accent-500 hover:underline"
                 href="https://github.com/snoww/loa-logs/issues"
                 target="_blank">issue</a>
-            or send a message in the <code>#loa-logs</code> channel on Discord at <a class="text-accent-500 hover:underline" href="https://discord.gg/sbSa3pkDF5" target="_blank"
-            ><code>discord.gg/sbSa3pkDF5</code></a
-        >
+            or send a message in the <code>#loa-logs</code> channel on Discord at
+            <a class="text-accent-500 hover:underline" href="https://discord.gg/sbSa3pkDF5" target="_blank"
+                ><code>discord.gg/sbSa3pkDF5</code></a>
         </p>
+
+        <p class="mt-4 px-4 text-base">You can support me and this project by buying me a coffee.</p>
+        <a href="https://www.buymeacoffee.com/synow" target="_blank"
+            ><img
+                class="mt-2 px-4"
+                src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png"
+                alt="Buy Me A Coffee" /></a>
 
         <p class="mt-4 px-4">
             Current version:
@@ -73,6 +80,6 @@
             {:then version}
                 v{version}
             {/await}
-        </p> 
+        </p>
     </div>
 </div>

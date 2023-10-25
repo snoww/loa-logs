@@ -33,6 +33,12 @@
             <a href="/logs" class="hover:text-accent-500" on:click={() => (hidden = true)}> Encounter Logs </a>
             <a href="/about" class="hover:text-accent-500" on:click={() => (hidden = true)}> About </a>
             <a href="/settings" class="hover:text-accent-500" on:click={() => (hidden = true)}> Settings </a>
+            <a href="https://www.buymeacoffee.com/synow" class="hover:text-accent-500" target="_blank" on:click={() => (hidden = true)}>
+                <div class="inline-flex space-x-1 items-center">
+                    <div>Donate</div>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-2 fill-gray-300" viewBox="0 0 512 512"><path d="M432,320H400a16,16,0,0,0-16,16V448H64V128H208a16,16,0,0,0,16-16V80a16,16,0,0,0-16-16H48A48,48,0,0,0,0,112V464a48,48,0,0,0,48,48H400a48,48,0,0,0,48-48V336A16,16,0,0,0,432,320ZM488,0h-128c-21.37,0-32.05,25.91-17,41l35.73,35.73L135,320.37a24,24,0,0,0,0,34L157.67,377a24,24,0,0,0,34,0L435.28,133.32,471,169c15,15,41,4.5,41-17V24A24,24,0,0,0,488,0Z"/></svg>
+                </div>
+            </a>
         </div>
         <div class="px-3 py-2 text-gray-300">
             {#await getVersion()}
