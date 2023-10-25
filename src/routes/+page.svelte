@@ -38,7 +38,6 @@
             } else {
                 await appWindow.setAlwaysOnTop(false);
             }
-            await appWindow.setAlwaysOnTop(true);
             registerShortcuts($settings.shortcuts);
             skillIcon.set({
                 path: convertFileSrc(await join(await resourceDir(), "images", "skills"))
