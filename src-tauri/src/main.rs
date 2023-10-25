@@ -301,6 +301,7 @@ async fn main() -> Result<()> {
             delete_all_uncleared_encounters,
             enable_aot,
             disable_aot,
+            disable_clickthrough,
         ])
         .run(tauri::generate_context!())
         .expect("error while running application");
@@ -920,7 +921,6 @@ fn toggle_meter_window(window: tauri::Window) {
             meter.hide().unwrap();
         } else {
             meter.show().unwrap();
-            meter.set_ignore_cursor_events(false).unwrap();
         }
     }
 }
@@ -1125,6 +1125,13 @@ fn enable_aot(window: tauri::Window) {
 fn disable_aot(window: tauri::Window) {
     if let Some(meter_window) = window.app_handle().get_window("main") {
         meter_window.set_always_on_top(false).ok();
+    }
+}
+
+#[tauri::command]
+fn disable_clickthrough(window: tauri::Window) {
+    if let Some(meter_window) = window.app_handle().get_window("main") {
+        meter_window.set_ignore_cursor_events(false).unwrap();
     }
 }
 

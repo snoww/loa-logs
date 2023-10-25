@@ -51,6 +51,10 @@ export const defaultSettings = {
         manualSave: {
             modifier: "",
             key: ""
+        },
+        disableClickthrough: {
+            modifier: "",
+            key: ""
         }
     },
     meter: {
@@ -190,6 +194,12 @@ export async function registerShortcuts(shortcuts: any) {
     if (shortcuts.manualSave.modifier && shortcuts.manualSave.key) {
         await register(shortcuts.manualSave.modifier + "+" + shortcuts.manualSave.key, async () => {
             await emit("save-request");
+        });
+    }
+
+    if (shortcuts.disableClickthrough.modifier && shortcuts.disableClickthrough.key) {
+        await register(shortcuts.disableClickthrough.modifier + "+" + shortcuts.disableClickthrough.key, async () => {
+            await invoke("disable_clickthrough");
         });
     }
 }

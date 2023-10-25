@@ -166,5 +166,31 @@
                 </select>
             </div>
         </div>
+        <div class="flex justify-between">
+            <label class="flex items-center" for="modifiers">
+                <div class="">
+                    <div class="text-gray-100">Disable Clickthrough</div>
+                </div>
+            </label>
+            <div class="flex items-center space-x-2">
+                <select
+                    id="modifiers"
+                    bind:value={$settings.shortcuts.disableClickthrough.modifier}
+                    class="focus:ring-accent-500 focus:border-accent-500 block w-20 rounded-lg border border-gray-600 bg-gray-700 p-2.5 text-sm text-white placeholder-gray-400">
+                    <option value="Ctrl">Ctrl</option>
+                    <option value="Alt">Alt</option>
+                    <option value="Shift"><kbd>Shift</kbd></option>
+                </select>
+                <div>+</div>
+                <select
+                    id="keys"
+                    bind:value={$settings.shortcuts.disableClickthrough.key}
+                    class="focus:ring-accent-500 focus:border-accent-500 block rounded-lg border border-gray-600 bg-gray-700 p-2.5 text-sm text-white placeholder-gray-400">
+                    {#each keyboardKeys as key}
+                        <option value={key}>{key.toUpperCase()}</option>
+                    {/each}
+                </select>
+            </div>
+        </div>
     </div>
 </div>

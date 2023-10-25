@@ -527,6 +527,8 @@ pub struct Shortcuts {
     pub show_latest_encounter: Shortcut,
     pub reset_session: Shortcut,
     pub pause_session: Shortcut,
+    pub manual_save: Shortcut,
+    pub disable_clickthrough: Shortcut,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
