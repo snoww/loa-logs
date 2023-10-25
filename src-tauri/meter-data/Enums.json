@@ -3432,7 +3432,8 @@
     "104": "life_mastery_decrease_durability_rate",
     "105": "life_mastery_increase_casting_speed",
     "106": "voyage_immune_events",
-    "107": "invoke_epic_skill"
+    "107": "voyage_ocean_bonus_buff",
+    "108": "invoke_epic_skill"
   },
   "commonactionexectype": { "0": "instant", "1": "toggle" },
   "commonactionlearntype": { "0": "none", "1": "auto", "2": "reward" },
@@ -3803,7 +3804,7 @@
   "coopquestteamsymboltype": { "0": "all", "1": "my_team" },
   "coopquestteamtype": { "0": "personal", "1": "team_a", "2": "team_b" },
   "coopquesttriggercondop": { "0": "equal", "1": "greater", "2": "less" },
-  "coopquesttriggercondtype": { "0": "none", "1": "time", "2": "attain_rate" },
+  "coopquesttriggercondtype": { "0": "none", "1": "time", "2": "attain_rate", "3": "attain_count" },
   "coopquesttype": { "0": "normal", "1": "chaos_gate", "2": "competition", "3": "team_competition", "4": "dungeon" },
   "coopresultgrade": { "0": "bronze", "1": "silver", "2": "gold", "3": "platinum" },
   "counterattacktype": { "0": "paralyzation", "1": "groggy", "2": "force_use_skill" },
@@ -10079,7 +10080,8 @@
     "22": "afk",
     "23": "pkshieldbuffid",
     "24": "rvr_instance_waiting_lines",
-    "25": "in_matching"
+    "25": "in_matching",
+    "26": "chaosgate"
   },
   "partyleavereason": {
     "0": "request",
@@ -13922,7 +13924,7 @@
   "superarmororigin": { "0": "status_effect", "1": "vf_iron_bubble", "2": "time_stop" },
   "superarmortooltiptype": { "0": "none", "1": "sway", "2": "hit", "3": "hitstate" },
   "superarmortype": { "0": "none", "1": "normal", "2": "invincible", "3": "special_1", "4": "abnormal_status" },
-  "survivalmatchtype": { "0": "dynamic_island" },
+  "survivalmatchtype": { "0": "dynamic_island", "1": "chaos_gate" },
   "systemmessagetype": {
     "0": "default",
     "1": "world",
@@ -15756,7 +15758,14 @@
     "618": "dynamic_island_entrance",
     "619": "social_action_wheel",
     "620": "internetcafe_benefit_west",
-    "621": "transcendence"
+    "621": "transcendence",
+    "622": "town_play_template_timer",
+    "623": "town_play_template_progress_race",
+    "624": "town_play_template_progress_survival",
+    "625": "town_play_template_result",
+    "626": "town_play_template_kill_score",
+    "627": "town_other_play_ground_info",
+    "628": "chaosgate_entrance"
   },
   "undefinedicontype": {
     "0": "wallpaper",

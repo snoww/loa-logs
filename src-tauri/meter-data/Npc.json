@@ -3037,6 +3037,308 @@
   "826009": { "id": 826009, "name": "단죄자 겔리우스", "grade": "boss", "type": "monster", "pushimmune": true },
   "826010": { "id": 826010, "name": "징벌의 가르기스", "grade": "boss", "type": "monster", "pushimmune": true },
   "826011": { "id": 826011, "name": "응집된 집행의 서슬", "grade": "boss", "type": "monster", "pushimmune": true },
+  "890000": { "id": 890000, "name": "Phantom Legion Demon Dog", "grade": "underling", "type": "monster" },
+  "890001": { "id": 890001, "name": "Phantom Legion Chess Queen", "grade": "underling", "type": "monster" },
+  "890010": { "id": 890010, "name": "Plague Legion Demon Dog", "grade": "underling", "type": "monster" },
+  "890011": { "id": 890011, "name": "Plague Legion Demon Prisoner", "grade": "underling", "type": "monster" },
+  "890012": { "id": 890012, "name": "Plague Legion Plague Keeper", "grade": "underling", "type": "monster" },
+  "890020": { "id": 890020, "name": "Darkness Legion Demon Dog", "grade": "underling", "type": "monster" },
+  "890030": { "id": 890030, "name": "Mayhem Legion Big Toad", "grade": "underling", "type": "monster" },
+  "890031": { "id": 890031, "name": "Mayhem Legion Brook", "grade": "underling", "type": "monster" },
+  "890032": { "id": 890032, "name": "Mayhem Legion Geunyo", "grade": "underling", "type": "monster" },
+  "890033": { "id": 890033, "name": "Mayhem Legion Skeleton Swordfighter", "grade": "underling", "type": "monster" },
+  "890034": { "id": 890034, "name": "Mayhem Legion Small Toy Hammer Clown", "grade": "underling", "type": "monster" },
+  "890035": { "id": 890035, "name": "Mayhem Legion Trumpet Clown", "grade": "underling", "type": "monster" },
+  "890036": { "id": 890036, "name": "Mayhem Legion Unicycle Clown", "grade": "underling", "type": "monster" },
+  "890037": { "id": 890037, "name": "Mayhem Legion Spade Card Soldier", "grade": "underling", "type": "monster" },
+  "890038": { "id": 890038, "name": "Mayhem Legion Clover Card Soldier", "grade": "underling", "type": "monster" },
+  "890039": { "id": 890039, "name": "Mayhem Legion Heart Card Soldier", "grade": "underling", "type": "monster" },
+  "890040": { "id": 890040, "name": "Mayhem Legion Diamond Card Soldier", "grade": "underling", "type": "monster" },
+  "890100": { "id": 890100, "name": "Phantom Legion Chess Pawn", "grade": "normal", "type": "monster" },
+  "890101": { "id": 890101, "name": "Phantom Legion Chess Queen", "grade": "normal", "type": "monster" },
+  "890110": { "id": 890110, "name": "Plague Legion Sakuul", "grade": "normal", "type": "monster" },
+  "890111": { "id": 890111, "name": "Plague Legion Mutant", "grade": "normal", "type": "monster" },
+  "890112": { "id": 890112, "name": "Plague Legion Corpulent Mutant", "grade": "normal", "type": "monster" },
+  "890113": { "id": 890113, "name": "Plague Legion Bamku", "grade": "normal", "type": "monster" },
+  "890120": { "id": 890120, "name": "Darkness Legion Skeleton Swordfighter", "grade": "normal", "type": "monster" },
+  "890121": { "id": 890121, "name": "Darkness Legion Skeleton Archer", "grade": "normal", "type": "monster" },
+  "890122": { "id": 890122, "name": "Darkness Legion Knight", "grade": "normal", "type": "monster" },
+  "890123": { "id": 890123, "name": "Darkness Legion Insect Knight", "grade": "normal", "type": "monster" },
+  "890124": { "id": 890124, "name": "Darkness Legion Skiara", "grade": "normal", "type": "monster" },
+  "890125": { "id": 890125, "name": "Darkness Legion Shadow Lancer", "grade": "normal", "type": "monster" },
+  "890126": { "id": 890126, "name": "Darkness Legion Shadow Greatswordsman", "grade": "normal", "type": "monster" },
+  "890127": {
+    "id": 890127,
+    "name": "Darkness Legion Shadow Dual Blades Soldier",
+    "grade": "normal",
+    "type": "monster"
+  },
+  "890130": { "id": 890130, "name": "Mayhem Legion Crackcrick", "grade": "normal", "type": "monster" },
+  "890131": { "id": 890131, "name": "Mayhem Legion Pest", "grade": "normal", "type": "monster" },
+  "890132": { "id": 890132, "name": "Mayhem Legion Kiriko", "grade": "normal", "type": "monster" },
+  "890133": { "id": 890133, "name": "Mayhem Legion Belled", "grade": "normal", "type": "monster" },
+  "890134": { "id": 890134, "name": "Mayhem Legion Skeleton Archer", "grade": "normal", "type": "monster" },
+  "890135": { "id": 890135, "name": "Mayhem Legion Toy Hammer Clown", "grade": "normal", "type": "monster" },
+  "890136": { "id": 890136, "name": "Mayhem Legion Cannon Clown", "grade": "normal", "type": "monster" },
+  "890200": {
+    "id": 890200,
+    "name": "Phantom Legion Chess Knight",
+    "grade": "named",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "890201": {
+    "id": 890201,
+    "name": "Phantom Legion Summoner",
+    "grade": "named",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "890202": { "id": 890202, "name": "Phantom Legion Knight", "grade": "named", "type": "monster", "pushimmune": true },
+  "890203": { "id": 890203, "name": "Phantom Legion Vizilia", "grade": "named", "type": "monster", "pushimmune": true },
+  "890210": { "id": 890210, "name": "Plague Legion Wormfist", "grade": "named", "type": "monster", "pushimmune": true },
+  "890211": {
+    "id": 890211,
+    "name": "Plague Legion Nimble Flesh",
+    "grade": "named",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "890212": { "id": 890212, "name": "Plague Legion Cardoss", "grade": "named", "type": "monster", "pushimmune": true },
+  "890213": { "id": 890213, "name": "Plague Legion Agherun", "grade": "named", "type": "monster", "pushimmune": true },
+  "890214": { "id": 890214, "name": "Plague Legion Worker", "grade": "named", "type": "monster", "pushimmune": true },
+  "890215": { "id": 890215, "name": "Plague Legion Beast", "grade": "named", "type": "monster", "pushimmune": true },
+  "890216": { "id": 890216, "name": "Plague Legion Infector", "grade": "named", "type": "monster", "pushimmune": true },
+  "890220": {
+    "id": 890220,
+    "name": "Darkness Legion Skeleton Knight",
+    "grade": "named",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "890221": {
+    "id": 890221,
+    "name": "Darkness Legion Warrior",
+    "grade": "named",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "890222": {
+    "id": 890222,
+    "name": "Darkness Legion Knight Commander",
+    "grade": "named",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "890223": {
+    "id": 890223,
+    "name": "Darkness Legion Knight Navegal",
+    "grade": "named",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "890224": {
+    "id": 890224,
+    "name": "Darkness Legion Insect Knight Commander",
+    "grade": "named",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "890225": {
+    "id": 890225,
+    "name": "Darkness Legion Veloran",
+    "grade": "named",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "890226": {
+    "id": 890226,
+    "name": "Darkness Legion Nignath",
+    "grade": "named",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "890227": {
+    "id": 890227,
+    "name": "Darkness Legion Devicanta",
+    "grade": "named",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "890228": {
+    "id": 890228,
+    "name": "Darkness Legion Shadow Knight",
+    "grade": "named",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "890230": { "id": 890230, "name": "Mayhem Legion Goroa", "grade": "named", "type": "monster", "pushimmune": true },
+  "890231": {
+    "id": 890231,
+    "name": "Mayhem Legion Red Warrior",
+    "grade": "named",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "890232": {
+    "id": 890232,
+    "name": "Mayhem Legion Corpse Tailor",
+    "grade": "named",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "890233": {
+    "id": 890233,
+    "name": "Mayhem Legion Stella's Shadow",
+    "grade": "named",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "890234": {
+    "id": 890234,
+    "name": "Mayhem Legion Strongman",
+    "grade": "named",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "890235": {
+    "id": 890235,
+    "name": "Mayhem Legion Grotesque Doll",
+    "grade": "named",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "890300": {
+    "id": 890300,
+    "name": "Phantom Legion Chess Rook",
+    "grade": "boss",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "890301": {
+    "id": 890301,
+    "name": "Phantom Legion Chess Bishop",
+    "grade": "boss",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "890302": {
+    "id": 890302,
+    "name": "Phantom Legion Chess King",
+    "grade": "boss",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "890310": { "id": 890310, "name": "Plague Legion Gurzar", "grade": "boss", "type": "monster", "pushimmune": true },
+  "890311": { "id": 890311, "name": "Plague Legion Vagnos", "grade": "boss", "type": "monster", "pushimmune": true },
+  "890312": { "id": 890312, "name": "Plague Legion Loogdoom", "grade": "boss", "type": "monster", "pushimmune": true },
+  "890320": { "id": 890320, "name": "Darkness Legion Zoldat", "grade": "boss", "type": "monster", "pushimmune": true },
+  "890321": { "id": 890321, "name": "Darkness Legion Veromek", "grade": "boss", "type": "monster", "pushimmune": true },
+  "890322": { "id": 890322, "name": "Darkness Legion Kiril", "grade": "boss", "type": "monster", "pushimmune": true },
+  "890330": { "id": 890330, "name": "Mayhem Legion Shamok", "grade": "boss", "type": "monster", "pushimmune": true },
+  "890331": { "id": 890331, "name": "Mayhem Legion Skutoom", "grade": "boss", "type": "monster", "pushimmune": true },
+  "890332": { "id": 890332, "name": "Mayhem Legion Stella", "grade": "boss", "type": "monster", "pushimmune": true },
+  "890400": {
+    "id": 890400,
+    "name": "Phantom Legion Chess Queen",
+    "grade": "boss",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "890401": {
+    "id": 890401,
+    "name": "Phantom Legion Chess Queen",
+    "grade": "boss",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "890410": {
+    "id": 890410,
+    "name": "Plague Legion Epidemikus",
+    "grade": "boss",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "890411": {
+    "id": 890411,
+    "name": "Plague Legion Epidemikus",
+    "grade": "boss",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "890420": {
+    "id": 890420,
+    "name": "Darkness Legion Eldraken",
+    "grade": "boss",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "890421": {
+    "id": 890421,
+    "name": "Darkness Legion Eldraken",
+    "grade": "boss",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "890430": { "id": 890430, "name": "Mayhem Legion Seto", "grade": "boss", "type": "monster", "pushimmune": true },
+  "890431": { "id": 890431, "name": "Mayhem Legion Seto", "grade": "boss", "type": "monster", "pushimmune": true },
+  "890500": {
+    "id": 890500,
+    "name": "Phantom Legion Illusion Explosive Sphere",
+    "grade": "normal",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "890501": {
+    "id": 890501,
+    "name": "Phantom Legion Illusion Explosive Sphere",
+    "grade": "normal",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "890510": {
+    "id": 890510,
+    "name": "Plague Legion Spore Bug",
+    "grade": "normal",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "890511": {
+    "id": 890511,
+    "name": "Plague Legion Spore Bug",
+    "grade": "normal",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "890512": {
+    "id": 890512,
+    "name": "Plague Legion Spore Bug",
+    "grade": "normal",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "890520": {
+    "id": 890520,
+    "name": "Darkness Legion Pressure Sphere",
+    "grade": "normal",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "890530": {
+    "id": 890530,
+    "name": "Mayhem Legion Grotesque Doll",
+    "grade": "normal",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "890620": {
+    "id": 890620,
+    "name": "Solar Knight Commander",
+    "grade": "normal",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "890621": { "id": 890621, "name": "투명 몬스터", "grade": "normal", "type": "monster", "pushimmune": true },
   "620010": { "id": 620010, "name": "Vertus", "grade": "raid", "type": "monster", "pushimmune": true },
   "620020": { "id": 620020, "name": "Helgaia", "grade": "raid", "type": "monster", "pushimmune": true },
   "620030": { "id": 620030, "name": "Chromanium", "grade": "raid", "type": "monster", "pushimmune": true },
@@ -10446,7 +10748,7 @@
   "20180701": { "id": 20180701, "name": "Insane Boulder", "grade": "elite", "type": "monster" },
   "20180720": { "id": 20180720, "name": "Summoner of Chaos", "grade": "elite", "type": "monster" },
   "20180731": { "id": 20180731, "name": "Insane Watcher", "grade": "elite", "type": "monster" },
-  "20180741": { "id": 20180741, "name": "Insane Elemental", "grade": "elite", "type": "monster" },
+  "20180741": { "id": 20180741, "name": "Deranged Elemental", "grade": "elite", "type": "monster" },
   "20181072": { "id": 20181072, "name": "Grayhammer Rioter", "grade": "elite", "type": "monster" },
   "20181085": { "id": 20181085, "name": "Grayhammer Watcher", "grade": "elite", "type": "monster" },
   "20181074": { "id": 20181074, "name": "Grayhammer Explorer", "grade": "elite", "type": "monster" },
@@ -11745,7 +12047,7 @@
   "180731": { "id": 180731, "name": "Insane Watcher", "grade": "normal", "type": "monster" },
   "180732": { "id": 180732, "name": "Visor", "grade": "named", "type": "monster", "pushimmune": true },
   "180740": { "id": 180740, "name": "Chaos Elemental", "grade": "normal", "type": "monster" },
-  "180741": { "id": 180741, "name": "Insane Elemental", "grade": "normal", "type": "monster" },
+  "180741": { "id": 180741, "name": "Deranged Elemental", "grade": "normal", "type": "monster" },
   "180742": { "id": 180742, "name": "Karma", "grade": "named", "type": "monster", "pushimmune": true },
   "180830": { "id": 180830, "name": "Regent's Mage", "grade": "normal", "type": "monster" },
   "180840": { "id": 180840, "name": "Regent's Cleric", "grade": "normal", "type": "monster" },
@@ -20022,7 +20324,7 @@
   "266010": { "id": 266010, "name": "Darkness Legion Demon", "grade": "normal", "type": "monster" },
   "266011": {
     "id": 266011,
-    "name": "Darkness Legion Commander",
+    "name": "Darkness Legion Captain",
     "grade": "named",
     "type": "monster",
     "pushimmune": true
@@ -27864,7 +28166,7 @@
   "19928": { "id": 19928, "name": "Goblin", "grade": "normal", "type": "townsfolk", "pushimmune": true },
   "19929": { "id": 19929, "name": "Lonely Panda Cub", "grade": "normal", "type": "townsfolk", "pushimmune": true },
   "19930": { "id": 19930, "name": "Allegro", "grade": "normal", "type": "townsfolk", "pushimmune": true },
-  "19931": { "id": 19931, "name": "Servant Ahrzen", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "19931": { "id": 19931, "name": "Servant Ahrzen", "grade": "normal", "type": "townsfolk" },
   "19932": { "id": 19932, "name": "Zinnervale", "grade": "normal", "type": "townsfolk" },
   "19933": { "id": 19933, "name": "Shandi", "grade": "normal", "type": "townsfolk", "pushimmune": true },
   "19934": { "id": 19934, "name": "Gabrian", "grade": "normal", "type": "townsfolk" },
@@ -34466,7 +34768,7 @@
   "71102": { "id": 71102, "name": "Goldie", "grade": "normal", "type": "townsfolk" },
   "71103": { "id": 71103, "name": "Goldie", "grade": "normal", "type": "townsfolk", "pushimmune": true },
   "71104": { "id": 71104, "name": "Goldie", "grade": "normal", "type": "townsfolk", "pushimmune": true },
-  "71105": { "id": 71105, "name": "Alfonso", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "71105": { "id": 71105, "name": "Alfonso Vediche", "grade": "normal", "type": "townsfolk", "pushimmune": true },
   "71106": { "id": 71106, "name": "Resident Looking at a Photo", "grade": "normal", "type": "townsfolk" },
   "71107": { "id": 71107, "name": "Resident Looking at a Photo", "grade": "normal", "type": "townsfolk" },
   "71108": { "id": 71108, "name": "Resident Looking at a Photo", "grade": "normal", "type": "townsfolk" },
@@ -35097,7 +35399,6 @@
   "82061": { "id": 82061, "name": "Vern Rescue Ship", "grade": "normal", "type": "townsfolk", "pushimmune": true },
   "82062": { "id": 82062, "name": "고래", "grade": "none", "type": "townsfolk", "pushimmune": true },
   "82063": { "id": 82063, "name": "고래", "grade": "none", "type": "townsfolk", "pushimmune": true },
-  "82065": { "id": 82065, "name": "Mio", "grade": "normal", "type": "townsfolk", "pushimmune": true },
   "82066": {
     "id": 82066,
     "name": "Tea and Libra Guild Vessel",
@@ -35113,7 +35414,6 @@
     "pushimmune": true
   },
   "82081": { "id": 82081, "name": "Legendary Adventurer", "grade": "normal", "type": "townsfolk", "pushimmune": true },
-  "82082": { "id": 82082, "name": "Mia", "grade": "normal", "type": "townsfolk" },
   "83300": { "id": 83300, "name": "Adeline", "grade": "normal", "type": "townsfolk" },
   "83301": { "id": 83301, "name": "Nahun's Tome", "grade": "normal", "type": "townsfolk", "pushimmune": true },
   "83302": { "id": 83302, "name": "Adorable Felix", "grade": "normal", "type": "townsfolk", "pushimmune": true },
@@ -37375,7 +37675,7 @@
   "43005": { "id": 43005, "name": "Anxious Citizen", "grade": "normal", "type": "townsfolk", "pushimmune": true },
   "43006": { "id": 43006, "name": "Anxious Citizen", "grade": "normal", "type": "townsfolk", "pushimmune": true },
   "43007": { "id": 43007, "name": "Anxious Citizen", "grade": "normal", "type": "townsfolk", "pushimmune": true },
-  "43008": { "id": 43008, "name": "Bellen", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "43008": { "id": 43008, "name": "Velen", "grade": "normal", "type": "townsfolk", "pushimmune": true },
   "43009": { "id": 43009, "name": "Veroka", "grade": "normal", "type": "townsfolk" },
   "43010": { "id": 43010, "name": "Villager", "grade": "normal", "type": "townsfolk" },
   "43011": { "id": 43011, "name": "Villager", "grade": "normal", "type": "townsfolk" },
@@ -39912,7 +40212,7 @@
   "47053": { "id": 47053, "name": "환경_요즈_12", "grade": "normal", "type": "townsfolk", "pushimmune": true },
   "47054": { "id": 47054, "name": "Zakra", "grade": "normal", "type": "townsfolk", "pushimmune": true },
   "47055": { "id": 47055, "name": "Shandi", "grade": "normal", "type": "townsfolk", "pushimmune": true },
-  "47056": { "id": 47056, "name": "Ahrzen", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "47056": { "id": 47056, "name": "Ahrzen", "grade": "normal", "type": "townsfolk" },
   "47057": { "id": 47057, "name": "Jederico", "grade": "seed", "type": "townsfolk", "pushimmune": true },
   "47058": { "id": 47058, "name": "Bishop Antonio", "grade": "normal", "type": "townsfolk", "pushimmune": true },
   "47059": { "id": 47059, "name": "Alfonso", "grade": "normal", "type": "townsfolk", "pushimmune": true },
@@ -39940,7 +40240,7 @@
   "47075": { "id": 47075, "name": "Hailey", "grade": "normal", "type": "townsfolk", "pushimmune": true },
   "47076": { "id": 47076, "name": "Bane", "grade": "normal", "type": "townsfolk", "pushimmune": true },
   "47077": { "id": 47077, "name": "Thirain", "grade": "normal", "type": "townsfolk", "pushimmune": true },
-  "47078": { "id": 47078, "name": "Ahrzen", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "47078": { "id": 47078, "name": "Ahrzen", "grade": "normal", "type": "townsfolk" },
   "47079": { "id": 47079, "name": "Meehan", "grade": "normal", "type": "townsfolk" },
   "47080": { "id": 47080, "name": "Attendant", "grade": "normal", "type": "townsfolk" },
   "47081": { "id": 47081, "name": "Entrepreneur", "grade": "normal", "type": "townsfolk", "pushimmune": true },
@@ -40268,7 +40568,7 @@
   "47241": { "id": 47241, "name": "Gaia", "grade": "normal", "type": "townsfolk", "pushimmune": true },
   "47242": { "id": 47242, "name": "Tunnel Fox", "grade": "normal", "type": "townsfolk" },
   "47243": { "id": 47243, "name": "Rosaline Vediche", "grade": "normal", "type": "townsfolk", "pushimmune": true },
-  "47244": { "id": 47244, "name": "Ahrzen", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "47244": { "id": 47244, "name": "Ahrzen", "grade": "normal", "type": "townsfolk" },
   "47245": { "id": 47245, "name": "Head Maid", "grade": "normal", "type": "townsfolk", "pushimmune": true },
   "47246": {
     "id": 47246,
