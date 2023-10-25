@@ -70,7 +70,7 @@
         <a href="https://www.buymeacoffee.com/synow" target="_blank"
             ><img
                 class="mt-2 px-4"
-                src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png"
+                src="/bmac.png"
                 alt="Buy Me A Coffee" /></a>
 
         <p class="mt-4 px-4">
