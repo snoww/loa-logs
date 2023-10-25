@@ -53,6 +53,16 @@
                 );
             }
 
+            // disable blur on windows 11
+            let ua = await navigator.userAgentData.getHighEntropyValues(["platformVersion"]);
+            if (navigator.userAgentData.platform === "Windows") {
+                const majorPlatformVersion = Number(ua.platformVersion.split(".")[0]);
+                if (majorPlatformVersion >= 13) {
+                    await invoke("write_log", { message: "win11 detected, disabling blur" });
+                    invoke("disable_blur");
+                }
+            }
+
             await invoke("write_log", { message: "finished meter setup" });
         })();
     });
