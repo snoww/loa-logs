@@ -25,6 +25,12 @@ Npcap is required to run LOA Logs.
 
 Download [here](https://npcap.com/#download).
 
+# Supporting the Project
+
+You can support me directly by buying me a [coffee.](https://www.buymeacoffee.com/synow)
+
+You can also support LOA Details' Herysia's [Patreon.](https://patreon.com/Herysia)
+
 # FAQ
 **Q: Meter isn't detecting anything...**
 
@@ -73,12 +79,6 @@ A: Create an issue here on GitHub, or send a message in the #loa-logs channel on
 **Q: Is it really "blazingly fast"?**
 
 A: [Yes.](https://cdn.discordapp.com/attachments/537415745198489633/1134417704732872704/t7ns9qtb5gh81.png)
-
-# Supporting the Project
-
-You can support me directly by buying me a [coffee.](https://www.buymeacoffee.com/synow)
-
-You can also support LOA Details' Herysia's [Patreon.](https://patreon.com/Herysia)
 
 ## Screenshots
 ### In-game Overlay (optional Boss HP bar)
