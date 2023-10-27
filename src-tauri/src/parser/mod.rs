@@ -137,6 +137,7 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool) -> Re
         }
         if save.load(Ordering::Relaxed) {
             save.store(false, Ordering::Relaxed);
+            state.party_info = update_party(&party_tracker, &entity_tracker);
             state.save_to_db();
             state.saved = true;
             state.resetting = true;
