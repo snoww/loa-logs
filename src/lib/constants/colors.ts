@@ -18,6 +18,7 @@ export const classColors: ClassColors = {
     Deathblade: { color: "#a91a16", defaultColor: "#a91a16" }, // 402
     Shadowhunter: { color: "#0099c6", defaultColor: "#0099c6" }, // 403
     Reaper: { color: "#109618", defaultColor: "#109618" }, // 404
+    Souleater: { color: "#c16ed0", defaultColor: "#c16ed0" }, // 405
     Sharpshooter: { color: "#dd4477", defaultColor: "#dd4477" }, // 502
     Deadeye: { color: "#4442a8", defaultColor: "#4442a8" }, // 503
     Artillerist: { color: "#33670b", defaultColor: "#33670b" }, // 504

@@ -1663,6 +1663,7 @@ pub fn get_class_from_id(class_id: &u32) -> String {
         402 => "Deathblade",
         403 => "Shadowhunter",
         404 => "Reaper",
+        405 => "Souleater",
         501 => "Gunner (Male)",
         502 => "Sharpshooter",
         503 => "Deadeye",
