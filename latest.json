@@ -1,11 +1,11 @@
 {
-    "version": "v1.3.4",
-    "notes": "### v1.3.4\n#### NEW FEATURES\n- updated meter for chaos gate update\n- added link to donation page to support me\n\n#### BUG FIXES & IMPROVEMENTS\n- added missing some missing bosses to search filter\n- added disable clickthrough shortcut\nfull patch notes on github\nsend bug reports/suggestions to discord.gg/sbSa3pkDF5",
-    "pub_date": "2023-10-25T17:26:45.030Z",
+    "version": "v1.3.5",
+    "notes": "### v1.3.5\n- updated meter for souleater update\n#### BUG FIXES & IMPROVEMENTS\n- fix donation page not showing icon\n- fix always on top setting not working\n- disable blur on win11 by default\nfull patch notes on github\nsend bug reports/suggestions to discord.gg/sbSa3pkDF5",
+    "pub_date": "2023-11-16T04:46:08.805Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.3.4/LOA.Logs_1.3.4_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlUwRUkzaDBKUnVTNlUvOG1pa0kvcFd1bUtTWERqa0N5Mi94TkxDN2pkRTdJOUEraG9FazUrYllqcDVwRkM0VlV5UjhpL2lSV0pwSVBjVjFBOE5ycmdvPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjk4MjU1MDM0CWZpbGU6TE9BIExvZ3NfMS4zLjRfeDY0LXNldHVwLm5zaXMuemlwCm8xSTFqVENiOFlQSTBaRW96dEplaGR3djMzU1JPcmpyT2M5VVlQK3RGN3h6WGlrbVIyZjhpRk5KM1cvWWozNlJuWFQwTkNkOGFGU0pSRkFzZmJPeEJBPT0K"
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.3.5/LOA.Logs_1.3.5_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmYrbEJLVjZObmwyRzJjMVU5Y0t5NnFmK01tWnVaM0E0ZzFVcGtCaHZWUmxQSEs3NGM4bnpubU9rSURoTzQ2YVQ3M2pxMXVJN0cweUJEQytSRlRvb1E4PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzAwMTEwNjc1CWZpbGU6TE9BIExvZ3NfMS4zLjVfeDY0LXNldHVwLm5zaXMuemlwCldtcjFLUlNUV0M3dGQ0aDB6QVp1NXBRU0xlaVN1QXdYbG5GNjFrU1lVdmxDekVsUWlwRWFyTm1TY3BXV3VrSEd0VU51MzljdXl4RDNsVkNJb1dvOEFBPT0K"
         }
     }
 }
