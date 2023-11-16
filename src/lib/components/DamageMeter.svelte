@@ -359,7 +359,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {#each players as entity, i (entity.id)}
+                        {#each players as entity, i (entity.name)}
                             <tr
                                 class="h-7 px-2 py-1 {$settings.general.underlineHovered ? 'hover:underline' : ''}"
                                 animate:flip={{ duration: 200 }}

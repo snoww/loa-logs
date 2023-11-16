@@ -126,7 +126,7 @@
         </thead>
         <tbody on:contextmenu|preventDefault={handleRightClick}>
             {#if !focusedPlayer}
-                {#each players as player, i (player.id)}
+                {#each players as player, i (player.name)}
                     <tr
                         class="h-7 px-2 py-1 {$settings.general.underlineHovered ? 'hover:underline' : ''}"
                         animate:flip={{ duration: 200 }}
