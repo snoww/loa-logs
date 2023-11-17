@@ -1,11 +1,11 @@
 {
-    "version": "v1.3.5",
-    "notes": "### v1.3.5\n- updated meter for souleater update\n#### BUG FIXES & IMPROVEMENTS\n- fix donation page not showing icon\n- fix always on top setting not working\n- disable blur on win11 by default\nfull patch notes on github\nsend bug reports/suggestions to discord.gg/sbSa3pkDF5",
-    "pub_date": "2023-11-16T04:46:08.805Z",
+    "version": "v1.3.6",
+    "notes": "### v1.3.6\n#### BUG FIXES & IMPROVEMENTS\n- updated souleater icon\n- fixed \"show latest encounter\" not working when already viewing one\n- fixed meter freezing in certain situations\nfull patch notes on github\nsend bug reports/suggestions to discord.gg/sbSa3pkDF5",
+    "pub_date": "2023-11-17T05:04:43.509Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.3.5/LOA.Logs_1.3.5_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmYrbEJLVjZObmwyRzJjMVU5Y0t5NnFmK01tWnVaM0E0ZzFVcGtCaHZWUmxQSEs3NGM4bnpubU9rSURoTzQ2YVQ3M2pxMXVJN0cweUJEQytSRlRvb1E4PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzAwMTEwNjc1CWZpbGU6TE9BIExvZ3NfMS4zLjVfeDY0LXNldHVwLm5zaXMuemlwCldtcjFLUlNUV0M3dGQ0aDB6QVp1NXBRU0xlaVN1QXdYbG5GNjFrU1lVdmxDekVsUWlwRWFyTm1TY3BXV3VrSEd0VU51MzljdXl4RDNsVkNJb1dvOEFBPT0K"
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.3.6/LOA.Logs_1.3.6_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlljdWt3UDJSNVZWeWhSQUs5Z2FuekZZbmJST2xITlgxSEpHOFdIMEl3blY1ckczaHNIejJMYlV4YXdGZWpVcGJOZU14MldjMEpxZGVVL1NsNlFlK1FjPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzAwMTk3NTE2CWZpbGU6TE9BIExvZ3NfMS4zLjZfeDY0LXNldHVwLm5zaXMuemlwCnZwTXc1NDdHQ1AzYkNOS3BwdDBuTXZZNjFUTTFLMVFPSkV3VTNMSDRINndDZGpBLzQyMXZRSlROV21nSElWRTA2M2dmVDlzU0kzbldqK2FrSlU5OEFBPT0K"
         }
     }
 }
