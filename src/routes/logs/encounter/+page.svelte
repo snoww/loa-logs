@@ -26,6 +26,13 @@
         })();
     });
 
+    $: {
+        id = $page.url.searchParams.get("id") ?? "0";
+        (async () => {
+            encounter = await invoke("load_encounter", { id: id });
+        })();
+    }
+
     async function toggle_favorite() {
         await invoke("toggle_encounter_favorite", { id: Number(id) });
         $fav = !$fav;

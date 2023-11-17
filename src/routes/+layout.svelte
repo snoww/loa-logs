@@ -6,7 +6,7 @@
     import { navigating } from "$app/stores";
     import NProgress from "nprogress";
     import "nprogress/nprogress.css";
-    import { goto } from "$app/navigation";
+    import { goto, invalidateAll } from "$app/navigation";
     import { settings } from "$lib/utils/settings";
     import { appWindow } from "@tauri-apps/api/window";
 
@@ -32,6 +32,7 @@
                     await showWindow();
                 });
                 let openUrlEvent = await listen("redirect-url", async (event) => {
+                    await invalidateAll();
                     await goto("/" + event.payload);
                     await showWindow();
                 });
