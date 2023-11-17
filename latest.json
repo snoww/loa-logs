@@ -1,11 +1,11 @@
 {
-    "version": "v1.3.6",
-    "notes": "### v1.3.6\n#### BUG FIXES & IMPROVEMENTS\n- updated souleater icon\n- fixed \"show latest encounter\" not working when already viewing one\n- fixed meter freezing in certain situations\nfull patch notes on github\nsend bug reports/suggestions to discord.gg/sbSa3pkDF5",
+    "version": "v1.3.7",
+    "notes": "### v1.3.7\n#### BUG FIXES & IMPROVEMENTS\n- updated souleater icon\n- fixed \"show latest encounter\" not working when already viewing one\n- fixed meter freezing in certain situations\n- fix identity gauge tracking\nfull patch notes on github\nsend bug reports/suggestions to discord.gg/sbSa3pkDF5",
     "pub_date": "2023-11-17T05:04:43.509Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.3.6/LOA.Logs_1.3.6_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlljdWt3UDJSNVZWeWhSQUs5Z2FuekZZbmJST2xITlgxSEpHOFdIMEl3blY1ckczaHNIejJMYlV4YXdGZWpVcGJOZU14MldjMEpxZGVVL1NsNlFlK1FjPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzAwMTk3NTE2CWZpbGU6TE9BIExvZ3NfMS4zLjZfeDY0LXNldHVwLm5zaXMuemlwCnZwTXc1NDdHQ1AzYkNOS3BwdDBuTXZZNjFUTTFLMVFPSkV3VTNMSDRINndDZGpBLzQyMXZRSlROV21nSElWRTA2M2dmVDlzU0kzbldqK2FrSlU5OEFBPT0K"
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.3.7/LOA.Logs_1.3.7_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlVDUzZzY2llNzJ6YngrVGpkTHdFcWpZSGFIbDlsc3pMWjl1V2lzRHAxWDR2T21hU250MXdKbU05QkZCMWhjMHMxNzZLeUhXUnlRRlFmWnBNRFpKYkFJPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzAwMjAxODE1CWZpbGU6TE9BIExvZ3NfMS4zLjdfeDY0LXNldHVwLm5zaXMuemlwClAybE1yR2crbXh6dEdyZWpldmpCU2IvMjh0WUZxdFlFMk9FRTFRSWFkUzBPL3Y4NlJqamFHU3BYZmZRLys2S0oxUytjSHkxMXk3MTdTNVY0VzNuR0N3PT0K"
         }
     }
 }
