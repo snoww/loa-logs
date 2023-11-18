@@ -155,10 +155,11 @@
             <table class="w-full table-fixed text-left text-gray-400" id="table">
                 <thead class="sticky top-0 bg-zinc-900 text-xs uppercase">
                     <tr>
-                        <th scope="col" class="w-[7%] px-3 py-3"> ID </th>
+                        <th scope="col" class="w-14 px-3 py-3"> ID </th>
                         <th scope="col" class="w-[25%] px-3 py-3"> Encounter </th>
                         <th scope="col" class="px-3 py-3"> Classes </th>
-                        <th scope="col" class="w-[8%] px-3 py-3"> Dur </th>
+                        <th scope="col" class="hidden md:table-cell w-32 px-3 py-3"> Local Player </th>
+                        <th scope="col" class="w-14 px-3 py-3"> Dur </th>
                         <th scope="col" class="w-[15%] px-3 py-3 text-right"> Date </th>
                     </tr>
                 </thead>
@@ -189,9 +190,13 @@
                                 {:else}
                                     <div
                                         use:tooltip={{
-                                            content: formatTimestamp(encounter.fightStart)
+                                            content:
+                                                (encounter.cleared ? "Clear " : "") +
+                                                formatTimestamp(encounter.fightStart)
                                         }}>
-                                        #{encounter.id}
+                                        <div class="" class:text-lime-400={encounter.cleared}>
+                                            #{encounter.id}
+                                        </div>
                                     </div>
                                 {/if}
                             </td>
@@ -202,7 +207,7 @@
                                     use:tooltip={{ content: encounter.bossName }}>
                                     {#if encounter.favorite}
                                         <svg
-                                            class="h-5 w-5 mr-1 fill-yellow-400 flex-shrink-0"
+                                            class="mr-1 h-5 w-5 flex-shrink-0 fill-yellow-400"
                                             xmlns="http://www.w3.org/2000/svg"
                                             viewBox="0 -960 960 960"
                                             ><path
@@ -225,6 +230,9 @@
                                         class="h-8 w-8"
                                         use:tooltip={{ content: encounter.names[i] }} />
                                 {/each}
+                            </td>
+                            <td class="hidden md:table-cell px-3 py-3 truncate">
+                                {encounter.localPlayer}
                             </td>
                             <td class="px-3 py-3">
                                 {formatDurationFromMs(encounter.duration)}

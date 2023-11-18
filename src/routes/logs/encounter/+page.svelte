@@ -65,9 +65,9 @@
                 </button>
                 <div class="pl-1 truncate">
                     {#if $settings.general.showDifficulty && encounter.difficulty}
-                    #{id.toLocaleString()}: [{encounter.difficulty}] {encounter.currentBossName}
+                    <span class:text-lime-400={encounter.cleared} use:tooltip={{ content: "Cleared" }}>#{id.toLocaleString()}: </span>[{encounter.difficulty}] {encounter.currentBossName}
                     {:else}
-                    #{id.toLocaleString()}: {encounter.currentBossName}
+                    <span class:text-lime-400={encounter.cleared}>#{id.toLocaleString()}: </span>{encounter.currentBossName}
                     {/if}
                 </div>
             </div>

@@ -10,28 +10,32 @@
     export let encounterDuration: string;
     export let totalDamageDealt: number;
     export let dps: number;
+    export let cleared: boolean;
 </script>
 
 {#if $takingScreenshot}
-    <div class="flex items-center justify-between px-1">
+    <div class="flex items-center justify-between px-1 tracking-tight">
         <div>
-            <span class="font-medium">
-            {#if $settings.general.showDifficulty && difficulty}
-                [{difficulty}] {bossName}
-            {:else}
-                {bossName}
+            {#if cleared}
+                <span class="text-lime-400">[Cleared]</span>
             {/if}
-            </span><span class="ml-2 text-xs font-mono">{date}</span>
+            <span class="font-medium">
+                {#if $settings.general.showDifficulty && difficulty}
+                    [{difficulty}] {bossName}
+                {:else}
+                    {bossName}
+                {/if}
+            </span><span class="ml-2 font-mono text-xs">{date}</span>
         </div>
         {#await getVersion() then version}
             {#if !$settings.general.hideLogo}
-            <div class="">
-                LOA Logs v{version}
-            </div>
+                <div class="">
+                    LOA Logs v{version}
+                </div>
             {:else}
-            <div class="font-mono text-xs">
-                v{version}
-            </div>
+                <div class="font-mono text-xs">
+                    v{version}
+                </div>
             {/if}
         {/await}
     </div>

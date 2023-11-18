@@ -582,6 +582,8 @@ fn load_encounters_preview(
     e.duration,
     e.difficulty,
     e.favorite,
+    e.cleared,
+    e.local_player,
     (
         SELECT GROUP_CONCAT(ordered_classes.class_info, ',')
         FROM (
@@ -609,7 +611,7 @@ fn load_encounters_preview(
 
     let encounter_iter = stmt
         .query_map(params_from_iter(params), |row| {
-            let classes = row.get(6).unwrap_or_else(|_| "".to_string());
+            let classes = row.get(8).unwrap_or_else(|_| "".to_string());
 
             let (classes, names) = classes
                 .split(',')
@@ -628,6 +630,8 @@ fn load_encounters_preview(
                 names,
                 difficulty: row.get(4)?,
                 favorite: row.get(5)?,
+                cleared: row.get(6)?,
+                local_player: row.get(7)?,
             })
         })
         .expect("could not query encounters");
@@ -682,7 +686,8 @@ fn load_encounter(window: tauri::Window, id: String) -> Encounter {
        debuffs,
        misc,
        difficulty,
-       favorite
+       favorite,
+       cleared
     FROM encounter
     WHERE id = ?
     ;",
@@ -723,6 +728,7 @@ fn load_encounter(window: tauri::Window, id: String) -> Encounter {
                 },
                 difficulty: row.get(13)?,
                 favorite: row.get(14)?,
+                cleared: row.get(15)?,
                 ..Default::default()
             })
         })

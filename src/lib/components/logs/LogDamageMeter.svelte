@@ -292,7 +292,8 @@
         date={formatTimestampDate(encounter.fightStart, true)}
         encounterDuration={millisToMinutesAndSeconds(encounter.duration)}
         {totalDamageDealt}
-        dps={encounter.encounterDamageStats.dps} />
+        dps={encounter.encounterDamageStats.dps} 
+        cleared={encounter.cleared}/>
     {#if !$takingScreenshot}
         <div class="mt-2 flex justify-between" style="width: calc(100vw - 4.5rem);">
             <div class="flex divide-x divide-gray-600">

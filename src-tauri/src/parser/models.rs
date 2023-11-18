@@ -68,6 +68,7 @@ pub struct Encounter {
     pub duration: i64,
     pub difficulty: Option<String>,
     pub favorite: bool,
+    pub cleared: bool,
 }
 
 #[derive(Debug, Serialize, Clone, Default)]
@@ -455,7 +456,9 @@ pub struct EncounterPreview {
     pub classes: Vec<i32>,
     pub names: Vec<String>,
     pub difficulty: Option<String>,
+    pub local_player: String,
     pub favorite: bool,
+    pub cleared: bool,
 }
 
 #[derive(Debug, Default, Serialize, Deserialize, Clone)]

@@ -20,6 +20,7 @@ export interface Encounter {
     reset: boolean;
     difficulty?: string;
     favorite: boolean;
+    cleared: boolean;
 }
 
 export interface EncountersOverview {
@@ -35,7 +36,9 @@ export interface EncounterPreview {
     classes: Array<number>;
     names: Array<string>;
     difficulty?: string;
+    localPlayer: string;
     favorite: boolean;
+    cleared: boolean;
 }
 
 export interface EncounterDamageStats {
