@@ -64,7 +64,8 @@
                 classes: Array.from($searchFilter.classes),
                 cleared: $searchFilter.cleared,
                 favorite: $searchFilter.favorite,
-                difficulty: $searchFilter.difficulty
+                difficulty: $searchFilter.difficulty,
+                bossOnlyDamage: $searchFilter.bossOnlyDamage,
             }
         });
         encounters = overview.encounters;

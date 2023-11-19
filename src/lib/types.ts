@@ -333,6 +333,7 @@ export class SearchFilter {
     favorite: boolean;
     cleared: boolean;
     difficulty: string;
+    bossOnlyDamage: boolean;
 
     constructor(minDuration = -1) {
         this.bosses = new Set();
@@ -343,6 +344,7 @@ export class SearchFilter {
         this.favorite = false;
         this.cleared = false;
         this.difficulty = "";
+        this.bossOnlyDamage = false;
     }
 }
 

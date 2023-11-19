@@ -586,6 +586,12 @@ fn load_encounters_preview(
         "".to_string()
     };
 
+    let boss_only_damage_filter = if filter.boss_only_damage {
+        "AND boss_only_damage = 1".to_string()
+    } else {
+        "".to_string()
+    };
+
     let difficulty_filter = if !filter.difficulty.is_empty() {
         format!("AND difficulty = '{}'", filter.difficulty)
     } else {
@@ -615,11 +621,11 @@ fn load_encounters_preview(
     FROM encounter e
     JOIN entity ent ON e.id = ent.encounter_id
     WHERE e.duration > ? AND ((current_boss LIKE '%' || ? || '%') OR (ent.class LIKE '%' || ? || '%') OR (ent.name LIKE '%' || ? || '%'))
-        {} {} {} {} {}
+        {} {} {} {} {} {}
     GROUP BY encounter_id
     ORDER BY e.fight_start DESC
     LIMIT ?
-    OFFSET ?", boss_filter, class_filter, raid_clear_filter, favorite_filter, difficulty_filter);
+    OFFSET ?", boss_filter, class_filter, raid_clear_filter, favorite_filter, difficulty_filter, boss_only_damage_filter);
 
     let mut stmt = conn.prepare_cached(&query).unwrap();
 
@@ -666,9 +672,9 @@ fn load_encounters_preview(
         FROM encounter e
         JOIN entity ent ON e.id = ent.encounter_id
         WHERE duration > ? AND ((current_boss LIKE '%' || ? || '%') OR (ent.class LIKE '%' || ? || '%') OR (ent.name LIKE '%' || ? || '%'))
-            {} {} {} {} {}
+            {} {} {} {} {} {}
         GROUP BY encounter_id)
-        ", boss_filter, class_filter, raid_clear_filter, favorite_filter, difficulty_filter);
+        ", boss_filter, class_filter, raid_clear_filter, favorite_filter, difficulty_filter, boss_only_damage_filter);
 
     let count: i32 = conn
         .query_row_and_then(&query, params_from_iter(count_params), |row| row.get(0))

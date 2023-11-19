@@ -78,6 +78,7 @@
                             $searchFilter.difficulty ||
                             $searchFilter.classes.size > 0 ||
                             $searchFilter.favorite ||
+                            $searchFilter.bossOnlyDamage ||
                             $searchFilter.minDuration !== $settings.logs.minEncounterDuration ||
                             $searchFilter.cleared
                                 ? 'fill-accent-500'
@@ -156,6 +157,13 @@
                                                 bind:checked={$searchFilter.favorite}
                                                 class="text-accent-500 h-4 w-4 rounded bg-zinc-700 focus:ring-0 focus:ring-offset-0" />
                                         </label>
+                                        <label class="flex items-center">
+                                            <div class="mr-2 text-gray-100">Boss Only</div>
+                                            <input
+                                                type="checkbox"
+                                                bind:checked={$searchFilter.bossOnlyDamage}
+                                                class="text-accent-500 h-4 w-4 rounded bg-zinc-700 focus:ring-0 focus:ring-offset-0" />
+                                        </label>
                                     </div>
                                     <div class="flex flex-wrap">
                                         {#each difficultyMap as difficulty (difficulty)}
@@ -218,6 +226,13 @@
                                             <input
                                                 type="checkbox"
                                                 bind:checked={$searchFilter.favorite}
+                                                class="text-accent-500 h-4 w-4 rounded bg-zinc-700 focus:ring-0 focus:ring-offset-0" />
+                                        </label>
+                                        <label class="flex items-center">
+                                            <div class="mr-2 text-gray-100">Boss Only</div>
+                                            <input
+                                                type="checkbox"
+                                                bind:checked={$searchFilter.bossOnlyDamage}
                                                 class="text-accent-500 h-4 w-4 rounded bg-zinc-700 focus:ring-0 focus:ring-offset-0" />
                                         </label>
                                     </div>
