@@ -51,6 +51,7 @@
                 <span class="mx-1 text-gray-200">Back</span>
             </a>
         </div>
+        {#key encounter}
         {#if encounter}
             <div class="flex items-center justify-between" style="width: calc(100vw - 7.5rem);">
                 <div class="flex items-center truncate pl-1 text-xl tracking-tighter">
@@ -93,13 +94,16 @@
                 </div>
             </div>
         {/if}
+        {/key}
     </div>
     <div class="overflow-auto bg-zinc-800 pb-8 pl-8 pt-2" style="height: calc(100vh - 4rem);" id="log-breakdown">
         <div class="relative inline-block min-w-[calc(100%-4rem)]">
             <div class="pr-8">
+                {#key encounter}
                 {#if encounter}
                     <LogDamageMeter {id} {encounter} />
                 {/if}
+                {/key}
             </div>
         </div>
     </div>
