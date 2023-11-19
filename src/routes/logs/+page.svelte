@@ -159,7 +159,7 @@
                         <th scope="col" class="w-14 px-3 py-3"> ID </th>
                         <th scope="col" class="w-[25%] px-3 py-3"> Encounter </th>
                         <th scope="col" class="px-3 py-3"> Classes </th>
-                        <th scope="col" class="hidden md:table-cell w-32 px-3 py-3"> Local Player </th>
+                        <th scope="col" class="hidden w-32 px-3 py-3 md:table-cell"> Local Player </th>
                         <th scope="col" class="w-14 px-3 py-3"> Dur </th>
                         <th scope="col" class="w-[15%] px-3 py-3 text-right"> Date </th>
                     </tr>
@@ -204,7 +204,7 @@
                             <td class="w-full truncate px-3 py-3 font-medium">
                                 <a
                                     href="/logs/encounter/?id={encounter.id}"
-                                    class="group hover:text-accent-500 flex items-center hover:underline"
+                                    class="hover:text-accent-500 group flex items-center hover:underline"
                                     use:tooltip={{ content: encounter.bossName }}>
                                     {#if encounter.favorite}
                                         <svg
@@ -216,7 +216,8 @@
                                     {/if}
                                     <div class="truncate">
                                         {#if encounter.difficulty && $settings.general.showDifficulty}
-                                            <DifficultyLabel difficulty={encounter.difficulty} hover={true}/> {encounter.bossName}
+                                            <DifficultyLabel difficulty={encounter.difficulty} hover={true} />
+                                            {encounter.bossName}
                                         {:else}
                                             {encounter.bossName}
                                         {/if}
@@ -232,7 +233,7 @@
                                         use:tooltip={{ content: encounter.names[i] }} />
                                 {/each}
                             </td>
-                            <td class="hidden md:table-cell px-3 py-3 truncate">
+                            <td class="hidden truncate px-3 py-3 md:table-cell">
                                 {encounter.localPlayer}
                             </td>
                             <td class="px-3 py-3">

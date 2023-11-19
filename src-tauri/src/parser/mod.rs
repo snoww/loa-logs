@@ -121,8 +121,10 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool) -> Re
             if let Some(bod) = event.payload() {
                 if bod == "true" {
                     boss_only_damage.store(true, Ordering::Relaxed);
+                    info!("boss only damage enabled")
                 } else {
                     boss_only_damage.store(false, Ordering::Relaxed);
+                    info!("boss only damage disabled")
                 }
             }
         }
@@ -157,7 +159,12 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool) -> Re
             state.saved = true;
             state.resetting = true;
         }
+        
         state.boss_only_damage = boss_only_damage.load(Ordering::Relaxed);
+        if !state.boss_only_damage {
+            state.encounter.boss_only_damage = false;
+        }
+
         match op {
             Pkt::CounterAttackNotify => {
                 if let Some(pkt) = parse_pkt(&data, PKTCounterAttackNotify::new, "PKTCounterAttackNotify") {

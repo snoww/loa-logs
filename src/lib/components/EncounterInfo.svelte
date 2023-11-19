@@ -2,7 +2,7 @@
     import { abbreviateNumber } from "$lib/utils/numbers";
     import { settings } from "$lib/utils/settings";
     import { takingScreenshot } from "$lib/utils/stores";
-    import { menuTooltip } from "$lib/utils/tooltip";
+    import { menuTooltip, tooltip } from "$lib/utils/tooltip";
     import { getVersion } from "@tauri-apps/api/app";
     import { emit } from "@tauri-apps/api/event";
     import { invoke } from "@tauri-apps/api/tauri";
@@ -75,6 +75,9 @@
 <div class="fixed left-0 top-0 z-50 h-7 w-full bg-zinc-900/[.6] px-2 py-1 text-sm" id="header">
     <div data-tauri-drag-region class="flex justify-between">
         <div data-tauri-drag-region class="flex space-x-2">
+            {#if $settings.general.bossOnlyDamage}
+                <div class="!-mx-1" use:tooltip={{ content: "Boss Only Damage" }} data-tauri-drag-region>👾</div>
+            {/if}
             <div data-tauri-drag-region>
                 {encounterDuration}
             </div>

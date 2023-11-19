@@ -17,6 +17,7 @@
     import { estherMap } from "$lib/constants/esthers";
     import { invoke } from "@tauri-apps/api";
     import { classColors } from "$lib/constants/colors";
+    import { emit } from "@tauri-apps/api/event";
 
     onMount(() => {
         (async () => {
@@ -62,6 +63,8 @@
                     invoke("disable_blur");
                 }
             }
+
+            await emit("boss-only-damage-request", $settings.general.bossOnlyDamage);
 
             await invoke("write_log", { message: "finished meter setup" });
         })();

@@ -4,6 +4,7 @@
     import SettingItem from "./SettingItem.svelte";
     import { ifaceChangedStore } from "$lib/utils/stores";
     import { onMount } from "svelte";
+    import { emit } from "@tauri-apps/api/event";
 
     let colorDropdownOpen = false;
     let networkDropdownOpen = false;
@@ -142,10 +143,19 @@
             name="Show Esther"
             description="Show damage dealt by Esther skills in meter and log view."
             bind:setting={$settings.general.showEsther} />
-        <SettingItem
-            name="Boss Only Damage"
-            description="Only track damage dealt to bosses."
-            bind:setting={$settings.general.bossOnlyDamage} />
+        <label class="flex items-center">
+            <input
+                type="checkbox"
+                bind:checked={$settings.general.bossOnlyDamage}
+                on:change={() => {
+                    emit("boss-only-damage-request", $settings.general.bossOnlyDamage);
+                }}
+                class="text-accent-500 h-5 w-5 rounded bg-zinc-700 focus:ring-0 focus:ring-offset-0" />
+            <div class="ml-5">
+                <div class="text-gray-100">Boss Only Damage</div>
+                <div class="text-xs text-gray-300">Only track damage dealt to bosses.</div>
+            </div>
+        </label>
         <SettingItem
             name="Show Raid Difficulty"
             description={"Shows the difficulty of the raid."}
