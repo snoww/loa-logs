@@ -143,6 +143,10 @@
             description="Show damage dealt by Esther skills in meter and log view."
             bind:setting={$settings.general.showEsther} />
         <SettingItem
+            name="Boss Only Damage"
+            description="Only track damage dealt to bosses."
+            bind:setting={$settings.general.bossOnlyDamage} />
+        <SettingItem
             name="Show Raid Difficulty"
             description={"Shows the difficulty of the raid."}
             bind:setting={$settings.general.showDifficulty} />
@@ -163,9 +167,7 @@
                     class="text-accent-500 h-5 w-5 rounded bg-zinc-700 focus:ring-0 focus:ring-offset-0" />
                 <div class="ml-5">
                     <div class="text-gray-100">Always on Top</div>
-                    <div class="text-xs text-gray-300">
-                        Sets the live meter to always be on top of other windows.
-                    </div>
+                    <div class="text-xs text-gray-300">Sets the live meter to always be on top of other windows.</div>
                 </div>
             </label>
         </div>

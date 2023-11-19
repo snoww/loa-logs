@@ -11,8 +11,6 @@ use serde_json::json;
 use tauri::{Manager, Window, Wry};
 use tokio::task;
 
-use super::status_tracker::StatusEffectType;
-
 const WINDOW_MS: i64 = 5_000;
 const WINDOW_S: i64 = 5;
 
@@ -39,6 +37,7 @@ pub struct EncounterState {
 
     pub party_info: Vec<Vec<String>>,
     pub raid_difficulty: String,
+    pub boss_only_damage: bool,
 }
 
 impl EncounterState {
@@ -61,6 +60,7 @@ impl EncounterState {
 
             party_info: Vec::new(),
             raid_difficulty: "".to_string(),
+            boss_only_damage: false,
         }
     }
 
@@ -475,9 +475,14 @@ impl EncounterState {
 
         if self.encounter.fight_start == 0 {
             self.encounter.fight_start = timestamp;
+            self.encounter.boss_only_damage = self.boss_only_damage;
             self.window
                 .emit("raid-start", timestamp)
                 .expect("failed to emit raid-start");
+        }
+
+        if self.boss_only_damage && target_entity.entity_type != EntityType::BOSS {
+            return;
         }
 
         if target_entity.id == dmg_target_entity.id {
@@ -1277,8 +1282,10 @@ fn insert_data(
         debuffs,
         misc,
         difficulty,
-        cleared
-    ) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15)",
+        cleared,
+        boss_only_damage,
+        version
+    ) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17)",
         )
         .expect("failed to prepare encounter statement");
 
@@ -1352,7 +1359,9 @@ fn insert_data(
             json!(encounter.encounter_damage_stats.debuffs),
             json!(misc),
             raid_difficulty,
-            raid_clear
+            raid_clear,
+            encounter.boss_only_damage,
+            DB_VERSION
         ])
         .expect("failed to insert encounter");
 

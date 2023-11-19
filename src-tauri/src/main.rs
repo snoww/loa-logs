@@ -334,34 +334,36 @@ fn setup_db(resource_path: PathBuf) -> Result<(), String> {
         }
     };
 
-    match conn.execute_batch(
+    match conn.execute_batch(&format!(
         "
-        CREATE TABLE IF NOT EXISTS encounter (
-            id INTEGER PRIMARY KEY,
-            last_combat_packet INTEGER,
-            fight_start INTEGER,
-            local_player TEXT,
-            current_boss TEXT,
-            duration INTEGER,
-            total_damage_dealt INTEGER,
-            top_damage_dealt INTEGER,
-            total_damage_taken INTEGER,
-            top_damage_taken INTEGER,
-            dps INTEGER,
-            buffs TEXT,
-            debuffs TEXT,
-            misc TEXT,
-            difficulty TEXT
-            favorite BOOLEAN NOT NULL DEFAULT 0,
-            cleared BOOLEAN,
-            version INTEGER NOT NULL DEFAULT 2
-        );
-        CREATE INDEX IF NOT EXISTS encounter_fight_start_index
-        ON encounter (fight_start desc);
-        CREATE INDEX IF NOT EXISTS encounter_current_boss_index
-        ON encounter (current_boss);
-        ",
-    ) {
+    CREATE TABLE IF NOT EXISTS encounter (
+        id INTEGER PRIMARY KEY,
+        last_combat_packet INTEGER,
+        fight_start INTEGER,
+        local_player TEXT,
+        current_boss TEXT,
+        duration INTEGER,
+        total_damage_dealt INTEGER,
+        top_damage_dealt INTEGER,
+        total_damage_taken INTEGER,
+        top_damage_taken INTEGER,
+        dps INTEGER,
+        buffs TEXT,
+        debuffs TEXT,
+        misc TEXT,
+        difficulty TEXT
+        favorite BOOLEAN NOT NULL DEFAULT 0,
+        cleared BOOLEAN,
+        version INTEGER NOT NULL DEFAULT {},
+        boss_only_damage BOOLEAN NOT NULL DEFAULT 0
+    );
+    CREATE INDEX IF NOT EXISTS encounter_fight_start_index
+    ON encounter (fight_start desc);
+    CREATE INDEX IF NOT EXISTS encounter_current_boss_index
+    ON encounter (current_boss);
+    ",
+        DB_VERSION
+    )) {
         Ok(_) => (),
         Err(e) => {
             return Err(e.to_string());
@@ -397,7 +399,10 @@ fn setup_db(resource_path: PathBuf) -> Result<(), String> {
         )
         .expect("failed to add columns");
         conn.execute(
-            "ALTER TABLE encounter ADD COLUMN version INTEGER DEFAULT 1",
+            &format!(
+                "ALTER TABLE encounter ADD COLUMN version INTEGER DEFAULT {}",
+                DB_VERSION
+            ),
             [],
         )
         .expect("failed to add columns");
@@ -408,6 +413,20 @@ fn setup_db(resource_path: PathBuf) -> Result<(), String> {
             [],
         )
         .expect("failed to add index");
+    }
+
+    let mut stmt = conn
+        .prepare(
+            "SELECT COUNT(*) FROM pragma_table_info('encounter') WHERE name='boss_only_damage'",
+        )
+        .unwrap();
+    let column_count: u32 = stmt.query_row([], |row| row.get(0)).unwrap();
+    if column_count == 0 {
+        conn.execute(
+            "ALTER TABLE encounter ADD COLUMN boss_only_damage BOOLEAN NOT NULL DEFAULT 0",
+            [],
+        )
+        .expect("failed to add column");
     }
 
     match conn.execute_batch(
@@ -687,7 +706,8 @@ fn load_encounter(window: tauri::Window, id: String) -> Encounter {
        misc,
        difficulty,
        favorite,
-       cleared
+       cleared,
+       boss_only_damage
     FROM encounter
     WHERE id = ?
     ;",
@@ -729,6 +749,7 @@ fn load_encounter(window: tauri::Window, id: String) -> Encounter {
                 difficulty: row.get(13)?,
                 favorite: row.get(14)?,
                 cleared: row.get(15)?,
+                boss_only_damage: row.get(16)?,
                 ..Default::default()
             })
         })

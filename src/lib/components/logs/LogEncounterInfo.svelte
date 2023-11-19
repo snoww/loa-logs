@@ -3,6 +3,8 @@
     import { settings } from "$lib/utils/settings";
     import { takingScreenshot } from "$lib/utils/stores";
     import { getVersion } from "@tauri-apps/api/app";
+    import DifficultyLabel from "../shared/DifficultyLabel.svelte";
+    import BossOnlyDamage from "../shared/BossOnlyDamage.svelte";
 
     export let bossName: string;
     export let difficulty: string | undefined;
@@ -11,6 +13,7 @@
     export let totalDamageDealt: number;
     export let dps: number;
     export let cleared: boolean;
+    export let bossOnlyDamage: boolean;
 </script>
 
 {#if $takingScreenshot}
@@ -19,9 +22,12 @@
             {#if cleared}
                 <span class="text-lime-400">[Cleared]</span>
             {/if}
+            {#if bossOnlyDamage}
+                <BossOnlyDamage/>
+            {/if}
             <span class="font-medium">
                 {#if $settings.general.showDifficulty && difficulty}
-                    [{difficulty}] {bossName}
+                    <DifficultyLabel {difficulty}/> {bossName}
                 {:else}
                     {bossName}
                 {/if}

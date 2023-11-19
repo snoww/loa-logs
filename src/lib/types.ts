@@ -21,6 +21,7 @@ export interface Encounter {
     difficulty?: string;
     favorite: boolean;
     cleared: boolean;
+    bossOnlyDamage: boolean;
 }
 
 export interface EncountersOverview {

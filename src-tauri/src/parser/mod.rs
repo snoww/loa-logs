@@ -76,6 +76,7 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool) -> Re
     let reset = Arc::new(AtomicBool::new(false));
     let pause = Arc::new(AtomicBool::new(false));
     let save = Arc::new(AtomicBool::new(false));
+    let boss_only_damage = Arc::new(AtomicBool::new(false));
 
     let emit_details = Arc::new(AtomicBool::new(false));
 
@@ -102,6 +103,7 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool) -> Re
     
     window.listen_global("pause-request", {
         let pause_clone = pause.clone();
+        let meter_window_clone = meter_window_clone.clone();
         move |_event| {
             let prev = pause_clone.fetch_xor(true, Ordering::Relaxed);
             if prev {
@@ -110,6 +112,19 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool) -> Re
                 info!("pausing meter");
             }
             meter_window_clone.emit("pause-encounter", "").ok();
+        }
+    });
+
+    window.listen_global("boss-only-damage-request", {
+        let boss_only_damage = boss_only_damage.clone();
+        move |event| {
+            if let Some(bod) = event.payload() {
+                if bod == "true" {
+                    boss_only_damage.store(true, Ordering::Relaxed);
+                } else {
+                    boss_only_damage.store(false, Ordering::Relaxed);
+                }
+            }
         }
     });
 
@@ -142,6 +157,7 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool) -> Re
             state.saved = true;
             state.resetting = true;
         }
+        state.boss_only_damage = boss_only_damage.load(Ordering::Relaxed);
         match op {
             Pkt::CounterAttackNotify => {
                 if let Some(pkt) = parse_pkt(&data, PKTCounterAttackNotify::new, "PKTCounterAttackNotify") {

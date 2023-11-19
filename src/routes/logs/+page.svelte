@@ -23,6 +23,7 @@
     import "nprogress/nprogress.css";
     import Notification from "$lib/components/shared/Notification.svelte";
     import { encounterMap } from "$lib/constants/encounters";
+    import DifficultyLabel from "$lib/components/shared/DifficultyLabel.svelte";
 
     let encounters: Array<EncounterPreview> = [];
     let totalEncounters: number = 0;
@@ -203,7 +204,7 @@
                             <td class="w-full truncate px-3 py-3 font-medium">
                                 <a
                                     href="/logs/encounter/?id={encounter.id}"
-                                    class="hover:text-accent-500 flex items-center hover:underline"
+                                    class="group hover:text-accent-500 flex items-center hover:underline"
                                     use:tooltip={{ content: encounter.bossName }}>
                                     {#if encounter.favorite}
                                         <svg
@@ -215,7 +216,7 @@
                                     {/if}
                                     <div class="truncate">
                                         {#if encounter.difficulty && $settings.general.showDifficulty}
-                                            [{encounter.difficulty}] {encounter.bossName}
+                                            <DifficultyLabel difficulty={encounter.difficulty} hover={true}/> {encounter.bossName}
                                         {:else}
                                             {encounter.bossName}
                                         {/if}

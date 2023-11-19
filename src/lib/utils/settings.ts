@@ -26,6 +26,7 @@ export const defaultSettings = {
         transparent: true,
         scale: "1",
         alwaysOnTop: true,
+        bossOnlyDamage: false,
     },
     shortcuts: {
         hideMeter: {

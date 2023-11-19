@@ -7,6 +7,8 @@ use serde::{Deserialize, Serialize};
 use serde_with::serde_as;
 use serde_with::DefaultOnError;
 
+pub const DB_VERSION: i32 = 3;
+
 #[derive(Debug, Default, Serialize, Deserialize, PartialEq, Copy, Clone)]
 #[allow(non_camel_case_types)]
 pub enum EntityType {
@@ -69,6 +71,7 @@ pub struct Encounter {
     pub difficulty: Option<String>,
     pub favorite: bool,
     pub cleared: bool,
+    pub boss_only_damage: bool,
 }
 
 #[derive(Debug, Serialize, Clone, Default)]
@@ -520,6 +523,7 @@ pub struct GeneralSettings {
     pub scale: String,
     #[serde(default = "default_true")]
     pub always_on_top: bool,
+    pub boss_only_damage: bool,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
