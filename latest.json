@@ -1,11 +1,11 @@
 {
-    "version": "v1.3.7",
-    "notes": "### v1.3.7\n#### BUG FIXES & IMPROVEMENTS\n- updated souleater icon\n- fixed \"show latest encounter\" not working when already viewing one\n- fixed meter freezing in certain situations\n- fix identity gauge tracking\nfull patch notes on github\nsend bug reports/suggestions to discord.gg/sbSa3pkDF5",
-    "pub_date": "2023-11-17T05:04:43.509Z",
+    "version": "v1.3.8",
+    "notes": "### v1.3.8\n#### NEW FEATURES\n- added boss only damage option. meter will only track bosses that are a Boss or Legion Commander\n- added color codes for difficulty of the content\n- added color codes to indicate raid cleared\n- updated screenshot tool to include raid cleared, and boss only damage\n#### BUG FIXES & IMPROVEMENTS\n- fixed issue where logs will crash when showing latest encounter, while inspecting a player\nfull patch notes on github\nsend bug reports/suggestions to discord.gg/sbSa3pkDF5",
+    "pub_date": "2023-11-19T23:57:39.855Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.3.7/LOA.Logs_1.3.7_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlVDUzZzY2llNzJ6YngrVGpkTHdFcWpZSGFIbDlsc3pMWjl1V2lzRHAxWDR2T21hU250MXdKbU05QkZCMWhjMHMxNzZLeUhXUnlRRlFmWnBNRFpKYkFJPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzAwMjAxODE1CWZpbGU6TE9BIExvZ3NfMS4zLjdfeDY0LXNldHVwLm5zaXMuemlwClAybE1yR2crbXh6dEdyZWpldmpCU2IvMjh0WUZxdFlFMk9FRTFRSWFkUzBPL3Y4NlJqamFHU3BYZmZRLys2S0oxUytjSHkxMXk3MTdTNVY0VzNuR0N3PT0K"
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.3.8/LOA.Logs_1.3.8_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmVXcG9IRlFRNGMyNXovZXRFSERkZkR3VGdBR3lWOC9DQjN2UmtvRDVjV0RxamlvV2hXdGNzT1FrM2dyMzZXWXNJUWJLbDNIcGYzZXZmay9qYk5KS1FzPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzAwNDM3Njg3CWZpbGU6TE9BIExvZ3NfMS4zLjhfeDY0LXNldHVwLm5zaXMuemlwCjlWaEtNdU5DVnJqT2pGdVJta1I2RlZUbXdvU28rNndPRzZrZmRPMW9tSDVZcC9BNzAvYW8veVhkOFdFbjZRRC9JeENtTHZzYVd2VW9FUkNOdmM0QkR3PT0K"
         }
     }
 }
