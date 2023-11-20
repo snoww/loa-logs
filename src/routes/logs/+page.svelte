@@ -160,7 +160,7 @@
                         <th scope="col" class="w-14 px-3 py-3"> ID </th>
                         <th scope="col" class="w-[25%] px-3 py-3"> Encounter </th>
                         <th scope="col" class="px-3 py-3"> Classes </th>
-                        <th scope="col" class="hidden w-32 px-3 py-3 md:table-cell"> Local Player </th>
+                        <th scope="col" class="hidden w-32 lg:w-48 px-3 py-3 md:table-cell"> Local Player </th>
                         <th scope="col" class="w-14 px-3 py-3"> Dur </th>
                         <th scope="col" class="w-[15%] px-3 py-3 text-right"> Date </th>
                     </tr>
