@@ -1,11 +1,11 @@
 {
-    "version": "v1.3.9",
-    "notes": "### v1.3.9\n#### BUG FIXES & IMPROVEMENTS\n- attempt to fix some logs missing local player\n- when boss only damage is turned on, meter does not start until boss is attacked\n- increase local player column width when expanded\n#### NEW FEATURES (v1.3.8)\n- added boss only damage option. meter will only track bosses that are considered Bosses or Legion Commanders\nfull patch notes on github\nsend bug reports/suggestions to discord.gg/sbSa3pkDF5",
+    "version": "v1.3.10",
+    "notes": "### v1.3.10\n#### BUG FIXES & IMPROVEMENTS\n- attempt to fix some logs missing local player\n- when boss only damage is turned on, meter does not start until boss is attacked\n- increase local player column width when expanded\n#### NEW FEATURES (v1.3.8)\n- added boss only damage option. meter will only track bosses that are considered Bosses or Legion Commanders\nfull patch notes on github\nsend bug reports/suggestions to discord.gg/sbSa3pkDF5",
     "pub_date": "2023-11-20T09:18:27.826Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.3.9/LOA.Logs_1.3.9_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmRzeFJZQ1EzNGF2Y1lCVXdWUlVSNU90UDNmYzdadE1Qc2U0YTFzc0tuZUtzZzltOG0wOHVUdllvemM3a25MMmVtVlhzaWRrcEZCYWlXWXp4RG16V1FvPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzAwNDcxNjk3CWZpbGU6TE9BIExvZ3NfMS4zLjlfeDY0LXNldHVwLm5zaXMuemlwCjN4OW1CT1gvUnFoS0VNd09CRlJERUVsSk1xZDJxSjZBRGZpc0N5d25nMmdOYXdIWHVCNXM0MEVLQnVHSHBwbSs3dW1YbkEvOWtrd0o2SktFT0ViMkFRPT0K"
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.3.10/LOA.Logs_1.3.10_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmVpNTVZK09iZlZPZ2VaeU5oY2E5MjBJaVZyVEZleDdLWkd2Y1BCZjBRV3FPUmQ3SFVUbFpsRXc2TW9ESDRoeFhnaUtkK0tMLzN6cGY1VEVGT3hFZ0EwPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzAwNDc0MTM5CWZpbGU6TE9BIExvZ3NfMS4zLjEwX3g2NC1zZXR1cC5uc2lzLnppcAp0YmIxZjVmampzUmY2N0VCWU96ZVp4VXlFQWx6bXRpOTNBeGppVXpYNUNnZFlQaDV3RngxUGhUaVcvZDJuRGxiYzF1MEU0MWhNL1pORi93MldCbkhBQT09Cg=="
         }
     }
 }
