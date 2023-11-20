@@ -471,7 +471,7 @@ impl EncounterState {
 
         source_entity.id = dmg_src_entity.id;
 
-        if self.boss_only_damage && (target_entity.entity_type != EntityType::BOSS || target_entity.entity_type != EntityType::PLAYER) {
+        if self.boss_only_damage && target_entity.entity_type != EntityType::BOSS && target_entity.entity_type != EntityType::PLAYER {
             return;
         }
 
