@@ -1,11 +1,11 @@
 {
-    "version": "v1.3.8",
-    "notes": "### v1.3.8\n#### NEW FEATURES\n- added boss only damage option. meter will only track bosses that are a Boss or Legion Commander\n- added color codes for difficulty of the content\n- added color codes to indicate raid cleared\n- updated screenshot tool to include raid cleared, and boss only damage\n#### BUG FIXES & IMPROVEMENTS\n- fixed issue where logs will crash when showing latest encounter, while inspecting a player\nfull patch notes on github\nsend bug reports/suggestions to discord.gg/sbSa3pkDF5",
-    "pub_date": "2023-11-19T23:57:39.855Z",
+    "version": "v1.3.9",
+    "notes": "### v1.3.9\n#### BUG FIXES & IMPROVEMENTS\n- attempt to fix some logs missing local player\n- when boss only damage is turned on, meter does not start until boss is attacked\n- increase local player column width when expanded\n#### NEW FEATURES (v1.3.8)\n- added boss only damage option. meter will only track bosses that are considered Bosses or Legion Commanders\nfull patch notes on github\nsend bug reports/suggestions to discord.gg/sbSa3pkDF5",
+    "pub_date": "2023-11-20T09:18:27.826Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.3.8/LOA.Logs_1.3.8_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmVXcG9IRlFRNGMyNXovZXRFSERkZkR3VGdBR3lWOC9DQjN2UmtvRDVjV0RxamlvV2hXdGNzT1FrM2dyMzZXWXNJUWJLbDNIcGYzZXZmay9qYk5KS1FzPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzAwNDM3Njg3CWZpbGU6TE9BIExvZ3NfMS4zLjhfeDY0LXNldHVwLm5zaXMuemlwCjlWaEtNdU5DVnJqT2pGdVJta1I2RlZUbXdvU28rNndPRzZrZmRPMW9tSDVZcC9BNzAvYW8veVhkOFdFbjZRRC9JeENtTHZzYVd2VW9FUkNOdmM0QkR3PT0K"
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.3.9/LOA.Logs_1.3.9_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmRzeFJZQ1EzNGF2Y1lCVXdWUlVSNU90UDNmYzdadE1Qc2U0YTFzc0tuZUtzZzltOG0wOHVUdllvemM3a25MMmVtVlhzaWRrcEZCYWlXWXp4RG16V1FvPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzAwNDcxNjk3CWZpbGU6TE9BIExvZ3NfMS4zLjlfeDY0LXNldHVwLm5zaXMuemlwCjN4OW1CT1gvUnFoS0VNd09CRlJERUVsSk1xZDJxSjZBRGZpc0N5d25nMmdOYXdIWHVCNXM0MEVLQnVHSHBwbSs3dW1YbkEvOWtrd0o2SktFT0ViMkFRPT0K"
         }
     }
 }
