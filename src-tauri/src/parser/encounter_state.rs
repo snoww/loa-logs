@@ -471,6 +471,10 @@ impl EncounterState {
 
         source_entity.id = dmg_src_entity.id;
 
+        if self.boss_only_damage && target_entity.entity_type != EntityType::BOSS {
+            return;
+        }
+
         let timestamp = Utc::now().timestamp_millis();
 
         if self.encounter.fight_start == 0 {
@@ -479,10 +483,6 @@ impl EncounterState {
             self.window
                 .emit("raid-start", timestamp)
                 .expect("failed to emit raid-start");
-        }
-
-        if self.boss_only_damage && target_entity.entity_type != EntityType::BOSS {
-            return;
         }
 
         if target_entity.id == dmg_target_entity.id {
