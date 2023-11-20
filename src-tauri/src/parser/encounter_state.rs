@@ -471,7 +471,7 @@ impl EncounterState {
 
         source_entity.id = dmg_src_entity.id;
 
-        if self.boss_only_damage && target_entity.entity_type != EntityType::BOSS {
+        if self.boss_only_damage && (target_entity.entity_type != EntityType::BOSS || target_entity.entity_type != EntityType::PLAYER) {
             return;
         }
 
@@ -864,7 +864,7 @@ impl EncounterState {
             }
         }
 
-        let mut encounter = self.encounter.clone();
+        let encounter = self.encounter.clone();
         let mut path = self
             .window
             .app_handle()
@@ -892,7 +892,7 @@ impl EncounterState {
 
             insert_data(
                 &tx,
-                &mut encounter,
+                encounter,
                 prev_stagger,
                 damage_log,
                 identity_log,
@@ -1252,7 +1252,7 @@ fn get_skill_name(skill_id: &i32) -> String {
 #[allow(clippy::too_many_arguments)]
 fn insert_data(
     tx: &Transaction,
-    encounter: &mut Encounter,
+    mut encounter: Encounter,
     prev_stagger: i32,
     damage_log: HashMap<String, Vec<(i64, i64)>>,
     identity_log: HashMap<String, IdentityLog>,
@@ -1393,7 +1393,7 @@ fn insert_data(
     let fight_end = encounter.last_combat_packet;
 
     for (_key, entity) in encounter.entities.iter_mut().filter(|(_, e)| {
-        ((e.entity_type == EntityType::PLAYER && e.class_id != 0 && (e.max_hp > 0))
+        ((e.entity_type == EntityType::PLAYER && e.class_id != 0 && e.max_hp > 0)
             || e.entity_type == EntityType::ESTHER)
             && e.damage_stats.damage_dealt > 0
     }) {
