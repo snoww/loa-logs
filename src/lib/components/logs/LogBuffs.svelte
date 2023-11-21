@@ -34,17 +34,13 @@
         if (focusedPlayer && !Object.hasOwn(focusedPlayer.damageStats.buffedBy, id)) {
             continue;
         }
-        if (buff.category === "buff") {
-            filterStatusEffects(groupedSynergies, buff, Number(id), focusedPlayer, tab, $settings.buffs.default);
-        }
+        filterStatusEffects(groupedSynergies, buff, Number(id), focusedPlayer, tab, $settings.buffs.default);
     }
     for (const [id, debuff] of Object.entries(encounterDamageStats.debuffs)) {
         if (focusedPlayer && !Object.hasOwn(focusedPlayer.damageStats.debuffedBy, id)) {
             continue;
         }
-        if (debuff.category === "debuff") {
-            filterStatusEffects(groupedSynergies, debuff, Number(id), focusedPlayer, tab, $settings.buffs.default);
-        }
+        filterStatusEffects(groupedSynergies, debuff, Number(id), focusedPlayer, tab, $settings.buffs.default);
     }
     groupedSynergies = new Map([...groupedSynergies.entries()].sort());
 

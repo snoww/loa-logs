@@ -18,6 +18,7 @@ export function defaultBuffFilter(buffType: number): boolean {
         ((StatusEffectBuffTypeFlags.DMG |
             StatusEffectBuffTypeFlags.CRIT |
             StatusEffectBuffTypeFlags.ATKSPEED |
+            StatusEffectBuffTypeFlags.MOVESPEED |
             StatusEffectBuffTypeFlags.COOLDOWN) &
             buffType) !==
         0
