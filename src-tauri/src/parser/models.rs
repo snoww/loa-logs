@@ -519,6 +519,7 @@ pub struct GeneralSettings {
     pub ip: String,
     pub port: u16,
     pub blur: bool,
+    pub blur_win11: bool,
     pub transparent: bool,
     #[serde(default = "default_scale")]
     pub scale: String,

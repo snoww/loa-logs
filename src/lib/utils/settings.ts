@@ -23,6 +23,7 @@ export const defaultSettings = {
         ip: "",
         port: 6040,
         blur: true,
+        blurWin11: false,
         transparent: true,
         scale: "1",
         alwaysOnTop: true,

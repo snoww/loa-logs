@@ -2,6 +2,7 @@
     import { settings } from "$lib/utils/settings";
     import { invoke } from "@tauri-apps/api";
     import SettingItem from "./SettingItem.svelte";
+    import { isWin11 } from "$lib/utils/stores";
 
     async function toggleBlur() {
         if ($settings.general.blur) {
@@ -10,6 +11,15 @@
             await invoke("disable_blur");
         }
     }
+
+    async function toggleBlurWin11() {
+        if ($settings.general.blurWin11) {
+            await invoke("enable_blur");
+        } else {
+            await invoke("disable_blur");
+        }
+    }
+
 </script>
 
 <div class="flex flex-col space-y-4 divide-y-[1px]">
@@ -37,23 +47,47 @@
             description="Underlines the text in the row when hovering over it for better readability."
             bind:setting={$settings.general.underlineHovered} />
         <div class="">
-            <label class="flex items-center">
-                <input
-                    type="checkbox"
-                    bind:checked={$settings.general.blur}
-                    on:change={toggleBlur}
-                    class="text-accent-500 h-5 w-5 rounded bg-zinc-700 focus:ring-0 focus:ring-offset-0" />
-                <div class="ml-5">
-                    <div class="text-gray-100">Blur Meter Background</div>
-                    <div class="text-xs text-gray-300">
-                        Adds background blur effect to live meter. Turn this off if experiencing lag in Windows 11.
+            {#if $isWin11}
+                <label class="flex items-center">
+                    <input
+                        type="checkbox"
+                        bind:checked={$settings.general.blurWin11}
+                        on:change={toggleBlurWin11}
+                        class="text-accent-500 h-5 w-5 rounded bg-zinc-700 focus:ring-0 focus:ring-offset-0" />
+                    <div class="ml-5">
+                        <div class="text-gray-100">Blur Meter Background</div>
+                        <div class="text-xs text-gray-300">
+                            Adds background blur effect to live meter. On Windows 11, this setting will cause lag while
+                            dragging the meter window.
+                        </div>
                     </div>
-                </div>
-            </label>
+                </label>
+            {:else}
+                <label class="flex items-center">
+                    <input
+                        type="checkbox"
+                        bind:checked={$settings.general.blur}
+                        on:change={toggleBlur}
+                        class="text-accent-500 h-5 w-5 rounded bg-zinc-700 focus:ring-0 focus:ring-offset-0" />
+                    <div class="ml-5">
+                        <div class="text-gray-100">Blur Meter Background</div>
+                        <div class="text-xs text-gray-300">
+                            Adds background blur effect to live meter.
+                        </div>
+                    </div>
+                </label>
+            {/if}
         </div>
-        <SettingItem
-            name="Transparent Meter"
-            description="Toggle transparent background for live meter."
-            bind:setting={$settings.general.transparent} />
+        {#if $isWin11}
+            <SettingItem
+                name="Transparent Meter"
+                description="Turn off to enable Dark Mode for Windows 11 (with blur setting off)."
+                bind:setting={$settings.general.transparent} />
+        {:else}
+            <SettingItem
+                name="Transparent Meter"
+                description="Toggle transparent background for live meter."
+                bind:setting={$settings.general.transparent} />
+        {/if}
     </div>
 </div>

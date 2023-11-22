@@ -15,3 +15,5 @@ export const ifaceChangedStore = writable(false);
 export const searchFilter = writable(new SearchFilter());
 
 export const selectedEncounters = writable(new Set<number>());
+
+export const isWin11 = writable(false);

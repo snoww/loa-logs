@@ -18,6 +18,7 @@
     import { invoke } from "@tauri-apps/api";
     import { classColors } from "$lib/constants/colors";
     import { emit } from "@tauri-apps/api/event";
+    import { isWin11 } from "$lib/utils/stores";
 
     onMount(() => {
         (async () => {
@@ -29,11 +30,6 @@
                 settings.set(merge(defaultSettings, $settings));
             }
             colors.set(merge(classColors, $colors));
-            if ($settings.general.blur) {
-                await invoke("enable_blur");
-            } else {
-                await invoke("disable_blur");
-            }
             if ($settings.general.alwaysOnTop) {
                 await appWindow.setAlwaysOnTop(true);
             } else {
@@ -59,8 +55,16 @@
             if (navigator.userAgentData.platform === "Windows") {
                 const majorPlatformVersion = Number(ua.platformVersion.split(".")[0]);
                 if (majorPlatformVersion >= 13) {
-                    await invoke("write_log", { message: "win11 detected, disabling blur" });
-                    invoke("disable_blur");
+                    $isWin11 = true;
+                    if ($settings.general.blurWin11) {
+                        await invoke("enable_blur");
+                    } else {
+                        await invoke("disable_blur");
+                    }
+                } else if ($settings.general.blur) {
+                    await invoke("enable_blur");
+                } else {
+                    await invoke("disable_blur");
                 }
             }
 
