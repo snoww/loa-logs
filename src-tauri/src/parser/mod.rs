@@ -29,9 +29,9 @@ use std::thread;
 use std::time::{Duration, Instant};
 use tauri::{Manager, Window, Wry};
 
-use self::models::{TripodIndex, TripodLevel};
+use self::models::{TripodIndex, TripodLevel, Settings};
 
-pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool) -> Result<()> {
+pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool, settings: Option<Settings>) -> Result<()> {
     let id_tracker = Rc::new(RefCell::new(IdTracker::new()));
     let party_tracker = Rc::new(RefCell::new(PartyTracker::new(id_tracker.clone())));
     let status_tracker = Rc::new(RefCell::new(StatusTracker::new(party_tracker.clone())));
@@ -77,6 +77,12 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool) -> Re
     let pause = Arc::new(AtomicBool::new(false));
     let save = Arc::new(AtomicBool::new(false));
     let boss_only_damage = Arc::new(AtomicBool::new(false));
+    if let Some(settings) = settings {
+        if settings.general.boss_only_damage {
+            boss_only_damage.store(true, Ordering::Relaxed);
+            info!("boss only damage enabled")
+        }
+    }
 
     let emit_details = Arc::new(AtomicBool::new(false));
 

@@ -106,7 +106,7 @@ async fn main() -> Result<()> {
             let mut ip: String;
             let mut port = 6040;
 
-            if let Some(settings) = settings {
+            if let Some(settings) = settings.clone() {
                 info!("settings loaded");
                 if settings.general.auto_iface {
                     ip = meter_core::get_most_common_ip().unwrap();
@@ -169,7 +169,7 @@ async fn main() -> Result<()> {
             logs_window.set_decorations(true).unwrap();
 
             tokio::task::spawn_blocking(move || {
-                parser::start(meter_window, ip, port, raw_socket).map_err(|e| {
+                parser::start(meter_window, ip, port, raw_socket, settings).map_err(|e| {
                     warn!("unexpected error occurred in parser: {}", e);
                 })
             });

@@ -68,8 +68,6 @@
                 }
             }
 
-            await emit("boss-only-damage-request", $settings.general.bossOnlyDamage);
-
             await invoke("write_log", { message: "finished meter setup" });
         })();
     });

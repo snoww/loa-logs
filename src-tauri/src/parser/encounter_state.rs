@@ -472,8 +472,12 @@ impl EncounterState {
 
         source_entity.id = dmg_src_entity.id;
 
+        // if boss only damage is enabled
+        // check if target is boss and not player
+        // check if target is player and source is boss
         if self.boss_only_damage
-            && (target_entity.entity_type != EntityType::BOSS
+            && ((target_entity.entity_type != EntityType::BOSS
+                && target_entity.entity_type != EntityType::PLAYER)
                 || (target_entity.entity_type == EntityType::PLAYER
                     && source_entity.entity_type != EntityType::BOSS))
         {
@@ -859,7 +863,7 @@ impl EncounterState {
             {
                 return;
             }
-    
+
             if let Some(current_boss) = self
                 .encounter
                 .entities
