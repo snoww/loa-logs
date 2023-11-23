@@ -169,7 +169,7 @@ impl EncounterState {
 
         // if not already saved to db, we save again
         if !self.saved && !self.encounter.current_boss_name.is_empty() {
-            self.save_to_db();
+            self.save_to_db(false);
         }
 
         // remove unrelated entities
@@ -192,7 +192,7 @@ impl EncounterState {
         match phase_code {
             0 | 2 | 3 | 4 => {
                 if !self.encounter.current_boss_name.is_empty() {
-                    self.save_to_db();
+                    self.save_to_db(false);
                     self.saved = true;
                 }
                 self.resetting = true;
@@ -472,7 +472,11 @@ impl EncounterState {
 
         source_entity.id = dmg_src_entity.id;
 
-        if self.boss_only_damage && target_entity.entity_type != EntityType::BOSS && target_entity.entity_type != EntityType::PLAYER {
+        if self.boss_only_damage
+            && (target_entity.entity_type != EntityType::BOSS
+                || (target_entity.entity_type == EntityType::PLAYER
+                    && source_entity.entity_type != EntityType::BOSS))
+        {
             return;
         }
 
@@ -839,29 +843,31 @@ impl EncounterState {
         }
     }
 
-    pub fn save_to_db(&self) {
-        if self.encounter.fight_start == 0
-            || self.encounter.current_boss_name.is_empty()
-            || !self
-                .encounter
-                .entities
-                .contains_key(&self.encounter.current_boss_name)
-            || !self
-                .encounter
-                .entities
-                .values()
-                .any(|e| e.entity_type == EntityType::PLAYER && e.damage_stats.damage_dealt > 0)
-        {
-            return;
-        }
-
-        if let Some(current_boss) = self
-            .encounter
-            .entities
-            .get(&self.encounter.current_boss_name)
-        {
-            if current_boss.current_hp == current_boss.max_hp {
+    pub fn save_to_db(&self, manual: bool) {
+        if !manual {
+            if self.encounter.fight_start == 0
+                || self.encounter.current_boss_name.is_empty()
+                || !self
+                    .encounter
+                    .entities
+                    .contains_key(&self.encounter.current_boss_name)
+                || !self
+                    .encounter
+                    .entities
+                    .values()
+                    .any(|e| e.entity_type == EntityType::PLAYER && e.damage_stats.damage_dealt > 0)
+            {
                 return;
+            }
+    
+            if let Some(current_boss) = self
+                .encounter
+                .entities
+                .get(&self.encounter.current_boss_name)
+            {
+                if current_boss.current_hp == current_boss.max_hp {
+                    return;
+                }
             }
         }
 
