@@ -160,8 +160,10 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool) -> Re
             state.resetting = true;
         }
         
-        state.boss_only_damage = boss_only_damage.load(Ordering::Relaxed);
-        if !state.boss_only_damage {
+        if boss_only_damage.load(Ordering::Relaxed) {
+            state.boss_only_damage = true;
+        } else {
+            state.boss_only_damage = false;
             state.encounter.boss_only_damage = false;
         }
 

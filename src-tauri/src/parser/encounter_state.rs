@@ -69,6 +69,7 @@ impl EncounterState {
         let clone = self.encounter.clone();
 
         self.encounter.fight_start = 0;
+        self.encounter.boss_only_damage = self.boss_only_damage;
         self.encounter.entities = HashMap::new();
         self.encounter.current_boss_name = "".to_string();
         self.encounter.encounter_damage_stats = Default::default();
