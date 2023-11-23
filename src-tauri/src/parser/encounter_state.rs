@@ -1405,6 +1405,7 @@ fn insert_data(
 
     for (_key, entity) in encounter.entities.iter_mut().filter(|(_, e)| {
         ((e.entity_type == EntityType::PLAYER && e.class_id != 0 && e.max_hp > 0)
+            || e.name == encounter.local_player
             || e.entity_type == EntityType::ESTHER)
             && e.damage_stats.damage_dealt > 0
     }) {
