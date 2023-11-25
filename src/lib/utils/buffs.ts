@@ -114,13 +114,13 @@ export function getSynergyPercentageDetails(groupedSynergies: Map<string, Map<nu
         buff.id = key;
         synergies.forEach((syn, id) => {
             if (skill.buffedBy[id]) {
-                buff.buffs.push(
-                    new Buff(
-                        syn.source.icon,
-                        round((skill.buffedBy[id] / skill.totalDamage) * 100),
-                        syn.source.skill?.icon
-                    )
+                const b = new Buff(
+                    syn.source.icon,
+                    round((skill.buffedBy[id] / skill.totalDamage) * 100),
+                    syn.source.skill?.icon
                 );
+                addBardBubbles(key, b, syn);
+                buff.buffs.push(b);
                 synergyDamage += skill.buffedBy[id];
             } else if (skill.debuffedBy[id]) {
                 buff.buffs.push(
@@ -155,6 +155,7 @@ export function getSynergyPercentageDetailsSum(
         buffs.id = key;
         synergies.forEach((syn, id) => {
             const buff = new Buff(syn.source.icon, "", syn.source.skill?.icon);
+            addBardBubbles(key, buff, syn);
             let totalBuffed = 0;
             for (const skill of skills) {
                 if (skill.buffedBy[id]) {
@@ -239,21 +240,19 @@ export function getPartyBuffs(
                     const buffs = groupedSynergies.get(key) || new Map();
                     buffs.forEach((syn, id) => {
                         if (player.damageStats.buffedBy[id]) {
-                            buffDetails.buffs.push(
-                                new Buff(
-                                    syn.source.icon,
-                                    round((player.damageStats.buffedBy[id] / player.damageStats.damageDealt) * 100),
-                                    syn.source.skill?.icon
-                                )
+                            const b = new Buff(
+                                syn.source.icon,
+                                round((player.damageStats.buffedBy[id] / player.damageStats.damageDealt) * 100),
+                                syn.source.skill?.icon
                             );
+                            addBardBubbles(key, b, syn);
+                            buffDetails.buffs.push(b);
                             buffDamage += player.damageStats.buffedBy[id];
                         } else if (player.damageStats.debuffedBy[id]) {
                             buffDetails.buffs.push(
                                 new Buff(
                                     syn.source.icon,
-                                    round(
-                                        (player.damageStats.debuffedBy[id] / player.damageStats.damageDealt) * 100
-                                    ),
+                                    round((player.damageStats.debuffedBy[id] / player.damageStats.damageDealt) * 100),
                                     syn.source.skill?.icon
                                 )
                             );
@@ -272,7 +271,11 @@ export function getPartyBuffs(
     return { parties, partyGroupedSynergies, partyPercentages, partyBuffs };
 }
 
-export function calculatePartyWidth(partyGroupedSynergies: Map<string, Set<string>>, remToPx: number, currentVw: number) {
+export function calculatePartyWidth(
+    partyGroupedSynergies: Map<string, Set<string>>,
+    remToPx: number,
+    currentVw: number
+) {
     const partyWidths: { [key: string]: string } = {};
     partyGroupedSynergies.forEach((synergies, partyId) => {
         const widthRem = synergies.size * 3.5 + 10;
@@ -285,4 +288,16 @@ export function calculatePartyWidth(partyGroupedSynergies: Map<string, Set<strin
     });
 
     return partyWidths;
+}
+
+export function addBardBubbles(key: string, buff: Buff, syn: StatusEffect) {
+    if (key === "_bard_serenadeofcourage") {
+        if (syn.source.desc.includes("15")) {
+            buff.bubbles = 3;
+        } else if (syn.source.desc.includes("10")) {
+            buff.bubbles = 2;
+        } else if (syn.source.desc.includes("5")) {
+            buff.bubbles = 1;
+        }
+    }
 }

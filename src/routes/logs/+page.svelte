@@ -24,6 +24,7 @@
     import Notification from "$lib/components/shared/Notification.svelte";
     import { encounterMap } from "$lib/constants/encounters";
     import DifficultyLabel from "$lib/components/shared/DifficultyLabel.svelte";
+    import BossOnlyDamage from "$lib/components/shared/BossOnlyDamage.svelte";
 
     let encounters: Array<EncounterPreview> = [];
     let totalEncounters: number = 0;
