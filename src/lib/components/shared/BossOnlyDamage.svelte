@@ -1,5 +1,7 @@
 <script lang="ts">
     import { tooltip } from "$lib/utils/tooltip";
+
+    export let width = 1.5;
 </script>
 
-<span use:tooltip={{ content: "Boss Only Damage" }}> 👾 </span>
+<img use:tooltip={{ content: "Boss Only Damage" }} src="/boss.png" alt="Boss Only Damage" style="width: {width}rem;" />

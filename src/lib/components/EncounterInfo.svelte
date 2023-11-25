@@ -76,7 +76,12 @@
     <div data-tauri-drag-region class="flex justify-between">
         <div data-tauri-drag-region class="flex space-x-2">
             {#if $settings.general.bossOnlyDamage}
-                <div class="!-mx-1" use:tooltip={{ content: "Boss Only Damage" }} data-tauri-drag-region>👾</div>
+                <img
+                    use:tooltip={{ content: "Boss Only Damage" }}
+                    src="/boss.png"
+                    alt="Boss Only Damage"
+                    class="!-mx-1 h-5 w-5"
+                    data-tauri-drag-region />
             {/if}
             <div data-tauri-drag-region>
                 {encounterDuration}
