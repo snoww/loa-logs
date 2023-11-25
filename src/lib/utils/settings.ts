@@ -206,6 +206,7 @@ export async function registerShortcuts(shortcuts: any) {
     }
 }
 
+export const imagePath = settingsStore("imagePath", {});
 export const skillIcon = settingsStore("skillIcon", {});
 export const classIconCache = settingsStore("classIconCache", {});
 

@@ -4,6 +4,7 @@
         classIconCache,
         colors,
         defaultSettings,
+        imagePath,
         registerShortcuts,
         settings,
         skillIcon
@@ -17,7 +18,6 @@
     import { estherMap } from "$lib/constants/esthers";
     import { invoke } from "@tauri-apps/api";
     import { classColors } from "$lib/constants/colors";
-    import { emit } from "@tauri-apps/api/event";
     import { isWin11 } from "$lib/utils/stores";
 
     onMount(() => {
@@ -36,6 +36,9 @@
                 await appWindow.setAlwaysOnTop(false);
             }
             registerShortcuts($settings.shortcuts);
+            imagePath.set({
+                path: convertFileSrc(await join(await resourceDir(), "images"))
+            });
             skillIcon.set({
                 path: convertFileSrc(await join(await resourceDir(), "images", "skills"))
             });

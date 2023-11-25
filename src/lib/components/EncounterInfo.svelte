@@ -1,7 +1,8 @@
 <script lang="ts">
     import { abbreviateNumber } from "$lib/utils/numbers";
-    import { settings } from "$lib/utils/settings";
+    import { settings, imagePath } from "$lib/utils/settings";
     import { takingScreenshot } from "$lib/utils/stores";
+    import { getImagePath } from "$lib/utils/strings";
     import { menuTooltip, tooltip } from "$lib/utils/tooltip";
     import { getVersion } from "@tauri-apps/api/app";
     import { emit } from "@tauri-apps/api/event";
@@ -78,7 +79,7 @@
             {#if $settings.general.bossOnlyDamage}
                 <img
                     use:tooltip={{ content: "Boss Only Damage" }}
-                    src="/boss.png"
+                    src="{$imagePath.path + getImagePath("icons/boss.png")}"
                     alt="Boss Only Damage"
                     class="!-mx-1 h-5 w-5"
                     data-tauri-drag-region />
