@@ -160,6 +160,10 @@
             name="Show Raid Difficulty"
             description={"Shows the difficulty of the raid."}
             bind:setting={$settings.general.showDifficulty} />
+        <SettingItem
+            name="Show Raid Gate"
+            description={"Shows the gate of the raid."}
+            bind:setting={$settings.general.showGate} />
         <!-- <SettingItem
             name="Show Date in Screenshot"
             description={'Shows the date of the encounter when taking screenshot'}

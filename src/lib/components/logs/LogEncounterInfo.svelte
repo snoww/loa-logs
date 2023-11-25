@@ -14,6 +14,7 @@
     export let dps: number;
     export let cleared: boolean;
     export let bossOnlyDamage: boolean;
+    export let raidGate: string | undefined;
 </script>
 
 {#if $takingScreenshot}
@@ -27,8 +28,15 @@
             {/if}
             <span class="font-medium">
                 {#if $settings.general.showDifficulty && difficulty}
-                    <DifficultyLabel {difficulty}/> {bossName}
+                    <DifficultyLabel {difficulty} />
+                    {#if $settings.general.showGate && raidGate}
+                        <span class="text-sky-400">[{raidGate}]</span>
+                    {/if}
+                    {bossName}
                 {:else}
+                    {#if $settings.general.showGate && raidGate}
+                        <span class="text-sky-400">[{raidGate}]</span>
+                    {/if}
                     {bossName}
                 {/if}
             </span><span class="ml-2 font-mono text-xs">{date}</span>

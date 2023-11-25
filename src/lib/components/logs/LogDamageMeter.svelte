@@ -11,7 +11,7 @@
     import { colors, settings, skillIcon } from "$lib/utils/settings";
     import { goto } from "$app/navigation";
     import html2canvas from "html2canvas";
-    import { screenshotAlert, screenshotError, takingScreenshot } from "$lib/utils/stores";
+    import { screenshotAlert, screenshotError, takingScreenshot, raidGates } from "$lib/utils/stores";
     import LogIdentity from "./identity/LogIdentity.svelte";
     import LogStagger from "./stagger/LogStagger.svelte";
     import { tooltip } from "$lib/utils/tooltip";
@@ -292,9 +292,10 @@
         date={formatTimestampDate(encounter.fightStart, true)}
         encounterDuration={millisToMinutesAndSeconds(encounter.duration)}
         {totalDamageDealt}
-        dps={encounter.encounterDamageStats.dps} 
+        dps={encounter.encounterDamageStats.dps}
         cleared={encounter.cleared}
-        bossOnlyDamage={encounter.bossOnlyDamage}/>
+        bossOnlyDamage={encounter.bossOnlyDamage}
+        raidGate={$raidGates.get(encounter.currentBossName)} />
     {#if !$takingScreenshot}
         <div class="mt-2 flex justify-between" style="width: calc(100vw - 4.5rem);">
             <div class="flex divide-x divide-gray-600">

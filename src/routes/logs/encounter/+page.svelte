@@ -3,7 +3,7 @@
     import LogDamageMeter from "$lib/components/logs/LogDamageMeter.svelte";
     import type { Encounter } from "$lib/types";
     import { formatTimestamp } from "$lib/utils/numbers";
-    import { backNavStore, ifaceChangedStore, screenshotAlert, screenshotError, searchStore } from "$lib/utils/stores";
+    import { backNavStore, ifaceChangedStore, raidGates, screenshotAlert, screenshotError, searchStore } from "$lib/utils/stores";
     import { invoke } from "@tauri-apps/api/tauri";
     import { onMount } from "svelte";
     import Notification from "$lib/components/shared/Notification.svelte";
@@ -12,10 +12,12 @@
     import { writable } from "svelte/store";
     import DifficultyLabel from "$lib/components/shared/DifficultyLabel.svelte";
     import BossOnlyDamage from "$lib/components/shared/BossOnlyDamage.svelte";
+    import { encounterMap } from "$lib/constants/encounters";
 
     let id = $page.url.searchParams.get("id") ?? "0";
     let encounter: Encounter;
     let fav = writable(false);
+    let raidGate = writable<string | undefined>(undefined);
 
     onMount(() => {
         if ($searchStore.length > 0) {
@@ -25,6 +27,7 @@
         (async () => {
             encounter = await invoke("load_encounter", { id: id });
             $fav = encounter.favorite;
+            $raidGate = $raidGates.get(encounter.currentBossName);
         })();
     });
 
@@ -83,11 +86,17 @@
                                     <BossOnlyDamage />
                                 {/if}
                                 <DifficultyLabel difficulty={encounter.difficulty} />
+                                {#if $settings.general.showGate && $raidGate}
+                                    <span class="text-sky-400">[{$raidGate}]</span>
+                                {/if}
                                 {encounter.currentBossName}
                             {:else}
                                 <span class:text-lime-400={encounter.cleared}>#{id.toLocaleString()}: </span>
                                 {#if encounter.bossOnlyDamage}
                                     <BossOnlyDamage />
+                                {/if}
+                                {#if $settings.general.showGate && $raidGate}
+                                    <span class="text-sky-400">[{$raidGate}]</span>
                                 {/if}
                                 {encounter.currentBossName}
                             {/if}
