@@ -24,7 +24,6 @@
     import Notification from "$lib/components/shared/Notification.svelte";
     import { encounterMap } from "$lib/constants/encounters";
     import DifficultyLabel from "$lib/components/shared/DifficultyLabel.svelte";
-    import BossOnlyDamage from "$lib/components/shared/BossOnlyDamage.svelte";
 
     let encounters: Array<EncounterPreview> = [];
     let totalEncounters: number = 0;
@@ -66,7 +65,7 @@
                 cleared: $searchFilter.cleared,
                 favorite: $searchFilter.favorite,
                 difficulty: $searchFilter.difficulty,
-                bossOnlyDamage: $searchFilter.bossOnlyDamage,
+                bossOnlyDamage: $searchFilter.bossOnlyDamage
             }
         });
         encounters = overview.encounters;
@@ -158,10 +157,36 @@
             <table class="w-full table-fixed text-left text-gray-400" id="table">
                 <thead class="sticky top-0 bg-zinc-900 text-xs uppercase">
                     <tr>
-                        <th scope="col" class="w-14 px-3 py-3"> ID </th>
+                        {#if selectMode}
+                            <th scope="col" class="w-14 px-2 py-3">
+                                <input
+                                    type="checkbox"
+                                    class="text-accent-500 h-5 w-5 rounded bg-zinc-700 focus:ring-0 focus:ring-offset-0"
+                                    checked={encounters.every((encounter) => $selectedEncounters.has(encounter.id))}
+                                    on:change={() => {
+                                        if (encounters.every((encounter) => $selectedEncounters.has(encounter.id))) {
+                                            selectedEncounters.update((set) => {
+                                                encounters.forEach((encounter) => {
+                                                    set.delete(encounter.id);
+                                                });
+                                                return set;
+                                            });
+                                        } else {
+                                            selectedEncounters.update((set) => {
+                                                encounters.forEach((encounter) => {
+                                                    set.add(encounter.id);
+                                                });
+                                                return set;
+                                            });
+                                        }
+                                    }} />
+                            </th>
+                        {:else}
+                            <th scope="col" class="w-14 px-3 py-3"> ID </th>
+                        {/if}
                         <th scope="col" class="w-[25%] px-3 py-3"> Encounter </th>
                         <th scope="col" class="px-3 py-3"> Classes </th>
-                        <th scope="col" class="hidden w-32 lg:w-48 px-3 py-3 md:table-cell"> Local Player </th>
+                        <th scope="col" class="hidden w-32 px-3 py-3 md:table-cell lg:w-48"> Local Player </th>
                         <th scope="col" class="w-14 px-3 py-3"> Dur </th>
                         <th scope="col" class="w-[15%] px-3 py-3 text-right"> Date </th>
                     </tr>
