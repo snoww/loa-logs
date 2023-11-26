@@ -1,11 +1,11 @@
 {
-    "version": "v1.3.12",
-    "notes": "### v1.3.12\n#### BUG FIXES\n- fix boss only damage setting not being read correctly\n- fix damage taken not being tracked correctly when boss only damage is enabled\nfull patch notes on github\nsend bug reports/suggestions to discord.gg/sbSa3pkDF5",
-    "pub_date": "2023-11-23T21:47:02.514Z",
+    "version": "v1.4.1",
+    "notes": "### v1.4.1\n#### NEW FEATURES\n- added option to show raid gates in logs\n- added optional damage taken tab (settings > general > show tanked)\n- added optional bosses tab (settings > general > show bosses)\n#### BUG FIXES & IMPROVEMENTS\n- updated boss only damage icon\nfull patch notes on github\nsend bug reports/suggestions to discord.gg/sbSa3pkDF5",
+    "pub_date": "2023-11-26T04:41:24.239Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.3.12/LOA.Logs_1.3.12_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlhUUnRqbC9ONzl3WGtzSVlIaHdUdkNQSXZBcDJTRzJWcGdCS05uRjVpbHpQZ2lMRUxRWUQrUVVla2VqUE9janFCcGxzNlpVYUxzWGhyWHpmWStMbkFVPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzAwNzc2MDc1CWZpbGU6TE9BIExvZ3NfMS4zLjEyX3g2NC1zZXR1cC5uc2lzLnppcApxMGNydmt4bnA5Y3BPbTFvNU1xcmhtTllHcjZvVGNzOVArNFFTOS9qbWJ4ZHhpa1lZR3Y2Z2JweGo4OEhNd3pRZmlZWXJxeEsyek5MRHVyQXFjcUxDUT09Cg=="
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.4.1/LOA.Logs_1.4.1_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlFQWkJlaFdWbDh6L2xaS0U2a2xIWnlXeTU4M1R4cWwyejI0MjBNcTRkYVZvYmhVOVkrT29nUFFCT1NuZWZVN3dCZVMydkxiVkMyV0NMUWxrbHdOWlFRPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzAwOTczMjMyCWZpbGU6TE9BIExvZ3NfMS40LjFfeDY0LXNldHVwLm5zaXMuemlwCmtnVTZmaEtVTUlNeUZCcTBrRThUOVl6VHh4R3kxeENDcmdsbk5zdnVneFhvdnpYUXRmS0g1RUd2OTYzWWNrNU1ERkw1QjMzK1JnaVZXYm9rMVA1YUJRPT0K"
         }
     }
 }
