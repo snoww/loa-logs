@@ -14,6 +14,8 @@ export const defaultSettings = {
         showDate: true,
         showDifficulty: true,
         showDetails: false,
+        showTanked: false,
+        showBosses: false,
         splitLines: false,
         underlineHovered: false,
         accentColor: "theme-pink",

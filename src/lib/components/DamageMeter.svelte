@@ -175,11 +175,11 @@
                         .filter((e) => e.damageStats.damageDealt > 0 && e.entityType === EntityType.PLAYER)
                         .sort((a, b) => b.damageStats.damageDealt - a.damageStats.damageDealt);
                 }
-                // if ($settings.general.showBosses) {
+                if ($settings.general.showBosses) {
                     bosses = Object.values(encounter.entities)
                         .filter((e) => e.damageStats.damageDealt > 0 && e.entityType === EntityType.BOSS)
                         .sort((a, b) => b.damageStats.damageDealt - a.damageStats.damageDealt);
-                // }
+                }
                 isSolo = players.length === 1;
                 anyDead = players.some((player) => player.isDead);
                 anyFrontAtk = players.some((player) => player.skillStats.frontAttacks > 0);

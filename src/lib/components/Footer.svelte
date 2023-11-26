@@ -81,20 +81,24 @@
                 on:click={() => setTab(MeterTab.SELF_BUFFS)}>
                 Self Buffs
             </button>
-            <button
-                class="h-6 border-0 border-b-[3px] px-1.5 {tab === MeterTab.TANK
-                    ? 'border-zinc-500'
-                    : 'border-zinc-800'}"
-                on:click={() => setTab(MeterTab.TANK)}>
-                Tanked
-            </button>
-            <button
-                class="h-6 border-0 border-b-[3px] px-1.5 {tab === MeterTab.BOSS
-                    ? 'border-zinc-500'
-                    : 'border-zinc-800'}"
-                on:click={() => setTab(MeterTab.BOSS)}>
-                Bosses
-            </button>
+            {#if $settings.general.showTanked}
+                <button
+                    class="h-6 border-0 border-b-[3px] px-1.5 {tab === MeterTab.TANK
+                        ? 'border-zinc-500'
+                        : 'border-zinc-800'}"
+                    on:click={() => setTab(MeterTab.TANK)}>
+                    Tanked
+                </button>
+            {/if}
+            {#if $settings.general.showBosses}
+                <button
+                    class="h-6 border-0 border-b-[3px] px-1.5 {tab === MeterTab.BOSS
+                        ? 'border-zinc-500'
+                        : 'border-zinc-800'}"
+                    on:click={() => setTab(MeterTab.BOSS)}>
+                    Bosses
+                </button>
+            {/if}
             {#if $settings.general.showDetails}
                 <button
                     class="h-6 flex-shrink-0 border-0 border-b-[3px] px-1.5 {tab === MeterTab.DETAILS

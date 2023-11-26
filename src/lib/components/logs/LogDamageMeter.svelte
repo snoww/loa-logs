@@ -78,11 +78,11 @@
                     )
                     .sort((a, b) => b.damageStats.damageDealt - a.damageStats.damageDealt);
             }
-            // if ($settings.general.showBosses) {
+            if ($settings.general.showBosses) {
                 bosses = Object.values(encounter.entities)
                     .filter((e) => e.damageStats.damageDealt > 0 && e.entityType === EntityType.BOSS)
                     .sort((a, b) => b.damageStats.damageDealt - a.damageStats.damageDealt);
-            // }
+            }
             isSolo = players.length === 1;
             topDamageDealt = encounter.encounterDamageStats.topDamageDealt;
             playerDamagePercentages = players.map((player) => (player.damageStats.damageDealt / topDamageDealt) * 100);
@@ -345,23 +345,23 @@
                     on:click={selfSynergyTab}>
                     Self Buffs
                 </button>
-                {#if encounter.encounterDamageStats.totalDamageTaken > 0}
-                <button
-                    class="rounded-sm px-2 py-1"
-                    class:bg-accent-900={tab == MeterTab.TANK}
-                    class:bg-gray-700={tab != MeterTab.TANK}
-                    on:click={tankTab}>
-                    Tanked
-                </button>
+                {#if $settings.general.showTanked && encounter.encounterDamageStats.totalDamageTaken > 0}
+                    <button
+                        class="rounded-sm px-2 py-1"
+                        class:bg-accent-900={tab == MeterTab.TANK}
+                        class:bg-gray-700={tab != MeterTab.TANK}
+                        on:click={tankTab}>
+                        Tanked
+                    </button>
                 {/if}
-                {#if bosses.length > 0}
-                <button
-                    class="rounded-sm px-2 py-1"
-                    class:bg-accent-900={tab == MeterTab.BOSS}
-                    class:bg-gray-700={tab != MeterTab.BOSS}
-                    on:click={bossTab}>
-                    Boss
-                </button>
+                {#if $settings.general.showBosses && bosses.length > 0}
+                    <button
+                        class="rounded-sm px-2 py-1"
+                        class:bg-accent-900={tab == MeterTab.BOSS}
+                        class:bg-gray-700={tab != MeterTab.BOSS}
+                        on:click={bossTab}>
+                        Bosses
+                    </button>
                 {/if}
                 {#if localPlayer && localPlayer.skillStats.identityStats}
                     <button
@@ -615,9 +615,15 @@
                 <DamageTaken {players} topDamageTaken={encounter.encounterDamageStats.topDamageTaken} tween={false} />
             {:else if tab === MeterTab.BOSS}
                 {#if !focusedBoss}
-                <BossTable {bosses} duration={encounter.duration} {inspectBoss} tween={false}/>
+                    <BossTable {bosses} duration={encounter.duration} {inspectBoss} tween={false} />
                 {:else}
-                <BossBreakdown boss={encounter.entities[focusedBoss]} duration={encounter.duration} handleRightClick={() => {focusedBoss = "";}} tween={false}/>
+                    <BossBreakdown
+                        boss={encounter.entities[focusedBoss]}
+                        duration={encounter.duration}
+                        handleRightClick={() => {
+                            focusedBoss = "";
+                        }}
+                        tween={false} />
                 {/if}
             {/if}
         </div>

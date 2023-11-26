@@ -16,7 +16,9 @@
 
     $: {
         if (topDamageTaken) {
-            sortedPlayers = [...players].filter((e) => e.damageStats.damageTaken > 0 && e.entityType === EntityType.PLAYER).sort((a, b) => b.damageStats.damageTaken - a.damageStats.damageTaken);
+            sortedPlayers = [...players]
+                .filter((e) => e.damageStats.damageTaken > 0 && e.entityType === EntityType.PLAYER)
+                .sort((a, b) => b.damageStats.damageTaken - a.damageStats.damageTaken);
             playerDamageTakenPercentages = sortedPlayers.map(
                 (player) => (player.damageStats.damageTaken / topDamageTaken!) * 100
             );
@@ -43,7 +45,7 @@
             <tr
                 class="h-7 px-2 py-1 {$settings.general.underlineHovered ? 'hover:underline' : ''}"
                 animate:flip={{ duration: 200 }}>
-                <DamageTakenRow {player} {alpha} width={playerDamageTakenPercentages[i]} {tween}/>
+                <DamageTakenRow {player} {alpha} width={playerDamageTakenPercentages[i]} {tween} />
             </tr>
         {/each}
     </tbody>

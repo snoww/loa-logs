@@ -160,10 +160,14 @@
             name="Show Raid Difficulty"
             description={"Shows the difficulty of the raid."}
             bind:setting={$settings.general.showDifficulty} />
-        <!-- <SettingItem
-            name="Show Date in Screenshot"
-            description={'Shows the date of the encounter when taking screenshot'}
-            bind:setting={$settings.general.showDate} /> -->
+        <SettingItem
+            name="Show Tanked Tab"
+            description={"Shows the damage taken by players."}
+            bind:setting={$settings.general.showTanked} />
+        <SettingItem
+            name="Show Bosses Tab"
+            description={"Shows the damage dealt by bosses and its skill breakdowns."}
+            bind:setting={$settings.general.showBosses} />
         <SettingItem
             name="Show Details Tab"
             description={"Shows an additional tab in meter for raw identity and stagger data."}
