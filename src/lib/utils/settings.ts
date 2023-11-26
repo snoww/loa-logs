@@ -15,6 +15,8 @@ export const defaultSettings = {
         showDifficulty: true,
         showGate: false,
         showDetails: false,
+        showTanked: false,
+        showBosses: false,
         splitLines: false,
         underlineHovered: false,
         accentColor: "theme-pink",
@@ -207,6 +209,7 @@ export async function registerShortcuts(shortcuts: any) {
     }
 }
 
+export const imagePath = settingsStore("imagePath", {});
 export const skillIcon = settingsStore("skillIcon", {});
 export const classIconCache = settingsStore("classIconCache", {});
 

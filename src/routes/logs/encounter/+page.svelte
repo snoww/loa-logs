@@ -76,28 +76,34 @@
                                         d="m321-202.5 159-95 159 96-42.5-180 140-121.5L552-519.5l-72-170-71.505 169.676L224-504l140 121-43 180.5Zm-86 120 64.5-279.093L83-549l286-25 111-263 111.5 263L877-549 660.484-361.593 725.436-82.5 480.218-230.61 235-82.5Zm245-353Z" /></svg>
                             {/if}
                         </button>
-                        <div class="truncate pl-1">
+                        <div class="truncate pl-1 flex items-center space-x-1">
                             {#if $settings.general.showDifficulty && encounter.difficulty}
                                 <span class:text-lime-400={encounter.cleared} use:tooltip={{ content: "Cleared" }}
                                     >#{id.toLocaleString()}:
                                 </span>
                                 {#if encounter.bossOnlyDamage}
-                                    <BossOnlyDamage />
+                                    <BossOnlyDamage width={2}/>
                                 {/if}
                                 <DifficultyLabel difficulty={encounter.difficulty} />
                                 {#if $settings.general.showGate && $raidGate}
                                     <span class="text-sky-200">[{$raidGate}]</span>
                                 {/if}
                                 {encounter.currentBossName}
+                                <div class="truncate" use:tooltip={{ content: encounter.currentBossName }}>
+                                    {encounter.currentBossName}
+                                </div>
                             {:else}
                                 <span class:text-lime-400={encounter.cleared}>#{id.toLocaleString()}: </span>
                                 {#if encounter.bossOnlyDamage}
-                                    <BossOnlyDamage />
+                                    <BossOnlyDamage width={2}/>
                                 {/if}
                                 {#if $settings.general.showGate && $raidGate}
                                     <span class="text-sky-200">[{$raidGate}]</span>
                                 {/if}
                                 {encounter.currentBossName}
+                                <div class="truncate" use:tooltip={{ content: encounter.currentBossName }}>
+                                    {encounter.currentBossName}
+                                </div>
                             {/if}
                         </div>
                     </div>

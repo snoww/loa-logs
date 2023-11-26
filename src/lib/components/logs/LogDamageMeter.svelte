@@ -27,11 +27,15 @@
     } from "$lib/utils/dpsCharts";
     import OpenerSkills from "./OpenerSkills.svelte";
     import ArcanistCardTable from "../shared/ArcanistCardTable.svelte";
+    import DamageTaken from "../shared/DamageTaken.svelte";
+    import BossTable from "../shared/BossTable.svelte";
+    import BossBreakdown from "../shared/BossBreakdown.svelte";
 
     export let id: string;
     export let encounter: Encounter;
 
     let players: Array<Entity> = [];
+    let bosses: Array<Entity> = [];
     let player: Entity | null = null;
     let playerDamagePercentages: Array<number> = [];
     let topDamageDealt = 0;
@@ -50,6 +54,7 @@
     let tab = MeterTab.DAMAGE;
     let chartType = ChartType.AVERAGE_DPS;
     let playerName = "";
+    let focusedBoss = "";
 
     let deleteConfirm = false;
 
@@ -71,6 +76,11 @@
                     .filter(
                         (e) => e.damageStats.damageDealt > 0 && e.entityType === EntityType.PLAYER && e.classId != 0
                     )
+                    .sort((a, b) => b.damageStats.damageDealt - a.damageStats.damageDealt);
+            }
+            if ($settings.general.showBosses) {
+                bosses = Object.values(encounter.entities)
+                    .filter((e) => e.damageStats.damageDealt > 0 && e.entityType === EntityType.BOSS)
                     .sort((a, b) => b.damageStats.damageDealt - a.damageStats.damageDealt);
             }
             isSolo = players.length === 1;
@@ -174,6 +184,10 @@
         chartType = ChartType.SKILL_LOG;
     }
 
+    function inspectBoss(name: string) {
+        focusedBoss = name;
+    }
+
     function damageTab() {
         tab = MeterTab.DAMAGE;
         setChartView();
@@ -186,6 +200,18 @@
 
     function selfSynergyTab() {
         tab = MeterTab.SELF_BUFFS;
+        setChartView();
+    }
+
+    function tankTab() {
+        handleRightClick();
+        tab = MeterTab.TANK;
+        setChartView();
+    }
+
+    function bossTab() {
+        handleRightClick();
+        tab = MeterTab.BOSS;
         setChartView();
     }
 
@@ -296,6 +322,7 @@
         cleared={encounter.cleared}
         bossOnlyDamage={encounter.bossOnlyDamage}
         raidGate={$raidGates.get(encounter.currentBossName)} />
+        bossOnlyDamage={encounter.bossOnlyDamage} />
     {#if !$takingScreenshot}
         <div class="mt-2 flex justify-between" style="width: calc(100vw - 4.5rem);">
             <div class="flex divide-x divide-gray-600">
@@ -311,15 +338,33 @@
                     class:bg-accent-900={tab == MeterTab.PARTY_BUFFS}
                     class:bg-gray-700={tab != MeterTab.PARTY_BUFFS}
                     on:click={partySynergyTab}>
-                    Party Synergy
+                    Party Buffs
                 </button>
                 <button
                     class="rounded-sm px-2 py-1"
                     class:bg-accent-900={tab == MeterTab.SELF_BUFFS}
                     class:bg-gray-700={tab != MeterTab.SELF_BUFFS}
                     on:click={selfSynergyTab}>
-                    Self Synergy
+                    Self Buffs
                 </button>
+                {#if $settings.general.showTanked && encounter.encounterDamageStats.totalDamageTaken > 0}
+                    <button
+                        class="rounded-sm px-2 py-1"
+                        class:bg-accent-900={tab == MeterTab.TANK}
+                        class:bg-gray-700={tab != MeterTab.TANK}
+                        on:click={tankTab}>
+                        Tanked
+                    </button>
+                {/if}
+                {#if $settings.general.showBosses && bosses.length > 0}
+                    <button
+                        class="rounded-sm px-2 py-1"
+                        class:bg-accent-900={tab == MeterTab.BOSS}
+                        class:bg-gray-700={tab != MeterTab.BOSS}
+                        on:click={bossTab}>
+                        Bosses
+                    </button>
+                {/if}
                 {#if localPlayer && localPlayer.skillStats.identityStats}
                     <button
                         class="rounded-sm px-2 py-1"
@@ -494,7 +539,8 @@
                                     <th class="w-12 font-normal" use:tooltip={{ content: "Crit %" }}>CRIT</th>
                                 {/if}
                                 {#if $settings.logs.critDmg}
-                                    <th class="w-12 font-normal" use:tooltip={{ content: "% Damage that Crit" }}>CDMG</th>
+                                    <th class="w-12 font-normal" use:tooltip={{ content: "% Damage that Crit" }}
+                                        >CDMG</th>
                                 {/if}
                                 {#if anyFrontAtk && $settings.logs.frontAtk}
                                     <th class="w-12 font-normal" use:tooltip={{ content: "Front Attack %" }}>F.A</th>
@@ -517,7 +563,9 @@
                         </thead>
                         <tbody class="relative z-10">
                             {#each players as player, i (player.name)}
-                                <tr class="h-7 px-2 py-1 {$settings.general.underlineHovered ? 'hover:underline' : ''}" on:click={() => inspectPlayer(player.name)}>
+                                <tr
+                                    class="h-7 px-2 py-1 {$settings.general.underlineHovered ? 'hover:underline' : ''}"
+                                    on:click={() => inspectPlayer(player.name)}>
                                     <LogDamageMeterRow
                                         entity={player}
                                         percentage={playerDamagePercentages[i]}
@@ -564,6 +612,20 @@
                         {players}
                         focusedPlayer={player}
                         {inspectPlayer} />
+                {/if}
+            {:else if tab === MeterTab.TANK}
+                <DamageTaken {players} topDamageTaken={encounter.encounterDamageStats.topDamageTaken} tween={false} />
+            {:else if tab === MeterTab.BOSS}
+                {#if !focusedBoss}
+                    <BossTable {bosses} duration={encounter.duration} {inspectBoss} tween={false} />
+                {:else}
+                    <BossBreakdown
+                        boss={encounter.entities[focusedBoss]}
+                        duration={encounter.duration}
+                        handleRightClick={() => {
+                            focusedBoss = "";
+                        }}
+                        tween={false} />
                 {/if}
             {/if}
         </div>

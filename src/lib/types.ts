@@ -242,7 +242,8 @@ export enum MeterTab {
     SELF_BUFFS,
     IDENTITY,
     STAGGER,
-    DETAILS
+    DETAILS,
+    BOSS
 }
 
 export enum ChartType {
@@ -288,6 +289,7 @@ export class Buff {
     icon: string;
     sourceIcon?: string;
     percentage: string;
+    bubbles?: number;
 
     constructor(icon: string, percentage: string, sourceIcon?: string) {
         this.icon = icon;

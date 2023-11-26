@@ -66,7 +66,7 @@
                 cleared: $searchFilter.cleared,
                 favorite: $searchFilter.favorite,
                 difficulty: $searchFilter.difficulty,
-                bossOnlyDamage: $searchFilter.bossOnlyDamage,
+                bossOnlyDamage: $searchFilter.bossOnlyDamage
             }
         });
         encounters = overview.encounters;
@@ -156,12 +156,38 @@
             style="height: calc(100vh - 8.25rem - 2.5rem);"
             id="logs-table">
             <table class="w-full table-fixed text-left text-gray-400" id="table">
-                <thead class="sticky top-0 bg-zinc-900 text-xs uppercase">
+                <thead class="sticky top-0 bg-zinc-900 text-xs uppercase z-10">
                     <tr>
-                        <th scope="col" class="w-14 px-3 py-3"> ID </th>
+                        {#if selectMode}
+                            <th scope="col" class="w-14 px-2 py-3">
+                                <input
+                                    type="checkbox"
+                                    class="text-accent-500 h-5 w-5 rounded bg-zinc-700 focus:ring-0 focus:ring-offset-0"
+                                    checked={encounters.every((encounter) => $selectedEncounters.has(encounter.id))}
+                                    on:change={() => {
+                                        if (encounters.every((encounter) => $selectedEncounters.has(encounter.id))) {
+                                            selectedEncounters.update((set) => {
+                                                encounters.forEach((encounter) => {
+                                                    set.delete(encounter.id);
+                                                });
+                                                return set;
+                                            });
+                                        } else {
+                                            selectedEncounters.update((set) => {
+                                                encounters.forEach((encounter) => {
+                                                    set.add(encounter.id);
+                                                });
+                                                return set;
+                                            });
+                                        }
+                                    }} />
+                            </th>
+                        {:else}
+                            <th scope="col" class="w-14 px-3 py-3"> ID </th>
+                        {/if}
                         <th scope="col" class="w-[25%] px-3 py-3"> Encounter </th>
                         <th scope="col" class="px-3 py-3"> Classes </th>
-                        <th scope="col" class="hidden w-32 lg:w-48 px-3 py-3 md:table-cell"> Local Player </th>
+                        <th scope="col" class="hidden w-32 px-3 py-3 md:table-cell lg:w-48"> Local Player </th>
                         <th scope="col" class="w-14 px-3 py-3"> Dur </th>
                         <th scope="col" class="w-[15%] px-3 py-3 text-right"> Date </th>
                     </tr>
@@ -234,7 +260,7 @@
                                     </div>
                                 </a>
                             </td>
-                            <td class="flex truncate px-3 py-3">
+                            <td class="flex truncate px-3 py-3" style="-webkit-mask-image: linear-gradient(to right, black 90%, transparent 100%);">
                                 {#each encounter.classes as classId, i}
                                     <img
                                         src={$classIconCache[classId]}

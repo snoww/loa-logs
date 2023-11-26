@@ -38,6 +38,9 @@ export function generateTooltipContent(buffs: BuffDetails, iconPath: string) {
             str += `<img src=${
                 iconPath + getSkillIcon(buff.sourceIcon)
             } alt="buff_source_icon" class="w-5 h-5 rounded mr-1"/>`;
+            if (buff.bubbles) {
+                str += `[${buff.bubbles*5}<span class="text-3xs text-gray-300">%</span>] `;
+            }
             str += `${buff.percentage}<span class="text-3xs text-gray-300">%</span>`;
             str += `</div>`;
         } else {

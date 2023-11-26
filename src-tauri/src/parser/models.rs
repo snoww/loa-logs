@@ -511,6 +511,8 @@ pub struct GeneralSettings {
     pub split_lines: bool,
     pub underline_hovered: bool,
     pub show_details: bool,
+    pub show_tanked: bool,
+    pub show_bosses: bool,
     pub hide_logo: bool,
     pub accent_color: String,
     pub raw_socket: bool,

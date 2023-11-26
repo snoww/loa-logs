@@ -42,6 +42,10 @@ export function getSkillIcon(skillIcon: string): string {
     return encodeURIComponent("\\" + (skillIcon !== "" ? skillIcon : "unknown.png"));
 }
 
+export function getImagePath(path: string): string {
+    return encodeURIComponent("\\" + path.replaceAll("/", "\\"));
+}
+
 export function getEstherFromNpcId(npcId: number): string {
     for (const esther of estherMap) {
         if (esther.npcs.includes(npcId)) return esther.name;

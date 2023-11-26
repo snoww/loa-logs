@@ -7,6 +7,7 @@
     import BuffTooltipDetail from "../shared/BuffTooltipDetail.svelte";
     import { tooltip } from "$lib/utils/tooltip";
     import { round } from "$lib/utils/numbers";
+    import { addBardBubbles } from "$lib/utils/buffs";
 
     export let player: Entity;
     export let groupedSynergies: Map<string, Map<number, StatusEffect>>;
@@ -26,18 +27,18 @@
 
     if (groupedSynergies.size > 0) {
         synergyPercentageDetails = [];
-        groupedSynergies.forEach((synergies) => {
+        groupedSynergies.forEach((synergies, key) => {
             let synergyDamage = 0;
             let buff = new BuffDetails();
             synergies.forEach((syn, id) => {
                 if (player.damageStats.buffedBy[id]) {
-                    buff.buffs.push(
-                        new Buff(
-                            syn.source.icon,
-                            round((player.damageStats.buffedBy[id] / player.damageStats.damageDealt) * 100),
-                            syn.source.skill?.icon
-                        )
+                    let b = new Buff(
+                        syn.source.icon,
+                        round((player.damageStats.buffedBy[id] / player.damageStats.damageDealt) * 100),
+                        syn.source.skill?.icon
                     );
+                    addBardBubbles(key, b, syn);
+                    buff.buffs.push(b);
                     synergyDamage += player.damageStats.buffedBy[id];
                 } else if (player.damageStats.debuffedBy[id]) {
                     buff.buffs.push(

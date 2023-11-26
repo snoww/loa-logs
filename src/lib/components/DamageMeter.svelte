@@ -26,6 +26,9 @@
     import { takingScreenshot, screenshotAlert, screenshotError } from "$lib/utils/stores";
     import html2canvas from "html2canvas";
     import Details from "./Details.svelte";
+    import DamageTaken from "./shared/DamageTaken.svelte";
+    import BossTable from "./shared/BossTable.svelte";
+    import BossBreakdown from "./shared/BossBreakdown.svelte";
 
     let time = +Date.now();
     let encounter: Encounter | null = null;
@@ -133,6 +136,7 @@
     });
 
     let players: Array<Entity> = [];
+    let bosses: Array<Entity> = [];
     let playerDamagePercentages: Array<number> = [];
     let topDamageDealt = 0;
     let encounterDuration = "00:00";
@@ -144,6 +148,7 @@
     let tab = MeterTab.DAMAGE;
     let player: Entity | null = null;
     let playerName = "";
+    let focusedBoss = "";
     let lastCombatPacket = 0;
     let anyDead: boolean = false;
     let anyFrontAtk: boolean = false;
@@ -168,6 +173,11 @@
                 } else {
                     players = Object.values(encounter.entities)
                         .filter((e) => e.damageStats.damageDealt > 0 && e.entityType === EntityType.PLAYER)
+                        .sort((a, b) => b.damageStats.damageDealt - a.damageStats.damageDealt);
+                }
+                if ($settings.general.showBosses) {
+                    bosses = Object.values(encounter.entities)
+                        .filter((e) => e.damageStats.damageDealt > 0 && e.entityType === EntityType.BOSS)
                         .sort((a, b) => b.damageStats.damageDealt - a.damageStats.damageDealt);
                 }
                 isSolo = players.length === 1;
@@ -228,6 +238,11 @@
         scrollToTopOfTable();
     }
 
+    function inspectBoss(name: string) {
+        focusedBoss = name;
+        scrollToTopOfTable();
+    }
+
     function handleRightClick() {
         if (state === MeterState.PLAYER) {
             state = MeterState.PARTY;
@@ -235,6 +250,11 @@
             playerName = "";
         }
 
+        scrollToTopOfTable();
+    }
+
+    function handleBossRightClick() {
+        focusedBoss = "";
         scrollToTopOfTable();
     }
 
@@ -427,6 +447,14 @@
                     {inspectPlayer}
                     encounterPartyInfo={parties}
                     localPlayer={encounter?.localPlayer} />
+            {/if}
+        {:else if tab === MeterTab.TANK}
+            <DamageTaken {players} topDamageTaken={encounter?.encounterDamageStats.topDamageTaken} />
+        {:else if tab === MeterTab.BOSS}
+            {#if !focusedBoss}
+            <BossTable {bosses} {duration} {inspectBoss}/>
+            {:else}
+            <BossBreakdown boss={encounter?.entities[focusedBoss]} {duration} handleRightClick={handleBossRightClick}/>
             {/if}
         {:else if tab === MeterTab.DETAILS}
             <Details />
