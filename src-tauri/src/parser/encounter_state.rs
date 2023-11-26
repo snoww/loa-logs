@@ -1406,7 +1406,8 @@ fn insert_data(
     for (_key, entity) in encounter.entities.iter_mut().filter(|(_, e)| {
         ((e.entity_type == EntityType::PLAYER && e.class_id != 0 && e.max_hp > 0)
             || e.name == encounter.local_player
-            || e.entity_type == EntityType::ESTHER)
+            || e.entity_type == EntityType::ESTHER
+            || (e.entity_type == EntityType::BOSS && e.max_hp > 0))
             && e.damage_stats.damage_dealt > 0
     }) {
         if entity.entity_type == EntityType::PLAYER {
@@ -1583,23 +1584,6 @@ fn insert_data(
             ])
             .expect("failed to insert entity");
     }
-    /*     if let Some(boss) = encounter.entities.get(&encounter.current_boss_name.to_string()) {
-        entity_stmt.execute(params![
-            boss.name,
-            last_insert_id,
-            boss.npc_id,
-            boss.entity_type.to_string(),
-            boss.class_id,
-            boss.class,
-            boss.gear_score,
-            boss.current_hp,
-            boss.max_hp,
-            boss.is_dead,
-            json!(boss.skills),
-            json!(boss.damage_stats),
-            json!(boss.skill_stats)
-        ]).expect("failed to insert entity");
-    } */
 }
 
 fn generate_intervals(start: i64, end: i64) -> Vec<i64> {

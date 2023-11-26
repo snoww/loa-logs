@@ -28,11 +28,14 @@
     import OpenerSkills from "./OpenerSkills.svelte";
     import ArcanistCardTable from "../shared/ArcanistCardTable.svelte";
     import DamageTaken from "../shared/DamageTaken.svelte";
+    import BossTable from "../shared/BossTable.svelte";
+    import BossBreakdown from "../shared/BossBreakdown.svelte";
 
     export let id: string;
     export let encounter: Encounter;
 
     let players: Array<Entity> = [];
+    let bosses: Array<Entity> = [];
     let player: Entity | null = null;
     let playerDamagePercentages: Array<number> = [];
     let topDamageDealt = 0;
@@ -51,6 +54,7 @@
     let tab = MeterTab.DAMAGE;
     let chartType = ChartType.AVERAGE_DPS;
     let playerName = "";
+    let focusedBoss = "";
 
     let deleteConfirm = false;
 
@@ -74,6 +78,11 @@
                     )
                     .sort((a, b) => b.damageStats.damageDealt - a.damageStats.damageDealt);
             }
+            // if ($settings.general.showBosses) {
+                bosses = Object.values(encounter.entities)
+                    .filter((e) => e.damageStats.damageDealt > 0 && e.entityType === EntityType.BOSS)
+                    .sort((a, b) => b.damageStats.damageDealt - a.damageStats.damageDealt);
+            // }
             isSolo = players.length === 1;
             topDamageDealt = encounter.encounterDamageStats.topDamageDealt;
             playerDamagePercentages = players.map((player) => (player.damageStats.damageDealt / topDamageDealt) * 100);
@@ -173,6 +182,10 @@
         state = MeterState.PLAYER;
         playerName = name;
         chartType = ChartType.SKILL_LOG;
+    }
+
+    function inspectBoss(name: string) {
+        focusedBoss = name;
     }
 
     function damageTab() {
@@ -332,6 +345,7 @@
                     on:click={selfSynergyTab}>
                     Self Buffs
                 </button>
+                {#if encounter.encounterDamageStats.totalDamageTaken > 0}
                 <button
                     class="rounded-sm px-2 py-1"
                     class:bg-accent-900={tab == MeterTab.TANK}
@@ -339,6 +353,8 @@
                     on:click={tankTab}>
                     Tanked
                 </button>
+                {/if}
+                {#if bosses.length > 0}
                 <button
                     class="rounded-sm px-2 py-1"
                     class:bg-accent-900={tab == MeterTab.BOSS}
@@ -346,6 +362,7 @@
                     on:click={bossTab}>
                     Boss
                 </button>
+                {/if}
                 {#if localPlayer && localPlayer.skillStats.identityStats}
                     <button
                         class="rounded-sm px-2 py-1"
@@ -596,6 +613,12 @@
                 {/if}
             {:else if tab === MeterTab.TANK}
                 <DamageTaken {players} topDamageTaken={encounter.encounterDamageStats.topDamageTaken} tween={false} />
+            {:else if tab === MeterTab.BOSS}
+                {#if !focusedBoss}
+                <BossTable {bosses} duration={encounter.duration} {inspectBoss} tween={false}/>
+                {:else}
+                <BossBreakdown boss={encounter.entities[focusedBoss]} duration={encounter.duration} handleRightClick={() => {focusedBoss = "";}} tween={false}/>
+                {/if}
             {/if}
         </div>
     {/if}

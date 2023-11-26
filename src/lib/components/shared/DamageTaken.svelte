@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { Entity } from "$lib/types";
+    import { EntityType, type Entity } from "$lib/types";
     import { settings } from "$lib/utils/settings";
     import { tooltip } from "$lib/utils/tooltip";
     import { flip } from "svelte/animate";
@@ -16,7 +16,7 @@
 
     $: {
         if (topDamageTaken) {
-            sortedPlayers = [...players].sort((a, b) => b.damageStats.damageTaken - a.damageStats.damageTaken);
+            sortedPlayers = [...players].filter((e) => e.damageStats.damageTaken > 0 && e.entityType === EntityType.PLAYER).sort((a, b) => b.damageStats.damageTaken - a.damageStats.damageTaken);
             playerDamageTakenPercentages = sortedPlayers.map(
                 (player) => (player.damageStats.damageTaken / topDamageTaken!) * 100
             );

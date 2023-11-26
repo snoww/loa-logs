@@ -72,29 +72,28 @@
                     ? 'border-zinc-500'
                     : 'border-zinc-800'}"
                 on:click={() => setTab(MeterTab.PARTY_BUFFS)}>
-                Party Syn
+                Party Buffs
             </button>
             <button
                 class="h-6 flex-shrink-0 border-0 border-b-[3px] px-1.5 {tab === MeterTab.SELF_BUFFS
                     ? 'border-zinc-500'
                     : 'border-zinc-800'}"
                 on:click={() => setTab(MeterTab.SELF_BUFFS)}>
-                Self Syn
+                Self Buffs
             </button>
-            <!-- idk if tank stats is useful or not, so not gonna include for now -->
             <button
                 class="h-6 border-0 border-b-[3px] px-1.5 {tab === MeterTab.TANK
                     ? 'border-zinc-500'
                     : 'border-zinc-800'}"
                 on:click={() => setTab(MeterTab.TANK)}>
-                Tank
+                Tanked
             </button>
             <button
                 class="h-6 border-0 border-b-[3px] px-1.5 {tab === MeterTab.BOSS
                     ? 'border-zinc-500'
                     : 'border-zinc-800'}"
                 on:click={() => setTab(MeterTab.BOSS)}>
-                Boss
+                Bosses
             </button>
             {#if $settings.general.showDetails}
                 <button
