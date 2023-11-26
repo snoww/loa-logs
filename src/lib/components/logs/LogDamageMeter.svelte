@@ -322,7 +322,6 @@
         cleared={encounter.cleared}
         bossOnlyDamage={encounter.bossOnlyDamage}
         raidGate={$raidGates.get(encounter.currentBossName)} />
-        bossOnlyDamage={encounter.bossOnlyDamage} />
     {#if !$takingScreenshot}
         <div class="mt-2 flex justify-between" style="width: calc(100vw - 4.5rem);">
             <div class="flex divide-x divide-gray-600">

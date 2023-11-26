@@ -88,7 +88,9 @@
                                 {#if $settings.general.showGate && $raidGate}
                                     <span class="text-sky-200">[{$raidGate}]</span>
                                 {/if}
-                                {encounter.currentBossName}
+                                <div>
+                                    {encounter.currentBossName}
+                                </div>
                                 <div class="truncate" use:tooltip={{ content: encounter.currentBossName }}>
                                     {encounter.currentBossName}
                                 </div>
@@ -100,7 +102,9 @@
                                 {#if $settings.general.showGate && $raidGate}
                                     <span class="text-sky-200">[{$raidGate}]</span>
                                 {/if}
-                                {encounter.currentBossName}
+                                <div>
+                                    {encounter.currentBossName}
+                                </div>
                                 <div class="truncate" use:tooltip={{ content: encounter.currentBossName }}>
                                     {encounter.currentBossName}
                                 </div>
