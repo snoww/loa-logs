@@ -52,8 +52,10 @@
         use:tooltip={{ content: skill.name }} />
 </td>
 <td class="-left-px" colspan="2">
-    <div class="truncate" use:tooltip={{ content: skill.name }}>
-        {skill.name}
+    <div class="truncate">
+        <span use:tooltip={{ content: skill.name }}>
+            {skill.name}
+        </span>
     </div>
 </td>
 {#if meterSettings.breakdown.damage}

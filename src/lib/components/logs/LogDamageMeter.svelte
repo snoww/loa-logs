@@ -333,14 +333,14 @@
                     Damage
                 </button>
                 <button
-                    class="rounded-sm px-2 py-1"
+                    class="rounded-sm px-2 py-1 flex-shrink-0"
                     class:bg-accent-900={tab == MeterTab.PARTY_BUFFS}
                     class:bg-gray-700={tab != MeterTab.PARTY_BUFFS}
                     on:click={partySynergyTab}>
                     Party Buffs
                 </button>
                 <button
-                    class="rounded-sm px-2 py-1"
+                    class="rounded-sm px-2 py-1 flex-shrink-0"
                     class:bg-accent-900={tab == MeterTab.SELF_BUFFS}
                     class:bg-gray-700={tab != MeterTab.SELF_BUFFS}
                     on:click={selfSynergyTab}>

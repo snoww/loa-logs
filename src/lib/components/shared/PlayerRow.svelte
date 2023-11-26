@@ -76,8 +76,10 @@
     {/if}
 </td>
 <td colspan="2">
-    <div class="truncate" use:tooltip={{ content: name }}>
-        {name}
+    <div class="truncate">
+        <span use:tooltip={{ content: name }}>
+            {name}
+        </span>
     </div>
 </td>
 {#if anyDead && meterSettings.deathTime}

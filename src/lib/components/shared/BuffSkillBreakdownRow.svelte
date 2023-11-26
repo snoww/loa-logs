@@ -33,7 +33,9 @@
     </td>
     <td colspan="2">
         <div class="truncate">
-            {skill.name}
+            <span use:tooltip={{ content: skill.name }}>
+                {skill.name}
+            </span>
         </div>
     </td>
     {#if groupedSynergies.size > 0}

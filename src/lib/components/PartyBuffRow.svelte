@@ -44,8 +44,10 @@
         use:tooltip={{ content: player.class }} />
 </td>
 <td colspan="2">
-    <div class="truncate" use:tooltip={{ content: playerName }}>
-        {playerName}
+    <div class="truncate">
+        <span use:tooltip={{ content: playerName }}>
+            {playerName}
+        </span>
     </div>
 </td>
 {#if playerBuffs.length > 0}

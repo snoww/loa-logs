@@ -44,8 +44,10 @@
         use:tooltip={{ content: player.class }} />
 </td>
 <td colspan="2">
-    <div class="truncate" use:tooltip={{ content: name }}>
-        {name}
+    <div class="truncate">
+        <span use:tooltip={{ content: name }}>
+            {name}
+        </span>
     </div>
 </td>
 <td class="pl-1 pr-2 text-right" use:tooltip={{ content: player.damageStats.damageTaken.toLocaleString() }}>

@@ -31,8 +31,10 @@
 </script>
 
 <td class="px-2" colspan="2">
-    <div class="truncate" use:tooltip={{ content: skill.name }}>
-        {skill.name}
+    <div class="truncate">
+        <span use:tooltip={{ content: skill.name }}>
+            {skill.name}
+        </span>
     </div>
 </td>
 <td class="px-1 text-center" use:tooltip={{ content: skill.totalDamage.toLocaleString() }}>
