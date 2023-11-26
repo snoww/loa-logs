@@ -5,7 +5,6 @@
     import { flip } from "svelte/animate";
 
     import DamageTakenRow from "./DamageTakenRow.svelte";
-    import { top } from "@popperjs/core";
 
     export let players: Array<Entity>;
     export let topDamageTaken: number | undefined;

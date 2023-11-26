@@ -48,7 +48,7 @@
         {name}
     </div>
 </td>
-<td class="px-1 text-center" use:tooltip={{ content: player.damageStats.damageTaken.toLocaleString() }}>
+<td class="pl-1 pr-2 text-right" use:tooltip={{ content: player.damageStats.damageTaken.toLocaleString() }}>
     {damageTaken[0]}<span class="text-3xs text-gray-300">{damageTaken[1]}</span>
 </td>
 <div
