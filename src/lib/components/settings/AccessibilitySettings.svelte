@@ -2,7 +2,6 @@
     import { settings } from "$lib/utils/settings";
     import { invoke } from "@tauri-apps/api";
     import SettingItem from "./SettingItem.svelte";
-    import { isWin11 } from "$lib/utils/stores";
 
     async function toggleBlur() {
         if ($settings.general.blur) {
@@ -47,7 +46,7 @@
             description="Underlines the text in the row when hovering over it for better readability."
             bind:setting={$settings.general.underlineHovered} />
         <div class="">
-            {#if $isWin11}
+            {#if $settings.general.isWin11}
                 <label class="flex items-center">
                     <input
                         type="checkbox"
@@ -78,7 +77,7 @@
                 </label>
             {/if}
         </div>
-        {#if $isWin11}
+        {#if $settings.general.isWin11}
             <SettingItem
                 name="Transparent Meter"
                 description="Turn off to enable Dark Mode for Windows 11 (with blur setting off)."

@@ -27,6 +27,7 @@ export const defaultSettings = {
         port: 6040,
         blur: true,
         blurWin11: false,
+        isWin11: false,
         transparent: true,
         scale: "1",
         alwaysOnTop: true,

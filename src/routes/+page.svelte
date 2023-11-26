@@ -18,7 +18,6 @@
     import { estherMap } from "$lib/constants/esthers";
     import { invoke } from "@tauri-apps/api";
     import { classColors } from "$lib/constants/colors";
-    import { isWin11 } from "$lib/utils/stores";
 
     onMount(() => {
         (async () => {
@@ -58,7 +57,7 @@
             if (navigator.userAgentData.platform === "Windows") {
                 const majorPlatformVersion = Number(ua.platformVersion.split(".")[0]);
                 if (majorPlatformVersion >= 13) {
-                    $isWin11 = true;
+                    $settings.general.isWin11 = true;
                     if ($settings.general.blurWin11) {
                         await invoke("enable_blur");
                     } else {

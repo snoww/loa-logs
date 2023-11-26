@@ -17,8 +17,6 @@ export const searchFilter = writable(new SearchFilter());
 
 export const selectedEncounters = writable(new Set<number>());
 
-export const isWin11 = writable(false);
-
 export const raidGates = readable(new Map<string, string>(), (set) => {
     const newMap = new Map<string, string>();
 
