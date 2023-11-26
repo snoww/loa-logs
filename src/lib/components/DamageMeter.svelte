@@ -26,6 +26,7 @@
     import { takingScreenshot, screenshotAlert, screenshotError } from "$lib/utils/stores";
     import html2canvas from "html2canvas";
     import Details from "./Details.svelte";
+    import DamageTaken from "./shared/DamageTaken.svelte";
 
     let time = +Date.now();
     let encounter: Encounter | null = null;
@@ -428,6 +429,12 @@
                     encounterPartyInfo={parties}
                     localPlayer={encounter?.localPlayer} />
             {/if}
+        {:else if tab === MeterTab.TANK}
+        <div>
+            <DamageTaken {players} topDamageTaken={encounter?.encounterDamageStats.topDamageTaken} />
+        </div>
+        {:else if tab === MeterTab.BOSS}
+        <!-- <div></div> -->
         {:else if tab === MeterTab.DETAILS}
             <Details />
         {/if}

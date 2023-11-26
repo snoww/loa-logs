@@ -70,7 +70,7 @@
     {:else}
         <img
             class="table-cell h-5 w-5"
-            src={$classIconCache[entity.classId]+""}
+            src={$classIconCache[entity.classId]}
             alt={entity.class}
             use:tooltip={{ content: entity.class }} />
     {/if}

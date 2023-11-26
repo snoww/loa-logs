@@ -27,6 +27,7 @@
     } from "$lib/utils/dpsCharts";
     import OpenerSkills from "./OpenerSkills.svelte";
     import ArcanistCardTable from "../shared/ArcanistCardTable.svelte";
+    import DamageTaken from "../shared/DamageTaken.svelte";
 
     export let id: string;
     export let encounter: Encounter;
@@ -189,6 +190,18 @@
         setChartView();
     }
 
+    function tankTab() {
+        handleRightClick();
+        tab = MeterTab.TANK;
+        setChartView();
+    }
+
+    function bossTab() {
+        handleRightClick();
+        tab = MeterTab.BOSS;
+        setChartView();
+    }
+
     function identityTab() {
         if (!localPlayer) return;
         tab = MeterTab.IDENTITY;
@@ -292,9 +305,9 @@
         date={formatTimestampDate(encounter.fightStart, true)}
         encounterDuration={millisToMinutesAndSeconds(encounter.duration)}
         {totalDamageDealt}
-        dps={encounter.encounterDamageStats.dps} 
+        dps={encounter.encounterDamageStats.dps}
         cleared={encounter.cleared}
-        bossOnlyDamage={encounter.bossOnlyDamage}/>
+        bossOnlyDamage={encounter.bossOnlyDamage} />
     {#if !$takingScreenshot}
         <div class="mt-2 flex justify-between" style="width: calc(100vw - 4.5rem);">
             <div class="flex divide-x divide-gray-600">
@@ -310,14 +323,28 @@
                     class:bg-accent-900={tab == MeterTab.PARTY_BUFFS}
                     class:bg-gray-700={tab != MeterTab.PARTY_BUFFS}
                     on:click={partySynergyTab}>
-                    Party Synergy
+                    Party Buffs
                 </button>
                 <button
                     class="rounded-sm px-2 py-1"
                     class:bg-accent-900={tab == MeterTab.SELF_BUFFS}
                     class:bg-gray-700={tab != MeterTab.SELF_BUFFS}
                     on:click={selfSynergyTab}>
-                    Self Synergy
+                    Self Buffs
+                </button>
+                <button
+                    class="rounded-sm px-2 py-1"
+                    class:bg-accent-900={tab == MeterTab.TANK}
+                    class:bg-gray-700={tab != MeterTab.TANK}
+                    on:click={tankTab}>
+                    Tanked
+                </button>
+                <button
+                    class="rounded-sm px-2 py-1"
+                    class:bg-accent-900={tab == MeterTab.BOSS}
+                    class:bg-gray-700={tab != MeterTab.BOSS}
+                    on:click={bossTab}>
+                    Boss
                 </button>
                 {#if localPlayer && localPlayer.skillStats.identityStats}
                     <button
@@ -493,7 +520,8 @@
                                     <th class="w-12 font-normal" use:tooltip={{ content: "Crit %" }}>CRIT</th>
                                 {/if}
                                 {#if $settings.logs.critDmg}
-                                    <th class="w-12 font-normal" use:tooltip={{ content: "% Damage that Crit" }}>CDMG</th>
+                                    <th class="w-12 font-normal" use:tooltip={{ content: "% Damage that Crit" }}
+                                        >CDMG</th>
                                 {/if}
                                 {#if anyFrontAtk && $settings.logs.frontAtk}
                                     <th class="w-12 font-normal" use:tooltip={{ content: "Front Attack %" }}>F.A</th>
@@ -516,7 +544,9 @@
                         </thead>
                         <tbody class="relative z-10">
                             {#each players as player, i (player.name)}
-                                <tr class="h-7 px-2 py-1 {$settings.general.underlineHovered ? 'hover:underline' : ''}" on:click={() => inspectPlayer(player.name)}>
+                                <tr
+                                    class="h-7 px-2 py-1 {$settings.general.underlineHovered ? 'hover:underline' : ''}"
+                                    on:click={() => inspectPlayer(player.name)}>
                                     <LogDamageMeterRow
                                         entity={player}
                                         percentage={playerDamagePercentages[i]}
@@ -564,6 +594,8 @@
                         focusedPlayer={player}
                         {inspectPlayer} />
                 {/if}
+            {:else if tab === MeterTab.TANK}
+                <DamageTaken {players} topDamageTaken={encounter.encounterDamageStats.topDamageTaken} tween={false} />
             {/if}
         </div>
     {/if}

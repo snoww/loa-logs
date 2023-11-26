@@ -242,7 +242,8 @@ export enum MeterTab {
     SELF_BUFFS,
     IDENTITY,
     STAGGER,
-    DETAILS
+    DETAILS,
+    BOSS
 }
 
 export enum ChartType {
