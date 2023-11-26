@@ -155,7 +155,7 @@
             style="height: calc(100vh - 8.25rem - 2.5rem);"
             id="logs-table">
             <table class="w-full table-fixed text-left text-gray-400" id="table">
-                <thead class="sticky top-0 bg-zinc-900 text-xs uppercase">
+                <thead class="sticky top-0 bg-zinc-900 text-xs uppercase z-10">
                     <tr>
                         {#if selectMode}
                             <th scope="col" class="w-14 px-2 py-3">
@@ -251,7 +251,7 @@
                                     </div>
                                 </a>
                             </td>
-                            <td class="flex truncate px-3 py-3">
+                            <td class="flex truncate px-3 py-3" style="-webkit-mask-image: linear-gradient(to right, black 90%, transparent 100%);">
                                 {#each encounter.classes as classId, i}
                                     <img
                                         src={$classIconCache[classId]}

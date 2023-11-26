@@ -62,7 +62,7 @@
     }
 </script>
 
-<div class="flex items-center justify-between">
+<div class="flex items-center justify-between z-30">
     <div class="flex items-center space-x-2">
         <div class="relative">
             <div class="absolute inset-y-0 left-0 flex cursor-default items-center pl-2">
