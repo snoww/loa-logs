@@ -161,6 +161,10 @@
             description={"Shows the difficulty of the raid."}
             bind:setting={$settings.general.showDifficulty} />
         <SettingItem
+            name="Show Raid Gate"
+            description={"Shows the gate of the raid."}
+            bind:setting={$settings.general.showGate} />
+        <SettingItem
             name="Show Tanked Tab"
             description={"Shows the damage taken by players."}
             bind:setting={$settings.general.showTanked} />

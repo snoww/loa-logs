@@ -13,6 +13,7 @@ export const defaultSettings = {
         hideLogo: false,
         showDate: true,
         showDifficulty: true,
+        showGate: false,
         showDetails: false,
         showTanked: false,
         showBosses: false,
