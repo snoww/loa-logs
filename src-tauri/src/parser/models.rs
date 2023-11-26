@@ -506,7 +506,6 @@ pub struct GeneralSettings {
     pub show_date: bool,
     #[serde(default = "default_true")]
     pub show_difficulty: bool,
-    #[serde(default = "default_true")]
     pub show_gate: bool,
     #[serde(default = "default_true")]
     pub split_lines: bool,

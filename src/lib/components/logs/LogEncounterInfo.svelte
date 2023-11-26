@@ -30,12 +30,12 @@
                 {#if $settings.general.showDifficulty && difficulty}
                     <DifficultyLabel {difficulty} />
                     {#if $settings.general.showGate && raidGate}
-                        <span class="text-sky-400">[{raidGate}]</span>
+                        <span class="text-sky-200">[{raidGate}]</span>
                     {/if}
                     {bossName}
                 {:else}
                     {#if $settings.general.showGate && raidGate}
-                        <span class="text-sky-400">[{raidGate}]</span>
+                        <span class="text-sky-200">[{raidGate}]</span>
                     {/if}
                     {bossName}
                 {/if}

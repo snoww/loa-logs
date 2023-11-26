@@ -13,7 +13,7 @@ export const defaultSettings = {
         hideLogo: false,
         showDate: true,
         showDifficulty: true,
-        showGate: true,
+        showGate: false,
         showDetails: false,
         splitLines: false,
         underlineHovered: false,

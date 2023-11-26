@@ -12,7 +12,6 @@
     import { writable } from "svelte/store";
     import DifficultyLabel from "$lib/components/shared/DifficultyLabel.svelte";
     import BossOnlyDamage from "$lib/components/shared/BossOnlyDamage.svelte";
-    import { encounterMap } from "$lib/constants/encounters";
 
     let id = $page.url.searchParams.get("id") ?? "0";
     let encounter: Encounter;
@@ -87,7 +86,7 @@
                                 {/if}
                                 <DifficultyLabel difficulty={encounter.difficulty} />
                                 {#if $settings.general.showGate && $raidGate}
-                                    <span class="text-sky-400">[{$raidGate}]</span>
+                                    <span class="text-sky-200">[{$raidGate}]</span>
                                 {/if}
                                 {encounter.currentBossName}
                             {:else}
@@ -96,7 +95,7 @@
                                     <BossOnlyDamage />
                                 {/if}
                                 {#if $settings.general.showGate && $raidGate}
-                                    <span class="text-sky-400">[{$raidGate}]</span>
+                                    <span class="text-sky-200">[{$raidGate}]</span>
                                 {/if}
                                 {encounter.currentBossName}
                             {/if}

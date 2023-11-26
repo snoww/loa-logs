@@ -221,13 +221,13 @@
                                             <DifficultyLabel difficulty={encounter.difficulty} hover={true} />
                                             {@const gate = $raidGates.get(encounter.bossName)}
                                             {#if $settings.general.showGate && gate}
-                                                <span class="group-hover:text-accent-500 text-sky-400"> [{gate}]</span>
+                                                <span class="group-hover:text-accent-500 text-sky-200"> [{gate}]</span>
                                             {/if}
                                             {encounter.bossName}
                                         {:else}
                                             {@const gate = $raidGates.get(encounter.bossName)}
                                             {#if $settings.general.showGate && gate}
-                                                <span class="text-sky-400"> [{gate}]</span>
+                                                <span class="text-sky-200"> [{gate}]</span>
                                             {/if}
                                             {encounter.bossName}
                                         {/if}
