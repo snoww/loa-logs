@@ -586,7 +586,7 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool, setti
                     }
                 }
                 clone.entities.retain(|_, e| {
-                    (e.entity_type == EntityType::PLAYER || e.entity_type == EntityType::ESTHER || e.entity_type == EntityType::BOSS)
+                    ((e.entity_type == EntityType::PLAYER && e.class_id > 0) || e.entity_type == EntityType::ESTHER || e.entity_type == EntityType::BOSS)
                         && e.damage_stats.damage_dealt > 0
                 });
 
