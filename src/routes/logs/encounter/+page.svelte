@@ -13,28 +13,28 @@
     import DifficultyLabel from "$lib/components/shared/DifficultyLabel.svelte";
     import BossOnlyDamage from "$lib/components/shared/BossOnlyDamage.svelte";
 
-    let id = $page.url.searchParams.get("id") ?? "0";
+    let id: string;
     let encounter: Encounter;
     let fav = writable(false);
     let raidGate = writable<string | undefined>(undefined);
+
+    const loadEncounter = async () => {
+        encounter = await invoke("load_encounter", { id });
+        $fav = encounter.favorite;
+        $raidGate = $raidGates.get(encounter.currentBossName);
+    };
 
     onMount(() => {
         if ($searchStore.length > 0) {
             $backNavStore = true;
         }
 
-        (async () => {
-            encounter = await invoke("load_encounter", { id: id });
-            $fav = encounter.favorite;
-            $raidGate = $raidGates.get(encounter.currentBossName);
-        })();
+        (async () => await loadEncounter())();
     });
 
     $: {
         id = $page.url.searchParams.get("id") ?? "0";
-        (async () => {
-            encounter = await invoke("load_encounter", { id: id });
-        })();
+        (async () => await loadEncounter())();
     }
 
     async function toggle_favorite() {
