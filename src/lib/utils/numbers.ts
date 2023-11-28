@@ -100,7 +100,7 @@ export function formatTimestamp(timestampMs: number): string {
 
 export function formatTimestampDate(timestampMs: number, iso = false): string {
     if (iso) {
-        return new Date(timestampMs).toISOString().split("T")[0];
+        return new Date(timestampMs).toLocaleDateString("sv");
     }
     return new Date(timestampMs).toLocaleString(undefined, {
         year: "numeric",
