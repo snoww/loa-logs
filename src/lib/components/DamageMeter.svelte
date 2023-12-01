@@ -269,6 +269,7 @@
         state = MeterState.PARTY;
         player = null;
         playerName = "";
+        focusedBoss = "";
         encounter = null;
         players = [];
         parties = undefined;
