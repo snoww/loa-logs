@@ -4,7 +4,6 @@
 )]
 
 mod parser;
-mod resources;
 use std::{
     fs::{self, File},
     io::{Read, Write},
@@ -82,11 +81,6 @@ async fn main() -> Result<()> {
                 .path_resolver()
                 .resource_dir()
                 .expect("could not get resource dir");
-
-            #[cfg(not(debug_assertions))]
-            {
-                resources::Resources::new(resource_path.clone()).extract()?;
-            }
 
             let settings = read_settings(&resource_path).ok();
 
