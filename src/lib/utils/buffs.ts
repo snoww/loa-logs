@@ -299,5 +299,14 @@ export function addBardBubbles(key: string, buff: Buff, syn: StatusEffect) {
         } else if (syn.source.desc.includes("5")) {
             buff.bubbles = 1;
         }
+    } else if (key === "arcanist_190900") {
+        // twisted fate
+        if (syn.source.desc.includes("10")) {
+            buff.bubbles = 2;
+        } else if (syn.source.desc.includes("20")) {
+            buff.bubbles = 4;
+        } else if (syn.source.desc.includes("40")) {
+            buff.bubbles = 8;
+        }
     }
 }
