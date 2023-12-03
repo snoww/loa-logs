@@ -289,7 +289,7 @@ export class Buff {
     icon: string;
     sourceIcon?: string;
     percentage: string;
-    bubbles?: number;
+    bonus?: number;
 
     constructor(icon: string, percentage: string, sourceIcon?: string) {
         this.icon = icon;

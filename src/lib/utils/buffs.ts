@@ -293,20 +293,20 @@ export function calculatePartyWidth(
 export function addBardBubbles(key: string, buff: Buff, syn: StatusEffect) {
     if (key === "_bard_serenadeofcourage") {
         if (syn.source.desc.includes("15")) {
-            buff.bubbles = 3;
+            buff.bonus = 15;
         } else if (syn.source.desc.includes("10")) {
-            buff.bubbles = 2;
+            buff.bonus = 10;
         } else if (syn.source.desc.includes("5")) {
-            buff.bubbles = 1;
+            buff.bonus = 5;
         }
     } else if (key === "arcanist_190900") {
         // twisted fate
         if (syn.source.desc.includes("10")) {
-            buff.bubbles = 2;
+            buff.bonus = 10;
         } else if (syn.source.desc.includes("20")) {
-            buff.bubbles = 4;
+            buff.bonus = 20;
         } else if (syn.source.desc.includes("40")) {
-            buff.bubbles = 8;
+            buff.bonus = 30;
         }
     }
 }
