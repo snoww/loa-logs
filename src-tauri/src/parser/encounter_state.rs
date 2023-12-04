@@ -1452,6 +1452,7 @@ fn insert_data(
                 let duration_seconds = (data[data.len() - 1].0 - data[0].0) / 1000;
                 let max = match entity.class.as_str() {
                     "Summoner" => 7_000.0,
+                    "Souleater" => 3_000.0,
                     _ => 10_000.0,
                 };
                 let stats: String = match entity.class.as_str() {
