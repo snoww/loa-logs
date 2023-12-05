@@ -1,3 +1,4 @@
+use std::fmt::Display;
 use std::str::FromStr;
 
 use bitflags::bitflags;
@@ -24,9 +25,9 @@ pub enum EntityType {
     SUMMON,
 }
 
-impl ToString for EntityType {
-    fn to_string(&self) -> String {
-        match self {
+impl Display for EntityType {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let str = match self {
             EntityType::UNKNOWN => "UNKNOWN".to_string(),
             EntityType::MONSTER => "MONSTER".to_string(),
             EntityType::BOSS => "BOSS".to_string(),
@@ -36,7 +37,8 @@ impl ToString for EntityType {
             EntityType::ESTHER => "ESTHER".to_string(),
             EntityType::PROJECTILE => "PROJECTILE".to_string(),
             EntityType::SUMMON => "SUMMON".to_string(),
-        }
+        };
+        write!(f, "{}", str)
     }
 }
 
