@@ -149,6 +149,8 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool, setti
     });
 
     let mut party_freeze = false;
+    let mut party_cache: Option<Vec<Vec<String>>> = None;
+    let mut party_map_cache: HashMap<i32, Vec<String>> = HashMap::new();
 
     while let Ok((op, data)) = rx.recv() {
         if reset.load(Ordering::Relaxed) {
@@ -336,7 +338,11 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool, setti
             }
             Pkt::RaidResult => {
                 party_freeze = true;
-                state.party_info = update_party(&party_tracker, &entity_tracker);
+                state.party_info = if let Some(party) = party_cache.take() {
+                    party
+                } else {
+                    update_party(&party_tracker, &entity_tracker)
+                };
                 state.on_phase_transition(0);
                 raid_end_cd = Instant::now();
                 debug_print!("phase", &0);
@@ -485,14 +491,22 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool, setti
                     match pkt.trigger_signal_type {
                         57 | 59 | 61 | 63 | 74 | 76 => {
                             party_freeze = true;
-                            state.party_info = update_party(&party_tracker, &entity_tracker);
+                            state.party_info = if let Some(party) = party_cache.take() {
+                                party
+                            } else {
+                                update_party(&party_tracker, &entity_tracker)
+                            };
                             state.raid_clear = true;
                             state.on_phase_transition(2);
                             raid_end_cd = Instant::now();
                         }
                         58 | 60 | 62 | 64 | 75 | 77 => {
                             party_freeze = true;
-                            state.party_info = update_party(&party_tracker, &entity_tracker);
+                            state.party_info = if let Some(party) = party_cache.take() {
+                                party
+                            } else {
+                                update_party(&party_tracker, &entity_tracker)
+                            };
                             state.raid_clear = false;
                             state.on_phase_transition(4);
                             raid_end_cd = Instant::now();
@@ -558,15 +572,31 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool, setti
 
             let party_info: Option<HashMap<i32, Vec<String>>>  = if last_party_update.elapsed() >= party_duration && !party_freeze {
                 last_party_update = Instant::now();
-                let party = update_party(&party_tracker, &entity_tracker);
-                if party.len() > 1 {
-                    Some(party
-                        .into_iter()
-                        .enumerate()
-                        .map(|(index, party)| (index as i32, party))
-                        .collect())
+                // we used cached party if it exists
+                if party_cache.is_some() {
+                    Some(party_map_cache.clone())
                 } else {
-                    None
+                    let party = update_party(&party_tracker, &entity_tracker);
+                    // check if both parties are resolved
+                    // if they are we then cache it
+                    if party.len() == 2 && party[0].len() == 4 && party[1].len() == 4 {
+                        party_cache = Some(party.clone());
+                        party_map_cache = party
+                            .into_iter()
+                            .enumerate()
+                            .map(|(index, party)| (index as i32, party))
+                            .collect();
+
+                        Some(party_map_cache.clone())
+                    } else if party.len() > 1 {
+                        Some(party
+                            .into_iter()
+                            .enumerate()
+                            .map(|(index, party)| (index as i32, party))
+                            .collect())
+                    } else {
+                        None
+                    }
                 }
             } else {
                 None
@@ -611,6 +641,8 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool, setti
             state.resetting = false;
             state.saved = false;
             party_freeze = false;
+            party_cache = None;
+            party_map_cache = HashMap::new();
         }
     }
 
