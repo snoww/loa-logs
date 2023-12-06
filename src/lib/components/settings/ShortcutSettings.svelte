@@ -169,7 +169,7 @@
         <div class="flex justify-between">
             <label class="flex items-center" for="modifiers">
                 <div class="">
-                    <div class="text-gray-100">Disable Clickthrough</div>
+                    <div class="text-gray-100">Toggle Clickthrough</div>
                 </div>
             </label>
             <div class="flex items-center space-x-2">

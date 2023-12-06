@@ -32,3 +32,5 @@ export const raidGates = readable(new Map<string, string>(), (set) => {
 
     return () => {};
 });
+
+export const clickthroughStore = writable(false);

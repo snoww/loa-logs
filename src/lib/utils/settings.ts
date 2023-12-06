@@ -2,8 +2,9 @@ import { classColors } from "$lib/constants/colors";
 import { invoke } from "@tauri-apps/api";
 import { emit } from "@tauri-apps/api/event";
 import { register, unregisterAll } from "@tauri-apps/api/globalShortcut";
-import { writable } from "svelte/store";
+import { get, writable } from "svelte/store";
 import { hideAll } from "tippy.js";
+import { clickthroughStore } from "$lib/utils/stores";
 
 export const defaultSettings = {
     general: {
@@ -205,7 +206,16 @@ export async function registerShortcuts(shortcuts: any) {
 
     if (shortcuts.disableClickthrough.modifier && shortcuts.disableClickthrough.key) {
         await register(shortcuts.disableClickthrough.modifier + "+" + shortcuts.disableClickthrough.key, async () => {
-            await invoke("disable_clickthrough");
+            // if meter is clickthrough, disable it
+            if (get(clickthroughStore)) {
+                await invoke("set_clickthrough", { set: false});
+                await invoke("write_log", { message: "disabling clickthrough" });
+                clickthroughStore.update(() => false);
+            } else {
+                await invoke("set_clickthrough" , { set: true});
+                await invoke("write_log", { message: "enabling clickthrough" });
+                clickthroughStore.update(() => true);
+            }
         });
     }
 }

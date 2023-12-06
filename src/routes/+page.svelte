@@ -34,7 +34,7 @@
             } else {
                 await appWindow.setAlwaysOnTop(false);
             }
-            registerShortcuts($settings.shortcuts);
+            await registerShortcuts($settings.shortcuts);
             imagePath.set({
                 path: convertFileSrc(await join(await resourceDir(), "images"))
             });
