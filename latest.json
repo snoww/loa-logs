@@ -1,11 +1,11 @@
 {
-    "version": "v1.4.2",
-    "notes": "### v1.4.2\n#### NEW FEATURES\n- added option to show raid gates in logs\n- added optional damage taken tab (settings > general > show tanked)\n- added optional bosses tab (settings > general > show bosses)\n#### BUG FIXES & IMPROVEMENTS\n- updated boss only damage icon\nfull patch notes on github\nsend bug reports/suggestions to discord.gg/sbSa3pkDF5",
-    "pub_date": "2023-11-26T06:10:53.837Z",
+    "version": "v1.4.3",
+    "notes": "### v1.4.3\n#### BUG FIXES AND IMPROVEMENTS\n- fix raid gate not updating after showing latest (#49)\n- fix screenshot dates to use local timezone\n- count brel g1 split phase as bosses (not dogs)\n- add buff tooltip for arcana twisted fate\n- clickthrough shortcut now toggles\nfull patch notes on github\nsend bug reports/suggestions to discord.gg/sbSa3pkDF5",
+    "pub_date": "2023-12-06T10:20:07.374Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.4.2/LOA.Logs_1.4.2_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlhNdHJOTXAvTURLdjRGNFJlc0NkQlFMNzQzdm10cnpTN0FNMWN5bm5BbnN0Szh2T092T0dGWmhwaWFyWHdneFgralNBRkhzZjUxTzdSZk9JUjJTbWdjPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzAwOTc5MDcxCWZpbGU6TE9BIExvZ3NfMS40LjJfeDY0LXNldHVwLm5zaXMuemlwCmxqNFI2ZDMydHcvV3N3OGN0QTNncE9QZmRLVi9uZlJCeWVWelQxOExnVWJMenJPSGIyZDBRa2ZMSnp4YTF3OUcxMTAvcWlzOHhwSi9HT3FRZm9JMUJ3PT0K"
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.4.3/LOA.Logs_1.4.3_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlhYQWRLZ1RQNzN0Z01lM3A5RFhGZFc5T1RPb3pTOUJ5S0VZY0pIeHNTZUVDZmRLYnErcmVDeHpZUmRsLzZjUVZiRElZTk9vY1BaQkJmS2tpZEhHNXd3PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzAxODU2ODE2CWZpbGU6TE9BIExvZ3NfMS40LjNfeDY0LXNldHVwLm5zaXMuemlwCkJCb1VJR1N3dEtDeVcrQ21qdEo2ekJUYkRoL2o0MnhmM3lIdnQxSlBjZjFKb3h6V0M0WnBQUmhQelFuUWNkRGNSaDk5ZHpGbU5RcjA5THNNUVdUZ0NnPT0K"
         }
     }
 }
