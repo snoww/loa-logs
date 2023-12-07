@@ -360,7 +360,7 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool, setti
                 if let Some(pkt) = parse_pkt(&data, PKTSkillCastNotify::new, "PKTSkillCastNotify") {
                     let mut entity = entity_tracker.get_source_entity(pkt.caster);
                     if entity.class_id == 202 {
-                        entity = entity_tracker.guess_is_player(entity, pkt.skill_id);
+                        entity_tracker.guess_is_player(&mut entity, pkt.skill_id);
                         state.on_skill_start(entity, pkt.skill_id as i32, None, None, Utc::now().timestamp_millis());
                     }
                 }
@@ -368,7 +368,7 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool, setti
             Pkt::SkillStartNotify => {
                 if let Some(pkt) = parse_pkt(&data, PKTSkillStartNotify::new, "PKTSkillStartNotify") {
                     let mut entity = entity_tracker.get_source_entity(pkt.source_id);
-                    entity = entity_tracker.guess_is_player(entity, pkt.skill_id);
+                    entity_tracker.guess_is_player(&mut entity, pkt.skill_id);
                     let tripod_index = pkt.skill_option_data.tripod_index.map(|tripod_index| TripodIndex {
                             first: tripod_index.first,
                             second: tripod_index.second,

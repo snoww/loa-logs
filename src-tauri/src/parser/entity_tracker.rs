@@ -388,12 +388,12 @@ impl EntityTracker {
         }
     }
 
-    pub fn guess_is_player(&mut self, mut entity: Entity, skill_id: u32) -> Entity {
+    pub fn guess_is_player(&mut self, entity: &mut Entity, skill_id: u32) {
         let class_id = get_skill_class_id(&(skill_id as i32));
         if class_id != 0 {
             if entity.entity_type == PLAYER {
                 if entity.class_id == class_id {
-                    return entity;
+                    return;
                 }
                 entity.class_id = class_id;
             } else {
@@ -402,7 +402,6 @@ impl EntityTracker {
             }
         }
         self.entities.insert(entity.id, entity.clone());
-        entity
     }
 
     pub fn build_and_register_status_effect(&mut self, sed: &StatusEffectData, target_id: u64) {

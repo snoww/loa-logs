@@ -32,8 +32,6 @@ serde_with = "2.3.3"
 meter-core = { path = "D:\\projects\\meter-core-rs\\" }
 log = "0.4.18"
 flexi_logger = { version = "0.25", default-features = false }
-zip = "0.6.6"
-
 
 [features]
 # by default Tauri runs in production mode
@@ -49,3 +47,6 @@ codegen-units = 1 # Compile crates one after another so the compiler can optimiz
 lto = true # Enables link to optimizations
 opt-level = "s" # Optimize for binary size
 strip = true # Remove debug symbols
+
+[profile.dev.package."*"]
+debug = false # Disable debug symbols for dependencies

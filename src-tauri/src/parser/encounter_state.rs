@@ -117,10 +117,7 @@ impl EncounterState {
         if let Some(mut local) = self.encounter.entities.remove(&self.encounter.local_player) {
             // update local player name, insert back into encounter
             self.encounter.local_player = entity.name.clone();
-            local.name = entity.name.clone();
-            local.class_id = entity.class_id;
-            local.class = get_class_from_id(&entity.class_id);
-            local.gear_score = entity.gear_level;
+            update_player_entity(&mut local, entity);
             self.encounter
                 .entities
                 .insert(self.encounter.local_player.clone(), local);
@@ -137,10 +134,7 @@ impl EncounterState {
             // if we find the old local player, we update its name and insert back into encounter
             if let Some(old_local) = old_local {
                 let mut new_local = self.encounter.entities[&old_local].clone();
-                new_local.name = entity.name.clone();
-                new_local.class_id = entity.class_id;
-                new_local.class = get_class_from_id(&entity.class_id);
-                new_local.gear_score = entity.gear_level;
+                update_player_entity(&mut new_local, entity);
                 self.encounter.entities.remove(&old_local);
                 self.encounter.local_player = entity.name.clone();
                 self.encounter
@@ -154,11 +148,7 @@ impl EncounterState {
         // replace or insert local player
         if let Some(mut local_player) = self.encounter.entities.remove(&self.encounter.local_player)
         {
-            local_player.id = entity.id;
-            local_player.name = entity.name.clone();
-            local_player.class_id = entity.class_id;
-            local_player.class = get_class_from_id(&entity.class_id);
-            local_player.gear_score = entity.gear_level;
+            update_player_entity(&mut local_player, &entity);
             self.encounter
                 .entities
                 .insert(entity.name.clone(), local_player);
@@ -312,6 +302,10 @@ impl EncounterState {
         tripod_level: Option<TripodLevel>,
         timestamp: i64,
     ) {
+        // do not track skills if encounter not started
+        if self.encounter.fight_start == 0 {
+            return;
+        }
         let skill_name = get_skill_name(&skill_id);
         let entity = self
             .encounter
@@ -446,8 +440,8 @@ impl EncounterState {
         }
 
         let mut skill_effect_id = skill_effect_id;
-        if is_battle_item(skill_effect_id, "attack")
-            && proj_entity.entity_type == EntityType::PROJECTILE
+        if proj_entity.entity_type == EntityType::PROJECTILE &&
+            is_battle_item(skill_effect_id, "attack")
         {
             skill_effect_id = proj_entity.skill_effect_id as i32;
         }
@@ -934,6 +928,14 @@ fn encounter_entity_from_entity(entity: &Entity) -> EncounterEntity {
         gear_score: entity.gear_level,
         ..Default::default()
     }
+}
+
+fn update_player_entity(old: &mut EncounterEntity, new: &Entity) {
+    old.id = new.id;
+    old.name = new.name.clone();
+    old.class_id = new.class_id;
+    old.class = get_class_from_id(&new.class_id);
+    old.gear_score = new.gear_level;
 }
 
 fn is_support_class_id(class_id: u32) -> bool {
