@@ -158,6 +158,7 @@ impl EncounterState {
             local_player.name = entity.name.clone();
             local_player.class_id = entity.class_id;
             local_player.class = get_class_from_id(&entity.class_id);
+            local_player.gear_score = entity.gear_level;
             self.encounter
                 .entities
                 .insert(entity.name.clone(), local_player);

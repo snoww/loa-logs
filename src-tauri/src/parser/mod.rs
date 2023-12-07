@@ -206,8 +206,10 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool, setti
                 if let Some(pkt) = parse_pkt(&data, PKTInitEnv::new, "PKTInitEnv") {
                     party_tracker.borrow_mut().reset_party_mappings();
                     state.raid_difficulty = "".to_string();
+                    party_cache = None;
+                    party_map_cache = HashMap::new();
                     let entity = entity_tracker.init_env(pkt);
-                    debug_print(format_args!("init env: {:?}", &entity));
+                    debug_print(format_args!("init env: {}, class: {}, ilvl: {}, id: {}", entity.name, get_class_from_id(&entity.class_id), entity.gear_level, entity.character_id));
                     state.on_init_env(entity);
                 }
             }
