@@ -19,8 +19,6 @@ use meter_core::packets::definitions::*;
 use meter_core::packets::opcodes::Pkt;
 use meter_core::{start_capture, start_raw_capture};
 use std::cell::RefCell;
-use std::collections::BTreeMap;
-use std::path::PathBuf;
 use std::rc::Rc;
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
@@ -81,21 +79,6 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool, setti
             boss_only_damage.store(true, Ordering::Relaxed);
             info!("boss only damage enabled")
         }
-    }
-
-    // read saved local players
-    // this info is used in case meter was opened late
-    let mut local_players: HashMap<u64, String> = HashMap::new();
-    let mut local_player_path = window
-        .app_handle()
-        .path_resolver()
-        .resource_dir()
-        .expect("could not get resource dir");
-    local_player_path.push("local_players.json");
-
-    if local_player_path.exists() {
-        let local_players_file = std::fs::read_to_string(local_player_path.clone()).expect("could not read local_players.json");
-        local_players = serde_json::from_str(&local_players_file).expect("could not parse local_players.json");
     }
 
     let emit_details = Arc::new(AtomicBool::new(false));
@@ -225,14 +208,7 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool, setti
                     state.raid_difficulty = "".to_string();
                     party_cache = None;
                     party_map_cache = HashMap::new();
-                    let mut entity = entity_tracker.init_env(pkt);
-                    if entity.name.is_empty() || entity.name == "You" {
-                        let saved_name = local_players.get(&entity.character_id).cloned().unwrap_or_default();
-                        if !saved_name.is_empty() {
-                            entity.name = saved_name;
-                            warn!("meter opened late, using saved local player name: {}", entity.name);
-                        }
-                    }
+                    let entity = entity_tracker.init_env(pkt);
                     debug_print(format_args!("init env: {}, class: {}, ilvl: {}, id: {}", entity.name, get_class_from_id(&entity.class_id), entity.gear_level, entity.character_id));
                     state.on_init_env(entity);
                 }
@@ -242,10 +218,7 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool, setti
                     let (hp, max_hp) = get_current_and_max_hp(&pkt.stat_pair);
                     let entity = entity_tracker.init_pc(pkt);
                     info!("local player: {}, class: {}, ilvl: {}, id: {}", entity.name, get_class_from_id(&entity.class_id), entity.gear_level, entity.character_id);
-                    if !local_players.contains_key(&entity.character_id) {
-                        local_players.insert(entity.character_id, entity.name.clone());
-                        write_local_players(&local_players, &local_player_path);
-                    }
+                    // debug_print!("init pc", &entity);
 
                     state.on_init_pc(entity, hp, max_hp)
                 }
@@ -304,7 +277,7 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool, setti
             }
             Pkt::PartyInfo => {
                 if let Some(pkt) = parse_pkt(&data, PKTPartyInfo::new, "PKTPartyInfo") {
-                    entity_tracker.party_info(pkt, &local_players);
+                    entity_tracker.party_info(pkt);
                     let local_player_id = entity_tracker.local_player_id;
                     if let Some(entity) = entity_tracker.entities.get(&local_player_id) {
                         state.update_local_player(entity);
@@ -696,11 +669,6 @@ fn update_party(party_tracker: &Rc<RefCell<PartyTracker>>, entity_tracker: &Enti
     sorted_parties.into_iter().map(|(_, members)| members).collect()
 }
 
-fn write_local_players(local_players: &HashMap<u64, String>, path: &PathBuf) {
-    let ordered: BTreeMap<_,_> = local_players.iter().collect();
-    let local_players_file = serde_json::to_string(&ordered).expect("could not serialize local_players");
-    std::fs::write(path, local_players_file).expect("could not write local_players.json");
-}
 
 fn parse_pkt<T, F>(data: &[u8], new_fn: F, pkt_name: &str) -> Option<T>
 where
