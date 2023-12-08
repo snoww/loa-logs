@@ -309,6 +309,8 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool, setti
                     if let Some(entity) = entity_tracker.entities.get(&local_player_id) {
                         state.update_local_player(entity);
                     }
+                    party_cache = None;
+                    party_map_cache = HashMap::new();
                 }
             }
             Pkt::PartyLeaveResult => {
@@ -316,6 +318,8 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool, setti
                     party_tracker
                         .borrow_mut()
                         .remove(pkt.party_instance_id, pkt.name);
+                    party_cache = None;
+                    party_map_cache = HashMap::new();
                 }
             }
             Pkt::PartyStatusEffectAddNotify => {
