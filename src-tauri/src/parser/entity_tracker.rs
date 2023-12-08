@@ -288,51 +288,29 @@ impl EntityTracker {
         self.entities.insert(trap.id, trap);
     }
 
-    pub fn party_info(&mut self, pkt: PKTPartyInfo) {
+    pub fn party_info(&mut self, pkt: PKTPartyInfo, local_players: &HashMap<u64, String>) {
         let local_player = match self.entities.get(&self.local_player_id) {
             Some(local_player) => local_player,
             None => return,
         };
 
-        if pkt.member_datas.len() == 1 {
-            if let Some(first) = pkt.member_datas.get(0) {
-                // self.party_tracker.borrow_mut().reset_party_mappings();
-                if first.name == local_player.name {
-                    if let Some(local_player) = self.entities.get_mut(&self.local_player_id) {
-                        local_player.class_id = first.class_id as u32;
-                        local_player.gear_level = truncate_gear_level(first.gear_level);
-                        local_player.character_id = first.character_id;
-                        self.id_tracker
-                            .borrow_mut()
-                            .add_mapping(first.character_id, self.local_player_id);
-                    }
-                    return;
-                }
-            }
-        }
-
         let local_player_name = local_player.name.clone();
-        let local_character_id = local_player.character_id;
+        let mut unknown_local = local_player_name.is_empty() || local_player_name == "You";
         self.party_tracker
             .borrow_mut()
             .remove_party_mappings(pkt.party_instance_id);
         for member in pkt.member_datas {
-            if member.name == local_player_name || member.character_id == local_character_id {
+            if unknown_local && local_players.contains_key(&member.character_id) {
                 if let Some(local_player) = self.entities.get_mut(&self.local_player_id) {
                     local_player.class_id = member.class_id as u32;
                     local_player.gear_level = truncate_gear_level(member.gear_level);
-                    if member.character_id == local_character_id {
-                        self.party_tracker
-                            .borrow_mut()
-                            .set_name(member.name.clone());
-                        local_player.name = member.name.clone();
-                    } else {
-                        local_player.character_id = member.character_id;
-                        self.id_tracker
-                            .borrow_mut()
-                            .add_mapping(member.character_id, self.local_player_id);
-                    }
+                    local_player.name = member.name.clone();
+                    local_player.character_id = member.character_id;
+                    self.id_tracker
+                        .borrow_mut()
+                        .add_mapping(member.character_id, self.local_player_id);
                 }
+                unknown_local = false;
             }
             let entity_id = self.id_tracker.borrow().get_entity_id(member.character_id);
 
