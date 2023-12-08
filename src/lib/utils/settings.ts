@@ -31,6 +31,7 @@ export const defaultSettings = {
         isWin11: false,
         transparent: true,
         scale: "1",
+        logScale: "1",
         alwaysOnTop: true,
         bossOnlyDamage: false,
     },

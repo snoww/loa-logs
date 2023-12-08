@@ -59,13 +59,13 @@
     }
     
     $: {
-        if ($settings.general.scale === "1") {
+        if ($settings.general.logScale === "1") {
             document.documentElement.style.setProperty("font-size", "medium");
-        } else if ($settings.general.scale === "2") {
+        } else if ($settings.general.logScale === "2") {
             document.documentElement.style.setProperty("font-size", "large");
-        } else if ($settings.general.scale === "3") {
+        } else if ($settings.general.logScale === "3") {
             document.documentElement.style.setProperty("font-size", "x-large");
-        } else if ($settings.general.scale === "0") {
+        } else if ($settings.general.logScale === "0") {
             document.documentElement.style.setProperty("font-size", "small");
         }
     }

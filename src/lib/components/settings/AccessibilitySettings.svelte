@@ -35,7 +35,21 @@
                     <option value="3">Largest</option>
                 </select>
             </div>
-            <div>UI Scale</div>
+            <div>Meter UI Scale</div>
+        </div>
+        <div class="flex items-center space-x-2 py-1">
+            <div>
+                <select
+                    id="modifiers"
+                    bind:value={$settings.general.logScale}
+                    class="focus:ring-accent-500 focus:border-accent-500 yx-2 block w-28 rounded-lg border border-gray-600 bg-gray-700 py-1 text-sm text-white placeholder-gray-400">
+                    <option value="0">Small</option>
+                    <option value="1">Normal</option>
+                    <option value="2">Large</option>
+                    <option value="3">Largest</option>
+                </select>
+            </div>
+            <div>Log UI Scale</div>
         </div>
         <SettingItem
             name="Split Lines"

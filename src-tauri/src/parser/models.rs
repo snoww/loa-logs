@@ -528,6 +528,8 @@ pub struct GeneralSettings {
     pub transparent: bool,
     #[serde(default = "default_scale")]
     pub scale: String,
+    #[serde(default = "default_scale")]
+    pub log_scale: String,
     #[serde(default = "default_true")]
     pub always_on_top: bool,
     pub boss_only_damage: bool,
