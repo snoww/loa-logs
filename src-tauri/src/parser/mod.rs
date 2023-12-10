@@ -203,13 +203,17 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool, setti
                 }
             }
             Pkt::InitEnv => {
+                // two methods of getting local player info
+                // 1. MigrationExecute + InitEnv      + PartyInfo
+                //    > character_id     > entity_id  > player_info
+                // 2. InitPC
+
                 if let Some(pkt) = parse_pkt(&data, PKTInitEnv::new, "PKTInitEnv") {
                     party_tracker.borrow_mut().reset_party_mappings();
                     state.raid_difficulty = "".to_string();
                     party_cache = None;
                     party_map_cache = HashMap::new();
                     let entity = entity_tracker.init_env(pkt);
-                    debug_print(format_args!("init env: {}, class: {}, ilvl: {}, id: {}", entity.name, get_class_from_id(&entity.class_id), entity.gear_level, entity.character_id));
                     state.on_init_env(entity);
                 }
             }
@@ -217,9 +221,7 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool, setti
                 if let Some(pkt) = parse_pkt(&data, PKTInitPC::new, "PKTInitPC") {
                     let (hp, max_hp) = get_current_and_max_hp(&pkt.stat_pair);
                     let entity = entity_tracker.init_pc(pkt);
-                    info!("local player: {}, class: {}, ilvl: {}, id: {}", entity.name, get_class_from_id(&entity.class_id), entity.gear_level, entity.character_id);
-                    // debug_print!("init pc", &entity);
-
+                    info!("local player: {}, {}, {}, eid: {}, id: {}", entity.name, get_class_from_id(&entity.class_id), entity.gear_level, entity.id, entity.character_id);
                     state.on_init_pc(entity, hp, max_hp)
                 }
             }
@@ -232,7 +234,7 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool, setti
                 if let Some(pkt) = parse_pkt(&data, PKTNewPC::new, "PKTNewPC") {
                     let (hp, max_hp) = get_current_and_max_hp(&pkt.pc_struct.stat_pair);
                     let entity = entity_tracker.new_pc(pkt);
-                    debug_print(format_args!("new PC: {}, {}, {}, id: {}, {}", entity.name, get_class_from_id(&entity.class_id), entity.id, entity.character_id, entity.gear_level));
+                    debug_print(format_args!("new PC: {}, {}, {}, eid: {}, cid: {}", entity.name, get_class_from_id(&entity.class_id), entity.gear_level, entity.id, entity.character_id));
                     state.on_new_pc(entity, hp, max_hp);
                 }
             }
@@ -240,7 +242,7 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool, setti
                 if let Some(pkt) = parse_pkt(&data, PKTNewNpc::new, "PKTNewNpc") {
                     let (hp, max_hp) = get_current_and_max_hp(&pkt.npc_struct.stat_pair);
                     let entity = entity_tracker.new_npc(pkt, max_hp);
-                    debug_print(format_args!("new {}: {}, {}, id: {}, hp: {}", entity.entity_type, entity.name, entity.id, entity.npc_id, max_hp));
+                    debug_print(format_args!("new {}: {}, eid: {}, id: {}, hp: {}", entity.entity_type, entity.name, entity.id, entity.npc_id, max_hp));
                     state.on_new_npc(entity, hp, max_hp);
                 }
             }
@@ -248,7 +250,7 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool, setti
                 if let Some(pkt) = parse_pkt(&data, PKTNewNpcSummon::new, "PKTNewNpcSummon") {
                     let (hp, max_hp) = get_current_and_max_hp(&pkt.npc_data.stat_pair);
                     let entity = entity_tracker.new_npc_summon(pkt, max_hp);
-                    debug_print(format_args!("new {}: {}, {}, id: {}, hp: {}", entity.entity_type, entity.name, entity.id, entity.npc_id, max_hp));
+                    debug_print(format_args!("new {}: {}, eid: {}, id: {}, hp: {}", entity.entity_type, entity.name, entity.id, entity.npc_id, max_hp));
                     state.on_new_npc(entity, hp, max_hp);
                 }
             }
@@ -277,6 +279,7 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool, setti
             }
             Pkt::PartyInfo => {
                 if let Some(pkt) = parse_pkt(&data, PKTPartyInfo::new, "PKTPartyInfo") {
+                    info!("party info: {:?}", pkt.member_datas);
                     entity_tracker.party_info(pkt);
                     let local_player_id = entity_tracker.local_player_id;
                     if let Some(entity) = entity_tracker.entities.get(&local_player_id) {

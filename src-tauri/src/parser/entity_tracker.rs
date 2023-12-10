@@ -10,6 +10,7 @@ use meter_core::packets::definitions::*;
 use meter_core::packets::structures::{NpcData, StatusEffectData};
 use std::cell::RefCell;
 use std::rc::Rc;
+use log::info;
 
 pub struct EntityTracker {
     id_tracker: Rc<RefCell<IdTracker>>,
@@ -40,9 +41,7 @@ impl EntityTracker {
     }
 
     pub fn init_env(&mut self, pkt: PKTInitEnv) -> Entity {
-        if self.local_player_id == 0 {
-            self.local_player_id = pkt.player_id;
-        } else {
+        if !self.local_player_id == 0 {
             let party_id = self
                 .party_tracker
                 .borrow_mut()
@@ -73,6 +72,8 @@ impl EntityTracker {
             },
         };
 
+        info!("init env: eid: {}->{}", self.local_player_id, pkt.player_id);
+
         local_player.id = pkt.player_id;
         self.local_player_id = pkt.player_id;
 
@@ -84,8 +85,6 @@ impl EntityTracker {
             self.id_tracker
                 .borrow_mut()
                 .add_mapping(local_player.character_id, local_player.id);
-        }
-        if local_player.character_id > 0 {
             self.party_tracker
                 .borrow_mut()
                 .complete_entry(local_player.character_id, local_player.id);
