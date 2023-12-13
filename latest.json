@@ -1,11 +1,11 @@
 {
-    "version": "v1.4.3",
-    "notes": "### v1.4.3\n#### BUG FIXES AND IMPROVEMENTS\n- fix raid gate not updating after showing latest (#49)\n- fix screenshot dates to use local timezone\n- count brel g1 split phase as bosses (not dogs)\n- add buff tooltip for arcana twisted fate\n- clickthrough shortcut now toggles\nfull patch notes on github\nsend bug reports/suggestions to discord.gg/sbSa3pkDF5",
-    "pub_date": "2023-12-06T10:20:07.374Z",
+    "version": "v1.4.4",
+    "notes": "### v1.4.4\n#### NEW FEATURES\n- update meter for voldis\n#### BUG FIXES AND IMPROVEMENTS\n- fix parties not resetting\n- separate meter and logs scale settings\nfull patch notes on github\nsend bug reports/suggestions to discord.gg/sbSa3pkDF5",
+    "pub_date": "2023-12-13T22:26:55.606Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.4.3/LOA.Logs_1.4.3_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlhYQWRLZ1RQNzN0Z01lM3A5RFhGZFc5T1RPb3pTOUJ5S0VZY0pIeHNTZUVDZmRLYnErcmVDeHpZUmRsLzZjUVZiRElZTk9vY1BaQkJmS2tpZEhHNXd3PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzAxODU2ODE2CWZpbGU6TE9BIExvZ3NfMS40LjNfeDY0LXNldHVwLm5zaXMuemlwCkJCb1VJR1N3dEtDeVcrQ21qdEo2ekJUYkRoL2o0MnhmM3lIdnQxSlBjZjFKb3h6V0M0WnBQUmhQelFuUWNkRGNSaDk5ZHpGbU5RcjA5THNNUVdUZ0NnPT0K"
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.4.4/LOA.Logs_1.4.4_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmFyNlZmVkZOWFhwMWtuTzN1dW04cnBjazlTQzJqQXFHWlN0OHpRZll2Qzc2VnNJMjZpUkxYNjh0NWwya1JwaktOL2FWSk9TZ0l0NndlVEtuUzY4UWcwPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzAyNTA2NTIzCWZpbGU6TE9BIExvZ3NfMS40LjRfeDY0LXNldHVwLm5zaXMuemlwClAzTUZpM09XRGZkTnQ5dXJDQUpSeU1aRlR3WjdPZ1hza0lYSDROYlMyTjRnN3pPbDBjeFgvNUc2YzhheGNuamh4aDA0N0draU5UWk5FN1FhMWtMWUNnPT0K"
         }
     }
 }
