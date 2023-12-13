@@ -31,6 +31,12 @@ export const encounterMap: { [key: string]: { [key: string]: Array<string> }} = 
         "Akkan G2": ["Lord of Degradation Akkan"],
         "Akkan G3": ["Plague Legion Commander Akkan", "Lord of Kartheon Akkan"]
     },
+    "Ivory Tower of Chaos": {
+        "Ivory Tower G1": ["Kaltaya, the Blooming Chaos"],
+        "Ivory Tower G2": ["Rakathus, the Lurking Arrogance"],
+        "Ivory Tower G3": ["Firehorn, Trampler of Earth"],
+        "Ivory Tower G4": ["Lazaram, the Trailblazer"]
+    }
 };
 
 export const difficultyMap: Array<string> = ["Normal", "Hard", "Inferno", "Challenge", "Trial"];

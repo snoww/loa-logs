@@ -44,6 +44,7 @@ export const bossList = [
 
 
     // guardian raids
+    "Gargadeth",
     "Sonavel",
     "Hanumatan",
     "Kungelanium",
@@ -94,12 +95,12 @@ export const bosses = {
             "Celestial Sentinel",
             "Prunya",
             "Lauriel",
+        ],
+        "Ivory Tower of Chaos": [
+            "Kaltaya, the Blooming Chaos",
+            "Rakathus, the Lurking Arrogance",
+            "Firehorn, Trampler of Earth",
+            "Lazaram, the Trailblazer"
         ]
-    },
-    "Guardian Raids": [
-        "Sonavel",
-        "Hanumatan",
-        "Kungelanium",
-        "Deskaluda"
-    ]
+    }
 };

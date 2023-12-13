@@ -1181,7 +1181,7 @@
   },
   "57781": {
     "id": 57781,
-    "name": "Share My HP",
+    "name": "Share My Life Force",
     "desc": "Share your life force with the Homunculus to restore the core's balance.",
     "classid": 0,
     "icon": "vehicle_349.png"
@@ -1727,11 +1727,41 @@
     "classid": 0,
     "icon": "vehicle_5.png"
   },
-  "59620": { "id": 59620, "name": "", "desc": "", "classid": 0, "icon": "vehicle_495.png" },
-  "59621": { "id": 59621, "name": "", "desc": "", "classid": 0, "icon": "vehicle_496.png" },
-  "59622": { "id": 59622, "name": "", "desc": "", "classid": 0, "icon": "vehicle_497.png" },
-  "59623": { "id": 59623, "name": "", "desc": "", "classid": 0, "icon": "vehicle_497.png" },
-  "59630": { "id": 59630, "name": " ", "desc": "", "classid": 0, "icon": "vehicle_498.png" },
+  "59620": {
+    "id": 59620,
+    "name": "Agree",
+    "desc": "The current situation isn't ideal, but it's a fair point, so let's agree for now.",
+    "classid": 0,
+    "icon": "vehicle_495.png"
+  },
+  "59621": {
+    "id": 59621,
+    "name": "Disagree",
+    "desc": "It's not true. Let's deny it immediately.",
+    "classid": 0,
+    "icon": "vehicle_496.png"
+  },
+  "59622": {
+    "id": 59622,
+    "name": "Object",
+    "desc": "This is nonsense. Let's respond firmly.",
+    "classid": 0,
+    "icon": "vehicle_497.png"
+  },
+  "59623": {
+    "id": 59623,
+    "name": "Object",
+    "desc": "This is nonsense. Let's respond firmly.",
+    "classid": 0,
+    "icon": "vehicle_497.png"
+  },
+  "59630": {
+    "id": 59630,
+    "name": "The real heretic is... ",
+    "desc": "Listening to this is absurd. We will not be swept away, no matter what!",
+    "classid": 0,
+    "icon": "vehicle_498.png"
+  },
   "59640": { "id": 59640, "name": "", "desc": "", "classid": 0, "icon": "saction_01_11.png" },
   "59700": {
     "id": 59700,
@@ -29261,6 +29291,13 @@
     "classid": 0,
     "icon": ""
   },
+  "42234104": {
+    "id": 42234104,
+    "name": "군단장 아브렐슈드_텔레포트(중앙)_낙사볼륨용",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
   "4215718": { "id": 4215718, "name": "티엔_3연속 찌르기 후 회전베기_A", "desc": "", "classid": 0, "icon": "" },
   "4215719": { "id": 4215719, "name": "티엔_3연속 찌르기 후 회전베기_B", "desc": "", "classid": 0, "icon": "" },
   "4215720": { "id": 4215720, "name": "티엔_검술 난무_A", "desc": "", "classid": 0, "icon": "" },
@@ -33185,7 +33222,7 @@
   },
   "13060": {
     "id": 13060,
-    "name": "Polestar",
+    "name": "Fallstar",
     "desc": "Slash upward to inflict <$MACRO physic @1:130600/> Damage and launch foes into the air then attack them in the air with up to <FONT COLOR='#ffbb00'><$CALC_COMMA ((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)* (<$TABLE_SKILLEFFECT ValueF 130605/>/10000)+((<$TABLE_SKILLEFFECT ValueA 130605/> + <$TABLE_SKILLEFFECT ValueB 130605/>)/2))*2 +((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)* (<$TABLE_SKILLEFFECT ValueF 251703/>/10000)+((<$TABLE_SKILLEFFECT ValueA 130605/> + <$TABLE_SKILLEFFECT ValueB 130605/>)/2))*2/></FONT> Damage, and spin with your Dual Blades to cause <$MACRO physic @1:130607/> Damage, slamming foes onto the ground.",
     "classid": 401,
     "icon": "bl_skill_01_13.png"
@@ -33479,7 +33516,7 @@
   },
   "25170": {
     "id": 25170,
-    "name": "Polestar",
+    "name": "Fallstar",
     "desc": "Slash upward to inflict <$MACRO physic @1:251700/> Damage and launch foes into the air then attack them in the air for up to <FONT COLOR='#ffbb00'><$CALC_COMMA ((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)* (<$TABLE_SKILLEFFECT ValueF 251702/>/10000)+((<$TABLE_SKILLEFFECT ValueA 251702/> + <$TABLE_SKILLEFFECT ValueB 251702/>)/2))*2 +((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)* (<$TABLE_SKILLEFFECT ValueF 251703/>/10000)+((<$TABLE_SKILLEFFECT ValueA 251703/> + <$TABLE_SKILLEFFECT ValueB 251703/>)/2))*2/></FONT> Damage, then slash downward with your longsword to cause <$MACRO physic @1:251705/> Damage, slamming foes onto the ground.",
     "classid": 402,
     "icon": "bl_skill_01_13.png",
@@ -34529,7 +34566,7 @@
   "23260": {
     "id": 23260,
     "name": "Shredding Strike",
-    "desc": "Concentrate energy onto your arms for <FONT COLOR='#ffff99'>1s</FONT> while facing forward, and then instantly glide <FONT COLOR='#ffff99'>3 meters</FONT> forward, inflicting <$MACRO physic @1:232602/> Damage along the way and throw a punch, inflicting <$MACRO physic @1:232601/> Damage. This skill's Damage varies, depending on the amount of Shock Energy you have. (<FONT COLOR='#ffff99'>0-25%</FONT> Shock Meter: +<FONT COLOR='#99ff99'>15%</FONT>, <FONT COLOR='#ffff99'>26-50%</FONT> Shock Meter: +<FONT COLOR='#99ff99'>30%</FONT>, <FONT COLOR='#ffff99'>51-75%</FONT> Shock Meter: +<FONT COLOR='#99ff99'>45%</FONT>, <FONT COLOR='#ffff99'>76-100%</FONT> Shock Meter: +<FONT COLOR='#99ff99'>60%</FONT>)",
+    "desc": "Concentrate energy onto your arms for <FONT COLOR='#ffff99'>1s</FONT> while facing forward, and then instantly glide <FONT COLOR='#ffff99'>3 meters</FONT> forward, inflicting <$MACRO physic @1:232602/> Damage along the way and throw a punch, inflicting <$MACRO physic @1:232601/> Damage. This skill's Damage varies depending on the amount of Shock Energy you have. (<FONT COLOR='#ffff99'>0-25%</FONT> Shock Meter: +<FONT COLOR='#99ff99'>15%</FONT>, <FONT COLOR='#ffff99'>26-50%</FONT> Shock Meter: +<FONT COLOR='#99ff99'>30%</FONT>, <FONT COLOR='#ffff99'>51-75%</FONT> Shock Meter: +<FONT COLOR='#99ff99'>45%</FONT>, <FONT COLOR='#ffff99'>76-100%</FONT> Shock Meter: +<FONT COLOR='#99ff99'>60%</FONT>)",
     "classid": 303,
     "icon": "if_skill_01_22.png",
     "identitycategory": "infighter_shock",
@@ -34936,7 +34973,7 @@
   "39100": {
     "id": 39100,
     "name": "Esoteric Skill: Lightning Tiger Strike",
-    "desc": "Gather [Lightning] energy and kick to send foes into the air with <$MACRO magic @1:391000/> Damage. Ignore collisions with adventurers and Normal monsters while moving.",
+    "desc": "Gather [Lightning] energy and unleash a kick, sending foes into the air and inflicting <$MACRO magic @1:391000/> Damage. Ignore collisions with adventurers and Normal monsters while moving.",
     "classid": 312,
     "icon": "bm_skill_01_35.png",
     "identitycategory": "battle_master_bubble",
@@ -35034,7 +35071,7 @@
   "39170": {
     "id": 39170,
     "name": "Lightning Kick",
-    "desc": "Deliver a flurry of kicks that inflict <$MACRO physic @1:391700/> [Lightning] Damage <FONT COLOR='#ffff99'>three</FONT> times, and strike down at foes causing <$MACRO physic @1:391701/> Damage. Downed foes are lifted off the ground, and airborne foes are slammed onto the ground for <$MACRO physic @1:391703/> Damage.",
+    "desc": "Deliver a flurry of kicks that inflict <$MACRO physic @1:391700/> [Lightning] Damage <FONT COLOR='#ffff99'>3</FONT> times, and strike down at foes causing <$MACRO physic @1:391701/> Damage. Downed foes are lifted off the ground, and airborne foes are slammed onto the ground for <$MACRO physic @1:391703/> Damage.",
     "classid": 312,
     "icon": "bm_skill_01_18.png",
     "identitycategory": "battle_master_normal",
@@ -41167,7 +41204,7 @@
   "46600": {
     "id": 46600,
     "name": "Deathbringer",
-    "desc": "Gathers a great power and swings the scythe forward alternating with the Deathlord. Inflicts <$MACRO physic @1:466000/> Damage <FONT COLOR='#ffff99'>4</FONT> times. After alternating <$MACRO physic @1:466001/> Damage  <FONT COLOR='#ffff99'>4</FONT> times, smashes the front and inflicts <$MACRO physic @1:466002/> Damage and knocks down foes.",
+    "desc": "Gathers a great power and swings the scythe forward alternating with the Deathlord. Inflicts <$MACRO physic @1:466000/> Damage <FONT COLOR='#ffff99'>4</FONT> times. After alternating <$MACRO physic @1:466001/> Damage <FONT COLOR='#ffff99'>4</FONT> times, smashes the front and inflicts <$MACRO physic @1:466002/> Damage and knocks down foes.",
     "classid": 405,
     "icon": "se_skill_01_20.png",
     "groups": [
@@ -41451,7 +41488,7 @@
   "16120": {
     "id": 16120,
     "name": "Red Dust",
-    "desc": "Swing the greatsword into the air and create a red energy. On hit, inflict <$MACRO physic @1:161200/> Damage, Atk. Power +<FONT COLOR='#99ff99'><$MACRO buffstat0_100 @1:161201/>%</FONT> for <$MACRO bufftime @1:161201/>s.",
+    "desc": "Swing the greatsword into the air and create an aura of red energy. On hit, inflict <$MACRO physic @1:161200/> Damage, Atk. Power +<FONT COLOR='#99ff99'><$MACRO buffstat0_100 @1:161201/>%</FONT> for <$MACRO bufftime @1:161201/>s.",
     "classid": 102,
     "icon": "bk_skill_01_8.png",
     "identitycategory": "berserker_normal",
@@ -42172,7 +42209,7 @@
   "18140": {
     "id": 18140,
     "name": "Endure Pain",
-    "desc": "Let out a roar, inflicting <$MACRO Magic @1:181401/> Damage to foes within a <FONT COLOR='#ffff99'>6-meter</FONT> range. Upon using the skill, gain a buff that makes you immune to Pushes and incoming Damage -<FONT COLOR='#99ff99'><$CALC_COMMA <$TABLE_SKILLBUFF PassiveOptionValue0 181400/>/100/>%</FONT> for <FONT COLOR='#ffff99'><$CALC_COMMA <$TABLE_SKILLBUFF Duration 181400/>/1000 /></FONT>s. On hit, obtain <FONT COLOR='#ffff99'>3</FONT> Gravity Cores.",
+    "desc": "Let out a roar, inflicting <$MACRO Magic @1:181401/> Damage to foes within a <FONT COLOR='#ffff99'>6-meter</FONT> range. Upon using the skill, gain a buff that grants Push-Immunity and Incoming Damage -<FONT COLOR='#99ff99'><$CALC_COMMA <$TABLE_SKILLBUFF PassiveOptionValue0 181400/>/100/>%</FONT> for <FONT COLOR='#ffff99'><$CALC_COMMA <$TABLE_SKILLBUFF Duration 181400/>/1000 /></FONT>s. On hit, obtain <FONT COLOR='#ffff99'>3</FONT> Gravity Cores.",
     "classid": 103,
     "icon": "dt_skill_01_9.png",
     "identitycategory": "destroyer_focus",
@@ -42291,7 +42328,7 @@
   "18230": {
     "id": 18230,
     "name": "Big Bang",
-    "desc": "Gather Gravitational Energy then explode it, inflicting <$MACRO physic @1:182300/> Damage to foes in a <FONT COLOR='#ffff99'>3.2meter</FONT> radius and knocking them away. All incoming Damage -<FONT COLOR='#99ff99'>50%</FONT> and gain immunity against Status Ailments, Pushes, and Move Speed reductions. Ignore collisions with adventurers and normal monsters while gathering energy. You can move while gathering Gravitational Energy. Damage up to +<FONT COLOR='#ffbb00'><$CALC_COMMA ((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>*(<$TABLE_SKILLEFFECT ValueF 182300/>/10000)+((<$TABLE_SKILLEFFECT ValueA 182300/> + <$TABLE_SKILLEFFECT ValueB 182300/>)/2))*2/></FONT> and the explosion radius up to +<FONT COLOR='#ffff99'>8 meters</FONT>, depending on how long you gathered energy.",
+    "desc": "Gather Gravitational Energy then explode it, inflicting <$MACRO physic @1:182300/> Damage to foes in a <FONT COLOR='#ffff99'>3.2meter</FONT> radius and knocking them away. All incoming Damage -<FONT COLOR='#99ff99'>50%</FONT> and gain immunity against Status Ailments, Pushes, and Move Speed Reductions. Ignore collisions with adventurers and normal monsters while gathering energy. You can move while gathering Gravitational Energy. Damage up to +<FONT COLOR='#ffbb00'><$CALC_COMMA (<$PLAYER_INFO STAT STAT_ATTACK_POWER/>*(<$TABLE_SKILLEFFECT ValueF 182300/>/10000)+((<$TABLE_SKILLEFFECT ValueA 182300/> + <$TABLE_SKILLEFFECT ValueB 182300/>)/2))*2/></FONT> and the explosion radius up to +<FONT COLOR='#ffff99'>8 meters</FONT>, depending on how long you gathered energy.",
     "classid": 103,
     "icon": "dt_skill_01_21.png",
     "groups": [
@@ -47782,6 +47819,16 @@
     "classid": 0,
     "icon": "vehicle_65.png"
   },
+  "98220": { "id": 98220, "name": "Booster", "desc": "Glide forward.", "classid": 0, "icon": "vehicle_60.png" },
+  "98221": { "id": 98221, "name": "Snowmaker", "desc": "Make snow fall down.", "classid": 0, "icon": "vehicle_63.png" },
+  "98222": {
+    "id": 98222,
+    "name": "Joytide Firecracker",
+    "desc": "Fire off a Joytide firecracker.",
+    "classid": 0,
+    "icon": "vehicle_64.png"
+  },
+  "98223": { "id": 98223, "name": "Forward Step", "desc": "Dance forward", "classid": 0, "icon": "vehicle_65.png" },
   "98000": {
     "id": 98000,
     "name": "Flaming Flamethrower",

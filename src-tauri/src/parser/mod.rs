@@ -279,7 +279,6 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool, setti
             }
             Pkt::PartyInfo => {
                 if let Some(pkt) = parse_pkt(&data, PKTPartyInfo::new, "PKTPartyInfo") {
-                    info!("party info: {:?}", pkt.member_datas);
                     entity_tracker.party_info(pkt);
                     let local_player_id = entity_tracker.local_player_id;
                     if let Some(entity) = entity_tracker.entities.get(&local_player_id) {

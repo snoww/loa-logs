@@ -13717,6 +13717,871 @@
       }
     ]
   },
+  "606000001": {
+    "id": 606000001,
+    "effects": [
+      {
+        "ratio": 500,
+        "cooldown": 0,
+        "conditions": [{ "type": "current_skill_group", "actor": "caster", "arg": 33 }],
+        "actions": [
+          { "type": "exec_after_skill", "actor": "caster", "args": [606000001, 0, 0, 0, 0, 0] },
+          { "type": "exec_after_skill", "actor": "caster", "args": [606000101, 0, 0, 0, 0, 0] }
+        ]
+      }
+    ]
+  },
+  "606010001": {
+    "id": 606010001,
+    "effects": [
+      {
+        "ratio": 1000,
+        "cooldown": 0,
+        "conditions": [{ "type": "current_skill_group", "actor": "caster", "arg": 33 }],
+        "actions": [
+          { "type": "exec_after_skill", "actor": "caster", "args": [606010001, 0, 0, 0, 0, 0] },
+          { "type": "exec_after_skill", "actor": "caster", "args": [606010101, 0, 0, 0, 0, 0] }
+        ]
+      }
+    ]
+  },
+  "606000002": {
+    "id": 606000002,
+    "effects": [
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [],
+        "actions": [{ "type": "modify_damage_when_critical", "actor": "target", "args": [600, 0, 0, 0, 0, 0] }]
+      }
+    ]
+  },
+  "606010002": {
+    "id": 606010002,
+    "effects": [
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [],
+        "actions": [{ "type": "modify_damage_when_critical", "actor": "target", "args": [1200, 0, 0, 0, 0, 0] }]
+      }
+    ]
+  },
+  "606000003": {
+    "id": 606000003,
+    "effects": [
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [{ "type": "current_skill_group", "actor": "caster", "arg": 27 }],
+        "actions": [{ "type": "exec_start_skill", "actor": "caster", "args": [606000003, 0, 0, 0, 0, 0] }]
+      }
+    ]
+  },
+  "606000103": {
+    "id": 606000103,
+    "effects": [
+      {
+        "ratio": 10000,
+        "cooldown": 500,
+        "conditions": [],
+        "actions": [{ "type": "exec_reactive_effect_when_damage", "actor": "self", "args": [606000103, 0, 0, 0, 0, 0] }]
+      }
+    ]
+  },
+  "606010003": {
+    "id": 606010003,
+    "effects": [
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [{ "type": "current_skill_group", "actor": "caster", "arg": 27 }],
+        "actions": [{ "type": "exec_start_skill", "actor": "caster", "args": [606010003, 0, 0, 0, 0, 0] }]
+      }
+    ]
+  },
+  "606010103": {
+    "id": 606010103,
+    "effects": [
+      {
+        "ratio": 10000,
+        "cooldown": 500,
+        "conditions": [],
+        "actions": [{ "type": "exec_reactive_effect_when_damage", "actor": "self", "args": [606010103, 0, 0, 0, 0, 0] }]
+      }
+    ]
+  },
+  "606000004": {
+    "id": 606000004,
+    "effects": [
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [{ "type": "hp_greater", "actor": "self", "arg": 50 }],
+        "actions": [
+          { "type": "modify_damage", "actor": "target", "args": [400, 0, 0, 0, 0, 0] },
+          { "type": "modify_reactive_damage", "actor": "self", "args": [-400, 0, 0, 0, 0, 0] }
+        ]
+      }
+    ]
+  },
+  "606000104": {
+    "id": 606000104,
+    "effects": [
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [{ "type": "hp_less", "actor": "self", "arg": 50 }],
+        "actions": [
+          { "type": "modify_damage", "actor": "target", "args": [300, 0, 0, 0, 0, 0] },
+          { "type": "modify_reactive_damage", "actor": "self", "args": [-600, 0, 0, 0, 0, 0] }
+        ]
+      }
+    ]
+  },
+  "606010004": {
+    "id": 606010004,
+    "effects": [
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [{ "type": "hp_greater", "actor": "self", "arg": 50 }],
+        "actions": [
+          { "type": "modify_damage", "actor": "target", "args": [800, 0, 0, 0, 0, 0] },
+          { "type": "modify_reactive_damage", "actor": "self", "args": [-800, 0, 0, 0, 0, 0] }
+        ]
+      }
+    ]
+  },
+  "606010104": {
+    "id": 606010104,
+    "effects": [
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [{ "type": "hp_less", "actor": "self", "arg": 50 }],
+        "actions": [
+          { "type": "modify_damage", "actor": "target", "args": [600, 0, 0, 0, 0, 0] },
+          { "type": "modify_reactive_damage", "actor": "self", "args": [-1200, 0, 0, 0, 0, 0] }
+        ]
+      }
+    ]
+  },
+  "606000005": {
+    "id": 606000005,
+    "effects": [
+      {
+        "ratio": 10000,
+        "cooldown": 12000,
+        "conditions": [],
+        "actions": [{ "type": "exec_active_effect_when_damage", "actor": "self", "args": [0, 0, 606000005, 0, 0, 0] }]
+      }
+    ]
+  },
+  "606000105": {
+    "id": 606000105,
+    "effects": [
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [400, 0, 0, 0, 0, 0] }]
+      }
+    ]
+  },
+  "606010005": {
+    "id": 606010005,
+    "effects": [
+      {
+        "ratio": 10000,
+        "cooldown": 12000,
+        "conditions": [],
+        "actions": [{ "type": "exec_active_effect_when_damage", "actor": "self", "args": [0, 0, 606010005, 0, 0, 0] }]
+      }
+    ]
+  },
+  "606010105": {
+    "id": 606010105,
+    "effects": [
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [800, 0, 0, 0, 0, 0] }]
+      }
+    ]
+  },
+  "606000006": {
+    "id": 606000006,
+    "effects": [
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [{ "type": "current_skill_group", "actor": "caster", "arg": 991100 }],
+        "actions": [{ "type": "exec_start_skill", "actor": "caster", "args": [0, 0, 606000006, 0, 0, 0] }]
+      }
+    ]
+  },
+  "606000106": {
+    "id": 606000106,
+    "effects": [
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [],
+        "actions": [{ "type": "exec_active_effect_when_damage", "actor": "self", "args": [0, 0, 606000106, 0, 0, 0] }]
+      }
+    ]
+  },
+  "606010006": {
+    "id": 606010006,
+    "effects": [
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [{ "type": "current_skill_group", "actor": "caster", "arg": 991100 }],
+        "actions": [{ "type": "exec_start_skill", "actor": "caster", "args": [0, 0, 606010006, 0, 0, 0] }]
+      }
+    ]
+  },
+  "606010106": {
+    "id": 606010106,
+    "effects": [
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [],
+        "actions": [{ "type": "exec_active_effect_when_damage", "actor": "self", "args": [0, 0, 606010106, 0, 0, 0] }]
+      }
+    ]
+  },
+  "606010206": {
+    "id": 606010206,
+    "effects": [
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [500, 0, 0, 0, 0, 0] }]
+      }
+    ]
+  },
+  "606000007": {
+    "id": 606000007,
+    "effects": [
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [{ "type": "current_skill_group", "actor": "caster", "arg": 27 }],
+        "actions": [{ "type": "exec_start_skill", "actor": "caster", "args": [0, 0, 606000007, 0, 0, 0] }]
+      }
+    ]
+  },
+  "606010007": {
+    "id": 606010007,
+    "effects": [
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [{ "type": "current_skill_group", "actor": "caster", "arg": 27 }],
+        "actions": [{ "type": "exec_start_skill", "actor": "caster", "args": [0, 0, 606010007, 0, 0, 0] }]
+      }
+    ]
+  },
+  "606000008": {
+    "id": 606000008,
+    "effects": [
+      {
+        "ratio": 10000,
+        "cooldown": 10000,
+        "conditions": [{ "type": "skill_effect_group_set", "actor": "target", "arg": 1000 }],
+        "actions": [{ "type": "exec_after_effect", "actor": "caster", "args": [606000008, 0, 0, 0, 0, 0] }]
+      }
+    ]
+  },
+  "606010008": {
+    "id": 606010008,
+    "effects": [
+      {
+        "ratio": 10000,
+        "cooldown": 10000,
+        "conditions": [{ "type": "skill_effect_group_set", "actor": "target", "arg": 1000 }],
+        "actions": [{ "type": "exec_after_effect", "actor": "caster", "args": [0, 0, 606010008, 0, 0, 0] }]
+      }
+    ]
+  },
+  "606000009": {
+    "id": 606000009,
+    "effects": [
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [{ "type": "current_skill_group", "actor": "caster", "arg": 10000000 }],
+        "actions": [{ "type": "exec_after_skill", "actor": "caster", "args": [0, 0, 606000009, 0, 0, 0] }]
+      }
+    ]
+  },
+  "606010009": {
+    "id": 606010009,
+    "effects": [
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [{ "type": "current_skill_group", "actor": "caster", "arg": 10000000 }],
+        "actions": [{ "type": "exec_after_skill", "actor": "caster", "args": [0, 0, 606010009, 0, 0, 0] }]
+      }
+    ]
+  },
+  "606101100": {
+    "id": 606101100,
+    "effects": [
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [{ "type": "skill_effect_group_set", "actor": "target", "arg": 3000 }],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [160, 0, 0, 0, 0, 0] }]
+      }
+    ]
+  },
+  "606101101": {
+    "id": 606101101,
+    "effects": [
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [{ "type": "skill_effect_group_set", "actor": "target", "arg": 3000 }],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [330, 0, 0, 0, 0, 0] }]
+      }
+    ]
+  },
+  "606101102": {
+    "id": 606101102,
+    "effects": [
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [{ "type": "skill_effect_group_set", "actor": "target", "arg": 3000 }],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [500, 0, 0, 0, 0, 0] }]
+      }
+    ]
+  },
+  "606101103": {
+    "id": 606101103,
+    "effects": [
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [{ "type": "skill_effect_group_set", "actor": "target", "arg": 3000 }],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [750, 0, 0, 0, 0, 0] }]
+      }
+    ]
+  },
+  "606101104": {
+    "id": 606101104,
+    "effects": [
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [{ "type": "skill_effect_group_set", "actor": "target", "arg": 3000 }],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [1000, 0, 0, 0, 0, 0] }]
+      }
+    ]
+  },
+  "606130011": {
+    "id": 606130011,
+    "effects": [
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-130, 0, 0, 0, 0, 0] }]
+      }
+    ]
+  },
+  "606130012": {
+    "id": 606130012,
+    "effects": [
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-330, 0, 0, 0, 0, 0] }]
+      }
+    ]
+  },
+  "606130013": {
+    "id": 606130013,
+    "effects": [
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
+      }
+    ]
+  },
+  "606130014": {
+    "id": 606130014,
+    "effects": [
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-750, 0, 0, 0, 0, 0] }]
+      }
+    ]
+  },
+  "606130015": {
+    "id": 606130015,
+    "effects": [
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-1000, 0, 0, 0, 0, 0] }]
+      }
+    ]
+  },
+  "606110010": {
+    "id": 606110010,
+    "effects": [
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [23, 0, 0, 0, 0, 0] }]
+      }
+    ]
+  },
+  "606110011": {
+    "id": 606110011,
+    "effects": [
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [47, 0, 0, 0, 0, 0] }]
+      }
+    ]
+  },
+  "606110012": {
+    "id": 606110012,
+    "effects": [
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [72, 0, 0, 0, 0, 0] }]
+      }
+    ]
+  },
+  "606110013": {
+    "id": 606110013,
+    "effects": [
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [108, 0, 0, 0, 0, 0] }]
+      }
+    ]
+  },
+  "606110014": {
+    "id": 606110014,
+    "effects": [
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [144, 0, 0, 0, 0, 0] }]
+      }
+    ]
+  },
+  "606120000": {
+    "id": 606120000,
+    "effects": [
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [{ "type": "npc_grade_greater", "actor": "target", "arg": 6 }],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [38, 0, 0, 0, 0, 0] }]
+      }
+    ]
+  },
+  "606120001": {
+    "id": 606120001,
+    "effects": [
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [{ "type": "npc_grade_greater", "actor": "target", "arg": 6 }],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [79, 0, 0, 0, 0, 0] }]
+      }
+    ]
+  },
+  "606120002": {
+    "id": 606120002,
+    "effects": [
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [{ "type": "npc_grade_greater", "actor": "target", "arg": 6 }],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [120, 0, 0, 0, 0, 0] }]
+      }
+    ]
+  },
+  "606120003": {
+    "id": 606120003,
+    "effects": [
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [{ "type": "npc_grade_greater", "actor": "target", "arg": 6 }],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [180, 0, 0, 0, 0, 0] }]
+      }
+    ]
+  },
+  "606120004": {
+    "id": 606120004,
+    "effects": [
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [{ "type": "npc_grade_greater", "actor": "target", "arg": 6 }],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [240, 0, 0, 0, 0, 0] }]
+      }
+    ]
+  },
+  "606150000": {
+    "id": 606150000,
+    "effects": [
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [23, 0, 0, 0, 0, 0] }]
+      }
+    ]
+  },
+  "606150001": {
+    "id": 606150001,
+    "effects": [
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [47, 0, 0, 0, 0, 0] }]
+      }
+    ]
+  },
+  "606150002": {
+    "id": 606150002,
+    "effects": [
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [72, 0, 0, 0, 0, 0] }]
+      }
+    ]
+  },
+  "606150003": {
+    "id": 606150003,
+    "effects": [
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [108, 0, 0, 0, 0, 0] }]
+      }
+    ]
+  },
+  "606150004": {
+    "id": 606150004,
+    "effects": [
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [144, 0, 0, 0, 0, 0] }]
+      }
+    ]
+  },
+  "606150010": {
+    "id": 606150010,
+    "effects": [
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [23, 0, 0, 0, 0, 0] }]
+      }
+    ]
+  },
+  "606150011": {
+    "id": 606150011,
+    "effects": [
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [47, 0, 0, 0, 0, 0] }]
+      }
+    ]
+  },
+  "606150012": {
+    "id": 606150012,
+    "effects": [
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [72, 0, 0, 0, 0, 0] }]
+      }
+    ]
+  },
+  "606150013": {
+    "id": 606150013,
+    "effects": [
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [108, 0, 0, 0, 0, 0] }]
+      }
+    ]
+  },
+  "606150014": {
+    "id": 606150014,
+    "effects": [
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [144, 0, 0, 0, 0, 0] }]
+      }
+    ]
+  },
+  "606150020": {
+    "id": 606150020,
+    "effects": [
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [23, 0, 0, 0, 0, 0] }]
+      }
+    ]
+  },
+  "606150021": {
+    "id": 606150021,
+    "effects": [
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [47, 0, 0, 0, 0, 0] }]
+      }
+    ]
+  },
+  "606150022": {
+    "id": 606150022,
+    "effects": [
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [72, 0, 0, 0, 0, 0] }]
+      }
+    ]
+  },
+  "606150023": {
+    "id": 606150023,
+    "effects": [
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [108, 0, 0, 0, 0, 0] }]
+      }
+    ]
+  },
+  "606150024": {
+    "id": 606150024,
+    "effects": [
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [144, 0, 0, 0, 0, 0] }]
+      }
+    ]
+  },
+  "606150030": {
+    "id": 606150030,
+    "effects": [
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [23, 0, 0, 0, 0, 0] }]
+      }
+    ]
+  },
+  "606150031": {
+    "id": 606150031,
+    "effects": [
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [47, 0, 0, 0, 0, 0] }]
+      }
+    ]
+  },
+  "606150032": {
+    "id": 606150032,
+    "effects": [
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [72, 0, 0, 0, 0, 0] }]
+      }
+    ]
+  },
+  "606150033": {
+    "id": 606150033,
+    "effects": [
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [108, 0, 0, 0, 0, 0] }]
+      }
+    ]
+  },
+  "606150034": {
+    "id": 606150034,
+    "effects": [
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [144, 0, 0, 0, 0, 0] }]
+      }
+    ]
+  },
+  "606150040": {
+    "id": 606150040,
+    "effects": [
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [23, 0, 0, 0, 0, 0] }]
+      }
+    ]
+  },
+  "606150041": {
+    "id": 606150041,
+    "effects": [
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [47, 0, 0, 0, 0, 0] }]
+      }
+    ]
+  },
+  "606150042": {
+    "id": 606150042,
+    "effects": [
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [72, 0, 0, 0, 0, 0] }]
+      }
+    ]
+  },
+  "606150043": {
+    "id": 606150043,
+    "effects": [
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [108, 0, 0, 0, 0, 0] }]
+      }
+    ]
+  },
+  "606150044": {
+    "id": 606150044,
+    "effects": [
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [144, 0, 0, 0, 0, 0] }]
+      }
+    ]
+  },
+  "606150050": {
+    "id": 606150050,
+    "effects": [
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [23, 0, 0, 0, 0, 0] }]
+      }
+    ]
+  },
+  "606150051": {
+    "id": 606150051,
+    "effects": [
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [47, 0, 0, 0, 0, 0] }]
+      }
+    ]
+  },
+  "606150052": {
+    "id": 606150052,
+    "effects": [
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [72, 0, 0, 0, 0, 0] }]
+      }
+    ]
+  },
+  "606150053": {
+    "id": 606150053,
+    "effects": [
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [108, 0, 0, 0, 0, 0] }]
+      }
+    ]
+  },
+  "606150054": {
+    "id": 606150054,
+    "effects": [
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [144, 0, 0, 0, 0, 0] }]
+      }
+    ]
+  },
   "700001101": {
     "id": 700001101,
     "effects": [

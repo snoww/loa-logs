@@ -25,5 +25,13 @@ export const bossHpMap: BossMap = {
     "Evolved Maurug": 30,
     "Lord of Degradation Akkan": 190,
     "Plague Legion Commander Akkan": 220,
-    "Lord of Kartheon Akkan": 300
+    "Lord of Kartheon Akkan": 300,
+    "Tienis": 110,
+    "Celestial Sentinel" : 60,
+    "Prunya": 90,
+    "Lauriel": 200,
+    "Kaltaya, the Blooming Chaos": 120,
+    "Rakathus, the Lurking Arrogance": 160,
+    "Firehorn, Trampler of Earth": 160,
+    "Lazaram, the Trailblazer": 200
 };

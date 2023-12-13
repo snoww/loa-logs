@@ -1684,7 +1684,9 @@
     "34": "dragon_1",
     "35": "birdcage",
     "36": "whale",
-    "37": "rubberduck"
+    "37": "rubberduck",
+    "38": "cultivator",
+    "39": "robot"
   },
   "actionconditionstancemodeoutput": { "0": "none", "1": "vehicle", "2": "pickup_prop" },
   "actiondisablereason": {
@@ -3877,6 +3879,7 @@
   "counterattacktype": { "0": "paralyzation", "1": "groggy", "2": "force_use_skill" },
   "creatureclass": { "0": "pc", "1": "npc" },
   "crewgrade": { "0": "common", "1": "uncommon", "2": "rare", "3": "epic", "4": "legend", "5": "relic" },
+  "cryptodatatype": { "0": "upk", "1": "ipk", "2": "lpk", "3": "db", "4": "string", "5": "excel_table_row" },
   "cumulativepointhinttype": {
     "0": "achievement",
     "1": "choice_precede_quest",
@@ -4104,6 +4107,7 @@
   "deathattrtype": { "0": "normal", "1": "freeze", "2": "stone", "3": "poison" },
   "deathtype": { "1": "animation", "2": "ragdoll", "4": "explosion", "8": "fall_down", "16": "drown" },
   "decaleffecttype": { "0": "circleorsquare", "1": "rectangle", "2": "arrow", "3": "fanshape", "4": "donutshape" },
+  "decrypteventtype": { "0": "time", "1": "zone_enter" },
   "devmessagetype": {
     "0": "threat",
     "1": "voyage_event_gauge",
@@ -6208,15 +6212,16 @@
     "949": "lost_survival_result",
     "950": "lost_survival_starting_point",
     "951": "afk_kick_last_action_time_update",
-    "952": "story_pass_mission_success",
-    "953": "story_pass_mission_objective_count",
-    "954": "story_pass_exp_add",
-    "955": "story_pass_level_up",
-    "956": "story_pass_level_reward_receive",
-    "957": "story_pass_paid_action",
-    "958": "check_point_change",
-    "959": "contents_limit_change",
-    "960": "confront_result"
+    "952": "afk_kick",
+    "953": "story_pass_mission_success",
+    "954": "story_pass_mission_objective_count",
+    "955": "story_pass_exp_add",
+    "956": "story_pass_level_up",
+    "957": "story_pass_level_reward_receive",
+    "958": "story_pass_paid_action",
+    "959": "check_point_change",
+    "960": "contents_limit_change",
+    "961": "confront_result"
   },
   "gamenotebackgroundtype": { "0": "default", "1": "story" },
   "gamenoteposition": { "0": "bottom", "1": "top" },
