@@ -308,7 +308,7 @@ export function addBardBubbles(key: string, buff: Buff, syn: StatusEffect) {
         } else if (syn.source.desc.includes("20")) {
             buff.bonus = 20;
         } else if (syn.source.desc.includes("40")) {
-            buff.bonus = 30;
+            buff.bonus = 40;
         }
     }
 }
