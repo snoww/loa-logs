@@ -1,7 +1,7 @@
 use crate::parser::entity_tracker::Entity;
 use crate::parser::models::{EntityType, SKILL_BUFF_DATA};
 use crate::parser::party_tracker::PartyTracker;
-use crate::parser::status_tracker::StatusEffectBuffCategory::{BattleItem, Bracelet, Etc};
+use crate::parser::status_tracker::StatusEffectBuffCategory::{BattleItem, Bracelet, Elixir, Etc};
 use crate::parser::status_tracker::StatusEffectCategory::Debuff;
 use crate::parser::status_tracker::StatusEffectShowType::All;
 use chrono::{DateTime, Duration, Utc};
@@ -295,6 +295,7 @@ impl StatusTracker {
 fn is_valid_for_raid(status_effect: &StatusEffect) -> bool {
     (status_effect.buff_category == BattleItem
         || status_effect.buff_category == Bracelet
+        || status_effect.buff_category == Elixir
         || status_effect.buff_category == Etc)
         && status_effect.category == Debuff
         && status_effect.show_type == All
@@ -350,6 +351,7 @@ pub fn build_status_effect(
             "bracelet" => buff_category = Bracelet,
             "etc" => buff_category = Etc,
             "battleitem" => buff_category = BattleItem,
+            "elixir" => buff_category = Elixir,
             _ => {}
         }
         if effect.icon_show_type.as_str() == "all" {
@@ -400,6 +402,7 @@ pub enum StatusEffectBuffCategory {
     Bracelet = 1,
     Etc = 2,
     BattleItem = 3,
+    Elixir = 4,
 }
 
 #[derive(Debug, Default, Copy, Clone, PartialEq, Eq)]
