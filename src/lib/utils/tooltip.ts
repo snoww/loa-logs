@@ -74,6 +74,10 @@ export function generateHeaderTooltip(buff: StatusEffect, iconPath: string) {
             str += `<div class="pr-1">`;
             str += "[Bracelet]";
             str += `</div>`;
+        } else if (buff.buffCategory === "elixir") {
+            str += `<div class="pr-1">`;
+            str += "[Elixir]";
+            str += `</div>`;
         } else if (buff.buffCategory === "battleitem") {
             str += `<div class="pr-1">`;
             str += "[Battle Item]";
