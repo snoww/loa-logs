@@ -78,6 +78,7 @@
 {#if $settings.logs.splitPartyBuffs && parties.length > 1 && tab === MeterTab.PARTY_BUFFS && !focusedPlayer}
     <div class="flex flex-col space-y-2">
         {#each [...partyGroupedSynergies] as [partyId, synergies], i (partyId)}
+            {#if parties[i] && parties[i].length > 0}
             <table class="table-fixed" style="width: {partyWidths[partyId]};">
                 <thead class="z-40 h-6" id="buff-head">
                     <tr class="bg-zinc-900">
@@ -99,6 +100,7 @@
                     {/each}
                 </tbody>
             </table>
+            {/if}
         {/each}
     </div>
 {:else}

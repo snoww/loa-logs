@@ -197,14 +197,14 @@ export function getPartyBuffs(
     if (partyInfo.length >= 2) {
         for (const [partyIdStr, names] of partyInfo) {
             const partyId = Number(partyIdStr);
+            parties[partyId] = [];
             for (const name of names) {
                 const player = players.find((player) => player.name === name);
                 if (player) {
-                    parties[partyId] = parties[partyId] || [];
                     parties[partyId].push(player);
                 }
             }
-            if (parties[partyId]) {
+            if (parties[partyId] && parties[partyId].length > 0) {
                 parties[partyId].sort((a, b) => b.damageStats.damageDealt - a.damageStats.damageDealt);
                 partyPercentages[partyId] = parties[partyId].map(
                     (player) => (player.damageStats.damageDealt / topDamageDealt) * 100
