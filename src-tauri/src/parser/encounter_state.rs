@@ -830,10 +830,19 @@ impl EncounterState {
 
                 self.prev_stagger = current_stagger;
 
-                let relative_timestamp_s = (timestamp - self.encounter.fight_start) / 1000;
+                let relative_timestamp_s = ((timestamp - self.encounter.fight_start) / 1000) as i32;
                 let stagger_percent = (1.0 - (current_stagger as f32 / max_stagger as f32)) * 100.0;
-                self.stagger_log
-                    .push((relative_timestamp_s as i32, stagger_percent));
+                if let Some(last) = self.stagger_log.last_mut() {
+                    if last.0 == relative_timestamp_s {
+                        last.1 = stagger_percent;
+                    } else {
+                        self.stagger_log
+                            .push((relative_timestamp_s, stagger_percent));
+                    }
+                } else {
+                    self.stagger_log
+                        .push((relative_timestamp_s, stagger_percent));
+                }
 
                 if max_stagger > self.encounter.encounter_damage_stats.max_stagger {
                     self.encounter.encounter_damage_stats.max_stagger = max_stagger;
