@@ -418,16 +418,7 @@ impl EntityTracker {
 
     fn build_and_register_status_effects(&mut self, seds: Vec<StatusEffectData>, target_id: u64) {
         for sed in seds.into_iter() {
-            let source_entity = self.get_source_entity(sed.source_id);
-            let status_effect = build_status_effect(
-                sed,
-                target_id,
-                source_entity.id,
-                StatusEffectTargetType::Local,
-            );
-            self.status_tracker
-                .borrow_mut()
-                .register_status_effect(status_effect);
+            self.build_and_register_status_effect(&sed, target_id);
         }
     }
 

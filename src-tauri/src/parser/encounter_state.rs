@@ -1446,16 +1446,17 @@ fn insert_data(
                     skill.dps = skill.total_damage / duration_seconds;
                 }
             }
+        }
 
-            for (_, cast_log) in cast_log.iter().filter(|&(s, _)| *s == entity.name) {
-                for (skill, log) in cast_log {
-                    entity.skills.entry(*skill).and_modify(|e| {
-                        e.cast_log = log.to_owned();
-                    });
-                }
+        entity.damage_stats.dps = entity.damage_stats.damage_dealt / duration_seconds;
+
+        for (_, cast_log) in cast_log.iter().filter(|&(s, _)| *s == entity.name) {
+            for (skill, log) in cast_log {
+                entity.skills.entry(*skill).and_modify(|e| {
+                    e.cast_log = log.to_owned();
+                });
             }
         }
-        entity.damage_stats.dps = entity.damage_stats.damage_dealt / duration_seconds;
 
         if let Some(identity_log) = identity_log.get(&entity.name) {
             if entity.name == encounter.local_player && identity_log.len() >= 2 {

@@ -107,9 +107,7 @@ impl StatusTracker {
 
         if let Some(se) = ser.get_mut(&instance_id) {
             if let Some(expire_at) = se.expire_at {
-                let extension_ms = (timestamp - se.end_tick) as i64;
-                se.expire_at = Some(expire_at + Duration::milliseconds(extension_ms));
-                se.end_tick = timestamp;
+                se.expire_at = Some(expire_at + Duration::milliseconds(se.expiration_delay as i64));
             }
         }
     }
