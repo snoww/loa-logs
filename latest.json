@@ -1,6 +1,6 @@
 {
     "version": "v1.4.5",
-    "notes": "### v1.4.5\n#### NEW FEATURES\n- add support for elixir buffs\n- add sorting functionality in logs\n#### BUG FIXES AND IMPROVEMENTS\n- improve local player detection when meter opened late\n- fix buff tab crashing when only party 2 did damage\nfull patch notes on github\nsend bug reports/suggestions to discord.gg/sbSa3pkDF5",
+    "notes": "### v1.4.5\n#### NEW FEATURES\n- add support for elixir buffs\n- add \"my dps\" column in logs\n- add sorting functionality in logs\n#### BUG FIXES AND IMPROVEMENTS\n- improve local player detection when meter opened late\n- fix hallucination set buff not tracking properly\n- fix buff tab crashing when only party 2 did damage\nfull patch notes on github\nsend bug reports/suggestions to discord.gg/sbSa3pkDF5",
     "pub_date": "2023-12-18T09:37:08.747Z",
     "platforms": {
         "windows-x86_64": {
