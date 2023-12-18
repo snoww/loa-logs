@@ -84,6 +84,7 @@
 {#if $settings.meter.splitPartyBuffs && parties.length > 1 && partyGroupedSynergies.length > 1 && parties.length === partyGroupedSynergies.length && tab === MeterTab.PARTY_BUFFS && !focusedPlayer}
     <div class="flex flex-col" class:flex-col-reverse={!localPlayerInP1} id="live-meter-table">
         {#each partyGroupedSynergies as [partyId, synergies], i (partyId)}
+            {#if parties[i] && parties[i].length > 0}
             <table class="w-full table-fixed">
                 <thead class="z-40 h-6" id="buff-head">
                     <tr class="bg-zinc-900">
@@ -108,6 +109,7 @@
                     {/each}
                 </tbody>
             </table>
+            {/if}
         {/each}
     </div>
 {:else}
