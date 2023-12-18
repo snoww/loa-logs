@@ -43,14 +43,15 @@ impl StatusTracker {
         } else {
             (pkt.pc_struct.player_id, StatusEffectTargetType::Local)
         };
+        let timestamp = Utc::now();
         for sed in pkt.pc_struct.status_effect_datas.into_iter() {
             let source_id = sed.source_id;
-            let status_effect = build_status_effect(sed, target_id, source_id, target_type);
+            let status_effect = build_status_effect(sed, target_id, source_id, target_type, timestamp);
             self.register_status_effect(status_effect);
         }
     }
 
-    pub fn register_status_effect(&mut self, mut se: StatusEffect) {
+    pub fn register_status_effect(&mut self, se: StatusEffect) {
         let registry = match se.target_type {
             StatusEffectTargetType::Local => &mut self.local_status_effect_registry,
             StatusEffectTargetType::Party => &mut self.party_status_effect_registry,
@@ -59,7 +60,6 @@ impl StatusTracker {
         registry.entry(se.target_id).or_insert_with(HashMap::new);
 
         let ser = registry.get_mut(&se.target_id).unwrap();
-        add_status_effect_timeout(&mut se);
         ser.insert(se.instance_id, se);
     }
 
@@ -106,8 +106,12 @@ impl StatusTracker {
         };
 
         if let Some(se) = ser.get_mut(&instance_id) {
-            if let Some(expire_at) = se.expire_at {
-                se.expire_at = Some(expire_at + Duration::milliseconds(se.expiration_delay as i64));
+            let duration_ms = timestamp - se.end_tick;
+            if duration_ms > 0 {
+                se.end_tick = timestamp;
+                if let Some(expire_at) = se.expire_at {
+                    se.expire_at = Some(expire_at + Duration::milliseconds(duration_ms as i64));
+                }
             }
         }
     }
@@ -146,6 +150,8 @@ impl StatusTracker {
         target_entity: &Entity,
         local_character_id: u64,
     ) -> (Vec<(u32, u64)>, Vec<(u32, u64)>) {
+        let timestamp = Utc::now();
+
         let use_party_for_source = if source_entity.entity_type == EntityType::PLAYER {
             self.should_use_party_status_effect(source_entity.character_id, local_character_id)
         } else {
@@ -159,7 +165,7 @@ impl StatusTracker {
         };
         // println!("source_id: {:?}, source_type: {:?}", source_id, source_type);
 
-        let source_effects = self.actually_get_status_effects(source_id, source_type);
+        let source_effects = self.actually_get_status_effects(source_id, source_type, timestamp);
         let status_effects_on_source: Vec<(u32, u64)> = source_effects
             .iter()
             .map(|x| (x.status_effect_id, x.source_id))
@@ -184,19 +190,24 @@ impl StatusTracker {
                 target_entity.character_id,
                 StatusEffectTargetType::Party,
                 &source_party_id,
+                timestamp,
             ),
             (false, Some(source_party_id)) => self.get_status_effects_from_party(
                 target_entity.id,
                 StatusEffectTargetType::Local,
                 &source_party_id,
+                timestamp,
             ),
             (true, None) => self.actually_get_status_effects(
                 target_entity.character_id,
                 StatusEffectTargetType::Party,
+                timestamp,
             ),
-            (false, None) => {
-                self.actually_get_status_effects(target_entity.id, StatusEffectTargetType::Local)
-            }
+            (false, None) => self.actually_get_status_effects(
+                target_entity.id,
+                StatusEffectTargetType::Local,
+                timestamp,
+            ),
         };
         let status_effects_on_target: Vec<(u32, u64)> = target_effects
             .iter()
@@ -213,6 +224,7 @@ impl StatusTracker {
         &mut self,
         target_id: u64,
         sett: StatusEffectTargetType,
+        timestamp: DateTime<Utc>,
     ) -> Vec<StatusEffect> {
         let registry = match sett {
             StatusEffectTargetType::Local => &mut self.local_status_effect_registry,
@@ -224,7 +236,7 @@ impl StatusTracker {
             Some(ser) => ser,
             None => return Vec::new(),
         };
-        ser.retain(|_, se| se.expire_at.map_or(true, |expire_at| expire_at > Utc::now()));
+        ser.retain(|_, se| se.expire_at.map_or(true, |expire_at| expire_at > timestamp));
         ser.values().cloned().collect()
     }
 
@@ -233,6 +245,7 @@ impl StatusTracker {
         target_id: u64,
         sett: StatusEffectTargetType,
         party_id: &u32,
+        timestamp: DateTime<Utc>,
     ) -> Vec<StatusEffect> {
         let registry = match sett {
             StatusEffectTargetType::Local => &mut self.local_status_effect_registry,
@@ -244,7 +257,6 @@ impl StatusTracker {
             None => return Vec::new(),
         };
 
-        let timestamp = Utc::now();
         // println!("ser before: {:?}", ser);
         ser.retain(|_, se| se.expire_at.map_or(true, |expire_at| expire_at > timestamp));
         let party_tracker = self.party_tracker.borrow();
@@ -299,22 +311,12 @@ fn is_valid_for_raid(status_effect: &StatusEffect) -> bool {
         && status_effect.show_type == All
 }
 
-pub fn add_status_effect_timeout(se: &mut StatusEffect) {
-    if se.expiration_delay > 0. && se.expiration_delay < 604800. {
-        let expiration_delay = (se.expiration_delay * 1000.) as i64;
-        let timeout_delay = Duration::milliseconds(expiration_delay + TIMEOUT_DELAY_MS);
-
-        se.expire_at = Some(se.timestamp + timeout_delay);
-        // println!("===\nstatus_id: {:?}, start_date: {:?}, expiration_delay: {:?}, timeout_delay: {:?}, expire_at: {:?}", se.status_effect_id,
-        //          start_date, expiration_delay, timeout_delay, se.expire_at);
-    }
-}
-
 pub fn build_status_effect(
     se_data: StatusEffectData,
     target_id: u64,
     source_id: u64,
     target_type: StatusEffectTargetType,
+    timestamp: DateTime<Utc>,
 ) -> StatusEffect {
     let c1 = se_data
         .value
@@ -372,10 +374,12 @@ pub fn build_status_effect(
         status_effect_type,
         show_type,
         expiration_delay: se_data.total_time,
-        expire_at: None,
+        expire_at: Some(
+            timestamp + Duration::milliseconds((se_data.total_time * 1000.) as i64 + TIMEOUT_DELAY_MS),
+        ),
         end_tick: se_data.end_tick,
         name,
-        timestamp: Utc::now(),
+        timestamp,
     }
 }
 
@@ -419,7 +423,7 @@ pub enum StatusEffectType {
 
 #[derive(Debug, Default, Clone)]
 pub struct StatusEffect {
-    instance_id: u32,
+    pub instance_id: u32,
     status_effect_id: u32,
     target_id: u64,
     source_id: u64,
@@ -429,9 +433,9 @@ pub struct StatusEffect {
     buff_category: StatusEffectBuffCategory,
     show_type: StatusEffectShowType,
     status_effect_type: StatusEffectType,
-    expiration_delay: f32,
-    expire_at: Option<DateTime<Utc>>,
-    end_tick: u64,
+    pub expiration_delay: f32,
+    pub expire_at: Option<DateTime<Utc>>,
+    pub end_tick: u64,
     timestamp: DateTime<Utc>,
-    name: String,
+    pub name: String,
 }

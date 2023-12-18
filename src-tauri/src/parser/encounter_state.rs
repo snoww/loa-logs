@@ -2,7 +2,7 @@ use std::cmp::{max, Ordering};
 
 use crate::parser::entity_tracker::Entity;
 use crate::parser::models::*;
-use chrono::Utc;
+use chrono::{Utc};
 use hashbrown::HashMap;
 use log::info;
 use meter_core::packets::definitions::{PKTIdentityGaugeChangeNotify, PKTParalyzationStateNotify};
@@ -109,10 +109,6 @@ impl EncounterState {
 
     // update local player as we get more info
     pub fn update_local_player(&mut self, entity: &Entity) {
-        if self.encounter.local_player == entity.name {
-            return;
-        }
-
         // we replace the existing local player if it exists, since its name might have changed (from hex or "You" to character name)
         if let Some(mut local) = self.encounter.entities.remove(&self.encounter.local_player) {
             // update local player name, insert back into encounter
@@ -401,6 +397,7 @@ impl EncounterState {
         target_max_hp: i64,
         se_on_source: Vec<(u32, u64)>,
         se_on_target: Vec<(u32, u64)>,
+        timestamp: i64,
     ) {
         let hit_flag = match modifier & 0xf {
             0 => HitFlag::NORMAL,
@@ -440,8 +437,8 @@ impl EncounterState {
         }
 
         let mut skill_effect_id = skill_effect_id;
-        if proj_entity.entity_type == EntityType::PROJECTILE &&
-            is_battle_item(skill_effect_id, "attack")
+        if proj_entity.entity_type == EntityType::PROJECTILE
+            && is_battle_item(skill_effect_id, "attack")
         {
             skill_effect_id = proj_entity.skill_effect_id as i32;
         }
@@ -478,8 +475,6 @@ impl EncounterState {
         {
             return;
         }
-
-        let timestamp = Utc::now().timestamp_millis();
 
         if self.encounter.fight_start == 0 {
             self.encounter.fight_start = timestamp;

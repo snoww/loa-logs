@@ -19,6 +19,8 @@ use meter_core::packets::definitions::*;
 use meter_core::packets::opcodes::Pkt;
 use meter_core::{start_capture, start_raw_capture};
 use std::cell::RefCell;
+use std::collections::BTreeMap;
+use std::path::PathBuf;
 use std::rc::Rc;
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
@@ -79,6 +81,21 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool, setti
             boss_only_damage.store(true, Ordering::Relaxed);
             info!("boss only damage enabled")
         }
+    }
+
+    // read saved local players
+    // this info is used in case meter was opened late
+    let mut local_players: HashMap<u64, String> = HashMap::new();
+    let mut local_player_path = window
+        .app_handle()
+        .path_resolver()
+        .resource_dir()
+        .expect("could not get resource dir");
+    local_player_path.push("local_players.json");
+
+    if local_player_path.exists() {
+        let local_players_file = std::fs::read_to_string(local_player_path.clone()).expect("could not read local_players.json");
+        local_players = serde_json::from_str(&local_players_file).expect("could not parse local_players.json");
     }
 
     let emit_details = Arc::new(AtomicBool::new(false));
@@ -203,10 +220,11 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool, setti
                 }
             }
             Pkt::InitEnv => {
-                // two methods of getting local player info
-                // 1. MigrationExecute + InitEnv      + PartyInfo
-                //    > character_id     > entity_id  > player_info
-                // 2. InitPC
+                // three methods of getting local player info
+                // 1. MigrationExecute    + InitEnv      + PartyInfo
+                // 2. Cached Local Player + InitEnv      + PartyInfo
+                //    > character_id        > entity_id    > player_info
+                // 3. InitPC
 
                 if let Some(pkt) = parse_pkt(&data, PKTInitEnv::new, "PKTInitEnv") {
                     party_tracker.borrow_mut().reset_party_mappings();
@@ -222,6 +240,10 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool, setti
                     let (hp, max_hp) = get_current_and_max_hp(&pkt.stat_pair);
                     let entity = entity_tracker.init_pc(pkt);
                     info!("local player: {}, {}, {}, eid: {}, id: {}", entity.name, get_class_from_id(&entity.class_id), entity.gear_level, entity.id, entity.character_id);
+                    if !local_players.contains_key(&entity.character_id) {
+                        local_players.insert(entity.character_id, entity.name.clone());
+                        write_local_players(&local_players, &local_player_path);
+                    }
                     state.on_init_pc(entity, hp, max_hp)
                 }
             }
@@ -279,8 +301,8 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool, setti
             }
             Pkt::PartyInfo => {
                 if let Some(pkt) = parse_pkt(&data, PKTPartyInfo::new, "PKTPartyInfo") {
-                    entity_tracker.party_info(pkt);
-                    let local_player_id = entity_tracker.local_player_id;
+                    entity_tracker.party_info(pkt, &local_players);
+                    let local_player_id = entity_tracker.local_entity_id;
                     if let Some(entity) = entity_tracker.entities.get(&local_player_id) {
                         state.update_local_player(entity);
                     }
@@ -365,8 +387,8 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool, setti
             Pkt::SkillCastNotify => {
                 if let Some(pkt) = parse_pkt(&data, PKTSkillCastNotify::new, "PKTSkillCastNotify") {
                     let mut entity = entity_tracker.get_source_entity(pkt.caster);
+                    entity_tracker.guess_is_player(&mut entity, pkt.skill_id);
                     if entity.class_id == 202 {
-                        entity_tracker.guess_is_player(&mut entity, pkt.skill_id);
                         state.on_skill_start(entity, pkt.skill_id as i32, None, None, Utc::now().timestamp_millis());
                     }
                 }
@@ -388,9 +410,9 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool, setti
                     state.on_skill_start(entity, pkt.skill_id as i32, tripod_index, tripod_level, Utc::now().timestamp_millis());
                 }
             }
-            Pkt::SkillStageNotify => {
-                // let pkt = PKTSkillStageNotify::new(&data);
-            }
+            // Pkt::SkillStageNotify => {
+            //     let pkt = PKTSkillStageNotify::new(&data);
+            // }
             Pkt::SkillDamageAbnormalMoveNotify => {
                 if Instant::now() - raid_end_cd < Duration::from_secs(5) {
                     debug_print(format_args!("ignoring damage - SkillDamageAbnormalMoveNotify"));
@@ -400,7 +422,7 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool, setti
                     let owner = entity_tracker.get_source_entity(pkt.source_id);
                     let local_character_id = id_tracker
                         .borrow()
-                        .get_local_character_id(entity_tracker.local_player_id);
+                        .get_local_character_id(entity_tracker.local_entity_id);
                     for event in pkt.skill_damage_abnormal_move_events.iter() {
                         let target_entity =
                             entity_tracker.get_or_create_entity(event.skill_damage_event.target_id);
@@ -420,6 +442,7 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool, setti
                             event.skill_damage_event.max_hp,
                             se_on_source,
                             se_on_target,
+                            Utc::now().timestamp_millis(),
                         );
                     }
                 }
@@ -434,7 +457,7 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool, setti
                     let owner = entity_tracker.get_source_entity(pkt.source_id);
                     let local_character_id = id_tracker
                         .borrow()
-                        .get_local_character_id(entity_tracker.local_player_id);
+                        .get_local_character_id(entity_tracker.local_entity_id);
                     for event in pkt.skill_damage_events.iter() {
                         let target_entity = entity_tracker.get_or_create_entity(event.target_id);
                         // source_entity is to determine battle item
@@ -454,6 +477,7 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool, setti
                             event.max_hp,
                             se_on_source,
                             se_on_target,
+                            Utc::now().timestamp_millis(),
                         );
                     }
                 }
@@ -461,11 +485,12 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool, setti
             Pkt::StatusEffectAddNotify => {
                 if let Some(pkt) = parse_pkt(&data, PKTStatusEffectAddNotify::new, "PKTStatusEffectAddNotify") {
                     entity_tracker
-                        .build_and_register_status_effect(&pkt.status_effect_data, pkt.object_id)
+                        .build_and_register_status_effect(&pkt.status_effect_data, pkt.object_id, Utc::now())
                 }
             }
             Pkt::StatusEffectDurationNotify => {
                 if let Some(pkt) = parse_pkt(&data, PKTStatusEffectDurationNotify::new, "PKTStatusEffectDurationNotify") {
+                    // debug_print(format_args!("status effect duration: {:?}", pkt));
                     status_tracker.borrow_mut().update_status_duration(
                         pkt.effect_instance_id,
                         pkt.target_id,
@@ -555,17 +580,15 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool, setti
                         .remove_local_object(pkt.object_id);
                 }
             }
-            Pkt::StatusEffectSyncDataNotify => {
-                // let pkt = PKTStatusEffectSyncDataNotify::new(&data);
-                // shields
-            }
-            Pkt::TroopMemberUpdateMinNotify => {
-                // let pkt = PKTTroopMemberUpdateMinNotify::new(&data);
-                // shields
-            }
-            _ => {
-                continue;
-            }
+            // Pkt::StatusEffectSyncDataNotify => {
+            //     let pkt = PKTStatusEffectSyncDataNotify::new(&data);
+            //     shields
+            // }
+            // Pkt::TroopMemberUpdateMinNotify => {
+            //     let pkt = PKTTroopMemberUpdateMinNotify::new(&data);
+            //     shields
+            // }
+            _ => {}
         }
 
         if last_update.elapsed() >= duration || state.resetting || state.boss_dead_update {
@@ -671,6 +694,11 @@ fn update_party(party_tracker: &Rc<RefCell<PartyTracker>>, entity_tracker: &Enti
     sorted_parties.into_iter().map(|(_, members)| members).collect()
 }
 
+fn write_local_players(local_players: &HashMap<u64, String>, path: &PathBuf) {
+    let ordered: BTreeMap<_,_> = local_players.iter().collect();
+    let local_players_file = serde_json::to_string(&ordered).expect("could not serialize local_players");
+    std::fs::write(path, local_players_file).expect("could not write local_players.json");
+}
 
 fn parse_pkt<T, F>(data: &[u8], new_fn: F, pkt_name: &str) -> Option<T>
 where
