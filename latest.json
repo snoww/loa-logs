@@ -1,11 +1,11 @@
 {
-    "version": "v1.4.5",
-    "notes": "### v1.4.5\n#### NEW FEATURES\n- add support for elixir buffs\n- add \"my dps\" column in logs\n- add sorting functionality in logs\n#### BUG FIXES AND IMPROVEMENTS\n- improve local player detection when meter opened late\n- fix hallucination set buff not tracking properly\n- fix buff tab crashing when only party 2 did damage\nfull patch notes on github\nsend bug reports/suggestions to discord.gg/sbSa3pkDF5",
-    "pub_date": "2023-12-18T09:37:08.747Z",
+    "version": "v1.4.6",
+    "notes": "### v1.4.6\n#### NEW FEATURES\n- add support for elixir buffs\n- add sorting functionality in logs\n#### BUG FIXES AND IMPROVEMENTS\n- improve local player detection when meter opened late\n- fix hallucination set not tracking properly\n- fix buff tab crashing when only party 2 did damage\nfull patch notes on github\nsend bug reports/suggestions to discord.gg/sbSa3pkDF5",
+    "pub_date": "2023-12-18T11:23:16.764Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.4.5/LOA.Logs_1.4.5_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYllBKyt1RHgzeU1kZWQ5ZUJ2SUVUY3VmRjFrbWJHRktpaFc1RUU4MWdzeE1SMWQxeVhKOTU3OWNoQ3dKV2ZTVlZNQXlUWGhMbU1QYlR4SWVaSUE1TlFZPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzAyODkyMjY0CWZpbGU6TE9BIExvZ3NfMS40LjVfeDY0LXNldHVwLm5zaXMuemlwCktqTnVabG1YSUNiYmFDdW5WRVcwN1IrN3FMNUl1aUVGWFJJOExaTkxXSUJpTDRTa3RSaGdlbDJmNURGZzRydHl6QlZRRUV4SGIxSFR0Tm15ZWZiTUR3PT0K"
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.4.6/LOA.Logs_1.4.6_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmZTbUQyRnlGR2hvSG9VVkJNSUpyWmRNSzdaUGp3SDQycTRRNGFjS2tRN2tIR3RwRXlsRUFyMjFGWkVNT3ViUExkR1U4QmEvczJlampyVG9pcHpXWFFJPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzAyODk4MzMxCWZpbGU6TE9BIExvZ3NfMS40LjZfeDY0LXNldHVwLm5zaXMuemlwClZjYTQ5N3A2cjdBaEhZWDhoUmNUZmZDZ0xZTWZscUhIQk1uamFsZmZmTUdiMUtoVkJhbEw2ZnVFb285S01ZQXE5bUYwUC9WajAxMnhKVUpYL2tZRUN3PT0K"
         }
     }
 }
