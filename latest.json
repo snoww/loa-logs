@@ -1,11 +1,11 @@
 {
-    "version": "v1.4.4",
-    "notes": "### v1.4.4\n#### NEW FEATURES\n- update meter for voldis\n#### BUG FIXES AND IMPROVEMENTS\n- fix parties not resetting\n- separate meter and logs scale settings\nfull patch notes on github\nsend bug reports/suggestions to discord.gg/sbSa3pkDF5",
-    "pub_date": "2023-12-13T22:26:55.606Z",
+    "version": "v1.4.5",
+    "notes": "### v1.4.5\n#### NEW FEATURES\n- add support for elixir buffs\n- add sorting functionality in logs\n#### BUG FIXES AND IMPROVEMENTS\n- improve local player detection when meter opened late\n- fix buff tab crashing when only party 2 did damage\nfull patch notes on github\nsend bug reports/suggestions to discord.gg/sbSa3pkDF5",
+    "pub_date": "2023-12-18T09:37:08.747Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.4.4/LOA.Logs_1.4.4_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmFyNlZmVkZOWFhwMWtuTzN1dW04cnBjazlTQzJqQXFHWlN0OHpRZll2Qzc2VnNJMjZpUkxYNjh0NWwya1JwaktOL2FWSk9TZ0l0NndlVEtuUzY4UWcwPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzAyNTA2NTIzCWZpbGU6TE9BIExvZ3NfMS40LjRfeDY0LXNldHVwLm5zaXMuemlwClAzTUZpM09XRGZkTnQ5dXJDQUpSeU1aRlR3WjdPZ1hza0lYSDROYlMyTjRnN3pPbDBjeFgvNUc2YzhheGNuamh4aDA0N0draU5UWk5FN1FhMWtMWUNnPT0K"
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.4.5/LOA.Logs_1.4.5_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYllBKyt1RHgzeU1kZWQ5ZUJ2SUVUY3VmRjFrbWJHRktpaFc1RUU4MWdzeE1SMWQxeVhKOTU3OWNoQ3dKV2ZTVlZNQXlUWGhMbU1QYlR4SWVaSUE1TlFZPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzAyODkyMjY0CWZpbGU6TE9BIExvZ3NfMS40LjVfeDY0LXNldHVwLm5zaXMuemlwCktqTnVabG1YSUNiYmFDdW5WRVcwN1IrN3FMNUl1aUVGWFJJOExaTkxXSUJpTDRTa3RSaGdlbDJmNURGZzRydHl6QlZRRUV4SGIxSFR0Tm15ZWZiTUR3PT0K"
         }
     }
 }
