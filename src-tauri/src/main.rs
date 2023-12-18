@@ -592,6 +592,13 @@ fn load_encounters_preview(
         "".to_string()
     };
 
+    let order = if filter.order == 1 { "".to_string() } else { "DESC".to_string() };
+    let sort = if filter.sort == "my_dps" {
+        filter.sort
+    } else {
+        format!("e.{}", filter.sort)
+    };
+
     let count_params = params.clone();
 
     let query = format!("SELECT
@@ -622,9 +629,9 @@ fn load_encounters_preview(
     WHERE e.duration > ? AND ((current_boss LIKE '%' || ? || '%') OR (ent.class LIKE '%' || ? || '%') OR (ent.name LIKE '%' || ? || '%'))
         {} {} {} {} {} {}
     GROUP BY encounter_id
-    ORDER BY e.fight_start DESC
+    ORDER BY {} {}
     LIMIT ?
-    OFFSET ?", boss_filter, class_filter, raid_clear_filter, favorite_filter, difficulty_filter, boss_only_damage_filter);
+    OFFSET ?", boss_filter, class_filter, raid_clear_filter, favorite_filter, difficulty_filter, boss_only_damage_filter, sort, order);
 
     let mut stmt = conn.prepare_cached(&query).unwrap();
 

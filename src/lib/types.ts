@@ -63,7 +63,7 @@ export interface EncounterMisc {
 }
 
 export interface PartyInfo {
-    [key: string]: Array<string>
+    [key: string]: Array<string>;
 }
 
 export class BossHpLog {
@@ -166,6 +166,7 @@ export interface IdentityStats {
 
 export interface StatusEffect {
     [x: string]: any;
+
     target: StatusEffectTarget;
     category: string;
     buffCategory: string;
@@ -337,6 +338,8 @@ export class SearchFilter {
     cleared: boolean;
     difficulty: string;
     bossOnlyDamage: boolean;
+    sort: string;
+    order: number;
 
     constructor(minDuration = -1) {
         this.bosses = new Set();
@@ -348,6 +351,8 @@ export class SearchFilter {
         this.cleared = false;
         this.difficulty = "";
         this.bossOnlyDamage = false;
+        this.sort = "fight_start";
+        this.order = 2;
     }
 }
 
