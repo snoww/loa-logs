@@ -462,6 +462,7 @@ pub struct EncounterPreview {
     pub names: Vec<String>,
     pub difficulty: Option<String>,
     pub local_player: String,
+    pub my_dps: i64,
     pub favorite: bool,
     pub cleared: bool,
 }

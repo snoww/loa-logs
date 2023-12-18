@@ -3,6 +3,7 @@
     import TableFilter from "$lib/components/table/TableFilter.svelte";
     import type { EncounterPreview, EncountersOverview } from "$lib/types";
     import {
+        abbreviateNumber,
         formatDurationFromMs,
         formatTimestamp,
         formatTimestampDate,
@@ -188,6 +189,7 @@
                         <th scope="col" class="w-[25%] px-3 py-3"> Encounter </th>
                         <th scope="col" class="px-3 py-3"> Classes </th>
                         <th scope="col" class="hidden w-32 px-3 py-3 md:table-cell lg:w-48"> Local Player </th>
+                        <th scope="col" class="hidden w-20 px-3 py-3 lg:table-cell text-right"> My DPS </th>
                         <th scope="col" class="w-14 px-3 py-3"> Dur </th>
                         <th scope="col" class="w-[15%] px-3 py-3 text-right"> Date </th>
                     </tr>
@@ -272,6 +274,11 @@
                             <td class="hidden truncate px-3 py-3 md:table-cell">
                                 {encounter.localPlayer}
                             </td>
+                            <td class="hidden truncate px-3 py-3 lg:table-cell">
+                                <div class="text-right pr-1">
+                                    {abbreviateNumber(encounter.myDps).toUpperCase()}
+                                </div>
+                            </td>
                             <td class="px-3 py-3">
                                 {formatDurationFromMs(encounter.duration)}
                             </td>
@@ -303,7 +310,7 @@
                             totalEncounters
                         )}</span>
                     of
-                    <span class="font-semibold text-white">{totalEncounters == 0 ? 1 : totalEncounters}</span></span>
+                    <span class="font-semibold text-white">{totalEncounters === 0 ? 1 : totalEncounters}</span></span>
                 <ul class="inline-flex items-center -space-x-px">
                     <li use:tooltip={{ content: "First" }}>
                         <button class="ml-0 block px-3" on:click={() => firstPage()}>

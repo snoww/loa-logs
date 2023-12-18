@@ -604,6 +604,11 @@ fn load_encounters_preview(
     e.cleared,
     e.local_player,
     (
+		SELECT en.dps
+		FROM entity en
+		WHERE en.name = e.local_player AND en.encounter_id = e.id
+	) AS my_dps,
+    (
         SELECT GROUP_CONCAT(ordered_classes.class_info, ',')
         FROM (
             SELECT en.class_id || ':' || en.name AS class_info
@@ -630,7 +635,7 @@ fn load_encounters_preview(
 
     let encounter_iter = stmt
         .query_map(params_from_iter(params), |row| {
-            let classes = row.get(8).unwrap_or_else(|_| "".to_string());
+            let classes = row.get(9).unwrap_or_else(|_| "".to_string());
 
             let (classes, names) = classes
                 .split(',')
@@ -651,6 +656,7 @@ fn load_encounters_preview(
                 favorite: row.get(5)?,
                 cleared: row.get(6)?,
                 local_player: row.get(7)?,
+                my_dps: row.get(8).unwrap_or_else(|_| 0),
             })
         })
         .expect("could not query encounters");

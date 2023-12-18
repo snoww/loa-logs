@@ -38,6 +38,7 @@ export interface EncounterPreview {
     names: Array<string>;
     difficulty?: string;
     localPlayer: string;
+    myDps: number;
     favorite: boolean;
     cleared: boolean;
 }
