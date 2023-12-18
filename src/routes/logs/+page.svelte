@@ -125,13 +125,14 @@
             $searchFilter.sort = sort;
             $searchFilter.order = order;
         }
+        $pageStore = 1;
     }
 
     function scrollToTopOfTable() {
         if (encounters.length === 0) {
             return;
         }
-        var rows = document.querySelectorAll(`#encounter-${encounters[0].id}`);
+        const rows = document.querySelectorAll(`#encounter-${encounters[0].id}`);
         rows[0].scrollIntoView({
             behavior: "smooth",
             block: "center"

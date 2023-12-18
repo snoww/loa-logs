@@ -134,7 +134,10 @@
                                 <button
                                     class="mx-2 rounded bg-zinc-800 px-1 text-xs hover:bg-zinc-600"
                                     on:click={() => {
-                                        searchFilter.set(new SearchFilter($settings.logs.minEncounterDuration));
+                                        let sf = new SearchFilter($settings.logs.minEncounterDuration);
+                                        sf.sort = $searchFilter.sort;
+                                        sf.order = $searchFilter.order;
+                                        searchFilter.set(sf);
                                         $pageStore = 1;
                                     }}>
                                     Reset All
