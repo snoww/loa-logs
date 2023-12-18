@@ -46,7 +46,8 @@ impl StatusTracker {
         let timestamp = Utc::now();
         for sed in pkt.pc_struct.status_effect_datas.into_iter() {
             let source_id = sed.source_id;
-            let status_effect = build_status_effect(sed, target_id, source_id, target_type, timestamp);
+            let status_effect =
+                build_status_effect(sed, target_id, source_id, target_type, timestamp);
             self.register_status_effect(status_effect);
         }
     }
@@ -107,7 +108,7 @@ impl StatusTracker {
 
         if let Some(se) = ser.get_mut(&instance_id) {
             let duration_ms = timestamp - se.end_tick;
-            if duration_ms > 0 {
+            if duration_ms > 0 && duration_ms < 10_000_000 {
                 se.end_tick = timestamp;
                 if let Some(expire_at) = se.expire_at {
                     se.expire_at = Some(expire_at + Duration::milliseconds(duration_ms as i64));
@@ -362,6 +363,12 @@ pub fn build_status_effect(
         }
     }
 
+    let expiry = if se_data.total_time > 0. && se_data.total_time < 604800. {
+        Some(timestamp + Duration::milliseconds((se_data.total_time as i64) * 1000 + TIMEOUT_DELAY_MS))
+    } else {
+        None
+    };
+
     StatusEffect {
         instance_id: se_data.effect_instance_id,
         source_id,
@@ -374,9 +381,7 @@ pub fn build_status_effect(
         status_effect_type,
         show_type,
         expiration_delay: se_data.total_time,
-        expire_at: Some(
-            timestamp + Duration::milliseconds((se_data.total_time * 1000.) as i64 + TIMEOUT_DELAY_MS),
-        ),
+        expire_at: expiry,
         end_tick: se_data.end_tick,
         name,
         timestamp,
