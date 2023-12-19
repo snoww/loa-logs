@@ -6,6 +6,7 @@ import { abbreviateNumber, formatDurationFromMs, formatDurationFromS, resampleDa
 import { getSkillIcon, isValidName } from "./strings";
 import { bossHpMap } from "$lib/constants/bossHpBars";
 import { classesMap } from "$lib/constants/classes";
+import BTree from "sorted-btree";
 
 export function getLegendNames(chartablePlayers: Entity[], showNames: boolean) {
     if (!showNames) {
@@ -159,35 +160,11 @@ export function getAverageDpsChart(
             formatter: function (params: any[]) {
                 const time = params[0].name;
                 let tooltipStr = `<div>${time}</div><div style="min-width: 10rem">`;
-                const playerTooltips: string[] = [];
                 const bossTooltips: string[] = [];
-                params.forEach((param) => {
-                    let label = param.seriesName;
-                    let value = param.value;
-                    if (param.seriesIndex >= Object.keys(chartablePlayers).length) {
-                        value = value[1] + "%";
-                        if (Object.hasOwn(bossHpMap, label)) {
-                            const bossMaxHpBars = bossHpMap[label];
-                            const bossHpBars = Math.floor(bossMaxHpBars * (parseFloat(value) / 100));
-                            value = bossHpBars + "x (" + value + ")";
-                        }
-                        bossTooltips.push(
-                            `<div style="display:flex; justify-content: space-between;"><div style="padding-right: 1rem;font-weight: 600;">${label}</div><div style="font-weight: 600;">${value}</div></div>`
-                        );
-                    } else {
-                        if (deathTimes[label] && deathTimes[label] < timeToSeconds(time)) {
-                            label = "💀 " + label;
-                        }
-                        value = abbreviateNumber(value);
-                        label =
-                            `<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:${param.color}"></span>` +
-                            label;
-                        playerTooltips.push(
-                            `<div style="display:flex; justify-content: space-between;"><div style="padding-right: 1rem">${label}</div><div style="">${value}</div></div>`
-                        );
-                    }
-                });
-                tooltipStr += bossTooltips.join("") + playerTooltips.join("") + "</div>";
+                const tree = new BTree(undefined, (a, b) => b - a);
+                const length = Object.keys(chartablePlayers).length;
+                params.forEach((param) => generateTooltip(param, bossTooltips, tree, deathTimes, time, length));
+                tooltipStr += bossTooltips.join("") + tree.valuesArray().join("") + "</div>";
                 return tooltipStr;
             }
         },
@@ -263,35 +240,11 @@ export function getRollingDpsChart(
             formatter: function (params: any[]) {
                 const time = params[0].name;
                 let tooltipStr = `<div>${time}</div><div style="min-width: 10rem">`;
-                const playerTooltips: string[] = [];
                 const bossTooltips: string[] = [];
-                params.forEach((param) => {
-                    let label = param.seriesName;
-                    let value = param.value;
-                    if (param.seriesIndex >= Object.keys(chartablePlayers).length) {
-                        value = value[1] + "%";
-                        if (Object.hasOwn(bossHpMap, label)) {
-                            const bossMaxHpBars = bossHpMap[label];
-                            const bossHpBars = Math.floor(bossMaxHpBars * (parseFloat(value) / 100));
-                            value = bossHpBars + "x (" + value + ")";
-                        }
-                        bossTooltips.push(
-                            `<div style="display:flex; justify-content: space-between;"><div style="padding-right: 1rem;font-weight: 600;">${label}</div><div style="font-weight: 600;">${value}</div></div>`
-                        );
-                    } else {
-                        if (deathTimes[label] && deathTimes[label] < timeToSeconds(time)) {
-                            label = "💀 " + label;
-                        }
-                        value = abbreviateNumber(value);
-                        label =
-                            `<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:${param.color}"></span>` +
-                            label;
-                        playerTooltips.push(
-                            `<div style="display:flex; justify-content: space-between;"><div style="padding-right: 1rem">${label}</div><div style="">${value}</div></div>`
-                        );
-                    }
-                });
-                tooltipStr += bossTooltips.join("") + playerTooltips.join("") + "</div>";
+                const length = Object.keys(chartablePlayers).length;
+                const tree = new BTree(undefined, (a, b) => b - a);
+                params.forEach((param) => generateTooltip(param, bossTooltips, tree, deathTimes, time, length));
+                tooltipStr += bossTooltips.join("") + tree.valuesArray().join("") + "</div>";
                 return tooltipStr;
             }
         },
@@ -482,4 +435,30 @@ export function getOpenerSkills(skills: MiniSkill[], x: number): OpenerSkill[] {
 
     // Return the first x names
     return result.slice(0, x);
+}
+
+function generateTooltip(param: any, bossTooltips: string[], tree: BTree, deathTimes: { [key: string]: number }, time: string, chartablePlayersLength: number) {
+    let label = param.seriesName;
+    let value = param.value;
+    if (param.seriesIndex >= chartablePlayersLength) {
+        value = value[1] + "%";
+        if (Object.hasOwn(bossHpMap, label)) {
+            const bossMaxHpBars = bossHpMap[label];
+            const bossHpBars = Math.floor(bossMaxHpBars * (parseFloat(value) / 100));
+            value = bossHpBars + "x (" + value + ")";
+        }
+        bossTooltips.push(
+            `<div style="display:flex; justify-content: space-between;"><div style="padding-right: 1rem;font-weight: 600;">${label}</div><div style="font-weight: 600;">${value}</div></div>`
+        );
+    } else {
+        if (deathTimes[label] && deathTimes[label] < timeToSeconds(time)) {
+            label = "💀 " + label;
+        }
+        const dps = Number(value);
+        value = abbreviateNumber(value);
+        label =
+            `<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:${param.color}"></span>` +
+            label;
+        tree.set(dps, `<div style="display:flex; justify-content: space-between;"><div style="padding-right: 1rem">${label}</div><div style="">${value}</div></div>`);
+    }
 }
