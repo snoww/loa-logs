@@ -1429,7 +1429,7 @@ fn insert_data(
                         entity
                             .damage_stats
                             .dps_rolling_10s_avg
-                            .push(damage / WINDOW_S);
+                            .push(damage / (WINDOW_S * 2));
                     }
                 }
                 let fight_start_sec = encounter.fight_start / 1000;
