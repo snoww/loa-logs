@@ -536,6 +536,8 @@ pub struct GeneralSettings {
     #[serde(default = "default_true")]
     pub always_on_top: bool,
     pub boss_only_damage: bool,
+    #[serde(default = "default_true")]
+    pub keep_favorites: bool,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]

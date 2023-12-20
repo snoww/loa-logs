@@ -592,7 +592,11 @@ fn load_encounters_preview(
         "".to_string()
     };
 
-    let order = if filter.order == 1 { "".to_string() } else { "DESC".to_string() };
+    let order = if filter.order == 1 {
+        "".to_string()
+    } else {
+        "DESC".to_string()
+    };
     let sort = if filter.sort == "my_dps" {
         filter.sort
     } else {
@@ -1051,45 +1055,63 @@ fn open_db_path(window: tauri::Window) {
 }
 
 #[tauri::command]
-fn delete_encounters_below_min_duration(window: tauri::Window, min_duration: i64) {
+fn delete_encounters_below_min_duration(
+    window: tauri::Window,
+    min_duration: i64,
+    keep_favorites: bool,
+) {
     let path = window
         .app_handle()
         .path_resolver()
         .resource_dir()
         .expect("could not get resource dir");
     let conn = get_db_connection(&path).expect("could not get db connection");
-    conn.execute(
-        "
-        DELETE FROM encounter
-        WHERE duration < ?;
-    ",
-        params![min_duration * 1000],
-    )
-    .unwrap();
+    if keep_favorites {
+        conn.execute(
+            "DELETE FROM encounter
+            WHERE duration < ? AND favorite = 0;",
+            params![min_duration * 1000],
+        )
+        .unwrap();
+    } else {
+        conn.execute(
+            "DELETE FROM encounter
+            WHERE duration < ?;",
+            params![min_duration * 1000],
+        )
+        .unwrap();
+    }
     conn.execute("VACUUM;", params![]).unwrap();
 }
 
 #[tauri::command]
-fn delete_all_uncleared_encounters(window: tauri::Window) {
+fn delete_all_uncleared_encounters(window: tauri::Window, keep_favorites: bool) {
     let path = window
         .app_handle()
         .path_resolver()
         .resource_dir()
         .expect("could not get resource dir");
     let conn = get_db_connection(&path).expect("could not get db connection");
-    conn.execute(
-        "
-        DELETE FROM encounter
-        WHERE cleared = 0;
-    ",
-        [],
-    )
-    .unwrap();
+    if keep_favorites {
+        conn.execute(
+            "DELETE FROM encounter
+            WHERE cleared = 0 AND favorite = 0;",
+            [],
+        )
+        .unwrap();
+    } else {
+        conn.execute(
+            "DELETE FROM encounter
+            WHERE cleared = 0;",
+            [],
+        )
+        .unwrap();
+    }
     conn.execute("VACUUM;", params![]).unwrap();
 }
 
 #[tauri::command]
-fn delete_all_encounters(window: tauri::Window) {
+fn delete_all_encounters(window: tauri::Window, keep_favorites: bool) {
     let path = window
         .app_handle()
         .path_resolver()
@@ -1097,7 +1119,16 @@ fn delete_all_encounters(window: tauri::Window) {
         .expect("could not get resource dir");
     let conn = get_db_connection(&path).expect("could not get db connection");
 
-    conn.execute("DELETE FROM encounter", []).unwrap();
+    if keep_favorites {
+        conn.execute(
+            "DELETE FROM encounter
+            WHERE favorite = 0;",
+            [],
+        )
+        .unwrap();
+    } else {
+        conn.execute("DELETE FROM encounter", []).unwrap();
+    }
     conn.execute("VACUUM", []).unwrap();
 }
 
