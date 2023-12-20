@@ -1,11 +1,11 @@
 {
-    "version": "v1.4.7",
-    "notes": "### v1.4.7\n#### BUG FIXES\n- fix incorrect buff duration\n###v1.4.6\n#### NEW FEATURES\n- add support for elixir buffs\n- add sorting functionality in logs\n#### BUG FIXES AND IMPROVEMENTS\n- improve local player detection when meter opened late\n- fix buff tab crashing when only party 2 did damage\nfull patch notes on github\nsend bug reports/suggestions to discord.gg/sbSa3pkDF5",
-    "pub_date": "2023-12-18T13:00:03.961Z",
+    "version": "v1.4.8",
+    "notes": "### v1.4.8\n#### NEW FEATURES\n- chart tooltips are now sorted by dps\n- add option to keep favorites when deleting encounters through settings\n#### BUG FIXES\n- fix certain buffs causing crashes\nfull patch notes on github\nsend bug reports/suggestions to discord.gg/sbSa3pkDF5",
+    "pub_date": "2023-12-20T21:08:51.578Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.4.7/LOA.Logs_1.4.7_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmV1anByMVpRemQwVFFxQy9iVTN3aDNUL0RhbHdFQlZodW9Ccis4aERhTGM0L2ZZeFNoZ0xIeE5XU0UvMThxK0dVZXF5MDBaQUZBUSt3aGtKR3pjS2dZPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzAyOTA0NDU2CWZpbGU6TE9BIExvZ3NfMS40LjdfeDY0LXNldHVwLm5zaXMuemlwCklrdGFhQjZrbGFuNi9uY21sbUVESnlMaVoyK1JEUGZRQlI4OW5BNGV6S3JwNGE0dTM1dEQvMExjMzNrUU1aNHQ4UFVZbzVRWVVzcDVXMGRCNTROVkRnPT0K"
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.4.8/LOA.Logs_1.4.8_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmViMFpDV1NLQzgraVhGVktIWFpHU3QzQ2ttMWJBQXdxWUdKK3drUGVneUxuV2tKbEFKaDdDOVJUT2YrQ0FKNldqeVNtZjdRRW5OVnRoWmtDNzJNNUFFPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzAzMTA2NTMxCWZpbGU6TE9BIExvZ3NfMS40LjhfeDY0LXNldHVwLm5zaXMuemlwCjF6WkFCaitsT2E4aHV4YTJQNVY1LzFwVnNoUHU1b3pKL21EZmd3eVNZNk8xdVNxV2pYanZwa250YVJUZm1EQVFhOElSV04raWtLUGg2ZFQzNlhWcUNRPT0K"
         }
     }
 }
