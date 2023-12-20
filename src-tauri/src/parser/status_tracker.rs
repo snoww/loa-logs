@@ -107,11 +107,12 @@ impl StatusTracker {
         };
 
         if let Some(se) = ser.get_mut(&instance_id) {
-            let duration_ms = timestamp - se.end_tick;
-            if duration_ms > 0 && duration_ms < 10_000_000 {
-                se.end_tick = timestamp;
-                if let Some(expire_at) = se.expire_at {
-                    se.expire_at = Some(expire_at + Duration::milliseconds(duration_ms as i64 + TIMEOUT_DELAY_MS));
+            if let Some(duration_ms) = timestamp.checked_sub(se.end_tick) {
+                if duration_ms > 0 && duration_ms < 10_000_000 {
+                    se.end_tick = timestamp;
+                    if let Some(expire_at) = se.expire_at {
+                        se.expire_at = Some(expire_at + Duration::milliseconds(duration_ms as i64 + TIMEOUT_DELAY_MS));
+                    }
                 }
             }
         }
