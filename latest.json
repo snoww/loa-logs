@@ -1,11 +1,11 @@
 {
-    "version": "v1.4.8",
-    "notes": "### v1.4.8\n#### NEW FEATURES\n- chart tooltips are now sorted by dps\n- add option to keep favorites when deleting encounters through settings\n#### BUG FIXES\n- fix certain buffs causing crashes\nfull patch notes on github\nsend bug reports/suggestions to discord.gg/sbSa3pkDF5",
-    "pub_date": "2023-12-20T21:08:51.578Z",
+    "version": "v1.4.9",
+    "notes": "### v1.4.9\n#### BUG FIXES\n- fix search filter for voldis abyss dungeons\nfull patch notes on github\nsend bug reports/suggestions to discord.gg/sbSa3pkDF5",
+    "pub_date": "2023-12-21T07:53:19.331Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.4.8/LOA.Logs_1.4.8_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmViMFpDV1NLQzgraVhGVktIWFpHU3QzQ2ttMWJBQXdxWUdKK3drUGVneUxuV2tKbEFKaDdDOVJUT2YrQ0FKNldqeVNtZjdRRW5OVnRoWmtDNzJNNUFFPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzAzMTA2NTMxCWZpbGU6TE9BIExvZ3NfMS40LjhfeDY0LXNldHVwLm5zaXMuemlwCjF6WkFCaitsT2E4aHV4YTJQNVY1LzFwVnNoUHU1b3pKL21EZmd3eVNZNk8xdVNxV2pYanZwa250YVJUZm1EQVFhOElSV04raWtLUGg2ZFQzNlhWcUNRPT0K"
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.4.9/LOA.Logs_1.4.9_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmVkeXN2b1pyb0JGTTBjRFNFd1h1dFhKZ3Z1aE04aVRMVTd0aTlvNVVDdkUvWE5ubGU2TE82cGI5ZnlDbWwyT1lXWkZyQmlyTGloblpZdGVONTVoSGdvPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzAzMTQ1MDE2CWZpbGU6TE9BIExvZ3NfMS40LjlfeDY0LXNldHVwLm5zaXMuemlwCis4Qld5Z1JYRS8xTkFuejNsS2hZcGxkN1JlOE9OVWdmWXhiNFlmVGhBZVRncllsQ0NuOGREb2JGRGYvdjAyeXBtM0pnQnF4Uloxa29Hb2ptdG9JVkRRPT0K"
         }
     }
 }
