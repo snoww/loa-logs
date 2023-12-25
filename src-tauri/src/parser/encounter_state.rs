@@ -352,6 +352,8 @@ impl EncounterState {
         let mut skill_id = skill_id;
         if let Some(skill) = entity.skills.get_mut(&skill_id) {
             skill.casts += 1;
+            skill.tripod_index = tripod_index;
+            skill.tripod_level = tripod_level;
         } else if let Some(skill) = entity
             .skills
             .values_mut()
@@ -359,6 +361,8 @@ impl EncounterState {
         {
             skill.casts += 1;
             skill_id = skill.id;
+            skill.tripod_index = tripod_index;
+            skill.tripod_level = tripod_level;
         } else {
             let (skill_name, skill_icon) =
                 get_skill_name_and_icon(&skill_id, &0, skill_name.clone());
