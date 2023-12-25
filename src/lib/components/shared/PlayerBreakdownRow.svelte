@@ -4,7 +4,7 @@
     import { abbreviateNumberSplit, round } from "$lib/utils/numbers";
     import { settings, skillIcon } from "$lib/utils/settings";
     import { getSkillIcon } from "$lib/utils/strings";
-    import { tooltip } from "$lib/utils/tooltip";
+    import { generateTripodTooltip, tooltip } from "$lib/utils/tooltip";
 
     export let skill: Skill;
     export let color: string;
@@ -53,7 +53,7 @@
 </td>
 <td class="-left-px" colspan="2">
     <div class="truncate">
-        <span use:tooltip={{ content: skill.name }}>
+        <span use:tooltip={{ content: generateTripodTooltip(skill) }}>
             {skill.name}
         </span>
     </div>

@@ -1,4 +1,4 @@
-import type { BuffDetails, StatusEffect } from "$lib/types";
+import type { BuffDetails, Skill, StatusEffect } from "$lib/types";
 import { createTippy } from "svelte-tippy";
 import "tippy.js/animations/perspective-subtle.css";
 import "tippy.js/dist/svg-arrow.css";
@@ -95,6 +95,89 @@ export function generateHeaderTooltip(buff: StatusEffect, iconPath: string) {
     str += `<div class="">`;
     str += removeUnknownHtmlTags(buff.source.desc);
     str += `</div></div></div>`;
+
+    return str;
+}
+
+// export function generateTripodTooltip(skill: Skill) {
+//     if (!skill.tripodIndex || !skill.tripodLevel) {
+//         return skill.name;
+//     }
+//
+//     let str = skill.name;
+//     const tripodLevels = ['first', 'second', 'third'];
+//     const colors = ['gray', 'blue', 'gray'];
+//
+//     tripodLevels.forEach(level => {
+//         if (skill.tripodLevel[level] > 0) {
+//             str += `<div class="flex space-x-1">`;
+//             colors.forEach((color, index) => {
+//                 str += `<div class="flex h-5 w-5 items-center justify-center rounded-full bg-${color}-800">`;
+//                 if (skill.tripodIndex[level] === index + 1) {
+//                     str += `<p class="text-gray-200">${skill.tripodLevel[level]}</p>`;
+//                 }
+//                 str += `</div>`;
+//             });
+//             str += `</div>`;
+//         }
+//     });
+//     console.log(str);
+//     return str;
+// }
+
+export function generateTripodTooltip(skill: Skill) {
+    if (!skill.tripodIndex) {
+        return skill.name;
+    }
+
+    let str = `<div class="py-0.5">${skill.name}</div>`;
+    str += `<div class="w-16">`;
+    if (skill.tripodIndex.first > 0) {
+        str += `<div class="flex space-x-1 py-0.5 justify-center">`;
+        if (skill.tripodIndex.first === 1) {
+            str += `<div class="flex h-5 w-5 items-center justify-center rounded-full bg-blue-800"><p class="text-gray-200">${skill.tripodLevel?.first || 1}</p></div>`;
+            str += `<div class="flex h-5 w-5 items-center justify-center rounded-full bg-gray-800"></div>`;
+            str += `<div class="flex h-5 w-5 items-center justify-center rounded-full bg-gray-800"></div>`;
+        } else if (skill.tripodIndex.first === 2) {
+            str += `<div class="flex h-5 w-5 items-center justify-center rounded-full bg-gray-800"></div>`;
+            str += `<div class="flex h-5 w-5 items-center justify-center rounded-full bg-blue-800"><p class="text-gray-200">${skill.tripodLevel?.first || 1}</p></div>`;
+            str += `<div class="flex h-5 w-5 items-center justify-center rounded-full bg-gray-800"></div>`;
+        } else if (skill.tripodIndex.first === 3) {
+            str += `<div class="flex h-5 w-5 items-center justify-center rounded-full bg-gray-800"></div>`;
+            str += `<div class="flex h-5 w-5 items-center justify-center rounded-full bg-gray-800"></div>`;
+            str += `<div class="flex h-5 w-5 items-center justify-center rounded-full bg-blue-800"><p class="text-gray-200">${skill.tripodLevel?.first || 1}</p></div>`;
+        }
+        str += `</div>`;
+    }
+    if (skill.tripodIndex.second > 0) {
+        str += `<div class="flex space-x-1 py-0.5 justify-center">`;
+        if (skill.tripodIndex.second === 1) {
+            str += `<div class="flex h-5 w-5 items-center justify-center rounded-full bg-lime-600"><p class="text-gray-200">${skill.tripodLevel?.second || 1}</p></div>`;
+            str += `<div class="flex h-5 w-5 items-center justify-center rounded-full bg-gray-800"></div>`;
+            str += `<div class="flex h-5 w-5 items-center justify-center rounded-full bg-gray-800"></div>`;
+        } else if (skill.tripodIndex.second === 2) {
+            str += `<div class="flex h-5 w-5 items-center justify-center rounded-full bg-gray-800"></div>`;
+            str += `<div class="flex h-5 w-5 items-center justify-center rounded-full bg-lime-600"><p class="text-gray-200">${skill.tripodLevel?.second || 1}</p></div>`;
+            str += `<div class="flex h-5 w-5 items-center justify-center rounded-full bg-gray-800"></div>`;
+        } else if (skill.tripodIndex.second === 3) {
+            str += `<div class="flex h-5 w-5 items-center justify-center rounded-full bg-gray-800"></div>`;
+            str += `<div class="flex h-5 w-5 items-center justify-center rounded-full bg-gray-800"></div>`;
+            str += `<div class="flex h-5 w-5 items-center justify-center rounded-full bg-lime-600"><p class="text-gray-200">${skill.tripodLevel?.second || 1}</p></div>`;
+        }
+        str += `</div>`;
+    }
+    if (skill.tripodIndex.third > 0) {
+        str += `<div class="flex space-x-1 py-0.5 justify-center">`;
+        if (skill.tripodIndex.third === 1) {
+            str += `<div class="flex h-5 w-5 items-center justify-center rounded-full bg-amber-600"><p class="text-gray-200">${skill.tripodLevel?.third || 1}</p></div>`;
+            str += `<div class="flex h-5 w-5 items-center justify-center rounded-full bg-gray-800"></div>`;
+        } else if (skill.tripodIndex.third === 2) {
+            str += `<div class="flex h-5 w-5 items-center justify-center rounded-full bg-gray-800"></div>`;
+            str += `<div class="flex h-5 w-5 items-center justify-center rounded-full bg-amber-600"><p class="text-gray-200">${skill.tripodLevel?.third || 1}</p></div>`;
+        }
+        str += `</div>`;
+    }
+    str += `</div>`;
 
     return str;
 }

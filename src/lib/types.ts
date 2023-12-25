@@ -126,6 +126,14 @@ export interface Skill {
     frontAttackDamage: number;
     dps: number;
     castLog: Array<number>;
+    tripodIndex?: Tripod;
+    tripodLevel?: Tripod;
+}
+
+export interface Tripod {
+    first: number;
+    second: number;
+    third: number;
 }
 
 export interface DamageStats {
