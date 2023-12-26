@@ -3,18 +3,12 @@
     import {
         backNavStore,
         pageStore,
-        searchStore,
-        updateAvailable,
-        updateManifest,
-        updateDismissed
+        searchStore
     } from "$lib/utils/stores";
     import { getVersion } from "@tauri-apps/api/app";
     import { onMount } from "svelte";
-    import { checkUpdate } from "@tauri-apps/api/updater";
-    import { invoke } from "@tauri-apps/api";
 
     let hidden: boolean = true;
-    let localUpdate: boolean = true;
 
     onMount(() => {
         // dunno if this is good lol XD
@@ -94,31 +88,5 @@
                 v{version}
             {/await}
         </p>
-        <div class="mt-4 px-4">
-            <button class="bg-accent-900 hover:bg-accent-800 rounded-md p-2 disabled:bg-gray-600"
-                    disabled={!localUpdate} on:click={async () => {
-                $updateDismissed = false;
-                try {
-                    const { shouldUpdate, manifest } = await checkUpdate();
-                    if (shouldUpdate) {
-                        $updateAvailable = true;
-                        $updateManifest = manifest;
-                    } else {
-                        localUpdate = false;
-                        setTimeout(() => {
-                            localUpdate = true;
-                        }, 5000);
-                    }
-                } catch (e) {
-                    await invoke("write_log", { message: e });
-                }
-            }}>
-                {#if localUpdate}
-                    Check for updates
-                {:else}
-                    Up to date
-                {/if}
-            </button>
-        </div>
     </div>
 </div>
