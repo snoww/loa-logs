@@ -34,8 +34,10 @@
                         class="hover:fill-accent-500 h-6 w-6 fill-gray-300"
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 96 960 960"
-                        ><path
-                            d="M107 841v-91.5h746.5V841H107Zm0-219.5V530h746.5v91.5H107Zm0-219V310h746.5v92.5H107Z" /></svg>
+                    >
+                        <path
+                            d="M107 841v-91.5h746.5V841H107Zm0-219.5V530h746.5v91.5H107Zm0-219V310h746.5v92.5H107Z" />
+                    </svg>
                 </button>
             </div>
             <div class="pl-2 text-xl tracking-tight text-gray-300">Settings</div>

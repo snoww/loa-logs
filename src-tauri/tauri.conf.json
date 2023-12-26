@@ -102,14 +102,14 @@
       "iconAsTemplate": true
     },
     "security": {
-      "csp": "default-src 'self'; img-src 'self' data: asset: https://asset.localhost; style-src 'self' 'unsafe-inline'; font-src 'self' data:"
+      "csp": "default-src 'self'; img-src https: data: asset: https://asset.localhost; style-src 'self' 'unsafe-inline'; font-src 'self' data:"
     },
     "updater": {
       "active": true, 
       "endpoints": [
         "https://raw.githubusercontent.com/snoww/loa-logs/master/latest.json"
       ],
-      "dialog": true,
+      "dialog": false,
       "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDZEODU5MzNEODY0ODg0REEKUldUYWhFaUdQWk9GYlczc3VSODJPK01RRTlYUER6NzU0eDE1WDYwcmJsY1d4d2EwblZHNlJ4dW8K",
       "windows": {
         "installMode": "passive"

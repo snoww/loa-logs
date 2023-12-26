@@ -9,6 +9,10 @@
     import { goto, invalidateAll } from "$app/navigation";
     import { settings } from "$lib/utils/settings";
     import { appWindow } from "@tauri-apps/api/window";
+    import { checkUpdate } from "@tauri-apps/api/updater";
+    import { updateAvailable, updateManifest } from "$lib/utils/stores";
+    import { invoke } from "@tauri-apps/api";
+    import UpdateAvailable from "$lib/components/shared/UpdateAvailable.svelte";
 
     let events: Set<UnlistenFn> = new Set();
 
@@ -27,6 +31,8 @@
 
         if (location.pathname !== "/") {
             (async () => {
+                await checkForUpdate();
+
                 let encounterUpdateEvent = await listen("show-latest-encounter", async (event) => {
                     await goto("/logs/encounter?id=" + event.payload);
                     await showWindow();
@@ -40,6 +46,7 @@
                 events.add(encounterUpdateEvent);
                 events.add(openUrlEvent);
 
+                setInterval(checkForUpdate, 600 * 1000);
             })();
         }
 
@@ -56,6 +63,18 @@
         await appWindow.show();
         await appWindow.unminimize();
         await appWindow.setFocus();
+    }
+
+    async function checkForUpdate() {
+        try {
+            const { shouldUpdate, manifest } = await checkUpdate();
+            if (shouldUpdate) {
+                $updateAvailable = true;
+                $updateManifest = manifest;
+            }
+        } catch (e) {
+            await invoke("write_log", { message: e });
+        }
     }
     
     $: {
@@ -74,4 +93,7 @@
 
 <div class={$settings.general.accentColor}>
     <slot />
+    {#if location.pathname !== "/"}
+        <UpdateAvailable />
+    {/if}
 </div>

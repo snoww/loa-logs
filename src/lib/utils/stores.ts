@@ -1,6 +1,7 @@
 import { encounterMap } from "$lib/constants/encounters";
 import { SearchFilter } from "$lib/types";
-import { readable, writable } from "svelte/store";
+import { readable, type Writable, writable } from "svelte/store";
+import type { UpdateManifest } from "@tauri-apps/api/updater";
 
 export const takingScreenshot = writable(false);
 
@@ -34,3 +35,7 @@ export const raidGates = readable(new Map<string, string>(), (set) => {
 });
 
 export const clickthroughStore = writable(false);
+
+export const updateAvailable = writable(false);
+export const updateManifest: Writable<UpdateManifest | undefined> = writable(undefined);
+export const updateDismissed = writable(false);
