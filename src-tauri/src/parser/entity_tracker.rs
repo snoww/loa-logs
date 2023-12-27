@@ -295,7 +295,7 @@ impl EntityTracker {
     pub fn party_info(&mut self, pkt: PKTPartyInfo, local_players: &HashMap<u64, String>) {
         let mut unknown_local = if let Some(local_player) = self.entities.get(&self.local_entity_id)
         {
-            local_player.name.is_empty() || local_player.name == "You"
+            local_player.name.is_empty() || local_player.name == "You" || local_player.name.starts_with("0")
         } else {
             true
         };
