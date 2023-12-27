@@ -1,11 +1,11 @@
 {
-    "version": "v1.4.9",
-    "notes": "### v1.4.9\n#### BUG FIXES\n- fix search filter for voldis abyss dungeons\nfull patch notes on github\nsend bug reports/suggestions to discord.gg/sbSa3pkDF5",
-    "pub_date": "2023-12-21T07:53:19.331Z",
+    "version": "v1.4.10",
+    "notes": "### v1.4.10\n#### NEW FEATURES\n- added new updater popup (will show up when next update is available)\n- hovering skills now show tripod info\nfull patch notes on github\nsend bug reports/suggestions to discord.gg/sbSa3pkDF5",
+    "pub_date": "2023-12-27T08:55:06.959Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.4.9/LOA.Logs_1.4.9_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmVkeXN2b1pyb0JGTTBjRFNFd1h1dFhKZ3Z1aE04aVRMVTd0aTlvNVVDdkUvWE5ubGU2TE82cGI5ZnlDbWwyT1lXWkZyQmlyTGloblpZdGVONTVoSGdvPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzAzMTQ1MDE2CWZpbGU6TE9BIExvZ3NfMS40LjlfeDY0LXNldHVwLm5zaXMuemlwCis4Qld5Z1JYRS8xTkFuejNsS2hZcGxkN1JlOE9OVWdmWXhiNFlmVGhBZVRncllsQ0NuOGREb2JGRGYvdjAyeXBtM0pnQnF4Uloxa29Hb2ptdG9JVkRRPT0K"
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.4.10/LOA.Logs_1.4.10_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmE2TFpoSVV6V1JZM1JTUzhiRGhQT1BGUktBaERqS1B3dXhqNnN4eE1oWEszL1FUbHJKSnNMeUgyRmFTSFY3NjVpQURoa0hndmtjencyZkQxbEVnbXc0PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzAzNjY2OTg0CWZpbGU6TE9BIExvZ3NfMS40LjEwX3g2NC1zZXR1cC5uc2lzLnppcAorRlJQOWNKQmgrc0kxbnRFOUV3T0FKL2ZkZmdLQ1Z3OUFsYUpiN1oybWpGeDVDYXhRYnQwdVRFL3RkbHhHc25ZcHgrVEpEd092RURuTWtRN0c1MEVEdz09Cg=="
         }
     }
 }

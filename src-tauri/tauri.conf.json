@@ -8,7 +8,7 @@
   },
   "package": {
     "productName": "LOA Logs",
-    "version": "1.4.9"
+    "version": "1.4.10"
   },
   "tauri": {
     "allowlist": {
@@ -66,8 +66,6 @@
         "images/**/*.png"
       ],
       "icon": [
-        "icons/45x45.png",
-        "icons/icon.icns",
         "icons/icon.ico"
       ],
       "identifier": "xyz.snow",
@@ -107,7 +105,7 @@
     "updater": {
       "active": true, 
       "endpoints": [
-        "https://raw.githubusercontent.com/snoww/loa-logs/master/latest.json"
+        "https://snow.xyz/loa-logs/latest"
       ],
       "dialog": false,
       "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDZEODU5MzNEODY0ODg0REEKUldUYWhFaUdQWk9GYlczc3VSODJPK01RRTlYUER6NzU0eDE1WDYwcmJsY1d4d2EwblZHNlJ4dW8K",
