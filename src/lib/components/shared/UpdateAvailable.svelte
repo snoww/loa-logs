@@ -65,6 +65,9 @@
         @apply text-lg font-semibold;
     }
     #notes > :global(h3) {
+        @apply text-lg font-semibold;
+    }
+    #notes > :global(h4) {
         @apply font-semibold;
     }
     #notes > :global(p) {
