@@ -306,8 +306,8 @@ impl EntityTracker {
 
         for member in pkt.member_datas {
             if unknown_local && local_players.contains_key(&member.character_id) {
-                unknown_local = false;
                 if let Some(local_player) = self.entities.get_mut(&self.local_entity_id) {
+                    unknown_local = false;
                     warn!(
                         "unknown local player, inferring from cache: {}",
                         member.name
