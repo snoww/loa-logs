@@ -2,7 +2,7 @@ use crate::parser::id_tracker::IdTracker;
 use crate::parser::models::EntityType::*;
 use crate::parser::models::{EntityType, Esther, ESTHER_DATA, NPC_DATA, SKILL_DATA};
 use crate::parser::party_tracker::PartyTracker;
-use crate::parser::status_tracker::{build_status_effect, StatusEffectTargetType, StatusTracker};
+use crate::parser::status_tracker::{build_status_effect, StatusEffect, StatusEffectTargetType, StatusTracker};
 
 use hashbrown::HashMap;
 use log::{info, warn};
@@ -21,7 +21,7 @@ pub struct EntityTracker {
     pub entities: HashMap<u64, Entity>,
 
     pub local_entity_id: u64,
-    local_character_id: u64,
+    pub local_character_id: u64,
 }
 
 impl EntityTracker {
@@ -295,7 +295,7 @@ impl EntityTracker {
     pub fn party_info(&mut self, pkt: PKTPartyInfo, local_players: &HashMap<u64, String>) {
         let mut unknown_local = if let Some(local_player) = self.entities.get(&self.local_entity_id)
         {
-            local_player.name.is_empty() || local_player.name == "You" || local_player.name.starts_with("0")
+            local_player.name.is_empty() || local_player.name == "You" || local_player.name.starts_with('0')
         } else {
             true
         };
@@ -401,7 +401,7 @@ impl EntityTracker {
         self.entities.insert(entity.id, entity.clone());
     }
 
-    pub fn build_and_register_status_effect(&mut self, sed: &StatusEffectData, target_id: u64, timestamp: DateTime<Utc>) {
+    pub fn build_and_register_status_effect(&mut self, sed: &StatusEffectData, target_id: u64, timestamp: DateTime<Utc>) -> StatusEffect {
         let source_entity = self.get_source_entity(sed.source_id);
         let status_effect = build_status_effect(
             sed.clone(),
@@ -410,9 +410,12 @@ impl EntityTracker {
             StatusEffectTargetType::Local,
             timestamp
         );
+
         self.status_tracker
             .borrow_mut()
-            .register_status_effect(status_effect);
+            .register_status_effect(status_effect.clone());
+
+        status_effect
     }
 
     fn build_and_register_status_effects(&mut self, seds: Vec<StatusEffectData>, target_id: u64) {

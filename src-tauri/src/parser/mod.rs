@@ -10,7 +10,7 @@ use crate::parser::entity_tracker::{get_current_and_max_hp, EntityTracker};
 use crate::parser::id_tracker::IdTracker;
 use crate::parser::models::{Identity, Stagger, EntityType};
 use crate::parser::party_tracker::PartyTracker;
-use crate::parser::status_tracker::{StatusEffectTargetType, StatusTracker};
+use crate::parser::status_tracker::{get_status_effect_value, StatusEffectTargetType, StatusEffectType, StatusTracker};
 use anyhow::Result;
 use chrono::Utc;
 use hashbrown::HashMap;
@@ -484,8 +484,12 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool, setti
             }
             Pkt::StatusEffectAddNotify => {
                 if let Some(pkt) = parse_pkt(&data, PKTStatusEffectAddNotify::new, "PKTStatusEffectAddNotify") {
-                    entity_tracker
-                        .build_and_register_status_effect(&pkt.status_effect_data, pkt.object_id, Utc::now())
+                    let status_effect = entity_tracker
+                        .build_and_register_status_effect(&pkt.status_effect_data, pkt.object_id, Utc::now());
+                    if status_effect.status_effect_type == StatusEffectType::Shield {
+                        let target = entity_tracker.get_source_entity(status_effect.target_id);
+                        state.on_boss_shield(&target, status_effect.value);
+                    }
                 }
             }
             Pkt::StatusEffectDurationNotify => {
@@ -501,11 +505,15 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool, setti
             }
             Pkt::StatusEffectRemoveNotify => {
                 if let Some(pkt) = parse_pkt(&data, PKTStatusEffectRemoveNotify::new, "PKTStatusEffectRemoveNotify") {
-                    status_tracker.borrow_mut().remove_status_effects(
+                    if status_tracker.borrow_mut().remove_status_effects(
                         pkt.object_id,
                         pkt.status_effect_ids,
                         StatusEffectTargetType::Local,
-                    );
+                    ) {
+                        if let Some(entity) = entity_tracker.entities.get(&pkt.object_id) {
+                            state.on_boss_shield(entity, 0);
+                        }
+                    }
                 }
             }
             Pkt::TriggerBossBattleStatus => {
@@ -580,14 +588,36 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool, setti
                         .remove_local_object(pkt.object_id);
                 }
             }
-            // Pkt::StatusEffectSyncDataNotify => {
-            //     let pkt = PKTStatusEffectSyncDataNotify::new(&data);
-            //     shields
-            // }
-            // Pkt::TroopMemberUpdateMinNotify => {
-            //     let pkt = PKTTroopMemberUpdateMinNotify::new(&data);
-            //     shields
-            // }
+            Pkt::StatusEffectSyncDataNotify => {
+                if let Some(pkt) = parse_pkt(&data, PKTStatusEffectSyncDataNotify::new, "PKTStatusEffectSyncDataNotify") {
+                    if let Some(status_effect) = status_tracker.borrow_mut()
+                        .sync_status_effect(pkt.effect_instance_id, pkt.character_id, pkt.object_id, pkt.value, entity_tracker.local_character_id) {
+                        if status_effect.status_effect_type == StatusEffectType::Shield {
+                            let target = entity_tracker.get_source_entity(status_effect.target_id);
+                            state.on_boss_shield(&target, status_effect.value);
+                        }
+                    }
+                }
+            }
+            Pkt::TroopMemberUpdateMinNotify => {
+                if let Some(pkt) = parse_pkt(&data, PKTTroopMemberUpdateMinNotify::new, "PKTTroopMemberUpdateMinNotify") {
+                    if pkt.status_effect_datas.is_empty() {
+                        continue;
+                    }
+                    for se in pkt.status_effect_datas.iter() {
+                        if let Some(object_id) = id_tracker.borrow().get_entity_id(pkt.character_id) {
+                            let val = get_status_effect_value(&se.value);
+                            if let Some(status_effect) = status_tracker.borrow_mut()
+                                .sync_status_effect(se.effect_instance_id, pkt.character_id, object_id, val, entity_tracker.local_character_id) {
+                                if status_effect.status_effect_type == StatusEffectType::Shield {
+                                    let target = entity_tracker.get_source_entity(status_effect.target_id);
+                                    state.on_boss_shield(&target, status_effect.value);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
             _ => {}
         }
 

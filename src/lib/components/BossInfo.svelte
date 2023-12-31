@@ -11,6 +11,7 @@
     export let boss: Entity;
 
     let bossHp = 0;
+    let bossShield = 0;
     let bossHPBars = 0;
     let bossCurrentBars = 0;
     let bossPreviousBars = 0;
@@ -24,8 +25,10 @@
 
     let bossCurrentHp: (string | number)[];
     let bossMaxHp: (string | number)[];
+    let bossShieldHp: (string | number)[];
 
     $: {
+        bossShield = boss.currentShield;
         if (boss.currentHp < 0) {
             bossHp = 0;
         } else {
@@ -33,6 +36,7 @@
         }
         bossCurrentHp = abbreviateNumberSplit(bossHp);
         bossMaxHp = abbreviateNumberSplit(boss.maxHp);
+        bossShieldHp = abbreviateNumberSplit(bossShield);
 
         if (Object.hasOwn(bossHpMap, boss.name) && $settings.meter.bossHpBar) {
             bossHPBars = bossHpMap[boss.name];
@@ -46,7 +50,9 @@
                 bossCurrentBars = bossHPBars;
                 bossPreviousBars = bossCurrentBars;
             } else {
-                bossCurrentBars = Math.ceil((bossHp / boss.maxHp) * bossHPBars);
+                const bossBars = Math.ceil((bossHp / boss.maxHp) * bossHPBars);
+                const bossShieldHpBars = Math.ceil((bossShield / boss.maxHp) * bossHPBars);
+                bossCurrentBars = Math.floor(bossBars + bossShieldHpBars);
             }
             if (bossPreviousBars === 0) {
                 bossPreviousBars = bossCurrentBars;
@@ -80,7 +86,11 @@
 
 <div class="h-7 border-y border-black bg-zinc-900/[.3]">
     {#if bossHPBars !== 0}
-        <div class="absolute -z-10 h-7" style="background-color: {bossBarColor[0]};width: {$tweenBossHpBar}%;" />
+        {#if bossShield > 0}
+            <div class="absolute -z-10 h-7 bg-neutral-50" style="width: 100%;" />
+        {:else}
+            <div class="absolute -z-10 h-7" style="background-color: {bossBarColor[0]};width: {$tweenBossHpBar}%;" />
+        {/if}
         {#if bossCurrentBars <= 1}
             <div class="absolute -z-20 h-7 w-full bg-zinc-900" />
         {:else}
@@ -98,7 +108,11 @@
         {/if}
     {:else}
         <div class="absolute -z-10 h-7 w-full bg-zinc-900" />
-        <div class="absolute z-0 h-7 bg-red-800" style="width: {$tweenBossHpBar}%;" />
+        {#if bossShield > 0}
+            <div class="absolute z-0 h-7 bg-neutral-50" style="width: 100%;" />
+        {:else}
+            <div class="absolute z-0 h-7 bg-red-800" style="width: {$tweenBossHpBar}%;" />
+        {/if}
     {/if}
     <div class="relative tracking-tighter">
         <div
@@ -107,10 +121,14 @@
             <div class="truncate">
                 {boss.name}
             </div>
-            <div>
+            <!-- BossName 0k/0k(+0k) (0x)-->
+            <div class="flex">
                 {bossCurrentHp[0]}<span class="text-xs">{bossCurrentHp[1]}</span>/{bossMaxHp[0]}<span class="text-xs"
-                    >{bossMaxHp[1]}</span
-                ><span class="pl-1">({bossCurrentPercentage.toFixed(1)}<span class="text-xs">%</span>)</span>
+                    >{bossMaxHp[1]}</span>
+                {#if bossShield > 0}
+                    <span class="ml-0.5">(+{bossShieldHp[0]}<span class="text-xs">{bossShieldHp[1]}</span>)</span>
+                {/if}
+                <span>({bossCurrentPercentage.toFixed(1)}<span class="text-xs">%</span>)</span>
             </div>
         </div>
         {#if bossHp <= 0}

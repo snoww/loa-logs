@@ -77,16 +77,25 @@ impl StatusTracker {
         target_id: u64,
         instance_id: Vec<u32>,
         sett: StatusEffectTargetType,
-    ) {
+    ) -> bool {
         let registry = match sett {
             StatusEffectTargetType::Local => &mut self.local_status_effect_registry,
             StatusEffectTargetType::Party => &mut self.party_status_effect_registry,
         };
+
+        let mut has_shield_buff = false;
+
         if let Some(ser) = registry.get_mut(&target_id) {
             for id in instance_id {
-                ser.remove(&id);
+                if let Some(se) = ser.remove(&id) {
+                    if se.status_effect_type == StatusEffectType::Shield {
+                        has_shield_buff = true;
+                    }
+                }
             }
         }
+
+        has_shield_buff
     }
 
     pub fn update_status_duration(
@@ -111,14 +120,24 @@ impl StatusTracker {
                 if duration_ms > 0 && duration_ms < 10_000_000 {
                     se.end_tick = timestamp;
                     if let Some(expire_at) = se.expire_at {
-                        se.expire_at = Some(expire_at + Duration::milliseconds(duration_ms as i64 + TIMEOUT_DELAY_MS));
+                        se.expire_at = Some(
+                            expire_at
+                                + Duration::milliseconds(duration_ms as i64 + TIMEOUT_DELAY_MS),
+                        );
                     }
                 }
             }
         }
     }
 
-    /*    pub fn sync_status_effect(&mut self, instance_id: u32, character_id: u64, object_id: u64, value: u32, local_character_id: u64) {
+    pub fn sync_status_effect(
+        &mut self,
+        instance_id: u32,
+        character_id: u64,
+        object_id: u64,
+        value: u32,
+        local_character_id: u64,
+    ) -> Option<StatusEffect> {
         let use_party = self.should_use_party_status_effect(character_id, local_character_id);
         let (target_id, sett) = if use_party {
             (character_id, StatusEffectTargetType::Party)
@@ -126,7 +145,7 @@ impl StatusTracker {
             (object_id, StatusEffectTargetType::Local)
         };
         if target_id == 0 {
-            return;
+            return None;
         }
         let registry = match sett {
             StatusEffectTargetType::Local => &mut self.local_status_effect_registry,
@@ -135,16 +154,18 @@ impl StatusTracker {
 
         let ser = match registry.get_mut(&target_id) {
             Some(ser) => ser,
-            None => return,
+            None => return None,
         };
 
         let se = match ser.get_mut(&instance_id) {
             Some(se) => se,
-            None => return,
+            None => return None,
         };
 
         se.value = value;
-    }*/
+
+        Some(se.clone())
+    }
 
     pub fn get_status_effects(
         &mut self,
@@ -320,25 +341,7 @@ pub fn build_status_effect(
     target_type: StatusEffectTargetType,
     timestamp: DateTime<Utc>,
 ) -> StatusEffect {
-    let c1 = se_data
-        .value
-        .as_ref()
-        .and_then(|v| {
-            v.get(0..4)
-                .map(|bytes| u32::from_le_bytes([bytes[0], bytes[1], bytes[2], bytes[3]]))
-        })
-        .unwrap_or(0);
-
-    let c2 = se_data
-        .value
-        .as_ref()
-        .and_then(|v| {
-            v.get(4..8)
-                .map(|bytes| u32::from_le_bytes([bytes[0], bytes[1], bytes[2], bytes[3]]))
-        })
-        .unwrap_or(0);
-
-    let val = c1.min(c2);
+    let value = get_status_effect_value(&se_data.value);
     let mut status_effect_category = StatusEffectCategory::Other;
     let mut buff_category = StatusEffectBuffCategory::Other;
     let mut show_type = StatusEffectShowType::Other;
@@ -365,7 +368,10 @@ pub fn build_status_effect(
     }
 
     let expiry = if se_data.total_time > 0. && se_data.total_time < 604800. {
-        Some(timestamp + Duration::milliseconds((se_data.total_time as i64) * 1000 + TIMEOUT_DELAY_MS))
+        Some(
+            timestamp
+                + Duration::milliseconds((se_data.total_time as i64) * 1000 + TIMEOUT_DELAY_MS),
+        )
     } else {
         None
     };
@@ -376,7 +382,7 @@ pub fn build_status_effect(
         target_id,
         status_effect_id: se_data.status_effect_id,
         target_type,
-        value: val,
+        value,
         buff_category,
         category: status_effect_category,
         status_effect_type,
@@ -387,6 +393,26 @@ pub fn build_status_effect(
         name,
         timestamp,
     }
+}
+
+pub fn get_status_effect_value(value: &Option<Vec<u8>>) -> u32 {
+    let c1 = value
+        .as_ref()
+        .and_then(|v| {
+            v.get(0..8)
+                .map(|bytes| u32::from_le_bytes([bytes[0], bytes[1], bytes[2], bytes[3]]))
+        })
+        .unwrap_or(0);
+
+    let c2 = value
+        .as_ref()
+        .and_then(|v| {
+            v.get(8..16)
+                .map(|bytes| u32::from_le_bytes([bytes[0], bytes[1], bytes[2], bytes[3]]))
+        })
+        .unwrap_or(0);
+
+    c1.min(c2)
 }
 
 #[derive(Debug, Default, Copy, Clone, PartialEq, Eq)]
@@ -431,14 +457,14 @@ pub enum StatusEffectType {
 pub struct StatusEffect {
     pub instance_id: u32,
     status_effect_id: u32,
-    target_id: u64,
+    pub target_id: u64,
     source_id: u64,
-    target_type: StatusEffectTargetType,
-    value: u32,
+    pub target_type: StatusEffectTargetType,
+    pub value: u32,
     category: StatusEffectCategory,
     buff_category: StatusEffectBuffCategory,
     show_type: StatusEffectShowType,
-    status_effect_type: StatusEffectType,
+    pub status_effect_type: StatusEffectType,
     pub expiration_delay: f32,
     pub expire_at: Option<DateTime<Utc>>,
     pub end_tick: u64,

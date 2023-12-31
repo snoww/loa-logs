@@ -720,7 +720,7 @@ impl EncounterState {
                 .or_default();
 
             let current_hp = if target_entity.current_hp >= 0 {
-                target_entity.current_hp
+                target_entity.current_hp + target_entity.current_shield
             } else {
                 0
             };
@@ -847,6 +847,13 @@ impl EncounterState {
                     self.encounter.encounter_damage_stats.max_stagger = max_stagger;
                 }
             }
+        }
+    }
+    pub fn on_boss_shield(&mut self, target_entity: &Entity, shield: u32) {
+        if target_entity.entity_type == EntityType::BOSS && target_entity.name == self.encounter.current_boss_name {
+            self.encounter.entities.entry(target_entity.name.clone()).and_modify(|e| {
+                e.current_shield = shield as i64;
+            });
         }
     }
 

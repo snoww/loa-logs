@@ -116,6 +116,7 @@ pub struct EncounterEntity {
     pub gear_score: f32,
     pub current_hp: i64,
     pub max_hp: i64,
+    pub current_shield: i64,
     pub is_dead: bool,
     pub skills: HashMap<i32, Skill>,
     pub damage_stats: DamageStats,

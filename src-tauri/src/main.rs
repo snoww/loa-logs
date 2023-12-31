@@ -667,7 +667,7 @@ fn load_encounters_preview(
                 favorite: row.get(5)?,
                 cleared: row.get(6)?,
                 local_player: row.get(7)?,
-                my_dps: row.get(8).unwrap_or_else(|_| 0),
+                my_dps: row.get(8).unwrap_or(0),
             })
         })
         .expect("could not query encounters");

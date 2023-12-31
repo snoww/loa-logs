@@ -100,6 +100,7 @@ export interface Entity {
     gearScore: number;
     currentHp: number;
     maxHp: number;
+    currentShield: number;
     isDead: boolean;
     skills: { [skillId: number]: Skill };
     damageStats: DamageStats;
