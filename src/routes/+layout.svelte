@@ -46,7 +46,7 @@
                 events.add(encounterUpdateEvent);
                 events.add(openUrlEvent);
 
-                setInterval(checkForUpdate, 1800 * 1000);
+                setInterval(checkForUpdate, 60 * 15 * 1000);
             })();
         }
 
