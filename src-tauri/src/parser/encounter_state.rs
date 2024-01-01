@@ -849,7 +849,7 @@ impl EncounterState {
             }
         }
     }
-    pub fn on_boss_shield(&mut self, target_entity: &Entity, shield: u32) {
+    pub fn on_boss_shield(&mut self, target_entity: &Entity, shield: u64) {
         if target_entity.entity_type == EntityType::BOSS && target_entity.name == self.encounter.current_boss_name {
             self.encounter.entities.entry(target_entity.name.clone()).and_modify(|e| {
                 e.current_shield = shield as i64;

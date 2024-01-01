@@ -81,6 +81,11 @@
     }
     #notes > :global(ul) {
         @apply py-1;
+        @apply pl-2;
+        @apply list-disc list-inside;
+    }
+    #notes > :global(* > * > ul) {
+        @apply pl-4;
         @apply list-disc list-inside;
     }
     #notes > :global(* > strong) {

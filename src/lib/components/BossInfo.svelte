@@ -122,13 +122,13 @@
                 {boss.name}
             </div>
             <!-- BossName 0k/0k(+0k) (0x)-->
-            <div class="flex">
+            <div class="flex items-baseline">
                 {bossCurrentHp[0]}<span class="text-xs">{bossCurrentHp[1]}</span>/{bossMaxHp[0]}<span class="text-xs"
                     >{bossMaxHp[1]}</span>
                 {#if bossShield > 0}
                     <span class="ml-0.5">(+{bossShieldHp[0]}<span class="text-xs">{bossShieldHp[1]}</span>)</span>
                 {/if}
-                <span>({bossCurrentPercentage.toFixed(1)}<span class="text-xs">%</span>)</span>
+                <span class="ml-1">({bossCurrentPercentage.toFixed(1)}<span class="text-xs">%</span>)</span>
             </div>
         </div>
         {#if bossHp <= 0}

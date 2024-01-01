@@ -135,7 +135,7 @@ impl StatusTracker {
         instance_id: u32,
         character_id: u64,
         object_id: u64,
-        value: u32,
+        value: u64,
         local_character_id: u64,
     ) -> Option<StatusEffect> {
         let use_party = self.should_use_party_status_effect(character_id, local_character_id);
@@ -395,24 +395,12 @@ pub fn build_status_effect(
     }
 }
 
-pub fn get_status_effect_value(value: &Option<Vec<u8>>) -> u32 {
-    let c1 = value
-        .as_ref()
-        .and_then(|v| {
-            v.get(0..8)
-                .map(|bytes| u32::from_le_bytes([bytes[0], bytes[1], bytes[2], bytes[3]]))
-        })
-        .unwrap_or(0);
-
-    let c2 = value
-        .as_ref()
-        .and_then(|v| {
-            v.get(8..16)
-                .map(|bytes| u32::from_le_bytes([bytes[0], bytes[1], bytes[2], bytes[3]]))
-        })
-        .unwrap_or(0);
-
-    c1.min(c2)
+pub fn get_status_effect_value(value: &Option<Vec<u8>>) -> u64 {
+    value.as_ref().map_or(0, |v| {
+        let c1 = v.get(0..8).map_or(0, |bytes| u64::from_le_bytes(bytes.try_into().unwrap()));
+        let c2 = v.get(8..16).map_or(0, |bytes| u64::from_le_bytes(bytes.try_into().unwrap()));
+        c1.min(c2)
+    })
 }
 
 #[derive(Debug, Default, Copy, Clone, PartialEq, Eq)]
@@ -460,7 +448,7 @@ pub struct StatusEffect {
     pub target_id: u64,
     source_id: u64,
     pub target_type: StatusEffectTargetType,
-    pub value: u32,
+    pub value: u64,
     category: StatusEffectCategory,
     buff_category: StatusEffectBuffCategory,
     show_type: StatusEffectShowType,

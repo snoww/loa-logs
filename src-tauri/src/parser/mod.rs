@@ -601,9 +601,6 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool, setti
             }
             Pkt::TroopMemberUpdateMinNotify => {
                 if let Some(pkt) = parse_pkt(&data, PKTTroopMemberUpdateMinNotify::new, "PKTTroopMemberUpdateMinNotify") {
-                    if pkt.status_effect_datas.is_empty() {
-                        continue;
-                    }
                     for se in pkt.status_effect_datas.iter() {
                         if let Some(object_id) = id_tracker.borrow().get_entity_id(pkt.character_id) {
                             let val = get_status_effect_value(&se.value);
