@@ -11,6 +11,7 @@
     import ColorSettings from "$lib/components/settings/ColorSettings.svelte";
     import AccessibilitySettings from "$lib/components/settings/AccessibilitySettings.svelte";
     import DatabaseSettings from "$lib/components/settings/DatabaseSettings.svelte";
+    import Title from "$lib/components/shared/Title.svelte";
 
     let currentTab = 0;
     let hidden: boolean = true;
