@@ -66,10 +66,10 @@
 
 <td class="pl-1">
     {#if $settings.general.showEsther && entity.entityType === EntityType.ESTHER}
-        <img class="table-cell h-5 w-5" src={$classIconCache[name]} alt={name} use:tooltip={{ content: name }} />
+        <img class="table-cell size-5" src={$classIconCache[name]} alt={name} use:tooltip={{ content: name }} />
     {:else}
         <img
-            class="table-cell h-5 w-5"
+            class="table-cell size-5"
             src={$classIconCache[entity.classId]}
             alt={entity.class}
             use:tooltip={{ content: entity.class }} />

@@ -37,7 +37,7 @@ export function generateTooltipContent(buffs: BuffDetails, iconPath: string) {
             str += `<div class="flex items-center">`;
             str += `<img src=${
                 iconPath + getSkillIcon(buff.sourceIcon)
-            } alt="buff_source_icon" class="w-5 h-5 rounded mr-1"/>`;
+            } alt="buff_source_icon" class="size-5 rounded mr-1"/>`;
             if (buff.bonus) {
                 str += `[${buff.bonus}<span class="text-3xs text-gray-300">%</span>] `;
             }
@@ -45,7 +45,7 @@ export function generateTooltipContent(buffs: BuffDetails, iconPath: string) {
             str += `</div>`;
         } else {
             str += `<div class="flex items-center">`;
-            str += `<img src=${iconPath + getSkillIcon(buff.icon)} alt="buff_icon" class="w-5 h-5 rounded mr-1"/>`;
+            str += `<img src=${iconPath + getSkillIcon(buff.icon)} alt="buff_icon" class="size-5 rounded mr-1"/>`;
             str += `${buff.percentage}<span class="text-3xs text-gray-300">%</span>`;
             str += `</div>`;
         }
@@ -61,7 +61,7 @@ export function generateHeaderTooltip(buff: StatusEffect, iconPath: string) {
         str += `${classesMap[buff.source.skill.classId]}:`;
         str += `<img src=${iconPath + getSkillIcon(buff.source.skill.icon)} alt=${
             buff.source.skill.name
-        } class="w-5 h-5 mx-1"/>`;
+        } class="size-5 mx-1"/>`;
         str += buff.source.skill.name;
         str += `</div>`;
     } else {
@@ -91,7 +91,7 @@ export function generateHeaderTooltip(buff: StatusEffect, iconPath: string) {
         str += `</div>`;
     }
     str += `<div class="flex tracking-tight items-center">`;
-    str += `<img src=${iconPath + getSkillIcon(buff.source.icon)} alt=${buff.name} class="w-5 h-5 mr-1"/>`;
+    str += `<img src=${iconPath + getSkillIcon(buff.source.icon)} alt=${buff.name} class="size-5 mr-1"/>`;
     str += `<div class="">`;
     str += removeUnknownHtmlTags(buff.source.desc);
     str += `</div></div></div>`;
@@ -112,7 +112,7 @@ export function generateHeaderTooltip(buff: StatusEffect, iconPath: string) {
 //         if (skill.tripodLevel[level] > 0) {
 //             str += `<div class="flex space-x-1">`;
 //             colors.forEach((color, index) => {
-//                 str += `<div class="flex h-5 w-5 items-center justify-center rounded-full bg-${color}-800">`;
+//                 str += `<div class="flex size-5 items-center justify-center rounded-full bg-${color}-800">`;
 //                 if (skill.tripodIndex[level] === index + 1) {
 //                     str += `<p class="text-gray-200">${skill.tripodLevel[level]}</p>`;
 //                 }
@@ -135,45 +135,45 @@ export function generateTripodTooltip(skill: Skill) {
     if (skill.tripodIndex.first > 0) {
         str += `<div class="flex space-x-1 py-0.5 justify-center">`;
         if (skill.tripodIndex.first === 1) {
-            str += `<div class="flex h-5 w-5 items-center justify-center rounded-full bg-blue-800"><p class="text-gray-200">${skill.tripodLevel?.first || 1}</p></div>`;
-            str += `<div class="flex h-5 w-5 items-center justify-center rounded-full bg-gray-800"></div>`;
-            str += `<div class="flex h-5 w-5 items-center justify-center rounded-full bg-gray-800"></div>`;
+            str += `<div class="flex size-5 items-center justify-center rounded-full bg-blue-800"><p class="text-gray-200">${skill.tripodLevel?.first || 1}</p></div>`;
+            str += `<div class="flex size-5 items-center justify-center rounded-full bg-gray-800"></div>`;
+            str += `<div class="flex size-5 items-center justify-center rounded-full bg-gray-800"></div>`;
         } else if (skill.tripodIndex.first === 2) {
-            str += `<div class="flex h-5 w-5 items-center justify-center rounded-full bg-gray-800"></div>`;
-            str += `<div class="flex h-5 w-5 items-center justify-center rounded-full bg-blue-800"><p class="text-gray-200">${skill.tripodLevel?.first || 1}</p></div>`;
-            str += `<div class="flex h-5 w-5 items-center justify-center rounded-full bg-gray-800"></div>`;
+            str += `<div class="flex size-5 items-center justify-center rounded-full bg-gray-800"></div>`;
+            str += `<div class="flex size-5 items-center justify-center rounded-full bg-blue-800"><p class="text-gray-200">${skill.tripodLevel?.first || 1}</p></div>`;
+            str += `<div class="flex size-5 items-center justify-center rounded-full bg-gray-800"></div>`;
         } else if (skill.tripodIndex.first === 3) {
-            str += `<div class="flex h-5 w-5 items-center justify-center rounded-full bg-gray-800"></div>`;
-            str += `<div class="flex h-5 w-5 items-center justify-center rounded-full bg-gray-800"></div>`;
-            str += `<div class="flex h-5 w-5 items-center justify-center rounded-full bg-blue-800"><p class="text-gray-200">${skill.tripodLevel?.first || 1}</p></div>`;
+            str += `<div class="flex size-5 items-center justify-center rounded-full bg-gray-800"></div>`;
+            str += `<div class="flex size-5 items-center justify-center rounded-full bg-gray-800"></div>`;
+            str += `<div class="flex size-5 items-center justify-center rounded-full bg-blue-800"><p class="text-gray-200">${skill.tripodLevel?.first || 1}</p></div>`;
         }
         str += `</div>`;
     }
     if (skill.tripodIndex.second > 0) {
         str += `<div class="flex space-x-1 py-0.5 justify-center">`;
         if (skill.tripodIndex.second === 1) {
-            str += `<div class="flex h-5 w-5 items-center justify-center rounded-full bg-lime-600"><p class="text-gray-200">${skill.tripodLevel?.second || 1}</p></div>`;
-            str += `<div class="flex h-5 w-5 items-center justify-center rounded-full bg-gray-800"></div>`;
-            str += `<div class="flex h-5 w-5 items-center justify-center rounded-full bg-gray-800"></div>`;
+            str += `<div class="flex size-5 items-center justify-center rounded-full bg-lime-600"><p class="text-gray-200">${skill.tripodLevel?.second || 1}</p></div>`;
+            str += `<div class="flex size-5 items-center justify-center rounded-full bg-gray-800"></div>`;
+            str += `<div class="flex size-5 items-center justify-center rounded-full bg-gray-800"></div>`;
         } else if (skill.tripodIndex.second === 2) {
-            str += `<div class="flex h-5 w-5 items-center justify-center rounded-full bg-gray-800"></div>`;
-            str += `<div class="flex h-5 w-5 items-center justify-center rounded-full bg-lime-600"><p class="text-gray-200">${skill.tripodLevel?.second || 1}</p></div>`;
-            str += `<div class="flex h-5 w-5 items-center justify-center rounded-full bg-gray-800"></div>`;
+            str += `<div class="flex size-5 items-center justify-center rounded-full bg-gray-800"></div>`;
+            str += `<div class="flex size-5 items-center justify-center rounded-full bg-lime-600"><p class="text-gray-200">${skill.tripodLevel?.second || 1}</p></div>`;
+            str += `<div class="flex size-5 items-center justify-center rounded-full bg-gray-800"></div>`;
         } else if (skill.tripodIndex.second === 3) {
-            str += `<div class="flex h-5 w-5 items-center justify-center rounded-full bg-gray-800"></div>`;
-            str += `<div class="flex h-5 w-5 items-center justify-center rounded-full bg-gray-800"></div>`;
-            str += `<div class="flex h-5 w-5 items-center justify-center rounded-full bg-lime-600"><p class="text-gray-200">${skill.tripodLevel?.second || 1}</p></div>`;
+            str += `<div class="flex size-5 items-center justify-center rounded-full bg-gray-800"></div>`;
+            str += `<div class="flex size-5 items-center justify-center rounded-full bg-gray-800"></div>`;
+            str += `<div class="flex size-5 items-center justify-center rounded-full bg-lime-600"><p class="text-gray-200">${skill.tripodLevel?.second || 1}</p></div>`;
         }
         str += `</div>`;
     }
     if (skill.tripodIndex.third > 0) {
         str += `<div class="flex space-x-1 py-0.5 justify-center">`;
         if (skill.tripodIndex.third === 1) {
-            str += `<div class="flex h-5 w-5 items-center justify-center rounded-full bg-amber-600"><p class="text-gray-200">${skill.tripodLevel?.third || 1}</p></div>`;
-            str += `<div class="flex h-5 w-5 items-center justify-center rounded-full bg-gray-800"></div>`;
+            str += `<div class="flex size-5 items-center justify-center rounded-full bg-amber-600"><p class="text-gray-200">${skill.tripodLevel?.third || 1}</p></div>`;
+            str += `<div class="flex size-5 items-center justify-center rounded-full bg-gray-800"></div>`;
         } else if (skill.tripodIndex.third === 2) {
-            str += `<div class="flex h-5 w-5 items-center justify-center rounded-full bg-gray-800"></div>`;
-            str += `<div class="flex h-5 w-5 items-center justify-center rounded-full bg-amber-600"><p class="text-gray-200">${skill.tripodLevel?.third || 1}</p></div>`;
+            str += `<div class="flex size-5 items-center justify-center rounded-full bg-gray-800"></div>`;
+            str += `<div class="flex size-5 items-center justify-center rounded-full bg-amber-600"><p class="text-gray-200">${skill.tripodLevel?.third || 1}</p></div>`;
         }
         str += `</div>`;
     }

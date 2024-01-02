@@ -45,7 +45,7 @@
     <tr class="h-7 px-2 py-1 text-3xs {$settings.general.underlineHovered ? 'hover:underline' : ''}">
         <td class="pl-1">
             <img
-                class="table-cell h-5 w-5"
+                class="table-cell size-5"
                 src={$classIconCache[player.classId]}
                 alt={player.class}
                 use:tooltip={{ content: player.class }} />

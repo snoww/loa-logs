@@ -26,7 +26,7 @@
 <tr class="h-7 px-2 py-1 text-3xs {$settings.general.underlineHovered ? 'hover:underline' : ''}">
     <td class="pl-1">
         <img
-            class="h-5 w-5"
+            class="size-5"
             src={$skillIcon.path + getSkillIcon(skill.icon)}
             alt={skill.name}
             use:tooltip={{ content: skill.name }} />

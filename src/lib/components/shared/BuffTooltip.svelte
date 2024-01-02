@@ -11,6 +11,6 @@
     <img
         src={$skillIcon.path + getSkillIcon(synergy.source.icon)}
         alt={synergy.name}
-        class="table-cell h-5 w-5"
+        class="table-cell size-5"
         use:tooltip={{ content: generateHeaderTooltip(synergy, $skillIcon.path) }} />
 </div>

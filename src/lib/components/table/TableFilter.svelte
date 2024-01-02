@@ -73,7 +73,7 @@
                             filterMenu = !filterMenu;
                         }}>
                         <svg
-                            class="h-5 w-5 {$searchFilter.bosses.size > 0 ||
+                            class="size-5 {$searchFilter.bosses.size > 0 ||
                             $searchFilter.encounters.size > 0 ||
                             $searchFilter.difficulty ||
                             $searchFilter.classes.size > 0 ||
@@ -151,21 +151,21 @@
                                             <input
                                                 type="checkbox"
                                                 bind:checked={$searchFilter.cleared}
-                                                class="text-accent-500 h-4 w-4 rounded bg-zinc-700 focus:ring-0 focus:ring-offset-0" />
+                                                class="text-accent-500 size-4 rounded bg-zinc-700 focus:ring-0 focus:ring-offset-0" />
                                         </label>
                                         <label class="flex items-center">
                                             <div class="mr-2 text-gray-100">Favorites</div>
                                             <input
                                                 type="checkbox"
                                                 bind:checked={$searchFilter.favorite}
-                                                class="text-accent-500 h-4 w-4 rounded bg-zinc-700 focus:ring-0 focus:ring-offset-0" />
+                                                class="text-accent-500 size-4 rounded bg-zinc-700 focus:ring-0 focus:ring-offset-0" />
                                         </label>
                                         <label class="flex items-center">
                                             <div class="mr-2 text-gray-100">Boss Only</div>
                                             <input
                                                 type="checkbox"
                                                 bind:checked={$searchFilter.bossOnlyDamage}
-                                                class="text-accent-500 h-4 w-4 rounded bg-zinc-700 focus:ring-0 focus:ring-offset-0" />
+                                                class="text-accent-500 size-4 rounded bg-zinc-700 focus:ring-0 focus:ring-offset-0" />
                                         </label>
                                     </div>
                                     <div class="flex flex-wrap">
@@ -222,21 +222,21 @@
                                             <input
                                                 type="checkbox"
                                                 bind:checked={$searchFilter.cleared}
-                                                class="text-accent-500 h-4 w-4 rounded bg-zinc-700 focus:ring-0 focus:ring-offset-0" />
+                                                class="text-accent-500 size-4 rounded bg-zinc-700 focus:ring-0 focus:ring-offset-0" />
                                         </label>
                                         <label class="flex items-center">
                                             <div class="mr-2 text-gray-100">Favorites</div>
                                             <input
                                                 type="checkbox"
                                                 bind:checked={$searchFilter.favorite}
-                                                class="text-accent-500 h-4 w-4 rounded bg-zinc-700 focus:ring-0 focus:ring-offset-0" />
+                                                class="text-accent-500 size-4 rounded bg-zinc-700 focus:ring-0 focus:ring-offset-0" />
                                         </label>
                                         <label class="flex items-center">
                                             <div class="mr-2 text-gray-100">Boss Only</div>
                                             <input
                                                 type="checkbox"
                                                 bind:checked={$searchFilter.bossOnlyDamage}
-                                                class="text-accent-500 h-4 w-4 rounded bg-zinc-700 focus:ring-0 focus:ring-offset-0" />
+                                                class="text-accent-500 size-4 rounded bg-zinc-700 focus:ring-0 focus:ring-offset-0" />
                                         </label>
                                     </div>
                                     <div class="flex flex-wrap">
@@ -330,7 +330,7 @@
                         $searchFilter = new SearchFilter($settings.logs.minEncounterDuration);
                     }}>
                     <svg
-                        class="h-5 w-5 fill-gray-400 hover:fill-gray-200"
+                        class="size-5 fill-gray-400 hover:fill-gray-200"
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 96 960 960"
                         ><path
@@ -346,7 +346,7 @@
                 on:click={() => {
                     deleteConfirm = true;
                 }}>
-                <svg class="h-5 w-5 fill-zinc-300" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"
+                <svg class="size-5 fill-zinc-300" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"
                     ><path
                         d="M254.5-100q-39.181 0-65.841-26.366Q162-152.731 162-191.5v-549h-57.5v-91.333H332V-879h295.5v47H856v91.5h-57.5v549q0 38.019-27.034 64.759Q744.431-100 706-100H254.5ZM706-740.5H254.5v549H706v-549ZM356.5-269H431v-396.5h-74.5V-269Zm173 0H605v-396.5h-75.5V-269Zm-275-471.5v549-549Z" /></svg>
             </button>
@@ -354,7 +354,7 @@
         <button
             class="flex items-center rounded-md p-1 text-xs {selectMode ? 'bg-accent-800' : 'bg-zinc-700'}"
             on:click={toggleSelectMode}>
-            <svg class="h-5 w-5 fill-zinc-300" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"
+            <svg class="size-5 fill-zinc-300" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"
                 ><path
                     d="M191-99.5q-37.744 0-64.622-26.878T99.5-191v-578q0-38.156 26.878-65.328Q153.256-861.5 191-861.5h578q15.545 0 34.773 8.5Q823-844.5 833-836l-71 71v-4H191v578h578v-330l92.5-92.5V-191q0 37.744-27.172 64.622T769-99.5H191ZM467-296 247-516l48-48.5 172.158 172 392.342-392 47 49.5L467-296Z" /></svg>
             <div class="px-1">Select</div>
@@ -373,7 +373,7 @@
                     aria-label="Close modal"
                     on:click={() => (deleteConfirm = false)}>
                     <span class="sr-only">Close modal</span>
-                    <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"
+                    <svg class="size-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"
                         ><path
                             fill-rule="evenodd"
                             d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"

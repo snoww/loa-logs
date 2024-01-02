@@ -81,7 +81,7 @@
                     use:tooltip={{ content: "Boss Only Damage" }}
                     src="{$imagePath.path + getImagePath("icons/boss.png")}"
                     alt="Boss Only Damage"
-                    class="!-mx-1 h-5 w-5"
+                    class="!-mx-1 size-5"
                     data-tauri-drag-region />
             {/if}
             <div data-tauri-drag-region>
@@ -123,7 +123,7 @@
                 <button class="" on:click={openLogWindow}>
                     <div use:menuTooltip={{ content: "Open Recent" }}>
                         <svg
-                            class="h-5 w-5 fill-gray-400 hover:fill-gray-50"
+                            class="size-5 fill-gray-400 hover:fill-gray-50"
                             xmlns="http://www.w3.org/2000/svg"
                             viewBox="0 96 960 960"
                             ><path
@@ -135,20 +135,20 @@
                     use:menuTooltip={{ content: !$paused ? "Pause Session" : "Resume Session" }}>
                     {#if !$paused}
                         <svg
-                            class="h-5 w-5 fill-gray-400 hover:fill-gray-50"
+                            class="size-5 fill-gray-400 hover:fill-gray-50"
                             xmlns="http://www.w3.org/2000/svg"
                             viewBox="0 96 960 960"
                             ><path d="M555 852V300h172.5v552H555Zm-322 0V300h172.5v552H233Z" /></svg>
                     {:else}
                         <svg
-                            class="h-5 w-5 fill-gray-400 hover:fill-gray-50"
+                            class="size-5 fill-gray-400 hover:fill-gray-50"
                             xmlns="http://www.w3.org/2000/svg"
                             viewBox="0 -960 960 960"><path d="M298.5-162.5v-641l503 320.5-503 320.5Z" /></svg>
                     {/if}
                 </button>
                 <button on:click={resetSession} use:menuTooltip={{ content: "Reset Session" }}>
                     <svg
-                        class="h-5 w-5 fill-gray-400 hover:fill-gray-50"
+                        class="size-5 fill-gray-400 hover:fill-gray-50"
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 96 960 960"
                         ><path
@@ -156,7 +156,7 @@
                 </button>
                 <button use:menuTooltip={{ content: "Manual Save" }} on:click={saveSession}>
                     <svg
-                        class="h-5 w-5 fill-gray-400 hover:fill-gray-50"
+                        class="size-5 fill-gray-400 hover:fill-gray-50"
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 -960 960 960"
                         ><path
@@ -164,7 +164,7 @@
                 </button>
                 <button use:menuTooltip={{ content: "Take Screenshot" }} on:click={screenshotFn}>
                     <svg
-                        class="h-5 w-5 fill-gray-400 hover:fill-gray-50"
+                        class="size-5 fill-gray-400 hover:fill-gray-50"
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 -960 960 960"
                         ><path
@@ -176,7 +176,7 @@
                         class="h-full px-1"
                         use:menuTooltip={{ content: "Show More" }}>
                         <svg
-                            class="h-4 w-4 stroke-gray-400 hover:stroke-gray-50"
+                            class="size-4 stroke-gray-400 hover:stroke-gray-50"
                             fill="none"
                             viewBox="0 0 24 24"
                             xmlns="http://www.w3.org/2000/svg"
@@ -197,7 +197,7 @@
                                 }}>
                                 <div class="flex space-x-1">
                                     <svg
-                                        class="h-5 w-5 fill-gray-400"
+                                        class="size-5 fill-gray-400"
                                         xmlns="http://www.w3.org/2000/svg"
                                         viewBox="0 96 960 960"
                                         ><path d="M555 852V300h172.5v552H555Zm-322 0V300h172.5v552H233Z" /></svg>
@@ -212,7 +212,7 @@
                                 }}>
                                 <div class="flex space-x-1">
                                     <svg
-                                        class="h-5 w-5 fill-gray-400"
+                                        class="size-5 fill-gray-400"
                                         xmlns="http://www.w3.org/2000/svg"
                                         viewBox="0 96 960 960"
                                         ><path
@@ -223,7 +223,7 @@
                                 <button class="hover:text-gray-50" on:click={enableClickThrough}>
                                     <div class="flex space-x-1">
                                         <svg
-                                            class="h-5 w-5 fill-gray-400"
+                                            class="size-5 fill-gray-400"
                                             xmlns="http://www.w3.org/2000/svg"
                                             viewBox="0 -960 960 960"
                                             ><path
@@ -234,7 +234,7 @@
                                 <button class="hover:text-gray-50">
                                     <div class="flex space-x-1">
                                         <svg
-                                            class="h-5 w-5 fill-gray-400"
+                                            class="size-5 fill-gray-400"
                                             xmlns="http://www.w3.org/2000/svg"
                                             viewBox="0 96 960 960"
                                             ><path
@@ -245,7 +245,7 @@
                                 <button class="hover:text-gray-50" on:click={openSettingsWindow}>
                                     <div class="flex space-x-1">
                                         <svg
-                                            class="h-5 w-5 fill-gray-400"
+                                            class="size-5 fill-gray-400"
                                             xmlns="http://www.w3.org/2000/svg"
                                             viewBox="0 96 960 960"
                                             ><path
@@ -260,7 +260,7 @@
                 <button on:click={() => appWindow.hide()}>
                     <div use:menuTooltip={{ content: "Minimize" }}>
                         <svg
-                            class="h-5 w-5 fill-gray-400 hover:fill-gray-50"
+                            class="size-5 fill-gray-400 hover:fill-gray-50"
                             xmlns="http://www.w3.org/2000/svg"
                             viewBox="0 0 24 24">
                             <path d="M20 14H4v-4h16" />
@@ -275,7 +275,7 @@
                         class="h-full px-2"
                         use:menuTooltip={{ content: "Show More" }}>
                         <svg
-                            class="h-4 w-4 stroke-gray-400 hover:stroke-gray-50"
+                            class="size-4 stroke-gray-400 hover:stroke-gray-50"
                             fill="none"
                             viewBox="0 0 24 24"
                             xmlns="http://www.w3.org/2000/svg"
@@ -291,7 +291,7 @@
                                 <button class="hover:text-gray-50" on:click={openLogWindow}>
                                     <div class="flex space-x-1">
                                         <svg
-                                            class="h-5 w-5 fill-gray-400"
+                                            class="size-5 fill-gray-400"
                                             xmlns="http://www.w3.org/2000/svg"
                                             viewBox="0 96 960 960"
                                             ><path
@@ -308,7 +308,7 @@
                                     <div class="flex space-x-1">
                                         {#if !$paused}
                                             <svg
-                                                class="h-5 w-5 fill-gray-400"
+                                                class="size-5 fill-gray-400"
                                                 xmlns="http://www.w3.org/2000/svg"
                                                 viewBox="0 96 960 960"
                                                 ><path
@@ -316,7 +316,7 @@
                                             <div>Pause</div>
                                         {:else}
                                             <svg
-                                                class="h-5 w-5 fill-gray-400 hover:fill-gray-50"
+                                                class="size-5 fill-gray-400 hover:fill-gray-50"
                                                 xmlns="http://www.w3.org/2000/svg"
                                                 viewBox="0 -960 960 960"
                                                 ><path d="M298.5-162.5v-641l503 320.5-503 320.5Z" /></svg>
@@ -332,7 +332,7 @@
                                     }}>
                                     <div class="flex space-x-1">
                                         <svg
-                                            class="h-5 w-5 fill-gray-400"
+                                            class="size-5 fill-gray-400"
                                             xmlns="http://www.w3.org/2000/svg"
                                             viewBox="0 96 960 960"
                                             ><path
@@ -343,7 +343,7 @@
                                 <button class="hover:text-gray-50" on:click={saveSession}>
                                     <div class="flex space-x-1">
                                         <svg
-                                            class="h-5 w-5 fill-gray-400"
+                                            class="size-5 fill-gray-400"
                                             xmlns="http://www.w3.org/2000/svg"
                                             viewBox="0 -960 960 960"
                                             ><path
@@ -354,7 +354,7 @@
                                 <button class="hover:text-gray-50" on:click={screenshotFn}>
                                     <div class="flex space-x-1">
                                         <svg
-                                            class="h-5 w-5 fill-gray-400"
+                                            class="size-5 fill-gray-400"
                                             xmlns="http://www.w3.org/2000/svg"
                                             viewBox="0 -960 960 960"
                                             ><path
@@ -365,7 +365,7 @@
                                 <button class="hover:text-gray-50" on:click={enableClickThrough}>
                                     <div class="flex space-x-1">
                                         <svg
-                                            class="h-5 w-5 fill-gray-400"
+                                            class="size-5 fill-gray-400"
                                             xmlns="http://www.w3.org/2000/svg"
                                             viewBox="0 -960 960 960"
                                             ><path
@@ -376,7 +376,7 @@
                                 <button class="hover:text-gray-50">
                                     <div class="flex space-x-1">
                                         <svg
-                                            class="h-5 w-5 fill-gray-400"
+                                            class="size-5 fill-gray-400"
                                             xmlns="http://www.w3.org/2000/svg"
                                             viewBox="0 96 960 960"
                                             ><path
@@ -387,7 +387,7 @@
                                 <button class="hover:text-gray-50" on:click={openSettingsWindow}>
                                     <div class="flex space-x-1">
                                         <svg
-                                            class="h-5 w-5 fill-gray-400"
+                                            class="size-5 fill-gray-400"
                                             xmlns="http://www.w3.org/2000/svg"
                                             viewBox="0 96 960 960"
                                             ><path
@@ -402,7 +402,7 @@
                 <button on:click={() => appWindow.hide()}>
                     <div use:menuTooltip={{ content: "Minimize" }}>
                         <svg
-                            class="h-5 w-5 fill-gray-400 hover:fill-gray-50"
+                            class="size-5 fill-gray-400 hover:fill-gray-50"
                             xmlns="http://www.w3.org/2000/svg"
                             viewBox="0 0 24 24">
                             <path d="M20 14H4v-4h16" />

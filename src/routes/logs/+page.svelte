@@ -169,7 +169,7 @@
                             <th scope="col" class="w-14 px-2 py-3">
                                 <input
                                     type="checkbox"
-                                    class="text-accent-500 h-5 w-5 rounded bg-zinc-700 focus:ring-0 focus:ring-offset-0"
+                                    class="text-accent-500 size-5 rounded bg-zinc-700 focus:ring-0 focus:ring-offset-0"
                                     checked={encounters.every((encounter) => $selectedEncounters.has(encounter.id))}
                                     on:change={() => {
                                         if (encounters.every((encounter) => $selectedEncounters.has(encounter.id))) {
@@ -221,14 +221,14 @@
                                     {#if $searchFilter.order === 2}
                                         <svg
                                             xmlns="http://www.w3.org/2000/svg"
-                                            class="ml-1 h-4 w-4 fill-gray-400"
+                                            class="ml-1 size-4 fill-gray-400"
                                             viewBox="0 -960 960 960">
                                             <path d="M480-332 233-580h494L480-332Z" />
                                         </svg>
                                     {:else}
                                         <svg
                                             xmlns="http://www.w3.org/2000/svg"
-                                            class="ml-1 h-4 w-4 fill-gray-400"
+                                            class="ml-1 size-4 fill-gray-400"
                                             viewBox="0 -960 960 960">
                                             <path d="M480-580 727-332H233L480-580Z" />
                                         </svg>
@@ -256,7 +256,7 @@
                                     <div>
                                         <input
                                             type="checkbox"
-                                            class="text-accent-500 h-5 w-5 rounded bg-zinc-700 focus:ring-0 focus:ring-offset-0"
+                                            class="text-accent-500 size-5 rounded bg-zinc-700 focus:ring-0 focus:ring-offset-0"
                                             checked={$selectedEncounters.has(encounter.id)}
                                             on:change={() => {
                                                 if ($selectedEncounters.has(encounter.id)) {
@@ -292,7 +292,7 @@
                                     use:tooltip={{ content: encounter.bossName }}>
                                     {#if encounter.favorite}
                                         <svg
-                                            class="mr-1 h-5 w-5 flex-shrink-0 fill-yellow-400"
+                                            class="mr-1 size-5 flex-shrink-0 fill-yellow-400"
                                             xmlns="http://www.w3.org/2000/svg"
                                             viewBox="0 -960 960 960">
                                             <path
@@ -324,7 +324,7 @@
                                     <img
                                         src={$classIconCache[classId]}
                                         alt="class-{classId}"
-                                        class="h-8 w-8"
+                                        class="size-8"
                                         use:tooltip={{ content: encounter.names[i] }} />
                                 {/each}
                             </td>
@@ -375,7 +375,7 @@
                         <button class="ml-0 block px-3" on:click={() => firstPage()}>
                             <span class="sr-only">First</span>
                             <svg
-                                class="hover:fill-accent-800 h-5 w-5 fill-gray-400"
+                                class="hover:fill-accent-800 size-5 fill-gray-400"
                                 xmlns="http://www.w3.org/2000/svg"
                                 viewBox="0 96 960 960">
                                 <path
@@ -387,7 +387,7 @@
                         <button class="ml-0 block px-3" on:click={() => previousPage()}>
                             <span class="sr-only">Back</span>
                             <svg
-                                class="hover:fill-accent-800 h-5 w-5 fill-gray-400"
+                                class="hover:fill-accent-800 size-5 fill-gray-400"
                                 xmlns="http://www.w3.org/2000/svg"
                                 viewBox="0 96 960 960">
                                 <path d="m560.5 837-262-262 262-262 65 65.5L429 575l196.5 196.5-65 65.5Z" />
@@ -398,7 +398,7 @@
                         <button class="ml-0 block px-3" on:click={() => nextPage()}>
                             <span class="sr-only">Next</span>
                             <svg
-                                class="hover:fill-accent-800 h-5 w-5 fill-gray-400"
+                                class="hover:fill-accent-800 size-5 fill-gray-400"
                                 xmlns="http://www.w3.org/2000/svg"
                                 viewBox="0 96 960 960">
                                 <path d="m375.5 837-65-65.5L507 575 310.5 378.5l65-65.5 262 262-262 262Z" />
@@ -409,7 +409,7 @@
                         <button class="ml-0 block px-3" on:click={() => lastPage()}>
                             <span class="sr-only">Last</span>
                             <svg
-                                class="hover:fill-accent-800 h-5 w-5 fill-gray-400"
+                                class="hover:fill-accent-800 size-5 fill-gray-400"
                                 xmlns="http://www.w3.org/2000/svg"
                                 viewBox="0 96 960 960">
                                 <path

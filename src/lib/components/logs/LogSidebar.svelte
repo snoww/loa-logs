@@ -30,7 +30,7 @@
     <div class="flex items-center justify-between py-4">
         <div class="px-4 text-lg font-semibold uppercase text-gray-200">LOA Logs</div>
         <button on:click={() => (hidden = true)} class="px-4">
-            <svg class="h-5 w-5 fill-gray-200" xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960"
+            <svg class="size-5 fill-gray-200" xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960"
             >
                 <path
                     d="m250.5 870-64-64.5 229-229.5-229-229.5 64-64.5L480 511.5 709.5 282l64 64.5-229 229.5 229 229.5-64 64.5L480 640.5 250.5 870Z" />
@@ -66,7 +66,7 @@
                     <button class="pr-1" use:tooltip={{content: "Update Now"}}
                             on:click={() => {$updateDismissed = false;}}>
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"
-                             class="w-5 h-5 fill-accent-500 animate-bounce">
+                             class="size-5 fill-accent-500 animate-bounce">
                             <path
                                 d="M281.5-165v-57.5H679v57.5H281.5Zm170-165v-356L329-563.5 289-604l191-191 191.5 191-40.5 40.5L509-686v356h-57.5Z" />
                         </svg>
@@ -97,7 +97,7 @@
                         }
                     }}>
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"
-                             class="w-5 h-5 fill-gray-300 {$spin ? 'animate-spin-once' : ''}">
+                             class="size-5 fill-gray-300 {$spin ? 'animate-spin-once' : ''}">
                             <path
                                 d="M169.333-164.667V-228h123.334l-16.666-14.666q-58.167-49.834-84.834-108.317Q164.5-409.467 164.5-477.598q0-105.735 62.48-189.332t163.686-114.403v65.999Q316.866-687.258 272.35-622q-44.517 65.257-44.517 144.213 0 56.787 21.083 101.954 21.084 45.167 59.751 79.834L334-276.666v-116h63.333v227.999h-228ZM570-178v-66.666q74.167-28 118.334-93.241 44.166-65.241 44.166-144.64 0-46.453-21.25-93.62t-58.583-84.5L628-683.334v116.001h-63.333v-228h228V-732H668.666l16.667 16q55.899 53.062 83.2 114.186 27.3 61.124 27.3 119.314 0 105.833-62.333 189.833T570-178Z" />
                         </svg>

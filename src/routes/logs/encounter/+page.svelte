@@ -48,7 +48,7 @@
         <div class="flex items-center justify-between py-4">
             <a href="/logs" class="bg-accent-900 hover:bg-accent-800 inline-flex rounded-md p-2">
                 <span class="sr-only">Back</span>
-                <svg class="h-5 w-5 fill-gray-200" xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960"
+                <svg class="size-5 fill-gray-200" xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960"
                     ><path d="M480 903 153 576l327-327.5 65.5 64.5-216 217h478v91.5h-478l216 216L480 903Z" /></svg>
                 <span class="mx-1 text-gray-200">Back</span>
             </a>
@@ -62,14 +62,14 @@
                             on:click={toggle_favorite}>
                             {#if $fav}
                                 <svg
-                                    class="h-7 w-7 fill-yellow-400"
+                                    class="size-7 fill-yellow-400"
                                     xmlns="http://www.w3.org/2000/svg"
                                     viewBox="0 -960 960 960"
                                     ><path
                                         d="m235-82.5 64.5-279.093L83-549l286-25 111-263 111.5 263L877-549 660.484-361.593 725.436-82.5 480.218-230.61 235-82.5Z" /></svg>
                             {:else}
                                 <svg
-                                    class="h-7 w-7 fill-gray-200"
+                                    class="size-7 fill-gray-200"
                                     xmlns="http://www.w3.org/2000/svg"
                                     viewBox="0 -960 960 960"
                                     ><path

@@ -66,7 +66,7 @@
                         type="checkbox"
                         bind:checked={$settings.general.blurWin11}
                         on:change={toggleBlurWin11}
-                        class="text-accent-500 h-5 w-5 rounded bg-zinc-700 focus:ring-0 focus:ring-offset-0" />
+                        class="text-accent-500 size-5 rounded bg-zinc-700 focus:ring-0 focus:ring-offset-0" />
                     <div class="ml-5">
                         <div class="text-gray-100">Blur Meter Background</div>
                         <div class="text-xs text-gray-300">
@@ -81,7 +81,7 @@
                         type="checkbox"
                         bind:checked={$settings.general.blur}
                         on:change={toggleBlur}
-                        class="text-accent-500 h-5 w-5 rounded bg-zinc-700 focus:ring-0 focus:ring-offset-0" />
+                        class="text-accent-500 size-5 rounded bg-zinc-700 focus:ring-0 focus:ring-offset-0" />
                     <div class="ml-5">
                         <div class="text-gray-100">Blur Meter Background</div>
                         <div class="text-xs text-gray-300">
