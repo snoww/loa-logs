@@ -16,7 +16,7 @@ use flexi_logger::{
     Cleanup, Criterion, DeferredNow, Duplicate, FileSpec, Logger, Naming, WriteMode,
 };
 use hashbrown::HashMap;
-use log::{info, warn, Record};
+use log::{info, warn, Record, error};
 use parser::models::*;
 
 use rusqlite::{params, params_from_iter, Connection};
@@ -164,7 +164,7 @@ async fn main() -> Result<()> {
 
             tokio::task::spawn_blocking(move || {
                 parser::start(meter_window, ip, port, raw_socket, settings).map_err(|e| {
-                    warn!("unexpected error occurred in parser: {}", e);
+                    error!("unexpected error occurred in parser: {}", e);
                 })
             });
 

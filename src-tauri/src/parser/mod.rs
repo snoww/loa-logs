@@ -90,12 +90,12 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool, setti
         .app_handle()
         .path_resolver()
         .resource_dir()
-        .expect("could not get resource dir");
+        .unwrap();
     local_player_path.push("local_players.json");
 
     if local_player_path.exists() {
-        let local_players_file = std::fs::read_to_string(local_player_path.clone()).expect("could not read local_players.json");
-        local_players = serde_json::from_str(&local_players_file).expect("could not parse local_players.json");
+        let local_players_file = std::fs::read_to_string(local_player_path.clone())?;
+        local_players = serde_json::from_str(&local_players_file).unwrap_or_default();
     }
 
     let emit_details = Arc::new(AtomicBool::new(false));
@@ -214,8 +214,7 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool, setti
                                 gauge1: pkt.identity_gauge1,
                                 gauge2: pkt.identity_gauge2,
                                 gauge3: pkt.identity_gauge3,
-                            })
-                            .expect("failed to emit identity-update");
+                            })?;
                     }
                 }
             }
@@ -242,7 +241,7 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool, setti
                     info!("local player: {}, {}, {}, eid: {}, id: {}", entity.name, get_class_from_id(&entity.class_id), entity.gear_level, entity.id, entity.character_id);
                     if !local_players.contains_key(&entity.character_id) {
                         local_players.insert(entity.character_id, entity.name.clone());
-                        write_local_players(&local_players, &local_player_path);
+                        write_local_players(&local_players, &local_player_path)?;
                     }
                     state.on_init_pc(entity, hp, max_hp)
                 }
@@ -294,8 +293,7 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool, setti
                             .emit("stagger-update", Stagger {
                                 current: pkt.paralyzation_point,
                                 max: pkt.paralyzation_max_point,
-                            })
-                            .expect("failed to emit stagger-update");
+                            })?;
                     }
                 }
             }
@@ -721,10 +719,11 @@ fn update_party(party_tracker: &Rc<RefCell<PartyTracker>>, entity_tracker: &Enti
     sorted_parties.into_iter().map(|(_, members)| members).collect()
 }
 
-fn write_local_players(local_players: &HashMap<u64, String>, path: &PathBuf) {
+fn write_local_players(local_players: &HashMap<u64, String>, path: &PathBuf) -> Result<()> {
     let ordered: BTreeMap<_,_> = local_players.iter().collect();
-    let local_players_file = serde_json::to_string(&ordered).expect("could not serialize local_players");
-    std::fs::write(path, local_players_file).expect("could not write local_players.json");
+    let local_players_file = serde_json::to_string(&ordered)?;
+    std::fs::write(path, local_players_file)?;
+    Ok(())
 }
 
 fn parse_pkt<T, F>(data: &[u8], new_fn: F, pkt_name: &str) -> Option<T>
