@@ -50,9 +50,11 @@
                 bossCurrentBars = bossHPBars;
                 bossPreviousBars = bossCurrentBars;
             } else {
-                const bossBars = Math.ceil((bossHp / boss.maxHp) * bossHPBars);
-                const bossShieldHpBars = Math.ceil((bossShield / boss.maxHp) * bossHPBars);
-                bossCurrentBars = Math.floor(bossBars + bossShieldHpBars);
+                if (bossShield > 0) {
+                    bossCurrentBars = Math.round(((bossHp + bossShield) / boss.maxHp) * bossHPBars);
+                } else {
+                    bossCurrentBars = Math.ceil((bossHp / boss.maxHp) * bossHPBars);
+                }
             }
             if (bossPreviousBars === 0) {
                 bossPreviousBars = bossCurrentBars;
