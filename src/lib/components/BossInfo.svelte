@@ -28,7 +28,7 @@
     let bossShieldHp: (string | number)[];
 
     $: {
-        bossShield = boss.currentShield + 1300000;
+        bossShield = boss.currentShield;
         if (boss.currentHp < 0) {
             bossHp = 0;
         } else {
