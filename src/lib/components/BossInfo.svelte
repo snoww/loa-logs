@@ -28,7 +28,7 @@
     let bossShieldHp: (string | number)[];
 
     $: {
-        bossShield = boss.currentShield;
+        bossShield = boss.currentShield + 1300000;
         if (boss.currentHp < 0) {
             bossHp = 0;
         } else {
@@ -89,7 +89,7 @@
 <div class="h-7 border-y border-black bg-zinc-900/[.3]">
     {#if bossHPBars !== 0}
         {#if bossShield > 0}
-            <div class="absolute -z-10 h-7 bg-neutral-50" style="width: 100%;" />
+            <div class="absolute -z-10 h-7 bg-neutral-300" style="width: 100%;" />
         {:else}
             <div class="absolute -z-10 h-7" style="background-color: {bossBarColor[0]};width: {$tweenBossHpBar}%;" />
         {/if}
@@ -111,7 +111,7 @@
     {:else}
         <div class="absolute -z-10 h-7 w-full bg-zinc-900" />
         {#if bossShield > 0}
-            <div class="absolute z-0 h-7 bg-neutral-50" style="width: 100%;" />
+            <div class="absolute z-0 h-7 bg-neutral-300" style="width: 100%;" />
         {:else}
             <div class="absolute z-0 h-7 bg-red-800" style="width: {$tweenBossHpBar}%;" />
         {/if}
