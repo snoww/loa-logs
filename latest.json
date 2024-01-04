@@ -1,11 +1,11 @@
 {
-    "version": "v1.4.11",
-    "notes": "### v1.4.11\n#### NEW FEATURES\n- new update popup (wow so cool!)\n- boss hp bar will now show shields if the boss is shielded (added in preparation of hell brel g6 7x mech)\n\n![shield](https://cdn.discordapp.com/attachments/220646943498567680/1191979350157959210/image.png)\n#### BUG FIXES\n- fix local player cache causing crashes\n\n### v1.4.10\n#### NEW FEATURES\n- hovering skills now show tripod info\n\n![hovering skills](https://cdn.discordapp.com/attachments/220646943498567680/1189022385702182921/image.png)\n#### BUG FIXES\n- fix tripods for certain skills not being tracked\n\nfull patch notes on [github](https://github.com/snoww/loa-logs/releases/latest)\n\nsend bug reports/suggestions to [#loa-logs](https://discord.gg/sbSa3pkDF5)",
-    "pub_date": "2024-01-03T05:50:39.885Z",
+    "version": "v1.4.12",
+    "notes": "### v1.4.12\n#### BUG FIXES\n- adjusted shielded bosses hp bar for win11 users\n- added missing buff icons\n\n### v1.4.11\n#### NEW FEATURES\n- new update popup (wow so cool!)\n- boss hp bar will now show shields if the boss is shielded (added in preparation of hell brel g6 7x mech)\n\n![shield](https://cdn.discordapp.com/attachments/220646943498567680/1191979350157959210/image.png)\n#### BUG FIXES\n- fix local player cache causing crashes\n\n### v1.4.10\n#### NEW FEATURES\n- hovering skills now show tripod info\n\n![hovering skills](https://cdn.discordapp.com/attachments/220646943498567680/1189022385702182921/image.png)\n#### BUG FIXES\n- fix tripods for certain skills not being tracked\n\nfull patch notes on [github](https://github.com/snoww/loa-logs/releases/latest)\n\nsend bug reports/suggestions to [#loa-logs](https://discord.gg/sbSa3pkDF5)",
+    "pub_date": "2024-01-04T09:36:36.470Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.4.11/LOA.Logs_1.4.11_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlFrNDRMWC9TaUFZVFUyRGdZeE84ZUtpdGMvMVh4aE45NnkyK0htKzMzb2Z4bU41eUM1TXFmN2h4QnRRMGp5a2xsT1FFVnlKajZpZTR3MDhiTFJCeXdnPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzA0MjYwOTQ0CWZpbGU6TE9BIExvZ3NfMS40LjExX3g2NC1zZXR1cC5uc2lzLnppcApBQkZoSE1QczBPM1JZc2krY3hZUkNDL2hzNHAwZCtGTysxWStYUmdnbW1ZUXBNbEI4RWM0UWpsdk5XbjVZL2VZYm5qTjVmRlVWQ2ZhQTBya2gwQmFCZz09Cg=="
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.4.12/LOA.Logs_1.4.12_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmFJRWNVdU1yaXVjb202VGFXMXV4UzRNTHk1djdLeExORXNCVWlCT1FDeHl3emMrelB2MWJpakRzVG9QZTZZR2FMeThHTGk0a01Odm11RXBhdGhEWFEwPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzA0MzYwOTM1CWZpbGU6TE9BIExvZ3NfMS40LjEyX3g2NC1zZXR1cC5uc2lzLnppcApoZ1BKYWkvcUhpOUFjWStrQTlucHpYQkFOYkVUY2NwOE1yOGQrS3daenpscjYrWVFmM202b3cwSDR1b2N1a1dJYU5hN3huT0ZaSzMwR1RTNzg5U2dCdz09Cg=="
         }
     }
 }
