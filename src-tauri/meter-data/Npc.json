@@ -19710,8 +19710,8 @@
   "480785": { "id": 480785, "name": "Heart Card Soldier", "grade": "named", "type": "monster", "pushimmune": true },
   "480786": { "id": 480786, "name": "Diamond Card Soldier", "grade": "named", "type": "monster", "pushimmune": true },
   "480802": { "id": 480802, "name": "Gehenna Helkasirs", "grade": "boss", "type": "monster", "pushimmune": true },
-  "480803": { "id": 480803, "name": "Nightmare Gehenna", "grade": "seed", "type": "monster", "pushimmune": true },
-  "480804": { "id": 480804, "name": "Nightmare Helkasirs", "grade": "seed", "type": "monster", "pushimmune": true },
+  "480803": { "id": 480803, "name": "Nightmare Gehenna", "grade": "boss", "type": "monster", "pushimmune": true },
+  "480804": { "id": 480804, "name": "Nightmare Helkasirs", "grade": "boss", "type": "monster", "pushimmune": true },
   "480805": {
     "id": 480805,
     "name": "Crushing Phantom Wardog",
@@ -19803,8 +19803,8 @@
   },
   "480881": { "id": 480881, "name": "Phantom Attis", "grade": "normal", "type": "monster" },
   "480882": { "id": 480882, "name": "Brelshaza", "grade": "normal", "type": "monster", "pushimmune": true },
-  "4221461": { "id": 4221461, "name": "Primordial Nightmare", "grade": "boss", "type": "monster", "pushimmune": true },
-  "4221462": { "id": 4221462, "name": "Primordial Nightmare", "grade": "boss", "type": "monster", "pushimmune": true },
+  "4221461": { "id": 4221461, "name": "Primordial Nightmare", "grade": "normal", "type": "monster", "pushimmune": true },
+  "4221462": { "id": 4221462, "name": "Primordial Nightmare", "grade": "normal", "type": "monster", "pushimmune": true },
   "4221463": {
     "id": 4221463,
     "name": "Pseudospace Primordial Nightmare",
@@ -21031,7 +21031,7 @@
   "480929": {
     "id": 480929,
     "name": "Starving Void Executioner",
-    "grade": "boss",
+    "grade": "normal",
     "type": "monster",
     "pushimmune": true
   },
@@ -21261,8 +21261,8 @@
   "481004": { "id": 481004, "name": "River Fear", "grade": "normal", "type": "monster", "pushimmune": true },
   "481005": { "id": 481005, "name": "River Fear", "grade": "normal", "type": "monster", "pushimmune": true },
   "481006": { "id": 481006, "name": "Plague Skiara", "grade": "normal", "type": "monster" },
-  "481007": { "id": 481007, "name": "Strong Currents", "grade": "boss", "type": "monster", "pushimmune": true },
-  "481008": { "id": 481008, "name": "Decaying Commander", "grade": "boss", "type": "monster", "pushimmune": true },
+  "481007": { "id": 481007, "name": "Strong Currents", "grade": "normal", "type": "monster", "pushimmune": true },
+  "481008": { "id": 481008, "name": "Decaying Commander", "grade": "normal", "type": "monster", "pushimmune": true },
   "481009": { "id": 481009, "name": "Plague Gargoyle", "grade": "normal", "type": "monster" },
   "481010": { "id": 481010, "name": "Giant Sickle", "grade": "normal", "type": "monster", "pushimmune": true },
   "481011": { "id": 481011, "name": "Giant Sickle", "grade": "normal", "type": "monster", "pushimmune": true },
