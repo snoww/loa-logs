@@ -93,6 +93,27 @@
     "classid": 0,
     "icon": "vehicle_388.png"
   },
+  "55160": { "id": 55160, "name": "PLACEHOLDER", "desc": "PLACEHOLDER", "classid": 0, "icon": "vehicle_549.png" },
+  "55161": { "id": 55161, "name": "PLACEHOLDER", "desc": "PLACEHOLDER", "classid": 0, "icon": "vehicle_550.png" },
+  "55162": { "id": 55162, "name": "PLACEHOLDER", "desc": "Increases Move Speed.", "classid": 0, "icon": "buff_10.png" },
+  "55163": {
+    "id": 55163,
+    "name": "[5주년섬] E_사진기_촬영_영감 별얻기(*테스트)",
+    "desc": "PLACEHOLDER",
+    "classid": 0,
+    "icon": "all_quest_05_11.png"
+  },
+  "55164": { "id": 55164, "name": "PLACEHOLDER", "desc": "PLACEHOLDER", "classid": 0, "icon": "vehicle_549.png" },
+  "55165": { "id": 55165, "name": "PLACEHOLDER", "desc": "PLACEHOLDER", "classid": 0, "icon": "vehicle_550.png" },
+  "55170": { "id": 55170, "name": "PLACEHOLDER", "desc": "PLACEHOLDER", "classid": 0, "icon": "vehicle_549.png" },
+  "55171": { "id": 55171, "name": "PLACEHOLDER", "desc": "PLACEHOLDER", "classid": 0, "icon": "vehicle_550.png" },
+  "55172": {
+    "id": 55172,
+    "name": "[장난감도감]E_사진기_촬영_영감 별얻기(*테스트)",
+    "desc": "",
+    "classid": 0,
+    "icon": "all_quest_05_11.png"
+  },
   "55200": {
     "id": 55200,
     "name": "Light of Destruction",
@@ -1101,40 +1122,22 @@
     "classid": 0,
     "icon": "vehicle_449.png"
   },
-  "57730": {
-    "id": 57730,
-    "name": "[테스트][좀비 서바이벌] 소총_평타",
-    "desc": "",
-    "classid": 0,
-    "icon": "vehicle_3.png"
-  },
-  "57731": {
-    "id": 57731,
-    "name": "[테스트][좀비 서바이벌] 소총_Space_구르기",
-    "desc": "",
-    "classid": 0,
-    "icon": "vehicle_293.png"
-  },
+  "57730": { "id": 57730, "name": "[좀비 서바이벌] 소총_평타", "desc": "", "classid": 0, "icon": "vehicle_3.png" },
+  "57731": { "id": 57731, "name": "Roll", "desc": "Quickly roll forward.", "classid": 0, "icon": "vehicle_293.png" },
   "57732": {
     "id": 57732,
-    "name": "[테스트][좀비 서바이벌] 소총_E_수류탄 투척",
-    "desc": "",
+    "name": "Ghost Grenade",
+    "desc": "Throw a Ghost Grenade at the target location.",
     "classid": 0,
-    "icon": "vehicle_210.png"
+    "icon": "po_skill_01_132.png"
   },
-  "57733": {
-    "id": 57733,
-    "name": "[테스트][좀비 서바이벌] 소총_W_장전",
-    "desc": "",
-    "classid": 0,
-    "icon": "buff_125.png"
-  },
+  "57733": { "id": 57733, "name": "Load", "desc": "Load bullets.", "classid": 0, "icon": "po_skill_01_133.png" },
   "57734": {
     "id": 57734,
-    "name": "[테스트][좀비 서바이벌] 소총_Q_날카로운 총격",
-    "desc": "",
+    "name": "Sharp Shooting",
+    "desc": "Take aim and fire piercing bullets.",
     "classid": 0,
-    "icon": "buff_321.png"
+    "icon": "po_skill_01_134.png"
   },
   "57740": {
     "id": 57740,
@@ -1167,8 +1170,8 @@
   },
   "57770": {
     "id": 57770,
-    "name": "[기억의오르골] 일레네의 횃불 Q스킬_아득한 불길",
-    "desc": "",
+    "name": "Distant Flame",
+    "desc": "A lonely, hopeful light in the darkness.\nContains a wish for someone’s safety from long ago.\nThe more you swing, the weaker the flame becomes. You must manipulate the light to make the flame bright again.",
     "classid": 0,
     "icon": "all_quest_02_44.png"
   },
@@ -1186,6 +1189,7 @@
     "classid": 0,
     "icon": "vehicle_349.png"
   },
+  "57790": { "id": 57790, "name": "Turn on the Light", "desc": "PLACEHOLDER", "classid": 0, "icon": "vehicle_16.png" },
   "58000": { "id": 58000, "name": "태초의 섬 해머_평타_브론즈", "desc": "", "classid": 0, "icon": "vehicle_285.png" },
   "58001": { "id": 58001, "name": "태초의 섬 해머_평타_실버", "desc": "", "classid": 0, "icon": "vehicle_285.png" },
   "58002": { "id": 58002, "name": "태초의 섬 해머_평타_골드", "desc": "", "classid": 0, "icon": "vehicle_285.png" },
@@ -1722,6 +1726,13 @@
   },
   "59613": {
     "id": 59613,
+    "name": "Absorb Medeia",
+    "desc": "Use the power of Arcturus to absorb Medeia.",
+    "classid": 0,
+    "icon": "vehicle_5.png"
+  },
+  "59614": {
+    "id": 59614,
     "name": "Absorb Medeia",
     "desc": "Use the power of Arcturus to absorb Medeia.",
     "classid": 0,
@@ -2384,6 +2395,7 @@
     "icon": ""
   },
   "4265996": { "id": 4265996, "name": "킬리네사_사망 스킬", "desc": "", "classid": 0, "icon": "" },
+  "4265999": { "id": 4265999, "name": "킬리네사_슬라이딩 후 진천각_테스트용", "desc": "", "classid": 0, "icon": "" },
   "4266800": { "id": 4266800, "name": "킬리네사 촉수_관련 스킬 이펙트 모음", "desc": "", "classid": 0, "icon": "" },
   "4266801": {
     "id": 4266801,
@@ -3453,6 +3465,34 @@
     "classid": 0,
     "icon": ""
   },
+  "4265330": {
+    "id": 4265330,
+    "name": "카멘 그림자 군마_그림자 군마 공격_맞대결_A_전조_특별수련장",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4265331": {
+    "id": 4265331,
+    "name": "카멘 그림자 군마_그림자 군마 공격_맞대결_A_시작_특별수련장",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4265332": {
+    "id": 4265332,
+    "name": "카멘 그림자 군마_그림자 군마 공격_맞대결_B_전조_특별수련장",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4265333": {
+    "id": 4265333,
+    "name": "카멘 그림자 군마_그림자 군마 공격_맞대결_B_시작_특별수련장",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
   "4265393": {
     "id": 4265393,
     "name": "카멘 그림자 군마_그림자 군마 공격_맞대결_테스트 용도_A_4_동작",
@@ -3709,6 +3749,34 @@
   "4266293": {
     "id": 4266293,
     "name": "카멘_어검술_관통하는 어검술_지형파괴 이후",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4266294": {
+    "id": 4266294,
+    "name": "카멘_한손검_4페이즈_맞대결 전조_특별수련장",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4266295": {
+    "id": 4266295,
+    "name": "카멘_한손검_4페이즈_맞대결_시작_특별수련장",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4266296": {
+    "id": 4266296,
+    "name": "카멘_한손검_3페이즈_맞대결 전조_특별수련장",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4266297": {
+    "id": 4266297,
+    "name": "카멘_한손검_3페이즈_맞대결_시작_특별수련장",
     "desc": "",
     "classid": 0,
     "icon": ""
@@ -4131,6 +4199,22 @@
   },
   "4266641": { "id": 4266641, "name": "카멘_4관문_암흑검_대쉬 후_콤보", "desc": "", "classid": 0, "icon": "" },
   "4266642": { "id": 4266642, "name": "카멘_4관문_암흑검_선회후 뒤베기_콤보", "desc": "", "classid": 0, "icon": "" },
+  "4266643": { "id": 4266643, "name": "카멘_격돌 연습모드_카멘의 일격_검 전조", "desc": "", "classid": 0, "icon": "" },
+  "4266644": { "id": 4266644, "name": "카멘_격돌 연습모드_카멘의 일격_검 시작", "desc": "", "classid": 0, "icon": "" },
+  "4266645": {
+    "id": 4266645,
+    "name": "카멘_격돌 연습모드_카멘의 일격_할버트 전조",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4266646": {
+    "id": 4266646,
+    "name": "카멘_격돌 연습모드_카멘의 일격_할버트 시작",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
   "4266701": {
     "id": 4266701,
     "name": "카멘_거대암흑검_제노사이드_타겟위치 낙하",
@@ -4247,9 +4331,9 @@
   "4266068": { "id": 4266068, "name": "카멘_최종_", "desc": "", "classid": 0, "icon": "" },
   "4266069": { "id": 4266069, "name": "카멘_최종_", "desc": "", "classid": 0, "icon": "" },
   "4266070": { "id": 4266070, "name": "카멘_최종_해일_시작", "desc": "", "classid": 0, "icon": "" },
-  "4266071": { "id": 4266071, "name": "카멘_최종_해일_저지", "desc": "", "classid": 0, "icon": "" },
+  "4266071": { "id": 4266071, "name": "카멘_최종_해일_저지_익스트림하드", "desc": "", "classid": 0, "icon": "" },
   "4266072": { "id": 4266072, "name": "카멘_최종_해일_성공", "desc": "", "classid": 0, "icon": "" },
-  "4266073": { "id": 4266073, "name": "카멘_최종_", "desc": "", "classid": 0, "icon": "" },
+  "4266073": { "id": 4266073, "name": "카멘_최종_해일_저지_하드", "desc": "", "classid": 0, "icon": "" },
   "4266074": { "id": 4266074, "name": "카멘_최종_", "desc": "", "classid": 0, "icon": "" },
   "4266075": { "id": 4266075, "name": "카멘_최종_", "desc": "", "classid": 0, "icon": "" },
   "4266076": { "id": 4266076, "name": "카멘_최종_", "desc": "", "classid": 0, "icon": "" },
@@ -6953,6 +7037,282 @@
     "classid": 0,
     "icon": ""
   },
+  "4220001": { "id": 4220001, "name": "시련_하누마탄_스트레이트 이지선다", "desc": "", "classid": 0, "icon": "" },
+  "4220002": { "id": 4220002, "name": "시련_하누마탄_전방 훅", "desc": "", "classid": 0, "icon": "" },
+  "4220003": { "id": 4220003, "name": "시련_하누마탄_백스핀 블로우", "desc": "", "classid": 0, "icon": "" },
+  "4220004": { "id": 4220004, "name": "시련_하누마탄_전방 잽", "desc": "", "classid": 0, "icon": "" },
+  "4220005": { "id": 4220005, "name": "시련_하누마탄_후방 대쉬", "desc": "", "classid": 0, "icon": "" },
+  "4220006": { "id": 4220006, "name": "시련_하누마탄_전방 대쉬 후 공격", "desc": "", "classid": 0, "icon": "" },
+  "4220007": { "id": 4220007, "name": "시련_하누마탄_점프 후 내려찍기", "desc": "", "classid": 0, "icon": "" },
+  "4220008": { "id": 4220008, "name": "시련_하누마탄_전방 지진파", "desc": "", "classid": 0, "icon": "" },
+  "4220009": { "id": 4220009, "name": "시련_하누마탄_순보 공격", "desc": "", "classid": 0, "icon": "" },
+  "4220010": { "id": 4220010, "name": "시련_하누마탄_기공탄", "desc": "", "classid": 0, "icon": "" },
+  "4220011": { "id": 4220011, "name": "시련_하누마탄_기공파", "desc": "", "classid": 0, "icon": "" },
+  "4220012": { "id": 4220012, "name": "시련_하누마탄_전방위 기공포", "desc": "", "classid": 0, "icon": "" },
+  "4220013": { "id": 4220013, "name": "시련_하누마탄_환영 남기기", "desc": "", "classid": 0, "icon": "" },
+  "4220014": {
+    "id": 4220014,
+    "name": "시련_하누마탄_대쉬 어퍼 후 양손 내려찍기",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4220015": { "id": 4220015, "name": "시련_하누마탄_대지 격파", "desc": "", "classid": 0, "icon": "" },
+  "4220016": { "id": 4220016, "name": "시련_하누마탄_전진 강타_카운터", "desc": "", "classid": 0, "icon": "" },
+  "4220017": {
+    "id": 4220017,
+    "name": "시련_하누마탄_가드 카운터_저지(반격)_카운터",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4220018": {
+    "id": 4220018,
+    "name": "시련_하누마탄_가드 카운터_저지 성공시 공격스킬",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4220019": { "id": 4220019, "name": "시련_하누마탄_초신성 폭발_1타", "desc": "", "classid": 0, "icon": "" },
+  "4220020": { "id": 4220020, "name": "시련_하누마탄_초신성 폭발_2타", "desc": "", "classid": 0, "icon": "" },
+  "4220021": {
+    "id": 4220021,
+    "name": "시련_하누마탄_광역 대지 분출 (광역기)_카운터",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4220022": {
+    "id": 4220022,
+    "name": "시련_하누마탄_발구르기 (필살기)_화염_저지",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4220023": {
+    "id": 4220023,
+    "name": "시련_하누마탄_발구르기 (필살기)_냉기_저지",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4220024": {
+    "id": 4220024,
+    "name": "시련_하누마탄_발구르기 (필살기)_화염_저지당함_카운터",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4220025": {
+    "id": 4220025,
+    "name": "시련_하누마탄_발구르기 (필살기)_냉기_저지당함_카운터",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4220026": {
+    "id": 4220026,
+    "name": "시련_하누마탄_필살 환영 공격 (필살기)_화염_저지",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4220027": {
+    "id": 4220027,
+    "name": "시련_하누마탄_필살 환영 공격 (필살기)_냉기_저지",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4220028": {
+    "id": 4220028,
+    "name": "시련_하누마탄_필살 환영 공격 (필살기)_화염_저지당함_카운터",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4220029": {
+    "id": 4220029,
+    "name": "시련_하누마탄_필살 환영 공격 (필살기)_냉기_저지당함_카운터",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4220030": {
+    "id": 4220030,
+    "name": "시련_하누마탄_뎀프시 롤 (필살기)_화염_카운터",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4220031": {
+    "id": 4220031,
+    "name": "시련_하누마탄_뎀프시 롤 (필살기)_냉기_카운터",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4220032": { "id": 4220032, "name": "시련_하누마탄_2차 지역이동 도착 후 포효", "desc": "", "classid": 0, "icon": "" },
+  "4220033": { "id": 4220033, "name": "시련_하누마탄_노모션 더미", "desc": "", "classid": 0, "icon": "" },
+  "4220034": { "id": 4220034, "name": "시련_하누마탄_2족 그로기_찐무력", "desc": "", "classid": 0, "icon": "" },
+  "4220035": { "id": 4220035, "name": "시련_하누마탄_4족 그로기_찐무력", "desc": "", "classid": 0, "icon": "" },
+  "4220036": { "id": 4220036, "name": "시련_하누마탄_지역이동_도착_일반", "desc": "", "classid": 0, "icon": "" },
+  "4220040": { "id": 4220040, "name": "시련_하누마탄_지역이동 2차_시작", "desc": "", "classid": 0, "icon": "" },
+  "4220041": { "id": 4220041, "name": "시련_하누마탄_지역이동_도착_잡기", "desc": "", "classid": 0, "icon": "" },
+  "4220042": { "id": 4220042, "name": "시련_하누마탄_거대화_해머링_카운터", "desc": "", "classid": 0, "icon": "" },
+  "4220043": { "id": 4220043, "name": "시련_하누마탄_거대화_폭쇄진", "desc": "", "classid": 0, "icon": "" },
+  "4220044": { "id": 4220044, "name": "시련_하누마탄_거대화_전방 앞찍기_약", "desc": "", "classid": 0, "icon": "" },
+  "4220045": { "id": 4220045, "name": "시련_하누마탄_거대화_전방 앞찍기_강", "desc": "", "classid": 0, "icon": "" },
+  "4220046": { "id": 4220046, "name": "시련_하누마탄_거대화_도약 진동 내려찍기", "desc": "", "classid": 0, "icon": "" },
+  "4220047": { "id": 4220047, "name": "시련_하누마탄_거대화_후방 점프 (4족용)", "desc": "", "classid": 0, "icon": "" },
+  "4220048": {
+    "id": 4220048,
+    "name": "시련_하누마탄_거대화_전진하며 마구 내려찍기",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4220049": { "id": 4220049, "name": "시련_하누마탄_거대화_진동탄", "desc": "", "classid": 0, "icon": "" },
+  "4220050": { "id": 4220050, "name": "시련_하누마탄_거대화_주변 마구 내려치기", "desc": "", "classid": 0, "icon": "" },
+  "4220051": {
+    "id": 4220051,
+    "name": "시련_하누마탄_거대화_제자리 뛰며 진동 발산",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4220052": {
+    "id": 4220052,
+    "name": "시련_하누마탄_거대화_잡고 진동 주입하기 (잡기)",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4220053": {
+    "id": 4220053,
+    "name": "시련_하누마탄_거대화_잡고 진동 주입하기 (잡기)_저지성공_놓치기",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4220054": {
+    "id": 4220054,
+    "name": "시련_하누마탄_거대화_음양보호막 (필살기)",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4220055": { "id": 4220055, "name": "시련_하누마탄_거대화_선회 후려치기", "desc": "", "classid": 0, "icon": "" },
+  "4220056": {
+    "id": 4220056,
+    "name": "시련_하누마탄_2족 카운터 성공 (타겟 부여)",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4220057": {
+    "id": 4220057,
+    "name": "시련_하누마탄_4족 카운터 성공 (타겟 부여)",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4220058": {
+    "id": 4220058,
+    "name": "시련_하누마탄_페이즈전환_발구르기 (필살기)_화염_저지",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4220059": {
+    "id": 4220059,
+    "name": "시련_하누마탄_페이즈전환_발구르기 (필살기)_냉기_저지",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4220060": {
+    "id": 4220060,
+    "name": "시련_하누마탄_페이즈전환_필살 환영 공격 (필살기)_화염_저지",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4220061": {
+    "id": 4220061,
+    "name": "시련_하누마탄_페이즈전환_필살 환영 공격 (필살기)_냉기_저지",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4220062": { "id": 4220062, "name": "시련_하누마탄_지역이동 1차_시작", "desc": "", "classid": 0, "icon": "" },
+  "4220063": { "id": 4220063, "name": "시련_하누마탄_지역이동 2차_시작", "desc": "", "classid": 0, "icon": "" },
+  "4220064": { "id": 4220064, "name": "시련_하누마탄_지역이동_실제 이동스킬", "desc": "", "classid": 0, "icon": "" },
+  "4220065": { "id": 4220065, "name": "시련_하누마탄_진동 강화_4족_광폭화", "desc": "", "classid": 0, "icon": "" },
+  "4220066": { "id": 4220066, "name": "시련_하누마탄_연계 공격_A", "desc": "", "classid": 0, "icon": "" },
+  "4220067": { "id": 4220067, "name": "시련_하누마탄_연계 공격_B", "desc": "", "classid": 0, "icon": "" },
+  "4220068": { "id": 4220068, "name": "시련_하누마탄_집중표적 재부여_2족", "desc": "", "classid": 0, "icon": "" },
+  "4220069": {
+    "id": 4220069,
+    "name": "시련_하누마탄_집중표적 재부여_2족_강제부여",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4220070": { "id": 4220070, "name": "시련_하누마탄_집중표적 재부여_4족", "desc": "", "classid": 0, "icon": "" },
+  "4220071": {
+    "id": 4220071,
+    "name": "시련_하누마탄_집중표적 재부여_4족_강제부여",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4220081": {
+    "id": 4220081,
+    "name": "시련_하누마탄_거대화_음양보호막_선회 후 공격_좌",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4220082": {
+    "id": 4220082,
+    "name": "시련_하누마탄_거대화_음양보호막_선회 후 공격_우",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4220083": {
+    "id": 4220083,
+    "name": "시련_하누마탄_거대화_음양보호막_선회 후 공격_X",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4220084": {
+    "id": 4220084,
+    "name": "시련_하누마탄_거대화_음양보호막_선회 후 공격_+",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4220085": { "id": 4220085, "name": "시련_하누마탄_1차 지역이동 도착 후 포효", "desc": "", "classid": 0, "icon": "" },
+  "4220086": { "id": 4220086, "name": "시련_하누마탄_음양보호막 놀이용 이동", "desc": "", "classid": 0, "icon": "" },
+  "4220096": { "id": 4220096, "name": "시련_하누마탄_음양보호막_이동스킬", "desc": "", "classid": 0, "icon": "" },
+  "4220097": {
+    "id": 4220097,
+    "name": "시련_하누마탄_잡은 후 마구 내려치기 (잡기)_놓기_PC사망",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4220098": {
+    "id": 4220098,
+    "name": "시련_하누마탄_거대화_잡고 진동 주입하기 (잡기)_놓기_PC사망",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4220099": { "id": 4220099, "name": "시련_하누마탄_대기 상태", "desc": "", "classid": 0, "icon": "" },
   "4207801": { "id": 4207801, "name": "나루니섬_회전함정_단방향_시계회전", "desc": "", "classid": 0, "icon": "" },
   "4207802": { "id": 4207802, "name": "나루니섬_회전함정_단방향_반시계회전", "desc": "", "classid": 0, "icon": "" },
   "4207803": { "id": 4207803, "name": "나루니섬_회전함정_양방향_시계회전", "desc": "", "classid": 0, "icon": "" },
@@ -6971,6 +7331,150 @@
   "400304": { "id": 400304, "name": "어둠의 소환사_구체 발사", "desc": "", "classid": 0, "icon": "" },
   "400305": { "id": 400305, "name": "어둠의 소환사_여러 구체 발사", "desc": "", "classid": 0, "icon": "" },
   "400306": { "id": 400306, "name": "어둠의 소환사_폭발 구체 생성", "desc": "", "classid": 0, "icon": "" },
+  "444570": { "id": 444570, "name": "혼돈의 나크라세나_번개방출", "desc": "", "classid": 0, "icon": "" },
+  "444571": { "id": 444571, "name": "혼돈의 나크라세나_전진하며 내려찍기", "desc": "", "classid": 0, "icon": "" },
+  "444572": { "id": 444572, "name": "혼돈의 나크라세나_전방 돌진", "desc": "", "classid": 0, "icon": "" },
+  "444573": { "id": 444573, "name": "혼돈의 나크라세나_연속 낙뢰", "desc": "", "classid": 0, "icon": "" },
+  "444574": { "id": 444574, "name": "혼돈의 나크라세나_추격형 꼬리 전기", "desc": "", "classid": 0, "icon": "" },
+  "444575": { "id": 444575, "name": "혼돈의 나크라세나_꼬리 지면 충격파", "desc": "", "classid": 0, "icon": "" },
+  "444576": { "id": 444576, "name": "혼돈의 나크라세나_백대쉬", "desc": "", "classid": 0, "icon": "" },
+  "4268401": { "id": 4268401, "name": "전투형_카리오 악마화_전투_올려치기", "desc": "", "classid": 0, "icon": "" },
+  "4268402": { "id": 4268402, "name": "전투형_카리오 악마화_전투_돌진 가르기", "desc": "", "classid": 0, "icon": "" },
+  "4268403": { "id": 4268403, "name": "전투형_카리오 악마화_전투_데몰리션", "desc": "", "classid": 0, "icon": "" },
+  "4268404": { "id": 4268404, "name": "전투형_카리오 악마화_전투_칼날 폭발", "desc": "", "classid": 0, "icon": "" },
+  "4268405": { "id": 4268405, "name": "전투형_카리오 악마화_전투_백스텝", "desc": "", "classid": 0, "icon": "" },
+  "4268406": {
+    "id": 4268406,
+    "name": "전투형_카리오 악마화_전투_전방 검기 뿌리기",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4268501": { "id": 4268501, "name": "전투형)타무트_데모닉 슬래쉬", "desc": "", "classid": 0, "icon": "" },
+  "4268502": { "id": 4268502, "name": "전투형)타무트_스피닝 체인", "desc": "", "classid": 0, "icon": "" },
+  "4268503": { "id": 4268503, "name": "전투형)타무트_슬래셔", "desc": "", "classid": 0, "icon": "" },
+  "4268504": { "id": 4268504, "name": "전투형)타무트_그라인드 체인", "desc": "", "classid": 0, "icon": "" },
+  "436608": { "id": 436608, "name": "변이된 게이저_레이저 내뿜기", "desc": "", "classid": 0, "icon": "" },
+  "439029": { "id": 439029, "name": "실마엘 골렘_박수 치기", "desc": "", "classid": 0, "icon": "" },
+  "439030": { "id": 439030, "name": "실마엘 골렘_내려찍기", "desc": "", "classid": 0, "icon": "" },
+  "421804": { "id": 421804, "name": "변이된 쥐_물어뜯기", "desc": "", "classid": 0, "icon": "" },
+  "4268600": { "id": 4268600, "name": "베히모스_테스트", "desc": "", "classid": 0, "icon": "" },
+  "4269301": {
+    "id": 4269301,
+    "name": "라크리마 수호자_파도_좌우 베기 후 마법 발사",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4269302": { "id": 4269302, "name": "라크리마 수호자_파도_정면 베기", "desc": "", "classid": 0, "icon": "" },
+  "4269303": {
+    "id": 4269303,
+    "name": "라크리마 수호자_파도_타겟 회전 후 물대포 발사",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4269304": { "id": 4269304, "name": "라크리마 수호자_파도_에너지 폭발", "desc": "", "classid": 0, "icon": "" },
+  "4269305": {
+    "id": 4269305,
+    "name": "라크리마 수호자_빛_좌우 베기 후 마법 발사",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4269306": { "id": 4269306, "name": "라크리마 수호자_빛_정면 베기", "desc": "", "classid": 0, "icon": "" },
+  "4269307": {
+    "id": 4269307,
+    "name": "라크리마 수호자_빛_타겟 회전 후 레이저 발사",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4269308": { "id": 4269308, "name": "라크리마 수호자_빛_에너지 폭발", "desc": "", "classid": 0, "icon": "" },
+  "4269309": {
+    "id": 4269309,
+    "name": "라크리마 수호자_폭풍_좌우 베기 후 마법 발사",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4269310": { "id": 4269310, "name": "라크리마 수호자_폭풍_정면 베기", "desc": "", "classid": 0, "icon": "" },
+  "4269311": {
+    "id": 4269311,
+    "name": "라크리마 수호자_폭풍_타겟 회전 후 레이저 발사",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4269312": { "id": 4269312, "name": "라크리마 수호자_폭풍_에너지 폭발", "desc": "", "classid": 0, "icon": "" },
+  "1024750": { "id": 1024750, "name": "다르키엘의 괴수_평타 1", "desc": "", "classid": 0, "icon": "" },
+  "1024760": { "id": 1024760, "name": "다르키엘의 괴수_평타 2", "desc": "", "classid": 0, "icon": "" },
+  "1024770": { "id": 1024770, "name": "다르키엘의 괴수_독 브레스", "desc": "", "classid": 0, "icon": "" },
+  "1024780": { "id": 1024780, "name": "다르키엘의 괴수_돌진", "desc": "", "classid": 0, "icon": "" },
+  "1024790": { "id": 1024790, "name": "다르키엘의 괴수_브레스", "desc": "", "classid": 0, "icon": "" },
+  "4269401": { "id": 4269401, "name": "독기 거대 덩어리_대폭발", "desc": "", "classid": 0, "icon": "" },
+  "4269402": {
+    "id": 4269402,
+    "name": "독기 거대 덩어리_작은 독덩어리 대량 발사",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4269403": { "id": 4269403, "name": "독기 거대 덩어리_외벽 점액 폭발", "desc": "", "classid": 0, "icon": "" },
+  "4269404": { "id": 4269404, "name": "독기 거대 덩어리_독 분출", "desc": "", "classid": 0, "icon": "" },
+  "4269405": { "id": 4269405, "name": "독기 거대 덩어리_레이저 발사", "desc": "", "classid": 0, "icon": "" },
+  "4269406": { "id": 4269406, "name": "독기 거대 덩어리_무력화 독지대", "desc": "", "classid": 0, "icon": "" },
+  "4269501": { "id": 4269501, "name": "독기 덩어리_덮치기", "desc": "", "classid": 0, "icon": "" },
+  "4269601": { "id": 4269601, "name": "독기 끈끈이_휘둘러 잡기", "desc": "", "classid": 0, "icon": "" },
+  "4269602": { "id": 4269602, "name": "독기 끈끈이_내려쳐 잡기", "desc": "", "classid": 0, "icon": "" },
+  "4268701": { "id": 4268701, "name": "다르키엘_순간이동_B", "desc": "", "classid": 0, "icon": "" },
+  "4268702": { "id": 4268702, "name": "다르키엘_멱살 잡고 내려치기", "desc": "", "classid": 0, "icon": "" },
+  "4268703": { "id": 4268703, "name": "다르키엘_전방 이동 후 휠윈드", "desc": "", "classid": 0, "icon": "" },
+  "4268704": { "id": 4268704, "name": "다르키엘_순간이동_A", "desc": "", "classid": 0, "icon": "" },
+  "4268705": { "id": 4268705, "name": "다르키엘_처형식", "desc": "", "classid": 0, "icon": "" },
+  "4268706": { "id": 4268706, "name": "다르키엘_마당 쓸어 검기 날리기", "desc": "", "classid": 0, "icon": "" },
+  "4268707": { "id": 4268707, "name": "다르키엘_후방 이동", "desc": "", "classid": 0, "icon": "" },
+  "4268708": { "id": 4268708, "name": "다르키엘_휘두르고 찍기", "desc": "", "classid": 0, "icon": "" },
+  "4268709": { "id": 4268709, "name": "다르키엘_대검 투척 A", "desc": "", "classid": 0, "icon": "" },
+  "4268710": { "id": 4268710, "name": "다르키엘_뒤돌아 3연 내려치기", "desc": "", "classid": 0, "icon": "" },
+  "4268711": { "id": 4268711, "name": "다르키엘_과다 출혈", "desc": "", "classid": 0, "icon": "" },
+  "4268712": { "id": 4268712, "name": "다르키엘_독무 뿌리기", "desc": "", "classid": 0, "icon": "" },
+  "4268713": { "id": 4268713, "name": "다르키엘_대검 투척 B", "desc": "", "classid": 0, "icon": "" },
+  "4268714": { "id": 4268714, "name": "다르키엘_추적", "desc": "", "classid": 0, "icon": "" },
+  "4268715": { "id": 4268715, "name": "다르키엘_카운터 휠윈드", "desc": "", "classid": 0, "icon": "" },
+  "4268716": { "id": 4268716, "name": "다르키엘_안개 흡수_1", "desc": "", "classid": 0, "icon": "" },
+  "4268717": { "id": 4268717, "name": "다르키엘_추적하는 안개", "desc": "", "classid": 0, "icon": "" },
+  "4268718": { "id": 4268718, "name": "다르키엘_기 모아 베기", "desc": "", "classid": 0, "icon": "" },
+  "4268719": { "id": 4268719, "name": "다르키엘_추적 내려찍기", "desc": "", "classid": 0, "icon": "" },
+  "4268720": { "id": 4268720, "name": "다르키엘_순간 이동 후 기습", "desc": "", "classid": 0, "icon": "" },
+  "4268721": { "id": 4268721, "name": "다르키엘_돌진 가르기", "desc": "", "classid": 0, "icon": "" },
+  "4268722": { "id": 4268722, "name": "다르키엘_대검 난무", "desc": "", "classid": 0, "icon": "" },
+  "4268723": { "id": 4268723, "name": "다르키엘_환영 창 투척", "desc": "", "classid": 0, "icon": "" },
+  "4268724": { "id": 4268724, "name": "다르키엘_환영 창 속박", "desc": "", "classid": 0, "icon": "" },
+  "4268725": { "id": 4268725, "name": "다르키엘_지면 가르기", "desc": "", "classid": 0, "icon": "" },
+  "4268901": { "id": 4268901, "name": "에키드나_뱀 부리기", "desc": "", "classid": 0, "icon": "" },
+  "4268902": { "id": 4268902, "name": "에키드나_휘두르고 점프", "desc": "", "classid": 0, "icon": "" },
+  "4268903": { "id": 4268903, "name": "에키드나_베일 감싸기", "desc": "", "classid": 0, "icon": "" },
+  "4268904": { "id": 4268904, "name": "에키드나_뱀 거울_잡기", "desc": "", "classid": 0, "icon": "" },
+  "4268905": { "id": 4268905, "name": "에키드나_뱀 거울_잡기 이탈시", "desc": "", "classid": 0, "icon": "" },
+  "4268906": { "id": 4268906, "name": "에키드나_잔상 돌진", "desc": "", "classid": 0, "icon": "" },
+  "4268907": { "id": 4268907, "name": "에키드나_황홀경", "desc": "", "classid": 0, "icon": "" },
+  "4268908": { "id": 4268908, "name": "에키드나_순간이동_1", "desc": "", "classid": 0, "icon": "" },
+  "4268909": { "id": 4268909, "name": "에키드나_순간이동_2", "desc": "", "classid": 0, "icon": "" },
+  "4268910": { "id": 4268910, "name": "에키드나_손바람", "desc": "", "classid": 0, "icon": "" },
+  "4268911": { "id": 4268911, "name": "에키드나_거울 뒤집기", "desc": "", "classid": 0, "icon": "" },
+  "4268912": { "id": 4268912, "name": "에키드나_낙화", "desc": "", "classid": 0, "icon": "" },
+  "4268913": { "id": 4268913, "name": "에키드나_사냥감_스킬 시작", "desc": "", "classid": 0, "icon": "" },
+  "4268914": { "id": 4268914, "name": "에키드나_사냥감_거울 파괴 실패", "desc": "", "classid": 0, "icon": "" },
+  "4268915": { "id": 4268915, "name": "에키드나_사냥감_거울 파괴 성공", "desc": "", "classid": 0, "icon": "" },
+  "4268916": { "id": 4268916, "name": "에키드나_샤프 커터", "desc": "", "classid": 0, "icon": "" },
+  "4268917": { "id": 4268917, "name": "에키드나_기운 당기기", "desc": "", "classid": 0, "icon": "" },
+  "4268918": { "id": 4268918, "name": "에키드나_천 매달기", "desc": "", "classid": 0, "icon": "" },
+  "4268919": { "id": 4268919, "name": "에키드나_분홍신", "desc": "", "classid": 0, "icon": "" },
+  "4268920": { "id": 4268920, "name": "에키드나_백허그_잡기", "desc": "", "classid": 0, "icon": "" },
+  "4268921": { "id": 4268921, "name": "에키드나_백허그_잡기 이탈시", "desc": "", "classid": 0, "icon": "" },
+  "4268922": { "id": 4268922, "name": "에키드나_공중 회전", "desc": "", "classid": 0, "icon": "" },
+  "4268923": { "id": 4268923, "name": "에키드나_후방 이동", "desc": "", "classid": 0, "icon": "" },
   "9913000": { "id": 9913000, "name": "암살자 평타", "desc": "", "classid": 401, "icon": "" },
   "9913010": { "id": 9913010, "name": "맨손 공격", "desc": "", "classid": 401, "icon": "" },
   "9913020": { "id": 9913020, "name": "고속 이동", "desc": "", "classid": 401, "icon": "bl_skill_01_22.png" },
@@ -10235,14 +10739,6 @@
     "icon": "rp_skill_01_7.png",
     "identitycategory": "warlord_lance"
   },
-  "9926090": {
-    "id": 9926090,
-    "name": "[리퍼][단검] 나이트메어",
-    "desc": "",
-    "classid": 404,
-    "icon": "rp_skill_01_6.png",
-    "identitycategory": "warlord_lance"
-  },
   "9938003": {
     "id": 9938003,
     "name": "[여거너] 스폰 스킬",
@@ -13063,6 +13559,14 @@
     "desc": "",
     "classid": 405,
     "icon": "se_skill_01_21.png"
+  },
+  "9926140": {
+    "id": 9926140,
+    "name": "[리퍼][단검] 팬텀 댄서",
+    "desc": "",
+    "classid": 404,
+    "icon": "rp_skill_01_22.png",
+    "identitycategory": "warlord_lance"
   },
   "100060": { "id": 100060, "name": "오염된 나팔나방_분진발사", "desc": "", "classid": 0, "icon": "" },
   "100061": { "id": 100061, "name": "오염된 벌침나방_스킬발사", "desc": "", "classid": 0, "icon": "" },
@@ -33335,7 +33839,8 @@
     "icon": "bl_skill_01_21.png",
     "identitycategory": "blade_burst",
     "groups": [
-      27, 28, 33, 100, 200, 41000, 41001, 410004, 1410004, 10000001, 12000002, 14000000, 14000001, 15000000, 16000000
+      27, 28, 33, 100, 200, 41000, 41001, 410004, 630103, 1410004, 10000001, 12000002, 14000000, 14000001, 15000000,
+      16000000
     ]
   },
   "25038": {
@@ -33412,7 +33917,7 @@
   "25090": {
     "id": 25090,
     "name": "Twin Shadows",
-    "desc": "Perform a quick vertical slash with your longsword to inflict <$MACRO physic @1:250900/> Damage. You can use this skill <FONT COLOR='#ffff99'>1</FONT> more time within <FONT COLOR='#ffff99'>4s</FONT>.",
+    "desc": "Perform a quick vertical slash with your longsword to inflict <$MACRO physic @1:250900/> Damage.",
     "classid": 402,
     "icon": "bl_skill_01_5.png",
     "identitycategory": "blade_normal",
@@ -33421,19 +33926,10 @@
       17000000
     ]
   },
-  "25093": {
-    "id": 25093,
-    "name": "Twin Shadows",
-    "desc": "Perform a quick vertical slash with your longsword to inflict <$MACRO physic @1:250900/> Damage. You can use this skill <FONT COLOR='#ffff99'>1</FONT> more time within <FONT COLOR='#ffff99'>4s</FONT>.",
-    "classid": 402,
-    "icon": "bl_skill_01_5.png",
-    "identitycategory": "blade_normal",
-    "groups": [27, 28, 100, 200, 410000, 10000001, 10000002, 12000002, 14000000, 14000001, 15000000, 16000000, 17000000]
-  },
   "25100": {
     "id": 25100,
     "name": "Blade Dance",
-    "desc": "Hack at foes for up to <FONT COLOR='#ffff99'>2s</FONT> and deliver <FONT COLOR='#ffff99'>7</FONT> blows, inflicting <FONT COLOR='#ffbb00'><$CALC_COMMA ((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)* (<$TABLE_SKILLEFFECT ValueF 251000/>/10000)+((<$TABLE_SKILLEFFECT ValueA 251000/> + <$TABLE_SKILLEFFECT ValueB 251000/>)/2))*7/></FONT> Damage, and another <$MACRO physic @1:251001/> Damage with the finishing blow. Pushed foes are launched back in the air.",
+    "desc": "Deliver <FONT COLOR='#ffff99'>5</FONT> hacking blows, inflicting <FONT COLOR='#ffbb00'><$CALC_COMMA ((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)* (<$TABLE_SKILLEFFECT ValueF 251000/>/10000)+((<$TABLE_SKILLEFFECT ValueA 251000/> + <$TABLE_SKILLEFFECT ValueB 251000/>)/2))*5/></FONT> Damage, and another <$MACRO physic @1:251001/> Damage with the finishing strike. Pushed foes are launched back in the air.",
     "classid": 402,
     "icon": "bl_skill_01_2.png",
     "identitycategory": "blade_normal",
@@ -33529,7 +34025,7 @@
   "25180": {
     "id": 25180,
     "name": "Void Strike",
-    "desc": "Charge and release the skill key midway to perform an upper slash with your longsword to inflict <$MACRO physic @1:251800/> Damage, launching foes into the air. Overcharge to push foes back as you advance <FONT COLOR='#ffff99'>5 meters</FONT> forward, inflicting up to <FONT COLOR='#ffbb00'><$CALC_COMMA ((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)* (<$TABLE_SKILLEFFECT ValueF 251801/>/10000)+((<$TABLE_SKILLEFFECT ValueA 251801/> + <$TABLE_SKILLEFFECT ValueB 251801/>)/2))*3 +((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)* (<$TABLE_SKILLEFFECT ValueF 251802/>/10000)+((<$TABLE_SKILLEFFECT ValueA 251802/> + <$TABLE_SKILLEFFECT ValueB 251802/>)/2))/></FONT> Damage and launching foes higher in the air.",
+    "desc": "Move <FONT COLOR='#ffff99'>5 meters</FONT> and unleash a rising slash with your longsword, launching enemies in front of you into the air and dealing <FONT COLOR='#ffbb00'><$CALC_COMMA ((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)* (<$TABLE_SKILLEFFECT ValueF 251801/>/10000)+((<$TABLE_SKILLEFFECT ValueA 251801/> + <$TABLE_SKILLEFFECT ValueB 251801/>)/2))*2 +((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)* (<$TABLE_SKILLEFFECT ValueF 251802/>/10000)+((<$TABLE_SKILLEFFECT ValueA 251802/> + <$TABLE_SKILLEFFECT ValueB 251802/>)/2))/></FONT> Damage. ",
     "classid": 402,
     "icon": "bl_skill_01_14.png",
     "identitycategory": "blade_normal",
@@ -33588,13 +34084,50 @@
   "25350": {
     "id": 25350,
     "name": "Blade Assault",
-    "desc": "Focus energy to inflict <$MACRO physic @1:253500/> Damage and pull in foes. Hold to move forward while viciously slashing at foes for up to <FONT COLOR='#ffbb00'><$CALC_COMMA ((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)* (<$TABLE_SKILLEFFECT ValueF 253504/>/10000)+((<$TABLE_SKILLEFFECT ValueA 253504/> + <$TABLE_SKILLEFFECT ValueB 253504/>)/2))*6/></FONT> Damage. Hit the Perfect Zone to cause <FONT COLOR='#ffbb00'><$CALC_COMMA ((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)* (<$TABLE_SKILLEFFECT ValueF 253507/>/10000)+((<$TABLE_SKILLEFFECT ValueA 253507/> + <$TABLE_SKILLEFFECT ValueB 253507/>)/2))*2/></FONT> Damage as you summon spiritual blades, then hurl them at once and inflict <FONT COLOR='#ffbb00'><$CALC_COMMA ((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)* (<$TABLE_SKILLEFFECT ValueF 253509/>/10000)+((<$TABLE_SKILLEFFECT ValueA 253509/> + <$TABLE_SKILLEFFECT ValueB 253509/>)/2))*2 +((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)* (<$TABLE_SKILLEFFECT ValueF 253510/>/10000)+((<$TABLE_SKILLEFFECT ValueA 253510/> + <$TABLE_SKILLEFFECT ValueB 253510/>)/2))/></FONT> Damage, knocking foes away. Pushed foes are launched back in the air.",
+    "desc": "Focus energy to inflict <$MACRO physic @1:253500/> Damage and pull in foes. Hold to move forward while viciously slashing at foes for up to <FONT COLOR='#ffbb00'><$CALC_COMMA ((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)* (<$TABLE_SKILLEFFECT ValueF 253504/>/10000)+((<$TABLE_SKILLEFFECT ValueA 253504/> + <$TABLE_SKILLEFFECT ValueB 253504/>)/2))*12/></FONT> Damage. When the Holding ends inflict <FONT COLOR='#ffbb00'><$CALC_COMMA ((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)* (<$TABLE_SKILLEFFECT ValueF 253507/>/10000)+((<$TABLE_SKILLEFFECT ValueA 253507/> + <$TABLE_SKILLEFFECT ValueB 253507/>)/2))*2/></FONT> Damage as you summon spiritual blades, then hurl them at once and inflict <FONT COLOR='#ffbb00'><$CALC_COMMA ((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)* (<$TABLE_SKILLEFFECT ValueF 253509/>/10000)+((<$TABLE_SKILLEFFECT ValueA 253509/> + <$TABLE_SKILLEFFECT ValueB 253509/>)/2))*4 +((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)* (<$TABLE_SKILLEFFECT ValueF 253510/>/10000)+((<$TABLE_SKILLEFFECT ValueA 253510/> + <$TABLE_SKILLEFFECT ValueB 253510/>)/2))/></FONT> Damage, knocking foes away. Pushed foes are launched back in the air.",
     "classid": 402,
     "icon": "bl_skill_01_19.png",
     "groups": [
       27, 28, 30, 100, 200, 410003, 991001, 991011, 991021, 10000000, 11000000, 11000002, 12000002, 14000000, 14000001,
       15000000
     ]
+  },
+  "25400": {
+    "id": 25400,
+    "name": "잔재된 기운 블레이드 버스트 1단계",
+    "desc": "",
+    "classid": 402,
+    "icon": "bl_skill_01_21.png",
+    "identitycategory": "blade_burst",
+    "groups": [
+      27, 28, 33, 100, 200, 41000, 41001, 410004, 1410004, 10000001, 12000002, 14000000, 14000001, 15000000, 16000000
+    ],
+    "sourceskill": 25030
+  },
+  "25401": {
+    "id": 25401,
+    "name": "잔재된 기운 블레이드 버스트 2단계",
+    "desc": "",
+    "classid": 402,
+    "icon": "bl_skill_01_21.png",
+    "identitycategory": "blade_burst",
+    "groups": [
+      27, 28, 33, 100, 200, 41000, 41001, 410004, 1410004, 10000001, 12000002, 14000000, 14000001, 15000000, 16000000
+    ],
+    "sourceskill": 25031
+  },
+  "25402": {
+    "id": 25402,
+    "name": "잔재된 기운 블레이드 버스트 3단계",
+    "desc": "",
+    "classid": 402,
+    "icon": "bl_skill_01_21.png",
+    "identitycategory": "blade_burst",
+    "groups": [
+      27, 28, 33, 100, 200, 41000, 41001, 410004, 630103, 1410004, 10000001, 12000002, 14000000, 14000001, 15000000,
+      16000000
+    ],
+    "sourceskill": 25032
   },
   "25900": { "id": 25900, "name": "격돌(맞대결) 스킬", "desc": "", "classid": 402, "icon": "" },
   "27000": {
@@ -34102,7 +34635,7 @@
   "22030": {
     "id": 22030,
     "name": "Esoteric Skill: Spiral Impact",
-    "desc": "Perform a powerful strike that can distort space. On hit, inflict <$MACRO physic @1:220300/> Damage.",
+    "desc": "Perform a powerful strike that can distort space. On hit, inflict <$MACRO physic @1:220300/> Damage and knock foe away.",
     "classid": 302,
     "icon": "bm_skill_01_11.png",
     "identitycategory": "battle_master_bubble",
@@ -34111,7 +34644,7 @@
   "22040": {
     "id": 22040,
     "name": "Esoteric Skill: Rising Fire Dragon",
-    "desc": "Inflict <$MACRO physic @1:220402/> Damage while you gather [Fire] energy, then soar into the air and deliver <FONT COLOR='#ffff99'>5</FONT> strikes for <$MACRO physic @1:220403/>, <$MACRO physic @1:220400/>, <$MACRO physic @1:220404/>, <$MACRO physic @1:220405/>, and <$MACRO physic @1:220401/> Damage.",
+    "desc": "Gathers [Fire] energy, inflicting <$MACRO physic @1:220402/> Damage and pulling hit foes. Then soar into the air and deliver <FONT COLOR='#ffff99'>5</FONT> strikes for <$MACRO physic @1:220403/>, <$MACRO physic @1:220400/>, <$MACRO physic @1:220404/>, <$MACRO physic @1:220405/>, and <$MACRO physic @1:220401/> Damage, launching hit foes into the air.",
     "classid": 302,
     "icon": "bm_skill_01_5.png",
     "identitycategory": "battle_master_bubble",
@@ -34120,7 +34653,7 @@
   "22060": {
     "id": 22060,
     "name": "Flash Heat Fang",
-    "desc": "Throw punches to inflict <FONT COLOR='#ffbb00'><$CALC_COMMA ((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)* (<$TABLE_SKILLEFFECT ValueF 220602/>/10000)+((<$TABLE_SKILLEFFECT ValueA 220602/> + <$TABLE_SKILLEFFECT ValueB 220602/>)/2))*4/></FONT> total Damage over <FONT COLOR='#ffff99'>9</FONT> hits, followed by a finishing blow that inflicts <$MACRO physic @1:220601/> Damage.",
+    "desc": "Throw punches to inflict <FONT COLOR='#ffbb00'><$CALC_COMMA ((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)* (<$TABLE_SKILLEFFECT ValueF 220600/>/10000)+((<$TABLE_SKILLEFFECT ValueA 220600/> + <$TABLE_SKILLEFFECT ValueB 220600/>)/2))*6/></FONT> total Damage over <FONT COLOR='#ffff99'>6</FONT> hits, followed by a finishing blow that inflicts <$MACRO physic @1:220602/> Damage. When attacking a foe in the air, you can continue to attack while keeping them in the air.",
     "classid": 302,
     "icon": "bm_skill_01_3.png",
     "identitycategory": "battle_master_normal",
@@ -34144,7 +34677,7 @@
   "22080": {
     "id": 22080,
     "name": "Roar of Courage",
-    "desc": "Let out a battle cry, inflicting <$MACRO physic @1:220800/> Damage and pushing surrounding foes away. On hit, foe Crit Resistance -<FONT COLOR='#99ff99'><$CALC_COMMA %1 <$TABLE_SKILLBUFF ValueA 220801/>/100/>%</FONT> for <FONT COLOR='#ffff99'>6s</FONT>.",
+    "desc": "Let out a battle cry, inflicting <$MACRO physic @1:220800/> Damage and pushing surrounding foes away. When using the skill, Crit Rate +<FONT COLOR='#99ff99'><$CALC_COMMA %1 <$TABLE_SKILLBUFF PassiveOptionValue0 220801/>/100/>%</FONT> for <$MACRO bufftime_st @1:220801/>s.",
     "classid": 302,
     "icon": "bm_skill_01_4.png",
     "identitycategory": "battle_master_normal",
@@ -34153,31 +34686,10 @@
       17000000
     ]
   },
-  "22090": {
-    "id": 22090,
-    "name": "Seismic Strike",
-    "desc": "Inflict <$MACRO magic @1:220902/> Damage every <FONT COLOR='#ffff99'>1s</FONT> up to <FONT COLOR='#ffff99'>5</FONT> times to foes within the earthquake's range.",
-    "classid": 302,
-    "icon": "bm_skill_01_9.png",
-    "identitycategory": "battle_master_normal",
-    "groups": [
-      27, 28, 33, 100, 202, 310000, 10000001, 10000002, 12000002, 13000002, 14000000, 14000001, 15000000, 16000000,
-      17000000
-    ]
-  },
-  "22100": {
-    "id": 22100,
-    "name": "Esoteric Skill: Lightning Strike",
-    "desc": "Release [Lightning] energy to inflict <$MACRO magic @1:221000/> Damage over <FONT COLOR='#ffff99'>3</FONT> hits, stunning foes for <$MACRO bufftime_st @1:221001/>s. Increases Damage by <FONT COLOR='#99ff99'>20%</FONT> against Frozen foes.",
-    "classid": 302,
-    "icon": "bm_skill_01_0.png",
-    "identitycategory": "battle_master_bubble",
-    "groups": [27, 28, 33, 100, 202, 310001, 10000001, 12000002, 14000000, 14000001, 15000000, 16000000, 17000000]
-  },
   "22110": {
     "id": 22110,
     "name": "Esoteric Skill: Call of the Wind God",
-    "desc": "Create a tornado that attacks foes for <$MACRO magic @1:221100/> Damage <FONT COLOR='#ffff99'>13</FONT> times over <FONT COLOR='#ffff99'>3s</FONT> and pulls foes close. Can move up to <FONT COLOR='#99ff99'>12 meters</FONT> while using this skill.",
+    "desc": "Create a tornado that attacks foes for <$MACRO magic @1:221100/> Damage <FONT COLOR='#ffff99'>13</FONT> times over <FONT COLOR='#ffff99'>3s</FONT> and launches foes into the air. Can move up to <FONT COLOR='#99ff99'>12 meters</FONT> while using this skill.",
     "classid": 302,
     "icon": "bm_skill_01_8.png",
     "identitycategory": "battle_master_bubble",
@@ -34186,7 +34698,7 @@
   "22120": {
     "id": 22120,
     "name": "Wind's Whisper",
-    "desc": "Gain the blessing of wind for all party members within a <FONT COLOR='#ffff99'>24-meter</FONT> radius, increasing Move Speed and Atk. Speed by <FONT COLOR='#99ff99'><$CALC_COMMA %1 <$TABLE_SKILLBUFF PassiveOptionValue0 221200/>/100/>%</FONT> and <FONT COLOR='#99ff99'><$CALC_COMMA %1 <$TABLE_SKILLBUFF PassiveOptionValue1 221200/>/100/>%</FONT> respectively for <FONT COLOR='#ffff99'><$CALC_COMMA <$TABLE_SKILLBUFF Duration 221200/>/1000 /></FONT>s. ",
+    "desc": "Grant the blessing of wind to all party members within a <FONT COLOR='#ffff99'>24-meter</FONT> radius, increasing Move Speed by <FONT COLOR='#99ff99'><$CALC_COMMA %1 <$TABLE_SKILLBUFF PassiveOptionValue0 221200/>/100/>%</FONT> and Atk. Speed by <FONT COLOR='#99ff99'><$CALC_COMMA %1 <$TABLE_SKILLBUFF PassiveOptionValue1 221200/>/100/>%</FONT> for <FONT COLOR='#ffff99'><$CALC_COMMA <$TABLE_SKILLBUFF Duration 221200/>/1000 /></FONT>s. ",
     "classid": 302,
     "icon": "bm_skill_01_7.png",
     "identitycategory": "battle_master_normal",
@@ -34247,7 +34759,7 @@
   "22170": {
     "id": 22170,
     "name": "Lightning Kick",
-    "desc": "Deliver a flurry of kicks that inflict <$MACRO physic @1:221700/> [Lightning] Damage <FONT COLOR='#ffff99'>3</FONT> times, and strike down at foes causing <$MACRO physic @1:221701/> Damage. Downed foes are lifted off the ground, and airborne foes are slammed onto the ground for <$MACRO physic @1:221703/> Damage.",
+    "desc": "Deliver a flurry of kicks that inflict <$MACRO physic @1:221700/> [Lightning] Damage <FONT COLOR='#ffff99'>3</FONT> times, and strike down at foes causing <$MACRO physic @1:221701/> Damage. Downed foes are lifted off the ground, and airborne foes are slammed onto the ground for <$MACRO physic @1:221703/> Damage. You can change the direction while using the skill.",
     "classid": 302,
     "icon": "bm_skill_01_18.png",
     "identitycategory": "battle_master_normal",
@@ -34295,7 +34807,7 @@
   "22290": {
     "id": 22290,
     "name": "Energy Combustion",
-    "desc": "Erupt the energy inside you to push foes away inflicting <$MACRO magic @1:222902/> Damage. Then call forth a gust that shrouds your body, inflicting <$MACRO magic @1:222901/> Damage every <FONT COLOR='#ffff99'>0.5s</FONT> for <FONT COLOR='#ffff99'>20</FONT>.",
+    "desc": "Erupt the energy inside you to push foes away, inflicting <$MACRO magic @1:222902/> Damage with no paralysis effects. Then call forth a gust that shrouds your body, inflicting <$MACRO magic @1:222901/> Damage every <FONT COLOR='#ffff99'>0.5s</FONT> for <FONT COLOR='#ffff99'>20s</FONT>. The Squall effect can be freely terminated within the duration.",
     "classid": 302,
     "icon": "bm_skill_01_24.png",
     "identitycategory": "battle_master_normal",
@@ -34304,10 +34816,19 @@
       17000000
     ]
   },
+  "22291": {
+    "id": 22291,
+    "name": "Energy Combustion",
+    "desc": "Erupt the energy inside you to push foes away, inflicting <$MACRO magic @1:222902/> Damage with no paralysis effects. Then call forth a gust that shrouds your body, inflicting <$MACRO magic @1:222901/> Damage every <FONT COLOR='#ffff99'>0.5s</FONT> for <FONT COLOR='#ffff99'>20s</FONT>. The Squall effect can be freely terminated within the duration.",
+    "classid": 302,
+    "icon": "bm_skill_01_24.png",
+    "identitycategory": "battle_master_normal",
+    "groups": [27]
+  },
   "22310": {
     "id": 22310,
     "name": "Ultimate Skill: Flash Rage Blow",
-    "desc": "Crouch, then dash <FONT COLOR='#ffff99'>6 meters</FONT> forward in a straight line. Hold the skill hotkey to deliver vicious strikes that inflict up to <FONT COLOR='#ffbb00'><$CALC_COMMA (((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)*(<$TABLE_SKILLEFFECT ValueF 223102/>/10000)+((<$TABLE_SKILLEFFECT ValueA 223102/> + <$TABLE_SKILLEFFECT ValueB 223102/>)/2)))*12/></FONT> Damage, followed by the shockwave that knocks foes back for <$MACRO magic @1:223108/> Damage. Releasing the skill key before the Holding Meter is maxed out will produce a minor shockwave that inflicts <$MACRO magic @1:223105/> Damage.",
+    "desc": "Crouch, then dash <FONT COLOR='#ffff99'>4 meters</FONT> forward in a straight line. Hold the skill hotkey to deliver vicious strikes that inflict up to <FONT COLOR='#ffbb00'><$CALC_COMMA (((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)*(<$TABLE_SKILLEFFECT ValueF 223102/>/10000)+((<$TABLE_SKILLEFFECT ValueA 223102/> + <$TABLE_SKILLEFFECT ValueB 223102/>)/2)))*12/></FONT> Damage, followed by the shockwave that knocks foes back for <$MACRO magic @1:223108/> Damage. Releasing the skill key before the Holding Meter is maxed out will produce a minor shockwave that inflicts <$MACRO magic @1:223105/> Damage.",
     "classid": 302,
     "icon": "bm_skill_01_25.png",
     "groups": [
@@ -34318,7 +34839,7 @@
   "22320": {
     "id": 22320,
     "name": "Sweeping Kick",
-    "desc": "Sweep foes off their feet, inflicting <$MACRO physic @1:223200/> Damage <FONT COLOR='#ffff99'>2</FONT> times. Use the skill one additional time to change your direction and deliver a spinning kick to foes in the air, inflicting <$MACRO physic @1:223201/>, <$MACRO physic @1:223202/>, and <$MACRO physic @1:223203/> Damage and sending them flying.",
+    "desc": "Sweep foes off their feet, inflicting <$MACRO physic @1:223200/> Damage. Use the skill again to change your direction and deliver a spinning kick to foes in the air, inflicting <$MACRO physic @1:223201/>, <$MACRO physic @1:223202/>, and <$MACRO physic @1:223203/> Damage and sending them flying.",
     "classid": 302,
     "icon": "bm_skill_01_26.png",
     "identitycategory": "battle_master_normal",
@@ -34336,6 +34857,27 @@
     "groups": [
       27, 28, 30, 100, 202, 310003, 991001, 991011, 991021, 10000000, 11000000, 11000002, 12000002, 14000000, 14000001,
       15000000
+    ]
+  },
+  "22340": {
+    "id": 22340,
+    "name": "Esoteric skill: Azure Dragon Supreme Fist",
+    "desc": "After assuming an attack stance, quickly lunge forward and strike. The first attack inflicts <$MACRO physic @1:223400/> Damage. If that attack succeeds, energy explodes, inflicting <$MACRO physic @1:223401/> additional damage and knocking back foes.",
+    "classid": 302,
+    "icon": "bm_skill_01_39.png",
+    "identitycategory": "battle_master_bubble",
+    "groups": [27, 28, 33, 100, 202, 310001, 10000001, 12000002, 14000000, 14000001, 15000000, 16000000, 17000000]
+  },
+  "22350": {
+    "id": 22350,
+    "name": "Leaping Dragon",
+    "desc": "Jump low and stay in place to kick <FONT COLOR='#ffff99'>4</FONT> times. Inflicts a total of <FONT COLOR='#ffbb00'><$CALC_COMMA ((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)* (<$TABLE_SKILLEFFECT ValueF 223500/>/10000)+((<$TABLE_SKILLEFFECT ValueA 223500/> + <$TABLE_SKILLEFFECT ValueB 223500/>)/2))*4/></FONT> Damage.",
+    "classid": 302,
+    "icon": "bm_skill_01_38.png",
+    "identitycategory": "battle_master_normal",
+    "groups": [
+      27, 28, 33, 100, 202, 310000, 10000001, 10000002, 12000002, 13000002, 14000000, 14000001, 15000000, 16000000,
+      17000000
     ]
   },
   "22900": { "id": 22900, "name": "격돌(맞대결) 스킬", "desc": "", "classid": 302, "icon": "" },
@@ -34383,24 +34925,6 @@
     "identitycategory": "infighter_shock",
     "groups": [27, 28, 33, 100, 201, 320002, 10000001, 12000002, 14000000, 14000001, 15000000, 16000000, 17000000]
   },
-  "23070": {
-    "id": 23070,
-    "name": "Earthquake Chain",
-    "desc": "Perform a downward attack, inflicting <$MACRO magic @1:230700/> Damage to nearby foes and knocking them down.",
-    "classid": 303,
-    "icon": "if_skill_01_8.png",
-    "identitycategory": "infighter_vigor",
-    "groups": [27, 28, 33, 100, 201, 320001, 10000001, 12000002, 14000000, 14000001, 15000000, 16000000, 17000000]
-  },
-  "23080": {
-    "id": 23080,
-    "name": "Chain of Resonance",
-    "desc": "Launch a shockwave forward to inflict <$MACRO magic @1:230800/> Damage, then pull foes to you, inflicting <$MACRO magic @1:230801/> Damage.",
-    "classid": 303,
-    "icon": "if_skill_01_1.png",
-    "identitycategory": "infighter_vigor",
-    "groups": [27, 28, 33, 100, 201, 320001, 10000001, 12000002, 14000000, 14000001, 15000000, 16000000, 17000000]
-  },
   "23090": {
     "id": 23090,
     "name": "Crushing Smite",
@@ -34422,7 +34946,7 @@
   "23110": {
     "id": 23110,
     "name": "Death Rattle",
-    "desc": "Release all condensed shock energy, inflicting <$MACRO magic @1:231102/> Damage and knocking foes back. Depending on the amount of shock energy you have, Damage +<FONT COLOR='#99ff99'>15%</FONT> if shock energy is between <FONT COLOR='#ffff99'>0-25%</FONT>, +<FONT COLOR='#99ff99'>30%</FONT> if it's between <FONT COLOR='#ffff99'>26%-50%</FONT>, +<FONT COLOR='#99ff99'>45%</FONT> if it's between <FONT COLOR='#ffff99'>51%-75%</FONT>, and +<FONT COLOR='#99ff99'>60%</FONT> if it's between <FONT COLOR='#ffff99'>76%-100%</FONT>.",
+    "desc": "Release all condensed Shock Energy, inflicting <$MACRO magic @1:231102/>. This skill's Damage varies depending on the amount of Shock Energy you have. Damage +<FONT COLOR='#99ff99'>15%</FONT> if Shock Energy is between <FONT COLOR='#ffff99'>0-25%</FONT>, +<FONT COLOR='#99ff99'>30%</FONT> if it's between <FONT COLOR='#ffff99'>26%-50%</FONT>, +<FONT COLOR='#99ff99'>45%</FONT> if it's between <FONT COLOR='#ffff99'>51%-75%</FONT>, and +<FONT COLOR='#99ff99'>60%</FONT> if it's between <FONT COLOR='#ffff99'>76%-100%</FONT>.",
     "classid": 303,
     "icon": "if_skill_01_10.png",
     "identitycategory": "infighter_shock",
@@ -34452,8 +34976,8 @@
     "desc": "Throw a diagonal punch to inflict <$MACRO physic @1:231600/> Damage.",
     "classid": 303,
     "icon": "if_skill_01_12.png",
-    "identitycategory": "infighter_shock",
-    "groups": [27, 28, 33, 100, 201, 320002, 10000001, 12000002, 14000000, 14000001, 15000000, 16000000, 17000000]
+    "identitycategory": "infighter_vigor",
+    "groups": [27, 28, 33, 100, 201, 320001, 10000001, 12000002, 14000000, 14000001, 15000000, 16000000, 17000000]
   },
   "23170": {
     "id": 23170,
@@ -34547,7 +35071,7 @@
   "23240": {
     "id": 23240,
     "name": "Potent Rising Fist",
-    "desc": "Deliver a rising attack in front of you to launch foes into the air with <$MACRO physic @1:232400/> and <$MACRO physic @1:232401/> Damage. Use the skill again while in the air to land at the target location with a smash, inflicting <$MACRO physic @1:232402/> Damage. The smash inflicts +<FONT COLOR='#99ff99'>50%</FONT> Damage against pushed foes.",
+    "desc": "Deliver a rising attack in front of you to launch foes into the air with <$MACRO physic @1:232400/> and <$MACRO physic @1:232401/> Damage. Use the skill again while in the air to land at the target location with a smash, inflicting <$MACRO physic @1:232402/> Damage. The smash inflicts +<FONT COLOR='#99ff99'>15%</FONT> Damage against pushed foes.",
     "classid": 303,
     "icon": "if_skill_01_20.png",
     "identitycategory": "infighter_shock",
@@ -34556,7 +35080,7 @@
   "23250": {
     "id": 23250,
     "name": "Undefeated Dragon King",
-    "desc": "Perform an attack at the target location. Concentrate energy throughout your body and inflict <$MACRO physic @1:232500/> Damage while moving toward the target location. <FONT COLOR='#ffff99'>2</FONT> black dragons emerge from the ground and fly alongside you, obliterating your destination in tandem. You can move up to <FONT COLOR='#ffff99'>13 meters</FONT>.",
+    "desc": "Perform an attack at the target location. Concentrate energy throughout your body and inflict <$MACRO physic @1:232500/> Damage while moving toward the target location. <FONT COLOR='#ffff99'>2</FONT> black dragons emerge from the ground and fly alongside you, obliterating your destination in tandem. On hit, all Tenacious Power is recovered fully. You can move up to <FONT COLOR='#ffff99'>13 meters</FONT>.",
     "classid": 303,
     "icon": "if_skill_01_21.png",
     "groups": [
@@ -34566,7 +35090,7 @@
   "23260": {
     "id": 23260,
     "name": "Shredding Strike",
-    "desc": "Concentrate energy onto your arms for <FONT COLOR='#ffff99'>1s</FONT> while facing forward, and then instantly glide <FONT COLOR='#ffff99'>3 meters</FONT> forward, inflicting <$MACRO physic @1:232602/> Damage along the way and throw a punch, inflicting <$MACRO physic @1:232601/> Damage. This skill's Damage varies depending on the amount of Shock Energy you have. (<FONT COLOR='#ffff99'>0-25%</FONT> Shock Meter: +<FONT COLOR='#99ff99'>15%</FONT>, <FONT COLOR='#ffff99'>26-50%</FONT> Shock Meter: +<FONT COLOR='#99ff99'>30%</FONT>, <FONT COLOR='#ffff99'>51-75%</FONT> Shock Meter: +<FONT COLOR='#99ff99'>45%</FONT>, <FONT COLOR='#ffff99'>76-100%</FONT> Shock Meter: +<FONT COLOR='#99ff99'>60%</FONT>)",
+    "desc": "Concentrate energy onto your arms and glide <FONT COLOR='#ffff99'>3 meters</FONT> forward, inflicting <$MACRO physic @1:232601/> Damage along the way and knocking back foes. This skill's Damage varies depending on the amount of Shock Energy you have. (<FONT COLOR='#ffff99'>0-25%</FONT> Shock Meter: +<FONT COLOR='#99ff99'>15%</FONT>, <FONT COLOR='#ffff99'>26-50%</FONT> Shock Meter: +<FONT COLOR='#99ff99'>30%</FONT>, <FONT COLOR='#ffff99'>51-75%</FONT> Shock Meter: +<FONT COLOR='#99ff99'>45%</FONT>, <FONT COLOR='#ffff99'>76-100%</FONT> Shock Meter: +<FONT COLOR='#99ff99'>60%</FONT>.)",
     "classid": 303,
     "icon": "if_skill_01_22.png",
     "identitycategory": "infighter_shock",
@@ -34575,12 +35099,39 @@
   "23270": {
     "id": 23270,
     "name": "Mysterious Art: Blast of Ruination",
-    "desc": "Focus your mind and reinforce your gauntlets to deliver a powerful strike. Gather the energy in the air onto your gauntlets and thrust forward. The ground cracks, dispersing an energy wave that reaches as far as <FONT COLOR='#ffff99'>14 meters</FONT>, knocking foes back. The Damage of the wave differs depending on the distance it travels. <$MACRO physic @1:232700/> Damage within <FONT COLOR='#ffff99'>0-3meters</FONT>, <$MACRO physic @1:232701/> Damage within <FONT COLOR='#ffff99'>3-6 meters</FONT>, <$MACRO physic @1:232702/> Damage within <FONT COLOR='#ffff99'>6-9 meters</FONT>, <$MACRO physic @1:232703/> Damage within <FONT COLOR='#ffff99'>9-12 meters</FONT>, and <$MACRO physic @1:232704/> Damage within <FONT COLOR='#ffff99'>12-14 meters</FONT>.",
+    "desc": "Focus your mind and gather energy into your gauntlets to deliver a powerful thrusting strike. The ground cracks, dispersing an energy wave that reaches <FONT COLOR='#ffff99'>14 meters</FONT>, inflicting <$MACRO physic @1:232700/> Damage and knocking foes back.",
     "classid": 303,
     "icon": "if_skill_01_23.png",
     "groups": [
       27, 28, 30, 100, 201, 320003, 991001, 991011, 991021, 10000000, 11000000, 12000002, 14000000, 14000001, 15000000
     ]
+  },
+  "23280": {
+    "id": 23280,
+    "name": "Tenacity Release",
+    "desc": "",
+    "classid": 303,
+    "icon": "buff_660.png",
+    "identitycategory": "infighter_normal",
+    "groups": [27, 28, 33, 100, 201, 320004, 10000001, 12000002, 14000000, 14000001, 15000000, 16000000]
+  },
+  "23290": {
+    "id": 23290,
+    "name": "Fist of the Wind God",
+    "desc": "Gather swirling energy into your gauntlets and fire it out, causing <$MACRO physic @1:232900/> Damage with a powerful shock attack. This skill can be charged by continuously pressing the skill button. This skill’s Damage increases by <FONT COLOR='#ffbb00'><$CALC_COMMA (<$PLAYER_INFO STAT STAT_ATTACK_POWER/>*(<$TABLE_SKILLEFFECT ValueF 232900/>/10000)+((<$TABLE_SKILLEFFECT ValueA 232900/> + <$TABLE_SKILLEFFECT ValueB 232900/>)/2))*2/></FONT> in proportion to the charge time.",
+    "classid": 303,
+    "icon": "if_skill_01_24.png",
+    "identitycategory": "infighter_shock",
+    "groups": [27, 28, 33, 100, 201, 320002, 10000001, 12000002, 14000000, 14000001, 15000000, 16000000, 17000000]
+  },
+  "23300": {
+    "id": 23300,
+    "name": "Explosive Fist",
+    "desc": "Fire your fists in front of you, dealing up to <FONT COLOR='#ffbb00'><$CALC_COMMA ((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)* (<$TABLE_SKILLEFFECT ValueF 233000/>/10000)+((<$TABLE_SKILLEFFECT ValueA 233000/> + <$TABLE_SKILLEFFECT ValueB 233000/>)/2))*2 + ((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)* (<$TABLE_SKILLEFFECT ValueF 233001/>/10000)+((<$TABLE_SKILLEFFECT ValueA 233001/> + <$TABLE_SKILLEFFECT ValueB 233001/>)/2))*3/></FONT> Damage over <FONT COLOR='#ffff99'>5</FONT> times.",
+    "classid": 303,
+    "icon": "if_skill_01_25.png",
+    "identitycategory": "infighter_vigor",
+    "groups": [27, 28, 33, 100, 201, 320001, 10000001, 12000002, 14000000, 14000001, 15000000, 16000000, 17000000]
   },
   "23900": { "id": 23900, "name": "격돌(맞대결) 스킬", "desc": "", "classid": 303, "icon": "" },
   "24000": {
@@ -34864,7 +35415,7 @@
   "24290": {
     "id": 24290,
     "name": "Illusion Strike",
-    "desc": "Swiftly move forward and inflict <$MACRO physic @1:242900/> Damage <FONT COLOR='#ffff99'>7</FONT> times while moving quickly around your initial location.",
+    "desc": "After a short dash forward, move quickly between nearby enemies, dealing <$MACRO physic @1:242900/> Damage to them<FONT COLOR='#ffff99'>7</FONT> times.",
     "classid": 304,
     "icon": "so_skill_01_26.png",
     "identitycategory": "forcemaster_normal",
@@ -34907,7 +35458,7 @@
   "39030": {
     "id": 39030,
     "name": "Esoteric Skill: Spiral Impact",
-    "desc": "Perform a powerful strike that can distort space. On hit, inflict <$MACRO physic @1:390300/> Damage.",
+    "desc": "Perform a powerful strike that can distort space. On hit, inflict <$MACRO physic @1:390300/> Damage and knock foes away.",
     "classid": 312,
     "icon": "bm_skill_01_11.png",
     "identitycategory": "battle_master_bubble",
@@ -34925,7 +35476,7 @@
   "39060": {
     "id": 39060,
     "name": "Flash Heat Fang",
-    "desc": "Throw punches to inflict <FONT COLOR='#ffbb00'><$CALC_COMMA ((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)* (<$TABLE_SKILLEFFECT ValueF 390602/>/10000)+((<$TABLE_SKILLEFFECT ValueA 390602/> + <$TABLE_SKILLEFFECT ValueB 390602/>)/2))*4/></FONT> total Damage over <FONT COLOR='#ffff99'>9</FONT> hits, followed by a finishing blow that inflicts <$MACRO physic @1:390601/> Damage.",
+    "desc": "Throw punches to inflict <FONT COLOR='#ffbb00'><$CALC_COMMA ((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)* (<$TABLE_SKILLEFFECT ValueF 390600/>/10000)+((<$TABLE_SKILLEFFECT ValueA 390600/> + <$TABLE_SKILLEFFECT ValueB 390600/>)/2))*6/></FONT> total Damage over <FONT COLOR='#ffff99'>6</FONT> hits, followed by a finishing blow that inflicts <$MACRO physic @1:390602/> Damage. When attacking a foe in the air, you can continue to attack while keeping them in the air.",
     "classid": 312,
     "icon": "bm_skill_01_3.png",
     "identitycategory": "battle_master_normal",
@@ -34949,7 +35500,7 @@
   "39080": {
     "id": 39080,
     "name": "Lightning Whisper",
-    "desc": "Roll forward and summon lightning, inflicting <$MACRO magic @1:390800/> Damage. On hit, foe Crit Resistance -<FONT COLOR='#99ff99'><$CALC_COMMA %1 <$TABLE_SKILLBUFF ValueA 390801/>/100/>%</FONT> for <FONT COLOR='#ffff99'>6s</FONT>.",
+    "desc": "Roll forward, summoning a lightning bolt and inflicting <$MACRO magic @1:390800/> Damage. Crit Rate +<FONT COLOR='#99ff99'><$CALC_COMMA %1 <$TABLE_SKILLBUFF PassiveOptionValue0 390801/>/100/>%</FONT> for <FONT COLOR='#ffff99'><$MACRO bufftime @1:390801/></FONT>s.",
     "classid": 312,
     "icon": "bm_skill_01_28.png",
     "identitycategory": "battle_master_normal",
@@ -34973,7 +35524,7 @@
   "39100": {
     "id": 39100,
     "name": "Esoteric Skill: Lightning Tiger Strike",
-    "desc": "Gather [Lightning] energy and unleash a kick, sending foes into the air and inflicting <$MACRO magic @1:391000/> Damage. Ignore collisions with adventurers and Normal monsters while moving.",
+    "desc": "Gather [Lightning] energy and unleash a kick, sending foes into the air and inflicting <$MACRO magic @1:391000/> Damage.",
     "classid": 312,
     "icon": "bm_skill_01_35.png",
     "identitycategory": "battle_master_bubble",
@@ -34982,7 +35533,7 @@
   "39110": {
     "id": 39110,
     "name": "Esoteric Skill: Call of the Wind God",
-    "desc": "Create a tornado that attacks foes for <$MACRO magic @1:391100/> Damage <FONT COLOR='#ffff99'>13</FONT> times over <FONT COLOR='#ffff99'>3s</FONT> and pulls foes close. Can move up to <FONT COLOR='#99ff99'>12 meters</FONT> while using this skill.",
+    "desc": "Create a tornado that attacks foes for <$MACRO magic @1:391100/> Damage <FONT COLOR='#ffff99'>13</FONT> times over <FONT COLOR='#ffff99'>3s</FONT> and launches foes into the air. Can move up to <FONT COLOR='#99ff99'>12 meters</FONT> while using this skill.",
     "classid": 312,
     "icon": "bm_skill_01_8.png",
     "identitycategory": "battle_master_bubble",
@@ -34991,7 +35542,7 @@
   "39120": {
     "id": 39120,
     "name": "Storm Dragon Kick",
-    "desc": "Deliver a roundhouse kick, inflicting <$MACRO physic @1:391200/> Damage to the foe <FONT COLOR='#ffff99'>2</FONT> times. Then attack an airborne foe to launch them into the air. Use the skill again within <FONT COLOR='#ffff99'>2s</FONT> to perform a knee attack that inflicts <$MACRO physic @1:391201/> Damage. Attack an airborne foe or a fallen foe to launch them into the air. Use the skill again within <FONT COLOR='#ffff99'>2s</FONT> to become immune to Paralysis and roll forward to perform a downward strike that inflicts <$MACRO physic @1:391208/>, <$MACRO physic @1:391202/> Damage. Airborne foes will be slammed into the ground. Each time you use additional skills, Cooldown +<FONT COLOR='#ff9999'>2s</FONT>.",
+    "desc": "Deliver a roundhouse kick, inflicting <$MACRO physic @1:391200/> Damage to the foe <FONT COLOR='#ffff99'>2</FONT> times. Then attack an airborne foe to launch them into the air. Use the skill again within <FONT COLOR='#ffff99'>2s</FONT> to perform a knee attack that inflicts <$MACRO physic @1:391201/> Damage. Attack an airborne foe or a fallen foe to launch them into the air. Use the skill again within <FONT COLOR='#ffff99'>2s</FONT> to roll forward to perform a downward strike that inflicts <$MACRO physic @1:391208/>, <$MACRO physic @1:391202/> Damage. Airborne foes will be slammed into the ground. Each time you use additional skills, Cooldown +<FONT COLOR='#ff9999'>2s</FONT>.",
     "classid": 312,
     "icon": "bm_skill_01_29.png",
     "identitycategory": "battle_master_normal",
@@ -35012,7 +35563,7 @@
   "39122": {
     "id": 39122,
     "name": "Storm Dragon Kick",
-    "desc": "Perform a downward strike and inflict <$MACRO physic @1:391202/> Damage. Grants immunity to Paralysis and airborne foes will be slammed into the ground.",
+    "desc": "Perform a downward strike and inflict <$MACRO physic @1:391202/> Damage. Airborne foes will be slammed into the ground.",
     "classid": 312,
     "icon": "bm_skill_01_31.png",
     "identitycategory": "battle_master_normal",
@@ -35038,6 +35589,14 @@
     "icon": "bm_skill_01_15.png",
     "identitycategory": "battle_master_normal",
     "groups": [991100, 1410005, 12000002, 14000000, 14000001]
+  },
+  "39151": {
+    "id": 39151,
+    "name": "[뿌리클래스] 전진답보(이동기)",
+    "desc": "Quickly charge a short distance.",
+    "classid": 311,
+    "icon": "bm_skill_01_15.png",
+    "identitycategory": "battle_master_normal"
   },
   "39155": {
     "id": 39155,
@@ -35071,7 +35630,7 @@
   "39170": {
     "id": 39170,
     "name": "Lightning Kick",
-    "desc": "Deliver a flurry of kicks that inflict <$MACRO physic @1:391700/> [Lightning] Damage <FONT COLOR='#ffff99'>3</FONT> times, and strike down at foes causing <$MACRO physic @1:391701/> Damage. Downed foes are lifted off the ground, and airborne foes are slammed onto the ground for <$MACRO physic @1:391703/> Damage.",
+    "desc": "Deliver a flurry of kicks that inflict <$MACRO physic @1:391700/> [Lightning] Damage <FONT COLOR='#ffff99'>3</FONT> times, and strike down at foes causing <$MACRO physic @1:391701/> Damage. Downed foes are lifted off the ground, and airborne foes are slammed onto the ground for <$MACRO physic @1:391703/> Damage. You can change the direction while using the skill.",
     "classid": 312,
     "icon": "bm_skill_01_18.png",
     "identitycategory": "battle_master_normal",
@@ -35142,7 +35701,7 @@
   "39320": {
     "id": 39320,
     "name": "Sweeping Kick",
-    "desc": "Sweep foes off their feet, inflicting <$MACRO physic @1:393200/> Damage <FONT COLOR='#ffff99'>2</FONT> times. Use the skill one additional time to change your direction and deliver a spinning kick to foes in the air, inflicting <$MACRO physic @1:393201/>, <$MACRO physic @1:393202/>, and <$MACRO physic @1:393203/> Damage and sending them flying.",
+    "desc": "Sweep foes off their feet, inflicting <$MACRO physic @1:393200/> Damage. Use the skill again to change your direction and deliver a spinning kick to foes in the air, inflicting <$MACRO physic @1:393201/>, <$MACRO physic @1:393202/>, and <$MACRO physic @1:393203/> Damage and sending them flying.",
     "classid": 312,
     "icon": "bm_skill_01_26.png",
     "identitycategory": "battle_master_normal",
@@ -35383,7 +35942,7 @@
   },
   "28110": {
     "id": 28110,
-    "name": "Sharp Shooter",
+    "name": "Sharpshooter",
     "desc": "Hold your bow sideways and concentrate energy on the handle, shooting <FONT COLOR='#ffff99'>10</FONT>arrows at once. <FONT COLOR='#ffff99'>Each arrow</FONT>inflicts<$MACRO physic @1:281100/> Damage and pushes foes back. Up to <FONT COLOR='#ffff99'>3 arrows</FONT> can hit the <FONT COLOR='#ffff99'>same</FONT> foe.",
     "classid": 502,
     "icon": "he_skill_01_10.png",
@@ -36054,7 +36613,7 @@
     "classid": 504,
     "icon": "bs_skill_01_16.png",
     "identitycategory": "blaster_normal",
-    "groups": [991100, 1410005, 12000002, 14000000, 14000001]
+    "groups": [530006, 991100, 1410005, 12000002, 14000000, 14000001]
   },
   "30020": {
     "id": 30020,
@@ -36308,7 +36867,7 @@
     "classid": 504,
     "icon": "bs_skill_01_17.png",
     "identitycategory": "blaster_normal",
-    "groups": [991200, 1410005, 12000002, 14000000, 14000001]
+    "groups": [530006, 991200, 1410005, 12000002, 14000000, 14000001]
   },
   "30156": {
     "id": 30156,
@@ -36425,38 +36984,44 @@
   "30250": {
     "id": 30250,
     "name": "Barrage: Howitzer",
-    "desc": "Bombard the target location and launch foes into the air for <$MACRO physic @1:300401/> Damage. On hit, foe Defense -<FONT COLOR='#99ff99'><$CALC_COMMA %1 <$TABLE_SKILLBUFF ValueC 300402/> /100/>%</FONT></FONT> for <FONT COLOR='#ffff99'><$CALC_COMMA %1 <$TABLE_SKILLBUFF Duration 300402/>/1000/></FONT>s.",
+    "desc": "Bombard the target location and launch foes into the air for <$MACRO physic @1:300401/> Damage. On hit, foe Defense -<FONT COLOR='#99ff99'><$CALC_COMMA %1 <$TABLE_SKILLBUFF ValueC 300402/> /100/>%</FONT> for <FONT COLOR='#ffff99'><$CALC_COMMA %1 <$TABLE_SKILLBUFF Duration 300402/>/1000/></FONT>s.",
     "classid": 504,
     "icon": "bs_skill_01_15.png",
     "identitycategory": "blaster_cannon",
-    "groups": [27, 28, 33, 100, 200, 53000, 53001, 530004, 10000001, 12000002, 14000000, 14000001, 15000000, 16000000]
+    "groups": [
+      27, 28, 33, 100, 200, 53000, 53001, 530004, 530006, 10000001, 12000002, 14000000, 14000001, 15000000, 16000000
+    ]
   },
   "30260": {
     "id": 30260,
     "name": "Barrage: Focus Fire",
-    "desc": "Spin at the target location while firing a barrage of bullets that inflict up to <FONT COLOR='#ffbb00'><$CALC_COMMA ((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)* (<$TABLE_SKILLEFFECT ValueF 300411/>/10000)+((<$TABLE_SKILLEFFECT ValueA 300411/> + <$TABLE_SKILLEFFECT ValueB 300411/>)/2))*5+((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)* (<$TABLE_SKILLEFFECT ValueF 300410/>/10000)+((<$TABLE_SKILLEFFECT ValueA 300410/> + <$TABLE_SKILLEFFECT ValueB 300410/>)/2))*5/></FONT> Damage, launching foes into the air. If the foe is Staggered, Damage +<FONT COLOR='#99ff99'><$CALC_COMMA <$TABLE_COMBATEFFECT Action0ArgA 300410 />/100/>%</FONT>.",
+    "desc": "Spin at the target location while firing a barrage of bullets that inflict up to <FONT COLOR='#ffbb00'><$CALC_COMMA ((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)* (<$TABLE_SKILLEFFECT ValueF 300411/>/10000)+((<$TABLE_SKILLEFFECT ValueA 300411/> + <$TABLE_SKILLEFFECT ValueB 300411/>)/2))*4+((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)* (<$TABLE_SKILLEFFECT ValueF 300410/>/10000)+((<$TABLE_SKILLEFFECT ValueA 300410/> + <$TABLE_SKILLEFFECT ValueB 300410/>)/2))*4/></FONT> Damage, launching foes into the air. If the foe is Staggered, Damage +<FONT COLOR='#99ff99'><$CALC_COMMA <$TABLE_COMBATEFFECT Action0ArgA 300410 />/100/>%</FONT>.",
     "classid": 504,
     "icon": "bs_skill_01_18.png",
     "identitycategory": "blaster_cannon",
-    "groups": [27, 28, 33, 100, 200, 53000, 53001, 530004, 10000001, 12000002, 14000000, 14000001, 15000000, 16000000]
+    "groups": [
+      27, 28, 33, 100, 200, 53000, 53001, 530004, 530006, 10000001, 12000002, 14000000, 14000001, 15000000, 16000000
+    ]
   },
   "30270": {
     "id": 30270,
     "name": "Barrage: Energy Cannon",
-    "desc": "Fire a powerful penetrating energy cannon, dealing up to <FONT COLOR='#00ccff'><$CALC_COMMA (((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)* (<$TABLE_SKILLEFFECT ValueF 300420/>/10000)+((<$TABLE_SKILLEFFECT ValueA 300420/> + <$TABLE_SKILLEFFECT ValueB 300420/>)/2))*12) + ((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)* (<$TABLE_SKILLEFFECT ValueF 300421/>/10000)+((<$TABLE_SKILLEFFECT ValueA 300421/> + <$TABLE_SKILLEFFECT ValueB 300421/>)/2))/></FONT> Damage and knocking back foes.",
+    "desc": "Fire a powerful, penetrating energy cannon, dealing up to <FONT COLOR='#00ccff'><$CALC_COMMA (((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)* (<$TABLE_SKILLEFFECT ValueF 300420/>/10000)+((<$TABLE_SKILLEFFECT ValueA 300420/> + <$TABLE_SKILLEFFECT ValueB 300420/>)/2))*6) + ((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)* (<$TABLE_SKILLEFFECT ValueF 300421/>/10000)+((<$TABLE_SKILLEFFECT ValueA 300421/> + <$TABLE_SKILLEFFECT ValueB 300421/>)/2))/></FONT> Damage and knocking back foes.",
     "classid": 504,
     "icon": "bs_skill_01_8.png",
     "identitycategory": "blaster_cannon",
-    "groups": [27, 28, 33, 100, 200, 53000, 53001, 530004, 10000001, 12000002, 14000000, 14000001, 15000000, 16000000]
+    "groups": [
+      27, 28, 33, 100, 200, 53000, 53001, 530004, 530006, 10000001, 12000002, 14000000, 14000001, 15000000, 16000000
+    ]
   },
   "30290": {
     "id": 30290,
     "name": "Bombardment: Impregnability",
-    "desc": "Creates a shield that absorbs Damage equal to <FONT COLOR='#99ff99'>30% </FONT> of Max HP for <FONT COLOR='#99ff99'>8s</FONT>. Shield expires when Barrage Mode ends.",
+    "desc": "Create a Shield that absorbs Damage up to <$MACRO shield @1:302900/> of Max HP for <$MACRO bufftime @1:302900/>s. Incoming Damage -<FONT COLOR='#99ff99'><$CALC_COMMA <$TABLE_SKILLBUFF PassiveOptionValue0 302901/>/100/>%</FONT>. When hit by a boss of a specific rank or higher, Penalty Meter -<FONT COLOR='#99ff99'>50%</FONT>. When Barrage Mode is canceled, the Shield, Damage Reduction, and Penalty Gauge Reduction effects are canceled.",
     "classid": 504,
     "icon": "bs_skill_01_25.png",
     "identitycategory": "blaster_cannon",
-    "groups": [27, 33, 53000, 53001, 10000001, 12000002, 14000000, 14000001, 15000000, 16000000, 17000000]
+    "groups": [27, 33, 53000, 53001, 530006, 10000001, 12000002, 14000000, 14000001, 15000000, 16000000, 17000000]
   },
   "30280": {
     "id": 30280,
@@ -36716,6 +37281,14 @@
     "icon": "dh_skill_01_30.png",
     "identitycategory": "devil_hunter_normal",
     "groups": [991100, 1410005, 12000002, 14000000, 14000001]
+  },
+  "38151": {
+    "id": 38151,
+    "name": "[뿌리 클래스][이동기]구르기",
+    "desc": "Moves forward while spinning fast. If an additional combo is input, the character moves while performing a somersault.",
+    "classid": 511,
+    "icon": "dh_skill_01_30.png",
+    "identitycategory": "devil_hunter_normal"
   },
   "38155": {
     "id": 38155,
@@ -37106,7 +37679,7 @@
   },
   "36150": {
     "id": 36150,
-    "name": "Godsent Law",
+    "name": "God’s Decree",
     "desc": "Summon a magick circle of light through holy scriptures. Texts made of infinite light swirl within the magick circle, inflicting <FONT COLOR='#00ccff'><$CALC_COMMA ((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)*(<$TABLE_SKILLEFFECT ValueF 361500/>/10000)+((<$TABLE_SKILLEFFECT ValueA 361500/> + <$TABLE_SKILLEFFECT ValueB 361500/>)/2))*5/></FONT> total Damage to foes for <FONT COLOR='#ffff99'>2s</FONT>.",
     "classid": 105,
     "icon": "hk_skill_01_12.png",
@@ -37179,7 +37752,7 @@
   "36210": {
     "id": 36210,
     "name": "Alithanes's Judgment",
-    "desc": "Jump up and unleash a holy light that shines toward your target location. Move to attack while ignoring collisions with adventurers and Guardians. Inflict <$MACRO physic @1:362100/> Damage on surrounding foes upon landing and create a barrier for <$MACRO shield @1:362100/> of your Max HP for all party members for <$MACRO bufftime @1:362100/>s within a <FONT COLOR='#ffff99'>24-meter</FONT> radius of all party members.  ",
+    "desc": "Jump up and unleash a holy light that shines toward your target location and recover Holy Meter by <FONT COLOR='#99ff99'>80%</FONT>. Move to attack while ignoring collisions with adventurers and Guardians. Inflict <$MACRO physic @1:362100/> Damage on surrounding foes upon landing and create a barrier for <$MACRO shield @1:362100/> of your Max HP for all party members for <$MACRO bufftime @1:362100/>s within a <FONT COLOR='#ffff99'>24-meter</FONT> radius of all party members. ",
     "classid": 105,
     "icon": "hk_skill_01_18.png",
     "groups": [
@@ -37842,7 +38415,7 @@
   "19281": {
     "id": 19281,
     "name": "Cull",
-    "desc": "For <$MACRO bufftime @1:192810/>s, when a basic attack or any skill attack hits <FONT COLOR='#ffff99'>1</FONT> foe, Crit Rate + <FONT COLOR='#99ff99'>100%</FONT> and Crit Damage +<FONT COLOR='#99ff99'>50%</FONT>.",
+    "desc": "For <$MACRO bufftime @1:192810/>s, basic attack or any skill attack Crit Rate + <FONT COLOR='#99ff99'>100%</FONT> and Crit Damage +<FONT COLOR='#99ff99'>50%</FONT>.",
     "classid": 202,
     "icon": "ar_carddeck_tooltip_9.png",
     "identitycategory": "arcana_card",
@@ -38575,6 +39148,14 @@
     "identitycategory": "summoner_summon",
     "groups": [200, 230000, 10000001, 10000002, 12000002, 14000000, 14000001, 15000000, 16000000]
   },
+  "20132": {
+    "id": 20132,
+    "name": "마리린 8번 기본 공격",
+    "desc": "",
+    "classid": 203,
+    "icon": "",
+    "identitycategory": "summoner_summon"
+  },
   "20134": {
     "id": 20134,
     "name": "마리린 4번 도발",
@@ -39044,7 +39625,7 @@
   "20300": {
     "id": 20300,
     "name": "Bagron's Wrath",
-    "desc": "Summon quicksand. Move Speed of foes within range -<FONT COLOR='#99ff99'><$MACRO buffstat0_100 @1:203005/>%</FONT>.\nAfter some time, Bagron jumps out of the sand, inflicting <$MACRO magic @1:203002/> [Earth] Damage to foes at the center of the quicksand and launching them into the air. Bagron then bites the foes in the air, inflicting <$MACRO magic @1:203003/> [Earth] Damage and slamming them down onto the ground.\nFoes at the periphery of the quicksand take <$MACRO magic @1:203004/> [Earth] Damage when Bagron appears from and disappears into the ground.",
+    "desc": "Summon quicksand. Move Speed of foes within range -<FONT COLOR='#99ff99'><$MACRO buffstat0_100 @1:203005/>%</FONT>.\nAfter some time, Bagron jumps out of the sand, inflicting <$MACRO magic @1:203002/> [Earth] Damage to foes at the center of the quicksand and launching them into the air. Bagron then bites the foes in the air, inflicting <$MACRO magic @1:203003/> [Earth] Damage and slamming them down onto the ground.",
     "classid": 203,
     "icon": "sm_skill_01_34.png",
     "groups": [
@@ -39204,6 +39785,16 @@
     "groups": [230000, 10000001, 10000002, 12000002, 14000000, 14000001, 15000000, 16000000],
     "summonsourceskill": 20130
   },
+  "20342": {
+    "id": 20342,
+    "name": "마리린 8번 기본 공격 X 2",
+    "desc": "",
+    "classid": 203,
+    "icon": "",
+    "identitycategory": "summoner_summon",
+    "groups": [230000, 10000001, 10000002, 12000002, 14000000, 14000001, 15000000, 16000000],
+    "summonsourceskill": 20130
+  },
   "20344": {
     "id": 20344,
     "name": "마리린 4번 도발",
@@ -39212,7 +39803,7 @@
     "icon": "",
     "identitycategory": "summoner_summon",
     "groups": [230000, 10000001, 10000002, 12000002, 14000000, 14000001, 15000000, 16000000, 17000000],
-    "summonsourceskill": 20347
+    "summonsourceskill": 20130
   },
   "20345": {
     "id": 20345,
@@ -39765,6 +40356,22 @@
     "icon": "rp_skill_01_2.png",
     "groups": [27, 33]
   },
+  "26090": {
+    "id": 26090,
+    "name": "Nightmare",
+    "desc": "Quickly throw a dagger in the target direction, causing <$MACRO physic @1:260900/> Damage. If there are no obstacles between the dagger and its target, the chain skill can be activated. When this skill is repeated, move to the opposite side of the target and strike the surrounding area, inflicting <$MACRO physic @1:260951/> Damage and reducing Move Speed by <FONT COLOR='#99ff99'>10%</FONT> for <FONT COLOR='#ffff99'>2</FONT>s.\n\n<FONT COLOR='#ffd200'>- Bleeding Poison</FONT>: While in <FONT COLOR='#ffff99'>Chaos</FONT> Mode, this skill grants Bleeding Poison to the dagger. Bleeding Poison inflicts <FONT COLOR='#ffbb00'><$CALC_COMMA (<$PLAYER_INFO STAT STAT_ATTACK_POWER/>*(<$TABLE_SKILLBUFF ValueE 280020/>/10000)+((<$TABLE_SKILLBUFF ValueB 280020/> + <$TABLE_SKILLBUFF ValueC 280020/>)/2))/></FONT> bleed Damage every 1s for <FONT COLOR='#ffff99'><$CALC_COMMA %1 <$TABLE_SKILLBUFF Duration 280020/>/1000/></FONT>s. Stacks up to <FONT COLOR='#ffff99'><$TABLE_SKILLBUFF Overlap 280020/></FONT> times. Inflicts Heavy Bleeding on foes with maximum Bleeding Poison, inflicting <$MACRO physic @1:260422/> damage.\n\n<FONT COLOR='#ffd200'>- Nerve Poison</FONT>: When using while in <FONT COLOR='#ffff99'>Persona</FONT> Mode, grants Nerve Poison to the dagger. Nerve Poison can be stacked up to <FONT COLOR='#ffff99'>3</FONT> times, and for <FONT COLOR='#ffff99'><$CALC_COMMA %1 <$TABLE_SKILLBUFF Duration 280040/>/1000/></FONT>s, inflicting Darkness. At <FONT COLOR='#ffff99'>3</FONT> stacks, inflicts Fear for <FONT COLOR='#ffff99'><$CALC_COMMA %1 <$TABLE_SKILLBUFF Duration 280050/>/1000/></FONT>s.",
+    "classid": 404,
+    "icon": "rp_skill_01_24.png",
+    "groups": [27, 28, 33, 100, 203, 10000001, 12000002, 14000000, 14000001, 15000000, 16000000]
+  },
+  "26100": {
+    "id": 26100,
+    "name": "Nightmare",
+    "desc": "If there are no obstacles in between the dagger and its target, move to the opposite side of the target and strikes the surrounding area, inflicting <$MACRO physic @1:260951/> Damage and increasing Move Speed by <FONT COLOR='#99ff99'>10%</FONT> for <FONT COLOR='#ffff99'>2</FONT>s.",
+    "classid": 404,
+    "icon": "rp_skill_01_24.png",
+    "groups": [27, 100, 203, 10000001, 12000002, 14000000, 14000001, 15000000, 16000000]
+  },
   "26050": {
     "id": 26050,
     "name": "Spinning Dagger",
@@ -39777,7 +40384,7 @@
   "26060": {
     "id": 26060,
     "name": "Spirit Catch",
-    "desc": "Perform a quick thrust forward to inflict <$MACRO physic @1:260600/> Damage, then dart <FONT COLOR='#ffff99'>4 meters</FONT> in the same direction and deliver one final attack that knocks foes down for <$MACRO physic @1:260612/> Damage.",
+    "desc": "Perform a quick thrust forward to inflict <$MACRO physic @1:260600/> Damage, then dart <FONT COLOR='#ffff99'>5 meters</FONT> in the same direction and deliver one final attack that knocks foes down for <$MACRO physic @1:260612/> Damage.",
     "classid": 404,
     "icon": "rp_skill_01_4.png",
     "identitycategory": "reaper_dagger",
@@ -39786,7 +40393,7 @@
   "26070": {
     "id": 26070,
     "name": "Shadow Vortex",
-    "desc": "Gather strength and pull foes to you, inflicting <$MACRO physic @1:260700/> Damage. Use the skill again to deliver a powerful spinning blow, inflicting <$MACRO physic @1:260701/> and <$MACRO physic @1:260702/> Damage.",
+    "desc": "Gather your strength and spin, dealing <$MACRO physic @1:260701/>, <$MACRO physic @1:260702/> Damage.",
     "classid": 404,
     "icon": "rp_skill_01_5.png",
     "identitycategory": "reaper_dagger",
@@ -39801,24 +40408,6 @@
     "identitycategory": "reaper_dagger",
     "groups": [27, 28, 33, 100, 203, 430000, 10000001, 12000002, 14000000, 14000001, 15000000, 16000000, 17000000]
   },
-  "26090": {
-    "id": 26090,
-    "name": "Nightmare",
-    "desc": "Throw a dagger at the target location to inflict <$MACRO physic @1:260900/> Damage. Use the skill again and teleport behind the hit target if there is no obstacle between you and the foe. Move Speed +<FONT COLOR='#99ff99'>10%</FONT> for <FONT COLOR='#ffff99'>2s</FONT> after teleportation.",
-    "classid": 404,
-    "icon": "rp_skill_01_6.png",
-    "identitycategory": "reaper_dagger",
-    "groups": [27, 28, 33, 100, 203, 430000, 10000001, 12000002, 14000000, 14000001, 15000000, 16000000, 17000000]
-  },
-  "26100": {
-    "id": 26100,
-    "name": "Nightmare",
-    "desc": "Throw a dagger at the target location to inflict <$MACRO physic @1:260900/> Damage. Use the skill again and teleport behind the hit target if there is no obstacle between you and the foe. Move Speed +<FONT COLOR='#99ff99'>10%</FONT> for <FONT COLOR='#ffff99'>2s</FONT> after teleportation.",
-    "classid": 404,
-    "icon": "rp_skill_01_6.png",
-    "identitycategory": "reaper_dagger",
-    "groups": [27, 100, 203, 430000, 10000001, 12000002, 14000000, 14000001, 15000000, 16000000, 17000000]
-  },
   "26110": {
     "id": 26110,
     "name": "Piercing Blade",
@@ -39831,20 +40420,11 @@
   "26120": {
     "id": 26120,
     "name": "Deathscythe",
-    "desc": "Quickly move <FONT COLOR='#ffff99'>3 meters</FONT> toward the target location and slash at foes <FONT COLOR='#ffff99'>2</FONT> times for <$MACRO physic @1:261200/> Damage. Use the skill again to perform another slash and inflict <$MACRO physic @1:261201/> Damage, knocking foes down.",
+    "desc": "Quickly move <FONT COLOR='#ffff99'>4 meters</FONT> toward the target location and slash at foes <FONT COLOR='#ffff99'>2</FONT> times for <$MACRO physic @1:261200/> Damage. Use the skill again to perform another slash and inflict <$MACRO physic @1:261201/> Damage, knocking foes down.",
     "classid": 404,
     "icon": "rp_skill_01_9.png",
     "identitycategory": "reaper_dagger",
     "groups": [27, 28, 33, 100, 203, 430000, 10000001, 12000002, 14000000, 14000001, 15000000, 16000000, 17000000]
-  },
-  "26130": {
-    "id": 26130,
-    "name": "Nightmare",
-    "desc": "Throw a dagger at the target location to inflict <$MACRO physic @1:260900/> Damage. Use the skill again and teleport behind the hit target if there is no obstacle between you and the foe. Move Speed +<FONT COLOR='#99ff99'>10%</FONT> for <FONT COLOR='#ffff99'>2s</FONT> after teleportation.",
-    "classid": 404,
-    "icon": "rp_skill_01_6.png",
-    "identitycategory": "reaper_dagger",
-    "groups": [27, 28, 100, 203, 430000, 10000001, 12000002, 14000000, 14000001, 15000000, 16000000, 17000000]
   },
   "26140": {
     "id": 26140,
@@ -39937,9 +40517,16 @@
     "classid": 404,
     "icon": "rp_skill_01_10.png",
     "identitycategory": "reaper_shadow",
-    "groups": [
-      27, 28, 33, 100, 203, 430001, 430004, 10000001, 12000002, 14000000, 14000001, 15000000, 16000000, 17000000
-    ]
+    "groups": [27, 28, 33, 100, 203, 430001, 10000001, 12000002, 14000000, 14000001, 15000000, 16000000, 17000000]
+  },
+  "26511": {
+    "id": 26511,
+    "name": "Distortion",
+    "desc": "Call forth the darkness of a twisted space to quickly move <FONT COLOR='#ffff99'>10 meters</FONT> forward, inflicting up to <FONT COLOR='#00ccff'><$CALC_COMMA (((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)*(<$TABLE_SKILLEFFECT ValueF 265108/>/10000)+((<$TABLE_SKILLEFFECT ValueA 265108/> + <$TABLE_SKILLEFFECT ValueB 265108/>)/2)))*4/></FONT> Damage to foes caught in the path. Inflict an additional <$MACRO magic @1:265110/> Damage to foes in your path upon landing. Ignore collisions with adventurers and Guardians.",
+    "classid": 404,
+    "icon": "rp_skill_01_10.png",
+    "identitycategory": "reaper_shadow",
+    "groups": [27, 28, 33, 100, 203, 430001, 10000001, 12000002, 14000000, 14000001, 15000000, 16000000, 17000000]
   },
   "26520": {
     "id": 26520,
@@ -40011,7 +40598,7 @@
   "26570": {
     "id": 26570,
     "name": "Shadow Trap",
-    "desc": "Summon a shadow snare at your current position, then move <FONT COLOR='#ffff99'>6 meters</FONT> backward, detonating a shadow that inflicts <$MACRO magic @1:265700/> Damage to foes within a <FONT COLOR='#ffff99'>3-meter</FONT> radius, stunning them for <$MACRO bufftime_st @1:265721/>s.",
+    "desc": "Summon a shadow snare at your current position, then move <FONT COLOR='#ffff99'>6 meters</FONT> backward, detonating your shadow to inflict <$MACRO magic @1:265700/> Damage to foes within a <FONT COLOR='#ffff99'>3-meter</FONT> radius and stun them for <$MACRO bufftime_st @1:265721/>s. When a <FONT COLOR='#ffff99'>Counterattack</FONT> is successful with this skill, immediately enter <FONT COLOR='#ffff99'>Chaos Mode</FONT>.",
     "classid": 404,
     "icon": "rp_skill_01_14.png",
     "identitycategory": "reaper_shadow",
@@ -40063,7 +40650,7 @@
   "26820": {
     "id": 26820,
     "name": "Silent Rage",
-    "desc": "Jump <FONT COLOR='#ffff99'>3 meters</FONT> backward and gather dark energy to shoot yourself forward, slashing foes for <$MACRO physic @1:268200/> Damage and knocking them down as you move. Ignore collisions with adventurers and Normal monsters while moving.",
+    "desc": "Gather Dark Energy in the air to launch yourself forward, slashing foes for <$MACRO physic @1:268200/> Damage and knocking them down as you pierce through them. Ignore collisions with adventurers and Normal monsters while moving.",
     "classid": 404,
     "icon": "rp_skill_01_17.png",
     "identitycategory": "reaper_swoop",
@@ -40091,7 +40678,7 @@
   "26910": {
     "id": 26910,
     "name": "Solar Eclipse: Requiem",
-    "desc": "Focus your mind and blend into the shadows for <FONT COLOR='#ffff99'>4s</FONT>. Use the skill again to sneak up to your foe in the shadows and deliver <FONT COLOR='#ffff99'>3</FONT> strikes to inflict <$MACRO physic @1:269110/>, <$MACRO physic @1:269110/>, <$MACRO physic @1:269111/> Damage, launching your foe in the air with the last strike. Become Stealthed again for <FONT COLOR='#ffff99'>4s</FONT> upon each strike, and you can still attack foes while you are not. Ignore collisions with adventurers and Guardians during skill use.",
+    "desc": "Focus your mind to inflict <$MACRO physic @1:269110/>Damage and blend into the shadows for <FONT COLOR='#ffff99'><$CALC_COMMA %1 <$TABLE_SKILLBUFF Duration 269101/>/1000/></FONT>s. Use the skill again to sneak up to your foe in the shadows and deliver <FONT COLOR='#ffff99'>2</FONT> additional ambush attacks inflicting <$MACRO physic @1:269110/>, dealing <$MACRO physic @1:269111/> Damage, and launching your foe in the air with the last strike. Each time an attack hits, the remaining Cooldown of the Swoop skill is reduced by <FONT COLOR='#99ff99'><$CALC_COMMA %1 <$TABLE_SKILLEFFECT ValueB 269190 />/1/>%</FONT>, and after the attack, become Stealthed for <FONT COLOR='#ffff99'><$CALC_COMMA %1 <$TABLE_SKILLBUFF Duration 269101/>/1000/></FONT>s, and you can still attack foes while you are not. Ignore collisions with adventurers and Guardians during skill use.",
     "classid": 404,
     "icon": "rp_skill_01_20.png",
     "groups": [27, 100, 203, 430003, 991001, 991011, 991021, 10000000, 11000000, 12000002, 14000000, 14000001, 15000000]
@@ -40099,7 +40686,7 @@
   "26920": {
     "id": 26920,
     "name": "Solar Eclipse: Requiem",
-    "desc": "Focus your mind and blend into the shadows for <FONT COLOR='#ffff99'>4s</FONT>. Use the skill again to sneak up to your foe in the shadows and deliver <FONT COLOR='#ffff99'>3</FONT> strikes to inflict <$MACRO physic @1:269110/>, <$MACRO physic @1:269110/>, <$MACRO physic @1:269111/> Damage, launching your foe in the air with the last strike. Become Stealthed again for <FONT COLOR='#ffff99'>4s</FONT> upon each strike, and you can still attack foes while you are not. Ignore collisions with adventurers and Guardians during skill use.",
+    "desc": "Focus your mind to inflict <$MACRO physic @1:269110/>Damage and blend into the shadows for <FONT COLOR='#ffff99'><$CALC_COMMA %1 <$TABLE_SKILLBUFF Duration 269101/>/1000/></FONT>s. Use the skill again to sneak up to your foe in the shadows and deliver <FONT COLOR='#ffff99'>2</FONT> additional ambush attacks inflicting <$MACRO physic @1:269110/>, dealing <$MACRO physic @1:269111/> Damage, and launching your foe in the air with the last strike. Each time an attack hits, the remaining Cooldown of the Swoop skill is reduced by <FONT COLOR='#99ff99'><$CALC_COMMA %1 <$TABLE_SKILLEFFECT ValueB 269190 />/1/>%</FONT>, and after the attack, become Stealthed for <FONT COLOR='#ffff99'><$CALC_COMMA %1 <$TABLE_SKILLBUFF Duration 269101/>/1000/></FONT>s, and you can still attack foes while you are not. Ignore collisions with adventurers and Guardians during skill use.",
     "classid": 404,
     "icon": "rp_skill_01_20.png",
     "groups": [27, 28, 30, 203, 430003, 991001, 11000000, 14000000, 14000001, 15000000]
@@ -40107,15 +40694,7 @@
   "26930": {
     "id": 26930,
     "name": "Solar Eclipse: Requiem",
-    "desc": "Focus your mind and blend into the shadows for <FONT COLOR='#ffff99'>4s</FONT>. Use the skill again to sneak up to your foe in the shadows and deliver <FONT COLOR='#ffff99'>3</FONT> strikes to inflict <$MACRO physic @1:269110/>, <$MACRO physic @1:269110/>, <$MACRO physic @1:269111/> Damage, launching your foe in the air with the last strike. Become Stealthed again for <FONT COLOR='#ffff99'>4s</FONT> upon each strike, and you can still attack foes while you are not. Ignore collisions with adventurers and Guardians during skill use.",
-    "classid": 404,
-    "icon": "rp_skill_01_20.png",
-    "groups": [27, 28, 30, 203, 430003, 991001, 11000000, 14000000, 14000001, 15000000]
-  },
-  "26950": {
-    "id": 26950,
-    "name": "Solar Eclipse: Requiem",
-    "desc": "Focus your mind and blend into the shadows for <FONT COLOR='#ffff99'>4s</FONT>. Use the skill again to sneak up to your foe in the shadows and deliver <FONT COLOR='#ffff99'>3</FONT> strikes to inflict <$MACRO physic @1:269110/>, <$MACRO physic @1:269110/>, <$MACRO physic @1:269111/> Damage, launching your foe in the air with the last strike. Become Stealthed again for <FONT COLOR='#ffff99'>4s</FONT> upon each strike, and you can still attack foes while you are not. Ignore collisions with adventurers and Guardians during skill use.",
+    "desc": "Focus your mind to inflict <$MACRO physic @1:269110/>Damage and blend into the shadows for <FONT COLOR='#ffff99'><$CALC_COMMA %1 <$TABLE_SKILLBUFF Duration 269101/>/1000/></FONT>s. Use the skill again to sneak up to your foe in the shadows and deliver <FONT COLOR='#ffff99'>2</FONT> additional ambush attacks inflicting <$MACRO physic @1:269110/>, dealing <$MACRO physic @1:269111/> Damage, and launching your foe in the air with the last strike. Each time an attack hits, the remaining Cooldown of the Swoop skill is reduced by <FONT COLOR='#99ff99'><$CALC_COMMA %1 <$TABLE_SKILLEFFECT ValueB 269190 />/1/>%</FONT>, and after the attack, become Stealthed for <FONT COLOR='#ffff99'><$CALC_COMMA %1 <$TABLE_SKILLBUFF Duration 269101/>/1000/></FONT>s, and you can still attack foes while you are not. Ignore collisions with adventurers and Guardians during skill use.",
     "classid": 404,
     "icon": "rp_skill_01_20.png",
     "groups": [27, 28, 30, 203, 430003, 991001, 11000000, 14000000, 14000001, 15000000]
@@ -41488,7 +42067,7 @@
   "16120": {
     "id": 16120,
     "name": "Red Dust",
-    "desc": "Swing the greatsword into the air and create an aura of red energy. On hit, inflict <$MACRO physic @1:161200/> Damage, Atk. Power +<FONT COLOR='#99ff99'><$MACRO buffstat0_100 @1:161201/>%</FONT> for <$MACRO bufftime @1:161201/>s.",
+    "desc": "Swing the greatsword into the air and create red energy. For <$MACRO bufftime @1:161201/>s, Atk. Power +<FONT COLOR='#99ff99'><$MACRO buffstat0_100 @1:161201/>%</FONT>, and on hit, inflicts <$MACRO physic @1:161200/> Damage.",
     "classid": 102,
     "icon": "bk_skill_01_8.png",
     "identitycategory": "berserker_normal",
@@ -41727,7 +42306,7 @@
     "classid": 104,
     "icon": "",
     "identitycategory": "warlord_normal",
-    "groups": [200, 991000]
+    "groups": [200, 130001, 991000]
   },
   "17010": {
     "id": 17010,
@@ -41735,7 +42314,8 @@
     "desc": "",
     "classid": 104,
     "icon": "",
-    "identitycategory": "warlord_normal"
+    "identitycategory": "warlord_normal",
+    "groups": [130001]
   },
   "17020": {
     "id": 17020,
@@ -41768,7 +42348,7 @@
     "icon": "gl_skill_01_19.png",
     "identitycategory": "warlord_lance",
     "groups": [
-      27, 28, 33, 100, 200, 130000, 10000001, 10000002, 12000002, 13000002, 14000000, 14000001, 15000000, 16000000,
+      27, 28, 33, 34, 100, 200, 130000, 10000001, 10000002, 12000002, 13000002, 14000000, 14000001, 15000000, 16000000,
       17000000
     ]
   },
@@ -41780,8 +42360,8 @@
     "icon": "gl_skill_01_1.png",
     "identitycategory": "warlord_normal",
     "groups": [
-      27, 28, 33, 100, 200, 130000, 10000001, 10000002, 12000002, 13000002, 14000000, 14000001, 15000000, 16000000,
-      17000000
+      27, 28, 33, 100, 200, 130000, 130001, 10000001, 10000002, 12000002, 13000002, 14000000, 14000001, 15000000,
+      16000000, 17000000
     ]
   },
   "17050": {
@@ -41792,8 +42372,8 @@
     "icon": "gl_skill_01_3.png",
     "identitycategory": "warlord_normal",
     "groups": [
-      27, 28, 33, 100, 200, 130000, 10000001, 10000002, 12000002, 13000002, 14000000, 14000001, 15000000, 16000000,
-      17000000
+      27, 28, 33, 100, 200, 130000, 130001, 10000001, 10000002, 12000002, 13000002, 14000000, 14000001, 15000000,
+      16000000, 17000000
     ]
   },
   "17060": {
@@ -41804,7 +42384,7 @@
     "icon": "gl_skill_01_2.png",
     "identitycategory": "warlord_lance",
     "groups": [
-      27, 28, 33, 100, 200, 130000, 10000001, 10000002, 12000002, 13000002, 14000000, 14000001, 15000000, 16000000,
+      27, 28, 33, 34, 100, 200, 130000, 10000001, 10000002, 12000002, 13000002, 14000000, 14000001, 15000000, 16000000,
       17000000
     ]
   },
@@ -41816,7 +42396,7 @@
     "icon": "gl_skill_01_20.png",
     "identitycategory": "warlord_lance",
     "groups": [
-      27, 28, 33, 100, 200, 130000, 10000001, 10000002, 12000002, 13000002, 14000000, 14000001, 15000000, 16000000,
+      27, 28, 33, 34, 100, 200, 130000, 10000001, 10000002, 12000002, 13000002, 14000000, 14000001, 15000000, 16000000,
       17000000
     ]
   },
@@ -41828,7 +42408,7 @@
     "icon": "gl_skill_01_8.png",
     "identitycategory": "warlord_lance",
     "groups": [
-      27, 28, 33, 100, 200, 130000, 10000001, 10000002, 12000002, 13000002, 14000000, 14000001, 15000000, 16000000,
+      27, 28, 33, 34, 100, 200, 130000, 10000001, 10000002, 12000002, 13000002, 14000000, 14000001, 15000000, 16000000,
       17000000
     ]
   },
@@ -41840,8 +42420,8 @@
     "icon": "gl_skill_01_17.png",
     "identitycategory": "warlord_normal",
     "groups": [
-      27, 28, 33, 100, 200, 130000, 10000001, 10000002, 12000002, 13000002, 14000000, 14000001, 15000000, 16000000,
-      17000000
+      27, 28, 33, 100, 200, 130000, 130001, 10000001, 10000002, 12000002, 13000002, 14000000, 14000001, 15000000,
+      16000000, 17000000
     ]
   },
   "17100": {
@@ -41852,8 +42432,8 @@
     "icon": "gl_skill_01_18.png",
     "identitycategory": "warlord_normal",
     "groups": [
-      27, 28, 33, 100, 200, 130000, 10000001, 10000002, 12000002, 13000002, 14000000, 14000001, 15000000, 16000000,
-      17000000
+      27, 28, 33, 100, 200, 130000, 130001, 10000001, 10000002, 12000002, 13000002, 14000000, 14000001, 15000000,
+      16000000, 17000000
     ]
   },
   "17101": {
@@ -41863,7 +42443,9 @@
     "classid": 104,
     "icon": "gl_skill_01_18.png",
     "identitycategory": "warlord_normal",
-    "groups": [27, 28, 100, 200, 130000, 10000001, 10000002, 12000002, 14000000, 14000001, 15000000, 16000000, 17000000]
+    "groups": [
+      27, 28, 100, 200, 130000, 130001, 10000001, 10000002, 12000002, 14000000, 14000001, 15000000, 16000000, 17000000
+    ]
   },
   "17110": {
     "id": 17110,
@@ -41873,8 +42455,8 @@
     "icon": "gl_skill_01_5.png",
     "identitycategory": "warlord_normal",
     "groups": [
-      27, 28, 33, 100, 200, 130000, 10000001, 10000002, 12000002, 13000002, 14000000, 14000001, 15000000, 16000000,
-      17000000
+      27, 28, 33, 100, 200, 130000, 130001, 10000001, 10000002, 12000002, 13000002, 14000000, 14000001, 15000000,
+      16000000, 17000000
     ]
   },
   "17130": {
@@ -41885,7 +42467,8 @@
     "icon": "gl_skill_01_15.png",
     "identitycategory": "warlord_normal",
     "groups": [
-      27, 33, 100, 200, 130000, 10000001, 10000002, 12000002, 13000002, 14000000, 14000001, 15000000, 16000000, 17000000
+      27, 33, 100, 200, 130000, 130001, 10000001, 10000002, 12000002, 13000002, 14000000, 14000001, 15000000, 16000000,
+      17000000
     ]
   },
   "17140": {
@@ -41896,8 +42479,8 @@
     "icon": "gl_skill_01_16.png",
     "identitycategory": "warlord_normal",
     "groups": [
-      27, 28, 33, 100, 200, 130000, 10000001, 10000002, 12000002, 13000002, 14000000, 14000001, 15000000, 16000000,
-      17000000
+      27, 28, 33, 100, 200, 130000, 130001, 10000001, 10000002, 12000002, 13000002, 14000000, 14000001, 15000000,
+      16000000, 17000000
     ]
   },
   "17150": {
@@ -41908,8 +42491,8 @@
     "icon": "gl_skill_01_22.png",
     "identitycategory": "warlord_normal",
     "groups": [
-      27, 28, 33, 100, 200, 130000, 10000001, 10000002, 12000002, 13000002, 14000000, 14000001, 15000000, 16000000,
-      17000000
+      27, 28, 33, 100, 200, 130000, 130001, 10000001, 10000002, 12000002, 13000002, 14000000, 14000001, 15000000,
+      16000000, 17000000
     ]
   },
   "17160": {
@@ -41920,7 +42503,7 @@
     "icon": "gl_skill_01_27.png",
     "identitycategory": "warlord_lance",
     "groups": [
-      27, 28, 33, 100, 200, 130000, 10000001, 10000002, 12000002, 13000002, 14000000, 14000001, 15000000, 16000000,
+      27, 28, 33, 34, 100, 200, 130000, 10000001, 10000002, 12000002, 13000002, 14000000, 14000001, 15000000, 16000000,
       17000000
     ]
   },
@@ -41943,8 +42526,8 @@
     "icon": "gl_skill_01_14.png",
     "identitycategory": "warlord_normal",
     "groups": [
-      27, 28, 33, 100, 200, 130000, 10000001, 10000002, 12000002, 13000002, 14000000, 14000001, 15000000, 16000000,
-      17000000
+      27, 28, 33, 100, 200, 130000, 130001, 10000001, 10000002, 12000002, 13000002, 14000000, 14000001, 15000000,
+      16000000, 17000000
     ]
   },
   "17190": {
@@ -41955,7 +42538,7 @@
     "icon": "gl_skill_01_29.png",
     "identitycategory": "warlord_lance",
     "groups": [
-      27, 28, 33, 100, 200, 130000, 10000001, 10000002, 12000002, 13000002, 14000000, 14000001, 15000000, 16000000,
+      27, 28, 33, 34, 100, 200, 130000, 10000001, 10000002, 12000002, 13000002, 14000000, 14000001, 15000000, 16000000,
       17000000
     ]
   },
@@ -41967,7 +42550,7 @@
     "icon": "gl_skill_01_9.png",
     "identitycategory": "warlord_lance",
     "groups": [
-      27, 28, 33, 100, 200, 130000, 10000001, 10000002, 12000002, 13000002, 14000000, 14000001, 15000000, 16000000,
+      27, 28, 33, 34, 100, 200, 130000, 10000001, 10000002, 12000002, 13000002, 14000000, 14000001, 15000000, 16000000,
       17000000
     ]
   },
@@ -41979,7 +42562,7 @@
     "icon": "gl_skill_01_30.png",
     "identitycategory": "warlord_lance",
     "groups": [
-      27, 28, 33, 100, 200, 130000, 10000001, 10000002, 12000002, 13000002, 14000000, 14000001, 15000000, 16000000,
+      27, 28, 33, 34, 100, 200, 130000, 10000001, 10000002, 12000002, 13000002, 14000000, 14000001, 15000000, 16000000,
       17000000
     ]
   },
@@ -42005,7 +42588,7 @@
   "17820": {
     "id": 17820,
     "name": "Battlefield Shield",
-    "desc": "Consume all Shield Meter and move instantly to a location up to <FONT COLOR='#ffff99'>16 meters</FONT> away, ignoring collisions with Adventurers, Guardians, and monsters.\nUpon landing, strike foes and inflict <$MACRO physic @1:178401/> Damage to foes within a <FONT COLOR='#ffff99'>6-meter</FONT> radius, launching them into the air. Foes within a <FONT COLOR='#ffff99'>3-meter </FONT>radius of the center of impact suffer a direct hit.\nGain a shield proportional to the consumed Shield Meter, and grant Push Immunity to party members within a <FONT COLOR='#ffff99'>10-meter</FONT> radius. Any Damage to them will be directed to you for up to <FONT COLOR='#ffff99'>5s</FONT>. If you stop using Battlefield Shield or if the Shield is attacked and disappears, Condensed Energy explodes and deals <$MACRO physic @1:178404/> Damage to nearby foes before knocking them away. Damage dealt by the explosion can increase up to <FONT COLOR='#ffff99'>30%</FONT> based on the amount of Damage blocked on behalf of allies. Cannot be used when Shield Meter is below <FONT COLOR='#ffff99'>20%</FONT>. When Battlefield Shield expires, Shield Meter is refunded up to <FONT COLOR='#ffff99'>25%</FONT> based on the amount of Damage blocked on behalf of allies.",
+    "desc": "Consume all Shield Meter and move instantly to a location up to <FONT COLOR='#ffff99'>16 meters</FONT> away, ignoring collisions with Adventurers, Guardians, and monsters.\nUpon landing, strike foes and inflict <$MACRO physic @1:178401/> Damage to foes within a <FONT COLOR='#ffff99'>6-meter</FONT> radius, launching them into the air. Foes within a <FONT COLOR='#ffff99'>3-meter</FONT> radius of the center of impact suffer a direct hit.\nGain a shield proportional to the consumed Shield Meter, and grant Push Immunity to party members within a <FONT COLOR='#ffff99'>10-meter</FONT> radius. Any Damage to them will be directed to you for up to <FONT COLOR='#ffff99'>5s</FONT>. If you stop using Battlefield Shield or if the Shield is attacked and disappears, Condensed Energy explodes and deals <$MACRO physic @1:178404/> Damage to nearby foes before knocking them away. Damage dealt by the explosion can increase up to <FONT COLOR='#ffff99'>30%</FONT> based on the amount of Damage blocked on behalf of allies. Cannot be used when Shield Meter is below <FONT COLOR='#ffff99'>20%</FONT>. When Battlefield Shield expires, Shield Meter is refunded a minimum of <FONT COLOR='#ffff99'>10%</FONT> and up to <FONT COLOR='#ffff99'>40%</FONT> based on the amount of Damage blocked on behalf of allies.",
     "classid": 104,
     "icon": "gl_skill_01_33.png",
     "identitycategory": "warlord_shield_of_battlefield",
@@ -42048,7 +42631,7 @@
   "18011": {
     "id": 18011,
     "name": "Vortex Gravity",
-    "desc": "Strike your hammer downward, inflicting <$MACRO physic @1:180200/> Damage, and explode gravitational energy in front of you, inflicting <$MACRO Magic @1:180210/> Damage, and pull in foes within a <FONT COLOR='#ffff99'>6-meter </FONT>radius.",
+    "desc": "Strike your hammer downward, inflicting <$MACRO physic @1:180200/> Damage and exploding gravitational energy in front of you, which inflicts<$MACRO Magic @1:180210/> Damage and pulls in foes within a <FONT COLOR='#ffff99'>6-meter</FONT> radius. The downward strike with the hammer can be <FONT COLOR='#ffff99'>counterattacked</FONT>.",
     "classid": 103,
     "icon": "dt_skill_01_20.png",
     "groups": [
@@ -42209,7 +42792,7 @@
   "18140": {
     "id": 18140,
     "name": "Endure Pain",
-    "desc": "Let out a roar, inflicting <$MACRO Magic @1:181401/> Damage to foes within a <FONT COLOR='#ffff99'>6-meter</FONT> range. Upon using the skill, gain a buff that grants Push-Immunity and Incoming Damage -<FONT COLOR='#99ff99'><$CALC_COMMA <$TABLE_SKILLBUFF PassiveOptionValue0 181400/>/100/>%</FONT> for <FONT COLOR='#ffff99'><$CALC_COMMA <$TABLE_SKILLBUFF Duration 181400/>/1000 /></FONT>s. On hit, obtain <FONT COLOR='#ffff99'>3</FONT> Gravity Cores.",
+    "desc": "Let out a roar, inflicting <$MACRO Magic @1:181401/> Damage to foes within a <FONT COLOR='#ffff99'>6-meter</FONT> range. Upon using the skill, gain a buff that makes you immune to Pushes and incoming Damage -<FONT COLOR='#99ff99'><$CALC_COMMA <$TABLE_SKILLBUFF PassiveOptionValue0 181400/>/100/>%</FONT> for <FONT COLOR='#ffff99'><$CALC_COMMA <$TABLE_SKILLBUFF Duration 181400/>/1000 /></FONT>s. When hit by a boss of a specific rank or higher, Penalty Meter -<FONT COLOR='#99ff99'>50%</FONT>. On hit, obtain <FONT COLOR='#ffff99'>3</FONT> Gravity Cores.",
     "classid": 103,
     "icon": "dt_skill_01_9.png",
     "identitycategory": "destroyer_focus",
@@ -42245,7 +42828,7 @@
   "18170": {
     "id": 18170,
     "name": "Perfect Swing",
-    "desc": "This skill can be charged for <FONT COLOR='#ffff99'>2s</FONT>. When used midattack, you will advance <FONT COLOR='#ffff99'>3 meters</FONT> forward as you swing your hammer with both hands to inflict <$MACRO physic @1:181700/> Damage. Overcharge the skill to move <FONT COLOR='#ffff99'>4 meters</FONT> forward and deliver an even fiercer blow to inflict <$MACRO physic @1:181702/> Damage.",
+    "desc": "This skill can be charged for <FONT COLOR='#ffff99'>1.4s</FONT>. When used mid-attack, you will advance <FONT COLOR='#ffff99'>3 meters</FONT> forward as you swing your hammer with both hands to inflict <$MACRO physic @1:181700/> Damage. Overcharge the skill to move <FONT COLOR='#ffff99'>4 meters</FONT> forward and deliver an even fiercer blow to inflict <$MACRO physic @1:181702/>Damage.",
     "classid": 103,
     "icon": "dt_skill_01_13.png",
     "identitycategory": "destroyer_release",
@@ -42399,6 +42982,13 @@
     "icon": "bk_skill_01_36.png",
     "identitycategory": "berserker_normal",
     "groups": [991100, 1410005, 12000002, 14000000, 14000001]
+  },
+  "45012": {
+    "id": 45012,
+    "name": "[뿌리클래스] 회피",
+    "desc": "Lower your body and slide as you move quickly.",
+    "classid": 111,
+    "icon": "bk_skill_01_35.png"
   },
   "45020": {
     "id": 45020,
@@ -43077,7 +43667,7 @@
   "31220": {
     "id": 31220,
     "name": "Paint: Illusion Door",
-    "desc": "Create a dimensional opening at a target location within <FONT COLOR='#ffff99'>12 meters</FONT> to teleport one party member to your location. The dimensional opening lasts for <FONT COLOR='#ffff99'>10</FONT>s, allowing party members to interact with it to travel as far as <FONT COLOR='#ffff99'>32 meters</FONT>. The transported party member generates a shield that absorbs Damage up to <FONT COLOR='#99ff99'><$CALC_COMMA <$TABLE_SKILLBUFF ValueC 312204/>/100/>%</FONT> of Max HP for <FONT COLOR='#ffff99'>6</FONT>s.",
+    "desc": "Create a dimensional opening at a target location within <FONT COLOR='#ffff99'>12 meters</FONT> to teleport one party member to your location. The dimensional opening lasts for <FONT COLOR='#ffff99'>10</FONT>s, allowing party members to interact with it to travel as far as <FONT COLOR='#ffff99'>32 meters</FONT>. Party members other than the self within <FONT COLOR='#ffff99'>7 meters</FONT> receive a shield that absorbs Damage up to <FONT COLOR='#99ff99'><$CALC_COMMA <$TABLE_SKILLBUFF ValueC 312204/>/100/>%</FONT> of Max HP for <FONT COLOR='#ffff99'>6</FONT>s.",
     "classid": 602,
     "icon": "yy_skill_01_7.png",
     "identitycategory": "yinyangshi_normal",
@@ -44510,7 +45100,7 @@
     "classid": 0,
     "icon": "po_skill_01_37.png"
   },
-  "43001": { "id": 43001, "name": "Chop-Chop", "desc": "Run like the wind.", "classid": 0, "icon": "buff_243.png" },
+  "43001": { "id": 43001, "name": "Double Time", "desc": "Run like the wind.", "classid": 0, "icon": "buff_243.png" },
   "43002": {
     "id": 43002,
     "name": "Slow Time",
@@ -44759,6 +45349,64 @@
     "classid": 0,
     "icon": "po_skill_01_110.png"
   },
+  "43370": { "id": 43370, "name": "[영지놀이] 영지 좀비_평타", "desc": "", "classid": 0, "icon": "" },
+  "43371": {
+    "id": 43371,
+    "name": "Infection",
+    "desc": "Lunge forward into a spin and slash the target with one hand, inflicting damage.\nInflicts <FONT COLOR='#ffff99'>2</FONT> stacks of the Death Threat debuff to the damaged target.",
+    "classid": 0,
+    "icon": "buff_551.png"
+  },
+  "43377": {
+    "id": 43377,
+    "name": "Infected Blood Clot",
+    "desc": "Fire a ball of blood at the target location, causing damage.\nInflicts the Infection debuff to the damaged target and knocks them down.",
+    "classid": 0,
+    "icon": "buff_549.png"
+  },
+  "43378": {
+    "id": 43378,
+    "name": "Smell of Blood",
+    "desc": "Sprint forward, damaging all targets in your path.",
+    "classid": 0,
+    "icon": "buff_500.png"
+  },
+  "43379": {
+    "id": 43379,
+    "name": "Impulse Control",
+    "desc": "Enter Discipline Mode.\nOnce in Discipline Mode, Incoming Damage for <$MACRO bufftime @1:13027/>s -<FONT COLOR='#99ff99'><$MACRO buffstat1_100 @1:13027/>%</FONT>, and grants Push Immunity and Status Ailment Immunity, but Move Speed -<FONT COLOR='#ff9999'><$MACRO buffstat0_100 @1:13027/>%</FONT>.",
+    "classid": 0,
+    "icon": "buff_422.png"
+  },
+  "43372": { "id": 43372, "name": "[영지놀이] 영지 상급 좀비_평타", "desc": "", "classid": 0, "icon": "" },
+  "43373": {
+    "id": 43373,
+    "name": "Infection",
+    "desc": "Lunge forward into a spin and slash the target with one hand, inflicting damage.\nInflicts <FONT COLOR='#ffff99'>3</FONT> stacks of the Threat of Death debuff to the damaged target.",
+    "classid": 0,
+    "icon": "buff_551.png"
+  },
+  "43374": {
+    "id": 43374,
+    "name": "Infected Blood Clot",
+    "desc": "Fire a ball of blood at the target location, causing damage.\nInflicts the Infection debuff to the damaged target and knocks them down.",
+    "classid": 0,
+    "icon": "buff_549.png"
+  },
+  "43375": {
+    "id": 43375,
+    "name": "Smell of Blood",
+    "desc": "Sprint forward, damaging all targets in your path.",
+    "classid": 0,
+    "icon": "buff_500.png"
+  },
+  "43376": {
+    "id": 43376,
+    "name": "Impulse Control",
+    "desc": "Enter Discipline Mode.\nOnce in Discipline Mode, Incoming Damage for <$MACRO bufftime @1:13027/>s -<FONT COLOR='#99ff99'><$MACRO buffstat1_100 @1:13027/>%</FONT>, and grants Push Immunity and Status Ailment Immunity, but Move Speed -<FONT COLOR='#ff9999'><$MACRO buffstat0_100 @1:13027/>%</FONT>.",
+    "classid": 0,
+    "icon": "buff_422.png"
+  },
   "46670": {
     "id": 46670,
     "name": "Phantom Movement (Right)",
@@ -44931,7 +45579,7 @@
   },
   "40675": {
     "id": 40675,
-    "name": "Whish",
+    "name": "Whoosh",
     "desc": "Rapidly spin in the air while moving forward. ",
     "classid": 0,
     "icon": "dh_skill_01_5.png"
@@ -45942,14 +46590,14 @@
   },
   "535300": {
     "id": 535300,
-    "name": "에스더 스킬 이난나 헬 어둠 2관문",
+    "name": "에스더 스킬 이난나 EX 어둠 2관문",
     "desc": "",
     "classid": 0,
     "icon": "po_skill_01_5.png"
   },
   "535320": {
     "id": 535320,
-    "name": "에스더 스킬 이난나 헬 어둠 3관문_봉인",
+    "name": "에스더 스킬 이난나 EX 어둠 3관문_봉인",
     "desc": "",
     "classid": 0,
     "icon": "po_skill_01_5.png"
@@ -46012,7 +46660,7 @@
   },
   "538000": {
     "id": 538000,
-    "name": "에스더 스킬 카단_1 카멘 4관문_헬",
+    "name": "에스더 스킬 카단_1 카멘 4관문_EX",
     "desc": "",
     "classid": 0,
     "icon": "po_skill_01_5.png"
@@ -46026,7 +46674,7 @@
   },
   "539000": {
     "id": 539000,
-    "name": "에스더 스킬 카단_2 카멘 4관문_헬",
+    "name": "에스더 스킬 카단_2 카멘 4관문_EX",
     "desc": "",
     "classid": 0,
     "icon": "po_skill_01_5.png"
@@ -46122,7 +46770,7 @@
   },
   "95510": {
     "id": 95510,
-    "name": "Shark Machine Gun",
+    "name": "Piercing Machine Gun",
     "desc": "Hold the skill hotkey to fire a machine gun while circling toward the target location.",
     "classid": 0,
     "icon": "vehicle_26.png"
@@ -46164,7 +46812,7 @@
   },
   "95511": {
     "id": 95511,
-    "name": "Shark Machine Gun",
+    "name": "Piercing Machine Gun",
     "desc": "Hold the skill hotkey to fire a machine gun while circling toward the target location.",
     "classid": 0,
     "icon": "vehicle_26.png"
@@ -46206,7 +46854,7 @@
   },
   "95512": {
     "id": 95512,
-    "name": "Shark Machine Gun",
+    "name": "Piercing Machine Gun",
     "desc": "Hold the skill hotkey to fire a machine gun while circling toward the target location.",
     "classid": 0,
     "icon": "vehicle_26.png"
@@ -47819,6 +48467,62 @@
     "classid": 0,
     "icon": "vehicle_65.png"
   },
+  "98200": {
+    "id": 98200,
+    "name": "Nitro Booster",
+    "desc": "Activate Nitro and go at full speed.",
+    "classid": 0,
+    "icon": "vehicle_60.png"
+  },
+  "98201": {
+    "id": 98201,
+    "name": "Headlight",
+    "desc": "Activates the headlamp.\n\n<FONT COLOR='#ffff99'>Can be turned off when holding</FONT>",
+    "classid": 0,
+    "icon": "vehicle_63.png"
+  },
+  "98202": {
+    "id": 98202,
+    "name": "Engine Failure",
+    "desc": "The engine runs in reverse, causing technical difficulties.",
+    "classid": 0,
+    "icon": "vehicle_64.png"
+  },
+  "98203": {
+    "id": 98203,
+    "name": "Origin of Wealth",
+    "desc": "Activate the unidentified hologram device, hoping for Arkesia's prosperity.",
+    "classid": 0,
+    "icon": "vehicle_65.png"
+  },
+  "98210": {
+    "id": 98210,
+    "name": "Rapido",
+    "desc": "It spins forward rapidly.\n<FONT COLOR='#909090'>Quickly</FONT>",
+    "classid": 0,
+    "icon": "vehicle_60.png"
+  },
+  "98211": {
+    "id": 98211,
+    "name": "Brillante",
+    "desc": "It rises and shines brightly.\n<FONT COLOR='#909090'>Brilliantly</FONT>",
+    "classid": 0,
+    "icon": "vehicle_63.png"
+  },
+  "98212": {
+    "id": 98212,
+    "name": "Sostenuto",
+    "desc": "It moves slowly as the harmony continues.\n<FONT COLOR='#909090'>Sustained</FONT>",
+    "classid": 0,
+    "icon": "vehicle_64.png"
+  },
+  "98213": {
+    "id": 98213,
+    "name": "Saltato",
+    "desc": "It rotates as if dancing.\n<FONT COLOR='#909090'>Lively</FONT>",
+    "classid": 0,
+    "icon": "vehicle_65.png"
+  },
   "98220": { "id": 98220, "name": "Booster", "desc": "Glide forward.", "classid": 0, "icon": "vehicle_60.png" },
   "98221": { "id": 98221, "name": "Snowmaker", "desc": "Make snow fall down.", "classid": 0, "icon": "vehicle_63.png" },
   "98222": {
@@ -47859,7 +48563,7 @@
   },
   "98040": {
     "id": 98040,
-    "name": "Shark Machine Gun",
+    "name": "Piercing Machine Gun",
     "desc": "Hold the skill hotkey to fire a machine gun while circling toward the target location.",
     "classid": 0,
     "icon": "vehicle_26.png"
