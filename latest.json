@@ -1,11 +1,11 @@
 {
-    "version": "v1.4.13",
-    "notes": "### v1.4.13\n#### BUG FIXES\n- adjusted hp bar color for shielded bosses (win11)\n- added missing buff icons\n\n### v1.4.11\n#### NEW FEATURES\n- new update popup (wow so cool!)\n- boss hp bar will now show shields if the boss is shielded (added in preparation of hell brel g6 7x mech)\n\n![shield](https://cdn.discordapp.com/attachments/220646943498567680/1191979350157959210/image.png)\n#### BUG FIXES\n- fix local player cache causing crashes\n\n### v1.4.10\n#### NEW FEATURES\n- hovering skills now show tripod info\n\n![hovering skills](https://cdn.discordapp.com/attachments/220646943498567680/1189022385702182921/image.png)\n#### BUG FIXES\n- fix tripods for certain skills not being tracked\n\nfull patch notes on [github](https://github.com/snoww/loa-logs/releases/latest)\n\nsend bug reports/suggestions to [#loa-logs](https://discord.gg/sbSa3pkDF5)",
-    "pub_date": "2024-01-04T10:39:57.827Z",
+    "version": "v1.5.0",
+    "notes": "### v1.5.0\n#### NEW FEATURES\n- updated meter for hell brel patch\n\nfull patch notes on [github](https://github.com/snoww/loa-logs/releases/latest)\n\nsend bug reports/suggestions to [#loa-logs](https://discord.gg/sbSa3pkDF5)",
+    "pub_date": "2024-01-11T00:51:39.342Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.4.13/LOA.Logs_1.4.13_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmEwN05ZUHhSODZEK0F5ZjFFR2kyK0srdXN3b3pZUURDbWt2ckI5Q2FJVjNFSFk4UHVkdnJ0MmUxVFE2eXByR1ZxT25vNjQ2TFc0U2NJS1NMYngvdGdnPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzA0MzY3MzEwCWZpbGU6TE9BIExvZ3NfMS40LjEzX3g2NC1zZXR1cC5uc2lzLnppcApncjdXUVEwdmR3LzErdTVuYmNLVUNPSTlZcTJoanIrbGVOaGRITHEvU09RRU1oUmc2cVFRZmdydzBMaWVHYmdOUEM2VUV3U3hLTWNxTTB6bzlORmRDdz09Cg=="
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.5.0/LOA.Logs_1.5.0_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlpNV2ovclkvQ20rTjdXWUx2TE9yNXlKU2tIMWpXckFBcjJjellER1VNSkora1ZaejF2R0YwelBTNVZNbnFSMm42Q0E2T1FlQ0VSUDdmdEVNdFl0RmdBPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzA0OTM1NTgwCWZpbGU6TE9BIExvZ3NfMS41LjBfeDY0LXNldHVwLm5zaXMuemlwCnBxUGZYRVQ2Yk1RT2gwMUNUWVc5N3NUU21lOHV5dFcxVnVyUnZxaUN1LzhWSTRsZkNNMVdKdU4zY00wMGhoVmdpTmNtOHJ6bFM2QW9FcUliZXAwckF3PT0K"
         }
     }
 }
