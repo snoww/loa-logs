@@ -1,11 +1,11 @@
 {
-    "version": "v1.5.0",
-    "notes": "### v1.5.0\n#### NEW FEATURES\n- updated meter for hell brel patch\n\nfull patch notes on [github](https://github.com/snoww/loa-logs/releases/latest)\n\nsend bug reports/suggestions to [#loa-logs](https://discord.gg/sbSa3pkDF5)",
-    "pub_date": "2024-01-11T00:51:39.342Z",
+    "version": "v1.5.1",
+    "notes": "### v1.5.1\n#### BUG FIXES\n- fix brel g1 split bosses not tracking\n- fix akkan g2 pre-gate adds counting as bosses\n\nfull patch notes on [github](https://github.com/snoww/loa-logs/releases/latest)\n\nsend bug reports/suggestions to [#loa-logs](https://discord.gg/sbSa3pkDF5)",
+    "pub_date": "2024-01-13T08:59:41.921Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.5.0/LOA_Logs_1.5.0_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlpNV2ovclkvQ20rTjdXWUx2TE9yNXlKU2tIMWpXckFBcjJjellER1VNSkora1ZaejF2R0YwelBTNVZNbnFSMm42Q0E2T1FlQ0VSUDdmdEVNdFl0RmdBPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzA0OTM1NTgwCWZpbGU6TE9BIExvZ3NfMS41LjBfeDY0LXNldHVwLm5zaXMuemlwCnBxUGZYRVQ2Yk1RT2gwMUNUWVc5N3NUU21lOHV5dFcxVnVyUnZxaUN1LzhWSTRsZkNNMVdKdU4zY00wMGhoVmdpTmNtOHJ6bFM2QW9FcUliZXAwckF3PT0K"
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.5.1/LOA.Logs_1.5.1_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlZzZkZBUTBLbzc1T1R4d2FySnhwODNyVkpsQzU2RGI1Y3IvRnNjbHp1UmwvaElXY2Zyb05GMkZDZUJaUEo1QU9VMnVnZ1RRbmt5WUtrcngrYklsdndZPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzA1MTM2MjU2CWZpbGU6TE9BIExvZ3NfMS41LjFfeDY0LXNldHVwLm5zaXMuemlwCmZHdHRrbllFYk5kWTAzM3Q2VjBjZTArbWtudVVxcVJvWUlkeTRvc01WbFFkam8rcERlMUNDc2YxWkRWTzQ2TW0xQnduS2R6NjlJaUg1NC9hYzFvUUR3PT0K"
         }
     }
 }
