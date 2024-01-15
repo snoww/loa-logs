@@ -15227,7 +15227,7 @@
     "type": "monster",
     "pushimmune": true
   },
-  "284091": { "id": 284091, "name": "Origin of Lazaram", "grade": "boss", "type": "monster", "pushimmune": true },
+  "284091": { "id": 284091, "name": "Origin of Lazaram", "grade": "normal", "type": "monster", "pushimmune": true },
   "494831": {
     "id": 494831,
     "name": "Lazaram, the Trailblazer",
@@ -15249,19 +15249,19 @@
     "type": "monster",
     "pushimmune": true
   },
-  "494841": { "id": 494841, "name": "Origin of Lazaram", "grade": "boss", "type": "monster", "pushimmune": true },
-  "494842": { "id": 494842, "name": "Origin of Lazaram", "grade": "boss", "type": "monster", "pushimmune": true },
+  "494841": { "id": 494841, "name": "Origin of Lazaram", "grade": "normal", "type": "monster", "pushimmune": true },
+  "494842": { "id": 494842, "name": "Origin of Lazaram", "grade": "normal", "type": "monster", "pushimmune": true },
   "494843": { "id": 494843, "name": "Subordinated Vertus", "grade": "boss", "type": "monster", "pushimmune": true },
   "494844": { "id": 494844, "name": "Subordinated Calventus", "grade": "boss", "type": "monster", "pushimmune": true },
   "494845": { "id": 494845, "name": "Subordinated Legoros", "grade": "boss", "type": "monster", "pushimmune": true },
   "494846": { "id": 494846, "name": "Brand of Subordination", "grade": "boss", "type": "monster", "pushimmune": true },
   "494847": { "id": 494847, "name": "Magick Source", "grade": "named", "type": "monster", "pushimmune": true },
-  "494852": { "id": 494852, "name": "Origin of Lazaram", "grade": "boss", "type": "monster", "pushimmune": true },
-  "494853": { "id": 494853, "name": "Origin of Lazaram", "grade": "boss", "type": "monster", "pushimmune": true },
-  "494854": { "id": 494854, "name": "Origin of Lazaram", "grade": "boss", "type": "monster", "pushimmune": true },
-  "494855": { "id": 494855, "name": "Origin of Lazaram", "grade": "boss", "type": "monster", "pushimmune": true },
-  "494856": { "id": 494856, "name": "Origin of Lazaram", "grade": "boss", "type": "monster", "pushimmune": true },
-  "494870": { "id": 494870, "name": "Origin of Lazaram", "grade": "boss", "type": "monster", "pushimmune": true },
+  "494852": { "id": 494852, "name": "Origin of Lazaram", "grade": "normal", "type": "monster", "pushimmune": true },
+  "494853": { "id": 494853, "name": "Origin of Lazaram", "grade": "normal", "type": "monster", "pushimmune": true },
+  "494854": { "id": 494854, "name": "Origin of Lazaram", "grade": "normal", "type": "monster", "pushimmune": true },
+  "494855": { "id": 494855, "name": "Origin of Lazaram", "grade": "normal", "type": "monster", "pushimmune": true },
+  "494856": { "id": 494856, "name": "Origin of Lazaram", "grade": "normal", "type": "monster", "pushimmune": true },
+  "494870": { "id": 494870, "name": "Origin of Lazaram", "grade": "normal", "type": "monster", "pushimmune": true },
   "494871": { "id": 494871, "name": "Lazaram_Fall_12", "grade": "boss", "type": "monster", "pushimmune": true },
   "494872": { "id": 494872, "name": "Lazaram_Fall_1", "grade": "boss", "type": "monster", "pushimmune": true },
   "494873": { "id": 494873, "name": "Lazaram_Fall_3", "grade": "boss", "type": "monster", "pushimmune": true },
@@ -15278,8 +15278,8 @@
     "type": "monster",
     "pushimmune": true
   },
-  "494882": { "id": 494882, "name": "Lava Pillar", "grade": "boss", "type": "summoned", "pushimmune": true },
-  "494883": { "id": 494883, "name": "Lava Pillar", "grade": "boss", "type": "monster", "pushimmune": true },
+  "494882": { "id": 494882, "name": "Lava Pillar", "grade": "normal", "type": "summoned", "pushimmune": true },
+  "494883": { "id": 494883, "name": "Lava Pillar", "grade": "normal", "type": "monster", "pushimmune": true },
   "494884": {
     "id": 494884,
     "name": "Firehorn_Invisible Monster",
@@ -15287,11 +15287,11 @@
     "type": "monster",
     "pushimmune": true
   },
-  "494885": { "id": 494885, "name": "Lava Pillar", "grade": "boss", "type": "summoned", "pushimmune": true },
-  "494886": { "id": 494886, "name": "Lava Pillar", "grade": "boss", "type": "summoned", "pushimmune": true },
-  "494887": { "id": 494887, "name": "Lava Pillar", "grade": "boss", "type": "summoned", "pushimmune": true },
-  "494888": { "id": 494888, "name": "Lava Pillar", "grade": "boss", "type": "summoned", "pushimmune": true },
-  "494889": { "id": 494889, "name": "Lava Pillar", "grade": "boss", "type": "summoned", "pushimmune": true },
+  "494885": { "id": 494885, "name": "Lava Pillar", "grade": "normal", "type": "summoned", "pushimmune": true },
+  "494886": { "id": 494886, "name": "Lava Pillar", "grade": "normal", "type": "summoned", "pushimmune": true },
+  "494887": { "id": 494887, "name": "Lava Pillar", "grade": "normal", "type": "summoned", "pushimmune": true },
+  "494888": { "id": 494888, "name": "Lava Pillar", "grade": "normal", "type": "summoned", "pushimmune": true },
+  "494889": { "id": 494889, "name": "Lava Pillar", "grade": "normal", "type": "summoned", "pushimmune": true },
   "494703": {
     "id": 494703,
     "name": "Rakathus, the Lurking Arrogance",
@@ -15330,14 +15330,14 @@
   "494726": {
     "id": 494726,
     "name": "Divided Parts of Arrogance",
-    "grade": "boss",
+    "grade": "normal",
     "type": "monster",
     "pushimmune": true
   },
   "494727": {
     "id": 494727,
     "name": "Divided Parts of Arrogance",
-    "grade": "boss",
+    "grade": "normal",
     "type": "monster",
     "pushimmune": true
   },
