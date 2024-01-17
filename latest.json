@@ -1,11 +1,11 @@
 {
-    "version": "v1.5.1",
-    "notes": "### v1.5.1\n#### BUG FIXES\n- fix brel g1 split bosses not tracking\n- fix akkan g2 pre-gate adds counting as bosses\n\nfull patch notes on [github](https://github.com/snoww/loa-logs/releases/latest)\n\nsend bug reports/suggestions to [#loa-logs](https://discord.gg/sbSa3pkDF5)",
-    "pub_date": "2024-01-13T08:59:41.921Z",
+    "version": "v1.5.2",
+    "notes": "### v1.5.2\n#### NEW FEATURES\n- added option to hide meter/log on startup (settings > accessibility)\n- added button to optimize database (use this if you delete encounters often)\n#### BUG FIXES\n- fix certain voldis adds counting as bosses\n\nfull patch notes on [github](https://github.com/snoww/loa-logs/releases/latest)\n\nsend bug reports/suggestions to [#loa-logs](https://discord.gg/sbSa3pkDF5)",
+    "pub_date": "2024-01-17T09:11:37.908Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.5.1/LOA.Logs_1.5.1_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlZzZkZBUTBLbzc1T1R4d2FySnhwODNyVkpsQzU2RGI1Y3IvRnNjbHp1UmwvaElXY2Zyb05GMkZDZUJaUEo1QU9VMnVnZ1RRbmt5WUtrcngrYklsdndZPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzA1MTM2MjU2CWZpbGU6TE9BIExvZ3NfMS41LjFfeDY0LXNldHVwLm5zaXMuemlwCmZHdHRrbllFYk5kWTAzM3Q2VjBjZTArbWtudVVxcVJvWUlkeTRvc01WbFFkam8rcERlMUNDc2YxWkRWTzQ2TW0xQnduS2R6NjlJaUg1NC9hYzFvUUR3PT0K"
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.5.2/LOA.Logs_1.5.2_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlQxU2FNY1UzRlpaV2EwUHZqVTAvTVRMUkxMdCtpUnMvY0lRZDJLRHcyR3JKcFlDZjZWaS9oQ3I0b0xxTXl2N3ZLSmlsNjJHN3N3Mi94L2pkQ05xWmdnPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzA1NDgyNTk5CWZpbGU6TE9BIExvZ3NfMS41LjJfeDY0LXNldHVwLm5zaXMuemlwCktacFdOajk2bDRnNlMxZTFxRE1IeElkYmVvbVA5V3NOU1k4bUM0UCtLbDl0dXpMWDljZG5YOU5PTTdHWXBad1JGM29Ob3hUa2xWTG15WldEOG5MTEFBPT0K"
         }
     }
 }
