@@ -6,12 +6,14 @@
     import { onMount } from "svelte";
     import NProgress from "nprogress";
     import SettingItem from "$lib/components/settings/SettingItem.svelte";
+    import { writable } from "svelte/store";
 
     let encounterDbInfo: EncounterDbInfo;
     let deleteConfirm = false;
     let deleteInProgress = false;
     let deleteMsg = "";
     let deleteFn: (() => void) | undefined;
+    let optimized = writable(false);
 
     async function openDbFolder() {
         await invoke("open_db_path");
@@ -62,6 +64,22 @@
         <div>Database Folder:</div>
         <button class="rounded-md bg-zinc-600 p-1 hover:bg-zinc-700" on:click={openDbFolder}> Open</button>
     </div>
+    <div class="flex items-center space-x-4">
+        <div use:tooltip={{ content: "Use this feature if searching is slow" }}>Optimize Database:</div>
+        <button
+            class="rounded-md p-1 w-20 {$optimized ? 'disabled bg-gray-600' : 'bg-accent-800 hover:bg-accent-900'}"
+            on:click={async () => {
+                $optimized = true;
+                await invoke("write_log", { message: "optimizing database..." });
+                await invoke("optimize_database");
+            }}>
+            {#if $optimized}
+                Optimized
+            {:else}
+                Optimize
+            {/if}
+        </button>
+    </div>
     <SettingItem
         name="Keep Favorites"
         description="Encounters marked as favorites will not be deleted using the options below"
@@ -107,10 +125,10 @@
                 <button
                     class="rounded-md bg-red-800 p-1 hover:bg-red-900"
                     on:click={() => {
-                    deleteConfirm = true;
-                    deleteMsg = `Are you sure you want to delete all encounters that were not cleared?`;
-                    deleteFn = deleteAllUnclearedEncounters;
-                }}>
+                        deleteConfirm = true;
+                        deleteMsg = `Are you sure you want to delete all encounters that were not cleared?`;
+                        deleteFn = deleteAllUnclearedEncounters;
+                    }}>
                     Delete
                 </button>
             </div>
@@ -143,8 +161,7 @@
                     aria-label="Close modal"
                     on:click={() => (deleteConfirm = false)}>
                     <span class="sr-only">Close modal</span>
-                    <svg class="size-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"
-                    >
+                    <svg class="size-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                         <path
                             fill-rule="evenodd"
                             d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
@@ -159,8 +176,7 @@
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"
-                            xmlns="http://www.w3.org/2000/svg"
-                        >
+                            xmlns="http://www.w3.org/2000/svg">
                             <path
                                 stroke-linecap="round"
                                 stroke-linejoin="round"
@@ -185,9 +201,7 @@
                                 No, cancel
                             </button>
                         {:else}
-                            <div>
-                                Deleting...
-                            </div>
+                            <div>Deleting...</div>
                         {/if}
                     </div>
                 </div>

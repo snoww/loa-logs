@@ -16,7 +16,7 @@ use flexi_logger::{
     Cleanup, Criterion, DeferredNow, Duplicate, FileSpec, Logger, Naming, WriteMode,
 };
 use hashbrown::HashMap;
-use log::{info, warn, Record, error};
+use log::{error, info, warn, Record};
 use parser::models::*;
 
 use rusqlite::{params, params_from_iter, Connection};
@@ -25,6 +25,7 @@ use tauri::{
     SystemTray, SystemTrayEvent, SystemTrayMenu, SystemTrayMenuItem, WindowBuilder,
 };
 use tauri_plugin_window_state::{AppHandleExt, StateFlags, WindowExt};
+use tokio::task;
 use window_vibrancy::{apply_blur, clear_blur};
 
 #[tokio::main]
@@ -102,6 +103,9 @@ async fn main() -> Result<()> {
 
             if let Some(settings) = settings.clone() {
                 info!("settings loaded");
+                if settings.general.hide_meter_on_start {
+                    meter_window.hide().unwrap();
+                }
                 if settings.general.auto_iface {
                     ip = meter_core::get_most_common_ip().unwrap();
                     info!("auto_iface enabled, using ip: {}", ip);
@@ -161,6 +165,11 @@ async fn main() -> Result<()> {
                     .expect("failed to create log window");
             logs_window.restore_state(StateFlags::all()).unwrap();
             logs_window.set_decorations(true).unwrap();
+            if let Some(settings) = settings.clone() {
+                if settings.general.hide_logs_on_start {
+                    logs_window.hide().unwrap();
+                }
+            }
 
             tokio::task::spawn_blocking(move || {
                 parser::start(meter_window, ip, port, raw_socket, settings).map_err(|e| {
@@ -1169,6 +1178,21 @@ fn get_db_info(window: tauri::Window, min_duration: i64) -> EncounterDbInfo {
         total_encounters: encounter_count,
         total_encounters_filtered: encounter_filtered_count,
     }
+}
+
+#[tauri::command]
+fn optimize_database(window: tauri::Window) {
+    let window = window.clone();
+    task::spawn(async move {
+        let path = window
+            .app_handle()
+            .path_resolver()
+            .resource_dir()
+            .expect("could not get resource dir");
+        let conn = get_db_connection(&path).expect("could not get db connection");
+        conn.execute("VACUUM;", params![]).unwrap();
+        info!("optimized database");
+    });
 }
 
 #[tauri::command]

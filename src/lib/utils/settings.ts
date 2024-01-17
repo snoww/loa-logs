@@ -35,6 +35,8 @@ export const defaultSettings = {
         alwaysOnTop: true,
         bossOnlyDamage: false,
         keepFavorites: true,
+        hideMeterOnStart: false,
+        hideLogsOnStart: false,
     },
     shortcuts: {
         hideMeter: {

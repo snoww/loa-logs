@@ -52,6 +52,14 @@
             <div>Log UI Scale</div>
         </div>
         <SettingItem
+            name="Hide Meter on Launch"
+            description={"Hide the meter window when starting the app."}
+            bind:setting={$settings.general.hideMeterOnStart} />
+        <SettingItem
+            name="Hide Logs on Launch"
+            description={"Hide the logs window when starting the app."}
+            bind:setting={$settings.general.hideLogsOnStart} />
+        <SettingItem
             name="Split Lines"
             description={"Split breakdown lines with alternating background colors for better readability."}
             bind:setting={$settings.general.splitLines} />
