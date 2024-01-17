@@ -156,20 +156,23 @@ async fn main() -> Result<()> {
                 }
             }
 
+            let mut logs_visible = true;
+            if let Some(settings) = settings.clone() {
+                if settings.general.hide_logs_on_start {
+                    logs_visible = false;
+                }
+            }
+
             let logs_window =
                 WindowBuilder::new(app, "logs", tauri::WindowUrl::App("/logs".into()))
                     .title("LOA Logs")
                     .min_inner_size(650.0, 300.0)
                     .inner_size(800.0, 500.0)
+                    .visible(logs_visible)
                     .build()
                     .expect("failed to create log window");
             logs_window.restore_state(StateFlags::all()).unwrap();
             logs_window.set_decorations(true).unwrap();
-            if let Some(settings) = settings.clone() {
-                if settings.general.hide_logs_on_start {
-                    logs_window.hide().unwrap();
-                }
-            }
 
             tokio::task::spawn_blocking(move || {
                 parser::start(meter_window, ip, port, raw_socket, settings).map_err(|e| {
