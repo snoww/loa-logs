@@ -1,11 +1,11 @@
 {
-    "version": "v1.5.4",
-    "notes": "### v1.5.4\n#### NEW FEATURES\n- added two new accent colors (rose and violet)\n- added support identity column (settings > live meter/logs > support identity %). _note: only works on new logs_\n\n![identity](https://cdn.discordapp.com/attachments/220646943498567680/1197486350916669512/app_BiFRacJpfE.png)\n\n![setting](https://cdn.discordapp.com/attachments/220646943498567680/1197501510972616764/app_bY7IgOVdje.png)\n#### BUG FIXES\n- fix flashing windows on launch when app set to be hidden\n- fix identity settings not saving\n\nfull patch notes on [github](https://github.com/snoww/loa-logs/releases/latest)\n\nsend bug reports/suggestions to [#loa-logs](https://discord.gg/sbSa3pkDF5)",
-    "pub_date": "2024-01-18T11:40:12.304Z",
+    "version": "v1.5.5",
+    "notes": "### v1.5.5\n#### NEW FEATURES\n- added two new accent colors (rose and violet)\n- added support identity column (settings > live meter/logs > support identity %). _note: only works on new logs_\n\n![identity](https://cdn.discordapp.com/attachments/220646943498567680/1197486350916669512/app_BiFRacJpfE.png)\n\n![setting](https://cdn.discordapp.com/attachments/220646943498567680/1197501510972616764/app_bY7IgOVdje.png)\n#### BUG FIXES\n- fix identity settings not saving\n\nfull patch notes on [github](https://github.com/snoww/loa-logs/releases/latest)\n\nsend bug reports/suggestions to [#loa-logs](https://discord.gg/sbSa3pkDF5)",
+    "pub_date": "2024-01-18T11:53:12.304Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.5.4/LOA.Logs_1.5.4_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmEyenhPeit5M24rbXVvcGxZaXRnZG13eU43VGFLa3NYS1paUnNKSmFEUlNRakVtblNoaE44b3ZpSS9vNXZBeWFkZzRDWmJubGtzc3UzUnpJTlFWY1FNPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzA1NTc4MDE0CWZpbGU6TE9BIExvZ3NfMS41LjRfeDY0LXNldHVwLm5zaXMuemlwCldkUzZiTFZES3U1UWxOdG52U2F6eTZMSGVHRWJWMUNiTUtFQnc5VWc4RDhDYnhrUUlPT1ZKVlBoMURiQTBaRERyRzJFWnppanhwSEMxTUFXbmRvOURRPT0K"
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.5.5/LOA.Logs_1.5.5_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmRmaWdqZFllcGxOckl5RHNwQUowSFp0Wm4xZC9oSXl3d0hsTkdxZFY2UGc5LzB6bXd6WGdnZFpnbXRnZVZTK25nOExhVFBNeDBqTG1TWTdEdS84UHdjPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzA1NTc4Nzg3CWZpbGU6TE9BIExvZ3NfMS41LjVfeDY0LXNldHVwLm5zaXMuemlwCjQ2L3kvV1ljWUlQa1kvUFphbVhtSmpjdzh0L1huSmVMQXhqWFlCMWZiK2t0U25DQjkrbi9oclBmVkxtZlNrZHpmNVNWcHlQdHhvMTc1dGdtQW00aUFRPT0K"
         }
     }
 }
