@@ -103,8 +103,8 @@ async fn main() -> Result<()> {
 
             if let Some(settings) = settings.clone() {
                 info!("settings loaded");
-                if !settings.general.hide_meter_on_start {
-                    meter_window.show().unwrap();
+                if settings.general.hide_meter_on_start {
+                    meter_window.hide().unwrap();
                 }
                 if settings.general.auto_iface {
                     ip = meter_core::get_most_common_ip().unwrap();
@@ -145,7 +145,6 @@ async fn main() -> Result<()> {
                     }
                 }
             } else {
-                meter_window.show().unwrap();
                 ip = meter_core::get_most_common_ip().unwrap();
                 info!("settings not found, auto_iface enabled, using ip: {}", ip);
             }
@@ -157,18 +156,20 @@ async fn main() -> Result<()> {
                 }
             }
 
-            let logs_visible = settings.as_ref().map(|s| s.general.hide_logs_on_start).unwrap_or(true);
+            let hide_logs = settings.as_ref().map(|s| s.general.hide_logs_on_start).unwrap_or(true);
 
             let logs_window =
                 WindowBuilder::new(app, "logs", tauri::WindowUrl::App("/logs".into()))
                     .title("LOA Logs")
                     .min_inner_size(650.0, 300.0)
                     .inner_size(800.0, 500.0)
-                    .visible(logs_visible)
                     .build()
                     .expect("failed to create log window");
             logs_window.restore_state(StateFlags::all()).unwrap();
             logs_window.set_decorations(true).unwrap();
+            if hide_logs {
+                logs_window.hide().unwrap();
+            }
 
 
             task::spawn_blocking(move || {
