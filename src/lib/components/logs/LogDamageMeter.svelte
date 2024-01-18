@@ -553,6 +553,11 @@
                                     <th class="w-12 font-normal" use:tooltip={{ content: "% Damage buffed by Support" }}
                                         >Buff%</th>
                                 {/if}
+                                {#if anySupportIdentity && $settings.logs.percentIdentityBySup}
+                                    <th class="w-12 font-normal" use:tooltip={{ content: "% Damage buffed by Support Identity" }}
+                                    >Iden%
+                                    </th>
+                                {/if}
                                 {#if anySupportBrand && $settings.logs.percentBrand}
                                     <th class="w-12 font-normal" use:tooltip={{ content: "% Damage buffed by Brand" }}
                                         >B%</th>
