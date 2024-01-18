@@ -123,7 +123,8 @@
         "decorations": false,
         "transparent": true,
         "minWidth": 400,
-        "minHeight": 180
+        "minHeight": 180,
+        "visible": false
       }
     ]
   }
