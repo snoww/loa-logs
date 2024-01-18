@@ -12,6 +12,7 @@
     export let anyFrontAtk: boolean;
     export let anyBackAtk: boolean;
     export let anySupportBuff: boolean;
+    export let anySupportIdentity: boolean;
     export let anySupportBrand: boolean;
     export let end: number;
     export let dps: (string | number)[];
@@ -130,6 +131,12 @@
     <td class="px-1 text-center">
         {round((entity.damageStats.buffedBySupport / entity.damageStats.damageDealt) * 100)}<span
             class="text-3xs text-gray-300">%</span>
+    </td>
+{/if}
+{#if anySupportIdentity && meterSettings.percentIdentityBySup}
+    <td class="px-1 text-center">
+        {round((entity.damageStats.buffedByIdentity / entity.damageStats.damageDealt) * 100)}<span
+        class="text-3xs text-gray-300">%</span>
     </td>
 {/if}
 {#if anySupportBrand && meterSettings.percentBrand}

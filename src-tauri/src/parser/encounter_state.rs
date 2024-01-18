@@ -10,6 +10,7 @@ use rusqlite::{params, Connection, Transaction};
 use serde_json::json;
 use tauri::{Manager, Window, Wry};
 use tokio::task;
+use crate::parser::debug_print;
 
 const WINDOW_MS: i64 = 5_000;
 const WINDOW_S: i64 = 5;
@@ -584,6 +585,7 @@ impl EncounterState {
                 .push((timestamp, damage));
 
             let mut is_buffed_by_support = false;
+            let mut is_buffed_by_identity = false;
             let mut is_debuffed_by_support = false;
             let se_on_source = se_on_source
                 .iter()
@@ -618,7 +620,18 @@ impl EncounterState {
                         if let Some(skill) = buff.source.skill.as_ref() {
                             is_buffed_by_support = is_support_class_id(skill.class_id)
                                 && buff.buff_type & StatusEffectBuffTypeFlags::DMG.bits() != 0
-                                && buff.target == StatusEffectTarget::PARTY;
+                                && buff.target == StatusEffectTarget::PARTY
+                                && buff.buff_category == "classskill";
+                        }
+                    }
+                }
+                if !is_buffed_by_identity {
+                    if let Some(buff) = self.encounter.encounter_damage_stats.buffs.get(buff_id) {
+                        if let Some(skill) = buff.source.skill.as_ref() {
+                            is_buffed_by_identity = is_support_class_id(skill.class_id)
+                                && buff.buff_type & StatusEffectBuffTypeFlags::DMG.bits() != 0
+                                && buff.target == StatusEffectTarget::PARTY
+                                && buff.buff_category == "identity";
                         }
                     }
                 }
@@ -667,6 +680,10 @@ impl EncounterState {
             if is_buffed_by_support {
                 skill.buffed_by_support += damage;
                 source_entity.damage_stats.buffed_by_support += damage;
+            }
+            if is_buffed_by_identity {
+                skill.buffed_by_identity += damage;
+                source_entity.damage_stats.buffed_by_identity += damage;
             }
             if is_debuffed_by_support {
                 skill.debuffed_by_support += damage;

@@ -12,6 +12,7 @@
     export let anyFrontAtk: boolean;
     export let anyBackAtk: boolean;
     export let anySupportBuff: boolean;
+    export let anySupportIdentity: boolean;
     export let anySupportBrand: boolean;
     export let end: number;
     export let isSolo: boolean;
@@ -26,6 +27,7 @@
     {anyFrontAtk}
     {anyBackAtk}
     {anySupportBuff}
+    {anySupportIdentity}
     {anySupportBrand}
     {end}
     {dps}

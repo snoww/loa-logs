@@ -11,6 +11,7 @@
     export let hasFrontAttacks: boolean;
     export let hasBackAttacks: boolean;
     export let anySupportBuff: boolean;
+    export let anySupportIdentity: boolean;
     export let anySupportBrand: boolean;
     export let abbreviatedSkillDamage: (string | number)[];
     export let skillDps: (string | number)[];
@@ -97,6 +98,15 @@
     <td class="px-1 text-center">
         {#if skill.totalDamage > 0}
             {round((skill.buffedBySupport / skill.totalDamage) * 100)}<span class="text-3xs text-gray-300">%</span>
+        {:else}
+            0.0<span class="text-3xs text-gray-300">%</span>
+        {/if}
+    </td>
+{/if}
+{#if anySupportIdentity && meterSettings.breakdown.percentIdentityBySup}
+    <td class="px-1 text-center">
+        {#if skill.totalDamage > 0}
+            {round((skill.buffedByIdentity / skill.totalDamage) * 100)}<span class="text-3xs text-gray-300">%</span>
         {:else}
             0.0<span class="text-3xs text-gray-300">%</span>
         {/if}

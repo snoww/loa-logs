@@ -23,6 +23,7 @@
     let hasBackAttacks = false;
     let hasFrontAttacks = false;
     let anySupportBrand = false;
+    let anySupportIdentity = false;
     let anySupportBuff = false;
 
     let playerName: string;
@@ -73,6 +74,7 @@
         hasBackAttacks = skills.some((skill) => skill.backAttacks > 0);
         hasFrontAttacks = skills.some((skill) => skill.frontAttacks > 0);
         anySupportBuff = skills.some((skill) => skill.buffedBySupport > 0);
+        anySupportIdentity = skills.some((skill) => skill.buffedByIdentity > 0);
         anySupportBrand = skills.some((skill) => skill.debuffedBySupport > 0);
     }
 </script>
@@ -88,6 +90,7 @@
             {hasFrontAttacks}
             {hasBackAttacks}
             {anySupportBuff}
+            {anySupportIdentity}
             {anySupportBrand} />
     </tr>
 </thead>
@@ -147,6 +150,12 @@
                 <td class="px-1 text-center">
                     {round((entity.damageStats.buffedBySupport / entity.damageStats.damageDealt) * 100)}<span
                         class="text-3xs text-gray-300">%</span>
+                </td>
+            {/if}
+            {#if anySupportIdentity && $settings.logs.breakdown.percentIdentityBySup}
+                <td class="px-1 text-center">
+                    {round((entity.damageStats.buffedByIdentity / entity.damageStats.damageDealt) * 100)}<span
+                    class="text-3xs text-gray-300">%</span>
                 </td>
             {/if}
             {#if anySupportBrand && $settings.logs.breakdown.percentBrand}
@@ -237,6 +246,7 @@
             {hasFrontAttacks}
             {hasBackAttacks}
             {anySupportBuff}
+            {anySupportIdentity}
             {anySupportBrand}
             abbreviatedSkillDamage={abbreviatedSkillDamage[i]}
             playerDamageDealt={entity.damageStats.damageDealt}

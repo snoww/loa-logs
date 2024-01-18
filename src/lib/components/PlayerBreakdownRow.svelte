@@ -10,6 +10,7 @@
     export let hasFrontAttacks: boolean;
     export let hasBackAttacks: boolean;
     export let anySupportBuff: boolean;
+    export let anySupportIdentity: boolean;
     export let anySupportBrand: boolean;
     export let abbreviatedSkillDamage: (string | number)[];
     export let skillDps: (string | number)[];
@@ -34,6 +35,7 @@
     {hasFrontAttacks}
     {hasBackAttacks}
     {anySupportBuff}
+    {anySupportIdentity}
     {anySupportBrand}
     {abbreviatedSkillDamage}
     {skillDps}
