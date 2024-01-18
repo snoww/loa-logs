@@ -81,11 +81,27 @@
                         </li>
                         <li>
                             <button
+                                class="block w-full px-4 py-2 text-left" style="background-color: rgb(218, 124, 160)"
+                                on:click={() => {
+                                    $settings.general.accentColor = "theme-rose";
+                                    colorDropdownOpen = false;
+                                }}>Rose</button>
+                        </li>
+                        <li>
+                            <button
                                 class="block w-full bg-pink-800 px-4 py-2 text-left"
                                 on:click={() => {
                                     $settings.general.accentColor = "theme-pink";
                                     colorDropdownOpen = false;
                                 }}>Pink</button>
+                        </li>
+                        <li>
+                            <button
+                                class="block w-full bg-violet-500 px-4 py-2 text-left"
+                                on:click={() => {
+                                    $settings.general.accentColor = "theme-violet";
+                                    colorDropdownOpen = false;
+                                }}>Violet</button>
                         </li>
                         <li>
                             <button
