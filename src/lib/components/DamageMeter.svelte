@@ -304,6 +304,7 @@
         anyFrontAtk = false;
         anyBackAtk = false;
         anySupportBuff = false;
+        anySupportIdentity = false;
         anySupportBrand = false;
     }
 

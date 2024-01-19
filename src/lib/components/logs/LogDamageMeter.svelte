@@ -329,30 +329,30 @@
             <div class="flex divide-x divide-gray-600">
                 <button
                     class="rounded-sm px-2 py-1"
-                    class:bg-accent-900={tab == MeterTab.DAMAGE}
-                    class:bg-gray-700={tab != MeterTab.DAMAGE}
+                    class:bg-accent-900={tab === MeterTab.DAMAGE}
+                    class:bg-gray-700={tab !== MeterTab.DAMAGE}
                     on:click={damageTab}>
                     Damage
                 </button>
                 <button
-                    class="rounded-sm px-2 py-1 flex-shrink-0"
-                    class:bg-accent-900={tab == MeterTab.PARTY_BUFFS}
-                    class:bg-gray-700={tab != MeterTab.PARTY_BUFFS}
+                    class="flex-shrink-0 rounded-sm px-2 py-1"
+                    class:bg-accent-900={tab === MeterTab.PARTY_BUFFS}
+                    class:bg-gray-700={tab !== MeterTab.PARTY_BUFFS}
                     on:click={partySynergyTab}>
                     Party Buffs
                 </button>
                 <button
-                    class="rounded-sm px-2 py-1 flex-shrink-0"
-                    class:bg-accent-900={tab == MeterTab.SELF_BUFFS}
-                    class:bg-gray-700={tab != MeterTab.SELF_BUFFS}
+                    class="flex-shrink-0 rounded-sm px-2 py-1"
+                    class:bg-accent-900={tab === MeterTab.SELF_BUFFS}
+                    class:bg-gray-700={tab !== MeterTab.SELF_BUFFS}
                     on:click={selfSynergyTab}>
                     Self Buffs
                 </button>
                 {#if $settings.general.showTanked && encounter.encounterDamageStats.totalDamageTaken > 0}
                     <button
                         class="rounded-sm px-2 py-1"
-                        class:bg-accent-900={tab == MeterTab.TANK}
-                        class:bg-gray-700={tab != MeterTab.TANK}
+                        class:bg-accent-900={tab === MeterTab.TANK}
+                        class:bg-gray-700={tab !== MeterTab.TANK}
                         on:click={tankTab}>
                         Tanked
                     </button>
@@ -360,8 +360,8 @@
                 {#if $settings.general.showBosses && bosses.length > 0}
                     <button
                         class="rounded-sm px-2 py-1"
-                        class:bg-accent-900={tab == MeterTab.BOSS}
-                        class:bg-gray-700={tab != MeterTab.BOSS}
+                        class:bg-accent-900={tab === MeterTab.BOSS}
+                        class:bg-gray-700={tab !== MeterTab.BOSS}
                         on:click={bossTab}>
                         Bosses
                     </button>
@@ -369,8 +369,8 @@
                 {#if localPlayer && localPlayer.skillStats.identityStats}
                     <button
                         class="rounded-sm px-2 py-1"
-                        class:bg-accent-900={tab == MeterTab.IDENTITY}
-                        class:bg-gray-700={tab != MeterTab.IDENTITY}
+                        class:bg-accent-900={tab === MeterTab.IDENTITY}
+                        class:bg-gray-700={tab !== MeterTab.IDENTITY}
                         on:click={identityTab}>
                         Identity
                     </button>
@@ -378,8 +378,8 @@
                 {#if encounter.encounterDamageStats.misc && encounter.encounterDamageStats.misc.staggerStats}
                     <button
                         class="rounded-sm px-2 py-1"
-                        class:bg-accent-900={tab == MeterTab.STAGGER}
-                        class:bg-gray-700={tab != MeterTab.STAGGER}
+                        class:bg-accent-900={tab === MeterTab.STAGGER}
+                        class:bg-gray-700={tab !== MeterTab.STAGGER}
                         on:click={staggerTab}>
                         Stagger
                     </button>
@@ -391,9 +391,10 @@
                     <svg
                         class="hover:fill-accent-800 h-5 w-5 fill-zinc-300"
                         xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 -960 960 960"
-                        ><path
-                            d="M479.5-269.5q71.75 0 119.625-47.875T647-437q0-71-47.875-118.75T479.5-603.5q-71.75 0-119.125 47.75T313-437q0 71.75 47.375 119.625T479.5-269.5Zm0-57.5q-47 0-78-31.145T370.5-437q0-47 31-78t78-31q47 0 78.5 31t31.5 78.25q0 47.25-31.5 78.5T479.5-327Zm-328 227.5q-38.019 0-64.76-26.741Q60-152.981 60-191v-491.5q0-37.431 26.74-64.966Q113.482-775 151.5-775h132l83.057-97.5H594.5l82 97.5h132q37.431 0 64.966 27.534Q901-719.931 901-682.5V-191q0 38.019-27.534 64.759Q845.931-99.5 808.5-99.5h-657Zm657-91.5v-491.5H635L552.5-780H408.451L325.5-682.5h-174V-191h657ZM480-436.5Z" /></svg>
+                        viewBox="0 -960 960 960">
+                        <path
+                            d="M479.5-269.5q71.75 0 119.625-47.875T647-437q0-71-47.875-118.75T479.5-603.5q-71.75 0-119.125 47.75T313-437q0 71.75 47.375 119.625T479.5-269.5Zm0-57.5q-47 0-78-31.145T370.5-437q0-47 31-78t78-31q47 0 78.5 31t31.5 78.25q0 47.25-31.5 78.5T479.5-327Zm-328 227.5q-38.019 0-64.76-26.741Q60-152.981 60-191v-491.5q0-37.431 26.74-64.966Q113.482-775 151.5-775h132l83.057-97.5H594.5l82 97.5h132q37.431 0 64.966 27.534Q901-719.931 901-682.5V-191q0 38.019-27.534 64.759Q845.931-99.5 808.5-99.5h-657Zm657-91.5v-491.5H635L552.5-780H408.451L325.5-682.5h-174V-191h657ZM480-436.5Z" />
+                    </svg>
                 </button>
                 <div class="relative flex items-center rounded-sm bg-gray-700" on:focusout={handleDropdownFocusLoss}>
                     <button on:click={handleDropdownClick} class="h-full px-2">
@@ -402,12 +403,9 @@
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"
-                            xmlns="http://www.w3.org/2000/svg"
-                            ><path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M19 9l-7 7-7-7" /></svg>
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                        </svg>
                     </button>
                     {#if dropdownOpen}
                         <div class="absolute left-9 top-0 z-50 rounded-md bg-gray-700">
@@ -462,11 +460,12 @@
                                     class="h-5 w-5"
                                     fill="currentColor"
                                     viewBox="0 0 20 20"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    ><path
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path
                                         fill-rule="evenodd"
                                         d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                                        clip-rule="evenodd" /></svg>
+                                        clip-rule="evenodd" />
+                                </svg>
                             </button>
                             <div id="modal" class="flex-1 space-y-6 overflow-y-auto overscroll-contain p-6">
                                 <div class="text-center">
@@ -476,13 +475,14 @@
                                         fill="none"
                                         stroke="currentColor"
                                         viewBox="0 0 24 24"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        ><path
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path
                                             stroke-linecap="round"
                                             stroke-linejoin="round"
                                             stroke-width="2"
                                             d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                                            class="s-Qbr4I8QhaoSZ" /></svg>
+                                            class="s-Qbr4I8QhaoSZ" />
+                                    </svg>
                                     <h3 class="mb-5 text-lg font-normal text-gray-400">
                                         Are you sure you want to delete this encounter?
                                     </h3>
@@ -541,7 +541,8 @@
                                 {/if}
                                 {#if $settings.logs.critDmg}
                                     <th class="w-12 font-normal" use:tooltip={{ content: "% Damage that Crit" }}
-                                        >CDMG</th>
+                                        >CDMG
+                                    </th>
                                 {/if}
                                 {#if anyFrontAtk && $settings.logs.frontAtk}
                                     <th class="w-12 font-normal" use:tooltip={{ content: "Front Attack %" }}>F.A</th>
@@ -551,16 +552,20 @@
                                 {/if}
                                 {#if anySupportBuff && $settings.logs.percentBuffBySup}
                                     <th class="w-12 font-normal" use:tooltip={{ content: "% Damage buffed by Support" }}
-                                        >Buff%</th>
+                                        >Buff%
+                                    </th>
                                 {/if}
                                 {#if anySupportIdentity && $settings.logs.percentIdentityBySup}
-                                    <th class="w-12 font-normal" use:tooltip={{ content: "% Damage buffed by Support Identity" }}
-                                    >Iden%
+                                    <th
+                                        class="w-12 font-normal"
+                                        use:tooltip={{ content: "% Damage buffed by Support Identity" }}
+                                        >Iden%
                                     </th>
                                 {/if}
                                 {#if anySupportBrand && $settings.logs.percentBrand}
                                     <th class="w-12 font-normal" use:tooltip={{ content: "% Damage buffed by Brand" }}
-                                        >B%</th>
+                                        >B%
+                                    </th>
                                 {/if}
                                 {#if $settings.logs.counters}
                                     <th class="w-12 font-normal" use:tooltip={{ content: "Counters" }}>CTR</th>
@@ -652,23 +657,23 @@
                 {#if playerName === "" && state === MeterState.PARTY}
                     <button
                         class="rounded-sm px-2 py-1"
-                        class:bg-accent-900={chartType == ChartType.AVERAGE_DPS}
-                        class:bg-gray-700={chartType != ChartType.AVERAGE_DPS}
+                        class:bg-accent-900={chartType === ChartType.AVERAGE_DPS}
+                        class:bg-gray-700={chartType !== ChartType.AVERAGE_DPS}
                         on:click={() => (chartType = ChartType.AVERAGE_DPS)}>
                         Average DPS
                     </button>
                     <button
                         class="rounded-sm px-2 py-1"
-                        class:bg-accent-900={chartType == ChartType.ROLLING_DPS}
-                        class:bg-gray-700={chartType != ChartType.ROLLING_DPS}
+                        class:bg-accent-900={chartType === ChartType.ROLLING_DPS}
+                        class:bg-gray-700={chartType !== ChartType.ROLLING_DPS}
                         on:click={() => (chartType = ChartType.ROLLING_DPS)}>
                         10s DPS Window
                     </button>
                 {:else if playerName !== "" && state === MeterState.PLAYER}
                     <button
                         class="rounded-sm px-2 py-1"
-                        class:bg-accent-900={chartType == ChartType.SKILL_LOG}
-                        class:bg-gray-700={chartType != ChartType.SKILL_LOG}
+                        class:bg-accent-900={chartType === ChartType.SKILL_LOG}
+                        class:bg-gray-700={chartType !== ChartType.SKILL_LOG}
                         on:click={() => (chartType = ChartType.SKILL_LOG)}>
                         Skill Casts
                     </button>

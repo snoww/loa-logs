@@ -53,6 +53,10 @@ async fn main() -> Result<()> {
 
     logger.start()?;
 
+    std::panic::set_hook(Box::new(|info| {
+        error!("Panicked: {:?}", info);
+    }));
+
     let quit = CustomMenuItem::new("quit".to_string(), "Quit");
     let show_logs = CustomMenuItem::new("show-logs".to_string(), "Show Logs");
     let show_meter = CustomMenuItem::new("show-meter".to_string(), "Show Meter");

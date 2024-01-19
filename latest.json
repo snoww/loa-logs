@@ -1,11 +1,11 @@
 {
-    "version": "v1.5.6",
-    "notes": "### v1.5.6\n#### NEW FEATURES\n- added two new accent colors (rose and violet)\n- added support identity column (settings > live meter/logs > support identity %). _note: only works on new logs_\n\n![identity](https://cdn.discordapp.com/attachments/220646943498567680/1197486350916669512/app_BiFRacJpfE.png)\n\n![setting](https://cdn.discordapp.com/attachments/220646943498567680/1197501510972616764/app_bY7IgOVdje.png)\n#### BUG FIXES\n- fix identity settings not saving\n- fix identity column not showing correctly\n\nfull patch notes on [github](https://github.com/snoww/loa-logs/releases/latest)\n\nsend bug reports/suggestions to [#loa-logs](https://discord.gg/sbSa3pkDF5)",
-    "pub_date": "2024-01-18T12:28:12.304Z",
+    "version": "v1.5.7",
+    "notes": "### v1.5.7\n#### BUG FIXES AND IMPROVEMENTS\n- all self buffs now show under breakdown. \n  - for example, you are able to see percentage of each circulate buff on each skill.\n- update wardancer roar synergy to be self buff instead of party buff\n- fix identity column not resetting\n- crashes are now logged to log file\n\n### v1.5.6\n#### NEW FEATURES\n- added two new accent colors (rose and violet)\n- added support identity column (settings > live meter/logs > support identity %). _note: only works on new logs_\n\n![identity](https://cdn.discordapp.com/attachments/220646943498567680/1197486350916669512/app_BiFRacJpfE.png)\n\n![setting](https://cdn.discordapp.com/attachments/220646943498567680/1197501510972616764/app_bY7IgOVdje.png)\n#### BUG FIXES\n- fix identity settings not saving\n- fix identity column not showing correctly\n\nfull patch notes on [github](https://github.com/snoww/loa-logs/releases/latest)\n\nsend bug reports/suggestions to [#loa-logs](https://discord.gg/sbSa3pkDF5)",
+    "pub_date": "2024-01-19T09:03:02.962Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.5.6/LOA.Logs_1.5.6_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlNZVjNCem9aZEhKazNCT2p3UUJ3aFE5emVKMFozaWFDT2xDWEdiYTNSbWdnZTFyZDN6YkhQb3grSTF1d0VuakJaR1Y3YUhRYURQNi9JT3RraGRZWFFNPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzA1NTgxMDMzCWZpbGU6TE9BIExvZ3NfMS41LjZfeDY0LXNldHVwLm5zaXMuemlwCnNHWmRRN3lzdTd4SU5BcHdxM3BCbm4veXk3YWRtWnJMNFMreDBCOWdzNldmVmk4QjFyM2wzVDlVQWNjVjVaUDRzOFRIZHFaZG5jUDBxWFZ6S3JNMEN3PT0K"
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.5.7/LOA.Logs_1.5.7_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmZWVFI0bzZPeEZIczlwUE1kdGUvTzlxcTVyQ0hkNUw0NjhmOU5CdmplOFpqVzZIMlhNT1Njbi9lcWRxaW1QQlZlNWx2T2RSZGZCWnRqUlArUkV3aWdZPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzA1NjU0NTMxCWZpbGU6TE9BIExvZ3NfMS41LjdfeDY0LXNldHVwLm5zaXMuemlwCmdWdmZFWThrQ29NMzlGTGg2T002SlltZENNSEdyRk9CLzhzVnhCS1hYUEdlenM1L3gzYmltNDlQMDNmM3E1c1cySGNVNmpWK2l3TnVjMUZWOFdvS0RRPT0K"
         }
     }
 }

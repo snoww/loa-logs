@@ -32,51 +32,55 @@ You can support me directly by buying me a [coffee.](https://www.buymeacoffee.co
 You can also support LOA Details' Herysia's [Patreon.](https://patreon.com/Herysia)
 
 # FAQ
-**Q: Meter isn't detecting anything...**
+#### Q: Meter window is missing / meter window is tiny
+
+A: Right-click the taskbar icon (located in the bottom right of your screen, next to the system time), click reset position, or load saved position. Adjust the size of the window and location, and then save the position. 
+
+#### Q: Meter isn't detecting anything...
 
 A: There can be multiple reasons. 1. Did you install Npcap? 2. Are you using a traditional VPN (e.g. NordVPN)? You need to disable auto-interface, and select the network interface for your VPN (should be named similar to your vpn name). If that doesn't work, enable raw socket mode. You must restart the meter as admin. 3. Are you using ExitLag? ExitLag should work on auto-interface, since its not really a VPN. However, if its not working on auto interface, you need to enable raw socket mode. You must restart the meter as admin.
 
-**Q: ExitLag not working even with the settings above**
+#### Q: ExitLag not working even with the settings above
 
 A: ExitLag recently updated their settings which changed how they redirect packets. Change your ExitLag settings to *Packet redirection method > Legacy - NDIS*.
 
-**Q: Should I run it in a VM?**
+#### Q: Should I run it in a VM?
 
 A: I do not run it in a VM with full 10 gems equipped on my character. There is always a risk of getting banned, even in a VM. You can run it in a VM if you want, the meter should work the same.
 
-**Q: Missing `packet.dll`**
+#### Q: Missing `packet.dll`
 
 A: You need install Npcap. If you already have Npcap installed and error still shows, please uninstall it, and then reinstall the latest version using the link above.
 
-**Q: The installer crashes or takes forever to install**
+#### Q: The installer crashes or takes forever to install
 
 A: Are you trying to install on a custom install folder with different permissions? You might need to run the installer in administrator mode due to permission issues.
 
-**Q: The meter crashes immediately when trying to open it.**
+#### Q: The meter crashes immediately when trying to open it.
 
 A: There could be two possible reasons. 1. The meter needs Microsoft Edge Webview2 Runtime to run. Yours is probably missing or out of date. Go uninstall it first (it won't let you install it if you have an older version installed), then download and install from [here](https://go.microsoft.com/fwlink/p/?LinkId=2124703) (https://go.microsoft.com/fwlink/p/?LinkId=2124703). 2. If you installed the meter in another folder that might require elevated permissions, you would need to run the program in administrator mode.
 
-**Q: The meter window lags a lot when dragging around.**
+#### Q: The meter window lags a lot when dragging around.
 
 A: Are you on Windows 11? Disable blur in the settings (settings > accessibility). If you wish to have a dark background with blur disabled, also disable the transparency setting to have a pseudo dark mode.
 
-**Q: Why isn't my item level shown next to my name when others have it?**
+#### Q: Why isn't my item level shown next to my name when others have it?
 
 A: You opened the meter too late, and it wasn't able to get your character information. It is doing its best by guessing. You can fix this by: switching characters, or changing parties around. (note: you need to enable "show gear score" in settings to show item level)
 
-**Q: There are too many/too few columns in the meter.**
+#### Q: There are too many/too few columns in the meter.
 
 A: You can change whatever column you want to show in the settings. TIP: you can `SHIFT+SCROLL` to scroll horizontally.
 
-**Q: Are you going to implement rDPS like LOA Details?**
+#### Q: Are you going to implement rDPS like LOA Details?
 
 A: No. If you wish to see rDPS, please use [LOA Details](https://github.com/lost-ark-dev/loa-details). They have spent a lot of effort simulating stats and buffs to make it work, and I am way too lazy to port that here. You can have both tools running at the same time if you wish.
 
-**Q: Help, my issue isn't listed here.**
+#### Q: Help, my issue isn't listed here.
 
 A: Create an issue here on GitHub, or send a message in the #loa-logs channel on Discord. [(invite)](https://discord.gg/sbSa3pkDF5)
 
-**Q: Is it really "blazingly fast"?**
+#### Q: Is it really "blazingly fast"?
 
 A: [Yes.](https://cdn.discordapp.com/attachments/537415745198489633/1134417704732872704/t7ns9qtb5gh81.png)
 
