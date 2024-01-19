@@ -65,8 +65,12 @@
             bind:setting={$settings.meter.positionalDmgPercent} />
         <SettingItem
             name="Support Buff %"
-            description="Show the percentage of damage buffed by support"
+            description="Show the percentage of damage buffed by support attack power buff"
             bind:setting={$settings.meter.percentBuffBySup} />
+        <SettingItem
+            name="Support Identity %"
+            description="Show the percentage of damage buffed by support identity"
+            bind:setting={$settings.meter.percentIdentityBySup} />
         <SettingItem
             name="Support Brand %"
             description="Show the percentage of damage buffed by support's brand skill (e.g. Bard's Sound Shock)"
@@ -109,8 +113,12 @@
                 bind:setting={$settings.meter.breakdown.backAtk} />
             <SettingItem
                 name="Support Buff %"
-                description="Show the percentage of damage of the skill buffed by support"
+                description="Show the percentage of damage of the skill buffed by support attack buff"
                 bind:setting={$settings.meter.breakdown.percentBuffBySup} />
+            <SettingItem
+                name="Support Identity %"
+                description="Show the percentage of damage of the skill buffed by support identity"
+                bind:setting={$settings.meter.breakdown.percentIdentityBySup} />
             <SettingItem
                 name="Support Brand %"
                 description="Show the percentage of damage of the skill buffed by support's brand skill (e.g. Bard's Sound Shock)"

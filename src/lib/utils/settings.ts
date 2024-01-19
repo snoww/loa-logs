@@ -87,6 +87,7 @@ export const defaultSettings = {
         counters: false,
         positionalDmgPercent: true,
         percentBuffBySup: false,
+        percentIdentityBySup: false,
         percentBrand: false,
         breakdown: {
             damage: true,
@@ -103,6 +104,7 @@ export const defaultSettings = {
             hits: false,
             hpm: false,
             percentBuffBySup: false,
+            percentIdentityBySup: false,
             percentBrand: false
         }
     },
@@ -121,6 +123,7 @@ export const defaultSettings = {
         minEncounterDuration: 30,
         positionalDmgPercent: true,
         percentBuffBySup: false,
+        percentIdentityBySup: false,
         percentBrand: false,
         breakdown: {
             damage: true,
@@ -137,6 +140,7 @@ export const defaultSettings = {
             hits: false,
             hpm: false,
             percentBuffBySup: false,
+            percentIdentityBySup: false,
             percentBrand: false
         }
     },

@@ -49,6 +49,28 @@
         --accent-accent-700: theme("accentColor.pink.700");
         --ring-accent-500: theme("ringColor.pink.500");
     }
+    .theme-rose {
+        --accent-500: rgb(218, 124, 160);
+        --accent-800: rgb(199, 101, 141);
+        --accent-900: rgb(176, 84, 118);
+        --text-accent-500: rgb(218, 124, 160);
+        --fill-accent-500: rgb(218, 124, 160);
+        --fill-accent-800: rgb(199, 101, 141);
+        --border-accent-500: rgb(218, 124, 160);
+        --accent-accent-700: rgb(199, 101, 141);
+        --ring-accent-500: rgb(218, 124, 160);
+    }
+    .theme-violet {
+        --accent-500: rgb(171, 145, 250);
+        --accent-800: rgb(145, 122, 201);
+        --accent-900: rgb(120, 102, 189);
+        --text-accent-500: rgb(171, 145, 250);
+        --fill-accent-500: rgb(171, 145, 250);
+        --fill-accent-800: rgb(145, 122, 201);
+        --border-accent-500: rgb(171, 145, 250);
+        --accent-accent-700:rgb(145, 122, 201);
+        --ring-accent-500: rgb(171, 145, 250);
+    }
     .theme-purple {
         --accent-500: theme("backgroundColor.purple.500");
         --accent-800: theme("backgroundColor.purple.800");

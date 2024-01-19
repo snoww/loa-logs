@@ -20,6 +20,7 @@
     let hasBackAttacks = true;
     let hasFrontAttacks = true;
     let anySupportBrand = false;
+    let anySupportIdentity = false;
     let anySupportBuff = false;
 
     $: {
@@ -41,6 +42,7 @@
                 hasBackAttacks = skills.some((skill) => skill.backAttacks > 0);
                 hasFrontAttacks = skills.some((skill) => skill.frontAttacks > 0);
                 anySupportBuff = skills.some((skill) => skill.buffedBySupport > 0);
+                anySupportIdentity = skills.some((skill) => skill.buffedByIdentity > 0);
                 anySupportBrand = skills.some((skill) => skill.debuffedBySupport > 0);
             }
         }
@@ -54,6 +56,7 @@
             {hasFrontAttacks}
             {hasBackAttacks}
             {anySupportBuff}
+            {anySupportIdentity}
             {anySupportBrand} />
     </tr>
 </thead>
@@ -67,6 +70,7 @@
                     {hasFrontAttacks}
                     {hasBackAttacks}
                     {anySupportBuff}
+                    {anySupportIdentity}
                     {anySupportBrand}
                     abbreviatedSkillDamage={abbreviatedSkillDamage[i]}
                     playerDamageDealt={entity.damageStats.damageDealt}

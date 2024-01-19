@@ -6,6 +6,7 @@
     export let hasFrontAttacks = true;
     export let anySupportBrand = false;
     export let anySupportBuff = false;
+    export let anySupportIdentity = false;
 </script>
 
 <th class="w-7 px-2 font-normal" />
@@ -41,7 +42,10 @@
     {/if}
 {/if}
 {#if anySupportBuff && meterSettings.breakdown.percentBuffBySup}
-    <th class="w-12 font-normal" use:tooltip={{ content: "% Damage buffed by Support" }}>Buff%</th>
+    <th class="w-12 font-normal" use:tooltip={{ content: "% Damage buffed by Support Atk. Power Buff" }}>Buff%</th>
+{/if}
+{#if anySupportIdentity && meterSettings.breakdown.percentIdentityBySup}
+    <th class="w-12 font-normal" use:tooltip={{ content: "% Damage buffed by Support Identity" }}>Iden%</th>
 {/if}
 {#if anySupportBrand && meterSettings.breakdown.percentBrand}
     <th class="w-12 font-normal" use:tooltip={{ content: "% Damage buffed by Brand" }}>B%</th>

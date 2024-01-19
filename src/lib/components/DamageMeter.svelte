@@ -154,6 +154,7 @@
     let anyFrontAtk: boolean = false;
     let anyBackAtk: boolean = false;
     let anySupportBuff: boolean = false;
+    let anySupportIdentity: boolean = false;
     let anySupportBrand: boolean = false;
     let isSolo: boolean = true;
 
@@ -185,6 +186,7 @@
                 anyFrontAtk = players.some((player) => player.skillStats.frontAttacks > 0);
                 anyBackAtk = players.some((player) => player.skillStats.backAttacks > 0);
                 anySupportBuff = players.some((player) => player.damageStats.buffedBySupport > 0);
+                anySupportIdentity = players.some((player) => player.damageStats.buffedByIdentity > 0);
                 anySupportBrand = players.some((player) => player.damageStats.debuffedBySupport > 0);
                 topDamageDealt = encounter.encounterDamageStats.topDamageDealt;
                 playerDamagePercentages = players.map(
@@ -367,8 +369,14 @@
                                 <th class="w-12 font-normal" use:tooltip={{ content: "Back Attack %" }}>B.A</th>
                             {/if}
                             {#if anySupportBuff && $settings.meter.percentBuffBySup}
-                                <th class="w-12 font-normal" use:tooltip={{ content: "% Damage buffed by Support" }}
-                                    >Buff%</th>
+                                <th class="w-12 font-normal" use:tooltip={{ content: "% Damage buffed by Support Atk. Power buff" }}
+                                >Buff%
+                                </th>
+                            {/if}
+                            {#if anySupportIdentity && $settings.meter.percentIdentityBySup}
+                                <th class="w-12 font-normal" use:tooltip={{ content: "% Damage buffed by Support Identity" }}
+                                >Iden%
+                                </th>
                             {/if}
                             {#if anySupportBrand && $settings.meter.percentBrand}
                                 <th class="w-12 font-normal" use:tooltip={{ content: "% Damage buffed by Brand" }}
@@ -395,6 +403,7 @@
                                     {anyFrontAtk}
                                     {anyBackAtk}
                                     {anySupportBuff}
+                                    {anySupportIdentity}
                                     {anySupportBrand}
                                     {isSolo} />
                             </tr>
