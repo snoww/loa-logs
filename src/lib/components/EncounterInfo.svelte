@@ -8,12 +8,14 @@
     import { emit } from "@tauri-apps/api/event";
     import { invoke } from "@tauri-apps/api/tauri";
     import { appWindow } from "@tauri-apps/api/window";
+    import { set } from "nprogress";
     import { writable } from "svelte/store";
     import { hideAll } from "tippy.js";
 
     export let encounterDuration: string;
     export let totalDamageDealt: number;
     export let dps: number;
+    export let timeUntilKill: string;
     export let screenshotFn: () => void;
 
     let paused = writable(false);
@@ -79,7 +81,7 @@
             {#if $settings.general.bossOnlyDamage}
                 <img
                     use:tooltip={{ content: "Boss Only Damage" }}
-                    src="{$imagePath.path + getImagePath("icons/boss.png")}"
+                    src={$imagePath.path + getImagePath("icons/boss.png")}
                     alt="Boss Only Damage"
                     class="!-mx-1 size-5"
                     data-tauri-drag-region />
@@ -117,6 +119,16 @@
                     </div>
                 {/if}
             </div>
+            {#if $settings.meter.timeUntilKill}
+                <div
+                    class="flex space-x-1 tracking-tighter text-gray-400"
+                    use:menuTooltip={{ content: `Expected Time to Kill` }}>
+                    <div data-tauri-drag-region>TTK</div>
+                    <div data-tauri-drag-region>
+                        {timeUntilKill}
+                    </div>
+                </div>
+            {/if}
         </div>
         {#if !$takingScreenshot}
             <div data-tauri-drag-region class="flex items-center space-x-px max-[419px]:hidden">

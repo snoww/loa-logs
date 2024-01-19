@@ -73,6 +73,7 @@ export const defaultSettings = {
         bossHpBar: true,
         splitBossHpBar: false,
         abbreviateHeader: true,
+        showTimeUntilKill: false,
         splitPartyBuffs: true,
         pinSelfParty: true,
         showClassColors: true,
@@ -216,11 +217,11 @@ export async function registerShortcuts(shortcuts: any) {
         await register(shortcuts.disableClickthrough.modifier + "+" + shortcuts.disableClickthrough.key, async () => {
             // if meter is clickthrough, disable it
             if (get(clickthroughStore)) {
-                await invoke("set_clickthrough", { set: false});
+                await invoke("set_clickthrough", { set: false });
                 await invoke("write_log", { message: "disabling clickthrough" });
                 clickthroughStore.update(() => false);
             } else {
-                await invoke("set_clickthrough" , { set: true});
+                await invoke("set_clickthrough", { set: true });
                 await invoke("write_log", { message: "enabling clickthrough" });
                 clickthroughStore.update(() => true);
             }

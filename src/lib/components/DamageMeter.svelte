@@ -143,6 +143,7 @@
     let duration = 0;
     let totalDamageDealt = 0;
     let dps = 0;
+    let timeUntilKill = "00:00";
     let currentBoss: Entity | null = null;
     let state = MeterState.PARTY;
     let tab = MeterTab.DAMAGE;
@@ -216,6 +217,25 @@
                 } else {
                     totalDamageDealt = encounter.encounterDamageStats.totalDamageDealt;
                 }
+                if ($settings.meter.timeUntilKill) {
+                    let remainingDps =
+                        players
+                            .filter(
+                                (e) => e.damageStats.damageDealt > 0 && !e.isDead && e.entityType != EntityType.ESTHER
+                            )
+                            .reduce((a, b) => a + b.damageStats.damageDealt, 0) /
+                        (duration / 1000);
+                    let remainingBossHealth = 0;
+                    if (encounter.currentBoss?.currentHp) {
+                        remainingBossHealth += encounter.currentBoss.currentHp;
+                    }
+                    if (encounter.currentBoss?.currentShield) {
+                        remainingBossHealth += encounter.currentBoss.currentShield;
+                    }
+                    let millisUntilKill = Math.floor((1000 * remainingBossHealth) / remainingDps);
+                    millisUntilKill = Math.max(millisUntilKill, 0);
+                    timeUntilKill = millisToMinutesAndSeconds(millisUntilKill);
+                }
 
                 lastCombatPacket = encounter.lastCombatPacket;
             }
@@ -279,6 +299,7 @@
         encounterDuration = "00:00";
         totalDamageDealt = 0;
         dps = 0;
+        timeUntilKill = "00:00";
         anyDead = false;
         anyFrontAtk = false;
         anyBackAtk = false;
@@ -323,7 +344,7 @@
 
 <svelte:window on:contextmenu|preventDefault />
 <div bind:this={targetDiv}>
-    <EncounterInfo {encounterDuration} {totalDamageDealt} {dps} screenshotFn={captureScreenshot} />
+    <EncounterInfo {encounterDuration} {totalDamageDealt} {dps} {timeUntilKill} screenshotFn={captureScreenshot} />
     {#if currentBoss !== null && $settings.meter.bossHp}
         <div class="relative top-7">
             <BossInfo boss={currentBoss} />
@@ -369,13 +390,17 @@
                                 <th class="w-12 font-normal" use:tooltip={{ content: "Back Attack %" }}>B.A</th>
                             {/if}
                             {#if anySupportBuff && $settings.meter.percentBuffBySup}
-                                <th class="w-12 font-normal" use:tooltip={{ content: "% Damage buffed by Support Atk. Power buff" }}
-                                >Buff%
+                                <th
+                                    class="w-12 font-normal"
+                                    use:tooltip={{ content: "% Damage buffed by Support Atk. Power buff" }}
+                                    >Buff%
                                 </th>
                             {/if}
                             {#if anySupportIdentity && $settings.meter.percentIdentityBySup}
-                                <th class="w-12 font-normal" use:tooltip={{ content: "% Damage buffed by Support Identity" }}
-                                >Iden%
+                                <th
+                                    class="w-12 font-normal"
+                                    use:tooltip={{ content: "% Damage buffed by Support Identity" }}
+                                    >Iden%
                                 </th>
                             {/if}
                             {#if anySupportBrand && $settings.meter.percentBrand}
@@ -462,9 +487,12 @@
             <DamageTaken {players} topDamageTaken={encounter?.encounterDamageStats.topDamageTaken} />
         {:else if tab === MeterTab.BOSS}
             {#if !focusedBoss}
-            <BossTable {bosses} {duration} {inspectBoss}/>
+                <BossTable {bosses} {duration} {inspectBoss} />
             {:else}
-            <BossBreakdown boss={encounter?.entities[focusedBoss]} {duration} handleRightClick={handleBossRightClick}/>
+                <BossBreakdown
+                    boss={encounter?.entities[focusedBoss]}
+                    {duration}
+                    handleRightClick={handleBossRightClick} />
             {/if}
         {:else if tab === MeterTab.DETAILS}
             <Details />
