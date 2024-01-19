@@ -72,7 +72,7 @@ export function filterStatusEffects(
     }
     // Self synergies
     else if (["pet", "cook", "battleitem", "dropsofether", "bracelet", "elixir"].includes(buff.buffCategory)) {
-        if (tab === MeterTab.SELF_BUFFS && !focusedPlayer) {
+        if (tab === MeterTab.SELF_BUFFS) {
             if (buff.buffCategory === "bracelet") {
                 // put bracelets buffs at the end
                 key = `zzbracelet_${buff.uniqueGroup}`;
