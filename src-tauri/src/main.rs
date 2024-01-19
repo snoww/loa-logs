@@ -156,15 +156,7 @@ async fn main() -> Result<()> {
                 }
             }
 
-            let hide_logs = settings
-                .as_ref()
-                .map(|s| s.general.hide_logs_on_start)
-                .unwrap_or(true);
-
-            let hide_logs = settings
-                .as_ref()
-                .map(|s| s.general.hide_logs_on_start)
-                .unwrap_or(true);
+            let hide_logs = settings.as_ref().map(|s| s.general.hide_logs_on_start).unwrap_or(true);
 
             let logs_window =
                 WindowBuilder::new(app, "logs", tauri::WindowUrl::App("/logs".into()))
@@ -178,6 +170,7 @@ async fn main() -> Result<()> {
             if hide_logs {
                 logs_window.hide().unwrap();
             }
+
 
             task::spawn_blocking(move || {
                 parser::start(meter_window, ip, port, raw_socket, settings).map_err(|e| {
