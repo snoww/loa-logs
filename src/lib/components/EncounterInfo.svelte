@@ -8,7 +8,6 @@
     import { emit } from "@tauri-apps/api/event";
     import { invoke } from "@tauri-apps/api/tauri";
     import { appWindow } from "@tauri-apps/api/window";
-    import { set } from "nprogress";
     import { writable } from "svelte/store";
     import { hideAll } from "tippy.js";
 
