@@ -208,7 +208,7 @@
                 } else {
                     encounterDuration = millisToMinutesAndSeconds(duration);
                     dps = totalDamageDealt / (duration / 1000);
-                    if ($settings.meter.timeUntilKill) {
+                    if ($settings.meter.timeUntilKill && encounter.currentBoss) {
                         let remainingDpm =
                             players
                                 .filter(
