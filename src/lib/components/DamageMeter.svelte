@@ -204,9 +204,29 @@
                 if (duration < 0) {
                     encounterDuration = millisToMinutesAndSeconds(0);
                     dps = 0;
+                    timeUntilKill = "00:00";
                 } else {
                     encounterDuration = millisToMinutesAndSeconds(duration);
                     dps = totalDamageDealt / (duration / 1000);
+                    if ($settings.meter.timeUntilKill) {
+                        let remainingDpm =
+                            players
+                                .filter(
+                                    (e) =>
+                                        e.damageStats.damageDealt > 0 && !e.isDead && e.entityType == EntityType.PLAYER
+                                )
+                                .reduce((a, b) => a + b.damageStats.damageDealt, 0) / duration;
+                        let remainingBossHealth = 0;
+                        if (encounter.currentBoss?.currentHp) {
+                            remainingBossHealth += encounter.currentBoss.currentHp;
+                        }
+                        if (encounter.currentBoss?.currentShield) {
+                            remainingBossHealth += encounter.currentBoss.currentShield;
+                        }
+                        let millisUntilKill = Math.floor(remainingBossHealth / remainingDpm);
+                        millisUntilKill = Math.max(millisUntilKill, 0);
+                        timeUntilKill = millisToMinutesAndSeconds(millisUntilKill);
+                    }
                 }
                 if ($settings.general.showEsther) {
                     totalDamageDealt =
@@ -216,25 +236,6 @@
                             .reduce((a, b) => a + b.damageStats.damageDealt, 0);
                 } else {
                     totalDamageDealt = encounter.encounterDamageStats.totalDamageDealt;
-                }
-                if ($settings.meter.timeUntilKill) {
-                    let remainingDps =
-                        players
-                            .filter(
-                                (e) => e.damageStats.damageDealt > 0 && !e.isDead && e.entityType != EntityType.ESTHER
-                            )
-                            .reduce((a, b) => a + b.damageStats.damageDealt, 0) /
-                        (duration / 1000);
-                    let remainingBossHealth = 0;
-                    if (encounter.currentBoss?.currentHp) {
-                        remainingBossHealth += encounter.currentBoss.currentHp;
-                    }
-                    if (encounter.currentBoss?.currentShield) {
-                        remainingBossHealth += encounter.currentBoss.currentShield;
-                    }
-                    let millisUntilKill = Math.floor((1000 * remainingBossHealth) / remainingDps);
-                    millisUntilKill = Math.max(millisUntilKill, 0);
-                    timeUntilKill = millisToMinutesAndSeconds(millisUntilKill);
                 }
 
                 lastCombatPacket = encounter.lastCombatPacket;
