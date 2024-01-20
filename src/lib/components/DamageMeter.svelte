@@ -216,15 +216,8 @@
                                         e.damageStats.damageDealt > 0 && !e.isDead && e.entityType == EntityType.PLAYER
                                 )
                                 .reduce((a, b) => a + b.damageStats.damageDealt, 0) / duration;
-                        let remainingBossHealth = 0;
-                        if (encounter.currentBoss?.currentHp) {
-                            remainingBossHealth += encounter.currentBoss.currentHp;
-                        }
-                        if (encounter.currentBoss?.currentShield) {
-                            remainingBossHealth += encounter.currentBoss.currentShield;
-                        }
-                        let millisUntilKill = Math.floor(remainingBossHealth / remainingDpm);
-                        millisUntilKill = Math.max(millisUntilKill, 0);
+                        let remainingBossHealth = encounter.currentBoss.currentHp + encounter.currentBoss.currentShield;
+                        let millisUntilKill = Math.max(remainingBossHealth / remainingDpm, 0);
                         timeUntilKill = millisToMinutesAndSeconds(millisUntilKill);
                     }
                 }
