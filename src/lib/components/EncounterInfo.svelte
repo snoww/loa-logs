@@ -130,7 +130,7 @@
             {/if}
         </div>
         {#if !$takingScreenshot}
-            <div data-tauri-drag-region class="flex items-center space-x-px max-[419px]:hidden">
+            <div data-tauri-drag-region class="flex items-center space-x-px max-[424px]:hidden">
                 <button class="" on:click={openLogWindow}>
                     <div use:menuTooltip={{ content: "Open Recent" }}>
                         <svg
@@ -279,7 +279,7 @@
                     </div>
                 </button>
             </div>
-            <div data-tauri-drag-region class="flex items-center space-x-px min-[420px]:hidden">
+            <div data-tauri-drag-region class="flex items-center space-x-px min-[425px]:hidden">
                 <div class="flex items-center" on:focusout={handleMiniDropdownFocusLoss}>
                     <button
                         on:click={handleMiniDropdownClick}
