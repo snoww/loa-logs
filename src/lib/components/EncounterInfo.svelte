@@ -133,7 +133,7 @@
             <div
                 data-tauri-drag-region
                 class="flex items-center space-x-px {$settings.meter.showTimeUntilKill
-                    ? 'max-[500px]:hidden'
+                    ? 'max-[499px]:hidden'
                     : 'max-[419px]:hidden'}">
                 <button class="" on:click={openLogWindow}>
                     <div use:menuTooltip={{ content: "Open Recent" }}>
@@ -286,7 +286,7 @@
             <div
                 data-tauri-drag-region
                 class="flex items-center space-x-px {$settings.meter.showTimeUntilKill
-                    ? 'min-[495px]:hidden'
+                    ? 'min-[500px]:hidden'
                     : 'min-[420px]:hidden'}">
                 <div class="flex items-center" on:focusout={handleMiniDropdownFocusLoss}>
                     <button
