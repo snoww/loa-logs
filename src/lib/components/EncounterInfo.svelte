@@ -92,7 +92,7 @@
                 data-tauri-drag-region
                 class="flex space-x-1 tracking-tighter text-gray-400"
                 use:menuTooltip={{ content: `Total Damage ${totalDamageDealt.toLocaleString()}` }}>
-                <div data-tauri-drag-region>T. DMG</div>
+                <div class="flex-shrink-0" data-tauri-drag-region>T. DMG</div>
                 {#if $settings.meter.abbreviateHeader}
                     <div data-tauri-drag-region>
                         {abbreviateNumber(totalDamageDealt)}
@@ -104,7 +104,7 @@
                 {/if}
             </div>
             <div class="flex space-x-1 tracking-tighter text-gray-400" use:menuTooltip={{ content: `Total DPS` }}>
-                <div data-tauri-drag-region>T. DPS</div>
+                <div class="flex-shrink-0" data-tauri-drag-region>T. DPS</div>
                 {#if $settings.meter.abbreviateHeader}
                     <div data-tauri-drag-region>
                         {abbreviateNumber(dps)}
@@ -118,7 +118,7 @@
                     </div>
                 {/if}
             </div>
-            {#if $settings.meter.timeUntilKill}
+            {#if $settings.meter.showTimeUntilKill}
                 <div
                     class="flex space-x-1 tracking-tighter text-gray-400"
                     use:menuTooltip={{ content: `Expected Time to Kill` }}>
@@ -130,7 +130,11 @@
             {/if}
         </div>
         {#if !$takingScreenshot}
-            <div data-tauri-drag-region class="flex items-center space-x-px max-[424px]:hidden">
+            <div
+                data-tauri-drag-region
+                class="flex items-center space-x-px {$settings.meter.showTimeUntilKill
+                    ? 'max-[500px]:hidden'
+                    : 'max-[419px]:hidden'}">
                 <button class="" on:click={openLogWindow}>
                     <div use:menuTooltip={{ content: "Open Recent" }}>
                         <svg
@@ -279,7 +283,11 @@
                     </div>
                 </button>
             </div>
-            <div data-tauri-drag-region class="flex items-center space-x-px min-[425px]:hidden">
+            <div
+                data-tauri-drag-region
+                class="flex items-center space-x-px {$settings.meter.showTimeUntilKill
+                    ? 'min-[495px]:hidden'
+                    : 'min-[420px]:hidden'}">
                 <div class="flex items-center" on:focusout={handleMiniDropdownFocusLoss}>
                     <button
                         on:click={handleMiniDropdownClick}

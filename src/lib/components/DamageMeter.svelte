@@ -208,7 +208,7 @@
                 } else {
                     encounterDuration = millisToMinutesAndSeconds(duration);
                     dps = totalDamageDealt / (duration / 1000);
-                    if ($settings.meter.timeUntilKill && encounter.currentBoss) {
+                    if ($settings.meter.showTimeUntilKill && encounter.currentBoss) {
                         let remainingDpm =
                             players
                                 .filter(
@@ -218,7 +218,12 @@
                                 .reduce((a, b) => a + b.damageStats.damageDealt, 0) / duration;
                         let remainingBossHealth = encounter.currentBoss.currentHp + encounter.currentBoss.currentShield;
                         let millisUntilKill = Math.max(remainingBossHealth / remainingDpm, 0);
-                        timeUntilKill = millisToMinutesAndSeconds(millisUntilKill);
+                        if (millisUntilKill > 3.6e6) {
+                            // 1 hr
+                            timeUntilKill = "∞";
+                        } else {
+                            timeUntilKill = millisToMinutesAndSeconds(millisUntilKill);
+                        }
                     }
                 }
                 if ($settings.general.showEsther) {
