@@ -1,7 +1,6 @@
 <script lang="ts">
     import { settings } from "$lib/utils/settings";
     import SettingItem from "./SettingItem.svelte";
-
 </script>
 
 <div class="flex flex-col space-y-4 divide-y-[1px]">
@@ -22,6 +21,10 @@
             name="Abbreviate Header"
             description="Abbreviates the Total DMG and Total DPS numbers in the header"
             bind:setting={$settings.meter.abbreviateHeader} />
+        <SettingItem
+            name="Show Time To Kill"
+            description="Shows approximate time until Boss HP reaches 0"
+            bind:setting={$settings.meter.showTimeUntilKill} />
         <SettingItem
             name="Show Class Colors"
             description="Shows class colors in the meter. Width of the bar shows relative % damage dealt."
