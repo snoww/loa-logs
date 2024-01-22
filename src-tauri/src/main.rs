@@ -160,7 +160,10 @@ async fn main() -> Result<()> {
                 }
             }
 
-            let hide_logs = settings.as_ref().map(|s| s.general.hide_logs_on_start).unwrap_or(true);
+            let hide_logs = settings
+                .as_ref()
+                .map(|s| s.general.hide_logs_on_start)
+                .unwrap_or(true);
 
             let logs_window =
                 WindowBuilder::new(app, "logs", tauri::WindowUrl::App("/logs".into()))
@@ -174,7 +177,6 @@ async fn main() -> Result<()> {
             if hide_logs {
                 logs_window.hide().unwrap();
             }
-
 
             task::spawn_blocking(move || {
                 parser::start(meter_window, ip, port, raw_socket, settings).map_err(|e| {
@@ -516,7 +518,7 @@ fn update_db(conn: &Connection) {
     }
 
     let count: i32 = conn
-        .query_row_and_then("SElECT COUNT(*) FROM entity WHERE dps IS NULL", [], |row| {
+        .query_row_and_then("SELECT COUNT(*) FROM entity WHERE dps IS NULL", [], |row| {
             row.get(0)
         })
         .expect("could not get entity count");
@@ -556,12 +558,21 @@ fn load_encounters_preview(
 
     let min_duration = filter.min_duration * 1000;
 
-    let mut params = vec![
-        min_duration.to_string(),
-        search.clone(),
-        search.clone(),
-        search,
-    ];
+    let mut params = vec![min_duration.to_string()];
+
+    let mut word_count = search.clone().split_whitespace().count();
+    if word_count > 0 {
+        for word in search.split_whitespace() {
+            params.push(word.to_string());
+            params.push(word.to_string());
+            params.push(word.to_string());
+        }
+    } else {
+        params.push("".to_string());
+        params.push("".to_string());
+        params.push("".to_string());
+        word_count += 1;
+    }
 
     let boss_filter = if !filter.bosses.is_empty() {
         let placeholders: Vec<String> = filter.bosses.iter().map(|_| "?".to_string()).collect();
@@ -619,7 +630,18 @@ fn load_encounters_preview(
 
     let count_params = params.clone();
 
-    let query = format!("SELECT
+    let mut input_filter = String::new();
+    let mut join_clauses = String::new();
+    for i in 0..word_count {
+        input_filter.push_str(&format!("AND ((current_boss LIKE '%' || ? || '%') OR (ent{}.class LIKE '%' || ? || '%') OR (ent{}.name LIKE '%' || ? || '%'))\n    ", i, i));
+        join_clauses.push_str(&format!(
+            "JOIN entity ent{} ON e.id = ent{}.encounter_id\n    ",
+            i, i
+        ));
+    }
+
+    let query = format!(
+        "SELECT
     e.id,
     e.fight_start,
     e.current_boss,
@@ -629,7 +651,7 @@ fn load_encounters_preview(
     e.cleared,
     e.local_player,
     (
-		SELECT en.dps
+        SELECT en.dps
 		FROM entity en
 		WHERE en.name = e.local_player AND en.encounter_id = e.id
 	) AS my_dps,
@@ -643,13 +665,24 @@ fn load_encounters_preview(
         ) AS ordered_classes
     ) AS classes
     FROM encounter e
-    JOIN entity ent ON e.id = ent.encounter_id
-    WHERE e.duration > ? AND ((current_boss LIKE '%' || ? || '%') OR (ent.class LIKE '%' || ? || '%') OR (ent.name LIKE '%' || ? || '%'))
-        {} {} {} {} {} {}
-    GROUP BY encounter_id
+    {}
+    WHERE e.duration > ? {}
+    {} {} {} {} {} {}
+    GROUP BY ent0.encounter_id
     ORDER BY {} {}
     LIMIT ?
-    OFFSET ?", boss_filter, class_filter, raid_clear_filter, favorite_filter, difficulty_filter, boss_only_damage_filter, sort, order);
+    OFFSET ?",
+        join_clauses,
+        input_filter,
+        boss_filter,
+        class_filter,
+        raid_clear_filter,
+        favorite_filter,
+        difficulty_filter,
+        boss_only_damage_filter,
+        sort,
+        order
+    );
 
     let mut stmt = conn.prepare_cached(&query).unwrap();
 
@@ -691,15 +724,25 @@ fn load_encounters_preview(
         encounters.push(encounter.unwrap());
     }
 
-    let query = format!("
+    let query = format!(
+        "
     SElECT COUNT(*)
-    FROM (SELECT encounter_id
+    FROM (SELECT ent0.encounter_id
         FROM encounter e
-        JOIN entity ent ON e.id = ent.encounter_id
-        WHERE duration > ? AND ((current_boss LIKE '%' || ? || '%') OR (ent.class LIKE '%' || ? || '%') OR (ent.name LIKE '%' || ? || '%'))
-            {} {} {} {} {} {}
-        GROUP BY encounter_id)
-        ", boss_filter, class_filter, raid_clear_filter, favorite_filter, difficulty_filter, boss_only_damage_filter);
+        {}
+        WHERE duration > ? {}
+        {} {} {} {} {} {}
+        GROUP BY ent0.encounter_id)
+        ",
+        join_clauses,
+        input_filter,
+        boss_filter,
+        class_filter,
+        raid_clear_filter,
+        favorite_filter,
+        difficulty_filter,
+        boss_only_damage_filter
+    );
 
     let count: i32 = conn
         .query_row_and_then(&query, params_from_iter(count_params), |row| row.get(0))
