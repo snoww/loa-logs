@@ -560,30 +560,31 @@ fn load_encounters_preview(
 
     let mut params = vec![min_duration.to_string()];
 
-    let mut search_words: Vec<&str> = search.split_whitespace().collect();
+    let search_words: Vec<&str> = if search.chars().any(|c| !c.is_whitespace()) {
+        search.split_whitespace().collect()
+    } else {
+        vec![""]
+    };
 
-    if search_words.is_empty() {
-        search_words.push("");
-    }
-
-    for word in search_words.clone() {
-        params.push(word.to_string());
-        params.push(word.to_string());
-        params.push(word.to_string());
-    }
+    params.extend(
+        search_words
+            .iter()
+            .flat_map(|word| std::iter::repeat(word.to_string()).take(3)),
+    );
 
     let word_count = search_words.len();
 
-    let mut input_filter = String::new();
-    let mut join_clauses = String::new();
+    let join_clauses = (0..word_count).fold(String::new(), |acc, i| {
+        acc + &format!("JOIN entity ent{} ON e.id = ent{}.encounter_id\n    ", i, i)
+    });
 
-    for i in 0..word_count {
-        join_clauses.push_str(&format!(
-            "JOIN entity ent{} ON e.id = ent{}.encounter_id\n    ",
+    let input_filter = (0..word_count)
+    .fold(String::new(), |acc, i| {
+        acc + &format!(
+            "AND ((current_boss LIKE '%' || ? || '%') OR (ent{}.class LIKE '%' || ? || '%') OR (ent{}.name LIKE '%' || ? || '%'))\n    ",
             i, i
-        ));
-        input_filter.push_str(&format!("AND ((current_boss LIKE '%' || ? || '%') OR (ent{}.class LIKE '%' || ? || '%') OR (ent{}.name LIKE '%' || ? || '%'))\n    ", i, i));
-    }
+        )
+    });
 
     let boss_filter = if !filter.bosses.is_empty() {
         let placeholders: Vec<String> = filter.bosses.iter().map(|_| "?".to_string()).collect();
