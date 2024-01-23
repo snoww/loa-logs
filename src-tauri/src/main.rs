@@ -560,18 +560,29 @@ fn load_encounters_preview(
 
     let mut params = vec![min_duration.to_string()];
 
-    let mut word_count = search.clone().split_whitespace().count();
-    if word_count > 0 {
-        for word in search.split_whitespace() {
-            params.push(word.to_string());
-            params.push(word.to_string());
-            params.push(word.to_string());
-        }
-    } else {
-        params.push("".to_string());
-        params.push("".to_string());
-        params.push("".to_string());
-        word_count += 1;
+    let mut search_words: Vec<&str> = search.split_whitespace().collect();
+
+    if search_words.is_empty() {
+        search_words.push("");
+    }
+
+    for word in search_words.clone() {
+        params.push(word.to_string());
+        params.push(word.to_string());
+        params.push(word.to_string());
+    }
+
+    let word_count = search_words.len();
+
+    let mut input_filter = String::new();
+    let mut join_clauses = String::new();
+
+    for i in 0..word_count {
+        join_clauses.push_str(&format!(
+            "JOIN entity ent{} ON e.id = ent{}.encounter_id\n    ",
+            i, i
+        ));
+        input_filter.push_str(&format!("AND ((current_boss LIKE '%' || ? || '%') OR (ent{}.class LIKE '%' || ? || '%') OR (ent{}.name LIKE '%' || ? || '%'))\n    ", i, i));
     }
 
     let boss_filter = if !filter.bosses.is_empty() {
@@ -629,16 +640,6 @@ fn load_encounters_preview(
     };
 
     let count_params = params.clone();
-
-    let mut input_filter = String::new();
-    let mut join_clauses = String::new();
-    for i in 0..word_count {
-        input_filter.push_str(&format!("AND ((current_boss LIKE '%' || ? || '%') OR (ent{}.class LIKE '%' || ? || '%') OR (ent{}.name LIKE '%' || ? || '%'))\n    ", i, i));
-        join_clauses.push_str(&format!(
-            "JOIN entity ent{} ON e.id = ent{}.encounter_id\n    ",
-            i, i
-        ));
-    }
 
     let query = format!(
         "SELECT
