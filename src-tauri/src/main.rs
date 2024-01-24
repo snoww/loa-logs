@@ -34,12 +34,7 @@ async fn main() -> Result<()> {
     std::panic::set_hook(Box::new(|info| {
         error!("Panicked: {:?}", info);
 
-        match app::get_logger() {
-            Ok(logger) => {
-                logger.flush();
-            },
-            Err(_) => {}
-        }
+        app::get_logger().unwrap().flush();
     }));
 
     let quit = CustomMenuItem::new("quit".to_string(), "Quit");
