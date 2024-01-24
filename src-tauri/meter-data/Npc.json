@@ -15575,7 +15575,7 @@
   "494724": {
     "id": 494724,
     "name": "Kaltaya, the Blooming Chaos",
-    "grade": "boss",
+    "grade": "normal",
     "type": "monster",
     "pushimmune": true
   },
@@ -15596,7 +15596,7 @@
   "494756": {
     "id": 494756,
     "name": "Kaltaya, the Blooming Chaos",
-    "grade": "boss",
+    "grade": "normal",
     "type": "monster",
     "pushimmune": true
   },
