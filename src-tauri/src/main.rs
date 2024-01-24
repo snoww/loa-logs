@@ -342,7 +342,7 @@ fn setup_db(resource_path: PathBuf) -> Result<(), String> {
         buffs TEXT,
         debuffs TEXT,
         misc TEXT,
-        difficulty TEXT
+        difficulty TEXT,
         favorite BOOLEAN NOT NULL DEFAULT 0,
         cleared BOOLEAN,
         version INTEGER NOT NULL DEFAULT {},
