@@ -3,8 +3,8 @@
     windows_subsystem = "windows"
 )]
 
-mod parser;
 mod app;
+mod parser;
 
 use std::{
     fs::{self, File},

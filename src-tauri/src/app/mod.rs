@@ -1,7 +1,5 @@
-
-
 use flexi_logger::{
-    Cleanup, Criterion, DeferredNow, Duplicate, FileSpec, Logger, LoggerHandle, Naming, WriteMode
+    Cleanup, Criterion, DeferredNow, Duplicate, FileSpec, Logger, LoggerHandle, Naming, WriteMode,
 };
 
 use log::{error, info, warn, Record};
@@ -25,27 +23,28 @@ impl AppState {
     }
 
     pub fn init_logger(&mut self) {
-        if let Some(_) = self.logger_handle.clone() {
+        if self.logger_handle.clone().is_some() {
             error!("AppState logger already inited");
             return;
         }
 
-        let mut logger = Logger::try_with_str("info, tao=off").unwrap()
-        .log_to_file(
-            FileSpec::default()
-                .suppress_timestamp()
-                .basename("loa_logs"),
-        )
-        .use_utc()
-        .write_mode(WriteMode::BufferAndFlush)
-        .append()
-        .format(AppState::default_format_with_time)
-        .rotate(
-            Criterion::Size(5_000_000),
-            Naming::Timestamps,
-            Cleanup::KeepLogFiles(2),
-        );
-        
+        let mut logger = Logger::try_with_str("info, tao=off")
+            .unwrap()
+            .log_to_file(
+                FileSpec::default()
+                    .suppress_timestamp()
+                    .basename("loa_logs"),
+            )
+            .use_utc()
+            .write_mode(WriteMode::BufferAndFlush)
+            .append()
+            .format(AppState::default_format_with_time)
+            .rotate(
+                Criterion::Size(5_000_000),
+                Naming::Timestamps,
+                Cleanup::KeepLogFiles(2),
+            );
+
         #[cfg(debug_assertions)]
         {
             logger = logger.duplicate_to_stdout(Duplicate::All);
@@ -55,7 +54,7 @@ impl AppState {
     }
 
     pub fn get_logger(&self) -> Option<LoggerHandle> {
-        return self.logger_handle.clone();
+        self.logger_handle.clone()
     }
 
     fn default_format_with_time(
@@ -72,7 +71,6 @@ impl AppState {
             record.args()
         )
     }
-
 }
 
 pub fn init() {
@@ -83,5 +81,5 @@ pub fn get_logger() -> Result<LoggerHandle, String> {
     if let Some(logger_handle) = get_app_state().lock().unwrap().get_logger() {
         return Ok(logger_handle);
     }
-    return Err("AppState logger not present".to_string());
+    Err("AppState logger not present".to_string())
 }
