@@ -1336,7 +1336,7 @@ fn insert_data(
         .expect("failed to prepare encounter statement");
 
     encounter.duration = encounter.last_combat_packet - encounter.fight_start;
-    let duration_seconds = encounter.duration / 1000;
+    let duration_seconds = max(encounter.duration / 1000, 1);
     encounter.encounter_damage_stats.dps =
         encounter.encounter_damage_stats.total_damage_dealt / duration_seconds;
 
