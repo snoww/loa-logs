@@ -1,11 +1,11 @@
 {
-    "version": "v1.5.7",
-    "notes": "### v1.5.7\n#### BUG FIXES AND IMPROVEMENTS\n- all self buffs now show under breakdown. \n  - for example, you are able to see percentage of each circulate buff on each skill.\n- update wardancer roar synergy to be self buff instead of party buff\n- fix identity column not resetting\n- crashes are now logged to log file\n\n### v1.5.6\n#### NEW FEATURES\n- added two new accent colors (rose and violet)\n- added support identity column (settings > live meter/logs > support identity %). _note: only works on new logs_\n\n![identity](https://cdn.discordapp.com/attachments/220646943498567680/1197486350916669512/app_BiFRacJpfE.png)\n\n![setting](https://cdn.discordapp.com/attachments/220646943498567680/1197501510972616764/app_bY7IgOVdje.png)\n#### BUG FIXES\n- fix identity settings not saving\n- fix identity column not showing correctly\n\nfull patch notes on [github](https://github.com/snoww/loa-logs/releases/latest)\n\nsend bug reports/suggestions to [#loa-logs](https://discord.gg/sbSa3pkDF5)",
-    "pub_date": "2024-01-19T09:03:02.962Z",
+    "version": "v1.5.8",
+    "notes": "### v1.5.8\n#### NEW FEATURES\n- added option to show rough estimated time to kill for bosses (settings > live meter)\n- search now supports multiple words. example: player1 player2\n\n\nfull patch notes on [github](https://github.com/snoww/loa-logs/releases/latest)\n\nsend bug reports/suggestions to [#loa-logs](https://discord.gg/sbSa3pkDF5)",
+    "pub_date": "2024-01-24T08:37:21.342Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.5.7/LOA.Logs_1.5.7_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmZWVFI0bzZPeEZIczlwUE1kdGUvTzlxcTVyQ0hkNUw0NjhmOU5CdmplOFpqVzZIMlhNT1Njbi9lcWRxaW1QQlZlNWx2T2RSZGZCWnRqUlArUkV3aWdZPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzA1NjU0NTMxCWZpbGU6TE9BIExvZ3NfMS41LjdfeDY0LXNldHVwLm5zaXMuemlwCmdWdmZFWThrQ29NMzlGTGg2T002SlltZENNSEdyRk9CLzhzVnhCS1hYUEdlenM1L3gzYmltNDlQMDNmM3E1c1cySGNVNmpWK2l3TnVjMUZWOFdvS0RRPT0K"
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.5.8/LOA.Logs_1.5.8_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlhIcjhVSzVKVy9ScCtyREtjWTBZeUREbWtlYmt4MGxXL3ZOR2tJMnRGTTdKcWoyQmF5RmJURWo0TGF0dlhObEZtRm03VDhpZjI4MVdDWVFZVHFtdEFVPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzA2MDg1MTkxCWZpbGU6TE9BIExvZ3NfMS41LjhfeDY0LXNldHVwLm5zaXMuemlwCm9ZY3pOOVlKQWZDUTZiUnA0SHZEZjlrWDNzOGk1QWNoemlsMFhHNHZQS1N5SXVrWEw5ejg5SzhwdTQyYnpvdnJBNkJRQnBiRjd1dEJTMDF0N1RLMUJ3PT0K"
         }
     }
 }
