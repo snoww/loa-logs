@@ -33,6 +33,10 @@
             (async () => {
                 await checkForUpdate();
 
+                if ($updateAvailable) {
+                    await showWindow();
+                }
+
                 let encounterUpdateEvent = await listen("show-latest-encounter", async (event) => {
                     await goto("/logs/encounter?id=" + event.payload);
                     await showWindow();
