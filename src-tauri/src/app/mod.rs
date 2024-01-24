@@ -83,5 +83,5 @@ pub fn get_logger() -> Result<LoggerHandle, String> {
     if let Some(logger_handle) = get_app_state().lock().unwrap().get_logger() {
         return Ok(logger_handle);
     }
-    return Err("xd".to_string());
+    return Err("AppState logger not present".to_string());
 }
