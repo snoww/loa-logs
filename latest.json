@@ -1,11 +1,11 @@
 {
-    "version": "v1.5.8",
-    "notes": "### v1.5.8\n#### NEW FEATURES\n- added option to show rough estimated time to kill for bosses (settings > live meter)\n- search now supports multiple words. example: player1 player2\n\n\nfull patch notes on [github](https://github.com/snoww/loa-logs/releases/latest)\n\nsend bug reports/suggestions to [#loa-logs](https://discord.gg/sbSa3pkDF5)",
-    "pub_date": "2024-01-24T08:37:21.342Z",
+    "version": "v1.5.9",
+    "notes": "### v1.5.9\n#### NEW FEATURES\n- added option to show rough estimated **time to kill (TTK)** for bosses (settings > live meter)\n- search now supports multiple words. example: player1 player2\n- improved method to save app crash logs to file\n\n#### BUG FIXES\n- fixed optimize database function not working\n\nthanks to [@JonasHri](https://github.com/JonasHri), [@yamiM0NSTER](https://github.com/yamiM0NSTER) for the contributions\n\nfull patch notes on [github](https://github.com/snoww/loa-logs/releases/latest)\n\nsend bug reports/suggestions to [#loa-logs](https://discord.gg/sbSa3pkDF5)",
+    "pub_date": "2024-01-24T10:43:13.283Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.5.8/LOA.Logs_1.5.8_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlhIcjhVSzVKVy9ScCtyREtjWTBZeUREbWtlYmt4MGxXL3ZOR2tJMnRGTTdKcWoyQmF5RmJURWo0TGF0dlhObEZtRm03VDhpZjI4MVdDWVFZVHFtdEFVPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzA2MDg1MTkxCWZpbGU6TE9BIExvZ3NfMS41LjhfeDY0LXNldHVwLm5zaXMuemlwCm9ZY3pOOVlKQWZDUTZiUnA0SHZEZjlrWDNzOGk1QWNoemlsMFhHNHZQS1N5SXVrWEw5ejg5SzhwdTQyYnpvdnJBNkJRQnBiRjd1dEJTMDF0N1RLMUJ3PT0K"
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.5.9/LOA.Logs_1.5.9_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlJaQ2I4c2dzemhoYzVZS09aN0dtNGJxS2ZCbFE0QlhPUkl3TzNWTUc3QmJPR3lzRitWRmF3WU9BSjVjQ01hR3l3cFE1VEc0WWUzMnh5dlJ5MkJlYWdZPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzA2MDk0NTU3CWZpbGU6TE9BIExvZ3NfMS41LjlfeDY0LXNldHVwLm5zaXMuemlwCjU2aFp0RFhkeHJrNjRDdDd2QXJDb2FRb0dyRm1zTTV0Q2ZnVitRZ1Buc0kvZlJPeHhHaEpzOFA2SFBpZklSRVNJTGw4c3RpbkhGb0ZXbEZ6b2RUK0N3PT0K"
         }
     }
 }
