@@ -292,6 +292,7 @@ async fn main() -> Result<()> {
             enable_aot,
             disable_aot,
             set_clickthrough,
+            optimize_database,
         ])
         .run(tauri::generate_context!())
         .expect("error while running application");
