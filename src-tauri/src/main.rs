@@ -4,6 +4,8 @@
 )]
 
 mod parser;
+mod app;
+
 use std::{
     fs::{self, File},
     io::{Read, Write},
@@ -12,11 +14,8 @@ use std::{
 };
 
 use anyhow::Result;
-use flexi_logger::{
-    Cleanup, Criterion, DeferredNow, Duplicate, FileSpec, Logger, Naming, WriteMode,
-};
 use hashbrown::HashMap;
-use log::{error, info, warn, Record};
+use log::{error, info, warn};
 use parser::models::*;
 
 use rusqlite::{params, params_from_iter, Connection};
@@ -30,31 +29,17 @@ use window_vibrancy::{apply_blur, clear_blur};
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let mut logger = Logger::try_with_str("info, tao=off")?
-        .log_to_file(
-            FileSpec::default()
-                .suppress_timestamp()
-                .basename("loa_logs"),
-        )
-        .use_utc()
-        .write_mode(WriteMode::BufferAndFlush)
-        .append()
-        .format(default_format_with_time)
-        .rotate(
-            Criterion::Size(5_000_000),
-            Naming::Timestamps,
-            Cleanup::KeepLogFiles(2),
-        );
-
-    #[cfg(debug_assertions)]
-    {
-        logger = logger.duplicate_to_stdout(Duplicate::All);
-    }
-
-    logger.start()?;
+    app::init();
 
     std::panic::set_hook(Box::new(|info| {
         error!("Panicked: {:?}", info);
+
+        match app::get_logger() {
+            Ok(logger) => {
+                logger.flush();
+            },
+            Err(_) => {}
+        }
     }));
 
     let quit = CustomMenuItem::new("quit".to_string(), "Quit");
@@ -1283,19 +1268,4 @@ fn set_clickthrough(window: tauri::Window, set: bool) {
 #[tauri::command]
 fn write_log(message: String) {
     info!("{}", message);
-}
-
-fn default_format_with_time(
-    w: &mut dyn std::io::Write,
-    now: &mut DeferredNow,
-    record: &Record,
-) -> Result<(), std::io::Error> {
-    write!(
-        w,
-        "[{}] {} [{}] {}",
-        now.format("%Y-%m-%dT%H:%M:%S%.6fZ"),
-        record.level(),
-        record.module_path().unwrap_or("<unnamed>"),
-        record.args()
-    )
 }
