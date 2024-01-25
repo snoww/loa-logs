@@ -28,12 +28,17 @@ impl AppState {
             return;
         }
 
+        let mut resource_directory =
+            std::env::current_exe().expect("Can't find path to executable");
+        resource_directory.pop();
+
         let mut logger = Logger::try_with_str("info, tao=off")
             .unwrap()
             .log_to_file(
                 FileSpec::default()
                     .suppress_timestamp()
-                    .basename("loa_logs"),
+                    .basename("loa_logs")
+                    .directory(resource_directory),
             )
             .use_utc()
             .write_mode(WriteMode::BufferAndFlush)
