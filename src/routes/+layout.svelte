@@ -10,7 +10,7 @@
     import { settings } from "$lib/utils/settings";
     import { appWindow } from "@tauri-apps/api/window";
     import { checkUpdate } from "@tauri-apps/api/updater";
-    import { updateAvailable, updateManifest } from "$lib/utils/stores";
+    import { updateAvailable, updateDismissed, updateManifest } from "$lib/utils/stores";
     import { invoke } from "@tauri-apps/api";
     import UpdateAvailable from "$lib/components/shared/UpdateAvailable.svelte";
 
@@ -74,7 +74,11 @@
             const { shouldUpdate, manifest } = await checkUpdate();
             if (shouldUpdate) {
                 $updateAvailable = true;
+                const oldManifest = $updateManifest;
                 $updateManifest = manifest;
+                if (oldManifest?.version !== $updateManifest?.version) {
+                    $updateDismissed = false;
+                }
             }
         } catch (e) {
             await invoke("write_log", { message: e });
