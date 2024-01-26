@@ -21,7 +21,7 @@ use parser::models::*;
 use rusqlite::{params, params_from_iter, Connection};
 use tauri::{
     api::process::Command, CustomMenuItem, LogicalPosition, LogicalSize, Manager, Position, Size,
-    SystemTray, SystemTrayEvent, SystemTrayMenu, SystemTrayMenuItem, WindowBuilder,
+    SystemTray, SystemTrayEvent, SystemTrayMenu, SystemTrayMenuItem,
 };
 use tauri_plugin_window_state::{AppHandleExt, StateFlags, WindowExt};
 use tokio::task;
