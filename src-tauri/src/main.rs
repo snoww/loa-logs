@@ -154,7 +154,6 @@ async fn main() -> Result<()> {
 
             let logs_window = app.get_window(LOGS_WINDOW_LABEL).unwrap();
             logs_window.restore_state(WINDOW_STATE_FLAGS).unwrap();
-            logs_window.set_decorations(true).unwrap();
             if hide_logs {
                 logs_window.hide().unwrap();
             }
