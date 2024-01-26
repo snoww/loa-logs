@@ -74,9 +74,6 @@ async fn main() -> Result<()> {
 
             let meter_window = app.get_window(METER_WINDOW_LABEL).unwrap();
             meter_window
-                .set_always_on_top(true)
-                .expect("failed to set windows always on top");
-            meter_window
                 .restore_state(StateFlags::all())
                 .expect("failed to restore window state");
             // #[cfg(debug_assertions)]
@@ -148,13 +145,7 @@ async fn main() -> Result<()> {
                 .map(|s| s.general.hide_logs_on_start)
                 .unwrap_or(true);
 
-            let logs_window =
-                WindowBuilder::new(app, LOGS_WINDOW_LABEL, tauri::WindowUrl::App("/logs".into()))
-                    .title("LOA Logs")
-                    .min_inner_size(650.0, 300.0)
-                    .inner_size(800.0, 500.0)
-                    .build()
-                    .expect("failed to create log window");
+            let logs_window = app.get_window(LOGS_WINDOW_LABEL).unwrap();
             logs_window.restore_state(StateFlags::all()).unwrap();
             logs_window.set_decorations(true).unwrap();
             if hide_logs {

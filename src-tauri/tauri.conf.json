@@ -115,15 +115,28 @@
     },
     "windows": [
       {
+        "label": "main",
+        "title": "LOA Logs",
         "fullscreen": false,
         "width": 500,
         "height": 350,
         "resizable": true,
-        "title": "LOA Logs",
         "decorations": false,
         "transparent": true,
         "minWidth": 400,
-        "minHeight": 180
+        "minHeight": 180,
+        "alwaysOnTop": true
+      },
+      {
+        "label": "logs",
+        "title": "LOA Logs",
+        "url": "logs",
+        "minWidth": 650,
+        "minHeight": 300,
+        "width": 800,
+        "height": 500,
+        "decorations": true,
+        "fileDropEnabled": false
       }
     ]
   }
