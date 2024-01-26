@@ -83,12 +83,21 @@ async fn main() -> Result<()> {
                 .as_ref()
                 .map(|s| s.general.hide_meter_on_start)
                 .unwrap_or(true);
+
+            let meter_always_on_top = settings
+                .as_ref()
+                .map(|s| s.general.always_on_top)
+                .unwrap_or(true);
+
             let meter_window = app.get_window(METER_WINDOW_LABEL).unwrap();
             meter_window
                 .restore_state(WINDOW_STATE_FLAGS)
                 .expect("failed to restore window state");
             if !hide_meter {
                 meter_window.show().unwrap();
+            }
+            if !meter_always_on_top {
+                meter_window.set_always_on_top(false).unwrap();
             }
             // #[cfg(debug_assertions)]
             // {
