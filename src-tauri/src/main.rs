@@ -29,6 +29,13 @@ use window_vibrancy::{apply_blur, clear_blur};
 
 const METER_WINDOW_LABEL: &str = "main";
 const LOGS_WINDOW_LABEL: &str = "logs";
+const WINDOW_STATE_FLAGS: StateFlags = StateFlags::from_bits_truncate(
+    StateFlags::DECORATIONS.bits()
+        | StateFlags::FULLSCREEN.bits()
+        | StateFlags::MAXIMIZED.bits()
+        | StateFlags::POSITION.bits()
+        | StateFlags::SIZE.bits(),
+);
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -74,7 +81,7 @@ async fn main() -> Result<()> {
 
             let meter_window = app.get_window(METER_WINDOW_LABEL).unwrap();
             meter_window
-                .restore_state(StateFlags::all())
+                .restore_state(WINDOW_STATE_FLAGS)
                 .expect("failed to restore window state");
             // #[cfg(debug_assertions)]
             // {
@@ -146,7 +153,7 @@ async fn main() -> Result<()> {
                 .unwrap_or(true);
 
             let logs_window = app.get_window(LOGS_WINDOW_LABEL).unwrap();
-            logs_window.restore_state(StateFlags::all()).unwrap();
+            logs_window.restore_state(WINDOW_STATE_FLAGS).unwrap();
             logs_window.set_decorations(true).unwrap();
             if hide_logs {
                 logs_window.hide().unwrap();
@@ -175,7 +182,7 @@ async fn main() -> Result<()> {
                     event
                         .window()
                         .app_handle()
-                        .save_window_state(StateFlags::all())
+                        .save_window_state(WINDOW_STATE_FLAGS)
                         .expect("failed to save window state");
                     event.window().app_handle().exit(0);
                 } else if event.window().label() == LOGS_WINDOW_LABEL {
@@ -198,7 +205,7 @@ async fn main() -> Result<()> {
             }
             SystemTrayEvent::MenuItemClick { id, .. } => match id.as_str() {
                 "quit" => {
-                    app.save_window_state(StateFlags::all())
+                    app.save_window_state(WINDOW_STATE_FLAGS)
                         .expect("failed to save window state");
                     app.exit(0);
                 }
@@ -216,14 +223,14 @@ async fn main() -> Result<()> {
                 }
                 "load" => {
                     if let Some(meter) = app.get_window(METER_WINDOW_LABEL) {
-                        meter.restore_state(StateFlags::all()).unwrap();
+                        meter.restore_state(WINDOW_STATE_FLAGS).unwrap();
                     }
                 }
                 "save" => {
                     if let Some(meter) = app.get_window(METER_WINDOW_LABEL) {
                         meter
                             .app_handle()
-                            .save_window_state(StateFlags::all())
+                            .save_window_state(WINDOW_STATE_FLAGS)
                             .unwrap();
                     }
                 }
