@@ -149,6 +149,8 @@ async fn main() -> Result<()> {
             } else {
                 ip = meter_core::get_most_common_ip().unwrap();
                 info!("settings not found, auto_iface enabled, using ip: {}", ip);
+                meter_window.show().unwrap();
+                logs_window.show().unwrap();
             }
 
             match setup_db(resource_path) {
