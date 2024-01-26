@@ -79,30 +79,19 @@ async fn main() -> Result<()> {
 
             let settings = read_settings(&resource_path).ok();
 
-            let hide_meter = settings
-                .as_ref()
-                .map(|s| s.general.hide_meter_on_start)
-                .unwrap_or(true);
-
-            let meter_always_on_top = settings
-                .as_ref()
-                .map(|s| s.general.always_on_top)
-                .unwrap_or(true);
-
             let meter_window = app.get_window(METER_WINDOW_LABEL).unwrap();
             meter_window
                 .restore_state(WINDOW_STATE_FLAGS)
                 .expect("failed to restore window state");
-            if !hide_meter {
-                meter_window.show().unwrap();
-            }
-            if !meter_always_on_top {
-                meter_window.set_always_on_top(false).unwrap();
-            }
             // #[cfg(debug_assertions)]
             // {
             //     meter_window.open_devtools();
             // }
+
+            let logs_window = app.get_window(LOGS_WINDOW_LABEL).unwrap();
+            logs_window
+                .restore_state(WINDOW_STATE_FLAGS)
+                .expect("failed to restore window state");
 
             let mut raw_socket = false;
             let mut ip: String;
@@ -110,8 +99,14 @@ async fn main() -> Result<()> {
 
             if let Some(settings) = settings.clone() {
                 info!("settings loaded");
-                if settings.general.hide_meter_on_start {
-                    meter_window.hide().unwrap();
+                if !settings.general.hide_meter_on_start {
+                    meter_window.show().unwrap();
+                }
+                if !settings.general.hide_logs_on_start {
+                    logs_window.show().unwrap();
+                }
+                if !settings.general.always_on_top {
+                    meter_window.set_always_on_top(false).unwrap();
                 }
                 if settings.general.auto_iface {
                     ip = meter_core::get_most_common_ip().unwrap();
@@ -161,17 +156,6 @@ async fn main() -> Result<()> {
                 Err(e) => {
                     warn!("error setting up database: {}", e);
                 }
-            }
-
-            let hide_logs = settings
-                .as_ref()
-                .map(|s| s.general.hide_logs_on_start)
-                .unwrap_or(true);
-
-            let logs_window = app.get_window(LOGS_WINDOW_LABEL).unwrap();
-            logs_window.restore_state(WINDOW_STATE_FLAGS).unwrap();
-            if !hide_logs {
-                logs_window.show().unwrap();
             }
 
             task::spawn_blocking(move || {
