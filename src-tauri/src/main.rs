@@ -257,12 +257,6 @@ async fn main() -> Result<()> {
                     if let Some(logs) = app.get_window(LOGS_WINDOW_LABEL) {
                         logs.show().unwrap();
                         logs.unminimize().unwrap();
-                    } else {
-                        WindowBuilder::new(app, LOGS_WINDOW_LABEL, tauri::WindowUrl::App("/logs".into()))
-                            .title("LOA Logs")
-                            .min_inner_size(500.0, 300.0)
-                            .build()
-                            .expect("failed to create log window");
                     }
                 }
                 _ => {}
