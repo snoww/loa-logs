@@ -129,7 +129,8 @@
         "transparent": true,
         "minWidth": 400,
         "minHeight": 180,
-        "alwaysOnTop": true
+        "alwaysOnTop": true,
+        "visible": false
       },
       {
         "label": "logs",

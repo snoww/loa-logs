@@ -79,10 +79,17 @@ async fn main() -> Result<()> {
 
             let settings = read_settings(&resource_path).ok();
 
+            let hide_meter = settings
+                .as_ref()
+                .map(|s| s.general.hide_meter_on_start)
+                .unwrap_or(true);
             let meter_window = app.get_window(METER_WINDOW_LABEL).unwrap();
             meter_window
                 .restore_state(WINDOW_STATE_FLAGS)
                 .expect("failed to restore window state");
+            if !hide_meter {
+                meter_window.show().unwrap();
+            }
             // #[cfg(debug_assertions)]
             // {
             //     meter_window.open_devtools();
