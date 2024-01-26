@@ -154,8 +154,8 @@ async fn main() -> Result<()> {
 
             let logs_window = app.get_window(LOGS_WINDOW_LABEL).unwrap();
             logs_window.restore_state(WINDOW_STATE_FLAGS).unwrap();
-            if hide_logs {
-                logs_window.hide().unwrap();
+            if !hide_logs {
+                logs_window.show().unwrap();
             }
 
             task::spawn_blocking(move || {

@@ -140,7 +140,8 @@
         "width": 800,
         "height": 500,
         "decorations": true,
-        "fileDropEnabled": false
+        "fileDropEnabled": false,
+        "visible": false
       }
     ]
   }
