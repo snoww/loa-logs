@@ -175,6 +175,14 @@
                         encounter.lastCombatPacket,
                         encounter.fightStart
                     );
+                } else if (chartType === ChartType.SKILL_LOG && focusedBoss) {
+                    let boss = bosses.find((boss) => boss.name === focusedBoss);
+                    chartOptions = getSkillLogChart(
+                        boss!,
+                        $skillIcon.path,
+                        encounter.lastCombatPacket,
+                        encounter.fightStart
+                    );
                 }
             }
         }
@@ -187,6 +195,8 @@
     }
 
     function inspectBoss(name: string) {
+        state = MeterState.PLAYER;
+        chartType = ChartType.SKILL_LOG;
         focusedBoss = name;
     }
 
@@ -693,7 +703,7 @@
                 <div class="mt-2 h-[300px]" use:chartable={chartOptions} style="width: calc(100vw - 4.5rem);" />
             {/if}
         {:else if chartType === ChartType.SKILL_LOG}
-            {#if player && player.entityType === EntityType.PLAYER}
+            {#if (player && player.entityType === EntityType.PLAYER) || focusedBoss}
                 <div class="mt-2 h-[400px]" use:chartable={chartOptions} style="width: calc(100vw - 4.5rem);" />
             {/if}
         {/if}
