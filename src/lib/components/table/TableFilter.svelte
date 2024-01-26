@@ -1,13 +1,15 @@
 <script lang="ts">
+    import { onMount } from "svelte";
+    import type { FormEventHandler } from "svelte/elements";
+
     import { bossList } from "$lib/constants/bosses";
     import { classList } from "$lib/constants/classes";
     import { difficultyMap, encounterMap } from "$lib/constants/encounters";
-    import { SearchFilter } from "$lib/types";
+    import { SearchFilter, type EncounterPreview } from "$lib/types";
     import { settings } from "$lib/utils/settings";
     import { pageStore, searchStore, searchFilter, selectedEncounters } from "$lib/utils/stores";
     import { tooltip } from "$lib/utils/tooltip";
     import { invoke } from "@tauri-apps/api";
-    import { onMount } from "svelte";
 
     let filterMenu = false;
     let filterTab = "Encounters";
@@ -16,6 +18,7 @@
 
     export let selectMode: boolean;
     export let refreshFn: () => void;
+    export let loadEncountersFn: () => Promise<Array<EncounterPreview>>;
 
     let deleteConfirm = false;
 
@@ -40,6 +43,21 @@
         };
     });
 
+    function debounce(fn: FormEventHandler<HTMLInputElement>, milliseconds: number) {
+        let timer: number | undefined;
+
+        return (evt: Event & { currentTarget: EventTarget & HTMLInputElement }) => {
+            clearTimeout(timer);
+            timer = setTimeout(() => {
+                fn(evt);
+            }, milliseconds);
+        };
+    }
+
+    const handleSearchInput = debounce((e) => {
+        loadEncountersFn();
+    }, 500);
+
     const isFilterButton = (element: HTMLElement) => {
         return element.classList.contains("filter-button");
     };
@@ -62,7 +80,7 @@
     }
 </script>
 
-<div class="flex items-center justify-between z-30">
+<div class="z-30 flex items-center justify-between">
     <div class="flex items-center space-x-2">
         <div class="relative">
             <div class="absolute inset-y-0 left-0 flex cursor-default items-center pl-2">
@@ -320,7 +338,8 @@
                 type="text"
                 bind:value={$searchStore}
                 class="focus:border-accent-500 block w-80 rounded-lg border border-gray-600 bg-zinc-700 px-8 text-sm text-zinc-300 placeholder-gray-400 focus:ring-0"
-                placeholder="Search encounters, names, or classes" />
+                placeholder="Search encounters, names, or classes"
+                on:input={handleSearchInput} />
             {#if $searchStore.length > 0}
                 <button
                     class="absolute inset-y-0 right-0 flex items-center pr-2"
