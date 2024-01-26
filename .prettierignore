@@ -11,6 +11,3 @@ node_modules
 pnpm-lock.yaml
 package-lock.json
 yarn.lock
-
-# Ignore tauri config
-src-tauri/tauri.conf.json

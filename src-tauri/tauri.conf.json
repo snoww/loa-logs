@@ -37,9 +37,7 @@
       "fs": {
         "readFile": true,
         "copyFile": true,
-        "scope": [
-          "**"
-        ]
+        "scope": ["**"]
       },
       "path": {
         "all": true
@@ -56,9 +54,7 @@
       "http": {
         "all": true,
         "request": true,
-        "scope": [
-          "https://*"
-        ]
+        "scope": ["https://*"]
       }
     },
     "bundle": {
@@ -107,7 +103,7 @@
       "csp": "default-src 'self'; img-src https: data: asset: https://asset.localhost; style-src 'self' 'unsafe-inline'; font-src 'self' data:"
     },
     "updater": {
-      "active": true,
+      "active": true, 
       "endpoints": [
         "https://snow.xyz/loa-logs/latest.json"
       ],
