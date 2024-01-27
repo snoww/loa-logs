@@ -42,6 +42,7 @@
             bossHPBars = bossHpMap[boss.name];
         } else {
             bossHPBars = 0;
+            bossCurrentBars = 0;
         }
 
         bossCurrentPercentage = (bossHp / boss.maxHp) * 100;
