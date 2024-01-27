@@ -1,4 +1,6 @@
 <script lang="ts">
+    import { onMount } from "svelte";
+
     import LogSidebar from "$lib/components/logs/LogSidebar.svelte";
     import TableFilter from "$lib/components/table/TableFilter.svelte";
     import type { EncounterPreview, EncountersOverview } from "$lib/types";
@@ -44,9 +46,16 @@
                 $pageStore = 1;
             }
         }
+    }
+
+    $: {
         $searchFilter = $searchFilter;
         loadEncounters();
     }
+
+    onMount(async () => {
+        loadEncounters();
+    });
 
     async function loadEncounters(): Promise<Array<EncounterPreview>> {
         NProgress.start();
@@ -156,7 +165,7 @@
     </div>
     <div class="px-8">
         <div class="py-2">
-            <TableFilter bind:selectMode refreshFn={refresh} />
+            <TableFilter bind:selectMode refreshFn={refresh} loadEncountersFn={loadEncounters} />
         </div>
         <div
             class="relative overflow-y-auto overflow-x-hidden"
