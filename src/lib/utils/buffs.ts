@@ -1,4 +1,4 @@
-import { classesMap } from "$lib/constants/classes";
+import { classesMap, classNameToClassId } from "$lib/constants/classes";
 import {
     StatusEffectBuffTypeFlags,
     type StatusEffect,
@@ -11,6 +11,7 @@ import {
     type PartyBuffs,
     type PartyInfo
 } from "$lib/types";
+import { invoke } from "@tauri-apps/api";
 import { round } from "./numbers";
 
 export function defaultBuffFilter(buffType: number): boolean {
@@ -57,51 +58,64 @@ export function filterStatusEffects(
     buffFilter = true
 ) {
     let key = "";
+
     // Party synergies
-    if (["classskill", "identity", "ability"].includes(buff.buffCategory) && buff.target === StatusEffectTarget.PARTY) {
-        if (tab === MeterTab.PARTY_BUFFS) {
-            if (buff.source.skill && [105, 204, 602].includes(buff.source.skill.classId)) {
-                // put support buffs at the start when sorting
-                key = "_";
-            }
-            key += `${classesMap[buff.source.skill?.classId ?? 0]}_${
+    if (isPartySynergy(buff)) {
+        if (tab !== MeterTab.PARTY_BUFFS) {
+            return;
+        }
+
+        if (isSupportBuff(buff)) {
+            key = makeSupportBuffKey(buff);
+        } else {
+            key = `${classesMap[buff.source.skill?.classId ?? 0]}_${
                 buff.uniqueGroup ? buff.uniqueGroup : buff.source.skill?.name
             }`;
-            groupedSynergiesAdd(groupedSynergies, key, id, buff, focusedPlayer, buffFilter);
         }
+
+        groupedSynergiesAdd(groupedSynergies, key, id, buff, focusedPlayer, buffFilter);
     }
     // Self synergies
-    else if (["pet", "cook", "battleitem", "dropsofether", "bracelet", "elixir"].includes(buff.buffCategory)) {
-        if (tab === MeterTab.SELF_BUFFS) {
-            if (buff.buffCategory === "bracelet") {
-                // put bracelets buffs at the end
-                key = `zzbracelet_${buff.uniqueGroup}`;
-            } else if (buff.buffCategory === "elixir") {
-                key = `elixir_${buff.uniqueGroup}`;
-            } else {
-                key = buff.buffCategory;
-            }
-            groupedSynergiesAdd(groupedSynergies, key, id, buff, focusedPlayer, buffFilter);
+    else if (isSelfItemSynergy(buff)) {
+        if (tab !== MeterTab.SELF_BUFFS) {
+            return;
         }
-    } else if (["set"].includes(buff.buffCategory)) {
+
+        if (buff.buffCategory === "bracelet") {
+            // put bracelets buffs at the end
+            key = `zzbracelet_${buff.uniqueGroup}`;
+        } else if (buff.buffCategory === "elixir") {
+            key = `elixir_${buff.uniqueGroup}`;
+        } else {
+            key = buff.buffCategory;
+        }
+        groupedSynergiesAdd(groupedSynergies, key, id, buff, focusedPlayer, buffFilter);
+    }
+    // set synergies
+    else if (isSetSynergy(buff)) {
         if (tab === MeterTab.SELF_BUFFS && !focusedPlayer) {
             // put set buffs at the start
             groupedSynergiesAdd(groupedSynergies, `_set_${buff.source.setName}`, id, buff, focusedPlayer, buffFilter);
         }
-    } else if (["classskill", "identity", "ability"].includes(buff.buffCategory)) {
-        // self & other identity, class skill, engravings
+    }
+    // self & other identity, class skill, engravings
+    else if (isSelfSkillSynergy(buff)) {
         if (tab === MeterTab.SELF_BUFFS && focusedPlayer) {
             if (buff.buffCategory === "ability") {
                 key = `${buff.uniqueGroup ? buff.uniqueGroup : id}`;
             } else {
-                if (focusedPlayer.classId !== buff.source.skill?.classId) return; // We hide other classes self buffs (class_skill & identity)
+                if (focusedPlayer.classId !== buff.source.skill?.classId) {
+                    return; // We hide other classes self buffs (class_skill & identity)
+                }
                 key = `${classesMap[buff.source.skill?.classId ?? 0]}_${
                     buff.uniqueGroup ? buff.uniqueGroup : buff.source.skill?.name
                 }`;
             }
             groupedSynergiesAdd(groupedSynergies, key, id, buff, focusedPlayer, buffFilter);
         }
-    } else if (["etc"].includes(buff.buffCategory)) {
+    }
+    // other synergies
+    else if (isOtherSynergy(buff)) {
         if (tab === MeterTab.SELF_BUFFS && focusedPlayer) {
             groupedSynergiesAdd(groupedSynergies, `etc_${buff.source.name}`, id, buff, focusedPlayer, buffFilter);
         }
@@ -311,4 +325,107 @@ export function addBardBubbles(key: string, buff: Buff, syn: StatusEffect) {
             buff.bonus = 40;
         }
     }
+}
+
+const supportClasses = [classNameToClassId["Paladin"], classNameToClassId["Bard"], classNameToClassId["Artist"]];
+
+function isSupportBuff(statusEffect: StatusEffect) {
+    if (!statusEffect.source.skill) {
+        return false;
+    }
+
+    return supportClasses.includes(statusEffect.source.skill.classId);
+}
+
+const supportSkills = {
+    marking: [
+        21020, // Sound shock, Stigma, Harp of Rythm
+        21290, // Sonatina
+        31420, // Paint: Drawing Orchids
+        36050, // Light Shock
+        36080, // Sword of Justice
+        36150, // God’s Decree (Godsent Law)
+        36100 // Holy Explosion
+    ],
+    markingGrp: [
+        210230, // Pala marking
+        210230, // Artist marking
+        210230 // Bard marking
+    ],
+    atkPwr: [
+        21170, // Sonic Vibration
+        21160, // Heavenly Tune
+        31400, // Paint: Sunsketch
+        31410, // Paint: Sun Well Skill
+        36200, // Heavenly Blessings
+        36170 // Wrath of God
+    ],
+    atkPwrGrp: [
+        101105, // Pala atk power
+        314004, // Artist atk power
+        101204 // Bard atk power
+    ],
+    identity: [
+        21140, // Serenade of Courage 1
+        21141, // Serenade of Courage 2
+        21142 // Serenade of Courage 3
+        // 31050, // Moonfall
+        // 36800 // Holy Aura
+    ],
+    identityGrp: [
+        368000, // Pala Holy aura group
+        310501 // Artist Moonfal group
+        // Bard Serenade of Courage - doesn't exist
+    ]
+};
+
+function makeSupportBuffKey(statusEffect: StatusEffect) {
+    const skillId = statusEffect.source.skill?.id ?? 0;
+    let key = "_";
+    key += `${classesMap[statusEffect.source.skill?.classId ?? 0]}`;
+    if (supportSkills.markingGrp.includes(statusEffect.uniqueGroup)) {
+        key += "_0";
+    } else if (supportSkills.atkPwrGrp.includes(statusEffect.uniqueGroup)) {
+        key += "_1";
+    } else if (
+        supportSkills.identity.includes(skillId) ||
+        supportSkills.identityGrp.includes(statusEffect.uniqueGroup)
+    ) {
+        key += "_2";
+    } else {
+        key += "_3";
+    }
+    key += `_${statusEffect.uniqueGroup ? statusEffect.uniqueGroup : statusEffect.source.skill?.name}`;
+    return key;
+}
+
+const buffCategories = {
+    partySynergy: ["classskill", "identity", "ability"],
+    selfItemSynergy: ["pet", "cook", "battleitem", "dropsofether", "bracelet", "elixir"],
+    setSynergy: ["set"],
+    selfSkillSynergy: ["classskill", "identity", "ability"],
+    other: ["etc"]
+};
+
+function isPartySynergy(statusEffect: StatusEffect) {
+    return (
+        buffCategories.partySynergy.includes(statusEffect.buffCategory) &&
+        statusEffect.target === StatusEffectTarget.PARTY
+    );
+}
+
+function isSelfItemSynergy(statusEffect: StatusEffect) {
+    return buffCategories.selfItemSynergy.includes(statusEffect.buffCategory);
+}
+
+function isSetSynergy(statusEffect: StatusEffect) {
+    return buffCategories.setSynergy.includes(statusEffect.buffCategory);
+}
+
+function isSelfSkillSynergy(statusEffect: StatusEffect) {
+    return buffCategories.selfSkillSynergy.includes(statusEffect.buffCategory);
+}
+
+function isOtherSynergy(statusEffect: StatusEffect) {
+    return buffCategories.other.includes(statusEffect.buffCategory);
 }
