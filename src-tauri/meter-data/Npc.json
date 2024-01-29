@@ -20234,14 +20234,14 @@
   "42245093": {
     "id": 42245093,
     "name": "Phantom Fragment",
-    "grade": "commander",
+    "grade": "normal",
     "type": "monster",
     "pushimmune": true
   },
   "42245094": {
     "id": 42245094,
     "name": "Phantom Fragment",
-    "grade": "commander",
+    "grade": "normal",
     "type": "monster",
     "pushimmune": true
   },
