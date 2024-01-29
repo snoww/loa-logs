@@ -2,9 +2,10 @@ import { classColors } from "$lib/constants/colors";
 import { invoke } from "@tauri-apps/api";
 import { emit } from "@tauri-apps/api/event";
 import { register, unregisterAll } from "@tauri-apps/api/globalShortcut";
-import { get, writable } from "svelte/store";
+import { get, type Writable, writable } from "svelte/store";
 import { hideAll } from "tippy.js";
 import { clickthroughStore } from "$lib/utils/stores";
+import type { UpdateManifest } from "@tauri-apps/api/updater";
 
 export const defaultSettings = {
     general: {
@@ -150,6 +151,12 @@ export const defaultSettings = {
     }
 };
 
+export const update = {
+    available: false,
+    manifest: undefined,
+    dismissed: false
+};
+
 const settingsStore = (key: string, defaultSettings: object) => {
     const storedSettings = localStorage.getItem(key);
     const value = storedSettings ? JSON.parse(storedSettings) : defaultSettings;
@@ -177,6 +184,7 @@ const settingsStore = (key: string, defaultSettings: object) => {
 
 export const settings = settingsStore("settings", defaultSettings);
 export const colors = settingsStore("classColors", classColors);
+export const updateSettings = settingsStore("updateSettings", update);
 
 export async function registerShortcuts(shortcuts: any) {
     await unregisterAll();

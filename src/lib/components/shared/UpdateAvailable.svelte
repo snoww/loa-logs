@@ -1,14 +1,14 @@
 <script lang="ts">
 
-    import { updateAvailable, updateDismissed, updateManifest } from "$lib/utils/stores";
     import SvelteMarkdown from 'svelte-markdown';
     import UpdateLink from "$lib/components/shared/UpdateLink.svelte";
     import { installUpdate } from "@tauri-apps/api/updater";
     import { writable } from "svelte/store";
+    import { updateSettings } from "$lib/utils/settings";
 
     let updateText = writable("Update Now");
 </script>
-{#if $updateAvailable && $updateManifest && !$updateDismissed}
+{#if $updateSettings.available && $updateSettings.manifest && !$updateSettings.dismissed}
     <div class="fixed inset-0 z-50 bg-zinc-900 bg-opacity-80" />
     <div class="fixed left-0 right-0 top-0 z-50 h-modal w-full items-center justify-center p-4">
         <div class="relative top-[10%] mx-auto flex max-h-[95%] w-full xl:max-w-3xl lg:max-w-2xl md:max-w-lg max-w-md">
@@ -17,7 +17,7 @@
                     type="button"
                     class="absolute right-2.5 top-3 ml-auto whitespace-normal rounded-lg p-1.5 hover:bg-zinc-600 focus:outline-none"
                     aria-label="Close modal"
-                    on:click={() => ($updateDismissed = true)}>
+                    on:click={() => ($updateSettings.dismissed = true)}>
                     <span class="sr-only">Close modal</span>
                     <svg class="size-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"
                     >
@@ -40,7 +40,7 @@
                             </div>
                         </div>
                         <div class="mb-5 text-gray-300" id="notes">
-                            <SvelteMarkdown source={$updateManifest.body} renderers={{link: UpdateLink}} />
+                            <SvelteMarkdown source={$updateSettings.manifest.body} renderers={{link: UpdateLink}} />
                         </div>
                         <div class="flex justify-center">
                             <button

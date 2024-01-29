@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { updateAvailable } from "$lib/utils/stores";
+    import { updateSettings } from "$lib/utils/settings";
 
     export let hidden: boolean;
     export let text: string;
@@ -7,7 +7,7 @@
 
 <div class="ml-2 flex space-x-2">
     <div class="relative">
-        {#if $updateAvailable}
+        {#if $updateSettings.available}
             <span class="absolute -right-0.5 top-0.5 flex size-2">
                 <span class="bg-accent-500 absolute inline-flex h-full w-full animate-ping rounded-full opacity-75"
                 ></span>

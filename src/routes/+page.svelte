@@ -7,7 +7,9 @@
         imagePath,
         registerShortcuts,
         settings,
-        skillIcon
+        skillIcon,
+        update,
+        updateSettings
     } from "$lib/utils/settings";
     import { appWindow } from "@tauri-apps/api/window";
     import { onMount } from "svelte";
@@ -29,6 +31,7 @@
                 settings.set(merge(defaultSettings, $settings));
             }
             colors.set(merge(classColors, $colors));
+            updateSettings.set(update);
             if ($settings.general.alwaysOnTop) {
                 await appWindow.setAlwaysOnTop(true);
             } else {

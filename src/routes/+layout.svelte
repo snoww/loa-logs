@@ -7,10 +7,9 @@
     import NProgress from "nprogress";
     import "nprogress/nprogress.css";
     import { goto, invalidateAll } from "$app/navigation";
-    import { settings } from "$lib/utils/settings";
+    import { settings, updateSettings } from "$lib/utils/settings";
     import { appWindow } from "@tauri-apps/api/window";
     import { checkUpdate } from "@tauri-apps/api/updater";
-    import { updateAvailable, updateDismissed, updateManifest } from "$lib/utils/stores";
     import { invoke } from "@tauri-apps/api";
     import UpdateAvailable from "$lib/components/shared/UpdateAvailable.svelte";
 
@@ -33,7 +32,7 @@
             (async () => {
                 await checkForUpdate();
 
-                if ($updateAvailable) {
+                if ($updateSettings.available) {
                     await showWindow();
                 }
 
@@ -73,11 +72,11 @@
         try {
             const { shouldUpdate, manifest } = await checkUpdate();
             if (shouldUpdate) {
-                $updateAvailable = true;
-                const oldManifest = $updateManifest;
-                $updateManifest = manifest;
-                if (oldManifest?.version !== $updateManifest?.version) {
-                    $updateDismissed = false;
+                $updateSettings.available = true;
+                const oldManifest = $updateSettings.manifest;
+                $updateSettings.manifest = manifest;
+                if (oldManifest?.version !== $updateSettings.manifest?.version) {
+                    $updateSettings.dismissed = false;
                 }
             }
         } catch (e) {

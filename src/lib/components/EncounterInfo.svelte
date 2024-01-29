@@ -1,6 +1,6 @@
 <script lang="ts">
     import { abbreviateNumber } from "$lib/utils/numbers";
-    import { settings, imagePath } from "$lib/utils/settings";
+    import { settings, imagePath, updateSettings } from "$lib/utils/settings";
     import { takingScreenshot } from "$lib/utils/stores";
     import { getImagePath } from "$lib/utils/strings";
     import { menuTooltip, tooltip } from "$lib/utils/tooltip";
@@ -19,8 +19,12 @@
 
     let paused = writable(false);
 
-    async function openLogWindow() {
+    async function openMostRecentEncounter() {
         await invoke("open_most_recent_encounter");
+    }
+    async function openUpdateWindow() {
+        $updateSettings.dismissed = false;
+        await invoke("open_url", { url: "logs" });
     }
     async function openSettingsWindow() {
         await invoke("open_url", { url: "settings" });
@@ -135,7 +139,7 @@
                 class="flex items-center space-x-px {$settings.meter.showTimeUntilKill
                     ? 'max-[499px]:hidden'
                     : 'max-[419px]:hidden'}">
-                <button class="" on:click={openLogWindow}>
+                <button class="" on:click={openMostRecentEncounter}>
                     <div use:menuTooltip={{ content: "Open Recent" }}>
                         <svg
                             class="size-5 fill-gray-400 hover:fill-gray-50"
@@ -185,7 +189,15 @@
                         ><path
                             d="M479.5-269.5q71.75 0 119.625-47.875T647-437q0-71-47.875-118.75T479.5-603.5q-71.75 0-119.125 47.75T313-437q0 71.75 47.375 119.625T479.5-269.5Zm0-57.5q-47 0-78-31.145T370.5-437q0-47 31-78t78-31q47 0 78.5 31t31.5 78.25q0 47.25-31.5 78.5T479.5-327Zm-328 227.5q-38.019 0-64.76-26.741Q60-152.981 60-191v-491.5q0-37.431 26.74-64.966Q113.482-775 151.5-775h132l83.057-97.5H594.5l82 97.5h132q37.431 0 64.966 27.534Q901-719.931 901-682.5V-191q0 38.019-27.534 64.759Q845.931-99.5 808.5-99.5h-657Zm657-91.5v-491.5H635L552.5-780H408.451L325.5-682.5h-174V-191h657ZM480-436.5Z" /></svg>
                 </button>
-                <div class="flex items-center" on:focusout={handleDropdownFocusLoss}>
+                <div class="relative flex items-center" on:focusout={handleDropdownFocusLoss}>
+                    {#if $updateSettings.available}
+                        <span class="absolute right-0.5 top-0 -z-10 flex size-2">
+                            <span
+                                class="bg-accent-500 absolute inline-flex h-full w-full animate-ping rounded-full opacity-75"
+                            ></span>
+                            <span class="bg-accent-800 relative inline-flex size-2 rounded-full"></span>
+                        </span>
+                    {/if}
                     <button
                         on:click={handleDropdownClick}
                         class="h-full px-1"
@@ -202,8 +214,22 @@
                                 d="M19 9l-7 7-7-7" /></svg>
                     </button>
                     {#if dropdownOpen}
-                        <div class="absolute right-2 top-6 z-50 rounded-md bg-zinc-700 shadow-md">
+                        <div class="absolute -right-5 top-6 z-50 rounded-md bg-zinc-700 shadow-md">
                             <div class="flex flex-col space-y-px p-1 text-gray-400">
+                                {#if $updateSettings.available}
+                                    <button class="flex-shrink-0 hover:text-gray-50" on:click={openUpdateWindow}>
+                                        <div class="text-accent-500 flex space-x-1 tracking-tight">
+                                            <svg
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                viewBox="0 -960 960 960"
+                                                class="fill-accent-500 size-5">
+                                                <path
+                                                    d="M281.5-165v-57.5H679v57.5H281.5Zm170-165v-356L329-563.5 289-604l191-191 191.5 191-40.5 40.5L509-686v356h-57.5Z" />
+                                            </svg>
+                                            <div>Update Out</div>
+                                        </div>
+                                    </button>
+                                {/if}
                                 <!--                             <button
                                 class="hover:text-gray-50"
                                 on:click={() => {
@@ -288,7 +314,15 @@
                 class="flex items-center space-x-px {$settings.meter.showTimeUntilKill
                     ? 'min-[500px]:hidden'
                     : 'min-[420px]:hidden'}">
-                <div class="flex items-center" on:focusout={handleMiniDropdownFocusLoss}>
+                <div class="relative flex items-center" on:focusout={handleMiniDropdownFocusLoss}>
+                    {#if $updateSettings.available}
+                        <span class="absolute right-0.5 top-0 -z-10 flex size-2">
+                            <span
+                                class="bg-accent-500 absolute inline-flex h-full w-full animate-ping rounded-full opacity-75"
+                            ></span>
+                            <span class="bg-accent-800 relative inline-flex size-2 rounded-full"></span>
+                        </span>
+                    {/if}
                     <button
                         on:click={handleMiniDropdownClick}
                         class="h-full px-2"
@@ -305,9 +339,23 @@
                                 d="M19 9l-7 7-7-7" /></svg>
                     </button>
                     {#if miniDropdownOpen}
-                        <div class="absolute right-2 top-6 z-50 rounded-md bg-zinc-700 shadow-md">
+                        <div class="absolute -right-5 top-6 z-50 rounded-md bg-zinc-700 shadow-md">
                             <div class="flex flex-col space-y-px p-1 text-gray-400">
-                                <button class="hover:text-gray-50" on:click={openLogWindow}>
+                                {#if $updateSettings.available}
+                                    <button class="flex-shrink-0 hover:text-gray-50" on:click={openUpdateWindow}>
+                                        <div class="text-accent-500 flex space-x-1 tracking-tight">
+                                            <svg
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                viewBox="0 -960 960 960"
+                                                class="fill-accent-500 size-5">
+                                                <path
+                                                    d="M281.5-165v-57.5H679v57.5H281.5Zm170-165v-356L329-563.5 289-604l191-191 191.5 191-40.5 40.5L509-686v356h-57.5Z" />
+                                            </svg>
+                                            <div>Update Out</div>
+                                        </div>
+                                    </button>
+                                {/if}
+                                <button class="hover:text-gray-50" on:click={openMostRecentEncounter}>
                                     <div class="flex space-x-1">
                                         <svg
                                             class="size-5 fill-gray-400"

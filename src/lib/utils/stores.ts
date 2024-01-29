@@ -35,7 +35,3 @@ export const raidGates = readable(new Map<string, string>(), (set) => {
 });
 
 export const clickthroughStore = writable(false);
-
-export const updateAvailable = writable(false);
-export const updateManifest: Writable<UpdateManifest | undefined> = writable(undefined);
-export const updateDismissed = writable(false);
