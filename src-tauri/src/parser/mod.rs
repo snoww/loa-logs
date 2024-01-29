@@ -5,16 +5,18 @@ pub mod models;
 mod party_tracker;
 mod status_tracker;
 
-use crate::parser::encounter_state::{EncounterState, get_class_from_id};
+use crate::parser::encounter_state::{get_class_from_id, EncounterState};
 use crate::parser::entity_tracker::{get_current_and_max_hp, EntityTracker};
 use crate::parser::id_tracker::IdTracker;
-use crate::parser::models::{Identity, Stagger, EntityType};
+use crate::parser::models::{EntityType, Identity, Stagger};
 use crate::parser::party_tracker::PartyTracker;
-use crate::parser::status_tracker::{get_status_effect_value, StatusEffectTargetType, StatusEffectType, StatusTracker};
+use crate::parser::status_tracker::{
+    get_status_effect_value, StatusEffectTargetType, StatusEffectType, StatusTracker,
+};
 use anyhow::Result;
 use chrono::Utc;
 use hashbrown::HashMap;
-use log::{warn, info};
+use log::{info, warn};
 use meter_core::packets::definitions::*;
 use meter_core::packets::opcodes::Pkt;
 use meter_core::{start_capture, start_raw_capture};
@@ -28,9 +30,15 @@ use std::thread;
 use std::time::{Duration, Instant};
 use tauri::{Manager, Window, Wry};
 
-use self::models::{TripodIndex, TripodLevel, Settings};
+use self::models::{Settings, TripodIndex, TripodLevel};
 
-pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool, settings: Option<Settings>) -> Result<()> {
+pub fn start(
+    window: Window<Wry>,
+    ip: String,
+    port: u16,
+    raw_socket: bool,
+    settings: Option<Settings>,
+) -> Result<()> {
     let id_tracker = Rc::new(RefCell::new(IdTracker::new()));
     let party_tracker = Rc::new(RefCell::new(PartyTracker::new(id_tracker.clone())));
     let status_tracker = Rc::new(RefCell::new(StatusTracker::new(party_tracker.clone())));
@@ -86,11 +94,7 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool, setti
     // read saved local players
     // this info is used in case meter was opened late
     let mut local_players: HashMap<u64, String> = HashMap::new();
-    let mut local_player_path = window
-        .app_handle()
-        .path_resolver()
-        .resource_dir()
-        .unwrap();
+    let mut local_player_path = window.app_handle().path_resolver().resource_dir().unwrap();
     local_player_path.push("local_players.json");
 
     if local_player_path.exists() {
@@ -120,7 +124,7 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool, setti
             meter_window_clone.emit("save-encounter", "").ok();
         }
     });
-    
+
     window.listen_global("pause-request", {
         let pause_clone = pause.clone();
         let meter_window_clone = meter_window_clone.clone();
@@ -181,7 +185,7 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool, setti
             state.saved = true;
             state.resetting = true;
         }
-        
+
         if boss_only_damage.load(Ordering::Relaxed) {
             state.boss_only_damage = true;
         } else {
@@ -191,7 +195,9 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool, setti
 
         match op {
             Pkt::CounterAttackNotify => {
-                if let Some(pkt) = parse_pkt(&data, PKTCounterAttackNotify::new, "PKTCounterAttackNotify") {
+                if let Some(pkt) =
+                    parse_pkt(&data, PKTCounterAttackNotify::new, "PKTCounterAttackNotify")
+                {
                     if let Some(entity) = entity_tracker.entities.get(&pkt.source_id) {
                         state.on_counterattack(entity);
                     }
@@ -200,21 +206,30 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool, setti
             Pkt::DeathNotify => {
                 if let Some(pkt) = parse_pkt(&data, PKTDeathNotify::new, "PKTDeathNotify") {
                     if let Some(entity) = entity_tracker.entities.get(&pkt.target_id) {
-                        debug_print(format_args!("death: {}, {}, {}", entity.name, entity.entity_type, entity.id));
+                        debug_print(format_args!(
+                            "death: {}, {}, {}",
+                            entity.name, entity.entity_type, entity.id
+                        ));
                         state.on_death(entity);
                     }
                 }
             }
             Pkt::IdentityGaugeChangeNotify => {
-                if let Some(pkt) = parse_pkt(&data, PKTIdentityGaugeChangeNotify::new, "PKTIdentityGaugeChangeNotify") {
+                if let Some(pkt) = parse_pkt(
+                    &data,
+                    PKTIdentityGaugeChangeNotify::new,
+                    "PKTIdentityGaugeChangeNotify",
+                ) {
                     state.on_identity_gain(&pkt);
                     if emit_details.load(Ordering::Relaxed) {
-                        window
-                            .emit("identity-update", Identity {
+                        window.emit(
+                            "identity-update",
+                            Identity {
                                 gauge1: pkt.identity_gauge1,
                                 gauge2: pkt.identity_gauge2,
                                 gauge3: pkt.identity_gauge3,
-                            })?;
+                            },
+                        )?;
                     }
                 }
             }
@@ -238,7 +253,14 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool, setti
                 if let Some(pkt) = parse_pkt(&data, PKTInitPC::new, "PKTInitPC") {
                     let (hp, max_hp) = get_current_and_max_hp(&pkt.stat_pair);
                     let entity = entity_tracker.init_pc(pkt);
-                    info!("local player: {}, {}, {}, eid: {}, id: {}", entity.name, get_class_from_id(&entity.class_id), entity.gear_level, entity.id, entity.character_id);
+                    info!(
+                        "local player: {}, {}, {}, eid: {}, id: {}",
+                        entity.name,
+                        get_class_from_id(&entity.class_id),
+                        entity.gear_level,
+                        entity.id,
+                        entity.character_id
+                    );
                     if !local_players.contains_key(&entity.character_id) {
                         local_players.insert(entity.character_id, entity.name.clone());
                         write_local_players(&local_players, &local_player_path)?;
@@ -247,7 +269,8 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool, setti
                 }
             }
             Pkt::MigrationExecute => {
-                if let Some(pkt) = parse_pkt(&data, PKTMigrationExecute::new, "PKTMigrationExecute") {
+                if let Some(pkt) = parse_pkt(&data, PKTMigrationExecute::new, "PKTMigrationExecute")
+                {
                     entity_tracker.migration_execute(pkt);
                 }
             }
@@ -255,7 +278,14 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool, setti
                 if let Some(pkt) = parse_pkt(&data, PKTNewPC::new, "PKTNewPC") {
                     let (hp, max_hp) = get_current_and_max_hp(&pkt.pc_struct.stat_pair);
                     let entity = entity_tracker.new_pc(pkt);
-                    debug_print(format_args!("new PC: {}, {}, {}, eid: {}, cid: {}", entity.name, get_class_from_id(&entity.class_id), entity.gear_level, entity.id, entity.character_id));
+                    debug_print(format_args!(
+                        "new PC: {}, {}, {}, eid: {}, cid: {}",
+                        entity.name,
+                        get_class_from_id(&entity.class_id),
+                        entity.gear_level,
+                        entity.id,
+                        entity.character_id
+                    ));
                     state.on_new_pc(entity, hp, max_hp);
                 }
             }
@@ -263,7 +293,10 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool, setti
                 if let Some(pkt) = parse_pkt(&data, PKTNewNpc::new, "PKTNewNpc") {
                     let (hp, max_hp) = get_current_and_max_hp(&pkt.npc_struct.stat_pair);
                     let entity = entity_tracker.new_npc(pkt, max_hp);
-                    debug_print(format_args!("new {}: {}, eid: {}, id: {}, hp: {}", entity.entity_type, entity.name, entity.id, entity.npc_id, max_hp));
+                    debug_print(format_args!(
+                        "new {}: {}, eid: {}, id: {}, hp: {}",
+                        entity.entity_type, entity.name, entity.id, entity.npc_id, max_hp
+                    ));
                     state.on_new_npc(entity, hp, max_hp);
                 }
             }
@@ -271,7 +304,10 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool, setti
                 if let Some(pkt) = parse_pkt(&data, PKTNewNpcSummon::new, "PKTNewNpcSummon") {
                     let (hp, max_hp) = get_current_and_max_hp(&pkt.npc_data.stat_pair);
                     let entity = entity_tracker.new_npc_summon(pkt, max_hp);
-                    debug_print(format_args!("new {}: {}, eid: {}, id: {}, hp: {}", entity.entity_type, entity.name, entity.id, entity.npc_id, max_hp));
+                    debug_print(format_args!(
+                        "new {}: {}, eid: {}, id: {}, hp: {}",
+                        entity.entity_type, entity.name, entity.id, entity.npc_id, max_hp
+                    ));
                     state.on_new_npc(entity, hp, max_hp);
                 }
             }
@@ -286,14 +322,20 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool, setti
                 }
             }
             Pkt::ParalyzationStateNotify => {
-                if let Some(pkt) = parse_pkt(&data, PKTParalyzationStateNotify::new, "PKTParalyzationStateNotify") {
+                if let Some(pkt) = parse_pkt(
+                    &data,
+                    PKTParalyzationStateNotify::new,
+                    "PKTParalyzationStateNotify",
+                ) {
                     state.on_stagger_change(&pkt);
                     if emit_details.load(Ordering::Relaxed) {
-                        window
-                            .emit("stagger-update", Stagger {
+                        window.emit(
+                            "stagger-update",
+                            Stagger {
                                 current: pkt.paralyzation_point,
                                 max: pkt.paralyzation_max_point,
-                            })?;
+                            },
+                        )?;
                     }
                 }
             }
@@ -309,7 +351,8 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool, setti
                 }
             }
             Pkt::PartyLeaveResult => {
-                if let Some(pkt) = parse_pkt(&data, PKTPartyLeaveResult::new, "PKTPartyLeaveResult") {
+                if let Some(pkt) = parse_pkt(&data, PKTPartyLeaveResult::new, "PKTPartyLeaveResult")
+                {
                     party_tracker
                         .borrow_mut()
                         .remove(pkt.party_instance_id, pkt.name);
@@ -318,17 +361,29 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool, setti
                 }
             }
             Pkt::PartyStatusEffectAddNotify => {
-                if let Some(pkt) = parse_pkt(&data, PKTPartyStatusEffectAddNotify::new, "PKTPartyStatusEffectAddNotify") {
+                if let Some(pkt) = parse_pkt(
+                    &data,
+                    PKTPartyStatusEffectAddNotify::new,
+                    "PKTPartyStatusEffectAddNotify",
+                ) {
                     entity_tracker.party_status_effect_add(pkt);
                 }
             }
             Pkt::PartyStatusEffectRemoveNotify => {
-                if let Some(pkt) = parse_pkt(&data, PKTPartyStatusEffectRemoveNotify::new, "PKTPartyStatusEffectRemoveNotify") {
+                if let Some(pkt) = parse_pkt(
+                    &data,
+                    PKTPartyStatusEffectRemoveNotify::new,
+                    "PKTPartyStatusEffectRemoveNotify",
+                ) {
                     entity_tracker.party_status_effect_remove(pkt);
                 }
             }
             Pkt::PartyStatusEffectResultNotify => {
-                if let Some(pkt) = parse_pkt(&data, PKTPartyStatusEffectResultNotify::new, "PKTPartyStatusEffectResultNotify") {
+                if let Some(pkt) = parse_pkt(
+                    &data,
+                    PKTPartyStatusEffectResultNotify::new,
+                    "PKTPartyStatusEffectResultNotify",
+                ) {
                     party_tracker.borrow_mut().add(
                         pkt.raid_instance_id,
                         pkt.party_instance_id,
@@ -387,25 +442,44 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool, setti
                     let mut entity = entity_tracker.get_source_entity(pkt.caster);
                     entity_tracker.guess_is_player(&mut entity, pkt.skill_id);
                     if entity.class_id == 202 {
-                        state.on_skill_start(entity, pkt.skill_id as i32, None, None, Utc::now().timestamp_millis());
+                        state.on_skill_start(
+                            entity,
+                            pkt.skill_id as i32,
+                            None,
+                            None,
+                            Utc::now().timestamp_millis(),
+                        );
                     }
                 }
             }
             Pkt::SkillStartNotify => {
-                if let Some(pkt) = parse_pkt(&data, PKTSkillStartNotify::new, "PKTSkillStartNotify") {
+                if let Some(pkt) = parse_pkt(&data, PKTSkillStartNotify::new, "PKTSkillStartNotify")
+                {
                     let mut entity = entity_tracker.get_source_entity(pkt.source_id);
                     entity_tracker.guess_is_player(&mut entity, pkt.skill_id);
-                    let tripod_index = pkt.skill_option_data.tripod_index.map(|tripod_index| TripodIndex {
-                            first: tripod_index.first,
-                            second: tripod_index.second,
-                            third: tripod_index.third,
-                        });
-                    let tripod_level = pkt.skill_option_data.tripod_level.map(|tripod_level| TripodLevel {
-                            first: tripod_level.first,
-                            second: tripod_level.second,
-                            third: tripod_level.third,
-                        });
-                    state.on_skill_start(entity, pkt.skill_id as i32, tripod_index, tripod_level, Utc::now().timestamp_millis());
+                    let tripod_index =
+                        pkt.skill_option_data
+                            .tripod_index
+                            .map(|tripod_index| TripodIndex {
+                                first: tripod_index.first,
+                                second: tripod_index.second,
+                                third: tripod_index.third,
+                            });
+                    let tripod_level =
+                        pkt.skill_option_data
+                            .tripod_level
+                            .map(|tripod_level| TripodLevel {
+                                first: tripod_level.first,
+                                second: tripod_level.second,
+                                third: tripod_level.third,
+                            });
+                    state.on_skill_start(
+                        entity,
+                        pkt.skill_id as i32,
+                        tripod_index,
+                        tripod_level,
+                        Utc::now().timestamp_millis(),
+                    );
                 }
             }
             // Pkt::SkillStageNotify => {
@@ -413,10 +487,16 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool, setti
             // }
             Pkt::SkillDamageAbnormalMoveNotify => {
                 if Instant::now() - raid_end_cd < Duration::from_secs(5) {
-                    debug_print(format_args!("ignoring damage - SkillDamageAbnormalMoveNotify"));
+                    debug_print(format_args!(
+                        "ignoring damage - SkillDamageAbnormalMoveNotify"
+                    ));
                     continue;
                 }
-                if let Some(pkt) = parse_pkt(&data, PKTSkillDamageAbnormalMoveNotify::new, "PKTSkillDamageAbnormalMoveNotify") {
+                if let Some(pkt) = parse_pkt(
+                    &data,
+                    PKTSkillDamageAbnormalMoveNotify::new,
+                    "PKTSkillDamageAbnormalMoveNotify",
+                ) {
                     let owner = entity_tracker.get_source_entity(pkt.source_id);
                     let local_character_id = id_tracker
                         .borrow()
@@ -451,7 +531,9 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool, setti
                     debug_print(format_args!("ignoring damage - SkillDamageNotify"));
                     continue;
                 }
-                if let Some(pkt) = parse_pkt(&data, PKTSkillDamageNotify::new, "PktSkillDamageNotify") {
+                if let Some(pkt) =
+                    parse_pkt(&data, PKTSkillDamageNotify::new, "PktSkillDamageNotify")
+                {
                     let owner = entity_tracker.get_source_entity(pkt.source_id);
                     let local_character_id = id_tracker
                         .borrow()
@@ -481,9 +563,16 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool, setti
                 }
             }
             Pkt::StatusEffectAddNotify => {
-                if let Some(pkt) = parse_pkt(&data, PKTStatusEffectAddNotify::new, "PKTStatusEffectAddNotify") {
-                    let status_effect = entity_tracker
-                        .build_and_register_status_effect(&pkt.status_effect_data, pkt.object_id, Utc::now());
+                if let Some(pkt) = parse_pkt(
+                    &data,
+                    PKTStatusEffectAddNotify::new,
+                    "PKTStatusEffectAddNotify",
+                ) {
+                    let status_effect = entity_tracker.build_and_register_status_effect(
+                        &pkt.status_effect_data,
+                        pkt.object_id,
+                        Utc::now(),
+                    );
                     if status_effect.status_effect_type == StatusEffectType::Shield {
                         let target = entity_tracker.get_source_entity(status_effect.target_id);
                         state.on_boss_shield(&target, status_effect.value);
@@ -491,7 +580,11 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool, setti
                 }
             }
             Pkt::StatusEffectDurationNotify => {
-                if let Some(pkt) = parse_pkt(&data, PKTStatusEffectDurationNotify::new, "PKTStatusEffectDurationNotify") {
+                if let Some(pkt) = parse_pkt(
+                    &data,
+                    PKTStatusEffectDurationNotify::new,
+                    "PKTStatusEffectDurationNotify",
+                ) {
                     // debug_print(format_args!("status effect duration: {:?}", pkt));
                     status_tracker.borrow_mut().update_status_duration(
                         pkt.effect_instance_id,
@@ -502,7 +595,11 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool, setti
                 }
             }
             Pkt::StatusEffectRemoveNotify => {
-                if let Some(pkt) = parse_pkt(&data, PKTStatusEffectRemoveNotify::new, "PKTStatusEffectRemoveNotify") {
+                if let Some(pkt) = parse_pkt(
+                    &data,
+                    PKTStatusEffectRemoveNotify::new,
+                    "PKTStatusEffectRemoveNotify",
+                ) {
                     if status_tracker.borrow_mut().remove_status_effects(
                         pkt.object_id,
                         pkt.status_effect_ids,
@@ -516,14 +613,20 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool, setti
             }
             Pkt::TriggerBossBattleStatus => {
                 // need to hard code clown because it spawns before the trigger is sent???
-                if state.encounter.current_boss_name.is_empty() || state.encounter.fight_start == 0
-                    || state.encounter.current_boss_name == "Saydon" {
+                if state.encounter.current_boss_name.is_empty()
+                    || state.encounter.fight_start == 0
+                    || state.encounter.current_boss_name == "Saydon"
+                {
                     state.on_phase_transition(3);
-                    debug_print(format_args!("phase: 3 - resetting encounter - TriggerBossBattleStatus"));
+                    debug_print(format_args!(
+                        "phase: 3 - resetting encounter - TriggerBossBattleStatus"
+                    ));
                 }
             }
             Pkt::TriggerStartNotify => {
-                if let Some(pkt) = parse_pkt(&data, PKTTriggerStartNotify::new, "PKTTriggerStartNotify") {
+                if let Some(pkt) =
+                    parse_pkt(&data, PKTTriggerStartNotify::new, "PKTTriggerStartNotify")
+                {
                     match pkt.trigger_signal_type {
                         57 | 59 | 61 | 63 | 74 | 76 => {
                             party_freeze = true;
@@ -554,7 +657,11 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool, setti
                 }
             }
             Pkt::ZoneMemberLoadStatusNotify => {
-                if let Some(pkt) = parse_pkt(&data, PKTZoneMemberLoadStatusNotify::new, "PKTZoneMemberLoadStatusNotify") {
+                if let Some(pkt) = parse_pkt(
+                    &data,
+                    PKTZoneMemberLoadStatusNotify::new,
+                    "PKTZoneMemberLoadStatusNotify",
+                ) {
                     if !state.raid_difficulty.is_empty() {
                         continue;
                     }
@@ -580,16 +687,29 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool, setti
                 }
             }
             Pkt::ZoneObjectUnpublishNotify => {
-                if let Some(pkt) = parse_pkt(&data, PKTZoneObjectUnpublishNotify::new, "PKTZoneObjectUnpublishNotify") {
+                if let Some(pkt) = parse_pkt(
+                    &data,
+                    PKTZoneObjectUnpublishNotify::new,
+                    "PKTZoneObjectUnpublishNotify",
+                ) {
                     status_tracker
                         .borrow_mut()
                         .remove_local_object(pkt.object_id);
                 }
             }
             Pkt::StatusEffectSyncDataNotify => {
-                if let Some(pkt) = parse_pkt(&data, PKTStatusEffectSyncDataNotify::new, "PKTStatusEffectSyncDataNotify") {
-                    if let Some(status_effect) = status_tracker.borrow_mut()
-                        .sync_status_effect(pkt.effect_instance_id, pkt.character_id, pkt.object_id, pkt.value, entity_tracker.local_character_id) {
+                if let Some(pkt) = parse_pkt(
+                    &data,
+                    PKTStatusEffectSyncDataNotify::new,
+                    "PKTStatusEffectSyncDataNotify",
+                ) {
+                    if let Some(status_effect) = status_tracker.borrow_mut().sync_status_effect(
+                        pkt.effect_instance_id,
+                        pkt.character_id,
+                        pkt.object_id,
+                        pkt.value,
+                        entity_tracker.local_character_id,
+                    ) {
                         if status_effect.status_effect_type == StatusEffectType::Shield {
                             let target = entity_tracker.get_source_entity(status_effect.target_id);
                             state.on_boss_shield(&target, status_effect.value);
@@ -598,14 +718,27 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool, setti
                 }
             }
             Pkt::TroopMemberUpdateMinNotify => {
-                if let Some(pkt) = parse_pkt(&data, PKTTroopMemberUpdateMinNotify::new, "PKTTroopMemberUpdateMinNotify") {
+                if let Some(pkt) = parse_pkt(
+                    &data,
+                    PKTTroopMemberUpdateMinNotify::new,
+                    "PKTTroopMemberUpdateMinNotify",
+                ) {
                     for se in pkt.status_effect_datas.iter() {
-                        if let Some(object_id) = id_tracker.borrow().get_entity_id(pkt.character_id) {
+                        if let Some(object_id) = id_tracker.borrow().get_entity_id(pkt.character_id)
+                        {
                             let val = get_status_effect_value(&se.value);
-                            if let Some(status_effect) = status_tracker.borrow_mut()
-                                .sync_status_effect(se.effect_instance_id, pkt.character_id, object_id, val, entity_tracker.local_character_id) {
+                            if let Some(status_effect) =
+                                status_tracker.borrow_mut().sync_status_effect(
+                                    se.effect_instance_id,
+                                    pkt.character_id,
+                                    object_id,
+                                    val,
+                                    entity_tracker.local_character_id,
+                                )
+                            {
                                 if status_effect.status_effect_type == StatusEffectType::Shield {
-                                    let target = entity_tracker.get_source_entity(status_effect.target_id);
+                                    let target =
+                                        entity_tracker.get_source_entity(status_effect.target_id);
                                     state.on_boss_shield(&target, status_effect.value);
                                 }
                             }
@@ -624,37 +757,40 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool, setti
             let mut clone = state.encounter.clone();
             let window = window.clone();
 
-            let party_info: Option<HashMap<i32, Vec<String>>>  = if last_party_update.elapsed() >= party_duration && !party_freeze {
-                last_party_update = Instant::now();
-                // we used cached party if it exists
-                if party_cache.is_some() {
-                    Some(party_map_cache.clone())
-                } else {
-                    let party = update_party(&party_tracker, &entity_tracker);
-                    // check if both parties are resolved
-                    // if they are we then cache it
-                    if party.len() == 2 && party[0].len() == 4 && party[1].len() == 4 {
-                        party_cache = Some(party.clone());
-                        party_map_cache = party
-                            .into_iter()
-                            .enumerate()
-                            .map(|(index, party)| (index as i32, party))
-                            .collect();
-
+            let party_info: Option<HashMap<i32, Vec<String>>> =
+                if last_party_update.elapsed() >= party_duration && !party_freeze {
+                    last_party_update = Instant::now();
+                    // we used cached party if it exists
+                    if party_cache.is_some() {
                         Some(party_map_cache.clone())
-                    } else if party.len() > 1 {
-                        Some(party
-                            .into_iter()
-                            .enumerate()
-                            .map(|(index, party)| (index as i32, party))
-                            .collect())
                     } else {
-                        None
+                        let party = update_party(&party_tracker, &entity_tracker);
+                        // check if both parties are resolved
+                        // if they are we then cache it
+                        if party.len() == 2 && party[0].len() == 4 && party[1].len() == 4 {
+                            party_cache = Some(party.clone());
+                            party_map_cache = party
+                                .into_iter()
+                                .enumerate()
+                                .map(|(index, party)| (index as i32, party))
+                                .collect();
+
+                            Some(party_map_cache.clone())
+                        } else if party.len() > 1 {
+                            Some(
+                                party
+                                    .into_iter()
+                                    .enumerate()
+                                    .map(|(index, party)| (index as i32, party))
+                                    .collect(),
+                            )
+                        } else {
+                            None
+                        }
                     }
-                }
-            } else {
-                None
-            };
+                } else {
+                    None
+                };
 
             tokio::task::spawn(async move {
                 if !clone.current_boss_name.is_empty() {
@@ -670,7 +806,9 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool, setti
                     }
                 }
                 clone.entities.retain(|_, e| {
-                    ((e.entity_type == EntityType::PLAYER && e.class_id > 0) || e.entity_type == EntityType::ESTHER || e.entity_type == EntityType::BOSS)
+                    ((e.entity_type == EntityType::PLAYER && e.class_id > 0)
+                        || e.entity_type == EntityType::ESTHER
+                        || e.entity_type == EntityType::BOSS)
                         && e.damage_stats.damage_dealt > 0
                 });
 
@@ -703,24 +841,30 @@ pub fn start(window: Window<Wry>, ip: String, port: u16, raw_socket: bool, setti
     Ok(())
 }
 
-fn update_party(party_tracker: &Rc<RefCell<PartyTracker>>, entity_tracker: &EntityTracker) -> Vec<Vec<String>> {
+fn update_party(
+    party_tracker: &Rc<RefCell<PartyTracker>>,
+    entity_tracker: &EntityTracker,
+) -> Vec<Vec<String>> {
     let mut party_info: HashMap<u32, Vec<String>> = HashMap::new();
 
-    for (entity_id, party_id) in party_tracker.borrow().entity_id_to_party_id.iter() {   
-        party_info
-        .entry(*party_id)
-        .or_insert_with(Vec::new)
-        .extend(entity_tracker.entities.get(entity_id).map(|entity| entity.name.clone()));
+    for (entity_id, party_id) in party_tracker.borrow().entity_id_to_party_id.iter() {
+        party_info.entry(*party_id).or_insert_with(Vec::new).extend(
+            entity_tracker
+                .entities
+                .get(entity_id)
+                .map(|entity| entity.name.clone()),
+        );
     }
-    let mut sorted_parties = party_info
-        .into_iter()
-        .collect::<Vec<(u32, Vec<String>)>>();
+    let mut sorted_parties = party_info.into_iter().collect::<Vec<(u32, Vec<String>)>>();
     sorted_parties.sort_by_key(|&(party_id, _)| party_id);
-    sorted_parties.into_iter().map(|(_, members)| members).collect()
+    sorted_parties
+        .into_iter()
+        .map(|(_, members)| members)
+        .collect()
 }
 
 fn write_local_players(local_players: &HashMap<u64, String>, path: &PathBuf) -> Result<()> {
-    let ordered: BTreeMap<_,_> = local_players.iter().collect();
+    let ordered: BTreeMap<_, _> = local_players.iter().collect();
     let local_players_file = serde_json::to_string(&ordered)?;
     std::fs::write(path, local_players_file)?;
     Ok(())
