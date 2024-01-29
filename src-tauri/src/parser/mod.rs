@@ -486,7 +486,7 @@ pub fn start(
             //     let pkt = PKTSkillStageNotify::new(&data);
             // }
             Pkt::SkillDamageAbnormalMoveNotify => {
-                if Instant::now() - raid_end_cd < Duration::from_secs(5) {
+                if Instant::now() - raid_end_cd < Duration::from_secs(10) {
                     debug_print(format_args!(
                         "ignoring damage - SkillDamageAbnormalMoveNotify"
                     ));
@@ -527,7 +527,7 @@ pub fn start(
             }
             Pkt::SkillDamageNotify => {
                 // use this to make sure damage packets are not tracked after a raid just wiped
-                if Instant::now() - raid_end_cd < Duration::from_secs(5) {
+                if Instant::now() - raid_end_cd < Duration::from_secs(10) {
                     debug_print(format_args!("ignoring damage - SkillDamageNotify"));
                     continue;
                 }
