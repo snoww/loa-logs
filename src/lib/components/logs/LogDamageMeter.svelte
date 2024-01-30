@@ -30,6 +30,7 @@
     import DamageTaken from "../shared/DamageTaken.svelte";
     import BossTable from "../shared/BossTable.svelte";
     import BossBreakdown from "../shared/BossBreakdown.svelte";
+    import LogShields from "$lib/components/logs/LogShields.svelte";
 
     export let id: string;
     export let encounter: Encounter;
@@ -63,6 +64,7 @@
 
     $: {
         if (encounter) {
+            console.log(encounter)
             if ($settings.general.showEsther) {
                 players = Object.values(encounter.entities)
                     .filter(
@@ -221,6 +223,12 @@
         setChartView();
     }
 
+    function shieldTab() {
+        handleRightClick();
+        tab = MeterTab.SHIELDS;
+        setChartView();
+    }
+
     function bossTab() {
         handleRightClick();
         tab = MeterTab.BOSS;
@@ -358,6 +366,15 @@
                     on:click={selfSynergyTab}>
                     Self Buffs
                 </button>
+                {#if $settings.general.showShields && encounter.encounterDamageStats.totalShielding > 0}
+                    <button
+                        class="rounded-sm px-2 py-1"
+                        class:bg-accent-900={tab === MeterTab.SHIELDS}
+                        class:bg-gray-700={tab !== MeterTab.SHIELDS}
+                        on:click={shieldTab}>
+                        Shields
+                    </button>
+                {/if}
                 {#if $settings.general.showTanked && encounter.encounterDamageStats.totalDamageTaken > 0}
                     <button
                         class="rounded-sm px-2 py-1"
@@ -637,6 +654,8 @@
                 {/if}
             {:else if tab === MeterTab.TANK}
                 <DamageTaken {players} topDamageTaken={encounter.encounterDamageStats.topDamageTaken} tween={false} />
+            {:else if tab === MeterTab.SHIELDS}
+                <LogShields />
             {:else if tab === MeterTab.BOSS}
                 {#if !focusedBoss}
                     <BossTable {bosses} duration={encounter.duration} {inspectBoss} tween={false} />

@@ -164,7 +164,6 @@
     $: {
         if (encounter) {
             if (encounter.fightStart !== 0 && !$paused) {
-                console.log(encounter.encounterDamageStats);
                 if ($settings.general.showEsther) {
                     players = Object.values(encounter.entities)
                         .filter(

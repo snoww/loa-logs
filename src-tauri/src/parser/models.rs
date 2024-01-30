@@ -531,6 +531,7 @@ pub struct GeneralSettings {
     pub split_lines: bool,
     pub underline_hovered: bool,
     pub show_details: bool,
+    pub show_shields: bool,
     pub show_tanked: bool,
     pub show_bosses: bool,
     pub hide_logo: bool,

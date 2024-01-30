@@ -17,6 +17,7 @@ export const defaultSettings = {
         showDifficulty: true,
         showGate: false,
         showDetails: false,
+        showShields: false,
         showTanked: false,
         showBosses: false,
         splitLines: false,

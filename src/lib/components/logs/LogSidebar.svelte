@@ -3,10 +3,10 @@
     import { Drawer } from "flowbite-svelte";
     import { sineIn } from "svelte/easing";
     import { tooltip } from "$lib/utils/tooltip";
-    import { updateAvailable, updateDismissed, updateManifest } from "$lib/utils/stores";
     import { invoke } from "@tauri-apps/api";
     import { checkUpdate } from "@tauri-apps/api/updater";
     import { writable } from "svelte/store";
+    import { updateSettings } from "$lib/utils/settings";
 
     export let hidden = true;
 
@@ -62,9 +62,9 @@
                         version {version}
                     {/await}
                 </div>
-                {#if $updateAvailable}
+                {#if $updateSettings.available}
                     <button class="pr-1" use:tooltip={{content: "Update Now"}}
-                            on:click={() => {$updateDismissed = false;}}>
+                            on:click={() => {$updateSettings.dismissed = false;}}>
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"
                              class="size-5 fill-accent-500 animate-bounce">
                             <path
@@ -83,9 +83,9 @@
                         try {
                             const { shouldUpdate, manifest } = await checkUpdate();
                             if (shouldUpdate) {
-                                $updateDismissed = false;
-                                $updateAvailable = true;
-                                $updateManifest = manifest;
+                                $updateSettings.dismissed = false;
+                                $updateSettings.available = true;
+                                $updateSettings.manifest = manifest;
                             } else {
                                 $updateText = "No Updates Available";
                                 setTimeout(() => {

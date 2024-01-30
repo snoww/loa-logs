@@ -337,8 +337,8 @@ fn setup_db(resource_path: PathBuf) -> Result<(), String> {
         dps INTEGER,
         buffs TEXT,
         debuffs TEXT,
-        total_shielding INTEGER,
-        total_effective_shielding INTEGER,
+        total_shielding INTEGER DEFAULT 0,
+        total_effective_shielding INTEGER DEFAULT 0,
         applied_shield_buffs TEXT,
         effective_shield_buffs TEXT,
         misc TEXT,
@@ -426,8 +426,8 @@ fn setup_db(resource_path: PathBuf) -> Result<(), String> {
     let column_count: u32 = stmt.query_row([], |row| row.get(0)).unwrap();
     if column_count == 0 {
         conn.execute_batch(
-            "ALTER TABLE encounter ADD COLUMN total_shielding INTEGER;
-                ALTER TABLE encounter ADD COLUMN total_effective_shielding INTEGER;
+            "ALTER TABLE encounter ADD COLUMN total_shielding INTEGER DEFAULT 0;
+                ALTER TABLE encounter ADD COLUMN total_effective_shielding INTEGER DEFAULT 0;
                 ALTER TABLE encounter ADD COLUMN applied_shield_buffs TEXT;
                 ALTER TABLE encounter ADD COLUMN effective_shield_buffs TEXT;",
         )
@@ -690,7 +690,7 @@ fn load_encounters_preview(
 
     let encounter_iter = stmt
         .query_map(params_from_iter(params), |row| {
-            let classes = row.get(9).unwrap_or_else(|_| "".to_string());
+            let classes: String = row.get(9).unwrap_or_default();
 
             let (classes, names) = classes
                 .split(',')
@@ -778,7 +778,11 @@ fn load_encounter(window: tauri::Window, id: String) -> Encounter {
        difficulty,
        favorite,
        cleared,
-       boss_only_damage
+       boss_only_damage,
+       total_shielding,
+       total_effective_shielding,
+       applied_shield_buffs,
+       effective_shield_buffs
     FROM encounter
     WHERE id = ?
     ;",
@@ -787,18 +791,29 @@ fn load_encounter(window: tauri::Window, id: String) -> Encounter {
 
     let mut encounter = encounter_stmt
         .query_row(params![id], |row| {
-            let buff_str = row.get(10).unwrap_or_else(|_| "".to_string());
+            let buff_str: String = row.get(10).unwrap_or_default();
             let buffs = serde_json::from_str::<HashMap<u32, StatusEffect>>(buff_str.as_str())
                 .unwrap_or_else(|_| HashMap::new());
 
-            let debuff_str = row.get(11).unwrap_or_else(|_| "".to_string());
+            let debuff_str: String = row.get(11).unwrap_or_default();
             let debuffs = serde_json::from_str::<HashMap<u32, StatusEffect>>(debuff_str.as_str())
                 .unwrap_or_else(|_| HashMap::new());
 
-            let misc_str = row.get(12).unwrap_or_else(|_| "".to_string());
+            let misc_str: String = row.get(12).unwrap_or_default();
             let misc = serde_json::from_str::<EncounterMisc>(misc_str.as_str())
                 .map(Some)
                 .unwrap_or_else(|_| None);
+
+            let total_shielding = row.get(17).unwrap_or_default();
+            let total_effective_shielding = row.get(18).unwrap_or_default();
+
+            let applied_shield_buff_str: String = row.get(19).unwrap_or_default();
+            let applied_shield_buffs = serde_json::from_str::<HashMap<u32, StatusEffect>>(applied_shield_buff_str.as_str())
+                .unwrap_or_default();
+            let effective_shield_buffs_str: String = row.get(20).unwrap_or_default();
+            let effective_shield_buffs = serde_json::from_str::<HashMap<u32, StatusEffect>>(effective_shield_buffs_str.as_str())
+                .unwrap_or_default();
+
 
             Ok(Encounter {
                 last_combat_packet: row.get(0)?,
@@ -815,6 +830,10 @@ fn load_encounter(window: tauri::Window, id: String) -> Encounter {
                     buffs,
                     debuffs,
                     misc,
+                    total_shielding,
+                    total_effective_shielding,
+                    applied_shield_buffs,
+                    effective_shield_buffs,
                     ..Default::default()
                 },
                 difficulty: row.get(13)?,
@@ -850,20 +869,19 @@ fn load_encounter(window: tauri::Window, id: String) -> Encounter {
 
     let entity_iter = entity_stmt
         .query_map(params![id], |row| {
-            let skill_str = row.get(7).unwrap_or_else(|_| "".to_string());
+            let skill_str: String = row.get(7).unwrap_or_default();
             let skills = serde_json::from_str::<HashMap<u32, Skill>>(skill_str.as_str())
-                .unwrap_or_else(|_| HashMap::new());
+                .unwrap_or_default();
 
-            let damage_stats_str = row.get(8).unwrap_or_else(|_| "".to_string());
-
+            let damage_stats_str: String = row.get(8).unwrap_or_default();
             let damage_stats = serde_json::from_str::<DamageStats>(damage_stats_str.as_str())
-                .unwrap_or_else(|_| DamageStats::default());
+                .unwrap_or_default();
 
-            let skill_stats_str = row.get(9).unwrap_or_else(|_| "".to_string());
+            let skill_stats_str: String = row.get(9).unwrap_or_default();
             let skill_stats = serde_json::from_str::<SkillStats>(skill_stats_str.as_str())
-                .unwrap_or_else(|_| SkillStats::default());
+                .unwrap_or_default();
 
-            let entity_type = row.get(11).unwrap_or_else(|_| "".to_string());
+            let entity_type: String = row.get(11).unwrap_or_default();
 
             Ok(EncounterEntity {
                 name: row.get(0)?,

@@ -53,10 +53,10 @@ export interface EncounterDamageStats {
     mostDamageTakenEntity: MostDamageTakenEntity;
     buffs: { [key: number]: StatusEffect };
     debuffs: { [key: number]: StatusEffect };
-    total_shielding: number;
-    total_effective_shielding: number;
-    applied_shield_buffs: { [key: number]: StatusEffect };
-    effective_shield_buffs: { [key: number]: StatusEffect };
+    totalShielding: number;
+    totalEffectiveShielding: number;
+    appliedShieldBuffs: { [key: number]: StatusEffect };
+    effectiveShieldBuffs: { [key: number]: StatusEffect };
     misc?: EncounterMisc;
 }
 
@@ -153,14 +153,14 @@ export interface DamageStats {
     backAttackDamage: number;
     frontAttackDamage: number;
     critDamage: number;
-    shields_given: number;
-    shields_received: number;
-    damage_absorbed: number;
-    damage_absorbed_on_others: number;
-    shields_given_by: { [key: number]: number };
-    shields_received_by: { [key: number]: number };
-    damage_absorbed_by: { [key: number]: number };
-    damage_absorbed_on_others_by: { [key: number]: number };
+    shieldsGiven: number;
+    shieldsReceived: number;
+    damageAbsorbed: number;
+    damageAbsorbedOnOthers: number;
+    shieldsGivenBy: { [key: number]: number };
+    shieldsReceivedBy: { [key: number]: number };
+    damageAbsorbedBy: { [key: number]: number };
+    damageAbsorbedOnOthersBy: { [key: number]: number };
     deaths: number;
     deathTime: number;
     dps: number;
@@ -268,7 +268,8 @@ export enum MeterTab {
     IDENTITY,
     STAGGER,
     DETAILS,
-    BOSS
+    BOSS,
+    SHIELDS
 }
 
 export enum ChartType {
