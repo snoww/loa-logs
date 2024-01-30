@@ -737,7 +737,7 @@ impl EncounterState {
                 .or_default();
 
             let current_hp = if target_entity.current_hp >= 0 {
-                target_entity.current_hp + target_entity.current_shield
+                target_entity.current_hp + target_entity.current_shield as i64
             } else {
                 0
             };
@@ -866,11 +866,96 @@ impl EncounterState {
             }
         }
     }
+
     pub fn on_boss_shield(&mut self, target_entity: &Entity, shield: u64) {
         if target_entity.entity_type == EntityType::BOSS && target_entity.name == self.encounter.current_boss_name {
             self.encounter.entities.entry(target_entity.name.clone()).and_modify(|e| {
-                e.current_shield = shield as i64;
+                e.current_shield = shield;
             });
+        }
+    }
+
+    pub fn on_shield_applied(&mut self, source_entity: &Entity, target_entity: &Entity, buff_id: u32, shield: u64) {
+        if source_entity.entity_type == EntityType::PLAYER && target_entity.entity_type == EntityType::PLAYER {
+            let mut target_entity_state = self
+                .encounter
+                .entities
+                .entry(target_entity.name.clone())
+                .or_insert_with(|| encounter_entity_from_entity(target_entity))
+                .to_owned();
+            let mut source_entity_state = self
+                .encounter
+                .entities
+                .entry(source_entity.name.clone())
+                .or_insert_with(|| encounter_entity_from_entity(source_entity))
+                .to_owned();
+
+            if !self.encounter.encounter_damage_stats.applied_shield_buffs.contains_key(&buff_id) {
+                if let Some(status_effect) = get_status_effect_data(buff_id) {
+                    self.encounter.encounter_damage_stats.applied_shield_buffs.insert(buff_id, status_effect);
+                }
+            }
+
+            if source_entity.id == target_entity.id {
+                source_entity_state.damage_stats.shields_received += shield;
+                source_entity_state.damage_stats.shields_given += shield;
+                source_entity_state.damage_stats.shields_given_by.entry(buff_id).and_modify(|e| *e += shield).or_insert(shield);
+                source_entity_state.damage_stats.shields_received_by.entry(buff_id).and_modify(|e| *e += shield).or_insert(shield);
+
+                self.encounter.entities.insert(source_entity_state.name.clone(), source_entity_state);
+            } else {
+                target_entity_state.damage_stats.shields_received += shield;
+                source_entity_state.damage_stats.shields_given += shield;
+                source_entity_state.damage_stats.shields_given_by.entry(buff_id).and_modify(|e| *e += shield).or_insert(shield);
+                target_entity_state.damage_stats.shields_received_by.entry(buff_id).and_modify(|e| *e += shield).or_insert(shield);
+
+                self.encounter.entities.insert(target_entity_state.name.clone(), target_entity_state);
+                self.encounter.entities.insert(source_entity_state.name.clone(), source_entity_state);
+            }
+
+            self.encounter.encounter_damage_stats.total_shielding += shield;
+        }
+    }
+
+    pub fn on_shield_used(&mut self, source_entity: &Entity, target_entity: &Entity, buff_id: u32, shield_removed: u64) {
+        if source_entity.entity_type == EntityType::PLAYER && target_entity.entity_type == EntityType::PLAYER {
+            let mut target_entity_state = self
+                .encounter
+                .entities
+                .entry(target_entity.name.clone())
+                .or_insert_with(|| encounter_entity_from_entity(target_entity))
+                .to_owned();
+            let mut source_entity_state = self
+                .encounter
+                .entities
+                .entry(source_entity.name.clone())
+                .or_insert_with(|| encounter_entity_from_entity(source_entity))
+                .to_owned();
+
+            if !self.encounter.encounter_damage_stats.effective_shield_buffs.contains_key(&buff_id) {
+                if let Some(status_effect) = get_status_effect_data(buff_id) {
+                    self.encounter.encounter_damage_stats.effective_shield_buffs.insert(buff_id, status_effect);
+                }
+            }
+
+            if source_entity.id == target_entity.id {
+                source_entity_state.damage_stats.damage_absorbed += shield_removed;
+                source_entity_state.damage_stats.damage_absorbed_on_others += shield_removed;
+                source_entity_state.damage_stats.damage_absorbed_by.entry(buff_id).and_modify(|e| *e += shield_removed).or_insert(shield_removed);
+                source_entity_state.damage_stats.damage_absorbed_on_others_by.entry(buff_id).and_modify(|e| *e += shield_removed).or_insert(shield_removed);
+
+                self.encounter.entities.insert(source_entity_state.name.clone(), source_entity_state);
+            } else {
+                target_entity_state.damage_stats.damage_absorbed += shield_removed;
+                source_entity_state.damage_stats.damage_absorbed_on_others += shield_removed;
+                target_entity_state.damage_stats.damage_absorbed_by.entry(buff_id).and_modify(|e| *e += shield_removed).or_insert(shield_removed);
+                source_entity_state.damage_stats.damage_absorbed_on_others_by.entry(buff_id).and_modify(|e| *e += shield_removed).or_insert(shield_removed);
+
+                self.encounter.entities.insert(target_entity_state.name.clone(), target_entity_state);
+                self.encounter.entities.insert(source_entity_state.name.clone(), source_entity_state);
+            }
+
+            self.encounter.encounter_damage_stats.total_effective_shielding += shield_removed;
         }
     }
 
@@ -1326,12 +1411,16 @@ fn insert_data(
         dps,
         buffs,
         debuffs,
+        total_shielding,
+        total_effective_shielding,
+        applied_shield_buffs,
+        effective_shield_buffs,
         misc,
         difficulty,
         cleared,
         boss_only_damage,
         version
-    ) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17)",
+    ) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17, ?18, ?19, ?20, ?21)",
         )
         .expect("failed to prepare encounter statement");
 
@@ -1403,6 +1492,10 @@ fn insert_data(
             encounter.encounter_damage_stats.dps,
             json!(encounter.encounter_damage_stats.buffs),
             json!(encounter.encounter_damage_stats.debuffs),
+            encounter.encounter_damage_stats.total_shielding,
+            encounter.encounter_damage_stats.total_effective_shielding,
+            json!(encounter.encounter_damage_stats.applied_shield_buffs),
+            json!(encounter.encounter_damage_stats.effective_shield_buffs),
             json!(misc),
             raid_difficulty,
             raid_clear,

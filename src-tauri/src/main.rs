@@ -337,6 +337,10 @@ fn setup_db(resource_path: PathBuf) -> Result<(), String> {
         dps INTEGER,
         buffs TEXT,
         debuffs TEXT,
+        total_shielding INTEGER,
+        total_effective_shielding INTEGER,
+        applied_shield_buffs TEXT,
+        effective_shield_buffs TEXT,
         misc TEXT,
         difficulty TEXT,
         favorite BOOLEAN NOT NULL DEFAULT 0,
@@ -414,6 +418,22 @@ fn setup_db(resource_path: PathBuf) -> Result<(), String> {
             [],
         )
         .expect("failed to add column");
+    }
+
+    let mut stmt = conn
+        .prepare(
+            "SELECT COUNT(*) FROM pragma_table_info('encounter') WHERE name='total_shielding'",
+        )
+        .unwrap();
+    let column_count: u32 = stmt.query_row([], |row| row.get(0)).unwrap();
+    if column_count == 0 {
+        conn.execute_batch(
+            "ALTER TABLE encounter ADD COLUMN total_shielding INTEGER;
+                ALTER TABLE encounter ADD COLUMN total_effective_shielding INTEGER;
+                ALTER TABLE encounter ADD COLUMN applied_shield_buffs TEXT;
+                ALTER TABLE encounter ADD COLUMN effective_shield_buffs TEXT;"
+        )
+            .expect("failed to add shield columns");
     }
 
     match conn.execute_batch(
@@ -770,11 +790,11 @@ fn load_encounter(window: tauri::Window, id: String) -> Encounter {
     let mut encounter = encounter_stmt
         .query_row(params![id], |row| {
             let buff_str = row.get(10).unwrap_or_else(|_| "".to_string());
-            let buffs = serde_json::from_str::<HashMap<i32, StatusEffect>>(buff_str.as_str())
+            let buffs = serde_json::from_str::<HashMap<u32, StatusEffect>>(buff_str.as_str())
                 .unwrap_or_else(|_| HashMap::new());
 
             let debuff_str = row.get(11).unwrap_or_else(|_| "".to_string());
-            let debuffs = serde_json::from_str::<HashMap<i32, StatusEffect>>(debuff_str.as_str())
+            let debuffs = serde_json::from_str::<HashMap<u32, StatusEffect>>(debuff_str.as_str())
                 .unwrap_or_else(|_| HashMap::new());
 
             let misc_str = row.get(12).unwrap_or_else(|_| "".to_string());
@@ -833,7 +853,7 @@ fn load_encounter(window: tauri::Window, id: String) -> Encounter {
     let entity_iter = entity_stmt
         .query_map(params![id], |row| {
             let skill_str = row.get(7).unwrap_or_else(|_| "".to_string());
-            let skills = serde_json::from_str::<HashMap<i32, Skill>>(skill_str.as_str())
+            let skills = serde_json::from_str::<HashMap<u32, Skill>>(skill_str.as_str())
                 .unwrap_or_else(|_| HashMap::new());
 
             let damage_stats_str = row.get(8).unwrap_or_else(|_| "".to_string());

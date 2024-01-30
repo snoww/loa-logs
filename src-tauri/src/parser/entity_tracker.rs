@@ -262,6 +262,7 @@ impl EntityTracker {
         self.status_tracker.borrow_mut().remove_status_effects(
             pkt.character_id,
             pkt.status_effect_ids,
+            pkt.reason,
             StatusEffectTargetType::Party,
         );
     }
@@ -386,7 +387,7 @@ impl EntityTracker {
             return;
         }
 
-        let class_id = get_skill_class_id(&(skill_id as i32));
+        let class_id = get_skill_class_id(&skill_id);
         if class_id != 0 {
             if entity.entity_type == PLAYER {
                 if entity.class_id == class_id {
@@ -489,7 +490,7 @@ fn get_esther_from_npc_id(npc_id: u32) -> Option<Esther> {
         .cloned()
 }
 
-pub fn get_skill_class_id(skill_id: &i32) -> u32 {
+pub fn get_skill_class_id(skill_id: &u32) -> u32 {
     if let Some(skill) = SKILL_DATA.get(skill_id) {
         skill.class_id
     } else {

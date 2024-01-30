@@ -10,9 +10,7 @@ use crate::parser::entity_tracker::{get_current_and_max_hp, EntityTracker};
 use crate::parser::id_tracker::IdTracker;
 use crate::parser::models::{EntityType, Identity, Stagger};
 use crate::parser::party_tracker::PartyTracker;
-use crate::parser::status_tracker::{
-    get_status_effect_value, StatusEffectTargetType, StatusEffectType, StatusTracker,
-};
+use crate::parser::status_tracker::{get_status_effect_value, StatusEffect, StatusEffectTargetType, StatusEffectType, StatusTracker};
 use anyhow::Result;
 use chrono::Utc;
 use hashbrown::HashMap;
@@ -574,8 +572,15 @@ pub fn start(
                         Utc::now(),
                     );
                     if status_effect.status_effect_type == StatusEffectType::Shield {
-                        let target = entity_tracker.get_source_entity(status_effect.target_id);
+                        let source = entity_tracker.get_source_entity(status_effect.source_id);
+                        let target_id = if status_effect.target_type == StatusEffectTargetType::Party {
+                            id_tracker.borrow().get_entity_id(status_effect.target_id).unwrap_or_default()
+                        } else {
+                            status_effect.target_id
+                        };
+                        let target = entity_tracker.get_source_entity(target_id);
                         state.on_boss_shield(&target, status_effect.value);
+                        state.on_shield_applied(&source, &target, status_effect.status_effect_id, status_effect.value);
                     }
                 }
             }
@@ -600,13 +605,22 @@ pub fn start(
                     PKTStatusEffectRemoveNotify::new,
                     "PKTStatusEffectRemoveNotify",
                 ) {
-                    if status_tracker.borrow_mut().remove_status_effects(
+                    let (is_shield, shields_broken) = status_tracker.borrow_mut().remove_status_effects(
                         pkt.object_id,
                         pkt.status_effect_ids,
+                        pkt.reason,
                         StatusEffectTargetType::Local,
-                    ) {
-                        if let Some(entity) = entity_tracker.entities.get(&pkt.object_id) {
-                            state.on_boss_shield(entity, 0);
+                    );
+
+                    if is_shield {
+                        if shields_broken.is_empty() {
+                            let target = entity_tracker.get_source_entity(pkt.object_id);
+                            state.on_boss_shield(&target, 0);
+                        } else {
+                            for status_effect in shields_broken {
+                                let change = status_effect.value;
+                                on_shield_change(&mut entity_tracker, &id_tracker, &mut state, status_effect, change);
+                            }
                         }
                     }
                 }
@@ -703,16 +717,17 @@ pub fn start(
                     PKTStatusEffectSyncDataNotify::new,
                     "PKTStatusEffectSyncDataNotify",
                 ) {
-                    if let Some(status_effect) = status_tracker.borrow_mut().sync_status_effect(
+                    let (status_effect, old_value) = status_tracker.borrow_mut().sync_status_effect(
                         pkt.effect_instance_id,
                         pkt.character_id,
                         pkt.object_id,
                         pkt.value,
-                        entity_tracker.local_character_id,
-                    ) {
+                        entity_tracker.local_character_id
+                    );
+                    if let Some(status_effect) = status_effect {
                         if status_effect.status_effect_type == StatusEffectType::Shield {
-                            let target = entity_tracker.get_source_entity(status_effect.target_id);
-                            state.on_boss_shield(&target, status_effect.value);
+                            let change = old_value - status_effect.value;
+                            on_shield_change(&mut entity_tracker, &id_tracker, &mut state, status_effect, change);
                         }
                     }
                 }
@@ -727,19 +742,17 @@ pub fn start(
                         if let Some(object_id) = id_tracker.borrow().get_entity_id(pkt.character_id)
                         {
                             let val = get_status_effect_value(&se.value);
-                            if let Some(status_effect) =
-                                status_tracker.borrow_mut().sync_status_effect(
-                                    se.effect_instance_id,
-                                    pkt.character_id,
-                                    object_id,
-                                    val,
-                                    entity_tracker.local_character_id,
-                                )
-                            {
+                            let (status_effect, old_value) = status_tracker.borrow_mut().sync_status_effect(
+                                se.effect_instance_id,
+                                pkt.character_id,
+                                object_id,
+                                val,
+                                entity_tracker.local_character_id
+                            );
+                            if let Some(status_effect) = status_effect {
                                 if status_effect.status_effect_type == StatusEffectType::Shield {
-                                    let target =
-                                        entity_tracker.get_source_entity(status_effect.target_id);
-                                    state.on_boss_shield(&target, status_effect.value);
+                                    let change = old_value - status_effect.value;
+                                    on_shield_change(&mut entity_tracker, &id_tracker, &mut state, status_effect, change);
                                 }
                             }
                         }
@@ -861,6 +874,18 @@ fn update_party(
         .into_iter()
         .map(|(_, members)| members)
         .collect()
+}
+
+fn on_shield_change(entity_tracker: &mut EntityTracker, id_tracker: &Rc<RefCell<IdTracker>>, state: &mut EncounterState, status_effect: StatusEffect, change: u64) {
+    let source = entity_tracker.get_source_entity(status_effect.source_id);
+    let target_id = if status_effect.target_type == StatusEffectTargetType::Party {
+        id_tracker.borrow().get_entity_id(status_effect.target_id).unwrap_or_default()
+    } else {
+        status_effect.target_id
+    };
+    let target = entity_tracker.get_source_entity(target_id);
+    state.on_boss_shield(&target, status_effect.value);
+    state.on_shield_used(&source, &target, status_effect.status_effect_id, change);
 }
 
 fn write_local_players(local_players: &HashMap<u64, String>, path: &PathBuf) -> Result<()> {
