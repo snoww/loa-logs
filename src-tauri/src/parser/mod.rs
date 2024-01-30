@@ -444,7 +444,7 @@ pub fn start(
                     if entity.class_id == 202 {
                         state.on_skill_start(
                             entity,
-                            pkt.skill_id as i32,
+                            pkt.skill_id,
                             None,
                             None,
                             Utc::now().timestamp_millis(),
@@ -475,7 +475,7 @@ pub fn start(
                             });
                     state.on_skill_start(
                         entity,
-                        pkt.skill_id as i32,
+                        pkt.skill_id,
                         tripod_index,
                         tripod_level,
                         Utc::now().timestamp_millis(),
@@ -513,8 +513,8 @@ pub fn start(
                             &source_entity,
                             &target_entity,
                             event.skill_damage_event.damage,
-                            pkt.skill_id as i32,
-                            pkt.skill_effect_id as i32,
+                            pkt.skill_id,
+                            pkt.skill_effect_id,
                             event.skill_damage_event.modifier as i32,
                             event.skill_damage_event.cur_hp,
                             event.skill_damage_event.max_hp,
@@ -550,8 +550,8 @@ pub fn start(
                             &source_entity,
                             &target_entity,
                             event.damage,
-                            pkt.skill_id as i32,
-                            pkt.skill_effect_id.unwrap_or_default() as i32,
+                            pkt.skill_id,
+                            pkt.skill_effect_id.unwrap_or_default(),
                             event.modifier as i32,
                             event.cur_hp,
                             event.max_hp,

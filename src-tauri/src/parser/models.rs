@@ -85,10 +85,14 @@ pub struct EncounterDamageStats {
     pub top_damage_taken: i64,
     pub dps: i64,
     pub most_damage_taken_entity: MostDamageTakenEntity,
-    pub buffs: HashMap<i32, StatusEffect>,
-    pub debuffs: HashMap<i32, StatusEffect>,
+    pub buffs: HashMap<u32, StatusEffect>,
+    pub debuffs: HashMap<u32, StatusEffect>,
+    pub total_shielding: i64,
+    pub total_effective_shielding: i64,
+    pub applied_shield_buffs: HashMap<u32, StatusEffect>,
+    pub effective_shield_buffs: HashMap<u32, StatusEffect>,
     #[serde(skip)]
-    pub unknown_buffs: HashSet<i32>,
+    pub unknown_buffs: HashSet<u32>,
     #[serde(skip)]
     pub max_stagger: i32,
     #[serde(skip)]
@@ -118,7 +122,7 @@ pub struct EncounterEntity {
     pub max_hp: i64,
     pub current_shield: i64,
     pub is_dead: bool,
-    pub skills: HashMap<i32, Skill>,
+    pub skills: HashMap<u32, Skill>,
     pub damage_stats: DamageStats,
     pub skill_stats: SkillStats,
 }
@@ -126,13 +130,13 @@ pub struct EncounterEntity {
 #[derive(Debug, Default, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase", default)]
 pub struct Skill {
-    pub id: i32,
+    pub id: u32,
     pub name: String,
     pub icon: String,
     pub total_damage: i64,
     pub max_damage: i64,
-    pub buffed_by: HashMap<i32, i64>,
-    pub debuffed_by: HashMap<i32, i64>,
+    pub buffed_by: HashMap<u32, i64>,
+    pub debuffed_by: HashMap<u32, i64>,
     pub buffed_by_support: i64,
     pub buffed_by_identity: i64,
     pub debuffed_by_support: i64,
@@ -172,14 +176,22 @@ pub struct TripodIndex {
 pub struct DamageStats {
     pub damage_dealt: i64,
     pub damage_taken: i64,
-    pub buffed_by: HashMap<i32, i64>,
-    pub debuffed_by: HashMap<i32, i64>,
+    pub buffed_by: HashMap<u32, i64>,
+    pub debuffed_by: HashMap<u32, i64>,
     pub buffed_by_support: i64,
     pub buffed_by_identity: i64,
     pub debuffed_by_support: i64,
     pub crit_damage: i64,
     pub back_attack_damage: i64,
     pub front_attack_damage: i64,
+    pub shields_given: i64,
+    pub shields_received: i64,
+    pub damage_absorbed: i64,
+    pub damage_absorbed_on_others: i64,
+    pub shields_given_by: HashMap<u32, i64>,
+    pub shields_received_by: HashMap<u32, i64>,
+    pub damage_absorbed_by: HashMap<u32, i64>,
+    pub damage_absorbed_on_others_by: HashMap<u32, i64>,
     pub deaths: i64,
     pub death_time: i64,
     pub dps: i64,
@@ -312,9 +324,9 @@ pub struct SkillData {
     #[serde(alias = "summonids", alias = "summonIds")]
     pub summon_ids: Option<Vec<i32>>,
     #[serde(alias = "summonsourceskill", alias = "summonSourceSkill")]
-    pub summon_source_skill: Option<i32>,
+    pub summon_source_skill: Option<u32>,
     #[serde(alias = "sourceskill", alias = "sourceSkill")]
-    pub source_skill: Option<i32>,
+    pub source_skill: Option<u32>,
 }
 
 #[derive(Debug, Default, Deserialize, Clone)]
@@ -325,7 +337,7 @@ pub struct SkillEffectData {
     #[serde(skip)]
     pub stagger: i32,
     #[serde(rename(deserialize = "sourceskill"))]
-    pub source_skill: Option<i32>,
+    pub source_skill: Option<u32>,
     #[serde(rename(deserialize = "directionalmask"))]
     pub directional_mask: i32,
     #[serde(rename(deserialize = "itemname"))]
@@ -355,13 +367,13 @@ pub struct SkillBuffData {
     pub buff_category: String,
     pub target: String,
     #[serde(rename(deserialize = "uniquegroup"))]
-    pub unique_group: i32,
+    pub unique_group: u32,
     #[serde(rename(deserialize = "overlapflag"))]
     pub overlap_flag: i32,
     #[serde(skip_serializing, rename(deserialize = "passiveoption"))]
     pub passive_option: Vec<PassiveOption>,
     #[serde(rename(deserialize = "sourceskill"))]
-    pub source_skill: Option<i32>,
+    pub source_skill: Option<u32>,
     #[serde(rename(deserialize = "setname"))]
     pub set_name: Option<String>,
 }
@@ -384,7 +396,7 @@ pub struct StatusEffect {
     pub category: String,
     pub buff_category: String,
     pub buff_type: u32,
-    pub unique_group: i32,
+    pub unique_group: u32,
     pub source: StatusEffectSource,
 }
 
@@ -690,15 +702,15 @@ lazy_static! {
         let json_str = include_str!("../../meter-data/Npc.json");
         serde_json::from_str(json_str).unwrap()
     };
-    pub static ref SKILL_DATA: HashMap<i32, SkillData> = {
+    pub static ref SKILL_DATA: HashMap<u32, SkillData> = {
         let json_str = include_str!("../../meter-data/Skill.json");
         serde_json::from_str(json_str).unwrap()
     };
-    pub static ref SKILL_EFFECT_DATA: HashMap<i32, SkillEffectData> = {
+    pub static ref SKILL_EFFECT_DATA: HashMap<u32, SkillEffectData> = {
         let json_str = include_str!("../../meter-data/SkillEffect.json");
         serde_json::from_str(json_str).unwrap()
     };
-    pub static ref SKILL_BUFF_DATA: HashMap<i32, SkillBuffData> = {
+    pub static ref SKILL_BUFF_DATA: HashMap<u32, SkillBuffData> = {
         let json_str = include_str!("../../meter-data/SkillBuff.json");
         serde_json::from_str(json_str).unwrap()
     };
