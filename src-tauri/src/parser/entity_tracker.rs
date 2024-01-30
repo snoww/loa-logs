@@ -2,8 +2,11 @@ use crate::parser::id_tracker::IdTracker;
 use crate::parser::models::EntityType::*;
 use crate::parser::models::{EntityType, Esther, ESTHER_DATA, NPC_DATA, SKILL_DATA};
 use crate::parser::party_tracker::PartyTracker;
-use crate::parser::status_tracker::{build_status_effect, StatusEffect, StatusEffectTargetType, StatusTracker};
+use crate::parser::status_tracker::{
+    build_status_effect, StatusEffect, StatusEffectTargetType, StatusTracker,
+};
 
+use chrono::{DateTime, Utc};
 use hashbrown::HashMap;
 use log::{info, warn};
 use meter_core::packets::common::StatPair;
@@ -11,7 +14,6 @@ use meter_core::packets::definitions::*;
 use meter_core::packets::structures::{NpcData, StatusEffectData};
 use std::cell::RefCell;
 use std::rc::Rc;
-use chrono::{DateTime, Utc};
 
 pub struct EntityTracker {
     id_tracker: Rc<RefCell<IdTracker>>,
@@ -250,7 +252,7 @@ impl EntityTracker {
                 pkt.character_id,
                 entity.id,
                 StatusEffectTargetType::Party,
-                timestamp
+                timestamp,
             );
             self.status_tracker
                 .borrow_mut()
@@ -296,7 +298,9 @@ impl EntityTracker {
     pub fn party_info(&mut self, pkt: PKTPartyInfo, local_players: &HashMap<u64, String>) {
         let mut unknown_local = if let Some(local_player) = self.entities.get(&self.local_entity_id)
         {
-            local_player.name.is_empty() || local_player.name == "You" || local_player.name.starts_with('0')
+            local_player.name.is_empty()
+                || local_player.name == "You"
+                || local_player.name.starts_with('0')
         } else {
             true
         };
@@ -402,14 +406,19 @@ impl EntityTracker {
         self.entities.insert(entity.id, entity.clone());
     }
 
-    pub fn build_and_register_status_effect(&mut self, sed: &StatusEffectData, target_id: u64, timestamp: DateTime<Utc>) -> StatusEffect {
+    pub fn build_and_register_status_effect(
+        &mut self,
+        sed: &StatusEffectData,
+        target_id: u64,
+        timestamp: DateTime<Utc>,
+    ) -> StatusEffect {
         let source_entity = self.get_source_entity(sed.source_id);
         let status_effect = build_status_effect(
             sed.clone(),
             target_id,
             source_entity.id,
             StatusEffectTargetType::Local,
-            timestamp
+            timestamp,
         );
 
         self.status_tracker

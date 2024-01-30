@@ -403,8 +403,12 @@ pub fn build_status_effect(
 
 pub fn get_status_effect_value(value: &Option<Vec<u8>>) -> u64 {
     value.as_ref().map_or(0, |v| {
-        let c1 = v.get(0..8).map_or(0, |bytes| u64::from_le_bytes(bytes.try_into().unwrap()));
-        let c2 = v.get(8..16).map_or(0, |bytes| u64::from_le_bytes(bytes.try_into().unwrap()));
+        let c1 = v
+            .get(0..8)
+            .map_or(0, |bytes| u64::from_le_bytes(bytes.try_into().unwrap()));
+        let c2 = v
+            .get(8..16)
+            .map_or(0, |bytes| u64::from_le_bytes(bytes.try_into().unwrap()));
         c1.min(c2)
     })
 }
