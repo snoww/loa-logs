@@ -1,11 +1,11 @@
 {
-    "version": "v1.5.9",
-    "notes": "### v1.5.9\n#### NEW FEATURES\n- added option to show rough estimated **time to kill (TTK)** for bosses (settings > live meter)\n- search now supports multiple words. example: player1 player2\n- improved method to save app crash logs to file\n\n#### BUG FIXES\n- fixed optimize database function not working\n\nthanks to [@JonasHri](https://github.com/JonasHri), [@yamiM0NSTER](https://github.com/yamiM0NSTER) for the contributions\n\nfull patch notes on [github](https://github.com/snoww/loa-logs/releases/latest)\n\nsend bug reports/suggestions to [#loa-logs](https://discord.gg/sbSa3pkDF5)",
-    "pub_date": "2024-01-24T10:43:13.283Z",
+    "version": "v1.5.10",
+    "notes": "### v1.5.10\n#### NEW FEATURES\n- added new log statistics for shields (settings > general > shields tab)\n\n![image](https://github.com/snoww/loa-logs/assets/33789437/3ffe3f4f-12d9-4bae-8ede-5619b633bc73)\n\n- improved start minimized option\n- improved search, no longer updates on each keystroke\n- normalized support buffs to always be in same order\n  - **brand** > **atk. buff** > **identity**\n\n![image](https://github.com/snoww/loa-logs/assets/33789437/d2b4b99a-93e7-4d01-9f31-fa723a2610d9)\n\n- logs window will show up when new update is available regardless of setting\n- added update notification to live meter\n- added boss move log chart\n\n#### BUG FIXES AND IMPROVEMENTS\n- fixed rare case where receiving a malformed packet would crash meter\n- removed brel g6 7x meteors counting as boss\n- reduced minimum height of meter window\nthanks to [@yamiM0NSTER](https://github.com/yamiM0NSTER) for the contributions\n\nfull patch notes on [github](https://github.com/snoww/loa-logs/releases/latest)\n\nsend bug reports/suggestions to [#loa-logs](https://discord.gg/sbSa3pkDF5)",
+    "pub_date": "2024-01-31T13:34:32.946Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.5.9/LOA.Logs_1.5.9_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlJaQ2I4c2dzemhoYzVZS09aN0dtNGJxS2ZCbFE0QlhPUkl3TzNWTUc3QmJPR3lzRitWRmF3WU9BSjVjQ01hR3l3cFE1VEc0WWUzMnh5dlJ5MkJlYWdZPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzA2MDk0NTU3CWZpbGU6TE9BIExvZ3NfMS41LjlfeDY0LXNldHVwLm5zaXMuemlwCjU2aFp0RFhkeHJrNjRDdDd2QXJDb2FRb0dyRm1zTTV0Q2ZnVitRZ1Buc0kvZlJPeHhHaEpzOFA2SFBpZklSRVNJTGw4c3RpbkhGb0ZXbEZ6b2RUK0N3PT0K"
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.5.10/LOA.Logs_1.5.10_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmY1ZGZ1bnhsTkxGSDBsanliY1JqSTEwbDhaK1JZK1A3RmdjYmtGaEZLOFAva09NRnhFc1gzQWpUSTF5WlJRcjJuMkZmYUVLa2tKb1ZMTU4zYXVjclFJPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzA2NzA4MjEyCWZpbGU6TE9BIExvZ3NfMS41LjEwX3g2NC1zZXR1cC5uc2lzLnppcApTWnUzUDBybWRIamhVWE84WG0wWWhBeUxqaGZrQiszM3k5QitwYzlHMGVPWU1sSWN1NmFGeWQ0RXcwSzJZT01PNzNML242akM5YTR6bHNQRTFkN0REQT09Cg=="
         }
     }
 }
