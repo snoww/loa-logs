@@ -85,13 +85,13 @@
             description="Show the percentage of damage buffed by support attack power buff"
             bind:setting={$settings.logs.percentBuffBySup} />
         <SettingItem
-            name="Support Identity %"
-            description="Show the percentage of damage buffed by support identity"
-            bind:setting={$settings.logs.percentIdentityBySup} />
-        <SettingItem
             name="Support Brand %"
             description="Show the percentage of damage buffed by support's brand skill (e.g. Bard's Sound Shock)"
             bind:setting={$settings.logs.percentBrand} />
+        <SettingItem
+            name="Support Identity %"
+            description="Show the percentage of damage buffed by support identity"
+            bind:setting={$settings.logs.percentIdentityBySup} />
         <SettingItem
             name="Counters"
             description="Show the number of counters hit"
@@ -133,13 +133,13 @@
                 description="Show the percentage of damage of the skill buffed by support"
                 bind:setting={$settings.logs.breakdown.percentBuffBySup} />
             <SettingItem
-                name="Support Identity %"
-                description="Show the percentage of damage of the skill buffed by support identity"
-                bind:setting={$settings.logs.breakdown.percentIdentityBySup} />
-            <SettingItem
                 name="Support Brand %"
                 description="Show the percentage of damage of the skill buffed by support's brand skill (e.g. Bard's Sound Shock)"
                 bind:setting={$settings.logs.breakdown.percentBrand} />
+            <SettingItem
+                name="Support Identity %"
+                description="Show the percentage of damage of the skill buffed by support identity"
+                bind:setting={$settings.logs.breakdown.percentIdentityBySup} />
             <SettingItem
                 name="Skill Average Damage"
                 description="Show the average damage dealt by the skill"

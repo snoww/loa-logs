@@ -103,19 +103,19 @@
         {/if}
     </td>
 {/if}
-{#if anySupportIdentity && meterSettings.breakdown.percentIdentityBySup}
+{#if anySupportBrand && meterSettings.breakdown.percentBrand}
     <td class="px-1 text-center">
         {#if skill.totalDamage > 0}
-            {round((skill.buffedByIdentity / skill.totalDamage) * 100)}<span class="text-3xs text-gray-300">%</span>
+            {round((skill.debuffedBySupport / skill.totalDamage) * 100)}<span class="text-3xs text-gray-300">%</span>
         {:else}
             0.0<span class="text-3xs text-gray-300">%</span>
         {/if}
     </td>
 {/if}
-{#if anySupportBrand && meterSettings.breakdown.percentBrand}
+{#if anySupportIdentity && meterSettings.breakdown.percentIdentityBySup}
     <td class="px-1 text-center">
         {#if skill.totalDamage > 0}
-            {round((skill.debuffedBySupport / skill.totalDamage) * 100)}<span class="text-3xs text-gray-300">%</span>
+            {round((skill.buffedByIdentity / skill.totalDamage) * 100)}<span class="text-3xs text-gray-300">%</span>
         {:else}
             0.0<span class="text-3xs text-gray-300">%</span>
         {/if}

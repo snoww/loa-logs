@@ -339,7 +339,7 @@ export function getPartyBuffs(
     if (groupedSynergies.size > 0 && parties.length > 1) {
         parties.forEach((party, partyId) => {
             partyGroupedSynergies.set(partyId.toString(), new Set<string>());
-            const partySyns = partyGroupedSynergies.get(partyId.toString())!;
+            const partySyns = new Set<string>();
             for (const player of party) {
                 groupedSynergies.forEach((synergies, key) => {
                     synergies.forEach((_, id) => {
@@ -349,6 +349,7 @@ export function getPartyBuffs(
                     });
                 });
             }
+            partyGroupedSynergies.set(partyId.toString(), new Set([...partySyns].sort()));
         });
 
         parties.forEach((party, partyId) => {
@@ -491,9 +492,9 @@ function makeSupportBuffKey(statusEffect: StatusEffect) {
     let key = "__";
     key += `${classesMap[statusEffect.source.skill?.classId ?? 0]}`;
     if (supportSkills.markingGrp.includes(statusEffect.uniqueGroup)) {
-        key += "_0";
-    } else if (supportSkills.atkPwrGrp.includes(statusEffect.uniqueGroup)) {
         key += "_1";
+    } else if (supportSkills.atkPwrGrp.includes(statusEffect.uniqueGroup)) {
+        key += "_0";
     } else if (
         supportSkills.identity.includes(skillId) ||
         supportSkills.identityGrp.includes(statusEffect.uniqueGroup)

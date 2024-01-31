@@ -44,11 +44,11 @@
 {#if anySupportBuff && meterSettings.breakdown.percentBuffBySup}
     <th class="w-12 font-normal" use:tooltip={{ content: "% Damage buffed by Support Atk. Power Buff" }}>Buff%</th>
 {/if}
-{#if anySupportIdentity && meterSettings.breakdown.percentIdentityBySup}
-    <th class="w-12 font-normal" use:tooltip={{ content: "% Damage buffed by Support Identity" }}>Iden%</th>
-{/if}
 {#if anySupportBrand && meterSettings.breakdown.percentBrand}
     <th class="w-12 font-normal" use:tooltip={{ content: "% Damage buffed by Brand" }}>B%</th>
+{/if}
+{#if anySupportIdentity && meterSettings.breakdown.percentIdentityBySup}
+    <th class="w-12 font-normal" use:tooltip={{ content: "% Damage buffed by Support Identity" }}>Iden%</th>
 {/if}
 {#if meterSettings.breakdown.avgDamage}
     <th class="w-12 font-normal" use:tooltip={{ content: "Skill Average Damage per Hit" }}>APH</th>

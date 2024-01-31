@@ -133,16 +133,16 @@
             class="text-3xs text-gray-300">%</span>
     </td>
 {/if}
+{#if anySupportBrand && meterSettings.percentBrand}
+    <td class="px-1 text-center">
+        {round((entity.damageStats.debuffedBySupport / entity.damageStats.damageDealt) * 100)}<span
+        class="text-3xs text-gray-300">%</span>
+    </td>
+{/if}
 {#if anySupportIdentity && meterSettings.percentIdentityBySup}
     <td class="px-1 text-center">
         {round((entity.damageStats.buffedByIdentity / entity.damageStats.damageDealt) * 100)}<span
         class="text-3xs text-gray-300">%</span>
-    </td>
-{/if}
-{#if anySupportBrand && meterSettings.percentBrand}
-    <td class="px-1 text-center">
-        {round((entity.damageStats.debuffedBySupport / entity.damageStats.damageDealt) * 100)}<span
-            class="text-3xs text-gray-300">%</span>
     </td>
 {/if}
 {#if meterSettings.counters}

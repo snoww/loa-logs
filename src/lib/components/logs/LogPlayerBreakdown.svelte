@@ -152,16 +152,16 @@
                         class="text-3xs text-gray-300">%</span>
                 </td>
             {/if}
+            {#if anySupportBrand && $settings.logs.breakdown.percentBrand}
+                <td class="px-1 text-center">
+                    {round((entity.damageStats.debuffedBySupport / entity.damageStats.damageDealt) * 100)}<span
+                    class="text-3xs text-gray-300">%</span>
+                </td>
+            {/if}
             {#if anySupportIdentity && $settings.logs.breakdown.percentIdentityBySup}
                 <td class="px-1 text-center">
                     {round((entity.damageStats.buffedByIdentity / entity.damageStats.damageDealt) * 100)}<span
                     class="text-3xs text-gray-300">%</span>
-                </td>
-            {/if}
-            {#if anySupportBrand && $settings.logs.breakdown.percentBrand}
-                <td class="px-1 text-center">
-                    {round((entity.damageStats.debuffedBySupport / entity.damageStats.damageDealt) * 100)}<span
-                        class="text-3xs text-gray-300">%</span>
                 </td>
             {/if}
             {#if $settings.logs.breakdown.avgDamage}
