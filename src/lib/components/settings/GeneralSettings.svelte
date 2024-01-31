@@ -181,6 +181,10 @@
             description={"Shows the gate of the raid."}
             bind:setting={$settings.general.showGate} />
         <SettingItem
+            name="Show Shield Tab"
+            description={"Shows the shield stats for the raid."}
+            bind:setting={$settings.general.showShields} />
+        <SettingItem
             name="Show Tanked Tab"
             description={"Shows the damage taken by players."}
             bind:setting={$settings.general.showTanked} />
