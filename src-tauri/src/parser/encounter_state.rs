@@ -981,20 +981,6 @@ impl EncounterState {
                 .or_insert_with(|| encounter_entity_from_entity(source_entity))
                 .to_owned();
 
-            if !self
-                .encounter
-                .encounter_damage_stats
-                .effective_shield_buffs
-                .contains_key(&buff_id)
-            {
-                if let Some(status_effect) = get_status_effect_data(buff_id) {
-                    self.encounter
-                        .encounter_damage_stats
-                        .effective_shield_buffs
-                        .insert(buff_id, status_effect);
-                }
-            }
-
             if source_entity.id == target_entity.id {
                 source_entity_state.damage_stats.damage_absorbed += shield_removed;
                 source_entity_state.damage_stats.damage_absorbed_on_others += shield_removed;
@@ -1499,13 +1485,12 @@ fn insert_data(
         total_shielding,
         total_effective_shielding,
         applied_shield_buffs,
-        effective_shield_buffs,
         misc,
         difficulty,
         cleared,
         boss_only_damage,
         version
-    ) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17, ?18, ?19, ?20, ?21)",
+    ) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17, ?18, ?19, ?20)",
         )
         .expect("failed to prepare encounter statement");
 
@@ -1580,7 +1565,6 @@ fn insert_data(
             encounter.encounter_damage_stats.total_shielding,
             encounter.encounter_damage_stats.total_effective_shielding,
             json!(encounter.encounter_damage_stats.applied_shield_buffs),
-            json!(encounter.encounter_damage_stats.effective_shield_buffs),
             json!(misc),
             raid_difficulty,
             raid_clear,

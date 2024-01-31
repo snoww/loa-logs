@@ -64,7 +64,6 @@
 
     $: {
         if (encounter) {
-            console.log(encounter)
             if ($settings.general.showEsther) {
                 players = Object.values(encounter.entities)
                     .filter(
@@ -655,7 +654,7 @@
             {:else if tab === MeterTab.TANK}
                 <DamageTaken {players} topDamageTaken={encounter.encounterDamageStats.topDamageTaken} tween={false} />
             {:else if tab === MeterTab.SHIELDS}
-                <LogShields />
+                <LogShields {players} encounterDamageStats={encounter.encounterDamageStats}/>
             {:else if tab === MeterTab.BOSS}
                 {#if !focusedBoss}
                     <BossTable {bosses} duration={encounter.duration} {inspectBoss} tween={false} />

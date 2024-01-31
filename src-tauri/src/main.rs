@@ -340,7 +340,6 @@ fn setup_db(resource_path: PathBuf) -> Result<(), String> {
         total_shielding INTEGER DEFAULT 0,
         total_effective_shielding INTEGER DEFAULT 0,
         applied_shield_buffs TEXT,
-        effective_shield_buffs TEXT,
         misc TEXT,
         difficulty TEXT,
         favorite BOOLEAN NOT NULL DEFAULT 0,
@@ -428,8 +427,7 @@ fn setup_db(resource_path: PathBuf) -> Result<(), String> {
         conn.execute_batch(
             "ALTER TABLE encounter ADD COLUMN total_shielding INTEGER DEFAULT 0;
                 ALTER TABLE encounter ADD COLUMN total_effective_shielding INTEGER DEFAULT 0;
-                ALTER TABLE encounter ADD COLUMN applied_shield_buffs TEXT;
-                ALTER TABLE encounter ADD COLUMN effective_shield_buffs TEXT;",
+                ALTER TABLE encounter ADD COLUMN applied_shield_buffs TEXT;",
         )
         .expect("failed to add shield columns");
     }
@@ -781,8 +779,7 @@ fn load_encounter(window: tauri::Window, id: String) -> Encounter {
        boss_only_damage,
        total_shielding,
        total_effective_shielding,
-       applied_shield_buffs,
-       effective_shield_buffs
+       applied_shield_buffs
     FROM encounter
     WHERE id = ?
     ;",
@@ -810,9 +807,6 @@ fn load_encounter(window: tauri::Window, id: String) -> Encounter {
             let applied_shield_buff_str: String = row.get(19).unwrap_or_default();
             let applied_shield_buffs = serde_json::from_str::<HashMap<u32, StatusEffect>>(applied_shield_buff_str.as_str())
                 .unwrap_or_default();
-            let effective_shield_buffs_str: String = row.get(20).unwrap_or_default();
-            let effective_shield_buffs = serde_json::from_str::<HashMap<u32, StatusEffect>>(effective_shield_buffs_str.as_str())
-                .unwrap_or_default();
 
 
             Ok(Encounter {
@@ -833,7 +827,6 @@ fn load_encounter(window: tauri::Window, id: String) -> Encounter {
                     total_shielding,
                     total_effective_shielding,
                     applied_shield_buffs,
-                    effective_shield_buffs,
                     ..Default::default()
                 },
                 difficulty: row.get(13)?,

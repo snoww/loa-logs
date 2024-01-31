@@ -90,7 +90,6 @@ pub struct EncounterDamageStats {
     pub total_shielding: u64,
     pub total_effective_shielding: u64,
     pub applied_shield_buffs: HashMap<u32, StatusEffect>,
-    pub effective_shield_buffs: HashMap<u32, StatusEffect>,
     #[serde(skip)]
     pub unknown_buffs: HashSet<u32>,
     #[serde(skip)]

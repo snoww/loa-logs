@@ -1,10 +1,11 @@
-import type { BuffDetails, Skill, StatusEffect } from "$lib/types";
+import { type BuffDetails, ShieldDetails, type Skill, type StatusEffect } from "$lib/types";
 import { createTippy } from "svelte-tippy";
 import "tippy.js/animations/perspective-subtle.css";
 import "tippy.js/dist/svg-arrow.css";
 import { getSkillIcon, removeUnknownHtmlTags } from "./strings";
 import { roundArrow } from "tippy.js";
 import { classesMap } from "$lib/constants/classes";
+import { abbreviateNumberSplit } from "$lib/utils/numbers";
 
 export const tooltip = createTippy({
     allowHTML: true,
@@ -49,6 +50,19 @@ export function generateTooltipContent(buffs: BuffDetails, iconPath: string) {
             str += `${buff.percentage}<span class="text-3xs text-gray-300">%</span>`;
             str += `</div>`;
         }
+    }
+    str += "</div>";
+    return str;
+}
+
+export function generateShieldTooltipContent(buffs: ShieldDetails, iconPath: string) {
+    let str = `<div class="font-normal text-xs flex flex-col space-y-1 -mx-px py-px">`;
+    for (const buff of buffs.buffs) {
+        const shield = abbreviateNumberSplit(buff.value);
+        str += `<div class="flex items-center">`;
+        str += `<img src=${iconPath + getSkillIcon(buff.icon)} alt="buff_icon" class="size-5 rounded mr-1"/>`;
+        str += `${shield[0]}<span class="text-3xs text-gray-300">${shield[1]}</span>`;
+        str += `</div>`;
     }
     str += "</div>";
     return str;

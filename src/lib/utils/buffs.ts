@@ -9,9 +9,8 @@ import {
     BuffDetails,
     type Skill,
     type PartyBuffs,
-    type PartyInfo
+    type PartyInfo, ShieldTab, Shield, ShieldDetails
 } from "$lib/types";
-import { invoke } from "@tauri-apps/api";
 import { round } from "./numbers";
 
 export function defaultBuffFilter(buffType: number): boolean {
@@ -54,14 +53,15 @@ export function filterStatusEffects(
     buff: StatusEffect,
     id: number,
     focusedPlayer: Entity | null,
-    tab: MeterTab,
-    buffFilter = true
+    tab: MeterTab | null,
+    buffFilter = true,
+    shields = false
 ) {
     let key = "";
 
     // Party synergies
     if (isPartySynergy(buff)) {
-        if (tab !== MeterTab.PARTY_BUFFS) {
+        if (tab !== MeterTab.PARTY_BUFFS && !shields) {
             return;
         }
 
@@ -77,7 +77,7 @@ export function filterStatusEffects(
     }
     // Self synergies
     else if (isSelfItemSynergy(buff)) {
-        if (tab !== MeterTab.SELF_BUFFS) {
+        if (tab !== MeterTab.SELF_BUFFS && !shields) {
             return;
         }
 
@@ -93,7 +93,7 @@ export function filterStatusEffects(
     }
     // set synergies
     else if (isSetSynergy(buff)) {
-        if (tab === MeterTab.SELF_BUFFS && !focusedPlayer) {
+        if (tab === MeterTab.SELF_BUFFS && !focusedPlayer || shields) {
             // put set buffs at the start
             groupedSynergiesAdd(groupedSynergies, `_set_${buff.source.setName}`, id, buff, focusedPlayer, buffFilter);
         }
@@ -107,7 +107,18 @@ export function filterStatusEffects(
                 if (focusedPlayer.classId !== buff.source.skill?.classId) {
                     return; // We hide other classes self buffs (class_skill & identity)
                 }
-                key = `${classesMap[buff.source.skill?.classId ?? 0]}_${
+                key = `_${classesMap[buff.source.skill?.classId ?? 0]}_${
+                    buff.uniqueGroup ? buff.uniqueGroup : buff.source.skill?.name
+                }`;
+            }
+            groupedSynergiesAdd(groupedSynergies, key, id, buff, focusedPlayer, buffFilter);
+        } else if (shields) {
+            if (isSupportBuff(buff)) {
+                key = makeSupportBuffKey(buff);
+            } else if (buff.buffCategory === "ability") {
+                key += `${buff.uniqueGroup ? buff.uniqueGroup : id}`;
+            } else {
+                key += `_${classesMap[buff.source.skill?.classId ?? 0]}_${
                     buff.uniqueGroup ? buff.uniqueGroup : buff.source.skill?.name
                 }`;
             }
@@ -116,7 +127,7 @@ export function filterStatusEffects(
     }
     // other synergies
     else if (isOtherSynergy(buff)) {
-        if (tab === MeterTab.SELF_BUFFS && focusedPlayer) {
+        if (tab === MeterTab.SELF_BUFFS && focusedPlayer || shields) {
             groupedSynergiesAdd(groupedSynergies, `etc_${buff.source.name}`, id, buff, focusedPlayer, buffFilter);
         }
     }
@@ -193,6 +204,102 @@ export function getSynergyPercentageDetailsSum(
     });
 
     return synergyPercentageDetails;
+}
+
+export function getPartyShields(players: Array<Entity>, encounterPartyInfo: PartyInfo, groupedShields: Map<string, Map<number, StatusEffect>>, tab: ShieldTab) {
+    const parties = new Array<Array<Entity>>();
+    const partyPercentages = new Array<number[]>();
+    const partyInfo = Object.entries(encounterPartyInfo);
+    let shieldValue = "";
+    let shieldBy = "";
+    switch (tab) {
+        case ShieldTab.GIVEN:
+            shieldBy = "shieldsGivenBy";
+            shieldValue = "shieldsGiven";
+            break;
+        case ShieldTab.RECEIVED:
+            shieldBy = "shieldsReceivedBy";
+            shieldValue = "shieldsReceived";
+            break;
+        case ShieldTab.E_GIVEN:
+            shieldBy = "damageAbsorbedOnOthersBy";
+            shieldValue = "damageAbsorbedOnOthers";
+            break;
+        case ShieldTab.E_RECEIVED:
+            shieldBy = "damageAbsorbedBy";
+            shieldValue = "damageAbsorbed";
+            break;
+    }
+    const topShield = Math.max(...players.map((player) => player.damageStats[shieldValue]));
+    const partyShields = new Map<string, Map<string, Array<ShieldDetails>>>();
+    const partyGroupedShields = new Map<string, Set<string>>();
+
+    if (partyInfo.length >= 1) {
+        for (const [partyIdStr, names] of partyInfo) {
+            const partyId = Number(partyIdStr);
+            parties[partyId] = [];
+            for (const name of names) {
+                const player = players.find((player) => player.name === name);
+                if (player) {
+                    parties[partyId].push(player);
+                }
+            }
+            if (parties[partyId] && parties[partyId].length > 0) {
+                parties[partyId].sort((a, b) => b.damageStats[shieldValue] - a.damageStats[shieldValue]);
+                partyPercentages[partyId] = parties[partyId].map(
+                    (player) => (player.damageStats[shieldValue] / topShield) * 100
+                );
+            }
+        }
+    } else {
+        parties[0] = players;
+    }
+
+    if (groupedShields.size > 0 && parties.length >= 1) {
+        parties.forEach((party, partyId) => {
+            partyGroupedShields.set(partyId.toString(), new Set<string>());
+            const pShields = new Set<string>();
+            for (const player of party) {
+                groupedShields.forEach((shields, key) => {
+                    shields.forEach((_, id) => {
+                        if (player.damageStats[shieldBy][id]) {
+                            pShields.add(key);
+                        }
+                    });
+                });
+            }
+            partyGroupedShields.set(partyId.toString(), new Set([...pShields].sort()));
+        });
+
+        parties.forEach((party, partyId) => {
+            partyShields.set(partyId.toString(), new Map<string, Array<ShieldDetails>>());
+            for (const player of party) {
+                partyShields.get(partyId.toString())!.set(player.name, []);
+                const playerBuffs = partyShields.get(partyId.toString())!.get(player.name)!;
+                partyGroupedShields.get(partyId.toString())?.forEach((key) => {
+                    const shieldDetails = new ShieldDetails();
+                    shieldDetails.id = key;
+                    let shieldTotal = 0;
+                    const buffs = groupedShields.get(key) || new Map();
+                    buffs.forEach((syn, id) => {
+                        if (player.damageStats[shieldBy][id]) {
+                            const s = new Shield(
+                                id,
+                                syn.source.icon,
+                                player.damageStats[shieldBy][id]
+                            );
+                            shieldDetails.buffs.push(s);
+                            shieldTotal += player.damageStats[shieldBy][id];
+                        }
+                    });
+                    shieldDetails.total = shieldTotal;
+                    playerBuffs.push(shieldDetails);
+                });
+            }
+        });
+    }
+
+    return { parties, partyPercentages, partyGroupedShields, partyShields };
 }
 
 export function getPartyBuffs(
@@ -307,7 +414,7 @@ export function calculatePartyWidth(
 }
 
 export function addBardBubbles(key: string, buff: Buff, syn: StatusEffect) {
-    if (key === "_bard_serenadeofcourage") {
+    if (key === "__bard_2_serenadeofcourage") {
         if (syn.source.desc.includes("15")) {
             buff.bonus = 15;
         } else if (syn.source.desc.includes("10")) {
@@ -315,7 +422,7 @@ export function addBardBubbles(key: string, buff: Buff, syn: StatusEffect) {
         } else if (syn.source.desc.includes("5")) {
             buff.bonus = 5;
         }
-    } else if (key === "arcanist_190900") {
+    } else if (key === "_arcanist_190900") {
         // twisted fate
         if (syn.source.desc.includes("10")) {
             buff.bonus = 10;
@@ -381,7 +488,7 @@ const supportSkills = {
 
 function makeSupportBuffKey(statusEffect: StatusEffect) {
     const skillId = statusEffect.source.skill?.id ?? 0;
-    let key = "_";
+    let key = "__";
     key += `${classesMap[statusEffect.source.skill?.classId ?? 0]}`;
     if (supportSkills.markingGrp.includes(statusEffect.uniqueGroup)) {
         key += "_0";
