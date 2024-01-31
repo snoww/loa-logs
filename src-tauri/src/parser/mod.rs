@@ -366,7 +366,27 @@ pub fn start(
                     PKTPartyStatusEffectAddNotify::new,
                     "PKTPartyStatusEffectAddNotify",
                 ) {
-                    entity_tracker.party_status_effect_add(pkt);
+                    let shields = entity_tracker.party_status_effect_add(pkt);
+                    for status_effect in shields {
+                        let source = entity_tracker.get_source_entity(status_effect.source_id);
+                        let target_id =
+                            if status_effect.target_type == StatusEffectTargetType::Party {
+                                id_tracker
+                                    .borrow()
+                                    .get_entity_id(status_effect.target_id)
+                                    .unwrap_or_default()
+                            } else {
+                                status_effect.target_id
+                            };
+                        let target = entity_tracker.get_source_entity(target_id);
+                        state.on_boss_shield(&target, status_effect.value);
+                        state.on_shield_applied(
+                            &source,
+                            &target,
+                            status_effect.status_effect_id,
+                            status_effect.value,
+                        );
+                    }
                 }
             }
             Pkt::PartyStatusEffectRemoveNotify => {
@@ -375,7 +395,20 @@ pub fn start(
                     PKTPartyStatusEffectRemoveNotify::new,
                     "PKTPartyStatusEffectRemoveNotify",
                 ) {
-                    entity_tracker.party_status_effect_remove(pkt);
+                    let (is_shield, shields_broken) =
+                        entity_tracker.party_status_effect_remove(pkt);
+                    if is_shield {
+                        for status_effect in shields_broken {
+                            let change = status_effect.value;
+                            on_shield_change(
+                                &mut entity_tracker,
+                                &id_tracker,
+                                &mut state,
+                                status_effect,
+                                change,
+                            );
+                        }
+                    }
                 }
             }
             Pkt::PartyStatusEffectResultNotify => {
