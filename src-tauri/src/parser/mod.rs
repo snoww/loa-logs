@@ -778,7 +778,7 @@ pub fn start(
                         );
                     if let Some(status_effect) = status_effect {
                         if status_effect.status_effect_type == StatusEffectType::Shield {
-                            let change = old_value - status_effect.value;
+                            let change = old_value.checked_sub(status_effect.value).unwrap_or_default();
                             on_shield_change(
                                 &mut entity_tracker,
                                 &id_tracker,
