@@ -30,8 +30,7 @@ use window_vibrancy::{apply_blur, clear_blur};
 const METER_WINDOW_LABEL: &str = "main";
 const LOGS_WINDOW_LABEL: &str = "logs";
 const WINDOW_STATE_FLAGS: StateFlags = StateFlags::from_bits_truncate(
-    StateFlags::DECORATIONS.bits()
-        | StateFlags::FULLSCREEN.bits()
+    StateFlags::FULLSCREEN.bits()
         | StateFlags::MAXIMIZED.bits()
         | StateFlags::POSITION.bits()
         | StateFlags::SIZE.bits(),
