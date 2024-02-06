@@ -174,8 +174,8 @@ async fn main() -> Result<()> {
         })
         .plugin(tauri_plugin_window_state::Builder::default().build())
         .plugin(tauri_plugin_single_instance::init(|_app, _argv, _cwd| {}))
-        .on_window_event(|event| {
-            if let tauri::WindowEvent::CloseRequested { api, .. } = event.event() {
+        .on_window_event(|event| match event.event() {
+            tauri::WindowEvent::CloseRequested { api, .. } => {
                 api.prevent_close();
 
                 if event.window().label() == METER_WINDOW_LABEL {
@@ -189,6 +189,16 @@ async fn main() -> Result<()> {
                     event.window().hide().unwrap();
                 }
             }
+            tauri::WindowEvent::Focused(focused) => {
+                if !focused {
+                    event
+                        .window()
+                        .app_handle()
+                        .save_window_state(WINDOW_STATE_FLAGS)
+                        .expect("failed to save window state");
+                }
+            }
+            _ => {}
         })
         .system_tray(system_tray)
         .on_system_tray_event(|app, event| match event {
