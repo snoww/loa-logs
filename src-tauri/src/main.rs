@@ -1026,6 +1026,10 @@ fn delete_encounters(window: tauri::Window, ids: Vec<i32>) {
 fn toggle_meter_window(window: tauri::Window) {
     if let Some(meter) = window.app_handle().get_window(METER_WINDOW_LABEL) {
         if meter.is_visible().unwrap() {
+            // workaround for tauri not handling minimized state for windows without decorations
+            if meter.is_minimized().unwrap() {
+                meter.unminimize().unwrap();
+            }
             meter.hide().unwrap();
         } else {
             meter.show().unwrap();
