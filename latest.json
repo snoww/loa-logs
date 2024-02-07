@@ -1,11 +1,11 @@
 {
-    "version": "v1.6.0",
-    "notes": "### v1.6.0\n#### NEW FEATURES\n- update meter for extreme valtan patch\n\n#### BUG FIXES AND IMPROVEMENTS\n- fix meter location not saving on exit\n- fix meter window being stuck tiny after minimizing in some cases\n\nthanks to [@yamiM0NSTER](https://github.com/yamiM0NSTER) for the contributions\n\nfull patch notes on [github](https://github.com/snoww/loa-logs/releases/latest)\n\nsend bug reports/suggestions to [#loa-logs](https://discord.gg/sbSa3pkDF5)",
-    "pub_date": "2024-02-07T22:49:48.871Z",
+    "version": "v1.6.1",
+    "notes": "### v1.6.1\n#### BUG FIXES AND IMPROVEMENTS\n- fix sidereal showing as unknown in extreme valtan\n\n### v1.6.0\n#### NEW FEATURES\n- update meter for extreme valtan patch\n\n#### BUG FIXES AND IMPROVEMENTS\n- fix meter location not saving on exit\n- fix meter window being stuck tiny after minimizing in some cases\n\nthanks to [@yamiM0NSTER](https://github.com/yamiM0NSTER) for the contributions\n\nfull patch notes on [github](https://github.com/snoww/loa-logs/releases/latest)\n\nsend bug reports/suggestions to [#loa-logs](https://discord.gg/sbSa3pkDF5)",
+    "pub_date": "2024-02-07T23:49:48.871Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.6.0/LOA.Logs_1.6.0_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYldPUWdSeGYwY3h2QmN3aFBYdmZrbThtb2RRbGpQQWxScml0Vk82RUExdnRaM0w5Y2JJL1pCVFlwMFcvUjdBWmNQZ3RQR29RVWVoM0tZM2JHblVnZWdzPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzA3MzQ2MjAxCWZpbGU6TE9BIExvZ3NfMS42LjBfeDY0LXNldHVwLm5zaXMuemlwCmpvU2hYcmxacUtLdVRPbE5RRkZNcHZqMXJicFdyYngvM3FJOVhydUMvVjJWZFB0UUJNM0d6VXA2TmFqT0JVU0hyVy9hR2E4ODNENnlCTzh3MjNUZ0NRPT0K"
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.6.1/LOA.Logs_1.6.1_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlorQUFOTzRpRTF5eUdGZjA3dVVFK0ttNDZLOWhGaEQxekFaMS9VdHh3SGlIQVZyK0dkR2QzOHFvdWdFams3T3BKNVl3aE1hQTJLUmszVW51cm5MZVFRPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzA3MzQ5OTU5CWZpbGU6TE9BIExvZ3NfMS42LjFfeDY0LXNldHVwLm5zaXMuemlwCkNtYTRJak5qejBEdHIrMHR3aWFOeXVKUnpmRTIxNWlzUjBCMElSYk9PVnM4MVlPNFJjSG5BKzV1dkVRUU5wZ3FMR0V3ZUJ0QVUzMnI5SU12RnFOZkJnPT0K"
         }
     }
 }
