@@ -730,7 +730,6 @@ pub fn start(
                     if !state.raid_difficulty.is_empty() {
                         continue;
                     }
-
                     match pkt.zone_level {
                         0 => {
                             state.raid_difficulty = "Normal".to_string();
@@ -746,6 +745,9 @@ pub fn start(
                         }
                         4 => {
                             state.raid_difficulty = "Special".to_string();
+                        }
+                        5 => {
+                            state.raid_difficulty = "Extreme".to_string();
                         }
                         _ => {}
                     }
