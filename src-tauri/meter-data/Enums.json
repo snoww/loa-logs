@@ -4953,6 +4953,7 @@
   "eventpackageuuidpostfix": { "0": "none", "1": "account", "2": "expedition", "3": "pc", "4": "generate" },
   "eventshopacquireresettype": { "0": "none", "1": "daily", "2": "weekly", "3": "monthly" },
   "eventshopbartertype": { "0": "default", "1": "specified_price", "2": "item", "3": "trade_gold" },
+  "eventshopconditiontype": { "0": "none", "1": "item_level", "2": "achievement" },
   "excesspropertybindtype": { "0": "character", "1": "expedition" },
   "excesspropertyexpiretype": { "0": "none", "1": "infinite", "2": "deadline", "3": "duration" },
   "excesspropertyinsertreason": {

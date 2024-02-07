@@ -903,14 +903,14 @@
   "57562": {
     "id": 57562,
     "name": "Jumping Crash",
-    "desc": "Jump to the target location and strike down with the Hot Spring Duck Hammer. On skill use, gain a shield for <FONT COLOR='#ffff99'>5</FONT>s.",
+    "desc": "Jump to the target location and strike down with the Hot Spring Duck Hammer. On skill use, gain a shield for <FONT COLOR='#ffff99'>5s</FONT>.",
     "classid": 0,
     "icon": "vehicle_378.png"
   },
   "57563": {
     "id": 57563,
     "name": "Dash",
-    "desc": "Raise the Hot Spring Duck Hammer and charge in the target direction. On skill use, Move Speed +<FONT COLOR='#ffff99'>3</FONT>s.",
+    "desc": "Raise the Hot Spring Duck Hammer and charge in the target direction. On skill use, Move Speed +<FONT COLOR='#ffff99'>3s</FONT>.",
     "classid": 0,
     "icon": "vehicle_379.png"
   },
@@ -1773,7 +1773,13 @@
     "classid": 0,
     "icon": "vehicle_498.png"
   },
-  "59640": { "id": 59640, "name": "", "desc": "", "classid": 0, "icon": "saction_01_11.png" },
+  "59640": {
+    "id": 59640,
+    "name": "Worry",
+    "desc": "Let's think about what's going on.",
+    "classid": 0,
+    "icon": "saction_01_11.png"
+  },
   "59700": {
     "id": 59700,
     "name": "Toy Hammer",
@@ -34602,7 +34608,7 @@
   "12120": {
     "id": 12120,
     "name": "Swift Wind Kick",
-    "desc": "Deliver a spinning kick in the air, attacking foes <FONT COLOR='#ffff99'>22</FONT> times, inflicting up to <FONT COLOR='#ffbb00'><$CALC_COMMA ((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)* (<$TABLE_SKILLEFFECT ValueF 121200/>/10000)+((<$TABLE_SKILLEFFECT ValueA 121200/> + <$TABLE_SKILLEFFECT ValueB 121200/>)/2))*11/></FONT> Damage over <FONT COLOR='#ffff99'>2.5</FONT>s. You can move up to <FONT COLOR='#ffff99'>14 meters</FONT> while using this skill, changing the attack direction with your cursor.",
+    "desc": "Deliver a spinning kick in the air, attacking foes <FONT COLOR='#ffff99'>22</FONT> times, inflicting up to <FONT COLOR='#ffbb00'><$CALC_COMMA ((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)* (<$TABLE_SKILLEFFECT ValueF 121200/>/10000)+((<$TABLE_SKILLEFFECT ValueA 121200/> + <$TABLE_SKILLEFFECT ValueB 121200/>)/2))*11/></FONT> Damage over <FONT COLOR='#ffff99'>2.5s</FONT>. You can move up to <FONT COLOR='#ffff99'>14 meters</FONT> while using this skill, changing the attack direction with your cursor.",
     "classid": 301,
     "icon": "bm_skill_01_23.png"
   },
@@ -37192,7 +37198,7 @@
   "38070": {
     "id": 38070,
     "name": "Target Down",
-    "desc": "Enters snipe stance with <FONT COLOR='#ffff99'>3</FONT> bullets. Each attack is an aimed shot that inflictst a <$MACRO physic @1:380700/>total of<FONT COLOR='#ffbb00'><$CALC_COMMA ((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)* (<$TABLE_SKILLEFFECT ValueF 380700/>/10000)+((<$TABLE_SKILLEFFECT ValueA 380700/> + <$TABLE_SKILLEFFECT ValueB 380700/>)/2))*3/></FONT> Damage. The duration of an aim lasts up to <FONT COLOR='#ffff99'>2.5</FONT>s.",
+    "desc": "Enters snipe stance with <FONT COLOR='#ffff99'>3</FONT> bullets. Each attack is an aimed shot that inflictst a <$MACRO physic @1:380700/>total of<FONT COLOR='#ffbb00'><$CALC_COMMA ((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)* (<$TABLE_SKILLEFFECT ValueF 380700/>/10000)+((<$TABLE_SKILLEFFECT ValueA 380700/> + <$TABLE_SKILLEFFECT ValueB 380700/>)/2))*3/></FONT> Damage. The duration of an aim lasts up to <FONT COLOR='#ffff99'>2.5s</FONT>.",
     "classid": 512,
     "icon": "dh_skill_01_42.png",
     "identitycategory": "devil_hunter_rifle",
@@ -38995,7 +39001,7 @@
   "20110": {
     "id": 20110,
     "name": "Pauru",
-    "desc": "Hurl a ball of fire at the target location to inflict <$MACRO magic @1:201102/> [Fire] Damage and summon the Fire Elemental Pauru. Pauru attacks nearby foes for <FONT COLOR='#ffff99'>15</FONT>s, inflicting <$MACRO magic @1:90017353/> [Fire] Damage with its basic attack.",
+    "desc": "Hurl a ball of fire at the target location to inflict <$MACRO magic @1:201102/> [Fire] Damage and summon the Fire Elemental Pauru. Pauru attacks nearby foes for <FONT COLOR='#ffff99'>15s</FONT>, inflicting <$MACRO magic @1:90017353/> [Fire] Damage with its basic attack.",
     "classid": 203,
     "icon": "sm_skill_01_37.png",
     "identitycategory": "summoner_summon",
@@ -39426,7 +39432,7 @@
   "20180": {
     "id": 20180,
     "name": "Sticky Moss Swamp",
-    "desc": "Summon a sticky, mossy swamp at the target location after <FONT COLOR='#ffff99'>0.5</FONT>s. The swamp lasts for <FONT COLOR='#ffff99'>5</FONT>s, inflicting <$MACRO magic @1:201801/> Damage every 1s. Foe Move Speed -<FONT COLOR='#99ff99'><$MACRO buffstat0_100 @1:201802/>%</FONT> for <FONT COLOR='#ffff99'>2</FONT>s.",
+    "desc": "Summon a sticky, mossy swamp at the target location after <FONT COLOR='#ffff99'>0.5s</FONT>. The swamp lasts for <FONT COLOR='#ffff99'>5s</FONT>, inflicting <$MACRO magic @1:201801/> Damage every 1s. Foe Move Speed -<FONT COLOR='#99ff99'><$MACRO buffstat0_100 @1:201802/>%</FONT> for <FONT COLOR='#ffff99'>2s</FONT>.",
     "classid": 203,
     "icon": "sm_skill_01_3.png",
     "identitycategory": "summoner_normal",
@@ -39545,7 +39551,7 @@
   "20270": {
     "id": 20270,
     "name": "Electric Storm",
-    "desc": "Concentrate energy for <FONT COLOR='#ffff99'>1.5</FONT>s and create an electric storm at the target location. The storm lasts for <FONT COLOR='#ffff99'>5</FONT>s, inflicting <FONT COLOR='#00ccff'><$CALC_COMMA ((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)* (<$TABLE_SKILLEFFECT ValueF 202701/>/10000)+((<$TABLE_SKILLEFFECT ValueA 202701/> + <$TABLE_SKILLEFFECT ValueB 202701/>)/2))*10/></FONT> [Lightning] Damage over <FONT COLOR='#ffff99'>10</FONT> hits.",
+    "desc": "Concentrate energy for <FONT COLOR='#ffff99'>1.5s</FONT> and create an electric storm at the target location. The storm lasts for <FONT COLOR='#ffff99'>5s</FONT>, inflicting <FONT COLOR='#00ccff'><$CALC_COMMA ((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)* (<$TABLE_SKILLEFFECT ValueF 202701/>/10000)+((<$TABLE_SKILLEFFECT ValueA 202701/> + <$TABLE_SKILLEFFECT ValueB 202701/>)/2))*10/></FONT> [Lightning] Damage over <FONT COLOR='#ffff99'>10</FONT> hits.",
     "classid": 203,
     "icon": "sm_skill_01_21.png",
     "identitycategory": "summoner_normal",
@@ -40929,7 +40935,7 @@
   "35170": {
     "id": 35170,
     "name": "Strategic Fire",
-    "desc": "Use the skill to enter a sitting shooting position. Aim forward and fire <FONT COLOR='#ffff99'>15</FONT> times over <FONT COLOR='#ffff99'>1.5</FONT>s, inflicting <FONT COLOR='#ffbb00'><$CALC_COMMA (((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)*(<$TABLE_SKILLEFFECT ValueF 351700/>/10000)+((<$TABLE_SKILLEFFECT ValueA 351700/> + <$TABLE_SKILLEFFECT ValueB 351700/>)/2)))*5/></FONT> total Damage and recharging the battery by <FONT COLOR='#99ff99'>75</FONT>.\n\n<FONT COLOR='#ff9999'>Use the skill to obtain the <FONT COLOR='#99ff99'>Reload</FONT> buff.</FONT>",
+    "desc": "Use the skill to enter a sitting shooting position. Aim forward and fire <FONT COLOR='#ffff99'>15</FONT> times over <FONT COLOR='#ffff99'>1.5s</FONT>, inflicting <FONT COLOR='#ffbb00'><$CALC_COMMA (((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)*(<$TABLE_SKILLEFFECT ValueF 351700/>/10000)+((<$TABLE_SKILLEFFECT ValueA 351700/> + <$TABLE_SKILLEFFECT ValueB 351700/>)/2)))*5/></FONT> total Damage and recharging the battery by <FONT COLOR='#99ff99'>75</FONT>.\n\n<FONT COLOR='#ff9999'>Use the skill to obtain the <FONT COLOR='#99ff99'>Reload</FONT> buff.</FONT>",
     "classid": 505,
     "icon": "sc_skill_01_6.png",
     "identitycategory": "scouter_scout",
@@ -41284,7 +41290,7 @@
   "37200": {
     "id": 37200,
     "name": "Blaze",
-    "desc": "Creates a rectangular flame forward, dealing <$MACRO magic @1:372004/> [Fire] Damage and paralyzing foes. Inflicts <$MACRO magic @1:372002/> [Fire] Damage for <FONT COLOR='#ffff99'>5</FONT>s.",
+    "desc": "Creates a rectangular flame forward, dealing <$MACRO magic @1:372004/> [Fire] Damage and paralyzing foes. Inflicts <$MACRO magic @1:372002/> [Fire] Damage for <FONT COLOR='#ffff99'>5s</FONT>.",
     "classid": 205,
     "icon": "scs_skill_01_3.png",
     "identitycategory": "elemental_master_fire",
@@ -42031,7 +42037,7 @@
   "16080": {
     "id": 16080,
     "name": "Hell Blade",
-    "desc": "Thrust your greatsword into the ground, inflicting <$MACRO magic @1:160800/> Damage. Hold for <FONT COLOR='#ffff99'>1.5</FONT>s to attack <FONT COLOR='#ffff99'>6</FONT> times to inflict <FONT COLOR='#00ccff'><$CALC_COMMA (((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)*(<$TABLE_SKILLEFFECT ValueF 160801/>/10000)+((<$TABLE_SKILLEFFECT ValueA 160801/> + <$TABLE_SKILLEFFECT ValueB 160801/>)/2)))*6/></FONT> Damage. Hit the Perfect Zone to deliver a finishing blow that inflicts <$MACRO magic @1:160802/> Damage and launches foes in the air.",
+    "desc": "Thrust your greatsword into the ground, inflicting <$MACRO magic @1:160800/> Damage. Hold for <FONT COLOR='#ffff99'>1.5s</FONT> to attack <FONT COLOR='#ffff99'>6</FONT> times to inflict <FONT COLOR='#00ccff'><$CALC_COMMA (((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)*(<$TABLE_SKILLEFFECT ValueF 160801/>/10000)+((<$TABLE_SKILLEFFECT ValueA 160801/> + <$TABLE_SKILLEFFECT ValueB 160801/>)/2)))*6/></FONT> Damage. Hit the Perfect Zone to deliver a finishing blow that inflicts <$MACRO magic @1:160802/> Damage and launches foes in the air.",
     "classid": 102,
     "icon": "bk_skill_01_0.png",
     "identitycategory": "berserker_normal",
@@ -43046,7 +43052,7 @@
   "45080": {
     "id": 45080,
     "name": "Volcanic Eruption",
-    "desc": "Thrust your greatsword into the ground, inflicting <$MACRO magic @1:450800/> Damage. Hold for <FONT COLOR='#ffff99'>1.5</FONT>s to attack <FONT COLOR='#ffff99'>6</FONT> times to inflict <FONT COLOR='#00ccff'><$CALC_COMMA (((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)*(<$TABLE_SKILLEFFECT ValueF 450801/>/10000)+((<$TABLE_SKILLEFFECT ValueA 450801/> + <$TABLE_SKILLEFFECT ValueB 450801/>)/2)))*6/></FONT> Damage. Hit the Perfect Zone to deliver a finishing blow that inflicts <$MACRO magic @1:450802/> Damage and launches foes into the air.",
+    "desc": "Thrust your greatsword into the ground, inflicting <$MACRO magic @1:450800/> Damage. Hold for <FONT COLOR='#ffff99'>1.5s</FONT> to attack <FONT COLOR='#ffff99'>6</FONT> times to inflict <FONT COLOR='#00ccff'><$CALC_COMMA (((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)*(<$TABLE_SKILLEFFECT ValueF 450801/>/10000)+((<$TABLE_SKILLEFFECT ValueA 450801/> + <$TABLE_SKILLEFFECT ValueB 450801/>)/2)))*6/></FONT> Damage. Hit the Perfect Zone to deliver a finishing blow that inflicts <$MACRO magic @1:450802/> Damage and launches foes into the air.",
     "classid": 112,
     "icon": "bk_skill_01_0.png",
     "identitycategory": "berserker_normal",
@@ -43363,7 +43369,7 @@
   "32140": {
     "id": 32140,
     "name": "Thick Fog",
-    "desc": "Unleash the umbrella's fog to unleash a shockwave, inflicting <$MACRO magic @1:321403/> Damage, and move <FONT COLOR='#ffff99'>6 meters</FONT> backward. The fog lasts for <FONT COLOR='#ffff99'>5</FONT>s, attacking <FONT COLOR='#ffff99'>10</FONT> times, dealing up to <FONT COLOR='#00ccff'><$CALC_COMMA ((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)*(<$TABLE_SKILLEFFECT ValueF 321401/>/10000)+((<$TABLE_SKILLEFFECT ValueA 321401/> + <$TABLE_SKILLEFFECT ValueB 321401/>)/2))*10/></FONT> damage, and for <FONT COLOR='#ffff99'><$CALC_COMMA %1 <$TABLE_SKILLBUFF Duration 321400/>/1000/></FONT>s, Move Speed -<FONT COLOR='#99ff99'><$MACRO buffstat0_100 @1:321400/>%</FONT>, and inflicts Darkness.",
+    "desc": "Unleash the umbrella's fog to unleash a shockwave, inflicting <$MACRO magic @1:321403/> Damage, and move <FONT COLOR='#ffff99'>6 meters</FONT> backward. The fog lasts for <FONT COLOR='#ffff99'>5s</FONT>, attacking <FONT COLOR='#ffff99'>10</FONT> times, dealing up to <FONT COLOR='#00ccff'><$CALC_COMMA ((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)*(<$TABLE_SKILLEFFECT ValueF 321401/>/10000)+((<$TABLE_SKILLEFFECT ValueA 321401/> + <$TABLE_SKILLEFFECT ValueB 321401/>)/2))*10/></FONT> damage, and for <FONT COLOR='#ffff99'><$CALC_COMMA %1 <$TABLE_SKILLBUFF Duration 321400/>/1000/>s</FONT>, Move Speed -<FONT COLOR='#99ff99'><$MACRO buffstat0_100 @1:321400/>%</FONT>, and inflicts Darkness.",
     "classid": 603,
     "icon": "wa_skill_01_16.png",
     "identitycategory": "weather_artist_weather",
@@ -43483,7 +43489,7 @@
   "32240": {
     "id": 32240,
     "name": "Scorching Sun",
-    "desc": "Create a ray of sunlight at the target location within <FONT COLOR='#ffff99'>10 meters</FONT>. Sunlight shines down after <FONT COLOR='#ffff99'>0.5</FONT>s, knocking down the enemy and dealing a total <FONT COLOR='#00ccff'><$CALC_COMMA ((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)*(<$TABLE_SKILLEFFECT ValueF 322402/>/10000)+((<$TABLE_SKILLEFFECT ValueA 322402/> + <$TABLE_SKILLEFFECT ValueB 322402/>)/2))*20/></FONT> [Fire] Damage over <FONT COLOR='#ffff99'>20</FONT> strikes.",
+    "desc": "Create a ray of sunlight at the target location within <FONT COLOR='#ffff99'>10 meters</FONT>. Sunlight shines down after <FONT COLOR='#ffff99'>0.5s</FONT>, knocking down the enemy and dealing a total <FONT COLOR='#00ccff'><$CALC_COMMA ((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)*(<$TABLE_SKILLEFFECT ValueF 322402/>/10000)+((<$TABLE_SKILLEFFECT ValueA 322402/> + <$TABLE_SKILLEFFECT ValueB 322402/>)/2))*20/></FONT> [Fire] Damage over <FONT COLOR='#ffff99'>20</FONT> strikes.",
     "classid": 603,
     "icon": "wa_skill_01_19.png",
     "identitycategory": "weather_artist_weather",
@@ -43679,7 +43685,7 @@
   "31230": {
     "id": 31230,
     "name": "Paint: Ink Well",
-    "desc": "Leap and smash the ground with the brush for <$MACRO magic @1:312300/> and <$MACRO magic @1:312302/> Damage, then create a puddle of ink that lasts for <FONT COLOR='#ffff99'>3.5</FONT>s. The ink puddle inflicts <$MACRO magic @1:312302/> Damage over <FONT COLOR='#ffff99'>12</FONT> hits, then launches foes in the air upon expiration, inflicting <$MACRO magic @1:312350/> Damage.",
+    "desc": "Leap and smash the ground with the brush for <$MACRO magic @1:312300/> and <$MACRO magic @1:312302/> Damage, then create a puddle of ink that lasts for <FONT COLOR='#ffff99'>3.5s</FONT>. The ink puddle inflicts <$MACRO magic @1:312302/> Damage over <FONT COLOR='#ffff99'>12</FONT> hits, then launches foes in the air upon expiration, inflicting <$MACRO magic @1:312350/> Damage.",
     "classid": 602,
     "icon": "yy_skill_01_8.png",
     "identitycategory": "yinyangshi_normal",
@@ -43703,7 +43709,7 @@
   "31410": {
     "id": 31410,
     "name": "Paint: Sun Well",
-    "desc": "Create an artist's scroll at the target location within <FONT COLOR='#ffff99'>10 meters</FONT>. The artist's scroll lasts <FONT COLOR='#ffff99'>4</FONT>s, inflicting <$MACRO magic @1:314103/> Damage every <FONT COLOR='#ffff99'>0.5</FONT>s. Instantly recovers MP by <FONT COLOR='#99ff99'><$CALC_COMMA <$TABLE_SKILLEFFECT ValueB 314104/>/100/>%</FONT> for all party members within <FONT COLOR='#ffff99'>24</FONT>m.",
+    "desc": "Create an artist's scroll at the target location within <FONT COLOR='#ffff99'>10 meters</FONT>. The artist's scroll lasts <FONT COLOR='#ffff99'>4s</FONT>, inflicting <$MACRO magic @1:314103/> Damage every <FONT COLOR='#ffff99'>0.5s</FONT>. Instantly recovers MP by <FONT COLOR='#99ff99'><$CALC_COMMA <$TABLE_SKILLEFFECT ValueB 314104/>/100/>%</FONT> for all party members within <FONT COLOR='#ffff99'>24</FONT>m.",
     "classid": 602,
     "icon": "yy_skill_01_10.png",
     "identitycategory": "yinyangshi_normal",
@@ -43715,7 +43721,7 @@
   "31420": {
     "id": 31420,
     "name": "Paint: Drawing Orchids",
-    "desc": "Unfold a <FONT COLOR='#ffff99'>14-meter-long</FONT> Artist's Scroll in front of you and push foes back with <$MACRO magic @1:314203/> Damage, then inflict <$MACRO magic @1:314201/> Damage every <FONT COLOR='#ffff99'>0.5</FONT>s a total of <FONT COLOR='#ffff99'>6</FONT> times.",
+    "desc": "Unfold a <FONT COLOR='#ffff99'>14-meter-long</FONT> Artist's Scroll in front of you and push foes back with <$MACRO magic @1:314203/> Damage, then inflict <$MACRO magic @1:314201/> Damage every <FONT COLOR='#ffff99'>0.5s</FONT> a total of <FONT COLOR='#ffff99'>6</FONT> times.",
     "classid": 602,
     "icon": "yy_skill_01_11.png",
     "identitycategory": "yinyangshi_normal",
@@ -43739,7 +43745,7 @@
   "31440": {
     "id": 31440,
     "name": "Paint: Inkrise",
-    "desc": "Summon an ink swamp within <FONT COLOR='#ffff99'>12 meters</FONT> of the target location that lasts for <FONT COLOR='#ffff99'>4</FONT>s. Targets in the swamp receive <$MACRO magic @1:314401/> Damage every <FONT COLOR='#ffff99'>0.5</FONT>s and suffer Move Speed -<FONT COLOR='#99ff99'><$MACRO buffstat0_100 @1:314404/>%</FONT> for <FONT COLOR='#ffff99'>2</FONT>s.",
+    "desc": "Summon an ink swamp within <FONT COLOR='#ffff99'>12 meters</FONT> of the target location that lasts for <FONT COLOR='#ffff99'>4s</FONT>. Targets in the swamp receive <$MACRO magic @1:314401/> Damage every <FONT COLOR='#ffff99'>0.5s</FONT> and suffer Move Speed -<FONT COLOR='#99ff99'><$MACRO buffstat0_100 @1:314404/>%</FONT> for <FONT COLOR='#ffff99'>2s</FONT>.",
     "classid": 602,
     "icon": "yy_skill_01_13.png",
     "identitycategory": "yinyangshi_normal",
@@ -43751,7 +43757,7 @@
   "31450": {
     "id": 31450,
     "name": "Paint: Starry Night",
-    "desc": "Concentrate dimensional power into the brush to change the space and inflict <$MACRO magic @1:314500/> Damage every second for <FONT COLOR='#ffff99'>0.6</FONT>s on foes within a <FONT COLOR='#ffff99'>6-meter</FONT> radius up to <FONT COLOR='#ffff99'>5</FONT> times.",
+    "desc": "Concentrate dimensional power into the brush to change the space and inflict <$MACRO magic @1:314500/> Damage every second for <FONT COLOR='#ffff99'>0.6s</FONT> on foes within a <FONT COLOR='#ffff99'>6-meter</FONT> radius up to <FONT COLOR='#ffff99'>5</FONT> times.",
     "classid": 602,
     "icon": "yy_skill_01_14.png",
     "identitycategory": "yinyangshi_normal",
