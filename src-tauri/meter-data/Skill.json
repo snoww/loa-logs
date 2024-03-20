@@ -780,6 +780,7 @@
     "classid": 0,
     "icon": "vehicle_315.png"
   },
+  "57204": { "id": 57204, "name": "[쿠르잔남부]물뿌리기", "desc": "", "classid": 0, "icon": "vehicle_315.png" },
   "57300": {
     "id": 57300,
     "name": "Walloping",
@@ -1561,28 +1562,28 @@
   "58330": {
     "id": 58330,
     "name": "Flame Rush",
-    "desc": "A movement skill. Move quickly in a lowered stance. While moving, the arm with the glove is directed towards the ground and spews out fire.\nGenerates fire on the path, creating a Flame Area for <FONT COLOR='#ffff99'>7</FONT>s.\nFlame Area inflicts Damage every second and has a chance to inflict Burn.",
+    "desc": "A movement skill. Move quickly in a lowered stance. While moving, the arm with the glove is directed towards the ground and spews out fire.\nGenerates fire on the path, creating a Flame Area for <FONT COLOR='#ffff99'>7s</FONT>.\nFlame Area inflicts Damage every second and has a chance to inflict Burn.",
     "classid": 0,
     "icon": "vehicle_290.png"
   },
   "58331": {
     "id": 58331,
     "name": "Flame Rush",
-    "desc": "A movement skill. Move quickly in a lowered stance. While moving, the arm with the glove is directed towards the ground and spews out fire.\nGenerates fire on the path, creating a Flame Area for <FONT COLOR='#ffff99'>7</FONT>s.\nFlame Area inflicts Damage every second and has a chance to inflict Burn. The skill type is changed to Combo, allowing one more use.",
+    "desc": "A movement skill. Move quickly in a lowered stance. While moving, the arm with the glove is directed towards the ground and spews out fire.\nGenerates fire on the path, creating a Flame Area for <FONT COLOR='#ffff99'>7s</FONT>.\nFlame Area inflicts Damage every second and has a chance to inflict Burn. The skill type is changed to Combo, allowing one more use.",
     "classid": 0,
     "icon": "vehicle_290.png"
   },
   "58332": {
     "id": 58332,
     "name": "Flame Rush",
-    "desc": "A movement skill. Move quickly in a lowered stance. While moving, the arm with the glove is directed towards the ground and spews out fire.\nGenerates fire on the path, creating a Flame Area for <FONT COLOR='#ffff99'>7</FONT>s.\nFlame Area inflicts Damage every second and has a chance to inflict Burn.",
+    "desc": "A movement skill. Move quickly in a lowered stance. While moving, the arm with the glove is directed towards the ground and spews out fire.\nGenerates fire on the path, creating a Flame Area for <FONT COLOR='#ffff99'>7s</FONT>.\nFlame Area inflicts Damage every second and has a chance to inflict Burn.",
     "classid": 0,
     "icon": "vehicle_290.png"
   },
   "58333": {
     "id": 58333,
     "name": "Flame Rush",
-    "desc": "A movement skill. Move quickly in a lowered stance. While moving, the arm with the glove is directed towards the ground and spews out fire.\nGenerates fire on the path, creating a Flame Area for <FONT COLOR='#ffff99'>7</FONT>s.\nFlame Area inflicts Damage every second and has a chance to inflict Burn.",
+    "desc": "A movement skill. Move quickly in a lowered stance. While moving, the arm with the glove is directed towards the ground and spews out fire.\nGenerates fire on the path, creating a Flame Area for <FONT COLOR='#ffff99'>7s</FONT>.\nFlame Area inflicts Damage every second and has a chance to inflict Burn.",
     "classid": 0,
     "icon": "vehicle_290.png"
   },
@@ -2244,6 +2245,64 @@
     "classid": 0,
     "icon": ""
   },
+  "4269700": { "id": 4269700, "name": "베히모스_방향 전환용 테스트 스킬", "desc": "", "classid": 0, "icon": "" },
+  "4269701": { "id": 4269701, "name": "베히모스_스킬_1_꼬리치기 연계", "desc": "", "classid": 0, "icon": "" },
+  "4269702": { "id": 4269702, "name": "베히모스_스킬_2_백스텝 날개짓", "desc": "", "classid": 0, "icon": "" },
+  "4269703": { "id": 4269703, "name": "베히모스_스킬_3_전진 공격", "desc": "", "classid": 0, "icon": "" },
+  "4269704": { "id": 4269704, "name": "베히모스_스킬_4-1_공중 찍기_전방", "desc": "", "classid": 0, "icon": "" },
+  "4269705": { "id": 4269705, "name": "베히모스_스킬_5_날개 찍기", "desc": "", "classid": 0, "icon": "" },
+  "4269706": { "id": 4269706, "name": "베히모스_스킬_6_광역 폭풍", "desc": "", "classid": 0, "icon": "" },
+  "4269707": { "id": 4269707, "name": "베히모스_스킬_7_렌 난입 공격", "desc": "", "classid": 0, "icon": "" },
+  "4269708": { "id": 4269708, "name": "베히모스_스킬_8_고공 비행", "desc": "", "classid": 0, "icon": "" },
+  "4269709": { "id": 4269709, "name": "베히모스_스킬_9_절벽에 매달려 공격", "desc": "", "classid": 0, "icon": "" },
+  "4269710": { "id": 4269710, "name": "베히모스_스킬_4-2_공중 찍기_후방 전환", "desc": "", "classid": 0, "icon": "" },
+  "4269711": { "id": 4269711, "name": "베히모스_스킬_4-3_공중 찍기_이동용_1", "desc": "", "classid": 0, "icon": "" },
+  "4269712": { "id": 4269712, "name": "베히모스_스킬_4-4_공중 찍기_이동용_2", "desc": "", "classid": 0, "icon": "" },
+  "4269713": { "id": 4269713, "name": "베히모스_스킬_8-2_고공 비행 폭격용", "desc": "", "classid": 0, "icon": "" },
+  "4269714": { "id": 4269714, "name": "베히모스_스킬_8-3_고공 비행_이동용", "desc": "", "classid": 0, "icon": "" },
+  "4269715": { "id": 4269715, "name": "베히모스_스킬_QTE 시작 포효", "desc": "", "classid": 0, "icon": "" },
+  "4269716": { "id": 4269716, "name": "베히모스_스킬_QTE 종료 포효", "desc": "", "classid": 0, "icon": "" },
+  "4269717": {
+    "id": 4269717,
+    "name": "베히모스_스킬_9-2_절벽에 매달려 공격_착지",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4269718": {
+    "id": 4269718,
+    "name": "베히모스_스킬_9-3_절벽에 매달려 공격_오른날개 공격",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4269719": {
+    "id": 4269719,
+    "name": "베히모스_스킬_9-4_절벽에 매달려 공격_왼날개 공격",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4269720": {
+    "id": 4269720,
+    "name": "베히모스_스킬_9-5_절벽에 매달려 공격_브레스 훑기",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4269721": {
+    "id": 4269721,
+    "name": "베히모스_스킬_9-6_절벽에 매달려 공격_떠나기",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4269722": { "id": 4269722, "name": "베히모스_스킬_7-2_전투 시작 조우 포효", "desc": "", "classid": 0, "icon": "" },
+  "4269798": { "id": 4269798, "name": "베히모스_선회_L", "desc": "", "classid": 0, "icon": "" },
+  "4269799": { "id": 4269799, "name": "베히모스_선회_R", "desc": "", "classid": 0, "icon": "" },
+  "4270201": { "id": 4270201, "name": "물웅덩이 방전", "desc": "", "classid": 0, "icon": "" },
+  "4270202": { "id": 4270202, "name": "낙뢰 소환 트랩", "desc": "", "classid": 0, "icon": "" },
+  "4270203": { "id": 4270203, "name": "렌 실마엘 창 공격 데미지", "desc": "", "classid": 0, "icon": "" },
   "4265900": { "id": 4265900, "name": "킬리네사_스킬 이펙트 모음", "desc": "", "classid": 0, "icon": "" },
   "4265901": { "id": 4265901, "name": "킬리네사_손톱 공격 모드 ON", "desc": "", "classid": 0, "icon": "" },
   "4265902": { "id": 4265902, "name": "킬리네사_손톱 공격 모드 OFF", "desc": "", "classid": 0, "icon": "" },
@@ -4369,6 +4428,466 @@
   "42660000": { "id": 42660000, "name": "카멘_최종_텔레포트_중앙", "desc": "", "classid": 0, "icon": "" },
   "42660001": { "id": 42660001, "name": "카멘_최종_텔레포트_12", "desc": "", "classid": 0, "icon": "" },
   "42660002": { "id": 42660002, "name": "카멘_최종_텔레포트_1", "desc": "", "classid": 0, "icon": "" },
+  "4138301": { "id": 4138301, "name": "스킬1_돌려차기 후 내려찍기", "desc": "", "classid": 0, "icon": "" },
+  "4138302": { "id": 4138302, "name": "스킬2_부채 공격", "desc": "", "classid": 0, "icon": "" },
+  "4138303": { "id": 4138303, "name": "스킬3_뒤로 이동하며, 바람날리기", "desc": "", "classid": 0, "icon": "" },
+  "4138304": { "id": 4138304, "name": "스킬4_회전 부채 생성 후 지면 폭발", "desc": "", "classid": 0, "icon": "" },
+  "4138305": { "id": 4138305, "name": "스킬5_입장_난입 전멸기", "desc": "", "classid": 0, "icon": "" },
+  "4138306": { "id": 4138306, "name": "스킬6_돌진 공격", "desc": "", "classid": 0, "icon": "" },
+  "4138307": { "id": 4138307, "name": "스킬7_돌풍 일으키기", "desc": "", "classid": 0, "icon": "" },
+  "4138308": { "id": 4138308, "name": "스킬8_잔상 이동", "desc": "", "classid": 0, "icon": "" },
+  "4138309": { "id": 4138309, "name": "스킬9_상시 공격_환영의 부채", "desc": "", "classid": 0, "icon": "" },
+  "4138310": { "id": 4138310, "name": "스킬10_연계 공격_속박의 바람", "desc": "", "classid": 0, "icon": "" },
+  "4138311": { "id": 4138311, "name": "스킬8_연계 패턴 종료_퇴장_낙사판정", "desc": "", "classid": 0, "icon": "" },
+  "4138312": { "id": 4138312, "name": "무력화_스킬5_난입스킬 공략성공", "desc": "", "classid": 0, "icon": "" },
+  "4138313": { "id": 4138313, "name": "무력화_연계 패턴 대기", "desc": "", "classid": 0, "icon": "" },
+  "4138314": { "id": 4138314, "name": "스킬8_맵 중앙이동_연출용", "desc": "", "classid": 0, "icon": "" },
+  "4138315": { "id": 4138315, "name": "스킬6_돌진 공격_중앙스팟 향해 돌진", "desc": "", "classid": 0, "icon": "" },
+  "4138330": { "id": 4138330, "name": "스킬9_아그리스 환영_강제 디스폰", "desc": "", "classid": 0, "icon": "" },
+  "4138331": { "id": 4138331, "name": "스킬1_환영의 부채_소환수_일반", "desc": "", "classid": 0, "icon": "" },
+  "4138332": { "id": 4138332, "name": "스킬1_환영의 부채_소환수_반전", "desc": "", "classid": 0, "icon": "" },
+  "4138333": { "id": 4138333, "name": "스폰 모션_아그리스 환영 스폰스킬", "desc": "", "classid": 0, "icon": "" },
+  "4138334": { "id": 4138334, "name": "스킬1_환영의 부채_소환수_일반2", "desc": "", "classid": 0, "icon": "" },
+  "4138335": { "id": 4138335, "name": "스킬1_환영의 부채_소환수_반전2", "desc": "", "classid": 0, "icon": "" },
+  "4270331": { "id": 4270331, "name": "스킬1_환각_폭발_아그리스_공략실패", "desc": "", "classid": 0, "icon": "" },
+  "4270332": { "id": 4270332, "name": "스킬2_환각_소멸_아그리스_공략성공", "desc": "", "classid": 0, "icon": "" },
+  "4270333": { "id": 4270333, "name": "스킬2_환각_소멸_다르키엘_공략성공", "desc": "", "classid": 0, "icon": "" },
+  "4270334": { "id": 4270334, "name": "스킬1_환각_폭발_다르키엘_공략 실패", "desc": "", "classid": 0, "icon": "" },
+  "4270335": { "id": 4270335, "name": "붉은 연기 향로 생성_아그리스", "desc": "", "classid": 0, "icon": "" },
+  "4270336": { "id": 4270336, "name": "검은 연기 향로 생성_아그리스", "desc": "", "classid": 0, "icon": "" },
+  "4270337": { "id": 4270337, "name": "붉은 연기 향로 생성_다르키엘", "desc": "", "classid": 0, "icon": "" },
+  "4270338": { "id": 4270338, "name": "붉은 연기 향로 생성_다르키엘", "desc": "", "classid": 0, "icon": "" },
+  "4243161": {
+    "id": 4243161,
+    "name": "투명NPC_난입스킬 전멸기_다르키엘 전투공간",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4243162": { "id": 4243162, "name": "투명NPC_난입스킬 전멸기", "desc": "", "classid": 0, "icon": "" },
+  "4243163": { "id": 4243163, "name": "투명NPC_난입스킬 전멸기", "desc": "", "classid": 0, "icon": "" },
+  "4243164": { "id": 4243164, "name": "투명NPC_난입스킬 전멸기", "desc": "", "classid": 0, "icon": "" },
+  "4243165": { "id": 4243165, "name": "투명NPC_난입스킬 전멸기", "desc": "", "classid": 0, "icon": "" },
+  "4243166": { "id": 4243166, "name": "투명NPC_난입스킬 전멸기", "desc": "", "classid": 0, "icon": "" },
+  "4243167": { "id": 4243167, "name": "투명NPC_난입스킬 전멸기", "desc": "", "classid": 0, "icon": "" },
+  "4243168": { "id": 4243168, "name": "투명NPC_난입스킬 전멸기", "desc": "", "classid": 0, "icon": "" },
+  "4243169": { "id": 4243169, "name": "투명NPC_난입스킬 전멸기", "desc": "", "classid": 0, "icon": "" },
+  "4243170": { "id": 4243170, "name": "투명NPC_난입스킬 전멸기", "desc": "", "classid": 0, "icon": "" },
+  "4002054": { "id": 4002054, "name": "악마개 사망 연출 스킬", "desc": "", "classid": 0, "icon": "" },
+  "110184": { "id": 110184, "name": "진화한 악마개 사망 연출 스킬", "desc": "", "classid": 0, "icon": "" },
+  "4104015": { "id": 4104015, "name": "고르곤 사망 연출 스킬", "desc": "", "classid": 0, "icon": "" },
+  "4268701": { "id": 4268701, "name": "다르키엘_순간이동_B", "desc": "", "classid": 0, "icon": "" },
+  "4268702": { "id": 4268702, "name": "다르키엘_멱살 잡고 내려치기", "desc": "", "classid": 0, "icon": "" },
+  "4268703": { "id": 4268703, "name": "다르키엘_전방 이동 후 휠윈드", "desc": "", "classid": 0, "icon": "" },
+  "4268704": { "id": 4268704, "name": "다르키엘_순간이동_A", "desc": "", "classid": 0, "icon": "" },
+  "4268705": { "id": 4268705, "name": "다르키엘_처형식", "desc": "", "classid": 0, "icon": "" },
+  "4268706": { "id": 4268706, "name": "다르키엘_마당 쓸어 검기 날리기", "desc": "", "classid": 0, "icon": "" },
+  "4268707": { "id": 4268707, "name": "다르키엘_후방 이동", "desc": "", "classid": 0, "icon": "" },
+  "4268708": { "id": 4268708, "name": "다르키엘_휘두르고 찍기", "desc": "", "classid": 0, "icon": "" },
+  "4268709": { "id": 4268709, "name": "다르키엘_대검 투척 A", "desc": "", "classid": 0, "icon": "" },
+  "4268710": { "id": 4268710, "name": "다르키엘_뒤돌아 3연 내려치기", "desc": "", "classid": 0, "icon": "" },
+  "4268711": { "id": 4268711, "name": "다르키엘_과다 출혈", "desc": "", "classid": 0, "icon": "" },
+  "4268712": { "id": 4268712, "name": "다르키엘_독무 뿌리기", "desc": "", "classid": 0, "icon": "" },
+  "4268713": { "id": 4268713, "name": "다르키엘_대검 투척 B", "desc": "", "classid": 0, "icon": "" },
+  "4268714": { "id": 4268714, "name": "다르키엘_추적", "desc": "", "classid": 0, "icon": "" },
+  "4268715": { "id": 4268715, "name": "다르키엘_카운터 휠윈드", "desc": "", "classid": 0, "icon": "" },
+  "4268716": { "id": 4268716, "name": "다르키엘_안개 흡수_1", "desc": "", "classid": 0, "icon": "" },
+  "4268717": { "id": 4268717, "name": "다르키엘_추적하는 안개", "desc": "", "classid": 0, "icon": "" },
+  "4268718": { "id": 4268718, "name": "다르키엘_기 모아 베기", "desc": "", "classid": 0, "icon": "" },
+  "4268719": { "id": 4268719, "name": "다르키엘_추적 내려찍기", "desc": "", "classid": 0, "icon": "" },
+  "4268720": { "id": 4268720, "name": "다르키엘_순간 이동 후 기습", "desc": "", "classid": 0, "icon": "" },
+  "4268721": { "id": 4268721, "name": "다르키엘_돌진 가르기", "desc": "", "classid": 0, "icon": "" },
+  "4268722": { "id": 4268722, "name": "다르키엘_대검 난무", "desc": "", "classid": 0, "icon": "" },
+  "4268723": { "id": 4268723, "name": "다르키엘_환영 창 투척", "desc": "", "classid": 0, "icon": "" },
+  "4268724": { "id": 4268724, "name": "다르키엘_환영 창 속박", "desc": "", "classid": 0, "icon": "" },
+  "4268725": { "id": 4268725, "name": "다르키엘_지면 가르기", "desc": "", "classid": 0, "icon": "" },
+  "4268726": { "id": 4268726, "name": "다르키엘_안개 흡수_2_링", "desc": "", "classid": 0, "icon": "" },
+  "4268727": { "id": 4268727, "name": "다르키엘_안개 흡수_3_분열", "desc": "", "classid": 0, "icon": "" },
+  "4268728": { "id": 4268728, "name": "다르키엘_방출", "desc": "", "classid": 0, "icon": "" },
+  "4268729": { "id": 4268729, "name": "다르키엘_저주_저주 걸고 지역 이동", "desc": "", "classid": 0, "icon": "" },
+  "4268730": { "id": 4268730, "name": "다르키엘_수확", "desc": "", "classid": 0, "icon": "" },
+  "4268731": { "id": 4268731, "name": "다르키엘_환각", "desc": "", "classid": 0, "icon": "" },
+  "4268732": { "id": 4268732, "name": "다르키엘_사술", "desc": "", "classid": 0, "icon": "" },
+  "4268733": { "id": 4268733, "name": "다르키엘_향로의 저주_빨강", "desc": "", "classid": 0, "icon": "" },
+  "4268734": { "id": 4268734, "name": "다르키엘_저주_지역 이동 후 저지", "desc": "", "classid": 0, "icon": "" },
+  "4268735": {
+    "id": 4268735,
+    "name": "다르키엘_저주_동시 전투 시작 시 버프 부여",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4268736": { "id": 4268736, "name": "다르키엘_저주_저지 성공 시 사용 스킬", "desc": "", "classid": 0, "icon": "" },
+  "4268737": { "id": 4268737, "name": "다르키엘_저주_동시 전투 도중 전멸기", "desc": "", "classid": 0, "icon": "" },
+  "4268738": { "id": 4268738, "name": "다르키엘_향로의 저주_빨강_검정", "desc": "", "classid": 0, "icon": "" },
+  "4268739": { "id": 4268739, "name": "다르키엘_처형식_잡기 대상 이탈 시", "desc": "", "classid": 0, "icon": "" },
+  "4268740": { "id": 4268740, "name": "다르키엘_수확_잡기 대상 이탈 시", "desc": "", "classid": 0, "icon": "" },
+  "4268741": { "id": 4268741, "name": "다르키엘_과다 출혈_카운터 성공 시 스킬", "desc": "", "classid": 0, "icon": "" },
+  "4268742": { "id": 4268742, "name": "다르키엘_선회_좌", "desc": "", "classid": 0, "icon": "" },
+  "4268743": { "id": 4268743, "name": "다르키엘_선회_우", "desc": "", "classid": 0, "icon": "" },
+  "4268744": { "id": 4268744, "name": "다르키엘_환각_분신_카운터 내려치기", "desc": "", "classid": 0, "icon": "" },
+  "4268745": { "id": 4268745, "name": "다르키엘_환각_분신_카운터 성공 시 스킬", "desc": "", "classid": 0, "icon": "" },
+  "4268746": { "id": 4268746, "name": "다르키엘_환각_놀이 성공 시 무력화", "desc": "", "classid": 0, "icon": "" },
+  "4268747": { "id": 4268747, "name": "다르키엘_저주_연계기 무적 해제 이후", "desc": "", "classid": 0, "icon": "" },
+  "4268748": { "id": 4268748, "name": "다르키엘_연계기_추적", "desc": "", "classid": 0, "icon": "" },
+  "4268749": { "id": 4268749, "name": "다르키엘_연계기_휘두르고 찍기", "desc": "", "classid": 0, "icon": "" },
+  "4268750": { "id": 4268750, "name": "다르키엘_연계기_추적 내려찍기", "desc": "", "classid": 0, "icon": "" },
+  "4268751": { "id": 4268751, "name": "다르키엘_연계기_추적_잡기 실패 시 스킬", "desc": "", "classid": 0, "icon": "" },
+  "4268752": { "id": 4268752, "name": "다르키엘_추적 내려찍기_연계기중", "desc": "", "classid": 0, "icon": "" },
+  "4268753": { "id": 4268753, "name": "다르키엘_전방 이동 후 휠윈드_연계기중", "desc": "", "classid": 0, "icon": "" },
+  "4268754": { "id": 4268754, "name": "다르키엘_카운터 휠윈드_연계기중", "desc": "", "classid": 0, "icon": "" },
+  "4268755": { "id": 4268755, "name": "다르키엘_순간이동_B_연계기중", "desc": "", "classid": 0, "icon": "" },
+  "4268756": { "id": 4268756, "name": "다르키엘_연계기_대기용 스킬", "desc": "", "classid": 0, "icon": "" },
+  "4268757": { "id": 4268757, "name": "다르키엘_순간이동_중앙 이동용", "desc": "", "classid": 0, "icon": "" },
+  "4268758": { "id": 4268758, "name": "다르키엘_돌진 가르기_중앙 이동용", "desc": "", "classid": 0, "icon": "" },
+  "4268759": { "id": 4268759, "name": "다르키엘_체력 회복", "desc": "", "classid": 0, "icon": "" },
+  "4268782": { "id": 4268782, "name": "다르키엘_3페이즈_진입스킬", "desc": "", "classid": 0, "icon": "" },
+  "4268783": { "id": 4268783, "name": "무력화_다르키엘_연계패턴_공략성공", "desc": "", "classid": 0, "icon": "" },
+  "4268790": { "id": 4268790, "name": "다르키엘_멱살 잡고 내려치기_스토리용", "desc": "", "classid": 0, "icon": "" },
+  "4268791": { "id": 4268791, "name": "다르키엘_전방 이동 후 휠윈드_스토리용", "desc": "", "classid": 0, "icon": "" },
+  "4268792": { "id": 4268792, "name": "다르키엘_마당 쓸어 검기 날리기_스토리용", "desc": "", "classid": 0, "icon": "" },
+  "4268793": { "id": 4268793, "name": "다르키엘_휘두르고 찍기_스토리용", "desc": "", "classid": 0, "icon": "" },
+  "4268794": { "id": 4268794, "name": "다르키엘_카운터 휠윈드_스토리용", "desc": "", "classid": 0, "icon": "" },
+  "4268795": { "id": 4268795, "name": "다르키엘_순간 이동 후 기습_스토리용", "desc": "", "classid": 0, "icon": "" },
+  "4268796": { "id": 4268796, "name": "다르키엘_돌진 가르기_스토리용", "desc": "", "classid": 0, "icon": "" },
+  "4268760": { "id": 4268760, "name": "방출_외곽 연기", "desc": "", "classid": 0, "icon": "" },
+  "4268761": { "id": 4268761, "name": "환각_외곽 연기", "desc": "", "classid": 0, "icon": "" },
+  "4268762": { "id": 4268762, "name": "향로의 저주_폭발", "desc": "", "classid": 0, "icon": "" },
+  "4268763": { "id": 4268763, "name": "향로의 저주_빨강 장판", "desc": "", "classid": 0, "icon": "" },
+  "4268764": { "id": 4268764, "name": "향로의 저주_검정 장판", "desc": "", "classid": 0, "icon": "" },
+  "4268765": { "id": 4268765, "name": "향로의 저주_특수 장판", "desc": "", "classid": 0, "icon": "" },
+  "4268766": { "id": 4268766, "name": "향로의 저주_빨강 장판 소멸", "desc": "", "classid": 0, "icon": "" },
+  "4268767": { "id": 4268767, "name": "향로의 저주_검정 장판 소멸", "desc": "", "classid": 0, "icon": "" },
+  "4268768": {
+    "id": 4268768,
+    "name": "향로의 저주_빨강 장판_투사체 생성 및 자살",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4268769": {
+    "id": 4268769,
+    "name": "향로의 저주_검정 장판_투사체 생성 및 자살",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4268770": {
+    "id": 4268770,
+    "name": "향로의 저주_특수 장판_투사체 생성 및 자살",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4268771": {
+    "id": 4268771,
+    "name": "향로의 저주_특수 장판으로 변환_빨강 장판",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4268772": {
+    "id": 4268772,
+    "name": "향로의 저주_특수 장판으로 변환_검정 장판",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4268773": { "id": 4268773, "name": "수확_투사체 생성용 투명 NPC 소환_빨강", "desc": "", "classid": 0, "icon": "" },
+  "4268774": { "id": 4268774, "name": "수확_투사체 생성용 투명 NPC 소환_검정", "desc": "", "classid": 0, "icon": "" },
+  "4268775": { "id": 4268775, "name": "수확_투사체 생성용 투명 NPC 소환_특수", "desc": "", "classid": 0, "icon": "" },
+  "4268776": {
+    "id": 4268776,
+    "name": "환각_1번 위상 가짜 및 진짜 다르키엘 분신 발사체 소환",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4268777": {
+    "id": 4268777,
+    "name": "환각_2번 위상 가짜 및 진짜 다르키엘 분신 발사체 소환",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4268778": { "id": 4268778, "name": "환각_카운터용 다르키엘 분신 소환", "desc": "", "classid": 0, "icon": "" },
+  "4268779": {
+    "id": 4268779,
+    "name": "향로 프랍 인터렉션 조건 버프 부여_3페 시작 시",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4268780": { "id": 4268780, "name": "향로 프랍 인터렉션 조건 버프 제거", "desc": "", "classid": 0, "icon": "" },
+  "4268781": {
+    "id": 4268781,
+    "name": "향로 프랍 인터렉션 조건 버프 재부여_전이 대상",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4270301": { "id": 4270301, "name": "향로_환각_폭발", "desc": "", "classid": 0, "icon": "" },
+  "4270302": { "id": 4270302, "name": "향로_환각_소멸", "desc": "", "classid": 0, "icon": "" },
+  "4270303": { "id": 4270303, "name": "향로_환각_스폰", "desc": "", "classid": 0, "icon": "" },
+  "4270304": { "id": 4270304, "name": "향로_환각_소멸2", "desc": "", "classid": 0, "icon": "" },
+  "4268901": { "id": 4268901, "name": "에키드나_뱀 부리기(뱀)", "desc": "", "classid": 0, "icon": "" },
+  "4268902": { "id": 4268902, "name": "에키드나_휘두르고 점프(천)", "desc": "", "classid": 0, "icon": "" },
+  "4268903": { "id": 4268903, "name": "에키드나_베일 감싸기(천)", "desc": "", "classid": 0, "icon": "" },
+  "4268904": { "id": 4268904, "name": "에키드나_뱀거울(뱀, 거울)", "desc": "", "classid": 0, "icon": "" },
+  "4268905": { "id": 4268905, "name": "에키드나_뱀거울(뱀, 거울)_이탈시", "desc": "", "classid": 0, "icon": "" },
+  "4268906": { "id": 4268906, "name": "에키드나_잔상 돌진(천)", "desc": "", "classid": 0, "icon": "" },
+  "4268907": { "id": 4268907, "name": "에키드나_황홀경(천)", "desc": "", "classid": 0, "icon": "" },
+  "4268908": { "id": 4268908, "name": "에키드나_순간이동(거울)_앞으로", "desc": "", "classid": 0, "icon": "" },
+  "4268909": { "id": 4268909, "name": "에키드나_순간이동(거울)_아래로", "desc": "", "classid": 0, "icon": "" },
+  "4268910": { "id": 4268910, "name": "에키드나_손바람(뱀)", "desc": "", "classid": 0, "icon": "" },
+  "4268911": { "id": 4268911, "name": "에키드나_거울 뒤집기(거울)", "desc": "", "classid": 0, "icon": "" },
+  "4268912": { "id": 4268912, "name": "에키드나_낙화(뱀, 꽃)", "desc": "", "classid": 0, "icon": "" },
+  "4268913": { "id": 4268913, "name": "에키드나_사냥감(뱀, 거울)_시작", "desc": "", "classid": 0, "icon": "" },
+  "4268914": { "id": 4268914, "name": "에키드나_사냥감(뱀, 거울)_파괴 실패", "desc": "", "classid": 0, "icon": "" },
+  "4268915": { "id": 4268915, "name": "에키드나_사냥감(뱀, 거울)_파괴 성공", "desc": "", "classid": 0, "icon": "" },
+  "4268916": { "id": 4268916, "name": "에키드나_샤프 커터(천)", "desc": "", "classid": 0, "icon": "" },
+  "4268917": { "id": 4268917, "name": "에키드나_기운 당기기(천)", "desc": "", "classid": 0, "icon": "" },
+  "4268918": { "id": 4268918, "name": "에키드나_기운 당기기(뱀)", "desc": "", "classid": 0, "icon": "" },
+  "4268919": { "id": 4268919, "name": "에키드나_분홍신(뱀)", "desc": "", "classid": 0, "icon": "" },
+  "4268920": { "id": 4268920, "name": "에키드나_백허그(꽃)", "desc": "", "classid": 0, "icon": "" },
+  "4268921": { "id": 4268921, "name": "에키드나_백허그(꽃)_이탈시", "desc": "", "classid": 0, "icon": "" },
+  "4268922": { "id": 4268922, "name": "에키드나_백허그(뱀)", "desc": "", "classid": 0, "icon": "" },
+  "4268923": { "id": 4268923, "name": "에키드나_후방이동(뱀, 꽃)", "desc": "", "classid": 0, "icon": "" },
+  "4268924": { "id": 4268924, "name": "에키드나_천거울(천, 거울)", "desc": "", "classid": 0, "icon": "" },
+  "4268925": { "id": 4268925, "name": "에키드나_측면회전(꽃)", "desc": "", "classid": 0, "icon": "" },
+  "4268926": { "id": 4268926, "name": "에키드나_양 손 휘두르기(뱀)", "desc": "", "classid": 0, "icon": "" },
+  "4268927": { "id": 4268927, "name": "에키드나_순차 채찍(뱀)", "desc": "", "classid": 0, "icon": "" },
+  "4268928": { "id": 4268928, "name": "에키드나_뱀 소환(뱀)", "desc": "", "classid": 0, "icon": "" },
+  "4268929": { "id": 4268929, "name": "에키드나_그림자 조종(뱀)", "desc": "", "classid": 0, "icon": "" },
+  "4268930": { "id": 4268930, "name": "에키드나_격돌(뱀)", "desc": "", "classid": 0, "icon": "" },
+  "4268931": { "id": 4268931, "name": "거울 돌진 기믹_시작(천, 거울)", "desc": "", "classid": 0, "icon": "" },
+  "4268932": { "id": 4268932, "name": "보스게이지 놀이_33프로(천, 거울)", "desc": "", "classid": 0, "icon": "" },
+  "4268933": { "id": 4268933, "name": "보스게이지 놀이_66프로(천, 거울)", "desc": "", "classid": 0, "icon": "" },
+  "4268934": { "id": 4268934, "name": "보스게이지 놀이_100프로(천, 거울)", "desc": "", "classid": 0, "icon": "" },
+  "4268935": { "id": 4268935, "name": "매혹적인 입술(천, 거울)", "desc": "", "classid": 0, "icon": "" },
+  "4268936": { "id": 4268936, "name": "후방 견제 후 콤보 공격(천, 거울)", "desc": "", "classid": 0, "icon": "" },
+  "4268937": { "id": 4268937, "name": "거울 폭격(천, 거울)", "desc": "", "classid": 0, "icon": "" },
+  "4268938": { "id": 4268938, "name": "부메랑 매혹 구체 날리기(천, 거울)", "desc": "", "classid": 0, "icon": "" },
+  "4268939": { "id": 4268939, "name": "강하게 내려찍기(천, 거울)", "desc": "", "classid": 0, "icon": "" },
+  "4268940": { "id": 4268940, "name": "거울 돌진 기믹_유지(천, 거울)", "desc": "", "classid": 0, "icon": "" },
+  "4268941": {
+    "id": 4268941,
+    "name": "거울 돌진 기믹_카운터 1차 성공(천, 거울)",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4268942": {
+    "id": 4268942,
+    "name": "거울 돌진 기믹_카운터 2차 성공(천, 거울)",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4268943": { "id": 4268943, "name": "거울 돌진 기믹_카운터 실패(천, 거울)", "desc": "", "classid": 0, "icon": "" },
+  "4268944": { "id": 4268944, "name": "에키드나_순차 채찍(뱀)_페이크카운터성공", "desc": "", "classid": 0, "icon": "" },
+  "4268945": { "id": 4268945, "name": "에키드나_순차 채찍(뱀)_협카성공", "desc": "", "classid": 0, "icon": "" },
+  "4268946": { "id": 4268946, "name": "거울 돌진 좌측_NPC에게로 이동(천, 거울)", "desc": "", "classid": 0, "icon": "" },
+  "4268947": { "id": 4268947, "name": "거울 돌진 우측_NPC에게로 이동(천, 거울)", "desc": "", "classid": 0, "icon": "" },
+  "4268948": { "id": 4268948, "name": "거울 돌진 실패시 거울에서 나타나기", "desc": "", "classid": 0, "icon": "" },
+  "4268993": { "id": 4268993, "name": "에키드나_뱀 부리기(뱀)_촬영용", "desc": "", "classid": 0, "icon": "" },
+  "4268994": { "id": 4268994, "name": "에키드나_휘두르고 점프(천)_촬영용", "desc": "", "classid": 0, "icon": "" },
+  "4268995": { "id": 4268995, "name": "에키드나_잔상 돌진(천)_촬영용", "desc": "", "classid": 0, "icon": "" },
+  "4268996": { "id": 4268996, "name": "에키드나_낙화(뱀, 꽃)_촬영용", "desc": "", "classid": 0, "icon": "" },
+  "4268997": { "id": 4268997, "name": "에키드나_그림자 조종(뱀)_촬영용", "desc": "", "classid": 0, "icon": "" },
+  "4268998": { "id": 4268998, "name": "에키드나_게이지놀이_테스트스킬", "desc": "", "classid": 0, "icon": "" },
+  "4268999": { "id": 4268999, "name": "에키드나_벽피격이상_테스트스킬", "desc": "", "classid": 0, "icon": "" },
+  "4270401": { "id": 4270401, "name": "거대 에키드나_매혹의 운무_격돌 전조", "desc": "", "classid": 0, "icon": "" },
+  "4270402": { "id": 4270402, "name": "거대 에키드나_매혹의 운무_격돌 시작", "desc": "", "classid": 0, "icon": "" },
+  "4270403": { "id": 4270403, "name": "거대 에키드나_인형뽑기", "desc": "", "classid": 0, "icon": "" },
+  "4270404": { "id": 4270404, "name": "거대 에키드나_인형뽑기_예외처리", "desc": "", "classid": 0, "icon": "" },
+  "4270405": { "id": 4270405, "name": "거대 에키드나_메두사_카운터 공격", "desc": "", "classid": 0, "icon": "" },
+  "4270406": { "id": 4270406, "name": "거대 에키드나_움직이는 거울 소환", "desc": "", "classid": 0, "icon": "" },
+  "4270407": { "id": 4270407, "name": "거대 에키드나_환영 나비 소환", "desc": "", "classid": 0, "icon": "" },
+  "4270408": { "id": 4270408, "name": "거대 에키드나_매섭게 내려치기", "desc": "", "classid": 0, "icon": "" },
+  "4270409": {
+    "id": 4270409,
+    "name": "거대 에키드나_매섭게 내려치기_카운터 실패",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4270410": {
+    "id": 4270410,
+    "name": "거대 에키드나_매섭게 내려치기_카운터 성공",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4270411": { "id": 4270411, "name": "거대 에키드나_메두사_카운터 공격", "desc": "", "classid": 0, "icon": "" },
+  "4270412": { "id": 4270412, "name": "거대 에키드나_메두사_카운터 성공", "desc": "", "classid": 0, "icon": "" },
+  "4270413": { "id": 4270413, "name": "거대 에키드나_환영 나비 소환_잡기 스킬", "desc": "", "classid": 0, "icon": "" },
+  "4270414": {
+    "id": 4270414,
+    "name": "거대 에키드나_환영 나비 소환_잡기 스킬 예외처리",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4270501": { "id": 4270501, "name": "매혹적인 꽃_씨앗 발사", "desc": "", "classid": 0, "icon": "" },
+  "454206": { "id": 454206, "name": "작은 매혹적인 꽃_꽃가루 자폭", "desc": "", "classid": 0, "icon": "" },
+  "4260310": { "id": 4260310, "name": "파리 지옥_잡아 먹기", "desc": "", "classid": 0, "icon": "" },
+  "4260311": { "id": 4260311, "name": "파리 지옥_놓아 주기", "desc": "", "classid": 0, "icon": "" },
+  "4260312": { "id": 4260312, "name": "파리 지옥_저지 성공시", "desc": "", "classid": 0, "icon": "" },
+  "4260313": { "id": 4260313, "name": "파리 지옥_다시 먹기 시도", "desc": "", "classid": 0, "icon": "" },
+  "4260314": { "id": 4260314, "name": "파리 지옥_다시 먹기 시도 실패", "desc": "", "classid": 0, "icon": "" },
+  "4269801": { "id": 4269801, "name": "뱀거울", "desc": "", "classid": 0, "icon": "" },
+  "4269802": { "id": 4269802, "name": "사냥감_왼오", "desc": "", "classid": 0, "icon": "" },
+  "4269803": { "id": 4269803, "name": "사냥감_오왼", "desc": "", "classid": 0, "icon": "" },
+  "4269804": { "id": 4269804, "name": "사냥감_뱀", "desc": "", "classid": 0, "icon": "" },
+  "4269805": { "id": 4269805, "name": "사냥감_파괴 성공", "desc": "", "classid": 0, "icon": "" },
+  "4269806": {
+    "id": 4269806,
+    "name": "거울돌진_좌측에서 우측 바라봄_최종 카운터",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4269807": {
+    "id": 4269807,
+    "name": "거울돌진_우측에서 좌측 바라봄_최종 카운터",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4269808": { "id": 4269808, "name": "전방 거울 비추기", "desc": "", "classid": 0, "icon": "" },
+  "4269809": { "id": 4269809, "name": "회전 후 전방 에너지 발사", "desc": "", "classid": 0, "icon": "" },
+  "4269810": { "id": 4269810, "name": "초강력 에너지 발사", "desc": "", "classid": 0, "icon": "" },
+  "4269811": {
+    "id": 4269811,
+    "name": "거울돌진_좌측에서 우측 바라봄_카운터 가능",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4269812": {
+    "id": 4269812,
+    "name": "거울돌진_우측에서 좌측 바라봄_카운터 가능",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4269813": { "id": 4269813, "name": "거울돌진_카운터 성공시", "desc": "", "classid": 0, "icon": "" },
+  "4269814": { "id": 4269814, "name": "거울 폭격_회전 후 전방 에너지 발사_1번", "desc": "", "classid": 0, "icon": "" },
+  "4269815": { "id": 4269815, "name": "거울 폭격_회전 후 전방 에너지 발사_2번", "desc": "", "classid": 0, "icon": "" },
+  "4269816": { "id": 4269816, "name": "거울돌진_카운터 실패시", "desc": "", "classid": 0, "icon": "" },
+  "4269817": {
+    "id": 4269817,
+    "name": "거울돌진_좌측에서 우측 바라봄_카운터 불가능",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4269818": {
+    "id": 4269818,
+    "name": "거울돌진_우측에서 좌측 바라봄_카운터 불가능",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4269819": { "id": 4269819, "name": "거울돌진_최종 카운터 성공시", "desc": "", "classid": 0, "icon": "" },
+  "4269820": { "id": 4269820, "name": "전방 에너지 발사", "desc": "", "classid": 0, "icon": "" },
+  "427207": {
+    "id": 427207,
+    "name": "마기에 빠진 비질리아_안광 발사_에키드나 레이드",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "427208": {
+    "id": 427208,
+    "name": "마기에 빠진 비질리아_스폰 스킬_에키드나 레이드",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4104012": { "id": 4104012, "name": "화염 고르곤_편대 이동_하강 잡기", "desc": "", "classid": 0, "icon": "" },
+  "4104013": { "id": 4104013, "name": "화염 고르곤_거대 고르곤_화염 브레스", "desc": "", "classid": 0, "icon": "" },
+  "4104014": { "id": 4104014, "name": "화염 고르곤_편대 이동_예외처리", "desc": "", "classid": 0, "icon": "" },
+  "4259813": { "id": 4259813, "name": "악마날개_에키드나 레이드_스폰 스킬", "desc": "", "classid": 0, "icon": "" },
+  "102092": { "id": 102092, "name": "에르아쉬_에키드나 레이드_스폰 스킬_비행", "desc": "", "classid": 0, "icon": "" },
+  "102093": {
+    "id": 102093,
+    "name": "에르아쉬_에키드나 레이드_스폰 스킬_공중 선회",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "102132": { "id": 102132, "name": "히르아_에키드나 레이드_강화 평타", "desc": "", "classid": 0, "icon": "" },
+  "102133": { "id": 102133, "name": "히르아_에키드나 레이드_단검 던지기_매혹", "desc": "", "classid": 0, "icon": "" },
+  "102134": { "id": 102134, "name": "히르아_에키드나 레이드_스폰 스킬", "desc": "", "classid": 0, "icon": "" },
+  "4270701": { "id": 4270701, "name": "투명NPC_매혹 타일 생성", "desc": "", "classid": 0, "icon": "" },
+  "4270702": { "id": 4270702, "name": "투명NPC_매혹 타일 제거", "desc": "", "classid": 0, "icon": "" },
+  "4270703": { "id": 4270703, "name": "투명NPC_매혹적인 꽃 스폰", "desc": "", "classid": 0, "icon": "" },
+  "4270704": { "id": 4270704, "name": "투명NPC_매혹적인 꽃 및 매혹타일 생성", "desc": "", "classid": 0, "icon": "" },
+  "4270705": { "id": 4270705, "name": "투명NPC_파리 지옥 스폰", "desc": "", "classid": 0, "icon": "" },
+  "4270706": {
+    "id": 4270706,
+    "name": "투명NPC_돌진 거울시_양옆 거울 전투 신호 부여_좌측",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4270707": {
+    "id": 4270707,
+    "name": "투명NPC_돌진 거울시_양옆 거울 전투 신호 부여_우측",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4270708": { "id": 4270708, "name": "투명NPC_추적하는 부채꼴 공격", "desc": "", "classid": 0, "icon": "" },
+  "4270709": { "id": 4270709, "name": "투명NPC_폭발하는 타일 공격_10초", "desc": "", "classid": 0, "icon": "" },
+  "4270710": { "id": 4270710, "name": "투명NPC_폭발하는 타일 공격_15초", "desc": "", "classid": 0, "icon": "" },
+  "4269901": {
+    "id": 4269901,
+    "name": "에키드나 뱀(격돌)_아그리스_격돌전조_보통",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4269902": {
+    "id": 4269902,
+    "name": "에키드나 뱀(격돌)_알키오네_격돌전조_보통",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4269903": { "id": 4269903, "name": "에키드나 뱀(격돌)_아그리스_격돌_보통", "desc": "", "classid": 0, "icon": "" },
+  "4269904": { "id": 4269904, "name": "에키드나 뱀(격돌)_알키오네_격돌_보통", "desc": "", "classid": 0, "icon": "" },
+  "4269905": {
+    "id": 4269905,
+    "name": "에키드나 뱀(격돌)_아그리스_격돌전조_어려움",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4269906": {
+    "id": 4269906,
+    "name": "에키드나 뱀(격돌)_알키오네_격돌전조_어려움",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4269907": { "id": 4269907, "name": "에키드나 뱀(격돌)_아그리스_격돌_어려움", "desc": "", "classid": 0, "icon": "" },
+  "4269908": { "id": 4269908, "name": "에키드나 뱀(격돌)_알키오네_격돌_어려움", "desc": "", "classid": 0, "icon": "" },
+  "4269909": { "id": 4269909, "name": "에키드나 뱀(격돌)_아그리스_히든격돌", "desc": "", "classid": 0, "icon": "" },
+  "4269910": { "id": 4269910, "name": "에키드나 뱀(격돌)_알키오네_히든격돌", "desc": "", "classid": 0, "icon": "" },
+  "405201": { "id": 405201, "name": "그림자 뱀_이동", "desc": "", "classid": 0, "icon": "" },
+  "405202": { "id": 405202, "name": "그림자 뱀_감금", "desc": "", "classid": 0, "icon": "" },
+  "405203": { "id": 405203, "name": "그림자 뱀_전진", "desc": "", "classid": 0, "icon": "" },
+  "405204": { "id": 405204, "name": "그림자 뱀_전진후 후진", "desc": "", "classid": 0, "icon": "" },
+  "405205": { "id": 405205, "name": "그림자 뱀_후진후 전진", "desc": "", "classid": 0, "icon": "" },
+  "405206": { "id": 405206, "name": "그림자 뱀_디스폰_바깥쪽", "desc": "", "classid": 0, "icon": "" },
+  "405207": { "id": 405207, "name": "그림자 뱀_디스폰_안쪽", "desc": "", "classid": 0, "icon": "" },
+  "4270901": { "id": 4270901, "name": "뱀허물_바스락거리기", "desc": "", "classid": 0, "icon": "" },
+  "4270902": { "id": 4270902, "name": "뱀허물_바스락거리기_페이크", "desc": "", "classid": 0, "icon": "" },
+  "4270903": { "id": 4270903, "name": "뱀허물_무너지기", "desc": "", "classid": 0, "icon": "" },
+  "4113401": { "id": 4113401, "name": "라하르트_에키드나레이드2관문_히든격돌", "desc": "", "classid": 0, "icon": "" },
   "4190401": { "id": 4190401, "name": "스톤피쉬_몸통 박치기", "desc": "", "classid": 0, "icon": "" },
   "4190402": { "id": 4190402, "name": "스톤피쉬_공중 폭격", "desc": "", "classid": 0, "icon": "" },
   "4190403": { "id": 4190403, "name": "스톤피쉬_하울링", "desc": "", "classid": 0, "icon": "" },
@@ -6562,6 +7081,22 @@
   "4266359": { "id": 4266359, "name": "베스칼_뒤돌아점프", "desc": "", "classid": 0, "icon": "" },
   "4266360": { "id": 4266360, "name": "베스칼_물기_약탐지", "desc": "", "classid": 0, "icon": "" },
   "4266361": { "id": 4266361, "name": "베스칼_날개 베기_약탐지", "desc": "", "classid": 0, "icon": "" },
+  "4266398": { "id": 4266398, "name": "베스칼_다운히트셋_테스트", "desc": "", "classid": 0, "icon": "" },
+  "4175204": { "id": 4175204, "name": "베른근위대기사_다르키엘놀이_사망스킬", "desc": "", "classid": 0, "icon": "" },
+  "4187003": { "id": 4187003, "name": "베른근위대궁수_다르키엘놀이_사망스킬", "desc": "", "classid": 0, "icon": "" },
+  "4215807": { "id": 4215807, "name": "태양의기사단_다르키엘놀이_사망스킬", "desc": "", "classid": 0, "icon": "" },
+  "4216102": { "id": 4216102, "name": "달의기사단궁수_다르키엘놀이_사망스킬", "desc": "", "classid": 0, "icon": "" },
+  "4216003": { "id": 4216003, "name": "달의기사단기사_다르키엘놀이_사망스킬", "desc": "", "classid": 0, "icon": "" },
+  "4217009": { "id": 4217009, "name": "키에사_다르키엘놀이_사망스킬", "desc": "", "classid": 0, "icon": "" },
+  "4217010": { "id": 4217010, "name": "키에사_다르키엘놀이_자폭스킬", "desc": "", "classid": 0, "icon": "" },
+  "4222407": { "id": 4222407, "name": "다르키엘_수확_연출용_발사체타입1", "desc": "", "classid": 0, "icon": "" },
+  "4222408": { "id": 4222408, "name": "다르키엘_이동구간_연출용 메테오", "desc": "", "classid": 0, "icon": "" },
+  "4222409": { "id": 4222409, "name": "다르키엘_이동구간_연출용 아이스에로우", "desc": "", "classid": 0, "icon": "" },
+  "4222410": { "id": 4222410, "name": "다르키엘_이동구간_연출용 욕망 에로우", "desc": "", "classid": 0, "icon": "" },
+  "4222411": { "id": 4222411, "name": "다르키엘_1페이즈_적군웨이브", "desc": "", "classid": 0, "icon": "" },
+  "4222412": { "id": 4222412, "name": "다르키엘_2페이즈_아군웨이브", "desc": "", "classid": 0, "icon": "" },
+  "4222413": { "id": 4222413, "name": "다르키엘_2페이즈_적군웨이브", "desc": "", "classid": 0, "icon": "" },
+  "4222414": { "id": 4222414, "name": "다르키엘_3페이즈_외곽", "desc": "", "classid": 0, "icon": "" },
   "445813": { "id": 445813, "name": "붉은코 보리스_내려찍기", "desc": "", "classid": 0, "icon": "" },
   "445814": { "id": 445814, "name": "붉은코 보리스_점프찍기", "desc": "", "classid": 0, "icon": "" },
   "445815": { "id": 445815, "name": "붉은코 보리스_쿵쿵따", "desc": "", "classid": 0, "icon": "" },
@@ -7081,13 +7616,7 @@
   },
   "4220019": { "id": 4220019, "name": "시련_하누마탄_초신성 폭발_1타", "desc": "", "classid": 0, "icon": "" },
   "4220020": { "id": 4220020, "name": "시련_하누마탄_초신성 폭발_2타", "desc": "", "classid": 0, "icon": "" },
-  "4220021": {
-    "id": 4220021,
-    "name": "시련_하누마탄_광역 대지 분출 (광역기)_카운터",
-    "desc": "",
-    "classid": 0,
-    "icon": ""
-  },
+  "4220021": { "id": 4220021, "name": "시련_하누마탄_광역 대지 분출 (광역기)", "desc": "", "classid": 0, "icon": "" },
   "4220022": {
     "id": 4220022,
     "name": "시련_하누마탄_발구르기 (필살기)_화염_저지",
@@ -7144,20 +7673,8 @@
     "classid": 0,
     "icon": ""
   },
-  "4220030": {
-    "id": 4220030,
-    "name": "시련_하누마탄_뎀프시 롤 (필살기)_화염_카운터",
-    "desc": "",
-    "classid": 0,
-    "icon": ""
-  },
-  "4220031": {
-    "id": 4220031,
-    "name": "시련_하누마탄_뎀프시 롤 (필살기)_냉기_카운터",
-    "desc": "",
-    "classid": 0,
-    "icon": ""
-  },
+  "4220030": { "id": 4220030, "name": "시련_하누마탄_원기옥(필살기)", "desc": "", "classid": 0, "icon": "" },
+  "4220031": { "id": 4220031, "name": "시련_하누마탄_원기옥(필살기)_저지성공", "desc": "", "classid": 0, "icon": "" },
   "4220032": { "id": 4220032, "name": "시련_하누마탄_2차 지역이동 도착 후 포효", "desc": "", "classid": 0, "icon": "" },
   "4220033": { "id": 4220033, "name": "시련_하누마탄_노모션 더미", "desc": "", "classid": 0, "icon": "" },
   "4220034": { "id": 4220034, "name": "시련_하누마탄_2족 그로기_찐무력", "desc": "", "classid": 0, "icon": "" },
@@ -7273,6 +7790,16 @@
     "classid": 0,
     "icon": ""
   },
+  "4220072": {
+    "id": 4220072,
+    "name": "시련_하누마탄_대쉬 어퍼 후 양손 내려찍기_원거리",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4220073": { "id": 4220073, "name": "시련_하누마탄_전진 강타_2차 카운터", "desc": "", "classid": 0, "icon": "" },
+  "4220074": { "id": 4220074, "name": "시련_하누마탄_전방 잽_사거리 무한 분리", "desc": "", "classid": 0, "icon": "" },
+  "4220075": { "id": 4220075, "name": "시련_하누마탄_거대화_해머링_카운터 없음", "desc": "", "classid": 0, "icon": "" },
   "4220081": {
     "id": 4220081,
     "name": "시련_하누마탄_거대화_음양보호막_선회 후 공격_좌",
@@ -7304,21 +7831,63 @@
   "4220085": { "id": 4220085, "name": "시련_하누마탄_1차 지역이동 도착 후 포효", "desc": "", "classid": 0, "icon": "" },
   "4220086": { "id": 4220086, "name": "시련_하누마탄_음양보호막 놀이용 이동", "desc": "", "classid": 0, "icon": "" },
   "4220096": { "id": 4220096, "name": "시련_하누마탄_음양보호막_이동스킬", "desc": "", "classid": 0, "icon": "" },
-  "4220097": {
-    "id": 4220097,
-    "name": "시련_하누마탄_잡은 후 마구 내려치기 (잡기)_놓기_PC사망",
+  "4220122": {
+    "id": 4220122,
+    "name": "시련_하누마탄_발구르기 (필살기)_화염_저지",
     "desc": "",
     "classid": 0,
     "icon": ""
   },
-  "4220098": {
-    "id": 4220098,
-    "name": "시련_하누마탄_거대화_잡고 진동 주입하기 (잡기)_놓기_PC사망",
+  "4220123": {
+    "id": 4220123,
+    "name": "시련_하누마탄_발구르기 (필살기)_냉기_저지",
     "desc": "",
     "classid": 0,
     "icon": ""
   },
-  "4220099": { "id": 4220099, "name": "시련_하누마탄_대기 상태", "desc": "", "classid": 0, "icon": "" },
+  "4220126": {
+    "id": 4220126,
+    "name": "시련_하누마탄_필살 환영 공격 (필살기)_화염_저지",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4220127": {
+    "id": 4220127,
+    "name": "시련_하누마탄_필살 환영 공격 (필살기)_냉기_저지",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4220130": { "id": 4220130, "name": "시련_하누마탄_원기옥(필살기)", "desc": "", "classid": 0, "icon": "" },
+  "4220158": {
+    "id": 4220158,
+    "name": "시련_하누마탄_페이즈전환_발구르기 (필살기)_화염_저지",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4220159": {
+    "id": 4220159,
+    "name": "시련_하누마탄_페이즈전환_발구르기 (필살기)_냉기_저지",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4220160": {
+    "id": 4220160,
+    "name": "시련_하누마탄_페이즈전환_필살 환영 공격 (필살기)_화염_저지",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4220161": {
+    "id": 4220161,
+    "name": "시련_하누마탄_페이즈전환_필살 환영 공격 (필살기)_냉기_저지",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
   "4207801": { "id": 4207801, "name": "나루니섬_회전함정_단방향_시계회전", "desc": "", "classid": 0, "icon": "" },
   "4207802": { "id": 4207802, "name": "나루니섬_회전함정_단방향_반시계회전", "desc": "", "classid": 0, "icon": "" },
   "4207803": { "id": 4207803, "name": "나루니섬_회전함정_양방향_시계회전", "desc": "", "classid": 0, "icon": "" },
@@ -7344,6 +7913,8 @@
   "444574": { "id": 444574, "name": "혼돈의 나크라세나_추격형 꼬리 전기", "desc": "", "classid": 0, "icon": "" },
   "444575": { "id": 444575, "name": "혼돈의 나크라세나_꼬리 지면 충격파", "desc": "", "classid": 0, "icon": "" },
   "444576": { "id": 444576, "name": "혼돈의 나크라세나_백대쉬", "desc": "", "classid": 0, "icon": "" },
+  "444577": { "id": 444577, "name": "혼돈의 나크라세나_그로기", "desc": "", "classid": 0, "icon": "" },
+  "444578": { "id": 444578, "name": "혼돈의 나크라세나_땅에서 스폰", "desc": "", "classid": 0, "icon": "" },
   "4268401": { "id": 4268401, "name": "전투형_카리오 악마화_전투_올려치기", "desc": "", "classid": 0, "icon": "" },
   "4268402": { "id": 4268402, "name": "전투형_카리오 악마화_전투_돌진 가르기", "desc": "", "classid": 0, "icon": "" },
   "4268403": { "id": 4268403, "name": "전투형_카리오 악마화_전투_데몰리션", "desc": "", "classid": 0, "icon": "" },
@@ -7352,6 +7923,36 @@
   "4268406": {
     "id": 4268406,
     "name": "전투형_카리오 악마화_전투_전방 검기 뿌리기",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4268407": { "id": 4268407, "name": "전투형)비누스 데런 남1_올려치기", "desc": "", "classid": 0, "icon": "" },
+  "4268408": { "id": 4268408, "name": "전투형)비누스 데런 남1_돌진 가르기", "desc": "", "classid": 0, "icon": "" },
+  "4268409": {
+    "id": 4268409,
+    "name": "전투형)비누스 데런 남2_무기버전_올려치기",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4268410": {
+    "id": 4268410,
+    "name": "전투형)비누스 데런 남2_무기버전_돌진 가르기",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4268411": {
+    "id": 4268411,
+    "name": "전투형)비누스 데런 남2_무기버전_데몰리션",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4268412": {
+    "id": 4268412,
+    "name": "전투형)비누스 데런 남2_무기버전_칼날 폭발",
     "desc": "",
     "classid": 0,
     "icon": ""
@@ -7381,14 +7982,8 @@
     "icon": ""
   },
   "4269304": { "id": 4269304, "name": "라크리마 수호자_파도_에너지 폭발", "desc": "", "classid": 0, "icon": "" },
-  "4269305": {
-    "id": 4269305,
-    "name": "라크리마 수호자_빛_좌우 베기 후 마법 발사",
-    "desc": "",
-    "classid": 0,
-    "icon": ""
-  },
-  "4269306": { "id": 4269306, "name": "라크리마 수호자_빛_정면 베기", "desc": "", "classid": 0, "icon": "" },
+  "4269305": { "id": 4269305, "name": "라크리마 수호자_공통_소환 모션용 1", "desc": "", "classid": 0, "icon": "" },
+  "4269306": { "id": 4269306, "name": "라크리마 수호자_공통_소환 모션용 2", "desc": "", "classid": 0, "icon": "" },
   "4269307": {
     "id": 4269307,
     "name": "라크리마 수호자_빛_타겟 회전 후 레이저 발사",
@@ -7431,56 +8026,131 @@
   "4269405": { "id": 4269405, "name": "독기 거대 덩어리_레이저 발사", "desc": "", "classid": 0, "icon": "" },
   "4269406": { "id": 4269406, "name": "독기 거대 덩어리_무력화 독지대", "desc": "", "classid": 0, "icon": "" },
   "4269501": { "id": 4269501, "name": "독기 덩어리_덮치기", "desc": "", "classid": 0, "icon": "" },
+  "4269502": { "id": 4269502, "name": "독기 덩어리_덮치기 후 분열 1", "desc": "", "classid": 0, "icon": "" },
+  "4269503": { "id": 4269503, "name": "독기 덩어리_사망", "desc": "", "classid": 0, "icon": "" },
+  "4269504": { "id": 4269504, "name": "독기 덩어리_사망 후 분열 1", "desc": "", "classid": 0, "icon": "" },
+  "4269505": { "id": 4269505, "name": "독기 덩어리_사망 후 분열 2", "desc": "", "classid": 0, "icon": "" },
+  "4269506": { "id": 4269506, "name": "독기 덩어리_스폰 연출", "desc": "", "classid": 0, "icon": "" },
   "4269601": { "id": 4269601, "name": "독기 끈끈이_휘둘러 잡기", "desc": "", "classid": 0, "icon": "" },
   "4269602": { "id": 4269602, "name": "독기 끈끈이_내려쳐 잡기", "desc": "", "classid": 0, "icon": "" },
-  "4268701": { "id": 4268701, "name": "다르키엘_순간이동_B", "desc": "", "classid": 0, "icon": "" },
-  "4268702": { "id": 4268702, "name": "다르키엘_멱살 잡고 내려치기", "desc": "", "classid": 0, "icon": "" },
-  "4268703": { "id": 4268703, "name": "다르키엘_전방 이동 후 휠윈드", "desc": "", "classid": 0, "icon": "" },
-  "4268704": { "id": 4268704, "name": "다르키엘_순간이동_A", "desc": "", "classid": 0, "icon": "" },
-  "4268705": { "id": 4268705, "name": "다르키엘_처형식", "desc": "", "classid": 0, "icon": "" },
-  "4268706": { "id": 4268706, "name": "다르키엘_마당 쓸어 검기 날리기", "desc": "", "classid": 0, "icon": "" },
-  "4268707": { "id": 4268707, "name": "다르키엘_후방 이동", "desc": "", "classid": 0, "icon": "" },
-  "4268708": { "id": 4268708, "name": "다르키엘_휘두르고 찍기", "desc": "", "classid": 0, "icon": "" },
-  "4268709": { "id": 4268709, "name": "다르키엘_대검 투척 A", "desc": "", "classid": 0, "icon": "" },
-  "4268710": { "id": 4268710, "name": "다르키엘_뒤돌아 3연 내려치기", "desc": "", "classid": 0, "icon": "" },
-  "4268711": { "id": 4268711, "name": "다르키엘_과다 출혈", "desc": "", "classid": 0, "icon": "" },
-  "4268712": { "id": 4268712, "name": "다르키엘_독무 뿌리기", "desc": "", "classid": 0, "icon": "" },
-  "4268713": { "id": 4268713, "name": "다르키엘_대검 투척 B", "desc": "", "classid": 0, "icon": "" },
-  "4268714": { "id": 4268714, "name": "다르키엘_추적", "desc": "", "classid": 0, "icon": "" },
-  "4268715": { "id": 4268715, "name": "다르키엘_카운터 휠윈드", "desc": "", "classid": 0, "icon": "" },
-  "4268716": { "id": 4268716, "name": "다르키엘_안개 흡수_1", "desc": "", "classid": 0, "icon": "" },
-  "4268717": { "id": 4268717, "name": "다르키엘_추적하는 안개", "desc": "", "classid": 0, "icon": "" },
-  "4268718": { "id": 4268718, "name": "다르키엘_기 모아 베기", "desc": "", "classid": 0, "icon": "" },
-  "4268719": { "id": 4268719, "name": "다르키엘_추적 내려찍기", "desc": "", "classid": 0, "icon": "" },
-  "4268720": { "id": 4268720, "name": "다르키엘_순간 이동 후 기습", "desc": "", "classid": 0, "icon": "" },
-  "4268721": { "id": 4268721, "name": "다르키엘_돌진 가르기", "desc": "", "classid": 0, "icon": "" },
-  "4268722": { "id": 4268722, "name": "다르키엘_대검 난무", "desc": "", "classid": 0, "icon": "" },
-  "4268723": { "id": 4268723, "name": "다르키엘_환영 창 투척", "desc": "", "classid": 0, "icon": "" },
-  "4268724": { "id": 4268724, "name": "다르키엘_환영 창 속박", "desc": "", "classid": 0, "icon": "" },
-  "4268725": { "id": 4268725, "name": "다르키엘_지면 가르기", "desc": "", "classid": 0, "icon": "" },
-  "4268901": { "id": 4268901, "name": "에키드나_뱀 부리기", "desc": "", "classid": 0, "icon": "" },
-  "4268902": { "id": 4268902, "name": "에키드나_휘두르고 점프", "desc": "", "classid": 0, "icon": "" },
-  "4268903": { "id": 4268903, "name": "에키드나_베일 감싸기", "desc": "", "classid": 0, "icon": "" },
-  "4268904": { "id": 4268904, "name": "에키드나_뱀 거울_잡기", "desc": "", "classid": 0, "icon": "" },
-  "4268905": { "id": 4268905, "name": "에키드나_뱀 거울_잡기 이탈시", "desc": "", "classid": 0, "icon": "" },
-  "4268906": { "id": 4268906, "name": "에키드나_잔상 돌진", "desc": "", "classid": 0, "icon": "" },
-  "4268907": { "id": 4268907, "name": "에키드나_황홀경", "desc": "", "classid": 0, "icon": "" },
-  "4268908": { "id": 4268908, "name": "에키드나_순간이동_1", "desc": "", "classid": 0, "icon": "" },
-  "4268909": { "id": 4268909, "name": "에키드나_순간이동_2", "desc": "", "classid": 0, "icon": "" },
-  "4268910": { "id": 4268910, "name": "에키드나_손바람", "desc": "", "classid": 0, "icon": "" },
-  "4268911": { "id": 4268911, "name": "에키드나_거울 뒤집기", "desc": "", "classid": 0, "icon": "" },
-  "4268912": { "id": 4268912, "name": "에키드나_낙화", "desc": "", "classid": 0, "icon": "" },
-  "4268913": { "id": 4268913, "name": "에키드나_사냥감_스킬 시작", "desc": "", "classid": 0, "icon": "" },
-  "4268914": { "id": 4268914, "name": "에키드나_사냥감_거울 파괴 실패", "desc": "", "classid": 0, "icon": "" },
-  "4268915": { "id": 4268915, "name": "에키드나_사냥감_거울 파괴 성공", "desc": "", "classid": 0, "icon": "" },
-  "4268916": { "id": 4268916, "name": "에키드나_샤프 커터", "desc": "", "classid": 0, "icon": "" },
-  "4268917": { "id": 4268917, "name": "에키드나_기운 당기기", "desc": "", "classid": 0, "icon": "" },
-  "4268918": { "id": 4268918, "name": "에키드나_천 매달기", "desc": "", "classid": 0, "icon": "" },
-  "4268919": { "id": 4268919, "name": "에키드나_분홍신", "desc": "", "classid": 0, "icon": "" },
-  "4268920": { "id": 4268920, "name": "에키드나_백허그_잡기", "desc": "", "classid": 0, "icon": "" },
-  "4268921": { "id": 4268921, "name": "에키드나_백허그_잡기 이탈시", "desc": "", "classid": 0, "icon": "" },
-  "4268922": { "id": 4268922, "name": "에키드나_공중 회전", "desc": "", "classid": 0, "icon": "" },
-  "4268923": { "id": 4268923, "name": "에키드나_후방 이동", "desc": "", "classid": 0, "icon": "" },
+  "4104007": { "id": 4104007, "name": "독기에 잠식된 가디언_브레스 공격", "desc": "", "classid": 0, "icon": "" },
+  "4104008": { "id": 4104008, "name": "독기에 잠식된 가디언_깨물고 내려치기", "desc": "", "classid": 0, "icon": "" },
+  "4104009": { "id": 4104009, "name": "독기에 잠식된 가디언_고공낙하", "desc": "", "classid": 0, "icon": "" },
+  "4104010": { "id": 4104010, "name": "독기에 잠식된 가디언_암흑탄", "desc": "", "classid": 0, "icon": "" },
+  "4104011": { "id": 4104011, "name": "독기에 잠식된 가디언_암흑탄_해상전투", "desc": "", "classid": 0, "icon": "" },
+  "4104018": { "id": 4104018, "name": "독기에 잠식된 가디언_브레스 공격 정면", "desc": "", "classid": 0, "icon": "" },
+  "4104019": { "id": 4104019, "name": "독기에 잠식된 가디언_브레스 공격_해상", "desc": "", "classid": 0, "icon": "" },
+  "4269500": { "id": 4269500, "name": "독기 덩어리_스폰 연출", "desc": "", "classid": 0, "icon": "" },
+  "4270101": { "id": 4270101, "name": "카제로스의 독기_파괴 연출", "desc": "", "classid": 0, "icon": "" },
+  "4270601": { "id": 4270601, "name": "쿠르잔 투명 몬스터_강화석 아우라", "desc": "", "classid": 0, "icon": "" },
+  "4270602": { "id": 4270602, "name": "쿠르잔 투명 몬스터_독기 파괴 연출", "desc": "", "classid": 0, "icon": "" },
+  "462804": {
+    "id": 462804,
+    "name": "가이스트 남 경비대_독기 디버프 감염 팩션 변경",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "464902": {
+    "id": 464902,
+    "name": "가이스트 여 경비대_독기 디버프 감염 팩션 변경",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "103614": { "id": 103614, "name": "독기 정령_회오리 폭발", "desc": "", "classid": 0, "icon": "" },
+  "4270603": { "id": 4270603, "name": "거대 강화석_파괴 연출", "desc": "", "classid": 0, "icon": "" },
+  "4270604": { "id": 4270604, "name": "쿠르잔 투명 몬스터_암흑탄", "desc": "", "classid": 0, "icon": "" },
+  "401606": { "id": 401606, "name": "진화한 독기 악마개_연속공격", "desc": "", "classid": 0, "icon": "" },
+  "401607": { "id": 401607, "name": "진화한 독기 악마개_양팔 내려찍기", "desc": "", "classid": 0, "icon": "" },
+  "401608": { "id": 401608, "name": "진화한 독기 악마개_할퀴기", "desc": "", "classid": 0, "icon": "" },
+  "401609": { "id": 401609, "name": "진화한 독기 악마개_점프 내려찍기", "desc": "", "classid": 0, "icon": "" },
+  "4271001": { "id": 4271001, "name": "프타_전투_스핀 커터", "desc": "", "classid": 0, "icon": "" },
+  "4271002": { "id": 4271002, "name": "프타_전투_블레이드 댄스", "desc": "", "classid": 0, "icon": "" },
+  "4271003": { "id": 4271003, "name": "프타_전투_어퍼 슬래쉬", "desc": "", "classid": 0, "icon": "" },
+  "4271004": { "id": 4271004, "name": "프타_전투_데스 센텐스", "desc": "", "classid": 0, "icon": "" },
+  "4271101": { "id": 4271101, "name": "아사르 데런_남_근거리_도끼_휘두르기", "desc": "", "classid": 0, "icon": "" },
+  "4271102": { "id": 4271102, "name": "아사르 데런_남_근거리_도끼_내려 찍기", "desc": "", "classid": 0, "icon": "" },
+  "4271103": {
+    "id": 4271103,
+    "name": "아사르 데런_남_근거리_도끼_아군 흡수_사망 스킬",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4403011": { "id": 4403011, "name": "독기 가고일_원거리_마력 발사", "desc": "", "classid": 0, "icon": "" },
+  "4271401": { "id": 4271401, "name": "아사르_데런_남_석궁_쇠뇌 발사", "desc": "", "classid": 0, "icon": "" },
+  "4271501": { "id": 4271501, "name": "아사르_데런_여_가면_휘두르기", "desc": "", "classid": 0, "icon": "" },
+  "4271502": { "id": 4271502, "name": "아사르_데런_여_가면_360도 휘두르기", "desc": "", "classid": 0, "icon": "" },
+  "4271601": { "id": 4271601, "name": "아사르_데런_남_가면_쌍검_쌍검 휘두르기", "desc": "", "classid": 0, "icon": "" },
+  "4271701": { "id": 4271701, "name": "전투형)비누스_데런_여2_무기버전_할퀴기", "desc": "", "classid": 0, "icon": "" },
+  "4271702": { "id": 4271702, "name": "전투형)비누스_데런_여2_무기버전_찌르기", "desc": "", "classid": 0, "icon": "" },
+  "4271703": {
+    "id": 4271703,
+    "name": "전투형)비누스_데런_여2_무기버전_검기 날리기",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4271704": {
+    "id": 4271704,
+    "name": "전투형)비누스_데런_여2_무기버전_도약 후 기운 발사",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4270801": { "id": 4270801, "name": "쿠르잔_아사르_렌_전투_3연타", "desc": "", "classid": 0, "icon": "" },
+  "4270802": {
+    "id": 4270802,
+    "name": "쿠르잔_아사르_렌_전투_소울드레인_데스위핑",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4270803": { "id": 4270803, "name": "쿠르잔_아사르_렌_전투_다크테일 스크래치", "desc": "", "classid": 0, "icon": "" },
+  "4270804": { "id": 4270804, "name": "쿠르잔_아사르_렌_전투_사이드 댄싱", "desc": "", "classid": 0, "icon": "" },
+  "4271801": { "id": 4271801, "name": "쿠르잔_변이된 살쾡이_할퀴기", "desc": "", "classid": 0, "icon": "" },
+  "4271901": { "id": 4271901, "name": "아사르_데런_여_가면_석궁_뇌쇠 발사체", "desc": "", "classid": 0, "icon": "" },
+  "4271902": {
+    "id": 4271902,
+    "name": "아사르_데런_여_가면_석궁_아군 흡수_사망 스킬",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "4272001": { "id": 4272001, "name": "아사르 데런_남_가면_휘두르기", "desc": "", "classid": 0, "icon": "" },
+  "4272002": { "id": 4272002, "name": "아사르 데런_남_가면_내려 찍기", "desc": "", "classid": 0, "icon": "" },
+  "4272101": { "id": 4272101, "name": "변이된 비누스 데런_2연 휘두르기", "desc": "", "classid": 0, "icon": "" },
+  "4272102": { "id": 4272102, "name": "변이된 비누스 데런_회전 후 내려치기", "desc": "", "classid": 0, "icon": "" },
+  "4272103": { "id": 4272103, "name": "변이된 비누스 데런_3연 베기", "desc": "", "classid": 0, "icon": "" },
+  "4272104": { "id": 4272104, "name": "변이된 비누스 데런_돌진 공격", "desc": "", "classid": 0, "icon": "" },
+  "4272201": { "id": 4272201, "name": "네페르_전투_사신화 평타", "desc": "", "classid": 0, "icon": "" },
+  "4272202": { "id": 4272202, "name": "네페르_전투_루나팃 엣지", "desc": "", "classid": 0, "icon": "" },
+  "4272203": { "id": 4272203, "name": "네페르_전투_소울 시너스", "desc": "", "classid": 0, "icon": "" },
+  "4272204": { "id": 4272204, "name": "네페르_전투_소울 드레인", "desc": "", "classid": 0, "icon": "" },
+  "4272301": { "id": 4272301, "name": "게메트_전투_파워 브레이크", "desc": "", "classid": 0, "icon": "" },
+  "4272302": { "id": 4272302, "name": "게메트_전투_소드 스톰", "desc": "", "classid": 0, "icon": "" },
+  "4272303": { "id": 4272303, "name": "게메트_전투_블러드 러쉬", "desc": "", "classid": 0, "icon": "" },
+  "4272304": { "id": 4272304, "name": "게메트_전투_헬 블레이드", "desc": "", "classid": 0, "icon": "" },
+  "4272401": { "id": 4272401, "name": "방랑자 루테란_전투_연속 검기 날리기", "desc": "", "classid": 0, "icon": "" },
+  "4272402": { "id": 4272402, "name": "방랑자 루테란_전투_횡 베기 후 찌르기", "desc": "", "classid": 0, "icon": "" },
+  "4272403": { "id": 4272403, "name": "방랑자 루테란_전투_공중 베기", "desc": "", "classid": 0, "icon": "" },
+  "4272404": { "id": 4272404, "name": "방랑자 루테란_전투_빛의 기둥", "desc": "", "classid": 0, "icon": "" },
+  "4272405": { "id": 4272405, "name": "방랑자 루테란_전투_빛의 일격", "desc": "", "classid": 0, "icon": "" },
+  "4272501": { "id": 4272501, "name": "각성 샨디_전투_블랙홀 생성 후 베기", "desc": "", "classid": 0, "icon": "" },
+  "4272502": { "id": 4272502, "name": "각성 샨디_전투_영역 전개 후 베기", "desc": "", "classid": 0, "icon": "" },
+  "4272503": { "id": 4272503, "name": "각성 샨디_전투_환영 벽으로 밀기", "desc": "", "classid": 0, "icon": "" },
+  "4272504": { "id": 4272504, "name": "각성 샨디_전투_환영 무기 날리기", "desc": "", "classid": 0, "icon": "" },
+  "1903537": { "id": 1903537, "name": "각성 진저웨일_전투_좌우 베기", "desc": "", "classid": 0, "icon": "" },
+  "1903538": {
+    "id": 1903538,
+    "name": "각성 진저웨일_전투_휘두른 후 거대 환영 창 베기",
+    "desc": "",
+    "classid": 0,
+    "icon": ""
+  },
+  "1903539": { "id": 1903539, "name": "각성 진저웨일_전투_환영 분신 찌르기", "desc": "", "classid": 0, "icon": "" },
+  "1903541": { "id": 1903541, "name": "각성 진저웨일_전투_환영 분신 유성강천", "desc": "", "classid": 0, "icon": "" },
   "9913000": { "id": 9913000, "name": "암살자 평타", "desc": "", "classid": 401, "icon": "" },
   "9913010": { "id": 9913010, "name": "맨손 공격", "desc": "", "classid": 401, "icon": "" },
   "9913020": { "id": 9913020, "name": "고속 이동", "desc": "", "classid": 401, "icon": "bl_skill_01_22.png" },
@@ -8119,7 +8789,7 @@
     "desc": "",
     "classid": 303,
     "icon": "if_skill_01_12.png",
-    "identitycategory": "infighter_shock"
+    "identitycategory": "infighter_vigor"
   },
   "9923170": {
     "id": 9923170,
@@ -11530,7 +12200,7 @@
     "desc": "",
     "classid": 303,
     "icon": "if_skill_01_12.png",
-    "identitycategory": "infighter_shock"
+    "identitycategory": "infighter_vigor"
   },
   "9823180": {
     "id": 9823180,
@@ -12184,16 +12854,14 @@
     "name": "[리퍼][단검] 나이트메어",
     "desc": "",
     "classid": 404,
-    "icon": "rp_skill_01_6.png",
-    "identitycategory": "warlord_lance"
+    "icon": "rp_skill_01_24.png"
   },
   "9826100": {
     "id": 9826100,
     "name": "[리퍼][단검] 나이트메어 이동",
     "desc": "",
     "classid": 404,
-    "icon": "rp_skill_01_6.png",
-    "identitycategory": "warlord_lance"
+    "icon": "rp_skill_01_24.png"
   },
   "9826570": {
     "id": 9826570,
@@ -12981,6 +13649,7 @@
   "9932002": { "id": 9932002, "name": "[기상술사] 스폰 스킬", "desc": "", "classid": 603, "icon": "" },
   "9945005": { "id": 9945005, "name": "[슬레이어] 스폰 스킬", "desc": "", "classid": 112, "icon": "" },
   "9946002": { "id": 9946002, "name": "[소울이터] 스폰 스킬", "desc": "", "classid": 405, "icon": "" },
+  "9947002": { "id": 9947002, "name": "[브레이커] 일리아칸 스폰 스킬", "desc": "", "classid": 313, "icon": "" },
   "9919003": { "id": 9919003, "name": "[아르카나] 부활 동작", "desc": "", "classid": 202, "icon": "" },
   "9921003": { "id": 9921003, "name": "[바드] 부활 동작", "desc": "", "classid": 204, "icon": "" },
   "9939003": { "id": 9939003, "name": "[스트라이커] 부활 동작", "desc": "", "classid": 312, "icon": "" },
@@ -13006,6 +13675,7 @@
   "9932003": { "id": 9932003, "name": "[기상술사] 부활 동작", "desc": "", "classid": 603, "icon": "" },
   "9945006": { "id": 9945006, "name": "[슬레이어] 부활 동작", "desc": "", "classid": 112, "icon": "" },
   "9946003": { "id": 9946003, "name": "[소울이터] 일리아칸 부활 동작", "desc": "", "classid": 405, "icon": "" },
+  "9947003": { "id": 9947003, "name": "[브레이커] 일리아칸 부활 동작", "desc": "", "classid": 313, "icon": "" },
   "9919004": { "id": 9919004, "name": "[아르카나] 사망 연출", "desc": "", "classid": 202, "icon": "" },
   "9921004": { "id": 9921004, "name": "[바드] 사망 연출", "desc": "", "classid": 204, "icon": "" },
   "9939004": { "id": 9939004, "name": "[스트라이커] 사망 연출", "desc": "", "classid": 312, "icon": "" },
@@ -13031,6 +13701,7 @@
   "9932004": { "id": 9932004, "name": "[기상술사] 사망 연출", "desc": "", "classid": 602, "icon": "" },
   "9945007": { "id": 9945007, "name": "[슬레이어] 사망 연출", "desc": "", "classid": 112, "icon": "" },
   "9946004": { "id": 9946004, "name": "[소울이터] 일리아칸 사망 연출", "desc": "", "classid": 405, "icon": "" },
+  "9947004": { "id": 9947004, "name": "[브레이커] 일리아칸 사망 연출", "desc": "", "classid": 313, "icon": "" },
   "9832120": {
     "id": 9832120,
     "name": "[기상술사][몰아치기]",
@@ -13414,6 +14085,7 @@
   "9832010": { "id": 9832010, "name": "[기상술사] 볼다이크 스폰 스킬", "desc": "", "classid": 603, "icon": "" },
   "9845010": { "id": 9845010, "name": "[슬레이어] 볼다이크 스폰 스킬", "desc": "", "classid": 112, "icon": "" },
   "9846010": { "id": 9846010, "name": "[소울이터] 볼다이크 스폰 스킬", "desc": "", "classid": 405, "icon": "" },
+  "9847010": { "id": 9847010, "name": "[브레이커] 볼다이크 스폰 스킬", "desc": "", "classid": 313, "icon": "" },
   "9819011": { "id": 9819011, "name": "[아르카나] 볼다이크 사망 스킬", "desc": "", "classid": 202, "icon": "" },
   "9821011": { "id": 9821011, "name": "[바드] 볼다이크 사망 스킬", "desc": "", "classid": 204, "icon": "" },
   "9839011": { "id": 9839011, "name": "[스트라이커] 볼다이크 사망 스킬", "desc": "", "classid": 312, "icon": "" },
@@ -13439,6 +14111,7 @@
   "9832011": { "id": 9832011, "name": "[기상술사] 볼다이크 사망 스킬", "desc": "", "classid": 603, "icon": "" },
   "9845011": { "id": 9845011, "name": "[슬레이어] 볼다이크 사망 스킬", "desc": "", "classid": 112, "icon": "" },
   "9846011": { "id": 9846011, "name": "[소울이터] 볼다이크 사망 스킬", "desc": "", "classid": 405, "icon": "" },
+  "9847011": { "id": 9847011, "name": "[브레이커] 볼다이크 사망 스킬", "desc": "", "classid": 313, "icon": "" },
   "9819012": { "id": 9819012, "name": "[아르카나] 어둠군단장 사망 스킬", "desc": "", "classid": 202, "icon": "" },
   "9821012": { "id": 9821012, "name": "[바드] 어둠군단장 사망 스킬", "desc": "", "classid": 204, "icon": "" },
   "9839012": { "id": 9839012, "name": "[스트라이커] 어둠군단장 사망 스킬", "desc": "", "classid": 312, "icon": "" },
@@ -13464,6 +14137,7 @@
   "9832012": { "id": 9832012, "name": "[기상술사] 어둠군단장 사망 스킬", "desc": "", "classid": 603, "icon": "" },
   "9845012": { "id": 9845012, "name": "[슬레이어] 어둠군단장 사망 스킬", "desc": "", "classid": 112, "icon": "" },
   "9846012": { "id": 9846012, "name": "[소울이터] 어둠군단장 사망 스킬", "desc": "", "classid": 405, "icon": "" },
+  "9847012": { "id": 9847012, "name": "[브레이커] 어둠군단장 사망 스킬", "desc": "", "classid": 313, "icon": "" },
   "9946000": { "id": 9946000, "name": "[소울이터] 평타", "desc": "", "classid": 405, "icon": "" },
   "9946001": { "id": 9946001, "name": "[소울이터] 사신화 평타", "desc": "", "classid": 405, "icon": "" },
   "9946010": { "id": 9946010, "name": "[소울이터] [맨손 공격]", "desc": "", "classid": 405, "icon": "" },
@@ -13479,7 +14153,7 @@
     "name": "[소울이터] [이동기] [사신화] 사이드 대쉬",
     "desc": "",
     "classid": 405,
-    "icon": "se_skill_01_2.png"
+    "icon": "se_skill_01_1.png"
   },
   "9946040": {
     "id": 9946040,
@@ -13495,7 +14169,7 @@
     "classid": 405,
     "icon": "se_skill_01_3.png"
   },
-  "9946050": { "id": 9946050, "name": "[소울이터] 사신화", "desc": "", "classid": 405, "icon": "se_skill_01_0.png" },
+  "9946050": { "id": 9946050, "name": "[소울이터] 사신화", "desc": "", "classid": 405, "icon": "se_skill_01_2.png" },
   "9946200": {
     "id": 9946200,
     "name": "[소울이터][살귀] 하베스트",
@@ -13508,14 +14182,14 @@
     "name": "[소울이터][살귀] 러스트 네일",
     "desc": "",
     "classid": 405,
-    "icon": "se_skill_01_7.png"
+    "icon": "se_skill_01_6.png"
   },
   "9946240": {
     "id": 9946240,
     "name": "[소울이터][살귀] 고스트 스텝",
     "desc": "",
     "classid": 405,
-    "icon": "se_skill_01_9.png"
+    "icon": "se_skill_01_8.png"
   },
   "9946250": {
     "id": 9946250,
@@ -13573,6 +14247,134 @@
     "classid": 404,
     "icon": "rp_skill_01_22.png",
     "identitycategory": "warlord_lance"
+  },
+  "9947000": {
+    "id": 9947000,
+    "name": "맨손 공격",
+    "desc": "",
+    "classid": 313,
+    "icon": "",
+    "identitycategory": "infighter_normal"
+  },
+  "9947010": {
+    "id": 9947010,
+    "name": "기본 공격 (평타)",
+    "desc": "",
+    "classid": 313,
+    "icon": "",
+    "identitycategory": "infighter_normal"
+  },
+  "9947011": {
+    "id": 9947011,
+    "name": "기본 공격 (권왕태세)",
+    "desc": "",
+    "classid": 313,
+    "icon": "",
+    "identitycategory": "infighter_normal"
+  },
+  "9947020": {
+    "id": 9947020,
+    "name": "기본 공격 (수라결)",
+    "desc": "",
+    "classid": 313,
+    "icon": "if_skill_01_3.png",
+    "identitycategory": "infighter_normal"
+  },
+  "9947030": {
+    "id": 9947030,
+    "name": "이동기",
+    "desc": "",
+    "classid": 313,
+    "icon": "if_skill_01_16.png",
+    "identitycategory": "infighter_normal"
+  },
+  "9947031": {
+    "id": 9947031,
+    "name": "이동기 (수라결)",
+    "desc": "",
+    "classid": 313,
+    "icon": "if_skill_01_16.png",
+    "identitycategory": "infighter_normal"
+  },
+  "9947050": {
+    "id": 9947050,
+    "name": "기상기",
+    "desc": "",
+    "classid": 313,
+    "icon": "if_skill_01_17.png",
+    "identitycategory": "infighter_normal"
+  },
+  "9947051": {
+    "id": 9947051,
+    "name": "PVP 강제 기상",
+    "desc": "",
+    "classid": 313,
+    "icon": "if_skill_01_17.png",
+    "identitycategory": "infighter_normal"
+  },
+  "9947110": {
+    "id": 9947110,
+    "name": "연쇄 돌풍",
+    "desc": "",
+    "classid": 313,
+    "icon": "if_skill_01_2.png",
+    "identitycategory": "infighter_vigor"
+  },
+  "9947120": {
+    "id": 9947120,
+    "name": "비뢰격",
+    "desc": "",
+    "classid": 313,
+    "icon": "if_skill_01_14.png",
+    "identitycategory": "infighter_vigor"
+  },
+  "9947130": {
+    "id": 9947130,
+    "name": "유성 낙하",
+    "desc": "",
+    "classid": 313,
+    "icon": "if_skill_01_5.png",
+    "identitycategory": "infighter_vigor"
+  },
+  "9947150": {
+    "id": 9947150,
+    "name": "연속전격",
+    "desc": "",
+    "classid": 313,
+    "icon": "if_skill_01_8.png",
+    "identitycategory": "infighter_vigor"
+  },
+  "9947170": {
+    "id": 9947170,
+    "name": "금강난격",
+    "desc": "",
+    "classid": 313,
+    "icon": "if_skill_01_19.png",
+    "identitycategory": "infighter_vigor"
+  },
+  "9947200": {
+    "id": 9947200,
+    "name": "휩쓸기",
+    "desc": "",
+    "classid": 313,
+    "icon": "if_skill_01_24.png",
+    "identitycategory": "infighter_shock"
+  },
+  "9947260": {
+    "id": 9947260,
+    "name": "천기심권",
+    "desc": "",
+    "classid": 313,
+    "icon": "if_skill_01_11.png",
+    "identitycategory": "infighter_shock"
+  },
+  "9947270": {
+    "id": 9947270,
+    "name": "파천섬광",
+    "desc": "",
+    "classid": 313,
+    "icon": "if_skill_01_7.png",
+    "identitycategory": "infighter_shock"
   },
   "100060": { "id": 100060, "name": "오염된 나팔나방_분진발사", "desc": "", "classid": 0, "icon": "" },
   "100061": { "id": 100061, "name": "오염된 벌침나방_스킬발사", "desc": "", "classid": 0, "icon": "" },
@@ -21637,6 +22439,7 @@
     "icon": ""
   },
   "4156560": { "id": 4156560, "name": "키즈라_스킬효과 테스트_무력화 비초기화", "desc": "", "classid": 0, "icon": "" },
+  "4156561": { "id": 4156561, "name": "키즈라_NpcSkillMove_테스트", "desc": "", "classid": 0, "icon": "" },
   "4148101": { "id": 4148101, "name": "카이슈르_연속 베기", "desc": "", "classid": 0, "icon": "" },
   "4148102": { "id": 4148102, "name": "카이슈르_마기 벼락 발사", "desc": "", "classid": 0, "icon": "" },
   "4148103": { "id": 4148103, "name": "카이슈르_환영 마검 소환", "desc": "", "classid": 0, "icon": "" },
@@ -33697,70 +34500,70 @@
   "13010": { "id": 13010, "name": "Hand Attack", "desc": "Hand Attack", "classid": 401, "icon": "" },
   "13020": {
     "id": 13020,
-    "name": "High-Speed Move",
+    "name": "고속 이동",
     "desc": "Rapidly slide forward.",
     "classid": 401,
     "icon": "bl_skill_01_22.png"
   },
   "13025": {
     "id": 13025,
-    "name": "Stand Up",
+    "name": "기상기",
     "desc": "Get back on your feet quickly by tumbling.",
     "classid": 401,
     "icon": "bl_skill_01_23.png"
   },
   "13030": {
     "id": 13030,
-    "name": "Surprise Attack",
+    "name": "서프라이즈 어택",
     "desc": "Dash <FONT COLOR='#ffff99'>4 meters</FONT> forward and slash at foes with your Dual Blades to inflict <$MACRO physic @1:130300/> Damage.",
     "classid": 401,
     "icon": "bl_skill_01_0.png"
   },
   "13040": {
     "id": 13040,
-    "name": "Upper Slash",
+    "name": "어퍼 슬래쉬",
     "desc": "Deliver a swift slash with your Dual Blades to inflict <$MACRO physic @1:130400/> Damage, then slash upward to create a deadly tornado that inflicts <$MACRO physic @1:130401/> Damage and launches foes in the air.",
     "classid": 401,
     "icon": "bl_skill_01_1.png"
   },
   "13050": {
     "id": 13050,
-    "name": "Wind Cut",
+    "name": "윈드 컷",
     "desc": "Quickly slash forward and create a gust of Dual Blades that lasts <FONT COLOR='#ffff99'>1.5s</FONT>, which inflicts up to <FONT COLOR='#00ccff'><$CALC_COMMA ((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)* (<$TABLE_SKILLEFFECT ValueF 130501/>/10000)+((<$TABLE_SKILLEFFECT ValueA 130501/> + <$TABLE_SKILLEFFECT ValueB 130501/>)/2))*5/></FONT> Damage and pulls foes close. Pushed foes are launched back in the air.",
     "classid": 401,
     "icon": "bl_skill_01_6.png"
   },
   "13060": {
     "id": 13060,
-    "name": "Fallstar",
+    "name": "폴스타",
     "desc": "Slash upward to inflict <$MACRO physic @1:130600/> Damage and launch foes into the air then attack them in the air with up to <FONT COLOR='#ffbb00'><$CALC_COMMA ((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)* (<$TABLE_SKILLEFFECT ValueF 130605/>/10000)+((<$TABLE_SKILLEFFECT ValueA 130605/> + <$TABLE_SKILLEFFECT ValueB 130605/>)/2))*2 +((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)* (<$TABLE_SKILLEFFECT ValueF 251703/>/10000)+((<$TABLE_SKILLEFFECT ValueA 130605/> + <$TABLE_SKILLEFFECT ValueB 130605/>)/2))*2/></FONT> Damage, and spin with your Dual Blades to cause <$MACRO physic @1:130607/> Damage, slamming foes onto the ground.",
     "classid": 401,
     "icon": "bl_skill_01_13.png"
   },
   "13070": {
     "id": 13070,
-    "name": "Spincutter",
+    "name": "스핀 커터",
     "desc": "Spin toward the target location and move <FONT COLOR='#ffff99'>5 meters</FONT>, inflicting up to <FONT COLOR='#ffbb00'><$CALC_COMMA ((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)* (<$TABLE_SKILLEFFECT ValueF 130700/>/10000)+((<$TABLE_SKILLEFFECT ValueA 130700/> + <$TABLE_SKILLEFFECT ValueB 130700/>)/2))*2/></FONT> Damage. This skill can be used up to <FONT COLOR='#ffff99'>2</FONT> times in a row.",
     "classid": 401,
     "icon": "bl_skill_01_8.png"
   },
   "13080": {
     "id": 13080,
-    "name": "Blade Dance",
+    "name": "블레이드 댄스",
     "desc": "Hack at foes for up to <FONT COLOR='#ffff99'>2s</FONT> and deliver <FONT COLOR='#ffff99'>7</FONT> blows, inflicting <FONT COLOR='#ffbb00'><$CALC_COMMA ((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)* (<$TABLE_SKILLEFFECT ValueF 130800/>/10000)+((<$TABLE_SKILLEFFECT ValueA 130800/> + <$TABLE_SKILLEFFECT ValueB 130800/>)/2))*7/></FONT> Damage, and another <$MACRO physic @1:130801/> Damage with the finishing blow. Pushed foes are launched back in the air.",
     "classid": 401,
     "icon": "bl_skill_01_2.png"
   },
   "13090": {
     "id": 13090,
-    "name": "Dark Axel",
+    "name": "다크 악셀",
     "desc": "Jump <FONT COLOR='#ffff99'>6 meters</FONT> forward, pushing foes back and inflicting <FONT COLOR='#ffbb00'><$CALC_COMMA ((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)* (<$TABLE_SKILLEFFECT ValueF 130900/>/10000)+((<$TABLE_SKILLEFFECT ValueA 130900/> + <$TABLE_SKILLEFFECT ValueB 130900/>)/2))*3/></FONT> Damage. Deliver a powerful slash with your longsword upon landing to inflict <$MACRO physic @1:130901/> Damage and knock the foes away. Pushed foes are launched back in the air.",
     "classid": 401,
     "icon": "bl_skill_01_11.png"
   },
   "13100": {
     "id": 13100,
-    "name": "Death Sentence",
+    "name": "데스 센텐스",
     "desc": "Leap <FONT COLOR='#ffff99'>4 meters</FONT> forward and thrust downward, inflicting <$MACRO physic @1:131000/> Damage and slamming foes onto the ground.",
     "classid": 401,
     "icon": "bl_skill_01_4.png"
@@ -33780,7 +34583,7 @@
     "desc": "Rapidly slide forward.",
     "classid": 402,
     "icon": "bl_skill_01_22.png",
-    "groups": [991100, 1410005, 12000002, 14000000, 14000001]
+    "groups": [991100, 991101, 1410005, 12000002, 14000000, 14000001]
   },
   "25025": {
     "id": 25025,
@@ -34090,7 +34893,7 @@
   "25350": {
     "id": 25350,
     "name": "Blade Assault",
-    "desc": "Focus energy to inflict <$MACRO physic @1:253500/> Damage and pull in foes. Hold to move forward while viciously slashing at foes for up to <FONT COLOR='#ffbb00'><$CALC_COMMA ((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)* (<$TABLE_SKILLEFFECT ValueF 253504/>/10000)+((<$TABLE_SKILLEFFECT ValueA 253504/> + <$TABLE_SKILLEFFECT ValueB 253504/>)/2))*12/></FONT> Damage. When the Holding ends inflict <FONT COLOR='#ffbb00'><$CALC_COMMA ((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)* (<$TABLE_SKILLEFFECT ValueF 253507/>/10000)+((<$TABLE_SKILLEFFECT ValueA 253507/> + <$TABLE_SKILLEFFECT ValueB 253507/>)/2))*2/></FONT> Damage as you summon spiritual blades, then hurl them at once and inflict <FONT COLOR='#ffbb00'><$CALC_COMMA ((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)* (<$TABLE_SKILLEFFECT ValueF 253509/>/10000)+((<$TABLE_SKILLEFFECT ValueA 253509/> + <$TABLE_SKILLEFFECT ValueB 253509/>)/2))*4 +((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)* (<$TABLE_SKILLEFFECT ValueF 253510/>/10000)+((<$TABLE_SKILLEFFECT ValueA 253510/> + <$TABLE_SKILLEFFECT ValueB 253510/>)/2))/></FONT> Damage, knocking foes away. Pushed foes are launched back in the air.",
+    "desc": "Focus energy to inflict <$MACRO physic @1:253500/> Damage and pull in foes. Hold to move forward while viciously slashing at foes for up to <FONT COLOR='#ffbb00'><$CALC_COMMA ((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)* (<$TABLE_SKILLEFFECT ValueF 253504/>/10000)+((<$TABLE_SKILLEFFECT ValueA 253504/> + <$TABLE_SKILLEFFECT ValueB 253504/>)/2))*12/></FONT> Damage. When the Holding ends inflict <FONT COLOR='#ffbb00'><$CALC_COMMA ((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)* (<$TABLE_SKILLEFFECT ValueF 253507/>/10000)+((<$TABLE_SKILLEFFECT ValueA 253507/> + <$TABLE_SKILLEFFECT ValueB 253507/>)/2))*2/></FONT> Damage as you summon countless blades, then hurl them at once and inflict <FONT COLOR='#ffbb00'><$CALC_COMMA ((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)* (<$TABLE_SKILLEFFECT ValueF 253509/>/10000)+((<$TABLE_SKILLEFFECT ValueA 253509/> + <$TABLE_SKILLEFFECT ValueB 253509/>)/2))*4 +((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)* (<$TABLE_SKILLEFFECT ValueF 253510/>/10000)+((<$TABLE_SKILLEFFECT ValueA 253510/> + <$TABLE_SKILLEFFECT ValueB 253510/>)/2))/></FONT> Damage, knocking foes away. Pushed foes are launched back in the air.",
     "classid": 402,
     "icon": "bl_skill_01_19.png",
     "groups": [
@@ -34160,7 +34963,7 @@
     "classid": 403,
     "icon": "dm_skill_01_0.png",
     "identitycategory": "demonic_normal",
-    "groups": [991100, 1410005, 12000002, 14000000, 14000001]
+    "groups": [991100, 991101, 1410005, 12000002, 14000000, 14000001]
   },
   "27025": {
     "id": 27025,
@@ -34451,7 +35254,7 @@
     "classid": 403,
     "icon": "dm_skill_01_19.png",
     "identitycategory": "demonic_demon",
-    "groups": [991100, 1410005, 12000002, 14000000, 14000001]
+    "groups": [991100, 991101, 1410005, 12000002, 14000000, 14000001]
   },
   "27810": {
     "id": 27810,
@@ -34544,70 +35347,70 @@
   "12010": { "id": 12010, "name": "Hand Attack", "desc": "Hand Attack", "classid": 301, "icon": "" },
   "12020": {
     "id": 12020,
-    "name": "Sky Shattering Blow",
+    "name": "붕천퇴",
     "desc": "Perform a roundhouse kick, inflicting <$MACRO physic @1:120200/> Damage. Use the skill again to kick upward, sending targets flying for <$MACRO physic @1:120201/> Damage. You can change your direction during additional attacks.",
     "classid": 301,
     "icon": "bm_skill_01_14.png"
   },
   "12030": {
     "id": 12030,
-    "name": "Stand Up",
+    "name": "기상 액션",
     "desc": "While down, spin around and jump to move to another location.",
     "classid": 301,
     "icon": "bm_skill_01_22.png"
   },
   "12040": {
     "id": 12040,
-    "name": "Lightning Kick",
+    "name": "뇌명각",
     "desc": "Deliver a flurry of kicks that inflict <$MACRO physic @1:120400/> [Lightning] Damage <FONT COLOR='#ffff99'>3</FONT> times, and strike down at foes causing <$MACRO physic @1:120401/> Damage. Downed foes are lifted off the ground, and airborne foes are slammed onto the ground for <$MACRO physic @1:120403/> Damage.",
     "classid": 301,
     "icon": "bm_skill_01_18.png"
   },
   "12050": {
     "id": 12050,
-    "name": "Triple Fist",
+    "name": "삼연권",
     "desc": "Violently swing your fists <FONT COLOR='#ffff99'>3</FONT> times while advancing <FONT COLOR='#ffff99'>4 meters</FONT> forward, inflicting <$MACRO physic @1:120500/>, <$MACRO physic @1:120500/>, and <$MACRO physic @1:120501/> Damage.",
     "classid": 301,
     "icon": "bm_skill_01_6.png"
   },
   "12060": {
     "id": 12060,
-    "name": "Charging Steps",
+    "name": "전진답보(이동기)",
     "desc": "Quickly charge a short distance.",
     "classid": 301,
     "icon": "bm_skill_01_15.png"
   },
   "12070": {
     "id": 12070,
-    "name": "Flash Heat Fang",
+    "name": "섬열란아",
     "desc": "Throw punches to inflict <FONT COLOR='#ffbb00'><$CALC_COMMA ((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)* (<$TABLE_SKILLEFFECT ValueF 120700/>/10000)+((<$TABLE_SKILLEFFECT ValueA 120700/> + <$TABLE_SKILLEFFECT ValueB 120700/>)/2))*4/></FONT> total Damage over <FONT COLOR='#ffff99'>9</FONT> hits, followed by a finishing blow that inflicts <$MACRO physic @1:120701/> Damage.",
     "classid": 301,
     "icon": "bm_skill_01_3.png"
   },
   "12090": {
     "id": 12090,
-    "name": "Moon Flash Kick",
+    "name": "월섬각",
     "desc": "Charge forward while kicking, inflicting <$MACRO physic @1:120900/>, <$MACRO physic @1:120901/> Damage. Press the skill hotkey <FONT COLOR='#ffff99'>3</FONT> times to deliver <FONT COLOR='#ffff99'>4</FONT> kicks at amazing speed that inflict <FONT COLOR='#ffbb00'><$CALC_COMMA ((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)* (<$TABLE_SKILLEFFECT ValueF 120902/>/10000)+((<$TABLE_SKILLEFFECT ValueA 120902/> + <$TABLE_SKILLEFFECT ValueB 120902/>)/2))*2/></FONT> Damage, another spinning back kick to inflict <$MACRO physic @1:120902/> Damage, followed by the finishing blow that inflicts <$MACRO physic @1:120903/> Damage and knocks foes back.",
     "classid": 301,
     "icon": "bm_skill_01_16.png"
   },
   "12100": {
     "id": 12100,
-    "name": "Seismic Strike",
+    "name": "지뢰진",
     "desc": "Inflict <$MACRO magic @1:121001/> Damage every<FONT COLOR='#ffff99'> 1s</FONT> up to <FONT COLOR='#ffff99'>5</FONT> times to foes within the earthquake's range.",
     "classid": 301,
     "icon": "bm_skill_01_9.png"
   },
   "12110": {
     "id": 12110,
-    "name": "Phoenix Advent",
+    "name": "화조강림",
     "desc": "Focus [Fire] energy and soar into the air to land at the target location within <FONT COLOR='#ffff99'>7 meters</FONT>. Inflict <$MACRO physic @1:121101/> Damage as you descend and <$MACRO physic @1:121102/> Damage upon hitting the ground, knocking foes down.",
     "classid": 301,
     "icon": "bm_skill_01_12.png"
   },
   "12120": {
     "id": 12120,
-    "name": "Swift Wind Kick",
+    "name": "초풍각",
     "desc": "Deliver a spinning kick in the air, attacking foes <FONT COLOR='#ffff99'>22</FONT> times, inflicting up to <FONT COLOR='#ffbb00'><$CALC_COMMA ((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)* (<$TABLE_SKILLEFFECT ValueF 121200/>/10000)+((<$TABLE_SKILLEFFECT ValueA 121200/> + <$TABLE_SKILLEFFECT ValueB 121200/>)/2))*11/></FONT> Damage over <FONT COLOR='#ffff99'>2.5s</FONT>. You can move up to <FONT COLOR='#ffff99'>14 meters</FONT> while using this skill, changing the attack direction with your cursor.",
     "classid": 301,
     "icon": "bm_skill_01_23.png"
@@ -34731,7 +35534,7 @@
     "classid": 302,
     "icon": "bm_skill_01_15.png",
     "identitycategory": "battle_master_normal",
-    "groups": [991100, 1410005, 12000002, 14000000, 14000001]
+    "groups": [991100, 991101, 1410005, 12000002, 14000000, 14000001]
   },
   "22155": {
     "id": 22155,
@@ -34992,7 +35795,7 @@
     "classid": 303,
     "icon": "if_skill_01_16.png",
     "identitycategory": "infighter_normal",
-    "groups": [991100, 1410005, 12000002, 14000000, 14000001]
+    "groups": [991100, 991101, 1410005, 12000002, 14000000, 14000001]
   },
   "23171": {
     "id": 23171,
@@ -35001,7 +35804,7 @@
     "classid": 303,
     "icon": "if_skill_01_16.png",
     "identitycategory": "infighter_normal",
-    "groups": [991100, 1410005, 12000002, 14000000, 14000001]
+    "groups": [991100, 991101, 1410005, 12000002, 14000000, 14000001]
   },
   "23172": {
     "id": 23172,
@@ -35010,7 +35813,7 @@
     "classid": 303,
     "icon": "if_skill_01_16.png",
     "identitycategory": "infighter_normal",
-    "groups": [991100, 1410005, 12000002, 14000000, 14000001]
+    "groups": [991100, 991101, 1410005, 12000002, 14000000, 14000001]
   },
   "23175": {
     "id": 23175,
@@ -35281,7 +36084,7 @@
     "classid": 304,
     "icon": "so_skill_01_10.png",
     "identitycategory": "forcemaster_normal",
-    "groups": [991100, 1410005, 12000002, 14000000, 14000001]
+    "groups": [991100, 991101, 1410005, 12000002, 14000000, 14000001]
   },
   "24155": {
     "id": 24155,
@@ -35594,7 +36397,7 @@
     "classid": 312,
     "icon": "bm_skill_01_15.png",
     "identitycategory": "battle_master_normal",
-    "groups": [991100, 1410005, 12000002, 14000000, 14000001]
+    "groups": [991100, 991101, 1410005, 12000002, 14000000, 14000001]
   },
   "39151": {
     "id": 39151,
@@ -35739,70 +36542,70 @@
   "14010": { "id": 14010, "name": "Hand Attack", "desc": "Hand Attack", "classid": 501, "icon": "" },
   "14020": {
     "id": 14020,
-    "name": "Tumbling",
+    "name": "구르기",
     "desc": "Tumble to quickly move forward.",
     "classid": 501,
     "icon": "dh_skill_01_13.png"
   },
   "14021": {
     "id": 14021,
-    "name": "Stand Up",
+    "name": "기상 액션",
     "desc": "Get back on your feet quickly by tumbling.",
     "classid": 501,
     "icon": "dh_skill_01_18.png"
   },
   "14030": {
     "id": 14030,
-    "name": "Spiral Tracker",
+    "name": "나선의 추적자",
     "desc": "Throws a spinning handgun at the target location within <FONT COLOR='#ffff99'>8 meters</FONT>, inflicting up to <FONT COLOR='#ffbb00'><$CALC ((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)* (<$TABLE_SKILLEFFECT ValueF 140301/>/10000)+((<$TABLE_SKILLEFFECT ValueA 140301/> + <$TABLE_SKILLEFFECT ValueB 140301/>)/2))*5/></FONT> Damage over </FONT>15<FONT COLOR='#ffff99'> hits.",
     "classid": 501,
     "icon": "dh_skill_01_9.png"
   },
   "14040": {
     "id": 14040,
-    "name": "Enforce Execution",
+    "name": "사형 집행",
     "desc": "Dash <FONT COLOR='#ffff99'>5 meters</FONT> forward, deliver an upper kick that inflicts <$MACRO physic @1:140400/> Damage, and perform a <FONT COLOR='#ffff99'>frontal attack and Counterattack</FONT>. Rapid fire your handgun <FONT COLOR='#ffff99'>8</FONT> times, inflicting up to <FONT COLOR='#ffbb00'><$CALC ((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)* (<$TABLE_SKILLEFFECT ValueF 140401/>/10000)+((<$TABLE_SKILLEFFECT ValueA 140401/> + <$TABLE_SKILLEFFECT ValueB 140401/>)/2))*4/></FONT> Damage. The handgun attack keeps pushed foes airborne.",
     "classid": 501,
     "icon": "dh_skill_01_4.png"
   },
   "14050": {
     "id": 14050,
-    "name": "Plasma Bullet",
+    "name": "플라즈마 블릿",
     "desc": "Fire a plasma bullet that travels at a low speed while continuously inflicting <$MACRO magic @1:140501/> Damage.",
     "classid": 501,
     "icon": "dh_skill_01_10.png"
   },
   "14060": {
     "id": 14060,
-    "name": "Meteor Stream",
+    "name": "메테오 스트림",
     "desc": "Fire a volley of bullets into the air, then control them to crash into the target location, inflicting <$MACRO physic @1:140601/> Damage and launching foes into the air.",
     "classid": 501,
     "icon": "dh_skill_01_0.png"
   },
   "14070": {
     "id": 14070,
-    "name": "AT01 Grenade",
+    "name": "AT02 류탄",
     "desc": "Throw a grenade at the target location within <FONT COLOR='#ffff99'>10 meters</FONT>, inflicting <$MACRO physic @1:140701/> Damage.",
     "classid": 501,
     "icon": "dh_skill_01_8.png"
   },
   "14080": {
     "id": 14080,
-    "name": "Somersault Shot",
+    "name": "썸머솔트샷",
     "desc": "Somersault to move forward while firing your handgun to inflict <$MACRO physic @1:141800/> Damage.",
     "classid": 501,
     "icon": "dh_skill_01_19.png"
   },
   "14090": {
     "id": 14090,
-    "name": "Dexterous Shot",
+    "name": "민첩한 사격",
     "desc": "Move <FONT COLOR='#ffff99'>6 meters</FONT> as you glide and fire your handgun <FONT COLOR='#ffff99'>4</FONT> times to inflict <FONT COLOR='#ffbb00'><$CALC ((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)* (<$TABLE_SKILLEFFECT ValueF 140900/>/10000)+((<$TABLE_SKILLEFFECT ValueA 140900/> + <$TABLE_SKILLEFFECT ValueB 140900/>)/2))*2/></FONT> Damage to nearby foes. This skill can be used up to <FONT COLOR='#ffff99'>2</FONT> times in a row.",
     "classid": 501,
     "icon": "dh_skill_01_16.png"
   },
   "14100": {
     "id": 14100,
-    "name": "Death Fire",
+    "name": "데스파이어",
     "desc": "Fire a volley of bullets over <FONT COLOR='#ffff99'>2.9</FONT>s to attack all nearby foes, causing up to <FONT COLOR='#ffbb00'><$CALC ((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)* (<$TABLE_SKILLEFFECT ValueF 141000/>/10000)+((<$TABLE_SKILLEFFECT ValueA 141000/> + <$TABLE_SKILLEFFECT ValueB 141000/>)/2))*9/></FONT> Damage over <FONT COLOR='#ffff99'>9</FONT> hits. Hit the Perfect Zone to throw a grenade as you jump backward, inflicting <$MACRO physic @1:141001 /> Damage and launching foes into the air.",
     "classid": 501,
     "icon": "dh_skill_01_5.png"
@@ -35831,7 +36634,7 @@
     "classid": 502,
     "icon": "he_skill_01_0.png",
     "identitycategory": "hawkeye_normal",
-    "groups": [991100, 1410005, 12000002, 14000000, 14000001]
+    "groups": [991100, 991101, 1410005, 12000002, 14000000, 14000001]
   },
   "28017": {
     "id": 28017,
@@ -36330,7 +37133,7 @@
     "classid": 503,
     "icon": "dh_skill_01_13.png",
     "identitycategory": "devil_hunter_normal",
-    "groups": [991100, 1410005, 12000002, 14000000, 14000001]
+    "groups": [991100, 991101, 1410005, 12000002, 14000000, 14000001]
   },
   "29155": {
     "id": 29155,
@@ -36592,7 +37395,7 @@
     "classid": 503,
     "icon": "dh_skill_01_46.png",
     "identitycategory": "devil_hunter_normal",
-    "groups": [991100, 1410005, 12000002, 14000000, 14000001]
+    "groups": [991100, 991101, 1410005, 12000002, 14000000, 14000001]
   },
   "29900": { "id": 29900, "name": "격돌(맞대결) 스킬", "desc": "", "classid": 503, "icon": "" },
   "30000": {
@@ -36619,7 +37422,7 @@
     "classid": 504,
     "icon": "bs_skill_01_16.png",
     "identitycategory": "blaster_normal",
-    "groups": [530006, 991100, 1410005, 12000002, 14000000, 14000001]
+    "groups": [530006, 991100, 991101, 1410005, 12000002, 14000000, 14000001]
   },
   "30020": {
     "id": 30020,
@@ -37286,7 +38089,7 @@
     "classid": 512,
     "icon": "dh_skill_01_30.png",
     "identitycategory": "devil_hunter_normal",
-    "groups": [991100, 1410005, 12000002, 14000000, 14000001]
+    "groups": [991100, 991101, 1410005, 12000002, 14000000, 14000001]
   },
   "38151": {
     "id": 38151,
@@ -37529,7 +38332,7 @@
     "desc": "Look and quickly sprint forward.",
     "classid": 105,
     "icon": "hk_skill_01_23.png",
-    "groups": [991100, 1410005, 12000002, 14000000, 14000001]
+    "groups": [991100, 991101, 1410005, 12000002, 14000000, 14000001]
   },
   "36025": {
     "id": 36025,
@@ -37802,6 +38605,300 @@
     "classid": 105,
     "icon": "hk_skill_01_20.png"
   },
+  "47000": {
+    "id": 47000,
+    "name": "Hand Attack",
+    "desc": "Hand Attack",
+    "classid": 313,
+    "icon": "",
+    "identitycategory": "infighter_normal"
+  },
+  "47010": {
+    "id": 47010,
+    "name": "Weapon Attack",
+    "desc": "Weapon Attack",
+    "classid": 313,
+    "icon": "",
+    "identitycategory": "infighter_normal",
+    "groups": [991000]
+  },
+  "47011": {
+    "id": 47011,
+    "name": "기본 공격 (권왕태세)",
+    "desc": "",
+    "classid": 313,
+    "icon": "",
+    "identitycategory": "infighter_normal",
+    "groups": [991000]
+  },
+  "47020": {
+    "id": 47020,
+    "name": "Asura Destruction Basic Attack",
+    "desc": "Basic Attack is enhanced, delivering <FONT COLOR='#ffff99'>2</FONT> jabs to the foes in front, dealing <$MACRO physic @1:470208/> and <$MACRO physic @1:470209/> Damage each, followed by a rapid hook that deals <$MACRO physic @1:470223/> Damage, and then executing up to <FONT COLOR='#ffff99'>28</FONT> attacks towards the front, each dealing <$MACRO physic @1:470231/> Damage. When <FONT COLOR='#ffff99'>Asura Destruction</FONT> ends mid-attack or after the attack, the finishing blow is executed, dealing <$MACRO physic @1:470241/> Damage. The attack can be halted by moving during the attack.",
+    "classid": 313,
+    "icon": "ifm_skill_01_27.png",
+    "identitycategory": "infighter_normal",
+    "groups": [36000, 991000]
+  },
+  "47030": {
+    "id": 47030,
+    "name": "Featherweight",
+    "desc": "Kick off the ground, advancing <FONT COLOR='#ffff99'>5 meters</FONT> forward.",
+    "classid": 313,
+    "icon": "ifm_skill_01_1.png",
+    "identitycategory": "infighter_normal",
+    "groups": [991100, 991101, 1410005, 12000002, 14000000, 14000001]
+  },
+  "47031": {
+    "id": 47031,
+    "name": "Asura Featherweight",
+    "desc": "Kick off the ground, advancing <FONT COLOR='#ffff99'>5 meters</FONT> forward.",
+    "classid": 313,
+    "icon": "ifm_skill_01_2.png",
+    "identitycategory": "infighter_normal",
+    "groups": [991100, 991101, 1410005, 12000002, 14000000, 14000001]
+  },
+  "47050": {
+    "id": 47050,
+    "name": "Stand Up",
+    "desc": "Spring back up from the ground by tumbling and then move forward a short distance.",
+    "classid": 313,
+    "icon": "ifm_skill_01_3.png",
+    "identitycategory": "infighter_normal",
+    "groups": [991200, 1410005, 12000002, 14000000, 14000001]
+  },
+  "47051": {
+    "id": 47051,
+    "name": "Stand Up",
+    "desc": "Spring back up from the ground by tumbling and then move forward a short distance.",
+    "classid": 313,
+    "icon": "ifm_skill_01_3.png",
+    "identitycategory": "infighter_normal"
+  },
+  "47100": {
+    "id": 47100,
+    "name": "Brawl King's Advance",
+    "desc": "Advance <FONT COLOR='#ffff99'>6 meters</FONT> forward and inflict <$MACRO physic @1:471001/> Damage <FONT COLOR='#ffff99'>3</FONT> times, then land a downward attack with your heavy gauntlets, inflicting <$MACRO physic @1:471002/> Damage.",
+    "classid": 313,
+    "icon": "ifm_skill_01_4.png",
+    "identitycategory": "infighter_vigor",
+    "groups": [27, 28, 33, 100, 201, 360000, 10000001, 12000002, 14000000, 14000001, 15000000, 16000000, 17000000]
+  },
+  "47110": {
+    "id": 47110,
+    "name": "Hurricane Chain",
+    "desc": "Charge the heavy gauntlets with fist energy and unleash it at foes in a straight line ahead, inflicting <$MACRO physic @1:471101/>, <$MACRO physic @1:471102/>, and <$MACRO physic @1:471103/> Damage.",
+    "classid": 313,
+    "icon": "ifm_skill_01_5.png",
+    "identitycategory": "infighter_vigor",
+    "groups": [27, 28, 33, 100, 201, 360000, 10000001, 12000002, 14000000, 14000001, 15000000, 16000000, 17000000]
+  },
+  "47120": {
+    "id": 47120,
+    "name": "Crater Strike",
+    "desc": "Slam down with the heavy gauntlets, inflicting <$MACRO physic @1:471201/> Damage <FONT COLOR='#ffff99'>2</FONT> times, followed by a powerful upward strike, dealing <$MACRO physic @1:471202/> Damage and knocking down the target.",
+    "classid": 313,
+    "icon": "ifm_skill_01_6.png",
+    "identitycategory": "infighter_vigor",
+    "groups": [27, 28, 33, 100, 201, 360000, 10000001, 12000002, 14000000, 14000001, 15000000, 16000000, 17000000]
+  },
+  "47130": {
+    "id": 47130,
+    "name": "Falling Star",
+    "desc": "Gather energy in the heavy gauntlets and leap to a designated location within <FONT COLOR='#ffff99'>10 meters</FONT>, striking the ground and inflicting <$MACRO physic @1:471301/> Damage to the hit foes, knocking them down.",
+    "classid": 313,
+    "icon": "ifm_skill_01_7.png",
+    "identitycategory": "infighter_vigor",
+    "groups": [27, 28, 33, 100, 201, 360000, 10000001, 12000002, 14000000, 14000001, 15000000, 16000000, 17000000]
+  },
+  "47140": {
+    "id": 47140,
+    "name": "Smashing Blow",
+    "desc": "Rapidly strike with the heavy gauntlets in an outward motion, inflicting <$MACRO physic @1:471401/> Damage to hit foes and launching pushed foes into the air. ",
+    "classid": 313,
+    "icon": "ifm_skill_01_8.png",
+    "identitycategory": "infighter_vigor",
+    "groups": [27, 28, 33, 100, 201, 360000, 10000001, 12000002, 14000000, 14000001, 15000000, 16000000, 17000000]
+  },
+  "47150": {
+    "id": 47150,
+    "name": "Flashstep",
+    "desc": "Lean forward and slide backward <FONT COLOR='#ffff99'>5 meters</FONT>. Use the skill again to quickly move forward <FONT COLOR='#ffff99'>7 meters</FONT> and then strike forward with the heavy gauntlets, inflicting <$MACRO physic @1:471501/> Damage.",
+    "classid": 313,
+    "icon": "ifm_skill_01_9.png",
+    "identitycategory": "infighter_vigor",
+    "groups": [27, 28, 33, 100, 201, 360000, 10000001, 12000002, 14000000, 14000001, 15000000, 16000000, 17000000]
+  },
+  "47160": {
+    "id": 47160,
+    "name": "Hundred Fists",
+    "desc": "Strike forward with the heavy gauntlets, inflicting <$MACRO physic @1:471601/> Damage, and upon holding the skill hotkey, deliver up to <FONT COLOR='#ffff99'>6</FONT> rapid jab attacks, each inflicting <$MACRO physic @1:471603/> Damage. After the jab attacks end, execute a finishing blow, inflicting <$MACRO physic @1:471605/> and <$MACRO physic @1:471602/> Damage. Pushed foes are launched into the air.",
+    "classid": 313,
+    "icon": "ifm_skill_01_10.png",
+    "identitycategory": "infighter_vigor",
+    "groups": [27, 28, 33, 100, 201, 360000, 10000001, 12000002, 14000000, 14000001, 15000000, 16000000, 17000000]
+  },
+  "47170": {
+    "id": 47170,
+    "name": "Adamantine Assault",
+    "desc": "Move forward, turn back to attack with the outer side of the heavy gauntlets, inflicting <$MACRO physic @1:471701/> Damage, then turn again to strike once more, inflicting <$MACRO physic @1:471701/> Damage, and launching pushed foes into the air on hit. Use the skill again during the attack to deliver a powerful forward punch, inflicting <$MACRO physic @1:471702/> Damage, and knocking pushed foes away.",
+    "classid": 313,
+    "icon": "ifm_skill_01_11.png",
+    "identitycategory": "infighter_vigor",
+    "groups": [27, 28, 33, 100, 201, 360000, 10000001, 12000002, 14000000, 14000001, 15000000, 16000000, 17000000]
+  },
+  "47180": {
+    "id": 47180,
+    "name": "Punishing Wave",
+    "desc": "Pivot and deliver consecutive hooks, inflicting <$MACRO physic @1:471801/>, <$MACRO physic @1:471802/>, <$MACRO physic @1:471803/>, and <$MACRO physic @1:471804/> Damage and launching pushed foes into the air. Follow with a powerful uppercut attack, inflicting <$MACRO physic @1:471805/> Damage and knocking foes away.",
+    "classid": 313,
+    "icon": "ifm_skill_01_12.png",
+    "identitycategory": "infighter_vigor",
+    "groups": [27, 28, 33, 100, 201, 360000, 10000001, 12000002, 14000000, 14000001, 15000000, 16000000, 17000000]
+  },
+  "47190": {
+    "id": 47190,
+    "name": "Obliteration",
+    "desc": "Execute a vertical jump, then smash the heavy gauntlets downward in front, inflicting <$MACRO physic @1:471901/> Damage. Plunge pushed foes downwards on hit.",
+    "classid": 313,
+    "icon": "ifm_skill_01_13.png",
+    "identitycategory": "infighter_shock",
+    "groups": [27, 28, 33, 100, 201, 360001, 10000001, 12000002, 14000000, 14000001, 15000000, 16000000, 17000000]
+  },
+  "47200": {
+    "id": 47200,
+    "name": "Haymaker",
+    "desc": "Vigorously swing the heavy gauntlets forward, inflicting <$MACRO physic @1:472001/> Damage.",
+    "classid": 313,
+    "icon": "ifm_skill_01_14.png",
+    "identitycategory": "infighter_shock",
+    "groups": [27, 28, 33, 100, 201, 360001, 10000001, 12000002, 14000000, 14000001, 15000000, 16000000, 17000000]
+  },
+  "47210": {
+    "id": 47210,
+    "name": "Spiral Uppercut",
+    "desc": "Deliver an uppercut attack in front, inflicting up to <FONT COLOR='#ffbb00'><$CALC_COMMA ((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)* (<$TABLE_SKILLEFFECT ValueF 472101/>/10000)+((<$TABLE_SKILLEFFECT ValueA 472101/> + <$TABLE_SKILLEFFECT ValueB 472101/>)/2))+((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)* (<$TABLE_SKILLEFFECT ValueF 472102/>/10000)+((<$TABLE_SKILLEFFECT ValueA 472102/> + <$TABLE_SKILLEFFECT ValueB 472102/>)/2))/></FONT> Damage and launching hit foes into the air.",
+    "classid": 313,
+    "icon": "ifm_skill_01_15.png",
+    "identitycategory": "infighter_shock",
+    "groups": [27, 28, 33, 100, 201, 360001, 10000001, 12000002, 14000000, 14000001, 15000000, 16000000, 17000000]
+  },
+  "47220": {
+    "id": 47220,
+    "name": "Earthbreaker",
+    "desc": "Slam the ground with the heavy gauntlets, generating a shockwave that inflicts <$MACRO physic @1:472201/> and <$MACRO physic @1:472202/> Damage and knocks hit foes away.",
+    "classid": 313,
+    "icon": "ifm_skill_01_16.png",
+    "identitycategory": "infighter_shock",
+    "groups": [27, 28, 33, 100, 201, 360001, 10000001, 12000002, 14000000, 14000001, 15000000, 16000000, 17000000]
+  },
+  "47230": {
+    "id": 47230,
+    "name": "Explosive Fist",
+    "desc": "Charge the heavy gauntlets with energy, then thrust it forward to generate a powerful energy blast, inflicting <$MACRO physic @1:472301/> Damage and causing internal shock to the hit foes, inflicting <$MACRO physic @1:472311/> Damage after <FONT COLOR='#ffff99'>2s</FONT>.",
+    "classid": 313,
+    "icon": "ifm_skill_01_17.png",
+    "identitycategory": "infighter_shock",
+    "groups": [27, 28, 33, 100, 201, 360001, 10000001, 12000002, 14000000, 14000001, 15000000, 16000000, 17000000]
+  },
+  "47240": {
+    "id": 47240,
+    "name": "Zaffre Nova",
+    "desc": "Create a force gauntlet and thrust it forward, inflicting <$MACRO physic @1:472401/> Damage <FONT COLOR='#ffff99'>4</FONT> times and launching pushed foes into the air when attacking. Then detonate the energy to inflict <$MACRO physic @1:472402/> Damage and knock the foes away.",
+    "classid": 313,
+    "icon": "ifm_skill_01_18.png",
+    "identitycategory": "infighter_shock",
+    "groups": [27, 28, 33, 100, 201, 360001, 10000001, 12000002, 14000000, 14000001, 15000000, 16000000, 17000000]
+  },
+  "47250": {
+    "id": 47250,
+    "name": "Yeon Galestorm Strike",
+    "desc": "Create a force gauntlet and strike forward <FONT COLOR='#ffff99'>3</FONT> times, inflicting <$MACRO physic @1:472501/>, <$MACRO physic @1:472502/>, and <$MACRO physic @1:472503/> Damage, with the last strike knocking away hit foes.",
+    "classid": 313,
+    "icon": "ifm_skill_01_19.png",
+    "identitycategory": "infighter_shock",
+    "groups": [27, 28, 33, 100, 201, 360001, 10000001, 12000002, 14000000, 14000001, 15000000, 16000000, 17000000]
+  },
+  "47260": {
+    "id": 47260,
+    "name": "Celestial Force Barrage",
+    "desc": "Clench your fist, assume a stance, and focus to create <FONT COLOR='#ffff99'>4</FONT> force gauntlets around you, then strike forward with the heavy gauntlets, inflicting <$MACRO physic @1:472601/> Damage, while simultaneously all force gauntlets fire in a straight line, inflicting <$MACRO physic @1:472602/> Damage <FONT COLOR='#ffff99'>4</FONT> times.",
+    "classid": 313,
+    "icon": "ifm_skill_01_20.png",
+    "identitycategory": "infighter_shock",
+    "groups": [27, 28, 33, 100, 201, 360001, 10000001, 12000002, 14000000, 14000001, 15000000, 16000000, 17000000]
+  },
+  "47270": {
+    "id": 47270,
+    "name": "Eye of the Storm",
+    "desc": "Assume a stance ready to strike forward, create a force gauntlet, gather energy for a set duration, then strike the upper front area at the speed of light, inflicting <$MACRO physic @1:472701/> Damage and knocking the foes away.",
+    "classid": 313,
+    "icon": "ifm_skill_01_21.png",
+    "identitycategory": "infighter_shock",
+    "groups": [27, 28, 33, 100, 201, 360001, 10000001, 12000002, 14000000, 14000001, 15000000, 16000000, 17000000]
+  },
+  "47900": {
+    "id": 47900,
+    "name": "격돌(맞대결) 스킬",
+    "desc": "",
+    "classid": 313,
+    "icon": "",
+    "identitycategory": "infighter_normal"
+  },
+  "47910": {
+    "id": 47910,
+    "name": "Celestial Door",
+    "desc": "Create an intangible celestial door in front. Take a moment to breathe, then swiftly strike at the celestial door, inflicting <$MACRO physic @1:479102/> Damage to foes ahead and knocking them away.",
+    "classid": 313,
+    "icon": "ifm_skill_01_22.png",
+    "groups": [
+      27, 28, 30, 100, 201, 360002, 991001, 991011, 991021, 10000000, 11000000, 12000002, 14000000, 14000001, 15000000
+    ]
+  },
+  "47920": {
+    "id": 47920,
+    "name": "Butterfly Sting",
+    "desc": "Move forward, creating a shadow <FONT COLOR='#ffff99'>4</FONT> times with each step. These shadows, upon formation, mimic the movement and then charge forward, inflicting <$MACRO physic @1:479212/>, <$MACRO physic @1:479222/>, <$MACRO physic @1:479232/>, and <$MACRO physic @1:479201/> Damage and knocking the foes away. After creating all the shadows, gather energy to create a force gauntlet and charge forward, exploding the energy in the force gauntlet to inflict <$MACRO physic @1:479242/> Damage and knock the foes away. After all attacks, deactivate the force gauntlet and recover your Tenacious Power/Asura Energy by <FONT COLOR='#99ff99'>100%</FONT>.",
+    "classid": 313,
+    "icon": "ifm_skill_01_23.png",
+    "groups": [
+      27, 28, 30, 100, 201, 360002, 991001, 991011, 991021, 10000000, 11000000, 12000002, 14000000, 14000001, 15000000
+    ]
+  },
+  "47930": {
+    "id": 47930,
+    "name": "Brawl King Stance",
+    "desc": "Assume the stance of the Brawl King.",
+    "classid": 313,
+    "icon": "ifm_skill_01_24.png",
+    "groups": [27, 28, 33, 100, 201, 360003, 630104, 10000001, 12000002, 14000000, 14000001, 15000000, 16000000]
+  },
+  "47940": {
+    "id": 47940,
+    "name": "Asura Destruction",
+    "desc": "Become an Asura, who lives solely for the sake of struggle.",
+    "classid": 313,
+    "icon": "ifm_skill_01_25.png",
+    "groups": [27, 28, 33, 100, 201, 360003, 630104, 10000001, 12000002, 14000000, 14000001, 15000000, 16000000]
+  },
+  "47950": {
+    "id": 47950,
+    "name": "Brawl King Twelve Forms: Falling Blossoms",
+    "desc": "Leap towards a location, create a force gauntlet at the peak of the jump, and then strike the ground, inflicting <$MACRO physic @1:479501/> Damage and launching the foes into the air, followed by a ground explosion that inflicts <$MACRO physic @1:479513/> Damage and knocks foes away. Allows movement up to <FONT COLOR='#ffff99'>14 meters</FONT>. Can be charged up to <FONT COLOR='#ffff99'>3</FONT> levels, and each time it charges <FONT COLOR='#ffff99'>1</FONT> level, gain <FONT COLOR='#99ff99'>33</FONT> Shock Energy. For every <FONT COLOR='#ffff99'>1</FONT> stack of Shock Energy, Outgoing Damage +<FONT COLOR='#99ff99'>4%</FONT>.",
+    "classid": 313,
+    "icon": "ifm_skill_01_26.png",
+    "identitycategory": "infighter_shock",
+    "groups": [27, 28, 33, 100, 201, 360001, 10000001, 12000002, 14000000, 14000001, 15000000, 16000000]
+  },
+  "47960": {
+    "id": 47960,
+    "name": "아이덴티티-호신투기",
+    "desc": "",
+    "classid": 313,
+    "icon": "ifm_skill_01_25.png",
+    "identitycategory": "infighter_normal",
+    "groups": [27, 33]
+  },
   "34000": {
     "id": 34000,
     "name": "Focus Stance",
@@ -37835,7 +38932,7 @@
     "classid": 305,
     "icon": "lm_skill_01_3.png",
     "identitycategory": "lance_master_wild",
-    "groups": [991100, 1410005, 12000002, 14000000, 14000001]
+    "groups": [991100, 991101, 1410005, 12000002, 14000000, 14000001]
   },
   "34030": {
     "id": 34030,
@@ -38064,7 +39161,7 @@
     "classid": 305,
     "icon": "lm_skill_01_19.png",
     "identitycategory": "lance_master_focus",
-    "groups": [991100, 1410005, 12000002, 14000000, 14000001]
+    "groups": [991100, 991101, 1410005, 12000002, 14000000, 14000001]
   },
   "34540": {
     "id": 34540,
@@ -38105,7 +39202,7 @@
   "34570": {
     "id": 34570,
     "name": "Starfall Pounce",
-    "desc": "Jump within <FONT COLOR='#ffff99'>8 meters</FONT> of the target location and create a shockwave as you land, inflicting <$MACRO physic @1:345700/> Damage and launching foes into the air.",
+    "desc": "Jump within <FONT COLOR='#ffff99'>10 meters</FONT> of the target location and create a shockwave as you land, inflicting <$MACRO physic @1:345700/> Damage and launching foes into the air.",
     "classid": 305,
     "icon": "lm_skill_01_23.png",
     "identitycategory": "lance_master_focus",
@@ -38165,70 +39262,70 @@
   "11010": { "id": 11010, "name": "Hand Attack", "desc": "Hand Attack", "classid": 201, "icon": "" },
   "11020": {
     "id": 11020,
-    "name": "Gale Bird",
+    "name": "[뿌리] 쏜살 바람새",
     "desc": "Summon <FONT COLOR='#ffff99'>5</FONT> Gale Birds to pierce and push foes inflicting <$MACRO magic @1:111201/> Damage.",
     "classid": 201,
     "icon": "sm_skill_01_6.png"
   },
   "11030": {
     "id": 11030,
-    "name": "Crystalline Magick",
+    "name": "[뿌리] 마력의 결정체",
     "desc": "Cast a magick ball to inflict <$MACRO magic @1:111301/> Damage, causing <$MACRO magic @1:111302/> Damage to foes within range behind the impact point. Move Speed of affected foes -<FONT COLOR='#99ff99'><$MACRO buffstat0_100 @1:111300/>%</FONT> for <$MACRO bufftime @1:111300/>s.",
     "classid": 201,
     "icon": "sm_skill_01_1.png"
   },
   "11040": {
     "id": 11040,
-    "name": "Flash Explosion",
+    "name": "[뿌리] 순간 폭발",
     "desc": "Cause a blast of condensed energy at the target location, inflicting <$MACRO magic @1:111401/> Damage.",
     "classid": 201,
     "icon": "sm_skill_01_5.png"
   },
   "11050": {
     "id": 11050,
-    "name": "Released Will",
+    "name": "[뿌리] 방출된 의지",
     "desc": "Cast a gust to inflict <$MACRO magic @1:111500/> Damage and push foes away.",
     "classid": 201,
     "icon": "sm_skill_01_14.png"
   },
   "11060": {
     "id": 11060,
-    "name": "Elemental Wings",
+    "name": "[뿌리] [이동기] 정령의 날개",
     "desc": "Use elemental energy to instantly move to a different location.",
     "classid": 201,
     "icon": "sm_skill_01_7.png"
   },
   "11061": {
     "id": 11061,
-    "name": "Stand Up",
+    "name": "[뿌리] [기상액션]",
     "desc": "Teleport while down to quickly get back on your feet.",
     "classid": 201,
     "icon": "sm_skill_01_26.png"
   },
   "11070": {
     "id": 11070,
-    "name": "Steed Charge",
+    "name": "[뿌리] 불타는 질주",
     "desc": "Summon magick energy in the shape of a galloping horse, inflicting <$MACRO magic @1:111701/> Damage and launching foes into the air.",
     "classid": 201,
     "icon": "sm_skill_01_2.png"
   },
   "11090": {
     "id": 11090,
-    "name": "Winged Spirit",
+    "name": "[뿌리] 윙드 스피릿",
     "desc": "Summon a Wind Elemental in a hawk form at the target location. Hold for up to <FONT COLOR='#ffff99'>4</FONT>s to inflict up to <FONT COLOR='#00ccff'><$CALC_COMMA ((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)* (<$TABLE_SKILLEFFECT ValueF 111900/>/10000)+((<$TABLE_SKILLEFFECT ValueA 111900/> + <$TABLE_SKILLEFFECT ValueB 111900/>)/2))*8/></FONT> Damage.",
     "classid": 201,
     "icon": "sm_skill_01_16.png"
   },
   "11100": {
     "id": 11100,
-    "name": "Electricity Release",
+    "name": "[뿌리] 전류 방출",
     "desc": "Cast a condensed ball of electrical current to inflict <$MACRO magic @1:112001/> [Lightning] Damage. On hit, creates an electric field that attacks foes within range for <FONT COLOR='#00ccff'><$CALC_COMMA ((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)* (<$TABLE_SKILLEFFECT ValueF 112011/>/10000)+((<$TABLE_SKILLEFFECT ValueA 112011/> + <$TABLE_SKILLEFFECT ValueB 112011/>)/2))*2/></FONT> [Lightning Damage] over <FONT COLOR='#ffff99'>1</FONT>s.",
     "classid": 201,
     "icon": "sm_skill_01_17.png"
   },
   "11110": {
     "id": 11110,
-    "name": "Water Elemental",
+    "name": "[뿌리] 물의 정령",
     "desc": "Summon a Water Elemental, inflicting up to <FONT COLOR='#00ccff'><$CALC_COMMA ((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)* (<$TABLE_SKILLEFFECT ValueF 112101/>/10000)+((<$TABLE_SKILLEFFECT ValueA 112101/> + <$TABLE_SKILLEFFECT ValueB 112101/>)/2))*5/></FONT> [Water] Damage over <FONT COLOR='#ffff99'>2s</FONT>.",
     "classid": 201,
     "icon": "sm_skill_01_19.png"
@@ -38488,7 +39585,7 @@
     "classid": 202,
     "icon": "ac_skill_01_22.png",
     "identitycategory": "arcana_normal",
-    "groups": [991100, 1410005, 12000002, 14000000, 14000001, 14000003]
+    "groups": [991100, 991101, 1410005, 12000002, 14000000, 14000001, 14000003]
   },
   "19105": {
     "id": 19105,
@@ -39460,7 +40557,7 @@
     "classid": 203,
     "icon": "sm_skill_01_7.png",
     "identitycategory": "summoner_normal",
-    "groups": [991100, 1410005, 12000002, 14000000, 14000001]
+    "groups": [991100, 991101, 1410005, 12000002, 14000000, 14000001]
   },
   "20215": {
     "id": 20215,
@@ -39989,7 +41086,7 @@
     "classid": 204,
     "icon": "bd_skill_01_16.png",
     "identitycategory": "bard_normal",
-    "groups": [991100, 1410005, 12000002, 14000000, 14000001]
+    "groups": [991100, 991101, 1410005, 12000002, 14000000, 14000001]
   },
   "21110": {
     "id": 21110,
@@ -40343,7 +41440,7 @@
     "desc": "Quickly move <FONT COLOR='#ffff99'>8 meters</FONT> forward while hidden in shadow.",
     "classid": 404,
     "icon": "rp_skill_01_1.png",
-    "groups": [991100, 1410005, 12000002, 14000000, 14000001]
+    "groups": [991100, 991101, 1410005, 12000002, 14000000, 14000001]
   },
   "26030": {
     "id": 26030,
@@ -40721,7 +41818,7 @@
     "desc": "Rapidly slide forward.",
     "classid": 505,
     "icon": "sc_skill_01_1.png",
-    "groups": [991100, 1410005, 12000002, 14000000, 14000001]
+    "groups": [991100, 991101, 1410005, 12000002, 14000000, 14000001]
   },
   "35030": {
     "id": 35030,
@@ -41075,7 +42172,7 @@
     "classid": 505,
     "icon": "sc_skill_01_22.png",
     "identitycategory": "scouter_hyper_sync",
-    "groups": [991100, 1410005, 12000002, 14000000, 14000001]
+    "groups": [991100, 991101, 1410005, 12000002, 14000000, 14000001]
   },
   "35740": {
     "id": 35740,
@@ -41233,7 +42330,7 @@
     "classid": 205,
     "icon": "scs_skill_01_1.png",
     "identitycategory": "elemental_master_normal",
-    "groups": [991100, 1410005, 12000002, 14000000, 14000001]
+    "groups": [991100, 991101, 1410005, 12000002, 14000000, 14000001]
   },
   "37030": {
     "id": 37030,
@@ -41552,7 +42649,7 @@
     "desc": "Quickly move <FONT COLOR='#ffff99'>6 meters</FONT> forward.",
     "classid": 405,
     "icon": "se_skill_01_1.png",
-    "groups": [991100, 1410005, 12000002, 14000000, 14000001]
+    "groups": [991100, 991101, 1410005, 12000002, 14000000, 14000001]
   },
   "46021": {
     "id": 46021,
@@ -41560,7 +42657,7 @@
     "desc": "Quickly move <FONT COLOR='#ffff99'>8 meters</FONT> forward.",
     "classid": 405,
     "icon": "se_skill_01_1.png",
-    "groups": [991100, 1410005, 12000002, 14000000, 14000001]
+    "groups": [991100, 991101, 1410005, 12000002, 14000000, 14000001]
   },
   "46040": {
     "id": 46040,
@@ -41811,8 +42908,8 @@
   "46900": { "id": 46900, "name": "[소울이터]격돌(맞대결) 스킬", "desc": "", "classid": 405, "icon": "" },
   "10000": {
     "id": 10000,
-    "name": "Basic Attack",
-    "desc": "",
+    "name": "Weapon Attack",
+    "desc": "Weapon Attack",
     "classid": 101,
     "icon": "",
     "identitycategory": "berserker_normal",
@@ -41820,15 +42917,15 @@
   },
   "10010": {
     "id": 10010,
-    "name": "Fist Attack",
-    "desc": "",
+    "name": "Hand Attack",
+    "desc": "Hand Attack",
     "classid": 101,
     "icon": "",
     "identitycategory": "berserker_normal"
   },
   "10020": {
     "id": 10020,
-    "name": "Double Slash",
+    "name": "더블 슬래쉬",
     "desc": "Swing your greatsword in the shape of X, inflicting <$MACRO physic @1:100200/> and <$MACRO physic @1:100201/> Damage for each swing.",
     "classid": 101,
     "icon": "bk_skill_01_1.png",
@@ -41837,7 +42934,7 @@
   },
   "10030": {
     "id": 10030,
-    "name": "Shoulder Charge",
+    "name": "숄더 차지",
     "desc": "Charge <FONT COLOR='#ffff99'>7 meters</FONT> toward the target location and inflict <FONT COLOR='#ffbb00'><$CALC_COMMA (((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)*(<$TABLE_SKILLEFFECT ValueF 100300/>/10000)+((<$TABLE_SKILLEFFECT ValueA 100300/> + <$TABLE_SKILLEFFECT ValueB 100300/>)/2)))+(((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)*(<$TABLE_SKILLEFFECT ValueF 100301/>/10000)+((<$TABLE_SKILLEFFECT ValueA 100301/> + <$TABLE_SKILLEFFECT ValueB 100301/>)/2)))+(((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)*(<$TABLE_SKILLEFFECT ValueF 100302/>/10000)+((<$TABLE_SKILLEFFECT ValueA 100302/> + <$TABLE_SKILLEFFECT ValueB 100302/>)/2)))/></FONT> Damage to foes in the path.",
     "classid": 101,
     "icon": "bk_skill_01_5.png",
@@ -41846,7 +42943,7 @@
   },
   "10040": {
     "id": 10040,
-    "name": "Crime Hazard",
+    "name": "크라임 해저드",
     "desc": "Jump and swing your greatsword to inflict <$MACRO physic @1:100400/> Damage and launch foes into the sky, then strike down to inflict <$MACRO physic @1:100401/> Damage and knock them down.",
     "classid": 101,
     "icon": "bk_skill_01_4.png",
@@ -41855,7 +42952,7 @@
   },
   "10050": {
     "id": 10050,
-    "name": "Assault Blade",
+    "name": "어설트 블레이드",
     "desc": "Perform a diagonal slash to inflict <$MACRO physic @1:100500/> total Damage.",
     "classid": 101,
     "icon": "bk_skill_01_7.png",
@@ -41880,7 +42977,7 @@
   },
   "10070": {
     "id": 10070,
-    "name": "Power Break",
+    "name": "파워 브레이크",
     "desc": "Concentrate your strength into your greatsword to inflict <$MACRO physic @1:100700/> Damage to nearby foes and knock them back.",
     "classid": 101,
     "icon": "bk_skill_01_6.png",
@@ -41889,7 +42986,7 @@
   },
   "10090": {
     "id": 10090,
-    "name": "Finish Strike",
+    "name": "피니쉬 스트라이크",
     "desc": "Thrust your greatsword down, inflicting <$MACRO physic @1:100900/> Damage.",
     "classid": 101,
     "icon": "bk_skill_01_14.png",
@@ -41898,7 +42995,7 @@
   },
   "10110": {
     "id": 10110,
-    "name": "Whirlwind",
+    "name": "휠윈드",
     "desc": "Spin around for <FONT COLOR='#ffff99'>4s</FONT> to inflict up to <FONT COLOR='#ffbb00'><$CALC_COMMA (((<$PLAYER_INFO STAT STAT_ATTACK_POWER/>)*(<$TABLE_SKILLEFFECT ValueF 101100/>/10000)+((<$TABLE_SKILLEFFECT ValueA 101100/> + <$TABLE_SKILLEFFECT ValueB 101100/>)/2)))*12/></FONT> Damage.",
     "classid": 101,
     "icon": "bk_skill_01_3.png",
@@ -41907,7 +43004,7 @@
   },
   "10120": {
     "id": 10120,
-    "name": "Tempest Slash",
+    "name": "템페스트 슬래쉬",
     "desc": "Charge <FONT COLOR='#ffff99'>4 meters</FONT> toward the target location and slash at foes, inflicting <$MACRO physic @1:101200/> Damage and launching them into the air. Use as a combo to deliver a spinning attack, inflicting <$MACRO physic @1:101201/> and <$MACRO physic @1:101201/> Damage before landing a downward blow, inflicting <$MACRO physic @1:101202/> Damage.",
     "classid": 101,
     "icon": "bk_skill_01_12.png",
@@ -41970,7 +43067,7 @@
     "classid": 102,
     "icon": "bk_skill_01_26.png",
     "identitycategory": "berserker_normal",
-    "groups": [991100, 1410005, 12000002, 14000000, 14000001]
+    "groups": [991100, 991101, 1410005, 12000002, 14000000, 14000001]
   },
   "16045": {
     "id": 16045,
@@ -42329,7 +43426,7 @@
     "desc": "Quickly jump backward while facing forward.",
     "classid": 104,
     "icon": "gl_skill_01_13.png",
-    "groups": [991100, 1410005, 12000002, 14000000, 14000001]
+    "groups": [991100, 991101, 1410005, 12000002, 14000000, 14000001]
   },
   "17025": {
     "id": 17025,
@@ -42659,7 +43756,7 @@
     "classid": 103,
     "icon": "dt_skill_01_4.png",
     "identitycategory": "destroyer_normal",
-    "groups": [991100, 1410005, 12000002, 14000000, 14000001]
+    "groups": [991100, 991101, 1410005, 12000002, 14000000, 14000001]
   },
   "18025": {
     "id": 18025,
@@ -42974,25 +44071,25 @@
   "45010": {
     "id": 45010,
     "name": "Dash",
-    "desc": "Lower your body and slide as you move quickly.",
+    "desc": "Lower your body and slide <FONT COLOR='#ffff99'>8 meters</FONT> as you move quickly.",
     "classid": 112,
     "icon": "bk_skill_01_35.png",
     "identitycategory": "berserker_normal",
-    "groups": [991100, 1410005, 12000002, 14000000, 14000001]
+    "groups": [991100, 991101, 1410005, 12000002, 14000000, 14000001]
   },
   "45011": {
     "id": 45011,
     "name": "Wild Dash",
-    "desc": "Lower your body to an attack stance and slide as you move quickly.",
+    "desc": "Lower your body to an attack stance and slide approximately <FONT COLOR='#ffff99'>6 meters</FONT> as you move quickly.",
     "classid": 112,
     "icon": "bk_skill_01_36.png",
     "identitycategory": "berserker_normal",
-    "groups": [991100, 1410005, 12000002, 14000000, 14000001]
+    "groups": [991100, 991101, 1410005, 12000002, 14000000, 14000001]
   },
   "45012": {
     "id": 45012,
     "name": "[뿌리클래스] 회피",
-    "desc": "Lower your body and slide as you move quickly.",
+    "desc": "Lower your body and slide <FONT COLOR='#ffff99'>8 meters</FONT> as you move quickly.",
     "classid": 111,
     "icon": "bk_skill_01_35.png"
   },
@@ -43286,7 +44383,7 @@
     "desc": "Rapidly slide <FONT COLOR='#ffff99'>7 meters</FONT> forward.",
     "classid": 603,
     "icon": "wa_skill_01_1.png",
-    "groups": [991100, 1410005, 12000002, 14000000, 14000001]
+    "groups": [991100, 991101, 1410005, 12000002, 14000000, 14000001]
   },
   "32021": {
     "id": 32021,
@@ -43294,7 +44391,7 @@
     "desc": "Open your umbrella and fly forward <FONT COLOR='#ffff99'>7 meters</FONT>. Press the key again to jump into the sky and land on the ground.",
     "classid": 603,
     "icon": "wa_skill_01_3.png",
-    "groups": [991100, 1410005, 12000002, 14000000, 14000001]
+    "groups": [991100, 991101, 1410005, 12000002, 14000000, 14000001]
   },
   "32030": {
     "id": 32030,
@@ -43549,21 +44646,21 @@
   "15010": { "id": 15010, "name": "[뿌리] [맨손 공격]", "desc": "", "classid": 601, "icon": "" },
   "15020": {
     "id": 15020,
-    "name": "Stroke: Spill",
+    "name": "[뿌리] [이동기]",
     "desc": "Ride the brush and quickly move forward.",
     "classid": 601,
     "icon": "yy_skill_01_1.png"
   },
   "15030": {
     "id": 15030,
-    "name": "Stroke: Here and There",
+    "name": "[뿌리] [기상액션]",
     "desc": "Hide your body in the ink and quickly move before standing up.",
     "classid": 601,
     "icon": "yy_skill_01_2.png"
   },
   "15040": {
     "id": 15040,
-    "name": "Stroke: Here and There",
+    "name": "[뿌리] [PVP][기상액션]",
     "desc": "Hide your body in the ink and quickly move before standing up.",
     "classid": 601,
     "icon": "yy_skill_01_2.png"
@@ -43584,7 +44681,7 @@
     "desc": "Ride the brush and quickly move forward.",
     "classid": 602,
     "icon": "yy_skill_01_1.png",
-    "groups": [991100, 1410005, 12000002, 14000000, 14000001]
+    "groups": [991100, 991101, 1410005, 12000002, 14000000, 14000001]
   },
   "31030": {
     "id": 31030,
@@ -45221,6 +46318,12 @@
     "classid": 0,
     "icon": "use_3_13.png"
   },
+  "43140": { "id": 43140, "name": "", "desc": "", "classid": 0, "icon": "voyage_skill_22.png" },
+  "43141": { "id": 43141, "name": "", "desc": "", "classid": 0, "icon": "buff_238.png" },
+  "43142": { "id": 43142, "name": "", "desc": "", "classid": 0, "icon": "buff_339.png" },
+  "43143": { "id": 43143, "name": "", "desc": "", "classid": 0, "icon": "buff_394.png" },
+  "43144": { "id": 43144, "name": "", "desc": "", "classid": 0, "icon": "island_icon_63.png" },
+  "43145": { "id": 43145, "name": "", "desc": "", "classid": 0, "icon": "island_icon_63.png" },
   "42180": {
     "id": 42180,
     "name": "Sprinkle Gifts",
@@ -45288,6 +46391,13 @@
     "id": 43321,
     "name": "Plant Mokoko Seeds!",
     "desc": "It seems like it'll give off a wonderful smell that'll make someone happy.",
+    "classid": 0,
+    "icon": "po_skill_01_72.png"
+  },
+  "43322": {
+    "id": 43322,
+    "name": "[장난감도감] 황금 모코코 씨앗 심기!",
+    "desc": "",
     "classid": 0,
     "icon": "po_skill_01_72.png"
   },
@@ -46301,7 +47411,7 @@
   },
   "531000": {
     "id": 531000,
-    "name": "에스더 스킬 실리안 발탄 익스트림 1620_2관문",
+    "name": "에스더 스킬 실리안 발탄 싱글 1620_2관문",
     "desc": "",
     "classid": 0,
     "icon": "po_skill_01_5.png"
@@ -46350,7 +47460,7 @@
   },
   "532000": {
     "id": 532000,
-    "name": "에스더 스킬 웨이 발탄 익스트림 1620_2관문",
+    "name": "에스더 스킬 웨이 발탄 싱글 1620_2관문",
     "desc": "",
     "classid": 0,
     "icon": "po_skill_01_5.png"
@@ -46406,7 +47516,7 @@
   },
   "533000": {
     "id": 533000,
-    "name": "에스더 스킬 바훈투르 발탄 익스트림 1620_2관문",
+    "name": "에스더 스킬 바훈투르 발탄 싱글 1620_2관문",
     "desc": "",
     "classid": 0,
     "icon": "po_skill_01_5.png"
@@ -47044,6 +48154,20 @@
     "desc": "As the wind blows, a gentle and pleasing aroma wafts from all around.",
     "classid": 0,
     "icon": "vehicle_60.png"
+  },
+  "95723": {
+    "id": 95723,
+    "name": "Sprint",
+    "desc": "Cut through the wind as you quickly dash forward.",
+    "classid": 0,
+    "icon": "vehicle_60.png"
+  },
+  "95724": {
+    "id": 95724,
+    "name": "Firework",
+    "desc": "Shoot up dazzling flames.",
+    "classid": 0,
+    "icon": "vehicle_63.png"
   },
   "95730": { "id": 95730, "name": "Jump", "desc": "Jump forward.", "classid": 0, "icon": "vehicle_62.png" },
   "95740": { "id": 95740, "name": "Slide", "desc": "Move quickly.", "classid": 0, "icon": "vehicle_60.png" },
@@ -47868,21 +48992,21 @@
   "97781": {
     "id": 97781,
     "name": "Snowkin's Performance",
-    "desc": "The snowkin appears and starts performing.\n\n<FONT COLOR='#ffff99'>It seems the snowkin can play together with others.</FONT>",
+    "desc": "The Snowkin appears and starts performing.\n\n<FONT COLOR='#ffff99'>It seems the Snowkin can play together with others.</FONT>",
     "classid": 0,
     "icon": "vehicle_63.png"
   },
   "97782": {
     "id": 97782,
     "name": "Gingerman's Performance",
-    "desc": "The gingerman appears and starts performing.\n\n<FONT COLOR='#ffff99'>It seems the snowkin can play together with others.</FONT>",
+    "desc": "The gingerman appears and starts performing.\n\n<FONT COLOR='#ffff99'>It seems the Snowkin can play together with others.</FONT>",
     "classid": 0,
     "icon": "vehicle_64.png"
   },
   "97783": {
     "id": 97783,
     "name": "Rudolph's Performance",
-    "desc": "Rudolph appears and starts riding the rhythm.\n\n<FONT COLOR='#ffff99'>It seems the snowkin can play together with others.</FONT>",
+    "desc": "Rudolph appears and starts riding the rhythm.\n\n<FONT COLOR='#ffff99'>It seems the Snowkin can play together with others.</FONT>",
     "classid": 0,
     "icon": "vehicle_65.png"
   },
@@ -48539,6 +49663,63 @@
     "icon": "vehicle_64.png"
   },
   "98223": { "id": 98223, "name": "Forward Step", "desc": "Dance forward", "classid": 0, "icon": "vehicle_65.png" },
+  "98240": {
+    "id": 98240,
+    "name": "Snow Sketch",
+    "desc": "Make snowflakes flutter down.",
+    "classid": 0,
+    "icon": "vehicle_63.png"
+  },
+  "98241": {
+    "id": 98241,
+    "name": "Firework",
+    "desc": "Magnificent fireworks explode.",
+    "classid": 0,
+    "icon": "vehicle_64.png"
+  },
+  "98242": {
+    "id": 98242,
+    "name": "Snow Flurry",
+    "desc": "Form a snow crystal.",
+    "classid": 0,
+    "icon": "vehicle_65.png"
+  },
+  "98243": {
+    "id": 98243,
+    "name": "Pleasant Sprint",
+    "desc": "Rush forward with joy.",
+    "classid": 0,
+    "icon": "vehicle_60.png"
+  },
+  "98250": {
+    "id": 98250,
+    "name": "Blazing Breath",
+    "desc": "Spit flames forward.",
+    "classid": 0,
+    "icon": "vehicle_63.png"
+  },
+  "98251": {
+    "id": 98251,
+    "name": "Flame Expansion",
+    "desc": "Set the entire body on fire, blazing fiercely.",
+    "classid": 0,
+    "icon": "vehicle_64.png"
+  },
+  "98252": {
+    "id": 98252,
+    "name": "Flame Butterfly",
+    "desc": "Gaze at the flame circling around.",
+    "classid": 0,
+    "icon": "vehicle_65.png"
+  },
+  "98253": { "id": 98253, "name": "Sprint", "desc": "Quickly sprint forward.", "classid": 0, "icon": "vehicle_60.png" },
+  "98260": {
+    "id": 98260,
+    "name": "Leap!",
+    "desc": "Leap amidst fluttering snowflakes.",
+    "classid": 0,
+    "icon": "vehicle_60.png"
+  },
   "98000": {
     "id": 98000,
     "name": "Flaming Flamethrower",

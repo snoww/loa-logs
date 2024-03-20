@@ -736,6 +736,20 @@
     "type": "monster",
     "pushimmune": true
   },
+  "693013": {
+    "id": 693013,
+    "name": "<FONT COLOR='#8DF901'>Onyx Rabbit</FONT>",
+    "grade": "normal",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "693014": {
+    "id": 693014,
+    "name": "<FONT COLOR='#D460EB'>Contaminated Kethus</FONT>",
+    "grade": "normal",
+    "type": "monster",
+    "pushimmune": true
+  },
   "691101": { "id": 691101, "name": "Pongpong Rabbit", "grade": "normal", "type": "monster", "pushimmune": true },
   "691102": { "id": 691102, "name": "Stormcloud Rabbit", "grade": "normal", "type": "monster", "pushimmune": true },
   "691103": { "id": 691103, "name": "Brown Rabbit", "grade": "normal", "type": "monster", "pushimmune": true },
@@ -1114,8 +1128,17 @@
     "pushimmune": true
   },
   "731345": { "id": 731345, "name": "2nd Tuturi", "grade": "lucky", "type": "monster", "pushimmune": true },
-  "731346": { "id": 731346, "name": "블루 퀸 슬라임", "grade": "lucky", "type": "monster", "pushimmune": true },
-  "731347": { "id": 731347, "name": "레드 퀸 슬라임", "grade": "lucky", "type": "monster", "pushimmune": true },
+  "731346": { "id": 731346, "name": "Blue Queen", "grade": "lucky", "type": "monster", "pushimmune": true },
+  "731347": { "id": 731347, "name": "Red Queen", "grade": "lucky", "type": "monster", "pushimmune": true },
+  "731348": { "id": 731348, "name": "Blue Queen", "grade": "lucky", "type": "monster", "pushimmune": true },
+  "731349": { "id": 731349, "name": "Red Queen", "grade": "lucky", "type": "monster", "pushimmune": true },
+  "731350": {
+    "id": 731350,
+    "name": "점령전 투명 몬스터 - 트리거용",
+    "grade": "normal",
+    "type": "monster",
+    "pushimmune": true
+  },
   "740000": { "id": 740000, "name": "Red Guardian", "grade": "named", "type": "monster", "pushimmune": true },
   "740001": { "id": 740001, "name": "Blue Guardian", "grade": "named", "type": "monster", "pushimmune": true },
   "740002": { "id": 740002, "name": "Red Guardian", "grade": "named", "type": "monster", "pushimmune": true },
@@ -1759,6 +1782,18 @@
   "850258": { "id": 850258, "name": "Ice Homunculus Freegie", "grade": "normal", "type": "monster" },
   "850259": { "id": 850259, "name": "Lightning Homunculus Trapi", "grade": "normal", "type": "monster" },
   "850260": { "id": 850260, "name": "Notia, Homunculus of Night", "grade": "normal", "type": "monster" },
+  "850261": { "id": 850261, "name": "Miasmic Devourer Leader", "grade": "normal", "type": "monster" },
+  "850262": { "id": 850262, "name": "Miasmic Beast Leader", "grade": "normal", "type": "monster" },
+  "850263": { "id": 850263, "name": "Virulent Gazer", "grade": "normal", "type": "monster" },
+  "850264": { "id": 850264, "name": "Hardshelled Sylmael Construct", "grade": "normal", "type": "monster" },
+  "850265": { "id": 850265, "name": "Powerful Miasmic Gargoyle", "grade": "normal", "type": "monster" },
+  "850266": { "id": 850266, "name": "Enhanced Miasmic Gargoyle", "grade": "normal", "type": "monster" },
+  "850267": { "id": 850267, "name": "Agile Miasmic Demon Dog", "grade": "normal", "type": "monster" },
+  "850268": { "id": 850268, "name": "Aggressive Miasmic Demon Dog", "grade": "normal", "type": "monster" },
+  "850269": { "id": 850269, "name": "Frenzied Vinus Assassin", "grade": "normal", "type": "monster" },
+  "850270": { "id": 850270, "name": "Violent Vinus Slayer", "grade": "normal", "type": "monster" },
+  "850271": { "id": 850271, "name": "Brutal Vinus Executioner", "grade": "normal", "type": "monster" },
+  "850272": { "id": 850272, "name": "Cruel Vinus Plunderer", "grade": "normal", "type": "monster" },
   "850998": { "id": 850998, "name": "Rowen Forest Rabbit", "grade": "normal", "type": "monster", "pushimmune": true },
   "850999": { "id": 850999, "name": "Lost Tooki", "grade": "lucky", "type": "monster", "pushimmune": true },
   "910005": { "id": 910005, "name": "Hungering Ghost Ship", "grade": "normal", "type": "monster" },
@@ -5795,6 +5830,28 @@
   "889112": { "id": 889112, "name": "투명 몬스터", "grade": "normal", "type": "monster", "pushimmune": true },
   "889113": { "id": 889113, "name": "투명 몬스터", "grade": "normal", "type": "monster", "pushimmune": true },
   "889114": { "id": 889114, "name": "투명 몬스터", "grade": "normal", "type": "monster", "pushimmune": true },
+  "485050": { "id": 485050, "name": "태양의 기사단 지휘관", "grade": "named", "type": "monster", "pushimmune": true },
+  "485051": { "id": 485051, "name": "베른 근위대", "grade": "normal", "type": "monster" },
+  "485052": { "id": 485052, "name": "베른 근위대", "grade": "normal", "type": "monster" },
+  "485053": { "id": 485053, "name": "티양의 기사단", "grade": "normal", "type": "monster" },
+  "485054": { "id": 485054, "name": "달의 기사단", "grade": "normal", "type": "monster" },
+  "485055": { "id": 485055, "name": "달의 기사단", "grade": "normal", "type": "monster" },
+  "485056": { "id": 485056, "name": "몬스터", "grade": "boss", "type": "monster", "pushimmune": true },
+  "485057": { "id": 485057, "name": "몬스터", "grade": "boss", "type": "monster", "pushimmune": true },
+  "485058": { "id": 485058, "name": "티양의 기사단", "grade": "normal", "type": "monster" },
+  "485059": { "id": 485059, "name": "몬스터", "grade": "boss", "type": "monster", "pushimmune": true },
+  "485060": { "id": 485060, "name": "화염 고르곤", "grade": "boss", "type": "monster", "pushimmune": true },
+  "485061": { "id": 485061, "name": "에르아쉬", "grade": "normal", "type": "monster" },
+  "485062": { "id": 485062, "name": "히르아", "grade": "named", "type": "monster", "pushimmune": true },
+  "485063": { "id": 485063, "name": "라미로스", "grade": "seed", "type": "monster", "pushimmune": true },
+  "485064": { "id": 485064, "name": "강화 악마개", "grade": "normal", "type": "monster" },
+  "485065": { "id": 485065, "name": "혼돈의 주술사", "grade": "named", "type": "monster", "pushimmune": true },
+  "485066": { "id": 485066, "name": "악마의 날개", "grade": "named", "type": "monster", "pushimmune": true },
+  "485067": { "id": 485067, "name": "비질리아", "grade": "normal", "type": "monster" },
+  "485068": { "id": 485068, "name": "화염 고르곤", "grade": "seed", "type": "monster", "pushimmune": true },
+  "485069": { "id": 485069, "name": "베른 근위대", "grade": "normal", "type": "monster" },
+  "485070": { "id": 485070, "name": "베른 근위대", "grade": "normal", "type": "monster" },
+  "485101": { "id": 485101, "name": "에르아쉬", "grade": "normal", "type": "monster" },
   "511200": { "id": 511200, "name": "Dancing Queen Rekiel", "grade": "boss", "type": "monster" },
   "511201": { "id": 511201, "name": "Dancing Queen Rekiel", "grade": "boss", "type": "monster" },
   "511202": { "id": 511202, "name": "투명 몬스터_이벤트", "grade": "normal", "type": "monster", "pushimmune": true },
@@ -6907,6 +6964,60 @@
   "594628": { "id": 594628, "name": "악마개", "grade": "normal", "type": "monster" },
   "594629": { "id": 594629, "name": "악마개", "grade": "normal", "type": "monster" },
   "594630": { "id": 594630, "name": "진화한 악마개", "grade": "normal", "type": "monster" },
+  "580001": {
+    "id": 580001,
+    "name": "Kaishuter the Raging Dragon",
+    "grade": "boss",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "580002": { "id": 580002, "name": "Vertus of Despair", "grade": "seed", "type": "monster", "pushimmune": true },
+  "580003": {
+    "id": 580003,
+    "name": "Calventus of Destruction",
+    "grade": "seed",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "580004": { "id": 580004, "name": "Fearful Legoros", "grade": "seed", "type": "monster", "pushimmune": true },
+  "580005": { "id": 580005, "name": "Chaos Wyvern", "grade": "named", "type": "monster", "pushimmune": true },
+  "580006": {
+    "id": 580006,
+    "name": "Shadowfallen Lava Construct",
+    "grade": "named",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "580007": {
+    "id": 580007,
+    "name": "Shadowfallen Lava Construct",
+    "grade": "named",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "580008": { "id": 580008, "name": "Chaos Spitolei", "grade": "named", "type": "monster", "pushimmune": true },
+  "580009": { "id": 580009, "name": "Shadowfallen Evelo", "grade": "named", "type": "monster", "pushimmune": true },
+  "580010": { "id": 580010, "name": "Eroded Demon Dog", "grade": "named", "type": "monster", "pushimmune": true },
+  "580011": { "id": 580011, "name": "Chaos Edunkel", "grade": "named", "type": "monster", "pushimmune": true },
+  "580012": { "id": 580012, "name": "Chaos Gargoyle", "grade": "normal", "type": "monster" },
+  "580013": { "id": 580013, "name": "Chaos Gargoyle", "grade": "normal", "type": "monster" },
+  "580014": { "id": 580014, "name": "Chaos Gargoyle", "grade": "normal", "type": "monster" },
+  "580015": { "id": 580015, "name": "Chaos Cerberk", "grade": "normal", "type": "monster" },
+  "580016": { "id": 580016, "name": "Chaos Cerberus", "grade": "normal", "type": "monster" },
+  "580017": { "id": 580017, "name": "Chaos Kriseta", "grade": "normal", "type": "monster" },
+  "580018": { "id": 580018, "name": "Chaos Phyloc", "grade": "normal", "type": "monster" },
+  "580019": { "id": 580019, "name": "Chaos Skiara", "grade": "normal", "type": "monster" },
+  "580020": { "id": 580020, "name": "Shadowfallen Summoner", "grade": "normal", "type": "monster" },
+  "580021": { "id": 580021, "name": "Shadowfallen Flame Demon", "grade": "normal", "type": "monster" },
+  "580022": { "id": 580022, "name": "Chaos Demon Dog", "grade": "normal", "type": "monster" },
+  "580023": {
+    "id": 580023,
+    "name": "Shadowfallen Self-Destructing Lava",
+    "grade": "named",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "580024": { "id": 580024, "name": "혼돈의 악마개", "grade": "normal", "type": "monster" },
   "990371": { "id": 990371, "name": "라하르트", "grade": "boss", "type": "monster", "pushimmune": true },
   "990372": { "id": 990372, "name": "총사령관 아델", "grade": "boss", "type": "monster", "pushimmune": true },
   "990373": { "id": 990373, "name": "금강", "grade": "boss", "type": "monster", "pushimmune": true },
@@ -9906,86 +10017,420 @@
   "20281005": { "id": 20281005, "name": "Advanced Homunculus Freegie", "grade": "elite", "type": "monster" },
   "20281006": { "id": 20281006, "name": "Advanced Homunculus Trapi", "grade": "elite", "type": "monster" },
   "20281002": { "id": 20281002, "name": "Advanced Homunculus Notia", "grade": "elite", "type": "monster" },
-  "504400": { "id": 504400, "name": "어인 해적 싸움꾼_1", "grade": "normal", "type": "monster" },
-  "504401": { "id": 504401, "name": "어인 해적 약탈자_1", "grade": "normal", "type": "monster" },
-  "504402": { "id": 504402, "name": "어인 해적 소총수_1", "grade": "normal", "type": "monster" },
-  "504403": { "id": 504403, "name": "어인 해적 무법자_1", "grade": "normal", "type": "monster" },
-  "504404": { "id": 504404, "name": "어인 해적 세티노_1", "grade": "named", "type": "monster", "pushimmune": true },
-  "504405": { "id": 504405, "name": "어인 해적 탐색꾼_1", "grade": "normal", "type": "monster" },
-  "504406": { "id": 504406, "name": "어인 해적 선장_1", "grade": "normal", "type": "monster" },
-  "504407": { "id": 504407, "name": "어인 해적 사술사_1", "grade": "normal", "type": "monster" },
-  "504408": { "id": 504408, "name": "어인 해적 싸움꾼_2", "grade": "normal", "type": "monster" },
-  "504409": { "id": 504409, "name": "어인 해적 약탈자_2", "grade": "normal", "type": "monster" },
-  "504410": { "id": 504410, "name": "어인 해적 소총수_2", "grade": "normal", "type": "monster" },
-  "504411": { "id": 504411, "name": "어인 해적 무법자_2", "grade": "normal", "type": "monster" },
-  "504412": { "id": 504412, "name": "어인 해적 세티노_2", "grade": "named", "type": "monster", "pushimmune": true },
-  "504413": { "id": 504413, "name": "어인 해적 탐색꾼_2", "grade": "normal", "type": "monster" },
-  "504414": { "id": 504414, "name": "어인 해적 선장_2", "grade": "normal", "type": "monster" },
-  "504415": { "id": 504415, "name": "어인 해적 사술사_2", "grade": "normal", "type": "monster" },
-  "504416": { "id": 504416, "name": "어인 해적 싸움꾼_3", "grade": "normal", "type": "monster" },
-  "504417": { "id": 504417, "name": "어인 해적 약탈자_3", "grade": "normal", "type": "monster" },
-  "504418": { "id": 504418, "name": "어인 해적 소총수_3", "grade": "normal", "type": "monster" },
-  "504419": { "id": 504419, "name": "어인 해적 무법자_3", "grade": "normal", "type": "monster" },
-  "504420": { "id": 504420, "name": "어인 해적 세티노_3", "grade": "named", "type": "monster", "pushimmune": true },
-  "504421": { "id": 504421, "name": "어인 해적 탐색꾼_3", "grade": "normal", "type": "monster" },
-  "504422": { "id": 504422, "name": "어인 해적 선장_3", "grade": "normal", "type": "monster" },
-  "504423": { "id": 504423, "name": "어인 해적 사술사_3", "grade": "normal", "type": "monster" },
-  "504424": { "id": 504424, "name": "진화한 악마개_1", "grade": "normal", "type": "monster" },
-  "504425": { "id": 504425, "name": "진화한 악마개_2", "grade": "normal", "type": "monster" },
-  "504426": { "id": 504426, "name": "진화한 악마개_3", "grade": "normal", "type": "monster" },
-  "504427": { "id": 504427, "name": "마기에 빠진 에르사위", "grade": "normal", "type": "monster" },
-  "504428": { "id": 504428, "name": "마기에 빠진 비질리아", "grade": "normal", "type": "monster" },
-  "504429": { "id": 504429, "name": "사령술 해골병사", "grade": "normal", "type": "monster" },
-  "504430": { "id": 504430, "name": "사령술 해골궁수", "grade": "normal", "type": "monster" },
-  "504431": { "id": 504431, "name": "사령술 해골법사", "grade": "normal", "type": "monster" },
-  "504432": { "id": 504432, "name": "욕망 라미로스", "grade": "normal", "type": "monster" },
-  "504433": { "id": 504433, "name": "라크리마 수호자_파도", "grade": "named", "type": "monster", "pushimmune": true },
-  "504434": { "id": 504434, "name": "라크리마 수호자_빛", "grade": "named", "type": "monster", "pushimmune": true },
-  "504435": { "id": 504435, "name": "라크리마 수호자_폭풍", "grade": "named", "type": "monster", "pushimmune": true },
-  "504436": { "id": 504436, "name": "라크리마 수호자의 존속_1", "grade": "normal", "type": "monster" },
-  "504437": { "id": 504437, "name": "라크리마 수호자의 존속_2", "grade": "normal", "type": "monster" },
-  "504438": { "id": 504438, "name": "라크리마 수호자의 존속_3", "grade": "normal", "type": "monster" },
-  "514000": { "id": 514000, "name": "어인 해적 싸움꾼_1", "grade": "normal", "type": "monster" },
-  "514001": { "id": 514001, "name": "어인 해적 약탈자_1", "grade": "normal", "type": "monster" },
-  "514002": { "id": 514002, "name": "어인 해적 소총수_1", "grade": "normal", "type": "monster" },
-  "514003": { "id": 514003, "name": "어인 해적 무법자_1", "grade": "normal", "type": "monster" },
-  "514004": { "id": 514004, "name": "어인 해적 세티노_1", "grade": "named", "type": "monster", "pushimmune": true },
-  "514005": { "id": 514005, "name": "어인 해적 탐색꾼_1", "grade": "normal", "type": "monster" },
-  "514006": { "id": 514006, "name": "어인 해적 선장_1", "grade": "normal", "type": "monster" },
-  "514007": { "id": 514007, "name": "어인 해적 사술사_1", "grade": "normal", "type": "monster" },
-  "514030": { "id": 514030, "name": "어인 해적 싸움꾼_2", "grade": "normal", "type": "monster" },
-  "514031": { "id": 514031, "name": "어인 해적 약탈자_2", "grade": "normal", "type": "monster" },
-  "514032": { "id": 514032, "name": "어인 해적 소총수_2", "grade": "normal", "type": "monster" },
-  "514033": { "id": 514033, "name": "어인 해적 무법자_2", "grade": "normal", "type": "monster" },
-  "514034": { "id": 514034, "name": "어인 해적 세티노_2", "grade": "named", "type": "monster", "pushimmune": true },
-  "514035": { "id": 514035, "name": "어인 해적 탐색꾼_2", "grade": "normal", "type": "monster" },
-  "514036": { "id": 514036, "name": "어인 해적 선장_2", "grade": "normal", "type": "monster" },
-  "514037": { "id": 514037, "name": "어인 해적 사술사_2", "grade": "normal", "type": "monster" },
-  "514040": { "id": 514040, "name": "어인 해적 싸움꾼_3", "grade": "normal", "type": "monster" },
-  "514041": { "id": 514041, "name": "어인 해적 약탈자_3", "grade": "normal", "type": "monster" },
-  "514042": { "id": 514042, "name": "어인 해적 소총수_3", "grade": "normal", "type": "monster" },
-  "514043": { "id": 514043, "name": "어인 해적 무법자_3", "grade": "normal", "type": "monster" },
-  "514044": { "id": 514044, "name": "어인 해적 세티노_3", "grade": "named", "type": "monster", "pushimmune": true },
-  "514045": { "id": 514045, "name": "어인 해적 탐색꾼_3", "grade": "normal", "type": "monster" },
-  "514046": { "id": 514046, "name": "어인 해적 선장_3", "grade": "normal", "type": "monster" },
-  "514047": { "id": 514047, "name": "어인 해적 사술사_3", "grade": "normal", "type": "monster" },
-  "145500": { "id": 145500, "name": "독기 거대 덩어리", "grade": "boss", "type": "monster", "pushimmune": true },
-  "145501": { "id": 145501, "name": "독기 덩어리", "grade": "normal", "type": "monster", "pushimmune": true },
+  "20294000": {
+    "id": 20294000,
+    "name": "Noxious Mutated Devourer",
+    "grade": "elite",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "20294003": { "id": 20294003, "name": "Noxious Mutated Gazer", "grade": "elite", "type": "monster" },
+  "20294008": {
+    "id": 20294008,
+    "name": "Rabid Miasmic Demon Dog",
+    "grade": "elite",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "20294010": {
+    "id": 20294010,
+    "name": "Rough Vinus Plunderer",
+    "grade": "elite",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "504400": { "id": 504400, "name": "Red Mist Pirates Brawler", "grade": "normal", "type": "monster" },
+  "504401": { "id": 504401, "name": "Red Mist Pirates Plunderer", "grade": "normal", "type": "monster" },
+  "504402": { "id": 504402, "name": "Red Mist Pirates Scout", "grade": "normal", "type": "monster" },
+  "504403": { "id": 504403, "name": "Red Mist Pirates Outlaw", "grade": "normal", "type": "monster" },
+  "504404": { "id": 504404, "name": "Red Mist Pirates Boatswain", "grade": "normal", "type": "monster" },
+  "504405": { "id": 504405, "name": "Red Mist Pirates Marauder", "grade": "normal", "type": "monster" },
+  "504406": { "id": 504406, "name": "Red Mist Pirates Executioner", "grade": "normal", "type": "monster" },
+  "504407": { "id": 504407, "name": "Red Mist Pirates Sorcerer", "grade": "normal", "type": "monster" },
+  "504408": { "id": 504408, "name": "Cursed Pirate Brawler", "grade": "normal", "type": "monster" },
+  "504409": { "id": 504409, "name": "Cursed Pirate Plunderer", "grade": "normal", "type": "monster" },
+  "504410": { "id": 504410, "name": "Cursed Pirate Scout", "grade": "normal", "type": "monster" },
+  "504411": { "id": 504411, "name": "Cursed Pirate Outlaw", "grade": "normal", "type": "monster" },
+  "504412": { "id": 504412, "name": "Cursed Pirate Boatswain", "grade": "normal", "type": "monster" },
+  "504413": { "id": 504413, "name": "Cursed Pirate Marauder", "grade": "normal", "type": "monster" },
+  "504414": { "id": 504414, "name": "Cursed Pirate Executioner", "grade": "normal", "type": "monster" },
+  "504415": { "id": 504415, "name": "Cursed Pirate Sorcerer", "grade": "normal", "type": "monster" },
+  "504416": { "id": 504416, "name": "Cursed Pirate Brawler", "grade": "normal", "type": "monster" },
+  "504417": { "id": 504417, "name": "Cursed Pirate Plunderer", "grade": "normal", "type": "monster" },
+  "504418": { "id": 504418, "name": "Cursed Pirate Scout", "grade": "normal", "type": "monster" },
+  "504419": { "id": 504419, "name": "Cursed Pirate Outlaw", "grade": "normal", "type": "monster" },
+  "504420": { "id": 504420, "name": "Cursed Pirate Boatswain", "grade": "normal", "type": "monster" },
+  "504421": { "id": 504421, "name": "Cursed Pirate Marauder", "grade": "normal", "type": "monster" },
+  "504422": { "id": 504422, "name": "Cursed Pirate Executioner", "grade": "normal", "type": "monster" },
+  "504423": { "id": 504423, "name": "Cursed Pirate Sorcerer", "grade": "normal", "type": "monster" },
+  "504424": { "id": 504424, "name": "Terrifying Seabed Demon Dog", "grade": "normal", "type": "monster" },
+  "504425": { "id": 504425, "name": "Terrifying Seabed Demon Dog", "grade": "normal", "type": "monster" },
+  "504426": { "id": 504426, "name": "Terrifying Seabed Demon Dog", "grade": "normal", "type": "monster" },
+  "504427": { "id": 504427, "name": "Shadowfallen Lesser Demon", "grade": "normal", "type": "monster" },
+  "504428": { "id": 504428, "name": "Shadowfallen Demon Oculus", "grade": "normal", "type": "monster" },
+  "504429": { "id": 504429, "name": "Shadowfallen Demon Swordfighter", "grade": "normal", "type": "monster" },
+  "504430": { "id": 504430, "name": "Shadowfallen Demon Archer", "grade": "normal", "type": "monster" },
+  "504431": { "id": 504431, "name": "Shadowfallen Demon Shaman", "grade": "normal", "type": "monster" },
+  "504432": { "id": 504432, "name": "Monster Radonema", "grade": "seed", "type": "monster", "pushimmune": true },
+  "504433": {
+    "id": 504433,
+    "name": "Talakines, Guardian of Harmony",
+    "grade": "named",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "504434": {
+    "id": 504434,
+    "name": "Amphitines, Guardian of Harmony",
+    "grade": "named",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "504435": {
+    "id": 504435,
+    "name": "Forekenis, Guardian of Harmony",
+    "grade": "named",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "504436": { "id": 504436, "name": "Guardian Elemental", "grade": "normal", "type": "monster" },
+  "504437": { "id": 504437, "name": "Guardian Elemental", "grade": "normal", "type": "monster" },
+  "504438": { "id": 504438, "name": "Guardian Elemental", "grade": "normal", "type": "monster" },
+  "514000": { "id": 514000, "name": "Decaying Pirate Brawler", "grade": "normal", "type": "monster" },
+  "514001": { "id": 514001, "name": "Decaying Pirate Plunderer", "grade": "normal", "type": "monster" },
+  "514002": { "id": 514002, "name": "Decaying Pirate Scout", "grade": "normal", "type": "monster" },
+  "514003": { "id": 514003, "name": "Decaying Pirate Outlaw", "grade": "normal", "type": "monster" },
+  "514004": {
+    "id": 514004,
+    "name": "Decaying Pirate Boatswain",
+    "grade": "named",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "514005": { "id": 514005, "name": "Decaying Pirate Marauder", "grade": "normal", "type": "monster" },
+  "514006": { "id": 514006, "name": "Decaying Pirate Executioner", "grade": "normal", "type": "monster" },
+  "514007": { "id": 514007, "name": "Decaying Pirate Sorcerer", "grade": "normal", "type": "monster" },
+  "514030": { "id": 514030, "name": "Decaying Pirate Brawler", "grade": "normal", "type": "monster" },
+  "514031": { "id": 514031, "name": "Decaying Pirate Plunderer", "grade": "normal", "type": "monster" },
+  "514032": { "id": 514032, "name": "Decaying Pirate Scout", "grade": "normal", "type": "monster" },
+  "514033": { "id": 514033, "name": "Decaying Pirate Outlaw", "grade": "normal", "type": "monster" },
+  "514034": { "id": 514034, "name": "Decaying Pirate Boatswain", "grade": "normal", "type": "monster" },
+  "514035": { "id": 514035, "name": "Decaying Pirate Marauder", "grade": "normal", "type": "monster" },
+  "514036": { "id": 514036, "name": "Decaying Pirate Executioner", "grade": "normal", "type": "monster" },
+  "514037": { "id": 514037, "name": "Decaying Pirate Sorcerer", "grade": "normal", "type": "monster" },
+  "514040": { "id": 514040, "name": "Decaying Pirate Brawler", "grade": "normal", "type": "monster" },
+  "514041": { "id": 514041, "name": "Decaying Pirate Plunderer", "grade": "normal", "type": "monster" },
+  "514042": { "id": 514042, "name": "Decaying Pirate Scout", "grade": "normal", "type": "monster" },
+  "514043": { "id": 514043, "name": "Decaying Pirate Outlaw", "grade": "normal", "type": "monster" },
+  "514044": { "id": 514044, "name": "Decaying Pirate Boatswain", "grade": "normal", "type": "monster" },
+  "514045": { "id": 514045, "name": "Decaying Pirate Marauder", "grade": "normal", "type": "monster" },
+  "514046": { "id": 514046, "name": "Decaying Pirate Executioner", "grade": "normal", "type": "monster" },
+  "514047": { "id": 514047, "name": "Decaying Pirate Sorcerer", "grade": "normal", "type": "monster" },
+  "145500": { "id": 145500, "name": "거대 독기 집합체", "grade": "boss", "type": "monster", "pushimmune": true },
+  "145501": { "id": 145501, "name": "응축된 독기 덩어리", "grade": "normal", "type": "monster", "pushimmune": true },
   "145502": { "id": 145502, "name": "독기 끈끈이", "grade": "normal", "type": "monster", "pushimmune": true },
+  "145503": { "id": 145503, "name": "거대한 독기 덩어리", "grade": "normal", "type": "monster", "pushimmune": true },
+  "145504": { "id": 145504, "name": "응축된 독기 덩어리", "grade": "normal", "type": "monster", "pushimmune": true },
   "145511": { "id": 145511, "name": "독기 덩어리", "grade": "normal", "type": "monster", "pushimmune": true },
   "145512": { "id": 145512, "name": "독기 끈끈이", "grade": "normal", "type": "monster", "pushimmune": true },
-  "145521": { "id": 145521, "name": "독기 덩어리", "grade": "normal", "type": "monster", "pushimmune": true },
-  "145522": { "id": 145522, "name": "독기 끈끈이", "grade": "normal", "type": "monster", "pushimmune": true },
-  "145531": { "id": 145531, "name": "독기에 중독 된 가이스트(남)_1", "grade": "normal", "type": "monster" },
-  "145532": { "id": 145532, "name": "독기에 중독 된 가이스트(여)_1", "grade": "normal", "type": "monster" },
-  "145533": {
-    "id": 145533,
-    "name": "독기에 중독 된 가이스트(남)_2",
+  "145513": { "id": 145513, "name": "독기 덩어리", "grade": "normal", "type": "monster", "pushimmune": true },
+  "145514": {
+    "id": 145514,
+    "name": "쿠르잔 투명 독기 덩어리 스폰",
     "grade": "normal",
     "type": "monster",
     "pushimmune": true
   },
-  "145534": { "id": 145534, "name": "독기에 중독 된 가이스트(여)_2", "grade": "normal", "type": "monster" },
+  "145521": {
+    "id": 145521,
+    "name": "떨어져 나온 독기 덩어리",
+    "grade": "normal",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "145522": { "id": 145522, "name": "독기 끈끈이", "grade": "normal", "type": "monster", "pushimmune": true },
+  "145531": { "id": 145531, "name": "독기에 잠식된 가이스트", "grade": "normal", "type": "monster" },
+  "145532": { "id": 145532, "name": "독기에 잠식된 가이스트", "grade": "normal", "type": "monster" },
+  "145533": {
+    "id": 145533,
+    "name": "독기에 중독된 가이스트",
+    "grade": "normal",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "145534": { "id": 145534, "name": "독기에 중독된 가이스트", "grade": "normal", "type": "monster" },
+  "290000": { "id": 290000, "name": "Kazeros's Miasma", "grade": "normal", "type": "monster", "pushimmune": true },
+  "290001": { "id": 290001, "name": "Kazeros's Miasma", "grade": "normal", "type": "monster", "pushimmune": true },
+  "290002": { "id": 290002, "name": "Kazeros's Miasma", "grade": "normal", "type": "monster", "pushimmune": true },
+  "290003": {
+    "id": 290003,
+    "name": "Seething Blood Levantalos",
+    "grade": "boss",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "290004": {
+    "id": 290004,
+    "name": "Seething Blood Levantalos",
+    "grade": "boss",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "290005": { "id": 290005, "name": "Poisonous Gargoyle", "grade": "normal", "type": "monster" },
+  "290006": { "id": 290006, "name": "Toxic Gargoyle", "grade": "normal", "type": "monster" },
+  "290007": { "id": 290007, "name": "Miasmic Demon Dog", "grade": "normal", "type": "monster" },
+  "290008": { "id": 290008, "name": "Mutated Miasmic Demon Dog", "grade": "normal", "type": "monster" },
+  "290009": { "id": 290009, "name": "Noxious Elemental", "grade": "normal", "type": "monster" },
+  "291000": { "id": 291000, "name": "Vinus Outlaw", "grade": "normal", "type": "monster" },
+  "291001": { "id": 291001, "name": "Starving Vinus Outlaw", "grade": "normal", "type": "monster" },
+  "291002": { "id": 291002, "name": "Vinus Outlaw", "grade": "normal", "type": "monster" },
+  "291003": { "id": 291003, "name": "Starving Vinus Outlaw", "grade": "normal", "type": "monster" },
+  "291004": { "id": 291004, "name": "Mutated Vinus", "grade": "seed", "type": "monster", "pushimmune": true },
+  "292000": { "id": 292000, "name": "Vinus Warrior", "grade": "normal", "type": "monster" },
+  "292001": { "id": 292001, "name": "Enhanced Vinus Warrior", "grade": "normal", "type": "monster" },
+  "292002": { "id": 292002, "name": "Vinus Warrior", "grade": "normal", "type": "monster" },
+  "292003": { "id": 292003, "name": "Enhanced Vinus Warrior", "grade": "normal", "type": "monster" },
+  "292004": { "id": 292004, "name": "Frenzied Vinus ", "grade": "seed", "type": "monster", "pushimmune": true },
+  "292005": { "id": 292005, "name": "Faithless Kario", "grade": "boss", "type": "monster", "pushimmune": true },
+  "293000": { "id": 293000, "name": "Chaotic Skolakia", "grade": "boss", "type": "monster", "pushimmune": true },
+  "293001": {
+    "id": 293001,
+    "name": "Hemantaros, the Poisonous Shadow",
+    "grade": "seed",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "293002": { "id": 293002, "name": "Cruel Vinus Outlaw", "grade": "normal", "type": "monster" },
+  "293003": { "id": 293003, "name": "Ruthless Vinus Outlaw", "grade": "normal", "type": "monster" },
+  "293004": { "id": 293004, "name": "Cruel Vinus Outlaw", "grade": "normal", "type": "monster" },
+  "293005": { "id": 293005, "name": "Ruthless Vinus Outlaw", "grade": "normal", "type": "monster" },
+  "294000": { "id": 294000, "name": "Miasmic Devourer", "grade": "normal", "type": "monster" },
+  "294001": { "id": 294001, "name": "Miasmic Mutated Rat", "grade": "normal", "type": "monster" },
+  "294002": { "id": 294002, "name": "Miasmic Beast", "grade": "normal", "type": "monster" },
+  "294003": { "id": 294003, "name": "Miasmic Gazer", "grade": "normal", "type": "monster" },
+  "294004": { "id": 294004, "name": "Sylmael Construct", "grade": "normal", "type": "monster" },
+  "294005": { "id": 294005, "name": "Poisonous Gargoyle", "grade": "normal", "type": "monster" },
+  "294006": { "id": 294006, "name": "Toxic Gargoyle", "grade": "normal", "type": "monster" },
+  "294007": { "id": 294007, "name": "Miasmic Demon Dog", "grade": "normal", "type": "monster" },
+  "294008": { "id": 294008, "name": "Enhanced Miasmic Demon Dog", "grade": "normal", "type": "monster" },
+  "294009": { "id": 294009, "name": "Vinus Plunderer", "grade": "normal", "type": "monster" },
+  "294010": { "id": 294010, "name": "Enhanced Vinus Plunderer", "grade": "normal", "type": "monster" },
+  "294011": { "id": 294011, "name": "Vinus Plunderer", "grade": "normal", "type": "monster" },
+  "294012": { "id": 294012, "name": "Enhanced Vinus Plunderer", "grade": "normal", "type": "monster" },
+  "295000": { "id": 295000, "name": "Vinus Executioner", "grade": "normal", "type": "monster" },
+  "295001": { "id": 295001, "name": "Vinus Assassin", "grade": "normal", "type": "monster" },
+  "295002": { "id": 295002, "name": "Vinus Executioner", "grade": "normal", "type": "monster" },
+  "295003": { "id": 295003, "name": "Vinus Assassin", "grade": "normal", "type": "monster" },
+  "295004": { "id": 295004, "name": "Brutal Vinus Destroyer", "grade": "named", "type": "monster", "pushimmune": true },
+  "295005": {
+    "id": 295005,
+    "name": "Tukayras, the Shadow of Chaos",
+    "grade": "seed",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "295006": { "id": 295006, "name": "Poisonous Gargoyle", "grade": "normal", "type": "monster" },
+  "295007": { "id": 295007, "name": "Toxic Gargoyle", "grade": "normal", "type": "monster" },
+  "295008": { "id": 295008, "name": "Miasmic Demon Dog", "grade": "normal", "type": "monster" },
+  "295009": {
+    "id": 295009,
+    "name": "Brutal Miasmic Demon Dog",
+    "grade": "named",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "295010": {
+    "id": 295010,
+    "name": "Behemoth, the Whirling Wings of Chaos",
+    "grade": "boss",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "295011": { "id": 295011, "name": "Assar Warrior", "grade": "normal", "type": "monster" },
+  "295012": { "id": 295012, "name": "Assar Archer", "grade": "normal", "type": "monster" },
+  "295013": { "id": 295013, "name": "Assar Archer", "grade": "normal", "type": "monster" },
+  "295014": { "id": 295014, "name": "Assar Warrior", "grade": "normal", "type": "monster" },
+  "295015": { "id": 295015, "name": "Assar Assassin", "grade": "normal", "type": "monster" },
+  "295016": { "id": 295016, "name": "Assar Archer", "grade": "normal", "type": "monster" },
+  "145535": {
+    "id": 145535,
+    "name": "독기에 노출된 가이스트",
+    "grade": "normal",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "145536": { "id": 145536, "name": "독기에 노출된 가이스트", "grade": "normal", "type": "monster" },
+  "295017": {
+    "id": 295017,
+    "name": "Behemoth, the Whirling Wings of Chaos",
+    "grade": "boss",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "295018": {
+    "id": 295018,
+    "name": "베히모스 신호용 투명몬스터",
+    "grade": "boss",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "295019": { "id": 295019, "name": "베히모스 낙뢰", "grade": "boss", "type": "monster", "pushimmune": true },
+  "295020": { "id": 295020, "name": "Assar Assassin", "grade": "normal", "type": "monster" },
+  "295021": { "id": 295021, "name": "Assar Archer", "grade": "normal", "type": "monster" },
+  "295022": { "id": 295022, "name": "Assar Warrior", "grade": "normal", "type": "monster" },
+  "294100": { "id": 294100, "name": "Cruel Vinus Plunderer", "grade": "named", "type": "monster", "pushimmune": true },
+  "294101": { "id": 294101, "name": "Cruel Vinus Plunderer", "grade": "named", "type": "monster", "pushimmune": true },
+  "294102": { "id": 294102, "name": "Miasmic Beast", "grade": "named", "type": "monster", "pushimmune": true },
+  "294103": { "id": 294103, "name": "Miasmic Gazer", "grade": "named", "type": "monster", "pushimmune": true },
+  "145537": { "id": 145537, "name": "아만", "grade": "boss", "type": "monster", "pushimmune": true },
+  "504439": { "id": 504439, "name": "붉은 재앙, 다르키엘", "grade": "boss", "type": "monster", "pushimmune": true },
+  "504440": { "id": 504440, "name": "다르키엘의 향로", "grade": "normal", "type": "monster", "pushimmune": true },
+  "504441": { "id": 504441, "name": "Pure Guardian Elemental", "grade": "named", "type": "monster" },
+  "504442": { "id": 504442, "name": "Pure Guardian Elemental", "grade": "named", "type": "monster" },
+  "504443": { "id": 504443, "name": "Pure Guardian Elemental", "grade": "named", "type": "monster" },
+  "504444": { "id": 504444, "name": "Rough Seabed Demon Dog", "grade": "named", "type": "monster" },
+  "504445": { "id": 504445, "name": "Rough Seabed Demon Dog", "grade": "named", "type": "monster" },
+  "504446": { "id": 504446, "name": "Rough Seabed Demon Dog", "grade": "named", "type": "monster" },
+  "290010": { "id": 290010, "name": "카제로스의 독기", "grade": "normal", "type": "monster", "pushimmune": true },
+  "290011": { "id": 290011, "name": "카제로스의 독기", "grade": "normal", "type": "monster", "pushimmune": true },
+  "290012": { "id": 290012, "name": "카제로스의 독기", "grade": "normal", "type": "monster", "pushimmune": true },
+  "290013": { "id": 290013, "name": "투명몬스터_독기 폭탄", "grade": "normal", "type": "monster", "pushimmune": true },
+  "294200": { "id": 294200, "name": "Vinus Plunderer", "grade": "normal", "type": "monster" },
+  "294201": { "id": 294201, "name": "Enhanced Vinus Plunderer", "grade": "normal", "type": "monster" },
+  "294202": { "id": 294202, "name": "Vinus Plunderer", "grade": "normal", "type": "monster" },
+  "294203": { "id": 294203, "name": "Sylmael Construct", "grade": "normal", "type": "monster" },
+  "294204": { "id": 294204, "name": "Miasmic Devourer", "grade": "normal", "type": "monster" },
+  "145538": { "id": 145538, "name": "독기 덩어리", "grade": "normal", "type": "monster", "pushimmune": true },
+  "291005": {
+    "id": 291005,
+    "name": "쿠르잔 투명 몬스터 강화석",
+    "grade": "normal",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "292006": {
+    "id": 292006,
+    "name": "쿠르잔 투명 몬스터 강화석",
+    "grade": "normal",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "293006": {
+    "id": 293006,
+    "name": "쿠르잔 투명 몬스터 강화석",
+    "grade": "normal",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "293007": {
+    "id": 293007,
+    "name": "거대강화석 보호막 투명 몬스터",
+    "grade": "normal",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "293008": {
+    "id": 293008,
+    "name": "거대강화석 버프 투명 몬스터",
+    "grade": "normal",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "294300": {
+    "id": 294300,
+    "name": "쿠르잔 모코코 찾기 놀이용 영차",
+    "grade": "normal",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "294301": {
+    "id": 294301,
+    "name": "쿠르잔 모코코 찾기 놀이용 더줘콩",
+    "grade": "normal",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "290014": {
+    "id": 290014,
+    "name": "카제로스의 독기_소_idle2",
+    "grade": "normal",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "290015": {
+    "id": 290015,
+    "name": "카제로스의 독기_중_idle2",
+    "grade": "normal",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "290016": {
+    "id": 290016,
+    "name": "카제로스의 독기_대_idle2",
+    "grade": "normal",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "290017": {
+    "id": 290017,
+    "name": "카제로스의 독기_소_idle3",
+    "grade": "normal",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "290018": {
+    "id": 290018,
+    "name": "카제로스의 독기_중_idle3",
+    "grade": "normal",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "290019": {
+    "id": 290019,
+    "name": "카제로스의 독기_대_idle3",
+    "grade": "normal",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "504447": { "id": 504447, "name": "Red Tail Poisonous Scorpion", "grade": "normal", "type": "monster" },
+  "504448": { "id": 504448, "name": "Dark Tail Poisonous Scorpion", "grade": "normal", "type": "monster" },
+  "504449": { "id": 504449, "name": "Spike Tail Poisonous Scorpion", "grade": "normal", "type": "monster" },
+  "504450": { "id": 504450, "name": "초록 거미", "grade": "normal", "type": "monster" },
+  "504451": { "id": 504451, "name": "붉은 거미", "grade": "normal", "type": "monster" },
+  "504452": { "id": 504452, "name": "베른 남부 마력 골렘", "grade": "normal", "type": "monster" },
+  "504453": { "id": 504453, "name": "베른 남부 마력 골렘", "grade": "normal", "type": "monster" },
+  "504454": {
+    "id": 504454,
+    "name": "Shadowfallen Guardian Elemental",
+    "grade": "named",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "504455": { "id": 504455, "name": "자켈 전사_2", "grade": "normal", "type": "monster" },
+  "504456": { "id": 504456, "name": "자켈 병사_2", "grade": "normal", "type": "monster" },
+  "504457": { "id": 504457, "name": "자켈 투창병_1", "grade": "normal", "type": "monster" },
+  "504458": { "id": 504458, "name": "Mossy Guardian Construct", "grade": "normal", "type": "monster" },
+  "504459": { "id": 504459, "name": "토병 수호자", "grade": "normal", "type": "monster" },
+  "504460": { "id": 504460, "name": "Red Rock Tarabkin", "grade": "normal", "type": "monster" },
+  "504461": { "id": 504461, "name": "Giant Claw Krabtor", "grade": "named", "type": "monster", "pushimmune": true },
+  "292010": { "id": 292010, "name": "Poisonous Gargoyle", "grade": "normal", "type": "monster" },
+  "292011": { "id": 292011, "name": "Toxic Gargoyle", "grade": "normal", "type": "monster" },
+  "292012": { "id": 292012, "name": "Miasmic Demon Dog", "grade": "normal", "type": "monster" },
+  "292013": { "id": 292013, "name": "Enhanced Miasmic Demon Dog", "grade": "normal", "type": "monster" },
+  "504480": { "id": 504480, "name": "파수꾼", "grade": "boss", "type": "monster", "pushimmune": true },
+  "504481": { "id": 504481, "name": "파수꾼", "grade": "boss", "type": "monster", "pushimmune": true },
+  "504482": { "id": 504482, "name": "파수꾼", "grade": "boss", "type": "monster", "pushimmune": true },
+  "504483": { "id": 504483, "name": "파수꾼", "grade": "boss", "type": "monster", "pushimmune": true },
+  "29501001": { "id": 29501001, "name": "베히모스 물웅덩이", "grade": "boss", "type": "monster", "pushimmune": true },
+  "29501002": { "id": 29501002, "name": "폭풍룡 베히모스", "grade": "boss", "type": "monster", "pushimmune": true },
+  "29501003": {
+    "id": 29501003,
+    "name": "베히모스 위치 체크 투명몬스터",
+    "grade": "boss",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "29501004": { "id": 29501004, "name": "렌 공격용 소환수", "grade": "boss", "type": "monster", "pushimmune": true },
   "504800": { "id": 504800, "name": "Sea Turtle", "grade": "normal", "type": "monster" },
   "504801": { "id": 504801, "name": "Spotted Bat", "grade": "normal", "type": "monster" },
   "504802": { "id": 504802, "name": "Turtle", "grade": "named", "type": "monster", "pushimmune": true },
@@ -15674,6 +16119,7 @@
   "11111032": { "id": 11111032, "name": "기상술사", "grade": "boss", "type": "monster_pc_form" },
   "11111053": { "id": 11111053, "name": "슬레이어", "grade": "boss", "type": "monster_pc_form" },
   "11111054": { "id": 11111054, "name": "소울이터", "grade": "boss", "type": "monster_pc_form" },
+  "11111055": { "id": 11111055, "name": "브레이커", "grade": "boss", "type": "monster_pc_form" },
   "11111110": { "id": 11111110, "name": "워로드", "grade": "boss", "type": "monster_pc_form" },
   "11111111": { "id": 11111111, "name": "디스트로이어", "grade": "boss", "type": "monster_pc_form" },
   "11111112": { "id": 11111112, "name": "홀리나이트", "grade": "boss", "type": "monster_pc_form" },
@@ -15699,6 +16145,7 @@
   "11111132": { "id": 11111132, "name": "기상술사", "grade": "boss", "type": "monster_pc_form" },
   "11111133": { "id": 11111133, "name": "슬레이어", "grade": "boss", "type": "monster_pc_form" },
   "11111134": { "id": 11111134, "name": "소울이터", "grade": "boss", "type": "monster_pc_form" },
+  "11111135": { "id": 11111135, "name": "브레이커", "grade": "boss", "type": "monster_pc_form" },
   "11111210": { "id": 11111210, "name": "워로드", "grade": "boss", "type": "monster_pc_form" },
   "11111211": { "id": 11111211, "name": "디스트로이어", "grade": "boss", "type": "monster_pc_form" },
   "11111212": { "id": 11111212, "name": "홀리나이트", "grade": "boss", "type": "monster_pc_form" },
@@ -15724,6 +16171,7 @@
   "11111232": { "id": 11111232, "name": "기상술사", "grade": "boss", "type": "monster_pc_form" },
   "11111233": { "id": 11111233, "name": "슬레이어", "grade": "boss", "type": "monster_pc_form" },
   "11111234": { "id": 11111234, "name": "소울이터", "grade": "boss", "type": "monster_pc_form" },
+  "11111235": { "id": 11111235, "name": "브레이커", "grade": "boss", "type": "monster_pc_form" },
   "882200": {
     "id": 882200,
     "name": "Cube Bewitched Warrior",
@@ -15892,6 +16340,20 @@
     "type": "monster_pc_form",
     "pushimmune": true
   },
+  "882224": {
+    "id": 882224,
+    "name": "Cube Bewitched Assassin",
+    "grade": "named",
+    "type": "monster_pc_form",
+    "pushimmune": true
+  },
+  "882225": {
+    "id": 882225,
+    "name": "Cube Bewitched Martial Artist",
+    "grade": "named",
+    "type": "monster_pc_form",
+    "pushimmune": true
+  },
   "882250": {
     "id": 882250,
     "name": "Wingsuit Mercenary",
@@ -15916,13 +16378,6 @@
   "882253": {
     "id": 882253,
     "name": "Wingsuit Mercenary",
-    "grade": "named",
-    "type": "monster_pc_form",
-    "pushimmune": true
-  },
-  "882224": {
-    "id": 882224,
-    "name": "Cube Bewitched Assassin",
     "grade": "named",
     "type": "monster_pc_form",
     "pushimmune": true
@@ -16095,6 +16550,20 @@
     "type": "monster_pc_form",
     "pushimmune": true
   },
+  "882524": {
+    "id": 882524,
+    "name": "Cube Bewitched Assassin",
+    "grade": "named",
+    "type": "monster_pc_form",
+    "pushimmune": true
+  },
+  "882525": {
+    "id": 882525,
+    "name": "Cube Bewitched Martial Artist",
+    "grade": "named",
+    "type": "monster_pc_form",
+    "pushimmune": true
+  },
   "882550": {
     "id": 882550,
     "name": "Wingsuit Mercenary",
@@ -16119,13 +16588,6 @@
   "882553": {
     "id": 882553,
     "name": "Wingsuit Mercenary",
-    "grade": "named",
-    "type": "monster_pc_form",
-    "pushimmune": true
-  },
-  "882524": {
-    "id": 882524,
-    "name": "Cube Bewitched Assassin",
     "grade": "named",
     "type": "monster_pc_form",
     "pushimmune": true
@@ -16298,6 +16760,20 @@
     "type": "monster_pc_form",
     "pushimmune": true
   },
+  "882824": {
+    "id": 882824,
+    "name": "Cube Bewitched Assassin",
+    "grade": "named",
+    "type": "monster_pc_form",
+    "pushimmune": true
+  },
+  "882825": {
+    "id": 882825,
+    "name": "Cube Bewitched Martial Artist",
+    "grade": "named",
+    "type": "monster_pc_form",
+    "pushimmune": true
+  },
   "882850": {
     "id": 882850,
     "name": "Wingsuit Mercenary",
@@ -16322,13 +16798,6 @@
   "882853": {
     "id": 882853,
     "name": "Wingsuit Mercenary",
-    "grade": "named",
-    "type": "monster_pc_form",
-    "pushimmune": true
-  },
-  "882824": {
-    "id": 882824,
-    "name": "Cube Bewitched Assassin",
     "grade": "named",
     "type": "monster_pc_form",
     "pushimmune": true
@@ -16501,6 +16970,20 @@
     "type": "monster_pc_form",
     "pushimmune": true
   },
+  "883124": {
+    "id": 883124,
+    "name": "Cube Bewitched Assassin",
+    "grade": "named",
+    "type": "monster_pc_form",
+    "pushimmune": true
+  },
+  "883125": {
+    "id": 883125,
+    "name": "Cube Bewitched Martial Artist",
+    "grade": "named",
+    "type": "monster_pc_form",
+    "pushimmune": true
+  },
   "883150": {
     "id": 883150,
     "name": "Wingsuit Mercenary",
@@ -16525,13 +17008,6 @@
   "883153": {
     "id": 883153,
     "name": "Wingsuit Mercenary",
-    "grade": "named",
-    "type": "monster_pc_form",
-    "pushimmune": true
-  },
-  "883124": {
-    "id": 883124,
-    "name": "Cube Bewitched Assassin",
     "grade": "named",
     "type": "monster_pc_form",
     "pushimmune": true
@@ -22643,6 +23119,13 @@
   "30161": { "id": 30161, "name": "Heavy Turret", "grade": "underling", "type": "summoned", "pushimmune": true },
   "30200": { "id": 30200, "name": "Shadow Illusion", "grade": "underling", "type": "summoned", "pushimmune": true },
   "30300": { "id": 30300, "name": "Shadow Illusion", "grade": "underling", "type": "summoned", "pushimmune": true },
+  "30400": {
+    "id": 30400,
+    "name": "블레이드 초각성기 잔상 연출",
+    "grade": "underling",
+    "type": "summoned",
+    "pushimmune": true
+  },
   "32050": { "id": 32050, "name": "Taunting Scarecrow", "grade": "underling", "type": "townsfolk" },
   "32051": { "id": 32051, "name": "Powerful Taunting Scarecrow", "grade": "underling", "type": "townsfolk" },
   "32052": { "id": 32052, "name": "Splendid Taunting Scarecrow", "grade": "underling", "type": "townsfolk" },
@@ -22710,6 +23193,20 @@
     "type": "monster",
     "pushimmune": true
   },
+  "53123": {
+    "id": 53123,
+    "name": "투명 NPC (에스더 스킬 실리안_싱글_발탄_1580)",
+    "grade": "normal",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "53124": {
+    "id": 53124,
+    "name": "투명 NPC (에스더 스킬 실리안_싱글_발탄_1620)",
+    "grade": "normal",
+    "type": "monster",
+    "pushimmune": true
+  },
   "53200": {
     "id": 53200,
     "name": "투명 NPC (에스더 스킬 웨이 발탄 1레벨)",
@@ -22741,6 +23238,20 @@
   "53222": {
     "id": 53222,
     "name": "투명 NPC (에스더 스킬 웨이_익스트림_발탄_1620)",
+    "grade": "normal",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "53223": {
+    "id": 53223,
+    "name": "투명 NPC (에스더 스킬 웨이_싱글_발탄_1580)",
+    "grade": "normal",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "53224": {
+    "id": 53224,
+    "name": "투명 NPC (에스더 스킬 웨이_싱글_발탄_1620)",
     "grade": "normal",
     "type": "monster",
     "pushimmune": true
@@ -22797,6 +23308,20 @@
   "53322": {
     "id": 53322,
     "name": "투명 NPC (에스더 스킬 바훈투르_익스트림_발탄_1620)",
+    "grade": "normal",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "53323": {
+    "id": 53323,
+    "name": "투명 NPC (에스더 스킬 바훈투르_싱글_발탄_1580)",
+    "grade": "normal",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "53324": {
+    "id": 53324,
+    "name": "투명 NPC (에스더 스킬 바훈투르_싱글_발탄_1620)",
     "grade": "normal",
     "type": "monster",
     "pushimmune": true
@@ -24579,6 +25104,153 @@
     "type": "monster",
     "pushimmune": true
   },
+  "58300": {
+    "id": 58300,
+    "name": "증원스킬_아제나_1관문_노말",
+    "grade": "normal",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "58301": {
+    "id": 58301,
+    "name": "증원스킬_아제나_1관문_하드",
+    "grade": "normal",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "58310": {
+    "id": 58310,
+    "name": "증원스킬_아제나_2관문_노말",
+    "grade": "normal",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "58311": {
+    "id": 58311,
+    "name": "증원스킬_아제나_2관문_하드",
+    "grade": "normal",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "58400": {
+    "id": 58400,
+    "name": "증원스킬_라하르트_1관문_노말",
+    "grade": "normal",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "58401": {
+    "id": 58401,
+    "name": "증원스킬_라하르트_1관문_하드",
+    "grade": "normal",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "58402": {
+    "id": 58402,
+    "name": "증원스킬_라하르트_1관문_노말_태양의 기사단_남",
+    "grade": "normal",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "58403": {
+    "id": 58403,
+    "name": "증원스킬_라하르트_1관문_하드_태양의 기사단_남",
+    "grade": "normal",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "58410": {
+    "id": 58410,
+    "name": "증원스킬_라하르트_2관문_노말",
+    "grade": "normal",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "58411": {
+    "id": 58411,
+    "name": "증원스킬_라하르트_2관문_하드",
+    "grade": "normal",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "58412": {
+    "id": 58412,
+    "name": "증원스킬_라하르트_2관문_노말_태양의 기사단_남",
+    "grade": "normal",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "58413": {
+    "id": 58413,
+    "name": "증원스킬_라하르트_2관문_하드_태양의 기사단_남",
+    "grade": "normal",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "58420": {
+    "id": 58420,
+    "name": "증원스킬_라하르트_2관문_하드_히든",
+    "grade": "normal",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "58500": {
+    "id": 58500,
+    "name": "증원스킬_아델_1관문_노말",
+    "grade": "normal",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "58501": {
+    "id": 58501,
+    "name": "증원스킬_아델_1관문_하드",
+    "grade": "normal",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "58502": {
+    "id": 58502,
+    "name": "증원스킬_아델_1관문_노말_달의기사단_근거리_남",
+    "grade": "normal",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "58503": {
+    "id": 58503,
+    "name": "증원스킬_아델_1관문_하드_달의기사단_근거리_남",
+    "grade": "normal",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "58504": {
+    "id": 58504,
+    "name": "증원스킬_아델_1관문_노말_달의기사단_원거리_여",
+    "grade": "normal",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "58505": {
+    "id": 58505,
+    "name": "증원스킬_아델_1관문_하드_달의기사단_원거리_여",
+    "grade": "normal",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "58600": {
+    "id": 58600,
+    "name": "증원스킬_에페르니아_2관문_노말",
+    "grade": "normal",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "58601": {
+    "id": 58601,
+    "name": "증원스킬_에페르니아_2관문_하드",
+    "grade": "normal",
+    "type": "monster",
+    "pushimmune": true
+  },
   "121030": { "id": 121030, "name": "Male Ladybug", "grade": "none", "type": "summoned" },
   "121031": { "id": 121031, "name": "Male Ladybug", "grade": "none", "type": "summoned" },
   "121032": { "id": 121032, "name": "Male Ladybug", "grade": "none", "type": "summoned" },
@@ -24824,6 +25496,10 @@
   "10002913": { "id": 10002913, "name": "Citron-Caped Eeyo", "grade": "underling", "type": "pet" },
   "10002914": { "id": 10002914, "name": "Dawnbringer Nyao", "grade": "underling", "type": "pet" },
   "10002915": { "id": 10002915, "name": "Coy Cat Kyao", "grade": "underling", "type": "pet" },
+  "10003001": { "id": 10003001, "name": "Foreman Burk", "grade": "underling", "type": "pet" },
+  "10003002": { "id": 10003002, "name": "Gullible Vivi", "grade": "underling", "type": "pet" },
+  "10003011": { "id": 10003011, "name": "Foreman Burk", "grade": "underling", "type": "pet" },
+  "10003012": { "id": 10003012, "name": "Gullible Vivi", "grade": "underling", "type": "pet" },
   "10003203": { "id": 10003203, "name": "Flawless Shammy", "grade": "underling", "type": "pet" },
   "10003213": { "id": 10003213, "name": "Flawless Shammy", "grade": "underling", "type": "pet" },
   "10003301": { "id": 10003301, "name": "Twinkling Kakung", "grade": "underling", "type": "pet" },
@@ -24844,6 +25520,10 @@
   "10003615": { "id": 10003615, "name": "Vacationing Betsy", "grade": "underling", "type": "pet" },
   "10003701": { "id": 10003701, "name": "Luke Atdis Moko", "grade": "underling", "type": "pet" },
   "10003711": { "id": 10003711, "name": "Luke Atdis Moko", "grade": "underling", "type": "pet" },
+  "10003801": { "id": 10003801, "name": "Warm Moon Fox", "grade": "underling", "type": "pet" },
+  "10003802": { "id": 10003802, "name": "Radiant Moon Fox", "grade": "underling", "type": "pet" },
+  "10003811": { "id": 10003811, "name": "Warm Moon Fox", "grade": "underling", "type": "pet" },
+  "10003812": { "id": 10003812, "name": "Radiant Moon Fox", "grade": "underling", "type": "pet" },
   "10003901": { "id": 10003901, "name": "Mysterious Moon Fox", "grade": "underling", "type": "pet" },
   "10003902": { "id": 10003902, "name": "Ephemeral Moon Fox", "grade": "underling", "type": "pet" },
   "10003903": { "id": 10003903, "name": "Soft Moon Fox", "grade": "underling", "type": "pet" },
@@ -24854,6 +25534,26 @@
   "10003913": { "id": 10003913, "name": "Soft Moon Fox", "grade": "underling", "type": "pet" },
   "10003914": { "id": 10003914, "name": "Fuzzy Moon Fox", "grade": "underling", "type": "pet" },
   "10003915": { "id": 10003915, "name": "Cozy Moon Fox", "grade": "underling", "type": "pet" },
+  "10004001": { "id": 10004001, "name": "Boris Bear", "grade": "underling", "type": "pet" },
+  "10004002": { "id": 10004002, "name": "Bernie Bear", "grade": "underling", "type": "pet" },
+  "10004003": { "id": 10004003, "name": "Bonnie Bear", "grade": "underling", "type": "pet" },
+  "10004004": { "id": 10004004, "name": "Brianna Bear", "grade": "underling", "type": "pet" },
+  "10004005": { "id": 10004005, "name": "Betty Bear", "grade": "underling", "type": "pet" },
+  "10004006": { "id": 10004006, "name": "Blixem Bear", "grade": "underling", "type": "pet" },
+  "10004007": { "id": 10004007, "name": "Blanche Bear", "grade": "underling", "type": "pet" },
+  "10004008": { "id": 10004008, "name": "Bora Bear", "grade": "underling", "type": "pet" },
+  "10004009": { "id": 10004009, "name": "Bunni Bear", "grade": "underling", "type": "pet" },
+  "10004010": { "id": 10004010, "name": "Bobbi Bear", "grade": "underling", "type": "pet" },
+  "10004011": { "id": 10004011, "name": "Boris Bear", "grade": "underling", "type": "pet" },
+  "10004012": { "id": 10004012, "name": "Bernie Bear", "grade": "underling", "type": "pet" },
+  "10004013": { "id": 10004013, "name": "Bonnie Bear", "grade": "underling", "type": "pet" },
+  "10004014": { "id": 10004014, "name": "Brianna Bear", "grade": "underling", "type": "pet" },
+  "10004015": { "id": 10004015, "name": "Betty Bear", "grade": "underling", "type": "pet" },
+  "10004016": { "id": 10004016, "name": "Blixem Bear", "grade": "underling", "type": "pet" },
+  "10004017": { "id": 10004017, "name": "Blanche Bear", "grade": "underling", "type": "pet" },
+  "10004018": { "id": 10004018, "name": "Bora Bear", "grade": "underling", "type": "pet" },
+  "10004019": { "id": 10004019, "name": "Bunni Bear", "grade": "underling", "type": "pet" },
+  "10004020": { "id": 10004020, "name": "Bobbi Bear", "grade": "underling", "type": "pet" },
   "10100001": { "id": 10100001, "name": "Heavy Walker-M1", "grade": "underling", "type": "pet" },
   "10100002": { "id": 10100002, "name": "Heavy Walker-M2", "grade": "underling", "type": "pet" },
   "10100003": { "id": 10100003, "name": "Heavy Walker-M3", "grade": "underling", "type": "pet" },
@@ -25246,6 +25946,26 @@
   "10104013": { "id": 10104013, "name": "Plush Pillow Cesealia", "grade": "underling", "type": "pet" },
   "10104014": { "id": 10104014, "name": "Bunhead Sealena", "grade": "underling", "type": "pet" },
   "10104015": { "id": 10104015, "name": "Antler Sealbastian", "grade": "underling", "type": "pet" },
+  "10104101": { "id": 10104101, "name": "Silent Knight Tory", "grade": "underling", "type": "pet" },
+  "10104102": { "id": 10104102, "name": "Helm Knight Tomi", "grade": "underling", "type": "pet" },
+  "10104103": { "id": 10104103, "name": "Ironblood Knight Toby", "grade": "underling", "type": "pet" },
+  "10104104": { "id": 10104104, "name": "Wisdom Knight Tony", "grade": "underling", "type": "pet" },
+  "10104105": { "id": 10104105, "name": "Greatest Knight Toki", "grade": "underling", "type": "pet" },
+  "10104106": { "id": 10104106, "name": "Earth Knight Torang", "grade": "underling", "type": "pet" },
+  "10104107": { "id": 10104107, "name": "Snowfield Knight Tosun", "grade": "underling", "type": "pet" },
+  "10104108": { "id": 10104108, "name": "Deep Sea Knight Tomun", "grade": "underling", "type": "pet" },
+  "10104109": { "id": 10104109, "name": "Mist Knight Tosik", "grade": "underling", "type": "pet" },
+  "10104110": { "id": 10104110, "name": "Flame Knight Thor", "grade": "underling", "type": "pet" },
+  "10104111": { "id": 10104111, "name": "Silent Knight Tory", "grade": "underling", "type": "pet" },
+  "10104112": { "id": 10104112, "name": "Helm Knight Tomi", "grade": "underling", "type": "pet" },
+  "10104113": { "id": 10104113, "name": "Ironblood Knight Toby", "grade": "underling", "type": "pet" },
+  "10104114": { "id": 10104114, "name": "Wisdom Knight Tony", "grade": "underling", "type": "pet" },
+  "10104115": { "id": 10104115, "name": "Greatest Knight Toki", "grade": "underling", "type": "pet" },
+  "10104116": { "id": 10104116, "name": "Earth Knight Torang", "grade": "underling", "type": "pet" },
+  "10104117": { "id": 10104117, "name": "Snowfield Knight Tosun", "grade": "underling", "type": "pet" },
+  "10104118": { "id": 10104118, "name": "Deep Sea Knight Tomun", "grade": "underling", "type": "pet" },
+  "10104119": { "id": 10104119, "name": "Mist Knight Tosik", "grade": "underling", "type": "pet" },
+  "10104120": { "id": 10104120, "name": "Flame Knight Thor", "grade": "underling", "type": "pet" },
   "9910031": { "id": 9910031, "name": "악마개", "grade": "underling", "type": "monster" },
   "9920031": { "id": 9920031, "name": "악마개", "grade": "underling", "type": "monster" },
   "9930031": { "id": 9930031, "name": "악마개", "grade": "underling", "type": "monster" },
@@ -25279,6 +25999,7 @@
   "959305001": { "id": 959305001, "name": "창술사", "grade": "normal", "type": "townsfolk" },
   "959311001": { "id": 959311001, "name": "무도가(남)", "grade": "normal", "type": "townsfolk" },
   "959312001": { "id": 959312001, "name": "스트라이커", "grade": "normal", "type": "townsfolk" },
+  "959313001": { "id": 959313001, "name": "브레이커", "grade": "normal", "type": "townsfolk" },
   "959401001": { "id": 959401001, "name": "데런", "grade": "normal", "type": "townsfolk" },
   "959402001": { "id": 959402001, "name": "블레이드", "grade": "normal", "type": "townsfolk" },
   "959403001": { "id": 959403001, "name": "데모닉", "grade": "normal", "type": "townsfolk" },
@@ -25301,6 +26022,7 @@
   "960000004": { "id": 960000004, "name": "트로피용 하드 퍼클 1위", "grade": "normal", "type": "townsfolk" },
   "960000005": { "id": 960000005, "name": "트로피용 하드 퍼클 2 ~4위", "grade": "normal", "type": "townsfolk" },
   "960000006": { "id": 960000006, "name": "트로피용 하드 퍼클 5 ~10위", "grade": "normal", "type": "townsfolk" },
+  "960000007": { "id": 960000007, "name": "시련하누마탄 트로피", "grade": "normal", "type": "townsfolk" },
   "978600000": { "id": 978600000, "name": "비살상 몬스터 1", "grade": "boss", "type": "monster", "pushimmune": true },
   "978600001": { "id": 978600001, "name": "비살상 몬스터 2", "grade": "boss", "type": "monster", "pushimmune": true },
   "978600002": { "id": 978600002, "name": "비살상 몬스터 3", "grade": "boss", "type": "monster", "pushimmune": true },
@@ -35884,7 +36606,151 @@
   "51951": { "id": 51951, "name": "Militia Member", "grade": "normal", "type": "townsfolk" },
   "51952": { "id": 51952, "name": "피냐타 환경", "grade": "normal", "type": "townsfolk" },
   "51953": { "id": 51953, "name": "피냐타 환경", "grade": "normal", "type": "townsfolk" },
+  "51954": { "id": 51954, "name": "Jederico", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "51955": { "id": 51955, "name": "Thirain", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "51956": { "id": 51956, "name": "Kaldor", "grade": "normal", "type": "townsfolk" },
+  "51957": { "id": 51957, "name": "Goulding", "grade": "normal", "type": "townsfolk" },
+  "51958": { "id": 51958, "name": "Levi", "grade": "normal", "type": "townsfolk" },
+  "51959": { "id": 51959, "name": "Young Armen's Phantom", "grade": "normal", "type": "townsfolk" },
+  "51960": { "id": 51960, "name": "Armen", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "51961": { "id": 51961, "name": "Gustaven", "grade": "normal", "type": "townsfolk" },
+  "51962": { "id": 51962, "name": "Young Armen's Phantom", "grade": "normal", "type": "townsfolk" },
+  "51963": { "id": 51963, "name": "Armen", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "51964": { "id": 51964, "name": "Twisted Statue", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "51965": {
+    "id": 51965,
+    "name": "Auditory Hallucination",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "51966": {
+    "id": 51966,
+    "name": "Auditory Hallucination",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "51967": {
+    "id": 51967,
+    "name": "Auditory Hallucination",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "51968": { "id": 51968, "name": "Lurking Spiritual Echo", "grade": "normal", "type": "townsfolk" },
+  "51969": { "id": 51969, "name": "Lurking Spiritual Echo", "grade": "normal", "type": "townsfolk" },
+  "51970": { "id": 51970, "name": "Lurking Spiritual Echo", "grade": "normal", "type": "townsfolk" },
+  "51971": { "id": 51971, "name": "Lurking Spiritual Echo", "grade": "normal", "type": "townsfolk" },
+  "51972": { "id": 51972, "name": "Potion Bottle", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "51973": { "id": 51973, "name": "Bag", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "51974": { "id": 51974, "name": "Young Armen's Voice", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "51975": { "id": 51975, "name": "Bishop Lazaro", "grade": "normal", "type": "townsfolk" },
+  "51976": { "id": 51976, "name": "Thirain", "grade": "normal", "type": "townsfolk" },
+  "51977": { "id": 51977, "name": "Jederico", "grade": "normal", "type": "townsfolk" },
+  "51978": { "id": 51978, "name": "Levi", "grade": "normal", "type": "townsfolk" },
+  "51979": { "id": 51979, "name": "Goulding", "grade": "normal", "type": "townsfolk" },
+  "51980": { "id": 51980, "name": "Kaldor", "grade": "normal", "type": "townsfolk" },
+  "51981": { "id": 51981, "name": "Gustaven", "grade": "normal", "type": "townsfolk" },
+  "51982": { "id": 51982, "name": "Twilight Priest", "grade": "normal", "type": "townsfolk" },
+  "51983": { "id": 51983, "name": "Twilight Priest", "grade": "normal", "type": "townsfolk" },
+  "51984": { "id": 51984, "name": "Twilight Priest", "grade": "normal", "type": "townsfolk" },
   "51985": { "id": 51985, "name": "Strange Piñata", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "51986": { "id": 51986, "name": "Twisted Angel Statue", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "51987": { "id": 51987, "name": "Dawn Priest", "grade": "normal", "type": "townsfolk" },
+  "51988": { "id": 51988, "name": "Dawn Priest", "grade": "normal", "type": "townsfolk" },
+  "51989": { "id": 51989, "name": "Dawn Priest", "grade": "named", "type": "townsfolk", "pushimmune": true },
+  "51990": { "id": 51990, "name": "Dawn Priest", "grade": "named", "type": "townsfolk", "pushimmune": true },
+  "51991": { "id": 51991, "name": "Dawn Priest", "grade": "normal", "type": "townsfolk" },
+  "51992": { "id": 51992, "name": "Dawn Priest", "grade": "named", "type": "townsfolk", "pushimmune": true },
+  "51993": { "id": 51993, "name": "Dawn Priest", "grade": "normal", "type": "townsfolk" },
+  "51994": { "id": 51994, "name": "Escort Knight Conrad", "grade": "normal", "type": "townsfolk" },
+  "51995": { "id": 51995, "name": "Dawn Priest Hesikio", "grade": "named", "type": "townsfolk", "pushimmune": true },
+  "51996": { "id": 51996, "name": "Armen", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "51997": { "id": 51997, "name": "Dead End", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "51998": { "id": 51998, "name": "Young Armen", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "51999": { "id": 51999, "name": "Young Armen", "grade": "normal", "type": "townsfolk" },
+  "52000": { "id": 52000, "name": "Hogun", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "52001": { "id": 52001, "name": "Knight Commander Cassleford", "grade": "normal", "type": "townsfolk" },
+  "52002": {
+    "id": 52002,
+    "name": "투명_테르미아 도서관 빛줄기",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "52003": { "id": 52003, "name": "Luterran Merchant", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "52004": { "id": 52004, "name": "Luterran Merchant", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "52005": { "id": 52005, "name": "웅성이는 NPC 3 (시녀)", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "52006": { "id": 52006, "name": "My Status", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "52007": { "id": 52007, "name": "Guard", "grade": "normal", "type": "townsfolk" },
+  "52008": { "id": 52008, "name": "Bishop Lazaro", "grade": "normal", "type": "townsfolk" },
+  "52009": {
+    "id": 52009,
+    "name": "투명_웅성웅성 관중1_선고의 날",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "52010": {
+    "id": 52010,
+    "name": "투명_웅성웅성 관중2_선고의 날",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "52011": { "id": 52011, "name": "기사", "grade": "normal", "type": "townsfolk" },
+  "52012": { "id": 52012, "name": "Suitable Person", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "52013": {
+    "id": 52013,
+    "name": "세이크리아 고위 전투 사제 (꾸밈용)",
+    "grade": "named",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "52014": { "id": 52014, "name": "Merian", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "52015": { "id": 52015, "name": "Young Armen's Phantom", "grade": "normal", "type": "townsfolk" },
+  "52016": { "id": 52016, "name": "Thirain", "grade": "normal", "type": "townsfolk" },
+  "52017": { "id": 52017, "name": "Young Armen's Phantom", "grade": "normal", "type": "townsfolk" },
+  "52018": { "id": 52018, "name": "Meehan", "grade": "normal", "type": "townsfolk" },
+  "52019": { "id": 52019, "name": "Zakra", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "52020": { "id": 52020, "name": "Alfonso Vediche", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "52021": { "id": 52021, "name": "Jederico", "grade": "normal", "type": "townsfolk" },
+  "52022": { "id": 52022, "name": "Kaldor", "grade": "normal", "type": "townsfolk" },
+  "52023": { "id": 52023, "name": "Shandi", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "52024": { "id": 52024, "name": "Judge Beo", "grade": "normal", "type": "townsfolk" },
+  "52025": { "id": 52025, "name": "심판 사제 (시작용)", "grade": "normal", "type": "townsfolk" },
+  "52026": { "id": 52026, "name": "Zinnervale", "grade": "normal", "type": "townsfolk" },
+  "52027": { "id": 52027, "name": "Goulding", "grade": "normal", "type": "townsfolk" },
+  "52028": { "id": 52028, "name": "Levi", "grade": "normal", "type": "townsfolk" },
+  "52029": { "id": 52029, "name": "Verad", "grade": "normal", "type": "townsfolk" },
+  "52030": { "id": 52030, "name": "Isaac", "grade": "normal", "type": "townsfolk" },
+  "52031": { "id": 52031, "name": "Zeherade", "grade": "normal", "type": "townsfolk" },
+  "52032": { "id": 52032, "name": "Zeherade", "grade": "normal", "type": "townsfolk" },
+  "52033": { "id": 52033, "name": "Mariu", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "52034": { "id": 52034, "name": "Historian Leopoldin", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "52035": { "id": 52035, "name": "Zakra", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "52036": { "id": 52036, "name": "Thirain", "grade": "normal", "type": "townsfolk" },
+  "52037": { "id": 52037, "name": "Alfonso Vediche", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "52038": { "id": 52038, "name": "Bishop Lazaro", "grade": "normal", "type": "townsfolk" },
+  "52039": {
+    "id": 52039,
+    "name": "투명_심판관 비오_선고의날",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "52040": { "id": 52040, "name": "Shandi", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "52041": { "id": 52041, "name": "Jederico", "grade": "normal", "type": "townsfolk" },
+  "52042": { "id": 52042, "name": "Judge Beo", "grade": "normal", "type": "townsfolk" },
+  "52043": { "id": 52043, "name": "Holy Knight", "grade": "elite", "type": "townsfolk" },
+  "52044": { "id": 52044, "name": "Zinnervale", "grade": "normal", "type": "townsfolk" },
+  "52045": { "id": 52045, "name": "Goulding", "grade": "normal", "type": "townsfolk" },
+  "52046": { "id": 52046, "name": "Levi", "grade": "normal", "type": "townsfolk" },
+  "52047": { "id": 52047, "name": "Kaldor", "grade": "normal", "type": "townsfolk" },
+  "52048": { "id": 52048, "name": "Rosaline Vediche", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "52049": { "id": 52049, "name": "Ahrzen", "grade": "normal", "type": "townsfolk" },
+  "52050": { "id": 52050, "name": "Young Armen's Phantom", "grade": "normal", "type": "townsfolk" },
   "52051": {
     "id": 52051,
     "name": "환경_라일라이 아일랜드_여1",
@@ -36119,6 +36985,637 @@
     "type": "townsfolk",
     "pushimmune": true
   },
+  "52096": { "id": 52096, "name": "Rosaline Vediche", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "52097": { "id": 52097, "name": "Ahrzen", "grade": "normal", "type": "townsfolk" },
+  "52098": { "id": 52098, "name": "라자로 대동 전투 사제", "grade": "normal", "type": "townsfolk" },
+  "52099": { "id": 52099, "name": "라자로 대동 전투 사제2", "grade": "named", "type": "townsfolk", "pushimmune": true },
+  "52100": { "id": 52100, "name": "실리안 배웅 기사들_창", "grade": "normal", "type": "townsfolk" },
+  "52101": { "id": 52101, "name": "실리안 배웅 기사들_검", "grade": "normal", "type": "townsfolk" },
+  "52102": { "id": 52102, "name": "실리안 배웅 기사들_검_여자", "grade": "normal", "type": "townsfolk" },
+  "52103": {
+    "id": 52103,
+    "name": "이단심판 구경 사제들_전투 정예",
+    "grade": "named",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "52104": { "id": 52104, "name": "이단심판 구경 사제들_전투 법사", "grade": "normal", "type": "townsfolk" },
+  "52105": {
+    "id": 52105,
+    "name": "이단심판 구경 사제들_고위 남1",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "52106": {
+    "id": 52106,
+    "name": "이단심판 구경 사제들_고위 남2",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "52107": {
+    "id": 52107,
+    "name": "이단심판 구경 사제들_고위 남3",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "52108": {
+    "id": 52108,
+    "name": "이단심판 구경 사제들_고위 남4",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "52109": {
+    "id": 52109,
+    "name": "이단심판 구경 사제들_고위 여1",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "52110": {
+    "id": 52110,
+    "name": "이단심판 구경 사제들_고위 여2",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "52111": {
+    "id": 52111,
+    "name": "이단심판 구경 사제들_고위 여3",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "52112": {
+    "id": 52112,
+    "name": "이단심판 구경 사제들_고위 여4",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "52113": {
+    "id": 52113,
+    "name": "이단심판 구경 주민_플레체 주민_청년남1",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "52114": {
+    "id": 52114,
+    "name": "이단심판 구경 주민_플레체 주민_청년남3",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "52115": {
+    "id": 52115,
+    "name": "이단심판 구경 주민_플레체_주민_여_청년-1",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "52116": {
+    "id": 52116,
+    "name": "이단심판 구경 주민_플레체_주민_여_청년-2",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "52117": {
+    "id": 52117,
+    "name": "이단심판 구경 주민_플레체_주민_귀족_남_청년",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "52118": {
+    "id": 52118,
+    "name": "이단심판 구경 주민_플레체_주민_귀족_남_청년-1",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "52119": {
+    "id": 52119,
+    "name": "이단심판 구경 주민_플레체_주민_귀족_남_청년-2",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "52120": {
+    "id": 52120,
+    "name": "이단심판 구경 주민_플레체_주민_귀족_남_청년-3",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "52121": {
+    "id": 52121,
+    "name": "이단심판 구경 주민_플레체_주민_귀족_남_장년",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "52122": {
+    "id": 52122,
+    "name": "이단심판 구경 주민_플레체_주민_귀족_남_장년-1",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "52123": {
+    "id": 52123,
+    "name": "이단심판 구경 주민_플레체_주민_귀족_남_장년-2",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "52124": {
+    "id": 52124,
+    "name": "이단심판 구경 주민_플레체_주민_귀족_남_장년-3",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "52125": {
+    "id": 52125,
+    "name": "이단심판 구경 주민_NPC 플레체 주민_귀족_여_청년",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "52126": {
+    "id": 52126,
+    "name": "이단심판 구경 주민_NPC 플레체 주민_귀족_여_청년-1",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "52127": {
+    "id": 52127,
+    "name": "이단심판 구경 주민_NPC 플레체 주민_귀족_여_청년-2",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "52128": {
+    "id": 52128,
+    "name": "이단심판 구경 주민_NPC 플레체 주민_귀족_여_청년-3",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "52129": {
+    "id": 52129,
+    "name": "이단심판 구경 주민_NPC 플레체 주민_귀족_여_장년",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "52130": {
+    "id": 52130,
+    "name": "이단심판 구경 주민_NPC 플레체 주민_귀족_여_장년-1",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "52131": {
+    "id": 52131,
+    "name": "이단심판 구경 주민_NPC 플레체 주민_귀족_여_장년-3",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "52132": {
+    "id": 52132,
+    "name": "이단심판 구경 주민_플레체_요즈 주민_남_청년",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "52133": {
+    "id": 52133,
+    "name": "이단심판 구경 주민_플레체_요즈 주민_남_청년-1",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "52134": {
+    "id": 52134,
+    "name": "이단심판 구경 주민_플레체_요즈 주민_남_청년-2",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "52135": {
+    "id": 52135,
+    "name": "이단심판 구경 주민_플레체_요즈 상인_남_청년-3",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "52136": {
+    "id": 52136,
+    "name": "이단심판 구경 주민_플레체_요즈 주민_여_청년",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "52137": {
+    "id": 52137,
+    "name": "이단심판 구경 주민_플레체_요즈 주민_여_청년-1",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "52138": {
+    "id": 52138,
+    "name": "이단심판 구경 주민_플레체_요즈 주민_여_청년-2",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "52139": {
+    "id": 52139,
+    "name": "이단심판 구경 주민_플레체_요즈 주민_여_청년-3",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "52140": {
+    "id": 52140,
+    "name": "이단심판 구경 주민_플레체_요즈 상인_여_청년-3",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "52141": {
+    "id": 52141,
+    "name": "이단심판 구경 주민_플레체 주민_남_청년",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "52142": {
+    "id": 52142,
+    "name": "이단심판 구경 주민_플레체 주민_남_청년-1",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "52143": {
+    "id": 52143,
+    "name": "이단심판 구경 주민_플레체 주민_남_청년-2",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "52144": {
+    "id": 52144,
+    "name": "이단심판 구경 주민_플레체 상인_남_청년",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "52145": {
+    "id": 52145,
+    "name": "이단심판 구경 주민_플레체 상인_남_청년-1",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "52146": {
+    "id": 52146,
+    "name": "이단심판 구경 주민_플레체 주민_남_장년-2",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "52147": {
+    "id": 52147,
+    "name": "이단심판 구경 주민_플레체 주민_남_장년",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "52148": {
+    "id": 52148,
+    "name": "이단심판 구경 주민_플레체 상인_남_장년-2",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "52149": {
+    "id": 52149,
+    "name": "이단심판 구경 주민_플레체 주민_남_노년",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "52150": {
+    "id": 52150,
+    "name": "이단심판 구경 주민_플레체 주민_남_노년-1",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "52151": {
+    "id": 52151,
+    "name": "이단심판 구경 주민_플레체 주민_남_노년-2",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "52152": {
+    "id": 52152,
+    "name": "이단심판 구경 주민_플레체 상인_남_노년-2",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "52153": {
+    "id": 52153,
+    "name": "이단심판 구경 주민_플레체_주민_여_청년",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "52154": {
+    "id": 52154,
+    "name": "이단심판 구경 주민_플레체_주민_여_청년-1",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "52155": {
+    "id": 52155,
+    "name": "이단심판 구경 주민_플레체_주민_여_중년-1",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "52156": {
+    "id": 52156,
+    "name": "이단심판 구경 주민_플레체_주민_여_노년",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "52157": {
+    "id": 52157,
+    "name": "이단심판 구경 주민_플레체_주민_여_노년-1",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "52158": {
+    "id": 52158,
+    "name": "이단심판 구경 주민_플레체_상인_여_청년",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "52159": {
+    "id": 52159,
+    "name": "이단심판 구경 주민_플레체_상인_여_청년-1",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "52160": { "id": 52160, "name": "이단심판 구경 주민_귀족 보통 남", "grade": "normal", "type": "townsfolk" },
+  "52161": {
+    "id": 52161,
+    "name": "이단심판 구경 주민_베른_남부주민_인간_남_꼬마-1",
+    "grade": "normal",
+    "type": "townsfolk"
+  },
+  "52162": {
+    "id": 52162,
+    "name": "이단심판 구경 주민_베른_남부주민_인간_남_꼬마-2",
+    "grade": "normal",
+    "type": "townsfolk"
+  },
+  "52163": {
+    "id": 52163,
+    "name": "이단심판 구경 주민_베른_남부주민_인간_여_꼬마",
+    "grade": "normal",
+    "type": "townsfolk"
+  },
+  "52164": {
+    "id": 52164,
+    "name": "이단심판 구경 주민_베른_남부주민_인간_남_청년-7",
+    "grade": "normal",
+    "type": "townsfolk"
+  },
+  "52165": { "id": 52165, "name": "Judgment Priest", "grade": "normal", "type": "townsfolk" },
+  "52166": { "id": 52166, "name": "Judgment Priest", "grade": "normal", "type": "townsfolk" },
+  "52167": { "id": 52167, "name": "Judgment Holy Knight", "grade": "elite", "type": "townsfolk" },
+  "52168": { "id": 52168, "name": "심판 사제_여 (꾸밈용)", "grade": "normal", "type": "townsfolk" },
+  "52169": { "id": 52169, "name": "심판 사제_남 (꾸밈용)", "grade": "normal", "type": "townsfolk" },
+  "52170": { "id": 52170, "name": "심판 성기사 (꾸밈용)", "grade": "normal", "type": "townsfolk" },
+  "52171": { "id": 52171, "name": "심판 성기사_고위 (꾸밈용)", "grade": "elite", "type": "townsfolk" },
+  "52172": {
+    "id": 52172,
+    "name": "항의 사제(여)_선고의 날",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "52173": {
+    "id": 52173,
+    "name": "항의 사제2(남)_선고의 날",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "52174": {
+    "id": 52174,
+    "name": "사라지는 사제_선고의 날",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "52175": { "id": 52175, "name": "반기는 중급 현자1_여", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "52176": { "id": 52176, "name": "반기는 중급 현자2_여", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "52177": { "id": 52177, "name": "반기는 중급 현자3_남", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "52178": { "id": 52178, "name": "반기는 중급 현자4_남", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "52179": { "id": 52179, "name": "Hatma", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "52180": { "id": 52180, "name": "Sinez", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "52181": { "id": 52181, "name": "아베스타 앞 호문쿨", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "52185": { "id": 52185, "name": "Thirain", "grade": "normal", "type": "townsfolk" },
+  "52186": { "id": 52186, "name": "Young Armen's Phantom", "grade": "normal", "type": "townsfolk" },
+  "52187": {
+    "id": 52187,
+    "name": "이단심판 구경 주민_플레체 주민_남_장년",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "52188": {
+    "id": 52188,
+    "name": "이단심판 구경 주민_플레체 주민_남_장년1",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "52189": {
+    "id": 52189,
+    "name": "이단심판 구경 주민_요즈 주민_남_청년3",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "52190": {
+    "id": 52190,
+    "name": "이단심판 구경 주민_세이크리아 성기사단 기사",
+    "grade": "normal",
+    "type": "townsfolk"
+  },
+  "52191": {
+    "id": 52191,
+    "name": "이단심판 구경 주민_플레체 주민_귀족_여_장년",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "52192": {
+    "id": 52192,
+    "name": "이단심판 구경 주민_플레체 상인_남_노년1",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "52193": { "id": 52193, "name": "Librarian Fudor", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "52194": { "id": 52194, "name": "Historian Edward", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "52195": { "id": 52195, "name": "Historian Jared", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "52196": { "id": 52196, "name": "Maria", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "52197": {
+    "id": 52197,
+    "name": "말풍선 관중1(남)_선고의 날",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "52198": {
+    "id": 52198,
+    "name": "말풍선 관중2(여)_선고의 날",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "52199": {
+    "id": 52199,
+    "name": "말풍선 관중3(여)_선고의 날",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "52200": { "id": 52200, "name": "반기는 중급 현자5_남", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "52201": { "id": 52201, "name": "반기는 중급 현자6_여", "grade": "normal", "type": "townsfolk" },
+  "52220": {
+    "id": 52220,
+    "name": "말풍선 관중6(여)_선고의 날",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "52221": {
+    "id": 52221,
+    "name": "말풍선 관중7(남)_선고의 날",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "52222": {
+    "id": 52222,
+    "name": "반기는 상급 현자1_디보테아 (여)_문양",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "52223": {
+    "id": 52223,
+    "name": "반기는 상급 현자2_쿠티사바 (남)_문양",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "52224": { "id": 52224, "name": "Hatma", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "52225": { "id": 52225, "name": "Hatma", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "52226": {
+    "id": 52226,
+    "name": "반기는 상급 현자2_쿠티사바 (남)_일반",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "52227": { "id": 52227, "name": "Mariu", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "52228": {
+    "id": 52228,
+    "name": "문양 발동 중급 현자1_운명의 빛(남)",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "52229": {
+    "id": 52229,
+    "name": "문양 발동 중급 현자2_운명의 빛(남)",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "52230": {
+    "id": 52230,
+    "name": "문양 발동 중급 현자3_운명의 빛(남)",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "52231": {
+    "id": 52231,
+    "name": "문양 발동 중급 현자4_운명의 빛(여)",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "52232": {
+    "id": 52232,
+    "name": "문양 발동 중급 현자5_운명의 빛(여)",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "52233": {
+    "id": 52233,
+    "name": "문양 발동 중급 현자6_운명의 빛(여)",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "52234": { "id": 52234, "name": "Isaac", "grade": "normal", "type": "townsfolk" },
+  "52235": { "id": 52235, "name": "Verad", "grade": "normal", "type": "townsfolk" },
+  "52236": { "id": 52236, "name": "Escort Knight Conrad", "grade": "normal", "type": "townsfolk" },
+  "52237": { "id": 52237, "name": "대기중인 루테란 기사(창)_운명의 빛", "grade": "normal", "type": "townsfolk" },
+  "52238": { "id": 52238, "name": "대기중인 루테란 기사(검)_운명의 빛", "grade": "normal", "type": "townsfolk" },
+  "52239": { "id": 52239, "name": "대기중인 루테란 기사(검/여성)_운명의 빛", "grade": "normal", "type": "townsfolk" },
+  "52240": { "id": 52240, "name": "Sinez", "grade": "normal", "type": "townsfolk" },
+  "52241": {
+    "id": 52241,
+    "name": "말풍선 관중4(남)_선고의 날",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "52242": {
+    "id": 52242,
+    "name": "말풍선 관중5(남)_선고의 날",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
   "52246": {
     "id": 52246,
     "name": "Moko Village Signboard",
@@ -36126,6 +37623,65 @@
     "type": "townsfolk",
     "pushimmune": true
   },
+  "52247": { "id": 52247, "name": "대기중인 루테란 기사(창2)_운명의 빛", "grade": "normal", "type": "townsfolk" },
+  "52248": {
+    "id": 52248,
+    "name": "말풍선 관중8(남)_선고의 날",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "52249": {
+    "id": 52249,
+    "name": "말풍선 관중9(여)_선고의 날",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "52250": {
+    "id": 52250,
+    "name": "말풍선 관중10(여)_선고의 날",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "52251": {
+    "id": 52251,
+    "name": "말풍선 관중11(남)_선고의 날",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "52252": {
+    "id": 52252,
+    "name": "말풍선 관중12(여)_선고의 날",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "52253": {
+    "id": 52253,
+    "name": "말풍선 관중13(남)_선고의 날",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "52254": {
+    "id": 52254,
+    "name": "말풍선 관중14(여)_선고의 날",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "52255": {
+    "id": 52255,
+    "name": "투명_웅성웅성 관중3_선고의 날",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "52256": { "id": 52256, "name": "Luterran Noble", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "52291": { "id": 52291, "name": "Think", "grade": "normal", "type": "townsfolk", "pushimmune": true },
   "61000": { "id": 61000, "name": "Fairy", "grade": "normal", "type": "townsfolk", "pushimmune": true },
   "61001": { "id": 61001, "name": "Firefly Swarm", "grade": "normal", "type": "townsfolk", "pushimmune": true },
   "61002": { "id": 61002, "name": "Firefly Swarm", "grade": "normal", "type": "townsfolk", "pushimmune": true },
@@ -36851,6 +38407,13 @@
   "80108": { "id": 80108, "name": "Night Market Merchant", "grade": "normal", "type": "townsfolk", "pushimmune": true },
   "80109": { "id": 80109, "name": "Night Market Merchant", "grade": "normal", "type": "townsfolk", "pushimmune": true },
   "80121": { "id": 80121, "name": "Riana", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "80209": {
+    "id": 80209,
+    "name": "Arkesia Grand Prix Manager",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
   "80210": { "id": 80210, "name": "Nia", "grade": "normal", "type": "townsfolk" },
   "80211": { "id": 80211, "name": "Albion", "grade": "normal", "type": "townsfolk", "pushimmune": true },
   "80212": { "id": 80212, "name": "Liru", "grade": "normal", "type": "townsfolk", "pushimmune": true },
@@ -36859,6 +38422,7 @@
   "80215": { "id": 80215, "name": "Flanos", "grade": "normal", "type": "townsfolk" },
   "80216": { "id": 80216, "name": "Curculus", "grade": "normal", "type": "townsfolk", "pushimmune": true },
   "80217": { "id": 80217, "name": "Dimension-Reflecting Mirror", "grade": "normal", "type": "townsfolk" },
+  "80218": { "id": 80218, "name": "Arkesia Grand Prix Manager", "grade": "normal", "type": "townsfolk" },
   "81000": {
     "id": 81000,
     "name": "Traveling Sales King Fairy",
@@ -36890,6 +38454,7 @@
   "81115": { "id": 81115, "name": "Nada", "grade": "normal", "type": "townsfolk" },
   "81250": { "id": 81250, "name": "Rada", "grade": "normal", "type": "townsfolk", "pushimmune": true },
   "81251": { "id": 81251, "name": "Shandi", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "81931": { "id": 81931, "name": "Transparent Mirror", "grade": "normal", "type": "townsfolk" },
   "82000": { "id": 82000, "name": "Legendary Adventurer", "grade": "normal", "type": "townsfolk", "pushimmune": true },
   "82001": { "id": 82001, "name": "Humpback Whale", "grade": "none", "type": "townsfolk", "pushimmune": true },
   "82007": { "id": 82007, "name": "Shipbuilder", "grade": "normal", "type": "townsfolk", "pushimmune": true },
@@ -41168,6 +42733,7 @@
   "45025": { "id": 45025, "name": "Novice Instructor Ino", "grade": "normal", "type": "townsfolk", "pushimmune": true },
   "45026": { "id": 45026, "name": "Guiding Light", "grade": "normal", "type": "townsfolk", "pushimmune": true },
   "45027": { "id": 45027, "name": "Novice Instructor Ino", "grade": "normal", "type": "townsfolk" },
+  "45028": { "id": 45028, "name": "Novice Instructor Ino", "grade": "normal", "type": "townsfolk" },
   "45100": { "id": 45100, "name": "Macaboa Port Monument", "grade": "normal", "type": "townsfolk", "pushimmune": true },
   "45101": { "id": 45101, "name": "Homunculus", "grade": "normal", "type": "townsfolk", "pushimmune": true },
   "45102": { "id": 45102, "name": "Macaboa Port Monument", "grade": "normal", "type": "townsfolk", "pushimmune": true },
@@ -43930,6 +45496,8 @@
   "46980": { "id": 46980, "name": "Glancing Resident", "grade": "normal", "type": "townsfolk" },
   "46981": { "id": 46981, "name": "Azakiel", "grade": "normal", "type": "townsfolk" },
   "46982": { "id": 46982, "name": "Mysterious Man", "grade": "normal", "type": "townsfolk" },
+  "46983": { "id": 46983, "name": "엘가시아_이벤트 거울 앞 환경 NPC1", "grade": "normal", "type": "townsfolk" },
+  "46984": { "id": 46984, "name": "엘가시아_이벤트 거울 앞 환경 NPC1", "grade": "normal", "type": "townsfolk" },
   "47001": { "id": 47001, "name": "Raphael", "grade": "normal", "type": "townsfolk", "pushimmune": true },
   "47002": { "id": 47002, "name": "Markum", "grade": "normal", "type": "townsfolk", "pushimmune": true },
   "47003": { "id": 47003, "name": "Mudi", "grade": "normal", "type": "townsfolk", "pushimmune": true },
@@ -44918,11 +46486,61 @@
     "id": 47516,
     "name": "쿠르잔_기능성_군단장 레이드 헬모드 추가 상인",
     "grade": "normal",
-    "type": "townsfolk"
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "47517": {
+    "id": 47517,
+    "name": "쿠르잔_기능성_군단장 레이드 혼돈의 돌 교환",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
   },
   "47521": {
     "id": 47521,
     "name": "쿠르잔_기능성_재련 필수 재료 교환",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "47524": {
+    "id": 47524,
+    "name": "쿠르잔_기능성_군단장 레이드 장비 제작",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "47527": {
+    "id": 47527,
+    "name": "쿠르잔_기능성_품질 업그레이드",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "47528": {
+    "id": 47528,
+    "name": "쿠르잔_기능성_어빌리티 스톤 세공사",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "47531": {
+    "id": 47531,
+    "name": "쿠르잔_기능성_아바타 가공",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "47535": {
+    "id": 47535,
+    "name": "쿠르잔_기능성_팔찌 효과 부여",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "47536": {
+    "id": 47536,
+    "name": "쿠르잔_기능성_엘릭서 부여_물물 교환",
     "grade": "normal",
     "type": "townsfolk",
     "pushimmune": true
