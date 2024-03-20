@@ -15,6 +15,7 @@ export const classColors: ClassColors = {
     Soulfist: { color: "#316395", defaultColor: "#316395" }, // 304
     Glaivier: { color: "#f6da6a", defaultColor: "#f6da6a" }, // 305
     Striker: { color: "#994499", defaultColor: "#994499" }, // 312
+    Breaker: { color: "#4de3d1", defaultColor: "#4de3d1" }, // 313
     Deathblade: { color: "#a91a16", defaultColor: "#a91a16" }, // 402
     Shadowhunter: { color: "#0099c6", defaultColor: "#0099c6" }, // 403
     Reaper: { color: "#109618", defaultColor: "#109618" }, // 404

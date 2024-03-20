@@ -1,11 +1,11 @@
 {
-    "version": "v1.6.3",
-    "notes": "### v1.6.3\n#### BUG FIXES AND IMPROVEMENTS\n- added hp tracking to hell brel g5 50x cubes (note: all orbs share same hp bar in meter, since they share the same name)\n\nfull patch notes on [github](https://github.com/snoww/loa-logs/releases/latest)\n\nsend bug reports/suggestions to [#loa-logs](https://discord.gg/sbSa3pkDF5)",
-    "pub_date": "2024-02-21T09:50:55.796Z",
+    "version": "v1.7.1",
+    "notes": "### v1.7.1\n#### NEW FEATURES\n- update meter for breaker patch\n\nfull patch notes on [github](https://github.com/snoww/loa-logs/releases/latest)\n\nsend bug reports/suggestions to [#loa-logs](https://discord.gg/sbSa3pkDF5))",
+    "pub_date": "",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.6.3/LOA.Logs_1.6.3_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmNSVXViT3hrcUF5Z2VrUU5qQXNGeTZpU1kxQnh5eTdsUjNGb1JXUWlEWWNxOHluQ1RJR25ELzEyUkdUQTkwNjRpSVprTGJjS1dabnZySHVGMVdzZUF3PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzA4NTA4MzUxCWZpbGU6TE9BIExvZ3NfMS42LjNfeDY0LXNldHVwLm5zaXMuemlwCm9jMnFNSkRsK3lIYXlIRCs5SWZ5RGRaWXR5cVNoT3VQNlIxNUc5R3BvS014MjNMZHlIZmRMaVNNUStwWVoyMHAxTjZJdGI3WWZhTUJjVVhUL3ZrQ0J3PT0K"
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.7.1/LOA.Logs_1.7.1_x64-setup.nsis.zip",
+            "signature": ""
         }
     }
 }

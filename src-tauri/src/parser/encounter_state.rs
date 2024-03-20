@@ -1863,6 +1863,7 @@ pub fn get_class_from_id(class_id: &u32) -> String {
         305 => "Glaivier",
         311 => "Martial Artist (Male)",
         312 => "Striker",
+        313 => "Breaker",
         401 => "Assassin",
         402 => "Deathblade",
         403 => "Shadowhunter",
