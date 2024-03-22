@@ -1,11 +1,11 @@
 {
-    "version": "v1.7.1",
-    "notes": "### v1.7.1\n#### NEW FEATURES\n- update meter for breaker patch\n- note: breaker icon is temporary, will be replaced next update\n\nfull patch notes on [github](https://github.com/snoww/loa-logs/releases/latest)\n\nsend bug reports/suggestions to [#loa-logs](https://discord.gg/sbSa3pkDF5)",
-    "pub_date": "2024-03-20T17:21:07.748Z",
+    "version": "v1.7.2",
+    "notes": "### v1.7.2\n#### BUG FIXES AND IMPROVEMENTS\n- fix icons for breaker\n\n### v1.7.1\n#### NEW FEATURES\n- update meter for breaker patch\n- note: breaker icon is temporary, will be replaced next update\n\nthanks to [@jasonlmfong](https://github.com/jasonlmfong) for breaker icon\n\nfull patch notes on [github](https://github.com/snoww/loa-logs/releases/latest)\n\nsend bug reports/suggestions to [#loa-logs](https://discord.gg/sbSa3pkDF5)",
+    "pub_date": "2024-03-22T02:11:29.104Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.7.1/LOA.Logs_1.7.1_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmYrYkdtWHZtNElKQmNQSlVmb0d4U1M0ZFRURjNqNS9rYUxrY1BEa053c041dDQwMThlbGFGS2hZajJXTEwvbldxSERFbUg4RXJYZDdpVjAxd1d5V0FNPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzEwOTU0ODgzCWZpbGU6TE9BIExvZ3NfMS43LjFfeDY0LXNldHVwLm5zaXMuemlwCmovb2xxak9hSm5wT1cxN2ZYNlRoOGtDUlFIdXZMMXFOckp4NlUwRWJ3S2ZmRG1WaGdCUkp2S0tBY0lDTTVxQlRweDE1aENVV2FJcXZLMHpRQzZZckFRPT0K"
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.7.2/LOA.Logs_1.7.2_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlN3a3hpeEdRc3J4OHA3cE9MYTgvMEdZNGNiKzZldDltc1k4MS9RT1UxUkdpRi9VUnRrVmtrL2IzOUUzSC9aT1pKbThHNjdXMXV6YzVnS1czU2Y3TlFrPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzExMDczNTk0CWZpbGU6TE9BIExvZ3NfMS43LjJfeDY0LXNldHVwLm5zaXMuemlwCmt3ajRBU0pIUUViTk1INjFmUEdzRlZ2VzY5QXZESnR2aVhnenVrZndzWkhUK1g2U2YyNGVWQkFBMXJDRU5lTSt0a1FvaHdZV2grYkJNS0E5akdaaURBPT0K"
         }
     }
 }
