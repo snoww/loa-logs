@@ -26,11 +26,12 @@ tauri-plugin-single-instance = { git = "https://github.com/tauri-apps/plugins-wo
 bitflags = "2.4.1"
 window-vibrancy = "0.4.3"
 hashbrown = { version = "0.14.3", features = ["serde"] }
-rusqlite = { version = "0.30.0", features = ["bundled", "serde_json"] }
+rusqlite = { version = "0.31.0", features = ["bundled", "serde_json"] }
 tokio = { version = "1.29.1", features = ["rt", "macros"] }
 serde_with = "3.5.1"
 log = "0.4.18"
-flexi_logger = { version = "0.27.4", default-features = false }
+flexi_logger = { version = "0.28.0", default-features = false }
+ipnet = "2.9.0"
 meter-core = { path = "D:\\projects\\meter-core-rs\\" }
 
 [features]
