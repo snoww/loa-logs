@@ -15,15 +15,15 @@ This project is an opinionated flavor of [LOA Details](https://github.com/lost-a
 
 This project was designed specifically with hell-raiding in mind.
 
+> [!IMPORTANT]
+> Npcap is required to run LOA Logs.
+>
+> Download [here](https://npcap.com/#download).
+
 # Download
 https://github.com/snoww/loa-logs/releases
 
 *currently only Windows 7 and up is supported
-
-# Prerequisites
-Npcap is required to run LOA Logs.
-
-Download [here](https://npcap.com/#download).
 
 # Supporting the Project
 
@@ -86,35 +86,26 @@ A: [Yes.](https://cdn.discordapp.com/attachments/537415745198489633/113441770473
 
 ## Screenshots
 ### In-game Overlay (optional Boss HP bar)
-![log_image](https://cdn.discordapp.com/attachments/537415745198489633/1100293328995614750/image.png)
+![log_image](https://i.imgur.com/luHu7Fz.png)
 
 ### Damage Breakdown with DPS Charts
-<img src="https://media.discordapp.net/attachments/1122373187775246427/1152471960991846630/LOA_Logs_J2USnnRtjc.png" width="500"/>
+<img src="https://i.imgur.com/T4HX6XK.png" width="500"/>
 
 ### Skill Breakdown
-<img src="https://cdn.discordapp.com/attachments/1122373187775246427/1152474569089749042/image.png" width="600"/>
+<img src="https://i.imgur.com/P5Mb9oe.png" width="600"/>
 
 ### Arcana Card Tracking
-<img src="https://media.discordapp.net/attachments/1122373187775246427/1152471963206418462/LOA_Logs_OyD9TjdeIo.png" width="500"/>
+<img src="https://i.imgur.com/afoAVOZ.png" width="500"/>
 
 ### Buff Uptime Tracking
-<img src="https://cdn.discordapp.com/attachments/220646943498567680/1165156286279729162/image.png" width="800"/>
+<img src="https://i.imgur.com/9SkFQs3.png" width="800"/>
 
 ### Opener Rotation
-<img src="https://cdn.discordapp.com/attachments/1122373187775246427/1152471962287865896/LOA_Logs_U5gvJHAGB7.png" width="600"/>
+<img src="https://i.imgur.com/hcpHAKG.png" width="600"/>
 
 ### Past Encounters
-<img src="https://media.discordapp.net/attachments/1122373187775246427/1152471961998479370/LOA_Logs_1kVnLts5cq.png" width="500"/>
+<img src="https://i.imgur.com/RZT6Rww.png" width="500"/>
 
 #### Search Filters
-<img src="https://media.discordapp.net/attachments/1122373187775246427/1152471961268650004/LOA_Logs_fD1dlhOsPw.png" width="400"/>
+<img src="https://i.imgur.com/5aJJISG.png" width="400"/>
 
-### Identity Tracking (only for yourself)
-#### Bard/Artist Bubble Tracking
-<img src="https://cdn.discordapp.com/attachments/537415745198489633/1100239509754490931/image.png" width="500"/>
-
-### Stagger Tracking (only bosses with visible stagger bar)
-<img src="https://cdn.discordapp.com/attachments/537415745198489633/1100300320392871986/image.png" width="500"/>
-
-### Skill Cast Log
-<img src="https://cdn.discordapp.com/attachments/1122373187775246427/1152471962535346226/LOA_Logs_zRCzuitke7.png" width="600"/>
