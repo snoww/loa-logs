@@ -15,15 +15,16 @@ This project is an opinionated flavor of [LOA Details](https://github.com/lost-a
 
 This project was designed specifically with hell-raiding in mind.
 
-> [!IMPORTANT]
-> Npcap is required to run LOA Logs.
->
-> Download [here](https://npcap.com/#download).
-
 # Download
 https://github.com/snoww/loa-logs/releases
 
 *currently only Windows 7 and up is supported
+
+> [!IMPORTANT]
+> ### Prerequisites
+> Npcap is required to run LOA Logs.
+>
+> Download [here](https://npcap.com/#download).
 
 # Supporting the Project
 
