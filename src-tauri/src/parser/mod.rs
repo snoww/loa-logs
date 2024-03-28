@@ -8,7 +8,7 @@ mod status_tracker;
 use crate::parser::encounter_state::{get_class_from_id, EncounterState};
 use crate::parser::entity_tracker::{get_current_and_max_hp, EntityTracker};
 use crate::parser::id_tracker::IdTracker;
-use crate::parser::models::{EntityType, Identity, Stagger};
+use crate::parser::models::{EntityType, Identity, Stagger, AWS_REGIONS};
 use crate::parser::party_tracker::PartyTracker;
 use crate::parser::status_tracker::{
     get_status_effect_value, StatusEffect, StatusEffectTargetType, StatusEffectType, StatusTracker,
@@ -16,14 +16,17 @@ use crate::parser::status_tracker::{
 use anyhow::Result;
 use chrono::Utc;
 use hashbrown::HashMap;
+use ipnet::{Ipv4Net};
 use log::{info, warn};
 use meter_core::packets::definitions::*;
 use meter_core::packets::opcodes::Pkt;
 use meter_core::{start_capture, start_raw_capture};
 use std::cell::RefCell;
 use std::collections::BTreeMap;
+use std::net::Ipv4Addr;
 use std::path::PathBuf;
 use std::rc::Rc;
+use std::str::FromStr;
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
 use std::thread;
@@ -271,6 +274,11 @@ pub fn start(
             Pkt::MigrationExecute => {
                 if let Some(pkt) = parse_pkt(&data, PKTMigrationExecute::new, "PKTMigrationExecute")
                 {
+                    debug_print(format_args!("server ip: {}", pkt.server_addr));
+                    let ip_without_port = pkt.server_addr.split(':').collect::<Vec<_>>()[0];
+                    let region = get_aws_region_from_ip(ip_without_port);
+                    debug_print(format_args!("region: {:?}", region));
+                    state.region = region;
                     entity_tracker.migration_execute(pkt);
                 }
             }
@@ -780,7 +788,9 @@ pub fn start(
                         );
                     if let Some(status_effect) = status_effect {
                         if status_effect.status_effect_type == StatusEffectType::Shield {
-                            let change = old_value.checked_sub(status_effect.value).unwrap_or_default();
+                            let change = old_value
+                                .checked_sub(status_effect.value)
+                                .unwrap_or_default();
                             on_shield_change(
                                 &mut entity_tracker,
                                 &id_tracker,
@@ -969,6 +979,37 @@ fn write_local_players(local_players: &HashMap<u64, String>, path: &PathBuf) -> 
     let local_players_file = serde_json::to_string(&ordered)?;
     std::fs::write(path, local_players_file)?;
     Ok(())
+}
+
+fn get_aws_region_from_ip(ip: &str) -> Option<String> {
+    let ip: Ipv4Addr = ip.parse().unwrap();
+
+    for prefix in AWS_REGIONS.prefixes.iter().filter(|p| {
+        p.region == "us-east-1"
+            || p.region == "us-west-2"
+            || p.region == "eu-central-1"
+            || p.region == "sa-east-1"
+    }) {
+        let net = match Ipv4Net::from_str(&prefix.ip_prefix) {
+            Ok(net) => net,
+            Err(_) => continue,
+        };
+
+        if net.contains(&ip) {
+            if prefix.region == "us-east-1" {
+                return Some("NAE".to_string());
+            } else if prefix.region == "us-west-2" {
+                return Some("NAW".to_string());
+            } else if prefix.region == "eu-central-1" {
+                return Some("EUC".to_string());
+            } else if prefix.region == "sa-east-1" {
+                return Some("SA".to_string());
+            }
+        }
+    }
+
+    warn!("Could not find region for ip: {}", ip);
+    None
 }
 
 fn parse_pkt<T, F>(data: &[u8], new_fn: F, pkt_name: &str) -> Option<T>

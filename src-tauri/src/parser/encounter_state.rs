@@ -39,6 +39,7 @@ pub struct EncounterState {
     pub party_info: Vec<Vec<String>>,
     pub raid_difficulty: String,
     pub boss_only_damage: bool,
+    pub region: Option<String>,
 }
 
 impl EncounterState {
@@ -62,6 +63,7 @@ impl EncounterState {
             party_info: Vec::new(),
             raid_difficulty: "".to_string(),
             boss_only_damage: false,
+            region: None,
         }
     }
 
@@ -1077,6 +1079,7 @@ impl EncounterState {
         let raid_clear = self.raid_clear;
         let party_info = self.party_info.clone();
         let raid_difficulty = self.raid_difficulty.clone();
+        let region = self.region.clone();
 
         task::spawn(async move {
             info!("saving to db - {}", encounter.current_boss_name);
@@ -1097,6 +1100,7 @@ impl EncounterState {
                 raid_clear,
                 party_info,
                 raid_difficulty,
+                region,
             );
 
             tx.commit().expect("failed to commit transaction");
@@ -1465,6 +1469,7 @@ fn insert_data(
     raid_clear: bool,
     party_info: Vec<Vec<String>>,
     raid_difficulty: String,
+    region: Option<String>,
 ) {
     let mut encounter_stmt = tx
         .prepare_cached(
@@ -1513,6 +1518,7 @@ fn insert_data(
                     .collect(),
             )
         },
+        region,
         ..Default::default()
     };
 
