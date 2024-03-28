@@ -39,11 +39,11 @@ export function truncateString(str: string, len = 10): string {
 }
 
 export function getSkillIcon(skillIcon: string): string {
-    return encodeURIComponent("\\" + (skillIcon !== "" ? skillIcon : "unknown.png"));
+    return encodeURIComponent("\\" + (skillIcon !== "" ? skillIcon : "unknown.png")) + addRandomQueryParam();
 }
 
 export function getImagePath(path: string): string {
-    return encodeURIComponent("\\" + path.replaceAll("/", "\\"));
+    return encodeURIComponent("\\" + path.replaceAll("/", "\\")) + addRandomQueryParam();
 }
 
 export function getEstherFromNpcId(npcId: number): string {
@@ -52,4 +52,8 @@ export function getEstherFromNpcId(npcId: number): string {
     }
 
     return "Unknown";
+}
+
+export function addRandomQueryParam(): string {
+    return "?" + Math.floor(Math.random() * 10000000);
 }
