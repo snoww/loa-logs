@@ -1,7 +1,7 @@
 {
     "version": "v1.7.4",
     "notes": "### v1.7.4\n#### NEW FEATURES\n- game region is now stored in logs\n#### BUG FIXES AND IMPROVEMENTS\n- fixed breaker icon not loading for some users\n\n### v1.7.3\n#### NEW FEATURES\n- update meter for weekly maintenance\n#### BUG FIXES AND IMPROVEMENTS\n- slightly adjusted breaker class icon\n\nfull patch notes on [github](https://github.com/snoww/loa-logs/releases/latest)\n\nsend bug reports/suggestions to [#loa-logs](https://discord.gg/sbSa3pkDF5)",
-    "pub_date": "",
+    "pub_date": "2024-03-28T10:47:32.922Z",
     "platforms": {
         "windows-x86_64": {
             "url": "https://github.com/snoww/loa-logs/releases/download/v1.7.4/LOA.Logs_1.7.4_x64-setup.nsis.zip",
