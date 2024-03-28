@@ -1,11 +1,11 @@
 {
-    "version": "v1.7.3",
-    "notes": "### v1.7.3\n#### NEW FEATURES\n- update meter for weekly maintenance\n#### BUG FIXES AND IMPROVEMENTS\n- slightly adjusted breaker class icon\n\nfull patch notes on [github](https://github.com/snoww/loa-logs/releases/latest)\n\nsend bug reports/suggestions to [#loa-logs](https://discord.gg/sbSa3pkDF5)",
-    "pub_date": "2024-03-27T21:51:28.475Z",
+    "version": "v1.7.4",
+    "notes": "### v1.7.4\n#### NEW FEATURES\n- game region is now stored in logs\n#### BUG FIXES AND IMPROVEMENTS\n- fixed breaker icon not loading for some users\n\n### v1.7.3\n#### NEW FEATURES\n- update meter for weekly maintenance\n#### BUG FIXES AND IMPROVEMENTS\n- slightly adjusted breaker class icon\n\nfull patch notes on [github](https://github.com/snoww/loa-logs/releases/latest)\n\nsend bug reports/suggestions to [#loa-logs](https://discord.gg/sbSa3pkDF5)",
+    "pub_date": "",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.7.3/LOA.Logs_1.7.3_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlNpVGJJWUlndDJHVHVuOTMrZm42Qm84Yk5VbVp1TVhFTWlvOUthcytjT0IzR1pRMURaM2MwS24vK2RybXliaHlqK3ZxSWtnSFdncTkzbU5IblhEUmdFPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzExNTc3NDUwCWZpbGU6TE9BIExvZ3NfMS43LjNfeDY0LXNldHVwLm5zaXMuemlwClFZTU52dE9pWGZBUXhyQUExSjJabi9MdXp2ZCtFa3dhd3Zlci9tQWhGSjlXV3pNQjRIK2dsWnlXa1Bhdi9PN1pCQlo0STZMQUVzREdray96Wi9HMUFRPT0K"
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.7.4/LOA.Logs_1.7.4_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlU4c293TmtWOGx3dGR1bTFwWjhjL3pVK1dLOHFkZDc5K0RjWm5pZDY3RDZNUXpJclRYWW1aY2x1elR3VlhYMktpa2xMYmFZSUErRG1Pd0lFajZ5eXdvPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzExNjIxMjcwCWZpbGU6TE9BIExvZ3NfMS43LjRfeDY0LXNldHVwLm5zaXMuemlwCnNKaE8wM1p4SVprZjlCWGQrVG9yM1I2cUNSODhGbkQ1eXpXRC94NzZickNvbklHQ2hCbGhqR09wdEdxYXFyaEU3V1ZUK2VhelEvSW5acDNJZnhoT0NBPT0K"
         }
     }
 }
