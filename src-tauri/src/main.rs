@@ -455,6 +455,7 @@ fn setup_db(resource_path: PathBuf) -> Result<(), String> {
         "
         CREATE TABLE IF NOT EXISTS entity (
             name TEXT,
+            character_id INTEGER,
             encounter_id INTEGER NOT NULL,
             npc_id INTEGER,
             entity_type TEXT,
@@ -492,7 +493,16 @@ fn setup_db(resource_path: PathBuf) -> Result<(), String> {
     let column_count: u32 = stmt.query_row([], |row| row.get(0)).unwrap();
     if column_count == 0 {
         conn.execute("ALTER TABLE entity ADD COLUMN dps INTEGER", [])
-            .expect("failed to add integer column");
+            .expect("failed to add dps column");
+    }
+
+    let mut stmt = conn
+        .prepare("SELECT COUNT(*) FROM pragma_table_info('entity') WHERE name='character_id'")
+        .unwrap();
+    let column_count: u32 = stmt.query_row([], |row| row.get(0)).unwrap();
+    if column_count == 0 {
+        conn.execute("ALTER TABLE entity ADD COLUMN character_id INTEGER", [])
+            .expect("failed to add character_id column");
     }
 
     update_db(&conn);

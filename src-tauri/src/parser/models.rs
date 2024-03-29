@@ -8,7 +8,7 @@ use serde::{Deserialize, Serialize};
 use serde_with::serde_as;
 use serde_with::DefaultOnError;
 
-pub const DB_VERSION: i32 = 3;
+pub const DB_VERSION: i32 = 4;
 
 #[derive(Debug, Default, Serialize, Deserialize, PartialEq, Copy, Clone)]
 #[allow(non_camel_case_types)]
@@ -111,6 +111,7 @@ pub struct MostDamageTakenEntity {
 #[serde(rename_all = "camelCase")]
 pub struct EncounterEntity {
     pub id: u64,
+    pub character_id: u64,
     pub npc_id: u32,
     pub name: String,
     pub entity_type: EntityType,
