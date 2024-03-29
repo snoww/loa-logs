@@ -55,5 +55,5 @@ export function getEstherFromNpcId(npcId: number): string {
 }
 
 export function addRandomQueryParam(): string {
-    return "?" + Math.floor(Math.random() * 10000000);
+    return "?174";
 }

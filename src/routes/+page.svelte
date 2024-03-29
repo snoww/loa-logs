@@ -45,11 +45,11 @@
             skillIcon.set({
                 path: convertFileSrc(await join(await resourceDir(), "images", "skills"))
             });
-            Object.keys(classesMap).forEach(async (key) => {
+            for (const key of Object.keys(classesMap)) {
                 $classIconCache[key] =
                     convertFileSrc(await join(await resourceDir(), "images", "classes", key + ".png")) +
                     addRandomQueryParam();
-            });
+            }
             for (const esther of estherMap) {
                 $classIconCache[esther.name] =
                     convertFileSrc(await join(await resourceDir(), "images", "classes", esther.icon)) +
