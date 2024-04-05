@@ -2,7 +2,7 @@ use crate::parser::id_tracker::IdTracker;
 use crate::parser::models::EntityType::*;
 use crate::parser::models::{EntityType, Esther, ESTHER_DATA, NPC_DATA, SKILL_DATA};
 use crate::parser::party_tracker::PartyTracker;
-use crate::parser::status_tracker::{build_status_effect, StatusEffect, StatusEffectTargetType, StatusEffectType, StatusTracker};
+use crate::parser::status_tracker::{build_status_effect, StatusEffectDetails, StatusEffectTargetType, StatusEffectType, StatusTracker};
 
 use chrono::{DateTime, Utc};
 use hashbrown::HashMap;
@@ -235,9 +235,9 @@ impl EntityTracker {
         npc
     }
 
-    pub fn party_status_effect_add(&mut self, pkt: PKTPartyStatusEffectAddNotify) -> Vec<StatusEffect> {
+    pub fn party_status_effect_add(&mut self, pkt: PKTPartyStatusEffectAddNotify) -> Vec<StatusEffectDetails> {
         let timestamp = Utc::now();
-        let mut shields: Vec<StatusEffect> = Vec::new();
+        let mut shields: Vec<StatusEffectDetails> = Vec::new();
         for sed in pkt.status_effect_datas {
             let source_id = if pkt.player_id_on_refresh != 0 {
                 pkt.player_id_on_refresh
@@ -263,7 +263,7 @@ impl EntityTracker {
         shields
     }
 
-    pub fn party_status_effect_remove(&mut self, pkt: PKTPartyStatusEffectRemoveNotify) -> (bool, Vec<StatusEffect>) {
+    pub fn party_status_effect_remove(&mut self, pkt: PKTPartyStatusEffectRemoveNotify) -> (bool, Vec<StatusEffectDetails>) {
         self.status_tracker.borrow_mut().remove_status_effects(
             pkt.character_id,
             pkt.status_effect_ids,
@@ -414,7 +414,7 @@ impl EntityTracker {
         sed: &StatusEffectData,
         target_id: u64,
         timestamp: DateTime<Utc>,
-    ) -> StatusEffect {
+    ) -> StatusEffectDetails {
         let source_entity = self.get_source_entity(sed.source_id);
         let status_effect = build_status_effect(
             sed.clone(),

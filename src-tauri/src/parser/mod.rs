@@ -4,6 +4,7 @@ mod id_tracker;
 pub mod models;
 mod party_tracker;
 mod status_tracker;
+mod rdps;
 
 use crate::parser::encounter_state::{get_class_from_id, EncounterState};
 use crate::parser::entity_tracker::{get_current_and_max_hp, EntityTracker};
@@ -11,7 +12,7 @@ use crate::parser::id_tracker::IdTracker;
 use crate::parser::models::{EntityType, Identity, Stagger, AWS_REGIONS};
 use crate::parser::party_tracker::PartyTracker;
 use crate::parser::status_tracker::{
-    get_status_effect_value, StatusEffect, StatusEffectTargetType, StatusEffectType, StatusTracker,
+    get_status_effect_value, StatusEffectDetails, StatusEffectTargetType, StatusEffectType, StatusTracker,
 };
 use anyhow::Result;
 use chrono::Utc;
@@ -957,7 +958,7 @@ fn on_shield_change(
     entity_tracker: &mut EntityTracker,
     id_tracker: &Rc<RefCell<IdTracker>>,
     state: &mut EncounterState,
-    status_effect: StatusEffect,
+    status_effect: StatusEffectDetails,
     change: u64,
 ) {
     let source = entity_tracker.get_source_entity(status_effect.source_id);

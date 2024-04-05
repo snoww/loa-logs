@@ -11,6 +11,7 @@ use rusqlite::{params, Connection, Transaction};
 use serde_json::json;
 use tauri::{Manager, Window, Wry};
 use tokio::task;
+use crate::parser::status_tracker::StatusEffectDetails;
 
 const WINDOW_MS: i64 = 5_000;
 const WINDOW_S: i64 = 5;
@@ -406,8 +407,8 @@ impl EncounterState {
         modifier: i32,
         target_current_hp: i64,
         target_max_hp: i64,
-        se_on_source: Vec<(u32, u64)>,
-        se_on_target: Vec<(u32, u64)>,
+        se_on_source: Vec<StatusEffectDetails>,
+        se_on_target: Vec<StatusEffectDetails>,
         timestamp: i64,
     ) {
         let hit_flag = match modifier & 0xf {
@@ -593,7 +594,7 @@ impl EncounterState {
             let mut is_buffed_by_support = false;
             let mut is_buffed_by_identity = false;
             let mut is_debuffed_by_support = false;
-            let se_on_source = se_on_source.iter().map(|(se, _)| *se).collect::<Vec<_>>();
+            let se_on_source = se_on_source.iter().map(|se| se.status_effect_id).collect::<Vec<_>>();
             for buff_id in se_on_source.iter() {
                 if !self
                     .encounter
@@ -639,7 +640,7 @@ impl EncounterState {
                     }
                 }
             }
-            let se_on_target = se_on_target.iter().map(|(se, _)| *se).collect::<Vec<_>>();
+            let se_on_target = se_on_target.iter().map(|se| se.status_effect_id).collect::<Vec<_>>();
             for debuff_id in se_on_target.iter() {
                 if !self
                     .encounter
