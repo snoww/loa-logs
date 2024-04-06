@@ -101,6 +101,7 @@ impl EntityTracker {
             class_id: pkt.class_id as u32,
             gear_level: truncate_gear_level(pkt.gear_level),
             character_id: pkt.character_id,
+            stats: pkt.stat_pair.iter().map(|sp| (sp.stat_type, sp.value)).collect(),
             ..Default::default()
         };
 
@@ -167,6 +168,7 @@ impl EntityTracker {
             class_id: pkt.pc_struct.class_id as u32,
             gear_level: truncate_gear_level(pkt.pc_struct.avg_item_level),
             character_id: pkt.pc_struct.character_id,
+            stats: pkt.pc_struct.stat_pair.iter().map(|sp| (sp.stat_type, sp.value)).collect(),
             ..Default::default()
         };
         self.entities.insert(entity.id, entity.clone());
@@ -200,12 +202,17 @@ impl EntityTracker {
     }
 
     pub fn new_npc(&mut self, pkt: PKTNewNpc, max_hp: i64) -> Entity {
-        let (entity_type, name) = get_npc_entity_type_and_name(&pkt.npc_struct, max_hp);
+        let (entity_type, name, grade) = get_npc_entity_type_name_grade(&pkt.npc_struct, max_hp);
         let npc = Entity {
             id: pkt.npc_struct.object_id,
             entity_type,
             name,
+            grade,
             npc_id: pkt.npc_struct.type_id,
+            level: pkt.npc_struct.level,
+            balance_level: pkt.npc_struct.balance_level.unwrap_or(pkt.npc_struct.level),
+            push_immune: entity_type == BOSS,
+            stats: pkt.npc_struct.stat_pair.iter().map(|sp| (sp.stat_type, sp.value)).collect(),
             ..Default::default()
         };
         self.entities.insert(npc.id, npc.clone());
@@ -215,7 +222,7 @@ impl EntityTracker {
     }
 
     pub fn new_npc_summon(&mut self, pkt: PKTNewNpcSummon, max_hp: i64) -> Entity {
-        let (entity_type, name) = get_npc_entity_type_and_name(&pkt.npc_data, max_hp);
+        let (entity_type, name, grade) = get_npc_entity_type_name_grade(&pkt.npc_data, max_hp);
         let entity_type = if entity_type == NPC {
             SUMMON
         } else {
@@ -225,8 +232,13 @@ impl EntityTracker {
             id: pkt.npc_data.object_id,
             entity_type,
             name,
+            grade,
             npc_id: pkt.npc_data.type_id,
             owner_id: pkt.owner_id,
+            level: pkt.npc_data.level,
+            balance_level: pkt.npc_data.balance_level.unwrap_or(pkt.npc_data.level),
+            push_immune: entity_type == BOSS,
+            stats: pkt.npc_data.stat_pair.iter().map(|sp| (sp.stat_type, sp.value)).collect(),
             ..Default::default()
         };
         self.entities.insert(npc.id, npc.clone());
@@ -472,9 +484,9 @@ pub fn get_current_and_max_hp(stat_pair: &Vec<StatPair>) -> (i64, i64) {
     (hp.unwrap_or_default(), max_hp.unwrap_or_default())
 }
 
-fn get_npc_entity_type_and_name(npc: &NpcData, max_hp: i64) -> (EntityType, String) {
+fn get_npc_entity_type_name_grade(npc: &NpcData, max_hp: i64) -> (EntityType, String, String) {
     if let Some(esther) = get_esther_from_npc_id(npc.type_id) {
-        return (ESTHER, esther.name);
+        return (ESTHER, esther.name, "none".to_string());
     }
 
     if let Some((_, npc_info)) = NPC_DATA.get_key_value(&npc.type_id) {
@@ -486,12 +498,12 @@ fn get_npc_entity_type_and_name(npc: &NpcData, max_hp: i64) -> (EntityType, Stri
             && !npc_info.name.contains('_')
             && npc_info.name.chars().all(|c| c.is_ascii())
         {
-            (BOSS, npc_info.name.clone())
+            (BOSS, npc_info.name.clone(), npc_info.grade.clone())
         } else {
-            (NPC, npc_info.name.clone())
+            (NPC, npc_info.name.clone(), npc_info.grade.clone())
         }
     } else {
-        (NPC, format!("{:x}", npc.object_id))
+        (NPC, format!("{:x}", npc.object_id), "none".to_string())
     }
 }
 
@@ -526,4 +538,10 @@ pub struct Entity {
     pub owner_id: u64,
     pub skill_effect_id: u32,
     pub skill_id: u32,
+    pub stats: HashMap<u8, i64>,
+    pub stance: u8,
+    pub grade: String,
+    pub push_immune: bool,
+    pub level: u16,
+    pub balance_level: u16,
 }

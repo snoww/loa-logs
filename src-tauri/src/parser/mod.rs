@@ -9,7 +9,7 @@ mod rdps;
 use crate::parser::encounter_state::{get_class_from_id, EncounterState};
 use crate::parser::entity_tracker::{get_current_and_max_hp, EntityTracker};
 use crate::parser::id_tracker::IdTracker;
-use crate::parser::models::{EntityType, Identity, Stagger, AWS_REGIONS};
+use crate::parser::models::{EntityType, Identity, Stagger, AWS_REGIONS, DamageData};
 use crate::parser::party_tracker::PartyTracker;
 use crate::parser::status_tracker::{
     get_status_effect_value, StatusEffectDetails, StatusEffectTargetType, StatusEffectType, StatusTracker,
@@ -550,16 +550,22 @@ pub fn start(
                         let (se_on_source, se_on_target) = status_tracker
                             .borrow_mut()
                             .get_status_effects(&owner, &target_entity, local_character_id);
+                        let damage_data = DamageData {
+                            skill_id: pkt.skill_id,
+                            skill_effect_id: pkt.skill_effect_id,
+                            damage: event.skill_damage_event.damage,
+                            modifier: event.skill_damage_event.modifier as i32,
+                            target_current_hp: event.skill_damage_event.cur_hp,
+                            target_max_hp: event.skill_damage_event.max_hp,
+                            damage_attribute: event.skill_damage_event.damage_attr,
+                            damage_type: event.skill_damage_event.damage_type,
+                        };
+                        
                         state.on_damage(
                             &owner,
                             &source_entity,
                             &target_entity,
-                            event.skill_damage_event.damage,
-                            pkt.skill_id,
-                            pkt.skill_effect_id,
-                            event.skill_damage_event.modifier as i32,
-                            event.skill_damage_event.cur_hp,
-                            event.skill_damage_event.max_hp,
+                            damage_data,
                             se_on_source,
                             se_on_target,
                             Utc::now().timestamp_millis(),
@@ -587,16 +593,21 @@ pub fn start(
                         let (se_on_source, se_on_target) = status_tracker
                             .borrow_mut()
                             .get_status_effects(&owner, &target_entity, local_character_id);
+                        let damage_data = DamageData {
+                            skill_id: pkt.skill_id,
+                            skill_effect_id: pkt.skill_effect_id.unwrap_or_default(),
+                            damage: event.damage,
+                            modifier: event.modifier as i32,
+                            target_current_hp: event.cur_hp,
+                            target_max_hp: event.max_hp,
+                            damage_attribute: event.damage_attr,
+                            damage_type: event.damage_type,
+                        };
                         state.on_damage(
                             &owner,
                             &source_entity,
                             &target_entity,
-                            event.damage,
-                            pkt.skill_id,
-                            pkt.skill_effect_id.unwrap_or_default(),
-                            event.modifier as i32,
-                            event.cur_hp,
-                            event.max_hp,
+                            damage_data,
                             se_on_source,
                             se_on_target,
                             Utc::now().timestamp_millis(),

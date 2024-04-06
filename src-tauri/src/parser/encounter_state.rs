@@ -311,6 +311,7 @@ impl EncounterState {
             return;
         }
         let skill_name = get_skill_name(&skill_id);
+        let mut tripod_change = false;
         let entity = self
             .encounter
             .entities
@@ -335,6 +336,7 @@ impl EncounterState {
                         ..Default::default()
                     },
                 )]);
+                tripod_change = true;
                 entity
             });
 
@@ -360,6 +362,8 @@ impl EncounterState {
         let mut skill_id = skill_id;
         if let Some(skill) = entity.skills.get_mut(&skill_id) {
             skill.casts += 1;
+            tripod_change = check_tripod_index_change(skill.tripod_index, tripod_index)
+                || check_tripod_level_change(skill.tripod_level, tripod_level);
             skill.tripod_index = tripod_index;
             skill.tripod_level = tripod_level;
         } else if let Some(skill) = entity
@@ -369,6 +373,8 @@ impl EncounterState {
         {
             skill.casts += 1;
             skill_id = skill.id;
+            tripod_change = check_tripod_index_change(skill.tripod_index, tripod_index)
+                || check_tripod_level_change(skill.tripod_level, tripod_level);
             skill.tripod_index = tripod_index;
             skill.tripod_level = tripod_level;
         } else {
@@ -386,6 +392,35 @@ impl EncounterState {
                     ..Default::default()
                 },
             );
+            tripod_change = true;
+        }
+        if tripod_change {
+            let mut tripod_data: Vec<TripodData> = vec![];
+            if let (Some(tripod_index), Some(tripod_level)) = (tripod_index, tripod_level) {
+                let indexes = [tripod_index.first, tripod_index.second + 3, tripod_index.third + 6];
+                let levels = [tripod_level.first, tripod_level.second, tripod_level.third];
+                if let Some(effect) = SKILL_FEATURE_DATA.get(&skill_id) {
+                    for i in 0..3 {
+                        let entries = effect.tripods.get(&indexes[i]).unwrap();
+                        let mut options: Vec<SkillFeatureOption> = vec![];
+                        for entry in &entries.entries {
+                            if entry.level > 0 && entry.level == levels[i] {
+                                options.push(entry.clone());
+                            }
+                        }
+                        tripod_data.push(TripodData {
+                            index: indexes[i],
+                            options
+                        });
+                    }
+                }
+            }
+            
+            if !tripod_data.is_empty() {
+                entity.skills.entry(skill_id).and_modify(|e| {
+                    e.tripod_data = Some(tripod_data);
+                });
+            }
         }
         self.cast_log
             .entry(entity.name.clone())
@@ -401,17 +436,12 @@ impl EncounterState {
         dmg_src_entity: &Entity,
         proj_entity: &Entity,
         dmg_target_entity: &Entity,
-        damage: i64,
-        skill_id: u32,
-        skill_effect_id: u32,
-        modifier: i32,
-        target_current_hp: i64,
-        target_max_hp: i64,
+        damage_data: DamageData,
         se_on_source: Vec<StatusEffectDetails>,
         se_on_target: Vec<StatusEffectDetails>,
         timestamp: i64,
     ) {
-        let hit_flag = match modifier & 0xf {
+        let hit_flag = match damage_data.modifier & 0xf {
             0 => HitFlag::NORMAL,
             1 => HitFlag::CRITICAL,
             2 => HitFlag::MISS,
@@ -430,7 +460,7 @@ impl EncounterState {
                 return;
             }
         };
-        let hit_option = match ((modifier >> 4) & 0x7) - 1 {
+        let hit_option = match ((damage_data.modifier >> 4) & 0x7) - 1 {
             -1 => HitOption::NONE,
             0 => HitOption::BACK_ATTACK,
             1 => HitOption::FRONTAL_ATTACK,
@@ -444,11 +474,11 @@ impl EncounterState {
         if hit_flag == HitFlag::INVINCIBLE {
             return;
         }
-        if hit_flag == HitFlag::DAMAGE_SHARE && skill_id == 0 && skill_effect_id == 0 {
+        if hit_flag == HitFlag::DAMAGE_SHARE && damage_data.skill_id == 0 && damage_data.skill_effect_id == 0 {
             return;
         }
 
-        let mut skill_effect_id = skill_effect_id;
+        let mut skill_effect_id = damage_data.skill_effect_id;
         if proj_entity.entity_type == EntityType::PROJECTILE
             && is_battle_item(skill_effect_id, "attack")
         {
@@ -468,8 +498,8 @@ impl EncounterState {
             .entry(dmg_target_entity.name.clone())
             .or_insert_with(|| {
                 let mut target_entity = encounter_entity_from_entity(dmg_target_entity);
-                target_entity.current_hp = target_current_hp;
-                target_entity.max_hp = target_max_hp;
+                target_entity.current_hp = damage_data.target_current_hp;
+                target_entity.max_hp = damage_data.target_max_hp;
                 target_entity
             })
             .to_owned();
@@ -497,17 +527,17 @@ impl EncounterState {
         }
 
         if target_entity.id == dmg_target_entity.id {
-            target_entity.current_hp = target_current_hp;
-            target_entity.max_hp = target_max_hp;
+            target_entity.current_hp = damage_data.target_current_hp;
+            target_entity.max_hp = damage_data.target_max_hp;
         }
 
-        let mut damage = damage;
-        if target_entity.entity_type != EntityType::PLAYER && target_current_hp < 0 {
-            damage += target_current_hp;
+        let mut damage = damage_data.damage;
+        if target_entity.entity_type != EntityType::PLAYER && damage_data.target_current_hp < 0 {
+            damage += damage_data.target_current_hp;
         }
 
-        let mut skill_id = if skill_id != 0 {
-            skill_id
+        let mut skill_id = if damage_data.skill_id != 0 {
+            damage_data.skill_id
         } else {
             skill_effect_id
         };
@@ -1859,6 +1889,36 @@ fn calculate_average_dps(data: &[(i64, i64)], start_time: i64, end_time: i64) ->
     }
 
     results
+}
+
+pub fn check_tripod_index_change(before: Option<TripodIndex>, after: Option<TripodIndex>) -> bool {
+    if before.is_none() && after.is_none() {
+        return false;
+    }
+
+    if before.is_none() || after.is_none() {
+        return true;
+    }
+
+    let before = before.unwrap();
+    let after = after.unwrap();
+
+    before != after
+}
+
+pub fn check_tripod_level_change(before: Option<TripodLevel>, after: Option<TripodLevel>) -> bool {
+    if before.is_none() && after.is_none() {
+        return false;
+    }
+
+    if before.is_none() || after.is_none() {
+        return true;
+    }
+
+    let before = before.unwrap();
+    let after = after.unwrap();
+
+    before != after
 }
 
 pub fn get_class_from_id(class_id: &u32) -> String {
