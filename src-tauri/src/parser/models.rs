@@ -154,6 +154,9 @@ pub struct Skill {
     pub tripod_index: Option<TripodIndex>,
     pub tripod_level: Option<TripodLevel>,
     pub tripod_data: Option<Vec<TripodData>>,
+    pub rdps_damage_received: i64,
+    pub rdps_damage_received_support: i64,
+    pub rdps_damage_given: i64,
 }
 
 #[derive(Debug, Default, Serialize, Deserialize, Clone)]
@@ -224,6 +227,9 @@ pub struct DamageStats {
     pub dps_average: Vec<i64>,
     #[serde_as(deserialize_as = "DefaultOnError")]
     pub dps_rolling_10s_avg: Vec<i64>,
+    pub rdps_damage_received: i64,
+    pub rdps_damage_received_support: i64,
+    pub rdps_damage_given: i64,
 }
 
 #[derive(Debug, Default, Serialize, Deserialize, Clone)]
@@ -483,7 +489,6 @@ bitflags! {
 
 #[derive(Debug, Default, Deserialize, Clone)]
 pub struct CombatEffectData {
-    pub id: i32,
     pub effects: Vec<CombatEffectDetail>,
 }
 
@@ -532,6 +537,28 @@ pub struct SkillFeatureOption {
     pub param_type: String,
     pub param: Vec<i32>,
 }
+
+#[derive(Debug, Default, Deserialize, Clone)]
+pub struct ItemSet {
+    #[serde(rename(deserialize = "itemids"))]
+    pub item_ids: Vec<u32>,
+    pub value: HashMap<u8, ItemSetDetails>,
+}
+
+#[derive(Debug, Default, Deserialize, Clone)]
+pub struct ItemSetDetails {
+    pub desc: String,
+    pub options: Vec<PassiveOption>,
+}
+
+#[derive(Debug, Default, Deserialize, Clone)]
+pub struct ItemSetShort {
+    pub set_name: String,
+    pub level: u8,
+}
+
+pub type ItemSetLevel = HashMap<u8, ItemSetCount>;
+pub type ItemSetCount = HashMap<u8, ItemSetDetails>;
 
 #[derive(Debug, Default, Deserialize, Clone)]
 pub struct AwsIpRanges {
@@ -779,7 +806,6 @@ pub enum HitFlag {
 }
 
 pub struct CombatEffectConditionData<'a> {
-    pub effect: &'a CombatEffectDetail,
     pub self_entity: Option<&'a Entity>,
     pub target_entity: Option<&'a Entity>,
     pub caster_entity: Option<&'a Entity>,
@@ -791,7 +817,7 @@ pub struct CombatEffectConditionData<'a> {
 #[derive(Debug, Clone)]
 pub struct RdpsData {
     pub multi_dmg: RdpsRates,
-    pub atk_pow_sub_rate_2: RdpsRates,
+    pub atk_pow_sub_rate_2: RdpsSelfRates,
     pub atk_pow_sub_rate_1: RdpsRates,
     pub skill_dmg_rate: RdpsSelfRates,
     pub atk_pow_amplify: Vec<RdpsBuffData>,
@@ -803,7 +829,7 @@ impl Default for RdpsData {
     fn default() -> Self {
         Self {
             multi_dmg: RdpsRates::default(),
-            atk_pow_sub_rate_2: RdpsRates::default(),
+            atk_pow_sub_rate_2: RdpsSelfRates::default(),
             atk_pow_sub_rate_1: RdpsRates::default(),
             skill_dmg_rate: RdpsSelfRates::default(),
             atk_pow_amplify: Vec::new(),
@@ -843,6 +869,11 @@ pub struct RdpsBuffData {
     pub rate: f64,
 }
 
+pub struct ItemSetInfo {
+    pub item_ids: HashMap<u32, ItemSetShort>,
+    pub set_names: HashMap<String, ItemSetLevel>,
+}
+
 lazy_static! {
     pub static ref NPC_DATA: HashMap<u32, Npc> = {
         let json_str = include_str!("../../meter-data/Npc.json");
@@ -867,6 +898,37 @@ lazy_static! {
     pub static ref SKILL_FEATURE_DATA: HashMap<u32, SkillFeatureLevelData> = {
         let json_str = include_str!("../../meter-data/SkillFeature.json");
         serde_json::from_str(json_str).unwrap()
+    };
+    pub static ref ITEM_SET_DATA: HashMap<String, HashMap<u8, ItemSet>> = {
+        let json_str = include_str!("../../meter-data/ItemSet.json");
+        serde_json::from_str(json_str).unwrap()
+    };
+    pub static ref ITEM_SET_INFO: ItemSetInfo = {
+        let mut item_set_ids: HashMap<u32, ItemSetShort> = HashMap::new();
+        let mut item_set_names: HashMap<String, ItemSetLevel> = HashMap::new();
+
+        for (set_name, set_name_data) in ITEM_SET_DATA.iter() {
+            let mut item_set_level: ItemSetLevel = HashMap::new();
+            for (level, set_level_data) in set_name_data.iter() {
+                let mut item_set_count: ItemSetCount = HashMap::new();
+                for (count, set_count_data) in set_level_data.value.iter() {
+                    item_set_count.insert(*count, set_count_data.clone());
+                }
+                item_set_level.insert(*level, item_set_count);
+                for item_id in set_level_data.item_ids.iter() {
+                    item_set_ids.insert(*item_id, ItemSetShort {
+                        set_name: set_name.clone(),
+                        level: *level,
+                    });
+                }
+            }
+            item_set_names.insert(set_name.clone(), item_set_level);
+        }
+
+        ItemSetInfo {
+            item_ids: item_set_ids,
+            set_names: item_set_names,
+        }
     };
     pub static ref ESTHER_DATA: Vec<Esther> = {
         let json_str = include_str!("../../meter-data/Esther.json");

@@ -1,14 +1,9 @@
 use crate::parser::entity_tracker::Entity;
-use crate::parser::models::{
-    CombatEffectConditionData, CombatEffectData, CombatEffectDetail, EncounterEntity, EntityType,
-    PassiveOption, SkillBuffData, SkillData, IDENTITY_CATEGORY, NPC_GRADE,
-    STAT_TYPE_MAP, STAT_TYPE_MAP_TRA,
-};
+use crate::parser::models::{CombatEffectConditionData, CombatEffectData, CombatEffectDetail, EncounterEntity, EntityType, PassiveOption, SkillBuffData, SkillData, IDENTITY_CATEGORY, NPC_GRADE, STAT_TYPE_MAP, STAT_TYPE_MAP_TRA, Skill};
 use hashbrown::HashMap;
+use crate::parser::encounter_state::is_support_class_id;
 
-
-
-pub fn get_buffs_after_tripods(
+pub fn get_buff_after_tripods(
     buff: &SkillBuffData,
     entity: &EncounterEntity,
     skill_id: u32,
@@ -120,10 +115,10 @@ pub fn get_buffs_after_tripods(
 }
 
 pub fn get_crit_multiplier_from_combat_effect(
-    ce: CombatEffectData,
+    ce: &CombatEffectData,
     ce_condition_data: CombatEffectConditionData,
-) -> i32 {
-    let mut crit_damage_rate = 0;
+) -> f64 {
+    let mut crit_damage_rate = 0.0;
 
     ce.effects
         .iter()
@@ -149,7 +144,7 @@ pub fn get_crit_multiplier_from_combat_effect(
                     .filter(|action| action.action_type == "modify_critical_multiplier")
                     .for_each(|action| {
                         if action.action_type == "modify_critical_multiplier" {
-                            let val = action.args.first().cloned().unwrap_or_default() / 100;
+                            let val = action.args.first().cloned().unwrap_or_default() as f64 / 100.0;
                             crit_damage_rate += val;
                         }
                     })
@@ -339,4 +334,18 @@ pub fn is_combat_effect_condition_valid(
     }
 
     is_valid
+}
+
+pub fn apply_rdps(damage_owner: &mut EncounterEntity, source_entity: Option<&mut EncounterEntity>, skill: &mut Skill, delta: i64) {
+    if let Some(source) = source_entity {
+        source.damage_stats.rdps_damage_given += delta;
+        
+        if is_support_class_id(source.class_id) {
+            damage_owner.damage_stats.rdps_damage_received_support += delta;
+            skill.rdps_damage_received_support += delta;
+        }
+    }
+    
+    damage_owner.damage_stats.rdps_damage_received += delta;
+    skill.rdps_damage_received += delta;    
 }

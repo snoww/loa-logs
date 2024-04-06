@@ -218,6 +218,12 @@ pub fn start(
                     }
                 }
             }
+            Pkt::EquipChangeNotify => {
+                if let Some(pkt) = parse_pkt(&data, PKTEquipChangeNotify::new, "PKTEquipChangeNotify")
+                {
+                    entity_tracker.get_player_set_options(pkt.object_id, pkt.equip_item_data_list);
+                }
+            }
             Pkt::IdentityGaugeChangeNotify => {
                 if let Some(pkt) = parse_pkt(
                     &data,
@@ -543,6 +549,7 @@ pub fn start(
                     let local_character_id = id_tracker
                         .borrow()
                         .get_local_character_id(entity_tracker.local_entity_id);
+                    let target_count = pkt.skill_damage_abnormal_move_events.len() as i32;
                     for event in pkt.skill_damage_abnormal_move_events.iter() {
                         let target_entity =
                             entity_tracker.get_or_create_entity(event.skill_damage_event.target_id);
@@ -568,6 +575,8 @@ pub fn start(
                             damage_data,
                             se_on_source,
                             se_on_target,
+                            target_count,
+                            &entity_tracker,
                             Utc::now().timestamp_millis(),
                         );
                     }
@@ -586,6 +595,7 @@ pub fn start(
                     let local_character_id = id_tracker
                         .borrow()
                         .get_local_character_id(entity_tracker.local_entity_id);
+                    let target_count = pkt.skill_damage_events.len() as i32;
                     for event in pkt.skill_damage_events.iter() {
                         let target_entity = entity_tracker.get_or_create_entity(event.target_id);
                         // source_entity is to determine battle item
@@ -610,6 +620,8 @@ pub fn start(
                             damage_data,
                             se_on_source,
                             se_on_target,
+                            target_count,
+                            &entity_tracker,
                             Utc::now().timestamp_millis(),
                         );
                     }

@@ -1,8 +1,6 @@
 use std::cmp::{max, Ordering};
+use std::default::Default;
 
-use crate::parser::debug_print;
-use crate::parser::entity_tracker::Entity;
-use crate::parser::models::*;
 use chrono::Utc;
 use hashbrown::HashMap;
 use log::info;
@@ -11,6 +9,11 @@ use rusqlite::{params, Connection, Transaction};
 use serde_json::json;
 use tauri::{Manager, Window, Wry};
 use tokio::task;
+
+use crate::parser::debug_print;
+use crate::parser::entity_tracker::{Entity, EntityTracker};
+use crate::parser::models::*;
+use crate::parser::rdps::{get_buff_after_tripods, get_crit_multiplier_from_combat_effect};
 use crate::parser::status_tracker::StatusEffectDetails;
 
 const WINDOW_MS: i64 = 5_000;
@@ -397,7 +400,11 @@ impl EncounterState {
         if tripod_change {
             let mut tripod_data: Vec<TripodData> = vec![];
             if let (Some(tripod_index), Some(tripod_level)) = (tripod_index, tripod_level) {
-                let indexes = [tripod_index.first, tripod_index.second + 3, tripod_index.third + 6];
+                let indexes = [
+                    tripod_index.first,
+                    tripod_index.second + 3,
+                    tripod_index.third + 6,
+                ];
                 let levels = [tripod_level.first, tripod_level.second, tripod_level.third];
                 if let Some(effect) = SKILL_FEATURE_DATA.get(&skill_id) {
                     for i in 0..3 {
@@ -410,12 +417,12 @@ impl EncounterState {
                         }
                         tripod_data.push(TripodData {
                             index: indexes[i],
-                            options
+                            options,
                         });
                     }
                 }
             }
-            
+
             if !tripod_data.is_empty() {
                 entity.skills.entry(skill_id).and_modify(|e| {
                     e.tripod_data = Some(tripod_data);
@@ -439,6 +446,8 @@ impl EncounterState {
         damage_data: DamageData,
         se_on_source: Vec<StatusEffectDetails>,
         se_on_target: Vec<StatusEffectDetails>,
+        target_count: i32,
+        entity_tracker: &EntityTracker,
         timestamp: i64,
     ) {
         let hit_flag = match damage_data.modifier & 0xf {
@@ -460,7 +469,8 @@ impl EncounterState {
                 return;
             }
         };
-        let hit_option = match ((damage_data.modifier >> 4) & 0x7) - 1 {
+        let hit_option_raw = ((damage_data.modifier >> 4) & 0x7) - 1;
+        let hit_option = match hit_option_raw {
             -1 => HitOption::NONE,
             0 => HitOption::BACK_ATTACK,
             1 => HitOption::FRONTAL_ATTACK,
@@ -474,7 +484,10 @@ impl EncounterState {
         if hit_flag == HitFlag::INVINCIBLE {
             return;
         }
-        if hit_flag == HitFlag::DAMAGE_SHARE && damage_data.skill_id == 0 && damage_data.skill_effect_id == 0 {
+        if hit_flag == HitFlag::DAMAGE_SHARE
+            && damage_data.skill_id == 0
+            && damage_data.skill_effect_id == 0
+        {
             return;
         }
 
@@ -542,7 +555,8 @@ impl EncounterState {
             skill_effect_id
         };
 
-        let mut skill_name = get_skill_name(&skill_id);
+        let skill_data = get_skill(&skill_id);
+        let mut skill_name = skill_data.as_ref().map_or("".to_string(), |s| s.name.clone());
         if skill_name.is_empty() {
             skill_name = get_skill_name_and_icon(&skill_id, &skill_effect_id, "".to_string()).0;
         }
@@ -624,8 +638,11 @@ impl EncounterState {
             let mut is_buffed_by_support = false;
             let mut is_buffed_by_identity = false;
             let mut is_debuffed_by_support = false;
-            let se_on_source = se_on_source.iter().map(|se| se.status_effect_id).collect::<Vec<_>>();
-            for buff_id in se_on_source.iter() {
+            let se_on_source_ids = se_on_source
+                .iter()
+                .map(|se| se.status_effect_id)
+                .collect::<Vec<_>>();
+            for buff_id in se_on_source_ids.iter() {
                 if !self
                     .encounter
                     .encounter_damage_stats
@@ -670,8 +687,11 @@ impl EncounterState {
                     }
                 }
             }
-            let se_on_target = se_on_target.iter().map(|se| se.status_effect_id).collect::<Vec<_>>();
-            for debuff_id in se_on_target.iter() {
+            let se_on_target_ids = se_on_target
+                .iter()
+                .map(|se| se.status_effect_id)
+                .collect::<Vec<_>>();
+            for debuff_id in se_on_target_ids.iter() {
                 if !self
                     .encounter
                     .encounter_damage_stats
@@ -721,7 +741,7 @@ impl EncounterState {
                 source_entity.damage_stats.debuffed_by_support += damage;
             }
 
-            for buff_id in se_on_source.into_iter() {
+            for buff_id in se_on_source_ids.into_iter() {
                 skill
                     .buffed_by
                     .entry(buff_id)
@@ -734,7 +754,7 @@ impl EncounterState {
                     .and_modify(|e| *e += damage)
                     .or_insert(damage);
             }
-            for debuff_id in se_on_target.into_iter() {
+            for debuff_id in se_on_target_ids.into_iter() {
                 skill
                     .debuffed_by
                     .entry(debuff_id)
@@ -746,6 +766,335 @@ impl EncounterState {
                     .entry(debuff_id)
                     .and_modify(|e| *e += damage)
                     .or_insert(damage);
+            }
+
+            if damage > 0 {
+                let mut rdps_data = RdpsData::default();
+                for status_effect in se_on_source.iter() {
+                    let caster_entity = match entity_tracker.entities.get(&status_effect.source_id)
+                    {
+                        Some(entity) => entity,
+                        None => continue,
+                    };
+                    let caster_encounter_entity =
+                        match self.encounter.entities.get(&caster_entity.name) {
+                            Some(entity) => entity,
+                            None => continue,
+                        };
+                    let original_buff = match SKILL_BUFF_DATA.get(&status_effect.status_effect_id) {
+                        Some(buff) => buff,
+                        None => continue,
+                    };
+                    let buff = get_buff_after_tripods(
+                        original_buff,
+                        caster_encounter_entity,
+                        skill_id,
+                        skill_effect_id,
+                    );
+
+                    if buff.buff_type == "skill_damage_amplify"
+                        && buff.status_effect_values.is_some()
+                        && caster_encounter_entity.entity_type == EntityType::PLAYER
+                        && status_effect.source_id != dmg_src_entity.id
+                    {
+                        let status_effect_values = buff.status_effect_values.unwrap();
+                        let b_skill_id = status_effect_values.first().cloned().unwrap_or_default();
+                        let b_skill_effect_id =
+                            status_effect_values.get(4).cloned().unwrap_or_default();
+                        if (b_skill_id == 0 || b_skill_id == skill_id as i32)
+                            && (skill_effect_id == 0 || b_skill_effect_id == skill_effect_id as i32)
+                        {
+                            if let Some(val) = status_effect_values.get(1).cloned() {
+                                let rate =
+                                    (val as f64 / 10000.0) * status_effect.stack_count as f64;
+                                rdps_data.multi_dmg.values.push(RdpsBuffData {
+                                    caster: caster_encounter_entity.name.clone(),
+                                    rate,
+                                });
+                                rdps_data.multi_dmg.sum_rate += rate;
+                                rdps_data.multi_dmg.total_rate *= 1.0 + rate;
+                            }
+                        }
+                    } else if buff.buff_type == "attack_power_amplify"
+                        && buff.status_effect_values.is_some()
+                        && caster_encounter_entity.entity_type == EntityType::PLAYER
+                        && status_effect.source_id != dmg_src_entity.id
+                    {
+                        let status_effect_values = buff.status_effect_values.unwrap();
+                        if let Some(val) = status_effect_values.first().cloned() {
+                            let mut rate =
+                                (val as f64 / 10000.0) * status_effect.stack_count as f64;
+                            let caster_base_atk_power = Some(0); // todo stats api
+                            let target_base_atk_power = Some(0); // todo stats api
+                            if let (Some(caster_base_atk_power), Some(target_base_atk_power)) =
+                                (caster_base_atk_power, target_base_atk_power)
+                            {
+                                rate *=
+                                    caster_base_atk_power as f64 / target_base_atk_power as f64;
+                            }
+                            rdps_data.atk_pow_amplify.push(RdpsBuffData {
+                                caster: caster_encounter_entity.name.clone(),
+                                rate,
+                            });
+                        }
+                    }
+
+                    for passive in buff.passive_option {
+                        let val = passive.value as f64;
+                        let mut rate = (val / 10000.0) * status_effect.stack_count as f64;
+                        if passive.option_type == "stat" {
+                            if passive.key_stat == "attack_power_sub_rate_2" && val != 0.0 {
+                                if caster_encounter_entity.entity_type == EntityType::PLAYER
+                                    && status_effect.source_id != dmg_src_entity.id
+                                {
+                                    rdps_data.atk_pow_sub_rate_2.values.push(RdpsBuffData {
+                                        caster: caster_encounter_entity.name.clone(),
+                                        rate,
+                                    });
+                                    rdps_data.atk_pow_sub_rate_2.sum_rate += rate;
+                                } else {
+                                    rdps_data.atk_pow_sub_rate_2.self_sum_rate += rate;
+                                }
+                            } else if passive.key_stat == "attack_power_sub_rate_1" && val != 0.0 {
+                                if caster_encounter_entity.entity_type == EntityType::PLAYER
+                                    && status_effect.source_id != dmg_src_entity.id
+                                {
+                                    rdps_data.atk_pow_sub_rate_1.values.push(RdpsBuffData {
+                                        caster: caster_encounter_entity.name.clone(),
+                                        rate,
+                                    });
+                                    rdps_data.atk_pow_sub_rate_1.sum_rate += rate;
+                                } else {
+                                    rdps_data.atk_pow_sub_rate_1.total_rate *= 1.0 + rate;
+                                }
+                            } else if passive.key_stat == "skill_damage_rate" && val != 0.0 {
+                                if caster_encounter_entity.entity_type == EntityType::PLAYER
+                                    && status_effect.source_id != dmg_src_entity.id
+                                {
+                                    rdps_data.skill_dmg_rate.values.push(RdpsBuffData {
+                                        caster: caster_encounter_entity.name.clone(),
+                                        rate,
+                                    });
+                                    rdps_data.skill_dmg_rate.sum_rate += rate;
+                                } else {
+                                    rdps_data.skill_dmg_rate.self_sum_rate += rate;
+                                }
+                            }
+                        }
+                        if passive.key_stat == "critical_hit_rate" && val != 0.0 {
+                            if caster_encounter_entity.entity_type == EntityType::PLAYER
+                                && status_effect.source_id != dmg_src_entity.id
+                            {
+                                rdps_data.crit.values.push(RdpsBuffData {
+                                    caster: caster_encounter_entity.name.clone(),
+                                    rate,
+                                });
+                                rdps_data.crit.sum_rate += rate;
+                            } else {
+                                rdps_data.crit.self_sum_rate += rate;
+                            }
+                        }
+                        if caster_encounter_entity.entity_type == EntityType::PLAYER
+                            && status_effect.source_id != dmg_src_entity.id
+                        {
+                            if passive.key_stat == "skill_damage_sub_rate_2" && val != 0.0 {
+                                let identity_efficiency = Some(1.0); // todo stats api
+                                if let Some(identity_efficiency) = identity_efficiency {
+                                    match caster_encounter_entity.class_id {
+                                        105 | 204 | 602 => {
+                                            rate *= 1.0 + (identity_efficiency / 10000.0);
+                                        }
+                                        _ => {}
+                                    }
+                                }
+                                rdps_data.multi_dmg.values.push(RdpsBuffData {
+                                    caster: caster_encounter_entity.name.clone(),
+                                    rate,
+                                });
+                                rdps_data.multi_dmg.sum_rate += rate;
+                                rdps_data.multi_dmg.total_rate *= 1.0 + rate;
+                            } else if passive.key_stat == "critical_dam_rate"
+                                && buff.buff_category == "buff"
+                            {
+                                rdps_data.crit_dmg_rate += rate;
+                            }
+                        } else if passive.option_type == "combat_effect" {
+                            if let Some(ce) = COMBAT_EFFECT_DATA.get(&passive.key_index) {
+                                let ce_conditional_data = CombatEffectConditionData {
+                                    self_entity: Some(dmg_src_entity),
+                                    target_entity: Some(dmg_target_entity),
+                                    caster_entity: Some(caster_entity),
+                                    skill: SKILL_DATA.get(&skill_id),
+                                    hit_option: Some(hit_option_raw),
+                                    target_count: Some(target_count),
+                                };
+                                let crit_multiplier =
+                                    get_crit_multiplier_from_combat_effect(ce, ce_conditional_data);
+                                rdps_data.crit_dmg_rate +=
+                                    status_effect.stack_count as f64 * crit_multiplier;
+                            }
+                        }
+                    }
+                }
+
+                for status_effect in se_on_target.iter() {
+                    let caster_entity = match entity_tracker.entities.get(&status_effect.source_id)
+                    {
+                        Some(entity) => entity,
+                        None => continue,
+                    };
+                    let caster_encounter_entity =
+                        match self.encounter.entities.get(&caster_entity.name) {
+                            Some(entity) => entity,
+                            None => continue,
+                        };
+                    let original_debuff = match SKILL_BUFF_DATA.get(&status_effect.status_effect_id)
+                    {
+                        Some(buff) => buff,
+                        None => continue,
+                    };
+                    let debuff = get_buff_after_tripods(
+                        original_debuff,
+                        caster_encounter_entity,
+                        skill_id,
+                        skill_effect_id,
+                    );
+                    let status_effect_values = match debuff.status_effect_values {
+                        Some(values) => values,
+                        None => continue,
+                    };
+                    if debuff.buff_type == "instant_stat_amplify" {
+                        if let Some(val) = status_effect_values.first().cloned() {
+                            let rate = (val as f64 / 10000.0) * status_effect.stack_count as f64;
+                            if caster_encounter_entity.entity_type == EntityType::PLAYER
+                                && status_effect.source_id != dmg_src_entity.id
+                            {
+                                rdps_data.crit.values.push(RdpsBuffData {
+                                    caster: caster_encounter_entity.name.clone(),
+                                    rate,
+                                });
+                                rdps_data.crit.sum_rate += rate;
+                            } else {
+                                rdps_data.crit.self_sum_rate += rate;
+                            }
+                        }
+                    }
+                    if caster_encounter_entity.entity_type != EntityType::PLAYER
+                        || status_effect.source_id == dmg_src_entity.id
+                    {
+                        continue;
+                    }
+                    if debuff.buff_type == "instant_stat_amplify" {
+                        if damage_data.damage_type == 0 {
+                            if let Some(val) = status_effect_values.get(2).cloned() {
+                                let rate = -(val as f64 / 10000.0) * status_effect.stack_count as f64 * 0.5;
+                                rdps_data.multi_dmg.values.push(RdpsBuffData {
+                                    caster: caster_encounter_entity.name.clone(),
+                                    rate,
+                                });
+                                rdps_data.multi_dmg.sum_rate += rate;
+                                rdps_data.multi_dmg.total_rate *= 1.0 + rate;
+                            }
+                            if let Some(val) = status_effect_values.get(7).cloned() {
+                                let rate = val as f64 / 10000.0 * status_effect.stack_count as f64;
+                                rdps_data.multi_dmg.values.push(RdpsBuffData {
+                                    caster: caster_encounter_entity.name.clone(),
+                                    rate,
+                                });
+                                rdps_data.multi_dmg.sum_rate += rate;
+                                rdps_data.multi_dmg.total_rate *= 1.0 + rate;
+                            }
+                            if hit_flag == HitFlag::CRITICAL {
+                                if let Some(val) = status_effect_values.get(9).cloned() {
+                                    let rate = val as f64 / 10000.0 * status_effect.stack_count as f64;
+                                    rdps_data.multi_dmg.values.push(RdpsBuffData {
+                                        caster: caster_encounter_entity.name.clone(),
+                                        rate,
+                                    });
+                                    rdps_data.multi_dmg.sum_rate += rate;
+                                    rdps_data.multi_dmg.total_rate *= 1.0 + rate;
+                                }
+                            }
+                        } else if damage_data.damage_type == 1 {
+                            if let Some(val) = status_effect_values.get(3).cloned() {
+                                let rate = -(val as f64 / 10000.0) * status_effect.stack_count as f64 * 0.5;
+                                rdps_data.multi_dmg.values.push(RdpsBuffData {
+                                    caster: caster_encounter_entity.name.clone(),
+                                    rate,
+                                });
+                                rdps_data.multi_dmg.sum_rate += rate;
+                                rdps_data.multi_dmg.total_rate *= 1.0 + rate;
+                            }
+                            if let Some(val) = status_effect_values.get(8).cloned() {
+                                let rate = val as f64 / 10000.0 * status_effect.stack_count as f64;
+                                rdps_data.multi_dmg.values.push(RdpsBuffData {
+                                    caster: caster_encounter_entity.name.clone(),
+                                    rate,
+                                });
+                                rdps_data.multi_dmg.sum_rate += rate;
+                                rdps_data.multi_dmg.total_rate *= 1.0 + rate;
+                            }
+                            if hit_flag == HitFlag::CRITICAL {
+                                if let Some(val) = status_effect_values.get(10).cloned() {
+                                    let rate = val as f64 / 10000.0 * status_effect.stack_count as f64;
+                                    rdps_data.multi_dmg.values.push(RdpsBuffData {
+                                        caster: caster_encounter_entity.name.clone(),
+                                        rate,
+                                    });
+                                    rdps_data.multi_dmg.sum_rate += rate;
+                                    rdps_data.multi_dmg.total_rate *= 1.0 + rate;
+                                }
+                            }
+                        }
+                    } else if debuff.buff_type == "skill_damage_amplify" {
+                        let b_skill_id = status_effect_values.first().cloned().unwrap_or_default();
+                        let b_skill_effect_id =
+                            status_effect_values.get(4).cloned().unwrap_or_default();
+                        if (b_skill_id == 0 || b_skill_id == skill_id as i32)
+                            && (skill_effect_id == 0 || b_skill_effect_id == skill_effect_id as i32)
+                        {
+                            if let Some(val) = status_effect_values.get(1).cloned() {
+                                let rate =
+                                    (val as f64 / 10000.0) * status_effect.stack_count as f64;
+                                rdps_data.multi_dmg.values.push(RdpsBuffData {
+                                    caster: caster_encounter_entity.name.clone(),
+                                    rate,
+                                });
+                                rdps_data.multi_dmg.sum_rate += rate;
+                                rdps_data.multi_dmg.total_rate *= 1.0 + rate;
+                            }
+                        }
+                    }
+                    
+                    if debuff.buff_type == "directional_attack_amplify" {
+                        if hit_option == HitOption::FRONTAL_ATTACK {
+                            if let Some(front_rate) = status_effect_values.first().cloned() {
+                                let rate = (front_rate as f64 / 100.0) * status_effect.stack_count as f64;
+                                rdps_data.multi_dmg.values.push(RdpsBuffData {
+                                    caster: caster_encounter_entity.name.clone(),
+                                    rate,
+                                });
+                                rdps_data.multi_dmg.sum_rate += rate;
+                                rdps_data.multi_dmg.total_rate *= 1.0 + rate;                            
+                            }
+                        }
+                        if hit_option == HitOption::BACK_ATTACK {
+                            if let Some(back_rate) = status_effect_values.get(4).cloned() {
+                                let rate = (back_rate as f64 / 100.0) * status_effect.stack_count as f64;
+                                rdps_data.multi_dmg.values.push(RdpsBuffData {
+                                    caster: caster_encounter_entity.name.clone(),
+                                    rate,
+                                });
+                                rdps_data.multi_dmg.sum_rate += rate;
+                                rdps_data.multi_dmg.total_rate *= 1.0 + rate;                            
+                            }
+                        }
+                    }
+                }
+                if !rdps_data.crit.values.is_empty() && skill_data.is_some() {
+                    let skill_data = skill_data.unwrap();
+                    
+                }
             }
         }
 
@@ -1172,7 +1521,7 @@ fn update_player_entity(old: &mut EncounterEntity, new: &Entity) {
     old.gear_score = new.gear_level;
 }
 
-fn is_support_class_id(class_id: u32) -> bool {
+pub fn is_support_class_id(class_id: u32) -> bool {
     class_id == 105 || class_id == 204 || class_id == 602
 }
 
@@ -1495,6 +1844,10 @@ fn get_skill_name(skill_id: &u32) -> String {
     SKILL_DATA
         .get(skill_id)
         .map_or("".to_string(), |skill| skill.name.clone())
+}
+
+fn get_skill(skill_id: &u32) -> Option<SkillData> {
+    SKILL_DATA.get(skill_id).cloned()
 }
 
 #[allow(clippy::too_many_arguments)]

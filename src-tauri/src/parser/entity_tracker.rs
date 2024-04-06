@@ -1,6 +1,6 @@
 use crate::parser::id_tracker::IdTracker;
 use crate::parser::models::EntityType::*;
-use crate::parser::models::{EntityType, Esther, ESTHER_DATA, NPC_DATA, SKILL_DATA};
+use crate::parser::models::{EntityType, Esther, ESTHER_DATA, ITEM_SET_INFO, NPC_DATA, PassiveOption, SKILL_DATA};
 use crate::parser::party_tracker::PartyTracker;
 use crate::parser::status_tracker::{build_status_effect, StatusEffectDetails, StatusEffectTargetType, StatusEffectType, StatusTracker};
 
@@ -9,7 +9,7 @@ use hashbrown::HashMap;
 use log::{info, warn};
 use meter_core::packets::common::StatPair;
 use meter_core::packets::definitions::*;
-use meter_core::packets::structures::{NpcData, StatusEffectData};
+use meter_core::packets::structures::{EquipItemData, NpcData, StatusEffectData};
 use std::cell::RefCell;
 use std::rc::Rc;
 
@@ -464,6 +464,38 @@ impl EntityTracker {
         self.entities.insert(entity.id, entity.clone());
         entity
     }
+    
+    pub fn get_player_set_options(&mut self, id: u64, equip_list: Vec<EquipItemData>) {
+        let entity = match self.entities.get(&id) { 
+            Some(entity) => entity,
+            None => return
+        };
+        
+        if entity.entity_type != PLAYER {
+            return;
+        }
+        
+        let mut player_set: HashMap<String, HashMap<i32, i32>> = HashMap::new();
+        for item in equip_list {
+            // 1 -> weapon
+            // 6 -> pauldron
+            if item.slot >= 1 && item.slot <= 6 {
+                if let Some(item_set) = ITEM_SET_INFO.item_ids.get(&item.id) {
+                    let set_entry = player_set.entry(item_set.set_name.clone()).or_insert(HashMap::new());
+                    let level = set_entry.get(&(item_set.level as i32)).cloned().unwrap_or_default();
+                    set_entry.insert(item_set.level as i32, level + 1);
+                }
+            }
+        }
+        let mut effective_options: Vec<PassiveOption> = Vec::new();
+        for (set_name, set_entry) in player_set {
+            if let Some(effect) = ITEM_SET_INFO.set_names.get(&set_name) {
+                let max_count_applied = 0;
+                let higher_level_count = 0;
+            }
+        }
+        
+    }
 }
 
 pub fn get_current_and_max_hp(stat_pair: &Vec<StatPair>) -> (i64, i64) {
@@ -544,4 +576,18 @@ pub struct Entity {
     pub push_immune: bool,
     pub level: u16,
     pub balance_level: u16,
+    pub item_set: Option<Vec<PassiveOption>>,
+    pub items: Items,
+}
+
+#[derive(Debug, Default, Clone)]
+pub struct Items {
+    pub life_tool_list: Option<PlayerItemData>,
+    pub equip_list: Option<PlayerItemData>,
+}
+
+#[derive(Debug, Default, Clone)]
+pub struct PlayerItemData {
+    pub id: u64,
+    pub slot: i32
 }
