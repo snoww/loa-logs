@@ -278,6 +278,13 @@ pub fn start(
                     state.on_init_pc(entity, hp, max_hp)
                 }
             }
+            Pkt::InitItem => {
+                if let Some(pkt) = parse_pkt(&data, PKTInitItem::new, "PKTInitItem") {
+                    if pkt.storage_type == 1 || pkt.storage_type == 20 {
+                        entity_tracker.get_local_player_set_options(pkt.item_data_list);
+                    }
+                }
+            }
             Pkt::MigrationExecute => {
                 if let Some(pkt) = parse_pkt(&data, PKTMigrationExecute::new, "PKTMigrationExecute")
                 {
