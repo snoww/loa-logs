@@ -723,6 +723,9 @@ fn load_encounters_preview(
                 .split(',')
                 .map(|s| {
                     let info: Vec<&str> = s.split(':').collect();
+                    if info.len() != 2 {
+                        return (101, "Unknown".to_string());
+                    }
                     (info[0].parse::<i32>().unwrap_or(101), info[1].to_string())
                 })
                 .unzip();
