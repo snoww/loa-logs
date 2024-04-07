@@ -153,6 +153,7 @@ pub struct Skill {
     pub cast_log: Vec<i32>,
     pub tripod_index: Option<TripodIndex>,
     pub tripod_level: Option<TripodLevel>,
+    #[serde(skip)]
     pub tripod_data: Option<Vec<TripodData>>,
     pub rdps_damage_received: i64,
     pub rdps_damage_received_support: i64,

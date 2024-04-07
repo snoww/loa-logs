@@ -12,6 +12,7 @@ use std::cell::RefCell;
 use std::rc::Rc;
 
 const TIMEOUT_DELAY_MS: i64 = 1000;
+const WORKSHOP_BUFF_ID: u32 = 9701;
 
 pub type StatusEffectRegistry = HashMap<u32, StatusEffectDetails>;
 
@@ -78,7 +79,7 @@ impl StatusTracker {
         instance_id: Vec<u32>,
         reason: u8,
         sett: StatusEffectTargetType,
-    ) -> (bool, Vec<StatusEffectDetails>) {
+    ) -> (bool, Vec<StatusEffectDetails>, bool) {
         let registry = match sett {
             StatusEffectTargetType::Local => &mut self.local_status_effect_registry,
             StatusEffectTargetType::Party => &mut self.party_status_effect_registry,
@@ -86,10 +87,14 @@ impl StatusTracker {
 
         let mut has_shield_buff = false;
         let mut shields_broken: Vec<StatusEffectDetails> = Vec::new();
+        let mut left_workshop = false;
 
         if let Some(ser) = registry.get_mut(&target_id) {
             for id in instance_id {
                 if let Some(se) = ser.remove(&id) {
+                    if se.status_effect_id == WORKSHOP_BUFF_ID {
+                        left_workshop = true;
+                    }
                     if se.status_effect_type == StatusEffectType::Shield {
                         has_shield_buff = true;
                         if reason == 4 {
@@ -100,7 +105,7 @@ impl StatusTracker {
             }
         }
 
-        (has_shield_buff, shields_broken)
+        (has_shield_buff, shields_broken, left_workshop)
     }
 
     pub fn update_status_duration(

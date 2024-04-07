@@ -84,7 +84,7 @@ pub fn get_buff_after_tripods(
                                     } else {
                                         let mut new_values: Vec<i32> = vec![];
                                         for i in
-                                            0..(status_effect_values.len()).max(params.len() - 3)
+                                            0..status_effect_values.len().max(params.len() - 3)
                                         {
                                             if params.get(i + 3).is_some() {
                                                 let old_value = status_effect_values
@@ -259,7 +259,7 @@ pub fn is_combat_effect_condition_valid(
                     "self" => check_validity(self_entity),
                     "target" => check_validity(target_entity),
                     "caster" => check_validity(caster_entity),
-                    _ => false, // Default case if actor doesn't match any known roles
+                    _ => false,
                 };
             }
             "npc_scaled_level_less" => {

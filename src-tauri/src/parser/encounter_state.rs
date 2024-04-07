@@ -16,6 +16,7 @@ use crate::parser::models::*;
 use crate::parser::rdps::{
     apply_rdps, get_buff_after_tripods, get_crit_multiplier_from_combat_effect,
 };
+use crate::parser::stats_api::{PlayerStats, Stats};
 use crate::parser::status_tracker::StatusEffectDetails;
 
 const WINDOW_MS: i64 = 5_000;
@@ -450,6 +451,7 @@ impl EncounterState {
         se_on_target: Vec<StatusEffectDetails>,
         target_count: i32,
         entity_tracker: &EntityTracker,
+        player_stats: &Option<HashMap<String, Stats>>,
         timestamp: i64,
     ) {
         let hit_flag = match damage_data.modifier & 0xf {
@@ -772,7 +774,8 @@ impl EncounterState {
                     .or_insert(damage);
             }
 
-            if damage > 0 {
+            if damage > 0 && player_stats.is_some() {
+                let player_stats = player_stats.as_ref().unwrap();
                 let mut rdps_data = RdpsData::default();
                 for status_effect in se_on_source.iter() {
                     let caster_entity = match entity_tracker.entities.get(&status_effect.source_id)
@@ -828,8 +831,12 @@ impl EncounterState {
                         if let Some(val) = status_effect_values.first().cloned() {
                             let mut rate =
                                 (val as f64 / 10000.0) * status_effect.stack_count as f64;
-                            let caster_base_atk_power = Some(0); // todo stats api
-                            let target_base_atk_power = Some(0); // todo stats api
+                            let caster_base_atk_power = player_stats
+                                .get(&caster_encounter_entity.name)
+                                .map(|stats| stats.atk_power);
+                            let target_base_atk_power = player_stats
+                                .get(&dmg_src_entity.name)
+                                .map(|stats| stats.atk_power);
                             if let (Some(caster_base_atk_power), Some(target_base_atk_power)) =
                                 (caster_base_atk_power, target_base_atk_power)
                             {
@@ -844,8 +851,8 @@ impl EncounterState {
 
                     for passive in buff.passive_option {
                         let val = passive.value as f64;
-                        let mut rate = (val / 10000.0) * status_effect.stack_count as f64;
                         if passive.option_type == "stat" {
+                            let rate = (val / 10000.0) * status_effect.stack_count as f64;
                             if passive.key_stat == "attack_power_sub_rate_2" && val != 0.0 {
                                 if caster_encounter_entity.entity_type == EntityType::PLAYER
                                     && status_effect.source_id != dmg_src_entity.id
@@ -885,6 +892,7 @@ impl EncounterState {
                             }
                         }
                         if passive.key_stat == "critical_hit_rate" && val != 0.0 {
+                            let rate = (val / 10000.0) * status_effect.stack_count as f64;
                             if caster_encounter_entity.entity_type == EntityType::PLAYER
                                 && status_effect.source_id != dmg_src_entity.id
                             {
@@ -900,12 +908,19 @@ impl EncounterState {
                         if caster_encounter_entity.entity_type == EntityType::PLAYER
                             && status_effect.source_id != dmg_src_entity.id
                         {
+                            let mut rate = (val / 10000.0) * status_effect.stack_count as f64;
                             if passive.key_stat == "skill_damage_sub_rate_2" && val != 0.0 {
-                                let identity_efficiency = Some(1.0); // todo stats api
-                                if let Some(identity_efficiency) = identity_efficiency {
+                                let spec = player_stats
+                                    .get(&caster_encounter_entity.name)
+                                    .map(|stats| stats.spec as f64);
+                                if let Some(spec) = spec {
                                     match caster_encounter_entity.class_id {
-                                        105 | 204 | 602 => {
-                                            rate *= 1.0 + (identity_efficiency / 10000.0);
+                                        105 => {
+                                            rate *= 1.0 + ((spec / 0.0699) * 0.63) / 10000.0;
+                                        }
+                                        204 => rate *= 1.0 + ((spec / 0.0699) * 0.35) / 10000.0,
+                                        602 => {
+                                            rate *= 1.0 + ((spec / 0.0699) * 0.38) / 10000.0;
                                         }
                                         _ => {}
                                     }
@@ -1225,7 +1240,9 @@ impl EncounterState {
                 }
 
                 if !rdps_data.skill_dmg_rate.values.is_empty() {
-                    let additional_damage = Some(0.0); // todo stats
+                    let additional_damage = player_stats
+                        .get(&dmg_src_entity.name)
+                        .map(|stats| stats.add_dmg as f64);
                     if let Some(additional_damage) = additional_damage {
                         rdps_data.skill_dmg_rate.self_sum_rate += additional_damage / 10000.0;
                     }
@@ -1233,7 +1250,9 @@ impl EncounterState {
 
                 let mut crit_sum_eff_gain_rate = 0.0;
                 if !rdps_data.crit.values.is_empty() {
-                    let crit_stat_value = Some(0); // todo stats
+                    let crit_stat_value = player_stats
+                        .get(&dmg_src_entity.name)
+                        .map(|stats| stats.crit);
                     rdps_data.crit.self_sum_rate +=
                         crit_stat_value.unwrap_or_default() as f64 / 0.2794 / 10000.0;
                     let capped_sum_rate = 0.0_f64

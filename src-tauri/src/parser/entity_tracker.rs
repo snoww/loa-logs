@@ -305,7 +305,7 @@ impl EntityTracker {
     pub fn party_status_effect_remove(
         &mut self,
         pkt: PKTPartyStatusEffectRemoveNotify,
-    ) -> (bool, Vec<StatusEffectDetails>) {
+    ) -> (bool, Vec<StatusEffectDetails>, bool) {
         self.status_tracker.borrow_mut().remove_status_effects(
             pkt.character_id,
             pkt.status_effect_ids,
