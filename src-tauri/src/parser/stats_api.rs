@@ -1,23 +1,24 @@
 use crate::parser::debug_print;
 use crate::parser::encounter_state::EncounterState;
 use crate::parser::entity_tracker::{Entity, EntityTracker};
+use chrono::{DateTime, Duration, Utc};
 use hashbrown::HashMap;
 use log::{info, warn};
 use md5::compute;
 use reqwest::Client;
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 use serde_json::json;
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::{Arc, Mutex};
 
-const API_URL: &str = "http://localhost:3000/query";
+const API_URL: &str = "https://inspect.fau.dev/query";
 
 pub struct StatsApi {
     cache: Arc<Mutex<HashMap<String, PlayerStats>>>,
     stats_cache: Arc<Mutex<HashMap<String, Stats>>>,
     cache_status: Arc<AtomicBool>,
     client: Arc<Client>,
-    hash: String,
+    hash: HashMap<String, String>,
 }
 
 impl StatsApi {
@@ -27,7 +28,7 @@ impl StatsApi {
             stats_cache: Arc::new(Mutex::new(HashMap::new())),
             cache_status: Arc::new(AtomicBool::new(false)),
             client: Arc::new(Client::new()),
-            hash: String::new(),
+            hash: HashMap::new(),
         }
     }
 
@@ -38,19 +39,17 @@ impl StatsApi {
         entity_tracker: &EntityTracker,
         cached: &HashMap<u64, String>,
     ) {
-        info!("syncing player stats");
         let region = match state.region.as_ref() {
             Some(region) => region.clone(),
             None => cached.get(&0).cloned().unwrap_or_default(),
         };
         if party.is_empty() || region.is_empty() {
-            info!("party info is empty or region is not set");
+            debug_print(format_args!("party info is empty or region is not set"));
             return;
         }
 
-        let mut player_names = party.iter().flatten().cloned().collect::<Vec<String>>();
-        player_names.sort();
-        let mut combined_hash = String::new();
+        let player_names = party.iter().flatten().cloned().collect::<Vec<String>>();
+        let mut player_hashes: Vec<PlayerHash> = Vec::new();
         for player in player_names.iter() {
             let entity_id = match state.encounter.entities.get(player) {
                 Some(entity) => entity.id,
@@ -58,35 +57,40 @@ impl StatsApi {
             };
             if let Some(entity) = entity_tracker.entities.get(&entity_id) {
                 if let Some(hash) = self.get_hash(entity) {
-                    combined_hash += &hash;
+                    if self
+                        .hash
+                        .get(player)
+                        .map_or(false, |cached_hash| cached_hash == &hash)
+                    {
+                        continue;
+                    } else {
+                        self.hash.insert(player.clone(), hash.clone());
+                        player_hashes.push(PlayerHash {
+                            name: player.clone(),
+                            hash,
+                            expiry: Utc::now() + Duration::minutes(5),
+                        });
+                    }
                 }
             }
         }
-        let new_hash = format!("{:x}", compute(combined_hash));
-        if new_hash == self.hash {
-            return;
-        }
-        self.hash = new_hash;
-        self.request(region, player_names);
+        self.request(region, player_hashes);
     }
 
-    fn request(&self, region: String, players: Vec<String>) {
+    fn request(&self, region: String, players: Vec<PlayerHash>) {
         let client_clone = Arc::clone(&self.client);
         let cache_lock = Arc::clone(&self.cache);
         let cache_status = Arc::clone(&self.cache_status);
         let stats_cache_lock = Arc::clone(&self.stats_cache);
-        let hash = self.hash.clone();
         tokio::task::spawn(async move {
             let request_body = json!({
                 "region": region,
                 "characters": players,
-                "hash": hash,
             });
             debug_print(format_args!("requesting player stats"));
-            let response = client_clone.get(API_URL).json(&request_body).send().await;
-            match response {
-                Ok(response) => {
-                    if let Ok(data) = response.json::<HashMap<String, PlayerStats>>().await {
+            match client_clone.get(API_URL).json(&request_body).send().await {
+                Ok(response) => match response.json::<HashMap<String, PlayerStats>>().await {
+                    Ok(data) => {
                         debug_print(format_args!("received player stats"));
                         let mut cache_clone = cache_lock.lock().unwrap();
                         let mut stats_cache_clone = stats_cache_lock.lock().unwrap();
@@ -103,9 +107,11 @@ impl StatsApi {
                             cache_clone.insert(name, stats);
                         }
                         cache_status.store(true, Ordering::Relaxed);
-                        debug_print(format_args!("stats_cache: {:?}", stats_cache_clone));
                     }
-                }
+                    Err(e) => {
+                        warn!("failed to parse player stats: {:?}", e);
+                    }
+                },
                 Err(e) => {
                     warn!("failed to fetch player stats: {:?}", e);
                 }
@@ -220,3 +226,11 @@ pub struct EngravingData {
     pub level: u8,
 }
 
+#[derive(Debug, Default, Clone, Serialize)]
+#[serde(rename_all = "camelCase", default)]
+pub struct PlayerHash {
+    pub name: String,
+    pub hash: String,
+    #[serde(skip)]
+    pub expiry: DateTime<Utc>,
+}

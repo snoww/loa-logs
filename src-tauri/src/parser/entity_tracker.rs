@@ -526,7 +526,6 @@ impl EntityTracker {
             });
         }
         entity.items.equip_list = Some(player_equip_list);
-
         let mut effective_options: Vec<PassiveOption> = Vec::new();
         for (set_name, set_entry) in player_set {
             if let Some(effect) = ITEM_SET_INFO.set_names.get(&set_name) {

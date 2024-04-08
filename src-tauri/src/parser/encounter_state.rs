@@ -775,6 +775,9 @@ impl EncounterState {
             }
 
             if damage > 0 && player_stats.is_some() {
+                // rdps ported from meter-core by herysia
+                // refer to here for documentation
+                // https://github.com/lost-ark-dev/meter-core/blob/a93ed3dd05a251d8dee47f5e6e17f275a0bd89fb/src/logger/gameTracker.ts#L417
                 let player_stats = player_stats.as_ref().unwrap();
                 let mut rdps_data = RdpsData::default();
                 for status_effect in se_on_source.iter() {
@@ -833,15 +836,13 @@ impl EncounterState {
                                 (val as f64 / 10000.0) * status_effect.stack_count as f64;
                             let caster_base_atk_power = player_stats
                                 .get(&caster_encounter_entity.name)
-                                .map(|stats| stats.atk_power);
+                                .map(|stats| stats.atk_power)
+                                .unwrap_or(50_000);
                             let target_base_atk_power = player_stats
                                 .get(&dmg_src_entity.name)
-                                .map(|stats| stats.atk_power);
-                            if let (Some(caster_base_atk_power), Some(target_base_atk_power)) =
-                                (caster_base_atk_power, target_base_atk_power)
-                            {
-                                rate *= caster_base_atk_power as f64 / target_base_atk_power as f64;
-                            }
+                                .map(|stats| stats.atk_power)
+                                .unwrap_or(50_000);
+                            rate *= caster_base_atk_power as f64 / target_base_atk_power as f64;
                             rdps_data.atk_pow_amplify.push(RdpsBuffData {
                                 caster: caster_encounter_entity.name.clone(),
                                 rate,
@@ -912,18 +913,13 @@ impl EncounterState {
                             if passive.key_stat == "skill_damage_sub_rate_2" && val != 0.0 {
                                 let spec = player_stats
                                     .get(&caster_encounter_entity.name)
-                                    .map(|stats| stats.spec as f64);
-                                if let Some(spec) = spec {
-                                    match caster_encounter_entity.class_id {
-                                        105 => {
-                                            rate *= 1.0 + ((spec / 0.0699) * 0.63) / 10000.0;
-                                        }
-                                        204 => rate *= 1.0 + ((spec / 0.0699) * 0.35) / 10000.0,
-                                        602 => {
-                                            rate *= 1.0 + ((spec / 0.0699) * 0.38) / 10000.0;
-                                        }
-                                        _ => {}
-                                    }
+                                    .map(|stats| stats.spec as f64)
+                                    .unwrap_or(500.0);
+                                match caster_encounter_entity.class_id {
+                                    105 => rate *= 1.0 + ((spec / 0.0699) * 0.63) / 10000.0,
+                                    204 => rate *= 1.0 + ((spec / 0.0699) * 0.35) / 10000.0,
+                                    602 => rate *= 1.0 + ((spec / 0.0699) * 0.38) / 10000.0,
+                                    _ => {}
                                 }
                                 rdps_data.multi_dmg.values.push(RdpsBuffData {
                                     caster: caster_encounter_entity.name.clone(),
@@ -1242,10 +1238,9 @@ impl EncounterState {
                 if !rdps_data.skill_dmg_rate.values.is_empty() {
                     let additional_damage = player_stats
                         .get(&dmg_src_entity.name)
-                        .map(|stats| stats.add_dmg as f64);
-                    if let Some(additional_damage) = additional_damage {
-                        rdps_data.skill_dmg_rate.self_sum_rate += additional_damage / 10000.0;
-                    }
+                        .map(|stats| stats.add_dmg as f64)
+                        .unwrap_or(2500.0);
+                    rdps_data.skill_dmg_rate.self_sum_rate += additional_damage / 10000.0;
                 }
 
                 let mut crit_sum_eff_gain_rate = 0.0;

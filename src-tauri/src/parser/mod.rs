@@ -106,6 +106,8 @@ pub fn start(
     if local_player_path.exists() {
         let local_players_file = std::fs::read_to_string(local_player_path.clone())?;
         local_players = serde_json::from_str(&local_players_file).unwrap_or_default();
+        // load region if it was saved prior
+        state.region = local_players.get(&0).cloned();
     }
 
     let emit_details = Arc::new(AtomicBool::new(false));
