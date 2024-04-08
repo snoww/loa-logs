@@ -31,6 +31,7 @@
     import BossTable from "../shared/BossTable.svelte";
     import BossBreakdown from "../shared/BossBreakdown.svelte";
     import LogShields from "$lib/components/logs/LogShields.svelte";
+    import Rdps from "$lib/components/shared/Rdps.svelte";
 
     export let id: string;
     export let encounter: Encounter;
@@ -206,6 +207,11 @@
         setChartView();
     }
 
+    function RDPSTab() {
+        tab = MeterTab.RDPS;
+        setChartView();
+    }
+
     function partySynergyTab() {
         tab = MeterTab.PARTY_BUFFS;
         setChartView();
@@ -350,6 +356,13 @@
                     class:bg-gray-700={tab !== MeterTab.DAMAGE}
                     on:click={damageTab}>
                     Damage
+                </button>
+                <button
+                    class="flex-shrink-0 rounded-sm px-3 py-1"
+                    class:bg-accent-900={tab === MeterTab.RDPS}
+                    class:bg-gray-700={tab !== MeterTab.RDPS}
+                    on:click={RDPSTab}>
+                    RDPS
                 </button>
                 <button
                     class="flex-shrink-0 rounded-sm px-2 py-1"
@@ -583,7 +596,7 @@
                                 {/if}
                                 {#if anySupportBrand && $settings.logs.percentBrand}
                                     <th class="w-12 font-normal" use:tooltip={{ content: "% Damage buffed by Brand" }}
-                                    >B%
+                                        >B%
                                     </th>
                                 {/if}
                                 {#if anySupportIdentity && $settings.logs.percentIdentityBySup}
@@ -629,6 +642,8 @@
                         </table>
                     {/if}
                 {/if}
+            {:else if tab === MeterTab.RDPS}
+                <Rdps {players} totalDamageDealt={encounter.encounterDamageStats.totalDamageDealt} duration={encounter.duration} />
             {:else if tab === MeterTab.PARTY_BUFFS}
                 {#if state === MeterState.PARTY}
                     <LogBuffs {tab} encounterDamageStats={encounter.encounterDamageStats} {players} {inspectPlayer} />
@@ -654,7 +669,7 @@
             {:else if tab === MeterTab.TANK}
                 <DamageTaken {players} topDamageTaken={encounter.encounterDamageStats.topDamageTaken} tween={false} />
             {:else if tab === MeterTab.SHIELDS}
-                <LogShields {players} encounterDamageStats={encounter.encounterDamageStats}/>
+                <LogShields {players} encounterDamageStats={encounter.encounterDamageStats} />
             {:else if tab === MeterTab.BOSS}
                 {#if !focusedBoss}
                     <BossTable {bosses} duration={encounter.duration} {inspectBoss} tween={false} />

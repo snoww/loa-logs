@@ -1,4 +1,4 @@
-import { BossHpLog, type IdentityLogType, type IdentityLogTypeValue } from "$lib/types";
+import { BossHpLog, type DamageStats, type IdentityLogType, type IdentityLogTypeValue } from "$lib/types";
 
 export function tryParseInt(intString: string | number, defaultValue = 0) {
     if (typeof intString === "number") {
@@ -105,7 +105,7 @@ export function formatTimestampDate(timestampMs: number, iso = false): string {
     return new Date(timestampMs).toLocaleString(undefined, {
         year: "numeric",
         month: "2-digit",
-        day: "2-digit",
+        day: "2-digit"
     });
 }
 export function formatTimestampTime(timestampMs: number): string {
@@ -159,13 +159,13 @@ export function resampleData(data: Array<BossHpLog>, interval = 5, length: numbe
     const resampledData: Array<BossHpLog> = [];
     let last = null;
     const lastTime = data[data.length - 1].time;
-    
+
     const dataMap = data.reduce((map, obj) => {
         map.set(obj.time, obj);
         return map;
     }, new Map<number, BossHpLog>());
 
-    for(let i = 0; i < length; i++) {
+    for (let i = 0; i < length; i++) {
         const time = i * interval;
         if (time > lastTime) {
             break;
@@ -183,8 +183,23 @@ export function resampleData(data: Array<BossHpLog>, interval = 5, length: numbe
 }
 
 export function timeToSeconds(time: string): number {
-    const split = time.split(':');
+    const split = time.split(":");
     const minutes = +split[0];
     const seconds = +split[1];
     return minutes * 60 + seconds;
+}
+
+export function getRDamage(damageStats: DamageStats): number {
+    return (
+        damageStats.damageDealt -
+        damageStats.rdpsDamageReceivedSupport -
+        (damageStats.rdpsDamageReceived - damageStats.rdpsDamageReceivedSupport) +
+        damageStats.rdpsDamageGiven
+    );
+}
+
+export function getBaseDamage(damageStats: DamageStats): number {
+    return damageStats.damageDealt -
+        damageStats.rdpsDamageReceivedSupport -
+        (damageStats.rdpsDamageReceived - damageStats.rdpsDamageReceivedSupport);
 }

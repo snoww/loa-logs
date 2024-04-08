@@ -29,6 +29,7 @@
     import DamageTaken from "./shared/DamageTaken.svelte";
     import BossTable from "./shared/BossTable.svelte";
     import BossBreakdown from "./shared/BossBreakdown.svelte";
+    import Rdps from "$lib/components/Rdps.svelte";
 
     let time = +Date.now();
     let encounter: Encounter | null = null;
@@ -440,6 +441,8 @@
                     <PlayerBreakdown entity={player} {duration} {handleRightClick} />
                 </table>
             {/if}
+        {:else if tab === MeterTab.RDPS}
+            <Rdps {players} {duration} {totalDamageDealt} />
         {:else if tab === MeterTab.PARTY_BUFFS}
             {#if state === MeterState.PARTY}
                 <Buffs

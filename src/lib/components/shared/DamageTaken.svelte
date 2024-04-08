@@ -16,9 +16,9 @@
 
     $: {
         if (topDamageTaken) {
-            sortedPlayers = [...players]
+            sortedPlayers = players
                 .filter((e) => e.damageStats.damageTaken > 0 && e.entityType === EntityType.PLAYER)
-                .sort((a, b) => b.damageStats.damageTaken - a.damageStats.damageTaken);
+                .toSorted((a, b) => b.damageStats.damageTaken - a.damageStats.damageTaken);
             playerDamageTakenPercentages = sortedPlayers.map(
                 (player) => (player.damageStats.damageTaken / topDamageTaken!) * 100
             );
