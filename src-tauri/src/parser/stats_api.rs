@@ -67,12 +67,16 @@ impl StatsApi {
                         self.hash.insert(player.clone(), hash.clone());
                         player_hashes.push(PlayerHash {
                             name: player.clone(),
-                            hash,
-                            expiry: Utc::now() + Duration::minutes(5),
+                            hash
                         });
                     }
+                } else {
+                    self.hash.remove(player);
                 }
             }
+        }
+        if player_hashes.is_empty() {
+            return;
         }
         self.request(region, player_hashes);
     }
@@ -87,8 +91,11 @@ impl StatsApi {
                 "region": region,
                 "characters": players,
             });
+            println!("{:?}", request_body);
             debug_print(format_args!("requesting player stats"));
-            match client_clone.get(API_URL).json(&request_body).send().await {
+            // let a = client_clone.post(API_URL).json(&request_body).send().await;
+            // println!("{:?}", a.unwrap().text().await);
+            match client_clone.post(API_URL).json(&request_body).send().await {
                 Ok(response) => match response.json::<HashMap<String, PlayerStats>>().await {
                     Ok(data) => {
                         debug_print(format_args!("received player stats"));
@@ -135,8 +142,10 @@ impl StatsApi {
         }
 
         let mut equip_data: [u32; 32] = [0; 32];
-        for item in player.items.equip_list.as_ref().unwrap().iter() {
-            equip_data[item.slot as usize] = item.id;
+        if let Some(equip_list) = player.items.equip_list.as_ref() {
+            for item in equip_list.iter() {
+                equip_data[item.slot as usize] = item.id;
+            }
         }
 
         let data = format!(
@@ -150,7 +159,10 @@ impl StatsApi {
         Some(format!("{:x}", compute(data)))
     }
 
-    pub fn get_all_stats(&self) -> Option<HashMap<String, PlayerStats>> {
+    pub fn get_all_stats(&self, difficulty: &str) -> Option<HashMap<String, PlayerStats>> {
+        if difficulty.is_empty() || difficulty == "Inferno" || difficulty == "Challenge" {
+            return None;
+        }
         if self.cache_status.load(Ordering::Relaxed) {
             if let Ok(cache) = self.cache.lock() {
                 Some(cache.clone())
@@ -163,7 +175,7 @@ impl StatsApi {
     }
 
     pub fn get_stats(&self, difficulty: &str) -> Option<HashMap<String, Stats>> {
-        if difficulty == "Inferno" || difficulty == "Challenge" {
+        if difficulty.is_empty() || difficulty == "Inferno" || difficulty == "Challenge" {
             return None;
         }
         if self.cache_status.load(Ordering::Relaxed) {
@@ -231,6 +243,4 @@ pub struct EngravingData {
 pub struct PlayerHash {
     pub name: String,
     pub hash: String,
-    #[serde(skip)]
-    pub expiry: DateTime<Utc>,
 }

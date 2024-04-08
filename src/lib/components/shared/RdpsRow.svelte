@@ -16,6 +16,8 @@
     let playerName: string;
     let color = "#ffffff";
     let damageDealt: (string | number)[];
+    let damageGiven: (string | number)[];
+    let damageReceived: (string | number)[];
     let damagePercentage: string;
     let rDamage: number;
     let rDps: (string | number)[];
@@ -27,6 +29,8 @@
         rDps = abbreviateNumberSplit(rDamage / (duration / 1000));
         damageDealt = abbreviateNumberSplit(rDamage);
         damagePercentage = ((rDamage / totalDamageDealt) * 100).toFixed(1);
+        damageGiven = abbreviateNumberSplit(player.damageStats.rdpsDamageGiven);
+        damageReceived = abbreviateNumberSplit(player.damageStats.rdpsDamageReceived);
         let baseDamage = getBaseDamage(player.damageStats);
         let sSyn = player.damageStats.rdpsDamageReceivedSupport / baseDamage;
         let dSyn = (player.damageStats.rdpsDamageReceived - player.damageStats.rdpsDamageReceivedSupport) / baseDamage;
@@ -67,13 +71,19 @@
         {damagePercentage}<span class="text-xs text-gray-300">%</span>
     </td>
     <td class="px-1 text-center">
+        {damageReceived[0]}<span class="text-3xs text-gray-300">{damageReceived[1]}</span>
+    </td>
+    <td class="px-1 text-center">
+        {damageGiven[0]}<span class="text-3xs text-gray-300">{damageGiven[1]}</span>
+    </td>
+    <td class="px-1 text-center">
         {synPercentage}<span class="text-3xs text-gray-300">%</span>
     </td>
     <td class="px-1 text-center">
-        {dSynPercentage}<span class="text-3xs text-gray-300">%</span>
+        {sSynPercentage}<span class="text-3xs text-gray-300">%</span>
     </td>
     <td class="px-1 text-center">
-        {sSynPercentage}<span class="text-3xs text-gray-300">%</span>
+        {dSynPercentage}<span class="text-3xs text-gray-300">%</span>
     </td>
     <div
         class="absolute left-0 -z-10 h-7 px-2 py-1"

@@ -153,6 +153,8 @@ pub struct Skill {
     pub cast_log: Vec<i32>,
     pub tripod_index: Option<TripodIndex>,
     pub tripod_level: Option<TripodLevel>,
+    pub gem_cooldown: Option<u8>,
+    pub gem_damage: Option<u8>,
     #[serde(skip)]
     pub tripod_data: Option<Vec<TripodData>>,
     pub rdps_damage_received: i64,
@@ -807,12 +809,12 @@ pub enum HitFlag {
 }
 
 pub struct CombatEffectConditionData<'a> {
-    pub self_entity: Option<&'a Entity>,
-    pub target_entity: Option<&'a Entity>,
-    pub caster_entity: Option<&'a Entity>,
+    pub self_entity: &'a Entity,
+    pub target_entity: &'a Entity,
+    pub caster_entity: &'a Entity,
     pub skill: Option<&'a SkillData>,
-    pub hit_option: Option<i32>,
-    pub target_count: Option<i32>,
+    pub hit_option: i32,
+    pub target_count: i32,
 }
 
 #[derive(Debug, Clone)]

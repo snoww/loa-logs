@@ -29,7 +29,7 @@
     import DamageTaken from "./shared/DamageTaken.svelte";
     import BossTable from "./shared/BossTable.svelte";
     import BossBreakdown from "./shared/BossBreakdown.svelte";
-    import Rdps from "$lib/components/Rdps.svelte";
+    import Rdps from "$lib/components/shared/Rdps.svelte";
 
     let time = +Date.now();
     let encounter: Encounter | null = null;

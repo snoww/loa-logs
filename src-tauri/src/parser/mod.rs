@@ -189,7 +189,8 @@ pub fn start(
         if save.load(Ordering::Relaxed) {
             save.store(false, Ordering::Relaxed);
             state.party_info = update_party(&party_tracker, &entity_tracker);
-            state.save_to_db(true);
+            let player_stats = stats_api.get_all_stats(&state.raid_difficulty);
+            state.save_to_db(player_stats, true);
             state.saved = true;
             state.resetting = true;
         }
@@ -260,7 +261,8 @@ pub fn start(
                     party_cache = None;
                     party_map_cache = HashMap::new();
                     let entity = entity_tracker.init_env(pkt);
-                    state.on_init_env(entity);
+                    let player_stats = stats_api.get_all_stats(&state.raid_difficulty);
+                    state.on_init_env(entity, player_stats);
                 }
             }
             Pkt::InitPC => {
@@ -478,7 +480,8 @@ pub fn start(
                 }
             }
             Pkt::RaidBossKillNotify => {
-                state.on_phase_transition(1);
+                let player_stats = stats_api.get_all_stats(&state.raid_difficulty);
+                state.on_phase_transition(1, player_stats);
                 state.raid_clear = true;
                 debug_print(format_args!("phase: 1 - RaidBossKillNotify"));
             }
@@ -489,7 +492,8 @@ pub fn start(
                 } else {
                     update_party(&party_tracker, &entity_tracker)
                 };
-                state.on_phase_transition(0);
+                let player_stats = stats_api.get_all_stats(&state.raid_difficulty);
+                state.on_phase_transition(0, player_stats);
                 raid_end_cd = Instant::now();
                 debug_print(format_args!("phase: 0 - RaidResult"));
             }
@@ -741,7 +745,8 @@ pub fn start(
                     || state.encounter.fight_start == 0
                     || state.encounter.current_boss_name == "Saydon"
                 {
-                    state.on_phase_transition(3);
+                    let player_stats = stats_api.get_all_stats(&state.raid_difficulty);
+                    state.on_phase_transition(3, player_stats);
                     debug_print(format_args!(
                         "phase: 3 - resetting encounter - TriggerBossBattleStatus"
                     ));
@@ -760,7 +765,8 @@ pub fn start(
                                 update_party(&party_tracker, &entity_tracker)
                             };
                             state.raid_clear = true;
-                            state.on_phase_transition(2);
+                            let player_stats = stats_api.get_all_stats(&state.raid_difficulty);
+                            state.on_phase_transition(2, player_stats);
                             raid_end_cd = Instant::now();
                             debug_print(format_args!("phase: 2 - clear - TriggerStartNotify"));
                         }
@@ -772,7 +778,8 @@ pub fn start(
                                 update_party(&party_tracker, &entity_tracker)
                             };
                             state.raid_clear = false;
-                            state.on_phase_transition(4);
+                            let player_stats = stats_api.get_all_stats(&state.raid_difficulty);
+                            state.on_phase_transition(4, player_stats);
                             raid_end_cd = Instant::now();
                             debug_print(format_args!("phase: 4 - wipe - TriggerStartNotify"));
                         }
