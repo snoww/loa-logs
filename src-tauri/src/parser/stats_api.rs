@@ -74,7 +74,7 @@ impl StatsApi {
             hash_cache.retain(|player, _| player_names.contains(player));
         }
         let mut player_hashes: Vec<PlayerHash> = Vec::new();
-        if let Ok(hash_cache) = self.hash_cache.lock() {
+        if let Ok(mut hash_cache) = self.hash_cache.lock() {
             for player in player_names.iter() {
                 let entity_id = match state.encounter.entities.get(player) {
                     Some(entity) => entity.id,
@@ -88,6 +88,7 @@ impl StatsApi {
                         {
                             continue;
                         } else {
+                            hash_cache.insert(player.clone(), hash.clone());
                             player_hashes.push(PlayerHash {
                                 name: player.clone(),
                                 hash,
@@ -222,6 +223,7 @@ async fn make_request(
 ) {
     if current_retries > 24 {
         warn!("# of retries exceeded, failed to fetch player stats for {:?}", players);
+        remove_from_hash_cache(&hash_cache, &players);
         window
             .emit("rdps", "request_failed")
             .expect("failed to emit rdps message");
@@ -240,8 +242,8 @@ async fn make_request(
         Ok(response) => match response.json::<HashMap<String, PlayerStats>>().await {
             Ok(data) => {
                 let mut missing_players: Vec<PlayerHash> = Vec::new();
-                if let (Ok(mut cache_clone), Ok(mut stats_cache_clone), Ok(mut hash_cache_clone)) =
-                    (cache.lock(), stats_cache.lock(), hash_cache.lock())
+                if let (Ok(mut cache_clone), Ok(mut stats_cache_clone)) =
+                    (cache.lock(), stats_cache.lock())
                 {
                     missing_players = players
                         .iter()
@@ -250,15 +252,6 @@ async fn make_request(
                         .collect();
 
                     for (name, stats) in data {
-                        hash_cache_clone.insert(
-                            name.clone(),
-                            players
-                                .iter()
-                                .find(|p| p.name == name)
-                                .unwrap()
-                                .hash
-                                .clone(),
-                        );
                         stats_cache_clone.insert(
                             name.clone(),
                             Stats {
@@ -283,11 +276,13 @@ async fn make_request(
                     cache_status.store(false, Ordering::Relaxed);
                     if cancellation.load(Ordering::SeqCst) {
                         debug_print(format_args!("request cancelled"));
+                        remove_from_hash_cache(&hash_cache, &missing_players);
                         return;
                     }
                     tokio::time::sleep(core::time::Duration::from_secs(2)).await;
                     if cancellation.load(Ordering::SeqCst) {
                         debug_print(format_args!("request cancelled"));
+                        remove_from_hash_cache(&hash_cache, &missing_players);
                         return;
                     }
                     debug_print(format_args!(
@@ -320,6 +315,14 @@ async fn make_request(
         Err(e) => {
             cache_status.store(false, Ordering::Relaxed);
             warn!("failed to fetch player stats: {:?}", e);
+        }
+    }
+}
+
+fn remove_from_hash_cache(hash_cache: &Arc<Mutex<HashMap<String, String>>>, player: &[PlayerHash]) {
+    if let Ok(mut hash_cache) = hash_cache.lock() {
+        for player in player.iter() {
+            hash_cache.remove(&player.name);
         }
     }
 }

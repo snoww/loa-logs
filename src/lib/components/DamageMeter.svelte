@@ -316,6 +316,8 @@
         anySupportBuff = false;
         anySupportIdentity = false;
         anySupportBrand = false;
+        anyRdpsData = false;
+        $rdpsEventDetails = "";
     }
 
     let screenshotAreaDiv: HTMLElement;

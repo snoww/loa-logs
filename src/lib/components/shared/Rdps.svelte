@@ -23,7 +23,7 @@
             playerRDamagePercentages = sortedPlayers.map((p) => (getRDamage(p.damageStats) / topRDamage) * 100);
         }
 
-        if (meterSettings.showClassColors) {
+        if (meterSettings.showClassColors !== undefined && !meterSettings.showClassColors) {
             alpha = 0;
         } else {
             alpha = 0.6;
