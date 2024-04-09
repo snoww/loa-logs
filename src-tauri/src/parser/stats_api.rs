@@ -221,7 +221,7 @@ async fn make_request(
     current_retries: usize,
 ) {
     if current_retries > 24 {
-        debug_print(format_args!("retries exceeded"));
+        warn!("# of retries exceeded, failed to fetch player stats for {:?}", players);
         window
             .emit("rdps", "request_failed")
             .expect("failed to emit rdps message");
