@@ -50,6 +50,7 @@
     let anySupportBuff: boolean = false;
     let anySupportIdentity: boolean = false;
     let anySupportBrand: boolean = false;
+    let anyRdpsData: boolean = false;
 
     let isSolo = true;
 
@@ -95,6 +96,7 @@
             anySupportBuff = players.some((player) => player.damageStats.buffedBySupport > 0);
             anySupportIdentity = players.some((player) => player.damageStats.buffedByIdentity > 0);
             anySupportBrand = players.some((player) => player.damageStats.debuffedBySupport > 0);
+            anyRdpsData = players.some((player) => player.damageStats.rdpsDamageReceived > 0);
             if ($settings.general.showEsther) {
                 totalDamageDealt =
                     encounter.encounterDamageStats.totalDamageDealt +
@@ -357,13 +359,15 @@
                     on:click={damageTab}>
                     Damage
                 </button>
-                <button
-                    class="flex-shrink-0 rounded-sm px-3 py-1"
-                    class:bg-accent-900={tab === MeterTab.RDPS}
-                    class:bg-gray-700={tab !== MeterTab.RDPS}
-                    on:click={RDPSTab}>
-                    RDPS
-                </button>
+                {#if anyRdpsData}
+                    <button
+                        class="flex-shrink-0 rounded-sm px-3 py-1"
+                        class:bg-accent-900={tab === MeterTab.RDPS}
+                        class:bg-gray-700={tab !== MeterTab.RDPS}
+                        on:click={RDPSTab}>
+                        RDPS
+                    </button>
+                {/if}
                 <button
                     class="flex-shrink-0 rounded-sm px-2 py-1"
                     class:bg-accent-900={tab === MeterTab.PARTY_BUFFS}
@@ -606,6 +610,13 @@
                                         >Iden%
                                     </th>
                                 {/if}
+                                {#if anyRdpsData && $settings.logs.ssyn}
+                                    <th
+                                        class="w-12 font-normal"
+                                        use:tooltip={{ content: "% Damage gained from Support" }}
+                                    >sSyn%
+                                    </th>
+                                {/if}
                                 {#if $settings.logs.counters}
                                     <th class="w-12 font-normal" use:tooltip={{ content: "Counters" }}>CTR</th>
                                 {/if}
@@ -626,6 +637,7 @@
                                         {anySupportBuff}
                                         {anySupportIdentity}
                                         {anySupportBrand}
+                                        {anyRdpsData}
                                         end={encounter.lastCombatPacket}
                                         {isSolo} />
                                 </tr>
@@ -643,7 +655,11 @@
                     {/if}
                 {/if}
             {:else if tab === MeterTab.RDPS}
-                <Rdps {players} totalDamageDealt={encounter.encounterDamageStats.totalDamageDealt} duration={encounter.duration} />
+                <Rdps
+                    meterSettings={$settings.logs}
+                    {players}
+                    totalDamageDealt={encounter.encounterDamageStats.totalDamageDealt}
+                    duration={encounter.duration} />
             {:else if tab === MeterTab.PARTY_BUFFS}
                 {#if state === MeterState.PARTY}
                     <LogBuffs {tab} encounterDamageStats={encounter.encounterDamageStats} {players} {inspectPlayer} />

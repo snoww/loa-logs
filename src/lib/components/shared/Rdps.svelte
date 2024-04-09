@@ -8,10 +8,12 @@
     export let players: Array<Entity>;
     export let totalDamageDealt: number;
     export let duration: number;
+    export let meterSettings: any;
 
     let sortedPlayers: Entity[];
     let topRDamage: number;
     let playerRDamagePercentages: number[];
+    let alpha: number;
     $: {
         if (players.length > 0) {
             sortedPlayers = players
@@ -20,20 +22,28 @@
             topRDamage = getRDamage(sortedPlayers[0].damageStats);
             playerRDamagePercentages = sortedPlayers.map((p) => (getRDamage(p.damageStats) / topRDamage) * 100);
         }
+
+        if (meterSettings.showClassColors) {
+            alpha = 0;
+        } else {
+            alpha = 0.6;
+        }
     }
 </script>
 
 <table class="relative w-full table-fixed">
-    <RdpsHeader />
+    <RdpsHeader {meterSettings} />
     <tbody class="relative z-10">
         {#if players.length > 0}
             {#each sortedPlayers as player, i (player.name)}
                 <RdpsRow
+                    {meterSettings}
                     {player}
                     width={playerRDamagePercentages[i]}
                     shadow={!$takingScreenshot}
                     {totalDamageDealt}
-                    {duration} />
+                    {duration}
+                    {alpha} />
             {/each}
         {/if}
     </tbody>

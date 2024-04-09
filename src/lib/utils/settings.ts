@@ -92,6 +92,9 @@ export const defaultSettings = {
         percentBuffBySup: false,
         percentIdentityBySup: false,
         percentBrand: false,
+        rdpsDamageGiven: false,
+        rdpsDamageReceived: false,
+        ssyn: true,
         breakdown: {
             damage: true,
             dps: true,
@@ -128,6 +131,9 @@ export const defaultSettings = {
         percentBuffBySup: false,
         percentIdentityBySup: false,
         percentBrand: false,
+        rdpsDamageGiven: true,
+        rdpsDamageReceived: true,
+        ssyn: true,
         breakdown: {
             damage: true,
             dps: true,

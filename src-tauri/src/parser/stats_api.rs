@@ -11,6 +11,7 @@ use serde::{Deserialize, Serialize};
 use serde_json::json;
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::{Arc, Mutex};
+use tauri::{Window, Wry};
 
 const API_URL: &str = "https://inspect.fau.dev/query";
 
@@ -21,11 +22,13 @@ pub struct StatsApi {
     cancellation_flag: Arc<AtomicBool>,
     client: Arc<Client>,
     hash: HashMap<String, String>,
+    window: Arc<Window<Wry>>,
 }
 
 impl StatsApi {
-    pub fn new() -> Self {
+    pub fn new(window: Window<Wry>) -> Self {
         Self {
+            window: Arc::new(window),
             cache: Arc::new(Mutex::new(HashMap::new())),
             stats_cache: Arc::new(Mutex::new(HashMap::new())),
             cache_status: Arc::new(AtomicBool::new(false)),
@@ -48,6 +51,7 @@ impl StatsApi {
         };
         if party.is_empty() || region.is_empty() {
             debug_print(format_args!("party info is empty or region is not set"));
+            self.broadcast("missing_info");
             return;
         }
         if state.raid_difficulty.is_empty()
@@ -55,6 +59,7 @@ impl StatsApi {
             || state.raid_difficulty == "Challenge"
         {
             debug_print(format_args!("stats not valid in current zone"));
+            self.broadcast("invalid_zone");
             return;
         }
 
@@ -100,9 +105,12 @@ impl StatsApi {
         self.cancellation_flag.store(true, Ordering::SeqCst);
         let new_cancellation_flag = Arc::new(AtomicBool::new(false));
         self.cancellation_flag = Arc::clone(&new_cancellation_flag);
+        self.broadcast("requesting_stats");
+        let window_clone = Arc::clone(&self.window);
         tokio::task::spawn(async move {
             make_request(
                 &client_clone,
+                &window_clone,
                 &region,
                 cache_lock,
                 stats_cache_lock,
@@ -139,7 +147,7 @@ impl StatsApi {
                 equip_data[item.slot as usize] = item.id;
             }
         }
-        
+
         let data = format!(
             "{}{}{}{}",
             player.name,
@@ -180,11 +188,18 @@ impl StatsApi {
             None
         }
     }
+
+    pub fn broadcast(&self, message: &str) {
+        self.window
+                .emit("rdps", message)
+                .expect("failed to emit rdps message");
+    }
 }
 
 #[async_recursion]
 async fn make_request(
     client: &Client,
+    window: &Arc<Window<Wry>>,
     region: &str,
     cache: Arc<Mutex<HashMap<String, PlayerStats>>>,
     stats_cache: Arc<Mutex<HashMap<String, Stats>>>,
@@ -195,6 +210,8 @@ async fn make_request(
 ) {
     if current_retries > 24 {
         debug_print(format_args!("retries exceeded"));
+        window.emit("rdps", "request_failed")
+            .expect("failed to emit rdps message");
         return;
     }
 
@@ -209,10 +226,10 @@ async fn make_request(
     match client.post(API_URL).json(&request_body).send().await {
         Ok(response) => match response.json::<HashMap<String, PlayerStats>>().await {
             Ok(data) => {
-                let missing_players: Vec<PlayerHash>;
+                let mut missing_players: Vec<PlayerHash> = Vec::new();
+                if let (Ok(mut cache_clone), Ok(mut stats_cache_clone)) =
+                    (cache.try_lock(), stats_cache.try_lock())
                 {
-                    let mut cache_clone = cache.lock().unwrap();
-                    let mut stats_cache_clone = stats_cache.lock().unwrap();
                     missing_players = players
                         .iter()
                         .filter(|player| !data.contains_key(&player.name))
@@ -231,13 +248,14 @@ async fn make_request(
                         );
                         cache_clone.insert(name, stats);
                     }
-
                     // debug_print(format_args!("{:?}", stats_cache_clone));
                 }
 
                 if missing_players.is_empty() {
                     debug_print(format_args!("received player stats"));
                     cache_status.store(true, Ordering::Relaxed);
+                    window.emit("rdps", "request_success")
+                        .expect("failed to emit rdps message");
                 } else {
                     cache_status.store(false, Ordering::Relaxed);
                     if cancellation.load(Ordering::SeqCst) {
@@ -258,6 +276,7 @@ async fn make_request(
                     // until we receive stats for all players
                     make_request(
                         client,
+                        window,
                         region,
                         Arc::clone(&cache),
                         Arc::clone(&stats_cache),

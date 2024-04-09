@@ -3,7 +3,7 @@
     import { classIconCache, colors, settings } from "$lib/utils/settings";
     import type { Entity } from "$lib/types";
     import { formatPlayerName } from "$lib/utils/strings";
-    import { abbreviateNumberSplit, getBaseDamage, getRDamage, round } from "$lib/utils/numbers";
+    import { abbreviateNumberSplit, getBaseDamage, getRDamage } from "$lib/utils/numbers";
     import { HexToRgba } from "$lib/utils/colors";
 
     export let player: Entity;
@@ -12,6 +12,7 @@
     export let shadow: boolean = false;
     export let alpha: number = 0.6;
     export let duration: number;
+    export let meterSettings: any;
 
     let playerName: string;
     let color = "#ffffff";
@@ -35,9 +36,9 @@
         let sSyn = player.damageStats.rdpsDamageReceivedSupport / baseDamage;
         let dSyn = (player.damageStats.rdpsDamageReceived - player.damageStats.rdpsDamageReceivedSupport) / baseDamage;
         let syn = sSyn + dSyn;
-        sSynPercentage = round(sSyn * 100);
-        dSynPercentage = round(dSyn * 100);
-        synPercentage = round(syn * 100);
+        sSynPercentage = (sSyn * 100).toFixed(1);
+        dSynPercentage = (dSyn * 100).toFixed(1);
+        synPercentage = (syn * 100).toFixed(1);
 
         playerName = formatPlayerName(player, $settings.general.showNames, $settings.general.showGearScore);
         if (Object.hasOwn($colors, player.class)) {
@@ -70,12 +71,16 @@
     <td class="px-1 text-center">
         {damagePercentage}<span class="text-xs text-gray-300">%</span>
     </td>
-    <td class="px-1 text-center">
-        {damageReceived[0]}<span class="text-3xs text-gray-300">{damageReceived[1]}</span>
-    </td>
-    <td class="px-1 text-center">
-        {damageGiven[0]}<span class="text-3xs text-gray-300">{damageGiven[1]}</span>
-    </td>
+    {#if meterSettings.rdpsDamageGiven}
+        <td class="px-1 text-center">
+            {damageReceived[0]}<span class="text-3xs text-gray-300">{damageReceived[1]}</span>
+        </td>
+    {/if}
+    {#if meterSettings.rdpsDamageReceived}
+        <td class="px-1 text-center">
+            {damageGiven[0]}<span class="text-3xs text-gray-300">{damageGiven[1]}</span>
+        </td>
+    {/if}
     <td class="px-1 text-center">
         {synPercentage}<span class="text-3xs text-gray-300">%</span>
     </td>

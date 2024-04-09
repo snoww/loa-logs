@@ -3,22 +3,24 @@ mod entity_tracker;
 mod id_tracker;
 pub mod models;
 mod party_tracker;
-mod status_tracker;
 mod rdps;
 mod stats_api;
+mod status_tracker;
 
 use crate::parser::encounter_state::{get_class_from_id, EncounterState};
 use crate::parser::entity_tracker::{get_current_and_max_hp, EntityTracker};
 use crate::parser::id_tracker::IdTracker;
-use crate::parser::models::{EntityType, Identity, Stagger, AWS_REGIONS, DamageData};
+use crate::parser::models::{DamageData, EntityType, Identity, Stagger, AWS_REGIONS};
 use crate::parser::party_tracker::PartyTracker;
+use crate::parser::stats_api::StatsApi;
 use crate::parser::status_tracker::{
-    get_status_effect_value, StatusEffectDetails, StatusEffectTargetType, StatusEffectType, StatusTracker,
+    get_status_effect_value, StatusEffectDetails, StatusEffectTargetType, StatusEffectType,
+    StatusTracker,
 };
 use anyhow::Result;
 use chrono::Utc;
 use hashbrown::HashMap;
-use ipnet::{Ipv4Net};
+use ipnet::Ipv4Net;
 use log::{info, warn};
 use meter_core::packets::definitions::*;
 use meter_core::packets::opcodes::Pkt;
@@ -52,7 +54,7 @@ pub fn start(
         id_tracker.clone(),
         party_tracker.clone(),
     );
-    let mut stats_api = stats_api::StatsApi::new();
+    let mut stats_api = StatsApi::new(window.clone());
     let mut state = EncounterState::new(window.clone());
     let rx = if raw_socket {
         if !meter_core::check_is_admin() {
@@ -224,7 +226,8 @@ pub fn start(
                 }
             }
             Pkt::EquipChangeNotify => {
-                if let Some(pkt) = parse_pkt(&data, PKTEquipChangeNotify::new, "PKTEquipChangeNotify")
+                if let Some(pkt) =
+                    parse_pkt(&data, PKTEquipChangeNotify::new, "PKTEquipChangeNotify")
                 {
                     entity_tracker.get_player_set_options(pkt.object_id, pkt.equip_item_data_list);
                 }
@@ -573,7 +576,7 @@ pub fn start(
                         .get_local_character_id(entity_tracker.local_entity_id);
                     let target_count = pkt.skill_damage_abnormal_move_events.len() as i32;
                     let player_stats = stats_api.get_stats(&state.raid_difficulty);
-                    
+
                     for event in pkt.skill_damage_abnormal_move_events.iter() {
                         let target_entity =
                             entity_tracker.get_or_create_entity(event.skill_damage_event.target_id);
@@ -591,7 +594,7 @@ pub fn start(
                             damage_attribute: event.skill_damage_event.damage_attr,
                             damage_type: event.skill_damage_event.damage_type,
                         };
-                        
+
                         state.on_damage(
                             &owner,
                             &source_entity,

@@ -35,3 +35,4 @@ export const raidGates = readable(new Map<string, string>(), (set) => {
 });
 
 export const clickthroughStore = writable(false);
+export const rdpsEventDetails = writable("");

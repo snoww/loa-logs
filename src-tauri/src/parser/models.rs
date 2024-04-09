@@ -708,6 +708,12 @@ pub struct LogTabs {
     pub percent_brand: bool,
     pub counters: bool,
     pub min_encounter_duration: i32,
+    #[serde(default = "default_true")]
+    pub rdps_damage_given: bool,
+    #[serde(default = "default_true")]
+    pub rdps_damage_received: bool,
+    #[serde(default = "default_true")]
+    pub ssyn: bool,
     pub breakdown: BreakdownTabs,
 }
 
@@ -738,6 +744,10 @@ pub struct MeterTabs {
     pub positional_dmg_percent: bool,
     pub percent_brand: bool,
     pub counters: bool,
+    pub rdps_damage_given: bool,
+    pub rdps_damage_received: bool,
+    #[serde(default = "default_true")]
+    pub ssyn: bool,
     pub breakdown: BreakdownTabs,
 }
 

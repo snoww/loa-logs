@@ -23,7 +23,7 @@
     import { tooltip } from "$lib/utils/tooltip";
     import { writable } from "svelte/store";
     import Notification from "./shared/Notification.svelte";
-    import { takingScreenshot, screenshotAlert, screenshotError } from "$lib/utils/stores";
+    import { takingScreenshot, screenshotAlert, screenshotError, rdpsEventDetails } from "$lib/utils/stores";
     import html2canvas from "html2canvas";
     import Details from "./Details.svelte";
     import DamageTaken from "./shared/DamageTaken.svelte";
@@ -117,6 +117,13 @@
             let adminErrorEvent = await listen("admin", () => {
                 adminAlert = true;
             });
+            let rdpsEvent = await listen("rdps", (event: any) => {
+                if (event.payload === "request_success" || event.payload === "requesting_stats") {
+                    $rdpsEventDetails = "";
+                } else {
+                    $rdpsEventDetails = event.payload;
+                }
+            });
 
             events.push(
                 encounterUpdateEvent,
@@ -127,7 +134,8 @@
                 saveEncounterEvent,
                 phaseTransitionEvent,
                 raidStartEvent,
-                adminErrorEvent
+                adminErrorEvent,
+                rdpsEvent
             );
         })();
     });
@@ -158,6 +166,7 @@
     let anySupportBuff: boolean = false;
     let anySupportIdentity: boolean = false;
     let anySupportBrand: boolean = false;
+    let anyRdpsData: boolean = false;
     let isSolo: boolean = true;
 
     let paused = writable(false);
@@ -190,6 +199,7 @@
                 anySupportBuff = players.some((player) => player.damageStats.buffedBySupport > 0);
                 anySupportIdentity = players.some((player) => player.damageStats.buffedByIdentity > 0);
                 anySupportBrand = players.some((player) => player.damageStats.debuffedBySupport > 0);
+                anyRdpsData = players.some((player) => player.damageStats.rdpsDamageReceived > 0);
                 topDamageDealt = encounter.encounterDamageStats.topDamageDealt;
                 playerDamagePercentages = players.map(
                     (player) => (player.damageStats.damageDealt / topDamageDealt) * 100
@@ -408,6 +418,13 @@
                                     >Iden%
                                 </th>
                             {/if}
+                            {#if anyRdpsData && $settings.meter.ssyn}
+                                <th
+                                    class="w-12 font-normal"
+                                    use:tooltip={{ content: "% Damage gained from Support" }}
+                                >sSyn%
+                                </th>
+                            {/if}
                             {#if $settings.meter.counters}
                                 <th class="w-12 font-normal" use:tooltip={{ content: "Counters" }}>CTR</th>
                             {/if}
@@ -431,6 +448,7 @@
                                     {anySupportBuff}
                                     {anySupportIdentity}
                                     {anySupportBrand}
+                                    {anyRdpsData}
                                     {isSolo} />
                             </tr>
                         {/each}
@@ -442,7 +460,7 @@
                 </table>
             {/if}
         {:else if tab === MeterTab.RDPS}
-            <Rdps {players} {duration} {totalDamageDealt} />
+            <Rdps {players} {duration} {totalDamageDealt} meterSettings={$settings.meter}/>
         {:else if tab === MeterTab.PARTY_BUFFS}
             {#if state === MeterState.PARTY}
                 <Buffs
