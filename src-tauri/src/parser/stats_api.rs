@@ -1,7 +1,8 @@
 use crate::parser::debug_print;
 use crate::parser::encounter_state::EncounterState;
 use crate::parser::entity_tracker::{Entity, EntityTracker};
-use chrono::{DateTime, Duration, Utc};
+use async_recursion::async_recursion;
+use chrono::{DateTime, Utc};
 use hashbrown::HashMap;
 use log::{info, warn};
 use md5::compute;
@@ -17,6 +18,7 @@ pub struct StatsApi {
     cache: Arc<Mutex<HashMap<String, PlayerStats>>>,
     stats_cache: Arc<Mutex<HashMap<String, Stats>>>,
     cache_status: Arc<AtomicBool>,
+    cancellation_flag: Arc<AtomicBool>,
     client: Arc<Client>,
     hash: HashMap<String, String>,
 }
@@ -27,6 +29,7 @@ impl StatsApi {
             cache: Arc::new(Mutex::new(HashMap::new())),
             stats_cache: Arc::new(Mutex::new(HashMap::new())),
             cache_status: Arc::new(AtomicBool::new(false)),
+            cancellation_flag: Arc::new(AtomicBool::new(false)),
             client: Arc::new(Client::new()),
             hash: HashMap::new(),
         }
@@ -45,6 +48,13 @@ impl StatsApi {
         };
         if party.is_empty() || region.is_empty() {
             debug_print(format_args!("party info is empty or region is not set"));
+            return;
+        }
+        if state.raid_difficulty.is_empty()
+            || state.raid_difficulty == "Inferno"
+            || state.raid_difficulty == "Challenge"
+        {
+            debug_print(format_args!("stats not valid in current zone"));
             return;
         }
 
@@ -67,7 +77,7 @@ impl StatsApi {
                         self.hash.insert(player.clone(), hash.clone());
                         player_hashes.push(PlayerHash {
                             name: player.clone(),
-                            hash
+                            hash,
                         });
                     }
                 } else {
@@ -78,51 +88,30 @@ impl StatsApi {
         if player_hashes.is_empty() {
             return;
         }
+
         self.request(region, player_hashes);
     }
 
-    fn request(&self, region: String, players: Vec<PlayerHash>) {
+    fn request(&mut self, region: String, players: Vec<PlayerHash>) {
         let client_clone = Arc::clone(&self.client);
         let cache_lock = Arc::clone(&self.cache);
         let cache_status = Arc::clone(&self.cache_status);
         let stats_cache_lock = Arc::clone(&self.stats_cache);
+        self.cancellation_flag.store(true, Ordering::SeqCst);
+        let new_cancellation_flag = Arc::new(AtomicBool::new(false));
+        self.cancellation_flag = Arc::clone(&new_cancellation_flag);
         tokio::task::spawn(async move {
-            let request_body = json!({
-                "region": region,
-                "characters": players,
-            });
-            println!("{:?}", request_body);
-            debug_print(format_args!("requesting player stats"));
-            // let a = client_clone.post(API_URL).json(&request_body).send().await;
-            // println!("{:?}", a.unwrap().text().await);
-            match client_clone.post(API_URL).json(&request_body).send().await {
-                Ok(response) => match response.json::<HashMap<String, PlayerStats>>().await {
-                    Ok(data) => {
-                        debug_print(format_args!("received player stats"));
-                        let mut cache_clone = cache_lock.lock().unwrap();
-                        let mut stats_cache_clone = stats_cache_lock.lock().unwrap();
-                        for (name, stats) in data {
-                            stats_cache_clone.insert(
-                                name.clone(),
-                                Stats {
-                                    crit: stats.stats.get(&0).cloned().unwrap_or_default(),
-                                    spec: stats.stats.get(&1).cloned().unwrap_or_default(),
-                                    atk_power: stats.stats.get(&4).cloned().unwrap_or_default(),
-                                    add_dmg: stats.stats.get(&5).cloned().unwrap_or_default(),
-                                },
-                            );
-                            cache_clone.insert(name, stats);
-                        }
-                        cache_status.store(true, Ordering::Relaxed);
-                    }
-                    Err(e) => {
-                        warn!("failed to parse player stats: {:?}", e);
-                    }
-                },
-                Err(e) => {
-                    warn!("failed to fetch player stats: {:?}", e);
-                }
-            }
+            make_request(
+                &client_clone,
+                &region,
+                cache_lock,
+                stats_cache_lock,
+                cache_status,
+                new_cancellation_flag,
+                players,
+                0,
+            )
+            .await;
         });
     }
 
@@ -144,10 +133,13 @@ impl StatsApi {
         let mut equip_data: [u32; 32] = [0; 32];
         if let Some(equip_list) = player.items.equip_list.as_ref() {
             for item in equip_list.iter() {
+                if item.slot >= 32 {
+                    continue;
+                }
                 equip_data[item.slot as usize] = item.id;
             }
         }
-
+        
         let data = format!(
             "{}{}{}{}",
             player.name,
@@ -186,6 +178,105 @@ impl StatsApi {
             }
         } else {
             None
+        }
+    }
+}
+
+#[async_recursion]
+async fn make_request(
+    client: &Client,
+    region: &str,
+    cache: Arc<Mutex<HashMap<String, PlayerStats>>>,
+    stats_cache: Arc<Mutex<HashMap<String, Stats>>>,
+    cache_status: Arc<AtomicBool>,
+    cancellation: Arc<AtomicBool>,
+    players: Vec<PlayerHash>,
+    current_retries: usize,
+) {
+    if current_retries > 24 {
+        debug_print(format_args!("retries exceeded"));
+        return;
+    }
+
+    let request_body = json!({
+        "region": region.clone(),
+        "characters": players.clone(),
+    });
+    debug_print(format_args!("requesting player stats"));
+    // debug_print(format_args!("{:?}", players));
+    // println!("{:?}", request_body);
+
+    match client.post(API_URL).json(&request_body).send().await {
+        Ok(response) => match response.json::<HashMap<String, PlayerStats>>().await {
+            Ok(data) => {
+                let missing_players: Vec<PlayerHash>;
+                {
+                    let mut cache_clone = cache.lock().unwrap();
+                    let mut stats_cache_clone = stats_cache.lock().unwrap();
+                    missing_players = players
+                        .iter()
+                        .filter(|player| !data.contains_key(&player.name))
+                        .cloned()
+                        .collect();
+
+                    for (name, stats) in data {
+                        stats_cache_clone.insert(
+                            name.clone(),
+                            Stats {
+                                crit: stats.stats.get(&0).cloned().unwrap_or_default(),
+                                spec: stats.stats.get(&1).cloned().unwrap_or_default(),
+                                atk_power: stats.stats.get(&4).cloned().unwrap_or_default(),
+                                add_dmg: stats.stats.get(&5).cloned().unwrap_or_default(),
+                            },
+                        );
+                        cache_clone.insert(name, stats);
+                    }
+
+                    // debug_print(format_args!("{:?}", stats_cache_clone));
+                }
+
+                if missing_players.is_empty() {
+                    debug_print(format_args!("received player stats"));
+                    cache_status.store(true, Ordering::Relaxed);
+                } else {
+                    cache_status.store(false, Ordering::Relaxed);
+                    if cancellation.load(Ordering::SeqCst) {
+                        debug_print(format_args!("request cancelled"));
+                        return;
+                    }
+                    tokio::time::sleep(core::time::Duration::from_secs(2)).await;
+                    if cancellation.load(Ordering::SeqCst) {
+                        debug_print(format_args!("request cancelled"));
+                        return;
+                    }
+                    debug_print(format_args!(
+                        "missing stats for: {:?}, retrying, attempt {}",
+                        missing_players,
+                        current_retries + 1
+                    ));
+                    // retry request with missing players
+                    // until we receive stats for all players
+                    make_request(
+                        client,
+                        region,
+                        Arc::clone(&cache),
+                        Arc::clone(&stats_cache),
+                        cache_status,
+                        cancellation,
+                        missing_players,
+                        current_retries + 1,
+                    )
+                    .await;
+                }
+            }
+            Err(e) => {
+                cache_status.store(false, Ordering::Relaxed);
+                warn!("failed to parse player stats: {:?}", e);
+            }
+        },
+        Err(e) => {
+            cache_status.store(false, Ordering::Relaxed);
+            warn!("failed to fetch player stats: {:?}", e);
         }
     }
 }

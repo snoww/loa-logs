@@ -85,6 +85,7 @@ name = "app"
 version = "0.1.0"
 dependencies = [
  "anyhow",
+ "async-recursion",
  "bitflags 2.5.0",
  "chrono",
  "flexi_logger",

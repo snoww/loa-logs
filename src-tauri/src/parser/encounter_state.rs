@@ -151,7 +151,11 @@ impl EncounterState {
         }
     }
 
-    pub fn on_init_env(&mut self, entity: Entity, player_stats: Option<HashMap<String, PlayerStats>>) {
+    pub fn on_init_env(
+        &mut self,
+        entity: Entity,
+        player_stats: Option<HashMap<String, PlayerStats>>,
+    ) {
         // replace or insert local player
         if let Some(mut local_player) = self.encounter.entities.remove(&self.encounter.local_player)
         {
@@ -182,7 +186,11 @@ impl EncounterState {
         self.soft_reset(false);
     }
 
-    pub fn on_phase_transition(&mut self, phase_code: i32, player_stats: Option<HashMap<String, PlayerStats>>) {
+    pub fn on_phase_transition(
+        &mut self,
+        phase_code: i32,
+        player_stats: Option<HashMap<String, PlayerStats>>,
+    ) {
         self.window
             .emit("phase-transition", phase_code)
             .expect("failed to emit phase-transition");
@@ -190,7 +198,7 @@ impl EncounterState {
         match phase_code {
             0 | 2 | 3 | 4 => {
                 if !self.encounter.current_boss_name.is_empty() {
-                    self.save_to_db(player_stats,false);
+                    self.save_to_db(player_stats, false);
                     self.saved = true;
                 }
                 self.resetting = true;
@@ -812,9 +820,12 @@ impl EncounterState {
                         let b_skill_effect_id =
                             status_effect_values.get(4).cloned().unwrap_or_default();
                         if (b_skill_id == 0 || b_skill_id == skill_id as i32)
-                            && (b_skill_effect_id == 0 || b_skill_effect_id == skill_effect_id as i32)
+                            && (b_skill_effect_id == 0
+                                || b_skill_effect_id == skill_effect_id as i32)
                         {
-                            if let Some(val) = status_effect_values.get(1).cloned() {
+                            if let Some(val) =
+                                status_effect_values.get(1).cloned().filter(|&v| v != 0)
+                            {
                                 let rate =
                                     (val as f64 / 10000.0) * status_effect.stack_count as f64;
                                 rdps_data.multi_dmg.values.push(RdpsBuffData {
@@ -831,7 +842,8 @@ impl EncounterState {
                         && status_effect.source_id != dmg_src_entity.id
                     {
                         let status_effect_values = buff.status_effect_values.unwrap();
-                        if let Some(val) = status_effect_values.first().cloned() {
+                        if let Some(val) = status_effect_values.first().cloned().filter(|&v| v != 0)
+                        {
                             let mut rate =
                                 (val as f64 / 10000.0) * status_effect.stack_count as f64;
                             let caster_base_atk_power = player_stats
@@ -854,6 +866,7 @@ impl EncounterState {
                         let val = passive.value as f64;
                         if passive.option_type == "stat" {
                             let rate = (val / 10000.0) * status_effect.stack_count as f64;
+                            // println!("{}: {}: {}", passive.key_stat, val, status_effect.stack_count);
                             if passive.key_stat == "attack_power_sub_rate_2" && val != 0.0 {
                                 if caster_encounter_entity.entity_type == EntityType::PLAYER
                                     && status_effect.source_id != dmg_src_entity.id
@@ -875,7 +888,6 @@ impl EncounterState {
                                         rate,
                                     });
                                     rdps_data.atk_pow_sub_rate_1.sum_rate += rate;
-                                } else {
                                     rdps_data.atk_pow_sub_rate_1.total_rate *= 1.0 + rate;
                                 }
                             } else if passive.key_stat == "skill_damage_rate" && val != 0.0 {
@@ -978,7 +990,8 @@ impl EncounterState {
                         None => continue,
                     };
                     if debuff.buff_type == "instant_stat_amplify" {
-                        if let Some(val) = status_effect_values.first().cloned() {
+                        if let Some(val) = status_effect_values.first().cloned().filter(|&v| v != 0)
+                        {
                             let rate = (val as f64 / 10000.0) * status_effect.stack_count as f64;
                             if caster_encounter_entity.entity_type == EntityType::PLAYER
                                 && status_effect.source_id != dmg_src_entity.id
@@ -1000,7 +1013,9 @@ impl EncounterState {
                     }
                     if debuff.buff_type == "instant_stat_amplify" {
                         if damage_data.damage_type == 0 {
-                            if let Some(val) = status_effect_values.get(2).cloned() {
+                            if let Some(val) =
+                                status_effect_values.get(2).cloned().filter(|&v| v != 0)
+                            {
                                 let rate = -(val as f64 / 10000.0)
                                     * status_effect.stack_count as f64
                                     * 0.5;
@@ -1011,8 +1026,11 @@ impl EncounterState {
                                 rdps_data.multi_dmg.sum_rate += rate;
                                 rdps_data.multi_dmg.total_rate *= 1.0 + rate;
                             }
-                            if let Some(val) = status_effect_values.get(7).cloned() {
-                                let rate = (val as f64 / 10000.0) * status_effect.stack_count as f64;
+                            if let Some(val) =
+                                status_effect_values.get(7).cloned().filter(|&v| v != 0)
+                            {
+                                let rate =
+                                    (val as f64 / 10000.0) * status_effect.stack_count as f64;
                                 rdps_data.multi_dmg.values.push(RdpsBuffData {
                                     caster: caster_encounter_entity.name.clone(),
                                     rate,
@@ -1021,7 +1039,9 @@ impl EncounterState {
                                 rdps_data.multi_dmg.total_rate *= 1.0 + rate;
                             }
                             if hit_flag == HitFlag::CRITICAL {
-                                if let Some(val) = status_effect_values.get(9).cloned() {
+                                if let Some(val) =
+                                    status_effect_values.get(9).cloned().filter(|&v| v != 0)
+                                {
                                     let rate =
                                         (val as f64 / 10000.0) * status_effect.stack_count as f64;
                                     rdps_data.multi_dmg.values.push(RdpsBuffData {
@@ -1033,7 +1053,9 @@ impl EncounterState {
                                 }
                             }
                         } else if damage_data.damage_type == 1 {
-                            if let Some(val) = status_effect_values.get(3).cloned() {
+                            if let Some(val) =
+                                status_effect_values.get(3).cloned().filter(|&v| v != 0)
+                            {
                                 let rate = -(val as f64 / 10000.0)
                                     * status_effect.stack_count as f64
                                     * 0.5;
@@ -1044,7 +1066,9 @@ impl EncounterState {
                                 rdps_data.multi_dmg.sum_rate += rate;
                                 rdps_data.multi_dmg.total_rate *= 1.0 + rate;
                             }
-                            if let Some(val) = status_effect_values.get(8).cloned() {
+                            if let Some(val) =
+                                status_effect_values.get(8).cloned().filter(|&v| v != 0)
+                            {
                                 let rate = val as f64 / 10000.0 * status_effect.stack_count as f64;
                                 rdps_data.multi_dmg.values.push(RdpsBuffData {
                                     caster: caster_encounter_entity.name.clone(),
@@ -1054,7 +1078,9 @@ impl EncounterState {
                                 rdps_data.multi_dmg.total_rate *= 1.0 + rate;
                             }
                             if hit_flag == HitFlag::CRITICAL {
-                                if let Some(val) = status_effect_values.get(10).cloned() {
+                                if let Some(val) =
+                                    status_effect_values.get(10).cloned().filter(|&v| v != 0)
+                                {
                                     let rate =
                                         val as f64 / 10000.0 * status_effect.stack_count as f64;
                                     rdps_data.multi_dmg.values.push(RdpsBuffData {
@@ -1071,9 +1097,12 @@ impl EncounterState {
                         let b_skill_effect_id =
                             status_effect_values.get(4).cloned().unwrap_or_default();
                         if (b_skill_id == 0 || b_skill_id == skill_id as i32)
-                            && (b_skill_effect_id == 0 || b_skill_effect_id == skill_effect_id as i32)
+                            && (b_skill_effect_id == 0
+                                || b_skill_effect_id == skill_effect_id as i32)
                         {
-                            if let Some(val) = status_effect_values.get(1).cloned() {
+                            if let Some(val) =
+                                status_effect_values.get(1).cloned().filter(|&v| v != 0)
+                            {
                                 let rate =
                                     (val as f64 / 10000.0) * status_effect.stack_count as f64;
                                 rdps_data.multi_dmg.values.push(RdpsBuffData {
@@ -1088,7 +1117,9 @@ impl EncounterState {
 
                     if debuff.buff_type == "directional_attack_amplify" {
                         if hit_option == HitOption::FRONTAL_ATTACK {
-                            if let Some(front_rate) = status_effect_values.first().cloned() {
+                            if let Some(front_rate) =
+                                status_effect_values.first().cloned().filter(|&v| v != 0)
+                            {
                                 let rate =
                                     (front_rate as f64 / 100.0) * status_effect.stack_count as f64;
                                 rdps_data.multi_dmg.values.push(RdpsBuffData {
@@ -1100,7 +1131,9 @@ impl EncounterState {
                             }
                         }
                         if hit_option == HitOption::BACK_ATTACK {
-                            if let Some(back_rate) = status_effect_values.get(4).cloned() {
+                            if let Some(back_rate) =
+                                status_effect_values.get(4).cloned().filter(|&v| v != 0)
+                            {
                                 let rate =
                                     (back_rate as f64 / 100.0) * status_effect.stack_count as f64;
                                 rdps_data.multi_dmg.values.push(RdpsBuffData {
@@ -1135,45 +1168,41 @@ impl EncounterState {
                         }
 
                         if let Some(tripod_data) = skill.tripod_data.as_ref() {
-                            let mut combat_effects: HashMap<i32, CombatEffectData> =
-                                HashMap::new();
+                            let mut combat_effects: HashMap<i32, CombatEffectData> = HashMap::new();
                             for tripods in tripod_data.iter() {
                                 for option in tripods.options.iter() {
-                                    let first =
-                                        option.param.first().cloned().unwrap_or_default();
+                                    let first = option.param.first().cloned().unwrap_or_default();
                                     if option.effect_type == "add_chain_combat_effect" {
                                         if first == 0 || skill_effect_id as i32 == first {
                                             if let Some(ce_id) = option.param.get(1).cloned() {
-                                                if let Some(ce) = COMBAT_EFFECT_DATA.get(&ce_id)
-                                                {
+                                                if let Some(ce) = COMBAT_EFFECT_DATA.get(&ce_id) {
                                                     combat_effects.insert(ce_id, ce.clone());
                                                 }
                                             }
-                                        } else if option.effect_type
-                                            == "remove_chain_combat_effect"
+                                        } else if option.effect_type == "remove_chain_combat_effect"
                                         {
                                             combat_effects.remove(&first);
-                                        } else if option.effect_type
-                                            == "change_combat_effect_arg"
-                                        {
+                                        } else if option.effect_type == "change_combat_effect_arg" {
                                             if first == 0 || skill_effect_id as i32 == first {
-                                                if let Some(ce_id) =
-                                                    option.param.get(1).cloned()
-                                                {
-                                                    if let Some(ce) =
-                                                        combat_effects.get_mut(&ce_id)
+                                                if let Some(ce_id) = option.param.get(1).cloned() {
+                                                    if let Some(ce) = combat_effects.get_mut(&ce_id)
                                                     {
                                                         for effects in ce.effects.iter_mut() {
-                                                            for action in
-                                                                effects.actions.iter_mut()
+                                                            for action in effects.actions.iter_mut()
                                                             {
-                                                                for i in
-                                                                    0..option.param.len() - 2
-                                                                {
+                                                                for i in 0..option.param.len() - 2 {
                                                                     if option.param_type
                                                                         == "relative"
                                                                     {
-                                                                        action.args[i] *= (1.0 + option.param.get(i + 2).cloned().unwrap_or_default() as f64 / 100.0) as i32
+                                                                        action.args[i] *= (1.0
+                                                                            + option
+                                                                                .param
+                                                                                .get(i + 2)
+                                                                                .cloned()
+                                                                                .unwrap_or_default()
+                                                                                as f64
+                                                                                / 100.0)
+                                                                            as i32
                                                                     } else {
                                                                         action.args[i] += option
                                                                             .param
@@ -1198,8 +1227,7 @@ impl EncounterState {
                                                     / 10000.0;
                                             } else if option.effect_type
                                                 == "change_dam_critical_rate"
-                                                && (first == 0
-                                                    || skill_effect_id as i32 == first)
+                                                && (first == 0 || skill_effect_id as i32 == first)
                                             {
                                                 rdps_data.crit.self_sum_rate += option
                                                     .param
@@ -1232,13 +1260,14 @@ impl EncounterState {
                         }
                     }
                 }
-                
+
                 if !rdps_data.skill_dmg_rate.values.is_empty() {
                     let additional_damage = player_stats
                         .get(&dmg_src_entity.name)
                         .map(|stats| stats.add_dmg as f64)
-                        .unwrap_or(2500.0);
+                        .unwrap_or(0.0);
                     rdps_data.skill_dmg_rate.self_sum_rate += additional_damage / 10000.0;
+                    // println!("additional dmg: {}", additional_damage);
                 }
                 
                 let mut crit_sum_eff_gain_rate = 0.0;
@@ -1257,7 +1286,7 @@ impl EncounterState {
                             - rdps_data.crit.self_sum_rate
                             + 1.0);
                 }
-                
+
                 let attack_power_amplify = if rdps_data.atk_pow_amplify.is_empty() {
                     RdpsBuffData {
                         caster: "".to_string(),
@@ -2302,16 +2331,21 @@ fn insert_data(
         }
 
         entity.damage_stats.dps = entity.damage_stats.damage_dealt / duration_seconds;
-        
-        if let Some(stats) = player_stats.as_ref().and_then(|stats| stats.get(&entity.name)) {
+
+        if let Some(stats) = player_stats
+            .as_ref()
+            .and_then(|stats| stats.get(&entity.name))
+        {
             for gem in stats.gems.iter().flatten() {
                 let skill_id = gem.skill_id;
                 if let Some(skill) = entity.skills.get_mut(&skill_id) {
                     match gem.gem_type {
-                        5 => { // damage gem
+                        5 => {
+                            // damage gem
                             skill.gem_damage = Some(damage_gem_value_to_level(gem.value))
                         }
-                        27 => { // cooldown gem
+                        27 => {
+                            // cooldown gem
                             skill.gem_cooldown = Some(cooldown_gem_value_to_level(gem.value))
                         }
                         _ => {}
@@ -2319,7 +2353,7 @@ fn insert_data(
                 }
             }
         }
-        
+
         for (_, skill) in entity.skills.iter_mut() {
             skill.dps = skill.total_damage / duration_seconds;
         }
