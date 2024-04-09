@@ -1761,6 +1761,7 @@ impl EncounterState {
         let party_info = self.party_info.clone();
         let raid_difficulty = self.raid_difficulty.clone();
         let region = self.region.clone();
+        let meter_version = self.window.app_handle().package_info().version.to_string();
 
         task::spawn(async move {
             info!("saving to db - {}", encounter.current_boss_name);
@@ -1783,6 +1784,7 @@ impl EncounterState {
                 raid_difficulty,
                 region,
                 player_stats,
+                meter_version,
             );
 
             tx.commit().expect("failed to commit transaction");
@@ -2164,6 +2166,7 @@ fn insert_data(
     raid_difficulty: String,
     region: Option<String>,
     player_stats: Option<HashMap<String, PlayerStats>>,
+    meter_version: String,
 ) {
     let mut encounter_stmt = tx
         .prepare_cached(
@@ -2213,6 +2216,7 @@ fn insert_data(
             )
         },
         region,
+        version: Some(meter_version),
         ..Default::default()
     };
 

@@ -83,9 +83,9 @@ pub fn start(
     };
 
     let mut last_update = Instant::now();
-    let duration = Duration::from_millis(100);
+    let mut duration = Duration::from_millis(200);
     let mut last_party_update = Instant::now();
-    let party_duration = Duration::from_millis(1000);
+    let party_duration = Duration::from_millis(2000);
     let mut raid_end_cd: Instant = Instant::now();
 
     let reset = Arc::new(AtomicBool::new(false));
@@ -96,6 +96,10 @@ pub fn start(
         if settings.general.boss_only_damage {
             boss_only_damage.store(true, Ordering::Relaxed);
             info!("boss only damage enabled")
+        }
+        if settings.general.low_performance_mode {
+            duration = Duration::from_millis(1000);
+            info!("low performance mode enabled")
         }
     }
 

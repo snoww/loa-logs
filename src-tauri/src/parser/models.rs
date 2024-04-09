@@ -324,6 +324,8 @@ pub struct EncounterMisc {
     pub party_info: Option<HashMap<i32, Vec<String>>>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub region: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub version: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
@@ -627,6 +629,7 @@ pub struct Settings {
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", default)]
 pub struct GeneralSettings {
+    pub low_performance_mode: bool,
     #[serde(default = "default_true")]
     pub show_names: bool,
     pub show_gear_score: bool,

@@ -9,6 +9,7 @@ import type { UpdateManifest } from "@tauri-apps/api/updater";
 
 export const defaultSettings = {
     general: {
+        lowPerformanceMode: false,
         showNames: true,
         showGearScore: false,
         showEsther: true,
