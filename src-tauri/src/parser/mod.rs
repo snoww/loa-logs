@@ -251,6 +251,19 @@ pub fn start(
                     }
                 }
             }
+            Pkt::IdentityStanceChangeNotify => {
+                if let Some(pkt) = parse_pkt(
+                    &data,
+                    PKTIdentityStanceChangeNotify::new,
+                    "PKTIdentityStanceChangeNotify",
+                ) {
+                    if let Some(entity) = entity_tracker.entities.get_mut(&pkt.object_id) {
+                        if entity.entity_type == EntityType::PLAYER {
+                            entity.stance = pkt.stance;
+                        }
+                    }
+                }
+            }
             Pkt::InitEnv => {
                 // three methods of getting local player info
                 // 1. MigrationExecute    + InitEnv      + PartyInfo
