@@ -3,7 +3,7 @@ use crate::parser::encounter_state::EncounterState;
 use crate::parser::entity_tracker::{Entity, EntityTracker};
 use async_recursion::async_recursion;
 use chrono::{DateTime, Utc};
-use hashbrown::HashMap;
+use hashbrown::{HashMap, HashSet};
 use log::{info, warn};
 use md5::compute;
 use reqwest::Client;
@@ -21,7 +21,7 @@ pub struct StatsApi {
     cache_status: Arc<AtomicBool>,
     cancellation_flag: Arc<AtomicBool>,
     client: Arc<Client>,
-    hash: HashMap<String, String>,
+    hash_cache: Arc<Mutex<HashMap<String, String>>>,
     window: Arc<Window<Wry>>,
 }
 
@@ -34,7 +34,7 @@ impl StatsApi {
             cache_status: Arc::new(AtomicBool::new(false)),
             cancellation_flag: Arc::new(AtomicBool::new(false)),
             client: Arc::new(Client::new()),
-            hash: HashMap::new(),
+            hash_cache: Arc::new(Mutex::new(HashMap::new())),
         }
     }
 
@@ -63,30 +63,37 @@ impl StatsApi {
             return;
         }
 
-        let player_names = party.iter().flatten().cloned().collect::<Vec<String>>();
+        let player_names = party.iter().flatten().cloned().collect::<HashSet<String>>();
+        if let (Ok(mut cache), Ok(mut stats_cache), Ok(mut hash_cache)) = (
+            self.cache.lock(),
+            self.stats_cache.lock(),
+            self.hash_cache.lock(),
+        ) {
+            cache.retain(|player, _| player_names.contains(player));
+            stats_cache.retain(|player, _| player_names.contains(player));
+            hash_cache.retain(|player, _| player_names.contains(player));
+        }
         let mut player_hashes: Vec<PlayerHash> = Vec::new();
-        for player in player_names.iter() {
-            let entity_id = match state.encounter.entities.get(player) {
-                Some(entity) => entity.id,
-                None => continue,
-            };
-            if let Some(entity) = entity_tracker.entities.get(&entity_id) {
-                if let Some(hash) = self.get_hash(entity) {
-                    if self
-                        .hash
-                        .get(player)
-                        .map_or(false, |cached_hash| cached_hash == &hash)
-                    {
-                        continue;
-                    } else {
-                        self.hash.insert(player.clone(), hash.clone());
-                        player_hashes.push(PlayerHash {
-                            name: player.clone(),
-                            hash,
-                        });
+        if let Ok(hash_cache) = self.hash_cache.lock() {
+            for player in player_names.iter() {
+                let entity_id = match state.encounter.entities.get(player) {
+                    Some(entity) => entity.id,
+                    None => continue,
+                };
+                if let Some(entity) = entity_tracker.entities.get(&entity_id) {
+                    if let Some(hash) = self.get_hash(entity) {
+                        if hash_cache
+                            .get(player)
+                            .map_or(false, |cached_hash| cached_hash == &hash)
+                        {
+                            continue;
+                        } else {
+                            player_hashes.push(PlayerHash {
+                                name: player.clone(),
+                                hash,
+                            });
+                        }
                     }
-                } else {
-                    self.hash.remove(player);
                 }
             }
         }
@@ -99,12 +106,15 @@ impl StatsApi {
 
     fn request(&mut self, region: String, players: Vec<PlayerHash>) {
         let client_clone = Arc::clone(&self.client);
-        let cache_lock = Arc::clone(&self.cache);
+        let cache_clone = Arc::clone(&self.cache);
         let cache_status = Arc::clone(&self.cache_status);
-        let stats_cache_lock = Arc::clone(&self.stats_cache);
+        let stats_cache_clone = Arc::clone(&self.stats_cache);
+        let hash_cache_clone = Arc::clone(&self.hash_cache);
+
         self.cancellation_flag.store(true, Ordering::SeqCst);
         let new_cancellation_flag = Arc::new(AtomicBool::new(false));
         self.cancellation_flag = Arc::clone(&new_cancellation_flag);
+
         self.broadcast("requesting_stats");
         let window_clone = Arc::clone(&self.window);
         tokio::task::spawn(async move {
@@ -112,8 +122,9 @@ impl StatsApi {
                 &client_clone,
                 &window_clone,
                 &region,
-                cache_lock,
-                stats_cache_lock,
+                cache_clone,
+                stats_cache_clone,
+                hash_cache_clone,
                 cache_status,
                 new_cancellation_flag,
                 players,
@@ -191,8 +202,8 @@ impl StatsApi {
 
     pub fn broadcast(&self, message: &str) {
         self.window
-                .emit("rdps", message)
-                .expect("failed to emit rdps message");
+            .emit("rdps", message)
+            .expect("failed to emit rdps message");
     }
 }
 
@@ -203,6 +214,7 @@ async fn make_request(
     region: &str,
     cache: Arc<Mutex<HashMap<String, PlayerStats>>>,
     stats_cache: Arc<Mutex<HashMap<String, Stats>>>,
+    hash_cache: Arc<Mutex<HashMap<String, String>>>,
     cache_status: Arc<AtomicBool>,
     cancellation: Arc<AtomicBool>,
     players: Vec<PlayerHash>,
@@ -210,7 +222,8 @@ async fn make_request(
 ) {
     if current_retries > 24 {
         debug_print(format_args!("retries exceeded"));
-        window.emit("rdps", "request_failed")
+        window
+            .emit("rdps", "request_failed")
             .expect("failed to emit rdps message");
         return;
     }
@@ -227,8 +240,8 @@ async fn make_request(
         Ok(response) => match response.json::<HashMap<String, PlayerStats>>().await {
             Ok(data) => {
                 let mut missing_players: Vec<PlayerHash> = Vec::new();
-                if let (Ok(mut cache_clone), Ok(mut stats_cache_clone)) =
-                    (cache.try_lock(), stats_cache.try_lock())
+                if let (Ok(mut cache_clone), Ok(mut stats_cache_clone), Ok(mut hash_cache_clone)) =
+                    (cache.lock(), stats_cache.lock(), hash_cache.lock())
                 {
                     missing_players = players
                         .iter()
@@ -237,6 +250,15 @@ async fn make_request(
                         .collect();
 
                     for (name, stats) in data {
+                        hash_cache_clone.insert(
+                            name.clone(),
+                            players
+                                .iter()
+                                .find(|p| p.name == name)
+                                .unwrap()
+                                .hash
+                                .clone(),
+                        );
                         stats_cache_clone.insert(
                             name.clone(),
                             Stats {
@@ -254,7 +276,8 @@ async fn make_request(
                 if missing_players.is_empty() {
                     debug_print(format_args!("received player stats"));
                     cache_status.store(true, Ordering::Relaxed);
-                    window.emit("rdps", "request_success")
+                    window
+                        .emit("rdps", "request_success")
                         .expect("failed to emit rdps message");
                 } else {
                     cache_status.store(false, Ordering::Relaxed);
@@ -280,6 +303,7 @@ async fn make_request(
                         region,
                         Arc::clone(&cache),
                         Arc::clone(&stats_cache),
+                        Arc::clone(&hash_cache),
                         cache_status,
                         cancellation,
                         missing_players,
