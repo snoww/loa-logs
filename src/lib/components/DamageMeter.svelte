@@ -23,7 +23,13 @@
     import { tooltip } from "$lib/utils/tooltip";
     import { writable } from "svelte/store";
     import Notification from "./shared/Notification.svelte";
-    import { takingScreenshot, screenshotAlert, screenshotError, rdpsEventDetails } from "$lib/utils/stores";
+    import {
+        takingScreenshot,
+        screenshotAlert,
+        screenshotError,
+        rdpsEventDetails,
+        localPlayer
+    } from "$lib/utils/stores";
     import html2canvas from "html2canvas";
     import Details from "./Details.svelte";
     import DamageTaken from "./shared/DamageTaken.svelte";
@@ -192,6 +198,7 @@
                         .filter((e) => e.damageStats.damageDealt > 0 && e.entityType === EntityType.BOSS)
                         .sort((a, b) => b.damageStats.damageDealt - a.damageStats.damageDealt);
                 }
+                $localPlayer = encounter.localPlayer;
                 isSolo = players.length === 1;
                 anyDead = players.some((player) => player.isDead);
                 anyFrontAtk = players.some((player) => player.skillStats.frontAttacks > 0);

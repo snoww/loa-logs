@@ -7,7 +7,7 @@
     import { cardIds } from "$lib/constants/cards";
     import { tooltip } from "$lib/utils/tooltip";
     import { formatPlayerName } from "$lib/utils/strings";
-    import { takingScreenshot } from "$lib/utils/stores";
+    import { localPlayer, takingScreenshot } from "$lib/utils/stores";
     import { HexToRgba, RGBLinearShade } from "$lib/utils/colors";
 
     export let entity: Entity;
@@ -61,7 +61,11 @@
     }
 
     if (Object.hasOwn($colors, entity.class)) {
-        color = $colors[entity.class].color;
+        if ($settings.general.constantLocalPlayerColor && $localPlayer == entity.name) {
+            color = $colors["Local"].color;
+        } else {
+            color = $colors[entity.class].color;
+        }
     } else if (entity.entityType === EntityType.ESTHER) {
         color = "#4dc8d0";
     }

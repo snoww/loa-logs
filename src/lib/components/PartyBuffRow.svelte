@@ -7,6 +7,7 @@
     import BuffTooltipDetail from "./shared/BuffTooltipDetail.svelte";
     import { tweened } from "svelte/motion";
     import { cubicOut } from "svelte/easing";
+    import { localPlayer } from "$lib/utils/stores";
 
     export let player: Entity;
     export let playerBuffs: Array<BuffDetails>;
@@ -25,7 +26,11 @@
     $: {
         tweenedValue.set(percentage);
         if (Object.hasOwn($colors, player.class)) {
-            color = $colors[player.class].color;
+            if ($settings.general.constantLocalPlayerColor && $localPlayer == player.name) {
+                color = $colors["Local"].color;
+            } else {
+                color = $colors[player.class].color;
+            }
         }
         playerName = formatPlayerName(player, $settings.general.showNames, $settings.general.showGearScore);
         if (!$settings.meter.showClassColors) {

@@ -669,6 +669,7 @@ pub struct GeneralSettings {
     pub keep_favorites: bool,
     pub hide_meter_on_start: bool,
     pub hide_logs_on_start: bool,
+    pub constant_local_player_color: bool,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]

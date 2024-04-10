@@ -40,6 +40,7 @@ export const defaultSettings = {
         keepFavorites: true,
         hideMeterOnStart: false,
         hideLogsOnStart: false,
+        constantLocalPlayerColor: false,
     },
     shortcuts: {
         hideMeter: {

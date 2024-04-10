@@ -7,6 +7,7 @@
     import { tooltip } from "$lib/utils/tooltip";
     import { cubicOut } from "svelte/easing";
     import { tweened } from "svelte/motion";
+    import { localPlayer } from "$lib/utils/stores";
 
     export let player: Entity;
     export let width: number;
@@ -31,7 +32,11 @@
         name = formatPlayerName(player, $settings.general.showNames, $settings.general.showGearScore);
 
         if (Object.hasOwn($colors, player.class)) {
-            color = $colors[player.class].color;
+            if ($settings.general.constantLocalPlayerColor && $localPlayer == player.name) {
+                color = $colors["Local"].color;
+            } else {
+                color = $colors[player.class].color;
+            }
         }
     }
 </script>

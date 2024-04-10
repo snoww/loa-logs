@@ -6,6 +6,7 @@
     import { colors, settings } from "$lib/utils/settings";
     import PlayerBreakdownHeader from "./shared/PlayerBreakdownHeader.svelte";
     import { cardIds } from "$lib/constants/cards";
+    import { localPlayer } from "$lib/utils/stores";
 
     export let entity: Entity | null;
     export let duration: number;
@@ -26,7 +27,11 @@
     $: {
         if (entity) {
             if (Object.hasOwn($colors, entity.class)) {
-                color = $colors[entity.class].color;
+                if ($settings.general.constantLocalPlayerColor && $localPlayer == entity.name) {
+                    color = $colors["Local"].color;
+                } else {
+                    color = $colors[entity.class].color;
+                }
             } else if (entity.entityType === EntityType.ESTHER) {
                 color = "#4dc8d0";
             }

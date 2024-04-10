@@ -28,10 +28,6 @@
         tweenedValue.set(width);
         damageDealt = abbreviateNumberSplit(boss.damageStats.damageDealt);
 
-        if (Object.hasOwn($colors, boss.class)) {
-            color = $colors[boss.class].color;
-        }
-
         if (duration > 0) {
             dps = abbreviateNumberSplit(boss.damageStats.damageDealt / (duration / 1000));
         } else {

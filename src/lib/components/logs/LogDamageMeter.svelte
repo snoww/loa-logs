@@ -11,7 +11,7 @@
     import { colors, settings, skillIcon } from "$lib/utils/settings";
     import { goto } from "$app/navigation";
     import html2canvas from "html2canvas";
-    import { screenshotAlert, screenshotError, takingScreenshot, raidGates } from "$lib/utils/stores";
+    import { screenshotAlert, screenshotError, takingScreenshot, raidGates, localPlayer } from "$lib/utils/stores";
     import LogIdentity from "./identity/LogIdentity.svelte";
     import LogStagger from "./stagger/LogStagger.svelte";
     import { tooltip } from "$lib/utils/tooltip";
@@ -42,7 +42,7 @@
     let playerDamagePercentages: Array<number> = [];
     let topDamageDealt = 0;
     let totalDamageDealt = 0;
-    let localPlayer: Entity | null = null;
+    let localPlayerEntity: Entity | null = null;
 
     let anyDead: boolean;
     let anyFrontAtk: boolean = false;
@@ -87,6 +87,7 @@
                     .filter((e) => e.damageStats.damageDealt > 0 && e.entityType === EntityType.BOSS)
                     .sort((a, b) => b.damageStats.damageDealt - a.damageStats.damageDealt);
             }
+            $localPlayer = encounter.localPlayer;
             isSolo = players.length === 1;
             topDamageDealt = encounter.encounterDamageStats.topDamageDealt;
             playerDamagePercentages = players.map((player) => (player.damageStats.damageDealt / topDamageDealt) * 100);
@@ -108,7 +109,7 @@
             }
 
             if (encounter.localPlayer) {
-                localPlayer = encounter.entities[encounter.localPlayer];
+                localPlayerEntity = encounter.entities[encounter.localPlayer];
             }
 
             if (playerName) {
@@ -243,7 +244,7 @@
     }
 
     function identityTab() {
-        if (!localPlayer) return;
+        if (!localPlayerEntity) return;
         tab = MeterTab.IDENTITY;
         chartType = ChartType.IDENTITY;
     }
@@ -409,7 +410,7 @@
                         Bosses
                     </button>
                 {/if}
-                {#if localPlayer && localPlayer.skillStats.identityStats}
+                {#if localPlayerEntity && localPlayerEntity.skillStats.identityStats}
                     <button
                         class="rounded-sm px-2 py-1"
                         class:bg-accent-900={tab === MeterTab.IDENTITY}
@@ -549,8 +550,8 @@
             {/if}
         </div>
     {/if}
-    {#if tab === MeterTab.IDENTITY && localPlayer !== null}
-        <LogIdentity {localPlayer} duration={encounter.duration} />
+    {#if tab === MeterTab.IDENTITY && localPlayerEntity !== null}
+        <LogIdentity {localPlayerEntity} duration={encounter.duration} />
     {:else if tab === MeterTab.STAGGER && encounter.encounterDamageStats.misc && encounter.encounterDamageStats.misc.staggerStats}
         <LogStagger staggerStats={encounter.encounterDamageStats.misc.staggerStats} />
     {:else}

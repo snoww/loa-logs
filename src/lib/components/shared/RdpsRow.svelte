@@ -5,6 +5,7 @@
     import { formatPlayerName } from "$lib/utils/strings";
     import { abbreviateNumberSplit, getBaseDamage, getRDamage } from "$lib/utils/numbers";
     import { HexToRgba } from "$lib/utils/colors";
+    import { localPlayer } from "$lib/utils/stores";
 
     export let player: Entity;
     export let totalDamageDealt: number;
@@ -42,7 +43,11 @@
 
         playerName = formatPlayerName(player, $settings.general.showNames, $settings.general.showGearScore);
         if (Object.hasOwn($colors, player.class)) {
-            color = $colors[player.class].color;
+            if ($settings.general.constantLocalPlayerColor && $localPlayer == player.name) {
+                color = $colors["Local"].color;
+            } else {
+                color = $colors[player.class].color;
+            }
         }
     }
 </script>

@@ -149,7 +149,7 @@
         </div>
         <SettingItem
             name="Low Performance Mode"
-            description="Lowers meter update frequency to reduce CPU usage (Requires Restart)."
+            description="Lowers meter update frequency to reduce CPU usage. (Requires Restart)"
             bind:setting={$settings.general.lowPerformanceMode} />
         <SettingItem
             name="Show Names"

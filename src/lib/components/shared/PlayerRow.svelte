@@ -5,6 +5,7 @@
     import { colors, classIconCache, settings } from "$lib/utils/settings";
     import { formatPlayerName, getEstherFromNpcId } from "$lib/utils/strings";
     import { tooltip } from "$lib/utils/tooltip";
+    import { localPlayer } from "$lib/utils/stores";
 
     export let entity: Entity;
     export let totalDamageDealt: number;
@@ -59,7 +60,11 @@
         }
 
         if (Object.hasOwn($colors, entity.class)) {
-            color = $colors[entity.class].color;
+            if ($settings.general.constantLocalPlayerColor && $localPlayer == entity.name) {
+                color = $colors["Local"].color;
+            } else {
+                color = $colors[entity.class].color;
+            }
         }
         if (entity.entityType === EntityType.ESTHER) {
             name = getEstherFromNpcId(entity.npcId);

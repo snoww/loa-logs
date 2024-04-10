@@ -1,6 +1,7 @@
 import type { ClassColors } from "$lib/types";
 
 export const classColors: ClassColors = {
+    Local: { color: "#000000", defaultColor: "#000000" }, // 0
     Berserker: { color: "#ee2e48", defaultColor: "#ee2e48" }, // 102
     Destroyer: { color: "#7b9aa2", defaultColor: "#7b9aa2" }, // 103
     Gunlancer: { color: "#E1907E", defaultColor: "#E1907E" }, // 104

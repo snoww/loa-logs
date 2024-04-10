@@ -8,6 +8,7 @@
     import { tooltip } from "$lib/utils/tooltip";
     import BuffSkillBreakdownRow from "./BuffSkillBreakdownRow.svelte";
     import BuffTooltipDetail from "./shared/BuffTooltipDetail.svelte";
+    import { localPlayer } from "$lib/utils/stores";
 
     export let groupedSynergies: Map<string, Map<number, StatusEffect>>;
     export let player: Entity;
@@ -27,7 +28,11 @@
             skills = skills.filter((skill) => !cardIds.includes(skill.id));
         }
         if (Object.hasOwn($colors, player.class)) {
-            color = $colors[player.class].color;
+            if ($settings.general.constantLocalPlayerColor && $localPlayer == player.name) {
+                color = $colors["Local"].color;
+            } else {
+                color = $colors[player.class].color;
+            }
         }
 
         if (skills.length > 0) {

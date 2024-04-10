@@ -3,7 +3,7 @@
     import { HexToRgba } from "$lib/utils/colors";
     import { formatPlayerName } from "$lib/utils/strings";
     import { colors, classIconCache, settings } from "$lib/utils/settings";
-    import { takingScreenshot } from "$lib/utils/stores";
+    import { localPlayer, takingScreenshot } from "$lib/utils/stores";
     import BuffTooltipDetail from "../shared/BuffTooltipDetail.svelte";
     import { tooltip } from "$lib/utils/tooltip";
     import { round } from "$lib/utils/numbers";
@@ -18,7 +18,11 @@
     let synergyPercentageDetails: Array<BuffDetails>;
 
     if (Object.hasOwn($colors, player.class)) {
-        color = $colors[player.class].color;
+        if ($settings.general.constantLocalPlayerColor && $localPlayer == player.name) {
+            color = $colors["Local"].color;
+        } else {
+            color = $colors[player.class].color;
+        }
     }
 
     $: {
