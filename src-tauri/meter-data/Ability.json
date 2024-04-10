@@ -1,0 +1,2894 @@
+{
+  "106": {
+    "id": 106,
+    "levels": {
+      "1": { "desc": "Effectiveness of recovery items +15%." },
+      "2": { "desc": "Effectiveness of recovery items +25%." }
+    },
+    "name": "Potion Sickness",
+    "isnegative": false,
+    "icon": "buff_100.png",
+    "isengrave": false,
+    "featuretype": 1
+  },
+  "107": {
+    "id": 107,
+    "levels": {
+      "1": { "desc": "Damage +9% to foes with 30% or lower HP.", "values": [3000, 900] },
+      "2": { "desc": "Damage +22% to foes with 30% or lower HP.", "values": [3000, 2200] },
+      "3": { "desc": "Damage +36% to foes with 30% or lower HP.", "values": [3000, 3600] }
+    },
+    "name": "Disrespect",
+    "isnegative": false,
+    "icon": "achieve_04_30.png",
+    "isengrave": true,
+    "featuretype": 2
+  },
+  "109": {
+    "id": 109,
+    "levels": {
+      "1": { "desc": "Atk./Move Speed +3%.", "values": [300] },
+      "2": { "desc": "Atk./Move Speed +8%.", "values": [800] },
+      "3": { "desc": "Atk./Move Speed +15%", "values": [1500] }
+    },
+    "name": "Spirit Absorption",
+    "isnegative": false,
+    "icon": "buff_65.png",
+    "isengrave": true,
+    "featuretype": 3
+  },
+  "110": {
+    "id": 110,
+    "levels": {
+      "1": {
+        "desc": "Attacking a foe creates an Ether that only you can collect. On collecting the Ether, Atk. Power +0.2% for 90s and All Defense +0.3%. Stacks up to 30 times. Chance on Ether collection to increases the stack by 3. (Cooldown: 10s)",
+        "values": [2000, 9001550, 9000550, 250]
+      },
+      "2": {
+        "desc": "Attacking a foe creates an Ether that only you can collect. On collecting the Ether, Atk. Power +0.3% for 90s and All Defense +0.6%. Stacks up to 30 times. Chance on Ether collection to increases the stack by 3. (Cooldown: 10s)",
+        "values": [2000, 9001551, 9000551, 250]
+      },
+      "3": {
+        "desc": "Attacking a foe creates an Ether that only you can collect. On collecting the Ether, Atk. Power +0.5% for 90s and All Defense +1%. Stacks up to 30 times. Chance on Ether collection to increases the stack by 3. (Cooldown: 10s)",
+        "values": [2000, 9001552, 9000552, 250]
+      }
+    },
+    "name": "Ether Predator",
+    "isnegative": false,
+    "icon": "buff_74.png",
+    "isengrave": true,
+    "featuretype": 4
+  },
+  "111": {
+    "id": 111,
+    "levels": {
+      "1": { "desc": "Damage +3% when your HP is above 80%.", "values": [500003] },
+      "2": { "desc": "Damage +8% when your HP is above 80%.", "values": [500004] },
+      "3": { "desc": "Damage +16% when your HP is above 80%.", "values": [500005] }
+    },
+    "name": "Stabilized Status",
+    "isnegative": false,
+    "icon": "buff_105.png",
+    "isengrave": true,
+    "featuretype": 5
+  },
+  "112": {
+    "id": 112,
+    "levels": {
+      "1": { "desc": "Cutting skill Lv. +1.", "values": [1] },
+      "2": { "desc": "Cutting skill Lv. +2. ", "values": [2] },
+      "3": { "desc": "Cutting skill Lv. +3. ", "values": [3] }
+    },
+    "name": "Master of Slashes",
+    "isnegative": false,
+    "icon": "buff_107.png",
+    "isengrave": true,
+    "featuretype": 6
+  },
+  "118": {
+    "id": 118,
+    "levels": {
+      "1": { "desc": "Damage +4% to Boss or above monsters. Incoming Damage +20%.", "values": [400, 2000] },
+      "2": { "desc": "Damage +10% to Boss or above monsters. Incoming Damage +20%.", "values": [1000, 2000] },
+      "3": { "desc": "Damage +20% to Boss or above monsters. Incoming Damage +20%.", "values": [2000, 2000] }
+    },
+    "name": "Grudge",
+    "isnegative": false,
+    "icon": "buff_71.png",
+    "isengrave": true,
+    "featuretype": 10
+  },
+  "119": {
+    "id": 119,
+    "levels": { "1": { "desc": "Become invincible while using your Movement Skill." } },
+    "name": "Invincible Evasion",
+    "isnegative": false,
+    "icon": "buff_20.png",
+    "isengrave": true,
+    "featuretype": 11
+  },
+  "121": {
+    "id": 121,
+    "levels": {
+      "1": { "desc": "Charge skills' charging speed +8%. Damage +4%.", "values": [800, 400] },
+      "2": { "desc": "Charge skills' charging speed +20%. Damage +10%.", "values": [2000, 1000] },
+      "3": { "desc": "Charge skills' charging speed +40%. Damage +20%.", "values": [4000, 2000] }
+    },
+    "name": "Super Charge",
+    "isnegative": false,
+    "icon": "achieve_06_14.png",
+    "isengrave": true,
+    "featuretype": 12
+  },
+  "123": {
+    "id": 123,
+    "levels": {
+      "1": { "desc": "Incoming Damage -5% while Pushed.", "values": [500, 500011] },
+      "2": { "desc": "Incoming Damage -15% while Pushed.", "values": [2000, 500012] },
+      "3": { "desc": "Incoming Damage -30% while Pushed.", "values": [3000, 500013] }
+    },
+    "name": "Strong Will",
+    "isnegative": false,
+    "icon": "buff_44.png",
+    "isengrave": true,
+    "featuretype": 14
+  },
+  "124": {
+    "id": 124,
+    "levels": {
+      "1": { "desc": "Movement Skill Cooldown -10%.", "values": [1000] },
+      "2": { "desc": "Movement Skill Cooldown -15%.", "values": [1500] },
+      "3": { "desc": "Movement Skill Cooldown -20%.", "values": [2000] }
+    },
+    "name": "Fugitive",
+    "isnegative": false,
+    "icon": "buff_137.png",
+    "isengrave": false,
+    "featuretype": 15
+  },
+  "125": {
+    "id": 125,
+    "levels": {
+      "1": {
+        "desc": "Fury Meter remains at max and turns into Mayhem Mode with the power of darkness. Mayhem Mode: Outgoing Damage +3%, Atk. and Move Speed +15%, all incoming Damage -70%. When Mayhem Mode activates, HP is reduced to 25% of Max HP; this cannot be exceeded even when healing is applied. Can only receive 40% of healing and 25% of shield. Press the <FONT COLOR='#ffff99'><$HOTKEY 108/></FONT> key to cancel Mayhem Mode and recover 25% of Max HP; cannot enter Mayhem Mode again for 30s.",
+        "values": [2500, 2500, 10080106, 10080110, 7500]
+      },
+      "2": {
+        "desc": "Fury Meter remains at max and turns into Mayhem Mode with the power of darkness. Mayhem Mode: Outgoing Damage +8%, Atk. and Move Speed +15%, all incoming Damage -70%. When Mayhem Mode activates, HP is reduced to 25% of Max HP; this cannot be exceeded even when healing is applied. Can only receive 40% of healing and 25% of shield. Press the <FONT COLOR='#ffff99'><$HOTKEY 108/></FONT> key to cancel Mayhem Mode and recover 25% of Max HP; cannot enter Mayhem Mode again for 30s.",
+        "values": [2500, 2500, 10080107, 10080110, 7500]
+      },
+      "3": {
+        "desc": "Fury Meter remains at max and turns into Mayhem Mode with the power of darkness. Mayhem Mode: Outgoing Damage +16%, Atk. and Move Speed +15%, all incoming Damage -70%. When Mayhem Mode activates, HP is reduced to 25% of Max HP; this cannot be exceeded even when healing is applied. Can only receive 40% of healing and 25% of shield. Press the <FONT COLOR='#ffff99'><$HOTKEY 108/></FONT> key to cancel Mayhem Mode and recover 25% of Max HP; cannot enter Mayhem Mode again for 30s.",
+        "values": [2500, 2500, 10080108, 10080110, 7500]
+      }
+    },
+    "name": "Mayhem",
+    "isnegative": false,
+    "icon": "ability_270.png",
+    "isengrave": true,
+    "featuretype": 16
+  },
+  "127": {
+    "id": 127,
+    "levels": {
+      "1": {
+        "desc": "Max number of Esoteric Orbs +1. Esoteric skills inflict +8% Damage per Esoteric Orb you have.",
+        "values": [800, 1600, 2400, 3200]
+      },
+      "2": {
+        "desc": "Max number of Esoteric Orbs +1. Esoteric skills inflict +10% Damage per Esoteric Orb you have.",
+        "values": [1000, 2000, 3000, 4000]
+      },
+      "3": {
+        "desc": "Max number of Esoteric Orbs +1. Esoteric skills inflict +12% Damage per Esoteric Orb you have.",
+        "values": [1200, 2400, 3600, 4800]
+      }
+    },
+    "name": "Esoteric Skill Enhancement",
+    "isnegative": false,
+    "icon": "buff_238.png",
+    "isengrave": true,
+    "featuretype": 17
+  },
+  "129": {
+    "id": 129,
+    "levels": {
+      "1": { "desc": "Changing Stances enhances your weapon. Crit Rate +20% for 9s. ", "values": [500020] },
+      "2": { "desc": "Changing Stances enhances your weapon. Crit Rate +25% for 9s. ", "values": [500021] },
+      "3": { "desc": "Changing Stances enhances your weapon. Crit Rate +30% for 9s. ", "values": [500022] }
+    },
+    "name": "Enhanced Weapon",
+    "isnegative": false,
+    "icon": "ability_242.png",
+    "isengrave": true,
+    "featuretype": 18
+  },
+  "130": {
+    "id": 130,
+    "levels": {
+      "1": {
+        "desc": "If Firepower Level 1 or more, Overheat is triggered. Normal Skill Damage +7% and Firepower Meter duration +10s. When not in Barrage Mode, incoming Damage -5%.",
+        "values": [0, 10000, 300217, 500]
+      },
+      "2": {
+        "desc": "If Firepower Level 1 or more, Overheat is triggered. Normal Skill Damage +14% and Firepower Meter duration +12s. When not in Barrage Mode, incoming Damage -10%.",
+        "values": [0, 12000, 300218, 1000]
+      },
+      "3": {
+        "desc": "If Firepower Level 1 or more, Overheat is triggered. Normal Skill Damage +28% and Firepower Meter duration +14s. When not in Barrage Mode, incoming Damage -15%.",
+        "values": [0, 14000, 300219, 1500]
+      }
+    },
+    "name": "Firepower Enhancement",
+    "isnegative": false,
+    "icon": "ability_271.png",
+    "isengrave": true,
+    "featuretype": 19
+  },
+  "132": {
+    "id": 132,
+    "levels": {
+      "1": { "desc": "Damage +100% to Lucky monsters.", "values": [10000] },
+      "2": { "desc": "Damage +100% to Lucky monsters.", "values": [20000] },
+      "3": { "desc": "Damage +100% to Lucky monsters.", "values": [30000] }
+    },
+    "name": "Fortune Hunter",
+    "isnegative": false,
+    "icon": "buff_156.png",
+    "isengrave": false,
+    "featuretype": 20
+  },
+  "133": {
+    "id": 133,
+    "levels": { "1": { "desc": "Phy. or Mag. Defense value increased to match whichever is highest." } },
+    "name": "Balanced Defense",
+    "isnegative": false,
+    "icon": "buff_26.png",
+    "isengrave": true,
+    "featuretype": 21
+  },
+  "134": {
+    "id": 134,
+    "levels": {
+      "1": {
+        "desc": "Attacks have a chance to create an Ether within 8 meters. (Cooldown: 60s)",
+        "values": [500031, 400]
+      },
+      "2": {
+        "desc": "Attacks have a chance to create an Ether within 8 meters. (Cooldown: 30s)",
+        "values": [500032, 400]
+      },
+      "3": {
+        "desc": "Attacks have a chance to create an Ether within 8 meters. (Cooldown: 10s)",
+        "values": [500033, 400]
+      }
+    },
+    "name": "Drops of Ether",
+    "isnegative": false,
+    "icon": "buff_18.png",
+    "isengrave": true,
+    "featuretype": 22
+  },
+  "140": {
+    "id": 140,
+    "levels": {
+      "1": {
+        "desc": "When receiving fatal Damage, become invincible for 3s, recovering 50% of the Damage taken during invincibility as HP. Resets Movement Skill cooldown. (Cooldown: 15m)",
+        "values": [500029, 500030]
+      },
+      "2": {
+        "desc": "When receiving fatal Damage, become invincible for 3s, recovering 50% of the Damage taken during invincibility as HP. Resets Movement Skill cooldown. (Cooldown: 12m)",
+        "values": [500029, 500089]
+      },
+      "3": {
+        "desc": "When receiving fatal Damage, become invincible for 3s, recovering 50% of the Damage taken during invincibility as HP. Resets Movement Skill cooldown. (Cooldown: 9m)",
+        "values": [500029, 500090]
+      }
+    },
+    "name": "Crisis Evasion",
+    "isnegative": false,
+    "icon": "buff_162.png",
+    "isengrave": true,
+    "featuretype": 26
+  },
+  "141": {
+    "id": 141,
+    "levels": {
+      "1": {
+        "desc": "+10% Crit Damage but your attacks have a chance to deal -20% Damage.",
+        "values": [1000, 2000, 500114]
+      },
+      "2": {
+        "desc": "+25% Crit Damage but your attacks have a chance to deal -20% Damage.",
+        "values": [1000, 2000, 500115]
+      },
+      "3": {
+        "desc": "+50% Crit Damage but your attacks have a chance to deal -20% Damage.",
+        "values": [1000, 2000, 500116]
+      }
+    },
+    "name": "Keen Blunt Weapon",
+    "isnegative": false,
+    "icon": "achieve_03_40.png",
+    "isengrave": true,
+    "featuretype": 27
+  },
+  "142": {
+    "id": 142,
+    "levels": {
+      "1": { "desc": "Stagger attack effectiveness +6%.", "values": [600] },
+      "2": { "desc": "Stagger attack effectiveness +18%.", "values": [1800] },
+      "3": { "desc": "Stagger attack effectiveness +36%.", "values": [3600] }
+    },
+    "name": "Vital Point Hit",
+    "isnegative": false,
+    "icon": "buff_168.png",
+    "isengrave": true,
+    "featuretype": 28
+  },
+  "157": {
+    "id": 157,
+    "levels": {
+      "1": { "desc": "Piercing skills lv. +1.", "values": [1] },
+      "2": { "desc": "Piercing skills lv. +2.", "values": [2] },
+      "3": { "desc": "Piercing skills lv. +3.", "values": [3] }
+    },
+    "name": "Master of Piercing",
+    "isnegative": false,
+    "icon": "buff_96.png",
+    "isengrave": true,
+    "featuretype": 36
+  },
+  "158": {
+    "id": 158,
+    "levels": {
+      "1": { "desc": "Destruction skill Lv. +1", "values": [1] },
+      "2": { "desc": "Destruction skill Lv. +2", "values": [2] },
+      "3": { "desc": "Destruction skill Lv. +3", "values": [3] }
+    },
+    "name": "Master of Destruction",
+    "isnegative": false,
+    "icon": "buff_27.png",
+    "isengrave": true,
+    "featuretype": 37
+  },
+  "167": {
+    "id": 167,
+    "levels": { "1": { "desc": "Max MP +5%." }, "2": { "desc": "Max MP +15%." }, "3": { "desc": "Max MP +30%." } },
+    "name": "Max MP Increase",
+    "isnegative": false,
+    "icon": "buff_122.png",
+    "isengrave": true
+  },
+  "168": {
+    "id": 168,
+    "levels": {
+      "1": { "desc": "MP Recovery +5%. When MP is at 50% or below, Damage to foes +3%." },
+      "2": { "desc": "MP Recovery +15%. When MP is at 50% or below, Damage to foes +6%." },
+      "3": { "desc": "MP Recovery +30%. When MP is at 50% or below, Damage to foes +12%." }
+    },
+    "name": "MP Efficiency Increase",
+    "isnegative": false,
+    "icon": "buff_166.png",
+    "isengrave": true
+  },
+  "188": {
+    "id": 188,
+    "levels": {
+      "1": { "desc": "During Burst, Outgoing Damage +16%. After Burst, Exhaustion does not occur.", "values": [1600] },
+      "2": { "desc": "During Burst, Outgoing Damage +25%. After Burst, Exhaustion does not occur.", "values": [2500] },
+      "3": { "desc": "During Burst, Outgoing Damage +36%. After Burst, Exhaustion does not occur.", "values": [3600] }
+    },
+    "name": "Berserker's Technique",
+    "isnegative": false,
+    "icon": "ability_269.png",
+    "isengrave": true,
+    "featuretype": 83
+  },
+  "189": {
+    "id": 189,
+    "levels": {
+      "1": { "desc": "Damage to foes +30%, but you can no longer gain Esoteric Meter." },
+      "2": { "desc": "Damage to foes +40%, but you can no longer gain Esoteric Meter." },
+      "3": { "desc": "Damage to foes +50%, but you can no longer gain Esoteric Meter." }
+    },
+    "name": "First Intention",
+    "isnegative": false,
+    "icon": "ability_25.png",
+    "isengrave": true,
+    "featuretype": 84
+  },
+  "190": {
+    "id": 190,
+    "levels": {
+      "1": {
+        "desc": "Natural recovery speed of Stamina Energy +300%. Stamina Skill Damage +25%. Shock Skill Damage -30%. Gain 3 Tenacious Power when using Stamina Skills. Gain Paralysis Immunity in Tenacity Release state.",
+        "values": [30000, 2500, 3000, 300]
+      },
+      "2": {
+        "desc": "Natural recovery speed of Stamina Energy +450%. Stamina Skill Damage +35%. Shock Skill Damage -30%. Gain 4 Tenacious Power when using Stamina Skills. Gain Paralysis Immunity in Tenacity Release state.",
+        "values": [45000, 3500, 3000, 400]
+      },
+      "3": {
+        "desc": "Natural recovery speed of Stamina Energy +600%. Stamina Skill Damage +45%. Shock Skill Damage -30%. Gain 5 Tenacious Power when using Stamina Skills. Gain Paralysis Immunity in Tenacity Release state.",
+        "values": [60000, 4500, 3000, 500]
+      }
+    },
+    "name": "Ultimate Skill: Taijutsu",
+    "isnegative": false,
+    "icon": "achieve_07_22.png",
+    "isengrave": true,
+    "featuretype": 85
+  },
+  "191": {
+    "id": 191,
+    "levels": {
+      "1": {
+        "desc": "Shock Skill Damage +10% and 5% of Shock Energy consumed upon using Shock Skill will be returned. Atk. Speed +20% in Tenacity Release status, but duration decreases by 5s.",
+        "values": [0, 1000, 500]
+      },
+      "2": {
+        "desc": "Shock Skill Damage +15% and 10% of Shock Energy consumed upon using Shock Skill will be returned. Atk. Speed +20% in Tenacity Release status, but duration decreases by 5s.",
+        "values": [0, 1500, 1000]
+      },
+      "3": {
+        "desc": "Shock Skill Damage +20% and 20% of Shock Energy consumed upon using Shock Skill will be returned. Atk. Speed +20% in Tenacity Release status, but duration decreases by 5s.",
+        "values": [0, 2000, 2000]
+      }
+    },
+    "name": "Shock Training",
+    "isnegative": false,
+    "icon": "buff_177.png",
+    "isengrave": true,
+    "featuretype": 86
+  },
+  "192": {
+    "id": 192,
+    "levels": {
+      "1": {
+        "desc": "Can only use Handgun Stance. Handgun Skill Damage +35%. Awakening Skill Clay Bombardment Damage +20%. Stagger Damage +40%. Movement Skill is replaced with Relentless Assault. Each hit with Handgun Skill decreases the Cooldown of Movement Skill by 0.1s.",
+        "values": [3500, 4000, 2000, 0, 29320, 100]
+      },
+      "2": {
+        "desc": "Can only use Handgun Stance. Handgun Skill Damage +55%. Awakening Skill Clay Bombardment Damage +35%. Stagger Damage +40%. Also, Movement Skill is replaced with Relentless Assault. Each hit with Handgun Skill decreases the Cooldown of Movement Skill by 0.1s.",
+        "values": [5500, 4000, 3500, 0, 29320, 100]
+      },
+      "3": {
+        "desc": "Can only use Handgun Stance. Handgun Skill Damage +75%. Awakening Skill Clay Bombardment Damage +50%. Stagger Damage +40%. Also, Movement Skill is replaced with Relentless Assault. Each hit with Handgun Skill decreases the Cooldown of Movement Skill by 0.1s.",
+        "values": [7500, 4000, 5000, 0, 29320, 100]
+      }
+    },
+    "name": "Pistoleer",
+    "isnegative": false,
+    "icon": "buff_600.png",
+    "isengrave": true,
+    "featuretype": 87
+  },
+  "193": {
+    "id": 193,
+    "levels": {
+      "1": {
+        "desc": "Barrage Skill Damage +5%. Barrage Skill Crit Rate +20%. Barrage Meter Gain +30%. Does not enter in cooling state. Gain 70% Firepower Meter upon entering Barrage Mode.",
+        "values": [500, 2000, 3000]
+      },
+      "2": {
+        "desc": "Barrage Skill Damage +12%. Barrage Skill Crit Rate +30%. Barrage Meter Gain +30%. Does not enter in cooling state. Gain 70% Firepower Meter upon entering Barrage Mode.",
+        "values": [1200, 3000, 3000]
+      },
+      "3": {
+        "desc": "Barrage Skill Damage +20%. Barrage Skill Crit Rate +40%. Barrage Meter Gain +30%. Does not enter in cooling state. Gain 70% Firepower Meter upon entering Barrage Mode.",
+        "values": [2000, 4000, 3000]
+      }
+    },
+    "name": "Barrage Enhancement",
+    "isnegative": false,
+    "icon": "gl_skill_01_26.png",
+    "isengrave": true,
+    "featuretype": 88
+  },
+  "194": {
+    "id": 194,
+    "levels": {
+      "1": {
+        "desc": "Your outgoing Damage from Serenade of Courage +10% and Crit Rate +10%. ",
+        "values": [211423, 211423, 211423]
+      },
+      "2": {
+        "desc": "Your outgoing Damage from Serenade of Courage +15% and Crit Rate +10%. ",
+        "values": [211424, 211424, 211424]
+      },
+      "3": {
+        "desc": "Your outgoing Damage from Serenade of Courage +20% and Crit Rate +10%.",
+        "values": [211425, 211425, 211425]
+      }
+    },
+    "name": "True Courage",
+    "isnegative": false,
+    "icon": "ability_275.png",
+    "isengrave": true,
+    "featuretype": 89
+  },
+  "195": {
+    "id": 195,
+    "levels": {
+      "1": {
+        "desc": "When the recovery effect ends, an additional recovery effect is activated, recovering 8% of your Max HP.",
+        "values": [211330]
+      },
+      "2": {
+        "desc": "When the recovery effect ends, an additional recovery effect is activated, recovering 16% of your Max HP.",
+        "values": [211332]
+      },
+      "3": {
+        "desc": "When the recovery effect ends, an additional recovery effect is activated, recovering 24% of your Max HP.",
+        "values": [211334]
+      }
+    },
+    "name": "Desperate Salvation",
+    "isnegative": false,
+    "icon": "ability_276.png",
+    "isengrave": true,
+    "featuretype": 90
+  },
+  "196": {
+    "id": 196,
+    "levels": {
+      "1": {
+        "desc": "When using a Gravity Release Skill, Crit Rate +3% and Crit Damage +6% based on the amount of Cores used.",
+        "values": [300, 600]
+      },
+      "2": {
+        "desc": "When using a Gravity Release Skill, Crit Rate +4% and Crit Damage +12% based on the amount of Cores used.",
+        "values": [400, 1200]
+      },
+      "3": {
+        "desc": "When using a Gravity Release Skill, Crit Rate+5% and Crit Damage +18% based on the amount of Cores used.",
+        "values": [500, 1800]
+      }
+    },
+    "name": "Rage Hammer",
+    "isnegative": false,
+    "icon": "achieve_08_49.png",
+    "isengrave": true,
+    "featuretype": 91
+  },
+  "197": {
+    "id": 197,
+    "levels": {
+      "1": {
+        "desc": "Gravity Meter +20% upon using Gravity Release Skill. In Hypergravity Mode, Crit Rate of basic attacks and Vortex Gravity +10%. Outgoing Damage +4%. When the Hypergravity Skill hits the same foe 3 times, cause a \"Gravity Shock\" which inflicts additional Damage. Damage inflicted by Gravity Shock is influenced by Hypergravity Skill Damage.",
+        "values": [18011, 1000, 2000, 180200, 5000]
+      },
+      "2": {
+        "desc": "Gravity Meter +45% upon using Gravity Release Skill. In Hypergravity Mode, Crit Rate of basic attacks and Vortex Gravity +20%. Outgoing Damage +10%. When the Hypergravity Skill hits the same foe 3 times, cause a \"Gravity Shock\" which inflicts additional Damage. Damage inflicted by Gravity Shock is influenced by Hypergravity Skill Damage.",
+        "values": [18011, 2000, 4500, 180201, 5000]
+      },
+      "3": {
+        "desc": "Gravity Meter +70% upon using Gravity Release Skill. In Hypergravity Mode, Crit Rate of basic attacks and Vortex Gravity +30%. Outgoing Damage +20%. When the Hypergravity Skill hits the same foe 3 times, cause a \"Gravity Shock\" which inflicts additional Damage. Damage inflicted by Gravity Shock is influenced by Hypergravity Skill Damage.",
+        "values": [18011, 3000, 7000, 180202, 5000]
+      }
+    },
+    "name": "Gravity Training",
+    "isnegative": false,
+    "icon": "ability_268.png",
+    "isengrave": true,
+    "featuretype": 92
+  },
+  "198": {
+    "id": 198,
+    "levels": {
+      "1": {
+        "desc": "Enhances the Ancient Elemental Skill. Elemental Orb cost -1. Normal Skill Damage and Ancient Elemental Skill Damage +2% and Crit Rate +3%.",
+        "values": [1, 200, 300]
+      },
+      "2": {
+        "desc": "Enhances the Ancient Elemental Skill. Elemental Orb cost -1. Normal Skill Damage and Ancient Elemental Skill Damage +6% and Crit Rate +8%.",
+        "values": [1, 600, 800]
+      },
+      "3": {
+        "desc": "Enhances the Ancient Elemental Skill. Elemental Orb cost -1. Normal Skill Damage and Ancient Elemental Skill Damage +12% and Crit Rate +16%.",
+        "values": [1, 1200, 1600]
+      }
+    },
+    "name": "Master Summoner",
+    "isnegative": false,
+    "icon": "buff_78.png",
+    "isengrave": true,
+    "featuretype": 93
+  },
+  "199": {
+    "id": 199,
+    "levels": {
+      "1": {
+        "desc": "Maririn, Pauru, Elcid, Shurdi, and Kelsion: Summon duration +5%, Damage +10%, Atk. Speed +3%, Move Speed +3%, and Command Skill Cooldown -3%.",
+        "values": [199, 500, 1000, 32, 3]
+      },
+      "2": {
+        "desc": "Maririn, Pauru, Elcid, Shurdi, and Kelsion: Summon duration +10%, Damage +17%, Atk. Speed +6%, Move Speed +6%, and Command Skill Cooldown -6%.",
+        "values": [199, 1000, 1700, 32, 6]
+      },
+      "3": {
+        "desc": "Maririn, Pauru, Elcid, Shurdi, and Kelsion: Summon duration +20%, Damage +25%, Atk. Speed +10%, Move Speed +10%, and Command Skill Cooldown -10%.",
+        "values": [199, 2000, 2500, 32, 10]
+      }
+    },
+    "name": "Communication Overflow",
+    "isnegative": false,
+    "icon": "ability_274.png",
+    "isengrave": true,
+    "featuretype": 94
+  },
+  "200": {
+    "id": 200,
+    "levels": {
+      "1": { "desc": "4-stack Ruin Damage +20%. When Ruin hits, recover 30% of consumed MP.", "values": [2000, 3000] },
+      "2": { "desc": "4-stack Ruin Damage +25%. When Ruin hits, recover 30% of consumed MP.", "values": [2500, 3000] },
+      "3": { "desc": "4-stack Ruin Damage +30%. When Ruin hits, recover 30% of consumed MP.", "values": [3000, 3000] }
+    },
+    "name": "Empress's Grace",
+    "isnegative": false,
+    "icon": "ability_272.png",
+    "isengrave": true,
+    "featuretype": 95
+  },
+  "201": {
+    "id": 201,
+    "levels": {
+      "1": {
+        "desc": "Adds Emperor Cards to the Card Deck. Balance and Judgment Cards are replaced with Chancellor and Sovereign Cards. Normal Skill Damage +20%.",
+        "values": [19282, 0, 2000, 19287, 19286]
+      },
+      "2": {
+        "desc": "Adds Emperor Cards to the Card Deck. Balance and Judgment Cards are replaced with Chancellor and Sovereign Cards. Normal Skill Damage +30%. Emperor Card Damage +30%.",
+        "values": [19282, 3000, 3000, 19287, 19286]
+      },
+      "3": {
+        "desc": "Adds Emperor Cards to the Card Deck. Balance and Judgment Cards are replaced with Chancellor and Sovereign Cards. Normal Skill Damage +40%. Emperor Card Damage +80%.",
+        "values": [19282, 8000, 4000, 19287, 19286]
+      }
+    },
+    "name": "Order of the Emperor",
+    "isnegative": false,
+    "icon": "ability_273.png",
+    "isengrave": true,
+    "featuretype": 96
+  },
+  "202": {
+    "id": 202,
+    "levels": {
+      "1": { "desc": "Stand Up Action Cooldown -4% .", "values": [1000] },
+      "2": { "desc": "Stand Up Action Cooldown -12%.", "values": [1500] },
+      "3": { "desc": "Stand Up Action Cooldown -25%.", "values": [2000] }
+    },
+    "name": "Master of Escape",
+    "isnegative": false,
+    "icon": "buff_10.png",
+    "isengrave": true,
+    "featuretype": 97
+  },
+  "203": {
+    "id": 203,
+    "levels": {
+      "1": { "desc": "Atk. Power +4% when not in a Party or Raid.", "values": [500068] },
+      "2": { "desc": "Atk. Power +8% when not in a Party or Raid.", "values": [500069] },
+      "3": { "desc": "Atk. Power +12% when not in a Party or Raid.", "values": [500070] }
+    },
+    "name": "Vagabond",
+    "isnegative": false,
+    "icon": "buff_119.png",
+    "isengrave": false,
+    "featuretype": 98
+  },
+  "206": {
+    "id": 206,
+    "levels": {
+      "1": {
+        "desc": "Guardians' whereabouts are always displayed on the map. This effect is applied to all of your party members."
+      }
+    },
+    "name": "Telescope",
+    "isnegative": false,
+    "icon": "buff_152.png",
+    "isengrave": true,
+    "featuretype": 99
+  },
+  "224": {
+    "id": 224,
+    "levels": {
+      "1": {
+        "desc": "Normal skills Damage +25%. Shield Amount +30% in Defensive Stance. Damage +2% for 10s when hit and when hitting while in Defensive Stance (stacks up to 3 times, once every 1s).",
+        "values": [500041, 1000, 2500, 3000]
+      },
+      "2": {
+        "desc": "Normal skills Damage +27.5%. Shield Amount +40% in Defensive Stance. Damage +3% for 10s when hit and when hitting foes while in Defensive Stance (stacks up to 3 times, once every 1s).",
+        "values": [500042, 1000, 2750, 4000]
+      },
+      "3": {
+        "desc": "+30% Normal skills damage. +50% Shield Amount in Defensive Stance. +4% Damage for 10s when hit and when hitting foes while in Defensive Stance (stacks up to 3 times, once per second).",
+        "values": [500043, 1000, 3000, 5000]
+      }
+    },
+    "name": "Combat Readiness",
+    "isnegative": false,
+    "icon": "ability_266.png",
+    "isengrave": true,
+    "featuretype": 100
+  },
+  "225": {
+    "id": 225,
+    "levels": {
+      "1": {
+        "desc": "Gunlance skill Damage and Crit Rate +5%. Crit Damage +30%. Battlefield Shield cannot be used. Shield Meter consumption during Defensive Stance +100%.",
+        "values": [100, 500, 3000]
+      },
+      "2": {
+        "desc": "Gunlance skill Damage and Crit Rate +10%. Crit Damage +40%. Battlefield Shield cannot be used. Shield Meter consumption during Defensive Stance +100%.",
+        "values": [100, 1000, 4000]
+      },
+      "3": {
+        "desc": "Gunlance skill Damage and Crit Rate +15%. Crit Damage +50%. Battlefield Shield cannot be used. Consumption of the Shield Meter during Defensive Stance +100%.",
+        "values": [100, 1500, 5000]
+      }
+    },
+    "name": "Lone Knight",
+    "isnegative": false,
+    "icon": "ability_267.png",
+    "isengrave": true,
+    "featuretype": 101
+  },
+  "235": {
+    "id": 235,
+    "levels": {
+      "1": { "desc": "Incoming Damage is reduced proportional to HP lost. (Max. 5%)", "values": [500] },
+      "2": { "desc": "Incoming Damage is reduced proportional to HP lost. (Max. 15%)", "values": [1500] },
+      "3": { "desc": "Incoming Damage is reduced proportional to HP lost. (Max. 30%)", "values": [3000] }
+    },
+    "name": "Fortitude",
+    "isnegative": false,
+    "icon": "buff_66.png",
+    "isengrave": true,
+    "featuretype": 102
+  },
+  "236": {
+    "id": 236,
+    "levels": {
+      "1": {
+        "desc": "On successful Counter Attack, Atk. Power +4%. For 3s Countered target takes +2% Damage from all party members.",
+        "values": [500163, 500164]
+      },
+      "2": {
+        "desc": "On successful Counter Attack, Atk. Power +10%. For 3s Countered target takes +4% Damage from all party members.",
+        "values": [500165, 500166]
+      },
+      "3": {
+        "desc": "On successful Counter Attack, Atk. Power +20%. For 3s Countered target takes +8% Damage from all party members.",
+        "values": [500167, 500168]
+      }
+    },
+    "name": "Crushing Fist",
+    "isnegative": false,
+    "icon": "buff_83.png",
+    "isengrave": true,
+    "featuretype": 103
+  },
+  "237": {
+    "id": 237,
+    "levels": {
+      "1": { "desc": "Damage to shields +16%.", "values": [1600] },
+      "2": { "desc": "Damage to shields +50%.", "values": [5000] },
+      "3": { "desc": "Damage to shields +100%.", "values": [10000] }
+    },
+    "name": "Shield Piercing",
+    "isnegative": false,
+    "icon": "buff_89.png",
+    "isengrave": true,
+    "featuretype": 104
+  },
+  "238": {
+    "id": 238,
+    "levels": {
+      "1": { "desc": "Outgoing Damage +3% at 50% or lower HP.", "values": [5000, 300, 500112] },
+      "2": { "desc": "Outgoing Damage +8% at 50% or lower HP.", "values": [5000, 800, 501112] },
+      "3": { "desc": "Outgoing Damage +16% at 50% or lower HP.", "values": [5000, 1600, 502112] }
+    },
+    "name": "Master's Tenacity",
+    "isnegative": false,
+    "icon": "buff_147.png",
+    "isengrave": true,
+    "featuretype": 105
+  },
+  "239": {
+    "id": 239,
+    "levels": {
+      "1": {
+        "desc": "When attacked, there is a 20% chance of activating Divine Protection which reduces the Damage received by 60%. (Cooldown: 60s)",
+        "values": [2000, 6000]
+      },
+      "2": {
+        "desc": "When attacked, there is a 20% chance of activating Divine Protection which reduces the Damage received by 60%. (Cooldown: 20s)",
+        "values": [2000, 6000]
+      },
+      "3": {
+        "desc": "When attacked, there is a 20% chance of activating Divine Protection which reduces the Damage received by 60%. (Cooldown: 10s)",
+        "values": [2000, 6000]
+      }
+    },
+    "name": "Divine Protection",
+    "isnegative": false,
+    "icon": "buff_229.png",
+    "isengrave": true,
+    "featuretype": 106
+  },
+  "240": {
+    "id": 240,
+    "levels": {
+      "1": {
+        "desc": "All Defense +20%. This additional Defense is immune to Defense Reduction effects.",
+        "values": [2000, 12000]
+      },
+      "2": {
+        "desc": "All Defense +50%. This additional Defense is immune to Defense Reduction effects.",
+        "values": [5000, 15000]
+      },
+      "3": {
+        "desc": "All Defense +100%. This additional Defense is immune to Defense Reduction effects.",
+        "values": [10000, 20000]
+      }
+    },
+    "name": "Heavy Armor",
+    "isnegative": false,
+    "icon": "buff_46.png",
+    "isengrave": true,
+    "featuretype": 107
+  },
+  "241": {
+    "id": 241,
+    "levels": {
+      "1": { "desc": "Bomb/grenade Battle Item carrying limit +1.", "values": [1] },
+      "2": { "desc": "Bomb/grenade Battle Item carrying limit +2.", "values": [2] },
+      "3": { "desc": "Bomb/grenade Battle Item carrying limit +3.", "values": [3] }
+    },
+    "name": "Explosive Expert",
+    "isnegative": false,
+    "icon": "buff_121.png",
+    "isengrave": true,
+    "featuretype": 108
+  },
+  "242": {
+    "id": 242,
+    "levels": {
+      "1": {
+        "desc": "Become immune to all Status Ailments while affected by shields, but -90% Shields' HP and Defensive Stance's Damage absorption amounts. (Not applicable to Battlefield Shield)",
+        "values": [9000, 500109]
+      },
+      "2": {
+        "desc": "Become immune to all Status Ailments while affected by shields, but -75% Shields' HP and Defensive Stance's Damage absorption amounts. (Not applicable to Battlefield Shield)",
+        "values": [7500, 501109]
+      },
+      "3": {
+        "desc": "Become immune to all Status Ailments while affected by shields, but -50% Shields' HP and Defensive Stance's Damage absorption amounts. (Not applicable to Battlefield Shield)",
+        "values": [5000, 502109]
+      }
+    },
+    "name": "Enhanced Shield",
+    "isnegative": false,
+    "icon": "buff_239.png",
+    "isengrave": true,
+    "featuretype": 109
+  },
+  "243": {
+    "id": 243,
+    "levels": {
+      "1": { "desc": "Attacks summon temporary soldiers that Damage foes. (Cooldown: 75s)", "values": [426500] },
+      "2": { "desc": "Attacks summon temporary soldiers that Damage foes. (Cooldown: 30s)", "values": [426500] },
+      "3": { "desc": "Attacks summon temporary soldiers that Damage foes. (Cooldown: 15s)", "values": [426500] }
+    },
+    "name": "Necromancy",
+    "isnegative": false,
+    "icon": "buff_29.png",
+    "isengrave": true,
+    "featuretype": 110
+  },
+  "244": {
+    "id": 244,
+    "levels": {
+      "1": {
+        "desc": "When attacking Challenge or lower monsters with full HP, your attack is a guaranteed crit with +30% Damage.",
+        "values": [3000, 500]
+      },
+      "2": {
+        "desc": "When attacking Challenge or lower monsters with full HP, your attack is a guaranteed crit with +80% Damage.",
+        "values": [8000, 500]
+      },
+      "3": {
+        "desc": "When attacking Challenge or lower monsters with full HP, your attack is a guaranteed crit with +160% Damage.",
+        "values": [16000, 500]
+      }
+    },
+    "name": "Preemptive Strike",
+    "isnegative": false,
+    "icon": "achieve_08_62.png",
+    "isengrave": true,
+    "featuretype": 111
+  },
+  "245": {
+    "id": 245,
+    "levels": {
+      "1": { "desc": "Damage to staggered foes +7.5%.", "values": [750] },
+      "2": { "desc": "Damage to staggered foes +20%.", "values": [2000] },
+      "3": { "desc": "Damage to staggered foes +40%.", "values": [4000] }
+    },
+    "name": "Broken Bone",
+    "isnegative": false,
+    "icon": "buff_94.png",
+    "isengrave": true,
+    "featuretype": 112
+  },
+  "246": {
+    "id": 246,
+    "levels": {
+      "1": {
+        "desc": "Attacks have a 60% chance of generating a lightning orb. These lightning orbs can only be generated once every 4s. When 5 orbs are created, they explode and Damage surrounding foes. ",
+        "values": [6000, 502100]
+      },
+      "2": {
+        "desc": "Attacks have a 60% chance of generating a lightning orb. These lightning orbs can only be generated once every 2s. When 5 orbs are created, they explode and Damage surrounding foes.",
+        "values": [6000, 502100]
+      },
+      "3": {
+        "desc": "Attacks have a 60% chance of generating a lightning orb. These lightning orbs can only be generated once every 1s. When 5 orbs are created, they explode and Damage surrounding foes.",
+        "values": [6000, 502100]
+      }
+    },
+    "name": "Lightning Fury",
+    "isnegative": false,
+    "icon": "buff_191.png",
+    "isengrave": true,
+    "featuretype": 113
+  },
+  "247": {
+    "id": 247,
+    "levels": {
+      "1": { "desc": "Atk. Power +3%. Healing -25%, natural recovery excluded.", "values": [2500, 300] },
+      "2": { "desc": "Atk. Power +8%. Healing -25%, natural recovery excluded.", "values": [2500, 800] },
+      "3": { "desc": "Atk. Power +16%. Healing -25%, natural recovery excluded.", "values": [2500, 1600] }
+    },
+    "name": "Cursed Doll",
+    "isnegative": false,
+    "icon": "buff_237.png",
+    "isengrave": true,
+    "featuretype": 114
+  },
+  "248": {
+    "id": 248,
+    "levels": {
+      "1": { "desc": "Atk. Power +1% for 15s after killing a foe. (Max. 5 stacks)", "values": [500102] },
+      "2": { "desc": "Atk. Power +1.5% for 25s after killing a foe. (Max. 6 stacks)", "values": [500103] },
+      "3": { "desc": "Atk. Power +2.5% for 40s after killing a foe. (Max. 7 stacks)", "values": [500104] }
+    },
+    "name": "Contender",
+    "isnegative": false,
+    "icon": "buff_136.png",
+    "isengrave": true,
+    "featuretype": 115
+  },
+  "249": {
+    "id": 249,
+    "levels": {
+      "1": { "desc": "Damage +5% for successful back attacks.", "values": [500] },
+      "2": { "desc": "Damage +12% for successful back attacks.", "values": [1200] },
+      "3": { "desc": "Damage +25% for successful back attacks.", "values": [2500] }
+    },
+    "name": "Ambush Master",
+    "isnegative": false,
+    "icon": "buff_148.png",
+    "isengrave": true,
+    "featuretype": 116
+  },
+  "250": {
+    "id": 250,
+    "levels": {
+      "1": { "desc": "When obtained, Ethers deal Mag. Damage equal to 50% of your Max HP.", "values": [100500003] },
+      "2": { "desc": "When obtained, Ethers deal Mag. Damage equal to 75% of your Max HP.", "values": [100500013] },
+      "3": { "desc": "When obtained, Ethers deal Mag. Damage equal to 100% of your Max HP.", "values": [100500015] }
+    },
+    "name": "Ether Blast",
+    "isnegative": false,
+    "icon": "buff_104.png",
+    "isengrave": false,
+    "featuretype": 117
+  },
+  "251": {
+    "id": 251,
+    "levels": {
+      "1": {
+        "desc": "Stacks up to +5% MP Recovery every 3s while you are not attacked. When the maximum stack is reached, skill Cooldown -3%. Being hit removes 1 stack of the effect. A new stack cannot be gained for 10s.",
+        "values": [500106]
+      },
+      "2": {
+        "desc": "Stacks up to +10% MP Recovery every 3s while you are not attacked. When the maximum stack is reached, skill Cooldown -6%. Being hit removes 1 stack of the effect. A new stack cannot be gained for 10s.",
+        "values": [500139]
+      },
+      "3": {
+        "desc": "Stacks up to +15% MP Recovery every 3s while you are not attacked. When the maximum stack is reached, skill Cooldown -10%. Being hit removes 1 stack of the effect. A new stack cannot be gained for 10s.",
+        "values": [500141]
+      }
+    },
+    "name": "Magick Stream",
+    "isnegative": false,
+    "icon": "buff_63.png",
+    "isengrave": true,
+    "featuretype": 118
+  },
+  "252": {
+    "id": 252,
+    "levels": {
+      "1": { "desc": "10% chance when using a Movement Skill to reset its Cooldown.", "values": [1000] },
+      "2": { "desc": "12% chance when using a Movement Skill to reset its Cooldown.", "values": [1200] },
+      "3": { "desc": "30% chance when using a Movement Skill to reset its Cooldown.", "values": [3000] }
+    },
+    "name": "Double Jump",
+    "isnegative": false,
+    "icon": "buff_243.png",
+    "isengrave": false,
+    "featuretype": 119
+  },
+  "253": {
+    "id": 253,
+    "levels": {
+      "1": { "desc": "Damage to foes while shielded +3%.", "values": [300] },
+      "2": { "desc": "Damage to foes while shielded +8%.", "values": [800] },
+      "3": { "desc": "Damage to foes while shielded +16%.", "values": [1600] }
+    },
+    "name": "Barricade",
+    "isnegative": false,
+    "icon": "buff_170.png",
+    "isengrave": true,
+    "featuretype": 120
+  },
+  "254": {
+    "id": 254,
+    "levels": {
+      "1": { "desc": "Outgoing Damage +10% of basic Move Speed bonus percentage.", "values": [1000] },
+      "2": { "desc": "Outgoing Damage +22% of basic Move Speed bonus percentage.", "values": [2200] },
+      "3": { "desc": "Outgoing Damage +45% of basic Move Speed bonus percentage.", "values": [4500] }
+    },
+    "name": "Raid Captain",
+    "isnegative": false,
+    "icon": "buff_210.png",
+    "isengrave": true,
+    "featuretype": 121
+  },
+  "255": {
+    "id": 255,
+    "levels": {
+      "1": { "desc": "Awakening Skill Cooldown -10%. +1 maximum use.", "values": [1000, 1] },
+      "2": { "desc": "Awakening Skill Cooldown -25%. +2 maximum uses.", "values": [2500, 2] },
+      "3": { "desc": "Awakening Skill Cooldown -50%. +3 maximum uses.", "values": [5000, 3] }
+    },
+    "name": "Awakening",
+    "isnegative": false,
+    "icon": "buff_113.png",
+    "isengrave": true,
+    "featuretype": 122
+  },
+  "256": {
+    "id": 256,
+    "levels": {
+      "1": {
+        "desc": "Energy does not go below 1, but additional Energy Recovery effect is not applied during Hype or Combat Resource Recovery. If Energy is 30% or below, Damage to foes +5%.",
+        "values": [500, 3000]
+      },
+      "2": {
+        "desc": "Energy does not go below 1, but additional Energy Recovery effect is not applied during Hype or Combat Resource Recovery. If Energy is 30% or below, Damage to foes +10%.",
+        "values": [1000, 3000]
+      },
+      "3": {
+        "desc": "Energy does not go below 1, but additional Energy Recovery effect is not applied during Hype or Combat Resource Recovery. If Energy is 30% or below, Damage to foes +18%.",
+        "values": [1800, 3000]
+      }
+    },
+    "name": "Energy Overflow",
+    "isnegative": false,
+    "icon": "buff_235.png",
+    "isengrave": true,
+    "featuretype": 125
+  },
+  "257": {
+    "id": 257,
+    "levels": {
+      "1": {
+        "desc": "Awakening Skill Damage +5%. When using Hype, enter level 3 immediately. While in Hype Mode, Energy recovery speed +300%, Damage +20%.",
+        "values": [24023, 146, 240230, 30000, 500]
+      },
+      "2": {
+        "desc": "Awakening Skill Damage +10%. When using Hype, enter level 3 immediately. While in Hype Mode, Energy recovery speed +300%, Damage +30%.",
+        "values": [24023, 146, 240240, 30000, 1000]
+      },
+      "3": {
+        "desc": "Awakening Skill Damage +20%. When using Hype, enter level 3 immediately. While in Hype Mode, Energy recovery speed +300%, Damage +40%.",
+        "values": [24023, 146, 240250, 30000, 2000]
+      }
+    },
+    "name": "Robust Spirit",
+    "isnegative": false,
+    "icon": "ability_45.png",
+    "isengrave": true,
+    "featuretype": 126
+  },
+  "258": {
+    "id": 258,
+    "levels": {
+      "1": {
+        "desc": "Summons Silverhawk MK-II, allowing Move Speed +4%, Silverhawk's Crit Rate +10%, Basic AoE Radius +60%, and Silverhawk's summon duration +30%. On Basic Attack or Wings of Storm hit, foes get a Mark of Death. Outgoing Damage +3%. Additionally, when Silverhawk is summoned Atk. Power +2%.",
+        "values": [1000, 3000, 28160, 281301, 500197]
+      },
+      "2": {
+        "desc": "Summons Silverhawk MK-II, allowing Move Speed +4%, Silverhawk's Crit Rate +20%, Basic AoE Radius +60%, and Silverhawk's Summoning Duration +60%. On Basic Attack or Wings of Storm hit, foes get a Mark of Death. Outgoing Damage +7%. Additionally, when Silverhawk is summoned Atk. Power +5%.",
+        "values": [2000, 6000, 28160, 281311, 500198]
+      },
+      "3": {
+        "desc": "Summons Silverhawk MK-II, allowing Move Speed +4%, Silverhawk's Crit Rate +40%, Basic AoE Radius +60%, and Silverhawk's Summoning Duration +100%. On Basic Attack or Wings of Storm hit, foes get a Mark of Death. Outgoing Damage +12%. Additionally, when Silverhawk is summoned Atk. Power +10%.",
+        "values": [4000, 10000, 28160, 281321, 500199]
+      }
+    },
+    "name": "Loyal Companion",
+    "isnegative": false,
+    "icon": "ability_47.png",
+    "isengrave": true,
+    "featuretype": 123
+  },
+  "259": {
+    "id": 259,
+    "levels": {
+      "1": {
+        "desc": "On hit, outgoing Damage +3% if Silverhawk isn't summoned. When using Last Rush, recover 50% of the remaining Hawk Meter. Adds Mark of Death II to hit targets which increases their incoming Damage by 20% for 8s.",
+        "values": [281704, 5000, 28170, 300]
+      },
+      "2": {
+        "desc": "On hit, outgoing Damage +7% if Silverhawk isn't summoned. When using Last Rush, recover 50% of the remaining Hawk Meter. Adds Mark of Death II to hit targets which increases their incoming Damage by 25% for 8s.",
+        "values": [281705, 5000, 28170, 700]
+      },
+      "3": {
+        "desc": "On hit, outgoing Damage +12% if Silverhawk isn't summoned. When using Last Rush, recover 50% of the remaining Hawk Meter. Adds Mark of Death II to hit targets which increases their incoming Damage by 30% for 8s.",
+        "values": [281706, 5000, 28170, 1200]
+      }
+    },
+    "name": "Death Strike",
+    "isnegative": false,
+    "icon": "buff_245.png",
+    "isengrave": true,
+    "featuretype": 124
+  },
+  "114": {
+    "id": 114,
+    "levels": {
+      "1": { "desc": "10% chance of obtaining an additional Ability Stone.", "values": [1] },
+      "2": { "desc": "20% chance of obtaining an additional Ability Stone.", "values": [1] },
+      "3": { "desc": "30% chance of obtaining an additional Ability Stone.", "values": [1] }
+    },
+    "name": "Twinkle Twinkle",
+    "isnegative": false,
+    "icon": "buff_115.png",
+    "isengrave": true,
+    "featuretype": 7
+  },
+  "116": {
+    "id": 116,
+    "levels": {
+      "1": { "desc": "Encumbered Speed +15%.", "values": [551161] },
+      "2": { "desc": "Encumbered Speed +30%.", "values": [551162] },
+      "3": { "desc": "Encumbered Speed +45%.", "values": [551163] }
+    },
+    "name": "Servant",
+    "isnegative": false,
+    "icon": "buff_111.png",
+    "isengrave": true,
+    "featuretype": 8
+  },
+  "207": {
+    "id": 207,
+    "levels": {
+      "1": { "desc": "Obtain materials once more per ore vein when using Mining Bomb.", "values": [7502, 1] }
+    },
+    "name": "Dynamite",
+    "isnegative": false,
+    "icon": "ability_91.png",
+    "isengrave": true,
+    "featuretype": 38
+  },
+  "211": {
+    "id": 211,
+    "levels": { "1": { "desc": "Net Fishing is always available, but it costs 5 Fishing Tools.", "values": [4] } },
+    "name": "Master Net Caster",
+    "isnegative": false,
+    "icon": "ability_96.png",
+    "isengrave": true,
+    "featuretype": 42
+  },
+  "213": {
+    "id": 213,
+    "levels": { "1": { "desc": "Cut down trees of a rank higher than your current logging level.", "values": [1] } },
+    "name": "Giant Tree",
+    "isnegative": false,
+    "icon": "ability_92.png",
+    "isengrave": true,
+    "featuretype": 44
+  },
+  "214": {
+    "id": 214,
+    "levels": {
+      "1": { "desc": "3% chance of a sapling sprouting up where you logged.", "values": [3, 60000] },
+      "2": { "desc": "7% chance of a sapling sprouting up where you logged.", "values": [7, 60000] },
+      "3": { "desc": "10% chance of a sapling sprouting up where you logged.", "values": [10, 60000] }
+    },
+    "name": "Sapling",
+    "isnegative": false,
+    "icon": "ability_93.png",
+    "isengrave": true,
+    "featuretype": 45
+  },
+  "215": {
+    "id": 215,
+    "levels": {
+      "1": { "desc": "2% chance while foraging to gather twice the amount.", "values": [2, 1] },
+      "2": { "desc": "4% chance while foraging to gather twice the amount.", "values": [4, 1] },
+      "3": { "desc": "6% chance while foraging to gather twice the amount.", "values": [6, 1] }
+    },
+    "name": "4-Leaf Clover",
+    "isnegative": false,
+    "icon": "ability_97.png",
+    "isengrave": true,
+    "featuretype": 46
+  },
+  "217": {
+    "id": 217,
+    "levels": {
+      "1": { "desc": "2% chance to discover a larva after foraging.", "values": [2, 60000] },
+      "2": { "desc": "4% chance to discover a larva after foraging.", "values": [4, 60000] },
+      "3": { "desc": "6% chance to discover a larva after foraging.", "values": [6, 60000] }
+    },
+    "name": "Entomologist",
+    "isnegative": false,
+    "icon": "buff_157.png",
+    "isengrave": true,
+    "featuretype": 48
+  },
+  "219": {
+    "id": 219,
+    "levels": {
+      "1": { "desc": "4% chance that your allotted skill uses won't decrease while carving.", "values": [4] },
+      "2": { "desc": "8% chance that your allotted skill uses won't decrease while carving.", "values": [8] },
+      "3": { "desc": "12% chance that your allotted skill uses won't decrease while carving.", "values": [12] }
+    },
+    "name": "Butcher",
+    "isnegative": false,
+    "icon": "ability_95.png",
+    "isengrave": true,
+    "featuretype": 50
+  },
+  "221": {
+    "id": 221,
+    "levels": {
+      "1": {
+        "desc": "Excavation minigames are easier, with a +30% chance of extra loot.",
+        "values": [500062, 1, 3000, 1]
+      }
+    },
+    "name": "Delicate Brush",
+    "isnegative": false,
+    "icon": "ability_98.png",
+    "isengrave": true,
+    "featuretype": 52
+  },
+  "260": {
+    "id": 260,
+    "levels": { "1": { "desc": "Mining Tool Rank +1.", "values": [1] } },
+    "name": "Increase Mining Tools",
+    "isnegative": false,
+    "icon": "ability_0.png",
+    "isengrave": true,
+    "featuretype": 55
+  },
+  "261": {
+    "id": 261,
+    "levels": { "1": { "desc": "Mining Tool Moonlight Miner cost -1. ", "values": [1] } },
+    "name": "Relentless Miner",
+    "isnegative": false,
+    "icon": "ability_100.png",
+    "isengrave": true,
+    "featuretype": 56
+  },
+  "262": {
+    "id": 262,
+    "levels": {
+      "1": { "desc": "Mining Bomb Cooldown -12%.", "values": [1200] },
+      "2": { "desc": "Mining Bomb Cooldown -24%.", "values": [2400] },
+      "3": { "desc": "Mining Bomb Cooldown -36%.", "values": [3600] }
+    },
+    "name": "Bomb Enthusiast",
+    "isnegative": false,
+    "icon": "ability_101.png",
+    "isengrave": true,
+    "featuretype": 57
+  },
+  "263": {
+    "id": 263,
+    "levels": { "1": { "desc": "Fishing Tool Rank +1.", "values": [1] } },
+    "name": "Increase Fishing Tools",
+    "isnegative": false,
+    "icon": "ability_0.png",
+    "isengrave": true,
+    "featuretype": 58
+  },
+  "264": {
+    "id": 264,
+    "levels": {
+      "1": { "desc": "15% chance to get extra items while Mystery Point Fishing.", "values": [1500, 1] },
+      "2": { "desc": "30% chance to get extra items while Mystery Point Fishing.", "values": [3000, 1] },
+      "3": { "desc": "45% chance to get extra items while Mystery Point Fishing.", "values": [4500, 1] }
+    },
+    "name": "Double Points",
+    "isnegative": false,
+    "icon": "ability_103.png",
+    "isengrave": true,
+    "featuretype": 59
+  },
+  "265": {
+    "id": 265,
+    "levels": {
+      "1": {
+        "desc": "Throw Bait uses higher quality bait, increasing the duration of This Is The Big One to 110s.",
+        "values": [704032]
+      },
+      "2": {
+        "desc": "Throw Bait uses higher quality bait, increasing the duration of This Is The Big One to 130s.",
+        "values": [704033]
+      },
+      "3": {
+        "desc": "Throw Bait uses higher quality bait, increasing the duration of This Is The Big One to 150s.",
+        "values": [704034]
+      }
+    },
+    "name": "Golden Bait",
+    "isnegative": false,
+    "icon": "ability_104.png",
+    "isengrave": true,
+    "featuretype": 60
+  },
+  "266": {
+    "id": 266,
+    "levels": { "1": { "desc": "Logging Tool Rank +1.", "values": [1] } },
+    "name": "Logging Tool Rank Boost",
+    "isnegative": false,
+    "icon": "ability_0.png",
+    "isengrave": true,
+    "featuretype": 61
+  },
+  "267": {
+    "id": 267,
+    "levels": { "1": { "desc": "50% chance to reset Cooldown of Kick Tree is used.", "values": [5000] } },
+    "name": "Rapid Kick",
+    "isnegative": false,
+    "icon": "ability_106.png",
+    "isengrave": true,
+    "featuretype": 62
+  },
+  "268": {
+    "id": 268,
+    "levels": { "1": { "desc": "Foraging Tool Rank +1.", "values": [1] } },
+    "name": "Increase Harvesting Tools",
+    "isnegative": false,
+    "icon": "ability_0.png",
+    "isengrave": true,
+    "featuretype": 63
+  },
+  "269": {
+    "id": 269,
+    "levels": {
+      "1": { "desc": "8% chance that your allotted skill uses won't decrease while foraging.", "values": [800] },
+      "2": { "desc": "12% chance that your allotted skill uses won't decrease while foraging.", "values": [1200] },
+      "3": { "desc": "16% chance that your allotted skill uses won't decrease while foraging.", "values": [1600] }
+    },
+    "name": "Deceptive Foraging",
+    "isnegative": false,
+    "icon": "ability_108.png",
+    "isengrave": true,
+    "featuretype": 64
+  },
+  "270": {
+    "id": 270,
+    "levels": { "1": { "desc": "Hunting Tool Rank +1.", "values": [1] } },
+    "name": "Increase Hunting Tools",
+    "isnegative": false,
+    "icon": "ability_0.png",
+    "isengrave": true,
+    "featuretype": 65
+  },
+  "271": {
+    "id": 271,
+    "levels": {
+      "1": {
+        "desc": "Machete hits paralyzes huge prey, regardless of the rank of the machete you have equipped.",
+        "values": [703002]
+      }
+    },
+    "name": "Deadly Poison",
+    "isnegative": false,
+    "icon": "ability_110.png",
+    "isengrave": true,
+    "featuretype": 66
+  },
+  "272": {
+    "id": 272,
+    "levels": {
+      "1": { "desc": "Chance for a Golden Rabbit +4% when using Search or Prey Searching.", "values": [400] },
+      "2": { "desc": "Chance for a Golden Rabbit +8% when using Search or Prey Searching.", "values": [800] },
+      "3": { "desc": "Chance for a Golden Rabbit +12% when using Search or Prey Searching.", "values": [1200] }
+    },
+    "name": "Golden Rabbit",
+    "isnegative": false,
+    "icon": "ability_111.png",
+    "isengrave": true,
+    "featuretype": 67
+  },
+  "273": {
+    "id": 273,
+    "levels": { "1": { "desc": "Excavating Tool Rank +1.", "values": [1] } },
+    "name": "Increase Excavation Tools",
+    "isnegative": false,
+    "icon": "ability_0.png",
+    "isengrave": true,
+    "featuretype": 68
+  },
+  "274": {
+    "id": 274,
+    "levels": {
+      "1": { "desc": "4% chance upon digging to discover an additional treasure chest.", "values": [400] },
+      "2": { "desc": "8% chance upon digging to discover an additional treasure chest.", "values": [800] },
+      "3": { "desc": "12% chance upon digging to discover an additional treasure chest.", "values": [1200] }
+    },
+    "name": "Loot Hunter",
+    "isnegative": false,
+    "icon": "ability_113.png",
+    "isengrave": true,
+    "featuretype": 69
+  },
+  "275": {
+    "id": 275,
+    "levels": { "1": { "desc": "Sniffer Dog Cooldown -60%.", "values": [6000] } },
+    "name": "Master Tamer",
+    "isnegative": false,
+    "icon": "ability_114.png",
+    "isengrave": true,
+    "featuretype": 70
+  },
+  "276": {
+    "id": 276,
+    "levels": {
+      "1": {
+        "desc": "In addition to acquiring Flurry / Focus when switching stance, gain 40% of opposite stance's effects.",
+        "values": [2]
+      },
+      "2": {
+        "desc": "In addition to acquiring Flurry / Focus when switching stance, gain 60% of opposite stance's effects.",
+        "values": [3]
+      },
+      "3": {
+        "desc": "In addition to acquiring Flurry / Focus when switching stance, gain 100% of opposite stance's effects.",
+        "values": [4]
+      }
+    },
+    "name": "Pinnacle",
+    "isnegative": false,
+    "icon": "ability_207.png",
+    "isengrave": true,
+    "featuretype": 270
+  },
+  "277": {
+    "id": 277,
+    "levels": {
+      "1": {
+        "desc": "Cannot use Focus Stance. Flurry skills Damage +20%, Dual Meter gain +50%.",
+        "values": [2000, 5000]
+      },
+      "2": {
+        "desc": "Cannot use Focus Stance. Flurry skills Damage +30%, Dual Meter gain +75%.",
+        "values": [3000, 7500]
+      },
+      "3": {
+        "desc": "Cannot use Focus Stance. Flurry skills Damage +40%, Dual Meter gain +100%.",
+        "values": [4000, 10000]
+      }
+    },
+    "name": "Control",
+    "isnegative": false,
+    "icon": "ability_208.png",
+    "isengrave": true,
+    "featuretype": 271
+  },
+  "278": {
+    "id": 278,
+    "levels": {
+      "1": {
+        "desc": "Deathblade Surge skill Damage -30%. When Art is activated, Death Orb is immediately consumed to activate Deathblade Surge. Atk. Power +6%, Move Speed +6%, Atk. Power +10%, +20%, +30% for 30s according to the number of Death Orbs consumed.",
+        "values": [500120, 500121, 500122]
+      },
+      "2": {
+        "desc": "Deathblade Surge skill Damage -30%. When Art is activated, Death Orb is immediately consumed to activate Deathblade Surge. Atk. Power +9%, Move Speed +9%, Atk. Power +12%, +24%, +36% for 30s according to the number of Death Orbs consumed.",
+        "values": [500123, 500124, 500125]
+      },
+      "3": {
+        "desc": "Deathblade Surge skill Damage -30%. When Art is activated, Death Orb is immediately consumed to activate Deathblade Surge. Atk. Power +12%, Move Speed +12%, Atk. Power +15%, +30%, +45% for 30s according to the number of Death Orbs consumed.",
+        "values": [500143, 500144, 500145]
+      }
+    },
+    "name": "Remaining Energy",
+    "isnegative": false,
+    "icon": "ability_209.png",
+    "isengrave": true,
+    "featuretype": 283
+  },
+  "279": {
+    "id": 279,
+    "levels": {
+      "1": {
+        "desc": "Activates the top level of Deathblade Surge, which unleashes the same powerful Attack regardless of the number of Death Orbs available. When skills other than basic attacks hit while in Death Trance state, Surge Enhancement effects will stack in proportion to the number of hits. This effect increases Damage dealt through Deathblade Surge by up to 40%. Damage doubles at the max stack of 60 stacks. When Death Trance ends, gain up to 100% Death Orb Meter according to the number of Surge Enhancement stacks.",
+        "values": [25038, 250316]
+      },
+      "2": {
+        "desc": "Activates the top level of Deathblade Surge, which unleashes the same powerful Attack regardless of the number of Death Orbs available. When skills other than basic attacks hit while in Death Trance state, Surge Enhancement effects will stack in proportion to the number of hits. This effect increases Damage dealt through Deathblade Surge by up to 55%. Damage doubles at the max stack of 60 stacks. When Death Trance ends, gain up to 100% Death Orb Meter according to the number of Surge Enhancement stacks.",
+        "values": [25038, 250317]
+      },
+      "3": {
+        "desc": "Activates the top level of Deathblade Surge, which unleashes the same powerful Attack regardless of the number of Death Orbs available. When skills other than basic attacks hit while in Death Trance state, Surge Enhancement effects will stack in proportion to the number of hits. This effect increases Damage dealt through Deathblade Surge by up to 80%. Damage doubles at the max stack of 60 stacks. When Death Trance ends, gain up to 100% Death Orb Meter according to the number of Surge Enhancement stacks. ",
+        "values": [25038, 250318]
+      }
+    },
+    "name": "Surge",
+    "isnegative": false,
+    "icon": "ability_210.png",
+    "isengrave": true,
+    "featuretype": 282
+  },
+  "280": {
+    "id": 280,
+    "levels": {
+      "1": {
+        "desc": "Normal Skill Damage +20%. Shadowburst Meter +50% for all skills. Disables Demonize.",
+        "values": [2000, 5000]
+      },
+      "2": {
+        "desc": "Normal Skill Damage +28%. Shadowburst Meter +50% for all skills. Disables Demonize.",
+        "values": [2800, 5000]
+      },
+      "3": {
+        "desc": "Normal Skill Damage +36%. Shadowburst Meter +50% for all skills. Disables Demonize.",
+        "values": [3600, 5000]
+      }
+    },
+    "name": "Perfect Suppression",
+    "isnegative": false,
+    "icon": "ability_211.png",
+    "isengrave": true,
+    "featuretype": 280
+  },
+  "281": {
+    "id": 281,
+    "levels": {
+      "1": {
+        "desc": "The Composure effect does not activate when Demonize ends. Upon Demonize, Demon Skill Cooldown is reset.",
+        "values": [552821]
+      },
+      "2": {
+        "desc": "The Composure effect does not activate when Demonize ends. Upon Demonize, Demon Skill Cooldown is reset, and Crit Rate +15% while Demonic Mode is active.",
+        "values": [552822]
+      },
+      "3": {
+        "desc": "The Composure effect does not activate when Demonize ends. Upon Demonize, Demon Skill Cooldown is reset, and Crit Rate +30% while Demonic Mode is active.",
+        "values": [552823]
+      }
+    },
+    "name": "Demonic Impulse",
+    "isnegative": false,
+    "icon": "ability_212.png",
+    "isengrave": true,
+    "featuretype": 281
+  },
+  "282": {
+    "id": 282,
+    "levels": {
+      "1": {
+        "desc": "Punishment Damage +15%. When Punishment skill hits, Piety Meter gain +100%. Duration of Sacred Executioner +100%.",
+        "values": [1500, 10000, 5000, 552921]
+      },
+      "2": {
+        "desc": "Punishment Damage +22.5%. When Punishment hits, Piety Meter gain +100%. Duration of Sacred Executioner +125%.",
+        "values": [2250, 10000, 5556, 552921]
+      },
+      "3": {
+        "desc": "Punishment Damage +30%. When Punishment hits, Piety Meter gain +100%. Duration of Sacred Executioner +150%.",
+        "values": [3000, 10000, 6000, 552921]
+      }
+    },
+    "name": "Judgment",
+    "isnegative": false,
+    "icon": "ability_214.png",
+    "isengrave": true,
+    "featuretype": 292
+  },
+  "283": {
+    "id": 283,
+    "levels": {
+      "1": {
+        "desc": "With Holy Aura, Damage received -10% and 2% of Max HP restored every 2.5s for all party members.",
+        "values": [500128]
+      },
+      "2": {
+        "desc": "With Holy Aura, Damage received -15% and 2% of Max HP restored every 2s for all party members.",
+        "values": [500146]
+      },
+      "3": {
+        "desc": "With Holy Aura, Damage received -20% and 2% of Max HP restored every 1.5s for all party members.",
+        "values": [500150]
+      }
+    },
+    "name": "Blessed Aura",
+    "isnegative": false,
+    "icon": "ability_215.png",
+    "isengrave": true,
+    "featuretype": 293
+  },
+  "284": {
+    "id": 284,
+    "levels": {
+      "1": {
+        "desc": "Increases Normal Skill, Drone Skill, and Joint Skill Damage by 16%. Battery max capacity +10%. Upgraded drone technology increases Drone Move Speed. When using a Joint Skill or retrieving the drone with <FONT COLOR='#ffff99'><$HOTKEY 108/></FONT>, Drone Defense System triggers every 10s, generating a Shield that has 2% of Max HP for 5s. Additionally, when the drone is attached to the Machinist, caster's Move Speed +10%.",
+        "values": [1600, 1000, 500132, 500219, 10000, 200]
+      },
+      "2": {
+        "desc": "Increases Normal Skill, Drone Skill, and Joint Skill Damage by 22%. Battery max capacity +15%. Upgraded drone technology increases Drone Move Speed. When using a Joint Skill or retrieving the drone with <FONT COLOR='#ffff99'><$HOTKEY 108/></FONT>, Drone Defense System triggers every 10s, generating a Shield that has 4% of Max HP for 5s. Additionally, when the drone is attached to the Machinist, caster's Move Speed +10%.",
+        "values": [2200, 1500, 500132, 500220, 10000, 200]
+      },
+      "3": {
+        "desc": "Increases Normal Skill, Drone Skill, and Joint Skill Damage by 32%. Battery max capacity +20%. Upgraded drone technology increases Drone Move Speed. When using a Joint Skill or retrieving the drone with <FONT COLOR='#ffff99'><$HOTKEY 108/></FONT>, Drone Defense System triggers every 10s, generating a Shield that has 8% of Max HP for 5s. Additionally, when the drone is attached to the Machinist, caster's Move Speed +10%.",
+        "values": [3200, 2000, 500132, 500221, 10000, 200]
+      }
+    },
+    "name": "Arthetinean Skill",
+    "isnegative": false,
+    "icon": "ability_216.png",
+    "isengrave": true,
+    "featuretype": 318
+  },
+  "285": {
+    "id": 285,
+    "levels": {
+      "1": {
+        "desc": "During Hypersync Mode, on hit, Sync skills inflict Damage +2% (Max. 3 stacks) and Cooldown for Sync skills excluding Movement skills and Stand Up skills -0.5s. Also, Cooldown of Sync skills is reset when entering Hypersync Mode, and it returns 40% of its Core Energy cost when canceled.",
+        "values": [500133, 4000, 69000001, 500, 10000]
+      },
+      "2": {
+        "desc": "During Hypersync Mode, on hit, Sync skills inflict Damage +4% (max. 3 stacks) and Cooldown for Sync skills excluding Movement skills and Stand Up skills -0.5s. Also, Cooldown of Sync skills is reset when entering Hypersync Mode, and it returns 40% of its Core Energy cost when canceled.",
+        "values": [500134, 4000, 69000001, 500, 10000]
+      },
+      "3": {
+        "desc": "During Hypersync Mode, on hit, Sync skills inflict Damage +6% (max. 3 stacks) and Cooldown for Sync skills excluding Movement skills and Stand Up skills -0.5s. Also, Cooldown of Sync skills is reset when entering Hypersync Mode, and it returns 40% of its Core Energy cost when canceled.",
+        "values": [500135, 4000, 69000001, 500, 10000]
+      }
+    },
+    "name": "Evolutionary Legacy",
+    "isnegative": false,
+    "icon": "ability_217.png",
+    "isengrave": true,
+    "featuretype": 319
+  },
+  "286": {
+    "id": 286,
+    "levels": {
+      "1": {
+        "desc": "Chaos Meter +50%. Atk. Power +12% and Crit Rate +3% when the Chaos Meter is full.",
+        "values": [260405, 0, 260406, 5000]
+      },
+      "2": {
+        "desc": "Chaos Meter +50%. Atk. Power +18% and Crit Rate +5% when the Chaos Meter is full.",
+        "values": [260405, 0, 260407, 5000]
+      },
+      "3": {
+        "desc": "Chaos Meter +50%. Atk. Power +25% and Crit Rate +8% when the Chaos Meter is full.",
+        "values": [260405, 0, 260408, 5000]
+      }
+    },
+    "name": "Hunger",
+    "isnegative": false,
+    "icon": "ability_222.png",
+    "isengrave": true,
+    "featuretype": 324
+  },
+  "287": {
+    "id": 287,
+    "levels": {
+      "1": {
+        "desc": "Upon switching to Persona Mode, gain the \"Lunar Voice\" effect instead of the Swoop Enhancement effect that stacks every second. Upon gaining the \"Lunar Voice\" effect, Swoop skill Damage +120%, Atk. Speed +10%, and \"Shadow Step\" skill cooldown is reset.",
+        "values": [260409]
+      },
+      "2": {
+        "desc": "Upon switching to Persona Mode, gain the \"Lunar Voice\" effect instead of the Swoop Enhancement effect that stacks every second. Upon gaining the \"Lunar Voice\" effect, Swoop skill Damage +135%, Crit Rate +5%, Atk. Speed +10%, and \"Shadow Step\" skill cooldown is reset.",
+        "values": [260410]
+      },
+      "3": {
+        "desc": "Upon switching to Persona Mode, gain the \"Lunar Voice\" effect instead of the Swoop Enhancement effect that stacks every second. Upon gaining the \"Lunar Voice\" effect, Swoop skill Damage +150%, Crit Rate +10%, Atk. Speed +10%, and \"Shadow Step\" skill cooldown is reset.",
+        "values": [260411]
+      }
+    },
+    "name": "Lunar Voice",
+    "isnegative": false,
+    "icon": "ability_223.png",
+    "isengrave": true,
+    "featuretype": 323
+  },
+  "288": {
+    "id": 288,
+    "levels": {
+      "1": { "desc": "Frontal attack Damage +5% ", "values": [500] },
+      "2": { "desc": "Frontal attack Damage +12% ", "values": [1200] },
+      "3": { "desc": "Frontal attack Damage +25% ", "values": [2500] }
+    },
+    "name": "Master Brawler",
+    "isnegative": false,
+    "icon": "ability_224.png",
+    "isengrave": true,
+    "featuretype": 325
+  },
+  "289": {
+    "id": 289,
+    "levels": {
+      "1": {
+        "desc": "Atk. Speed +8% for 9s in Handgun Stance. Crit Rate +10% and Outgoing Damage +10% for 9s in Shotgun Stance. Outgoing Damage +16% for 9s while in Rifle Stance.",
+        "values": [500154, 500155, 500156]
+      },
+      "2": {
+        "desc": "Atk. Speed +12% for 9s in Handgun Stance. Crit Rate +10% and Outgoing Damage +17% for 9s in Shotgun Stance. Outgoing Damage +22% for 9s while in Rifle Stance.",
+        "values": [500157, 500158, 500159]
+      },
+      "3": {
+        "desc": "Atk. Speed +16% for 9s in Handgun Stance. Crit Rate +10% and Outgoing Damage +24% for 9s in Shotgun Stance. Outgoing Damage +28% for 9s while in Rifle Stance.",
+        "values": [500160, 500161, 500162]
+      }
+    },
+    "name": "Peacemaker",
+    "isnegative": false,
+    "icon": "ability_225.png",
+    "isengrave": true,
+    "featuretype": 326
+  },
+  "290": {
+    "id": 290,
+    "levels": {
+      "1": { "desc": "Crit Rate +22%. Unable to use Shotgun Stance." },
+      "2": { "desc": "Crit Rate +33%. Crit Damage +6%. Unable to use Shotgun Stance." },
+      "3": { "desc": "Crit Rate +45%. Crit Damage +15%. Unable to use Shotgun Stance." }
+    },
+    "name": "Time to Hunt",
+    "isnegative": false,
+    "icon": "ability_228.png",
+    "isengrave": true,
+    "featuretype": 327
+  },
+  "291": {
+    "id": 291,
+    "levels": {
+      "1": {
+        "desc": "Max number of Esoteric Orbs +1. Esoteric skills consume all Esoteric Orbs and inflict +17% Damage per Esoteric Orb consumed.",
+        "values": [1700]
+      },
+      "2": {
+        "desc": "Max number of Esoteric Orbs +1. Esoteric skills consume all Esoteric Orbs and inflict +26% Damage per Esoteric Orb consumed.",
+        "values": [2600]
+      },
+      "3": {
+        "desc": "Max number of Esoteric Orbs +1. Esoteric skills consume all Esoteric Orbs and inflict +35% Damage per Esoteric Orb consumed.",
+        "values": [3500]
+      }
+    },
+    "name": "Deathblow",
+    "isnegative": false,
+    "icon": "ability_230.png",
+    "isengrave": true,
+    "featuretype": 328
+  },
+  "292": {
+    "id": 292,
+    "levels": {
+      "1": {
+        "desc": "Only 1 Esoteric Orb is used when using Esoteric Skill, and Esoteric Skill Damage +15%.",
+        "values": [-1500, 1]
+      },
+      "2": {
+        "desc": "Only 1 Esoteric Orb is used when using Esoteric Skill, and Esoteric Skill Damage +22%.",
+        "values": [-2200, 1]
+      },
+      "3": {
+        "desc": "Only 1 Esoteric Orb is used when using Esoteric Skill, and Esoteric Skill Damage +30%.",
+        "values": [-3000, 1]
+      }
+    },
+    "name": "Esoteric Flurry",
+    "isnegative": false,
+    "icon": "ability_229.png",
+    "isengrave": true,
+    "featuretype": 329
+  },
+  "293": {
+    "id": 293,
+    "levels": {
+      "1": {
+        "desc": "When Arcane Torrent is triggered, remaining skills Cooldown -50% (except Movement Skills and Awakening Skills). During Arcane Torrent, Crit Rate +10% and Crit Damage +20%.",
+        "values": [2500, 500187]
+      },
+      "2": {
+        "desc": "When Arcane Torrent is triggered, remaining skills Cooldown -50% (except Movement Skills and Awakening Skills). During Arcane Torrent, Crit Rate +17% and Crit Damage +37%.",
+        "values": [2500, 500188]
+      },
+      "3": {
+        "desc": "When Arcane Torrent is triggered, remaining skills Cooldown -50% (except Movement Skills and Awakening Skills). During Arcane Torrent, Crit Rate +25% and Crit Damage +55%.",
+        "values": [2500, 500189]
+      }
+    },
+    "name": "Igniter",
+    "isnegative": false,
+    "icon": "ability_240.png",
+    "isengrave": true,
+    "featuretype": 330
+  },
+  "294": {
+    "id": 294,
+    "levels": {
+      "1": {
+        "desc": "Disables Arcane Rupture, but Damage of skills (except Awakening and Movement skills) +16% and Cooldown -3%. ",
+        "values": [37110, 0, 1600, 300]
+      },
+      "2": {
+        "desc": "Disables Arcane Rupture, but Damage of skills (except Awakening and Movement skills) +22% and Cooldown -6%. ",
+        "values": [37110, 0, 2200, 600]
+      },
+      "3": {
+        "desc": "Disables Arcane Rupture, but Damage of skills (except Awakening and Movement skills) +28% and Cooldown -10%. ",
+        "values": [37110, 0, 2800, 1000]
+      }
+    },
+    "name": "Reflux",
+    "isnegative": false,
+    "icon": "ability_241.png",
+    "isengrave": true,
+    "featuretype": 331
+  },
+  "295": {
+    "id": 295,
+    "levels": {
+      "1": { "desc": "Atk. Speed -10%, Atk. Power +4%.", "values": [1000, 400] },
+      "2": { "desc": "Atk. Speed -10%. Atk. Power +10%.", "values": [1000, 1000] },
+      "3": { "desc": "Atk. Speed -10%. Atk. Power +18%.", "values": [1000, 1800] }
+    },
+    "name": "Mass Increase",
+    "isnegative": false,
+    "icon": "ability_231.png",
+    "isengrave": true,
+    "featuretype": 339
+  },
+  "296": {
+    "id": 296,
+    "levels": {
+      "1": {
+        "desc": "After using a Movement Skill, Damage of skills (excluding Basic Attack and Awakening Skills) +3% for 5s.",
+        "values": [500175]
+      },
+      "2": {
+        "desc": "After using a Movement Skill, Damage of skills (excluding Basic Attack and Awakening Skills) +8% for 5s.",
+        "values": [500185]
+      },
+      "3": {
+        "desc": "After using a Movement Skill, Damage of skills (excluding Basic Attack and Awakening Skills) +16% for 5s.",
+        "values": [500186]
+      }
+    },
+    "name": "Propulsion",
+    "isnegative": false,
+    "icon": "ability_232.png",
+    "isengrave": true,
+    "featuretype": 332
+  },
+  "297": {
+    "id": 297,
+    "levels": {
+      "1": {
+        "desc": "Damage of attacks other than Back Attack and Frontal Attack +3%. Does not apply to Awakening Skills.",
+        "values": [300]
+      },
+      "2": {
+        "desc": "Damage of attacks other than Back Attack and Frontal Attack +8%. Does not apply to Awakening Skills.",
+        "values": [800]
+      },
+      "3": {
+        "desc": "Damage of attacks other than Back Attack and Frontal Attack +16%. Does not apply to Awakening Skills.",
+        "values": [1600]
+      }
+    },
+    "name": "Hit Master",
+    "isnegative": false,
+    "icon": "ability_233.png",
+    "isengrave": true,
+    "featuretype": 333
+  },
+  "298": {
+    "id": 298,
+    "levels": {
+      "1": {
+        "desc": "When \"!!!!!\" is entered into normal chat, Sight Focus is activated for 6s. After the effect is activated, offensive skill Damage +8%. Only half of the effect is applied to Awakening Skills. Does not apply to Basic Attack. Cooldown: 30s.",
+        "values": [500182, 28, 800, 30, 500190]
+      },
+      "2": {
+        "desc": "When \"!!!!!\" is entered into normal chat, Sight Focus is activated for 6s. After the effect is activated, offensive skill Damage +16%. Only half of the effect is applied to Awakening Skills. Does not apply to Basic Attack. Cooldown: 30s.",
+        "values": [500183, 28, 1600, 30, 500209]
+      },
+      "3": {
+        "desc": "When \"!!!!!\" is entered into normal chat, Sight Focus is activated for 6s. After the effect is activated, offensive skill Damage +28%. Only half of the effect is applied to Awakening Skills. Does not apply to Basic Attack. Cooldown: 30s.",
+        "values": [500184, 28, 2800, 30, 500210]
+      }
+    },
+    "name": "Sight Focus",
+    "isnegative": false,
+    "icon": "ability_234.png",
+    "isengrave": true,
+    "featuretype": 335
+  },
+  "299": {
+    "id": 299,
+    "levels": {
+      "1": {
+        "desc": "After using skills (excluding Movement Skills and Basic Attacks), Atk. Power +0.3% for 6s. Stacks up to 6 times. When max stacks are reached, Crit Rate +5%. If Cooldown reduction due to skill cancel is applied to this effect, it is applied after the end of the skill.",
+        "values": [27, 500176]
+      },
+      "2": {
+        "desc": "After using skills (excluding Movement Skills and Basic Attack), Atk. Power +0.6% for 6s. Stacks up to 6 times. When max stacks are reached, Crit Rate +10%. If Cooldown reduction due to skill cancel is applied to this effect, it is applied after the end of the skill.",
+        "values": [27, 500177]
+      },
+      "3": {
+        "desc": "After using skills (excluding Movement Skills and Basic Attack), Atk. Power +1% for 6s. Stacks up to 6 times. When max stacks are reached, Crit Rate +15%. If Cooldown reduction due to skill cancel is applied to this effect, it is applied after the end of the skill.",
+        "values": [27, 500178]
+      }
+    },
+    "name": "Adrenaline",
+    "isnegative": false,
+    "icon": "ability_235.png",
+    "isengrave": true,
+    "featuretype": 336
+  },
+  "300": {
+    "id": 300,
+    "levels": {
+      "1": { "desc": "Holding and Casting skill Speed +5%. Damage +4%.", "values": [500, 400] },
+      "2": { "desc": "Holding and Casting skill Speed +10%. Damage +10%.", "values": [1000, 1000] },
+      "3": { "desc": "Holding and Casting skill Speed +20%. Damage +20%.", "values": [2000, 2000] }
+    },
+    "name": "All-Out Attack",
+    "isnegative": false,
+    "icon": "ability_236.png",
+    "isengrave": true,
+    "featuretype": 340
+  },
+  "301": {
+    "id": 301,
+    "levels": {
+      "1": {
+        "desc": "Shield and Healing effectiveness on all Party Members +6%. If target's HP is 50% or lower, +3% additional effectiveness.",
+        "values": [600, 5000, 900]
+      },
+      "2": {
+        "desc": "Shield and Healing effectiveness on all Party Members +14%. If target's HP is 50% or lower, +7% additional effectiveness.",
+        "values": [1400, 5000, 2100]
+      },
+      "3": {
+        "desc": "Shield and Healing effectiveness on all Party Members +24%. If target's HP is 50% or lower, +12% additional effectiveness.",
+        "values": [2400, 5000, 3600]
+      }
+    },
+    "name": "Expert",
+    "isnegative": false,
+    "icon": "ability_237.png",
+    "isengrave": true,
+    "featuretype": 337
+  },
+  "302": {
+    "id": 302,
+    "levels": {
+      "1": {
+        "desc": "When HP falls below 30%, gain a shield equal to 20% of Max HP for 6s. If the shield is not destroyed after 6s, recover 50% of the remaining shield as HP. (Cooldown: 300s.)",
+        "values": [3000, 500169]
+      },
+      "2": {
+        "desc": "When HP falls below 30%, gain a shield equal to 30% of Max HP for 6s. If the shield is not destroyed after 6s, recover 50% of the remaining shield as HP. (Cooldown: 240s.)",
+        "values": [3000, 500170]
+      },
+      "3": {
+        "desc": "When HP falls below 30%, gain a shield equal to 50% of Max HP for 6s. If the shield is not destroyed after 6s, recover 50% of the remaining shield as HP. (Cooldown: 180s.)",
+        "values": [3000, 500171]
+      }
+    },
+    "name": "Emergency Rescue",
+    "isnegative": false,
+    "icon": "ability_238.png",
+    "isengrave": true,
+    "featuretype": 338
+  },
+  "303": {
+    "id": 303,
+    "levels": {
+      "1": { "desc": "Crit Rate +4%. Crit Damage -12%.", "values": [400, 1200] },
+      "2": { "desc": "Crit Rate +10%. Crit Damage -12%.", "values": [1000, 1200] },
+      "3": { "desc": "Crit Rate +20%. Crit Damage -12%.", "values": [2000, 1200] }
+    },
+    "name": "Precise Dagger",
+    "isnegative": false,
+    "icon": "ability_239.png",
+    "isengrave": true,
+    "featuretype": 334
+  },
+  "304": {
+    "id": 304,
+    "levels": {
+      "1": { "desc": "위기모면2", "values": [700004201, 700004202] },
+      "2": { "desc": "위기모면2", "values": [700004201, 700004202] },
+      "3": { "desc": "위기모면2", "values": [700004201, 700004202] }
+    },
+    "name": "날카로운 단도",
+    "isnegative": false,
+    "icon": "",
+    "isengrave": false,
+    "featuretype": 341
+  },
+  "305": {
+    "id": 305,
+    "levels": {
+      "1": {
+        "desc": "Upon using Moonfall or Sunrise, gain an effect that increases the Artist's Crit Rate by <$CALC <$MACRO buffstat0_100 @1:500194/>/>% and Crit Damage by <$CALC <$MACRO buffstat1_100 @1:500194/>/>% for 60s.",
+        "values": [500194]
+      },
+      "2": {
+        "desc": "Upon using Moonfall or Sunrise, gain an effect that increases the Artist's Crit Rate by <$CALC <$MACRO buffstat0_100 @1:500195/>/>% and Crit Damage by <$CALC <$MACRO buffstat1_100 @1:500195/>/>% for 60s.",
+        "values": [500195]
+      },
+      "3": {
+        "desc": "Upon using Moonfall or Sunrise, gain an effect that increases the Artist's Crit Rate by <$CALC <$MACRO buffstat0_100 @1:500196/>/>% and Crit Damage by <$CALC <$MACRO buffstat1_100 @1:500196/>/>% for 60s.",
+        "values": [500196]
+      }
+    },
+    "name": "Recurrence",
+    "isnegative": false,
+    "icon": "ability_248.png",
+    "isengrave": true,
+    "featuretype": 342
+  },
+  "306": {
+    "id": 306,
+    "levels": {
+      "1": {
+        "desc": "When casting Sunrise, the energy spreads to recover HP of Party Members within 24m of the Artist and Sun Marble. It recovers up to <$CALC (<$TABLE_SKILLEFFECT ValueD 311114/>/100)/>% of the Artist's Max HP.",
+        "values": [31120]
+      },
+      "2": {
+        "desc": "When casting Sunrise, the energy spreads to recover HP of Party Members within 24m of the Artist and Sun Marble. It recovers up to <$CALC (<$TABLE_SKILLEFFECT ValueD 311119/>/100)/>% of the Artist's Max HP.",
+        "values": [31130]
+      },
+      "3": {
+        "desc": "When casting Sunrise, the energy spreads to recover HP of Party Members within 24m of the Artist and Sun Marble. It recovers up to <$CALC (<$TABLE_SKILLEFFECT ValueD 311124/>/100)/>% of the Artist's Max HP.",
+        "values": [31140]
+      }
+    },
+    "name": "Full Bloom",
+    "isnegative": false,
+    "icon": "ability_249.png",
+    "isengrave": true,
+    "featuretype": 343
+  },
+  "307": {
+    "id": 307,
+    "levels": {
+      "1": {
+        "desc": "Crit Rate +7% of the basic Move Speed Bonus percentage, and Crit damage +22% of the basic Atk. Speed Increase percentage. If Umbrella skill is used and then again within 3s, recover max 12% of Raindrop Meter. Sun Shower is enhanced and counts as an Umbrella skill. Sun Shower AoE radius is reduced and Raindrop Meter consumption +50%. Foes no longer receive the Atk. Power Reduction effect, but Atk. Speed and Move Speed Increase of allies +12%.",
+        "values": [500200, 32041, 5000, 2200, 700, 1200]
+      },
+      "2": {
+        "desc": "Crit Rate +15% of the basic Move Speed Bonus percentage, and Crit damage +45% of the basic Atk. Speed Increase percentage. If Umbrella skill is used and then again within 3s, recover max 12% of Raindrop Meter. Sun Shower is enhanced and counts as an Umbrella skill. Sun Shower AoE radius is reduced and Raindrop Meter consumption +50%. Foes no longer receive the Atk. Power Reduction effect, but Atk. Speed and Move Speed Increase of allies +12%. ",
+        "values": [500201, 32041, 5000, 4500, 1500, 1200]
+      },
+      "3": {
+        "desc": "Crit Rate +30% of the basic Move Speed Bonus percentage, and Crit damage +90% of the basic Atk. Speed Increase percentage. If Umbrella skill is used and then again within 3s, recover max 12% of Raindrop Meter. Sun Shower is enhanced and counts as an Umbrella skill. Sun Shower AoE radius is reduced and Raindrop Meter consumption +50%. Foes no longer receive the Atk. Power Reduction effect, but Atk. Speed and Move Speed Increase of allies +12%.",
+        "values": [500202, 32041, 5000, 9000, 3000, 1200]
+      }
+    },
+    "name": "Wind Fury",
+    "isnegative": false,
+    "icon": "ability_258.png",
+    "isengrave": true,
+    "featuretype": 345
+  },
+  "308": {
+    "id": 308,
+    "levels": {
+      "1": {
+        "desc": "Sun Shower's Raindrop Meter consumption decreases by 50%. While Sun Shower is active, damage dealt by Weather skills increases by 7%.",
+        "values": [32040, 5000, 700]
+      },
+      "2": {
+        "desc": "Sun Shower's Raindrop Meter consumption decreases by 50%. While Sun Shower is active, damage dealt by Weather skills increases by 15%.",
+        "values": [32040, 5000, 1500]
+      },
+      "3": {
+        "desc": "Sun Shower's Raindrop Meter consumption decreases by 50%. While Sun Shower is active, damage dealt by Weather skills increases by 30%.",
+        "values": [32040, 5000, 3000]
+      }
+    },
+    "name": "Drizzle",
+    "isnegative": false,
+    "icon": "ability_259.png",
+    "isengrave": true,
+    "featuretype": 344
+  },
+  "309": {
+    "id": 309,
+    "levels": {
+      "1": {
+        "desc": "Fury Meter +3% and MP +1% when hitting an enemy and absorbing their Vigor. (Cooldown: 1s) In Burst Mode, Crit Damage +10% and gain Fatigue every 3s. Fatigue: Fury Meter Consumption +10% every 3s, and cannot use Bloodlust. When Burst Mode ends, the duration of Exhaustion will be reduced according to the stacks of Fatigue. The Fury Meter is fully recovered when Exhaustion ends.",
+        "values": [500215, 3, 500214, 300, 100]
+      },
+      "2": {
+        "desc": "Fury Meter +6% and MP +2% when hitting an enemy and absorbing their Vigor. (Cooldown: 1s) In Burst Mode, Crit Damage +25% and gain Fatigue every 3s. Fatigue: Fury Meter Consumption +10% every 3s, and cannot use Bloodlust. When Burst Mode ends, the duration of Exhaustion will be reduced according to the stacks of Fatigue. The Fury Meter is fully recovered when Exhaustion ends.",
+        "values": [500216, 3, 500214, 600, 200]
+      },
+      "3": {
+        "desc": "Fury Meter +10% and MP +3% when hitting an enemy and absorbing their Vigor. (Cooldown: 1s) In Burst Mode, Crit Damage +40% and gain Fatigue every 3s. Fatigue: Fury Meter Consumption +10% every 3s, and cannot use Bloodlust. When Burst Mode ends, the duration of Exhaustion will be reduced according to the stacks of Fatigue. The Fury Meter is fully recovered when Exhaustion ends.",
+        "values": [500217, 3, 500214, 1000, 300]
+      }
+    },
+    "name": "Predator",
+    "isnegative": false,
+    "icon": "ability_260.png",
+    "isengrave": true,
+    "featuretype": 346
+  },
+  "310": {
+    "id": 310,
+    "levels": {
+      "1": {
+        "desc": "Damage +7% while in Burst Mode and Bloodlust Crit Rate +5%. Fury Meter gain -25% and Burst duration -50%. When Burst ends, Exhaustion does not occur.",
+        "values": [500, 500211, 2500, 10000]
+      },
+      "2": {
+        "desc": "Damage +15% while in Burst Mode and Bloodlust Crit Rate +10%. Fury Meter gain -25% and Burst duration -50%. When Burst ends, Exhaustion does not occur.",
+        "values": [1000, 500212, 2500, 10000]
+      },
+      "3": {
+        "desc": "Damage +25% while in Burst Mode and Bloodlust Crit Rate +20%. Fury Meter gain -25% and Burst duration -50%. When Burst ends, Exhaustion does not occur.",
+        "values": [2000, 500213, 2500, 10000]
+      }
+    },
+    "name": "Punisher",
+    "isnegative": false,
+    "icon": "ability_261.png",
+    "isengrave": true,
+    "featuretype": 347
+  },
+  "311": {
+    "id": 311,
+    "levels": {
+      "1": {
+        "desc": "Crit Rate +3%. Upon using Soul Stone, recover Possession Meter by 5%. Upon entering while in Deathlord Mode, the cooldown of Deathlord Skills resets and Deathlord Skills's Damage while in Deathlord Mode +5%, Deathlord Skills's cooldown -50%.",
+        "values": [300, 500, 5000, 500]
+      },
+      "2": {
+        "desc": "Crit Rate +8%. Upon using Soul Stone, recover Possession Meter by 5%. Upon entering while in Deathlord Mode, the cooldown of Deathlord Skills resets and Deathlord Skills's Damage while in Deathlord Mode +10%, Deathlord Skills's cooldown -60%.",
+        "values": [800, 1000, 6000, 500]
+      },
+      "3": {
+        "desc": "Crit Rate +14%. Upon using Soul Stone, recover Possession Meter by 5%. Upon entering while in Deathlord Mode, the cooldown of Deathlord Skills resets and Deathlord Skills's Damage while in Deathlord Mode +15%, Deathlord Skills's cooldown -70%.",
+        "values": [1400, 1500, 7000, 500]
+      }
+    },
+    "name": "Full Moon Harvester",
+    "isnegative": false,
+    "icon": "ability_263.png",
+    "isengrave": true,
+    "featuretype": 348
+  },
+  "312": {
+    "id": 312,
+    "levels": {
+      "1": {
+        "desc": "Possession Meter turns into Edge Meter, disabling Deathlord Mode. Edge Meter increases upon using Deathlord Skills. When the Edge Meter is full, Deathlord Skills are disabled for 12s, but Ghast Skills are enhanced. Using Deathlord Skills does not consume Soul Stones. However, upon gathering 3 Soul Stones, instead of consuming all, the enhanced Deathlord Skills are used. Ghast and Deathlord Skills's Damage +20%. Additionally, the enhanced Deathlord Skills's Damage +25%.",
+        "values": [1000, 3000, 12000, 4000, 6000, 2000, 2500]
+      },
+      "2": {
+        "desc": "Possession Meter turns into Edge Meter, disabling Deathlord Mode. Edge Meter increases upon using Deathlord Skills. When the Edge Meter is full, Deathlord Skills are disabled for 12s, but Ghast Skills are enhanced. Using Deathlord Skills does not consume Soul Stones. However, upon gathering 3 Soul Stones, instead of consuming all, the enhanced Deathlord Skills are used. Ghast and Deathlord Skills's Damage +30%. Additionally, the enhanced Deathlord Skills's Damage +35%.",
+        "values": [1000, 3000, 12000, 4000, 6000, 3000, 3500]
+      },
+      "3": {
+        "desc": "Possession Meter turns into Edge Meter, disabling Deathlord Mode. Edge Meter increases upon using Deathlord Skills. When the Edge Meter is full, Deathlord Skills are disabled for 12s, but Ghast Skills are enhanced. Using Deathlord Skills does not consume Soul Stones. However, upon gathering 3 Soul Stones, instead of consuming all, the enhanced Deathlord Skills are used. Ghast and Deathlord Skills's Damage +40%. Additionally, the enhanced Deathlord Skills's Damage +50%.",
+        "values": [1000, 3000, 12000, 4000, 6000, 4000, 5000]
+      }
+    },
+    "name": "Night's Edge",
+    "isnegative": false,
+    "icon": "ability_264.png",
+    "isengrave": true,
+    "featuretype": 349
+  },
+  "313": {
+    "id": 313,
+    "levels": {
+      "1": { "desc": "위기모면3", "values": [900605, 900606] },
+      "2": { "desc": "위기모면3", "values": [900605, 900606] },
+      "3": { "desc": "위기모면3", "values": [900605, 900606] }
+    },
+    "name": "위기모면3",
+    "isnegative": false,
+    "icon": "",
+    "isengrave": false,
+    "featuretype": 350
+  },
+  "314": {
+    "id": 314,
+    "levels": {
+      "1": {
+        "desc": "Outgoing Damage +2%, Brawl King Stance's duration changed to 15s. When in Brawl King Stance, recovers 3 Stamina and Shock Energy every 1s. Atk. Speed +20%. During Brawl King Stance, \"Brawl King Twelve Forms: Falling Blossoms\" skill is enabled. Brawl King Twelve Forms: Falling Blossoms Damage +20%, Crit Rate +15%. On skill use, outgoing Damage +4% per 1 Shock Energy.",
+        "values": [0, 2000, 300, 300]
+      },
+      "2": {
+        "desc": "Outgoing Damage +8%, Brawl King Stance's duration changed to 15s. When in Brawl King Stance, recovers 4 Stamina and Shock Energy every 1s. Atk. Speed +20%. During Brawl King Stance, \"Brawl King Twelve Forms: Falling Blossoms\" skill is enabled. Brawl King Twelve Forms: Falling Blossoms Damage +50%, Crit Rate +15%. On skill use, outgoing Damage +4% per 1 Shock Energy.",
+        "values": [0, 5000, 400, 400]
+      },
+      "3": {
+        "desc": "Outgoing Damage +14%, Brawl King Stance's duration changed to 15s. When in Brawl King Stance, recovers 5 Stamina and Shock Energy every 1s. Atk. Speed +20%. During Brawl King Stance, \"Brawl King Twelve Forms: Falling Blossoms\" skill is enabled. Brawl King Twelve Forms: Falling Blossoms Damage +80%, Crit Rate +15%. On skill use, outgoing Damage +4% per 1 Shock Energy.",
+        "values": [0, 8000, 500, 500]
+      }
+    },
+    "name": "Brawl King Storm",
+    "isnegative": false,
+    "icon": "ability_277.png",
+    "isengrave": true,
+    "featuretype": 351
+  },
+  "315": {
+    "id": 315,
+    "levels": {
+      "1": {
+        "desc": "Total Stamina and Shock Energy -30%. Press <FONT COLOR='#ffff99'><$HOTKEY 108/></FONT> to gain Defensive Speculation effect. When Defensive Speculation is used, gain Push Immunity for 2s, gain Shield 40% of Max HP, Incoming Damage -20%. After Defensive Speculation is used, enter into Fighting Spirit Absorption state for 10s and cannot use Defensive Speculation. Tenacious Power changes to Asura Energy, gaining 4% when using Shock Skill after using Stamina Skill or using Stamina Skill after Shock Skill. When in combat, gain Fighting Spirit effect, and Brawl King Stance changes to Asura State. When entering Asura State, Fighting Spirit effect changes into Asura Destruction effect. The Movement Skill changes and Basic Attack changes into Asura Destruction Basic Attack. Asura Destruction Basic Attack Damage +160% of Crit Rate. When Fighting Spirit and Asura Destruction are in effect, Skill Damage including Awakening Skill and Basic Attack +5%, Move Speed +15%.",
+        "values": [3000, 500, 16000, 400, 400]
+      },
+      "2": {
+        "desc": "Total Stamina and Shock Energy -30%. Press <FONT COLOR='#ffff99'><$HOTKEY 108/></FONT> to gain Defensive Speculation effect. When Defensive Speculation is used, gain Push Immunity for 2s, gain Shield 40% of Max HP, Incoming Damage -20%. After Defensive Speculation is used, enter into Fighting Spirit Absorption state for 10s and cannot use Defensive Speculation. Tenacious Power changes to Asura Energy, gaining 4% when using Shock Skill after using Stamina Skill or using Stamina Skill after Shock Skill. When in combat, gain Fighting Spirit effect, and Brawl King Stance changes to Asura State. When entering Asura State, Fighting Spirit effect changes into Asura Destruction effect. The Movement Skill changes and Basic Attack changes into Asura Destruction Basic Attack. Asura Destruction Basic Attack Damage +180% of Crit Rate. When Fighting Spirit and Asura Destruction are in effect, Skill Damage including Awakening Skill and Basic Attack +15%, Move Speed +15%.",
+        "values": [3000, 1500, 18000, 400, 400]
+      },
+      "3": {
+        "desc": "Total Stamina and Shock Energy -30%. Press <FONT COLOR='#ffff99'><$HOTKEY 108/></FONT> to gain Defensive Speculation effect. When Defensive Speculation is used, gain Push Immunity for 2s, gain Shield 40% of Max HP, Incoming Damage -20%. After Defensive Speculation is used, enter into Fighting Spirit Absorption state for 10s and cannot use Defensive Speculation. Tenacious Power changes to Asura Energy, gaining 4% when using Shock Skill after using Stamina Skill or using Stamina Skill after Shock Skill. When in combat, gain Fighting Spirit effect, and Brawl King Stance changes to Asura State. When entering Asura State, Fighting Spirit effect changes into Asura Destruction effect. The Movement Skill changes and Basic Attack changes into Asura Destruction Basic Attack. Asura Destruction Basic Attack Damage +200% of Crit Rate. When Fighting Spirit and Asura Destruction are in effect, Skill Damage including Awakening Skill and Basic Attack +25%, Move Speed +15%.",
+        "values": [3000, 2500, 20000, 400, 400]
+      }
+    },
+    "name": "Asura's Path",
+    "isnegative": false,
+    "icon": "ability_278.png",
+    "isengrave": true,
+    "featuretype": 352
+  },
+  "176": {
+    "id": 176,
+    "levels": { "1": { "desc": "Electrocution Immunity Rate", "values": [100061] } },
+    "name": "Electrocution Immunity Rate",
+    "isnegative": false,
+    "icon": "",
+    "isengrave": true,
+    "featuretype": 71
+  },
+  "177": {
+    "id": 177,
+    "levels": { "1": { "desc": "Disease Immunity", "values": [100091] } },
+    "name": "Disease Immunity",
+    "isnegative": false,
+    "icon": "",
+    "isengrave": true,
+    "featuretype": 72
+  },
+  "178": {
+    "id": 178,
+    "levels": { "1": { "desc": "Sleep Immunity ", "values": [100111] } },
+    "name": "Sleep Immunity",
+    "isnegative": false,
+    "icon": "",
+    "isengrave": true,
+    "featuretype": 73
+  },
+  "179": {
+    "id": 179,
+    "levels": { "1": { "desc": "Imprisonment Immunity Rate", "values": [100101] } },
+    "name": "Imprisonment Immunity Rate",
+    "isnegative": false,
+    "icon": "",
+    "isengrave": true,
+    "featuretype": 74
+  },
+  "180": {
+    "id": 180,
+    "levels": { "1": { "desc": "Bleed Immunity", "values": [100131] } },
+    "name": "Bleed Immunity",
+    "isnegative": false,
+    "icon": "",
+    "isengrave": true,
+    "featuretype": 75
+  },
+  "181": {
+    "id": 181,
+    "levels": { "1": { "desc": "Poison Immunity", "values": [100141] } },
+    "name": "Poison Immunity",
+    "isnegative": false,
+    "icon": "",
+    "isengrave": true,
+    "featuretype": 76
+  },
+  "182": {
+    "id": 182,
+    "levels": { "1": { "desc": "Curse Immunity", "values": [100151] } },
+    "name": "Curse Immunity",
+    "isnegative": false,
+    "icon": "",
+    "isengrave": true,
+    "featuretype": 77
+  },
+  "184": {
+    "id": 184,
+    "levels": { "1": { "desc": "Frost Immunity", "values": [100201] } },
+    "name": "Frost Immunity",
+    "isnegative": false,
+    "icon": "",
+    "isengrave": true,
+    "featuretype": 82
+  },
+  "185": {
+    "id": 185,
+    "levels": { "1": { "desc": "Weakening Immunity", "values": [100171] } },
+    "name": "Weakening Immunity",
+    "isnegative": false,
+    "icon": "",
+    "isengrave": true,
+    "featuretype": 79
+  },
+  "186": {
+    "id": 186,
+    "levels": { "1": { "desc": "Numbing Immunity", "values": [100181] } },
+    "name": "Numbing Immunity",
+    "isnegative": false,
+    "icon": "",
+    "isengrave": true,
+    "featuretype": 80
+  },
+  "187": {
+    "id": 187,
+    "levels": { "1": { "desc": "Darkness Immunity Rate", "values": [100191] } },
+    "name": "Darkness Immunity Rate",
+    "isnegative": false,
+    "icon": "",
+    "isengrave": true,
+    "featuretype": 81
+  },
+  "122": {
+    "id": 122,
+    "levels": { "1": { "desc": "Stun Immunity", "values": [100001] } },
+    "name": "Stun Immunity",
+    "isnegative": false,
+    "icon": "",
+    "isengrave": true,
+    "featuretype": 13
+  },
+  "149": {
+    "id": 149,
+    "levels": { "1": { "desc": "Petrification Immunity", "values": [100011] } },
+    "name": "Petrification Immunity",
+    "isnegative": false,
+    "icon": "",
+    "isengrave": true,
+    "featuretype": 29
+  },
+  "150": {
+    "id": 150,
+    "levels": { "1": { "desc": "Freeze Immunity", "values": [100021] } },
+    "name": "Freeze Immunity",
+    "isnegative": false,
+    "icon": "",
+    "isengrave": true,
+    "featuretype": 30
+  },
+  "151": {
+    "id": 151,
+    "levels": { "1": { "desc": "Silence Immunity", "values": [100031] } },
+    "name": "Silence Immunity",
+    "isnegative": false,
+    "icon": "",
+    "isengrave": true,
+    "featuretype": 31
+  },
+  "152": {
+    "id": 152,
+    "levels": { "1": { "desc": "Earthquake Immunity Rate", "values": [100041] } },
+    "name": "Earthquake Immunity Rate",
+    "isnegative": false,
+    "icon": "",
+    "isengrave": true,
+    "featuretype": 32
+  },
+  "153": {
+    "id": 153,
+    "levels": { "1": { "desc": "Fear Immunity", "values": [100051] } },
+    "name": "Fear Immunity",
+    "isnegative": false,
+    "icon": "",
+    "isengrave": true,
+    "featuretype": 33
+  },
+  "154": {
+    "id": 154,
+    "levels": { "1": { "desc": "Burn Immunity", "values": [100121] } },
+    "name": "Burn Immunity",
+    "isnegative": false,
+    "icon": "",
+    "isengrave": true,
+    "featuretype": 34
+  },
+  "155": {
+    "id": 155,
+    "levels": { "1": { "desc": "Slow Immunity Rate", "values": [100161] } },
+    "name": "Slow Immunity",
+    "isnegative": false,
+    "icon": "",
+    "isengrave": true,
+    "featuretype": 35
+  },
+  "800": {
+    "id": 800,
+    "levels": {
+      "1": { "desc": "Atk. Power -2%." },
+      "2": { "desc": "Atk. Power -4%." },
+      "3": { "desc": "Atk. Power -6%." }
+    },
+    "name": "Atk. Power Reduction",
+    "isnegative": true,
+    "icon": "ability_218.png",
+    "isengrave": true
+  },
+  "801": {
+    "id": 801,
+    "levels": { "1": { "desc": "Defense -5%." }, "2": { "desc": "Defense -10%." }, "3": { "desc": "Defense -15%." } },
+    "name": "Defense Reduction",
+    "isnegative": true,
+    "icon": "ability_219.png",
+    "isengrave": true
+  },
+  "802": {
+    "id": 802,
+    "levels": {
+      "1": { "desc": "Atk. Speed -2%." },
+      "2": { "desc": "Atk. Speed -4%." },
+      "3": { "desc": "Atk. Speed -6%." }
+    },
+    "name": "Atk. Speed Reduction",
+    "isnegative": true,
+    "icon": "ability_220.png",
+    "isengrave": true
+  },
+  "803": {
+    "id": 803,
+    "levels": {
+      "1": { "desc": "Move Speed -2%." },
+      "2": { "desc": "Move Speed -4%." },
+      "3": { "desc": "Move Speed -6%." }
+    },
+    "name": "Move Speed Reduction",
+    "isnegative": true,
+    "icon": "ability_221.png",
+    "isengrave": true
+  },
+  "1000001": {
+    "id": 1000001,
+    "levels": { "1": { "desc": "5", "values": [500] } },
+    "name": "항해 보조장비 희귀 - 수리비 감소",
+    "isnegative": false,
+    "icon": "ability_100.png",
+    "isengrave": true,
+    "featuretype": 320
+  },
+  "1000002": {
+    "id": 1000002,
+    "levels": { "1": { "desc": "10", "values": [1000] } },
+    "name": "항해 보조장비 희귀 - 수리비 감소",
+    "isnegative": false,
+    "icon": "ability_100.png",
+    "isengrave": true,
+    "featuretype": 320
+  },
+  "1000003": {
+    "id": 1000003,
+    "levels": { "1": { "desc": "15", "values": [1500] } },
+    "name": "항해 보조장비 희귀 - 수리비 감소",
+    "isnegative": false,
+    "icon": "ability_100.png",
+    "isengrave": true,
+    "featuretype": 320
+  },
+  "1000004": {
+    "id": 1000004,
+    "levels": { "1": { "desc": "20", "values": [2000] } },
+    "name": "항해 보조장비 희귀 - 수리비 감소",
+    "isnegative": false,
+    "icon": "ability_100.png",
+    "isengrave": true,
+    "featuretype": 320
+  },
+  "1000101": {
+    "id": 1000101,
+    "levels": { "1": { "desc": "1", "values": [1] } },
+    "name": "생활 보조장비 희귀 - 올 마스터리",
+    "isnegative": false,
+    "icon": "ability_100.png",
+    "isengrave": true,
+    "featuretype": 322
+  },
+  "1000102": {
+    "id": 1000102,
+    "levels": { "1": { "desc": "2", "values": [2] } },
+    "name": "생활 보조장비 희귀 - 올 마스터리",
+    "isnegative": false,
+    "icon": "ability_100.png",
+    "isengrave": true,
+    "featuretype": 322
+  },
+  "1000103": {
+    "id": 1000103,
+    "levels": { "1": { "desc": "3", "values": [3] } },
+    "name": "생활 보조장비 희귀 - 올 마스터리",
+    "isnegative": false,
+    "icon": "ability_100.png",
+    "isengrave": true,
+    "featuretype": 322
+  },
+  "1000104": {
+    "id": 1000104,
+    "levels": { "1": { "desc": "4", "values": [4] } },
+    "name": "생활 보조장비 희귀 - 올 마스터리",
+    "isnegative": false,
+    "icon": "ability_100.png",
+    "isengrave": true,
+    "featuretype": 322
+  },
+  "1000201": {
+    "id": 1000201,
+    "levels": { "1": { "desc": "1", "values": [1] } },
+    "name": "생활 보조장비 희귀 - 숙련도",
+    "isnegative": false,
+    "icon": "ability_100.png",
+    "isengrave": true,
+    "featuretype": 321
+  },
+  "1000202": {
+    "id": 1000202,
+    "levels": { "1": { "desc": "2", "values": [2] } },
+    "name": "생활 보조장비 희귀 - 숙련도",
+    "isnegative": false,
+    "icon": "ability_100.png",
+    "isengrave": true,
+    "featuretype": 321
+  },
+  "1000203": {
+    "id": 1000203,
+    "levels": { "1": { "desc": "3", "values": [3] } },
+    "name": "생활 보조장비 희귀 - 숙련도",
+    "isnegative": false,
+    "icon": "ability_100.png",
+    "isengrave": true,
+    "featuretype": 321
+  },
+  "1000204": {
+    "id": 1000204,
+    "levels": { "1": { "desc": "4", "values": [4] } },
+    "name": "생활 보조장비 희귀 - 숙련도",
+    "isnegative": false,
+    "icon": "ability_100.png",
+    "isengrave": true,
+    "featuretype": 321
+  },
+  "10000": {
+    "id": 10000,
+    "levels": { "1": { "desc": "" }, "2": { "desc": "" }, "3": { "desc": "" } },
+    "name": "3-2노말 A",
+    "isnegative": false,
+    "icon": "ability_100.png",
+    "isengrave": false
+  },
+  "10001": {
+    "id": 10001,
+    "levels": { "1": { "desc": "" }, "2": { "desc": "" } },
+    "name": "3-2노말 b",
+    "isnegative": false,
+    "icon": "ability_100.png",
+    "isengrave": false
+  },
+  "10002": {
+    "id": 10002,
+    "levels": { "1": { "desc": "" }, "2": { "desc": "" }, "3": { "desc": "" } },
+    "name": "3-2유물B",
+    "isnegative": false,
+    "icon": "ability_100.png",
+    "isengrave": false
+  },
+  "10003": {
+    "id": 10003,
+    "levels": { "1": { "desc": "" }, "2": { "desc": "" }, "3": { "desc": "" } },
+    "name": "3-2유물D",
+    "isnegative": false,
+    "icon": "ability_100.png",
+    "isengrave": false
+  },
+  "10004": {
+    "id": 10004,
+    "levels": { "1": { "desc": "" }, "2": { "desc": "" }, "3": { "desc": "" } },
+    "name": "3-2유물D",
+    "isnegative": false,
+    "icon": "ability_100.png",
+    "isengrave": false
+  },
+  "10005": {
+    "id": 10005,
+    "levels": { "1": { "desc": "" }, "2": { "desc": "" }, "3": { "desc": "" } },
+    "name": "배신 상급",
+    "isnegative": false,
+    "icon": "ability_100.png",
+    "isengrave": false
+  },
+  "10006": {
+    "id": 10006,
+    "levels": { "1": { "desc": "" }, "2": { "desc": "" }, "3": { "desc": "" } },
+    "name": "배신 상급",
+    "isnegative": false,
+    "icon": "ability_100.png",
+    "isengrave": false
+  },
+  "10007": {
+    "id": 10007,
+    "levels": { "1": { "desc": "" }, "2": { "desc": "" }, "3": { "desc": "" } },
+    "name": "배신 상급 3lv",
+    "isnegative": false,
+    "icon": "ability_100.png",
+    "isengrave": true
+  },
+  "10008": {
+    "id": 10008,
+    "levels": { "1": { "desc": "" }, "2": { "desc": "" }, "3": { "desc": "" } },
+    "name": "샨디1단계",
+    "isnegative": false,
+    "icon": "ability_100.png",
+    "isengrave": false
+  },
+  "10009": {
+    "id": 10009,
+    "levels": { "1": { "desc": "" }, "2": { "desc": "" }, "3": { "desc": "" } },
+    "name": "아제나 1단계",
+    "isnegative": false,
+    "icon": "ability_100.png",
+    "isengrave": false
+  },
+  "10010": {
+    "id": 10010,
+    "levels": { "1": { "desc": "" }, "2": { "desc": "" }, "3": { "desc": "" } },
+    "name": "니나브 1단계",
+    "isnegative": false,
+    "icon": "ability_100.png",
+    "isengrave": false
+  },
+  "10011": {
+    "id": 10011,
+    "levels": { "1": { "desc": "" }, "2": { "desc": "" }, "3": { "desc": "" } },
+    "name": "구원 lv2 4세트",
+    "isnegative": false,
+    "icon": "ability_100.png",
+    "isengrave": false
+  },
+  "10012": {
+    "id": 10012,
+    "levels": { "1": { "desc": "" }, "2": { "desc": "" }, "3": { "desc": "" } },
+    "name": "구원 lv3 2세트",
+    "isnegative": false,
+    "icon": "ability_100.png",
+    "isengrave": false
+  },
+  "10013": {
+    "id": 10013,
+    "levels": { "1": { "desc": "" }, "2": { "desc": "" }, "3": { "desc": "" } },
+    "name": "구원 lv3 2세트",
+    "isnegative": false,
+    "icon": "ability_100.png",
+    "isengrave": false
+  },
+  "10014": {
+    "id": 10014,
+    "levels": { "1": { "desc": "" }, "2": { "desc": "" }, "3": { "desc": "" } },
+    "name": "아제나 1단계(한계돌파)",
+    "isnegative": false,
+    "icon": "ability_100.png",
+    "isengrave": false
+  },
+  "10015": {
+    "id": 10015,
+    "levels": { "1": { "desc": "" }, "2": { "desc": "" }, "3": { "desc": "" } },
+    "name": "니나브 1단계(한계돌파)",
+    "isnegative": false,
+    "icon": "ability_100.png",
+    "isengrave": false
+  },
+  "10101": {
+    "id": 10101,
+    "levels": { "1": { "desc": "" }, "2": { "desc": "" }, "3": { "desc": "" } },
+    "name": "오레하/아르고스 1",
+    "isnegative": false,
+    "icon": "ability_100.png",
+    "isengrave": false
+  },
+  "10102": {
+    "id": 10102,
+    "levels": { "1": { "desc": "" }, "2": { "desc": "" }, "3": { "desc": "" } },
+    "name": "오레하/아르고스 2",
+    "isnegative": false,
+    "icon": "ability_100.png",
+    "isengrave": false
+  },
+  "10200": {
+    "id": 10200,
+    "levels": { "1": { "desc": "" }, "2": { "desc": "" }, "3": { "desc": "" } },
+    "name": "초월 상의 5별 효과",
+    "isnegative": false,
+    "icon": "ability_100.png",
+    "isengrave": false
+  },
+  "10201": {
+    "id": 10201,
+    "levels": { "1": { "desc": "" }, "2": { "desc": "" }, "3": { "desc": "" } },
+    "name": "초월 하의 10별 효과",
+    "isnegative": false,
+    "icon": "ability_100.png",
+    "isengrave": false
+  },
+  "77300001": {
+    "id": 77300001,
+    "levels": {
+      "1": {
+        "desc": "Shield and Healing effectiveness on all Party Members +6%. If target's HP is 50% or lower, +3% additional effectiveness."
+      },
+      "2": {
+        "desc": "Shield and Healing effectiveness on all Party Members +6%. If target's HP is 50% or lower, +3% additional effectiveness."
+      },
+      "3": {
+        "desc": "Shield and Healing effectiveness on all Party Members +6%. If target's HP is 50% or lower, +3% additional effectiveness."
+      }
+    },
+    "name": "Expert",
+    "isnegative": false,
+    "icon": "ability_237.png",
+    "isengrave": false
+  },
+  "77300002": {
+    "id": 77300002,
+    "levels": {
+      "1": {
+        "desc": "When HP falls below 30%, gain a shield equal to 20% of Max HP for 6s. If the shield is not destroyed after 6s, recover 50% of the remaining shield as HP. (Cooldown: 300s.)"
+      }
+    },
+    "name": "Emergency Rescue",
+    "isnegative": false,
+    "icon": "ability_238.png",
+    "isengrave": false
+  },
+  "77390001": {
+    "id": 77390001,
+    "levels": {
+      "1": {
+        "desc": "Normal skills Damage +25%. Shield Amount +30% in Defensive Stance. Damage +2% for 10s when hit and when hitting while in Defensive Stance (stacks up to 3 times, once every 1s)."
+      },
+      "2": {
+        "desc": "Normal skills Damage +27.5%. Shield Amount +40% in Defensive Stance. Damage +3% for 10s when hit and when hitting foes while in Defensive Stance (stacks up to 3 times, once every 1s)."
+      },
+      "3": {
+        "desc": "+30% Normal skills damage. +50% Shield Amount in Defensive Stance. +4% Damage for 10s when hit and when hitting foes while in Defensive Stance (stacks up to 3 times, once per second)."
+      }
+    },
+    "name": "Combat Readiness",
+    "isnegative": false,
+    "icon": "buff_19.png",
+    "isengrave": false
+  },
+  "77390201": {
+    "id": 77390201,
+    "levels": {
+      "1": { "desc": "Incoming Damage is reduced proportional to HP lost. (Max. 5%)" },
+      "2": { "desc": "Incoming Damage is reduced proportional to HP lost. (Max. 15%)" },
+      "3": { "desc": "Incoming Damage is reduced proportional to HP lost. (Max. 30%)" }
+    },
+    "name": "Fortitude",
+    "isnegative": false,
+    "icon": "buff_66.png",
+    "isengrave": false
+  },
+  "77390101": {
+    "id": 77390101,
+    "levels": {
+      "1": { "desc": "Damage to foes while shielded +3%." },
+      "2": { "desc": "Damage to foes while shielded +8%." },
+      "3": { "desc": "Damage to foes while shielded +16%." }
+    },
+    "name": "Barricade",
+    "isnegative": false,
+    "icon": "buff_170.png",
+    "isengrave": false
+  },
+  "77393001": {
+    "id": 77393001,
+    "levels": {
+      "1": {
+        "desc": "Maririn, Pauru, Elcid, Shurdi, and Kelsion: Summon duration +5%, Damage +10%, Atk. Speed +3%, Move Speed +3%, and Command Skill Cooldown -3%."
+      },
+      "2": {
+        "desc": "Maririn, Pauru, Elcid, Shurdi, and Kelsion: Summon duration +10%, Damage +17%, Atk. Speed +6%, Move Speed +6%, and Command Skill Cooldown -6%."
+      },
+      "3": {
+        "desc": "Maririn, Pauru, Elcid, Shurdi, and Kelsion: Summon duration +20%, Damage +25%, Atk. Speed +10%, Move Speed +10%, and Command Skill Cooldown -10%."
+      }
+    },
+    "name": "Communication Overflow",
+    "isnegative": false,
+    "icon": "buff_21.png",
+    "isengrave": false
+  },
+  "77392310": {
+    "id": 77392310,
+    "levels": {
+      "1": {
+        "desc": "Increases Normal Skill, Drone Skill, and Joint Skill Damage by 16%. Battery max capacity +10%. Upgraded drone technology increases Drone Move Speed. When using a Joint Skill or retrieving the drone with <FONT COLOR='#ffff99'><$HOTKEY 108/></FONT>, Drone Defense System triggers every 10s, generating a Shield that has 2% of Max HP for 5s. Additionally, when the drone is attached to the Machinist, caster's Move Speed +10%."
+      },
+      "2": {
+        "desc": "Increases Normal Skill, Drone Skill, and Joint Skill Damage by 22%. Battery max capacity +15%. Upgraded drone technology increases Drone Move Speed. When using a Joint Skill or retrieving the drone with <FONT COLOR='#ffff99'><$HOTKEY 108/></FONT>, Drone Defense System triggers every 10s, generating a Shield that has 4% of Max HP for 5s. Additionally, when the drone is attached to the Machinist, caster's Move Speed +10%."
+      },
+      "3": {
+        "desc": "Increases Normal Skill, Drone Skill, and Joint Skill Damage by 32%. Battery max capacity +20%. Upgraded drone technology increases Drone Move Speed. When using a Joint Skill or retrieving the drone with <FONT COLOR='#ffff99'><$HOTKEY 108/></FONT>, Drone Defense System triggers every 10s, generating a Shield that has 8% of Max HP for 5s. Additionally, when the drone is attached to the Machinist, caster's Move Speed +10%."
+      }
+    },
+    "name": "Arthetinean Skill",
+    "isnegative": false,
+    "icon": "ability_0.png",
+    "isengrave": false
+  },
+  "77394200": {
+    "id": 77394200,
+    "levels": {
+      "1": {
+        "desc": "Upon switching to Persona Mode, gain the \"Lunar Voice\" effect instead of the Swoop Enhancement effect that stacks every second. Upon gaining the \"Lunar Voice\" effect, Swoop skill Damage +120%, Atk. Speed +10%, and \"Shadow Step\" skill cooldown is reset."
+      }
+    },
+    "name": "Lunar Voice",
+    "isnegative": false,
+    "icon": "ability_0.png",
+    "isengrave": false
+  },
+  "77399999": {
+    "id": 77399999,
+    "levels": { "1": { "desc": "Movement Skill Cooldown -10%." } },
+    "name": "Fugitive",
+    "isnegative": false,
+    "icon": "buff_0.png",
+    "isengrave": false
+  }
+}

@@ -113,38 +113,20 @@ export function generateHeaderTooltip(buff: StatusEffect, iconPath: string) {
     return str;
 }
 
-// export function generateTripodTooltip(skill: Skill) {
-//     if (!skill.tripodIndex || !skill.tripodLevel) {
-//         return skill.name;
-//     }
-//
-//     let str = skill.name;
-//     const tripodLevels = ['first', 'second', 'third'];
-//     const colors = ['gray', 'blue', 'gray'];
-//
-//     tripodLevels.forEach(level => {
-//         if (skill.tripodLevel[level] > 0) {
-//             str += `<div class="flex space-x-1">`;
-//             colors.forEach((color, index) => {
-//                 str += `<div class="flex size-5 items-center justify-center rounded-full bg-${color}-800">`;
-//                 if (skill.tripodIndex[level] === index + 1) {
-//                     str += `<p class="text-gray-200">${skill.tripodLevel[level]}</p>`;
-//                 }
-//                 str += `</div>`;
-//             });
-//             str += `</div>`;
-//         }
-//     });
-//     console.log(str);
-//     return str;
-// }
-
-export function generateTripodTooltip(skill: Skill) {
+export function generateSkillTooltip(skill: Skill) {
     if (!skill.tripodIndex) {
         return skill.name;
     }
 
     let str = `<div class="py-0.5">${skill.name}</div>`;
+    str += "<div class='text-gray-300'>";
+    if (skill.gemDamage) {
+        str += `<div><span style="color: ${getColorFromLevel(skill.gemDamage)}">Lv. ${skill.gemDamage}</span> DMG</div>`;
+    }
+    if (skill.gemCooldown) {
+        str += `<div><span style="color: ${getColorFromLevel(skill.gemCooldown)}">Lv. ${skill.gemCooldown}</span> CD</div>`;
+    }
+    str += "</div>";
     str += `<div class="w-16">`;
     if (skill.tripodIndex.first > 0) {
         str += `<div class="flex space-x-1 py-0.5 justify-center">`;
@@ -194,4 +176,16 @@ export function generateTripodTooltip(skill: Skill) {
     str += `</div>`;
 
     return str;
+}
+
+function getColorFromLevel(level: number) {
+    if (level === 5 || level === 6) {
+        return "#a23ac7";
+    } else if (level === 7 || level === 8 || level === 9) {
+        return "#e08d14";
+    } else if (level === 10) {
+        return "#ed691a";
+    } else {
+        return "#e5e7eb";
+    }
 }

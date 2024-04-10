@@ -17,6 +17,7 @@
     export let anySupportBuff: boolean;
     export let anySupportIdentity: boolean;
     export let anySupportBrand: boolean;
+    export let anyRdpsData: boolean;
     export let isSolo: boolean;
 
     let alpha = 0.6;
@@ -54,6 +55,7 @@
     {anySupportBuff}
     {anySupportIdentity}
     {anySupportBrand}
+    {anyRdpsData}
     end={lastCombatPacket}
     {dps}
     {alpha}

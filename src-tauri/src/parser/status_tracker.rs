@@ -12,8 +12,9 @@ use std::cell::RefCell;
 use std::rc::Rc;
 
 const TIMEOUT_DELAY_MS: i64 = 1000;
+const WORKSHOP_BUFF_ID: u32 = 9701;
 
-pub type StatusEffectRegistry = HashMap<u32, StatusEffect>;
+pub type StatusEffectRegistry = HashMap<u32, StatusEffectDetails>;
 
 pub struct StatusTracker {
     party_tracker: Rc<RefCell<PartyTracker>>,
@@ -52,7 +53,7 @@ impl StatusTracker {
         }
     }
 
-    pub fn register_status_effect(&mut self, se: StatusEffect) {
+    pub fn register_status_effect(&mut self, se: StatusEffectDetails) {
         let registry = match se.target_type {
             StatusEffectTargetType::Local => &mut self.local_status_effect_registry,
             StatusEffectTargetType::Party => &mut self.party_status_effect_registry,
@@ -78,18 +79,22 @@ impl StatusTracker {
         instance_id: Vec<u32>,
         reason: u8,
         sett: StatusEffectTargetType,
-    ) -> (bool, Vec<StatusEffect>) {
+    ) -> (bool, Vec<StatusEffectDetails>, bool) {
         let registry = match sett {
             StatusEffectTargetType::Local => &mut self.local_status_effect_registry,
             StatusEffectTargetType::Party => &mut self.party_status_effect_registry,
         };
 
         let mut has_shield_buff = false;
-        let mut shields_broken: Vec<StatusEffect> = Vec::new();
+        let mut shields_broken: Vec<StatusEffectDetails> = Vec::new();
+        let mut left_workshop = false;
 
         if let Some(ser) = registry.get_mut(&target_id) {
             for id in instance_id {
                 if let Some(se) = ser.remove(&id) {
+                    if se.status_effect_id == WORKSHOP_BUFF_ID {
+                        left_workshop = true;
+                    }
                     if se.status_effect_type == StatusEffectType::Shield {
                         has_shield_buff = true;
                         if reason == 4 {
@@ -100,7 +105,7 @@ impl StatusTracker {
             }
         }
 
-        (has_shield_buff, shields_broken)
+        (has_shield_buff, shields_broken, left_workshop)
     }
 
     pub fn update_status_duration(
@@ -142,7 +147,7 @@ impl StatusTracker {
         object_id: u64,
         value: u64,
         local_character_id: u64,
-    ) -> (Option<StatusEffect>, u64) {
+    ) -> (Option<StatusEffectDetails>, u64) {
         let use_party = self.should_use_party_status_effect(character_id, local_character_id);
         let (target_id, sett) = if use_party {
             (character_id, StatusEffectTargetType::Party)
@@ -178,7 +183,7 @@ impl StatusTracker {
         source_entity: &Entity,
         target_entity: &Entity,
         local_character_id: u64,
-    ) -> (Vec<(u32, u64)>, Vec<(u32, u64)>) {
+    ) -> (Vec<StatusEffectDetails>, Vec<StatusEffectDetails>) {
         let timestamp = Utc::now();
 
         let use_party_for_source = if source_entity.entity_type == EntityType::PLAYER {
@@ -194,12 +199,7 @@ impl StatusTracker {
         };
         // println!("source_id: {:?}, source_type: {:?}", source_id, source_type);
 
-        let source_effects = self.actually_get_status_effects(source_id, source_type, timestamp);
-        let status_effects_on_source: Vec<(u32, u64)> = source_effects
-            .iter()
-            .map(|x| (x.status_effect_id, x.source_id))
-            .collect();
-        // println!("status_effects_on_source: {:?}", status_effects_on_source);
+        let status_effects_on_source = self.actually_get_status_effects(source_id, source_type, timestamp);
 
         let use_party_for_target = if source_entity.entity_type == EntityType::PLAYER {
             self.should_use_party_status_effect(target_entity.character_id, local_character_id)
@@ -214,7 +214,7 @@ impl StatusTracker {
             .get(&source_entity.id)
             .cloned();
         // println!("use_party_for_target: {:?}, source_party_id: {:?}", use_party_for_target, source_party_id);
-        let target_effects = match (use_party_for_target, source_party_id) {
+        let status_effects_on_target = match (use_party_for_target, source_party_id) {
             (true, Some(source_party_id)) => self.get_status_effects_from_party(
                 target_entity.character_id,
                 StatusEffectTargetType::Party,
@@ -238,10 +238,6 @@ impl StatusTracker {
                 timestamp,
             ),
         };
-        let status_effects_on_target: Vec<(u32, u64)> = target_effects
-            .iter()
-            .map(|x| (x.status_effect_id, x.source_id))
-            .collect();
         // println!("status_effects_on_target: {:?}", status_effects_on_target);
         // println!(
         //     "status_effects_on_source: {:?}, status_effects_on_target: {:?}",
@@ -254,7 +250,7 @@ impl StatusTracker {
         target_id: u64,
         sett: StatusEffectTargetType,
         timestamp: DateTime<Utc>,
-    ) -> Vec<StatusEffect> {
+    ) -> Vec<StatusEffectDetails> {
         let registry = match sett {
             StatusEffectTargetType::Local => &mut self.local_status_effect_registry,
             StatusEffectTargetType::Party => &mut self.party_status_effect_registry,
@@ -275,7 +271,7 @@ impl StatusTracker {
         sett: StatusEffectTargetType,
         party_id: &u32,
         timestamp: DateTime<Utc>,
-    ) -> Vec<StatusEffect> {
+    ) -> Vec<StatusEffectDetails> {
         let registry = match sett {
             StatusEffectTargetType::Local => &mut self.local_status_effect_registry,
             StatusEffectTargetType::Party => &mut self.party_status_effect_registry,
@@ -331,7 +327,7 @@ impl StatusTracker {
     }
 }
 
-fn is_valid_for_raid(status_effect: &StatusEffect) -> bool {
+fn is_valid_for_raid(status_effect: &StatusEffectDetails) -> bool {
     (status_effect.buff_category == BattleItem
         || status_effect.buff_category == Bracelet
         || status_effect.buff_category == Elixir
@@ -346,7 +342,7 @@ pub fn build_status_effect(
     source_id: u64,
     target_type: StatusEffectTargetType,
     timestamp: DateTime<Utc>,
-) -> StatusEffect {
+) -> StatusEffectDetails {
     let value = get_status_effect_value(&se_data.value);
     let mut status_effect_category = StatusEffectCategory::Other;
     let mut buff_category = StatusEffectBuffCategory::Other;
@@ -382,13 +378,14 @@ pub fn build_status_effect(
         None
     };
 
-    StatusEffect {
+    StatusEffectDetails {
         instance_id: se_data.effect_instance_id,
         source_id,
         target_id,
         status_effect_id: se_data.status_effect_id,
         target_type,
         value,
+        stack_count: se_data.stack_count,
         buff_category,
         category: status_effect_category,
         status_effect_type,
@@ -452,13 +449,14 @@ pub enum StatusEffectType {
 }
 
 #[derive(Debug, Default, Clone)]
-pub struct StatusEffect {
+pub struct StatusEffectDetails {
     pub instance_id: u32,
     pub status_effect_id: u32,
     pub target_id: u64,
     pub source_id: u64,
     pub target_type: StatusEffectTargetType,
     pub value: u64,
+    pub stack_count: u8,
     pub category: StatusEffectCategory,
     pub buff_category: StatusEffectBuffCategory,
     pub show_type: StatusEffectShowType,

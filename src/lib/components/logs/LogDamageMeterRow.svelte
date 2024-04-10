@@ -14,6 +14,7 @@
     export let anySupportBuff: boolean;
     export let anySupportIdentity: boolean;
     export let anySupportBrand: boolean;
+    export let anyRdpsData: boolean;
     export let end: number;
     export let isSolo: boolean;
 
@@ -29,6 +30,7 @@
     {anySupportBuff}
     {anySupportIdentity}
     {anySupportBrand}
+    {anyRdpsData}
     {end}
     {dps}
     width={percentage}

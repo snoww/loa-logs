@@ -470,6 +470,7 @@ fn setup_db(resource_path: PathBuf) -> Result<(), String> {
             dps INTEGER,
             skill_stats TEXT,
             last_update INTEGER,
+            engravings TEXT,
             PRIMARY KEY (name, encounter_id),
             FOREIGN KEY (encounter_id) REFERENCES encounter (id) ON DELETE CASCADE
         );
@@ -503,6 +504,15 @@ fn setup_db(resource_path: PathBuf) -> Result<(), String> {
     if column_count == 0 {
         conn.execute("ALTER TABLE entity ADD COLUMN character_id INTEGER", [])
             .expect("failed to add character_id column");
+    }
+
+    let mut stmt = conn
+        .prepare("SELECT COUNT(*) FROM pragma_table_info('entity') WHERE name='engravings'")
+        .unwrap();
+    let column_count: u32 = stmt.query_row([], |row| row.get(0)).unwrap();
+    if column_count == 0 {
+        conn.execute("ALTER TABLE entity ADD COLUMN engravings TEXT", [])
+            .expect("failed to add engravings column");
     }
 
     update_db(&conn);
@@ -723,6 +733,9 @@ fn load_encounters_preview(
                 .split(',')
                 .map(|s| {
                     let info: Vec<&str> = s.split(':').collect();
+                    if info.len() != 2 {
+                        return (101, "Unknown".to_string());
+                    }
                     (info[0].parse::<i32>().unwrap_or(101), info[1].to_string())
                 })
                 .unzip();

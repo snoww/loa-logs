@@ -1,10 +1,11 @@
 <script lang="ts">
     import { EntityType, type Entity } from "$lib/types";
     import { HexToRgba } from "$lib/utils/colors";
-    import { abbreviateNumberSplit, round } from "$lib/utils/numbers";
+    import { abbreviateNumberSplit, getBaseDamage, round } from "$lib/utils/numbers";
     import { colors, classIconCache, settings } from "$lib/utils/settings";
     import { formatPlayerName, getEstherFromNpcId } from "$lib/utils/strings";
     import { tooltip } from "$lib/utils/tooltip";
+    import { localPlayer } from "$lib/utils/stores";
 
     export let entity: Entity;
     export let totalDamageDealt: number;
@@ -14,6 +15,7 @@
     export let anySupportBuff: boolean;
     export let anySupportIdentity: boolean;
     export let anySupportBrand: boolean;
+    export let anyRdpsData: boolean;
     export let end: number;
     export let dps: (string | number)[];
 
@@ -29,6 +31,7 @@
     let color = "#ffffff";
     let deadFor: string;
 
+    let sSynPercentage = "0.0";
     let critPercentage = "0.0";
     let critDmgPercentage = "0.0";
     let baPercentage = "0.0";
@@ -38,10 +41,16 @@
         damageDealt = abbreviateNumberSplit(entity.damageStats.damageDealt);
         damagePercentage = ((entity.damageStats.damageDealt / totalDamageDealt) * 100).toFixed(1);
 
+        let baseDamage = getBaseDamage(entity.damageStats);
+        sSynPercentage = ((entity.damageStats.rdpsDamageReceivedSupport / baseDamage) * 100).toFixed(1);
+
         if (entity.skillStats.hits !== 0) {
             critDmgPercentage = round((entity.damageStats.critDamage / entity.damageStats.damageDealt) * 100);
             critPercentage = round((entity.skillStats.crits / entity.skillStats.hits) * 100);
-            if (meterSettings.positionalDmgPercent && (entity.damageStats.frontAttackDamage > 0 || entity.damageStats.backAttackDamage > 0)) {
+            if (
+                meterSettings.positionalDmgPercent &&
+                (entity.damageStats.frontAttackDamage > 0 || entity.damageStats.backAttackDamage > 0)
+            ) {
                 faPercentage = round((entity.damageStats.frontAttackDamage / entity.damageStats.damageDealt) * 100);
                 baPercentage = round((entity.damageStats.backAttackDamage / entity.damageStats.damageDealt) * 100);
             } else {
@@ -51,7 +60,11 @@
         }
 
         if (Object.hasOwn($colors, entity.class)) {
-            color = $colors[entity.class].color;
+            if ($settings.general.constantLocalPlayerColor && $localPlayer == entity.name) {
+                color = $colors["Local"].color;
+            } else {
+                color = $colors[entity.class].color;
+            }
         }
         if (entity.entityType === EntityType.ESTHER) {
             name = getEstherFromNpcId(entity.npcId);
@@ -117,14 +130,12 @@
 {/if}
 {#if anyFrontAtk && meterSettings.frontAtk}
     <td class="px-1 text-center">
-        {faPercentage}<span class="text-3xs text-gray-300"
-            >%</span>
+        {faPercentage}<span class="text-3xs text-gray-300">%</span>
     </td>
 {/if}
 {#if anyBackAtk && meterSettings.backAtk}
     <td class="px-1 text-center">
-        {baPercentage}<span class="text-3xs text-gray-300"
-            >%</span>
+        {baPercentage}<span class="text-3xs text-gray-300">%</span>
     </td>
 {/if}
 {#if anySupportBuff && meterSettings.percentBuffBySup}
@@ -136,13 +147,18 @@
 {#if anySupportBrand && meterSettings.percentBrand}
     <td class="px-1 text-center">
         {round((entity.damageStats.debuffedBySupport / entity.damageStats.damageDealt) * 100)}<span
-        class="text-3xs text-gray-300">%</span>
+            class="text-3xs text-gray-300">%</span>
     </td>
 {/if}
 {#if anySupportIdentity && meterSettings.percentIdentityBySup}
     <td class="px-1 text-center">
         {round((entity.damageStats.buffedByIdentity / entity.damageStats.damageDealt) * 100)}<span
-        class="text-3xs text-gray-300">%</span>
+            class="text-3xs text-gray-300">%</span>
+    </td>
+{/if}
+{#if anyRdpsData && meterSettings.ssyn}
+    <td class="px-1 text-center">
+        {sSynPercentage}<span class="text-3xs text-gray-300">%</span>
     </td>
 {/if}
 {#if meterSettings.counters}

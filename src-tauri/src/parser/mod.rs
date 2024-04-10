@@ -3,20 +3,26 @@ mod entity_tracker;
 mod id_tracker;
 pub mod models;
 mod party_tracker;
+mod rdps;
+mod stats_api;
 mod status_tracker;
+mod utils;
 
-use crate::parser::encounter_state::{get_class_from_id, EncounterState};
+use crate::parser::encounter_state::EncounterState;
 use crate::parser::entity_tracker::{get_current_and_max_hp, EntityTracker};
 use crate::parser::id_tracker::IdTracker;
-use crate::parser::models::{EntityType, Identity, Stagger, AWS_REGIONS};
+use crate::parser::models::{DamageData, EntityType, Identity, Stagger, AWS_REGIONS};
 use crate::parser::party_tracker::PartyTracker;
+use crate::parser::stats_api::StatsApi;
 use crate::parser::status_tracker::{
-    get_status_effect_value, StatusEffect, StatusEffectTargetType, StatusEffectType, StatusTracker,
+    get_status_effect_value, StatusEffectDetails, StatusEffectTargetType, StatusEffectType,
+    StatusTracker,
 };
+use crate::parser::utils::get_class_from_id;
 use anyhow::Result;
 use chrono::Utc;
 use hashbrown::HashMap;
-use ipnet::{Ipv4Net};
+use ipnet::Ipv4Net;
 use log::{info, warn};
 use meter_core::packets::definitions::*;
 use meter_core::packets::opcodes::Pkt;
@@ -50,6 +56,7 @@ pub fn start(
         id_tracker.clone(),
         party_tracker.clone(),
     );
+    let mut stats_api = StatsApi::new(window.clone());
     let mut state = EncounterState::new(window.clone());
     let rx = if raw_socket {
         if !meter_core::check_is_admin() {
@@ -78,9 +85,9 @@ pub fn start(
     };
 
     let mut last_update = Instant::now();
-    let duration = Duration::from_millis(100);
+    let mut duration = Duration::from_millis(200);
     let mut last_party_update = Instant::now();
-    let party_duration = Duration::from_millis(1000);
+    let party_duration = Duration::from_millis(2000);
     let mut raid_end_cd: Instant = Instant::now();
 
     let reset = Arc::new(AtomicBool::new(false));
@@ -91,6 +98,10 @@ pub fn start(
         if settings.general.boss_only_damage {
             boss_only_damage.store(true, Ordering::Relaxed);
             info!("boss only damage enabled")
+        }
+        if settings.general.low_performance_mode {
+            duration = Duration::from_millis(1000);
+            info!("low performance mode enabled")
         }
     }
 
@@ -103,6 +114,8 @@ pub fn start(
     if local_player_path.exists() {
         let local_players_file = std::fs::read_to_string(local_player_path.clone())?;
         local_players = serde_json::from_str(&local_players_file).unwrap_or_default();
+        // load region if it was saved prior
+        state.region = local_players.get(&0).cloned();
     }
 
     let emit_details = Arc::new(AtomicBool::new(false));
@@ -184,7 +197,8 @@ pub fn start(
         if save.load(Ordering::Relaxed) {
             save.store(false, Ordering::Relaxed);
             state.party_info = update_party(&party_tracker, &entity_tracker);
-            state.save_to_db(true);
+            let player_stats = stats_api.get_all_stats(&state.raid_difficulty);
+            state.save_to_db(player_stats, true);
             state.saved = true;
             state.resetting = true;
         }
@@ -217,6 +231,13 @@ pub fn start(
                     }
                 }
             }
+            Pkt::EquipChangeNotify => {
+                if let Some(pkt) =
+                    parse_pkt(&data, PKTEquipChangeNotify::new, "PKTEquipChangeNotify")
+                {
+                    entity_tracker.get_player_set_options(pkt.object_id, pkt.equip_item_data_list);
+                }
+            }
             Pkt::IdentityGaugeChangeNotify => {
                 if let Some(pkt) = parse_pkt(
                     &data,
@@ -236,6 +257,19 @@ pub fn start(
                     }
                 }
             }
+            Pkt::IdentityStanceChangeNotify => {
+                if let Some(pkt) = parse_pkt(
+                    &data,
+                    PKTIdentityStanceChangeNotify::new,
+                    "PKTIdentityStanceChangeNotify",
+                ) {
+                    if let Some(entity) = entity_tracker.entities.get_mut(&pkt.object_id) {
+                        if entity.entity_type == EntityType::PLAYER {
+                            entity.stance = pkt.stance;
+                        }
+                    }
+                }
+            }
             Pkt::InitEnv => {
                 // three methods of getting local player info
                 // 1. MigrationExecute    + InitEnv      + PartyInfo
@@ -249,7 +283,8 @@ pub fn start(
                     party_cache = None;
                     party_map_cache = HashMap::new();
                     let entity = entity_tracker.init_env(pkt);
-                    state.on_init_env(entity);
+                    let player_stats = stats_api.get_all_stats(&state.raid_difficulty);
+                    state.on_init_env(entity, player_stats);
                 }
             }
             Pkt::InitPC => {
@@ -271,6 +306,13 @@ pub fn start(
                     state.on_init_pc(entity, hp, max_hp)
                 }
             }
+            Pkt::InitItem => {
+                if let Some(pkt) = parse_pkt(&data, PKTInitItem::new, "PKTInitItem") {
+                    if pkt.storage_type == 1 || pkt.storage_type == 20 {
+                        entity_tracker.get_local_player_set_options(pkt.item_data_list);
+                    }
+                }
+            }
             Pkt::MigrationExecute => {
                 if let Some(pkt) = parse_pkt(&data, PKTMigrationExecute::new, "PKTMigrationExecute")
                 {
@@ -278,6 +320,9 @@ pub fn start(
                     let ip_without_port = pkt.server_addr.split(':').collect::<Vec<_>>()[0];
                     let region = get_aws_region_from_ip(ip_without_port);
                     debug_print(format_args!("region: {:?}", region));
+                    // cache player region as first in the list
+                    local_players.insert(0, region.clone().unwrap_or_default());
+                    write_local_players(&local_players, &local_player_path)?;
                     state.region = region;
                     entity_tracker.migration_execute(pkt);
                 }
@@ -403,8 +448,12 @@ pub fn start(
                     PKTPartyStatusEffectRemoveNotify::new,
                     "PKTPartyStatusEffectRemoveNotify",
                 ) {
-                    let (is_shield, shields_broken) =
+                    let (is_shield, shields_broken, left_workshop) =
                         entity_tracker.party_status_effect_remove(pkt);
+                    if left_workshop {
+                        let party = update_party(&party_tracker, &entity_tracker);
+                        stats_api.sync(party, &state, &entity_tracker, &local_players);
+                    }
                     if is_shield {
                         for status_effect in shields_broken {
                             let change = status_effect.value;
@@ -453,7 +502,8 @@ pub fn start(
                 }
             }
             Pkt::RaidBossKillNotify => {
-                state.on_phase_transition(1);
+                let player_stats = stats_api.get_all_stats(&state.raid_difficulty);
+                state.on_phase_transition(1, player_stats);
                 state.raid_clear = true;
                 debug_print(format_args!("phase: 1 - RaidBossKillNotify"));
             }
@@ -464,7 +514,8 @@ pub fn start(
                 } else {
                     update_party(&party_tracker, &entity_tracker)
                 };
-                state.on_phase_transition(0);
+                let player_stats = stats_api.get_all_stats(&state.raid_difficulty);
+                state.on_phase_transition(0, player_stats);
                 raid_end_cd = Instant::now();
                 debug_print(format_args!("phase: 0 - RaidResult"));
             }
@@ -542,6 +593,9 @@ pub fn start(
                     let local_character_id = id_tracker
                         .borrow()
                         .get_local_character_id(entity_tracker.local_entity_id);
+                    let target_count = pkt.skill_damage_abnormal_move_events.len() as i32;
+                    let player_stats = stats_api.get_stats(&state.raid_difficulty);
+
                     for event in pkt.skill_damage_abnormal_move_events.iter() {
                         let target_entity =
                             entity_tracker.get_or_create_entity(event.skill_damage_event.target_id);
@@ -549,18 +603,27 @@ pub fn start(
                         let (se_on_source, se_on_target) = status_tracker
                             .borrow_mut()
                             .get_status_effects(&owner, &target_entity, local_character_id);
+                        let damage_data = DamageData {
+                            skill_id: pkt.skill_id,
+                            skill_effect_id: pkt.skill_effect_id,
+                            damage: event.skill_damage_event.damage,
+                            modifier: event.skill_damage_event.modifier as i32,
+                            target_current_hp: event.skill_damage_event.cur_hp,
+                            target_max_hp: event.skill_damage_event.max_hp,
+                            damage_attribute: event.skill_damage_event.damage_attr,
+                            damage_type: event.skill_damage_event.damage_type,
+                        };
+
                         state.on_damage(
                             &owner,
                             &source_entity,
                             &target_entity,
-                            event.skill_damage_event.damage,
-                            pkt.skill_id,
-                            pkt.skill_effect_id,
-                            event.skill_damage_event.modifier as i32,
-                            event.skill_damage_event.cur_hp,
-                            event.skill_damage_event.max_hp,
+                            damage_data,
                             se_on_source,
                             se_on_target,
+                            target_count,
+                            &entity_tracker,
+                            &player_stats,
                             Utc::now().timestamp_millis(),
                         );
                     }
@@ -579,6 +642,9 @@ pub fn start(
                     let local_character_id = id_tracker
                         .borrow()
                         .get_local_character_id(entity_tracker.local_entity_id);
+                    let target_count = pkt.skill_damage_events.len() as i32;
+                    let player_stats = stats_api.get_stats(&state.raid_difficulty);
+
                     for event in pkt.skill_damage_events.iter() {
                         let target_entity = entity_tracker.get_or_create_entity(event.target_id);
                         // source_entity is to determine battle item
@@ -586,18 +652,26 @@ pub fn start(
                         let (se_on_source, se_on_target) = status_tracker
                             .borrow_mut()
                             .get_status_effects(&owner, &target_entity, local_character_id);
+                        let damage_data = DamageData {
+                            skill_id: pkt.skill_id,
+                            skill_effect_id: pkt.skill_effect_id.unwrap_or_default(),
+                            damage: event.damage,
+                            modifier: event.modifier as i32,
+                            target_current_hp: event.cur_hp,
+                            target_max_hp: event.max_hp,
+                            damage_attribute: event.damage_attr,
+                            damage_type: event.damage_type,
+                        };
                         state.on_damage(
                             &owner,
                             &source_entity,
                             &target_entity,
-                            event.damage,
-                            pkt.skill_id,
-                            pkt.skill_effect_id.unwrap_or_default(),
-                            event.modifier as i32,
-                            event.cur_hp,
-                            event.max_hp,
+                            damage_data,
                             se_on_source,
                             se_on_target,
+                            target_count,
+                            &entity_tracker,
+                            &player_stats,
                             Utc::now().timestamp_millis(),
                         );
                     }
@@ -657,14 +731,17 @@ pub fn start(
                     PKTStatusEffectRemoveNotify::new,
                     "PKTStatusEffectRemoveNotify",
                 ) {
-                    let (is_shield, shields_broken) =
+                    let (is_shield, shields_broken, left_workshop) =
                         status_tracker.borrow_mut().remove_status_effects(
                             pkt.object_id,
                             pkt.status_effect_ids,
                             pkt.reason,
                             StatusEffectTargetType::Local,
                         );
-
+                    if left_workshop {
+                        let party = update_party(&party_tracker, &entity_tracker);
+                        stats_api.sync(party, &state, &entity_tracker, &local_players);
+                    }
                     if is_shield {
                         if shields_broken.is_empty() {
                             let target = entity_tracker.get_source_entity(pkt.object_id);
@@ -690,7 +767,8 @@ pub fn start(
                     || state.encounter.fight_start == 0
                     || state.encounter.current_boss_name == "Saydon"
                 {
-                    state.on_phase_transition(3);
+                    let player_stats = stats_api.get_all_stats(&state.raid_difficulty);
+                    state.on_phase_transition(3, player_stats);
                     debug_print(format_args!(
                         "phase: 3 - resetting encounter - TriggerBossBattleStatus"
                     ));
@@ -709,7 +787,8 @@ pub fn start(
                                 update_party(&party_tracker, &entity_tracker)
                             };
                             state.raid_clear = true;
-                            state.on_phase_transition(2);
+                            let player_stats = stats_api.get_all_stats(&state.raid_difficulty);
+                            state.on_phase_transition(2, player_stats);
                             raid_end_cd = Instant::now();
                             debug_print(format_args!("phase: 2 - clear - TriggerStartNotify"));
                         }
@@ -721,9 +800,14 @@ pub fn start(
                                 update_party(&party_tracker, &entity_tracker)
                             };
                             state.raid_clear = false;
-                            state.on_phase_transition(4);
+                            let player_stats = stats_api.get_all_stats(&state.raid_difficulty);
+                            state.on_phase_transition(4, player_stats);
                             raid_end_cd = Instant::now();
                             debug_print(format_args!("phase: 4 - wipe - TriggerStartNotify"));
+                        }
+                        27 | 10 | 11 => {
+                            let party = update_party(&party_tracker, &entity_tracker);
+                            stats_api.sync(party, &state, &entity_tracker, &local_players);
                         }
                         _ => {}
                     }
@@ -857,7 +941,7 @@ pub fn start(
                         let party = update_party(&party_tracker, &entity_tracker);
                         // check if both parties are resolved
                         // if they are we then cache it
-                        if party.len() == 2 && party[0].len() == 4 && party[1].len() == 4 {
+                        if party.len() >= 2 && party[0].len() == 4 && party[1].len() == 4 {
                             party_cache = Some(party.clone());
                             party_map_cache = party
                                 .into_iter()
@@ -957,7 +1041,7 @@ fn on_shield_change(
     entity_tracker: &mut EntityTracker,
     id_tracker: &Rc<RefCell<IdTracker>>,
     state: &mut EncounterState,
-    status_effect: StatusEffect,
+    status_effect: StatusEffectDetails,
     change: u64,
 ) {
     let source = entity_tracker.get_source_entity(status_effect.source_id);

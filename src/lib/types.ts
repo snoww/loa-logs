@@ -133,6 +133,11 @@ export interface Skill {
     castLog: Array<number>;
     tripodIndex?: Tripod;
     tripodLevel?: Tripod;
+    gemCooldown?: number;
+    gemDamage?: number;
+    rdpsDamageReceived: number;
+    rdpsDamageReceivedSupport: number;
+    rdpsDamageGiven: number;
 }
 
 export interface Tripod {
@@ -165,6 +170,9 @@ export interface DamageStats {
     dps: number;
     dpsAverage: [number, number];
     dpsRolling10sAvg: [number, number];
+    rdpsDamageReceived: number;
+    rdpsDamageReceivedSupport: number;
+    rdpsDamageGiven: number;
     [key: string]: any;
 }
 
@@ -262,6 +270,7 @@ export enum MeterState {
 
 export enum MeterTab {
     DAMAGE,
+    RDPS,
     TANK,
     PARTY_BUFFS,
     SELF_BUFFS,

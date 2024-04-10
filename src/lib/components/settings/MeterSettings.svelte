@@ -84,6 +84,19 @@
             bind:setting={$settings.meter.counters} />
     </div>
     <div class="pt-4">
+        <div>RDPS</div>
+        <div class="mt-4 flex flex-col space-y-2 px-2">
+            <SettingItem
+                name="RDPS Received"
+                description="Total damage received from other players"
+                bind:setting={$settings.meter.rdpsDamageReceived} />
+            <SettingItem
+                name="RDPS Given"
+                description="Total damage given to other players"
+                bind:setting={$settings.meter.rdpsDamageGiven} />
+        </div>
+    </div>
+    <div class="pt-4">
         <div class="px-2">Skill Breakdown</div>
         <div class="mt-4 flex flex-col space-y-2 px-2">
             <SettingItem

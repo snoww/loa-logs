@@ -9,6 +9,7 @@
     import { tooltip } from "$lib/utils/tooltip";
     import { round } from "$lib/utils/numbers";
     import { addBardBubbles } from "$lib/utils/buffs";
+    import { localPlayer } from "$lib/utils/stores";
 
     export let player: Entity;
     export let groupedSynergies: Map<string, Map<number, StatusEffect>>;
@@ -27,7 +28,11 @@
     $: {
         tweenedValue.set(percentage);
         if (Object.hasOwn($colors, player.class)) {
-            color = $colors[player.class].color;
+            if ($settings.general.constantLocalPlayerColor && $localPlayer == player.name) {
+                color = $colors["Local"].color;
+            } else {
+                color = $colors[player.class].color;
+            }
         }
 
         playerName = formatPlayerName(player, $settings.general.showNames, $settings.general.showGearScore);

@@ -110,5 +110,9 @@
                 description="Toggle transparent background for live meter."
                 bind:setting={$settings.general.transparent} />
         {/if}
+        <SettingItem
+            name="Constant Local Player Color"
+            description={"Keeps the color for the local player the same regardless of class. (Change in Class Colors)"}
+            bind:setting={$settings.general.constantLocalPlayerColor} />
     </div>
 </div>

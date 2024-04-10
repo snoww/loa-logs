@@ -2,7 +2,7 @@
     import { HexToRgba } from "$lib/utils/colors";
     import { formatPlayerName } from "$lib/utils/strings";
     import { colors, classIconCache, settings } from "$lib/utils/settings";
-    import { takingScreenshot } from "$lib/utils/stores";
+    import { localPlayer, takingScreenshot } from "$lib/utils/stores";
     import { tooltip } from "$lib/utils/tooltip";
     import { type Entity, ShieldDetails } from "$lib/types";
     import ShieldTooltipDetail from "$lib/components/shared/ShieldTooltipDetail.svelte";
@@ -16,7 +16,11 @@
     let playerName: string;
 
     if (Object.hasOwn($colors, player.class)) {
-        color = $colors[player.class].color;
+        if ($settings.general.constantLocalPlayerColor && $localPlayer == player.name) {
+            color = $colors["Local"].color;
+        } else {
+            color = $colors[player.class].color;
+        }
     }
 
     let totalShieldStr: (string | number)[];

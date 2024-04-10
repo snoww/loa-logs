@@ -23,12 +23,19 @@
     import { tooltip } from "$lib/utils/tooltip";
     import { writable } from "svelte/store";
     import Notification from "./shared/Notification.svelte";
-    import { takingScreenshot, screenshotAlert, screenshotError } from "$lib/utils/stores";
+    import {
+        takingScreenshot,
+        screenshotAlert,
+        screenshotError,
+        rdpsEventDetails,
+        localPlayer
+    } from "$lib/utils/stores";
     import html2canvas from "html2canvas";
     import Details from "./Details.svelte";
     import DamageTaken from "./shared/DamageTaken.svelte";
     import BossTable from "./shared/BossTable.svelte";
     import BossBreakdown from "./shared/BossBreakdown.svelte";
+    import Rdps from "$lib/components/shared/Rdps.svelte";
 
     let time = +Date.now();
     let encounter: Encounter | null = null;
@@ -116,6 +123,13 @@
             let adminErrorEvent = await listen("admin", () => {
                 adminAlert = true;
             });
+            let rdpsEvent = await listen("rdps", (event: any) => {
+                if (event.payload === "request_success" || event.payload === "requesting_stats") {
+                    $rdpsEventDetails = "";
+                } else {
+                    $rdpsEventDetails = event.payload;
+                }
+            });
 
             events.push(
                 encounterUpdateEvent,
@@ -126,7 +140,8 @@
                 saveEncounterEvent,
                 phaseTransitionEvent,
                 raidStartEvent,
-                adminErrorEvent
+                adminErrorEvent,
+                rdpsEvent
             );
         })();
     });
@@ -157,6 +172,7 @@
     let anySupportBuff: boolean = false;
     let anySupportIdentity: boolean = false;
     let anySupportBrand: boolean = false;
+    let anyRdpsData: boolean = false;
     let isSolo: boolean = true;
 
     let paused = writable(false);
@@ -182,6 +198,7 @@
                         .filter((e) => e.damageStats.damageDealt > 0 && e.entityType === EntityType.BOSS)
                         .sort((a, b) => b.damageStats.damageDealt - a.damageStats.damageDealt);
                 }
+                $localPlayer = encounter.localPlayer;
                 isSolo = players.length === 1;
                 anyDead = players.some((player) => player.isDead);
                 anyFrontAtk = players.some((player) => player.skillStats.frontAttacks > 0);
@@ -189,6 +206,7 @@
                 anySupportBuff = players.some((player) => player.damageStats.buffedBySupport > 0);
                 anySupportIdentity = players.some((player) => player.damageStats.buffedByIdentity > 0);
                 anySupportBrand = players.some((player) => player.damageStats.debuffedBySupport > 0);
+                anyRdpsData = players.some((player) => player.damageStats.rdpsDamageReceived > 0);
                 topDamageDealt = encounter.encounterDamageStats.topDamageDealt;
                 playerDamagePercentages = players.map(
                     (player) => (player.damageStats.damageDealt / topDamageDealt) * 100
@@ -293,6 +311,7 @@
         focusedBoss = "";
         encounter = null;
         players = [];
+        bosses = [];
         parties = undefined;
         currentBoss = null;
         encounterDuration = "00:00";
@@ -305,6 +324,8 @@
         anySupportBuff = false;
         anySupportIdentity = false;
         anySupportBrand = false;
+        anyRdpsData = false;
+        $rdpsEventDetails = "";
     }
 
     let screenshotAreaDiv: HTMLElement;
@@ -407,6 +428,13 @@
                                     >Iden%
                                 </th>
                             {/if}
+                            {#if anyRdpsData && $settings.meter.ssyn}
+                                <th
+                                    class="w-12 font-normal"
+                                    use:tooltip={{ content: "% Damage gained from Support" }}
+                                >sSyn%
+                                </th>
+                            {/if}
                             {#if $settings.meter.counters}
                                 <th class="w-12 font-normal" use:tooltip={{ content: "Counters" }}>CTR</th>
                             {/if}
@@ -430,6 +458,7 @@
                                     {anySupportBuff}
                                     {anySupportIdentity}
                                     {anySupportBrand}
+                                    {anyRdpsData}
                                     {isSolo} />
                             </tr>
                         {/each}
@@ -440,6 +469,8 @@
                     <PlayerBreakdown entity={player} {duration} {handleRightClick} />
                 </table>
             {/if}
+        {:else if tab === MeterTab.RDPS}
+            <Rdps {players} {duration} {totalDamageDealt} meterSettings={$settings.meter}/>
         {:else if tab === MeterTab.PARTY_BUFFS}
             {#if state === MeterState.PARTY}
                 <Buffs

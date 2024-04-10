@@ -4,7 +4,7 @@
     import { HexToRgba, RGBLinearShade } from "$lib/utils/colors";
     import { settings, skillIcon } from "$lib/utils/settings";
     import { getSkillIcon } from "$lib/utils/strings";
-    import { generateTripodTooltip, tooltip } from "$lib/utils/tooltip";
+    import { generateSkillTooltip, tooltip } from "$lib/utils/tooltip";
     import BuffTooltipDetail from "./BuffTooltipDetail.svelte";
 
     export let skill: Skill;
@@ -33,7 +33,7 @@
     </td>
     <td colspan="2">
         <div class="truncate">
-            <span use:tooltip={{ content: generateTripodTooltip(skill) }}>
+            <span use:tooltip={{ content: generateSkillTooltip(skill) }}>
                 {skill.name}
             </span>
         </div>
