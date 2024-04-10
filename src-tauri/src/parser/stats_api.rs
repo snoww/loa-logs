@@ -159,6 +159,10 @@ impl StatsApi {
                 equip_data[item.slot as usize] = item.id;
             }
         }
+        
+        if equip_data[..26].iter().all(|&x| x == 0) {
+            return Some("".to_string());
+        }
 
         let data = format!(
             "{}{}{}{}",
