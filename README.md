@@ -75,7 +75,7 @@ A: You can change whatever column you want to show in the settings. TIP: you can
 
 #### Q: Are you going to implement rDPS like LOA Details?
 
-A: No. If you wish to see rDPS, please use [LOA Details](https://github.com/lost-ark-dev/loa-details). They have spent a lot of effort simulating stats and buffs to make it work, and I am way too lazy to port that here. You can have both tools running at the same time if you wish.
+A: rDPS is finally implemented as of v1.8.0. Make sure to thank Herysia and Mathi.
 
 #### Q: Help, my issue isn't listed here.
 
@@ -91,6 +91,9 @@ A: [Yes.](https://cdn.discordapp.com/attachments/537415745198489633/113441770473
 
 ### Damage Breakdown with DPS Charts
 <img src="https://i.imgur.com/T4HX6XK.png" width="500"/>
+
+### rDPS
+<img src="https://i.imgur.com/cxKz9pP.png"/>
 
 ### Skill Breakdown
 <img src="https://i.imgur.com/P5Mb9oe.png" width="600"/>
