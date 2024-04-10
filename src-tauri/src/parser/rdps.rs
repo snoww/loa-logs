@@ -1,10 +1,6 @@
-use crate::parser::encounter_state::is_support_class_id;
 use crate::parser::entity_tracker::Entity;
-use crate::parser::models::{
-    CombatEffectConditionData, CombatEffectData, CombatEffectDetail, EncounterEntity, EntityType,
-    PassiveOption, Skill, SkillBuffData, SkillData, IDENTITY_CATEGORY, NPC_GRADE, STAT_TYPE_MAP,
-    STAT_TYPE_MAP_TRA,
-};
+use crate::parser::models::*;
+use crate::parser::utils::is_support_class_id;
 use hashbrown::HashMap;
 
 pub fn get_buff_after_tripods(
@@ -74,8 +70,7 @@ pub fn get_buff_after_tripods(
                             }
                         }
                     } else if feature_type == "change_buff_param" {
-                        if let Some(status_effect_values) = buff.status_effect_values.as_mut()
-                        {
+                        if let Some(status_effect_values) = buff.status_effect_values.as_mut() {
                             if i0 == 0 || i0 == skill_effect_id {
                                 let buff_id = params.get(1).cloned().unwrap_or_default();
                                 if buff.id == buff_id {

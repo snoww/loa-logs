@@ -6,8 +6,9 @@ mod party_tracker;
 mod rdps;
 mod stats_api;
 mod status_tracker;
+mod utils;
 
-use crate::parser::encounter_state::{get_class_from_id, EncounterState};
+use crate::parser::encounter_state::EncounterState;
 use crate::parser::entity_tracker::{get_current_and_max_hp, EntityTracker};
 use crate::parser::id_tracker::IdTracker;
 use crate::parser::models::{DamageData, EntityType, Identity, Stagger, AWS_REGIONS};
@@ -17,6 +18,7 @@ use crate::parser::status_tracker::{
     get_status_effect_value, StatusEffectDetails, StatusEffectTargetType, StatusEffectType,
     StatusTracker,
 };
+use crate::parser::utils::get_class_from_id;
 use anyhow::Result;
 use chrono::Utc;
 use hashbrown::HashMap;
