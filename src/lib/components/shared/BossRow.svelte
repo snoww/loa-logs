@@ -2,7 +2,7 @@
     import type { Entity } from "$lib/types";
     import { HexToRgba, RGBLinearShade } from "$lib/utils/colors";
     import { abbreviateNumberSplit } from "$lib/utils/numbers";
-    import { colors, settings } from "$lib/utils/settings";
+    import { settings } from "$lib/utils/settings";
     import { tooltip } from "$lib/utils/tooltip";
     import { cubicOut } from "svelte/easing";
     import { tweened } from "svelte/motion";

@@ -551,7 +551,7 @@
         </div>
     {/if}
     {#if tab === MeterTab.IDENTITY && localPlayerEntity !== null}
-        <LogIdentity {localPlayerEntity} duration={encounter.duration} />
+        <LogIdentity localPlayer={localPlayerEntity} duration={encounter.duration} />
     {:else if tab === MeterTab.STAGGER && encounter.encounterDamageStats.misc && encounter.encounterDamageStats.misc.staggerStats}
         <LogStagger staggerStats={encounter.encounterDamageStats.misc.staggerStats} />
     {:else}

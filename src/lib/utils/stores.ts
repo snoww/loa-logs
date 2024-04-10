@@ -1,7 +1,6 @@
 import { encounterMap } from "$lib/constants/encounters";
 import { SearchFilter } from "$lib/types";
-import { readable, type Writable, writable } from "svelte/store";
-import type { UpdateManifest } from "@tauri-apps/api/updater";
+import { readable, writable } from "svelte/store";
 
 export const takingScreenshot = writable(false);
 
