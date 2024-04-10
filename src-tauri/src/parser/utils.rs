@@ -468,8 +468,8 @@ pub fn get_engravings(
         }
     }
     
-    class_engravings.sort_by(|a, b| a.level.cmp(&b.level).then_with(|| a.id.cmp(&b.id)));
-    other_engravings.sort_by(|a, b| a.level.cmp(&b.level).then_with(|| a.id.cmp(&b.id)));
+    class_engravings.sort_by(|a, b| b.level.cmp(&a.level).then_with(|| a.id.cmp(&b.id)));
+    other_engravings.sort_by(|a, b| b.level.cmp(&a.level).then_with(|| a.id.cmp(&b.id)));
 
     let class = if class_engravings.is_empty() {
         None
