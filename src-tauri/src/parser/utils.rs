@@ -1,6 +1,6 @@
 use crate::parser::entity_tracker::Entity;
 use crate::parser::models::*;
-use crate::parser::stats_api::PlayerStats;
+use crate::parser::stats_api::{Engraving, PlayerStats};
 use hashbrown::HashMap;
 use rusqlite::{params, Transaction};
 use serde_json::json;
@@ -440,6 +440,90 @@ fn cooldown_gem_value_to_level(value: u32) -> u8 {
     }
 }
 
+pub fn get_engravings(
+    class_id: u32,
+    engravings: &Option<Vec<Engraving>>,
+) -> Option<PlayerEngravings> {
+    let engravings = match engravings {
+        Some(engravings) => engravings,
+        None => return None,
+    };
+
+    let mut class_engravings: Vec<PlayerEngraving> = Vec::new();
+    let mut other_engravings: Vec<PlayerEngraving> = Vec::new();
+
+    for e in engravings.iter() {
+        if let Some(engraving_data) = ENGRAVING_DATA.get(&e.id) {
+            let player_engraving = PlayerEngraving {
+                name: engraving_data.name.clone(),
+                id: e.id,
+                level: e.level,
+                icon: engraving_data.icon.clone(),
+            };
+            if is_class_engraving(class_id, engraving_data.id) {
+                class_engravings.push(player_engraving);
+            } else {
+                other_engravings.push(player_engraving);
+            }
+        }
+    }
+    
+    class_engravings.sort_by(|a, b| a.level.cmp(&b.level).then_with(|| a.id.cmp(&b.id)));
+    other_engravings.sort_by(|a, b| a.level.cmp(&b.level).then_with(|| a.id.cmp(&b.id)));
+
+    let class = if class_engravings.is_empty() {
+        None
+    } else {
+        Some(class_engravings)
+    };
+    let other = if other_engravings.is_empty() {
+        None
+    } else {
+        Some(other_engravings)
+    };
+
+    if class.is_none() && other.is_none() {
+        None
+    } else {
+        Some(PlayerEngravings {
+            class_engravings: class,
+            other_engravings: other,
+        })
+    }
+}
+
+fn is_class_engraving(class_id: u32, engraving_id: u32) -> bool {
+    match engraving_id {
+        125 | 188 => class_id == 102, // mayhem, berserker's technique
+        196 | 197 => class_id == 103, // rage hammer, gravity training
+        224 | 225 => class_id == 104, // combat readiness, lone knight
+        282 | 283 => class_id == 105, // judgement, blessed aura
+        309 | 320 => class_id == 112, // predator, punisher
+        200 | 201 => class_id == 201, // empress's grace, order of the emperor
+        198 | 199 => class_id == 202, // master summoner, communication overflow
+        194 | 195 => class_id == 203, // true courage, desperate salvation
+        293 | 294 => class_id == 204, // igniter, reflux
+        189 | 127 => class_id == 302, // first intention, esoteric skill enhancement
+        190 | 191 => class_id == 303, // ultimate skill: taijutsu, shock training
+        256 | 257 => class_id == 304, // energy overflow, robust spirit
+        276 | 277 => class_id == 305, // pinnacle, control
+        291 | 292 => class_id == 312, // deathblow, esoteric flurry
+        314 | 315 => class_id == 313, // brawl king storm, asura's path
+        278 | 279 => class_id == 401, // remaining energy, surge
+        280 | 281 => class_id == 402, // perfect suppression, demonic impulse
+        286 | 287 => class_id == 403, // hunger, lunar voice
+        311 | 312 => class_id == 404, // full moon harvester, night's edge
+        258 | 259 => class_id == 502, // loyal companion, death strike
+        192 | 129 => class_id == 503, // pistoleer, enhanced weapon
+        130 | 193 => class_id == 504, // firepower enhancement, barrage enhancement
+        284 | 285 => class_id == 505, // arthetinean skill, evolutionary legacy
+        289 | 290 => class_id == 511, // peacemaker, time to hunt
+        305 | 306 => class_id == 602, // recurrence, full bloom
+        307 | 308 => class_id == 603, // wind fury, drizzle
+        _ => false,
+    }
+}
+
 fn generate_intervals(start: i64, end: i64) -> Vec<i64> {
     if start >= end {
         return Vec::new();
@@ -676,8 +760,9 @@ pub fn insert_data(
         damage_stats,
         skill_stats,
         dps,
-        character_id
-    ) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15)",
+        character_id,
+        engravings
+    ) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16)",
         )
         .expect("failed to prepare entity statement");
 
@@ -735,6 +820,8 @@ pub fn insert_data(
                     }
                 }
             }
+            
+            entity.engraving_data = get_engravings(entity.class_id, &stats.engravings);
         }
 
         for (_, skill) in entity.skills.iter_mut() {
@@ -887,6 +974,7 @@ pub fn insert_data(
                 json!(entity.skill_stats),
                 entity.damage_stats.dps,
                 entity.character_id,
+                json!(entity.engraving_data),
             ])
             .expect("failed to insert entity");
     }

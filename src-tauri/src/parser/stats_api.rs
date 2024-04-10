@@ -342,6 +342,7 @@ pub struct PlayerStats {
     pub stats: HashMap<u8, u32>,
     pub elixirs: Option<Vec<ElixirData>>,
     pub gems: Option<Vec<GemData>>,
+    pub engravings: Option<Vec<Engraving>>,
 }
 
 #[derive(Debug, Default, Clone, Deserialize)]
@@ -370,8 +371,8 @@ pub struct GemData {
 
 #[derive(Debug, Default, Clone, Deserialize)]
 #[serde(rename_all = "camelCase", default)]
-pub struct EngravingData {
-    pub name: String,
+pub struct Engraving {
+    pub id: u32,
     pub level: u8,
 }
 

@@ -311,6 +311,7 @@
         focusedBoss = "";
         encounter = null;
         players = [];
+        bosses = [];
         parties = undefined;
         currentBoss = null;
         encounterDuration = "00:00";

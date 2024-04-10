@@ -133,6 +133,8 @@ export interface Skill {
     castLog: Array<number>;
     tripodIndex?: Tripod;
     tripodLevel?: Tripod;
+    gemCooldown?: number;
+    gemDamage?: number;
     rdpsDamageReceived: number;
     rdpsDamageReceivedSupport: number;
     rdpsDamageGiven: number;

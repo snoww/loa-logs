@@ -126,6 +126,23 @@ pub struct EncounterEntity {
     pub skills: HashMap<u32, Skill>,
     pub damage_stats: DamageStats,
     pub skill_stats: SkillStats,
+    pub engraving_data: Option<PlayerEngravings>
+}
+
+#[derive(Debug, Default, Serialize, Deserialize, Clone)]
+#[serde(rename_all = "camelCase")]
+pub struct PlayerEngravings {
+    pub class_engravings: Option<Vec<PlayerEngraving>>,
+    pub other_engravings: Option<Vec<PlayerEngraving>>,
+}
+
+#[derive(Debug, Default, Serialize, Deserialize, Clone)]
+#[serde(rename_all = "camelCase")]
+pub struct PlayerEngraving {
+    pub name: String,
+    pub id: u32,
+    pub level: u8,
+    pub icon: String,
 }
 
 #[derive(Debug, Default, Serialize, Deserialize, Clone)]
@@ -566,6 +583,13 @@ pub type ItemSetLevel = HashMap<u8, ItemSetCount>;
 pub type ItemSetCount = HashMap<u8, ItemSetDetails>;
 
 #[derive(Debug, Default, Deserialize, Clone)]
+pub struct EngravingData {
+    pub id: u32,
+    pub name: String,
+    pub icon: String,
+}
+
+#[derive(Debug, Default, Deserialize, Clone)]
 pub struct AwsIpRanges {
     pub prefixes: Vec<Prefix>,
 }
@@ -914,6 +938,10 @@ lazy_static! {
     };
     pub static ref SKILL_FEATURE_DATA: HashMap<u32, SkillFeatureLevelData> = {
         let json_str = include_str!("../../meter-data/SkillFeature.json");
+        serde_json::from_str(json_str).unwrap()
+    };
+    pub static ref ENGRAVING_DATA: HashMap<u32, EngravingData> = {
+        let json_str = include_str!("../../meter-data/Ability.json");
         serde_json::from_str(json_str).unwrap()
     };
     pub static ref ITEM_SET_DATA: HashMap<String, HashMap<u8, ItemSet>> = {
