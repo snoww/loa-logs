@@ -3,7 +3,7 @@
     import { type Entity, EntityType } from "$lib/types";
     import RdpsRow from "$lib/components/shared/RdpsRow.svelte";
     import { getRDamage } from "$lib/utils/numbers";
-    import { takingScreenshot } from "$lib/utils/stores";
+    import { rdpsEventDetails, takingScreenshot } from "$lib/utils/stores";
 
     export let players: Array<Entity>;
     export let totalDamageDealt: number;
@@ -34,7 +34,7 @@
 <table class="relative w-full table-fixed">
     <RdpsHeader {meterSettings} />
     <tbody class="relative z-10">
-        {#if players.length > 0}
+        {#if players.length > 0 && $rdpsEventDetails === ""}
             {#each sortedPlayers as player, i (player.name)}
                 <RdpsRow
                     {meterSettings}
