@@ -93,8 +93,12 @@
             description="Show the percentage of damage buffed by support identity"
             bind:setting={$settings.logs.percentIdentityBySup} />
         <SettingItem
-            name="Counters"
-            description="Show the number of counters hit"
+            name="Support Identity %"
+            description="Show the percentage of damage buffed by support identity"
+            bind:setting={$settings.logs.ssyn} />
+        <SettingItem
+            name="Support Synergy %"
+            description="Show the percentage of damage gained from support synergy"
             bind:setting={$settings.logs.counters} />
     </div>
     <div class="pt-4">
