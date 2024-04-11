@@ -199,7 +199,8 @@ impl StatusTracker {
         };
         // println!("source_id: {:?}, source_type: {:?}", source_id, source_type);
 
-        let status_effects_on_source = self.actually_get_status_effects(source_id, source_type, timestamp);
+        let status_effects_on_source =
+            self.actually_get_status_effects(source_id, source_type, timestamp);
 
         let use_party_for_target = if source_entity.entity_type == EntityType::PLAYER {
             self.should_use_party_status_effect(target_entity.character_id, local_character_id)
@@ -214,7 +215,7 @@ impl StatusTracker {
             .get(&source_entity.id)
             .cloned();
         // println!("use_party_for_target: {:?}, source_party_id: {:?}", use_party_for_target, source_party_id);
-        let status_effects_on_target = match (use_party_for_target, source_party_id) {
+        let mut status_effects_on_target = match (use_party_for_target, source_party_id) {
             (true, Some(source_party_id)) => self.get_status_effects_from_party(
                 target_entity.character_id,
                 StatusEffectTargetType::Party,
@@ -242,6 +243,12 @@ impl StatusTracker {
         // println!(
         //     "status_effects_on_source: {:?}, status_effects_on_target: {:?}",
         //     status_effects_on_source, status_effects_on_target);
+        status_effects_on_target.retain(|se| {
+            !(se.target_type == StatusEffectTargetType::Local
+                && se.category == Debuff
+                && se.source_id != source_id
+                && se.db_target_type == "self")
+        });
         (status_effects_on_source, status_effects_on_target)
     }
 
@@ -349,6 +356,7 @@ pub fn build_status_effect(
     let mut show_type = StatusEffectShowType::Other;
     let mut status_effect_type = StatusEffectType::Other;
     let mut name = "Unknown".to_string();
+    let mut db_target_type = "".to_string();
     if let Some(effect) = SKILL_BUFF_DATA.get(&se_data.status_effect_id) {
         name = effect.name.to_string();
         if effect.category.as_str() == "debuff" {
@@ -367,6 +375,7 @@ pub fn build_status_effect(
         if effect.buff_type.as_str() == "shield" {
             status_effect_type = StatusEffectType::Shield
         }
+        db_target_type = effect.target.to_string();
     }
 
     let expiry = if se_data.total_time > 0. && se_data.total_time < 604800. {
@@ -384,6 +393,7 @@ pub fn build_status_effect(
         target_id,
         status_effect_id: se_data.status_effect_id,
         target_type,
+        db_target_type,
         value,
         stack_count: se_data.stack_count,
         buff_category,
@@ -455,6 +465,7 @@ pub struct StatusEffectDetails {
     pub target_id: u64,
     pub source_id: u64,
     pub target_type: StatusEffectTargetType,
+    pub db_target_type: String,
     pub value: u64,
     pub stack_count: u8,
     pub category: StatusEffectCategory,
