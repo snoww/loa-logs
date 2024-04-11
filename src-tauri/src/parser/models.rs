@@ -1,13 +1,13 @@
 use std::fmt::Display;
 use std::str::FromStr;
 
+use crate::parser::entity_tracker::Entity;
 use bitflags::bitflags;
 use hashbrown::{HashMap, HashSet};
 use lazy_static::lazy_static;
 use serde::{Deserialize, Serialize};
 use serde_with::serde_as;
 use serde_with::DefaultOnError;
-use crate::parser::entity_tracker::Entity;
 
 pub const DB_VERSION: i32 = 4;
 
@@ -126,7 +126,7 @@ pub struct EncounterEntity {
     pub skills: HashMap<u32, Skill>,
     pub damage_stats: DamageStats,
     pub skill_stats: SkillStats,
-    pub engraving_data: Option<PlayerEngravings>
+    pub engraving_data: Option<PlayerEngravings>,
 }
 
 #[derive(Debug, Default, Serialize, Deserialize, Clone)]
@@ -863,7 +863,7 @@ pub struct RdpsData {
     pub skill_dmg_rate: RdpsSelfRates,
     pub atk_pow_amplify: Vec<RdpsBuffData>,
     pub crit: RdpsSelfRates,
-    pub crit_dmg_rate: f64
+    pub crit_dmg_rate: f64,
 }
 
 impl Default for RdpsData {
@@ -961,10 +961,13 @@ lazy_static! {
                 }
                 item_set_level.insert(*level, item_set_count);
                 for item_id in set_level_data.item_ids.iter() {
-                    item_set_ids.insert(*item_id, ItemSetShort {
-                        set_name: set_name.clone(),
-                        level: *level,
-                    });
+                    item_set_ids.insert(
+                        *item_id,
+                        ItemSetShort {
+                            set_name: set_name.clone(),
+                            level: *level,
+                        },
+                    );
                 }
             }
             item_set_names.insert(set_name.clone(), item_set_level);
@@ -978,6 +981,19 @@ lazy_static! {
     pub static ref ESTHER_DATA: Vec<Esther> = {
         let json_str = include_str!("../../meter-data/Esther.json");
         serde_json::from_str(json_str).unwrap()
+    };
+    pub static ref VALID_ZONES: HashSet<u32> = {
+        let valid_zones = [
+            30801, 30802, 30803, 30804, 30805, 30806, 30807, 30832, 30835, 37001, 37002, 37003,
+            37011, 37012, 37021, 37022, 37031, 37032, 37041, 37042, 37051, 37061, 37071, 37072,
+            37081, 37091, 37092, 37093, 37094, 37101, 37102, 37111, 37112, 308010, 308011, 308012,
+            308014, 308015, 308016, 308017, 308018, 308019, 308020, 308021, 308022, 308023, 308024,
+            308025, 308026, 308027, 308028, 308029, 308030, 308037, 308039, 308040, 308041, 308042,
+            308043, 308410, 308411, 308412, 308414, 308415, 308416, 308417, 308418, 308419, 308420,
+            308421, 308422, 308423, 308424, 308425, 308426, 308428, 308429, 308430, 308437, 309020,
+        ];
+
+        valid_zones.iter().cloned().collect()
     };
     pub static ref AWS_REGIONS: AwsIpRanges = {
         let json_str = include_str!("../../meter-data/ip-ranges.json");

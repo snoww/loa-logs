@@ -23,6 +23,7 @@ pub struct StatsApi {
     client: Arc<Client>,
     hash_cache: Arc<Mutex<HashMap<String, String>>>,
     window: Arc<Window<Wry>>,
+    pub valid_zone: bool,
 }
 
 impl StatsApi {
@@ -35,6 +36,7 @@ impl StatsApi {
             cancellation_flag: Arc::new(AtomicBool::new(false)),
             client: Arc::new(Client::new()),
             hash_cache: Arc::new(Mutex::new(HashMap::new())),
+            valid_zone: false,
         }
     }
 
@@ -54,10 +56,7 @@ impl StatsApi {
             self.broadcast("missing_info");
             return;
         }
-        if state.raid_difficulty.is_empty()
-            || state.raid_difficulty == "Inferno"
-            || state.raid_difficulty == "Challenge"
-        {
+        if !self.valid_difficulty(&state.raid_difficulty) {
             debug_print(format_args!("stats not valid in current zone"));
             self.broadcast("invalid_zone");
             return;
@@ -159,7 +158,7 @@ impl StatsApi {
                 equip_data[item.slot as usize] = item.id;
             }
         }
-        
+
         if equip_data[..26].iter().all(|&x| x == 0) {
             return Some("".to_string());
         }
@@ -176,7 +175,7 @@ impl StatsApi {
     }
 
     pub fn get_all_stats(&self, difficulty: &str) -> Option<HashMap<String, PlayerStats>> {
-        if difficulty.is_empty() || difficulty == "Inferno" || difficulty == "Challenge" {
+        if !self.valid_difficulty(difficulty) {
             return None;
         }
         if self.cache_status.load(Ordering::Relaxed) {
@@ -191,7 +190,7 @@ impl StatsApi {
     }
 
     pub fn get_stats(&self, difficulty: &str) -> Option<HashMap<String, Stats>> {
-        if difficulty.is_empty() || difficulty == "Inferno" || difficulty == "Challenge" {
+        if !self.valid_difficulty(difficulty) {
             return None;
         }
         if self.cache_status.load(Ordering::Relaxed) {
@@ -203,6 +202,11 @@ impl StatsApi {
         } else {
             None
         }
+    }
+
+    fn valid_difficulty(&self, difficulty: &str) -> bool {
+        (difficulty == "Normal" || difficulty == "Hard" || difficulty == "Extreme")
+            && self.valid_zone
     }
 
     pub fn broadcast(&self, message: &str) {
@@ -226,7 +230,10 @@ async fn make_request(
     current_retries: usize,
 ) {
     if current_retries > 24 {
-        warn!("# of retries exceeded, failed to fetch player stats for {:?}", players);
+        warn!(
+            "# of retries exceeded, failed to fetch player stats for {:?}",
+            players
+        );
         remove_from_hash_cache(&hash_cache, &players);
         window
             .emit("rdps", "request_failed")

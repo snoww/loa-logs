@@ -11,7 +11,7 @@ mod utils;
 use crate::parser::encounter_state::EncounterState;
 use crate::parser::entity_tracker::{get_current_and_max_hp, EntityTracker};
 use crate::parser::id_tracker::IdTracker;
-use crate::parser::models::{DamageData, EntityType, Identity, Stagger, AWS_REGIONS};
+use crate::parser::models::{DamageData, EntityType, Identity, Stagger, AWS_REGIONS, VALID_ZONES};
 use crate::parser::party_tracker::PartyTracker;
 use crate::parser::stats_api::StatsApi;
 use crate::parser::status_tracker::{
@@ -499,6 +499,8 @@ pub fn start(
                             state.raid_difficulty = "".to_string();
                         }
                     }
+
+                    stats_api.valid_zone = VALID_ZONES.contains(&pkt.raid_id);
                 }
             }
             Pkt::RaidBossKillNotify => {
@@ -819,6 +821,8 @@ pub fn start(
                     PKTZoneMemberLoadStatusNotify::new,
                     "PKTZoneMemberLoadStatusNotify",
                 ) {
+                    stats_api.valid_zone = VALID_ZONES.contains(&pkt.zone_id);
+
                     if !state.raid_difficulty.is_empty() {
                         continue;
                     }
