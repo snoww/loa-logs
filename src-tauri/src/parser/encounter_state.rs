@@ -406,25 +406,29 @@ impl EncounterState {
         if tripod_change {
             let mut tripod_data: Vec<TripodData> = vec![];
             if let (Some(tripod_index), Some(tripod_level)) = (tripod_index, tripod_level) {
-                let indexes = [
-                    tripod_index.first,
-                    tripod_index.second + 3,
-                    tripod_index.third + 6,
-                ];
+                let mut indexes = vec![tripod_index.first];
+                if tripod_index.second != 0 {
+                    indexes.push(tripod_index.second + 3);
+                }
+                // third row should never be set if second is not set
+                if tripod_index.third != 0 {
+                    indexes.push(tripod_index.third + 6);
+                }
                 let levels = [tripod_level.first, tripod_level.second, tripod_level.third];
                 if let Some(effect) = SKILL_FEATURE_DATA.get(&skill_id) {
-                    for i in 0..3 {
-                        let entries = effect.tripods.get(&indexes[i]).unwrap();
-                        let mut options: Vec<SkillFeatureOption> = vec![];
-                        for entry in &entries.entries {
-                            if entry.level > 0 && entry.level == levels[i] {
-                                options.push(entry.clone());
+                    for i in 0..indexes.len() {
+                        if let Some(entries) = effect.tripods.get(&indexes[i]) {
+                            let mut options: Vec<SkillFeatureOption> = vec![];
+                            for entry in &entries.entries {
+                                if entry.level > 0 && entry.level == levels[i] {
+                                    options.push(entry.clone());
+                                }
                             }
+                            tripod_data.push(TripodData {
+                                index: indexes[i],
+                                options,
+                            });
                         }
-                        tripod_data.push(TripodData {
-                            index: indexes[i],
-                            options,
-                        });
                     }
                 }
             }
