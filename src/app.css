@@ -156,7 +156,7 @@
 @layer components {
     * {
         -ms-overflow-style: none;
-        scrollbar-width: none;
+        scrollbar-width: auto;
     }
     *::-webkit-scrollbar {
         display: none;
@@ -166,18 +166,18 @@
     #logs-table::-webkit-scrollbar,
     #log-breakdown::-webkit-scrollbar,
     #buff-table::-webkit-scrollbar {
-        @apply right-0 block size-2 bg-zinc-800;
+        @apply !right-0 !block !size-2 !bg-zinc-800;
     }
     .custom-scroll::-webkit-scrollbar-thumb,
     #logs-table::-webkit-scrollbar-thumb,
     #log-breakdown::-webkit-scrollbar-thumb,
     #buff-table::-webkit-scrollbar-thumb {
-        @apply rounded-md bg-zinc-600;
+        @apply !rounded-md !bg-zinc-600;
     }
     .custom-scroll::-webkit-scrollbar-corner,
     #log-table::-webkit-scrollbar-corner,
     #log-breakdown::-webkit-scrollbar-corner,
     #buff-table::-webkit-scrollbar-corner {
-        @apply bg-zinc-800;
+        @apply !bg-zinc-800;
     }
 }
