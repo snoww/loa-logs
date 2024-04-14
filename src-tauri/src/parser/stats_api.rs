@@ -97,6 +97,7 @@ impl StatsApi {
                 }
             }
         }
+
         if player_hashes.is_empty() {
             return;
         }
@@ -229,7 +230,7 @@ async fn make_request(
     players: Vec<PlayerHash>,
     current_retries: usize,
 ) {
-    if current_retries > 24 {
+    if current_retries >= 10 {
         warn!(
             "# of retries exceeded, failed to fetch player stats for {:?}",
             players
@@ -285,12 +286,15 @@ async fn make_request(
                         .expect("failed to emit rdps message");
                 } else {
                     cache_status.store(false, Ordering::Relaxed);
+                    window
+                        .emit("rdps", "request_failed_retrying")
+                        .expect("failed to emit rdps message");
                     if cancellation.load(Ordering::SeqCst) {
                         debug_print(format_args!("request cancelled"));
                         remove_from_hash_cache(&hash_cache, &missing_players);
                         return;
                     }
-                    tokio::time::sleep(core::time::Duration::from_secs(2)).await;
+                    tokio::time::sleep(core::time::Duration::from_secs(5)).await;
                     if cancellation.load(Ordering::SeqCst) {
                         debug_print(format_args!("request cancelled"));
                         remove_from_hash_cache(&hash_cache, &missing_players);

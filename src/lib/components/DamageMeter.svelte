@@ -57,7 +57,7 @@
             time = +Date.now();
         }, 1000);
 
-        $rdpsEventDetails = "invalid_zone";
+        $rdpsEventDetails = "not_available";
 
         (async () => {
             let encounterUpdateEvent = await listen("encounter-update", (event: EncounterEvent) => {
@@ -126,7 +126,7 @@
                 adminAlert = true;
             });
             let rdpsEvent = await listen("rdps", (event: any) => {
-                if (event.payload === "request_success" || event.payload === "requesting_stats") {
+                if (event.payload === "request_success") {
                     $rdpsEventDetails = "";
                 } else {
                     $rdpsEventDetails = event.payload;
@@ -209,6 +209,13 @@
                 anySupportIdentity = players.some((player) => player.damageStats.buffedByIdentity > 0);
                 anySupportBrand = players.some((player) => player.damageStats.debuffedBySupport > 0);
                 anyRdpsData = players.some((player) => player.damageStats.rdpsDamageReceived > 0);
+                if (!anyRdpsData) {
+                    if ($rdpsEventDetails === "") {
+                        $rdpsEventDetails = "not_available";
+                    }
+                } else {
+                    $rdpsEventDetails = "";
+                }
                 topDamageDealt = encounter.encounterDamageStats.topDamageDealt;
                 playerDamagePercentages = players.map(
                     (player) => (player.damageStats.damageDealt / topDamageDealt) * 100
@@ -327,6 +334,7 @@
         anySupportIdentity = false;
         anySupportBrand = false;
         anyRdpsData = false;
+        $rdpsEventDetails = "not_available";
     }
 
     let screenshotAreaDiv: HTMLElement;

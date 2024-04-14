@@ -15,6 +15,12 @@
                 <span>Meter Opened Too Late, RDPS Data not Loaded</span>
             {:else if ($rdpsEventDetails === "request_failed")}
                 <span>Failed to Fetch Character Stats</span>
+            {:else if ($rdpsEventDetails === "request_failed_retrying")}
+                <span>Failed to Fetch Character Stats, Retrying...</span>
+            {:else if ($rdpsEventDetails === "not_available")}
+                <span class="text-gray-200">RDPS Unavailable</span>
+            {:else if ($rdpsEventDetails === "requesting_stats")}
+                <span class="text-gray-200">Requesting RDPS Data...</span>
             {:else}
                 <span>Error: {$rdpsEventDetails}</span>
             {/if}
