@@ -1268,11 +1268,14 @@ fn get_db_info(window: tauri::Window, min_duration: i64) -> EncounterDbInfo {
     let size_in_bytes = metadata.len();
     let size_in_kb = size_in_bytes as f64 / 1024.0;
     let size_in_mb = size_in_kb / 1024.0;
+    let size_in_gb = size_in_mb / 1024.0;
 
-    let size_str = if size_in_mb < 1.0 {
-        format!("{:.2} KB", size_in_kb)
-    } else {
+    let size_str = if size_in_gb >= 1.0 {
+        format!("{:.2} GB", size_in_gb)
+    } else if size_in_mb >= 1.0 {
         format!("{:.2} MB", size_in_mb)
+    } else {
+        format!("{:.2} KB", size_in_kb)
     };
 
     EncounterDbInfo {
@@ -1284,17 +1287,14 @@ fn get_db_info(window: tauri::Window, min_duration: i64) -> EncounterDbInfo {
 
 #[tauri::command]
 fn optimize_database(window: tauri::Window) {
-    let window = window.clone();
-    task::spawn(async move {
-        let path = window
-            .app_handle()
-            .path_resolver()
-            .resource_dir()
-            .expect("could not get resource dir");
-        let conn = get_db_connection(&path).expect("could not get db connection");
-        conn.execute("VACUUM;", params![]).unwrap();
-        info!("optimized database");
-    });
+    let path = window
+        .app_handle()
+        .path_resolver()
+        .resource_dir()
+        .expect("could not get resource dir");
+    let conn = get_db_connection(&path).expect("could not get db connection");
+    conn.execute("VACUUM;", params![]).unwrap();
+    info!("optimized database");
 }
 
 #[tauri::command]

@@ -14,6 +14,7 @@
     let deleteMsg = "";
     let deleteFn: (() => void) | undefined;
     let optimized = writable(false);
+    let optimizing = writable(false);
 
     async function openDbFolder() {
         await invoke("open_db_path");
@@ -65,13 +66,17 @@
         <button class="rounded-md bg-zinc-600 p-1 hover:bg-zinc-700" on:click={openDbFolder}> Open</button>
     </div>
     <div class="flex items-center space-x-4">
-        <div use:tooltip={{ content: "Use this feature if searching is slow" }}>Optimize Database:</div>
+        <div use:tooltip={{ content: "Use this feature if searching is slow" }}>
+            Optimize Database (Only use if Search is Slow):
+        </div>
         <button
-            class="rounded-md p-1 w-20 {$optimized ? 'disabled bg-gray-600' : 'bg-accent-800 hover:bg-accent-900'}"
+            class="w-20 rounded-md p-1 {$optimized ? 'disabled bg-gray-600' : 'bg-accent-800 hover:bg-accent-900'}"
             on:click={async () => {
-                $optimized = true;
+                $optimizing = true;
                 await invoke("write_log", { message: "optimizing database..." });
                 await invoke("optimize_database");
+                $optimizing = false;
+                $optimized = true;
             }}>
             {#if $optimized}
                 Optimized
@@ -149,6 +154,24 @@
         {/if}
     {/if}
 </div>
+{#if $optimizing}
+    <div class="fixed inset-0 z-50 bg-zinc-900 bg-opacity-80" />
+    <div class="fixed left-0 right-0 top-0 z-50 h-modal w-full items-center justify-center p-4">
+        <div class="relative top-[40%] mx-auto flex max-h-full w-full max-w-md">
+            <div class="relative mx-auto flex flex-col rounded-lg border-gray-700 bg-zinc-800 text-gray-400 shadow-md">
+                <div id="modal" class="flex-1 space-y-2 overflow-y-auto overscroll-contain p-6 text-center">
+                    <div>
+                        Optimizing Database. Do <span class="font-bold">NOT</span> close the app.
+                    </div>
+                    <div>
+                        App might become unresponsive, please be patient.
+                    </div>
+                    <div class="">This might take a while...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+{/if}
 {#if deleteConfirm && encounterDbInfo}
     <div class="fixed inset-0 z-50 bg-zinc-900 bg-opacity-80" />
     <div class="fixed left-0 right-0 top-0 z-50 h-modal w-full items-center justify-center p-4">
