@@ -83,7 +83,7 @@ A: Create an issue here on GitHub, or send a message in the #loa-logs channel on
 
 #### Q: Is it really "blazingly fast"?
 
-A: [Yes.](https://cdn.discordapp.com/attachments/537415745198489633/1134417704732872704/t7ns9qtb5gh81.png)
+A: [Yes.](https://i.imgur.com/QsLAntt.png)
 
 ## Screenshots
 ### In-game Overlay (optional Boss HP bar)
