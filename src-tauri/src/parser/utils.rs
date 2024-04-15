@@ -442,6 +442,7 @@ fn cooldown_gem_value_to_level(value: u32) -> u8 {
 
 fn gem_skill_id_to_skill_ids(skill_id: u32) -> Vec<u32> {
     match skill_id {
+        13000 | 13001 => vec![18011, 18030], // destroyer hypergravity skills
         23000 => vec![20311, 20310, 20070, 20071, 20080, 20081, 20170, 20181, 20280, 20281], // summoner elemental damage
         41000 => vec![25038, 25035, 25036, 25037], // db surge skill
         42000 | 42001 => vec![27800, 27030, 27810, 27820, 27830, 27840, 27850, 27860], // sh transformation skills
