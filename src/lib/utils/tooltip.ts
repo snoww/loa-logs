@@ -114,9 +114,6 @@ export function generateHeaderTooltip(buff: StatusEffect, iconPath: string) {
 }
 
 export function generateSkillTooltip(skill: Skill) {
-    if (!skill.tripodIndex) {
-        return skill.name;
-    }
 
     let str = `<div class="py-0.5">${skill.name}</div>`;
     str += "<div class='text-gray-300'>";
@@ -127,6 +124,9 @@ export function generateSkillTooltip(skill: Skill) {
         str += `<div><span style="color: ${getColorFromLevel(skill.gemCooldown)}">Lv. ${skill.gemCooldown}</span> CD</div>`;
     }
     str += "</div>";
+    if (!skill.tripodIndex) {
+        return str;
+    }
     str += `<div class="w-16">`;
     if (skill.tripodIndex.first > 0) {
         str += `<div class="flex space-x-1 py-0.5 justify-center">`;

@@ -440,6 +440,19 @@ fn cooldown_gem_value_to_level(value: u32) -> u8 {
     }
 }
 
+fn gem_skill_id_to_skill_ids(skill_id: u32) -> Vec<u32> {
+    match skill_id {
+        23000 => vec![20311, 20310, 20070, 20071, 20080, 20081, 20170, 20181, 20280, 20281], // summoner elemental damage
+        41000 => vec![25038, 25035, 25036, 25037], // db surge skill
+        42000 | 42001 => vec![27800, 27030, 27810, 27820, 27830, 27840, 27850, 27860], // sh transformation skills
+        51001 => vec![28159, 28160, 28161, 28162, 28170], // sharpshooter bird skill
+        53000 | 53001 => vec![30240, 30250, 30260, 30270, 30290], // arty barrage skills
+        54000 | 54001 => vec![35720, 35750, 35760, 35761, 35770, 35771, 35780, 35781, 35790, 35800], // machinist transformation skills
+        62000 => vec![32040, 32041], // aeromancer sun shower
+        _ => vec![skill_id],
+    }
+}
+
 pub fn get_engravings(
     class_id: u32,
     engravings: &Option<Vec<Engraving>>,
@@ -805,18 +818,19 @@ pub fn insert_data(
             .and_then(|stats| stats.get(&entity.name))
         {
             for gem in stats.gems.iter().flatten() {
-                let skill_id = gem.skill_id;
-                if let Some(skill) = entity.skills.get_mut(&skill_id) {
-                    match gem.gem_type {
-                        5 => {
-                            // damage gem
-                            skill.gem_damage = Some(damage_gem_value_to_level(gem.value))
+                for skill_id in gem_skill_id_to_skill_ids(gem.skill_id) {
+                    if let Some(skill) = entity.skills.get_mut(&skill_id) {
+                        match gem.gem_type {
+                            5 | 34 => {
+                                // damage gem
+                                skill.gem_damage = Some(damage_gem_value_to_level(gem.value))
+                            }
+                            27 | 35 => {
+                                // cooldown gem
+                                skill.gem_cooldown = Some(cooldown_gem_value_to_level(gem.value))
+                            }
+                            _ => {}
                         }
-                        27 => {
-                            // cooldown gem
-                            skill.gem_cooldown = Some(cooldown_gem_value_to_level(gem.value))
-                        }
-                        _ => {}
                     }
                 }
             }
