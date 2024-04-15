@@ -660,7 +660,8 @@
                     meterSettings={$settings.logs}
                     {players}
                     totalDamageDealt={encounter.encounterDamageStats.totalDamageDealt}
-                    duration={encounter.duration} />
+                    duration={encounter.duration}
+                    encounterPartyInfo={encounter.encounterDamageStats.misc?.partyInfo}/>
             {:else if tab === MeterTab.PARTY_BUFFS}
                 {#if state === MeterState.PARTY}
                     <LogBuffs {tab} encounterDamageStats={encounter.encounterDamageStats} {players} {inspectPlayer} />

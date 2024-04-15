@@ -6,6 +6,8 @@
     import { abbreviateNumberSplit, getBaseDamage, getRDamage } from "$lib/utils/numbers";
     import { HexToRgba } from "$lib/utils/colors";
     import { localPlayer } from "$lib/utils/stores";
+    import { tweened } from "svelte/motion";
+    import { cubicOut } from "svelte/easing";
 
     export let player: Entity;
     export let totalDamageDealt: number;
@@ -30,7 +32,12 @@
     let sConPercentage = "0.0";
     let dConPercentage = "0.0";
     let conPercentage = "0.0";
+    const tweenedValue = tweened(0, {
+        duration: 400,
+        easing: cubicOut
+    });
     $: {
+        tweenedValue.set(width);
         rDamage = getRDamage(player.damageStats);
         rDps = abbreviateNumberSplit(rDamage / (duration / 1000));
         damageDealt = abbreviateNumberSplit(rDamage);

@@ -3,10 +3,11 @@
     import { rdpsEventDetails } from "$lib/utils/stores";
 
     export let meterSettings: any;
+    export let partyId: number | undefined;
 </script>
 
 <thead>
-    <tr class="bg-zinc-900">
+    <tr class="h-6 bg-zinc-900">
         {#if $rdpsEventDetails}
             <th class="w-full px-2 text-right font-normal text-red-400">
                 {#if $rdpsEventDetails === "invalid_zone"}
@@ -26,7 +27,11 @@
                 {/if}
             </th>
         {:else}
-            <th class="w-7 px-2 font-normal" />
+            {#if partyId !== undefined && partyId >= 0}
+                <th class="w-7 whitespace-nowrap px-2 font-normal tracking-tight">Party {+partyId + 1}</th>
+            {:else}
+                <th class="w-7 px-2 font-normal"></th>
+            {/if}
             <th class="w-14 px-2 text-left font-normal" />
             <th class="w-full" />
             <th

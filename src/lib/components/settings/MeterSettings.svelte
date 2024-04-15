@@ -91,6 +91,10 @@
         <div>RDPS</div>
         <div class="mt-4 flex flex-col space-y-2 px-2">
             <SettingItem
+                name="Split RDPS Parties"
+                description="Split players into their respective parties for RDPS"
+                bind:setting={$settings.meter.rdpsSplitParty} />
+            <SettingItem
                 name="RDPS Received"
                 description="Total damage received from other players"
                 bind:setting={$settings.meter.rdpsDamageReceived} />
