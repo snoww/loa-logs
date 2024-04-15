@@ -46,6 +46,10 @@
     function debounce(fn: FormEventHandler<HTMLInputElement>, milliseconds: number) {
         let timer: number | undefined;
 
+        if ($searchStore.length === 0) {
+            return fn;
+        }
+
         return (evt: Event & { currentTarget: EventTarget & HTMLInputElement }) => {
             clearTimeout(timer);
             timer = setTimeout(() => {
