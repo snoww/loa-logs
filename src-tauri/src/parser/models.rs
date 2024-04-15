@@ -741,6 +741,18 @@ pub struct LogTabs {
     #[serde(default = "default_true")]
     pub rdps_damage_received: bool,
     #[serde(default = "default_true")]
+    pub rdps_contribution: bool,
+    #[serde(default = "default_true")]
+    pub rdps_s_contribution: bool,
+    #[serde(default = "default_true")]
+    pub rdps_d_contribution: bool,
+    #[serde(default = "default_true")]
+    pub rdps_syn: bool,
+    #[serde(default = "default_true")]
+    pub rdps_s_syn: bool,
+    #[serde(default = "default_true")]
+    pub rdps_d_syn: bool,
+    #[serde(default = "default_true")]
     pub ssyn: bool,
     pub breakdown: BreakdownTabs,
 }
@@ -774,6 +786,15 @@ pub struct MeterTabs {
     pub counters: bool,
     pub rdps_damage_given: bool,
     pub rdps_damage_received: bool,
+    pub rdps_contribution: bool,
+    pub rdps_s_contribution: bool,
+    pub rdps_d_contribution: bool,
+    #[serde(default = "default_true")]
+    pub rdps_syn: bool,
+    #[serde(default = "default_true")]
+    pub rdps_s_syn: bool,
+    #[serde(default = "default_true")]
+    pub rdps_d_syn: bool,
     #[serde(default = "default_true")]
     pub ssyn: bool,
     pub breakdown: BreakdownTabs,

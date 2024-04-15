@@ -94,11 +94,11 @@
             bind:setting={$settings.logs.percentIdentityBySup} />
         <SettingItem
             name="Support Synergy %"
-            description="Show the percentage of damage buffed by support identity"
+            description="Show the percentage of damage gained from support synergies"
             bind:setting={$settings.logs.ssyn} />
         <SettingItem
             name="Counters"
-            description="Show the percentage of damage gained from support synergy"
+            description="Show the number of counters hit"
             bind:setting={$settings.logs.counters} />
     </div>
     <div class="pt-4">
@@ -112,6 +112,30 @@
                 name="RDPS Given"
                 description="Total damage given to other players"
                 bind:setting={$settings.logs.rdpsDamageGiven} />
+            <SettingItem
+                name="Damage Contribution %"
+                description="Percentage of your damage that is from all other players' buffs other than your own"
+                bind:setting={$settings.logs.rdpsContribution} />
+            <SettingItem
+                name="Support Damage Contribution %"
+                description="Percentage of your damage that is from support buffs"
+                bind:setting={$settings.logs.rdpsSContribution} />
+            <SettingItem
+                name="Dealer Damage Contribution %"
+                description="Percentage of your damage that is from dealer buffs"
+                bind:setting={$settings.logs.rdpsDContribution} />
+            <SettingItem
+                name="Synergy %"
+                description="Show the percentage of damage gained from all synergies other than your own"
+                bind:setting={$settings.logs.rdpsSyn} />
+            <SettingItem
+                name="Support Synergy %"
+                description="Show the percentage of damage gained from support synergies"
+                bind:setting={$settings.logs.rdpsSSyn} />
+            <SettingItem
+                name="Dealer Synergy %"
+                description="Show the percentage of damage gained from dealer synergies"
+                bind:setting={$settings.logs.rdpsDSyn} />
         </div>
     </div>
     <div class="pt-4">

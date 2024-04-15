@@ -28,6 +28,7 @@
     let damageDealt: (string | number)[];
     let damagePercentage: string;
     let name: string;
+    let tooltipName: string;
     let color = "#ffffff";
     let deadFor: string;
 
@@ -68,9 +69,15 @@
         }
         if (entity.entityType === EntityType.ESTHER) {
             name = getEstherFromNpcId(entity.npcId);
+            tooltipName = name;
             color = "#4dc8d0";
         } else {
             name = formatPlayerName(entity, $settings.general.showNames, $settings.general.showGearScore);
+            if ($settings.general.showNames) {
+                tooltipName = entity.name;
+            } else {
+                tooltipName = entity.class;
+            }
         }
         if (entity.isDead) {
             deadFor = Math.abs((end - entity.damageStats.deathTime) / 1000).toFixed(0) + "s";
@@ -157,7 +164,7 @@
     </td>
 {/if}
 {#if anyRdpsData && meterSettings.ssyn}
-    <td class="px-1 text-center">
+    <td class="px-1 text-center" use:tooltip={{content: `<span class="italic">${tooltipName}</span> dealt +${sSynPercentage}% more damage from support buffs`}}>
         {sSynPercentage}<span class="text-3xs text-gray-300">%</span>
     </td>
 {/if}
