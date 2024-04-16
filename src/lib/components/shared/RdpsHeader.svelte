@@ -3,7 +3,7 @@
     import { rdpsEventDetails } from "$lib/utils/stores";
 
     export let meterSettings: any;
-    export let partyId: number | undefined;
+    export let partyId: number | undefined = undefined;
 </script>
 
 <thead>

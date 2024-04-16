@@ -17,6 +17,7 @@
     let alpha: number;
     let partySortedPlayers: Array<Array<Entity>> = [];
     let partyRDamgePercentages: number[][];
+    let isLiveMeter = meterSettings.bossHp !== undefined;
     $: {
         if (players.length > 0) {
             sortedPlayers = players
@@ -64,7 +65,7 @@
 </script>
 
 {#if meterSettings.rdpsSplitParty && encounterPartyInfo && partySortedPlayers.length > 1}
-    <div class="flex flex-col space-y-2">
+    <div class="flex flex-col" class:space-y-2={!isLiveMeter}>
         {#each partySortedPlayers as partyMember, i (i)}
             <table class="relative w-full table-fixed">
                 <RdpsHeader {meterSettings} partyId={i} />
