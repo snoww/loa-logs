@@ -62,18 +62,11 @@ impl StatsApi {
             return;
         }
 
+        let now = Utc::now();
+        self.remove_expired_from_cache(now);
         let player_names = party.iter().flatten().cloned().collect::<HashSet<String>>();
-        if let (Ok(mut cache), Ok(mut stats_cache), Ok(mut hash_cache)) = (
-            self.cache.lock(),
-            self.stats_cache.lock(),
-            self.hash_cache.lock(),
-        ) {
-            cache.retain(|player, _| player_names.contains(player));
-            stats_cache.retain(|player, _| player_names.contains(player));
-            hash_cache.retain(|player, _| player_names.contains(player));
-        }
         let mut player_hashes: Vec<PlayerHash> = Vec::new();
-        if let Ok(mut hash_cache) = self.hash_cache.lock() {
+        if let (Ok(mut cache), Ok(mut hash_cache)) = (self.cache.lock(), self.hash_cache.lock()) {
             for player in player_names.iter() {
                 let entity_id = match state.encounter.entities.get(player) {
                     Some(entity) => entity.id,
@@ -85,6 +78,9 @@ impl StatsApi {
                             .get(player)
                             .map_or(false, |cached_hash| cached_hash == &hash)
                         {
+                            cache.entry(player.clone()).and_modify(|stats| {
+                                stats.expiry = now + chrono::Duration::hours(1);
+                            });
                             continue;
                         } else {
                             hash_cache.insert(player.clone(), hash.clone());
@@ -205,6 +201,30 @@ impl StatsApi {
         }
     }
 
+    fn remove_expired_from_cache(&mut self, now: DateTime<Utc>) {
+        if let (Ok(mut cache), Ok(mut stats_cache), Ok(mut hash_cache)) = (
+            self.cache.lock(),
+            self.stats_cache.lock(),
+            self.hash_cache.lock(),
+        ) {
+            let expired_names: Vec<String> = cache
+                .iter()
+                .filter_map(|(name, stats)| {
+                    if now > stats.expiry {
+                        Some(name.clone())
+                    } else {
+                        None
+                    }
+                })
+                .collect();
+            for name in expired_names.iter() {
+                cache.remove(name);
+                stats_cache.remove(name);
+                hash_cache.remove(name);
+            }
+        }
+    }
+
     fn valid_difficulty(&self, difficulty: &str) -> bool {
         (difficulty == "Normal" || difficulty == "Hard" || difficulty == "Extreme")
             && self.valid_zone
@@ -263,7 +283,8 @@ async fn make_request(
                         .cloned()
                         .collect();
 
-                    for (name, stats) in data {
+                    let now = Utc::now();
+                    for (name, mut stats) in data {
                         stats_cache_clone.insert(
                             name.clone(),
                             Stats {
@@ -273,6 +294,7 @@ async fn make_request(
                                 add_dmg: stats.stats.get(&5).cloned().unwrap_or_default(),
                             },
                         );
+                        stats.expiry = now + chrono::Duration::hours(1);
                         cache_clone.insert(name, stats);
                     }
                     // debug_print(format_args!("{:?}", stats_cache_clone));
@@ -358,6 +380,8 @@ pub struct PlayerStats {
     pub elixirs: Option<Vec<ElixirData>>,
     pub gems: Option<Vec<GemData>>,
     pub engravings: Option<Vec<Engraving>>,
+    #[serde(skip)]
+    pub expiry: DateTime<Utc>,
 }
 
 #[derive(Debug, Default, Clone, Deserialize)]
