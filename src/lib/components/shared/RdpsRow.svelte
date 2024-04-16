@@ -16,6 +16,7 @@
     export let alpha: number = 0.6;
     export let duration: number;
     export let meterSettings: any;
+    export let isLiveMeter = false;
 
     let playerName: string;
     let tooltipName: string;
@@ -162,5 +163,5 @@
     <div
         class="absolute left-0 -z-10 h-7 px-2 py-1"
         class:shadow-md={shadow}
-        style="background-color: {HexToRgba(color, alpha)}; width: {width}%" />
+        style="background-color: {HexToRgba(color, alpha)}; width: {isLiveMeter ? $tweenedValue : width}%" />
 </tr>

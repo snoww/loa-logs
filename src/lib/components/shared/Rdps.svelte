@@ -64,7 +64,7 @@
     }
 </script>
 
-{#if meterSettings.rdpsSplitParty && encounterPartyInfo && partySortedPlayers.length > 1}
+{#if players.length > 0 && $rdpsEventDetails === "" && meterSettings.rdpsSplitParty && encounterPartyInfo && partySortedPlayers.length > 1}
     <div class="flex flex-col" class:space-y-2={!isLiveMeter}>
         {#each partySortedPlayers as partyMember, i (i)}
             <table class="relative w-full table-fixed">
@@ -78,7 +78,8 @@
                             shadow={!$takingScreenshot}
                             {totalDamageDealt}
                             {duration}
-                            {alpha} />
+                            {alpha}
+                            {isLiveMeter} />
                     {/each}
                 </tbody>
             </table>
@@ -97,7 +98,8 @@
                         shadow={!$takingScreenshot}
                         {totalDamageDealt}
                         {duration}
-                        {alpha} />
+                        {alpha}
+                        {isLiveMeter} />
                 {/each}
             {/if}
         </tbody>
