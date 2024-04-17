@@ -688,6 +688,7 @@ pub struct GeneralSettings {
     pub log_scale: String,
     #[serde(default = "default_true")]
     pub always_on_top: bool,
+    #[serde(default = "default_true")]
     pub boss_only_damage: bool,
     #[serde(default = "default_true")]
     pub keep_favorites: bool,

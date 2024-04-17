@@ -21,6 +21,7 @@
     import { invoke } from "@tauri-apps/api";
     import { classColors } from "$lib/constants/colors";
     import { queryParam } from "$lib/utils/strings";
+    import { emit } from "@tauri-apps/api/event";
 
     onMount(() => {
         (async () => {
@@ -37,6 +38,10 @@
                 await appWindow.setAlwaysOnTop(true);
             } else {
                 await appWindow.setAlwaysOnTop(false);
+            }
+            if (!$settings.general.bossOnlyDamage) {
+                $settings.general.bossOnlyDamage = true;
+                await emit("boss-only-damage-request", true);
             }
             await registerShortcuts($settings.shortcuts);
             imagePath.set({
