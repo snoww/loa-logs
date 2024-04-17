@@ -854,7 +854,7 @@ fn load_encounter(window: tauri::Window, id: String) -> Encounter {
             Ok(Encounter {
                 last_combat_packet: row.get(0)?,
                 fight_start: row.get(1)?,
-                local_player: row.get(2)?,
+                local_player: row.get(2).unwrap_or("You".to_string()),
                 current_boss_name: row.get(3)?,
                 duration: row.get(4)?,
                 encounter_damage_stats: EncounterDamageStats {
