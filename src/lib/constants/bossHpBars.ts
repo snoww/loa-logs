@@ -33,5 +33,15 @@ export const bossHpMap: BossMap = {
     "Kaltaya, the Blooming Chaos": 120,
     "Rakathus, the Lurking Arrogance": 160,
     "Firehorn, Trampler of Earth": 160,
-    "Lazaram, the Trailblazer": 200
+    "Lazaram, the Trailblazer": 200,
+    "Killineza the Dark Worshipper": 180,
+    "Valinak, Knight of Darkness": 180,
+    "Valinak, Taboo Usurper": 180,
+    "Valinak, Herald of the End": 180,
+    "Thaemine the Lightqueller": 300,
+    "Darkness Sword": 40,
+    "Giant Darkness Sword": 40,
+    "Darkness Legion Commander Thaemine": 350,
+    // "tg41-Darkness Legion Commander Thaemine's Clone": 35,
+    "Thaemine, Conqueror of Stars": 350,
 };

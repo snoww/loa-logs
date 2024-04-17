@@ -150,15 +150,15 @@
     "id": 125,
     "levels": {
       "1": {
-        "desc": "Fury Meter remains at max and turns into Mayhem Mode with the power of darkness. Mayhem Mode: Outgoing Damage +3%, Atk. and Move Speed +15%, all incoming Damage -70%. When Mayhem Mode activates, HP is reduced to 25% of Max HP; this cannot be exceeded even when healing is applied. Can only receive 40% of healing and 25% of shield. Press the <FONT COLOR='#ffff99'><$HOTKEY 108/></FONT> key to cancel Mayhem Mode and recover 25% of Max HP; cannot enter Mayhem Mode again for 30s.",
+        "desc": "Fury Meter remains at max and turns into Mayhem Mode with the power of darkness. Mayhem Mode: Outgoing Damage +3%, Atk. and Move Speed +15%, all incoming Damage -72%. When Mayhem Mode activates, HP is reduced to 25% of Max HP; this cannot be exceeded even when healing is applied. Can only receive 40% of healing and 25% of shield. Press the <FONT COLOR='#ffff99'><$HOTKEY 108/></FONT> key to cancel Mayhem Mode and recover 25% of Max HP; cannot enter Mayhem Mode again for 30s.",
         "values": [2500, 2500, 10080106, 10080110, 7500]
       },
       "2": {
-        "desc": "Fury Meter remains at max and turns into Mayhem Mode with the power of darkness. Mayhem Mode: Outgoing Damage +8%, Atk. and Move Speed +15%, all incoming Damage -70%. When Mayhem Mode activates, HP is reduced to 25% of Max HP; this cannot be exceeded even when healing is applied. Can only receive 40% of healing and 25% of shield. Press the <FONT COLOR='#ffff99'><$HOTKEY 108/></FONT> key to cancel Mayhem Mode and recover 25% of Max HP; cannot enter Mayhem Mode again for 30s.",
+        "desc": "Fury Meter remains at max and turns into Mayhem Mode with the power of darkness. Mayhem Mode: Outgoing Damage +8%, Atk. and Move Speed +15%, all incoming Damage -72%. When Mayhem Mode activates, HP is reduced to 25% of Max HP; this cannot be exceeded even when healing is applied. Can only receive 40% of healing and 25% of shield. Press the <FONT COLOR='#ffff99'><$HOTKEY 108/></FONT> key to cancel Mayhem Mode and recover 25% of Max HP; cannot enter Mayhem Mode again for 30s.",
         "values": [2500, 2500, 10080107, 10080110, 7500]
       },
       "3": {
-        "desc": "Fury Meter remains at max and turns into Mayhem Mode with the power of darkness. Mayhem Mode: Outgoing Damage +16%, Atk. and Move Speed +15%, all incoming Damage -70%. When Mayhem Mode activates, HP is reduced to 25% of Max HP; this cannot be exceeded even when healing is applied. Can only receive 40% of healing and 25% of shield. Press the <FONT COLOR='#ffff99'><$HOTKEY 108/></FONT> key to cancel Mayhem Mode and recover 25% of Max HP; cannot enter Mayhem Mode again for 30s.",
+        "desc": "Fury Meter remains at max and turns into Mayhem Mode with the power of darkness. Mayhem Mode: Outgoing Damage +16%, Atk. and Move Speed +15%, all incoming Damage -72%. When Mayhem Mode activates, HP is reduced to 25% of Max HP; this cannot be exceeded even when healing is applied. Can only receive 40% of healing and 25% of shield. Press the <FONT COLOR='#ffff99'><$HOTKEY 108/></FONT> key to cancel Mayhem Mode and recover 25% of Max HP; cannot enter Mayhem Mode again for 30s.",
         "values": [2500, 2500, 10080108, 10080110, 7500]
       }
     },
@@ -582,12 +582,12 @@
         "values": [1, 200, 300]
       },
       "2": {
-        "desc": "Enhances the Ancient Elemental Skill. Elemental Orb cost -1. Normal Skill Damage and Ancient Elemental Skill Damage +6% and Crit Rate +8%.",
-        "values": [1, 600, 800]
+        "desc": "Enhances the Ancient Elemental Skill. Elemental Orb cost -1. Normal Skill Damage and Ancient Elemental Skill Damage +10% and Crit Rate +8%.",
+        "values": [1, 1000, 800]
       },
       "3": {
-        "desc": "Enhances the Ancient Elemental Skill. Elemental Orb cost -1. Normal Skill Damage and Ancient Elemental Skill Damage +12% and Crit Rate +16%.",
-        "values": [1, 1200, 1600]
+        "desc": "Enhances the Ancient Elemental Skill. Elemental Orb cost -1. Normal Skill Damage and Ancient Elemental Skill Damage +20% and Crit Rate +16%.",
+        "values": [1, 2000, 1600]
       }
     },
     "name": "Master Summoner",
@@ -600,16 +600,16 @@
     "id": 199,
     "levels": {
       "1": {
-        "desc": "Maririn, Pauru, Elcid, Shurdi, and Kelsion: Summon duration +5%, Damage +10%, Atk. Speed +3%, Move Speed +3%, and Command Skill Cooldown -3%.",
-        "values": [199, 500, 1000, 32, 3]
+        "desc": "Maririn, Pauru, Elcid, Shurdi, and Kelsion: Summon duration +5%, Damage +15%, Atk. Speed +3%, Move Speed +3%, and Command Skill Cooldown -3%.",
+        "values": [199, 500, 1500, 32, 3]
       },
       "2": {
-        "desc": "Maririn, Pauru, Elcid, Shurdi, and Kelsion: Summon duration +10%, Damage +17%, Atk. Speed +6%, Move Speed +6%, and Command Skill Cooldown -6%.",
-        "values": [199, 1000, 1700, 32, 6]
+        "desc": "Maririn, Pauru, Elcid, Shurdi, and Kelsion: Summon duration +10%, Damage +25%, Atk. Speed +6%, Move Speed +6%, and Command Skill Cooldown -6%.",
+        "values": [199, 1000, 2500, 32, 6]
       },
       "3": {
-        "desc": "Maririn, Pauru, Elcid, Shurdi, and Kelsion: Summon duration +20%, Damage +25%, Atk. Speed +10%, Move Speed +10%, and Command Skill Cooldown -10%.",
-        "values": [199, 2000, 2500, 32, 10]
+        "desc": "Maririn, Pauru, Elcid, Shurdi, and Kelsion: Summon duration +20%, Damage +35%, Atk. Speed +10%, Move Speed +10%, and Command Skill Cooldown -10%.",
+        "values": [199, 2000, 3500, 32, 10]
       }
     },
     "name": "Communication Overflow",
@@ -1489,16 +1489,16 @@
     "id": 277,
     "levels": {
       "1": {
-        "desc": "Cannot use Focus Stance. Flurry skills Damage +20%, Dual Meter gain +50%.",
-        "values": [2000, 5000]
+        "desc": "Cannot use Focus Stance. Flurry Skill Damage +20%, Dual Meter gain +50%. Cooldown of Movement Skills decrease by 2s when the Dual Meter is consumed.",
+        "values": [2000, 5000, 2000]
       },
       "2": {
-        "desc": "Cannot use Focus Stance. Flurry skills Damage +30%, Dual Meter gain +75%.",
-        "values": [3000, 7500]
+        "desc": "Cannot use Focus Stance. Flurry Skill Damage +30%, Dual Meter gain +75%. Cooldown of Movement Skills decrease by 2s when the Dual Meter is consumed.",
+        "values": [3000, 7500, 2000]
       },
       "3": {
-        "desc": "Cannot use Focus Stance. Flurry skills Damage +40%, Dual Meter gain +100%.",
-        "values": [4000, 10000]
+        "desc": "Cannot use Focus Stance. Flurry Skill Damage +40%, Dual Meter gain +100%. Cooldown of Movement Skills decrease by 2s when the Dual Meter is consumed.",
+        "values": [4000, 10000, 2000]
       }
     },
     "name": "Control",
@@ -1823,15 +1823,15 @@
     "id": 293,
     "levels": {
       "1": {
-        "desc": "When Arcane Torrent is triggered, remaining skills Cooldown -50% (except Movement Skills and Awakening Skills). During Arcane Torrent, Crit Rate +10% and Crit Damage +20%.",
+        "desc": "When Arcane Torrent is triggered, remaining skills Cooldown -50% (except Movement Skills and Awakening Skills). During Arcane Torrent, Crit Rate +12% and Crit Damage +20%.",
         "values": [2500, 500187]
       },
       "2": {
-        "desc": "When Arcane Torrent is triggered, remaining skills Cooldown -50% (except Movement Skills and Awakening Skills). During Arcane Torrent, Crit Rate +17% and Crit Damage +37%.",
+        "desc": "When Arcane Torrent is triggered, remaining skills Cooldown -50% (except Movement Skills and Awakening Skills). During Arcane Torrent, Crit Rate +20% and Crit Damage +37%.",
         "values": [2500, 500188]
       },
       "3": {
-        "desc": "When Arcane Torrent is triggered, remaining skills Cooldown -50% (except Movement Skills and Awakening Skills). During Arcane Torrent, Crit Rate +25% and Crit Damage +55%.",
+        "desc": "When Arcane Torrent is triggered, remaining skills Cooldown -50% (except Movement Skills and Awakening Skills). During Arcane Torrent, Crit Rate +30% and Crit Damage +55%.",
         "values": [2500, 500189]
       }
     },
@@ -2839,13 +2839,13 @@
     "id": 77393001,
     "levels": {
       "1": {
-        "desc": "Maririn, Pauru, Elcid, Shurdi, and Kelsion: Summon duration +5%, Damage +10%, Atk. Speed +3%, Move Speed +3%, and Command Skill Cooldown -3%."
+        "desc": "Maririn, Pauru, Elcid, Shurdi, and Kelsion: Summon duration +5%, Damage +15%, Atk. Speed +3%, Move Speed +3%, and Command Skill Cooldown -3%."
       },
       "2": {
-        "desc": "Maririn, Pauru, Elcid, Shurdi, and Kelsion: Summon duration +10%, Damage +17%, Atk. Speed +6%, Move Speed +6%, and Command Skill Cooldown -6%."
+        "desc": "Maririn, Pauru, Elcid, Shurdi, and Kelsion: Summon duration +10%, Damage +25%, Atk. Speed +6%, Move Speed +6%, and Command Skill Cooldown -6%."
       },
       "3": {
-        "desc": "Maririn, Pauru, Elcid, Shurdi, and Kelsion: Summon duration +20%, Damage +25%, Atk. Speed +10%, Move Speed +10%, and Command Skill Cooldown -10%."
+        "desc": "Maririn, Pauru, Elcid, Shurdi, and Kelsion: Summon duration +20%, Damage +35%, Atk. Speed +10%, Move Speed +10%, and Command Skill Cooldown -10%."
       }
     },
     "name": "Communication Overflow",

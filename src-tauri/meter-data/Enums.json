@@ -4258,7 +4258,8 @@
     "34": "back_step",
     "35": "close",
     "36": "join_security_service",
-    "37": "appeal"
+    "37": "appeal",
+    "38": "fast_login"
   },
   "dialogcreatetype": { "0": "singular", "1": "multiple", "2": "stacksingular" },
   "diegameactioncontentstype": { "0": "na", "1": "tower" },
@@ -7005,7 +7006,7 @@
     "62": "soul_eater_killer",
     "63": "soul_eater_death"
   },
-  "identitychangeorigin": { "0": "default", "1": "confront" },
+  "identitychangeorigin": { "0": "default", "1": "confront", "2": "cutscene" },
   "identitycontentsevent": {
     "0": "vehicle_get_off",
     "1": "polymorph_remove",
@@ -13807,13 +13808,14 @@
   "stageperrewardfinish": { "0": "not_yet", "1": "partly_clear", "2": "full_clear" },
   "statcategory": { "0": "none", "1": "primary", "2": "seconary" },
   "statchangeorigin": {
-    "0": "origin_none",
-    "1": "origin_item",
-    "2": "origin_buff",
-    "3": "origin_drain",
-    "4": "origin_skill_effect",
-    "5": "origin_victory_crest",
-    "6": "combat_effect"
+    "0": "none",
+    "1": "item",
+    "2": "buff",
+    "3": "drain",
+    "4": "skill_effect",
+    "5": "victory_crest",
+    "6": "combat_effect",
+    "7": "revitalize"
   },
   "stattype": {
     "0": "none",
@@ -14296,6 +14298,7 @@
     "8": "set_recommended_cash_price",
     "9": "set_recommended_gold_price",
     "10": "delete_result",
+    "11": "set_available_amount",
     "99": "truncate",
     "100": "refresh_limit_price"
   },

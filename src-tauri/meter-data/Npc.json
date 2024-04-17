@@ -4029,6 +4029,878 @@
   "621044": { "id": 621044, "name": "Swamp Turtle", "grade": "normal", "type": "monster" },
   "621045": { "id": 621045, "name": "Swamp Todispie", "grade": "normal", "type": "monster" },
   "621046": { "id": 621046, "name": "Swamp Toadling", "grade": "normal", "type": "monster" },
+  "620430": { "id": 620430, "name": "Veskal", "grade": "raid", "type": "monster", "pushimmune": true },
+  "480500": {
+    "id": 480500,
+    "name": "Thaemine the Lightqueller",
+    "grade": "commander",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480501": {
+    "id": 480501,
+    "name": "Thaemine the Lightqueller",
+    "grade": "boss",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480502": { "id": 480502, "name": "Dark Greatsword", "grade": "boss", "type": "monster", "pushimmune": true },
+  "480503": {
+    "id": 480503,
+    "name": "Thaemine the Lightqueller",
+    "grade": "boss",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480504": {
+    "id": 480504,
+    "name": "Thaemine the Lightqueller",
+    "grade": "commander",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480505": {
+    "id": 480505,
+    "name": "Thaemine the Lightqueller",
+    "grade": "boss",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480506": {
+    "id": 480506,
+    "name": "Thaemine the Lightqueller",
+    "grade": "commander",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480507": {
+    "id": 480507,
+    "name": "Thaemine the Lightqueller",
+    "grade": "boss",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480508": {
+    "id": 480508,
+    "name": "Thaemine the Lightqueller",
+    "grade": "boss",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480509": {
+    "id": 480509,
+    "name": "Thaemine the Lightqueller",
+    "grade": "boss",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480510": {
+    "id": 480510,
+    "name": "Thaemine the Lightqueller",
+    "grade": "boss",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480511": {
+    "id": 480511,
+    "name": "Thaemine the Lightqueller",
+    "grade": "boss",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480512": {
+    "id": 480512,
+    "name": "Thaemine the Lightqueller",
+    "grade": "boss",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480513": {
+    "id": 480513,
+    "name": "Thaemine the Lightqueller",
+    "grade": "boss",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480514": { "id": 480514, "name": "Dark Greatsword", "grade": "boss", "type": "monster", "pushimmune": true },
+  "480515": { "id": 480515, "name": "Shadow Ghost", "grade": "seed", "type": "monster", "pushimmune": true },
+  "480516": { "id": 480516, "name": "Dark Greatsword", "grade": "boss", "type": "monster", "pushimmune": true },
+  "480517": {
+    "id": 480517,
+    "name": "어둠 군단장 카멘_테스트용도",
+    "grade": "commander",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480518": {
+    "id": 480518,
+    "name": "Thaemine the Lightqueller",
+    "grade": "boss",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480519": {
+    "id": 480519,
+    "name": "Thaemine the Lightqueller",
+    "grade": "boss",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480520": {
+    "id": 480520,
+    "name": "Thaemine the Lightqueller",
+    "grade": "boss",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480521": {
+    "id": 480521,
+    "name": "Thaemine the Lightqueller",
+    "grade": "boss",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480522": {
+    "id": 480522,
+    "name": "Thaemine the Lightqueller",
+    "grade": "boss",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480523": {
+    "id": 480523,
+    "name": "Thaemine the Lightqueller",
+    "grade": "boss",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480524": {
+    "id": 480524,
+    "name": "Thaemine the Lightqueller",
+    "grade": "boss",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480525": { "id": 480525, "name": "Dark Greatsword", "grade": "boss", "type": "monster", "pushimmune": true },
+  "480526": {
+    "id": 480526,
+    "name": "어둠 군단장_투명몬스터_위상변화_1",
+    "grade": "boss",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480527": {
+    "id": 480527,
+    "name": "어둠 군단장_투명몬스터_위상변화_2",
+    "grade": "boss",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480528": {
+    "id": 480528,
+    "name": "어둠 군단장_투명몬스터_위상변화_3",
+    "grade": "boss",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480529": {
+    "id": 480529,
+    "name": "어둠 군단장_투명몬스터_위상변화_4",
+    "grade": "boss",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480530": {
+    "id": 480530,
+    "name": "어둠 군단장_투명몬스터_위상변화_5",
+    "grade": "boss",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480531": {
+    "id": 480531,
+    "name": "어둠 군단장_투명몬스터_위상변화_6",
+    "grade": "boss",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480532": {
+    "id": 480532,
+    "name": "어둠 군단장_투명몬스터_위상변화_7",
+    "grade": "boss",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480533": {
+    "id": 480533,
+    "name": "어둠 군단장_투명몬스터_위상변화_8",
+    "grade": "boss",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480534": {
+    "id": 480534,
+    "name": "Thaemine the Lightqueller",
+    "grade": "boss",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480535": {
+    "id": 480535,
+    "name": "Thaemine the Lightqueller",
+    "grade": "boss",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480536": {
+    "id": 480536,
+    "name": "Thaemine the Lightqueller",
+    "grade": "boss",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480537": {
+    "id": 480537,
+    "name": "Thaemine the Lightqueller",
+    "grade": "boss",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480538": {
+    "id": 480538,
+    "name": "Thaemine the Lightqueller",
+    "grade": "boss",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480539": {
+    "id": 480539,
+    "name": "Thaemine the Lightqueller",
+    "grade": "boss",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480540": {
+    "id": 480540,
+    "name": "어둠 군단장_3관문_투명몬스터",
+    "grade": "boss",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480541": {
+    "id": 480541,
+    "name": "Thaemine the Lightqueller",
+    "grade": "commander",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480542": {
+    "id": 480542,
+    "name": "Thaemine the Lightqueller",
+    "grade": "commander",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480543": {
+    "id": 480543,
+    "name": "Thaemine the Lightqueller",
+    "grade": "commander",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480544": {
+    "id": 480544,
+    "name": "Thaemine the Lightqueller",
+    "grade": "commander",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480545": {
+    "id": 480545,
+    "name": "Darkness Legion Commander Thaemine",
+    "grade": "commander",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480546": {
+    "id": 480546,
+    "name": "Darkness Legion Commander Thaemine",
+    "grade": "commander",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480547": {
+    "id": 480547,
+    "name": "Thaemine, Conqueror of Stars",
+    "grade": "commander",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480548": { "id": 480548, "name": "어둠 군단장 카멘", "grade": "commander", "type": "monster", "pushimmune": true },
+  "480549": { "id": 480549, "name": "군마를 탄 카멘", "grade": "commander", "type": "monster", "pushimmune": true },
+  "480300": { "id": 480300, "name": "Red Moon's Illusion", "grade": "normal", "type": "monster" },
+  "480301": { "id": 480301, "name": "Demon Dog", "grade": "normal", "type": "monster" },
+  "480302": { "id": 480302, "name": "Enhanced Demon Dog", "grade": "normal", "type": "monster" },
+  "480303": {
+    "id": 480303,
+    "name": "Darkness Worshipper Akkun",
+    "grade": "named",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480304": {
+    "id": 480304,
+    "name": "Darkness Follower Akkun",
+    "grade": "named",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480305": {
+    "id": 480305,
+    "name": "Darkness-encroached Agarus",
+    "grade": "seed",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480306": { "id": 480306, "name": "Raging Exploder", "grade": "normal", "type": "monster" },
+  "480307": { "id": 480307, "name": "Red Moon Bewitched Exploder", "grade": "normal", "type": "monster" },
+  "480308": {
+    "id": 480308,
+    "name": "Darkness Follower Harkamo",
+    "grade": "named",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480309": { "id": 480309, "name": "Enhanced Demon Dog", "grade": "normal", "type": "monster" },
+  "480321": { "id": 480321, "name": "Raging Demon Dog", "grade": "normal", "type": "monster" },
+  "480322": { "id": 480322, "name": "Red Moon Eroded Demon Dog", "grade": "normal", "type": "monster" },
+  "480323": { "id": 480323, "name": "Shadowfallen Trill", "grade": "normal", "type": "monster" },
+  "480324": { "id": 480324, "name": "Red Moon Enhanced Trill", "grade": "normal", "type": "monster" },
+  "480325": { "id": 480325, "name": "Enhanced Gargoyle", "grade": "named", "type": "monster", "pushimmune": true },
+  "480326": {
+    "id": 480326,
+    "name": "Red Moon Follower Farham",
+    "grade": "named",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480327": { "id": 480327, "name": "Darkness Bewitched Follower", "grade": "normal", "type": "monster" },
+  "480328": { "id": 480328, "name": "Red Moon Enhanced Darkness Follower", "grade": "normal", "type": "monster" },
+  "480329": { "id": 480329, "name": "Darkness Bewitched Demon Charger", "grade": "normal", "type": "monster" },
+  "480330": { "id": 480330, "name": "Red Moon Enhanced Demon Charger", "grade": "normal", "type": "monster" },
+  "480331": { "id": 480331, "name": "Dark Berserker Nignath", "grade": "named", "type": "monster", "pushimmune": true },
+  "480332": { "id": 480332, "name": "Enhanced Nignath", "grade": "named", "type": "monster", "pushimmune": true },
+  "480333": {
+    "id": 480333,
+    "name": "Darkness Bewitched Nignath",
+    "grade": "seed",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480334": { "id": 480334, "name": "Morgalo", "grade": "normal", "type": "monster" },
+  "480335": { "id": 480335, "name": "Enhanced Morgalo", "grade": "normal", "type": "monster" },
+  "480336": { "id": 480336, "name": "Raging Skiara", "grade": "normal", "type": "monster" },
+  "480337": { "id": 480337, "name": "Red Moon Bewitched Skiara", "grade": "normal", "type": "monster" },
+  "480338": {
+    "id": 480338,
+    "name": "Darkness Worshipping Amaus",
+    "grade": "seed",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480339": {
+    "id": 480339,
+    "name": "Darkness Following Zederma",
+    "grade": "seed",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480340": {
+    "id": 480340,
+    "name": "Darkness Following Occultist",
+    "grade": "seed",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480361": { "id": 480361, "name": "Darkness-encroached Demon", "grade": "normal", "type": "monster" },
+  "480362": { "id": 480362, "name": "Red Moon Bewitched Demon", "grade": "normal", "type": "monster" },
+  "480363": {
+    "id": 480363,
+    "name": "Darkness Follower Greggba",
+    "grade": "named",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480364": {
+    "id": 480364,
+    "name": "Red Moon Bewitched Wormfist",
+    "grade": "named",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480365": { "id": 480365, "name": "Darkness Bewitched Patsul", "grade": "normal", "type": "monster" },
+  "480366": { "id": 480366, "name": "Red Moon Bewitched Patsul", "grade": "normal", "type": "monster" },
+  "480367": {
+    "id": 480367,
+    "name": "Darkness Worshipper Harzal",
+    "grade": "named",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480368": {
+    "id": 480368,
+    "name": "Red Moon Bewitched Harzal",
+    "grade": "seed",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480369": { "id": 480369, "name": "Plague Legion Mutant", "grade": "normal", "type": "monster" },
+  "480370": { "id": 480370, "name": "Red Moon Energy Mutant", "grade": "normal", "type": "monster" },
+  "480371": { "id": 480371, "name": "Plague Legion Plague Shaman", "grade": "normal", "type": "monster" },
+  "480381": { "id": 480381, "name": "Thirain", "grade": "normal", "type": "monster", "pushimmune": true },
+  "480382": { "id": 480382, "name": "Nineveh", "grade": "normal", "type": "monster", "pushimmune": true },
+  "480383": { "id": 480383, "name": "Halrock", "grade": "normal", "type": "monster" },
+  "480384": { "id": 480384, "name": "Gabrian", "grade": "normal", "type": "monster" },
+  "480385": { "id": 480385, "name": "Luterran Knight", "grade": "normal", "type": "monster" },
+  "480386": { "id": 480386, "name": "Luterran Knight", "grade": "normal", "type": "monster" },
+  "480387": { "id": 480387, "name": "Luterran Knight", "grade": "normal", "type": "monster" },
+  "480388": { "id": 480388, "name": "Luterran Knight", "grade": "normal", "type": "monster" },
+  "480389": { "id": 480389, "name": "Luterran Senior Knight", "grade": "normal", "type": "monster" },
+  "480390": { "id": 480390, "name": "Luterran Knight", "grade": "normal", "type": "monster", "pushimmune": true },
+  "480391": { "id": 480391, "name": "Demon Dog", "grade": "normal", "type": "monster" },
+  "480392": { "id": 480392, "name": "Shadowfallen Trill", "grade": "normal", "type": "monster" },
+  "480400": { "id": 480400, "name": "Darkness Follower", "grade": "normal", "type": "monster" },
+  "480401": { "id": 480401, "name": "Darkness Follower", "grade": "normal", "type": "monster" },
+  "480402": { "id": 480402, "name": "Darkness Follower", "grade": "normal", "type": "monster" },
+  "480403": {
+    "id": 480403,
+    "name": "Argulas, Knight of Darkness",
+    "grade": "seed",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480404": {
+    "id": 480404,
+    "name": "Killineza the Dark Worshipper",
+    "grade": "boss",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480405": {
+    "id": 480405,
+    "name": "Killineza the Dark Worshipper",
+    "grade": "boss",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480406": {
+    "id": 480406,
+    "name": "Killineza the Dark Worshipper",
+    "grade": "boss",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480407": {
+    "id": 480407,
+    "name": "Killineza the Dark Worshipper",
+    "grade": "boss",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480408": {
+    "id": 480408,
+    "name": "Killineza the Dark Worshipper",
+    "grade": "boss",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480409": { "id": 480409, "name": "Tentacle of Darkness", "grade": "seed", "type": "monster", "pushimmune": true },
+  "480410": { "id": 480410, "name": "Tentacle of Darkness", "grade": "seed", "type": "monster", "pushimmune": true },
+  "480411": { "id": 480411, "name": "Tentacle of Darkness", "grade": "seed", "type": "monster", "pushimmune": true },
+  "480412": { "id": 480412, "name": "Tentacle of Darkness", "grade": "seed", "type": "monster", "pushimmune": true },
+  "480413": { "id": 480413, "name": "Tentacle of Darkness", "grade": "seed", "type": "monster", "pushimmune": true },
+  "480414": { "id": 480414, "name": "Tentacle of Darkness", "grade": "seed", "type": "monster", "pushimmune": true },
+  "480415": { "id": 480415, "name": "Tentacle of Darkness", "grade": "seed", "type": "monster", "pushimmune": true },
+  "480416": { "id": 480416, "name": "Tentacle of Darkness", "grade": "seed", "type": "monster", "pushimmune": true },
+  "480417": { "id": 480417, "name": "Tentacle of Darkness", "grade": "seed", "type": "monster", "pushimmune": true },
+  "480418": { "id": 480418, "name": "Tentacle of Darkness", "grade": "seed", "type": "monster", "pushimmune": true },
+  "480419": {
+    "id": 480419,
+    "name": "Killineza the Dark Worshipper",
+    "grade": "boss",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480420": {
+    "id": 480420,
+    "name": "Killineza the Dark Worshipper",
+    "grade": "boss",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480421": { "id": 480421, "name": "Tentacle of Darkness", "grade": "seed", "type": "monster", "pushimmune": true },
+  "480422": { "id": 480422, "name": "Tentacle of Darkness", "grade": "seed", "type": "monster", "pushimmune": true },
+  "480423": {
+    "id": 480423,
+    "name": "Killineza the Dark Worshipper",
+    "grade": "boss",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480424": {
+    "id": 480424,
+    "name": "Killineza the Dark Worshipper",
+    "grade": "boss",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480425": {
+    "id": 480425,
+    "name": "Killineza the Dark Worshipper",
+    "grade": "boss",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480426": {
+    "id": 480426,
+    "name": "Killineza the Dark Worshipper",
+    "grade": "boss",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480427": {
+    "id": 480427,
+    "name": "Killineza the Dark Worshipper",
+    "grade": "boss",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480428": {
+    "id": 480428,
+    "name": "Killineza the Dark Worshipper",
+    "grade": "boss",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480429": {
+    "id": 480429,
+    "name": "Killineza the Dark Worshipper",
+    "grade": "boss",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480430": { "id": 480430, "name": "Killineza's Eye", "grade": "seed", "type": "monster", "pushimmune": true },
+  "480431": {
+    "id": 480431,
+    "name": "Killineza the Dark Worshipper",
+    "grade": "boss",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480432": { "id": 480432, "name": "Eye of Worship", "grade": "seed", "type": "monster", "pushimmune": true },
+  "480433": { "id": 480433, "name": "Killineza's Organism", "grade": "named", "type": "monster", "pushimmune": true },
+  "480434": { "id": 480434, "name": "Tentacle of Darkness", "grade": "seed", "type": "monster", "pushimmune": true },
+  "480435": { "id": 480435, "name": "Killineza's Eye", "grade": "seed", "type": "monster", "pushimmune": true },
+  "480436": { "id": 480436, "name": "Killineza's Eye", "grade": "seed", "type": "monster", "pushimmune": true },
+  "480437": { "id": 480437, "name": "Tentacle of Darkness", "grade": "seed", "type": "monster", "pushimmune": true },
+  "480438": { "id": 480438, "name": "Hand of Darkness", "grade": "seed", "type": "monster", "pushimmune": true },
+  "480439": { "id": 480439, "name": "Red Moon's Wraith", "grade": "named", "type": "monster", "pushimmune": true },
+  "480440": { "id": 480440, "name": "Red Moon's Wraith", "grade": "named", "type": "monster", "pushimmune": true },
+  "480441": { "id": 480441, "name": "Red Moon's Wraith", "grade": "named", "type": "monster", "pushimmune": true },
+  "480442": { "id": 480442, "name": "Red Moon's Wraith", "grade": "named", "type": "monster", "pushimmune": true },
+  "480443": { "id": 480443, "name": "Red Moon's Wraith", "grade": "named", "type": "monster", "pushimmune": true },
+  "480444": { "id": 480444, "name": "Red Moon's Wraith", "grade": "named", "type": "monster", "pushimmune": true },
+  "480445": { "id": 480445, "name": "Red Moon's Wraith", "grade": "named", "type": "monster", "pushimmune": true },
+  "480446": { "id": 480446, "name": "Red Moon's Wraith", "grade": "named", "type": "monster", "pushimmune": true },
+  "480447": { "id": 480447, "name": "칠흑의 숭배자, 킬리네사", "grade": "boss", "type": "monster", "pushimmune": true },
+  "480448": {
+    "id": 480448,
+    "name": "Killineza the Dark Worshipper",
+    "grade": "boss",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480449": {
+    "id": 480449,
+    "name": "Killineza the Dark Worshipper",
+    "grade": "boss",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480451": {
+    "id": 480451,
+    "name": "Valinak, Knight of Darkness",
+    "grade": "boss",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480455": { "id": 480455, "name": "Valinak", "grade": "seed", "type": "monster", "pushimmune": true },
+  "480456": { "id": 480456, "name": "Valinak", "grade": "seed", "type": "monster", "pushimmune": true },
+  "480457": { "id": 480457, "name": "Valinak", "grade": "seed", "type": "monster", "pushimmune": true },
+  "480458": { "id": 480458, "name": "Valinak", "grade": "seed", "type": "monster", "pushimmune": true },
+  "480461": { "id": 480461, "name": "Valinak, Taboo Usurper", "grade": "boss", "type": "monster", "pushimmune": true },
+  "480462": {
+    "id": 480462,
+    "name": "Valinak, Herald of the End",
+    "grade": "boss",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480463": {
+    "id": 480463,
+    "name": "Valinak, Herald of the End",
+    "grade": "boss",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480464": { "id": 480464, "name": "Darkness Follower", "grade": "normal", "type": "monster" },
+  "480465": { "id": 480465, "name": "Darkness Follower", "grade": "normal", "type": "monster" },
+  "480466": { "id": 480466, "name": "Darkness Follower", "grade": "normal", "type": "monster" },
+  "480467": { "id": 480467, "name": "Darkness Follower", "grade": "normal", "type": "monster" },
+  "480468": { "id": 480468, "name": "Darkness Follower", "grade": "normal", "type": "monster" },
+  "480469": { "id": 480469, "name": "Darkness Follower", "grade": "normal", "type": "monster" },
+  "480470": { "id": 480470, "name": "Hutch of Darkness", "grade": "named", "type": "monster", "pushimmune": true },
+  "480471": { "id": 480471, "name": "Hutch of Darkness", "grade": "named", "type": "monster", "pushimmune": true },
+  "480472": { "id": 480472, "name": "Hutch of Darkness", "grade": "normal", "type": "monster" },
+  "480473": { "id": 480473, "name": "Hutch of Darkness", "grade": "normal", "type": "monster", "pushimmune": true },
+  "480474": { "id": 480474, "name": "Taboo Kin", "grade": "boss", "type": "monster", "pushimmune": true },
+  "480475": { "id": 480475, "name": "Taboo Kin", "grade": "seed", "type": "monster", "pushimmune": true },
+  "480476": { "id": 480476, "name": "Taboo Kin", "grade": "seed", "type": "monster", "pushimmune": true },
+  "480477": { "id": 480477, "name": "Taboo Kin", "grade": "seed", "type": "monster", "pushimmune": true },
+  "480478": { "id": 480478, "name": "Taboo Kin", "grade": "seed", "type": "monster", "pushimmune": true },
+  "480479": { "id": 480479, "name": "Taboo Kin", "grade": "seed", "type": "monster", "pushimmune": true },
+  "480480": { "id": 480480, "name": "Taboo Kin", "grade": "seed", "type": "monster", "pushimmune": true },
+  "480481": {
+    "id": 480481,
+    "name": "Thunder of the Apocalypse",
+    "grade": "boss",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480482": {
+    "id": 480482,
+    "name": "Thunder of the Apocalypse",
+    "grade": "boss",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480483": {
+    "id": 480483,
+    "name": "Thunder of the Apocalypse",
+    "grade": "boss",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480484": { "id": 480484, "name": "Valinak", "grade": "seed", "type": "monster", "pushimmune": true },
+  "480485": { "id": 480485, "name": "Dark Membrane", "grade": "seed", "type": "monster", "pushimmune": true },
+  "480486": { "id": 480486, "name": "Dark Membrane", "grade": "seed", "type": "monster", "pushimmune": true },
+  "480487": { "id": 480487, "name": "Valinak", "grade": "seed", "type": "monster", "pushimmune": true },
+  "480488": { "id": 480488, "name": "Valinak", "grade": "seed", "type": "monster", "pushimmune": true },
+  "480489": { "id": 480489, "name": "Valinak", "grade": "seed", "type": "monster", "pushimmune": true },
+  "480490": { "id": 480490, "name": "Valinak", "grade": "seed", "type": "monster", "pushimmune": true },
+  "480491": { "id": 480491, "name": "Valinak", "grade": "seed", "type": "monster", "pushimmune": true },
+  "480492": { "id": 480492, "name": "Valinak", "grade": "seed", "type": "monster", "pushimmune": true },
+  "480493": { "id": 480493, "name": "Valinak", "grade": "seed", "type": "monster", "pushimmune": true },
+  "480494": { "id": 480494, "name": "Valinak", "grade": "seed", "type": "monster", "pushimmune": true },
+  "480495": { "id": 480495, "name": "Valinak", "grade": "seed", "type": "monster", "pushimmune": true },
+  "480496": { "id": 480496, "name": "Valinak", "grade": "seed", "type": "monster", "pushimmune": true },
+  "480497": { "id": 480497, "name": "Valinak", "grade": "seed", "type": "monster", "pushimmune": true },
+  "480498": { "id": 480498, "name": "Valinak", "grade": "seed", "type": "monster", "pushimmune": true },
+  "480499": { "id": 480499, "name": "Valinak", "grade": "seed", "type": "monster", "pushimmune": true },
+  "480550": {
+    "id": 480550,
+    "name": "Darkness Legion Commander Thaemine",
+    "grade": "commander",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480551": { "id": 480551, "name": "Darkness Clone", "grade": "boss", "type": "monster", "pushimmune": true },
+  "480552": { "id": 480552, "name": "Darkness Sword", "grade": "boss", "type": "monster", "pushimmune": true },
+  "480553": { "id": 480553, "name": "Giant Darkness Sword", "grade": "boss", "type": "monster", "pushimmune": true },
+  "480554": {
+    "id": 480554,
+    "name": "Darkness Legion Commander Thaemine",
+    "grade": "boss",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480555": { "id": 480555, "name": "Darkness Sword", "grade": "boss", "type": "monster", "pushimmune": true },
+  "480556": { "id": 480556, "name": "Darkness Sword", "grade": "boss", "type": "monster", "pushimmune": true },
+  "480557": { "id": 480557, "name": "Darkness Sword", "grade": "boss", "type": "monster", "pushimmune": true },
+  "480558": { "id": 480558, "name": "Giant Darkness Sword", "grade": "boss", "type": "monster", "pushimmune": true },
+  "480559": { "id": 480559, "name": "Giant Darkness Sword", "grade": "boss", "type": "monster", "pushimmune": true },
+  "480560": {
+    "id": 480560,
+    "name": "Darkness Legion Commander Thaemine",
+    "grade": "boss",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480561": { "id": 480561, "name": "Giant Darkness Sword", "grade": "boss", "type": "monster", "pushimmune": true },
+  "480562": {
+    "id": 480562,
+    "name": "Darkness Legion Commander Thaemine",
+    "grade": "boss",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480563": {
+    "id": 480563,
+    "name": "Darkness Legion Commander Thaemine",
+    "grade": "boss",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480564": {
+    "id": 480564,
+    "name": "Darkness Legion Commander Thaemine",
+    "grade": "boss",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480565": {
+    "id": 480565,
+    "name": "Darkness Legion Commander Thaemine",
+    "grade": "boss",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480566": {
+    "id": 480566,
+    "name": "Darkness Legion Commander Thaemine",
+    "grade": "boss",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480567": {
+    "id": 480567,
+    "name": "Darkness Legion Commander Thaemine",
+    "grade": "boss",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480568": {
+    "id": 480568,
+    "name": "Darkness Legion Commander Thaemine",
+    "grade": "boss",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480569": { "id": 480569, "name": "Darkness Sword", "grade": "boss", "type": "monster", "pushimmune": true },
+  "480570": { "id": 480570, "name": "Darkness Sword", "grade": "boss", "type": "monster", "pushimmune": true },
+  "480571": { "id": 480571, "name": "Darkness Sword", "grade": "boss", "type": "monster", "pushimmune": true },
+  "480572": { "id": 480572, "name": "Darkness Sword", "grade": "boss", "type": "monster", "pushimmune": true },
+  "480573": { "id": 480573, "name": "Darkness Sword", "grade": "boss", "type": "monster", "pushimmune": true },
+  "480574": { "id": 480574, "name": "Darkness Sword", "grade": "boss", "type": "monster", "pushimmune": true },
+  "480575": { "id": 480575, "name": "Darkness Sword", "grade": "boss", "type": "monster", "pushimmune": true },
+  "480576": { "id": 480576, "name": "Darkness Sword", "grade": "boss", "type": "monster", "pushimmune": true },
+  "480577": { "id": 480577, "name": "Darkness Sword", "grade": "boss", "type": "monster", "pushimmune": true },
+  "480578": { "id": 480578, "name": "Darkness Sword", "grade": "boss", "type": "monster", "pushimmune": true },
+  "480579": { "id": 480579, "name": "Darkness Sword", "grade": "boss", "type": "monster", "pushimmune": true },
+  "480590": { "id": 480590, "name": "Darkness Sword", "grade": "boss", "type": "monster", "pushimmune": true },
+  "480591": {
+    "id": 480591,
+    "name": "Darkness Legion Commander Thaemine",
+    "grade": "boss",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480592": {
+    "id": 480592,
+    "name": "Darkness Legion Commander Thaemine",
+    "grade": "boss",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480593": { "id": 480593, "name": "Darkness Sword", "grade": "boss", "type": "monster", "pushimmune": true },
+  "480594": {
+    "id": 480594,
+    "name": "Darkness Legion Commander Thaemine",
+    "grade": "boss",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480595": {
+    "id": 480595,
+    "name": "Darkness Legion Commander Thaemine",
+    "grade": "boss",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480596": {
+    "id": 480596,
+    "name": "Darkness Legion Commander Thaemine",
+    "grade": "boss",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480597": {
+    "id": 480597,
+    "name": "Darkness Legion Commander Thaemine",
+    "grade": "boss",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480598": { "id": 480598, "name": "Darkness Sword", "grade": "boss", "type": "monster", "pushimmune": true },
+  "480599": {
+    "id": 480599,
+    "name": "Darkness Legion Commander Thaemine",
+    "grade": "boss",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480588": {
+    "id": 480588,
+    "name": "Darkness Legion Commander Thaemine",
+    "grade": "boss",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480589": {
+    "id": 480589,
+    "name": "Darkness Legion Commander Thaemine",
+    "grade": "boss",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480580": {
+    "id": 480580,
+    "name": "Thaemine, Conqueror of Stars",
+    "grade": "commander",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480581": { "id": 480581, "name": "별을 제패한 자, 카멘", "grade": "boss", "type": "monster", "pushimmune": true },
+  "480582": {
+    "id": 480582,
+    "name": "Final_Transparent_Giant Sword",
+    "grade": "boss",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480583": {
+    "id": 480583,
+    "name": "Thaemine, Conqueror of Stars",
+    "grade": "boss",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480584": {
+    "id": 480584,
+    "name": "Thaemine, Conqueror of Stars",
+    "grade": "boss",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480585": { "id": 480585, "name": "Final_Giant Sword", "grade": "boss", "type": "monster", "pushimmune": true },
+  "480586": {
+    "id": 480586,
+    "name": "Thaemine, Conqueror of Stars",
+    "grade": "boss",
+    "type": "monster",
+    "pushimmune": true
+  },
+  "480587": { "id": 480587, "name": "최종_투명_음성대사", "grade": "boss", "type": "monster", "pushimmune": true },
   "800000": { "id": 800000, "name": "Dawn Mist Elemental", "grade": "normal", "type": "monster" },
   "800010": { "id": 800010, "name": "Brimstone Elemental", "grade": "normal", "type": "monster" },
   "800020": { "id": 800020, "name": "Corpse Spider", "grade": "normal", "type": "monster" },
@@ -4556,11 +5428,11 @@
   "807014": { "id": 807014, "name": "Insane Chungshu", "grade": "normal", "type": "monster" },
   "807015": { "id": 807015, "name": "Insane White Beard Reindeer", "grade": "normal", "type": "monster" },
   "807016": { "id": 807016, "name": "Insane Highland Reindeer", "grade": "normal", "type": "monster" },
-  "807017": { "id": 807017, "name": "Insane Grey Wolf", "grade": "normal", "type": "monster" },
+  "807017": { "id": 807017, "name": "Insane Gray Wolf", "grade": "normal", "type": "monster" },
   "807018": { "id": 807018, "name": "Insane Lunar Wolf", "grade": "normal", "type": "monster" },
   "807019": { "id": 807019, "name": "Insane Dark Wolf", "grade": "normal", "type": "monster" },
   "807020": { "id": 807020, "name": "Insane White Rat", "grade": "normal", "type": "monster" },
-  "807021": { "id": 807021, "name": "Insane Grey Rat", "grade": "normal", "type": "monster" },
+  "807021": { "id": 807021, "name": "Insane Gray Rat", "grade": "normal", "type": "monster" },
   "807022": { "id": 807022, "name": "Insane Spotted Rat", "grade": "normal", "type": "monster" },
   "807023": { "id": 807023, "name": "Insane Red Mantis", "grade": "normal", "type": "monster" },
   "807024": { "id": 807024, "name": "Insane Yellow Mantis", "grade": "normal", "type": "monster" },
@@ -7324,7 +8196,7 @@
   "832022": { "id": 832022, "name": "Infected Bolt Grenadier", "grade": "underling", "type": "monster" },
   "832023": { "id": 832023, "name": "Zakel Lancer", "grade": "underling", "type": "monster" },
   "832040": { "id": 832040, "name": "Imp Mage", "grade": "underling", "type": "monster" },
-  "832041": { "id": 832041, "name": "Demon-struck Chaos Shard", "grade": "underling", "type": "monster" },
+  "832041": { "id": 832041, "name": "Demon-Struck Chaos Sliver", "grade": "underling", "type": "monster" },
   "832042": { "id": 832042, "name": "Corrupted Watcher", "grade": "underling", "type": "monster" },
   "832043": { "id": 832043, "name": "Skeleton Archer", "grade": "underling", "type": "monster" },
   "832044": { "id": 832044, "name": "Skeleton Mage", "grade": "underling", "type": "monster" },
@@ -14388,7 +15260,7 @@
   "233100": { "id": 233100, "name": "Swordswift Woopir", "grade": "normal", "type": "monster" },
   "233110": { "id": 233110, "name": "Swordswift Kiriko", "grade": "normal", "type": "monster" },
   "233120": { "id": 233120, "name": "Swordswift Belled", "grade": "normal", "type": "monster" },
-  "233130": { "id": 233130, "name": "Evil Legion Chaos Shard", "grade": "normal", "type": "monster" },
+  "233130": { "id": 233130, "name": "Evil Legion Chaos Sliver", "grade": "normal", "type": "monster" },
   "233140": { "id": 233140, "name": "Oreskin King Turtle", "grade": "normal", "type": "monster" },
   "233150": { "id": 233150, "name": "Gem Spider", "grade": "normal", "type": "monster" },
   "233160": { "id": 233160, "name": "Emerald Butterfly", "grade": "normal", "type": "monster" },
@@ -14413,7 +15285,7 @@
   "234060": { "id": 234060, "name": "Worm Larva", "grade": "normal", "type": "monster" },
   "234070": { "id": 234070, "name": "Evil Legion Flame Bomber", "grade": "normal", "type": "monster" },
   "234080": { "id": 234080, "name": "Swordthrall Gargoyle", "grade": "normal", "type": "monster" },
-  "234090": { "id": 234090, "name": "Evil Legion Chaos Shard", "grade": "normal", "type": "monster" },
+  "234090": { "id": 234090, "name": "Evil Legion Chaos Sliver", "grade": "normal", "type": "monster" },
   "234100": { "id": 234100, "name": "Swordswift Eraswie", "grade": "normal", "type": "monster" },
   "234110": { "id": 234110, "name": "Swordthrall Vizilia", "grade": "normal", "type": "monster" },
   "234120": { "id": 234120, "name": "Telpa Miner", "grade": "normal", "type": "monster" },
@@ -19654,7 +20526,7 @@
   "269504": { "id": 269504, "name": "Skiara of Chaos", "grade": "normal", "type": "monster" },
   "269505": { "id": 269505, "name": "Black Mage of Chaos", "grade": "named", "type": "monster", "pushimmune": true },
   "269506": { "id": 269506, "name": "Black Warrior of Chaos", "grade": "normal", "type": "monster" },
-  "269507": { "id": 269507, "name": "Chaos Shard", "grade": "underling", "type": "monster" },
+  "269507": { "id": 269507, "name": "Chaos Sliver", "grade": "underling", "type": "monster" },
   "269508": { "id": 269508, "name": "Chaos Cragolith", "grade": "normal", "type": "monster" },
   "269509": { "id": 269509, "name": "Summoner of Chaos", "grade": "normal", "type": "monster" },
   "269510": {
@@ -38712,6 +39584,10 @@
     "pushimmune": true
   },
   "82081": { "id": 82081, "name": "Legendary Adventurer", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "82083": { "id": 82083, "name": "", "grade": "normal", "type": "townsfolk" },
+  "82084": { "id": 82084, "name": "Pleah", "grade": "normal", "type": "townsfolk" },
+  "82085": { "id": 82085, "name": "Magick-Reflecting Mirror", "grade": "normal", "type": "townsfolk" },
+  "82086": { "id": 82086, "name": "Angella", "grade": "normal", "type": "townsfolk" },
   "83300": { "id": 83300, "name": "Adeline", "grade": "normal", "type": "townsfolk" },
   "83301": { "id": 83301, "name": "Nahun's Tome", "grade": "normal", "type": "townsfolk", "pushimmune": true },
   "83302": { "id": 83302, "name": "Adorable Felix", "grade": "normal", "type": "townsfolk", "pushimmune": true },
@@ -40870,6 +41746,242 @@
   "42413": { "id": 42413, "name": "Wei's Phantom", "grade": "normal", "type": "townsfolk" },
   "42414": { "id": 42414, "name": "Azena's Phantom", "grade": "normal", "type": "townsfolk" },
   "42415": { "id": 42415, "name": "Nineveh's Phantom", "grade": "normal", "type": "townsfolk" },
+  "42416": { "id": 42416, "name": "Papa", "grade": "normal", "type": "townsfolk" },
+  "42417": { "id": 42417, "name": "수근대는 주민1", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "42418": { "id": 42418, "name": "수근대는 주민2", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "42419": { "id": 42419, "name": "루테란 병사 대장", "grade": "normal", "type": "townsfolk" },
+  "42420": { "id": 42420, "name": "루테란 왕궁 입구 병사 남", "grade": "normal", "type": "townsfolk" },
+  "42421": { "id": 42421, "name": "루테란 왕궁 입구 병사 여", "grade": "normal", "type": "townsfolk" },
+  "42422": { "id": 42422, "name": "Luterran Knight", "grade": "normal", "type": "townsfolk" },
+  "42423": { "id": 42423, "name": "Thirain", "grade": "normal", "type": "townsfolk" },
+  "42424": { "id": 42424, "name": "Nineveh", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "42425": { "id": 42425, "name": "루테란 병사 남 격전의 평야", "grade": "normal", "type": "townsfolk" },
+  "42426": { "id": 42426, "name": "Kadan", "grade": "none", "type": "townsfolk", "pushimmune": true },
+  "42427": { "id": 42427, "name": "Cassleford", "grade": "normal", "type": "townsfolk" },
+  "42428": { "id": 42428, "name": "중급 여자 기사", "grade": "normal", "type": "townsfolk" },
+  "42429": { "id": 42429, "name": "중급 남자 기사", "grade": "normal", "type": "townsfolk" },
+  "42430": { "id": 42430, "name": "궁정 하녀1", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "42431": { "id": 42431, "name": "궁정 하녀2", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "42432": { "id": 42432, "name": "루테란 기사 알현실 입구1", "grade": "normal", "type": "townsfolk" },
+  "42433": { "id": 42433, "name": "루테란 기사 알현실 입구2", "grade": "normal", "type": "townsfolk" },
+  "42434": { "id": 42434, "name": "궁정 하인 남자1", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "42435": { "id": 42435, "name": "궁정 하인 남자2", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "42436": { "id": 42436, "name": "Thirain", "grade": "normal", "type": "townsfolk" },
+  "42437": { "id": 42437, "name": "Nineveh", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "42438": { "id": 42438, "name": "Shandi", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "42439": { "id": 42439, "name": "Wei", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "42440": { "id": 42440, "name": "Balthorr", "grade": "normal", "type": "townsfolk" },
+  "42441": { "id": 42441, "name": "Zinnervale", "grade": "normal", "type": "townsfolk" },
+  "42442": { "id": 42442, "name": "Sasha", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "42443": { "id": 42443, "name": "Azena", "grade": "normal", "type": "townsfolk" },
+  "42444": { "id": 42444, "name": "Gherdia", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "42445": { "id": 42445, "name": "Kaysarr", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "42446": { "id": 42446, "name": "Madnick", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "42447": { "id": 42447, "name": "Sian", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "42448": { "id": 42448, "name": "Bastian", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "42449": { "id": 42449, "name": "Nia", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "42450": { "id": 42450, "name": "Nagi", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "42451": { "id": 42451, "name": "Kaldor", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "42452": { "id": 42452, "name": "Levi", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "42453": { "id": 42453, "name": "Jederico", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "42454": { "id": 42454, "name": "Meehan", "grade": "normal", "type": "townsfolk" },
+  "42455": { "id": 42455, "name": "Isaac", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "42456": { "id": 42456, "name": "Verad", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "42457": { "id": 42457, "name": "Finding Blackfang", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "42458": { "id": 42458, "name": "Pahan", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "42459": { "id": 42459, "name": "Gumga", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "42460": { "id": 42460, "name": "Ealyn", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "42461": { "id": 42461, "name": "Thar", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "42462": { "id": 42462, "name": "Avele", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "42463": { "id": 42463, "name": "근위 기사 남자", "grade": "normal", "type": "townsfolk" },
+  "42464": { "id": 42464, "name": "근위 기사 여자", "grade": "normal", "type": "townsfolk" },
+  "42465": { "id": 42465, "name": "Anessa", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "42466": { "id": 42466, "name": "루테란 주민 남자1", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "42467": { "id": 42467, "name": "여자 아이", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "42468": { "id": 42468, "name": "남자 아이", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "42469": { "id": 42469, "name": "루테란 주민 여자1", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "42470": { "id": 42470, "name": "루테란 귀족 남자1", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "42471": { "id": 42471, "name": "루테란 귀족 남자2", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "42472": { "id": 42472, "name": "루테란 귀족 여자1", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "42473": { "id": 42473, "name": "루테란 귀족 여자2", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "42474": { "id": 42474, "name": "투구 쓴 기사 남자", "grade": "normal", "type": "townsfolk" },
+  "42475": { "id": 42475, "name": "가이스트", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "42476": {
+    "id": 42476,
+    "name": "구출되는 베른 무인 여자",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "42477": {
+    "id": 42477,
+    "name": "구출되는 가이스트 남자",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "42478": { "id": 42478, "name": "Thirain", "grade": "normal", "type": "townsfolk" },
+  "42479": { "id": 42479, "name": "Zinnervale", "grade": "normal", "type": "townsfolk" },
+  "42480": { "id": 42480, "name": "Shandi's Illusory Bird", "grade": "none", "type": "townsfolk", "pushimmune": true },
+  "42481": {
+    "id": 42481,
+    "name": "비행정 파편에 깔린 투명 npc1",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "42482": {
+    "id": 42482,
+    "name": "비행정 파편에 깔린 투명 npc2",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "42483": { "id": 42483, "name": "Wei", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "42484": { "id": 42484, "name": "Balthorr", "grade": "normal", "type": "townsfolk" },
+  "42485": { "id": 42485, "name": "Sasha", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "42486": { "id": 42486, "name": "Bastian", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "42487": { "id": 42487, "name": "케나인 군인 남", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "42488": { "id": 42488, "name": "케나인 군인 여", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "42489": { "id": 42489, "name": "비공정 병사 남자", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "42490": { "id": 42490, "name": "비공정 병사 여자", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "42491": { "id": 42491, "name": "루테란 투구 병사 남자", "grade": "normal", "type": "townsfolk" },
+  "42492": { "id": 42492, "name": "루테란 일반 병사 남자", "grade": "normal", "type": "townsfolk" },
+  "42493": { "id": 42493, "name": "태양의 기사단 남자", "grade": "normal", "type": "townsfolk" },
+  "42494": { "id": 42494, "name": "태양의 기사단 여자", "grade": "normal", "type": "townsfolk" },
+  "42495": { "id": 42495, "name": "달의 기사단 남자 근거리", "grade": "normal", "type": "townsfolk" },
+  "42496": { "id": 42496, "name": "달의 기사단 여자 원거리", "grade": "normal", "type": "townsfolk" },
+  "42497": { "id": 42497, "name": "로헨델 병사 남자1", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "42498": { "id": 42498, "name": "로헨델 병사 남자2", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "42499": {
+    "id": 42499,
+    "name": "이난나 보호 스킬용 투명 NPC",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "42500": { "id": 42500, "name": "루테란 귀족 남자3", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "42501": { "id": 42501, "name": "루테란 귀족 여자3", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "42502": { "id": 42502, "name": "루테란 주민 남자2", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "42503": { "id": 42503, "name": "루테란 주민 여자2", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "42504": { "id": 42504, "name": "남자 아이2", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "42505": { "id": 42505, "name": "여자 아이2", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "42506": { "id": 42506, "name": "루테란 기사 격전의 평야2", "grade": "normal", "type": "townsfolk" },
+  "42507": { "id": 42507, "name": "Wei", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "42508": { "id": 42508, "name": "Balthorr", "grade": "normal", "type": "townsfolk" },
+  "42509": { "id": 42509, "name": "Shandi", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "42510": { "id": 42510, "name": "Azena", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "42511": {
+    "id": 42511,
+    "name": "Ecological Research Scholar",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "42512": {
+    "id": 42512,
+    "name": "Ecological Research Scholar",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "42513": { "id": 42513, "name": "루테란 주민1 남 교수", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "42514": { "id": 42514, "name": "루테란 주민2 여 조교", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "42515": { "id": 42515, "name": "슈테른 주민1 남", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "42516": { "id": 42516, "name": "슈테른 주민2 남", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "42517": { "id": 42517, "name": "슈테른 주민3 여", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "42518": { "id": 42518, "name": "베른 주민1 남", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "42519": { "id": 42519, "name": "베른 주민2 여", "grade": "normal", "type": "townsfolk" },
+  "42520": { "id": 42520, "name": "로헨델 주민1 여", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "42521": { "id": 42521, "name": "로헨델 주민2 여", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "42522": { "id": 42522, "name": "로헨델 주민3 남", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "42523": { "id": 42523, "name": "욘 주민1 남", "grade": "normal", "type": "townsfolk" },
+  "42524": { "id": 42524, "name": "욘 주민2 남", "grade": "normal", "type": "townsfolk" },
+  "42525": { "id": 42525, "name": "페이튼 주민1 여 아베스타", "grade": "normal", "type": "townsfolk" },
+  "42526": { "id": 42526, "name": "페이튼 주민2 남 아베스타", "grade": "normal", "type": "townsfolk" },
+  "42527": { "id": 42527, "name": "파푸니카 주민1 여", "grade": "normal", "type": "townsfolk" },
+  "42528": { "id": 42528, "name": "파푸니카 주민2 여", "grade": "normal", "type": "townsfolk" },
+  "42529": { "id": 42529, "name": "엘가시아 주민1 남", "grade": "normal", "type": "townsfolk" },
+  "42530": { "id": 42530, "name": "엘가시아 주민2 여", "grade": "normal", "type": "townsfolk" },
+  "42531": { "id": 42531, "name": "엘가시아 주민3 남", "grade": "normal", "type": "townsfolk" },
+  "42532": {
+    "id": 42532,
+    "name": "볼다이크 주민1 남 현자",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "42533": { "id": 42533, "name": "볼다이크 주민2 여 현자", "grade": "normal", "type": "townsfolk" },
+  "42534": {
+    "id": 42534,
+    "name": "볼다이크 주만3 여 현자",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "42535": { "id": 42535, "name": "루테란 기사 격전의 평야", "grade": "normal", "type": "townsfolk" },
+  "42536": { "id": 42536, "name": "루테란 중급 기사 여자", "grade": "normal", "type": "townsfolk" },
+  "42537": { "id": 42537, "name": "루테란 병사 대장 필드", "grade": "normal", "type": "townsfolk" },
+  "42538": { "id": 42538, "name": "루테란 병사1 필드", "grade": "normal", "type": "townsfolk" },
+  "42539": { "id": 42539, "name": "루테란 병사2 필드", "grade": "normal", "type": "townsfolk" },
+  "42540": { "id": 42540, "name": "루테란 주민3", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "42541": { "id": 42541, "name": "루테란 주민4", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "42542": { "id": 42542, "name": "루테란 주민5", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "42543": { "id": 42543, "name": "루테란 주민6", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "42544": { "id": 42544, "name": "루테란 주민7", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "42545": { "id": 42545, "name": "루테란 주민8", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "42546": { "id": 42546, "name": "루테란 주민9", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "42547": { "id": 42547, "name": "루테란 주민10", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "42548": { "id": 42548, "name": "루테란 주민11", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "42549": { "id": 42549, "name": "루테란 주민12", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "42550": { "id": 42550, "name": "루테란 주민13", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "42551": { "id": 42551, "name": "루테란 주민14", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "42552": { "id": 42552, "name": "루테란 주민15", "grade": "normal", "type": "townsfolk" },
+  "42553": {
+    "id": 42553,
+    "name": "이난나 보호 스킬용 투명 NPC(버프 붙는)",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "42554": { "id": 42554, "name": "비무장 가이스트1", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "42555": { "id": 42555, "name": "비무장 가이스트2", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "42556": { "id": 42556, "name": "피난민1_여", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "42557": { "id": 42557, "name": "피난민2_남", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "42558": { "id": 42558, "name": "피난민3_여", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "42559": { "id": 42559, "name": "피난민 보호 병사_남", "grade": "normal", "type": "townsfolk" },
+  "42560": { "id": 42560, "name": "피난민4_남", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "42561": { "id": 42561, "name": "피난민5_노인", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "42562": { "id": 42562, "name": "피난민6_아이", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "42563": { "id": 42563, "name": "Armen", "grade": "normal", "type": "townsfolk", "pushimmune": true },
+  "42564": {
+    "id": 42564,
+    "name": "카멘 전조 이후_축제 광장 시민1",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "42565": {
+    "id": 42565,
+    "name": "카멘 전조 이후_축제 광장 시민2",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "42566": {
+    "id": 42566,
+    "name": "카멘 전조 이후_축제 광장 시민3",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
+  "42567": {
+    "id": 42567,
+    "name": "카멘 전조 이후_축제 광장 시민4",
+    "grade": "normal",
+    "type": "townsfolk",
+    "pushimmune": true
+  },
   "42800": { "id": 42800, "name": "Xereon", "grade": "normal", "type": "townsfolk", "pushimmune": true },
   "42801": { "id": 42801, "name": "Avele", "grade": "boss", "type": "townsfolk", "pushimmune": true },
   "42802": { "id": 42802, "name": "President Alberto", "grade": "normal", "type": "townsfolk" },

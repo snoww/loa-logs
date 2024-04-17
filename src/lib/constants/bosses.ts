@@ -44,6 +44,7 @@ export const bossList = [
 
 
     // guardian raids
+    "Vescal",
     "Gargadeth",
     "Sonavel",
     "Hanumatan",
@@ -58,19 +59,19 @@ export const bosses = {
             "Destroyer Lucas",
             "Leader Lugaru",
             "Demon Beast Commander Valtan",
-            "Ravaged Tyrant of Beasts",
+            "Ravaged Tyrant of Beasts"
         ],
         "Vykas": [
             "Incubus Morphe",
             "Nightmarish Morphe",
             "Covetous Devourer Vykas",
-            "Covetous Legion Commander Vykas",
+            "Covetous Legion Commander Vykas"
         ],
         "Clown": [
             "Saydon",
             "Kakul",
             "Kakul-Saydon",
-            "Encore-Desiring Kakul-Saydon",
+            "Encore-Desiring Kakul-Saydon"
         ],
         "Brelshaza": [
             "Gehenna Helkasirs",
@@ -79,7 +80,7 @@ export const bosses = {
             "Ashtarot",
             "Primordial Nightmare",
             "Brelshaza, Monarch of Nightmares",
-            "Phantom Legion Commander Brelshaza",
+            "Phantom Legion Commander Brelshaza"
         ],
         "Akkan": [
             "Griefbringer Maurug",
@@ -87,6 +88,18 @@ export const bosses = {
             "Lord of Degradation Akkan",
             "Plague Legion Commander Akkan",
             "Lord of Kartheon Akkan"
+        ],
+        "Thaemine": [
+            "Killineza the Dark Worshipper",
+            "Valinak, Knight of Darkness",
+            "Valinak, Taboo Usurper",
+            "Valinak, Herald of the End",
+            "Thaemine the Lightqueller",
+            "Darkness Sword",
+            "Giant Darkness Sword",
+            "Darkness Legion Commander Thaemine",
+            // "tg41-Darkness Legion Commander Thaemine's Clone(boss)",
+            "Thaemine, Conqueror of Stars",
         ]
     },
     "Abyssal Dungeons": {
@@ -94,7 +107,7 @@ export const bosses = {
             "Tienis",
             "Celestial Sentinel",
             "Prunya",
-            "Lauriel",
+            "Lauriel"
         ],
         "Ivory Tower of Chaos": [
             "Kaltaya, the Blooming Chaos",

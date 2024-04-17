@@ -36,7 +36,15 @@ export const encounterMap: { [key: string]: { [key: string]: Array<string> }} = 
         "Ivory Tower G2": ["Rakathus, the Lurking Arrogance"],
         "Ivory Tower G3": ["Firehorn, Trampler of Earth"],
         "Ivory Tower G4": ["Lazaram, the Trailblazer", "Subordinated Vertus", "Subordinated Calventus", "Subordinated Legoros", "Brand of Subordination"]
+    },
+    "Thaemine": {
+        "Thaemine G1": ["Killineza the Dark Worshipper"],
+        "Thaemine G2": ["Valinak, Knight of Darkness", "Valinak, Taboo Usurper", "Valinak, Herald of the End"],
+        "Thaemine G3": ["Thaemine the Lightqueller", "Darkness Sword", "Giant Darkness Sword"],
+        "Thaemine G4": ["Darkness Legion Commander Thaemine",
+            // "tg41prokel",
+            "Thaemine, Conqueror of Stars"]
     }
 };
 
-export const difficultyMap: Array<string> = ["Normal", "Hard", "Inferno", "Challenge", "Trial", "Extreme"];
+export const difficultyMap: Array<string> = ["Normal", "Hard", "Inferno", "Challenge", "Trial", "Extreme", "The First"];

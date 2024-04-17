@@ -843,7 +843,7 @@ pub fn start(
                             state.raid_difficulty = "Special".to_string();
                         }
                         5 => {
-                            state.raid_difficulty = "Extreme".to_string();
+                            state.raid_difficulty = "The First".to_string();
                         }
                         _ => {}
                     }
