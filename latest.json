@@ -1,7 +1,7 @@
 {
     "version": "v1.9.1",
     "notes": "### v1.9.1\n#### NEW FEATURES\n- updated meter for thaemine patch\n- added gem display for transformation and identity skills (surge, demonic impulse sh, etc.)\n- added new option to split rdps into parties\n\n![rdps_party](https://i.imgur.com/2mJCuuQ.png)\n\n- added new columns for rdps that show the actual % of your damage that came from all, supp, or dps\n- added new tooltips to help clarify meaning of sSyn%\n\nsCon% (Support Contribution) Tooltip Example\n\n![rdps_tooltips](https://i.imgur.com/7yi88Rc.png)\n\nsSyn% (Support Synergy) Tooltip Example\n\n![rdps_tooltips](https://i.imgur.com/O1UQCRR.png)\n\n#### BUG FIXES AND IMPROVEMENTS\n- improved db optimization button (settings > database > optimize database)\n- fixed crashes under certain conditions\n- boss damage only will be forced on every app start (please let me know if that is an issue for you)\n\n\n### RDPS NOTE: if you or anyone in your raid swaps gear presets, please wait up to 20s before pulling for the stats server to get updated gear info\n\n\nfull patch notes on [github](https://github.com/snoww/loa-logs/releases/latest)\n\nsend bug reports/suggestions to [#loa-logs](https://discord.gg/sbSa3pkDF5)",
-    "pub_date": "2024-04-17T010:05:46.403Z",
+    "pub_date": "2024-04-17T16:16:22.003Z",
     "platforms": {
         "windows-x86_64": {
             "url": "https://github.com/snoww/loa-logs/releases/download/v1.9.1/LOA.Logs_1.9.1_x64-setup.nsis.zip",
