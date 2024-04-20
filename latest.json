@@ -1,11 +1,11 @@
 {
-    "version": "v1.9.1",
-    "notes": "### v1.9.1\n#### NEW FEATURES\n- updated meter for thaemine patch\n- added gem display for transformation and identity skills (surge, demonic impulse sh, etc.)\n- added new option to split rdps into parties\n\n![rdps_party](https://i.imgur.com/2mJCuuQ.png)\n\n- added new columns for rdps that show the actual % of your damage that came from all, supp, or dps\n- added new tooltips to help clarify meaning of sSyn%\n\nsCon% (Support Contribution) Tooltip Example\n\n![rdps_tooltips](https://i.imgur.com/7yi88Rc.png)\n\nsSyn% (Support Synergy) Tooltip Example\n\n![rdps_tooltips](https://i.imgur.com/O1UQCRR.png)\n\n#### BUG FIXES AND IMPROVEMENTS\n- improved db optimization button (settings > database > optimize database)\n- fixed crashes under certain conditions\n- boss damage only will be forced on every app start (please let me know if that is an issue for you)\n\n\n### RDPS NOTE: if you or anyone in your raid swaps gear presets, please wait up to 20s before pulling for the stats server to get updated gear info\n\n\nfull patch notes on [github](https://github.com/snoww/loa-logs/releases/latest)\n\nsend bug reports/suggestions to [#loa-logs](https://discord.gg/sbSa3pkDF5)",
-    "pub_date": "2024-04-17T16:16:22.003Z",
+    "version": "v1.9.2",
+    "notes": "### v1.9.2\n### RDPS NOTE: if you or anyone in your raid swaps gear presets, please wait up to 20s before pulling for the stats server to get updated gear info\n### GENERAL NOTE: boss only damage is turned on by default when meter is started. this might be why you aren't seeing anything recorded in chaos dungeons.\n#### BUG FIXES AND IMPROVEMENTS\n- fix filtering for veskal guardian raid\n- fix filtering for thaemine g3 and g4\n- fix incorrect boss name for thaemine g3 swords\n- added separate boss for thaemine g4 prokel\n- removed giant darkness swords as bosses for thaemine g4\n- removed random bosses for thaemine g4\n\n\nfull patch notes on [github](https://github.com/snoww/loa-logs/releases/latest)\n\nsend bug reports/suggestions to [#loa-logs](https://discord.gg/sbSa3pkDF5)",
+    "pub_date": "2024-04-20T06:38:12.412Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.9.1/LOA.Logs_1.9.1_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmFCRWlVZExhdE5oU3Z2T2NzYzlnSkgvQ0RoSEZJZ2lvOWV1NE1MRDh1aDFuMzFMdlhTNkNzK2NZcms4UERRRkJGUjIrKzFRUCtYaDBKVFJvVG5LVFFnPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzEzMzYzOTg4CWZpbGU6TE9BIExvZ3NfMS45LjFfeDY0LXNldHVwLm5zaXMuemlwCk1XNmlFRTc0UnZrelFSUEkvSDZudkVQdE11S3lyKzVQZ1B0R2xoelo0OGFxSHBSNTdKVFk5SUdWcUVxRmNSckgvRGxzYVlLOU04SnI0KzRyQ3hGa0RnPT0K"
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.9.2/LOA.Logs_1.9.2_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlFzZy9EQ1lMVHk2YlBCS2piZXFaR3cvNDdYUHBZVlErUktVd0lhQjZVbVAzVGFtaksyam5FQkd0bmV4Z0xubFhPYTRXdlUvVzFRS25wS1haWjkrWlFrPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzEzNTk1MTgzCWZpbGU6TE9BIExvZ3NfMS45LjJfeDY0LXNldHVwLm5zaXMuemlwCjJtcTZGNVVtZUJZMVFIeG1ZVEFWN2h5eTJYSzMrbWZVRjlKdTdrTDJsbi9mNzI5Q0pPaHVwU25FOXFjK0tXRDkyMG5RdkhoUE9WbjkycFRvcHVLbEN3PT0K"
         }
     }
 }
