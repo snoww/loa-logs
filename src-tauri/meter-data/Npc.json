@@ -4710,7 +4710,7 @@
   "480550": {
     "id": 480550,
     "name": "Darkness Legion Commander Thaemine",
-    "grade": "seed",
+    "grade": "commander",
     "type": "monster",
     "pushimmune": true
   },
