@@ -1,7 +1,7 @@
 {
     "version": "v1.9.3",
     "notes": "### v1.9.3\n#### BUG FIXES\n- fix thaemine g4 (again)\n\n### v1.9.2\n### RDPS NOTE: if you or anyone in your raid swaps gear presets, please wait up to 20s before pulling for the stats server to get updated gear info\n### GENERAL NOTE: boss only damage is turned on by default when meter is started. this might be why you aren't seeing anything recorded in chaos dungeons.\n#### BUG FIXES AND IMPROVEMENTS\n- fix filtering for veskal guardian raid\n- fix filtering for thaemine g3 and g4\n- fix incorrect boss name for thaemine g3 swords\n- added separate boss for thaemine g4 prokel\n- removed giant darkness swords as bosses for thaemine g4\n- removed random bosses for thaemine g4\n\n\nfull patch notes on [github](https://github.com/snoww/loa-logs/releases/latest)\n\nsend bug reports/suggestions to [#loa-logs](https://discord.gg/sbSa3pkDF5)",
-    "pub_date": "2024-04-20T06:38:12.412Z",
+    "pub_date": "2024-04-20T21:15:09.577Z",
     "platforms": {
         "windows-x86_64": {
             "url": "https://github.com/snoww/loa-logs/releases/download/v1.9.3/LOA.Logs_1.9.3_x64-setup.nsis.zip",
