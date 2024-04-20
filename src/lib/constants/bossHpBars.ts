@@ -39,9 +39,8 @@ export const bossHpMap: BossMap = {
     "Valinak, Taboo Usurper": 180,
     "Valinak, Herald of the End": 180,
     "Thaemine the Lightqueller": 300,
-    "Darkness Sword": 40,
-    "Giant Darkness Sword": 40,
+    "Dark Greatsword": 40,
     "Darkness Legion Commander Thaemine": 350,
-    // "tg41-Darkness Legion Commander Thaemine's Clone": 35,
+    "Thaemine Prokel": 35,
     "Thaemine, Conqueror of Stars": 350,
 };

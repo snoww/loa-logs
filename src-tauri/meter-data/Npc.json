@@ -4663,7 +4663,7 @@
   "480471": { "id": 480471, "name": "Hutch of Darkness", "grade": "named", "type": "monster", "pushimmune": true },
   "480472": { "id": 480472, "name": "Hutch of Darkness", "grade": "normal", "type": "monster" },
   "480473": { "id": 480473, "name": "Hutch of Darkness", "grade": "normal", "type": "monster", "pushimmune": true },
-  "480474": { "id": 480474, "name": "Taboo Kin", "grade": "boss", "type": "monster", "pushimmune": true },
+  "480474": { "id": 480474, "name": "Taboo Kin", "grade": "seed", "type": "monster", "pushimmune": true },
   "480475": { "id": 480475, "name": "Taboo Kin", "grade": "seed", "type": "monster", "pushimmune": true },
   "480476": { "id": 480476, "name": "Taboo Kin", "grade": "seed", "type": "monster", "pushimmune": true },
   "480477": { "id": 480477, "name": "Taboo Kin", "grade": "seed", "type": "monster", "pushimmune": true },
@@ -4673,21 +4673,21 @@
   "480481": {
     "id": 480481,
     "name": "Thunder of the Apocalypse",
-    "grade": "boss",
+    "grade": "seed",
     "type": "monster",
     "pushimmune": true
   },
   "480482": {
     "id": 480482,
     "name": "Thunder of the Apocalypse",
-    "grade": "boss",
+    "grade": "seed",
     "type": "monster",
     "pushimmune": true
   },
   "480483": {
     "id": 480483,
     "name": "Thunder of the Apocalypse",
-    "grade": "boss",
+    "grade": "seed",
     "type": "monster",
     "pushimmune": true
   },
@@ -4710,43 +4710,43 @@
   "480550": {
     "id": 480550,
     "name": "Darkness Legion Commander Thaemine",
-    "grade": "commander",
+    "grade": "seed",
     "type": "monster",
     "pushimmune": true
   },
-  "480551": { "id": 480551, "name": "Darkness Clone", "grade": "boss", "type": "monster", "pushimmune": true },
-  "480552": { "id": 480552, "name": "Darkness Sword", "grade": "boss", "type": "monster", "pushimmune": true },
-  "480553": { "id": 480553, "name": "Giant Darkness Sword", "grade": "boss", "type": "monster", "pushimmune": true },
+  "480551": { "id": 480551, "name": "Darkness Clone", "grade": "seed", "type": "monster", "pushimmune": true },
+  "480552": { "id": 480552, "name": "Darkness Sword", "grade": "seed", "type": "monster", "pushimmune": true },
+  "480553": { "id": 480553, "name": "Giant Darkness Sword", "grade": "seed", "type": "monster", "pushimmune": true },
   "480554": {
     "id": 480554,
     "name": "Darkness Legion Commander Thaemine",
-    "grade": "boss",
+    "grade": "seed",
     "type": "monster",
     "pushimmune": true
   },
-  "480555": { "id": 480555, "name": "Darkness Sword", "grade": "boss", "type": "monster", "pushimmune": true },
-  "480556": { "id": 480556, "name": "Darkness Sword", "grade": "boss", "type": "monster", "pushimmune": true },
-  "480557": { "id": 480557, "name": "Darkness Sword", "grade": "boss", "type": "monster", "pushimmune": true },
-  "480558": { "id": 480558, "name": "Giant Darkness Sword", "grade": "boss", "type": "monster", "pushimmune": true },
-  "480559": { "id": 480559, "name": "Giant Darkness Sword", "grade": "boss", "type": "monster", "pushimmune": true },
+  "480555": { "id": 480555, "name": "Darkness Sword", "grade": "seed", "type": "monster", "pushimmune": true },
+  "480556": { "id": 480556, "name": "Darkness Sword", "grade": "seed", "type": "monster", "pushimmune": true },
+  "480557": { "id": 480557, "name": "Darkness Sword", "grade": "seed", "type": "monster", "pushimmune": true },
+  "480558": { "id": 480558, "name": "Giant Darkness Sword", "grade": "seed", "type": "monster", "pushimmune": true },
+  "480559": { "id": 480559, "name": "Giant Darkness Sword", "grade": "seed", "type": "monster", "pushimmune": true },
   "480560": {
     "id": 480560,
     "name": "Darkness Legion Commander Thaemine",
-    "grade": "boss",
+    "grade": "seed",
     "type": "monster",
     "pushimmune": true
   },
-  "480561": { "id": 480561, "name": "Giant Darkness Sword", "grade": "boss", "type": "monster", "pushimmune": true },
+  "480561": { "id": 480561, "name": "Giant Darkness Sword", "grade": "seed", "type": "monster", "pushimmune": true },
   "480562": {
     "id": 480562,
     "name": "Darkness Legion Commander Thaemine",
-    "grade": "boss",
+    "grade": "seed",
     "type": "monster",
     "pushimmune": true
   },
   "480563": {
     "id": 480563,
-    "name": "Darkness Legion Commander Thaemine",
+    "name": "Thaemine Prokel",
     "grade": "boss",
     "type": "monster",
     "pushimmune": true
@@ -4754,112 +4754,112 @@
   "480564": {
     "id": 480564,
     "name": "Darkness Legion Commander Thaemine",
-    "grade": "boss",
+    "grade": "seed",
     "type": "monster",
     "pushimmune": true
   },
   "480565": {
     "id": 480565,
     "name": "Darkness Legion Commander Thaemine",
-    "grade": "boss",
+    "grade": "seed",
     "type": "monster",
     "pushimmune": true
   },
   "480566": {
     "id": 480566,
     "name": "Darkness Legion Commander Thaemine",
-    "grade": "boss",
+    "grade": "seed",
     "type": "monster",
     "pushimmune": true
   },
   "480567": {
     "id": 480567,
     "name": "Darkness Legion Commander Thaemine",
-    "grade": "boss",
+    "grade": "seed",
     "type": "monster",
     "pushimmune": true
   },
   "480568": {
     "id": 480568,
     "name": "Darkness Legion Commander Thaemine",
-    "grade": "boss",
+    "grade": "seed",
     "type": "monster",
     "pushimmune": true
   },
-  "480569": { "id": 480569, "name": "Darkness Sword", "grade": "boss", "type": "monster", "pushimmune": true },
-  "480570": { "id": 480570, "name": "Darkness Sword", "grade": "boss", "type": "monster", "pushimmune": true },
-  "480571": { "id": 480571, "name": "Darkness Sword", "grade": "boss", "type": "monster", "pushimmune": true },
-  "480572": { "id": 480572, "name": "Darkness Sword", "grade": "boss", "type": "monster", "pushimmune": true },
-  "480573": { "id": 480573, "name": "Darkness Sword", "grade": "boss", "type": "monster", "pushimmune": true },
-  "480574": { "id": 480574, "name": "Darkness Sword", "grade": "boss", "type": "monster", "pushimmune": true },
-  "480575": { "id": 480575, "name": "Darkness Sword", "grade": "boss", "type": "monster", "pushimmune": true },
-  "480576": { "id": 480576, "name": "Darkness Sword", "grade": "boss", "type": "monster", "pushimmune": true },
-  "480577": { "id": 480577, "name": "Darkness Sword", "grade": "boss", "type": "monster", "pushimmune": true },
-  "480578": { "id": 480578, "name": "Darkness Sword", "grade": "boss", "type": "monster", "pushimmune": true },
-  "480579": { "id": 480579, "name": "Darkness Sword", "grade": "boss", "type": "monster", "pushimmune": true },
-  "480590": { "id": 480590, "name": "Darkness Sword", "grade": "boss", "type": "monster", "pushimmune": true },
+  "480569": { "id": 480569, "name": "Darkness Sword", "grade": "seed", "type": "monster", "pushimmune": true },
+  "480570": { "id": 480570, "name": "Darkness Sword", "grade": "seed", "type": "monster", "pushimmune": true },
+  "480571": { "id": 480571, "name": "Darkness Sword", "grade": "seed", "type": "monster", "pushimmune": true },
+  "480572": { "id": 480572, "name": "Darkness Sword", "grade": "seed", "type": "monster", "pushimmune": true },
+  "480573": { "id": 480573, "name": "Darkness Sword", "grade": "seed", "type": "monster", "pushimmune": true },
+  "480574": { "id": 480574, "name": "Darkness Sword", "grade": "seed", "type": "monster", "pushimmune": true },
+  "480575": { "id": 480575, "name": "Darkness Sword", "grade": "seed", "type": "monster", "pushimmune": true },
+  "480576": { "id": 480576, "name": "Darkness Sword", "grade": "seed", "type": "monster", "pushimmune": true },
+  "480577": { "id": 480577, "name": "Darkness Sword", "grade": "seed", "type": "monster", "pushimmune": true },
+  "480578": { "id": 480578, "name": "Darkness Sword", "grade": "seed", "type": "monster", "pushimmune": true },
+  "480579": { "id": 480579, "name": "Darkness Sword", "grade": "seed", "type": "monster", "pushimmune": true },
+  "480590": { "id": 480590, "name": "Darkness Sword", "grade": "seed", "type": "monster", "pushimmune": true },
   "480591": {
     "id": 480591,
     "name": "Darkness Legion Commander Thaemine",
-    "grade": "boss",
+    "grade": "seed",
     "type": "monster",
     "pushimmune": true
   },
   "480592": {
     "id": 480592,
     "name": "Darkness Legion Commander Thaemine",
-    "grade": "boss",
+    "grade": "seed",
     "type": "monster",
     "pushimmune": true
   },
-  "480593": { "id": 480593, "name": "Darkness Sword", "grade": "boss", "type": "monster", "pushimmune": true },
+  "480593": { "id": 480593, "name": "Darkness Sword", "grade": "seed", "type": "monster", "pushimmune": true },
   "480594": {
     "id": 480594,
     "name": "Darkness Legion Commander Thaemine",
-    "grade": "boss",
+    "grade": "seed",
     "type": "monster",
     "pushimmune": true
   },
   "480595": {
     "id": 480595,
     "name": "Darkness Legion Commander Thaemine",
-    "grade": "boss",
+    "grade": "seed",
     "type": "monster",
     "pushimmune": true
   },
   "480596": {
     "id": 480596,
     "name": "Darkness Legion Commander Thaemine",
-    "grade": "boss",
+    "grade": "seed",
     "type": "monster",
     "pushimmune": true
   },
   "480597": {
     "id": 480597,
     "name": "Darkness Legion Commander Thaemine",
-    "grade": "boss",
+    "grade": "seed",
     "type": "monster",
     "pushimmune": true
   },
-  "480598": { "id": 480598, "name": "Darkness Sword", "grade": "boss", "type": "monster", "pushimmune": true },
+  "480598": { "id": 480598, "name": "Darkness Sword", "grade": "seed", "type": "monster", "pushimmune": true },
   "480599": {
     "id": 480599,
     "name": "Darkness Legion Commander Thaemine",
-    "grade": "boss",
+    "grade": "seed",
     "type": "monster",
     "pushimmune": true
   },
   "480588": {
     "id": 480588,
     "name": "Darkness Legion Commander Thaemine",
-    "grade": "boss",
+    "grade": "seed",
     "type": "monster",
     "pushimmune": true
   },
   "480589": {
     "id": 480589,
     "name": "Darkness Legion Commander Thaemine",
-    "grade": "boss",
+    "grade": "seed",
     "type": "monster",
     "pushimmune": true
   },

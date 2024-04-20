@@ -44,7 +44,7 @@ export const bossList = [
 
 
     // guardian raids
-    "Vescal",
+    "Veskal",
     "Gargadeth",
     "Sonavel",
     "Hanumatan",
@@ -95,10 +95,9 @@ export const bosses = {
             "Valinak, Taboo Usurper",
             "Valinak, Herald of the End",
             "Thaemine the Lightqueller",
-            "Darkness Sword",
-            "Giant Darkness Sword",
+            "Dark Greatsword",
             "Darkness Legion Commander Thaemine",
-            // "tg41-Darkness Legion Commander Thaemine's Clone(boss)",
+            "Thaemine Prokel",
             "Thaemine, Conqueror of Stars",
         ]
     },
