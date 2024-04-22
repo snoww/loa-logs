@@ -56,4 +56,4 @@ export function getEstherFromNpcId(npcId: number): string {
 
 // this is used to invalidate caches when loading images
 // change this value when images are updated
-export const queryParam: string = "?174";
+export const queryParam: string = "?194";
