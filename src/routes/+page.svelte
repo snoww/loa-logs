@@ -39,7 +39,7 @@
             } else {
                 await appWindow.setAlwaysOnTop(false);
             }
-            if (!$settings.general.bossOnlyDamage) {
+            if ($settings.general.bossOnlyDamageDefaultOn && !$settings.general.bossOnlyDamage) {
                 $settings.general.bossOnlyDamage = true;
                 await emit("boss-only-damage-request", true);
             }

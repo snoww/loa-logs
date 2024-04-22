@@ -177,6 +177,10 @@
             </div>
         </label>
         <SettingItem
+            name="Boss Only Damage Default On"
+            description={"This setting makes it so that the meter will start with boss only damage turned on every time."}
+            bind:setting={$settings.general.bossOnlyDamageDefaultOn} />
+        <SettingItem
             name="Show Raid Difficulty"
             description={"Shows the difficulty of the raid."}
             bind:setting={$settings.general.showDifficulty} />
