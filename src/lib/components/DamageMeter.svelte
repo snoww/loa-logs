@@ -201,14 +201,30 @@
                         .sort((a, b) => b.damageStats.damageDealt - a.damageStats.damageDealt);
                 }
                 $localPlayer = encounter.localPlayer;
-                isSolo = players.length === 1;
-                anyDead = players.some((player) => player.isDead);
-                anyFrontAtk = players.some((player) => player.skillStats.frontAttacks > 0);
-                anyBackAtk = players.some((player) => player.skillStats.backAttacks > 0);
-                anySupportBuff = players.some((player) => player.damageStats.buffedBySupport > 0);
-                anySupportIdentity = players.some((player) => player.damageStats.buffedByIdentity > 0);
-                anySupportBrand = players.some((player) => player.damageStats.debuffedBySupport > 0);
-                anyRdpsData = players.some((player) => player.damageStats.rdpsDamageReceived > 0);
+                if (!isSolo) {
+                    isSolo = players.length === 1;
+                }
+                if (!anyDead) {
+                    anyDead = players.some((player) => player.isDead);
+                }
+                if (!anyFrontAtk) {
+                    anyFrontAtk = players.some((player) => player.skillStats.frontAttacks > 0);
+                }
+                if (!anyBackAtk) {
+                    anyBackAtk = players.some((player) => player.skillStats.backAttacks > 0);
+                }
+                if (!anySupportBuff) {
+                    anySupportBuff = players.some((player) => player.damageStats.buffedBySupport > 0);
+                }
+                if (!anySupportIdentity) {
+                    anySupportIdentity = players.some((player) => player.damageStats.buffedByIdentity > 0);
+                }
+                if (!anySupportBrand) {
+                    anySupportBrand = players.some((player) => player.damageStats.debuffedBySupport > 0);
+                }
+                if (!anyRdpsData) {
+                    anyRdpsData = players.some((player) => player.damageStats.rdpsDamageReceived > 0);
+                }
                 if (!anyRdpsData) {
                     if ($rdpsEventDetails === "") {
                         $rdpsEventDetails = "not_available";
