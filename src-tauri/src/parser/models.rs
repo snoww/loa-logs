@@ -265,6 +265,7 @@ pub struct SkillStats {
     pub identity_stats: Option<String>,
 }
 
+#[derive(Debug)]
 pub struct DamageData {
     pub skill_id: u32,
     pub skill_effect_id: u32,

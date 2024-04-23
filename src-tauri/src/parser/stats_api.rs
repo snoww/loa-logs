@@ -63,7 +63,6 @@ impl StatsApi {
         }
 
         let now = Utc::now();
-        self.remove_expired_from_cache(now);
         let player_names = party.iter().flatten().cloned().collect::<HashSet<String>>();
         let mut player_hashes: Vec<PlayerHash> = Vec::new();
         if let (Ok(mut cache), Ok(mut hash_cache)) = (self.cache.lock(), self.hash_cache.lock()) {
@@ -78,10 +77,14 @@ impl StatsApi {
                             .get(player)
                             .map_or(false, |cached_hash| cached_hash == &hash)
                         {
-                            cache.entry(player.clone()).and_modify(|stats| {
-                                stats.expiry = now + chrono::Duration::hours(1);
-                            });
-                            continue;
+                            if let Some(cached_player) = cache.get_mut(player) {
+                                cached_player.expiry = now + chrono::Duration::hours(1);
+                            } else {
+                                player_hashes.push(PlayerHash {
+                                    name: player.clone(),
+                                    hash,
+                                });
+                            }
                         } else {
                             hash_cache.insert(player.clone(), hash.clone());
                             player_hashes.push(PlayerHash {
@@ -94,6 +97,8 @@ impl StatsApi {
             }
         }
 
+        self.remove_expired_from_cache(now);
+        
         if player_hashes.is_empty() {
             return;
         }
@@ -226,7 +231,7 @@ impl StatsApi {
     }
 
     fn valid_difficulty(&self, difficulty: &str) -> bool {
-        (difficulty == "Normal" || difficulty == "Hard" || difficulty == "Extreme")
+        (difficulty == "Normal" || difficulty == "Hard" || difficulty == "The First")
             && self.valid_zone
     }
 
