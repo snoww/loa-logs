@@ -124,6 +124,8 @@ pub fn start(
             stats_api.client_id = client_id.clone();
             local_players.insert(1, client_id.clone());
             write_local_players(&local_players, &local_player_path)?;
+        } else {
+            stats_api.client_id = client_id.clone();
         }
     }
 
