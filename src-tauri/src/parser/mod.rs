@@ -38,6 +38,7 @@ use std::sync::Arc;
 use std::thread;
 use std::time::{Duration, Instant};
 use tauri::{Manager, Window, Wry};
+use uuid::Uuid;
 
 use self::models::{Settings, TripodIndex, TripodLevel};
 
@@ -109,6 +110,7 @@ pub fn start(
     // this info is used in case meter was opened late
     let mut local_players: HashMap<u64, String> = HashMap::new();
     let mut local_player_path = window.app_handle().path_resolver().resource_dir().unwrap();
+    let mut client_id: String;
     local_player_path.push("local_players.json");
 
     if local_player_path.exists() {
@@ -116,6 +118,13 @@ pub fn start(
         local_players = serde_json::from_str(&local_players_file).unwrap_or_default();
         // load region if it was saved prior
         state.region = local_players.get(&0).cloned();
+        client_id = local_players.get(&1).cloned().unwrap_or_default();
+        if client_id.is_empty() {
+            client_id = Uuid::new_v4().to_string();
+            stats_api.client_id = client_id.clone();
+            local_players.insert(1, client_id.clone());
+            write_local_players(&local_players, &local_player_path)?;
+        }
     }
 
     let emit_details = Arc::new(AtomicBool::new(false));

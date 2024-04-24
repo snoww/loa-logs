@@ -11,11 +11,12 @@ use serde::{Deserialize, Serialize};
 use serde_json::json;
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::{Arc, Mutex};
-use tauri::{Window, Wry};
+use tauri::{Manager, Window, Wry};
 
 const API_URL: &str = "https://inspect.fau.dev/query";
 
 pub struct StatsApi {
+    pub client_id: String,
     cache: Arc<Mutex<HashMap<String, PlayerStats>>>,
     stats_cache: Arc<Mutex<HashMap<String, Stats>>>,
     cache_status: Arc<AtomicBool>,
@@ -29,6 +30,7 @@ pub struct StatsApi {
 impl StatsApi {
     pub fn new(window: Window<Wry>) -> Self {
         Self {
+            client_id: String::new(),
             window: Arc::new(window),
             cache: Arc::new(Mutex::new(HashMap::new())),
             stats_cache: Arc::new(Mutex::new(HashMap::new())),
@@ -112,6 +114,7 @@ impl StatsApi {
         let cache_status = Arc::clone(&self.cache_status);
         let stats_cache_clone = Arc::clone(&self.stats_cache);
         let hash_cache_clone = Arc::clone(&self.hash_cache);
+        let cleint_id_clone = self.client_id.clone();
 
         self.cancellation_flag.store(true, Ordering::SeqCst);
         let new_cancellation_flag = Arc::new(AtomicBool::new(false));
@@ -121,6 +124,7 @@ impl StatsApi {
         let window_clone = Arc::clone(&self.window);
         tokio::task::spawn(async move {
             make_request(
+                &cleint_id_clone,
                 &client_clone,
                 &window_clone,
                 &region,
@@ -138,6 +142,7 @@ impl StatsApi {
 
     pub fn get_hash(&self, player: &Entity) -> Option<String> {
         if player.items.equip_list.is_none()
+            || player.gear_level <= 0.0
             || player.character_id == 0
             || player.class_id == 0
             || player.name == "You"
@@ -165,9 +170,11 @@ impl StatsApi {
             return Some("".to_string());
         }
 
+        // {player_name}{xxxx.xx}{xxx}{character_id}{equip_data}
         let data = format!(
-            "{}{}{}{}",
+            "{}{:.02}{}{}{}",
             player.name,
+            player.gear_level,
             player.class_id,
             player.character_id,
             equip_data.iter().map(|x| x.to_string()).collect::<String>()
@@ -244,6 +251,7 @@ impl StatsApi {
 
 #[async_recursion]
 async fn make_request(
+    client_id: &str,
     client: &Client,
     window: &Arc<Window<Wry>>,
     region: &str,
@@ -267,7 +275,10 @@ async fn make_request(
         return;
     }
 
+    let version = window.app_handle().package_info().version.to_string();
     let request_body = json!({
+        "id": client_id,
+        "version": version,
         "region": region.clone(),
         "characters": players.clone(),
     });
@@ -335,6 +346,7 @@ async fn make_request(
                     // retry request with missing players
                     // until we receive stats for all players
                     make_request(
+                        client_id,
                         client,
                         window,
                         region,
