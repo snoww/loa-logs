@@ -201,9 +201,7 @@
                         .sort((a, b) => b.damageStats.damageDealt - a.damageStats.damageDealt);
                 }
                 $localPlayer = encounter.localPlayer;
-                if (!isSolo) {
-                    isSolo = players.length === 1;
-                }
+                isSolo = players.length === 1;
                 if (!anyDead) {
                     anyDead = players.some((player) => player.isDead);
                 }
