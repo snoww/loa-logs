@@ -118,7 +118,7 @@ impl StatsApi {
         let cache_status = Arc::clone(&self.cache_status);
         let stats_cache_clone = Arc::clone(&self.stats_cache);
         let hash_cache_clone = Arc::clone(&self.hash_cache);
-        let cleint_id_clone = self.client_id.clone();
+        let client_id_clone = self.client_id.clone();
 
         self.cancellation_flag.store(true, Ordering::SeqCst);
         let new_cancellation_flag = Arc::new(AtomicBool::new(false));
@@ -128,7 +128,7 @@ impl StatsApi {
         let window_clone = Arc::clone(&self.window);
         tokio::task::spawn(async move {
             make_request(
-                &cleint_id_clone,
+                &client_id_clone,
                 &client_clone,
                 &window_clone,
                 &region,
