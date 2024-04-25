@@ -1,11 +1,11 @@
 {
-    "version": "v1.9.4",
-    "notes": "### v1.9.4\n#### BUG FIXES AND IMPROVEMENTS\n- performance improvements for live meter\n- fix broken kadan icons for g4-2 and g4-3\n- fix rdps not working for thaemine the first difficulty\n- fix rdps becoming inaacruate after long sessions\n- added option to turn off boss damage only being forced on every start\n\n\nfull patch notes on [github](https://github.com/snoww/loa-logs/releases/latest)\n\nsend bug reports/suggestions to [#loa-logs](https://discord.gg/sbSa3pkDF5)",
-    "pub_date": "2024-04-24T08:17:18.921Z",
+    "version": "v1.9.5",
+    "notes": "### v1.9.5\n#### BUG FIXES AND IMPROVEMENTS\n- more rdps fixes\n- fix damage% tab not showing in live meter (sorry)\n\nfull patch notes on [github](https://github.com/snoww/loa-logs/releases/latest)\n\nsend bug reports/suggestions to [#loa-logs](https://discord.gg/sbSa3pkDF5)",
+    "pub_date": "2024-04-25T23:29:57.339Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.9.4/LOA.Logs_1.9.4_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmNqODRQSXJtRHowVkRsM1RZbHNjUlhBWXZMT0c1TVNvNk1TNVVaNXJiVFZtcVFOM2N6UmhNUVdzWDVoRE5Pa2E5ZklJQ1Z2WVpDZUZGS1p1ODliWEFVPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzEzOTQ2MzcwCWZpbGU6TE9BIExvZ3NfMS45LjRfeDY0LXNldHVwLm5zaXMuemlwCkM3WXZFelJqenVoSjJ0aTB6SFRCR2xJc0Z6bW5yOXlIL3dNWkxhck0vQTFjZDBPK09qbDJMdlQ5WXZTRENHS0NYaFlBSHhFcEpHMmhZM004THNTQkJRPT0K"
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.9.5/LOA.Logs_1.9.5_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlhwM1J2czdiYnhyeFEwOUtseVN6dk5yb1lMdDd6bVh3MEVMMDRQSHRtc3pXM2FRbnBQdlBGTmR0eVIvbDdPZ0dueEtmN01DencrU2ZkSEtrMWx1RVFFPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzE0MDg3NzY2CWZpbGU6TE9BIExvZ3NfMS45LjVfeDY0LXNldHVwLm5zaXMuemlwCkRCSlNIQTZ1MDgxM3Q0WmxmVE1nRW0vbGNaT2o0VXZsSzZwcUgrdGFPZ3JySGl1VTJUNzNGNVFFR05SV21sTVN1c25ub1RnRUZFZVpsRXUwWEVqR0NBPT0K"
         }
     }
 }
