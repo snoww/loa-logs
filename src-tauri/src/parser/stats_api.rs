@@ -94,6 +94,10 @@ impl StatsApi {
                                 hash,
                             });
                         }
+                    } else {
+                        debug_print(format_args!("missing info for {:?}, could not generate hash", player));
+                        self.broadcast("missing_info");
+                        return;
                     }
                 }
             }
