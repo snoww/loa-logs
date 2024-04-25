@@ -341,6 +341,7 @@
         totalDamageDealt = 0;
         dps = 0;
         timeUntilKill = "00:00";
+        isSolo = true;
         anyDead = false;
         anyFrontAtk = false;
         anyBackAtk = false;
