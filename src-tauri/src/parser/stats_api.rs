@@ -25,6 +25,7 @@ pub struct StatsApi {
     hash_cache: Arc<Mutex<HashMap<String, String>>>,
     window: Arc<Window<Wry>>,
     pub valid_zone: bool,
+    valid_stats: Option<bool>,
 }
 
 impl StatsApi {
@@ -39,12 +40,13 @@ impl StatsApi {
             client: Arc::new(Client::new()),
             hash_cache: Arc::new(Mutex::new(HashMap::new())),
             valid_zone: false,
+            valid_stats: None,
         }
     }
 
     pub fn sync(
         &mut self,
-        party: Vec<Vec<String>>,
+        party: &Vec<Vec<String>>,
         state: &EncounterState,
         entity_tracker: &EntityTracker,
         cached: &HashMap<u64, String>,
@@ -95,7 +97,10 @@ impl StatsApi {
                             });
                         }
                     } else {
-                        debug_print(format_args!("missing info for {:?}, could not generate hash", player));
+                        debug_print(format_args!(
+                            "missing info for {:?}, could not generate hash",
+                            player
+                        ));
                         self.broadcast("missing_info");
                         return;
                     }
@@ -104,11 +109,12 @@ impl StatsApi {
         }
 
         self.remove_expired_from_cache(now);
-        
+
         if player_hashes.is_empty() {
             return;
         }
 
+        self.valid_stats = None;
         self.request(region, player_hashes);
     }
 
@@ -187,10 +193,26 @@ impl StatsApi {
         Some(format!("{:x}", compute(data)))
     }
 
-    pub fn get_all_stats(&self, difficulty: &str) -> Option<HashMap<String, PlayerStats>> {
-        if !self.valid_difficulty(difficulty) {
+    pub fn get_all_stats(
+        &mut self,
+        difficulty: &str,
+        party: &[Vec<String>],
+    ) -> Option<HashMap<String, PlayerStats>> {
+        if self.valid_stats.is_none() {
+            if let Ok(cache) = self.cache.lock() {
+                self.valid_stats = Some(
+                    party
+                        .iter()
+                        .flatten()
+                        .all(|player| cache.contains_key(player)),
+                );
+            }
+        }
+
+        if !self.valid_difficulty(difficulty) || !self.valid_stats.unwrap_or(false) {
             return None;
         }
+
         if self.cache_status.load(Ordering::Relaxed) {
             if let Ok(cache) = self.cache.lock() {
                 Some(cache.clone())
@@ -202,10 +224,30 @@ impl StatsApi {
         }
     }
 
-    pub fn get_stats(&self, difficulty: &str) -> Option<HashMap<String, Stats>> {
+    pub fn get_stats(
+        &mut self,
+        difficulty: &str,
+        party: &[Vec<String>],
+    ) -> Option<HashMap<String, Stats>> {
+        if self.valid_stats.is_none() {
+            if let Ok(cache) = self.stats_cache.lock() {
+                self.valid_stats = Some(
+                    party
+                        .iter()
+                        .flatten()
+                        .all(|player| cache.contains_key(player)),
+                );
+            }
+        }
+
         if !self.valid_difficulty(difficulty) {
             return None;
         }
+        if !self.valid_stats.unwrap_or(false) {
+            self.broadcast("missing_info");
+            return None;
+        }
+
         if self.cache_status.load(Ordering::Relaxed) {
             if let Ok(cache) = self.stats_cache.lock() {
                 Some(cache.clone())
