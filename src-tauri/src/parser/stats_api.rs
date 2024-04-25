@@ -83,11 +83,7 @@ impl StatsApi {
                         {
                             if let Some(cached_player) = cache.get_mut(player) {
                                 cached_player.expiry = now + chrono::Duration::hours(1);
-                            } else {
-                                player_hashes.push(PlayerHash {
-                                    name: player.clone(),
-                                    hash,
-                                });
+                                // debug_print(format_args!("cached stats: {:?}", cached_player));
                             }
                         } else {
                             hash_cache.insert(player.clone(), hash.clone());
@@ -108,6 +104,12 @@ impl StatsApi {
             }
         }
 
+        debug_print(format_args!(
+            "requesting for {}/{} players",
+            player_hashes.len(),
+            player_names.len()
+        ));
+        
         self.remove_expired_from_cache(now);
 
         if player_hashes.is_empty() {
@@ -228,15 +230,18 @@ impl StatsApi {
         &mut self,
         difficulty: &str,
         party: &[Vec<String>],
+        raid_duration: i64,
     ) -> Option<HashMap<String, Stats>> {
         if self.valid_stats.is_none() {
             if let Ok(cache) = self.stats_cache.lock() {
-                self.valid_stats = Some(
-                    party
-                        .iter()
-                        .flatten()
-                        .all(|player| cache.contains_key(player)),
-                );
+                let valid = party
+                    .iter()
+                    .flatten()
+                    .all(|player| cache.contains_key(player));
+
+                if valid || raid_duration >= 15_000 {
+                    self.valid_stats = Some(valid);
+                }
             }
         }
 
@@ -244,7 +249,9 @@ impl StatsApi {
             return None;
         }
         if !self.valid_stats.unwrap_or(false) {
-            self.broadcast("missing_info");
+            if self.valid_stats.is_some() {
+                self.broadcast("invalid_stats");
+            }
             return None;
         }
 

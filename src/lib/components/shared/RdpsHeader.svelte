@@ -23,6 +23,8 @@
                     <span>Meter Opened Too Late, RDPS Data not Loaded</span>
                 {:else if $rdpsEventDetails === "request_failed"}
                     <span>Failed to Fetch Character Stats</span>
+                {:else if $rdpsEventDetails === "invalid_stats"}
+                    <span>Failed to Fetch Stats for Some Members</span>
                 {:else if $rdpsEventDetails === "request_failed_retrying"}
                     <span>Failed to Fetch Character Stats, Retrying...</span>
                 {:else if $rdpsEventDetails === "not_available"}

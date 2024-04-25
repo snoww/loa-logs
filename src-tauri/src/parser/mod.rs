@@ -603,12 +603,13 @@ pub fn start(
                     PKTSkillDamageAbnormalMoveNotify::new,
                     "PKTSkillDamageAbnormalMoveNotify",
                 ) {
+                    let now = Utc::now().timestamp_millis();
                     let owner = entity_tracker.get_source_entity(pkt.source_id);
                     let local_character_id = id_tracker
                         .borrow()
                         .get_local_character_id(entity_tracker.local_entity_id);
                     let target_count = pkt.skill_damage_abnormal_move_events.len() as i32;
-                    let player_stats = stats_api.get_stats(&state.raid_difficulty, &state.party_info);
+                    let player_stats = stats_api.get_stats(&state.raid_difficulty, &state.party_info, now - state.encounter.fight_start);
 
                     for event in pkt.skill_damage_abnormal_move_events.iter() {
                         let target_entity =
@@ -638,7 +639,7 @@ pub fn start(
                             target_count,
                             &entity_tracker,
                             &player_stats,
-                            Utc::now().timestamp_millis(),
+                            now,
                         );
                     }
                 }
@@ -652,12 +653,13 @@ pub fn start(
                 if let Some(pkt) =
                     parse_pkt(&data, PKTSkillDamageNotify::new, "PktSkillDamageNotify")
                 {
+                    let now = Utc::now().timestamp_millis();
                     let owner = entity_tracker.get_source_entity(pkt.source_id);
                     let local_character_id = id_tracker
                         .borrow()
                         .get_local_character_id(entity_tracker.local_entity_id);
                     let target_count = pkt.skill_damage_events.len() as i32;
-                    let player_stats = stats_api.get_stats(&state.raid_difficulty, &state.party_info);
+                    let player_stats = stats_api.get_stats(&state.raid_difficulty, &state.party_info, now - state.encounter.fight_start);
 
                     for event in pkt.skill_damage_events.iter() {
                         let target_entity = entity_tracker.get_or_create_entity(event.target_id);
@@ -686,7 +688,7 @@ pub fn start(
                             target_count,
                             &entity_tracker,
                             &player_stats,
-                            Utc::now().timestamp_millis(),
+                            now,
                         );
                     }
                 }
