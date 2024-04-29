@@ -283,10 +283,11 @@ async fn make_request(
                     .map(|player| (player.name.clone(), player.hash.clone()))
                     .collect();
 
-                for (name, stats) in data {
-                    stats_cache.insert(name.clone(), stats.clone());
+                for (name, mut stats) in data {
                     let hash = player_hash_map.get(&name).cloned().unwrap_or_default();
-                    request_cache.insert(hash.clone(), stats);
+                    stats.hash = hash.clone();
+                    stats_cache.insert(name.clone(), stats.clone());
+                    request_cache.insert(hash, stats);
                 }
                 // debug_print(format_args!("{:?}", stats_cache_clone));
 
@@ -305,7 +306,7 @@ async fn make_request(
                         debug_print(format_args!("request cancelled"));
                         return;
                     }
-                    tokio::time::sleep(core::time::Duration::from_secs(5)).await;
+                    tokio::time::sleep(Duration::from_secs(5)).await;
                     if cancellation.load(Ordering::SeqCst) {
                         debug_print(format_args!("request cancelled"));
                         return;
@@ -359,7 +360,7 @@ pub struct Stats(pub Vec<u32>);
 #[serde(rename_all = "camelCase", default)]
 pub struct PlayerStats {
     pub name: String,
-    // pub hash: String,
+    pub hash: String,
     pub stats: Stats,
     pub elixirs: Option<Vec<ElixirData>>,
     pub gems: Option<Vec<GemData>>,

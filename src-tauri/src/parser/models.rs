@@ -127,6 +127,7 @@ pub struct EncounterEntity {
     pub damage_stats: DamageStats,
     pub skill_stats: SkillStats,
     pub engraving_data: Option<PlayerEngravings>,
+    pub gear_hash: Option<String>,
 }
 
 #[derive(Debug, Default, Serialize, Deserialize, Clone)]

@@ -515,6 +515,15 @@ fn setup_db(resource_path: PathBuf) -> Result<(), String> {
             .expect("failed to add engravings column");
     }
 
+    let mut stmt = conn
+        .prepare("SELECT COUNT(*) FROM pragma_table_info('entity') WHERE name='gear_hash'")
+        .unwrap();
+    let column_count: u32 = stmt.query_row([], |row| row.get(0)).unwrap();
+    if column_count == 0 {
+        conn.execute("ALTER TABLE entity ADD COLUMN gear_hash TEXT", [])
+            .expect("failed to add gear_hash column");
+    }
+
     update_db(&conn);
 
     Ok(())
