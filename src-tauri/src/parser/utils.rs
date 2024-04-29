@@ -695,7 +695,7 @@ pub fn insert_data(
         },
         region,
         version: Some(meter_version),
-        rdps_valid: player_stats.is_some(),
+        rdps_valid: Some(player_stats.is_some()),
         ..Default::default()
     };
 

@@ -274,8 +274,7 @@ async fn make_request(
     match client.post(API_URL).json(&request_body).send().await {
         Ok(response) => match response.json::<HashMap<String, PlayerStats>>().await {
             Ok(data) => {
-                let mut missing_players: Vec<PlayerHash>;
-                missing_players = players
+                let missing_players: Vec<PlayerHash> = players
                     .iter()
                     .filter(|player| !data.contains_key(&player.name))
                     .cloned()
@@ -361,7 +360,7 @@ pub struct Stats(pub Vec<u32>);
 #[serde(rename_all = "camelCase", default)]
 pub struct PlayerStats {
     pub name: String,
-    pub hash: String,
+    // pub hash: String,
     pub stats: Stats,
     pub elixirs: Option<Vec<ElixirData>>,
     pub gems: Option<Vec<GemData>>,

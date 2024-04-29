@@ -97,7 +97,9 @@
             anySupportBuff = players.some((player) => player.damageStats.buffedBySupport > 0);
             anySupportIdentity = players.some((player) => player.damageStats.buffedByIdentity > 0);
             anySupportBrand = players.some((player) => player.damageStats.debuffedBySupport > 0);
-            anyRdpsData = players.some((player) => player.damageStats.rdpsDamageReceived > 0);
+            if (encounter.encounterDamageStats.misc?.rdpsValid === undefined || encounter.encounterDamageStats.misc?.rdpsValid) {
+                anyRdpsData = players.some((player) => player.damageStats.rdpsDamageReceived > 0);
+            }
             if ($settings.general.showEsther) {
                 totalDamageDealt =
                     encounter.encounterDamageStats.totalDamageDealt +
