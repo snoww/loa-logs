@@ -3,7 +3,6 @@ use crate::parser::debug_print;
 use crate::parser::encounter_state::EncounterState;
 use crate::parser::entity_tracker::{Entity, EntityTracker};
 use async_recursion::async_recursion;
-use chrono::{Utc};
 use hashbrown::{HashMap, HashSet};
 use log::{info, warn};
 use md5::compute;
@@ -42,11 +41,11 @@ impl StatsApi {
             valid_zone: false,
             valid_stats: None,
             stats_cache: Cache::builder()
-                .max_capacity(50)
+                .max_capacity(32)
                 .time_to_idle(Duration::from_secs(60*10))
                 .build(),
             request_cache: Cache::builder()
-                .max_capacity(100)
+                .max_capacity(64)
                 .time_to_idle(Duration::from_secs(60*30))
                 .build(),
         }
@@ -107,7 +106,7 @@ impl StatsApi {
             player_hashes.len(),
             player_names.len()
         ));
-        
+
         if player_hashes.is_empty() {
             return;
         }
@@ -120,7 +119,7 @@ impl StatsApi {
         let client_clone = Arc::clone(&self.client);
         let cache_status = Arc::clone(&self.cache_status);
         let client_id_clone = self.client_id.clone();
-        
+
         let stats_cache = self.stats_cache.clone();
         let request_cache_clone = self.request_cache.clone();
 
@@ -270,7 +269,7 @@ async fn make_request(
     debug_print(format_args!("requesting player stats"));
     // debug_print(format_args!("{:?}", players));
     // println!("{:?}", request_body);
-    
+
     match client.post(API_URL).json(&request_body).send().await {
         Ok(response) => match response.json::<HashMap<String, PlayerStats>>().await {
             Ok(data) => {
