@@ -5,6 +5,7 @@ use hashbrown::HashMap;
 use rusqlite::{params, Transaction};
 use serde_json::json;
 use std::cmp::{max, Ordering};
+use moka::sync::Cache;
 
 pub fn encounter_entity_from_entity(entity: &Entity) -> EncounterEntity {
     let mut e = EncounterEntity {
@@ -642,7 +643,7 @@ pub fn insert_data(
     party_info: Vec<Vec<String>>,
     raid_difficulty: String,
     region: Option<String>,
-    player_stats: Option<HashMap<String, PlayerStats>>,
+    player_stats: Option<Cache<String, PlayerStats>>,
     meter_version: String,
 ) {
     let mut encounter_stmt = tx
@@ -694,6 +695,7 @@ pub fn insert_data(
         },
         region,
         version: Some(meter_version),
+        rdps_valid: player_stats.is_some(),
         ..Default::default()
     };
 

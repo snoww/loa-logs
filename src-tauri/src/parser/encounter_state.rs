@@ -5,6 +5,7 @@ use chrono::Utc;
 use hashbrown::HashMap;
 use log::info;
 use meter_core::packets::definitions::{PKTIdentityGaugeChangeNotify, PKTParalyzationStateNotify};
+use moka::sync::Cache;
 use rusqlite::Connection;
 
 use tauri::{Manager, Window, Wry};
@@ -13,7 +14,7 @@ use tokio::task;
 use crate::parser::entity_tracker::{Entity, EntityTracker};
 use crate::parser::models::*;
 use crate::parser::rdps::*;
-use crate::parser::stats_api::{PlayerStats, Stats};
+use crate::parser::stats_api::{PlayerStats, StatsApi};
 use crate::parser::status_tracker::StatusEffectDetails;
 use crate::parser::utils::*;
 
@@ -149,7 +150,7 @@ impl EncounterState {
     pub fn on_init_env(
         &mut self,
         entity: Entity,
-        player_stats: Option<HashMap<String, PlayerStats>>,
+        player_stats: Option<Cache<String, PlayerStats>>,
     ) {
         // replace or insert local player
         if let Some(mut local_player) = self.encounter.entities.remove(&self.encounter.local_player)
@@ -181,11 +182,7 @@ impl EncounterState {
         self.soft_reset(false);
     }
 
-    pub fn on_phase_transition(
-        &mut self,
-        phase_code: i32,
-        player_stats: Option<HashMap<String, PlayerStats>>,
-    ) {
+    pub fn on_phase_transition(&mut self, phase_code: i32, stats_api: &mut StatsApi) {
         self.window
             .emit("phase-transition", phase_code)
             .expect("failed to emit phase-transition");
@@ -193,6 +190,8 @@ impl EncounterState {
         match phase_code {
             0 | 2 | 3 | 4 => {
                 if !self.encounter.current_boss_name.is_empty() {
+                    let player_stats =
+                        stats_api.get_stats(&self.raid_difficulty, &self.party_info, 0);
                     self.save_to_db(player_stats, false);
                     self.saved = true;
                 }
@@ -458,7 +457,7 @@ impl EncounterState {
         se_on_target: Vec<StatusEffectDetails>,
         target_count: i32,
         entity_tracker: &EntityTracker,
-        player_stats: &Option<HashMap<String, Stats>>,
+        player_stats: &Option<Cache<String, PlayerStats>>,
         timestamp: i64,
     ) {
         let hit_flag = match damage_data.modifier & 0xf {
@@ -847,12 +846,12 @@ impl EncounterState {
                                 (val as f64 / 10000.0) * status_effect.stack_count as f64;
                             let caster_base_atk_power = player_stats
                                 .get(&caster_encounter_entity.name)
-                                .map(|stats| stats.atk_power)
-                                .unwrap_or(50_000);
+                                .map(|p| p.stats.0[4])
+                                .unwrap_or_default();
                             let target_base_atk_power = player_stats
                                 .get(&dmg_src_entity.name)
-                                .map(|stats| stats.atk_power)
-                                .unwrap_or(50_000);
+                                .map(|p| p.stats.0[4])
+                                .unwrap_or_default();
                             rate *= caster_base_atk_power as f64 / target_base_atk_power as f64;
                             rdps_data.atk_pow_amplify.push(RdpsBuffData {
                                 caster: caster_encounter_entity.name.clone(),
@@ -924,7 +923,7 @@ impl EncounterState {
                             if passive.key_stat == "skill_damage_sub_rate_2" && val != 0.0 {
                                 let spec = player_stats
                                     .get(&caster_encounter_entity.name)
-                                    .map(|stats| stats.spec as f64)
+                                    .map(|p| p.stats.0[1] as f64)
                                     .unwrap_or(500.0);
                                 match caster_encounter_entity.class_id {
                                     105 => rate *= 1.0 + ((spec / 0.0699) * 0.63) / 10000.0,
@@ -1263,8 +1262,8 @@ impl EncounterState {
                 if !rdps_data.skill_dmg_rate.values.is_empty() {
                     let additional_damage = player_stats
                         .get(&dmg_src_entity.name)
-                        .map(|stats| stats.add_dmg as f64)
-                        .unwrap_or(0.0);
+                        .map(|p| p.stats.0[5] as f64)
+                        .unwrap_or_default();
                     rdps_data.skill_dmg_rate.self_sum_rate += additional_damage / 10000.0;
                     // println!("additional dmg: {}", additional_damage);
                 }
@@ -1273,9 +1272,9 @@ impl EncounterState {
                 if !rdps_data.crit.values.is_empty() {
                     let crit_stat_value = player_stats
                         .get(&dmg_src_entity.name)
-                        .map(|stats| stats.crit);
-                    rdps_data.crit.self_sum_rate +=
-                        crit_stat_value.unwrap_or_default() as f64 / 0.2794 / 10000.0;
+                        .map(|p| p.stats.0[0] as f64)
+                        .unwrap_or_default();
+                    rdps_data.crit.self_sum_rate += crit_stat_value / 0.2794 / 10000.0;
                     let capped_sum_rate = 0.0_f64
                         .max(1.0 - rdps_data.crit.self_sum_rate)
                         .min(rdps_data.crit.sum_rate);
@@ -1712,7 +1711,7 @@ impl EncounterState {
         }
     }
 
-    pub fn save_to_db(&self, player_stats: Option<HashMap<String, PlayerStats>>, manual: bool) {
+    pub fn save_to_db(&self, player_stats: Option<Cache<String, PlayerStats>>, manual: bool) {
         if !manual {
             if self.encounter.fight_start == 0
                 || self.encounter.current_boss_name.is_empty()
