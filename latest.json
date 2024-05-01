@@ -1,11 +1,11 @@
 {
-    "version": "v1.9.6",
-    "notes": "### v1.9.6\n#### BUG FIXES AND IMPROVEMENTS\n- major improvements to rdps reliability\n- rdps will be hidden instead of showing incorrect values if stats were not received in time\n- (maybe) fixed an issue with some people crashing when opening rdps/tanked tab in logs",
-    "pub_date": "2024-04-29T23:11:31.449Z",
+    "version": "v1.9.7",
+    "notes": "### v1.9.7\n#### BUG FIXES AND IMPROVEMENTS\n- fixed 5-flower chest transcendence being labeled betrayal set\n- minor bug fixes and improvements\n\nfull patch notes on [github](https://github.com/snoww/loa-logs/releases/latest)\n\nsend bug reports/suggestions to [#loa-logs](https://discord.gg/sbSa3pkDF5)",
+    "pub_date": "2024-05-01T05:36:09.658Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.9.6/LOA.Logs_1.9.6_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmViVCtiM2l1NTF6bVBWTlljblZ4VFc5ZDQxMHNwdWlpRHFrWE82ak5CNW4yM1ZMdlh4Vkw5OFg5Ry9BdmQwRVNqdzZwWjBzbHFzNEhwK05pd2U1RkFBPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzE0NDMwNDgyCWZpbGU6TE9BIExvZ3NfMS45LjZfeDY0LXNldHVwLm5zaXMuemlwClUwTDJQUnJGQzFsYW1NWm5uamlpZGpZVDMyQ3ZzNzVmT2hiNWlFbFVFTkpVNGh5UUNPcDlkV2owSytHZytLeWgwT1VKTUFERmxOYVh6MnJxb1NFWkRnPT0K"
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.9.7/LOA.Logs_1.9.7_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlgrQ2pSY0s1bnhnTEE5VUs2ZFpDZXdVYlpUcVVveEgzS2k1aXRkMDVKY2ZNc3pkYWhpY2RuYVV1M0lEUjF5RStaWXVhcXdHM2JQRkNrbkdFN0o5dmc0PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzE0NTQxNjQ1CWZpbGU6TE9BIExvZ3NfMS45LjdfeDY0LXNldHVwLm5zaXMuemlwCnJZRE5CUnhFanlUcWVJeEZaZWR6b2ErWjV6UHhLT05jak5sZnFQWXVQMVExSHVDQ3JtTWxpajQ2UE5UWmJuTTFqSEUwRDNLV2VzdGk4Y21wMFRLdUJRPT0K"
         }
     }
 }
