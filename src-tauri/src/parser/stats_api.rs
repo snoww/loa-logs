@@ -1,4 +1,3 @@
-use std::fmt;
 use crate::parser::debug_print;
 use crate::parser::encounter_state::EncounterState;
 use crate::parser::entity_tracker::{Entity, EntityTracker};
@@ -6,15 +5,16 @@ use async_recursion::async_recursion;
 use hashbrown::{HashMap, HashSet};
 use log::{info, warn};
 use md5::compute;
+use moka::sync::Cache;
 use reqwest::Client;
+use serde::de::{MapAccess, Visitor};
 use serde::{Deserialize, Deserializer, Serialize};
 use serde_json::json;
+use std::fmt;
 use std::sync::atomic::{AtomicBool, Ordering};
-use std::sync::{Arc};
+use std::sync::Arc;
 use std::time::Duration;
 use tauri::{Manager, Window, Wry};
-use moka::sync::Cache;
-use serde::de::{MapAccess, Visitor};
 
 const API_URL: &str = "https://inspect.fau.dev/query";
 
@@ -28,6 +28,7 @@ pub struct StatsApi {
     valid_stats: Option<bool>,
     stats_cache: Cache<String, PlayerStats>,
     request_cache: Cache<String, PlayerStats>,
+    inflight_cache: Cache<String, u8>,
 }
 
 impl StatsApi {
@@ -42,12 +43,13 @@ impl StatsApi {
             valid_stats: None,
             stats_cache: Cache::builder()
                 .max_capacity(32)
-                .time_to_idle(Duration::from_secs(60*10))
+                .time_to_idle(Duration::from_secs(60 * 10))
                 .build(),
             request_cache: Cache::builder()
                 .max_capacity(64)
-                .time_to_idle(Duration::from_secs(60*30))
+                .time_to_idle(Duration::from_secs(60 * 30))
                 .build(),
+            inflight_cache: Cache::builder().max_capacity(16).build(),
         }
     }
 
@@ -84,7 +86,8 @@ impl StatsApi {
                 if let Some(hash) = self.get_hash(entity) {
                     if let Some(cached) = self.request_cache.get(&hash) {
                         self.stats_cache.insert(player.clone(), cached.clone());
-                    } else {
+                    } else if !self.inflight_cache.contains_key(&hash) {
+                        self.inflight_cache.insert(hash.clone(), 0);
                         player_hashes.push(PlayerHash {
                             name: player.clone(),
                             hash,
@@ -101,15 +104,16 @@ impl StatsApi {
             }
         }
 
+
+        if player_hashes.is_empty() {
+            return;
+        }
+        
         debug_print(format_args!(
             "requesting for {}/{} players",
             player_hashes.len(),
             player_names.len()
         ));
-
-        if player_hashes.is_empty() {
-            return;
-        }
 
         self.valid_stats = None;
         self.request(region, player_hashes);
@@ -121,7 +125,8 @@ impl StatsApi {
         let client_id_clone = self.client_id.clone();
 
         let stats_cache = self.stats_cache.clone();
-        let request_cache_clone = self.request_cache.clone();
+        let request_cache = self.request_cache.clone();
+        let inflight_cache = self.inflight_cache.clone();
 
         self.cancellation_flag.store(true, Ordering::SeqCst);
         let new_cancellation_flag = Arc::new(AtomicBool::new(false));
@@ -136,7 +141,8 @@ impl StatsApi {
                 &window_clone,
                 &region,
                 stats_cache,
-                request_cache_clone,
+                request_cache,
+                inflight_cache,
                 cache_status,
                 new_cancellation_flag,
                 players,
@@ -243,6 +249,7 @@ async fn make_request(
     region: &str,
     stats_cache: Cache<String, PlayerStats>,
     request_cache: Cache<String, PlayerStats>,
+    inflight_cache: Cache<String, u8>,
     cache_status: Arc<AtomicBool>,
     cancellation: Arc<AtomicBool>,
     players: Vec<PlayerHash>,
@@ -253,6 +260,7 @@ async fn make_request(
             "# of retries exceeded, failed to fetch player stats for {:?}",
             players
         );
+        remove_from_in_flight_cache(&inflight_cache, &players);
         window
             .emit("rdps", "request_failed")
             .expect("failed to emit rdps message");
@@ -278,16 +286,11 @@ async fn make_request(
                     .filter(|player| !data.contains_key(&player.name))
                     .cloned()
                     .collect();
-                let player_hash_map: HashMap<String, String> = players
-                    .iter()
-                    .map(|player| (player.name.clone(), player.hash.clone()))
-                    .collect();
 
-                for (name, mut stats) in data {
-                    let hash = player_hash_map.get(&name).cloned().unwrap_or_default();
-                    stats.hash = hash.clone();
+                for (name, stats) in data {
+                    inflight_cache.remove(&stats.hash);
                     stats_cache.insert(name.clone(), stats.clone());
-                    request_cache.insert(hash, stats);
+                    request_cache.insert(stats.hash.clone(), stats);
                 }
                 // debug_print(format_args!("{:?}", stats_cache_clone));
 
@@ -304,11 +307,13 @@ async fn make_request(
                         .expect("failed to emit rdps message");
                     if cancellation.load(Ordering::SeqCst) {
                         debug_print(format_args!("request cancelled"));
+                        remove_from_in_flight_cache(&inflight_cache, &players);
                         return;
                     }
                     tokio::time::sleep(Duration::from_secs(5)).await;
                     if cancellation.load(Ordering::SeqCst) {
                         debug_print(format_args!("request cancelled"));
+                        remove_from_in_flight_cache(&inflight_cache, &players);
                         return;
                     }
                     debug_print(format_args!(
@@ -325,6 +330,7 @@ async fn make_request(
                         region,
                         stats_cache,
                         request_cache,
+                        inflight_cache,
                         cache_status,
                         cancellation,
                         missing_players,
@@ -342,6 +348,12 @@ async fn make_request(
             cache_status.store(false, Ordering::Relaxed);
             warn!("failed to fetch player stats: {:?}", e);
         }
+    }
+}
+
+fn remove_from_in_flight_cache(in_flight_cache: &Cache<String, u8>, players: &[PlayerHash]) {
+    for player in players.iter() {
+        in_flight_cache.remove(&player.hash);
     }
 }
 
@@ -415,8 +427,8 @@ impl<'de> Visitor<'de> for StatsVisitor {
     }
 
     fn visit_map<A>(self, mut map: A) -> Result<Self::Value, A::Error>
-        where
-            A: MapAccess<'de>,
+    where
+        A: MapAccess<'de>,
     {
         let mut stats = vec![0; 6];
         while let Some((key, value)) = map.next_entry::<usize, u32>()? {
@@ -430,8 +442,8 @@ impl<'de> Visitor<'de> for StatsVisitor {
 
 impl<'de> Deserialize<'de> for Stats {
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
-        where
-            D: Deserializer<'de>,
+    where
+        D: Deserializer<'de>,
     {
         deserializer.deserialize_map(StatsVisitor)
     }
