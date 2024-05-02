@@ -43,7 +43,6 @@
                 $settings.general.bossOnlyDamage = true;
                 await emit("boss-only-damage-request", true);
             }
-            await registerShortcuts($settings.shortcuts);
             imagePath.set({
                 path: convertFileSrc(await join(await resourceDir(), "images"))
             });
@@ -60,6 +59,8 @@
                     convertFileSrc(await join(await resourceDir(), "images", "classes", esther.icon)) +
                     queryParam;
             }
+
+            await registerShortcuts($settings.shortcuts);
 
             // disable blur on windows 11
             let ua = await navigator.userAgentData.getHighEntropyValues(["platformVersion"]);

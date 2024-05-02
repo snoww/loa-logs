@@ -210,53 +210,57 @@ export const colors = settingsStore("classColors", classColors);
 export const updateSettings = settingsStore("updateSettings", update);
 
 export async function registerShortcuts(shortcuts: any) {
-    await unregisterAll();
+    try {
+        await unregisterAll();
 
-    if (shortcuts.hideMeter.modifier && shortcuts.hideMeter.key) {
-        await register(shortcuts.hideMeter.modifier + "+" + shortcuts.hideMeter.key, async () => {
-            await invoke("toggle_meter_window");
-            hideAll();
-        });
-    }
-    if (shortcuts.showLogs.modifier && shortcuts.showLogs.key) {
-        await register(shortcuts.showLogs.modifier + "+" + shortcuts.showLogs.key, async () => {
-            await invoke("toggle_logs_window");
-        });
-    }
-    if (shortcuts.showLatestEncounter.modifier && shortcuts.showLatestEncounter.key) {
-        await register(shortcuts.showLatestEncounter.modifier + "+" + shortcuts.showLatestEncounter.key, async () => {
-            await invoke("open_most_recent_encounter");
-        });
-    }
-    if (shortcuts.resetSession.modifier && shortcuts.resetSession.key) {
-        await register(shortcuts.resetSession.modifier + "+" + shortcuts.resetSession.key, async () => {
-            await emit("reset-request");
-        });
-    }
-    if (shortcuts.pauseSession.modifier && shortcuts.pauseSession.key) {
-        await register(shortcuts.pauseSession.modifier + "+" + shortcuts.pauseSession.key, async () => {
-            await emit("pause-request");
-        });
-    }
-    if (shortcuts.manualSave.modifier && shortcuts.manualSave.key) {
-        await register(shortcuts.manualSave.modifier + "+" + shortcuts.manualSave.key, async () => {
-            await emit("save-request");
-        });
-    }
+        if (shortcuts.hideMeter.modifier && shortcuts.hideMeter.key) {
+            await register(shortcuts.hideMeter.modifier + "+" + shortcuts.hideMeter.key, async () => {
+                await invoke("toggle_meter_window");
+                hideAll();
+            });
+        }
+        if (shortcuts.showLogs.modifier && shortcuts.showLogs.key) {
+            await register(shortcuts.showLogs.modifier + "+" + shortcuts.showLogs.key, async () => {
+                await invoke("toggle_logs_window");
+            });
+        }
+        if (shortcuts.showLatestEncounter.modifier && shortcuts.showLatestEncounter.key) {
+            await register(shortcuts.showLatestEncounter.modifier + "+" + shortcuts.showLatestEncounter.key, async () => {
+                await invoke("open_most_recent_encounter");
+            });
+        }
+        if (shortcuts.resetSession.modifier && shortcuts.resetSession.key) {
+            await register(shortcuts.resetSession.modifier + "+" + shortcuts.resetSession.key, async () => {
+                await emit("reset-request");
+            });
+        }
+        if (shortcuts.pauseSession.modifier && shortcuts.pauseSession.key) {
+            await register(shortcuts.pauseSession.modifier + "+" + shortcuts.pauseSession.key, async () => {
+                await emit("pause-request");
+            });
+        }
+        if (shortcuts.manualSave.modifier && shortcuts.manualSave.key) {
+            await register(shortcuts.manualSave.modifier + "+" + shortcuts.manualSave.key, async () => {
+                await emit("save-request");
+            });
+        }
 
-    if (shortcuts.disableClickthrough.modifier && shortcuts.disableClickthrough.key) {
-        await register(shortcuts.disableClickthrough.modifier + "+" + shortcuts.disableClickthrough.key, async () => {
-            // if meter is clickthrough, disable it
-            if (get(clickthroughStore)) {
-                await invoke("set_clickthrough", { set: false });
-                await invoke("write_log", { message: "disabling clickthrough" });
-                clickthroughStore.update(() => false);
-            } else {
-                await invoke("set_clickthrough", { set: true });
-                await invoke("write_log", { message: "enabling clickthrough" });
-                clickthroughStore.update(() => true);
-            }
-        });
+        if (shortcuts.disableClickthrough.modifier && shortcuts.disableClickthrough.key) {
+            await register(shortcuts.disableClickthrough.modifier + "+" + shortcuts.disableClickthrough.key, async () => {
+                // if meter is clickthrough, disable it
+                if (get(clickthroughStore)) {
+                    await invoke("set_clickthrough", { set: false });
+                    await invoke("write_log", { message: "disabling clickthrough" });
+                    clickthroughStore.update(() => false);
+                } else {
+                    await invoke("set_clickthrough", { set: true });
+                    await invoke("write_log", { message: "enabling clickthrough" });
+                    clickthroughStore.update(() => true);
+                }
+            });
+        }
+    } catch (error) {
+        await invoke("write_log", { message: "[live_meter::register_shortcuts]" + error });
     }
 }
 
