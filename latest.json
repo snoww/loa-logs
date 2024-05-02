@@ -1,11 +1,11 @@
 {
-    "version": "v1.9.7",
-    "notes": "### v1.9.7\n#### BUG FIXES AND IMPROVEMENTS\n- fixed 5-flower chest transcendence being labeled betrayal set\n- minor bug fixes and improvements\n\nfull patch notes on [github](https://github.com/snoww/loa-logs/releases/latest)\n\nsend bug reports/suggestions to [#loa-logs](https://discord.gg/sbSa3pkDF5)",
-    "pub_date": "2024-05-01T05:36:09.658Z",
+    "version": "v1.9.8",
+    "notes": "### v1.9.8\n#### BUG FIXES AND IMPROVEMENTS\n- finally fixed breaker icon and other icons not loading for certain users \n\n\napologies for the constant small updates x.x\n\nfull patch notes on [github](https://github.com/snoww/loa-logs/releases/latest)\n\nsend bug reports/suggestions to [#loa-logs](https://discord.gg/sbSa3pkDF5)",
+    "pub_date": "2024-05-02T23:01:23.237Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.9.7/LOA.Logs_1.9.7_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlgrQ2pSY0s1bnhnTEE5VUs2ZFpDZXdVYlpUcVVveEgzS2k1aXRkMDVKY2ZNc3pkYWhpY2RuYVV1M0lEUjF5RStaWXVhcXdHM2JQRkNrbkdFN0o5dmc0PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzE0NTQxNjQ1CWZpbGU6TE9BIExvZ3NfMS45LjdfeDY0LXNldHVwLm5zaXMuemlwCnJZRE5CUnhFanlUcWVJeEZaZWR6b2ErWjV6UHhLT05jak5sZnFQWXVQMVExSHVDQ3JtTWxpajQ2UE5UWmJuTTFqSEUwRDNLV2VzdGk4Y21wMFRLdUJRPT0K"
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.9.8/LOA.Logs_1.9.8_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlJaajBhaVM2bVNsS2krUmQ0Q2NVODdUTU9mek1sNVB5UVFDQ1dSbWV6WmE0dlJpdDZ3SE1FTTBZSW5jTW9IQ3VVd0R2QjVDbzFFT2ZRVVI3SVBCV3c4PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzE0NjkwOTMyCWZpbGU6TE9BIExvZ3NfMS45LjhfeDY0LXNldHVwLm5zaXMuemlwCjJZSE1vVThOT3ZKUmVSRm5BWXhiUmJxSm85Yy9JVENlak5vbUtpbTJvM1dndWgxWEk1RU50bHBUYlRKdUZ5QkYvUDNHK0s0N3pTSUFKNitsS0UxU0J3PT0K"
         }
     }
 }
