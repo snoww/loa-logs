@@ -23,6 +23,12 @@
         await invoke("set_start_on_boot", { set: $settings.general.startOnBoot });
     }
 
+    $: {
+        (async () => {
+            $settings.general.startOnBoot = await invoke("check_start_on_boot");
+        })();
+    }
+
 </script>
 
 <div class="flex flex-col space-y-4 divide-y-[1px]">
@@ -55,14 +61,20 @@
             </div>
             <div>Log UI Scale</div>
         </div>
-        <SettingItem
-            name="Start with Windows"
-            description={"Automatically start the app when Windows boots up."}
-            bind:setting={$settings.general.startOnBoot} />
+        <label class="flex items-center">
+            <input
+                type="checkbox"
+                bind:checked={$settings.general.startOnBoot}
+                on:change={setStartOnBoot}
+                class="text-accent-500 size-5 rounded bg-zinc-700 focus:ring-0 focus:ring-offset-0" />
+            <div class="ml-5">
+                <div class="text-gray-100">Start with Windows</div>
+                <div class="text-xs text-gray-300">Automatically start the app when Windows boots up.</div>
+            </div>
+        </label>
         <SettingItem
             name="Hide Meter on Launch"
             description={"Hide the meter window when starting the app."}
-            on:change={setStartOnBoot}
             bind:setting={$settings.general.hideMeterOnStart} />
         <SettingItem
             name="Hide Logs on Launch"
