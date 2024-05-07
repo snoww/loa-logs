@@ -703,6 +703,7 @@ pub struct GeneralSettings {
     pub constant_local_player_color: bool,
     #[serde(default = "default_true")]
     pub boss_only_damage_default_on: bool,
+    pub start_on_boot: bool,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]

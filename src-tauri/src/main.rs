@@ -14,6 +14,7 @@ use std::{
 };
 
 use anyhow::Result;
+use auto_launch::AutoLaunch;
 use hashbrown::HashMap;
 use log::{error, info, warn};
 use parser::models::*;
@@ -308,6 +309,7 @@ async fn main() -> Result<()> {
             disable_aot,
             set_clickthrough,
             optimize_database,
+            set_start_on_boot,
         ])
         .run(tauri::generate_context!())
         .expect("error while running application");
@@ -1338,6 +1340,28 @@ fn disable_aot(window: tauri::Window) {
 fn set_clickthrough(window: tauri::Window, set: bool) {
     if let Some(meter_window) = window.app_handle().get_window(METER_WINDOW_LABEL) {
         meter_window.set_ignore_cursor_events(set).unwrap();
+    }
+}
+
+#[tauri::command]
+fn set_start_on_boot(window: tauri::Window, set: bool) {
+    let app_name = window.app_handle().package_info().name.clone();
+    let app_path = match std::env::current_exe() {
+        Ok(path) => path.to_string_lossy().to_string(),
+        Err(e) => {
+            warn!("could not get current exe path: {}", e);
+            return;
+        }
+    };
+    let auto = AutoLaunch::new(&app_name, &app_path, &[] as &[&str]);
+    if set {
+        auto.enable().map_err(|e| {
+            warn!("could not enable auto launch: {}", e);
+        }).ok();
+    } else {
+        auto.disable().map_err(|e| {
+            warn!("could not disable auto launch: {}", e);
+        }).ok();
     }
 }
 

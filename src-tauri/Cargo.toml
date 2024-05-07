@@ -37,6 +37,7 @@ md5 = "0.7.0"
 async-recursion = "1.1.0"
 uuid = { version = "1.8.0", features = ["v4"] }
 moka = { version = "0.12.7", features = ["sync"] }
+auto-launch = "0.5.0"
 meter-core = { path = "D:\\projects\\meter-core-rs\\" }
 
 [features]

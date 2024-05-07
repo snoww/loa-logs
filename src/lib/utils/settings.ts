@@ -41,6 +41,7 @@ export const defaultSettings = {
         hideLogsOnStart: false,
         constantLocalPlayerColor: false,
         bossOnlyDamageDefaultOn: true,
+        startOnBoot: false,
     },
     shortcuts: {
         hideMeter: {
