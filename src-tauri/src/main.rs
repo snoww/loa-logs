@@ -1358,10 +1358,12 @@ fn set_start_on_boot(window: tauri::Window, set: bool) {
         auto.enable().map_err(|e| {
             warn!("could not enable auto launch: {}", e);
         }).ok();
+        info!("enabled start on boot");
     } else {
         auto.disable().map_err(|e| {
             warn!("could not disable auto launch: {}", e);
         }).ok();
+        info!("disabled start on boot");
     }
 }
 
