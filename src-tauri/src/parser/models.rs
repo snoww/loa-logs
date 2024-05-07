@@ -347,6 +347,8 @@ pub struct EncounterMisc {
     pub version: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub rdps_valid: Option<bool>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub rdps_message: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]

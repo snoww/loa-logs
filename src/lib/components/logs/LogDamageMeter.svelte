@@ -11,7 +11,14 @@
     import { colors, settings, skillIcon } from "$lib/utils/settings";
     import { goto } from "$app/navigation";
     import html2canvas from "html2canvas";
-    import { screenshotAlert, screenshotError, takingScreenshot, raidGates, localPlayer } from "$lib/utils/stores";
+    import {
+        screenshotAlert,
+        screenshotError,
+        takingScreenshot,
+        raidGates,
+        localPlayer,
+        rdpsEventDetails
+    } from "$lib/utils/stores";
     import LogIdentity from "./identity/LogIdentity.svelte";
     import LogStagger from "./stagger/LogStagger.svelte";
     import { tooltip } from "$lib/utils/tooltip";
@@ -99,6 +106,11 @@
             anySupportBrand = players.some((player) => player.damageStats.debuffedBySupport > 0);
             if (encounter.encounterDamageStats.misc?.rdpsValid === undefined || encounter.encounterDamageStats.misc?.rdpsValid) {
                 anyRdpsData = players.some((player) => player.damageStats.rdpsDamageReceived > 0);
+            }
+            if (encounter.encounterDamageStats.misc?.rdpsMessage === undefined || encounter.encounterDamageStats.misc?.rdpsMessage) {
+                $rdpsEventDetails = encounter.encounterDamageStats.misc?.rdpsMessage || "";
+            } else {
+                $rdpsEventDetails = "";
             }
             if ($settings.general.showEsther) {
                 totalDamageDealt =

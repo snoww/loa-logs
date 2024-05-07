@@ -29,6 +29,7 @@ pub struct StatsApi {
     stats_cache: Cache<String, PlayerStats>,
     request_cache: Cache<String, PlayerStats>,
     inflight_cache: Cache<String, u8>,
+    pub status_message: String,
 }
 
 impl StatsApi {
@@ -50,6 +51,7 @@ impl StatsApi {
                 .time_to_idle(Duration::from_secs(60 * 30))
                 .build(),
             inflight_cache: Cache::builder().max_capacity(16).build(),
+            status_message: "".to_string(),
         }
     }
 
@@ -103,8 +105,7 @@ impl StatsApi {
                 }
             }
         }
-
-
+        
         if player_hashes.is_empty() {
             return;
         }
@@ -114,7 +115,8 @@ impl StatsApi {
             player_hashes.len(),
             player_names.len()
         ));
-
+        
+        self.status_message = "".to_string();
         self.valid_stats = None;
         self.request(region, player_hashes);
     }
@@ -234,7 +236,8 @@ impl StatsApi {
             && self.valid_zone
     }
 
-    pub fn broadcast(&self, message: &str) {
+    pub fn broadcast(&mut self, message: &str) {
+        self.status_message = message.to_string();
         self.window
             .emit("rdps", message)
             .expect("failed to emit rdps message");

@@ -64,6 +64,7 @@ export interface EncounterMisc {
     bossHpLog: { [key: string]: Array<BossHpLog> };
     partyInfo?: PartyInfo;
     rdpsValid?: boolean;
+    rdpsMessage?: string;
 }
 
 export interface PartyInfo {

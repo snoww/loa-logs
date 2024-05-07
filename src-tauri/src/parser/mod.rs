@@ -209,6 +209,7 @@ pub fn start(
             save.store(false, Ordering::Relaxed);
             state.party_info = update_party(&party_tracker, &entity_tracker);
             let player_stats = stats_api.get_stats(&state.raid_difficulty, &state.party_info, 0);
+            state.rdps_message = stats_api.status_message.clone();
             state.save_to_db(player_stats, true);
             state.saved = true;
             state.resetting = true;

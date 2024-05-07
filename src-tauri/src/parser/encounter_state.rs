@@ -43,6 +43,7 @@ pub struct EncounterState {
     pub raid_difficulty: String,
     pub boss_only_damage: bool,
     pub region: Option<String>,
+    pub rdps_message: String,
 }
 
 impl EncounterState {
@@ -67,6 +68,7 @@ impl EncounterState {
             raid_difficulty: "".to_string(),
             boss_only_damage: false,
             region: None,
+            rdps_message: "".to_string(),
         }
     }
 
@@ -89,6 +91,7 @@ impl EncounterState {
         self.stagger_log = Vec::new();
         self.stagger_intervals = Vec::new();
         self.party_info = Vec::new();
+        self.rdps_message = "".to_string();
 
         for (key, entity) in clone.entities.into_iter().filter(|(_, e)| {
             e.entity_type == EntityType::PLAYER
@@ -192,6 +195,7 @@ impl EncounterState {
                 if !self.encounter.current_boss_name.is_empty() {
                     let player_stats =
                         stats_api.get_stats(&self.raid_difficulty, &self.party_info, 0);
+                    self.rdps_message = stats_api.status_message.clone();
                     self.save_to_db(player_stats, false);
                     self.saved = true;
                 }
@@ -1760,6 +1764,7 @@ impl EncounterState {
         let raid_difficulty = self.raid_difficulty.clone();
         let region = self.region.clone();
         let meter_version = self.window.app_handle().package_info().version.to_string();
+        let rdps_message = self.rdps_message.clone();
 
         task::spawn(async move {
             info!("saving to db - {}", encounter.current_boss_name);
@@ -1783,6 +1788,7 @@ impl EncounterState {
                 region,
                 player_stats,
                 meter_version,
+                rdps_message,
             );
 
             tx.commit().expect("failed to commit transaction");
