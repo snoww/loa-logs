@@ -14,6 +14,7 @@ use std::fmt;
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
 use std::time::Duration;
+use chrono::{DateTime, Utc};
 use tauri::{Manager, Window, Wry};
 
 const API_URL: &str = "https://inspect.fau.dev/query";
@@ -30,6 +31,7 @@ pub struct StatsApi {
     request_cache: Cache<String, PlayerStats>,
     inflight_cache: Cache<String, u8>,
     pub status_message: String,
+    last_broadcast: DateTime<Utc>,
 }
 
 impl StatsApi {
@@ -52,6 +54,7 @@ impl StatsApi {
                 .build(),
             inflight_cache: Cache::builder().max_capacity(16).build(),
             status_message: "".to_string(),
+            last_broadcast: Utc::now(),
         }
     }
 
@@ -105,7 +108,7 @@ impl StatsApi {
                 }
             }
         }
-        
+
         self.status_message = "".to_string();
         if player_hashes.is_empty() {
             return;
@@ -218,8 +221,11 @@ impl StatsApi {
             return None;
         }
         if !self.valid_stats.unwrap_or(false) {
-            if self.valid_stats.is_some() {
+            let now = Utc::now();
+            let duration = now.signed_duration_since(self.last_broadcast).num_seconds();
+            if self.valid_stats.is_some() && duration >= 10 {
                 self.broadcast("invalid_stats");
+                self.last_broadcast = now;
             }
             return None;
         }
