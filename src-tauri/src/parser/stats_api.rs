@@ -106,6 +106,7 @@ impl StatsApi {
             }
         }
         
+        self.status_message = "".to_string();
         if player_hashes.is_empty() {
             return;
         }
@@ -116,7 +117,6 @@ impl StatsApi {
             player_names.len()
         ));
         
-        self.status_message = "".to_string();
         self.valid_stats = None;
         self.request(region, player_hashes);
     }
