@@ -1,9 +1,10 @@
 use crate::parser::debug_print;
 use crate::parser::encounter_state::EncounterState;
-use crate::parser::entity_tracker::{Entity, EntityTracker};
+use crate::parser::entity_tracker::Entity;
 use async_recursion::async_recursion;
-use hashbrown::{HashMap, HashSet};
-use log::{info, warn};
+use chrono::{DateTime, Utc};
+use hashbrown::HashMap;
+use log::warn;
 use md5::compute;
 use moka::sync::Cache;
 use reqwest::Client;
@@ -11,18 +12,15 @@ use serde::de::{MapAccess, Visitor};
 use serde::{Deserialize, Deserializer, Serialize};
 use serde_json::json;
 use std::fmt;
-use std::sync::atomic::{AtomicBool, Ordering};
+use std::sync::atomic::AtomicBool;
 use std::sync::Arc;
 use std::time::Duration;
-use chrono::{DateTime, Utc};
 use tauri::{Manager, Window, Wry};
 
 const API_URL: &str = "https://inspect.fau.dev/query";
 
 pub struct StatsApi {
     pub client_id: String,
-    cache_status: Arc<AtomicBool>,
-    cancellation_flag: Arc<AtomicBool>,
     client: Arc<Client>,
     window: Arc<Window<Wry>>,
     pub valid_zone: bool,
@@ -30,6 +28,7 @@ pub struct StatsApi {
     stats_cache: Cache<String, PlayerStats>,
     request_cache: Cache<String, PlayerStats>,
     inflight_cache: Cache<String, u8>,
+    cancel_queue: Cache<String, String>,
     pub status_message: String,
     last_broadcast: DateTime<Utc>,
 }
@@ -39,8 +38,6 @@ impl StatsApi {
         Self {
             client_id: String::new(),
             window: Arc::new(window),
-            cache_status: Arc::new(AtomicBool::new(false)),
-            cancellation_flag: Arc::new(AtomicBool::new(false)),
             client: Arc::new(Client::new()),
             valid_zone: false,
             valid_stats: None,
@@ -52,7 +49,14 @@ impl StatsApi {
                 .max_capacity(64)
                 .time_to_idle(Duration::from_secs(60 * 30))
                 .build(),
-            inflight_cache: Cache::builder().max_capacity(16).build(),
+            inflight_cache: Cache::builder()
+                .max_capacity(16)
+                .time_to_live(Duration::from_secs(60))
+                .build(),
+            cancel_queue: Cache::builder()
+                .max_capacity(16)
+                .time_to_live(Duration::from_secs(30))
+                .build(),
             status_message: "".to_string(),
             last_broadcast: Utc::now(),
         }
@@ -60,85 +64,67 @@ impl StatsApi {
 
     pub fn sync(
         &mut self,
-        party: &Vec<Vec<String>>,
+        player: &Entity,
         state: &EncounterState,
-        entity_tracker: &EntityTracker,
-        cached: &HashMap<u64, String>,
+        cached_region: &HashMap<u64, String>,
     ) {
-        let region = match state.region.as_ref() {
-            Some(region) => region.clone(),
-            None => cached.get(&0).cloned().unwrap_or_default(),
-        };
-        if party.is_empty() || region.is_empty() {
-            debug_print(format_args!("party info is empty or region is not set"));
-            self.broadcast("missing_info");
-            return;
-        }
         if !self.valid_difficulty(&state.raid_difficulty) {
-            debug_print(format_args!("stats not valid in current zone"));
             self.broadcast("invalid_zone");
             return;
         }
 
-        let player_names = party.iter().flatten().cloned().collect::<HashSet<String>>();
-        let mut player_hashes: Vec<PlayerHash> = Vec::new();
-        for player in player_names.iter() {
-            let entity_id = match state.encounter.entities.get(player) {
-                Some(entity) => entity.id,
-                None => continue,
-            };
-            if let Some(entity) = entity_tracker.entities.get(&entity_id) {
-                if let Some(hash) = self.get_hash(entity) {
-                    if let Some(cached) = self.request_cache.get(&hash) {
-                        self.stats_cache.insert(player.clone(), cached.clone());
-                    } else if !self.inflight_cache.contains_key(&hash) {
-                        self.inflight_cache.insert(hash.clone(), 0);
-                        player_hashes.push(PlayerHash {
-                            name: player.clone(),
-                            hash,
-                        });
-                    }
-                } else {
-                    debug_print(format_args!(
-                        "missing info for {:?}, could not generate hash",
-                        player
-                    ));
-                    self.broadcast("missing_info");
-                    return;
-                }
-            }
-        }
+        let region = match state.region.as_ref() {
+            Some(region) => region.clone(),
+            None => cached_region.get(&0).cloned().unwrap_or_default(),
+        };
 
-        self.status_message = "".to_string();
-        if player_hashes.is_empty() {
+        if region.is_empty() {
+            debug_print(format_args!("party info is empty or region is not set"));
+            self.broadcast("missing_info");
             return;
         }
-        
-        debug_print(format_args!(
-            "requesting for {}/{} players",
-            player_hashes.len(),
-            player_names.len()
-        ));
-        
+
+        let player_hash = if let Some(hash) = self.get_hash(player) {
+            if let Some(cached) = self.request_cache.get(&hash) {
+                self.stats_cache.insert(player.name.clone(), cached.clone());
+                return;
+            } else if !self.inflight_cache.contains_key(&hash) {
+                self.inflight_cache.insert(hash.clone(), 0);
+                self.stats_cache.invalidate(&player.name);
+                self.cancel_queue.insert(player.name.clone(), hash.clone());
+                PlayerHash {
+                    name: player.name.clone(),
+                    hash,
+                }
+            } else {
+                return;
+            }
+        } else {
+            debug_print(format_args!(
+                "missing info for {:?}, could not generate hash",
+                player
+            ));
+            self.broadcast("missing_info");
+            return;
+        };
+
+        self.status_message = "".to_string();
         self.valid_stats = None;
-        self.request(region, player_hashes);
+        self.request(region, player_hash);
     }
 
-    fn request(&mut self, region: String, players: Vec<PlayerHash>) {
+    fn request(&mut self, region: String, player: PlayerHash) {
         let client_clone = Arc::clone(&self.client);
-        let cache_status = Arc::clone(&self.cache_status);
         let client_id_clone = self.client_id.clone();
 
         let stats_cache = self.stats_cache.clone();
         let request_cache = self.request_cache.clone();
         let inflight_cache = self.inflight_cache.clone();
+        let cancel_queue = self.cancel_queue.clone();
 
-        self.cancellation_flag.store(true, Ordering::SeqCst);
-        let new_cancellation_flag = Arc::new(AtomicBool::new(false));
-        self.cancellation_flag = Arc::clone(&new_cancellation_flag);
+        let window_clone = Arc::clone(&self.window);
 
         self.broadcast("requesting_stats");
-        let window_clone = Arc::clone(&self.window);
         tokio::task::spawn(async move {
             make_request(
                 &client_id_clone,
@@ -148,9 +134,8 @@ impl StatsApi {
                 stats_cache,
                 request_cache,
                 inflight_cache,
-                cache_status,
-                new_cancellation_flag,
-                players,
+                cancel_queue,
+                player,
                 0,
             )
             .await;
@@ -206,6 +191,10 @@ impl StatsApi {
         party: &[Vec<String>],
         raid_duration: i64,
     ) -> Option<Cache<String, PlayerStats>> {
+        if !self.valid_difficulty(difficulty) {
+            return None;
+        }
+
         if self.valid_stats.is_none() {
             let valid = party
                 .iter()
@@ -217,9 +206,6 @@ impl StatsApi {
             }
         }
 
-        if !self.valid_difficulty(difficulty) {
-            return None;
-        }
         if !self.valid_stats.unwrap_or(false) {
             let now = Utc::now();
             let duration = now.signed_duration_since(self.last_broadcast).num_seconds();
@@ -230,16 +216,12 @@ impl StatsApi {
             return None;
         }
 
-        if self.cache_status.load(Ordering::Relaxed) {
-            Some(self.stats_cache.clone())
-        } else {
-            None
-        }
+        Some(self.stats_cache.clone())
     }
 
     fn valid_difficulty(&self, difficulty: &str) -> bool {
-        (difficulty == "Normal" || difficulty == "Hard" || difficulty == "The First")
-            && self.valid_zone
+        self.valid_zone
+            && (difficulty == "Normal" || difficulty == "Hard" || difficulty == "The First")
     }
 
     pub fn broadcast(&mut self, message: &str) {
@@ -259,17 +241,17 @@ async fn make_request(
     stats_cache: Cache<String, PlayerStats>,
     request_cache: Cache<String, PlayerStats>,
     inflight_cache: Cache<String, u8>,
-    cache_status: Arc<AtomicBool>,
-    cancellation: Arc<AtomicBool>,
-    players: Vec<PlayerHash>,
+    cancel_queue: Cache<String, String>,
+    player: PlayerHash,
     current_retries: usize,
 ) {
-    if current_retries >= 10 {
+    if current_retries >= 20 {
         warn!(
             "# of retries exceeded, failed to fetch player stats for {:?}",
-            players
+            player
         );
-        remove_from_in_flight_cache(&inflight_cache, &players);
+        inflight_cache.invalidate(&player.hash);
+        cancel_queue.invalidate(&player.name);
         window
             .emit("rdps", "request_failed")
             .expect("failed to emit rdps message");
@@ -281,53 +263,46 @@ async fn make_request(
         "id": client_id,
         "version": version,
         "region": region.clone(),
-        "characters": players.clone(),
+        "characters": vec![player.clone()],
     });
-    debug_print(format_args!("requesting player stats"));
+    debug_print(format_args!("requesting player stats for {:?}", player));
     // debug_print(format_args!("{:?}", players));
     // println!("{:?}", request_body);
 
     match client.post(API_URL).json(&request_body).send().await {
         Ok(response) => match response.json::<HashMap<String, PlayerStats>>().await {
             Ok(data) => {
-                let missing_players: Vec<PlayerHash> = players
-                    .iter()
-                    .filter(|player| !data.contains_key(&player.name))
-                    .cloned()
-                    .collect();
-
-                for (name, stats) in data {
-                    inflight_cache.remove(&stats.hash);
-                    stats_cache.insert(name.clone(), stats.clone());
-                    request_cache.insert(stats.hash.clone(), stats);
-                }
-                // debug_print(format_args!("{:?}", stats_cache_clone));
-
-                if missing_players.is_empty() {
-                    debug_print(format_args!("received player stats"));
-                    cache_status.store(true, Ordering::Relaxed);
+                if data.contains_key(&player.name) {
+                    // should only contain 1 element
+                    for (name, stats) in data {
+                        inflight_cache.invalidate(&stats.hash);
+                        stats_cache.insert(name.clone(), stats.clone());
+                        request_cache.insert(stats.hash.clone(), stats);
+                    }
+                    debug_print(format_args!("received player stats for {:?}", player.name));
                     window
                         .emit("rdps", "request_success")
                         .expect("failed to emit rdps message");
                 } else {
-                    cache_status.store(false, Ordering::Relaxed);
                     window
                         .emit("rdps", "request_failed_retrying")
                         .expect("failed to emit rdps message");
-                    if cancellation.load(Ordering::SeqCst) {
-                        debug_print(format_args!("request cancelled"));
-                        remove_from_in_flight_cache(&inflight_cache, &players);
-                        return;
-                    }
-                    tokio::time::sleep(Duration::from_secs(5)).await;
-                    if cancellation.load(Ordering::SeqCst) {
-                        debug_print(format_args!("request cancelled"));
-                        remove_from_in_flight_cache(&inflight_cache, &players);
-                        return;
+                    for _ in 0..50 {
+                        if let Some(cancel_hash) = cancel_queue.get(&player.name) {
+                            if cancel_hash != player.hash {
+                                cancel_queue.invalidate(&player.name);
+                                debug_print(format_args!(
+                                    "request cancelled for {:?}, using newer hash: {:?}",
+                                    player, cancel_hash
+                                ));
+                                return;
+                            }
+                        }
+                        tokio::time::sleep(Duration::from_millis(100)).await;
                     }
                     debug_print(format_args!(
                         "missing stats for: {:?}, retrying, attempt {}",
-                        missing_players,
+                        player,
                         current_retries + 1
                     ));
                     // retry request with missing players
@@ -340,29 +315,23 @@ async fn make_request(
                         stats_cache,
                         request_cache,
                         inflight_cache,
-                        cache_status,
-                        cancellation,
-                        missing_players,
+                        cancel_queue,
+                        player,
                         current_retries + 1,
                     )
                     .await;
                 }
             }
             Err(e) => {
-                cache_status.store(false, Ordering::Relaxed);
                 warn!("failed to parse player stats: {:?}", e);
             }
         },
         Err(e) => {
-            cache_status.store(false, Ordering::Relaxed);
             warn!("failed to fetch player stats: {:?}", e);
+            window
+                .emit("rdps", "api_error")
+                .expect("failed to emit rdps message");
         }
-    }
-}
-
-fn remove_from_in_flight_cache(in_flight_cache: &Cache<String, u8>, players: &[PlayerHash]) {
-    for player in players.iter() {
-        in_flight_cache.remove(&player.hash);
     }
 }
 

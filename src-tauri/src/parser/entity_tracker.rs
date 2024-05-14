@@ -501,6 +501,10 @@ impl EntityTracker {
         self.entities.insert(entity.id, entity.clone());
         entity
     }
+    
+    pub fn get_entity_ref(&self, id: u64) -> Option<&Entity> {
+        self.entities.get(&id)
+    }
 
     pub fn get_player_set_options(&mut self, id: u64, equip_list: Vec<EquipItemData>) {
         let entity = match self.entities.get_mut(&id) {

@@ -1795,4 +1795,18 @@ impl EncounterState {
             info!("saved to db");
         });
     }
+
+    pub fn get_players(&self) -> Vec<String> {
+        self.encounter
+            .entities
+            .iter()
+            .filter_map(|(_, e)| {
+                if e.entity_type == EntityType::PLAYER {
+                    Some(e.name.clone())
+                } else {
+                    None
+                }
+            })
+            .collect::<Vec<String>>()
+    }
 }

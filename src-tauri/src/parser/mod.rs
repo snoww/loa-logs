@@ -298,6 +298,7 @@ pub fn start(
                     let player_stats =
                         stats_api.get_stats(&state.raid_difficulty, &state.party_info, 0);
                     state.on_init_env(entity, player_stats);
+                    stats_api.valid_zone = false;
                 }
             }
             Pkt::InitPC => {
@@ -461,12 +462,15 @@ pub fn start(
                     PKTPartyStatusEffectRemoveNotify::new,
                     "PKTPartyStatusEffectRemoveNotify",
                 ) {
+                    let character_id = pkt.character_id;
                     let (is_shield, shields_broken, left_workshop) =
                         entity_tracker.party_status_effect_remove(pkt);
                     if left_workshop {
-                        let party = update_party(&party_tracker, &entity_tracker);
-                        stats_api.sync(&party, &state, &entity_tracker, &local_players);
-                        state.party_info = party;
+                        if let Some(entity_id) = id_tracker.borrow().get_entity_id(character_id) {
+                            if let Some(entity) = entity_tracker.get_entity_ref(entity_id) {
+                                stats_api.sync(entity, &state, &local_players);
+                            }
+                        }
                     }
                     if is_shield {
                         for status_effect in shields_broken {
@@ -766,9 +770,9 @@ pub fn start(
                             StatusEffectTargetType::Local,
                         );
                     if left_workshop {
-                        let party = update_party(&party_tracker, &entity_tracker);
-                        stats_api.sync(&party, &state, &entity_tracker, &local_players);
-                        state.party_info = party;
+                        if let Some(entity) = entity_tracker.get_entity_ref(pkt.object_id) {
+                            stats_api.sync(entity, &state, &local_players);
+                        }
                     }
                     if is_shield {
                         if shields_broken.is_empty() {
@@ -831,9 +835,7 @@ pub fn start(
                             debug_print(format_args!("phase: 4 - wipe - TriggerStartNotify"));
                         }
                         27 | 10 | 11 => {
-                            let party = update_party(&party_tracker, &entity_tracker);
-                            stats_api.sync(&party, &state, &entity_tracker, &local_players);
-                            state.party_info = party;
+                            // debug_print(format_args!("old rdps sync time - {}", pkt.trigger_signal_type));
                         }
                         _ => {}
                     }
