@@ -39,15 +39,15 @@ A: Right-click the taskbar icon (located in the bottom right of your screen, nex
 
 #### Q: Meter isn't detecting anything...
 
-A: There can be multiple reasons. 1. Did you install Npcap? 2. Are you using a traditional VPN (e.g. NordVPN)? You need to disable auto-interface, and select the network interface for your VPN (should be named similar to your vpn name). If that doesn't work, enable raw socket mode. You must restart the meter as admin. 3. Are you using ExitLag? ExitLag should work on auto-interface, since its not really a VPN. However, if its not working on auto interface, you need to enable raw socket mode. You must restart the meter as admin.
+A: There can be multiple reasons. Did you install Npcap? If that still doesn't work, enable raw socket mode by doing the following: *Settings > General > Un-check Auto Network Selection > Raw Socket*. You must restart the meter as admin.
 
-#### Q: ExitLag not working even with the settings above
+#### Q: How to use ExitLag with LOA Logs?
 
-A: ExitLag recently updated their settings which changed how they redirect packets. Change your ExitLag settings to *Packet redirection method > Legacy - NDIS*.
+A: ExitLag recently updated their settings which changed how they redirect packets. Change your ExitLag settings to *Packet redirection method > Legacy - NDIS*. If that still doesn't work. Turn on raw socket by following the steps above.
 
 #### Q: Should I run it in a VM?
 
-A: I do not run it in a VM with full 10 gems equipped on my character. There is always a risk of getting banned, even in a VM. You can run it in a VM if you want, the meter should work the same.
+A: Probably unnecessary. Meter is currently in a gray area by AGS, and they have not been banning any users for using it.
 
 #### Q: Missing `packet.dll`
 
