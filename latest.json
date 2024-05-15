@@ -1,11 +1,11 @@
 {
-    "version": "v1.9.9",
-    "notes": "### v1.9.9\n#### NEW FEATURES\n- added option to start meter with windows (settings > accessibility)\n\n![start_with_windows image](https://i.imgur.com/nequiKu.png)\n\n#### BUG FIXES AND IMPROVEMENTS\n- rdps tab in logs now show status message if it failed to load\n\n\napologies for the constant small updates x.x\n\nfull patch notes on [github](https://github.com/snoww/loa-logs/releases/latest)\n\nsend bug reports/suggestions to [#loa-logs](https://discord.gg/sbSa3pkDF5)",
-    "pub_date": "2024-05-08T01:46:20.308Z",
+    "version": "v1.9.10",
+    "notes": "### v1.9.10\n#### BUG FIXES AND IMPROVEMENTS\n- more improvements to rdps reliability\n- fix issue where some logs didn't display rdps properly\n\nfull patch notes on [github](https://github.com/snoww/loa-logs/releases/latest)\n\nsend bug reports/suggestions to [#loa-logs](https://discord.gg/sbSa3pkDF5)",
+    "pub_date": "2024-05-15T07:30:27.704Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.9.9/LOA.Logs_1.9.9_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlRTVXowcXNKUnk1aUtqcmFoRTNEMWZVYWlFYy8wSjlhM2ZCOFEzbWYzY2F6UVNYY3hKZ1BpTEFTYThhN1c1Tm5kRFU2Zzcwb3N1VVFVVHN5MVRMU1F3PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzE1MTMyNzU1CWZpbGU6TE9BIExvZ3NfMS45LjlfeDY0LXNldHVwLm5zaXMuemlwCmdPZE41b3JVcWhsbk9iT25nNVJNMW5ORDF5QTRkcWptUW9tM2s1bzFuOENSbGxDVHRkQlE3L3JyVlVUNjlxNysyS0R5U0pDZE5NR0ZQWUFLOHNuZ0FnPT0K"
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.9.10/LOA.Logs_1.9.10_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlVPU2I0WHMwMG9zYUY3SkU1OGJyQk9USDM3aHFINzBTeXd5WDk0SkJlZGY0Y0pyM09CZW01bU03ZCt4eWtydnVPWGVzNmtwbGRkb1VpanFjems4MGdJPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzE1NzU4MDQyCWZpbGU6TE9BIExvZ3NfMS45LjEwX3g2NC1zZXR1cC5uc2lzLnppcApKSlk5RmZzOXVzMS91WW45NUU5RmZnQW9sb2d5a00wc2xyZklLRTZLMjErMnVIbkFFSzdtK000bHoxOHpKRzlnc1V2SUZLaGhPM3BSVVloT0xWZXNCdz09Cg=="
         }
     }
 }
