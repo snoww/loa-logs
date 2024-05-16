@@ -79,7 +79,7 @@ impl StatsApi {
         };
 
         if region.is_empty() {
-            debug_print(format_args!("party info is empty or region is not set"));
+            debug_print(format_args!("region is not set"));
             self.broadcast("missing_info");
             return;
         }

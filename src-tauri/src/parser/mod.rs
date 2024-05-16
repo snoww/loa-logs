@@ -59,6 +59,9 @@ pub fn start(
     );
     let mut stats_api = StatsApi::new(window.clone());
     let mut state = EncounterState::new(window.clone());
+    let mut resource_path = window.app_handle().path_resolver().resource_dir().unwrap();
+    resource_path.push("current_region");
+    let region_file_path = resource_path.to_string_lossy();
     let rx = if raw_socket {
         if !meter_core::check_is_admin() {
             warn!("Not running as admin, cannot use raw socket");
@@ -68,7 +71,7 @@ pub fn start(
             }
         }
         meter_core::add_firewall()?;
-        match start_raw_capture(ip, port) {
+        match start_raw_capture(ip, port, region_file_path.to_string()) {
             Ok(rx) => rx,
             Err(e) => {
                 warn!("Error starting capture: {}", e);
@@ -76,7 +79,7 @@ pub fn start(
             }
         }
     } else {
-        match start_capture(ip, port) {
+        match start_capture(ip, port, region_file_path.to_string()) {
             Ok(rx) => rx,
             Err(e) => {
                 warn!("Error starting capture: {}", e);
@@ -299,6 +302,11 @@ pub fn start(
                         stats_api.get_stats(&state.raid_difficulty, &state.party_info, 0);
                     state.on_init_env(entity, player_stats);
                     stats_api.valid_zone = false;
+                    if let Ok(region) = std::fs::read_to_string(region_file_path.to_string()) {
+                        state.region = Some(region);
+                    } else {
+                        warn!("failed to read region file");
+                    }
                 }
             }
             Pkt::InitPC => {
@@ -330,14 +338,6 @@ pub fn start(
             Pkt::MigrationExecute => {
                 if let Some(pkt) = parse_pkt(&data, PKTMigrationExecute::new, "PKTMigrationExecute")
                 {
-                    debug_print(format_args!("server ip: {}", pkt.server_addr));
-                    let ip_without_port = pkt.server_addr.split(':').collect::<Vec<_>>()[0];
-                    let region = get_aws_region_from_ip(ip_without_port);
-                    debug_print(format_args!("region: {:?}", region));
-                    // cache player region as first in the list
-                    local_players.insert(0, region.clone().unwrap_or_default());
-                    write_local_players(&local_players, &local_player_path)?;
-                    state.region = region;
                     entity_tracker.migration_execute(pkt);
                 }
             }

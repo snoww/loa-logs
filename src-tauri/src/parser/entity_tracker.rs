@@ -602,7 +602,7 @@ pub fn get_player_equipment(
         });
     }
 
-    return (player_set, player_equip_list);
+    (player_set, player_equip_list)
 }
 
 pub fn get_player_item_set(player_set: HashMap<String, HashMap<u8, u8>>) -> Vec<PassiveOption> {
@@ -627,7 +627,7 @@ pub fn get_player_item_set(player_set: HashMap<String, HashMap<u8, u8>>) -> Vec<
         }
     }
 
-    return effective_options;
+    effective_options
 }
 
 pub fn get_current_and_max_hp(stat_pair: &Vec<StatPair>) -> (i64, i64) {
