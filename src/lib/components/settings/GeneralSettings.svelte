@@ -291,7 +291,14 @@
                                     networkDropdownOpen = false;
                                     $ifaceChangedStore = true;
                                 }}>
-                                {iface[0]}
+                                <div class="flex space-x-1">
+                                    <div class="w-40 truncate">
+                                        {iface[0]}
+                                    </div>
+                                    <div>
+                                        [{iface[1]}]
+                                    </div>
+                                </div>
                             </button>
                         {/each}
                     </div>
