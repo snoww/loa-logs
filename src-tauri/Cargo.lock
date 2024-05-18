@@ -91,7 +91,6 @@ dependencies = [
  "chrono",
  "flexi_logger",
  "hashbrown 0.14.5",
- "ipnet",
  "lazy_static",
  "log",
  "md5",
