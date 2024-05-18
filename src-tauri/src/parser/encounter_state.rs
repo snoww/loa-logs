@@ -6,6 +6,7 @@ use hashbrown::HashMap;
 use log::info;
 use meter_core::packets::definitions::{PKTIdentityGaugeChangeNotify, PKTParalyzationStateNotify};
 use moka::sync::Cache;
+use rsntp::SntpClient;
 use rusqlite::Connection;
 
 use tauri::{Manager, Window, Wry};
@@ -44,6 +45,9 @@ pub struct EncounterState {
     pub boss_only_damage: bool,
     pub region: Option<String>,
     pub rdps_message: String,
+
+    sntp_client: SntpClient,
+    ntp_fight_start: i64,
 }
 
 impl EncounterState {
@@ -69,6 +73,9 @@ impl EncounterState {
             boss_only_damage: false,
             region: None,
             rdps_message: "".to_string(),
+
+            sntp_client: SntpClient::new(),
+            ntp_fight_start: 0,
         }
     }
 
@@ -92,6 +99,8 @@ impl EncounterState {
         self.stagger_intervals = Vec::new();
         self.party_info = Vec::new();
         self.rdps_message = "".to_string();
+
+        self.ntp_fight_start = 0;
 
         for (key, entity) in clone.entities.into_iter().filter(|(_, e)| {
             e.entity_type == EntityType::PLAYER
@@ -547,6 +556,13 @@ impl EncounterState {
 
         if self.encounter.fight_start == 0 {
             self.encounter.fight_start = timestamp;
+            
+            if let Ok(result) = self.sntp_client.synchronize("time.cloudflare.com") {
+                let dt = result.datetime().into_chrono_datetime().unwrap_or_default();
+                self.ntp_fight_start = dt.timestamp_millis();
+                // debug_print(format_args!("fight start local: {}, ntp: {}", Utc::now().to_rfc3339(), dt.to_rfc3339()));
+            };
+            
             self.encounter.boss_only_damage = self.boss_only_damage;
             self.window
                 .emit("raid-start", timestamp)
@@ -1765,6 +1781,8 @@ impl EncounterState {
         let region = self.region.clone();
         let meter_version = self.window.app_handle().package_info().version.to_string();
         let rdps_message = self.rdps_message.clone();
+        
+        let ntp_fight_start = self.ntp_fight_start;
 
         task::spawn(async move {
             info!("saving to db - {}", encounter.current_boss_name);
@@ -1789,6 +1807,7 @@ impl EncounterState {
                 player_stats,
                 meter_version,
                 rdps_message,
+                ntp_fight_start,
             );
 
             tx.commit().expect("failed to commit transaction");

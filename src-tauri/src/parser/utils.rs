@@ -650,6 +650,7 @@ pub fn insert_data(
     player_stats: Option<Cache<String, PlayerStats>>,
     meter_version: String,
     rdps_message: String,
+    ntp_fight_start: i64,
 ) {
     let mut encounter_stmt = tx
         .prepare_cached(
@@ -709,6 +710,7 @@ pub fn insert_data(
         } else {
             Some(rdps_message)
         },
+        ntp_fight_start: Some(ntp_fight_start),
         ..Default::default()
     };
     
