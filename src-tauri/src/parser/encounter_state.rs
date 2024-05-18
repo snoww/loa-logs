@@ -155,6 +155,11 @@ impl EncounterState {
         entity: Entity,
         player_stats: Option<Cache<String, PlayerStats>>,
     ) {
+        // if not already saved to db, we save again
+        if !self.saved && !self.encounter.current_boss_name.is_empty() {
+            self.save_to_db(player_stats, false);
+        }
+        
         // replace or insert local player
         if let Some(mut local_player) = self.encounter.entities.remove(&self.encounter.local_player)
         {
@@ -167,12 +172,7 @@ impl EncounterState {
             self.encounter.entities.insert(entity.name.clone(), entity);
         }
         self.encounter.local_player = entity.name;
-
-        // if not already saved to db, we save again
-        if !self.saved && !self.encounter.current_boss_name.is_empty() {
-            self.save_to_db(player_stats, false);
-        }
-
+        
         // remove unrelated entities
         self.encounter.entities.retain(|_, e| {
             e.name == self.encounter.local_player || e.damage_stats.damage_dealt > 0

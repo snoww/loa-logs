@@ -301,10 +301,13 @@ pub fn start(
                     let player_stats = stats_api.get_stats(&state, 0);
                     state.on_init_env(entity, player_stats);
                     stats_api.valid_zone = false;
-                    if let Ok(region) = std::fs::read_to_string(region_file_path.to_string()) {
-                        state.region = Some(region);
-                    } else {
-                        warn!("failed to read region file");
+                    match std::fs::read_to_string(region_file_path.to_string()) {
+                        Ok(region) => {
+                            state.region = Some(region);
+                        }
+                        Err(e) => {
+                            warn!("failed to read region file. {}", e);
+                        }
                     }
                 }
             }
@@ -1091,37 +1094,6 @@ fn write_local_players(local_players: &HashMap<u64, String>, path: &PathBuf) -> 
     let local_players_file = serde_json::to_string(&ordered)?;
     std::fs::write(path, local_players_file)?;
     Ok(())
-}
-
-fn get_aws_region_from_ip(ip: &str) -> Option<String> {
-    let ip: Ipv4Addr = ip.parse().unwrap();
-
-    for prefix in AWS_REGIONS.prefixes.iter().filter(|p| {
-        p.region == "us-east-1"
-            || p.region == "us-west-2"
-            || p.region == "eu-central-1"
-            || p.region == "sa-east-1"
-    }) {
-        let net = match Ipv4Net::from_str(&prefix.ip_prefix) {
-            Ok(net) => net,
-            Err(_) => continue,
-        };
-
-        if net.contains(&ip) {
-            if prefix.region == "us-east-1" {
-                return Some("NAE".to_string());
-            } else if prefix.region == "us-west-2" {
-                return Some("NAW".to_string());
-            } else if prefix.region == "eu-central-1" {
-                return Some("EUC".to_string());
-            } else if prefix.region == "sa-east-1" {
-                return Some("SA".to_string());
-            }
-        }
-    }
-
-    warn!("Could not find region for ip: {}", ip);
-    None
 }
 
 fn parse_pkt<T, F>(data: &[u8], new_fn: F, pkt_name: &str) -> Option<T>
