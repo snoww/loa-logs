@@ -194,7 +194,7 @@ impl EncounterState {
             0 | 2 | 3 | 4 => {
                 if !self.encounter.current_boss_name.is_empty() {
                     let player_stats =
-                        stats_api.get_stats(&self.raid_difficulty, &self.party_info, 0);
+                        stats_api.get_stats(self, 0);
                     self.rdps_message = stats_api.status_message.clone();
                     self.save_to_db(player_stats, false);
                     self.saved = true;

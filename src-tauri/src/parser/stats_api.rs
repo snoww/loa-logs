@@ -12,10 +12,10 @@ use serde::de::{MapAccess, Visitor};
 use serde::{Deserialize, Deserializer, Serialize};
 use serde_json::json;
 use std::fmt;
-use std::sync::atomic::AtomicBool;
 use std::sync::Arc;
 use std::time::Duration;
 use tauri::{Manager, Window, Wry};
+use crate::parser::models::EntityType;
 
 const API_URL: &str = "https://inspect.fau.dev/query";
 
@@ -43,11 +43,9 @@ impl StatsApi {
             valid_stats: None,
             stats_cache: Cache::builder()
                 .max_capacity(32)
-                .time_to_idle(Duration::from_secs(60 * 10))
                 .build(),
             request_cache: Cache::builder()
                 .max_capacity(64)
-                .time_to_idle(Duration::from_secs(60 * 30))
                 .build(),
             inflight_cache: Cache::builder()
                 .max_capacity(16)
@@ -187,19 +185,18 @@ impl StatsApi {
 
     pub fn get_stats(
         &mut self,
-        difficulty: &str,
-        party: &[Vec<String>],
+        state: &EncounterState,
         raid_duration: i64,
     ) -> Option<Cache<String, PlayerStats>> {
-        if !self.valid_difficulty(difficulty) {
+        if !self.valid_difficulty(&state.raid_difficulty) {
             return None;
         }
 
         if self.valid_stats.is_none() {
-            let valid = party
+            let valid = state.encounter.entities
                 .iter()
-                .flatten()
-                .all(|player| self.stats_cache.contains_key(player));
+                .filter(|(_, e)| e.entity_type == EntityType::PLAYER)
+                .all(|(name, _)| self.stats_cache.contains_key(name));
 
             if valid || raid_duration >= 15_000 {
                 self.valid_stats = Some(valid);

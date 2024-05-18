@@ -701,14 +701,17 @@ pub fn insert_data(
         region,
         version: Some(meter_version),
         rdps_valid: Some(player_stats.is_some()),
-        rdps_message: if rdps_message.is_empty() || rdps_message == "invalid_zone" || rdps_message == "requesting_stats" {
+        rdps_message: if rdps_message.is_empty()
+            || rdps_message == "invalid_zone"
+            || rdps_message == "requesting_stats"
+        {
             None
         } else {
             Some(rdps_message)
         },
         ..Default::default()
     };
-
+    
     if !stagger_log.is_empty() {
         if prev_stagger > 0 && prev_stagger != encounter.encounter_damage_stats.max_stagger {
             // never finished staggering the boss, calculate average from whatever stagger has been done

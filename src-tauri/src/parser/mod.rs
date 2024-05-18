@@ -211,7 +211,7 @@ pub fn start(
         if save.load(Ordering::Relaxed) {
             save.store(false, Ordering::Relaxed);
             state.party_info = update_party(&party_tracker, &entity_tracker);
-            let player_stats = stats_api.get_stats(&state.raid_difficulty, &state.party_info, 0);
+            let player_stats = stats_api.get_stats(&state, 0);
             state.rdps_message = stats_api.status_message.clone();
             state.save_to_db(player_stats, true);
             state.saved = true;
@@ -298,8 +298,7 @@ pub fn start(
                     party_cache = None;
                     party_map_cache = HashMap::new();
                     let entity = entity_tracker.init_env(pkt);
-                    let player_stats =
-                        stats_api.get_stats(&state.raid_difficulty, &state.party_info, 0);
+                    let player_stats = stats_api.get_stats(&state, 0);
                     state.on_init_env(entity, player_stats);
                     stats_api.valid_zone = false;
                     if let Ok(region) = std::fs::read_to_string(region_file_path.to_string()) {
@@ -618,9 +617,7 @@ pub fn start(
                     } else {
                         0
                     };
-                    let player_stats =
-                        stats_api.get_stats(&state.raid_difficulty, &state.party_info, duration);
-
+                    let player_stats = stats_api.get_stats(&state, duration);
                     for event in pkt.skill_damage_abnormal_move_events.iter() {
                         let target_entity =
                             entity_tracker.get_or_create_entity(event.skill_damage_event.target_id);
@@ -674,8 +671,7 @@ pub fn start(
                     } else {
                         0
                     };
-                    let player_stats =
-                        stats_api.get_stats(&state.raid_difficulty, &state.party_info, duration);
+                    let player_stats = stats_api.get_stats(&state, duration);
                     for event in pkt.skill_damage_events.iter() {
                         let target_entity = entity_tracker.get_or_create_entity(event.target_id);
                         // source_entity is to determine battle item
