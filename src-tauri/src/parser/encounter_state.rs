@@ -9,6 +9,7 @@ use moka::sync::Cache;
 use rsntp::SntpClient;
 use rusqlite::Connection;
 
+use crate::parser::debug_print;
 use tauri::{Manager, Window, Wry};
 use tokio::task;
 
@@ -168,7 +169,7 @@ impl EncounterState {
         if !self.saved && !self.encounter.current_boss_name.is_empty() {
             self.save_to_db(player_stats, false);
         }
-        
+
         // replace or insert local player
         if let Some(mut local_player) = self.encounter.entities.remove(&self.encounter.local_player)
         {
@@ -181,7 +182,7 @@ impl EncounterState {
             self.encounter.entities.insert(entity.name.clone(), entity);
         }
         self.encounter.local_player = entity.name;
-        
+
         // remove unrelated entities
         self.encounter.entities.retain(|_, e| {
             e.name == self.encounter.local_player || e.damage_stats.damage_dealt > 0
@@ -202,8 +203,7 @@ impl EncounterState {
         match phase_code {
             0 | 2 | 3 | 4 => {
                 if !self.encounter.current_boss_name.is_empty() {
-                    let player_stats =
-                        stats_api.get_stats(self, 0);
+                    let player_stats = stats_api.get_stats(self, 0);
                     self.rdps_message = stats_api.status_message.clone();
                     self.save_to_db(player_stats, false);
                     self.saved = true;
@@ -1784,6 +1784,8 @@ impl EncounterState {
         
         let ntp_fight_start = self.ntp_fight_start;
 
+        debug_print(format_args!("rdps_data: {:?}", player_stats));
+
         task::spawn(async move {
             info!("saving to db - {}", encounter.current_boss_name);
 
@@ -1813,19 +1815,5 @@ impl EncounterState {
             tx.commit().expect("failed to commit transaction");
             info!("saved to db");
         });
-    }
-
-    pub fn get_players(&self) -> Vec<String> {
-        self.encounter
-            .entities
-            .iter()
-            .filter_map(|(_, e)| {
-                if e.entity_type == EntityType::PLAYER {
-                    Some(e.name.clone())
-                } else {
-                    None
-                }
-            })
-            .collect::<Vec<String>>()
     }
 }

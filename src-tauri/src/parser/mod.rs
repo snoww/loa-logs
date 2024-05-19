@@ -129,6 +129,8 @@ pub fn start(
         }
     }
 
+    get_and_set_region(region_file_path.as_ref(), &mut state);
+
     let emit_details = Arc::new(AtomicBool::new(false));
 
     let meter_window_clone = window.clone();
@@ -352,6 +354,12 @@ pub fn start(
                         entity.id,
                         entity.character_id
                     ));
+                    if stats_api.valid_zone {
+                        stats_api.sync(&entity, &state);
+                        if let Some(local_player) = entity_tracker.get_entity_ref(entity_tracker.local_entity_id) {
+                            stats_api.sync(local_player, &state);
+                        }
+                    }
                     state.on_new_pc(entity, hp, max_hp);
                 }
             }
@@ -467,7 +475,7 @@ pub fn start(
                     if left_workshop {
                         if let Some(entity_id) = id_tracker.borrow().get_entity_id(character_id) {
                             if let Some(entity) = entity_tracker.get_entity_ref(entity_id) {
-                                stats_api.sync(entity, &state, &local_players);
+                                stats_api.sync(entity, &state);
                             }
                         }
                     }
@@ -767,7 +775,7 @@ pub fn start(
                         );
                     if left_workshop {
                         if let Some(entity) = entity_tracker.get_entity_ref(pkt.object_id) {
-                            stats_api.sync(entity, &state, &local_players);
+                            stats_api.sync(entity, &state);
                         }
                     }
                     if is_shield {
@@ -1091,6 +1099,17 @@ fn write_local_players(local_players: &HashMap<u64, String>, path: &PathBuf) -> 
     let local_players_file = serde_json::to_string(&ordered)?;
     std::fs::write(path, local_players_file)?;
     Ok(())
+}
+
+fn get_and_set_region(path: &str, state: &mut EncounterState) {
+    match std::fs::read_to_string(path) {
+        Ok(region) => {
+            state.region = Some(region);
+        }
+        Err(e) => {
+            warn!("failed to read region file. {}", e);
+        }
+    }
 }
 
 fn parse_pkt<T, F>(data: &[u8], new_fn: F, pkt_name: &str) -> Option<T>

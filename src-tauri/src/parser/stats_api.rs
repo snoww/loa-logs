@@ -1,6 +1,7 @@
 use crate::parser::debug_print;
 use crate::parser::encounter_state::EncounterState;
 use crate::parser::entity_tracker::Entity;
+use crate::parser::models::EntityType;
 use async_recursion::async_recursion;
 use chrono::{DateTime, Utc};
 use hashbrown::HashMap;
@@ -15,7 +16,6 @@ use std::fmt;
 use std::sync::Arc;
 use std::time::Duration;
 use tauri::{Manager, Window, Wry};
-use crate::parser::models::EntityType;
 
 const API_URL: &str = "https://inspect.fau.dev/query";
 
@@ -41,15 +41,11 @@ impl StatsApi {
             client: Arc::new(Client::new()),
             valid_zone: false,
             valid_stats: None,
-            stats_cache: Cache::builder()
-                .max_capacity(32)
-                .build(),
-            request_cache: Cache::builder()
-                .max_capacity(64)
-                .build(),
+            stats_cache: Cache::builder().max_capacity(32).build(),
+            request_cache: Cache::builder().max_capacity(64).build(),
             inflight_cache: Cache::builder()
                 .max_capacity(16)
-                .time_to_live(Duration::from_secs(60))
+                .time_to_live(Duration::from_secs(30))
                 .build(),
             cancel_queue: Cache::builder()
                 .max_capacity(16)
@@ -60,12 +56,7 @@ impl StatsApi {
         }
     }
 
-    pub fn sync(
-        &mut self,
-        player: &Entity,
-        state: &EncounterState,
-        cached_region: &HashMap<u64, String>,
-    ) {
+    pub fn sync(&mut self, player: &Entity, state: &EncounterState) {
         if !self.valid_difficulty(&state.raid_difficulty) {
             self.broadcast("invalid_zone");
             return;
@@ -73,7 +64,7 @@ impl StatsApi {
 
         let region = match state.region.as_ref() {
             Some(region) => region.clone(),
-            None => cached_region.get(&0).cloned().unwrap_or_default(),
+            None => "".to_string(),
         };
 
         if region.is_empty() {
@@ -193,7 +184,9 @@ impl StatsApi {
         }
 
         if self.valid_stats.is_none() {
-            let valid = state.encounter.entities
+            let valid = state
+                .encounter
+                .entities
                 .iter()
                 .filter(|(_, e)| e.entity_type == EntityType::PLAYER)
                 .all(|(name, _)| self.stats_cache.contains_key(name));
