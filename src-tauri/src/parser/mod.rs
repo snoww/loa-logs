@@ -116,8 +116,6 @@ pub fn start(
     if local_player_path.exists() {
         let local_players_file = std::fs::read_to_string(local_player_path.clone())?;
         local_players = serde_json::from_str(&local_players_file).unwrap_or_default();
-        // load region if it was saved prior
-        state.region = local_players.get(&0).cloned();
         client_id = local_players.get(&1).cloned().unwrap_or_default();
         if client_id.is_empty() {
             client_id = Uuid::new_v4().to_string();
@@ -300,14 +298,8 @@ pub fn start(
                     let player_stats = stats_api.get_stats(&state, 0);
                     state.on_init_env(entity, player_stats);
                     stats_api.valid_zone = false;
-                    match std::fs::read_to_string(region_file_path.to_string()) {
-                        Ok(region) => {
-                            state.region = Some(region);
-                        }
-                        Err(e) => {
-                            warn!("failed to read region file. {}", e);
-                        }
-                    }
+                    get_and_set_region(region_file_path.as_ref(), &mut state);
+                    // debug_print(format_args!("region: {:?}", state.region));
                 }
             }
             Pkt::InitPC => {
@@ -340,6 +332,7 @@ pub fn start(
                 if let Some(pkt) = parse_pkt(&data, PKTMigrationExecute::new, "PKTMigrationExecute")
                 {
                     entity_tracker.migration_execute(pkt);
+                    get_and_set_region(region_file_path.as_ref(), &mut state);
                 }
             }
             Pkt::NewPC => {
