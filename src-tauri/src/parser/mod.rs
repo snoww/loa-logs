@@ -299,7 +299,7 @@ pub fn start(
                     state.on_init_env(entity, player_stats);
                     stats_api.valid_zone = false;
                     get_and_set_region(region_file_path.as_ref(), &mut state);
-                    // debug_print(format_args!("region: {:?}", state.region));
+                    info!("region: {:?}", state.region);
                 }
             }
             Pkt::InitPC => {
