@@ -277,7 +277,7 @@ async fn make_request(
                     window
                         .emit("rdps", "request_failed_retrying")
                         .expect("failed to emit rdps message");
-                    for _ in 0..50 {
+                    for _ in 0..30 {
                         if let Some(cancel_hash) = cancel_queue.get(&player.name) {
                             if cancel_hash != player.hash {
                                 cancel_queue.invalidate(&player.name);
