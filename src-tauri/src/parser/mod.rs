@@ -54,11 +54,11 @@ pub fn start(
         id_tracker.clone(),
         party_tracker.clone(),
     );
-    let mut stats_api = StatsApi::new(window.clone());
     let mut state = EncounterState::new(window.clone());
     let mut resource_path = window.app_handle().path_resolver().resource_dir().unwrap();
     resource_path.push("current_region");
     let region_file_path = resource_path.to_string_lossy();
+    let mut stats_api = StatsApi::new(window.clone(), region_file_path.to_string());
     let rx = if raw_socket {
         if !meter_core::check_is_admin() {
             warn!("Not running as admin, cannot use raw socket");

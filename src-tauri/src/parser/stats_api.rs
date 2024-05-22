@@ -31,10 +31,12 @@ pub struct StatsApi {
     cancel_queue: Cache<String, String>,
     pub status_message: String,
     last_broadcast: DateTime<Utc>,
+    
+    region_file_path: String,
 }
 
 impl StatsApi {
-    pub fn new(window: Window<Wry>) -> Self {
+    pub fn new(window: Window<Wry>, region_file_path: String) -> Self {
         Self {
             client_id: String::new(),
             window: Arc::new(window),
@@ -53,6 +55,7 @@ impl StatsApi {
                 .build(),
             status_message: "".to_string(),
             last_broadcast: Utc::now(),
+            region_file_path,
         }
     }
 
@@ -64,7 +67,12 @@ impl StatsApi {
 
         let region = match state.region.as_ref() {
             Some(region) => region.clone(),
-            None => "".to_string(),
+            None => {
+                std::fs::read_to_string(&self.region_file_path).unwrap_or_else(|e| {
+                    warn!("failed to read region file. {}", e);
+                    "".to_string()
+                })
+            },
         };
 
         if region.is_empty() {
