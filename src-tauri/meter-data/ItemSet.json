@@ -446,7 +446,7 @@
       ],
       "value": {
         "2": {
-          "desc": "Targets that have protection effects (Shield, HP Regen, Damage Reduction) from party effects will have the Seed of Life applied for <FONT COLOR='#99ff99'>12s</FONT>.\nSeed of Life: Endurance +<FONT COLOR='#99ff99'>25</FONT> (Max <FONT COLOR='#99ff99'>20</FONT> stacks)",
+          "desc": "Targets that have protection effects (Shield, HP Regen, Damage Reduction) from party effects will have the Seed of Life applied for <FONT COLOR='#99ff99'>12s</FONT>. Does not apply to protective effects with no duration.\nSeed of Life: Endurance +<FONT COLOR='#99ff99'>25</FONT> (Max <FONT COLOR='#99ff99'>20</FONT> stacks)",
           "options": [{ "type": "combat_effect", "keystat": "none", "keyindex": 600000119, "value": 0 }]
         },
         "4": {
@@ -467,7 +467,7 @@
       ],
       "value": {
         "2": {
-          "desc": "Targets that have protection effects (Shield, HP Regen, Damage Reduction) from party effects will have the Seed of Life applied for <FONT COLOR='#99ff99'>12s</FONT>.\nSeed of Life: Endurance +<FONT COLOR='#99ff99'>30</FONT> (Max <FONT COLOR='#99ff99'>20</FONT> stacks)",
+          "desc": "Targets that have protection effects (Shield, HP Regen, Damage Reduction) from party effects will have the Seed of Life applied for <FONT COLOR='#99ff99'>12s</FONT>. Does not apply to protective effects with no duration.\nSeed of Life: Endurance +<FONT COLOR='#99ff99'>30</FONT> (Max <FONT COLOR='#99ff99'>20</FONT> stacks)",
           "options": [{ "type": "combat_effect", "keystat": "none", "keyindex": 610000119, "value": 0 }]
         },
         "4": {
@@ -488,7 +488,7 @@
       ],
       "value": {
         "2": {
-          "desc": "Targets that have protection effects from the party (Shield, HP Regen, Damage Reduction) will gain Seed of Life for <FONT COLOR='#99ff99'>12s</FONT>.\nSeed of Life: +<FONT COLOR='#99ff99'>35</FONT>Endurance. (Max <FONT COLOR='#99ff99'>20</FONT> stacks)",
+          "desc": "Targets that have protection effects (Shield, HP Regen, Damage Reduction) from party effects will have the Seed of Life applied for <FONT COLOR='#99ff99'>12s</FONT>. Does not apply to protective effects with no duration.\nSeed of Life: Endurance +<FONT COLOR='#99ff99'>35</FONT> (Max <FONT COLOR='#99ff99'>20</FONT> stacks)",
           "options": [{ "type": "combat_effect", "keystat": "none", "keyindex": 620000119, "value": 0 }]
         },
         "4": {

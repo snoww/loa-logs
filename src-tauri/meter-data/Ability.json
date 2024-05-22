@@ -656,9 +656,9 @@
   "202": {
     "id": 202,
     "levels": {
-      "1": { "desc": "Stand Up Action Cooldown -4% .", "values": [1000] },
-      "2": { "desc": "Stand Up Action Cooldown -12%.", "values": [1500] },
-      "3": { "desc": "Stand Up Action Cooldown -25%.", "values": [2000] }
+      "1": { "desc": "Stand Up Action Cooldown -4% .", "values": [400] },
+      "2": { "desc": "Stand Up Action Cooldown -12%.", "values": [1200] },
+      "3": { "desc": "Stand Up Action Cooldown -25%.", "values": [2500] }
     },
     "name": "Master of Escape",
     "isnegative": false,
@@ -2041,7 +2041,7 @@
       "2": { "desc": "위기모면2", "values": [700004201, 700004202] },
       "3": { "desc": "위기모면2", "values": [700004201, 700004202] }
     },
-    "name": "날카로운 단도",
+    "name": "",
     "isnegative": false,
     "icon": "",
     "isengrave": false,
@@ -2230,7 +2230,7 @@
       "2": { "desc": "위기모면3", "values": [900605, 900606] },
       "3": { "desc": "위기모면3", "values": [900605, 900606] }
     },
-    "name": "위기모면3",
+    "name": "",
     "isnegative": false,
     "icon": "",
     "isengrave": false,
@@ -2498,7 +2498,7 @@
   "1000001": {
     "id": 1000001,
     "levels": { "1": { "desc": "5", "values": [500] } },
-    "name": "항해 보조장비 희귀 - 수리비 감소",
+    "name": "",
     "isnegative": false,
     "icon": "ability_100.png",
     "isengrave": true,
@@ -2507,7 +2507,7 @@
   "1000002": {
     "id": 1000002,
     "levels": { "1": { "desc": "10", "values": [1000] } },
-    "name": "항해 보조장비 희귀 - 수리비 감소",
+    "name": "",
     "isnegative": false,
     "icon": "ability_100.png",
     "isengrave": true,
@@ -2516,7 +2516,7 @@
   "1000003": {
     "id": 1000003,
     "levels": { "1": { "desc": "15", "values": [1500] } },
-    "name": "항해 보조장비 희귀 - 수리비 감소",
+    "name": "",
     "isnegative": false,
     "icon": "ability_100.png",
     "isengrave": true,
@@ -2525,7 +2525,7 @@
   "1000004": {
     "id": 1000004,
     "levels": { "1": { "desc": "20", "values": [2000] } },
-    "name": "항해 보조장비 희귀 - 수리비 감소",
+    "name": "",
     "isnegative": false,
     "icon": "ability_100.png",
     "isengrave": true,
@@ -2534,7 +2534,7 @@
   "1000101": {
     "id": 1000101,
     "levels": { "1": { "desc": "1", "values": [1] } },
-    "name": "생활 보조장비 희귀 - 올 마스터리",
+    "name": "",
     "isnegative": false,
     "icon": "ability_100.png",
     "isengrave": true,
@@ -2543,7 +2543,7 @@
   "1000102": {
     "id": 1000102,
     "levels": { "1": { "desc": "2", "values": [2] } },
-    "name": "생활 보조장비 희귀 - 올 마스터리",
+    "name": "",
     "isnegative": false,
     "icon": "ability_100.png",
     "isengrave": true,
@@ -2552,7 +2552,7 @@
   "1000103": {
     "id": 1000103,
     "levels": { "1": { "desc": "3", "values": [3] } },
-    "name": "생활 보조장비 희귀 - 올 마스터리",
+    "name": "",
     "isnegative": false,
     "icon": "ability_100.png",
     "isengrave": true,
@@ -2561,7 +2561,7 @@
   "1000104": {
     "id": 1000104,
     "levels": { "1": { "desc": "4", "values": [4] } },
-    "name": "생활 보조장비 희귀 - 올 마스터리",
+    "name": "",
     "isnegative": false,
     "icon": "ability_100.png",
     "isengrave": true,
@@ -2570,7 +2570,7 @@
   "1000201": {
     "id": 1000201,
     "levels": { "1": { "desc": "1", "values": [1] } },
-    "name": "생활 보조장비 희귀 - 숙련도",
+    "name": "",
     "isnegative": false,
     "icon": "ability_100.png",
     "isengrave": true,
@@ -2579,7 +2579,7 @@
   "1000202": {
     "id": 1000202,
     "levels": { "1": { "desc": "2", "values": [2] } },
-    "name": "생활 보조장비 희귀 - 숙련도",
+    "name": "",
     "isnegative": false,
     "icon": "ability_100.png",
     "isengrave": true,
@@ -2588,7 +2588,7 @@
   "1000203": {
     "id": 1000203,
     "levels": { "1": { "desc": "3", "values": [3] } },
-    "name": "생활 보조장비 희귀 - 숙련도",
+    "name": "",
     "isnegative": false,
     "icon": "ability_100.png",
     "isengrave": true,
@@ -2597,7 +2597,7 @@
   "1000204": {
     "id": 1000204,
     "levels": { "1": { "desc": "4", "values": [4] } },
-    "name": "생활 보조장비 희귀 - 숙련도",
+    "name": "",
     "isnegative": false,
     "icon": "ability_100.png",
     "isengrave": true,
@@ -2606,7 +2606,7 @@
   "10000": {
     "id": 10000,
     "levels": { "1": { "desc": "" }, "2": { "desc": "" }, "3": { "desc": "" } },
-    "name": "3-2노말 A",
+    "name": "",
     "isnegative": false,
     "icon": "ability_100.png",
     "isengrave": false
@@ -2614,7 +2614,7 @@
   "10001": {
     "id": 10001,
     "levels": { "1": { "desc": "" }, "2": { "desc": "" } },
-    "name": "3-2노말 b",
+    "name": "",
     "isnegative": false,
     "icon": "ability_100.png",
     "isengrave": false
@@ -2622,7 +2622,7 @@
   "10002": {
     "id": 10002,
     "levels": { "1": { "desc": "" }, "2": { "desc": "" }, "3": { "desc": "" } },
-    "name": "3-2유물B",
+    "name": "",
     "isnegative": false,
     "icon": "ability_100.png",
     "isengrave": false
@@ -2630,7 +2630,7 @@
   "10003": {
     "id": 10003,
     "levels": { "1": { "desc": "" }, "2": { "desc": "" }, "3": { "desc": "" } },
-    "name": "3-2유물D",
+    "name": "",
     "isnegative": false,
     "icon": "ability_100.png",
     "isengrave": false
@@ -2638,7 +2638,7 @@
   "10004": {
     "id": 10004,
     "levels": { "1": { "desc": "" }, "2": { "desc": "" }, "3": { "desc": "" } },
-    "name": "3-2유물D",
+    "name": "",
     "isnegative": false,
     "icon": "ability_100.png",
     "isengrave": false
@@ -2646,7 +2646,7 @@
   "10005": {
     "id": 10005,
     "levels": { "1": { "desc": "" }, "2": { "desc": "" }, "3": { "desc": "" } },
-    "name": "배신 상급",
+    "name": "",
     "isnegative": false,
     "icon": "ability_100.png",
     "isengrave": false
@@ -2654,7 +2654,7 @@
   "10006": {
     "id": 10006,
     "levels": { "1": { "desc": "" }, "2": { "desc": "" }, "3": { "desc": "" } },
-    "name": "배신 상급",
+    "name": "",
     "isnegative": false,
     "icon": "ability_100.png",
     "isengrave": false
@@ -2662,7 +2662,7 @@
   "10007": {
     "id": 10007,
     "levels": { "1": { "desc": "" }, "2": { "desc": "" }, "3": { "desc": "" } },
-    "name": "배신 상급 3lv",
+    "name": "",
     "isnegative": false,
     "icon": "ability_100.png",
     "isengrave": true
@@ -2670,7 +2670,7 @@
   "10008": {
     "id": 10008,
     "levels": { "1": { "desc": "" }, "2": { "desc": "" }, "3": { "desc": "" } },
-    "name": "샨디1단계",
+    "name": "",
     "isnegative": false,
     "icon": "ability_100.png",
     "isengrave": false
@@ -2678,7 +2678,7 @@
   "10009": {
     "id": 10009,
     "levels": { "1": { "desc": "" }, "2": { "desc": "" }, "3": { "desc": "" } },
-    "name": "아제나 1단계",
+    "name": "",
     "isnegative": false,
     "icon": "ability_100.png",
     "isengrave": false
@@ -2686,7 +2686,7 @@
   "10010": {
     "id": 10010,
     "levels": { "1": { "desc": "" }, "2": { "desc": "" }, "3": { "desc": "" } },
-    "name": "니나브 1단계",
+    "name": "",
     "isnegative": false,
     "icon": "ability_100.png",
     "isengrave": false
@@ -2694,7 +2694,7 @@
   "10011": {
     "id": 10011,
     "levels": { "1": { "desc": "" }, "2": { "desc": "" }, "3": { "desc": "" } },
-    "name": "구원 lv2 4세트",
+    "name": "",
     "isnegative": false,
     "icon": "ability_100.png",
     "isengrave": false
@@ -2702,7 +2702,7 @@
   "10012": {
     "id": 10012,
     "levels": { "1": { "desc": "" }, "2": { "desc": "" }, "3": { "desc": "" } },
-    "name": "구원 lv3 2세트",
+    "name": "",
     "isnegative": false,
     "icon": "ability_100.png",
     "isengrave": false
@@ -2710,7 +2710,7 @@
   "10013": {
     "id": 10013,
     "levels": { "1": { "desc": "" }, "2": { "desc": "" }, "3": { "desc": "" } },
-    "name": "구원 lv3 2세트",
+    "name": "",
     "isnegative": false,
     "icon": "ability_100.png",
     "isengrave": false
@@ -2718,7 +2718,7 @@
   "10014": {
     "id": 10014,
     "levels": { "1": { "desc": "" }, "2": { "desc": "" }, "3": { "desc": "" } },
-    "name": "아제나 1단계(한계돌파)",
+    "name": "",
     "isnegative": false,
     "icon": "ability_100.png",
     "isengrave": false
@@ -2726,7 +2726,7 @@
   "10015": {
     "id": 10015,
     "levels": { "1": { "desc": "" }, "2": { "desc": "" }, "3": { "desc": "" } },
-    "name": "니나브 1단계(한계돌파)",
+    "name": "",
     "isnegative": false,
     "icon": "ability_100.png",
     "isengrave": false
@@ -2734,7 +2734,7 @@
   "10101": {
     "id": 10101,
     "levels": { "1": { "desc": "" }, "2": { "desc": "" }, "3": { "desc": "" } },
-    "name": "오레하/아르고스 1",
+    "name": "",
     "isnegative": false,
     "icon": "ability_100.png",
     "isengrave": false
@@ -2742,7 +2742,7 @@
   "10102": {
     "id": 10102,
     "levels": { "1": { "desc": "" }, "2": { "desc": "" }, "3": { "desc": "" } },
-    "name": "오레하/아르고스 2",
+    "name": "",
     "isnegative": false,
     "icon": "ability_100.png",
     "isengrave": false
@@ -2750,7 +2750,7 @@
   "10200": {
     "id": 10200,
     "levels": { "1": { "desc": "" }, "2": { "desc": "" }, "3": { "desc": "" } },
-    "name": "초월 상의 5별 효과",
+    "name": "",
     "isnegative": false,
     "icon": "ability_100.png",
     "isengrave": false
@@ -2758,7 +2758,7 @@
   "10201": {
     "id": 10201,
     "levels": { "1": { "desc": "" }, "2": { "desc": "" }, "3": { "desc": "" } },
-    "name": "초월 하의 10별 효과",
+    "name": "",
     "isnegative": false,
     "icon": "ability_100.png",
     "isengrave": false

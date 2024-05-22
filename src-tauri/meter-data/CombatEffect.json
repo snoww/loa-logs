@@ -56,6 +56,34 @@
       }
     ]
   },
+  "5500": {
+    "id": 5500,
+    "effects": [
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-5000, 0, 0, 0, 0, 0] }]
+      }
+    ]
+  },
+  "5510": {
+    "id": 5510,
+    "effects": [
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [],
+        "actions": [{ "type": "modify_damage_shield_multiplier", "actor": "target", "args": [10000, 1, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [],
+        "actions": [{ "type": "modify_penetration", "actor": "target", "args": [10000, 0, 0, 0, 0, 0] }]
+      }
+    ]
+  },
   "32090": {
     "id": 32090,
     "effects": [
@@ -19639,7 +19667,289 @@
       {
         "ratio": 10000,
         "cooldown": 0,
-        "conditions": [{ "type": "npc_grade_equal", "actor": "target", "arg": 9 }],
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 40385801 }
+        ],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 40392201 }
+        ],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 40385803 }
+        ],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 40392202 }
+        ],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 40392203 }
+        ],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 40392204 }
+        ],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 40451301 }
+        ],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 40451302 }
+        ],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 40451303 }
+        ],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 40392205 }
+        ],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 40392206 }
+        ],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 40392207 }
+        ],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 40385804 }
+        ],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 40451304 }
+        ],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 40451305 }
+        ],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 40543201 }
+        ],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 40385805 }
+        ],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 633140 }
+        ],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 633141 }
+        ],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 634000 }
+        ],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 634072 }
+        ],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 634010 }
+        ],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 634020 }
+        ],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 625140 }
+        ],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 625141 }
+        ],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 625180 }
+        ],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 625181 }
+        ],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 156101 }
+        ],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 990168 }
+        ],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 990198 }
+        ],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 990355 }
+        ],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 46697 }
+        ],
         "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
       }
     ]
@@ -19650,7 +19960,289 @@
       {
         "ratio": 10000,
         "cooldown": 0,
-        "conditions": [{ "type": "npc_grade_equal", "actor": "target", "arg": 9 }],
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 40385801 }
+        ],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [100, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 40392201 }
+        ],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [100, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 40385803 }
+        ],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [100, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 40392202 }
+        ],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [100, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 40392203 }
+        ],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [100, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 40392204 }
+        ],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [100, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 40451301 }
+        ],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [100, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 40451302 }
+        ],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [100, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 40451303 }
+        ],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [100, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 40392205 }
+        ],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [100, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 40392206 }
+        ],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [100, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 40392207 }
+        ],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [100, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 40385804 }
+        ],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [100, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 40451304 }
+        ],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [100, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 40451305 }
+        ],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [100, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 40543201 }
+        ],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [100, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 40385805 }
+        ],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [100, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 633140 }
+        ],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [100, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 633141 }
+        ],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [100, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 634000 }
+        ],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [100, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 634072 }
+        ],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [100, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 634010 }
+        ],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [100, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 634020 }
+        ],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [100, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 625140 }
+        ],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [100, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 625141 }
+        ],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [100, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 625180 }
+        ],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [100, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 625181 }
+        ],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [100, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 156101 }
+        ],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [100, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 990168 }
+        ],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [100, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 990198 }
+        ],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [100, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 990355 }
+        ],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [100, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 46697 }
+        ],
         "actions": [{ "type": "modify_damage", "actor": "target", "args": [100, 0, 0, 0, 0, 0] }]
       }
     ]
@@ -19661,7 +20253,289 @@
       {
         "ratio": 10000,
         "cooldown": 0,
-        "conditions": [{ "type": "npc_grade_equal", "actor": "target", "arg": 9 }],
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 40385801 }
+        ],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [300, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 40392201 }
+        ],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [300, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 40385803 }
+        ],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [300, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 40392202 }
+        ],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [300, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 40392203 }
+        ],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [300, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 40392204 }
+        ],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [300, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 40451301 }
+        ],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [300, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 40451302 }
+        ],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [300, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 40451303 }
+        ],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [300, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 40392205 }
+        ],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [300, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 40392206 }
+        ],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [300, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 40392207 }
+        ],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [300, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 40385804 }
+        ],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [300, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 40451304 }
+        ],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [300, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 40451305 }
+        ],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [300, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 40543201 }
+        ],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [300, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 40385805 }
+        ],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [300, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 633140 }
+        ],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [300, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 633141 }
+        ],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [300, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 634000 }
+        ],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [300, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 634072 }
+        ],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [300, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 634010 }
+        ],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [300, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 634020 }
+        ],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [300, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 625140 }
+        ],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [300, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 625141 }
+        ],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [300, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 625180 }
+        ],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [300, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 625181 }
+        ],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [300, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 156101 }
+        ],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [300, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 990168 }
+        ],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [300, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 990198 }
+        ],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [300, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 990355 }
+        ],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [300, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 46697 }
+        ],
         "actions": [{ "type": "modify_damage", "actor": "target", "args": [300, 0, 0, 0, 0, 0] }]
       }
     ]
@@ -19694,7 +20568,289 @@
       {
         "ratio": 10000,
         "cooldown": 0,
-        "conditions": [{ "type": "npc_grade_equal", "actor": "target", "arg": 9 }],
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 40385801 }
+        ],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 40392201 }
+        ],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 40385803 }
+        ],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 40392202 }
+        ],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 40392203 }
+        ],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 40392204 }
+        ],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 40451301 }
+        ],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 40451302 }
+        ],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 40451303 }
+        ],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 40392205 }
+        ],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 40392206 }
+        ],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 40392207 }
+        ],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 40385804 }
+        ],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 40451304 }
+        ],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 40451305 }
+        ],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 40543201 }
+        ],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 40385805 }
+        ],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 633140 }
+        ],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 633141 }
+        ],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 634000 }
+        ],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 634072 }
+        ],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 634010 }
+        ],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 634020 }
+        ],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 625140 }
+        ],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 625141 }
+        ],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 625180 }
+        ],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 625181 }
+        ],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 156101 }
+        ],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 990168 }
+        ],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 990198 }
+        ],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 990355 }
+        ],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 46697 }
+        ],
         "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
       }
     ]
@@ -19705,7 +20861,289 @@
       {
         "ratio": 10000,
         "cooldown": 0,
-        "conditions": [{ "type": "npc_grade_equal", "actor": "target", "arg": 9 }],
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 40385801 }
+        ],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 40392201 }
+        ],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 40385803 }
+        ],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 40392202 }
+        ],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 40392203 }
+        ],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 40392204 }
+        ],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 40451301 }
+        ],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 40451302 }
+        ],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 40451303 }
+        ],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 40392205 }
+        ],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 40392206 }
+        ],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 40392207 }
+        ],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 40385804 }
+        ],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 40451304 }
+        ],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 40451305 }
+        ],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 40543201 }
+        ],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 40385805 }
+        ],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 633140 }
+        ],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 633141 }
+        ],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 634000 }
+        ],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 634072 }
+        ],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 634010 }
+        ],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 634020 }
+        ],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 625140 }
+        ],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 625141 }
+        ],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 625180 }
+        ],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 625181 }
+        ],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 156101 }
+        ],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 990168 }
+        ],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 990198 }
+        ],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 990355 }
+        ],
+        "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "npc_grade_equal", "actor": "target", "arg": 9 },
+          { "type": "npc_id", "actor": "target", "arg": 46697 }
+        ],
         "actions": [{ "type": "modify_reactive_damage", "actor": "self", "args": [-500, 0, 0, 0, 0, 0] }]
       }
     ]
@@ -23916,7 +25354,7 @@
       {
         "ratio": 10000,
         "cooldown": 0,
-        "conditions": [],
+        "conditions": [{ "type": "npc_grade_greater", "actor": "target", "arg": 1 }],
         "actions": [{ "type": "modify_damage_shield_multiplier", "actor": "target", "args": [70000, 0, 0, 0, 0, 0] }]
       }
     ]
@@ -25987,6 +27425,183 @@
       }
     ]
   },
+  "426899954": {
+    "id": 426899954,
+    "effects": [
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [
+          { "type": "pc", "actor": "self", "arg": 0 },
+          { "type": "current_skill_group", "actor": "self", "arg": 991100 }
+        ],
+        "actions": [{ "type": "exec_after_skill", "actor": "self", "args": [426891935, 0, 0, 0, 0, 0] }]
+      }
+    ]
+  },
+  "427261201": {
+    "id": 427261201,
+    "effects": [
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [{ "type": "pc", "actor": "target", "arg": 0 }],
+        "actions": [{ "type": "exec_after_effect", "actor": "target", "args": [427261207, 0, 0, 0, 0, 0] }]
+      }
+    ]
+  },
+  "427261202": {
+    "id": 427261202,
+    "effects": [
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [{ "type": "pc", "actor": "target", "arg": 0 }],
+        "actions": [{ "type": "exec_after_effect", "actor": "target", "args": [427261208, 0, 0, 0, 0, 0] }]
+      }
+    ]
+  },
+  "427261203": {
+    "id": 427261203,
+    "effects": [
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [{ "type": "pc", "actor": "target", "arg": 0 }],
+        "actions": [{ "type": "exec_after_effect", "actor": "target", "args": [427261209, 0, 0, 0, 0, 0] }]
+      }
+    ]
+  },
+  "427261271": {
+    "id": 427261271,
+    "effects": [
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [{ "type": "pc", "actor": "target", "arg": 0 }],
+        "actions": [{ "type": "exec_after_effect", "actor": "target", "args": [427261275, 0, 0, 0, 0, 0] }]
+      }
+    ]
+  },
+  "427261272": {
+    "id": 427261272,
+    "effects": [
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [{ "type": "pc", "actor": "target", "arg": 0 }],
+        "actions": [{ "type": "exec_after_effect", "actor": "target", "args": [427261276, 0, 0, 0, 0, 0] }]
+      }
+    ]
+  },
+  "427261273": {
+    "id": 427261273,
+    "effects": [
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [{ "type": "pc", "actor": "target", "arg": 0 }],
+        "actions": [{ "type": "exec_after_effect", "actor": "target", "args": [427261277, 0, 0, 0, 0, 0] }]
+      }
+    ]
+  },
+  "427261274": {
+    "id": 427261274,
+    "effects": [
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [{ "type": "pc", "actor": "target", "arg": 0 }],
+        "actions": [{ "type": "exec_after_effect", "actor": "target", "args": [427261278, 0, 0, 0, 0, 0] }]
+      }
+    ]
+  },
+  "427261109": {
+    "id": 427261109,
+    "effects": [
+      {
+        "ratio": 10000,
+        "cooldown": 5000,
+        "conditions": [{ "type": "npc_id", "actor": "target", "arg": 620500 }],
+        "actions": [{ "type": "exec_active_effect_when_damage", "actor": "caster", "args": [427261109, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 5000,
+        "conditions": [{ "type": "npc_id", "actor": "target", "arg": 620501 }],
+        "actions": [{ "type": "exec_active_effect_when_damage", "actor": "caster", "args": [427261109, 0, 0, 0, 0, 0] }]
+      }
+    ]
+  },
+  "539590610": {
+    "id": 539590610,
+    "effects": [
+      {
+        "ratio": 10000,
+        "cooldown": 3000,
+        "conditions": [{ "type": "npc_id", "actor": "target", "arg": 620502 }],
+        "actions": [{ "type": "exec_active_effect_when_damage", "actor": "caster", "args": [539590610, 0, 0, 0, 0, 0] }]
+      }
+    ]
+  },
+  "44457019": {
+    "id": 44457019,
+    "effects": [
+      {
+        "ratio": 10000,
+        "cooldown": 3000,
+        "conditions": [{ "type": "npc_id", "actor": "target", "arg": 620502 }],
+        "actions": [{ "type": "exec_active_effect_when_damage", "actor": "caster", "args": [44457019, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 3000,
+        "conditions": [{ "type": "npc_id", "actor": "target", "arg": 620503 }],
+        "actions": [{ "type": "exec_active_effect_when_damage", "actor": "caster", "args": [44457019, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 3000,
+        "conditions": [{ "type": "npc_id", "actor": "target", "arg": 620504 }],
+        "actions": [{ "type": "exec_active_effect_when_damage", "actor": "caster", "args": [44457019, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 3000,
+        "conditions": [{ "type": "npc_id", "actor": "target", "arg": 620505 }],
+        "actions": [{ "type": "exec_active_effect_when_damage", "actor": "caster", "args": [44457019, 0, 0, 0, 0, 0] }]
+      }
+    ]
+  },
+  "44457021": {
+    "id": 44457021,
+    "effects": [
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [{ "type": "npc_id", "actor": "target", "arg": 620502 }],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [-9000, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [{ "type": "npc_id", "actor": "target", "arg": 620503 }],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [-9000, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [{ "type": "npc_id", "actor": "target", "arg": 620504 }],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [-9000, 0, 0, 0, 0, 0] }]
+      },
+      {
+        "ratio": 10000,
+        "cooldown": 0,
+        "conditions": [{ "type": "npc_id", "actor": "target", "arg": 620505 }],
+        "actions": [{ "type": "modify_damage", "actor": "target", "args": [-9000, 0, 0, 0, 0, 0] }]
+      }
+    ]
+  },
   "260400": {
     "id": 260400,
     "effects": [
@@ -26705,7 +28320,7 @@
         "ratio": 10000,
         "cooldown": 0,
         "conditions": [],
-        "actions": [{ "type": "exec_after_skill", "actor": "self", "args": [70000050, 0, 0, 0, 0, 0] }]
+        "actions": [{ "type": "exec_after_skill", "actor": "caster", "args": [70000050, 0, 0, 0, 0, 0] }]
       }
     ]
   },
@@ -26716,7 +28331,7 @@
         "ratio": 10000,
         "cooldown": 0,
         "conditions": [],
-        "actions": [{ "type": "exec_after_skill", "actor": "self", "args": [70000051, 0, 0, 0, 0, 0] }]
+        "actions": [{ "type": "exec_after_skill", "actor": "caster", "args": [70000051, 0, 0, 0, 0, 0] }]
       }
     ]
   },
@@ -26727,7 +28342,7 @@
         "ratio": 10000,
         "cooldown": 0,
         "conditions": [],
-        "actions": [{ "type": "exec_after_skill", "actor": "self", "args": [70000052, 0, 0, 0, 0, 0] }]
+        "actions": [{ "type": "exec_after_skill", "actor": "caster", "args": [70000052, 0, 0, 0, 0, 0] }]
       }
     ]
   },
@@ -26738,7 +28353,7 @@
         "ratio": 10000,
         "cooldown": 0,
         "conditions": [],
-        "actions": [{ "type": "exec_after_skill", "actor": "self", "args": [70000053, 0, 0, 0, 0, 0] }]
+        "actions": [{ "type": "exec_after_skill", "actor": "caster", "args": [70000053, 0, 0, 0, 0, 0] }]
       }
     ]
   },
@@ -26749,7 +28364,7 @@
         "ratio": 10000,
         "cooldown": 0,
         "conditions": [],
-        "actions": [{ "type": "exec_after_skill", "actor": "self", "args": [70000054, 0, 0, 0, 0, 0] }]
+        "actions": [{ "type": "exec_after_skill", "actor": "caster", "args": [70000054, 0, 0, 0, 0, 0] }]
       }
     ]
   },
@@ -26760,7 +28375,7 @@
         "ratio": 2000,
         "cooldown": 0,
         "conditions": [],
-        "actions": [{ "type": "exec_after_skill", "actor": "self", "args": [70000100, 0, 0, 0, 0, 0] }]
+        "actions": [{ "type": "exec_after_skill", "actor": "caster", "args": [70000100, 0, 0, 0, 0, 0] }]
       }
     ]
   },
@@ -26771,7 +28386,7 @@
         "ratio": 2000,
         "cooldown": 0,
         "conditions": [],
-        "actions": [{ "type": "exec_after_skill", "actor": "self", "args": [70000101, 0, 0, 0, 0, 0] }]
+        "actions": [{ "type": "exec_after_skill", "actor": "caster", "args": [70000101, 0, 0, 0, 0, 0] }]
       }
     ]
   },
@@ -26782,7 +28397,7 @@
         "ratio": 2000,
         "cooldown": 0,
         "conditions": [],
-        "actions": [{ "type": "exec_after_skill", "actor": "self", "args": [70000102, 0, 0, 0, 0, 0] }]
+        "actions": [{ "type": "exec_after_skill", "actor": "caster", "args": [70000102, 0, 0, 0, 0, 0] }]
       }
     ]
   },
@@ -26793,7 +28408,7 @@
         "ratio": 2000,
         "cooldown": 0,
         "conditions": [],
-        "actions": [{ "type": "exec_after_skill", "actor": "self", "args": [70000103, 0, 0, 0, 0, 0] }]
+        "actions": [{ "type": "exec_after_skill", "actor": "caster", "args": [70000103, 0, 0, 0, 0, 0] }]
       }
     ]
   },
@@ -26804,7 +28419,7 @@
         "ratio": 2000,
         "cooldown": 0,
         "conditions": [],
-        "actions": [{ "type": "exec_after_skill", "actor": "self", "args": [70000104, 0, 0, 0, 0, 0] }]
+        "actions": [{ "type": "exec_after_skill", "actor": "caster", "args": [70000104, 0, 0, 0, 0, 0] }]
       }
     ]
   },
@@ -43666,7 +45281,7 @@
         "conditions": [{ "type": "npc_grade_greater", "actor": "target", "arg": 6 }],
         "actions": [
           { "type": "exec_active_effect_when_damage", "actor": "target", "args": [607016220, 1, 0, 0, 1, 0] },
-          { "type": "exec_active_effect_when_damage", "actor": "self", "args": [0, 0, 607016224, 1, 0, 0] }
+          { "type": "exec_active_effect_when_damage", "actor": "caster", "args": [607016242, 1, 607016224, 1, 0, 0] }
         ]
       }
     ]
@@ -43713,7 +45328,7 @@
         "conditions": [{ "type": "npc_grade_greater", "actor": "target", "arg": 6 }],
         "actions": [
           { "type": "exec_active_effect_when_damage", "actor": "target", "args": [607016230, 1, 0, 0, 1, 0] },
-          { "type": "exec_active_effect_when_damage", "actor": "self", "args": [0, 0, 607016224, 1, 0, 0] }
+          { "type": "exec_active_effect_when_damage", "actor": "caster", "args": [607016242, 1, 607016224, 1, 0, 0] }
         ]
       }
     ]
@@ -43760,7 +45375,7 @@
         "conditions": [{ "type": "npc_grade_greater", "actor": "target", "arg": 6 }],
         "actions": [
           { "type": "exec_active_effect_when_damage", "actor": "target", "args": [607016240, 1, 607016241, 1, 1, 0] },
-          { "type": "exec_active_effect_when_damage", "actor": "self", "args": [0, 0, 607016224, 1, 0, 0] }
+          { "type": "exec_active_effect_when_damage", "actor": "caster", "args": [607016242, 1, 607016224, 1, 0, 0] }
         ]
       }
     ]

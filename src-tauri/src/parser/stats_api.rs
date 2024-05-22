@@ -211,7 +211,7 @@ impl StatsApi {
 
     fn valid_difficulty(&self, difficulty: &str) -> bool {
         self.valid_zone
-            && (difficulty == "Normal" || difficulty == "Hard" || difficulty == "The First")
+            && (difficulty == "Normal" || difficulty == "Hard" || difficulty == "The First" || difficulty == "Trial")
     }
 
     pub fn broadcast(&mut self, message: &str) {
