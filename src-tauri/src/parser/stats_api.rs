@@ -76,11 +76,13 @@ impl StatsApi {
         };
 
         if region.is_empty() {
-            debug_print(format_args!("region is not set"));
+            warn!("region is not set");
             self.broadcast("missing_info");
             return;
         }
 
+        self.status_message = "".to_string();
+        self.valid_stats = None;
         let player_hash = if let Some(hash) = self.get_hash(player) {
             if let Some(cached) = self.request_cache.get(&hash) {
                 self.stats_cache.insert(player.name.clone(), cached.clone());
@@ -97,16 +99,14 @@ impl StatsApi {
                 return;
             }
         } else {
-            debug_print(format_args!(
+            warn!(
                 "missing info for {:?}, could not generate hash",
                 player
-            ));
+            );
             self.broadcast("missing_info");
             return;
         };
 
-        self.status_message = "".to_string();
-        self.valid_stats = None;
         self.request(region, player_hash);
     }
 
