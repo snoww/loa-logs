@@ -1,11 +1,11 @@
 {
-    "version": "v1.10.2",
-    "notes": "### v1.10.2\n#### BUG FIXES\n- fix azena icon showing as inanna\n- minor fix to region detection\n\n### v1.10.1\n#### NEW FEATURES\n- updated meter for trial hanumatan patch\n#### BUG FIXES AND IMPROVEMENTS\n- more improvements to rdps reliability\n  - improved region detection for players that plays on multiple regions\n  - fix cases where a single person's rdps was incorrectly calculated\n  - fix cases where rdps will become inaccurate if players afk for too long (taking break between pulls)\n- show ip address of network interfaces when _automatic network selection_ is disabled\n- fix dead column still showing when players has respawned\n\nfull patch notes on [github](https://github.com/snoww/loa-logs/releases/latest)\n\nsend bug reports/suggestions to [#loa-logs](https://discord.gg/sbSa3pkDF5)",
-    "pub_date": "2024-05-22T22:41:03.593Z",
+    "version": "v1.10.3",
+    "notes": "### v1.10.3\n#### BUG FIXES\n- fix meter not tracking in trial hanumatan\n\nfull patch notes on [github](https://github.com/snoww/loa-logs/releases/latest)\n\nsend bug reports/suggestions to [#loa-logs](https://discord.gg/sbSa3pkDF5)",
+    "pub_date": "2024-05-25T22:05:07.126Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.10.2/LOA.Logs_1.10.2_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlZOUVoxa081V0ZPcG94NnZ5dzU4Rm9qUHVQQlhGL0hCU2M5UWhFMWU2enRrQ0hhOFBzcllscTN1OG9iaWtaeW5mTTMzSU1jbVliZWhwUTBJdE53cWdnPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzE2NDE5NTg3CWZpbGU6TE9BIExvZ3NfMS4xMC4yX3g2NC1zZXR1cC5uc2lzLnppcApxbEdFZG5wNVpqUUVodVRBWGJlcmc3VlJKQy80N2kyN0JpSldNUUVGdjMzTUhQRE5sZDRSMEF6dUkxMFdWTnVKaTNBakpmaW1ncHVHaXMvMFNyM1NEdz09Cg=="
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.10.3/LOA.Logs_1.10.3_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmVxL25kZHEyRVBEWUdoMzJFempkcjBIbVI5anZrMFdaK2p3ZTdlWFh2c05ud0VwcWZ6akx1Q0Z1QTRJbktLZ2NBOHExYTZSUUhJZGNWS2tPK3BjZ0FnPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzE2Njc0NzI0CWZpbGU6TE9BIExvZ3NfMS4xMC4zX3g2NC1zZXR1cC5uc2lzLnppcApoVkR6Snp4cmpRcjBYNjRWZm5YZDB2Q1Q4UEp2TmNuZFZKWWYydGVTalFUR0ZjMDNQRWtuQkJYODd5N0lYVzdvL3U3VXFralZZRVFocHZ2OHVxb1RCQT09Cg=="
         }
     }
 }
