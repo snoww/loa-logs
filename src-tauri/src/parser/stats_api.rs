@@ -80,6 +80,11 @@ impl StatsApi {
             self.broadcast("missing_info");
             return;
         }
+        
+        if player.entity_type != EntityType::PLAYER {
+            debug_print(format_args!("invalid entity type: {:?}", player));
+            return;
+        }
 
         self.status_message = "".to_string();
         self.valid_stats = None;
@@ -106,7 +111,7 @@ impl StatsApi {
             self.broadcast("missing_info");
             return;
         };
-
+        
         self.request(region, player_hash);
     }
 
@@ -199,15 +204,17 @@ impl StatsApi {
                 .filter(|(_, e)| e.entity_type == EntityType::PLAYER)
                 .all(|(name, _)| self.stats_cache.contains_key(name));
 
-            if valid || raid_duration >= 15_000 {
-                self.valid_stats = Some(valid);
+            if !valid && raid_duration >= 15_000 {
+                self.valid_stats = Some(false);
+            } else if valid {
+                self.valid_stats = Some(true);
             }
         }
 
         if !self.valid_stats.unwrap_or(false) {
             let now = Utc::now();
             let duration = now.signed_duration_since(self.last_broadcast).num_seconds();
-            if self.valid_stats.is_some() && duration >= 10 {
+            if duration >= 10 {
                 self.broadcast("invalid_stats");
                 self.last_broadcast = now;
             }
