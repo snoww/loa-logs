@@ -3981,13 +3981,9 @@
   "620280": { "id": 620280, "name": "Hanumatan", "grade": "raid", "type": "monster", "pushimmune": true },
   "620281": { "id": 620281, "name": "Hanumatan", "grade": "raid", "type": "monster", "pushimmune": true },
   "620282": { "id": 620282, "name": "Yin Yang Protection", "grade": "normal", "type": "monster", "pushimmune": true },
-  "620286": {
-    "id": 620286,
-    "name": "하누마탄_음양보호막_투명몬스터",
-    "grade": "normal",
-    "type": "monster",
-    "pushimmune": true
-  },
+  "620285": { "id": 620285, "name": "Hanumatan", "grade": "raid", "type": "monster", "pushimmune": true },
+  "620286": { "id": 620286, "name": "", "grade": "normal", "type": "monster", "pushimmune": true },
+  "620287": { "id": 620287, "name": "Hanumatan", "grade": "raid", "type": "monster", "pushimmune": true },
   "620290": { "id": 620290, "name": "Kungelanium", "grade": "raid", "type": "monster", "pushimmune": true },
   "620291": { "id": 620291, "name": "Ice Rift", "grade": "normal", "type": "monster", "pushimmune": true },
   "620292": { "id": 620292, "name": "Ice Pillar", "grade": "underling", "type": "monster" },
@@ -4125,13 +4121,7 @@
   "480514": { "id": 480514, "name": "Dark Greatsword", "grade": "boss", "type": "monster", "pushimmune": true },
   "480515": { "id": 480515, "name": "Shadow Ghost", "grade": "seed", "type": "monster", "pushimmune": true },
   "480516": { "id": 480516, "name": "Dark Greatsword", "grade": "boss", "type": "monster", "pushimmune": true },
-  "480517": {
-    "id": 480517,
-    "name": "어둠 군단장 카멘_테스트용도",
-    "grade": "commander",
-    "type": "monster",
-    "pushimmune": true
-  },
+  "480517": { "id": 480517, "name": "", "grade": "commander", "type": "monster", "pushimmune": true },
   "480518": {
     "id": 480518,
     "name": "Thaemine the Lightqueller",
