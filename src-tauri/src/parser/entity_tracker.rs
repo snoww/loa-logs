@@ -369,6 +369,7 @@ impl EntityTracker {
                         "unknown local player, inferring from cache: {}",
                         member.name
                     );
+                    local_player.entity_type = PLAYER;
                     local_player.class_id = member.class_id as u32;
                     local_player.gear_level = truncate_gear_level(member.gear_level);
                     local_player.name = member.name.clone();

@@ -60,6 +60,11 @@ impl StatsApi {
     }
 
     pub fn sync(&mut self, player: &Entity, state: &EncounterState) {
+        if state.encounter.last_combat_packet - state.encounter.fight_start > 5_000 {
+            debug_print(format_args!("fight in progress, ignoring sync"));
+            return;
+        }
+        
         if !self.valid_difficulty(&state.raid_difficulty) {
             self.broadcast("invalid_zone");
             return;
@@ -82,7 +87,7 @@ impl StatsApi {
         }
         
         if player.entity_type != EntityType::PLAYER {
-            debug_print(format_args!("invalid entity type: {:?}", player));
+            warn!("invalid entity type: {:?}", player);
             return;
         }
 
@@ -90,6 +95,7 @@ impl StatsApi {
         self.valid_stats = None;
         let player_hash = if let Some(hash) = self.get_hash(player) {
             if let Some(cached) = self.request_cache.get(&hash) {
+                debug_print(format_args!("using cached stats for {:?}", player));
                 self.stats_cache.insert(player.name.clone(), cached.clone());
                 return;
             } else if !self.inflight_cache.contains_key(&hash) {
@@ -145,8 +151,7 @@ impl StatsApi {
     }
 
     pub fn get_hash(&self, player: &Entity) -> Option<String> {
-        if player.items.equip_list.is_none()
-            || player.gear_level < 0.0
+        if player.gear_level < 0.0
             || player.character_id == 0
             || player.class_id == 0
             || player.name == "You"
@@ -171,6 +176,7 @@ impl StatsApi {
         }
 
         if equip_data[..26].iter().all(|&x| x == 0) {
+            warn!("missing equipment data for {:?}", player);
             return Some("".to_string());
         }
 
