@@ -416,7 +416,8 @@ pub fn get_status_effect_value(value: &Option<Vec<u8>>) -> u64 {
         let c2 = v
             .get(8..16)
             .map_or(0, |bytes| u64::from_le_bytes(bytes.try_into().unwrap()));
-        c1.min(c2)
+
+        c1.max(c2)
     })
 }
 
