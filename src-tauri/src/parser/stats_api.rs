@@ -17,11 +17,11 @@ use std::sync::Arc;
 use std::time::Duration;
 use tauri::{Manager, Window, Wry};
 
-const API_URL: &str = "https://inspect.fau.dev/query";
+pub const API_URL: &str = "https://inspect.fau.dev";
 
 pub struct StatsApi {
     pub client_id: String,
-    client: Arc<Client>,
+    client: Client,
     window: Arc<Window<Wry>>,
     pub valid_zone: bool,
     valid_stats: Option<bool>,
@@ -31,8 +31,12 @@ pub struct StatsApi {
     cancel_queue: Cache<String, String>,
     pub status_message: String,
     last_broadcast: DateTime<Utc>,
-    
+
     region_file_path: String,
+
+    pub region: String,
+    pub raid_id: u32,
+    pub raid_info_sent: bool,
 }
 
 impl StatsApi {
@@ -40,7 +44,7 @@ impl StatsApi {
         Self {
             client_id: String::new(),
             window: Arc::new(window),
-            client: Arc::new(Client::new()),
+            client: Client::new(),
             valid_zone: false,
             valid_stats: None,
             stats_cache: Cache::builder().max_capacity(32).build(),
@@ -56,6 +60,10 @@ impl StatsApi {
             status_message: "".to_string(),
             last_broadcast: Utc::now(),
             region_file_path,
+
+            region: "".to_string(),
+            raid_id: 0,
+            raid_info_sent: false,
         }
     }
 
@@ -64,7 +72,7 @@ impl StatsApi {
             debug_print(format_args!("fight in progress, ignoring sync"));
             return;
         }
-        
+
         if !self.valid_difficulty(&state.raid_difficulty) {
             self.broadcast("invalid_zone");
             return;
@@ -72,12 +80,10 @@ impl StatsApi {
 
         let region = match state.region.as_ref() {
             Some(region) => region.clone(),
-            None => {
-                std::fs::read_to_string(&self.region_file_path).unwrap_or_else(|e| {
-                    warn!("failed to read region file. {}", e);
-                    "".to_string()
-                })
-            },
+            None => std::fs::read_to_string(&self.region_file_path).unwrap_or_else(|e| {
+                warn!("failed to read region file. {}", e);
+                "".to_string()
+            }),
         };
 
         if region.is_empty() {
@@ -85,7 +91,9 @@ impl StatsApi {
             self.broadcast("missing_info");
             return;
         }
-        
+
+        self.region = region.clone();
+
         if player.entity_type != EntityType::PLAYER {
             warn!("invalid entity type: {:?}", player);
             return;
@@ -110,19 +118,17 @@ impl StatsApi {
                 return;
             }
         } else {
-            warn!(
-                "missing info for {:?}, could not generate hash",
-                player
-            );
+            warn!("missing info for {:?}, could not generate hash", player);
             self.broadcast("missing_info");
             return;
         };
-        
+
+        self.raid_info_sent = false;
         self.request(region, player_hash);
     }
 
     fn request(&mut self, region: String, player: PlayerHash) {
-        let client_clone = Arc::clone(&self.client);
+        let client_clone = self.client.clone();
         let client_id_clone = self.client_id.clone();
 
         let stats_cache = self.stats_cache.clone();
@@ -232,7 +238,10 @@ impl StatsApi {
 
     fn valid_difficulty(&self, difficulty: &str) -> bool {
         self.valid_zone
-            && (difficulty == "Normal" || difficulty == "Hard" || difficulty == "The First" || difficulty == "Trial")
+            && (difficulty == "Normal"
+                || difficulty == "Hard"
+                || difficulty == "The First"
+                || difficulty == "Trial")
     }
 
     pub fn broadcast(&mut self, message: &str) {
@@ -240,6 +249,59 @@ impl StatsApi {
         self.window
             .emit("rdps", message)
             .expect("failed to emit rdps message");
+    }
+
+    pub fn send_raid_info(&mut self, state: &EncounterState) {
+        if !self.valid_difficulty(&state.raid_difficulty)
+            || self.region.is_empty()
+            || self.raid_id == 0
+        {
+            debug_print(format_args!("invalid zone or missing region"));
+            return;
+        }
+
+        let players: Vec<String> = state
+            .encounter
+            .entities
+            .iter()
+            .filter_map(|(_, e)| {
+                if e.entity_type == EntityType::PLAYER {
+                    Some(e.name.clone())
+                } else {
+                    None
+                }
+            })
+            .collect();
+
+        let client = self.client.clone();
+        let client_id = self.client_id.clone();
+        let version = self.window.app_handle().package_info().version.to_string();
+        let region = self.region.clone();
+
+        self.raid_info_sent = true;
+
+        tokio::task::spawn(async move {
+            let request_body = json!({
+                "id": client_id,
+                "version": version,
+                "region": region,
+                "characters": players,
+            });
+
+            match client
+                .post(format!("{API_URL}/raid"))
+                .json(&request_body)
+                .send()
+                .await
+            {
+                Ok(_) => {
+                    debug_print(format_args!("sent raid info"));
+                }
+                Err(e) => {
+                    warn!("failed to send raid info: {:?}", e);
+                }
+            }
+        });
     }
 }
 
@@ -280,7 +342,12 @@ async fn make_request(
     // debug_print(format_args!("{:?}", players));
     // println!("{:?}", request_body);
 
-    match client.post(API_URL).json(&request_body).send().await {
+    match client
+        .post(format!("{API_URL}/query"))
+        .json(&request_body)
+        .send()
+        .await
+    {
         Ok(response) => match response.json::<HashMap<String, PlayerStats>>().await {
             Ok(data) => {
                 if data.contains_key(&player.name) {

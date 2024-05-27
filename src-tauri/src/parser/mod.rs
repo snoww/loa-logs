@@ -13,7 +13,7 @@ use crate::parser::entity_tracker::{get_current_and_max_hp, EntityTracker};
 use crate::parser::id_tracker::IdTracker;
 use crate::parser::models::{DamageData, EntityType, Identity, Stagger, VALID_ZONES};
 use crate::parser::party_tracker::PartyTracker;
-use crate::parser::stats_api::StatsApi;
+use crate::parser::stats_api::{StatsApi, API_URL};
 use crate::parser::status_tracker::{
     get_status_effect_value, StatusEffectDetails, StatusEffectTargetType, StatusEffectType,
     StatusTracker,
@@ -26,6 +26,8 @@ use log::{info, warn};
 use meter_core::packets::definitions::*;
 use meter_core::packets::opcodes::Pkt;
 use meter_core::{start_capture, start_raw_capture};
+use reqwest::Client;
+use serde_json::json;
 use std::cell::RefCell;
 use std::collections::BTreeMap;
 use std::path::PathBuf;
@@ -91,6 +93,10 @@ pub fn start(
     let party_duration = Duration::from_millis(2000);
     let mut raid_end_cd: Instant = Instant::now();
 
+    let client = Client::new();
+    let mut last_hearbeat = Instant::now();
+    let heartbeat_duration = Duration::from_secs(60 * 5);
+
     let reset = Arc::new(AtomicBool::new(false));
     let pause = Arc::new(AtomicBool::new(false));
     let save = Arc::new(AtomicBool::new(false));
@@ -110,7 +116,7 @@ pub fn start(
     // this info is used in case meter was opened late
     let mut local_players: HashMap<u64, String> = HashMap::new();
     let mut local_player_path = window.app_handle().path_resolver().resource_dir().unwrap();
-    let mut client_id: String;
+    let mut client_id = "".to_string();
     local_player_path.push("local_players.json");
 
     if local_player_path.exists() {
@@ -519,6 +525,9 @@ pub fn start(
                     }
 
                     stats_api.valid_zone = VALID_ZONES.contains(&pkt.raid_id);
+                    if stats_api.valid_zone {
+                        stats_api.raid_id = pkt.raid_id;
+                    }
                 }
             }
             Pkt::RaidBossKillNotify => {
@@ -614,6 +623,9 @@ pub fn start(
                         .get_local_character_id(entity_tracker.local_entity_id);
                     let target_count = pkt.skill_damage_abnormal_move_events.len() as i32;
                     let duration = if state.encounter.fight_start > 0 {
+                        if !stats_api.raid_info_sent {
+                            stats_api.send_raid_info(&state);
+                        }
                         now - state.encounter.fight_start
                     } else {
                         0
@@ -668,6 +680,9 @@ pub fn start(
                         .get_local_character_id(entity_tracker.local_entity_id);
                     let target_count = pkt.skill_damage_events.len() as i32;
                     let duration = if state.encounter.fight_start > 0 {
+                        if !stats_api.raid_info_sent {
+                            stats_api.send_raid_info(&state);
+                        }
                         now - state.encounter.fight_start
                     } else {
                         0
@@ -844,7 +859,11 @@ pub fn start(
                     PKTZoneMemberLoadStatusNotify::new,
                     "PKTZoneMemberLoadStatusNotify",
                 ) {
+                    debug_print(format_args!("raid zone id: {}", &pkt.zone_id));
                     stats_api.valid_zone = VALID_ZONES.contains(&pkt.zone_id);
+                    if stats_api.valid_zone {
+                        stats_api.raid_id = pkt.zone_id;
+                    }
 
                     if !state.raid_difficulty.is_empty() {
                         continue;
@@ -1038,6 +1057,38 @@ pub fn start(
             party_freeze = false;
             party_cache = None;
             party_map_cache = HashMap::new();
+        }
+
+        if last_hearbeat.elapsed() >= heartbeat_duration {
+            let client = client.clone();
+            let client_id = client_id.clone();
+            let version = window.app_handle().package_info().version.to_string();
+            let region = match state.region {
+                Some(ref region) => region.clone(),
+                None => continue,
+            };
+            tokio::task::spawn(async move {
+                let request_body = json!({
+                    "id": client_id,
+                    "version": version,
+                    "region": region,
+                });
+
+                match client
+                    .post(format!("{API_URL}/heartbeat"))
+                    .json(&request_body)
+                    .send()
+                    .await
+                {
+                    Ok(_) => {
+                        debug_print(format_args!("sent heartbeat"));
+                    }
+                    Err(e) => {
+                        warn!("failed to send heartbeat: {:?}", e);
+                    }
+                }
+            });
+            last_hearbeat = Instant::now();
         }
     }
 
