@@ -3,7 +3,6 @@ use crate::parser::encounter_state::EncounterState;
 use crate::parser::entity_tracker::Entity;
 use crate::parser::models::EntityType;
 use async_recursion::async_recursion;
-use chrono::{DateTime, Utc};
 use hashbrown::HashMap;
 use log::warn;
 use md5::compute;
@@ -24,18 +23,14 @@ pub struct StatsApi {
     client: Client,
     window: Arc<Window<Wry>>,
     pub valid_zone: bool,
-    valid_stats: Option<bool>,
     stats_cache: Cache<String, PlayerStats>,
     request_cache: Cache<String, PlayerStats>,
     inflight_cache: Cache<String, u8>,
     cancel_queue: Cache<String, String>,
-    pub status_message: String,
-    last_broadcast: DateTime<Utc>,
 
     region_file_path: String,
 
     pub region: String,
-    pub raid_id: u32,
     pub raid_info_sent: bool,
 }
 
@@ -46,7 +41,6 @@ impl StatsApi {
             window: Arc::new(window),
             client: Client::new(),
             valid_zone: false,
-            valid_stats: None,
             stats_cache: Cache::builder().max_capacity(32).build(),
             request_cache: Cache::builder().max_capacity(64).build(),
             inflight_cache: Cache::builder()
@@ -57,18 +51,17 @@ impl StatsApi {
                 .max_capacity(16)
                 .time_to_live(Duration::from_secs(30))
                 .build(),
-            status_message: "".to_string(),
-            last_broadcast: Utc::now(),
             region_file_path,
 
             region: "".to_string(),
-            raid_id: 0,
             raid_info_sent: false,
         }
     }
 
     pub fn sync(&mut self, player: &Entity, state: &EncounterState) {
-        if state.encounter.last_combat_packet - state.encounter.fight_start > 5_000 {
+        if state.encounter.fight_start > 0
+            && state.encounter.last_combat_packet - state.encounter.fight_start > 1_000
+        {
             debug_print(format_args!("fight in progress, ignoring sync"));
             return;
         }
@@ -99,11 +92,9 @@ impl StatsApi {
             return;
         }
 
-        self.status_message = "".to_string();
-        self.valid_stats = None;
         let player_hash = if let Some(hash) = self.get_hash(player) {
             if let Some(cached) = self.request_cache.get(&hash) {
-                debug_print(format_args!("using cached stats for {:?}", player));
+                debug_print(format_args!("using cached stats for {:?}", player.name));
                 self.stats_cache.insert(player.name.clone(), cached.clone());
                 return;
             } else if !self.inflight_cache.contains_key(&hash) {
@@ -123,7 +114,6 @@ impl StatsApi {
             return;
         };
 
-        self.raid_info_sent = false;
         self.request(region, player_hash);
     }
 
@@ -199,37 +189,8 @@ impl StatsApi {
         Some(format!("{:x}", compute(data)))
     }
 
-    pub fn get_stats(
-        &mut self,
-        state: &EncounterState,
-        raid_duration: i64,
-    ) -> Option<Cache<String, PlayerStats>> {
+    pub fn get_stats(&mut self, state: &EncounterState) -> Option<Cache<String, PlayerStats>> {
         if !self.valid_difficulty(&state.raid_difficulty) {
-            return None;
-        }
-
-        if self.valid_stats.is_none() {
-            let valid = state
-                .encounter
-                .entities
-                .iter()
-                .filter(|(_, e)| e.entity_type == EntityType::PLAYER)
-                .all(|(name, _)| self.stats_cache.contains_key(name));
-
-            if !valid && raid_duration >= 15_000 {
-                self.valid_stats = Some(false);
-            } else if valid {
-                self.valid_stats = Some(true);
-            }
-        }
-
-        if !self.valid_stats.unwrap_or(false) {
-            let now = Utc::now();
-            let duration = now.signed_duration_since(self.last_broadcast).num_seconds();
-            if duration >= 10 {
-                self.broadcast("invalid_stats");
-                self.last_broadcast = now;
-            }
             return None;
         }
 
@@ -245,28 +206,29 @@ impl StatsApi {
     }
 
     pub fn broadcast(&mut self, message: &str) {
-        self.status_message = message.to_string();
         self.window
             .emit("rdps", message)
             .expect("failed to emit rdps message");
     }
 
     pub fn send_raid_info(&mut self, state: &EncounterState) {
-        if !self.valid_difficulty(&state.raid_difficulty)
-            || self.region.is_empty()
-            || self.raid_id == 0
+        self.raid_info_sent = true;
+
+        if self.region.is_empty()
+            || state.encounter.current_boss_name.is_empty()
+            || state.raid_difficulty.is_empty()
         {
-            debug_print(format_args!("invalid zone or missing region"));
+            debug_print(format_args!("missing raid info"));
             return;
         }
 
-        let players: Vec<String> = state
+        let players: HashMap<String, u64> = state
             .encounter
             .entities
             .iter()
             .filter_map(|(_, e)| {
                 if e.entity_type == EntityType::PLAYER {
-                    Some(e.name.clone())
+                    Some((e.name.clone(), e.character_id))
                 } else {
                     None
                 }
@@ -277,14 +239,16 @@ impl StatsApi {
         let client_id = self.client_id.clone();
         let version = self.window.app_handle().package_info().version.to_string();
         let region = self.region.clone();
-
-        self.raid_info_sent = true;
-
+        let boss_name = state.encounter.current_boss_name.clone();
+        let difficulty = state.raid_difficulty.clone();
+        
         tokio::task::spawn(async move {
             let request_body = json!({
                 "id": client_id,
                 "version": version,
                 "region": region,
+                "boss": boss_name,
+                "difficulty": difficulty,
                 "characters": players,
             });
 
@@ -413,16 +377,15 @@ async fn make_request(
     }
 }
 
-// #[derive(Debug, Default, Clone)]
-// pub struct Stats {
-//     pub crit: u32,
-//     pub spec: u32,
-//     pub atk_power: u32,
-//     pub add_dmg: u32,
-// }
-
 #[derive(Debug, Default, Clone)]
-pub struct Stats(pub Vec<u32>);
+pub struct Stats {
+    pub crit: u32,
+    pub spec: u32,
+    pub swift: u32,
+    pub exp: u32,
+    pub atk_power: u32,
+    pub add_dmg: u32,
+}
 
 #[derive(Debug, Default, Clone, Deserialize)]
 #[serde(rename_all = "camelCase", default)]
@@ -486,13 +449,23 @@ impl<'de> Visitor<'de> for StatsVisitor {
     where
         A: MapAccess<'de>,
     {
-        let mut stats = vec![0; 6];
+        let mut stats = Stats::default();
         while let Some((key, value)) = map.next_entry::<usize, u32>()? {
-            if key < stats.len() {
-                stats[key] = value;
+            if key == 0 {
+                stats.crit = value;
+            } else if key == 1 {
+                stats.spec = value;
+            } else if key == 2 {
+                stats.swift = value;
+            } else if key == 3 {
+                stats.exp = value;
+            } else if key == 4 {
+                stats.atk_power = value;
+            } else if key == 5 {
+                stats.add_dmg = value;
             }
         }
-        Ok(Stats(stats))
+        Ok(stats)
     }
 }
 

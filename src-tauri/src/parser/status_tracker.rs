@@ -10,6 +10,7 @@ use meter_core::packets::definitions::PKTNewPC;
 use meter_core::packets::structures::StatusEffectData;
 use std::cell::RefCell;
 use std::rc::Rc;
+use log::warn;
 
 const TIMEOUT_DELAY_MS: i64 = 1000;
 const WORKSHOP_BUFF_ID: u32 = 9701;
@@ -417,7 +418,10 @@ pub fn get_status_effect_value(value: &Option<Vec<u8>>) -> u64 {
             .get(8..16)
             .map_or(0, |bytes| u64::from_le_bytes(bytes.try_into().unwrap()));
 
-        c1.max(c2)
+        // if c1 != c2 {
+        //     warn!("status effect value mismatch: {:?} != {:?}, {:?}", c1, c2, v);
+        // }
+        c1.min(c2)
     })
 }
 

@@ -91,7 +91,7 @@ pub fn start(
     let mut duration = Duration::from_millis(200);
     let mut last_party_update = Instant::now();
     let party_duration = Duration::from_millis(2000);
-    let mut raid_end_cd: Instant = Instant::now();
+    let mut raid_end_cd = Instant::now();
 
     let client = Client::new();
     let mut last_hearbeat = Instant::now();
@@ -214,8 +214,7 @@ pub fn start(
         if save.load(Ordering::Relaxed) {
             save.store(false, Ordering::Relaxed);
             state.party_info = update_party(&party_tracker, &entity_tracker);
-            let player_stats = stats_api.get_stats(&state, 0);
-            state.rdps_message = stats_api.status_message.clone();
+            let player_stats = stats_api.get_stats(&state);
             state.save_to_db(player_stats, true);
             state.saved = true;
             state.resetting = true;
@@ -301,7 +300,7 @@ pub fn start(
                     party_cache = None;
                     party_map_cache = HashMap::new();
                     let entity = entity_tracker.init_env(pkt);
-                    let player_stats = stats_api.get_stats(&state, 0);
+                    let player_stats = stats_api.get_stats(&state);
                     state.on_init_env(entity, player_stats);
                     stats_api.valid_zone = false;
                     get_and_set_region(region_file_path.as_ref(), &mut state);
@@ -355,7 +354,9 @@ pub fn start(
                     ));
                     if stats_api.valid_zone {
                         stats_api.sync(&entity, &state);
-                        if let Some(local_player) = entity_tracker.get_entity_ref(entity_tracker.local_entity_id) {
+                        if let Some(local_player) =
+                            entity_tracker.get_entity_ref(entity_tracker.local_entity_id)
+                        {
                             stats_api.sync(local_player, &state);
                         }
                     }
@@ -525,9 +526,6 @@ pub fn start(
                     }
 
                     stats_api.valid_zone = VALID_ZONES.contains(&pkt.raid_id);
-                    if stats_api.valid_zone {
-                        stats_api.raid_id = pkt.raid_id;
-                    }
                 }
             }
             Pkt::RaidBossKillNotify => {
@@ -622,15 +620,10 @@ pub fn start(
                         .borrow()
                         .get_local_character_id(entity_tracker.local_entity_id);
                     let target_count = pkt.skill_damage_abnormal_move_events.len() as i32;
-                    let duration = if state.encounter.fight_start > 0 {
-                        if !stats_api.raid_info_sent {
-                            stats_api.send_raid_info(&state);
-                        }
-                        now - state.encounter.fight_start
-                    } else {
-                        0
-                    };
-                    let player_stats = stats_api.get_stats(&state, duration);
+                    if !stats_api.raid_info_sent && state.encounter.fight_start > 0 {
+                        stats_api.send_raid_info(&state);
+                    }
+                    let player_stats = stats_api.get_stats(&state);
                     for event in pkt.skill_damage_abnormal_move_events.iter() {
                         let target_entity =
                             entity_tracker.get_or_create_entity(event.skill_damage_event.target_id);
@@ -679,15 +672,10 @@ pub fn start(
                         .borrow()
                         .get_local_character_id(entity_tracker.local_entity_id);
                     let target_count = pkt.skill_damage_events.len() as i32;
-                    let duration = if state.encounter.fight_start > 0 {
-                        if !stats_api.raid_info_sent {
-                            stats_api.send_raid_info(&state);
-                        }
-                        now - state.encounter.fight_start
-                    } else {
-                        0
-                    };
-                    let player_stats = stats_api.get_stats(&state, duration);
+                    if !stats_api.raid_info_sent && state.encounter.fight_start > 0 {
+                        stats_api.send_raid_info(&state);
+                    }
+                    let player_stats = stats_api.get_stats(&state);
                     for event in pkt.skill_damage_events.iter() {
                         let target_entity = entity_tracker.get_or_create_entity(event.target_id);
                         // source_entity is to determine battle item
@@ -859,15 +847,12 @@ pub fn start(
                     PKTZoneMemberLoadStatusNotify::new,
                     "PKTZoneMemberLoadStatusNotify",
                 ) {
-                    debug_print(format_args!("raid zone id: {}", &pkt.zone_id));
                     stats_api.valid_zone = VALID_ZONES.contains(&pkt.zone_id);
-                    if stats_api.valid_zone {
-                        stats_api.raid_id = pkt.zone_id;
-                    }
-
+                    
                     if !state.raid_difficulty.is_empty() {
                         continue;
                     }
+                    debug_print(format_args!("raid zone id: {}", &pkt.zone_id));
                     match pkt.zone_level {
                         0 => {
                             state.raid_difficulty = "Normal".to_string();
@@ -1124,6 +1109,9 @@ fn on_shield_change(
     status_effect: StatusEffectDetails,
     change: u64,
 ) {
+    if change == 0 {
+        return;
+    }
     let source = entity_tracker.get_source_entity(status_effect.source_id);
     let target_id = if status_effect.target_type == StatusEffectTargetType::Party {
         id_tracker

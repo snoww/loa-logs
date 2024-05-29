@@ -649,8 +649,8 @@ pub fn insert_data(
     region: Option<String>,
     player_stats: Option<Cache<String, PlayerStats>>,
     meter_version: String,
-    rdps_message: String,
     ntp_fight_start: i64,
+    rdps_valid: bool,
 ) {
     let mut encounter_stmt = tx
         .prepare_cached(
@@ -701,19 +701,16 @@ pub fn insert_data(
         },
         region,
         version: Some(meter_version),
-        rdps_valid: Some(player_stats.is_some()),
-        rdps_message: if rdps_message.is_empty()
-            || rdps_message == "invalid_zone"
-            || rdps_message == "requesting_stats"
-        {
+        rdps_valid: Some(rdps_valid),
+        rdps_message: if rdps_valid {
             None
         } else {
-            Some(rdps_message)
+            Some("invalid_stats".to_string())
         },
         ntp_fight_start: Some(ntp_fight_start),
         ..Default::default()
     };
-    
+
     if !stagger_log.is_empty() {
         if prev_stagger > 0 && prev_stagger != encounter.encounter_damage_stats.max_stagger {
             // never finished staggering the boss, calculate average from whatever stagger has been done

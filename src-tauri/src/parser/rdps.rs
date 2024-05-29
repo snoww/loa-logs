@@ -114,7 +114,7 @@ pub fn get_buff_after_tripods(
 
 pub fn get_crit_multiplier_from_combat_effect(
     ce: &CombatEffectData,
-    ce_condition_data: CombatEffectConditionData,
+    ce_condition_data: &CombatEffectConditionData,
 ) -> f64 {
     let mut crit_damage_rate = 0.0;
 
@@ -318,6 +318,76 @@ pub fn is_combat_effect_condition_valid(
     }
 
     is_valid
+}
+
+pub fn calculate_tripod_data(
+    tripod_data: &[TripodData],
+    rdps_data: &mut RdpsData,
+    skill_effect_id: u32,
+    ce_conditional_data: &CombatEffectConditionData,
+) {
+    let mut combat_effects: HashMap<i32, CombatEffectData> = HashMap::new();
+    for tripods in tripod_data.iter() {
+        for option in tripods.options.iter() {
+            let first = option.param.first().cloned().unwrap_or_default();
+            if option.effect_type == "add_chain_combat_effect" {
+                if first == 0 || skill_effect_id as i32 == first {
+                    if let Some(ce_id) = option.param.get(1).cloned() {
+                        if let Some(ce) = COMBAT_EFFECT_DATA.get(&ce_id) {
+                            combat_effects.insert(ce_id, ce.clone());
+                        }
+                    }
+                } else if option.effect_type == "remove_chain_combat_effect" {
+                    combat_effects.remove(&first);
+                } else if option.effect_type == "change_combat_effect_arg" {
+                    if first == 0 || skill_effect_id as i32 == first {
+                        if let Some(ce_id) = option.param.get(1).cloned() {
+                            if let Some(ce) = combat_effects.get_mut(&ce_id) {
+                                for effects in ce.effects.iter_mut() {
+                                    for action in effects.actions.iter_mut() {
+                                        for i in 0..option.param.len() - 2 {
+                                            if option.param_type == "relative" {
+                                                action.args[i] *= (1.0
+                                                    + option
+                                                        .param
+                                                        .get(i + 2)
+                                                        .cloned()
+                                                        .unwrap_or_default()
+                                                        as f64
+                                                        / 100.0)
+                                                    as i32
+                                            } else {
+                                                action.args[i] += option
+                                                    .param
+                                                    .get(i + 2)
+                                                    .cloned()
+                                                    .unwrap_or_default()
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } else if option.effect_type == "change_dam_critical" {
+                    if first == 0 || skill_effect_id as i32 == first {
+                        rdps_data.crit_dmg_rate +=
+                            option.param.get(1).cloned().unwrap_or_default() as f64 / 10000.0;
+                    } else if option.effect_type == "change_dam_critical_rate"
+                        && (first == 0 || skill_effect_id as i32 == first)
+                    {
+                        rdps_data.crit.self_sum_rate +=
+                            option.param.get(1).cloned().unwrap_or_default() as f64 / 10000.0;
+                    }
+                }
+            }
+        }
+    }
+    
+    for (_, ce) in combat_effects {
+        let crit_multiplier = get_crit_multiplier_from_combat_effect(&ce, ce_conditional_data);
+        rdps_data.crit_dmg_rate += crit_multiplier;
+    }
 }
 
 pub fn apply_rdps(
