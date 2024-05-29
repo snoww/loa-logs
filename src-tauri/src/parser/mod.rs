@@ -94,7 +94,7 @@ pub fn start(
     let mut raid_end_cd = Instant::now();
 
     let client = Client::new();
-    let mut last_hearbeat = Instant::now();
+    let mut last_heartbeat = Instant::now();
     let heartbeat_duration = Duration::from_secs(60 * 5);
 
     let reset = Arc::new(AtomicBool::new(false));
@@ -319,7 +319,10 @@ pub fn start(
                         entity.id,
                         entity.character_id
                     );
-                    if !local_players.contains_key(&entity.character_id) {
+                    if local_players
+                        .get(&entity.character_id)
+                        .map_or(true, |cached| cached.as_str() != entity.name)
+                    {
                         local_players.insert(entity.character_id, entity.name.clone());
                         write_local_players(&local_players, &local_player_path)?;
                     }
@@ -848,7 +851,7 @@ pub fn start(
                     "PKTZoneMemberLoadStatusNotify",
                 ) {
                     stats_api.valid_zone = VALID_ZONES.contains(&pkt.zone_id);
-                    
+
                     if !state.raid_difficulty.is_empty() {
                         continue;
                     }
@@ -972,9 +975,7 @@ pub fn start(
                         Some(party_map_cache.clone())
                     } else {
                         let party = update_party(&party_tracker, &entity_tracker);
-                        // check if both parties are resolved
-                        // if they are we then cache it
-                        if party.len() >= 2 && party[0].len() == 4 && party[1].len() == 4 {
+                        if party.len() > 1 {
                             party_cache = Some(party.clone());
                             party_map_cache = party
                                 .into_iter()
@@ -983,14 +984,6 @@ pub fn start(
                                 .collect();
 
                             Some(party_map_cache.clone())
-                        } else if party.len() > 1 {
-                            Some(
-                                party
-                                    .into_iter()
-                                    .enumerate()
-                                    .map(|(index, party)| (index as i32, party))
-                                    .collect(),
-                            )
                         } else {
                             None
                         }
@@ -1044,7 +1037,7 @@ pub fn start(
             party_map_cache = HashMap::new();
         }
 
-        if last_hearbeat.elapsed() >= heartbeat_duration {
+        if last_heartbeat.elapsed() >= heartbeat_duration {
             let client = client.clone();
             let client_id = client_id.clone();
             let version = window.app_handle().package_info().version.to_string();
@@ -1073,7 +1066,7 @@ pub fn start(
                     }
                 }
             });
-            last_hearbeat = Instant::now();
+            last_heartbeat = Instant::now();
         }
     }
 
