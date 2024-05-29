@@ -1,11 +1,11 @@
 {
-    "version": "v1.10.3",
-    "notes": "### v1.10.3\n#### BUG FIXES\n- fix meter not tracking in trial hanumatan\n\nfull patch notes on [github](https://github.com/snoww/loa-logs/releases/latest)\n\nsend bug reports/suggestions to [#loa-logs](https://discord.gg/sbSa3pkDF5)",
-    "pub_date": "2024-05-25T22:05:07.126Z",
+    "version": "v1.10.4",
+    "notes": "### v1.10.4\n#### BUG FIXES\n- fix meter not tracking in trial hanumatan\n\nfull patch notes on [github](https://github.com/snoww/loa-logs/releases/latest)\n\nsend bug reports/suggestions to [#loa-logs](https://discord.gg/sbSa3pkDF5)",
+    "pub_date": "2024-05-29T07:52:27.317Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.10.3/LOA.Logs_1.10.3_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmVxL25kZHEyRVBEWUdoMzJFempkcjBIbVI5anZrMFdaK2p3ZTdlWFh2c05ud0VwcWZ6akx1Q0Z1QTRJbktLZ2NBOHExYTZSUUhJZGNWS2tPK3BjZ0FnPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzE2Njc0NzI0CWZpbGU6TE9BIExvZ3NfMS4xMC4zX3g2NC1zZXR1cC5uc2lzLnppcApoVkR6Snp4cmpRcjBYNjRWZm5YZDB2Q1Q4UEp2TmNuZFZKWWYydGVTalFUR0ZjMDNQRWtuQkJYODd5N0lYVzdvL3U3VXFralZZRVFocHZ2OHVxb1RCQT09Cg=="
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.10.4/LOA.Logs_1.10.4_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmJLTk9pKy9nbjhOQ3gzOFIySlVHNDl2ZTBmU09Zb0dHSDlZb0pQLzR1ampueDhxd3FrZWJGelhuMS9kWGJ5cUUyQ25sMGx5NS9oSUFScFZVKzdPbFFNPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzE2OTY5NjMyCWZpbGU6TE9BIExvZ3NfMS4xMC40X3g2NC1zZXR1cC5uc2lzLnppcApVRkVPVkl3K3ZNbHdCcURxdlNTTHVubVJqYnNRMUk5UkVtK294d3F5VWt2eHhxNEoveUoxRFlaOU5PdmJEQUo4a25pbFd1aHpiL2ZVUEFhRkh6SjZDZz09Cg=="
         }
     }
 }
