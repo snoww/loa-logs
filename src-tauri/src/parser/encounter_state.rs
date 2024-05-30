@@ -3,7 +3,7 @@ use std::default::Default;
 
 use chrono::Utc;
 use hashbrown::HashMap;
-use log::info;
+use log::{info, warn};
 use meter_core::packets::definitions::{PKTIdentityGaugeChangeNotify, PKTParalyzationStateNotify};
 use moka::sync::Cache;
 use rsntp::SntpClient;
@@ -807,7 +807,9 @@ impl EncounterState {
                     .or_insert(damage);
             }
 
-            if let (true, Some(player_stats)) = (damage > 0, player_stats.clone()) {
+            if let (true, Some(player_stats)) =
+                (self.rdps_valid && damage > 0, player_stats.clone())
+            {
                 // rdps ported from meter-core by herysia
                 // refer to here for documentation
                 // https://github.com/lost-ark-dev/meter-core/blob/a93ed3dd05a251d8dee47f5e6e17f275a0bd89fb/src/logger/gameTracker.ts#L417
@@ -827,10 +829,17 @@ impl EncounterState {
                         let caster_stats = match player_stats.get(&caster_entity.name) {
                             Some(caster) => caster,
                             None => {
-                                if caster_entity.entity_type == EntityType::PLAYER && self.encounter.last_combat_packet - self.encounter.fight_start
-                                    > RDPS_VALID_LIMIT
+                                if caster_entity.entity_type == EntityType::PLAYER
+                                    && self.encounter.last_combat_packet
+                                        - self.encounter.fight_start
+                                        > RDPS_VALID_LIMIT
                                 {
-                                    // println!("caster {:?} is not in player_stats. [{}]", caster_entity.name, self.encounter.last_combat_packet - self.encounter.fight_start);
+                                    warn!(
+                                        "caster {:?} is not in player_stats. [{}]",
+                                        caster_entity.name,
+                                        self.encounter.last_combat_packet
+                                            - self.encounter.fight_start
+                                    );
                                     self.rdps_valid = false;
                                 }
 
@@ -1349,10 +1358,15 @@ impl EncounterState {
                             delta,
                         );
                     }
-                } else if dmg_src_entity.entity_type == EntityType::PLAYER && self.encounter.last_combat_packet - self.encounter.fight_start
-                    > RDPS_VALID_LIMIT
+                } else if dmg_src_entity.entity_type == EntityType::PLAYER
+                    && self.encounter.last_combat_packet - self.encounter.fight_start
+                        > RDPS_VALID_LIMIT
                 {
-                    // println!("{:?} is not in player_stats. [{}]", dmg_src_entity.name, self.encounter.last_combat_packet - self.encounter.fight_start);
+                    warn!(
+                        "{:?} is not in player_stats. [{}]",
+                        dmg_src_entity.name,
+                        self.encounter.last_combat_packet - self.encounter.fight_start
+                    );
                     self.rdps_valid = false;
                 }
             }
@@ -1734,7 +1748,10 @@ impl EncounterState {
         ));
 
         task::spawn(async move {
-            info!("saving to db - {}", encounter.current_boss_name);
+            info!(
+                "saving to db - cleared: [{}] {}",
+                raid_clear, encounter.current_boss_name
+            );
 
             let mut conn = Connection::open(path).expect("failed to open database");
             let tx = conn.transaction().expect("failed to create transaction");

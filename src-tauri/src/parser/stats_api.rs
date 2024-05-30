@@ -4,7 +4,7 @@ use crate::parser::entity_tracker::Entity;
 use crate::parser::models::EntityType;
 use async_recursion::async_recursion;
 use hashbrown::HashMap;
-use log::warn;
+use log::{info, warn};
 use md5::compute;
 use moka::sync::Cache;
 use reqwest::Client;
@@ -222,6 +222,8 @@ impl StatsApi {
             debug_print(format_args!("missing raid info"));
             return;
         }
+        
+        info!("encounter begin");
 
         let players: HashMap<String, u64> = state
             .encounter
@@ -330,7 +332,7 @@ async fn make_request(
                     window
                         .emit("rdps", "request_failed_retrying")
                         .expect("failed to emit rdps message");
-                    for _ in 0..30 {
+                    for _ in 0..20 {
                         if let Some(cancel_hash) = cancel_queue.get(&player.name) {
                             if cancel_hash != player.hash {
                                 cancel_queue.invalidate(&player.name);
@@ -343,11 +345,11 @@ async fn make_request(
                         }
                         tokio::time::sleep(Duration::from_millis(100)).await;
                     }
-                    debug_print(format_args!(
+                    warn!(
                         "missing stats for: {:?}, retrying, attempt {}",
                         player,
                         current_retries + 1
-                    ));
+                    );
                     // retry request with missing players
                     // until we receive stats for all players
                     make_request(
