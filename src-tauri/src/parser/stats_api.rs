@@ -45,11 +45,11 @@ impl StatsApi {
             request_cache: Cache::builder().max_capacity(64).build(),
             inflight_cache: Cache::builder()
                 .max_capacity(16)
-                .time_to_live(Duration::from_secs(30))
+                .time_to_live(Duration::from_secs(10))
                 .build(),
             cancel_queue: Cache::builder()
                 .max_capacity(16)
-                .time_to_live(Duration::from_secs(30))
+                .time_to_live(Duration::from_secs(10))
                 .build(),
             region_file_path,
 
@@ -96,6 +96,7 @@ impl StatsApi {
             if let Some(cached) = self.request_cache.get(&hash) {
                 debug_print(format_args!("using cached stats for {:?}", player.name));
                 self.stats_cache.insert(player.name.clone(), cached.clone());
+                self.cancel_queue.insert(player.name.clone(), hash.clone());
                 return;
             } else if !self.inflight_cache.contains_key(&hash) {
                 self.inflight_cache.insert(hash.clone(), 0);
