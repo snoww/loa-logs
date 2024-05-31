@@ -31,7 +31,6 @@ pub struct StatsApi {
     region_file_path: String,
 
     pub region: String,
-    pub raid_info_sent: bool,
 }
 
 impl StatsApi {
@@ -54,7 +53,6 @@ impl StatsApi {
             region_file_path,
 
             region: "".to_string(),
-            raid_info_sent: false,
         }
     }
 
@@ -213,18 +211,15 @@ impl StatsApi {
     }
 
     pub fn send_raid_info(&mut self, state: &EncounterState) {
-        self.raid_info_sent = true;
-
-        if self.region.is_empty()
-            || state.encounter.current_boss_name.is_empty()
-            || state.raid_difficulty.is_empty()
+        if !((self.valid_zone && (state.raid_difficulty == "Normal" || state.raid_difficulty == "Hard"))
+            || (state.raid_difficulty == "Inferno"
+                || state.raid_difficulty == "Trial"
+                || state.raid_difficulty == "The First"))
         {
-            debug_print(format_args!("missing raid info"));
+            debug_print(format_args!("not valid for raid info"));
             return;
         }
         
-        info!("encounter begin");
-
         let players: HashMap<String, u64> = state
             .encounter
             .entities
@@ -244,7 +239,8 @@ impl StatsApi {
         let region = self.region.clone();
         let boss_name = state.encounter.current_boss_name.clone();
         let difficulty = state.raid_difficulty.clone();
-        
+        let cleared = state.raid_clear;
+
         tokio::task::spawn(async move {
             let request_body = json!({
                 "id": client_id,
@@ -253,6 +249,7 @@ impl StatsApi {
                 "boss": boss_name,
                 "difficulty": difficulty,
                 "characters": players,
+                "cleared": cleared,
             });
 
             match client

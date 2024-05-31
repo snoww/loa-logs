@@ -623,9 +623,6 @@ pub fn start(
                         .borrow()
                         .get_local_character_id(entity_tracker.local_entity_id);
                     let target_count = pkt.skill_damage_abnormal_move_events.len() as i32;
-                    if !stats_api.raid_info_sent && state.encounter.fight_start > 0 {
-                        stats_api.send_raid_info(&state);
-                    }
                     let player_stats = stats_api.get_stats(&state);
                     for event in pkt.skill_damage_abnormal_move_events.iter() {
                         let target_entity =
@@ -675,9 +672,6 @@ pub fn start(
                         .borrow()
                         .get_local_character_id(entity_tracker.local_entity_id);
                     let target_count = pkt.skill_damage_events.len() as i32;
-                    if !stats_api.raid_info_sent && state.encounter.fight_start > 0 {
-                        stats_api.send_raid_info(&state);
-                    }
                     let player_stats = stats_api.get_stats(&state);
                     for event in pkt.skill_damage_events.iter() {
                         let target_entity = entity_tracker.get_or_create_entity(event.target_id);

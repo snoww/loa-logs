@@ -209,7 +209,10 @@ impl EncounterState {
             0 | 2 | 3 | 4 => {
                 if !self.encounter.current_boss_name.is_empty() {
                     let player_stats = stats_api.get_stats(self);
-                    stats_api.raid_info_sent = false;
+                    stats_api.send_raid_info(self);
+                    if phase_code == 0 {
+                        stats_api.valid_zone = false;
+                    }
                     self.save_to_db(player_stats, false);
                     self.saved = true;
                 }
