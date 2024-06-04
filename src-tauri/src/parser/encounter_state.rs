@@ -1744,7 +1744,7 @@ impl EncounterState {
         let ntp_fight_start = self.ntp_fight_start;
 
         let rdps_valid = self.rdps_valid;
-
+        
         debug_print(format_args!(
             "rdps_data valid: [{}] {:?}",
             rdps_valid, player_stats
@@ -1777,6 +1777,7 @@ impl EncounterState {
                 meter_version,
                 ntp_fight_start,
                 rdps_valid,
+                manual,
             );
 
             tx.commit().expect("failed to commit transaction");

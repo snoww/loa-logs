@@ -651,6 +651,7 @@ pub fn insert_data(
     meter_version: String,
     ntp_fight_start: i64,
     rdps_valid: bool,
+    manual: bool,
 ) {
     let mut encounter_stmt = tx
         .prepare_cached(
@@ -708,6 +709,7 @@ pub fn insert_data(
             Some("invalid_stats".to_string())
         },
         ntp_fight_start: Some(ntp_fight_start),
+        manual_save: Some(manual),
         ..Default::default()
     };
 
