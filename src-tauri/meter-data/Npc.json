@@ -16672,14 +16672,14 @@
   "494726": {
     "id": 494726,
     "name": "Divided Parts of Arrogance",
-    "grade": "normal",
+    "grade": "boss",
     "type": "monster",
     "pushimmune": true
   },
   "494727": {
     "id": 494727,
     "name": "Divided Parts of Arrogance",
-    "grade": "normal",
+    "grade": "boss",
     "type": "monster",
     "pushimmune": true
   },
@@ -21083,8 +21083,8 @@
   "480785": { "id": 480785, "name": "Heart Card Soldier", "grade": "named", "type": "monster", "pushimmune": true },
   "480786": { "id": 480786, "name": "Diamond Card Soldier", "grade": "named", "type": "monster", "pushimmune": true },
   "480802": { "id": 480802, "name": "Gehenna Helkasirs", "grade": "boss", "type": "monster", "pushimmune": true },
-  "480803": { "id": 480803, "name": "Nightmare Gehenna", "grade": "boss", "type": "monster", "pushimmune": true },
-  "480804": { "id": 480804, "name": "Nightmare Helkasirs", "grade": "boss", "type": "monster", "pushimmune": true },
+  "480803": { "id": 480803, "name": "Nightmare Gehenna", "grade": "seed", "type": "monster", "pushimmune": true },
+  "480804": { "id": 480804, "name": "Nightmare Helkasirs", "grade": "seed", "type": "monster", "pushimmune": true },
   "480805": {
     "id": 480805,
     "name": "Crushing Phantom Wardog",
