@@ -1,11 +1,11 @@
 {
-    "version": "v1.10.5",
-    "notes": "### v1.10.5\n#### BUG FIXES AND IMPROVEMENTS\n- minor bug fixes and improvements\n### v1.10.4\n#### BUG FIXES AND IMPROVEMENTS\n- fix cases where rdps marked invalid after player dies during raid\n- more rdps improvements\n- fix pants transcendence name missing\n- preparing meter for general raid statistics\n\nfull patch notes on [github](https://github.com/snoww/loa-logs/releases/latest)\n\nsend bug reports/suggestions to [#loa-logs](https://discord.gg/sbSa3pkDF5)",
-    "pub_date": "2024-05-31T08:00:08.707Z",
+    "version": "v1.10.6",
+    "notes": "### v1.10.6\n#### BUG FIXES AND IMPROVEMENTS\n- removed south america in region detection\n- remove brel gate 1 nightmare gehenna/helkasirs as bosses\n- add voldis g2 100x split dragons as bosses\n- add flag for manually saved encounters\n\n\nfull patch notes on [github](https://github.com/snoww/loa-logs/releases/latest)\n\nsend bug reports/suggestions to [#loa-logs](https://discord.gg/sbSa3pkDF5)(https://discord.gg/sbSa3pkDF5)",
+    "pub_date": "2024-06-05T07:43:47.592Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.10.5/LOA.Logs_1.10.5_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlVzbG9GM01BbWlMb09sNy8yZ2l5UGw1SUwyME13N29wZi8vK2krS0tDcXY2eFNzNVk2aUhDOS81am93djJ6QUFqampKUGhUaStQczdnUFo1NWQ1dkFZPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzE3MTQyNTE1CWZpbGU6TE9BIExvZ3NfMS4xMC41X3g2NC1zZXR1cC5uc2lzLnppcAovK3hwNDRpOUVMYWRzYXNtRnZ2NkFoK2VlS3RhWHFKZmRuZzdmUmZMTVpuSDEyOE4wTGJHeURjbit1em5vMnlveHJlcmFObXBmZTliZWZxL2Nkd1pDUT09Cg=="
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.10.6/LOA.Logs_1.10.6_x64-setup.nsis.zip",
+            "signature": ""
         }
     }
 }
