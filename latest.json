@@ -5,7 +5,7 @@
     "platforms": {
         "windows-x86_64": {
             "url": "https://github.com/snoww/loa-logs/releases/download/v1.10.6/LOA.Logs_1.10.6_x64-setup.nsis.zip",
-            "signature": ""
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmFpejhvMjRoblFOTW5wdTNkUmFZTjMwL0FKMWUxeVZkZ21Sb0ZmUUhKOHdqYkF6aEZGcDNQdjdiVnVQRm5acHpIK2VHTWpnb1V4TDdqMHlId3VsVndzPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzE3NTczNTUyCWZpbGU6TE9BIExvZ3NfMS4xMC42X3g2NC1zZXR1cC5uc2lzLnppcAoyenhqaCtqdVprYTdrcnRxUFAzbzZDME1vK3NFN3RFS1pjbG5CUFBITlBObERCeXQycElGOVg4QXZINncxaWRhbGY5R1BwYVFWY1BnVzgyMmMzdjlEUT09Cg=="
         }
     }
 }
