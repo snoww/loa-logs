@@ -140,6 +140,7 @@ impl StatsApi {
                 cancel_queue,
                 player,
                 0,
+                false,
             )
             .await;
         });
@@ -232,6 +233,11 @@ impl StatsApi {
                 }
             })
             .collect();
+        
+        if players.len() > 16 {
+            warn!("invalid zone. num players: {}", players.len());
+            return;
+        }
 
         let client = self.client.clone();
         let client_id = self.client_id.clone();
@@ -279,20 +285,29 @@ async fn make_request(
     request_cache: Cache<String, PlayerStats>,
     inflight_cache: Cache<String, u8>,
     cancel_queue: Cache<String, String>,
-    player: PlayerHash,
+    mut player: PlayerHash,
     current_retries: usize,
+    mut final_attempt: bool,
 ) {
-    if current_retries >= 20 {
+    if current_retries >= 12 {
         warn!(
             "# of retries exceeded, failed to fetch player stats for {:?}",
             player
         );
         inflight_cache.invalidate(&player.hash);
         cancel_queue.invalidate(&player.name);
-        window
-            .emit("rdps", "request_failed")
-            .expect("failed to emit rdps message");
-        return;
+        
+        if !final_attempt {
+            final_attempt = true;
+            player.hash = "".to_string();
+            warn!("final attempt for {:?} without hash", player.name);
+        } else {
+            window
+                .emit("rdps", "request_failed")
+                .expect("failed to emit rdps message");
+            warn!("unable to find player {:?} on {:?}", player.name, region);
+            return;
+        }
     }
 
     let version = window.app_handle().package_info().version.to_string();
@@ -360,6 +375,7 @@ async fn make_request(
                         cancel_queue,
                         player,
                         current_retries + 1,
+                        final_attempt,
                     )
                     .await;
                 }
