@@ -9,7 +9,7 @@
     import { goto, invalidateAll } from "$app/navigation";
     import { settings, updateSettings } from "$lib/utils/settings";
     import { appWindow } from "@tauri-apps/api/window";
-    import { checkUpdate } from "@tauri-apps/api/updater";
+    import { checkUpdate, installUpdate } from "@tauri-apps/api/updater";
     import { invoke } from "@tauri-apps/api";
     import UpdateAvailable from "$lib/components/shared/UpdateAvailable.svelte";
 
@@ -33,7 +33,7 @@
                 await checkForUpdate();
 
                 if ($updateSettings.available) {
-                    await showWindow();
+                    await installUpdate();
                 }
 
                 let encounterUpdateEvent = await listen("show-latest-encounter", async (event) => {

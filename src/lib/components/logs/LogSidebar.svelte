@@ -42,6 +42,7 @@
             <a href="/logs" class="hover:text-accent-500" on:click={() => (hidden = true)}> Encounter Logs </a>
             <a href="/about" class="hover:text-accent-500" on:click={() => (hidden = true)}> About </a>
             <a href="/settings" class="hover:text-accent-500" on:click={() => (hidden = true)}> Settings </a>
+            <a href="/changelog" class="hover:text-accent-500" on:click={() => (hidden = true)}> Changelog </a>
             <a href="https://www.buymeacoffee.com/synow" class="hover:text-accent-500" target="_blank"
                on:click={() => (hidden = true)}>
                 <div class="inline-flex space-x-1 items-center">
