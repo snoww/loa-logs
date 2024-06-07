@@ -92,9 +92,8 @@ impl StatsApi {
 
         let player_hash = if let Some(hash) = self.get_hash(player) {
             if let Some(cached) = self.request_cache.get(&hash) {
-                debug_print(format_args!("using cached stats for {:?}", player.name));
+                info!("using cached stats for {:?}", player.name);
                 self.stats_cache.insert(player.name.clone(), cached.clone());
-                self.cancel_queue.insert(player.name.clone(), hash.clone());
                 return;
             } else if !self.inflight_cache.contains_key(&hash) {
                 self.inflight_cache.insert(hash.clone(), 0);
@@ -336,7 +335,7 @@ async fn make_request(
                         stats_cache.insert(name.clone(), stats.clone());
                         request_cache.insert(stats.hash.clone(), stats);
                     }
-                    debug_print(format_args!("received player stats for {:?}", player.name));
+                    info!("received player stats for {:?}", player.name);
                     window
                         .emit("rdps", "request_success")
                         .expect("failed to emit rdps message");
