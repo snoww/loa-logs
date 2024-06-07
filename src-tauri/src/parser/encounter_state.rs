@@ -20,7 +20,7 @@ use crate::parser::stats_api::{PlayerStats, StatsApi};
 use crate::parser::status_tracker::StatusEffectDetails;
 use crate::parser::utils::*;
 
-const RDPS_VALID_LIMIT: i64 = 15_000;
+const RDPS_VALID_LIMIT: i64 = 25_000;
 
 #[derive(Debug)]
 pub struct EncounterState {

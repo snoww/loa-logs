@@ -289,7 +289,7 @@ async fn make_request(
     current_retries: usize,
     mut final_attempt: bool,
 ) {
-    if current_retries >= 12 {
+    if current_retries >= 10 {
         warn!(
             "# of retries exceeded, failed to fetch player stats for {:?}",
             player
