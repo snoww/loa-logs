@@ -1,11 +1,11 @@
 {
-    "version": "v1.10.6",
-    "notes": "### v1.10.6\n#### BUG FIXES AND IMPROVEMENTS\n- removed south america in region detection\n- remove brel gate 1 nightmare gehenna/helkasirs as bosses\n- add voldis g2 100x split dragons as bosses\n- add flag for manually saved encounters\n\n\nfull patch notes on [github](https://github.com/snoww/loa-logs/releases/latest)\n\nsend bug reports/suggestions to [#loa-logs](https://discord.gg/sbSa3pkDF5)(https://discord.gg/sbSa3pkDF5)",
-    "pub_date": "2024-06-05T07:43:47.592Z",
+    "version": "v1.10.7",
+    "notes": "### v1.10.7\n#### NEW FEATURES\n- updates will be installed automatically at app start\n- added changelog tab on sidebar to see recent release notes\n#### BUG FIXES AND IMPROVEMENTS\n- fixed issue where parties were missing players in buff tab\n\nfull patch notes on [github](https://github.com/snoww/loa-logs/releases/latest)\n\nsend bug reports/suggestions to [#loa-logs](https://discord.gg/sbSa3pkDF5)",
+    "pub_date": "2024-06-07T23:14:10.806Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.10.6/LOA.Logs_1.10.6_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmFpejhvMjRoblFOTW5wdTNkUmFZTjMwL0FKMWUxeVZkZ21Sb0ZmUUhKOHdqYkF6aEZGcDNQdjdiVnVQRm5acHpIK2VHTWpnb1V4TDdqMHlId3VsVndzPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzE3NTczNTUyCWZpbGU6TE9BIExvZ3NfMS4xMC42X3g2NC1zZXR1cC5uc2lzLnppcAoyenhqaCtqdVprYTdrcnRxUFAzbzZDME1vK3NFN3RFS1pjbG5CUFBITlBObERCeXQycElGOVg4QXZINncxaWRhbGY5R1BwYVFWY1BnVzgyMmMzdjlEUT09Cg=="
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.10.7/LOA.Logs_1.10.7_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmNrTnN6aTZ2bjZTVnF5Q3FHRlpjOXZHc2FHSEN1ZWxld0tXcTFnSzUxby9KN1dlY2MxR3I4SllKZ096VzVKTndpdGppZVJJMnVjOFBpY09IT2hyQ1F3PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzE3ODAyMDcyCWZpbGU6TE9BIExvZ3NfMS4xMC43X3g2NC1zZXR1cC5uc2lzLnppcApnVmhwQkovRjV1eWJMeTc4NXNhNHF2WkEyd29ZeVVsR0hMSzI0NHBHcUFTenoyaFJ1cEV2cXlEMXNoNEJYNTJLSVNuQldISnlEaTZOVlhjYmtLNFNDQT09Cg=="
         }
     }
 }
