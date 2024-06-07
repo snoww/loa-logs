@@ -970,14 +970,18 @@ pub fn start(
                     } else {
                         let party = update_party(&party_tracker, &entity_tracker);
                         if party.len() > 1 {
-                            party_cache = Some(party.clone());
-                            party_map_cache = party
-                                .into_iter()
+                            let current_party: HashMap<i32, Vec<String>> = party
+                                .iter()
                                 .enumerate()
-                                .map(|(index, party)| (index as i32, party))
+                                .map(|(index, party)| (index as i32, party.clone()))
                                 .collect();
+                            
+                            if party.iter().all(|p| p.len() == 4) {
+                                party_cache = Some(party.clone());
+                                party_map_cache = current_party.clone();
+                            }
 
-                            Some(party_map_cache.clone())
+                            Some(current_party)
                         } else {
                             None
                         }
