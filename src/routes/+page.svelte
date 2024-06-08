@@ -22,6 +22,7 @@
     import { classColors } from "$lib/constants/colors";
     import { queryParam } from "$lib/utils/strings";
     import { emit } from "@tauri-apps/api/event";
+    import { checkUpdate, installUpdate } from "@tauri-apps/api/updater";
 
     onMount(() => {
         (async () => {
@@ -58,6 +59,16 @@
                 $classIconCache[esther.name] =
                     convertFileSrc(await join(await resourceDir(), "images", "classes", esther.icon)) +
                     queryParam;
+            }
+
+            try {
+                const update = await checkUpdate();
+                if (update.shouldUpdate) {
+                    await invoke("write_log", { message: "installing update..." });
+                    await installUpdate();
+                }
+            } catch (e) {
+                await invoke("write_log", { message: e });
             }
 
             await registerShortcuts($settings.shortcuts);
