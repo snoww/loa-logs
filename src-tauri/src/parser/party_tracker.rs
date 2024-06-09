@@ -114,7 +114,7 @@ impl PartyTracker {
         let party_instance = self
             .raid_instance_to_party_ids
             .entry(raid_instance_id)
-            .or_insert(HashSet::new());
+            .or_default();
         party_instance.insert(party_id);
     }
 }

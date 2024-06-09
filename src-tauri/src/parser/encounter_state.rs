@@ -137,7 +137,7 @@ impl EncounterState {
         // we replace the existing local player if it exists, since its name might have changed (from hex or "You" to character name)
         if let Some(mut local) = self.encounter.entities.remove(&self.encounter.local_player) {
             // update local player name, insert back into encounter
-            self.encounter.local_player = entity.name.clone();
+            self.encounter.local_player.clone_from(&entity.name);
             update_player_entity(&mut local, entity);
             self.encounter
                 .entities
@@ -157,7 +157,7 @@ impl EncounterState {
                 let mut new_local = self.encounter.entities[&old_local].clone();
                 update_player_entity(&mut new_local, entity);
                 self.encounter.entities.remove(&old_local);
-                self.encounter.local_player = entity.name.clone();
+                self.encounter.local_player.clone_from(&entity.name);
                 self.encounter
                     .entities
                     .insert(self.encounter.local_player.clone(), new_local);
@@ -225,7 +225,7 @@ impl EncounterState {
     // replace local player
     pub fn on_init_pc(&mut self, entity: Entity, hp: i64, max_hp: i64) {
         self.encounter.entities.remove(&self.encounter.local_player);
-        self.encounter.local_player = entity.name.clone();
+        self.encounter.local_player.clone_from(&entity.name);
         let mut player = encounter_entity_from_entity(&entity);
         player.current_hp = hp;
         player.max_hp = max_hp;
@@ -1384,7 +1384,7 @@ impl EncounterState {
         }
         // update current_boss
         else if target_entity.entity_type == EntityType::BOSS {
-            self.encounter.current_boss_name = target_entity.name.clone();
+            self.encounter.current_boss_name.clone_from(&target_entity.name);
             target_entity.id = dmg_target_entity.id;
             target_entity.npc_id = dmg_target_entity.npc_id;
 
@@ -1451,7 +1451,7 @@ impl EncounterState {
                 .iter()
                 .find(|(_, e)| e.id == pkt.player_id)
             {
-                self.encounter.local_player = entity.name.clone();
+                self.encounter.local_player.clone_from(&entity.name);
             } else {
                 return;
             }

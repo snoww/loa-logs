@@ -372,7 +372,7 @@ impl EntityTracker {
                     local_player.entity_type = PLAYER;
                     local_player.class_id = member.class_id as u32;
                     local_player.gear_level = truncate_gear_level(member.gear_level);
-                    local_player.name = member.name.clone();
+                    local_player.name.clone_from(&member.name);
                     local_player.character_id = member.character_id;
                     self.id_tracker
                         .borrow_mut()
@@ -637,8 +637,8 @@ pub fn get_current_and_max_hp(stat_pair: &Vec<StatPair>) -> (i64, i64) {
 
     for pair in stat_pair {
         match pair.stat_type as u32 {
-            x if x == 1 => hp = Some(pair.value),
-            x if x == 27 => max_hp = Some(pair.value),
+            1 => hp = Some(pair.value),
+            27 => max_hp = Some(pair.value),
             _ => {}
         }
         if hp.is_some() && max_hp.is_some() {

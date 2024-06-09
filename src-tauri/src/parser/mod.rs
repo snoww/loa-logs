@@ -125,11 +125,11 @@ pub fn start(
         client_id = local_players.get(&1).cloned().unwrap_or_default();
         if client_id.is_empty() {
             client_id = Uuid::new_v4().to_string();
-            stats_api.client_id = client_id.clone();
+            stats_api.client_id.clone_from(&client_id);
             local_players.insert(1, client_id.clone());
             write_local_players(&local_players, &local_player_path)?;
         } else {
-            stats_api.client_id = client_id.clone();
+            stats_api.client_id.clone_from(&client_id);
         }
     }
 
@@ -978,7 +978,7 @@ pub fn start(
                             
                             if party.iter().all(|p| p.len() == 4) {
                                 party_cache = Some(party.clone());
-                                party_map_cache = current_party.clone();
+                                party_map_cache.clone_from(&current_party);
                             }
 
                             Some(current_party)

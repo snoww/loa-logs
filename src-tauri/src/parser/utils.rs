@@ -29,7 +29,7 @@ pub fn encounter_entity_from_entity(entity: &Entity) -> EncounterEntity {
 pub fn update_player_entity(old: &mut EncounterEntity, new: &Entity) {
     old.id = new.id;
     old.character_id = new.character_id;
-    old.name = new.name.clone();
+    old.name.clone_from(&new.name);
     old.class_id = new.class_id;
     old.class = get_class_from_id(&new.class_id);
     old.gear_score = new.gear_level;
@@ -103,17 +103,17 @@ pub fn get_status_effect_data(buff_id: u32) -> Option<StatusEffect> {
             status_effect.source.skill = buff_source_skill.cloned();
         }
     } else if buff_category == "set" && buff.set_name.is_some() {
-        status_effect.source.set_name = buff.set_name.clone();
+        status_effect.source.set_name.clone_from(&buff.set_name);
     } else if buff_category == "battleitem" {
         if let Some(buff_source_item) = SKILL_EFFECT_DATA.get(&buff_id) {
             if let Some(item_name) = buff_source_item.item_name.as_ref() {
-                status_effect.source.name = item_name.clone();
+                status_effect.source.name.clone_from(item_name);
             }
             if let Some(item_desc) = buff_source_item.item_desc.as_ref() {
-                status_effect.source.desc = item_desc.clone();
+                status_effect.source.desc.clone_from(item_desc);
             }
             if let Some(icon) = buff_source_item.icon.as_ref() {
-                status_effect.source.icon = icon.clone();
+                status_effect.source.icon.clone_from(icon);
             }
         }
     }
@@ -551,7 +551,7 @@ fn generate_intervals(start: i64, end: i64) -> Vec<i64> {
     (0..end - start).step_by(1_000).collect()
 }
 
-fn sum_in_range(vec: &Vec<(i64, i64)>, start: i64, end: i64) -> i64 {
+fn sum_in_range(vec: &[(i64, i64)], start: i64, end: i64) -> i64 {
     let start_idx = binary_search_left(vec, start);
     let end_idx = binary_search_left(vec, end + 1);
 
@@ -561,7 +561,7 @@ fn sum_in_range(vec: &Vec<(i64, i64)>, start: i64, end: i64) -> i64 {
         .sum()
 }
 
-fn binary_search_left(vec: &Vec<(i64, i64)>, target: i64) -> usize {
+fn binary_search_left(vec: &[(i64, i64)], target: i64) -> usize {
     let mut left = 0;
     let mut right = vec.len();
 
@@ -864,7 +864,7 @@ pub fn insert_data(
         for (_, cast_log) in cast_log.iter().filter(|&(s, _)| *s == entity.name) {
             for (skill, log) in cast_log {
                 entity.skills.entry(*skill).and_modify(|e| {
-                    e.cast_log = log.to_owned();
+                    e.cast_log.clone_from(log);
                 });
             }
         }

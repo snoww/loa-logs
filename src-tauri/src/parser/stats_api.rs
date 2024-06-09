@@ -82,7 +82,7 @@ impl StatsApi {
             return;
         }
 
-        self.region = region.clone();
+        self.region.clone_from(&region);
 
         if player.entity_type != EntityType::PLAYER {
             warn!("invalid entity type: {:?}", player);
@@ -314,7 +314,7 @@ async fn make_request(
     let request_body = json!({
         "id": client_id,
         "version": version,
-        "region": region.clone(),
+        "region": region,
         "player": player.clone(),
     });
     debug_print(format_args!("requesting player stats for {:?}", player));
