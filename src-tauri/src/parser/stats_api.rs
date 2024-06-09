@@ -7,7 +7,7 @@ use hashbrown::HashMap;
 use log::{info, warn};
 use md5::compute;
 use moka::sync::Cache;
-use reqwest::Client;
+use reqwest::{Client, StatusCode};
 use serde::de::{MapAccess, Visitor};
 use serde::{Deserialize, Deserializer, Serialize};
 use serde_json::json;
@@ -44,11 +44,10 @@ impl StatsApi {
             request_cache: Cache::builder().max_capacity(64).build(),
             inflight_cache: Cache::builder()
                 .max_capacity(16)
-                .time_to_live(Duration::from_secs(10))
                 .build(),
             cancel_queue: Cache::builder()
                 .max_capacity(16)
-                .time_to_live(Duration::from_secs(10))
+                .time_to_live(Duration::from_secs(15))
                 .build(),
             region_file_path,
 
@@ -101,6 +100,7 @@ impl StatsApi {
                 self.cancel_queue.insert(player.name.clone(), hash.clone());
                 PlayerHash {
                     name: player.name.clone(),
+                    id: player.character_id,
                     hash,
                 }
             } else {
@@ -211,7 +211,8 @@ impl StatsApi {
     }
 
     pub fn send_raid_info(&mut self, state: &EncounterState) {
-        if !((self.valid_zone && (state.raid_difficulty == "Normal" || state.raid_difficulty == "Hard"))
+        if !((self.valid_zone
+            && (state.raid_difficulty == "Normal" || state.raid_difficulty == "Hard"))
             || (state.raid_difficulty == "Inferno"
                 || state.raid_difficulty == "Trial"
                 || state.raid_difficulty == "The First"))
@@ -219,7 +220,7 @@ impl StatsApi {
             debug_print(format_args!("not valid for raid info"));
             return;
         }
-        
+
         let players: HashMap<String, u64> = state
             .encounter
             .entities
@@ -232,7 +233,7 @@ impl StatsApi {
                 }
             })
             .collect();
-        
+
         if players.len() > 16 {
             warn!("invalid zone. num players: {}", players.len());
             return;
@@ -295,7 +296,7 @@ async fn make_request(
         );
         inflight_cache.invalidate(&player.hash);
         cancel_queue.invalidate(&player.name);
-        
+
         if !final_attempt {
             final_attempt = true;
             player.hash = "".to_string();
@@ -314,7 +315,7 @@ async fn make_request(
         "id": client_id,
         "version": version,
         "region": region.clone(),
-        "characters": vec![player.clone()],
+        "player": player.clone(),
     });
     debug_print(format_args!("requesting player stats for {:?}", player));
     // debug_print(format_args!("{:?}", players));
@@ -326,65 +327,73 @@ async fn make_request(
         .send()
         .await
     {
-        Ok(response) => match response.json::<HashMap<String, PlayerStats>>().await {
-            Ok(data) => {
-                if data.contains_key(&player.name) {
-                    // should only contain 1 element
-                    for (name, stats) in data {
-                        inflight_cache.invalidate(&stats.hash);
-                        stats_cache.insert(name.clone(), stats.clone());
-                        request_cache.insert(stats.hash.clone(), stats);
+        Ok(res) => match res.status() {
+            StatusCode::OK => {
+                let data = res.json::<PlayerStats>().await;
+                match data {
+                    Ok(data) => {
+                        debug_print(format_args!("received player stats for {:?}", player.name));
+                        inflight_cache.invalidate(&data.hash);
+                        stats_cache.insert(player.name.clone(), data.clone());
+                        request_cache.insert(data.hash.clone(), data);
+                        window
+                            .emit("rdps", "request_success")
+                            .expect("failed to emit rdps message");
                     }
-                    info!("received player stats for {:?}", player.name);
-                    window
-                        .emit("rdps", "request_success")
-                        .expect("failed to emit rdps message");
-                } else {
-                    window
-                        .emit("rdps", "request_failed_retrying")
-                        .expect("failed to emit rdps message");
-                    for _ in 0..20 {
-                        if let Some(cancel_hash) = cancel_queue.get(&player.name) {
-                            if cancel_hash != player.hash {
-                                cancel_queue.invalidate(&player.name);
-                                debug_print(format_args!(
-                                    "request cancelled for {:?}, using newer hash: {:?}",
-                                    player, cancel_hash
-                                ));
-                                return;
-                            }
-                        }
-                        tokio::time::sleep(Duration::from_millis(100)).await;
+                    Err(e) => {
+                        warn!("failed to parse player stats: {:?}", e);
                     }
-                    warn!(
-                        "missing stats for: {:?}, retrying, attempt {}",
-                        player,
-                        current_retries + 1
-                    );
-                    // retry request with missing players
-                    // until we receive stats for all players
-                    make_request(
-                        client_id,
-                        client,
-                        window,
-                        region,
-                        stats_cache,
-                        request_cache,
-                        inflight_cache,
-                        cancel_queue,
-                        player,
-                        current_retries + 1,
-                        final_attempt,
-                    )
-                    .await;
                 }
             }
-            Err(e) => {
-                warn!("failed to parse player stats: {:?}", e);
+            StatusCode::NOT_FOUND => {
+                window
+                    .emit("rdps", "request_failed_retrying")
+                    .expect("failed to emit rdps message");
+                for _ in 0..20 {
+                    if let Some(cancel_hash) = cancel_queue.get(&player.name) {
+                        if cancel_hash != player.hash {
+                            cancel_queue.invalidate(&player.name);
+                            debug_print(format_args!(
+                                "request cancelled for {:?}, using newer hash: {:?}",
+                                player, cancel_hash
+                            ));
+                            return;
+                        }
+                    }
+                    tokio::time::sleep(Duration::from_millis(100)).await;
+                }
+                warn!(
+                    "missing stats for: {:?}, retrying, attempt {}",
+                    player,
+                    current_retries + 1
+                );
+                // retry request with missing players
+                // until we receive stats for all players
+                make_request(
+                    client_id,
+                    client,
+                    window,
+                    region,
+                    stats_cache,
+                    request_cache,
+                    inflight_cache,
+                    cancel_queue,
+                    player,
+                    current_retries + 1,
+                    final_attempt,
+                )
+                .await;
+            }
+            _ => {
+                warn!("failed to fetch player stats: error {:?}", res.status());
+                window
+                    .emit("rdps", "api_error")
+                    .expect("failed to emit rdps message");
             }
         },
         Err(e) => {
-            warn!("failed to fetch player stats: {:?}", e);
+            warn!("failed to send api request: {:?}", e);
+            inflight_cache.invalidate(&player.hash);
             window
                 .emit("rdps", "api_error")
                 .expect("failed to emit rdps message");
@@ -449,6 +458,7 @@ pub struct Engraving {
 pub struct PlayerHash {
     pub name: String,
     pub hash: String,
+    pub id: u64,
 }
 
 struct StatsVisitor;
