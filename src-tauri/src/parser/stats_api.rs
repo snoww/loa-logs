@@ -40,11 +40,9 @@ impl StatsApi {
             window: Arc::new(window),
             client: Client::new(),
             valid_zone: false,
-            stats_cache: Cache::builder().max_capacity(32).build(),
+            stats_cache: Cache::builder().max_capacity(64).build(),
             request_cache: Cache::builder().max_capacity(64).build(),
-            inflight_cache: Cache::builder()
-                .max_capacity(16)
-                .build(),
+            inflight_cache: Cache::builder().max_capacity(32).build(),
             cancel_queue: Cache::builder()
                 .max_capacity(16)
                 .time_to_live(Duration::from_secs(15))
@@ -386,6 +384,7 @@ async fn make_request(
             }
             _ => {
                 warn!("failed to fetch player stats: error {:?}", res.status());
+                inflight_cache.invalidate(&player.hash);
                 window
                     .emit("rdps", "api_error")
                     .expect("failed to emit rdps message");

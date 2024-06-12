@@ -1384,7 +1384,9 @@ impl EncounterState {
         }
         // update current_boss
         else if target_entity.entity_type == EntityType::BOSS {
-            self.encounter.current_boss_name.clone_from(&target_entity.name);
+            self.encounter
+                .current_boss_name
+                .clone_from(&target_entity.name);
             target_entity.id = dmg_target_entity.id;
             target_entity.npc_id = dmg_target_entity.npc_id;
 
@@ -1744,11 +1746,8 @@ impl EncounterState {
         let ntp_fight_start = self.ntp_fight_start;
 
         let rdps_valid = self.rdps_valid;
-        
-        debug_print(format_args!(
-            "rdps_data valid: [{}] {:?}",
-            rdps_valid, player_stats
-        ));
+
+        debug_print(format_args!("rdps_data valid: [{}]", rdps_valid));
 
         task::spawn(async move {
             info!(
