@@ -1,3 +1,9 @@
+### v1.10.8
+#### NEW FEATURES
+- **RDPS NOTE:** you must be updated to v1.10.8 or later to use rdps due to api backend change
+#### BUG FIXES AND IMPROVEMENTS
+- fix auto update causing meter to freeze up
+- performance improvements
 ### v1.10.7
 #### NEW FEATURES
 - updates will be installed automatically at app start
