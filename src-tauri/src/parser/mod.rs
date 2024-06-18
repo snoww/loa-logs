@@ -297,6 +297,7 @@ pub fn start(
                 if let Some(pkt) = parse_pkt(&data, PKTInitEnv::new, "PKTInitEnv") {
                     party_tracker.borrow_mut().reset_party_mappings();
                     state.raid_difficulty = "".to_string();
+                    state.raid_difficulty_id = 0;
                     party_cache = None;
                     party_map_cache = HashMap::new();
                     let entity = entity_tracker.init_env(pkt);
@@ -517,14 +518,17 @@ pub fn start(
                     match pkt.raid_id {
                         308226 | 308227 | 308239 | 308339 => {
                             state.raid_difficulty = "Trial".to_string();
+                            state.raid_difficulty_id = 7;
                         }
                         308428 | 308429 | 308420 | 308410 | 308411 | 308414 | 308422 | 308424
                         | 308421 | 308412 | 308423 | 308426 | 308416 | 308419 | 308415 | 308437
                         | 308417 | 308418 | 308425 | 308430 => {
                             state.raid_difficulty = "Challenge".to_string();
+                            state.raid_difficulty_id = 8;
                         }
                         _ => {
                             state.raid_difficulty = "".to_string();
+                            state.raid_difficulty_id = 0;
                         }
                     }
 
@@ -846,28 +850,34 @@ pub fn start(
                 ) {
                     stats_api.valid_zone = VALID_ZONES.contains(&pkt.zone_id);
 
-                    if !state.raid_difficulty.is_empty() {
+                    if state.raid_difficulty_id >= pkt.zone_id && !state.raid_difficulty.is_empty() {
                         continue;
                     }
                     debug_print(format_args!("raid zone id: {}", &pkt.zone_id));
                     match pkt.zone_level {
                         0 => {
                             state.raid_difficulty = "Normal".to_string();
+                            state.raid_difficulty_id = 0;
                         }
                         1 => {
                             state.raid_difficulty = "Hard".to_string();
+                            state.raid_difficulty_id = 1;
                         }
                         2 => {
                             state.raid_difficulty = "Inferno".to_string();
+                            state.raid_difficulty_id = 2;
                         }
                         3 => {
                             state.raid_difficulty = "Challenge".to_string();
+                            state.raid_difficulty_id = 3;
                         }
                         4 => {
                             state.raid_difficulty = "Special".to_string();
+                            state.raid_difficulty_id = 4;
                         }
                         5 => {
                             state.raid_difficulty = "The First".to_string();
+                            state.raid_difficulty_id = 5;
                         }
                         _ => {}
                     }

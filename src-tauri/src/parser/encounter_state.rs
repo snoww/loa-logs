@@ -45,6 +45,7 @@ pub struct EncounterState {
 
     pub party_info: Vec<Vec<String>>,
     pub raid_difficulty: String,
+    pub raid_difficulty_id: u32,
     pub boss_only_damage: bool,
     pub region: Option<String>,
 
@@ -74,6 +75,7 @@ impl EncounterState {
 
             party_info: Vec::new(),
             raid_difficulty: "".to_string(),
+            raid_difficulty_id: 0,
             boss_only_damage: false,
             region: None,
 
