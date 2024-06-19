@@ -339,7 +339,11 @@ async fn make_request(
                             .expect("failed to emit rdps message");
                     }
                     Err(e) => {
+                        inflight_cache.invalidate(&player.hash);
                         warn!("failed to parse player stats: {:?}", e);
+                        window
+                            .emit("rdps", "api_error")
+                            .expect("failed to emit rdps message");
                     }
                 }
             }
@@ -383,7 +387,7 @@ async fn make_request(
                 .await;
             }
             _ => {
-                warn!("failed to fetch player stats: error {:?}", res.status());
+                warn!("failed to fetch player stats: api error {:?}", res.status());
                 inflight_cache.invalidate(&player.hash);
                 window
                     .emit("rdps", "api_error")
