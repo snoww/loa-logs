@@ -846,6 +846,11 @@ impl EncounterState {
                                             - self.encounter.fight_start
                                     );
                                     self.rdps_valid = false;
+                                    if !self.rdps_valid {
+                                        self.window
+                                            .emit("rdps", "invalid_stats")
+                                            .expect("failed to emit rdps message");
+                                    }
                                 }
 
                                 PlayerStats::default()
@@ -1373,6 +1378,12 @@ impl EncounterState {
                         self.encounter.last_combat_packet - self.encounter.fight_start
                     );
                     self.rdps_valid = false;
+
+                    if !self.rdps_valid {
+                        self.window
+                            .emit("rdps", "invalid_stats")
+                            .expect("failed to emit rdps message");
+                    }
                 }
             }
         }

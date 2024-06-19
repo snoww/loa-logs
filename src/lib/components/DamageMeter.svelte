@@ -450,7 +450,7 @@
                                     >Iden%
                                 </th>
                             {/if}
-                            {#if anyRdpsData && $settings.meter.ssyn}
+                            {#if anyRdpsData && $rdpsEventDetails === "" && $settings.meter.ssyn}
                                 <th
                                     class="w-12 font-normal"
                                     use:tooltip={{ content: "% Damage gained from Support" }}
@@ -480,7 +480,7 @@
                                     {anySupportBuff}
                                     {anySupportIdentity}
                                     {anySupportBrand}
-                                    {anyRdpsData}
+                                    anyRdpsData={anyRdpsData && $rdpsEventDetails === ""}
                                     {isSolo} />
                             </tr>
                         {/each}
