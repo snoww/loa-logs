@@ -11,7 +11,7 @@
         formatTimestampDate,
         formatTimestampTime
     } from "$lib/utils/numbers";
-    import { classIconCache, settings } from "$lib/utils/settings";
+    import { classIconCache, miscSettings, settings } from "$lib/utils/settings";
     import {
         backNavStore,
         ifaceChangedStore,
@@ -24,12 +24,15 @@
     import { tooltip } from "$lib/utils/tooltip";
     import { invoke } from "@tauri-apps/api";
     import NProgress from "nprogress";
+    import { goto } from "$app/navigation";
     import "nprogress/nprogress.css";
     import Notification from "$lib/components/shared/Notification.svelte";
     import { encounterMap } from "$lib/constants/encounters";
     import DifficultyLabel from "$lib/components/shared/DifficultyLabel.svelte";
     import SortSymbol from "$lib/components/table/SortSymbol.svelte";
     import Title from "$lib/components/shared/Title.svelte";
+    import { getVersion } from "@tauri-apps/api/app";
+    import { appWindow } from "@tauri-apps/api/window";
 
     let encounters: Array<EncounterPreview> = [];
     let totalEncounters: number = 0;
@@ -54,8 +57,26 @@
     }
 
     onMount(async () => {
-        loadEncounters();
+        await loadEncounters();
+        if ($miscSettings) {
+            const version = await getVersion();
+            if (!$miscSettings.viewedChangelog || $miscSettings.version !== version) {
+                $miscSettings.version = version;
+                await gotoChangelog();
+            }
+        } else {
+            $miscSettings = { version: await getVersion() };
+            await gotoChangelog();
+        }
     });
+
+    async function gotoChangelog() {
+        await appWindow.show();
+        await appWindow.unminimize();
+        await appWindow.setFocus();
+
+        goto("/changelog");
+    }
 
     async function loadEncounters(): Promise<Array<EncounterPreview>> {
         NProgress.start();

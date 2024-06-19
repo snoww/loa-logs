@@ -4,6 +4,7 @@
     import { onMount } from "svelte";
     import Title from "$lib/components/shared/Title.svelte";
     import ChangelogMarkdown from "$lib/data/changelog.md?raw";
+    import { miscSettings } from "$lib/utils/settings";
 
     let hidden: boolean = true;
 
@@ -11,6 +12,7 @@
         $pageStore = 1;
         $backNavStore = false;
         $searchStore = "";
+        $miscSettings.viewedChangelog = true;
     });
 </script>
 

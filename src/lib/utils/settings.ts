@@ -210,6 +210,8 @@ export const settings = settingsStore("settings", defaultSettings);
 export const colors = settingsStore("classColors", classColors);
 export const updateSettings = settingsStore("updateSettings", update);
 
+export const miscSettings = settingsStore("miscSettings", {});
+
 export async function registerShortcuts(shortcuts: any) {
     try {
         await unregisterAll();

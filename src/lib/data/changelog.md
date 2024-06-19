@@ -1,3 +1,20 @@
+<div class="rounded-md flex space-x-2 items-center">
+  <div class="text-lg font-semibold text-white">
+    v1.11.0
+  </div>
+  <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
+    New
+  </div>
+</div>
+
+#### NEW FEATURES
+- updated meter for echidna patch
+#### BUG FIXES AND IMPROVEMENTS
+- potential fix to difficulty being incorrect at times
+- hide rdps instead of displaying invalid stats when failed to fetch stats
+
+---
+
 ### v1.10.8
 #### NEW FEATURES
 - **RDPS NOTE:** you must be updated to v1.10.8 or later to use rdps due to api backend change
