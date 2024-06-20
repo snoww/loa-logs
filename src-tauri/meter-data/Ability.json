@@ -158,7 +158,7 @@
         "values": [2500, 2500, 10080107, 10080110, 7500]
       },
       "3": {
-        "desc": "Fury Meter remains at max and turns into Mayhem Mode with the power of darkness. Mayhem Mode: Outgoing Damage +16%, Atk. and Move Speed +15%, all incoming Damage -72%. When Mayhem Mode activates, HP is reduced to 25% of Max HP; this cannot be exceeded even when healing is applied. Can only receive 40% of healing and 25% of shield. Press the <FONT COLOR='#ffff99'><$HOTKEY 108/></FONT> key to cancel Mayhem Mode and recover 25% of Max HP; cannot enter Mayhem Mode again for 30s.",
+        "desc": "Fury Meter remains at max and turns into Mayhem Mode with the power of darkness. Mayhem Mode: Outgoing Damage +18%, Atk. and Move Speed +15%, all incoming Damage -72%. When Mayhem Mode activates, HP is reduced to 25% of Max HP; this cannot be exceeded even when healing is applied. Can only receive 40% of healing and 25% of shield. Press the <FONT COLOR='#ffff99'><$HOTKEY 108/></FONT> key to cancel Mayhem Mode and recover 25% of Max HP; cannot enter Mayhem Mode again for 30s.",
         "values": [2500, 2500, 10080108, 10080110, 7500]
       }
     },
@@ -166,6 +166,7 @@
     "isnegative": false,
     "icon": "ability_270.png",
     "isengrave": true,
+    "class": 102,
     "featuretype": 16
   },
   "127": {
@@ -188,6 +189,7 @@
     "isnegative": false,
     "icon": "buff_238.png",
     "isengrave": true,
+    "class": 302,
     "featuretype": 17
   },
   "129": {
@@ -201,6 +203,7 @@
     "isnegative": false,
     "icon": "ability_242.png",
     "isengrave": true,
+    "class": 503,
     "featuretype": 18
   },
   "130": {
@@ -223,6 +226,7 @@
     "isnegative": false,
     "icon": "ability_271.png",
     "isengrave": true,
+    "class": 504,
     "featuretype": 19
   },
   "132": {
@@ -383,6 +387,7 @@
     "isnegative": false,
     "icon": "ability_269.png",
     "isengrave": true,
+    "class": 102,
     "featuretype": 83
   },
   "189": {
@@ -396,6 +401,7 @@
     "isnegative": false,
     "icon": "ability_25.png",
     "isengrave": true,
+    "class": 302,
     "featuretype": 84
   },
   "190": {
@@ -418,6 +424,7 @@
     "isnegative": false,
     "icon": "achieve_07_22.png",
     "isengrave": true,
+    "class": 303,
     "featuretype": 85
   },
   "191": {
@@ -440,6 +447,7 @@
     "isnegative": false,
     "icon": "buff_177.png",
     "isengrave": true,
+    "class": 303,
     "featuretype": 86
   },
   "192": {
@@ -462,6 +470,7 @@
     "isnegative": false,
     "icon": "buff_600.png",
     "isengrave": true,
+    "class": 503,
     "featuretype": 87
   },
   "193": {
@@ -484,6 +493,7 @@
     "isnegative": false,
     "icon": "gl_skill_01_26.png",
     "isengrave": true,
+    "class": 504,
     "featuretype": 88
   },
   "194": {
@@ -506,6 +516,7 @@
     "isnegative": false,
     "icon": "ability_275.png",
     "isengrave": true,
+    "class": 204,
     "featuretype": 89
   },
   "195": {
@@ -528,6 +539,7 @@
     "isnegative": false,
     "icon": "ability_276.png",
     "isengrave": true,
+    "class": 204,
     "featuretype": 90
   },
   "196": {
@@ -550,6 +562,7 @@
     "isnegative": false,
     "icon": "achieve_08_49.png",
     "isengrave": true,
+    "class": 103,
     "featuretype": 91
   },
   "197": {
@@ -572,6 +585,7 @@
     "isnegative": false,
     "icon": "ability_268.png",
     "isengrave": true,
+    "class": 103,
     "featuretype": 92
   },
   "198": {
@@ -594,6 +608,7 @@
     "isnegative": false,
     "icon": "buff_78.png",
     "isengrave": true,
+    "class": 203,
     "featuretype": 93
   },
   "199": {
@@ -616,6 +631,7 @@
     "isnegative": false,
     "icon": "ability_274.png",
     "isengrave": true,
+    "class": 203,
     "featuretype": 94
   },
   "200": {
@@ -629,28 +645,30 @@
     "isnegative": false,
     "icon": "ability_272.png",
     "isengrave": true,
+    "class": 202,
     "featuretype": 95
   },
   "201": {
     "id": 201,
     "levels": {
       "1": {
-        "desc": "Adds Emperor Cards to the Card Deck. Balance and Judgment Cards are replaced with Chancellor and Sovereign Cards. Normal Skill Damage +20%.",
-        "values": [19282, 0, 2000, 19287, 19286]
+        "desc": "Adds Emperor Cards to the Card Deck. Balance and Judgment Cards are replaced with Chancellor and Sovereign Cards. Normal Skill Damage +25%.",
+        "values": [19282, 0, 2500, 19287, 19286]
       },
       "2": {
-        "desc": "Adds Emperor Cards to the Card Deck. Balance and Judgment Cards are replaced with Chancellor and Sovereign Cards. Normal Skill Damage +30%. Emperor Card Damage +30%.",
-        "values": [19282, 3000, 3000, 19287, 19286]
+        "desc": "Adds Emperor Cards to the Card Deck. Balance and Judgment Cards are replaced with Chancellor and Sovereign Cards. Normal Skill Damage +35%. Emperor Card Damage +30%.",
+        "values": [19282, 3000, 3500, 19287, 19286]
       },
       "3": {
-        "desc": "Adds Emperor Cards to the Card Deck. Balance and Judgment Cards are replaced with Chancellor and Sovereign Cards. Normal Skill Damage +40%. Emperor Card Damage +80%.",
-        "values": [19282, 8000, 4000, 19287, 19286]
+        "desc": "Adds Emperor Cards to the Card Deck. Balance and Judgment Cards are replaced with Chancellor and Sovereign Cards. Normal Skill Damage +45%. Emperor Card Damage +80%.",
+        "values": [19282, 8000, 4500, 19287, 19286]
       }
     },
     "name": "Order of the Emperor",
     "isnegative": false,
     "icon": "ability_273.png",
     "isengrave": true,
+    "class": 202,
     "featuretype": 96
   },
   "202": {
@@ -712,6 +730,7 @@
     "isnegative": false,
     "icon": "ability_266.png",
     "isengrave": true,
+    "class": 104,
     "featuretype": 100
   },
   "225": {
@@ -734,6 +753,7 @@
     "isnegative": false,
     "icon": "ability_267.png",
     "isengrave": true,
+    "class": 104,
     "featuretype": 101
   },
   "235": {
@@ -1092,6 +1112,7 @@
     "isnegative": false,
     "icon": "buff_235.png",
     "isengrave": true,
+    "class": 304,
     "featuretype": 125
   },
   "257": {
@@ -1114,21 +1135,22 @@
     "isnegative": false,
     "icon": "ability_45.png",
     "isengrave": true,
+    "class": 304,
     "featuretype": 126
   },
   "258": {
     "id": 258,
     "levels": {
       "1": {
-        "desc": "Summons Silverhawk MK-II, allowing Move Speed +4%, Silverhawk's Crit Rate +10%, Basic AoE Radius +60%, and Silverhawk's summon duration +30%. On Basic Attack or Wings of Storm hit, foes get a Mark of Death. Outgoing Damage +3%. Additionally, when Silverhawk is summoned Atk. Power +2%.",
+        "desc": "Summons Silverhawk MK-II, allowing Move Speed +4%, Silverhawk's Crit Rate +10%, Basic AoE Radius +60%, and Silverhawk's summon duration +30%. On Basic Attack or Wings of Storm hit, foes get a Mark of Death. Outgoing Damage +4%. Additionally, when Silverhawk is summoned Atk. Power +2%.",
         "values": [1000, 3000, 28160, 281301, 500197]
       },
       "2": {
-        "desc": "Summons Silverhawk MK-II, allowing Move Speed +4%, Silverhawk's Crit Rate +20%, Basic AoE Radius +60%, and Silverhawk's Summoning Duration +60%. On Basic Attack or Wings of Storm hit, foes get a Mark of Death. Outgoing Damage +7%. Additionally, when Silverhawk is summoned Atk. Power +5%.",
+        "desc": "Summons Silverhawk MK-II, allowing Move Speed +4%, Silverhawk's Crit Rate +20%, Basic AoE Radius +60%, and Silverhawk's summon duration +60%. On Basic Attack or Wings of Storm hit, foes get a Mark of Death. Outgoing Damage +8%. Additionally, when Silverhawk is summoned Atk. Power +5%.",
         "values": [2000, 6000, 28160, 281311, 500198]
       },
       "3": {
-        "desc": "Summons Silverhawk MK-II, allowing Move Speed +4%, Silverhawk's Crit Rate +40%, Basic AoE Radius +60%, and Silverhawk's Summoning Duration +100%. On Basic Attack or Wings of Storm hit, foes get a Mark of Death. Outgoing Damage +12%. Additionally, when Silverhawk is summoned Atk. Power +10%.",
+        "desc": "Summons Silverhawk MK-II, allowing Move Speed +4%, Silverhawk's Crit Rate +40%, Basic AoE Radius +60%, and Silverhawk's summoning duration +100%. On Basic Attack or Wings of Storm hit, foes get a Mark of Death. Outgoing Damage +15%. Additionally, when Silverhawk is summoned, Atk. Power +10%.",
         "values": [4000, 10000, 28160, 281321, 500199]
       }
     },
@@ -1136,6 +1158,7 @@
     "isnegative": false,
     "icon": "ability_47.png",
     "isengrave": true,
+    "class": 502,
     "featuretype": 123
   },
   "259": {
@@ -1158,6 +1181,7 @@
     "isnegative": false,
     "icon": "buff_245.png",
     "isengrave": true,
+    "class": 502,
     "featuretype": 124
   },
   "114": {
@@ -1483,28 +1507,30 @@
     "isnegative": false,
     "icon": "ability_207.png",
     "isengrave": true,
+    "class": 305,
     "featuretype": 270
   },
   "277": {
     "id": 277,
     "levels": {
       "1": {
-        "desc": "Cannot use Focus Stance. Flurry Skill Damage +20%, Dual Meter gain +50%. Cooldown of Movement Skills decrease by 2s when the Dual Meter is consumed.",
-        "values": [2000, 5000, 2000]
+        "desc": "Cannot use Focus Stance. Flurry Skill Damage +22%, Dual Meter gain +50%. Cooldown of Movement Skills decrease by 2s when the Dual Meter is consumed.",
+        "values": [2200, 5000, 2000]
       },
       "2": {
-        "desc": "Cannot use Focus Stance. Flurry Skill Damage +30%, Dual Meter gain +75%. Cooldown of Movement Skills decrease by 2s when the Dual Meter is consumed.",
-        "values": [3000, 7500, 2000]
+        "desc": "Cannot use Focus Stance. Flurry Skill Damage +33%, Dual Meter gain +75%. Cooldown of Movement Skills decrease by 2s when the Dual Meter is consumed.",
+        "values": [3300, 7500, 2000]
       },
       "3": {
-        "desc": "Cannot use Focus Stance. Flurry Skill Damage +40%, Dual Meter gain +100%. Cooldown of Movement Skills decrease by 2s when the Dual Meter is consumed.",
-        "values": [4000, 10000, 2000]
+        "desc": "Cannot use Focus Stance. Flurry Skill Damage +44%, Dual Meter gain +100%. Cooldown of Movement Skills decrease by 2s when the Dual Meter is consumed.",
+        "values": [4400, 10000, 2000]
       }
     },
     "name": "Control",
     "isnegative": false,
     "icon": "ability_208.png",
     "isengrave": true,
+    "class": 305,
     "featuretype": 271
   },
   "278": {
@@ -1527,6 +1553,7 @@
     "isnegative": false,
     "icon": "ability_209.png",
     "isengrave": true,
+    "class": 402,
     "featuretype": 283
   },
   "279": {
@@ -1549,6 +1576,7 @@
     "isnegative": false,
     "icon": "ability_210.png",
     "isengrave": true,
+    "class": 402,
     "featuretype": 282
   },
   "280": {
@@ -1571,6 +1599,7 @@
     "isnegative": false,
     "icon": "ability_211.png",
     "isengrave": true,
+    "class": 403,
     "featuretype": 280
   },
   "281": {
@@ -1593,6 +1622,7 @@
     "isnegative": false,
     "icon": "ability_212.png",
     "isengrave": true,
+    "class": 403,
     "featuretype": 281
   },
   "282": {
@@ -1615,6 +1645,7 @@
     "isnegative": false,
     "icon": "ability_214.png",
     "isengrave": true,
+    "class": 105,
     "featuretype": 292
   },
   "283": {
@@ -1637,6 +1668,7 @@
     "isnegative": false,
     "icon": "ability_215.png",
     "isengrave": true,
+    "class": 105,
     "featuretype": 293
   },
   "284": {
@@ -1659,21 +1691,22 @@
     "isnegative": false,
     "icon": "ability_216.png",
     "isengrave": true,
+    "class": 505,
     "featuretype": 318
   },
   "285": {
     "id": 285,
     "levels": {
       "1": {
-        "desc": "During Hypersync Mode, on hit, Sync skills inflict Damage +2% (Max. 3 stacks) and Cooldown for Sync skills excluding Movement skills and Stand Up skills -0.5s. Also, Cooldown of Sync skills is reset when entering Hypersync Mode, and it returns 40% of its Core Energy cost when canceled.",
+        "desc": "During Hypersync Mode, on hit, Sync Skill Damage +6% and Cooldown for Sync skills excluding Movement skills and Stand Up skills -0.5s. Also, Cooldown of Sync skills is reset when entering Hypersync Mode, and it returns 40% of its Core Energy cost when canceled.",
         "values": [500133, 4000, 69000001, 500, 10000]
       },
       "2": {
-        "desc": "During Hypersync Mode, on hit, Sync skills inflict Damage +4% (max. 3 stacks) and Cooldown for Sync skills excluding Movement skills and Stand Up skills -0.5s. Also, Cooldown of Sync skills is reset when entering Hypersync Mode, and it returns 40% of its Core Energy cost when canceled.",
+        "desc": "During Hypersync Mode, on hit, Sync Skill Damage +12% and Cooldown for Sync skills excluding Movement skills and Stand Up skills -0.5s. Also, Cooldown of Sync skills is reset when entering Hypersync Mode, and it returns 40% of its Core Energy cost when canceled.",
         "values": [500134, 4000, 69000001, 500, 10000]
       },
       "3": {
-        "desc": "During Hypersync Mode, on hit, Sync skills inflict Damage +6% (max. 3 stacks) and Cooldown for Sync skills excluding Movement skills and Stand Up skills -0.5s. Also, Cooldown of Sync skills is reset when entering Hypersync Mode, and it returns 40% of its Core Energy cost when canceled.",
+        "desc": "During Hypersync Mode, on hit, Sync Skill Damage +21% and Cooldown for sync skills excluding Movement skills and Stand Up skills -0.5s. Also, Cooldown of Sync skills is reset when entering Hypersync Mode, and it returns 40% of its Core Energy cost when canceled.",
         "values": [500135, 4000, 69000001, 500, 10000]
       }
     },
@@ -1681,6 +1714,7 @@
     "isnegative": false,
     "icon": "ability_217.png",
     "isengrave": true,
+    "class": 505,
     "featuretype": 319
   },
   "286": {
@@ -1703,6 +1737,7 @@
     "isnegative": false,
     "icon": "ability_222.png",
     "isengrave": true,
+    "class": 404,
     "featuretype": 324
   },
   "287": {
@@ -1725,6 +1760,7 @@
     "isnegative": false,
     "icon": "ability_223.png",
     "isengrave": true,
+    "class": 404,
     "featuretype": 323
   },
   "288": {
@@ -1760,6 +1796,7 @@
     "isnegative": false,
     "icon": "ability_225.png",
     "isengrave": true,
+    "class": 512,
     "featuretype": 326
   },
   "290": {
@@ -1773,6 +1810,7 @@
     "isnegative": false,
     "icon": "ability_228.png",
     "isengrave": true,
+    "class": 512,
     "featuretype": 327
   },
   "291": {
@@ -1795,6 +1833,7 @@
     "isnegative": false,
     "icon": "ability_230.png",
     "isengrave": true,
+    "class": 312,
     "featuretype": 328
   },
   "292": {
@@ -1817,6 +1856,7 @@
     "isnegative": false,
     "icon": "ability_229.png",
     "isengrave": true,
+    "class": 312,
     "featuretype": 329
   },
   "293": {
@@ -1839,6 +1879,7 @@
     "isnegative": false,
     "icon": "ability_240.png",
     "isengrave": true,
+    "class": 205,
     "featuretype": 330
   },
   "294": {
@@ -1861,6 +1902,7 @@
     "isnegative": false,
     "icon": "ability_241.png",
     "isengrave": true,
+    "class": 205,
     "featuretype": 331
   },
   "295": {
@@ -2041,7 +2083,7 @@
       "2": { "desc": "위기모면2", "values": [700004201, 700004202] },
       "3": { "desc": "위기모면2", "values": [700004201, 700004202] }
     },
-    "name": "",
+    "name": "날카로운 단도",
     "isnegative": false,
     "icon": "",
     "isengrave": false,
@@ -2067,6 +2109,7 @@
     "isnegative": false,
     "icon": "ability_248.png",
     "isengrave": true,
+    "class": 602,
     "featuretype": 342
   },
   "306": {
@@ -2089,6 +2132,7 @@
     "isnegative": false,
     "icon": "ability_249.png",
     "isengrave": true,
+    "class": 602,
     "featuretype": 343
   },
   "307": {
@@ -2111,6 +2155,7 @@
     "isnegative": false,
     "icon": "ability_258.png",
     "isengrave": true,
+    "class": 603,
     "featuretype": 345
   },
   "308": {
@@ -2133,6 +2178,7 @@
     "isnegative": false,
     "icon": "ability_259.png",
     "isengrave": true,
+    "class": 603,
     "featuretype": 344
   },
   "309": {
@@ -2155,6 +2201,7 @@
     "isnegative": false,
     "icon": "ability_260.png",
     "isengrave": true,
+    "class": 112,
     "featuretype": 346
   },
   "310": {
@@ -2177,6 +2224,7 @@
     "isnegative": false,
     "icon": "ability_261.png",
     "isengrave": true,
+    "class": 112,
     "featuretype": 347
   },
   "311": {
@@ -2199,6 +2247,7 @@
     "isnegative": false,
     "icon": "ability_263.png",
     "isengrave": true,
+    "class": 405,
     "featuretype": 348
   },
   "312": {
@@ -2221,6 +2270,7 @@
     "isnegative": false,
     "icon": "ability_264.png",
     "isengrave": true,
+    "class": 405,
     "featuretype": 349
   },
   "313": {
@@ -2230,7 +2280,7 @@
       "2": { "desc": "위기모면3", "values": [900605, 900606] },
       "3": { "desc": "위기모면3", "values": [900605, 900606] }
     },
-    "name": "",
+    "name": "위기모면3",
     "isnegative": false,
     "icon": "",
     "isengrave": false,
@@ -2256,6 +2306,7 @@
     "isnegative": false,
     "icon": "ability_277.png",
     "isengrave": true,
+    "class": 313,
     "featuretype": 351
   },
   "315": {
@@ -2278,6 +2329,7 @@
     "isnegative": false,
     "icon": "ability_278.png",
     "isengrave": true,
+    "class": 313,
     "featuretype": 352
   },
   "176": {
@@ -2498,7 +2550,7 @@
   "1000001": {
     "id": 1000001,
     "levels": { "1": { "desc": "5", "values": [500] } },
-    "name": "",
+    "name": "항해 보조장비 희귀 - 수리비 감소",
     "isnegative": false,
     "icon": "ability_100.png",
     "isengrave": true,
@@ -2507,7 +2559,7 @@
   "1000002": {
     "id": 1000002,
     "levels": { "1": { "desc": "10", "values": [1000] } },
-    "name": "",
+    "name": "항해 보조장비 희귀 - 수리비 감소",
     "isnegative": false,
     "icon": "ability_100.png",
     "isengrave": true,
@@ -2516,7 +2568,7 @@
   "1000003": {
     "id": 1000003,
     "levels": { "1": { "desc": "15", "values": [1500] } },
-    "name": "",
+    "name": "항해 보조장비 희귀 - 수리비 감소",
     "isnegative": false,
     "icon": "ability_100.png",
     "isengrave": true,
@@ -2525,7 +2577,7 @@
   "1000004": {
     "id": 1000004,
     "levels": { "1": { "desc": "20", "values": [2000] } },
-    "name": "",
+    "name": "항해 보조장비 희귀 - 수리비 감소",
     "isnegative": false,
     "icon": "ability_100.png",
     "isengrave": true,
@@ -2534,7 +2586,7 @@
   "1000101": {
     "id": 1000101,
     "levels": { "1": { "desc": "1", "values": [1] } },
-    "name": "",
+    "name": "생활 보조장비 희귀 - 올 마스터리",
     "isnegative": false,
     "icon": "ability_100.png",
     "isengrave": true,
@@ -2543,7 +2595,7 @@
   "1000102": {
     "id": 1000102,
     "levels": { "1": { "desc": "2", "values": [2] } },
-    "name": "",
+    "name": "생활 보조장비 희귀 - 올 마스터리",
     "isnegative": false,
     "icon": "ability_100.png",
     "isengrave": true,
@@ -2552,7 +2604,7 @@
   "1000103": {
     "id": 1000103,
     "levels": { "1": { "desc": "3", "values": [3] } },
-    "name": "",
+    "name": "생활 보조장비 희귀 - 올 마스터리",
     "isnegative": false,
     "icon": "ability_100.png",
     "isengrave": true,
@@ -2561,7 +2613,7 @@
   "1000104": {
     "id": 1000104,
     "levels": { "1": { "desc": "4", "values": [4] } },
-    "name": "",
+    "name": "생활 보조장비 희귀 - 올 마스터리",
     "isnegative": false,
     "icon": "ability_100.png",
     "isengrave": true,
@@ -2570,7 +2622,7 @@
   "1000201": {
     "id": 1000201,
     "levels": { "1": { "desc": "1", "values": [1] } },
-    "name": "",
+    "name": "생활 보조장비 희귀 - 숙련도",
     "isnegative": false,
     "icon": "ability_100.png",
     "isengrave": true,
@@ -2579,7 +2631,7 @@
   "1000202": {
     "id": 1000202,
     "levels": { "1": { "desc": "2", "values": [2] } },
-    "name": "",
+    "name": "생활 보조장비 희귀 - 숙련도",
     "isnegative": false,
     "icon": "ability_100.png",
     "isengrave": true,
@@ -2588,7 +2640,7 @@
   "1000203": {
     "id": 1000203,
     "levels": { "1": { "desc": "3", "values": [3] } },
-    "name": "",
+    "name": "생활 보조장비 희귀 - 숙련도",
     "isnegative": false,
     "icon": "ability_100.png",
     "isengrave": true,
@@ -2597,7 +2649,7 @@
   "1000204": {
     "id": 1000204,
     "levels": { "1": { "desc": "4", "values": [4] } },
-    "name": "",
+    "name": "생활 보조장비 희귀 - 숙련도",
     "isnegative": false,
     "icon": "ability_100.png",
     "isengrave": true,
@@ -2606,7 +2658,7 @@
   "10000": {
     "id": 10000,
     "levels": { "1": { "desc": "" }, "2": { "desc": "" }, "3": { "desc": "" } },
-    "name": "",
+    "name": "3-2노말 A",
     "isnegative": false,
     "icon": "ability_100.png",
     "isengrave": false
@@ -2614,7 +2666,7 @@
   "10001": {
     "id": 10001,
     "levels": { "1": { "desc": "" }, "2": { "desc": "" } },
-    "name": "",
+    "name": "3-2노말 b",
     "isnegative": false,
     "icon": "ability_100.png",
     "isengrave": false
@@ -2622,7 +2674,7 @@
   "10002": {
     "id": 10002,
     "levels": { "1": { "desc": "" }, "2": { "desc": "" }, "3": { "desc": "" } },
-    "name": "",
+    "name": "3-2유물B",
     "isnegative": false,
     "icon": "ability_100.png",
     "isengrave": false
@@ -2630,7 +2682,7 @@
   "10003": {
     "id": 10003,
     "levels": { "1": { "desc": "" }, "2": { "desc": "" }, "3": { "desc": "" } },
-    "name": "",
+    "name": "3-2유물D",
     "isnegative": false,
     "icon": "ability_100.png",
     "isengrave": false
@@ -2638,7 +2690,7 @@
   "10004": {
     "id": 10004,
     "levels": { "1": { "desc": "" }, "2": { "desc": "" }, "3": { "desc": "" } },
-    "name": "",
+    "name": "3-2유물D",
     "isnegative": false,
     "icon": "ability_100.png",
     "isengrave": false
@@ -2646,7 +2698,7 @@
   "10005": {
     "id": 10005,
     "levels": { "1": { "desc": "" }, "2": { "desc": "" }, "3": { "desc": "" } },
-    "name": "",
+    "name": "배신 상급",
     "isnegative": false,
     "icon": "ability_100.png",
     "isengrave": false
@@ -2654,7 +2706,7 @@
   "10006": {
     "id": 10006,
     "levels": { "1": { "desc": "" }, "2": { "desc": "" }, "3": { "desc": "" } },
-    "name": "",
+    "name": "배신 상급",
     "isnegative": false,
     "icon": "ability_100.png",
     "isengrave": false
@@ -2662,7 +2714,7 @@
   "10007": {
     "id": 10007,
     "levels": { "1": { "desc": "" }, "2": { "desc": "" }, "3": { "desc": "" } },
-    "name": "",
+    "name": "배신 상급 3lv",
     "isnegative": false,
     "icon": "ability_100.png",
     "isengrave": true
@@ -2670,7 +2722,7 @@
   "10008": {
     "id": 10008,
     "levels": { "1": { "desc": "" }, "2": { "desc": "" }, "3": { "desc": "" } },
-    "name": "",
+    "name": "샨디1단계",
     "isnegative": false,
     "icon": "ability_100.png",
     "isengrave": false
@@ -2678,7 +2730,7 @@
   "10009": {
     "id": 10009,
     "levels": { "1": { "desc": "" }, "2": { "desc": "" }, "3": { "desc": "" } },
-    "name": "",
+    "name": "아제나 1단계",
     "isnegative": false,
     "icon": "ability_100.png",
     "isengrave": false
@@ -2686,7 +2738,7 @@
   "10010": {
     "id": 10010,
     "levels": { "1": { "desc": "" }, "2": { "desc": "" }, "3": { "desc": "" } },
-    "name": "",
+    "name": "니나브 1단계",
     "isnegative": false,
     "icon": "ability_100.png",
     "isengrave": false
@@ -2694,7 +2746,7 @@
   "10011": {
     "id": 10011,
     "levels": { "1": { "desc": "" }, "2": { "desc": "" }, "3": { "desc": "" } },
-    "name": "",
+    "name": "구원 lv2 4세트",
     "isnegative": false,
     "icon": "ability_100.png",
     "isengrave": false
@@ -2702,7 +2754,7 @@
   "10012": {
     "id": 10012,
     "levels": { "1": { "desc": "" }, "2": { "desc": "" }, "3": { "desc": "" } },
-    "name": "",
+    "name": "구원 lv3 2세트",
     "isnegative": false,
     "icon": "ability_100.png",
     "isengrave": false
@@ -2710,7 +2762,7 @@
   "10013": {
     "id": 10013,
     "levels": { "1": { "desc": "" }, "2": { "desc": "" }, "3": { "desc": "" } },
-    "name": "",
+    "name": "구원 lv3 2세트",
     "isnegative": false,
     "icon": "ability_100.png",
     "isengrave": false
@@ -2718,7 +2770,7 @@
   "10014": {
     "id": 10014,
     "levels": { "1": { "desc": "" }, "2": { "desc": "" }, "3": { "desc": "" } },
-    "name": "",
+    "name": "아제나 1단계(한계돌파)",
     "isnegative": false,
     "icon": "ability_100.png",
     "isengrave": false
@@ -2726,7 +2778,7 @@
   "10015": {
     "id": 10015,
     "levels": { "1": { "desc": "" }, "2": { "desc": "" }, "3": { "desc": "" } },
-    "name": "",
+    "name": "니나브 1단계(한계돌파)",
     "isnegative": false,
     "icon": "ability_100.png",
     "isengrave": false
@@ -2734,7 +2786,7 @@
   "10101": {
     "id": 10101,
     "levels": { "1": { "desc": "" }, "2": { "desc": "" }, "3": { "desc": "" } },
-    "name": "",
+    "name": "오레하/아르고스 1",
     "isnegative": false,
     "icon": "ability_100.png",
     "isengrave": false
@@ -2742,7 +2794,7 @@
   "10102": {
     "id": 10102,
     "levels": { "1": { "desc": "" }, "2": { "desc": "" }, "3": { "desc": "" } },
-    "name": "",
+    "name": "오레하/아르고스 2",
     "isnegative": false,
     "icon": "ability_100.png",
     "isengrave": false
@@ -2750,7 +2802,7 @@
   "10200": {
     "id": 10200,
     "levels": { "1": { "desc": "" }, "2": { "desc": "" }, "3": { "desc": "" } },
-    "name": "",
+    "name": "초월 상의 5별 효과",
     "isnegative": false,
     "icon": "ability_100.png",
     "isengrave": false
@@ -2758,7 +2810,7 @@
   "10201": {
     "id": 10201,
     "levels": { "1": { "desc": "" }, "2": { "desc": "" }, "3": { "desc": "" } },
-    "name": "",
+    "name": "초월 하의 10별 효과",
     "isnegative": false,
     "icon": "ability_100.png",
     "isengrave": false
@@ -2809,7 +2861,8 @@
     "name": "Combat Readiness",
     "isnegative": false,
     "icon": "buff_19.png",
-    "isengrave": false
+    "isengrave": false,
+    "class": 104
   },
   "77390201": {
     "id": 77390201,
@@ -2851,7 +2904,8 @@
     "name": "Communication Overflow",
     "isnegative": false,
     "icon": "buff_21.png",
-    "isengrave": false
+    "isengrave": false,
+    "class": 203
   },
   "77392310": {
     "id": 77392310,
@@ -2869,7 +2923,8 @@
     "name": "Arthetinean Skill",
     "isnegative": false,
     "icon": "ability_0.png",
-    "isengrave": false
+    "isengrave": false,
+    "class": 505
   },
   "77394200": {
     "id": 77394200,
@@ -2881,7 +2936,8 @@
     "name": "Lunar Voice",
     "isnegative": false,
     "icon": "ability_0.png",
-    "isengrave": false
+    "isengrave": false,
+    "class": 404
   },
   "77399999": {
     "id": 77399999,
