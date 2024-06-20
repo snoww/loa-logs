@@ -8,10 +8,24 @@
 </div>
 
 #### NEW FEATURES
-- updated meter for echidna patch
-#### BUG FIXES AND IMPROVEMENTS
-- potential fix to difficulty being incorrect at times
-- hide rdps instead of displaying invalid stats when failed to fetch stats
+- updated meter for echidna patch (special thanks to @PetAndMet and @faust)
+
+**NOTE:** Please do note that this is a very barebones patch. Most of the meter features are **not** working properly due to missing packet structures. We are working hard to become fully independent of Herysia's meter-core, but this process is extremely difficult and will take a few weeks.
+
+If you missed the news, please read the announcement in the discord channel. [#announcements - ramen shop](https://discord.gg/2rwTTKXRwu).
+
+### Current Functionality
+#### Working
+- damage meter
+- basic logs
+- maybe some other stuff
+#### Not Working
+- party/self buff uptime tracking
+- rdps
+- shields
+- stagger
+- identity
+- pretty much anything else
 
 ---
 

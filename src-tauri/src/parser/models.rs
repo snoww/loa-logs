@@ -404,9 +404,9 @@ pub struct SkillData {
     #[serde(alias = "summonids", alias = "summonIds")]
     pub summon_ids: Option<Vec<i32>>,
     #[serde(alias = "summonsourceskill", alias = "summonSourceSkill")]
-    pub summon_source_skill: Option<u32>,
+    pub summon_source_skill: Option<Vec<u32>>,
     #[serde(alias = "sourceskill", alias = "sourceSkill")]
-    pub source_skill: Option<u32>,
+    pub source_skill: Option<Vec<u32>>,
 }
 
 #[derive(Debug, Default, Deserialize, Clone)]
@@ -417,7 +417,7 @@ pub struct SkillEffectData {
     #[serde(skip)]
     pub stagger: i32,
     #[serde(rename(deserialize = "sourceskill"))]
-    pub source_skill: Option<u32>,
+    pub source_skill: Option<Vec<u32>>,
     #[serde(rename(deserialize = "directionalmask"))]
     pub directional_mask: i32,
     #[serde(rename(deserialize = "itemname"))]
@@ -455,7 +455,7 @@ pub struct SkillBuffData {
     #[serde(skip_serializing, rename(deserialize = "passiveoption"))]
     pub passive_option: Vec<PassiveOption>,
     #[serde(rename(deserialize = "sourceskill"))]
-    pub source_skill: Option<u32>,
+    pub source_skill: Option<Vec<u32>>,
     #[serde(rename(deserialize = "setname"))]
     pub set_name: Option<String>,
 }

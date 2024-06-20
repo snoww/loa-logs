@@ -175,7 +175,7 @@ impl EntityTracker {
             entity_type: PLAYER,
             name: pkt.pc_struct.name.clone(),
             class_id: pkt.pc_struct.class_id as u32,
-            gear_level: truncate_gear_level(pkt.pc_struct.avg_item_level),
+            gear_level: truncate_gear_level(pkt.pc_struct.max_item_level), // todo?
             character_id: pkt.pc_struct.character_id,
             stats: pkt
                 .pc_struct

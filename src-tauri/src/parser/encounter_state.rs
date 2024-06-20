@@ -82,7 +82,8 @@ impl EncounterState {
             sntp_client: SntpClient::new(),
             ntp_fight_start: 0,
 
-            rdps_valid: true,
+            // todo
+            rdps_valid: false,
         }
     }
 
@@ -108,7 +109,7 @@ impl EncounterState {
 
         self.ntp_fight_start = 0;
 
-        self.rdps_valid = true;
+        self.rdps_valid = false;
 
         for (key, entity) in clone.entities.into_iter().filter(|(_, e)| {
             e.entity_type == EntityType::PLAYER
@@ -812,6 +813,7 @@ impl EncounterState {
                     .or_insert(damage);
             }
 
+            // todo
             if let (true, Some(player_stats)) =
                 (self.rdps_valid && damage > 0, player_stats.clone())
             {

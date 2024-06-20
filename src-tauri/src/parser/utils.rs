@@ -89,7 +89,8 @@ pub fn get_status_effect_data(buff_id: u32) -> Option<StatusEffect> {
         || (buff_category == "ability" && buff.unique_group != 0)
     {
         if buff.source_skill.is_some() {
-            let buff_source_skill = SKILL_DATA.get(&buff.source_skill.unwrap());
+            // todo
+            let buff_source_skill = SKILL_DATA.get(buff.source_skill.as_ref().unwrap().first().unwrap_or(&0));
             if buff_source_skill.is_some() {
                 status_effect.source.skill = buff_source_skill.cloned();
             }
@@ -318,8 +319,8 @@ pub fn get_skill_name_and_icon(
                     effect.icon.as_ref().cloned().unwrap_or_default(),
                 );
             }
-            if let Some(source_skill) = effect.source_skill {
-                if let Some(skill) = SKILL_DATA.get(&source_skill) {
+            if let Some(source_skill) = effect.source_skill.as_ref() {
+                if let Some(skill) = SKILL_DATA.get(source_skill.first().unwrap_or(&0)) {
                     return (skill.name.clone(), skill.icon.clone());
                 }
             } else if let Some(skill) = SKILL_DATA.get(&(skill_effect_id / 10)) {
@@ -331,14 +332,15 @@ pub fn get_skill_name_and_icon(
         };
     } else {
         return if let Some(skill) = SKILL_DATA.get(skill_id) {
-            if let Some(summon_source_skill) = skill.summon_source_skill {
-                if let Some(skill) = SKILL_DATA.get(&summon_source_skill) {
+            if let Some(summon_source_skill) = skill.summon_source_skill.as_ref() {
+                // todo
+                if let Some(skill) = SKILL_DATA.get(summon_source_skill.first().unwrap_or(&0)) {
                     (skill.name.clone() + " (Summon)", skill.icon.clone())
                 } else {
                     (skill_name, "".to_string())
                 }
-            } else if let Some(source_skill) = skill.source_skill {
-                if let Some(skill) = SKILL_DATA.get(&source_skill) {
+            } else if let Some(source_skill) = skill.source_skill.as_ref() {
+                if let Some(skill) = SKILL_DATA.get(source_skill.first().unwrap_or(&0)) {
                     (skill.name.clone(), skill.icon.clone())
                 } else {
                     (skill_name, "".to_string())

@@ -54,6 +54,8 @@ impl StatsApi {
     }
 
     pub fn sync(&mut self, player: &Entity, state: &EncounterState) {
+        // todo
+        return;
         if state.encounter.fight_start > 0
             && state.encounter.last_combat_packet - state.encounter.fight_start > 1_000
         {
