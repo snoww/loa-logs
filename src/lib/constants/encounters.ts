@@ -1,4 +1,4 @@
-export const encounterMap: { [key: string]: { [key: string]: Array<string> }} = {
+export const encounterMap: { [key: string]: { [key: string]: Array<string> } } = {
     Valtan: {
         "Valtan G1": ["Dark Mountain Predator", "Destroyer Lucas", "Leader Lugaru"],
         "Valtan G2": ["Demon Beast Commander Valtan", "Ravaged Tyrant of Beasts"]
@@ -18,7 +18,11 @@ export const encounterMap: { [key: string]: { [key: string]: Array<string> }} = 
         "Brelshaza G2": ["Prokel", "Prokel's Spiritual Echo", "Ashtarot"],
         "Brelshaza G3": ["Primordial Nightmare"],
         "Brelshaza G4": ["Phantom Legion Commander Brelshaza"],
-        "Brelshaza G5": ["Brelshaza, Monarch of Nightmares", "Imagined Primordial Nightmare", "Pseudospace Primordial Nightmare"],
+        "Brelshaza G5": [
+            "Brelshaza, Monarch of Nightmares",
+            "Imagined Primordial Nightmare",
+            "Pseudospace Primordial Nightmare"
+        ],
         "Brelshaza G6": ["Phantom Legion Commander Brelshaza"]
     },
     Kayangel: {
@@ -31,19 +35,31 @@ export const encounterMap: { [key: string]: { [key: string]: Array<string> }} = 
         "Akkan G2": ["Lord of Degradation Akkan"],
         "Akkan G3": ["Plague Legion Commander Akkan", "Lord of Kartheon Akkan"]
     },
-    "Ivory": {
+    Ivory: {
         "Ivory Tower G1": ["Kaltaya, the Blooming Chaos"],
         "Ivory Tower G2": ["Rakathus, the Lurking Arrogance"],
         "Ivory Tower G3": ["Firehorn, Trampler of Earth"],
-        "Ivory Tower G4": ["Lazaram, the Trailblazer", "Subordinated Vertus", "Subordinated Calventus", "Subordinated Legoros", "Brand of Subordination"]
+        "Ivory Tower G4": [
+            "Lazaram, the Trailblazer",
+            "Subordinated Vertus",
+            "Subordinated Calventus",
+            "Subordinated Legoros",
+            "Brand of Subordination"
+        ]
     },
-    "Thaemine": {
+    Thaemine: {
         "Thaemine G1": ["Killineza the Dark Worshipper"],
         "Thaemine G2": ["Valinak, Knight of Darkness", "Valinak, Taboo Usurper", "Valinak, Herald of the End"],
         "Thaemine G3": ["Thaemine the Lightqueller", "Dark Greatsword"],
-        "Thaemine G4": ["Darkness Legion Commander Thaemine",
-            "Thaemine Prokel",
-            "Thaemine, Conqueror of Stars"]
+        "Thaemine G4": ["Darkness Legion Commander Thaemine", "Thaemine Prokel", "Thaemine, Conqueror of Stars"]
+    },
+    Echidna: {
+        "Echidna G1": ["Red Doom Narkiel" , "Agris"],
+        "Echidna G2": ["Echidna", "Covetous Master Echidna", "Desire in Full Bloom, Echidna"]
+    },
+    Behemoth: {
+        "Behemoth G1": ["Behemoth, the Whirling Wings of Chaos"],
+        "Behemoth G2": ["Behemoth, the Whirling Wings of Chaos"]
     }
 };
 

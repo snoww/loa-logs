@@ -43,4 +43,9 @@ export const bossHpMap: BossMap = {
     "Darkness Legion Commander Thaemine": 350,
     "Thaemine Prokel": 35,
     "Thaemine, Conqueror of Stars": 350,
+    "Red Doom Narkiel": 180,
+    "Agris": 100,
+    "Echidna": 285,
+    "Covetous Master Echidna": 285,
+    "Desire in Full Bloom, Echidna": 285,
 };
