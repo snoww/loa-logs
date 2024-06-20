@@ -57,10 +57,10 @@ export const encounterMap: { [key: string]: { [key: string]: Array<string> } } =
         "Echidna G1": ["Red Doom Narkiel" , "Agris"],
         "Echidna G2": ["Echidna", "Covetous Master Echidna", "Desire in Full Bloom, Echidna"]
     },
-    Behemoth: {
-        "Behemoth G1": ["Behemoth, the Whirling Wings of Chaos"],
-        "Behemoth G2": ["Behemoth, the Whirling Wings of Chaos"]
-    }
+    // Behemoth: {
+    //     "Behemoth G1": ["Behemoth, the Whirling Wings of Chaos"],
+    //     "Behemoth G2": ["Behemoth, the Whirling Wings of Chaos"]
+    // }
 };
 
 export const difficultyMap: Array<string> = ["Normal", "Hard", "Inferno", "Challenge", "Trial", "Extreme", "The First"];
