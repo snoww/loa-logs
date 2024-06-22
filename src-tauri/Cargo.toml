@@ -8,6 +8,7 @@ repository = "https://github.com/snoww/loa-logs"
 default-run = "app"
 edition = "2021"
 rust-version = "1.59"
+build = "build.rs"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -38,7 +39,13 @@ uuid = { version = "1.8.0", features = ["v4"] }
 moka = { version = "0.12.7", features = ["sync"] }
 auto-launch = "0.5.0"
 rsntp = { version = "4.0.0", default-features = false, features = ["chrono"]  }
-meter-core = { path = "D:\\projects\\meter-core-rs\\" }
+
+# look at Makefile.deps target
+#
+# TODO: use this path instead for xcompilation?
+# meter-core = { path = "./meter-core-rs" }
+#
+meter-core = { path = ".\\meter-core-rs" }
 
 [features]
 # by default Tauri runs in production mode
