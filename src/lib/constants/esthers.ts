@@ -66,12 +66,12 @@ export const estherMap = [
         "npcs": [58200, 58201, 58202, 58203, 58204]
     },
     { "name": "Kadan Defense", "icon": "esther_8.png", "skills": [539000, 539010], "npcs": [58210, 58211, 58212, 58213, 58214] },
-    { "name": "Adele", "icon": "combined_3.png1", "skills": [540400], "npcs": [58500, 58501] },
+    { "name": "Avele", "icon": "combined_3.png", "skills": [540400], "npcs": [58500, 58501] },
     {
         "name": "Thar",
-        "icon": "combined_2.png1",
+        "icon": "combined_2.png",
         "skills": [540200, 540800, 540801],
         "npcs": [58400, 58401, 58410, 58411, 58420]
     },
-    { "name": "Ephernia", "icon": "combined_4.png1", "skills": [540600], "npcs": [58600, 58601] }
+    { "name": "Ephernia", "icon": "combined_4.png", "skills": [540600], "npcs": [58600, 58601] }
 ];

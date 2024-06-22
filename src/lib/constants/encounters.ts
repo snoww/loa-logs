@@ -54,9 +54,15 @@ export const encounterMap: { [key: string]: { [key: string]: Array<string> } } =
         "Thaemine G4": ["Darkness Legion Commander Thaemine", "Thaemine Prokel", "Thaemine, Conqueror of Stars"]
     },
     Echidna: {
-        "Echidna G1": ["Red Doom Narkiel" , "Agris"],
-        "Echidna G2": ["Echidna", "Covetous Master Echidna", "Desire in Full Bloom, Echidna"]
-    },
+        "Echidna G1": ["Red Doom Narkiel", "Agris"],
+        "Echidna G2": [
+            "Echidna",
+            "Covetous Master Echidna",
+            "Desire in Full Bloom, Echidna",
+            "Alcaone, the Twisted Venom",
+            "Agris, the Devouring Bog"
+        ]
+    }
     // Behemoth: {
     //     "Behemoth G1": ["Behemoth, the Whirling Wings of Chaos"],
     //     "Behemoth G2": ["Behemoth, the Whirling Wings of Chaos"]

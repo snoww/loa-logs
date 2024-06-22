@@ -47,5 +47,7 @@ export const bossHpMap: BossMap = {
     "Agris": 100,
     "Echidna": 285,
     "Covetous Master Echidna": 285,
-    "Desire in Full Bloom, Echidna": 285,
+    "Alcaone, the Twisted Venom": 86,
+    "Agris, the Devouring Bog": 103,
+    "Behemoth, the Whirling Wings of Chaos": 500
 };
