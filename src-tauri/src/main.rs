@@ -72,6 +72,25 @@ async fn main() -> Result<()> {
         .setup(|app| {
             info!("starting app v{}", app.package_info().version.to_string());
 
+            let handle = app.handle();
+            tauri::async_runtime::spawn(async move {
+                match tauri::updater::builder(handle).check().await {
+                    Ok(update) => {
+                        if update.is_update_available() {
+                            info!("update available, downloading update: {}", update.latest_version());
+                            update.download_and_install().await.map_err(|e| {
+                                error!("failed to download update: {}", e);
+                            }).ok();
+                        } else {
+                            info!("no update available");
+                        }
+                    }
+                    Err(e) => {
+                        warn!("failed to get update: {}", e);
+                    }
+                }
+            });
+
             let resource_path = app
                 .path_resolver()
                 .resource_dir()

@@ -22,7 +22,7 @@
     import { classColors } from "$lib/constants/colors";
     import { queryParam } from "$lib/utils/strings";
     import { emit } from "@tauri-apps/api/event";
-    import { checkUpdate, installUpdate } from "@tauri-apps/api/updater";
+    import { checkUpdate } from "@tauri-apps/api/updater";
 
     onMount(() => {
         (async () => {
@@ -52,23 +52,25 @@
             });
             for (const key of Object.keys(classesMap)) {
                 $classIconCache[key] =
-                    convertFileSrc(await join(await resourceDir(), "images", "classes", key + ".png")) +
-                    queryParam;
+                    convertFileSrc(await join(await resourceDir(), "images", "classes", key + ".png")) + queryParam;
             }
             for (const esther of estherMap) {
                 $classIconCache[esther.name] =
-                    convertFileSrc(await join(await resourceDir(), "images", "classes", esther.icon)) +
-                    queryParam;
+                    convertFileSrc(await join(await resourceDir(), "images", "classes", esther.icon)) + queryParam;
             }
 
             try {
-                const update = await checkUpdate();
-                if (update.shouldUpdate) {
-                    await invoke("write_log", { message: "installing update..." });
-                    await installUpdate();
+                const { shouldUpdate, manifest } = await checkUpdate();
+                if (shouldUpdate) {
+                    $updateSettings.available = true;
+                    const oldManifest = $updateSettings.manifest;
+                    $updateSettings.manifest = manifest;
+                    if (oldManifest?.version !== $updateSettings.manifest?.version) {
+                        $updateSettings.dismissed = false;
+                    }
                 }
             } catch (e) {
-                await invoke("write_log", { message: e });
+                await invoke("write_log", { message: String(e) });
             }
 
             await registerShortcuts($settings.shortcuts);
