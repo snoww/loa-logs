@@ -1,21 +1,16 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.11.1
+    v1.11.2
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
   </div>
 </div>
 
-#### NEW FEATURES (NOT REALLY NEW)
-- counters tracking is now working
-- death tracking also working
-
 #### BUG FIXES AND IMPROVEMENTS
-- fix icons for allied skills
-- fix avele name (no longer the singer)
-- (maybe) fixed thar special interaction showing as unknown
-- removed g2 mirrors from hp bar tracking
+- thar name and icon now displays properly
+
+**update note:** apologies for the lack of communication regarding updates. just letting you guys know faust and the others are still working hard on getting the packet structures, so please be patient (as a support player myself i know how all the supports feel).
 
 **NOTE:** Please do note that this is a very barebones patch. Most of the meter features are **not** working properly due to missing packet structures. We are working hard to become fully independent of Herysia's meter-core, but this process is extremely difficult and will take a few weeks.
 
@@ -34,6 +29,16 @@ If you missed the news, please read the announcement in the discord channel. [#a
 - identity
 - pretty much anything else not listed here
 
+### v1.11.1
+#### NEW FEATURES (NOT REALLY NEW)
+- counters tracking is now working
+- death tracking also working
+
+#### BUG FIXES AND IMPROVEMENTS
+- fix icons for allied skills
+- fix avele name (no longer the singer)
+- (maybe) fixed thar special interaction showing as unknown
+- removed g2 mirrors from hp bar tracking
 
 ### v1.11.0
 #### NEW FEATURES
