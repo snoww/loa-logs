@@ -88,7 +88,7 @@ pub fn start(
     };
 
     let mut last_update = Instant::now();
-    let mut duration = Duration::from_millis(200);
+    let mut duration = Duration::from_millis(500);
     let mut last_party_update = Instant::now();
     let party_duration = Duration::from_millis(2000);
     let mut raid_end_cd = Instant::now();
@@ -107,7 +107,7 @@ pub fn start(
             info!("boss only damage enabled")
         }
         if settings.general.low_performance_mode {
-            duration = Duration::from_millis(1000);
+            duration = Duration::from_millis(1500);
             info!("low performance mode enabled")
         }
     }
