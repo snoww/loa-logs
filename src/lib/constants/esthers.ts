@@ -71,7 +71,7 @@ export const estherMap = [
         "name": "Thar",
         "icon": "combined_2.png",
         "skills": [540200, 540800, 540801],
-        "npcs": [58400, 58401, 58410, 58411, 58420]
+        "npcs": [58400, 58401, 58410, 58411, 58420, 58421]
     },
     { "name": "Ephernia", "icon": "combined_4.png", "skills": [540600], "npcs": [58600, 58601] }
 ];
