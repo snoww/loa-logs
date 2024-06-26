@@ -77,10 +77,20 @@ async fn main() -> Result<()> {
                 match tauri::updater::builder(handle).check().await {
                     Ok(update) => {
                         if update.is_update_available() {
-                            info!("update available, downloading update: {}", update.latest_version());
-                            update.download_and_install().await.map_err(|e| {
-                                error!("failed to download update: {}", e);
-                            }).ok();
+                            #[cfg(not(debug_assertions))]
+                            {
+                                info!(
+                                    "update available, downloading update: v{}",
+                                    update.latest_version()
+                                );
+                                update
+                                    .download_and_install()
+                                    .await
+                                    .map_err(|e| {
+                                        error!("failed to download update: {}", e);
+                                    })
+                                    .ok();
+                            }
                         } else {
                             info!("no update available");
                         }
@@ -878,9 +888,10 @@ fn load_encounter(window: tauri::Window, id: String) -> Encounter {
             let total_effective_shielding = row.get(18).unwrap_or_default();
 
             let applied_shield_buff_str: String = row.get(19).unwrap_or_default();
-            let applied_shield_buffs = serde_json::from_str::<HashMap<u32, StatusEffect>>(applied_shield_buff_str.as_str())
-                .unwrap_or_default();
-
+            let applied_shield_buffs = serde_json::from_str::<HashMap<u32, StatusEffect>>(
+                applied_shield_buff_str.as_str(),
+            )
+            .unwrap_or_default();
 
             Ok(Encounter {
                 last_combat_packet: row.get(0)?,
@@ -936,16 +947,16 @@ fn load_encounter(window: tauri::Window, id: String) -> Encounter {
     let entity_iter = entity_stmt
         .query_map(params![id], |row| {
             let skill_str: String = row.get(7).unwrap_or_default();
-            let skills = serde_json::from_str::<HashMap<u32, Skill>>(skill_str.as_str())
-                .unwrap_or_default();
+            let skills =
+                serde_json::from_str::<HashMap<u32, Skill>>(skill_str.as_str()).unwrap_or_default();
 
             let damage_stats_str: String = row.get(8).unwrap_or_default();
-            let damage_stats = serde_json::from_str::<DamageStats>(damage_stats_str.as_str())
-                .unwrap_or_default();
+            let damage_stats =
+                serde_json::from_str::<DamageStats>(damage_stats_str.as_str()).unwrap_or_default();
 
             let skill_stats_str: String = row.get(9).unwrap_or_default();
-            let skill_stats = serde_json::from_str::<SkillStats>(skill_stats_str.as_str())
-                .unwrap_or_default();
+            let skill_stats =
+                serde_json::from_str::<SkillStats>(skill_stats_str.as_str()).unwrap_or_default();
 
             let entity_type: String = row.get(11).unwrap_or_default();
 
@@ -1389,14 +1400,18 @@ fn set_start_on_boot(window: tauri::Window, set: bool) {
     };
     let auto = AutoLaunch::new(&app_name, &app_path, &[] as &[&str]);
     if set {
-        auto.enable().map_err(|e| {
-            warn!("could not enable auto launch: {}", e);
-        }).ok();
+        auto.enable()
+            .map_err(|e| {
+                warn!("could not enable auto launch: {}", e);
+            })
+            .ok();
         info!("enabled start on boot");
     } else {
-        auto.disable().map_err(|e| {
-            warn!("could not disable auto launch: {}", e);
-        }).ok();
+        auto.disable()
+            .map_err(|e| {
+                warn!("could not disable auto launch: {}", e);
+            })
+            .ok();
         info!("disabled start on boot");
     }
 }
