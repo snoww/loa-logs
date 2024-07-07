@@ -78,6 +78,9 @@
                 if (oldManifest?.version !== $updateSettings.manifest?.version) {
                     $updateSettings.dismissed = false;
                 }
+                if (manifest?.version.includes("2024")) {
+                    $updateSettings.isNotice = true;
+                }
             }
         } catch (e) {
             await invoke("write_log", { message: e });

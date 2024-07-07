@@ -178,7 +178,8 @@ export const defaultSettings = {
 export const update = {
     available: false,
     manifest: undefined,
-    dismissed: false
+    dismissed: false,
+    isNotice: false,
 };
 
 const settingsStore = (key: string, defaultSettings: object) => {

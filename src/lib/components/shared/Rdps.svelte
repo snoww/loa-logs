@@ -16,7 +16,7 @@
     let playerRDamagePercentages: number[];
     let alpha: number;
     let partySortedPlayers: Array<Array<Entity>> = [];
-    let partyRDamgePercentages: number[][];
+    let partyRDamagePercentages: number[][];
     let isLiveMeter = meterSettings.bossHp !== undefined;
     $: {
         if (players.length > 0) {
@@ -52,7 +52,7 @@
                 }
 
                 partySortedPlayers = parties;
-                partyRDamgePercentages = partyPercentages;
+                partyRDamagePercentages = partyPercentages;
             }
         }
 
@@ -74,7 +74,7 @@
                         <RdpsRow
                             {meterSettings}
                             {player}
-                            width={partyRDamgePercentages[i][j]}
+                            width={partyRDamagePercentages[i][j]}
                             shadow={!$takingScreenshot}
                             {totalDamageDealt}
                             {duration}

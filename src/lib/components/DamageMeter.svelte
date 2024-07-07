@@ -28,7 +28,8 @@
         screenshotAlert,
         screenshotError,
         rdpsEventDetails,
-        localPlayer
+        localPlayer,
+        missingInfo
     } from "$lib/utils/stores";
     import html2canvas from "html2canvas";
     import Details from "./Details.svelte";
@@ -36,6 +37,8 @@
     import BossTable from "./shared/BossTable.svelte";
     import BossBreakdown from "./shared/BossBreakdown.svelte";
     import Rdps from "$lib/components/shared/Rdps.svelte";
+    import { isValidName } from "$lib/utils/strings";
+    import MissingInfo from "./shared/MissingInfo.svelte";
 
     let time = +Date.now();
     let encounter: Encounter | null = null;
@@ -182,6 +185,11 @@
     $: {
         if (encounter) {
             if (encounter.fightStart !== 0 && !$paused) {
+                if (!$missingInfo) {
+                    if (encounter.localPlayer === "You" || !isValidName(encounter.localPlayer)) {
+                        $missingInfo = true;
+                    }
+                }
                 if ($settings.general.showEsther) {
                     players = Object.values(encounter.entities)
                         .filter(
@@ -348,6 +356,7 @@
         anySupportBrand = false;
         anyRdpsData = false;
         $rdpsEventDetails = "not_available";
+        $missingInfo = false;
     }
 
     let screenshotAreaDiv: HTMLElement;
@@ -405,7 +414,9 @@
                             // console.log("titlebar clicked");
                         }}>
                         <tr class="bg-zinc-900 tracking-tighter">
-                            <th class="w-7 px-2 font-normal" />
+                            <th class="w-7 px-2 font-normal">
+                                <MissingInfo />
+                            </th>
                             <th class="w-14 px-2 text-left font-normal" />
                             <th class="w-full" />
                             {#if anyDead && $settings.meter.deathTime}
@@ -451,10 +462,8 @@
                                 </th>
                             {/if}
                             {#if anyRdpsData && $rdpsEventDetails === "" && $settings.meter.ssyn}
-                                <th
-                                    class="w-12 font-normal"
-                                    use:tooltip={{ content: "% Damage gained from Support" }}
-                                >sSyn%
+                                <th class="w-12 font-normal" use:tooltip={{ content: "% Damage gained from Support" }}
+                                    >sSyn%
                                 </th>
                             {/if}
                             {#if $settings.meter.counters}
@@ -492,7 +501,12 @@
                 </table>
             {/if}
         {:else if tab === MeterTab.RDPS}
-            <Rdps {players} {duration} {totalDamageDealt} meterSettings={$settings.meter} encounterPartyInfo={parties}/>
+            <Rdps
+                {players}
+                {duration}
+                {totalDamageDealt}
+                meterSettings={$settings.meter}
+                encounterPartyInfo={parties} />
         {:else if tab === MeterTab.PARTY_BUFFS}
             {#if state === MeterState.PARTY}
                 <Buffs
