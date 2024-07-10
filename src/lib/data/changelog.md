@@ -1,18 +1,23 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.11.2
+    v1.11.3
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
   </div>
 </div>
 
-#### BUG FIXES AND IMPROVEMENTS
-- thar name and icon now displays properly
+#### NEW FEATURES (NOT REALLY, AGAIN)
+- buffs tracking should be working (huge thanks to @faust for getting these packets)
+- raid difficulty labels are now working
+- added warning in meter if meter is opened late
 
-**update note:** apologies for the lack of communication regarding updates. just letting you guys know faust and the others are still working hard on getting the packet structures, so please be patient (as a support player myself i know how all the supports feel).
 
-**NOTE:** Please do note that this is a very barebones patch. Most of the meter features are **not** working properly due to missing packet structures. We are working hard to become fully independent of Herysia's meter-core, but this process is extremely difficult and will take a few weeks.
+**NOTE:** please make sure meter is opened before loading into a raid for accurate tracking, there are still many packets missing.
+
+
+**NOTE 2:** everything will break again next reset and meter will no longer work, please be patient as we work on extracting the packets again.
+
 
 If you missed the news, please read the announcement in the discord channel. [#announcements - ramen shop](https://discord.gg/2rwTTKXRwu).
 
@@ -20,14 +25,18 @@ If you missed the news, please read the announcement in the discord channel. [#a
 #### Working
 - damage meter
 - basic logs
+- party/self buff uptime tracking (mostly)
+- identity (maybe)
 - maybe some other stuff
 #### Not Working
-- party/self buff uptime tracking
 - rdps
 - shields
 - stagger
-- identity
 - pretty much anything else not listed here
+
+### v1.11.2
+#### BUG FIXES AND IMPROVEMENTS
+- thar name and icon now displays properly
 
 ### v1.11.1
 #### NEW FEATURES (NOT REALLY NEW)
