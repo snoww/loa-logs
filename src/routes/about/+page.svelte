@@ -55,17 +55,26 @@
             class="text-accent-500 hover:underline"
             href="https://github.com/snoww/loa-logs/issues"
             target="_blank">issue</a>
-            or send a message in the <code>#loa-logs</code> channel on Discord at
-            <a class="text-accent-500 hover:underline" href="https://discord.gg/sbSa3pkDF5" target="_blank"
-            ><code>discord.gg/sbSa3pkDF5</code></a>
+            or send a message in the <code>#peepotalk</code> channel on Discord at
+            <a class="text-accent-500 hover:underline" href="https://discord.gg/HMtnzPFHTG" target="_blank"
+            ><code>discord.gg/HMtnzPFHTG</code></a>
         </p>
 
-        <p class="mt-4 px-4 text-base">You can support me and this project by buying me a coffee.</p>
-        <a href="https://www.buymeacoffee.com/synow" target="_blank"
-        ><img
-            class="mt-2 px-4"
-            src="/bmac.png"
-            alt="Buy Me A Coffee" /></a>
+        <p class="mt-4 px-4 text-base">You can support me and this project by buying me a coffee. (Ko-fi supports PayPal)</p>
+        <div>
+            <a href="https://ko-fi.com/synow" target="_blank"
+            ><img
+                class="mt-2 px-4 w-[260px]"
+                src="/kofi.png"
+                alt="Ko-fi" /></a>
+        </div>
+        <div>
+            <a href="https://www.buymeacoffee.com/synow" target="_blank"
+            ><img
+                class="mt-2 px-4"
+                src="/bmac.png"
+                alt="Buy Me A Coffee" /></a>
+        </div>
 
         <p class="mt-4 px-4">
             Current version:
