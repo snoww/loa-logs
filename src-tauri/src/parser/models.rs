@@ -154,6 +154,7 @@ pub struct Skill {
     pub icon: String,
     pub total_damage: i64,
     pub max_damage: i64,
+    pub max_damage_cast: i64,
     pub buffed_by: HashMap<u32, i64>,
     pub debuffed_by: HashMap<u32, i64>,
     pub buffed_by_support: i64,
@@ -178,6 +179,7 @@ pub struct Skill {
     pub rdps_damage_received: i64,
     pub rdps_damage_received_support: i64,
     pub rdps_damage_given: i64,
+    pub skill_cast_log: Vec<SkillCast>,
 }
 
 #[derive(Debug, Default, Serialize, Deserialize, Clone)]
@@ -264,6 +266,28 @@ pub struct SkillStats {
     pub counters: i64,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub identity_stats: Option<String>,
+}
+
+#[derive(Debug, Default, Serialize, Deserialize, Clone)]
+#[serde(rename_all = "camelCase")]
+pub struct SkillCast {
+    pub timestamp: i64,
+    pub last: i64,
+    pub hits: Vec<SkillHit>,
+}
+
+#[derive(Debug, Default, Serialize, Deserialize, Clone)]
+#[serde(rename_all = "camelCase")]
+pub struct SkillHit {
+    pub timestamp: i64,
+    pub damage: i64,
+    pub crit: bool,
+    pub back_attack: bool,
+    pub front_attack: bool,
+    pub buffed_by: Vec<u32>,
+    pub debuffed_by: Vec<u32>,
+    pub rdps_damage_received: i64,
+    pub rdps_damage_received_support: i64,
 }
 
 #[derive(Debug)]

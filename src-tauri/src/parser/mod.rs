@@ -4,10 +4,12 @@ mod id_tracker;
 pub mod models;
 mod party_tracker;
 mod rdps;
+mod skill_tracker;
 mod stats_api;
 mod status_tracker;
 mod utils;
 
+use self::models::{Settings, TripodIndex, TripodLevel};
 use crate::parser::encounter_state::EncounterState;
 use crate::parser::entity_tracker::{get_current_and_max_hp, EntityTracker};
 use crate::parser::id_tracker::IdTracker;
@@ -38,8 +40,6 @@ use std::thread;
 use std::time::{Duration, Instant};
 use tauri::{Manager, Window, Wry};
 use uuid::Uuid;
-
-use self::models::{Settings, TripodIndex, TripodLevel};
 
 pub fn start(
     window: Window<Wry>,
@@ -391,12 +391,35 @@ pub fn start(
             }
             Pkt::NewProjectile => {
                 if let Some(pkt) = parse_pkt(&data, PKTNewProjectile::new, "PKTNewProjectile") {
-                    entity_tracker.new_projectile(pkt);
+                    entity_tracker.new_projectile(&pkt);
+                    if entity_tracker.id_is_player(pkt.projectile_info.owner_id)
+                        && pkt.projectile_info.skill_id > 0
+                    {
+                        let key = (pkt.projectile_info.owner_id, pkt.projectile_info.skill_id);
+                        if let Some(timestamp) = state.skill_tracker.skill_timestamp.get(&key) {
+                            state
+                                .skill_tracker
+                                .projectile_id_to_timestamp
+                                .insert(pkt.projectile_info.projectile_id, timestamp);
+                        }
+                    }
                 }
             }
             Pkt::NewTrap => {
                 if let Some(pkt) = parse_pkt(&data, PKTNewTrap::new, "PKTNewTrap") {
-                    entity_tracker.new_trap(pkt);
+                    entity_tracker.new_trap(&pkt);
+                    let key = (pkt.trap_data.owner_id, pkt.trap_data.skill_id);
+                    if entity_tracker.id_is_player(pkt.trap_data.owner_id)
+                        && pkt.trap_data.skill_id > 0
+                    {
+                        let key = (pkt.trap_data.owner_id, pkt.trap_data.skill_id);
+                        if let Some(timestamp) = state.skill_tracker.skill_timestamp.get(&key) {
+                            state
+                                .skill_tracker
+                                .projectile_id_to_timestamp
+                                .insert(pkt.trap_data.object_id, timestamp);
+                        }
+                    }
                 }
             }
             Pkt::ParalyzationStateNotify => {
@@ -472,7 +495,7 @@ pub fn start(
                     entity_tracker.guess_is_player(&mut entity, pkt.skill_id);
                     if entity.class_id == 202 {
                         state.on_skill_start(
-                            entity,
+                            &entity,
                             pkt.skill_id,
                             None,
                             None,
@@ -502,13 +525,18 @@ pub fn start(
                                 second: tripod_level.second,
                                 third: tripod_level.third,
                             });
-                    state.on_skill_start(
-                        entity,
+                    let timestamp = Utc::now().timestamp_millis();
+                    let skill_id = state.on_skill_start(
+                        &entity,
                         pkt.skill_id,
                         tripod_index,
                         tripod_level,
-                        Utc::now().timestamp_millis(),
+                        timestamp,
                     );
+                    
+                    if entity.entity_type == EntityType::PLAYER && skill_id > 0 {
+                        state.skill_tracker.new_cast(entity.id, skill_id, timestamp);
+                    }
                 }
             }
             // Pkt::SkillStageNotify => {
@@ -849,7 +877,8 @@ pub fn start(
                 ) {
                     stats_api.valid_zone = VALID_ZONES.contains(&pkt.zone_id);
 
-                    if state.raid_difficulty_id >= pkt.zone_id && !state.raid_difficulty.is_empty() {
+                    if state.raid_difficulty_id >= pkt.zone_id && !state.raid_difficulty.is_empty()
+                    {
                         continue;
                     }
                     debug_print(format_args!("raid zone id: {}", &pkt.zone_id));
@@ -984,7 +1013,7 @@ pub fn start(
                                 .enumerate()
                                 .map(|(index, party)| (index as i32, party.clone()))
                                 .collect();
-                            
+
                             if party.iter().all(|p| p.len() == 4) {
                                 party_cache = Some(party.clone());
                                 party_map_cache.clone_from(&current_party);

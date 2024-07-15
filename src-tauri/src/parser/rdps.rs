@@ -383,7 +383,7 @@ pub fn calculate_tripod_data(
             }
         }
     }
-    
+
     for (_, ce) in combat_effects {
         let crit_multiplier = get_crit_multiplier_from_combat_effect(&ce, ce_conditional_data);
         rdps_data.crit_dmg_rate += crit_multiplier;
@@ -395,6 +395,7 @@ pub fn apply_rdps(
     source_entity: Option<&mut EncounterEntity>,
     skill_id: u32,
     delta: f64,
+    skill_hit: &mut SkillHit,
 ) {
     let delta = delta.round() as i64;
     let skill = damage_owner.skills.get_mut(&skill_id).unwrap();
@@ -404,9 +405,11 @@ pub fn apply_rdps(
         if is_support_class_id(source.class_id) {
             damage_owner.damage_stats.rdps_damage_received_support += delta;
             skill.rdps_damage_received_support += delta;
+            skill_hit.rdps_damage_received_support += delta;
         }
     }
 
     damage_owner.damage_stats.rdps_damage_received += delta;
     skill.rdps_damage_received += delta;
+    skill_hit.rdps_damage_received += delta;
 }

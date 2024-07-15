@@ -16,6 +16,7 @@ use tokio::task;
 use crate::parser::entity_tracker::{Entity, EntityTracker};
 use crate::parser::models::*;
 use crate::parser::rdps::*;
+use crate::parser::skill_tracker::SkillTracker;
 use crate::parser::stats_api::{PlayerStats, StatsApi};
 use crate::parser::status_tracker::StatusEffectDetails;
 use crate::parser::utils::*;
@@ -53,6 +54,8 @@ pub struct EncounterState {
     ntp_fight_start: i64,
 
     pub rdps_valid: bool,
+
+    pub skill_tracker: SkillTracker,
 }
 
 impl EncounterState {
@@ -84,6 +87,8 @@ impl EncounterState {
 
             // todo
             rdps_valid: false,
+
+            skill_tracker: SkillTracker::new(),
         }
     }
 
@@ -110,6 +115,8 @@ impl EncounterState {
         self.ntp_fight_start = 0;
 
         self.rdps_valid = false;
+
+        self.skill_tracker = SkillTracker::new();
 
         for (key, entity) in clone.entities.into_iter().filter(|(_, e)| {
             e.entity_type == EntityType::PLAYER
@@ -332,15 +339,15 @@ impl EncounterState {
 
     pub fn on_skill_start(
         &mut self,
-        source_entity: Entity,
+        source_entity: &Entity,
         skill_id: u32,
         tripod_index: Option<TripodIndex>,
         tripod_level: Option<TripodLevel>,
         timestamp: i64,
-    ) {
+    ) -> u32 {
         // do not track skills if encounter not started
         if self.encounter.fight_start == 0 {
-            return;
+            return 0;
         }
         let skill_name = get_skill_name(&skill_id);
         let mut tripod_change = false;
@@ -351,7 +358,7 @@ impl EncounterState {
             .or_insert_with(|| {
                 let (skill_name, skill_icon) =
                     get_skill_name_and_icon(&skill_id, &0, skill_name.clone());
-                let mut entity = encounter_entity_from_entity(&source_entity);
+                let mut entity = encounter_entity_from_entity(source_entity);
                 entity.skill_stats = SkillStats {
                     casts: 0,
                     ..Default::default()
@@ -468,6 +475,8 @@ impl EncounterState {
             .entry(skill_id)
             .or_default()
             .push(relative_timestamp);
+
+        skill_id
     }
 
     #[allow(clippy::too_many_arguments)]
@@ -567,6 +576,10 @@ impl EncounterState {
 
         if self.encounter.fight_start == 0 {
             self.encounter.fight_start = timestamp;
+            self.skill_tracker.fight_start = timestamp;
+            if source_entity.entity_type == EntityType::PLAYER {
+                self.skill_tracker.new_cast(source_entity.id, damage_data.skill_id, timestamp);
+            }
 
             if let Ok(result) = self.sntp_client.synchronize("time.cloudflare.com") {
                 let dt = result.datetime().into_chrono_datetime().unwrap_or_default();
@@ -603,7 +616,7 @@ impl EncounterState {
             .as_ref()
             .map_or("".to_string(), |s| s.name.clone());
         if skill_name.is_empty() {
-            skill_name = get_skill_name_and_icon(&skill_id, &skill_effect_id, "".to_string()).0;
+            skill_name = get_skill_name_and_icon(&skill_id, &skill_effect_id, skill_id.to_string()).0;
         }
         let relative_timestamp = (timestamp - self.encounter.fight_start) as i32;
 
@@ -638,6 +651,12 @@ impl EncounterState {
 
         let skill = source_entity.skills.get_mut(&skill_id).unwrap();
 
+        let mut skill_hit = SkillHit {
+            damage,
+            timestamp: relative_timestamp as i64,
+            ..Default::default()
+        };
+
         skill.total_damage += damage;
         if damage > skill.max_damage {
             skill.max_damage = damage;
@@ -654,18 +673,21 @@ impl EncounterState {
             source_entity.damage_stats.crit_damage += damage;
             skill.crits += 1;
             skill.crit_damage += damage;
+            skill_hit.crit = true;
         }
         if hit_option == HitOption::BACK_ATTACK {
             source_entity.skill_stats.back_attacks += 1;
             source_entity.damage_stats.back_attack_damage += damage;
             skill.back_attacks += 1;
             skill.back_attack_damage += damage;
+            skill_hit.back_attack = true;
         }
         if hit_option == HitOption::FRONTAL_ATTACK {
             source_entity.skill_stats.front_attacks += 1;
             source_entity.damage_stats.front_attack_damage += damage;
             skill.front_attacks += 1;
             skill.front_attack_damage += damage;
+            skill_hit.front_attack = true;
         }
 
         if source_entity.entity_type == EntityType::PLAYER {
@@ -786,32 +808,34 @@ impl EncounterState {
                 source_entity.damage_stats.debuffed_by_support += damage;
             }
 
-            for buff_id in se_on_source_ids.into_iter() {
+            for buff_id in se_on_source_ids.iter() {
                 skill
                     .buffed_by
-                    .entry(buff_id)
+                    .entry(*buff_id)
                     .and_modify(|e| *e += damage)
                     .or_insert(damage);
                 source_entity
                     .damage_stats
                     .buffed_by
-                    .entry(buff_id)
+                    .entry(*buff_id)
                     .and_modify(|e| *e += damage)
                     .or_insert(damage);
             }
-            for debuff_id in se_on_target_ids.into_iter() {
+            for debuff_id in se_on_target_ids.iter() {
                 skill
                     .debuffed_by
-                    .entry(debuff_id)
+                    .entry(*debuff_id)
                     .and_modify(|e| *e += damage)
                     .or_insert(damage);
                 source_entity
                     .damage_stats
                     .debuffed_by
-                    .entry(debuff_id)
+                    .entry(*debuff_id)
                     .and_modify(|e| *e += damage)
                     .or_insert(damage);
             }
+            skill_hit.buffed_by = se_on_source_ids;
+            skill_hit.debuffed_by = se_on_target_ids;
 
             // todo
             if let (true, Some(player_stats)) =
@@ -1309,6 +1333,7 @@ impl EncounterState {
                             self.encounter.entities.get_mut(&crit.caster),
                             skill_id,
                             delta,
+                            &mut skill_hit,
                         );
                     }
 
@@ -1320,6 +1345,7 @@ impl EncounterState {
                             self.encounter.entities.get_mut(&dmg.caster),
                             skill_id,
                             delta,
+                            &mut skill_hit,
                         );
                     }
 
@@ -1331,6 +1357,7 @@ impl EncounterState {
                             self.encounter.entities.get_mut(&dmg.caster),
                             skill_id,
                             delta,
+                            &mut skill_hit,
                         );
                     }
 
@@ -1343,6 +1370,7 @@ impl EncounterState {
                             self.encounter.entities.get_mut(&dmg.caster),
                             skill_id,
                             delta,
+                            &mut skill_hit,
                         );
                     }
 
@@ -1356,6 +1384,7 @@ impl EncounterState {
                             self.encounter.entities.get_mut(&dmg.caster),
                             skill_id,
                             delta,
+                            &mut skill_hit,
                         );
                     }
 
@@ -1368,6 +1397,7 @@ impl EncounterState {
                                 .get_mut(&attack_power_amplify.caster),
                             skill_id,
                             delta,
+                            &mut skill_hit,
                         );
                     }
                 } else if dmg_src_entity.entity_type == EntityType::PLAYER
@@ -1430,6 +1460,10 @@ impl EncounterState {
                 last.hp = current_hp;
                 last.p = hp_percent;
             }
+        }
+
+        if skill_id > 0 {
+            self.skill_tracker.on_hit(source_entity.id, proj_entity.id, skill_id, skill_hit);
         }
 
         self.encounter
@@ -1708,7 +1742,7 @@ impl EncounterState {
         }
     }
 
-    pub fn save_to_db(&self, player_stats: Option<Cache<String, PlayerStats>>, manual: bool) {
+    pub fn save_to_db(&mut self, player_stats: Option<Cache<String, PlayerStats>>, manual: bool) {
         if !manual {
             if self.encounter.fight_start == 0
                 || self.encounter.current_boss_name.is_empty()
@@ -1762,12 +1796,16 @@ impl EncounterState {
 
         let rdps_valid = self.rdps_valid;
 
+        let skill_cast_log = self.skill_tracker.get_cast_log();
+
+        // debug_print(format_args!("skill cast log:\n{}", serde_json::to_string(&skill_cast_log).unwrap()));
+
         debug_print(format_args!("rdps_data valid: [{}]", rdps_valid));
 
         task::spawn(async move {
             info!(
-                "saving to db - cleared: [{}] {}",
-                raid_clear, encounter.current_boss_name
+                "saving to db - cleared: [{}], difficulty: [{:?}] {}",
+                raid_clear, encounter.difficulty, encounter.current_boss_name
             );
 
             let mut conn = Connection::open(path).expect("failed to open database");
@@ -1792,6 +1830,7 @@ impl EncounterState {
                 ntp_fight_start,
                 rdps_valid,
                 manual,
+                skill_cast_log,
             );
 
             tx.commit().expect("failed to commit transaction");

@@ -321,7 +321,7 @@ impl EntityTracker {
         )
     }
 
-    pub fn new_projectile(&mut self, pkt: PKTNewProjectile) {
+    pub fn new_projectile(&mut self, pkt: &PKTNewProjectile) {
         let projectile = Entity {
             id: pkt.projectile_info.projectile_id,
             entity_type: PROJECTILE,
@@ -334,7 +334,7 @@ impl EntityTracker {
         self.entities.insert(projectile.id, projectile);
     }
 
-    pub fn new_trap(&mut self, pkt: PKTNewTrap) {
+    pub fn new_trap(&mut self, pkt: &PKTNewTrap) {
         let trap = Entity {
             id: pkt.trap_data.object_id,
             entity_type: PROJECTILE,
@@ -434,6 +434,14 @@ impl EntityTracker {
             };
             self.entities.insert(entity.id, entity.clone());
             entity
+        }
+    }
+    
+    pub fn id_is_player(&mut self, id: u64) -> bool {
+        if let Some(entity) = self.entities.get(&id) {
+            entity.entity_type == PLAYER
+        } else {
+            false
         }
     }
 

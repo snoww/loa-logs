@@ -6,6 +6,7 @@ use moka::sync::Cache;
 use rusqlite::{params, Transaction};
 use serde_json::json;
 use std::cmp::{max, Ordering};
+use std::collections::BTreeMap;
 
 pub fn encounter_entity_from_entity(entity: &Entity) -> EncounterEntity {
     let mut e = EncounterEntity {
@@ -90,7 +91,8 @@ pub fn get_status_effect_data(buff_id: u32) -> Option<StatusEffect> {
     {
         if buff.source_skill.is_some() {
             // todo
-            let buff_source_skill = SKILL_DATA.get(buff.source_skill.as_ref().unwrap().first().unwrap_or(&0));
+            let buff_source_skill =
+                SKILL_DATA.get(buff.source_skill.as_ref().unwrap().first().unwrap_or(&0));
             if buff_source_skill.is_some() {
                 status_effect.source.skill = buff_source_skill.cloned();
             }
@@ -359,7 +361,7 @@ pub fn get_skill_name_and_icon(
 pub fn get_skill_name(skill_id: &u32) -> String {
     SKILL_DATA
         .get(skill_id)
-        .map_or("".to_string(), |skill| skill.name.clone())
+        .map_or(skill_id.to_string(), |skill| skill.name.clone())
 }
 
 pub fn get_skill(skill_id: &u32) -> Option<SkillData> {
@@ -654,6 +656,7 @@ pub fn insert_data(
     ntp_fight_start: i64,
     rdps_valid: bool,
     manual: bool,
+    skill_cast_log: HashMap<u64, HashMap<u32, BTreeMap<i64, SkillCast>>>,
 ) {
     let mut encounter_stmt = tx
         .prepare_cached(
@@ -867,6 +870,22 @@ pub fn insert_data(
             for (skill, log) in cast_log {
                 entity.skills.entry(*skill).and_modify(|e| {
                     e.cast_log.clone_from(log);
+                });
+            }
+        }
+
+        for (_, skill_cast_log) in skill_cast_log.iter().filter(|&(s, _)| *s == entity.id) {
+            for (skill, log) in skill_cast_log {
+                entity.skills.entry(*skill).and_modify(|e| {
+                    e.max_damage_cast = log
+                        .values()
+                        .map(|cast| cast.hits.iter().map(|hit| hit.damage).sum::<i64>())
+                        .max()
+                        .unwrap_or_default();
+                    e.skill_cast_log = log
+                        .iter()
+                        .map(|(_, skill_casts)| skill_casts.clone())
+                        .collect();
                 });
             }
         }
