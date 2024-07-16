@@ -126,8 +126,6 @@
         {abbreviateNumberSplit(skill.totalDamage / skill.hits)[0]}<span class="text-3xs text-gray-300"
             >{abbreviateNumberSplit(skill.totalDamage / skill.hits)[1]}</span>
     </td>
-{/if}
-{#if meterSettings.breakdown.avgDamage}
     <td class="px-1 text-center">
         {abbreviateNumberSplit(skill.totalDamage / skill.casts)[0]}<span class="text-3xs text-gray-300"
             >{abbreviateNumberSplit(skill.totalDamage / skill.casts)[1]}</span>
@@ -138,6 +136,16 @@
         {abbreviateNumberSplit(skill.maxDamage)[0]}<span class="text-3xs text-gray-300"
             >{abbreviateNumberSplit(skill.maxDamage)[1]}</span>
     </td>
+    {#if skill.maxDamageCast}
+    <td class="px-1 text-center">
+        {abbreviateNumberSplit(skill.maxDamageCast)[0]}<span class="text-3xs text-gray-300"
+            >{abbreviateNumberSplit(skill.maxDamageCast)[1]}</span>
+    </td>
+    {:else}
+    <td class="px-1 text-center">
+        -
+    </td>
+    {/if}
 {/if}
 {#if meterSettings.breakdown.casts}
     <td

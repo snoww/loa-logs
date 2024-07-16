@@ -57,7 +57,10 @@
     <th class="w-12 font-normal" use:tooltip={{ content: "Skill Average Damage per Cast" }}>APC</th>
 {/if}
 {#if meterSettings.breakdown.maxDamage}
-    <th class="w-12 font-normal" use:tooltip={{ content: "Skill Max Damage" }}>Max</th>
+    <th class="w-12 font-normal" use:tooltip={{ content: "Skill Max Hit Damage" }}>MaxH</th>
+{/if}
+{#if meterSettings.breakdown.maxDamage}
+    <th class="w-12 font-normal" use:tooltip={{ content: "Skill Max Cast Damage" }}>MaxC</th>
 {/if}
 {#if meterSettings.breakdown.casts}
     <th class="w-10 font-normal" use:tooltip={{ content: "Total Casts" }}>Casts</th>
