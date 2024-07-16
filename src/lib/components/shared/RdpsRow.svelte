@@ -56,7 +56,7 @@
         dConPercentage = ((1 - 1 / (1 + dSyn)) * 100).toFixed(1);
         conPercentage = ((1 - 1 / (1 + syn)) * 100).toFixed(1);
 
-        playerName = formatPlayerName(player, $settings.general.showNames, $settings.general.showGearScore);
+        playerName = formatPlayerName(player, $settings.general);;
         if ($settings.general.showNames) {
             tooltipName = player.name;
         } else {

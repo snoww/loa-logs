@@ -32,7 +32,7 @@
                 color = $colors[player.class].color;
             }
         }
-        playerName = formatPlayerName(player, $settings.general.showNames, $settings.general.showGearScore);
+        playerName = formatPlayerName(player, $settings.general);;
         if (!$settings.meter.showClassColors) {
             alpha = 0;
         } else {

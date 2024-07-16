@@ -11,6 +11,7 @@ export const defaultSettings = {
         lowPerformanceMode: false,
         showNames: true,
         showGearScore: false,
+        hideNames: false,
         showEsther: true,
         hideLogo: false,
         showDate: true,

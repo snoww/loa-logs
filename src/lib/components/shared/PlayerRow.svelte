@@ -72,7 +72,7 @@
             tooltipName = name;
             color = "#4dc8d0";
         } else {
-            name = formatPlayerName(entity, $settings.general.showNames, $settings.general.showGearScore);
+            name = formatPlayerName(entity, $settings.general);;
             if ($settings.general.showNames) {
                 tooltipName = entity.name;
             } else {

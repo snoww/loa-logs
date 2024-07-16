@@ -35,7 +35,7 @@
             }
         }
 
-        playerName = formatPlayerName(player, $settings.general.showNames, $settings.general.showGearScore);
+        playerName = formatPlayerName(player, $settings.general);;
 
         if (groupedSynergies.size > 0) {
             synergyPercentageDetails = [];

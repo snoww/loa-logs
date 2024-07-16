@@ -680,6 +680,7 @@ pub struct GeneralSettings {
     #[serde(default = "default_true")]
     pub show_names: bool,
     pub show_gear_score: bool,
+    pub hide_names: bool,
     #[serde(default = "default_true")]
     pub show_esther: bool,
     #[serde(default = "default_true")]

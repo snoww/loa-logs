@@ -29,7 +29,7 @@
         tweenedValue.set(width);
         damageTaken = abbreviateNumberSplit(player.damageStats.damageTaken);
 
-        name = formatPlayerName(player, $settings.general.showNames, $settings.general.showGearScore);
+        name = formatPlayerName(player, $settings.general);;
 
         if (Object.hasOwn($colors, player.class)) {
             if ($settings.general.constantLocalPlayerColor && $localPlayer == player.name) {

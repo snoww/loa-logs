@@ -152,13 +152,17 @@
             description="Lowers meter update frequency to reduce CPU usage. (Requires Restart)"
             bind:setting={$settings.general.lowPerformanceMode} />
         <SettingItem
-            name="Show Names"
+            name="Show Player Names"
             description="Show player names if it's loaded. If disabled, it will show the class name (e.g. Arcanist)."
             bind:setting={$settings.general.showNames} />
         <SettingItem
             name="Show Gear Score"
             description="Show player's item level if it's loaded."
             bind:setting={$settings.general.showGearScore} />
+        <SettingItem
+            name="Hide Names"
+            description="Hides player names completely, will not show class name either."
+            bind:setting={$settings.general.hideNames} />
         <SettingItem
             name="Show Esther"
             description="Show damage dealt by Esther skills in meter and log view."
