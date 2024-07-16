@@ -310,50 +310,51 @@ pub fn get_skill_name_and_icon(
     skill_id: &u32,
     skill_effect_id: &u32,
     skill_name: String,
-) -> (String, String) {
+) -> (String, String, Option<Vec<u32>>) {
     if (*skill_id == 0) && (*skill_effect_id == 0) {
-        ("Bleed".to_string(), "buff_168.png".to_string())
+        ("Bleed".to_string(), "buff_168.png".to_string(), None)
     } else if (*skill_effect_id != 0) && (*skill_effect_id == *skill_id) {
         return if let Some(effect) = SKILL_EFFECT_DATA.get(skill_effect_id) {
             if let Some(item_name) = effect.item_name.as_ref() {
                 return (
                     item_name.clone(),
                     effect.icon.as_ref().cloned().unwrap_or_default(),
+                    None,
                 );
             }
             if let Some(source_skill) = effect.source_skill.as_ref() {
                 if let Some(skill) = SKILL_DATA.get(source_skill.first().unwrap_or(&0)) {
-                    return (skill.name.clone(), skill.icon.clone());
+                    return (skill.name.clone(), skill.icon.clone(), None);
                 }
             } else if let Some(skill) = SKILL_DATA.get(&(skill_effect_id / 10)) {
-                return (skill.name.clone(), skill.icon.clone());
+                return (skill.name.clone(), skill.icon.clone(), None);
             }
-            (effect.comment.clone(), "".to_string())
+            (effect.comment.clone(), "".to_string(), None)
         } else {
-            (skill_name, "".to_string())
+            (skill_name, "".to_string(), None)
         };
     } else {
         return if let Some(skill) = SKILL_DATA.get(skill_id) {
             if let Some(summon_source_skill) = skill.summon_source_skill.as_ref() {
                 // todo
                 if let Some(skill) = SKILL_DATA.get(summon_source_skill.first().unwrap_or(&0)) {
-                    (skill.name.clone() + " (Summon)", skill.icon.clone())
+                    (skill.name.clone() + " (Summon)", skill.icon.clone(), Some(summon_source_skill.clone()))
                 } else {
-                    (skill_name, "".to_string())
+                    (skill_name, "".to_string(), None)
                 }
             } else if let Some(source_skill) = skill.source_skill.as_ref() {
                 if let Some(skill) = SKILL_DATA.get(source_skill.first().unwrap_or(&0)) {
-                    (skill.name.clone(), skill.icon.clone())
+                    (skill.name.clone(), skill.icon.clone(), None)
                 } else {
-                    (skill_name, "".to_string())
+                    (skill_name, "".to_string(), None)
                 }
             } else {
-                (skill.name.clone(), skill.icon.clone())
+                (skill.name.clone(), skill.icon.clone(), None)
             }
         } else if let Some(skill) = SKILL_DATA.get(&(skill_id - (skill_id % 10))) {
-            (skill.name.clone(), skill.icon.clone())
+            (skill.name.clone(), skill.icon.clone(), None)
         } else {
-            (skill_name, "".to_string())
+            (skill_name, "".to_string(), None)
         };
     }
 }

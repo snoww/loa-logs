@@ -176,6 +176,8 @@ pub struct Skill {
     pub gem_damage: Option<u8>,
     #[serde(skip)]
     pub tripod_data: Option<Vec<TripodData>>,
+    #[serde(skip)]
+    pub summon_sources: Option<Vec<u32>>,
     pub rdps_damage_received: i64,
     pub rdps_damage_received_support: i64,
     pub rdps_damage_given: i64,

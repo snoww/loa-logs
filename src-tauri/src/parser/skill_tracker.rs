@@ -1,9 +1,9 @@
 use crate::parser::models::{SkillCast, SkillHit};
 use hashbrown::HashMap;
+use log::info;
 use moka::sync::Cache;
 use std::collections::BTreeMap;
 use std::time::Duration;
-use log::info;
 
 #[derive(Debug)]
 pub struct SkillTracker {
@@ -19,19 +19,32 @@ impl SkillTracker {
             fight_start: -1,
             skills: HashMap::new(),
             projectile_id_to_timestamp: Cache::builder()
-                .time_to_idle(Duration::from_secs(60))
+                .time_to_idle(Duration::from_secs(20))
                 .build(),
             skill_timestamp: Cache::builder()
-                .time_to_idle(Duration::from_secs(60))
+                .time_to_idle(Duration::from_secs(20))
                 .build(),
         }
     }
 
-    pub fn new_cast(&mut self, entity_id: u64, skill_id: u32, timestamp: i64) {
+    pub fn new_cast(
+        &mut self,
+        entity_id: u64,
+        skill_id: u32,
+        summon_source: Option<Vec<u32>>,
+        timestamp: i64,
+    ) {
         let relative = timestamp - self.fight_start;
+        if let Some(summon_source) = summon_source {
+            for source in summon_source {
+                if self.skill_timestamp.get(&(entity_id, source)).is_some() {
+                    // info!("ignoring summon: {}|{}|{}", entity_id, source, relative);
+                    return;
+                }
+            }
+        }
         // info!("new skill CAST: {}|{}|{}", entity_id, skill_id, relative);
-        self.skill_timestamp
-            .insert((entity_id, skill_id), relative);
+        self.skill_timestamp.insert((entity_id, skill_id), relative);
         self.skills.insert(
             (entity_id, skill_id, relative),
             SkillCast {
@@ -42,18 +55,41 @@ impl SkillTracker {
         );
     }
 
-    pub fn on_hit(&mut self, entity_id: u64, projectile_id: u64, skill_id: u32, info: SkillHit) {
-        let skill_timestamp =
-            if let Some(skill_timestamp) = self.projectile_id_to_timestamp.get(&projectile_id) {
-                skill_timestamp
-            } else if let Some(skill_timestamp) = self.skill_timestamp.get(&(entity_id, skill_id)) {
-                skill_timestamp
-            } else {
-                -1
-            };
+    pub fn on_hit(
+        &mut self,
+        entity_id: u64,
+        projectile_id: u64,
+        skill_id: u32,
+        info: SkillHit,
+        summon_source: Option<Vec<u32>>,
+    ) {
+        let skill_timestamp = if let Some(summon_source) = summon_source {
+            let mut source_timestamp = info.timestamp;
+            let mut found = false;
+            for source in summon_source {
+                if let Some(skill_timestamp) = self.skill_timestamp.get(&(entity_id, source)) {
+                    found = true;
+                    source_timestamp = skill_timestamp;
+                    break;
+                }
+            }
+            if !found {
+                self.skill_timestamp.insert((entity_id, skill_id), source_timestamp);
+            }
+            source_timestamp
+        } else if let Some(skill_timestamp) = self.projectile_id_to_timestamp.get(&projectile_id) {
+            skill_timestamp
+        } else if let Some(skill_timestamp) = self.skill_timestamp.get(&(entity_id, skill_id)) {
+            skill_timestamp
+        } else {
+            -1
+        };
 
         if skill_timestamp >= 0 {
-            // info!("new skill HIT: {}|{}|{}", entity_id, skill_id, skill_timestamp);
+            // info!(
+            //     "new skill HIT: {}|{}|{}|{}",
+            //     entity_id, projectile_id, skill_id, skill_timestamp
+            // );
             let timestamp = info.timestamp;
             self.skills
                 .entry((entity_id, skill_id, skill_timestamp))
@@ -63,7 +99,7 @@ impl SkillTracker {
                 })
                 .or_insert(SkillCast {
                     hits: vec![info],
-                    timestamp,
+                    timestamp: skill_timestamp,
                     last: timestamp,
                 });
         }

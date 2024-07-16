@@ -526,7 +526,7 @@ pub fn start(
                                 third: tripod_level.third,
                             });
                     let timestamp = Utc::now().timestamp_millis();
-                    let skill_id = state.on_skill_start(
+                    let (skill_id, summon_source) = state.on_skill_start(
                         &entity,
                         pkt.skill_id,
                         tripod_index,
@@ -535,7 +535,7 @@ pub fn start(
                     );
                     
                     if entity.entity_type == EntityType::PLAYER && skill_id > 0 {
-                        state.skill_tracker.new_cast(entity.id, skill_id, timestamp);
+                        state.skill_tracker.new_cast(entity.id, skill_id, summon_source, timestamp);
                     }
                 }
             }
