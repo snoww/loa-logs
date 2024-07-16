@@ -1,12 +1,34 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { EntityType, type Entity, BossHpLog, OpenerSkill, MiniSkill } from "$lib/types";
+import {
+    EntityType,
+    type Entity,
+    BossHpLog,
+    OpenerSkill,
+    MiniSkill,
+    type SkillCast,
+    type EncounterDamageStats,
+    type SkillHit,
+    type SkillChartSupportDamage,
+    type SkillChartModInfo
+} from "$lib/types";
 import Heap from "heap-js";
 import { defaultOptions } from "./charts";
-import { abbreviateNumber, formatDurationFromMs, formatDurationFromS, resampleData, round2, timeToSeconds } from "./numbers";
+import {
+    abbreviateNumber,
+    formatDurationFromMs,
+    formatDurationFromS,
+    resampleData,
+    round,
+    round2,
+    timeToSeconds
+} from "./numbers";
 import { getSkillIcon, isValidName } from "./strings";
 import { bossHpMap } from "$lib/constants/bossHpBars";
 import { classesMap } from "$lib/constants/classes";
 import BTree from "sorted-btree";
+import { getSkillCastBuffs } from "./buffs";
+import { identity } from "lodash-es";
+import { tooltip } from "./tooltip";
 
 export function getLegendNames(chartablePlayers: Entity[], showNames: boolean) {
     if (!showNames) {
@@ -70,7 +92,12 @@ export function getBossHpSeries(bosses: [string, BossHpLog[]][], legendNames: st
         });
 }
 
-export function getAveragePlayerSeries(chartablePlayers: Entity[], legendNames: string[], fightStart: number, classColors: any) {
+export function getAveragePlayerSeries(
+    chartablePlayers: Entity[],
+    legendNames: string[],
+    fightStart: number,
+    classColors: any
+) {
     return chartablePlayers
         .filter((e) => e.entityType === EntityType.PLAYER)
         .map((player: Entity, i: number) => {
@@ -103,7 +130,12 @@ export function getAveragePlayerSeries(chartablePlayers: Entity[], legendNames: 
         });
 }
 
-export function getRollingPlayerSeries(chartablePlayers: Entity[], legendNames: string[], fightStart: number, classColors: any) {
+export function getRollingPlayerSeries(
+    chartablePlayers: Entity[],
+    legendNames: string[],
+    fightStart: number,
+    classColors: any
+) {
     return chartablePlayers
         .filter((e) => e.entityType === EntityType.PLAYER)
         .map((player, i) => {
@@ -292,11 +324,20 @@ export function getRollingDpsChart(
     };
 }
 
-export function getSkillLogChart(player: Entity, skillIconPath: string, lastCombatPacket: number, fightStart: number) {
+export function getSkillLogChart(
+    player: Entity,
+    skillIconPath: string,
+    lastCombatPacket: number,
+    fightStart: number,
+    encounterDamageStats: EncounterDamageStats
+) {
     const sortedSkills = Object.values(player.skills)
-        .filter((skill) => skill.castLog.length > 0)
+        .filter((skill) => skill.skillCastLog.length > 0)
         .sort((a, b) => a.totalDamage - b.totalDamage);
     const skills = sortedSkills.map((skill) => skill.name);
+    const calculateDamage = (obj: any) => {
+        return obj.value[2].hits.map((hit: SkillHit) => hit.damage).reduce((a, b) => a + b, 0);
+    };
 
     return {
         ...defaultOptions,
@@ -332,15 +373,11 @@ export function getSkillLogChart(player: Entity, skillIconPath: string, lastComb
             }
         ],
         tooltip: {
-            trigger: "axis",
-            formatter: function (params: any[]) {
-                let output = `<span style="font-weight: 600">${params[0].name}</span>`;
-                params.forEach((p) => {
-                    output += `<br/>${p.seriesName}`;
-                });
-
-                return output;
-            }
+            trigger: "item",
+            triggerOn: "click",
+            confine: true,
+            transitionDuration: 0,
+            extraCssText: "pointer-events: auto !important; padding: 0"
         } as any,
         legend: {
             data: [...skills].reverse(),
@@ -398,7 +435,29 @@ export function getSkillLogChart(player: Entity, skillIconPath: string, lastComb
                 symbol: "image://" + skillIconPath + getSkillIcon(skill.icon),
                 symbolSize: [20, 20],
                 symbolKeepAspect: true,
-                data: skill.castLog.map((cast) => [formatDurationFromMs(cast), skill.name])
+                data: skill.skillCastLog.map((cast) => [
+                    formatDurationFromMs(cast.timestamp),
+                    skill.name,
+                    cast,
+                    skill.icon
+                ]),
+                tooltip: {
+                    formatter: function (param: any) {
+                        let output = "<div class='tooltip-scroll overflow-y-auto max-h-56 pt-1 pb-2 px-2'>";
+                        output += `<div class='font-semibold mb-1'>${param.name}-${formatDurationFromMs(param.value[2].last)} (${round((param.value[2].last - param.value[2].timestamp)/1000)}s)</div>`;
+                        output += "<div>";
+                        output += "<div class='flex space-x-1'>";
+                        output += `<img class="size-5 rounded-sm" src=${skillIconPath + getSkillIcon(param.value[3])} alt=${param.seriesName}/>`;
+                        output += `<div class='font-semibold'>${param.seriesName}</div>`;
+                        output += "</div>";
+                        output += skillCastBreakdownTooltip(param.value[2], encounterDamageStats, skillIconPath);
+                        output += "</div>";
+                        output += "</div>";
+                        return output;
+                    },
+                    borderColor: "#fff",
+                    extraCssText: "pointer-events: auto !important; padding: 0"
+                }
             };
         })
     };
@@ -437,7 +496,14 @@ export function getOpenerSkills(skills: MiniSkill[], x: number): OpenerSkill[] {
     return result.slice(0, x);
 }
 
-function generateTooltip(param: any, bossTooltips: string[], tree: BTree, deathTimes: { [key: string]: number }, time: string, chartablePlayersLength: number) {
+function generateTooltip(
+    param: any,
+    bossTooltips: string[],
+    tree: BTree,
+    deathTimes: { [key: string]: number },
+    time: string,
+    chartablePlayersLength: number
+) {
     let label = param.seriesName;
     let value = param.value;
     if (param.seriesIndex >= chartablePlayersLength) {
@@ -459,6 +525,74 @@ function generateTooltip(param: any, bossTooltips: string[], tree: BTree, deathT
         label =
             `<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:${param.color}"></span>` +
             label;
-        tree.set(dps, `<div style="display:flex; justify-content: space-between;"><div style="padding-right: 1rem">${label}</div><div style="">${value}</div></div>`);
+        tree.set(
+            dps,
+            `<div style="display:flex; justify-content: space-between;"><div style="padding-right: 1rem">${label}</div><div style="">${value}</div></div>`
+        );
     }
+}
+
+function skillCastBreakdownTooltip(skillCast: SkillCast, encounterDamageStats: EncounterDamageStats, iconPath: string): string {
+    const totalDamage = skillCast.hits.map((hit) => hit.damage).reduce((a, b) => a + b, 0);
+    let output = "<div class='flex flex-col'>";
+    output += `<div>Total Damage: <span class='font-semibold'>${abbreviateNumber(totalDamage)}</span></div>`;
+    output += `<div>`;
+    let table = `
+    <table class='table-fixed'>
+        <thead>
+            <tr>
+                <td class='w-10 font-semibold'>Hits</td>
+                <td class='w-14 font-semibold'>Mods</td>
+                <td class='w-14 font-semibold'>DMG</td>
+                <td class='w-60 font-semibold overflow-auto'>Buffs</td>
+            </tr>
+        </thead>
+        <tbody>
+    `;
+    const supportBuffs: SkillChartSupportDamage = { buff: 0, brand: 0, identity: 0};
+    const modInfo: SkillChartModInfo = { crit: 0, critDamage: 0, ba: 0, fa: 0 };
+    for (const [i, hit] of skillCast.hits.entries()) {
+        const buffString = getSkillCastBuffs(hit.damage, hit.buffedBy, hit.debuffedBy, encounterDamageStats, iconPath, supportBuffs);
+        
+        table += "<tr>";
+        table += `<td>#${i + 1}</td>`;
+        let mods = "";
+        if (hit.crit) {
+            mods += "C ";
+            modInfo.crit++;
+            modInfo.critDamage += hit.damage;
+        }
+        if (hit.backAttack) {
+            mods += "B ";
+            modInfo.ba++;
+        }
+        if (hit.frontAttack) {
+            mods += "F ";
+            modInfo.fa++;
+        }
+        table += `<td>${mods.trim() ? mods : "-"}</td>`;
+        table += `<td>${abbreviateNumber(hit.damage)}</td>`;
+        table += `<td>${buffString}</td>`;
+        table += "</tr>";
+    }
+    table += "</tbody></table>";
+    output += `<div>
+    Crit: <span class='font-semibold'>${modInfo.crit > 0 ? round(modInfo.crit / skillCast.hits.length * 100) : 0}%</span>
+    | CDMG: <span class='font-semibold'>${modInfo.critDamage > 0 ? round(modInfo.critDamage / totalDamage * 100) : 0}%</span>`;
+    if (modInfo.ba > 0) {
+        output += ` | BA: <span class='font-semibold'>${round(modInfo.ba / skillCast.hits.length * 100)}%</span>`;
+    }
+    if (modInfo.fa > 0) {
+        output += ` | FA: <span class='font-semibold'>${round(modInfo.fa / skillCast.hits.length * 100)}%</span>`;
+    }
+    output += "</div>";
+    output += `<div>
+    Buff: <span class='font-semibold'>${supportBuffs.buff > 0 ? round(supportBuffs.buff / totalDamage * 100) : 0}%</span>`;
+    output += ` | B: <span class='font-semibold'>${supportBuffs.brand > 0 ? round(supportBuffs.brand / totalDamage * 100) : 0}%</span>`;
+    output += ` | Iden: <span class='font-semibold'>${supportBuffs.identity > 0 ? round(supportBuffs.identity / totalDamage * 100) : 0}%</span>
+    </div>`;
+    output += table;
+    output += "</div></div>";
+
+    return output;
 }

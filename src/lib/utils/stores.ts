@@ -1,6 +1,6 @@
 import { encounterMap } from "$lib/constants/encounters";
-import { SearchFilter } from "$lib/types";
-import { readable, writable } from "svelte/store";
+import { SearchFilter, type StatusEffectWithId } from "$lib/types";
+import { readable, writable, type Writable } from "svelte/store";
 import MarkdownIt from "markdown-it";
 
 export const takingScreenshot = writable(false);

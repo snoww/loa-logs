@@ -180,4 +180,16 @@
     #buff-table::-webkit-scrollbar-corner {
         @apply !bg-zinc-800;
     }
+
+    .tooltip-scroll::-webkit-scrollbar {
+        @apply !right-0 !block !size-1.5 !bg-white
+    }
+
+    .tooltip-scroll::-webkit-scrollbar-thumb {
+        @apply !rounded-md !bg-zinc-300;
+    }
+
+    .tooltip-scroll::-webkit-scrollbar-corner {
+        @apply !bg-zinc-300;
+    }
 }

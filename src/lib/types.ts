@@ -118,6 +118,7 @@ export interface Skill {
     icon: string;
     totalDamage: number;
     maxDamage: number;
+    maxDamageCast: number;
     buffedBy: { [key: number]: number };
     debuffedBy: { [key: number]: number };
     buffedBySupport: number;
@@ -140,6 +141,25 @@ export interface Skill {
     rdpsDamageReceived: number;
     rdpsDamageReceivedSupport: number;
     rdpsDamageGiven: number;
+    skillCastLog: Array<SkillCast>;
+}
+
+export interface SkillCast {
+    timestamp: number;
+    last: number;
+    hits: SkillHit[];
+}
+
+export interface SkillHit {
+    timestamp: number;
+    damage: number;
+    crit: boolean;
+    backAttack: boolean;
+    frontAttack: boolean;
+    buffedBy: number[];
+    debuffedBy: number[];
+    rdpsDamageReceived: number;
+    rdpsDamageReceivedSupport: number;
 }
 
 export interface Tripod {
@@ -206,6 +226,24 @@ export interface StatusEffect {
     buffType: number;
     uniqueGroup: number;
     source: StatusEffectSource;
+}
+
+export interface StatusEffectWithId {
+    id: number;
+    statusEffect: StatusEffect;
+}
+
+export interface SkillChartSupportDamage {
+    buff: number;
+    brand: number;
+    identity: number;
+}
+
+export interface SkillChartModInfo {
+    crit: number;
+    critDamage: number;
+    ba: number;
+    fa: number;
 }
 
 export enum StatusEffectTarget {

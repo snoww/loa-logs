@@ -9,9 +9,14 @@ import {
     BuffDetails,
     type Skill,
     type PartyBuffs,
-    type PartyInfo, ShieldTab, Shield, ShieldDetails
+    type PartyInfo, ShieldTab, Shield, ShieldDetails,
+    type EncounterDamageStats,
+    type StatusEffectWithId,
+    type SkillChartSupportDamage
 } from "$lib/types";
+import { identity } from "lodash-es";
 import { round } from "./numbers";
+import { getSkillIcon } from "./strings";
 
 export function defaultBuffFilter(buffType: number): boolean {
     return (
@@ -536,4 +541,72 @@ function isSelfSkillSynergy(statusEffect: StatusEffect) {
 
 function isOtherSynergy(statusEffect: StatusEffect) {
     return buffCategories.other.includes(statusEffect.buffCategory);
+}
+
+export function getSkillCastBuffs(hitDamage: number, buffs: number[], debuffs: number[], encounterDamageStats: EncounterDamageStats, iconPath: string, supportBuffs: SkillChartSupportDamage) {
+    const groupedBuffs: Map<string, Array<StatusEffectWithId>> = new Map();
+
+    for (const buffId of buffs) {
+        if (encounterDamageStats.buffs.hasOwnProperty(buffId)) {
+            includeBuff(hitDamage, buffId, encounterDamageStats.buffs[buffId], groupedBuffs, supportBuffs);
+        }
+    }
+    for (const buffId of debuffs) {
+        if (encounterDamageStats.debuffs.hasOwnProperty(buffId)) {
+            includeBuff(hitDamage, buffId, encounterDamageStats.debuffs[buffId], groupedBuffs, supportBuffs);
+        }
+    }
+
+    const sortedMap = new Map([...groupedBuffs].sort((a, b) => String(a[0]).localeCompare(b[0])));
+    let buffString = "";
+    buffString += "<div class='flex' id='skill-cast-tooltip'>";
+    for (const [, buffs] of sortedMap) {
+        for (const buff of buffs) {
+            buffString += `<img class="size-6 rounded-sm buff-tippy !pointer-events-auto" src="${iconPath + getSkillIcon(buff.statusEffect.source.icon)}" alt="${buff.statusEffect.source.name}" id="${"buff-" + buff.id}"/>`;
+        }
+    }
+    buffString += "</div>";
+
+    return buffString;
+}
+
+function includeBuff(hitDamage: number, buffId: number, buff: StatusEffect, map: Map<string, Array<StatusEffectWithId>>, supportBuffs: SkillChartSupportDamage) {
+    let key = "";
+    if (((StatusEffectBuffTypeFlags.DMG |
+        StatusEffectBuffTypeFlags.CRIT |
+        StatusEffectBuffTypeFlags.ATKSPEED |
+        StatusEffectBuffTypeFlags.MOVESPEED |
+        StatusEffectBuffTypeFlags.COOLDOWN) &
+        buff.buffType) ===
+    0) {
+        return;
+    }
+    if (isPartySynergy(buff)) {
+        if (isSupportBuff(buff)) {
+            key = makeSupportBuffKey(buff);
+            if (key.includes("_0")) {
+                supportBuffs.buff += hitDamage;
+            } else if (key.includes("_1")) {
+                supportBuffs.brand += hitDamage;
+            } else if (key.includes("_2")) {
+                supportBuffs.identity += hitDamage;
+            }
+        } else {
+            key = `${classesMap[buff.source.skill?.classId ?? 0]}_${
+                buff.uniqueGroup ? buff.uniqueGroup : buff.source.skill?.name
+            }`;
+        }
+
+        addToMap(key, buffId, buff, map);
+    }
+
+}
+
+function addToMap(key: string, buffId: number, buff: StatusEffect, map: Map<string, Array<StatusEffectWithId>>) {
+    const buffWithId: StatusEffectWithId = { id: buffId, statusEffect: buff };
+    if (map.has(key)) {
+        map.get(key)?.push(buffWithId);
+    } else {
+        map.set(key, [buffWithId]);
+    }
 }

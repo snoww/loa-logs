@@ -192,7 +192,8 @@
                         player,
                         $skillIcon.path,
                         encounter.lastCombatPacket,
-                        encounter.fightStart
+                        encounter.fightStart,
+                        encounter.encounterDamageStats
                     );
                 } else if (chartType === ChartType.SKILL_LOG && focusedBoss) {
                     let boss = bosses.find((boss) => boss.name === focusedBoss);
@@ -200,7 +201,8 @@
                         boss!,
                         $skillIcon.path,
                         encounter.lastCombatPacket,
-                        encounter.fightStart
+                        encounter.fightStart,
+                        encounter.encounterDamageStats
                     );
                 }
             }
@@ -745,13 +747,7 @@
                         10s DPS Window
                     </button>
                 {:else if playerName !== "" && state === MeterState.PLAYER}
-                    <button
-                        class="rounded-sm px-2 py-1"
-                        class:bg-accent-900={chartType === ChartType.SKILL_LOG}
-                        class:bg-gray-700={chartType !== ChartType.SKILL_LOG}
-                        on:click={() => (chartType = ChartType.SKILL_LOG)}>
-                        Skill Casts
-                    </button>
+                <!--  -->
                 {/if}
             </div>
         {/if}
