@@ -882,6 +882,7 @@ pub fn start(
                         continue;
                     }
                     debug_print(format_args!("raid zone id: {}", &pkt.zone_id));
+                    debug_print(format_args!("raid zone id: {}", &pkt.zone_level));
                     match pkt.zone_level {
                         0 => {
                             state.raid_difficulty = "Normal".to_string();
@@ -900,7 +901,7 @@ pub fn start(
                             state.raid_difficulty_id = 3;
                         }
                         4 => {
-                            state.raid_difficulty = "Special".to_string();
+                            state.raid_difficulty = "Solo".to_string();
                             state.raid_difficulty_id = 4;
                         }
                         5 => {

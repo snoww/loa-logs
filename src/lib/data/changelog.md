@@ -1,22 +1,25 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.11.3
+    v1.12.0
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
   </div>
 </div>
 
-#### NEW FEATURES (NOT REALLY, AGAIN)
-- buffs tracking should be working (huge thanks to @faust for getting these packets)
-- raid difficulty labels are now working
-- added warning in meter if meter is opened late
+#### NEW FEATURES
+- updated meter for summer patch, thanks to @PetAndMet, @PoonT, @faust
+- skill cast tracking
+  - each damage tick of a skill is now tracked
+  - you can look at the details of a skill cast by clicking on a skill icon in the skill cast graph
 
+clicking on a skill icon in the graph brings up a tooltip that shows some basic info about the cast.
 
-**NOTE:** please make sure meter is opened before loading into a raid for accurate tracking, there are still many packets missing.
+![graph tooltip](https://i.imgur.com/cS3OtwK.png)
 
+scrolling down to the bottom of the page allows you to view the cast in more detail. where you are able to hover over columns for tooltips, and change the buff filtering to show different buffs applied during the damage tick. you can also click the arrows to look at the next/previous cast of the skill. it will also show rdps data when that is back and working again.
 
-**NOTE 2:** everything will break again next reset and meter will no longer work, please be patient as we work on extracting the packets again.
+![skill details](https://i.imgur.com/kqvMxyR.png)
 
 
 If you missed the news, please read the announcement in the discord channel. [#announcements - ramen shop](https://discord.gg/2rwTTKXRwu).
@@ -33,6 +36,12 @@ If you missed the news, please read the announcement in the discord channel. [#a
 - shields
 - stagger
 - pretty much anything else not listed here
+
+### v1.11.3
+#### NEW FEATURES (NOT REALLY, AGAIN)
+- buffs tracking should be working (huge thanks to @faust for getting these packets)
+- raid difficulty labels are now working
+- added warning in meter if meter is opened late
 
 ### v1.11.2
 #### BUG FIXES AND IMPROVEMENTS
