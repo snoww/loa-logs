@@ -623,7 +623,7 @@ impl EncounterState {
         };
 
         let skill_data = get_skill(&skill_id);
-        let mut skill_name = skill_id.to_string();
+        let mut skill_name = "".to_string();
         let mut skill_summon_sources: Option<Vec<u32>> = None;
         if let Some(skill_data) = skill_data.as_ref() {
             skill_name.clone_from(&skill_data.name);
