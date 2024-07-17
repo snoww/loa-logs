@@ -1,5 +1,6 @@
 use crate::parser::entity_tracker::Entity;
 use crate::parser::models::*;
+use crate::parser::skill_tracker::SkillTracker;
 use crate::parser::stats_api::{Engraving, PlayerStats};
 use hashbrown::HashMap;
 use moka::sync::Cache;
@@ -310,6 +311,8 @@ pub fn get_skill_name_and_icon(
     skill_id: &u32,
     skill_effect_id: &u32,
     skill_name: String,
+    skill_tracker: &SkillTracker,
+    entity_id: u64,
 ) -> (String, String, Option<Vec<u32>>) {
     if (*skill_id == 0) && (*skill_effect_id == 0) {
         ("Bleed".to_string(), "buff_168.png".to_string(), None)
@@ -336,9 +339,27 @@ pub fn get_skill_name_and_icon(
     } else {
         return if let Some(skill) = SKILL_DATA.get(skill_id) {
             if let Some(summon_source_skill) = skill.summon_source_skill.as_ref() {
-                // todo
+                for source in summon_source_skill {
+                    if skill_tracker
+                        .skill_timestamp
+                        .get(&(entity_id, *source))
+                        .is_some()
+                    {
+                        if let Some(skill) = SKILL_DATA.get(source) {
+                            return (
+                                skill.name.clone() + " (Summon)",
+                                skill.icon.clone(),
+                                Some(summon_source_skill.clone()),
+                            );
+                        }
+                    }
+                }
                 if let Some(skill) = SKILL_DATA.get(summon_source_skill.first().unwrap_or(&0)) {
-                    (skill.name.clone() + " (Summon)", skill.icon.clone(), Some(summon_source_skill.clone()))
+                    (
+                        skill.name.clone() + " (Summon)",
+                        skill.icon.clone(),
+                        Some(summon_source_skill.clone()),
+                    )
                 } else {
                     (skill_name, "".to_string(), None)
                 }
@@ -644,7 +665,6 @@ pub fn insert_data(
     prev_stagger: i32,
     damage_log: HashMap<String, Vec<(i64, i64)>>,
     identity_log: HashMap<String, IdentityLog>,
-    cast_log: HashMap<String, HashMap<u32, Vec<i32>>>,
     boss_hp_log: HashMap<String, Vec<BossHpLog>>,
     stagger_log: Vec<(i32, f32)>,
     mut stagger_intervals: Vec<(i32, i32)>,
@@ -865,14 +885,6 @@ pub fn insert_data(
 
         for (_, skill) in entity.skills.iter_mut() {
             skill.dps = skill.total_damage / duration_seconds;
-        }
-
-        for (_, cast_log) in cast_log.iter().filter(|&(s, _)| *s == entity.name) {
-            for (skill, log) in cast_log {
-                entity.skills.entry(*skill).and_modify(|e| {
-                    e.cast_log.clone_from(log);
-                });
-            }
         }
 
         for (_, skill_cast_log) in skill_cast_log.iter().filter(|&(s, _)| *s == entity.id) {

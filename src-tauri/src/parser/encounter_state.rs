@@ -37,7 +37,6 @@ pub struct EncounterState {
 
     damage_log: HashMap<String, Vec<(i64, i64)>>,
     identity_log: HashMap<String, IdentityLog>,
-    cast_log: HashMap<String, HashMap<u32, Vec<i32>>>,
 
     boss_hp_log: HashMap<String, Vec<BossHpLog>>,
 
@@ -72,7 +71,6 @@ impl EncounterState {
             damage_log: HashMap::new(),
             identity_log: HashMap::new(),
             boss_hp_log: HashMap::new(),
-            cast_log: HashMap::new(),
             stagger_log: Vec::new(),
             stagger_intervals: Vec::new(),
 
@@ -106,7 +104,6 @@ impl EncounterState {
 
         self.damage_log = HashMap::new();
         self.identity_log = HashMap::new();
-        self.cast_log = HashMap::new();
         self.boss_hp_log = HashMap::new();
         self.stagger_log = Vec::new();
         self.stagger_intervals = Vec::new();
@@ -356,8 +353,13 @@ impl EncounterState {
             .entities
             .entry(source_entity.name.clone())
             .or_insert_with(|| {
-                let (skill_name, skill_icon, summons) =
-                    get_skill_name_and_icon(&skill_id, &0, skill_name.clone());
+                let (skill_name, skill_icon, summons) = get_skill_name_and_icon(
+                    &skill_id,
+                    &0,
+                    skill_name.clone(),
+                    &self.skill_tracker,
+                    source_entity.id,
+                );
                 let mut entity = encounter_entity_from_entity(source_entity);
                 entity.skill_stats = SkillStats {
                     casts: 0,
@@ -421,8 +423,13 @@ impl EncounterState {
             skill.tripod_level = tripod_level;
             skill_summon_sources.clone_from(&skill.summon_sources);
         } else {
-            let (skill_name, skill_icon, summons) =
-                get_skill_name_and_icon(&skill_id, &0, skill_name.clone());
+            let (skill_name, skill_icon, summons) = get_skill_name_and_icon(
+                &skill_id,
+                &0,
+                skill_name.clone(),
+                &self.skill_tracker,
+                source_entity.id,
+            );
             skill_summon_sources.clone_from(&summons);
             entity.skills.insert(
                 skill_id,
@@ -475,12 +482,6 @@ impl EncounterState {
                 });
             }
         }
-        self.cast_log
-            .entry(entity.name.clone())
-            .or_default()
-            .entry(skill_id)
-            .or_default()
-            .push(relative_timestamp);
 
         (skill_id, skill_summon_sources)
     }
@@ -631,8 +632,13 @@ impl EncounterState {
         }
 
         if skill_name.is_empty() {
-            (skill_name, _, skill_summon_sources) =
-                get_skill_name_and_icon(&skill_id, &skill_effect_id, skill_id.to_string());
+            (skill_name, _, skill_summon_sources) = get_skill_name_and_icon(
+                &skill_id,
+                &skill_effect_id,
+                skill_id.to_string(),
+                &self.skill_tracker,
+                source_entity.id,
+            );
         }
         let relative_timestamp = (timestamp - self.encounter.fight_start) as i32;
 
@@ -644,14 +650,13 @@ impl EncounterState {
             {
                 skill_id = skill.id;
             } else {
-                let (skill_name, skill_icon, _) =
-                    get_skill_name_and_icon(&skill_id, &skill_effect_id, skill_name.clone());
-                self.cast_log
-                    .entry(source_entity.name.clone())
-                    .or_default()
-                    .entry(skill_id)
-                    .or_default()
-                    .push(relative_timestamp);
+                let (skill_name, skill_icon, _) = get_skill_name_and_icon(
+                    &skill_id,
+                    &skill_effect_id,
+                    skill_name.clone(),
+                    &self.skill_tracker,
+                    source_entity.id,
+                );
                 source_entity.skills.insert(
                     skill_id,
                     Skill {
@@ -1805,7 +1810,6 @@ impl EncounterState {
 
         let damage_log = self.damage_log.clone();
         let identity_log = self.identity_log.clone();
-        let cast_log = self.cast_log.clone();
         let boss_hp_log = self.boss_hp_log.clone();
         let stagger_log = self.stagger_log.clone();
         let stagger_intervals = self.stagger_intervals.clone();
@@ -1840,7 +1844,6 @@ impl EncounterState {
                 prev_stagger,
                 damage_log,
                 identity_log,
-                cast_log,
                 boss_hp_log,
                 stagger_log,
                 stagger_intervals,
