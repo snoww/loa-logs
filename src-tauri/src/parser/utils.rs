@@ -665,6 +665,7 @@ pub fn insert_data(
     prev_stagger: i32,
     damage_log: HashMap<String, Vec<(i64, i64)>>,
     identity_log: HashMap<String, IdentityLog>,
+    cast_log: HashMap<String, HashMap<u32, Vec<i32>>>,
     boss_hp_log: HashMap<String, Vec<BossHpLog>>,
     stagger_log: Vec<(i32, f32)>,
     mut stagger_intervals: Vec<(i32, i32)>,
@@ -885,6 +886,14 @@ pub fn insert_data(
 
         for (_, skill) in entity.skills.iter_mut() {
             skill.dps = skill.total_damage / duration_seconds;
+        }
+
+        for (_, cast_log) in cast_log.iter().filter(|&(s, _)| *s == entity.name) {
+            for (skill, log) in cast_log {
+                entity.skills.entry(*skill).and_modify(|e| {
+                    e.cast_log.clone_from(log);
+                });
+            }
         }
 
         for (_, skill_cast_log) in skill_cast_log.iter().filter(|&(s, _)| *s == entity.id) {

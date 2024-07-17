@@ -37,6 +37,7 @@ pub struct EncounterState {
 
     damage_log: HashMap<String, Vec<(i64, i64)>>,
     identity_log: HashMap<String, IdentityLog>,
+    cast_log: HashMap<String, HashMap<u32, Vec<i32>>>,
 
     boss_hp_log: HashMap<String, Vec<BossHpLog>>,
 
@@ -71,6 +72,7 @@ impl EncounterState {
             damage_log: HashMap::new(),
             identity_log: HashMap::new(),
             boss_hp_log: HashMap::new(),
+            cast_log: HashMap::new(),
             stagger_log: Vec::new(),
             stagger_intervals: Vec::new(),
 
@@ -104,6 +106,7 @@ impl EncounterState {
 
         self.damage_log = HashMap::new();
         self.identity_log = HashMap::new();
+        self.cast_log = HashMap::new();
         self.boss_hp_log = HashMap::new();
         self.stagger_log = Vec::new();
         self.stagger_intervals = Vec::new();
@@ -482,6 +485,12 @@ impl EncounterState {
                 });
             }
         }
+        self.cast_log
+            .entry(entity.name.clone())
+            .or_default()
+            .entry(skill_id)
+            .or_default()
+            .push(relative_timestamp);
 
         (skill_id, skill_summon_sources)
     }
@@ -1810,6 +1819,7 @@ impl EncounterState {
 
         let damage_log = self.damage_log.clone();
         let identity_log = self.identity_log.clone();
+        let cast_log = self.cast_log.clone();
         let boss_hp_log = self.boss_hp_log.clone();
         let stagger_log = self.stagger_log.clone();
         let stagger_intervals = self.stagger_intervals.clone();
@@ -1844,6 +1854,7 @@ impl EncounterState {
                 prev_stagger,
                 damage_log,
                 identity_log,
+                cast_log,
                 boss_hp_log,
                 stagger_log,
                 stagger_intervals,
