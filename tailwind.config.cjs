@@ -6,7 +6,8 @@ module.exports = {
     theme: {
         extend: {
             fontFamily: {
-                sans: ["Inter Variable", ...defaultTheme.fontFamily.sans]
+                sans: ["Inter Variable", ...defaultTheme.fontFamily.sans],
+                mono: ["JetBrains Mono Variable", ...defaultTheme.fontFamily.mono]
             },
             fontSize: {
                 xxs: "0.875rem", // 14px
