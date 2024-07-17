@@ -1,5 +1,6 @@
 <script lang="ts">
     import "@fontsource-variable/inter";
+    import '@fontsource-variable/jetbrains-mono';
     import "../app.css";
     import { onDestroy, onMount } from "svelte";
     import { listen, type UnlistenFn } from "@tauri-apps/api/event";

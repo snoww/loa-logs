@@ -246,6 +246,11 @@ export interface SkillChartModInfo {
     fa: number;
 }
 
+export interface SkillCastInfo {
+    skillId: number;
+    cast: number;
+}
+
 export enum StatusEffectTarget {
     OTHER = "OTHER",
     SELF = "SELF",

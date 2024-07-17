@@ -39,6 +39,7 @@
     import BossBreakdown from "../shared/BossBreakdown.svelte";
     import LogShields from "$lib/components/logs/LogShields.svelte";
     import Rdps from "$lib/components/shared/Rdps.svelte";
+    import LogSkillChart from "./LogSkillChart.svelte";
 
     export let id: string;
     export let encounter: Encounter;
@@ -764,8 +765,8 @@
                 <div class="mt-2 h-[300px]" use:chartable={chartOptions} style="width: calc(100vw - 4.5rem);" />
             {/if}
         {:else if chartType === ChartType.SKILL_LOG}
-            {#if (player && player.entityType === EntityType.PLAYER) || focusedBoss}
-                <div class="mt-2 h-[400px]" use:chartable={chartOptions} style="width: calc(100vw - 4.5rem);" />
+            {#if (player && player.entityType === EntityType.PLAYER)}
+                <LogSkillChart {chartOptions} {player} encounterDamageStats={encounter.encounterDamageStats} />
             {/if}
         {/if}
     </div>

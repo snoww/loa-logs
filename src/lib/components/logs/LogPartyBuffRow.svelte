@@ -23,7 +23,7 @@
     }
 
     $: {
-        playerName = formatPlayerName(player, $settings.general.showNames, $settings.general.showGearScore);
+        playerName = formatPlayerName(player, $settings.general);;
     }
 </script>
 

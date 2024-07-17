@@ -26,9 +26,10 @@ import { getSkillIcon, isValidName } from "./strings";
 import { bossHpMap } from "$lib/constants/bossHpBars";
 import { classesMap } from "$lib/constants/classes";
 import BTree from "sorted-btree";
-import { getSkillCastBuffs } from "./buffs";
+import { getFormattedBuffString, getSkillCastBuffs } from "./buffs";
 import { identity } from "lodash-es";
 import { tooltip } from "./tooltip";
+import { focusedSkillCast } from "./stores";
 
 export function getLegendNames(chartablePlayers: Entity[], showNames: boolean) {
     if (!showNames) {
@@ -443,11 +444,17 @@ export function getSkillLogChart(
                 ]),
                 tooltip: {
                     formatter: function (param: any) {
+                        focusedSkillCast.set({ skillId: skill.id, cast: param.dataIndex });
                         let output = "<div class='tooltip-scroll overflow-y-auto max-h-56 pt-1 pb-2 px-2'>";
-                        output += `<div class='font-semibold mb-1'>${param.name}-${formatDurationFromMs(param.value[2].last)} (${round((param.value[2].last - param.value[2].timestamp)/1000)}s)</div>`;
+                        output += `
+                        <div class='flex justify-between'>
+                        <div class='font-semibold mb-1'>${param.name}-${formatDurationFromMs(param.value[2].last)} (${round((param.value[2].last - param.value[2].timestamp) / 1000)}s)</div>
+                        <div class='tracking-tight text-sm'>Scroll Down for Details</div>
+                        </div>
+                        `;
                         output += "<div>";
                         output += "<div class='flex space-x-1'>";
-                        output += `<img class="size-5 rounded-sm" src=${skillIconPath + getSkillIcon(param.value[3])} alt=${param.seriesName}/>`;
+                        output += `<img class="size-5 rounded-sm" src='${skillIconPath + getSkillIcon(param.value[3])}' alt='${param.seriesName}' />`;
                         output += `<div class='font-semibold'>${param.seriesName}</div>`;
                         output += "</div>";
                         output += skillCastBreakdownTooltip(param.value[2], encounterDamageStats, skillIconPath);
@@ -532,7 +539,11 @@ function generateTooltip(
     }
 }
 
-function skillCastBreakdownTooltip(skillCast: SkillCast, encounterDamageStats: EncounterDamageStats, iconPath: string): string {
+function skillCastBreakdownTooltip(
+    skillCast: SkillCast,
+    encounterDamageStats: EncounterDamageStats,
+    iconPath: string
+): string {
     const totalDamage = skillCast.hits.map((hit) => hit.damage).reduce((a, b) => a + b, 0);
     let output = "<div class='flex flex-col'>";
     output += `<div>Total Damage: <span class='font-semibold'>${abbreviateNumber(totalDamage)}</span></div>`;
@@ -543,19 +554,27 @@ function skillCastBreakdownTooltip(skillCast: SkillCast, encounterDamageStats: E
             <tr>
                 <td class='w-10 font-semibold'>Hits</td>
                 <td class='w-14 font-semibold'>Mods</td>
-                <td class='w-14 font-semibold'>DMG</td>
+                <td class='w-16 font-semibold'>DMG</td>
                 <td class='w-60 font-semibold overflow-auto'>Buffs</td>
             </tr>
         </thead>
         <tbody>
     `;
-    const supportBuffs: SkillChartSupportDamage = { buff: 0, brand: 0, identity: 0};
+    const supportBuffs: SkillChartSupportDamage = { buff: 0, brand: 0, identity: 0 };
     const modInfo: SkillChartModInfo = { crit: 0, critDamage: 0, ba: 0, fa: 0 };
     for (const [i, hit] of skillCast.hits.entries()) {
-        const buffString = getSkillCastBuffs(hit.damage, hit.buffedBy, hit.debuffedBy, encounterDamageStats, iconPath, supportBuffs);
-        
+        const groupedBuffs = getSkillCastBuffs(
+            hit.damage,
+            hit.buffedBy,
+            hit.debuffedBy,
+            encounterDamageStats,
+            supportBuffs
+        );
+
+        const buffString = getFormattedBuffString(groupedBuffs, iconPath);
+
         table += "<tr>";
-        table += `<td>#${i + 1}</td>`;
+        table += `<td class="font-mono">#${i + 1}</td>`;
         let mods = "";
         if (hit.crit) {
             mods += "C ";
@@ -570,26 +589,26 @@ function skillCastBreakdownTooltip(skillCast: SkillCast, encounterDamageStats: E
             mods += "F ";
             modInfo.fa++;
         }
-        table += `<td>${mods.trim() ? mods : "-"}</td>`;
-        table += `<td>${abbreviateNumber(hit.damage)}</td>`;
+        table += `<td class="font-mono">${mods.trim() ? mods : "-"}</td>`;
+        table += `<td class="font-mono">${abbreviateNumber(hit.damage)}</td>`;
         table += `<td>${buffString}</td>`;
         table += "</tr>";
     }
     table += "</tbody></table>";
     output += `<div>
-    Crit: <span class='font-semibold'>${modInfo.crit > 0 ? round(modInfo.crit / skillCast.hits.length * 100) : 0}%</span>
-    | CDMG: <span class='font-semibold'>${modInfo.critDamage > 0 ? round(modInfo.critDamage / totalDamage * 100) : 0}%</span>`;
+    Crit: <span class='font-semibold'>${round((modInfo.crit / skillCast.hits.length) * 100)}%</span>
+    | CDMG: <span class='font-semibold'>${totalDamage !== 0 ? round((modInfo.critDamage / totalDamage) * 100) : 0}%</span>`;
     if (modInfo.ba > 0) {
-        output += ` | BA: <span class='font-semibold'>${round(modInfo.ba / skillCast.hits.length * 100)}%</span>`;
+        output += ` | BA: <span class='font-semibold'>${round((modInfo.ba / skillCast.hits.length) * 100)}%</span>`;
     }
     if (modInfo.fa > 0) {
-        output += ` | FA: <span class='font-semibold'>${round(modInfo.fa / skillCast.hits.length * 100)}%</span>`;
+        output += ` | FA: <span class='font-semibold'>${round((modInfo.fa / skillCast.hits.length) * 100)}%</span>`;
     }
     output += "</div>";
     output += `<div>
-    Buff: <span class='font-semibold'>${supportBuffs.buff > 0 ? round(supportBuffs.buff / totalDamage * 100) : 0}%</span>`;
-    output += ` | B: <span class='font-semibold'>${supportBuffs.brand > 0 ? round(supportBuffs.brand / totalDamage * 100) : 0}%</span>`;
-    output += ` | Iden: <span class='font-semibold'>${supportBuffs.identity > 0 ? round(supportBuffs.identity / totalDamage * 100) : 0}%</span>
+    Buff: <span class='font-semibold'>${supportBuffs.buff > 0 ? round((supportBuffs.buff / totalDamage) * 100) : 0}%</span>`;
+    output += ` | B: <span class='font-semibold'>${supportBuffs.brand > 0 ? round((supportBuffs.brand / totalDamage) * 100) : 0}%</span>`;
+    output += ` | Iden: <span class='font-semibold'>${supportBuffs.identity > 0 ? round((supportBuffs.identity / totalDamage) * 100) : 0}%</span>
     </div>`;
     output += table;
     output += "</div></div>";

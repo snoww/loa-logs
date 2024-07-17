@@ -26,7 +26,7 @@
     let totalShieldStr: (string | number)[];
 
     $: {
-        playerName = formatPlayerName(player, $settings.general.showNames, $settings.general.showGearScore);
+        playerName = formatPlayerName(player, $settings.general);;
         let totalShield = playerShields.reduce((acc, buff) => acc + buff.total, 0);
         totalShieldStr = abbreviateNumberSplit(totalShield);
     }

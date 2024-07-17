@@ -5,12 +5,13 @@
     import { generateHeaderTooltip, tooltip } from "$lib/utils/tooltip";
 
     export let synergy: StatusEffect;
+    export let size = "size-5";
 </script>
 
 <div>
     <img
         src={$skillIcon.path + getSkillIcon(synergy.source.icon)}
         alt={synergy.name}
-        class="table-cell size-5"
+        class="table-cell {size}"
         use:tooltip={{ content: generateHeaderTooltip(synergy, $skillIcon.path) }} />
 </div>

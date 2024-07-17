@@ -9,12 +9,15 @@ import {
     BuffDetails,
     type Skill,
     type PartyBuffs,
-    type PartyInfo, ShieldTab, Shield, ShieldDetails,
+    type PartyInfo,
+    ShieldTab,
+    Shield,
+    ShieldDetails,
     type EncounterDamageStats,
     type StatusEffectWithId,
     type SkillChartSupportDamage
 } from "$lib/types";
-import { identity } from "lodash-es";
+import { add, identity } from "lodash-es";
 import { round } from "./numbers";
 import { getSkillIcon } from "./strings";
 
@@ -98,7 +101,7 @@ export function filterStatusEffects(
     }
     // set synergies
     else if (isSetSynergy(buff)) {
-        if (tab === MeterTab.SELF_BUFFS && !focusedPlayer || shields) {
+        if ((tab === MeterTab.SELF_BUFFS && !focusedPlayer) || shields) {
             // put set buffs at the start
             groupedSynergiesAdd(groupedSynergies, `_set_${buff.source.setName}`, id, buff, focusedPlayer, buffFilter);
         }
@@ -132,7 +135,7 @@ export function filterStatusEffects(
     }
     // other synergies
     else if (isOtherSynergy(buff)) {
-        if (tab === MeterTab.SELF_BUFFS && focusedPlayer || shields) {
+        if ((tab === MeterTab.SELF_BUFFS && focusedPlayer) || shields) {
             groupedSynergiesAdd(groupedSynergies, `etc_${buff.source.name}`, id, buff, focusedPlayer, buffFilter);
         }
     }
@@ -211,7 +214,12 @@ export function getSynergyPercentageDetailsSum(
     return synergyPercentageDetails;
 }
 
-export function getPartyShields(players: Array<Entity>, encounterPartyInfo: PartyInfo, groupedShields: Map<string, Map<number, StatusEffect>>, tab: ShieldTab) {
+export function getPartyShields(
+    players: Array<Entity>,
+    encounterPartyInfo: PartyInfo,
+    groupedShields: Map<string, Map<number, StatusEffect>>,
+    tab: ShieldTab
+) {
     const parties = new Array<Array<Entity>>();
     const partyPercentages = new Array<number[]>();
     const partyInfo = Object.entries(encounterPartyInfo);
@@ -288,11 +296,7 @@ export function getPartyShields(players: Array<Entity>, encounterPartyInfo: Part
                     const buffs = groupedShields.get(key) || new Map();
                     buffs.forEach((syn, id) => {
                         if (player.damageStats[shieldBy][id]) {
-                            const s = new Shield(
-                                id,
-                                syn.source.icon,
-                                player.damageStats[shieldBy][id]
-                            );
+                            const s = new Shield(id, syn.source.icon, player.damageStats[shieldBy][id]);
                             shieldDetails.buffs.push(s);
                             shieldTotal += player.damageStats[shieldBy][id];
                         }
@@ -543,45 +547,85 @@ function isOtherSynergy(statusEffect: StatusEffect) {
     return buffCategories.other.includes(statusEffect.buffCategory);
 }
 
-export function getSkillCastBuffs(hitDamage: number, buffs: number[], debuffs: number[], encounterDamageStats: EncounterDamageStats, iconPath: string, supportBuffs: SkillChartSupportDamage) {
+export function getSkillCastBuffs(
+    hitDamage: number,
+    buffs: number[],
+    debuffs: number[],
+    encounterDamageStats: EncounterDamageStats,
+    supportBuffs: SkillChartSupportDamage,
+    playerClassId: number = 0,
+    buffType: string = "party",
+    buffFilter: boolean = true
+) {
     const groupedBuffs: Map<string, Array<StatusEffectWithId>> = new Map();
 
     for (const buffId of buffs) {
         if (encounterDamageStats.buffs.hasOwnProperty(buffId)) {
-            includeBuff(hitDamage, buffId, encounterDamageStats.buffs[buffId], groupedBuffs, supportBuffs);
+            includeBuff(
+                hitDamage,
+                buffId,
+                encounterDamageStats.buffs[buffId],
+                groupedBuffs,
+                supportBuffs,
+                playerClassId,
+                buffType,
+                buffFilter
+            );
         }
     }
     for (const buffId of debuffs) {
         if (encounterDamageStats.debuffs.hasOwnProperty(buffId)) {
-            includeBuff(hitDamage, buffId, encounterDamageStats.debuffs[buffId], groupedBuffs, supportBuffs);
+            includeBuff(
+                hitDamage,
+                buffId,
+                encounterDamageStats.debuffs[buffId],
+                groupedBuffs,
+                supportBuffs,
+                playerClassId,
+                buffType,
+                buffFilter
+            );
         }
     }
 
-    const sortedMap = new Map([...groupedBuffs].sort((a, b) => String(a[0]).localeCompare(b[0])));
+    return new Map([...groupedBuffs].sort((a, b) => String(a[0]).localeCompare(b[0])));
+}
+
+export function getFormattedBuffString(groupedBuffs: Map<string, Array<StatusEffectWithId>>, iconPath: string) {
     let buffString = "";
-    buffString += "<div class='flex' id='skill-cast-tooltip'>";
-    for (const [, buffs] of sortedMap) {
+    buffString += "<div class='flex'>";
+    for (const [, buffs] of groupedBuffs) {
         for (const buff of buffs) {
-            buffString += `<img class="size-6 rounded-sm buff-tippy !pointer-events-auto" src="${iconPath + getSkillIcon(buff.statusEffect.source.icon)}" alt="${buff.statusEffect.source.name}" id="${"buff-" + buff.id}"/>`;
+            buffString += `<img class="size-6 rounded-sm" src="${iconPath + getSkillIcon(buff.statusEffect.source.icon)}" alt="${buff.statusEffect.source.skill?.name}"/>`;
         }
     }
     buffString += "</div>";
-
     return buffString;
 }
 
-function includeBuff(hitDamage: number, buffId: number, buff: StatusEffect, map: Map<string, Array<StatusEffectWithId>>, supportBuffs: SkillChartSupportDamage) {
+function includeBuff(
+    hitDamage: number,
+    buffId: number,
+    buff: StatusEffect,
+    map: Map<string, Array<StatusEffectWithId>>,
+    supportBuffs: SkillChartSupportDamage,
+    playerClassId: number,
+    buffType: string,
+    buffFilter: boolean,
+) {
     let key = "";
-    if (((StatusEffectBuffTypeFlags.DMG |
-        StatusEffectBuffTypeFlags.CRIT |
-        StatusEffectBuffTypeFlags.ATKSPEED |
-        StatusEffectBuffTypeFlags.MOVESPEED |
-        StatusEffectBuffTypeFlags.COOLDOWN) &
-        buff.buffType) ===
-    0) {
+    if (buffFilter &&
+        ((StatusEffectBuffTypeFlags.DMG |
+            StatusEffectBuffTypeFlags.CRIT |
+            StatusEffectBuffTypeFlags.ATKSPEED |
+            StatusEffectBuffTypeFlags.MOVESPEED |
+            StatusEffectBuffTypeFlags.COOLDOWN) &
+            buff.buffType) ===
+        0
+    ) {
         return;
     }
-    if (isPartySynergy(buff)) {
+    if (buffType === "party" && isPartySynergy(buff)) {
         if (isSupportBuff(buff)) {
             key = makeSupportBuffKey(buff);
             if (key.includes("_0")) {
@@ -598,8 +642,38 @@ function includeBuff(hitDamage: number, buffId: number, buff: StatusEffect, map:
         }
 
         addToMap(key, buffId, buff, map);
+    } else if (buffType === "self") {
+        if (isPartySynergy(buff)) {}
+        else if (isSelfSkillSynergy(buff)) {
+            if (buff.buffCategory === "ability") {
+                key = `${buff.uniqueGroup ? buff.uniqueGroup : buffId}`;
+            } else {
+                if (playerClassId !== buff.source.skill?.classId) {
+                    return;
+                }
+                key = `_${classesMap[buff.source.skill?.classId ?? 0]}_${
+                    buff.uniqueGroup ? buff.uniqueGroup : buff.source.skill?.name
+                }`;
+            }
+            addToMap(key, buffId, buff, map);
+        } else if (isSetSynergy(buff)) {
+            addToMap(`_set_${buff.source.setName}`, buffId, buff, map);
+        }  
+    } else if (buffType === "misc") {
+        if (isSelfItemSynergy(buff)) {
+            if (buff.buffCategory === "bracelet") {
+                // put bracelets buffs at the end
+                key = `zzbracelet_${buff.uniqueGroup}`;
+            } else if (buff.buffCategory === "elixir") {
+                key = `elixir_${buff.uniqueGroup}`;
+            } else {
+                key = buff.buffCategory;
+            }
+            addToMap(key, buffId, buff, map);
+        } else if (isOtherSynergy(buff)) {
+            addToMap(`etc_${buff.source.name}`, buffId, buff, map);
+        }
     }
-
 }
 
 function addToMap(key: string, buffId: number, buff: StatusEffect, map: Map<string, Array<StatusEffectWithId>>) {
