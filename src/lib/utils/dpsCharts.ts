@@ -118,9 +118,14 @@ export function getAveragePlayerSeries(
                 };
             }
 
+            let color = "gray";
+            if (classColors[classesMap[player.classId]]) {
+                color = classColors[classesMap[player.classId]].color;
+            }
+
             return {
                 name: legendNames[i],
-                color: classColors[classesMap[player.classId]].color,
+                color: color,
                 type: "line",
                 data: player.damageStats.dpsAverage,
                 showSymbol: false,
@@ -153,9 +158,15 @@ export function getRollingPlayerSeries(
                     ]
                 };
             }
+
+            let color = "gray";
+            if (classColors[classesMap[player.classId]]) {
+                color = classColors[classesMap[player.classId]].color;
+            }
+
             return {
                 name: legendNames[i],
-                color: classColors[classesMap[player.classId]].color,
+                color: color,
                 type: "line",
                 data: player.damageStats.dpsRolling10sAvg,
                 showSymbol: false,
