@@ -1838,13 +1838,12 @@ impl EncounterState {
         // debug_print(format_args!("skill cast log:\n{}", serde_json::to_string(&skill_cast_log).unwrap()));
 
         debug_print(format_args!("rdps_data valid: [{}]", rdps_valid));
+        info!(
+            "saving to db - cleared: [{}], difficulty: [{:?}] {}",
+            raid_clear, self.raid_difficulty, encounter.current_boss_name
+        );
 
         task::spawn(async move {
-            info!(
-                "saving to db - cleared: [{}], difficulty: [{:?}] {}",
-                raid_clear, encounter.difficulty, encounter.current_boss_name
-            );
-
             let mut conn = Connection::open(path).expect("failed to open database");
             let tx = conn.transaction().expect("failed to create transaction");
 
