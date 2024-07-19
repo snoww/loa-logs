@@ -182,6 +182,8 @@ pub struct Skill {
     pub rdps_damage_received_support: i64,
     pub rdps_damage_given: i64,
     pub skill_cast_log: Vec<SkillCast>,
+    #[serde(skip)]
+    pub last_timestamp: i64,
 }
 
 #[derive(Debug, Default, Serialize, Deserialize, Clone)]

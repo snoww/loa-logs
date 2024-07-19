@@ -50,7 +50,7 @@ pub fn is_battle_item(skill_effect_id: u32, _item_type: &str) -> bool {
     false
 }
 
-pub fn get_status_effect_data(buff_id: u32) -> Option<StatusEffect> {
+pub fn get_status_effect_data(buff_id: u32, source_skill: Option<u32>) -> Option<StatusEffect> {
     let buff = SKILL_BUFF_DATA.get(&buff_id);
     if buff.is_none() || buff.unwrap().icon_show_type == "none" {
         return None;
@@ -90,12 +90,14 @@ pub fn get_status_effect_data(buff_id: u32) -> Option<StatusEffect> {
         || buff_category == "identity"
         || (buff_category == "ability" && buff.unique_group != 0)
     {
-        if buff.source_skill.is_some() {
-            // todo
-            let buff_source_skill =
-                SKILL_DATA.get(buff.source_skill.as_ref().unwrap().first().unwrap_or(&0));
-            if buff_source_skill.is_some() {
-                status_effect.source.skill = buff_source_skill.cloned();
+        if let Some(buff_source_skills) = buff.source_skill.as_ref() {
+            if let Some(source_skill) = source_skill {
+                let skill = SKILL_DATA.get(&source_skill);
+                get_summon_source_skill(skill, &mut status_effect);
+            } else {
+                let source_skill = buff_source_skills.first().unwrap_or(&0);
+                let skill = SKILL_DATA.get(source_skill);
+                get_summon_source_skill(skill, &mut status_effect);
             }
         } else if let Some(buff_source_skill) = SKILL_DATA.get(&(buff_id / 10)) {
             status_effect.source.skill = Some(buff_source_skill.clone());
@@ -123,6 +125,21 @@ pub fn get_status_effect_data(buff_id: u32) -> Option<StatusEffect> {
     }
 
     Some(status_effect)
+}
+
+fn get_summon_source_skill(skill: Option<&SkillData>, status_effect: &mut StatusEffect) {
+    if let Some(skill) = skill {
+        if let Some(summon_skills) = skill.summon_source_skill.as_ref() {
+            let summon_source_skill = summon_skills.first().unwrap_or(&0);
+            if *summon_source_skill > 0 {
+                if let Some(summon_skill) = SKILL_DATA.get(summon_source_skill) {
+                    status_effect.source.skill = Some(summon_skill.clone());
+                }
+            }
+        } else {
+            status_effect.source.skill = Some(skill.clone());
+        }
+    }
 }
 
 pub fn get_status_effect_buff_type_flags(buff: &SkillBuffData) -> u32 {
@@ -1055,4 +1072,12 @@ pub fn insert_data(
             ])
             .expect("failed to insert entity");
     }
+}
+
+pub fn get_new_id(source_skill: u32) -> u32 {
+    source_skill + 1_000_000_000
+}
+
+pub fn get_skill_id(new_skill: u32) -> u32 {
+    new_skill - 1_000_000_000
 }

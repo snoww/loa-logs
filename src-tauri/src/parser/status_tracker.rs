@@ -1,16 +1,17 @@
 use crate::parser::entity_tracker::Entity;
-use crate::parser::models::{EntityType, SKILL_BUFF_DATA};
+use crate::parser::models::{EncounterEntity, EntityType, SKILL_BUFF_DATA};
 use crate::parser::party_tracker::PartyTracker;
 use crate::parser::status_tracker::StatusEffectBuffCategory::{BattleItem, Bracelet, Elixir, Etc};
 use crate::parser::status_tracker::StatusEffectCategory::Debuff;
 use crate::parser::status_tracker::StatusEffectShowType::All;
+use crate::parser::utils::get_new_id;
 use chrono::{DateTime, Duration, Utc};
 use hashbrown::HashMap;
+use log::warn;
 use meter_core::packets::definitions::PKTNewPC;
 use meter_core::packets::structures::StatusEffectData;
 use std::cell::RefCell;
 use std::rc::Rc;
-use log::warn;
 
 const TIMEOUT_DELAY_MS: i64 = 1000;
 const WORKSHOP_BUFF_ID: u32 = 9701;
@@ -49,7 +50,7 @@ impl StatusTracker {
         for sed in pkt.pc_struct.status_effect_datas.into_iter() {
             let source_id = sed.source_id;
             let status_effect =
-                build_status_effect(sed, target_id, source_id, target_type, timestamp);
+                build_status_effect(sed, target_id, source_id, target_type, timestamp, None);
             self.register_status_effect(status_effect);
         }
     }
@@ -350,6 +351,7 @@ pub fn build_status_effect(
     source_id: u64,
     target_type: StatusEffectTargetType,
     timestamp: DateTime<Utc>,
+    source_entity: Option<&EncounterEntity>,
 ) -> StatusEffectDetails {
     let value = get_status_effect_value(&se_data.value);
     let mut status_effect_category = StatusEffectCategory::Other;
@@ -358,6 +360,7 @@ pub fn build_status_effect(
     let mut status_effect_type = StatusEffectType::Other;
     let mut name = "Unknown".to_string();
     let mut db_target_type = "".to_string();
+    let mut custom_id = 0;
     if let Some(effect) = SKILL_BUFF_DATA.get(&se_data.status_effect_id) {
         name = effect.name.to_string();
         if effect.category.as_str() == "debuff" {
@@ -377,6 +380,27 @@ pub fn build_status_effect(
             status_effect_type = StatusEffectType::Shield
         }
         db_target_type = effect.target.to_string();
+
+        if let Some(source_skills) = effect.source_skill.as_ref() {
+            if source_skills.len() > 1 {
+                if let Some(source_entity) = source_entity {
+                    let mut last_time = i64::MIN;
+                    let mut last_skill = 0_u32;
+                    for source_skill in source_skills {
+                        if let Some(skill) = source_entity.skills.get(source_skill) {
+                            if skill.last_timestamp > last_time {
+                                last_skill = *source_skill;
+                                last_time = skill.last_timestamp;
+                            }
+                        }
+                    }
+                    
+                    if last_skill > 0 {
+                        custom_id = get_new_id(last_skill);
+                    }
+                }
+            }
+        }
     }
 
     let expiry = if se_data.total_time > 0. && se_data.total_time < 604800. {
@@ -393,6 +417,7 @@ pub fn build_status_effect(
         source_id,
         target_id,
         status_effect_id: se_data.status_effect_id,
+        custom_id,
         target_type,
         db_target_type,
         value,
@@ -467,6 +492,7 @@ pub enum StatusEffectType {
 pub struct StatusEffectDetails {
     pub instance_id: u32,
     pub status_effect_id: u32,
+    pub custom_id: u32,
     pub target_id: u64,
     pub source_id: u64,
     pub target_type: StatusEffectTargetType,

@@ -669,7 +669,8 @@ pub fn start(
                     PKTPartyStatusEffectAddNotify::new,
                     "PKTPartyStatusEffectAddNotify",
                 ) {
-                    let shields = entity_tracker.party_status_effect_add(pkt);
+                    let buff_map = state.custom_buff_id_map.clone();
+                    let shields = entity_tracker.party_status_effect_add(pkt, &state.encounter.entities, buff_map);
                     for status_effect in shields {
                         let source = entity_tracker.get_source_entity(status_effect.source_id);
                         let target_id =
@@ -743,10 +744,13 @@ pub fn start(
                     PKTStatusEffectAddNotify::new,
                     "PKTStatusEffectAddNotify",
                 ) {
+                    let buff_map = state.custom_buff_id_map.clone();
                     let status_effect = entity_tracker.build_and_register_status_effect(
                         &pkt.status_effect_data,
                         pkt.object_id,
                         Utc::now(),
+                        Some(&state.encounter.entities),
+                        Some(buff_map),
                     );
                     if status_effect.status_effect_type == StatusEffectType::Shield {
                         let source = entity_tracker.get_source_entity(status_effect.source_id);

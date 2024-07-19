@@ -1,6 +1,3 @@
-use std::cmp::{max, Ordering};
-use std::default::Default;
-
 use chrono::Utc;
 use hashbrown::HashMap;
 use log::{info, warn};
@@ -8,6 +5,11 @@ use meter_core::packets::definitions::{PKTIdentityGaugeChangeNotify, PKTParalyza
 use moka::sync::Cache;
 use rsntp::SntpClient;
 use rusqlite::Connection;
+use std::cell::RefCell;
+use std::cmp::{max, Ordering};
+use std::default::Default;
+use std::rc::Rc;
+use std::sync::Arc;
 
 use crate::parser::debug_print;
 use tauri::{Manager, Window, Wry};
@@ -56,6 +58,8 @@ pub struct EncounterState {
     pub rdps_valid: bool,
 
     pub skill_tracker: SkillTracker,
+
+    pub custom_buff_id_map: Rc<RefCell<HashMap<u32, u32>>>,
 }
 
 impl EncounterState {
@@ -89,6 +93,8 @@ impl EncounterState {
             rdps_valid: false,
 
             skill_tracker: SkillTracker::new(),
+
+            custom_buff_id_map: Rc::new(RefCell::new(HashMap::new())),
         }
     }
 
@@ -117,6 +123,8 @@ impl EncounterState {
         self.rdps_valid = false;
 
         self.skill_tracker = SkillTracker::new();
+
+        self.custom_buff_id_map = Rc::new(RefCell::new(HashMap::new()));
 
         for (key, entity) in clone.entities.into_iter().filter(|(_, e)| {
             e.entity_type == EntityType::PLAYER
@@ -692,6 +700,7 @@ impl EncounterState {
         if damage > skill.max_damage {
             skill.max_damage = damage;
         }
+        skill.last_timestamp = timestamp;
 
         source_entity.damage_stats.damage_dealt += damage;
         target_entity.damage_stats.damage_taken += damage;
@@ -738,7 +747,13 @@ impl EncounterState {
             let mut is_debuffed_by_support = false;
             let se_on_source_ids = se_on_source
                 .iter()
-                .map(|se| se.status_effect_id)
+                .map(|se| {
+                    if se.custom_id > 0 {
+                        se.custom_id
+                    } else {
+                        se.status_effect_id
+                    }
+                })
                 .collect::<Vec<_>>();
             for buff_id in se_on_source_ids.iter() {
                 if !self
@@ -752,7 +767,17 @@ impl EncounterState {
                         .buffs
                         .contains_key(buff_id)
                 {
-                    if let Some(status_effect) = get_status_effect_data(*buff_id) {
+                    let mut source_id: Option<u32> = None;
+                    let original_buff_id =
+                        if let Some(deref_id) = self.custom_buff_id_map.borrow().get(buff_id) {
+                            source_id = Some(get_skill_id(*buff_id));
+                            *deref_id
+                        } else {
+                            *buff_id
+                        };
+
+                    if let Some(status_effect) = get_status_effect_data(original_buff_id, source_id)
+                    {
                         self.encounter
                             .encounter_damage_stats
                             .buffs
@@ -787,7 +812,13 @@ impl EncounterState {
             }
             let se_on_target_ids = se_on_target
                 .iter()
-                .map(|se| se.status_effect_id)
+                .map(|se| {
+                    if se.custom_id > 0 {
+                        se.custom_id
+                    } else {
+                        se.status_effect_id
+                    }
+                })
                 .collect::<Vec<_>>();
             for debuff_id in se_on_target_ids.iter() {
                 if !self
@@ -801,7 +832,18 @@ impl EncounterState {
                         .debuffs
                         .contains_key(debuff_id)
                 {
-                    if let Some(status_effect) = get_status_effect_data(*debuff_id) {
+                    let mut source_id: Option<u32> = None;
+                    let original_debuff_id =
+                        if let Some(deref_id) = self.custom_buff_id_map.borrow().get(debuff_id) {
+                            source_id = Some(get_skill_id(*debuff_id));
+                            *deref_id
+                        } else {
+                            *debuff_id
+                        };
+
+                    if let Some(status_effect) =
+                        get_status_effect_data(original_debuff_id, source_id)
+                    {
                         self.encounter
                             .encounter_damage_stats
                             .debuffs
@@ -1652,7 +1694,16 @@ impl EncounterState {
                 .applied_shield_buffs
                 .contains_key(&buff_id)
             {
-                if let Some(status_effect) = get_status_effect_data(buff_id) {
+                let mut source_id: Option<u32> = None;
+                let original_buff_id =
+                    if let Some(deref_id) = self.custom_buff_id_map.borrow().get(&buff_id) {
+                        source_id = Some(get_skill_id(buff_id));
+                        *deref_id
+                    } else {
+                        buff_id
+                    };
+
+                if let Some(status_effect) = get_status_effect_data(original_buff_id, source_id) {
                     self.encounter
                         .encounter_damage_stats
                         .applied_shield_buffs
