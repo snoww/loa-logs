@@ -30,7 +30,8 @@
         getLegendNames,
         getRollingDpsChart,
         getRollingPlayerSeries,
-        getSkillLogChart
+        getSkillLogChart,
+        getSkillLogChartOld
     } from "$lib/utils/dpsCharts";
     import OpenerSkills from "./OpenerSkills.svelte";
     import ArcanistCardTable from "../shared/ArcanistCardTable.svelte";
@@ -40,6 +41,7 @@
     import LogShields from "$lib/components/logs/LogShields.svelte";
     import Rdps from "$lib/components/shared/Rdps.svelte";
     import LogSkillChart from "./LogSkillChart.svelte";
+    import { entries } from "lodash-es";
 
     export let id: string;
     export let encounter: Encounter;
@@ -67,6 +69,8 @@
     let chartType = ChartType.AVERAGE_DPS;
     let playerName = "";
     let focusedBoss = "";
+
+    let hasSkillCastLog = false;
 
     let deleteConfirm = false;
 
@@ -105,10 +109,16 @@
             anySupportBuff = players.some((player) => player.damageStats.buffedBySupport > 0);
             anySupportIdentity = players.some((player) => player.damageStats.buffedByIdentity > 0);
             anySupportBrand = players.some((player) => player.damageStats.debuffedBySupport > 0);
-            if (encounter.encounterDamageStats.misc?.rdpsValid === undefined || encounter.encounterDamageStats.misc?.rdpsValid) {
+            if (
+                encounter.encounterDamageStats.misc?.rdpsValid === undefined ||
+                encounter.encounterDamageStats.misc?.rdpsValid
+            ) {
                 anyRdpsData = players.some((player) => player.damageStats.rdpsDamageReceived > 0);
             }
-            if (encounter.encounterDamageStats.misc?.rdpsMessage === undefined || encounter.encounterDamageStats.misc?.rdpsMessage) {
+            if (
+                encounter.encounterDamageStats.misc?.rdpsMessage === undefined ||
+                encounter.encounterDamageStats.misc?.rdpsMessage
+            ) {
                 $rdpsEventDetails = encounter.encounterDamageStats.misc?.rdpsMessage || "";
             } else {
                 $rdpsEventDetails = "";
@@ -189,21 +199,34 @@
                         deathTimes
                     );
                 } else if (chartType === ChartType.SKILL_LOG && player && player.entityType === EntityType.PLAYER) {
-                    chartOptions = getSkillLogChart(
-                        player,
-                        $skillIcon.path,
-                        encounter.lastCombatPacket,
-                        encounter.fightStart,
-                        encounter.encounterDamageStats
-                    );
+                    if (
+                        Object.entries(player.skills).some(
+                            ([, skill]) => skill.skillCastLog && skill.skillCastLog.length > 0
+                        )
+                    ) {
+                        hasSkillCastLog = true;
+                        chartOptions = getSkillLogChart(
+                            player,
+                            $skillIcon.path,
+                            encounter.lastCombatPacket,
+                            encounter.fightStart,
+                            encounter.encounterDamageStats
+                        );
+                    } else {
+                        chartOptions = getSkillLogChartOld(
+                            player,
+                            $skillIcon.path,
+                            encounter.lastCombatPacket,
+                            encounter.fightStart
+                        );
+                    }
                 } else if (chartType === ChartType.SKILL_LOG && focusedBoss) {
                     let boss = bosses.find((boss) => boss.name === focusedBoss);
-                    chartOptions = getSkillLogChart(
+                    chartOptions = getSkillLogChartOld(
                         boss!,
                         $skillIcon.path,
                         encounter.lastCombatPacket,
-                        encounter.fightStart,
-                        encounter.encounterDamageStats
+                        encounter.fightStart
                     );
                 }
             }
@@ -632,7 +655,7 @@
                                     <th
                                         class="w-12 font-normal"
                                         use:tooltip={{ content: "% Damage gained from Support" }}
-                                    >sSyn%
+                                        >sSyn%
                                     </th>
                                 {/if}
                                 {#if $settings.logs.counters}
@@ -678,7 +701,7 @@
                     {players}
                     totalDamageDealt={encounter.encounterDamageStats.totalDamageDealt}
                     duration={encounter.duration}
-                    encounterPartyInfo={encounter.encounterDamageStats.misc?.partyInfo}/>
+                    encounterPartyInfo={encounter.encounterDamageStats.misc?.partyInfo} />
             {:else if tab === MeterTab.PARTY_BUFFS}
                 {#if state === MeterState.PARTY}
                     <LogBuffs {tab} encounterDamageStats={encounter.encounterDamageStats} {players} {inspectPlayer} />
@@ -748,7 +771,7 @@
                         10s DPS Window
                     </button>
                 {:else if playerName !== "" && state === MeterState.PLAYER}
-                <!--  -->
+                    <!--  -->
                 {/if}
             </div>
         {/if}
@@ -765,8 +788,10 @@
                 <div class="mt-2 h-[300px]" use:chartable={chartOptions} style="width: calc(100vw - 4.5rem);" />
             {/if}
         {:else if chartType === ChartType.SKILL_LOG}
-            {#if (player && player.entityType === EntityType.PLAYER)}
+            {#if player && player.entityType === EntityType.PLAYER && hasSkillCastLog}
                 <LogSkillChart {chartOptions} {player} encounterDamageStats={encounter.encounterDamageStats} />
+            {:else if player && player.entityType === EntityType.PLAYER || focusedBoss}
+                <div class="mt-2 h-[300px]" use:chartable={chartOptions} style="width: calc(100vw - 4.5rem);" />
             {/if}
         {/if}
     </div>

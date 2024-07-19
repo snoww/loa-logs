@@ -347,9 +347,6 @@ export function getSkillLogChart(
         .filter((skill) => skill.skillCastLog.length > 0)
         .sort((a, b) => a.totalDamage - b.totalDamage);
     const skills = sortedSkills.map((skill) => skill.name);
-    const calculateDamage = (obj: any) => {
-        return obj.value[2].hits.map((hit: SkillHit) => hit.damage).reduce((a, b) => a + b, 0);
-    };
 
     return {
         ...defaultOptions,
@@ -476,6 +473,118 @@ export function getSkillLogChart(
                     borderColor: "#fff",
                     extraCssText: "pointer-events: auto !important; padding: 0"
                 }
+            };
+        })
+    };
+}
+
+export function getSkillLogChartOld(player: Entity, skillIconPath: string, lastCombatPacket: number, fightStart: number) {
+    const sortedSkills = Object.values(player.skills)
+        .filter((skill) => skill.castLog.length > 0)
+        .sort((a, b) => a.totalDamage - b.totalDamage);
+    const skills = sortedSkills.map((skill) => skill.name);
+
+    return {
+        ...defaultOptions,
+        grid: {
+            left: "2%",
+            right: "5%",
+            bottom: "18%",
+            top: "10%",
+            containLabel: true
+        },
+        dataZoom: [
+            {
+                type: "slider",
+                fillerColor: "rgba(80,80,80,.5)",
+                borderColor: "rgba(80,80,80,.5)",
+                handleStyle: {
+                    color: "rgba(80,80,80,.5)"
+                },
+                moveHandleStyle: {
+                    color: "rgba(136,136,136)"
+                }
+            },
+            {
+                type: "inside",
+                xAxisIndex: [0],
+                throttle: 50
+            },
+            {
+                type: "inside",
+                yAxisIndex: [0],
+                throttle: 50,
+                zoomOnMouseWheel: false
+            }
+        ],
+        tooltip: {
+            trigger: "axis",
+            formatter: function (params: any[]) {
+                let output = `<span style="font-weight: 600">${params[0].name}</span>`;
+                params.forEach((p) => {
+                    output += `<br/>${p.seriesName}`;
+                });
+
+                return output;
+            }
+        } as any,
+        legend: {
+            data: [...skills].reverse(),
+            textStyle: {
+                color: "white"
+            },
+            type: "scroll",
+            width: "90%",
+            pageIconInactiveColor: "#313131",
+            pageIconColor: "#aaa",
+            pageTextStyle: {
+                color: "#aaa"
+            },
+            itemWidth: 20,
+            itemHeight: 20,
+            selector: true
+        },
+        xAxis: {
+            type: "category",
+            splitLine: {
+                show: false
+            },
+            data: Array.from(
+                {
+                    length: (lastCombatPacket - fightStart) / 1000
+                },
+                (_, i) => formatDurationFromS(i)
+            ),
+            boundaryGap: false,
+            axisLabel: {
+                color: "white"
+            }
+        },
+        yAxis: {
+            type: "category",
+            splitLine: {
+                show: true,
+                lineStyle: {
+                    color: "#333"
+                }
+            },
+            axisLabel: {
+                show: false
+            },
+            data: skills.map((skill) => {
+                return {
+                    value: skill
+                };
+            })
+        },
+        series: sortedSkills.map((skill) => {
+            return {
+                name: skill.name,
+                type: "scatter",
+                symbol: "image://" + skillIconPath + getSkillIcon(skill.icon),
+                symbolSize: [20, 20],
+                symbolKeepAspect: true,
+                data: skill.castLog.map((cast) => [formatDurationFromMs(cast), skill.name])
             };
         })
     };
