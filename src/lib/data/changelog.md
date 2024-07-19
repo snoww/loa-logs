@@ -1,6 +1,6 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.12.0
+    v1.12.1
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
@@ -8,19 +8,14 @@
 </div>
 
 #### NEW FEATURES
-- updated meter for summer patch, thanks to @PetAndMet, @PoonT, @faust
-- skill cast tracking
-  - each damage tick of a skill is now tracked
-  - you can look at the details of a skill cast by clicking on a skill icon in the skill cast graph
+- shield tracking should be working again
+- added the ability to differentiate bard brands (e.g. sound shock, harp of rhythm, stigma)
 
-clicking on a skill icon in the graph brings up a tooltip that shows some basic info about the cast.
+![brands](https://i.imgur.com/NQFBHlo.png)
 
-![graph tooltip](https://i.imgur.com/cS3OtwK.png)
-
-scrolling down to the bottom of the page allows you to view the cast in more detail. where you are able to hover over columns for tooltips, and change the buff filtering to show different buffs applied during the damage tick. you can also click the arrows to look at the next/previous cast of the skill. it will also show rdps data when that is back and working again.
-
-![skill details](https://i.imgur.com/kqvMxyR.png)
-
+#### BUG FIXES AND IMPROVEMENTS
+- fixed app crashing when trying to view log with missing data
+- added backwards compatibility to view old skill charts on older logs
 
 If you missed the news, please read the announcement in the discord channel. [#announcements - ramen shop](https://discord.gg/2rwTTKXRwu).
 
@@ -36,6 +31,23 @@ If you missed the news, please read the announcement in the discord channel. [#a
 - shields
 - stagger
 - pretty much anything else not listed here
+
+### v1.12.0
+#### NEW FEATURES
+- updated meter for summer patch, thanks to @PetAndMet, @PoonT, @faust
+- skill cast tracking
+  - each damage tick of a skill is now tracked
+  - you can look at the details of a skill cast by clicking on a skill icon in the skill cast graph
+
+clicking on a skill icon in the graph brings up a tooltip that shows some basic info about the cast.
+
+![graph tooltip](https://i.imgur.com/cS3OtwK.png)
+
+scrolling down to the bottom of the page allows you to view the cast in more detail. where you are able to hover over columns for tooltips, and change the buff filtering to show different buffs applied during the damage tick. you can also click the arrows to look at the next/previous cast of the skill. it will also show rdps data when that is back and working again.
+
+![skill details](https://i.imgur.com/kqvMxyR.png)
+
+
 
 ### v1.11.3
 #### NEW FEATURES (NOT REALLY, AGAIN)
