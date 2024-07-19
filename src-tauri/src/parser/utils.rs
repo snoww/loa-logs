@@ -2,6 +2,7 @@ use crate::parser::entity_tracker::Entity;
 use crate::parser::models::*;
 use crate::parser::skill_tracker::SkillTracker;
 use crate::parser::stats_api::{Engraving, PlayerStats};
+use crate::parser::status_tracker::StatusEffectDetails;
 use hashbrown::HashMap;
 use moka::sync::Cache;
 use rusqlite::{params, Transaction};
@@ -1071,6 +1072,15 @@ pub fn insert_data(
                 entity.gear_hash,
             ])
             .expect("failed to insert entity");
+    }
+}
+
+pub fn map_status_effect(se: &StatusEffectDetails, custom_id_map: &mut HashMap<u32, u32>) -> u32 {
+    if se.custom_id > 0 {
+        custom_id_map.insert(se.custom_id, se.status_effect_id);
+        se.custom_id
+    } else { 
+        se.status_effect_id
     }
 }
 

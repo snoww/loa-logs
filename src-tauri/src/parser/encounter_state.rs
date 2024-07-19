@@ -59,7 +59,7 @@ pub struct EncounterState {
 
     pub skill_tracker: SkillTracker,
 
-    pub custom_buff_id_map: Rc<RefCell<HashMap<u32, u32>>>,
+    custom_id_map: HashMap<u32, u32>
 }
 
 impl EncounterState {
@@ -94,7 +94,7 @@ impl EncounterState {
 
             skill_tracker: SkillTracker::new(),
 
-            custom_buff_id_map: Rc::new(RefCell::new(HashMap::new())),
+            custom_id_map: HashMap::new(),
         }
     }
 
@@ -123,8 +123,8 @@ impl EncounterState {
         self.rdps_valid = false;
 
         self.skill_tracker = SkillTracker::new();
-
-        self.custom_buff_id_map = Rc::new(RefCell::new(HashMap::new()));
+        
+        self.custom_id_map = HashMap::new();
 
         for (key, entity) in clone.entities.into_iter().filter(|(_, e)| {
             e.entity_type == EntityType::PLAYER
@@ -305,13 +305,16 @@ impl EncounterState {
             if npc.entity_type == EntityType::BOSS {
                 // if current encounter has no boss, we set the boss
                 // if current encounter has a boss, we check if new boss has more max hp, or if current boss is dead
-                self.encounter.current_boss_name = self
+                self.encounter.current_boss_name = if self
                     .encounter
                     .entities
                     .get(&self.encounter.current_boss_name)
                     .map_or(true, |boss| npc.max_hp >= boss.max_hp || boss.is_dead)
-                    .then(|| entity_name)
-                    .unwrap_or(self.encounter.current_boss_name.clone());
+                {
+                    entity_name
+                } else {
+                    self.encounter.current_boss_name.clone()
+                };
             }
         }
     }
@@ -747,13 +750,7 @@ impl EncounterState {
             let mut is_debuffed_by_support = false;
             let se_on_source_ids = se_on_source
                 .iter()
-                .map(|se| {
-                    if se.custom_id > 0 {
-                        se.custom_id
-                    } else {
-                        se.status_effect_id
-                    }
-                })
+                .map(|se| map_status_effect(se, &mut self.custom_id_map))
                 .collect::<Vec<_>>();
             for buff_id in se_on_source_ids.iter() {
                 if !self
@@ -768,13 +765,12 @@ impl EncounterState {
                         .contains_key(buff_id)
                 {
                     let mut source_id: Option<u32> = None;
-                    let original_buff_id =
-                        if let Some(deref_id) = self.custom_buff_id_map.borrow().get(buff_id) {
-                            source_id = Some(get_skill_id(*buff_id));
-                            *deref_id
-                        } else {
-                            *buff_id
-                        };
+                    let original_buff_id = if let Some(deref_id) = self.custom_id_map.get(buff_id) {
+                        source_id = Some(get_skill_id(*buff_id));
+                        *deref_id
+                    } else {
+                        *buff_id
+                    };
 
                     if let Some(status_effect) = get_status_effect_data(original_buff_id, source_id)
                     {
@@ -812,13 +808,7 @@ impl EncounterState {
             }
             let se_on_target_ids = se_on_target
                 .iter()
-                .map(|se| {
-                    if se.custom_id > 0 {
-                        se.custom_id
-                    } else {
-                        se.status_effect_id
-                    }
-                })
+                .map(|se| map_status_effect(se, &mut self.custom_id_map))
                 .collect::<Vec<_>>();
             for debuff_id in se_on_target_ids.iter() {
                 if !self
@@ -833,13 +823,12 @@ impl EncounterState {
                         .contains_key(debuff_id)
                 {
                     let mut source_id: Option<u32> = None;
-                    let original_debuff_id =
-                        if let Some(deref_id) = self.custom_buff_id_map.borrow().get(debuff_id) {
-                            source_id = Some(get_skill_id(*debuff_id));
-                            *deref_id
-                        } else {
-                            *debuff_id
-                        };
+                    let original_debuff_id = if let Some(deref_id) = self.custom_id_map.get(debuff_id) {
+                        source_id = Some(get_skill_id(*debuff_id));
+                        *deref_id
+                    } else {
+                        *debuff_id
+                    };
 
                     if let Some(status_effect) =
                         get_status_effect_data(original_debuff_id, source_id)
@@ -1696,7 +1685,7 @@ impl EncounterState {
             {
                 let mut source_id: Option<u32> = None;
                 let original_buff_id =
-                    if let Some(deref_id) = self.custom_buff_id_map.borrow().get(&buff_id) {
+                    if let Some(deref_id) = self.custom_id_map.get(&buff_id) {
                         source_id = Some(get_skill_id(buff_id));
                         *deref_id
                     } else {

@@ -281,11 +281,9 @@ impl EntityTracker {
         &mut self,
         pkt: PKTPartyStatusEffectAddNotify,
         entities: &HashMap<String, EncounterEntity>,
-        buff_map: Rc<RefCell<HashMap<u32, u32>>>,
     ) -> Vec<StatusEffectDetails> {
         let timestamp = Utc::now();
         let mut shields: Vec<StatusEffectDetails> = Vec::new();
-        let mut buff_map = buff_map.borrow_mut();
         for sed in pkt.status_effect_datas {
             let source_id = if pkt.player_id_on_refresh != 0 {
                 pkt.player_id_on_refresh
@@ -303,9 +301,6 @@ impl EntityTracker {
                 timestamp,
                 encounter_entity
             );
-            if status_effect.custom_id > 0 {
-                buff_map.insert(status_effect.custom_id, status_effect.status_effect_id);
-            }
             if status_effect.status_effect_type == StatusEffectType::Shield {
                 shields.push(status_effect.clone());
             }
@@ -480,7 +475,6 @@ impl EntityTracker {
         target_id: u64,
         timestamp: DateTime<Utc>,
         entities: Option<&HashMap<String, EncounterEntity>>,
-        buff_map: Option<Rc<RefCell<HashMap<u32, u32>>>>,
     ) -> StatusEffectDetails {
         let source_entity = self.get_source_entity(sed.source_id);
         let source_encounter_entity = entities.and_then(|entities| entities.get(&source_entity.name));
@@ -492,12 +486,6 @@ impl EntityTracker {
             timestamp,
             source_encounter_entity,
         );
-        
-        if status_effect.custom_id > 0 {
-            if let Some(buff_map) = buff_map {
-                buff_map.borrow_mut().insert(status_effect.custom_id, status_effect.status_effect_id);
-            }
-        }
 
         self.status_tracker
             .borrow_mut()
@@ -509,7 +497,7 @@ impl EntityTracker {
     fn build_and_register_status_effects(&mut self, seds: Vec<StatusEffectData>, target_id: u64) {
         let timestamp = Utc::now();
         for sed in seds.into_iter() {
-            self.build_and_register_status_effect(&sed, target_id, timestamp, None, None);
+            self.build_and_register_status_effect(&sed, target_id, timestamp, None);
         }
     }
 
