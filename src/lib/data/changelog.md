@@ -1,12 +1,17 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.12.1
+    v1.12.2
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
   </div>
 </div>
 
+#### BUG FIXES AND IMPROVEMENTS
+- fixed parties being recognized incorrectly, causing buffs to show up incorrectly or missing
+- meter can now be opened before raid again still show buffs correctly (still try to open before character select tho)
+
+### v1.12.1
 #### NEW FEATURES
 - shield tracking should be working again
 - added the ability to differentiate bard brands (e.g. sound shock, harp of rhythm, stigma)
@@ -17,20 +22,6 @@
 - fixed app crashing when trying to view log with missing data
 - added backwards compatibility to view old skill charts on older logs
 
-If you missed the news, please read the announcement in the discord channel. [#announcements - ramen shop](https://discord.gg/2rwTTKXRwu).
-
-### Current Functionality
-#### Working
-- damage meter
-- basic logs
-- party/self buff uptime tracking (mostly)
-- identity (maybe)
-- maybe some other stuff
-#### Not Working
-- rdps
-- shields
-- stagger
-- pretty much anything else not listed here
 
 ### v1.12.0
 #### NEW FEATURES
