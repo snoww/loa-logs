@@ -41,7 +41,6 @@
     import LogShields from "$lib/components/logs/LogShields.svelte";
     import Rdps from "$lib/components/shared/Rdps.svelte";
     import LogSkillChart from "./LogSkillChart.svelte";
-    import { entries } from "lodash-es";
 
     export let id: string;
     export let encounter: Encounter;

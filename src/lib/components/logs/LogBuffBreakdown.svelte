@@ -17,7 +17,7 @@
     let playerName: string;
 
     $: {
-        playerName = formatPlayerName(player, $settings.general.showNames, $settings.general.showGearScore, false);
+        playerName = formatPlayerName(player, $settings.general);
     }
 
     let color: string;

@@ -11,7 +11,7 @@
 
     let tab = ShieldTab.GIVEN;
 
-    let groupedSheilds = new Map<string, Map<number, StatusEffect>>();
+    let groupedShields = new Map<string, Map<number, StatusEffect>>();
 
     let parties = new Array<Array<Entity>>();
     let partyGroupedShields = new Map<string, Set<string>>();
@@ -23,11 +23,11 @@
 
     $: {
         for (const [id, buff] of Object.entries(encounterDamageStats.appliedShieldBuffs)) {
-            filterStatusEffects(groupedSheilds, buff, Number(id), null, null, false, true);
+            filterStatusEffects(groupedShields, buff, Number(id), null, null, false, true);
         }
-        groupedSheilds = new Map([...groupedSheilds.entries()].sort());
+        groupedShields = new Map([...groupedShields.entries()].sort());
         if (encounterDamageStats.misc?.partyInfo) {
-            let obj = getPartyShields(players, encounterDamageStats.misc.partyInfo, groupedSheilds, tab);
+            let obj = getPartyShields(players, encounterDamageStats.misc.partyInfo, groupedShields, tab);
             parties = obj.parties;
             partyGroupedShields = obj.partyGroupedShields;
             partyPercentages = obj.partyPercentages;
@@ -37,6 +37,7 @@
             const remToPx = parseFloat(getComputedStyle(document.documentElement).fontSize);
             partyWidths = calculatePartyWidth(partyGroupedShields, remToPx, vw);
         }
+
     }
 </script>
 
@@ -98,7 +99,7 @@
                         <th class="w-full" />
                         <th class="w-20 font-normal">Total</th>
                         {#each synergies as synergy (synergy)}
-                            {@const syns = groupedSheilds.get(synergy) || new Map()}
+                            {@const syns = groupedShields.get(synergy) || new Map()}
                             <ShieldHeader shields={syns} />
                         {/each}
                     </tr>
