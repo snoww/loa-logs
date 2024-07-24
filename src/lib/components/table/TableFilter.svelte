@@ -46,21 +46,16 @@
     function debounce(fn: FormEventHandler<HTMLInputElement>, milliseconds: number) {
         let timer: number | undefined;
 
-        if ($searchStore.length === 0) {
-            return fn;
-        }
-
         return (evt: Event & { currentTarget: EventTarget & HTMLInputElement }) => {
             clearTimeout(timer);
-            timer = setTimeout(() => {
-                fn(evt);
-            }, milliseconds);
+            const timeout = $searchStore.length ? milliseconds : 0;
+            timer = setTimeout(() => fn(evt), timeout);
         };
     }
 
     const handleSearchInput = debounce((e) => {
         loadEncountersFn();
-    }, 500);
+    }, 300);
 
     const isFilterButton = (element: HTMLElement) => {
         return element.classList.contains("filter-button");
