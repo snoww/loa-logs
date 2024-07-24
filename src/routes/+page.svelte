@@ -70,6 +70,8 @@
                     }
                     if (manifest?.version.includes("2024")) {
                         $updateSettings.isNotice = true;
+                    } else {
+                        $updateSettings.isNotice = false;
                     }
                 }
             } catch (e) {
