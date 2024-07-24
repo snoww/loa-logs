@@ -632,12 +632,7 @@ fn load_encounters_preview(
 
     let mut params = vec![min_duration.to_string()];
 
-    let search_words: Vec<&str> = if search.chars().any(|c| !c.is_whitespace()) {
-        search.split_whitespace().collect()
-    } else {
-        vec![""]
-    };
-
+    let search_words: Vec<&str> = search.split_whitespace().collect();
     params.extend(
         search_words
             .iter()
@@ -646,11 +641,11 @@ fn load_encounters_preview(
 
     let word_count = search_words.len();
 
-    let join_clauses = (0..word_count).fold(String::new(), |acc, i| {
+    let join_clauses = (0..search_words.len().max(1)).fold(String::new(), |acc, i| {
         acc + &format!("JOIN entity ent{} ON e.id = ent{}.encounter_id\n    ", i, i)
     });
 
-    let input_filter = (0..word_count)
+    let input_filter = (0..search_words.len())
     .fold(String::new(), |acc, i| {
         acc + &format!(
             "AND ((current_boss LIKE '%' || ? || '%') OR (ent{}.class LIKE '%' || ? || '%') OR (ent{}.name LIKE '%' || ? || '%'))\n    ",
