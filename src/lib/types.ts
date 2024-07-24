@@ -443,7 +443,6 @@ export class SearchFilter {
     encounters: Set<string>;
     classes: Set<string>;
     minDuration: number;
-    maxDuration: number;
     favorite: boolean;
     cleared: boolean;
     difficulty: string;
@@ -456,7 +455,6 @@ export class SearchFilter {
         this.encounters = new Set();
         this.classes = new Set();
         this.minDuration = minDuration;
-        this.maxDuration = -1;
         this.favorite = false;
         this.cleared = false;
         this.difficulty = "";

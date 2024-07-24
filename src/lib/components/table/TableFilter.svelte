@@ -23,10 +23,6 @@
     let deleteConfirm = false;
 
     onMount(() => {
-        if ($searchFilter.minDuration === -1) {
-            $searchFilter.minDuration = $settings.logs.minEncounterDuration;
-        }
-
         const clickOutside = (event: MouseEvent) => {
             if (filterDiv && filterDiv.contains(event.target as Node)) {
                 return;

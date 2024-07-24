@@ -51,13 +51,15 @@
         }
     }
 
-    $: {
-        $searchFilter = $searchFilter;
-        loadEncounters();
+    // Initialize `minDuration` here to not trigger a reload of encounters
+    // TODO: move this into `SearchFilter` constructor?
+    if ($searchFilter.minDuration === -1) {
+        $searchFilter.minDuration = $settings.logs.minEncounterDuration;
     }
+    // TODO: make `loadEncounters()` take `searchFilter` and `pageStore` as arguments
+    $: $searchFilter && loadEncounters();
 
     onMount(async () => {
-        await loadEncounters();
         if ($miscSettings) {
             const version = await getVersion();
             if (!$miscSettings.viewedChangelog || $miscSettings.version !== version) {
