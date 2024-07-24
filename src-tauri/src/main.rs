@@ -506,12 +506,11 @@ fn setup_db(resource_path: PathBuf) -> Result<(), String> {
             PRIMARY KEY (name, encounter_id),
             FOREIGN KEY (encounter_id) REFERENCES encounter (id) ON DELETE CASCADE
         );
-        CREATE INDEX IF NOT EXISTS entity_encounter_id_index
-        ON entity (encounter_id desc);
-        CREATE INDEX IF NOT EXISTS entity_name_index
-        ON entity (name);
-        CREATE INDEX IF NOT EXISTS entity_class_index
-        ON entity (class);
+        DROP INDEX IF EXISTS entity_encounter_id_index;
+        DROP INDEX IF EXISTS entity_name_index;
+        DROP INDEX IF EXISTS entity_class_index;
+        CREATE INDEX IF NOT EXISTS entity_id_class_name_index
+        ON entity (encounter_id desc, class, name);
         ",
     ) {
         Ok(_) => (),
