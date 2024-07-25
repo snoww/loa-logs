@@ -1,12 +1,18 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.12.2
+    v1.13.0
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
   </div>
 </div>
 
+#### NEW FEATURES
+- updated meter for game qol update (thanks to @PoonT)
+- shields are broken again
+
+
+### v1.12.2
 #### BUG FIXES AND IMPROVEMENTS
 - fixed parties being recognized incorrectly, causing buffs to show up incorrectly or missing
 - meter can now be opened before raid again still show buffs correctly (still try to open before character select tho)
@@ -22,7 +28,6 @@
 - fixed app crashing when trying to view log with missing data
 - added backwards compatibility to view old skill charts on older logs
 
-
 ### v1.12.0
 #### NEW FEATURES
 - updated meter for summer patch, thanks to @PetAndMet, @PoonT, @faust
@@ -37,7 +42,6 @@ clicking on a skill icon in the graph brings up a tooltip that shows some basic 
 scrolling down to the bottom of the page allows you to view the cast in more detail. where you are able to hover over columns for tooltips, and change the buff filtering to show different buffs applied during the damage tick. you can also click the arrows to look at the next/previous cast of the skill. it will also show rdps data when that is back and working again.
 
 ![skill details](https://i.imgur.com/kqvMxyR.png)
-
 
 
 ### v1.11.3
