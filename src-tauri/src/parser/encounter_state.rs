@@ -1661,7 +1661,6 @@ impl EncounterState {
         buff_id: u32,
         shield: u64,
     ) {
-        return;
         if source_entity.entity_type == EntityType::PLAYER
             && target_entity.entity_type == EntityType::PLAYER
         {
