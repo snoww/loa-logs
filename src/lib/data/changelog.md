@@ -1,12 +1,17 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.13.0
+    v1.13.1
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
   </div>
 </div>
 
+#### BUG FIXES AND IMPROVEMENTS
+- fix encounter not resetting after pulls
+- difficulty for guardians might be incorrect
+
+### v1.13.0
 #### NEW FEATURES
 - updated meter for game qol update (thanks to @PoonT)
 - shields are broken again
