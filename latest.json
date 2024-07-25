@@ -1,11 +1,11 @@
 {
     "version": "v1.13.1",
-    "notes": "### v1.13.1\n#### NEW FEATURES\n- updated meter for game qol update (thanks to @PoonT)\n- shields are broken again\n\n### Current Functionality\n#### Working\n- damage meter\n- basic logs\n- party/self buff uptime tracking (mostly)\n- identity (maybe)\n- maybe some other stuff\n#### Not Working\n- shields\n- rdps\n- stagger\n- pretty much anything else not listed here\n\nfull patch notes on [github](https://github.com/snoww/loa-logs/releases/latest)\n\nsend bug reports/suggestions to [ramen shop server](https://discord.gg/RXvTMV2YHu)",
-    "pub_date": "",
+    "notes": "### v1.13.1\n#### BUG FIXES AND IMPROVEMENTS\n- fix encounter not resetting after pulls\n- difficulty for guardians might be incorrect\n\n### v1.13.0\n#### NEW FEATURES\n- updated meter for game qol update (thanks to @PoonT)\n- shields are broken again\n\n### Current Functionality\n#### Working\n- damage meter\n- basic logs\n- party/self buff uptime tracking (mostly)\n- identity (maybe)\n- maybe some other stuff\n#### Not Working\n- shields\n- rdps\n- stagger\n- pretty much anything else not listed here\n\nfull patch notes on [github](https://github.com/snoww/loa-logs/releases/latest)\n\nsend bug reports/suggestions to [ramen shop server](https://discord.gg/RXvTMV2YHu)",
+    "pub_date": "2024-07-25T03:46:24.254Z",
     "platforms": {
         "windows-x86_64": {
             "url": "https://github.com/snoww/loa-logs/releases/download/v1.13.1/LOA.Logs_1.13.1_x64-setup.nsis.zip",
-            "signature": ""
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYldiV1cvNHdFZVlDRlY0QXo4T2RTeCtkT2ZwYWZaUGIrVEdmTG9FYmZBUnhkSXZ3SDdkZ01xVGFHUndXK3NJb2hSMS85T1FyWnN6RlV6SlQwVE1IZ1FRPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzIxODc1MzAzCWZpbGU6TE9BIExvZ3NfMS4xMy4xX3g2NC1zZXR1cC5uc2lzLnppcApPdElnd0hzNWFDQXE1NFBQUVU4Z3NpL3YyY2NnaXRsNXhVNEFZTEs4RW1GQ1JSNm11L3UyOEhRTGlnVXNYZ3ZOU0RwQWIzdExuSEU4RHJuRm5EU09CUT09Cg=="
         }
     }
 }
