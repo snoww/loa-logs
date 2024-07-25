@@ -408,7 +408,6 @@ pub fn start(
             Pkt::NewTrap => {
                 if let Some(pkt) = parse_pkt(&data, PKTNewTrap::new, "PKTNewTrap") {
                     entity_tracker.new_trap(&pkt);
-                    let key = (pkt.trap_data.owner_id, pkt.trap_data.skill_id);
                     if entity_tracker.id_is_player(pkt.trap_data.owner_id)
                         && pkt.trap_data.skill_id > 0
                     {
@@ -669,6 +668,7 @@ pub fn start(
                     PKTPartyStatusEffectAddNotify::new,
                     "PKTPartyStatusEffectAddNotify",
                 ) {
+                    // info!("{:?}", pkt);
                     let shields = entity_tracker.party_status_effect_add(pkt, &state.encounter.entities);
                     for status_effect in shields {
                         let source = entity_tracker.get_source_entity(status_effect.source_id);
@@ -1140,6 +1140,7 @@ fn on_shield_change(
     status_effect: StatusEffectDetails,
     change: u64,
 ) {
+    return;
     if change == 0 {
         return;
     }

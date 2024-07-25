@@ -586,9 +586,7 @@ impl EncounterState {
                 target_entity
             })
             .to_owned();
-
-        source_entity.id = dmg_src_entity.id;
-
+        
         // if boss only damage is enabled
         // check if target is boss and not player
         // check if target is player and source is boss
@@ -627,6 +625,8 @@ impl EncounterState {
 
         self.encounter.last_combat_packet = timestamp;
 
+        source_entity.id = dmg_src_entity.id;
+        
         if target_entity.id == dmg_target_entity.id {
             target_entity.current_hp = damage_data.target_current_hp;
             target_entity.max_hp = damage_data.target_max_hp;
@@ -1661,6 +1661,7 @@ impl EncounterState {
         buff_id: u32,
         shield: u64,
     ) {
+        return;
         if source_entity.entity_type == EntityType::PLAYER
             && target_entity.entity_type == EntityType::PLAYER
         {
@@ -1879,7 +1880,7 @@ impl EncounterState {
 
         debug_print(format_args!("rdps_data valid: [{}]", rdps_valid));
         info!(
-            "saving to db - cleared: [{}], difficulty: [{:?}] {}",
+            "saving to db - cleared: [{}], difficulty: [{}] {}",
             raid_clear, self.raid_difficulty, encounter.current_boss_name
         );
 
