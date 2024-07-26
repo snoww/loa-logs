@@ -1,6 +1,7 @@
 import { estherMap } from "$lib/constants/esthers";
 import type { Entity } from "$lib/types";
 import { round2 } from "./numbers";
+import { missingInfo } from "./stores";
 
 export function isValidName(word: string) {
     return /^\p{Lu}/u.test(word);
@@ -14,7 +15,11 @@ export function removeUnknownHtmlTags(input: string) {
 
 export function formatPlayerName(player: Entity, generalSettings: any): string {
     let playerName = player.name;
-    if (!isValidName(playerName) || !generalSettings.showNames) {
+    const validName = isValidName(playerName);
+    if (!validName) {
+        missingInfo.set(true);
+    }
+    if (!validName || !generalSettings.showNames) {
         if (player.class) {
             playerName = player.class;
         } else {
