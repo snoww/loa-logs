@@ -459,7 +459,7 @@ export class SearchFilter {
         this.cleared = false;
         this.difficulty = "";
         this.bossOnlyDamage = false;
-        this.sort = "fight_start";
+        this.sort = "id";
         this.order = 2;
     }
 }

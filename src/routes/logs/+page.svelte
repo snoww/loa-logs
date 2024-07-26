@@ -152,8 +152,8 @@
         let order = $searchFilter.sort === sort ? ($searchFilter.order + 1) % 3 : 1;
 
         if (order === 0) {
-            $searchFilter.sort = "fight_start";
-            $searchFilter.order = sort === "fight_start" ? 1 : 2;
+            $searchFilter.sort = "id";
+            $searchFilter.order = sort === "id" ? 1 : 2;
         } else {
             $searchFilter.sort = sort;
             $searchFilter.order = order;
