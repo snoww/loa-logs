@@ -1,12 +1,18 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.13.3
+    v1.13.4
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
   </div>
 </div>
 
+#### BUG FIXES AND IMPROVEMENTS
+- fixed certain skills not being detected in certain gates
+
+**NOTE:** apologies for the broken updates, been super busy and not able to find time to work on the
+
+### v1.13.3
 #### BUG FIXES AND IMPROVEMENTS
 - fixed parties not being determined correctly, causing buffs to show up incorrectly
 - added back shields (shields might still be wrong for your own party in 8 man raids)
