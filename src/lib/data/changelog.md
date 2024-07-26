@@ -1,12 +1,17 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.13.2
+    v1.13.3
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
   </div>
 </div>
 
+#### BUG FIXES AND IMPROVEMENTS
+- fixed parties not being determined correctly, causing buffs to show up incorrectly
+- added back shields (shields might still be wrong for your own party in 8 man raids)
+
+### v1.13.2
 #### BUG FIXES AND IMPROVEMENTS
 - actually fixed encounter not resetting after pulls
 - fixed some buffs not showing correctly (e.g. harp of rhythm)
