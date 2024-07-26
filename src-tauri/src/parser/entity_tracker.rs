@@ -285,12 +285,7 @@ impl EntityTracker {
         let timestamp = Utc::now();
         let mut shields: Vec<StatusEffectDetails> = Vec::new();
         for sed in pkt.status_effect_datas {
-            let source_id = if pkt.player_id_on_refresh != 0 {
-                pkt.player_id_on_refresh
-            } else {
-                sed.source_id
-            };
-            let entity = self.get_source_entity(source_id);
+            let entity = self.get_source_entity(sed.source_id);
             let encounter_entity = entities.get(&entity.name);
             // println!("entity: {:?}", entity);
             let status_effect = build_status_effect(

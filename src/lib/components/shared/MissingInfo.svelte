@@ -9,8 +9,8 @@
         class="text-left font-normal text-red-400 whitespace-nowrap"
         use:tooltip={{
             content:
-                "Meter opened too late, missing local player info. Please go to Character Select or Swap Characters to reload info."
+                "MISSING INFO FOR LOCAL PLAYER, DATA WILL BE INCORRECT. Please go to CHARACTER SELECT or SWAP CHARACTERS."
         }}>
-        Warning: Missing Info
+        WARNING: INVALID DATA
     </div>
 {/if}
