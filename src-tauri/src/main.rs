@@ -437,13 +437,13 @@ fn setup_db(resource_path: &Path) -> Result<(), rusqlite::Error> {
     if !stmt.exists(["entity", "gear_hash"])? {
         tx.execute("ALTER TABLE entity ADD COLUMN gear_hash TEXT", [])?;
     }
+    stmt.finalize()?;
 
-    drop(stmt);
     let mut stmt = tx.prepare("SELECT 1 FROM sqlite_master WHERE type=? AND name=?")?;
     if !stmt.exists(["table", "encounter_preview"])? {
         update_db(&tx)?;
     }
-    drop(stmt);
+    stmt.finalize()?;
     tx.commit()
 }
 
@@ -553,7 +553,32 @@ fn update_db(tx: &rusqlite::Transaction) -> Result<(), rusqlite::Error> {
         CREATE INDEX encounter_preview_my_dps_index ON encounter_preview(my_dps);
         CREATE INDEX encounter_preview_duration_index ON encounter_preview(duration);
         ",
-    )
+    )?;
+    tx.execute_batch(
+        "
+        CREATE VIRTUAL TABLE encounter_search USING fts5(
+            current_boss, players, columnsize=0, detail=full,
+            tokenize='trigram remove_diacritics 1',
+            content=encounter_preview, content_rowid=id
+        );
+        INSERT INTO encounter_search(encounter_search) VALUES('rebuild');
+        CREATE TRIGGER encounter_preview_ai AFTER INSERT ON encounter_preview BEGIN
+            INSERT INTO encounter_search(rowid, current_boss, players)
+            VALUES (new.id, new.current_boss, new.players);
+        END;
+        CREATE TRIGGER encounter_preview_ad AFTER DELETE ON encounter_preview BEGIN
+            INSERT INTO encounter_search(encounter_search, rowid, current_boss, players)
+            VALUES('delete', old.id, old.current_boss, old.players);
+        END;
+        CREATE TRIGGER encounter_preview_au AFTER UPDATE ON encounter_preview BEGIN
+            INSERT INTO encounter_search(encounter_search, rowid, current_boss, players)
+            VALUES('delete', old.id, old.current_boss, old.players);
+            INSERT INTO encounter_search(rowid, current_boss, players)
+            VALUES (new.id, new.current_boss, new.players);
+        END;
+        ",
+    )?;
+    Ok(())
 }
 
 #[tauri::command]
@@ -570,10 +595,21 @@ fn load_encounters_preview(
         .resource_dir()
         .expect("could not get resource dir");
     let conn = get_db_connection(&path).expect("could not get db connection");
+    let mut params = vec![];
 
-    let min_duration = filter.min_duration * 1000;
+    let join_clause = if search.len() > 2 {
+        let escaped_search = search
+            .split_whitespace()
+            .map(|word| format!("\"{}\"", word.replace("\"", "")))
+            .collect::<Vec<_>>()
+            .join(" ");
+        params.push(escaped_search);
+        "JOIN encounter_search(?) ON encounter_search.rowid = e.id"
+    } else {
+        ""
+    };
 
-    let mut params = vec![min_duration.to_string()];
+    params.push((filter.min_duration * 1000).to_string());
 
     let boss_filter = if !filter.bosses.is_empty() {
         let mut placeholders = "?,".repeat(filter.bosses.len());
@@ -626,12 +662,13 @@ fn load_encounters_preview(
     e.local_player,
     e.my_dps,
     e.players
-    FROM encounter_preview e
+    FROM encounter_preview e {}
     WHERE e.duration > ? {}
     {} {} {} {}
     ORDER BY {} {}
     LIMIT ?
     OFFSET ?",
+        join_clause,
         boss_filter,
         raid_clear_filter,
         favorite_filter,
@@ -684,10 +721,11 @@ fn load_encounters_preview(
     let query = format!(
         "
         SELECT COUNT(*)
-        FROM encounter_preview e
+        FROM encounter_preview e {}
         WHERE duration > ? {}
         {} {} {} {}
         ",
+        join_clause,
         boss_filter,
         raid_clear_filter,
         favorite_filter,
