@@ -87,10 +87,11 @@
                 bosses.push(...encounterMap[raid][encounter]);
             }
         }
-        // word boundary (\b) + word (\S+) + colon (:)
+        // start or space (^|\s) + word (\w+) + colon or space or end (:|\s|$)
+        // using match (?:) and lookahead (?=) https://regex101.com/r/1cMFH8/1
         // if word is a valid className, replace it with the classId
-        // example: "bard:Anyduck artillerist:" -> "204:Anyduck 504:"
-        let searchQuery = search.replace(/\b(\S+):/g, (_, word: string) => {
+        // example: "bard:Anyduck shadowhunter" -> "204:Anyduck 403"
+        let searchQuery = search.replace(/(?:^|\s)\w+(?=:|\s|$)/g, (word: string) => {
             const className = word[0].toUpperCase() + word.substring(1).toLowerCase();
             return String(classNameToClassId[className] || word);
         });
