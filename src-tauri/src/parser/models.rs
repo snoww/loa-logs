@@ -654,7 +654,6 @@ pub struct EncountersOverview {
 #[serde(rename_all = "camelCase", default)]
 pub struct SearchFilter {
     pub bosses: Vec<String>,
-    pub classes: Vec<String>,
     pub min_duration: i32,
     pub max_duration: i32,
     pub cleared: bool,

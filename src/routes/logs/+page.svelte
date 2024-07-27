@@ -3,7 +3,7 @@
 
     import LogSidebar from "$lib/components/logs/LogSidebar.svelte";
     import TableFilter from "$lib/components/table/TableFilter.svelte";
-    import type { EncounterPreview, EncountersOverview } from "$lib/types";
+    import type { EncounterPreview, EncountersOverview, SearchFilter } from "$lib/types";
     import {
         abbreviateNumber,
         formatDurationFromMs,
@@ -27,6 +27,7 @@
     import { goto } from "$app/navigation";
     import "nprogress/nprogress.css";
     import Notification from "$lib/components/shared/Notification.svelte";
+    import { classNameToClassId } from "$lib/constants/classes";
     import { encounterMap } from "$lib/constants/encounters";
     import DifficultyLabel from "$lib/components/shared/DifficultyLabel.svelte";
     import SortSymbol from "$lib/components/table/SortSymbol.svelte";
@@ -37,7 +38,6 @@
     let encounters: Array<EncounterPreview> = [];
     let totalEncounters: number = 0;
     const rowsPerPage = 10;
-    const maxSearchLength = 30;
 
     let selectMode = false;
 
@@ -52,12 +52,10 @@
     }
 
     // Initialize `minDuration` here to not trigger a reload of encounters
-    // TODO: move this into `SearchFilter` constructor?
     if ($searchFilter.minDuration === -1) {
         $searchFilter.minDuration = $settings.logs.minEncounterDuration;
     }
-    // TODO: make `loadEncounters()` take `searchFilter` and `pageStore` as arguments
-    $: $searchFilter && loadEncounters();
+    $: loadEncounters($searchFilter, $searchStore, $pageStore);
 
     onMount(async () => {
         if ($miscSettings) {
@@ -80,30 +78,36 @@
         goto("/changelog");
     }
 
-    async function loadEncounters(): Promise<Array<EncounterPreview>> {
+    async function loadEncounters(searchFilter: SearchFilter, search: string, page: number): Promise<Array<EncounterPreview>> {
         NProgress.start();
         let bosses = Array.from($searchFilter.bosses);
-        if ($searchFilter.encounters.size > 0) {
-            for (const encounter of $searchFilter.encounters) {
+        if (searchFilter.encounters.size > 0) {
+            for (const encounter of searchFilter.encounters) {
                 const raid = encounter.substring(0, encounter.indexOf(" "));
                 bosses.push(...encounterMap[raid][encounter]);
             }
         }
+        // word boundary (\b) + word (\S+) + colon (:)
+        // if word is a valid className, replace it with the classId
+        // example: "bard:Anyduck artillerist:" -> "204:Anyduck 504:"
+        let searchQuery = search.replace(/\b(\S+):/g, (_, word: string) => {
+            const className = word[0].toUpperCase() + word.substring(1).toLowerCase();
+            return String(classNameToClassId[className] || word);
+        });
+
         let overview: EncountersOverview = await invoke("load_encounters_preview", {
-            page: $pageStore,
+            page: page,
             pageSize: rowsPerPage,
-            search: $searchStore.substring(0, maxSearchLength),
+            search: searchQuery,
             filter: {
-                minDuration:
-                    $searchFilter.minDuration !== -1 ? $searchFilter.minDuration : $settings.logs.minEncounterDuration,
+                minDuration: searchFilter.minDuration,
                 bosses: bosses,
-                classes: Array.from($searchFilter.classes),
-                cleared: $searchFilter.cleared,
-                favorite: $searchFilter.favorite,
-                difficulty: $searchFilter.difficulty,
-                bossOnlyDamage: $searchFilter.bossOnlyDamage,
-                sort: $searchFilter.sort,
-                order: $searchFilter.order
+                cleared: searchFilter.cleared,
+                favorite: searchFilter.favorite,
+                difficulty: searchFilter.difficulty,
+                bossOnlyDamage: searchFilter.bossOnlyDamage,
+                sort: searchFilter.sort,
+                order: searchFilter.order
             }
         });
         encounters = overview.encounters;
@@ -112,38 +116,33 @@
         return encounters;
     }
 
-    async function refresh() {
-        $searchStore = "";
+    function refresh() {
         $pageStore = 1;
         $backNavStore = false;
-        await loadEncounters();
+        $searchFilter = $searchFilter;
     }
 
-    async function nextPage() {
+    function nextPage() {
         if ($pageStore * rowsPerPage < totalEncounters) {
             $pageStore++;
-            await loadEncounters();
             scrollToTopOfTable();
         }
     }
 
-    async function previousPage() {
+    function previousPage() {
         if ($pageStore > 1) {
             $pageStore--;
-            await loadEncounters();
             scrollToTopOfTable();
         }
     }
 
-    async function firstPage() {
+    function firstPage() {
         $pageStore = 1;
-        await loadEncounters();
         scrollToTopOfTable();
     }
 
-    async function lastPage() {
+    function lastPage() {
         $pageStore = Math.ceil(totalEncounters / rowsPerPage);
-        await loadEncounters();
         scrollToTopOfTable();
     }
 
@@ -188,7 +187,7 @@
     </div>
     <div class="px-8">
         <div class="py-2">
-            <TableFilter bind:selectMode refreshFn={refresh} loadEncountersFn={loadEncounters} />
+            <TableFilter bind:selectMode refreshFn={refresh} />
         </div>
         <div
             class="relative overflow-y-auto overflow-x-hidden"
