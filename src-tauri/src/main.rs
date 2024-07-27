@@ -511,8 +511,6 @@ fn update_db(tx: &rusqlite::Transaction) -> Result<(), rusqlite::Error> {
             FOREIGN KEY (id) REFERENCES encounter(id) ON DELETE CASCADE
         );
 
-        -- migrate old data with the help of an index
-        CREATE INDEX encounter_preview_migration_index ON entity(encounter_id, class_id, name, dps) WHERE entity_type = 'PLAYER';
         INSERT INTO encounter_preview SELECT
             id, fight_start, current_boss, duration, 
             (
@@ -528,7 +526,6 @@ fn update_db(tx: &rusqlite::Transaction) -> Result<(), rusqlite::Error> {
             ) AS my_dps,
             favorite, cleared, boss_only_damage
         FROM encounter;
-        DROP INDEX encounter_preview_migration_index;
 
         DROP INDEX IF EXISTS encounter_fight_start_index;
         DROP INDEX IF EXISTS encounter_current_boss_index;
