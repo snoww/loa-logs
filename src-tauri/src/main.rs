@@ -567,7 +567,7 @@ fn update_db(tx: &rusqlite::Transaction) -> Result<(), rusqlite::Error> {
             INSERT INTO encounter_search(encounter_search, rowid, current_boss, players)
             VALUES('delete', old.id, old.current_boss, old.players);
         END;
-        CREATE TRIGGER encounter_preview_au AFTER UPDATE ON encounter_preview BEGIN
+        CREATE TRIGGER encounter_preview_au AFTER UPDATE OF current_boss, players ON encounter_preview BEGIN
             INSERT INTO encounter_search(encounter_search, rowid, current_boss, players)
             VALUES('delete', old.id, old.current_boss, old.players);
             INSERT INTO encounter_search(rowid, current_boss, players)
