@@ -703,10 +703,6 @@ pub fn insert_data(
             "
     INSERT INTO encounter (
         last_combat_packet,
-        fight_start,
-        local_player,
-        current_boss,
-        duration,
         total_damage_dealt,
         top_damage_dealt,
         total_damage_taken,
@@ -718,11 +714,8 @@ pub fn insert_data(
         total_effective_shielding,
         applied_shield_buffs,
         misc,
-        difficulty,
-        cleared,
-        boss_only_damage,
         version
-    ) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17, ?18, ?19, ?20)",
+    ) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13)",
         )
         .expect("failed to prepare encounter statement");
 
@@ -793,10 +786,6 @@ pub fn insert_data(
     encounter_stmt
         .execute(params![
             encounter.last_combat_packet,
-            encounter.fight_start,
-            encounter.local_player,
-            encounter.current_boss_name,
-            encounter.duration,
             encounter.encounter_damage_stats.total_damage_dealt,
             encounter.encounter_damage_stats.top_damage_dealt,
             encounter.encounter_damage_stats.total_damage_taken,
@@ -808,9 +797,6 @@ pub fn insert_data(
             encounter.encounter_damage_stats.total_effective_shielding,
             json!(encounter.encounter_damage_stats.applied_shield_buffs),
             json!(misc),
-            raid_difficulty,
-            raid_clear,
-            encounter.boss_only_damage,
             DB_VERSION
         ])
         .expect("failed to insert encounter");
@@ -1073,6 +1059,59 @@ pub fn insert_data(
             ])
             .expect("failed to insert entity");
     }
+
+    let mut players = encounter
+        .entities
+        .values()
+        .filter(|e| {
+            ((e.entity_type == EntityType::PLAYER && e.class_id != 0 && e.max_hp > 0)
+                || e.name == encounter.local_player)
+                && e.damage_stats.damage_dealt > 0
+        })
+        .collect::<Vec<_>>();
+    let local_player_dps = players
+        .iter()
+        .find(|e| e.name == encounter.local_player)
+        .and_then(|e| Some(e.damage_stats.dps))
+        .unwrap_or_default();
+    players.sort_unstable_by_key(|e| e.damage_stats.damage_dealt);
+    let preview_players = players
+        .into_iter()
+        .map(|e| format!("{}:{}", e.class_id, e.name))
+        .collect::<Vec<_>>()
+        .join(",");
+
+    let mut encounter_preview_stmt = tx
+        .prepare_cached(
+            "
+    INSERT INTO encounter_preview (
+        id
+        fight_start,
+        current_boss,
+        duration,
+        payers,
+        difficulty,
+        local_player,
+        my_dps
+        cleared,
+        boss_only_damage,
+    ) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10)",
+        )
+        .expect("failed to prepare encounter preview statement");
+    encounter_preview_stmt
+        .execute(params![
+            last_insert_id,
+            encounter.fight_start,
+            encounter.current_boss_name,
+            encounter.duration,
+            preview_players,
+            raid_difficulty,
+            encounter.local_player,
+            local_player_dps,
+            raid_clear,
+            encounter.boss_only_damage
+        ])
+        .expect("failed to insert encounter preview");
 }
 
 pub fn map_status_effect(se: &StatusEffectDetails, custom_id_map: &mut HashMap<u32, u32>) -> u32 {
