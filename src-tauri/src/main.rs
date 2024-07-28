@@ -1265,7 +1265,13 @@ fn optimize_database(window: tauri::Window) {
         .resource_dir()
         .expect("could not get resource dir");
     let conn = get_db_connection(&path).expect("could not get db connection");
-    conn.execute("VACUUM;", params![]).unwrap();
+    conn.execute_batch(
+        "
+        INSERT INTO encounter_search(encounter_search) VALUES('optimize');
+        VACUUM;
+        ",
+    )
+    .unwrap();
     info!("optimized database");
 }
 
