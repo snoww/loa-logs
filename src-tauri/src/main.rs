@@ -76,7 +76,7 @@ async fn main() -> Result<()> {
                 .path_resolver()
                 .resource_dir()
                 .expect("could not get resource dir");
-            std::thread::sleep(std::time::Duration::from_secs(20));
+
             match setup_db(&resource_path) {
                 Ok(_) => (),
                 Err(e) => {
