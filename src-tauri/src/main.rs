@@ -72,6 +72,18 @@ async fn main() -> Result<()> {
         .setup(|app| {
             info!("starting app v{}", app.package_info().version.to_string());
 
+            let resource_path = app
+                .path_resolver()
+                .resource_dir()
+                .expect("could not get resource dir");
+            std::thread::sleep(std::time::Duration::from_secs(20));
+            match setup_db(&resource_path) {
+                Ok(_) => (),
+                Err(e) => {
+                    warn!("error setting up database: {}", e);
+                }
+            }
+
             let handle = app.handle();
             tauri::async_runtime::spawn(async move {
                 match tauri::updater::builder(handle).check().await {
@@ -100,11 +112,6 @@ async fn main() -> Result<()> {
                     }
                 }
             });
-
-            let resource_path = app
-                .path_resolver()
-                .resource_dir()
-                .expect("could not get resource dir");
 
             let settings = read_settings(&resource_path).ok();
 
@@ -182,13 +189,6 @@ async fn main() -> Result<()> {
                 logs_window.show().unwrap();
             }
 
-            match setup_db(&resource_path) {
-                Ok(_) => (),
-                Err(e) => {
-                    warn!("error setting up database: {}", e);
-                }
-            }
-
             task::spawn_blocking(move || {
                 parser::start(meter_window, ip, port, raw_socket, settings).map_err(|e| {
                     error!("unexpected error occurred in parser: {}", e);
@@ -202,7 +202,12 @@ async fn main() -> Result<()> {
 
             Ok(())
         })
-        .plugin(tauri_plugin_window_state::Builder::default().build())
+        .plugin(
+            tauri_plugin_window_state::Builder::new()
+                .skip_initial_state(METER_WINDOW_LABEL)
+                .skip_initial_state(LOGS_WINDOW_LABEL)
+                .build(),
+        )
         .plugin(tauri_plugin_single_instance::init(|_app, _argv, _cwd| {}))
         .on_window_event(|event| match event.event() {
             tauri::WindowEvent::CloseRequested { api, .. } => {
