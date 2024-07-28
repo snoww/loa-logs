@@ -19,7 +19,7 @@ use hashbrown::HashMap;
 use log::{error, info, warn};
 use parser::models::*;
 
-use rusqlite::{params, params_from_iter, Connection};
+use rusqlite::{params, params_from_iter, Connection, Transaction};
 use tauri::{
     api::process::Command, CustomMenuItem, LogicalPosition, LogicalSize, Manager, Position, Size,
     SystemTray, SystemTrayEvent, SystemTrayMenu, SystemTrayMenuItem,
@@ -364,6 +364,10 @@ fn setup_db(resource_path: &Path) -> Result<(), rusqlite::Error> {
     CREATE TABLE IF NOT EXISTS encounter (
         id INTEGER PRIMARY KEY,
         last_combat_packet INTEGER,
+        fight_start INTEGER,
+        local_player TEXT,
+        current_boss TEXT,
+        duration INTEGER,
         total_damage_dealt INTEGER,
         top_damage_dealt INTEGER,
         total_damage_taken INTEGER,
@@ -375,6 +379,9 @@ fn setup_db(resource_path: &Path) -> Result<(), rusqlite::Error> {
         total_effective_shielding INTEGER DEFAULT 0,
         applied_shield_buffs TEXT,
         misc TEXT,
+        difficulty TEXT,
+        favorite BOOLEAN NOT NULL DEFAULT 0,
+        cleared BOOLEAN,
         version INTEGER NOT NULL DEFAULT {},
         boss_only_damage BOOLEAN NOT NULL DEFAULT 0
     );
@@ -385,6 +392,25 @@ fn setup_db(resource_path: &Path) -> Result<(), rusqlite::Error> {
     let mut stmt = tx.prepare("SELECT 1 FROM pragma_table_info(?) WHERE name=?")?;
     if !stmt.exists(["encounter", "misc"])? {
         tx.execute("ALTER TABLE encounter ADD COLUMN misc TEXT", [])?;
+    }
+    if !stmt.exists(["encounter", "difficulty"])? {
+        tx.execute("ALTER TABLE encounter ADD COLUMN difficulty TEXT", [])?;
+    }
+    if !stmt.exists(["encounter", "favorite"])? {
+        tx.execute_batch(&format!(
+            "
+            ALTER TABLE encounter ADD COLUMN favorite BOOLEAN DEFAULT 0;
+            ALTER TABLE encounter ADD COLUMN version INTEGER DEFAULT {};
+            ALTER TABLE encounter ADD COLUMN cleared BOOLEAN;
+            ",
+            DB_VERSION,
+        ))?;
+    }
+    if !stmt.exists(["encounter", "boss_only_damage"])? {
+        tx.execute(
+            "ALTER TABLE encounter ADD COLUMN boss_only_damage BOOLEAN NOT NULL DEFAULT 0",
+            [],
+        )?;
     }
     if !stmt.exists(["encounter", "total_shielding"])? {
         tx.execute_batch(
@@ -439,61 +465,22 @@ fn setup_db(resource_path: &Path) -> Result<(), rusqlite::Error> {
     }
     stmt.finalize()?;
 
+    tx.execute_batch(
+        "
+        UPDATE encounter SET cleared = coalesce(json_extract(misc, '$.raidClear'), 0) WHERE cleared IS NULL;
+        UPDATE entity SET dps = coalesce(json_extract(damage_stats, '$.dps'), 0) WHERE dps IS NULL;
+        ",
+    )?;
+
     let mut stmt = tx.prepare("SELECT 1 FROM sqlite_master WHERE type=? AND name=?")?;
     if !stmt.exists(["table", "encounter_preview"])? {
-        update_db(&tx)?;
+        migration_full_text_search(&tx)?;
     }
     stmt.finalize()?;
     tx.commit()
 }
 
-fn update_db(tx: &rusqlite::Transaction) -> Result<(), rusqlite::Error> {
-    // Relevant legacy migration logic is moved here
-    let mut stmt = tx.prepare("SELECT 1 FROM pragma_table_info(?) WHERE name=?")?;
-    if !stmt.exists(["encounter", "difficulty"])? {
-        tx.execute("ALTER TABLE encounter ADD COLUMN difficulty TEXT", [])?;
-    }
-    if !stmt.exists(["encounter", "favorite"])? {
-        tx.execute_batch(&format!(
-            "
-            ALTER TABLE encounter ADD COLUMN favorite BOOLEAN DEFAULT 0;
-            ALTER TABLE encounter ADD COLUMN version INTEGER DEFAULT {};
-            ALTER TABLE encounter ADD COLUMN cleared BOOLEAN;
-            ",
-            DB_VERSION,
-        ))?;
-    }
-    if !stmt.exists(["encounter", "boss_only_damage"])? {
-        tx.execute(
-            "ALTER TABLE encounter ADD COLUMN boss_only_damage BOOLEAN NOT NULL DEFAULT 0",
-            [],
-        )?;
-    }
-
-    match tx.execute(
-        "
-        UPDATE encounter
-        SET cleared = coalesce(json_extract(misc, '$.raidClear'), 0)
-        WHERE cleared IS NULL
-        ",
-        [],
-    ) {
-        Ok(updated) => info!("updated {} encounters", updated),
-        Err(e) => warn!("failed to update cleared status: {}", e),
-    }
-
-    match tx.execute(
-        "
-        UPDATE entity
-        SET dps = coalesce(json_extract(damage_stats, '$.dps'), 0)
-        WHERE dps IS NULL
-        ",
-        [],
-    ) {
-        Ok(updated) => info!("updated {} entities", updated),
-        Err(e) => warn!("failed to extract dps from entities: {}", e),
-    }
-
+fn migration_full_text_search(tx: &Transaction) -> Result<(), rusqlite::Error> {
     tx.execute_batch(
         "
         CREATE TABLE encounter_preview (
@@ -544,15 +531,10 @@ fn update_db(tx: &rusqlite::Transaction) -> Result<(), rusqlite::Error> {
 
         CREATE INDEX encounter_preview_favorite_index ON encounter_preview(favorite);
         CREATE INDEX encounter_preview_current_boss_difficulty_index ON encounter_preview(current_boss, difficulty);
-
-        -- used in sort by
         CREATE INDEX encounter_preview_fight_start_index ON encounter_preview(fight_start);
         CREATE INDEX encounter_preview_my_dps_index ON encounter_preview(my_dps);
         CREATE INDEX encounter_preview_duration_index ON encounter_preview(duration);
-        ",
-    )?;
-    tx.execute_batch(
-        "
+
         CREATE VIRTUAL TABLE encounter_search USING fts5(
             current_boss, players, columnsize=0, detail=full,
             tokenize='trigram remove_diacritics 1',
@@ -574,8 +556,7 @@ fn update_db(tx: &rusqlite::Transaction) -> Result<(), rusqlite::Error> {
             VALUES (new.id, new.current_boss, new.players);
         END;
         ",
-    )?;
-    Ok(())
+    )
 }
 
 #[tauri::command]
