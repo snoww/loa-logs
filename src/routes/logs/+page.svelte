@@ -317,7 +317,8 @@
                             </td>
                             <td class="w-full truncate px-3 py-3 font-medium">
                                 <a
-                                    href="/logs/encounter/?id={encounter.id}"
+                                    href="/logs/encounter/{encounter.id}"
+                                    data-sveltekit-preload-data
                                     class="hover:text-accent-500 group flex items-center hover:underline"
                                     use:tooltip={{ content: encounter.bossName }}>
                                     {#if encounter.favorite}

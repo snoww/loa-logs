@@ -832,7 +832,7 @@ fn load_encounters_preview(
     }
 }
 
-#[tauri::command]
+#[tauri::command(async)]
 fn load_encounter(window: tauri::Window, id: String) -> Encounter {
     let path = window
         .app_handle()
