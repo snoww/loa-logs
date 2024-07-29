@@ -548,7 +548,6 @@ fn migration_full_text_search(tx: &Transaction) -> Result<(), rusqlite::Error> {
         ALTER TABLE encounter DROP COLUMN boss_only_damage;
 
         CREATE INDEX encounter_preview_favorite_index ON encounter_preview(favorite);
-        CREATE INDEX encounter_preview_current_boss_difficulty_index ON encounter_preview(current_boss, difficulty);
         CREATE INDEX encounter_preview_fight_start_index ON encounter_preview(fight_start);
         CREATE INDEX encounter_preview_my_dps_index ON encounter_preview(my_dps);
         CREATE INDEX encounter_preview_duration_index ON encounter_preview(duration);
