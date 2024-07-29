@@ -18,15 +18,11 @@
 
     export let selectMode: boolean;
     export let refreshFn: () => void;
-    export let loadEncountersFn: () => Promise<Array<EncounterPreview>>;
 
+    let search = $searchStore;
     let deleteConfirm = false;
 
     onMount(() => {
-        if ($searchFilter.minDuration === -1) {
-            $searchFilter.minDuration = $settings.logs.minEncounterDuration;
-        }
-
         const clickOutside = (event: MouseEvent) => {
             if (filterDiv && filterDiv.contains(event.target as Node)) {
                 return;
@@ -46,21 +42,17 @@
     function debounce(fn: FormEventHandler<HTMLInputElement>, milliseconds: number) {
         let timer: number | undefined;
 
-        if ($searchStore.length === 0) {
-            return fn;
-        }
-
         return (evt: Event & { currentTarget: EventTarget & HTMLInputElement }) => {
             clearTimeout(timer);
-            timer = setTimeout(() => {
-                fn(evt);
-            }, milliseconds);
+            const timeout = search.length >= 3 ? milliseconds : 0;
+            timer = setTimeout(() => fn(evt), timeout);
+            // currentTarget is null because the event expires
         };
     }
 
-    const handleSearchInput = debounce((e) => {
-        loadEncountersFn();
-    }, 500);
+    const handleSearchInput = debounce(() => {
+        $searchStore = search.length >= 3 ? search : "";
+    }, 300);
 
     const isFilterButton = (element: HTMLElement) => {
         return element.classList.contains("filter-button");
@@ -98,7 +90,6 @@
                             class="size-5 {$searchFilter.bosses.size > 0 ||
                             $searchFilter.encounters.size > 0 ||
                             $searchFilter.difficulty ||
-                            $searchFilter.classes.size > 0 ||
                             $searchFilter.favorite ||
                             $searchFilter.bossOnlyDamage ||
                             $searchFilter.minDuration !== $settings.logs.minEncounterDuration ||
@@ -159,7 +150,7 @@
                                         let sf = new SearchFilter($settings.logs.minEncounterDuration);
                                         sf.sort = $searchFilter.sort;
                                         sf.order = $searchFilter.order;
-                                        searchFilter.set(sf);
+                                        $searchFilter = sf;
                                         $pageStore = 1;
                                     }}>
                                     Reset All
@@ -288,19 +279,10 @@
                                 <div class="flex h-36 flex-wrap overflow-auto px-2 py-1 text-xs">
                                     {#each classList.sort() as className (className)}
                                         <button
-                                            class="m-1 truncate rounded border border-gray-500 p-1 {$searchFilter.classes.has(
-                                                className
-                                            )
-                                                ? 'bg-gray-800'
-                                                : ''}"
+                                            class="m-1 truncate rounded border border-gray-500 p-1"
                                             on:click={() => {
-                                                let newSet = new Set($searchFilter.classes);
-                                                if (newSet.has(className)) {
-                                                    newSet.delete(className);
-                                                } else {
-                                                    newSet.add(className);
-                                                }
-                                                $searchFilter.classes = newSet;
+                                                search += ` ${className.toLowerCase()}:`;
+                                                $searchStore = search;
                                                 $pageStore = 1;
                                             }}>
                                             {className}
@@ -340,16 +322,18 @@
             </div>
             <input
                 type="text"
-                bind:value={$searchStore}
-                class="focus:border-accent-500 block w-80 rounded-lg border border-gray-600 bg-zinc-700 px-8 text-sm text-zinc-300 placeholder-gray-400 focus:ring-0"
-                placeholder="Search encounters, names, or classes"
+                maxlength="128"
+                bind:value={search}
+                class="focus:border-accent-500 block w-96 rounded-lg border border-gray-600 bg-zinc-700 px-8 text-sm text-zinc-300 placeholder-gray-400 focus:ring-0"
+                placeholder="Search encounters, names, or class:name pairs"
                 on:input={handleSearchInput} />
             {#if $searchStore.length > 0}
                 <button
                     class="absolute inset-y-0 right-0 flex items-center pr-2"
                     on:click={() => {
-                        searchStore.set("");
-                        pageStore.set(1);
+                        search = "";
+                        $searchStore = "";
+                        $pageStore = 1;
                         $searchFilter = new SearchFilter($settings.logs.minEncounterDuration);
                     }}>
                     <svg

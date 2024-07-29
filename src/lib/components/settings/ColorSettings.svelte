@@ -40,7 +40,7 @@
                     <div class="flex items-center space-x-1">
                         <img
                             class="size-8"
-                            src={$classIconCache[classNameToClassId[classColor[0]]]}
+                            src={$classIconCache[classNameToClassId[classColor[0]] || 0]}
                             alt={classColor[0]} />
                         <div class="text-gray-100">{classColor[0]}</div>
                     </div>
