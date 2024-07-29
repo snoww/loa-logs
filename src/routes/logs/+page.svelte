@@ -278,7 +278,7 @@
                         </th>
                     </tr>
                 </thead>
-                <tbody class="bg-neutral-800 tracking-tight">
+                <tbody data-sveltekit-preload-data class="bg-neutral-800 tracking-tight">
                     {#each encounters as encounter (encounter.fightStart)}
                         <tr class="border-b border-gray-700 hover:bg-zinc-700" id="encounter-{encounter.id}">
                             <td class="px-2 py-3">
@@ -318,7 +318,6 @@
                             <td class="w-full truncate px-3 py-3 font-medium">
                                 <a
                                     href="/logs/encounter/{encounter.id}"
-                                    data-sveltekit-preload-data
                                     class="hover:text-accent-500 group flex items-center hover:underline"
                                     use:tooltip={{ content: encounter.bossName }}>
                                     {#if encounter.favorite}
