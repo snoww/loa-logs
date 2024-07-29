@@ -365,6 +365,18 @@ fn setup_db(resource_path: &Path) -> Result<(), rusqlite::Error> {
     let mut conn = Connection::open(resource_path.join("encounters.db"))?;
     let tx = conn.transaction()?;
 
+    let mut stmt = tx.prepare("SELECT 1 FROM sqlite_master WHERE type=? AND name=?")?;
+    if !stmt.exists(["table", "encounter"])? {
+        migration_legacy(&tx)?;
+    }
+    if !stmt.exists(["table", "encounter_preview"])? {
+        migration_full_text_search(&tx)?;
+    }
+    stmt.finalize()?;
+    tx.commit()
+}
+
+fn migration_legacy(tx: &Transaction) -> Result<(), rusqlite::Error> {
     tx.execute_batch(&format!(
         "
     CREATE TABLE IF NOT EXISTS encounter (
@@ -391,6 +403,10 @@ fn setup_db(resource_path: &Path) -> Result<(), rusqlite::Error> {
         version INTEGER NOT NULL DEFAULT {},
         boss_only_damage BOOLEAN NOT NULL DEFAULT 0
     );
+    CREATE INDEX IF NOT EXISTS encounter_fight_start_index
+    ON encounter (fight_start desc);
+    CREATE INDEX IF NOT EXISTS encounter_current_boss_index
+    ON encounter (current_boss);
     ",
         DB_VERSION
     ))?;
@@ -451,9 +467,12 @@ fn setup_db(resource_path: &Path) -> Result<(), rusqlite::Error> {
             PRIMARY KEY (name, encounter_id),
             FOREIGN KEY (encounter_id) REFERENCES encounter (id) ON DELETE CASCADE
         );
-        -- TODO: swap PRIMARY KEY to (encounter_id, name) and delete this index
         CREATE INDEX IF NOT EXISTS entity_encounter_id_index
-        ON entity (encounter_id);
+        ON entity (encounter_id desc);
+        CREATE INDEX IF NOT EXISTS entity_name_index
+        ON entity (name);
+        CREATE INDEX IF NOT EXISTS entity_class_index
+        ON entity (class);
         ",
     )?;
 
@@ -476,14 +495,7 @@ fn setup_db(resource_path: &Path) -> Result<(), rusqlite::Error> {
         UPDATE encounter SET cleared = coalesce(json_extract(misc, '$.raidClear'), 0) WHERE cleared IS NULL;
         UPDATE entity SET dps = coalesce(json_extract(damage_stats, '$.dps'), 0) WHERE dps IS NULL;
         ",
-    )?;
-
-    let mut stmt = tx.prepare("SELECT 1 FROM sqlite_master WHERE type=? AND name=?")?;
-    if !stmt.exists(["table", "encounter_preview"])? {
-        migration_full_text_search(&tx)?;
-    }
-    stmt.finalize()?;
-    tx.commit()
+    )
 }
 
 fn migration_full_text_search(tx: &Transaction) -> Result<(), rusqlite::Error> {
