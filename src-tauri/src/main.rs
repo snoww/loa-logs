@@ -77,14 +77,17 @@ async fn main() -> Result<()> {
                 .path_resolver()
                 .resource_dir()
                 .expect("could not get resource dir");
-
-            match setup_db(&resource_path) {
-                Ok(_) => (),
-                Err(e) => {
-                    warn!("error setting up database: {}", e);
+            
+            let cloned_path = resource_path.clone();
+            tokio::task::spawn(async move {
+                match setup_db(&cloned_path) {
+                    Ok(_) => (),
+                    Err(e) => {
+                        warn!("error setting up database: {}", e);
+                    }
                 }
-            }
-
+            });
+            
             let handle = app.handle();
             tauri::async_runtime::spawn(async move {
                 match tauri::updater::builder(handle).check().await {
@@ -362,17 +365,21 @@ fn get_db_connection(resource_path: &Path) -> Result<Connection, rusqlite::Error
 }
 
 fn setup_db(resource_path: &Path) -> Result<(), rusqlite::Error> {
+    info!("setting up database");
     let mut conn = Connection::open(resource_path.join("encounters.db"))?;
     let tx = conn.transaction()?;
 
     let mut stmt = tx.prepare("SELECT 1 FROM sqlite_master WHERE type=? AND name=?")?;
     if !stmt.exists(["table", "encounter"])? {
+        info!("creating tables");
         migration_legacy(&tx)?;
     }
     if !stmt.exists(["table", "encounter_preview"])? {
+        info!("optimizing searches");
         migration_full_text_search(&tx)?;
     }
     stmt.finalize()?;
+    info!("finished setting up database");
     tx.commit()
 }
 
