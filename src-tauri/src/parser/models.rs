@@ -633,7 +633,7 @@ pub struct EncounterPreview {
     pub id: i32,
     pub fight_start: i64,
     pub boss_name: String,
-    pub duration: i32,
+    pub duration: i64,
     pub classes: Vec<i32>,
     pub names: Vec<String>,
     pub difficulty: Option<String>,

@@ -281,7 +281,7 @@
                     </tr>
                 </thead>
                 <tbody class="bg-neutral-800 tracking-tight">
-                    {#each encounters as encounter (encounter.fightStart)}
+                    {#each encounters as encounter (encounter.id)}
                         <tr class="border-b border-gray-700 hover:bg-zinc-700" id="encounter-{encounter.id}">
                             <td class="px-2 py-3">
                                 {#if selectMode}
