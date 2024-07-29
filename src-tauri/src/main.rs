@@ -610,9 +610,9 @@ fn load_encounters_preview(
         let mut placeholders = "?,".repeat(filter.bosses.len());
         placeholders.pop(); // remove trailing comma
         params.extend(filter.bosses);
-        &format!("AND e.current_boss IN ({})", placeholders)
+        format!("AND e.current_boss IN ({})", placeholders)
     } else {
-        ""
+        "".to_string()
     };
 
     let raid_clear_filter = if filter.cleared {
