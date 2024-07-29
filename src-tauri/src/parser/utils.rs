@@ -7,7 +7,7 @@ use hashbrown::HashMap;
 use moka::sync::Cache;
 use rusqlite::{params, Transaction};
 use serde_json::json;
-use std::cmp::{max, Ordering};
+use std::cmp::{max, Ordering, Reverse};
 use std::collections::BTreeMap;
 
 pub fn encounter_entity_from_entity(entity: &Entity) -> EncounterEntity {
@@ -1074,7 +1074,7 @@ pub fn insert_data(
         .find(|e| e.name == encounter.local_player)
         .and_then(|e| Some(e.damage_stats.dps))
         .unwrap_or_default();
-    players.sort_unstable_by_key(|e| e.damage_stats.damage_dealt);
+    players.sort_unstable_by_key(|e| Reverse(e.damage_stats.damage_dealt));
     let preview_players = players
         .into_iter()
         .map(|e| format!("{}:{}", e.class_id, e.name))
@@ -1085,16 +1085,16 @@ pub fn insert_data(
         .prepare_cached(
             "
     INSERT INTO encounter_preview (
-        id
+        id,
         fight_start,
         current_boss,
         duration,
         payers,
         difficulty,
         local_player,
-        my_dps
+        my_dps,
         cleared,
-        boss_only_damage,
+        boss_only_damage
     ) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10)",
         )
         .expect("failed to prepare encounter preview statement");
