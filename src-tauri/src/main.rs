@@ -19,7 +19,7 @@ use hashbrown::HashMap;
 use log::{error, info, warn};
 use parser::models::*;
 
-use rusqlite::{params, params_from_iter, Connection};
+use rusqlite::{params, params_from_iter, Connection, Transaction};
 use tauri::{
     api::process::Command, CustomMenuItem, LogicalPosition, LogicalSize, Manager, Position, Size,
     SystemTray, SystemTrayEvent, SystemTrayMenu, SystemTrayMenuItem,
@@ -34,7 +34,8 @@ const WINDOW_STATE_FLAGS: StateFlags = StateFlags::from_bits_truncate(
     StateFlags::FULLSCREEN.bits()
         | StateFlags::MAXIMIZED.bits()
         | StateFlags::POSITION.bits()
-        | StateFlags::SIZE.bits(),
+        | StateFlags::SIZE.bits()
+        | StateFlags::VISIBLE.bits(),
 );
 
 #[tokio::main]
@@ -72,6 +73,21 @@ async fn main() -> Result<()> {
         .setup(|app| {
             info!("starting app v{}", app.package_info().version.to_string());
 
+            let resource_path = app
+                .path_resolver()
+                .resource_dir()
+                .expect("could not get resource dir");
+            
+            let cloned_path = resource_path.clone();
+            tokio::task::spawn(async move {
+                match setup_db(&cloned_path) {
+                    Ok(_) => (),
+                    Err(e) => {
+                        warn!("error setting up database: {}", e);
+                    }
+                }
+            });
+            
             let handle = app.handle();
             tauri::async_runtime::spawn(async move {
                 match tauri::updater::builder(handle).check().await {
@@ -100,11 +116,6 @@ async fn main() -> Result<()> {
                     }
                 }
             });
-
-            let resource_path = app
-                .path_resolver()
-                .resource_dir()
-                .expect("could not get resource dir");
 
             let settings = read_settings(&resource_path).ok();
 
@@ -182,13 +193,6 @@ async fn main() -> Result<()> {
                 logs_window.show().unwrap();
             }
 
-            match setup_db(resource_path) {
-                Ok(_) => (),
-                Err(e) => {
-                    warn!("error setting up database: {}", e);
-                }
-            }
-
             task::spawn_blocking(move || {
                 parser::start(meter_window, ip, port, raw_socket, settings).map_err(|e| {
                     error!("unexpected error occurred in parser: {}", e);
@@ -202,7 +206,12 @@ async fn main() -> Result<()> {
 
             Ok(())
         })
-        .plugin(tauri_plugin_window_state::Builder::default().build())
+        .plugin(
+            tauri_plugin_window_state::Builder::new()
+                .skip_initial_state(METER_WINDOW_LABEL)
+                .skip_initial_state(LOGS_WINDOW_LABEL)
+                .build(),
+        )
         .plugin(tauri_plugin_single_instance::init(|_app, _argv, _cwd| {}))
         .on_window_event(|event| match event.event() {
             tauri::WindowEvent::CloseRequested { api, .. } => {
@@ -347,32 +356,35 @@ async fn main() -> Result<()> {
     Ok(())
 }
 
-fn get_db_connection(resource_path: &Path) -> Result<Connection, String> {
-    let mut path = resource_path.to_path_buf();
-    path.push("encounters.db");
+fn get_db_connection(resource_path: &Path) -> Result<Connection, rusqlite::Error> {
+    let path = resource_path.join("encounters.db");
     if !path.exists() {
-        setup_db(path.clone())?;
+        setup_db(resource_path)?;
     }
-    let conn = match Connection::open(path) {
-        Ok(conn) => conn,
-        Err(e) => {
-            return Err(e.to_string());
-        }
-    };
-    Ok(conn)
+    Connection::open(path)
 }
 
-fn setup_db(resource_path: PathBuf) -> Result<(), String> {
-    let mut path = resource_path;
-    path.push("encounters.db");
-    let conn = match Connection::open(path) {
-        Ok(conn) => conn,
-        Err(e) => {
-            return Err(e.to_string());
-        }
-    };
+fn setup_db(resource_path: &Path) -> Result<(), rusqlite::Error> {
+    info!("setting up database");
+    let mut conn = Connection::open(resource_path.join("encounters.db"))?;
+    let tx = conn.transaction()?;
 
-    match conn.execute_batch(&format!(
+    let mut stmt = tx.prepare("SELECT 1 FROM sqlite_master WHERE type=? AND name=?")?;
+    if !stmt.exists(["table", "encounter"])? {
+        info!("creating tables");
+        migration_legacy(&tx)?;
+    }
+    if !stmt.exists(["table", "encounter_preview"])? {
+        info!("optimizing searches");
+        migration_full_text_search(&tx)?;
+    }
+    stmt.finalize()?;
+    info!("finished setting up database");
+    tx.commit()
+}
+
+fn migration_legacy(tx: &Transaction) -> Result<(), rusqlite::Error> {
+    tx.execute_batch(&format!(
         "
     CREATE TABLE IF NOT EXISTS encounter (
         id INTEGER PRIMARY KEY,
@@ -404,86 +416,42 @@ fn setup_db(resource_path: PathBuf) -> Result<(), String> {
     ON encounter (current_boss);
     ",
         DB_VERSION
-    )) {
-        Ok(_) => (),
-        Err(e) => {
-            return Err(e.to_string());
-        }
-    }
+    ))?;
 
-    let mut stmt = conn
-        .prepare("SELECT COUNT(*) FROM pragma_table_info('encounter') WHERE name='misc'")
-        .unwrap();
-    let column_count: u32 = stmt.query_row([], |row| row.get(0)).unwrap();
-    if column_count == 0 {
-        conn.execute("ALTER TABLE encounter ADD COLUMN misc TEXT", [])
-            .expect("failed to add column");
+    let mut stmt = tx.prepare("SELECT 1 FROM pragma_table_info(?) WHERE name=?")?;
+    if !stmt.exists(["encounter", "misc"])? {
+        tx.execute("ALTER TABLE encounter ADD COLUMN misc TEXT", [])?;
     }
-
-    let mut stmt = conn
-        .prepare("SELECT COUNT(*) FROM pragma_table_info('encounter') WHERE name='difficulty'")
-        .unwrap();
-    let column_count: u32 = stmt.query_row([], |row| row.get(0)).unwrap();
-    if column_count == 0 {
-        conn.execute("ALTER TABLE encounter ADD COLUMN difficulty TEXT", [])
-            .expect("failed to add column");
+    if !stmt.exists(["encounter", "difficulty"])? {
+        tx.execute("ALTER TABLE encounter ADD COLUMN difficulty TEXT", [])?;
     }
-
-    let mut stmt = conn
-        .prepare("SELECT COUNT(*) FROM pragma_table_info('encounter') WHERE name='favorite'")
-        .unwrap();
-    let column_count: u32 = stmt.query_row([], |row| row.get(0)).unwrap();
-    if column_count == 0 {
-        conn.execute(
-            "ALTER TABLE encounter ADD COLUMN favorite BOOLEAN DEFAULT 0",
-            [],
-        )
-        .expect("failed to add columns");
-        conn.execute(
-            &format!(
-                "ALTER TABLE encounter ADD COLUMN version INTEGER DEFAULT {}",
-                DB_VERSION
-            ),
-            [],
-        )
-        .expect("failed to add columns");
-        conn.execute("ALTER TABLE encounter ADD COLUMN cleared BOOLEAN", [])
-            .expect("failed to add columns");
-        conn.execute(
-            "CREATE INDEX IF NOT EXISTS encounter_favorite_index ON encounter (favorite);",
-            [],
-        )
-        .expect("failed to add index");
+    if !stmt.exists(["encounter", "favorite"])? {
+        tx.execute_batch(&format!(
+            "
+            ALTER TABLE encounter ADD COLUMN favorite BOOLEAN DEFAULT 0;
+            ALTER TABLE encounter ADD COLUMN version INTEGER DEFAULT {};
+            ALTER TABLE encounter ADD COLUMN cleared BOOLEAN;
+            ",
+            DB_VERSION,
+        ))?;
     }
-
-    let mut stmt = conn
-        .prepare(
-            "SELECT COUNT(*) FROM pragma_table_info('encounter') WHERE name='boss_only_damage'",
-        )
-        .unwrap();
-    let column_count: u32 = stmt.query_row([], |row| row.get(0)).unwrap();
-    if column_count == 0 {
-        conn.execute(
+    if !stmt.exists(["encounter", "boss_only_damage"])? {
+        tx.execute(
             "ALTER TABLE encounter ADD COLUMN boss_only_damage BOOLEAN NOT NULL DEFAULT 0",
             [],
-        )
-        .expect("failed to add column");
+        )?;
     }
-
-    let mut stmt = conn
-        .prepare("SELECT COUNT(*) FROM pragma_table_info('encounter') WHERE name='total_shielding'")
-        .unwrap();
-    let column_count: u32 = stmt.query_row([], |row| row.get(0)).unwrap();
-    if column_count == 0 {
-        conn.execute_batch(
-            "ALTER TABLE encounter ADD COLUMN total_shielding INTEGER DEFAULT 0;
+    if !stmt.exists(["encounter", "total_shielding"])? {
+        tx.execute_batch(
+            "
+                ALTER TABLE encounter ADD COLUMN total_shielding INTEGER DEFAULT 0;
                 ALTER TABLE encounter ADD COLUMN total_effective_shielding INTEGER DEFAULT 0;
-                ALTER TABLE encounter ADD COLUMN applied_shield_buffs TEXT;",
-        )
-        .expect("failed to add shield columns");
+                ALTER TABLE encounter ADD COLUMN applied_shield_buffs TEXT;
+                ",
+        )?;
     }
 
-    match conn.execute_batch(
+    tx.execute_batch(
         "
         CREATE TABLE IF NOT EXISTS entity (
             name TEXT,
@@ -513,105 +481,106 @@ fn setup_db(resource_path: PathBuf) -> Result<(), String> {
         CREATE INDEX IF NOT EXISTS entity_class_index
         ON entity (class);
         ",
-    ) {
-        Ok(_) => (),
-        Err(e) => {
-            return Err(e.to_string());
-        }
+    )?;
+
+    if !stmt.exists(["entity", "dps"])? {
+        tx.execute("ALTER TABLE entity ADD COLUMN dps INTEGER", [])?;
     }
-
-    let mut stmt = conn
-        .prepare("SELECT COUNT(*) FROM pragma_table_info('entity') WHERE name='dps'")
-        .unwrap();
-    let column_count: u32 = stmt.query_row([], |row| row.get(0)).unwrap();
-    if column_count == 0 {
-        conn.execute("ALTER TABLE entity ADD COLUMN dps INTEGER", [])
-            .expect("failed to add dps column");
+    if !stmt.exists(["entity", "character_id"])? {
+        tx.execute("ALTER TABLE entity ADD COLUMN character_id INTEGER", [])?;
     }
-
-    let mut stmt = conn
-        .prepare("SELECT COUNT(*) FROM pragma_table_info('entity') WHERE name='character_id'")
-        .unwrap();
-    let column_count: u32 = stmt.query_row([], |row| row.get(0)).unwrap();
-    if column_count == 0 {
-        conn.execute("ALTER TABLE entity ADD COLUMN character_id INTEGER", [])
-            .expect("failed to add character_id column");
+    if !stmt.exists(["entity", "engravings"])? {
+        tx.execute("ALTER TABLE entity ADD COLUMN engravings TEXT", [])?;
     }
-
-    let mut stmt = conn
-        .prepare("SELECT COUNT(*) FROM pragma_table_info('entity') WHERE name='engravings'")
-        .unwrap();
-    let column_count: u32 = stmt.query_row([], |row| row.get(0)).unwrap();
-    if column_count == 0 {
-        conn.execute("ALTER TABLE entity ADD COLUMN engravings TEXT", [])
-            .expect("failed to add engravings column");
+    if !stmt.exists(["entity", "gear_hash"])? {
+        tx.execute("ALTER TABLE entity ADD COLUMN gear_hash TEXT", [])?;
     }
+    stmt.finalize()?;
 
-    let mut stmt = conn
-        .prepare("SELECT COUNT(*) FROM pragma_table_info('entity') WHERE name='gear_hash'")
-        .unwrap();
-    let column_count: u32 = stmt.query_row([], |row| row.get(0)).unwrap();
-    if column_count == 0 {
-        conn.execute("ALTER TABLE entity ADD COLUMN gear_hash TEXT", [])
-            .expect("failed to add gear_hash column");
-    }
-
-    update_db(&conn);
-
-    Ok(())
+    tx.execute_batch(
+        "
+        UPDATE encounter SET cleared = coalesce(json_extract(misc, '$.raidClear'), 0) WHERE cleared IS NULL;
+        UPDATE entity SET dps = coalesce(json_extract(damage_stats, '$.dps'), 0) WHERE dps IS NULL;
+        ",
+    )
 }
 
-fn update_db(conn: &Connection) {
-    let count: i32 = conn
-        .query_row_and_then(
-            "SElECT COUNT(*) FROM encounter WHERE cleared IS NULL",
-            [],
-            |row| row.get(0),
-        )
-        .expect("could not get encounter count");
-    if count > 0 {
-        match conn.execute(
-            "
-        UPDATE encounter
-        SET cleared = CASE
-                WHEN json_extract(misc, '$.raidClear') IS NULL THEN 0
-                ELSE 1
-                END
-        WHERE cleared IS NULL
-        ",
-            [],
-        ) {
-            Ok(updated) => {
-                info!("updated {} encounters", updated);
-            }
-            Err(e) => {
-                warn!("failed to update cleared status: {}", e);
-            }
-        }
-    }
+fn migration_full_text_search(tx: &Transaction) -> Result<(), rusqlite::Error> {
+    tx.execute_batch(
+        "
+        CREATE TABLE encounter_preview (
+            id INTEGER PRIMARY KEY,
+            fight_start INTEGER,
+            current_boss TEXT,
+            duration INTEGER,
+            players TEXT,
+            difficulty TEXT,
+            local_player TEXT,
+            my_dps INTEGER,
+            favorite BOOLEAN NOT NULL DEFAULT 0,
+            cleared BOOLEAN,
+            boss_only_damage BOOLEAN NOT NULL DEFAULT 0,
+            FOREIGN KEY (id) REFERENCES encounter(id) ON DELETE CASCADE
+        );
 
-    let count: i32 = conn
-        .query_row_and_then("SELECT COUNT(*) FROM entity WHERE dps IS NULL", [], |row| {
-            row.get(0)
-        })
-        .expect("could not get entity count");
-    if count > 0 {
-        match conn.execute(
-            "
-        UPDATE entity
-        SET dps = json_extract(damage_stats, '$.dps')
-        WHERE dps IS NULL
+        INSERT INTO encounter_preview SELECT
+            id, fight_start, current_boss, duration, 
+            (
+                SELECT GROUP_CONCAT(class_id || ':' || name ORDER BY dps DESC)
+                FROM entity
+                WHERE encounter_id = encounter.id AND entity_type = 'PLAYER'
+            ) AS players,
+            difficulty, local_player,
+            (
+                SELECT dps
+                FROM entity
+                WHERE encounter_id = encounter.id AND name = encounter.local_player
+            ) AS my_dps,
+            favorite, cleared, boss_only_damage
+        FROM encounter;
+
+        DROP INDEX IF EXISTS encounter_fight_start_index;
+        DROP INDEX IF EXISTS encounter_current_boss_index;
+        DROP INDEX IF EXISTS encounter_favorite_index;
+        DROP INDEX IF EXISTS entity_name_index;
+        DROP INDEX IF EXISTS entity_class_index;
+
+        ALTER TABLE encounter DROP COLUMN fight_start;
+        ALTER TABLE encounter DROP COLUMN current_boss;
+        ALTER TABLE encounter DROP COLUMN duration;
+        ALTER TABLE encounter DROP COLUMN difficulty;
+        ALTER TABLE encounter DROP COLUMN local_player;
+        ALTER TABLE encounter DROP COLUMN favorite;
+        ALTER TABLE encounter DROP COLUMN cleared;
+        ALTER TABLE encounter DROP COLUMN boss_only_damage;
+
+        CREATE INDEX encounter_preview_favorite_index ON encounter_preview(favorite);
+        CREATE INDEX encounter_preview_fight_start_index ON encounter_preview(fight_start);
+        CREATE INDEX encounter_preview_my_dps_index ON encounter_preview(my_dps);
+        CREATE INDEX encounter_preview_duration_index ON encounter_preview(duration);
+
+        CREATE VIRTUAL TABLE encounter_search USING fts5(
+            current_boss, players, columnsize=0, detail=full,
+            tokenize='trigram remove_diacritics 1',
+            content=encounter_preview, content_rowid=id
+        );
+        INSERT INTO encounter_search(encounter_search) VALUES('rebuild');
+        CREATE TRIGGER encounter_preview_ai AFTER INSERT ON encounter_preview BEGIN
+            INSERT INTO encounter_search(rowid, current_boss, players)
+            VALUES (new.id, new.current_boss, new.players);
+        END;
+        CREATE TRIGGER encounter_preview_ad AFTER DELETE ON encounter_preview BEGIN
+            INSERT INTO encounter_search(encounter_search, rowid, current_boss, players)
+            VALUES('delete', old.id, old.current_boss, old.players);
+        END;
+        CREATE TRIGGER encounter_preview_au AFTER UPDATE OF current_boss, players ON encounter_preview BEGIN
+            INSERT INTO encounter_search(encounter_search, rowid, current_boss, players)
+            VALUES('delete', old.id, old.current_boss, old.players);
+            INSERT INTO encounter_search(rowid, current_boss, players)
+            VALUES (new.id, new.current_boss, new.players);
+        END;
         ",
-            [],
-        ) {
-            Ok(updated) => {
-                info!("updated {} entities", updated);
-            }
-            Err(e) => {
-                warn!("failed to extract dps from entities: {}", e);
-            }
-        }
-    }
+    )
 }
 
 #[tauri::command]
@@ -628,90 +597,58 @@ fn load_encounters_preview(
         .resource_dir()
         .expect("could not get resource dir");
     let conn = get_db_connection(&path).expect("could not get db connection");
+    let mut params = vec![];
 
-    let min_duration = filter.min_duration * 1000;
-
-    let mut params = vec![min_duration.to_string()];
-
-    let search_words: Vec<&str> = if search.chars().any(|c| !c.is_whitespace()) {
-        search.split_whitespace().collect()
+    let join_clause = if search.len() > 2 {
+        let escaped_search = search
+            .split_whitespace()
+            .map(|word| format!("\"{}\"", word.replace("\"", "")))
+            .collect::<Vec<_>>()
+            .join(" ");
+        params.push(escaped_search);
+        "JOIN encounter_search(?) ON encounter_search.rowid = e.id"
     } else {
-        vec![""]
+        ""
     };
 
-    params.extend(
-        search_words
-            .iter()
-            .flat_map(|word| std::iter::repeat(word.to_string()).take(3)),
-    );
-
-    let word_count = search_words.len();
-
-    let join_clauses = (0..word_count).fold(String::new(), |acc, i| {
-        acc + &format!("JOIN entity ent{} ON e.id = ent{}.encounter_id\n    ", i, i)
-    });
-
-    let input_filter = (0..word_count)
-    .fold(String::new(), |acc, i| {
-        acc + &format!(
-            "AND ((current_boss LIKE '%' || ? || '%') OR (ent{}.class LIKE '%' || ? || '%') OR (ent{}.name LIKE '%' || ? || '%'))\n    ",
-            i, i
-        )
-    });
+    params.push((filter.min_duration * 1000).to_string());
 
     let boss_filter = if !filter.bosses.is_empty() {
-        let placeholders: Vec<String> = filter.bosses.iter().map(|_| "?".to_string()).collect();
-        filter.bosses.into_iter().for_each(|boss| params.push(boss));
-        format!("AND (current_boss IN ({}))", placeholders.join(","))
-    } else {
-        "".to_string()
-    };
-
-    let class_filter = if !filter.classes.is_empty() {
-        let placeholders: Vec<String> = filter.classes.iter().map(|_| "?".to_string()).collect();
-        filter
-            .classes
-            .into_iter()
-            .for_each(|class| params.push(class));
-        format!("AND (class IN ({}))", placeholders.join(","))
+        let mut placeholders = "?,".repeat(filter.bosses.len());
+        placeholders.pop(); // remove trailing comma
+        params.extend(filter.bosses);
+        format!("AND e.current_boss IN ({})", placeholders)
     } else {
         "".to_string()
     };
 
     let raid_clear_filter = if filter.cleared {
-        "AND cleared = 1".to_string()
+        "AND cleared = 1"
     } else {
-        "".to_string()
+        ""
     };
 
     let favorite_filter = if filter.favorite {
-        "AND favorite = 1".to_string()
+        "AND favorite = 1"
     } else {
-        "".to_string()
+        ""
     };
 
     let boss_only_damage_filter = if filter.boss_only_damage {
-        "AND boss_only_damage = 1".to_string()
+        "AND boss_only_damage = 1"
     } else {
-        "".to_string()
+        ""
     };
 
     let difficulty_filter = if !filter.difficulty.is_empty() {
-        format!("AND difficulty = '{}'", filter.difficulty)
+        params.push(filter.difficulty);
+        "AND difficulty = ?"
     } else {
-        "".to_string()
+        ""
     };
 
-    let order = if filter.order == 1 {
-        "".to_string()
-    } else {
-        "DESC".to_string()
-    };
-    let sort = if filter.sort == "my_dps" {
-        filter.sort
-    } else {
-        format!("e.{}", filter.sort)
-    };
+    let order = if filter.order == 1 { "ASC" } else { "DESC" };
+    let sort = format!("e.{}", filter.sort);
 
     let count_params = params.clone();
 
@@ -725,32 +662,16 @@ fn load_encounters_preview(
     e.favorite,
     e.cleared,
     e.local_player,
-    (
-        SELECT en.dps
-		FROM entity en
-		WHERE en.name = e.local_player AND en.encounter_id = e.id
-	) AS my_dps,
-    (
-        SELECT GROUP_CONCAT(ordered_classes.class_info, ',')
-        FROM (
-            SELECT en.class_id || ':' || en.name AS class_info
-            FROM entity en
-            WHERE en.encounter_id = e.id AND en.entity_type = 'PLAYER'
-            ORDER BY dps DESC
-        ) AS ordered_classes
-    ) AS classes
-    FROM encounter e
-    {}
+    e.my_dps,
+    e.players
+    FROM encounter_preview e {}
     WHERE e.duration > ? {}
-    {} {} {} {} {} {}
-    GROUP BY ent0.encounter_id
+    {} {} {} {}
     ORDER BY {} {}
     LIMIT ?
     OFFSET ?",
-        join_clauses,
-        input_filter,
+        join_clause,
         boss_filter,
-        class_filter,
         raid_clear_filter,
         favorite_filter,
         difficulty_filter,
@@ -797,25 +718,17 @@ fn load_encounters_preview(
         })
         .expect("could not query encounters");
 
-    let mut encounters: Vec<EncounterPreview> = Vec::new();
-    for encounter in encounter_iter {
-        encounters.push(encounter.unwrap());
-    }
+    let encounters: Vec<EncounterPreview> = encounter_iter.collect::<Result<_, _>>().unwrap();
 
     let query = format!(
         "
-    SElECT COUNT(*)
-    FROM (SELECT ent0.encounter_id
-        FROM encounter e
-        {}
+        SELECT COUNT(*)
+        FROM encounter_preview e {}
         WHERE duration > ? {}
-        {} {} {} {} {} {}
-        GROUP BY ent0.encounter_id)
+        {} {} {} {}
         ",
-        join_clauses,
-        input_filter,
+        join_clause,
         boss_filter,
-        class_filter,
         raid_clear_filter,
         favorite_filter,
         difficulty_filter,
@@ -863,9 +776,9 @@ fn load_encounter(window: tauri::Window, id: String) -> Encounter {
        total_shielding,
        total_effective_shielding,
        applied_shield_buffs
-    FROM encounter
+    FROM encounter JOIN encounter_preview USING (id)
     WHERE id = ?
-    ;",
+    ",
         )
         .unwrap();
 
@@ -998,7 +911,7 @@ fn get_encounter_count(window: tauri::Window) -> i32 {
         .expect("could not get resource dir");
     let conn = get_db_connection(&path).expect("could not get db connection");
     let mut stmt = conn
-        .prepare_cached("SELECT COUNT(*) FROM encounter;")
+        .prepare_cached("SELECT COUNT(*) FROM encounter_preview")
         .unwrap();
 
     let count: Result<i32, rusqlite::Error> = stmt.query_row(params![], |row| row.get(0));
@@ -1018,7 +931,7 @@ fn open_most_recent_encounter(window: tauri::Window) {
         .prepare_cached(
             "
     SELECT id
-    FROM encounter
+    FROM encounter_preview
     ORDER BY fight_start DESC
     LIMIT 1;
     ",
@@ -1051,7 +964,7 @@ fn toggle_encounter_favorite(window: tauri::Window, id: i32) {
     let mut stmt = conn
         .prepare_cached(
             "
-    UPDATE encounter
+    UPDATE encounter_preview
     SET favorite = NOT favorite
     WHERE id = ?;
     ",
@@ -1222,19 +1135,27 @@ fn delete_encounters_below_min_duration(
     if keep_favorites {
         conn.execute(
             "DELETE FROM encounter
-            WHERE duration < ? AND favorite = 0;",
+            WHERE id IN (
+                SELECT id
+                FROM encounter_preview
+                WHERE duration < ? AND favorite = 0
+            )",
             params![min_duration * 1000],
         )
         .unwrap();
     } else {
         conn.execute(
             "DELETE FROM encounter
-            WHERE duration < ?;",
+            WHERE id IN (
+                SELECT id
+                FROM encounter_preview
+                WHERE duration < ?
+            )",
             params![min_duration * 1000],
         )
         .unwrap();
     }
-    conn.execute("VACUUM;", params![]).unwrap();
+    conn.execute("VACUUM", params![]).unwrap();
 }
 
 #[tauri::command]
@@ -1248,19 +1169,27 @@ fn delete_all_uncleared_encounters(window: tauri::Window, keep_favorites: bool) 
     if keep_favorites {
         conn.execute(
             "DELETE FROM encounter
-            WHERE cleared = 0 AND favorite = 0;",
+            WHERE id IN (
+                SELECT id
+                FROM encounter_preview
+                WHERE cleared = 0 AND favorite = 0
+            )",
             [],
         )
         .unwrap();
     } else {
         conn.execute(
             "DELETE FROM encounter
-            WHERE cleared = 0;",
+            WHERE (
+                SELECT id
+                FROM encounter_preview
+                WHERE cleared = 0
+            )",
             [],
         )
         .unwrap();
     }
-    conn.execute("VACUUM;", params![]).unwrap();
+    conn.execute("VACUUM", params![]).unwrap();
 }
 
 #[tauri::command]
@@ -1275,7 +1204,11 @@ fn delete_all_encounters(window: tauri::Window, keep_favorites: bool) {
     if keep_favorites {
         conn.execute(
             "DELETE FROM encounter
-            WHERE favorite = 0;",
+            WHERE id IN (
+                SELECT id
+                FROM encounter_preview
+                WHERE favorite = 0
+            )",
             [],
         )
         .unwrap();
@@ -1294,11 +1227,13 @@ fn get_db_info(window: tauri::Window, min_duration: i64) -> EncounterDbInfo {
         .expect("could not get resource dir");
     let conn = get_db_connection(&path).expect("could not get db connection");
     let encounter_count = conn
-        .query_row("SELECT COUNT(*) FROM encounter;", [], |row| row.get(0))
+        .query_row("SELECT COUNT(*) FROM encounter_preview", [], |row| {
+            row.get(0)
+        })
         .unwrap();
     let encounter_filtered_count = conn
         .query_row(
-            "SELECT COUNT(*) FROM encounter WHERE duration >= ?;",
+            "SELECT COUNT(*) FROM encounter_preview WHERE duration >= ?",
             params![min_duration * 1000],
             |row| row.get(0),
         )
@@ -1335,7 +1270,13 @@ fn optimize_database(window: tauri::Window) {
         .resource_dir()
         .expect("could not get resource dir");
     let conn = get_db_connection(&path).expect("could not get db connection");
-    conn.execute("VACUUM;", params![]).unwrap();
+    conn.execute_batch(
+        "
+        INSERT INTO encounter_search(encounter_search) VALUES('optimize');
+        VACUUM;
+        ",
+    )
+    .unwrap();
     info!("optimized database");
 }
 

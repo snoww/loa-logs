@@ -441,9 +441,7 @@ export interface EncounterDbInfo {
 export class SearchFilter {
     bosses: Set<string>;
     encounters: Set<string>;
-    classes: Set<string>;
     minDuration: number;
-    maxDuration: number;
     favorite: boolean;
     cleared: boolean;
     difficulty: string;
@@ -454,14 +452,12 @@ export class SearchFilter {
     constructor(minDuration = -1) {
         this.bosses = new Set();
         this.encounters = new Set();
-        this.classes = new Set();
         this.minDuration = minDuration;
-        this.maxDuration = -1;
         this.favorite = false;
         this.cleared = false;
         this.difficulty = "";
         this.bossOnlyDamage = false;
-        this.sort = "fight_start";
+        this.sort = "id";
         this.order = 2;
     }
 }

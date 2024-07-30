@@ -3,7 +3,7 @@
 
     import LogSidebar from "$lib/components/logs/LogSidebar.svelte";
     import TableFilter from "$lib/components/table/TableFilter.svelte";
-    import type { EncounterPreview, EncountersOverview } from "$lib/types";
+    import type { EncounterPreview, EncountersOverview, SearchFilter } from "$lib/types";
     import {
         abbreviateNumber,
         formatDurationFromMs,
@@ -27,6 +27,7 @@
     import { goto } from "$app/navigation";
     import "nprogress/nprogress.css";
     import Notification from "$lib/components/shared/Notification.svelte";
+    import { classNameToClassId } from "$lib/constants/classes";
     import { encounterMap } from "$lib/constants/encounters";
     import DifficultyLabel from "$lib/components/shared/DifficultyLabel.svelte";
     import SortSymbol from "$lib/components/table/SortSymbol.svelte";
@@ -37,7 +38,6 @@
     let encounters: Array<EncounterPreview> = [];
     let totalEncounters: number = 0;
     const rowsPerPage = 10;
-    const maxSearchLength = 30;
 
     let selectMode = false;
 
@@ -51,13 +51,13 @@
         }
     }
 
-    $: {
-        $searchFilter = $searchFilter;
-        loadEncounters();
+    // Initialize `minDuration` here to not trigger a reload of encounters
+    if ($searchFilter.minDuration === -1) {
+        $searchFilter.minDuration = $settings.logs.minEncounterDuration;
     }
+    $: loadEncounters($searchFilter, $searchStore, $pageStore);
 
     onMount(async () => {
-        await loadEncounters();
         if ($miscSettings) {
             const version = await getVersion();
             if (!$miscSettings.viewedChangelog || $miscSettings.version !== version) {
@@ -78,30 +78,37 @@
         goto("/changelog");
     }
 
-    async function loadEncounters(): Promise<Array<EncounterPreview>> {
+    async function loadEncounters(searchFilter: SearchFilter, search: string, page: number): Promise<Array<EncounterPreview>> {
         NProgress.start();
         let bosses = Array.from($searchFilter.bosses);
-        if ($searchFilter.encounters.size > 0) {
-            for (const encounter of $searchFilter.encounters) {
+        if (searchFilter.encounters.size > 0) {
+            for (const encounter of searchFilter.encounters) {
                 const raid = encounter.substring(0, encounter.indexOf(" "));
                 bosses.push(...encounterMap[raid][encounter]);
             }
         }
+        // start or space (^|\s) + word (\w+) + colon or space or end (:|\s|$)
+        // using match (?:) and lookahead (?=) https://regex101.com/r/1cMFH8/1
+        // if word is a valid className, replace it with the classId
+        // example: "bard:Anyduck shadowhunter" -> "204:Anyduck 403"
+        let searchQuery = search.replace(/(?:^|\s)\w+(?=:|\s|$)/g, (word: string) => {
+            const className = word[0].toUpperCase() + word.substring(1).toLowerCase();
+            return String(classNameToClassId[className] || word);
+        });
+
         let overview: EncountersOverview = await invoke("load_encounters_preview", {
-            page: $pageStore,
+            page: page,
             pageSize: rowsPerPage,
-            search: $searchStore.substring(0, maxSearchLength),
+            search: searchQuery,
             filter: {
-                minDuration:
-                    $searchFilter.minDuration !== -1 ? $searchFilter.minDuration : $settings.logs.minEncounterDuration,
+                minDuration: searchFilter.minDuration,
                 bosses: bosses,
-                classes: Array.from($searchFilter.classes),
-                cleared: $searchFilter.cleared,
-                favorite: $searchFilter.favorite,
-                difficulty: $searchFilter.difficulty,
-                bossOnlyDamage: $searchFilter.bossOnlyDamage,
-                sort: $searchFilter.sort,
-                order: $searchFilter.order
+                cleared: searchFilter.cleared,
+                favorite: searchFilter.favorite,
+                difficulty: searchFilter.difficulty,
+                bossOnlyDamage: searchFilter.bossOnlyDamage,
+                sort: searchFilter.sort,
+                order: searchFilter.order
             }
         });
         encounters = overview.encounters;
@@ -110,38 +117,33 @@
         return encounters;
     }
 
-    async function refresh() {
-        $searchStore = "";
+    function refresh() {
         $pageStore = 1;
         $backNavStore = false;
-        await loadEncounters();
+        $searchFilter = $searchFilter;
     }
 
-    async function nextPage() {
+    function nextPage() {
         if ($pageStore * rowsPerPage < totalEncounters) {
             $pageStore++;
-            await loadEncounters();
             scrollToTopOfTable();
         }
     }
 
-    async function previousPage() {
+    function previousPage() {
         if ($pageStore > 1) {
             $pageStore--;
-            await loadEncounters();
             scrollToTopOfTable();
         }
     }
 
-    async function firstPage() {
+    function firstPage() {
         $pageStore = 1;
-        await loadEncounters();
         scrollToTopOfTable();
     }
 
-    async function lastPage() {
+    function lastPage() {
         $pageStore = Math.ceil(totalEncounters / rowsPerPage);
-        await loadEncounters();
         scrollToTopOfTable();
     }
 
@@ -150,8 +152,8 @@
         let order = $searchFilter.sort === sort ? ($searchFilter.order + 1) % 3 : 1;
 
         if (order === 0) {
-            $searchFilter.sort = "fight_start";
-            $searchFilter.order = sort === "fight_start" ? 1 : 2;
+            $searchFilter.sort = "id";
+            $searchFilter.order = sort === "id" ? 1 : 2;
         } else {
             $searchFilter.sort = sort;
             $searchFilter.order = order;
@@ -186,7 +188,7 @@
     </div>
     <div class="px-8">
         <div class="py-2">
-            <TableFilter bind:selectMode refreshFn={refresh} loadEncountersFn={loadEncounters} />
+            <TableFilter bind:selectMode refreshFn={refresh} />
         </div>
         <div
             class="relative overflow-y-auto overflow-x-hidden"
@@ -278,8 +280,8 @@
                         </th>
                     </tr>
                 </thead>
-                <tbody data-sveltekit-preload-data class="bg-neutral-800 tracking-tight">
-                    {#each encounters as encounter (encounter.fightStart)}
+                <tbody class="bg-neutral-800 tracking-tight">
+                    {#each encounters as encounter (encounter.id)}
                         <tr class="border-b border-gray-700 hover:bg-zinc-700" id="encounter-{encounter.id}">
                             <td class="px-2 py-3">
                                 {#if selectMode}

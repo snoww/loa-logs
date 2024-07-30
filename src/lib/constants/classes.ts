@@ -40,7 +40,7 @@ export const classesMap: ClassMap = {
     604: "Alchemist"
 };
 
-export const classNameToClassId: { [key: string]: number } = {
+export const classNameToClassId: { [key: string]: number | undefined } = {
     "Unknown": 0,
     "Warrior (Male)": 101,
     "Berserker": 102,
