@@ -78,15 +78,12 @@ async fn main() -> Result<()> {
                 .resource_dir()
                 .expect("could not get resource dir");
             
-            let cloned_path = resource_path.clone();
-            tokio::task::spawn(async move {
-                match setup_db(&cloned_path) {
-                    Ok(_) => (),
-                    Err(e) => {
-                        warn!("error setting up database: {}", e);
-                    }
+            match setup_db(&resource_path) {
+                Ok(_) => (),
+                Err(e) => {
+                    warn!("error setting up database: {}", e);
                 }
-            });
+            }
             
             let handle = app.handle();
             tauri::async_runtime::spawn(async move {
