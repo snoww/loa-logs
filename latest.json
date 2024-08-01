@@ -1,11 +1,11 @@
 {
-    "version": "v1.13.4",
-    "notes": "### v1.13.4\n#### BUG FIXES AND IMPROVEMENTS\n- fixed certain skills not being detected in certain gates\n\n**NOTE:** apologies for the broken updates, been super busy and not able to find time to work on the meter.\n\n### Current Functionality\n#### Working\n- damage meter\n- basic logs\n- party/self buff uptime tracking (mostly)\n- identity (maybe)\n- shields (maybe)\n- maybe some other stuff\n#### Not Working\n- rdps\n- stagger\n- pretty much anything else not listed here\n\nfull patch notes on [github](https://github.com/snoww/loa-logs/releases/latest)\n\nsend bug reports/suggestions to [ramen shop server](https://discord.gg/RXvTMV2YHu)",
-    "pub_date": "2024-07-26T22:01:48.427Z",
+    "version": "v1.13.5",
+    "notes": "### v1.13.5\n#### NEW FEATURES\n- greatly improved encounter searching and loading speed (@anyduck)\n  - NOTE: launching meter after the update will require up to 30 seconds of database migrations\n- allow changing number of rows displayed in the log table\n- due to log sizes increasing because of every single skill cast being saved, future encounters will have fields compressed, greatly reducing database sizes for the future\n\nfull patch notes on [github](https://github.com/snoww/loa-logs/releases/latest)\n\nsend bug reports/suggestions to [ramen shop server](https://discord.gg/RXvTMV2YHu)",
+    "pub_date": "2024-08-01T22:35:54.285Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.13.4/LOA.Logs_1.13.4_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlF5MWt4Z0N3TzRSVjhzWEZMYmU5RHBEWmQ4U3kxZUlQV1ZRSk5SNHcyM3FtWHdXVlJkU0xUdDFFM0NJNDI3NmZCRkJkSU5FYUFTakZ1ZkszN0pyU1F3PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzIyMDMxNDU2CWZpbGU6TE9BIExvZ3NfMS4xMy40X3g2NC1zZXR1cC5uc2lzLnppcApuVmx3R1RWVFRHUGRGMWRuMmEyOGZmdFJzRm5oUHpXT2txc0h3cWtXdTU1RDZROXNwUnZGc0hIYjhxYUFCanZkTnRZTGp5bUhoeFFpTUlDSkllYVBCQT09Cg=="
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.13.5/LOA.Logs_1.13.5_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlRHb0p1SCs4S1Z4aUdLVU1jMHZBc1d6THh2SjN4Y2Q1M0toYlhOaVEwRXUrMENkMzFSV3MxdTAvbHcrWkM3cDRrVnJjVTlpVWFRbWY3VlNGVXlvd3dFPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzIyNTUxNzE1CWZpbGU6TE9BIExvZ3NfMS4xMy41X3g2NC1zZXR1cC5uc2lzLnppcApOSjZiOURnTjVlTWowNDUvRWZ4NFJYNmViWFgyKzlxUkt3L1dTYllDb0M0OWpmSERiNVp2MllXSXhUa1J4Vi9YdXltTlFabDNsVEwrLzZOTldJVHVCQT09Cg=="
         }
     }
 }

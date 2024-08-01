@@ -1,12 +1,20 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.13.4
+    v1.13.5
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
   </div>
 </div>
 
+#### NEW FEATURES
+- greatly improved encounter searching and loading speed (@anyduck)
+  - NOTE: launching meter after the update will require up to 30 seconds of database migrations
+- allow changing number of rows displayed in the log table
+- due to log sizes increasing because of every single skill cast being saved, future encounters will have fields compressed, greatly reducing database sizes for the future
+
+
+### v1.13.4
 #### BUG FIXES AND IMPROVEMENTS
 - fixed certain skills not being detected in certain gates
 
