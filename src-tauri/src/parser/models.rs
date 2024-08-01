@@ -9,7 +9,7 @@ use serde::{Deserialize, Serialize};
 use serde_with::serde_as;
 use serde_with::DefaultOnError;
 
-pub const DB_VERSION: i32 = 4;
+pub const DB_VERSION: i32 = 5;
 
 #[derive(Debug, Default, Serialize, Deserialize, PartialEq, Copy, Clone)]
 #[allow(non_camel_case_types)]
@@ -99,6 +99,9 @@ pub struct EncounterDamageStats {
     pub stagger_start: i64,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub misc: Option<EncounterMisc>,
+    pub boss_hp_log: HashMap<String, Vec<BossHpLog>>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub stagger_stats: Option<StaggerStats>,
 }
 
 #[derive(Debug, Serialize, Clone, Default)]
@@ -363,8 +366,8 @@ pub struct StaggerStats {
 pub struct EncounterMisc {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub stagger_stats: Option<StaggerStats>,
-    #[serde_as(deserialize_as = "DefaultOnError")]
-    pub boss_hp_log: HashMap<String, Vec<BossHpLog>>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub boss_hp_log: Option<HashMap<String, Vec<BossHpLog>>>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub raid_clear: Option<bool>,
     #[serde(skip_serializing_if = "Option::is_none")]

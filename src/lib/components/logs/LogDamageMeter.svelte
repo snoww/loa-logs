@@ -156,7 +156,7 @@
             ) {
                 let legendNames = getLegendNames(chartablePlayers, $settings.general.showNames);
                 let deathTimes = getDeathTimes(chartablePlayers, legendNames, encounter.fightStart);
-                let bossHpLogs = Object.entries(encounter.encounterDamageStats.misc?.bossHpLog || {});
+                let bossHpLogs = Object.entries(encounter.encounterDamageStats.bossHpLog || {});
                 if (chartType === ChartType.AVERAGE_DPS) {
                     let chartPlayers = getAveragePlayerSeries(
                         chartablePlayers,
@@ -458,7 +458,7 @@
                         Identity
                     </button>
                 {/if}
-                {#if encounter.encounterDamageStats.misc && encounter.encounterDamageStats.misc.staggerStats}
+                {#if encounter.encounterDamageStats.staggerStats}
                     <button
                         class="rounded-sm px-2 py-1"
                         class:bg-accent-900={tab === MeterTab.STAGGER}
@@ -591,8 +591,8 @@
     {/if}
     {#if tab === MeterTab.IDENTITY && localPlayerEntity !== null}
         <LogIdentity localPlayer={localPlayerEntity} duration={encounter.duration} />
-    {:else if tab === MeterTab.STAGGER && encounter.encounterDamageStats.misc && encounter.encounterDamageStats.misc.staggerStats}
-        <LogStagger staggerStats={encounter.encounterDamageStats.misc.staggerStats} />
+    {:else if tab === MeterTab.STAGGER && encounter.encounterDamageStats.staggerStats}
+        <LogStagger staggerStats={encounter.encounterDamageStats.staggerStats} />
     {:else}
         <div class="px relative top-0 overflow-x-auto overflow-y-visible">
             {#if tab === MeterTab.DAMAGE}

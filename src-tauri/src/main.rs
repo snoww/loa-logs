@@ -15,6 +15,7 @@ use std::{
 
 use anyhow::Result;
 use auto_launch::AutoLaunch;
+use flate2::read::GzDecoder;
 use hashbrown::HashMap;
 use log::{error, info, warn};
 use parser::models::*;
@@ -77,14 +78,14 @@ async fn main() -> Result<()> {
                 .path_resolver()
                 .resource_dir()
                 .expect("could not get resource dir");
-            
+
             match setup_db(&resource_path) {
                 Ok(_) => (),
                 Err(e) => {
                     warn!("error setting up database: {}", e);
                 }
             }
-            
+
             let handle = app.handle();
             tauri::async_runtime::spawn(async move {
                 match tauri::updater::builder(handle).check().await {
@@ -551,6 +552,9 @@ fn migration_full_text_search(tx: &Transaction) -> Result<(), rusqlite::Error> {
         ALTER TABLE encounter DROP COLUMN cleared;
         ALTER TABLE encounter DROP COLUMN boss_only_damage;
 
+        ALTER TABLE encounter ADD COLUMN boss_hp_log BLOB;
+        ALTER TABLE encounter ADD COLUMN stagger_log TEXT;
+
         CREATE INDEX encounter_preview_favorite_index ON encounter_preview(favorite);
         CREATE INDEX encounter_preview_fight_start_index ON encounter_preview(fight_start);
         CREATE INDEX encounter_preview_my_dps_index ON encounter_preview(my_dps);
@@ -772,36 +776,111 @@ fn load_encounter(window: tauri::Window, id: String) -> Encounter {
        boss_only_damage,
        total_shielding,
        total_effective_shielding,
-       applied_shield_buffs
+       applied_shield_buffs,
+       boss_hp_log,
+       stagger_log
     FROM encounter JOIN encounter_preview USING (id)
     WHERE id = ?
     ",
         )
         .unwrap();
 
+    let mut compressed = false;
     let mut encounter = encounter_stmt
         .query_row(params![id], |row| {
-            let buff_str: String = row.get(10).unwrap_or_default();
-            let buffs = serde_json::from_str::<HashMap<u32, StatusEffect>>(buff_str.as_str())
-                .unwrap_or_else(|_| HashMap::new());
-
-            let debuff_str: String = row.get(11).unwrap_or_default();
-            let debuffs = serde_json::from_str::<HashMap<u32, StatusEffect>>(debuff_str.as_str())
-                .unwrap_or_else(|_| HashMap::new());
-
             let misc_str: String = row.get(12).unwrap_or_default();
             let misc = serde_json::from_str::<EncounterMisc>(misc_str.as_str())
                 .map(Some)
-                .unwrap_or_else(|_| None);
+                .unwrap_or_default();
+
+            let mut boss_hp_log: HashMap<String, Vec<BossHpLog>> = HashMap::new();
+            let mut stagger_stats: Option<StaggerStats> = None;
+
+            if let Some(misc) = misc.as_ref() {
+                let version = misc
+                    .version
+                    .clone()
+                    .unwrap_or_default()
+                    .split('.')
+                    .map(|x| x.parse::<i32>().unwrap_or_default())
+                    .collect::<Vec<_>>();
+
+                if version[0] > 1
+                    || (version[0] == 1 && version[1] >= 14)
+                    || (version[0] == 1 && version[1] == 13 && version[2] >= 5)
+                {
+                    compressed = true;
+                }
+
+                if !compressed {
+                    boss_hp_log = misc.boss_hp_log.clone().unwrap_or_default();
+                    stagger_stats.clone_from(&misc.stagger_stats);
+                }
+            }
+
+            let buffs: HashMap<u32, StatusEffect>;
+            let debuffs: HashMap<u32, StatusEffect>;
+            let applied_shield_buffs: HashMap<u32, StatusEffect>;
+            if compressed {
+                let raw_bytes: Vec<u8> = row.get(10).unwrap_or_default();
+                let mut decompress = GzDecoder::new(raw_bytes.as_slice());
+                let mut buff_string = String::new();
+                decompress
+                    .read_to_string(&mut buff_string)
+                    .expect("could not decompress buffs");
+                buffs = serde_json::from_str::<HashMap<u32, StatusEffect>>(buff_string.as_str())
+                    .unwrap_or_default();
+
+                let raw_bytes: Vec<u8> = row.get(11).unwrap_or_default();
+                let mut decompress = GzDecoder::new(raw_bytes.as_slice());
+                let mut debuff_string = String::new();
+                decompress
+                    .read_to_string(&mut debuff_string)
+                    .expect("could not decompress debuffs");
+                debuffs =
+                    serde_json::from_str::<HashMap<u32, StatusEffect>>(debuff_string.as_str())
+                        .unwrap_or_default();
+
+                let raw_bytes: Vec<u8> = row.get(19).unwrap_or_default();
+                let mut decompress = GzDecoder::new(raw_bytes.as_slice());
+                let mut applied_shield_buff_string = String::new();
+                decompress
+                    .read_to_string(&mut applied_shield_buff_string)
+                    .expect("could not decompress applied_shield_buffs");
+                applied_shield_buffs = serde_json::from_str::<HashMap<u32, StatusEffect>>(
+                    applied_shield_buff_string.as_str(),
+                )
+                .unwrap_or_default();
+
+                let raw_bytes: Vec<u8> = row.get(20).unwrap_or_default();
+                let mut decompress = GzDecoder::new(raw_bytes.as_slice());
+                let mut boss_string = String::new();
+                decompress
+                    .read_to_string(&mut boss_string)
+                    .expect("could not decompress boss_hp_log");
+                boss_hp_log =
+                    serde_json::from_str::<HashMap<String, Vec<BossHpLog>>>(boss_string.as_str())
+                        .unwrap_or_default();
+
+                let stagger_str: String = row.get(21).unwrap_or_default();
+                stagger_stats = serde_json::from_str::<Option<StaggerStats>>(stagger_str.as_str())
+                    .unwrap_or_default();
+            } else {
+                let buff_str: String = row.get(10).unwrap_or_default();
+                buffs = serde_json::from_str::<HashMap<u32, StatusEffect>>(buff_str.as_str())
+                    .unwrap_or_default();
+                let debuff_str: String = row.get(11).unwrap_or_default();
+                debuffs = serde_json::from_str::<HashMap<u32, StatusEffect>>(debuff_str.as_str())
+                    .unwrap_or_default();
+                let applied_shield_buff_str: String = row.get(19).unwrap_or_default();
+                applied_shield_buffs = serde_json::from_str::<HashMap<u32, StatusEffect>>(
+                    applied_shield_buff_str.as_str(),
+                )
+                .unwrap_or_default();
+            }
 
             let total_shielding = row.get(17).unwrap_or_default();
             let total_effective_shielding = row.get(18).unwrap_or_default();
-
-            let applied_shield_buff_str: String = row.get(19).unwrap_or_default();
-            let applied_shield_buffs = serde_json::from_str::<HashMap<u32, StatusEffect>>(
-                applied_shield_buff_str.as_str(),
-            )
-            .unwrap_or_default();
 
             Ok(Encounter {
                 last_combat_packet: row.get(0)?,
@@ -821,6 +900,8 @@ fn load_encounter(window: tauri::Window, id: String) -> Encounter {
                     total_shielding,
                     total_effective_shielding,
                     applied_shield_buffs,
+                    boss_hp_log,
+                    stagger_stats,
                     ..Default::default()
                 },
                 difficulty: row.get(13)?,
@@ -856,13 +937,36 @@ fn load_encounter(window: tauri::Window, id: String) -> Encounter {
 
     let entity_iter = entity_stmt
         .query_map(params![id], |row| {
-            let skill_str: String = row.get(7).unwrap_or_default();
-            let skills =
-                serde_json::from_str::<HashMap<u32, Skill>>(skill_str.as_str()).unwrap_or_default();
+            let skills: HashMap<u32, Skill>;
+            let damage_stats: DamageStats;
 
-            let damage_stats_str: String = row.get(8).unwrap_or_default();
-            let damage_stats =
-                serde_json::from_str::<DamageStats>(damage_stats_str.as_str()).unwrap_or_default();
+            if compressed {
+                let raw_bytes: Vec<u8> = row.get(7).unwrap_or_default();
+                let mut decompress = GzDecoder::new(raw_bytes.as_slice());
+                let mut skill_string = String::new();
+                decompress
+                    .read_to_string(&mut skill_string)
+                    .expect("could not decompress skills");
+                skills = serde_json::from_str::<HashMap<u32, Skill>>(skill_string.as_str())
+                    .unwrap_or_default();
+
+                let raw_bytes: Vec<u8> = row.get(8).unwrap_or_default();
+                let mut decompress = GzDecoder::new(raw_bytes.as_slice());
+                let mut damage_stats_string = String::new();
+                decompress
+                    .read_to_string(&mut damage_stats_string)
+                    .expect("could not decompress damage stats");
+                damage_stats = serde_json::from_str::<DamageStats>(damage_stats_string.as_str())
+                    .unwrap_or_default();
+            } else {
+                let skill_str: String = row.get(7).unwrap_or_default();
+                skills = serde_json::from_str::<HashMap<u32, Skill>>(skill_str.as_str())
+                    .unwrap_or_default();
+
+                let damage_stats_str: String = row.get(8).unwrap_or_default();
+                damage_stats = serde_json::from_str::<DamageStats>(damage_stats_str.as_str())
+                    .unwrap_or_default();
+            }
 
             let skill_stats_str: String = row.get(9).unwrap_or_default();
             let skill_stats =

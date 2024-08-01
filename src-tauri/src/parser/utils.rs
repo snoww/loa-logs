@@ -3,12 +3,16 @@ use crate::parser::models::*;
 use crate::parser::skill_tracker::SkillTracker;
 use crate::parser::stats_api::{Engraving, PlayerStats};
 use crate::parser::status_tracker::StatusEffectDetails;
+use flate2::write::GzEncoder;
+use flate2::Compression;
 use hashbrown::HashMap;
 use moka::sync::Cache;
 use rusqlite::{params, Transaction};
+use serde::Serialize;
 use serde_json::json;
 use std::cmp::{max, Ordering, Reverse};
 use std::collections::BTreeMap;
+use std::io::Write;
 
 pub fn encounter_entity_from_entity(entity: &Entity) -> EncounterEntity {
     let mut e = EncounterEntity {
@@ -714,8 +718,10 @@ pub fn insert_data(
         total_effective_shielding,
         applied_shield_buffs,
         misc,
-        version
-    ) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13)",
+        version,
+        boss_hp_log,
+        stagger_log
+    ) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15)",
         )
         .expect("failed to prepare encounter statement");
 
@@ -724,8 +730,7 @@ pub fn insert_data(
     encounter.encounter_damage_stats.dps =
         encounter.encounter_damage_stats.total_damage_dealt / duration_seconds;
 
-    let mut misc: EncounterMisc = EncounterMisc {
-        boss_hp_log,
+    let misc: EncounterMisc = EncounterMisc {
         raid_clear: if raid_clear { Some(true) } else { None },
         party_info: if party_info.is_empty() {
             None
@@ -751,6 +756,7 @@ pub fn insert_data(
         ..Default::default()
     };
 
+    let mut stagger_stats: Option<StaggerStats> = None;
     if !stagger_log.is_empty() {
         if prev_stagger > 0 && prev_stagger != encounter.encounter_damage_stats.max_stagger {
             // never finished staggering the boss, calculate average from whatever stagger has been done
@@ -779,9 +785,14 @@ pub fn insert_data(
                     / encounter.encounter_damage_stats.max_stagger as f64,
                 log: stagger_log,
             };
-            misc.stagger_stats = Some(stagger);
+            stagger_stats = Some(stagger);
         }
     }
+
+    let compressed_boss_hp = compress_json(&boss_hp_log);
+    let compressed_buffs = compress_json(&encounter.encounter_damage_stats.buffs);
+    let compressed_debuffs = compress_json(&encounter.encounter_damage_stats.debuffs);
+    let compressed_shields = compress_json(&encounter.encounter_damage_stats.applied_shield_buffs);
 
     encounter_stmt
         .execute(params![
@@ -791,13 +802,15 @@ pub fn insert_data(
             encounter.encounter_damage_stats.total_damage_taken,
             encounter.encounter_damage_stats.top_damage_taken,
             encounter.encounter_damage_stats.dps,
-            json!(encounter.encounter_damage_stats.buffs),
-            json!(encounter.encounter_damage_stats.debuffs),
+            compressed_buffs,
+            compressed_debuffs,
             encounter.encounter_damage_stats.total_shielding,
             encounter.encounter_damage_stats.total_effective_shielding,
-            json!(encounter.encounter_damage_stats.applied_shield_buffs),
+            compressed_shields,
             json!(misc),
-            DB_VERSION
+            DB_VERSION,
+            compressed_boss_hp,
+            json!(stagger_stats),
         ])
         .expect("failed to insert encounter");
 
@@ -1036,6 +1049,9 @@ pub fn insert_data(
                 entity.skill_stats.identity_stats = Some(stats);
             }
         }
+        
+        let compressed_skills = compress_json(&entity.skills);
+        let compressed_damage_stats = compress_json(&entity.damage_stats);
 
         entity_stmt
             .execute(params![
@@ -1049,8 +1065,8 @@ pub fn insert_data(
                 entity.current_hp,
                 entity.max_hp,
                 entity.is_dead,
-                json!(entity.skills),
-                json!(entity.damage_stats),
+                compressed_skills,
+                compressed_damage_stats,
                 json!(entity.skill_stats),
                 entity.damage_stats.dps,
                 entity.character_id,
@@ -1072,7 +1088,7 @@ pub fn insert_data(
     let local_player_dps = players
         .iter()
         .find(|e| e.name == encounter.local_player)
-        .and_then(|e| Some(e.damage_stats.dps))
+        .map(|e| e.damage_stats.dps)
         .unwrap_or_default();
     players.sort_unstable_by_key(|e| Reverse(e.damage_stats.damage_dealt));
     let preview_players = players
@@ -1089,7 +1105,7 @@ pub fn insert_data(
         fight_start,
         current_boss,
         duration,
-        payers,
+        players,
         difficulty,
         local_player,
         my_dps,
@@ -1118,7 +1134,7 @@ pub fn map_status_effect(se: &StatusEffectDetails, custom_id_map: &mut HashMap<u
     if se.custom_id > 0 {
         custom_id_map.insert(se.custom_id, se.status_effect_id);
         se.custom_id
-    } else { 
+    } else {
         se.status_effect_id
     }
 }
@@ -1129,4 +1145,14 @@ pub fn get_new_id(source_skill: u32) -> u32 {
 
 pub fn get_skill_id(new_skill: u32) -> u32 {
     new_skill - 1_000_000_000
+}
+
+pub fn compress_json<T>(value: &T) -> Vec<u8>
+where
+    T: ?Sized + Serialize,
+{
+    let mut e = GzEncoder::new(Vec::new(), Compression::default());
+    let bytes = serde_json::to_vec(value).expect("unable to serialize json");
+    e.write_all(&bytes).expect("unable to write json to buffer");
+    e.finish().expect("unable to compress json")
 }

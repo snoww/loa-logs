@@ -57,11 +57,13 @@ export interface EncounterDamageStats {
     totalEffectiveShielding: number;
     appliedShieldBuffs: { [key: number]: StatusEffect };
     misc?: EncounterMisc;
+    bossHpLog: { [key: string]: Array<BossHpLog> };
+    staggerStats?: StaggerStats;
 }
 
 export interface EncounterMisc {
-    staggerStats: StaggerStats;
-    bossHpLog: { [key: string]: Array<BossHpLog> };
+    staggerStats?: StaggerStats;
+    bossHpLog?: { [key: string]: Array<BossHpLog> };
     partyInfo?: PartyInfo;
     rdpsValid?: boolean;
     rdpsMessage?: string;
