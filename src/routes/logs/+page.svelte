@@ -37,11 +37,13 @@
 
     let encounters: Array<EncounterPreview> = [];
     let totalEncounters: number = 0;
-    const rowsPerPage = 10;
-
     let selectMode = false;
 
     $: {
+        if ($settings.general.logsPerPage <= 0 || $settings.general.logsPerPage > 100) {
+            $settings.general.logsPerPage = 10;
+        }
+
         if ($searchStore.length > 0) {
             if ($backNavStore) {
                 $backNavStore = false;
@@ -58,6 +60,9 @@
     $: loadEncounters($searchFilter, $searchStore, $pageStore);
 
     onMount(async () => {
+        if ($settings.general.logsPerPage <= 0 || $settings.general.logsPerPage > 100) {
+            $settings.general.logsPerPage = 10;
+        }
         if ($miscSettings) {
             const version = await getVersion();
             if (!$miscSettings.viewedChangelog || $miscSettings.version !== version) {
@@ -78,7 +83,11 @@
         goto("/changelog");
     }
 
-    async function loadEncounters(searchFilter: SearchFilter, search: string, page: number): Promise<Array<EncounterPreview>> {
+    async function loadEncounters(
+        searchFilter: SearchFilter,
+        search: string,
+        page: number
+    ): Promise<Array<EncounterPreview>> {
         NProgress.start();
         let bosses = Array.from($searchFilter.bosses);
         if (searchFilter.encounters.size > 0) {
@@ -98,7 +107,7 @@
 
         let overview: EncountersOverview = await invoke("load_encounters_preview", {
             page: page,
-            pageSize: rowsPerPage,
+            pageSize: $settings.general.logsPerPage,
             search: searchQuery,
             filter: {
                 minDuration: searchFilter.minDuration,
@@ -124,7 +133,7 @@
     }
 
     function nextPage() {
-        if ($pageStore * rowsPerPage < totalEncounters) {
+        if ($pageStore * $settings.general.logsPerPage < totalEncounters) {
             $pageStore++;
             scrollToTopOfTable();
         }
@@ -143,7 +152,7 @@
     }
 
     function lastPage() {
-        $pageStore = Math.ceil(totalEncounters / rowsPerPage);
+        $pageStore = Math.ceil(totalEncounters / $settings.general.logsPerPage);
         scrollToTopOfTable();
     }
 
@@ -170,6 +179,13 @@
             behavior: "smooth",
             block: "center"
         });
+    }
+
+    async function changeRowsPerPage(event: Event) {
+        $settings.general.logsPerPage = parseInt((event.target as HTMLSelectElement).value);
+        $pageStore = 1;
+        await loadEncounters($searchFilter, $searchStore, $pageStore);
+        scrollToTopOfTable();
     }
 
     let hidden: boolean = true;
@@ -393,15 +409,29 @@
             </table>
         </div>
         {#if encounters.length > 0}
-            <div class="flex items-center justify-between py-4">
-                <span class="text-sm text-gray-400"
-                    >Showing <span class="font-semibold dark:text-white"
-                        >{($pageStore - 1) * rowsPerPage + 1}-{Math.min(
-                            ($pageStore - 1) * rowsPerPage + 1 + rowsPerPage - 1,
-                            totalEncounters
-                        )}</span>
-                    of
-                    <span class="font-semibold text-white">{totalEncounters === 0 ? 1 : totalEncounters}</span></span>
+            <div class="flex items-center justify-between py-3">
+                <div class="flex items-center gap-2">
+                    <label for="rowsPerPage" class="text-sm text-gray-400">Rows per page:</label>
+                    <select
+                        id="rowsPerPage"
+                        class="focus:border-accent-500 inline rounded-lg border border-gray-600 bg-zinc-700 px-1 py-1 text-sm text-zinc-300 placeholder-gray-400 focus:ring-0"
+                        on:change={changeRowsPerPage}>
+                        <option selected={$settings.general.logsPerPage === 10}>10</option>
+                        <option selected={$settings.general.logsPerPage === 25}>25</option>
+                        <option selected={$settings.general.logsPerPage === 50}>50</option>
+                        <option selected={$settings.general.logsPerPage === 100}>100</option>
+                    </select>
+
+                    <span class="text-sm text-gray-400"
+                        >Showing <span class="font-semibold dark:text-white"
+                            >{($pageStore - 1) * $settings.general.logsPerPage + 1}-{Math.min(
+                                ($pageStore - 1) * $settings.general.logsPerPage + 1 + $settings.general.logsPerPage - 1,
+                                totalEncounters
+                            )}</span>
+                        of
+                        <span class="font-semibold text-white">{totalEncounters === 0 ? 1 : totalEncounters}</span
+                        ></span>
+                </div>
                 <ul class="inline-flex items-center -space-x-px">
                     <li use:tooltip={{ content: "First" }}>
                         <button class="ml-0 block px-3" on:click={() => firstPage()}>
