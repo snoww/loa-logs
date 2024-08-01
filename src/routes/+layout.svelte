@@ -38,7 +38,7 @@
                 }
 
                 let encounterUpdateEvent = await listen("show-latest-encounter", async (event) => {
-                    await goto("/logs/encounter?id=" + event.payload);
+                    await goto("/logs/encounter/" + event.payload);
                     await showWindow();
                 });
                 let openUrlEvent = await listen("redirect-url", async (event) => {
