@@ -367,13 +367,22 @@ fn setup_db(resource_path: &Path) -> Result<(), rusqlite::Error> {
     let mut conn = Connection::open(resource_path.join("encounters.db"))?;
     let tx = conn.transaction()?;
 
+    // FIXME: replace me with idempotent migrations
+
     let mut stmt = tx.prepare("SELECT 1 FROM sqlite_master WHERE type=? AND name=?")?;
     if !stmt.exists(["table", "encounter"])? {
         info!("creating tables");
-        migration_legacy(&tx)?;
+        migration_legacy_encounter(&tx)?;
+        migration_legacy_entity(&tx)?;
     }
+
+    // NOTE: for databases, where the bad migration code already ran
+    migration_legacy_entity(&tx)?;
+
     if !stmt.exists(["table", "encounter_preview"])? {
         info!("optimizing searches");
+        migration_legacy_encounter(&tx)?;
+        migration_legacy_entity(&tx)?;
         migration_full_text_search(&tx)?;
     }
     stmt.finalize()?;
@@ -381,7 +390,7 @@ fn setup_db(resource_path: &Path) -> Result<(), rusqlite::Error> {
     tx.commit()
 }
 
-fn migration_legacy(tx: &Transaction) -> Result<(), rusqlite::Error> {
+fn migration_legacy_encounter(tx: &Transaction) -> Result<(), rusqlite::Error> {
     tx.execute_batch(&format!(
         "
     CREATE TABLE IF NOT EXISTS encounter (
@@ -448,7 +457,11 @@ fn migration_legacy(tx: &Transaction) -> Result<(), rusqlite::Error> {
                 ",
         )?;
     }
+    tx.execute("UPDATE encounter SET cleared = coalesce(json_extract(misc, '$.raidClear'), 0) WHERE cleared IS NULL;", [])?;
+    stmt.finalize()
+}
 
+fn migration_legacy_entity(tx: &Transaction) -> Result<(), rusqlite::Error> {
     tx.execute_batch(
         "
         CREATE TABLE IF NOT EXISTS entity (
@@ -481,6 +494,7 @@ fn migration_legacy(tx: &Transaction) -> Result<(), rusqlite::Error> {
         ",
     )?;
 
+    let mut stmt = tx.prepare("SELECT 1 FROM pragma_table_info(?) WHERE name=?")?;
     if !stmt.exists(["entity", "dps"])? {
         tx.execute("ALTER TABLE entity ADD COLUMN dps INTEGER", [])?;
     }
@@ -493,14 +507,8 @@ fn migration_legacy(tx: &Transaction) -> Result<(), rusqlite::Error> {
     if !stmt.exists(["entity", "gear_hash"])? {
         tx.execute("ALTER TABLE entity ADD COLUMN gear_hash TEXT", [])?;
     }
-    stmt.finalize()?;
-
-    tx.execute_batch(
-        "
-        UPDATE encounter SET cleared = coalesce(json_extract(misc, '$.raidClear'), 0) WHERE cleared IS NULL;
-        UPDATE entity SET dps = coalesce(json_extract(damage_stats, '$.dps'), 0) WHERE dps IS NULL;
-        ",
-    )
+    tx.execute("UPDATE entity SET dps = coalesce(json_extract(damage_stats, '$.dps'), 0) WHERE dps IS NULL;", [])?;
+    stmt.finalize()
 }
 
 fn migration_full_text_search(tx: &Transaction) -> Result<(), rusqlite::Error> {
