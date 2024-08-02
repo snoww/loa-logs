@@ -1,12 +1,17 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.13.5
+    v1.13.6
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
   </div>
 </div>
 
+#### BUG FIXES AND IMPROVEMENTS
+- fix class search not working
+- fix migration errors for some users
+
+### v1.13.5
 #### NEW FEATURES
 - greatly improved encounter searching and loading speed (@anyduck)
   - NOTE: launching meter after the update will require up to 30 seconds of database migrations

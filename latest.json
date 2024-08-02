@@ -1,11 +1,11 @@
 {
-    "version": "v1.13.5",
-    "notes": "### v1.13.5\n#### NEW FEATURES\n- greatly improved encounter searching and loading speed (@anyduck)\n  - NOTE: launching meter after the update will require up to 30 seconds of database migrations\n- allow changing number of rows displayed in the log table\n- due to log sizes increasing because of every single skill cast being saved, future encounters will have fields compressed, greatly reducing database sizes for the future\n\nfull patch notes on [github](https://github.com/snoww/loa-logs/releases/latest)\n\nsend bug reports/suggestions to [ramen shop server](https://discord.gg/RXvTMV2YHu)",
-    "pub_date": "2024-08-01T22:35:54.285Z",
+    "version": "v1.13.6",
+    "notes": "### v1.13.6\n#### BUG FIXES AND IMPROVEMENTS\n- fix class search not working\n- fix migration errors for some users\n\nfull patch notes on [github](https://github.com/snoww/loa-logs/releases/latest)\n\nsend bug reports/suggestions to [ramen shop server](https://discord.gg/RXvTMV2YHu)",
+    "pub_date": "2024-08-02T22:43:12.620Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.13.5/LOA.Logs_1.13.5_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlRHb0p1SCs4S1Z4aUdLVU1jMHZBc1d6THh2SjN4Y2Q1M0toYlhOaVEwRXUrMENkMzFSV3MxdTAvbHcrWkM3cDRrVnJjVTlpVWFRbWY3VlNGVXlvd3dFPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzIyNTUxNzE1CWZpbGU6TE9BIExvZ3NfMS4xMy41X3g2NC1zZXR1cC5uc2lzLnppcApOSjZiOURnTjVlTWowNDUvRWZ4NFJYNmViWFgyKzlxUkt3L1dTYllDb0M0OWpmSERiNVp2MllXSXhUa1J4Vi9YdXltTlFabDNsVEwrLzZOTldJVHVCQT09Cg=="
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.13.6/LOA.Logs_1.13.6_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlh1UkN6SXJ0cTNWMm45Y3ZuNFd4V3FBeldqaEFsWDdwWTQrc1ZnRGQ1Wjhubit6Z1Y3ZFlQZS8rM1VISlRLaEV3MXlhd0diOGpKdzlsYVp2ZjBMRXdZPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzIyNjM4NzAyCWZpbGU6TE9BIExvZ3NfMS4xMy42X3g2NC1zZXR1cC5uc2lzLnppcAo3MmZIZ3BVbkYzcmpuVHhrN1FrMjZ5aVBaaTFHSG1raGtMZWFRczVCd2E5Tm4yd2FwVWFCUFpLdXZkeVNJVTVmTkFnek0xVHY4YUdoVnRPQlZXeW1BQT09Cg=="
         }
     }
 }
