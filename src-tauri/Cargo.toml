@@ -7,7 +7,7 @@ license = "GNU General Public License v3.0"
 repository = "https://github.com/snoww/loa-logs"
 default-run = "app"
 edition = "2021"
-rust-version = "1.70.0"
+rust-version = "1.77.0"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
