@@ -58,3 +58,7 @@ strip = true # Remove debug symbols
 
 [profile.dev.package."*"]
 debug = false # Disable debug symbols for dependencies
+
+[patch.crates-io]
+# Waiting for https://github.com/libpnet/libpnet/pull/715 to be adressed
+pnet = { git = "https://github.com/anyduck/libpnet", branch = "fix-non-utf8-string" }
