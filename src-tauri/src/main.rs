@@ -1289,7 +1289,7 @@ fn delete_all_uncleared_encounters(window: tauri::Window, keep_favorites: bool) 
     } else {
         conn.execute(
             "DELETE FROM encounter
-            WHERE (
+            WHERE id IN (
                 SELECT id
                 FROM encounter_preview
                 WHERE cleared = 0
