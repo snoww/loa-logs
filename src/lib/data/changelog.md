@@ -1,12 +1,16 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.13.6
+    v1.13.7
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
   </div>
 </div>
 
+#### BUG FIXES AND IMPROVEMENTS
+- fix using "delete all uncleared encounters" deleting the entire database
+
+### v1.13.6
 #### BUG FIXES AND IMPROVEMENTS
 - fix class search not working
 - fix migration errors for some users

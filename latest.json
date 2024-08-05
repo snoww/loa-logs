@@ -1,11 +1,11 @@
 {
-    "version": "v1.13.6",
-    "notes": "### v1.13.6\n#### BUG FIXES AND IMPROVEMENTS\n- fix class search not working\n- fix migration errors for some users\n\nfull patch notes on [github](https://github.com/snoww/loa-logs/releases/latest)\n\nsend bug reports/suggestions to [ramen shop server](https://discord.gg/RXvTMV2YHu)",
-    "pub_date": "2024-08-02T22:43:12.620Z",
+    "version": "v1.13.7",
+    "notes": "### v1.13.7\n#### BUG FIXES AND IMPROVEMENTS\n- fix using \"delete all uncleared encounters\" deleting the entire database\n\nfull patch notes on [github](https://github.com/snoww/loa-logs/releases/latest)\n\nsend bug reports/suggestions to [ramen shop server](https://discord.gg/RXvTMV2YHu)",
+    "pub_date": "2024-08-05T11:47:43.560Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.13.6/LOA.Logs_1.13.6_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlh1UkN6SXJ0cTNWMm45Y3ZuNFd4V3FBeldqaEFsWDdwWTQrc1ZnRGQ1Wjhubit6Z1Y3ZFlQZS8rM1VISlRLaEV3MXlhd0diOGpKdzlsYVp2ZjBMRXdZPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzIyNjM4NzAyCWZpbGU6TE9BIExvZ3NfMS4xMy42X3g2NC1zZXR1cC5uc2lzLnppcAo3MmZIZ3BVbkYzcmpuVHhrN1FrMjZ5aVBaaTFHSG1raGtMZWFRczVCd2E5Tm4yd2FwVWFCUFpLdXZkeVNJVTVmTkFnek0xVHY4YUdoVnRPQlZXeW1BQT09Cg=="
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.13.7/LOA.Logs_1.13.7_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlhZOGFLM2pXV0VCcGQrbFQ3T2Rzb0QzZTVJSzMrTWNCODFYMVB4TXA5M210TkVLU2tzaUY0NzF4M1A5bTRUYnpZbk5wV0ZaNU8zOGp0YzdMMW1FcVFrPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzIyODU4NjUyCWZpbGU6TE9BIExvZ3NfMS4xMy43X3g2NC1zZXR1cC5uc2lzLnppcAp4S1lpMDcvc3BaVUh1QjdhVmc5c3I2VzRIRXRLekR4SVpFdlRGd01pWitnQVZIdk0vRjByVzBHRGxOTUVHTHhENHRKYUdWVVk5eHpmbHFnd1RzRFVDdz09Cg=="
         }
     }
 }
