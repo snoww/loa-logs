@@ -12,8 +12,8 @@
     import type { PageData } from "./$types";
 
     export let data: PageData;
-    let encounter = data.encounter;
-    let fav = encounter.favorite;
+    $: encounter = data.encounter;
+    $: fav = encounter.favorite;
     $: raidGate = $raidGates.get(encounter.currentBossName);
 
     onMount(() => {
@@ -96,7 +96,9 @@
     <div class="overflow-auto bg-zinc-800 pb-8 pl-8 pt-2" style="height: calc(100vh - 4rem);" id="log-breakdown">
         <div class="relative inline-block min-w-[calc(100%-4rem)]">
             <div class="pr-8">
-                <LogDamageMeter id={data.id} {encounter} />
+                {#key data.id}
+                    <LogDamageMeter id={data.id} {encounter} />
+                {/key}
             </div>
         </div>
     </div>
