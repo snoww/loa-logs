@@ -1,12 +1,17 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.14.0
+    v1.14.1
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
   </div>
 </div>
 
+#### BUG FIXES AND IMPROVEMENTS
+- fix "show latest encounter" not working when an encounter is already open
+- fix certain skills that leave projectile behind not being tracked (e.g. reflux sorc frost call)
+
+### v1.14.0
 #### NEW FEATURES
 - update meter for calm before the storm update (thanks to @PoonT and @PetAndMet)
 

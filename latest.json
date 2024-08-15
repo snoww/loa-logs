@@ -1,11 +1,11 @@
 {
-    "version": "v1.14.0",
-    "notes": "### v1.14.0\n#### NEW FEATURES\n- update meter for calm before the storm update (thanks to @PoonT and @PetAndMet)\n\nfull patch notes on [github](https://github.com/snoww/loa-logs/releases/latest)\n\nsend bug reports/suggestions to [ramen shop server](https://discord.gg/RXvTMV2YHu)",
-    "pub_date": "2024-08-14T23:58:40.345Z",
+    "version": "v1.14.1",
+    "notes": "### v1.14.1\n#### NEW FEATURES\n- update meter for calm before the storm update (thanks to @PoonT and @PetAndMet)\n\nfull patch notes on [github](https://github.com/snoww/loa-logs/releases/latest)\n\nsend bug reports/suggestions to [ramen shop server](https://discord.gg/RXvTMV2YHu)",
+    "pub_date": "2024-08-15T09:22:17.108Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.14.0/LOA.Logs_1.14.0_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlpRS2RkZC8xekJzMTZhR3drTFhYUWNqTFNQcERIdEU5MWxNSWNDZFBVRWpFS3M0MlRZNEZ2QmZBbGJneTNWZ1BKK29MNlBMSWc1T0ZpR0FERmpsSEFvPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzIzNjc5OTc3CWZpbGU6TE9BIExvZ3NfMS4xNC4wX3g2NC1zZXR1cC5uc2lzLnppcApVbTFTZ1pQbnN2c09iUytIOUkvcGNXSzBOd1VjaW56V0ErTVY3UHE2amNRUGg0T2VtUHhrbGFNM0V0SHRkTnBReFNiK1UzSWhmSStINFQzczdYOEdBUT09Cg=="
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.14.1/LOA.Logs_1.14.1_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmV2eFJ4TW1yc0NQOGZVYVdEeHNrc3p0MDd0V3Z3MXlHSlN0VGM5Yk5waDFFYnl0a3hUYjVtNkI0UXVxTnppRGtmdzk3MkZzT1B0VktMZTkyRlhlZXdVPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzIzNzEzNzgzCWZpbGU6TE9BIExvZ3NfMS4xNC4xX3g2NC1zZXR1cC5uc2lzLnppcApMZXFHZ0JibFVhZGtLTjZwN0xkODg4MFJMNUFyZzlNL3V1N2pXZTk2THBCeDlUdmFwcjdpMVFlWERtUkQwcXFMcUpMelMwTFZzek1DUUZLa0Fld0pBUT09Cg=="
         }
     }
 }
