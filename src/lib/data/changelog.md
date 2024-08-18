@@ -1,12 +1,16 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.14.1
+    v1.14.2
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
   </div>
 </div>
 
+#### BUG FIXES AND IMPROVEMENTS
+- fix bard harp branding not tracking in certain gates
+
+### v1.14.1
 #### BUG FIXES AND IMPROVEMENTS
 - fix "show latest encounter" not working when an encounter is already open
 - fix certain skills that leave projectile behind not being tracked (e.g. reflux sorc frost call)
