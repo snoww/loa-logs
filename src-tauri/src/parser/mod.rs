@@ -248,13 +248,13 @@ pub fn start(
                     }
                 }
             }
-            Pkt::EquipChangeNotify => {
-                if let Some(pkt) =
-                    parse_pkt(&data, PKTEquipChangeNotify::new, "PKTEquipChangeNotify")
-                {
-                    entity_tracker.get_player_set_options(pkt.object_id, pkt.equip_item_data_list);
-                }
-            }
+            // Pkt::EquipChangeNotify => {
+            //     if let Some(pkt) =
+            //         parse_pkt(&data, PKTEquipChangeNotify::new, "PKTEquipChangeNotify")
+            //     {
+            //         entity_tracker.get_player_set_options(pkt.object_id, pkt.equip_item_data_list);
+            //     }
+            // }
             Pkt::IdentityGaugeChangeNotify => {
                 if let Some(pkt) = parse_pkt(
                     &data,
@@ -274,19 +274,19 @@ pub fn start(
                     }
                 }
             }
-            Pkt::IdentityStanceChangeNotify => {
-                if let Some(pkt) = parse_pkt(
-                    &data,
-                    PKTIdentityStanceChangeNotify::new,
-                    "PKTIdentityStanceChangeNotify",
-                ) {
-                    if let Some(entity) = entity_tracker.entities.get_mut(&pkt.object_id) {
-                        if entity.entity_type == EntityType::PLAYER {
-                            entity.stance = pkt.stance;
-                        }
-                    }
-                }
-            }
+            // Pkt::IdentityStanceChangeNotify => {
+            //     if let Some(pkt) = parse_pkt(
+            //         &data,
+            //         PKTIdentityStanceChangeNotify::new,
+            //         "PKTIdentityStanceChangeNotify",
+            //     ) {
+            //         if let Some(entity) = entity_tracker.entities.get_mut(&pkt.object_id) {
+            //             if entity.entity_type == EntityType::PLAYER {
+            //                 entity.stance = pkt.stance;
+            //             }
+            //         }
+            //     }
+            // }
             Pkt::InitEnv => {
                 // three methods of getting local player info
                 // 1. MigrationExecute    + InitEnv      + PartyInfo
@@ -310,7 +310,7 @@ pub fn start(
             }
             Pkt::InitPC => {
                 if let Some(pkt) = parse_pkt(&data, PKTInitPC::new, "PKTInitPC") {
-                    let (hp, max_hp) = get_current_and_max_hp(&pkt.stat_pair);
+                    let (hp, max_hp) = get_current_and_max_hp(&pkt.stat_pairs);
                     let entity = entity_tracker.init_pc(pkt);
                     info!(
                         "local player: {}, {}, {}, eid: {}, id: {}",
@@ -330,23 +330,23 @@ pub fn start(
                     state.on_init_pc(entity, hp, max_hp)
                 }
             }
-            Pkt::InitItem => {
-                if let Some(pkt) = parse_pkt(&data, PKTInitItem::new, "PKTInitItem") {
-                    if pkt.storage_type == 1 || pkt.storage_type == 20 {
-                        entity_tracker.get_local_player_set_options(pkt.item_data_list);
-                    }
-                }
-            }
-            Pkt::MigrationExecute => {
-                if let Some(pkt) = parse_pkt(&data, PKTMigrationExecute::new, "PKTMigrationExecute")
-                {
-                    entity_tracker.migration_execute(pkt);
-                    get_and_set_region(region_file_path.as_ref(), &mut state);
-                }
-            }
+            // Pkt::InitItem => {
+            //     if let Some(pkt) = parse_pkt(&data, PKTInitItem::new, "PKTInitItem") {
+            //         if pkt.storage_type == 1 || pkt.storage_type == 20 {
+            //             entity_tracker.get_local_player_set_options(pkt.item_data_list);
+            //         }
+            //     }
+            // }
+            // Pkt::MigrationExecute => {
+            //     if let Some(pkt) = parse_pkt(&data, PKTMigrationExecute::new, "PKTMigrationExecute")
+            //     {
+            //         entity_tracker.migration_execute(pkt);
+            //         get_and_set_region(region_file_path.as_ref(), &mut state);
+            //     }
+            // }
             Pkt::NewPC => {
                 if let Some(pkt) = parse_pkt(&data, PKTNewPC::new, "PKTNewPC") {
-                    let (hp, max_hp) = get_current_and_max_hp(&pkt.pc_struct.stat_pair);
+                    let (hp, max_hp) = get_current_and_max_hp(&pkt.pc_struct.stat_pairs);
                     let entity = entity_tracker.new_pc(pkt);
                     debug_print(format_args!(
                         "new PC: {}, {}, {}, eid: {}, cid: {}",
@@ -369,7 +369,7 @@ pub fn start(
             }
             Pkt::NewNpc => {
                 if let Some(pkt) = parse_pkt(&data, PKTNewNpc::new, "PKTNewNpc") {
-                    let (hp, max_hp) = get_current_and_max_hp(&pkt.npc_struct.stat_pair);
+                    let (hp, max_hp) = get_current_and_max_hp(&pkt.npc_struct.stat_pairs);
                     let entity = entity_tracker.new_npc(pkt, max_hp);
                     debug_print(format_args!(
                         "new {}: {}, eid: {}, id: {}, hp: {}",
@@ -380,7 +380,7 @@ pub fn start(
             }
             Pkt::NewNpcSummon => {
                 if let Some(pkt) = parse_pkt(&data, PKTNewNpcSummon::new, "PKTNewNpcSummon") {
-                    let (hp, max_hp) = get_current_and_max_hp(&pkt.npc_data.stat_pair);
+                    let (hp, max_hp) = get_current_and_max_hp(&pkt.npc_struct.stat_pairs);
                     let entity = entity_tracker.new_npc_summon(pkt, max_hp);
                     debug_print(format_args!(
                         "new {}: {}, eid: {}, id: {}, hp: {}",
@@ -408,37 +408,37 @@ pub fn start(
             Pkt::NewTrap => {
                 if let Some(pkt) = parse_pkt(&data, PKTNewTrap::new, "PKTNewTrap") {
                     entity_tracker.new_trap(&pkt);
-                    if entity_tracker.id_is_player(pkt.trap_data.owner_id)
-                        && pkt.trap_data.skill_id > 0
+                    if entity_tracker.id_is_player(pkt.trap_struct.owner_id)
+                        && pkt.trap_struct.skill_id > 0
                     {
-                        let key = (pkt.trap_data.owner_id, pkt.trap_data.skill_id);
+                        let key = (pkt.trap_struct.owner_id, pkt.trap_struct.skill_id);
                         if let Some(timestamp) = state.skill_tracker.skill_timestamp.get(&key) {
                             state
                                 .skill_tracker
                                 .projectile_id_to_timestamp
-                                .insert(pkt.trap_data.object_id, timestamp);
+                                .insert(pkt.trap_struct.object_id, timestamp);
                         }
                     }
                 }
             }
-            Pkt::ParalyzationStateNotify => {
-                if let Some(pkt) = parse_pkt(
-                    &data,
-                    PKTParalyzationStateNotify::new,
-                    "PKTParalyzationStateNotify",
-                ) {
-                    state.on_stagger_change(&pkt);
-                    if emit_details.load(Ordering::Relaxed) {
-                        window.emit(
-                            "stagger-update",
-                            Stagger {
-                                current: pkt.paralyzation_point,
-                                max: pkt.paralyzation_max_point,
-                            },
-                        )?;
-                    }
-                }
-            }
+            // Pkt::ParalyzationStateNotify => {
+            //     if let Some(pkt) = parse_pkt(
+            //         &data,
+            //         PKTParalyzationStateNotify::new,
+            //         "PKTParalyzationStateNotify",
+            //     ) {
+            //         state.on_stagger_change(&pkt);
+            //         if emit_details.load(Ordering::Relaxed) {
+            //             window.emit(
+            //                 "stagger-update",
+            //                 Stagger {
+            //                     current: pkt.paralyzation_point,
+            //                     max: pkt.paralyzation_max_point,
+            //                 },
+            //             )?;
+            //         }
+            //     }
+            // }
             Pkt::RaidBegin => {
                 if let Some(pkt) = parse_pkt(&data, PKTRaidBegin::new, "PKTRaidBegin") {
                     debug_print(format_args!("raid begin: {}", pkt.raid_id));
@@ -490,7 +490,7 @@ pub fn start(
             }
             Pkt::SkillCastNotify => {
                 if let Some(pkt) = parse_pkt(&data, PKTSkillCastNotify::new, "PKTSkillCastNotify") {
-                    let mut entity = entity_tracker.get_source_entity(pkt.caster);
+                    let mut entity = entity_tracker.get_source_entity(pkt.source_id);
                     entity_tracker.guess_is_player(&mut entity, pkt.skill_id);
                     if entity.class_id == 202 {
                         state.on_skill_start(
@@ -773,20 +773,20 @@ pub fn start(
                     }
                 }
             }
-            Pkt::StatusEffectDurationNotify => {
-                if let Some(pkt) = parse_pkt(
-                    &data,
-                    PKTStatusEffectDurationNotify::new,
-                    "PKTStatusEffectDurationNotify",
-                ) {
-                    status_tracker.borrow_mut().update_status_duration(
-                        pkt.effect_instance_id,
-                        pkt.target_id,
-                        pkt.expiration_tick,
-                        StatusEffectTargetType::Local,
-                    );
-                }
-            }
+            // Pkt::StatusEffectDurationNotify => {
+            //     if let Some(pkt) = parse_pkt(
+            //         &data,
+            //         PKTStatusEffectDurationNotify::new,
+            //         "PKTStatusEffectDurationNotify",
+            //     ) {
+            //         status_tracker.borrow_mut().update_status_duration(
+            //             pkt.effect_instance_id,
+            //             pkt.target_id,
+            //             pkt.expiration_tick,
+            //             StatusEffectTargetType::Local,
+            //         );
+            //     }
+            // }
             Pkt::StatusEffectRemoveNotify => {
                 if let Some(pkt) = parse_pkt(
                     &data,
@@ -796,7 +796,7 @@ pub fn start(
                     let (is_shield, shields_broken, left_workshop) =
                         status_tracker.borrow_mut().remove_status_effects(
                             pkt.object_id,
-                            pkt.status_effect_ids,
+                            pkt.status_effect_instance_ids,
                             pkt.reason,
                             StatusEffectTargetType::Local,
                         );
@@ -840,7 +840,7 @@ pub fn start(
                 if let Some(pkt) =
                     parse_pkt(&data, PKTTriggerStartNotify::new, "PKTTriggerStartNotify")
                 {
-                    match pkt.trigger_signal_type {
+                    match pkt.signal {
                         57 | 59 | 61 | 63 | 74 | 76 => {
                             party_freeze = true;
                             state.party_info = if let Some(party) = party_cache.take() {
@@ -934,7 +934,7 @@ pub fn start(
                 ) {
                     let (status_effect, old_value) =
                         status_tracker.borrow_mut().sync_status_effect(
-                            pkt.effect_instance_id,
+                            pkt.status_effect_instance_id,
                             pkt.character_id,
                             pkt.object_id,
                             pkt.value,
@@ -969,7 +969,7 @@ pub fn start(
                             let val = get_status_effect_value(&se.value);
                             let (status_effect, old_value) =
                                 status_tracker.borrow_mut().sync_status_effect(
-                                    se.effect_instance_id,
+                                    se.status_effect_instance_id,
                                     pkt.character_id,
                                     object_id,
                                     val,

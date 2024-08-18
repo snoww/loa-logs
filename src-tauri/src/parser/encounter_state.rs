@@ -1,7 +1,7 @@
 use chrono::Utc;
 use hashbrown::HashMap;
 use log::{info, warn};
-use meter_core::packets::definitions::{PKTIdentityGaugeChangeNotify, PKTParalyzationStateNotify};
+use meter_core::packets::definitions::{PKTIdentityGaugeChangeNotify};
 use moka::sync::Cache;
 use rsntp::SntpClient;
 use rusqlite::Connection;
@@ -1595,51 +1595,51 @@ impl EncounterState {
         }
     }
 
-    pub fn on_stagger_change(&mut self, pkt: &PKTParalyzationStateNotify) {
-        if self.encounter.current_boss_name.is_empty() || self.encounter.fight_start == 0 {
-            return;
-        }
+    // pub fn on_stagger_change(&mut self, pkt: &PKTParalyzationStateNotify) {
+    //     if self.encounter.current_boss_name.is_empty() || self.encounter.fight_start == 0 {
+    //         return;
+    //     }
 
-        if let Some(boss) = self
-            .encounter
-            .entities
-            .get_mut(&self.encounter.current_boss_name)
-        {
-            let timestamp = Utc::now().timestamp_millis();
-            let current_stagger = pkt.paralyzation_point as i32;
-            let max_stagger = pkt.paralyzation_max_point as i32;
-            if boss.id == pkt.object_id {
-                if current_stagger == max_stagger {
-                    let staggered_in =
-                        (timestamp - self.encounter.encounter_damage_stats.stagger_start) / 1000;
-                    self.stagger_intervals
-                        .push((staggered_in as i32, max_stagger))
-                } else if current_stagger != 0 && self.prev_stagger == 0 {
-                    self.encounter.encounter_damage_stats.stagger_start = timestamp;
-                }
+    //     if let Some(boss) = self
+    //         .encounter
+    //         .entities
+    //         .get_mut(&self.encounter.current_boss_name)
+    //     {
+    //         let timestamp = Utc::now().timestamp_millis();
+    //         let current_stagger = pkt.paralyzation_point as i32;
+    //         let max_stagger = pkt.paralyzation_max_point as i32;
+    //         if boss.id == pkt.object_id {
+    //             if current_stagger == max_stagger {
+    //                 let staggered_in =
+    //                     (timestamp - self.encounter.encounter_damage_stats.stagger_start) / 1000;
+    //                 self.stagger_intervals
+    //                     .push((staggered_in as i32, max_stagger))
+    //             } else if current_stagger != 0 && self.prev_stagger == 0 {
+    //                 self.encounter.encounter_damage_stats.stagger_start = timestamp;
+    //             }
 
-                self.prev_stagger = current_stagger;
+    //             self.prev_stagger = current_stagger;
 
-                let relative_timestamp_s = ((timestamp - self.encounter.fight_start) / 1000) as i32;
-                let stagger_percent = (1.0 - (current_stagger as f32 / max_stagger as f32)) * 100.0;
-                if let Some(last) = self.stagger_log.last_mut() {
-                    if last.0 == relative_timestamp_s {
-                        last.1 = stagger_percent;
-                    } else {
-                        self.stagger_log
-                            .push((relative_timestamp_s, stagger_percent));
-                    }
-                } else {
-                    self.stagger_log
-                        .push((relative_timestamp_s, stagger_percent));
-                }
+    //             let relative_timestamp_s = ((timestamp - self.encounter.fight_start) / 1000) as i32;
+    //             let stagger_percent = (1.0 - (current_stagger as f32 / max_stagger as f32)) * 100.0;
+    //             if let Some(last) = self.stagger_log.last_mut() {
+    //                 if last.0 == relative_timestamp_s {
+    //                     last.1 = stagger_percent;
+    //                 } else {
+    //                     self.stagger_log
+    //                         .push((relative_timestamp_s, stagger_percent));
+    //                 }
+    //             } else {
+    //                 self.stagger_log
+    //                     .push((relative_timestamp_s, stagger_percent));
+    //             }
 
-                if max_stagger > self.encounter.encounter_damage_stats.max_stagger {
-                    self.encounter.encounter_damage_stats.max_stagger = max_stagger;
-                }
-            }
-        }
-    }
+    //             if max_stagger > self.encounter.encounter_damage_stats.max_stagger {
+    //                 self.encounter.encounter_damage_stats.max_stagger = max_stagger;
+    //             }
+    //         }
+    //     }
+    // }
 
     pub fn on_boss_shield(&mut self, target_entity: &Entity, shield: u64) {
         if target_entity.entity_type == EntityType::BOSS

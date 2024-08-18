@@ -394,7 +394,7 @@ pub fn build_status_effect(
                             }
                         }
                     }
-                    
+
                     if last_skill > 0 {
                         custom_id = get_new_id(last_skill);
                     }
@@ -413,7 +413,7 @@ pub fn build_status_effect(
     };
 
     StatusEffectDetails {
-        instance_id: se_data.effect_instance_id,
+        instance_id: se_data.status_effect_instance_id,
         source_id,
         target_id,
         status_effect_id: se_data.status_effect_id,
@@ -442,10 +442,6 @@ pub fn get_status_effect_value(value: &Option<Vec<u8>>) -> u64 {
         let c2 = v
             .get(8..16)
             .map_or(0, |bytes| u64::from_le_bytes(bytes.try_into().unwrap()));
-
-        // if c1 != c2 {
-        //     warn!("status effect value mismatch: {:?} != {:?}, {:?}", c1, c2, v);
-        // }
         c1.min(c2)
     })
 }
