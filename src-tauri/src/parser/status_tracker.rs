@@ -388,6 +388,17 @@ pub fn build_status_effect(
                     let mut last_skill = 0_u32;
                     for source_skill in source_skills {
                         if let Some(skill) = source_entity.skills.get(source_skill) {
+                            // hard code check for stigma brand tripod
+                            // maybe set up a map of tripods for other skills in future idk??
+                            if skill.id == 21090 {
+                                if let Some(tripods) = skill.tripod_index {
+                                    if tripods.second != 2 {
+                                        continue;
+                                    }
+                                } else { 
+                                    continue;
+                                }
+                            }
                             if skill.last_timestamp > last_time {
                                 last_skill = *source_skill;
                                 last_time = skill.last_timestamp;
