@@ -138,128 +138,132 @@
                     {skill.name} #{$focusedSkillCast.cast + 1}
                 </div>
             </div>
-            <div class="py-2">
-                Total Damage: <span class="font-semibold" use:tooltip={{ content: totalDamage.toLocaleString() }}
-                    >{abbreviateNumber(totalDamage)}</span>
-            </div>
-            <div>
-                Crit: <span class="font-semibold">{round((modInfo.crit / skillCast.hits.length) * 100)}%</span>
-                | CDMG:
-                <span class="font-semibold"
-                    >{round(totalDamage !== 0 ? (modInfo.critDamage / totalDamage) * 100 : 0)}%</span>
-                {#if modInfo.ba > 0}
-                    | BA: <span class="font-semibold">{round((modInfo.ba / skillCast.hits.length) * 100)}%</span>
-                {/if}
-                {#if modInfo.fa > 0}
-                    | FA: <span class="font-semibold">{round((modInfo.fa / skillCast.hits.length) * 100)}%</span>
-                {/if}
-            </div>
-            <div class="">
-                Buff: <span class="font-semibold"
-                    >{round(totalDamage !== 0 ? (supportBuffs.buff / totalDamage) * 100 : 0)}%</span>
-                | Brand:
-                <span class="font-semibold"
-                    >{round(totalDamage !== 0 ? (supportBuffs.brand / totalDamage) * 100 : 0)}%</span>
-                | Identity:
-                <span class="font-semibold"
-                    >{round(totalDamage !== 0 ? (supportBuffs.identity / totalDamage) * 100 : 0)}%</span>
-            </div>
-            <table class="mt-2 w-[60rem] table-fixed">
-                <thead>
-                    <tr>
-                        <td class="w-12 font-semibold" use:tooltip={{ content: "Each damage tick" }}>Hits</td>
-                        <td class="w-16 font-semibold" use:tooltip={{ content: "Time since previous damage tick" }}
-                            >Ticks</td>
-                        <td class="w-12 font-semibold" use:tooltip={{ content: "Hit modifiers, e.g. Crit, BA, FA" }}
-                            >Mods</td>
-                        <td class="w-16 font-semibold" use:tooltip={{ content: "Hit damage" }}>DMG</td>
-                        <td class="w-full font-semibold">
-                            <span use:tooltip={{ content: "Party Buffs" }}>
-                                <button
-                                    class={$buffType === "party" ? "text-accent-500" : "hover:text-accent-500"}
-                                    on:click={() => {
-                                        $buffType = "party";
-                                    }}>
-                                    Party
-                                </button>
-                            </span>
-                            |
-                            <span use:tooltip={{ content: "Self Buffs, including Relic Sets" }}>
-                                <button
-                                    class={$buffType === "self" ? "text-accent-500" : "hover:text-accent-500"}
-                                    on:click={() => {
-                                        $buffType = "self";
-                                    }}>
-                                    Self
-                                </button>
-                            </span>
-                            |
-                            <span use:tooltip={{ content: "All other buffs, e.g. Darks, Atros, etc." }}>
-                                <button
-                                    class={$buffType === "misc" ? "text-accent-500" : "hover:text-accent-500"}
-                                    on:click={() => {
-                                        $buffType = "misc";
-                                    }}>
-                                    Misc.
-                                </button>
-                            </span>
-                            Buffs
-                        </td>
-                    </tr>
-                </thead>
-                <tbody>
-                    {#each skillCast.hits as hit, i (i)}
+            {#if skillCast.hits.length === 0}
+                <div class="py-2">No Hits</div>
+            {:else}
+                <div class="py-2">
+                    Total Damage: <span class="font-semibold" use:tooltip={{ content: totalDamage.toLocaleString() }}
+                        >{abbreviateNumber(totalDamage)}</span>
+                </div>
+                <div>
+                    Crit: <span class="font-semibold">{round((modInfo.crit / skillCast.hits.length) * 100)}%</span>
+                    | CDMG:
+                    <span class="font-semibold"
+                        >{round(totalDamage !== 0 ? (modInfo.critDamage / totalDamage) * 100 : 0)}%</span>
+                    {#if modInfo.ba > 0}
+                        | BA: <span class="font-semibold">{round((modInfo.ba / skillCast.hits.length) * 100)}%</span>
+                    {/if}
+                    {#if modInfo.fa > 0}
+                        | FA: <span class="font-semibold">{round((modInfo.fa / skillCast.hits.length) * 100)}%</span>
+                    {/if}
+                </div>
+                <div class="">
+                    Buff: <span class="font-semibold"
+                        >{round(totalDamage !== 0 ? (supportBuffs.buff / totalDamage) * 100 : 0)}%</span>
+                    | Brand:
+                    <span class="font-semibold"
+                        >{round(totalDamage !== 0 ? (supportBuffs.brand / totalDamage) * 100 : 0)}%</span>
+                    | Identity:
+                    <span class="font-semibold"
+                        >{round(totalDamage !== 0 ? (supportBuffs.identity / totalDamage) * 100 : 0)}%</span>
+                </div>
+                <table class="mt-2 w-[60rem] table-fixed">
+                    <thead>
                         <tr>
-                            <td class="h-7 font-mono">#{i + 1}</td>
-                            {#if i === 0}
-                                <td class="font-mono">
-                                    <span use:tooltip={{ content: `${formatDurationFromMs(hit.timestamp)}s` }}>
-                                        +{round((hit.timestamp - skillCast.timestamp) / 1000)}s
-                                    </span>
-                                </td>
-                            {:else}
-                                <td class="font-mono">
-                                    <span use:tooltip={{ content: `${formatDurationFromMs(hit.timestamp)}s` }}>
-                                        +{round((hit.timestamp - skillCast.hits[i - 1].timestamp) / 1000)}s
-                                    </span>
-                                </td>
-                            {/if}
-                            <td class="font-mono">
-                                {#if hit.crit}
-                                    <span use:tooltip={{ content: "Critical Hit" }}>C</span>
-                                {/if}
-                                {#if hit.backAttack}
-                                    <span use:tooltip={{ content: "Back Attack" }}>B</span>
-                                {/if}
-                                {#if hit.frontAttack}
-                                    <span use:tooltip={{ content: "Front Attack" }}>F</span>
-                                {/if}
-                                {#if !hit.crit && !hit.backAttack && !hit.frontAttack}
-                                    -
-                                {/if}
-                            </td>
-                            <td class="font-mono">
-                                <span use:tooltip={{ content: hit.damage.toLocaleString() }}>
-                                    {abbreviateNumber(hit.damage)}
+                            <td class="w-12 font-semibold" use:tooltip={{ content: "Each damage tick" }}>Hits</td>
+                            <td class="w-16 font-semibold" use:tooltip={{ content: "Time since previous damage tick" }}
+                                >Ticks</td>
+                            <td class="w-12 font-semibold" use:tooltip={{ content: "Hit modifiers, e.g. Crit, BA, FA" }}
+                                >Mods</td>
+                            <td class="w-16 font-semibold" use:tooltip={{ content: "Hit damage" }}>DMG</td>
+                            <td class="w-full font-semibold">
+                                <span use:tooltip={{ content: "Party Buffs" }}>
+                                    <button
+                                        class={$buffType === "party" ? "text-accent-500" : "hover:text-accent-500"}
+                                        on:click={() => {
+                                            $buffType = "party";
+                                        }}>
+                                        Party
+                                    </button>
                                 </span>
-                            </td>
-                            <td>
-                                <div class="flex">
-                                    {#if allGroupedBuffs[i].size > 0}
-                                        {#each allGroupedBuffs[i] as [_, groupedBuffs]}
-                                            {#each groupedBuffs as buff}
-                                                <BuffTooltip synergy={buff.statusEffect} size={"size-6"} />
-                                            {/each}
-                                        {/each}
-                                    {:else}
-                                        -
-                                    {/if}
-                                </div>
+                                |
+                                <span use:tooltip={{ content: "Self Buffs, including Relic Sets" }}>
+                                    <button
+                                        class={$buffType === "self" ? "text-accent-500" : "hover:text-accent-500"}
+                                        on:click={() => {
+                                            $buffType = "self";
+                                        }}>
+                                        Self
+                                    </button>
+                                </span>
+                                |
+                                <span use:tooltip={{ content: "All other buffs, e.g. Darks, Atros, etc." }}>
+                                    <button
+                                        class={$buffType === "misc" ? "text-accent-500" : "hover:text-accent-500"}
+                                        on:click={() => {
+                                            $buffType = "misc";
+                                        }}>
+                                        Misc.
+                                    </button>
+                                </span>
+                                Buffs
                             </td>
                         </tr>
-                    {/each}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        {#each skillCast.hits as hit, i (i)}
+                            <tr>
+                                <td class="h-7 font-mono">#{i + 1}</td>
+                                {#if i === 0}
+                                    <td class="font-mono">
+                                        <span use:tooltip={{ content: `${formatDurationFromMs(hit.timestamp)}s` }}>
+                                            +{round((hit.timestamp - skillCast.timestamp) / 1000)}s
+                                        </span>
+                                    </td>
+                                {:else}
+                                    <td class="font-mono">
+                                        <span use:tooltip={{ content: `${formatDurationFromMs(hit.timestamp)}s` }}>
+                                            +{round((hit.timestamp - skillCast.hits[i - 1].timestamp) / 1000)}s
+                                        </span>
+                                    </td>
+                                {/if}
+                                <td class="font-mono">
+                                    {#if hit.crit}
+                                        <span use:tooltip={{ content: "Critical Hit" }}>C</span>
+                                    {/if}
+                                    {#if hit.backAttack}
+                                        <span use:tooltip={{ content: "Back Attack" }}>B</span>
+                                    {/if}
+                                    {#if hit.frontAttack}
+                                        <span use:tooltip={{ content: "Front Attack" }}>F</span>
+                                    {/if}
+                                    {#if !hit.crit && !hit.backAttack && !hit.frontAttack}
+                                        -
+                                    {/if}
+                                </td>
+                                <td class="font-mono">
+                                    <span use:tooltip={{ content: hit.damage.toLocaleString() }}>
+                                        {abbreviateNumber(hit.damage)}
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="flex">
+                                        {#if allGroupedBuffs[i].size > 0}
+                                            {#each allGroupedBuffs[i] as [_, groupedBuffs]}
+                                                {#each groupedBuffs as buff}
+                                                    <BuffTooltip synergy={buff.statusEffect} size={"size-6"} />
+                                                {/each}
+                                            {/each}
+                                        {:else}
+                                            -
+                                        {/if}
+                                    </div>
+                                </td>
+                            </tr>
+                        {/each}
+                    </tbody>
+                </table>
+            {/if}
         </div>
     {/if}
 </div>

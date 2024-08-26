@@ -108,9 +108,7 @@ impl SkillTracker {
     pub fn get_cast_log(&mut self) -> HashMap<u64, HashMap<u32, BTreeMap<i64, SkillCast>>> {
         let mut cast_log: HashMap<u64, HashMap<u32, BTreeMap<i64, SkillCast>>> = HashMap::new();
         for ((entity_id, skill_id, timestamp), cast) in self.skills.iter() {
-            if cast.hits.is_empty() {
-                continue;
-            }
+            
             cast_log
                 .entry(*entity_id)
                 .or_default()

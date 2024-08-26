@@ -465,7 +465,9 @@ export function getSkillLogChart(
                         output += `<img class="size-5 rounded-sm" src='${skillIconPath + getSkillIcon(param.value[3])}' alt='${param.seriesName}' />`;
                         output += `<div class='font-semibold'>${param.seriesName}</div>`;
                         output += "</div>";
-                        output += skillCastBreakdownTooltip(param.value[2], encounterDamageStats, skillIconPath);
+                        if (param.value[2].hits.length > 0) {
+                            output += skillCastBreakdownTooltip(param.value[2], encounterDamageStats, skillIconPath);
+                        }
                         output += "</div>";
                         output += "</div>";
                         return output;
@@ -478,7 +480,12 @@ export function getSkillLogChart(
     };
 }
 
-export function getSkillLogChartOld(player: Entity, skillIconPath: string, lastCombatPacket: number, fightStart: number) {
+export function getSkillLogChartOld(
+    player: Entity,
+    skillIconPath: string,
+    lastCombatPacket: number,
+    fightStart: number
+) {
     const sortedSkills = Object.values(player.skills)
         .filter((skill) => skill.castLog.length > 0)
         .sort((a, b) => a.totalDamage - b.totalDamage);
