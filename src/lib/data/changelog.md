@@ -1,12 +1,20 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.14.2
+    v1.15.0
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
   </div>
 </div>
 
+#### NEW FEATURES
+- update meter for august patch
+
+#### BUG FIXES AND IMPROVEMENTS
+- attempt to fix meter crashing when windows language is set to certain locales
+- attempt to fix stigma being counted as a brand when brand tripod not selected
+
+### v1.14.2
 #### BUG FIXES AND IMPROVEMENTS
 - fix bard harp branding not tracking in certain gates
 
