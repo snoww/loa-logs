@@ -1,11 +1,11 @@
 {
-    "version": "v1.15.0",
-    "notes": "### v1.15.0\n#### NEW FEATURES\n- update meter for august patch\n\n#### BUG FIXES AND IMPROVEMENTS\n- attempt to fix meter crashing when windows language is set to certain locales\n- attempt to fix stigma being counted as a brand when brand tripod not selected\n\nfull patch notes on [github](https://github.com/snoww/loa-logs/releases/latest)\n\nsend bug reports/suggestions to [ramen shop server](https://discord.gg/RXvTMV2YHu)",
-    "pub_date": "2024-08-28T22:41:09.926Z",
+    "version": "v1.16.0",
+    "notes": "### v1.16.0\n#### NEW FEATURES\n- update meter for behemoth patch\n\nfull patch notes on [github](https://github.com/snoww/loa-logs/releases/latest)\n\nsend bug reports/suggestions to [ramen shop server](https://discord.gg/RXvTMV2YHu)",
+    "pub_date": "2024-09-11T22:10:09.678Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.15.0/LOA.Logs_1.15.0_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmRoWDZ0cXNyYjNnZTRjN3ZoMWlsQWcyWWlrMTJoYVBUVXlmVFF6dkdqL09qaWJWbjMrN3hpYUZQNjdOVjhlTlBEOTRZa0xwQkZ1TGF6YnJqcmYrVVFBPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzI0ODg0OTQ3CWZpbGU6TE9BIExvZ3NfMS4xNS4wX3g2NC1zZXR1cC5uc2lzLnppcApaTjd4NDhwREhXdkg5MlYzUk9HZ3BYZ29WWWw1eVBWUXVkVnIweVEyWjBKb1RicU9mRHdaVjRVSXBtSU1UMjRZM1lwM3Vwd3ZpTk84SjZ1bWhzNVdDdz09Cg=="
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.16.0/LOA.Logs_1.16.0_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmNraTd5VVo1UFhIanBROUxod1FqeG9QSm80VmZaTDRPV2JmVW01OWRiTUhKV3hDSHB0cDVnL3grejZLNjRJV2ljNmxGMm5QRGUzTGJoSDc4UUFZelFRPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzI2MDkyNTYzCWZpbGU6TE9BIExvZ3NfMS4xNi4wX3g2NC1zZXR1cC5uc2lzLnppcApCRk1BTVJPemVXRmgwOFlpU1JUdzcvbEJ5QTVNc1NFN2VmWDQrV2dkcmlacjFwelhFanp3TzVxbFhFaWo3N0FRNDhhd3NzZVZzTHBRQVlRRFptdDVDQT09Cg=="
         }
     }
 }
