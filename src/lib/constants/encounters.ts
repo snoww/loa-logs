@@ -62,11 +62,11 @@ export const encounterMap: { [key: string]: { [key: string]: Array<string> } } =
             "Alcaone, the Twisted Venom",
             "Agris, the Devouring Bog"
         ]
+    },
+    Behemoth: {
+        "Behemoth G1": ["Behemoth, the Storm Commander", "Despicable Skolakia", "Untrue Crimson Yoho", "Ruthless Lakadroff", "Vicious Argeos"],
+        "Behemoth G2": ["Behemoth, the Whirling Wings of Chaos"]
     }
-    // Behemoth: {
-    //     "Behemoth G1": ["Behemoth, the Whirling Wings of Chaos"],
-    //     "Behemoth G2": ["Behemoth, the Whirling Wings of Chaos"]
-    // }
 };
 
 export const difficultyMap: Array<string> = ["Normal", "Hard", "Inferno", "Challenge", "Solo", "Trial", "Extreme", "The First"];

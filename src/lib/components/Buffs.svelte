@@ -72,6 +72,10 @@
                     localPlayerInP1 = encounterPartyInfo[0].some((player) => player === localPlayer);
                 }
 
+                if (Object.keys(encounterPartyInfo).length < 3) {
+                    localPlayerInP1 = true;
+                }
+
                 parties = partyBuffsObj.parties;
                 partyGroupedSynergies = [...partyBuffsObj.partyGroupedSynergies];
                 partyPercentages = partyBuffsObj.partyPercentages;

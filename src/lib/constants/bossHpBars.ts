@@ -49,5 +49,6 @@ export const bossHpMap: BossMap = {
     "Covetous Master Echidna": 285,
     "Alcaone, the Twisted Venom": 86,
     "Agris, the Devouring Bog": 103,
-    "Behemoth, the Whirling Wings of Chaos": 500
+    "Behemoth, the Storm Commander": 500,
+    "Behemoth, Cruel Storm Slayer": 705
 };
