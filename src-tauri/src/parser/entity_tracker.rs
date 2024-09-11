@@ -664,17 +664,18 @@ fn get_npc_entity_type_name_grade(npc: &NpcStruct, max_hp: i64) -> (EntityType, 
     }
 
     if let Some((_, npc_info)) = NPC_DATA.get_key_value(&npc.type_id) {
+        let npc_name = npc_info.name.clone().unwrap_or_default();
         if (npc_info.grade == "boss"
             || npc_info.grade == "raid"
             || npc_info.grade == "epic_raid"
             || npc_info.grade == "commander")
             && max_hp > 10_000
-            && !npc_info.name.contains('_')
-            && npc_info.name.chars().all(|c| c.is_ascii())
+            && !npc_name.contains('_')
+            && npc_name.chars().all(|c| c.is_ascii())
         {
-            (BOSS, npc_info.name.clone(), npc_info.grade.clone())
+            (BOSS, npc_name.clone(), npc_info.grade.clone())
         } else {
-            (NPC, npc_info.name.clone(), npc_info.grade.clone())
+            (NPC, npc_name.clone(), npc_info.grade.clone())
         }
     } else {
         (NPC, format!("{:x}", npc.object_id), "none".to_string())

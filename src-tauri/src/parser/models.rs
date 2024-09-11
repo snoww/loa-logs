@@ -404,7 +404,7 @@ impl BossHpLog {
 #[derive(Debug, Default, Deserialize, Clone)]
 pub struct Npc {
     pub id: i32,
-    pub name: String,
+    pub name: Option<String>,
     pub grade: String,
     #[serde(rename = "type")]
     pub npc_type: String,
@@ -464,40 +464,34 @@ pub struct SkillEffectData {
 #[serde(rename_all = "camelCase")]
 pub struct SkillBuffData {
     pub id: i32,
-    pub name: String,
-    pub desc: String,
-    pub icon: String,
-    #[serde(rename(deserialize = "iconshowtype"))]
+    pub name: Option<String>,
+    pub desc: Option<String>,
+    pub icon: Option<String>,
     pub icon_show_type: String,
     pub duration: i32,
     // buff | debuff
     pub category: String,
     #[serde(rename(deserialize = "type"))]
     pub buff_type: String,
-    #[serde(rename(deserialize = "statuseffectvalues"))]
     pub status_effect_values: Option<Vec<i32>>,
-    #[serde(rename(deserialize = "buffcategory"))]
     pub buff_category: String,
     pub target: String,
-    #[serde(rename(deserialize = "uniquegroup"))]
     pub unique_group: u32,
-    #[serde(rename(deserialize = "overlapflag"))]
+    #[serde(rename(deserialize = "overlap"))]
     pub overlap_flag: i32,
-    #[serde(skip_serializing, rename(deserialize = "passiveoption"))]
+    #[serde(skip_serializing, rename(deserialize = "passiveOptions"))]
     pub passive_option: Vec<PassiveOption>,
-    #[serde(rename(deserialize = "sourceskill"))]
+    #[serde(rename(deserialize = "sourceSkills"))]
     pub source_skill: Option<Vec<u32>>,
-    #[serde(rename(deserialize = "setname"))]
     pub set_name: Option<String>,
 }
 
 #[derive(Debug, Default, Deserialize, Clone)]
+#[serde(rename_all = "camelCase")]
 pub struct PassiveOption {
     #[serde(rename(deserialize = "type"))]
     pub option_type: String,
-    #[serde(rename(deserialize = "keystat"))]
     pub key_stat: String,
-    #[serde(rename(deserialize = "keyindex"))]
     pub key_index: i32,
     pub value: i32,
 }
@@ -602,8 +596,8 @@ pub struct SkillFeatureOption {
 }
 
 #[derive(Debug, Default, Deserialize, Clone)]
+#[serde(rename_all = "camelCase")]
 pub struct ItemSet {
-    #[serde(rename(deserialize = "itemids"))]
     pub item_ids: Vec<u32>,
     pub value: HashMap<u8, ItemSetDetails>,
 }
