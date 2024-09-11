@@ -11,6 +11,7 @@
 - update meter for behemoth patch
 
 #### BUG FIXES AND IMPROVEMENTS
+- fix meter crashes
 - fix behemoth g2 not being labeled correctly
 
 ### v1.15.0
