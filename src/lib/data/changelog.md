@@ -1,6 +1,6 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.16.0
+    v1.16.1
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
@@ -9,6 +9,9 @@
 
 #### NEW FEATURES
 - update meter for behemoth patch
+
+#### BUG FIXES AND IMPROVEMENTS
+- fix behemoth g2 not being labeled correctly
 
 ### v1.15.0
 #### NEW FEATURES

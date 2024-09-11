@@ -1,11 +1,11 @@
 {
-    "version": "v1.16.0",
-    "notes": "### v1.16.0\n#### NEW FEATURES\n- update meter for behemoth patch\n\nfull patch notes on [github](https://github.com/snoww/loa-logs/releases/latest)\n\nsend bug reports/suggestions to [ramen shop server](https://discord.gg/RXvTMV2YHu)",
+    "version": "v1.16.1",
+    "notes": "### v1.16.1\n#### NEW FEATURES\n- update meter for behemoth patch\n\n#### BUG FIXES AND IMPROVEMENTS\n- fix behemoth g2 not being labeled correctly\n\nfull patch notes on [github](https://github.com/snoww/loa-logs/releases/latest)\n\nsend bug reports/suggestions to [ramen shop server](https://discord.gg/RXvTMV2YHu)",
     "pub_date": "2024-09-11T22:10:09.678Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.16.0/LOA.Logs_1.16.0_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmNraTd5VVo1UFhIanBROUxod1FqeG9QSm80VmZaTDRPV2JmVW01OWRiTUhKV3hDSHB0cDVnL3grejZLNjRJV2ljNmxGMm5QRGUzTGJoSDc4UUFZelFRPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzI2MDkyNTYzCWZpbGU6TE9BIExvZ3NfMS4xNi4wX3g2NC1zZXR1cC5uc2lzLnppcApCRk1BTVJPemVXRmgwOFlpU1JUdzcvbEJ5QTVNc1NFN2VmWDQrV2dkcmlacjFwelhFanp3TzVxbFhFaWo3N0FRNDhhd3NzZVZzTHBRQVlRRFptdDVDQT09Cg=="
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.16.1/LOA.Logs_1.16.1_x64-setup.nsis.zip",
+            "signature": ""
         }
     }
 }
