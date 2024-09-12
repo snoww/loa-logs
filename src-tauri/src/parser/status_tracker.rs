@@ -362,7 +362,7 @@ pub fn build_status_effect(
     let mut db_target_type = "".to_string();
     let mut custom_id = 0;
     if let Some(effect) = SKILL_BUFF_DATA.get(&se_data.status_effect_id) {
-        name = effect.name.clone().unwrap_or_default();
+        name = effect.name.to_string();
         if effect.category.as_str() == "debuff" {
             status_effect_category = Debuff
         }

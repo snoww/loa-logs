@@ -84,9 +84,9 @@ pub fn get_status_effect_data(buff_id: u32, source_skill: Option<u32>) -> Option
         buff_type: get_status_effect_buff_type_flags(buff),
         unique_group: buff.unique_group,
         source: StatusEffectSource {
-            name: buff.name.clone().unwrap_or_default(),
-            desc: buff.desc.clone().unwrap_or_default(),
-            icon: buff.icon.clone().unwrap_or_default(),
+            name: buff.name.clone(),
+            desc: buff.desc.clone(),
+            icon: buff.icon.clone(),
             ..Default::default()
         },
     };

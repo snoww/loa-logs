@@ -72,7 +72,7 @@
                     localPlayerInP1 = encounterPartyInfo[0].some((player) => player === localPlayer);
                 }
 
-                if (Object.keys(encounterPartyInfo).length < 3) {
+                if (Object.keys(encounterPartyInfo).length > 2) {
                     localPlayerInP1 = true;
                 }
 
