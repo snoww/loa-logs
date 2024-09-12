@@ -1,11 +1,11 @@
 {
-    "version": "v1.16.1",
-    "notes": "### v1.16.1\n#### NEW FEATURES\n- update meter for behemoth patch\n\n#### BUG FIXES AND IMPROVEMENTS\n- fix meter crashes\n- fix behemoth g2 not being labeled correctly\n\nfull patch notes on [github](https://github.com/snoww/loa-logs/releases/latest)\n\nsend bug reports/suggestions to [ramen shop server](https://discord.gg/RXvTMV2YHu)",
-    "pub_date": "2024-09-11T22:55:24.732Z",
+    "version": "v1.16.2",
+    "notes": "### v1.16.2\n#### BUG FIXES AND IMPROVEMENTS\n- fixed artist sunsketch buff\n\nfull patch notes on [github](https://github.com/snoww/loa-logs/releases/latest)\n\nsend bug reports/suggestions to [ramen shop server](https://discord.gg/RXvTMV2YHu)",
+    "pub_date": "2024-09-12T00:08:03.656Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.16.1/LOA.Logs_1.16.1_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlY5Vlc3OHZyTkV0Mm5rdXdHTDQ4SkdOZ0xlVFZ3TFMwMmw1cFJYaWZRZmdjQmdTbXNHSGQrSXNuT3pKVjlVUjZ3N3JHYmtta2hldmJRcjFTaW9Qc2dRPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzI2MDk1NDA4CWZpbGU6TE9BIExvZ3NfMS4xNi4xX3g2NC1zZXR1cC5uc2lzLnppcAp4TENaUEZPcEoxRmFhc1VyL1JtL2Yza1pUc3BpazU2SDJyNXYyT1Z0K3N1N1YxcTJqTjBVQVdtWmcvZ1pwQzFJMkJmM29YQW9wNi9qUUdETXVhd0lDdz09Cg=="
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.16.2/LOA.Logs_1.16.2_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlF3UnB5OXlQMDluakdGOENoV29JTk5wMUgxTTlRZXFHc2g0aUJkOHRNbUxTNnFZY0dXTUU2dE1Gd2lIRC9oS1IvNUxOVzZrb1Y3OTY5TmdKR3Q2ZlFJPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzI2MDk5Njk4CWZpbGU6TE9BIExvZ3NfMS4xNi4yX3g2NC1zZXR1cC5uc2lzLnppcAp4SHhweDI2T0hkZk41MWpSVHp5aXd0RGwxNlY5ZnRheFJ6bHh3M1JQd1M0L2JzR2NuWmk0R2d6bWpCbkNYN2hmV1lCZWhHZHcyNXAyN3pUcGJabTVCdz09Cg=="
         }
     }
 }
