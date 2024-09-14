@@ -1,11 +1,11 @@
 {
-    "version": "v1.16.2",
-    "notes": "### v1.16.2\n#### BUG FIXES AND IMPROVEMENTS\n- fixed artist sunsketch buff\n\nfull patch notes on [github](https://github.com/snoww/loa-logs/releases/latest)\n\nsend bug reports/suggestions to [ramen shop server](https://discord.gg/RXvTMV2YHu)",
-    "pub_date": "2024-09-12T00:08:03.656Z",
+    "version": "v1.16.3",
+    "notes": "### v1.16.3\n#### NEW FEATURES\n- added party split damage option for logs only (settings > logs > split party damage: default ON)\n\n#### BUG FIXES AND IMPROVEMENTS\n- fix add in akkan raid counting as boss\n\nfull patch notes on [github](https://github.com/snoww/loa-logs/releases/latest)\n\nsend bug reports/suggestions to [ramen shop server](https://discord.gg/RXvTMV2YHu)",
+    "pub_date": "2024-09-14T00:58:56.875Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.16.2/LOA.Logs_1.16.2_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlF3UnB5OXlQMDluakdGOENoV29JTk5wMUgxTTlRZXFHc2g0aUJkOHRNbUxTNnFZY0dXTUU2dE1Gd2lIRC9oS1IvNUxOVzZrb1Y3OTY5TmdKR3Q2ZlFJPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzI2MDk5Njk4CWZpbGU6TE9BIExvZ3NfMS4xNi4yX3g2NC1zZXR1cC5uc2lzLnppcAp4SHhweDI2T0hkZk41MWpSVHp5aXd0RGwxNlY5ZnRheFJ6bHh3M1JQd1M0L2JzR2NuWmk0R2d6bWpCbkNYN2hmV1lCZWhHZHcyNXAyN3pUcGJabTVCdz09Cg=="
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.16.3/LOA.Logs_1.16.3_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlpNdVQwMmErSGFHdVA5ZmZVVE9KVWtrS3pKMWgvM2NJZ1lWaFBnSEpGcFJrR1g2OC8vNW16UUJsUUFxekFmMTUxM0J5a01iOGZ2dC9yVjEyU0JFMlFVPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzI2Mjc1ODA0CWZpbGU6TE9BIExvZ3NfMS4xNi4zX3g2NC1zZXR1cC5uc2lzLnppcApjdmpzelVVZkFwMGRXU25PRDNycURud2tIRE1OaUxNU2EwQzFiTVZFeTR2TndNQlVJT092clBLU0twV1VRNCtGMDNoRUZhcXdhTW5qNFFYVjlVUTZCZz09Cg=="
         }
     }
 }
