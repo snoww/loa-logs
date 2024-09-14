@@ -128,6 +128,7 @@ export const defaultSettings = {
     },
     logs: {
         abbreviateHeader: false,
+        splitPartyDamage: true,
         splitPartyBuffs: true,
         damage: true,
         dps: true,

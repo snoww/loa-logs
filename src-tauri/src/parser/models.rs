@@ -753,6 +753,8 @@ pub struct Shortcut {
 pub struct LogTabs {
     pub abbreviate_header: bool,
     #[serde(default = "default_true")]
+    pub split_party_damage: bool,
+    #[serde(default = "default_true")]
     pub split_party_buffs: bool,
     pub damage: bool,
     pub dps: bool,

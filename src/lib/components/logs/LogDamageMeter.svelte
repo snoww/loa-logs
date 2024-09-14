@@ -1,5 +1,13 @@
 <script lang="ts">
-    import { MeterState, MeterTab, type Entity, type Encounter, ChartType, EntityType } from "$lib/types";
+    import {
+        MeterState,
+        MeterTab,
+        type Entity,
+        type Encounter,
+        ChartType,
+        EntityType,
+        type PartyInfo
+    } from "$lib/types";
     import { formatTimestampDate, millisToMinutesAndSeconds } from "$lib/utils/numbers";
     import { invoke } from "@tauri-apps/api/tauri";
     import LogDamageMeterRow from "./LogDamageMeterRow.svelte";
@@ -41,6 +49,9 @@
     import LogShields from "$lib/components/logs/LogShields.svelte";
     import Rdps from "$lib/components/shared/Rdps.svelte";
     import LogSkillChart from "./LogSkillChart.svelte";
+    import { keys } from "lodash-es";
+    import LogDamageMeterPartySplit from "./LogDamageMeterPartySplit.svelte";
+    import LogDamageMeterHeader from "./LogDamageMeterHeader.svelte";
 
     export let id: string;
     export let encounter: Encounter;
@@ -75,6 +86,8 @@
 
     let chartOptions: EChartsOptions = {};
 
+    let encounterPartyInfo: PartyInfo | undefined = undefined;
+
     $: {
         if (encounter) {
             if ($settings.general.showEsther) {
@@ -108,6 +121,7 @@
             anySupportBuff = players.some((player) => player.damageStats.buffedBySupport > 0);
             anySupportIdentity = players.some((player) => player.damageStats.buffedByIdentity > 0);
             anySupportBrand = players.some((player) => player.damageStats.debuffedBySupport > 0);
+            encounterPartyInfo = encounter.encounterDamageStats.misc?.partyInfo;
             if (
                 encounter.encounterDamageStats.misc?.rdpsValid === undefined ||
                 encounter.encounterDamageStats.misc?.rdpsValid
@@ -597,80 +611,34 @@
         <div class="px relative top-0 overflow-x-auto overflow-y-visible">
             {#if tab === MeterTab.DAMAGE}
                 {#if state === MeterState.PARTY}
-                    <table class="relative w-full table-fixed">
-                        <thead
-                            class="z-30 h-6"
-                            on:contextmenu|preventDefault={() => {
-                                console.log("titlebar clicked");
-                            }}>
-                            <tr class="bg-zinc-900">
-                                <th class="w-7 px-2 font-normal" />
-                                <th class="w-14 px-2 text-left font-normal" />
-                                <th class="w-full" />
-                                {#if anyDead && $settings.logs.deathTime}
-                                    <th class="w-16 font-normal" use:tooltip={{ content: "Dead for" }}>Dead for</th>
-                                {/if}
-                                {#if $settings.logs.damage}
-                                    <th class="w-14 font-normal" use:tooltip={{ content: "Damage Dealt" }}>DMG</th>
-                                {/if}
-                                {#if $settings.logs.dps}
-                                    <th class="w-14 font-normal" use:tooltip={{ content: "Damage per second" }}>DPS</th>
-                                {/if}
-                                {#if !isSolo && $settings.logs.damagePercent}
-                                    <th class="w-12 font-normal" use:tooltip={{ content: "Damage %" }}>D%</th>
-                                {/if}
-                                {#if $settings.logs.critRate}
-                                    <th class="w-12 font-normal" use:tooltip={{ content: "Crit %" }}>CRIT</th>
-                                {/if}
-                                {#if $settings.logs.critDmg}
-                                    <th class="w-12 font-normal" use:tooltip={{ content: "% Damage that Crit" }}
-                                        >CDMG
-                                    </th>
-                                {/if}
-                                {#if anyFrontAtk && $settings.logs.frontAtk}
-                                    <th class="w-12 font-normal" use:tooltip={{ content: "Front Attack %" }}>F.A</th>
-                                {/if}
-                                {#if anyBackAtk && $settings.logs.backAtk}
-                                    <th class="w-12 font-normal" use:tooltip={{ content: "Back Attack %" }}>B.A</th>
-                                {/if}
-                                {#if anySupportBuff && $settings.logs.percentBuffBySup}
-                                    <th class="w-12 font-normal" use:tooltip={{ content: "% Damage buffed by Support" }}
-                                        >Buff%
-                                    </th>
-                                {/if}
-                                {#if anySupportBrand && $settings.logs.percentBrand}
-                                    <th class="w-12 font-normal" use:tooltip={{ content: "% Damage buffed by Brand" }}
-                                        >B%
-                                    </th>
-                                {/if}
-                                {#if anySupportIdentity && $settings.logs.percentIdentityBySup}
-                                    <th
-                                        class="w-12 font-normal"
-                                        use:tooltip={{ content: "% Damage buffed by Support Identity" }}
-                                        >Iden%
-                                    </th>
-                                {/if}
-                                {#if anyRdpsData && $settings.logs.ssyn}
-                                    <th
-                                        class="w-12 font-normal"
-                                        use:tooltip={{ content: "% Damage gained from Support" }}
-                                        >sSyn%
-                                    </th>
-                                {/if}
-                                {#if $settings.logs.counters}
-                                    <th class="w-12 font-normal" use:tooltip={{ content: "Counters" }}>CTR</th>
-                                {/if}
-                            </tr>
-                        </thead>
-                        <tbody class="relative z-10">
-                            {#each players as player, i (player.name)}
-                                <tr
-                                    class="h-7 px-2 py-1 {$settings.general.underlineHovered ? 'hover:underline' : ''}"
-                                    on:click={() => inspectPlayer(player.name)}>
-                                    <LogDamageMeterRow
-                                        entity={player}
-                                        percentage={playerDamagePercentages[i]}
-                                        {totalDamageDealt}
+                    {#if $settings.logs.splitPartyDamage && encounterPartyInfo && Object.keys(encounterPartyInfo).length >= 2}
+                        <LogDamageMeterPartySplit
+                            {players}
+                            {encounterPartyInfo}
+                            {topDamageDealt}
+                            {totalDamageDealt}
+                            {anyDead}
+                            {anyFrontAtk}
+                            {anyBackAtk}
+                            {anySupportBuff}
+                            {anySupportIdentity}
+                            {anySupportBrand}
+                            {anyRdpsData}
+                            end={encounter.lastCombatPacket}
+                            {isSolo}
+                            {inspectPlayer} />
+                    {:else}
+                        <table class="relative w-full table-fixed">
+                            <thead
+                                class="z-30 h-6"
+                                on:contextmenu|preventDefault={() => {
+                                    console.log("titlebar clicked");
+                                }}>
+                                <tr class="bg-zinc-900">
+                                    <th class="w-7 px-2 font-normal" />
+                                    <th class="w-14 px-2 text-left font-normal" />
+                                    <th class="w-full" />
+                                    <LogDamageMeterHeader
                                         {anyDead}
                                         {anyFrontAtk}
                                         {anyBackAtk}
@@ -678,12 +646,34 @@
                                         {anySupportIdentity}
                                         {anySupportBrand}
                                         {anyRdpsData}
-                                        end={encounter.lastCombatPacket}
                                         {isSolo} />
                                 </tr>
-                            {/each}
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody class="relative z-10">
+                                {#each players as player, i (player.name)}
+                                    <tr
+                                        class="h-7 px-2 py-1 {$settings.general.underlineHovered
+                                            ? 'hover:underline'
+                                            : ''}"
+                                        on:click={() => inspectPlayer(player.name)}>
+                                        <LogDamageMeterRow
+                                            entity={player}
+                                            percentage={playerDamagePercentages[i]}
+                                            {totalDamageDealt}
+                                            {anyDead}
+                                            {anyFrontAtk}
+                                            {anyBackAtk}
+                                            {anySupportBuff}
+                                            {anySupportIdentity}
+                                            {anySupportBrand}
+                                            {anyRdpsData}
+                                            end={encounter.lastCombatPacket}
+                                            {isSolo} />
+                                    </tr>
+                                {/each}
+                            </tbody>
+                        </table>
+                    {/if}
                 {:else if state === MeterState.PLAYER && player !== null}
                     <table class="relative w-full table-fixed">
                         <LogPlayerBreakdown entity={player} duration={encounter.duration} {totalDamageDealt} />
@@ -700,7 +690,7 @@
                     {players}
                     totalDamageDealt={encounter.encounterDamageStats.totalDamageDealt}
                     duration={encounter.duration}
-                    encounterPartyInfo={encounter.encounterDamageStats.misc?.partyInfo} />
+                    {encounterPartyInfo} />
             {:else if tab === MeterTab.PARTY_BUFFS}
                 {#if state === MeterState.PARTY}
                     <LogBuffs {tab} encounterDamageStats={encounter.encounterDamageStats} {players} {inspectPlayer} />
@@ -789,7 +779,7 @@
         {:else if chartType === ChartType.SKILL_LOG}
             {#if player && player.entityType === EntityType.PLAYER && hasSkillCastLog}
                 <LogSkillChart {chartOptions} {player} encounterDamageStats={encounter.encounterDamageStats} />
-            {:else if player && player.entityType === EntityType.PLAYER || focusedBoss}
+            {:else if (player && player.entityType === EntityType.PLAYER) || focusedBoss}
                 <div class="mt-2 h-[300px]" use:chartable={chartOptions} style="width: calc(100vw - 4.5rem);" />
             {/if}
         {/if}
