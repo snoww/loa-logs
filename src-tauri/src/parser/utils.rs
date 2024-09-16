@@ -405,7 +405,13 @@ pub fn get_skill_name_and_icon(
 pub fn get_skill_name(skill_id: &u32) -> String {
     SKILL_DATA
         .get(skill_id)
-        .map_or(skill_id.to_string(), |skill| skill.name.clone())
+        .map_or(skill_id.to_string(), |skill| { 
+            if skill.name.is_empty() {
+                skill_id.to_string()
+            } else {
+                skill.name.clone()
+            }
+        })
 }
 
 pub fn get_skill(skill_id: &u32) -> Option<SkillData> {

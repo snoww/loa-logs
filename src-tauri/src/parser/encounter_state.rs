@@ -5,11 +5,8 @@ use meter_core::packets::definitions::{PKTIdentityGaugeChangeNotify};
 use moka::sync::Cache;
 use rsntp::SntpClient;
 use rusqlite::Connection;
-use std::cell::RefCell;
 use std::cmp::{max, Ordering};
 use std::default::Default;
-use std::rc::Rc;
-use std::sync::Arc;
 
 use crate::parser::debug_print;
 use tauri::{Manager, Window, Wry};
@@ -383,7 +380,13 @@ impl EncounterState {
                     skill_id,
                     Skill {
                         id: skill_id,
-                        name: skill_name,
+                        name: { 
+                            if skill_name.is_empty() {
+                                skill_id.to_string()
+                            } else {
+                                skill_name
+                            }
+                        },
                         icon: skill_icon,
                         tripod_index,
                         tripod_level,
@@ -449,7 +452,13 @@ impl EncounterState {
                 skill_id,
                 Skill {
                     id: skill_id,
-                    name: skill_name,
+                    name: {
+                        if skill_name.is_empty() {
+                            skill_id.to_string()
+                        } else {
+                            skill_name
+                        }
+                    },
                     icon: skill_icon,
                     tripod_index,
                     tripod_level,
@@ -681,7 +690,13 @@ impl EncounterState {
                     skill_id,
                     Skill {
                         id: skill_id,
-                        name: skill_name,
+                        name: {
+                            if skill_name.is_empty() {
+                                skill_id.to_string()
+                            } else {
+                                skill_name
+                            }
+                        },
                         icon: skill_icon,
                         summon_sources: skill_summon_sources.clone(),
                         casts: 1,
