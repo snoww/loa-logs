@@ -7,7 +7,6 @@ import {
     MiniSkill,
     type SkillCast,
     type EncounterDamageStats,
-    type SkillHit,
     type SkillChartSupportDamage,
     type SkillChartModInfo
 } from "$lib/types";
@@ -27,8 +26,6 @@ import { bossHpMap } from "$lib/constants/bossHpBars";
 import { classesMap } from "$lib/constants/classes";
 import BTree from "sorted-btree";
 import { getFormattedBuffString, getSkillCastBuffs } from "./buffs";
-import { identity } from "lodash-es";
-import { tooltip } from "./tooltip";
 import { focusedSkillCast } from "./stores";
 
 export function getLegendNames(chartablePlayers: Entity[], showNames: boolean) {
