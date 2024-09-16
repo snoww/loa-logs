@@ -172,6 +172,7 @@
     let focusedBoss = "";
     let lastCombatPacket = 0;
     let anyDead: boolean = false;
+    let multipleDeaths: boolean = false;
     let anyFrontAtk: boolean = false;
     let anyBackAtk: boolean = false;
     let anySupportBuff: boolean = false;
@@ -211,6 +212,7 @@
                 $localPlayer = encounter.localPlayer;
                 isSolo = players.length === 1;
                 anyDead = players.some((player) => player.isDead);
+                multipleDeaths = players.some((player) => player.damageStats.deaths > 1);
                 if (!anyFrontAtk) {
                     anyFrontAtk = players.some((player) => player.skillStats.frontAttacks > 0);
                 }
@@ -422,6 +424,9 @@
                             {#if anyDead && $settings.meter.deathTime}
                                 <th class="w-14 font-normal" use:tooltip={{ content: "Dead for" }}>Dead</th>
                             {/if}
+                            {#if multipleDeaths && $settings.meter.deathTime}
+                                <th class="w-14 font-normal" use:tooltip={{ content: "Death Count" }}>Deaths</th>
+                            {/if}
                             {#if $settings.meter.damage}
                                 <th class="w-14 font-normal" use:tooltip={{ content: "Damage Dealt" }}>DMG</th>
                             {/if}
@@ -484,6 +489,7 @@
                                     {totalDamageDealt}
                                     {lastCombatPacket}
                                     {anyDead}
+                                    {multipleDeaths}
                                     {anyFrontAtk}
                                     {anyBackAtk}
                                     {anySupportBuff}

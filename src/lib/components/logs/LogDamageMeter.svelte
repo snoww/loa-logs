@@ -6,7 +6,7 @@
         type Encounter,
         ChartType,
         EntityType,
-        type PartyInfo
+        type PartyInfo,
     } from "$lib/types";
     import { formatTimestampDate, millisToMinutesAndSeconds } from "$lib/utils/numbers";
     import { invoke } from "@tauri-apps/api/tauri";
@@ -49,7 +49,6 @@
     import LogShields from "$lib/components/logs/LogShields.svelte";
     import Rdps from "$lib/components/shared/Rdps.svelte";
     import LogSkillChart from "./LogSkillChart.svelte";
-    import { keys } from "lodash-es";
     import LogDamageMeterPartySplit from "./LogDamageMeterPartySplit.svelte";
     import LogDamageMeterHeader from "./LogDamageMeterHeader.svelte";
 
@@ -64,14 +63,14 @@
     let totalDamageDealt = 0;
     let localPlayerEntity: Entity | null = null;
 
-    let anyDead: boolean;
+    let anyDead: boolean = false;
+    let multipleDeaths: boolean = false;
     let anyFrontAtk: boolean = false;
     let anyBackAtk: boolean = false;
     let anySupportBuff: boolean = false;
     let anySupportIdentity: boolean = false;
     let anySupportBrand: boolean = false;
     let anyRdpsData: boolean = false;
-
     let isSolo = true;
 
     let state = MeterState.PARTY;
@@ -116,6 +115,7 @@
             topDamageDealt = encounter.encounterDamageStats.topDamageDealt;
             playerDamagePercentages = players.map((player) => (player.damageStats.damageDealt / topDamageDealt) * 100);
             anyDead = players.some((player) => player.isDead);
+            multipleDeaths = players.some((player) => player.damageStats.deaths > 1);
             anyFrontAtk = players.some((player) => player.skillStats.frontAttacks > 0);
             anyBackAtk = players.some((player) => player.skillStats.backAttacks > 0);
             anySupportBuff = players.some((player) => player.damageStats.buffedBySupport > 0);
@@ -506,7 +506,7 @@
                     </button>
                     {#if dropdownOpen}
                         <div class="absolute left-9 top-0 z-50 rounded-md bg-gray-700">
-                            <div class="flex w-40 flex-col divide-y-2 divide-gray-600 px-2 py-1">
+                            <div class="flex w-48 flex-col divide-y-2 divide-gray-600 px-2 py-1">
                                 <button
                                     class="hover:text-accent-500 p-1 text-left"
                                     on:click={() => {
@@ -523,6 +523,30 @@
                                             value=""
                                             class="peer sr-only"
                                             bind:checked={$settings.general.showNames} />
+                                        <div
+                                            class="peer-checked:bg-accent-800 peer h-5 w-9 rounded-full border-gray-600 bg-gray-800 after:absolute after:left-[2px] after:top-[2px] after:h-4 after:w-4 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none" />
+                                    </label>
+                                </button>
+                                <button class="flex items-center justify-between bg-gray-700 p-1">
+                                    <span class="text-sm">Split Party Damage</span>
+                                    <label class="relative inline-flex cursor-pointer items-center">
+                                        <input
+                                            type="checkbox"
+                                            value=""
+                                            class="peer sr-only"
+                                            bind:checked={$settings.logs.splitPartyDamage} />
+                                        <div
+                                            class="peer-checked:bg-accent-800 peer h-5 w-9 rounded-full border-gray-600 bg-gray-800 after:absolute after:left-[2px] after:top-[2px] after:h-4 after:w-4 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none" />
+                                    </label>
+                                </button>
+                                <button class="flex items-center justify-between bg-gray-700 p-1">
+                                    <span class="text-sm">Show Esther</span>
+                                    <label class="relative inline-flex cursor-pointer items-center">
+                                        <input
+                                            type="checkbox"
+                                            value=""
+                                            class="peer sr-only"
+                                            bind:checked={$settings.general.showEsther} />
                                         <div
                                             class="peer-checked:bg-accent-800 peer h-5 w-9 rounded-full border-gray-600 bg-gray-800 after:absolute after:left-[2px] after:top-[2px] after:h-4 after:w-4 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none" />
                                     </label>
@@ -617,7 +641,6 @@
                             {encounterPartyInfo}
                             {topDamageDealt}
                             {totalDamageDealt}
-                            {anyDead}
                             {anyFrontAtk}
                             {anyBackAtk}
                             {anySupportBuff}
@@ -640,6 +663,7 @@
                                     <th class="w-full" />
                                     <LogDamageMeterHeader
                                         {anyDead}
+                                        {multipleDeaths}
                                         {anyFrontAtk}
                                         {anyBackAtk}
                                         {anySupportBuff}
@@ -661,6 +685,7 @@
                                             percentage={playerDamagePercentages[i]}
                                             {totalDamageDealt}
                                             {anyDead}
+                                            {multipleDeaths}
                                             {anyFrontAtk}
                                             {anyBackAtk}
                                             {anySupportBuff}

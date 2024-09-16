@@ -10,6 +10,7 @@
     export let entity: Entity;
     export let totalDamageDealt: number;
     export let anyDead: boolean;
+    export let multipleDeaths: boolean;
     export let anyFrontAtk: boolean;
     export let anyBackAtk: boolean;
     export let anySupportBuff: boolean;
@@ -108,6 +109,11 @@
         {#if entity.isDead}
             {deadFor}
         {/if}
+    </td>
+{/if}
+{#if multipleDeaths && meterSettings.deathTime}
+    <td class="px-1 text-center">
+        {entity.damageStats.deaths}
     </td>
 {/if}
 {#if meterSettings.damage}

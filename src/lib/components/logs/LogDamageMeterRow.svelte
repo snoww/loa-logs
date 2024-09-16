@@ -9,6 +9,7 @@
     export let percentage: number;
     export let totalDamageDealt: number;
     export let anyDead: boolean;
+    export let multipleDeaths: boolean;
     export let anyFrontAtk: boolean;
     export let anyBackAtk: boolean;
     export let anySupportBuff: boolean;
@@ -25,6 +26,7 @@
     {entity}
     {totalDamageDealt}
     {anyDead}
+    {multipleDeaths}
     {anyFrontAtk}
     {anyBackAtk}
     {anySupportBuff}

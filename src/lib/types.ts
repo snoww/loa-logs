@@ -465,8 +465,8 @@ export class SearchFilter {
 }
 
 export interface PartyBuffs {
-    parties: Array<Array<Entity>>,
-    partyGroupedSynergies: Map<string, Set<string>>,
-    partyPercentages: Array<number[]>,
-    partyBuffs: Map<string, Map<string, Array<BuffDetails>>>,
+    parties: Array<Array<Entity>>;
+    partyGroupedSynergies: Map<string, Set<string>>;
+    partyPercentages: Array<number[]>;
+    partyBuffs: Map<string, Map<string, Array<BuffDetails>>>;
 }
