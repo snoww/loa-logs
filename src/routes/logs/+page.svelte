@@ -97,10 +97,10 @@
             }
         }
         // start or space (^|\s) + word (\w+) + colon or space or end (:|\s|$)
-        // using lookbehind (?<=:) and lookahead (?=) https://regex101.com/r/1cMFH8/2
+        // using lookbehind (?<=) and lookahead (?=) https://regex101.com/r/1cMFH8/4
         // if word is a valid className, replace it with the classId
         // example: "bard:Anyduck shadowhunter" -> "204:Anyduck 403"
-        let searchQuery = search.replace(/(?<=:^|\s)\w+(?=:|\s|$)/g, (word: string) => {
+        let searchQuery = search.replace(/(?<=^|\s)\w+(?=:|\s|$)/g, (word: string) => {
             const className = word[0].toUpperCase() + word.substring(1).toLowerCase();
             return String(classNameToClassId[className] || word);
         });
