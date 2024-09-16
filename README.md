@@ -32,28 +32,40 @@ https://github.com/snoww/loa-logs/releases
 
 You can support me directly by buying me a [coffee.](https://www.buymeacoffee.com/synow)
 
-You can also support LOA Details' Herysia's [Patreon.](https://patreon.com/Herysia)
-
 # FAQ
-#### Q: Meter window is missing / meter window is tiny
+#### Q: METER NOT WORKING AFTER MAJOR PATCH!!!
 
-A: Right-click the taskbar icon (located in the bottom right of your screen, next to the system time), click reset position, or load saved position. Adjust the size of the window and location, and then save the position. 
+A: This is normal. The meter will not work after a major game patch. The game shuffles around the opcodes and packets every major patch, and the meter must be updated in order for it to work. Please wait patiently until the meter update is ready. If you keep meter open a pop-up should show up prompting you to update once it is released.
+
+
+#### Q: Missing `packet.dll`
+
+A: You need install Npcap. If you already have Npcap installed and error still shows, please uninstall it, and then reinstall the latest version using the link above.
 
 #### Q: Meter isn't detecting anything...
 
-A: There can be multiple reasons. Did you install Npcap? If that still doesn't work, enable raw socket mode by doing the following: *Settings > General > Un-check Auto Network Selection > Raw Socket*. You must restart the meter as admin.
+A: There can be multiple reasons. Did you install Npcap? Are you using a VPN? Check the VPN section of the FAQ. If you're using ping reducers, please ask in the discord, invite link is below.
 
 #### Q: How to use ExitLag with LOA Logs?
 
-A: ExitLag recently updated their settings which changed how they redirect packets. Change your ExitLag settings to *Packet redirection method > Legacy - NDIS*. If that still doesn't work. Turn on raw socket by following the steps above.
+A: ExitLag recently updated their settings which changed how they redirect packets. Change your ExitLag settings to *Packet redirection method > Legacy - NDIS*. If that still doesn't work. Turn on raw socket by following the steps above. 
+
+#### Q: How to use a traditional VPN with LOA Logs?
+
+A: Using traditional VPNs, NOT ping reducers like ExitLag and Mudfish, should work without changing any settings. If that doesn't work, turn off "Automatic Network Selection", and choose your VPN adapter manually in the list, should be named similar to "VPN_NAME adapter". If that still doesn't work, try turning on raw socket on. Remember you need to restart meter and go to character select everytime you change a setting. 
+
+#### Q: Class not swapping or character name is stuck on the previous character
+
+A: Are you using raw socket? Raw socket is wonky and has frequent packet losses, and this occurs often during character swaps. If you can run the meter without raw socket then please turn it off. If your meter doesn't work without raw socket, then unfortunately the issue will persist.  
 
 #### Q: Should I run it in a VM?
 
 A: Probably unnecessary. Meter is currently in a gray area by AGS, and they have not been banning any users for using it.
 
-#### Q: Missing `packet.dll`
+#### Q: Meter window is missing / meter window is tiny
 
-A: You need install Npcap. If you already have Npcap installed and error still shows, please uninstall it, and then reinstall the latest version using the link above.
+A: Right-click the taskbar icon (located in the bottom right of your screen, next to the system time), click reset position, or load saved position. Adjust the size of the window and location, and then save the position.
+
 
 #### Q: The installer crashes or takes forever to install
 
@@ -77,11 +89,11 @@ A: You can change whatever column you want to show in the settings. TIP: you can
 
 #### Q: Are you going to implement rDPS like LOA Details?
 
-A: rDPS is finally implemented as of v1.8.0. Make sure to thank Herysia and Mathi.
+A: rDPS is no longer working due to missing packets.
 
 #### Q: Help, my issue isn't listed here.
 
-A: Create an issue here on GitHub, or send a message in the #loa-logs channel on Discord. [(invite)](https://discord.gg/sbSa3pkDF5)
+A: Create an issue here on GitHub, or send a message in the #troubleshooting channel on Discord. [(invite)](https://discord.gg/HMtnzPFHTG)
 
 #### Q: Is it really "blazingly fast"?
 
