@@ -250,6 +250,8 @@
         state = MeterState.PLAYER;
         playerName = name;
         chartType = ChartType.SKILL_LOG;
+
+        scrollToTop();
     }
 
     function inspectBoss(name: string) {
