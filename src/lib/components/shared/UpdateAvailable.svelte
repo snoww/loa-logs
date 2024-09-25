@@ -41,7 +41,7 @@
                                 <div class="text-lg font-semibold text-gray-200">New Update Available!</div>
                             {/if}
                         </div>
-                        <div class="prose-a:text-accent-500 prose prose-sm prose-zinc prose-invert mb-5" id="notes">
+                        <div class="prose-a:text-accent-500 prose prose-sm prose-zinc prose-invert mb-5 prose-img:-my-2 prose-img:rounded-md prose-img:border prose-img:border-zinc-600 prose-img:shadow-md" id="notes">
                             {@html $markdownIt.render($updateSettings.manifest.body)}
                         </div>
                         {#if !$updateSettings.isNotice}

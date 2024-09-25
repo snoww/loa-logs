@@ -6,7 +6,7 @@
         type Encounter,
         ChartType,
         EntityType,
-        type PartyInfo,
+        type PartyInfo
     } from "$lib/types";
     import { formatTimestampDate, millisToMinutesAndSeconds } from "$lib/utils/numbers";
     import { invoke } from "@tauri-apps/api/tauri";
@@ -795,7 +795,13 @@
                 {/if}
             </div>
         {/if}
-        {#if chartType === ChartType.AVERAGE_DPS || chartType === ChartType.ROLLING_DPS}
+        {#if chartType === ChartType.AVERAGE_DPS}
+            {#if !$settings.general.showNames}
+                <div class="mt-2 h-[300px]" use:chartable={chartOptions} style="width: calc(100vw - 4.5rem);" />
+            {:else}
+                <div class="mt-2 h-[300px]" use:chartable={chartOptions} style="width: calc(100vw - 4.5rem);" />
+            {/if}
+        {:else if chartType === ChartType.ROLLING_DPS}
             {#if !$settings.general.showNames}
                 <div class="mt-2 h-[300px]" use:chartable={chartOptions} style="width: calc(100vw - 4.5rem);" />
             {:else}
