@@ -39,6 +39,7 @@ moka = { version = "0.12.7", features = ["sync"] }
 auto-launch = "0.5.0"
 rsntp = { version = "4.0.0", default-features = false, features = ["chrono"]  }
 flate2 = "1.0.30"
+sysinfo = "0.31.4"
 meter-core = { path = "D:\\projects\\meter-core-rs\\" }
 
 [features]

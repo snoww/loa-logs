@@ -8,6 +8,7 @@ import { clickthroughStore } from "$lib/utils/stores";
 
 export const defaultSettings = {
     general: {
+        startLoaOnStart: false,
         lowPerformanceMode: false,
         showNames: true,
         showGearScore: false,

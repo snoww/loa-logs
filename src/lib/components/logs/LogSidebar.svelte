@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
     import { getVersion } from "@tauri-apps/api/app";
     import { Drawer } from "flowbite-svelte";
     import { sineIn } from "svelte/easing";
@@ -7,6 +7,7 @@
     import { checkUpdate } from "@tauri-apps/api/updater";
     import { writable } from "svelte/store";
     import { updateSettings } from "$lib/utils/settings";
+    import { onMount } from "svelte";
 
     export let hidden = true;
 
@@ -17,6 +18,32 @@
     };
     let spin = writable(false);
     let updateText = writable("Check for Updates");
+
+    let loaRunning = false;
+
+    $: starting = false;
+
+    $: {
+        if (!hidden) {
+            checkLoaRunning();
+
+            setInterval(() => {
+                checkLoaRunning();
+            }, 5000);
+        }
+    }
+
+    onMount(() => {
+        checkLoaRunning();
+    });
+
+    async function checkLoaRunning() {
+        loaRunning = await invoke("check_loa_running");
+    }
+
+    function startLoa() {
+        invoke("start_loa_process");
+    }
 </script>
 
 <Drawer
@@ -30,8 +57,7 @@
     <div class="flex items-center justify-between py-4">
         <div class="px-4 text-lg font-semibold uppercase text-gray-200">LOA Logs</div>
         <button on:click={() => (hidden = true)} class="px-4">
-            <svg class="size-5 fill-gray-200" xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960"
-            >
+            <svg class="size-5 fill-gray-200" xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960">
                 <path
                     d="m250.5 870-64-64.5 229-229.5-229-229.5 64-64.5L480 511.5 709.5 282l64 64.5-229 229.5 229 229.5-64 64.5L480 640.5 250.5 870Z" />
             </svg>
@@ -43,9 +69,12 @@
             <a href="/about" class="hover:text-accent-500" on:click={() => (hidden = true)}> About </a>
             <a href="/settings" class="hover:text-accent-500" on:click={() => (hidden = true)}> Settings </a>
             <a href="/changelog" class="hover:text-accent-500" on:click={() => (hidden = true)}> Changelog </a>
-            <a href="https://ko-fi.com/synow" class="hover:text-accent-500" target="_blank"
-               on:click={() => (hidden = true)}>
-                <div class="inline-flex space-x-1 items-center">
+            <a
+                href="https://ko-fi.com/synow"
+                class="hover:text-accent-500"
+                target="_blank"
+                on:click={() => (hidden = true)}>
+                <div class="inline-flex items-center space-x-1">
                     <div>Donate</div>
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-2 fill-gray-300" viewBox="0 0 512 512">
                         <path
@@ -53,9 +82,27 @@
                     </svg>
                 </div>
             </a>
+            {#if !loaRunning && !starting}
+                <button
+                    class="bg-accent-800 hover:bg-accent-900 mx-4 rounded-lg p-2"
+                    on:click={() => {
+                        starting = true;
+                        startLoa();
+                        setTimeout(() => {
+                            starting = false;
+                            checkLoaRunning();
+                        }, 20000);
+                    }}>
+                    Start Lost Ark
+                </button>
+            {:else if !loaRunning && starting}
+                <button class="mx-4 rounded-lg bg-zinc-700 p-2" disabled> Starting... </button>
+            {:else if loaRunning}
+                <button class="mx-4 rounded-lg bg-zinc-700 p-2" disabled> Lost Ark Running </button>
+            {/if}
         </div>
         <div class="px-3 py-2 text-gray-300">
-            <div class="flex justify-between items-center">
+            <div class="flex items-center justify-between">
                 <div>
                     {#await getVersion()}
                         version
@@ -64,41 +111,52 @@
                     {/await}
                 </div>
                 {#if $updateSettings.available}
-                    <button class="pr-1" use:tooltip={{content: "Update Now"}}
-                            on:click={() => {$updateSettings.dismissed = false;}}>
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"
-                             class="size-5 fill-accent-500 animate-bounce">
+                    <button
+                        class="pr-1"
+                        use:tooltip={{ content: "Update Now" }}
+                        on:click={() => {
+                            $updateSettings.dismissed = false;
+                        }}>
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 -960 960 960"
+                            class="fill-accent-500 size-5 animate-bounce">
                             <path
                                 d="M281.5-165v-57.5H679v57.5H281.5Zm170-165v-356L329-563.5 289-604l191-191 191.5 191-40.5 40.5L509-686v356h-57.5Z" />
                         </svg>
                     </button>
                 {:else}
-                    <button class="pr-1" use:tooltip={{content: $updateText}} on:click={async () => {
-                        if ($updateText === "No Updates Available") return;
-                        if (!$spin) {
-                            $spin = true;
-                            setTimeout(() => {
-                                $spin = false;
-                            }, 1000);
-                        }
-                        try {
-                            const { shouldUpdate, manifest } = await checkUpdate();
-                            if (shouldUpdate) {
-                                $updateSettings.dismissed = false;
-                                $updateSettings.available = true;
-                                $updateSettings.manifest = manifest;
-                            } else {
-                                $updateText = "No Updates Available";
+                    <button
+                        class="pr-1"
+                        use:tooltip={{ content: $updateText }}
+                        on:click={async () => {
+                            if ($updateText === "No Updates Available") return;
+                            if (!$spin) {
+                                $spin = true;
                                 setTimeout(() => {
-                                    $updateText = "Check for Updates";
-                                }, 5000);
+                                    $spin = false;
+                                }, 1000);
                             }
-                        } catch (e) {
-                            await invoke("write_log", { message: e });
-                        }
-                    }}>
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"
-                             class="size-5 fill-gray-300 {$spin ? 'animate-spin-once' : ''}">
+                            try {
+                                const { shouldUpdate, manifest } = await checkUpdate();
+                                if (shouldUpdate) {
+                                    $updateSettings.dismissed = false;
+                                    $updateSettings.available = true;
+                                    $updateSettings.manifest = manifest;
+                                } else {
+                                    $updateText = "No Updates Available";
+                                    setTimeout(() => {
+                                        $updateText = "Check for Updates";
+                                    }, 5000);
+                                }
+                            } catch (e) {
+                                await invoke("write_log", { message: e });
+                            }
+                        }}>
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 -960 960 960"
+                            class="size-5 fill-gray-300 {$spin ? 'animate-spin-once' : ''}">
                             <path
                                 d="M169.333-164.667V-228h123.334l-16.666-14.666q-58.167-49.834-84.834-108.317Q164.5-409.467 164.5-477.598q0-105.735 62.48-189.332t163.686-114.403v65.999Q316.866-687.258 272.35-622q-44.517 65.257-44.517 144.213 0 56.787 21.083 101.954 21.084 45.167 59.751 79.834L334-276.666v-116h63.333v227.999h-228ZM570-178v-66.666q74.167-28 118.334-93.241 44.166-65.241 44.166-144.64 0-46.453-21.25-93.62t-58.583-84.5L628-683.334v116.001h-63.333v-228h228V-732H668.666l16.667 16q55.899 53.062 83.2 114.186 27.3 61.124 27.3 119.314 0 105.833-62.333 189.833T570-178Z" />
                         </svg>

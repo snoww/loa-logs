@@ -21,6 +21,7 @@ use log::{error, info, warn};
 use parser::models::*;
 
 use rusqlite::{params, params_from_iter, Connection, Transaction};
+use sysinfo::{ProcessesToUpdate, System};
 use tauri::{
     api::process::Command, CustomMenuItem, LogicalPosition, LogicalSize, Manager, Position, Size,
     SystemTray, SystemTrayEvent, SystemTrayMenu, SystemTrayMenuItem,
@@ -183,6 +184,11 @@ async fn main() -> Result<()> {
                     } else {
                         info!("using npcap");
                     }
+                }
+
+                if settings.general.start_loa_on_start {
+                    info!("auto launch game enabled");
+                    start_loa_process();
                 }
             } else {
                 ip = meter_core::get_most_common_ip().unwrap();
@@ -347,6 +353,8 @@ async fn main() -> Result<()> {
             optimize_database,
             check_start_on_boot,
             set_start_on_boot,
+            check_loa_running,
+            start_loa_process,
         ])
         .run(tauri::generate_context!())
         .expect("error while running application");
@@ -1463,6 +1471,34 @@ fn set_start_on_boot(window: tauri::Window, set: bool) {
             })
             .ok();
         info!("disabled start on boot");
+    }
+}
+
+#[tauri::command]
+fn check_loa_running() -> bool {
+    let system = System::new_all();
+    let process_name = "lostark.exe";
+
+    // Iterate through all running processes
+    for process in system.processes().values() {
+        if process.name().to_string_lossy().to_ascii_lowercase() == process_name {
+            return true;
+        }
+    }
+    false
+}
+
+#[tauri::command]
+fn start_loa_process() {
+    if !check_loa_running() {
+        info!("starting lost ark process...");
+        Command::new("cmd")
+            .args(["/C", "start", "steam://rungameid/1599340"])
+            .spawn()
+            .map_err(|e| error!("could not open lost ark: {}", e))
+            .ok();
+    } else {
+        info!("lost ark already running")
     }
 }
 

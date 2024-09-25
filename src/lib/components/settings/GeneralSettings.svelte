@@ -148,6 +148,10 @@
             {/if}
         </div>
         <SettingItem
+            name="Auto Launch Lost Ark"
+            description="Automatically start Lost Ark when the app is opened."
+            bind:setting={$settings.general.startLoaOnStart} />
+        <SettingItem
             name="Low Performance Mode"
             description="Lowers meter update frequency to reduce CPU usage. (Requires Restart)"
             bind:setting={$settings.general.lowPerformanceMode} />
