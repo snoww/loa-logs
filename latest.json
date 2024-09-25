@@ -1,11 +1,11 @@
 {
-    "version": "v1.16.4",
-    "notes": "### v1.16.4\n#### NEW FEATURES\n- updated app icon\n- added quick setting toggles to logs\n\n![toggles](https://i.imgur.com/roxHSBM.png)\n- added death counts\n\n![death_counts](https://i.imgur.com/dAwztWg.png)\n\n#### BUG FIXES AND IMPROVEMENTS\n- added esthers to split party view (oops i forgot them initially)\n- fix searching by class\n\nfull patch notes on [github](https://github.com/snoww/loa-logs/releases/latest)\n\nsend bug reports/suggestions to [ramen shop server](https://discord.gg/RXvTMV2YHu)",
-    "pub_date": "2024-09-16T21:40:33.464Z",
+    "version": "v1.16.5",
+    "notes": "### v1.16.5\n#### NEW FEATURES\n- added button to show max damage for a cast in skill cast log\n\n![max_cast](https://i.imgur.com/0ZNTm41.png)\n\n- added button to launch lost ark within meter\n- added option to auto launch lost ark when starting meter\n\n![start_lost_ark](https://i.imgur.com/y4VNUth.png)\n\n![auto_launch](https://i.imgur.com/WYxAfgt.png)\n\n#### BUG FIXES AND IMPROVEMENTS\n- fixed death count not showing in behemoth if everyone was alive at the end of the raid, but had deaths during the raid\n\nfull patch notes on [github](https://github.com/snoww/loa-logs/releases/latest)\n\nsend bug reports/suggestions to [ramen shop server](https://discord.gg/RXvTMV2YHu)",
+    "pub_date": "2024-09-25T07:22:22.660Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.16.4/LOA.Logs_1.16.4_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlU3TEdUbElSWEE5WWZYeTZ5UHJyTFhSSlAvS3lPM0E4bkk3UkI5TnB6UjhpOFIweHVSZkdKYTlQVUE4eUUvMG5SaWE0RGdCakdiNWVGZzdEQkpLQ1F3PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzI2NTIyOTA1CWZpbGU6TE9BIExvZ3NfMS4xNi40X3g2NC1zZXR1cC5uc2lzLnppcApxemxqRUdkQUlZUzFuVWZGSTNsSXQrQTg2Ti9yeDVVUmdFL3NKc3BPU3NZVXlqaVkveUNUZ2tvNm1vVDJNbWFNdU93dXY3dlFDY05xcE9Gb01ZWk5DZz09Cg=="
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.16.5/LOA.Logs_1.16.5_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmQ5ZVhwQzFzU0F0RURoMjdJN3F1eTdCOTc1LzFjc0w4KzdZMkQyRjJ4Yy84YWQrTEF2VjdNVmpjVytVbWF1TTRBTVBoRkRkcUMwZytzT3BGTHZ1WGdVPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzI3MjMyMTc4CWZpbGU6TE9BIExvZ3NfMS4xNi41X3g2NC1zZXR1cC5uc2lzLnppcAp5VEtmeEp0NW10NUFtU090akF2cnJuSlJjcFBJbXlwM1hRT01RZ0NJeHo3OE5HN1RUbG5yRDFTMmlIQ2E1dnVrcTQ3elk3ZzBBMm1SUXk3Nzd0M0tCdz09Cg=="
         }
     }
 }

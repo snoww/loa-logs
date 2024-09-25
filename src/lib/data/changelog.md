@@ -1,12 +1,28 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.16.4
+    v1.16.5
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
   </div>
 </div>
 
+#### NEW FEATURES
+- added button to show max damage for a cast in skill cast log
+
+![max_cast](https://i.imgur.com/0ZNTm41.png)
+
+- added button to launch lost ark within meter
+- added option to auto launch lost ark when starting meter
+
+![start_lost_ark](https://i.imgur.com/y4VNUth.png)
+
+![auto_launch](https://i.imgur.com/WYxAfgt.png)
+
+#### BUG FIXES AND IMPROVEMENTS
+- fixed death count not showing in behemoth if everyone was alive at the end of the raid, but had deaths during the raid
+
+### v1.16.4
 #### NEW FEATURES
 - updated app icon
 - added quick setting toggles to logs
