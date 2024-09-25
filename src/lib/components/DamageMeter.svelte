@@ -212,7 +212,11 @@
                 $localPlayer = encounter.localPlayer;
                 isSolo = players.length === 1;
                 anyDead = players.some((player) => player.isDead);
-                multipleDeaths = players.some((player) => player.damageStats.deaths > 1);
+                if (!anyDead) {
+                    multipleDeaths = players.some((player) => player.damageStats.deaths > 0);
+                } else {
+                    multipleDeaths = players.some((player) => player.damageStats.deaths > 1);
+                }
                 if (!anyFrontAtk) {
                     anyFrontAtk = players.some((player) => player.skillStats.frontAttacks > 0);
                 }

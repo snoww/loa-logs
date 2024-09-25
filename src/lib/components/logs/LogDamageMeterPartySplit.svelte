@@ -43,6 +43,10 @@
                                 if (!multipleDeaths && player.damageStats.deaths > 1) {
                                     multipleDeaths = true;
                                 }
+                            } else {
+                                if (!multipleDeaths && player.damageStats.deaths > 0) {
+                                    multipleDeaths = true;
+                                }
                             }
                         }
                     }

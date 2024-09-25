@@ -73,7 +73,7 @@
             tooltipName = name;
             color = "#4dc8d0";
         } else {
-            name = formatPlayerName(entity, $settings.general);;
+            name = formatPlayerName(entity, $settings.general);
             if ($settings.general.showNames) {
                 tooltipName = entity.name;
             } else {
@@ -113,7 +113,11 @@
 {/if}
 {#if multipleDeaths && meterSettings.deathTime}
     <td class="px-1 text-center">
-        {entity.damageStats.deaths}
+        {#if entity.damageStats.deaths > 0}
+            {entity.damageStats.deaths}
+        {:else}
+         -
+        {/if}
     </td>
 {/if}
 {#if meterSettings.damage}
@@ -170,7 +174,11 @@
     </td>
 {/if}
 {#if anyRdpsData && meterSettings.ssyn}
-    <td class="px-1 text-center" use:tooltip={{content: `<span class="italic">${tooltipName}</span> dealt +${sSynPercentage}% more damage from support buffs`}}>
+    <td
+        class="px-1 text-center"
+        use:tooltip={{
+            content: `<span class="italic">${tooltipName}</span> dealt +${sSynPercentage}% more damage from support buffs`
+        }}>
         {sSynPercentage}<span class="text-3xs text-gray-300">%</span>
     </td>
 {/if}

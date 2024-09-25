@@ -115,7 +115,11 @@
             topDamageDealt = encounter.encounterDamageStats.topDamageDealt;
             playerDamagePercentages = players.map((player) => (player.damageStats.damageDealt / topDamageDealt) * 100);
             anyDead = players.some((player) => player.isDead);
-            multipleDeaths = players.some((player) => player.damageStats.deaths > 1);
+            if (!anyDead) {
+                multipleDeaths = players.some((player) => player.damageStats.deaths > 0);
+            } else {
+                multipleDeaths = players.some((player) => player.damageStats.deaths > 1);
+            }
             anyFrontAtk = players.some((player) => player.skillStats.frontAttacks > 0);
             anyBackAtk = players.some((player) => player.skillStats.backAttacks > 0);
             anySupportBuff = players.some((player) => player.damageStats.buffedBySupport > 0);
