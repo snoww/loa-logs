@@ -79,11 +79,24 @@
             }
         }
     }
+
+    function getHighestDamageCastIndex(): number {
+        let highestDamage = 0;
+        let highestIndex = 0;
+        for (const [i, cast] of skill.skillCastLog.entries()) {
+            const totalDamage = cast.hits.map((hit) => hit.damage).reduce((a, b) => a + b, 0);
+            if (totalDamage > highestDamage) {
+                highestDamage = totalDamage;
+                highestIndex = i;
+            }
+        }
+        return highestIndex;
+    }
 </script>
 
 <div class="mt-2 h-[400px]" use:chartable={chartOptions} style="width: calc(100vw - 4.5rem);" />
 
-<div class="mb-4 mt-2">
+<div class="mb-4 mt-2 min-h-[30rem]">
     <div class="flex justify-start text-lg font-medium">
         <div use:menuTooltip={{ content: "Details about a skill casted during the raid" }}>Skill Cast Details</div>
     </div>
@@ -91,7 +104,15 @@
         <div>Click on a skill cast to show details.</div>
     {:else if skill}
         <div class="px-1 pb-2">
-            <div class="flex items-center pb-1">
+            <div class="flex items-center pt-1 pb-2">
+                <button
+                    use:tooltip={{ content: "Go to highest damage cast." }}
+                    class="mr-4 p-1 bg-accent-500 hover:bg-accent-800 rounded-md text-sm"
+                    on:click={() => {
+                        $focusedSkillCast.cast = getHighestDamageCastIndex();
+                    }}>
+                    Find Max Cast
+                </button>
                 <button
                     use:tooltip={{ content: "Previous Cast" }}
                     class="pr-1"

@@ -464,7 +464,7 @@ export function getSkillLogChart(
                         output += "<div>";
                         output += "<div class='flex space-x-1'>";
                         output += `<img class="size-5 rounded-sm" src='${skillIconPath + getSkillIcon(param.value[3])}' alt='${param.seriesName}' />`;
-                        output += `<div class='font-semibold'>${param.seriesName}</div>`;
+                        output += `<div class='font-semibold'>${param.seriesName + " #" +  (param.dataIndex + 1)}</div>`;
                         output += "</div>";
                         if (param.value[2].hits.length > 0) {
                             output += skillCastBreakdownTooltip(param.value[2], encounterDamageStats, skillIconPath);
