@@ -39,6 +39,8 @@
     import Rdps from "$lib/components/shared/Rdps.svelte";
     import { isValidName } from "$lib/utils/strings";
     import MissingInfo from "./shared/MissingInfo.svelte";
+    import { invoke } from "@tauri-apps/api";
+    import { uploadLog } from "$lib/utils/sync";
 
     let time = +Date.now();
     let encounter: Encounter | null = null;
@@ -125,6 +127,15 @@
                 }
                 $raidInProgress = false;
             });
+            let clearEncounterEvent = await listen("clear-encounter", async (event: any) => {
+                if (!$settings.sync.auto) {
+                    return;
+                }
+
+                let id = event.payload.toString();
+                const encounter = await invoke("load_encounter", { id }) as Encounter;
+                await uploadLog(id, encounter, $settings.sync, true);
+            });
             let adminErrorEvent = await listen("admin", () => {
                 adminAlert = true;
             });
@@ -146,7 +157,8 @@
                 phaseTransitionEvent,
                 raidStartEvent,
                 adminErrorEvent,
-                rdpsEvent
+                rdpsEvent,
+                clearEncounterEvent
             );
         })();
     });

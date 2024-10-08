@@ -355,6 +355,8 @@ async fn main() -> Result<()> {
             set_start_on_boot,
             check_loa_running,
             start_loa_process,
+            get_sync_candidates,
+            sync,
         ])
         .run(tauri::generate_context!())
         .expect("error while running application");
@@ -393,6 +395,12 @@ fn setup_db(resource_path: &Path) -> Result<(), rusqlite::Error> {
         migration_legacy_entity(&tx)?;
         migration_full_text_search(&tx)?;
     }
+    
+    if !stmt.exists(["table", "sync_logs"])? {
+        info!("adding sync table");
+        migration_sync(&tx)?;
+    }
+    
     stmt.finalize()?;
     info!("finished setting up database");
     tx.commit()
@@ -597,6 +605,18 @@ fn migration_full_text_search(tx: &Transaction) -> Result<(), rusqlite::Error> {
             VALUES (new.id, new.current_boss, new.players);
         END;
         ",
+    )
+}
+
+fn migration_sync(tx: &Transaction) -> Result<(), rusqlite::Error> {
+    tx.execute_batch(
+        "
+        CREATE TABLE IF NOT EXISTS sync_logs (
+        encounter_id INTEGER PRIMARY KEY,
+        upstream_id TEXT,
+        failed BOOLEAN NOT NULL DEFAULT 0,
+        FOREIGN KEY (encounter_id) REFERENCES encounter (id) ON DELETE CASCADE
+    );",
     )
 }
 
@@ -944,7 +964,9 @@ fn load_encounter(window: tauri::Window, id: String) -> Encounter {
         skill_stats,
         last_update,
         entity_type,
-        npc_id
+        npc_id,
+        character_id,
+        engravings
     FROM entity
     WHERE encounter_id = ?;
     ",
@@ -978,7 +1000,7 @@ fn load_encounter(window: tauri::Window, id: String) -> Encounter {
                 let skill_str: String = row.get(7).unwrap_or_default();
                 skills = serde_json::from_str::<HashMap<u32, Skill>>(skill_str.as_str())
                     .unwrap_or_default();
-
+                
                 let damage_stats_str: String = row.get(8).unwrap_or_default();
                 damage_stats = serde_json::from_str::<DamageStats>(damage_stats_str.as_str())
                     .unwrap_or_default();
@@ -990,6 +1012,11 @@ fn load_encounter(window: tauri::Window, id: String) -> Encounter {
 
             let entity_type: String = row.get(11).unwrap_or_default();
 
+            let engravings_str: String = row.get(14).unwrap_or_default();
+            let engravings =
+                serde_json::from_str::<Option<PlayerEngravings>>(engravings_str.as_str())
+                    .unwrap_or_default();
+            
             Ok(EncounterEntity {
                 name: row.get(0)?,
                 class_id: row.get(1)?,
@@ -1004,6 +1031,8 @@ fn load_encounter(window: tauri::Window, id: String) -> Encounter {
                 entity_type: EntityType::from_str(entity_type.as_str())
                     .unwrap_or(EntityType::UNKNOWN),
                 npc_id: row.get(12)?,
+                character_id: row.get(13).unwrap_or_default(),
+                engraving_data: engravings,
                 ..Default::default()
             })
         })
@@ -1014,9 +1043,51 @@ fn load_encounter(window: tauri::Window, id: String) -> Encounter {
         entities.insert(entity.name.to_string(), entity);
     }
 
+    let mut sync_stmt = conn
+        .prepare_cached(
+            "
+    SELECT upstream_id
+    FROM sync_logs
+    WHERE encounter_id = ? AND failed = false;
+            ",
+        )
+        .unwrap();
+
+    let sync: Result<String, rusqlite::Error> = sync_stmt.query_row(params![id], |row| row.get(0));
+    encounter.sync = sync.ok();
+
     encounter.entities = entities;
 
     encounter
+}
+
+#[tauri::command]
+fn get_sync_candidates(window: tauri::Window) -> Vec<i32> {
+    let path = window
+        .app_handle()
+        .path_resolver()
+        .resource_dir()
+        .expect("could not get resource dir");
+    let conn = get_db_connection(&path).expect("could not get db connection");
+
+    let mut stmt = conn
+        .prepare_cached(
+            "
+    SELECT id
+    FROM encounter_preview
+    LEFT JOIN sync_logs ON encounter_id = id
+    WHERE cleared = true AND boss_only_damage = 1 AND upstream_id IS NULL
+    ORDER BY fight_start;
+            ",
+        )
+        .unwrap();
+    let rows = stmt.query_map([], |row| row.get(0)).unwrap();
+
+    let mut ids = Vec::new();
+    for id_result in rows {
+        ids.push(id_result.unwrap_or(0));
+    }
+    ids
 }
 
 #[tauri::command]
@@ -1273,6 +1344,25 @@ fn delete_encounters_below_min_duration(
         .unwrap();
     }
     conn.execute("VACUUM", params![]).unwrap();
+}
+
+#[tauri::command]
+fn sync(window: tauri::Window, encounter: i32, upstream: String, failed: bool) {
+    let path = window
+        .app_handle()
+        .path_resolver()
+        .resource_dir()
+        .expect("could not get resource dir");
+    let conn = get_db_connection(&path).expect("could not get db connection");
+
+    conn.execute(
+        "
+        INSERT OR REPLACE INTO sync_logs (encounter_id, upstream_id, failed)
+        VALUES(?, ?, ?);
+        ",
+        params![encounter, upstream, failed],
+    )
+    .unwrap();
 }
 
 #[tauri::command]

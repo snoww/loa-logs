@@ -75,6 +75,7 @@ pub struct Encounter {
     pub favorite: bool,
     pub cleared: bool,
     pub boss_only_damage: bool,
+    pub sync: Option<String>,
 }
 
 #[derive(Debug, Serialize, Clone, Default)]
@@ -675,6 +676,7 @@ pub struct Settings {
     pub meter: MeterTabs,
     pub logs: LogTabs,
     pub buffs: BuffSettings,
+    pub sync: SyncSettings,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -868,6 +870,17 @@ pub struct BuffSettings {
     pub default: bool,
 }
 
+#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase", default)]
+pub struct SyncSettings {
+    pub enabled: bool,
+    pub access_token: String,
+    pub auto: bool,
+    pub username: String,
+    pub valid_token: bool,
+    pub visibility: String,
+}
+
 #[derive(Default, Debug, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct EncounterDbInfo {
@@ -1005,40 +1018,40 @@ lazy_static! {
         let json_str = include_str!("../../meter-data/Ability.json");
         serde_json::from_str(json_str).unwrap()
     };
-    pub static ref ITEM_SET_DATA: HashMap<String, HashMap<u8, ItemSet>> = {
-        let json_str = include_str!("../../meter-data/ItemSet.json");
-        serde_json::from_str(json_str).unwrap()
-    };
-    pub static ref ITEM_SET_INFO: ItemSetInfo = {
-        let mut item_set_ids: HashMap<u32, ItemSetShort> = HashMap::new();
-        let mut item_set_names: HashMap<String, ItemSetLevel> = HashMap::new();
-
-        for (set_name, set_name_data) in ITEM_SET_DATA.iter() {
-            let mut item_set_level: ItemSetLevel = HashMap::new();
-            for (level, set_level_data) in set_name_data.iter() {
-                let mut item_set_count: ItemSetCount = HashMap::new();
-                for (count, set_count_data) in set_level_data.value.iter() {
-                    item_set_count.insert(*count, set_count_data.clone());
-                }
-                item_set_level.insert(*level, item_set_count);
-                for item_id in set_level_data.item_ids.iter() {
-                    item_set_ids.insert(
-                        *item_id,
-                        ItemSetShort {
-                            set_name: set_name.clone(),
-                            level: *level,
-                        },
-                    );
-                }
-            }
-            item_set_names.insert(set_name.clone(), item_set_level);
-        }
-
-        ItemSetInfo {
-            item_ids: item_set_ids,
-            set_names: item_set_names,
-        }
-    };
+    // pub static ref ITEM_SET_DATA: HashMap<String, HashMap<u8, ItemSet>> = {
+    //     let json_str = include_str!("../../meter-data/ItemSet.json");
+    //     serde_json::from_str(json_str).unwrap()
+    // };
+    // pub static ref ITEM_SET_INFO: ItemSetInfo = {
+    //     let mut item_set_ids: HashMap<u32, ItemSetShort> = HashMap::new();
+    //     let mut item_set_names: HashMap<String, ItemSetLevel> = HashMap::new();
+    // 
+    //     for (set_name, set_name_data) in ITEM_SET_DATA.iter() {
+    //         let mut item_set_level: ItemSetLevel = HashMap::new();
+    //         for (level, set_level_data) in set_name_data.iter() {
+    //             let mut item_set_count: ItemSetCount = HashMap::new();
+    //             for (count, set_count_data) in set_level_data.value.iter() {
+    //                 item_set_count.insert(*count, set_count_data.clone());
+    //             }
+    //             item_set_level.insert(*level, item_set_count);
+    //             for item_id in set_level_data.item_ids.iter() {
+    //                 item_set_ids.insert(
+    //                     *item_id,
+    //                     ItemSetShort {
+    //                         set_name: set_name.clone(),
+    //                         level: *level,
+    //                     },
+    //                 );
+    //             }
+    //         }
+    //         item_set_names.insert(set_name.clone(), item_set_level);
+    //     }
+    // 
+    //     ItemSetInfo {
+    //         item_ids: item_set_ids,
+    //         set_names: item_set_names,
+    //     }
+    // };
     pub static ref ESTHER_DATA: Vec<Esther> = {
         let json_str = include_str!("../../meter-data/Esther.json");
         serde_json::from_str(json_str).unwrap()
@@ -1053,7 +1066,6 @@ lazy_static! {
             308040, 308041, 308042, 308043, 308044, 308239, 308339, 308410, 308411, 308412, 308414,
             308415, 308416, 308417, 308418, 308419, 308420, 308421, 308422, 308423, 308424, 308425,
             308426, 308428, 308429, 308430, 308437, 309020, 30865, 30866
-            // todo behemoth
         ];
 
         valid_zones.iter().cloned().collect()

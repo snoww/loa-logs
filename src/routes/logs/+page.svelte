@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { onMount } from "svelte";
+    import { onDestroy, onMount } from "svelte";
 
     import LogSidebar from "$lib/components/logs/LogSidebar.svelte";
     import TableFilter from "$lib/components/table/TableFilter.svelte";
@@ -19,7 +19,7 @@
         raidGates,
         searchFilter,
         searchStore,
-        selectedEncounters
+        selectedEncounters, uploadErrorMessage, uploadErrorStore
     } from "$lib/utils/stores";
     import { tooltip } from "$lib/utils/tooltip";
     import { invoke } from "@tauri-apps/api";
@@ -73,6 +73,10 @@
             $miscSettings = { version: await getVersion() };
             await gotoChangelog();
         }
+    });
+
+    onDestroy(() => {
+        $uploadErrorStore = false;
     });
 
     async function gotoChangelog() {

@@ -1898,11 +1898,12 @@ impl EncounterState {
             raid_clear, self.raid_difficulty, encounter.current_boss_name
         );
 
+        let window = self.window.clone();
         task::spawn(async move {
             let mut conn = Connection::open(path).expect("failed to open database");
             let tx = conn.transaction().expect("failed to create transaction");
 
-            insert_data(
+            let encounter_id = insert_data(
                 &tx,
                 encounter,
                 prev_stagger,
@@ -1926,6 +1927,12 @@ impl EncounterState {
 
             tx.commit().expect("failed to commit transaction");
             info!("saved to db");
+
+            if raid_clear {
+                window
+                    .emit("clear-encounter", encounter_id)
+                    .expect("failed to emit clear-encounter");
+            }
         });
     }
 }

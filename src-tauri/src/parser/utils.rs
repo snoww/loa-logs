@@ -707,7 +707,7 @@ pub fn insert_data(
     rdps_valid: bool,
     manual: bool,
     skill_cast_log: HashMap<u64, HashMap<u32, BTreeMap<i64, SkillCast>>>,
-) {
+) -> i64 {
     let mut encounter_stmt = tx
         .prepare_cached(
             "
@@ -1134,6 +1134,8 @@ pub fn insert_data(
             encounter.boss_only_damage
         ])
         .expect("failed to insert encounter preview");
+    
+    last_insert_id
 }
 
 pub fn map_status_effect(se: &StatusEffectDetails, custom_id_map: &mut HashMap<u32, u32>) -> u32 {

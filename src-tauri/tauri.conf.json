@@ -100,7 +100,7 @@
       "iconAsTemplate": true
     },
     "security": {
-      "csp": "default-src 'self'; img-src https: data: asset: https://asset.localhost; style-src 'self' 'unsafe-inline'; font-src 'self' data:"
+      "csp": "default-src *; img-src https: data: asset: https://asset.localhost; style-src 'self' 'unsafe-inline'; font-src 'self' data:"
     },
     "updater": {
       "active": true, 

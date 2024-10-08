@@ -176,6 +176,14 @@ export const defaultSettings = {
     },
     buffs: {
         default: true,
+    },
+    sync: {
+        enabled: false,
+        accessToken: "",
+        validToken: false,
+        auto: false,
+        username: "",
+        visibility: "0"
     }
 };
 

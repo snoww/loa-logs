@@ -22,6 +22,7 @@ export interface Encounter {
     favorite: boolean;
     cleared: boolean;
     bossOnlyDamage: boolean;
+    sync?: string;
 }
 
 export interface EncountersOverview {
@@ -49,7 +50,6 @@ export interface EncounterDamageStats {
     totalDamageTaken: number;
     topDamageTaken: number;
     dps: number;
-    dpsIntervals: { [key: number]: number };
     mostDamageTakenEntity: MostDamageTakenEntity;
     buffs: { [key: number]: StatusEffect };
     debuffs: { [key: number]: StatusEffect };

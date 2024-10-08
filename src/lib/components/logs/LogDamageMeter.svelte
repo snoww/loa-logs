@@ -25,7 +25,7 @@
         takingScreenshot,
         raidGates,
         localPlayer,
-        rdpsEventDetails
+        rdpsEventDetails, uploadErrorStore, uploadErrorMessage
     } from "$lib/utils/stores";
     import LogIdentity from "./identity/LogIdentity.svelte";
     import LogStagger from "./stagger/LogStagger.svelte";
@@ -51,6 +51,8 @@
     import LogSkillChart from "./LogSkillChart.svelte";
     import LogDamageMeterPartySplit from "./LogDamageMeterPartySplit.svelte";
     import LogDamageMeterHeader from "./LogDamageMeterHeader.svelte";
+    import { LOG_SITE_URL, uploadLog } from "$lib/utils/sync";
+    import Notification from "$lib/components/shared/Notification.svelte";
 
     export let id: string;
     export let encounter: Encounter;
@@ -362,6 +364,26 @@
 
     let targetDiv: HTMLElement;
 
+    $: uploading = false;
+
+    async function upload() {
+        if (encounter.sync || uploading) {
+            return;
+        }
+
+        uploading = true;
+        let result = await uploadLog(id, encounter, $settings.sync);
+        if (result.error) {
+            $uploadErrorStore = true;
+            $uploadErrorMessage = "upload error: " + result.error;
+        } else {
+            encounter.sync = result.id;
+        }
+
+        uploading = false;
+        uploading = false;
+    }
+
     async function captureScreenshot() {
         takingScreenshot.set(true);
         setTimeout(async () => {
@@ -499,6 +521,50 @@
                             d="M479.5-269.5q71.75 0 119.625-47.875T647-437q0-71-47.875-118.75T479.5-603.5q-71.75 0-119.125 47.75T313-437q0 71.75 47.375 119.625T479.5-269.5Zm0-57.5q-47 0-78-31.145T370.5-437q0-47 31-78t78-31q47 0 78.5 31t31.5 78.25q0 47.25-31.5 78.5T479.5-327Zm-328 227.5q-38.019 0-64.76-26.741Q60-152.981 60-191v-491.5q0-37.431 26.74-64.966Q113.482-775 151.5-775h132l83.057-97.5H594.5l82 97.5h132q37.431 0 64.966 27.534Q901-719.931 901-682.5V-191q0 38.019-27.534 64.759Q845.931-99.5 808.5-99.5h-657Zm657-91.5v-491.5H635L552.5-780H408.451L325.5-682.5h-174V-191h657ZM480-436.5Z" />
                     </svg>
                 </button>
+                {#if encounter.cleared && $settings.sync.enabled && $settings.sync.accessToken && $settings.sync.validToken}
+                    {#if uploading}
+                        <button class="rounded-sm bg-gray-700 px-2 py-1" use:tooltip={{ content: "Uploading..." }}>
+                            <svg
+                                class="hover:fill-accent-800 h-5 w-5 animate-spin fill-zinc-300"
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 -960 960 960">
+                                <path
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    d="M160-160v-80h110l-16-14q-52-46-73-105t-21-119q0-111 66.5-197.5T400-790v84q-72 26-116 88.5T240-478q0 45 17 87.5t53 78.5l10 10v-98h80v240H160Zm400-10v-84q72-26 116-88.5T720-482q0-45-17-87.5T650-648l-10-10v98h-80v-240h240v80H690l16 14q49 49 71.5 106.5T800-482q0 111-66.5 197.5T560-170Z" />
+                            </svg>
+                        </button>
+                    {:else if true}
+                    <!--{:else if !encounter.sync}-->
+                        <button
+                            class="rounded-sm bg-gray-700 px-2 py-1"
+                            use:tooltip={{ content: "Sync to logs.snow.xyz" }}
+                            on:click={upload}>
+                            <svg
+                                class="hover:fill-accent-800 h-5 w-5 fill-zinc-300"
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 -960 960 960">
+                                <path
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    d="M450-313v-371L330-564l-43-43 193-193 193 193-43 43-120-120v371h-60ZM220-160q-24 0-42-18t-18-42v-143h60v143h520v-143h60v143q0 24-18 42t-42 18H220Z" />
+                            </svg>
+                        </button>
+                    {:else}
+                        <a
+                            class="rounded-sm bg-gray-700 px-2 py-1"
+                            use:tooltip={{ content: "Open on logs.snow.xyz" }}
+                            href={LOG_SITE_URL + "/logs/" + encounter.sync}
+                            target="_blank">
+                            <svg
+                                class="hover:fill-accent-800 h-5 w-5 fill-zinc-300"
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 -960 960 960">
+                                <path
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    d="m414-280 226-226-58-58-169 169-84-84-57 57 142 142ZM260-160q-91 0-155.5-63T40-377q0-78 47-139t123-78q25-92 100-149t170-57q117 0 198.5 81.5T760-520q69 8 114.5 59.5T920-340q0 75-52.5 127.5T740-160H260Zm0-80h480q42 0 71-29t29-71q0-42-29-71t-71-29h-60v-80q0-83-58.5-141.5T480-720q-83 0-141.5 58.5T280-520h-20q-58 0-99 41t-41 99q0 58 41 99t99 41Zm220-240Z" />
+                            </svg>
+                        </a>
+                    {/if}
+                {/if}
                 <div class="relative flex items-center rounded-sm bg-gray-700" on:focusout={handleDropdownFocusLoss}>
                     <button on:click={handleDropdownClick} class="h-full px-2">
                         <svg
@@ -815,4 +881,12 @@
             {/if}
         {/if}
     </div>
+{/if}
+{#if $uploadErrorStore}
+    <Notification
+        bind:showAlert={$uploadErrorStore}
+        text={$uploadErrorMessage}
+        dismissable={true}
+        width="20rem"
+        isError={true} />
 {/if}

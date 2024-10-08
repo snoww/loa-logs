@@ -13,6 +13,8 @@ export const searchStore = writable("");
 export const backNavStore = writable(false);
 
 export const ifaceChangedStore = writable(false);
+export const uploadErrorStore = writable(false);
+export const uploadErrorMessage = writable("");
 
 export const searchFilter = writable(new SearchFilter());
 
@@ -58,3 +60,11 @@ md.renderer.rules.link_open = function (tokens, idx, options, env, self) {
 };
 
 export const markdownIt = readable(md);
+
+export const syncStore = writable({
+    syncing: false,
+    synced: 0,
+    total: 0,
+    message: "",
+    stop: false
+});
