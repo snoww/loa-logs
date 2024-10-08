@@ -1062,23 +1062,27 @@ fn load_encounter(window: tauri::Window, id: String) -> Encounter {
 }
 
 #[tauri::command]
-fn get_sync_candidates(window: tauri::Window) -> Vec<i32> {
+fn get_sync_candidates(window: tauri::Window, force_resync: bool) -> Vec<i32> {
     let path = window
         .app_handle()
         .path_resolver()
         .resource_dir()
         .expect("could not get resource dir");
     let conn = get_db_connection(&path).expect("could not get db connection");
-
+    let query = if force_resync {
+        "= '0'"
+    } else {
+        "IS NULL"
+    };
     let mut stmt = conn
         .prepare_cached(
-            "
+            &format!("
     SELECT id
     FROM encounter_preview
     LEFT JOIN sync_logs ON encounter_id = id
-    WHERE cleared = true AND boss_only_damage = 1 AND upstream_id IS NULL
+    WHERE cleared = true AND boss_only_damage = 1 AND upstream_id {}
     ORDER BY fight_start;
-            ",
+            ", query),
         )
         .unwrap();
     let rows = stmt.query_map([], |row| row.get(0)).unwrap();

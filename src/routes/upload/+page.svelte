@@ -29,7 +29,7 @@
         }
     }
 
-    function syncPastLogs() {
+    function syncPastLogs(force = false) {
         if (!$settings.sync.enabled) {
             $syncStore.message = "Sync is not enabled.";
             return;
@@ -48,7 +48,7 @@
         $syncStore.synced = 0;
 
         (async () => {
-            const ids = (await invoke("get_sync_candidates", {})) as number[];
+            const ids = (await invoke("get_sync_candidates", { forceResync: force })) as number[];
             console.log(ids);
             $syncStore.total = ids.length;
 
@@ -164,12 +164,12 @@
                 </div>
             </div>
         </div>
-
         <div class="mt-4 flex flex-col space-y-2 px-2">
             <div class="flex items-center space-x-2">
                 <div>Sync Past Logs:</div>
                 {#if !$syncStore.syncing}
-                    <button class="rounded-md bg-zinc-600 p-1 hover:bg-zinc-700" on:click={syncPastLogs}>Sync</button>
+                    <button class="rounded-md bg-zinc-600 p-1 hover:bg-zinc-700" on:click={() => {syncPastLogs();}}>Sync</button>
+                    <button class="rounded-md bg-zinc-600 p-1 hover:bg-zinc-700" on:click={() => {syncPastLogs(true);}}>Force Re-sync</button>
                 {:else}
                     <button class="rounded-md bg-zinc-600 p-1 hover:bg-zinc-700" disabled>Syncing...</button>
                     <button
