@@ -3,8 +3,8 @@ import type { Encounter } from "$lib/types";
 import pako from "pako";
 
 export const LOG_SITE_URL = "https://logs.snow.xyz";
-export const API_URL = "https://api.snow.xyz";
-// export const API_URL = "http://localhost:5180";
+// export const API_URL = "https://api.snow.xyz";
+export const API_URL = "http://localhost:5180";
 
 export const bosses = [
     "Dark Mountain Predator",
@@ -72,6 +72,15 @@ export async function uploadLog(id: string | number, encounter: Encounter, setti
     }
     const body = await resp.json();
     if (body.error) {
+        if (body.error === "duplicate log" && body.duplicate) {
+            const duplicate = body.duplicate;
+            await invoke("write_log", {
+                message: "did not upload duplicate encounter " + id + " (" + encounter.currentBossName + ") using existing upstream: " + duplicate
+            });
+            await invoke("sync", { encounter: Number(id), upstream: duplicate.toString(), failed: false });
+            return { id: duplicate, error: "" };
+        }
+
         await invoke("write_log", {
             message:
                 "couldn't upload encounter " +

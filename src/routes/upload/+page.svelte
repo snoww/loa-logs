@@ -55,7 +55,7 @@
             for (let i = 0; i < ids.length; i++) {
                 let id = ids[i];
                 const encounter = (await invoke("load_encounter", { id: id.toString() })) as Encounter;
-                let upstream = await uploadLog(id, encounter, $settings.sync, true);
+                let upstream = await uploadLog(id, encounter, $settings.sync);
                 if (upstream.id) {
                     $syncStore.synced++;
                 }
