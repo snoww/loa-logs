@@ -41,7 +41,7 @@
     }
     let buffSummary: BuffDetails[];
     if (tab === MeterTab.SELF_BUFFS || tab === MeterTab.PARTY_BUFFS) {
-        buffSummary = getSynergyPercentageDetailsSum(groupedSynergies, skills, player.damageStats.damageDealt);
+        buffSummary = getSynergyPercentageDetailsSum(groupedSynergies, skills, player.damageStats);
     }
 </script>
 

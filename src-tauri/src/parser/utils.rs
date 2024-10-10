@@ -57,17 +57,17 @@ pub fn is_battle_item(skill_effect_id: u32, _item_type: &str) -> bool {
 
 pub fn get_status_effect_data(buff_id: u32, source_skill: Option<u32>) -> Option<StatusEffect> {
     let buff = SKILL_BUFF_DATA.get(&buff_id);
-    if buff.is_none() || buff.unwrap().icon_show_type == "none" {
+    if buff.is_none() || buff.unwrap().icon_show_type.clone().unwrap_or_default() == "none" {
         return None;
     }
 
     let buff = buff.unwrap();
-    let buff_category = if buff.buff_category == "ability"
+    let buff_category = if buff.buff_category.clone().unwrap_or_default() == "ability"
         && [501, 502, 503, 504, 505].contains(&buff.unique_group)
     {
         "dropsofether".to_string()
     } else {
-        buff.buff_category.clone()
+        buff.buff_category.clone().unwrap_or_default()
     };
     let mut status_effect = StatusEffect {
         target: {
@@ -84,9 +84,9 @@ pub fn get_status_effect_data(buff_id: u32, source_skill: Option<u32>) -> Option
         buff_type: get_status_effect_buff_type_flags(buff),
         unique_group: buff.unique_group,
         source: StatusEffectSource {
-            name: buff.name.clone(),
-            desc: buff.desc.clone(),
-            icon: buff.icon.clone(),
+            name: buff.name.clone()?,
+            desc: buff.desc.clone()?,
+            icon: buff.icon.clone()?,
             ..Default::default()
         },
     };
@@ -95,7 +95,7 @@ pub fn get_status_effect_data(buff_id: u32, source_skill: Option<u32>) -> Option
         || buff_category == "identity"
         || (buff_category == "ability" && buff.unique_group != 0)
     {
-        if let Some(buff_source_skills) = buff.source_skill.as_ref() {
+        if let Some(buff_source_skills) = buff.source_skills.as_ref() {
             if let Some(source_skill) = source_skill {
                 let skill = SKILL_DATA.get(&source_skill);
                 get_summon_source_skill(skill, &mut status_effect);
@@ -173,7 +173,7 @@ pub fn get_status_effect_buff_type_flags(buff: &SkillBuffData) -> u32 {
         buff_type |= StatusEffectBuffTypeFlags::RESOURCE;
     }
 
-    for option in buff.passive_option.iter() {
+    for option in buff.passive_options.iter() {
         let key_stat_str = option.key_stat.as_str();
         let option_type = option.option_type.as_str();
         if option_type == "stat" {
@@ -349,10 +349,18 @@ pub fn get_skill_name_and_icon(
             }
             if let Some(source_skill) = effect.source_skill.as_ref() {
                 if let Some(skill) = SKILL_DATA.get(source_skill.first().unwrap_or(&0)) {
-                    return (skill.name.clone(), skill.icon.clone(), None);
+                    return (
+                        skill.name.clone().unwrap_or_default(),
+                        skill.icon.clone().unwrap_or_default(),
+                        None,
+                    );
                 }
             } else if let Some(skill) = SKILL_DATA.get(&(skill_effect_id / 10)) {
-                return (skill.name.clone(), skill.icon.clone(), None);
+                return (
+                    skill.name.clone().unwrap_or_default(),
+                    skill.icon.clone().unwrap_or_default(),
+                    None,
+                );
             }
             (effect.comment.clone(), "".to_string(), None)
         } else {
@@ -369,8 +377,8 @@ pub fn get_skill_name_and_icon(
                     {
                         if let Some(skill) = SKILL_DATA.get(source) {
                             return (
-                                skill.name.clone() + " (Summon)",
-                                skill.icon.clone(),
+                                skill.name.clone().unwrap_or_default() + " (Summon)",
+                                skill.icon.clone().unwrap_or_default(),
                                 Some(summon_source_skill.clone()),
                             );
                         }
@@ -378,8 +386,8 @@ pub fn get_skill_name_and_icon(
                 }
                 if let Some(skill) = SKILL_DATA.get(summon_source_skill.first().unwrap_or(&0)) {
                     (
-                        skill.name.clone() + " (Summon)",
-                        skill.icon.clone(),
+                        skill.name.clone().unwrap_or_default() + " (Summon)",
+                        skill.icon.clone().unwrap_or_default(),
                         Some(summon_source_skill.clone()),
                     )
                 } else {
@@ -387,15 +395,27 @@ pub fn get_skill_name_and_icon(
                 }
             } else if let Some(source_skill) = skill.source_skill.as_ref() {
                 if let Some(skill) = SKILL_DATA.get(source_skill.first().unwrap_or(&0)) {
-                    (skill.name.clone(), skill.icon.clone(), None)
+                    (
+                        skill.name.clone().unwrap_or_default(),
+                        skill.icon.clone().unwrap_or_default(),
+                        None,
+                    )
                 } else {
                     (skill_name, "".to_string(), None)
                 }
             } else {
-                (skill.name.clone(), skill.icon.clone(), None)
+                (
+                    skill.name.clone().unwrap_or_default(),
+                    skill.icon.clone().unwrap_or_default(),
+                    None,
+                )
             }
         } else if let Some(skill) = SKILL_DATA.get(&(skill_id - (skill_id % 10))) {
-            (skill.name.clone(), skill.icon.clone(), None)
+            (
+                skill.name.clone().unwrap_or_default(),
+                skill.icon.clone().unwrap_or_default(),
+                None,
+            )
         } else {
             (skill_name, "".to_string(), None)
         };
@@ -405,11 +425,11 @@ pub fn get_skill_name_and_icon(
 pub fn get_skill_name(skill_id: &u32) -> String {
     SKILL_DATA
         .get(skill_id)
-        .map_or(skill_id.to_string(), |skill| { 
-            if skill.name.is_empty() {
+        .map_or(skill_id.to_string(), |skill| {
+            if skill.name.is_none() {
                 skill_id.to_string()
             } else {
-                skill.name.clone()
+                skill.name.clone().unwrap_or_default()
             }
         })
 }
@@ -595,6 +615,18 @@ fn is_class_engraving(class_id: u32, engraving_id: u32) -> bool {
         307 | 308 => class_id == 603, // wind fury, drizzle
         _ => false,
     }
+}
+
+pub fn is_hyper_awakening_skill(skill_id: u32) -> bool {
+    matches!(skill_id, 16720 | 16730 | 18240 | 18250 | 17250 | 17260 | 36230 | 36240 | 45820 | 45830 | 19360
+        | 19370 | 20370 | 20350 | 21320 | 21330 | 37380 | 37390 | 22360 | 22370 | 23400 | 23410
+        | 24300 | 24310 | 34620 | 34630 | 39340 | 39350 | 47300 | 47310 | 25410 | 25420 | 27910
+        | 27920 | 26940 | 26950 | 46620 | 46630 | 29360 | 29370 | 30320 | 30330 | 35810 | 35820
+        | 38320 | 38330 | 31920 | 31930 | 32290 | 32280)
+}
+
+pub fn is_hat_buff(buff_id: u32) -> bool {
+    matches!(buff_id, 362600 | 212305 | 319503)
 }
 
 fn generate_intervals(start: i64, end: i64) -> Vec<i64> {
@@ -1055,7 +1087,7 @@ pub fn insert_data(
                 entity.skill_stats.identity_stats = Some(stats);
             }
         }
-        
+
         let compressed_skills = compress_json(&entity.skills);
         let compressed_damage_stats = compress_json(&entity.damage_stats);
 
@@ -1134,7 +1166,7 @@ pub fn insert_data(
             encounter.boss_only_damage
         ])
         .expect("failed to insert encounter preview");
-    
+
     last_insert_id
 }
 

@@ -27,6 +27,7 @@ export const bosses = [
     "Caliligos",
     "Achates",
     "Veskal",
+    "Argeos",
     "Killineza the Dark Worshipper",
     "Valinak, Herald of the End",
     "Thaemine the Lightqueller",

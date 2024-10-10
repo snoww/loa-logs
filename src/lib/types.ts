@@ -125,6 +125,7 @@ export interface Skill {
     debuffedBy: { [key: number]: number };
     buffedBySupport: number;
     buffedByIdentity: number;
+    buffedByHat: number;
     debuffedBySupport: number;
     casts: number;
     hits: number;
@@ -173,10 +174,12 @@ export interface Tripod {
 export interface DamageStats {
     damageDealt: number;
     damageTaken: number;
+    hyperAwakeningDamage?: number;
     buffedBy: { [key: number]: number };
     debuffedBy: { [key: number]: number };
     buffedBySupport: number;
     buffedByIdentity: number;
+    buffedByHat?: number;
     debuffedBySupport: number;
     backAttackDamage: number;
     frontAttackDamage: number;

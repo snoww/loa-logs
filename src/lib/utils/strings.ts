@@ -9,7 +9,7 @@ export function isValidName(word: string) {
 
 export function removeUnknownHtmlTags(input: string) {
     input = input.replace(/<\$TABLE_SKILLFEATURE[^>]*\/>/g, "??");
-    input = input.replace(/<\$CALC[^>]*\/>/g, "??");
+    input = input.replace(/<\$[^<>]*?(?:<[^<>]*?>[^<>]*?)*?\/?>/g, "??");
     return input;
 }
 

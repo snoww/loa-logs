@@ -1,6 +1,6 @@
 <script lang="ts">
     import type { BuffDetails, Skill, StatusEffect } from "$lib/types";
-    import { getSynergyPercentageDetails } from "$lib/utils/buffs";
+    import { getSynergyPercentageDetails, hyperAwakeningIds } from "$lib/utils/buffs";
     import { HexToRgba, RGBLinearShade } from "$lib/utils/colors";
     import { settings, skillIcon } from "$lib/utils/settings";
     import { getSkillIcon } from "$lib/utils/strings";
@@ -16,9 +16,15 @@
 
     let synergyPercentageDetails: Array<BuffDetails>;
 
+    let isHyperAwakening = false;
+
     $: {
         if (groupedSynergies.size > 0) {
             synergyPercentageDetails = getSynergyPercentageDetails(groupedSynergies, skill);
+        }
+
+        if (hyperAwakeningIds.has(skill.id)) {
+            isHyperAwakening = true;
         }
     }
 </script>
@@ -43,6 +49,8 @@
             <td class="px-1 text-center">
                 {#if synergy.percentage}
                     <BuffTooltipDetail {synergy} />
+                {:else if isHyperAwakening}
+                    -
                 {/if}
             </td>
         {/each}

@@ -7,6 +7,7 @@
     export let dismissable = true;
     export let width: string;
     export let isError = false;
+    export let fixed = false;
 </script>
 
 <div transition:fade|global>
@@ -14,7 +15,7 @@
         color="none"
         class="{isError
             ? 'bg-red-800'
-            : 'bg-accent-800'} fixed inset-x-0 bottom-20 z-50 mx-auto h-10 py-2"
+            : 'bg-accent-800'} {fixed ? 'fixed' : 'absolute'} inset-x-0 bottom-20 z-50 mx-auto h-10 py-2"
         style={`width: ${width};`}
         {dismissable}
         on:close={() => (showAlert = false)}>

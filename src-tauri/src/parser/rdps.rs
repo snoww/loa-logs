@@ -31,7 +31,7 @@ pub fn get_buff_after_tripods(
                                         change_map.insert(stat_type, value);
                                     }
                                 }
-                                for passive_option in buff.passive_option.iter_mut() {
+                                for passive_option in buff.passive_options.iter_mut() {
                                     let change = change_map.get(
                                         &(STAT_TYPE_MAP[passive_option.key_stat.as_str()] as i32),
                                     );
@@ -57,7 +57,7 @@ pub fn get_buff_after_tripods(
                                 let key_stat = params.get(2).cloned();
                                 let value = params.get(3).cloned();
                                 if let (Some(key_stat), Some(value)) = (key_stat, value) {
-                                    buff.passive_option.push(PassiveOption {
+                                    buff.passive_options.push(PassiveOption {
                                         option_type: "stat".to_string(),
                                         key_stat: STAT_TYPE_MAP_TRA
                                             .get(&(key_stat as u32))

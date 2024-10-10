@@ -8,7 +8,7 @@
     import { formatPlayerName } from "$lib/utils/strings";
     import { tooltip } from "$lib/utils/tooltip";
     import { round } from "$lib/utils/numbers";
-    import { addBardBubbles } from "$lib/utils/buffs";
+    import { addBardBubbles, supportSkills } from "$lib/utils/buffs";
     import { localPlayer } from "$lib/utils/stores";
 
     export let player: Entity;
@@ -35,18 +35,25 @@
             }
         }
 
-        playerName = formatPlayerName(player, $settings.general);;
+        playerName = formatPlayerName(player, $settings.general);
+
+        let damageDealt = player.damageStats.damageDealt;
+        let damageDealtWithoutHA = player.damageStats.damageDealt - (player.damageStats.hyperAwakeningDamage ?? 0);
 
         if (groupedSynergies.size > 0) {
             synergyPercentageDetails = [];
             groupedSynergies.forEach((synergies, key) => {
                 let synergyDamage = 0;
                 let buff = new BuffDetails();
+                let isHat = false;
                 synergies.forEach((syn, id) => {
+                    if (supportSkills.haTechnique.includes(id)) {
+                        isHat = true;
+                    }
                     if (player.damageStats.buffedBy[id]) {
                         let b = new Buff(
                             syn.source.icon,
-                            round((player.damageStats.buffedBy[id] / player.damageStats.damageDealt) * 100),
+                            round((player.damageStats.buffedBy[id] / (isHat ? damageDealt : damageDealtWithoutHA)) * 100),
                             syn.source.skill?.icon
                         );
                         addBardBubbles(key, b, syn);
@@ -56,7 +63,7 @@
                         buff.buffs.push(
                             new Buff(
                                 syn.source.icon,
-                                round((player.damageStats.debuffedBy[id] / player.damageStats.damageDealt) * 100),
+                                round((player.damageStats.debuffedBy[id] / (isHat ? damageDealt : damageDealtWithoutHA)) * 100),
                                 syn.source.skill?.icon
                             )
                         );
@@ -65,7 +72,7 @@
                 });
 
                 if (synergyDamage > 0) {
-                    buff.percentage = round((synergyDamage / player.damageStats.damageDealt) * 100);
+                    buff.percentage = round((synergyDamage / (isHat ? damageDealt : damageDealtWithoutHA)) * 100);
                 }
                 synergyPercentageDetails.push(buff);
             });

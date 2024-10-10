@@ -15,9 +15,8 @@ import {
     ShieldDetails,
     type EncounterDamageStats,
     type StatusEffectWithId,
-    type SkillChartSupportDamage
+    type SkillChartSupportDamage, type DamageStats
 } from "$lib/types";
-import { add, identity } from "lodash-es";
 import { round } from "./numbers";
 import { getSkillIcon } from "./strings";
 
@@ -143,11 +142,28 @@ export function filterStatusEffects(
 
 export function getSynergyPercentageDetails(groupedSynergies: Map<string, Map<number, StatusEffect>>, skill: Skill) {
     const synergyPercentageDetails: BuffDetails[] = [];
+    const isHyperAwakening = hyperAwakeningIds.has(skill.id);
     groupedSynergies.forEach((synergies, key) => {
         let synergyDamage = 0;
         const buff = new BuffDetails();
         buff.id = key;
+
         synergies.forEach((syn, id) => {
+            if (isHyperAwakening) {
+                if (supportSkills.haTechnique.includes(id)) {
+                    const b = new Buff(
+                        syn.source.icon,
+                        round((skill.buffedBy[id] / skill.totalDamage) * 100),
+                        syn.source.skill?.icon
+                    );
+
+                    buff.buffs.push(b);
+                    synergyDamage += skill.buffedBy[id];
+                }
+
+                return;
+            }
+
             if (skill.buffedBy[id]) {
                 const b = new Buff(
                     syn.source.icon,
@@ -181,18 +197,28 @@ export function getSynergyPercentageDetails(groupedSynergies: Map<string, Map<nu
 export function getSynergyPercentageDetailsSum(
     groupedSynergies: Map<string, Map<number, StatusEffect>>,
     skills: Skill[],
-    totalDamage: number
+    damageStats: DamageStats
 ) {
+    const totalDamage = damageStats.damageDealt;
+    const totalDamageWithoutHa = totalDamage - (damageStats.hyperAwakeningDamage ?? 0);
+
     const synergyPercentageDetails: BuffDetails[] = [];
     groupedSynergies.forEach((synergies, key) => {
+
         let synergyDamage = 0;
         const buffs = new BuffDetails();
         buffs.id = key;
+        let isHat = false;
         synergies.forEach((syn, id) => {
+             isHat = supportSkills.haTechnique.includes(id);
+
             const buff = new Buff(syn.source.icon, "", syn.source.skill?.icon);
             addBardBubbles(key, buff, syn);
             let totalBuffed = 0;
             for (const skill of skills) {
+                if (hyperAwakeningIds.has(skill.id) && !isHat) {
+                    continue;
+                }
                 if (skill.buffedBy[id]) {
                     totalBuffed += skill.buffedBy[id];
                     synergyDamage += skill.buffedBy[id];
@@ -201,12 +227,21 @@ export function getSynergyPercentageDetailsSum(
                     synergyDamage += skill.debuffedBy[id];
                 }
             }
-            buff.percentage = round((totalBuffed / totalDamage) * 100);
+            if (isHat) {
+                buff.percentage = round((totalBuffed / totalDamage) * 100);
+            } else {
+                buff.percentage = round((totalBuffed / totalDamageWithoutHa) * 100);
+            }
             buffs.buffs.push(buff);
         });
 
         if (synergyDamage > 0) {
-            buffs.percentage = round((synergyDamage / totalDamage) * 100);
+            if (isHat) {
+                buffs.percentage = round((synergyDamage / totalDamage) * 100);
+            } else {
+                buffs.percentage = round((synergyDamage / totalDamageWithoutHa) * 100);
+            }
+            console.log(key, buffs.percentage);
         }
         synergyPercentageDetails.push(buffs);
     });
@@ -366,16 +401,23 @@ export function getPartyBuffs(
             for (const player of party) {
                 partyBuffs.get(partyId.toString())!.set(player.name, []);
                 const playerBuffs = partyBuffs.get(partyId.toString())!.get(player.name)!;
+
                 partyGroupedSynergies.get(partyId.toString())?.forEach((key) => {
                     const buffDetails = new BuffDetails();
                     buffDetails.id = key;
                     let buffDamage = 0;
                     const buffs = groupedSynergies.get(key) || new Map();
+                    let damageDealt = player.damageStats.damageDealt;
+
                     buffs.forEach((syn, id) => {
+                        if (!supportSkills.haTechnique.includes(id)) {
+                            damageDealt -= player.damageStats.hyperAwakeningDamage ?? 0;
+                        }
+
                         if (player.damageStats.buffedBy[id]) {
                             const b = new Buff(
                                 syn.source.icon,
-                                round((player.damageStats.buffedBy[id] / player.damageStats.damageDealt) * 100),
+                                round((player.damageStats.buffedBy[id] / damageDealt) * 100),
                                 syn.source.skill?.icon
                             );
                             addBardBubbles(key, b, syn);
@@ -385,7 +427,7 @@ export function getPartyBuffs(
                             buffDetails.buffs.push(
                                 new Buff(
                                     syn.source.icon,
-                                    round((player.damageStats.debuffedBy[id] / player.damageStats.damageDealt) * 100),
+                                    round((player.damageStats.debuffedBy[id] / damageDealt) * 100),
                                     syn.source.skill?.icon
                                 )
                             );
@@ -393,8 +435,9 @@ export function getPartyBuffs(
                         }
                     });
                     if (buffDamage > 0) {
-                        buffDetails.percentage = round((buffDamage / player.damageStats.damageDealt) * 100);
+                        buffDetails.percentage = round((buffDamage / damageDealt) * 100);
                     }
+
                     playerBuffs.push(buffDetails);
                 });
             }
@@ -454,7 +497,7 @@ function isSupportBuff(statusEffect: StatusEffect) {
     return supportClasses.includes(statusEffect.source.skill.classId);
 }
 
-const supportSkills = {
+export const supportSkills = {
     marking: [
         21020, // Sound shock, Stigma, Harp of Rythm
         21290, // Sonatina
@@ -493,6 +536,11 @@ const supportSkills = {
         368000, // Pala Holy aura group
         310501 // Artist Moonfal group
         // Bard Serenade of Courage - doesn't exist
+    ],
+    haTechnique: [
+        362600, // Paladin
+        212305, // Bard
+        319503 // Artist
     ]
 };
 
@@ -509,8 +557,10 @@ function makeSupportBuffKey(statusEffect: StatusEffect) {
         supportSkills.identityGrp.includes(statusEffect.uniqueGroup)
     ) {
         key += "_2";
-    } else {
+    } else if (supportSkills.haTechnique.includes(skillId)) {
         key += "_3";
+    } else {
+        key += "_4";
     }
     key += `_${statusEffect.uniqueGroup ? statusEffect.uniqueGroup : statusEffect.source.skill?.name}`;
     return key;
@@ -684,3 +734,11 @@ function addToMap(key: string, buffId: number, buff: StatusEffect, map: Map<stri
         map.set(key, [buffWithId]);
     }
 }
+
+export const hyperAwakeningIds: Set<number> = new Set([
+    16720, 16730, 18240, 18250, 17250, 17260, 36230, 36240, 45820, 45830,
+    19360, 19370, 20370, 20350, 21320, 21330, 37380, 37390, 22360, 22370,
+    23400, 23410, 24300, 24310, 34620, 34630, 39340, 39350, 47300, 47310,
+    25410, 25420, 27910, 27920, 26940, 26950, 46620, 46630, 29360, 29370,
+    30320, 30330, 35810, 35820, 38320, 38330, 31920, 31930, 32290, 32280
+]);

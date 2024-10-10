@@ -362,18 +362,18 @@ pub fn build_status_effect(
     let mut db_target_type = "".to_string();
     let mut custom_id = 0;
     if let Some(effect) = SKILL_BUFF_DATA.get(&se_data.status_effect_id) {
-        name = effect.name.to_string();
+        name = effect.name.clone().unwrap_or_default();
         if effect.category.as_str() == "debuff" {
             status_effect_category = Debuff
         }
-        match effect.buff_category.as_str() {
+        match effect.buff_category.clone().unwrap_or_default().as_str() {
             "bracelet" => buff_category = Bracelet,
             "etc" => buff_category = Etc,
             "battleitem" => buff_category = BattleItem,
             "elixir" => buff_category = Elixir,
             _ => {}
         }
-        if effect.icon_show_type.as_str() == "all" {
+        if effect.icon_show_type.clone().unwrap_or_default() == "all" {
             show_type = All
         }
         if effect.buff_type.as_str() == "shield" {
@@ -381,7 +381,7 @@ pub fn build_status_effect(
         }
         db_target_type = effect.target.to_string();
 
-        if let Some(source_skills) = effect.source_skill.as_ref() {
+        if let Some(source_skills) = effect.source_skills.as_ref() {
             if source_skills.len() > 1 {
                 if let Some(source_entity) = source_entity {
                     let mut last_time = i64::MIN;

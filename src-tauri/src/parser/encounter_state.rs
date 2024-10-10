@@ -1,7 +1,7 @@
 use chrono::Utc;
 use hashbrown::HashMap;
 use log::{info, warn};
-use meter_core::packets::definitions::{PKTIdentityGaugeChangeNotify};
+use meter_core::packets::definitions::PKTIdentityGaugeChangeNotify;
 use moka::sync::Cache;
 use rsntp::SntpClient;
 use rusqlite::Connection;
@@ -56,7 +56,7 @@ pub struct EncounterState {
 
     pub skill_tracker: SkillTracker,
 
-    custom_id_map: HashMap<u32, u32>
+    custom_id_map: HashMap<u32, u32>,
 }
 
 impl EncounterState {
@@ -120,7 +120,7 @@ impl EncounterState {
         self.rdps_valid = false;
 
         self.skill_tracker = SkillTracker::new();
-        
+
         self.custom_id_map = HashMap::new();
 
         for (key, entity) in clone.entities.into_iter().filter(|(_, e)| {
@@ -380,7 +380,7 @@ impl EncounterState {
                     skill_id,
                     Skill {
                         id: skill_id,
-                        name: { 
+                        name: {
                             if skill_name.is_empty() {
                                 skill_id.to_string()
                             } else {
@@ -595,7 +595,7 @@ impl EncounterState {
                 target_entity
             })
             .to_owned();
-        
+
         // if boss only damage is enabled
         // check if target is boss and not player
         // check if target is player and source is boss
@@ -635,7 +635,7 @@ impl EncounterState {
         self.encounter.last_combat_packet = timestamp;
 
         source_entity.id = dmg_src_entity.id;
-        
+
         if target_entity.id == dmg_target_entity.id {
             target_entity.current_hp = damage_data.target_current_hp;
             target_entity.max_hp = damage_data.target_max_hp;
@@ -656,7 +656,7 @@ impl EncounterState {
         let mut skill_name = "".to_string();
         let mut skill_summon_sources: Option<Vec<u32>> = None;
         if let Some(skill_data) = skill_data.as_ref() {
-            skill_name.clone_from(&skill_data.name);
+            skill_name = skill_data.name.clone().unwrap_or_default();
             skill_summon_sources.clone_from(&skill_data.summon_source_skill);
         }
 
@@ -721,6 +721,10 @@ impl EncounterState {
         skill.last_timestamp = timestamp;
 
         source_entity.damage_stats.damage_dealt += damage;
+        let is_hyper_awakening = is_hyper_awakening_skill(skill.id);
+        if is_hyper_awakening {
+            source_entity.damage_stats.hyper_awakening_damage += damage;
+        }
         target_entity.damage_stats.damage_taken += damage;
 
         source_entity.skill_stats.hits += 1;
@@ -763,6 +767,7 @@ impl EncounterState {
             let mut is_buffed_by_support = false;
             let mut is_buffed_by_identity = false;
             let mut is_debuffed_by_support = false;
+            let mut is_buffed_by_hat = false;
             let se_on_source_ids = se_on_source
                 .iter()
                 .map(|se| map_status_effect(se, &mut self.custom_id_map))
@@ -820,6 +825,10 @@ impl EncounterState {
                         }
                     }
                 }
+
+                if !is_buffed_by_hat && is_hat_buff(*buff_id) {
+                    is_buffed_by_hat = true;
+                }
             }
             let se_on_target_ids = se_on_target
                 .iter()
@@ -838,12 +847,13 @@ impl EncounterState {
                         .contains_key(debuff_id)
                 {
                     let mut source_id: Option<u32> = None;
-                    let original_debuff_id = if let Some(deref_id) = self.custom_id_map.get(debuff_id) {
-                        source_id = Some(get_skill_id(*debuff_id));
-                        *deref_id
-                    } else {
-                        *debuff_id
-                    };
+                    let original_debuff_id =
+                        if let Some(deref_id) = self.custom_id_map.get(debuff_id) {
+                            source_id = Some(get_skill_id(*debuff_id));
+                            *deref_id
+                        } else {
+                            *debuff_id
+                        };
 
                     if let Some(status_effect) =
                         get_status_effect_data(original_debuff_id, source_id)
@@ -872,20 +882,28 @@ impl EncounterState {
                 }
             }
 
-            if is_buffed_by_support {
+            if is_buffed_by_support && !is_hyper_awakening {
                 skill.buffed_by_support += damage;
                 source_entity.damage_stats.buffed_by_support += damage;
             }
-            if is_buffed_by_identity {
+            if is_buffed_by_identity && !is_hyper_awakening {
                 skill.buffed_by_identity += damage;
                 source_entity.damage_stats.buffed_by_identity += damage;
             }
-            if is_debuffed_by_support {
+            if is_debuffed_by_support && !is_hyper_awakening {
                 skill.debuffed_by_support += damage;
                 source_entity.damage_stats.debuffed_by_support += damage;
             }
-
+            if is_buffed_by_hat {
+                skill.buffed_by_hat += damage;
+                source_entity.damage_stats.buffed_by_hat += damage;
+            }
+            
             for buff_id in se_on_source_ids.iter() {
+                if is_hyper_awakening && !is_hat_buff(*buff_id) {
+                    continue;
+                }
+
                 skill
                     .buffed_by
                     .entry(*buff_id)
@@ -899,6 +917,10 @@ impl EncounterState {
                     .or_insert(damage);
             }
             for debuff_id in se_on_target_ids.iter() {
+                if is_hyper_awakening {
+                    break;
+                }
+                
                 skill
                     .debuffed_by
                     .entry(*debuff_id)
@@ -911,8 +933,13 @@ impl EncounterState {
                     .and_modify(|e| *e += damage)
                     .or_insert(damage);
             }
-            skill_hit.buffed_by = se_on_source_ids;
-            skill_hit.debuffed_by = se_on_target_ids;
+            
+            if is_hyper_awakening { 
+                skill_hit.buffed_by = se_on_source_ids.iter().filter(|&id| is_hat_buff(*id)).cloned().collect();
+            } else {
+                skill_hit.buffed_by = se_on_source_ids;
+                skill_hit.debuffed_by = se_on_target_ids;
+            }
 
             // todo
             if let (true, Some(player_stats)) =
@@ -1019,7 +1046,7 @@ impl EncounterState {
                             }
                         }
 
-                        for passive in buff.passive_option {
+                        for passive in buff.passive_options {
                             let val = passive.value as f64;
                             if passive.option_type == "stat" {
                                 let rate = (val / 10000.0) * status_effect.stack_count as f64;
@@ -1096,7 +1123,7 @@ impl EncounterState {
                                     rdps_data.multi_dmg.sum_rate += rate;
                                     rdps_data.multi_dmg.total_rate *= 1.0 + rate;
                                 } else if passive.key_stat == "critical_dam_rate"
-                                    && buff.buff_category == "buff"
+                                    && buff.buff_category.clone().unwrap_or_default() == "buff"
                                 {
                                     rdps_data.crit_dmg_rate += rate;
                                 }
@@ -1699,13 +1726,12 @@ impl EncounterState {
                 .contains_key(&buff_id)
             {
                 let mut source_id: Option<u32> = None;
-                let original_buff_id =
-                    if let Some(deref_id) = self.custom_id_map.get(&buff_id) {
-                        source_id = Some(get_skill_id(buff_id));
-                        *deref_id
-                    } else {
-                        buff_id
-                    };
+                let original_buff_id = if let Some(deref_id) = self.custom_id_map.get(&buff_id) {
+                    source_id = Some(get_skill_id(buff_id));
+                    *deref_id
+                } else {
+                    buff_id
+                };
 
                 if let Some(status_effect) = get_status_effect_data(original_buff_id, source_id) {
                     self.encounter

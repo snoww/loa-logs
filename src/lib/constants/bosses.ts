@@ -44,6 +44,7 @@ export const bossList = [
 
 
     // guardian raids
+    "Argeos",
     "Veskal",
     "Gargadeth",
     "Sonavel",

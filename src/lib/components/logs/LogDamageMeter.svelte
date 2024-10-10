@@ -887,5 +887,6 @@
         text={$uploadErrorMessage}
         dismissable={true}
         width="20rem"
+        fixed={true}
         isError={true} />
 {/if}
