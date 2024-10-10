@@ -27,6 +27,8 @@
     export let isSolo: boolean;
 
     let damageDealt: (string | number)[];
+    let damageDealtRaw: number;
+    let damageWithoutHa: number;
     let damagePercentage: string;
     let name: string;
     let tooltipName: string;
@@ -40,21 +42,23 @@
     let faPercentage = "0.0";
 
     $: {
-        damageDealt = abbreviateNumberSplit(entity.damageStats.damageDealt);
-        damagePercentage = ((entity.damageStats.damageDealt / totalDamageDealt) * 100).toFixed(1);
+        damageDealtRaw = entity.damageStats.damageDealt;
+        damageDealt = abbreviateNumberSplit(damageDealtRaw);
+        damageWithoutHa = damageDealtRaw - (entity.damageStats.hyperAwakeningDamage ?? 0);
+        damagePercentage = ((damageDealtRaw / totalDamageDealt) * 100).toFixed(1);
 
         let baseDamage = getBaseDamage(entity.damageStats);
         sSynPercentage = ((entity.damageStats.rdpsDamageReceivedSupport / baseDamage) * 100).toFixed(1);
 
         if (entity.skillStats.hits !== 0) {
-            critDmgPercentage = round((entity.damageStats.critDamage / entity.damageStats.damageDealt) * 100);
+            critDmgPercentage = round((entity.damageStats.critDamage / damageDealtRaw) * 100);
             critPercentage = round((entity.skillStats.crits / entity.skillStats.hits) * 100);
             if (
                 meterSettings.positionalDmgPercent &&
                 (entity.damageStats.frontAttackDamage > 0 || entity.damageStats.backAttackDamage > 0)
             ) {
-                faPercentage = round((entity.damageStats.frontAttackDamage / entity.damageStats.damageDealt) * 100);
-                baPercentage = round((entity.damageStats.backAttackDamage / entity.damageStats.damageDealt) * 100);
+                faPercentage = round((entity.damageStats.frontAttackDamage / damageDealtRaw) * 100);
+                baPercentage = round((entity.damageStats.backAttackDamage / damageDealtRaw) * 100);
             } else {
                 faPercentage = round((entity.skillStats.frontAttacks / entity.skillStats.hits) * 100);
                 baPercentage = round((entity.skillStats.backAttacks / entity.skillStats.hits) * 100);
@@ -121,7 +125,7 @@
     </td>
 {/if}
 {#if meterSettings.damage}
-    <td class="px-1 text-center" use:tooltip={{ content: entity.damageStats.damageDealt.toLocaleString() }}>
+    <td class="px-1 text-center" use:tooltip={{ content: damageDealtRaw.toLocaleString() }}>
         {damageDealt[0]}<span class="text-3xs text-gray-300">{damageDealt[1]}</span>
     </td>
 {/if}
@@ -157,19 +161,19 @@
 {/if}
 {#if anySupportBuff && meterSettings.percentBuffBySup}
     <td class="px-1 text-center">
-        {round((entity.damageStats.buffedBySupport / entity.damageStats.damageDealt) * 100)}<span
+        {round((entity.damageStats.buffedBySupport / damageWithoutHa) * 100)}<span
             class="text-3xs text-gray-300">%</span>
     </td>
 {/if}
 {#if anySupportBrand && meterSettings.percentBrand}
     <td class="px-1 text-center">
-        {round((entity.damageStats.debuffedBySupport / entity.damageStats.damageDealt) * 100)}<span
+        {round((entity.damageStats.debuffedBySupport / damageWithoutHa) * 100)}<span
             class="text-3xs text-gray-300">%</span>
     </td>
 {/if}
 {#if anySupportIdentity && meterSettings.percentIdentityBySup}
     <td class="px-1 text-center">
-        {round((entity.damageStats.buffedByIdentity / entity.damageStats.damageDealt) * 100)}<span
+        {round((entity.damageStats.buffedByIdentity / damageWithoutHa) * 100)}<span
             class="text-3xs text-gray-300">%</span>
     </td>
 {/if}
