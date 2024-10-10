@@ -485,7 +485,6 @@ pub struct SkillBuffData {
     pub overlap_flag: i32,
     pub passive_options: Vec<PassiveOption>,
     pub source_skills: Option<Vec<u32>>,
-    #[serde(rename(deserialize = "setname"))]
     pub set_name: Option<String>,
 }
 
