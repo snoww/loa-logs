@@ -381,7 +381,6 @@
         }
 
         uploading = false;
-        uploading = false;
     }
 
     async function captureScreenshot() {
