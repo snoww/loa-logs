@@ -13,9 +13,9 @@
 <div transition:fade|global>
     <Alert
         color="none"
-        class="{isError
-            ? 'bg-red-800'
-            : 'bg-accent-800'} {fixed ? 'fixed' : 'absolute'} inset-x-0 bottom-20 z-50 mx-auto h-10 py-2"
+        class="{isError ? 'bg-red-800' : 'bg-accent-800'} {fixed
+            ? 'fixed bottom-20'
+            : 'absolute bottom-8'} inset-x-0 z-50 mx-auto h-10 py-2"
         style={`width: ${width};`}
         {dismissable}
         on:close={() => (showAlert = false)}>
