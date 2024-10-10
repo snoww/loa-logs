@@ -3,8 +3,8 @@ import type { Encounter } from "$lib/types";
 import pako from "pako";
 
 export const LOG_SITE_URL = "https://logs.snow.xyz";
-// export const API_URL = "https://api.snow.xyz";
-export const API_URL = "http://localhost:5180";
+export const API_URL = "https://api.snow.xyz";
+// export const API_URL = "http://localhost:5180";
 
 export const bosses = [
     "Dark Mountain Predator",
@@ -41,6 +41,10 @@ export const bosses = [
 export async function uploadLog(id: string | number, encounter: Encounter, settings: any) {
     if (!bosses.includes(encounter.currentBossName) || !encounter.cleared) {
         return { id: 0, error: "Invalid Encounter" };
+    }
+
+    if (!encounter.difficulty) {
+        return { id: 0, error: "Missing Difficulty" };
     }
 
     const jsonString = JSON.stringify(encounter);
