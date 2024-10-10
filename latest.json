@@ -1,11 +1,11 @@
 {
-    "version": "v1.16.5",
-    "notes": "### v1.16.5\n#### NEW FEATURES\n- added button to show max damage for a cast in skill cast log\n\n![max_cast](https://i.imgur.com/0ZNTm41.png)\n\n- added button to launch lost ark within meter\n- added option to auto launch lost ark when starting meter\n\n![start_lost_ark](https://i.imgur.com/y4VNUth.png)\n\n![auto_launch](https://i.imgur.com/WYxAfgt.png)\n\n#### BUG FIXES AND IMPROVEMENTS\n- fixed death count not showing in behemoth if everyone was alive at the end of the raid, but had deaths during the raid\n\nfull patch notes on [github](https://github.com/snoww/loa-logs/releases/latest)\n\nsend bug reports/suggestions to [ramen shop server](https://discord.gg/RXvTMV2YHu)",
-    "pub_date": "2024-09-25T07:22:22.660Z",
+    "version": "v1.17.0",
+    "notes": "### v1.17.0\n#### NEW FEATURES\n- updated meter for t4\n- adjusted how buffs interact with hyper awakening\n- added tracking for support hyper awakening technique buffs (internal for now)\n- added uploading functionality (sidebar > upload), donations are appreciated to help keep servers running\n\n#### BUG FIXES AND IMPROVEMENTS\n- fix 10s dps graph not working\n- added option to try to re-sync failed uploads, note: error logs can be found in the log file in the install directory\n\nsend bug reports/suggestions to [ramen shop server](https://discord.gg/RXvTMV2YHu)",
+    "pub_date": "2024-10-10T11:52:03.710Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.16.5/LOA.Logs_1.16.5_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmNjaUlxcWMrNGYwQng3QkNMZUo1aVI2NDIyaVgyNDBvbzFxMEFWajdWWmxEOVdhSVhlOVdIejYvK0tuVU95c01oYmF5ZVRaaVVNcW5Uc3d2MmRXMEFBPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzI3MjUwMTAwCWZpbGU6TE9BIExvZ3NfMS4xNi41X3g2NC1zZXR1cC5uc2lzLnppcApxS3B5YS92bXZwZXNSTVFlNWUxNFBkWktYQUtoRHZsaVYzRkpDQXVkVEllcm9HcEg3ZFBOS2oyQ1BHRUFMeWNSK2xBeFR1eVl0YW8yUFZSVjM1Z3RCQT09Cg=="
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.17.0/LOA.Logs_1.17.0_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlRrY0xQbHB4NjhHK0VKODg4MWVHZkRBME5hTkZRTzQ5Zm1mM1lLN3ZpSGtPb2M0d3JwM25ObXVGeXJmUGgwNW5hK2JIdEpSd3dDWjA3YkFsSy84UVFjPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzI4NTYxMTcxCWZpbGU6TE9BIExvZ3NfMS4xNy4wX3g2NC1zZXR1cC5uc2lzLnppcApIcElYejduMlpOWjg2MzB0OU1BVmtvMmExRmkyUHU5cjRKZHJvbFlNb1FKRzFFK2NGbVc5dmtHampONE8zeXp3TnViSGVGRWd3ZFB1UzlsZEI0aWtBUT09Cg=="
         }
     }
 }

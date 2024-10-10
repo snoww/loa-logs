@@ -1,12 +1,23 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.16.5
+    v1.17.0
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
   </div>
 </div>
 
+#### NEW FEATURES
+- updated meter for t4
+- adjusted how buffs interact with hyper awakening
+- added tracking for support hyper awakening technique buffs (internal for now)
+- added uploading functionality (sidebar > upload), donations are appreciated to help keep servers running
+
+#### BUG FIXES AND IMPROVEMENTS
+- fix 10s dps graph not working
+- added option to try to re-sync failed uploads, note: error logs can be found in the log file in the install directory
+
+### v1.16.5
 #### NEW FEATURES
 - added button to show max damage for a cast in skill cast log
 
