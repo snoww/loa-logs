@@ -407,11 +407,15 @@ export function getPartyBuffs(
                     buffDetails.id = key;
                     let buffDamage = 0;
                     const buffs = groupedSynergies.get(key) || new Map();
-                    let damageDealt = player.damageStats.damageDealt;
+                    const damageDealtWithHa = player.damageStats.damageDealt;
+                    const damageDealtWithoutHa = damageDealtWithHa - (player.damageStats.hyperAwakeningDamage ?? 0);
+                    let isHat = false;
 
                     buffs.forEach((syn, id) => {
-                        if (!supportSkills.haTechnique.includes(id)) {
-                            damageDealt -= player.damageStats.hyperAwakeningDamage ?? 0;
+                        let damageDealt = damageDealtWithHa;
+                        if (supportSkills.haTechnique.includes(id)) {
+                            isHat = true;
+                            damageDealt = damageDealtWithoutHa;
                         }
 
                         if (player.damageStats.buffedBy[id]) {
@@ -435,7 +439,7 @@ export function getPartyBuffs(
                         }
                     });
                     if (buffDamage > 0) {
-                        buffDetails.percentage = round((buffDamage / damageDealt) * 100);
+                        buffDetails.percentage = round((buffDamage / (isHat ? damageDealtWithHa : damageDealtWithoutHa)) * 100);
                     }
 
                     playerBuffs.push(buffDetails);
@@ -443,6 +447,8 @@ export function getPartyBuffs(
             }
         });
     }
+
+    console.log(partyBuffs)
 
     return { parties, partyGroupedSynergies, partyPercentages, partyBuffs };
 }

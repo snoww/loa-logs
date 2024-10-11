@@ -134,7 +134,7 @@ pub fn get_status_effect_data(buff_id: u32, source_skill: Option<u32>) -> Option
 
 fn get_summon_source_skill(skill: Option<&SkillData>, status_effect: &mut StatusEffect) {
     if let Some(skill) = skill {
-        if let Some(summon_skills) = skill.summon_source_skill.as_ref() {
+        if let Some(summon_skills) = skill.summon_source_skills.as_ref() {
             let summon_source_skill = summon_skills.first().unwrap_or(&0);
             if *summon_source_skill > 0 {
                 if let Some(summon_skill) = SKILL_DATA.get(summon_source_skill) {
@@ -368,7 +368,7 @@ pub fn get_skill_name_and_icon(
         };
     } else {
         return if let Some(skill) = SKILL_DATA.get(skill_id) {
-            if let Some(summon_source_skill) = skill.summon_source_skill.as_ref() {
+            if let Some(summon_source_skill) = skill.summon_source_skills.as_ref() {
                 for source in summon_source_skill {
                     if skill_tracker
                         .skill_timestamp
@@ -393,7 +393,7 @@ pub fn get_skill_name_and_icon(
                 } else {
                     (skill_name, "".to_string(), None)
                 }
-            } else if let Some(source_skill) = skill.source_skill.as_ref() {
+            } else if let Some(source_skill) = skill.source_skills.as_ref() {
                 if let Some(skill) = SKILL_DATA.get(source_skill.first().unwrap_or(&0)) {
                     (
                         skill.name.clone().unwrap_or_default(),
@@ -625,7 +625,7 @@ pub fn is_hyper_awakening_skill(skill_id: u32) -> bool {
         | 38320 | 38330 | 31920 | 31930 | 32290 | 32280)
 }
 
-pub fn is_hat_buff(buff_id: u32) -> bool {
+pub fn is_hat_buff(buff_id: &u32) -> bool {
     matches!(buff_id, 362600 | 212305 | 319503)
 }
 

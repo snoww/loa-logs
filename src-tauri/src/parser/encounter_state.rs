@@ -657,7 +657,7 @@ impl EncounterState {
         let mut skill_summon_sources: Option<Vec<u32>> = None;
         if let Some(skill_data) = skill_data.as_ref() {
             skill_name = skill_data.name.clone().unwrap_or_default();
-            skill_summon_sources.clone_from(&skill_data.summon_source_skill);
+            skill_summon_sources.clone_from(&skill_data.summon_source_skills);
         }
 
         if skill_name.is_empty() {
@@ -721,10 +721,12 @@ impl EncounterState {
         skill.last_timestamp = timestamp;
 
         source_entity.damage_stats.damage_dealt += damage;
+
         let is_hyper_awakening = is_hyper_awakening_skill(skill.id);
         if is_hyper_awakening {
             source_entity.damage_stats.hyper_awakening_damage += damage;
         }
+
         target_entity.damage_stats.damage_taken += damage;
 
         source_entity.skill_stats.hits += 1;
@@ -805,7 +807,7 @@ impl EncounterState {
                             .insert(*buff_id);
                     }
                 }
-                if !is_buffed_by_support {
+                if !is_buffed_by_support && !is_hat_buff(buff_id) {
                     if let Some(buff) = self.encounter.encounter_damage_stats.buffs.get(buff_id) {
                         if let Some(skill) = buff.source.skill.as_ref() {
                             is_buffed_by_support = is_support_class_id(skill.class_id)
@@ -826,7 +828,7 @@ impl EncounterState {
                     }
                 }
 
-                if !is_buffed_by_hat && is_hat_buff(*buff_id) {
+                if !is_buffed_by_hat && is_hat_buff(buff_id) {
                     is_buffed_by_hat = true;
                 }
             }
@@ -900,7 +902,7 @@ impl EncounterState {
             }
             
             for buff_id in se_on_source_ids.iter() {
-                if is_hyper_awakening && !is_hat_buff(*buff_id) {
+                if is_hyper_awakening && !is_hat_buff(buff_id) {
                     continue;
                 }
 
@@ -935,7 +937,7 @@ impl EncounterState {
             }
             
             if is_hyper_awakening { 
-                skill_hit.buffed_by = se_on_source_ids.iter().filter(|&id| is_hat_buff(*id)).cloned().collect();
+                skill_hit.buffed_by = se_on_source_ids.iter().filter(|&id| is_hat_buff(id)).cloned().collect();
             } else {
                 skill_hit.buffed_by = se_on_source_ids;
                 skill_hit.debuffed_by = se_on_target_ids;

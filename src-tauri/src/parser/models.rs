@@ -429,19 +429,13 @@ pub struct SkillData {
     pub id: i32,
     pub name: Option<String>,
     pub desc: Option<String>,
-    #[serde(alias = "classid", alias = "classId")]
     pub class_id: u32,
     pub icon: Option<String>,
-    #[serde(alias = "identitycategory", alias = "identityCategory")]
     pub identity_category: Option<String>,
     #[serde(alias = "groups")]
     pub groups: Option<Vec<i32>>,
-    #[serde(alias = "summonids", alias = "summonIds")]
-    pub summon_ids: Option<Vec<i32>>,
-    #[serde(alias = "summonsourceskill", alias = "summonSourceSkill")]
-    pub summon_source_skill: Option<Vec<u32>>,
-    #[serde(alias = "sourceskill", alias = "sourceSkill")]
-    pub source_skill: Option<Vec<u32>>,
+    pub summon_source_skills: Option<Vec<u32>>,
+    pub source_skills: Option<Vec<u32>>,
 }
 
 #[derive(Debug, Default, Deserialize, Clone)]
