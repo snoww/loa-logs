@@ -813,7 +813,8 @@ impl EncounterState {
                             is_buffed_by_support = is_support_class_id(skill.class_id)
                                 && buff.buff_type & StatusEffectBuffTypeFlags::DMG.bits() != 0
                                 && buff.target == StatusEffectTarget::PARTY
-                                && buff.buff_category == "classskill";
+                                && (buff.buff_category == "classskill"
+                                    || buff.buff_category == "arkpassive");
                         }
                     }
                 }
@@ -900,7 +901,7 @@ impl EncounterState {
                 skill.buffed_by_hat += damage;
                 source_entity.damage_stats.buffed_by_hat += damage;
             }
-            
+
             for buff_id in se_on_source_ids.iter() {
                 if is_hyper_awakening && !is_hat_buff(buff_id) {
                     continue;
@@ -922,7 +923,7 @@ impl EncounterState {
                 if is_hyper_awakening {
                     break;
                 }
-                
+
                 skill
                     .debuffed_by
                     .entry(*debuff_id)
@@ -935,9 +936,13 @@ impl EncounterState {
                     .and_modify(|e| *e += damage)
                     .or_insert(damage);
             }
-            
-            if is_hyper_awakening { 
-                skill_hit.buffed_by = se_on_source_ids.iter().filter(|&id| is_hat_buff(id)).cloned().collect();
+
+            if is_hyper_awakening {
+                skill_hit.buffed_by = se_on_source_ids
+                    .iter()
+                    .filter(|&id| is_hat_buff(id))
+                    .cloned()
+                    .collect();
             } else {
                 skill_hit.buffed_by = se_on_source_ids;
                 skill_hit.debuffed_by = se_on_target_ids;
