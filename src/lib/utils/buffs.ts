@@ -241,7 +241,6 @@ export function getSynergyPercentageDetailsSum(
             } else {
                 buffs.percentage = round((synergyDamage / totalDamageWithoutHa) * 100);
             }
-            console.log(key, buffs.percentage);
         }
         synergyPercentageDetails.push(buffs);
     });
@@ -447,8 +446,6 @@ export function getPartyBuffs(
             }
         });
     }
-
-    console.log(partyBuffs)
 
     return { parties, partyGroupedSynergies, partyPercentages, partyBuffs };
 }
