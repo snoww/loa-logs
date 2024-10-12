@@ -1,6 +1,6 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.17.3
+    v1.17.4
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
@@ -10,6 +10,7 @@
 #### BUG FIXES AND IMPROVEMENTS
 - attempt to fix buffs being calculated incorrectly
 - attempt to fix some skills not being categorized correctly, e.g. scouter skills, re deathbalde
+- fix some icons missing
 
 ### v1.17.0
 #### NEW FEATURES

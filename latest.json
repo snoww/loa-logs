@@ -1,11 +1,11 @@
 {
-    "version": "v1.17.3",
-    "notes": "### v1.17.3\n#### BUG FIXES AND IMPROVEMENTS\n- attempt to fix buffs being calculated incorrectly\n- attempt to fix some skills not being categorized correctly, e.g. scouter skills, re deathbalde\n\nsend bug reports/suggestions to [ramen shop server](https://discord.gg/RXvTMV2YHu)",
-    "pub_date": "2024-10-11T23:13:38.034Z",
+    "version": "v1.17.4",
+    "notes": "### v1.17.4\n#### BUG FIXES AND IMPROVEMENTS\n- attempt to fix buffs being calculated incorrectly\n- attempt to fix some skills not being categorized correctly, e.g. scouter skills, re deathbalde\n\nsend bug reports/suggestions to [ramen shop server](https://discord.gg/RXvTMV2YHu)",
+    "pub_date": "2024-10-11T23:20:38.034Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.17.3/LOA.Logs_1.17.3_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmVDTyt2MW1ZYndUU0FHM2NXWkJIdGl4UHRGMXZFaVZlakkyT2hEWTVreUdpYWpSRENHcythMGs3MUg3R0N0akcrYmcxcENCOXRQM21Pb0J6WlNNU0FBPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzI4Njg5MzgwCWZpbGU6TE9BIExvZ3NfMS4xNy4zX3g2NC1zZXR1cC5uc2lzLnppcAo1ZlRoRUdKcFMxSzRaaGxQMnpRSW13NjdXYXpRa1YyRUhYdnA2QXhRVUVWcVVpMUFNQUNRSndmTGwyczdDN0NOSTMwZkRQNzBHWE8wT2t4T2lqWHZEUT09Cg=="
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.17.4/LOA.Logs_1.17.4_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmFPbFo1MFE4R3Z0a1JlbFo2aFIzamcxMm1iMHppK3puSGVvbU5pb2UrNVVvRnNwN21JUk5TUzNKRjdLYXZNQ3hkaVpZaXhYcmI0V3lxOUpqL2NyMmdrPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzI4NjkyNjk1CWZpbGU6TE9BIExvZ3NfMS4xNy40X3g2NC1zZXR1cC5uc2lzLnppcApvL0dyV3VKdlc0REhiYUdQMmY3MzZncnlXbE5mSVFrTWd1QzFVY1ZWbWsxcHdvUjc3Z2RBTEhYeEtlTEZQejNuNUlDNWdPaExmTXgrRkZiT002OFREUT09Cg=="
         }
     }
 }
