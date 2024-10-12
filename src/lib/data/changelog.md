@@ -1,12 +1,17 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.17.4
+    v1.17.5
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
   </div>
 </div>
 
+#### BUG FIXES AND IMPROVEMENTS
+- fix skills with summons showing as different skill
+- fix some icons missing
+
+### v1.17.4
 #### BUG FIXES AND IMPROVEMENTS
 - attempt to fix buffs being calculated incorrectly
 - attempt to fix some skills not being categorized correctly, e.g. scouter skills, re deathbalde
