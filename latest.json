@@ -1,11 +1,11 @@
 {
-    "version": "v1.17.5",
-    "notes": "### v1.17.5\n#### BUG FIXES AND IMPROVEMENTS\n- fix skills with summons showing as different skill\n- fix some icons missing\n\nsend bug reports/suggestions to [ramen shop server](https://discord.gg/RXvTMV2YHu)",
-    "pub_date": "2024-10-11T23:20:38.034Z",
+    "version": "v1.17.6",
+    "notes": "### v1.17.6\n#### BUG FIXES AND IMPROVEMENTS\n- fix some skills showing up wrong or missing\n\nsend bug reports/suggestions to [ramen shop server](https://discord.gg/RXvTMV2YHu)",
+    "pub_date": "2024-10-13T01:45:30.794Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.17.5/LOA.Logs_1.17.5_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmRlR0FUdWphK25LZWF3OGlTeTF5TmtUcW5RampXdnhYTldIOEdrQjRMcGREd1BhUkIrV0pIa1E2ZTU5MHgrY2F3OUIweG5adXhKWldGc093MDBkWHdZPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzI4NzY3OTQ0CWZpbGU6TE9BIExvZ3NfMS4xNy41X3g2NC1zZXR1cC5uc2lzLnppcApjVFZYMUhBWWRkMjVLbEJzT1hXTUNKRGZ6dFZ4bU45NkJwR2JOWCtWYmdJWFplWTZPd01mOEhZc3gyWnQ3V3dFRjBiNWVmTlI5L2xxSVpBekh2Y3dEdz09Cg=="
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.17.6/LOA.Logs_1.17.6_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmRXTE51Z1VnQTMxd29oRWZDa0RrdlFXUm9rRjE0aHE5cVFvM3h1YkN3d0doRDJwSkd6ZXpPVGpua3JJS0FMNXFPSmNQQ2hwOEQwVlJwcFVvbjZYVmdVPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzI4Nzg0MDEwCWZpbGU6TE9BIExvZ3NfMS4xNy42X3g2NC1zZXR1cC5uc2lzLnppcApEOUg5MHM0Q0VuT1ZQd0JzWnYwMnkyVGZYcTRlS3BFaitteHhwZ3REVkpudFEzMkNTeW5WRGpTbzJKOVZOQ0lFUUZMY3hmLzVUZFZGS0syMlhzS1dBZz09Cg=="
         }
     }
 }

@@ -1,11 +1,15 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.17.5
+    v1.17.6
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
   </div>
 </div>
+
+### v1.17.5
+#### BUG FIXES AND IMPROVEMENTS
+- fix some skills showing up wrong or missing
 
 #### BUG FIXES AND IMPROVEMENTS
 - fix skills with summons showing as different skill
