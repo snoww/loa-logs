@@ -66,6 +66,10 @@ export const encounterMap: { [key: string]: { [key: string]: Array<string> } } =
     Behemoth: {
         "Behemoth G1": ["Behemoth, the Storm Commander", "Despicable Skolakia", "Untrue Crimson Yoho", "Ruthless Lakadroff", "Vicious Argeos"],
         "Behemoth G2": ["Behemoth, Cruel Storm Slayer"]
+    },
+    Aegir: {
+        "Aegir G1": ["Akkan, Lord of Death"],
+        "Aegir G2": ["Aegir, the Oppressor"]
     }
 };
 

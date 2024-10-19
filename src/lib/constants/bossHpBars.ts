@@ -50,5 +50,7 @@ export const bossHpMap: BossMap = {
     "Alcaone, the Twisted Venom": 86,
     "Agris, the Devouring Bog": 103,
     "Behemoth, the Storm Commander": 500,
-    "Behemoth, Cruel Storm Slayer": 705
+    "Behemoth, Cruel Storm Slayer": 705,
+    "Akkan, Lord of Death": 220,
+    "Aegir, the Oppressor": 300
 };
