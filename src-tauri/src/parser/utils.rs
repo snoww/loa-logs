@@ -92,6 +92,7 @@ pub fn get_status_effect_data(buff_id: u32, source_skill: Option<u32>) -> Option
     };
 
     if buff_category == "classskill"
+        || buff_category == "arkpassive"
         || buff_category == "identity"
         || (buff_category == "ability" && buff.unique_group != 0)
     {

@@ -570,11 +570,11 @@ function makeSupportBuffKey(statusEffect: StatusEffect) {
 }
 
 const buffCategories = {
-    partySynergy: ["classskill", "identity", "ability"],
+    partySynergy: ["classskill", "identity", "ability", "arkpassive"],
     selfItemSynergy: ["pet", "cook", "battleitem", "dropsofether", "bracelet", "elixir"],
-    setSynergy: ["set"],
-    selfSkillSynergy: ["classskill", "identity", "ability"],
-    other: ["etc"]
+    setSynergy: ["set", "arkpassive"],
+    selfSkillSynergy: ["classskill", "identity", "ability", "arkpassive"],
+    other: ["etc", "arkpassive"]
 };
 
 function isPartySynergy(statusEffect: StatusEffect) {
