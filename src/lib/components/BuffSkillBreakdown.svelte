@@ -21,7 +21,7 @@
     let buffSummary: BuffDetails[];
 
     $: {
-        playerName = formatPlayerName(player, $settings.general.showNames, $settings.general.showGearScore, false);
+        playerName = formatPlayerName(player, $settings.general);
 
         skills = Object.values(player.skills).sort((a, b) => b.totalDamage - a.totalDamage);
         if (player.class === "Arcanist") {
