@@ -11,7 +11,7 @@
 
     let cards = Object.values(player.skills)
         .sort((a, b) => b.casts - a.casts)
-        .filter((skill) => cardIds.includes(skill.id) || skill.id === 19282);
+        .filter((skill) => cardIds.includes(skill.id) || skill.id === 19282 || skill.id === 19288);
 
     let totalDraws = 0;
     let maxDraw = 0;
