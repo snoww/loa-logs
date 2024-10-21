@@ -531,8 +531,10 @@ export const supportSkills = {
     identity: [
         21140, // Serenade of Courage 1
         21141, // Serenade of Courage 2
-        21142 // Serenade of Courage 3
-        // 31050, // Moonfall
+        21142, // Serenade of Courage 3
+        21143, // Serenade of Courage
+        31050, // Moonfall 10%
+        31051, // Moonfall 5%
         // 36800 // Holy Aura
     ],
     identityGrp: [
