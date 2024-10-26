@@ -5,7 +5,7 @@ use crate::parser::stats_api::{Engraving, PlayerStats};
 use crate::parser::status_tracker::StatusEffectDetails;
 use flate2::write::GzEncoder;
 use flate2::Compression;
-use hashbrown::HashMap;
+use hashbrown::{HashMap, HashSet};
 use moka::sync::Cache;
 use rusqlite::{params, Transaction};
 use serde::Serialize;
@@ -484,34 +484,82 @@ pub fn get_class_from_id(class_id: &u32) -> String {
     class.to_string()
 }
 
-fn damage_gem_value_to_level(value: u32) -> u8 {
-    match value {
-        4000 => 10,
-        3000 => 9,
-        2400 => 8,
-        2100 => 7,
-        1800 => 6,
-        1500 => 5,
-        1200 => 4,
-        900 => 3,
-        600 => 2,
-        300 => 1,
-        _ => 0,
+fn damage_gem_value_to_level(value: u32, tier: u8) -> u8 {
+    if tier == 4 {
+        match value {
+            4400 => 10,
+            4000 => 9,
+            3600 => 8,
+            3200 => 7,
+            2800 => 6,
+            2400 => 5,
+            2000 => 4,
+            1600 => 3,
+            1200 => 2,
+            800 => 1,
+            _ => 0,
+        }
+    } else {
+        match value {
+            4000 => 10,
+            3000 => 9,
+            2400 => 8,
+            2100 => 7,
+            1800 => 6,
+            1500 => 5,
+            1200 => 4,
+            900 => 3,
+            600 => 2,
+            300 => 1,
+            _ => 0,
+        }
     }
 }
 
-fn cooldown_gem_value_to_level(value: u32) -> u8 {
+fn cooldown_gem_value_to_level(value: u32, tier: u8) -> u8 {
+    if tier == 4 {
+        match value {
+            2400 => 10,
+            2200 => 9,
+            2000 => 8,
+            1800 => 7,
+            1600 => 6,
+            1400 => 5,
+            1200 => 4,
+            1000 => 3,
+            800 => 2,
+            600 => 1,
+            _ => 0,
+        }
+    } else {
+        match value {
+            2000 => 10,
+            1800 => 9,
+            1600 => 8,
+            1400 => 7,
+            1200 => 6,
+            1000 => 5,
+            800 => 4,
+            600 => 3,
+            400 => 2,
+            200 => 1,
+            _ => 0,
+        }
+    }
+}
+
+fn support_damage_gem_value_to_level(value: u32) -> u8 {
     match value {
-        2000 => 10,
-        1800 => 9,
-        1600 => 8,
-        1400 => 7,
-        1200 => 6,
-        1000 => 5,
-        800 => 4,
-        600 => 3,
-        400 => 2,
-        200 => 1,
+        1000 => 10,
+        900 => 9,
+        800 => 8,
+        700 => 7,
+        600 => 6,
+        500 => 5,
+        400 => 4,
+        300 => 3,
+        200 => 2,
+        100 => 1,
         _ => 0,
     }
 }
@@ -530,59 +578,42 @@ fn gem_skill_id_to_skill_ids(skill_id: u32) -> Vec<u32> {
             35720, 35750, 35760, 35761, 35770, 35771, 35780, 35781, 35790, 35800,
         ], // machinist transformation skills
         62000 => vec![32040, 32041],                      // aeromancer sun shower
+        24000 => vec![21140, 21141, 21142, 21143, 21130, 21131, 21132, 21133], // bard serenade skills
+        60000 => vec![
+            31050, 31051, 31110, 31120, 31121, 31130, 31131, 31140, 31141,
+        ], // artist moonfall
         _ => vec![skill_id],
     }
 }
 
 pub fn get_engravings(
     class_id: u32,
-    engravings: &Option<Vec<Engraving>>,
-) -> Option<PlayerEngravings> {
+    engravings: &Option<Vec<u32>>,
+) -> (Vec<String>, Option<Vec<String>>) {
     let engravings = match engravings {
         Some(engravings) => engravings,
-        None => return None,
+        None => return (vec![], None),
     };
 
-    let mut class_engravings: Vec<PlayerEngraving> = Vec::new();
-    let mut other_engravings: Vec<PlayerEngraving> = Vec::new();
+    let mut class_engravings: Vec<String> = Vec::new();
+    let mut other_engravings: Vec<String> = Vec::new();
 
-    for e in engravings.iter() {
-        if let Some(engraving_data) = ENGRAVING_DATA.get(&e.id) {
-            let player_engraving = PlayerEngraving {
-                name: engraving_data.name.clone(),
-                id: e.id,
-                level: e.level,
-                icon: engraving_data.icon.clone(),
-            };
+    for engraving_id in engravings.iter() {
+        if let Some(engraving_data) = ENGRAVING_DATA.get(engraving_id) {
+            let player_engraving = engraving_data.name.clone();
             if is_class_engraving(class_id, engraving_data.id) {
-                class_engravings.push(player_engraving);
-            } else {
-                other_engravings.push(player_engraving);
+                class_engravings.push(player_engraving.clone().unwrap_or("Unknown".to_string()));
             }
+            other_engravings.push(player_engraving.unwrap_or("Unknown".to_string()));
         }
     }
 
-    class_engravings.sort_by(|a, b| b.level.cmp(&a.level).then_with(|| a.id.cmp(&b.id)));
-    other_engravings.sort_by(|a, b| b.level.cmp(&a.level).then_with(|| a.id.cmp(&b.id)));
+    other_engravings.sort_unstable();
 
-    let class = if class_engravings.is_empty() {
-        None
+    if other_engravings.is_empty() {
+        (class_engravings, None)
     } else {
-        Some(class_engravings)
-    };
-    let other = if other_engravings.is_empty() {
-        None
-    } else {
-        Some(other_engravings)
-    };
-
-    if class.is_none() && other.is_none() {
-        None
-    } else {
-        Some(PlayerEngravings {
-            class_engravings: class,
-            other_engravings: other,
-        })
+        (class_engravings, Some(other_engravings))
     }
 }
 
@@ -734,7 +765,7 @@ pub fn insert_data(
     party_info: Vec<Vec<String>>,
     raid_difficulty: String,
     region: Option<String>,
-    player_stats: Option<Cache<String, PlayerStats>>,
+    player_info: Option<HashMap<String, PlayerStats>>,
     meter_version: String,
     ntp_fight_start: i64,
     rdps_valid: bool,
@@ -875,8 +906,10 @@ pub fn insert_data(
         dps,
         character_id,
         engravings,
-        gear_hash
-    ) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17)",
+        gear_hash,
+        ark_passive_active,
+        spec
+    ) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17, ?18, ?19)",
         )
         .expect("failed to prepare entity statement");
 
@@ -914,21 +947,29 @@ pub fn insert_data(
 
         entity.damage_stats.dps = entity.damage_stats.damage_dealt / duration_seconds;
 
-        if let Some(stats) = player_stats
+        if let Some(info) = player_info
             .as_ref()
             .and_then(|stats| stats.get(&entity.name))
         {
-            for gem in stats.gems.iter().flatten() {
+            for gem in info.gems.iter().flatten() {
                 for skill_id in gem_skill_id_to_skill_ids(gem.skill_id) {
                     if let Some(skill) = entity.skills.get_mut(&skill_id) {
+                        skill.gem_tier = Some(gem.tier);
                         match gem.gem_type {
                             5 | 34 => {
                                 // damage gem
-                                skill.gem_damage = Some(damage_gem_value_to_level(gem.value))
+                                skill.gem_damage =
+                                    Some(damage_gem_value_to_level(gem.value, gem.tier))
                             }
                             27 | 35 => {
                                 // cooldown gem
-                                skill.gem_cooldown = Some(cooldown_gem_value_to_level(gem.value))
+                                skill.gem_cooldown =
+                                    Some(cooldown_gem_value_to_level(gem.value, gem.tier))
+                            }
+                            64 | 65 => {
+                                // support identity gem??
+                                skill.gem_damage =
+                                    Some(support_damage_gem_value_to_level(gem.value))
                             }
                             _ => {}
                         }
@@ -936,8 +977,31 @@ pub fn insert_data(
                 }
             }
 
-            entity.engraving_data = get_engravings(entity.class_id, &stats.engravings);
-            entity.gear_hash = Some(stats.hash.clone());
+            entity.ark_passive_active = Some(info.ark_passive_enabled);
+
+            if info.ark_passive_enabled {
+                // todo ark passive
+                entity.spec = Some(get_player_spec(
+                    entity,
+                    &encounter.encounter_damage_stats.buffs,
+                ));
+            } else {
+                let (class, other) = get_engravings(entity.class_id, &info.engravings);
+                if class.len() == 1 {
+                    entity.spec = Some(class[0].clone());
+                } else {
+                    entity.spec = Some(get_player_spec(
+                        entity,
+                        &encounter.encounter_damage_stats.buffs,
+                    ));
+                }
+                entity.engraving_data = other;
+            }
+        } else {
+            entity.spec = Some(get_player_spec(
+                entity,
+                &encounter.encounter_damage_stats.buffs,
+            ));
         }
 
         for (_, skill) in entity.skills.iter_mut() {
@@ -1111,6 +1175,8 @@ pub fn insert_data(
                 entity.character_id,
                 json!(entity.engraving_data),
                 entity.gear_hash,
+                entity.ark_passive_active,
+                entity.spec
             ])
             .expect("failed to insert entity");
     }
@@ -1180,6 +1246,20 @@ pub fn map_status_effect(se: &StatusEffectDetails, custom_id_map: &mut HashMap<u
     }
 }
 
+pub fn is_valid_player(player: &EncounterEntity) -> bool {
+    player.gear_score >= 0.0
+        && player.entity_type == EntityType::PLAYER
+        && player.character_id != 0
+        && player.class_id != 0
+        && player.name != "You"
+        && player
+            .name
+            .chars()
+            .next()
+            .unwrap_or_default()
+            .is_uppercase()
+}
+
 pub fn get_new_id(source_skill: u32) -> u32 {
     source_skill + 1_000_000_000
 }
@@ -1196,4 +1276,229 @@ where
     let bytes = serde_json::to_vec(value).expect("unable to serialize json");
     e.write_all(&bytes).expect("unable to write json to buffer");
     e.finish().expect("unable to compress json")
+}
+
+fn get_player_spec(player: &EncounterEntity, buffs: &HashMap<u32, StatusEffect>) -> String {
+    match player.class.as_str() {
+        "Berserker" => {
+            if player
+                .skills
+                .iter()
+                .any(|(_, skill)| skill.name == "Bloody Rush")
+            {
+                "Berserker Technique".to_string()
+            } else {
+                "Mayhem".to_string()
+            }
+        }
+        "Destroyer" => {
+            if let Some(hyper_gravity_skill) = player.skills.get(&18030) {
+                if hyper_gravity_skill.dps as f32 / player.damage_stats.dps as f32 > 0.3 {
+                    return "Gravity Training".to_string();
+                }
+            }
+
+            "Rage Hammer".to_string()
+        }
+        "Gunlancer" => {
+            if player.skills.contains_key(&17200) && player.skills.contains_key(&17210) {
+                "Lone Knight".to_string()
+            } else if player.skills.contains_key(&17140) {
+                "Combat Readiness".to_string()
+            } else {
+                "Princess".to_string()
+            }
+        }
+        "Paladin" => {
+            if (player.skills.contains_key(&36050)
+                || player.skills.contains_key(&36080)
+                || player.skills.contains_key(&36150))
+                && player.skills.contains_key(&36200)
+                && player.skills.contains_key(&36170)
+            {
+                "Blessed Aura".to_string()
+            } else {
+                "Judgement".to_string()
+            }
+        }
+        "Slayer" => {
+            if player.skills.contains_key(&45004) {
+                "Punisher".to_string()
+            } else {
+                "Predator".to_string()
+            }
+        }
+        "Arcanist" => {
+            if player.skills.contains_key(&19282) {
+                "Order of the Emperor".to_string()
+            } else {
+                "Empress's Grace".to_string()
+            }
+        }
+        "Summoner" => {
+            if player
+                .skills
+                .iter()
+                .any(|(_, skill)| skill.name.contains("Kelsion"))
+            {
+                "Communication Overflow".to_string()
+            } else {
+                "Master Summoner".to_string()
+            }
+        }
+        "Bard" => {
+            if player.skills.contains_key(&21250) && player.skills.contains_key(&21080) {
+                "Desperate Salvation".to_string()
+            } else {
+                "True Courage".to_string()
+            }
+        }
+        "Sorceress" => {
+            if player.skills.contains_key(&37350)
+                && player.skills.contains_key(&37270)
+                && player.skills.contains_key(&37330)
+            {
+                "Igniter".to_string()
+            } else {
+                "Reflux".to_string()
+            }
+        }
+        "Wardancer" => {
+            if player.skills.contains_key(&22340) {
+                "Esoteric Skill Enhancement".to_string()
+            } else {
+                "First Intention".to_string()
+            }
+        }
+        "Scrapper" => {
+            if player.skills.contains_key(&23230) {
+                "Shock Training".to_string()
+            } else {
+                "Ultimate Skill: Taijutsu".to_string()
+            }
+        }
+        "Soulfist" => {
+            if player.skills.contains_key(&24200) {
+                "Energy Overflow".to_string()
+            } else {
+                "Robust Spirit".to_string()
+            }
+        }
+        "Glaivier" => {
+            if player.skills.contains_key(&34590) {
+                "Pinnacle".to_string()
+            } else {
+                "Control".to_string()
+            }
+        }
+        "Striker" => {
+            if player.skills.contains_key(&39110) {
+                "Esoteric Flurry".to_string()
+            } else {
+                "Deathblow".to_string()
+            }
+        }
+        "Breaker" => {
+            if player.skills.contains_key(&47020) {
+                "Asura's Path".to_string()
+            } else {
+                "Brawl King Storm".to_string()
+            }
+        }
+        "Deathblade" => {
+            if player.skills.contains_key(&25038) {
+                "Surge".to_string()
+            } else {
+                "Remaining Energy".to_string()
+            }
+        }
+        "Shadowhunter" => {
+            if player.skills.contains_key(&27860) {
+                "Demonic Impulse".to_string()
+            } else {
+                "Perfect Suppression".to_string()
+            }
+        }
+        "Reaper" => {
+            let buff_names = get_buff_names(player, buffs);
+            if buff_names.iter().any(|s| s.contains("Lunar Voice")) {
+                "Lunar Voice".to_string()
+            } else {
+                "Hunger".to_string()
+            }
+        }
+        "Souleater" => {
+            if player.skills.contains_key(&46250) {
+                "Night's Edge".to_string()
+            } else {
+                "Full Moon Harvester".to_string()
+            }
+        }
+        "Sharpshooter" => {
+            let buff_names = get_buff_names(player, buffs);
+            if buff_names.iter().any(|s| s.contains("Loyal Companion")) {
+                "Loyal Companion".to_string()
+            } else {
+                "Death Strike".to_string()
+            }
+        }
+        "Deadeye" => {
+            if player.skills.contains_key(&29300) {
+                "Enhanced Weapon".to_string()
+            } else {
+                "Pistoleer".to_string()
+            }
+        }
+        "Artillerist" => {
+            if player.skills.contains_key(&30260) {
+                "Barrage Enhancement".to_string()
+            } else {
+                "Firepower Enhancement".to_string()
+            }
+        }
+        "Machinist" => {
+            let buff_names = get_buff_names(player, buffs);
+            if buff_names.iter().any(|s| s.contains("Evolutionary Legacy")) {
+                "Evolutionary Legacy".to_string()
+            } else {
+                "Arthetinean Skill".to_string()
+            }
+        }
+        "Gunslinger" => {
+            if player.skills.contains_key(&38110) {
+                "Peacemaker".to_string()
+            } else {
+                "Time to Hunt".to_string()
+            }
+        }
+        "Artist" => {
+            if player.skills.contains_key(&31400)
+                && player.skills.contains_key(&31410)
+                && player.skills.contains_key(&31420)
+            {
+                "Full Bloom".to_string()
+            } else {
+                "Recurrence".to_string()
+            }
+        }
+        "Aeromancer" => {
+            if player.skills.contains_key(&32250) && player.skills.contains_key(&32260) {
+                "Wind Fury".to_string()
+            } else {
+                "Drizzle".to_string()
+            }
+        }
+        _ => "Unknown".to_string(),
+    }
+}
+
+fn get_buff_names(player: &EncounterEntity, buffs: &HashMap<u32, StatusEffect>) -> Vec<String> {
+    let mut names = Vec::new();
+    for (id, _) in player.damage_stats.buffed_by.iter() {
+        if let Some(buff) = buffs.get(id) {
+            names.push(buff.source.name.clone());
+        }
+    }
+
+    names
 }

@@ -130,24 +130,10 @@ pub struct EncounterEntity {
     pub skills: HashMap<u32, Skill>,
     pub damage_stats: DamageStats,
     pub skill_stats: SkillStats,
-    pub engraving_data: Option<PlayerEngravings>,
+    pub engraving_data: Option<Vec<String>>,
     pub gear_hash: Option<String>,
-}
-
-#[derive(Debug, Default, Serialize, Deserialize, Clone)]
-#[serde(rename_all = "camelCase")]
-pub struct PlayerEngravings {
-    pub class_engravings: Option<Vec<PlayerEngraving>>,
-    pub other_engravings: Option<Vec<PlayerEngraving>>,
-}
-
-#[derive(Debug, Default, Serialize, Deserialize, Clone)]
-#[serde(rename_all = "camelCase")]
-pub struct PlayerEngraving {
-    pub name: String,
-    pub id: u32,
-    pub level: u8,
-    pub icon: String,
+    pub ark_passive_active: Option<bool>,
+    pub spec: Option<String>,
 }
 
 #[derive(Debug, Default, Serialize, Deserialize, Clone)]
@@ -177,6 +163,7 @@ pub struct Skill {
     pub cast_log: Vec<i32>,
     pub tripod_index: Option<TripodIndex>,
     pub tripod_level: Option<TripodLevel>,
+    pub gem_tier: Option<u8>,
     pub gem_cooldown: Option<u8>,
     pub gem_damage: Option<u8>,
     #[serde(skip)]

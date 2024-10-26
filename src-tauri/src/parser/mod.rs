@@ -214,8 +214,7 @@ pub fn start(
         if save.load(Ordering::Relaxed) {
             save.store(false, Ordering::Relaxed);
             state.party_info = update_party(&party_tracker, &entity_tracker);
-            let player_stats = stats_api.get_stats(&state);
-            state.save_to_db(player_stats, true);
+            state.save_to_db(&stats_api, true);
             state.saved = true;
             state.resetting = true;
         }
@@ -301,8 +300,7 @@ pub fn start(
                     party_cache = None;
                     party_map_cache = HashMap::new();
                     let entity = entity_tracker.init_env(pkt);
-                    let player_stats = stats_api.get_stats(&state);
-                    state.on_init_env(entity, player_stats);
+                    state.on_init_env(entity, &stats_api);
                     stats_api.valid_zone = false;
                     get_and_set_region(region_file_path.as_ref(), &mut state);
                     info!("region: {:?}", state.region);
@@ -356,14 +354,6 @@ pub fn start(
                         entity.id,
                         entity.character_id
                     ));
-                    if stats_api.valid_zone {
-                        stats_api.sync(&entity, &state);
-                        if let Some(local_player) =
-                            entity_tracker.get_entity_ref(entity_tracker.local_entity_id)
-                        {
-                            stats_api.sync(local_player, &state);
-                        }
-                    }
                     state.on_new_pc(entity, hp, max_hp);
                 }
             }
@@ -702,13 +692,6 @@ pub fn start(
                     let character_id = pkt.character_id;
                     let (is_shield, shields_broken, left_workshop) =
                         entity_tracker.party_status_effect_remove(pkt);
-                    if left_workshop {
-                        if let Some(entity_id) = id_tracker.borrow().get_entity_id(character_id) {
-                            if let Some(entity) = entity_tracker.get_entity_ref(entity_id) {
-                                stats_api.sync(entity, &state);
-                            }
-                        }
-                    }
                     if is_shield {
                         for status_effect in shields_broken {
                             let change = status_effect.value;
@@ -800,11 +783,6 @@ pub fn start(
                             pkt.reason,
                             StatusEffectTargetType::Local,
                         );
-                    if left_workshop {
-                        if let Some(entity) = entity_tracker.get_entity_ref(pkt.object_id) {
-                            stats_api.sync(entity, &state);
-                        }
-                    }
                     if is_shield {
                         if shields_broken.is_empty() {
                             let target = entity_tracker.get_source_entity(pkt.object_id);

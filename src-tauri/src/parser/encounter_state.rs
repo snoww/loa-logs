@@ -183,11 +183,11 @@ impl EncounterState {
     pub fn on_init_env(
         &mut self,
         entity: Entity,
-        player_stats: Option<Cache<String, PlayerStats>>,
+        stats_api: &StatsApi,
     ) {
         // if not already saved to db, we save again
         if !self.saved && !self.encounter.current_boss_name.is_empty() {
-            self.save_to_db(player_stats, false);
+            self.save_to_db(stats_api, false);
         }
 
         // replace or insert local player
@@ -223,12 +223,11 @@ impl EncounterState {
         match phase_code {
             0 | 2 | 3 | 4 => {
                 if !self.encounter.current_boss_name.is_empty() {
-                    let player_stats = stats_api.get_stats(self);
                     stats_api.send_raid_info(self);
                     if phase_code == 0 {
                         stats_api.valid_zone = false;
                     }
-                    self.save_to_db(player_stats, false);
+                    self.save_to_db(stats_api, false);
                     self.saved = true;
                 }
                 self.resetting = true;
@@ -949,7 +948,7 @@ impl EncounterState {
             }
 
             // todo
-            if let (true, Some(player_stats)) =
+            /*if let (true, Some(player_stats)) =
                 (self.rdps_valid && damage > 0, player_stats.clone())
             {
                 // rdps ported from meter-core by herysia
@@ -1528,7 +1527,7 @@ impl EncounterState {
                             .expect("failed to emit rdps message");
                     }
                 }
-            }
+            }*/
         }
 
         if target_entity.entity_type == EntityType::PLAYER {
@@ -1867,7 +1866,7 @@ impl EncounterState {
         }
     }
 
-    pub fn save_to_db(&mut self, player_stats: Option<Cache<String, PlayerStats>>, manual: bool) {
+    pub fn save_to_db(&mut self, stats_api: &StatsApi, manual: bool) {
         if !manual {
             if self.encounter.fight_start == 0
                 || self.encounter.current_boss_name.is_empty()
@@ -1923,6 +1922,8 @@ impl EncounterState {
 
         let skill_cast_log = self.skill_tracker.get_cast_log();
 
+        let stats_api = stats_api.clone();
+
         // debug_print(format_args!("skill cast log:\n{}", serde_json::to_string(&skill_cast_log).unwrap()));
 
         debug_print(format_args!("rdps_data valid: [{}]", rdps_valid));
@@ -1933,6 +1934,25 @@ impl EncounterState {
 
         let window = self.window.clone();
         task::spawn(async move {
+            let player_infos = if !raid_difficulty.is_empty()
+                && !encounter.current_boss_name.is_empty()
+                && raid_clear
+                && !manual
+            {
+                let players = encounter
+                    .entities
+                    .values()
+                    .filter(|e| is_valid_player(e))
+                    .map(|e| e.name.clone())
+                    .collect::<Vec<_>>();
+
+                stats_api
+                    .get_character_info(&encounter.current_boss_name, players)
+                    .await
+            } else {
+                None
+            };
+
             let mut conn = Connection::open(path).expect("failed to open database");
             let tx = conn.transaction().expect("failed to create transaction");
 
@@ -1950,7 +1970,7 @@ impl EncounterState {
                 party_info,
                 raid_difficulty,
                 region,
-                player_stats,
+                player_infos,
                 meter_version,
                 ntp_fight_start,
                 rdps_valid,

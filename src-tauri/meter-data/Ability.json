@@ -2,7 +2,7 @@
   "106": {
     "id": 106,
     "name": "Potion Sickness",
-    "icon": "Buff_100.png",
+    "icon": "buff_100.png",
     "levels": {
       "1": {
         "desc": "Effectiveness of recovery items +15%.",
@@ -87,7 +87,7 @@
   "109": {
     "id": 109,
     "name": "Spirit Absorption",
-    "icon": "Buff_65.png",
+    "icon": "buff_65.png",
     "levels": {
       "1": {
         "desc": "Atk./Move Speed +<FONT COLOR='#99ff99'>3%</FONT>.",
@@ -136,7 +136,7 @@
   "110": {
     "id": 110,
     "name": "Ether Predator",
-    "icon": "Buff_74.png",
+    "icon": "buff_74.png",
     "levels": {
       "1": {
         "desc": "Attacking a foe creates an Ether that only you can collect. On collecting the Ether, Atk. Power +<FONT COLOR='#99ff99'>0.2%</FONT> for <FONT COLOR='#ffff99'>90s</FONT> and All Defense +<FONT COLOR='#99ff99'>0.3%</FONT>. Stacks up to <FONT COLOR='#ffff99'>30</FONT> times. Chance on Ether collection to increase the stack by <FONT COLOR='#ffff99'>3</FONT>. (Cooldown: <FONT COLOR='#ffff99'>10s</FONT>)",
@@ -185,7 +185,7 @@
   "111": {
     "id": 111,
     "name": "Stabilized Status",
-    "icon": "Buff_105.png",
+    "icon": "buff_105.png",
     "levels": {
       "1": {
         "desc": "Damage +<FONT COLOR='#99ff99'>3%</FONT> when your HP is above <FONT COLOR='#ffff99'>65%</FONT>.",
@@ -234,7 +234,7 @@
   "112": {
     "id": 112,
     "name": "Master of Slashes",
-    "icon": "Buff_107.png",
+    "icon": "buff_107.png",
     "levels": {
       "1": {
         "desc": "Cutting skill Lv. +1.",
@@ -283,7 +283,7 @@
   "118": {
     "id": 118,
     "name": "Grudge",
-    "icon": "Buff_71.png",
+    "icon": "buff_71.png",
     "levels": {
       "1": {
         "desc": "Damage +<FONT COLOR='#99ff99'>4%</FONT> to Boss or above monsters. Incoming Damage +<FONT COLOR='#ff9999'>20%</FONT>.",
@@ -332,7 +332,7 @@
   "119": {
     "id": 119,
     "name": "Invincible Evasion",
-    "icon": "Buff_20.png",
+    "icon": "buff_20.png",
     "levels": {
       "1": {
         "desc": "Become invincible while using your Movement Skill.",
@@ -404,7 +404,7 @@
   "123": {
     "id": 123,
     "name": "Strong Will",
-    "icon": "Buff_44.png",
+    "icon": "buff_44.png",
     "levels": {
       "1": {
         "desc": "Incoming Damage -<FONT COLOR='#99ff99'>5%</FONT> while Pushed.",
@@ -453,7 +453,7 @@
   "124": {
     "id": 124,
     "name": "Fugitive",
-    "icon": "Buff_137.png",
+    "icon": "buff_137.png",
     "levels": {
       "1": {
         "desc": "Movement Skill Cooldown -10%.",
@@ -502,7 +502,7 @@
   "125": {
     "id": 125,
     "name": "Mayhem",
-    "icon": "Ability_270.png",
+    "icon": "ability_270.png",
     "levels": {
       "1": {
         "desc": "Fury Meter remains at max and turns into Mayhem Mode with the power of darkness. Mayhem Mode: Outgoing Damage +<FONT COLOR='#99ff99'>3%</FONT>, Atk. and Move Speed +<FONT COLOR='#99ff99'>15%</FONT>, all incoming Damage -<FONT COLOR='#99ff99'>72%</FONT>. When Mayhem Mode activates, HP is reduced to <FONT COLOR='#ff9999'>25%</FONT> of Max HP; this cannot be exceeded even when healing is applied. Can only receive <FONT COLOR='#ff9999'>40%</FONT> of healing and <FONT COLOR='#ff9999'>25%</FONT> of shield. Press the <FONT COLOR='#ffff99'><$HOTKEY 108/></FONT> key to cancel Mayhem Mode and recover <FONT COLOR='#99ff99'>25%</FONT> of Max HP; cannot enter Mayhem Mode again for <FONT COLOR='#ffff99'>30s</FONT>.",
@@ -551,7 +551,7 @@
   "127": {
     "id": 127,
     "name": "Esoteric Skill Enhancement",
-    "icon": "Buff_238.png",
+    "icon": "buff_238.png",
     "levels": {
       "1": {
         "desc": "Max number of Esoteric Orbs +<FONT COLOR='#ffff99'>1</FONT>. Esoteric Skills inflict +<FONT COLOR='#99ff99'>8%</FONT> Damage per Esoteric Orb you have.",
@@ -600,7 +600,7 @@
   "129": {
     "id": 129,
     "name": "Enhanced Weapon",
-    "icon": "Ability_242.png",
+    "icon": "ability_242.png",
     "levels": {
       "1": {
         "desc": "Changing Stances enhances your weapon. Crit Rate +<FONT COLOR='#99ff99'>20%</FONT> for <FONT COLOR='#ffff99'>9s</FONT>. ",
@@ -649,7 +649,7 @@
   "130": {
     "id": 130,
     "name": "Firepower Enhancement",
-    "icon": "Ability_271.png",
+    "icon": "ability_271.png",
     "levels": {
       "1": {
         "desc": "If Firepower Level <FONT COLOR='#ffff99'>1</FONT> or more, Overheat is triggered. Normal Skill Damage +<FONT COLOR='#99ff99'>7%</FONT> and Firepower Meter duration +<FONT COLOR='#ffff99'>10s</FONT>. When not in Barrage Mode, incoming Damage -<FONT COLOR='#99ff99'>5%</FONT>.",
@@ -698,7 +698,7 @@
   "132": {
     "id": 132,
     "name": "Fortune Hunter",
-    "icon": "Buff_156.png",
+    "icon": "buff_156.png",
     "levels": {
       "1": {
         "desc": "Damage +100% to Lucky monsters.",
@@ -747,7 +747,7 @@
   "133": {
     "id": 133,
     "name": "Balanced Defense",
-    "icon": "Buff_26.png",
+    "icon": "buff_26.png",
     "levels": {
       "1": {
         "desc": "Phy. or Mag. Defense value increased to match whichever is highest.",
@@ -770,7 +770,7 @@
   "134": {
     "id": 134,
     "name": "Drops of Ether",
-    "icon": "Buff_18.png",
+    "icon": "buff_18.png",
     "levels": {
       "1": {
         "desc": "Attacks have a chance to create an Ether within <FONT COLOR='#ffff99'>8 meters</FONT>. (Cooldown: <FONT COLOR='#ffff99'>60s</FONT>)",
@@ -819,7 +819,7 @@
   "140": {
     "id": 140,
     "name": "Crisis Evasion",
-    "icon": "Buff_162.png",
+    "icon": "buff_162.png",
     "levels": {
       "1": {
         "desc": "When receiving fatal Damage, become invincible for <FONT COLOR='#ffff99'>3s</FONT>, recovering <FONT COLOR='#99ff99'>50%</FONT> of the Damage taken during invincibility as HP. Resets Movement Skill cooldown. (Cooldown: <FONT COLOR='#ffff99'>15m</FONT>)",
@@ -917,7 +917,7 @@
   "142": {
     "id": 142,
     "name": "Vital Point Hit",
-    "icon": "Buff_168.png",
+    "icon": "buff_168.png",
     "levels": {
       "1": {
         "desc": "Stagger attack effectiveness +<FONT COLOR='#99ff99'>6%</FONT>.",
@@ -966,7 +966,7 @@
   "157": {
     "id": 157,
     "name": "Master of Piercing",
-    "icon": "Buff_96.png",
+    "icon": "buff_96.png",
     "levels": {
       "1": {
         "desc": "Piercing skills lv. +1.",
@@ -1015,7 +1015,7 @@
   "158": {
     "id": 158,
     "name": "Master of Destruction",
-    "icon": "Buff_27.png",
+    "icon": "buff_27.png",
     "levels": {
       "1": {
         "desc": "Destruction skill Lv. +1",
@@ -1064,7 +1064,7 @@
   "167": {
     "id": 167,
     "name": "Max MP Increase",
-    "icon": "Buff_122.png",
+    "icon": "buff_122.png",
     "levels": {
       "1": {
         "desc": "Max MP +<FONT COLOR='#99ff99'>5%</FONT>.",
@@ -1086,7 +1086,7 @@
   "168": {
     "id": 168,
     "name": "MP Efficiency Increase",
-    "icon": "Buff_166.png",
+    "icon": "buff_166.png",
     "levels": {
       "1": {
         "desc": "MP Recovery +<FONT COLOR='#99ff99'>4%</FONT>. Damage of MP-consuming skills +<FONT COLOR='#99ff99'>3%</FONT>.",
@@ -1135,7 +1135,7 @@
   "188": {
     "id": 188,
     "name": "Berserker Technique",
-    "icon": "Ability_269.png",
+    "icon": "ability_269.png",
     "levels": {
       "1": {
         "desc": "During Burst, Outgoing Damage +<FONT COLOR='#99ff99'>16%</FONT>. After Burst, Exhaustion does not occur.",
@@ -1184,7 +1184,7 @@
   "189": {
     "id": 189,
     "name": "First Intention",
-    "icon": "Ability_25.png",
+    "icon": "ability_25.png",
     "levels": {
       "1": {
         "desc": "Damage to foes +<FONT COLOR='#99ff99'>30%</FONT>, but you can no longer gain Esoteric Meter.",
@@ -1282,7 +1282,7 @@
   "191": {
     "id": 191,
     "name": "Shock Training",
-    "icon": "Buff_177.png",
+    "icon": "buff_177.png",
     "levels": {
       "1": {
         "desc": "Shock Skill Damage +<FONT COLOR='#99ff99'>10%</FONT> and <FONT COLOR='#99ff99'>5%</FONT> of Shock Energy consumed upon using Shock Skill will be returned. Atk. Speed +<FONT COLOR='#99ff99'>20%</FONT> in Tenacity Release status, but duration decreases by <FONT COLOR='#ffff99'>5s</FONT>.",
@@ -1331,7 +1331,7 @@
   "192": {
     "id": 192,
     "name": "Pistoleer",
-    "icon": "Buff_600.png",
+    "icon": "buff_600.png",
     "levels": {
       "1": {
         "desc": "Can only use Handgun Stance. Handgun Skill Damage +<FONT COLOR='#99ff99'>35%</FONT>. Awakening Skill Clay Bombardment Damage +<FONT COLOR='#99ff99'>20%</FONT>. Stagger Damage +<FONT COLOR='#99ff99'>40%</FONT>. Movement Skill is replaced with Relentless Assault. Each hit with the Handgun Skill decreases the Cooldown of Movement Skill by <FONT COLOR='#99ff99'>0.1s</FONT>.",
@@ -1380,7 +1380,7 @@
   "193": {
     "id": 193,
     "name": "Barrage Enhancement",
-    "icon": "GL_Skill_01_26.png",
+    "icon": "gl_skill_01_26.png",
     "levels": {
       "1": {
         "desc": "Barrage Skill Damage +<FONT COLOR='#99ff99'>5%</FONT>. Barrage Skill Crit Rate +<FONT COLOR='#99ff99'>20%</FONT>. Barrage Meter Gain +<FONT COLOR='#99ff99'>30%</FONT>. Does not enter a cooling state. Gain <FONT COLOR='#99ff99'>70%</FONT> Firepower Meter upon entering Barrage Mode.",
@@ -1429,7 +1429,7 @@
   "194": {
     "id": 194,
     "name": "True Courage",
-    "icon": "Ability_275.png",
+    "icon": "ability_275.png",
     "levels": {
       "1": {
         "desc": "Outgoing Damage from Serenade of Courage +<FONT COLOR='#99ff99'>10%</FONT> and Crit Rate +<FONT COLOR='#99ff99'>10%</FONT>. ",
@@ -1478,7 +1478,7 @@
   "195": {
     "id": 195,
     "name": "Desperate Salvation",
-    "icon": "Ability_276.png",
+    "icon": "ability_276.png",
     "levels": {
       "1": {
         "desc": "When the recovery effect ends, an additional recovery effect is activated, recovering <FONT COLOR='#99ff99'>8%</FONT> of your Max HP.",
@@ -1576,7 +1576,7 @@
   "197": {
     "id": 197,
     "name": "Gravity Training",
-    "icon": "Ability_268.png",
+    "icon": "ability_268.png",
     "levels": {
       "1": {
         "desc": "Gravity Meter +<FONT COLOR='#99ff99'>20%</FONT> upon using Gravity Release Skill. In Hypergravity Mode, Crit Rate of basic attacks and Vortex Gravity +<FONT COLOR='#99ff99'>10%</FONT>. Outgoing Damage +<FONT COLOR='#99ff99'>4%</FONT>. When the Hypergravity Skill hits the same foe <FONT COLOR='#ffff99'>3</FONT> times, cause a Gravity Shock that inflicts additional Damage. Damage inflicted by Gravity Shock is influenced by Hypergravity Skill Damage.",
@@ -1625,7 +1625,7 @@
   "198": {
     "id": 198,
     "name": "Master Summoner",
-    "icon": "Buff_78.png",
+    "icon": "buff_78.png",
     "levels": {
       "1": {
         "desc": "Enhances the Ancient Elemental Skill. Elemental Orb cost -<FONT COLOR='#ffff99'>1</FONT>. Normal Skill Damage and Ancient Elemental Skill Damage +<FONT COLOR='#99ff99'>2%</FONT> and Crit Rate +<FONT COLOR='#99ff99'>3%</FONT>.",
@@ -1674,7 +1674,7 @@
   "199": {
     "id": 199,
     "name": "Communication Overflow",
-    "icon": "Ability_274.png",
+    "icon": "ability_274.png",
     "levels": {
       "1": {
         "desc": "Maririn, Pauru, Elcid, Shurdi, Igna, and Kelsion: Summoning Duration +<FONT COLOR='#99ff99'>5%</FONT>, Damage +<FONT COLOR='#99ff99'>15%</FONT>, Atk./Move Speed +<FONT COLOR='#99ff99'>3%</FONT>, and Command Skill Cooldown -<FONT COLOR='#99ff99'>3%</FONT>.",
@@ -1723,7 +1723,7 @@
   "200": {
     "id": 200,
     "name": "Grace of the Empress",
-    "icon": "Ability_272.png",
+    "icon": "ability_272.png",
     "levels": {
       "1": {
         "desc": "<FONT COLOR='#ffff99'>4-stack</FONT> Ruin Skill Damage +<FONT COLOR='#99ff99'>20%</FONT>. When Ruin hits, recover <FONT COLOR='#99ff99'>30%</FONT> of consumed MP.",
@@ -1772,7 +1772,7 @@
   "201": {
     "id": 201,
     "name": "Order of the Emperor",
-    "icon": "Ability_273.png",
+    "icon": "ability_273.png",
     "levels": {
       "1": {
         "desc": "Adds Emperor Cards to the Card Deck. Balance and Judgment Cards are replaced with Chancellor and Sovereign Cards. Normal Skill Damage +<FONT COLOR='#99ff99'>25%</FONT>.",
@@ -1821,7 +1821,7 @@
   "202": {
     "id": 202,
     "name": "Master of Escape",
-    "icon": "Buff_10.png",
+    "icon": "buff_10.png",
     "levels": {
       "1": {
         "desc": "Stand Up Action Cooldown -<FONT COLOR='#99ff99'>4%</FONT>.",
@@ -1870,7 +1870,7 @@
   "203": {
     "id": 203,
     "name": "Vagabond",
-    "icon": "Buff_119.png",
+    "icon": "buff_119.png",
     "levels": {
       "1": {
         "desc": "Atk. Power +4% when not in a Party or Raid.",
@@ -1919,7 +1919,7 @@
   "206": {
     "id": 206,
     "name": "Telescope",
-    "icon": "Buff_152.png",
+    "icon": "buff_152.png",
     "levels": {
       "1": {
         "desc": "Guardians' whereabouts are always displayed on the map. This effect is applied to all of your party members.",
@@ -1942,7 +1942,7 @@
   "224": {
     "id": 224,
     "name": "Combat Readiness",
-    "icon": "Ability_266.png",
+    "icon": "ability_266.png",
     "levels": {
       "1": {
         "desc": "Normal skills Damage +<FONT COLOR='#99ff99'>25%</FONT>. Shield Amount +<FONT COLOR='#99ff99'>30%</FONT> in Defensive Stance. Damage +<FONT COLOR='#99ff99'>2%</FONT> for <FONT COLOR='#ffff99'>10s</FONT> when hit and when hitting foes while in Defensive Stance (stacks up to <FONT COLOR='#ffff99'>3</FONT> times, once every <FONT COLOR='#ffff99'>1s</FONT>).",
@@ -1991,7 +1991,7 @@
   "225": {
     "id": 225,
     "name": "Lone Knight",
-    "icon": "Ability_267.png",
+    "icon": "ability_267.png",
     "levels": {
       "1": {
         "desc": "Gunlance skill Damage and Crit Rate +<FONT COLOR='#99ff99'>5%</FONT>. Crit Damage +<FONT COLOR='#99ff99'>30%</FONT>. Battlefield Shield cannot be used. Consumption of the Shield Meter during Defensive Stance +<FONT COLOR='#ff9999'>100%</FONT>.",
@@ -2040,7 +2040,7 @@
   "235": {
     "id": 235,
     "name": "Fortitude",
-    "icon": "Buff_66.png",
+    "icon": "buff_66.png",
     "levels": {
       "1": {
         "desc": "Incoming Damage is reduced proportional to HP lost. (Max. <FONT COLOR='#99ff99'>5%</FONT>)",
@@ -2089,7 +2089,7 @@
   "236": {
     "id": 236,
     "name": "Crushing Fist",
-    "icon": "Buff_83.png",
+    "icon": "buff_83.png",
     "levels": {
       "1": {
         "desc": "On successful Counterattack, Atk. Power +<FONT COLOR='#99ff99'>4%</FONT> for <FONT COLOR='#ffff99'>3s</FONT>. Countered target takes +<FONT COLOR='#99ff99'>2%</FONT> Damage from all party members for <FONT COLOR='#ffff99'>3s</FONT>.",
@@ -2138,7 +2138,7 @@
   "237": {
     "id": 237,
     "name": "Shield Piercing",
-    "icon": "Buff_89.png",
+    "icon": "buff_89.png",
     "levels": {
       "1": {
         "desc": "Damage to shields +<FONT COLOR='#99ff99'>16%</FONT>.",
@@ -2187,7 +2187,7 @@
   "238": {
     "id": 238,
     "name": "Master's Tenacity",
-    "icon": "Buff_147.png",
+    "icon": "buff_147.png",
     "levels": {
       "1": {
         "desc": "Outgoing Damage +<FONT COLOR='#99ff99'>3%</FONT> at <FONT COLOR='#ffff99'>50%</FONT> or lower HP.",
@@ -2236,7 +2236,7 @@
   "239": {
     "id": 239,
     "name": "Divine Protection",
-    "icon": "Buff_229.png",
+    "icon": "buff_229.png",
     "levels": {
       "1": {
         "desc": "When attacked, there is a <FONT COLOR='#99ff99'>20%</FONT> chance of activating Divine Protection, which reduces the Damage received by <FONT COLOR='#99ff99'>60%</FONT>. (Cooldown: <FONT COLOR='#ffff99'>60s</FONT>)",
@@ -2285,7 +2285,7 @@
   "240": {
     "id": 240,
     "name": "Heavy Armor",
-    "icon": "Buff_46.png",
+    "icon": "buff_46.png",
     "levels": {
       "1": {
         "desc": "All Defense +<FONT COLOR='#99ff99'>20%</FONT>. This additional Defense is immune to Defense Reduction effects.",
@@ -2334,7 +2334,7 @@
   "241": {
     "id": 241,
     "name": "Explosive Expert",
-    "icon": "Buff_121.png",
+    "icon": "buff_121.png",
     "levels": {
       "1": {
         "desc": "Bomb/Grenade Battle Item carrying limit +<FONT COLOR='#99ff99'>1</FONT>.",
@@ -2383,7 +2383,7 @@
   "242": {
     "id": 242,
     "name": "Enhanced Shield",
-    "icon": "Buff_239.png",
+    "icon": "buff_239.png",
     "levels": {
       "1": {
         "desc": "Become immune to all Status Ailments while affected by shields, but -<FONT COLOR='#ff9999'>90%</FONT> Shield HP and Defensive Stance's Damage absorption amounts. (Not applicable to Battlefield Shield)",
@@ -2432,7 +2432,7 @@
   "243": {
     "id": 243,
     "name": "Necromancy",
-    "icon": "Buff_29.png",
+    "icon": "buff_29.png",
     "levels": {
       "1": {
         "desc": "Attacks summon temporary soldiers that Damage foes. (Cooldown: <FONT COLOR='#ffff99'>75s</FONT>)",
@@ -2530,7 +2530,7 @@
   "245": {
     "id": 245,
     "name": "Broken Bone",
-    "icon": "Buff_94.png",
+    "icon": "buff_94.png",
     "levels": {
       "1": {
         "desc": "Damage to Staggered foes +<FONT COLOR='#99ff99'>7.5%</FONT>.",
@@ -2579,7 +2579,7 @@
   "246": {
     "id": 246,
     "name": "Lightning Fury",
-    "icon": "Buff_191.png",
+    "icon": "buff_191.png",
     "levels": {
       "1": {
         "desc": "Attacks have a <FONT COLOR='#99ff99'>60%</FONT> chance of generating a lightning orb. These lightning orbs can only be generated once every <FONT COLOR='#ffff99'>4s</FONT>. When <FONT COLOR='#ffff99'>5</FONT> orbs are created, they explode and Damage surrounding foes. ",
@@ -2628,7 +2628,7 @@
   "247": {
     "id": 247,
     "name": "Cursed Doll",
-    "icon": "Buff_237.png",
+    "icon": "buff_237.png",
     "levels": {
       "1": {
         "desc": "Outgoing Damage +<FONT COLOR='#99ff99'>3%</FONT>. Healing -<FONT COLOR='#ff9999'>25%</FONT>, natural recovery excluded.",
@@ -2677,7 +2677,7 @@
   "248": {
     "id": 248,
     "name": "Contender",
-    "icon": "Buff_136.png",
+    "icon": "buff_136.png",
     "levels": {
       "1": {
         "desc": "Atk. Power +<FONT COLOR='#99ff99'>1%</FONT> for <FONT COLOR='#ffff99'>15s</FONT> after killing a foe. (Max. <FONT COLOR='#ffff99'>5</FONT> stacks)",
@@ -2726,7 +2726,7 @@
   "249": {
     "id": 249,
     "name": "Ambush Master",
-    "icon": "Buff_148.png",
+    "icon": "buff_148.png",
     "levels": {
       "1": {
         "desc": "Outgoing Damage +<FONT COLOR='#99ff99'>1%</FONT>. Back Attack Damage +<FONT COLOR='#99ff99'>3%</FONT>.",
@@ -2775,7 +2775,7 @@
   "250": {
     "id": 250,
     "name": "Ether Blast",
-    "icon": "Buff_104.png",
+    "icon": "buff_104.png",
     "levels": {
       "1": {
         "desc": "When obtained, Ethers deal Mag. Damage equal to 50% of your Max HP.",
@@ -2824,7 +2824,7 @@
   "251": {
     "id": 251,
     "name": "Magick Stream",
-    "icon": "Buff_63.png",
+    "icon": "buff_63.png",
     "levels": {
       "1": {
         "desc": "When using skills (excluding Movement Skills and Basic Attack), MP Recovery +<FONT COLOR='#99ff99'>0.5%</FONT> for <FONT COLOR='#ffff99'>10s</FONT>. Stacks up to <FONT COLOR='#ffff99'>10</FONT> times. When max stacks are reached, Skill Cooldown -<FONT COLOR='#99ff99'>2%</FONT>. If this effect has Cooldown Reduction due to skill cancel, it is applied after the end of the skill.",
@@ -2873,7 +2873,7 @@
   "252": {
     "id": 252,
     "name": "Double Jump",
-    "icon": "Buff_243.png",
+    "icon": "buff_243.png",
     "levels": {
       "1": {
         "desc": "10% chance when using a Movement Skill to reset its Cooldown.",
@@ -2922,7 +2922,7 @@
   "253": {
     "id": 253,
     "name": "Barricade",
-    "icon": "Buff_170.png",
+    "icon": "buff_170.png",
     "levels": {
       "1": {
         "desc": "Damage to foes while shielded +<FONT COLOR='#99ff99'>3%</FONT>.",
@@ -2971,7 +2971,7 @@
   "254": {
     "id": 254,
     "name": "Raid Captain",
-    "icon": "Buff_210.png",
+    "icon": "buff_210.png",
     "levels": {
       "1": {
         "desc": "Outgoing Damage +<FONT COLOR='#99ff99'>10%</FONT> of basic Move Speed bonus percentage.",
@@ -3020,7 +3020,7 @@
   "255": {
     "id": 255,
     "name": "Awakening",
-    "icon": "Buff_113.png",
+    "icon": "buff_113.png",
     "levels": {
       "1": {
         "desc": "Awakening Skill Cooldown -<FONT COLOR='#99ff99'>10%</FONT>. Max Uses +<FONT COLOR='#ffff99'>1</FONT>.",
@@ -3069,7 +3069,7 @@
   "256": {
     "id": 256,
     "name": "Energy Overflow",
-    "icon": "Buff_235.png",
+    "icon": "buff_235.png",
     "levels": {
       "1": {
         "desc": "Energy does not go below <FONT COLOR='#ffff99'>1</FONT>, but additional Energy Recovery effect is not applied during Hype or Combat Resource Recovery. If Energy is <FONT COLOR='#ffff99'>30%</FONT> or below, Damage to foes +<FONT COLOR='#99ff99'>5%</FONT>.",
@@ -3118,7 +3118,7 @@
   "257": {
     "id": 257,
     "name": "Robust Spirit",
-    "icon": "Ability_45.png",
+    "icon": "ability_45.png",
     "levels": {
       "1": {
         "desc": "Awakening Skill Damage +<FONT COLOR='#99ff99'>5%</FONT>. When using Hype, enter level <FONT COLOR='#ffff99'>3</FONT> immediately. While in Hype Mode, Energy recovery speed +<FONT COLOR='#99ff99'>300%</FONT>, Damage +<FONT COLOR='#99ff99'>20%</FONT>.",
@@ -3167,7 +3167,7 @@
   "258": {
     "id": 258,
     "name": "Loyal Companion",
-    "icon": "Ability_47.png",
+    "icon": "ability_47.png",
     "levels": {
       "1": {
         "desc": "Summons Silverhawk MK-II, allowing Move Speed <FONT COLOR='#99ff99'>+4%</FONT>, Silverhawk's Crit Rate <FONT COLOR='#99ff99'>+10%</FONT>, Basic AoE Radius <FONT COLOR='#99ff99'>+60%</FONT>, and Silverhawk's Summoning Duration <FONT COLOR='#99ff99'>+30%</FONT>. On Basic Attack or Wings of Storm hit, foes get a Mark of Death. Outgoing Damage <FONT COLOR='#99ff99'>+4%</FONT>. Additionally, when Silverhawk is summoned Atk. Power <FONT COLOR='#99ff99'>+2%</FONT>.",
@@ -3216,7 +3216,7 @@
   "259": {
     "id": 259,
     "name": "Death Strike",
-    "icon": "Buff_245.png",
+    "icon": "buff_245.png",
     "levels": {
       "1": {
         "desc": "On hit, outgoing Damage +<FONT COLOR='#99ff99'>3%</FONT> if Silverhawk isn't summoned. When using Last Rush, recover <FONT COLOR='#99ff99'>50%</FONT> of the remaining Hawk Meter. Adds Mark of Death II to hit targets, increasing their incoming Damage by <FONT COLOR='#99ff99'>20%</FONT> for <FONT COLOR='#ffff99'>8s</FONT>.",
@@ -3265,7 +3265,7 @@
   "114": {
     "id": 114,
     "name": "Twinkle Twinkle",
-    "icon": "Buff_115.png",
+    "icon": "buff_115.png",
     "levels": {
       "1": {
         "desc": "10% chance of obtaining an additional Ability Stone.",
@@ -3314,7 +3314,7 @@
   "116": {
     "id": 116,
     "name": "Servant",
-    "icon": "Buff_111.png",
+    "icon": "buff_111.png",
     "levels": {
       "1": {
         "desc": "Encumbered Speed +15%.",
@@ -3363,7 +3363,7 @@
   "207": {
     "id": 207,
     "name": "Dynamite",
-    "icon": "Ability_91.png",
+    "icon": "ability_91.png",
     "levels": {
       "1": {
         "desc": "Obtain materials once more per ore vein when using Mining Bomb.",
@@ -3377,7 +3377,7 @@
   "211": {
     "id": 211,
     "name": "Master Net Caster",
-    "icon": "Ability_96.png",
+    "icon": "ability_96.png",
     "levels": {
       "1": {
         "desc": "Net Fishing is always available, but it costs 5 Fishing Tools.",
@@ -3391,7 +3391,7 @@
   "213": {
     "id": 213,
     "name": "Giant Tree",
-    "icon": "Ability_92.png",
+    "icon": "ability_92.png",
     "levels": {
       "1": {
         "desc": "Cut down trees of a rank higher than your current logging level.",
@@ -3405,7 +3405,7 @@
   "214": {
     "id": 214,
     "name": "Sapling",
-    "icon": "Ability_93.png",
+    "icon": "ability_93.png",
     "levels": {
       "1": {
         "desc": "3% chance of a sapling sprouting up where you logged.",
@@ -3427,7 +3427,7 @@
   "215": {
     "id": 215,
     "name": "4-Leaf Clover",
-    "icon": "Ability_97.png",
+    "icon": "ability_97.png",
     "levels": {
       "1": {
         "desc": "2% chance while foraging to gather twice the amount.",
@@ -3449,7 +3449,7 @@
   "217": {
     "id": 217,
     "name": "Entomologist",
-    "icon": "Buff_157.png",
+    "icon": "buff_157.png",
     "levels": {
       "1": {
         "desc": "2% chance to discover a larva after foraging.",
@@ -3471,7 +3471,7 @@
   "219": {
     "id": 219,
     "name": "Butcher",
-    "icon": "Ability_95.png",
+    "icon": "ability_95.png",
     "levels": {
       "1": {
         "desc": "4% chance that your allotted skill uses won't decrease while carving.",
@@ -3493,7 +3493,7 @@
   "221": {
     "id": 221,
     "name": "Delicate Brush",
-    "icon": "Ability_98.png",
+    "icon": "ability_98.png",
     "levels": {
       "1": {
         "desc": "Excavation minigames are easier, with a +30% chance of extra loot.",
@@ -3507,7 +3507,7 @@
   "260": {
     "id": 260,
     "name": "Increase Mining Tools",
-    "icon": "Ability_0.png",
+    "icon": "ability_0.png",
     "levels": {
       "1": {
         "desc": "Mining Tool Rank +1.",
@@ -3521,7 +3521,7 @@
   "261": {
     "id": 261,
     "name": "Relentless Miner",
-    "icon": "Ability_100.png",
+    "icon": "ability_100.png",
     "levels": {
       "1": {
         "desc": "Mining Tool Moonlight Miner cost -1. ",
@@ -3535,7 +3535,7 @@
   "262": {
     "id": 262,
     "name": "Bomb Enthusiast",
-    "icon": "Ability_101.png",
+    "icon": "ability_101.png",
     "levels": {
       "1": {
         "desc": "Mining Bomb Cooldown -12%.",
@@ -3557,7 +3557,7 @@
   "263": {
     "id": 263,
     "name": "Increase Fishing Tools",
-    "icon": "Ability_0.png",
+    "icon": "ability_0.png",
     "levels": {
       "1": {
         "desc": "Fishing Tool Rank +1.",
@@ -3571,7 +3571,7 @@
   "264": {
     "id": 264,
     "name": "Double Points",
-    "icon": "Ability_103.png",
+    "icon": "ability_103.png",
     "levels": {
       "1": {
         "desc": "15% chance to get extra items while Mystery Point Fishing.",
@@ -3593,7 +3593,7 @@
   "265": {
     "id": 265,
     "name": "Golden Bait",
-    "icon": "Ability_104.png",
+    "icon": "ability_104.png",
     "levels": {
       "1": {
         "desc": "Throw Bait uses higher quality bait, increasing the duration of This Is The Big One to 110s.",
@@ -3615,7 +3615,7 @@
   "266": {
     "id": 266,
     "name": "Logging Tool Rank Boost",
-    "icon": "Ability_0.png",
+    "icon": "ability_0.png",
     "levels": {
       "1": {
         "desc": "Logging Tool Rank +1.",
@@ -3629,7 +3629,7 @@
   "267": {
     "id": 267,
     "name": "Rapid Kick",
-    "icon": "Ability_106.png",
+    "icon": "ability_106.png",
     "levels": {
       "1": {
         "desc": "50% chance to reset Cooldown of Kick Tree is used.",
@@ -3643,7 +3643,7 @@
   "268": {
     "id": 268,
     "name": "Increase Harvesting Tools",
-    "icon": "Ability_0.png",
+    "icon": "ability_0.png",
     "levels": {
       "1": {
         "desc": "Foraging Tool Rank +1.",
@@ -3657,7 +3657,7 @@
   "269": {
     "id": 269,
     "name": "Deceptive Foraging",
-    "icon": "Ability_108.png",
+    "icon": "ability_108.png",
     "levels": {
       "1": {
         "desc": "8% chance that your allotted skill uses won't decrease while foraging.",
@@ -3679,7 +3679,7 @@
   "270": {
     "id": 270,
     "name": "Increase Hunting Tools",
-    "icon": "Ability_0.png",
+    "icon": "ability_0.png",
     "levels": {
       "1": {
         "desc": "Hunting Tool Rank +1.",
@@ -3693,7 +3693,7 @@
   "271": {
     "id": 271,
     "name": "Deadly Poison",
-    "icon": "Ability_110.png",
+    "icon": "ability_110.png",
     "levels": {
       "1": {
         "desc": "Machete hits paralyzes huge prey, regardless of the rank of the machete you have equipped.",
@@ -3707,7 +3707,7 @@
   "272": {
     "id": 272,
     "name": "Golden Rabbit",
-    "icon": "Ability_111.png",
+    "icon": "ability_111.png",
     "levels": {
       "1": {
         "desc": "Chance for a Golden Rabbit +4% when using Search or Prey Searching.",
@@ -3729,7 +3729,7 @@
   "273": {
     "id": 273,
     "name": "Increase Excavation Tools",
-    "icon": "Ability_0.png",
+    "icon": "ability_0.png",
     "levels": {
       "1": {
         "desc": "Excavating Tool Rank +1.",
@@ -3743,7 +3743,7 @@
   "274": {
     "id": 274,
     "name": "Loot Hunter",
-    "icon": "Ability_113.png",
+    "icon": "ability_113.png",
     "levels": {
       "1": {
         "desc": "4% chance upon digging to discover an additional treasure chest.",
@@ -3765,7 +3765,7 @@
   "275": {
     "id": 275,
     "name": "Master Tamer",
-    "icon": "Ability_114.png",
+    "icon": "ability_114.png",
     "levels": {
       "1": {
         "desc": "Sniffer Dog Cooldown -60%.",
@@ -3779,7 +3779,7 @@
   "276": {
     "id": 276,
     "name": "Pinnacle",
-    "icon": "Ability_207.png",
+    "icon": "ability_207.png",
     "levels": {
       "1": {
         "desc": "In addition to acquiring Flurry / Focus when switching stance, gain <FONT COLOR='#99ff99'>40%</FONT> of opposite stance's effects.",
@@ -3828,7 +3828,7 @@
   "277": {
     "id": 277,
     "name": "Control",
-    "icon": "Ability_208.png",
+    "icon": "ability_208.png",
     "levels": {
       "1": {
         "desc": "Cannot use Focus Stance. Flurry Skill Damage +<FONT COLOR='#99ff99'>22%</FONT>, Dual Meter gain +<FONT COLOR='#99ff99'>50%</FONT>. Cooldown of Movement Skills decrease by <FONT COLOR='#99ff99'>2s</FONT> when the Dual Meter is consumed.",
@@ -3877,7 +3877,7 @@
   "278": {
     "id": 278,
     "name": "Remaining Energy",
-    "icon": "Ability_209.png",
+    "icon": "ability_209.png",
     "levels": {
       "1": {
         "desc": "Deathblade Surge skill Damage -<FONT COLOR='#ff9999'>30%</FONT>. When Art is activated, Death Orb is immediately consumed to activate Deathblade Surge. Atk. Power and Move Speed +<FONT COLOR='#99ff99'>6%</FONT>, Atk. Power +<FONT COLOR='#99ff99'>10%</FONT>, +<FONT COLOR='#99ff99'>20%</FONT>, +<FONT COLOR='#99ff99'>30%</FONT> for <FONT COLOR='#ffff99'>30s</FONT> according to the number of Death Orbs consumed.",
@@ -3926,7 +3926,7 @@
   "279": {
     "id": 279,
     "name": "Surge",
-    "icon": "Ability_210.png",
+    "icon": "ability_210.png",
     "levels": {
       "1": {
         "desc": "Activates the top level of Deathblade Surge, which unleashes the same powerful Attack regardless of the number of Death Orbs available. When skills other than basic attacks hit while in Death Trance state, Surge Enhancement effects will stack in proportion to the number of hits. This effect increases Damage dealt through Deathblade Surge by up to <FONT COLOR='#99ff99'>40%</FONT>. Damage <FONT COLOR='#99ff99'>doubles</FONT> at the max stack of <FONT COLOR='#ffff99'>60</FONT> stacks. When Death Trance ends, gain up to <FONT COLOR='#99ff99'>100%</FONT> Death Orb Meter according to the number of Surge Enhancement stacks.",
@@ -3975,7 +3975,7 @@
   "280": {
     "id": 280,
     "name": "Perfect Suppression",
-    "icon": "Ability_211.png",
+    "icon": "ability_211.png",
     "levels": {
       "1": {
         "desc": "Normal Skill Damage +<FONT COLOR='#99ff99'>20%</FONT>. Shadowburst Meter +<FONT COLOR='#99ff99'>50%</FONT> for all skills. Disables Demonize.",
@@ -4024,7 +4024,7 @@
   "281": {
     "id": 281,
     "name": "Demonic Impulse",
-    "icon": "Ability_212.png",
+    "icon": "ability_212.png",
     "levels": {
       "1": {
         "desc": "The Composure effect does not activate when Demonize ends. Upon Demonize, Demon Skill Cooldown is reset (excluding Hyper Awakening Techniques).",
@@ -4073,13 +4073,13 @@
   "282": {
     "id": 282,
     "name": "Judgment",
-    "icon": "Ability_214.png",
+    "icon": "ability_214.png",
     "levels": {
       "1": {
-        "desc": "Punish Skill Damage +<FONT COLOR='#99ff99'>15%</FONT>. When Punish Skill hits, Piety Meter gain +<FONT COLOR='#99ff99'>100%</FONT>. Sacred Executioner duration +<FONT COLOR='#99ff99'>100%</FONT>.",
+        "desc": "Punish Skill Damage +<FONT COLOR='#99ff99'>15%</FONT>, Sacred Executioner duration +<FONT COLOR='#99ff99'>100%</FONT>.",
         "values": [
           1500,
-          10000,
+          0,
           5000,
           552921,
           0,
@@ -4089,10 +4089,10 @@
         ]
       },
       "2": {
-        "desc": "Punish Skill Damage +<FONT COLOR='#99ff99'>22.5%</FONT>. When Punish Skill hits, Piety Meter gain +<FONT COLOR='#99ff99'>100%</FONT>. Sacred Executioner duration +<FONT COLOR='#99ff99'>125%</FONT>.",
+        "desc": "Punish Skill Damage +<FONT COLOR='#99ff99'>22.5%</FONT>, Sacred Executioner duration +<FONT COLOR='#99ff99'>125%</FONT>.",
         "values": [
           2250,
-          10000,
+          0,
           5556,
           552921,
           0,
@@ -4102,10 +4102,10 @@
         ]
       },
       "3": {
-        "desc": "Punish Skill Damage +<FONT COLOR='#99ff99'>30%</FONT>. When Punish Skill hits, Piety Meter gain +<FONT COLOR='#99ff99'>100%</FONT>. Sacred Executioner duration +<FONT COLOR='#99ff99'>150%</FONT>.",
+        "desc": "Punish Skill Damage +<FONT COLOR='#99ff99'>30%</FONT>, Sacred Executioner duration +<FONT COLOR='#99ff99'>150%</FONT>.",
         "values": [
           3000,
-          10000,
+          0,
           6000,
           552921,
           0,
@@ -4122,7 +4122,7 @@
   "283": {
     "id": 283,
     "name": "Blessed Aura",
-    "icon": "Ability_215.png",
+    "icon": "ability_215.png",
     "levels": {
       "1": {
         "desc": "When using Holy Aura, Damage received -<FONT COLOR='#99ff99'>10%</FONT> and <FONT COLOR='#99ff99'>2%</FONT> of Max HP restored every <FONT COLOR='#ffff99'>2.5s</FONT> for all party members.",
@@ -4171,7 +4171,7 @@
   "284": {
     "id": 284,
     "name": "Arthetinean Skill",
-    "icon": "Ability_216.png",
+    "icon": "ability_216.png",
     "levels": {
       "1": {
         "desc": "Normal Skill, Drone Skill, and Joint Skill Damage +<FONT COLOR='#99ff99'>16%</FONT>. Battery max capacity +<FONT COLOR='#99ff99'>10%</FONT>. Upgraded drone technology increases Drone Move Speed. When using a Joint Skill or retrieving the drone with <FONT COLOR='#ffff99'><$HOTKEY 108/></FONT>, Drone Defense System triggers every <FONT COLOR='#ffff99'>10s</FONT>, gaining a Shield that has <FONT COLOR='#99ff99'>2%</FONT> of Max HP for <FONT COLOR='#ffff99'>5s</FONT>. Additionally, when the drone is attached to the Machinist, caster's Move Speed +<FONT COLOR='#99ff99'>10%</FONT>.",
@@ -4220,7 +4220,7 @@
   "285": {
     "id": 285,
     "name": "Evolutionary Legacy",
-    "icon": "Ability_217.png",
+    "icon": "ability_217.png",
     "levels": {
       "1": {
         "desc": "Hypersync Mode: When using Sync skill, Damage +<FONT COLOR='#99ff99'>6%</FONT> and Cooldown for Sync skills (excluding Movement skills and Stand Up skills) -<FONT COLOR='#99ff99'>0.5s</FONT>. Also, cooldown of Sync skills (excluding Hyper Awakening Techniques) is reset when entering Hypersync Mode, and it returns <FONT COLOR='#99ff99'>40%</FONT> of its Core Energy cost when canceled.",
@@ -4269,7 +4269,7 @@
   "286": {
     "id": 286,
     "name": "Hunger",
-    "icon": "Ability_222.png",
+    "icon": "ability_222.png",
     "levels": {
       "1": {
         "desc": "Chaos Meter +<FONT COLOR='#99ff99'>50%</FONT>. Atk. Power +<FONT COLOR='#99ff99'>12%</FONT> and Crit Rate +<FONT COLOR='#99ff99'>3%</FONT> when the Chaos Meter is full.",
@@ -4318,7 +4318,7 @@
   "287": {
     "id": 287,
     "name": "Lunar Voice",
-    "icon": "Ability_223.png",
+    "icon": "ability_223.png",
     "levels": {
       "1": {
         "desc": "Upon switching to Persona Mode, gain the \"Lunar Voice\" effect instead of the Enhanced Swoop effect that stacks every second. Upon gaining the \"Lunar Voice\" effect, Swoop skill Damage +<FONT COLOR='#99ff99'>120%</FONT>, Atk. Speed +<FONT COLOR='#99ff99'>10%</FONT>, and \"Shadow Step\" skill cooldown is reset.",
@@ -4367,7 +4367,7 @@
   "288": {
     "id": 288,
     "name": "Master Brawler",
-    "icon": "Ability_224.png",
+    "icon": "ability_224.png",
     "levels": {
       "1": {
         "desc": "Outgoing Damage +<FONT COLOR='#99ff99'>1%</FONT>. Frontal Attack Damage +<FONT COLOR='#99ff99'>3%</FONT>.",
@@ -4416,7 +4416,7 @@
   "289": {
     "id": 289,
     "name": "Peacemaker",
-    "icon": "Ability_225.png",
+    "icon": "ability_225.png",
     "levels": {
       "1": {
         "desc": "Atk. Speed +<FONT COLOR='#99ff99'>8%</FONT> for <FONT COLOR='#ffff99'>9s</FONT> in Handgun Stance. Crit Rate +<FONT COLOR='#99ff99'>10%</FONT> and Outgoing Damage +<FONT COLOR='#99ff99'>10%</FONT> for <FONT COLOR='#ffff99'>9s</FONT> in Shotgun Stance. Outgoing Damage +<FONT COLOR='#99ff99'>16%</FONT> for <FONT COLOR='#ffff99'>9s</FONT> while in Rifle Stance.",
@@ -4465,7 +4465,7 @@
   "290": {
     "id": 290,
     "name": "Time to Hunt",
-    "icon": "Ability_228.png",
+    "icon": "ability_228.png",
     "levels": {
       "1": {
         "desc": "Crit Rate +<FONT COLOR='#99ff99'>22%</FONT>. Unable to use Shotgun Stance.",
@@ -4514,7 +4514,7 @@
   "291": {
     "id": 291,
     "name": "Deathblow",
-    "icon": "Ability_230.png",
+    "icon": "ability_230.png",
     "levels": {
       "1": {
         "desc": "Max number of Esoteric Orbs +<FONT COLOR='#ffff99'>1</FONT>. Esoteric skills consume all Esoteric Orbs and inflict +<FONT COLOR='#99ff99'>17%</FONT> Damage per Esoteric Orb consumed.",
@@ -4563,7 +4563,7 @@
   "292": {
     "id": 292,
     "name": "Esoteric Flurry",
-    "icon": "Ability_229.png",
+    "icon": "ability_229.png",
     "levels": {
       "1": {
         "desc": "Only <FONT COLOR='#ffff99'>1</FONT> Esoteric Orb is used when using Esoteric Skill, and Esoteric Skill Damage +<FONT COLOR='#99ff99'>15%</FONT>.",
@@ -4612,7 +4612,7 @@
   "293": {
     "id": 293,
     "name": "Igniter",
-    "icon": "Ability_240.png",
+    "icon": "ability_240.png",
     "levels": {
       "1": {
         "desc": "When Arcane Torrent is triggered, remaining skills Cooldown -<FONT COLOR='#99ff99'>50%</FONT> (except Stand Up, Movement Skills, Awakening Skills, and Hyper Awakening Techniques). During Arcane Torrent, Crit Rate +<FONT COLOR='#99ff99'>12%</FONT> and Crit Damage +<FONT COLOR='#99ff99'>20%</FONT>.",
@@ -4661,7 +4661,7 @@
   "294": {
     "id": 294,
     "name": "Reflux",
-    "icon": "Ability_241.png",
+    "icon": "ability_241.png",
     "levels": {
       "1": {
         "desc": "Disables Arcane Rupture, but Damage of skills (except Awakening and Movement skills) +<FONT COLOR='#99ff99'>16%</FONT> and Cooldown -<FONT COLOR='#99ff99'>3%</FONT>. ",
@@ -4710,7 +4710,7 @@
   "295": {
     "id": 295,
     "name": "Mass Increase",
-    "icon": "Ability_231.png",
+    "icon": "ability_231.png",
     "levels": {
       "1": {
         "desc": "Atk. Speed -<FONT COLOR='#ff9999'>10%</FONT>. Outgoing Damage +<FONT COLOR='#99ff99'>4%</FONT>.",
@@ -4759,7 +4759,7 @@
   "296": {
     "id": 296,
     "name": "Propulsion",
-    "icon": "Ability_232.png",
+    "icon": "ability_232.png",
     "levels": {
       "1": {
         "desc": "After using a Movement Skill, Damage of skills (excluding Basic Attack and Awakening Skills) +<FONT COLOR='#99ff99'>3%</FONT> for <FONT COLOR='#ffff99'>5s</FONT>.",
@@ -4808,7 +4808,7 @@
   "297": {
     "id": 297,
     "name": "Hit Master",
-    "icon": "Ability_233.png",
+    "icon": "ability_233.png",
     "levels": {
       "1": {
         "desc": "Damage of attacks other than Back Attack and Frontal Attack +<FONT COLOR='#99ff99'>3%</FONT>. Does not apply to Awakening Skills.",
@@ -4857,7 +4857,7 @@
   "298": {
     "id": 298,
     "name": "Sight Focus",
-    "icon": "Ability_234.png",
+    "icon": "ability_234.png",
     "levels": {
       "1": {
         "desc": "When \"!!!!!\" is entered into normal chat, Sight Focus is activated for <FONT COLOR='#ffff99'>6s</FONT>. After the effect is activated, offensive skill Damage +<FONT COLOR='#99ff99'>8%</FONT>. Only half of the effect is applied to Awakening Skills. Does not apply to Basic Attack. Cooldown: <FONT COLOR='#ffff99'>30s</FONT>.",
@@ -4906,7 +4906,7 @@
   "299": {
     "id": 299,
     "name": "Adrenaline",
-    "icon": "Ability_235.png",
+    "icon": "ability_235.png",
     "levels": {
       "1": {
         "desc": "After using skills (excluding Movement Skills and Basic Attacks), Atk. Power +<FONT COLOR='#99ff99'>0.3%</FONT> for <FONT COLOR='#ffff99'>6s</FONT>. Stacks up to <FONT COLOR='#ffff99'>6</FONT> times. When max stacks are reached, Crit Rate +<FONT COLOR='#99ff99'>5%</FONT>. If Cooldown reduction due to skill cancel is applied to this effect, it is applied after the end of the skill.",
@@ -4955,7 +4955,7 @@
   "300": {
     "id": 300,
     "name": "All-Out Attack",
-    "icon": "Ability_236.png",
+    "icon": "ability_236.png",
     "levels": {
       "1": {
         "desc": "Holding and Casting Skill Speed +<FONT COLOR='#99ff99'>5%</FONT>. Damage +<FONT COLOR='#99ff99'>4%</FONT>.",
@@ -5004,7 +5004,7 @@
   "301": {
     "id": 301,
     "name": "Expert",
-    "icon": "Ability_237.png",
+    "icon": "ability_237.png",
     "levels": {
       "1": {
         "desc": "Shield and Healing effectiveness on all Party Members +<FONT COLOR='#99ff99'>6%</FONT>. If target's HP is <FONT COLOR='#ffff99'>50%</FONT> or lower, +<FONT COLOR='#99ff99'>3%</FONT> additional effectiveness.",
@@ -5053,7 +5053,7 @@
   "302": {
     "id": 302,
     "name": "Emergency Rescue",
-    "icon": "Ability_238.png",
+    "icon": "ability_238.png",
     "levels": {
       "1": {
         "desc": "When HP falls below <FONT COLOR='#ffff99'>30%</FONT>, gain a shield equal to <FONT COLOR='#99ff99'>20%</FONT> of Max HP for <FONT COLOR='#ffff99'>6s</FONT>. If the shield is not destroyed after 6s, recover <FONT COLOR='#99ff99'>50%</FONT> of the remaining shield as HP. (Cooldown: <FONT COLOR='#ffff99'>300s</FONT>.)",
@@ -5102,7 +5102,7 @@
   "303": {
     "id": 303,
     "name": "Precise Dagger",
-    "icon": "Ability_239.png",
+    "icon": "ability_239.png",
     "levels": {
       "1": {
         "desc": "Crit Rate +<FONT COLOR='#99ff99'>4%</FONT>. Crit Damage -<FONT COLOR='#ff9999'>6%</FONT>.",
@@ -5200,7 +5200,7 @@
   "305": {
     "id": 305,
     "name": "Recurrence",
-    "icon": "Ability_248.png",
+    "icon": "ability_248.png",
     "levels": {
       "1": {
         "desc": "Upon using Moonfall or Sunrise, gain an effect that increases the Artist's Crit Rate by <FONT COLOR='#99ff99'><$CALC <$MACRO buffstat0_100 @1:500194/>/>%</FONT> and Crit Damage by <FONT COLOR='#99ff99'><$CALC <$MACRO buffstat1_100 @1:500194/>/>%</FONT> for <FONT COLOR='#ffff99'>60s</FONT>.",
@@ -5249,7 +5249,7 @@
   "306": {
     "id": 306,
     "name": "Full Bloom",
-    "icon": "Ability_249.png",
+    "icon": "ability_249.png",
     "levels": {
       "1": {
         "desc": "When casting Sunrise, the energy spreads to recover HP of Party Members within <FONT COLOR='#ffff99'>24m</FONT> of the Artist and Sun Marble. It recovers up to <FONT COLOR='#99ff99'><$CALC (<$TABLE_SKILLEFFECT ValueD 311114/>/100)/>%</FONT> of the Artist's Max HP.",
@@ -5298,7 +5298,7 @@
   "307": {
     "id": 307,
     "name": "Wind Fury",
-    "icon": "Ability_258.png",
+    "icon": "ability_258.png",
     "levels": {
       "1": {
         "desc": "Crit Rate +<FONT COLOR='#99ff99'>7%</FONT> of the basic Move Speed Bonus percentage, and Crit Damage +<FONT COLOR='#99ff99'>22%</FONT> of the basic Atk. Speed Increase percentage. If Umbrella skill is used and then again within <FONT COLOR='#ffff99'>3s</FONT>, recover max <FONT COLOR='#99ff99'>12%</FONT> of Raindrop Meter. Sun Shower is enhanced and counts as an Umbrella skill. Sun Shower AoE radius is reduced and Raindrop Meter consumption +<FONT COLOR='#ff9999'>50%</FONT>. Foes no longer receive the Atk. Power Reduction effect, but Atk. Speed and Move Speed Increase of allies +<FONT COLOR='#99ff99'>12%</FONT>.",
@@ -5347,7 +5347,7 @@
   "308": {
     "id": 308,
     "name": "Drizzle",
-    "icon": "Ability_259.png",
+    "icon": "ability_259.png",
     "levels": {
       "1": {
         "desc": "Sun Shower's Raindrop Meter consumption decreases by <FONT COLOR='#99ff99'>50%</FONT>. While Sun Shower is active, damage dealt by Weather skills increases by <FONT COLOR='#99ff99'>7%</FONT>.",
@@ -5396,7 +5396,7 @@
   "309": {
     "id": 309,
     "name": "Predator",
-    "icon": "Ability_260.png",
+    "icon": "ability_260.png",
     "levels": {
       "1": {
         "desc": "Fury Meter +<FONT COLOR='#99ff99'>3%</FONT> and MP +<FONT COLOR='#99ff99'>1%</FONT> when hitting an enemy and absorbing their Vigor. (Cooldown: <FONT COLOR='#ffff99'>1s</FONT>) In Burst Mode, Crit Damage +<FONT COLOR='#99ff99'>10%</FONT> and gain Fatigue every <FONT COLOR='#ffff99'>3s</FONT>. Fatigue: Fury Meter Consumption +<FONT COLOR='#ff9999'>10%</FONT> every <FONT COLOR='#ffff99'>3s</FONT>, and cannot use Bloodlust. When Burst Mode ends, the duration of Exhaustion will be reduced according to the stacks of Fatigue. The Fury Meter is fully recovered when Exhaustion ends.",
@@ -5445,7 +5445,7 @@
   "310": {
     "id": 310,
     "name": "Punisher",
-    "icon": "Ability_261.png",
+    "icon": "ability_261.png",
     "levels": {
       "1": {
         "desc": "Damage +<FONT COLOR='#99ff99'>7%</FONT> while in Burst Mode and Bloodlust Crit Rate +<FONT COLOR='#99ff99'>5%</FONT>. Fury Meter gain -<FONT COLOR='#ff9999'>25%</FONT> and Burst duration -<FONT COLOR='#ff9999'>50%</FONT>. When Burst ends, Exhaustion does not occur.",
@@ -5494,7 +5494,7 @@
   "311": {
     "id": 311,
     "name": "Full Moon Harvester",
-    "icon": "Ability_263.png",
+    "icon": "ability_263.png",
     "levels": {
       "1": {
         "desc": "Crit Rate +<FONT COLOR='#99ff99'>3%</FONT>. Upon using Soul Stone, recover Possession Meter by <FONT COLOR='#99ff99'>5%</FONT>. Upon entering Deathlord Mode, the cooldown of Deathlord Skills (excluding Hyper Awakening Techniques) resets. Deathlord Skills Damage while in Deathlord Mode +<FONT COLOR='#99ff99'>5%</FONT> and Deathlord Skills cooldown -<FONT COLOR='#99ff99'>50%</FONT> (excluding Hyper Awakening Techniques).",
@@ -5543,7 +5543,7 @@
   "312": {
     "id": 312,
     "name": "Night's Edge",
-    "icon": "Ability_264.png",
+    "icon": "ability_264.png",
     "levels": {
       "1": {
         "desc": "Possession Meter turns into Edge Meter, disabling Deathlord Mode. Edge Meter increases upon using Deathlord Skills. When the Edge Meter is full, Deathlord Skills are disabled for <FONT COLOR='#ffff99'>12s</FONT>, but Ghast Skills are enhanced. Using Deathlord Skills does not consume Soul Stones. However, upon gathering <FONT COLOR='#ffff99'>3</FONT> Soul Stones, instead of consuming all, the enhanced Deathlord Skills are used. Ghast and Deathlord Skills Damage +<FONT COLOR='#99ff99'>20%</FONT>. Additionally, the enhanced Deathlord Skills Damage +<FONT COLOR='#99ff99'>25%</FONT>.",
@@ -5641,7 +5641,7 @@
   "314": {
     "id": 314,
     "name": "Brawl King Storm",
-    "icon": "Ability_277.png",
+    "icon": "ability_277.png",
     "levels": {
       "1": {
         "desc": "Outgoing Damage +<FONT COLOR='#99ff99'>2%</FONT>, Brawl King Stance's duration changed to <FONT COLOR='#ffff99'>15s</FONT>. When in Brawl King Stance, recovers <FONT COLOR='#99ff99'>3</FONT> Stamina and Shock Energy every 1s. Atk. Speed +<FONT COLOR='#99ff99'>20%</FONT>. During Brawl King Stance, Brawl King Twelve Forms: Falling Blossoms skill is enabled. Brawl King Twelve Forms: Falling Blossoms Damage +<FONT COLOR='#99ff99'>20%</FONT>, Crit Rate +<FONT COLOR='#99ff99'>15%</FONT>. On skill use, outgoing Damage +<FONT COLOR='#99ff99'>4%</FONT> per <FONT COLOR='#ffff99'>1</FONT> Shock Energy.",
@@ -5690,7 +5690,7 @@
   "315": {
     "id": 315,
     "name": "Asura's Path",
-    "icon": "Ability_278.png",
+    "icon": "ability_278.png",
     "levels": {
       "1": {
         "desc": "Total Stamina and Shock Energy -<FONT COLOR='#99ff99'>30%</FONT>. Press <FONT COLOR='#ffff99'><$HOTKEY 108/></FONT> to gain Defensive Speculation effect. Tenacious Power changes to Asura Energy, gaining <FONT COLOR='#99ff99'>4%</FONT> when using Shock Skill after using Stamina Skill or using Stamina Skill after Shock Skill. When in combat, gain Speculation effect, and Brawl King Stance changes to Asura State. When entering Asura State, Speculation effect changes into Asura Destruction effect. The Movement Skill changes and Basic Attack changes into Asura Destruction Basic Attack. Asura Destruction Basic Attack Damage +<FONT COLOR='#99ff99'>160%</FONT> of Crit Rate. When Speculation and Asura Destruction are in effect, Skill Damage including Awakening Skill and Basic Attack +<FONT COLOR='#99ff99'>5%</FONT>, Move Speed +<FONT COLOR='#99ff99'>15%</FONT>.",
@@ -5739,7 +5739,7 @@
   "316": {
     "id": 316,
     "name": null,
-    "icon": "Buff_0.png",
+    "icon": "buff_0.png",
     "levels": {
       "1": {
         "desc": "Successful attacks create a chance for all Elemental Damage +6% for 8s. (Cooldown: 32s).",
@@ -6198,7 +6198,7 @@
   "800": {
     "id": 800,
     "name": "Atk. Power Reduction",
-    "icon": "Ability_218.png",
+    "icon": "ability_218.png",
     "levels": {
       "1": {
         "desc": "Atk. Power -<FONT COLOR='#ff9999'>2%</FONT>.",
@@ -6220,7 +6220,7 @@
   "801": {
     "id": 801,
     "name": "Defense Reduction",
-    "icon": "Ability_219.png",
+    "icon": "ability_219.png",
     "levels": {
       "1": {
         "desc": "Defense -<FONT COLOR='#ff9999'>5%</FONT>.",
@@ -6242,7 +6242,7 @@
   "802": {
     "id": 802,
     "name": "Atk. Speed Reduction",
-    "icon": "Ability_220.png",
+    "icon": "ability_220.png",
     "levels": {
       "1": {
         "desc": "Atk. Speed -<FONT COLOR='#ff9999'>2%</FONT>.",
@@ -6264,7 +6264,7 @@
   "803": {
     "id": 803,
     "name": "Move Speed Reduction",
-    "icon": "Ability_221.png",
+    "icon": "ability_221.png",
     "levels": {
       "1": {
         "desc": "Move Speed -<FONT COLOR='#ff9999'>2%</FONT>.",
@@ -6286,7 +6286,7 @@
   "1000001": {
     "id": 1000001,
     "name": null,
-    "icon": "Ability_100.png",
+    "icon": "ability_100.png",
     "levels": {
       "1": {
         "desc": null,
@@ -6309,7 +6309,7 @@
   "1000002": {
     "id": 1000002,
     "name": null,
-    "icon": "Ability_100.png",
+    "icon": "ability_100.png",
     "levels": {
       "1": {
         "desc": null,
@@ -6332,7 +6332,7 @@
   "1000003": {
     "id": 1000003,
     "name": null,
-    "icon": "Ability_100.png",
+    "icon": "ability_100.png",
     "levels": {
       "1": {
         "desc": null,
@@ -6355,7 +6355,7 @@
   "1000004": {
     "id": 1000004,
     "name": null,
-    "icon": "Ability_100.png",
+    "icon": "ability_100.png",
     "levels": {
       "1": {
         "desc": null,
@@ -6378,7 +6378,7 @@
   "1000101": {
     "id": 1000101,
     "name": null,
-    "icon": "Ability_100.png",
+    "icon": "ability_100.png",
     "levels": {
       "1": {
         "desc": null,
@@ -6401,7 +6401,7 @@
   "1000102": {
     "id": 1000102,
     "name": null,
-    "icon": "Ability_100.png",
+    "icon": "ability_100.png",
     "levels": {
       "1": {
         "desc": null,
@@ -6424,7 +6424,7 @@
   "1000103": {
     "id": 1000103,
     "name": null,
-    "icon": "Ability_100.png",
+    "icon": "ability_100.png",
     "levels": {
       "1": {
         "desc": null,
@@ -6447,7 +6447,7 @@
   "1000104": {
     "id": 1000104,
     "name": null,
-    "icon": "Ability_100.png",
+    "icon": "ability_100.png",
     "levels": {
       "1": {
         "desc": null,
@@ -6470,7 +6470,7 @@
   "1000201": {
     "id": 1000201,
     "name": null,
-    "icon": "Ability_100.png",
+    "icon": "ability_100.png",
     "levels": {
       "1": {
         "desc": null,
@@ -6493,7 +6493,7 @@
   "1000202": {
     "id": 1000202,
     "name": null,
-    "icon": "Ability_100.png",
+    "icon": "ability_100.png",
     "levels": {
       "1": {
         "desc": null,
@@ -6516,7 +6516,7 @@
   "1000203": {
     "id": 1000203,
     "name": null,
-    "icon": "Ability_100.png",
+    "icon": "ability_100.png",
     "levels": {
       "1": {
         "desc": null,
@@ -6539,7 +6539,7 @@
   "1000204": {
     "id": 1000204,
     "name": null,
-    "icon": "Ability_100.png",
+    "icon": "ability_100.png",
     "levels": {
       "1": {
         "desc": null,
@@ -6562,7 +6562,7 @@
   "10000": {
     "id": 10000,
     "name": null,
-    "icon": "Ability_100.png",
+    "icon": "ability_100.png",
     "levels": {
       "1": {
         "desc": null,
@@ -6584,7 +6584,7 @@
   "10001": {
     "id": 10001,
     "name": null,
-    "icon": "Ability_100.png",
+    "icon": "ability_100.png",
     "levels": {
       "1": {
         "desc": null,
@@ -6602,7 +6602,7 @@
   "10002": {
     "id": 10002,
     "name": null,
-    "icon": "Ability_100.png",
+    "icon": "ability_100.png",
     "levels": {
       "1": {
         "desc": null,
@@ -6624,7 +6624,7 @@
   "10003": {
     "id": 10003,
     "name": null,
-    "icon": "Ability_100.png",
+    "icon": "ability_100.png",
     "levels": {
       "1": {
         "desc": null,
@@ -6646,7 +6646,7 @@
   "10004": {
     "id": 10004,
     "name": null,
-    "icon": "Ability_100.png",
+    "icon": "ability_100.png",
     "levels": {
       "1": {
         "desc": null,
@@ -6668,7 +6668,7 @@
   "10005": {
     "id": 10005,
     "name": null,
-    "icon": "Ability_100.png",
+    "icon": "ability_100.png",
     "levels": {
       "1": {
         "desc": null,
@@ -6690,7 +6690,7 @@
   "10006": {
     "id": 10006,
     "name": null,
-    "icon": "Ability_100.png",
+    "icon": "ability_100.png",
     "levels": {
       "1": {
         "desc": null,
@@ -6712,7 +6712,7 @@
   "10007": {
     "id": 10007,
     "name": null,
-    "icon": "Ability_100.png",
+    "icon": "ability_100.png",
     "levels": {
       "1": {
         "desc": null,
@@ -6734,7 +6734,7 @@
   "10008": {
     "id": 10008,
     "name": null,
-    "icon": "Ability_100.png",
+    "icon": "ability_100.png",
     "levels": {
       "1": {
         "desc": null,
@@ -6756,7 +6756,7 @@
   "10009": {
     "id": 10009,
     "name": null,
-    "icon": "Ability_100.png",
+    "icon": "ability_100.png",
     "levels": {
       "1": {
         "desc": null,
@@ -6778,7 +6778,7 @@
   "10010": {
     "id": 10010,
     "name": null,
-    "icon": "Ability_100.png",
+    "icon": "ability_100.png",
     "levels": {
       "1": {
         "desc": null,
@@ -6800,7 +6800,7 @@
   "10011": {
     "id": 10011,
     "name": null,
-    "icon": "Ability_100.png",
+    "icon": "ability_100.png",
     "levels": {
       "1": {
         "desc": null,
@@ -6822,7 +6822,7 @@
   "10012": {
     "id": 10012,
     "name": null,
-    "icon": "Ability_100.png",
+    "icon": "ability_100.png",
     "levels": {
       "1": {
         "desc": null,
@@ -6844,7 +6844,7 @@
   "10013": {
     "id": 10013,
     "name": null,
-    "icon": "Ability_100.png",
+    "icon": "ability_100.png",
     "levels": {
       "1": {
         "desc": null,
@@ -6866,7 +6866,7 @@
   "10014": {
     "id": 10014,
     "name": null,
-    "icon": "Ability_100.png",
+    "icon": "ability_100.png",
     "levels": {
       "1": {
         "desc": null,
@@ -6888,7 +6888,7 @@
   "10015": {
     "id": 10015,
     "name": null,
-    "icon": "Ability_100.png",
+    "icon": "ability_100.png",
     "levels": {
       "1": {
         "desc": null,
@@ -6910,7 +6910,7 @@
   "10019": {
     "id": 10019,
     "name": null,
-    "icon": "Ability_100.png",
+    "icon": "ability_100.png",
     "levels": {
       "1": {
         "desc": null,
@@ -6932,7 +6932,7 @@
   "10020": {
     "id": 10020,
     "name": null,
-    "icon": "Ability_100.png",
+    "icon": "ability_100.png",
     "levels": {
       "1": {
         "desc": null,
@@ -6954,7 +6954,7 @@
   "10101": {
     "id": 10101,
     "name": null,
-    "icon": "Ability_100.png",
+    "icon": "ability_100.png",
     "levels": {
       "1": {
         "desc": null,
@@ -6976,7 +6976,7 @@
   "10102": {
     "id": 10102,
     "name": null,
-    "icon": "Ability_100.png",
+    "icon": "ability_100.png",
     "levels": {
       "1": {
         "desc": null,
@@ -6998,7 +6998,7 @@
   "10200": {
     "id": 10200,
     "name": null,
-    "icon": "Ability_100.png",
+    "icon": "ability_100.png",
     "levels": {
       "1": {
         "desc": null,
@@ -7020,7 +7020,7 @@
   "10201": {
     "id": 10201,
     "name": null,
-    "icon": "Ability_100.png",
+    "icon": "ability_100.png",
     "levels": {
       "1": {
         "desc": null,
@@ -7042,7 +7042,7 @@
   "77300001": {
     "id": 77300001,
     "name": "Expert",
-    "icon": "Ability_237.png",
+    "icon": "ability_237.png",
     "levels": {
       "1": {
         "desc": "Shield and Healing effectiveness on all Party Members +<FONT COLOR='#99ff99'>6%</FONT>. If target's HP is <FONT COLOR='#ffff99'>50%</FONT> or lower, +<FONT COLOR='#99ff99'>3%</FONT> additional effectiveness.",
@@ -7064,7 +7064,7 @@
   "77300002": {
     "id": 77300002,
     "name": "Emergency Rescue",
-    "icon": "Ability_238.png",
+    "icon": "ability_238.png",
     "levels": {
       "1": {
         "desc": "When HP falls below <FONT COLOR='#ffff99'>30%</FONT>, gain a shield equal to <FONT COLOR='#99ff99'>20%</FONT> of Max HP for <FONT COLOR='#ffff99'>6s</FONT>. If the shield is not destroyed after 6s, recover <FONT COLOR='#99ff99'>50%</FONT> of the remaining shield as HP. (Cooldown: <FONT COLOR='#ffff99'>300s</FONT>.)",
@@ -7078,7 +7078,7 @@
   "77390001": {
     "id": 77390001,
     "name": "Combat Readiness",
-    "icon": "Buff_19.png",
+    "icon": "buff_19.png",
     "levels": {
       "1": {
         "desc": "Normal skills Damage +<FONT COLOR='#99ff99'>25%</FONT>. Shield Amount +<FONT COLOR='#99ff99'>30%</FONT> in Defensive Stance. Damage +<FONT COLOR='#99ff99'>2%</FONT> for <FONT COLOR='#ffff99'>10s</FONT> when hit and when hitting foes while in Defensive Stance (stacks up to <FONT COLOR='#ffff99'>3</FONT> times, once every <FONT COLOR='#ffff99'>1s</FONT>).",
@@ -7100,7 +7100,7 @@
   "77390201": {
     "id": 77390201,
     "name": "Fortitude",
-    "icon": "Buff_66.png",
+    "icon": "buff_66.png",
     "levels": {
       "1": {
         "desc": "Incoming Damage is reduced proportional to HP lost. (Max. <FONT COLOR='#99ff99'>5%</FONT>)",
@@ -7122,7 +7122,7 @@
   "77390101": {
     "id": 77390101,
     "name": "Barricade",
-    "icon": "Buff_170.png",
+    "icon": "buff_170.png",
     "levels": {
       "1": {
         "desc": "Damage to foes while shielded +<FONT COLOR='#99ff99'>3%</FONT>.",
@@ -7144,7 +7144,7 @@
   "77393001": {
     "id": 77393001,
     "name": "Communication Overflow",
-    "icon": "Buff_21.png",
+    "icon": "buff_21.png",
     "levels": {
       "1": {
         "desc": "Maririn, Pauru, Elcid, Shurdi, Igna, and Kelsion: Summoning Duration +<FONT COLOR='#99ff99'>5%</FONT>, Damage +<FONT COLOR='#99ff99'>15%</FONT>, Atk./Move Speed +<FONT COLOR='#99ff99'>3%</FONT>, and Command Skill Cooldown -<FONT COLOR='#99ff99'>3%</FONT>.",
@@ -7166,7 +7166,7 @@
   "77392310": {
     "id": 77392310,
     "name": "Arthetinean Skill",
-    "icon": "Ability_0.png",
+    "icon": "ability_0.png",
     "levels": {
       "1": {
         "desc": "Normal Skill, Drone Skill, and Joint Skill Damage +<FONT COLOR='#99ff99'>16%</FONT>. Battery max capacity +<FONT COLOR='#99ff99'>10%</FONT>. Upgraded drone technology increases Drone Move Speed. When using a Joint Skill or retrieving the drone with <FONT COLOR='#ffff99'><$HOTKEY 108/></FONT>, Drone Defense System triggers every <FONT COLOR='#ffff99'>10s</FONT>, gaining a Shield that has <FONT COLOR='#99ff99'>2%</FONT> of Max HP for <FONT COLOR='#ffff99'>5s</FONT>. Additionally, when the drone is attached to the Machinist, caster's Move Speed +<FONT COLOR='#99ff99'>10%</FONT>.",
@@ -7188,7 +7188,7 @@
   "77394200": {
     "id": 77394200,
     "name": "Lunar Voice",
-    "icon": "Ability_0.png",
+    "icon": "ability_0.png",
     "levels": {
       "1": {
         "desc": "Upon switching to Persona Mode, gain the \"Lunar Voice\" effect instead of the Enhanced Swoop effect that stacks every second. Upon gaining the \"Lunar Voice\" effect, Swoop skill Damage +<FONT COLOR='#99ff99'>120%</FONT>, Atk. Speed +<FONT COLOR='#99ff99'>10%</FONT>, and \"Shadow Step\" skill cooldown is reset.",
@@ -7202,7 +7202,7 @@
   "77399999": {
     "id": 77399999,
     "name": "Fugitive",
-    "icon": "Buff_137.png",
+    "icon": "buff_137.png",
     "levels": {
       "1": {
         "desc": "Movement Skill Cooldown -10%.",
@@ -7216,7 +7216,7 @@
   "1255": {
     "id": 1255,
     "name": "Awakening",
-    "icon": "Buff_113.png",
+    "icon": "buff_113.png",
     "levels": {
       "1": {
         "desc": "Awakening Skill Cooldown -<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1255 1/>/100/>%</FONT>. Max Uses +<FONT COLOR='#99ff99'><$TABLE_ABILITYFEATURE VALUE01 1255 1/></FONT>.",
@@ -8071,7 +8071,7 @@
   "1243": {
     "id": 1243,
     "name": "Necromancy",
-    "icon": "Buff_29.png",
+    "icon": "buff_29.png",
     "levels": {
       "1": {
         "desc": "Attacks summon temporary soldiers that Damage foes. (Cooldown: <FONT COLOR='#ffff99'><$CALC <$TABLE_ABILITYFEATURE COOLDOWN 1243 1/>/1000/>s</FONT>)",
@@ -8926,7 +8926,7 @@
   "1242": {
     "id": 1242,
     "name": "Enhanced Shield",
-    "icon": "Buff_239.png",
+    "icon": "buff_239.png",
     "levels": {
       "1": {
         "desc": "Become immune to all Status Ailments while affected by shields, but -<FONT COLOR='#ff9999'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1242 1/>/100/>%</FONT> to Shield HP and Defensive Stance's Damage absorption. (Not applicable to Battlefield Shield)",
@@ -9781,7 +9781,7 @@
   "1288": {
     "id": 1288,
     "name": "Master Brawler",
-    "icon": "Ability_224.png",
+    "icon": "ability_224.png",
     "levels": {
       "1": {
         "desc": "Outgoing Damage +<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_COMBATEFFECT Action0ArgA 20522501/>/100/>%</FONT>. Frontal Attack Damage +<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1288 1/>/100/>%</FONT>.",
@@ -10636,7 +10636,7 @@
   "1134": {
     "id": 1134,
     "name": "Drops of Ether",
-    "icon": "Buff_18.png",
+    "icon": "buff_18.png",
     "levels": {
       "1": {
         "desc": "Attacks have a chance to create an Ether within <FONT COLOR='#ffff99'>8 meters</FONT>. (Cooldown: <FONT COLOR='#ffff99'><$CALC_COMMA %1 <$TABLE_ABILITYFEATURE COOLDOWN 1134 1/>/1000/></FONT>s)",
@@ -11491,7 +11491,7 @@
   "1123": {
     "id": 1123,
     "name": "Strong Will",
-    "icon": "Buff_44.png",
+    "icon": "buff_44.png",
     "levels": {
       "1": {
         "desc": "Incoming Damage -<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1123 1/>/100/>%</FONT> while Pushed.",
@@ -12346,7 +12346,7 @@
   "1142": {
     "id": 1142,
     "name": "Vital Point Hit",
-    "icon": "Buff_168.png",
+    "icon": "buff_168.png",
     "levels": {
       "1": {
         "desc": "Stagger Attack effectiveness +<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1142 1/>/100/>%</FONT>.",
@@ -13201,7 +13201,7 @@
   "1249": {
     "id": 1249,
     "name": "Ambush Master",
-    "icon": "Buff_148.png",
+    "icon": "buff_148.png",
     "levels": {
       "1": {
         "desc": "Outgoing Damage +<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_COMBATEFFECT Action0ArgA 20522601/>/100/>%</FONT>. Back Attack Damage +<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1249 1/>/100/>%</FONT>.",
@@ -14056,7 +14056,7 @@
   "1302": {
     "id": 1302,
     "name": "Emergency Rescue",
-    "icon": "Ability_238.png",
+    "icon": "ability_238.png",
     "levels": {
       "1": {
         "desc": "When HP falls below <FONT COLOR='#ffff99'>30%</FONT>, gain a shield equal to <FONT COLOR='#99ff99'><$CALC %2 <$TABLE_SKILLBUFF ValueC 520701/>/100/>%</FONT> of Max HP for <FONT COLOR='#ffff99'>6s</FONT>. If the shield is not destroyed after 6s, recover <FONT COLOR='#99ff99'>50%</FONT> of the remaining shield as HP. (Cooldown: <FONT COLOR='#ffff99'><$CALC <$TABLE_ABILITYFEATURE COOLDOWN 1302 1/>/1000/></FONT>s.)",
@@ -14911,7 +14911,7 @@
   "1238": {
     "id": 1238,
     "name": "Master's Tenacity",
-    "icon": "Buff_147.png",
+    "icon": "buff_147.png",
     "levels": {
       "1": {
         "desc": "Outgoing Damage +<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE01 1238 1/>/100/>%</FONT> at <FONT COLOR='#ffff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1238 1/>/100/>%</FONT> or lower HP.",
@@ -15766,7 +15766,7 @@
   "1254": {
     "id": 1254,
     "name": "Raid Captain",
-    "icon": "Buff_210.png",
+    "icon": "buff_210.png",
     "levels": {
       "1": {
         "desc": "Outgoing Damage +<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1254 1/>/100/>%</FONT> of Move Speed Bonus percentage.",
@@ -16621,7 +16621,7 @@
   "1251": {
     "id": 1251,
     "name": "Magick Stream",
-    "icon": "Buff_63.png",
+    "icon": "buff_63.png",
     "levels": {
       "1": {
         "desc": "When using skills (excluding Movement Skills and Basic Attack), MP Recovery +<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$MACRO buffstat0 @1:522701/>/100/>%</FONT> for <FONT COLOR='#ffff99'>10s</FONT>. Stacks up to <FONT COLOR='#ffff99'>10</FONT> times. When max stacks are reached, Skill Cooldown -<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$MACRO buffstat0 @1:522801/>/100/>%</FONT>. If this effect has Cooldown Reduction due to skill cancel, it is applied after the end of the skill.",
@@ -17476,7 +17476,7 @@
   "1168": {
     "id": 1168,
     "name": "MP Efficiency Increase",
-    "icon": "Buff_166.png",
+    "icon": "buff_166.png",
     "levels": {
       "1": {
         "desc": "MP Recovery +<FONT COLOR='#99ff99'><$CALC_COMMA %2 12 />%</FONT>. Damage of MP-consuming skills +<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE01 1168 1/>/100/>%</FONT>.",
@@ -18331,7 +18331,7 @@
   "1253": {
     "id": 1253,
     "name": "Barricade",
-    "icon": "Buff_170.png",
+    "icon": "buff_170.png",
     "levels": {
       "1": {
         "desc": "Damage to foes while shielded +<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1253 1/>/100/>%</FONT>.",
@@ -19186,7 +19186,7 @@
   "1246": {
     "id": 1246,
     "name": "Lightning Fury",
-    "icon": "Buff_191.png",
+    "icon": "buff_191.png",
     "levels": {
       "1": {
         "desc": "Attacks have a <FONT COLOR='#ffff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1246 1/>/100/>%</FONT> chance of generating a lightning orb. These lightning orbs can only be generated once every <FONT COLOR='#ffff99'>1s</FONT>. When <FONT COLOR='#ffff99'>5</FONT> orbs are created, they explode and Damage surrounding foes. (Challenge or lower foes receive +<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_COMBATEFFECT Action0ArgA 20521101 />/100/>%</FONT> Additional Damage.)",
@@ -20041,7 +20041,7 @@
   "1245": {
     "id": 1245,
     "name": "Broken Bone",
-    "icon": "Buff_94.png",
+    "icon": "buff_94.png",
     "levels": {
       "1": {
         "desc": "Damage to Staggered foes +<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1245 1/>/100/>%</FONT>.",
@@ -20896,7 +20896,7 @@
   "1236": {
     "id": 1236,
     "name": "Crushing Fist",
-    "icon": "Buff_83.png",
+    "icon": "buff_83.png",
     "levels": {
       "1": {
         "desc": "On successful Counterattack, Atk. Power +<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$MACRO buffstat0 @1:521201/>/100/>%</FONT> for <FONT COLOR='#ffff99'>3s</FONT>. Countered target takes +<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_SKILLBUFF ValueH 521301/>/100/>%</FONT> Damage from all party members for <FONT COLOR='#ffff99'>3s</FONT>.",
@@ -21751,7 +21751,7 @@
   "1235": {
     "id": 1235,
     "name": "Fortitude",
-    "icon": "Buff_66.png",
+    "icon": "buff_66.png",
     "levels": {
       "1": {
         "desc": "Incoming Damage is reduced proportional to HP lost. (Max. <FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1235 1/>/100/>%</FONT>)",
@@ -23461,7 +23461,7 @@
   "1300": {
     "id": 1300,
     "name": "All-Out Attack",
-    "icon": "Ability_236.png",
+    "icon": "ability_236.png",
     "levels": {
       "1": {
         "desc": "Holding and Casting Skill Speed +<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1300 1/>/100/>%</FONT>. Damage +<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE01 1300 1/>/100/>%</FONT>.",
@@ -25171,7 +25171,7 @@
   "1248": {
     "id": 1248,
     "name": "Contender",
-    "icon": "Buff_136.png",
+    "icon": "buff_136.png",
     "levels": {
       "1": {
         "desc": "Atk. Power +<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$MACRO buffstat0 @1:521401/>/100/>%</FONT> for <FONT COLOR='#ffff99'>40</FONT>s after killing a foe. (Max. <FONT COLOR='#ffff99'><$TABLE_SKILLBUFF Overlap 521401/></FONT> stacks)",
@@ -26026,7 +26026,7 @@
   "1298": {
     "id": 1298,
     "name": "Sight Focus",
-    "icon": "Ability_234.png",
+    "icon": "ability_234.png",
     "levels": {
       "1": {
         "desc": "When \"!!!!!\" is entered into normal chat, Sight Focus is activated for <FONT COLOR='#ffff99'>6s</FONT>. After the effect is activated, offensive skill Damage +<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE02 1298 1/>/100/>%</FONT>. Only half of the effect is applied to Awakening Skills. Does not apply to Basic Attack. Cooldown: <FONT COLOR='#ffff99'>30s</FONT>.",
@@ -26881,7 +26881,7 @@
   "1237": {
     "id": 1237,
     "name": "Shield Piercing",
-    "icon": "Buff_89.png",
+    "icon": "buff_89.png",
     "levels": {
       "1": {
         "desc": "Damage to shields +<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1237 1/>/100/>%</FONT>.",
@@ -27736,7 +27736,7 @@
   "1299": {
     "id": 1299,
     "name": "Adrenaline",
-    "icon": "Ability_235.png",
+    "icon": "ability_235.png",
     "levels": {
       "1": {
         "desc": "After using skills (excluding Movement Skills and Basic Attack), Atk. Power +<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$MACRO buffstat0 @1:521701/>/100/>%</FONT> for <FONT COLOR='#ffff99'>6</FONT>s. Stacks up to <FONT COLOR='#ffff99'>6</FONT> times. When max stacks are reached, Crit Rate +<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$MACRO buffstat0 @1:521801/>/100/>%</FONT>. If Cooldown reduction due to skill cancel is applied to this effect, it is applied after the end of the skill.",
@@ -28591,7 +28591,7 @@
   "1111": {
     "id": 1111,
     "name": "Stabilized Status",
-    "icon": "Buff_105.png",
+    "icon": "buff_105.png",
     "levels": {
       "1": {
         "desc": "Damage +<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_COMBATEFFECT Action0ArgA 20521901/>/100/>%</FONT> when your HP is <FONT COLOR='#ffff99'>65%</FONT> or above.",
@@ -30301,7 +30301,7 @@
   "1239": {
     "id": 1239,
     "name": "Divine Protection",
-    "icon": "Buff_229.png",
+    "icon": "buff_229.png",
     "levels": {
       "1": {
         "desc": "When attacked, there is a <FONT COLOR='#ffff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1239 1/>/100/>%</FONT> chance of activating Divine Protection, which decreases Incoming Damage by <FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE01 1239 1/>/100/>%</FONT>. (Cooldown: <FONT COLOR='#ffff99'>10s</FONT>)",
@@ -31156,7 +31156,7 @@
   "1110": {
     "id": 1110,
     "name": "Ether Predator",
-    "icon": "Buff_74.png",
+    "icon": "buff_74.png",
     "levels": {
       "1": {
         "desc": "Attacking a foe creates an Ether that only you can collect. On collecting the Ether, Atk. Power +<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$MACRO buffstat0 @1:522001/>/100/>%</FONT> for <FONT COLOR='#ffff99'>90</FONT>s and All Defense +<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$MACRO buffstat1 @1:522001/>/100/>%</FONT>. Stacks up to <FONT COLOR='#ffff99'>30</FONT> times. Chance on Ether collection to increase the stack by <FONT COLOR='#ffff99'>3</FONT>. (Cooldown: <FONT COLOR='#ffff99'><$CALC_COMMA %1 <$TABLE_ABILITYFEATURE COOLDOWN 1110 1/>/1000/></FONT>s)",
@@ -32866,7 +32866,7 @@
   "1118": {
     "id": 1118,
     "name": "Grudge",
-    "icon": "Buff_71.png",
+    "icon": "buff_71.png",
     "levels": {
       "1": {
         "desc": "Damage +<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1118 1/>/100/>%</FONT> to Boss or Raid monsters. Incoming Damage +<FONT COLOR='#ff9999'>20%</FONT>.",
@@ -33721,7 +33721,7 @@
   "1140": {
     "id": 1140,
     "name": "Crisis Evasion",
-    "icon": "Buff_162.png",
+    "icon": "buff_162.png",
     "levels": {
       "1": {
         "desc": "When receiving fatal Damage, become invincible for <FONT COLOR='#ffff99'>3s</FONT>, recovering <FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_SKILLBUFF ValueA 522201/>/100/>%</FONT> of the Damage taken during invincibility as HP. (Cooldown: <FONT COLOR='#ffff99'><$CALC <$TABLE_ABILITYFEATURE COOLDOWN 1140 1/>/1000/>s</FONT>)",
@@ -34576,7 +34576,7 @@
   "1247": {
     "id": 1247,
     "name": "Cursed Doll",
-    "icon": "Buff_237.png",
+    "icon": "buff_237.png",
     "levels": {
       "1": {
         "desc": "Outgoing Damage +<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE01 1247 1/>/100/>%</FONT>. Recovery -<FONT COLOR='#ff9999'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1247 1/>/100/>%</FONT>.",
@@ -35431,7 +35431,7 @@
   "1301": {
     "id": 1301,
     "name": "Expert",
-    "icon": "Ability_237.png",
+    "icon": "ability_237.png",
     "levels": {
       "1": {
         "desc": "Shield and Healing effectiveness on all Party Members +<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1301 1/>/100/>%</FONT>. If target's HP is <FONT COLOR='#ffff99'>50%</FONT> or lower, +<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$CALC <$TABLE_ABILITYFEATURE VALUE02 1301 1/>-<$TABLE_ABILITYFEATURE VALUE00 1301 1/>/>/100/>%</FONT> additional effectiveness.",
@@ -36286,7 +36286,7 @@
   "1109": {
     "id": 1109,
     "name": "Spirit Absorption",
-    "icon": "Buff_65.png",
+    "icon": "buff_65.png",
     "levels": {
       "1": {
         "desc": "Atk./Move Speed +<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1109 1/>/100/>%</FONT>.",
@@ -37141,7 +37141,7 @@
   "1303": {
     "id": 1303,
     "name": "Precise Dagger",
-    "icon": "Ability_239.png",
+    "icon": "ability_239.png",
     "levels": {
       "1": {
         "desc": "Crit Rate +<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1303 1/>/100/>%</FONT>. Crit Damage -<FONT COLOR='#ff9999'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE01 1303 1/>/100/>%</FONT>.",
@@ -37996,7 +37996,7 @@
   "1240": {
     "id": 1240,
     "name": "Heavy Armor",
-    "icon": "Buff_46.png",
+    "icon": "buff_46.png",
     "levels": {
       "1": {
         "desc": "All Defense +<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1240 1/>/100/>%</FONT>. This additional Defense is immune to Defense Reduction effects.",
@@ -38851,7 +38851,7 @@
   "1295": {
     "id": 1295,
     "name": "Mass Increase",
-    "icon": "Ability_231.png",
+    "icon": "ability_231.png",
     "levels": {
       "1": {
         "desc": "Atk. Speed -<FONT COLOR='#ff9999'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1295 1/>/100/>%</FONT>. Outgoing Damage +<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE01 1295 1/>/100/>%</FONT>.",
@@ -39706,7 +39706,7 @@
   "1167": {
     "id": 1167,
     "name": "Max MP Increase",
-    "icon": "Buff_122.png",
+    "icon": "buff_122.png",
     "levels": {
       "1": {
         "desc": "Max MP +<FONT COLOR='#99ff99'><$CALC_COMMA %2 20 />%</FONT>.",
@@ -39976,7 +39976,7 @@
   "1296": {
     "id": 1296,
     "name": "Propulsion",
-    "icon": "Ability_232.png",
+    "icon": "ability_232.png",
     "levels": {
       "1": {
         "desc": "After using a Movement Skill, Damage of skills (excluding Basic Attack and Awakening Skills) +<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_COMBATEFFECT Action0ArgA 20522401/>/100/>%</FONT> for <FONT COLOR='#ffff99'>5s</FONT>.",
@@ -40831,7 +40831,7 @@
   "1297": {
     "id": 1297,
     "name": "Hit Master",
-    "icon": "Ability_233.png",
+    "icon": "ability_233.png",
     "levels": {
       "1": {
         "desc": "Damage of attacks other than Back Attack and Frontal Attack +<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1297 1/>/100/>%</FONT>. Does not apply to Awakening Skills.",
@@ -41686,7 +41686,7 @@
   "1202": {
     "id": 1202,
     "name": "Master of Escape",
-    "icon": "Buff_10.png",
+    "icon": "buff_10.png",
     "levels": {
       "1": {
         "desc": "Stand Up Cooldown -<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1202 1/>/100/>%</FONT>.",
@@ -42541,7 +42541,7 @@
   "1241": {
     "id": 1241,
     "name": "Explosive Expert",
-    "icon": "Buff_121.png",
+    "icon": "buff_121.png",
     "levels": {
       "1": {
         "desc": "Bomb/Grenade Battle Item carrying limit +<FONT COLOR='#99ff99'><$CALC <$TABLE_ABILITYFEATURE VALUE00 1241 1/>/></FONT>. Bomb/Grenade Battle Item Damage +<FONT COLOR='#99ff99'><$CALC_COMMA %2 40 />%</FONT>.",
@@ -43396,7 +43396,7 @@
   "1800": {
     "id": 1800,
     "name": "Atk. Power Reduction",
-    "icon": "Ability_218.png",
+    "icon": "ability_218.png",
     "levels": {
       "1": {
         "desc": "Atk. Power -<FONT COLOR='#ff9999'>2%</FONT>.",
@@ -43418,7 +43418,7 @@
   "1801": {
     "id": 1801,
     "name": "Defense Reduction",
-    "icon": "Ability_219.png",
+    "icon": "ability_219.png",
     "levels": {
       "1": {
         "desc": "Defense -<FONT COLOR='#ff9999'>5%</FONT>.",
@@ -43440,7 +43440,7 @@
   "1802": {
     "id": 1802,
     "name": "Atk. Speed Reduction",
-    "icon": "Ability_220.png",
+    "icon": "ability_220.png",
     "levels": {
       "1": {
         "desc": "Atk. Speed -<FONT COLOR='#ff9999'>2%</FONT>.",
@@ -43462,7 +43462,7 @@
   "1803": {
     "id": 1803,
     "name": "Move Speed Reduction",
-    "icon": "Ability_221.png",
+    "icon": "ability_221.png",
     "levels": {
       "1": {
         "desc": "Move Speed -<FONT COLOR='#ff9999'>2%</FONT>.",

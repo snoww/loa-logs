@@ -400,6 +400,8 @@ fn setup_db(resource_path: &Path) -> Result<(), rusqlite::Error> {
         info!("adding sync table");
         migration_sync(&tx)?;
     }
+
+    migration_specs(&tx)?;
     
     stmt.finalize()?;
     info!("finished setting up database");
@@ -618,6 +620,21 @@ fn migration_sync(tx: &Transaction) -> Result<(), rusqlite::Error> {
         FOREIGN KEY (encounter_id) REFERENCES encounter (id) ON DELETE CASCADE
     );",
     )
+}
+
+fn migration_specs(tx: &Transaction) -> Result<(), rusqlite::Error> {
+    let mut stmt = tx.prepare("SELECT 1 FROM pragma_table_info(?) WHERE name=?")?;
+    if !stmt.exists(["entity", "spec"])? {
+        info!("adding spec info columns");
+        tx.execute_batch(
+            "
+                ALTER TABLE entity ADD COLUMN spec TEXT;
+                ALTER TABLE entity ADD COLUMN ark_passive_active BOOLEAN;
+                ",
+        )?;
+    }
+    
+    stmt.finalize()
 }
 
 #[tauri::command]
@@ -1012,10 +1029,10 @@ fn load_encounter(window: tauri::Window, id: String) -> Encounter {
 
             let entity_type: String = row.get(11).unwrap_or_default();
 
-            let engravings_str: String = row.get(14).unwrap_or_default();
-            let engravings =
-                serde_json::from_str::<Option<PlayerEngravings>>(engravings_str.as_str())
-                    .unwrap_or_default();
+            // let engravings_str: String = row.get(14).unwrap_or_default();
+            // let engravings =
+            //     serde_json::from_str::<Option<PlayerEngravings>>(engravings_str.as_str())
+            //         .unwrap_or_default();
             
             Ok(EncounterEntity {
                 name: row.get(0)?,
@@ -1032,7 +1049,7 @@ fn load_encounter(window: tauri::Window, id: String) -> Encounter {
                     .unwrap_or(EntityType::UNKNOWN),
                 npc_id: row.get(12)?,
                 character_id: row.get(13).unwrap_or_default(),
-                engraving_data: engravings,
+                // engraving_data: engravings,
                 ..Default::default()
             })
         })
