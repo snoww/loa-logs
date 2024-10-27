@@ -171,7 +171,6 @@ export function resampleData(data: Array<BossHpLog>, interval = 5, length: numbe
             break;
         }
         if (dataMap.has(time)) {
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             last = dataMap.get(time)!;
         } else if (last === null) {
             continue;
@@ -199,7 +198,9 @@ export function getRDamage(damageStats: DamageStats): number {
 }
 
 export function getBaseDamage(damageStats: DamageStats): number {
-    return damageStats.damageDealt -
+    return (
+        damageStats.damageDealt -
         damageStats.rdpsDamageReceivedSupport -
-        (damageStats.rdpsDamageReceived - damageStats.rdpsDamageReceivedSupport);
+        (damageStats.rdpsDamageReceived - damageStats.rdpsDamageReceivedSupport)
+    );
 }

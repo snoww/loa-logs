@@ -6,31 +6,48 @@
     import { settings } from "$lib/utils/settings";
     import PlayerRow from "./shared/PlayerRow.svelte";
 
-    export let entity: Entity;
-    export let percentage: number;
-    export let duration: number;
-    export let totalDamageDealt: number;
-    export let lastCombatPacket: number;
-    export let anyDead: boolean;
-    export let multipleDeaths: boolean;
-    export let anyFrontAtk: boolean;
-    export let anyBackAtk: boolean;
-    export let anySupportBuff: boolean;
-    export let anySupportIdentity: boolean;
-    export let anySupportBrand: boolean;
-    export let anyRdpsData: boolean;
-    export let isSolo: boolean;
+    let {
+        entity,
+        percentage,
+        duration,
+        totalDamageDealt,
+        lastCombatPacket,
+        anyDead,
+        multipleDeaths,
+        anyFrontAtk,
+        anyBackAtk,
+        anySupportBuff,
+        anySupportIdentity,
+        anySupportBrand,
+        anyRdpsData,
+        isSolo
+    }: {
+        entity: Entity;
+        percentage: number;
+        duration: number;
+        totalDamageDealt: number;
+        lastCombatPacket: number;
+        anyDead: boolean;
+        multipleDeaths: boolean;
+        anyFrontAtk: boolean;
+        anyBackAtk: boolean;
+        anySupportBuff: boolean;
+        anySupportIdentity: boolean;
+        anySupportBrand: boolean;
+        anyRdpsData: boolean;
+        isSolo: boolean;
+    } = $props();
 
-    let alpha = 0.6;
+    let alpha = $state(0.6);
 
     const tweenedValue = tweened(0, {
         duration: 400,
         easing: cubicOut
     });
 
-    let dps: (string | number)[];
+    let dps = $state<(string | number)[]>([]);
 
-    $: {
+    $effect(() => {
         tweenedValue.set(percentage);
 
         if (duration > 0) {
@@ -44,7 +61,7 @@
         } else {
             alpha = 0.6;
         }
-    }
+    });
 </script>
 
 <PlayerRow

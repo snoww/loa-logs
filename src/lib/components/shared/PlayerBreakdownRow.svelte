@@ -6,35 +6,49 @@
     import { getSkillIcon } from "$lib/utils/strings";
     import { generateSkillTooltip, tooltip } from "$lib/utils/tooltip";
 
-    export let skill: Skill;
-    export let color: string;
-    export let hasFrontAttacks: boolean;
-    export let hasBackAttacks: boolean;
-    export let anySupportBuff: boolean;
-    export let anySupportIdentity: boolean;
-    export let anySupportBrand: boolean;
-    export let abbreviatedSkillDamage: (string | number)[];
-    export let skillDps: (string | number)[];
-    export let playerDamageDealt: number;
-    export let width: number;
-    export let duration: number;
+    let {
+        skill,
+        color,
+        hasFrontAttacks,
+        hasBackAttacks,
+        anySupportBuff,
+        anySupportIdentity,
+        anySupportBrand,
+        abbreviatedSkillDamage,
+        skillDps,
+        playerDamageDealt,
+        width,
+        duration,
+        meterSettings,
+        shadow = false,
+        index
+    }: {
+        skill: Skill;
+        color: string;
+        hasFrontAttacks: boolean;
+        hasBackAttacks: boolean;
+        anySupportBuff: boolean;
+        anySupportIdentity: boolean;
+        anySupportBrand: boolean;
+        abbreviatedSkillDamage: (string | number)[];
+        skillDps: (string | number)[];
+        playerDamageDealt: number;
+        width: number;
+        duration: number;
+        meterSettings: any;
+        shadow?: boolean;
+        index: number;
+    } = $props();
 
-    export let meterSettings: any;
-    export let shadow: boolean = false;
-    export let index: number;
-
-    let critPercentage = "0.0";
-    let critDmgPercentage = "0.0";
-    let baPercentage = "0.0";
-    let faPercentage = "0.0";
-    $: {
+    let critPercentage = $state("0.0");
+    let critDmgPercentage = $state("0.0");
+    let baPercentage = $state("0.0");
+    let faPercentage = $state("0.0");
+    $effect(() => {
         if (skill.hits !== 0) {
             critDmgPercentage = round((skill.critDamage / skill.totalDamage) * 100);
             critPercentage = round((skill.crits / skill.hits) * 100);
-            if (
-                meterSettings.positionalDmgPercent &&
-                (skill.frontAttackDamage > 0 || skill.backAttackDamage > 0)
-            ) {
+            if (meterSettings.positionalDmgPercent && (skill.frontAttackDamage > 0 || skill.backAttackDamage > 0)) {
                 faPercentage = round((skill.frontAttackDamage / skill.totalDamage) * 100);
                 baPercentage = round((skill.backAttackDamage / skill.totalDamage) * 100);
             } else {
@@ -42,7 +56,7 @@
                 baPercentage = round((skill.backAttacks / skill.hits) * 100);
             }
         }
-    }
+    });
 </script>
 
 <td class="pl-1">
@@ -137,23 +151,19 @@
             >{abbreviateNumberSplit(skill.maxDamage)[1]}</span>
     </td>
     {#if skill.maxDamageCast}
-    <td class="px-1 text-center">
-        {abbreviateNumberSplit(skill.maxDamageCast)[0]}<span class="text-3xs text-gray-300"
-            >{abbreviateNumberSplit(skill.maxDamageCast)[1]}</span>
-    </td>
+        <td class="px-1 text-center">
+            {abbreviateNumberSplit(skill.maxDamageCast)[0]}<span class="text-3xs text-gray-300"
+                >{abbreviateNumberSplit(skill.maxDamageCast)[1]}</span>
+        </td>
     {:else}
-    <td class="px-1 text-center">
-        -
-    </td>
+        <td class="px-1 text-center"> - </td>
     {/if}
 {/if}
 {#if meterSettings.breakdown.casts}
     <td
         class="px-1 text-center"
         use:tooltip={{
-            content: `<div class="py-1">${
-                skill.casts.toLocaleString() + " " + (skill.casts === 1 ? "cast" : "casts")
-            }</div>`
+            content: `<div class="py-1">${skill.casts.toLocaleString() + " " + (skill.casts === 1 ? "cast" : "casts")}</div>`
         }}>
         {abbreviateNumberSplit(skill.casts)[0]}<span class="text-3xs text-gray-300"
             >{abbreviateNumberSplit(skill.casts)[1]}</span>
@@ -175,9 +185,7 @@
     <td
         class="px-1 text-center"
         use:tooltip={{
-            content: `<div class="py-1">${
-                skill.hits.toLocaleString() + " " + (skill.hits === 1 ? "hit" : "hits")
-            }</div>`
+            content: `<div class="py-1">${skill.hits.toLocaleString() + " " + (skill.hits === 1 ? "hit" : "hits")}</div>`
         }}>
         {abbreviateNumberSplit(skill.hits)[0]}<span class="text-3xs text-gray-300"
             >{abbreviateNumberSplit(skill.hits)[1]}</span>
@@ -190,9 +198,7 @@
         {:else}
             <div
                 use:tooltip={{
-                    content: `<div class="py-1">${
-                        skill.hits.toLocaleString() + " " + (skill.hits === 1 ? "hit" : "hits")
-                    }</div>`
+                    content: `<div class="py-1">${skill.hits.toLocaleString() + " " + (skill.hits === 1 ? "hit" : "hits")}</div>`
                 }}>
                 {round(skill.hits / (duration / 1000 / 60))}
             </div>
@@ -204,4 +210,5 @@
     class:shadow-md={shadow}
     style="background-color: {index % 2 === 1 && $settings.general.splitLines
         ? RGBLinearShade(HexToRgba(color, 0.6))
-        : HexToRgba(color, 0.6)}; width: {width}%" />
+        : HexToRgba(color, 0.6)}; width: {width}%">
+</div>

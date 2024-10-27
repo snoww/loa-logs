@@ -2,8 +2,8 @@
     import { formatDurationFromS } from "$lib/utils/numbers";
     import { settings } from "$lib/utils/settings";
     import SettingItem from "./SettingItem.svelte";
-
 </script>
+
 <div class="flex flex-col space-y-4 divide-y-[1px]">
     <div class="mt-4 flex flex-col space-y-2 px-2">
         <label class="flex flex-col pb-4 pt-2">
@@ -28,7 +28,7 @@
                 step="10" />
             <datalist id="markers">
                 {#each Array.from({ length: 11 }, (_, i) => i * 30) as i}
-                    <option value={i} />
+                    <option value={i}></option>
                 {/each}
             </datalist>
         </label>
@@ -56,10 +56,7 @@
             name="Damage %"
             description="Show the damage percentage of the player relative to the entire raid"
             bind:setting={$settings.logs.damagePercent} />
-        <SettingItem
-            name="DPS"
-            description="Show the current damage per second"
-            bind:setting={$settings.logs.dps} />
+        <SettingItem name="DPS" description="Show the current damage per second" bind:setting={$settings.logs.dps} />
         <SettingItem
             name="Crit Rate"
             description="Show the critical strike rate"

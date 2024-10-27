@@ -2,15 +2,15 @@
     import type { StatusEffect } from "$lib/types";
     import BuffTooltip from "./BuffTooltip.svelte";
 
-    export let synergies: Map<number, StatusEffect>;
+    let { synergies }: { synergies: Map<number, StatusEffect> } = $props();
 
-    let width = "3.5rem";
+    let width = $state("3.5rem");
 
-    $: {
+    $effect(() => {
         if (synergies.size > 1) {
             width = `${synergies.size * 1.5 + 1}rem`;
         }
-    }
+    });
 </script>
 
 <th class="" style="width: {width}">

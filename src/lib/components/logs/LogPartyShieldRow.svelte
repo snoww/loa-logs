@@ -8,12 +8,18 @@
     import ShieldTooltipDetail from "$lib/components/shared/ShieldTooltipDetail.svelte";
     import { abbreviateNumberSplit } from "$lib/utils/numbers";
 
-    export let player: Entity;
-    export let playerShields: Array<ShieldDetails>;
-    export let percentage: number;
+    let {
+        player,
+        playerShields,
+        percentage
+    }: {
+        player: Entity;
+        playerShields: Array<ShieldDetails>;
+        percentage: number;
+    } = $props();
 
-    let color = "#ffffff";
-    let playerName: string;
+    let color = $state("#ffffff");
+    let playerName = $state<string>();
 
     if (Object.hasOwn($colors, player.class)) {
         if ($settings.general.constantLocalPlayerColor && $localPlayer == player.name) {
@@ -23,13 +29,13 @@
         }
     }
 
-    let totalShieldStr: (string | number)[];
+    let totalShieldStr = $state<(string | number)[]>([]);
 
-    $: {
-        playerName = formatPlayerName(player, $settings.general);;
+    $effect(() => {
+        playerName = formatPlayerName(player, $settings.general);
         let totalShield = playerShields.reduce((acc, buff) => acc + buff.total, 0);
         totalShieldStr = abbreviateNumberSplit(totalShield);
-    }
+    });
 </script>
 
 <td class="pl-1">
@@ -61,4 +67,5 @@
 <div
     class="absolute left-0 -z-10 h-7 px-2 py-1"
     class:shadow-md={!$takingScreenshot}
-    style="background-color: {HexToRgba(color, 0.6)}; width: {percentage}%" />
+    style="background-color: {HexToRgba(color, 0.6)}; width: {percentage}%">
+</div>

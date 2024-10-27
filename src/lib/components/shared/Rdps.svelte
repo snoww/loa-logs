@@ -5,20 +5,28 @@
     import { getRDamage } from "$lib/utils/numbers";
     import { rdpsEventDetails, takingScreenshot } from "$lib/utils/stores";
 
-    export let players: Array<Entity>;
-    export let totalDamageDealt: number;
-    export let duration: number;
-    export let meterSettings: any;
-    export let encounterPartyInfo: PartyInfo | undefined;
+    let {
+        players,
+        totalDamageDealt,
+        duration,
+        meterSettings,
+        encounterPartyInfo
+    }: {
+        players: Array<Entity>;
+        totalDamageDealt: number;
+        duration: number;
+        meterSettings: any;
+        encounterPartyInfo: PartyInfo | undefined;
+    } = $props();
 
-    let sortedPlayers: Entity[] = [];
-    let topRDamage: number;
-    let playerRDamagePercentages: number[];
-    let alpha: number;
-    let partySortedPlayers: Array<Array<Entity>> = [];
-    let partyRDamagePercentages: number[][];
-    let isLiveMeter = meterSettings.bossHp !== undefined;
-    $: {
+    let sortedPlayers = $state<Entity[]>([]);
+    let topRDamage = $state(0);
+    let playerRDamagePercentages = $state<number[]>([]);
+    let alpha = $state(0.6);
+    let partySortedPlayers = $state<Entity[][]>([]);
+    let partyRDamagePercentages = $state<number[][]>([]);
+    let isLiveMeter = $state(meterSettings.bossHp !== undefined);
+    $effect(() => {
         if (players.length > 0) {
             sortedPlayers = players
                 .filter((p) => p.entityType == EntityType.PLAYER)
@@ -61,7 +69,7 @@
         } else {
             alpha = 0.6;
         }
-    }
+    });
 </script>
 
 {#if players.length > 0 && $rdpsEventDetails === "" && meterSettings.rdpsSplitParty && encounterPartyInfo && partySortedPlayers.length > 1}

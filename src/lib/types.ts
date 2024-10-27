@@ -346,7 +346,6 @@ export enum ShieldTab {
     E_RECEIVED
 }
 
-
 export interface ClassMap {
     [key: number]: string;
 }

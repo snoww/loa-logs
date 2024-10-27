@@ -6,7 +6,7 @@
     import ChangelogMarkdown from "$lib/data/changelog.md?raw";
     import { miscSettings } from "$lib/utils/settings";
 
-    let hidden: boolean = true;
+    let hidden = $state(true);
 
     onMount(() => {
         $pageStore = 1;
@@ -23,6 +23,7 @@
     </div>
     <div
         class="prose-a:text-accent-500 prose prose-sm prose-zinc prose-invert mx-14 my-6 tracking-tight text-gray-200 prose-img:-my-2 prose-img:rounded-md prose-img:border prose-img:border-zinc-600 prose-img:shadow-md">
+        <!-- eslint-disable-next-line svelte/no-at-html-tags -->
         {@html $markdownIt.render(ChangelogMarkdown)}
     </div>
 </div>

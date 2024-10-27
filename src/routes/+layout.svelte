@@ -1,8 +1,8 @@
 <script lang="ts">
     import "@fontsource-variable/inter";
-    import '@fontsource-variable/jetbrains-mono';
+    import "@fontsource-variable/jetbrains-mono";
     import "../app.css";
-    import { onDestroy, onMount } from "svelte";
+    import { onDestroy, onMount, type Snippet } from "svelte";
     import { listen, type UnlistenFn } from "@tauri-apps/api/event";
     import { navigating } from "$app/stores";
     import NProgress from "nprogress";
@@ -13,6 +13,8 @@
     import { checkUpdate } from "@tauri-apps/api/updater";
     import { invoke } from "@tauri-apps/api";
     import UpdateAvailable from "$lib/components/shared/UpdateAvailable.svelte";
+
+    let { children }: { children: Snippet } = $props();
 
     let events: Set<UnlistenFn> = new Set();
 
@@ -54,9 +56,7 @@
             })();
         }
 
-        return () => {
-            unsubscribe();
-        };
+        return () => unsubscribe();
     });
 
     onDestroy(() => {
@@ -89,8 +89,8 @@
             await invoke("write_log", { message: e });
         }
     }
-    
-    $: {
+
+    $effect(() => {
         if ($settings.general.logScale === "1") {
             document.documentElement.style.setProperty("font-size", "medium");
         } else if ($settings.general.logScale === "2") {
@@ -100,12 +100,11 @@
         } else if ($settings.general.logScale === "0") {
             document.documentElement.style.setProperty("font-size", "small");
         }
-    }
-
+    });
 </script>
 
 <div class={$settings.general.accentColor}>
-    <slot />
+    {@render children()}
     {#if location.pathname !== "/"}
         <UpdateAvailable />
     {/if}

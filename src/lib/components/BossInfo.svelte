@@ -8,26 +8,26 @@
     import { linear } from "svelte/easing";
     import { tweened } from "svelte/motion";
 
-    export let boss: Entity;
+    let { boss }: { boss: Entity } = $props();
 
-    let bossHp = 0;
-    let bossShield = 0;
-    let bossHPBars = 0;
-    let bossCurrentBars = 0;
-    let bossPreviousBars = 0;
-    let bossCurrentPercentage = 0;
-    let colorIndex = 0;
-    let bossBarColor = [bossHpBarColors[colorIndex], bossHpBarColors[colorIndex + 1]];
+    let bossHp = $state(0);
+    let bossShield = $state(0);
+    let bossHPBars = $state(0);
+    let bossCurrentBars = $state(0);
+    let bossPreviousBars = $state(0);
+    let bossCurrentPercentage = $state(0);
+    let colorIndex = $state(0);
+    let bossBarColor = $state([bossHpBarColors[0], bossHpBarColors[1]]);
     const tweenBossHpBar = tweened(100, {
         duration: 200,
         easing: linear
     });
 
-    let bossCurrentHp: (string | number)[];
-    let bossMaxHp: (string | number)[];
-    let bossShieldHp: (string | number)[];
+    let bossCurrentHp = $state<(string | number)[]>([]);
+    let bossMaxHp = $state<(string | number)[]>([]);
+    let bossShieldHp = $state<(string | number)[]>([]);
 
-    $: {
+    $effect(() => {
         bossShield = boss.currentShield;
         if (boss.currentHp < 0) {
             bossHp = 0;
@@ -84,37 +84,38 @@
             bossCurrentBars = 0;
             tweenBossHpBar.set(0);
         }
-    }
+    });
 </script>
 
 <div class="h-7 border-y border-black bg-zinc-900/[.3]">
     {#if bossHPBars !== 0}
         {#if bossShield > 0}
-            <div class="absolute -z-10 h-7 bg-neutral-400" style="width: 100%;" />
+            <div class="absolute -z-10 h-7 bg-neutral-400" style="width: 100%;"></div>
         {:else}
-            <div class="absolute -z-10 h-7" style="background-color: {bossBarColor[0]};width: {$tweenBossHpBar}%;" />
+            <div class="absolute -z-10 h-7" style="background-color: {bossBarColor[0]};width: {$tweenBossHpBar}%;">
+            </div>
         {/if}
         {#if bossCurrentBars <= 1}
-            <div class="absolute -z-20 h-7 w-full bg-zinc-900" />
+            <div class="absolute -z-20 h-7 w-full bg-zinc-900"></div>
         {:else}
-            <div class="absolute -z-20 h-7 w-full" style="background-color: {bossBarColor[1]};" />
+            <div class="absolute -z-20 h-7 w-full" style="background-color: {bossBarColor[1]};"></div>
         {/if}
         {#if $settings.meter.splitBossHpBar}
             <div class="absolute h-7 w-full">
                 <div class="grid h-7 grid-cols-4 divide-x-2 divide-zinc-800/60">
-                    <div />
-                    <div />
-                    <div />
-                    <div />
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
                 </div>
             </div>
         {/if}
     {:else}
-        <div class="absolute -z-10 h-7 w-full bg-zinc-900" />
+        <div class="absolute -z-10 h-7 w-full bg-zinc-900"></div>
         {#if bossShield > 0}
-            <div class="absolute z-0 h-7 bg-neutral-400" style="width: 100%;" />
+            <div class="absolute z-0 h-7 bg-neutral-400" style="width: 100%;"></div>
         {:else}
-            <div class="absolute z-0 h-7 bg-red-800" style="width: {$tweenBossHpBar}%;" />
+            <div class="absolute z-0 h-7 bg-red-800" style="width: {$tweenBossHpBar}%;"></div>
         {/if}
     {/if}
     <div class="relative tracking-tighter">

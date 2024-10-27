@@ -1,8 +1,13 @@
 <script lang="ts">
-    export let difficulty: string | undefined;
-    export let hover: boolean = false;
-
+    let {
+        difficulty,
+        hover = false
+    }: {
+        difficulty: string | undefined;
+        hover?: boolean;
+    } = $props();
 </script>
+
 {#if difficulty === "Normal"}
     <span>[Normal]</span>
 {:else if difficulty === "Hard"}

@@ -6,15 +6,27 @@
     import DifficultyLabel from "../shared/DifficultyLabel.svelte";
     import BossOnlyDamage from "../shared/BossOnlyDamage.svelte";
 
-    export let bossName: string;
-    export let difficulty: string | undefined;
-    export let date: string;
-    export let encounterDuration: string;
-    export let totalDamageDealt: number;
-    export let dps: number;
-    export let cleared: boolean;
-    export let bossOnlyDamage: boolean;
-    export let raidGate: string | undefined;
+    let {
+        bossName,
+        difficulty,
+        date,
+        encounterDuration,
+        totalDamageDealt,
+        dps,
+        cleared,
+        bossOnlyDamage,
+        raidGate
+    }: {
+        bossName: string;
+        difficulty: string | undefined;
+        date: string;
+        encounterDuration: string;
+        totalDamageDealt: number;
+        dps: number;
+        cleared: boolean;
+        bossOnlyDamage: boolean;
+        raidGate: string | undefined;
+    } = $props();
 </script>
 
 {#if $takingScreenshot}
@@ -24,7 +36,7 @@
                 <span class="text-lime-400">[Cleared]</span>
             {/if}
             {#if bossOnlyDamage}
-                <BossOnlyDamage/>
+                <BossOnlyDamage />
             {/if}
             <span class="font-medium">
                 {#if $settings.general.showDifficulty && difficulty}

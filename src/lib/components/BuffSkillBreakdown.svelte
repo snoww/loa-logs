@@ -10,18 +10,24 @@
     import BuffTooltipDetail from "./shared/BuffTooltipDetail.svelte";
     import { localPlayer } from "$lib/utils/stores";
 
-    export let groupedSynergies: Map<string, Map<number, StatusEffect>>;
-    export let player: Entity;
-    export let tab: MeterTab;
+    let {
+        groupedSynergies,
+        player,
+        tab
+    }: {
+        groupedSynergies: Map<string, Map<number, StatusEffect>>;
+        player: Entity;
+        tab: MeterTab;
+    } = $props();
 
-    let color: string;
-    let skillDamagePercentages: Array<number> = [];
-    let skills = Array<Skill>();
-    let playerName: string;
-    let buffSummary: BuffDetails[];
+    let color = $state("#ffffff");
+    let skillDamagePercentages = $state<number[]>([]);
+    let skills = $state<Skill[]>([]);
+    let playerName = $state<string>();
+    let buffSummary = $state<BuffDetails[]>([]);
 
-    $: {
-        playerName = formatPlayerName(player, $settings.general.showNames, $settings.general.showGearScore, false);
+    $effect(() => {
+        playerName = formatPlayerName(player, $settings.general);
 
         skills = Object.values(player.skills).sort((a, b) => b.totalDamage - a.totalDamage);
         if (player.class === "Arcanist") {
@@ -42,7 +48,7 @@
         if (tab === MeterTab.SELF_BUFFS || tab === MeterTab.PARTY_BUFFS) {
             buffSummary = getSynergyPercentageDetailsSum(groupedSynergies, skills, player.damageStats);
         }
-    }
+    });
 </script>
 
 {#if tab === MeterTab.SELF_BUFFS || tab === MeterTab.PARTY_BUFFS}
@@ -70,7 +76,11 @@
                 </td>
             {/each}
         {/if}
-        <div class="absolute left-0 -z-10 h-7 w-full px-2 py-1" style="background-color: {$settings.general.splitLines ? RGBLinearShade(HexToRgba(color, 0.6)) : HexToRgba(color, 0.6)}" />
+        <td
+            class="absolute left-0 -z-10 h-7 w-full px-2 py-1"
+            style="background-color: {$settings.general.splitLines
+                ? RGBLinearShade(HexToRgba(color, 0.6))
+                : HexToRgba(color, 0.6)}"></td>
     </tr>
 {/if}
 {#each skills as skill, i (skill.id)}

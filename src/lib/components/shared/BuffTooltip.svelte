@@ -4,8 +4,13 @@
     import { getSkillIcon } from "$lib/utils/strings";
     import { generateHeaderTooltip, tooltip } from "$lib/utils/tooltip";
 
-    export let synergy: StatusEffect;
-    export let size = "size-5";
+    let {
+        synergy,
+        size = "size-5"
+    }: {
+        synergy: StatusEffect;
+        size?: string;
+    } = $props();
 </script>
 
 <div>

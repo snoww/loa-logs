@@ -3,30 +3,28 @@
     import { emit, listen, type UnlistenFn } from "@tauri-apps/api/event";
     import { onDestroy, onMount } from "svelte";
 
-    let identity: IdentityEvent = { gauge1: 0, gauge2: 0, gauge3: 0 };
-    let stagger: StaggerEvent = { current: 0, max: 0 };
-    let staggerPercent = "";
+    let identity = $state<IdentityEvent>({ gauge1: 0, gauge2: 0, gauge3: 0 });
+    let stagger = $state<StaggerEvent>({ current: 0, max: 0 });
+    let staggerPercent = $state("");
 
-    $: {
+    $effect(() => {
         if (stagger.max > 0) {
             staggerPercent = "(" + (((stagger.max - stagger.current) / stagger.max) * 100).toFixed(1) + "%)";
         }
-    }
+    });
 
     let events: Array<UnlistenFn> = [];
-    onMount(() => {
-        (async () => {
-            await emit("emit-details-request");
-            let staggerEvent = await listen("stagger-update", (event: any) => {
-                // console.log(+Date.now(), event.payload);
-                stagger = event.payload;
-            });
-            let identityEvent = await listen("identity-update", (event: any) => {
-                // console.log(+Date.now(), event.payload);
-                identity = event.payload;
-            });
-            events.push(staggerEvent, identityEvent);
-        })();
+    onMount(async () => {
+        await emit("emit-details-request");
+        let staggerEvent = await listen("stagger-update", (event: any) => {
+            // console.log(+Date.now(), event.payload);
+            stagger = event.payload;
+        });
+        let identityEvent = await listen("identity-update", (event: any) => {
+            // console.log(+Date.now(), event.payload);
+            identity = event.payload;
+        });
+        events.push(staggerEvent, identityEvent);
     });
     onDestroy(() => {
         emit("emit-details-request");

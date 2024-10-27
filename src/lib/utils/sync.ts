@@ -57,7 +57,7 @@ export async function uploadLog(id: string | number, encounter: Encounter, setti
             access_token: settings.accessToken,
             "Content-Encoding": "gzip",
             "Content-Type": "application/json",
-            "visibility": settings.visibility ?? ""
+            visibility: settings.visibility ?? ""
         },
         body: blob
     });
@@ -80,7 +80,13 @@ export async function uploadLog(id: string | number, encounter: Encounter, setti
         if (body.error === "duplicate log" && body.duplicate) {
             const duplicate = body.duplicate;
             await invoke("write_log", {
-                message: "did not upload duplicate encounter " + id + " (" + encounter.currentBossName + ") using existing upstream: " + duplicate
+                message:
+                    "did not upload duplicate encounter " +
+                    id +
+                    " (" +
+                    encounter.currentBossName +
+                    ") using existing upstream: " +
+                    duplicate
             });
             await invoke("sync", { encounter: Number(id), upstream: duplicate.toString(), failed: false });
             return { id: duplicate, error: "" };

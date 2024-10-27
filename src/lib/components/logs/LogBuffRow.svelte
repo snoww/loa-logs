@@ -9,13 +9,19 @@
     import { round } from "$lib/utils/numbers";
     import { addBardBubbles, supportSkills } from "$lib/utils/buffs";
 
-    export let player: Entity;
-    export let groupedSynergies: Map<string, Map<number, StatusEffect>>;
-    export let percentage: number;
+    let {
+        player,
+        groupedSynergies,
+        percentage
+    }: {
+        player: Entity;
+        groupedSynergies: Map<string, Map<number, StatusEffect>>;
+        percentage: number;
+    } = $props();
 
-    let color = "#ffffff";
-    let playerName: string;
-    let synergyPercentageDetails: Array<BuffDetails>;
+    let color = $state("#ffffff");
+    let playerName = $state<string>();
+    let synergyPercentageDetails = $state<BuffDetails[]>([]);
 
     if (Object.hasOwn($colors, player.class)) {
         if ($settings.general.constantLocalPlayerColor && $localPlayer == player.name) {
@@ -25,9 +31,9 @@
         }
     }
 
-    $: {
-        playerName = formatPlayerName(player, $settings.general);;
-    }
+    $effect(() => {
+        playerName = formatPlayerName(player, $settings.general);
+    });
 
     let damageDealt = player.damageStats.damageDealt;
     let damageDealtWithoutHA = player.damageStats.damageDealt - (player.damageStats.hyperAwakeningDamage ?? 0);
@@ -55,7 +61,9 @@
                     buff.buffs.push(
                         new Buff(
                             syn.source.icon,
-                            round((player.damageStats.debuffedBy[id] / (isHat ? damageDealt : damageDealtWithoutHA)) * 100),
+                            round(
+                                (player.damageStats.debuffedBy[id] / (isHat ? damageDealt : damageDealtWithoutHA)) * 100
+                            ),
                             syn.source.skill?.icon
                         )
                     );
@@ -97,4 +105,5 @@
 <div
     class="absolute left-0 -z-10 h-7 px-2 py-1"
     class:shadow-md={!$takingScreenshot}
-    style="background-color: {HexToRgba(color, 0.6)}; width: {percentage}%" />
+    style="background-color: {HexToRgba(color, 0.6)}; width: {percentage}%">
+</div>

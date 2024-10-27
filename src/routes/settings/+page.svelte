@@ -12,9 +12,10 @@
     import AccessibilitySettings from "$lib/components/settings/AccessibilitySettings.svelte";
     import DatabaseSettings from "$lib/components/settings/DatabaseSettings.svelte";
     import Title from "$lib/components/shared/Title.svelte";
+    import { preventDefault } from "$lib/utils/svelte";
 
-    let currentTab = 0;
-    let hidden: boolean = true;
+    let currentTab = $state(0);
+    let hidden = $state(true);
 
     onMount(() => {
         // dunno if this is good lol XD
@@ -24,7 +25,7 @@
     });
 </script>
 
-<svelte:window on:contextmenu|preventDefault />
+<svelte:window oncontextmenu={preventDefault(() => {})} />
 <LogSidebar bind:hidden />
 <div class="custom-scroll h-screen overflow-y-scroll bg-zinc-800 pb-8">
     <div class="sticky top-0 z-10 flex h-16 justify-between bg-zinc-800 px-8 py-5 shadow-md">
@@ -36,56 +37,56 @@
                 class="border-b px-3 py-4 {currentTab === 0
                     ? 'text-accent-500 border-accent-500'
                     : 'border-zinc-500 text-gray-400 hover:text-gray-200'}"
-                on:click={() => (currentTab = 0)}>
+                onclick={() => (currentTab = 0)}>
                 General
             </button>
             <button
                 class="border-b px-3 py-4 {currentTab === 1
                     ? 'text-accent-500 border-accent-500'
                     : 'border-zinc-500 text-gray-400 hover:text-gray-200'}"
-                on:click={() => (currentTab = 1)}>
+                onclick={() => (currentTab = 1)}>
                 Live Meter
             </button>
             <button
                 class="border-b px-3 py-4 {currentTab === 2
                     ? 'text-accent-500 border-accent-500'
                     : 'border-zinc-500 text-gray-400 hover:text-gray-200'}"
-                on:click={() => (currentTab = 2)}>
+                onclick={() => (currentTab = 2)}>
                 Logs
             </button>
             <button
                 class="border-b px-3 py-4 {currentTab === 3
                     ? 'text-accent-500 border-accent-500'
                     : 'border-zinc-500 text-gray-400 hover:text-gray-200'}"
-                on:click={() => (currentTab = 3)}>
+                onclick={() => (currentTab = 3)}>
                 Buffs
             </button>
             <button
                 class="border-b px-3 py-4 {currentTab === 4
                     ? 'text-accent-500 border-accent-500'
                     : 'border-zinc-500 text-gray-400 hover:text-gray-200'}"
-                on:click={() => (currentTab = 4)}>
+                onclick={() => (currentTab = 4)}>
                 Shortcuts
             </button>
             <button
                 class="border-b px-3 py-4 {currentTab === 5
                     ? 'text-accent-500 border-accent-500'
                     : 'border-zinc-500 text-gray-400 hover:text-gray-200'}"
-                on:click={() => (currentTab = 5)}>
+                onclick={() => (currentTab = 5)}>
                 Class Colors
             </button>
             <button
                 class="border-b px-3 py-4 {currentTab === 6
                     ? 'text-accent-500 border-accent-500'
                     : 'border-zinc-500 text-gray-400 hover:text-gray-200'}"
-                on:click={() => (currentTab = 6)}>
+                onclick={() => (currentTab = 6)}>
                 Accessibility
             </button>
             <button
                 class="border-b px-3 py-4 {currentTab === 7
                     ? 'text-accent-500 border-accent-500'
                     : 'border-zinc-500 text-gray-400 hover:text-gray-200'}"
-                on:click={() => (currentTab = 7)}>
+                onclick={() => (currentTab = 7)}>
                 Database
             </button>
         </div>

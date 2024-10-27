@@ -7,41 +7,60 @@
     import { tooltip } from "$lib/utils/tooltip";
     import { localPlayer } from "$lib/utils/stores";
 
-    export let entity: Entity;
-    export let totalDamageDealt: number;
-    export let anyDead: boolean;
-    export let multipleDeaths: boolean;
-    export let anyFrontAtk: boolean;
-    export let anyBackAtk: boolean;
-    export let anySupportBuff: boolean;
-    export let anySupportIdentity: boolean;
-    export let anySupportBrand: boolean;
-    export let anyRdpsData: boolean;
-    export let end: number;
-    export let dps: (string | number)[];
+    let {
+        entity,
+        totalDamageDealt,
+        anyDead,
+        multipleDeaths,
+        anyFrontAtk,
+        anyBackAtk,
+        anySupportBuff,
+        anySupportIdentity,
+        anySupportBrand,
+        anyRdpsData,
+        end,
+        dps,
+        alpha = 0.6,
+        width,
+        meterSettings,
+        shadow = false,
+        isSolo
+    }: {
+        entity: Entity;
+        totalDamageDealt: number;
+        anyDead: boolean;
+        multipleDeaths: boolean;
+        anyFrontAtk: boolean;
+        anyBackAtk: boolean;
+        anySupportBuff: boolean;
+        anySupportIdentity: boolean;
+        anySupportBrand: boolean;
+        anyRdpsData: boolean;
+        end: number;
+        dps: (string | number)[];
+        alpha?: number;
+        width: number;
+        meterSettings: any;
+        shadow?: boolean;
+        isSolo: boolean;
+    } = $props();
 
-    export let alpha: number = 0.6;
-    export let width: number;
-    export let meterSettings: any;
-    export let shadow: boolean = false;
-    export let isSolo: boolean;
+    let damageDealt = $state<(string | number)[]>([]);
+    let damageDealtRaw = $state(0);
+    let damageWithoutHa = $state(0);
+    let damagePercentage = $state<string>();
+    let name = $state("");
+    let tooltipName = $state<string>();
+    let color = $state("#ffffff");
+    let deadFor = $state<string>();
 
-    let damageDealt: (string | number)[];
-    let damageDealtRaw: number;
-    let damageWithoutHa: number;
-    let damagePercentage: string;
-    let name: string;
-    let tooltipName: string;
-    let color = "#ffffff";
-    let deadFor: string;
+    let sSynPercentage = $state<string>("0.0");
+    let critPercentage = $state<string>("0.0");
+    let critDmgPercentage = $state<string>("0.0");
+    let baPercentage = $state<string>("0.0");
+    let faPercentage = $state<string>("0.0");
 
-    let sSynPercentage = "0.0";
-    let critPercentage = "0.0";
-    let critDmgPercentage = "0.0";
-    let baPercentage = "0.0";
-    let faPercentage = "0.0";
-
-    $: {
+    $effect(() => {
         damageDealtRaw = entity.damageStats.damageDealt;
         damageDealt = abbreviateNumberSplit(damageDealtRaw);
         damageWithoutHa = damageDealtRaw - (entity.damageStats.hyperAwakeningDamage ?? 0);
@@ -87,7 +106,7 @@
         if (entity.isDead) {
             deadFor = Math.abs((end - entity.damageStats.deathTime) / 1000).toFixed(0) + "s";
         }
-    }
+    });
 </script>
 
 <td class="pl-1">
@@ -120,7 +139,7 @@
         {#if entity.damageStats.deaths > 0}
             {entity.damageStats.deaths}
         {:else}
-         -
+            -
         {/if}
     </td>
 {/if}
@@ -161,20 +180,20 @@
 {/if}
 {#if anySupportBuff && meterSettings.percentBuffBySup}
     <td class="px-1 text-center">
-        {round((entity.damageStats.buffedBySupport / damageWithoutHa) * 100)}<span
-            class="text-3xs text-gray-300">%</span>
+        {round((entity.damageStats.buffedBySupport / damageWithoutHa) * 100)}<span class="text-3xs text-gray-300"
+            >%</span>
     </td>
 {/if}
 {#if anySupportBrand && meterSettings.percentBrand}
     <td class="px-1 text-center">
-        {round((entity.damageStats.debuffedBySupport / damageWithoutHa) * 100)}<span
-            class="text-3xs text-gray-300">%</span>
+        {round((entity.damageStats.debuffedBySupport / damageWithoutHa) * 100)}<span class="text-3xs text-gray-300"
+            >%</span>
     </td>
 {/if}
 {#if anySupportIdentity && meterSettings.percentIdentityBySup}
     <td class="px-1 text-center">
-        {round((entity.damageStats.buffedByIdentity / damageWithoutHa) * 100)}<span
-            class="text-3xs text-gray-300">%</span>
+        {round((entity.damageStats.buffedByIdentity / damageWithoutHa) * 100)}<span class="text-3xs text-gray-300"
+            >%</span>
     </td>
 {/if}
 {#if anyRdpsData && meterSettings.ssyn}
@@ -188,10 +207,11 @@
 {/if}
 {#if meterSettings.counters}
     <td class="px-1 text-center">
-        {entity.skillStats.counters}<span class="text-3xs text-gray-300" />
+        {entity.skillStats.counters}<span class="text-3xs text-gray-300"></span>
     </td>
 {/if}
 <div
     class="absolute left-0 -z-10 h-7 px-2 py-1"
     class:shadow-md={shadow}
-    style="background-color: {HexToRgba(color, alpha)}; width: {width}%" />
+    style="background-color: {HexToRgba(color, alpha)}; width: {width}%">
+</div>

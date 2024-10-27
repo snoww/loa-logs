@@ -4,9 +4,9 @@
     import { getSkillIcon } from "$lib/utils/strings";
     import { generateHeaderTooltip, tooltip } from "$lib/utils/tooltip";
 
-    export let synergy: StatusEffect;
+    let { synergy }: { synergy: StatusEffect } = $props();
 
-    let icon = synergy.source.icon;
+    let icon = $state(synergy.source.icon);
     if (synergy.source.skill) {
         icon = synergy.source.skill.icon;
     }

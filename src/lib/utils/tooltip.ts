@@ -114,7 +114,6 @@ export function generateHeaderTooltip(buff: StatusEffect, iconPath: string) {
 }
 
 export function generateSkillTooltip(skill: Skill) {
-
     let str = `<div class="py-0.5">${skill.name}</div>`;
     str += "<div class='text-gray-300'>";
     if (skill.gemDamage) {

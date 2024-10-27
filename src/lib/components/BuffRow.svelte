@@ -11,21 +11,27 @@
     import { addBardBubbles, supportSkills } from "$lib/utils/buffs";
     import { localPlayer } from "$lib/utils/stores";
 
-    export let player: Entity;
-    export let groupedSynergies: Map<string, Map<number, StatusEffect>>;
-    export let percentage: number;
+    let {
+        player,
+        groupedSynergies,
+        percentage
+    }: {
+        player: Entity;
+        groupedSynergies: Map<string, Map<number, StatusEffect>>;
+        percentage: number;
+    } = $props();
 
-    let color = "#ffffff";
-    let alpha = 0.6;
-    let playerName: string;
-    let synergyPercentageDetails: Array<BuffDetails>;
+    let color = $state("#ffffff");
+    let alpha = $state(0.6);
+    let playerName = $state<string>();
+    let synergyPercentageDetails = $state<BuffDetails[]>([]);
 
     const tweenedValue = tweened(0, {
         duration: 400,
         easing: cubicOut
     });
 
-    $: {
+    $effect(() => {
         tweenedValue.set(percentage);
         if (Object.hasOwn($colors, player.class)) {
             if ($settings.general.constantLocalPlayerColor && $localPlayer == player.name) {
@@ -53,7 +59,9 @@
                     if (player.damageStats.buffedBy[id]) {
                         let b = new Buff(
                             syn.source.icon,
-                            round((player.damageStats.buffedBy[id] / (isHat ? damageDealt : damageDealtWithoutHA)) * 100),
+                            round(
+                                (player.damageStats.buffedBy[id] / (isHat ? damageDealt : damageDealtWithoutHA)) * 100
+                            ),
                             syn.source.skill?.icon
                         );
                         addBardBubbles(key, b, syn);
@@ -63,7 +71,10 @@
                         buff.buffs.push(
                             new Buff(
                                 syn.source.icon,
-                                round((player.damageStats.debuffedBy[id] / (isHat ? damageDealt : damageDealtWithoutHA)) * 100),
+                                round(
+                                    (player.damageStats.debuffedBy[id] / (isHat ? damageDealt : damageDealtWithoutHA)) *
+                                        100
+                                ),
                                 syn.source.skill?.icon
                             )
                         );
@@ -83,7 +94,7 @@
         } else {
             alpha = 0.6;
         }
-    }
+    });
 </script>
 
 <td class="pl-1">
@@ -111,4 +122,5 @@
 {/if}
 <div
     class="absolute left-0 -z-10 h-7 px-2 py-1"
-    style="background-color: {HexToRgba(color, alpha)}; width: {$tweenedValue}%" />
+    style="background-color: {HexToRgba(color, alpha)}; width: {$tweenedValue}%">
+</div>

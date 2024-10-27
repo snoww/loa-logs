@@ -21,7 +21,6 @@
     import Buffs from "./Buffs.svelte";
     import { settings } from "$lib/utils/settings";
     import { tooltip } from "$lib/utils/tooltip";
-    import { writable } from "svelte/store";
     import Notification from "./shared/Notification.svelte";
     import {
         takingScreenshot,
@@ -41,163 +40,161 @@
     import MissingInfo from "./shared/MissingInfo.svelte";
     import { invoke } from "@tauri-apps/api";
     import { uploadLog } from "$lib/utils/sync";
+    import { preventDefault } from "$lib/utils/svelte";
 
     let time = +Date.now();
-    let encounter: Encounter | null = null;
-    let parties: PartyInfo | undefined;
-    let events: Array<UnlistenFn> = [];
+    let encounter = $state<Encounter | null>(null);
+    let parties = $state<PartyInfo | undefined>();
+    let events = $state<UnlistenFn[]>([]);
 
-    let zoneChangeAlert = false;
-    let resettingAlert = false;
-    let pauseAlert = false;
-    let saveAlert = false;
-    let raidClear = false;
-    let raidWipe = false;
-    let bossDeadAlert = false;
-    let adminAlert = false;
-    let raidInProgress = writable(true);
+    let zoneChangeAlert = $state(false);
+    let resettingAlert = $state(false);
+    let pauseAlert = $state(false);
+    let saveAlert = $state(false);
+    let raidClear = $state(false);
+    let raidWipe = $state(false);
+    let bossDeadAlert = $state(false);
+    let adminAlert = $state(false);
+    let raidInProgress = $state(true);
 
-    onMount(() => {
+    onMount(async () => {
         setInterval(() => {
             time = +Date.now();
         }, 1000);
 
         $rdpsEventDetails = "not_available";
-
-        (async () => {
-            let encounterUpdateEvent = await listen("encounter-update", (event: EncounterEvent) => {
-                // console.log(+Date.now(), event.payload);
-                encounter = event.payload;
-            });
-            let partyUpdateEvent = await listen("party-update", (event: PartyEvent) => {
-                if (event.payload) {
-                    parties = event.payload;
-                }
-            });
-            let zoneChangeEvent = await listen("zone-change", () => {
-                // console.log("zone change event")
-                zoneChangeAlert = true;
-                $raidInProgress = false;
-                setTimeout(() => {
-                    reset();
-                    zoneChangeAlert = false;
-                    $raidInProgress = true;
-                }, 6000);
-            });
-            let raidStartEvent = await listen("raid-start", () => {
+        let encounterUpdateEvent = await listen("encounter-update", (event: EncounterEvent) => {
+            // console.log(+Date.now(), event.payload);
+            encounter = event.payload;
+        });
+        let partyUpdateEvent = await listen("party-update", (event: PartyEvent) => {
+            if (event.payload) {
+                parties = event.payload;
+            }
+        });
+        let zoneChangeEvent = await listen("zone-change", () => {
+            // console.log("zone change event")
+            zoneChangeAlert = true;
+            raidInProgress = false;
+            setTimeout(() => {
                 reset();
-                $raidInProgress = true;
-            });
-            let resetEncounterEvent = await listen("reset-encounter", () => {
-                reset();
-                resettingAlert = true;
+                zoneChangeAlert = false;
+                raidInProgress = true;
+            }, 6000);
+        });
+        let raidStartEvent = await listen("raid-start", () => {
+            reset();
+            raidInProgress = true;
+        });
+        let resetEncounterEvent = await listen("reset-encounter", () => {
+            reset();
+            resettingAlert = true;
+            setTimeout(() => {
+                resettingAlert = false;
+            }, 1500);
+        });
+        let pauseEncounterEvent = await listen("pause-encounter", () => {
+            paused = !paused;
+            pauseAlert = !pauseAlert;
+        });
+        let saveEncounterEvent = await listen("save-encounter", () => {
+            reset();
+            saveAlert = true;
+            setTimeout(() => {
+                saveAlert = false;
+            }, 1500);
+        });
+        let phaseTransitionEvent = await listen("phase-transition", (event: any) => {
+            let phaseCode = event.payload;
+            // console.log(Date.now() + ": phase transition event: ", event.payload)
+            if (phaseCode === 1) {
+                bossDeadAlert = true;
                 setTimeout(() => {
-                    resettingAlert = false;
-                }, 1500);
-            });
-            let pauseEncounterEvent = await listen("pause-encounter", () => {
-                $paused = !$paused;
-                pauseAlert = !pauseAlert;
-            });
-            let saveEncounterEvent = await listen("save-encounter", () => {
-                reset();
-                saveAlert = true;
+                    bossDeadAlert = false;
+                }, 3000);
+            } else if (phaseCode === 2 && raidInProgress) {
+                raidClear = true;
                 setTimeout(() => {
-                    saveAlert = false;
-                }, 1500);
-            });
-            let phaseTransitionEvent = await listen("phase-transition", (event: any) => {
-                let phaseCode = event.payload;
-                // console.log(Date.now() + ": phase transition event: ", event.payload)
-                if (phaseCode === 1) {
-                    bossDeadAlert = true;
-                    setTimeout(() => {
-                        bossDeadAlert = false;
-                    }, 3000);
-                } else if (phaseCode === 2 && raidInProgress) {
-                    raidClear = true;
-                    setTimeout(() => {
-                        raidClear = false;
-                    }, 3000);
-                } else if (phaseCode === 4 && raidInProgress) {
-                    raidWipe = true;
-                    setTimeout(() => {
-                        raidWipe = false;
-                    }, 3000);
-                }
-                $raidInProgress = false;
-            });
-            let clearEncounterEvent = await listen("clear-encounter", async (event: any) => {
-                if (!$settings.sync.auto) {
-                    return;
-                }
+                    raidClear = false;
+                }, 3000);
+            } else if (phaseCode === 4 && raidInProgress) {
+                raidWipe = true;
+                setTimeout(() => {
+                    raidWipe = false;
+                }, 3000);
+            }
+            raidInProgress = false;
+        });
+        let clearEncounterEvent = await listen("clear-encounter", async (event: any) => {
+            if (!$settings.sync.auto) {
+                return;
+            }
 
-                let id = event.payload.toString();
-                const encounter = await invoke("load_encounter", { id }) as Encounter;
-                await uploadLog(id, encounter, $settings.sync);
-            });
-            let adminErrorEvent = await listen("admin", () => {
-                adminAlert = true;
-            });
-            let rdpsEvent = await listen("rdps", (event: any) => {
-                if (event.payload === "request_success") {
-                    $rdpsEventDetails = "";
-                } else {
-                    $rdpsEventDetails = event.payload;
-                }
-            });
+            let id = event.payload.toString();
+            const encounter = (await invoke("load_encounter", { id })) as Encounter;
+            await uploadLog(id, encounter, $settings.sync);
+        });
+        let adminErrorEvent = await listen("admin", () => {
+            adminAlert = true;
+        });
+        let rdpsEvent = await listen("rdps", (event: any) => {
+            if (event.payload === "request_success") {
+                $rdpsEventDetails = "";
+            } else {
+                $rdpsEventDetails = event.payload;
+            }
+        });
 
-            events.push(
-                encounterUpdateEvent,
-                partyUpdateEvent,
-                zoneChangeEvent,
-                resetEncounterEvent,
-                pauseEncounterEvent,
-                saveEncounterEvent,
-                phaseTransitionEvent,
-                raidStartEvent,
-                adminErrorEvent,
-                rdpsEvent,
-                clearEncounterEvent
-            );
-        })();
+        events.push(
+            encounterUpdateEvent,
+            partyUpdateEvent,
+            zoneChangeEvent,
+            resetEncounterEvent,
+            pauseEncounterEvent,
+            saveEncounterEvent,
+            phaseTransitionEvent,
+            raidStartEvent,
+            adminErrorEvent,
+            rdpsEvent,
+            clearEncounterEvent
+        );
     });
 
     onDestroy(() => {
         events.forEach((unlisten) => unlisten());
     });
 
-    let players: Array<Entity> = [];
-    let bosses: Array<Entity> = [];
-    let playerDamagePercentages: Array<number> = [];
-    let topDamageDealt = 0;
-    let encounterDuration = "00:00";
-    let duration = 0;
-    let totalDamageDealt = 0;
-    let dps = 0;
-    let timeUntilKill = "00:00";
-    let currentBoss: Entity | null = null;
-    let state = MeterState.PARTY;
-    let tab = MeterTab.DAMAGE;
-    let player: Entity | null = null;
-    let playerName = "";
-    let focusedBoss = "";
-    let lastCombatPacket = 0;
-    let anyDead: boolean = false;
-    let multipleDeaths: boolean = false;
-    let anyFrontAtk: boolean = false;
-    let anyBackAtk: boolean = false;
-    let anySupportBuff: boolean = false;
-    let anySupportIdentity: boolean = false;
-    let anySupportBrand: boolean = false;
-    let anyRdpsData: boolean = false;
-    let isSolo: boolean = true;
+    let players = $state<Entity[]>([]);
+    let bosses = $state<Entity[]>([]);
+    let playerDamagePercentages = $state<number[]>([]);
+    let topDamageDealt = $state(0);
+    let encounterDuration = $state("00:00");
+    let duration = $state(0);
+    let totalDamageDealt = $state(0);
+    let dps = $state(0);
+    let timeUntilKill = $state("00:00");
+    let currentBoss = $state<Entity | null>(null);
+    let mstate = $state(MeterState.PARTY);
+    let tab = $state(MeterTab.DAMAGE);
+    let player = $state<Entity>();
+    let playerName = $state("");
+    let focusedBoss = $state("");
+    let lastCombatPacket = $state(0);
+    let anyDead = $state(false);
+    let multipleDeaths = $state(false);
+    let anyFrontAtk = $state(false);
+    let anyBackAtk = $state(false);
+    let anySupportBuff = $state(false);
+    let anySupportIdentity = $state(false);
+    let anySupportBrand = $state(false);
+    let anyRdpsData = $state(false);
+    let isSolo = $state(true);
 
-    let paused = writable(false);
+    let paused = $state(false);
 
-    $: {
+    $effect(() => {
         if (encounter) {
-            if (encounter.fightStart !== 0 && !$paused) {
+            if (encounter.fightStart !== 0 && !paused) {
                 if (!$missingInfo) {
                     if (encounter.localPlayer === "You" || !isValidName(encounter.localPlayer)) {
                         $missingInfo = true;
@@ -261,7 +258,7 @@
 
                 if (
                     // ((encounter.currentBoss && !encounter.currentBoss.isDead) || !encounter.currentBoss) &&
-                    $raidInProgress
+                    raidInProgress
                 ) {
                     duration = time - encounter.fightStart;
                 }
@@ -310,16 +307,16 @@
 
             if (playerName) {
                 player = encounter.entities[playerName];
-                state = MeterState.PLAYER;
+                mstate = MeterState.PLAYER;
             } else {
-                player = null;
-                state = MeterState.PARTY;
+                player = undefined;
+                mstate = MeterState.PARTY;
             }
         }
-    }
+    });
 
     function inspectPlayer(name: string) {
-        state = MeterState.PLAYER;
+        mstate = MeterState.PLAYER;
         playerName = name;
         scrollToTopOfTable();
     }
@@ -330,9 +327,9 @@
     }
 
     function handleRightClick() {
-        if (state === MeterState.PLAYER) {
-            state = MeterState.PARTY;
-            player = null;
+        if (mstate === MeterState.PLAYER) {
+            mstate = MeterState.PARTY;
+            player = undefined;
             playerName = "";
         }
 
@@ -352,8 +349,8 @@
     }
 
     function reset() {
-        state = MeterState.PARTY;
-        player = null;
+        mstate = MeterState.PARTY;
+        player = undefined;
         playerName = "";
         focusedBoss = "";
         encounter = null;
@@ -399,7 +396,7 @@
                         $screenshotAlert = false;
                         document.body.style.pointerEvents = "auto";
                     }, 2000);
-                } catch (error) {
+                } catch {
                     takingScreenshot.set(false);
                     $screenshotError = true;
                     setTimeout(() => {
@@ -424,19 +421,19 @@
         class="relative top-7 scroll-ml-8 scroll-mt-2 overflow-scroll"
         style="height: calc(100vh - 1.5rem - 1.75rem {currentBoss !== null ? ' - 1.75rem' : ''});">
         {#if tab === MeterTab.DAMAGE}
-            {#if state === MeterState.PARTY}
+            {#if mstate === MeterState.PARTY}
                 <table class="relative w-full table-fixed" id="live-meter-table">
                     <thead
                         class="sticky top-0 z-40 h-6"
-                        on:contextmenu|preventDefault={() => {
+                        oncontextmenu={preventDefault(() => {
                             // console.log("titlebar clicked");
-                        }}>
+                        })}>
                         <tr class="bg-zinc-900 tracking-tighter">
                             <th class="w-7 px-2 font-normal">
                                 <MissingInfo />
                             </th>
-                            <th class="w-14 px-2 text-left font-normal" />
-                            <th class="w-full" />
+                            <th class="w-14 px-2 text-left font-normal"></th>
+                            <th class="w-full"></th>
                             {#if anyDead && $settings.meter.deathTime}
                                 <th class="w-14 font-normal" use:tooltip={{ content: "Dead for" }}>Dead</th>
                             {/if}
@@ -497,7 +494,7 @@
                             <tr
                                 class="h-7 px-2 py-1 {$settings.general.underlineHovered ? 'hover:underline' : ''}"
                                 animate:flip={{ duration: 200 }}
-                                on:click={() => inspectPlayer(entity.name)}>
+                                onclick={() => inspectPlayer(entity.name)}>
                                 <DamageMeterPlayerRow
                                     {entity}
                                     percentage={playerDamagePercentages[i]}
@@ -517,7 +514,7 @@
                         {/each}
                     </tbody>
                 </table>
-            {:else if state === MeterState.PLAYER && player !== null}
+            {:else if mstate === MeterState.PLAYER && player !== null}
                 <table class="relative w-full table-fixed" id="live-meter-table">
                     <PlayerBreakdown entity={player} {duration} {handleRightClick} />
                 </table>
@@ -530,7 +527,7 @@
                 meterSettings={$settings.meter}
                 encounterPartyInfo={parties} />
         {:else if tab === MeterTab.PARTY_BUFFS}
-            {#if state === MeterState.PARTY}
+            {#if mstate === MeterState.PARTY}
                 <Buffs
                     {tab}
                     encounterDamageStats={encounter?.encounterDamageStats}
@@ -551,7 +548,7 @@
                     localPlayer={encounter?.localPlayer} />
             {/if}
         {:else if tab === MeterTab.SELF_BUFFS}
-            {#if state === MeterState.PARTY}
+            {#if mstate === MeterState.PARTY}
                 <Buffs
                     {tab}
                     encounterDamageStats={encounter?.encounterDamageStats}

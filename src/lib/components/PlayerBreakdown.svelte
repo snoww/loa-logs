@@ -7,24 +7,31 @@
     import PlayerBreakdownHeader from "./shared/PlayerBreakdownHeader.svelte";
     import { cardIds } from "$lib/constants/cards";
     import { localPlayer } from "$lib/utils/stores";
+    import { preventDefault } from "$lib/utils/svelte";
 
-    export let entity: Entity | null;
-    export let duration: number;
-    export let handleRightClick: () => void;
+    let {
+        entity,
+        duration,
+        handleRightClick
+    }: {
+        entity: Entity | undefined;
+        duration: number;
+        handleRightClick: () => void;
+    } = $props();
 
-    let color = "#ffffff";
-    let skills: Array<Skill> = [];
-    let skillDamagePercentages: Array<number> = [];
-    let abbreviatedSkillDamage: Array<(string | number)[]> = [];
-    let skillDps: Array<(string | number)[]> = [];
+    let color = $state("#ffffff");
+    let skills = $state<Skill[]>([]);
+    let skillDamagePercentages = $state<number[]>([]);
+    let abbreviatedSkillDamage = $state<(string | number)[][]>([]);
+    let skillDps = $state<(string | number)[][]>([]);
 
-    let hasBackAttacks = true;
-    let hasFrontAttacks = true;
-    let anySupportBrand = false;
-    let anySupportIdentity = false;
-    let anySupportBuff = false;
+    let hasBackAttacks = $state(true);
+    let hasFrontAttacks = $state(true);
+    let anySupportBuff = $state(false);
+    let anySupportIdentity = $state(false);
+    let anySupportBrand = $state(false);
 
-    $: {
+    $effect(() => {
         if (entity) {
             if (Object.hasOwn($colors, entity.class)) {
                 if ($settings.general.constantLocalPlayerColor && $localPlayer == entity.name) {
@@ -51,7 +58,7 @@
                 anySupportBrand = skills.some((skill) => skill.debuffedBySupport > 0);
             }
         }
-    }
+    });
 </script>
 
 <thead class="sticky top-0 z-40 h-6">
@@ -65,10 +72,12 @@
             {anySupportBrand} />
     </tr>
 </thead>
-<tbody on:contextmenu|preventDefault={handleRightClick} class="relative z-10">
+<tbody oncontextmenu={preventDefault(handleRightClick)} class="relative z-10">
     {#if entity}
         {#each skills as skill, i (skill.id)}
-            <tr class="h-7 px-2 py-1 text-3xs {$settings.general.underlineHovered ? 'hover:underline' : ''}" animate:flip={{ duration: 200 }}>
+            <tr
+                class="h-7 px-2 py-1 text-3xs {$settings.general.underlineHovered ? 'hover:underline' : ''}"
+                animate:flip={{ duration: 200 }}>
                 <PlayerBreakdownRow
                     {skill}
                     {color}
@@ -81,8 +90,8 @@
                     playerDamageDealt={entity.damageStats.damageDealt}
                     damagePercentage={skillDamagePercentages[i]}
                     skillDps={skillDps[i]}
-                    {duration} 
-                    index={i}/>
+                    {duration}
+                    index={i} />
             </tr>
         {/each}
     {/if}

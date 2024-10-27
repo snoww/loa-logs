@@ -15,7 +15,8 @@ import {
     ShieldDetails,
     type EncounterDamageStats,
     type StatusEffectWithId,
-    type SkillChartSupportDamage, type DamageStats
+    type SkillChartSupportDamage,
+    type DamageStats
 } from "$lib/types";
 import { round } from "./numbers";
 import { getSkillIcon } from "./strings";
@@ -37,7 +38,7 @@ export function groupedSynergiesAdd(
     key: string,
     id: number,
     buff: StatusEffect,
-    focusedPlayer: Entity | null,
+    focusedPlayer: Entity | undefined,
     buffFilter = true
 ) {
     // by default, only show dmg, crit, atk spd, cd buffs.
@@ -59,7 +60,7 @@ export function filterStatusEffects(
     groupedSynergies: Map<string, Map<number, StatusEffect>>,
     buff: StatusEffect,
     id: number,
-    focusedPlayer: Entity | null,
+    focusedPlayer: Entity | undefined,
     tab: MeterTab | null,
     buffFilter = true,
     shields = false
@@ -204,13 +205,12 @@ export function getSynergyPercentageDetailsSum(
 
     const synergyPercentageDetails: BuffDetails[] = [];
     groupedSynergies.forEach((synergies, key) => {
-
         let synergyDamage = 0;
         const buffs = new BuffDetails();
         buffs.id = key;
         let isHat = false;
         synergies.forEach((syn, id) => {
-             isHat = supportSkills.haTechnique.includes(id);
+            isHat = supportSkills.haTechnique.includes(id);
 
             const buff = new Buff(syn.source.icon, "", syn.source.skill?.icon);
             addBardBubbles(key, buff, syn);
@@ -438,7 +438,9 @@ export function getPartyBuffs(
                         }
                     });
                     if (buffDamage > 0) {
-                        buffDetails.percentage = round((buffDamage / (isHat ? damageDealtWithHa : damageDealtWithoutHa)) * 100);
+                        buffDetails.percentage = round(
+                            (buffDamage / (isHat ? damageDealtWithHa : damageDealtWithoutHa)) * 100
+                        );
                     }
 
                     playerBuffs.push(buffDetails);
@@ -613,7 +615,7 @@ export function getSkillCastBuffs(
     const groupedBuffs: Map<string, Array<StatusEffectWithId>> = new Map();
 
     for (const buffId of buffs) {
-        if (encounterDamageStats.buffs.hasOwnProperty(buffId)) {
+        if (Object.prototype.hasOwnProperty.call(encounterDamageStats.buffs, buffId)) {
             includeBuff(
                 hitDamage,
                 buffId,
@@ -627,7 +629,7 @@ export function getSkillCastBuffs(
         }
     }
     for (const buffId of debuffs) {
-        if (encounterDamageStats.debuffs.hasOwnProperty(buffId)) {
+        if (Object.prototype.hasOwnProperty.call(encounterDamageStats.debuffs, buffId)) {
             includeBuff(
                 hitDamage,
                 buffId,
@@ -664,17 +666,18 @@ function includeBuff(
     supportBuffs: SkillChartSupportDamage,
     playerClassId: number,
     buffType: string,
-    buffFilter: boolean,
+    buffFilter: boolean
 ) {
     let key = "";
-    if (buffFilter &&
+    if (
+        buffFilter &&
         ((StatusEffectBuffTypeFlags.DMG |
             StatusEffectBuffTypeFlags.CRIT |
             StatusEffectBuffTypeFlags.ATKSPEED |
             StatusEffectBuffTypeFlags.MOVESPEED |
             StatusEffectBuffTypeFlags.COOLDOWN) &
             buff.buffType) ===
-        0
+            0
     ) {
         return;
     }
@@ -696,8 +699,9 @@ function includeBuff(
 
         addToMap(key, buffId, buff, map);
     } else if (buffType === "self") {
-        if (isPartySynergy(buff)) {}
-        else if (isSelfSkillSynergy(buff)) {
+        if (isPartySynergy(buff)) {
+            /*  */
+        } else if (isSelfSkillSynergy(buff)) {
             if (buff.buffCategory === "ability") {
                 key = `${buff.uniqueGroup ? buff.uniqueGroup : buffId}`;
             } else {
@@ -711,7 +715,7 @@ function includeBuff(
             addToMap(key, buffId, buff, map);
         } else if (isSetSynergy(buff)) {
             addToMap(`_set_${buff.source.setName}`, buffId, buff, map);
-        }  
+        }
     } else if (buffType === "misc") {
         if (isSelfItemSynergy(buff)) {
             if (buff.buffCategory === "bracelet") {
@@ -739,9 +743,8 @@ function addToMap(key: string, buffId: number, buff: StatusEffect, map: Map<stri
 }
 
 export const hyperAwakeningIds: Set<number> = new Set([
-    16720, 16730, 18240, 18250, 17250, 17260, 36230, 36240, 45820, 45830,
-    19360, 19370, 20370, 20350, 21320, 21330, 37380, 37390, 22360, 22370,
-    23400, 23410, 24300, 24310, 34620, 34630, 39340, 39350, 47300, 47310,
-    25410, 25420, 27910, 27920, 26940, 26950, 46620, 46630, 29360, 29370,
-    30320, 30330, 35810, 35820, 38320, 38330, 31920, 31930, 32290, 32280
+    16720, 16730, 18240, 18250, 17250, 17260, 36230, 36240, 45820, 45830, 19360, 19370, 20370, 20350, 21320, 21330,
+    37380, 37390, 22360, 22370, 23400, 23410, 24300, 24310, 34620, 34630, 39340, 39350, 47300, 47310, 25410, 25420,
+    27910, 27920, 26940, 26950, 46620, 46630, 29360, 29370, 30320, 30330, 35810, 35820, 38320, 38330, 31920, 31930,
+    32290, 32280
 ]);

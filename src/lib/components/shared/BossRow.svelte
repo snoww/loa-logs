@@ -7,12 +7,21 @@
     import { cubicOut } from "svelte/easing";
     import { tweened } from "svelte/motion";
 
-    export let boss: Entity;
-    export let width: number;
-    export let shadow = false;
-    export let tween: boolean;
-    export let duration: number;
-    export let index: number;
+    let {
+        boss,
+        width,
+        shadow = false,
+        tween,
+        duration,
+        index
+    }: {
+        boss: Entity;
+        width: number;
+        shadow?: boolean;
+        tween: boolean;
+        duration: number;
+        index: number;
+    } = $props();
 
     const tweenedValue = tweened(0, {
         duration: 400,
@@ -21,10 +30,10 @@
 
     let color = "#164e63";
 
-    let damageDealt: (string | number)[];
-    let dps: (string | number)[];
+    let damageDealt = $state<(string | number)[]>([]);
+    let dps = $state<(string | number)[]>([]);
 
-    $: {
+    $effect(() => {
         tweenedValue.set(width);
         damageDealt = abbreviateNumberSplit(boss.damageStats.damageDealt);
 
@@ -33,7 +42,7 @@
         } else {
             dps = ["0", ""];
         }
-    }
+    });
 </script>
 
 <td colspan="2" class="px-2">
@@ -54,4 +63,5 @@
     class:shadow-md={shadow}
     style="background-color: {index % 2 === 1 && $settings.general.splitLines
         ? RGBLinearShade(HexToRgba(color, 0.6))
-        : HexToRgba(color, 0.6)}; width: {tween ? $tweenedValue : width}%"  />
+        : HexToRgba(color, 0.6)}; width: {tween ? $tweenedValue : width}%">
+</div>
