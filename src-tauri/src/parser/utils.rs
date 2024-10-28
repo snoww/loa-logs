@@ -1,7 +1,7 @@
 use crate::parser::entity_tracker::Entity;
 use crate::parser::models::*;
 use crate::parser::skill_tracker::SkillTracker;
-use crate::parser::stats_api::{Engraving, PlayerStats};
+use crate::parser::stats_api::PlayerStats;
 use crate::parser::status_tracker::StatusEffectDetails;
 use flate2::write::GzEncoder;
 use flate2::Compression;
@@ -579,6 +579,7 @@ fn gem_skill_id_to_skill_ids(skill_id: u32) -> Vec<u32> {
         ], // machinist transformation skills
         62000 => vec![32040, 32041],                      // aeromancer sun shower
         24000 => vec![21140, 21141, 21142, 21143, 21130, 21131, 21132, 21133], // bard serenade skills
+        47000 => vec![47950], // bk breaker identity
         60000 => vec![
             31050, 31051, 31110, 31120, 31121, 31130, 31131, 31140, 31141,
         ], // artist moonfall
@@ -603,17 +604,23 @@ pub fn get_engravings(
             let player_engraving = engraving_data.name.clone();
             if is_class_engraving(class_id, engraving_data.id) {
                 class_engravings.push(player_engraving.clone().unwrap_or("Unknown".to_string()));
+            } else {
+                other_engravings.push(player_engraving.unwrap_or("Unknown".to_string()));
             }
-            other_engravings.push(player_engraving.unwrap_or("Unknown".to_string()));
         }
     }
 
     other_engravings.sort_unstable();
+    let sorted_engravings: Vec<String> = class_engravings
+        .iter()
+        .cloned()
+        .chain(other_engravings)
+        .collect();
 
-    if other_engravings.is_empty() {
+    if sorted_engravings.is_empty() {
         (class_engravings, None)
     } else {
-        (class_engravings, Some(other_engravings))
+        (class_engravings, Some(sorted_engravings))
     }
 }
 
@@ -943,6 +950,11 @@ pub fn insert_data(
                 entity.damage_stats.dps_average =
                     calculate_average_dps(damage_log, fight_start_sec, fight_end_sec);
             }
+
+            entity.spec = Some(get_player_spec(
+                entity,
+                &encounter.encounter_damage_stats.buffs,
+            ));
         }
 
         entity.damage_stats.dps = entity.damage_stats.damage_dealt / duration_seconds;
@@ -979,29 +991,23 @@ pub fn insert_data(
 
             entity.ark_passive_active = Some(info.ark_passive_enabled);
 
+            let (class, other) = get_engravings(entity.class_id, &info.engravings);
+            entity.engraving_data = other;
             if info.ark_passive_enabled {
-                // todo ark passive
-                entity.spec = Some(get_player_spec(
-                    entity,
-                    &encounter.encounter_damage_stats.buffs,
-                ));
-            } else {
-                let (class, other) = get_engravings(entity.class_id, &info.engravings);
-                if class.len() == 1 {
-                    entity.spec = Some(class[0].clone());
-                } else {
-                    entity.spec = Some(get_player_spec(
-                        entity,
-                        &encounter.encounter_damage_stats.buffs,
-                    ));
+                if let Some(tree) = info.ark_passive_data.as_ref() {
+                    if let Some(enlightenment) = tree.enlightenment.as_ref() {
+                        for node in enlightenment.iter() {
+                            let spec = get_spec_from_ark_passive(node);
+                            if spec != "Unknown" {
+                                entity.spec = Some(spec);
+                                break;
+                            }
+                        }
+                    }
                 }
-                entity.engraving_data = other;
+            } else if class.len() == 1 {
+                entity.spec = Some(class[0].clone());
             }
-        } else {
-            entity.spec = Some(get_player_spec(
-                entity,
-                &encounter.encounter_damage_stats.buffs,
-            ));
         }
 
         for (_, skill) in entity.skills.iter_mut() {
@@ -1332,7 +1338,7 @@ fn get_player_spec(player: &EncounterEntity, buffs: &HashMap<u32, StatusEffect>)
             if player.skills.contains_key(&19282) {
                 "Order of the Emperor".to_string()
             } else {
-                "Empress's Grace".to_string()
+                "Grace of the Empress".to_string()
             }
         }
         "Summoner" => {
@@ -1501,4 +1507,63 @@ fn get_buff_names(player: &EncounterEntity, buffs: &HashMap<u32, StatusEffect>) 
     }
 
     names
+}
+
+fn get_spec_from_ark_passive(node: &ArkPassiveNode) -> String {
+    match node.id {
+        2160000 => "Berserker Technique",
+        2160010 => "Mayhem",
+        2170000 => "Lone Knight",
+        2170010 => "Combat Readiness",
+        2180000 => "Rage Hammer",
+        2180010 => "Gravity Training",
+        2360000 => "Judgement",
+        2360010 => "Blessed Aura",
+        2450000 => "Punisher",
+        2450010 => "Predator",
+        2230000 => "Ultimate Skill: Taijutsu",
+        2230100 => "Shock Training",
+        2220000 => "First Intention",
+        2220100 => "Esoteric Skill Enhancement",
+        2240000 => "Energy Overflow",
+        2240100 => "Robust Spirit",
+        2340000 => "Control",
+        2340100 => "Pinnacle",
+        2470000 => "Brawl King Storm",
+        2470100 => "Asura's Path",
+        2390000 => "Esoteric Flurry",
+        2390010 => "Deathblow",
+        2300000 => "Barrage Enhancement",
+        2300100 => "Firepower Enhancement",
+        2290000 => "Enhanced Weapon",
+        2290100 => "Pistoleer",
+        2280000 => "Death Strike",
+        2280100 => "Loyal Companion",
+        2350000 => "Evolutionary Legacy",
+        2350100 => "Arthetinean Skill",
+        2380000 => "Peacemaker",
+        2380100 => "Time to Hunt",
+        2370000 => "Igniter",
+        2370100 => "Reflux",
+        2190000 => "Grace of the Empress",
+        2190100 => "Order of the Emperor",
+        2200000 => "Communication Overflow",
+        2200100 => "Master Summoner",
+        2210000 => "Desperate Salvation",
+        2210100 => "True Courage",
+        2270000 => "Demonic Impulse",
+        2270600 => "Perfect Suppression",
+        2250000 => "Surge",
+        2250600 => "Remaining Energy",
+        2260000 => "Lunar Voice",
+        2260600 => "Hunger",
+        2460000 => "Full Moon Harvester",
+        2460600 => "Night's Edge",
+        2320000 => "Wind Fury",
+        2320600 => "Drizzle",
+        2310000 => "Full Bloom",
+        2310600 => "Recurrence",
+        _ => "Unknown",
+    }
+    .to_string()
 }

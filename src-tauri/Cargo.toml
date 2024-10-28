@@ -13,6 +13,7 @@ rust-version = "1.77.0"
 
 [build-dependencies]
 tauri-build = { version = "1.3.0", features = [] }
+embed-resource = "2.5"
 
 [dependencies]
 anyhow = "1.0.75"
@@ -25,12 +26,12 @@ tauri-plugin-window-state = { git = "https://github.com/tauri-apps/plugins-works
 tauri-plugin-single-instance = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
 bitflags = "2.4.1"
 window-vibrancy = "0.4.3"
-hashbrown = { version = "0.14.3", features = ["serde"] }
+hashbrown = { version = "0.15.0", features = ["serde"] }
 rusqlite = { version = "0.32.1", features = ["bundled", "serde_json"] }
 tokio = { version = "1.29.1", features = ["rt", "macros"] }
 serde_with = "3.5.1"
 log = "0.4.18"
-flexi_logger = { version = "0.28.0", default-features = false }
+flexi_logger = { version = "0.29.4", default-features = false }
 reqwest = { version = "0.12", features = ["json"] }
 md5 = "0.7.0"
 async-recursion = "1.1.0"
@@ -39,7 +40,7 @@ moka = { version = "0.12.7", features = ["sync"] }
 auto-launch = "0.5.0"
 rsntp = { version = "4.0.0", default-features = false, features = ["chrono"]  }
 flate2 = "1.0.30"
-sysinfo = "0.31.4"
+sysinfo = "0.32.0"
 meter-core = { path = "D:\\projects\\meter-core-rs\\" }
 
 [features]
@@ -59,7 +60,3 @@ strip = true # Remove debug symbols
 
 [profile.dev.package."*"]
 debug = false # Disable debug symbols for dependencies
-
-[patch.crates-io]
-# Waiting for https://github.com/libpnet/libpnet/pull/715 to be adressed
-pnet = { git = "https://github.com/anyduck/libpnet", branch = "fix-non-utf8-string" }

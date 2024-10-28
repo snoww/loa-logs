@@ -1,7 +1,7 @@
 use crate::parser::debug_print;
 use crate::parser::encounter_state::EncounterState;
 use crate::parser::entity_tracker::Entity;
-use crate::parser::models::EntityType;
+use crate::parser::models::{ArkPassiveData, EntityType};
 use async_recursion::async_recursion;
 use hashbrown::HashMap;
 use log::{info, warn};
@@ -488,21 +488,6 @@ pub struct GemData {
     pub skill_id: u32,
     pub gem_type: u8,
     pub value: u32,
-}
-
-#[derive(Debug, Default, Clone, Deserialize)]
-#[serde(rename_all = "camelCase", default)]
-pub struct ArkPassiveData {
-    pub evolution: Option<Vec<ArkPassiveNode>>,
-    pub enlightenment: Option<Vec<ArkPassiveNode>>,
-    pub leap: Option<Vec<ArkPassiveNode>>,
-}
-
-#[derive(Debug, Default, Clone, Deserialize)]
-#[serde(rename_all = "camelCase", default)]
-pub struct ArkPassiveNode {
-    pub id: u32,
-    pub lv: u8,
 }
 
 #[derive(Debug, Default, Clone, Deserialize)]

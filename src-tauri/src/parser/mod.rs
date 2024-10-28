@@ -36,7 +36,6 @@ use std::path::PathBuf;
 use std::rc::Rc;
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
-use std::thread;
 use std::time::{Duration, Instant};
 use tauri::{Manager, Window, Wry};
 use uuid::Uuid;
@@ -45,7 +44,6 @@ pub fn start(
     window: Window<Wry>,
     ip: String,
     port: u16,
-    raw_socket: bool,
     settings: Option<Settings>,
 ) -> Result<()> {
     let id_tracker = Rc::new(RefCell::new(IdTracker::new()));
@@ -61,31 +59,16 @@ pub fn start(
     resource_path.push("current_region");
     let region_file_path = resource_path.to_string_lossy();
     let mut stats_api = StatsApi::new(window.clone(), region_file_path.to_string());
-    let rx = if raw_socket {
-        if !meter_core::check_is_admin() {
-            warn!("Not running as admin, cannot use raw socket");
-            loop {
-                window.emit("admin", "")?;
-                thread::sleep(Duration::from_millis(5000));
-            }
-        }
-        meter_core::add_firewall()?;
-        match start_raw_capture(ip, port, region_file_path.to_string()) {
-            Ok(rx) => rx,
-            Err(e) => {
-                warn!("Error starting capture: {}", e);
-                return Ok(());
-            }
-        }
-    } else {
-        match start_capture(ip, port, region_file_path.to_string()) {
-            Ok(rx) => rx,
-            Err(e) => {
-                warn!("Error starting capture: {}", e);
-                return Ok(());
-            }
+    let rx = match start_capture(ip, port, region_file_path.to_string()) {
+        Ok(rx) => rx,
+        Err(e) => {
+            warn!("Error starting capture: {}", e);
+            return Ok(());
         }
     };
+
+    let damage_handler = meter_core::decryption::DamageEncryptionHandler::new();
+    let damage_handler = damage_handler.start()?;
 
     let mut last_update = Instant::now();
     let mut duration = Duration::from_millis(500);
@@ -550,7 +533,11 @@ pub fn start(
                         .get_local_character_id(entity_tracker.local_entity_id);
                     let target_count = pkt.skill_damage_abnormal_move_events.len() as i32;
                     let player_stats = stats_api.get_stats(&state);
-                    for event in pkt.skill_damage_abnormal_move_events.iter() {
+                    for mut event in pkt.skill_damage_abnormal_move_events.into_iter() {
+                        if !damage_handler.decrypt_damage_event(&mut event.skill_damage_event) {
+                            state.damage_is_valid = false;
+                            continue;
+                        }
                         let target_entity =
                             entity_tracker.get_or_create_entity(event.skill_damage_event.target_id);
                         let source_entity = entity_tracker.get_or_create_entity(pkt.source_id);
@@ -599,7 +586,11 @@ pub fn start(
                         .get_local_character_id(entity_tracker.local_entity_id);
                     let target_count = pkt.skill_damage_events.len() as i32;
                     let player_stats = stats_api.get_stats(&state);
-                    for event in pkt.skill_damage_events.iter() {
+                    for mut event in pkt.skill_damage_events.into_iter() {
+                        if !damage_handler.decrypt_damage_event(&mut event) {
+                            state.damage_is_valid = false;
+                            continue;
+                        }
                         let target_entity = entity_tracker.get_or_create_entity(event.target_id);
                         // source_entity is to determine battle item
                         let source_entity = entity_tracker.get_or_create_entity(pkt.source_id);
@@ -690,7 +681,7 @@ pub fn start(
                     "PKTPartyStatusEffectRemoveNotify",
                 ) {
                     let character_id = pkt.character_id;
-                    let (is_shield, shields_broken, left_workshop) =
+                    let (is_shield, shields_broken, _left_workshop) =
                         entity_tracker.party_status_effect_remove(pkt);
                     if is_shield {
                         for status_effect in shields_broken {
@@ -776,7 +767,7 @@ pub fn start(
                     PKTStatusEffectRemoveNotify::new,
                     "PKTStatusEffectRemoveNotify",
                 ) {
-                    let (is_shield, shields_broken, left_workshop) =
+                    let (is_shield, shields_broken, _left_workshop) =
                         status_tracker.borrow_mut().remove_status_effects(
                             pkt.object_id,
                             pkt.status_effect_instance_ids,
@@ -980,6 +971,7 @@ pub fn start(
                 state.boss_dead_update = false;
             }
             let mut clone = state.encounter.clone();
+            let damage_valid = state.damage_is_valid;
             let window = window.clone();
 
             let party_info: Option<HashMap<i32, Vec<String>>> =
@@ -1035,6 +1027,12 @@ pub fn start(
                     window
                         .emit("encounter-update", Some(clone))
                         .expect("failed to emit encounter-update");
+
+                    if !damage_valid { 
+                        window
+                            .emit("invalid-damage", "")
+                            .expect("failed to emit invalid-damage");
+                    }
 
                     if party_info.is_some() {
                         window

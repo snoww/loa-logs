@@ -57,6 +57,8 @@ pub struct EncounterState {
     pub skill_tracker: SkillTracker,
 
     custom_id_map: HashMap<u32, u32>,
+    
+    pub damage_is_valid: bool,
 }
 
 impl EncounterState {
@@ -92,6 +94,8 @@ impl EncounterState {
             skill_tracker: SkillTracker::new(),
 
             custom_id_map: HashMap::new(),
+            
+            damage_is_valid: true,
         }
     }
 
@@ -122,6 +126,8 @@ impl EncounterState {
         self.skill_tracker = SkillTracker::new();
 
         self.custom_id_map = HashMap::new();
+        
+        self.damage_is_valid = true;
 
         for (key, entity) in clone.entities.into_iter().filter(|(_, e)| {
             e.entity_type == EntityType::PLAYER
@@ -1893,6 +1899,10 @@ impl EncounterState {
                 }
             }
         }
+        
+        if !self.damage_is_valid { 
+            warn!("damage decryption is invalid, not saving to db");
+        }
 
         let encounter = self.encounter.clone();
         let mut path = self
@@ -1926,7 +1936,7 @@ impl EncounterState {
 
         // debug_print(format_args!("skill cast log:\n{}", serde_json::to_string(&skill_cast_log).unwrap()));
 
-        debug_print(format_args!("rdps_data valid: [{}]", rdps_valid));
+        // debug_print(format_args!("rdps_data valid: [{}]", rdps_valid));
         info!(
             "saving to db - cleared: [{}], difficulty: [{}] {}",
             raid_clear, self.raid_difficulty, encounter.current_boss_name
@@ -1939,6 +1949,7 @@ impl EncounterState {
                 && raid_clear
                 && !manual
             {
+                info!("fetching player info");
                 let players = encounter
                     .entities
                     .values()
@@ -1947,7 +1958,7 @@ impl EncounterState {
                     .collect::<Vec<_>>();
 
                 stats_api
-                    .get_character_info(&encounter.current_boss_name, players)
+                    .get_character_info(&encounter.current_boss_name, players, region.clone())
                     .await
             } else {
                 None

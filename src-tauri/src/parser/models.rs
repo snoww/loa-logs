@@ -133,6 +133,7 @@ pub struct EncounterEntity {
     pub engraving_data: Option<Vec<String>>,
     pub gear_hash: Option<String>,
     pub ark_passive_active: Option<bool>,
+    pub ark_passive_data: Option<ArkPassiveData>,
     pub spec: Option<String>,
 }
 
@@ -216,6 +217,21 @@ impl PartialEq for TripodIndex {
 }
 
 impl Eq for TripodIndex {}
+
+#[derive(Debug, Default, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase", default)]
+pub struct ArkPassiveData {
+    pub evolution: Option<Vec<ArkPassiveNode>>,
+    pub enlightenment: Option<Vec<ArkPassiveNode>>,
+    pub leap: Option<Vec<ArkPassiveNode>>,
+}
+
+#[derive(Debug, Default, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase", default)]
+pub struct ArkPassiveNode {
+    pub id: u32,
+    pub lv: u8,
+}
 
 #[serde_as]
 #[derive(Debug, Default, Serialize, Deserialize, Clone)]
@@ -603,8 +619,8 @@ pub type ItemSetCount = HashMap<u8, ItemSetDetails>;
 #[derive(Debug, Default, Deserialize, Clone)]
 pub struct EngravingData {
     pub id: u32,
-    pub name: String,
-    pub icon: String,
+    pub name: Option<String>,
+    pub icon: Option<String>,
 }
 
 #[derive(Debug, Default, Serialize, Deserialize, Clone)]

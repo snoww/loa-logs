@@ -132,7 +132,6 @@ async fn main() -> Result<()> {
                 .restore_state(WINDOW_STATE_FLAGS)
                 .expect("failed to restore window state");
 
-            let mut raw_socket = false;
             let mut ip: String;
             let mut port = 6040;
 
@@ -178,12 +177,8 @@ async fn main() -> Result<()> {
                         port = settings.general.port;
                         info!("using port: {}", port);
                     }
-                    raw_socket = settings.general.raw_socket;
-                    if raw_socket {
-                        info!("using raw socket");
-                    } else {
-                        info!("using npcap");
-                    }
+                    
+                    info!("using npcap");
                 }
 
                 if settings.general.start_loa_on_start {
@@ -198,7 +193,7 @@ async fn main() -> Result<()> {
             }
 
             task::spawn_blocking(move || {
-                parser::start(meter_window, ip, port, raw_socket, settings).map_err(|e| {
+                parser::start(meter_window, ip, port, settings).map_err(|e| {
                     error!("unexpected error occurred in parser: {}", e);
                 })
             });
@@ -630,6 +625,7 @@ fn migration_specs(tx: &Transaction) -> Result<(), rusqlite::Error> {
             "
                 ALTER TABLE entity ADD COLUMN spec TEXT;
                 ALTER TABLE entity ADD COLUMN ark_passive_active BOOLEAN;
+                ALTER TABLE entity ADD COLUMN ark_passive_data TEXT;
                 ",
         )?;
     }
@@ -983,7 +979,10 @@ fn load_encounter(window: tauri::Window, id: String) -> Encounter {
         entity_type,
         npc_id,
         character_id,
-        engravings
+        engravings,
+        spec,
+        ark_passive_active,
+        ark_passive_data
     FROM entity
     WHERE encounter_id = ?;
     ",
@@ -1029,10 +1028,18 @@ fn load_encounter(window: tauri::Window, id: String) -> Encounter {
 
             let entity_type: String = row.get(11).unwrap_or_default();
 
-            // let engravings_str: String = row.get(14).unwrap_or_default();
-            // let engravings =
-            //     serde_json::from_str::<Option<PlayerEngravings>>(engravings_str.as_str())
-            //         .unwrap_or_default();
+            let engravings_str: String = row.get(14).unwrap_or_default();
+            let engravings =
+                serde_json::from_str::<Option<Vec<String>>>(engravings_str.as_str())
+                    .unwrap_or_default();
+            
+            let spec: Option<String> = row.get(15).unwrap_or_default();
+            let ark_passive_active: Option<bool> = row.get(16).unwrap_or_default();
+            
+            let ark_passive_data_str: String = row.get(17).unwrap_or_default();
+            let ark_passive_data = 
+                serde_json::from_str::<Option<ArkPassiveData>>(ark_passive_data_str.as_str())
+                    .unwrap_or_default();
             
             Ok(EncounterEntity {
                 name: row.get(0)?,
@@ -1049,7 +1056,10 @@ fn load_encounter(window: tauri::Window, id: String) -> Encounter {
                     .unwrap_or(EntityType::UNKNOWN),
                 npc_id: row.get(12)?,
                 character_id: row.get(13).unwrap_or_default(),
-                // engraving_data: engravings,
+                engraving_data: engravings,
+                spec,
+                ark_passive_active,
+                ark_passive_data,
                 ..Default::default()
             })
         })
