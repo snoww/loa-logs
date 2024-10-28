@@ -1318,7 +1318,8 @@ fn get_player_spec(player: &EncounterEntity, buffs: &HashMap<u32, StatusEffect>)
         "Paladin" => {
             if (player.skills.contains_key(&36050)
                 || player.skills.contains_key(&36080)
-                || player.skills.contains_key(&36150))
+                || player.skills.contains_key(&36150)
+                || player.skills.contains_key(&36100))
                 && player.skills.contains_key(&36200)
                 && player.skills.contains_key(&36170)
             {
