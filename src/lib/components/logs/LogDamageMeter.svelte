@@ -271,10 +271,10 @@
         setChartView();
     }
 
-    function RDPSTab() {
-        tab = MeterTab.RDPS;
-        setChartView();
-    }
+    // function RDPSTab() {
+    //     tab = MeterTab.RDPS;
+    //     setChartView();
+    // }
 
     function partySynergyTab() {
         tab = MeterTab.PARTY_BUFFS;
@@ -440,15 +440,15 @@
                     on:click={damageTab}>
                     Damage
                 </button>
-                {#if anyRdpsData || $rdpsEventDetails !== ""}
-                    <button
-                        class="flex-shrink-0 rounded-sm px-3 py-1"
-                        class:bg-accent-900={tab === MeterTab.RDPS}
-                        class:bg-gray-700={tab !== MeterTab.RDPS}
-                        on:click={RDPSTab}>
-                        RDPS
-                    </button>
-                {/if}
+                <!--{#if anyRdpsData || $rdpsEventDetails !== ""}-->
+                <!--    <button-->
+                <!--        class="flex-shrink-0 rounded-sm px-3 py-1"-->
+                <!--        class:bg-accent-900={tab === MeterTab.RDPS}-->
+                <!--        class:bg-gray-700={tab !== MeterTab.RDPS}-->
+                <!--        on:click={RDPSTab}>-->
+                <!--        RDPS-->
+                <!--    </button>-->
+                <!--{/if}-->
                 <button
                     class="flex-shrink-0 rounded-sm px-2 py-1"
                     class:bg-accent-900={tab === MeterTab.PARTY_BUFFS}

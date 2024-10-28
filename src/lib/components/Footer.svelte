@@ -67,13 +67,13 @@
                 on:click={() => setTab(MeterTab.DAMAGE)}>
                 Damage
             </button>
-            <button
-                class="h-6 border-0 border-b-[3px] px-2 {tab === MeterTab.RDPS
-                    ? 'border-zinc-500'
-                    : 'border-zinc-800'}"
-                on:click={() => setTab(MeterTab.RDPS)}>
-                RDPS
-            </button>
+<!--            <button-->
+<!--                class="h-6 border-0 border-b-[3px] px-2 {tab === MeterTab.RDPS-->
+<!--                    ? 'border-zinc-500'-->
+<!--                    : 'border-zinc-800'}"-->
+<!--                on:click={() => setTab(MeterTab.RDPS)}>-->
+<!--                RDPS-->
+<!--            </button>-->
             <button
                 class="h-6 flex-shrink-0 border-0 border-b-[3px] px-1.5 {tab === MeterTab.PARTY_BUFFS
                     ? 'border-zinc-500'

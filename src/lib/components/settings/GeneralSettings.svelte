@@ -325,21 +325,21 @@
                     </div>
                 </label>
             </div>
-            <div>
-                <label class="flex items-center">
-                    <input
-                        type="checkbox"
-                        bind:checked={$settings.general.rawSocket}
-                        on:change={() => {
-                            $ifaceChangedStore = true;
-                        }}
-                        class="text-accent-500 size-5 rounded bg-zinc-700 focus:ring-0 focus:ring-offset-0" />
-                    <div class="ml-5">
-                        <div class="text-gray-100">Raw Socket</div>
-                        <div class="text-xs text-gray-300">Enables raw socket capture. (manually restart as Admin)</div>
-                    </div>
-                </label>
-            </div>
+<!--            <div>-->
+<!--                <label class="flex items-center">-->
+<!--                    <input-->
+<!--                        type="checkbox"-->
+<!--                        bind:checked={$settings.general.rawSocket}-->
+<!--                        on:change={() => {-->
+<!--                            $ifaceChangedStore = true;-->
+<!--                        }}-->
+<!--                        class="text-accent-500 size-5 rounded bg-zinc-700 focus:ring-0 focus:ring-offset-0" />-->
+<!--                    <div class="ml-5">-->
+<!--                        <div class="text-gray-100">Raw Socket</div>-->
+<!--                        <div class="text-xs text-gray-300">Enables raw socket capture. (manually restart as Admin)</div>-->
+<!--                    </div>-->
+<!--                </label>-->
+<!--            </div>-->
         {/if}
     </div>
 </div>

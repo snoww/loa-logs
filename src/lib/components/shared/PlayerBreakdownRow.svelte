@@ -65,7 +65,7 @@
     </td>
 {/if}
 {#if meterSettings.breakdown.dps}
-    <td class="px-1 text-center">
+    <td class="px-1 text-center" use:tooltip={{ content: skill.dps.toLocaleString() }}>
         {skillDps[0]}<span class="text-3xs text-gray-300">{skillDps[1]}</span>
     </td>
 {/if}
@@ -122,22 +122,22 @@
     </td>
 {/if}
 {#if meterSettings.breakdown.avgDamage}
-    <td class="px-1 text-center">
+    <td class="px-1 text-center" use:tooltip={{ content: Math.round(skill.totalDamage / skill.hits).toLocaleString() }}>
         {abbreviateNumberSplit(skill.totalDamage / skill.hits)[0]}<span class="text-3xs text-gray-300"
             >{abbreviateNumberSplit(skill.totalDamage / skill.hits)[1]}</span>
     </td>
-    <td class="px-1 text-center">
+    <td class="px-1 text-center" use:tooltip={{ content: Math.round(skill.totalDamage / skill.casts).toLocaleString() }}>
         {abbreviateNumberSplit(skill.totalDamage / skill.casts)[0]}<span class="text-3xs text-gray-300"
             >{abbreviateNumberSplit(skill.totalDamage / skill.casts)[1]}</span>
     </td>
 {/if}
 {#if meterSettings.breakdown.maxDamage}
-    <td class="px-1 text-center">
+    <td class="px-1 text-center" use:tooltip={{ content: skill.maxDamage.toLocaleString() }}>
         {abbreviateNumberSplit(skill.maxDamage)[0]}<span class="text-3xs text-gray-300"
             >{abbreviateNumberSplit(skill.maxDamage)[1]}</span>
     </td>
     {#if skill.maxDamageCast}
-    <td class="px-1 text-center">
+    <td class="px-1 text-center" use:tooltip={{ content: skill.maxDamageCast.toLocaleString() }}>
         {abbreviateNumberSplit(skill.maxDamageCast)[0]}<span class="text-3xs text-gray-300"
             >{abbreviateNumberSplit(skill.maxDamageCast)[1]}</span>
     </td>

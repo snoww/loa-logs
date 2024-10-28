@@ -112,6 +112,21 @@ export interface Entity {
     skills: { [skillId: number]: Skill };
     damageStats: DamageStats;
     skillStats: SkillStats;
+    engravingData?: Array<string>;
+    arkPassiveActive?: boolean;
+    arkPassiveData?: ArkPassiveData;
+    spec?: string;
+}
+
+export interface ArkPassiveData {
+    evolution?: Array<ArkPassiveNode>,
+    enlightenment?: Array<ArkPassiveNode>,
+    leap?: Array<ArkPassiveNode>,
+}
+
+export interface ArkPassiveNode {
+    id: number;
+    lv: number;
 }
 
 export interface Skill {
@@ -141,6 +156,7 @@ export interface Skill {
     tripodLevel?: Tripod;
     gemCooldown?: number;
     gemDamage?: number;
+    gemTier?: number;
     rdpsDamageReceived: number;
     rdpsDamageReceivedSupport: number;
     rdpsDamageGiven: number;

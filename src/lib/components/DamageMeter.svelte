@@ -69,6 +69,9 @@
                 // console.log(+Date.now(), event.payload);
                 encounter = event.payload;
             });
+            let invalidDamageEvent = await listen("invalid-damage", () => {
+                $missingInfo = true;
+            });
             let partyUpdateEvent = await listen("party-update", (event: PartyEvent) => {
                 if (event.payload) {
                     parties = event.payload;
@@ -149,6 +152,7 @@
 
             events.push(
                 encounterUpdateEvent,
+                invalidDamageEvent,
                 partyUpdateEvent,
                 zoneChangeEvent,
                 resetEncounterEvent,

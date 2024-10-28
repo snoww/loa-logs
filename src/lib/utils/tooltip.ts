@@ -114,14 +114,13 @@ export function generateHeaderTooltip(buff: StatusEffect, iconPath: string) {
 }
 
 export function generateSkillTooltip(skill: Skill) {
-
     let str = `<div class="py-0.5">${skill.name}</div>`;
     str += "<div class='text-gray-300'>";
     if (skill.gemDamage) {
-        str += `<div><span style="color: ${getColorFromLevel(skill.gemDamage)}">Lv. ${skill.gemDamage}</span> DMG</div>`;
+        str += `<div><span style="color: ${getColorFromTier(skill.gemTier)}">T${skill.gemTier ?? 3} </span><span style="color: ${getColorFromLevel(skill.gemDamage, skill.gemTier)}">Lv. ${skill.gemDamage}</span> DMG</div>`;
     }
     if (skill.gemCooldown) {
-        str += `<div><span style="color: ${getColorFromLevel(skill.gemCooldown)}">Lv. ${skill.gemCooldown}</span> CD</div>`;
+        str += `<div><span style="color: ${getColorFromTier(skill.gemTier)}">T${skill.gemTier ?? 3} </span><span style="color: ${getColorFromLevel(skill.gemCooldown, skill.gemTier)}">Lv. ${skill.gemCooldown}</span> CD</div>`;
     }
     str += "</div>";
     if (!skill.tripodIndex) {
@@ -178,14 +177,36 @@ export function generateSkillTooltip(skill: Skill) {
     return str;
 }
 
-function getColorFromLevel(level: number) {
-    if (level === 5 || level === 6) {
-        return "#a23ac7";
-    } else if (level === 7 || level === 8 || level === 9) {
-        return "#e08d14";
-    } else if (level === 10) {
-        return "#ed691a";
+function getColorFromLevel(level: number, tier?: number) {
+    if (tier === 4) {
+        if (level === 3 || level === 4) {
+            return "#a23ac7";
+        } else if (level === 5 || level === 6 || level === 7) {
+            return "#e08d14";
+        } else if (level === 8 || level === 9) {
+            return "#ed691a";
+        } else if (level === 10) {
+            return "#e7c990";
+        } else {
+            return "#e5e7eb";
+        }
     } else {
-        return "#e5e7eb";
+        if (level === 5 || level === 6) {
+            return "#a23ac7";
+        } else if (level === 7 || level === 8 || level === 9) {
+            return "#e08d14";
+        } else if (level === 10) {
+            return "#ed691a";
+        } else {
+            return "#e5e7eb";
+        }
+    }
+}
+
+function getColorFromTier(tier?: number) {
+    if (tier === 4) {
+        return "#d96dff";
+    } else {
+        return "#e08d14";
     }
 }
