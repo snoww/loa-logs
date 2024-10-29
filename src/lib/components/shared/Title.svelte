@@ -1,8 +1,7 @@
 <script lang="ts">
     import { updateSettings } from "$lib/utils/settings";
 
-    export let hidden: boolean;
-    export let text: string;
+    let { hidden = $bindable(), text }: { hidden: boolean; text: string } = $props();
 </script>
 
 <div class="ml-2 flex space-x-2">
@@ -14,7 +13,7 @@
                 <span class="bg-accent-800 relative inline-flex size-2 rounded-full"></span>
             </span>
         {/if}
-        <button on:click={() => (hidden = false)} class="mt-px block">
+        <button onclick={() => (hidden = false)} class="mt-px block">
             <svg
                 class="hover:fill-accent-500 size-6 fill-gray-300"
                 xmlns="http://www.w3.org/2000/svg"

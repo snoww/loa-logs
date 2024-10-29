@@ -9,21 +9,26 @@
     import { cubicOut } from "svelte/easing";
     import { localPlayer } from "$lib/utils/stores";
 
-    export let player: Entity;
-    export let playerBuffs: Array<BuffDetails>;
-    export let percentage: number;
+    let {
+        player,
+        playerBuffs,
+        percentage
+    }: {
+        player: Entity;
+        playerBuffs: Array<BuffDetails>;
+        percentage: number;
+    } = $props();
 
-    let color = "#ffffff";
-    let alpha = 0.6;
-    let playerName: string;
+    let color = $state("#ffffff");
+    let alpha = $state(0.6);
+    let playerName = $state<string>();
 
     const tweenedValue = tweened(0, {
         duration: 400,
         easing: cubicOut
     });
 
-    
-    $: {
+    $effect(() => {
         tweenedValue.set(percentage);
         if (Object.hasOwn($colors, player.class)) {
             if ($settings.general.constantLocalPlayerColor && $localPlayer == player.name) {
@@ -32,13 +37,13 @@
                 color = $colors[player.class].color;
             }
         }
-        playerName = formatPlayerName(player, $settings.general);;
+        playerName = formatPlayerName(player, $settings.general);
         if (!$settings.meter.showClassColors) {
             alpha = 0;
         } else {
             alpha = 0.6;
         }
-    }
+    });
 </script>
 
 <td class="pl-1">
@@ -64,6 +69,7 @@
         </td>
     {/each}
 {/if}
-<div
+<td
     class="absolute left-0 -z-10 h-7 px-2 py-1"
-    style="background-color: {HexToRgba(color, alpha)}; width: {$tweenedValue}%" />
+    style="background-color: {HexToRgba(color, alpha)}; width: {$tweenedValue}%">
+</td>

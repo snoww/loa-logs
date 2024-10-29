@@ -23,7 +23,7 @@
 
     $: {
         for (const [id, buff] of Object.entries(encounterDamageStats.appliedShieldBuffs)) {
-            filterStatusEffects(groupedShields, buff, Number(id), null, null, false, true);
+            filterStatusEffects(groupedShields, buff, Number(id), undefined, null, false, true);
         }
         groupedShields = new Map([...groupedShields.entries()].sort());
         if (encounterDamageStats.misc?.partyInfo) {
@@ -37,7 +37,6 @@
             const remToPx = parseFloat(getComputedStyle(document.documentElement).fontSize);
             partyWidths = calculatePartyWidth(partyGroupedShields, remToPx, vw);
         }
-
     }
 </script>
 
@@ -47,7 +46,7 @@
         class="rounded-sm border-t border-t-gray-600 px-2 py-1"
         class:bg-accent-900={tab === ShieldTab.GIVEN}
         class:bg-gray-700={tab !== ShieldTab.GIVEN}
-        on:click={() => {
+        onclick={() => {
             tab = ShieldTab.GIVEN;
         }}
         use:tooltip={{ content: "Total amount of shields given by each skill" }}>
@@ -57,7 +56,7 @@
         class="rounded-sm border-t border-t-gray-600 px-2 py-1"
         class:bg-accent-900={tab === ShieldTab.RECEIVED}
         class:bg-gray-700={tab !== ShieldTab.RECEIVED}
-        on:click={() => {
+        onclick={() => {
             tab = ShieldTab.RECEIVED;
         }}
         use:tooltip={{ content: "Total amount of shields received from each skill" }}>
@@ -67,7 +66,7 @@
         class="rounded-sm border-t border-t-gray-600 px-2 py-1"
         class:bg-accent-900={tab === ShieldTab.E_GIVEN}
         class:bg-gray-700={tab !== ShieldTab.E_GIVEN}
-        on:click={() => {
+        onclick={() => {
             tab = ShieldTab.E_GIVEN;
         }}
         use:tooltip={{ content: "Total damage blocked of each shield" }}>
@@ -77,7 +76,7 @@
         class="rounded-sm border-t border-t-gray-600 px-2 py-1"
         class:bg-accent-900={tab === ShieldTab.E_RECEIVED}
         class:bg-gray-700={tab !== ShieldTab.E_RECEIVED}
-        on:click={() => {
+        onclick={() => {
             tab = ShieldTab.E_RECEIVED;
         }}
         use:tooltip={{ content: "Damage blocked by each shield" }}>
@@ -93,10 +92,10 @@
                         {#if parties.length > 1}
                             <th class="w-7 whitespace-nowrap px-2 font-normal tracking-tight">Party {+partyId + 1}</th>
                         {:else}
-                            <th class="w-7 px-2 font-normal" />
+                            <th class="w-7 px-2 font-normal"></th>
                         {/if}
-                        <th class="w-20 px-2 text-left font-normal" />
-                        <th class="w-full" />
+                        <th class="w-20 px-2 text-left font-normal"></th>
+                        <th class="w-full"></th>
                         <th class="w-20 font-normal">Total</th>
                         {#each synergies as synergy (synergy)}
                             {@const syns = groupedShields.get(synergy) || new Map()}

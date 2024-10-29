@@ -53,7 +53,9 @@
                     if (player.damageStats.buffedBy[id]) {
                         let b = new Buff(
                             syn.source.icon,
-                            round((player.damageStats.buffedBy[id] / (isHat ? damageDealt : damageDealtWithoutHA)) * 100),
+                            round(
+                                (player.damageStats.buffedBy[id] / (isHat ? damageDealt : damageDealtWithoutHA)) * 100
+                            ),
                             syn.source.skill?.icon
                         );
                         addBardBubbles(key, b, syn);
@@ -63,7 +65,10 @@
                         buff.buffs.push(
                             new Buff(
                                 syn.source.icon,
-                                round((player.damageStats.debuffedBy[id] / (isHat ? damageDealt : damageDealtWithoutHA)) * 100),
+                                round(
+                                    (player.damageStats.debuffedBy[id] / (isHat ? damageDealt : damageDealtWithoutHA)) *
+                                        100
+                                ),
                                 syn.source.skill?.icon
                             )
                         );
@@ -109,6 +114,6 @@
         </td>
     {/each}
 {/if}
-<div
+<td
     class="absolute left-0 -z-10 h-7 px-2 py-1"
-    style="background-color: {HexToRgba(color, alpha)}; width: {$tweenedValue}%" />
+    style="background-color: {HexToRgba(color, alpha)}; width: {$tweenedValue}%"></td>

@@ -199,7 +199,9 @@ export function getRDamage(damageStats: DamageStats): number {
 }
 
 export function getBaseDamage(damageStats: DamageStats): number {
-    return damageStats.damageDealt -
+    return (
+        damageStats.damageDealt -
         damageStats.rdpsDamageReceivedSupport -
-        (damageStats.rdpsDamageReceived - damageStats.rdpsDamageReceivedSupport);
+        (damageStats.rdpsDamageReceived - damageStats.rdpsDamageReceivedSupport)
+    );
 }

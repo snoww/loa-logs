@@ -4,14 +4,19 @@
     import ArtistBard from "./ArtistBard.svelte";
     import GenericClass from "./GenericClass.svelte";
 
-    export let localPlayer: Entity;
-    export let duration: number;
+    let {
+        localPlayer,
+        duration
+    }: {
+        localPlayer: Entity;
+        duration: number;
+    } = $props();
 
     let identityStats: IdentityStats = JSON.parse(localPlayer.skillStats.identityStats!);
 </script>
 
 {#if localPlayer.class === "Arcanist"}
-    <Arcana {identityStats} {duration} player={localPlayer}/>
+    <Arcana {identityStats} {duration} player={localPlayer} />
 {:else if localPlayer.class === "Artist" || localPlayer.class === "Bard"}
     <ArtistBard className={localPlayer.class} {identityStats} />
 {:else}

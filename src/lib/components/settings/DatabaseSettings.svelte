@@ -6,24 +6,21 @@
     import { onMount } from "svelte";
     import NProgress from "nprogress";
     import SettingItem from "$lib/components/settings/SettingItem.svelte";
-    import { writable } from "svelte/store";
 
-    let encounterDbInfo: EncounterDbInfo;
-    let deleteConfirm = false;
-    let deleteInProgress = false;
-    let deleteMsg = "";
-    let deleteFn: (() => void) | undefined;
-    let optimized = writable(false);
-    let optimizing = writable(false);
+    let encounterDbInfo = $state<EncounterDbInfo>();
+    let deleteConfirm = $state(false);
+    let deleteInProgress = $state(false);
+    let deleteMsg = $state<string>();
+    let deleteFn = $state<() => void>();
+    let optimized = $state(false);
+    let optimizing = $state(false);
 
     async function openDbFolder() {
         await invoke("open_db_path");
     }
 
-    onMount(() => {
-        (async () => {
-            encounterDbInfo = await invoke("get_db_info", { minDuration: $settings.logs.minEncounterDuration });
-        })();
+    onMount(async () => {
+        encounterDbInfo = await invoke("get_db_info", { minDuration: $settings.logs.minEncounterDuration });
     });
 
     async function deleteEncounterBelowMinDuration() {
@@ -63,22 +60,22 @@
 <div class="mt-4 flex flex-col space-y-2 px-2">
     <div class="flex items-center space-x-4">
         <div>Database Folder:</div>
-        <button class="rounded-md bg-zinc-600 p-1 hover:bg-zinc-700" on:click={openDbFolder}> Open</button>
+        <button class="rounded-md bg-zinc-600 p-1 hover:bg-zinc-700" onclick={openDbFolder}> Open</button>
     </div>
     <div class="flex items-center space-x-4">
         <div use:tooltip={{ content: "Use this feature if searching is slow" }}>
             Optimize Database (Only use if Search is Slow):
         </div>
         <button
-            class="w-20 rounded-md p-1 {$optimized ? 'disabled bg-gray-600' : 'bg-accent-800 hover:bg-accent-900'}"
-            on:click={async () => {
-                $optimizing = true;
+            class="w-20 rounded-md p-1 {optimized ? 'disabled bg-gray-600' : 'bg-accent-800 hover:bg-accent-900'}"
+            onclick={async () => {
+                optimizing = true;
                 await invoke("write_log", { message: "optimizing database..." });
                 await invoke("optimize_database");
-                $optimizing = false;
-                $optimized = true;
+                optimizing = false;
+                optimized = true;
             }}>
-            {#if $optimized}
+            {#if optimized}
                 Optimized
             {:else}
                 Optimize
@@ -103,6 +100,7 @@
             </div>
         </div>
         {#if encounterDbInfo.totalEncounters - encounterDbInfo.totalEncountersFiltered > 0}
+            {@const count = encounterDbInfo.totalEncounters - encounterDbInfo.totalEncountersFiltered}
             <div class="flex items-center space-x-2">
                 <div use:tooltip={{ content: "Total encounters > minimum duration" }}>Total Encounters Filtered:</div>
                 <div class="font-mono">
@@ -113,11 +111,9 @@
                 <div>Delete Encounters Below Minimum Duration:</div>
                 <button
                     class="rounded-md bg-red-800 p-1 hover:bg-red-900"
-                    on:click={() => {
+                    onclick={() => {
                         deleteConfirm = true;
-                        deleteMsg = `Are you sure you want to delete ${(
-                            encounterDbInfo.totalEncounters - encounterDbInfo.totalEncountersFiltered
-                        ).toLocaleString()} encounters? (might take a while)`;
+                        deleteMsg = `Are you sure you want to delete ${count.toLocaleString()} encounters? (might take a while)`;
                         deleteFn = deleteEncounterBelowMinDuration;
                     }}>
                     Delete
@@ -129,7 +125,7 @@
                 <div>Delete all uncleared encounters:</div>
                 <button
                     class="rounded-md bg-red-800 p-1 hover:bg-red-900"
-                    on:click={() => {
+                    onclick={() => {
                         deleteConfirm = true;
                         deleteMsg = `Are you sure you want to delete all encounters that were not cleared?`;
                         deleteFn = deleteAllUnclearedEncounters;
@@ -139,13 +135,14 @@
             </div>
         {/if}
         {#if encounterDbInfo.totalEncounters > 0}
+            {@const totalEncounters = encounterDbInfo.totalEncounters}
             <div class="flex items-center space-x-4">
                 <div>Delete all encounters:</div>
                 <button
                     class="rounded-md bg-red-800 p-1 hover:bg-red-900"
-                    on:click={() => {
+                    onclick={() => {
                         deleteConfirm = true;
-                        deleteMsg = `Are you sure you want to delete ALL ${encounterDbInfo.totalEncounters.toLocaleString()} encounters? (this is unreversable)`;
+                        deleteMsg = `Are you sure you want to delete ALL ${totalEncounters.toLocaleString()} encounters? (this is unreversable)`;
                         deleteFn = deleteAllEncounters;
                     }}>
                     Delete
@@ -154,8 +151,8 @@
         {/if}
     {/if}
 </div>
-{#if $optimizing}
-    <div class="fixed inset-0 z-50 bg-zinc-900 bg-opacity-80" />
+{#if optimizing}
+    <div class="fixed inset-0 z-50 bg-zinc-900 bg-opacity-80"></div>
     <div class="fixed left-0 right-0 top-0 z-50 h-modal w-full items-center justify-center p-4">
         <div class="relative top-[40%] mx-auto flex max-h-full w-full max-w-md">
             <div class="relative mx-auto flex flex-col rounded-lg border-gray-700 bg-zinc-800 text-gray-400 shadow-md">
@@ -163,9 +160,7 @@
                     <div>
                         Optimizing Database. Do <span class="font-bold">NOT</span> close the app.
                     </div>
-                    <div>
-                        App might become unresponsive, please be patient.
-                    </div>
+                    <div>App might become unresponsive, please be patient.</div>
                     <div class="">This might take a while...</div>
                 </div>
             </div>
@@ -173,7 +168,7 @@
     </div>
 {/if}
 {#if deleteConfirm && encounterDbInfo}
-    <div class="fixed inset-0 z-50 bg-zinc-900 bg-opacity-80" />
+    <div class="fixed inset-0 z-50 bg-zinc-900 bg-opacity-80"></div>
     <div class="fixed left-0 right-0 top-0 z-50 h-modal w-full items-center justify-center p-4">
         <div class="relative top-[25%] mx-auto flex max-h-full w-full max-w-md">
             <div class="relative mx-auto flex flex-col rounded-lg border-gray-700 bg-zinc-800 text-gray-400 shadow-md">
@@ -182,7 +177,7 @@
                     class:invisible={deleteInProgress}
                     class="absolute right-2.5 top-3 ml-auto whitespace-normal rounded-lg p-1.5 hover:bg-zinc-600 focus:outline-none"
                     aria-label="Close modal"
-                    on:click={() => (deleteConfirm = false)}>
+                    onclick={() => (deleteConfirm = false)}>
                     <span class="sr-only">Close modal</span>
                     <svg class="size-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                         <path
@@ -214,13 +209,13 @@
                             <button
                                 type="button"
                                 class="mr-2 inline-flex items-center justify-center rounded-lg bg-red-700 px-5 py-2.5 text-center text-sm text-white hover:bg-red-800 focus:outline-none"
-                                on:click={deleteFn}>
+                                onclick={deleteFn}>
                                 Yes, I'm sure
                             </button>
                             <button
                                 type="button"
                                 class="inline-flex items-center justify-center rounded-lg bg-gray-800 bg-transparent px-5 py-2.5 text-center text-sm text-gray-400 hover:bg-zinc-700 hover:text-white focus:text-white focus:outline-none"
-                                on:click={() => (deleteConfirm = false)}>
+                                onclick={() => (deleteConfirm = false)}>
                                 No, cancel
                             </button>
                         {:else}

@@ -37,25 +37,10 @@ export const cardIconMap: { [key: string]: string } = {
     "19285": "AR_CardDeck_ToolTip_16.png",
     "19286": "AR_CardDeck_ToolTip_17.png",
     "19287": "AR_CardDeck_ToolTip_14.png",
-    "19288": "AR_CardDeck_ToolTip_18.png",
+    "19288": "AR_CardDeck_ToolTip_18.png"
 };
 
 // not including emperor
 export const cardIds = [
-    19090,
-    19091,
-    19092,
-    19093,
-    19094,
-    19095,
-    19096,
-    19097,
-    19098,
-    19099,
-    19280,
-    19281,
-    19284,
-    19285,
-    19286,
-    19287,
+    19090, 19091, 19092, 19093, 19094, 19095, 19096, 19097, 19098, 19099, 19280, 19281, 19284, 19285, 19286, 19287
 ];

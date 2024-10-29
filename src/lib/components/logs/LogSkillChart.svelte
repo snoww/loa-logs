@@ -94,7 +94,7 @@
     }
 </script>
 
-<div class="mt-2 h-[400px]" use:chartable={chartOptions} style="width: calc(100vw - 4.5rem);" />
+<div class="mt-2 h-[400px]" use:chartable={chartOptions} style="width: calc(100vw - 4.5rem);"></div>
 
 <div class="mb-4 mt-2 min-h-[30rem]">
     <div class="flex justify-start text-lg font-medium">
@@ -104,11 +104,11 @@
         <div>Click on a skill cast to show details.</div>
     {:else if skill}
         <div class="px-1 pb-2">
-            <div class="flex items-center pt-1 pb-2">
+            <div class="flex items-center pb-2 pt-1">
                 <button
                     use:tooltip={{ content: "Go to highest damage cast." }}
-                    class="mr-4 p-1 bg-accent-500 hover:bg-accent-800 rounded-md text-sm"
-                    on:click={() => {
+                    class="bg-accent-500 hover:bg-accent-800 mr-4 rounded-md p-1 text-sm"
+                    onclick={() => {
                         $focusedSkillCast.cast = getHighestDamageCastIndex();
                     }}>
                     Find Max Cast
@@ -116,7 +116,7 @@
                 <button
                     use:tooltip={{ content: "Previous Cast" }}
                     class="pr-1"
-                    on:click={() => {
+                    onclick={() => {
                         if ($focusedSkillCast.cast > 0) {
                             $focusedSkillCast.cast -= 1;
                         }
@@ -133,7 +133,7 @@
                 <button
                     use:tooltip={{ content: "Next Cast" }}
                     class="px-1"
-                    on:click={() => {
+                    onclick={() => {
                         if ($focusedSkillCast.cast < skill.skillCastLog.length - 1) $focusedSkillCast.cast += 1;
                     }}>
                     <svg
@@ -201,7 +201,7 @@
                                 <span use:tooltip={{ content: "Party Buffs" }}>
                                     <button
                                         class={$buffType === "party" ? "text-accent-500" : "hover:text-accent-500"}
-                                        on:click={() => {
+                                        onclick={() => {
                                             $buffType = "party";
                                         }}>
                                         Party
@@ -211,7 +211,7 @@
                                 <span use:tooltip={{ content: "Self Buffs, including Relic Sets" }}>
                                     <button
                                         class={$buffType === "self" ? "text-accent-500" : "hover:text-accent-500"}
-                                        on:click={() => {
+                                        onclick={() => {
                                             $buffType = "self";
                                         }}>
                                         Self
@@ -221,7 +221,7 @@
                                 <span use:tooltip={{ content: "All other buffs, e.g. Darks, Atros, etc." }}>
                                     <button
                                         class={$buffType === "misc" ? "text-accent-500" : "hover:text-accent-500"}
-                                        on:click={() => {
+                                        onclick={() => {
                                             $buffType = "misc";
                                         }}>
                                         Misc.

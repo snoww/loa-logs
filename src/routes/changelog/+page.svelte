@@ -1,17 +1,14 @@
 <script lang="ts">
     import LogSidebar from "$lib/components/logs/LogSidebar.svelte";
-    import { backNavStore, markdownIt, pageStore, searchStore } from "$lib/utils/stores";
+    import { markdownIt } from "$lib/utils/stores";
     import { onMount } from "svelte";
     import Title from "$lib/components/shared/Title.svelte";
     import ChangelogMarkdown from "$lib/data/changelog.md?raw";
     import { miscSettings } from "$lib/utils/settings";
 
-    let hidden: boolean = true;
+    let hidden = $state(true);
 
     onMount(() => {
-        $pageStore = 1;
-        $backNavStore = false;
-        $searchStore = "";
         $miscSettings.viewedChangelog = true;
     });
 </script>

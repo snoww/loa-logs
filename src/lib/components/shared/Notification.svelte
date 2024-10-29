@@ -2,12 +2,21 @@
     import { Alert } from "flowbite-svelte";
     import { fade } from "svelte/transition";
 
-    export let showAlert;
-    export let text = "";
-    export let dismissable = true;
-    export let width: string;
-    export let isError = false;
-    export let fixed = false;
+    let {
+        showAlert = $bindable(),
+        text = "",
+        dismissable = true,
+        width,
+        isError = false,
+        fixed = false
+    }: {
+        showAlert: boolean;
+        text?: string;
+        dismissable?: boolean;
+        width: string;
+        isError?: boolean;
+        fixed?: boolean;
+    } = $props();
 </script>
 
 <div transition:fade|global>
@@ -18,7 +27,7 @@
             : 'absolute bottom-8'} inset-x-0 z-50 mx-auto h-10 py-2"
         style={`width: ${width};`}
         {dismissable}
-        on:close={() => (showAlert = false)}>
+        onclose={() => (showAlert = false)}>
         <span slot="icon">
             <svg
                 aria-hidden="true"

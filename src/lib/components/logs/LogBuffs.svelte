@@ -34,13 +34,13 @@
         if (focusedPlayer && !Object.hasOwn(focusedPlayer.damageStats.buffedBy, id)) {
             continue;
         }
-        filterStatusEffects(groupedSynergies, buff, Number(id), focusedPlayer, tab, $settings.buffs.default);
+        filterStatusEffects(groupedSynergies, buff, Number(id), undefined, tab, $settings.buffs.default);
     }
     for (const [id, debuff] of Object.entries(encounterDamageStats.debuffs)) {
         if (focusedPlayer && !Object.hasOwn(focusedPlayer.damageStats.debuffedBy, id)) {
             continue;
         }
-        filterStatusEffects(groupedSynergies, debuff, Number(id), focusedPlayer, tab, $settings.buffs.default);
+        filterStatusEffects(groupedSynergies, debuff, Number(id), undefined, tab, $settings.buffs.default);
     }
     groupedSynergies = new Map([...groupedSynergies.entries()].sort());
 
@@ -79,27 +79,29 @@
     <div class="flex flex-col space-y-2">
         {#each [...partyGroupedSynergies] as [partyId, synergies], i (partyId)}
             {#if parties[i] && parties[i].length > 0}
-            <table class="table-fixed" style="width: {partyWidths[partyId]};">
-                <thead class="z-40 h-6" id="buff-head">
-                    <tr class="bg-zinc-900">
-                        <th class="w-7 whitespace-nowrap px-2 font-normal tracking-tight">Party {+partyId + 1}</th>
-                        <th class="w-20 px-2 text-left font-normal" />
-                        <th class="w-full" />
-                        {#each [...synergies] as synergy (synergy)}
-                            {@const syns = groupedSynergies.get(synergy) || new Map()}
-                            <BuffHeader synergies={syns} />
-                        {/each}
-                    </tr>
-                </thead>
-                <tbody class="relative z-10">
-                    {#each parties[i] as player, playerIndex (player.name)}
-                        {@const playerBuffs = partyBuffs.get(partyId)?.get(player.name) ?? []}
-                        <tr class="h-7 px-2 py-1 {$settings.general.underlineHovered ? 'hover:underline' : ''}" on:click={() => inspectPlayer(player.name)}>
-                            <LogPartyBuffRow {player} {playerBuffs} percentage={partyPercentages[i][playerIndex]} />
+                <table class="table-fixed" style="width: {partyWidths[partyId]};">
+                    <thead class="z-40 h-6" id="buff-head">
+                        <tr class="bg-zinc-900">
+                            <th class="w-7 whitespace-nowrap px-2 font-normal tracking-tight">Party {+partyId + 1}</th>
+                            <th class="w-20 px-2 text-left font-normal"></th>
+                            <th class="w-full"></th>
+                            {#each [...synergies] as synergy (synergy)}
+                                {@const syns = groupedSynergies.get(synergy) || new Map()}
+                                <BuffHeader synergies={syns} />
+                            {/each}
                         </tr>
-                    {/each}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody class="relative z-10">
+                        {#each parties[i] as player, playerIndex (player.name)}
+                            {@const playerBuffs = partyBuffs.get(partyId)?.get(player.name) ?? []}
+                            <tr
+                                class="h-7 px-2 py-1 {$settings.general.underlineHovered ? 'hover:underline' : ''}"
+                                onclick={() => inspectPlayer(player.name)}>
+                                <LogPartyBuffRow {player} {playerBuffs} percentage={partyPercentages[i][playerIndex]} />
+                            </tr>
+                        {/each}
+                    </tbody>
+                </table>
             {/if}
         {/each}
     </div>
@@ -107,9 +109,9 @@
     <table class="w-full table-fixed">
         <thead class="relative z-40 h-6" id="buff-head">
             <tr class="bg-zinc-900">
-                <th class="w-7 px-2 font-normal" />
-                <th class="w-20 px-2 text-left font-normal" />
-                <th class="w-full" />
+                <th class="w-7 px-2 font-normal"></th>
+                <th class="w-20 px-2 text-left font-normal"></th>
+                <th class="w-full"></th>
                 {#each [...groupedSynergies] as [id, synergies] (id)}
                     <BuffHeader {synergies} />
                 {:else}
@@ -120,7 +122,9 @@
         <tbody class="relative z-10">
             {#if !focusedPlayer}
                 {#each players as player, i (player.name)}
-                    <tr class="h-7 px-2 py-1 {$settings.general.underlineHovered ? 'hover:underline' : ''}" on:click={() => inspectPlayer(player.name)}>
+                    <tr
+                        class="h-7 px-2 py-1 {$settings.general.underlineHovered ? 'hover:underline' : ''}"
+                        onclick={() => inspectPlayer(player.name)}>
                         <LogBuffRow {player} {groupedSynergies} percentage={percentages[i]} />
                     </tr>
                 {/each}

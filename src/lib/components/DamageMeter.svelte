@@ -41,6 +41,7 @@
     import MissingInfo from "./shared/MissingInfo.svelte";
     import { invoke } from "@tauri-apps/api";
     import { uploadLog } from "$lib/utils/sync";
+    import { preventDefault } from "$lib/utils/svelte";
 
     let time = +Date.now();
     let encounter: Encounter | null = null;
@@ -136,7 +137,7 @@
                 }
 
                 let id = event.payload.toString();
-                const encounter = await invoke("load_encounter", { id }) as Encounter;
+                const encounter = (await invoke("load_encounter", { id })) as Encounter;
                 await uploadLog(id, encounter, $settings.sync);
             });
             let adminErrorEvent = await listen("admin", () => {
@@ -183,7 +184,7 @@
     let currentBoss: Entity | null = null;
     let state = MeterState.PARTY;
     let tab = MeterTab.DAMAGE;
-    let player: Entity | null = null;
+    let player: Entity | undefined = undefined;
     let playerName = "";
     let focusedBoss = "";
     let lastCombatPacket = 0;
@@ -316,7 +317,7 @@
                 player = encounter.entities[playerName];
                 state = MeterState.PLAYER;
             } else {
-                player = null;
+                player = undefined;
                 state = MeterState.PARTY;
             }
         }
@@ -336,7 +337,7 @@
     function handleRightClick() {
         if (state === MeterState.PLAYER) {
             state = MeterState.PARTY;
-            player = null;
+            player = undefined;
             playerName = "";
         }
 
@@ -357,7 +358,7 @@
 
     function reset() {
         state = MeterState.PARTY;
-        player = null;
+        player = undefined;
         playerName = "";
         focusedBoss = "";
         encounter = null;
@@ -416,7 +417,7 @@
     }
 </script>
 
-<svelte:window on:contextmenu|preventDefault />
+<svelte:window oncontextmenu={preventDefault()} />
 <div bind:this={screenshotAreaDiv} style="height: calc(100vh - 1.5rem);">
     <EncounterInfo {encounterDuration} {totalDamageDealt} {dps} {timeUntilKill} screenshotFn={captureScreenshot} />
     {#if currentBoss !== null && $settings.meter.bossHp}
@@ -432,15 +433,15 @@
                 <table class="relative w-full table-fixed" id="live-meter-table">
                     <thead
                         class="sticky top-0 z-40 h-6"
-                        on:contextmenu|preventDefault={() => {
+                        oncontextmenu={preventDefault(() => {
                             // console.log("titlebar clicked");
-                        }}>
+                        })}>
                         <tr class="bg-zinc-900 tracking-tighter">
                             <th class="w-7 px-2 font-normal">
                                 <MissingInfo />
                             </th>
-                            <th class="w-14 px-2 text-left font-normal" />
-                            <th class="w-full" />
+                            <th class="w-14 px-2 text-left font-normal"></th>
+                            <th class="w-full"></th>
                             {#if anyDead && $settings.meter.deathTime}
                                 <th class="w-14 font-normal" use:tooltip={{ content: "Dead for" }}>Dead</th>
                             {/if}
@@ -501,7 +502,7 @@
                             <tr
                                 class="h-7 px-2 py-1 {$settings.general.underlineHovered ? 'hover:underline' : ''}"
                                 animate:flip={{ duration: 200 }}
-                                on:click={() => inspectPlayer(entity.name)}>
+                                onclick={() => inspectPlayer(entity.name)}>
                                 <DamageMeterPlayerRow
                                     {entity}
                                     percentage={playerDamagePercentages[i]}

@@ -3,14 +3,15 @@
     import LogSidebar from "$lib/components/logs/LogSidebar.svelte";
     import Title from "$lib/components/shared/Title.svelte";
     import { onMount } from "svelte";
-    import { invoke } from "@tauri-apps/api";
+    import { invoke } from "@tauri-apps/api/tauri";
     import { checkAccessToken, LOG_SITE_URL, uploadLog } from "$lib/utils/sync";
     import type { Encounter } from "$lib/types";
     import { syncStore } from "$lib/utils/stores.js";
     import SettingItem from "$lib/components/settings/SettingItem.svelte";
+    import { preventDefault } from "$lib/utils/svelte";
 
-    let hidden: boolean = true;
-    let message = "";
+    let hidden = $state(true);
+    let message = $state("");
 
     onMount(async () => {
         await check();
@@ -81,7 +82,7 @@
     }
 </script>
 
-<svelte:window on:contextmenu|preventDefault />
+<svelte:window oncontextmenu={preventDefault()} />
 <LogSidebar bind:hidden />
 <div class="custom-scroll h-screen overflow-y-scroll bg-zinc-800 pb-8">
     <div class="sticky top-0 flex h-16 justify-between bg-zinc-800 px-8 py-5 shadow-md">
@@ -114,12 +115,12 @@
                     </a>
                 {/if}
                 <button
-                    on:click={check}
+                    onclick={check}
                     class="mr-0.5 inline w-fit rounded-md bg-zinc-600 px-1.5 py-1 text-xs hover:bg-zinc-700">
                     Check
                 </button>
             </div>
-            <div class="{$settings.sync.validToken ? 'text-green-400' : 'text-red-500'}">
+            <div class={$settings.sync.validToken ? "text-green-400" : "text-red-500"}>
                 {message}
             </div>
         </div>
@@ -168,13 +169,21 @@
             <div class="flex items-center space-x-2">
                 <div>Sync Past Logs:</div>
                 {#if !$syncStore.syncing}
-                    <button class="rounded-md bg-zinc-600 p-1 hover:bg-zinc-700" on:click={() => {syncPastLogs();}}>Sync</button>
-                    <button class="rounded-md bg-zinc-600 p-1 hover:bg-zinc-700" on:click={() => {syncPastLogs(true);}}>Force Re-sync</button>
+                    <button
+                        class="rounded-md bg-zinc-600 p-1 hover:bg-zinc-700"
+                        onclick={() => {
+                            syncPastLogs();
+                        }}>Sync</button>
+                    <button
+                        class="rounded-md bg-zinc-600 p-1 hover:bg-zinc-700"
+                        onclick={() => {
+                            syncPastLogs(true);
+                        }}>Force Re-sync</button>
                 {:else}
                     <button class="rounded-md bg-zinc-600 p-1 hover:bg-zinc-700" disabled>Syncing...</button>
                     <button
                         class="rounded-md bg-zinc-600 p-1 hover:bg-zinc-700"
-                        on:click={() => {
+                        onclick={() => {
                             $syncStore.stop = true;
                         }}>Stop</button>
                 {/if}

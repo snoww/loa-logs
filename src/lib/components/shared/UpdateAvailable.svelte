@@ -8,7 +8,7 @@
 </script>
 
 {#if $updateSettings.available && $updateSettings.manifest && !$updateSettings.dismissed}
-    <div class="fixed inset-0 z-50 bg-zinc-900 bg-opacity-80" />
+    <div class="fixed inset-0 z-50 bg-zinc-900 bg-opacity-80"></div>
     <div class="fixed left-0 right-0 top-0 z-50 h-modal w-full items-center justify-center p-4">
         <div class="relative top-[10%] mx-auto flex max-h-[95%] w-full max-w-md md:max-w-lg lg:max-w-2xl xl:max-w-3xl">
             <div class="relative mx-auto flex flex-col rounded-lg border-gray-700 bg-zinc-800 text-gray-400 shadow-md">
@@ -16,7 +16,7 @@
                     type="button"
                     class="absolute right-2.5 top-3 ml-auto whitespace-normal rounded-lg p-1.5 hover:bg-zinc-600 focus:outline-none"
                     aria-label="Close modal"
-                    on:click={() => ($updateSettings.dismissed = true)}>
+                    onclick={() => ($updateSettings.dismissed = true)}>
                     <span class="sr-only">Close modal</span>
                     <svg class="size-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                         <path
@@ -29,7 +29,7 @@
                     <div class="">
                         <div class="mb-1 flex items-center justify-center space-x-1">
                             {#if $updateSettings.isNotice}
-                                <div class="text-lg font-semibold text-gray-200 py-2">Notice</div>
+                                <div class="py-2 text-lg font-semibold text-gray-200">Notice</div>
                             {:else}
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
@@ -41,7 +41,9 @@
                                 <div class="text-lg font-semibold text-gray-200">New Update Available!</div>
                             {/if}
                         </div>
-                        <div class="prose-a:text-accent-500 prose prose-sm prose-zinc prose-invert mb-5 prose-img:-my-2 prose-img:rounded-md prose-img:border prose-img:border-zinc-600 prose-img:shadow-md" id="notes">
+                        <div
+                            class="prose-a:text-accent-500 prose prose-sm prose-zinc prose-invert mb-5 prose-img:-my-2 prose-img:rounded-md prose-img:border prose-img:border-zinc-600 prose-img:shadow-md"
+                            id="notes">
                             {@html $markdownIt.render($updateSettings.manifest.body)}
                         </div>
                         {#if !$updateSettings.isNotice}
@@ -49,7 +51,7 @@
                                 <button
                                     type="button"
                                     class="bg-accent-900 hover:bg-accent-800 mr-2 inline-flex items-center justify-center rounded-lg px-5 py-2.5 text-center text-sm text-white focus:outline-none"
-                                    on:click={async () => {
+                                    onclick={async () => {
                                         $updateText = "Updating...";
                                         await installUpdate();
                                     }}>

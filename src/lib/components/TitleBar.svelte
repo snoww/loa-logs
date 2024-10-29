@@ -15,4 +15,4 @@
     </div>
 </div>
 
-<div data-tauri-drag-region class="fixed top-0 h-8 w-screen" />
+<div data-tauri-drag-region class="fixed top-0 h-8 w-screen"></div>

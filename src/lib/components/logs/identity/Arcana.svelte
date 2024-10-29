@@ -5,11 +5,19 @@
     import { fillMissingElapsedTimes, formatDurationFromS } from "$lib/utils/numbers";
     import { colors } from "$lib/utils/settings";
 
-    export let identityStats: IdentityStats;
-    export let player: Entity;
-    export let duration: number;
+    let {
+        identityStats,
+        player,
+        duration
+    }: {
+        identityStats: IdentityStats;
+        player: Entity;
+        duration: number;
+    } = $props();
 
-    let cards = Object.values(player.skills).sort((a, b) => b.casts - a.casts).filter((skill) => cardIds.includes(skill.id) || skill.id === 19282);
+    let cards = Object.values(player.skills)
+        .sort((a, b) => b.casts - a.casts)
+        .filter((skill) => cardIds.includes(skill.id) || skill.id === 19282);
     let totalDraws = cards.reduce((acc, skill) => acc + skill.casts, 0);
 
     let data = fillMissingElapsedTimes(identityStats.log);
@@ -96,9 +104,9 @@
                         str += cardMap[cards[0]];
                     }
                     if (cards[1] !== 0) {
-                        str += " | " +cardMap[cards[1]];
+                        str += " | " + cardMap[cards[1]];
                     } else {
-                        str += " |"
+                        str += " |";
                     }
                     return str;
                 })
@@ -122,6 +130,6 @@
     {/if}
     <div class="mt-4">
         <div class="text-lg font-medium tracking-tight">Identity Log</div>
-        <div class="mt-2 h-[220px]" use:chartable={identityLogOptions} style="width: calc(100vw - 4.5rem);" />
+        <div class="mt-2 h-[220px]" use:chartable={identityLogOptions} style="width: calc(100vw - 4.5rem);"></div>
     </div>
 </div>

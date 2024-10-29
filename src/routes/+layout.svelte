@@ -1,8 +1,8 @@
 <script lang="ts">
     import "@fontsource-variable/inter";
-    import '@fontsource-variable/jetbrains-mono';
+    import "@fontsource-variable/jetbrains-mono";
     import "../app.css";
-    import { onDestroy, onMount } from "svelte";
+    import { onMount, type Snippet } from "svelte";
     import { listen, type UnlistenFn } from "@tauri-apps/api/event";
     import { navigating } from "$app/stores";
     import NProgress from "nprogress";
@@ -11,10 +11,10 @@
     import { settings, updateSettings } from "$lib/utils/settings";
     import { appWindow } from "@tauri-apps/api/window";
     import { checkUpdate } from "@tauri-apps/api/updater";
-    import { invoke } from "@tauri-apps/api";
+    import { invoke } from "@tauri-apps/api/tauri";
     import UpdateAvailable from "$lib/components/shared/UpdateAvailable.svelte";
 
-    let events: Set<UnlistenFn> = new Set();
+    let { children }: { children: Snippet } = $props();
 
     NProgress.configure({
         template: '<div class="bar !bg-gray-500" role="bar"><div class="peg !shadow-gray-500"></div></div>'
@@ -22,12 +22,11 @@
 
     onMount(() => {
         let unsubscribe = navigating.subscribe((navigating) => {
-            if (navigating) {
-                NProgress.start();
-            } else {
-                NProgress.done();
-            }
+            if (navigating) NProgress.start();
+            else NProgress.done();
         });
+
+        let events: Set<UnlistenFn> = new Set();
 
         if (location.pathname !== "/") {
             (async () => {
@@ -56,11 +55,8 @@
 
         return () => {
             unsubscribe();
+            events.forEach((unlisten) => unlisten());
         };
-    });
-
-    onDestroy(() => {
-        events.forEach((unlisten) => unlisten());
     });
 
     async function showWindow() {
@@ -89,23 +85,34 @@
             await invoke("write_log", { message: e });
         }
     }
-    
-    $: {
-        if ($settings.general.logScale === "1") {
-            document.documentElement.style.setProperty("font-size", "medium");
-        } else if ($settings.general.logScale === "2") {
-            document.documentElement.style.setProperty("font-size", "large");
-        } else if ($settings.general.logScale === "3") {
-            document.documentElement.style.setProperty("font-size", "x-large");
-        } else if ($settings.general.logScale === "0") {
-            document.documentElement.style.setProperty("font-size", "small");
-        }
-    }
 
+    $effect(() => {
+        if (location.pathname !== "/") {
+            if ($settings.general.logScale === "1") {
+                document.documentElement.style.setProperty("font-size", "medium");
+            } else if ($settings.general.logScale === "2") {
+                document.documentElement.style.setProperty("font-size", "large");
+            } else if ($settings.general.logScale === "3") {
+                document.documentElement.style.setProperty("font-size", "x-large");
+            } else if ($settings.general.logScale === "0") {
+                document.documentElement.style.setProperty("font-size", "small");
+            }
+        } else {
+            if ($settings.general.scale === "1") {
+                document.documentElement.style.setProperty("font-size", "medium");
+            } else if ($settings.general.scale === "2") {
+                document.documentElement.style.setProperty("font-size", "large");
+            } else if ($settings.general.scale === "3") {
+                document.documentElement.style.setProperty("font-size", "x-large");
+            } else if ($settings.general.scale === "0") {
+                document.documentElement.style.setProperty("font-size", "small");
+            }
+        }
+    });
 </script>
 
 <div class={$settings.general.accentColor}>
-    <slot />
+    {@render children()}
     {#if location.pathname !== "/"}
         <UpdateAvailable />
     {/if}

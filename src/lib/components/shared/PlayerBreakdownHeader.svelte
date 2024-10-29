@@ -1,17 +1,26 @@
 <script lang="ts">
     import { tooltip } from "$lib/utils/tooltip";
 
-    export let meterSettings: any;
-    export let hasBackAttacks = true;
-    export let hasFrontAttacks = true;
-    export let anySupportBrand = false;
-    export let anySupportBuff = false;
-    export let anySupportIdentity = false;
+    let {
+        meterSettings,
+        hasBackAttacks = true,
+        hasFrontAttacks = true,
+        anySupportBrand = false,
+        anySupportBuff = false,
+        anySupportIdentity = false
+    }: {
+        meterSettings: any;
+        hasBackAttacks?: boolean;
+        hasFrontAttacks?: boolean;
+        anySupportBrand?: boolean;
+        anySupportBuff?: boolean;
+        anySupportIdentity?: boolean;
+    } = $props();
 </script>
 
-<th class="w-7 px-2 font-normal" />
-<th class="w-14 px-2 text-left font-normal" />
-<th class="w-full" />
+<th class="w-7 px-2 font-normal"></th>
+<th class="w-14 px-2 text-left font-normal"></th>
+<th class="w-full"></th>
 {#if meterSettings.breakdown.damage}
     <th class="w-12 font-normal" use:tooltip={{ content: "Damage Dealt" }}>DMG</th>
 {/if}
@@ -29,16 +38,16 @@
 {/if}
 {#if hasFrontAttacks && meterSettings.breakdown.frontAtk}
     {#if meterSettings.positionalDmgPercent}
-    <th class="w-12 font-normal" use:tooltip={{ content: "% Damage from Front Attack" }}>F.A</th>
+        <th class="w-12 font-normal" use:tooltip={{ content: "% Damage from Front Attack" }}>F.A</th>
     {:else}
-    <th class="w-12 font-normal" use:tooltip={{ content: "Front Attack %" }}>F.A</th>
+        <th class="w-12 font-normal" use:tooltip={{ content: "Front Attack %" }}>F.A</th>
     {/if}
 {/if}
 {#if hasBackAttacks && meterSettings.breakdown.backAtk}
     {#if meterSettings.positionalDmgPercent}
-    <th class="w-12 font-normal" use:tooltip={{ content: "% Damage from Back Attack" }}>B.A</th>
+        <th class="w-12 font-normal" use:tooltip={{ content: "% Damage from Back Attack" }}>B.A</th>
     {:else}
-    <th class="w-12 font-normal" use:tooltip={{ content: "Back Attack %" }}>B.A</th>
+        <th class="w-12 font-normal" use:tooltip={{ content: "Back Attack %" }}>B.A</th>
     {/if}
 {/if}
 {#if anySupportBuff && meterSettings.breakdown.percentBuffBySup}

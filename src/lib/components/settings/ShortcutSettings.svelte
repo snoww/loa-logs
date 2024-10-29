@@ -1,13 +1,11 @@
 <script lang="ts">
     import { keyboardKeys, registerShortcuts, settings } from "$lib/utils/settings";
 
-    $: {
-        (async () => {
-            registerShortcuts($settings.shortcuts);
-        })();
-    }
-
+    $effect(() => {
+        registerShortcuts($settings.shortcuts);
+    });
 </script>
+
 <div class="flex flex-col space-y-4 divide-y-[1px]">
     <div class="mt-4 flex flex-col space-y-2 px-2">
         <div class="flex justify-between">
@@ -23,7 +21,7 @@
                     class="focus:ring-accent-500 focus:border-accent-500 block w-20 rounded-lg border border-gray-600 bg-gray-700 p-2.5 text-sm text-white placeholder-gray-400">
                     <option value="Ctrl">Ctrl</option>
                     <option value="Alt">Alt</option>
-                    <option value="Shift"><kbd>Shift</kbd></option>
+                    <option value="Shift">Shift</option>
                 </select>
                 <div>+</div>
                 <select
@@ -49,7 +47,7 @@
                     class="focus:ring-accent-500 focus:border-accent-500 block w-20 rounded-lg border border-gray-600 bg-gray-700 p-2.5 text-sm text-white placeholder-gray-400">
                     <option value="Ctrl">Ctrl</option>
                     <option value="Alt">Alt</option>
-                    <option value="Shift"><kbd>Shift</kbd></option>
+                    <option value="Shift">Shift</option>
                 </select>
                 <div>+</div>
                 <select
@@ -75,7 +73,7 @@
                     class="focus:ring-accent-500 focus:border-accent-500 block w-20 rounded-lg border border-gray-600 bg-gray-700 p-2.5 text-sm text-white placeholder-gray-400">
                     <option value="Ctrl">Ctrl</option>
                     <option value="Alt">Alt</option>
-                    <option value="Shift"><kbd>Shift</kbd></option>
+                    <option value="Shift">Shift</option>
                 </select>
                 <div>+</div>
                 <select
@@ -101,7 +99,7 @@
                     class="focus:ring-accent-500 focus:border-accent-500 block w-20 rounded-lg border border-gray-600 bg-gray-700 p-2.5 text-sm text-white placeholder-gray-400">
                     <option value="Ctrl">Ctrl</option>
                     <option value="Alt">Alt</option>
-                    <option value="Shift"><kbd>Shift</kbd></option>
+                    <option value="Shift">Shift</option>
                 </select>
                 <div>+</div>
                 <select
@@ -127,7 +125,7 @@
                     class="focus:ring-accent-500 focus:border-accent-500 block w-20 rounded-lg border border-gray-600 bg-gray-700 p-2.5 text-sm text-white placeholder-gray-400">
                     <option value="Ctrl">Ctrl</option>
                     <option value="Alt">Alt</option>
-                    <option value="Shift"><kbd>Shift</kbd></option>
+                    <option value="Shift">Shift</option>
                 </select>
                 <div>+</div>
                 <select
@@ -153,7 +151,7 @@
                     class="focus:ring-accent-500 focus:border-accent-500 block w-20 rounded-lg border border-gray-600 bg-gray-700 p-2.5 text-sm text-white placeholder-gray-400">
                     <option value="Ctrl">Ctrl</option>
                     <option value="Alt">Alt</option>
-                    <option value="Shift"><kbd>Shift</kbd></option>
+                    <option value="Shift">Shift</option>
                 </select>
                 <div>+</div>
                 <select
@@ -179,7 +177,7 @@
                     class="focus:ring-accent-500 focus:border-accent-500 block w-20 rounded-lg border border-gray-600 bg-gray-700 p-2.5 text-sm text-white placeholder-gray-400">
                     <option value="Ctrl">Ctrl</option>
                     <option value="Alt">Alt</option>
-                    <option value="Shift"><kbd>Shift</kbd></option>
+                    <option value="Shift">Shift</option>
                 </select>
                 <div>+</div>
                 <select

@@ -18,7 +18,7 @@
     import { convertFileSrc } from "@tauri-apps/api/tauri";
     import { classesMap } from "$lib/constants/classes";
     import { estherMap } from "$lib/constants/esthers";
-    import { invoke } from "@tauri-apps/api";
+    import { invoke } from "@tauri-apps/api/tauri";
     import { classColors } from "$lib/constants/colors";
     import { queryParam } from "$lib/utils/strings";
     import { emit } from "@tauri-apps/api/event";
@@ -81,8 +81,8 @@
             await registerShortcuts($settings.shortcuts);
 
             // disable blur on windows 11
-            let ua = await navigator.userAgentData.getHighEntropyValues(["platformVersion"]);
-            if (navigator.userAgentData.platform === "Windows") {
+            let ua = await (navigator as any).userAgentData.getHighEntropyValues(["platformVersion"]);
+            if ((navigator as any).userAgentData.platform === "Windows") {
                 const majorPlatformVersion = Number(ua.platformVersion.split(".")[0]);
                 if (majorPlatformVersion >= 13) {
                     $settings.general.isWin11 = true;
@@ -101,18 +101,6 @@
             await invoke("write_log", { message: "finished meter setup" });
         })();
     });
-
-    $: {
-        if ($settings.general.scale === "1") {
-            document.documentElement.style.setProperty("font-size", "medium");
-        } else if ($settings.general.scale === "2") {
-            document.documentElement.style.setProperty("font-size", "large");
-        } else if ($settings.general.scale === "3") {
-            document.documentElement.style.setProperty("font-size", "x-large");
-        } else if ($settings.general.scale === "0") {
-            document.documentElement.style.setProperty("font-size", "small");
-        }
-    }
 </script>
 
 <div

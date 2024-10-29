@@ -5,19 +5,35 @@
     import { takingScreenshot } from "$lib/utils/stores";
     import PlayerRow from "../shared/PlayerRow.svelte";
 
-    export let entity: Entity;
-    export let percentage: number;
-    export let totalDamageDealt: number;
-    export let anyDead: boolean;
-    export let multipleDeaths: boolean;
-    export let anyFrontAtk: boolean;
-    export let anyBackAtk: boolean;
-    export let anySupportBuff: boolean;
-    export let anySupportIdentity: boolean;
-    export let anySupportBrand: boolean;
-    export let anyRdpsData: boolean;
-    export let end: number;
-    export let isSolo: boolean;
+    let {
+        entity,
+        percentage,
+        totalDamageDealt,
+        anyDead,
+        multipleDeaths,
+        anyFrontAtk,
+        anyBackAtk,
+        anySupportBuff,
+        anySupportIdentity,
+        anySupportBrand,
+        anyRdpsData,
+        end,
+        isSolo
+    }: {
+        entity: Entity;
+        percentage: number;
+        totalDamageDealt: number;
+        anyDead: boolean;
+        multipleDeaths: boolean;
+        anyFrontAtk: boolean;
+        anyBackAtk: boolean;
+        anySupportBuff: boolean;
+        anySupportIdentity: boolean;
+        anySupportBrand: boolean;
+        anyRdpsData: boolean;
+        end: number;
+        isSolo: boolean;
+    } = $props();
 
     let dps = abbreviateNumberSplit(entity.damageStats.dps);
 </script>

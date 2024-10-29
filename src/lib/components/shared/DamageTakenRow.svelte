@@ -9,27 +9,35 @@
     import { tweened } from "svelte/motion";
     import { localPlayer } from "$lib/utils/stores";
 
-    export let player: Entity;
-    export let width: number;
-    export let alpha = 0.6;
-    export let shadow = false;
-    export let tween: boolean;
+    let {
+        player,
+        width,
+        alpha = 0.6,
+        shadow = false,
+        tween
+    }: {
+        player: Entity;
+        width: number;
+        alpha?: number;
+        shadow?: boolean;
+        tween: boolean;
+    } = $props();
 
     const tweenedValue = tweened(0, {
         duration: 400,
         easing: cubicOut
     });
 
-    let color = "#ffffff";
-    let name: string;
+    let color = $state("#ffffff");
+    let name = $state<string>();
 
-    let damageTaken: (string | number)[];
+    let damageTaken = $state<(string | number)[]>([]);
 
-    $: {
+    $effect(() => {
         tweenedValue.set(width);
         damageTaken = abbreviateNumberSplit(player.damageStats.damageTaken);
 
-        name = formatPlayerName(player, $settings.general);;
+        name = formatPlayerName(player, $settings.general);
 
         if (Object.hasOwn($colors, player.class)) {
             if ($settings.general.constantLocalPlayerColor && $localPlayer == player.name) {
@@ -38,7 +46,7 @@
                 color = $colors[player.class].color;
             }
         }
-    }
+    });
 </script>
 
 <td class="pl-1">
@@ -60,7 +68,8 @@
         {damageTaken[0]}<span class="text-3xs text-gray-300">{damageTaken[1]}</span>
     </span>
 </td>
-<div
+<td
     class="absolute left-0 -z-10 h-7 px-2 py-1"
     class:shadow-md={shadow}
-    style="background-color: {HexToRgba(color, alpha)}; width: {tween ? $tweenedValue : width}%" />
+    style="background-color: {HexToRgba(color, alpha)}; width: {tween ? $tweenedValue : width}%">
+</td>

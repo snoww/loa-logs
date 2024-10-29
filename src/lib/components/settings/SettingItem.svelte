@@ -1,7 +1,9 @@
 <script lang="ts">
-    export let name: string;
-    export let description: string;
-    export let setting: boolean;
+    let {
+        name,
+        description,
+        setting = $bindable()
+    }: { name: string; description: string; setting: boolean } = $props();
 </script>
 
 <div class="">

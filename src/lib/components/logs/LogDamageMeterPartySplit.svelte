@@ -4,28 +4,44 @@
     import LogDamageMeterHeader from "./LogDamageMeterHeader.svelte";
     import LogDamageMeterRow from "./LogDamageMeterRow.svelte";
 
-    export let players: Array<Entity>;
-    export let encounterPartyInfo: PartyInfo | undefined;
-    export let topDamageDealt: number;
-    export let totalDamageDealt: number;
-    export let anyFrontAtk: boolean;
-    export let anyBackAtk: boolean;
-    export let anySupportBuff: boolean;
-    export let anySupportIdentity: boolean;
-    export let anySupportBrand: boolean;
-    export let anyRdpsData: boolean;
-    export let end: number;
-    export let isSolo: boolean;
-    export let inspectPlayer: (name: string) => void;
+    let {
+        players,
+        encounterPartyInfo,
+        topDamageDealt,
+        totalDamageDealt,
+        anyFrontAtk,
+        anyBackAtk,
+        anySupportBuff,
+        anySupportIdentity,
+        anySupportBrand,
+        anyRdpsData,
+        end,
+        isSolo,
+        inspectPlayer
+    }: {
+        players: Array<Entity>;
+        encounterPartyInfo: PartyInfo | undefined;
+        topDamageDealt: number;
+        totalDamageDealt: number;
+        anyFrontAtk: boolean;
+        anyBackAtk: boolean;
+        anySupportBuff: boolean;
+        anySupportIdentity: boolean;
+        anySupportBrand: boolean;
+        anyRdpsData: boolean;
+        end: number;
+        isSolo: boolean;
+        inspectPlayer: (name: string) => void;
+    } = $props();
 
     let parties = new Array<Array<Entity>>();
     let partyPercentages = new Array<number[]>();
     let anyPartyDead = new Array<boolean>();
-    let multipleDeaths = false;
+    let multipleDeaths = $state(false);
 
-    let esthers = new Array<Entity>();
+    let esthers = $state<Entity[]>([]);
 
-    $: {
+    $effect(() => {
         if (encounterPartyInfo) {
             esthers = players.filter((player) => player.entityType === EntityType.ESTHER);
             const partyInfo = Object.entries(encounterPartyInfo);
@@ -61,7 +77,7 @@
                 parties[0] = players;
             }
         }
-    }
+    });
 </script>
 
 <div class="flex flex-col space-y-2">
@@ -71,8 +87,8 @@
                 <thead class="z-40 h-6">
                     <tr class="bg-zinc-900">
                         <th class="w-7 whitespace-nowrap px-2 font-normal tracking-tight">Party {+partyId + 1}</th>
-                        <th class="w-20 px-2 text-left font-normal" />
-                        <th class="w-full" />
+                        <th class="w-20 px-2 text-left font-normal"></th>
+                        <th class="w-full"></th>
                         <LogDamageMeterHeader
                             anyDead={anyPartyDead[partyId]}
                             {multipleDeaths}
@@ -89,7 +105,7 @@
                     {#each party as player, playerIndex (player.name)}
                         <tr
                             class="h-7 px-2 py-1 {$settings.general.underlineHovered ? 'hover:underline' : ''}"
-                            on:click={() => inspectPlayer(player.name)}>
+                            onclick={() => inspectPlayer(player.name)}>
                             <LogDamageMeterRow
                                 entity={player}
                                 percentage={partyPercentages[partyId][playerIndex]}
@@ -115,8 +131,8 @@
             <thead class="z-40 h-6">
                 <tr class="bg-zinc-900">
                     <th class="w-7 whitespace-nowrap px-2 font-normal tracking-tight">Esthers</th>
-                    <th class="w-20 px-2 text-left font-normal" />
-                    <th class="w-full" />
+                    <th class="w-20 px-2 text-left font-normal"></th>
+                    <th class="w-full"></th>
                     <LogDamageMeterHeader
                         anyDead={false}
                         multipleDeaths={false}
@@ -133,7 +149,7 @@
                 {#each esthers as esther (esther.name)}
                     <tr
                         class="h-7 px-2 py-1 {$settings.general.underlineHovered ? 'hover:underline' : ''}"
-                        on:click={() => inspectPlayer(esther.name)}>
+                        onclick={() => inspectPlayer(esther.name)}>
                         <LogDamageMeterRow
                             entity={esther}
                             percentage={(esther.damageStats.damageDealt / topDamageDealt) * 100}

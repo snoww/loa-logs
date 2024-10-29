@@ -25,7 +25,9 @@
         takingScreenshot,
         raidGates,
         localPlayer,
-        rdpsEventDetails, uploadErrorStore, uploadErrorMessage
+        rdpsEventDetails,
+        uploadErrorStore,
+        uploadErrorMessage
     } from "$lib/utils/stores";
     import LogIdentity from "./identity/LogIdentity.svelte";
     import LogStagger from "./stagger/LogStagger.svelte";
@@ -53,6 +55,7 @@
     import LogDamageMeterHeader from "./LogDamageMeterHeader.svelte";
     import { LOG_SITE_URL, uploadLog } from "$lib/utils/sync";
     import Notification from "$lib/components/shared/Notification.svelte";
+    import { preventDefault } from "$lib/utils/svelte";
 
     export let id: string;
     export let encounter: Encounter;
@@ -413,13 +416,13 @@
     }
 </script>
 
-<svelte:window on:contextmenu|preventDefault />
-<!-- svelte-ignore a11y-no-static-element-interactions -->
+<svelte:window oncontextmenu={preventDefault()} />
+<!-- svelte-ignore a11y_no_static_element_interactions -->
 <div
     bind:this={targetDiv}
     class="scroll-ml-8 scroll-mt-2 text-gray-100"
     class:p-4={$takingScreenshot}
-    on:contextmenu|preventDefault={handleRightClick}>
+    oncontextmenu={preventDefault(handleRightClick)}>
     <LogEncounterInfo
         bossName={encounter.currentBossName}
         difficulty={encounter.difficulty}
@@ -437,30 +440,30 @@
                     class="rounded-sm px-2 py-1"
                     class:bg-accent-900={tab === MeterTab.DAMAGE}
                     class:bg-gray-700={tab !== MeterTab.DAMAGE}
-                    on:click={damageTab}>
+                    onclick={damageTab}>
                     Damage
                 </button>
-                <!--{#if anyRdpsData || $rdpsEventDetails !== ""}-->
-                <!--    <button-->
-                <!--        class="flex-shrink-0 rounded-sm px-3 py-1"-->
-                <!--        class:bg-accent-900={tab === MeterTab.RDPS}-->
-                <!--        class:bg-gray-700={tab !== MeterTab.RDPS}-->
-                <!--        on:click={RDPSTab}>-->
-                <!--        RDPS-->
-                <!--    </button>-->
-                <!--{/if}-->
+                <!-- {#if anyRdpsData || $rdpsEventDetails !== ""}
+                    <button
+                        class="flex-shrink-0 rounded-sm px-3 py-1"
+                        class:bg-accent-900={tab === MeterTab.RDPS}
+                        class:bg-gray-700={tab !== MeterTab.RDPS}
+                        onclick={RDPSTab}>
+                        RDPS
+                    </button>
+                {/if} -->
                 <button
                     class="flex-shrink-0 rounded-sm px-2 py-1"
                     class:bg-accent-900={tab === MeterTab.PARTY_BUFFS}
                     class:bg-gray-700={tab !== MeterTab.PARTY_BUFFS}
-                    on:click={partySynergyTab}>
+                    onclick={partySynergyTab}>
                     Party Buffs
                 </button>
                 <button
                     class="flex-shrink-0 rounded-sm px-2 py-1"
                     class:bg-accent-900={tab === MeterTab.SELF_BUFFS}
                     class:bg-gray-700={tab !== MeterTab.SELF_BUFFS}
-                    on:click={selfSynergyTab}>
+                    onclick={selfSynergyTab}>
                     Self Buffs
                 </button>
                 {#if $settings.general.showShields && encounter.encounterDamageStats.totalShielding > 0}
@@ -468,7 +471,7 @@
                         class="rounded-sm px-2 py-1"
                         class:bg-accent-900={tab === MeterTab.SHIELDS}
                         class:bg-gray-700={tab !== MeterTab.SHIELDS}
-                        on:click={shieldTab}>
+                        onclick={shieldTab}>
                         Shields
                     </button>
                 {/if}
@@ -477,7 +480,7 @@
                         class="rounded-sm px-2 py-1"
                         class:bg-accent-900={tab === MeterTab.TANK}
                         class:bg-gray-700={tab !== MeterTab.TANK}
-                        on:click={tankTab}>
+                        onclick={tankTab}>
                         Tanked
                     </button>
                 {/if}
@@ -486,7 +489,7 @@
                         class="rounded-sm px-2 py-1"
                         class:bg-accent-900={tab === MeterTab.BOSS}
                         class:bg-gray-700={tab !== MeterTab.BOSS}
-                        on:click={bossTab}>
+                        onclick={bossTab}>
                         Bosses
                     </button>
                 {/if}
@@ -495,7 +498,7 @@
                         class="rounded-sm px-2 py-1"
                         class:bg-accent-900={tab === MeterTab.IDENTITY}
                         class:bg-gray-700={tab !== MeterTab.IDENTITY}
-                        on:click={identityTab}>
+                        onclick={identityTab}>
                         Identity
                     </button>
                 {/if}
@@ -504,14 +507,14 @@
                         class="rounded-sm px-2 py-1"
                         class:bg-accent-900={tab === MeterTab.STAGGER}
                         class:bg-gray-700={tab !== MeterTab.STAGGER}
-                        on:click={staggerTab}>
+                        onclick={staggerTab}>
                         Stagger
                     </button>
                 {/if}
                 <button
                     class="rounded-sm bg-gray-700 px-2 py-1"
                     use:tooltip={{ content: "Take Screenshot" }}
-                    on:click={captureScreenshot}>
+                    onclick={captureScreenshot}>
                     <svg
                         class="hover:fill-accent-800 h-5 w-5 fill-zinc-300"
                         xmlns="http://www.w3.org/2000/svg"
@@ -536,7 +539,7 @@
                         <button
                             class="rounded-sm bg-gray-700 px-2 py-1"
                             use:tooltip={{ content: "Sync to logs.snow.xyz" }}
-                            on:click={upload}>
+                            onclick={upload}>
                             <svg
                                 class="hover:fill-accent-800 h-5 w-5 fill-zinc-300"
                                 xmlns="http://www.w3.org/2000/svg"
@@ -563,8 +566,8 @@
                         </a>
                     {/if}
                 {/if}
-                <div class="relative flex items-center rounded-sm bg-gray-700" on:focusout={handleDropdownFocusLoss}>
-                    <button on:click={handleDropdownClick} class="h-full px-2">
+                <div class="relative flex items-center rounded-sm bg-gray-700" onfocusout={handleDropdownFocusLoss}>
+                    <button onclick={handleDropdownClick} class="h-full px-2">
                         <svg
                             class="h-4 w-4"
                             fill="none"
@@ -579,7 +582,7 @@
                             <div class="flex w-48 flex-col divide-y-2 divide-gray-600 px-2 py-1">
                                 <button
                                     class="hover:text-accent-500 p-1 text-left"
-                                    on:click={() => {
+                                    onclick={() => {
                                         dropdownOpen = false;
                                         captureScreenshot();
                                     }}>
@@ -594,7 +597,8 @@
                                             class="peer sr-only"
                                             bind:checked={$settings.general.showNames} />
                                         <div
-                                            class="peer-checked:bg-accent-800 peer h-5 w-9 rounded-full border-gray-600 bg-gray-800 after:absolute after:left-[2px] after:top-[2px] after:h-4 after:w-4 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none" />
+                                            class="peer-checked:bg-accent-800 peer h-5 w-9 rounded-full border-gray-600 bg-gray-800 after:absolute after:left-[2px] after:top-[2px] after:h-4 after:w-4 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none">
+                                        </div>
                                     </label>
                                 </button>
                                 <button class="flex items-center justify-between bg-gray-700 p-1">
@@ -606,7 +610,8 @@
                                             class="peer sr-only"
                                             bind:checked={$settings.logs.splitPartyDamage} />
                                         <div
-                                            class="peer-checked:bg-accent-800 peer h-5 w-9 rounded-full border-gray-600 bg-gray-800 after:absolute after:left-[2px] after:top-[2px] after:h-4 after:w-4 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none" />
+                                            class="peer-checked:bg-accent-800 peer h-5 w-9 rounded-full border-gray-600 bg-gray-800 after:absolute after:left-[2px] after:top-[2px] after:h-4 after:w-4 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none">
+                                        </div>
                                     </label>
                                 </button>
                                 <button class="flex items-center justify-between bg-gray-700 p-1">
@@ -618,12 +623,13 @@
                                             class="peer sr-only"
                                             bind:checked={$settings.general.showEsther} />
                                         <div
-                                            class="peer-checked:bg-accent-800 peer h-5 w-9 rounded-full border-gray-600 bg-gray-800 after:absolute after:left-[2px] after:top-[2px] after:h-4 after:w-4 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none" />
+                                            class="peer-checked:bg-accent-800 peer h-5 w-9 rounded-full border-gray-600 bg-gray-800 after:absolute after:left-[2px] after:top-[2px] after:h-4 after:w-4 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none">
+                                        </div>
                                     </label>
                                 </button>
                                 <button
                                     class="p-1 text-left hover:text-red-600"
-                                    on:click={() => {
+                                    onclick={() => {
                                         dropdownOpen = false;
                                         deleteConfirm = true;
                                     }}>
@@ -636,7 +642,7 @@
             </div>
 
             {#if deleteConfirm}
-                <div class="fixed inset-0 z-50 bg-zinc-900 bg-opacity-80" />
+                <div class="fixed inset-0 z-50 bg-zinc-900 bg-opacity-80"></div>
                 <div class="fixed left-0 right-0 top-0 z-50 h-modal w-full items-center justify-center p-4">
                     <div class="relative top-[25%] mx-auto flex max-h-full w-full max-w-md">
                         <div
@@ -645,7 +651,7 @@
                                 type="button"
                                 class="absolute right-2.5 top-3 ml-auto whitespace-normal rounded-lg p-1.5 hover:bg-zinc-600 focus:outline-none"
                                 aria-label="Close modal"
-                                on:click={() => (deleteConfirm = false)}>
+                                onclick={() => (deleteConfirm = false)}>
                                 <span class="sr-only">Close modal</span>
                                 <svg
                                     class="h-5 w-5"
@@ -680,13 +686,13 @@
                                     <button
                                         type="button"
                                         class="mr-2 inline-flex items-center justify-center rounded-lg bg-red-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-red-800 focus:outline-none"
-                                        on:click={deleteEncounter}>
+                                        onclick={deleteEncounter}>
                                         Yes, I'm sure
                                     </button>
                                     <button
                                         type="button"
                                         class="inline-flex items-center justify-center rounded-lg bg-gray-800 bg-transparent px-5 py-2.5 text-center text-sm font-medium text-gray-400 hover:bg-zinc-700 hover:text-white focus:text-white focus:outline-none"
-                                        on:click={() => (deleteConfirm = false)}>
+                                        onclick={() => (deleteConfirm = false)}>
                                         No, cancel
                                     </button>
                                 </div>
@@ -724,13 +730,13 @@
                         <table class="relative w-full table-fixed">
                             <thead
                                 class="z-30 h-6"
-                                on:contextmenu|preventDefault={() => {
+                                oncontextmenu={preventDefault(() => {
                                     console.log("titlebar clicked");
-                                }}>
+                                })}>
                                 <tr class="bg-zinc-900">
-                                    <th class="w-7 px-2 font-normal" />
-                                    <th class="w-14 px-2 text-left font-normal" />
-                                    <th class="w-full" />
+                                    <th class="w-7 px-2 font-normal"></th>
+                                    <th class="w-14 px-2 text-left font-normal"></th>
+                                    <th class="w-full"></th>
                                     <LogDamageMeterHeader
                                         {anyDead}
                                         {multipleDeaths}
@@ -749,7 +755,7 @@
                                         class="h-7 px-2 py-1 {$settings.general.underlineHovered
                                             ? 'hover:underline'
                                             : ''}"
-                                        on:click={() => inspectPlayer(player.name)}>
+                                        onclick={() => inspectPlayer(player.name)}>
                                         <LogDamageMeterRow
                                             entity={player}
                                             percentage={playerDamagePercentages[i]}
@@ -829,8 +835,8 @@
     {/if}
 </div>
 {#if tab !== MeterTab.IDENTITY && tab !== MeterTab.STAGGER}
-    <!-- svelte-ignore a11y-no-static-element-interactions -->
-    <div class="mt-4" on:contextmenu|preventDefault={handleRightClick}>
+    <!-- svelte-ignore a11y_no_static_element_interactions -->
+    <div class="mt-4" oncontextmenu={preventDefault(handleRightClick)}>
         {#if chartType === ChartType.SKILL_LOG}
             {#if player && player.entityType === EntityType.PLAYER}
                 <OpenerSkills skills={player.skills} />
@@ -844,14 +850,14 @@
                         class="rounded-sm px-2 py-1"
                         class:bg-accent-900={chartType === ChartType.AVERAGE_DPS}
                         class:bg-gray-700={chartType !== ChartType.AVERAGE_DPS}
-                        on:click={() => (chartType = ChartType.AVERAGE_DPS)}>
+                        onclick={() => (chartType = ChartType.AVERAGE_DPS)}>
                         Average DPS
                     </button>
                     <button
                         class="rounded-sm px-2 py-1"
                         class:bg-accent-900={chartType === ChartType.ROLLING_DPS}
                         class:bg-gray-700={chartType !== ChartType.ROLLING_DPS}
-                        on:click={() => (chartType = ChartType.ROLLING_DPS)}>
+                        onclick={() => (chartType = ChartType.ROLLING_DPS)}>
                         10s DPS Window
                     </button>
                 {:else if playerName !== "" && state === MeterState.PLAYER}
@@ -861,21 +867,21 @@
         {/if}
         {#if chartType === ChartType.AVERAGE_DPS}
             {#if !$settings.general.showNames}
-                <div class="mt-2 h-[300px]" use:chartable={chartOptions} style="width: calc(100vw - 4.5rem);" />
+                <div class="mt-2 h-[300px]" use:chartable={chartOptions} style="width: calc(100vw - 4.5rem);"></div>
             {:else}
-                <div class="mt-2 h-[300px]" use:chartable={chartOptions} style="width: calc(100vw - 4.5rem);" />
+                <div class="mt-2 h-[300px]" use:chartable={chartOptions} style="width: calc(100vw - 4.5rem);"></div>
             {/if}
         {:else if chartType === ChartType.ROLLING_DPS}
             {#if !$settings.general.showNames}
-                <div class="mt-2 h-[300px]" use:chartable={chartOptions} style="width: calc(100vw - 4.5rem);" />
+                <div class="mt-2 h-[300px]" use:chartable={chartOptions} style="width: calc(100vw - 4.5rem);"></div>
             {:else}
-                <div class="mt-2 h-[300px]" use:chartable={chartOptions} style="width: calc(100vw - 4.5rem);" />
+                <div class="mt-2 h-[300px]" use:chartable={chartOptions} style="width: calc(100vw - 4.5rem);"></div>
             {/if}
         {:else if chartType === ChartType.SKILL_LOG}
             {#if player && player.entityType === EntityType.PLAYER && hasSkillCastLog}
                 <LogSkillChart {chartOptions} {player} encounterDamageStats={encounter.encounterDamageStats} />
             {:else if (player && player.entityType === EntityType.PLAYER) || focusedBoss}
-                <div class="mt-2 h-[300px]" use:chartable={chartOptions} style="width: calc(100vw - 4.5rem);" />
+                <div class="mt-2 h-[300px]" use:chartable={chartOptions} style="width: calc(100vw - 4.5rem);"></div>
             {/if}
         {/if}
     </div>
