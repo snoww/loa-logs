@@ -1,4 +1,4 @@
-import { type BuffDetails, ShieldDetails, type Skill, type StatusEffect } from "$lib/types";
+import { type BuffDetails, type Entity, ShieldDetails, type Skill, type StatusEffect } from "$lib/types";
 import { createTippy } from "svelte-tippy";
 import "tippy.js/animations/perspective-subtle.css";
 import "tippy.js/dist/svg-arrow.css";
@@ -110,6 +110,21 @@ export function generateHeaderTooltip(buff: StatusEffect, iconPath: string) {
     str += removeUnknownHtmlTags(buff.source.desc);
     str += `</div></div></div>`;
 
+    return str;
+}
+
+export function generateClassTooltip(player: Entity) {
+    let str = `<div class="flex">`;
+    if (player.arkPassiveActive) {
+        str += `<div class="mr-1"><span class="text-purple-400">[Ark Passive]</span></div>`;
+    }
+    if (player.spec) {
+        str += player.spec + " " + player.class;
+    } else {
+        str += player.class;
+    }
+
+    str += "</div>";
     return str;
 }
 

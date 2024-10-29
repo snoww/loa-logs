@@ -35,7 +35,9 @@ export const bosses = [
     "Red Doom Narkiel",
     "Covetous Master Echidna",
     "Behemoth, the Storm Commander",
-    "Behemoth, Cruel Storm Slayer"
+    "Behemoth, Cruel Storm Slayer",
+    "Akkan, Lord of Death",
+    "Aegir, the Oppressor"
 ];
 
 export async function uploadLog(id: string | number, encounter: Encounter, settings: any) {

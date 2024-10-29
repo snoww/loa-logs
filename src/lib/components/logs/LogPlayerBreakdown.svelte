@@ -5,7 +5,7 @@
     import { classIconCache, colors, settings } from "$lib/utils/settings";
     import PlayerBreakdownHeader from "../shared/PlayerBreakdownHeader.svelte";
     import { cardIds } from "$lib/constants/cards";
-    import { tooltip } from "$lib/utils/tooltip";
+    import { generateClassTooltip, tooltip } from "$lib/utils/tooltip";
     import { formatPlayerName } from "$lib/utils/strings";
     import { localPlayer, takingScreenshot } from "$lib/utils/stores";
     import { HexToRgba, RGBLinearShade } from "$lib/utils/colors";
@@ -106,7 +106,7 @@
                     class="table-cell size-5"
                     src={$classIconCache[entity.classId]}
                     alt={entity.class}
-                    use:tooltip={{ content: entity.class }} />
+                    use:tooltip={{ content: generateClassTooltip(entity) }} />
             </td>
             <td colspan="2">
                 <div class="truncate">

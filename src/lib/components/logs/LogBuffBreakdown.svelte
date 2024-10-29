@@ -6,7 +6,7 @@
     import { colors, classIconCache, settings } from "$lib/utils/settings";
     import { localPlayer, takingScreenshot } from "$lib/utils/stores";
     import { formatPlayerName } from "$lib/utils/strings";
-    import { tooltip } from "$lib/utils/tooltip";
+    import { generateClassTooltip, tooltip } from "$lib/utils/tooltip";
     import BuffTooltipDetail from "../shared/BuffTooltipDetail.svelte";
     import LogBuffBreakdownRow from "./LogBuffBreakdownRow.svelte";
 
@@ -52,7 +52,7 @@
                 class="table-cell size-5"
                 src={$classIconCache[player.classId]}
                 alt={player.class}
-                use:tooltip={{ content: player.class }} />
+                use:tooltip={{ content: generateClassTooltip(player) }} />
         </td>
         <td colspan="2">
             <div class="truncate">

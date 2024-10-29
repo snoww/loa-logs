@@ -4,7 +4,7 @@
     import { abbreviateNumberSplit, getBaseDamage, round } from "$lib/utils/numbers";
     import { colors, classIconCache, settings } from "$lib/utils/settings";
     import { formatPlayerName, getEstherFromNpcId } from "$lib/utils/strings";
-    import { tooltip } from "$lib/utils/tooltip";
+    import { generateClassTooltip, tooltip } from "$lib/utils/tooltip";
     import { localPlayer } from "$lib/utils/stores";
 
     export let entity: Entity;
@@ -98,7 +98,7 @@
             class="table-cell size-5"
             src={$classIconCache[entity.classId]}
             alt={entity.class}
-            use:tooltip={{ content: entity.class }} />
+            use:tooltip={{ content: generateClassTooltip(entity) }} />
     {/if}
 </td>
 <td colspan="2">

@@ -4,7 +4,7 @@
     import { abbreviateNumberSplit } from "$lib/utils/numbers";
     import { colors, classIconCache, settings } from "$lib/utils/settings";
     import { formatPlayerName } from "$lib/utils/strings";
-    import { tooltip } from "$lib/utils/tooltip";
+    import { generateClassTooltip, tooltip } from "$lib/utils/tooltip";
     import { cubicOut } from "svelte/easing";
     import { tweened } from "svelte/motion";
     import { localPlayer } from "$lib/utils/stores";
@@ -46,7 +46,7 @@
         class="table-cell size-5"
         src={$classIconCache[player.classId]}
         alt={player.class}
-        use:tooltip={{ content: player.class }} />
+        use:tooltip={{ content: generateClassTooltip(player) }} />
 </td>
 <td colspan="2">
     <div class="truncate">
