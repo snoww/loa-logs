@@ -2,8 +2,8 @@
     import { formatDurationFromS } from "$lib/utils/numbers";
     import { settings } from "$lib/utils/settings";
     import SettingItem from "./SettingItem.svelte";
-
 </script>
+
 <div class="flex flex-col space-y-4 divide-y-[1px]">
     <div class="mt-4 flex flex-col space-y-2 px-2">
         <label class="flex flex-col pb-4 pt-2">
@@ -56,10 +56,7 @@
             name="Damage %"
             description="Show the damage percentage of the player relative to the entire raid"
             bind:setting={$settings.logs.damagePercent} />
-        <SettingItem
-            name="DPS"
-            description="Show the current damage per second"
-            bind:setting={$settings.logs.dps} />
+        <SettingItem name="DPS" description="Show the current damage per second" bind:setting={$settings.logs.dps} />
         <SettingItem
             name="Crit Rate"
             description="Show the critical strike rate"
@@ -96,56 +93,56 @@
             name="Support Identity %"
             description="Show the percentage of damage buffed by support identity"
             bind:setting={$settings.logs.percentIdentityBySup} />
-<!--        <SettingItem-->
-<!--            name="Support Synergy %"-->
-<!--            description="Show the percentage of damage gained from support synergies"-->
-<!--            bind:setting={$settings.logs.ssyn} />-->
+        <!--        <SettingItem-->
+        <!--            name="Support Synergy %"-->
+        <!--            description="Show the percentage of damage gained from support synergies"-->
+        <!--            bind:setting={$settings.logs.ssyn} />-->
         <SettingItem
             name="Counters"
             description="Show the number of counters hit"
             bind:setting={$settings.logs.counters} />
     </div>
-<!--    <div class="pt-4">-->
-<!--        <div>RDPS</div>-->
-<!--        <div class="mt-4 flex flex-col space-y-2 px-2">-->
-<!--            <SettingItem-->
-<!--                name="Split RDPS Parties"-->
-<!--                description="Split players into their respective parties for RDPS"-->
-<!--                bind:setting={$settings.logs.rdpsSplitParty} />-->
-<!--            <SettingItem-->
-<!--                name="RDPS Received"-->
-<!--                description="Total damage received from other players"-->
-<!--                bind:setting={$settings.logs.rdpsDamageReceived} />-->
-<!--            <SettingItem-->
-<!--                name="RDPS Given"-->
-<!--                description="Total damage given to other players"-->
-<!--                bind:setting={$settings.logs.rdpsDamageGiven} />-->
-<!--            <SettingItem-->
-<!--                name="Damage Contribution %"-->
-<!--                description="Percentage of your damage that is from all other players' buffs other than your own"-->
-<!--                bind:setting={$settings.logs.rdpsContribution} />-->
-<!--            <SettingItem-->
-<!--                name="Support Damage Contribution %"-->
-<!--                description="Percentage of your damage that is from support buffs"-->
-<!--                bind:setting={$settings.logs.rdpsSContribution} />-->
-<!--            <SettingItem-->
-<!--                name="Dealer Damage Contribution %"-->
-<!--                description="Percentage of your damage that is from dealer buffs"-->
-<!--                bind:setting={$settings.logs.rdpsDContribution} />-->
-<!--            <SettingItem-->
-<!--                name="Synergy %"-->
-<!--                description="Show the percentage of damage gained from all synergies other than your own"-->
-<!--                bind:setting={$settings.logs.rdpsSyn} />-->
-<!--            <SettingItem-->
-<!--                name="Support Synergy %"-->
-<!--                description="Show the percentage of damage gained from support synergies"-->
-<!--                bind:setting={$settings.logs.rdpsSSyn} />-->
-<!--            <SettingItem-->
-<!--                name="Dealer Synergy %"-->
-<!--                description="Show the percentage of damage gained from dealer synergies"-->
-<!--                bind:setting={$settings.logs.rdpsDSyn} />-->
-<!--        </div>-->
-<!--    </div>-->
+    <!--    <div class="pt-4">-->
+    <!--        <div>RDPS</div>-->
+    <!--        <div class="mt-4 flex flex-col space-y-2 px-2">-->
+    <!--            <SettingItem-->
+    <!--                name="Split RDPS Parties"-->
+    <!--                description="Split players into their respective parties for RDPS"-->
+    <!--                bind:setting={$settings.logs.rdpsSplitParty} />-->
+    <!--            <SettingItem-->
+    <!--                name="RDPS Received"-->
+    <!--                description="Total damage received from other players"-->
+    <!--                bind:setting={$settings.logs.rdpsDamageReceived} />-->
+    <!--            <SettingItem-->
+    <!--                name="RDPS Given"-->
+    <!--                description="Total damage given to other players"-->
+    <!--                bind:setting={$settings.logs.rdpsDamageGiven} />-->
+    <!--            <SettingItem-->
+    <!--                name="Damage Contribution %"-->
+    <!--                description="Percentage of your damage that is from all other players' buffs other than your own"-->
+    <!--                bind:setting={$settings.logs.rdpsContribution} />-->
+    <!--            <SettingItem-->
+    <!--                name="Support Damage Contribution %"-->
+    <!--                description="Percentage of your damage that is from support buffs"-->
+    <!--                bind:setting={$settings.logs.rdpsSContribution} />-->
+    <!--            <SettingItem-->
+    <!--                name="Dealer Damage Contribution %"-->
+    <!--                description="Percentage of your damage that is from dealer buffs"-->
+    <!--                bind:setting={$settings.logs.rdpsDContribution} />-->
+    <!--            <SettingItem-->
+    <!--                name="Synergy %"-->
+    <!--                description="Show the percentage of damage gained from all synergies other than your own"-->
+    <!--                bind:setting={$settings.logs.rdpsSyn} />-->
+    <!--            <SettingItem-->
+    <!--                name="Support Synergy %"-->
+    <!--                description="Show the percentage of damage gained from support synergies"-->
+    <!--                bind:setting={$settings.logs.rdpsSSyn} />-->
+    <!--            <SettingItem-->
+    <!--                name="Dealer Synergy %"-->
+    <!--                description="Show the percentage of damage gained from dealer synergies"-->
+    <!--                bind:setting={$settings.logs.rdpsDSyn} />-->
+    <!--        </div>-->
+    <!--    </div>-->
     <div class="pt-4">
         <div>Skill Breakdown</div>
         <div class="mt-4 flex flex-col space-y-2 px-2">

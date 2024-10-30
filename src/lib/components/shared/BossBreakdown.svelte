@@ -50,13 +50,12 @@
                     <BossBreakdownRow
                         {skill}
                         abbreviatedSkillDamage={abbreviatedSkillDamage[i]}
-                        skillDps={skillDps[i]} 
+                        skillDps={skillDps[i]}
                         width={skillDamagePercentages[i]}
                         index={i}
                         {duration}
                         totalDamageDealt={boss.damageStats.damageDealt}
-                        {tween}
-                        />
+                        {tween} />
                 </tr>
             {/each}
         {/if}

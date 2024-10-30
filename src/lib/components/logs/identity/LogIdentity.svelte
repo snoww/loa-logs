@@ -11,7 +11,7 @@
 </script>
 
 {#if localPlayer.class === "Arcanist"}
-    <Arcana {identityStats} {duration} player={localPlayer}/>
+    <Arcana {identityStats} {duration} player={localPlayer} />
 {:else if localPlayer.class === "Artist" || localPlayer.class === "Bard"}
     <ArtistBard className={localPlayer.class} {identityStats} />
 {:else}

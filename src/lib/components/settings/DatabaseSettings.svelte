@@ -163,9 +163,7 @@
                     <div>
                         Optimizing Database. Do <span class="font-bold">NOT</span> close the app.
                     </div>
-                    <div>
-                        App might become unresponsive, please be patient.
-                    </div>
+                    <div>App might become unresponsive, please be patient.</div>
                     <div class="">This might take a while...</div>
                 </div>
             </div>

@@ -25,7 +25,9 @@
         takingScreenshot,
         raidGates,
         localPlayer,
-        rdpsEventDetails, uploadErrorStore, uploadErrorMessage
+        rdpsEventDetails,
+        uploadErrorStore,
+        uploadErrorMessage
     } from "$lib/utils/stores";
     import LogIdentity from "./identity/LogIdentity.svelte";
     import LogStagger from "./stagger/LogStagger.svelte";

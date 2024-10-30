@@ -34,6 +34,6 @@
         {duration}
         width={damagePercentage}
         meterSettings={$settings.logs}
-        shadow={!$takingScreenshot} 
-        {index}/>
+        shadow={!$takingScreenshot}
+        {index} />
 </tr>

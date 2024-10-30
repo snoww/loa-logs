@@ -20,4 +20,4 @@
     }
 </script>
 
-<BuffSkillBreakdownRow {skill} {color} {groupedSynergies} width={$tweenedValue} {index}/>
+<BuffSkillBreakdownRow {skill} {color} {groupedSynergies} width={$tweenedValue} {index} />

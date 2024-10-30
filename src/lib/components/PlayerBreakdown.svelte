@@ -68,7 +68,9 @@
 <tbody on:contextmenu|preventDefault={handleRightClick} class="relative z-10">
     {#if entity}
         {#each skills as skill, i (skill.id)}
-            <tr class="h-7 px-2 py-1 text-3xs {$settings.general.underlineHovered ? 'hover:underline' : ''}" animate:flip={{ duration: 200 }}>
+            <tr
+                class="h-7 px-2 py-1 text-3xs {$settings.general.underlineHovered ? 'hover:underline' : ''}"
+                animate:flip={{ duration: 200 }}>
                 <PlayerBreakdownRow
                     {skill}
                     {color}
@@ -81,8 +83,8 @@
                     playerDamageDealt={entity.damageStats.damageDealt}
                     damagePercentage={skillDamagePercentages[i]}
                     skillDps={skillDps[i]}
-                    {duration} 
-                    index={i}/>
+                    {duration}
+                    index={i} />
             </tr>
         {/each}
     {/if}

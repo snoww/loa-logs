@@ -120,7 +120,7 @@
         {#if entity.damageStats.deaths > 0}
             {entity.damageStats.deaths}
         {:else}
-         -
+            -
         {/if}
     </td>
 {/if}
@@ -161,20 +161,20 @@
 {/if}
 {#if anySupportBuff && meterSettings.percentBuffBySup}
     <td class="px-1 text-center">
-        {round((entity.damageStats.buffedBySupport / damageWithoutHa) * 100)}<span
-            class="text-3xs text-gray-300">%</span>
+        {round((entity.damageStats.buffedBySupport / damageWithoutHa) * 100)}<span class="text-3xs text-gray-300"
+            >%</span>
     </td>
 {/if}
 {#if anySupportBrand && meterSettings.percentBrand}
     <td class="px-1 text-center">
-        {round((entity.damageStats.debuffedBySupport / damageWithoutHa) * 100)}<span
-            class="text-3xs text-gray-300">%</span>
+        {round((entity.damageStats.debuffedBySupport / damageWithoutHa) * 100)}<span class="text-3xs text-gray-300"
+            >%</span>
     </td>
 {/if}
 {#if anySupportIdentity && meterSettings.percentIdentityBySup}
     <td class="px-1 text-center">
-        {round((entity.damageStats.buffedByIdentity / damageWithoutHa) * 100)}<span
-            class="text-3xs text-gray-300">%</span>
+        {round((entity.damageStats.buffedByIdentity / damageWithoutHa) * 100)}<span class="text-3xs text-gray-300"
+            >%</span>
     </td>
 {/if}
 {#if anyRdpsData && meterSettings.ssyn}

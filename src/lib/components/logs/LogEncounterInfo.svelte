@@ -24,7 +24,7 @@
                 <span class="text-lime-400">[Cleared]</span>
             {/if}
             {#if bossOnlyDamage}
-                <BossOnlyDamage/>
+                <BossOnlyDamage />
             {/if}
             <span class="font-medium">
                 {#if $settings.general.showDifficulty && difficulty}

@@ -43,5 +43,4 @@
     {duration}
     width={$tweenedValue}
     meterSettings={$settings.meter}
-    {index}
-    />
+    {index} />

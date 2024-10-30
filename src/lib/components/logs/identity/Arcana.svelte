@@ -9,7 +9,9 @@
     export let player: Entity;
     export let duration: number;
 
-    let cards = Object.values(player.skills).sort((a, b) => b.casts - a.casts).filter((skill) => cardIds.includes(skill.id) || skill.id === 19282);
+    let cards = Object.values(player.skills)
+        .sort((a, b) => b.casts - a.casts)
+        .filter((skill) => cardIds.includes(skill.id) || skill.id === 19282);
     let totalDraws = cards.reduce((acc, skill) => acc + skill.casts, 0);
 
     let data = fillMissingElapsedTimes(identityStats.log);
@@ -96,9 +98,9 @@
                         str += cardMap[cards[0]];
                     }
                     if (cards[1] !== 0) {
-                        str += " | " +cardMap[cards[1]];
+                        str += " | " + cardMap[cards[1]];
                     } else {
-                        str += " |"
+                        str += " |";
                     }
                     return str;
                 })

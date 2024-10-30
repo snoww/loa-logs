@@ -104,10 +104,10 @@
         <div>Click on a skill cast to show details.</div>
     {:else if skill}
         <div class="px-1 pb-2">
-            <div class="flex items-center pt-1 pb-2">
+            <div class="flex items-center pb-2 pt-1">
                 <button
                     use:tooltip={{ content: "Go to highest damage cast." }}
-                    class="mr-4 p-1 bg-accent-500 hover:bg-accent-800 rounded-md text-sm"
+                    class="bg-accent-500 hover:bg-accent-800 mr-4 rounded-md p-1 text-sm"
                     on:click={() => {
                         $focusedSkillCast.cast = getHighestDamageCastIndex();
                     }}>

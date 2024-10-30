@@ -27,7 +27,6 @@
     $: {
         tweenedValue.set(width);
     }
-
 </script>
 
 <td class="px-2" colspan="2">

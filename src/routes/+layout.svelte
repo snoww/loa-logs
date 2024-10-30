@@ -1,6 +1,6 @@
 <script lang="ts">
     import "@fontsource-variable/inter";
-    import '@fontsource-variable/jetbrains-mono';
+    import "@fontsource-variable/jetbrains-mono";
     import "../app.css";
     import { onDestroy, onMount } from "svelte";
     import { listen, type UnlistenFn } from "@tauri-apps/api/event";
@@ -89,7 +89,7 @@
             await invoke("write_log", { message: e });
         }
     }
-    
+
     $: {
         if ($settings.general.logScale === "1") {
             document.documentElement.style.setProperty("font-size", "medium");
@@ -101,7 +101,6 @@
             document.documentElement.style.setProperty("font-size", "small");
         }
     }
-
 </script>
 
 <div class={$settings.general.accentColor}>

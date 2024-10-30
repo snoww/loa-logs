@@ -42,7 +42,6 @@ export const bossList = [
     // "Prunya",
     // "Lauriel",
 
-
     // guardian raids
     "Argeos",
     "Veskal",

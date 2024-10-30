@@ -22,7 +22,6 @@
         easing: cubicOut
     });
 
-    
     $: {
         tweenedValue.set(percentage);
         if (Object.hasOwn($colors, player.class)) {
@@ -32,7 +31,7 @@
                 color = $colors[player.class].color;
             }
         }
-        playerName = formatPlayerName(player, $settings.general);;
+        playerName = formatPlayerName(player, $settings.general);
         if (!$settings.meter.showClassColors) {
             alpha = 0;
         } else {

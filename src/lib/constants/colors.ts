@@ -27,7 +27,7 @@ export const classColors: ClassColors = {
     Machinist: { color: "#3b4292", defaultColor: "#3b4292" }, // 505
     Gunslinger: { color: "#6bcec2", defaultColor: "#6bcec2" }, // 512
     Artist: { color: "#a34af0", defaultColor: "#a34af0" }, // 602
-    Aeromancer: { color: "#084ba3", defaultColor: "#084ba3" }, // 603
+    Aeromancer: { color: "#084ba3", defaultColor: "#084ba3" } // 603
     // Alchemist: { color: "#3a945e", defaultColor: "#3a945e" } // 604
 };
 

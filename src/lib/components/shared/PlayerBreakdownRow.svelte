@@ -31,10 +31,7 @@
         if (skill.hits !== 0) {
             critDmgPercentage = round((skill.critDamage / skill.totalDamage) * 100);
             critPercentage = round((skill.crits / skill.hits) * 100);
-            if (
-                meterSettings.positionalDmgPercent &&
-                (skill.frontAttackDamage > 0 || skill.backAttackDamage > 0)
-            ) {
+            if (meterSettings.positionalDmgPercent && (skill.frontAttackDamage > 0 || skill.backAttackDamage > 0)) {
                 faPercentage = round((skill.frontAttackDamage / skill.totalDamage) * 100);
                 baPercentage = round((skill.backAttackDamage / skill.totalDamage) * 100);
             } else {
@@ -126,7 +123,9 @@
         {abbreviateNumberSplit(skill.totalDamage / skill.hits)[0]}<span class="text-3xs text-gray-300"
             >{abbreviateNumberSplit(skill.totalDamage / skill.hits)[1]}</span>
     </td>
-    <td class="px-1 text-center" use:tooltip={{ content: Math.round(skill.totalDamage / skill.casts).toLocaleString() }}>
+    <td
+        class="px-1 text-center"
+        use:tooltip={{ content: Math.round(skill.totalDamage / skill.casts).toLocaleString() }}>
         {abbreviateNumberSplit(skill.totalDamage / skill.casts)[0]}<span class="text-3xs text-gray-300"
             >{abbreviateNumberSplit(skill.totalDamage / skill.casts)[1]}</span>
     </td>
@@ -137,14 +136,12 @@
             >{abbreviateNumberSplit(skill.maxDamage)[1]}</span>
     </td>
     {#if skill.maxDamageCast}
-    <td class="px-1 text-center" use:tooltip={{ content: skill.maxDamageCast.toLocaleString() }}>
-        {abbreviateNumberSplit(skill.maxDamageCast)[0]}<span class="text-3xs text-gray-300"
-            >{abbreviateNumberSplit(skill.maxDamageCast)[1]}</span>
-    </td>
+        <td class="px-1 text-center" use:tooltip={{ content: skill.maxDamageCast.toLocaleString() }}>
+            {abbreviateNumberSplit(skill.maxDamageCast)[0]}<span class="text-3xs text-gray-300"
+                >{abbreviateNumberSplit(skill.maxDamageCast)[1]}</span>
+        </td>
     {:else}
-    <td class="px-1 text-center">
-        -
-    </td>
+        <td class="px-1 text-center"> - </td>
     {/if}
 {/if}
 {#if meterSettings.breakdown.casts}

@@ -119,9 +119,9 @@ export interface Entity {
 }
 
 export interface ArkPassiveData {
-    evolution?: Array<ArkPassiveNode>,
-    enlightenment?: Array<ArkPassiveNode>,
-    leap?: Array<ArkPassiveNode>,
+    evolution?: Array<ArkPassiveNode>;
+    enlightenment?: Array<ArkPassiveNode>;
+    leap?: Array<ArkPassiveNode>;
 }
 
 export interface ArkPassiveNode {
@@ -361,7 +361,6 @@ export enum ShieldTab {
     E_GIVEN,
     E_RECEIVED
 }
-
 
 export interface ClassMap {
     [key: number]: string;

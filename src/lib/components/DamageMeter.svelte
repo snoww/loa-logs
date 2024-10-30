@@ -136,7 +136,7 @@
                 }
 
                 let id = event.payload.toString();
-                const encounter = await invoke("load_encounter", { id }) as Encounter;
+                const encounter = (await invoke("load_encounter", { id })) as Encounter;
                 await uploadLog(id, encounter, $settings.sync);
             });
             let adminErrorEvent = await listen("admin", () => {

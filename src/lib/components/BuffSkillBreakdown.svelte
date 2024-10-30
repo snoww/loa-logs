@@ -70,7 +70,11 @@
                 </td>
             {/each}
         {/if}
-        <div class="absolute left-0 -z-10 h-7 w-full px-2 py-1" style="background-color: {$settings.general.splitLines ? RGBLinearShade(HexToRgba(color, 0.6)) : HexToRgba(color, 0.6)}" />
+        <div
+            class="absolute left-0 -z-10 h-7 w-full px-2 py-1"
+            style="background-color: {$settings.general.splitLines
+                ? RGBLinearShade(HexToRgba(color, 0.6))
+                : HexToRgba(color, 0.6)}" />
     </tr>
 {/if}
 {#each skills as skill, i (skill.id)}

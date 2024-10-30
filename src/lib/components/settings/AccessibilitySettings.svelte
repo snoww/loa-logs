@@ -28,7 +28,6 @@
             $settings.general.startOnBoot = await invoke("check_start_on_boot");
         })();
     }
-
 </script>
 
 <div class="flex flex-col space-y-4 divide-y-[1px]">
@@ -113,9 +112,7 @@
                         class="text-accent-500 size-5 rounded bg-zinc-700 focus:ring-0 focus:ring-offset-0" />
                     <div class="ml-5">
                         <div class="text-gray-100">Blur Meter Background</div>
-                        <div class="text-xs text-gray-300">
-                            Adds background blur effect to live meter.
-                        </div>
+                        <div class="text-xs text-gray-300">Adds background blur effect to live meter.</div>
                     </div>
                 </label>
             {/if}

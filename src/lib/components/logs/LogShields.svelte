@@ -37,7 +37,6 @@
             const remToPx = parseFloat(getComputedStyle(document.documentElement).fontSize);
             partyWidths = calculatePartyWidth(partyGroupedShields, remToPx, vw);
         }
-
     }
 </script>
 

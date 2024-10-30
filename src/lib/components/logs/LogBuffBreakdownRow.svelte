@@ -10,4 +10,10 @@
     export let index: number;
 </script>
 
-<BuffSkillBreakdownRow {skill} {color} {groupedSynergies} width={damagePercentage} shadow={!$takingScreenshot} {index}/>
+<BuffSkillBreakdownRow
+    {skill}
+    {color}
+    {groupedSynergies}
+    width={damagePercentage}
+    shadow={!$takingScreenshot}
+    {index} />

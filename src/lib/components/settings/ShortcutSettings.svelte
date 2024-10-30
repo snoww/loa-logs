@@ -6,8 +6,8 @@
             registerShortcuts($settings.shortcuts);
         })();
     }
-
 </script>
+
 <div class="flex flex-col space-y-4 divide-y-[1px]">
     <div class="mt-4 flex flex-col space-y-2 px-2">
         <div class="flex justify-between">

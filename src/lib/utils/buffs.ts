@@ -15,7 +15,8 @@ import {
     ShieldDetails,
     type EncounterDamageStats,
     type StatusEffectWithId,
-    type SkillChartSupportDamage, type DamageStats
+    type SkillChartSupportDamage,
+    type DamageStats
 } from "$lib/types";
 import { round } from "./numbers";
 import { getSkillIcon } from "./strings";
@@ -204,13 +205,12 @@ export function getSynergyPercentageDetailsSum(
 
     const synergyPercentageDetails: BuffDetails[] = [];
     groupedSynergies.forEach((synergies, key) => {
-
         let synergyDamage = 0;
         const buffs = new BuffDetails();
         buffs.id = key;
         let isHat = false;
         synergies.forEach((syn, id) => {
-             isHat = supportSkills.haTechnique.includes(id);
+            isHat = supportSkills.haTechnique.includes(id);
 
             const buff = new Buff(syn.source.icon, "", syn.source.skill?.icon);
             addBardBubbles(key, buff, syn);
@@ -438,7 +438,9 @@ export function getPartyBuffs(
                         }
                     });
                     if (buffDamage > 0) {
-                        buffDetails.percentage = round((buffDamage / (isHat ? damageDealtWithHa : damageDealtWithoutHa)) * 100);
+                        buffDetails.percentage = round(
+                            (buffDamage / (isHat ? damageDealtWithHa : damageDealtWithoutHa)) * 100
+                        );
                     }
 
                     playerBuffs.push(buffDetails);
@@ -534,7 +536,7 @@ export const supportSkills = {
         21142, // Serenade of Courage 3
         21143, // Serenade of Courage
         31050, // Moonfall 10%
-        31051, // Moonfall 5%
+        31051 // Moonfall 5%
         // 36800 // Holy Aura
     ],
     identityGrp: [
@@ -666,17 +668,18 @@ function includeBuff(
     supportBuffs: SkillChartSupportDamage,
     playerClassId: number,
     buffType: string,
-    buffFilter: boolean,
+    buffFilter: boolean
 ) {
     let key = "";
-    if (buffFilter &&
+    if (
+        buffFilter &&
         ((StatusEffectBuffTypeFlags.DMG |
             StatusEffectBuffTypeFlags.CRIT |
             StatusEffectBuffTypeFlags.ATKSPEED |
             StatusEffectBuffTypeFlags.MOVESPEED |
             StatusEffectBuffTypeFlags.COOLDOWN) &
             buff.buffType) ===
-        0
+            0
     ) {
         return;
     }
@@ -698,8 +701,8 @@ function includeBuff(
 
         addToMap(key, buffId, buff, map);
     } else if (buffType === "self") {
-        if (isPartySynergy(buff)) {}
-        else if (isSelfSkillSynergy(buff)) {
+        if (isPartySynergy(buff)) {
+        } else if (isSelfSkillSynergy(buff)) {
             if (buff.buffCategory === "ability") {
                 key = `${buff.uniqueGroup ? buff.uniqueGroup : buffId}`;
             } else {
@@ -713,7 +716,7 @@ function includeBuff(
             addToMap(key, buffId, buff, map);
         } else if (isSetSynergy(buff)) {
             addToMap(`_set_${buff.source.setName}`, buffId, buff, map);
-        }  
+        }
     } else if (buffType === "misc") {
         if (isSelfItemSynergy(buff)) {
             if (buff.buffCategory === "bracelet") {
@@ -741,9 +744,8 @@ function addToMap(key: string, buffId: number, buff: StatusEffect, map: Map<stri
 }
 
 export const hyperAwakeningIds: Set<number> = new Set([
-    16720, 16730, 18240, 18250, 17250, 17260, 36230, 36240, 45820, 45830,
-    19360, 19370, 20370, 20350, 21320, 21330, 37380, 37390, 22360, 22370,
-    23400, 23410, 24300, 24310, 34620, 34630, 39340, 39350, 47300, 47310,
-    25410, 25420, 27910, 27920, 26940, 26950, 46620, 46630, 29360, 29370,
-    30320, 30330, 35810, 35820, 38320, 38330, 31920, 31930, 32290, 32280
+    16720, 16730, 18240, 18250, 17250, 17260, 36230, 36240, 45820, 45830, 19360, 19370, 20370, 20350, 21320, 21330,
+    37380, 37390, 22360, 22370, 23400, 23410, 24300, 24310, 34620, 34630, 39340, 39350, 47300, 47310, 25410, 25420,
+    27910, 27920, 26940, 26950, 46620, 46630, 29360, 29370, 30320, 30330, 35810, 35820, 38320, 38330, 31920, 31930,
+    32290, 32280
 ]);

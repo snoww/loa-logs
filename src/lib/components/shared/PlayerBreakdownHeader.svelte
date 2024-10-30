@@ -29,16 +29,16 @@
 {/if}
 {#if hasFrontAttacks && meterSettings.breakdown.frontAtk}
     {#if meterSettings.positionalDmgPercent}
-    <th class="w-12 font-normal" use:tooltip={{ content: "% Damage from Front Attack" }}>F.A</th>
+        <th class="w-12 font-normal" use:tooltip={{ content: "% Damage from Front Attack" }}>F.A</th>
     {:else}
-    <th class="w-12 font-normal" use:tooltip={{ content: "Front Attack %" }}>F.A</th>
+        <th class="w-12 font-normal" use:tooltip={{ content: "Front Attack %" }}>F.A</th>
     {/if}
 {/if}
 {#if hasBackAttacks && meterSettings.breakdown.backAtk}
     {#if meterSettings.positionalDmgPercent}
-    <th class="w-12 font-normal" use:tooltip={{ content: "% Damage from Back Attack" }}>B.A</th>
+        <th class="w-12 font-normal" use:tooltip={{ content: "% Damage from Back Attack" }}>B.A</th>
     {:else}
-    <th class="w-12 font-normal" use:tooltip={{ content: "Back Attack %" }}>B.A</th>
+        <th class="w-12 font-normal" use:tooltip={{ content: "Back Attack %" }}>B.A</th>
     {/if}
 {/if}
 {#if anySupportBuff && meterSettings.breakdown.percentBuffBySup}

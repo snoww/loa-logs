@@ -175,7 +175,7 @@ export const defaultSettings = {
         }
     },
     buffs: {
-        default: true,
+        default: true
     },
     sync: {
         enabled: false,
@@ -191,7 +191,7 @@ export const update = {
     available: false,
     manifest: undefined,
     dismissed: false,
-    isNotice: false,
+    isNotice: false
 };
 
 const settingsStore = (key: string, defaultSettings: object) => {
@@ -241,9 +241,12 @@ export async function registerShortcuts(shortcuts: any) {
             });
         }
         if (shortcuts.showLatestEncounter.modifier && shortcuts.showLatestEncounter.key) {
-            await register(shortcuts.showLatestEncounter.modifier + "+" + shortcuts.showLatestEncounter.key, async () => {
-                await invoke("open_most_recent_encounter");
-            });
+            await register(
+                shortcuts.showLatestEncounter.modifier + "+" + shortcuts.showLatestEncounter.key,
+                async () => {
+                    await invoke("open_most_recent_encounter");
+                }
+            );
         }
         if (shortcuts.resetSession.modifier && shortcuts.resetSession.key) {
             await register(shortcuts.resetSession.modifier + "+" + shortcuts.resetSession.key, async () => {
@@ -262,18 +265,21 @@ export async function registerShortcuts(shortcuts: any) {
         }
 
         if (shortcuts.disableClickthrough.modifier && shortcuts.disableClickthrough.key) {
-            await register(shortcuts.disableClickthrough.modifier + "+" + shortcuts.disableClickthrough.key, async () => {
-                // if meter is clickthrough, disable it
-                if (get(clickthroughStore)) {
-                    await invoke("set_clickthrough", { set: false });
-                    await invoke("write_log", { message: "disabling clickthrough" });
-                    clickthroughStore.update(() => false);
-                } else {
-                    await invoke("set_clickthrough", { set: true });
-                    await invoke("write_log", { message: "enabling clickthrough" });
-                    clickthroughStore.update(() => true);
+            await register(
+                shortcuts.disableClickthrough.modifier + "+" + shortcuts.disableClickthrough.key,
+                async () => {
+                    // if meter is clickthrough, disable it
+                    if (get(clickthroughStore)) {
+                        await invoke("set_clickthrough", { set: false });
+                        await invoke("write_log", { message: "disabling clickthrough" });
+                        clickthroughStore.update(() => false);
+                    } else {
+                        await invoke("set_clickthrough", { set: true });
+                        await invoke("write_log", { message: "enabling clickthrough" });
+                        clickthroughStore.update(() => true);
+                    }
                 }
-            });
+            );
         }
     } catch (error) {
         await invoke("write_log", { message: "[live_meter::register_shortcuts]" + error });

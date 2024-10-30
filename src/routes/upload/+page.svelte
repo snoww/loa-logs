@@ -119,7 +119,7 @@
                     Check
                 </button>
             </div>
-            <div class="{$settings.sync.validToken ? 'text-green-400' : 'text-red-500'}">
+            <div class={$settings.sync.validToken ? "text-green-400" : "text-red-500"}>
                 {message}
             </div>
         </div>
@@ -168,8 +168,16 @@
             <div class="flex items-center space-x-2">
                 <div>Sync Past Logs:</div>
                 {#if !$syncStore.syncing}
-                    <button class="rounded-md bg-zinc-600 p-1 hover:bg-zinc-700" on:click={() => {syncPastLogs();}}>Sync</button>
-                    <button class="rounded-md bg-zinc-600 p-1 hover:bg-zinc-700" on:click={() => {syncPastLogs(true);}}>Force Re-sync</button>
+                    <button
+                        class="rounded-md bg-zinc-600 p-1 hover:bg-zinc-700"
+                        on:click={() => {
+                            syncPastLogs();
+                        }}>Sync</button>
+                    <button
+                        class="rounded-md bg-zinc-600 p-1 hover:bg-zinc-700"
+                        on:click={() => {
+                            syncPastLogs(true);
+                        }}>Force Re-sync</button>
                 {:else}
                     <button class="rounded-md bg-zinc-600 p-1 hover:bg-zinc-700" disabled>Syncing...</button>
                     <button

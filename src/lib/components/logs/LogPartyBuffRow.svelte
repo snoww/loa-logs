@@ -23,7 +23,7 @@
     }
 
     $: {
-        playerName = formatPlayerName(player, $settings.general);;
+        playerName = formatPlayerName(player, $settings.general);
     }
 </script>
 

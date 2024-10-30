@@ -1,7 +1,14 @@
 <script lang="ts">
     import LogDamageMeter from "$lib/components/logs/LogDamageMeter.svelte";
     import { formatTimestamp } from "$lib/utils/numbers";
-    import { backNavStore, ifaceChangedStore, raidGates, screenshotAlert, screenshotError, searchStore } from "$lib/utils/stores";
+    import {
+        backNavStore,
+        ifaceChangedStore,
+        raidGates,
+        screenshotAlert,
+        screenshotError,
+        searchStore
+    } from "$lib/utils/stores";
     import { invoke } from "@tauri-apps/api/tauri";
     import { onMount } from "svelte";
     import Notification from "$lib/components/shared/Notification.svelte";
@@ -44,28 +51,22 @@
                     use:tooltip={{ content: `${fav ? "Remove from" : "Add to"} Favorites` }}
                     on:click={toggle_favorite}>
                     {#if fav}
-                        <svg
-                            class="size-7 fill-yellow-400"
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 -960 960 960"
+                        <svg class="size-7 fill-yellow-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"
                             ><path
                                 d="m235-82.5 64.5-279.093L83-549l286-25 111-263 111.5 263L877-549 660.484-361.593 725.436-82.5 480.218-230.61 235-82.5Z" /></svg>
                     {:else}
-                        <svg
-                            class="size-7 fill-gray-200"
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 -960 960 960"
+                        <svg class="size-7 fill-gray-200" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"
                             ><path
                                 d="m321-202.5 159-95 159 96-42.5-180 140-121.5L552-519.5l-72-170-71.505 169.676L224-504l140 121-43 180.5Zm-86 120 64.5-279.093L83-549l286-25 111-263 111.5 263L877-549 660.484-361.593 725.436-82.5 480.218-230.61 235-82.5Zm245-353Z" /></svg>
                     {/if}
                 </button>
-                <div class="truncate pl-1 flex items-center space-x-1">
+                <div class="flex items-center space-x-1 truncate pl-1">
                     {#if $settings.general.showDifficulty && encounter.difficulty}
                         <span class:text-lime-400={encounter.cleared} use:tooltip={{ content: "Cleared" }}
                             >#{data.id.toLocaleString()}:
                         </span>
                         {#if encounter.bossOnlyDamage}
-                            <BossOnlyDamage width={2}/>
+                            <BossOnlyDamage width={2} />
                         {/if}
                         <DifficultyLabel difficulty={encounter.difficulty} />
                         {#if $settings.general.showGate && raidGate}
@@ -77,7 +78,7 @@
                     {:else}
                         <span class:text-lime-400={encounter.cleared}>#{data.id.toLocaleString()}: </span>
                         {#if encounter.bossOnlyDamage}
-                            <BossOnlyDamage width={2}/>
+                            <BossOnlyDamage width={2} />
                         {/if}
                         {#if $settings.general.showGate && raidGate}
                             <span class="text-sky-200">[{raidGate}]</span>

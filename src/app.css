@@ -68,7 +68,7 @@
         --fill-accent-500: rgb(171, 145, 250);
         --fill-accent-800: rgb(145, 122, 201);
         --border-accent-500: rgb(171, 145, 250);
-        --accent-accent-700:rgb(145, 122, 201);
+        --accent-accent-700: rgb(145, 122, 201);
         --ring-accent-500: rgb(171, 145, 250);
     }
     .theme-purple {
@@ -182,7 +182,7 @@
     }
 
     .tooltip-scroll::-webkit-scrollbar {
-        @apply !right-0 !block !size-1.5 !bg-white
+        @apply !right-0 !block !size-1.5 !bg-white;
     }
 
     .tooltip-scroll::-webkit-scrollbar-thumb {

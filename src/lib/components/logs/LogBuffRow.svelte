@@ -26,7 +26,7 @@
     }
 
     $: {
-        playerName = formatPlayerName(player, $settings.general);;
+        playerName = formatPlayerName(player, $settings.general);
     }
 
     let damageDealt = player.damageStats.damageDealt;
@@ -55,7 +55,9 @@
                     buff.buffs.push(
                         new Buff(
                             syn.source.icon,
-                            round((player.damageStats.debuffedBy[id] / (isHat ? damageDealt : damageDealtWithoutHA)) * 100),
+                            round(
+                                (player.damageStats.debuffedBy[id] / (isHat ? damageDealt : damageDealtWithoutHA)) * 100
+                            ),
                             syn.source.skill?.icon
                         )
                     );

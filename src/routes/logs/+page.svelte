@@ -19,7 +19,9 @@
         raidGates,
         searchFilter,
         searchStore,
-        selectedEncounters, uploadErrorMessage, uploadErrorStore
+        selectedEncounters,
+        uploadErrorMessage,
+        uploadErrorStore
     } from "$lib/utils/stores";
     import { tooltip } from "$lib/utils/tooltip";
     import { invoke } from "@tauri-apps/api";
@@ -429,7 +431,10 @@
                     <span class="text-sm text-gray-400"
                         >Showing <span class="font-semibold dark:text-white"
                             >{($pageStore - 1) * $settings.general.logsPerPage + 1}-{Math.min(
-                                ($pageStore - 1) * $settings.general.logsPerPage + 1 + $settings.general.logsPerPage - 1,
+                                ($pageStore - 1) * $settings.general.logsPerPage +
+                                    1 +
+                                    $settings.general.logsPerPage -
+                                    1,
                                 totalEncounters
                             )}</span>
                         of
