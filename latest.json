@@ -1,11 +1,11 @@
 {
-    "version": "v1.17.6",
-    "notes": "### v1.17.6\n#### BUG FIXES AND IMPROVEMENTS\n- fix some skills showing up wrong or missing\n\nsend bug reports/suggestions to [ramen shop server](https://discord.gg/RXvTMV2YHu)",
-    "pub_date": "2024-10-13T01:45:30.794Z",
+    "version": "v1.18.0",
+    "notes": "### v1.18.0\n\n#### NOTES\n\n- thanks for the amazing work from molenzwiebel, poont, and several others, for the quick work on getting around the new damage data\n  encryption.\n- meter still does NOT touch the game files whatsoever. it does NOT read game memory, or tamper with easy anti-cheat.\n- AGS can still detect meter like they always have. it always has been a gray area, however they have never issued any\n  bans for it.\n- due to the workarounds, meter MUST be opened before entering the raid\n- due to the workarounds methods used, meter CANNOT be run in a vm anymore, raw socket also no longer works. meter should continue to\n  work with vpns, and ping reducers like exitlag.\n\n#### NEW FEATURES\n\n- updated meter for aegir patch\n- gem data added to skills on raid clear\n- class spec data added to players on raid clear\n- added a bunch of new tooltips to dps data\n\n#### BUG FIXES AND IMPROVEMENTS\n\n- fixed arcana knight card not showing\n- fixed surge skill showing only skill id\n- fixed artist t-skill buff showing in the wrong order\n- improved local player detection\n\nsend bug reports/suggestions to [ramen shop server](https://discord.gg/RXvTMV2YHu)\n",
+    "pub_date": "2024-10-30T08:38:33.709Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.17.6/LOA.Logs_1.17.6_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmRXTE51Z1VnQTMxd29oRWZDa0RrdlFXUm9rRjE0aHE5cVFvM3h1YkN3d0doRDJwSkd6ZXpPVGpua3JJS0FMNXFPSmNQQ2hwOEQwVlJwcFVvbjZYVmdVPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzI4Nzg0MDEwCWZpbGU6TE9BIExvZ3NfMS4xNy42X3g2NC1zZXR1cC5uc2lzLnppcApEOUg5MHM0Q0VuT1ZQd0JzWnYwMnkyVGZYcTRlS3BFaitteHhwZ3REVkpudFEzMkNTeW5WRGpTbzJKOVZOQ0lFUUZMY3hmLzVUZFZGS0syMlhzS1dBZz09Cg=="
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.18.0/LOA.Logs_1.18.0_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmVDWVg1aG14UHBmVDA0OGxHUW9vQnp6YlI5N2FmNWU3cVpCcmp0dXVGdmVIdjVPUk81ckxGeEVFeE9CYi84dHBZbHBrRUhMQzZFVWNvaUNQT1I2TVFNPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzMwMzEyNTMxCWZpbGU6TE9BIExvZ3NfMS4xOC4wX3g2NC1zZXR1cC5uc2lzLnppcApCb2d4clp4TnZ4K3UvVzUyQWpPSzNxSWRORGlibEo1VFJQNVNJV003M1pmYlc4UmRJUzliSHIvbGx1TG83ejNmSkZ3SXVIVXN0dXU3bkhyd1BwTEJDZz09Cg=="
         }
     }
 }
