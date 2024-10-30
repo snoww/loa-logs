@@ -1,9 +1,6 @@
 use crate::parser::id_tracker::IdTracker;
 use crate::parser::models::EntityType::*;
-use crate::parser::models::{
-    EncounterEntity, EntityType, Esther, PassiveOption, ESTHER_DATA, NPC_DATA,
-    SKILL_DATA,
-};
+use crate::parser::models::{EncounterEntity, EntityType, Esther, LocalInfo, LocalPlayer, PassiveOption, ESTHER_DATA, NPC_DATA, SKILL_DATA};
 use crate::parser::party_tracker::PartyTracker;
 use crate::parser::status_tracker::{
     build_status_effect, StatusEffectDetails, StatusEffectTargetType, StatusEffectType,
@@ -15,7 +12,7 @@ use hashbrown::HashMap;
 use log::{info, warn};
 use meter_core::packets::definitions::*;
 use meter_core::packets::structures::{EquipItemData, NpcStruct, StatPair, StatusEffectData};
-use std::cell::{RefCell};
+use std::cell::RefCell;
 use std::rc::Rc;
 
 pub struct EntityTracker {
@@ -344,7 +341,7 @@ impl EntityTracker {
         self.entities.insert(trap.id, trap);
     }
 
-    pub fn party_info(&mut self, pkt: PKTPartyInfo, local_players: &HashMap<u64, String>) {
+    pub fn party_info(&mut self, pkt: PKTPartyInfo, local_info: &LocalInfo) {
         let mut unknown_local = if let Some(local_player) = self.entities.get(&self.local_entity_id)
         {
             local_player.name.is_empty()
@@ -358,8 +355,31 @@ impl EntityTracker {
             .borrow_mut()
             .remove_party_mappings(pkt.party_instance_id);
 
+        let most_likely_local_name = if unknown_local {
+            let party_members = pkt
+                .party_member_datas
+                .iter()
+                .map(|m| m.character_id)
+                .collect::<Vec<u64>>();
+            let mut party_locals = local_info
+                .local_players
+                .iter()
+                .filter_map(|(k, v)| {
+                    if party_members.contains(k) {
+                        Some(v)
+                    } else {
+                        None
+                    }
+                })
+                .collect::<Vec<&LocalPlayer>>();
+            party_locals.sort_by(|a, b| b.count.cmp(&a.count));
+            party_locals.first().map_or_else(String::new, |p| p.name.clone())
+        } else {
+            "".to_string()
+        };
+
         for member in pkt.party_member_datas {
-            if unknown_local && local_players.contains_key(&member.character_id) {
+            if unknown_local && member.name == most_likely_local_name {
                 if let Some(local_player) = self.entities.get_mut(&self.local_entity_id) {
                     unknown_local = false;
                     warn!(

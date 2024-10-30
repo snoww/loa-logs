@@ -13,7 +13,7 @@ use self::models::{Settings, TripodIndex, TripodLevel};
 use crate::parser::encounter_state::EncounterState;
 use crate::parser::entity_tracker::{get_current_and_max_hp, EntityTracker};
 use crate::parser::id_tracker::IdTracker;
-use crate::parser::models::{DamageData, EntityType, Identity, Stagger, VALID_ZONES};
+use crate::parser::models::{DamageData, EntityType, Identity, LocalInfo, LocalPlayer, Stagger, VALID_ZONES};
 use crate::parser::party_tracker::PartyTracker;
 use crate::parser::stats_api::{StatsApi, API_URL};
 use crate::parser::status_tracker::{
@@ -27,7 +27,8 @@ use hashbrown::HashMap;
 use log::{info, warn};
 use meter_core::packets::definitions::*;
 use meter_core::packets::opcodes::Pkt;
-use meter_core::{start_capture, start_raw_capture};
+use meter_core::start_capture;
+use meter_core::start_raw_capture;
 use reqwest::Client;
 use serde_json::json;
 use std::cell::RefCell;
@@ -97,20 +98,20 @@ pub fn start(
 
     // read saved local players
     // this info is used in case meter was opened late
-    let mut local_players: HashMap<u64, String> = HashMap::new();
+    let mut local_info: LocalInfo = LocalInfo::default();
     let mut local_player_path = window.app_handle().path_resolver().resource_dir().unwrap();
     let mut client_id = "".to_string();
     local_player_path.push("local_players.json");
 
     if local_player_path.exists() {
         let local_players_file = std::fs::read_to_string(local_player_path.clone())?;
-        local_players = serde_json::from_str(&local_players_file).unwrap_or_default();
-        client_id = local_players.get(&1).cloned().unwrap_or_default();
+        local_info = serde_json::from_str(&local_players_file).unwrap_or_default();
+        client_id = local_info.client_id.clone();
         if client_id.is_empty() {
             client_id = Uuid::new_v4().to_string();
             stats_api.client_id.clone_from(&client_id);
-            local_players.insert(1, client_id.clone());
-            write_local_players(&local_players, &local_player_path)?;
+            local_info.client_id.clone_from(&client_id);
+            write_local_players(&local_info, &local_player_path)?;
         } else {
             stats_api.client_id.clone_from(&client_id);
         }
@@ -301,13 +302,17 @@ pub fn start(
                         entity.id,
                         entity.character_id
                     );
-                    if local_players
-                        .get(&entity.character_id)
-                        .map_or(true, |cached| cached.as_str() != entity.name)
-                    {
-                        local_players.insert(entity.character_id, entity.name.clone());
-                        write_local_players(&local_players, &local_player_path)?;
-                    }
+
+                    local_info.local_players.entry(entity.character_id).and_modify(|e| {
+                        e.name = entity.name.clone();
+                        e.count += 1;
+                    }).or_insert(LocalPlayer {
+                        name: entity.name.clone(),
+                        count: 1,
+                    });
+
+                    write_local_players(&local_info, &local_player_path)?;
+                    
                     state.on_init_pc(entity, hp, max_hp)
                 }
             }
@@ -624,7 +629,7 @@ pub fn start(
             }
             Pkt::PartyInfo => {
                 if let Some(pkt) = parse_pkt(&data, PKTPartyInfo::new, "PKTPartyInfo") {
-                    entity_tracker.party_info(pkt, &local_players);
+                    entity_tracker.party_info(pkt, &local_info);
                     let local_player_id = entity_tracker.local_entity_id;
                     if let Some(entity) = entity_tracker.entities.get(&local_player_id) {
                         state.update_local_player(entity);
@@ -1136,9 +1141,8 @@ fn on_shield_change(
     state.on_shield_used(&source, &target, status_effect.status_effect_id, change);
 }
 
-fn write_local_players(local_players: &HashMap<u64, String>, path: &PathBuf) -> Result<()> {
-    let ordered: BTreeMap<_, _> = local_players.iter().collect();
-    let local_players_file = serde_json::to_string(&ordered)?;
+fn write_local_players(local_info: &LocalInfo, path: &PathBuf) -> Result<()> {
+    let local_players_file = serde_json::to_string(local_info)?;
     std::fs::write(path, local_players_file)?;
     Ok(())
 }
