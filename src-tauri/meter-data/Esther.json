@@ -85,15 +85,15 @@
     },
     { "name": "Ephernia", "icon": "combined_4.png", "skills": [540600], "npcs": [58600, 58601] },
     {
-        "name": "Ealyn",
-        "icon": "",
-        "skills": [],
-        "npcs": [58900, 58901, 58910]
-    },
-    {
         "name": "Bastian",
-        "icon": "",
+        "icon": "combined_5.png",
         "skills": [],
         "npcs": [58800, 58801]
+    },
+    {
+        "name": "Ealyn",
+        "icon": "combined_6.png",
+        "skills": [],
+        "npcs": [58900, 58901, 58910]
     }
 ]
