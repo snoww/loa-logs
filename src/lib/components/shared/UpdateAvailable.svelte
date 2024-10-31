@@ -1,10 +1,9 @@
 <script lang="ts">
     import { installUpdate } from "@tauri-apps/api/updater";
-    import { writable } from "svelte/store";
     import { updateSettings } from "$lib/utils/settings";
     import { markdownIt } from "$lib/utils/stores.js";
 
-    let updateText = writable("Update Now");
+    let updateText = "Update Now";
 </script>
 
 {#if $updateSettings.available && $updateSettings.manifest && !$updateSettings.dismissed}
@@ -52,10 +51,10 @@
                                     type="button"
                                     class="bg-accent-900 hover:bg-accent-800 mr-2 inline-flex items-center justify-center rounded-lg px-5 py-2.5 text-center text-sm text-white focus:outline-none"
                                     on:click={async () => {
-                                        $updateText = "Updating...";
+                                        updateText = "Updating...";
                                         await installUpdate();
                                     }}>
-                                    {$updateText}
+                                    {updateText}
                                 </button>
                             </div>
                         {/if}

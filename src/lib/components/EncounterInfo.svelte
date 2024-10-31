@@ -8,7 +8,6 @@
     import { emit } from "@tauri-apps/api/event";
     import { invoke } from "@tauri-apps/api/tauri";
     import { appWindow } from "@tauri-apps/api/window";
-    import { writable } from "svelte/store";
     import { hideAll } from "tippy.js";
 
     export let encounterDuration: string;
@@ -17,7 +16,7 @@
     export let timeUntilKill: string;
     export let screenshotFn: () => void;
 
-    let paused = writable(false);
+    let paused = false;
 
     async function openMostRecentEncounter() {
         await invoke("open_most_recent_encounter");
@@ -34,7 +33,7 @@
     }
     async function pauseSession() {
         await emit("pause-request");
-        $paused = !$paused;
+        paused = !paused;
     }
     async function saveSession() {
         await emit("save-request");
@@ -152,8 +151,8 @@
                 </button>
                 <button
                     on:click={pauseSession}
-                    use:menuTooltip={{ content: !$paused ? "Pause Session" : "Resume Session" }}>
-                    {#if !$paused}
+                    use:menuTooltip={{ content: !paused ? "Pause Session" : "Resume Session" }}>
+                    {#if !paused}
                         <svg
                             class="size-5 fill-gray-400 hover:fill-gray-50"
                             xmlns="http://www.w3.org/2000/svg"
@@ -380,7 +379,7 @@
                                         dropdownOpen = false;
                                     }}>
                                     <div class="flex space-x-1">
-                                        {#if !$paused}
+                                        {#if !paused}
                                             <svg
                                                 class="size-5 fill-gray-400"
                                                 xmlns="http://www.w3.org/2000/svg"

@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { onDestroy, onMount } from "svelte";
+    import { onMount } from "svelte";
 
     import LogSidebar from "$lib/components/logs/LogSidebar.svelte";
     import TableFilter from "$lib/components/table/TableFilter.svelte";
@@ -60,24 +60,24 @@
     }
     $: loadEncounters($searchFilter, $searchStore, $pageStore);
 
-    onMount(async () => {
-        if ($settings.general.logsPerPage <= 0 || $settings.general.logsPerPage > 100) {
-            $settings.general.logsPerPage = 10;
-        }
-        if ($miscSettings) {
-            const version = await getVersion();
-            if (!$miscSettings.viewedChangelog || $miscSettings.version !== version) {
-                $miscSettings.version = version;
+    onMount(() => {
+        (async () => {
+            if ($settings.general.logsPerPage <= 0 || $settings.general.logsPerPage > 100) {
+                $settings.general.logsPerPage = 10;
+            }
+            if ($miscSettings) {
+                const version = await getVersion();
+                if (!$miscSettings.viewedChangelog || $miscSettings.version !== version) {
+                    $miscSettings.version = version;
+                    await gotoChangelog();
+                }
+            } else {
+                $miscSettings = { version: await getVersion() };
                 await gotoChangelog();
             }
-        } else {
-            $miscSettings = { version: await getVersion() };
-            await gotoChangelog();
-        }
-    });
+        })();
 
-    onDestroy(() => {
-        $uploadErrorStore = false;
+        return () => ($uploadErrorStore = false);
     });
 
     async function gotoChangelog() {

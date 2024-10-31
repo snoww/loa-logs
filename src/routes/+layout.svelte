@@ -2,7 +2,7 @@
     import "@fontsource-variable/inter";
     import "@fontsource-variable/jetbrains-mono";
     import "../app.css";
-    import { onDestroy, onMount } from "svelte";
+    import { onMount } from "svelte";
     import { listen, type UnlistenFn } from "@tauri-apps/api/event";
     import { navigating } from "$app/stores";
     import NProgress from "nprogress";
@@ -56,11 +56,8 @@
 
         return () => {
             unsubscribe();
+            events.forEach((unlisten) => unlisten());
         };
-    });
-
-    onDestroy(() => {
-        events.forEach((unlisten) => unlisten());
     });
 
     async function showWindow() {

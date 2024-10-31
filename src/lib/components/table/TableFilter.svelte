@@ -34,9 +34,8 @@
             filterMenu = false;
         };
         document.addEventListener("click", clickOutside);
-        return () => {
-            document.removeEventListener("click", clickOutside);
-        };
+
+        return () => document.removeEventListener("click", clickOutside);
     });
 
     function debounce(fn: FormEventHandler<HTMLInputElement>, milliseconds: number) {

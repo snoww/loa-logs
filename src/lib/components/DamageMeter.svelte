@@ -11,7 +11,7 @@
     } from "$lib/types";
     import { millisToMinutesAndSeconds } from "$lib/utils/numbers";
     import { listen, type UnlistenFn } from "@tauri-apps/api/event";
-    import { onDestroy, onMount } from "svelte";
+    import { onMount } from "svelte";
     import { flip } from "svelte/animate";
     import EncounterInfo from "./EncounterInfo.svelte";
     import BossInfo from "./BossInfo.svelte";
@@ -21,7 +21,6 @@
     import Buffs from "./Buffs.svelte";
     import { settings } from "$lib/utils/settings";
     import { tooltip } from "$lib/utils/tooltip";
-    import { writable } from "svelte/store";
     import Notification from "./shared/Notification.svelte";
     import {
         takingScreenshot,
@@ -55,7 +54,7 @@
     let raidWipe = false;
     let bossDeadAlert = false;
     let adminAlert = false;
-    let raidInProgress = writable(true);
+    let raidInProgress = true;
 
     onMount(() => {
         setInterval(() => {
@@ -80,16 +79,16 @@
             let zoneChangeEvent = await listen("zone-change", () => {
                 // console.log("zone change event")
                 zoneChangeAlert = true;
-                $raidInProgress = false;
+                raidInProgress = false;
                 setTimeout(() => {
                     reset();
                     zoneChangeAlert = false;
-                    $raidInProgress = true;
+                    raidInProgress = true;
                 }, 6000);
             });
             let raidStartEvent = await listen("raid-start", () => {
                 reset();
-                $raidInProgress = true;
+                raidInProgress = true;
             });
             let resetEncounterEvent = await listen("reset-encounter", () => {
                 reset();
@@ -99,7 +98,7 @@
                 }, 1500);
             });
             let pauseEncounterEvent = await listen("pause-encounter", () => {
-                $paused = !$paused;
+                paused = !paused;
                 pauseAlert = !pauseAlert;
             });
             let saveEncounterEvent = await listen("save-encounter", () => {
@@ -128,7 +127,7 @@
                         raidWipe = false;
                     }, 3000);
                 }
-                $raidInProgress = false;
+                raidInProgress = false;
             });
             let clearEncounterEvent = await listen("clear-encounter", async (event: any) => {
                 if (!$settings.sync.auto) {
@@ -165,10 +164,8 @@
                 clearEncounterEvent
             );
         })();
-    });
 
-    onDestroy(() => {
-        events.forEach((unlisten) => unlisten());
+        return () => events.forEach((unlisten) => unlisten());
     });
 
     let players: Array<Entity> = [];
@@ -197,11 +194,11 @@
     let anyRdpsData: boolean = false;
     let isSolo: boolean = true;
 
-    let paused = writable(false);
+    let paused = false;
 
     $: {
         if (encounter) {
-            if (encounter.fightStart !== 0 && !$paused) {
+            if (encounter.fightStart !== 0 && !paused) {
                 if (!$missingInfo) {
                     if (encounter.localPlayer === "You" || !isValidName(encounter.localPlayer)) {
                         $missingInfo = true;
@@ -274,7 +271,7 @@
 
                 if (
                     // ((encounter.currentBoss && !encounter.currentBoss.isDead) || !encounter.currentBoss) &&
-                    $raidInProgress
+                    raidInProgress
                 ) {
                     duration = time - encounter.fightStart;
                 }

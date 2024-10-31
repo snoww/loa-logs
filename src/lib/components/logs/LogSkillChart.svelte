@@ -15,9 +15,8 @@
     import { focusedSkillCast } from "$lib/utils/stores";
     import { getSkillIcon } from "$lib/utils/strings";
     import { menuTooltip, tooltip } from "$lib/utils/tooltip";
-    import { onDestroy, onMount } from "svelte";
+    import { onMount } from "svelte";
     import BuffTooltip from "../shared/BuffTooltip.svelte";
-    import { writable } from "svelte/store";
 
     export let chartOptions;
     export let player: Entity | null;
@@ -25,13 +24,11 @@
 
     onMount(() => {
         focusedSkillCast.set({ skillId: 0, cast: 0 });
+
+        return () => focusedSkillCast.set({ skillId: 0, cast: 0 });
     });
 
-    onDestroy(() => {
-        focusedSkillCast.set({ skillId: 0, cast: 0 });
-    });
-
-    let buffType = writable("party");
+    let buffType = "party";
 
     let skill: Skill;
     let skillCast: SkillCast;
@@ -62,7 +59,7 @@
                         encounterDamageStats,
                         { buff: 0, brand: 0, identity: 0 },
                         player.classId,
-                        $buffType,
+                        buffType,
                         $settings.buffs.default
                     )
                 );
@@ -202,9 +199,9 @@
                             <td class="w-full font-semibold">
                                 <span use:tooltip={{ content: "Party Buffs" }}>
                                     <button
-                                        class={$buffType === "party" ? "text-accent-500" : "hover:text-accent-500"}
+                                        class={buffType === "party" ? "text-accent-500" : "hover:text-accent-500"}
                                         on:click={() => {
-                                            $buffType = "party";
+                                            buffType = "party";
                                         }}>
                                         Party
                                     </button>
@@ -212,9 +209,9 @@
                                 |
                                 <span use:tooltip={{ content: "Self Buffs, including Relic Sets" }}>
                                     <button
-                                        class={$buffType === "self" ? "text-accent-500" : "hover:text-accent-500"}
+                                        class={buffType === "self" ? "text-accent-500" : "hover:text-accent-500"}
                                         on:click={() => {
-                                            $buffType = "self";
+                                            buffType = "self";
                                         }}>
                                         Self
                                     </button>
@@ -222,9 +219,9 @@
                                 |
                                 <span use:tooltip={{ content: "All other buffs, e.g. Darks, Atros, etc." }}>
                                     <button
-                                        class={$buffType === "misc" ? "text-accent-500" : "hover:text-accent-500"}
+                                        class={buffType === "misc" ? "text-accent-500" : "hover:text-accent-500"}
                                         on:click={() => {
-                                            $buffType = "misc";
+                                            buffType = "misc";
                                         }}>
                                         Misc.
                                     </button>

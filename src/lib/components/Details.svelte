@@ -1,7 +1,7 @@
 <script lang="ts">
     import type { IdentityEvent, StaggerEvent } from "$lib/types";
     import { emit, listen, type UnlistenFn } from "@tauri-apps/api/event";
-    import { onDestroy, onMount } from "svelte";
+    import { onMount } from "svelte";
 
     let identity: IdentityEvent = { gauge1: 0, gauge2: 0, gauge3: 0 };
     let stagger: StaggerEvent = { current: 0, max: 0 };
@@ -27,10 +27,11 @@
             });
             events.push(staggerEvent, identityEvent);
         })();
-    });
-    onDestroy(() => {
-        emit("emit-details-request");
-        events.forEach((unlisten) => unlisten());
+
+        return () => {
+            emit("emit-details-request");
+            events.forEach((unlisten) => unlisten());
+        };
     });
 </script>
 
