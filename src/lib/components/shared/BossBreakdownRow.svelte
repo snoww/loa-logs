@@ -8,8 +8,8 @@
     import { tweened } from "svelte/motion";
 
     export let skill: Skill;
-    export let abbreviatedSkillDamage: (string | number)[];
-    export let skillDps: (string | number)[];
+    export let abbreviatedSkillDamage: [number, string];
+    export let skillDps: [number, string];
     export let width: number;
     export let shadow: boolean = false;
     export let index: number;

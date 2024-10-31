@@ -26,7 +26,7 @@ export interface Encounter {
 }
 
 export interface EncountersOverview {
-    encounters: Array<EncounterPreview>;
+    encounters: EncounterPreview[];
     totalEncounters: number;
 }
 
@@ -35,8 +35,8 @@ export interface EncounterPreview {
     fightStart: number;
     bossName: string;
     duration: number;
-    classes: Array<number>;
-    names: Array<string>;
+    classes: number[];
+    names: string[];
     difficulty?: string;
     localPlayer: string;
     myDps: number;
@@ -57,20 +57,20 @@ export interface EncounterDamageStats {
     totalEffectiveShielding: number;
     appliedShieldBuffs: { [key: number]: StatusEffect };
     misc?: EncounterMisc;
-    bossHpLog: { [key: string]: Array<BossHpLog> };
+    bossHpLog: { [key: string]: BossHpLog[] };
     staggerStats?: StaggerStats;
 }
 
 export interface EncounterMisc {
     staggerStats?: StaggerStats;
-    bossHpLog?: { [key: string]: Array<BossHpLog> };
+    bossHpLog?: { [key: string]: BossHpLog[] };
     partyInfo?: PartyInfo;
     rdpsValid?: boolean;
     rdpsMessage?: string;
 }
 
 export interface PartyInfo {
-    [key: string]: Array<string>;
+    [key: string]: string[];
 }
 
 export class BossHpLog {
@@ -112,16 +112,16 @@ export interface Entity {
     skills: { [skillId: number]: Skill };
     damageStats: DamageStats;
     skillStats: SkillStats;
-    engravingData?: Array<string>;
+    engravingData?: string[];
     arkPassiveActive?: boolean;
     arkPassiveData?: ArkPassiveData;
     spec?: string;
 }
 
 export interface ArkPassiveData {
-    evolution?: Array<ArkPassiveNode>;
-    enlightenment?: Array<ArkPassiveNode>;
-    leap?: Array<ArkPassiveNode>;
+    evolution?: ArkPassiveNode[];
+    enlightenment?: ArkPassiveNode[];
+    leap?: ArkPassiveNode[];
 }
 
 export interface ArkPassiveNode {
@@ -151,7 +151,7 @@ export interface Skill {
     backAttackDamage: number;
     frontAttackDamage: number;
     dps: number;
-    castLog: Array<number>;
+    castLog: number[];
     tripodIndex?: Tripod;
     tripodLevel?: Tripod;
     gemCooldown?: number;
@@ -160,7 +160,7 @@ export interface Skill {
     rdpsDamageReceived: number;
     rdpsDamageReceivedSupport: number;
     rdpsDamageGiven: number;
-    skillCastLog: Array<SkillCast>;
+    skillCastLog: SkillCast[];
 }
 
 export interface SkillCast {
@@ -292,8 +292,8 @@ export interface SkillData {
     desc: string;
     classId: number;
     icon: string;
-    summonIds: Array<number> | null;
-    summonSourceSkill: Array<number> | null;
+    summonIds: number[] | null;
+    summonSourceSkill: number[] | null;
     sourceSkill: number | null;
 }
 
@@ -383,7 +383,7 @@ export enum StatusEffectBuffTypeFlags {
 
 export class BuffDetails {
     percentage: string;
-    buffs: Array<Buff>;
+    buffs: Buff[];
     id: string;
 
     constructor() {
@@ -408,7 +408,7 @@ export class Buff {
 
 export class ShieldDetails {
     total: number;
-    buffs: Array<Shield>;
+    buffs: Shield[];
     id: string;
 
     constructor() {
@@ -433,9 +433,9 @@ export class Shield {
 export class MiniSkill {
     name: string;
     icon: string;
-    castLog: Array<number>;
+    castLog: number[];
 
-    constructor(name: string, icon: string, castLog: Array<number>) {
+    constructor(name: string, icon: string, castLog: number[]) {
         this.name = name;
         this.icon = icon;
         this.castLog = castLog;
@@ -483,8 +483,8 @@ export class SearchFilter {
 }
 
 export interface PartyBuffs {
-    parties: Array<Array<Entity>>;
+    parties: Entity[][];
     partyGroupedSynergies: Map<string, Set<string>>;
-    partyPercentages: Array<number[]>;
-    partyBuffs: Map<string, Map<string, Array<BuffDetails>>>;
+    partyPercentages: number[][];
+    partyBuffs: Map<string, Map<string, BuffDetails[]>>;
 }

@@ -5,7 +5,7 @@
     import { getRDamage } from "$lib/utils/numbers";
     import { rdpsEventDetails, takingScreenshot } from "$lib/utils/stores";
 
-    export let players: Array<Entity>;
+    export let players: Entity[];
     export let totalDamageDealt: number;
     export let duration: number;
     export let meterSettings: any;
@@ -15,7 +15,7 @@
     let topRDamage: number;
     let playerRDamagePercentages: number[];
     let alpha: number;
-    let partySortedPlayers: Array<Array<Entity>> = [];
+    let partySortedPlayers: Entity[][] = [];
     let partyRDamagePercentages: number[][];
     let isLiveMeter = meterSettings.bossHp !== undefined;
     $: {
@@ -31,9 +31,9 @@
             playerRDamagePercentages = sortedPlayers.map((p) => (getRDamage(p.damageStats) / topRDamage) * 100);
 
             if (meterSettings.rdpsSplitParty && encounterPartyInfo) {
-                const parties = new Array<Array<Entity>>();
+                const parties: Entity[][] = [];
                 const partyInfo = Object.entries(encounterPartyInfo);
-                const partyPercentages = new Array<number[]>();
+                const partyPercentages: number[][] = [];
                 if (partyInfo.length >= 2) {
                     for (const [partyIdStr, names] of partyInfo) {
                         const partyId = Number(partyIdStr);

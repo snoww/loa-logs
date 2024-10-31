@@ -8,7 +8,7 @@
     import type { BuffDetails, Entity } from "$lib/types";
 
     export let player: Entity;
-    export let playerBuffs: Array<BuffDetails>;
+    export let playerBuffs: BuffDetails[];
     export let percentage: number;
 
     let color = "#ffffff";

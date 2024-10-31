@@ -15,7 +15,7 @@
 
     let color = "#ffffff";
     let playerName: string;
-    let synergyPercentageDetails: Array<BuffDetails>;
+    let synergyPercentageDetails: BuffDetails[];
 
     if (Object.hasOwn($colors, player.class)) {
         if ($settings.general.constantLocalPlayerColor && $localPlayer == player.name) {

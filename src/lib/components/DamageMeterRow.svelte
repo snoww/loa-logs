@@ -28,7 +28,7 @@
         easing: cubicOut
     });
 
-    let dps: (string | number)[];
+    let dps: [number, string];
 
     $: {
         tweenedValue.set(percentage);
@@ -36,7 +36,7 @@
         if (duration > 0) {
             dps = abbreviateNumberSplit(entity.damageStats.damageDealt / (duration / 1000));
         } else {
-            dps = ["0", ""];
+            dps = [0, ""];
         }
 
         if (!$settings.meter.showClassColors) {

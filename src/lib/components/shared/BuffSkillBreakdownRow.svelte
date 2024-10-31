@@ -14,7 +14,7 @@
     export let shadow = false;
     export let index: number;
 
-    let synergyPercentageDetails: Array<BuffDetails>;
+    let synergyPercentageDetails: BuffDetails[];
 
     let isHyperAwakening = false;
 

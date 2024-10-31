@@ -10,7 +10,7 @@
     import { localPlayer } from "$lib/utils/stores";
 
     export let player: Entity;
-    export let playerBuffs: Array<BuffDetails>;
+    export let playerBuffs: BuffDetails[];
     export let percentage: number;
 
     let color = "#ffffff";

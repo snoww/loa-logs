@@ -21,8 +21,8 @@
 
     let color = "#164e63";
 
-    let damageDealt: (string | number)[];
-    let dps: (string | number)[];
+    let damageDealt: [number, string];
+    let dps: [number, string];
 
     $: {
         tweenedValue.set(width);
@@ -31,7 +31,7 @@
         if (duration > 0) {
             dps = abbreviateNumberSplit(boss.damageStats.damageDealt / (duration / 1000));
         } else {
-            dps = ["0", ""];
+            dps = [0, ""];
         }
     }
 </script>

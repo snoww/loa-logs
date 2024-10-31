@@ -9,7 +9,7 @@
     import { abbreviateNumberSplit } from "$lib/utils/numbers";
 
     export let player: Entity;
-    export let playerShields: Array<ShieldDetails>;
+    export let playerShields: ShieldDetails[];
     export let percentage: number;
 
     let color = "#ffffff";
@@ -23,7 +23,7 @@
         }
     }
 
-    let totalShieldStr: (string | number)[];
+    let totalShieldStr: [number, string];
 
     $: {
         playerName = formatPlayerName(player, $settings.general);

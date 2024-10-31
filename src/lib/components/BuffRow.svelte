@@ -18,7 +18,7 @@
     let color = "#ffffff";
     let alpha = 0.6;
     let playerName: string;
-    let synergyPercentageDetails: Array<BuffDetails>;
+    let synergyPercentageDetails: BuffDetails[];
 
     const tweenedValue = tweened(0, {
         duration: 400,

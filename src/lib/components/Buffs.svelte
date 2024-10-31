@@ -18,21 +18,21 @@
 
     export let tab: MeterTab;
     export let encounterDamageStats: EncounterDamageStats | undefined;
-    export let players: Array<Entity>;
+    export let players: Entity[];
     export let focusedPlayer: Entity | null = null;
     export let handleRightClick: () => void;
     export let inspectPlayer: (name: string) => void;
     export let encounterPartyInfo: PartyInfo | undefined;
     export let localPlayer: string | undefined;
 
-    let groupedSynergies: Map<string, Map<number, StatusEffect>> = new Map();
-    let percentages = Array<number>();
+    let groupedSynergies = new Map<string, Map<number, StatusEffect>>();
+    let percentages: number[] = [];
 
-    let parties = new Array<Array<Entity>>();
-    let partyGroupedSynergies = new Array<[string, Set<string>]>();
-    let partyPercentages = new Array<number[]>();
+    let parties: Entity[][] = [];
+    let partyGroupedSynergies: Array<[string, Set<string>]> = [];
+    let partyPercentages: number[][] = [];
 
-    let partyBuffs = new Map<string, Map<string, Array<BuffDetails>>>();
+    let partyBuffs = new Map<string, Map<string, BuffDetails[]>>();
 
     let localPlayerInP1 = true;
 

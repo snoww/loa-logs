@@ -4,7 +4,7 @@
     import LogDamageMeterHeader from "./LogDamageMeterHeader.svelte";
     import LogDamageMeterRow from "./LogDamageMeterRow.svelte";
 
-    export let players: Array<Entity>;
+    export let players: Entity[];
     export let encounterPartyInfo: PartyInfo | undefined;
     export let topDamageDealt: number;
     export let totalDamageDealt: number;
@@ -18,12 +18,12 @@
     export let isSolo: boolean;
     export let inspectPlayer: (name: string) => void;
 
-    let parties = new Array<Array<Entity>>();
-    let partyPercentages = new Array<number[]>();
-    let anyPartyDead = new Array<boolean>();
+    let parties: Entity[][] = [];
+    let partyPercentages: number[][] = [];
+    let anyPartyDead: boolean[] = [];
     let multipleDeaths = false;
 
-    let esthers = new Array<Entity>();
+    let esthers: Entity[] = [];
 
     $: {
         if (encounterPartyInfo) {

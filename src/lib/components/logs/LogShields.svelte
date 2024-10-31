@@ -6,17 +6,17 @@
     import LogPartyShieldRow from "$lib/components/logs/LogPartyShieldRow.svelte";
     import { tooltip } from "$lib/utils/tooltip";
 
-    export let players: Array<Entity>;
+    export let players: Entity[];
     export let encounterDamageStats: EncounterDamageStats;
 
     let tab = ShieldTab.GIVEN;
 
     let groupedShields = new Map<string, Map<number, StatusEffect>>();
 
-    let parties = new Array<Array<Entity>>();
+    let parties: Entity[][] = [];
     let partyGroupedShields = new Map<string, Set<string>>();
-    let partyPercentages = new Array<number[]>();
-    let partyShields = new Map<string, Map<string, Array<ShieldDetails>>>();
+    let partyPercentages: number[][] = [];
+    let partyShields = new Map<string, Map<string, ShieldDetails[]>>();
 
     let vw: number;
     let partyWidths: { [key: string]: string };

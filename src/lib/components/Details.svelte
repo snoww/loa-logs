@@ -13,7 +13,7 @@
         }
     }
 
-    let events: Array<UnlistenFn> = [];
+    let events: UnlistenFn[] = [];
     onMount(() => {
         (async () => {
             await emit("emit-details-request");

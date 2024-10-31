@@ -21,7 +21,7 @@
     }
 
     let color: string;
-    let skillDamagePercentages: Array<number> = [];
+    let skillDamagePercentages: number[] = [];
 
     let skills = Object.values(player.skills).sort((a, b) => b.totalDamage - a.totalDamage);
     if (player.class === "Arcanist") {

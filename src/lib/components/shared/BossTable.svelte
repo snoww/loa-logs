@@ -5,12 +5,12 @@
     import { flip } from "svelte/animate";
     import BossRow from "./BossRow.svelte";
 
-    export let bosses: Array<Entity>;
+    export let bosses: Entity[];
     export let tween = true;
     export let duration: number;
     export let inspectBoss: (boss: string) => void;
 
-    let bossDamageDealtPercentages: Array<number> = [];
+    let bossDamageDealtPercentages: number[] = [];
 
     $: {
         if (bosses.length > 0) {

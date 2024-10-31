@@ -11,10 +11,10 @@
     export let handleRightClick: () => void;
     export let tween = true;
 
-    let skills: Array<Skill> = [];
-    let skillDamagePercentages: Array<number> = [];
-    let abbreviatedSkillDamage: Array<(string | number)[]> = [];
-    let skillDps: Array<(string | number)[]> = [];
+    let skills: Skill[] = [];
+    let skillDamagePercentages: number[] = [];
+    let abbreviatedSkillDamage: Array<[number, string]> = [];
+    let skillDps: Array<[number, string]> = [];
 
     $: {
         if (boss) {

@@ -36,7 +36,7 @@
     import { getVersion } from "@tauri-apps/api/app";
     import { appWindow } from "@tauri-apps/api/window";
 
-    let encounters: Array<EncounterPreview> = [];
+    let encounters: EncounterPreview[] = [];
     let totalEncounters: number = 0;
     let selectMode = false;
 
@@ -88,11 +88,7 @@
         goto("/changelog");
     }
 
-    async function loadEncounters(
-        filter: SearchFilter,
-        search: string,
-        page: number
-    ): Promise<Array<EncounterPreview>> {
+    async function loadEncounters(filter: SearchFilter, search: string, page: number): Promise<EncounterPreview[]> {
         NProgress.start();
         let bosses = Array.from($searchFilter.bosses);
         if (filter.encounters.size > 0) {

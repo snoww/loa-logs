@@ -59,10 +59,10 @@
     export let id: string;
     export let encounter: Encounter;
 
-    let players: Array<Entity> = [];
-    let bosses: Array<Entity> = [];
+    let players: Entity[] = [];
+    let bosses: Entity[] = [];
     let player: Entity | null = null;
-    let playerDamagePercentages: Array<number> = [];
+    let playerDamagePercentages: number[] = [];
     let topDamageDealt = 0;
     let totalDamageDealt = 0;
     let localPlayerEntity: Entity | null = null;
@@ -435,7 +435,7 @@
                     setTimeout(() => {
                         $screenshotAlert = false;
                     }, 2000);
-                } catch (error) {
+                } catch {
                     takingScreenshot.set(false);
                     $screenshotError = true;
                     setTimeout(() => {

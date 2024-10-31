@@ -15,8 +15,8 @@
     export let tab: MeterTab;
 
     let color: string;
-    let skillDamagePercentages: Array<number> = [];
-    let skills = Array<Skill>();
+    let skillDamagePercentages: number[] = [];
+    let skills: Skill[] = [];
     let playerName: string;
     let buffSummary: BuffDetails[];
 

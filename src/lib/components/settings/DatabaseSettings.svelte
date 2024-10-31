@@ -6,7 +6,6 @@
     import { onMount } from "svelte";
     import NProgress from "nprogress";
     import SettingItem from "$lib/components/settings/SettingItem.svelte";
-    import { writable } from "svelte/store";
 
     let encounterDbInfo: EncounterDbInfo;
     let deleteConfirm = false;

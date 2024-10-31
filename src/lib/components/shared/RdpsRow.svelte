@@ -21,12 +21,12 @@
     let playerName: string;
     let tooltipName: string;
     let color = "#ffffff";
-    let damageDealt: (string | number)[];
-    let damageGiven: (string | number)[];
-    let damageReceived: (string | number)[];
+    let damageDealt: [number, string];
+    let damageGiven: [number, string];
+    let damageReceived: [number, string];
     let damagePercentage: string;
     let rDamage: number;
-    let rDps: (string | number)[];
+    let rDps: [number, string];
     let sSynPercentage = "0.0";
     let dSynPercentage = "0.0";
     let synPercentage = "0.0";

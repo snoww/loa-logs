@@ -23,7 +23,7 @@
     let color = "#ffffff";
     let name: string;
 
-    let damageTaken: (string | number)[];
+    let damageTaken: [number, string];
 
     $: {
         tweenedValue.set(width);

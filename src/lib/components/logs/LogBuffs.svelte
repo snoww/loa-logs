@@ -16,7 +16,7 @@
 
     export let tab: MeterTab;
     export let encounterDamageStats: EncounterDamageStats;
-    export let players: Array<Entity>;
+    export let players: Entity[];
     export let focusedPlayer: Entity | null = null;
     export let inspectPlayer: (name: string) => void;
 
@@ -29,7 +29,7 @@
         (player) => (player.damageStats.damageDealt / encounterDamageStats.topDamageDealt) * 100
     );
 
-    let groupedSynergies: Map<string, Map<number, StatusEffect>> = new Map();
+    let groupedSynergies = new Map<string, Map<number, StatusEffect>>();
     for (const [id, buff] of Object.entries(encounterDamageStats.buffs)) {
         if (focusedPlayer && !Object.hasOwn(focusedPlayer.damageStats.buffedBy, id)) {
             continue;
@@ -44,11 +44,11 @@
     }
     groupedSynergies = new Map([...groupedSynergies.entries()].sort());
 
-    let parties = new Array<Array<Entity>>();
+    let parties: Entity[][] = [];
     let partyGroupedSynergies = new Map<string, Set<string>>();
-    let partyPercentages = new Array<number[]>();
+    let partyPercentages: number[][] = [];
 
-    let partyBuffs = new Map<string, Map<string, Array<BuffDetails>>>();
+    let partyBuffs = new Map<string, Map<string, BuffDetails[]>>();
 
     let vw: number;
     let partyWidths: { [key: string]: string };

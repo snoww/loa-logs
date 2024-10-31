@@ -6,13 +6,13 @@
 
     import DamageTakenRow from "./DamageTakenRow.svelte";
 
-    export let players: Array<Entity>;
+    export let players: Entity[];
     export let topDamageTaken: number | undefined;
     export let tween = true;
 
-    let playerDamageTakenPercentages: Array<number> = [];
+    let playerDamageTakenPercentages: number[] = [];
     let alpha = 0.6;
-    let sortedPlayers: Array<Entity> = [];
+    let sortedPlayers: Entity[] = [];
 
     $: {
         if (topDamageTaken) {

@@ -8,7 +8,7 @@
 
     let colorDropdownOpen = false;
     let networkDropdownOpen = false;
-    let networkInterfaces: [string, string][];
+    let networkInterfaces: Array<[string, string]>;
 
     const handleColorDropdownFocusLoss = (event: FocusEvent) => {
         const relatedTarget = event.relatedTarget as HTMLElement;

@@ -44,7 +44,7 @@
     let time = +Date.now();
     let encounter: Encounter | null = null;
     let parties: PartyInfo | undefined;
-    let events: Array<UnlistenFn> = [];
+    let events: UnlistenFn[] = [];
 
     let zoneChangeAlert = false;
     let resettingAlert = false;
@@ -168,9 +168,9 @@
         return () => events.forEach((unlisten) => unlisten());
     });
 
-    let players: Array<Entity> = [];
-    let bosses: Array<Entity> = [];
-    let playerDamagePercentages: Array<number> = [];
+    let players: Entity[] = [];
+    let bosses: Entity[] = [];
+    let playerDamagePercentages: number[] = [];
     let topDamageDealt = 0;
     let encounterDuration = "00:00";
     let duration = 0;
@@ -417,7 +417,7 @@
                         $screenshotAlert = false;
                         document.body.style.pointerEvents = "auto";
                     }, 2000);
-                } catch (error) {
+                } catch {
                     takingScreenshot.set(false);
                     $screenshotError = true;
                     setTimeout(() => {

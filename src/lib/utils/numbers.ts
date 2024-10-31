@@ -34,18 +34,18 @@ export function round2(num: number, decimalPlaces = 1): number {
 
 export function abbreviateNumber(n: number) {
     if (n >= 1e3 && n < 1e6) return (n / 1e3).toFixed(1) + "k";
-    if (n >= 1e6 && n < 1e9) return +(n / 1e6).toFixed(1) + "m";
-    if (n >= 1e9 && n < 1e12) return +(n / 1e9).toFixed(1) + "b";
-    if (n >= 1e12) return +(n / 1e12).toFixed(1) + "t";
+    if (n >= 1e6 && n < 1e9) return (n / 1e6).toFixed(1) + "m";
+    if (n >= 1e9 && n < 1e12) return (n / 1e9).toFixed(1) + "b";
+    if (n >= 1e12) return (n / 1e12).toFixed(1) + "t";
     else return tryParseInt(n).toFixed(0);
 }
 
-export function abbreviateNumberSplit(n: number) {
+export function abbreviateNumberSplit(n: number): [number, string] {
     if (n >= 1e3 && n < 1e6) return [+(n / 1e3).toFixed(1), "k"];
     if (n >= 1e6 && n < 1e9) return [+(n / 1e6).toFixed(1), "m"];
     if (n >= 1e9 && n < 1e12) return [+(n / 1e9).toFixed(1), "b"];
     if (n >= 1e12) return [+(n / 1e12).toFixed(1), "t"];
-    else return [tryParseInt(n).toFixed(0), ""];
+    else return [+tryParseInt(n).toFixed(0), ""];
 }
 
 export function millisToMinutesAndSeconds(millis: number) {
@@ -155,8 +155,8 @@ export function formatMinutes(minutesDecimal: number): string {
     return result;
 }
 
-export function resampleData(data: Array<BossHpLog>, interval = 5, length: number) {
-    const resampledData: Array<BossHpLog> = [];
+export function resampleData(data: BossHpLog[], interval = 5, length: number) {
+    const resampledData: BossHpLog[] = [];
     let last = null;
     const lastTime = data[data.length - 1].time;
 

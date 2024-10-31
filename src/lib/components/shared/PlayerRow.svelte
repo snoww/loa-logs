@@ -18,7 +18,7 @@
     export let anySupportBrand: boolean;
     export let anyRdpsData: boolean;
     export let end: number;
-    export let dps: (string | number)[];
+    export let dps: [number, string];
 
     export let alpha: number = 0.6;
     export let width: number;
@@ -26,7 +26,7 @@
     export let shadow: boolean = false;
     export let isSolo: boolean;
 
-    let damageDealt: (string | number)[];
+    let damageDealt: [number, string];
     let damageDealtRaw: number;
     let damageWithoutHa: number;
     let damagePercentage: string;

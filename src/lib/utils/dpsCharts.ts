@@ -62,7 +62,12 @@ export function getDeathTimes(chartablePlayers: Entity[], legendNames: string[],
 
 const colors = ["#cc338b", "#A020F0", "#FFA500", "#800000"];
 
-export function getBossHpSeries(bosses: [string, BossHpLog[]][], legendNames: string[], len: number, interval: number) {
+export function getBossHpSeries(
+    bosses: Array<[string, BossHpLog[]]>,
+    legendNames: string[],
+    len: number,
+    interval: number
+) {
     return bosses
         .filter((e) => e[1].length > 1)
         .sort((a, b) => {

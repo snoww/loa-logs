@@ -37,7 +37,7 @@
     let supportBuffs: SkillChartSupportDamage;
     let modInfo: SkillChartModInfo;
 
-    let allGroupedBuffs: Map<string, Array<StatusEffectWithId>>[];
+    let allGroupedBuffs: Array<Map<string, StatusEffectWithId[]>>;
 
     $: {
         if ($focusedSkillCast.skillId > 0 && player) {

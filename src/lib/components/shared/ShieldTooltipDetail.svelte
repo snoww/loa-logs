@@ -5,7 +5,7 @@
     import { abbreviateNumberSplit } from "$lib/utils/numbers";
 
     export let shieldDetails: ShieldDetails;
-    let shield: (string | number)[];
+    let shield: [number, string];
 
     $: {
         shield = abbreviateNumberSplit(shieldDetails.total);

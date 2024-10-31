@@ -23,9 +23,9 @@
         easing: linear
     });
 
-    let bossCurrentHp: (string | number)[];
-    let bossMaxHp: (string | number)[];
-    let bossShieldHp: (string | number)[];
+    let bossCurrentHp: [number, string];
+    let bossMaxHp: [number, string];
+    let bossShieldHp: [number, string];
 
     $: {
         bossShield = boss.currentShield;
