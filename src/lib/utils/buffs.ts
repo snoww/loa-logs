@@ -254,8 +254,8 @@ export function getPartyShields(
     groupedShields: Map<string, Map<number, StatusEffect>>,
     tab: ShieldTab
 ) {
-    const parties = new Array<Entity[]>();
-    const partyPercentages = new Array<number[]>();
+    const parties: Entity[][] = [];
+    const partyPercentages: number[][] = [];
     const partyInfo = Object.entries(encounterPartyInfo);
     let shieldValue = "";
     let shieldBy = "";
@@ -351,9 +351,9 @@ export function getPartyBuffs(
     encounterPartyInfo: PartyInfo,
     groupedSynergies: Map<string, Map<number, StatusEffect>>
 ): PartyBuffs {
-    const parties = new Array<Entity[]>();
+    const parties: Entity[][] = [];
     const partyGroupedSynergies = new Map<string, Set<string>>();
-    const partyPercentages = new Array<number[]>();
+    const partyPercentages: number[][] = [];
 
     const partyBuffs = new Map<string, Map<string, BuffDetails[]>>();
 
@@ -614,7 +614,7 @@ export function getSkillCastBuffs(
     buffType: string = "party",
     buffFilter: boolean = true
 ) {
-    const groupedBuffs: Map<string, StatusEffectWithId[]> = new Map();
+    const groupedBuffs = new Map<string, StatusEffectWithId[]>();
 
     for (const buffId of buffs) {
         if (Object.prototype.hasOwnProperty.call(encounterDamageStats.buffs, buffId)) {

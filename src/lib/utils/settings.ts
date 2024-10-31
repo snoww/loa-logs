@@ -287,8 +287,8 @@ export async function registerShortcuts(shortcuts: any) {
     }
 }
 
-export const imagePath = settingsStore<{ path: string }>("imagePath", { path: "" });
-export const skillIcon = settingsStore<{ path: string }>("skillIcon", { path: "" });
+export const imagePath = settingsStore("imagePath", { path: "" });
+export const skillIcon = settingsStore("skillIcon", { path: "" });
 export const classIconCache = settingsStore<{ [key: string]: string }>("classIconCache", {});
 
 export const keyboardKeys = [
