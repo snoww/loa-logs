@@ -92,10 +92,10 @@
                         {#if parties.length > 1}
                             <th class="w-7 whitespace-nowrap px-2 font-normal tracking-tight">Party {+partyId + 1}</th>
                         {:else}
-                            <th class="w-7 px-2 font-normal" />
+                            <th class="w-7 px-2 font-normal"></th>
                         {/if}
-                        <th class="w-20 px-2 text-left font-normal" />
-                        <th class="w-full" />
+                        <th class="w-20 px-2 text-left font-normal"></th>
+                        <th class="w-full"></th>
                         <th class="w-20 font-normal">Total</th>
                         {#each synergies as synergy (synergy)}
                             {@const syns = groupedShields.get(synergy) || new Map()}

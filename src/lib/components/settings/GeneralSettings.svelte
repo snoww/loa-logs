@@ -54,6 +54,7 @@
     <div class="mt-4 flex flex-col space-y-2 px-2">
         <div class="relative pt-2" on:focusout={handleColorDropdownFocusLoss}>
             <div class="flex items-center">
+                <!-- svelte-ignore a11y_consider_explicit_label -->
                 <button
                     id=""
                     class="bg-accent-800 inline-flex items-center rounded-lg px-2 py-2 text-center text-sm"
@@ -260,7 +261,7 @@
                 </div>
                 <div class="flex items-baseline space-x-2">
                     <div>Interface:</div>
-                    <!-- svelte-ignore a11y-click-events-have-key-events -->
+                    <!-- svelte-ignore a11y_click_events_have_key_events -->
                     <div
                         role="button"
                         tabindex="0"
@@ -319,7 +320,7 @@
                         type="number"
                         class="h-8 w-24 rounded-md bg-zinc-700 text-sm text-gray-300"
                         bind:value={$settings.general.port}
-                        placeholder={$settings.general.port} />
+                        placeholder={$settings.general.port.toString()} />
                     <div class="ml-5">
                         <div class="text-gray-100">Port</div>
                         <div class="text-xs text-gray-300">Set custom port if not using default. Default is 6040.</div>

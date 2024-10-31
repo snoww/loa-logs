@@ -139,6 +139,7 @@
                 class="flex items-center space-x-px {$settings.meter.showTimeUntilKill
                     ? 'max-[499px]:hidden'
                     : 'max-[419px]:hidden'}">
+                <!-- svelte-ignore a11y_consider_explicit_label -->
                 <button class="" on:click={openMostRecentEncounter}>
                     <div use:menuTooltip={{ content: "Open Recent" }}>
                         <svg
@@ -165,6 +166,7 @@
                             viewBox="0 -960 960 960"><path d="M298.5-162.5v-641l503 320.5-503 320.5Z" /></svg>
                     {/if}
                 </button>
+                <!-- svelte-ignore a11y_consider_explicit_label -->
                 <button on:click={resetSession} use:menuTooltip={{ content: "Reset Session" }}>
                     <svg
                         class="size-5 fill-gray-400 hover:fill-gray-50"
@@ -173,6 +175,7 @@
                         ><path
                             d="M452.5 955q-132-10-222.5-107.25T139.5 617.5q0-79 35.75-149T275.5 352l65.5 65q-51 32-80.5 86T231 617.5q0 97 63.25 166.25T452.5 862.5V955Zm57.5 0v-92.5q96.5-10 158.5-79t62-166q0-99-67-170.75T497 369h-24l65 66-49 49.5-166-166 166-167 49 49-76 76h25q140 0 238 100.5t98 240.5Q823 751 732.25 848T510 955Z" /></svg>
                 </button>
+                <!-- svelte-ignore a11y_consider_explicit_label -->
                 <button use:menuTooltip={{ content: "Manual Save" }} on:click={saveSession}>
                     <svg
                         class="size-5 fill-gray-400 hover:fill-gray-50"
@@ -181,6 +184,7 @@
                         ><path
                             d="M861.5-691.5V-191q0 38.019-27.034 64.759Q807.431-99.5 769-99.5H191q-38.019 0-64.759-26.741Q99.5-152.981 99.5-191v-578q0-38.431 26.741-65.466Q152.981-861.5 191-861.5h500.5l170 170ZM769-651.186 651.186-769H191v578h578v-460.186ZM479.765-257.5q41.985 0 71.61-29.39Q581-316.279 581-358.265q0-41.985-29.39-71.61-29.389-29.625-71.375-29.625-41.985 0-71.61 29.39Q379-400.721 379-358.735q0 41.985 29.39 71.61 29.389 29.625 71.375 29.625ZM244.5-575.5H598v-140H244.5v140ZM191-651.186V-191v-578 117.814Z" /></svg>
                 </button>
+                <!-- svelte-ignore a11y_consider_explicit_label -->
                 <button use:menuTooltip={{ content: "Take Screenshot" }} on:click={screenshotFn}>
                     <svg
                         class="size-5 fill-gray-400 hover:fill-gray-50"
@@ -198,6 +202,7 @@
                             <span class="bg-accent-800 relative inline-flex size-2 rounded-full"></span>
                         </span>
                     {/if}
+                    <!-- svelte-ignore a11y_consider_explicit_label -->
                     <button
                         on:click={handleDropdownClick}
                         class="h-full px-1"
@@ -298,6 +303,7 @@
                         </div>
                     {/if}
                 </div>
+                <!-- svelte-ignore a11y_consider_explicit_label -->
                 <button on:click={() => appWindow.hide()}>
                     <div use:menuTooltip={{ content: "Minimize" }}>
                         <svg
@@ -323,6 +329,7 @@
                             <span class="bg-accent-800 relative inline-flex size-2 rounded-full"></span>
                         </span>
                     {/if}
+                    <!-- svelte-ignore a11y_consider_explicit_label -->
                     <button
                         on:click={handleMiniDropdownClick}
                         class="h-full px-2"
@@ -466,6 +473,7 @@
                         </div>
                     {/if}
                 </div>
+                <!-- svelte-ignore a11y_consider_explicit_label -->
                 <button on:click={() => appWindow.hide()}>
                     <div use:menuTooltip={{ content: "Minimize" }}>
                         <svg

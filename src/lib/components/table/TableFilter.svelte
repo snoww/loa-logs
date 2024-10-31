@@ -5,7 +5,7 @@
     import { bossList } from "$lib/constants/bosses";
     import { classList } from "$lib/constants/classes";
     import { difficultyMap, encounterMap } from "$lib/constants/encounters";
-    import { SearchFilter, type EncounterPreview } from "$lib/types";
+    import { SearchFilter } from "$lib/types";
     import { settings } from "$lib/utils/settings";
     import { pageStore, searchStore, searchFilter, selectedEncounters } from "$lib/utils/stores";
     import { tooltip } from "$lib/utils/tooltip";
@@ -81,6 +81,7 @@
         <div class="relative">
             <div class="absolute inset-y-0 left-0 flex cursor-default items-center pl-2">
                 <div class="relative flex items-center">
+                    <!-- svelte-ignore a11y_consider_explicit_label -->
                     <button
                         use:tooltip={{ content: "Search Filter" }}
                         on:click|stopPropagation={() => {
@@ -302,7 +303,7 @@
                                                     min="0"
                                                     class="h-6 w-20 rounded-md bg-zinc-700 text-xs text-gray-300"
                                                     bind:value={$searchFilter.minDuration}
-                                                    placeholder={$settings.logs.minEncounterDuration} />
+                                                    placeholder={$settings.logs.minEncounterDuration.toString()} />
                                                 <div class="ml-2">seconds</div>
                                             </label>
                                             <button
@@ -328,6 +329,7 @@
                 placeholder="Search encounters, names, or class:name pairs"
                 on:input={handleSearchInput} />
             {#if $searchStore.length > 0}
+                <!-- svelte-ignore a11y_consider_explicit_label -->
                 <button
                     class="absolute inset-y-0 right-0 flex items-center pr-2"
                     on:click={() => {
@@ -348,6 +350,7 @@
     </div>
     <div class="flex items-center space-x-2">
         {#if selectMode && $selectedEncounters.size > 0}
+            <!-- svelte-ignore a11y_consider_explicit_label -->
             <button
                 class="flex items-center rounded-md bg-red-900 p-1 text-xs"
                 on:click={() => {
@@ -370,7 +373,7 @@
 </div>
 
 {#if deleteConfirm}
-    <div class="fixed inset-0 z-50 bg-zinc-900 bg-opacity-80" />
+    <div class="fixed inset-0 z-50 bg-zinc-900 bg-opacity-80"></div>
     <div class="fixed left-0 right-0 top-0 z-50 h-modal w-full items-center justify-center p-4">
         <div class="relative top-[25%] mx-auto flex max-h-full w-full max-w-md">
             <div class="relative mx-auto flex flex-col rounded-lg border-gray-700 bg-zinc-800 text-gray-400 shadow-md">

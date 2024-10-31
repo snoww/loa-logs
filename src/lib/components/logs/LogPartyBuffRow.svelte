@@ -50,7 +50,7 @@
         </td>
     {/each}
 {/if}
-<div
+<td
     class="absolute left-0 -z-10 h-7 px-2 py-1"
     class:shadow-md={!$takingScreenshot}
-    style="background-color: {HexToRgba(color, 0.6)}; width: {percentage}%" />
+    style="background-color: {HexToRgba(color, 0.6)}; width: {percentage}%"></td>

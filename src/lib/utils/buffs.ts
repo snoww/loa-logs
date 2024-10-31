@@ -617,7 +617,7 @@ export function getSkillCastBuffs(
     const groupedBuffs: Map<string, Array<StatusEffectWithId>> = new Map();
 
     for (const buffId of buffs) {
-        if (encounterDamageStats.buffs.hasOwnProperty(buffId)) {
+        if (Object.prototype.hasOwnProperty.call(encounterDamageStats.buffs, buffId)) {
             includeBuff(
                 hitDamage,
                 buffId,
@@ -631,7 +631,7 @@ export function getSkillCastBuffs(
         }
     }
     for (const buffId of debuffs) {
-        if (encounterDamageStats.debuffs.hasOwnProperty(buffId)) {
+        if (Object.prototype.hasOwnProperty.call(encounterDamageStats.debuffs, buffId)) {
             includeBuff(
                 hitDamage,
                 buffId,
@@ -702,6 +702,7 @@ function includeBuff(
         addToMap(key, buffId, buff, map);
     } else if (buffType === "self") {
         if (isPartySynergy(buff)) {
+            /*  */
         } else if (isSelfSkillSynergy(buff)) {
             if (buff.buffCategory === "ability") {
                 key = `${buff.uniqueGroup ? buff.uniqueGroup : buffId}`;

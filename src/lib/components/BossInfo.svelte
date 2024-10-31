@@ -39,6 +39,7 @@
         bossShieldHp = abbreviateNumberSplit(bossShield);
 
         if (Object.hasOwn(bossHpMap, boss.name) && $settings.meter.bossHpBar) {
+            // svelte-ignore reactive_declaration_non_reactive_property
             bossHPBars = bossHpMap[boss.name];
         } else {
             bossHPBars = 0;
@@ -63,6 +64,7 @@
             if (bossCurrentBars < bossPreviousBars) {
                 bossPreviousBars = bossCurrentBars;
                 colorIndex++;
+                // svelte-ignore reactive_declaration_non_reactive_property
                 bossBarColor = [
                     bossHpBarColors[colorIndex % bossHpBarColors.length],
                     bossHpBarColors[(colorIndex + 1) % bossHpBarColors.length]
@@ -90,31 +92,32 @@
 <div class="h-7 border-y border-black bg-zinc-900/[.3]">
     {#if bossHPBars !== 0}
         {#if bossShield > 0}
-            <div class="absolute -z-10 h-7 bg-neutral-400" style="width: 100%;" />
+            <div class="absolute -z-10 h-7 bg-neutral-400" style="width: 100%;"></div>
         {:else}
-            <div class="absolute -z-10 h-7" style="background-color: {bossBarColor[0]};width: {$tweenBossHpBar}%;" />
+            <div class="absolute -z-10 h-7" style="background-color: {bossBarColor[0]};width: {$tweenBossHpBar}%;">
+            </div>
         {/if}
         {#if bossCurrentBars <= 1}
-            <div class="absolute -z-20 h-7 w-full bg-zinc-900" />
+            <div class="absolute -z-20 h-7 w-full bg-zinc-900"></div>
         {:else}
-            <div class="absolute -z-20 h-7 w-full" style="background-color: {bossBarColor[1]};" />
+            <div class="absolute -z-20 h-7 w-full" style="background-color: {bossBarColor[1]};"></div>
         {/if}
         {#if $settings.meter.splitBossHpBar}
             <div class="absolute h-7 w-full">
                 <div class="grid h-7 grid-cols-4 divide-x-2 divide-zinc-800/60">
-                    <div />
-                    <div />
-                    <div />
-                    <div />
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
                 </div>
             </div>
         {/if}
     {:else}
-        <div class="absolute -z-10 h-7 w-full bg-zinc-900" />
+        <div class="absolute -z-10 h-7 w-full bg-zinc-900"></div>
         {#if bossShield > 0}
-            <div class="absolute z-0 h-7 bg-neutral-400" style="width: 100%;" />
+            <div class="absolute z-0 h-7 bg-neutral-400" style="width: 100%;"></div>
         {:else}
-            <div class="absolute z-0 h-7 bg-red-800" style="width: {$tweenBossHpBar}%;" />
+            <div class="absolute z-0 h-7 bg-red-800" style="width: {$tweenBossHpBar}%;"></div>
         {/if}
     {/if}
     <div class="relative tracking-tighter">

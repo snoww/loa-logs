@@ -39,7 +39,11 @@
             let mostDamageSkill = skills[0].totalDamage;
             skillDamagePercentages = skills.map((skill) => (skill.totalDamage / mostDamageSkill) * 100);
         }
-        if (tab === MeterTab.SELF_BUFFS || tab === MeterTab.PARTY_BUFFS) {
+        if (
+            // svelte-ignore reactive_declaration_non_reactive_property
+            tab === MeterTab.SELF_BUFFS ||
+            tab === MeterTab.PARTY_BUFFS
+        ) {
             buffSummary = getSynergyPercentageDetailsSum(groupedSynergies, skills, player.damageStats);
         }
     }
@@ -70,11 +74,11 @@
                 </td>
             {/each}
         {/if}
-        <div
+        <td
             class="absolute left-0 -z-10 h-7 w-full px-2 py-1"
             style="background-color: {$settings.general.splitLines
                 ? RGBLinearShade(HexToRgba(color, 0.6))
-                : HexToRgba(color, 0.6)}" />
+                : HexToRgba(color, 0.6)}"></td>
     </tr>
 {/if}
 {#each skills as skill, i (skill.id)}

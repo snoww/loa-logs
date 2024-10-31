@@ -37,11 +37,19 @@
     let localPlayerInP1 = true;
 
     $: {
-        if (focusedPlayer && focusedPlayer.entityType === EntityType.ESTHER) {
+        if (
+            // svelte-ignore reactive_declaration_non_reactive_property
+            focusedPlayer &&
+            focusedPlayer.entityType === EntityType.ESTHER
+        ) {
             focusedPlayer = null;
             handleRightClick();
         }
-        players = players.filter((player) => player.entityType === EntityType.PLAYER);
+        players = players.filter(
+            (player) =>
+                // svelte-ignore reactive_declaration_non_reactive_property
+                player.entityType === EntityType.PLAYER
+        );
         groupedSynergies = new Map<string, Map<number, StatusEffect>>();
         if (encounterDamageStats) {
             percentages = players.map(
@@ -98,8 +106,8 @@
                     <thead class="z-40 h-6" id="buff-head">
                         <tr class="bg-zinc-900">
                             <th class="w-7 whitespace-nowrap px-2 font-normal tracking-tight">Party {+partyId + 1}</th>
-                            <th class="w-20 px-2 text-left font-normal" />
-                            <th class="w-full" />
+                            <th class="w-20 px-2 text-left font-normal"></th>
+                            <th class="w-full"></th>
                             {#each [...synergies] as synergy (synergy)}
                                 {@const syns = groupedSynergies.get(synergy) || new Map()}
                                 <BuffHeader synergies={syns} />
@@ -125,9 +133,9 @@
     <table class="relative w-full table-fixed" id="live-meter-table">
         <thead class="sticky top-0 z-40 h-6">
             <tr class="bg-zinc-900">
-                <th class="w-7 px-2 font-normal" />
-                <th class="w-14 px-2 text-left font-normal" />
-                <th class="w-full" />
+                <th class="w-7 px-2 font-normal"></th>
+                <th class="w-14 px-2 text-left font-normal"></th>
+                <th class="w-full"></th>
                 {#each [...groupedSynergies] as [id, synergies] (id)}
                     <BuffHeader {synergies} />
                 {:else}

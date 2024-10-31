@@ -160,8 +160,8 @@
             {dSynPercentage}<span class="text-3xs text-gray-300">%</span>
         </td>
     {/if}
-    <div
+    <td
         class="absolute left-0 -z-10 h-7 px-2 py-1"
         class:shadow-md={shadow}
-        style="background-color: {HexToRgba(color, alpha)}; width: {isLiveMeter ? $tweenedValue : width}%" />
+        style="background-color: {HexToRgba(color, alpha)}; width: {isLiveMeter ? $tweenedValue : width}%"></td>
 </tr>

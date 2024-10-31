@@ -155,7 +155,7 @@
     {/if}
 </div>
 {#if $optimizing}
-    <div class="fixed inset-0 z-50 bg-zinc-900 bg-opacity-80" />
+    <div class="fixed inset-0 z-50 bg-zinc-900 bg-opacity-80"></div>
     <div class="fixed left-0 right-0 top-0 z-50 h-modal w-full items-center justify-center p-4">
         <div class="relative top-[40%] mx-auto flex max-h-full w-full max-w-md">
             <div class="relative mx-auto flex flex-col rounded-lg border-gray-700 bg-zinc-800 text-gray-400 shadow-md">
@@ -171,7 +171,7 @@
     </div>
 {/if}
 {#if deleteConfirm && encounterDbInfo}
-    <div class="fixed inset-0 z-50 bg-zinc-900 bg-opacity-80" />
+    <div class="fixed inset-0 z-50 bg-zinc-900 bg-opacity-80"></div>
     <div class="fixed left-0 right-0 top-0 z-50 h-modal w-full items-center justify-center p-4">
         <div class="relative top-[25%] mx-auto flex max-h-full w-full max-w-md">
             <div class="relative mx-auto flex flex-col rounded-lg border-gray-700 bg-zinc-800 text-gray-400 shadow-md">

@@ -81,8 +81,8 @@
             await registerShortcuts($settings.shortcuts);
 
             // disable blur on windows 11
-            let ua = await navigator.userAgentData.getHighEntropyValues(["platformVersion"]);
-            if (navigator.userAgentData.platform === "Windows") {
+            let ua = await (navigator as any).userAgentData.getHighEntropyValues(["platformVersion"]);
+            if ((navigator as any).userAgentData.platform === "Windows") {
                 const majorPlatformVersion = Number(ua.platformVersion.split(".")[0]);
                 if (majorPlatformVersion >= 13) {
                     $settings.general.isWin11 = true;

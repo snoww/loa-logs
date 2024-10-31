@@ -83,8 +83,8 @@
                     <thead class="z-40 h-6" id="buff-head">
                         <tr class="bg-zinc-900">
                             <th class="w-7 whitespace-nowrap px-2 font-normal tracking-tight">Party {+partyId + 1}</th>
-                            <th class="w-20 px-2 text-left font-normal" />
-                            <th class="w-full" />
+                            <th class="w-20 px-2 text-left font-normal"></th>
+                            <th class="w-full"></th>
                             {#each [...synergies] as synergy (synergy)}
                                 {@const syns = groupedSynergies.get(synergy) || new Map()}
                                 <BuffHeader synergies={syns} />
@@ -109,9 +109,9 @@
     <table class="w-full table-fixed">
         <thead class="relative z-40 h-6" id="buff-head">
             <tr class="bg-zinc-900">
-                <th class="w-7 px-2 font-normal" />
-                <th class="w-20 px-2 text-left font-normal" />
-                <th class="w-full" />
+                <th class="w-7 px-2 font-normal"></th>
+                <th class="w-20 px-2 text-left font-normal"></th>
+                <th class="w-full"></th>
                 {#each [...groupedSynergies] as [id, synergies] (id)}
                     <BuffHeader {synergies} />
                 {:else}

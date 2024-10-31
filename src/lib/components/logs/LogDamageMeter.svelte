@@ -97,6 +97,7 @@
                 players = Object.values(encounter.entities)
                     .filter(
                         (e) =>
+                            // svelte-ignore reactive_declaration_non_reactive_property
                             e.damageStats.damageDealt > 0 &&
                             (e.entityType === EntityType.ESTHER ||
                                 (e.entityType === EntityType.PLAYER && e.classId != 0))
@@ -105,13 +106,19 @@
             } else {
                 players = Object.values(encounter.entities)
                     .filter(
-                        (e) => e.damageStats.damageDealt > 0 && e.entityType === EntityType.PLAYER && e.classId != 0
+                        (e) =>
+                            // svelte-ignore reactive_declaration_non_reactive_property
+                            e.damageStats.damageDealt > 0 && e.entityType === EntityType.PLAYER && e.classId != 0
                     )
                     .sort((a, b) => b.damageStats.damageDealt - a.damageStats.damageDealt);
             }
             if ($settings.general.showBosses) {
                 bosses = Object.values(encounter.entities)
-                    .filter((e) => e.damageStats.damageDealt > 0 && e.entityType === EntityType.BOSS)
+                    .filter(
+                        (e) =>
+                            // svelte-ignore reactive_declaration_non_reactive_property
+                            e.damageStats.damageDealt > 0 && e.entityType === EntityType.BOSS
+                    )
                     .sort((a, b) => b.damageStats.damageDealt - a.damageStats.damageDealt);
             }
             $localPlayer = encounter.localPlayer;
@@ -148,7 +155,11 @@
                 totalDamageDealt =
                     encounter.encounterDamageStats.totalDamageDealt +
                     players
-                        .filter((e) => e.damageStats.damageDealt > 0 && e.entityType === EntityType.ESTHER)
+                        .filter(
+                            (e) =>
+                                // svelte-ignore reactive_declaration_non_reactive_property
+                                e.damageStats.damageDealt > 0 && e.entityType === EntityType.ESTHER
+                        )
                         .reduce((a, b) => a + b.damageStats.damageDealt, 0);
             } else {
                 totalDamageDealt = encounter.encounterDamageStats.totalDamageDealt;
@@ -160,14 +171,20 @@
 
             if (playerName) {
                 player = encounter.entities[playerName];
+                // svelte-ignore reactive_declaration_non_reactive_property
                 state = MeterState.PLAYER;
             } else {
                 player = null;
+                // svelte-ignore reactive_declaration_non_reactive_property
                 state = MeterState.PARTY;
             }
 
             let chartablePlayers = Object.values(encounter.entities)
-                .filter((e) => e.damageStats.damageDealt > 0 && e.entityType === EntityType.PLAYER && e.classId != 0)
+                .filter(
+                    (e) =>
+                        // svelte-ignore reactive_declaration_non_reactive_property
+                        e.damageStats.damageDealt > 0 && e.entityType === EntityType.PLAYER && e.classId != 0
+                )
                 .sort((a, b) => b.damageStats.damageDealt - a.damageStats.damageDealt);
 
             if (
@@ -179,7 +196,10 @@
                 let legendNames = getLegendNames(chartablePlayers, $settings.general.showNames);
                 let deathTimes = getDeathTimes(chartablePlayers, legendNames, encounter.fightStart);
                 let bossHpLogs = Object.entries(encounter.encounterDamageStats.bossHpLog || {});
-                if (chartType === ChartType.AVERAGE_DPS) {
+                if (
+                    // svelte-ignore reactive_declaration_non_reactive_property
+                    chartType === ChartType.AVERAGE_DPS
+                ) {
                     let chartPlayers = getAveragePlayerSeries(
                         chartablePlayers,
                         legendNames,
@@ -199,7 +219,10 @@
                         bossChart,
                         deathTimes
                     );
-                } else if (chartType === ChartType.ROLLING_DPS) {
+                } else if (
+                    // svelte-ignore reactive_declaration_non_reactive_property
+                    chartType === ChartType.ROLLING_DPS
+                ) {
                     let chartPlayers = getRollingPlayerSeries(
                         chartablePlayers,
                         legendNames,
@@ -219,7 +242,12 @@
                         bossChart,
                         deathTimes
                     );
-                } else if (chartType === ChartType.SKILL_LOG && player && player.entityType === EntityType.PLAYER) {
+                } else if (
+                    // svelte-ignore reactive_declaration_non_reactive_property
+                    chartType === ChartType.SKILL_LOG &&
+                    player &&
+                    player.entityType === EntityType.PLAYER
+                ) {
                     if (
                         Object.entries(player.skills).some(
                             ([, skill]) => skill.skillCastLog && skill.skillCastLog.length > 0
@@ -241,7 +269,11 @@
                             encounter.fightStart
                         );
                     }
-                } else if (chartType === ChartType.SKILL_LOG && focusedBoss) {
+                } else if (
+                    // svelte-ignore reactive_declaration_non_reactive_property
+                    chartType === ChartType.SKILL_LOG &&
+                    focusedBoss
+                ) {
                     let boss = bosses.find((boss) => boss.name === focusedBoss);
                     chartOptions = getSkillLogChartOld(
                         boss!,
@@ -416,7 +448,7 @@
 </script>
 
 <svelte:window on:contextmenu|preventDefault />
-<!-- svelte-ignore a11y-no-static-element-interactions -->
+<!-- svelte-ignore a11y_no_static_element_interactions -->
 <div
     bind:this={targetDiv}
     class="scroll-ml-8 scroll-mt-2 text-gray-100"
@@ -510,6 +542,7 @@
                         Stagger
                     </button>
                 {/if}
+                <!-- svelte-ignore a11y_consider_explicit_label -->
                 <button
                     class="rounded-sm bg-gray-700 px-2 py-1"
                     use:tooltip={{ content: "Take Screenshot" }}
@@ -524,6 +557,7 @@
                 </button>
                 {#if encounter.cleared && $settings.sync.enabled && $settings.sync.accessToken && $settings.sync.validToken}
                     {#if uploading}
+                        <!-- svelte-ignore a11y_consider_explicit_label -->
                         <button class="rounded-sm bg-gray-700 px-2 py-1" use:tooltip={{ content: "Uploading..." }}>
                             <svg
                                 class="hover:fill-accent-800 h-5 w-5 animate-spin fill-zinc-300"
@@ -535,6 +569,7 @@
                             </svg>
                         </button>
                     {:else if !encounter.sync}
+                        <!-- svelte-ignore a11y_consider_explicit_label -->
                         <button
                             class="rounded-sm bg-gray-700 px-2 py-1"
                             use:tooltip={{ content: "Sync to logs.snow.xyz" }}
@@ -549,6 +584,7 @@
                             </svg>
                         </button>
                     {:else}
+                        <!-- svelte-ignore a11y_consider_explicit_label -->
                         <a
                             class="rounded-sm bg-gray-700 px-2 py-1"
                             use:tooltip={{ content: "Open on logs.snow.xyz" }}
@@ -566,6 +602,7 @@
                     {/if}
                 {/if}
                 <div class="relative flex items-center rounded-sm bg-gray-700" on:focusout={handleDropdownFocusLoss}>
+                    <!-- svelte-ignore a11y_consider_explicit_label -->
                     <button on:click={handleDropdownClick} class="h-full px-2">
                         <svg
                             class="h-4 w-4"
@@ -596,7 +633,8 @@
                                             class="peer sr-only"
                                             bind:checked={$settings.general.showNames} />
                                         <div
-                                            class="peer-checked:bg-accent-800 peer h-5 w-9 rounded-full border-gray-600 bg-gray-800 after:absolute after:left-[2px] after:top-[2px] after:h-4 after:w-4 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none" />
+                                            class="peer-checked:bg-accent-800 peer h-5 w-9 rounded-full border-gray-600 bg-gray-800 after:absolute after:left-[2px] after:top-[2px] after:h-4 after:w-4 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none">
+                                        </div>
                                     </label>
                                 </button>
                                 <button class="flex items-center justify-between bg-gray-700 p-1">
@@ -608,7 +646,8 @@
                                             class="peer sr-only"
                                             bind:checked={$settings.logs.splitPartyDamage} />
                                         <div
-                                            class="peer-checked:bg-accent-800 peer h-5 w-9 rounded-full border-gray-600 bg-gray-800 after:absolute after:left-[2px] after:top-[2px] after:h-4 after:w-4 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none" />
+                                            class="peer-checked:bg-accent-800 peer h-5 w-9 rounded-full border-gray-600 bg-gray-800 after:absolute after:left-[2px] after:top-[2px] after:h-4 after:w-4 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none">
+                                        </div>
                                     </label>
                                 </button>
                                 <button class="flex items-center justify-between bg-gray-700 p-1">
@@ -620,7 +659,8 @@
                                             class="peer sr-only"
                                             bind:checked={$settings.general.showEsther} />
                                         <div
-                                            class="peer-checked:bg-accent-800 peer h-5 w-9 rounded-full border-gray-600 bg-gray-800 after:absolute after:left-[2px] after:top-[2px] after:h-4 after:w-4 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none" />
+                                            class="peer-checked:bg-accent-800 peer h-5 w-9 rounded-full border-gray-600 bg-gray-800 after:absolute after:left-[2px] after:top-[2px] after:h-4 after:w-4 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none">
+                                        </div>
                                     </label>
                                 </button>
                                 <button
@@ -638,7 +678,7 @@
             </div>
 
             {#if deleteConfirm}
-                <div class="fixed inset-0 z-50 bg-zinc-900 bg-opacity-80" />
+                <div class="fixed inset-0 z-50 bg-zinc-900 bg-opacity-80"></div>
                 <div class="fixed left-0 right-0 top-0 z-50 h-modal w-full items-center justify-center p-4">
                     <div class="relative top-[25%] mx-auto flex max-h-full w-full max-w-md">
                         <div
@@ -730,9 +770,9 @@
                                     console.log("titlebar clicked");
                                 }}>
                                 <tr class="bg-zinc-900">
-                                    <th class="w-7 px-2 font-normal" />
-                                    <th class="w-14 px-2 text-left font-normal" />
-                                    <th class="w-full" />
+                                    <th class="w-7 px-2 font-normal"></th>
+                                    <th class="w-14 px-2 text-left font-normal"></th>
+                                    <th class="w-full"></th>
                                     <LogDamageMeterHeader
                                         {anyDead}
                                         {multipleDeaths}
@@ -831,7 +871,7 @@
     {/if}
 </div>
 {#if tab !== MeterTab.IDENTITY && tab !== MeterTab.STAGGER}
-    <!-- svelte-ignore a11y-no-static-element-interactions -->
+    <!-- svelte-ignore a11y_no_static_element_interactions -->
     <div class="mt-4" on:contextmenu|preventDefault={handleRightClick}>
         {#if chartType === ChartType.SKILL_LOG}
             {#if player && player.entityType === EntityType.PLAYER}
@@ -863,21 +903,21 @@
         {/if}
         {#if chartType === ChartType.AVERAGE_DPS}
             {#if !$settings.general.showNames}
-                <div class="mt-2 h-[300px]" use:chartable={chartOptions} style="width: calc(100vw - 4.5rem);" />
+                <div class="mt-2 h-[300px]" use:chartable={chartOptions} style="width: calc(100vw - 4.5rem);"></div>
             {:else}
-                <div class="mt-2 h-[300px]" use:chartable={chartOptions} style="width: calc(100vw - 4.5rem);" />
+                <div class="mt-2 h-[300px]" use:chartable={chartOptions} style="width: calc(100vw - 4.5rem);"></div>
             {/if}
         {:else if chartType === ChartType.ROLLING_DPS}
             {#if !$settings.general.showNames}
-                <div class="mt-2 h-[300px]" use:chartable={chartOptions} style="width: calc(100vw - 4.5rem);" />
+                <div class="mt-2 h-[300px]" use:chartable={chartOptions} style="width: calc(100vw - 4.5rem);"></div>
             {:else}
-                <div class="mt-2 h-[300px]" use:chartable={chartOptions} style="width: calc(100vw - 4.5rem);" />
+                <div class="mt-2 h-[300px]" use:chartable={chartOptions} style="width: calc(100vw - 4.5rem);"></div>
             {/if}
         {:else if chartType === ChartType.SKILL_LOG}
             {#if player && player.entityType === EntityType.PLAYER && hasSkillCastLog}
                 <LogSkillChart {chartOptions} {player} encounterDamageStats={encounter.encounterDamageStats} />
             {:else if (player && player.entityType === EntityType.PLAYER) || focusedBoss}
-                <div class="mt-2 h-[300px]" use:chartable={chartOptions} style="width: calc(100vw - 4.5rem);" />
+                <div class="mt-2 h-[300px]" use:chartable={chartOptions} style="width: calc(100vw - 4.5rem);"></div>
             {/if}
         {/if}
     </div>

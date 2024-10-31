@@ -236,12 +236,12 @@
                     {/if}
                 </td>
             {/if}
-            <div
+            <td
                 class="absolute left-0 -z-10 h-7 px-2 py-1"
                 class:shadow-md={!$takingScreenshot}
                 style="background-color: {$settings.general.splitLines
                     ? RGBLinearShade(HexToRgba(color, 0.6))
-                    : HexToRgba(color, 0.6)}; width: 100%" />
+                    : HexToRgba(color, 0.6)}; width: 100%"></td>
         </tr>
     {/if}
     {#each skills as skill, i (skill.id)}

@@ -2,7 +2,7 @@ import { classColors } from "$lib/constants/colors";
 import { invoke } from "@tauri-apps/api";
 import { emit } from "@tauri-apps/api/event";
 import { register, unregisterAll } from "@tauri-apps/api/globalShortcut";
-import { get, writable } from "svelte/store";
+import { get, writable, type Writable } from "svelte/store";
 import { hideAll } from "tippy.js";
 import { clickthroughStore } from "$lib/utils/stores";
 
@@ -137,6 +137,7 @@ export const defaultSettings = {
         deathTime: true,
         critRate: true,
         critDmg: false,
+        critDmgPercent: false,
         frontAtk: true,
         backAtk: true,
         counters: false,
@@ -189,12 +190,12 @@ export const defaultSettings = {
 
 export const update = {
     available: false,
-    manifest: undefined,
+    manifest: undefined as any,
     dismissed: false,
     isNotice: false
 };
 
-const settingsStore = (key: string, defaultSettings: object) => {
+const settingsStore = <T>(key: string, defaultSettings: T): Writable<T> => {
     const storedSettings = localStorage.getItem(key);
     const value = storedSettings ? JSON.parse(storedSettings) : defaultSettings;
     const store = writable(value);
@@ -208,7 +209,7 @@ const settingsStore = (key: string, defaultSettings: object) => {
     }
     return {
         subscribe: store.subscribe,
-        set: (value: object) => {
+        set: (value: T) => {
             localStorage.setItem(key, JSON.stringify(value));
             if (key === "settings") {
                 invoke("save_settings", { settings: value });
@@ -223,7 +224,7 @@ export const settings = settingsStore("settings", defaultSettings);
 export const colors = settingsStore("classColors", classColors);
 export const updateSettings = settingsStore("updateSettings", update);
 
-export const miscSettings = settingsStore("miscSettings", {});
+export const miscSettings = settingsStore<{ viewedChangelog?: boolean; version?: string }>("miscSettings", {});
 
 export async function registerShortcuts(shortcuts: any) {
     try {
@@ -286,9 +287,9 @@ export async function registerShortcuts(shortcuts: any) {
     }
 }
 
-export const imagePath = settingsStore("imagePath", {});
-export const skillIcon = settingsStore("skillIcon", {});
-export const classIconCache = settingsStore("classIconCache", {});
+export const imagePath = settingsStore<{ path: string }>("imagePath", { path: "" });
+export const skillIcon = settingsStore<{ path: string }>("skillIcon", { path: "" });
+export const classIconCache = settingsStore<{ [key: string]: string }>("classIconCache", {});
 
 export const keyboardKeys = [
     "a",

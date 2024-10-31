@@ -9,9 +9,9 @@
     export let anySupportIdentity = false;
 </script>
 
-<th class="w-7 px-2 font-normal" />
-<th class="w-14 px-2 text-left font-normal" />
-<th class="w-full" />
+<th class="w-7 px-2 font-normal"></th>
+<th class="w-14 px-2 text-left font-normal"></th>
+<th class="w-full"></th>
 {#if meterSettings.breakdown.damage}
     <th class="w-12 font-normal" use:tooltip={{ content: "Damage Dealt" }}>DMG</th>
 {/if}

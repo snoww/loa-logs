@@ -63,6 +63,6 @@
         </td>
     {/each}
 {/if}
-<div
+<td
     class="absolute left-0 -z-10 h-7 px-2 py-1"
-    style="background-color: {HexToRgba(color, alpha)}; width: {$tweenedValue}%" />
+    style="background-color: {HexToRgba(color, alpha)}; width: {$tweenedValue}%"></td>

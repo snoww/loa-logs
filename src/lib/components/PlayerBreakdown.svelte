@@ -32,7 +32,10 @@
                 } else {
                     color = $colors[entity.class].color;
                 }
-            } else if (entity.entityType === EntityType.ESTHER) {
+            } else if (
+                // svelte-ignore reactive_declaration_non_reactive_property
+                entity.entityType === EntityType.ESTHER
+            ) {
                 color = "#4dc8d0";
             }
             skills = Object.values(entity.skills).sort((a, b) => b.totalDamage - a.totalDamage);

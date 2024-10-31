@@ -60,7 +60,7 @@
         {damageTaken[0]}<span class="text-3xs text-gray-300">{damageTaken[1]}</span>
     </span>
 </td>
-<div
+<td
     class="absolute left-0 -z-10 h-7 px-2 py-1"
     class:shadow-md={shadow}
-    style="background-color: {HexToRgba(color, alpha)}; width: {tween ? $tweenedValue : width}%" />
+    style="background-color: {HexToRgba(color, alpha)}; width: {tween ? $tweenedValue : width}%"></td>

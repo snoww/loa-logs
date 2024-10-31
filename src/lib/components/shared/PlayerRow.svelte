@@ -72,7 +72,10 @@
                 color = $colors[entity.class].color;
             }
         }
-        if (entity.entityType === EntityType.ESTHER) {
+        if (
+            // svelte-ignore reactive_declaration_non_reactive_property
+            entity.entityType === EntityType.ESTHER
+        ) {
             name = getEstherFromNpcId(entity.npcId);
             tooltipName = name;
             color = "#4dc8d0";
@@ -188,10 +191,10 @@
 {/if}
 {#if meterSettings.counters}
     <td class="px-1 text-center">
-        {entity.skillStats.counters}<span class="text-3xs text-gray-300" />
+        {entity.skillStats.counters}<span class="text-3xs text-gray-300"></span>
     </td>
 {/if}
-<div
+<td
     class="absolute left-0 -z-10 h-7 px-2 py-1"
     class:shadow-md={shadow}
-    style="background-color: {HexToRgba(color, alpha)}; width: {width}%" />
+    style="background-color: {HexToRgba(color, alpha)}; width: {width}%"></td>

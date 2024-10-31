@@ -20,7 +20,6 @@
         searchFilter,
         searchStore,
         selectedEncounters,
-        uploadErrorMessage,
         uploadErrorStore
     } from "$lib/utils/stores";
     import { tooltip } from "$lib/utils/tooltip";
@@ -90,14 +89,14 @@
     }
 
     async function loadEncounters(
-        searchFilter: SearchFilter,
+        filter: SearchFilter,
         search: string,
         page: number
     ): Promise<Array<EncounterPreview>> {
         NProgress.start();
         let bosses = Array.from($searchFilter.bosses);
-        if (searchFilter.encounters.size > 0) {
-            for (const encounter of searchFilter.encounters) {
+        if (filter.encounters.size > 0) {
+            for (const encounter of filter.encounters) {
                 const raid = encounter.substring(0, encounter.indexOf(" "));
                 bosses.push(...encounterMap[raid][encounter]);
             }
@@ -116,14 +115,14 @@
             pageSize: $settings.general.logsPerPage,
             search: searchQuery,
             filter: {
-                minDuration: searchFilter.minDuration,
+                minDuration: filter.minDuration,
                 bosses: bosses,
-                cleared: searchFilter.cleared,
-                favorite: searchFilter.favorite,
-                difficulty: searchFilter.difficulty,
-                bossOnlyDamage: searchFilter.bossOnlyDamage,
-                sort: searchFilter.sort,
-                order: searchFilter.order
+                cleared: filter.cleared,
+                favorite: filter.favorite,
+                difficulty: filter.difficulty,
+                bossOnlyDamage: filter.bossOnlyDamage,
+                sort: filter.sort,
+                order: filter.order
             }
         });
         encounters = overview.encounters;
@@ -402,13 +401,15 @@
                         </tr>
                     {:else}
                         {#if $searchStore.length > 0}
-                            <div class="w-screen bg-neutral-800 p-2">No encounters found.</div>
+                            <tr><td colspan="7" class="p-2">No encounters found.</td></tr>
                         {:else}
-                            <div class="w-screen bg-neutral-800 p-2">No encounters recorded.</div>
-                            <div class="w-screen bg-neutral-800 p-2">
-                                Meter should be turned on at character select (before entering raid at latest) for best
-                                accuracy.
-                            </div>
+                            <tr><td colspan="7" class="p-2">No encounters recorded.</td></tr>
+                            <tr>
+                                <td colspan="7" class="p-2">
+                                    Meter should be turned on at character select (before entering raid at latest) for
+                                    best accuracy.
+                                </td>
+                            </tr>
                         {/if}
                     {/each}
                 </tbody>

@@ -27,7 +27,11 @@
 
     $: {
         if (encounterPartyInfo) {
-            esthers = players.filter((player) => player.entityType === EntityType.ESTHER);
+            esthers = players.filter(
+                (player) =>
+                    // svelte-ignore reactive_declaration_non_reactive_property
+                    player.entityType === EntityType.ESTHER
+            );
             const partyInfo = Object.entries(encounterPartyInfo);
             if (partyInfo.length >= 2) {
                 for (const [partyIdStr, names] of partyInfo) {
@@ -71,8 +75,8 @@
                 <thead class="z-40 h-6">
                     <tr class="bg-zinc-900">
                         <th class="w-7 whitespace-nowrap px-2 font-normal tracking-tight">Party {+partyId + 1}</th>
-                        <th class="w-20 px-2 text-left font-normal" />
-                        <th class="w-full" />
+                        <th class="w-20 px-2 text-left font-normal"></th>
+                        <th class="w-full"></th>
                         <LogDamageMeterHeader
                             anyDead={anyPartyDead[partyId]}
                             {multipleDeaths}
@@ -115,8 +119,8 @@
             <thead class="z-40 h-6">
                 <tr class="bg-zinc-900">
                     <th class="w-7 whitespace-nowrap px-2 font-normal tracking-tight">Esthers</th>
-                    <th class="w-20 px-2 text-left font-normal" />
-                    <th class="w-full" />
+                    <th class="w-20 px-2 text-left font-normal"></th>
+                    <th class="w-full"></th>
                     <LogDamageMeterHeader
                         anyDead={false}
                         multipleDeaths={false}

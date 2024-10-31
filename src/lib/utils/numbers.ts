@@ -171,7 +171,6 @@ export function resampleData(data: Array<BossHpLog>, interval = 5, length: numbe
             break;
         }
         if (dataMap.has(time)) {
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             last = dataMap.get(time)!;
         } else if (last === null) {
             continue;

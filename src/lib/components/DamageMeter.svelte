@@ -211,18 +211,27 @@
                     players = Object.values(encounter.entities)
                         .filter(
                             (e) =>
+                                // svelte-ignore reactive_declaration_non_reactive_property
                                 e.damageStats.damageDealt > 0 &&
                                 (e.entityType === EntityType.ESTHER || e.entityType === EntityType.PLAYER)
                         )
                         .sort((a, b) => b.damageStats.damageDealt - a.damageStats.damageDealt);
                 } else {
                     players = Object.values(encounter.entities)
-                        .filter((e) => e.damageStats.damageDealt > 0 && e.entityType === EntityType.PLAYER)
+                        .filter(
+                            (e) =>
+                                // svelte-ignore reactive_declaration_non_reactive_property
+                                e.damageStats.damageDealt > 0 && e.entityType === EntityType.PLAYER
+                        )
                         .sort((a, b) => b.damageStats.damageDealt - a.damageStats.damageDealt);
                 }
                 if ($settings.general.showBosses) {
                     bosses = Object.values(encounter.entities)
-                        .filter((e) => e.damageStats.damageDealt > 0 && e.entityType === EntityType.BOSS)
+                        .filter(
+                            (e) =>
+                                // svelte-ignore reactive_declaration_non_reactive_property
+                                e.damageStats.damageDealt > 0 && e.entityType === EntityType.BOSS
+                        )
                         .sort((a, b) => b.damageStats.damageDealt - a.damageStats.damageDealt);
                 }
                 $localPlayer = encounter.localPlayer;
@@ -282,6 +291,8 @@
                             players
                                 .filter(
                                     (e) =>
+                                        // svelte-ignore reactive_declaration_non_reactive_property
+
                                         e.damageStats.damageDealt > 0 && !e.isDead && e.entityType == EntityType.PLAYER
                                 )
                                 .reduce((a, b) => a + b.damageStats.damageDealt, 0) / duration;
@@ -299,7 +310,11 @@
                     totalDamageDealt =
                         encounter.encounterDamageStats.totalDamageDealt +
                         players
-                            .filter((e) => e.damageStats.damageDealt > 0 && e.entityType === EntityType.ESTHER)
+                            .filter(
+                                (e) =>
+                                    // svelte-ignore reactive_declaration_non_reactive_property
+                                    e.damageStats.damageDealt > 0 && e.entityType === EntityType.ESTHER
+                            )
                             .reduce((a, b) => a + b.damageStats.damageDealt, 0);
                 } else {
                     totalDamageDealt = encounter.encounterDamageStats.totalDamageDealt;
@@ -314,9 +329,11 @@
 
             if (playerName) {
                 player = encounter.entities[playerName];
+                // svelte-ignore reactive_declaration_non_reactive_property
                 state = MeterState.PLAYER;
             } else {
                 player = null;
+                // svelte-ignore reactive_declaration_non_reactive_property
                 state = MeterState.PARTY;
             }
         }
@@ -439,8 +456,8 @@
                             <th class="w-7 px-2 font-normal">
                                 <MissingInfo />
                             </th>
-                            <th class="w-14 px-2 text-left font-normal" />
-                            <th class="w-full" />
+                            <th class="w-14 px-2 text-left font-normal"></th>
+                            <th class="w-full"></th>
                             {#if anyDead && $settings.meter.deathTime}
                                 <th class="w-14 font-normal" use:tooltip={{ content: "Dead for" }}>Dead</th>
                             {/if}

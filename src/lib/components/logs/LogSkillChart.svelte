@@ -94,7 +94,7 @@
     }
 </script>
 
-<div class="mt-2 h-[400px]" use:chartable={chartOptions} style="width: calc(100vw - 4.5rem);" />
+<div class="mt-2 h-[400px]" use:chartable={chartOptions} style="width: calc(100vw - 4.5rem);"></div>
 
 <div class="mb-4 mt-2 min-h-[30rem]">
     <div class="flex justify-start text-lg font-medium">
@@ -113,6 +113,7 @@
                     }}>
                     Find Max Cast
                 </button>
+                <!-- svelte-ignore a11y_consider_explicit_label -->
                 <button
                     use:tooltip={{ content: "Previous Cast" }}
                     class="pr-1"
@@ -130,6 +131,7 @@
                         <path d="m560.5 837-262-262 262-262 65 65.5L429 575l196.5 196.5-65 65.5Z" />
                     </svg>
                 </button>
+                <!-- svelte-ignore a11y_consider_explicit_label -->
                 <button
                     use:tooltip={{ content: "Next Cast" }}
                     class="px-1"
@@ -270,7 +272,7 @@
                                 <td>
                                     <div class="flex">
                                         {#if allGroupedBuffs[i].size > 0}
-                                            {#each allGroupedBuffs[i] as [_, groupedBuffs]}
+                                            {#each allGroupedBuffs[i] as [, groupedBuffs]}
                                                 {#each groupedBuffs as buff}
                                                     <BuffTooltip synergy={buff.statusEffect} size={"size-6"} />
                                                 {/each}

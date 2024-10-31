@@ -21,7 +21,11 @@
     $: {
         if (players.length > 0) {
             sortedPlayers = players
-                .filter((p) => p.entityType == EntityType.PLAYER)
+                .filter(
+                    (p) =>
+                        // svelte-ignore reactive_declaration_non_reactive_property
+                        p.entityType == EntityType.PLAYER
+                )
                 .toSorted((a, b) => getRDamage(b.damageStats) - getRDamage(a.damageStats));
             topRDamage = getRDamage(sortedPlayers[0].damageStats);
             playerRDamagePercentages = sortedPlayers.map((p) => (getRDamage(p.damageStats) / topRDamage) * 100);

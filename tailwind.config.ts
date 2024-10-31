@@ -1,8 +1,11 @@
-const defaultTheme = require("tailwindcss/defaultTheme");
+import typography from "@tailwindcss/typography";
+import flowbite from "flowbite/plugin";
+import type { Config } from "tailwindcss";
+import defaultTheme from "tailwindcss/defaultTheme";
 
-/** @type {import('tailwindcss').Config} */
-module.exports = {
+export default {
     content: ["./src/**/*.{html,js,svelte,ts}", "./node_modules/flowbite-svelte/**/*.{html,js,svelte,ts}"],
+
     theme: {
         extend: {
             fontFamily: {
@@ -25,5 +28,6 @@ module.exports = {
             }
         }
     },
-    plugins: [require("flowbite/plugin"), require("@tailwindcss/typography")]
-};
+
+    plugins: [flowbite, typography]
+} satisfies Config;

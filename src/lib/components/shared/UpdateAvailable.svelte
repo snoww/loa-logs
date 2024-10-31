@@ -8,7 +8,7 @@
 </script>
 
 {#if $updateSettings.available && $updateSettings.manifest && !$updateSettings.dismissed}
-    <div class="fixed inset-0 z-50 bg-zinc-900 bg-opacity-80" />
+    <div class="fixed inset-0 z-50 bg-zinc-900 bg-opacity-80"></div>
     <div class="fixed left-0 right-0 top-0 z-50 h-modal w-full items-center justify-center p-4">
         <div class="relative top-[10%] mx-auto flex max-h-[95%] w-full max-w-md md:max-w-lg lg:max-w-2xl xl:max-w-3xl">
             <div class="relative mx-auto flex flex-col rounded-lg border-gray-700 bg-zinc-800 text-gray-400 shadow-md">
