@@ -28,7 +28,7 @@
                 step="10" />
             <datalist id="markers">
                 {#each Array.from({ length: 11 }, (_, i) => i * 30) as i}
-                    <option value={i} />
+                    <option value={i}></option>
                 {/each}
             </datalist>
         </label>

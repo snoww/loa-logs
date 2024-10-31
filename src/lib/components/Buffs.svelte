@@ -18,30 +18,38 @@
 
     export let tab: MeterTab;
     export let encounterDamageStats: EncounterDamageStats | undefined;
-    export let players: Array<Entity>;
+    export let players: Entity[];
     export let focusedPlayer: Entity | null = null;
     export let handleRightClick: () => void;
     export let inspectPlayer: (name: string) => void;
     export let encounterPartyInfo: PartyInfo | undefined;
     export let localPlayer: string | undefined;
 
-    let groupedSynergies: Map<string, Map<number, StatusEffect>> = new Map();
-    let percentages = Array<number>();
+    let groupedSynergies = new Map<string, Map<number, StatusEffect>>();
+    let percentages: number[] = [];
 
-    let parties = new Array<Array<Entity>>();
-    let partyGroupedSynergies = new Array<[string, Set<string>]>();
-    let partyPercentages = new Array<number[]>();
+    let parties: Entity[][] = [];
+    let partyGroupedSynergies: Array<[string, Set<string>]> = [];
+    let partyPercentages: number[][] = [];
 
-    let partyBuffs = new Map<string, Map<string, Array<BuffDetails>>>();
+    let partyBuffs = new Map<string, Map<string, BuffDetails[]>>();
 
     let localPlayerInP1 = true;
 
     $: {
-        if (focusedPlayer && focusedPlayer.entityType === EntityType.ESTHER) {
+        if (
+            // svelte-ignore reactive_declaration_non_reactive_property
+            focusedPlayer &&
+            focusedPlayer.entityType === EntityType.ESTHER
+        ) {
             focusedPlayer = null;
             handleRightClick();
         }
-        players = players.filter((player) => player.entityType === EntityType.PLAYER);
+        players = players.filter(
+            (player) =>
+                // svelte-ignore reactive_declaration_non_reactive_property
+                player.entityType === EntityType.PLAYER
+        );
         groupedSynergies = new Map<string, Map<number, StatusEffect>>();
         if (encounterDamageStats) {
             percentages = players.map(
@@ -98,8 +106,8 @@
                     <thead class="z-40 h-6" id="buff-head">
                         <tr class="bg-zinc-900">
                             <th class="w-7 whitespace-nowrap px-2 font-normal tracking-tight">Party {+partyId + 1}</th>
-                            <th class="w-20 px-2 text-left font-normal" />
-                            <th class="w-full" />
+                            <th class="w-20 px-2 text-left font-normal"></th>
+                            <th class="w-full"></th>
                             {#each [...synergies] as synergy (synergy)}
                                 {@const syns = groupedSynergies.get(synergy) || new Map()}
                                 <BuffHeader synergies={syns} />
@@ -125,9 +133,9 @@
     <table class="relative w-full table-fixed" id="live-meter-table">
         <thead class="sticky top-0 z-40 h-6">
             <tr class="bg-zinc-900">
-                <th class="w-7 px-2 font-normal" />
-                <th class="w-14 px-2 text-left font-normal" />
-                <th class="w-full" />
+                <th class="w-7 px-2 font-normal"></th>
+                <th class="w-14 px-2 text-left font-normal"></th>
+                <th class="w-full"></th>
                 {#each [...groupedSynergies] as [id, synergies] (id)}
                     <BuffHeader {synergies} />
                 {:else}

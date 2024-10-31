@@ -249,13 +249,13 @@ export function getSynergyPercentageDetailsSum(
 }
 
 export function getPartyShields(
-    players: Array<Entity>,
+    players: Entity[],
     encounterPartyInfo: PartyInfo,
     groupedShields: Map<string, Map<number, StatusEffect>>,
     tab: ShieldTab
 ) {
-    const parties = new Array<Array<Entity>>();
-    const partyPercentages = new Array<number[]>();
+    const parties: Entity[][] = [];
+    const partyPercentages: number[][] = [];
     const partyInfo = Object.entries(encounterPartyInfo);
     let shieldValue = "";
     let shieldBy = "";
@@ -278,7 +278,7 @@ export function getPartyShields(
             break;
     }
     const topShield = Math.max(...players.map((player) => player.damageStats[shieldValue]));
-    const partyShields = new Map<string, Map<string, Array<ShieldDetails>>>();
+    const partyShields = new Map<string, Map<string, ShieldDetails[]>>();
     const partyGroupedShields = new Map<string, Set<string>>();
 
     if (partyInfo.length >= 1) {
@@ -319,7 +319,7 @@ export function getPartyShields(
         });
 
         parties.forEach((party, partyId) => {
-            partyShields.set(partyId.toString(), new Map<string, Array<ShieldDetails>>());
+            partyShields.set(partyId.toString(), new Map<string, ShieldDetails[]>());
             for (const player of party) {
                 partyShields.get(partyId.toString())!.set(player.name, []);
                 const playerBuffs = partyShields.get(partyId.toString())!.get(player.name)!;
@@ -346,16 +346,16 @@ export function getPartyShields(
 }
 
 export function getPartyBuffs(
-    players: Array<Entity>,
+    players: Entity[],
     topDamageDealt: number,
     encounterPartyInfo: PartyInfo,
     groupedSynergies: Map<string, Map<number, StatusEffect>>
 ): PartyBuffs {
-    const parties = new Array<Array<Entity>>();
+    const parties: Entity[][] = [];
     const partyGroupedSynergies = new Map<string, Set<string>>();
-    const partyPercentages = new Array<number[]>();
+    const partyPercentages: number[][] = [];
 
-    const partyBuffs = new Map<string, Map<string, Array<BuffDetails>>>();
+    const partyBuffs = new Map<string, Map<string, BuffDetails[]>>();
 
     const partyInfo = Object.entries(encounterPartyInfo);
     if (partyInfo.length >= 2) {
@@ -396,7 +396,7 @@ export function getPartyBuffs(
         });
 
         parties.forEach((party, partyId) => {
-            partyBuffs.set(partyId.toString(), new Map<string, Array<BuffDetails>>());
+            partyBuffs.set(partyId.toString(), new Map<string, BuffDetails[]>());
             for (const player of party) {
                 partyBuffs.get(partyId.toString())!.set(player.name, []);
                 const playerBuffs = partyBuffs.get(partyId.toString())!.get(player.name)!;
@@ -614,10 +614,10 @@ export function getSkillCastBuffs(
     buffType: string = "party",
     buffFilter: boolean = true
 ) {
-    const groupedBuffs: Map<string, Array<StatusEffectWithId>> = new Map();
+    const groupedBuffs = new Map<string, StatusEffectWithId[]>();
 
     for (const buffId of buffs) {
-        if (encounterDamageStats.buffs.hasOwnProperty(buffId)) {
+        if (Object.prototype.hasOwnProperty.call(encounterDamageStats.buffs, buffId)) {
             includeBuff(
                 hitDamage,
                 buffId,
@@ -631,7 +631,7 @@ export function getSkillCastBuffs(
         }
     }
     for (const buffId of debuffs) {
-        if (encounterDamageStats.debuffs.hasOwnProperty(buffId)) {
+        if (Object.prototype.hasOwnProperty.call(encounterDamageStats.debuffs, buffId)) {
             includeBuff(
                 hitDamage,
                 buffId,
@@ -648,7 +648,7 @@ export function getSkillCastBuffs(
     return new Map([...groupedBuffs].sort((a, b) => String(a[0]).localeCompare(b[0])));
 }
 
-export function getFormattedBuffString(groupedBuffs: Map<string, Array<StatusEffectWithId>>, iconPath: string) {
+export function getFormattedBuffString(groupedBuffs: Map<string, StatusEffectWithId[]>, iconPath: string) {
     let buffString = "";
     buffString += "<div class='flex'>";
     for (const [, buffs] of groupedBuffs) {
@@ -664,7 +664,7 @@ function includeBuff(
     hitDamage: number,
     buffId: number,
     buff: StatusEffect,
-    map: Map<string, Array<StatusEffectWithId>>,
+    map: Map<string, StatusEffectWithId[]>,
     supportBuffs: SkillChartSupportDamage,
     playerClassId: number,
     buffType: string,
@@ -702,6 +702,7 @@ function includeBuff(
         addToMap(key, buffId, buff, map);
     } else if (buffType === "self") {
         if (isPartySynergy(buff)) {
+            /*  */
         } else if (isSelfSkillSynergy(buff)) {
             if (buff.buffCategory === "ability") {
                 key = `${buff.uniqueGroup ? buff.uniqueGroup : buffId}`;
@@ -734,7 +735,7 @@ function includeBuff(
     }
 }
 
-function addToMap(key: string, buffId: number, buff: StatusEffect, map: Map<string, Array<StatusEffectWithId>>) {
+function addToMap(key: string, buffId: number, buff: StatusEffect, map: Map<string, StatusEffectWithId[]>) {
     const buffWithId: StatusEffectWithId = { id: buffId, statusEffect: buff };
     if (map.has(key)) {
         map.get(key)?.push(buffWithId);

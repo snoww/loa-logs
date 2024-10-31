@@ -12,8 +12,8 @@
     export let anySupportBuff: boolean;
     export let anySupportIdentity: boolean;
     export let anySupportBrand: boolean;
-    export let abbreviatedSkillDamage: (string | number)[];
-    export let skillDps: (string | number)[];
+    export let abbreviatedSkillDamage: [number, string];
+    export let skillDps: [number, string];
     export let playerDamageDealt: number;
     export let damagePercentage: number;
     export let duration: number;

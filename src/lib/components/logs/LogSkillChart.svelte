@@ -15,9 +15,8 @@
     import { focusedSkillCast } from "$lib/utils/stores";
     import { getSkillIcon } from "$lib/utils/strings";
     import { menuTooltip, tooltip } from "$lib/utils/tooltip";
-    import { onDestroy, onMount } from "svelte";
+    import { onMount } from "svelte";
     import BuffTooltip from "../shared/BuffTooltip.svelte";
-    import { writable } from "svelte/store";
 
     export let chartOptions;
     export let player: Entity | null;
@@ -25,13 +24,11 @@
 
     onMount(() => {
         focusedSkillCast.set({ skillId: 0, cast: 0 });
+
+        return () => focusedSkillCast.set({ skillId: 0, cast: 0 });
     });
 
-    onDestroy(() => {
-        focusedSkillCast.set({ skillId: 0, cast: 0 });
-    });
-
-    let buffType = writable("party");
+    let buffType = "party";
 
     let skill: Skill;
     let skillCast: SkillCast;
@@ -40,7 +37,7 @@
     let supportBuffs: SkillChartSupportDamage;
     let modInfo: SkillChartModInfo;
 
-    let allGroupedBuffs: Map<string, Array<StatusEffectWithId>>[];
+    let allGroupedBuffs: Array<Map<string, StatusEffectWithId[]>>;
 
     $: {
         if ($focusedSkillCast.skillId > 0 && player) {
@@ -62,7 +59,7 @@
                         encounterDamageStats,
                         { buff: 0, brand: 0, identity: 0 },
                         player.classId,
-                        $buffType,
+                        buffType,
                         $settings.buffs.default
                     )
                 );
@@ -94,7 +91,7 @@
     }
 </script>
 
-<div class="mt-2 h-[400px]" use:chartable={chartOptions} style="width: calc(100vw - 4.5rem);" />
+<div class="mt-2 h-[400px]" use:chartable={chartOptions} style="width: calc(100vw - 4.5rem);"></div>
 
 <div class="mb-4 mt-2 min-h-[30rem]">
     <div class="flex justify-start text-lg font-medium">
@@ -113,6 +110,7 @@
                     }}>
                     Find Max Cast
                 </button>
+                <!-- svelte-ignore a11y_consider_explicit_label -->
                 <button
                     use:tooltip={{ content: "Previous Cast" }}
                     class="pr-1"
@@ -130,6 +128,7 @@
                         <path d="m560.5 837-262-262 262-262 65 65.5L429 575l196.5 196.5-65 65.5Z" />
                     </svg>
                 </button>
+                <!-- svelte-ignore a11y_consider_explicit_label -->
                 <button
                     use:tooltip={{ content: "Next Cast" }}
                     class="px-1"
@@ -200,9 +199,9 @@
                             <td class="w-full font-semibold">
                                 <span use:tooltip={{ content: "Party Buffs" }}>
                                     <button
-                                        class={$buffType === "party" ? "text-accent-500" : "hover:text-accent-500"}
+                                        class={buffType === "party" ? "text-accent-500" : "hover:text-accent-500"}
                                         on:click={() => {
-                                            $buffType = "party";
+                                            buffType = "party";
                                         }}>
                                         Party
                                     </button>
@@ -210,9 +209,9 @@
                                 |
                                 <span use:tooltip={{ content: "Self Buffs, including Relic Sets" }}>
                                     <button
-                                        class={$buffType === "self" ? "text-accent-500" : "hover:text-accent-500"}
+                                        class={buffType === "self" ? "text-accent-500" : "hover:text-accent-500"}
                                         on:click={() => {
-                                            $buffType = "self";
+                                            buffType = "self";
                                         }}>
                                         Self
                                     </button>
@@ -220,9 +219,9 @@
                                 |
                                 <span use:tooltip={{ content: "All other buffs, e.g. Darks, Atros, etc." }}>
                                     <button
-                                        class={$buffType === "misc" ? "text-accent-500" : "hover:text-accent-500"}
+                                        class={buffType === "misc" ? "text-accent-500" : "hover:text-accent-500"}
                                         on:click={() => {
-                                            $buffType = "misc";
+                                            buffType = "misc";
                                         }}>
                                         Misc.
                                     </button>
@@ -270,7 +269,7 @@
                                 <td>
                                     <div class="flex">
                                         {#if allGroupedBuffs[i].size > 0}
-                                            {#each allGroupedBuffs[i] as [_, groupedBuffs]}
+                                            {#each allGroupedBuffs[i] as [, groupedBuffs]}
                                                 {#each groupedBuffs as buff}
                                                     <BuffTooltip synergy={buff.statusEffect} size={"size-6"} />
                                                 {/each}

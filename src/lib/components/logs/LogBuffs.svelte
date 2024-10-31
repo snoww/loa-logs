@@ -16,7 +16,7 @@
 
     export let tab: MeterTab;
     export let encounterDamageStats: EncounterDamageStats;
-    export let players: Array<Entity>;
+    export let players: Entity[];
     export let focusedPlayer: Entity | null = null;
     export let inspectPlayer: (name: string) => void;
 
@@ -29,7 +29,7 @@
         (player) => (player.damageStats.damageDealt / encounterDamageStats.topDamageDealt) * 100
     );
 
-    let groupedSynergies: Map<string, Map<number, StatusEffect>> = new Map();
+    let groupedSynergies = new Map<string, Map<number, StatusEffect>>();
     for (const [id, buff] of Object.entries(encounterDamageStats.buffs)) {
         if (focusedPlayer && !Object.hasOwn(focusedPlayer.damageStats.buffedBy, id)) {
             continue;
@@ -44,11 +44,11 @@
     }
     groupedSynergies = new Map([...groupedSynergies.entries()].sort());
 
-    let parties = new Array<Array<Entity>>();
+    let parties: Entity[][] = [];
     let partyGroupedSynergies = new Map<string, Set<string>>();
-    let partyPercentages = new Array<number[]>();
+    let partyPercentages: number[][] = [];
 
-    let partyBuffs = new Map<string, Map<string, Array<BuffDetails>>>();
+    let partyBuffs = new Map<string, Map<string, BuffDetails[]>>();
 
     let vw: number;
     let partyWidths: { [key: string]: string };
@@ -83,8 +83,8 @@
                     <thead class="z-40 h-6" id="buff-head">
                         <tr class="bg-zinc-900">
                             <th class="w-7 whitespace-nowrap px-2 font-normal tracking-tight">Party {+partyId + 1}</th>
-                            <th class="w-20 px-2 text-left font-normal" />
-                            <th class="w-full" />
+                            <th class="w-20 px-2 text-left font-normal"></th>
+                            <th class="w-full"></th>
                             {#each [...synergies] as synergy (synergy)}
                                 {@const syns = groupedSynergies.get(synergy) || new Map()}
                                 <BuffHeader synergies={syns} />
@@ -109,9 +109,9 @@
     <table class="w-full table-fixed">
         <thead class="relative z-40 h-6" id="buff-head">
             <tr class="bg-zinc-900">
-                <th class="w-7 px-2 font-normal" />
-                <th class="w-20 px-2 text-left font-normal" />
-                <th class="w-full" />
+                <th class="w-7 px-2 font-normal"></th>
+                <th class="w-20 px-2 text-left font-normal"></th>
+                <th class="w-full"></th>
                 {#each [...groupedSynergies] as [id, synergies] (id)}
                     <BuffHeader {synergies} />
                 {:else}

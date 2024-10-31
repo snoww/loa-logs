@@ -43,8 +43,8 @@
             {:else}
                 <th class="w-7 px-2 font-normal"></th>
             {/if}
-            <th class="w-14 px-2 text-left font-normal" />
-            <th class="w-full" />
+            <th class="w-14 px-2 text-left font-normal"></th>
+            <th class="w-full"></th>
             {#if showHeaderForOtherParties}
                 <th
                     class="w-14 font-normal"

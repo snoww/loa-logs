@@ -11,7 +11,7 @@
     } from "$lib/types";
     import { millisToMinutesAndSeconds } from "$lib/utils/numbers";
     import { listen, type UnlistenFn } from "@tauri-apps/api/event";
-    import { onDestroy, onMount } from "svelte";
+    import { onMount } from "svelte";
     import { flip } from "svelte/animate";
     import EncounterInfo from "./EncounterInfo.svelte";
     import BossInfo from "./BossInfo.svelte";
@@ -21,7 +21,6 @@
     import Buffs from "./Buffs.svelte";
     import { settings } from "$lib/utils/settings";
     import { tooltip } from "$lib/utils/tooltip";
-    import { writable } from "svelte/store";
     import Notification from "./shared/Notification.svelte";
     import {
         takingScreenshot,
@@ -45,7 +44,7 @@
     let time = +Date.now();
     let encounter: Encounter | null = null;
     let parties: PartyInfo | undefined;
-    let events: Array<UnlistenFn> = [];
+    let events: UnlistenFn[] = [];
 
     let zoneChangeAlert = false;
     let resettingAlert = false;
@@ -55,7 +54,7 @@
     let raidWipe = false;
     let bossDeadAlert = false;
     let adminAlert = false;
-    let raidInProgress = writable(true);
+    let raidInProgress = true;
 
     onMount(() => {
         setInterval(() => {
@@ -80,16 +79,16 @@
             let zoneChangeEvent = await listen("zone-change", () => {
                 // console.log("zone change event")
                 zoneChangeAlert = true;
-                $raidInProgress = false;
+                raidInProgress = false;
                 setTimeout(() => {
                     reset();
                     zoneChangeAlert = false;
-                    $raidInProgress = true;
+                    raidInProgress = true;
                 }, 6000);
             });
             let raidStartEvent = await listen("raid-start", () => {
                 reset();
-                $raidInProgress = true;
+                raidInProgress = true;
             });
             let resetEncounterEvent = await listen("reset-encounter", () => {
                 reset();
@@ -99,7 +98,7 @@
                 }, 1500);
             });
             let pauseEncounterEvent = await listen("pause-encounter", () => {
-                $paused = !$paused;
+                paused = !paused;
                 pauseAlert = !pauseAlert;
             });
             let saveEncounterEvent = await listen("save-encounter", () => {
@@ -128,7 +127,7 @@
                         raidWipe = false;
                     }, 3000);
                 }
-                $raidInProgress = false;
+                raidInProgress = false;
             });
             let clearEncounterEvent = await listen("clear-encounter", async (event: any) => {
                 if (!$settings.sync.auto) {
@@ -165,15 +164,13 @@
                 clearEncounterEvent
             );
         })();
+
+        return () => events.forEach((unlisten) => unlisten());
     });
 
-    onDestroy(() => {
-        events.forEach((unlisten) => unlisten());
-    });
-
-    let players: Array<Entity> = [];
-    let bosses: Array<Entity> = [];
-    let playerDamagePercentages: Array<number> = [];
+    let players: Entity[] = [];
+    let bosses: Entity[] = [];
+    let playerDamagePercentages: number[] = [];
     let topDamageDealt = 0;
     let encounterDuration = "00:00";
     let duration = 0;
@@ -197,11 +194,11 @@
     let anyRdpsData: boolean = false;
     let isSolo: boolean = true;
 
-    let paused = writable(false);
+    let paused = false;
 
     $: {
         if (encounter) {
-            if (encounter.fightStart !== 0 && !$paused) {
+            if (encounter.fightStart !== 0 && !paused) {
                 if (!$missingInfo) {
                     if (encounter.localPlayer === "You" || !isValidName(encounter.localPlayer)) {
                         $missingInfo = true;
@@ -211,18 +208,27 @@
                     players = Object.values(encounter.entities)
                         .filter(
                             (e) =>
+                                // svelte-ignore reactive_declaration_non_reactive_property
                                 e.damageStats.damageDealt > 0 &&
                                 (e.entityType === EntityType.ESTHER || e.entityType === EntityType.PLAYER)
                         )
                         .sort((a, b) => b.damageStats.damageDealt - a.damageStats.damageDealt);
                 } else {
                     players = Object.values(encounter.entities)
-                        .filter((e) => e.damageStats.damageDealt > 0 && e.entityType === EntityType.PLAYER)
+                        .filter(
+                            (e) =>
+                                // svelte-ignore reactive_declaration_non_reactive_property
+                                e.damageStats.damageDealt > 0 && e.entityType === EntityType.PLAYER
+                        )
                         .sort((a, b) => b.damageStats.damageDealt - a.damageStats.damageDealt);
                 }
                 if ($settings.general.showBosses) {
                     bosses = Object.values(encounter.entities)
-                        .filter((e) => e.damageStats.damageDealt > 0 && e.entityType === EntityType.BOSS)
+                        .filter(
+                            (e) =>
+                                // svelte-ignore reactive_declaration_non_reactive_property
+                                e.damageStats.damageDealt > 0 && e.entityType === EntityType.BOSS
+                        )
                         .sort((a, b) => b.damageStats.damageDealt - a.damageStats.damageDealt);
                 }
                 $localPlayer = encounter.localPlayer;
@@ -265,7 +271,7 @@
 
                 if (
                     // ((encounter.currentBoss && !encounter.currentBoss.isDead) || !encounter.currentBoss) &&
-                    $raidInProgress
+                    raidInProgress
                 ) {
                     duration = time - encounter.fightStart;
                 }
@@ -282,6 +288,8 @@
                             players
                                 .filter(
                                     (e) =>
+                                        // svelte-ignore reactive_declaration_non_reactive_property
+
                                         e.damageStats.damageDealt > 0 && !e.isDead && e.entityType == EntityType.PLAYER
                                 )
                                 .reduce((a, b) => a + b.damageStats.damageDealt, 0) / duration;
@@ -299,7 +307,11 @@
                     totalDamageDealt =
                         encounter.encounterDamageStats.totalDamageDealt +
                         players
-                            .filter((e) => e.damageStats.damageDealt > 0 && e.entityType === EntityType.ESTHER)
+                            .filter(
+                                (e) =>
+                                    // svelte-ignore reactive_declaration_non_reactive_property
+                                    e.damageStats.damageDealt > 0 && e.entityType === EntityType.ESTHER
+                            )
                             .reduce((a, b) => a + b.damageStats.damageDealt, 0);
                 } else {
                     totalDamageDealt = encounter.encounterDamageStats.totalDamageDealt;
@@ -314,9 +326,11 @@
 
             if (playerName) {
                 player = encounter.entities[playerName];
+                // svelte-ignore reactive_declaration_non_reactive_property
                 state = MeterState.PLAYER;
             } else {
                 player = null;
+                // svelte-ignore reactive_declaration_non_reactive_property
                 state = MeterState.PARTY;
             }
         }
@@ -403,7 +417,7 @@
                         $screenshotAlert = false;
                         document.body.style.pointerEvents = "auto";
                     }, 2000);
-                } catch (error) {
+                } catch {
                     takingScreenshot.set(false);
                     $screenshotError = true;
                     setTimeout(() => {
@@ -439,8 +453,8 @@
                             <th class="w-7 px-2 font-normal">
                                 <MissingInfo />
                             </th>
-                            <th class="w-14 px-2 text-left font-normal" />
-                            <th class="w-full" />
+                            <th class="w-14 px-2 text-left font-normal"></th>
+                            <th class="w-full"></th>
                             {#if anyDead && $settings.meter.deathTime}
                                 <th class="w-14 font-normal" use:tooltip={{ content: "Dead for" }}>Dead</th>
                             {/if}

@@ -6,24 +6,21 @@
     import { onMount } from "svelte";
     import NProgress from "nprogress";
     import SettingItem from "$lib/components/settings/SettingItem.svelte";
-    import { writable } from "svelte/store";
 
     let encounterDbInfo: EncounterDbInfo;
     let deleteConfirm = false;
     let deleteInProgress = false;
     let deleteMsg = "";
     let deleteFn: (() => void) | undefined;
-    let optimized = writable(false);
-    let optimizing = writable(false);
+    let optimized = false;
+    let optimizing = false;
 
     async function openDbFolder() {
         await invoke("open_db_path");
     }
 
-    onMount(() => {
-        (async () => {
-            encounterDbInfo = await invoke("get_db_info", { minDuration: $settings.logs.minEncounterDuration });
-        })();
+    onMount(async () => {
+        encounterDbInfo = await invoke("get_db_info", { minDuration: $settings.logs.minEncounterDuration });
     });
 
     async function deleteEncounterBelowMinDuration() {
@@ -70,15 +67,15 @@
             Optimize Database (Only use if Search is Slow):
         </div>
         <button
-            class="w-20 rounded-md p-1 {$optimized ? 'disabled bg-gray-600' : 'bg-accent-800 hover:bg-accent-900'}"
+            class="w-20 rounded-md p-1 {optimized ? 'disabled bg-gray-600' : 'bg-accent-800 hover:bg-accent-900'}"
             on:click={async () => {
-                $optimizing = true;
+                optimizing = true;
                 await invoke("write_log", { message: "optimizing database..." });
                 await invoke("optimize_database");
-                $optimizing = false;
-                $optimized = true;
+                optimizing = false;
+                optimized = true;
             }}>
-            {#if $optimized}
+            {#if optimized}
                 Optimized
             {:else}
                 Optimize
@@ -154,8 +151,8 @@
         {/if}
     {/if}
 </div>
-{#if $optimizing}
-    <div class="fixed inset-0 z-50 bg-zinc-900 bg-opacity-80" />
+{#if optimizing}
+    <div class="fixed inset-0 z-50 bg-zinc-900 bg-opacity-80"></div>
     <div class="fixed left-0 right-0 top-0 z-50 h-modal w-full items-center justify-center p-4">
         <div class="relative top-[40%] mx-auto flex max-h-full w-full max-w-md">
             <div class="relative mx-auto flex flex-col rounded-lg border-gray-700 bg-zinc-800 text-gray-400 shadow-md">
@@ -171,7 +168,7 @@
     </div>
 {/if}
 {#if deleteConfirm && encounterDbInfo}
-    <div class="fixed inset-0 z-50 bg-zinc-900 bg-opacity-80" />
+    <div class="fixed inset-0 z-50 bg-zinc-900 bg-opacity-80"></div>
     <div class="fixed left-0 right-0 top-0 z-50 h-modal w-full items-center justify-center p-4">
         <div class="relative top-[25%] mx-auto flex max-h-full w-full max-w-md">
             <div class="relative mx-auto flex flex-col rounded-lg border-gray-700 bg-zinc-800 text-gray-400 shadow-md">

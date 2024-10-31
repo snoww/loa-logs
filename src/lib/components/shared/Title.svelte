@@ -14,6 +14,7 @@
                 <span class="bg-accent-800 relative inline-flex size-2 rounded-full"></span>
             </span>
         {/if}
+        <!-- svelte-ignore a11y_consider_explicit_label -->
         <button on:click={() => (hidden = false)} class="mt-px block">
             <svg
                 class="hover:fill-accent-500 size-6 fill-gray-300"

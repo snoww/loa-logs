@@ -1,4 +1,4 @@
-export const encounterMap: { [key: string]: { [key: string]: Array<string> } } = {
+export const encounterMap: { [key: string]: { [key: string]: string[] } } = {
     Valtan: {
         "Valtan G1": ["Dark Mountain Predator", "Destroyer Lucas", "Leader Lugaru"],
         "Valtan G2": ["Demon Beast Commander Valtan", "Ravaged Tyrant of Beasts"]
@@ -79,7 +79,7 @@ export const encounterMap: { [key: string]: { [key: string]: Array<string> } } =
     }
 };
 
-export const difficultyMap: Array<string> = [
+export const difficultyMap: string[] = [
     "Normal",
     "Hard",
     "Inferno",

@@ -18,7 +18,7 @@
     export let anySupportBrand: boolean;
     export let anyRdpsData: boolean;
     export let end: number;
-    export let dps: (string | number)[];
+    export let dps: [number, string];
 
     export let alpha: number = 0.6;
     export let width: number;
@@ -26,7 +26,7 @@
     export let shadow: boolean = false;
     export let isSolo: boolean;
 
-    let damageDealt: (string | number)[];
+    let damageDealt: [number, string];
     let damageDealtRaw: number;
     let damageWithoutHa: number;
     let damagePercentage: string;
@@ -72,7 +72,10 @@
                 color = $colors[entity.class].color;
             }
         }
-        if (entity.entityType === EntityType.ESTHER) {
+        if (
+            // svelte-ignore reactive_declaration_non_reactive_property
+            entity.entityType === EntityType.ESTHER
+        ) {
             name = getEstherFromNpcId(entity.npcId);
             tooltipName = name;
             color = "#4dc8d0";
@@ -188,10 +191,10 @@
 {/if}
 {#if meterSettings.counters}
     <td class="px-1 text-center">
-        {entity.skillStats.counters}<span class="text-3xs text-gray-300" />
+        {entity.skillStats.counters}<span class="text-3xs text-gray-300"></span>
     </td>
 {/if}
-<div
+<td
     class="absolute left-0 -z-10 h-7 px-2 py-1"
     class:shadow-md={shadow}
-    style="background-color: {HexToRgba(color, alpha)}; width: {width}%" />
+    style="background-color: {HexToRgba(color, alpha)}; width: {width}%"></td>

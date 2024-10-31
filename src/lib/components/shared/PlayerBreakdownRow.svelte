@@ -13,8 +13,8 @@
     export let anySupportBuff: boolean;
     export let anySupportIdentity: boolean;
     export let anySupportBrand: boolean;
-    export let abbreviatedSkillDamage: (string | number)[];
-    export let skillDps: (string | number)[];
+    export let abbreviatedSkillDamage: [number, string];
+    export let skillDps: [number, string];
     export let playerDamageDealt: number;
     export let width: number;
     export let duration: number;
@@ -196,9 +196,9 @@
         {/if}
     </td>
 {/if}
-<div
+<td
     class="absolute left-0 -z-10 h-7 px-2 py-1"
     class:shadow-md={shadow}
     style="background-color: {index % 2 === 1 && $settings.general.splitLines
         ? RGBLinearShade(HexToRgba(color, 0.6))
-        : HexToRgba(color, 0.6)}; width: {width}%" />
+        : HexToRgba(color, 0.6)}; width: {width}%"></td>

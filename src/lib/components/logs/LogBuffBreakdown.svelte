@@ -21,7 +21,7 @@
     }
 
     let color: string;
-    let skillDamagePercentages: Array<number> = [];
+    let skillDamagePercentages: number[] = [];
 
     let skills = Object.values(player.skills).sort((a, b) => b.totalDamage - a.totalDamage);
     if (player.class === "Arcanist") {
@@ -70,12 +70,12 @@
                 </td>
             {/each}
         {/if}
-        <div
+        <td
             class="absolute left-0 -z-10 h-7 w-full px-2 py-1"
             class:shadow-md={!$takingScreenshot}
             style="background-color: {$settings.general.splitLines
                 ? RGBLinearShade(HexToRgba(color, 0.6))
-                : HexToRgba(color, 0.6)}" />
+                : HexToRgba(color, 0.6)}"></td>
     </tr>
 {/if}
 {#each skills as skill, i (skill.id)}

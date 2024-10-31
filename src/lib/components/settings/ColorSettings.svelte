@@ -23,7 +23,7 @@
                     id={"Local"}
                     bind:value={$colors["Local"].color}
                     on:change={(event) => {
-                        if (event) $colors[$colors["Local"]].color = event.currentTarget.value;
+                        if (event) $colors["Local"].color = event.currentTarget.value;
                     }} />
                 <button
                     class="rounded-md bg-zinc-600 p-1 text-xs hover:bg-zinc-700"

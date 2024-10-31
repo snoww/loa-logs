@@ -96,6 +96,6 @@
     {/if}
     <div class="mt-4">
         <div class="text-lg font-medium tracking-tight">Stagger Log</div>
-        <div class="mt-2 h-[200px]" use:chartable={staggerLogOptions} style="width: calc(100vw - 4.5rem);" />
+        <div class="mt-2 h-[200px]" use:chartable={staggerLogOptions} style="width: calc(100vw - 4.5rem);"></div>
     </div>
 </div>

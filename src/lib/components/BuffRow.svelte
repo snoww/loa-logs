@@ -18,7 +18,7 @@
     let color = "#ffffff";
     let alpha = 0.6;
     let playerName: string;
-    let synergyPercentageDetails: Array<BuffDetails>;
+    let synergyPercentageDetails: BuffDetails[];
 
     const tweenedValue = tweened(0, {
         duration: 400,
@@ -114,6 +114,6 @@
         </td>
     {/each}
 {/if}
-<div
+<td
     class="absolute left-0 -z-10 h-7 px-2 py-1"
-    style="background-color: {HexToRgba(color, alpha)}; width: {$tweenedValue}%" />
+    style="background-color: {HexToRgba(color, alpha)}; width: {$tweenedValue}%"></td>

@@ -15,10 +15,10 @@
     export let totalDamageDealt: number;
 
     let color = "#ffffff";
-    let skills: Array<Skill> = [];
-    let skillDamagePercentages: Array<number> = [];
-    let abbreviatedSkillDamage: Array<(string | number)[]> = [];
-    let skillDps: Array<(string | number)[]> = [];
+    let skills: Skill[] = [];
+    let skillDamagePercentages: number[] = [];
+    let abbreviatedSkillDamage: Array<[number, string]> = [];
+    let skillDps: Array<[number, string]> = [];
 
     let hasBackAttacks = false;
     let hasFrontAttacks = false;
@@ -236,12 +236,12 @@
                     {/if}
                 </td>
             {/if}
-            <div
+            <td
                 class="absolute left-0 -z-10 h-7 px-2 py-1"
                 class:shadow-md={!$takingScreenshot}
                 style="background-color: {$settings.general.splitLines
                     ? RGBLinearShade(HexToRgba(color, 0.6))
-                    : HexToRgba(color, 0.6)}; width: 100%" />
+                    : HexToRgba(color, 0.6)}; width: 100%"></td>
         </tr>
     {/if}
     {#each skills as skill, i (skill.id)}

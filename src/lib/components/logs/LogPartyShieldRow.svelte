@@ -9,7 +9,7 @@
     import { abbreviateNumberSplit } from "$lib/utils/numbers";
 
     export let player: Entity;
-    export let playerShields: Array<ShieldDetails>;
+    export let playerShields: ShieldDetails[];
     export let percentage: number;
 
     let color = "#ffffff";
@@ -23,7 +23,7 @@
         }
     }
 
-    let totalShieldStr: (string | number)[];
+    let totalShieldStr: [number, string];
 
     $: {
         playerName = formatPlayerName(player, $settings.general);
@@ -58,7 +58,7 @@
         </td>
     {/each}
 {/if}
-<div
+<td
     class="absolute left-0 -z-10 h-7 px-2 py-1"
     class:shadow-md={!$takingScreenshot}
-    style="background-color: {HexToRgba(color, 0.6)}; width: {percentage}%" />
+    style="background-color: {HexToRgba(color, 0.6)}; width: {percentage}%"></td>
