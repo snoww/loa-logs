@@ -583,6 +583,7 @@ fn gem_skill_id_to_skill_ids(skill_id: u32) -> Vec<u32> {
         60000 => vec![
             31050, 31051, 31110, 31120, 31121, 31130, 31131, 31140, 31141,
         ], // artist moonfall
+        19030 => vec![19290, 19030, 19300], // arcana evokes
         _ => vec![skill_id],
     }
 }
@@ -1005,6 +1006,7 @@ pub fn insert_data(
                         }
                     }
                 }
+                entity.ark_passive_data = info.ark_passive_data.clone();
             } else if class.len() == 1 {
                 entity.spec = Some(class[0].clone());
             }

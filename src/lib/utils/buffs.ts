@@ -401,26 +401,25 @@ export function getPartyBuffs(
                 partyBuffs.get(partyId.toString())!.set(player.name, []);
                 const playerBuffs = partyBuffs.get(partyId.toString())!.get(player.name)!;
 
+                const damageDealtWithHa = player.damageStats.damageDealt;
+                const damageDealtWithoutHa = damageDealtWithHa - (player.damageStats.hyperAwakeningDamage ?? 0);
+
                 partyGroupedSynergies.get(partyId.toString())?.forEach((key) => {
                     const buffDetails = new BuffDetails();
                     buffDetails.id = key;
                     let buffDamage = 0;
                     const buffs = groupedSynergies.get(key) || new Map();
-                    const damageDealtWithHa = player.damageStats.damageDealt;
-                    const damageDealtWithoutHa = damageDealtWithHa - (player.damageStats.hyperAwakeningDamage ?? 0);
                     let isHat = false;
 
                     buffs.forEach((syn, id) => {
-                        let damageDealt = damageDealtWithHa;
                         if (supportSkills.haTechnique.includes(id)) {
                             isHat = true;
-                            damageDealt = damageDealtWithoutHa;
                         }
 
                         if (player.damageStats.buffedBy[id]) {
                             const b = new Buff(
                                 syn.source.icon,
-                                round((player.damageStats.buffedBy[id] / damageDealt) * 100),
+                                round((player.damageStats.buffedBy[id] / (isHat ? damageDealtWithHa : damageDealtWithoutHa)) * 100),
                                 syn.source.skill?.icon
                             );
                             addBardBubbles(key, b, syn);
@@ -430,7 +429,7 @@ export function getPartyBuffs(
                             buffDetails.buffs.push(
                                 new Buff(
                                     syn.source.icon,
-                                    round((player.damageStats.debuffedBy[id] / damageDealt) * 100),
+                                    round((player.damageStats.debuffedBy[id] / damageDealtWithHa) * 100),
                                     syn.source.skill?.icon
                                 )
                             );
@@ -569,7 +568,7 @@ function makeSupportBuffKey(statusEffect: StatusEffect) {
     } else {
         key += "_4";
     }
-    key += `_${statusEffect.uniqueGroup ? statusEffect.uniqueGroup : statusEffect.source.skill?.name}`;
+    key += `_${statusEffect.uniqueGroup ? statusEffect.uniqueGroup : "0_" + statusEffect.source.skill?.name}`;
     return key;
 }
 
