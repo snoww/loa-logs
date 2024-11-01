@@ -3,12 +3,9 @@
     import { invoke } from "@tauri-apps/api";
     import SettingItem from "./SettingItem.svelte";
     import { ifaceChangedStore } from "$lib/utils/stores";
-    import { onMount } from "svelte";
     import { emit } from "@tauri-apps/api/event";
 
     let colorDropdownOpen = false;
-    let networkDropdownOpen = false;
-    let networkInterfaces: [string, string][];
 
     const handleColorDropdownFocusLoss = (event: FocusEvent) => {
         const relatedTarget = event.relatedTarget as HTMLElement;
@@ -21,26 +18,7 @@
     const handleColorDropdownClick = () => {
         colorDropdownOpen = !colorDropdownOpen;
     };
-
-    const handleNetDropdownClick = () => {
-        networkDropdownOpen = !networkDropdownOpen;
-    };
-
-    const handleNetDropdownFocusLoss = (event: FocusEvent) => {
-        const relatedTarget = event.relatedTarget as HTMLElement;
-        const currentTarget = event.currentTarget as HTMLElement;
-
-        if (currentTarget.contains(relatedTarget)) return;
-        networkDropdownOpen = false;
-    };
-
-    onMount(() => {
-        (async () => {
-            networkInterfaces = await invoke("get_network_interfaces");
-            networkInterfaces = networkInterfaces.filter((iface) => iface[1] !== "0.0.0.0");
-        })();
-    });
-
+    
     async function toggleAlwaysOnTop() {
         if ($settings.general.alwaysOnTop) {
             await invoke("enable_aot");
@@ -249,70 +227,6 @@
             </label>
         </div>
         {#if !$settings.general.autoIface}
-            <div class="relative" on:focusout={handleNetDropdownFocusLoss}>
-                <div class="flex items-center">
-                    <div class="">
-                        <div class="text-gray-100">Select Network Interface</div>
-                        <div class="text-xs text-gray-300">
-                            Select your network interface from the list that Lost Ark is running on.
-                        </div>
-                    </div>
-                </div>
-                <div class="flex items-baseline space-x-2">
-                    <div>Interface:</div>
-                    <!-- svelte-ignore a11y-click-events-have-key-events -->
-                    <div
-                        role="button"
-                        tabindex="0"
-                        class="mt-2 w-80 truncate rounded bg-zinc-700 p-1"
-                        on:click={handleNetDropdownClick}>
-                        <div class="px-2">
-                            {#if $settings.general.ifDesc}
-                                {$settings.general.ifDesc}
-                            {:else}
-                                No interface selected. Using default.
-                            {/if}
-                        </div>
-                    </div>
-                </div>
-                {#if networkDropdownOpen}
-                    <div
-                        id="dropdown"
-                        class="absolute left-[4.5rem] z-10 mt-1 flex w-80 cursor-pointer flex-col rounded bg-zinc-600 shadow">
-                        <button
-                            class="truncate rounded px-2 py-1 text-left text-sm text-gray-200 hover:bg-gray-700"
-                            aria-labelledby="dropdownDefaultButton"
-                            on:click={() => {
-                                $settings.general.ifDesc = "Default Network Interface";
-                                $settings.general.ip = "";
-                                networkDropdownOpen = false;
-                                $ifaceChangedStore = true;
-                            }}>
-                            Default Network Interface
-                        </button>
-                        {#each networkInterfaces as iface (iface)}
-                            <button
-                                class="truncate rounded px-2 py-1 text-left text-sm text-gray-200 hover:bg-gray-700"
-                                aria-labelledby="dropdownDefaultButton"
-                                on:click={() => {
-                                    $settings.general.ifDesc = iface[0];
-                                    $settings.general.ip = iface[1];
-                                    networkDropdownOpen = false;
-                                    $ifaceChangedStore = true;
-                                }}>
-                                <div class="flex space-x-1">
-                                    <div class="w-40 truncate">
-                                        {iface[0]}
-                                    </div>
-                                    <div>
-                                        [{iface[1]}]
-                                    </div>
-                                </div>
-                            </button>
-                        {/each}
-                    </div>
-                {/if}
-            </div>
             <div>
                 <label class="flex items-center">
                     <input
@@ -326,21 +240,6 @@
                     </div>
                 </label>
             </div>
-            <!--            <div>-->
-            <!--                <label class="flex items-center">-->
-            <!--                    <input-->
-            <!--                        type="checkbox"-->
-            <!--                        bind:checked={$settings.general.rawSocket}-->
-            <!--                        on:change={() => {-->
-            <!--                            $ifaceChangedStore = true;-->
-            <!--                        }}-->
-            <!--                        class="text-accent-500 size-5 rounded bg-zinc-700 focus:ring-0 focus:ring-offset-0" />-->
-            <!--                    <div class="ml-5">-->
-            <!--                        <div class="text-gray-100">Raw Socket</div>-->
-            <!--                        <div class="text-xs text-gray-300">Enables raw socket capture. (manually restart as Admin)</div>-->
-            <!--                    </div>-->
-            <!--                </label>-->
-            <!--            </div>-->
         {/if}
     </div>
 </div>

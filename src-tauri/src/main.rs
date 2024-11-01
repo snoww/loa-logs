@@ -132,7 +132,6 @@ async fn main() -> Result<()> {
                 .restore_state(WINDOW_STATE_FLAGS)
                 .expect("failed to restore window state");
 
-            let mut ip: String;
             let mut port = 6040;
 
             if let Some(settings) = settings.clone() {
@@ -146,39 +145,9 @@ async fn main() -> Result<()> {
                 if !settings.general.always_on_top {
                     meter_window.set_always_on_top(false).unwrap();
                 }
-                if settings.general.auto_iface {
-                    ip = meter_core::get_most_common_ip().unwrap();
-                    info!("auto_iface enabled, using ip: {}", ip);
-                } else {
-                    ip = settings.general.ip;
-                    let interface = settings.general.if_desc;
-                    info!(
-                        "manual interface set, ip: {} and interface: {}",
-                        ip, interface
-                    );
-                    let os_interfaces = get_network_interfaces();
-                    let right_name: Vec<&(String, String)> = os_interfaces
-                        .iter()
-                        .filter(|iface| iface.0 == interface)
-                        .collect();
-                    if !right_name.is_empty() {
-                        let perfect_match =
-                            right_name.clone().into_iter().find(|iface| iface.1 == ip);
-                        if perfect_match.is_none() {
-                            //in case of multiple interfaces with same name, try the first one
-                            ip = right_name[0].1.clone(); //get the up to date ip
-                            warn!("ip for manual interface was wrong, using ip: {}", ip);
-                        }
-                    } else {
-                        ip = meter_core::get_most_common_ip().unwrap();
-                        warn!("manually set interface not found, using default ip: {}", ip);
-                    }
-                    if settings.general.port > 0 {
-                        port = settings.general.port;
-                        info!("using port: {}", port);
-                    }
-                    
-                    info!("using npcap");
+
+                if settings.general.port > 0 {
+                    port = settings.general.port;
                 }
 
                 if settings.general.start_loa_on_start {
@@ -186,14 +155,14 @@ async fn main() -> Result<()> {
                     start_loa_process();
                 }
             } else {
-                ip = meter_core::get_most_common_ip().unwrap();
-                info!("settings not found, auto_iface enabled, using ip: {}", ip);
                 meter_window.show().unwrap();
                 logs_window.show().unwrap();
             }
 
+            info!("listening on port: {}", port);
+            
             task::spawn_blocking(move || {
-                parser::start(meter_window, ip, port, settings).map_err(|e| {
+                parser::start(meter_window, port, settings).map_err(|e| {
                     error!("unexpected error occurred in parser: {}", e);
                 })
             });

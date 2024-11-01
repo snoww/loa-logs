@@ -28,11 +28,9 @@ use log::{info, warn};
 use meter_core::packets::definitions::*;
 use meter_core::packets::opcodes::Pkt;
 use meter_core::start_capture;
-use meter_core::start_raw_capture;
 use reqwest::Client;
 use serde_json::json;
 use std::cell::RefCell;
-use std::collections::BTreeMap;
 use std::path::PathBuf;
 use std::rc::Rc;
 use std::sync::atomic::{AtomicBool, Ordering};
@@ -43,7 +41,6 @@ use uuid::Uuid;
 
 pub fn start(
     window: Window<Wry>,
-    ip: String,
     port: u16,
     settings: Option<Settings>,
 ) -> Result<()> {
@@ -60,7 +57,7 @@ pub fn start(
     resource_path.push("current_region");
     let region_file_path = resource_path.to_string_lossy();
     let mut stats_api = StatsApi::new(window.clone(), region_file_path.to_string());
-    let rx = match start_capture(ip, port, region_file_path.to_string()) {
+    let rx = match start_capture(port, region_file_path.to_string()) {
         Ok(rx) => rx,
         Err(e) => {
             warn!("Error starting capture: {}", e);
