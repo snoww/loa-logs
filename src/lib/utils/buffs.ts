@@ -429,7 +429,7 @@ export function getPartyBuffs(
                             buffDetails.buffs.push(
                                 new Buff(
                                     syn.source.icon,
-                                    round((player.damageStats.debuffedBy[id] / damageDealtWithHa) * 100),
+                                    round((player.damageStats.debuffedBy[id] / (isHat ? damageDealtWithHa : damageDealtWithoutHa)) * 100),
                                     syn.source.skill?.icon
                                 )
                             );
