@@ -1,11 +1,26 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.18.0
+    v1.18.1
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
   </div>
 </div>
+
+#### ADDITIONAL NOTES
+
+- meter will always ask for administrator in order to run now
+- meter will not work with traditional vpns, e.g. nordvpn, however exitlag and other ping reducers should still work
+- removed the need to select an interface
+- if the game is disconnecting randomly, try to close meter and see if it still is causing disconnects
+
+#### BUG FIXES AND IMPROVEMENTS
+
+- fixed buff tooltips showing incorrect percentages
+- fixed paladin ark passive brand not grouping correctly
+- fixed arcana evoke gem not showing correctly
+
+### v1.18.0
 
 #### NOTES
 

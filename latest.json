@@ -1,11 +1,11 @@
 {
-    "version": "v1.18.0",
-    "notes": "### v1.18.0\n\n#### NOTES\n\n- thanks for the amazing work from molenzwiebel, poont, and several others, for the quick work on getting around the new damage data\n  encryption.\n- meter still does NOT touch the game files whatsoever. it does NOT read game memory, or tamper with easy anti-cheat.\n- AGS can still detect meter like they always have. it always has been a gray area, however they have never issued any\n  bans for it.\n- due to the workarounds, meter MUST be opened before entering the raid\n- due to the workarounds methods used, meter CANNOT be run in a vm anymore, raw socket also no longer works. meter should continue to\n  work with vpns, and ping reducers like exitlag.\n\n#### NEW FEATURES\n\n- updated meter for aegir patch\n- gem data added to skills on raid clear\n- class spec data added to players on raid clear\n- added a bunch of new tooltips to dps data\n\n#### BUG FIXES AND IMPROVEMENTS\n\n- fixed arcana knight card not showing\n- fixed surge skill showing only skill id\n- fixed artist t-skill buff showing in the wrong order\n- improved local player detection\n\nsend bug reports/suggestions to [ramen shop server](https://discord.gg/RXvTMV2YHu)\n",
-    "pub_date": "2024-10-30T08:38:33.709Z",
+    "version": "v1.18.1",
+    "notes": "### v1.18.1\n\n#### ADDITIONAL NOTES\n\n- meter will always ask for administrator in order to run now\n- meter will not work with traditional vpns, e.g. nordvpn, however exitlag and other ping reducers should still work\n- removed the need to select an interface\n- if the game is disconnecting randomly, try to close meter and see if it still is causing disconnects\n\n#### BUG FIXES AND IMPROVEMENTS\n\n- fixed buff tooltips showing incorrect percentages\n- fixed paladin ark passive brand not grouping correctly\n- fixed arcana evoke gem not showing correctly",
+    "pub_date": "2024-11-01T07:27:08.964Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.18.0/LOA.Logs_1.18.0_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmVDWVg1aG14UHBmVDA0OGxHUW9vQnp6YlI5N2FmNWU3cVpCcmp0dXVGdmVIdjVPUk81ckxGeEVFeE9CYi84dHBZbHBrRUhMQzZFVWNvaUNQT1I2TVFNPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzMwMzEyNTMxCWZpbGU6TE9BIExvZ3NfMS4xOC4wX3g2NC1zZXR1cC5uc2lzLnppcApCb2d4clp4TnZ4K3UvVzUyQWpPSzNxSWRORGlibEo1VFJQNVNJV003M1pmYlc4UmRJUzliSHIvbGx1TG83ejNmSkZ3SXVIVXN0dXU3bkhyd1BwTEJDZz09Cg=="
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.18.1/LOA.Logs_1.18.1_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmJ2bHhCVUl3NC9jdTVOS29wOFVnL3gwekxnNUVRQUZnbGVkUnd1QUcvSzFxZVZ3NEI3aXp4cFl1R0FGV0w5K0R6UU03SU5NK3h0cThMb28zZ2w4a2drPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzMwNDQ1ODE3CWZpbGU6TE9BIExvZ3NfMS4xOC4xX3g2NC1zZXR1cC5uc2lzLnppcApuZW80T0lmNHdBQzd6cjYvVFhSYzlkeXNGNDR2RFBzeDY5dCtJT2VZVCtxd0J4TW9Sdmdzb3dvazdMc3V3SGdFcTF3azRYWXhrOUp0aHlmUXNIRDJBdz09Cg=="
         }
     }
 }
