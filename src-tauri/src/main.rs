@@ -14,7 +14,6 @@ use std::{
 };
 
 use anyhow::Result;
-use auto_launch::AutoLaunch;
 use flate2::read::GzDecoder;
 use hashbrown::HashMap;
 use log::{error, info, warn};
@@ -146,7 +145,7 @@ async fn main() -> Result<()> {
                     meter_window.set_always_on_top(false).unwrap();
                 }
 
-                if settings.general.port > 0 {
+                if settings.general.auto_iface && settings.general.port > 0 {
                     port = settings.general.port;
                 }
 
@@ -1523,22 +1522,24 @@ fn set_clickthrough(window: tauri::Window, set: bool) {
 }
 
 #[tauri::command]
-fn check_start_on_boot(window: tauri::Window) -> bool {
-    let app_name = window.app_handle().package_info().name.clone();
-    let app_path = match std::env::current_exe() {
-        Ok(path) => path.to_string_lossy().to_string(),
-        Err(e) => {
-            warn!("could not get current exe path: {}", e);
-            return false;
+fn check_start_on_boot() -> bool {
+    // Run the `schtasks` command to query the task
+    let output = Command::new("schtasks")
+        .args(["/query", "/tn", "LOA_Logs_Auto_Start"])
+        .output();
+
+    match output {
+        Ok(output) => {
+            output.status.success()
         }
-    };
-    let auto = AutoLaunch::new(&app_name, &app_path, &[] as &[&str]);
-    auto.is_enabled().unwrap_or(false)
+        Err(_) => {
+            false
+        }
+    }
 }
 
 #[tauri::command]
-fn set_start_on_boot(window: tauri::Window, set: bool) {
-    let app_name = window.app_handle().package_info().name.clone();
+fn set_start_on_boot(set: bool) {
     let app_path = match std::env::current_exe() {
         Ok(path) => path.to_string_lossy().to_string(),
         Err(e) => {
@@ -1546,21 +1547,42 @@ fn set_start_on_boot(window: tauri::Window, set: bool) {
             return;
         }
     };
-    let auto = AutoLaunch::new(&app_name, &app_path, &[] as &[&str]);
-    if set {
-        auto.enable()
-            .map_err(|e| {
-                warn!("could not enable auto launch: {}", e);
-            })
-            .ok();
-        info!("enabled start on boot");
-    } else {
-        auto.disable()
-            .map_err(|e| {
-                warn!("could not disable auto launch: {}", e);
-            })
-            .ok();
-        info!("disabled start on boot");
+
+    let task_name = "LOA_Logs_Auto_Start";
+
+    let set_status = check_start_on_boot();
+    if !set_status && set {
+        let output = Command::new("schtasks")
+            .args([
+                "/create",
+                "/tn", task_name,
+                "/tr", &app_path,
+                "/sc", "onstart",
+                "/rl", "highest"
+            ])
+            .output();
+
+        match output {
+            Ok(_) => {
+                info!("enabled start on boot");
+            }
+            Err(_) => {
+                warn!("error enabling start on boot");
+            }
+        }
+    } else if set_status && !set {
+        let output = Command::new("schtasks")
+            .args(["/delete", "/tn", task_name, "/f"])
+            .output();
+        
+        match output {
+            Ok(_) => {
+                info!("disabled start on boot");
+            }
+            Err(_) => {
+                warn!("error disabling start on boot");
+            }
+        }
     }
 }
 
