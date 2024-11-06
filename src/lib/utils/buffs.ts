@@ -100,7 +100,7 @@ export function filterStatusEffects(
         groupedSynergiesAdd(groupedSynergies, key, id, buff, focusedPlayer, buffFilter);
     }
     // set synergies
-    else if (isSetSynergy(buff)) {
+    else if (isSetSynergy(buff) && buff.source.setName) {
         if ((tab === MeterTab.SELF_BUFFS && !focusedPlayer) || shields) {
             // put set buffs at the start
             groupedSynergiesAdd(groupedSynergies, `_set_${buff.source.setName}`, id, buff, focusedPlayer, buffFilter);
@@ -109,7 +109,7 @@ export function filterStatusEffects(
     // self & other identity, class skill, engravings
     else if (isSelfSkillSynergy(buff)) {
         if (tab === MeterTab.SELF_BUFFS && focusedPlayer) {
-            if (buff.buffCategory === "ability") {
+            if (buff.buffCategory === "ability" || buff.buffCategory === "arkpassive") {
                 key = `${buff.uniqueGroup ? buff.uniqueGroup : id}`;
             } else {
                 if (focusedPlayer.classId !== buff.source.skill?.classId) {
