@@ -29,12 +29,14 @@
     });
 
     let dps: (string | number)[];
+    let dpsRaw = 0;
 
     $: {
         tweenedValue.set(percentage);
 
         if (duration > 0) {
-            dps = abbreviateNumberSplit(entity.damageStats.damageDealt / (duration / 1000));
+            dpsRaw = Math.round(entity.damageStats.damageDealt / (duration / 1000));
+            dps = abbreviateNumberSplit(dpsRaw);
         } else {
             dps = ["0", ""];
         }
@@ -58,6 +60,7 @@
     {anySupportIdentity}
     {anySupportBrand}
     {anyRdpsData}
+    {dpsRaw}
     end={lastCombatPacket}
     {dps}
     {alpha}

@@ -17,6 +17,7 @@
     export let damagePercentage: number;
     export let duration: number;
     export let index: number;
+    export let skillDpsRaw: number;
 </script>
 
 <tr class="h-7 px-2 py-1 text-3xs {$settings.general.underlineHovered ? 'hover:underline' : ''}">
@@ -32,6 +33,7 @@
         {skillDps}
         {playerDamageDealt}
         {duration}
+        {skillDpsRaw}
         width={damagePercentage}
         meterSettings={$settings.logs}
         shadow={!$takingScreenshot}

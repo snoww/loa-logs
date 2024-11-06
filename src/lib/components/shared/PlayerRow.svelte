@@ -19,6 +19,7 @@
     export let anyRdpsData: boolean;
     export let end: number;
     export let dps: (string | number)[];
+    export let dpsRaw: number;
 
     export let alpha: number = 0.6;
     export let width: number;
@@ -130,7 +131,7 @@
     </td>
 {/if}
 {#if meterSettings.dps}
-    <td class="px-1 text-center" use:tooltip={{ content: entity.damageStats.dps.toLocaleString() }}>
+    <td class="px-1 text-center" use:tooltip={{ content: dpsRaw.toLocaleString() }}>
         {dps[0]}<span class="text-3xs text-gray-300">{dps[1]}</span>
     </td>
 {/if}

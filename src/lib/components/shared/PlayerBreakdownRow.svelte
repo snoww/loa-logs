@@ -15,6 +15,7 @@
     export let anySupportBrand: boolean;
     export let abbreviatedSkillDamage: (string | number)[];
     export let skillDps: (string | number)[];
+    export let skillDpsRaw: number;
     export let playerDamageDealt: number;
     export let width: number;
     export let duration: number;
@@ -62,7 +63,7 @@
     </td>
 {/if}
 {#if meterSettings.breakdown.dps}
-    <td class="px-1 text-center" use:tooltip={{ content: skill.dps.toLocaleString() }}>
+    <td class="px-1 text-center" use:tooltip={{ content: skillDpsRaw.toLocaleString() }}>
         {skillDps[0]}<span class="text-3xs text-gray-300">{skillDps[1]}</span>
     </td>
 {/if}

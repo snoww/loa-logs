@@ -35,6 +35,7 @@
     {anyRdpsData}
     {end}
     {dps}
+    dpsRaw={entity.damageStats.dps}
     width={percentage}
     meterSettings={$settings.logs}
     shadow={!$takingScreenshot}

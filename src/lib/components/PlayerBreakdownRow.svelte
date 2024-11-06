@@ -14,6 +14,7 @@
     export let anySupportBrand: boolean;
     export let abbreviatedSkillDamage: (string | number)[];
     export let skillDps: (string | number)[];
+    export let skillDpsRaw: number;
     export let playerDamageDealt: number;
     export let damagePercentage: number;
     export let duration: number;
@@ -39,6 +40,7 @@
     {anySupportBrand}
     {abbreviatedSkillDamage}
     {skillDps}
+    {skillDpsRaw}
     {playerDamageDealt}
     {duration}
     width={$tweenedValue}

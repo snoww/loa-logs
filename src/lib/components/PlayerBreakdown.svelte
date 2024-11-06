@@ -17,6 +17,7 @@
     let skillDamagePercentages: Array<number> = [];
     let abbreviatedSkillDamage: Array<(string | number)[]> = [];
     let skillDps: Array<(string | number)[]> = [];
+    let skillDpsRaw: Array<number> = [];
 
     let hasBackAttacks = true;
     let hasFrontAttacks = true;
@@ -44,6 +45,7 @@
                 skillDamagePercentages = skills.map((skill) => (skill.totalDamage / mostDamageSkill) * 100);
                 abbreviatedSkillDamage = skills.map((skill) => abbreviateNumberSplit(skill.totalDamage));
                 skillDps = skills.map((skill) => abbreviateNumberSplit(skill.totalDamage / (duration / 1000)));
+                skillDpsRaw = skills.map((skill) => Math.round(skill.totalDamage / (duration / 1000)));
                 hasBackAttacks = skills.some((skill) => skill.backAttacks > 0);
                 hasFrontAttacks = skills.some((skill) => skill.frontAttacks > 0);
                 anySupportBuff = skills.some((skill) => skill.buffedBySupport > 0);
@@ -83,6 +85,7 @@
                     playerDamageDealt={entity.damageStats.damageDealt}
                     damagePercentage={skillDamagePercentages[i]}
                     skillDps={skillDps[i]}
+                    skillDpsRaw={skillDpsRaw[i]}
                     {duration}
                     index={i} />
             </tr>
