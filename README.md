@@ -39,21 +39,25 @@ You can support me directly by buying me a [coffee.](https://www.buymeacoffee.co
 
 A: This is normal. The meter will not work after a major game patch. The game shuffles around the opcodes and packets every major patch, and the meter must be updated in order for it to work. Please wait patiently until the meter update is ready. If you keep meter open a pop-up should show up prompting you to update once it is released.
 
-#### Q: Missing `packet.dll`
+#### Q: Missing `WinDivert64.sys`
 
-A: You need install Npcap. If you already have Npcap installed and error still shows, please uninstall it, and then reinstall the latest version using the link above.
+A: You need to reinstall meter. The meter uses the WinDivert driver to listen to game packets. You either removed the file or your antivirus removed it. 
 
 #### Q: Meter isn't detecting anything...
 
-A: There can be multiple reasons. Did you install Npcap? Are you using a VPN? Check the VPN section of the FAQ. If you're using ping reducers, please ask in the discord, invite link is below.
+A: There can be multiple reasons. If you have NordVPN installed, meter will not work due to both apps using WinDivert. You need to uninstall Nord, or completely quit the Nord processes and reboot.
 
 #### Q: How to use ExitLag with LOA Logs?
 
-A: ExitLag recently updated their settings which changed how they redirect packets. Change your ExitLag settings to _Packet redirection method > Legacy - NDIS_. If that still doesn't work. Turn on raw socket by following the steps above.
+A: ExitLag recently updated their settings which changed how they redirect packets. Change your ExitLag settings to _Packet redirection method > Legacy - NDIS_. 
+
+#### Q: How to use other ping reducers with LOA Logs?
+
+A: If there is an option to use NDIS packet redirection in your app, select that setting. 
 
 #### Q: How to use a traditional VPN with LOA Logs?
 
-A: Using traditional VPNs, NOT ping reducers like ExitLag and Mudfish, should work without changing any settings. If that doesn't work, turn off "Automatic Network Selection", and choose your VPN adapter manually in the list, should be named similar to "VPN_NAME adapter". If that still doesn't work, try turning on raw socket on. Remember you need to restart meter and go to character select everytime you change a setting.
+A: Traditional VPNs (NordVPN, Private Internet Access, etc.) are no longer supported anymore due to changes in packet requirements. They cannot be running at the same time as the meter.
 
 #### Q: Class not swapping or character name is stuck on the previous character
 
@@ -61,7 +65,7 @@ A: Are you using raw socket? Raw socket is wonky and has frequent packet losses,
 
 #### Q: Should I run it in a VM?
 
-A: Probably unnecessary. Meter is currently in a gray area by AGS, and they have not been banning any users for using it.
+A: Can no longer run meter in a VM due to changes in packet requirements.
 
 #### Q: Meter window is missing / meter window is tiny
 
@@ -71,7 +75,7 @@ A: Right-click the taskbar icon (located in the bottom right of your screen, nex
 
 A: Are you trying to install on a custom install folder with different permissions? You might need to run the installer in administrator mode due to permission issues.
 
-#### Q: The meter crashes immediately when trying to open it.
+#### Q: The meter crashes immediately when trying to open it. EdgeWebview2 Error.
 
 A: There could be two possible reasons. 1. The meter needs Microsoft Edge Webview2 Runtime to run. Yours is probably missing or out of date. Go uninstall it first (it won't let you install it if you have an older version installed), then download and install from [here](https://go.microsoft.com/fwlink/p/?LinkId=2124703) (https://go.microsoft.com/fwlink/p/?LinkId=2124703). 2. If you installed the meter in another folder that might require elevated permissions, you would need to run the program in administrator mode.
 
