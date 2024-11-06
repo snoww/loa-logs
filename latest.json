@@ -1,11 +1,11 @@
 {
-    "version": "v1.18.1",
-    "notes": "### v1.18.1\n\n#### ADDITIONAL NOTES\n\n- meter will always ask for administrator in order to run now\n- meter will not work with traditional vpns, e.g. nordvpn, however exitlag and other ping reducers should still work\n- removed the need to select an interface\n- if the game is disconnecting randomly, try to close meter and see if it still is causing disconnects\n\n#### BUG FIXES AND IMPROVEMENTS\n\n- fixed buff tooltips showing incorrect percentages\n- fixed paladin ark passive brand not grouping correctly\n- fixed arcana evoke gem not showing correctly",
-    "pub_date": "2024-11-01T07:27:08.964Z",
+    "version": "v1.18.2",
+    "notes": "### v1.18.2\n\n#### BUG FIXES AND IMPROVEMENTS\n- fixed start on boot option to use task scheduler (need to turn it off and back on for it to work)\n- fix certain buff tooltips being incorrect\n- moved ark passive self buffs into character breakdown\n\nsend bug reports/suggestions to [ramen shop server](https://discord.gg/RXvTMV2YHu)",
+    "pub_date": "2024-11-06T08:25:55.540Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.18.1/LOA.Logs_1.18.1_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmJZekhXN1hHMklWUldYSnhpcm1hUlptd1R0SXlLTWR3b0YzY0VVbVFMK2Zsc1JqS2FvMTdBR1dyVnk2SUs0RmQyNGhmOUUySDFWVEtQeno3NnF0cGcwPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzMwNDQ2NzczCWZpbGU6TE9BIExvZ3NfMS4xOC4xX3g2NC1zZXR1cC5uc2lzLnppcApYeklWeW9CRkJabHhzNC93ODJxVnZkSFF6SmxmSzdKeG1ZOU8yY2RrWE9rZ2xyUzNLTHpiWldjL21rR24rbGozaWt1NzUvclVleEFxcUhJbHc2YVJDUT09Cg=="
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.18.2/LOA.Logs_1.18.2_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlVqVEh2NkxsTTBvNGJ1dnMwRDE0QWo4S2x4c0JpeXFuU3pXSmVhVGdYUFRTR2VzNXlPR1RFeEU4Q3FudERybzFMODY3Z20yaW1Kam56TnFvcU5ZM1FFPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzMwODgxNjE2CWZpbGU6TE9BIExvZ3NfMS4xOC4yX3g2NC1zZXR1cC5uc2lzLnppcApDOXVJZW4vSHVHaHA3czJkTFZBSjU1QlpMbW1Mbjg5UGdtcVlLMDQwMFhSVjVHUjVSNTZZeFFwQnk1RGhyQlJTNGd0eUlNeUF3bE9XTVFEblkra0VEZz09Cg=="
         }
     }
 }

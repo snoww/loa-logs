@@ -1,11 +1,18 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.18.1
+    v1.18.2
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
   </div>
 </div>
+
+#### BUG FIXES AND IMPROVEMENTS
+- fixed start on boot option to use task scheduler (need to turn it off and back on for it to work)
+- fix certain buff tooltips being incorrect
+- moved ark passive self buffs into character breakdown
+
+### v1.18.1
 
 #### ADDITIONAL NOTES
 
