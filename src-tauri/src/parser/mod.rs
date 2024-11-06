@@ -964,6 +964,11 @@ pub fn start(
                     }
                 }
             }
+            Pkt::NewZoneKey => {
+                if let Some(pkt) = parse_pkt(&data, PKTNewZoneKey::new, "PKTNewZoneKey") {
+                    damage_handler.update_zone_instance_id(pkt.zone_id_1);
+                }
+            }
             _ => {}
         }
 

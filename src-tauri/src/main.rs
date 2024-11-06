@@ -69,7 +69,7 @@ async fn main() -> Result<()> {
         .add_item(quit);
 
     let system_tray = SystemTray::new().with_menu(tray_menu);
-
+    
     tauri::Builder::default()
         .setup(|app| {
             info!("starting app v{}", app.package_info().version.to_string());
@@ -97,9 +97,9 @@ async fn main() -> Result<()> {
                                     "update available, downloading update: v{}",
                                     update.latest_version()
                                 );
-                                
+
                                 unload_driver();
-                                
+
                                 update
                                     .download_and_install()
                                     .await
@@ -162,7 +162,7 @@ async fn main() -> Result<()> {
             }
 
             info!("listening on port: {}", port);
-            
+            load_driver();
             task::spawn_blocking(move || {
                 parser::start(meter_window, port, settings).map_err(|e| {
                     error!("unexpected error occurred in parser: {}", e);
@@ -363,14 +363,14 @@ fn setup_db(resource_path: &Path) -> Result<(), rusqlite::Error> {
         migration_legacy_entity(&tx)?;
         migration_full_text_search(&tx)?;
     }
-    
+
     if !stmt.exists(["table", "sync_logs"])? {
         info!("adding sync table");
         migration_sync(&tx)?;
     }
 
     migration_specs(&tx)?;
-    
+
     stmt.finalize()?;
     info!("finished setting up database");
     tx.commit()
@@ -602,7 +602,7 @@ fn migration_specs(tx: &Transaction) -> Result<(), rusqlite::Error> {
                 ",
         )?;
     }
-    
+
     stmt.finalize()
 }
 
@@ -989,7 +989,7 @@ fn load_encounter(window: tauri::Window, id: String) -> Encounter {
                 let skill_str: String = row.get(7).unwrap_or_default();
                 skills = serde_json::from_str::<HashMap<u32, Skill>>(skill_str.as_str())
                     .unwrap_or_default();
-                
+
                 let damage_stats_str: String = row.get(8).unwrap_or_default();
                 damage_stats = serde_json::from_str::<DamageStats>(damage_stats_str.as_str())
                     .unwrap_or_default();
@@ -1002,18 +1002,17 @@ fn load_encounter(window: tauri::Window, id: String) -> Encounter {
             let entity_type: String = row.get(11).unwrap_or_default();
 
             let engravings_str: String = row.get(14).unwrap_or_default();
-            let engravings =
-                serde_json::from_str::<Option<Vec<String>>>(engravings_str.as_str())
-                    .unwrap_or_default();
-            
+            let engravings = serde_json::from_str::<Option<Vec<String>>>(engravings_str.as_str())
+                .unwrap_or_default();
+
             let spec: Option<String> = row.get(15).unwrap_or_default();
             let ark_passive_active: Option<bool> = row.get(16).unwrap_or_default();
-            
+
             let ark_passive_data_str: String = row.get(17).unwrap_or_default();
-            let ark_passive_data = 
+            let ark_passive_data =
                 serde_json::from_str::<Option<ArkPassiveData>>(ark_passive_data_str.as_str())
                     .unwrap_or_default();
-            
+
             Ok(EncounterEntity {
                 name: row.get(0)?,
                 class_id: row.get(1)?,
@@ -1069,21 +1068,18 @@ fn get_sync_candidates(window: tauri::Window, force_resync: bool) -> Vec<i32> {
         .resource_dir()
         .expect("could not get resource dir");
     let conn = get_db_connection(&path).expect("could not get db connection");
-    let query = if force_resync {
-        "= '0'"
-    } else {
-        "IS NULL"
-    };
+    let query = if force_resync { "= '0'" } else { "IS NULL" };
     let mut stmt = conn
-        .prepare_cached(
-            &format!("
+        .prepare_cached(&format!(
+            "
     SELECT id
     FROM encounter_preview
     LEFT JOIN sync_logs ON encounter_id = id
     WHERE cleared = true AND boss_only_damage = 1 AND upstream_id {}
     ORDER BY fight_start;
-            ", query),
-        )
+            ",
+            query
+        ))
         .unwrap();
     let rows = stmt.query_map([], |row| row.get(0)).unwrap();
 
@@ -1519,20 +1515,22 @@ fn set_clickthrough(window: tauri::Window, set: bool) {
     }
 }
 
+fn load_driver() {
+    Command::new("sc").args(["delete", "windivert"]).output().expect("unable to delete driver");
+}
+
 #[tauri::command]
 fn unload_driver() {
-    let output = Command::new("sc")
-        .args(["stop", "windivert"])
-        .output();
-    
+    let output = Command::new("sc").args(["stop", "windivert"]).output();
+
     match output {
         Ok(output) => {
             if output.status.success() {
-                info!("stopped windivert driver");
+                info!("stopped driver");
             }
         }
         Err(_) => {
-            warn!("could not stop windivert driver");
+            warn!("could not execute command to stop driver");
         }
     }
 }
@@ -1545,12 +1543,8 @@ fn check_start_on_boot() -> bool {
         .output();
 
     match output {
-        Ok(output) => {
-            output.status.success()
-        }
-        Err(_) => {
-            false
-        }
+        Ok(output) => output.status.success(),
+        Err(_) => false,
     }
 }
 
@@ -1570,11 +1564,7 @@ fn set_start_on_boot(set: bool) {
     if !set_status && set {
         let output = Command::new("schtasks")
             .args([
-                "/create",
-                "/tn", task_name,
-                "/tr", &app_path,
-                "/sc", "onstart",
-                "/rl", "highest"
+                "/create", "/tn", task_name, "/tr", &app_path, "/sc", "onstart", "/rl", "highest",
             ])
             .output();
 
@@ -1590,7 +1580,7 @@ fn set_start_on_boot(set: bool) {
         let output = Command::new("schtasks")
             .args(["/delete", "/tn", task_name, "/f"])
             .output();
-        
+
         match output {
             Ok(_) => {
                 info!("disabled start on boot");
