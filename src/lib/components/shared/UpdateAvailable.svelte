@@ -3,6 +3,7 @@
     import { writable } from "svelte/store";
     import { updateSettings } from "$lib/utils/settings";
     import { markdownIt } from "$lib/utils/stores.js";
+    import { invoke } from "@tauri-apps/api";
 
     let updateText = writable("Update Now");
 </script>
@@ -53,6 +54,7 @@
                                     class="bg-accent-900 hover:bg-accent-800 mr-2 inline-flex items-center justify-center rounded-lg px-5 py-2.5 text-center text-sm text-white focus:outline-none"
                                     on:click={async () => {
                                         $updateText = "Updating...";
+                                        await invoke("unload_driver");
                                         await installUpdate();
                                     }}>
                                     {$updateText}

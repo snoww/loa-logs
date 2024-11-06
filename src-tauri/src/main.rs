@@ -20,7 +20,7 @@ use log::{error, info, warn};
 use parser::models::*;
 
 use rusqlite::{params, params_from_iter, Connection, Transaction};
-use sysinfo::{ProcessesToUpdate, System};
+use sysinfo::System;
 use tauri::{
     api::process::Command, CustomMenuItem, LogicalPosition, LogicalSize, Manager, Position, Size,
     SystemTray, SystemTrayEvent, SystemTrayMenu, SystemTrayMenuItem,
@@ -97,6 +97,9 @@ async fn main() -> Result<()> {
                                     "update available, downloading update: v{}",
                                     update.latest_version()
                                 );
+                                
+                                unload_driver();
+                                
                                 update
                                     .download_and_install()
                                     .await
@@ -200,6 +203,7 @@ async fn main() -> Result<()> {
                     app_handle
                         .save_window_state(WINDOW_STATE_FLAGS)
                         .expect("failed to save window state");
+                    unload_driver();
                     app_handle.exit(0);
                 } else if event.window().label() == LOGS_WINDOW_LABEL {
                     event.window().hide().unwrap();
@@ -233,6 +237,7 @@ async fn main() -> Result<()> {
                 "quit" => {
                     app.save_window_state(WINDOW_STATE_FLAGS)
                         .expect("failed to save window state");
+                    unload_driver();
                     app.exit(0);
                 }
                 "hide" => {
@@ -305,7 +310,6 @@ async fn main() -> Result<()> {
             get_db_info,
             disable_blur,
             enable_blur,
-            get_network_interfaces,
             write_log,
             toggle_encounter_favorite,
             delete_all_encounters,
@@ -320,6 +324,7 @@ async fn main() -> Result<()> {
             start_loa_process,
             get_sync_candidates,
             sync,
+            unload_driver,
         ])
         .run(tauri::generate_context!())
         .expect("error while running application");
@@ -1275,13 +1280,6 @@ fn get_settings(window: tauri::Window) -> Option<Settings> {
 }
 
 #[tauri::command]
-fn get_network_interfaces() -> Vec<(String, String)> {
-    let interfaces = meter_core::get_network_interfaces();
-    info!("get_network_interfaces: {:?}", interfaces);
-    interfaces
-}
-
-#[tauri::command]
 fn open_folder(path: String) {
     let mut path = path;
     if path.contains("USERPROFILE") {
@@ -1518,6 +1516,24 @@ fn disable_aot(window: tauri::Window) {
 fn set_clickthrough(window: tauri::Window, set: bool) {
     if let Some(meter_window) = window.app_handle().get_window(METER_WINDOW_LABEL) {
         meter_window.set_ignore_cursor_events(set).unwrap();
+    }
+}
+
+#[tauri::command]
+fn unload_driver() {
+    let output = Command::new("sc")
+        .args(["stop", "windivert"])
+        .output();
+    
+    match output {
+        Ok(output) => {
+            if output.status.success() {
+                info!("stopped windivert driver");
+            }
+        }
+        Err(_) => {
+            warn!("could not stop windivert driver");
+        }
     }
 }
 
