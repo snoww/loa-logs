@@ -916,8 +916,9 @@ pub fn insert_data(
         engravings,
         gear_hash,
         ark_passive_active,
-        spec
-    ) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17, ?18, ?19)",
+        spec,
+        ark_passive_data
+    ) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17, ?18, ?19, ?20)",
         )
         .expect("failed to prepare entity statement");
 
@@ -1184,7 +1185,8 @@ pub fn insert_data(
                 json!(entity.engraving_data),
                 entity.gear_hash,
                 entity.ark_passive_active,
-                entity.spec
+                entity.spec,
+                json!(entity.ark_passive_data)
             ])
             .expect("failed to insert entity");
     }
