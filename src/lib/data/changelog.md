@@ -1,17 +1,22 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.18.2
+    v1.19.0
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
   </div>
 </div>
 
+#### NEW FEATURES
+- updated meter for weekly reset
+- count argeos ball towards dps to encourage ball hitting
+
 #### BUG FIXES AND IMPROVEMENTS
+- capture driver will be unloaded automatically when quitting meter
+- capture driver will no longer prevent auto updater from updating for future updates after this one (hopefully)
 - fixed start on boot option to use task scheduler (need to turn it off and back on for it to work)
 - fix certain buff tooltips being incorrect
 - moved ark passive self buffs into character breakdown
-
 ### v1.18.1
 
 #### ADDITIONAL NOTES
