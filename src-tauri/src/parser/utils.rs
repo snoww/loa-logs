@@ -159,6 +159,7 @@ pub fn get_status_effect_buff_type_flags(buff: &SkillBuffData) -> u32 {
         "instant_stat_amplify",
         "attack_power_amplify",
         "instant_stat_amplify_by_contents",
+        "evolution_type_damage"
     ];
 
     let mut buff_type = StatusEffectBuffTypeFlags::NONE;

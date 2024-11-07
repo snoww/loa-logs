@@ -471,7 +471,7 @@ export function calculatePartyWidth(
 }
 
 export function addBardBubbles(key: string, buff: Buff, syn: StatusEffect) {
-    if (key === "__bard_2_serenadeofcourage") {
+    if (key.includes("serenadeofcourage")) {
         if (syn.source.desc.includes("15")) {
             buff.bonus = 15;
         } else if (syn.source.desc.includes("10")) {
@@ -479,7 +479,7 @@ export function addBardBubbles(key: string, buff: Buff, syn: StatusEffect) {
         } else if (syn.source.desc.includes("5")) {
             buff.bonus = 5;
         }
-    } else if (key === "_arcanist_190900") {
+    } else if (key.includes("190900")) {
         // twisted fate
         if (syn.source.desc.includes("10")) {
             buff.bonus = 10;
@@ -494,6 +494,10 @@ export function addBardBubbles(key: string, buff: Buff, syn: StatusEffect) {
 const supportClasses = [classNameToClassId["Paladin"], classNameToClassId["Bard"], classNameToClassId["Artist"]];
 
 function isSupportBuff(statusEffect: StatusEffect) {
+    if ([2000260, 2000360].includes(statusEffect.uniqueGroup)) {
+        return true;
+    }
+
     if (!statusEffect.source.skill) {
         return false;
     }
@@ -563,11 +567,18 @@ function makeSupportBuffKey(statusEffect: StatusEffect) {
         supportSkills.identityGrp.includes(statusEffect.uniqueGroup)
     ) {
         key += "_2";
-    } else if (supportSkills.haTechnique.includes(skillId)) {
+    } else if (supportSkills.haTechnique.includes(statusEffect.uniqueGroup)) {
         key += "_3";
-    } else {
+    } else if (statusEffect.uniqueGroup === 2000260) {
         key += "_4";
+    } else {
+        key += "_5";
     }
+
+    if (statusEffect.source.name === "Serenade of Amplification") {
+        key += "_";
+    }
+
     key += `_${statusEffect.uniqueGroup ? statusEffect.uniqueGroup : "0_" + statusEffect.source.skill?.name}`;
     return key;
 }
