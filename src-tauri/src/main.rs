@@ -1561,10 +1561,14 @@ fn set_start_on_boot(set: bool) {
     let task_name = "LOA_Logs_Auto_Start";
 
     let set_status = check_start_on_boot();
+
+    // Add quotes around the app_path
+    let app_path_with_quotes = format!("\"{}\"", app_path);
+
     if !set_status && set {
         let output = Command::new("schtasks")
             .args([
-                "/create", "/tn", task_name, "/tr", &app_path, "/sc", "onstart", "/rl", "highest",
+                "/create", "/tn", task_name, "/tr", &app_path_with_quotes, "/sc", "onstart", "/rl", "highest",
             ])
             .output();
 
