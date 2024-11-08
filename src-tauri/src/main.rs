@@ -1560,11 +1560,14 @@ fn set_start_on_boot(set: bool) {
 
     let task_name = "LOA_Logs_Auto_Start";
 
-    let set_status = check_start_on_boot();
-    if !set_status && set {
+    if set {
+        Command::new("schtasks")
+            .args(["/delete", "/tn", task_name, "/f"])
+            .output().ok();
+        
         let output = Command::new("schtasks")
             .args([
-                "/create", "/tn", task_name, "/tr", &app_path, "/sc", "onstart", "/rl", "highest",
+                "/create", "/tn", task_name, "/tr", &format!("\"{}\"", &app_path), "/sc", "onstart", "/rl", "highest",
             ])
             .output();
 
@@ -1572,11 +1575,11 @@ fn set_start_on_boot(set: bool) {
             Ok(_) => {
                 info!("enabled start on boot");
             }
-            Err(_) => {
-                warn!("error enabling start on boot");
+            Err(e) => {
+                warn!("error enabling start on boot: {}", e);
             }
         }
-    } else if set_status && !set {
+    } else {
         let output = Command::new("schtasks")
             .args(["/delete", "/tn", task_name, "/f"])
             .output();
@@ -1585,8 +1588,8 @@ fn set_start_on_boot(set: bool) {
             Ok(_) => {
                 info!("disabled start on boot");
             }
-            Err(_) => {
-                warn!("error disabling start on boot");
+            Err(e) => {
+                warn!("error disabling start on boot: {}", e);
             }
         }
     }
