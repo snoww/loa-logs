@@ -997,17 +997,18 @@ pub fn insert_data(
             let (class, other) = get_engravings(entity.class_id, &info.engravings);
             entity.engraving_data = other;
             if info.ark_passive_enabled {
-                if let Some(tree) = info.ark_passive_data.as_ref() {
-                    if let Some(enlightenment) = tree.enlightenment.as_ref() {
-                        for node in enlightenment.iter() {
-                            let spec = get_spec_from_ark_passive(node);
-                            if spec != "Unknown" {
-                                entity.spec = Some(spec);
-                                break;
-                            }
-                        }
-                    }
-                }
+                // not reliable enough
+                // if let Some(tree) = info.ark_passive_data.as_ref() {
+                //     if let Some(enlightenment) = tree.enlightenment.as_ref() {
+                //         for node in enlightenment.iter() {
+                //             let spec = get_spec_from_ark_passive(node);
+                //             if spec != "Unknown" {
+                //                 entity.spec = Some(spec);
+                //                 break;
+                //             }
+                //         }
+                //     }
+                // }
                 entity.ark_passive_data = info.ark_passive_data.clone();
             } else if class.len() == 1 {
                 entity.spec = Some(class[0].clone());
