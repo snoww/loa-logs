@@ -1,12 +1,21 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.19.0
+    v1.19.1
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
   </div>
 </div>
 
+#### NEW FEATURES
+- updated meter icon from suggestions
+
+#### BUG FIXES AND IMPROVEMENTS
+- *actually* fixed start with windows setting (turn off and on again to reset it)
+- remove movement speed buff from serenade percentage
+- fix arcana sovereign and chancellor buffs being grouped together
+
+### v1.19.0
 #### NEW FEATURES
 - updated meter for weekly reset
 - count argeos ball towards dps to encourage ball hitting

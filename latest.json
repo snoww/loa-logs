@@ -1,11 +1,11 @@
 {
-    "version": "v1.19.0",
-    "notes": "### v1.19.0\n\n#### NEW FEATURES\n- updated meter for weekly reset\n- count argeos ball towards dps to encourage ball hitting\n\n#### BUG FIXES AND IMPROVEMENTS\n- capture driver will be unloaded automatically when quitting meter\n- capture driver will no longer prevent auto updater from updating for future updates after this one (hopefully)\n- fixed start on boot option to use task scheduler (need to turn it off and back on for it to work)\n- fix certain buff tooltips being incorrect\n- moved ark passive self buffs into character breakdown\n\n\n![error](https://cdn.discordapp.com/attachments/1196224567337824406/1301817061487673384/image.png?ex=672d1b5e&is=672bc9de&hm=5cdd4be860c96414216eeaf4502ec113461e5414e0d22e874455089cd8f22b62&)\n\npress \"Ignore\" if this error pops up during updater\n\nsend bug reports/suggestions to [ramen shop server](https://discord.gg/RXvTMV2YHu)\n",
-    "pub_date": "2024-11-06T20:12:52.557Z",
+    "version": "v1.19.1",
+    "notes": "### v1.19.1\n\n#### NEW FEATURES\n- updated meter icon from suggestions\n\n#### BUG FIXES AND IMPROVEMENTS\n- *actually* fixed start with windows setting (turn off and on again to reset it)\n- remove movement speed buff from serenade percentage\n- fix arcana sovereign and chancellor buffs being grouped together\n\n\n![error](https://cdn.discordapp.com/attachments/1196224567337824406/1301817061487673384/image.png?ex=672d1b5e&is=672bc9de&hm=5cdd4be860c96414216eeaf4502ec113461e5414e0d22e874455089cd8f22b62&)\n\npress \"Ignore\" if this error pops up during updater\n\nsend bug reports/suggestions to [ramen shop server](https://discord.gg/RXvTMV2YHu)\n",
+    "pub_date": "2024-11-13T07:57:57.558Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.19.0/LOA.Logs_1.19.0_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmNLQTNhTXFQK3hUVmxLTElwRU9RU0xrQ2I3OCtya283QmZncU9kZFIvVVJGV2xQN3dQeHEwMGFiRFYzbEtMdkFlcmFmWUNGbG45RU5QamVETTZFMHdBPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzMwOTI5NzU0CWZpbGU6TE9BIExvZ3NfMS4xOS4wX3g2NC1zZXR1cC5uc2lzLnppcApWaGNHdjdHK2R4OVJ2eEJLdkFtdkR6N2hZSktUY21paHFJdmVMNnl1SmI2SU41d2VXM0R1NnpxdXdzQVJMRjI2NmIrNE5QSFhvZ0NHdU5DaWRNQ0JDQT09Cg=="
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.19.1/LOA.Logs_1.19.1_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlNtSE9BNjJvR2RrdGZKeXBxd0FzZFR4MDRqTTV2VjQ0MU0ySXYrems1NGhJbTcrQ2hFNFdEZUcyTmx3ZnRCVmIwalFSeG51TGZkbkQyVU1BQUJTK0FzPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzMxNDg0NTA3CWZpbGU6TE9BIExvZ3NfMS4xOS4xX3g2NC1zZXR1cC5uc2lzLnppcAp0OWFvQ2EycmV4Ym1DVFprdjk2VkdYeWR0WHEzdi9aOUVyTWNlTDZEZ1VQWWlzcE9MVzVUN3N2OEo2WUhlNEVab1NOcWlOdU1KL0gyZy9RaWZZbVhCdz09Cg=="
         }
     }
 }
