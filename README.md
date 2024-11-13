@@ -1,4 +1,4 @@
-# <img src="https://i.imgur.com/q2O4nnn.png" width="30"/> LOA Logs
+# <img src="https://i.imgur.com/VzbJVpr.png" width="30"/> LOA Logs
 
 [![GitHub](https://img.shields.io/github/downloads/snoww/loa-logs/total?style=for-the-badge&color=%23ff9800)](https://github.com/snoww/loa-logs/releases/latest) [![Discord](https://img.shields.io/discord/1174544914139328572?color=%235865F2&label=Discord&style=for-the-badge)](https://discord.gg/RXvTMV2YHu)
 
