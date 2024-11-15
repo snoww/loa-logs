@@ -164,9 +164,10 @@ pub struct Skill {
     pub cast_log: Vec<i32>,
     pub tripod_index: Option<TripodIndex>,
     pub tripod_level: Option<TripodLevel>,
-    pub gem_tier: Option<u8>,
     pub gem_cooldown: Option<u8>,
+    pub gem_tier: Option<u8>,
     pub gem_damage: Option<u8>,
+    pub gem_tier_dmg: Option<u8>,
     #[serde(skip)]
     pub tripod_data: Option<Vec<TripodData>>,
     #[serde(skip)]

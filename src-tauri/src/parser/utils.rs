@@ -969,22 +969,24 @@ pub fn insert_data(
             for gem in info.gems.iter().flatten() {
                 for skill_id in gem_skill_id_to_skill_ids(gem.skill_id) {
                     if let Some(skill) = entity.skills.get_mut(&skill_id) {
-                        skill.gem_tier = Some(gem.tier);
                         match gem.gem_type {
                             5 | 34 => {
                                 // damage gem
                                 skill.gem_damage =
-                                    Some(damage_gem_value_to_level(gem.value, gem.tier))
+                                    Some(damage_gem_value_to_level(gem.value, gem.tier));
+                                skill.gem_tier_dmg = Some(gem.tier);
                             }
                             27 | 35 => {
                                 // cooldown gem
                                 skill.gem_cooldown =
-                                    Some(cooldown_gem_value_to_level(gem.value, gem.tier))
+                                    Some(cooldown_gem_value_to_level(gem.value, gem.tier));
+                                skill.gem_tier = Some(gem.tier);
                             }
                             64 | 65 => {
                                 // support identity gem??
                                 skill.gem_damage =
-                                    Some(support_damage_gem_value_to_level(gem.value))
+                                    Some(support_damage_gem_value_to_level(gem.value));
+                                skill.gem_tier_dmg = Some(gem.tier);
                             }
                             _ => {}
                         }

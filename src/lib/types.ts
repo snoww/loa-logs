@@ -157,6 +157,7 @@ export interface Skill {
     gemCooldown?: number;
     gemDamage?: number;
     gemTier?: number;
+    gemTierDmg?: number;
     rdpsDamageReceived: number;
     rdpsDamageReceivedSupport: number;
     rdpsDamageGiven: number;

@@ -132,7 +132,7 @@ export function generateSkillTooltip(skill: Skill) {
     let str = `<div class="py-0.5">${skill.name}</div>`;
     str += "<div class='text-gray-300'>";
     if (skill.gemDamage) {
-        str += `<div><span style="color: ${getColorFromTier(skill.gemTier)}">T${skill.gemTier ?? 3} </span><span style="color: ${getColorFromLevel(skill.gemDamage, skill.gemTier)}">Lv. ${skill.gemDamage}</span> DMG</div>`;
+        str += `<div><span style="color: ${getColorFromTier(skill.gemTierDmg ?? skill.gemTier)}">T${(skill.gemTierDmg ?? skill.gemTier) ?? 3} </span><span style="color: ${getColorFromLevel(skill.gemDamage, skill.gemTierDmg ?? skill.gemTier)}">Lv. ${skill.gemDamage}</span> DMG</div>`;
     }
     if (skill.gemCooldown) {
         str += `<div><span style="color: ${getColorFromTier(skill.gemTier)}">T${skill.gemTier ?? 3} </span><span style="color: ${getColorFromLevel(skill.gemCooldown, skill.gemTier)}">Lv. ${skill.gemCooldown}</span> CD</div>`;
