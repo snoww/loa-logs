@@ -1154,8 +1154,8 @@ fn get_and_set_region(path: &str, state: &mut EncounterState) {
         Ok(region) => {
             state.region = Some(region);
         }
-        Err(e) => {
-            warn!("failed to read region file. {}", e);
+        Err(_) => {
+            // warn!("failed to read region file. {}", e);
         }
     }
 }
