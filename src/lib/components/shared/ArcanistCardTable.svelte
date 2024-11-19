@@ -36,7 +36,7 @@
                 >{(totalDraws / (duration / 1000 / 60)).toFixed(1)} cards/min</span>
         </div>
     </div>
-    <table class="relative mt-2 table-fixed" style="width: calc(100vw - 4rem)">
+    <table class="relative mt-2 table-fixed w-full">
         <thead class="z-30 h-6">
             <tr class="bg-zinc-900">
                 <th class="w-full px-2 text-left font-normal" />
