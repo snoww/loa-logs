@@ -1567,7 +1567,7 @@ fn set_start_on_boot(set: bool) {
         
         let output = Command::new("schtasks")
             .args([
-                "/create", "/tn", task_name, "/tr", &format!("\"{}\"", &app_path), "/sc", "onstart", "/rl", "highest",
+                "/create", "/tn", task_name, "/tr", &format!("\"{}\"", &app_path), "/sc", "onlogon", "/rl", "highest",
             ])
             .output();
 
