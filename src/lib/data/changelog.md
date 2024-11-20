@@ -1,18 +1,18 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.19.2
+    v1.19.3
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
   </div>
 </div>
 
-
 #### BUG FIXES AND IMPROVEMENTS
 - updated icon to higher resolution (ty @raeinor)
 - yet *another* fix to start with windows setting (turn off and on again to reset it)
 - fix gems showing wrong tier in certain cases
 - fix serenade of amplification showing as 10% serenade
+- fix scrapper spec classification
 
 ### v1.19.1
 

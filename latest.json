@@ -1,11 +1,11 @@
 {
-    "version": "v1.19.2",
-    "notes": "### v1.19.2\n\n#### BUG FIXES AND IMPROVEMENTS\n- updated icon to higher resolution (ty @raeinor)\n- yet *another* fix to start with windows setting (turn off and on again to reset it)\n- fix gems showing wrong tier in certain cases\n- fix serenade of amplification showing as 10% serenade\n\n\nsend bug reports/suggestions to [ramen shop server](https://discord.gg/RXvTMV2YHu)\n",
-    "pub_date": "2024-11-20T03:29:58.063Z",
+    "version": "v1.19.3",
+    "notes": "### v1.19.3\n\n#### BUG FIXES AND IMPROVEMENTS\n- updated icon to higher resolution (ty @raeinor)\n- yet *another* fix to start with windows setting (turn off and on again to reset it)\n- fix gems showing wrong tier in certain cases\n- fix serenade of amplification showing as 10% serenade\n\n\nsend bug reports/suggestions to [ramen shop server](https://discord.gg/RXvTMV2YHu)\n",
+    "pub_date": "2024-11-20T06:52:57.192Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.19.2/LOA.Logs_1.19.2_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmNCOHdiQXVEck1NK3VVbHVMdXhDalRuc29QMVlhaVZrR2tDeTI4SjJEVHcrd040VmJMSFIyUktWeWhVUEF0ZTZIai83NkFwQkNBU0tYbER5SlBtOHdJPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzMyMDczMzQzCWZpbGU6TE9BIExvZ3NfMS4xOS4yX3g2NC1zZXR1cC5uc2lzLnppcApKT1FBc3FJeXd1Qjg0MGJGeEdnbVUySDdrV2Z6QTNVYk1yWW5mOEw4OW0xVUhDbkNFUUo0cVpMaG16UUVUclhtRURpS2UzbmYyeWJPWXlYbWZLQk5EZz09Cg=="
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.19.3/LOA.Logs_1.19.3_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYldGcEtyT1hKdXAva1dVaVM3bFkranIrelBGdktCQ016VnB2RytmL09JTUJMWXhndkYyMldpVWp5eXpzZ3AyWU5xVXBMN1NjKzhqWDk2cFNhUHQ4dFFNPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzMyMDg1NDgyCWZpbGU6TE9BIExvZ3NfMS4xOS4zX3g2NC1zZXR1cC5uc2lzLnppcAp5ZDhzaHU4RzE1elNRL2wvcUNHMVhjV2E3R3FGVUZJN094M3BWZnBFUDBPRlJ4NWFoK0huaGV6NE1KVlBXbVg5UlIzNVYxQkZSL0dPd0hZUGtldzNEQT09Cg=="
         }
     }
 }
