@@ -1387,9 +1387,9 @@ fn get_player_spec(player: &EncounterEntity, buffs: &HashMap<u32, StatusEffect>)
         }
         "Scrapper" => {
             if player.skills.contains_key(&23230) {
-                "Shock Training".to_string()
-            } else {
                 "Ultimate Skill: Taijutsu".to_string()
+            } else {
+                "Shock Training".to_string()
             }
         }
         "Soulfist" => {
