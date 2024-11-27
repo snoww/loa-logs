@@ -1531,7 +1531,7 @@
             "actionType": "modify_damage",
             "actorType": "target",
             "args": [
-              1000,
+              1200,
               0,
               0,
               0,
@@ -1562,7 +1562,7 @@
             "actionType": "modify_damage",
             "actorType": "target",
             "args": [
-              2000,
+              2400,
               0,
               0,
               0,
@@ -1593,7 +1593,7 @@
             "actionType": "modify_damage",
             "actorType": "target",
             "args": [
-              3000,
+              3600,
               0,
               0,
               0,
@@ -41300,7 +41300,7 @@
             "actionType": "modify_damage",
             "actorType": "target",
             "args": [
-              -2000,
+              -1600,
               0,
               0,
               0,
@@ -41331,7 +41331,7 @@
             "actionType": "modify_damage",
             "actorType": "target",
             "args": [
-              -1725,
+              -1300,
               0,
               0,
               0,
@@ -41362,7 +41362,7 @@
             "actionType": "modify_damage",
             "actorType": "target",
             "args": [
-              -1450,
+              -1000,
               0,
               0,
               0,
@@ -44237,6 +44237,131 @@
       }
     ]
   },
+  "2160110": {
+    "id": 2160110,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "self",
+            "args": [
+              100,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "2160111": {
+    "id": 2160111,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "self",
+            "args": [
+              200,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "2160112": {
+    "id": 2160112,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "self",
+            "args": [
+              300,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "2160113": {
+    "id": 2160113,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "self",
+            "args": [
+              400,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "2160114": {
+    "id": 2160114,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "self",
+            "args": [
+              500,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
   "2165300": {
     "id": 2165300,
     "effects": [
@@ -46070,7 +46195,7 @@
             "actionType": "modify_damage",
             "actorType": "target",
             "args": [
-              900,
+              1000,
               0,
               0,
               0,
@@ -46095,7 +46220,7 @@
             "actionType": "modify_damage",
             "actorType": "target",
             "args": [
-              1800,
+              2000,
               0,
               0,
               0,
@@ -46120,7 +46245,7 @@
             "actionType": "modify_damage",
             "actorType": "target",
             "args": [
-              2700,
+              3000,
               0,
               0,
               0,
@@ -46639,7 +46764,7 @@
           {
             "conditionType": "current_skill",
             "actorType": "self",
-            "arg": 45004
+            "arg": 45003
           }
         ],
         "actions": [
@@ -46670,7 +46795,7 @@
           {
             "conditionType": "current_skill",
             "actorType": "self",
-            "arg": 45004
+            "arg": 45003
           }
         ],
         "actions": [
@@ -46701,7 +46826,7 @@
           {
             "conditionType": "current_skill",
             "actorType": "self",
-            "arg": 45004
+            "arg": 45003
           }
         ],
         "actions": [
@@ -51869,7 +51994,7 @@
             "actionType": "modify_damage",
             "actorType": "target",
             "args": [
-              2000,
+              3000,
               0,
               0,
               0,
@@ -51900,7 +52025,7 @@
             "actionType": "modify_damage",
             "actorType": "target",
             "args": [
-              4000,
+              6000,
               0,
               0,
               0,
@@ -51925,7 +52050,7 @@
             "actionType": "modify_damage",
             "actorType": "target",
             "args": [
-              300,
+              400,
               0,
               0,
               0,
@@ -51950,7 +52075,7 @@
             "actionType": "modify_damage",
             "actorType": "target",
             "args": [
-              900,
+              1000,
               0,
               0,
               0,
@@ -51975,7 +52100,7 @@
             "actionType": "modify_damage",
             "actorType": "target",
             "args": [
-              1500,
+              1600,
               0,
               0,
               0,
@@ -64795,7 +64920,7 @@
     "effects": [
       {
         "desc": null,
-        "cooldown": 0,
+        "cooldown": 100,
         "ratio": 10000,
         "conditions": [
           {
@@ -64826,7 +64951,7 @@
     "effects": [
       {
         "desc": null,
-        "cooldown": 0,
+        "cooldown": 100,
         "ratio": 10000,
         "conditions": [
           {
@@ -64857,7 +64982,7 @@
     "effects": [
       {
         "desc": null,
-        "cooldown": 0,
+        "cooldown": 100,
         "ratio": 10000,
         "conditions": [
           {
@@ -64899,10 +65024,10 @@
         ],
         "actions": [
           {
-            "actionType": "modify_damage",
+            "actionType": "modify_critical_ratio",
             "actorType": "target",
             "args": [
-              1500,
+              1000,
               0,
               0,
               0,
@@ -64925,10 +65050,10 @@
         ],
         "actions": [
           {
-            "actionType": "modify_damage",
+            "actionType": "modify_critical_ratio",
             "actorType": "target",
             "args": [
-              1500,
+              1000,
               0,
               0,
               0,
@@ -64956,10 +65081,10 @@
         ],
         "actions": [
           {
-            "actionType": "modify_damage",
+            "actionType": "modify_critical_ratio",
             "actorType": "target",
             "args": [
-              4000,
+              2000,
               0,
               0,
               0,
@@ -64982,10 +65107,10 @@
         ],
         "actions": [
           {
-            "actionType": "modify_damage",
+            "actionType": "modify_critical_ratio",
             "actorType": "target",
             "args": [
-              4000,
+              2000,
               0,
               0,
               0,
@@ -65013,10 +65138,67 @@
         ],
         "actions": [
           {
+            "actionType": "modify_critical_ratio",
+            "actorType": "target",
+            "args": [
+              3000,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "skill_effect_id",
+            "actorType": "self",
+            "arg": 182602
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "modify_critical_ratio",
+            "actorType": "target",
+            "args": [
+              3000,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "2185613": {
+    "id": 2185613,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "skill_effect_id",
+            "actorType": "self",
+            "arg": 182601
+          }
+        ],
+        "actions": [
+          {
             "actionType": "modify_damage",
             "actorType": "target",
             "args": [
-              6500,
+              600,
               0,
               0,
               0,
@@ -65042,7 +65224,121 @@
             "actionType": "modify_damage",
             "actorType": "target",
             "args": [
-              6500,
+              600,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "2185614": {
+    "id": 2185614,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "skill_effect_id",
+            "actorType": "self",
+            "arg": 182601
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              1800,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "skill_effect_id",
+            "actorType": "self",
+            "arg": 182602
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              1800,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "2185615": {
+    "id": 2185615,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "skill_effect_id",
+            "actorType": "self",
+            "arg": 182601
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              3000,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "skill_effect_id",
+            "actorType": "self",
+            "arg": 182602
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              3000,
               0,
               0,
               0,
@@ -65152,7 +65448,7 @@
     "effects": [
       {
         "desc": null,
-        "cooldown": 0,
+        "cooldown": 100,
         "ratio": 10000,
         "conditions": [
           {
@@ -65214,7 +65510,7 @@
     "effects": [
       {
         "desc": null,
-        "cooldown": 0,
+        "cooldown": 100,
         "ratio": 10000,
         "conditions": [
           {
@@ -65276,7 +65572,7 @@
     "effects": [
       {
         "desc": null,
-        "cooldown": 0,
+        "cooldown": 100,
         "ratio": 10000,
         "conditions": [
           {
@@ -65322,6 +65618,73 @@
             "actorType": "caster",
             "args": [
               2185905,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "2180090": {
+    "id": 2180090,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "current_skill",
+            "actorType": "self",
+            "arg": 18010
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "exec_start_skill",
+            "actorType": "caster",
+            "args": [
+              2180092,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "2180091": {
+    "id": 2180091,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "current_skill_group",
+            "actorType": "self",
+            "arg": 2180090
+          },
+          {
+            "conditionType": "identity_stance",
+            "actorType": "self",
+            "arg": 0
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "exec_start_skill",
+            "actorType": "caster",
+            "args": [
+              2180093,
               0,
               0,
               0,
@@ -67043,37 +67406,6 @@
       }
     ]
   },
-  "2292200": {
-    "id": 2292200,
-    "effects": [
-      {
-        "desc": null,
-        "cooldown": 0,
-        "ratio": 10000,
-        "conditions": [
-          {
-            "conditionType": "current_skill_group",
-            "actorType": "self",
-            "arg": 2292200
-          }
-        ],
-        "actions": [
-          {
-            "actionType": "exec_start_skill",
-            "actorType": "self",
-            "args": [
-              0,
-              0,
-              2292200,
-              0,
-              0,
-              0
-            ]
-          }
-        ]
-      }
-    ]
-  },
   "2293100": {
     "id": 2293100,
     "effects": [
@@ -67081,31 +67413,13 @@
         "desc": null,
         "cooldown": 0,
         "ratio": 10000,
-        "conditions": [
-          {
-            "conditionType": "directional_attack",
-            "actorType": "target",
-            "arg": 1
-          }
-        ],
+        "conditions": [],
         "actions": [
           {
             "actionType": "modify_damage",
             "actorType": "target",
             "args": [
               80,
-              0,
-              0,
-              0,
-              0,
-              0
-            ]
-          },
-          {
-            "actionType": "modify_penetration",
-            "actorType": "target",
-            "args": [
-              100,
               0,
               0,
               0,
@@ -67124,31 +67438,13 @@
         "desc": null,
         "cooldown": 0,
         "ratio": 10000,
-        "conditions": [
-          {
-            "conditionType": "directional_attack",
-            "actorType": "target",
-            "arg": 1
-          }
-        ],
+        "conditions": [],
         "actions": [
           {
             "actionType": "modify_damage",
             "actorType": "target",
             "args": [
               160,
-              0,
-              0,
-              0,
-              0,
-              0
-            ]
-          },
-          {
-            "actionType": "modify_penetration",
-            "actorType": "target",
-            "args": [
-              200,
               0,
               0,
               0,
@@ -67167,31 +67463,13 @@
         "desc": null,
         "cooldown": 0,
         "ratio": 10000,
-        "conditions": [
-          {
-            "conditionType": "directional_attack",
-            "actorType": "target",
-            "arg": 1
-          }
-        ],
+        "conditions": [],
         "actions": [
           {
             "actionType": "modify_damage",
             "actorType": "target",
             "args": [
               240,
-              0,
-              0,
-              0,
-              0,
-              0
-            ]
-          },
-          {
-            "actionType": "modify_penetration",
-            "actorType": "target",
-            "args": [
-              300,
               0,
               0,
               0,
@@ -67210,31 +67488,13 @@
         "desc": null,
         "cooldown": 0,
         "ratio": 10000,
-        "conditions": [
-          {
-            "conditionType": "directional_attack",
-            "actorType": "target",
-            "arg": 1
-          }
-        ],
+        "conditions": [],
         "actions": [
           {
             "actionType": "modify_damage",
             "actorType": "target",
             "args": [
               320,
-              0,
-              0,
-              0,
-              0,
-              0
-            ]
-          },
-          {
-            "actionType": "modify_penetration",
-            "actorType": "target",
-            "args": [
-              400,
               0,
               0,
               0,
@@ -67253,160 +67513,13 @@
         "desc": null,
         "cooldown": 0,
         "ratio": 10000,
-        "conditions": [
-          {
-            "conditionType": "directional_attack",
-            "actorType": "target",
-            "arg": 1
-          }
-        ],
+        "conditions": [],
         "actions": [
           {
             "actionType": "modify_damage",
             "actorType": "target",
             "args": [
               400,
-              0,
-              0,
-              0,
-              0,
-              0
-            ]
-          },
-          {
-            "actionType": "modify_penetration",
-            "actorType": "target",
-            "args": [
-              500,
-              0,
-              0,
-              0,
-              0,
-              0
-            ]
-          }
-        ]
-      }
-    ]
-  },
-  "2293200": {
-    "id": 2293200,
-    "effects": [
-      {
-        "desc": null,
-        "cooldown": 0,
-        "ratio": 10000,
-        "conditions": [
-          {
-            "conditionType": "status_effect_on",
-            "actorType": "self",
-            "arg": 2292200
-          }
-        ],
-        "actions": [
-          {
-            "actionType": "modify_critical_ratio",
-            "actorType": "target",
-            "args": [
-              400,
-              0,
-              0,
-              0,
-              0,
-              0
-            ]
-          },
-          {
-            "actionType": "modify_critical_multiplier",
-            "actorType": "target",
-            "args": [
-              800,
-              0,
-              0,
-              0,
-              0,
-              0
-            ]
-          }
-        ]
-      }
-    ]
-  },
-  "2293201": {
-    "id": 2293201,
-    "effects": [
-      {
-        "desc": null,
-        "cooldown": 0,
-        "ratio": 10000,
-        "conditions": [
-          {
-            "conditionType": "status_effect_on",
-            "actorType": "self",
-            "arg": 2292200
-          }
-        ],
-        "actions": [
-          {
-            "actionType": "modify_critical_ratio",
-            "actorType": "target",
-            "args": [
-              900,
-              0,
-              0,
-              0,
-              0,
-              0
-            ]
-          },
-          {
-            "actionType": "modify_critical_multiplier",
-            "actorType": "target",
-            "args": [
-              1100,
-              0,
-              0,
-              0,
-              0,
-              0
-            ]
-          }
-        ]
-      }
-    ]
-  },
-  "2293202": {
-    "id": 2293202,
-    "effects": [
-      {
-        "desc": null,
-        "cooldown": 0,
-        "ratio": 10000,
-        "conditions": [
-          {
-            "conditionType": "status_effect_on",
-            "actorType": "self",
-            "arg": 2292200
-          }
-        ],
-        "actions": [
-          {
-            "actionType": "modify_critical_ratio",
-            "actorType": "target",
-            "args": [
-              1400,
-              0,
-              0,
-              0,
-              0,
-              0
-            ]
-          },
-          {
-            "actionType": "modify_critical_multiplier",
-            "actorType": "target",
-            "args": [
-              1400,
               0,
               0,
               0,
@@ -67741,7 +67854,7 @@
             "actionType": "modify_damage",
             "actorType": "target",
             "args": [
-              400,
+              0,
               0,
               0,
               0,
@@ -67766,7 +67879,7 @@
             "actionType": "modify_damage",
             "actorType": "target",
             "args": [
-              1200,
+              500,
               0,
               0,
               0,
@@ -67791,7 +67904,100 @@
             "actionType": "modify_damage",
             "actorType": "target",
             "args": [
-              1900,
+              1000,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "2294210": {
+    "id": 2294210,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "current_skill_group",
+            "actorType": "self",
+            "arg": 2294200
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              500,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "2294211": {
+    "id": 2294211,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "current_skill_group",
+            "actorType": "self",
+            "arg": 2294200
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              700,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "2294212": {
+    "id": 2294212,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "current_skill_group",
+            "actorType": "self",
+            "arg": 2294200
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              900,
               0,
               0,
               0,
@@ -78594,7 +78800,7 @@
             "actionType": "modify_damage",
             "actorType": "target",
             "args": [
-              200,
+              70,
               0,
               0,
               0,
@@ -78619,7 +78825,7 @@
             "actionType": "modify_damage",
             "actorType": "target",
             "args": [
-              400,
+              140,
               0,
               0,
               0,
@@ -78644,7 +78850,7 @@
             "actionType": "modify_damage",
             "actorType": "target",
             "args": [
-              600,
+              210,
               0,
               0,
               0,
@@ -78669,7 +78875,7 @@
             "actionType": "modify_damage",
             "actorType": "target",
             "args": [
-              800,
+              280,
               0,
               0,
               0,
@@ -78694,7 +78900,7 @@
             "actionType": "modify_damage",
             "actorType": "target",
             "args": [
-              1000,
+              350,
               0,
               0,
               0,
@@ -80226,6 +80432,63 @@
             "actorType": "target",
             "args": [
               -5000,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "2241001": {
+    "id": 2241001,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "current_skill",
+            "actorType": "self",
+            "arg": 24270
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "exec_start_skill",
+            "actorType": "self",
+            "args": [
+              2241020,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "current_skill",
+            "actorType": "self",
+            "arg": 24050
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "exec_start_skill",
+            "actorType": "self",
+            "args": [
+              2241020,
               0,
               0,
               0,
@@ -87900,291 +88163,6 @@
       }
     ]
   },
-  "2230700": {
-    "id": 2230700,
-    "effects": [
-      {
-        "desc": null,
-        "cooldown": 0,
-        "ratio": 10000,
-        "conditions": [
-          {
-            "conditionType": "current_skill",
-            "actorType": "self",
-            "arg": 23170
-          }
-        ],
-        "actions": [
-          {
-            "actionType": "exec_start_skill",
-            "actorType": "self",
-            "args": [
-              2230700,
-              0,
-              0,
-              0,
-              0,
-              0
-            ]
-          }
-        ]
-      },
-      {
-        "desc": null,
-        "cooldown": 0,
-        "ratio": 10000,
-        "conditions": [
-          {
-            "conditionType": "current_skill",
-            "actorType": "self",
-            "arg": 23171
-          }
-        ],
-        "actions": [
-          {
-            "actionType": "exec_start_skill",
-            "actorType": "self",
-            "args": [
-              2230700,
-              0,
-              0,
-              0,
-              0,
-              0
-            ]
-          }
-        ]
-      }
-    ]
-  },
-  "2230701": {
-    "id": 2230701,
-    "effects": [
-      {
-        "desc": null,
-        "cooldown": 0,
-        "ratio": 10000,
-        "conditions": [
-          {
-            "conditionType": "current_skill",
-            "actorType": "self",
-            "arg": 23170
-          }
-        ],
-        "actions": [
-          {
-            "actionType": "exec_start_skill",
-            "actorType": "self",
-            "args": [
-              2230701,
-              0,
-              0,
-              0,
-              0,
-              0
-            ]
-          }
-        ]
-      },
-      {
-        "desc": null,
-        "cooldown": 0,
-        "ratio": 10000,
-        "conditions": [
-          {
-            "conditionType": "current_skill",
-            "actorType": "self",
-            "arg": 23171
-          }
-        ],
-        "actions": [
-          {
-            "actionType": "exec_start_skill",
-            "actorType": "self",
-            "args": [
-              2230701,
-              0,
-              0,
-              0,
-              0,
-              0
-            ]
-          }
-        ]
-      }
-    ]
-  },
-  "2230702": {
-    "id": 2230702,
-    "effects": [
-      {
-        "desc": null,
-        "cooldown": 0,
-        "ratio": 10000,
-        "conditions": [
-          {
-            "conditionType": "current_skill",
-            "actorType": "self",
-            "arg": 23170
-          }
-        ],
-        "actions": [
-          {
-            "actionType": "exec_start_skill",
-            "actorType": "self",
-            "args": [
-              2230702,
-              0,
-              0,
-              0,
-              0,
-              0
-            ]
-          }
-        ]
-      },
-      {
-        "desc": null,
-        "cooldown": 0,
-        "ratio": 10000,
-        "conditions": [
-          {
-            "conditionType": "current_skill",
-            "actorType": "self",
-            "arg": 23171
-          }
-        ],
-        "actions": [
-          {
-            "actionType": "exec_start_skill",
-            "actorType": "self",
-            "args": [
-              2230702,
-              0,
-              0,
-              0,
-              0,
-              0
-            ]
-          }
-        ]
-      }
-    ]
-  },
-  "2230703": {
-    "id": 2230703,
-    "effects": [
-      {
-        "desc": null,
-        "cooldown": 0,
-        "ratio": 10000,
-        "conditions": [
-          {
-            "conditionType": "current_skill",
-            "actorType": "self",
-            "arg": 23170
-          }
-        ],
-        "actions": [
-          {
-            "actionType": "exec_start_skill",
-            "actorType": "self",
-            "args": [
-              2230703,
-              0,
-              0,
-              0,
-              0,
-              0
-            ]
-          }
-        ]
-      },
-      {
-        "desc": null,
-        "cooldown": 0,
-        "ratio": 10000,
-        "conditions": [
-          {
-            "conditionType": "current_skill",
-            "actorType": "self",
-            "arg": 23171
-          }
-        ],
-        "actions": [
-          {
-            "actionType": "exec_start_skill",
-            "actorType": "self",
-            "args": [
-              2230703,
-              0,
-              0,
-              0,
-              0,
-              0
-            ]
-          }
-        ]
-      }
-    ]
-  },
-  "2230704": {
-    "id": 2230704,
-    "effects": [
-      {
-        "desc": null,
-        "cooldown": 0,
-        "ratio": 10000,
-        "conditions": [
-          {
-            "conditionType": "current_skill",
-            "actorType": "self",
-            "arg": 23170
-          }
-        ],
-        "actions": [
-          {
-            "actionType": "exec_start_skill",
-            "actorType": "self",
-            "args": [
-              2230704,
-              0,
-              0,
-              0,
-              0,
-              0
-            ]
-          }
-        ]
-      },
-      {
-        "desc": null,
-        "cooldown": 0,
-        "ratio": 10000,
-        "conditions": [
-          {
-            "conditionType": "current_skill",
-            "actorType": "self",
-            "arg": 23171
-          }
-        ],
-        "actions": [
-          {
-            "actionType": "exec_start_skill",
-            "actorType": "self",
-            "args": [
-              2230704,
-              0,
-              0,
-              0,
-              0,
-              0
-            ]
-          }
-        ]
-      }
-    ]
-  },
   "2230705": {
     "id": 2230705,
     "effects": [
@@ -88198,7 +88176,7 @@
             "actionType": "modify_damage",
             "actorType": "target",
             "args": [
-              140,
+              100,
               0,
               0,
               0,
@@ -88223,7 +88201,7 @@
             "actionType": "modify_damage",
             "actorType": "target",
             "args": [
-              280,
+              200,
               0,
               0,
               0,
@@ -88248,7 +88226,7 @@
             "actionType": "modify_damage",
             "actorType": "target",
             "args": [
-              420,
+              300,
               0,
               0,
               0,
@@ -88273,7 +88251,7 @@
             "actionType": "modify_damage",
             "actorType": "target",
             "args": [
-              560,
+              400,
               0,
               0,
               0,
@@ -88298,7 +88276,7 @@
             "actionType": "modify_damage",
             "actorType": "target",
             "args": [
-              700,
+              500,
               0,
               0,
               0,
@@ -128644,7 +128622,7 @@
             "actionType": "modify_critical_ratio",
             "actorType": "target",
             "args": [
-              2500,
+              2000,
               0,
               0,
               0,
@@ -128675,7 +128653,7 @@
             "actionType": "modify_critical_ratio",
             "actorType": "target",
             "args": [
-              2500,
+              2000,
               0,
               0,
               0,
@@ -128706,7 +128684,7 @@
             "actionType": "modify_critical_ratio",
             "actorType": "target",
             "args": [
-              2500,
+              2000,
               0,
               0,
               0,
@@ -130824,6 +130802,31 @@
       }
     ]
   },
+  "350003": {
+    "id": 350003,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [],
+        "actions": [
+          {
+            "actionType": "exec_after_effect",
+            "actorType": "self",
+            "args": [
+              350006,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
   "350406": {
     "id": 350406,
     "effects": [
@@ -131635,7 +131638,7 @@
             "actionType": "modify_damage",
             "actorType": "self",
             "args": [
-              300,
+              200,
               0,
               0,
               0,
@@ -131666,7 +131669,7 @@
             "actionType": "modify_damage",
             "actorType": "self",
             "args": [
-              600,
+              400,
               0,
               0,
               0,
@@ -131697,7 +131700,7 @@
             "actionType": "modify_damage",
             "actorType": "self",
             "args": [
-              900,
+              600,
               0,
               0,
               0,
@@ -131728,7 +131731,7 @@
             "actionType": "modify_damage",
             "actorType": "self",
             "args": [
-              1200,
+              800,
               0,
               0,
               0,
@@ -131759,7 +131762,7 @@
             "actionType": "modify_damage",
             "actorType": "self",
             "args": [
-              1500,
+              1000,
               0,
               0,
               0,
@@ -131931,21 +131934,15 @@
     "effects": [
       {
         "desc": null,
-        "cooldown": 10000,
+        "cooldown": 0,
         "ratio": 10000,
-        "conditions": [
-          {
-            "conditionType": "current_skill_group",
-            "actorType": "self",
-            "arg": 2350700
-          }
-        ],
+        "conditions": [],
         "actions": [
           {
-            "actionType": "exec_start_skill",
+            "actionType": "modify_damage",
             "actorType": "self",
             "args": [
-              2350710,
+              0,
               0,
               0,
               0,
@@ -131962,21 +131959,15 @@
     "effects": [
       {
         "desc": null,
-        "cooldown": 10000,
+        "cooldown": 0,
         "ratio": 10000,
-        "conditions": [
-          {
-            "conditionType": "current_skill_group",
-            "actorType": "self",
-            "arg": 2350700
-          }
-        ],
+        "conditions": [],
         "actions": [
           {
-            "actionType": "exec_start_skill",
+            "actionType": "modify_damage",
             "actorType": "self",
             "args": [
-              2350711,
+              100,
               0,
               0,
               0,
@@ -131993,21 +131984,15 @@
     "effects": [
       {
         "desc": null,
-        "cooldown": 10000,
+        "cooldown": 0,
         "ratio": 10000,
-        "conditions": [
-          {
-            "conditionType": "current_skill_group",
-            "actorType": "self",
-            "arg": 2350700
-          }
-        ],
+        "conditions": [],
         "actions": [
           {
-            "actionType": "exec_start_skill",
+            "actionType": "modify_damage",
             "actorType": "self",
             "args": [
-              2350712,
+              200,
               0,
               0,
               0,
@@ -132024,21 +132009,15 @@
     "effects": [
       {
         "desc": null,
-        "cooldown": 10000,
+        "cooldown": 0,
         "ratio": 10000,
-        "conditions": [
-          {
-            "conditionType": "current_skill_group",
-            "actorType": "self",
-            "arg": 2350700
-          }
-        ],
+        "conditions": [],
         "actions": [
           {
-            "actionType": "exec_start_skill",
+            "actionType": "modify_damage",
             "actorType": "self",
             "args": [
-              2350713,
+              300,
               0,
               0,
               0,
@@ -132055,54 +132034,17 @@
     "effects": [
       {
         "desc": null,
-        "cooldown": 10000,
+        "cooldown": 0,
         "ratio": 10000,
-        "conditions": [
-          {
-            "conditionType": "current_skill_group",
-            "actorType": "self",
-            "arg": 2350700
-          }
-        ],
+        "conditions": [],
         "actions": [
           {
-            "actionType": "exec_start_skill",
+            "actionType": "modify_damage",
             "actorType": "self",
             "args": [
-              2350714,
+              400,
               0,
               0,
-              0,
-              0,
-              0
-            ]
-          }
-        ]
-      }
-    ]
-  },
-  "2353410": {
-    "id": 2353410,
-    "effects": [
-      {
-        "desc": null,
-        "cooldown": 10000,
-        "ratio": 10000,
-        "conditions": [
-          {
-            "conditionType": "current_skill_group",
-            "actorType": "self",
-            "arg": 2350700
-          }
-        ],
-        "actions": [
-          {
-            "actionType": "exec_start_skill",
-            "actorType": "self",
-            "args": [
-              0,
-              0,
-              2350800,
               0,
               0,
               0
@@ -132256,6 +132198,37 @@
             "actorType": "self",
             "args": [
               440,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "2354110": {
+    "id": 2354110,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 5000,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "skill_effect_id",
+            "actorType": "self",
+            "arg": 357002
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "exec_after_effect",
+            "actorType": "self",
+            "args": [
+              2350800,
               0,
               0,
               0,
@@ -132640,7 +132613,7 @@
           {
             "conditionType": "current_skill",
             "actorType": "self",
-            "arg": 35831
+            "arg": 35870
           }
         ],
         "actions": [
@@ -132671,7 +132644,7 @@
           {
             "conditionType": "current_skill",
             "actorType": "self",
-            "arg": 35831
+            "arg": 35870
           }
         ],
         "actions": [
@@ -132702,7 +132675,7 @@
           {
             "conditionType": "current_skill",
             "actorType": "self",
-            "arg": 35831
+            "arg": 35870
           }
         ],
         "actions": [
@@ -132733,7 +132706,7 @@
           {
             "conditionType": "current_skill",
             "actorType": "self",
-            "arg": 35831
+            "arg": 35870
           }
         ],
         "actions": [
@@ -132741,7 +132714,7 @@
             "actionType": "modify_damage",
             "actorType": "target",
             "args": [
-              -3600,
+              2400,
               0,
               0,
               0,
@@ -132764,7 +132737,7 @@
           {
             "conditionType": "current_skill",
             "actorType": "self",
-            "arg": 35831
+            "arg": 35870
           }
         ],
         "actions": [
@@ -132772,7 +132745,7 @@
             "actionType": "modify_damage",
             "actorType": "target",
             "args": [
-              -2500,
+              4600,
               0,
               0,
               0,
@@ -132795,7 +132768,7 @@
           {
             "conditionType": "current_skill",
             "actorType": "self",
-            "arg": 35831
+            "arg": 35870
           }
         ],
         "actions": [
@@ -132803,7 +132776,7 @@
             "actionType": "modify_damage",
             "actorType": "target",
             "args": [
-              -1400,
+              6800,
               0,
               0,
               0,
@@ -132834,7 +132807,7 @@
             "actionType": "modify_damage",
             "actorType": "target",
             "args": [
-              1200,
+              1500,
               0,
               0,
               0,
@@ -132865,7 +132838,7 @@
             "actionType": "modify_damage",
             "actorType": "target",
             "args": [
-              3600,
+              3500,
               0,
               0,
               0,
@@ -132896,7 +132869,7 @@
             "actionType": "modify_damage",
             "actorType": "target",
             "args": [
-              5000,
+              5500,
               0,
               0,
               0,
@@ -132958,7 +132931,7 @@
             "actionType": "modify_damage",
             "actorType": "target",
             "args": [
-              1600,
+              1800,
               0,
               0,
               0,
@@ -132989,7 +132962,7 @@
             "actionType": "modify_damage",
             "actorType": "target",
             "args": [
-              3200,
+              3600,
               0,
               0,
               0,
@@ -144011,7 +143984,7 @@
             "actionType": "modify_critical_multiplier",
             "actorType": "target",
             "args": [
-              700,
+              1500,
               0,
               0,
               0,
@@ -144047,7 +144020,7 @@
             "actionType": "modify_critical_multiplier",
             "actorType": "target",
             "args": [
-              1400,
+              3000,
               0,
               0,
               0,
@@ -144083,7 +144056,7 @@
             "actionType": "modify_critical_multiplier",
             "actorType": "target",
             "args": [
-              2100,
+              4500,
               0,
               0,
               0,
@@ -144114,7 +144087,7 @@
             "actionType": "modify_damage",
             "actorType": "target",
             "args": [
-              800,
+              1200,
               0,
               0,
               0,
@@ -144145,7 +144118,7 @@
             "actionType": "modify_damage",
             "actorType": "target",
             "args": [
-              1700,
+              2400,
               0,
               0,
               0,
@@ -144176,7 +144149,7 @@
             "actionType": "modify_damage",
             "actorType": "target",
             "args": [
-              2600,
+              3600,
               0,
               0,
               0,
@@ -196626,7 +196599,7 @@
             "actionType": "modify_damage",
             "actorType": "target",
             "args": [
-              600,
+              700,
               0,
               0,
               0,
@@ -196657,7 +196630,7 @@
             "actionType": "modify_damage",
             "actorType": "target",
             "args": [
-              1200,
+              1400,
               0,
               0,
               0,
@@ -196688,7 +196661,7 @@
             "actionType": "modify_damage",
             "actorType": "target",
             "args": [
-              1800,
+              2100,
               0,
               0,
               0,
@@ -197569,7 +197542,7 @@
             "actionType": "modify_damage",
             "actorType": "target",
             "args": [
-              4200,
+              3900,
               0,
               0,
               0,
@@ -197600,7 +197573,7 @@
             "actionType": "modify_damage",
             "actorType": "target",
             "args": [
-              4500,
+              4200,
               0,
               0,
               0,
@@ -197631,7 +197604,7 @@
             "actionType": "modify_damage",
             "actorType": "target",
             "args": [
-              4800,
+              4500,
               0,
               0,
               0,

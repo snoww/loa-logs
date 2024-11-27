@@ -13,7 +13,9 @@ use self::models::{Settings, TripodIndex, TripodLevel};
 use crate::parser::encounter_state::EncounterState;
 use crate::parser::entity_tracker::{get_current_and_max_hp, EntityTracker};
 use crate::parser::id_tracker::IdTracker;
-use crate::parser::models::{DamageData, EntityType, Identity, LocalInfo, LocalPlayer, Stagger, VALID_ZONES};
+use crate::parser::models::{
+    DamageData, EntityType, Identity, LocalInfo, LocalPlayer, Stagger, VALID_ZONES,
+};
 use crate::parser::party_tracker::PartyTracker;
 use crate::parser::stats_api::{StatsApi, API_URL};
 use crate::parser::status_tracker::{
@@ -39,11 +41,7 @@ use std::time::{Duration, Instant};
 use tauri::{Manager, Window, Wry};
 use uuid::Uuid;
 
-pub fn start(
-    window: Window<Wry>,
-    port: u16,
-    settings: Option<Settings>,
-) -> Result<()> {
+pub fn start(window: Window<Wry>, port: u16, settings: Option<Settings>) -> Result<()> {
     let id_tracker = Rc::new(RefCell::new(IdTracker::new()));
     let party_tracker = Rc::new(RefCell::new(PartyTracker::new(id_tracker.clone())));
     let status_tracker = Rc::new(RefCell::new(StatusTracker::new(party_tracker.clone())));
@@ -300,16 +298,20 @@ pub fn start(
                         entity.character_id
                     );
 
-                    local_info.local_players.entry(entity.character_id).and_modify(|e| {
-                        e.name = entity.name.clone();
-                        e.count += 1;
-                    }).or_insert(LocalPlayer {
-                        name: entity.name.clone(),
-                        count: 1,
-                    });
+                    local_info
+                        .local_players
+                        .entry(entity.character_id)
+                        .and_modify(|e| {
+                            e.name = entity.name.clone();
+                            e.count += 1;
+                        })
+                        .or_insert(LocalPlayer {
+                            name: entity.name.clone(),
+                            count: 1,
+                        });
 
                     write_local_players(&local_info, &local_player_path)?;
-                    
+
                     state.on_init_pc(entity, hp, max_hp)
                 }
             }
@@ -507,9 +509,11 @@ pub fn start(
                         tripod_level,
                         timestamp,
                     );
-                    
+
                     if entity.entity_type == EntityType::PLAYER && skill_id > 0 {
-                        state.skill_tracker.new_cast(entity.id, skill_id, summon_source, timestamp);
+                        state
+                            .skill_tracker
+                            .new_cast(entity.id, skill_id, summon_source, timestamp);
                     }
                 }
             }
@@ -652,7 +656,8 @@ pub fn start(
                     "PKTPartyStatusEffectAddNotify",
                 ) {
                     // info!("{:?}", pkt);
-                    let shields = entity_tracker.party_status_effect_add(pkt, &state.encounter.entities);
+                    let shields =
+                        entity_tracker.party_status_effect_add(pkt, &state.encounter.entities);
                     for status_effect in shields {
                         let source = entity_tracker.get_source_entity(status_effect.source_id);
                         let target_id =
@@ -969,9 +974,9 @@ pub fn start(
                     }
                 }
             }
-            Pkt::NewZoneKey => {
-                if let Some(pkt) = parse_pkt(&data, PKTNewZoneKey::new, "PKTNewZoneKey") {
-                    damage_handler.update_zone_instance_id(pkt.zone_id_1);
+            Pkt::NewTransit => {
+                if let Some(pkt) = parse_pkt(&data, PKTNewTransit::new, "PKTNewZoneKey") {
+                    damage_handler.update_zone_instance_id(pkt.channel_id);
                 }
             }
             _ => {}
@@ -1040,7 +1045,7 @@ pub fn start(
                         .emit("encounter-update", Some(clone))
                         .expect("failed to emit encounter-update");
 
-                    if !damage_valid { 
+                    if !damage_valid {
                         window
                             .emit("invalid-damage", "")
                             .expect("failed to emit invalid-damage");

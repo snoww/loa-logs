@@ -505,7 +505,7 @@
     "icon": "ability_270.png",
     "levels": {
       "1": {
-        "desc": "Fury Meter remains at max and turns into Mayhem Mode with the power of darkness. Mayhem Mode: Outgoing Damage +<FONT COLOR='#99ff99'>3%</FONT>, Atk. and Move Speed +<FONT COLOR='#99ff99'>15%</FONT>, all incoming Damage -<FONT COLOR='#99ff99'>72%</FONT>. When Mayhem Mode activates, HP is reduced to <FONT COLOR='#ff9999'>25%</FONT> of Max HP; this cannot be exceeded even when healing is applied. Can only receive <FONT COLOR='#ff9999'>40%</FONT> of healing and <FONT COLOR='#ff9999'>25%</FONT> of shield. Press the <FONT COLOR='#ffff99'><$HOTKEY 108/></FONT> key to cancel Mayhem Mode and recover <FONT COLOR='#99ff99'>25%</FONT> of Max HP; cannot enter Mayhem Mode again for <FONT COLOR='#ffff99'>30s</FONT>.",
+        "desc": "Fury Meter remains at max and enters Mayhem Mode with the power of darkness. Mayhem Mode: Outgoing Damage +<FONT COLOR='#99ff99'>3%</FONT>, Atk. and Move Speed +<FONT COLOR='#99ff99'>15%</FONT>, all incoming Damage -<FONT COLOR='#99ff99'>72%</FONT>, and Crit Rate +<FONT COLOR='#99ff99'>30%</FONT>. When Mayhem Mode activates, HP is reduced to <FONT COLOR='#ff9999'>25%</FONT> of Max HP. This cannot be exceeded, even when healing is applied. Can only receive <FONT COLOR='#ff9999'>40%</FONT> of healing and <FONT COLOR='#ff9999'>25%</FONT> of shield. Press the <FONT COLOR='#ffff99'><$HOTKEY 108/></FONT> key to cancel Mayhem Mode and recover <FONT COLOR='#99ff99'>25%</FONT> of Max HP. Cannot enter Mayhem Mode again for <FONT COLOR='#ffff99'>30s</FONT>.",
         "values": [
           2500,
           2500,
@@ -518,7 +518,7 @@
         ]
       },
       "2": {
-        "desc": "Fury Meter remains at max and turns into Mayhem Mode with the power of darkness. Mayhem Mode: Outgoing Damage +<FONT COLOR='#99ff99'>8%</FONT>, Atk. and Move Speed +<FONT COLOR='#99ff99'>15%</FONT>, all incoming Damage -<FONT COLOR='#99ff99'>72%</FONT>. When Mayhem Mode activates, HP is reduced to <FONT COLOR='#ff9999'>25%</FONT> of Max HP; this cannot be exceeded even when healing is applied. Can only receive <FONT COLOR='#ff9999'>40%</FONT> of healing and <FONT COLOR='#ff9999'>25%</FONT> of shield. Press the <FONT COLOR='#ffff99'><$HOTKEY 108/></FONT> key to cancel Mayhem Mode and recover <FONT COLOR='#99ff99'>25%</FONT> of Max HP; cannot enter Mayhem Mode again for <FONT COLOR='#ffff99'>30s</FONT>.",
+        "desc": "Fury Meter remains at max and enters Mayhem Mode with the power of darkness. Mayhem Mode: Outgoing Damage +<FONT COLOR='#99ff99'>8%</FONT>, Atk. and Move Speed +<FONT COLOR='#99ff99'>15%</FONT>, all incoming Damage -<FONT COLOR='#99ff99'>72%</FONT>, and Crit Rate +<FONT COLOR='#99ff99'>30%</FONT>. When Mayhem Mode activates, HP is reduced to <FONT COLOR='#ff9999'>25%</FONT> of Max HP. This cannot be exceeded, even when healing is applied. Can only receive <FONT COLOR='#ff9999'>40%</FONT> of healing and <FONT COLOR='#ff9999'>25%</FONT> of shield. Press the <FONT COLOR='#ffff99'><$HOTKEY 108/></FONT> key to cancel Mayhem Mode and recover <FONT COLOR='#99ff99'>25%</FONT> of Max HP. Cannot enter Mayhem Mode again for <FONT COLOR='#ffff99'>30s</FONT>.",
         "values": [
           2500,
           2500,
@@ -531,7 +531,7 @@
         ]
       },
       "3": {
-        "desc": "Fury Meter remains at max and turns into Mayhem Mode with the power of darkness. Mayhem Mode: Outgoing Damage +<FONT COLOR='#99ff99'>18%</FONT>, Atk. and Move Speed +<FONT COLOR='#99ff99'>15%</FONT>, all incoming Damage -<FONT COLOR='#99ff99'>72%</FONT>. When Mayhem Mode activates, HP is reduced to <FONT COLOR='#ff9999'>25%</FONT> of Max HP; this cannot be exceeded even when healing is applied. Can only receive <FONT COLOR='#ff9999'>40%</FONT> of healing and <FONT COLOR='#ff9999'>25%</FONT> of shield. Press the <FONT COLOR='#ffff99'><$HOTKEY 108/></FONT> key to cancel Mayhem Mode and recover <FONT COLOR='#99ff99'>25%</FONT> of Max HP; cannot enter Mayhem Mode again for <FONT COLOR='#ffff99'>30s</FONT>.",
+        "desc": "Fury Meter remains at max and enters Mayhem Mode with the power of darkness. Mayhem Mode: Outgoing Damage +<FONT COLOR='#99ff99'>18%</FONT>, Atk. and Move Speed +<FONT COLOR='#99ff99'>15%</FONT>, all incoming Damage -<FONT COLOR='#99ff99'>72%</FONT>, and Crit Rate +<FONT COLOR='#99ff99'>30%</FONT>. When Mayhem Mode activates, HP is reduced to <FONT COLOR='#ff9999'>25%</FONT> of Max HP. This cannot be exceeded, even when healing is applied. Can only receive <FONT COLOR='#ff9999'>40%</FONT> of healing and <FONT COLOR='#ff9999'>25%</FONT> of shield. Press the <FONT COLOR='#ffff99'><$HOTKEY 108/></FONT> key to cancel Mayhem Mode and recover <FONT COLOR='#99ff99'>25%</FONT> of Max HP. Cannot enter Mayhem Mode again for <FONT COLOR='#ffff99'>30s</FONT>.",
         "values": [
           2500,
           2500,

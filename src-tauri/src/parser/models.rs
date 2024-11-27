@@ -5,7 +5,8 @@ use crate::parser::entity_tracker::Entity;
 use bitflags::bitflags;
 use hashbrown::{HashMap, HashSet};
 use lazy_static::lazy_static;
-use serde::{Deserialize, Serialize};
+use serde::{Deserialize, Deserializer, Serialize};
+use serde_json::Value;
 use serde_with::serde_as;
 use serde_with::DefaultOnError;
 
@@ -452,7 +453,7 @@ pub struct SkillEffectData {
     #[serde(rename(deserialize = "sourceskill"))]
     pub source_skill: Option<Vec<u32>>,
     #[serde(rename(deserialize = "directionalmask"))]
-    pub directional_mask: i32,
+    pub directional_mask: Option<i32>,
     #[serde(rename(deserialize = "itemname"))]
     pub item_name: Option<String>,
     #[serde(skip, rename(deserialize = "itemdesc"))]
@@ -474,6 +475,7 @@ pub struct SkillBuffData {
     // buff | debuff
     pub category: String,
     #[serde(rename(deserialize = "type"))]
+    #[serde(deserialize_with = "int_or_string_as_string")]
     pub buff_type: String,
     pub status_effect_values: Option<Vec<i32>>,
     pub buff_category: Option<String>,
@@ -1301,4 +1303,16 @@ fn default_true() -> bool {
 
 fn default_scale() -> String {
     "1".to_string()
+}
+
+fn int_or_string_as_string<'de, D>(deserializer: D) -> Result<String, D::Error>
+where
+    D: Deserializer<'de>,
+{
+    let value = Value::deserialize(deserializer)?;
+    match value {
+        Value::String(s) => Ok(s),
+        Value::Number(n) => Ok(n.to_string()),
+        _ => Err(serde::de::Error::custom("Expected a string or an integer")),
+    }
 }
