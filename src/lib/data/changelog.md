@@ -1,11 +1,20 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.19.3
+    v1.20.0
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
   </div>
 </div>
+
+
+#### NEW FEATURES
+- updated meter for thanksgiving patch
+
+#### BUG FIXES AND IMPROVEMENTS
+- added _estimate_ for stabilized status uptime (actual uptime will be equal or higher)
+
+### v1.19.3
 
 #### BUG FIXES AND IMPROVEMENTS
 - updated icon to higher resolution (ty @raeinor)
