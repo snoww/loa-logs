@@ -558,18 +558,20 @@ pub struct CombatEffectDetail {
 }
 
 #[derive(Debug, Default, Deserialize, Clone)]
+#[serde(rename_all = "camelCase", default)]
 pub struct CombatEffectCondition {
     #[serde(rename(deserialize = "type"))]
     pub condition_type: String,
-    pub actor: String,
+    pub actor_type: String,
     pub arg: i32,
 }
 
 #[derive(Debug, Default, Deserialize, Clone)]
+#[serde(rename_all = "camelCase", default)]
 pub struct CombatEffectAction {
     #[serde(rename(deserialize = "type"))]
     pub action_type: String,
-    pub actor: String,
+    pub actor_type: String,
     pub args: Vec<i32>,
 }
 

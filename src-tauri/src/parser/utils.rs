@@ -159,7 +159,7 @@ pub fn get_status_effect_buff_type_flags(buff: &SkillBuffData) -> u32 {
         "instant_stat_amplify",
         "attack_power_amplify",
         "instant_stat_amplify_by_contents",
-        "evolution_type_damage"
+        "evolution_type_damage",
     ];
 
     let mut buff_type = StatusEffectBuffTypeFlags::NONE;
@@ -572,13 +572,15 @@ fn gem_skill_id_to_skill_ids(skill_id: u32) -> Vec<u32> {
             20311, 20310, 20070, 20071, 20080, 20081, 20170, 20181, 20280, 20281,
         ], // summoner elemental damage
         41000 => vec![25038, 25035, 25036, 25037, 25400, 25401, 25402], // db surge skill
-        42000 | 42001 => vec![27800, 27030, 27810, 27820, 27830, 27840, 27850, 27860, 27940, 27960], // sh transformation skills
+        42000 | 42001 => vec![
+            27800, 27030, 27810, 27820, 27830, 27840, 27850, 27860, 27940, 27960,
+        ], // sh transformation skills
         51001 => vec![28159, 28160, 28161, 28162, 28170], // sharpshooter bird skill
         53000 | 53001 => vec![30240, 30250, 30260, 30270, 30290], // arty barrage skills
         54000 | 54001 => vec![
             35720, 35750, 35760, 35761, 35770, 35771, 35780, 35781, 35790, 35800,
         ], // machinist transformation skills
-        62000 => vec![32040, 32041],                      // aeromancer sun shower
+        62000 => vec![32040, 32041],         // aeromancer sun shower
         24000 => vec![21140, 21141, 21142, 21143, 21130, 21131, 21132, 21133], // bard serenade skills
         47000 => vec![47950], // bk breaker identity
         60000 => vec![
@@ -659,11 +661,59 @@ fn is_class_engraving(class_id: u32, engraving_id: u32) -> bool {
 }
 
 pub fn is_hyper_awakening_skill(skill_id: u32) -> bool {
-    matches!(skill_id, 16720 | 16730 | 18240 | 18250 | 17250 | 17260 | 36230 | 36240 | 45820 | 45830 | 19360
-        | 19370 | 20370 | 20350 | 21320 | 21330 | 37380 | 37390 | 22360 | 22370 | 23400 | 23410
-        | 24300 | 24310 | 34620 | 34630 | 39340 | 39350 | 47300 | 47310 | 25410 | 25420 | 27910
-        | 27920 | 26940 | 26950 | 46620 | 46630 | 29360 | 29370 | 30320 | 30330 | 35810 | 35820
-        | 38320 | 38330 | 31920 | 31930 | 32290 | 32280)
+    matches!(
+        skill_id,
+        16720
+            | 16730
+            | 18240
+            | 18250
+            | 17250
+            | 17260
+            | 36230
+            | 36240
+            | 45820
+            | 45830
+            | 19360
+            | 19370
+            | 20370
+            | 20350
+            | 21320
+            | 21330
+            | 37380
+            | 37390
+            | 22360
+            | 22370
+            | 23400
+            | 23410
+            | 24300
+            | 24310
+            | 34620
+            | 34630
+            | 39340
+            | 39350
+            | 47300
+            | 47310
+            | 25410
+            | 25420
+            | 27910
+            | 27920
+            | 26940
+            | 26950
+            | 46620
+            | 46630
+            | 29360
+            | 29370
+            | 30320
+            | 30330
+            | 35810
+            | 35820
+            | 38320
+            | 38330
+            | 31920
+            | 31930
+            | 32290
+            | 32280
+    )
 }
 
 pub fn is_hat_buff(buff_id: &u32) -> bool {
@@ -958,63 +1008,63 @@ pub fn insert_data(
                 entity,
                 &encounter.encounter_damage_stats.buffs,
             ));
-        }
 
-        entity.damage_stats.dps = entity.damage_stats.damage_dealt / duration_seconds;
-
-        if let Some(info) = player_info
-            .as_ref()
-            .and_then(|stats| stats.get(&entity.name))
-        {
-            for gem in info.gems.iter().flatten() {
-                for skill_id in gem_skill_id_to_skill_ids(gem.skill_id) {
-                    if let Some(skill) = entity.skills.get_mut(&skill_id) {
-                        match gem.gem_type {
-                            5 | 34 => {
-                                // damage gem
-                                skill.gem_damage =
-                                    Some(damage_gem_value_to_level(gem.value, gem.tier));
-                                skill.gem_tier_dmg = Some(gem.tier);
+            if let Some(info) = player_info
+                .as_ref()
+                .and_then(|stats| stats.get(&entity.name))
+            {
+                for gem in info.gems.iter().flatten() {
+                    for skill_id in gem_skill_id_to_skill_ids(gem.skill_id) {
+                        if let Some(skill) = entity.skills.get_mut(&skill_id) {
+                            match gem.gem_type {
+                                5 | 34 => {
+                                    // damage gem
+                                    skill.gem_damage =
+                                        Some(damage_gem_value_to_level(gem.value, gem.tier));
+                                    skill.gem_tier_dmg = Some(gem.tier);
+                                }
+                                27 | 35 => {
+                                    // cooldown gem
+                                    skill.gem_cooldown =
+                                        Some(cooldown_gem_value_to_level(gem.value, gem.tier));
+                                    skill.gem_tier = Some(gem.tier);
+                                }
+                                64 | 65 => {
+                                    // support identity gem??
+                                    skill.gem_damage =
+                                        Some(support_damage_gem_value_to_level(gem.value));
+                                    skill.gem_tier_dmg = Some(gem.tier);
+                                }
+                                _ => {}
                             }
-                            27 | 35 => {
-                                // cooldown gem
-                                skill.gem_cooldown =
-                                    Some(cooldown_gem_value_to_level(gem.value, gem.tier));
-                                skill.gem_tier = Some(gem.tier);
-                            }
-                            64 | 65 => {
-                                // support identity gem??
-                                skill.gem_damage =
-                                    Some(support_damage_gem_value_to_level(gem.value));
-                                skill.gem_tier_dmg = Some(gem.tier);
-                            }
-                            _ => {}
                         }
                     }
                 }
+
+                entity.ark_passive_active = Some(info.ark_passive_enabled);
+
+                let (class, other) = get_engravings(entity.class_id, &info.engravings);
+                entity.engraving_data = other;
+                if info.ark_passive_enabled {
+                    // not reliable enough
+                    // if let Some(tree) = info.ark_passive_data.as_ref() {
+                    //     if let Some(enlightenment) = tree.enlightenment.as_ref() {
+                    //         for node in enlightenment.iter() {
+                    //             let spec = get_spec_from_ark_passive(node);
+                    //             if spec != "Unknown" {
+                    //                 entity.spec = Some(spec);
+                    //                 break;
+                    //             }
+                    //         }
+                    //     }
+                    // }
+                    entity.ark_passive_data = info.ark_passive_data.clone();
+                } else if class.len() == 1 {
+                    entity.spec = Some(class[0].clone());
+                }
             }
 
-            entity.ark_passive_active = Some(info.ark_passive_enabled);
-
-            let (class, other) = get_engravings(entity.class_id, &info.engravings);
-            entity.engraving_data = other;
-            if info.ark_passive_enabled {
-                // not reliable enough
-                // if let Some(tree) = info.ark_passive_data.as_ref() {
-                //     if let Some(enlightenment) = tree.enlightenment.as_ref() {
-                //         for node in enlightenment.iter() {
-                //             let spec = get_spec_from_ark_passive(node);
-                //             if spec != "Unknown" {
-                //                 entity.spec = Some(spec);
-                //                 break;
-                //             }
-                //         }
-                //     }
-                // }
-                entity.ark_passive_data = info.ark_passive_data.clone();
-            } else if class.len() == 1 {
-                entity.spec = Some(class[0].clone());
-            }
+            entity.damage_stats.dps = entity.damage_stats.damage_dealt / duration_seconds;
         }
 
         for (_, skill) in entity.skills.iter_mut() {
@@ -1290,6 +1340,17 @@ where
     let bytes = serde_json::to_vec(value).expect("unable to serialize json");
     e.write_all(&bytes).expect("unable to write json to buffer");
     e.finish().expect("unable to compress json")
+}
+
+pub fn update_current_boss_name(boss_name: &str) -> String {
+    match boss_name {
+        "Chaos Lightning Dragon Jade" => "Argeos",
+        "Vicious Argeos" | "Ruthless Lakadroff" | "Untrue Crimson Yoho" | "Despicable Skolakia" => {
+            "Behemoth, the Storm Commander"
+        }
+        _ => boss_name,
+    }
+    .to_string()
 }
 
 fn get_player_spec(player: &EncounterEntity, buffs: &HashMap<u32, StatusEffect>) -> String {

@@ -168,7 +168,7 @@ pub fn is_combat_effect_condition_valid(
             break;
         }
 
-        let actor = &condition.actor;
+        let actor = &condition.actor_type;
         match condition.condition_type.as_str() {
             "target_count" => {
                 if target_count != condition.arg {

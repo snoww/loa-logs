@@ -57,7 +57,7 @@ pub struct EncounterState {
     pub skill_tracker: SkillTracker,
 
     custom_id_map: HashMap<u32, u32>,
-    
+
     pub damage_is_valid: bool,
 }
 
@@ -94,7 +94,7 @@ impl EncounterState {
             skill_tracker: SkillTracker::new(),
 
             custom_id_map: HashMap::new(),
-            
+
             damage_is_valid: true,
         }
     }
@@ -126,7 +126,7 @@ impl EncounterState {
         self.skill_tracker = SkillTracker::new();
 
         self.custom_id_map = HashMap::new();
-        
+
         self.damage_is_valid = true;
 
         for (key, entity) in clone.entities.into_iter().filter(|(_, e)| {
@@ -186,11 +186,7 @@ impl EncounterState {
         }
     }
 
-    pub fn on_init_env(
-        &mut self,
-        entity: Entity,
-        stats_api: &StatsApi,
-    ) {
+    pub fn on_init_env(&mut self, entity: Entity, stats_api: &StatsApi) {
         // if not already saved to db, we save again
         if !self.saved && !self.encounter.current_boss_name.is_empty() {
             self.save_to_db(stats_api, false);
@@ -610,6 +606,13 @@ impl EncounterState {
                 || (target_entity.entity_type == EntityType::PLAYER
                     && source_entity.entity_type != EntityType::BOSS))
         {
+            if target_entity.entity_type == EntityType::PLAYER {
+                target_entity.current_hp = damage_data.target_current_hp;
+                target_entity.max_hp = damage_data.target_max_hp;
+                
+                self.encounter.entities.insert(target_entity.name.clone(), target_entity);
+            }
+            
             return;
         }
 
@@ -907,10 +910,24 @@ impl EncounterState {
                 source_entity.damage_stats.buffed_by_hat += damage;
             }
 
+            let stabilized_status_active =
+                (source_entity.current_hp as f64 / source_entity.max_hp as f64) > 0.65;
+            let mut filtered_se_on_source_ids: Vec<u32> = vec![];
+
             for buff_id in se_on_source_ids.iter() {
                 if is_hyper_awakening && !is_hat_buff(buff_id) {
                     continue;
                 }
+
+                if let Some(buff) = self.encounter.encounter_damage_stats.buffs.get(buff_id) {
+                    if buff.source.name.contains("Stabilized Status") {
+                        if !stabilized_status_active {
+                            continue;
+                        }
+                    }
+                }
+
+                filtered_se_on_source_ids.push(*buff_id);
 
                 skill
                     .buffed_by
@@ -942,14 +959,8 @@ impl EncounterState {
                     .or_insert(damage);
             }
 
-            if is_hyper_awakening {
-                skill_hit.buffed_by = se_on_source_ids
-                    .iter()
-                    .filter(|&id| is_hat_buff(id))
-                    .cloned()
-                    .collect();
-            } else {
-                skill_hit.buffed_by = se_on_source_ids;
+            skill_hit.buffed_by = filtered_se_on_source_ids;
+            if !is_hyper_awakening {
                 skill_hit.debuffed_by = se_on_target_ids;
             }
 
@@ -1899,12 +1910,12 @@ impl EncounterState {
                 }
             }
         }
-        
-        if !self.damage_is_valid { 
+
+        if !self.damage_is_valid {
             warn!("damage decryption is invalid, not saving to db");
         }
 
-        let encounter = self.encounter.clone();
+        let mut encounter = self.encounter.clone();
         let mut path = self
             .window
             .app_handle()
@@ -1941,6 +1952,8 @@ impl EncounterState {
             "saving to db - cleared: [{}], difficulty: [{}] {}",
             raid_clear, self.raid_difficulty, encounter.current_boss_name
         );
+
+        encounter.current_boss_name = update_current_boss_name(&encounter.current_boss_name);
 
         let window = self.window.clone();
         task::spawn(async move {

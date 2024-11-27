@@ -934,9 +934,14 @@ pub fn start(
                     "PKTTroopMemberUpdateMinNotify",
                 ) {
                     // info!("{:?}", pkt);
-                    for se in pkt.status_effect_datas.iter() {
-                        if let Some(object_id) = id_tracker.borrow().get_entity_id(pkt.character_id)
-                        {
+                    if let Some(object_id) = id_tracker.borrow().get_entity_id(pkt.character_id) {
+                        if let Some(entity) = entity_tracker.get_entity_ref(object_id) {
+                            state.encounter.entities.entry(entity.name.clone()).and_modify(|e| {
+                                e.current_hp = pkt.cur_hp;
+                                e.max_hp = pkt.max_hp;
+                            });
+                        }
+                        for se in pkt.status_effect_datas.iter() {
                             let val = get_status_effect_value(&se.value);
                             let (status_effect, old_value) =
                                 status_tracker.borrow_mut().sync_status_effect(
