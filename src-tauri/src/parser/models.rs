@@ -450,17 +450,12 @@ pub struct SkillEffectData {
     pub comment: String,
     #[serde(skip)]
     pub stagger: i32,
-    #[serde(rename(deserialize = "sourceskill"))]
-    pub source_skill: Option<Vec<u32>>,
-    #[serde(rename(deserialize = "directionalmask"))]
+    pub source_skills: Option<Vec<u32>>,
     pub directional_mask: Option<i32>,
-    #[serde(rename(deserialize = "itemname"))]
     pub item_name: Option<String>,
-    #[serde(skip, rename(deserialize = "itemdesc"))]
     pub item_desc: Option<String>,
+    pub item_type: Option<String>,
     pub icon: Option<String>,
-    #[serde(rename(deserialize = "itemcategory"))]
-    pub item_category: Option<String>,
 }
 
 #[derive(Debug, Default, Deserialize, Clone)]

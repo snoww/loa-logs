@@ -48,8 +48,8 @@ pub fn is_support_class_id(class_id: u32) -> bool {
 
 pub fn is_battle_item(skill_effect_id: u32, _item_type: &str) -> bool {
     if let Some(item) = SKILL_EFFECT_DATA.get(&skill_effect_id) {
-        if let Some(category) = item.item_category.as_ref() {
-            return category == "useup_battle_item_common_attack";
+        if let Some(category) = item.item_type.as_ref() {
+            return category == "useup";
         }
     }
     false
@@ -349,8 +349,8 @@ pub fn get_skill_name_and_icon(
                     None,
                 );
             }
-            if let Some(source_skill) = effect.source_skill.as_ref() {
-                if let Some(skill) = SKILL_DATA.get(source_skill.first().unwrap_or(&0)) {
+            if let Some(source_skill) = effect.source_skills.as_ref() {
+                if let Some(skill) = SKILL_DATA.get(source_skill.iter().min().unwrap_or(&0)) {
                     return (
                         skill.name.clone().unwrap_or_default(),
                         skill.icon.clone().unwrap_or_default(),
