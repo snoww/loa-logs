@@ -1,11 +1,11 @@
 {
-    "version": "v1.20.0",
-    "notes": "### v1.20.0\n\n#### NEW FEATURES\n- updated meter for thanksgiving patch\n\n#### BUG FIXES AND IMPROVEMENTS\n- added _estimate_ for stabilized status uptime (actual uptime will be equal or higher)\n\nsend bug reports/suggestions to [ramen shop server](https://discord.gg/RXvTMV2YHu)\n",
-    "pub_date": "2024-11-27T22:40:23.171Z",
+    "version": "v1.20.1",
+    "notes": "### v1.20.1\n\n#### BUG FIXES AND IMPROVEMENTS\n- fix pants transcendence label\n- fix battle items labels\n- fix certain skills being separated\n\nsend bug reports/suggestions to [ramen shop server](https://discord.gg/RXvTMV2YHu)\n",
+    "pub_date": "2024-11-29T09:22:56.975Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.20.0/LOA.Logs_1.20.0_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYld5UitMZ3lMZncyWXBDdk1IaHIzNmJ3VzR3T01mMytxZ1ZiNnBwK0x2dGswOE4wdVF2K1RFWExVanRlV25qVU4xMXllaE9qVVRlL1lOK3pMV1dVZGdFPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzMyNzQ3MDg4CWZpbGU6TE9BIExvZ3NfMS4yMC4wX3g2NC1zZXR1cC5uc2lzLnppcApkOFRYNkhCQmpoRm52YUNrRW1CNmZNUXgrM0pDUGFxc0MzcHd5YVZ3MkFXN0p0ZEtGQXVjbHFydlRHNXpCMUVwWVc3T05OTkFtWjlGZ25oRmVIQTlCUT09Cg=="
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.20.1/LOA.Logs_1.20.1_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmVkVEdaUTlINytWS2ptQTlSWEtmNHJRc3BBTWRpV3VsVHczcGVOa1MremdGYzJoa3ZVWEZFdEhQdFRTR1B2MlB1blBYNFVnVG8wYndDQ0VBcVE2SVFvPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzMyODcyMzAwCWZpbGU6TE9BIExvZ3NfMS4yMC4xX3g2NC1zZXR1cC5uc2lzLnppcApMVWdOYjQ1SVlVTlVoWnREUllNTmtiZVVBTEhQemF5d1RpRDNLVjBIaHk4YUlYTDQ5ZW1xV3lDcEpZSGZuazZHOEM2d084UlJoOW5sYUlYK3lVOVpBQT09Cg=="
         }
     }
 }

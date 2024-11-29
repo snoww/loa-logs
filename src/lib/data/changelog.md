@@ -1,12 +1,18 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.20.0
+    v1.20.1
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
   </div>
 </div>
 
+#### BUG FIXES AND IMPROVEMENTS
+- fix pants transcendence label
+- fix battle items labels
+- fix certain skills being separated
+
+### v1.20.0
 
 #### NEW FEATURES
 - updated meter for thanksgiving patch
