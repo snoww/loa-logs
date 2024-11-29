@@ -46,8 +46,8 @@ pub fn is_support_class_id(class_id: u32) -> bool {
     class_id == 105 || class_id == 204 || class_id == 602
 }
 
-pub fn is_battle_item(skill_effect_id: u32, _item_type: &str) -> bool {
-    if let Some(item) = SKILL_EFFECT_DATA.get(&skill_effect_id) {
+pub fn is_battle_item(skill_effect_id: &u32, _item_type: &str) -> bool {
+    if let Some(item) = SKILL_EFFECT_DATA.get(skill_effect_id) {
         if let Some(category) = item.item_type.as_ref() {
             return category == "useup";
         }

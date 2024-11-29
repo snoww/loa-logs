@@ -573,7 +573,7 @@ impl EncounterState {
 
         let mut skill_effect_id = damage_data.skill_effect_id;
         if proj_entity.entity_type == EntityType::PROJECTILE
-            && is_battle_item(skill_effect_id, "attack")
+            && is_battle_item(&proj_entity.skill_effect_id, "attack")
         {
             skill_effect_id = proj_entity.skill_effect_id;
         }
@@ -606,13 +606,6 @@ impl EncounterState {
                 || (target_entity.entity_type == EntityType::PLAYER
                     && source_entity.entity_type != EntityType::BOSS))
         {
-            if target_entity.entity_type == EntityType::PLAYER {
-                target_entity.current_hp = damage_data.target_current_hp;
-                target_entity.max_hp = damage_data.target_max_hp;
-                
-                self.encounter.entities.insert(target_entity.name.clone(), target_entity);
-            }
-            
             return;
         }
 
