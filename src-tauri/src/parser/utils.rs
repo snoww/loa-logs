@@ -386,7 +386,7 @@ pub fn get_skill_name_and_icon(
                         }
                     }
                 }
-                if let Some(skill) = SKILL_DATA.get(summon_source_skill.first().unwrap_or(&0)) {
+                if let Some(skill) = SKILL_DATA.get(summon_source_skill.iter().min().unwrap_or(&0)) {
                     (
                         skill.name.clone().unwrap_or_default() + " (Summon)",
                         skill.icon.clone().unwrap_or_default(),
@@ -396,7 +396,7 @@ pub fn get_skill_name_and_icon(
                     (skill_name, "".to_string(), None)
                 }
             } else if let Some(source_skill) = skill.source_skills.as_ref() {
-                if let Some(skill) = SKILL_DATA.get(source_skill.first().unwrap_or(&0)) {
+                if let Some(skill) = SKILL_DATA.get(source_skill.iter().min().unwrap_or(&0)) {
                     (
                         skill.name.clone().unwrap_or_default(),
                         skill.icon.clone().unwrap_or_default(),
