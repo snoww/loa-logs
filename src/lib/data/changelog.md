@@ -1,11 +1,17 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.20.1
+    v1.20.2
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
   </div>
 </div>
+
+#### BUG FIXES AND IMPROVEMENTS
+- fix certain damage skills not being correctly tracked due to new encryption
+- fix source skills of certain buffs
+
+### v1.20.1
 
 #### BUG FIXES AND IMPROVEMENTS
 - fix pants transcendence label

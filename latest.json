@@ -1,11 +1,11 @@
 {
-    "version": "v1.20.1",
-    "notes": "### v1.20.1\n\n#### BUG FIXES AND IMPROVEMENTS\n- fix pants transcendence label\n- fix battle items labels\n- fix certain skills being separated\n\nsend bug reports/suggestions to [ramen shop server](https://discord.gg/RXvTMV2YHu)\n",
-    "pub_date": "2024-11-29T09:22:56.975Z",
+    "version": "v1.20.2",
+    "notes": "### v1.20.2\n\n#### BUG FIXES AND IMPROVEMENTS\n- fix certain damage skills not being correctly tracked due to new encryption\n- fix source skills of certain buffs\n\nsend bug reports/suggestions to [ramen shop server](https://discord.gg/RXvTMV2YHu)\n",
+    "pub_date": "2024-12-03T04:07:15.937Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.20.1/LOA.Logs_1.20.1_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmVkVEdaUTlINytWS2ptQTlSWEtmNHJRc3BBTWRpV3VsVHczcGVOa1MremdGYzJoa3ZVWEZFdEhQdFRTR1B2MlB1blBYNFVnVG8wYndDQ0VBcVE2SVFvPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzMyODcyMzAwCWZpbGU6TE9BIExvZ3NfMS4yMC4xX3g2NC1zZXR1cC5uc2lzLnppcApMVWdOYjQ1SVlVTlVoWnREUllNTmtiZVVBTEhQemF5d1RpRDNLVjBIaHk4YUlYTDQ5ZW1xV3lDcEpZSGZuazZHOEM2d084UlJoOW5sYUlYK3lVOVpBQT09Cg=="
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.20.2/LOA.Logs_1.20.2_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlRZVlJVMDJ2TnB3QXQ3bTNvc01aRERMUlJ6KzJEZjhONkR1WU85ZXR6MkxkM2NMYlFwclc1K0F2RWE0LzJ0VW1GcGZvUEpHaGRidklCMmZCcE5MZ1FzPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzMzMTk4NzM5CWZpbGU6TE9BIExvZ3NfMS4yMC4yX3g2NC1zZXR1cC5uc2lzLnppcApqUFVIVXdsQ2l3UHdtSkk1aWpXUVFoS0syRzFMUkUxeS9GWS9VR1Q3VDdTaTJMcnVoRElmZnBaZDlFbHNEVnBWOXBFMUNCclorVzJUNXdreGljMFZCdz09Cg=="
         }
     }
 }
