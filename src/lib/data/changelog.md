@@ -1,11 +1,16 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.20.2
+    v1.21.0
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
   </div>
 </div>
+
+#### NEW FEATURES
+- update meter for weekly maintenance
+
+### v1.20.2
 
 #### BUG FIXES AND IMPROVEMENTS
 - fix certain damage skills not being correctly tracked due to new encryption

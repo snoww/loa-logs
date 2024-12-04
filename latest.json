@@ -1,11 +1,11 @@
 {
-    "version": "v1.20.2",
-    "notes": "### v1.20.2\n\n#### BUG FIXES AND IMPROVEMENTS\n- fix certain damage skills not being correctly tracked due to new encryption\n- fix source skills of certain buffs\n\nsend bug reports/suggestions to [ramen shop server](https://discord.gg/RXvTMV2YHu)\n",
-    "pub_date": "2024-12-03T04:07:15.937Z",
+    "version": "v1.21.0",
+    "notes": "### v1.21.0\n\n#### NEW FEATURES\n- update meter for weekly maintenance\n\nsend bug reports/suggestions to [ramen shop server](https://discord.gg/RXvTMV2YHu)\n",
+    "pub_date": "2024-12-04T20:47:00.508Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.20.2/LOA.Logs_1.20.2_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlRZVlJVMDJ2TnB3QXQ3bTNvc01aRERMUlJ6KzJEZjhONkR1WU85ZXR6MkxkM2NMYlFwclc1K0F2RWE0LzJ0VW1GcGZvUEpHaGRidklCMmZCcE5MZ1FzPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzMzMTk4NzM5CWZpbGU6TE9BIExvZ3NfMS4yMC4yX3g2NC1zZXR1cC5uc2lzLnppcApqUFVIVXdsQ2l3UHdtSkk1aWpXUVFoS0syRzFMUkUxeS9GWS9VR1Q3VDdTaTJMcnVoRElmZnBaZDlFbHNEVnBWOXBFMUNCclorVzJUNXdreGljMFZCdz09Cg=="
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.21.0/LOA.Logs_1.21.0_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlM0WEVCQkZWVnhVaEFja0kwNVRCSit0aWhkekhSUjUzVVE0eFNVSUswdjZ5S3d0MVF4V3JGYmNjcEIxQW5ld3BLSms1VC9ScEs4SE95SGxwQU9admc4PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzMzMzQ1MTU0CWZpbGU6TE9BIExvZ3NfMS4yMS4wX3g2NC1zZXR1cC5uc2lzLnppcAordkI4YkNvOENZRDRjNzhsU3BmYjZ1a0F6bDY0d3hNOXRqOHFFK0FUOXgrMTExZGR6T3dnaVgvb29tNW5UVlhWcVVlR0I1RWxxQzRrVFNHZHBvbWlCUT09Cg=="
         }
     }
 }
