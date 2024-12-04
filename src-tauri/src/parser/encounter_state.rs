@@ -913,10 +913,8 @@ impl EncounterState {
                 }
 
                 if let Some(buff) = self.encounter.encounter_damage_stats.buffs.get(buff_id) {
-                    if buff.source.name.contains("Stabilized Status") {
-                        if !stabilized_status_active {
-                            continue;
-                        }
+                    if !stabilized_status_active && buff.source.name.contains("Stabilized Status") {
+                        continue;
                     }
                 }
 
