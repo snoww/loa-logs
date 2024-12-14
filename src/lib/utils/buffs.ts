@@ -226,7 +226,8 @@ export function getSynergyPercentageDetailsSum(
                 if (skill.buffedBy[id]) {
                     totalBuffed += skill.buffedBy[id];
                     synergyDamage += skill.buffedBy[id];
-                } else if (skill.debuffedBy[id]) {
+                }
+                if (skill.debuffedBy[id]) {
                     totalBuffed += skill.debuffedBy[id];
                     synergyDamage += skill.debuffedBy[id];
                 }
@@ -429,7 +430,8 @@ export function getPartyBuffs(
                             addBardBubbles(key, b, syn);
                             buffDetails.buffs.push(b);
                             buffDamage += player.damageStats.buffedBy[id];
-                        } else if (player.damageStats.debuffedBy[id]) {
+                        }
+                        if (player.damageStats.debuffedBy[id]) {
                             buffDetails.buffs.push(
                                 new Buff(
                                     syn.source.icon,
@@ -555,6 +557,10 @@ export const supportSkills = {
         362600, // Paladin
         212305, // Bard
         319503 // Artist
+    ],
+    evolutionGrp: [
+        2000260, // Combat Blessing
+        2000360 // Dance of Passion
     ]
 };
 
@@ -573,8 +579,6 @@ function makeSupportBuffKey(statusEffect: StatusEffect) {
         key += "_2";
     } else if (supportSkills.haTechnique.includes(statusEffect.uniqueGroup)) {
         key += "_3";
-    } else if (statusEffect.uniqueGroup === 2000260) {
-        key += "_4";
     } else {
         key += "_5";
     }
@@ -583,7 +587,11 @@ function makeSupportBuffKey(statusEffect: StatusEffect) {
         key += "_";
     }
 
-    key += `_${statusEffect.uniqueGroup ? statusEffect.uniqueGroup : "_" + statusEffect.source.skill?.name}`;
+    if (supportSkills.evolutionGrp.includes(statusEffect.uniqueGroup)) {
+        key += "_combat_dance";
+    } else {
+        key += `_${statusEffect.uniqueGroup ? statusEffect.uniqueGroup : "00_" + statusEffect.source.skill?.name}`;
+    }
     return key;
 }
 
