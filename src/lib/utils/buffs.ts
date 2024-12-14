@@ -95,7 +95,11 @@ export function filterStatusEffects(
         } else if (buff.buffCategory === "elixir") {
             key = `elixir_${buff.uniqueGroup}`;
         } else {
-            key = buff.buffCategory;
+            if (buff.category === "battleitem") {
+                key = buff.buffCategory + "_" + id;
+            } else {
+                key = buff.buffCategory;
+            }
         }
         groupedSynergiesAdd(groupedSynergies, key, id, buff, focusedPlayer, buffFilter);
     }
@@ -579,7 +583,7 @@ function makeSupportBuffKey(statusEffect: StatusEffect) {
         key += "_";
     }
 
-    key += `_${statusEffect.uniqueGroup ? statusEffect.uniqueGroup : "0_" + statusEffect.source.skill?.name}`;
+    key += `_${statusEffect.uniqueGroup ? statusEffect.uniqueGroup : "_" + statusEffect.source.skill?.name}`;
     return key;
 }
 
@@ -625,6 +629,7 @@ export function getSkillCastBuffs(
     buffFilter: boolean = true
 ) {
     const groupedBuffs: Map<string, Array<StatusEffectWithId>> = new Map();
+    const buffed = { buff: false, identity: false, brand: false};
 
     for (const buffId of buffs) {
         if (encounterDamageStats.buffs.hasOwnProperty(buffId)) {
@@ -636,7 +641,8 @@ export function getSkillCastBuffs(
                 supportBuffs,
                 playerClassId,
                 buffType,
-                buffFilter
+                buffFilter,
+                buffed
             );
         }
     }
@@ -650,7 +656,8 @@ export function getSkillCastBuffs(
                 supportBuffs,
                 playerClassId,
                 buffType,
-                buffFilter
+                buffFilter,
+                buffed
             );
         }
     }
@@ -678,7 +685,12 @@ function includeBuff(
     supportBuffs: SkillChartSupportDamage,
     playerClassId: number,
     buffType: string,
-    buffFilter: boolean
+    buffFilter: boolean,
+    buffed: {
+        buff: boolean;
+        identity: boolean;
+        brand: boolean;
+    }
 ) {
     let key = "";
     if (
@@ -696,11 +708,14 @@ function includeBuff(
     if (buffType === "party" && isPartySynergy(buff)) {
         if (isSupportBuff(buff)) {
             key = makeSupportBuffKey(buff);
-            if (key.includes("_0")) {
+            if (key.includes("_0_") && !buffed.buff) {
+                buffed.buff = true;
                 supportBuffs.buff += hitDamage;
-            } else if (key.includes("_1")) {
+            } else if (key.includes("_1_") && !buffed.brand) {
+                buffed.brand = true;
                 supportBuffs.brand += hitDamage;
-            } else if (key.includes("_2")) {
+            } else if (key.includes("_2_") && !buffed.identity) {
+                buffed.identity = true;
                 supportBuffs.identity += hitDamage;
             }
         } else {
