@@ -1,11 +1,11 @@
 {
-    "version": "v1.21.0",
-    "notes": "### v1.21.0\n\n#### NEW FEATURES\n- update meter for weekly maintenance\n\nsend bug reports/suggestions to [ramen shop server](https://discord.gg/RXvTMV2YHu)\n",
-    "pub_date": "2024-12-04T20:47:00.508Z",
+    "version": "v1.22.0",
+    "notes": "### v1.22.0\n\n#### NEW FEATURES\n- update meter for winter soloist patch\n\n#### BUG FIXES AND IMPROVEMENTS\n- fixed stabilized status buff showing when filtering \"offensive buffs only\"\n- fixed punishing strike tripod counting as different skill\n- fixed some errors in buff calculations\n- fixed buff percentages in skill hit breakdowns\n- grouped ark passive combat blessing/dance of passion buffs\n- separated dark bomb and atropine buffs in self buffs\n\nsend bug reports/suggestions to [ramen shop server](https://discord.gg/RXvTMV2YHu)\n",
+    "pub_date": "2024-12-18T20:40:00.339Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.21.0/LOA.Logs_1.21.0_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlM0WEVCQkZWVnhVaEFja0kwNVRCSit0aWhkekhSUjUzVVE0eFNVSUswdjZ5S3d0MVF4V3JGYmNjcEIxQW5ld3BLSms1VC9ScEs4SE95SGxwQU9admc4PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzMzMzQ1MTU0CWZpbGU6TE9BIExvZ3NfMS4yMS4wX3g2NC1zZXR1cC5uc2lzLnppcAordkI4YkNvOENZRDRjNzhsU3BmYjZ1a0F6bDY0d3hNOXRqOHFFK0FUOXgrMTExZGR6T3dnaVgvb29tNW5UVlhWcVVlR0I1RWxxQzRrVFNHZHBvbWlCUT09Cg=="
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.22.0/LOA.Logs_1.22.0_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlFpck9ZQnBra3VlUk9rUUFyeTRjYTVNbUlSTmVqd20xb0RJNUNHci9VTGw3ckl5aG5wcllIeS9nWnNZQjZMY2JHZFlIZEI4R0loNDdWbTVZYkZZYlFJPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzM0NTU0NTY4CWZpbGU6TE9BIExvZ3NfMS4yMi4wX3g2NC1zZXR1cC5uc2lzLnppcAorcFRBVksvR2FOSzEyVkw4dUgxS1pmVFFGeUs0anNmbzUzM1VhcStWRXZXUi9nMFpqWWRaZGVvTStlRE9lNnA2N09VaXNZNEp6ZzVvSGx2MkF5L25Bdz09Cg=="
         }
     }
 }

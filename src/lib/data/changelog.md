@@ -1,12 +1,24 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.21.0
+    v1.22.0
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
   </div>
 </div>
 
+#### NEW FEATURES
+- update meter for winter soloist patch
+
+#### BUG FIXES AND IMPROVEMENTS
+- fixed stabilized status buff showing when filtering "offensive buffs only"
+- fixed punishing strike tripod counting as different skill
+- fixed some errors in buff calculations
+- fixed buff percentages in skill hit breakdowns
+- grouped ark passive combat blessing/dance of passion buffs
+- separated dark bomb and atropine buffs in self buffs
+
+### v1.21.0
 #### NEW FEATURES
 - update meter for weekly maintenance
 
