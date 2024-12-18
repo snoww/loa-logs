@@ -6655,6 +6655,153 @@
       }
     ]
   },
+  "541511": {
+    "id": 541511,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [],
+        "actions": [
+          {
+            "actionType": "modify_damage_shield_multiplier",
+            "actorType": "self",
+            "args": [
+              10000,
+              1,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [],
+        "actions": [
+          {
+            "actionType": "modify_penetration",
+            "actorType": "target",
+            "args": [
+              10000,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "541700": {
+    "id": 541700,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [],
+        "actions": [
+          {
+            "actionType": "modify_penetration",
+            "actorType": "target",
+            "args": [
+              10000,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "npc_id",
+            "actorType": "target",
+            "arg": 485517
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              30000,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "541600": {
+    "id": 541600,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [],
+        "actions": [
+          {
+            "actionType": "modify_penetration",
+            "actorType": "target",
+            "args": [
+              10000,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "npc_id",
+            "actorType": "target",
+            "arg": 485517
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              -9500,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
   "20522501": {
     "id": 20522501,
     "effects": [
@@ -59852,6 +59999,2198 @@
       }
     ]
   },
+  "605100011": {
+    "id": 605100011,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [],
+        "actions": [
+          {
+            "actionType": "modify_damage_when_critical",
+            "actorType": "target",
+            "args": [
+              150,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "605100012": {
+    "id": 605100012,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [],
+        "actions": [
+          {
+            "actionType": "modify_damage_when_critical",
+            "actorType": "target",
+            "args": [
+              150,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "605100013": {
+    "id": 605100013,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [],
+        "actions": [
+          {
+            "actionType": "modify_damage_when_critical",
+            "actorType": "target",
+            "args": [
+              150,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "605100014": {
+    "id": 605100014,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [],
+        "actions": [
+          {
+            "actionType": "modify_damage_when_critical",
+            "actorType": "target",
+            "args": [
+              150,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "605100021": {
+    "id": 605100021,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [],
+        "actions": [
+          {
+            "actionType": "modify_damage_when_critical",
+            "actorType": "target",
+            "args": [
+              150,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "605100022": {
+    "id": 605100022,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [],
+        "actions": [
+          {
+            "actionType": "modify_damage_when_critical",
+            "actorType": "target",
+            "args": [
+              150,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "605100023": {
+    "id": 605100023,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [],
+        "actions": [
+          {
+            "actionType": "modify_damage_when_critical",
+            "actorType": "target",
+            "args": [
+              150,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "605100024": {
+    "id": 605100024,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [],
+        "actions": [
+          {
+            "actionType": "modify_damage_when_critical",
+            "actorType": "target",
+            "args": [
+              150,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "605100031": {
+    "id": 605100031,
+    "effects": [
+      {
+        "desc": "Outgoing Damage +<FONT COLOR='{0}'>3%</FONT>. Outgoing Damage +<FONT COLOR='{0}'>5%</FONT> to Staggered foes.",
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              300,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      {
+        "desc": "Outgoing Damage +<FONT COLOR='{0}'>3%</FONT>. Outgoing Damage +<FONT COLOR='{0}'>5%</FONT> to Staggered foes.",
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "abnormal_move",
+            "actorType": "target",
+            "arg": 4
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              500,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "605100032": {
+    "id": 605100032,
+    "effects": [
+      {
+        "desc": "Outgoing Damage +<FONT COLOR='{0}'>2.5%</FONT>. Outgoing Damage +<FONT COLOR='{0}'>4.5%</FONT> to Staggered foes.",
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              250,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      {
+        "desc": "Outgoing Damage +<FONT COLOR='{0}'>2.5%</FONT>. Outgoing Damage +<FONT COLOR='{0}'>4.5%</FONT> to Staggered foes.",
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "abnormal_move",
+            "actorType": "target",
+            "arg": 4
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              450,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "605100033": {
+    "id": 605100033,
+    "effects": [
+      {
+        "desc": "Outgoing Damage +<FONT COLOR='{0}'>2%</FONT>. Outgoing Damage +<FONT COLOR='{0}'>4%</FONT> to Staggered foes.",
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              200,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      {
+        "desc": "Outgoing Damage +<FONT COLOR='{0}'>2%</FONT>. Outgoing Damage +<FONT COLOR='{0}'>4%</FONT> to Staggered foes.",
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "abnormal_move",
+            "actorType": "target",
+            "arg": 4
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              400,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "605100034": {
+    "id": 605100034,
+    "effects": [
+      {
+        "desc": "Outgoing Damage +<FONT COLOR='{0}'>1.5%</FONT>. Outgoing Damage +<FONT COLOR='{0}'>3.5%</FONT> to Staggered foes.",
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              150,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      {
+        "desc": "Outgoing Damage +<FONT COLOR='{0}'>1.5%</FONT>. Outgoing Damage +<FONT COLOR='{0}'>3.5%</FONT> to Staggered foes.",
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "abnormal_move",
+            "actorType": "target",
+            "arg": 4
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              350,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "605100051": {
+    "id": 605100051,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              550,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "605100052": {
+    "id": 605100052,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              500,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "605100053": {
+    "id": 605100053,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              450,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "605100054": {
+    "id": 605100054,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              400,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "605100061": {
+    "id": 605100061,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [],
+        "actions": [
+          {
+            "actionType": "exec_active_effect_when_damage",
+            "actorType": "target",
+            "args": [
+              0,
+              0,
+              605100061,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "605100062": {
+    "id": 605100062,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [],
+        "actions": [
+          {
+            "actionType": "exec_active_effect_when_damage",
+            "actorType": "target",
+            "args": [
+              0,
+              0,
+              605100062,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "605100063": {
+    "id": 605100063,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [],
+        "actions": [
+          {
+            "actionType": "exec_active_effect_when_damage",
+            "actorType": "target",
+            "args": [
+              0,
+              0,
+              605100063,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "605100064": {
+    "id": 605100064,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [],
+        "actions": [
+          {
+            "actionType": "exec_active_effect_when_damage",
+            "actorType": "target",
+            "args": [
+              0,
+              0,
+              605100064,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "605100071": {
+    "id": 605100071,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [],
+        "actions": [
+          {
+            "actionType": "exec_active_effect_when_damage",
+            "actorType": "target",
+            "args": [
+              0,
+              0,
+              605100071,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "605100072": {
+    "id": 605100072,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [],
+        "actions": [
+          {
+            "actionType": "exec_active_effect_when_damage",
+            "actorType": "target",
+            "args": [
+              0,
+              0,
+              605100072,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "605100073": {
+    "id": 605100073,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [],
+        "actions": [
+          {
+            "actionType": "exec_active_effect_when_damage",
+            "actorType": "target",
+            "args": [
+              0,
+              0,
+              605100073,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "605100074": {
+    "id": 605100074,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [],
+        "actions": [
+          {
+            "actionType": "exec_active_effect_when_damage",
+            "actorType": "target",
+            "args": [
+              0,
+              0,
+              605100074,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "605100081": {
+    "id": 605100081,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "skill_effect_group_set",
+            "actorType": "target",
+            "arg": 1000
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "exec_after_effect",
+            "actorType": "target",
+            "args": [
+              0,
+              0,
+              605100081,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "605100082": {
+    "id": 605100082,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "skill_effect_group_set",
+            "actorType": "target",
+            "arg": 1000
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "exec_after_effect",
+            "actorType": "target",
+            "args": [
+              0,
+              0,
+              605100082,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "605100083": {
+    "id": 605100083,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "skill_effect_group_set",
+            "actorType": "target",
+            "arg": 1000
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "exec_after_effect",
+            "actorType": "target",
+            "args": [
+              0,
+              0,
+              605100083,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "605100084": {
+    "id": 605100084,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "skill_effect_group_set",
+            "actorType": "target",
+            "arg": 1000
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "exec_after_effect",
+            "actorType": "target",
+            "args": [
+              0,
+              0,
+              605100084,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "605110081": {
+    "id": 605110081,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              130,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "605110082": {
+    "id": 605110082,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              110,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "605110083": {
+    "id": 605110083,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              90,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "605110084": {
+    "id": 605110084,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              70,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "605100091": {
+    "id": 605100091,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [],
+        "actions": [
+          {
+            "actionType": "exec_active_effect_when_damage",
+            "actorType": "target",
+            "args": [
+              0,
+              0,
+              605100091,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "605100092": {
+    "id": 605100092,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [],
+        "actions": [
+          {
+            "actionType": "exec_active_effect_when_damage",
+            "actorType": "target",
+            "args": [
+              0,
+              0,
+              605100092,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "605100093": {
+    "id": 605100093,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [],
+        "actions": [
+          {
+            "actionType": "exec_active_effect_when_damage",
+            "actorType": "target",
+            "args": [
+              0,
+              0,
+              605100093,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "605100094": {
+    "id": 605100094,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [],
+        "actions": [
+          {
+            "actionType": "exec_active_effect_when_damage",
+            "actorType": "target",
+            "args": [
+              0,
+              0,
+              605100094,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "605100101": {
+    "id": 605100101,
+    "effects": [
+      {
+        "desc": "On hit, Weapon Power +<FONT COLOR='{0}'>1,480</FONT>, Atk./Move Speed +<FONT COLOR='#99ff99'>1%</FONT> for 10s. (Max. 6 stacks)",
+        "cooldown": 1000,
+        "ratio": 10000,
+        "conditions": [],
+        "actions": [
+          {
+            "actionType": "exec_active_effect_when_damage",
+            "actorType": "self",
+            "args": [
+              0,
+              0,
+              605100101,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "605100102": {
+    "id": 605100102,
+    "effects": [
+      {
+        "desc": "On hit, Weapon Power +<FONT COLOR='{0}'>1,320</FONT>, Atk./Move Speed +<FONT COLOR='#99ff99'>1%</FONT> for 10s. (Max. 6 stacks)",
+        "cooldown": 1000,
+        "ratio": 10000,
+        "conditions": [],
+        "actions": [
+          {
+            "actionType": "exec_active_effect_when_damage",
+            "actorType": "self",
+            "args": [
+              0,
+              0,
+              605100102,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "605100103": {
+    "id": 605100103,
+    "effects": [
+      {
+        "desc": "On hit, Weapon Power +<FONT COLOR='{0}'>1,160</FONT>, Atk./Move Speed +<FONT COLOR='#99ff99'>1%</FONT> for 10s. (Max. 6 stacks)",
+        "cooldown": 1000,
+        "ratio": 10000,
+        "conditions": [],
+        "actions": [
+          {
+            "actionType": "exec_active_effect_when_damage",
+            "actorType": "self",
+            "args": [
+              0,
+              0,
+              605100103,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "605100104": {
+    "id": 605100104,
+    "effects": [
+      {
+        "desc": "On hit, Weapon Power +<FONT COLOR='{0}'>1,000</FONT>, Atk./Move Speed +<FONT COLOR='#99ff99'>1%</FONT> for 10s. (Max. 6 stacks)",
+        "cooldown": 1000,
+        "ratio": 10000,
+        "conditions": [],
+        "actions": [
+          {
+            "actionType": "exec_active_effect_when_damage",
+            "actorType": "self",
+            "args": [
+              0,
+              0,
+              605100104,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "605100111": {
+    "id": 605100111,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "hp_greater",
+            "actorType": "self",
+            "arg": 50
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "exec_active_effect_when_damage",
+            "actorType": "self",
+            "args": [
+              0,
+              0,
+              605100111,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "605100112": {
+    "id": 605100112,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "hp_greater",
+            "actorType": "self",
+            "arg": 50
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "exec_active_effect_when_damage",
+            "actorType": "self",
+            "args": [
+              0,
+              0,
+              605100112,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "605100113": {
+    "id": 605100113,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "hp_greater",
+            "actorType": "self",
+            "arg": 50
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "exec_active_effect_when_damage",
+            "actorType": "self",
+            "args": [
+              0,
+              0,
+              605100113,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "605100114": {
+    "id": 605100114,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "hp_greater",
+            "actorType": "self",
+            "arg": 50
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "exec_active_effect_when_damage",
+            "actorType": "self",
+            "args": [
+              0,
+              0,
+              605100114,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "605100121": {
+    "id": 605100121,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 30000,
+        "ratio": 10000,
+        "conditions": [],
+        "actions": [
+          {
+            "actionType": "exec_active_effect_when_damage",
+            "actorType": "self",
+            "args": [
+              0,
+              0,
+              605100121,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "605100122": {
+    "id": 605100122,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 30000,
+        "ratio": 10000,
+        "conditions": [],
+        "actions": [
+          {
+            "actionType": "exec_active_effect_when_damage",
+            "actorType": "self",
+            "args": [
+              0,
+              0,
+              605100122,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "605100123": {
+    "id": 605100123,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 30000,
+        "ratio": 10000,
+        "conditions": [],
+        "actions": [
+          {
+            "actionType": "exec_active_effect_when_damage",
+            "actorType": "self",
+            "args": [
+              0,
+              0,
+              605100123,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "605100124": {
+    "id": 605100124,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 30000,
+        "ratio": 10000,
+        "conditions": [],
+        "actions": [
+          {
+            "actionType": "exec_active_effect_when_damage",
+            "actorType": "self",
+            "args": [
+              0,
+              0,
+              605100124,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "605100131": {
+    "id": 605100131,
+    "effects": [
+      {
+        "desc": "Outgoing Damage +<FONT COLOR='{0}'>3%</FONT>.",
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              300,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "605100132": {
+    "id": 605100132,
+    "effects": [
+      {
+        "desc": "Outgoing Damage +<FONT COLOR='{0}'>2.5%</FONT>.",
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              250,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "605100133": {
+    "id": 605100133,
+    "effects": [
+      {
+        "desc": "Outgoing Damage +<FONT COLOR='{0}'>2%</FONT>.",
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              200,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "605100134": {
+    "id": 605100134,
+    "effects": [
+      {
+        "desc": "Outgoing Damage +<FONT COLOR='{0}'>1.5%</FONT>.",
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              150,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "605100151": {
+    "id": 605100151,
+    "effects": [
+      {
+        "desc": "Back Attack Damage +<FONT COLOR='{0}'>3.5%</FONT>.",
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "directional_skill_effect",
+            "actorType": "self",
+            "arg": 2
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              350,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "605100152": {
+    "id": 605100152,
+    "effects": [
+      {
+        "desc": "Back Attack Damage +<FONT COLOR='{0}'>3%</FONT>.",
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "directional_skill_effect",
+            "actorType": "self",
+            "arg": 2
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              300,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "605100153": {
+    "id": 605100153,
+    "effects": [
+      {
+        "desc": "Back Attack Damage +<FONT COLOR='{0}'>2.5%</FONT>.",
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "directional_skill_effect",
+            "actorType": "self",
+            "arg": 2
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              250,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "605100154": {
+    "id": 605100154,
+    "effects": [
+      {
+        "desc": "Back Attack Damage +<FONT COLOR='{0}'>2%</FONT>.",
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "directional_skill_effect",
+            "actorType": "self",
+            "arg": 2
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              200,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "605100161": {
+    "id": 605100161,
+    "effects": [
+      {
+        "desc": "Frontal Attack Damage +<FONT COLOR='{0}'>3.5%</FONT>.",
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "directional_skill_effect",
+            "actorType": "self",
+            "arg": 1
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              350,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "605100162": {
+    "id": 605100162,
+    "effects": [
+      {
+        "desc": "Frontal Attack Damage +<FONT COLOR='{0}'>3%</FONT>.",
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "directional_skill_effect",
+            "actorType": "self",
+            "arg": 1
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              300,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "605100163": {
+    "id": 605100163,
+    "effects": [
+      {
+        "desc": "Frontal Attack Damage +<FONT COLOR='{0}'>2.5%</FONT>.",
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "directional_skill_effect",
+            "actorType": "self",
+            "arg": 1
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              250,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "605100164": {
+    "id": 605100164,
+    "effects": [
+      {
+        "desc": "Frontal Attack Damage +<FONT COLOR='{0}'>2%</FONT>.",
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "directional_skill_effect",
+            "actorType": "self",
+            "arg": 1
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              200,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "605100171": {
+    "id": 605100171,
+    "effects": [
+      {
+        "desc": "Non-directional Skill Damage +<FONT COLOR='{0}'>3.5%</FONT>.\nAwakening Skills do not apply.",
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "directional_skill_effect",
+            "actorType": "self",
+            "arg": 3
+          },
+          {
+            "conditionType": "current_skill_group",
+            "actorType": "self",
+            "arg": 10000001
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              350,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "605100172": {
+    "id": 605100172,
+    "effects": [
+      {
+        "desc": "Non-directional Skill Damage +<FONT COLOR='{0}'>3%</FONT>.\nAwakening Skills do not apply.",
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "directional_skill_effect",
+            "actorType": "self",
+            "arg": 3
+          },
+          {
+            "conditionType": "current_skill_group",
+            "actorType": "self",
+            "arg": 10000001
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              300,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "605100173": {
+    "id": 605100173,
+    "effects": [
+      {
+        "desc": "Non-directional Skill Damage +<FONT COLOR='{0}'>2.5%</FONT>.\nAwakening Skills do not apply.",
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "directional_skill_effect",
+            "actorType": "self",
+            "arg": 3
+          },
+          {
+            "conditionType": "current_skill_group",
+            "actorType": "self",
+            "arg": 10000001
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              250,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "605100174": {
+    "id": 605100174,
+    "effects": [
+      {
+        "desc": "Non-directional Skill Damage +<FONT COLOR='{0}'>2%</FONT>.\nAwakening Skills do not apply.",
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "directional_skill_effect",
+            "actorType": "self",
+            "arg": 3
+          },
+          {
+            "conditionType": "current_skill_group",
+            "actorType": "self",
+            "arg": 10000001
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              200,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "605100271": {
+    "id": 605100271,
+    "effects": [
+      {
+        "desc": "Damage to Challenge or lower monsters +<FONT COLOR='{0}'>6%</FONT>.",
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "npc_grade_less",
+            "actorType": "target",
+            "arg": 5
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              600,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "605100272": {
+    "id": 605100272,
+    "effects": [
+      {
+        "desc": "Damage to Challenge or lower monsters +<FONT COLOR='{0}'>5%</FONT>.",
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "npc_grade_less",
+            "actorType": "target",
+            "arg": 5
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              500,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "605100273": {
+    "id": 605100273,
+    "effects": [
+      {
+        "desc": "Damage to Challenge or lower monsters +<FONT COLOR='{0}'>4%</FONT>.",
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "npc_grade_less",
+            "actorType": "target",
+            "arg": 5
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              400,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "605100274": {
+    "id": 605100274,
+    "effects": [
+      {
+        "desc": "Damage to Challenge or lower monsters +<FONT COLOR='{0}'>3%</FONT>.",
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "npc_grade_less",
+            "actorType": "target",
+            "arg": 5
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              300,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "605100281": {
+    "id": 605100281,
+    "effects": [
+      {
+        "desc": "Incoming Damage from Challenge or lower monsters -<FONT COLOR='{0}'>10%</FONT>.",
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "npc_grade_less",
+            "actorType": "target",
+            "arg": 5
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "modify_reactive_damage",
+            "actorType": "self",
+            "args": [
+              -1000,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "605100282": {
+    "id": 605100282,
+    "effects": [
+      {
+        "desc": "Incoming Damage from Challenge or lower monsters -<FONT COLOR='{0}'>8%</FONT>.",
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "npc_grade_less",
+            "actorType": "target",
+            "arg": 5
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "modify_reactive_damage",
+            "actorType": "self",
+            "args": [
+              -800,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "605100283": {
+    "id": 605100283,
+    "effects": [
+      {
+        "desc": "Incoming Damage from Challenge or lower monsters -<FONT COLOR='{0}'>6%</FONT>.",
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "npc_grade_less",
+            "actorType": "target",
+            "arg": 5
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "modify_reactive_damage",
+            "actorType": "self",
+            "args": [
+              -600,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "605100284": {
+    "id": 605100284,
+    "effects": [
+      {
+        "desc": "Incoming Damage from Challenge or lower monsters -<FONT COLOR='{0}'>4%</FONT>.",
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "npc_grade_less",
+            "actorType": "target",
+            "arg": 5
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "modify_reactive_damage",
+            "actorType": "self",
+            "args": [
+              -400,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "605100351": {
+    "id": 605100351,
+    "effects": [
+      {
+        "desc": "On hit, Paralysis and Push Immunity for <FONT COLOR='{0}'>60s</FONT>. (Cooldown: <FONT COLOR='{0}'>60s</FONT>)\nThe effect is removed upon getting hit 1 time.",
+        "cooldown": 60000,
+        "ratio": 10000,
+        "conditions": [],
+        "actions": [
+          {
+            "actionType": "exec_active_effect_when_damage",
+            "actorType": "self",
+            "args": [
+              0,
+              0,
+              605100351,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "605100352": {
+    "id": 605100352,
+    "effects": [
+      {
+        "desc": "On hit, Paralysis and Push Immunity for <FONT COLOR='{0}'>70s</FONT>. (Cooldown: <FONT COLOR='{0}'>70s</FONT>)\nThe effect is removed upon getting hit 1 time.",
+        "cooldown": 70000,
+        "ratio": 10000,
+        "conditions": [],
+        "actions": [
+          {
+            "actionType": "exec_active_effect_when_damage",
+            "actorType": "self",
+            "args": [
+              0,
+              0,
+              605100352,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "605100353": {
+    "id": 605100353,
+    "effects": [
+      {
+        "desc": "On hit, Paralysis and Push Immunity for <FONT COLOR='{0}'>80s</FONT>. (Cooldown: <FONT COLOR='{0}'>80s</FONT>)\nThe effect is removed upon getting hit 1 time.",
+        "cooldown": 80000,
+        "ratio": 10000,
+        "conditions": [],
+        "actions": [
+          {
+            "actionType": "exec_active_effect_when_damage",
+            "actorType": "self",
+            "args": [
+              0,
+              0,
+              605100353,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "605100354": {
+    "id": 605100354,
+    "effects": [
+      {
+        "desc": "On hit, Paralysis and Push Immunity for <FONT COLOR='{0}'>90s</FONT>. (Cooldown: <FONT COLOR='{0}'>90s</FONT>)\nThe effect is removed upon getting hit 1 time.",
+        "cooldown": 90000,
+        "ratio": 10000,
+        "conditions": [],
+        "actions": [
+          {
+            "actionType": "exec_active_effect_when_damage",
+            "actorType": "self",
+            "args": [
+              0,
+              0,
+              605100354,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
   "960102000": {
     "id": 960102000,
     "effects": [
@@ -83975,6 +86314,58 @@
         ],
         "actions": [
           {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              -5000,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "current_skill",
+            "actorType": "self",
+            "arg": 28291
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              -5000,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "current_skill",
+            "actorType": "self",
+            "arg": 28290
+          }
+        ],
+        "actions": [
+          {
             "actionType": "exec_after_skill",
             "actorType": "self",
             "args": [
@@ -84019,6 +86410,58 @@
   "2285802": {
     "id": 2285802,
     "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "current_skill",
+            "actorType": "self",
+            "arg": 28290
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              -5000,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "current_skill",
+            "actorType": "self",
+            "arg": 28291
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              -5000,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
       {
         "desc": null,
         "cooldown": 0,
@@ -125603,6 +128046,54 @@
       }
     ]
   },
+  "44460700": {
+    "id": 44460700,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "pc",
+            "actorType": "target",
+            "arg": 0
+          },
+          {
+            "conditionType": "status_effect_on",
+            "actorType": "target",
+            "arg": 44460722
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "exec_active_effect_when_damage",
+            "actorType": "target",
+            "args": [
+              44460733,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "actionType": "exec_active_effect_when_damage",
+            "actorType": "target",
+            "args": [
+              0,
+              0,
+              44460710,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
   "260400": {
     "id": 260400,
     "effects": [
@@ -140008,6 +142499,155 @@
               0,
               0,
               11000141,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "16000120": {
+    "id": 16000120,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [],
+        "actions": [
+          {
+            "actionType": "modify_reactive_damage",
+            "actorType": "self",
+            "args": [
+              -5000,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "16000121": {
+    "id": 16000121,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 2001,
+        "ratio": 10000,
+        "conditions": [],
+        "actions": [
+          {
+            "actionType": "exec_reactive_effect_when_damage",
+            "actorType": "self",
+            "args": [
+              0,
+              0,
+              12000121,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "16000150": {
+    "id": 16000150,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 1000,
+        "ratio": 10000,
+        "conditions": [],
+        "actions": [
+          {
+            "actionType": "exec_when_counter",
+            "actorType": "self",
+            "args": [
+              12000150,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "16000190": {
+    "id": 16000190,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 8001,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "hp_less",
+            "actorType": "self",
+            "arg": 50
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "exec_reactive_effect_when_damage",
+            "actorType": "self",
+            "args": [
+              0,
+              0,
+              12000191,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "actionType": "exec_reactive_effect_when_damage",
+            "actorType": "self",
+            "args": [
+              12000190,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "16000191": {
+    "id": 16000191,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 8001,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "hp_less",
+            "actorType": "self",
+            "arg": 50
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "exec_reactive_effect_when_damage",
+            "actorType": "self",
+            "args": [
+              0,
+              0,
+              12000192,
               0,
               0,
               0

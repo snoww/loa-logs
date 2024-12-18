@@ -566,7 +566,6 @@ pub struct CombatEffectCondition {
 #[derive(Debug, Default, Deserialize, Clone)]
 #[serde(rename_all = "camelCase", default)]
 pub struct CombatEffectAction {
-    #[serde(rename(deserialize = "type"))]
     pub action_type: String,
     pub actor_type: String,
     pub args: Vec<i32>,
@@ -1002,10 +1001,10 @@ lazy_static! {
         let json_str = include_str!("../../meter-data/CombatEffect.json");
         serde_json::from_str(json_str).unwrap()
     };
-    pub static ref SKILL_FEATURE_DATA: HashMap<u32, SkillFeatureLevelData> = {
-        let json_str = include_str!("../../meter-data/SkillFeature.json");
-        serde_json::from_str(json_str).unwrap()
-    };
+    // pub static ref SKILL_FEATURE_DATA: HashMap<u32, SkillFeatureLevelData> = {
+    //     let json_str = include_str!("../../meter-data/SkillFeature.json");
+    //     serde_json::from_str(json_str).unwrap()
+    // };
     pub static ref ENGRAVING_DATA: HashMap<u32, EngravingData> = {
         let json_str = include_str!("../../meter-data/Ability.json");
         serde_json::from_str(json_str).unwrap()

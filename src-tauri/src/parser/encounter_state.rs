@@ -471,7 +471,7 @@ impl EncounterState {
             tripod_change = true;
         }
         if tripod_change {
-            let mut tripod_data: Vec<TripodData> = vec![];
+            // let mut tripod_data: Vec<TripodData> = vec![];
             if let (Some(tripod_index), Some(tripod_level)) = (tripod_index, tripod_level) {
                 let mut indexes = vec![tripod_index.first];
                 if tripod_index.second != 0 {
@@ -481,30 +481,30 @@ impl EncounterState {
                 if tripod_index.third != 0 {
                     indexes.push(tripod_index.third + 6);
                 }
-                let levels = [tripod_level.first, tripod_level.second, tripod_level.third];
-                if let Some(effect) = SKILL_FEATURE_DATA.get(&skill_id) {
-                    for i in 0..indexes.len() {
-                        if let Some(entries) = effect.tripods.get(&indexes[i]) {
-                            let mut options: Vec<SkillFeatureOption> = vec![];
-                            for entry in &entries.entries {
-                                if entry.level > 0 && entry.level == levels[i] {
-                                    options.push(entry.clone());
-                                }
-                            }
-                            tripod_data.push(TripodData {
-                                index: indexes[i],
-                                options,
-                            });
-                        }
-                    }
-                }
+                // let levels = [tripod_level.first, tripod_level.second, tripod_level.third];
+                // if let Some(effect) = SKILL_FEATURE_DATA.get(&skill_id) {
+                //     for i in 0..indexes.len() {
+                //         if let Some(entries) = effect.tripods.get(&indexes[i]) {
+                //             let mut options: Vec<SkillFeatureOption> = vec![];
+                //             for entry in &entries.entries {
+                //                 if entry.level > 0 && entry.level == levels[i] {
+                //                     options.push(entry.clone());
+                //                 }
+                //             }
+                //             tripod_data.push(TripodData {
+                //                 index: indexes[i],
+                //                 options,
+                //             });
+                //         }
+                //     }
+                // }
             }
 
-            if !tripod_data.is_empty() {
-                entity.skills.entry(skill_id).and_modify(|e| {
-                    e.tripod_data = Some(tripod_data);
-                });
-            }
+            // if !tripod_data.is_empty() {
+            //     entity.skills.entry(skill_id).and_modify(|e| {
+            //         e.tripod_data = Some(tripod_data);
+            //     });
+            // }
         }
         self.cast_log
             .entry(entity.name.clone())
