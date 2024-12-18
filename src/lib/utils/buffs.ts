@@ -95,7 +95,7 @@ export function filterStatusEffects(
         } else if (buff.buffCategory === "elixir") {
             key = `elixir_${buff.uniqueGroup}`;
         } else {
-            if (buff.category === "battleitem") {
+            if (buff.buffCategory === "battleitem") {
                 key = buff.buffCategory + "_" + id;
             } else {
                 key = buff.buffCategory;
