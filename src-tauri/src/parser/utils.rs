@@ -1367,13 +1367,11 @@ fn get_player_spec(player: &EncounterEntity, buffs: &HashMap<u32, StatusEffect>)
             }
         }
         "Destroyer" => {
-            if let Some(hyper_gravity_skill) = player.skills.get(&18030) {
-                if hyper_gravity_skill.dps as f32 / player.damage_stats.dps as f32 > 0.3 {
-                    return "Gravity Training".to_string();
-                }
+            if player.skills.contains_key(&18090) {
+                "Gravity Training".to_string()
+            } else {
+                "Rage Hammer".to_string()
             }
-
-            "Rage Hammer".to_string()
         }
         "Gunlancer" => {
             if player.skills.contains_key(&17200) && player.skills.contains_key(&17210) {
@@ -1534,7 +1532,7 @@ fn get_player_spec(player: &EncounterEntity, buffs: &HashMap<u32, StatusEffect>)
         }
         "Machinist" => {
             let buff_names = get_buff_names(player, buffs);
-            if buff_names.iter().any(|s| s.contains("Evolutionary Legacy")) {
+            if buff_names.iter().any(|s| s.contains("Combat Mode") || s.contains("Evolutionary Legacy")) {
                 "Evolutionary Legacy".to_string()
             } else {
                 "Arthetinean Skill".to_string()
