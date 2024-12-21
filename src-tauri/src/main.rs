@@ -99,6 +99,7 @@ async fn main() -> Result<()> {
                                 );
 
                                 unload_driver();
+                                remove_driver();
 
                                 update
                                     .download_and_install()
@@ -162,7 +163,7 @@ async fn main() -> Result<()> {
             }
 
             info!("listening on port: {}", port);
-            load_driver();
+            remove_driver();
             task::spawn_blocking(move || {
                 parser::start(meter_window, port, settings).map_err(|e| {
                     error!("unexpected error occurred in parser: {}", e);
@@ -324,6 +325,7 @@ async fn main() -> Result<()> {
             start_loa_process,
             get_sync_candidates,
             sync,
+            remove_driver,
             unload_driver,
         ])
         .run(tauri::generate_context!())
@@ -1515,7 +1517,8 @@ fn set_clickthrough(window: tauri::Window, set: bool) {
     }
 }
 
-fn load_driver() {
+#[tauri::command]
+fn remove_driver() {
     Command::new("sc").args(["delete", "windivert"]).output().expect("unable to delete driver");
 }
 

@@ -55,6 +55,7 @@
                                     on:click={async () => {
                                         $updateText = "Updating...";
                                         await invoke("unload_driver");
+                                        await invoke("remove_driver");
                                         await installUpdate();
                                     }}>
                                     {$updateText}
