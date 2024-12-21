@@ -1,11 +1,11 @@
 {
-    "version": "v1.22.0",
-    "notes": "### v1.22.0\n\n#### NEW FEATURES\n- update meter for winter soloist patch\n\n#### BUG FIXES AND IMPROVEMENTS\n- fixed stabilized status buff showing when filtering \"offensive buffs only\"\n- fixed punishing strike tripod counting as different skill\n- fixed some errors in buff calculations\n- fixed buff percentages in skill hit breakdowns\n- grouped ark passive combat blessing/dance of passion buffs\n- separated dark bomb and atropine buffs in self buffs\n\nsend bug reports/suggestions to [ramen shop server](https://discord.gg/RXvTMV2YHu)\n",
-    "pub_date": "2024-12-18T20:40:00.339Z",
+    "version": "v1.22.1",
+    "notes": "### v1.22.1\n\n#### BUG FIXES AND IMPROVEMENTS\n- fixed spec classification of destroyer and scouters\n\nsend bug reports/suggestions to [ramen shop server](https://discord.gg/RXvTMV2YHu)\n",
+    "pub_date": "2024-12-21T09:50:41.726Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.22.0/LOA.Logs_1.22.0_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlFpck9ZQnBra3VlUk9rUUFyeTRjYTVNbUlSTmVqd20xb0RJNUNHci9VTGw3ckl5aG5wcllIeS9nWnNZQjZMY2JHZFlIZEI4R0loNDdWbTVZYkZZYlFJPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzM0NTU0NTY4CWZpbGU6TE9BIExvZ3NfMS4yMi4wX3g2NC1zZXR1cC5uc2lzLnppcAorcFRBVksvR2FOSzEyVkw4dUgxS1pmVFFGeUs0anNmbzUzM1VhcStWRXZXUi9nMFpqWWRaZGVvTStlRE9lNnA2N09VaXNZNEp6ZzVvSGx2MkF5L25Bdz09Cg=="
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.22.1/LOA.Logs_1.22.1_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmRUM01YeVFTNVdvR2JMczRaV254NWVFUndCYi9vc1VqRXlkNE02V2JOQzkwY1VIZTFCa01BUTdiblhDc2p4R2VXMjllbWw3SmIwWkZoR0dkb0p6Q2dVPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzM0Nzc0NjUwCWZpbGU6TE9BIExvZ3NfMS4yMi4xX3g2NC1zZXR1cC5uc2lzLnppcAoraWdjZ3FTelRBRjhLbEpGQTZUN2JnVFk0Sk9LMVhxY290RE42dW9XMjhQVjkvYnRBYy9HOFV0S2RSZWp4QUZUaDk1NWpFSWVrMkIwVEhCMjQ2WTVCQT09Cg=="
         }
     }
 }

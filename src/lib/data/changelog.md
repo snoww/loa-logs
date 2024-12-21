@@ -1,12 +1,16 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.22.0
+    v1.22.1
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
   </div>
 </div>
 
+#### BUG FIXES AND IMPROVEMENTS
+- fixed spec classification of destroyer and scouters
+
+### v1.22.0
 #### NEW FEATURES
 - update meter for winter soloist patch
 
