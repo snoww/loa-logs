@@ -160,6 +160,7 @@ export const defaultSettings = {
             dps: true,
             damagePercent: true,
             critRate: true,
+            adjustedCritRate: false,
             critDmg: false,
             frontAtk: true,
             backAtk: true,

@@ -28,7 +28,35 @@
     let critDmgPercentage = "0.0";
     let baPercentage = "0.0";
     let faPercentage = "0.0";
+    let averagePerCast = 0;
+    let adjustedCritPercentage: string | undefined = undefined;
+
     $: {
+        averagePerCast = skill.totalDamage / skill.casts;
+
+        if (meterSettings.breakdown.adjustedCritRate) {
+            if (skill.adjustedCrit) {
+                adjustedCritPercentage = round(skill.adjustedCrit * 100);
+            } else {
+                let filter = averagePerCast * 0.05;
+                let adjustedCrits = 0;
+                let adjustedHits = 0;
+                if (skill.skillCastLog.length > 0) {
+                    for (const c of skill.skillCastLog) {
+                        for (const h of c.hits) {
+                            if (h.damage > filter) {
+                                adjustedCrits += h.crit ? 1 : 0;
+                                adjustedHits += 1;
+                            }
+                        }
+                    }
+                    if (adjustedHits > 0) {
+                        adjustedCritPercentage = round((adjustedCrits / adjustedHits) * 100);
+                    }
+                }
+            }
+        }
+
         if (skill.hits !== 0) {
             critDmgPercentage = round((skill.critDamage / skill.totalDamage) * 100);
             critPercentage = round((skill.crits / skill.hits) * 100);
@@ -77,6 +105,15 @@
         {critPercentage}<span class="text-3xs text-gray-300">%</span>
     </td>
 {/if}
+{#if meterSettings.breakdown.adjustedCritRate}
+    <td class="px-1 text-center">
+        {#if adjustedCritPercentage}
+            {adjustedCritPercentage}<span class="text-3xs text-gray-300">%</span>
+        {:else}
+            -
+        {/if}
+    </td>
+{/if}
 {#if meterSettings.breakdown.critDmg}
     <td class="px-1 text-center">
         {critDmgPercentage}<span class="text-3xs text-gray-300">%</span>
@@ -120,15 +157,14 @@
     </td>
 {/if}
 {#if meterSettings.breakdown.avgDamage}
-    <td class="px-1 text-center" use:tooltip={{ content: Math.round(skill.totalDamage / skill.hits).toLocaleString() }}>
-        {abbreviateNumberSplit(skill.totalDamage / skill.hits)[0]}<span class="text-3xs text-gray-300"
-            >{abbreviateNumberSplit(skill.totalDamage / skill.hits)[1]}</span>
+    {@const averagePerHit = skill.totalDamage / skill.hits}
+    <td class="px-1 text-center" use:tooltip={{ content: Math.round(averagePerHit).toLocaleString() }}>
+        {abbreviateNumberSplit(averagePerHit)[0]}<span class="text-3xs text-gray-300"
+            >{abbreviateNumberSplit(averagePerHit)[1]}</span>
     </td>
-    <td
-        class="px-1 text-center"
-        use:tooltip={{ content: Math.round(skill.totalDamage / skill.casts).toLocaleString() }}>
-        {abbreviateNumberSplit(skill.totalDamage / skill.casts)[0]}<span class="text-3xs text-gray-300"
-            >{abbreviateNumberSplit(skill.totalDamage / skill.casts)[1]}</span>
+    <td class="px-1 text-center" use:tooltip={{ content: Math.round(averagePerCast).toLocaleString() }}>
+        {abbreviateNumberSplit(averagePerCast)[0]}<span class="text-3xs text-gray-300"
+            >{abbreviateNumberSplit(averagePerCast)[1]}</span>
     </td>
 {/if}
 {#if meterSettings.breakdown.maxDamage}

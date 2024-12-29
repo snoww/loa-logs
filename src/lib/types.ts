@@ -145,6 +145,7 @@ export interface Skill {
     casts: number;
     hits: number;
     crits: number;
+    adjustedCrit?: number;
     critDamage: number;
     backAttacks: number;
     frontAttacks: number;

@@ -156,6 +156,7 @@ pub struct Skill {
     pub casts: i64,
     pub hits: i64,
     pub crits: i64,
+    pub adjusted_crit: Option<f64>,
     pub crit_damage: i64,
     pub back_attacks: i64,
     pub front_attacks: i64,

@@ -24,6 +24,9 @@
 {#if meterSettings.breakdown.critRate}
     <th class="w-12 font-normal" use:tooltip={{ content: "Crit %" }}>CRIT</th>
 {/if}
+{#if meterSettings.breakdown.adjustedCritRate}
+    <th class="w-12 font-normal" use:tooltip={{ content: "Adjusted Crit %" }}>aCRIT</th>
+{/if}
 {#if meterSettings.breakdown.critDmg}
     <th class="w-12 font-normal" use:tooltip={{ content: "% Damage that Crit" }}>CDMG</th>
 {/if}

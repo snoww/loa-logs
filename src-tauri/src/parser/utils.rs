@@ -1082,6 +1082,25 @@ pub fn insert_data(
         for (_, skill_cast_log) in skill_cast_log.iter().filter(|&(s, _)| *s == entity.id) {
             for (skill, log) in skill_cast_log {
                 entity.skills.entry(*skill).and_modify(|e| {
+                    let average_cast = e.total_damage as f64 / e.casts as f64;
+                    let filter = average_cast * 0.05;
+                    let mut adj_hits = 0;
+                    let mut adj_crits = 0;
+                    for cast in log.values() {
+                        for hit in cast.hits.iter() {
+                            if hit.damage as f64 > filter {
+                                adj_hits += 1;
+                                if hit.crit {
+                                    adj_crits += 1;
+                                }
+                            }
+                        }
+                    }
+                    
+                    if adj_hits > 0 { 
+                        e.adjusted_crit = Some(adj_crits as f64 / adj_hits as f64);
+                    }
+                    
                     e.max_damage_cast = log
                         .values()
                         .map(|cast| cast.hits.iter().map(|hit| hit.damage).sum::<i64>())

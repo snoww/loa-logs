@@ -163,6 +163,10 @@
                 description="Show the critical strike rate of the skill"
                 bind:setting={$settings.logs.breakdown.critRate} />
             <SettingItem
+                name="Skill Adjusted Crit Rate"
+                description="Show the adjusted critical strike rate. Hits that are less than 5% of the average cast are excluded. Useful for skills with one big hit and many smaller hits like Doomsday."
+                bind:setting={$settings.logs.breakdown.adjustedCritRate} />
+            <SettingItem
                 name="Skill Crit Damage"
                 description="Show the percentage of damage that crit for the skill"
                 bind:setting={$settings.logs.breakdown.critDmg} />

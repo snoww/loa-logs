@@ -137,6 +137,9 @@
                     {critPercentage}<span class="text-3xs text-gray-300">%</span>
                 </td>
             {/if}
+            {#if $settings.logs.breakdown.adjustedCritRate}
+                <td class="px-1 text-center"> - </td>
+            {/if}
             {#if $settings.logs.breakdown.critDmg}
                 <td class="px-1 text-center">
                     {critDmgPercentage}<span class="text-3xs text-gray-300">%</span>
