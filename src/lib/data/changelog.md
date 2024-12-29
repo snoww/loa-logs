@@ -1,12 +1,19 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.22.1
+    v1.22.2
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
   </div>
 </div>
 
+#### NEW FEATURES
+- added new optional column _"Adjusted Crit Rate"_ for skill breakdowns (Settings > Logs > Scroll down to Skill Breakdown > Check "Adjusted Crit Rate")
+  - calculates crit rate based on damage hits that do more than 5% of the average cast. this provides a more accurate crit rate for skills that have a big hit and multiple small hits or dots (e.g. Doomsday)
+  - only shows on logs and not live meter
+
+
+### v1.22.1
 #### BUG FIXES AND IMPROVEMENTS
 - fixed spec classification of destroyer and scouters
 

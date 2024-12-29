@@ -1,11 +1,11 @@
 {
-    "version": "v1.22.1",
-    "notes": "### v1.22.1\n\n#### BUG FIXES AND IMPROVEMENTS\n- fixed spec classification of destroyer and scouters\n\nsend bug reports/suggestions to [ramen shop server](https://discord.gg/RXvTMV2YHu)\n",
-    "pub_date": "2024-12-21T09:50:41.726Z",
+    "version": "v1.22.2",
+    "notes": "### v1.22.2\n\n#### NEW FEATURES\n- added new optional column _\"Adjusted Crit Rate\"_ for skill breakdowns (Settings > Logs > Scroll down to Skill Breakdown > Check \"Adjusted Crit Rate\")\n    - calculates crit rate based on damage hits that do more than 5% of the average cast. this provides a more accurate crit rate for skills that have a big hit and multiple small hits or dots (e.g. Doomsday)\n    - only shows on logs and not live meter\n\nsend bug reports/suggestions to [ramen shop server](https://discord.gg/RXvTMV2YHu)\n",
+    "pub_date": "2024-12-29T22:32:06.472Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.22.1/LOA.Logs_1.22.1_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlJ4eFBzOEhSQTJWakowUmwwUDduclJFZ2p0Q2xUZnNaSEZtSmhmaW5WUy9sa2xPdmNKOEJVZUhaMmpOaEszb0dxaHRXa2NmdTdlV2JaQk1BdFNISXcwPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzM0Nzc1MDIwCWZpbGU6TE9BIExvZ3NfMS4yMi4xX3g2NC1zZXR1cC5uc2lzLnppcAozeUdGUHlMN2lHb2dXQy81OFJiakE0WjNHZTNZQ2E0SC9YM1cvdTE1aWpzMDc0ZS9Wbmxnbm9mZ3NpbTZDSGFFTWN2QTBCZGpxTEhYZ1owZlk0Ti9Ddz09Cg=="
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.22.2/LOA.Logs_1.22.2_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYldQTTY4aGZRMWEvcDBCTytpdkJDVUJrZ0VMUzVEMjFHYk5iTVFhNEI0OVM3c0c2T0RjZndPVWpPYUs1ZkJ1b1JCM09nV2ozU052bFFQUG5mR3ByR1FVPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzM1NTA3NTQ4CWZpbGU6TE9BIExvZ3NfMS4yMi4yX3g2NC1zZXR1cC5uc2lzLnppcApDS2h1T2hVbVd6Z283c2VudEZvUm1Kc2xjNFpLT2xpVFpUUlViakZ6ajVNUE1XVXQ2UW1ZY2E4SzFWYlgyUDAzR1JzUUlZRnprb1JKMlBvd3lEc21DQT09Cg=="
         }
     }
 }
