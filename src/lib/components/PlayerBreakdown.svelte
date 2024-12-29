@@ -59,7 +59,7 @@
 <thead class="sticky top-0 z-40 h-6">
     <tr class="bg-zinc-900 tracking-tighter">
         <PlayerBreakdownHeader
-            meterSettings={$settings.meter}
+            meterSettings={"meter"}
             {hasFrontAttacks}
             {hasBackAttacks}
             {anySupportBuff}

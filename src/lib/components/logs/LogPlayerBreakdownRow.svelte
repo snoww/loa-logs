@@ -35,7 +35,7 @@
         {duration}
         {skillDpsRaw}
         width={damagePercentage}
-        meterSettings={$settings.logs}
+        meterSettings={"logs"}
         shadow={!$takingScreenshot}
         {index} />
 </tr>

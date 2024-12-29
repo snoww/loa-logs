@@ -1,79 +1,88 @@
 <script lang="ts">
+    import { settings } from "$lib/utils/settings";
     import { tooltip } from "$lib/utils/tooltip";
 
-    export let meterSettings: any;
+    export let meterSettings: string;
     export let hasBackAttacks = true;
     export let hasFrontAttacks = true;
     export let anySupportBrand = false;
     export let anySupportBuff = false;
     export let anySupportIdentity = false;
+
+    let currentSettings = $settings.logs;
+
+    if (meterSettings === "logs") {
+        currentSettings = $settings.logs;
+    } else {
+        currentSettings = $settings.meter;
+    }
 </script>
 
 <th class="w-7 px-2 font-normal" />
 <th class="w-14 px-2 text-left font-normal" />
 <th class="w-full" />
-{#if meterSettings.breakdown.damage}
+{#if currentSettings.breakdown.damage}
     <th class="w-12 font-normal" use:tooltip={{ content: "Damage Dealt" }}>DMG</th>
 {/if}
-{#if meterSettings.breakdown.dps}
+{#if currentSettings.breakdown.dps}
     <th class="w-12 font-normal" use:tooltip={{ content: "Damage per second" }}>DPS</th>
 {/if}
-{#if meterSettings.breakdown.damagePercent}
+{#if currentSettings.breakdown.damagePercent}
     <th class="w-10 font-normal" use:tooltip={{ content: "Damage %" }}>D%</th>
 {/if}
-{#if meterSettings.breakdown.critRate}
+{#if currentSettings.breakdown.critRate}
     <th class="w-12 font-normal" use:tooltip={{ content: "Crit %" }}>CRIT</th>
 {/if}
-{#if meterSettings.breakdown.adjustedCritRate}
+{#if meterSettings === "logs" && currentSettings.breakdown.adjustedCritRate}
     <th class="w-12 font-normal" use:tooltip={{ content: "Adjusted Crit %" }}>aCRIT</th>
 {/if}
-{#if meterSettings.breakdown.critDmg}
+{#if currentSettings.breakdown.critDmg}
     <th class="w-12 font-normal" use:tooltip={{ content: "% Damage that Crit" }}>CDMG</th>
 {/if}
-{#if hasFrontAttacks && meterSettings.breakdown.frontAtk}
-    {#if meterSettings.positionalDmgPercent}
+{#if hasFrontAttacks && currentSettings.breakdown.frontAtk}
+    {#if currentSettings.positionalDmgPercent}
         <th class="w-12 font-normal" use:tooltip={{ content: "% Damage from Front Attack" }}>F.A</th>
     {:else}
         <th class="w-12 font-normal" use:tooltip={{ content: "Front Attack %" }}>F.A</th>
     {/if}
 {/if}
-{#if hasBackAttacks && meterSettings.breakdown.backAtk}
-    {#if meterSettings.positionalDmgPercent}
+{#if hasBackAttacks && currentSettings.breakdown.backAtk}
+    {#if currentSettings.positionalDmgPercent}
         <th class="w-12 font-normal" use:tooltip={{ content: "% Damage from Back Attack" }}>B.A</th>
     {:else}
         <th class="w-12 font-normal" use:tooltip={{ content: "Back Attack %" }}>B.A</th>
     {/if}
 {/if}
-{#if anySupportBuff && meterSettings.breakdown.percentBuffBySup}
+{#if anySupportBuff && currentSettings.breakdown.percentBuffBySup}
     <th class="w-12 font-normal" use:tooltip={{ content: "% Damage buffed by Support Atk. Power Buff" }}>Buff%</th>
 {/if}
-{#if anySupportBrand && meterSettings.breakdown.percentBrand}
+{#if anySupportBrand && currentSettings.breakdown.percentBrand}
     <th class="w-12 font-normal" use:tooltip={{ content: "% Damage buffed by Brand" }}>B%</th>
 {/if}
-{#if anySupportIdentity && meterSettings.breakdown.percentIdentityBySup}
+{#if anySupportIdentity && currentSettings.breakdown.percentIdentityBySup}
     <th class="w-12 font-normal" use:tooltip={{ content: "% Damage buffed by Support Identity" }}>Iden%</th>
 {/if}
-{#if meterSettings.breakdown.avgDamage}
+{#if currentSettings.breakdown.avgDamage}
     <th class="w-12 font-normal" use:tooltip={{ content: "Skill Average Damage per Hit" }}>APH</th>
 {/if}
-{#if meterSettings.breakdown.avgDamage}
+{#if currentSettings.breakdown.avgDamage}
     <th class="w-12 font-normal" use:tooltip={{ content: "Skill Average Damage per Cast" }}>APC</th>
 {/if}
-{#if meterSettings.breakdown.maxDamage}
+{#if currentSettings.breakdown.maxDamage}
     <th class="w-12 font-normal" use:tooltip={{ content: "Skill Max Hit Damage" }}>MaxH</th>
 {/if}
-{#if meterSettings.breakdown.maxDamage}
+{#if meterSettings === "logs" && currentSettings.breakdown.maxDamage}
     <th class="w-12 font-normal" use:tooltip={{ content: "Skill Max Cast Damage" }}>MaxC</th>
 {/if}
-{#if meterSettings.breakdown.casts}
+{#if currentSettings.breakdown.casts}
     <th class="w-10 font-normal" use:tooltip={{ content: "Total Casts" }}>Casts</th>
 {/if}
-{#if meterSettings.breakdown.cpm}
+{#if currentSettings.breakdown.cpm}
     <th class="w-10 font-normal" use:tooltip={{ content: "Casts per minute" }}>CPM</th>
 {/if}
-{#if meterSettings.breakdown.hits}
+{#if currentSettings.breakdown.hits}
     <th class="w-10 font-normal" use:tooltip={{ content: "Total Hits" }}>Hits</th>
 {/if}
-{#if meterSettings.breakdown.hpm}
+{#if currentSettings.breakdown.hpm}
     <th class="w-10 font-normal" use:tooltip={{ content: "Hits per minute" }}>HPM</th>
 {/if}

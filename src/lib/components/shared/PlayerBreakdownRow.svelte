@@ -20,7 +20,7 @@
     export let width: number;
     export let duration: number;
 
-    export let meterSettings: any;
+    export let meterSettings: string;
     export let shadow: boolean = false;
     export let index: number;
 
@@ -31,10 +31,18 @@
     let averagePerCast = 0;
     let adjustedCritPercentage: string | undefined = undefined;
 
+    let currentSettings = $settings.logs;
+    if (meterSettings === "logs") {
+        currentSettings = $settings.logs;
+    } else {
+        currentSettings = $settings.meter;
+    }
+
     $: {
+
         averagePerCast = skill.totalDamage / skill.casts;
 
-        if (meterSettings.breakdown.adjustedCritRate) {
+        if (currentSettings.breakdown.adjustedCritRate) {
             if (skill.adjustedCrit) {
                 adjustedCritPercentage = round(skill.adjustedCrit * 100);
             } else {
@@ -60,7 +68,7 @@
         if (skill.hits !== 0) {
             critDmgPercentage = round((skill.critDamage / skill.totalDamage) * 100);
             critPercentage = round((skill.crits / skill.hits) * 100);
-            if (meterSettings.positionalDmgPercent && (skill.frontAttackDamage > 0 || skill.backAttackDamage > 0)) {
+            if (currentSettings.positionalDmgPercent && (skill.frontAttackDamage > 0 || skill.backAttackDamage > 0)) {
                 faPercentage = round((skill.frontAttackDamage / skill.totalDamage) * 100);
                 baPercentage = round((skill.backAttackDamage / skill.totalDamage) * 100);
             } else {
@@ -85,27 +93,27 @@
         </span>
     </div>
 </td>
-{#if meterSettings.breakdown.damage}
+{#if currentSettings.breakdown.damage}
     <td class="px-1 text-center" use:tooltip={{ content: skill.totalDamage.toLocaleString() }}>
         {abbreviatedSkillDamage[0]}<span class="text-3xs text-gray-300">{abbreviatedSkillDamage[1]}</span>
     </td>
 {/if}
-{#if meterSettings.breakdown.dps}
+{#if currentSettings.breakdown.dps}
     <td class="px-1 text-center" use:tooltip={{ content: skillDpsRaw.toLocaleString() }}>
         {skillDps[0]}<span class="text-3xs text-gray-300">{skillDps[1]}</span>
     </td>
 {/if}
-{#if meterSettings.breakdown.damagePercent}
+{#if currentSettings.breakdown.damagePercent}
     <td class="px-1 text-center">
         {round((skill.totalDamage / playerDamageDealt) * 100)}<span class="text-xs text-gray-300">%</span>
     </td>
 {/if}
-{#if meterSettings.breakdown.critRate}
+{#if currentSettings.breakdown.critRate}
     <td class="px-1 text-center">
         {critPercentage}<span class="text-3xs text-gray-300">%</span>
     </td>
 {/if}
-{#if meterSettings.breakdown.adjustedCritRate}
+{#if meterSettings === "logs" && currentSettings.breakdown.adjustedCritRate}
     <td class="px-1 text-center">
         {#if adjustedCritPercentage}
             {adjustedCritPercentage}<span class="text-3xs text-gray-300">%</span>
@@ -114,22 +122,22 @@
         {/if}
     </td>
 {/if}
-{#if meterSettings.breakdown.critDmg}
+{#if currentSettings.breakdown.critDmg}
     <td class="px-1 text-center">
         {critDmgPercentage}<span class="text-3xs text-gray-300">%</span>
     </td>
 {/if}
-{#if hasFrontAttacks && meterSettings.breakdown.frontAtk}
+{#if hasFrontAttacks && currentSettings.breakdown.frontAtk}
     <td class="px-1 text-center">
         {faPercentage}<span class="text-3xs text-gray-300">%</span>
     </td>
 {/if}
-{#if hasBackAttacks && meterSettings.breakdown.backAtk}
+{#if hasBackAttacks && currentSettings.breakdown.backAtk}
     <td class="px-1 text-center">
         {baPercentage}<span class="text-3xs text-gray-300">%</span>
     </td>
 {/if}
-{#if anySupportBuff && meterSettings.breakdown.percentBuffBySup}
+{#if anySupportBuff && currentSettings.breakdown.percentBuffBySup}
     <td class="px-1 text-center">
         {#if skill.totalDamage > 0}
             {round((skill.buffedBySupport / skill.totalDamage) * 100)}<span class="text-3xs text-gray-300">%</span>
@@ -138,7 +146,7 @@
         {/if}
     </td>
 {/if}
-{#if anySupportBrand && meterSettings.breakdown.percentBrand}
+{#if anySupportBrand && currentSettings.breakdown.percentBrand}
     <td class="px-1 text-center">
         {#if skill.totalDamage > 0}
             {round((skill.debuffedBySupport / skill.totalDamage) * 100)}<span class="text-3xs text-gray-300">%</span>
@@ -147,7 +155,7 @@
         {/if}
     </td>
 {/if}
-{#if anySupportIdentity && meterSettings.breakdown.percentIdentityBySup}
+{#if anySupportIdentity && currentSettings.breakdown.percentIdentityBySup}
     <td class="px-1 text-center">
         {#if skill.totalDamage > 0}
             {round((skill.buffedByIdentity / skill.totalDamage) * 100)}<span class="text-3xs text-gray-300">%</span>
@@ -156,7 +164,7 @@
         {/if}
     </td>
 {/if}
-{#if meterSettings.breakdown.avgDamage}
+{#if currentSettings.breakdown.avgDamage}
     {@const averagePerHit = skill.totalDamage / skill.hits}
     <td class="px-1 text-center" use:tooltip={{ content: Math.round(averagePerHit).toLocaleString() }}>
         {abbreviateNumberSplit(averagePerHit)[0]}<span class="text-3xs text-gray-300"
@@ -167,21 +175,23 @@
             >{abbreviateNumberSplit(averagePerCast)[1]}</span>
     </td>
 {/if}
-{#if meterSettings.breakdown.maxDamage}
+{#if currentSettings.breakdown.maxDamage}
     <td class="px-1 text-center" use:tooltip={{ content: skill.maxDamage.toLocaleString() }}>
         {abbreviateNumberSplit(skill.maxDamage)[0]}<span class="text-3xs text-gray-300"
             >{abbreviateNumberSplit(skill.maxDamage)[1]}</span>
     </td>
-    {#if skill.maxDamageCast}
-        <td class="px-1 text-center" use:tooltip={{ content: skill.maxDamageCast.toLocaleString() }}>
-            {abbreviateNumberSplit(skill.maxDamageCast)[0]}<span class="text-3xs text-gray-300"
-                >{abbreviateNumberSplit(skill.maxDamageCast)[1]}</span>
-        </td>
-    {:else}
-        <td class="px-1 text-center"> - </td>
+    {#if meterSettings === "logs"}
+        {#if skill.maxDamageCast}
+            <td class="px-1 text-center" use:tooltip={{ content: skill.maxDamageCast.toLocaleString() }}>
+                {abbreviateNumberSplit(skill.maxDamageCast)[0]}<span class="text-3xs text-gray-300"
+                    >{abbreviateNumberSplit(skill.maxDamageCast)[1]}</span>
+            </td>
+        {:else}
+            <td class="px-1 text-center"> - </td>
+        {/if}
     {/if}
 {/if}
-{#if meterSettings.breakdown.casts}
+{#if currentSettings.breakdown.casts}
     <td
         class="px-1 text-center"
         use:tooltip={{
@@ -193,7 +203,7 @@
             >{abbreviateNumberSplit(skill.casts)[1]}</span>
     </td>
 {/if}
-{#if meterSettings.breakdown.cpm}
+{#if currentSettings.breakdown.cpm}
     <td class="px-1 text-center">
         <div
             use:tooltip={{
@@ -205,7 +215,7 @@
         </div>
     </td>
 {/if}
-{#if meterSettings.breakdown.hits}
+{#if currentSettings.breakdown.hits}
     <td
         class="px-1 text-center"
         use:tooltip={{
@@ -217,7 +227,7 @@
             >{abbreviateNumberSplit(skill.hits)[1]}</span>
     </td>
 {/if}
-{#if meterSettings.breakdown.hpm}
+{#if currentSettings.breakdown.hpm}
     <td class="px-1 text-center">
         {#if skill.hits === 0}
             <div class="">0</div>

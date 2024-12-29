@@ -92,7 +92,7 @@
     }}>
     <tr class="bg-zinc-900">
         <PlayerBreakdownHeader
-            meterSettings={$settings.logs}
+            meterSettings={"logs"}
             {hasFrontAttacks}
             {hasBackAttacks}
             {anySupportBuff}

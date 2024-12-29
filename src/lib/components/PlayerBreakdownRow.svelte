@@ -44,5 +44,5 @@
     {playerDamageDealt}
     {duration}
     width={$tweenedValue}
-    meterSettings={$settings.meter}
+    meterSettings={"meter"}
     {index} />
