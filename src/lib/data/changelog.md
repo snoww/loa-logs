@@ -1,12 +1,20 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.22.2
+    v1.22.3
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
   </div>
 </div>
 
+#### NEW FEATURES
+- added ark passive details on hover over character in logs
+
+![ark passive details](https://i.imgur.com/nA1u5DG.png)
+
+NOTE: this data is NOT always accurate. obvious invalid data (e.g. completely different spec) will not be shown. however more subtle issues/differences may be present. take the info with a grain of salt.
+
+### v1.22.2
 #### NEW FEATURES
 - added new optional column _"Adjusted Crit Rate"_ for skill breakdowns (Settings > Logs > Scroll down to Skill Breakdown > Check "Adjusted Crit Rate")
   - calculates crit rate based on damage hits that do more than 5% of the average cast. this provides a more accurate crit rate for skills that have a big hit and multiple small hits or dots (e.g. Doomsday)

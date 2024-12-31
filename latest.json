@@ -1,11 +1,11 @@
 {
-    "version": "v1.22.2",
-    "notes": "### v1.22.2\n\n#### NEW FEATURES\n- added new optional column _\"Adjusted Crit Rate\"_ for skill breakdowns (Settings > Logs > Scroll down to Skill Breakdown > Check \"Adjusted Crit Rate\")\n    - calculates crit rate based on damage hits that do more than 5% of the average cast. this provides a more accurate crit rate for skills that have a big hit and multiple small hits or dots (e.g. Doomsday)\n    - only shows on logs and not live meter\n\nsend bug reports/suggestions to [ramen shop server](https://discord.gg/RXvTMV2YHu)\n",
-    "pub_date": "2024-12-29T22:32:06.472Z",
+    "version": "v1.22.3",
+    "notes": "### v1.22.3\n\n#### NEW FEATURES\n- added ark passive details on hover over character in logs\n\n![ark passive details](https://i.imgur.com/nA1u5DG.png)\n\nNOTE: this data is NOT always accurate. obvious invalid data (e.g. completely different spec) will not be shown. however more subtle issues/differences may be present. take the info with a grain of salt.\n\nsend bug reports/suggestions to [ramen shop server](https://discord.gg/RXvTMV2YHu)\n",
+    "pub_date": "2024-12-31T22:06:10.111Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.22.2/LOA.Logs_1.22.2_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYldQTTY4aGZRMWEvcDBCTytpdkJDVUJrZ0VMUzVEMjFHYk5iTVFhNEI0OVM3c0c2T0RjZndPVWpPYUs1ZkJ1b1JCM09nV2ozU052bFFQUG5mR3ByR1FVPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzM1NTA3NTQ4CWZpbGU6TE9BIExvZ3NfMS4yMi4yX3g2NC1zZXR1cC5uc2lzLnppcApDS2h1T2hVbVd6Z283c2VudEZvUm1Kc2xjNFpLT2xpVFpUUlViakZ6ajVNUE1XVXQ2UW1ZY2E4SzFWYlgyUDAzR1JzUUlZRnprb1JKMlBvd3lEc21DQT09Cg=="
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.22.3/LOA.Logs_1.22.3_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlloVXErWERTNW50NnVtYWZVUkNtTXB0QmhMdXlFTHl0STNNR05nOGQwQ1MzU21iNm9ZQ3hoL1podzU5VjRJSzJ1SU9sSlZTdTNnVVRuclIxZ0NkUkFZPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzM1NjgyODkxCWZpbGU6TE9BIExvZ3NfMS4yMi4zX3g2NC1zZXR1cC5uc2lzLnppcApaNzg4bkcyaFdWNWl0dUxQWmMza1NRaURHTkVEMFpTR05zTStraVpPOFZ6SzRoVnFXZUMvTFU0TEd0V255akJXMEV5a3pFZm40VGVSUlJycnVSQkZBZz09Cg=="
         }
     }
 }
