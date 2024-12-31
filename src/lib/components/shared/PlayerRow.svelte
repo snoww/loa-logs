@@ -4,7 +4,7 @@
     import { abbreviateNumberSplit, getBaseDamage, round } from "$lib/utils/numbers";
     import { colors, classIconCache, settings } from "$lib/utils/settings";
     import { formatPlayerName, getEstherFromNpcId } from "$lib/utils/strings";
-    import { generateClassTooltip, tooltip } from "$lib/utils/tooltip";
+    import { generateArkPassiveTooltip, generateClassTooltip, tooltip } from "$lib/utils/tooltip";
     import { localPlayer } from "$lib/utils/stores";
 
     export let entity: Entity;
@@ -104,7 +104,7 @@
 </td>
 <td colspan="2">
     <div class="truncate">
-        <span use:tooltip={{ content: name }}>
+        <span use:tooltip={{ content: generateArkPassiveTooltip(name, entity.arkPassiveData, entity.spec) }}>
             {name}
         </span>
     </div>

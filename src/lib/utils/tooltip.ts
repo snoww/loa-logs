@@ -1,4 +1,11 @@
-import { type BuffDetails, type Entity, ShieldDetails, type Skill, type StatusEffect } from "$lib/types";
+import {
+    type ArkPassiveData, type ArkPassiveNode,
+    type BuffDetails,
+    type Entity,
+    ShieldDetails,
+    type Skill,
+    type StatusEffect
+} from "$lib/types";
 import { createTippy } from "svelte-tippy";
 import "tippy.js/animations/perspective-subtle.css";
 import "tippy.js/dist/svg-arrow.css";
@@ -6,6 +13,7 @@ import { getSkillIcon, removeUnknownHtmlTags } from "./strings";
 import { roundArrow } from "tippy.js";
 import { classesMap } from "$lib/constants/classes";
 import { abbreviateNumberSplit } from "$lib/utils/numbers";
+import ArkPassives from "$lib/constants/ArkPassives.json";
 
 export const tooltip = createTippy({
     allowHTML: true,
@@ -192,6 +200,63 @@ export function generateSkillTooltip(skill: Skill) {
     return str;
 }
 
+export function generateArkPassiveTooltip(name: string, arkPassiveData?: ArkPassiveData, spec?: string) {
+    let str = `<div>${name}</div>`;
+    if (arkPassiveData && spec) {
+        let apSpec = "";
+        if (arkPassiveData.enlightenment) {
+            for (const node of arkPassiveData.enlightenment) {
+                const specName = getSpecFromArkPassive(node);
+                if (specName !== "Unknown") {
+                    apSpec = specName;
+                    break;
+                }
+            }
+        }
+
+        if (apSpec === spec) {
+            if (arkPassiveData.evolution) {
+                str += `<div class="text-purple-400">[Evolution]</div>`;
+                str += `<div class="flex flex-col">`;
+                for (const node of arkPassiveData.evolution) {
+                    // @ts-expect-error no type mapping
+                    const apNode = ArkPassives[node.id.toString()];
+                    const apName: string = apNode.levels[node.lv.toString()].name;
+                    str += `<div class="text-orange-200">${apName} <span class="text-white">Lv. ${node.lv}</span></div>`;
+                }
+                str += `</div>`;
+            }
+            if (arkPassiveData.enlightenment) {
+                str += `<div class="text-purple-400">[Enlightenment]</div>`;
+                str += `<div class="flex flex-col">`;
+                for (const node of arkPassiveData.enlightenment) {
+                    // @ts-expect-error no type mapping
+                    const apNode = ArkPassives[node.id.toString()];
+                    const apName: string = apNode.levels[node.lv.toString()].name;
+                    str += `<div class="text-cyan-200">${apName} <span class="text-white">Lv. ${node.lv}</span></div>`;
+                }
+                str += `</div>`;
+            }
+            if (arkPassiveData.leap) {
+                str += `<div class="text-purple-400">[Leap]</div>`;
+                str += `<div class="flex flex-col">`;
+                for (const node of arkPassiveData.leap) {
+                    // @ts-expect-error no type mapping
+                    const apNode = ArkPassives[node.id.toString()];
+                    const apName: string = apNode.levels[node.lv.toString()].name;
+                    str += `<div class="text-lime-400">${apName} <span class="text-white">Lv. ${node.lv}</span></div>`;
+                }
+                str += `</div>`;
+            }
+        } else {
+            str += `<div class="text-violet-400">Mismatched Ark Passive Data</div>`;
+        }
+
+    }
+
+    return str;
+}
+
 function getColorFromLevel(level: number, tier?: number) {
     if (tier === 4) {
         if (level === 3 || level === 4) {
@@ -223,5 +288,63 @@ function getColorFromTier(tier?: number) {
         return "#d96dff";
     } else {
         return "#e08d14";
+    }
+}
+
+function getSpecFromArkPassive(node: ArkPassiveNode): string {
+    switch (node.id) {
+        case 2160000: return "Berserker Technique";
+        case 2160010: return "Mayhem";
+        case 2170000: return "Lone Knight";
+        case 2170010: return "Combat Readiness";
+        case 2180000: return "Rage Hammer";
+        case 2180010: return "Gravity Training";
+        case 2360000: return "Judgement";
+        case 2360010: return "Blessed Aura";
+        case 2450000: return "Punisher";
+        case 2450010: return "Predator";
+        case 2230000: return "Ultimate Skill: Taijutsu";
+        case 2230100: return "Shock Training";
+        case 2220000: return "First Intention";
+        case 2220100: return "Esoteric Skill Enhancement";
+        case 2240000: return "Energy Overflow";
+        case 2240100: return "Robust Spirit";
+        case 2340000: return "Control";
+        case 2340100: return "Pinnacle";
+        case 2470000: return "Brawl King Storm";
+        case 2470100: return "Asura's Path";
+        case 2390000: return "Esoteric Flurry";
+        case 2390010: return "Deathblow";
+        case 2300000: return "Barrage Enhancement";
+        case 2300100: return "Firepower Enhancement";
+        case 2290000: return "Enhanced Weapon";
+        case 2290100: return "Pistoleer";
+        case 2280000: return "Death Strike";
+        case 2280100: return "Loyal Companion";
+        case 2350000: return "Evolutionary Legacy";
+        case 2350100: return "Arthetinean Skill";
+        case 2380000: return "Peacemaker";
+        case 2380100: return "Time to Hunt";
+        case 2370000: return "Igniter";
+        case 2370100: return "Reflux";
+        case 2190000: return "Grace of the Empress";
+        case 2190100: return "Order of the Emperor";
+        case 2200000: return "Communication Overflow";
+        case 2200100: return "Master Summoner";
+        case 2210000: return "Desperate Salvation";
+        case 2210100: return "True Courage";
+        case 2270000: return "Demonic Impulse";
+        case 2270600: return "Perfect Suppression";
+        case 2250000: return "Surge";
+        case 2250600: return "Remaining Energy";
+        case 2260000: return "Lunar Voice";
+        case 2260600: return "Hunger";
+        case 2460000: return "Full Moon Harvester";
+        case 2460600: return "Night's Edge";
+        case 2320000: return "Wind Fury";
+        case 2320600: return "Drizzle";
+        case 2310000: return "Full Bloom";
+        case 2310600: return "Recurrence";
+        default: return "Unknown";
     }
 }
