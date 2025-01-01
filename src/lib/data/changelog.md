@@ -1,12 +1,16 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.22.3
+    v1.22.4
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
   </div>
 </div>
 
+#### BUG FIXES AND IMPROVEMENTS
+- fixed rare case of damage values being incorrect
+
+### v1.22.3
 #### NEW FEATURES
 - added ark passive details on hover over character in logs
 

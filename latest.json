@@ -1,11 +1,11 @@
 {
-    "version": "v1.22.3",
-    "notes": "### v1.22.3\n\n#### NEW FEATURES\n- added ark passive details on hover over character in logs\n\n![ark passive details](https://i.imgur.com/nA1u5DG.png)\n\nNOTE: this data is NOT always accurate. obvious invalid data (e.g. completely different spec) will not be shown. however more subtle issues/differences may be present. take the info with a grain of salt.\n\nsend bug reports/suggestions to [ramen shop server](https://discord.gg/RXvTMV2YHu)\n",
-    "pub_date": "2024-12-31T22:06:10.111Z",
+    "version": "v1.22.4",
+    "notes": "### v1.22.4\n\n#### BUG FIXES AND IMPROVEMENTS\n- fixed rare case of damage values being incorrect\n\nsend bug reports/suggestions to [ramen shop server](https://discord.gg/RXvTMV2YHu)\n",
+    "pub_date": "2025-01-01T20:42:48.941Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.22.3/LOA.Logs_1.22.3_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlloVXErWERTNW50NnVtYWZVUkNtTXB0QmhMdXlFTHl0STNNR05nOGQwQ1MzU21iNm9ZQ3hoL1podzU5VjRJSzJ1SU9sSlZTdTNnVVRuclIxZ0NkUkFZPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzM1NjgyODkxCWZpbGU6TE9BIExvZ3NfMS4yMi4zX3g2NC1zZXR1cC5uc2lzLnppcApaNzg4bkcyaFdWNWl0dUxQWmMza1NRaURHTkVEMFpTR05zTStraVpPOFZ6SzRoVnFXZUMvTFU0TEd0V255akJXMEV5a3pFZm40VGVSUlJycnVSQkZBZz09Cg=="
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.22.4/LOA.Logs_1.22.4_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlVWK0dRYnM5TE9oV2krRkVGNFppVWhaeUZOVDFXQjBMUEo4bkx5bmhSQkp1WWp2eE80eTFRaG9KYUJNMnlqSnJ1b0tWL3pmbE82SUdXeGxtTllkNXdJPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzM1NzY0MTExCWZpbGU6TE9BIExvZ3NfMS4yMi40X3g2NC1zZXR1cC5uc2lzLnppcApDTWJyZW5SOWxHN2t3NE9ocXpXUzJzM0ZjM0VjWVlVcm0xUE9wd0tUSENyYVQxZzlkbW90T0JaODFIZFk1N3AvVS9sTDd0bTM5azBjR012QUlwWFdDZz09Cg=="
         }
     }
 }
