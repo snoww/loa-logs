@@ -1373,12 +1373,13 @@ pub fn update_current_boss_name(boss_name: &str) -> String {
 }
 
 fn get_player_spec(player: &EncounterEntity, buffs: &HashMap<u32, StatusEffect>) -> String {
+    if player.skills.len() < 8 { 
+        return "Unknown".to_string();
+    }
+    
     match player.class.as_str() {
         "Berserker" => {
-            if player
-                .skills
-                .iter()
-                .any(|(_, skill)| skill.name == "Bloody Rush")
+            if player.skills.contains_key(&16140)
             {
                 "Berserker Technique".to_string()
             } else {
