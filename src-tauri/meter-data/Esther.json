@@ -97,25 +97,25 @@
   },
   {
     "name": "Bastian",
-    "icon": "combined_5.png",
+    "icon": "combined_6.png",
     "skills": [],
     "npcs": [58800, 58801]
   },
   {
     "name": "Ealyn",
-    "icon": "combined_6.png",
+    "icon": "combined_7.png",
     "skills": [],
     "npcs": [58900, 58901, 58910]
   },
   {
     "name": "Jederico",
-    "icon": "combined_7.png",
+    "icon": "combined_8.png",
     "skills": [],
     "npcs": [59000, 59001]
   },
   {
     "name": "Gustaven",
-    "icon": "combined_8.png",
+    "icon": "combined_9.png",
     "skills": [],
     "npcs": [59400, 59401]
   }
