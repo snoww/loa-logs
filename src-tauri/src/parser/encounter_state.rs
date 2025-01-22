@@ -126,9 +126,7 @@ impl EncounterState {
         self.skill_tracker = SkillTracker::new();
 
         self.custom_id_map = HashMap::new();
-
-        self.damage_is_valid = true;
-
+        
         for (key, entity) in clone.entities.into_iter().filter(|(_, e)| {
             e.entity_type == EntityType::PLAYER
                 || (keep_bosses && e.entity_type == EntityType::BOSS)

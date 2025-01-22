@@ -79,7 +79,7 @@
                 if (oldManifest?.version !== $updateSettings.manifest?.version) {
                     $updateSettings.dismissed = false;
                 }
-                if (manifest?.version.includes("2024")) {
+                if (manifest?.version.includes("2025")) {
                     $updateSettings.isNotice = true;
                 } else {
                     $updateSettings.isNotice = false;

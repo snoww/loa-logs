@@ -52,5 +52,7 @@ export const bossHpMap: BossMap = {
     "Behemoth, the Storm Commander": 500,
     "Behemoth, Cruel Storm Slayer": 705,
     "Akkan, Lord of Death": 220,
-    "Aegir, the Oppressor": 300
+    "Aegir, the Oppressor": 300,
+    "Narok the Butcher": 300,
+    "Phantom Manifester Brelshaza": 420,
 };

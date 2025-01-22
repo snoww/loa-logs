@@ -43,6 +43,7 @@ export const bossList = [
     // "Lauriel",
 
     // guardian raids
+    "Skolakia",
     "Argeos",
     "Veskal",
     "Gargadeth",

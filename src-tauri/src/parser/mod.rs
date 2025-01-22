@@ -276,6 +276,7 @@ pub fn start(window: Window<Wry>, port: u16, settings: Option<Settings>) -> Resu
                     party_tracker.borrow_mut().reset_party_mappings();
                     state.raid_difficulty = "".to_string();
                     state.raid_difficulty_id = 0;
+                    state.damage_is_valid = true;
                     party_cache = None;
                     party_map_cache = HashMap::new();
                     let entity = entity_tracker.init_env(pkt);
