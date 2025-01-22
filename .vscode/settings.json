@@ -1,0 +1,13 @@
+{
+	"files.exclude": {
+		"**/target": true,
+		"**/dist": true,
+		"**/build": true,
+		"**/node_modules": true,
+		"**/.svelte-kit": true,
+		"**/WinDivert*": true,
+	},
+	"search.exclude": {
+		"**/node_modules": true,
+	},
+}
