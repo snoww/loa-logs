@@ -1,11 +1,11 @@
 {
-    "version": "v1.23.0",
-    "notes": "### v1.23.0\n\n#### NEW FEATURES\n- update meter for act 2: brelshaza patch\n\n#### BUG FIXES AND IMPROVEMENTS\n- fix sharpshooter loyal companion classification\n\nsend bug reports/suggestions to [ramen shop server](https://discord.gg/RXvTMV2YHu)\n",
-    "pub_date": "2025-01-23T00:09:14.357Z",
+    "version": "v1.23.1",
+    "notes": "### v1.23.1\n\n#### BUG FIXES AND IMPROVEMENTS\n- fix filtering of new brelshaza raid logs\n- removed prokel's shadow as boss\n\nsend bug reports/suggestions to [ramen shop server](https://discord.gg/RXvTMV2YHu)\n",
+    "pub_date": "2025-01-23T22:37:46.489Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.23.0/LOA.Logs_1.23.0_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlJsL08xdXdQUlpPZktYUEF4emh5UnZHSUwyUHZJMUV2K2dZb3k5dnVHZkZSUXJwQ3BBRFUxMTJ4dDEweUVkeTd3Rk16SDVoZWxmWVdNVytMNzBvNndJPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzM3NTkxNjY4CWZpbGU6TE9BIExvZ3NfMS4yMy4wX3g2NC1zZXR1cC5uc2lzLnppcApKc1M2d3kvTWptK3hzbnRSVmtybXR4OE84cUFLcHVwSEp3QVE3YUZIeXErcHpCUHFoRGRidnpiZnBkMUd6NWJhYjZOZ000ZFJwbVJNU3d0N3RqNE9EUT09Cg=="
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.23.1/LOA.Logs_1.23.1_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlpsOENxNlJWbmNNWE92Q0lURlRiNUx6WHJ5ZHlPWWxiZi9VZVFwTWpUeHdDdWlWdnpNdEZBQ3ZZcGVWcmRUeEtTelFYYzZLRU5HbTlKZzlPSHM3Nmd3PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzM3NjcxNjkxCWZpbGU6TE9BIExvZ3NfMS4yMy4xX3g2NC1zZXR1cC5uc2lzLnppcApCejlxUEN3UGVrQkFzRlB0RDAzWEN2WVMvQS9pcDF6T0R4SVdBTE5kSTgzRkZpTzRKQkthd0JqTW1mSnhSRHh6S0M0bitkblhkaENhdlU4UmQ5YzJDUT09Cg=="
         }
     }
 }

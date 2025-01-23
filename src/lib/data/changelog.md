@@ -1,12 +1,18 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.23.0
+    v1.23.1
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
   </div>
 </div>
 
+
+#### BUG FIXES AND IMPROVEMENTS
+- fix filtering of new brelshaza raid logs
+- removed prokel's shadow as boss
+
+### v1.23.0
 #### NEW FEATURES
 - update meter for act 2: brelshaza patch
 
