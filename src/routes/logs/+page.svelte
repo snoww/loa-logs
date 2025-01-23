@@ -98,7 +98,7 @@
         let bosses = Array.from($searchFilter.bosses);
         if (searchFilter.encounters.size > 0) {
             for (const encounter of searchFilter.encounters) {
-                const raid = encounter.substring(0, encounter.indexOf(" "));
+                const raid = encounter.substring(0, encounter.lastIndexOf(" "));
                 bosses.push(...encounterMap[raid][encounter]);
             }
         }

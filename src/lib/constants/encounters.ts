@@ -77,9 +77,9 @@ export const encounterMap: { [key: string]: { [key: string]: Array<string> } } =
         "Aegir G1": ["Akkan, Lord of Death", "Abyss Monarch Aegir"],
         "Aegir G2": ["Aegir, the Oppressor", "Pulsating Giant's Heart"]
     },
-    "Brelshaza 2": {
-        "Brelshaza G1": ["Narok the Butcher"],
-        "Brelshaza G2": ["Phantom Manifester Brelshaza"]
+    "Act 2: Brelshaza": {
+        "Act 2: Brelshaza G1": ["Narok the Butcher"],
+        "Act 2: Brelshaza G2": ["Phantom Legion Commander Brelshaza", "Phantom Manifester Brelshaza"]
     }
 };
 
