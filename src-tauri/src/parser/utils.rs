@@ -712,7 +712,7 @@ pub fn is_hyper_awakening_skill(skill_id: u32) -> bool {
             | 31920
             | 31930
             | 32290
-            | 32280
+            | 32300
     )
 }
 
