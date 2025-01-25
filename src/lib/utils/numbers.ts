@@ -1,4 +1,5 @@
 import { BossHpLog, type DamageStats, type IdentityLogType, type IdentityLogTypeValue } from "$lib/types";
+import { bossHpMap } from "$lib/constants/bossHpBars";
 
 export function tryParseInt(intString: string | number, defaultValue = 0) {
     if (typeof intString === "number") {
@@ -204,4 +205,16 @@ export function getBaseDamage(damageStats: DamageStats): number {
         damageStats.rdpsDamageReceivedSupport -
         (damageStats.rdpsDamageReceived - damageStats.rdpsDamageReceivedSupport)
     );
+}
+
+export function getBossHpBars(bossName: string, bossMaxHp: number) {
+    if (bossName === "Phantom Legion Commander Brelshaza") {
+        if (bossMaxHp > 100_000_000_000) {
+            return 420;
+        } else {
+            return 250;
+        }
+    } else {
+        return bossHpMap[bossName];
+    }
 }

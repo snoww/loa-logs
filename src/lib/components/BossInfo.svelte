@@ -2,7 +2,7 @@
     import { bossHpMap } from "$lib/constants/bossHpBars";
     import { bossHpBarColors } from "$lib/constants/colors";
     import type { Entity } from "$lib/types";
-    import { abbreviateNumberSplit } from "$lib/utils/numbers";
+    import { abbreviateNumberSplit, getBossHpBars } from "$lib/utils/numbers";
     import { settings } from "$lib/utils/settings";
     import { menuTooltip } from "$lib/utils/tooltip";
     import { linear } from "svelte/easing";
@@ -39,7 +39,7 @@
         bossShieldHp = abbreviateNumberSplit(bossShield);
 
         if (Object.hasOwn(bossHpMap, boss.name) && $settings.meter.bossHpBar) {
-            bossHPBars = bossHpMap[boss.name];
+            bossHPBars = getBossHpBars(boss.name, boss.maxHp);
         } else {
             bossHPBars = 0;
             bossCurrentBars = 0;

@@ -20,7 +20,6 @@
         searchFilter,
         searchStore,
         selectedEncounters,
-        uploadErrorMessage,
         uploadErrorStore
     } from "$lib/utils/stores";
     import { tooltip } from "$lib/utils/tooltip";

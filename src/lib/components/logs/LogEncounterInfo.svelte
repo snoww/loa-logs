@@ -1,12 +1,12 @@
 <script lang="ts">
-    import { abbreviateNumber } from "$lib/utils/numbers";
+    import { abbreviateNumber, getBossHpBars } from "$lib/utils/numbers";
     import { settings } from "$lib/utils/settings";
     import { takingScreenshot } from "$lib/utils/stores";
     import { getVersion } from "@tauri-apps/api/app";
     import DifficultyLabel from "../shared/DifficultyLabel.svelte";
     import BossOnlyDamage from "../shared/BossOnlyDamage.svelte";
+    import type { Entity } from "$lib/types";
 
-    export let bossName: string;
     export let difficulty: string | undefined;
     export let date: string;
     export let encounterDuration: string;
@@ -15,6 +15,10 @@
     export let cleared: boolean;
     export let bossOnlyDamage: boolean;
     export let raidGate: string | undefined;
+    export let boss: Entity;
+
+    let bossMaxHpBars = getBossHpBars(boss.name, boss.maxHp);
+    let bossHpBars = Math.ceil((boss.currentHp / boss.maxHp) * bossMaxHpBars);
 </script>
 
 {#if $takingScreenshot}
@@ -22,6 +26,8 @@
         <div>
             {#if cleared}
                 <span class="text-lime-400">[Cleared]</span>
+            {:else if !cleared && bossHpBars}
+                <span class="text-gray-400">[Wipe - {bossHpBars}x]</span>
             {/if}
             {#if bossOnlyDamage}
                 <BossOnlyDamage />
@@ -32,12 +38,12 @@
                     {#if $settings.general.showGate && raidGate}
                         <span class="text-sky-200">[{raidGate}]</span>
                     {/if}
-                    {bossName}
+                    {boss.name}
                 {:else}
                     {#if $settings.general.showGate && raidGate}
                         <span class="text-sky-200">[{raidGate}]</span>
                     {/if}
-                    {bossName}
+                    {boss.name}
                 {/if}
             </span><span class="ml-2 font-mono text-xs">{date}</span>
         </div>

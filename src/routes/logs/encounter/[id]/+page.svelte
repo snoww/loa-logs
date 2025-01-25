@@ -1,6 +1,6 @@
 <script lang="ts">
     import LogDamageMeter from "$lib/components/logs/LogDamageMeter.svelte";
-    import { formatTimestamp } from "$lib/utils/numbers";
+    import { formatTimestamp, getBossHpBars } from "$lib/utils/numbers";
     import {
         backNavStore,
         ifaceChangedStore,
@@ -17,6 +17,7 @@
     import DifficultyLabel from "$lib/components/shared/DifficultyLabel.svelte";
     import BossOnlyDamage from "$lib/components/shared/BossOnlyDamage.svelte";
     import type { PageData } from "./$types";
+    import { bossHpMap } from "$lib/constants/bossHpBars";
 
     export let data: PageData;
     $: encounter = data.encounter;
@@ -33,6 +34,10 @@
         await invoke("toggle_encounter_favorite", { id: Number(data.id) });
         fav = !fav;
     }
+
+    $: bossMaxHpBars = getBossHpBars(boss.name, boss.maxHp);
+    $: boss = encounter.entities[encounter.currentBossName];
+    $: bossHpBars = Math.ceil((boss.currentHp / boss.maxHp) * bossMaxHpBars);
 </script>
 
 <div class="h-screen bg-zinc-800 pb-20">
@@ -72,6 +77,9 @@
                         {#if $settings.general.showGate && raidGate}
                             <span class="text-sky-200">[{raidGate}]</span>
                         {/if}
+                        {#if !encounter.cleared && bossHpBars}
+                            <span class="text-gray-400">[Wipe - {bossHpBars}x]</span>
+                        {/if}
                         <div class="truncate" use:tooltip={{ content: encounter.currentBossName }}>
                             {encounter.currentBossName}
                         </div>
@@ -82,6 +90,9 @@
                         {/if}
                         {#if $settings.general.showGate && raidGate}
                             <span class="text-sky-200">[{raidGate}]</span>
+                        {/if}
+                        {#if !encounter.cleared && bossHpBars}
+                            <span class="text-gray-400">[Wipe - {bossHpBars}x]</span>
                         {/if}
                         <div class="truncate" use:tooltip={{ content: encounter.currentBossName }}>
                             {encounter.currentBossName}
