@@ -140,3 +140,19 @@ A: [Yes.](https://i.imgur.com/QsLAntt.png)
 #### Search Filters
 
 <img src="https://i.imgur.com/5aJJISG.png" width="400"/>
+
+# Dev
+
+```bash
+git clone https://github.com/snoww/loa-logs.git
+npm install
+npm run build
+cd ./src-tauri
+```
+
+Download [windivert](https://github.com/basil00/WinDivert/releases) and copy dlls to `src-tauri`
+
+```bash
+cargo build
+cargo tauri dev
+```
