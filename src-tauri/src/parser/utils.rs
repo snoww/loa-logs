@@ -1064,9 +1064,10 @@ pub fn insert_data(
                 }
             }
 
-            entity.damage_stats.dps = entity.damage_stats.damage_dealt / duration_seconds;
         }
 
+        entity.damage_stats.dps = entity.damage_stats.damage_dealt / duration_seconds;
+        
         for (_, skill) in entity.skills.iter_mut() {
             skill.dps = skill.total_damage / duration_seconds;
         }
