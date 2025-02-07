@@ -777,8 +777,30 @@ function addToMap(key: string, buffId: number, buff: StatusEffect, map: Map<stri
 }
 
 export const hyperAwakeningIds: Set<number> = new Set([
-    16720, 16730, 18240, 18250, 17250, 17260, 36230, 36240, 45820, 45830, 19360, 19370, 20370, 20350, 21320, 21330,
-    37380, 37390, 22360, 22370, 23400, 23410, 24300, 24310, 34620, 34630, 39340, 39350, 47300, 47310, 25410, 25420,
-    27910, 27920, 26940, 26950, 46620, 46630, 29360, 29370, 30320, 30330, 35810, 35820, 38320, 38330, 31920, 31930,
-    32290, 32300
+    16720 | 16730 // berserker
+    | 18240 | 18250 // destroyer
+    | 17250 | 17260 // gunlancer
+    | 36230 | 36240 // paladin
+    | 45820 | 45830 // slayer
+    | 19360 | 19370 // arcanist
+    | 20370 | 20350 // summoner
+    | 21320 | 21330 // bard
+    | 37380 | 37390 // sorceress
+    | 22360 | 22370 // wardancer
+    | 23400 | 23410 // scrapper
+    | 24300 | 24310 // soulfist
+    | 34620 | 34630 // glaivier
+    | 39340 | 39350 // striker
+    | 47300 | 47310 // breaker
+    | 25410 | 25420 // deathblade
+    | 28260 | 28270 // sharpshooter
+    | 27910 | 27920 // shadowhunter
+    | 26940 | 26950 // reaper
+    | 46620 | 46630 // souleater
+    | 29360 | 29370 // deadeye
+    | 30320 | 30330 // artillerist
+    | 35810 | 35820 // machinist
+    | 38320 | 38330 // gunslinger
+    | 31920 | 31930 // artist
+    | 32290 | 32300 // aeromancer
 ]);
