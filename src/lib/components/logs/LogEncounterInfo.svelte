@@ -17,8 +17,12 @@
     export let raidGate: string | undefined;
     export let boss: Entity;
 
-    let bossMaxHpBars = getBossHpBars(boss.name, boss.maxHp);
-    let bossHpBars = Math.ceil((boss.currentHp / boss.maxHp) * bossMaxHpBars);
+    let bossHpBars: number | undefined;
+
+    if (boss) {
+        let bossMaxHpBars = getBossHpBars(boss.name, boss.maxHp);
+        bossHpBars = Math.ceil((boss.currentHp / boss.maxHp) * bossMaxHpBars);
+    }
 </script>
 
 {#if $takingScreenshot}

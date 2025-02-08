@@ -17,7 +17,6 @@
     import DifficultyLabel from "$lib/components/shared/DifficultyLabel.svelte";
     import BossOnlyDamage from "$lib/components/shared/BossOnlyDamage.svelte";
     import type { PageData } from "./$types";
-    import { bossHpMap } from "$lib/constants/bossHpBars";
 
     export let data: PageData;
     $: encounter = data.encounter;
@@ -35,9 +34,19 @@
         fav = !fav;
     }
 
-    $: bossMaxHpBars = getBossHpBars(boss.name, boss.maxHp);
-    $: boss = encounter.entities[encounter.currentBossName];
-    $: bossHpBars = Math.ceil((boss.currentHp / boss.maxHp) * bossMaxHpBars);
+    let bossHpBars: number | undefined;
+
+    $: {
+        if (encounter) {
+            let boss = encounter.entities[encounter.currentBossName];
+            if (boss) {
+                let bossMaxHpBars = getBossHpBars(boss.name, boss.maxHp);
+                bossHpBars = Math.ceil((boss.currentHp / boss.maxHp) * bossMaxHpBars);
+            }
+        }
+
+    }
+
 </script>
 
 <div class="h-screen bg-zinc-800 pb-20">
