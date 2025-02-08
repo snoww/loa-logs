@@ -1948,8 +1948,6 @@ impl EncounterState {
         task::spawn(async move {
             let player_infos = if !raid_difficulty.is_empty()
                 && !encounter.current_boss_name.is_empty()
-                && raid_clear
-                && !manual
             {
                 info!("fetching player info");
                 let players = encounter
@@ -1958,10 +1956,14 @@ impl EncounterState {
                     .filter(|e| is_valid_player(e))
                     .map(|e| e.name.clone())
                     .collect::<Vec<_>>();
-
-                stats_api
-                    .get_character_info(&encounter.current_boss_name, players, region.clone())
-                    .await
+                
+                if !players.is_empty() && players.len() <= 16 { 
+                    stats_api
+                        .get_character_info(&encounter.current_boss_name, players, region.clone())
+                        .await
+                } else {
+                    None
+                }
             } else {
                 None
             };
