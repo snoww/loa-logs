@@ -40,6 +40,7 @@
     let critDmgPercentage = "0.0";
     let baPercentage = "0.0";
     let faPercentage = "0.0";
+    let damageWithoutHA = entity.damageStats.damageDealt - (entity.damageStats.hyperAwakeningDamage ?? 0)
 
     if (entity.skillStats.hits !== 0) {
         critDmgPercentage = round((entity.damageStats.critDamage / entity.damageStats.damageDealt) * 100);
@@ -157,19 +158,19 @@
             {/if}
             {#if anySupportBuff && $settings.logs.breakdown.percentBuffBySup}
                 <td class="px-1 text-center">
-                    {round((entity.damageStats.buffedBySupport / entity.damageStats.damageDealt) * 100)}<span
+                    {round((entity.damageStats.buffedBySupport / damageWithoutHA) * 100)}<span
                         class="text-3xs text-gray-300">%</span>
                 </td>
             {/if}
             {#if anySupportBrand && $settings.logs.breakdown.percentBrand}
                 <td class="px-1 text-center">
-                    {round((entity.damageStats.debuffedBySupport / entity.damageStats.damageDealt) * 100)}<span
+                    {round((entity.damageStats.debuffedBySupport / damageWithoutHA) * 100)}<span
                         class="text-3xs text-gray-300">%</span>
                 </td>
             {/if}
             {#if anySupportIdentity && $settings.logs.breakdown.percentIdentityBySup}
                 <td class="px-1 text-center">
-                    {round((entity.damageStats.buffedByIdentity / entity.damageStats.damageDealt) * 100)}<span
+                    {round((entity.damageStats.buffedByIdentity / damageWithoutHA) * 100)}<span
                         class="text-3xs text-gray-300">%</span>
                 </td>
             {/if}
