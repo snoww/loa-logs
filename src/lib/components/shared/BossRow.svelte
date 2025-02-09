@@ -16,20 +16,13 @@
         index: number;
     }
 
-    let {
-        boss,
-        width,
-        shadow = false,
-        tween,
-        duration,
-        index
-    }: Props = $props();
+    let { boss, width, shadow = false, tween, duration, index }: Props = $props();
 
     const tweenedValue = new Tween(0, {
         duration: 400,
         easing: cubicOut
     });
-    
+
     $effect(() => {
         tweenedValue.set(width);
     });
@@ -38,7 +31,6 @@
 
     let damageDealt: (string | number)[] = $state(abbreviateNumberSplit(boss.damageStats.damageDealt));
     let dps: (string | number)[] = $state([]);
-
 
     $effect(() => {
         if (duration > 0) {

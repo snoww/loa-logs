@@ -16,14 +16,7 @@
         index: number;
     }
 
-    let {
-        skill,
-        color,
-        groupedSynergies,
-        width,
-        shadow = false,
-        index
-    }: Props = $props();
+    let { skill, color, groupedSynergies, width, shadow = false, index }: Props = $props();
 
     let synergyPercentageDetails: Array<BuffDetails> = $state(getSynergyPercentageDetails(groupedSynergies, skill));
     let isHyperAwakening = hyperAwakeningIds.has(skill.id);

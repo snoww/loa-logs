@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { run } from 'svelte/legacy';
+    import { run } from "svelte/legacy";
 
     import { tooltip } from "$lib/utils/tooltip";
     import { classIconCache, colors, settings } from "$lib/utils/settings";
@@ -9,7 +9,7 @@
     import { HexToRgba } from "$lib/utils/colors";
     import { localPlayer } from "$lib/utils/stores";
     import { cubicOut } from "svelte/easing";
-    import { Tween } from 'svelte/motion';
+    import { Tween } from "svelte/motion";
 
     interface Props {
         player: Entity;
@@ -52,7 +52,7 @@
         duration: 400,
         easing: cubicOut
     });
-    
+
     $effect(() => {
         tweenedValue.set(width);
     });
@@ -73,7 +73,7 @@
         synPercentage = (syn * 100).toFixed(1);
         sConPercentage = ((1 - 1 / (1 + sSyn)) * 100).toFixed(1);
         dConPercentage = ((1 - 1 / (1 + dSyn)) * 100).toFixed(1);
-        conPercentage = ((1 - 1 / (1 + syn)) * 100).toFixed(1);       
+        conPercentage = ((1 - 1 / (1 + syn)) * 100).toFixed(1);
     });
 
     $effect(() => {

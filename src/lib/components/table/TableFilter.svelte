@@ -88,10 +88,10 @@
                     <button
                         aria-label="Search Filter"
                         use:tooltip={{ content: "Search Filter" }}
-                        onclick={((e) => {
+                        onclick={(e) => {
                             e.stopPropagation();
                             filterMenu = !filterMenu;
-                        })}>
+                        }}>
                         <svg
                             class="size-5 {$searchFilter.bosses.size > 0 ||
                             $searchFilter.encounters.size > 0 ||

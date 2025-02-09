@@ -15,7 +15,8 @@ import { defaultOptions } from "./charts";
 import {
     abbreviateNumber,
     formatDurationFromMs,
-    formatDurationFromS, getBossHpBars,
+    formatDurationFromS,
+    getBossHpBars,
     resampleData,
     round,
     round2,

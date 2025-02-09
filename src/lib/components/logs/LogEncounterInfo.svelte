@@ -19,17 +19,8 @@
         boss: Entity;
     }
 
-    let {
-        difficulty,
-        date,
-        encounterDuration,
-        totalDamageDealt,
-        dps,
-        cleared,
-        bossOnlyDamage,
-        raidGate,
-        boss
-    }: Props = $props();
+    let { difficulty, date, encounterDuration, totalDamageDealt, dps, cleared, bossOnlyDamage, raidGate, boss }: Props =
+        $props();
 
     let bossHpBars: number | undefined = $state();
 

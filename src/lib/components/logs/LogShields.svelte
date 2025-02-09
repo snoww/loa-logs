@@ -83,38 +83,39 @@
 </div>
 <div class="flex flex-col space-y-2">
     {#if encounterDamageStats.misc?.partyInfo && partyGroupedShields.size > 0}
-    {#each [...partyGroupedShields] as [partyId, synergies], i (partyId)}
-        {#if parties[i] && parties[i].length > 0}
-            <table class="table-fixed" style="width: {partyWidths[partyId]};">
-                <thead class="z-40 h-6" id="buff-head">
-                    <tr class="bg-zinc-900">
-                        {#if parties.length > 1}
-                            <th class="w-7 whitespace-nowrap px-2 font-normal tracking-tight">Party {+partyId + 1}</th>
-                        {:else}
-                            <th class="w-7 px-2 font-normal"></th>
-                        {/if}
-                        <th class="w-20 px-2 text-left font-normal"></th>
-                        <th class="w-full"></th>
-                        <th class="w-20 font-normal">Total</th>
-                        {#each synergies as synergy (synergy)}
-                            {@const syns = groupedShields.get(synergy) || new Map()}
-                            <ShieldHeader shields={syns} />
-                        {/each}
-                    </tr>
-                </thead>
-                <tbody class="relative z-10">
-                    {#each parties[i] as player, playerIndex (player.name)}
-                        {@const shields = partyShields.get(partyId)?.get(player.name) ?? []}
-                        <tr class="h-7 px-2 py-1 {$settings.general.underlineHovered ? 'hover:underline' : ''}">
-                            <LogPartyShieldRow
-                                {player}
-                                playerShields={shields}
-                                percentage={partyPercentages[i][playerIndex]} />
+        {#each [...partyGroupedShields] as [partyId, synergies], i (partyId)}
+            {#if parties[i] && parties[i].length > 0}
+                <table class="table-fixed" style="width: {partyWidths[partyId]};">
+                    <thead class="z-40 h-6" id="buff-head">
+                        <tr class="bg-zinc-900">
+                            {#if parties.length > 1}
+                                <th class="w-7 whitespace-nowrap px-2 font-normal tracking-tight"
+                                    >Party {+partyId + 1}</th>
+                            {:else}
+                                <th class="w-7 px-2 font-normal"></th>
+                            {/if}
+                            <th class="w-20 px-2 text-left font-normal"></th>
+                            <th class="w-full"></th>
+                            <th class="w-20 font-normal">Total</th>
+                            {#each synergies as synergy (synergy)}
+                                {@const syns = groupedShields.get(synergy) || new Map()}
+                                <ShieldHeader shields={syns} />
+                            {/each}
                         </tr>
-                    {/each}
-                </tbody>
-            </table>
-        {/if}
-    {/each}
+                    </thead>
+                    <tbody class="relative z-10">
+                        {#each parties[i] as player, playerIndex (player.name)}
+                            {@const shields = partyShields.get(partyId)?.get(player.name) ?? []}
+                            <tr class="h-7 px-2 py-1 {$settings.general.underlineHovered ? 'hover:underline' : ''}">
+                                <LogPartyShieldRow
+                                    {player}
+                                    playerShields={shields}
+                                    percentage={partyPercentages[i][playerIndex]} />
+                            </tr>
+                        {/each}
+                    </tbody>
+                </table>
+            {/if}
+        {/each}
     {/if}
 </div>

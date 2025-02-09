@@ -83,7 +83,6 @@
     let totalDamageDealt = $state(0);
     let anyRdpsData: boolean = $state(false);
 
-
     let hasSkillCastLog = $state(false);
 
     let deleteConfirm = $state(false);
@@ -140,7 +139,9 @@
         }
     });
 
-    let playerDamagePercentages: Array<number> = $derived(players.map((player) => (player.damageStats.damageDealt / topDamageDealt) * 100));
+    let playerDamagePercentages: Array<number> = $derived(
+        players.map((player) => (player.damageStats.damageDealt / topDamageDealt) * 100)
+    );
     let topDamageDealt = $derived(encounter.encounterDamageStats.topDamageDealt);
     let localPlayerEntity: Entity | null = $state(null);
 

@@ -11,13 +11,7 @@
         index: number;
     }
 
-    let {
-        skill,
-        color,
-        damagePercentage,
-        groupedSynergies,
-        index
-    }: Props = $props();
+    let { skill, color, damagePercentage, groupedSynergies, index }: Props = $props();
 </script>
 
 <BuffSkillBreakdownRow

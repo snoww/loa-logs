@@ -199,7 +199,7 @@
     let hidden: boolean = $state(true);
 </script>
 
-<svelte:window oncontextmenu={((e) => e.preventDefault())} />
+<svelte:window oncontextmenu={(e) => e.preventDefault()} />
 <LogSidebar bind:hidden />
 <div class="h-screen bg-zinc-800">
     <div class="flex h-16 items-center justify-between px-8 py-5 shadow-md">
@@ -405,8 +405,8 @@
                             <tr class="w-screen bg-neutral-800 p-2"><td>No encounters recorded.</td></tr>
                             <tr class="w-screen bg-neutral-800 p-2">
                                 <td>
-                                    Meter should be turned on at character select (before entering raid at latest) for best
-                                    accuracy.
+                                    Meter should be turned on at character select (before entering raid at latest) for
+                                    best accuracy.
                                 </td>
                             </tr>
                         {/if}

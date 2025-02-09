@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { run } from 'svelte/legacy';
+    import { run } from "svelte/legacy";
 
     import RdpsHeader from "$lib/components/shared/RdpsHeader.svelte";
     import { type Entity, EntityType, type PartyInfo } from "$lib/types";
@@ -15,13 +15,7 @@
         encounterPartyInfo: PartyInfo | undefined;
     }
 
-    let {
-        players,
-        totalDamageDealt,
-        duration,
-        meterSettings,
-        encounterPartyInfo
-    }: Props = $props();
+    let { players, totalDamageDealt, duration, meterSettings, encounterPartyInfo }: Props = $props();
 
     let sortedPlayers: Entity[] = $state([]);
     let topRDamage: number = $state(0);
@@ -76,7 +70,6 @@
             alpha = 0.6;
         }
     });
-
 </script>
 
 {#if players.length > 0 && $rdpsEventDetails === "" && meterSettings.rdpsSplitParty && encounterPartyInfo && partySortedPlayers.length > 1}

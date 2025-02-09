@@ -20,8 +20,6 @@
 
     let playerName: string = $derived(formatPlayerName(player, $settings.general));
 
-    
-
     let color: string = $state("");
     let skillDamagePercentages: Array<number> = $state([]);
 
@@ -54,7 +52,6 @@
             }
         }
     });
-
 </script>
 
 {#if tab === MeterTab.SELF_BUFFS || tab === MeterTab.PARTY_BUFFS}

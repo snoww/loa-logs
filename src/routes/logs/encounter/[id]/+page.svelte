@@ -52,7 +52,6 @@
             }
         }
     });
-
 </script>
 
 <div class="h-screen bg-zinc-800 pb-20">

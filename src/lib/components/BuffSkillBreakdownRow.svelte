@@ -12,13 +12,7 @@
         index: number;
     }
 
-    let {
-        skill,
-        color,
-        damagePercentage,
-        groupedSynergies,
-        index
-    }: Props = $props();
+    let { skill, color, damagePercentage, groupedSynergies, index }: Props = $props();
 
     const tweenedValue = new Tween(0, {
         duration: 400,

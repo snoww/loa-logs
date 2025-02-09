@@ -33,7 +33,6 @@
 
     let playerName: string = $derived(formatPlayerName(entity, $settings.general));
 
-    
     let dps = abbreviateNumberSplit(entity.damageStats.dps);
     let damageDealt = abbreviateNumberSplit(entity.damageStats.damageDealt);
     let damagePercentage = ((entity.damageStats.damageDealt / totalDamageDealt) * 100).toFixed(1);
@@ -60,7 +59,9 @@
 
     $effect(() => {
         if (entity.class === "Arcanist") {
-            skills = Object.values(entity.skills).sort((a, b) => b.totalDamage - a.totalDamage).filter((skill) => !cardIds.includes(skill.id));
+            skills = Object.values(entity.skills)
+                .sort((a, b) => b.totalDamage - a.totalDamage)
+                .filter((skill) => !cardIds.includes(skill.id));
         } else {
             skills = Object.values(entity.skills).sort((a, b) => b.totalDamage - a.totalDamage);
         }
@@ -90,11 +91,9 @@
             anySupportBrand = skills.some((skill) => skill.debuffedBySupport > 0);
         }
     });
-
 </script>
 
-<thead
-    class="z-30 h-6">
+<thead class="z-30 h-6">
     <tr class="bg-zinc-900">
         <PlayerBreakdownHeader
             meterSettings={"logs"}

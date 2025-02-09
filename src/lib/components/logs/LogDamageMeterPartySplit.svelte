@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { run } from 'svelte/legacy';
+    import { run } from "svelte/legacy";
 
     import { EntityType, type Entity, type PartyInfo } from "$lib/types";
     import { settings } from "$lib/utils/settings";

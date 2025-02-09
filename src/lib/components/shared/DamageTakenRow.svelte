@@ -1,5 +1,4 @@
 <script lang="ts">
-
     import type { Entity } from "$lib/types";
     import { HexToRgba } from "$lib/utils/colors";
     import { abbreviateNumberSplit } from "$lib/utils/numbers";
@@ -8,7 +7,7 @@
     import { generateClassTooltip, tooltip } from "$lib/utils/tooltip";
     import { cubicOut } from "svelte/easing";
     import { localPlayer } from "$lib/utils/stores";
-    import { Tween } from 'svelte/motion';
+    import { Tween } from "svelte/motion";
 
     interface Props {
         player: Entity;
@@ -18,13 +17,7 @@
         tween: boolean;
     }
 
-    let {
-        player,
-        width,
-        alpha = 0.6,
-        shadow = false,
-        tween
-    }: Props = $props();
+    let { player, width, alpha = 0.6, shadow = false, tween }: Props = $props();
 
     const tweenedValue = new Tween(0, {
         duration: 400,

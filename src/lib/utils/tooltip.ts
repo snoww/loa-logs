@@ -1,5 +1,6 @@
 import {
-    type ArkPassiveData, type ArkPassiveNode,
+    type ArkPassiveData,
+    type ArkPassiveNode,
     type BuffDetails,
     type Entity,
     ShieldDetails,
@@ -140,7 +141,7 @@ export function generateSkillTooltip(skill: Skill) {
     let str = `<div class="py-0.5">${skill.name}</div>`;
     str += "<div class='text-gray-300'>";
     if (skill.gemDamage) {
-        str += `<div><span style="color: ${getColorFromTier(skill.gemTierDmg ?? skill.gemTier)}">T${(skill.gemTierDmg ?? skill.gemTier) ?? 3} </span><span style="color: ${getColorFromLevel(skill.gemDamage, skill.gemTierDmg ?? skill.gemTier)}">Lv. ${skill.gemDamage}</span> DMG</div>`;
+        str += `<div><span style="color: ${getColorFromTier(skill.gemTierDmg ?? skill.gemTier)}">T${skill.gemTierDmg ?? skill.gemTier ?? 3} </span><span style="color: ${getColorFromLevel(skill.gemDamage, skill.gemTierDmg ?? skill.gemTier)}">Lv. ${skill.gemDamage}</span> DMG</div>`;
     }
     if (skill.gemCooldown) {
         str += `<div><span style="color: ${getColorFromTier(skill.gemTier)}">T${skill.gemTier ?? 3} </span><span style="color: ${getColorFromLevel(skill.gemCooldown, skill.gemTier)}">Lv. ${skill.gemCooldown}</span> CD</div>`;
@@ -251,7 +252,6 @@ export function generateArkPassiveTooltip(name: string, arkPassiveData?: ArkPass
         } else {
             str += `<div class="text-violet-400">Mismatched Ark Passive Data</div>`;
         }
-
     }
 
     return str;
@@ -293,58 +293,111 @@ function getColorFromTier(tier?: number) {
 
 function getSpecFromArkPassive(node: ArkPassiveNode): string {
     switch (node.id) {
-        case 2160000: return "Berserker Technique";
-        case 2160010: return "Mayhem";
-        case 2170000: return "Lone Knight";
-        case 2170010: return "Combat Readiness";
-        case 2180000: return "Rage Hammer";
-        case 2180010: return "Gravity Training";
-        case 2360000: return "Judgement";
-        case 2360010: return "Blessed Aura";
-        case 2450000: return "Punisher";
-        case 2450010: return "Predator";
-        case 2230000: return "Ultimate Skill: Taijutsu";
-        case 2230100: return "Shock Training";
-        case 2220000: return "First Intention";
-        case 2220100: return "Esoteric Skill Enhancement";
-        case 2240000: return "Energy Overflow";
-        case 2240100: return "Robust Spirit";
-        case 2340000: return "Control";
-        case 2340100: return "Pinnacle";
-        case 2470000: return "Brawl King Storm";
-        case 2470100: return "Asura's Path";
-        case 2390000: return "Esoteric Flurry";
-        case 2390010: return "Deathblow";
-        case 2300000: return "Barrage Enhancement";
-        case 2300100: return "Firepower Enhancement";
-        case 2290000: return "Enhanced Weapon";
-        case 2290100: return "Pistoleer";
-        case 2280000: return "Death Strike";
-        case 2280100: return "Loyal Companion";
-        case 2350000: return "Evolutionary Legacy";
-        case 2350100: return "Arthetinean Skill";
-        case 2380000: return "Peacemaker";
-        case 2380100: return "Time to Hunt";
-        case 2370000: return "Igniter";
-        case 2370100: return "Reflux";
-        case 2190000: return "Grace of the Empress";
-        case 2190100: return "Order of the Emperor";
-        case 2200000: return "Communication Overflow";
-        case 2200100: return "Master Summoner";
-        case 2210000: return "Desperate Salvation";
-        case 2210100: return "True Courage";
-        case 2270000: return "Demonic Impulse";
-        case 2270600: return "Perfect Suppression";
-        case 2250000: return "Surge";
-        case 2250600: return "Remaining Energy";
-        case 2260000: return "Lunar Voice";
-        case 2260600: return "Hunger";
-        case 2460000: return "Full Moon Harvester";
-        case 2460600: return "Night's Edge";
-        case 2320000: return "Wind Fury";
-        case 2320600: return "Drizzle";
-        case 2310000: return "Full Bloom";
-        case 2310600: return "Recurrence";
-        default: return "Unknown";
+        case 2160000:
+            return "Berserker Technique";
+        case 2160010:
+            return "Mayhem";
+        case 2170000:
+            return "Lone Knight";
+        case 2170010:
+            return "Combat Readiness";
+        case 2180000:
+            return "Rage Hammer";
+        case 2180010:
+            return "Gravity Training";
+        case 2360000:
+            return "Judgement";
+        case 2360010:
+            return "Blessed Aura";
+        case 2450000:
+            return "Punisher";
+        case 2450010:
+            return "Predator";
+        case 2230000:
+            return "Ultimate Skill: Taijutsu";
+        case 2230100:
+            return "Shock Training";
+        case 2220000:
+            return "First Intention";
+        case 2220100:
+            return "Esoteric Skill Enhancement";
+        case 2240000:
+            return "Energy Overflow";
+        case 2240100:
+            return "Robust Spirit";
+        case 2340000:
+            return "Control";
+        case 2340100:
+            return "Pinnacle";
+        case 2470000:
+            return "Brawl King Storm";
+        case 2470100:
+            return "Asura's Path";
+        case 2390000:
+            return "Esoteric Flurry";
+        case 2390010:
+            return "Deathblow";
+        case 2300000:
+            return "Barrage Enhancement";
+        case 2300100:
+            return "Firepower Enhancement";
+        case 2290000:
+            return "Enhanced Weapon";
+        case 2290100:
+            return "Pistoleer";
+        case 2280000:
+            return "Death Strike";
+        case 2280100:
+            return "Loyal Companion";
+        case 2350000:
+            return "Evolutionary Legacy";
+        case 2350100:
+            return "Arthetinean Skill";
+        case 2380000:
+            return "Peacemaker";
+        case 2380100:
+            return "Time to Hunt";
+        case 2370000:
+            return "Igniter";
+        case 2370100:
+            return "Reflux";
+        case 2190000:
+            return "Grace of the Empress";
+        case 2190100:
+            return "Order of the Emperor";
+        case 2200000:
+            return "Communication Overflow";
+        case 2200100:
+            return "Master Summoner";
+        case 2210000:
+            return "Desperate Salvation";
+        case 2210100:
+            return "True Courage";
+        case 2270000:
+            return "Demonic Impulse";
+        case 2270600:
+            return "Perfect Suppression";
+        case 2250000:
+            return "Surge";
+        case 2250600:
+            return "Remaining Energy";
+        case 2260000:
+            return "Lunar Voice";
+        case 2260600:
+            return "Hunger";
+        case 2460000:
+            return "Full Moon Harvester";
+        case 2460600:
+            return "Night's Edge";
+        case 2320000:
+            return "Wind Fury";
+        case 2320600:
+            return "Drizzle";
+        case 2310000:
+            return "Full Bloom";
+        case 2310600:
+            return "Recurrence";
+        default:
+            return "Unknown";
     }
 }

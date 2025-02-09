@@ -18,7 +18,7 @@
     const handleColorDropdownClick = () => {
         colorDropdownOpen = !colorDropdownOpen;
     };
-    
+
     async function toggleAlwaysOnTop() {
         if ($settings.general.alwaysOnTop) {
             await invoke("enable_aot");
@@ -220,9 +220,7 @@
                     class="text-accent-500 size-5 rounded bg-zinc-700 focus:ring-0 focus:ring-offset-0" />
                 <div class="ml-5">
                     <div class="text-gray-100">Auto Port Selection</div>
-                    <div class="text-xs text-gray-300">
-                        Automatically select port to listen on.
-                    </div>
+                    <div class="text-xs text-gray-300">Automatically select port to listen on.</div>
                 </div>
             </label>
         </div>

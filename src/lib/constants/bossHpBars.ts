@@ -54,5 +54,5 @@ export const bossHpMap: BossMap = {
     "Akkan, Lord of Death": 220,
     "Aegir, the Oppressor": 300,
     "Narok the Butcher": 300,
-    "Phantom Manifester Brelshaza": 420,
+    "Phantom Manifester Brelshaza": 420
 };
