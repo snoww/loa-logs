@@ -8,24 +8,55 @@
     import { cardIds } from "$lib/constants/cards";
     import { localPlayer } from "$lib/utils/stores";
 
-    export let entity: Entity | null;
-    export let duration: number;
-    export let handleRightClick: () => void;
+    interface Props {
+        entity: Entity | null;
+        duration: number;
+        handleRightClick: () => void;
+    }
 
-    let color = "#ffffff";
-    let skills: Array<Skill> = [];
-    let skillDamagePercentages: Array<number> = [];
-    let abbreviatedSkillDamage: Array<(string | number)[]> = [];
-    let skillDps: Array<(string | number)[]> = [];
-    let skillDpsRaw: Array<number> = [];
+    let { entity, duration, handleRightClick }: Props = $props();
 
-    let hasBackAttacks = true;
-    let hasFrontAttacks = true;
-    let anySupportBrand = false;
-    let anySupportIdentity = false;
-    let anySupportBuff = false;
+    let color = $state("#ffffff");
+    let skills: Array<Skill> = $state([]);
+    let skillDamagePercentages: Array<number> = $state([]);
+    let abbreviatedSkillDamage: Array<(string | number)[]> = $state([]);
+    let skillDps: Array<(string | number)[]> = $state([]);
+    let skillDpsRaw: Array<number> = $state([]);
 
-    $: {
+    let hasBackAttacks = $state(true);
+    let hasFrontAttacks = $state(true);
+    let anySupportBrand = $state(false);
+    let anySupportIdentity = $state(false);
+    let anySupportBuff = $state(false);
+
+    $effect(() => {
+        if (entity) {
+            if (entity.class === "Arcanist") {
+                skills = Object.values(entity.skills)
+                    .sort((a, b) => b.totalDamage - a.totalDamage)
+                    .filter((skill) => !cardIds.includes(skill.id));
+            } else {
+                skills = Object.values(entity.skills).sort((a, b) => b.totalDamage - a.totalDamage);
+            }
+        }
+    });
+
+    $effect(() => {
+        if (entity && skills.length > 0) {
+            let mostDamageSkill = skills[0].totalDamage;
+            skillDamagePercentages = skills.map((skill) => (skill.totalDamage / mostDamageSkill) * 100);
+            abbreviatedSkillDamage = skills.map((skill) => abbreviateNumberSplit(skill.totalDamage));
+            skillDps = skills.map((skill) => abbreviateNumberSplit(skill.totalDamage / (duration / 1000)));
+            skillDpsRaw = skills.map((skill) => Math.round(skill.totalDamage / (duration / 1000)));
+            hasBackAttacks = skills.some((skill) => skill.backAttacks > 0);
+            hasFrontAttacks = skills.some((skill) => skill.frontAttacks > 0);
+            anySupportBuff = skills.some((skill) => skill.buffedBySupport > 0);
+            anySupportIdentity = skills.some((skill) => skill.buffedByIdentity > 0);
+            anySupportBrand = skills.some((skill) => skill.debuffedBySupport > 0);
+        }
+    });
+
+    $effect(() => {
         if (entity) {
             if (Object.hasOwn($colors, entity.class)) {
                 if ($settings.general.constantLocalPlayerColor && $localPlayer == entity.name) {
@@ -36,24 +67,8 @@
             } else if (entity.entityType === EntityType.ESTHER) {
                 color = "#4dc8d0";
             }
-            skills = Object.values(entity.skills).sort((a, b) => b.totalDamage - a.totalDamage);
-            if (entity.class === "Arcanist") {
-                skills = skills.filter((skill) => !cardIds.includes(skill.id));
-            }
-            if (skills.length > 0) {
-                let mostDamageSkill = skills[0].totalDamage;
-                skillDamagePercentages = skills.map((skill) => (skill.totalDamage / mostDamageSkill) * 100);
-                abbreviatedSkillDamage = skills.map((skill) => abbreviateNumberSplit(skill.totalDamage));
-                skillDps = skills.map((skill) => abbreviateNumberSplit(skill.totalDamage / (duration / 1000)));
-                skillDpsRaw = skills.map((skill) => Math.round(skill.totalDamage / (duration / 1000)));
-                hasBackAttacks = skills.some((skill) => skill.backAttacks > 0);
-                hasFrontAttacks = skills.some((skill) => skill.frontAttacks > 0);
-                anySupportBuff = skills.some((skill) => skill.buffedBySupport > 0);
-                anySupportIdentity = skills.some((skill) => skill.buffedByIdentity > 0);
-                anySupportBrand = skills.some((skill) => skill.debuffedBySupport > 0);
-            }
         }
-    }
+    });
 </script>
 
 <thead class="sticky top-0 z-40 h-6">
@@ -67,7 +82,7 @@
             {anySupportBrand} />
     </tr>
 </thead>
-<tbody on:contextmenu|preventDefault={handleRightClick} class="relative z-10">
+<tbody oncontextmenu={handleRightClick} class="relative z-10">
     {#if entity}
         {#each skills as skill, i (skill.id)}
             <tr

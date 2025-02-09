@@ -5,28 +5,42 @@
     import { settings } from "$lib/utils/settings";
     import { tooltip } from "$lib/utils/tooltip";
     import { cubicOut } from "svelte/easing";
-    import { tweened } from "svelte/motion";
+    import { Tween } from "svelte/motion";
 
-    export let skill: Skill;
-    export let abbreviatedSkillDamage: (string | number)[];
-    export let skillDps: (string | number)[];
-    export let width: number;
-    export let shadow: boolean = false;
-    export let index: number;
-    export let duration: number;
-    export let totalDamageDealt: number;
-    export let tween: boolean;
+    interface Props {
+        skill: Skill;
+        abbreviatedSkillDamage: (string | number)[];
+        skillDps: (string | number)[];
+        width: number;
+        shadow?: boolean;
+        index: number;
+        duration: number;
+        totalDamageDealt: number;
+        tween: boolean;
+    }
+
+    let {
+        skill,
+        abbreviatedSkillDamage,
+        skillDps,
+        width,
+        shadow = false,
+        index,
+        duration,
+        totalDamageDealt,
+        tween
+    }: Props = $props();
 
     let color = "#164e63";
 
-    const tweenedValue = tweened(0, {
+    const tweenedValue = new Tween(0, {
         duration: 400,
         easing: cubicOut
     });
 
-    $: {
+    $effect(() => {
         tweenedValue.set(width);
-    }
+    });
 </script>
 
 <td class="px-2" colspan="2">
@@ -65,9 +79,9 @@
         {round(skill.casts / (duration / 1000 / 60))}
     </div>
 </td>
-<div
+<td
     class="absolute left-0 -z-10 h-7 px-2 py-1"
     class:shadow-md={shadow}
     style="background-color: {index % 2 === 1 && $settings.general.splitLines
         ? RGBLinearShade(HexToRgba(color, 0.6))
-        : HexToRgba(color, 0.6)}; width: {tween ? $tweenedValue : width}%" />
+        : HexToRgba(color, 0.6)}; width: {tween ? tweenedValue.current : width}%"></td>

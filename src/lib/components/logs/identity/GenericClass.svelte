@@ -4,8 +4,12 @@
     import { fillMissingElapsedTimes, formatDurationFromS } from "$lib/utils/numbers";
     import { colors } from "$lib/utils/settings";
 
-    export let className: string;
-    export let identityStats: IdentityStats;
+    interface Props {
+        className: string;
+        identityStats: IdentityStats;
+    }
+
+    let { className, identityStats }: Props = $props();
 
     let data = fillMissingElapsedTimes(identityStats.log);
 
@@ -96,6 +100,6 @@
     {/if}
     <div class="mt-4">
         <div class="text-lg font-medium">Identity Log</div>
-        <div class="mt-2 h-[200px]" use:chartable={identityLogOptions} style="width: calc(100vw - 4.5rem);" />
+        <div class="mt-2 h-[200px]" use:chartable={identityLogOptions} style="width: calc(100vw - 4.5rem);"></div>
     </div>
 </div>

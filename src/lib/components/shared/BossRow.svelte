@@ -5,35 +5,48 @@
     import { settings } from "$lib/utils/settings";
     import { tooltip } from "$lib/utils/tooltip";
     import { cubicOut } from "svelte/easing";
-    import { tweened } from "svelte/motion";
+    import { Tween } from "svelte/motion";
 
-    export let boss: Entity;
-    export let width: number;
-    export let shadow = false;
-    export let tween: boolean;
-    export let duration: number;
-    export let index: number;
+    interface Props {
+        boss: Entity;
+        width: number;
+        shadow?: boolean;
+        tween: boolean;
+        duration: number;
+        index: number;
+    }
 
-    const tweenedValue = tweened(0, {
+    let {
+        boss,
+        width,
+        shadow = false,
+        tween,
+        duration,
+        index
+    }: Props = $props();
+
+    const tweenedValue = new Tween(0, {
         duration: 400,
         easing: cubicOut
+    });
+    
+    $effect(() => {
+        tweenedValue.set(width);
     });
 
     let color = "#164e63";
 
-    let damageDealt: (string | number)[];
-    let dps: (string | number)[];
+    let damageDealt: (string | number)[] = $state(abbreviateNumberSplit(boss.damageStats.damageDealt));
+    let dps: (string | number)[] = $state([]);
 
-    $: {
-        tweenedValue.set(width);
-        damageDealt = abbreviateNumberSplit(boss.damageStats.damageDealt);
 
+    $effect(() => {
         if (duration > 0) {
             dps = abbreviateNumberSplit(boss.damageStats.damageDealt / (duration / 1000));
         } else {
             dps = ["0", ""];
         }
-    }
+    });
 </script>
 
 <td colspan="2" class="px-2">
@@ -49,9 +62,9 @@
 <td class="px-1 text-center">
     {dps[0]}<span class="text-3xs text-gray-300">{dps[1]}</span>
 </td>
-<div
+<td
     class="absolute left-0 -z-10 h-7 px-2 py-1"
     class:shadow-md={shadow}
     style="background-color: {index % 2 === 1 && $settings.general.splitLines
         ? RGBLinearShade(HexToRgba(color, 0.6))
-        : HexToRgba(color, 0.6)}; width: {tween ? $tweenedValue : width}%" />
+        : HexToRgba(color, 0.6)}; width: {tween ? tweenedValue.current : width}%"></td>

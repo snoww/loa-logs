@@ -1,6 +1,10 @@
 <script lang="ts">
-    export let difficulty: string | undefined;
-    export let hover: boolean = false;
+    interface Props {
+        difficulty: string | undefined;
+        hover?: boolean;
+    }
+
+    let { difficulty, hover = false }: Props = $props();
 </script>
 
 {#if difficulty === "Normal"}

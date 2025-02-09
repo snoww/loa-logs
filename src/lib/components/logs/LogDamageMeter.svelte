@@ -14,7 +14,7 @@
     import LogPlayerBreakdown from "./LogPlayerBreakdown.svelte";
     import LogEncounterInfo from "./LogEncounterInfo.svelte";
     import LogBuffs from "./LogBuffs.svelte";
-    import { page } from "$app/stores";
+    import { page } from "$app/state";
     import { chartable, type EChartsOptions } from "$lib/utils/charts";
     import { colors, settings, skillIcon } from "$lib/utils/settings";
     import { goto } from "$app/navigation";
@@ -56,206 +56,179 @@
     import { LOG_SITE_URL, uploadLog } from "$lib/utils/sync";
     import Notification from "$lib/components/shared/Notification.svelte";
 
-    export let id: string;
-    export let encounter: Encounter;
+    interface Props {
+        id: string;
+        encounter: Encounter;
+    }
 
-    let players: Array<Entity> = [];
-    let bosses: Array<Entity> = [];
-    let player: Entity | null = null;
-    let playerDamagePercentages: Array<number> = [];
-    let topDamageDealt = 0;
-    let totalDamageDealt = 0;
-    let localPlayerEntity: Entity | null = null;
+    let { id, encounter = $bindable() }: Props = $props();
 
-    let anyDead: boolean = false;
-    let multipleDeaths: boolean = false;
-    let anyFrontAtk: boolean = false;
-    let anyBackAtk: boolean = false;
-    let anySupportBuff: boolean = false;
-    let anySupportIdentity: boolean = false;
-    let anySupportBrand: boolean = false;
-    let anyRdpsData: boolean = false;
-    let isSolo = true;
-
-    let state = MeterState.PARTY;
-    let tab = MeterTab.DAMAGE;
-    let chartType = ChartType.AVERAGE_DPS;
-    let playerName = "";
-    let focusedBoss = "";
-
-    let hasSkillCastLog = false;
-
-    let deleteConfirm = false;
-
-    let chartOptions: EChartsOptions = {};
-
-    let encounterPartyInfo: PartyInfo | undefined = undefined;
-
-    $: {
-        if (encounter) {
-            if ($settings.general.showEsther) {
-                players = Object.values(encounter.entities)
-                    .filter(
-                        (e) =>
-                            e.damageStats.damageDealt > 0 &&
-                            (e.entityType === EntityType.ESTHER ||
-                                (e.entityType === EntityType.PLAYER && e.classId != 0))
-                    )
-                    .sort((a, b) => b.damageStats.damageDealt - a.damageStats.damageDealt);
-            } else {
-                players = Object.values(encounter.entities)
-                    .filter(
-                        (e) => e.damageStats.damageDealt > 0 && e.entityType === EntityType.PLAYER && e.classId != 0
-                    )
-                    .sort((a, b) => b.damageStats.damageDealt - a.damageStats.damageDealt);
-            }
-            if ($settings.general.showBosses) {
-                bosses = Object.values(encounter.entities)
-                    .filter((e) => e.damageStats.damageDealt > 0 && e.entityType === EntityType.BOSS)
-                    .sort((a, b) => b.damageStats.damageDealt - a.damageStats.damageDealt);
-            }
-            $localPlayer = encounter.localPlayer;
-            isSolo = players.length === 1;
-            topDamageDealt = encounter.encounterDamageStats.topDamageDealt;
-            playerDamagePercentages = players.map((player) => (player.damageStats.damageDealt / topDamageDealt) * 100);
-            anyDead = players.some((player) => player.isDead);
-            if (!anyDead) {
-                multipleDeaths = players.some((player) => player.damageStats.deaths > 0);
-            } else {
-                multipleDeaths = players.some((player) => player.damageStats.deaths > 1);
-            }
-            anyFrontAtk = players.some((player) => player.skillStats.frontAttacks > 0);
-            anyBackAtk = players.some((player) => player.skillStats.backAttacks > 0);
-            anySupportBuff = players.some((player) => player.damageStats.buffedBySupport > 0);
-            anySupportIdentity = players.some((player) => player.damageStats.buffedByIdentity > 0);
-            anySupportBrand = players.some((player) => player.damageStats.debuffedBySupport > 0);
-            encounterPartyInfo = encounter.encounterDamageStats.misc?.partyInfo;
-            if (
-                encounter.encounterDamageStats.misc?.rdpsValid === undefined ||
-                encounter.encounterDamageStats.misc?.rdpsValid
-            ) {
-                anyRdpsData = players.some((player) => player.damageStats.rdpsDamageReceived > 0);
-            }
-            if (
-                encounter.encounterDamageStats.misc?.rdpsMessage === undefined ||
-                encounter.encounterDamageStats.misc?.rdpsMessage
-            ) {
-                $rdpsEventDetails = encounter.encounterDamageStats.misc?.rdpsMessage || "";
-            } else {
-                $rdpsEventDetails = "";
-            }
-            if ($settings.general.showEsther) {
-                totalDamageDealt =
-                    encounter.encounterDamageStats.totalDamageDealt +
-                    players
-                        .filter((e) => e.damageStats.damageDealt > 0 && e.entityType === EntityType.ESTHER)
-                        .reduce((a, b) => a + b.damageStats.damageDealt, 0);
-            } else {
-                totalDamageDealt = encounter.encounterDamageStats.totalDamageDealt;
-            }
-
-            if (encounter.localPlayer) {
-                localPlayerEntity = encounter.entities[encounter.localPlayer];
-            }
-
-            if (playerName) {
-                player = encounter.entities[playerName];
-                state = MeterState.PLAYER;
-            } else {
-                player = null;
-                state = MeterState.PARTY;
-            }
-
-            let chartablePlayers = Object.values(encounter.entities)
+    let players: Array<Entity> = $derived.by(() => {
+        if ($settings.general.showEsther) {
+            return Object.values(encounter.entities)
+                .filter(
+                    (e) =>
+                        e.damageStats.damageDealt > 0 &&
+                        (e.entityType === EntityType.ESTHER || (e.entityType === EntityType.PLAYER && e.classId != 0))
+                )
+                .sort((a, b) => b.damageStats.damageDealt - a.damageStats.damageDealt);
+        } else {
+            return Object.values(encounter.entities)
                 .filter((e) => e.damageStats.damageDealt > 0 && e.entityType === EntityType.PLAYER && e.classId != 0)
                 .sort((a, b) => b.damageStats.damageDealt - a.damageStats.damageDealt);
+        }
+    });
+    let bosses: Array<Entity> = $state([]);
+    let player: Entity | null = $state(null);
+    let totalDamageDealt = $state(0);
+    let anyRdpsData: boolean = $state(false);
 
-            if (
-                chartablePlayers.length > 0 &&
-                chartablePlayers[0].damageStats &&
-                chartablePlayers[0].damageStats.dpsAverage.length > 0 &&
-                chartablePlayers[0].damageStats.dpsRolling10sAvg.length > 0
-            ) {
-                let legendNames = getLegendNames(chartablePlayers, $settings.general.showNames);
-                let deathTimes = getDeathTimes(chartablePlayers, legendNames, encounter.fightStart);
-                let bossHpLogs = Object.entries(encounter.encounterDamageStats.bossHpLog || {});
-                if (chartType === ChartType.AVERAGE_DPS) {
-                    let chartPlayers = getAveragePlayerSeries(
-                        chartablePlayers,
-                        legendNames,
+
+    let hasSkillCastLog = $state(false);
+
+    let deleteConfirm = $state(false);
+
+    let encounterPartyInfo: PartyInfo | undefined = $state(encounter.encounterDamageStats.misc?.partyInfo);
+
+    $effect(() => {
+        if ($settings.general.showBosses) {
+            bosses = Object.values(encounter.entities)
+                .filter((e) => e.damageStats.damageDealt > 0 && e.entityType === EntityType.BOSS)
+                .sort((a, b) => b.damageStats.damageDealt - a.damageStats.damageDealt);
+        }
+        $localPlayer = encounter.localPlayer;
+        if (!anyDead) {
+            multipleDeaths = players.some((player) => player.damageStats.deaths > 0);
+        } else {
+            multipleDeaths = players.some((player) => player.damageStats.deaths > 1);
+        }
+
+        // if (
+        //     encounter.encounterDamageStats.misc?.rdpsValid === undefined ||
+        //     encounter.encounterDamageStats.misc?.rdpsValid
+        // ) {
+        //     anyRdpsData = players.some((player) => player.damageStats.rdpsDamageReceived > 0);
+        // }
+        // if (
+        //     encounter.encounterDamageStats.misc?.rdpsMessage === undefined ||
+        //     encounter.encounterDamageStats.misc?.rdpsMessage
+        // ) {
+        //     $rdpsEventDetails = encounter.encounterDamageStats.misc?.rdpsMessage || "";
+        // } else {
+        //     $rdpsEventDetails = "";
+        // }
+        if ($settings.general.showEsther) {
+            totalDamageDealt =
+                encounter.encounterDamageStats.totalDamageDealt +
+                players
+                    .filter((e) => e.damageStats.damageDealt > 0 && e.entityType === EntityType.ESTHER)
+                    .reduce((a, b) => a + b.damageStats.damageDealt, 0);
+        } else {
+            totalDamageDealt = encounter.encounterDamageStats.totalDamageDealt;
+        }
+
+        if (encounter.localPlayer) {
+            localPlayerEntity = encounter.entities[encounter.localPlayer];
+        }
+
+        if (playerName) {
+            player = encounter.entities[playerName];
+            meterState = MeterState.PLAYER;
+        } else {
+            player = null;
+            meterState = MeterState.PARTY;
+        }
+    });
+
+    let playerDamagePercentages: Array<number> = $derived(players.map((player) => (player.damageStats.damageDealt / topDamageDealt) * 100));
+    let topDamageDealt = $derived(encounter.encounterDamageStats.topDamageDealt);
+    let localPlayerEntity: Entity | null = $state(null);
+
+    let anyDead: boolean = $derived(players.some((player) => player.isDead));
+    let multipleDeaths: boolean = $state(false);
+    let anyFrontAtk: boolean = $derived(players.some((player) => player.skillStats.frontAttacks > 0));
+    let anyBackAtk: boolean = $derived(players.some((player) => player.skillStats.backAttacks > 0));
+    let anySupportBuff: boolean = $derived(players.some((player) => player.damageStats.buffedBySupport > 0));
+    let anySupportIdentity: boolean = $derived(players.some((player) => player.damageStats.buffedByIdentity > 0));
+    let anySupportBrand: boolean = $derived(players.some((player) => player.damageStats.debuffedBySupport > 0));
+    let isSolo = $derived(players.length === 1);
+
+    let meterState = $state(MeterState.PARTY);
+    let tab = $state(MeterTab.DAMAGE);
+    let chartType = $state(ChartType.AVERAGE_DPS);
+    let playerName = $state("");
+    let focusedBoss = $state("");
+
+    let chartOptions: EChartsOptions = $state({});
+    let chartablePlayers = Object.values(encounter.entities)
+        .filter((e) => e.damageStats.damageDealt > 0 && e.entityType === EntityType.PLAYER && e.classId != 0)
+        .sort((a, b) => b.damageStats.damageDealt - a.damageStats.damageDealt);
+
+    $effect.pre(() => {
+        if (
+            chartablePlayers.length > 0 &&
+            chartablePlayers[0].damageStats &&
+            chartablePlayers[0].damageStats.dpsAverage.length > 0 &&
+            chartablePlayers[0].damageStats.dpsRolling10sAvg.length > 0
+        ) {
+            let legendNames = getLegendNames(chartablePlayers, $settings.general.showNames);
+            let deathTimes = getDeathTimes(chartablePlayers, legendNames, encounter.fightStart);
+            let bossHpLogs = Object.entries(encounter.encounterDamageStats.bossHpLog || {});
+
+            if (chartType === ChartType.AVERAGE_DPS) {
+                let chartPlayers = getAveragePlayerSeries(chartablePlayers, legendNames, encounter.fightStart, $colors);
+                let bossChart = getBossHpSeries(
+                    bossHpLogs,
+                    legendNames,
+                    chartablePlayers[0].damageStats.dpsAverage.length,
+                    5
+                );
+                chartOptions = getAverageDpsChart(chartablePlayers, legendNames, chartPlayers, bossChart, deathTimes);
+            } else if (chartType === ChartType.ROLLING_DPS) {
+                let chartPlayers = getRollingPlayerSeries(chartablePlayers, legendNames, encounter.fightStart, $colors);
+                let bossChart = getBossHpSeries(
+                    bossHpLogs,
+                    legendNames,
+                    chartablePlayers[0].damageStats.dpsRolling10sAvg.length,
+                    1
+                );
+                chartOptions = getRollingDpsChart(chartablePlayers, legendNames, chartPlayers, bossChart, deathTimes);
+            } else if (chartType === ChartType.SKILL_LOG && player && player.entityType === EntityType.PLAYER) {
+                if (
+                    Object.entries(player.skills).some(
+                        ([, skill]) => skill.skillCastLog && skill.skillCastLog.length > 0
+                    )
+                ) {
+                    hasSkillCastLog = true;
+                    chartOptions = getSkillLogChart(
+                        player,
+                        $skillIcon.path,
+                        encounter.lastCombatPacket,
                         encounter.fightStart,
-                        $colors
+                        encounter.encounterDamageStats
                     );
-                    let bossChart = getBossHpSeries(
-                        bossHpLogs,
-                        legendNames,
-                        chartablePlayers[0].damageStats.dpsAverage.length,
-                        5
-                    );
-                    chartOptions = getAverageDpsChart(
-                        chartablePlayers,
-                        legendNames,
-                        chartPlayers,
-                        bossChart,
-                        deathTimes
-                    );
-                } else if (chartType === ChartType.ROLLING_DPS) {
-                    let chartPlayers = getRollingPlayerSeries(
-                        chartablePlayers,
-                        legendNames,
-                        encounter.fightStart,
-                        $colors
-                    );
-                    let bossChart = getBossHpSeries(
-                        bossHpLogs,
-                        legendNames,
-                        chartablePlayers[0].damageStats.dpsRolling10sAvg.length,
-                        1
-                    );
-                    chartOptions = getRollingDpsChart(
-                        chartablePlayers,
-                        legendNames,
-                        chartPlayers,
-                        bossChart,
-                        deathTimes
-                    );
-                } else if (chartType === ChartType.SKILL_LOG && player && player.entityType === EntityType.PLAYER) {
-                    if (
-                        Object.entries(player.skills).some(
-                            ([, skill]) => skill.skillCastLog && skill.skillCastLog.length > 0
-                        )
-                    ) {
-                        hasSkillCastLog = true;
-                        chartOptions = getSkillLogChart(
-                            player,
-                            $skillIcon.path,
-                            encounter.lastCombatPacket,
-                            encounter.fightStart,
-                            encounter.encounterDamageStats
-                        );
-                    } else {
-                        chartOptions = getSkillLogChartOld(
-                            player,
-                            $skillIcon.path,
-                            encounter.lastCombatPacket,
-                            encounter.fightStart
-                        );
-                    }
-                } else if (chartType === ChartType.SKILL_LOG && focusedBoss) {
-                    let boss = bosses.find((boss) => boss.name === focusedBoss);
+                } else {
                     chartOptions = getSkillLogChartOld(
-                        boss!,
+                        player,
                         $skillIcon.path,
                         encounter.lastCombatPacket,
                         encounter.fightStart
                     );
                 }
+            } else if (chartType === ChartType.SKILL_LOG && focusedBoss) {
+                let boss = bosses.find((boss) => boss.name === focusedBoss);
+                chartOptions = getSkillLogChartOld(
+                    boss!,
+                    $skillIcon.path,
+                    encounter.lastCombatPacket,
+                    encounter.fightStart
+                );
             }
         }
-    }
+    });
 
     function inspectPlayer(name: string) {
-        state = MeterState.PLAYER;
+        meterState = MeterState.PLAYER;
         playerName = name;
         chartType = ChartType.SKILL_LOG;
 
@@ -263,7 +236,7 @@
     }
 
     function inspectBoss(name: string) {
-        state = MeterState.PLAYER;
+        meterState = MeterState.PLAYER;
         chartType = ChartType.SKILL_LOG;
         focusedBoss = name;
     }
@@ -318,16 +291,19 @@
     }
 
     function setChartView() {
-        if (state === MeterState.PARTY) {
+        if (meterState === MeterState.PARTY) {
             chartType = ChartType.AVERAGE_DPS;
-        } else if (state === MeterState.PLAYER) {
+        } else if (meterState === MeterState.PLAYER) {
             chartType = ChartType.SKILL_LOG;
         }
     }
 
-    function handleRightClick() {
-        if (state === MeterState.PLAYER) {
-            state = MeterState.PARTY;
+    function handleRightClick(e: MouseEvent | undefined = undefined) {
+        if (e) {
+            e.preventDefault();
+        }
+        if (meterState === MeterState.PLAYER) {
+            meterState = MeterState.PARTY;
             player = null;
             playerName = "";
             chartType = ChartType.AVERAGE_DPS;
@@ -336,20 +312,22 @@
     }
 
     function scrollToTop() {
-        targetDiv.scrollIntoView({ behavior: "smooth", block: "start", inline: "start" });
+        if (targetDiv) {
+            targetDiv.scrollIntoView({ behavior: "smooth", block: "start", inline: "start" });
+        }
     }
 
     async function deleteEncounter() {
         await invoke("delete_encounter", { id: id });
-        if ($page.url.searchParams.has("page")) {
-            let currentPage = parseInt($page.url.searchParams.get("page")!);
+        if (page.url.searchParams.has("page")) {
+            let currentPage = parseInt(page.url.searchParams.get("page")!);
             goto(`/logs?page=${currentPage}`);
         } else {
             goto("/logs");
         }
     }
 
-    let dropdownOpen = false;
+    let dropdownOpen = $state(false);
 
     const handleDropdownClick = () => {
         dropdownOpen = !dropdownOpen;
@@ -364,9 +342,9 @@
         dropdownOpen = false;
     };
 
-    let targetDiv: HTMLElement;
+    let targetDiv: HTMLElement | undefined = $state();
 
-    $: uploading = false;
+    let uploading = $state(false);
 
     async function upload() {
         if (encounter.sync || uploading) {
@@ -388,6 +366,11 @@
     async function captureScreenshot() {
         takingScreenshot.set(true);
         setTimeout(async () => {
+            if (!targetDiv) {
+                takingScreenshot.set(false);
+                return;
+            }
+
             const canvas = await html2canvas(targetDiv, {
                 useCORS: true,
                 backgroundColor: "#27272A"
@@ -415,13 +398,13 @@
     }
 </script>
 
-<svelte:window on:contextmenu|preventDefault />
-<!-- svelte-ignore a11y-no-static-element-interactions -->
+<svelte:window oncontextmenu={(e) => e.preventDefault()} />
+<!-- svelte-ignore a11y_no_static_element_interactions -->
 <div
     bind:this={targetDiv}
     class="scroll-ml-8 scroll-mt-2 text-gray-100"
     class:p-4={$takingScreenshot}
-    on:contextmenu|preventDefault={handleRightClick}>
+    oncontextmenu={handleRightClick}>
     <LogEncounterInfo
         boss={encounter.entities[encounter.currentBossName]}
         difficulty={encounter.difficulty}
@@ -439,7 +422,7 @@
                     class="rounded-sm px-2 py-1"
                     class:bg-accent-900={tab === MeterTab.DAMAGE}
                     class:bg-gray-700={tab !== MeterTab.DAMAGE}
-                    on:click={damageTab}>
+                    onclick={damageTab}>
                     Damage
                 </button>
                 <!--{#if anyRdpsData || $rdpsEventDetails !== ""}-->
@@ -455,14 +438,14 @@
                     class="flex-shrink-0 rounded-sm px-2 py-1"
                     class:bg-accent-900={tab === MeterTab.PARTY_BUFFS}
                     class:bg-gray-700={tab !== MeterTab.PARTY_BUFFS}
-                    on:click={partySynergyTab}>
+                    onclick={partySynergyTab}>
                     Party Buffs
                 </button>
                 <button
                     class="flex-shrink-0 rounded-sm px-2 py-1"
                     class:bg-accent-900={tab === MeterTab.SELF_BUFFS}
                     class:bg-gray-700={tab !== MeterTab.SELF_BUFFS}
-                    on:click={selfSynergyTab}>
+                    onclick={selfSynergyTab}>
                     Self Buffs
                 </button>
                 {#if $settings.general.showShields && encounter.encounterDamageStats.totalShielding > 0}
@@ -470,7 +453,7 @@
                         class="rounded-sm px-2 py-1"
                         class:bg-accent-900={tab === MeterTab.SHIELDS}
                         class:bg-gray-700={tab !== MeterTab.SHIELDS}
-                        on:click={shieldTab}>
+                        onclick={shieldTab}>
                         Shields
                     </button>
                 {/if}
@@ -479,7 +462,7 @@
                         class="rounded-sm px-2 py-1"
                         class:bg-accent-900={tab === MeterTab.TANK}
                         class:bg-gray-700={tab !== MeterTab.TANK}
-                        on:click={tankTab}>
+                        onclick={tankTab}>
                         Tanked
                     </button>
                 {/if}
@@ -488,7 +471,7 @@
                         class="rounded-sm px-2 py-1"
                         class:bg-accent-900={tab === MeterTab.BOSS}
                         class:bg-gray-700={tab !== MeterTab.BOSS}
-                        on:click={bossTab}>
+                        onclick={bossTab}>
                         Bosses
                     </button>
                 {/if}
@@ -497,7 +480,7 @@
                         class="rounded-sm px-2 py-1"
                         class:bg-accent-900={tab === MeterTab.IDENTITY}
                         class:bg-gray-700={tab !== MeterTab.IDENTITY}
-                        on:click={identityTab}>
+                        onclick={identityTab}>
                         Identity
                     </button>
                 {/if}
@@ -506,14 +489,15 @@
                         class="rounded-sm px-2 py-1"
                         class:bg-accent-900={tab === MeterTab.STAGGER}
                         class:bg-gray-700={tab !== MeterTab.STAGGER}
-                        on:click={staggerTab}>
+                        onclick={staggerTab}>
                         Stagger
                     </button>
                 {/if}
                 <button
                     class="rounded-sm bg-gray-700 px-2 py-1"
+                    aria-label="Take Screenshot"
                     use:tooltip={{ content: "Take Screenshot" }}
-                    on:click={captureScreenshot}>
+                    onclick={captureScreenshot}>
                     <svg
                         class="hover:fill-accent-800 h-5 w-5 fill-zinc-300"
                         xmlns="http://www.w3.org/2000/svg"
@@ -524,7 +508,7 @@
                 </button>
                 {#if encounter.cleared && $settings.sync.enabled && $settings.sync.accessToken && $settings.sync.validToken}
                     {#if uploading}
-                        <button class="rounded-sm bg-gray-700 px-2 py-1" use:tooltip={{ content: "Uploading..." }}>
+                        <div class="rounded-sm bg-gray-700 px-2 py-1" use:tooltip={{ content: "Uploading..." }}>
                             <svg
                                 class="hover:fill-accent-800 h-5 w-5 animate-spin fill-zinc-300"
                                 xmlns="http://www.w3.org/2000/svg"
@@ -533,12 +517,13 @@
                                     xmlns="http://www.w3.org/2000/svg"
                                     d="M160-160v-80h110l-16-14q-52-46-73-105t-21-119q0-111 66.5-197.5T400-790v84q-72 26-116 88.5T240-478q0 45 17 87.5t53 78.5l10 10v-98h80v240H160Zm400-10v-84q72-26 116-88.5T720-482q0-45-17-87.5T650-648l-10-10v98h-80v-240h240v80H690l16 14q49 49 71.5 106.5T800-482q0 111-66.5 197.5T560-170Z" />
                             </svg>
-                        </button>
+                        </div>
                     {:else if !encounter.sync}
                         <button
                             class="rounded-sm bg-gray-700 px-2 py-1"
+                            aria-label="Sync to logs.snow.xyz"
                             use:tooltip={{ content: "Sync to logs.snow.xyz" }}
-                            on:click={upload}>
+                            onclick={upload}>
                             <svg
                                 class="hover:fill-accent-800 h-5 w-5 fill-zinc-300"
                                 xmlns="http://www.w3.org/2000/svg"
@@ -551,6 +536,7 @@
                     {:else}
                         <a
                             class="rounded-sm bg-gray-700 px-2 py-1"
+                            aria-label="Open on logs.snow.xyz"
                             use:tooltip={{ content: "Open on logs.snow.xyz" }}
                             href={LOG_SITE_URL + "/logs/" + encounter.sync}
                             target="_blank">
@@ -565,8 +551,8 @@
                         </a>
                     {/if}
                 {/if}
-                <div class="relative flex items-center rounded-sm bg-gray-700" on:focusout={handleDropdownFocusLoss}>
-                    <button on:click={handleDropdownClick} class="h-full px-2">
+                <div class="relative flex items-center rounded-sm bg-gray-700" onfocusout={handleDropdownFocusLoss}>
+                    <button onclick={handleDropdownClick} class="h-full px-2" aria-label="Settings">
                         <svg
                             class="h-4 w-4"
                             fill="none"
@@ -581,7 +567,7 @@
                             <div class="flex w-48 flex-col divide-y-2 divide-gray-600 px-2 py-1">
                                 <button
                                     class="hover:text-accent-500 p-1 text-left"
-                                    on:click={() => {
+                                    onclick={() => {
                                         dropdownOpen = false;
                                         captureScreenshot();
                                     }}>
@@ -596,7 +582,8 @@
                                             class="peer sr-only"
                                             bind:checked={$settings.general.showNames} />
                                         <div
-                                            class="peer-checked:bg-accent-800 peer h-5 w-9 rounded-full border-gray-600 bg-gray-800 after:absolute after:left-[2px] after:top-[2px] after:h-4 after:w-4 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none" />
+                                            class="peer-checked:bg-accent-800 peer h-5 w-9 rounded-full border-gray-600 bg-gray-800 after:absolute after:left-[2px] after:top-[2px] after:h-4 after:w-4 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none">
+                                        </div>
                                     </label>
                                 </button>
                                 <button class="flex items-center justify-between bg-gray-700 p-1">
@@ -608,7 +595,8 @@
                                             class="peer sr-only"
                                             bind:checked={$settings.logs.splitPartyDamage} />
                                         <div
-                                            class="peer-checked:bg-accent-800 peer h-5 w-9 rounded-full border-gray-600 bg-gray-800 after:absolute after:left-[2px] after:top-[2px] after:h-4 after:w-4 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none" />
+                                            class="peer-checked:bg-accent-800 peer h-5 w-9 rounded-full border-gray-600 bg-gray-800 after:absolute after:left-[2px] after:top-[2px] after:h-4 after:w-4 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none">
+                                        </div>
                                     </label>
                                 </button>
                                 <button class="flex items-center justify-between bg-gray-700 p-1">
@@ -620,12 +608,13 @@
                                             class="peer sr-only"
                                             bind:checked={$settings.general.showEsther} />
                                         <div
-                                            class="peer-checked:bg-accent-800 peer h-5 w-9 rounded-full border-gray-600 bg-gray-800 after:absolute after:left-[2px] after:top-[2px] after:h-4 after:w-4 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none" />
+                                            class="peer-checked:bg-accent-800 peer h-5 w-9 rounded-full border-gray-600 bg-gray-800 after:absolute after:left-[2px] after:top-[2px] after:h-4 after:w-4 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none">
+                                        </div>
                                     </label>
                                 </button>
                                 <button
                                     class="p-1 text-left hover:text-red-600"
-                                    on:click={() => {
+                                    onclick={() => {
                                         dropdownOpen = false;
                                         deleteConfirm = true;
                                     }}>
@@ -638,7 +627,7 @@
             </div>
 
             {#if deleteConfirm}
-                <div class="fixed inset-0 z-50 bg-zinc-900 bg-opacity-80" />
+                <div class="fixed inset-0 z-50 bg-zinc-900 bg-opacity-80"></div>
                 <div class="fixed left-0 right-0 top-0 z-50 h-modal w-full items-center justify-center p-4">
                     <div class="relative top-[25%] mx-auto flex max-h-full w-full max-w-md">
                         <div
@@ -647,7 +636,7 @@
                                 type="button"
                                 class="absolute right-2.5 top-3 ml-auto whitespace-normal rounded-lg p-1.5 hover:bg-zinc-600 focus:outline-none"
                                 aria-label="Close modal"
-                                on:click={() => (deleteConfirm = false)}>
+                                onclick={() => (deleteConfirm = false)}>
                                 <span class="sr-only">Close modal</span>
                                 <svg
                                     class="h-5 w-5"
@@ -682,13 +671,13 @@
                                     <button
                                         type="button"
                                         class="mr-2 inline-flex items-center justify-center rounded-lg bg-red-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-red-800 focus:outline-none"
-                                        on:click={deleteEncounter}>
+                                        onclick={deleteEncounter}>
                                         Yes, I'm sure
                                     </button>
                                     <button
                                         type="button"
                                         class="inline-flex items-center justify-center rounded-lg bg-gray-800 bg-transparent px-5 py-2.5 text-center text-sm font-medium text-gray-400 hover:bg-zinc-700 hover:text-white focus:text-white focus:outline-none"
-                                        on:click={() => (deleteConfirm = false)}>
+                                        onclick={() => (deleteConfirm = false)}>
                                         No, cancel
                                     </button>
                                 </div>
@@ -706,7 +695,7 @@
     {:else}
         <div class="px relative top-0 overflow-x-auto overflow-y-visible">
             {#if tab === MeterTab.DAMAGE}
-                {#if state === MeterState.PARTY}
+                {#if meterState === MeterState.PARTY}
                     {#if $settings.logs.splitPartyDamage && encounterPartyInfo && Object.keys(encounterPartyInfo).length >= 2}
                         <LogDamageMeterPartySplit
                             {players}
@@ -724,15 +713,11 @@
                             {inspectPlayer} />
                     {:else}
                         <table class="relative w-full table-fixed">
-                            <thead
-                                class="z-30 h-6"
-                                on:contextmenu|preventDefault={() => {
-                                    console.log("titlebar clicked");
-                                }}>
+                            <thead class="z-30 h-6">
                                 <tr class="bg-zinc-900">
-                                    <th class="w-7 px-2 font-normal" />
-                                    <th class="w-14 px-2 text-left font-normal" />
-                                    <th class="w-full" />
+                                    <th class="w-7 px-2 font-normal"></th>
+                                    <th class="w-14 px-2 text-left font-normal"></th>
+                                    <th class="w-full"></th>
                                     <LogDamageMeterHeader
                                         {anyDead}
                                         {multipleDeaths}
@@ -751,7 +736,7 @@
                                         class="h-7 px-2 py-1 {$settings.general.underlineHovered
                                             ? 'hover:underline'
                                             : ''}"
-                                        on:click={() => inspectPlayer(player.name)}>
+                                        onclick={() => inspectPlayer(player.name)}>
                                         <LogDamageMeterRow
                                             entity={player}
                                             percentage={playerDamagePercentages[i]}
@@ -771,7 +756,7 @@
                             </tbody>
                         </table>
                     {/if}
-                {:else if state === MeterState.PLAYER && player !== null}
+                {:else if meterState === MeterState.PLAYER && player !== null}
                     <table class="relative w-full table-fixed">
                         <LogPlayerBreakdown entity={player} duration={encounter.duration} {totalDamageDealt} />
                     </table>
@@ -789,7 +774,7 @@
                     duration={encounter.duration}
                     {encounterPartyInfo} />
             {:else if tab === MeterTab.PARTY_BUFFS}
-                {#if state === MeterState.PARTY}
+                {#if meterState === MeterState.PARTY}
                     <LogBuffs {tab} encounterDamageStats={encounter.encounterDamageStats} {players} {inspectPlayer} />
                 {:else}
                     <LogBuffs
@@ -800,7 +785,7 @@
                         {inspectPlayer} />
                 {/if}
             {:else if tab === MeterTab.SELF_BUFFS}
-                {#if state === MeterState.PARTY}
+                {#if meterState === MeterState.PARTY}
                     <LogBuffs {tab} encounterDamageStats={encounter.encounterDamageStats} {players} {inspectPlayer} />
                 {:else}
                     <LogBuffs
@@ -831,8 +816,8 @@
     {/if}
 </div>
 {#if tab !== MeterTab.IDENTITY && tab !== MeterTab.STAGGER}
-    <!-- svelte-ignore a11y-no-static-element-interactions -->
-    <div class="mt-4" on:contextmenu|preventDefault={handleRightClick}>
+    <!-- svelte-ignore a11y_no_static_element_interactions -->
+    <div class="mt-4" oncontextmenu={handleRightClick}>
         {#if chartType === ChartType.SKILL_LOG}
             {#if player && player.entityType === EntityType.PLAYER}
                 <OpenerSkills skills={player.skills} />
@@ -841,43 +826,43 @@
         {#if player?.entityType !== EntityType.ESTHER}
             <div class="text-lg font-medium">Charts</div>
             <div class="mt-2 flex divide-x divide-gray-600">
-                {#if playerName === "" && state === MeterState.PARTY}
+                {#if playerName === "" && meterState === MeterState.PARTY}
                     <button
                         class="rounded-sm px-2 py-1"
                         class:bg-accent-900={chartType === ChartType.AVERAGE_DPS}
                         class:bg-gray-700={chartType !== ChartType.AVERAGE_DPS}
-                        on:click={() => (chartType = ChartType.AVERAGE_DPS)}>
+                        onclick={() => (chartType = ChartType.AVERAGE_DPS)}>
                         Average DPS
                     </button>
                     <button
                         class="rounded-sm px-2 py-1"
                         class:bg-accent-900={chartType === ChartType.ROLLING_DPS}
                         class:bg-gray-700={chartType !== ChartType.ROLLING_DPS}
-                        on:click={() => (chartType = ChartType.ROLLING_DPS)}>
+                        onclick={() => (chartType = ChartType.ROLLING_DPS)}>
                         10s DPS Window
                     </button>
-                {:else if playerName !== "" && state === MeterState.PLAYER}
+                {:else if playerName !== "" && meterState === MeterState.PLAYER}
                     <!--  -->
                 {/if}
             </div>
         {/if}
         {#if chartType === ChartType.AVERAGE_DPS}
             {#if !$settings.general.showNames}
-                <div class="mt-2 h-[300px]" use:chartable={chartOptions} style="width: calc(100vw - 4.5rem);" />
+                <div class="mt-2 h-[300px]" use:chartable={chartOptions} style="width: calc(100vw - 4.5rem);"></div>
             {:else}
-                <div class="mt-2 h-[300px]" use:chartable={chartOptions} style="width: calc(100vw - 4.5rem);" />
+                <div class="mt-2 h-[300px]" use:chartable={chartOptions} style="width: calc(100vw - 4.5rem);"></div>
             {/if}
         {:else if chartType === ChartType.ROLLING_DPS}
             {#if !$settings.general.showNames}
-                <div class="mt-2 h-[300px]" use:chartable={chartOptions} style="width: calc(100vw - 4.5rem);" />
+                <div class="mt-2 h-[300px]" use:chartable={chartOptions} style="width: calc(100vw - 4.5rem);"></div>
             {:else}
-                <div class="mt-2 h-[300px]" use:chartable={chartOptions} style="width: calc(100vw - 4.5rem);" />
+                <div class="mt-2 h-[300px]" use:chartable={chartOptions} style="width: calc(100vw - 4.5rem);"></div>
             {/if}
         {:else if chartType === ChartType.SKILL_LOG}
             {#if player && player.entityType === EntityType.PLAYER && hasSkillCastLog}
                 <LogSkillChart {chartOptions} {player} encounterDamageStats={encounter.encounterDamageStats} />
             {:else if (player && player.entityType === EntityType.PLAYER) || focusedBoss}
-                <div class="mt-2 h-[300px]" use:chartable={chartOptions} style="width: calc(100vw - 4.5rem);" />
+                <div class="mt-2 h-[300px]" use:chartable={chartOptions} style="width: calc(100vw - 4.5rem);"></div>
             {/if}
         {/if}
     </div>

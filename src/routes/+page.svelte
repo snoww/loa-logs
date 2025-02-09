@@ -102,7 +102,7 @@
         })();
     });
 
-    $: {
+    $effect(() => {
         if ($settings.general.scale === "1") {
             document.documentElement.style.setProperty("font-size", "medium");
         } else if ($settings.general.scale === "2") {
@@ -112,7 +112,7 @@
         } else if ($settings.general.scale === "0") {
             document.documentElement.style.setProperty("font-size", "small");
         }
-    }
+    });
 </script>
 
 <div

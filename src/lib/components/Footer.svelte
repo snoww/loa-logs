@@ -3,7 +3,11 @@
     import { settings } from "$lib/utils/settings";
     import { getVersion } from "@tauri-apps/api/app";
     import { onMount } from "svelte";
-    export let tab: MeterTab;
+    interface Props {
+        tab: MeterTab;
+    }
+
+    let { tab = $bindable() }: Props = $props();
 
     function setTab(newTab: MeterTab) {
         tab = newTab;
@@ -64,7 +68,7 @@
                 class="h-6 border-0 border-b-[3px] px-1.5 {tab === MeterTab.DAMAGE
                     ? 'border-zinc-500'
                     : 'border-zinc-800'}"
-                on:click={() => setTab(MeterTab.DAMAGE)}>
+                onclick={() => setTab(MeterTab.DAMAGE)}>
                 Damage
             </button>
             <!--            <button-->
@@ -78,14 +82,14 @@
                 class="h-6 flex-shrink-0 border-0 border-b-[3px] px-1.5 {tab === MeterTab.PARTY_BUFFS
                     ? 'border-zinc-500'
                     : 'border-zinc-800'}"
-                on:click={() => setTab(MeterTab.PARTY_BUFFS)}>
+                onclick={() => setTab(MeterTab.PARTY_BUFFS)}>
                 Party Buffs
             </button>
             <button
                 class="h-6 flex-shrink-0 border-0 border-b-[3px] px-1.5 {tab === MeterTab.SELF_BUFFS
                     ? 'border-zinc-500'
                     : 'border-zinc-800'}"
-                on:click={() => setTab(MeterTab.SELF_BUFFS)}>
+                onclick={() => setTab(MeterTab.SELF_BUFFS)}>
                 Self Buffs
             </button>
             {#if $settings.general.showTanked}
@@ -93,7 +97,7 @@
                     class="h-6 border-0 border-b-[3px] px-1.5 {tab === MeterTab.TANK
                         ? 'border-zinc-500'
                         : 'border-zinc-800'}"
-                    on:click={() => setTab(MeterTab.TANK)}>
+                    onclick={() => setTab(MeterTab.TANK)}>
                     Tanked
                 </button>
             {/if}
@@ -102,7 +106,7 @@
                     class="h-6 border-0 border-b-[3px] px-1.5 {tab === MeterTab.BOSS
                         ? 'border-zinc-500'
                         : 'border-zinc-800'}"
-                    on:click={() => setTab(MeterTab.BOSS)}>
+                    onclick={() => setTab(MeterTab.BOSS)}>
                     Bosses
                 </button>
             {/if}
@@ -111,7 +115,7 @@
                     class="h-6 flex-shrink-0 border-0 border-b-[3px] px-1.5 {tab === MeterTab.DETAILS
                         ? 'border-zinc-500'
                         : 'border-zinc-800'}"
-                    on:click={() => setTab(MeterTab.DETAILS)}>
+                    onclick={() => setTab(MeterTab.DETAILS)}>
                     Details
                 </button>
             {/if}

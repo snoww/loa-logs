@@ -36,11 +36,11 @@
     import { getVersion } from "@tauri-apps/api/app";
     import { appWindow } from "@tauri-apps/api/window";
 
-    let encounters: Array<EncounterPreview> = [];
-    let totalEncounters: number = 0;
-    let selectMode = false;
+    let encounters: Array<EncounterPreview> = $state([]);
+    let totalEncounters: number = $state(0);
+    let selectMode = $state(false);
 
-    $: {
+    $effect(() => {
         if ($settings.general.logsPerPage <= 0 || $settings.general.logsPerPage > 100) {
             $settings.general.logsPerPage = 10;
         }
@@ -52,13 +52,15 @@
                 $pageStore = 1;
             }
         }
-    }
+    });
 
     // Initialize `minDuration` here to not trigger a reload of encounters
     if ($searchFilter.minDuration === -1) {
         $searchFilter.minDuration = $settings.logs.minEncounterDuration;
     }
-    $: loadEncounters($searchFilter, $searchStore, $pageStore);
+    $effect(() => {
+        loadEncounters($searchFilter, $searchStore, $pageStore);
+    });
 
     onMount(async () => {
         if ($settings.general.logsPerPage <= 0 || $settings.general.logsPerPage > 100) {
@@ -94,11 +96,11 @@
         page: number
     ): Promise<Array<EncounterPreview>> {
         NProgress.start();
-        let bosses = Array.from($searchFilter.bosses);
+        let raidBosses = Array.from(searchFilter.bosses);
         if (searchFilter.encounters.size > 0) {
             for (const encounter of searchFilter.encounters) {
                 const raid = encounter.substring(0, encounter.lastIndexOf(" "));
-                bosses.push(...encounterMap[raid][encounter]);
+                raidBosses.push(...encounterMap[raid][encounter]);
             }
         }
         // start or space (^|\s) + word (\w+) + colon or space or end (:|\s|$)
@@ -116,7 +118,7 @@
             search: searchQuery,
             filter: {
                 minDuration: searchFilter.minDuration,
-                bosses: bosses,
+                bosses: raidBosses,
                 cleared: searchFilter.cleared,
                 favorite: searchFilter.favorite,
                 difficulty: searchFilter.difficulty,
@@ -125,6 +127,7 @@
                 order: searchFilter.order
             }
         });
+
         encounters = overview.encounters;
         totalEncounters = overview.totalEncounters;
         NProgress.done();
@@ -193,17 +196,15 @@
         scrollToTopOfTable();
     }
 
-    let hidden: boolean = true;
+    let hidden: boolean = $state(true);
 </script>
 
-<svelte:window on:contextmenu|preventDefault />
+<svelte:window oncontextmenu={((e) => e.preventDefault())} />
 <LogSidebar bind:hidden />
 <div class="h-screen bg-zinc-800">
     <div class="flex h-16 items-center justify-between px-8 py-5 shadow-md">
         <Title text="Past Encounters" bind:hidden />
-        <button
-            class="bg-accent-900 hover:bg-accent-800 mr-4 rounded-md px-2 py-1 shadow-md"
-            on:click={() => refresh()}>
+        <button class="bg-accent-900 hover:bg-accent-800 mr-4 rounded-md px-2 py-1 shadow-md" onclick={() => refresh()}>
             Refresh
         </button>
     </div>
@@ -224,7 +225,7 @@
                                     type="checkbox"
                                     class="text-accent-500 size-5 rounded bg-zinc-700 focus:ring-0 focus:ring-offset-0"
                                     checked={encounters.every((encounter) => $selectedEncounters.has(encounter.id))}
-                                    on:change={() => {
+                                    onchange={() => {
                                         if (encounters.every((encounter) => $selectedEncounters.has(encounter.id))) {
                                             selectedEncounters.update((set) => {
                                                 encounters.forEach((encounter) => {
@@ -244,7 +245,7 @@
                             </th>
                         {:else}
                             <th scope="col" class="w-14 px-3 py-3">
-                                <button class="hover:text-accent-500 flex items-center" on:click={() => setSort("id")}>
+                                <button class="hover:text-accent-500 flex items-center" onclick={() => setSort("id")}>
                                     ID
                                     {#if $searchFilter.sort === "id"}
                                         <SortSymbol />
@@ -258,7 +259,7 @@
                         <th scope="col" class="hidden w-24 px-3 py-3 text-right lg:table-cell">
                             <button
                                 class="hover:text-accent-500 ml-auto flex items-center"
-                                on:click={() => setSort("my_dps")}>
+                                onclick={() => setSort("my_dps")}>
                                 {#if $searchFilter.sort === "my_dps"}
                                     <SortSymbol />
                                 {/if}
@@ -266,9 +267,7 @@
                             </button>
                         </th>
                         <th scope="col" class="w-14 px-3 py-3">
-                            <button
-                                class="hover:text-accent-500 flex items-center"
-                                on:click={() => setSort("duration")}>
+                            <button class="hover:text-accent-500 flex items-center" onclick={() => setSort("duration")}>
                                 DUR
                                 {#if $searchFilter.sort === "duration"}
                                     {#if $searchFilter.order === 2}
@@ -292,7 +291,7 @@
                         <th scope="col" class="w-[15%] px-3 py-3">
                             <button
                                 class="hover:text-accent-500 ml-auto flex items-center"
-                                on:click={() => setSort("fight_start")}>
+                                onclick={() => setSort("fight_start")}>
                                 {#if $searchFilter.sort === "fight_start"}
                                     <SortSymbol />
                                 {/if}
@@ -311,7 +310,7 @@
                                             type="checkbox"
                                             class="text-accent-500 size-5 rounded bg-zinc-700 focus:ring-0 focus:ring-offset-0"
                                             checked={$selectedEncounters.has(encounter.id)}
-                                            on:change={() => {
+                                            onchange={() => {
                                                 if ($selectedEncounters.has(encounter.id)) {
                                                     selectedEncounters.update((set) => {
                                                         set.delete(encounter.id);
@@ -401,13 +400,15 @@
                         </tr>
                     {:else}
                         {#if $searchStore.length > 0}
-                            <div class="w-screen bg-neutral-800 p-2">No encounters found.</div>
+                            <tr class="w-screen bg-neutral-800 p-2"><td> No encounters found. </td> </tr>
                         {:else}
-                            <div class="w-screen bg-neutral-800 p-2">No encounters recorded.</div>
-                            <div class="w-screen bg-neutral-800 p-2">
-                                Meter should be turned on at character select (before entering raid at latest) for best
-                                accuracy.
-                            </div>
+                            <tr class="w-screen bg-neutral-800 p-2"><td>No encounters recorded.</td></tr>
+                            <tr class="w-screen bg-neutral-800 p-2">
+                                <td>
+                                    Meter should be turned on at character select (before entering raid at latest) for best
+                                    accuracy.
+                                </td>
+                            </tr>
                         {/if}
                     {/each}
                 </tbody>
@@ -420,7 +421,7 @@
                     <select
                         id="rowsPerPage"
                         class="focus:border-accent-500 inline rounded-lg border border-gray-600 bg-zinc-700 px-1 py-1 text-sm text-zinc-300 placeholder-gray-400 focus:ring-0"
-                        on:change={changeRowsPerPage}>
+                        onchange={changeRowsPerPage}>
                         <option selected={$settings.general.logsPerPage === 10}>10</option>
                         <option selected={$settings.general.logsPerPage === 25}>25</option>
                         <option selected={$settings.general.logsPerPage === 50}>50</option>
@@ -442,7 +443,7 @@
                 </div>
                 <ul class="inline-flex items-center -space-x-px">
                     <li use:tooltip={{ content: "First" }}>
-                        <button class="ml-0 block px-3" on:click={() => firstPage()}>
+                        <button class="ml-0 block px-3" onclick={() => firstPage()}>
                             <span class="sr-only">First</span>
                             <svg
                                 class="hover:fill-accent-800 size-5 fill-gray-400"
@@ -454,7 +455,7 @@
                         </button>
                     </li>
                     <li use:tooltip={{ content: "Previous" }}>
-                        <button class="ml-0 block px-3" on:click={() => previousPage()}>
+                        <button class="ml-0 block px-3" onclick={() => previousPage()}>
                             <span class="sr-only">Back</span>
                             <svg
                                 class="hover:fill-accent-800 size-5 fill-gray-400"
@@ -465,7 +466,7 @@
                         </button>
                     </li>
                     <li use:tooltip={{ content: "Next" }}>
-                        <button class="ml-0 block px-3" on:click={() => nextPage()}>
+                        <button class="ml-0 block px-3" onclick={() => nextPage()}>
                             <span class="sr-only">Next</span>
                             <svg
                                 class="hover:fill-accent-800 size-5 fill-gray-400"
@@ -476,7 +477,7 @@
                         </button>
                     </li>
                     <li use:tooltip={{ content: "Last" }}>
-                        <button class="ml-0 block px-3" on:click={() => lastPage()}>
+                        <button class="ml-0 block px-3" onclick={() => lastPage()}>
                             <span class="sr-only">Last</span>
                             <svg
                                 class="hover:fill-accent-800 size-5 fill-gray-400"

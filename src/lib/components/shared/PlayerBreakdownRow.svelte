@@ -6,42 +6,59 @@
     import { getSkillIcon } from "$lib/utils/strings";
     import { generateSkillTooltip, tooltip } from "$lib/utils/tooltip";
 
-    export let skill: Skill;
-    export let color: string;
-    export let hasFrontAttacks: boolean;
-    export let hasBackAttacks: boolean;
-    export let anySupportBuff: boolean;
-    export let anySupportIdentity: boolean;
-    export let anySupportBrand: boolean;
-    export let abbreviatedSkillDamage: (string | number)[];
-    export let skillDps: (string | number)[];
-    export let skillDpsRaw: number;
-    export let playerDamageDealt: number;
-    export let width: number;
-    export let duration: number;
+    interface Props {
+        skill: Skill;
+        color: string;
+        hasFrontAttacks: boolean;
+        hasBackAttacks: boolean;
+        anySupportBuff: boolean;
+        anySupportIdentity: boolean;
+        anySupportBrand: boolean;
+        abbreviatedSkillDamage: (string | number)[];
+        skillDps: (string | number)[];
+        skillDpsRaw: number;
+        playerDamageDealt: number;
+        width: number;
+        duration: number;
+        meterSettings: string;
+        shadow?: boolean;
+        index: number;
+    }
 
-    export let meterSettings: string;
-    export let shadow: boolean = false;
-    export let index: number;
+    let {
+        skill,
+        color,
+        hasFrontAttacks,
+        hasBackAttacks,
+        anySupportBuff,
+        anySupportIdentity,
+        anySupportBrand,
+        abbreviatedSkillDamage,
+        skillDps,
+        skillDpsRaw,
+        playerDamageDealt,
+        width,
+        duration,
+        meterSettings,
+        shadow = false,
+        index
+    }: Props = $props();
 
-    let critPercentage = "0.0";
-    let critDmgPercentage = "0.0";
-    let baPercentage = "0.0";
-    let faPercentage = "0.0";
-    let averagePerCast = 0;
-    let adjustedCritPercentage: string | undefined = undefined;
+    let critPercentage = $state("0.0");
+    let critDmgPercentage = $state("0.0");
+    let baPercentage = $state("0.0");
+    let faPercentage = $state("0.0");
+    let averagePerCast = $derived(skill.totalDamage / skill.casts);
+    let adjustedCritPercentage: string | undefined = $state(undefined);
 
-    let currentSettings = $settings.logs;
+    let currentSettings = $state($settings.logs);
     if (meterSettings === "logs") {
         currentSettings = $settings.logs;
     } else {
         currentSettings = $settings.meter;
     }
 
-    $: {
-
-        averagePerCast = skill.totalDamage / skill.casts;
-
+    $effect(() => {
         if (currentSettings.breakdown.adjustedCritRate) {
             if (skill.adjustedCrit) {
                 adjustedCritPercentage = round(skill.adjustedCrit * 100);
@@ -64,7 +81,6 @@
                 }
             }
         }
-
         if (skill.hits !== 0) {
             critDmgPercentage = round((skill.critDamage / skill.totalDamage) * 100);
             critPercentage = round((skill.crits / skill.hits) * 100);
@@ -76,7 +92,7 @@
                 baPercentage = round((skill.backAttacks / skill.hits) * 100);
             }
         }
-    }
+    });
 </script>
 
 <td class="pl-1">
@@ -243,9 +259,9 @@
         {/if}
     </td>
 {/if}
-<div
+<td
     class="absolute left-0 -z-10 h-7 px-2 py-1"
     class:shadow-md={shadow}
     style="background-color: {index % 2 === 1 && $settings.general.splitLines
         ? RGBLinearShade(HexToRgba(color, 0.6))
-        : HexToRgba(color, 0.6)}; width: {width}%" />
+        : HexToRgba(color, 0.6)}; width: {width}%"></td>

@@ -4,15 +4,19 @@
     import "../app.css";
     import { onDestroy, onMount } from "svelte";
     import { listen, type UnlistenFn } from "@tauri-apps/api/event";
-    import { navigating } from "$app/stores";
     import NProgress from "nprogress";
     import "nprogress/nprogress.css";
-    import { goto, invalidateAll } from "$app/navigation";
+    import { afterNavigate, goto, invalidateAll, onNavigate } from "$app/navigation";
     import { settings, updateSettings } from "$lib/utils/settings";
     import { appWindow } from "@tauri-apps/api/window";
     import { checkUpdate } from "@tauri-apps/api/updater";
     import { invoke } from "@tauri-apps/api";
     import UpdateAvailable from "$lib/components/shared/UpdateAvailable.svelte";
+    interface Props {
+        children?: import('svelte').Snippet;
+    }
+
+    let { children }: Props = $props();
 
     let events: Set<UnlistenFn> = new Set();
 
@@ -21,12 +25,11 @@
     });
 
     onMount(() => {
-        let unsubscribe = navigating.subscribe((navigating) => {
-            if (navigating) {
-                NProgress.start();
-            } else {
-                NProgress.done();
-            }
+        onNavigate(() => {
+            NProgress.start();
+        });
+        afterNavigate(() => {
+            NProgress.done();
         });
 
         if (location.pathname !== "/") {
@@ -53,10 +56,6 @@
                 setInterval(checkForUpdate, 60 * 15 * 1000);
             })();
         }
-
-        return () => {
-            unsubscribe();
-        };
     });
 
     onDestroy(() => {
@@ -90,7 +89,7 @@
         }
     }
 
-    $: {
+    $effect.pre(() => {
         if ($settings.general.logScale === "1") {
             document.documentElement.style.setProperty("font-size", "medium");
         } else if ($settings.general.logScale === "2") {
@@ -100,11 +99,11 @@
         } else if ($settings.general.logScale === "0") {
             document.documentElement.style.setProperty("font-size", "small");
         }
-    }
+    });
 </script>
 
 <div class={$settings.general.accentColor}>
-    <slot />
+    {@render children?.()}
     {#if location.pathname !== "/"}
         <UpdateAvailable />
     {/if}

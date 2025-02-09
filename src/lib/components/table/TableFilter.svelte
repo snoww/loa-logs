@@ -5,22 +5,26 @@
     import { bossList } from "$lib/constants/bosses";
     import { classList } from "$lib/constants/classes";
     import { difficultyMap, encounterMap } from "$lib/constants/encounters";
-    import { SearchFilter, type EncounterPreview } from "$lib/types";
+    import { SearchFilter } from "$lib/types";
     import { settings } from "$lib/utils/settings";
     import { pageStore, searchStore, searchFilter, selectedEncounters } from "$lib/utils/stores";
     import { tooltip } from "$lib/utils/tooltip";
     import { invoke } from "@tauri-apps/api";
 
-    let filterMenu = false;
-    let filterTab = "Encounters";
+    let filterMenu = $state(false);
+    let filterTab = $state("Encounters");
 
-    let filterDiv: HTMLDivElement;
+    let filterDiv: HTMLDivElement | undefined = $state();
 
-    export let selectMode: boolean;
-    export let refreshFn: () => void;
+    interface Props {
+        selectMode: boolean;
+        refreshFn: () => void;
+    }
 
-    let search = $searchStore;
-    let deleteConfirm = false;
+    let { selectMode = $bindable(), refreshFn }: Props = $props();
+
+    let search = $state($searchStore);
+    let deleteConfirm = $state(false);
 
     onMount(() => {
         const clickOutside = (event: MouseEvent) => {
@@ -82,10 +86,12 @@
             <div class="absolute inset-y-0 left-0 flex cursor-default items-center pl-2">
                 <div class="relative flex items-center">
                     <button
+                        aria-label="Search Filter"
                         use:tooltip={{ content: "Search Filter" }}
-                        on:click|stopPropagation={() => {
+                        onclick={((e) => {
+                            e.stopPropagation();
                             filterMenu = !filterMenu;
-                        }}>
+                        })}>
                         <svg
                             class="size-5 {$searchFilter.bosses.size > 0 ||
                             $searchFilter.encounters.size > 0 ||
@@ -111,7 +117,7 @@
                                         class="border-b px-1 {filterTab === 'Encounters'
                                             ? 'border-zinc-200'
                                             : 'border-zinc-700 text-gray-400'}"
-                                        on:click={() => {
+                                        onclick={() => {
                                             filterTab = "Encounters";
                                         }}>
                                         Encounters
@@ -120,7 +126,7 @@
                                         class="border-b px-1 {filterTab === 'Bosses'
                                             ? 'border-zinc-200'
                                             : 'border-zinc-700 text-gray-400'}"
-                                        on:click={() => {
+                                        onclick={() => {
                                             filterTab = "Bosses";
                                         }}>
                                         Bosses
@@ -129,7 +135,7 @@
                                         class="border-b px-1 {filterTab === 'Classes'
                                             ? 'border-zinc-200'
                                             : 'border-zinc-700 text-gray-400'}"
-                                        on:click={() => {
+                                        onclick={() => {
                                             filterTab = "Classes";
                                         }}>
                                         Classes
@@ -138,7 +144,7 @@
                                         class="border-b px-1 {filterTab === 'Duration'
                                             ? 'border-zinc-200'
                                             : 'border-zinc-700 text-gray-400'}"
-                                        on:click={() => {
+                                        onclick={() => {
                                             filterTab = "Duration";
                                         }}>
                                         Duration
@@ -146,7 +152,7 @@
                                 </div>
                                 <button
                                     class="mx-2 rounded bg-zinc-800 px-1 text-xs hover:bg-zinc-600"
-                                    on:click={() => {
+                                    onclick={() => {
                                         let sf = new SearchFilter($settings.logs.minEncounterDuration);
                                         sf.sort = $searchFilter.sort;
                                         sf.order = $searchFilter.order;
@@ -188,7 +194,7 @@
                                                 difficulty
                                                     ? 'bg-gray-800'
                                                     : ''}"
-                                                on:click={() => {
+                                                onclick={() => {
                                                     if ($searchFilter.difficulty === difficulty) {
                                                         $searchFilter.difficulty = "";
                                                     } else {
@@ -210,7 +216,7 @@
                                                         )
                                                             ? 'bg-gray-800'
                                                             : ''}"
-                                                        on:click={() => {
+                                                        onclick={() => {
                                                             let newSet = new Set($searchFilter.encounters);
                                                             if (newSet.has(encounter)) {
                                                                 newSet.delete(encounter);
@@ -260,7 +266,7 @@
                                                 )
                                                     ? 'bg-gray-800'
                                                     : ''}"
-                                                on:click={() => {
+                                                onclick={() => {
                                                     let newSet = new Set($searchFilter.bosses);
                                                     if (newSet.has(boss)) {
                                                         newSet.delete(boss);
@@ -280,7 +286,7 @@
                                     {#each classList.sort() as className (className)}
                                         <button
                                             class="m-1 truncate rounded border border-gray-500 p-1"
-                                            on:click={() => {
+                                            onclick={() => {
                                                 search += ` ${className.toLowerCase()}:`;
                                                 $searchStore = search;
                                                 $pageStore = 1;
@@ -307,7 +313,7 @@
                                             </label>
                                             <button
                                                 class="mx-2 h-6 rounded bg-zinc-800 px-1 text-xs hover:bg-zinc-600"
-                                                on:click={() => {
+                                                onclick={() => {
                                                     $searchFilter.minDuration = $settings.logs.minEncounterDuration;
                                                 }}>
                                                 Reset
@@ -326,11 +332,12 @@
                 bind:value={search}
                 class="focus:border-accent-500 block w-96 rounded-lg border border-gray-600 bg-zinc-700 px-8 text-sm text-zinc-300 placeholder-gray-400 focus:ring-0"
                 placeholder="Search encounters, names, or class:name pairs"
-                on:input={handleSearchInput} />
+                oninput={handleSearchInput} />
             {#if $searchStore.length > 0}
                 <button
+                    aria-label="Clear Search"
                     class="absolute inset-y-0 right-0 flex items-center pr-2"
-                    on:click={() => {
+                    onclick={() => {
                         search = "";
                         $searchStore = "";
                         $pageStore = 1;
@@ -349,8 +356,9 @@
     <div class="flex items-center space-x-2">
         {#if selectMode && $selectedEncounters.size > 0}
             <button
+                aria-label="Delete Selected"
                 class="flex items-center rounded-md bg-red-900 p-1 text-xs"
-                on:click={() => {
+                onclick={() => {
                     deleteConfirm = true;
                 }}>
                 <svg class="size-5 fill-zinc-300" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"
@@ -360,7 +368,7 @@
         {/if}
         <button
             class="flex items-center rounded-md p-1 text-xs {selectMode ? 'bg-accent-800' : 'bg-zinc-700'}"
-            on:click={toggleSelectMode}>
+            onclick={toggleSelectMode}>
             <svg class="size-5 fill-zinc-300" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"
                 ><path
                     d="M191-99.5q-37.744 0-64.622-26.878T99.5-191v-578q0-38.156 26.878-65.328Q153.256-861.5 191-861.5h578q15.545 0 34.773 8.5Q823-844.5 833-836l-71 71v-4H191v578h578v-330l92.5-92.5V-191q0 37.744-27.172 64.622T769-99.5H191ZM467-296 247-516l48-48.5 172.158 172 392.342-392 47 49.5L467-296Z" /></svg>
@@ -370,7 +378,7 @@
 </div>
 
 {#if deleteConfirm}
-    <div class="fixed inset-0 z-50 bg-zinc-900 bg-opacity-80" />
+    <div class="fixed inset-0 z-50 bg-zinc-900 bg-opacity-80"></div>
     <div class="fixed left-0 right-0 top-0 z-50 h-modal w-full items-center justify-center p-4">
         <div class="relative top-[25%] mx-auto flex max-h-full w-full max-w-md">
             <div class="relative mx-auto flex flex-col rounded-lg border-gray-700 bg-zinc-800 text-gray-400 shadow-md">
@@ -378,7 +386,7 @@
                     type="button"
                     class="absolute right-2.5 top-3 ml-auto whitespace-normal rounded-lg p-1.5 hover:bg-zinc-600 focus:outline-none"
                     aria-label="Close modal"
-                    on:click={() => (deleteConfirm = false)}>
+                    onclick={() => (deleteConfirm = false)}>
                     <span class="sr-only">Close modal</span>
                     <svg class="size-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"
                         ><path
@@ -407,13 +415,13 @@
                         <button
                             type="button"
                             class="mr-2 inline-flex items-center justify-center rounded-lg bg-red-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-red-800 focus:outline-none"
-                            on:click={deleteSelected}>
+                            onclick={deleteSelected}>
                             Yes, I'm sure
                         </button>
                         <button
                             type="button"
                             class="inline-flex items-center justify-center rounded-lg bg-gray-800 bg-transparent px-5 py-2.5 text-center text-sm font-medium text-gray-400 hover:bg-zinc-700 hover:text-white focus:text-white focus:outline-none"
-                            on:click={() => (deleteConfirm = false)}>
+                            onclick={() => (deleteConfirm = false)}>
                             No, cancel
                         </button>
                     </div>

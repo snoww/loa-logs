@@ -5,7 +5,7 @@
     import { ifaceChangedStore } from "$lib/utils/stores";
     import { emit } from "@tauri-apps/api/event";
 
-    let colorDropdownOpen = false;
+    let colorDropdownOpen = $state(false);
 
     const handleColorDropdownFocusLoss = (event: FocusEvent) => {
         const relatedTarget = event.relatedTarget as HTMLElement;
@@ -30,13 +30,14 @@
 
 <div class="flex flex-col space-y-4 divide-y-[1px]">
     <div class="mt-4 flex flex-col space-y-2 px-2">
-        <div class="relative pt-2" on:focusout={handleColorDropdownFocusLoss}>
+        <div class="relative pt-2" onfocusout={handleColorDropdownFocusLoss}>
             <div class="flex items-center">
                 <button
+                    aria-label="Open color dropdown"
                     id=""
                     class="bg-accent-800 inline-flex items-center rounded-lg px-2 py-2 text-center text-sm"
                     type="button"
-                    on:click={handleColorDropdownClick}>
+                    onclick={handleColorDropdownClick}>
                     <svg class="size-4 fill-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960"
                         ><path
                             d="M480 996q-86.035 0-162.566-33.158t-133.825-90.451q-57.293-57.294-90.451-133.802Q60 662.08 60 576.062 60 487 93.196 410.724q33.196-76.275 91.5-133.25Q243 220.5 320.769 187.75 398.538 155 487.189 155q83.023 0 157.706 28.207 74.683 28.207 131.885 77.88 57.202 49.672 90.711 118.242Q901 447.9 901 527q0 112.5-62.75 184.5t-175.664 72H605.5q-17 0-29.5 13.25T563.5 827q0 25.447 10 36.224 10 10.776 10 32.276 0 40-28.55 70.25T480 996Zm0-420Zm-222.5 24.5q19.7 0 34.1-14.4Q306 571.7 306 552q0-19.7-14.4-34.1-14.4-14.4-34.1-14.4-19.7 0-34.1 14.4Q209 532.3 209 552q0 19.7 14.4 34.1 14.4 14.4 34.1 14.4Zm121-162q20.2 0 34.6-14.4 14.4-14.4 14.4-34.1 0-20.7-14.4-34.6-14.4-13.9-34.1-13.9-20.7 0-34.6 13.9-13.9 13.9-13.9 34.1 0 20.2 13.9 34.6 13.9 14.4 34.1 14.4Zm203.5 0q20.2 0 34.6-14.4Q631 409.7 631 390q0-20.7-14.4-34.6-14.4-13.9-34.1-13.9-20.7 0-34.6 13.9-13.9 13.9-13.9 34.1 0 20.2 13.9 34.6 13.9 14.4 34.1 14.4Zm123.5 162q19.7 0 34.1-14.4Q754 571.7 754 552q0-19.7-14.4-34.1-14.4-14.4-34.1-14.4-20.7 0-34.6 14.4Q657 532.3 657 552q0 19.7 13.9 34.1 13.9 14.4 34.6 14.4Zm-229.342 304q7.592 0 11.717-3.545Q492 897.41 492 888.938 492 874.5 477.25 865q-14.75-9.5-14.75-47.5 0-48.674 32.73-87.087Q527.96 692 576.25 692h86.25q74 0 110-43.75t36-115.25q0-131-97.843-208.25t-223.16-77.25q-140.595 0-238.296 95.919T151.5 576.479q0 136.521 95.211 232.271t229.447 95.75Z" /></svg>
@@ -52,7 +53,7 @@
                         <li>
                             <button
                                 class="block w-full rounded-t-lg bg-red-800 px-4 py-2 text-left"
-                                on:click={() => {
+                                onclick={() => {
                                     $settings.general.accentColor = "theme-red";
                                     colorDropdownOpen = false;
                                 }}>Red</button>
@@ -61,7 +62,7 @@
                             <button
                                 class="block w-full px-4 py-2 text-left"
                                 style="background-color: rgb(218, 124, 160)"
-                                on:click={() => {
+                                onclick={() => {
                                     $settings.general.accentColor = "theme-rose";
                                     colorDropdownOpen = false;
                                 }}>Rose</button>
@@ -69,7 +70,7 @@
                         <li>
                             <button
                                 class="block w-full bg-pink-800 px-4 py-2 text-left"
-                                on:click={() => {
+                                onclick={() => {
                                     $settings.general.accentColor = "theme-pink";
                                     colorDropdownOpen = false;
                                 }}>Pink</button>
@@ -77,7 +78,7 @@
                         <li>
                             <button
                                 class="block w-full bg-violet-500 px-4 py-2 text-left"
-                                on:click={() => {
+                                onclick={() => {
                                     $settings.general.accentColor = "theme-violet";
                                     colorDropdownOpen = false;
                                 }}>Violet</button>
@@ -85,7 +86,7 @@
                         <li>
                             <button
                                 class="block w-full bg-purple-800 px-4 py-2 text-left"
-                                on:click={() => {
+                                onclick={() => {
                                     $settings.general.accentColor = "theme-purple";
                                     colorDropdownOpen = false;
                                 }}>Purple</button>
@@ -93,7 +94,7 @@
                         <li>
                             <button
                                 class="block w-full bg-sky-800 px-4 py-2 text-left"
-                                on:click={() => {
+                                onclick={() => {
                                     $settings.general.accentColor = "theme-blue";
                                     colorDropdownOpen = false;
                                 }}>Blue</button>
@@ -101,7 +102,7 @@
                         <li>
                             <button
                                 class="block w-full bg-green-800 px-4 py-2 text-left"
-                                on:click={() => {
+                                onclick={() => {
                                     $settings.general.accentColor = "theme-green";
                                     colorDropdownOpen = false;
                                 }}>Green</button>
@@ -109,7 +110,7 @@
                         <li>
                             <button
                                 class="block w-full bg-yellow-400 px-4 py-2 text-left"
-                                on:click={() => {
+                                onclick={() => {
                                     $settings.general.accentColor = "theme-yellow";
                                     colorDropdownOpen = false;
                                 }}>Yellow</button>
@@ -117,7 +118,7 @@
                         <li>
                             <button
                                 class="block w-full rounded-b-lg bg-orange-500 px-4 py-2 text-left"
-                                on:click={() => {
+                                onclick={() => {
                                     $settings.general.accentColor = "theme-orange";
                                     colorDropdownOpen = false;
                                 }}>Orange</button>
@@ -154,7 +155,7 @@
             <input
                 type="checkbox"
                 bind:checked={$settings.general.bossOnlyDamage}
-                on:change={() => {
+                onchange={() => {
                     emit("boss-only-damage-request", $settings.general.bossOnlyDamage);
                 }}
                 class="text-accent-500 size-5 rounded bg-zinc-700 focus:ring-0 focus:ring-offset-0" />
@@ -196,7 +197,7 @@
                 <input
                     type="checkbox"
                     bind:checked={$settings.general.alwaysOnTop}
-                    on:change={toggleAlwaysOnTop}
+                    onchange={toggleAlwaysOnTop}
                     class="text-accent-500 size-5 rounded bg-zinc-700 focus:ring-0 focus:ring-offset-0" />
                 <div class="ml-5">
                     <div class="text-gray-100">Always on Top</div>
@@ -213,7 +214,7 @@
                 <input
                     type="checkbox"
                     bind:checked={$settings.general.autoIface}
-                    on:change={() => {
+                    onchange={() => {
                         $ifaceChangedStore = true;
                     }}
                     class="text-accent-500 size-5 rounded bg-zinc-700 focus:ring-0 focus:ring-offset-0" />

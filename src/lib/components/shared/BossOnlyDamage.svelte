@@ -3,7 +3,11 @@
     import { getImagePath } from "$lib/utils/strings";
     import { tooltip } from "$lib/utils/tooltip";
 
-    export let width = 1.5;
+    interface Props {
+        width?: number;
+    }
+
+    let { width = 1.5 }: Props = $props();
 </script>
 
 <img

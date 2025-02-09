@@ -42,19 +42,19 @@
     import { invoke } from "@tauri-apps/api";
     import { uploadLog } from "$lib/utils/sync";
 
-    let time = +Date.now();
-    let encounter: Encounter | null = null;
-    let parties: PartyInfo | undefined;
+    let time = $state(+Date.now());
+    let encounter: Encounter | null = $state(null);
+    let parties: PartyInfo | undefined = $state();
     let events: Array<UnlistenFn> = [];
 
-    let zoneChangeAlert = false;
-    let resettingAlert = false;
-    let pauseAlert = false;
-    let saveAlert = false;
-    let raidClear = false;
-    let raidWipe = false;
-    let bossDeadAlert = false;
-    let adminAlert = false;
+    let zoneChangeAlert = $state(false);
+    let resettingAlert = $state(false);
+    let pauseAlert = $state(false);
+    let saveAlert = $state(false);
+    let raidClear = $state(false);
+    let raidWipe = $state(false);
+    let bossDeadAlert = $state(false);
+    let adminAlert = $state(false);
     let raidInProgress = writable(true);
 
     onMount(() => {
@@ -171,42 +171,37 @@
         events.forEach((unlisten) => unlisten());
     });
 
-    let players: Array<Entity> = [];
-    let bosses: Array<Entity> = [];
-    let playerDamagePercentages: Array<number> = [];
-    let topDamageDealt = 0;
-    let encounterDuration = "00:00";
-    let duration = 0;
-    let totalDamageDealt = 0;
-    let dps = 0;
-    let timeUntilKill = "00:00";
-    let currentBoss: Entity | null = null;
-    let state = MeterState.PARTY;
-    let tab = MeterTab.DAMAGE;
-    let player: Entity | null = null;
-    let playerName = "";
-    let focusedBoss = "";
-    let lastCombatPacket = 0;
-    let anyDead: boolean = false;
-    let multipleDeaths: boolean = false;
-    let anyFrontAtk: boolean = false;
-    let anyBackAtk: boolean = false;
-    let anySupportBuff: boolean = false;
-    let anySupportIdentity: boolean = false;
-    let anySupportBrand: boolean = false;
-    let anyRdpsData: boolean = false;
-    let isSolo: boolean = true;
+    let players: Array<Entity> = $state([]);
+    let bosses: Array<Entity> = $state([]);
+    let playerDamagePercentages: Array<number> = $state([]);
+    let topDamageDealt = $state(0);
+    let encounterDuration = $state("00:00");
+    let duration = $state(0);
+    let totalDamageDealt = $state(0);
+    let dps = $state(0);
+    let timeUntilKill = $state("00:00");
+    let currentBoss: Entity | null = $state(null);
+    let meterState = $state(MeterState.PARTY);
+    let tab = $state(MeterTab.DAMAGE);
+    let player: Entity | null = $state(null);
+    let playerName = $state("");
+    let focusedBoss = $state("");
+    let lastCombatPacket = $state(0);
+    let anyDead: boolean = $state(false);
+    let multipleDeaths: boolean = $state(false);
+    let anyFrontAtk: boolean = $state(false);
+    let anyBackAtk: boolean = $state(false);
+    let anySupportBuff: boolean = $state(false);
+    let anySupportIdentity: boolean = $state(false);
+    let anySupportBrand: boolean = $state(false);
+    let anyRdpsData: boolean = $state(false);
+    let isSolo: boolean = $state(true);
 
     let paused = writable(false);
 
-    $: {
+    $effect(() => {
         if (encounter) {
             if (encounter.fightStart !== 0 && !$paused) {
-                if (!$missingInfo) {
-                    if (encounter.localPlayer === "You" || !isValidName(encounter.localPlayer)) {
-                        $missingInfo = true;
-                    }
-                }
                 if ($settings.general.showEsther) {
                     players = Object.values(encounter.entities)
                         .filter(
@@ -220,10 +215,83 @@
                         .filter((e) => e.damageStats.damageDealt > 0 && e.entityType === EntityType.PLAYER)
                         .sort((a, b) => b.damageStats.damageDealt - a.damageStats.damageDealt);
                 }
+
                 if ($settings.general.showBosses) {
                     bosses = Object.values(encounter.entities)
                         .filter((e) => e.damageStats.damageDealt > 0 && e.entityType === EntityType.BOSS)
                         .sort((a, b) => b.damageStats.damageDealt - a.damageStats.damageDealt);
+                }
+            }
+        }
+    });
+
+    $effect(() => {
+        if (encounter) {
+            if (encounter.fightStart !== 0 && !$paused) {
+                if (duration < 0) {
+                    encounterDuration = millisToMinutesAndSeconds(0);
+                    dps = 0;
+                    timeUntilKill = "00:00";
+                } else {
+                    encounterDuration = millisToMinutesAndSeconds(duration);
+                    dps = totalDamageDealt / (duration / 1000);
+                    if ($settings.meter.showTimeUntilKill && encounter.currentBoss) {
+                        let remainingDpm =
+                            players
+                                .filter(
+                                    (e) =>
+                                        e.damageStats.damageDealt > 0 && !e.isDead && e.entityType == EntityType.PLAYER
+                                )
+                                .reduce((a, b) => a + b.damageStats.damageDealt, 0) / duration;
+                        let remainingBossHealth = encounter.currentBoss.currentHp + encounter.currentBoss.currentShield;
+                        let millisUntilKill = Math.max(remainingBossHealth / remainingDpm, 0);
+                        if (millisUntilKill > 3.6e6) {
+                            // 1 hr
+                            timeUntilKill = "∞";
+                        } else {
+                            timeUntilKill = millisToMinutesAndSeconds(millisUntilKill);
+                        }
+                    }
+                }
+
+                if (
+                    // ((encounter.currentBoss && !encounter.currentBoss.isDead) || !encounter.currentBoss) &&
+                    $raidInProgress
+                ) {
+                    duration = time - encounter.fightStart;
+                }
+            }
+        }
+    });
+
+    $effect(() => {
+        if (encounter) {
+            if (encounter.fightStart !== 0 && !$paused) {
+                topDamageDealt = encounter.encounterDamageStats.topDamageDealt;
+                playerDamagePercentages = players.map(
+                    (player) => (player.damageStats.damageDealt / topDamageDealt) * 100
+                );
+
+                if ($settings.general.showEsther) {
+                    totalDamageDealt =
+                        encounter.encounterDamageStats.totalDamageDealt +
+                        players
+                            .filter((e) => e.damageStats.damageDealt > 0 && e.entityType === EntityType.ESTHER)
+                            .reduce((a, b) => a + b.damageStats.damageDealt, 0);
+                } else {
+                    totalDamageDealt = encounter.encounterDamageStats.totalDamageDealt;
+                }
+            }
+        }
+    });
+
+    $effect(() => {
+        if (encounter) {
+            if (encounter.fightStart !== 0 && !$paused) {
+                if (!$missingInfo) {
+                    if (encounter.localPlayer === "You" || !isValidName(encounter.localPlayer)) {
+                        $missingInfo = true;
+                    }
                 }
                 $localPlayer = encounter.localPlayer;
                 isSolo = players.length === 1;
@@ -258,52 +326,6 @@
                 } else {
                     $rdpsEventDetails = "";
                 }
-                topDamageDealt = encounter.encounterDamageStats.topDamageDealt;
-                playerDamagePercentages = players.map(
-                    (player) => (player.damageStats.damageDealt / topDamageDealt) * 100
-                );
-
-                if (
-                    // ((encounter.currentBoss && !encounter.currentBoss.isDead) || !encounter.currentBoss) &&
-                    $raidInProgress
-                ) {
-                    duration = time - encounter.fightStart;
-                }
-
-                if (duration < 0) {
-                    encounterDuration = millisToMinutesAndSeconds(0);
-                    dps = 0;
-                    timeUntilKill = "00:00";
-                } else {
-                    encounterDuration = millisToMinutesAndSeconds(duration);
-                    dps = totalDamageDealt / (duration / 1000);
-                    if ($settings.meter.showTimeUntilKill && encounter.currentBoss) {
-                        let remainingDpm =
-                            players
-                                .filter(
-                                    (e) =>
-                                        e.damageStats.damageDealt > 0 && !e.isDead && e.entityType == EntityType.PLAYER
-                                )
-                                .reduce((a, b) => a + b.damageStats.damageDealt, 0) / duration;
-                        let remainingBossHealth = encounter.currentBoss.currentHp + encounter.currentBoss.currentShield;
-                        let millisUntilKill = Math.max(remainingBossHealth / remainingDpm, 0);
-                        if (millisUntilKill > 3.6e6) {
-                            // 1 hr
-                            timeUntilKill = "∞";
-                        } else {
-                            timeUntilKill = millisToMinutesAndSeconds(millisUntilKill);
-                        }
-                    }
-                }
-                if ($settings.general.showEsther) {
-                    totalDamageDealt =
-                        encounter.encounterDamageStats.totalDamageDealt +
-                        players
-                            .filter((e) => e.damageStats.damageDealt > 0 && e.entityType === EntityType.ESTHER)
-                            .reduce((a, b) => a + b.damageStats.damageDealt, 0);
-                } else {
-                    totalDamageDealt = encounter.encounterDamageStats.totalDamageDealt;
-                }
 
                 lastCombatPacket = encounter.lastCombatPacket;
             }
@@ -314,16 +336,16 @@
 
             if (playerName) {
                 player = encounter.entities[playerName];
-                state = MeterState.PLAYER;
+                meterState = MeterState.PLAYER;
             } else {
                 player = null;
-                state = MeterState.PARTY;
+                meterState = MeterState.PARTY;
             }
         }
-    }
+    });
 
     function inspectPlayer(name: string) {
-        state = MeterState.PLAYER;
+        meterState = MeterState.PLAYER;
         playerName = name;
         scrollToTopOfTable();
     }
@@ -333,9 +355,12 @@
         scrollToTopOfTable();
     }
 
-    function handleRightClick() {
-        if (state === MeterState.PLAYER) {
-            state = MeterState.PARTY;
+    function handleRightClick(e: MouseEvent | undefined = undefined) {
+        if (e) {
+            e.preventDefault();
+        }
+        if (meterState === MeterState.PLAYER) {
+            meterState = MeterState.PARTY;
             player = null;
             playerName = "";
         }
@@ -356,7 +381,7 @@
     }
 
     function reset() {
-        state = MeterState.PARTY;
+        meterState = MeterState.PARTY;
         player = null;
         playerName = "";
         focusedBoss = "";
@@ -381,12 +406,17 @@
         $missingInfo = false;
     }
 
-    let screenshotAreaDiv: HTMLElement;
+    let screenshotAreaDiv: HTMLElement | undefined = $state();
 
     async function captureScreenshot() {
         takingScreenshot.set(true);
         document.body.style.pointerEvents = "none";
         setTimeout(async () => {
+            if (!screenshotAreaDiv) {
+                takingScreenshot.set(false);
+                return;
+            }
+
             const canvas = await html2canvas(screenshotAreaDiv, {
                 useCORS: true,
                 backgroundColor: "#27272A"
@@ -416,7 +446,7 @@
     }
 </script>
 
-<svelte:window on:contextmenu|preventDefault />
+<svelte:window oncontextmenu={(e) => e.preventDefault()} />
 <div bind:this={screenshotAreaDiv} style="height: calc(100vh - 1.5rem);">
     <EncounterInfo {encounterDuration} {totalDamageDealt} {dps} {timeUntilKill} screenshotFn={captureScreenshot} />
     {#if currentBoss !== null && $settings.meter.bossHp}
@@ -428,19 +458,15 @@
         class="relative top-7 scroll-ml-8 scroll-mt-2 overflow-scroll"
         style="height: calc(100vh - 1.5rem - 1.75rem {currentBoss !== null ? ' - 1.75rem' : ''});">
         {#if tab === MeterTab.DAMAGE}
-            {#if state === MeterState.PARTY}
+            {#if meterState === MeterState.PARTY}
                 <table class="relative w-full table-fixed" id="live-meter-table">
-                    <thead
-                        class="sticky top-0 z-40 h-6"
-                        on:contextmenu|preventDefault={() => {
-                            // console.log("titlebar clicked");
-                        }}>
+                    <thead class="sticky top-0 z-40 h-6">
                         <tr class="bg-zinc-900 tracking-tighter">
                             <th class="w-7 px-2 font-normal">
                                 <MissingInfo />
                             </th>
-                            <th class="w-14 px-2 text-left font-normal" />
-                            <th class="w-full" />
+                            <th class="w-14 px-2 text-left font-normal"></th>
+                            <th class="w-full"></th>
                             {#if anyDead && $settings.meter.deathTime}
                                 <th class="w-14 font-normal" use:tooltip={{ content: "Dead for" }}>Dead</th>
                             {/if}
@@ -501,7 +527,7 @@
                             <tr
                                 class="h-7 px-2 py-1 {$settings.general.underlineHovered ? 'hover:underline' : ''}"
                                 animate:flip={{ duration: 200 }}
-                                on:click={() => inspectPlayer(entity.name)}>
+                                onclick={() => inspectPlayer(entity.name)}>
                                 <DamageMeterPlayerRow
                                     {entity}
                                     percentage={playerDamagePercentages[i]}
@@ -521,7 +547,7 @@
                         {/each}
                     </tbody>
                 </table>
-            {:else if state === MeterState.PLAYER && player !== null}
+            {:else if meterState === MeterState.PLAYER && player !== null}
                 <table class="relative w-full table-fixed" id="live-meter-table">
                     <PlayerBreakdown entity={player} {duration} {handleRightClick} />
                 </table>
@@ -534,11 +560,11 @@
                 meterSettings={$settings.meter}
                 encounterPartyInfo={parties} />
         {:else if tab === MeterTab.PARTY_BUFFS}
-            {#if state === MeterState.PARTY}
+            {#if meterState === MeterState.PARTY}
                 <Buffs
                     {tab}
                     encounterDamageStats={encounter?.encounterDamageStats}
-                    {players}
+                    entities={players}
                     {handleRightClick}
                     {inspectPlayer}
                     encounterPartyInfo={parties}
@@ -547,7 +573,7 @@
                 <Buffs
                     {tab}
                     encounterDamageStats={encounter?.encounterDamageStats}
-                    {players}
+                    entities={players}
                     focusedPlayer={player}
                     {handleRightClick}
                     {inspectPlayer}
@@ -555,11 +581,11 @@
                     localPlayer={encounter?.localPlayer} />
             {/if}
         {:else if tab === MeterTab.SELF_BUFFS}
-            {#if state === MeterState.PARTY}
+            {#if meterState === MeterState.PARTY}
                 <Buffs
                     {tab}
                     encounterDamageStats={encounter?.encounterDamageStats}
-                    {players}
+                    entities={players}
                     focusedPlayer={player}
                     {handleRightClick}
                     {inspectPlayer}
@@ -569,7 +595,7 @@
                 <Buffs
                     {tab}
                     encounterDamageStats={encounter?.encounterDamageStats}
-                    {players}
+                    entities={players}
                     focusedPlayer={player}
                     {handleRightClick}
                     {inspectPlayer}

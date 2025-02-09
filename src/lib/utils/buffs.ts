@@ -255,7 +255,7 @@ export function getSynergyPercentageDetailsSum(
 
 export function getPartyShields(
     players: Array<Entity>,
-    encounterPartyInfo: PartyInfo,
+    encounterPartyInfo: PartyInfo | undefined,
     groupedShields: Map<string, Map<number, StatusEffect>>,
     tab: ShieldTab
 ) {

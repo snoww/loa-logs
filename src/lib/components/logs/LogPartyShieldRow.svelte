@@ -8,12 +8,16 @@
     import ShieldTooltipDetail from "$lib/components/shared/ShieldTooltipDetail.svelte";
     import { abbreviateNumberSplit } from "$lib/utils/numbers";
 
-    export let player: Entity;
-    export let playerShields: Array<ShieldDetails>;
-    export let percentage: number;
+    interface Props {
+        player: Entity;
+        playerShields: Array<ShieldDetails>;
+        percentage: number;
+    }
 
-    let color = "#ffffff";
-    let playerName: string;
+    let { player, playerShields, percentage }: Props = $props();
+
+    let color = $state("#ffffff");
+    let playerName: string = $derived(formatPlayerName(player, $settings.general));
 
     if (Object.hasOwn($colors, player.class)) {
         if ($settings.general.constantLocalPlayerColor && $localPlayer == player.name) {
@@ -23,13 +27,10 @@
         }
     }
 
-    let totalShieldStr: (string | number)[];
-
-    $: {
-        playerName = formatPlayerName(player, $settings.general);
+    let totalShieldStr: (string | number)[] = $derived.by(() => {
         let totalShield = playerShields.reduce((acc, buff) => acc + buff.total, 0);
-        totalShieldStr = abbreviateNumberSplit(totalShield);
-    }
+        return abbreviateNumberSplit(totalShield);
+    });
 </script>
 
 <td class="pl-1">
@@ -58,7 +59,7 @@
         </td>
     {/each}
 {/if}
-<div
+<td
     class="absolute left-0 -z-10 h-7 px-2 py-1"
     class:shadow-md={!$takingScreenshot}
-    style="background-color: {HexToRgba(color, 0.6)}; width: {percentage}%" />
+    style="background-color: {HexToRgba(color, 0.6)}; width: {percentage}%"></td>

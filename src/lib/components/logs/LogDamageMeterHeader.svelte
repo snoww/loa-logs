@@ -2,15 +2,29 @@
     import { settings } from "$lib/utils/settings";
     import { tooltip } from "$lib/utils/tooltip";
 
-    export let anyDead: boolean;
-    export let multipleDeaths: boolean;
-    export let anyFrontAtk: boolean;
-    export let anyBackAtk: boolean;
-    export let anySupportBuff: boolean;
-    export let anySupportIdentity: boolean;
-    export let anySupportBrand: boolean;
-    export let anyRdpsData: boolean;
-    export let isSolo: boolean;
+    interface Props {
+        anyDead: boolean;
+        multipleDeaths: boolean;
+        anyFrontAtk: boolean;
+        anyBackAtk: boolean;
+        anySupportBuff: boolean;
+        anySupportIdentity: boolean;
+        anySupportBrand: boolean;
+        anyRdpsData: boolean;
+        isSolo: boolean;
+    }
+
+    let {
+        anyDead,
+        multipleDeaths,
+        anyFrontAtk,
+        anyBackAtk,
+        anySupportBuff,
+        anySupportIdentity,
+        anySupportBrand,
+        anyRdpsData,
+        isSolo
+    }: Props = $props();
 </script>
 
 {#if anyDead && $settings.logs.deathTime}

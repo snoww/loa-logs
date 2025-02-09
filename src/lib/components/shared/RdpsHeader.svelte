@@ -2,15 +2,15 @@
     import { tooltip } from "$lib/utils/tooltip";
     import { rdpsEventDetails } from "$lib/utils/stores";
 
-    export let meterSettings: any;
-    export let partyId: number | undefined = undefined;
-    export let isLiveMeter = false;
-
-    let showHeaderForOtherParties = true;
-
-    $: {
-        showHeaderForOtherParties = !(partyId !== undefined && partyId > 0 && isLiveMeter);
+    interface Props {
+        meterSettings: any;
+        partyId?: number | undefined;
+        isLiveMeter?: boolean;
     }
+
+    let { meterSettings, partyId = undefined, isLiveMeter = false }: Props = $props();
+
+    let showHeaderForOtherParties = $derived(!(partyId !== undefined && partyId > 0 && isLiveMeter));
 </script>
 
 <thead>
@@ -43,8 +43,8 @@
             {:else}
                 <th class="w-7 px-2 font-normal"></th>
             {/if}
-            <th class="w-14 px-2 text-left font-normal" />
-            <th class="w-full" />
+            <th class="w-14 px-2 text-left font-normal"></th>
+            <th class="w-full"></th>
             {#if showHeaderForOtherParties}
                 <th
                     class="w-14 font-normal"

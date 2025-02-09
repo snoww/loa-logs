@@ -10,23 +10,43 @@
     import BuffTooltipDetail from "./shared/BuffTooltipDetail.svelte";
     import { localPlayer } from "$lib/utils/stores";
 
-    export let groupedSynergies: Map<string, Map<number, StatusEffect>>;
-    export let player: Entity;
-    export let tab: MeterTab;
+    interface Props {
+        groupedSynergies: Map<string, Map<number, StatusEffect>>;
+        player: Entity;
+        tab: MeterTab;
+    }
 
-    let color: string;
-    let skillDamagePercentages: Array<number> = [];
-    let skills = Array<Skill>();
-    let playerName: string;
-    let buffSummary: BuffDetails[];
+    let { groupedSynergies, player, tab }: Props = $props();
 
-    $: {
-        playerName = formatPlayerName(player, $settings.general);
-
-        skills = Object.values(player.skills).sort((a, b) => b.totalDamage - a.totalDamage);
-        if (player.class === "Arcanist") {
-            skills = skills.filter((skill) => !cardIds.includes(skill.id));
+    let color: string = $state("");
+    let skillDamagePercentages: Array<number> = $state([]);
+    let skills = $state(Array<Skill>());
+    let playerName: string = $derived(formatPlayerName(player, $settings.general));
+    let buffSummary: BuffDetails[] = $derived.by(() => {
+        if (tab === MeterTab.SELF_BUFFS || tab === MeterTab.PARTY_BUFFS) {
+            return getSynergyPercentageDetailsSum(groupedSynergies, skills, player.damageStats);
         }
+        return [];
+    });
+
+    $effect(() => {
+        if (player.class === "Arcanist") {
+            skills = Object.values(player.skills)
+                .sort((a, b) => b.totalDamage - a.totalDamage)
+                .filter((skill) => !cardIds.includes(skill.id));
+        } else {
+            skills = Object.values(player.skills).sort((a, b) => b.totalDamage - a.totalDamage);
+        }
+    });
+
+    $effect(() => {
+        if (skills.length > 0) {
+            let mostDamageSkill = skills[0].totalDamage;
+            skillDamagePercentages = skills.map((skill) => (skill.totalDamage / mostDamageSkill) * 100);
+        }
+    });
+
+    $effect(() => {
         if (Object.hasOwn($colors, player.class)) {
             if ($settings.general.constantLocalPlayerColor && $localPlayer == player.name) {
                 color = $colors["Local"].color;
@@ -34,15 +54,7 @@
                 color = $colors[player.class].color;
             }
         }
-
-        if (skills.length > 0) {
-            let mostDamageSkill = skills[0].totalDamage;
-            skillDamagePercentages = skills.map((skill) => (skill.totalDamage / mostDamageSkill) * 100);
-        }
-        if (tab === MeterTab.SELF_BUFFS || tab === MeterTab.PARTY_BUFFS) {
-            buffSummary = getSynergyPercentageDetailsSum(groupedSynergies, skills, player.damageStats);
-        }
-    }
+    });
 </script>
 
 {#if tab === MeterTab.SELF_BUFFS || tab === MeterTab.PARTY_BUFFS}
@@ -70,11 +82,11 @@
                 </td>
             {/each}
         {/if}
-        <div
+        <td
             class="absolute left-0 -z-10 h-7 w-full px-2 py-1"
             style="background-color: {$settings.general.splitLines
                 ? RGBLinearShade(HexToRgba(color, 0.6))
-                : HexToRgba(color, 0.6)}" />
+                : HexToRgba(color, 0.6)}"></td>
     </tr>
 {/if}
 {#each skills as skill, i (skill.id)}

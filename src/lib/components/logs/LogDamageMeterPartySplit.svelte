@@ -1,43 +1,63 @@
 <script lang="ts">
+    import { run } from 'svelte/legacy';
+
     import { EntityType, type Entity, type PartyInfo } from "$lib/types";
     import { settings } from "$lib/utils/settings";
     import LogDamageMeterHeader from "./LogDamageMeterHeader.svelte";
     import LogDamageMeterRow from "./LogDamageMeterRow.svelte";
 
-    export let players: Array<Entity>;
-    export let encounterPartyInfo: PartyInfo | undefined;
-    export let topDamageDealt: number;
-    export let totalDamageDealt: number;
-    export let anyFrontAtk: boolean;
-    export let anyBackAtk: boolean;
-    export let anySupportBuff: boolean;
-    export let anySupportIdentity: boolean;
-    export let anySupportBrand: boolean;
-    export let anyRdpsData: boolean;
-    export let end: number;
-    export let isSolo: boolean;
-    export let inspectPlayer: (name: string) => void;
+    interface Props {
+        players: Array<Entity>;
+        encounterPartyInfo: PartyInfo | undefined;
+        topDamageDealt: number;
+        totalDamageDealt: number;
+        anyFrontAtk: boolean;
+        anyBackAtk: boolean;
+        anySupportBuff: boolean;
+        anySupportIdentity: boolean;
+        anySupportBrand: boolean;
+        anyRdpsData: boolean;
+        end: number;
+        isSolo: boolean;
+        inspectPlayer: (name: string) => void;
+    }
 
-    let parties = new Array<Array<Entity>>();
-    let partyPercentages = new Array<number[]>();
-    let anyPartyDead = new Array<boolean>();
-    let multipleDeaths = false;
+    let {
+        players,
+        encounterPartyInfo,
+        topDamageDealt,
+        totalDamageDealt,
+        anyFrontAtk,
+        anyBackAtk,
+        anySupportBuff,
+        anySupportIdentity,
+        anySupportBrand,
+        anyRdpsData,
+        end,
+        isSolo,
+        inspectPlayer
+    }: Props = $props();
 
-    let esthers = new Array<Entity>();
+    let parties = $state(new Array<Array<Entity>>());
+    let partyPercentages = $state(new Array<number[]>());
+    let anyPartyDead = $state(new Array<boolean>());
+    let multipleDeaths = $state(false);
 
-    $: {
+    let esthers = $derived(players.filter((player) => player.entityType === EntityType.ESTHER));
+
+    $effect(() => {
         if (encounterPartyInfo) {
-            esthers = players.filter((player) => player.entityType === EntityType.ESTHER);
+            let partyData = new Array<Array<Entity>>();
             const partyInfo = Object.entries(encounterPartyInfo);
             if (partyInfo.length >= 2) {
                 for (const [partyIdStr, names] of partyInfo) {
                     const partyId = Number(partyIdStr);
-                    parties[partyId] = [];
+                    partyData[partyId] = [];
                     anyPartyDead[partyId] = false;
                     for (const name of names) {
                         const player = players.find((player) => player.name === name);
                         if (player) {
-                            parties[partyId].push(player);
+                            partyData[partyId].push(player);
                             if (player.isDead) {
                                 anyPartyDead[partyId] = true;
                                 if (!multipleDeaths && player.damageStats.deaths > 1) {
@@ -50,18 +70,20 @@
                             }
                         }
                     }
-                    if (parties[partyId] && parties[partyId].length > 0) {
-                        parties[partyId].sort((a, b) => b.damageStats.damageDealt - a.damageStats.damageDealt);
-                        partyPercentages[partyId] = parties[partyId].map(
+                    if (partyData[partyId] && partyData[partyId].length > 0) {
+                        partyData[partyId].sort((a, b) => b.damageStats.damageDealt - a.damageStats.damageDealt);
+                        partyPercentages[partyId] = partyData[partyId].map(
                             (player) => (player.damageStats.damageDealt / topDamageDealt) * 100
                         );
                     }
                 }
             } else {
-                parties[0] = players;
+                partyData[0] = players;
             }
+
+            parties = partyData;
         }
-    }
+    });
 </script>
 
 <div class="flex flex-col space-y-2">
@@ -71,8 +93,8 @@
                 <thead class="z-40 h-6">
                     <tr class="bg-zinc-900">
                         <th class="w-7 whitespace-nowrap px-2 font-normal tracking-tight">Party {+partyId + 1}</th>
-                        <th class="w-20 px-2 text-left font-normal" />
-                        <th class="w-full" />
+                        <th class="w-20 px-2 text-left font-normal"></th>
+                        <th class="w-full"></th>
                         <LogDamageMeterHeader
                             anyDead={anyPartyDead[partyId]}
                             {multipleDeaths}
@@ -89,7 +111,7 @@
                     {#each party as player, playerIndex (player.name)}
                         <tr
                             class="h-7 px-2 py-1 {$settings.general.underlineHovered ? 'hover:underline' : ''}"
-                            on:click={() => inspectPlayer(player.name)}>
+                            onclick={() => inspectPlayer(player.name)}>
                             <LogDamageMeterRow
                                 entity={player}
                                 percentage={partyPercentages[partyId][playerIndex]}
@@ -115,8 +137,8 @@
             <thead class="z-40 h-6">
                 <tr class="bg-zinc-900">
                     <th class="w-7 whitespace-nowrap px-2 font-normal tracking-tight">Esthers</th>
-                    <th class="w-20 px-2 text-left font-normal" />
-                    <th class="w-full" />
+                    <th class="w-20 px-2 text-left font-normal"></th>
+                    <th class="w-full"></th>
                     <LogDamageMeterHeader
                         anyDead={false}
                         multipleDeaths={false}
@@ -133,7 +155,7 @@
                 {#each esthers as esther (esther.name)}
                     <tr
                         class="h-7 px-2 py-1 {$settings.general.underlineHovered ? 'hover:underline' : ''}"
-                        on:click={() => inspectPlayer(esther.name)}>
+                        onclick={() => inspectPlayer(esther.name)}>
                         <LogDamageMeterRow
                             entity={esther}
                             percentage={(esther.damageStats.damageDealt / topDamageDealt) * 100}

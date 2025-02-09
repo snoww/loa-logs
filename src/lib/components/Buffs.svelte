@@ -16,33 +16,49 @@
     import BuffHeader from "./shared/BuffHeader.svelte";
     import PartyBuffRow from "./PartyBuffRow.svelte";
 
-    export let tab: MeterTab;
-    export let encounterDamageStats: EncounterDamageStats | undefined;
-    export let players: Array<Entity>;
-    export let focusedPlayer: Entity | null = null;
-    export let handleRightClick: () => void;
-    export let inspectPlayer: (name: string) => void;
-    export let encounterPartyInfo: PartyInfo | undefined;
-    export let localPlayer: string | undefined;
+    interface Props {
+        tab: MeterTab;
+        encounterDamageStats: EncounterDamageStats | undefined;
+        entities: Array<Entity>;
+        focusedPlayer?: Entity | null;
+        handleRightClick: () => void;
+        inspectPlayer: (name: string) => void;
+        encounterPartyInfo: PartyInfo | undefined;
+        localPlayer: string | undefined;
+    }
 
-    let groupedSynergies: Map<string, Map<number, StatusEffect>> = new Map();
-    let percentages = Array<number>();
+    let {
+        tab,
+        encounterDamageStats,
+        entities,
+        focusedPlayer = $bindable(null),
+        handleRightClick,
+        inspectPlayer,
+        encounterPartyInfo,
+        localPlayer
+    }: Props = $props();
 
-    let parties = new Array<Array<Entity>>();
-    let partyGroupedSynergies = new Array<[string, Set<string>]>();
-    let partyPercentages = new Array<number[]>();
+    let players = $derived(entities.filter((entity) => entity.entityType === EntityType.PLAYER));
+    let groupedSynergies: Map<string, Map<number, StatusEffect>> = $state(new Map());
+    let percentages = $state(Array<number>());
 
-    let partyBuffs = new Map<string, Map<string, Array<BuffDetails>>>();
+    let parties = $state(new Array<Array<Entity>>());
+    let partyGroupedSynergies = $state(new Array<[string, Set<string>]>());
+    let partyPercentages = $state(new Array<number[]>());
 
-    let localPlayerInP1 = true;
+    let partyBuffs = $state(new Map<string, Map<string, Array<BuffDetails>>>());
 
-    $: {
+    let localPlayerInP1 = $state(true);
+
+    $effect(() => {
         if (focusedPlayer && focusedPlayer.entityType === EntityType.ESTHER) {
             focusedPlayer = null;
             handleRightClick();
         }
-        players = players.filter((player) => player.entityType === EntityType.PLAYER);
-        groupedSynergies = new Map<string, Map<number, StatusEffect>>();
+    });
+
+    $effect(() => {
+        let tempGroupedSynergies = new Map<string, Map<number, StatusEffect>>();
         if (encounterDamageStats) {
             percentages = players.map(
                 (player) => (player.damageStats.damageDealt / encounterDamageStats!.topDamageDealt) * 100
@@ -51,15 +67,15 @@
                 if (focusedPlayer && !Object.hasOwn(focusedPlayer.damageStats.buffedBy, id)) {
                     return;
                 }
-                filterStatusEffects(groupedSynergies, buff, Number(id), focusedPlayer, tab, $settings.buffs.default);
+                filterStatusEffects(tempGroupedSynergies, buff, Number(id), focusedPlayer, tab, $settings.buffs.default);
             });
             Object.entries(encounterDamageStats.debuffs).forEach(([id, debuff]) => {
                 if (focusedPlayer && !Object.hasOwn(focusedPlayer.damageStats.debuffedBy, id)) {
                     return;
                 }
-                filterStatusEffects(groupedSynergies, debuff, Number(id), focusedPlayer, tab, $settings.buffs.default);
+                filterStatusEffects(tempGroupedSynergies, debuff, Number(id), focusedPlayer, tab, $settings.buffs.default);
             });
-            groupedSynergies = new Map([...groupedSynergies.entries()].sort());
+            tempGroupedSynergies = new Map([...tempGroupedSynergies.entries()].sort());
             if (
                 $settings.meter.splitPartyBuffs &&
                 encounterPartyInfo &&
@@ -70,7 +86,7 @@
                     players,
                     encounterDamageStats.topDamageDealt,
                     encounterPartyInfo,
-                    groupedSynergies
+                    tempGroupedSynergies
                 );
 
                 if (localPlayer && $settings.meter.pinSelfParty) {
@@ -87,7 +103,9 @@
                 partyBuffs = partyBuffsObj.partyBuffs;
             }
         }
-    }
+
+        groupedSynergies = tempGroupedSynergies;
+    });
 </script>
 
 {#if $settings.meter.splitPartyBuffs && parties.length > 1 && partyGroupedSynergies.length > 1 && parties.length === partyGroupedSynergies.length && tab === MeterTab.PARTY_BUFFS && !focusedPlayer}
@@ -98,8 +116,8 @@
                     <thead class="z-40 h-6" id="buff-head">
                         <tr class="bg-zinc-900">
                             <th class="w-7 whitespace-nowrap px-2 font-normal tracking-tight">Party {+partyId + 1}</th>
-                            <th class="w-20 px-2 text-left font-normal" />
-                            <th class="w-full" />
+                            <th class="w-20 px-2 text-left font-normal"></th>
+                            <th class="w-full"></th>
                             {#each [...synergies] as synergy (synergy)}
                                 {@const syns = groupedSynergies.get(synergy) || new Map()}
                                 <BuffHeader synergies={syns} />
@@ -112,7 +130,7 @@
                             <tr
                                 class="h-7 px-2 py-1 {$settings.general.underlineHovered ? 'hover:underline' : ''}"
                                 animate:flip={{ duration: 200 }}
-                                on:click={() => inspectPlayer(player.name)}>
+                                onclick={() => inspectPlayer(player.name)}>
                                 <PartyBuffRow {player} {playerBuffs} percentage={partyPercentages[i][playerIndex]} />
                             </tr>
                         {/each}
@@ -125,9 +143,9 @@
     <table class="relative w-full table-fixed" id="live-meter-table">
         <thead class="sticky top-0 z-40 h-6">
             <tr class="bg-zinc-900">
-                <th class="w-7 px-2 font-normal" />
-                <th class="w-14 px-2 text-left font-normal" />
-                <th class="w-full" />
+                <th class="w-7 px-2 font-normal"></th>
+                <th class="w-14 px-2 text-left font-normal"></th>
+                <th class="w-full"></th>
                 {#each [...groupedSynergies] as [id, synergies] (id)}
                     <BuffHeader {synergies} />
                 {:else}
@@ -135,13 +153,13 @@
                 {/each}
             </tr>
         </thead>
-        <tbody on:contextmenu|preventDefault={handleRightClick}>
+        <tbody oncontextmenu={handleRightClick}>
             {#if !focusedPlayer}
                 {#each players as player, i (player.name)}
                     <tr
                         class="h-7 px-2 py-1 {$settings.general.underlineHovered ? 'hover:underline' : ''}"
                         animate:flip={{ duration: 200 }}
-                        on:click={() => inspectPlayer(player.name)}>
+                        onclick={() => inspectPlayer(player.name)}>
                         <BuffRow {player} {groupedSynergies} percentage={percentages[i]} />
                     </tr>
                 {/each}

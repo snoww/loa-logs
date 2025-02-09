@@ -2,14 +2,25 @@
     import { settings } from "$lib/utils/settings";
     import { tooltip } from "$lib/utils/tooltip";
 
-    export let meterSettings: string;
-    export let hasBackAttacks = true;
-    export let hasFrontAttacks = true;
-    export let anySupportBrand = false;
-    export let anySupportBuff = false;
-    export let anySupportIdentity = false;
+    interface Props {
+        meterSettings: string;
+        hasBackAttacks?: boolean;
+        hasFrontAttacks?: boolean;
+        anySupportBrand?: boolean;
+        anySupportBuff?: boolean;
+        anySupportIdentity?: boolean;
+    }
 
-    let currentSettings = $settings.logs;
+    let {
+        meterSettings,
+        hasBackAttacks = true,
+        hasFrontAttacks = true,
+        anySupportBrand = false,
+        anySupportBuff = false,
+        anySupportIdentity = false
+    }: Props = $props();
+
+    let currentSettings = $state($settings.logs);
 
     if (meterSettings === "logs") {
         currentSettings = $settings.logs;
@@ -18,9 +29,9 @@
     }
 </script>
 
-<th class="w-7 px-2 font-normal" />
-<th class="w-14 px-2 text-left font-normal" />
-<th class="w-full" />
+<th class="w-7 px-2 font-normal"></th>
+<th class="w-14 px-2 text-left font-normal"></th>
+<th class="w-full"></th>
 {#if currentSettings.breakdown.damage}
     <th class="w-12 font-normal" use:tooltip={{ content: "Damage Dealt" }}>DMG</th>
 {/if}

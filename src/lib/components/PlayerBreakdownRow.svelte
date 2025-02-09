@@ -1,33 +1,51 @@
 <script lang="ts">
     import type { Skill } from "$lib/types";
-    import { settings } from "$lib/utils/settings";
     import { cubicOut } from "svelte/easing";
-    import { tweened } from "svelte/motion";
+    import { Tween } from "svelte/motion";
     import PlayerBreakdownRow from "./shared/PlayerBreakdownRow.svelte";
 
-    export let skill: Skill;
-    export let color: string;
-    export let hasFrontAttacks: boolean;
-    export let hasBackAttacks: boolean;
-    export let anySupportBuff: boolean;
-    export let anySupportIdentity: boolean;
-    export let anySupportBrand: boolean;
-    export let abbreviatedSkillDamage: (string | number)[];
-    export let skillDps: (string | number)[];
-    export let skillDpsRaw: number;
-    export let playerDamageDealt: number;
-    export let damagePercentage: number;
-    export let duration: number;
-    export let index: number;
+    interface Props {
+        skill: Skill;
+        color: string;
+        hasFrontAttacks: boolean;
+        hasBackAttacks: boolean;
+        anySupportBuff: boolean;
+        anySupportIdentity: boolean;
+        anySupportBrand: boolean;
+        abbreviatedSkillDamage: (string | number)[];
+        skillDps: (string | number)[];
+        skillDpsRaw: number;
+        playerDamageDealt: number;
+        damagePercentage: number;
+        duration: number;
+        index: number;
+    }
 
-    const tweenedValue = tweened(0, {
+    let {
+        skill,
+        color,
+        hasFrontAttacks,
+        hasBackAttacks,
+        anySupportBuff,
+        anySupportIdentity,
+        anySupportBrand,
+        abbreviatedSkillDamage,
+        skillDps,
+        skillDpsRaw,
+        playerDamageDealt,
+        damagePercentage,
+        duration,
+        index
+    }: Props = $props();
+
+    const tweenedValue = new Tween(0, {
         duration: 400,
         easing: cubicOut
     });
 
-    $: {
+    $effect(() => {
         tweenedValue.set(damagePercentage);
-    }
+    });
 </script>
 
 <PlayerBreakdownRow
@@ -43,6 +61,6 @@
     {skillDpsRaw}
     {playerDamageDealt}
     {duration}
-    width={$tweenedValue}
+    width={tweenedValue.current}
     meterSettings={"meter"}
     {index} />

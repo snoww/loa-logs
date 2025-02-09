@@ -1,4 +1,6 @@
 <script lang="ts">
+    import { run } from 'svelte/legacy';
+
     import { tooltip } from "$lib/utils/tooltip";
     import { classIconCache, colors, settings } from "$lib/utils/settings";
     import type { Entity } from "$lib/types";
@@ -6,39 +8,56 @@
     import { abbreviateNumberSplit, getBaseDamage, getRDamage } from "$lib/utils/numbers";
     import { HexToRgba } from "$lib/utils/colors";
     import { localPlayer } from "$lib/utils/stores";
-    import { tweened } from "svelte/motion";
     import { cubicOut } from "svelte/easing";
+    import { Tween } from 'svelte/motion';
 
-    export let player: Entity;
-    export let totalDamageDealt: number;
-    export let width: number;
-    export let shadow: boolean = false;
-    export let alpha: number = 0.6;
-    export let duration: number;
-    export let meterSettings: any;
-    export let isLiveMeter = false;
+    interface Props {
+        player: Entity;
+        totalDamageDealt: number;
+        width: number;
+        shadow?: boolean;
+        alpha?: number;
+        duration: number;
+        meterSettings: any;
+        isLiveMeter?: boolean;
+    }
 
-    let playerName: string;
-    let tooltipName: string;
-    let color = "#ffffff";
-    let damageDealt: (string | number)[];
-    let damageGiven: (string | number)[];
-    let damageReceived: (string | number)[];
-    let damagePercentage: string;
-    let rDamage: number;
-    let rDps: (string | number)[];
-    let sSynPercentage = "0.0";
-    let dSynPercentage = "0.0";
-    let synPercentage = "0.0";
-    let sConPercentage = "0.0";
-    let dConPercentage = "0.0";
-    let conPercentage = "0.0";
-    const tweenedValue = tweened(0, {
+    let {
+        player,
+        totalDamageDealt,
+        width,
+        shadow = false,
+        alpha = 0.6,
+        duration,
+        meterSettings,
+        isLiveMeter = false
+    }: Props = $props();
+
+    let playerName: string = $derived(formatPlayerName(player, $settings.general));
+    let tooltipName: string = $state("");
+    let color = $state("#ffffff");
+    let damageDealt: (string | number)[] = $state([]);
+    let damageGiven: (string | number)[] = $state([]);
+    let damageReceived: (string | number)[] = $state([]);
+    let damagePercentage: string = $state("");
+    let rDamage: number = $state(0);
+    let rDps: (string | number)[] = $state([]);
+    let sSynPercentage = $state("0.0");
+    let dSynPercentage = $state("0.0");
+    let synPercentage = $state("0.0");
+    let sConPercentage = $state("0.0");
+    let dConPercentage = $state("0.0");
+    let conPercentage = $state("0.0");
+    const tweenedValue = new Tween(0, {
         duration: 400,
         easing: cubicOut
     });
-    $: {
+    
+    $effect(() => {
         tweenedValue.set(width);
+    });
+
+    $effect.pre(() => {
         rDamage = getRDamage(player.damageStats);
         rDps = abbreviateNumberSplit(rDamage / (duration / 1000));
         damageDealt = abbreviateNumberSplit(rDamage);
@@ -54,14 +73,18 @@
         synPercentage = (syn * 100).toFixed(1);
         sConPercentage = ((1 - 1 / (1 + sSyn)) * 100).toFixed(1);
         dConPercentage = ((1 - 1 / (1 + dSyn)) * 100).toFixed(1);
-        conPercentage = ((1 - 1 / (1 + syn)) * 100).toFixed(1);
+        conPercentage = ((1 - 1 / (1 + syn)) * 100).toFixed(1);       
+    });
 
-        playerName = formatPlayerName(player, $settings.general);
+    $effect(() => {
         if ($settings.general.showNames) {
             tooltipName = player.name;
         } else {
             tooltipName = player.class;
         }
+    });
+
+    $effect(() => {
         if (Object.hasOwn($colors, player.class)) {
             if ($settings.general.constantLocalPlayerColor && $localPlayer == player.name) {
                 color = $colors["Local"].color;
@@ -69,7 +92,7 @@
                 color = $colors[player.class].color;
             }
         }
-    }
+    });
 </script>
 
 <tr class="h-7 px-2 py-1 {$settings.general.underlineHovered ? 'hover:underline' : ''}">
@@ -160,8 +183,8 @@
             {dSynPercentage}<span class="text-3xs text-gray-300">%</span>
         </td>
     {/if}
-    <div
+    <td
         class="absolute left-0 -z-10 h-7 px-2 py-1"
         class:shadow-md={shadow}
-        style="background-color: {HexToRgba(color, alpha)}; width: {isLiveMeter ? $tweenedValue : width}%" />
+        style="background-color: {HexToRgba(color, alpha)}; width: {isLiveMeter ? tweenedValue.current : width}%"></td>
 </tr>

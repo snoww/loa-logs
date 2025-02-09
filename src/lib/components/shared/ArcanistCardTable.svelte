@@ -39,7 +39,7 @@
     <table class="relative mt-2 table-fixed w-full">
         <thead class="z-30 h-6">
             <tr class="bg-zinc-900">
-                <th class="w-full px-2 text-left font-normal" />
+                <th class="w-full px-2 text-left font-normal"></th>
                 <th class="w-14 font-normal">Draws</th>
                 <th class="w-20 font-normal">Draw %</th>
             </tr>
@@ -61,12 +61,12 @@
                     <td class="px-1 text-center">
                         {drawPercentages[i].toFixed(1)}<span class="text-3xs text-gray-300">%</span>
                     </td>
-                    <div
+                    <td
                         class="absolute left-0 -z-10 h-6 px-2 py-1"
                         class:shadow-md={!$takingScreenshot}
                         style="background-color: {i % 2 === 1 && $settings.general.splitLines
                             ? RGBLinearShade(HexToRgba($colors['Arcanist'].color, 0.6))
-                            : HexToRgba($colors['Arcanist'].color, 0.6)}; width: {relativeDrawPercentages[i]}%" />
+                            : HexToRgba($colors['Arcanist'].color, 0.6)}; width: {relativeDrawPercentages[i]}%"></td>
                 </tr>
             {/each}
         </tbody>

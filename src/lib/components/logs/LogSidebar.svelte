@@ -9,7 +9,11 @@
     import { updateSettings } from "$lib/utils/settings";
     import { onMount } from "svelte";
 
-    export let hidden = true;
+    interface Props {
+        hidden?: boolean;
+    }
+
+    let { hidden = $bindable(true) }: Props = $props();
 
     let transitionParams = {
         x: -320,
@@ -19,19 +23,7 @@
     let spin = writable(false);
     let updateText = writable("Check for Updates");
 
-    let loaRunning = false;
-
-    $: starting = false;
-
-    $: {
-        if (!hidden) {
-            checkLoaRunning();
-
-            setInterval(() => {
-                checkLoaRunning();
-            }, 5000);
-        }
-    }
+    let loaRunning = $state(false);
 
     onMount(() => {
         checkLoaRunning();
@@ -44,6 +36,17 @@
     function startLoa() {
         invoke("start_loa_process");
     }
+    let starting = $state(false);
+
+    $effect(() => {
+        if (!hidden) {
+            checkLoaRunning();
+
+            setInterval(() => {
+                checkLoaRunning();
+            }, 5000);
+        }
+    });
 </script>
 
 <Drawer
@@ -56,7 +59,7 @@
     bind:hidden>
     <div class="flex items-center justify-between py-4">
         <div class="px-4 text-lg font-semibold uppercase text-gray-200">LOA Logs</div>
-        <button on:click={() => (hidden = true)} class="px-4">
+        <button onclick={() => (hidden = true)} class="px-4" aria-label="Close">
             <svg class="size-5 fill-gray-200" xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960">
                 <path
                     d="m250.5 870-64-64.5 229-229.5-229-229.5 64-64.5L480 511.5 709.5 282l64 64.5-229 229.5 229 229.5-64 64.5L480 640.5 250.5 870Z" />
@@ -65,16 +68,16 @@
     </div>
     <div class="flex flex-col justify-between" style="height: calc(100vh - 3.75rem);">
         <div class="flex flex-col space-y-4 border-t-2 border-zinc-700 px-4 pt-4 text-gray-200">
-            <a href="/logs" class="hover:text-accent-500" on:click={() => (hidden = true)}> Encounter Logs </a>
-            <a href="/upload" class="hover:text-accent-500" on:click={() => (hidden = true)}> Upload </a>
-            <a href="/about" class="hover:text-accent-500" on:click={() => (hidden = true)}> About </a>
-            <a href="/settings" class="hover:text-accent-500" on:click={() => (hidden = true)}> Settings </a>
-            <a href="/changelog" class="hover:text-accent-500" on:click={() => (hidden = true)}> Changelog </a>
+            <a href="/logs" class="hover:text-accent-500" onclick={() => (hidden = true)}> Encounter Logs </a>
+            <a href="/upload" class="hover:text-accent-500" onclick={() => (hidden = true)}> Upload </a>
+            <a href="/about" class="hover:text-accent-500" onclick={() => (hidden = true)}> About </a>
+            <a href="/settings" class="hover:text-accent-500" onclick={() => (hidden = true)}> Settings </a>
+            <a href="/changelog" class="hover:text-accent-500" onclick={() => (hidden = true)}> Changelog </a>
             <a
                 href="https://ko-fi.com/synow"
                 class="hover:text-accent-500"
                 target="_blank"
-                on:click={() => (hidden = true)}>
+                onclick={() => (hidden = true)}>
                 <div class="inline-flex items-center space-x-1">
                     <div>Donate</div>
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-2 fill-gray-300" viewBox="0 0 512 512">
@@ -86,7 +89,7 @@
             {#if !loaRunning && !starting}
                 <button
                     class="bg-accent-800 hover:bg-accent-900 mx-4 rounded-lg p-2"
-                    on:click={() => {
+                    onclick={() => {
                         starting = true;
                         startLoa();
                         setTimeout(() => {
@@ -114,8 +117,9 @@
                 {#if $updateSettings.available}
                     <button
                         class="pr-1"
+                        aria-label="Update Now"
                         use:tooltip={{ content: "Update Now" }}
-                        on:click={() => {
+                        onclick={() => {
                             $updateSettings.dismissed = false;
                         }}>
                         <svg
@@ -129,8 +133,9 @@
                 {:else}
                     <button
                         class="pr-1"
+                        aria-label="Check for Updates"
                         use:tooltip={{ content: $updateText }}
-                        on:click={async () => {
+                        onclick={async () => {
                             if ($updateText === "No Updates Available") return;
                             if (!$spin) {
                                 $spin = true;

@@ -2,12 +2,23 @@
     import { Alert } from "flowbite-svelte";
     import { fade } from "svelte/transition";
 
-    export let showAlert;
-    export let text = "";
-    export let dismissable = true;
-    export let width: string;
-    export let isError = false;
-    export let fixed = false;
+    interface Props {
+        showAlert: any;
+        text?: string;
+        dismissable?: boolean;
+        width: string;
+        isError?: boolean;
+        fixed?: boolean;
+    }
+
+    let {
+        showAlert = $bindable(),
+        text = "",
+        dismissable = true,
+        width,
+        isError = false,
+        fixed = false
+    }: Props = $props();
 </script>
 
 <div transition:fade|global>

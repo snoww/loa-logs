@@ -2,7 +2,7 @@
     import { Buff, BuffDetails, type Entity, type StatusEffect } from "$lib/types";
     import { HexToRgba } from "$lib/utils/colors";
     import { cubicOut } from "svelte/easing";
-    import { tweened } from "svelte/motion";
+    import { Tween } from "svelte/motion";
     import BuffTooltipDetail from "./shared/BuffTooltipDetail.svelte";
     import { colors, classIconCache, settings } from "$lib/utils/settings";
     import { formatPlayerName } from "$lib/utils/strings";
@@ -11,37 +11,36 @@
     import { addBardBubbles, supportSkills } from "$lib/utils/buffs";
     import { localPlayer } from "$lib/utils/stores";
 
-    export let player: Entity;
-    export let groupedSynergies: Map<string, Map<number, StatusEffect>>;
-    export let percentage: number;
+    interface Props {
+        player: Entity;
+        groupedSynergies: Map<string, Map<number, StatusEffect>>;
+        percentage: number;
+    }
 
-    let color = "#ffffff";
-    let alpha = 0.6;
-    let playerName: string;
-    let synergyPercentageDetails: Array<BuffDetails>;
+    let { player, groupedSynergies, percentage }: Props = $props();
 
-    const tweenedValue = tweened(0, {
+    let color = $state("#ffffff");
+    let alpha = $state(0.6);
+    let playerName: string = $derived(formatPlayerName(player, $settings.general));
+    let synergyPercentageDetails: Array<BuffDetails> = $state([]);
+
+    const tweenedValue = new Tween(0, {
         duration: 400,
         easing: cubicOut
     });
 
-    $: {
-        tweenedValue.set(percentage);
-        if (Object.hasOwn($colors, player.class)) {
-            if ($settings.general.constantLocalPlayerColor && $localPlayer == player.name) {
-                color = $colors["Local"].color;
-            } else {
-                color = $colors[player.class].color;
-            }
+    $effect(() => {
+        if (percentage) {
+            tweenedValue.set(percentage);
         }
+    });
 
-        playerName = formatPlayerName(player, $settings.general);
-
+    $effect(() => {
         let damageDealt = player.damageStats.damageDealt;
         let damageDealtWithoutHA = player.damageStats.damageDealt - (player.damageStats.hyperAwakeningDamage ?? 0);
 
         if (groupedSynergies.size > 0) {
-            synergyPercentageDetails = [];
+            let tempSynergyPercentageDetails: Array<BuffDetails> = [];
             groupedSynergies.forEach((synergies, key) => {
                 let synergyDamage = 0;
                 let buff = new BuffDetails();
@@ -79,8 +78,20 @@
                 if (synergyDamage > 0) {
                     buff.percentage = round((synergyDamage / (isHat ? damageDealt : damageDealtWithoutHA)) * 100);
                 }
-                synergyPercentageDetails.push(buff);
+                tempSynergyPercentageDetails.push(buff);
             });
+
+            synergyPercentageDetails = tempSynergyPercentageDetails;
+        }
+    });
+
+    $effect(() => {
+        if (Object.hasOwn($colors, player.class)) {
+            if ($settings.general.constantLocalPlayerColor && $localPlayer == player.name) {
+                color = $colors["Local"].color;
+            } else {
+                color = $colors[player.class].color;
+            }
         }
 
         if (!$settings.meter.showClassColors) {
@@ -88,7 +99,7 @@
         } else {
             alpha = 0.6;
         }
-    }
+    });
 </script>
 
 <td class="pl-1">
@@ -114,6 +125,6 @@
         </td>
     {/each}
 {/if}
-<div
+<td
     class="absolute left-0 -z-10 h-7 px-2 py-1"
-    style="background-color: {HexToRgba(color, alpha)}; width: {$tweenedValue}%" />
+    style="background-color: {HexToRgba(color, alpha)}; width: {tweenedValue.current}%"></td>

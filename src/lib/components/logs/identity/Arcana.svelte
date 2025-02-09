@@ -5,9 +5,13 @@
     import { fillMissingElapsedTimes, formatDurationFromS } from "$lib/utils/numbers";
     import { colors } from "$lib/utils/settings";
 
-    export let identityStats: IdentityStats;
-    export let player: Entity;
-    export let duration: number;
+    interface Props {
+        identityStats: IdentityStats;
+        player: Entity;
+        duration: number;
+    }
+
+    let { identityStats, player, duration }: Props = $props();
 
     let cards = Object.values(player.skills)
         .sort((a, b) => b.casts - a.casts)
@@ -124,6 +128,6 @@
     {/if}
     <div class="mt-4">
         <div class="text-lg font-medium tracking-tight">Identity Log</div>
-        <div class="mt-2 h-[220px]" use:chartable={identityLogOptions} style="width: calc(100vw - 4.5rem);" />
+        <div class="mt-2 h-[220px]" use:chartable={identityLogOptions} style="width: calc(100vw - 4.5rem);"></div>
     </div>
 </div>

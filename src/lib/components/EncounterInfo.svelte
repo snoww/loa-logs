@@ -11,11 +11,15 @@
     import { writable } from "svelte/store";
     import { hideAll } from "tippy.js";
 
-    export let encounterDuration: string;
-    export let totalDamageDealt: number;
-    export let dps: number;
-    export let timeUntilKill: string;
-    export let screenshotFn: () => void;
+    interface Props {
+        encounterDuration: string;
+        totalDamageDealt: number;
+        dps: number;
+        timeUntilKill: string;
+        screenshotFn: () => void;
+    }
+
+    let { encounterDuration, totalDamageDealt, dps, timeUntilKill, screenshotFn }: Props = $props();
 
     let paused = writable(false);
 
@@ -40,8 +44,8 @@
         await emit("save-request");
     }
 
-    let dropdownOpen = false;
-    let miniDropdownOpen = false;
+    let dropdownOpen = $state(false);
+    let miniDropdownOpen = $state(false);
 
     const handleDropdownClick = () => {
         dropdownOpen = !dropdownOpen;
@@ -139,7 +143,7 @@
                 class="flex items-center space-x-px {$settings.meter.showTimeUntilKill
                     ? 'max-[499px]:hidden'
                     : 'max-[419px]:hidden'}">
-                <button class="" on:click={openMostRecentEncounter}>
+                <button class="" onclick={openMostRecentEncounter} aria-label="Open Recent">
                     <div use:menuTooltip={{ content: "Open Recent" }}>
                         <svg
                             class="size-5 fill-gray-400 hover:fill-gray-50"
@@ -150,7 +154,7 @@
                     </div>
                 </button>
                 <button
-                    on:click={pauseSession}
+                    onclick={pauseSession}
                     use:menuTooltip={{ content: !$paused ? "Pause Session" : "Resume Session" }}>
                     {#if !$paused}
                         <svg
@@ -165,7 +169,7 @@
                             viewBox="0 -960 960 960"><path d="M298.5-162.5v-641l503 320.5-503 320.5Z" /></svg>
                     {/if}
                 </button>
-                <button on:click={resetSession} use:menuTooltip={{ content: "Reset Session" }}>
+                <button onclick={resetSession} use:menuTooltip={{ content: "Reset Session" }} aria-label="Reset">
                     <svg
                         class="size-5 fill-gray-400 hover:fill-gray-50"
                         xmlns="http://www.w3.org/2000/svg"
@@ -173,7 +177,7 @@
                         ><path
                             d="M452.5 955q-132-10-222.5-107.25T139.5 617.5q0-79 35.75-149T275.5 352l65.5 65q-51 32-80.5 86T231 617.5q0 97 63.25 166.25T452.5 862.5V955Zm57.5 0v-92.5q96.5-10 158.5-79t62-166q0-99-67-170.75T497 369h-24l65 66-49 49.5-166-166 166-167 49 49-76 76h25q140 0 238 100.5t98 240.5Q823 751 732.25 848T510 955Z" /></svg>
                 </button>
-                <button use:menuTooltip={{ content: "Manual Save" }} on:click={saveSession}>
+                <button use:menuTooltip={{ content: "Manual Save" }} onclick={saveSession} aria-label="Save">
                     <svg
                         class="size-5 fill-gray-400 hover:fill-gray-50"
                         xmlns="http://www.w3.org/2000/svg"
@@ -181,7 +185,7 @@
                         ><path
                             d="M861.5-691.5V-191q0 38.019-27.034 64.759Q807.431-99.5 769-99.5H191q-38.019 0-64.759-26.741Q99.5-152.981 99.5-191v-578q0-38.431 26.741-65.466Q152.981-861.5 191-861.5h500.5l170 170ZM769-651.186 651.186-769H191v578h578v-460.186ZM479.765-257.5q41.985 0 71.61-29.39Q581-316.279 581-358.265q0-41.985-29.39-71.61-29.389-29.625-71.375-29.625-41.985 0-71.61 29.39Q379-400.721 379-358.735q0 41.985 29.39 71.61 29.389 29.625 71.375 29.625ZM244.5-575.5H598v-140H244.5v140ZM191-651.186V-191v-578 117.814Z" /></svg>
                 </button>
-                <button use:menuTooltip={{ content: "Take Screenshot" }} on:click={screenshotFn}>
+                <button use:menuTooltip={{ content: "Take Screenshot" }} onclick={screenshotFn} aria-label="Screenshot">
                     <svg
                         class="size-5 fill-gray-400 hover:fill-gray-50"
                         xmlns="http://www.w3.org/2000/svg"
@@ -189,7 +193,7 @@
                         ><path
                             d="M479.5-269.5q71.75 0 119.625-47.875T647-437q0-71-47.875-118.75T479.5-603.5q-71.75 0-119.125 47.75T313-437q0 71.75 47.375 119.625T479.5-269.5Zm0-57.5q-47 0-78-31.145T370.5-437q0-47 31-78t78-31q47 0 78.5 31t31.5 78.25q0 47.25-31.5 78.5T479.5-327Zm-328 227.5q-38.019 0-64.76-26.741Q60-152.981 60-191v-491.5q0-37.431 26.74-64.966Q113.482-775 151.5-775h132l83.057-97.5H594.5l82 97.5h132q37.431 0 64.966 27.534Q901-719.931 901-682.5V-191q0 38.019-27.534 64.759Q845.931-99.5 808.5-99.5h-657Zm657-91.5v-491.5H635L552.5-780H408.451L325.5-682.5h-174V-191h657ZM480-436.5Z" /></svg>
                 </button>
-                <div class="relative flex items-center" on:focusout={handleDropdownFocusLoss}>
+                <div class="relative flex items-center" onfocusout={handleDropdownFocusLoss}>
                     {#if $updateSettings.available}
                         <span class="absolute right-0.5 top-0 -z-10 flex size-2">
                             <span
@@ -199,7 +203,8 @@
                         </span>
                     {/if}
                     <button
-                        on:click={handleDropdownClick}
+                        aria-label="Settings"
+                        onclick={handleDropdownClick}
                         class="h-full px-1"
                         use:menuTooltip={{ content: "Show More" }}>
                         <svg
@@ -217,7 +222,7 @@
                         <div class="absolute -right-5 top-6 z-50 rounded-md bg-zinc-700 shadow-md">
                             <div class="flex flex-col space-y-px p-1 text-gray-400">
                                 {#if $updateSettings.available}
-                                    <button class="flex-shrink-0 hover:text-gray-50" on:click={openUpdateWindow}>
+                                    <button class="flex-shrink-0 hover:text-gray-50" onclick={openUpdateWindow}>
                                         <div class="text-accent-500 flex space-x-1 tracking-tight">
                                             <svg
                                                 xmlns="http://www.w3.org/2000/svg"
@@ -261,7 +266,7 @@
                                     <div>Reset</div>
                                 </div>
                             </button> -->
-                                <button class="hover:text-gray-50" on:click={enableClickThrough}>
+                                <button class="hover:text-gray-50" onclick={enableClickThrough}>
                                     <div class="flex space-x-1">
                                         <svg
                                             class="size-5 fill-gray-400"
@@ -283,7 +288,7 @@
                                         <div>Share</div>
                                     </div>
                                 </button>
-                                <button class="hover:text-gray-50" on:click={openSettingsWindow}>
+                                <button class="hover:text-gray-50" onclick={openSettingsWindow}>
                                     <div class="flex space-x-1">
                                         <svg
                                             class="size-5 fill-gray-400"
@@ -298,7 +303,7 @@
                         </div>
                     {/if}
                 </div>
-                <button on:click={() => appWindow.hide()}>
+                <button onclick={() => appWindow.hide()} aria-label="Minimize">
                     <div use:menuTooltip={{ content: "Minimize" }}>
                         <svg
                             class="size-5 fill-gray-400 hover:fill-gray-50"
@@ -314,7 +319,7 @@
                 class="flex items-center space-x-px {$settings.meter.showTimeUntilKill
                     ? 'min-[500px]:hidden'
                     : 'min-[420px]:hidden'}">
-                <div class="relative flex items-center" on:focusout={handleMiniDropdownFocusLoss}>
+                <div class="relative flex items-center" onfocusout={handleMiniDropdownFocusLoss}>
                     {#if $updateSettings.available}
                         <span class="absolute right-0.5 top-0 -z-10 flex size-2">
                             <span
@@ -324,7 +329,8 @@
                         </span>
                     {/if}
                     <button
-                        on:click={handleMiniDropdownClick}
+                        aria-label="Settings"
+                        onclick={handleMiniDropdownClick}
                         class="h-full px-2"
                         use:menuTooltip={{ content: "Show More" }}>
                         <svg
@@ -342,7 +348,7 @@
                         <div class="absolute -right-5 top-6 z-50 rounded-md bg-zinc-700 shadow-md">
                             <div class="flex flex-col space-y-px p-1 text-gray-400">
                                 {#if $updateSettings.available}
-                                    <button class="flex-shrink-0 hover:text-gray-50" on:click={openUpdateWindow}>
+                                    <button class="flex-shrink-0 hover:text-gray-50" onclick={openUpdateWindow}>
                                         <div class="text-accent-500 flex space-x-1 tracking-tight">
                                             <svg
                                                 xmlns="http://www.w3.org/2000/svg"
@@ -355,7 +361,7 @@
                                         </div>
                                     </button>
                                 {/if}
-                                <button class="hover:text-gray-50" on:click={openMostRecentEncounter}>
+                                <button class="hover:text-gray-50" onclick={openMostRecentEncounter}>
                                     <div class="flex space-x-1">
                                         <svg
                                             class="size-5 fill-gray-400"
@@ -368,7 +374,7 @@
                                 </button>
                                 <button
                                     class="hover:text-gray-50"
-                                    on:click={() => {
+                                    onclick={() => {
                                         pauseSession();
                                         dropdownOpen = false;
                                     }}>
@@ -393,7 +399,7 @@
                                 </button>
                                 <button
                                     class="hover:text-gray-50"
-                                    on:click={() => {
+                                    onclick={() => {
                                         resetSession();
                                         miniDropdownOpen = false;
                                     }}>
@@ -407,7 +413,7 @@
                                         <div>Reset</div>
                                     </div>
                                 </button>
-                                <button class="hover:text-gray-50" on:click={saveSession}>
+                                <button class="hover:text-gray-50" onclick={saveSession}>
                                     <div class="flex space-x-1">
                                         <svg
                                             class="size-5 fill-gray-400"
@@ -418,7 +424,7 @@
                                         <div>Save</div>
                                     </div>
                                 </button>
-                                <button class="hover:text-gray-50" on:click={screenshotFn}>
+                                <button class="hover:text-gray-50" onclick={screenshotFn}>
                                     <div class="flex space-x-1">
                                         <svg
                                             class="size-5 fill-gray-400"
@@ -429,7 +435,7 @@
                                         <div>Screenshot</div>
                                     </div>
                                 </button>
-                                <button class="hover:text-gray-50" on:click={enableClickThrough}>
+                                <button class="hover:text-gray-50" onclick={enableClickThrough}>
                                     <div class="flex space-x-1">
                                         <svg
                                             class="size-5 fill-gray-400"
@@ -451,7 +457,7 @@
                                         <div>Share</div>
                                     </div>
                                 </button>
-                                <button class="hover:text-gray-50" on:click={openSettingsWindow}>
+                                <button class="hover:text-gray-50" onclick={openSettingsWindow}>
                                     <div class="flex space-x-1">
                                         <svg
                                             class="size-5 fill-gray-400"
@@ -466,7 +472,7 @@
                         </div>
                     {/if}
                 </div>
-                <button on:click={() => appWindow.hide()}>
+                <button onclick={() => appWindow.hide()} aria-label="Minimize">
                     <div use:menuTooltip={{ content: "Minimize" }}>
                         <svg
                             class="size-5 fill-gray-400 hover:fill-gray-50"

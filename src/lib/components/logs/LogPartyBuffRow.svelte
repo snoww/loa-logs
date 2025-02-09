@@ -7,12 +7,16 @@
     import { generateClassTooltip, tooltip } from "$lib/utils/tooltip";
     import type { BuffDetails, Entity } from "$lib/types";
 
-    export let player: Entity;
-    export let playerBuffs: Array<BuffDetails>;
-    export let percentage: number;
+    interface Props {
+        player: Entity;
+        playerBuffs: Array<BuffDetails>;
+        percentage: number;
+    }
 
-    let color = "#ffffff";
-    let playerName: string;
+    let { player, playerBuffs, percentage }: Props = $props();
+
+    let color = $state("#ffffff");
+    let playerName: string = $derived(formatPlayerName(player, $settings.general));
 
     if (Object.hasOwn($colors, player.class)) {
         if ($settings.general.constantLocalPlayerColor && $localPlayer == player.name) {
@@ -20,10 +24,6 @@
         } else {
             color = $colors[player.class].color;
         }
-    }
-
-    $: {
-        playerName = formatPlayerName(player, $settings.general);
     }
 </script>
 
@@ -50,7 +50,7 @@
         </td>
     {/each}
 {/if}
-<div
+<td
     class="absolute left-0 -z-10 h-7 px-2 py-1"
     class:shadow-md={!$takingScreenshot}
-    style="background-color: {HexToRgba(color, 0.6)}; width: {percentage}%" />
+    style="background-color: {HexToRgba(color, 0.6)}; width: {percentage}%"></td>

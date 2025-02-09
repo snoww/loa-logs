@@ -7,50 +7,81 @@
     import { generateArkPassiveTooltip, generateClassTooltip, tooltip } from "$lib/utils/tooltip";
     import { localPlayer } from "$lib/utils/stores";
 
-    export let entity: Entity;
-    export let totalDamageDealt: number;
-    export let anyDead: boolean;
-    export let multipleDeaths: boolean;
-    export let anyFrontAtk: boolean;
-    export let anyBackAtk: boolean;
-    export let anySupportBuff: boolean;
-    export let anySupportIdentity: boolean;
-    export let anySupportBrand: boolean;
-    export let anyRdpsData: boolean;
-    export let end: number;
-    export let dps: (string | number)[];
-    export let dpsRaw: number;
+    interface Props {
+        entity: Entity;
+        totalDamageDealt: number;
+        anyDead: boolean;
+        multipleDeaths: boolean;
+        anyFrontAtk: boolean;
+        anyBackAtk: boolean;
+        anySupportBuff: boolean;
+        anySupportIdentity: boolean;
+        anySupportBrand: boolean;
+        anyRdpsData: boolean;
+        end: number;
+        dps: (string | number)[];
+        dpsRaw: number;
+        alpha?: number;
+        width: number;
+        meterSettings: any;
+        shadow?: boolean;
+        isSolo: boolean;
+    }
 
-    export let alpha: number = 0.6;
-    export let width: number;
-    export let meterSettings: any;
-    export let shadow: boolean = false;
-    export let isSolo: boolean;
+    let {
+        entity,
+        totalDamageDealt,
+        anyDead,
+        multipleDeaths,
+        anyFrontAtk,
+        anyBackAtk,
+        anySupportBuff,
+        anySupportIdentity,
+        anySupportBrand,
+        anyRdpsData,
+        end,
+        dps,
+        dpsRaw,
+        alpha = 0.6,
+        width,
+        meterSettings,
+        shadow = false,
+        isSolo
+    }: Props = $props();
 
-    let damageDealt: (string | number)[];
-    let damageDealtRaw: number;
-    let damageWithoutHa: number;
-    let damagePercentage: string;
-    let name: string;
-    let tooltipName: string;
-    let color = "#ffffff";
-    let deadFor: string;
+    let damageDealtRaw: number = $state(entity.damageStats.damageDealt);
+    let damageDealt: (string | number)[] = $derived(abbreviateNumberSplit(damageDealtRaw));
+    let damageWithoutHa: number = $derived(damageDealtRaw - (entity.damageStats.hyperAwakeningDamage ?? 0));
+    let damagePercentage: string = $derived(((damageDealtRaw / totalDamageDealt) * 100).toFixed(1));
+    let name: string = $state("");
+    let tooltipName: string = $state("");
+    let color = $state("#ffffff");
+    let deadFor: string = $state("");
 
-    let sSynPercentage = "0.0";
-    let critPercentage = "0.0";
-    let critDmgPercentage = "0.0";
-    let baPercentage = "0.0";
-    let faPercentage = "0.0";
+    let baseDamage = $state(getBaseDamage(entity.damageStats));
+    let sSynPercentage = $derived(((entity.damageStats.rdpsDamageReceivedSupport / baseDamage) * 100).toFixed(1));
 
-    $: {
-        damageDealtRaw = entity.damageStats.damageDealt;
-        damageDealt = abbreviateNumberSplit(damageDealtRaw);
-        damageWithoutHa = damageDealtRaw - (entity.damageStats.hyperAwakeningDamage ?? 0);
-        damagePercentage = ((damageDealtRaw / totalDamageDealt) * 100).toFixed(1);
+    let critPercentage = $state("0.0");
+    let critDmgPercentage = $state("0.0");
+    let baPercentage = $state("0.0");
+    let faPercentage = $state("0.0");
 
-        let baseDamage = getBaseDamage(entity.damageStats);
-        sSynPercentage = ((entity.damageStats.rdpsDamageReceivedSupport / baseDamage) * 100).toFixed(1);
+    $effect(() => {
+        if (entity.entityType === EntityType.ESTHER) {
+            name = getEstherFromNpcId(entity.npcId);
+            tooltipName = name;
+            color = "#4dc8d0";
+        } else {
+            name = formatPlayerName(entity, $settings.general);
+            if ($settings.general.showNames) {
+                tooltipName = entity.name;
+            } else {
+                tooltipName = entity.class;
+            }
+        }
+    });
 
+    $effect(() => {
         if (entity.skillStats.hits !== 0) {
             critDmgPercentage = round((entity.damageStats.critDamage / damageDealtRaw) * 100);
             critPercentage = round((entity.skillStats.crits / entity.skillStats.hits) * 100);
@@ -65,7 +96,15 @@
                 baPercentage = round((entity.skillStats.backAttacks / entity.skillStats.hits) * 100);
             }
         }
+    });
 
+    $effect(() => {
+        if (entity.isDead) {
+            deadFor = Math.abs((end - entity.damageStats.deathTime) / 1000).toFixed(0) + "s";
+        }
+    });
+
+    $effect(() => {
         if (Object.hasOwn($colors, entity.class)) {
             if ($settings.general.constantLocalPlayerColor && $localPlayer == entity.name) {
                 color = $colors["Local"].color;
@@ -73,22 +112,7 @@
                 color = $colors[entity.class].color;
             }
         }
-        if (entity.entityType === EntityType.ESTHER) {
-            name = getEstherFromNpcId(entity.npcId);
-            tooltipName = name;
-            color = "#4dc8d0";
-        } else {
-            name = formatPlayerName(entity, $settings.general);
-            if ($settings.general.showNames) {
-                tooltipName = entity.name;
-            } else {
-                tooltipName = entity.class;
-            }
-        }
-        if (entity.isDead) {
-            deadFor = Math.abs((end - entity.damageStats.deathTime) / 1000).toFixed(0) + "s";
-        }
-    }
+    });
 </script>
 
 <td class="pl-1">
@@ -189,10 +213,10 @@
 {/if}
 {#if meterSettings.counters}
     <td class="px-1 text-center">
-        {entity.skillStats.counters}<span class="text-3xs text-gray-300" />
+        {entity.skillStats.counters}<span class="text-3xs text-gray-300"></span>
     </td>
 {/if}
-<div
+<td
     class="absolute left-0 -z-10 h-7 px-2 py-1"
     class:shadow-md={shadow}
-    style="background-color: {HexToRgba(color, alpha)}; width: {width}%" />
+    style="background-color: {HexToRgba(color, alpha)}; width: {width}%"></td>

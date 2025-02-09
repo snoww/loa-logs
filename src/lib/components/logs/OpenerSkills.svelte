@@ -5,7 +5,11 @@
     import { getSkillIcon } from "$lib/utils/strings";
     import { menuTooltip, tooltip } from "$lib/utils/tooltip";
 
-    export let skills: { [skillId: number]: Skill };
+    interface Props {
+        skills: { [skillId: number]: Skill };
+    }
+
+    let { skills }: Props = $props();
 
     let skillsArray = Object.values(skills)
         .sort((a, b) => b.totalDamage - a.totalDamage)

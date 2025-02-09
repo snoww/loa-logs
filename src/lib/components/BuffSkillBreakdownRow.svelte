@@ -1,23 +1,32 @@
 <script lang="ts">
-    import { tweened } from "svelte/motion";
     import { cubicOut } from "svelte/easing";
     import type { Skill, StatusEffect } from "$lib/types";
     import BuffSkillBreakdownRow from "./shared/BuffSkillBreakdownRow.svelte";
+    import { Tween } from "svelte/motion";
 
-    export let skill: Skill;
-    export let color: string;
-    export let damagePercentage: number;
-    export let groupedSynergies: Map<string, Map<number, StatusEffect>>;
-    export let index: number;
+    interface Props {
+        skill: Skill;
+        color: string;
+        damagePercentage: number;
+        groupedSynergies: Map<string, Map<number, StatusEffect>>;
+        index: number;
+    }
 
-    const tweenedValue = tweened(0, {
+    let {
+        skill,
+        color,
+        damagePercentage,
+        groupedSynergies,
+        index
+    }: Props = $props();
+
+    const tweenedValue = new Tween(0, {
         duration: 400,
         easing: cubicOut
     });
-
-    $: {
+    $effect(() => {
         tweenedValue.set(damagePercentage);
-    }
+    });
 </script>
 
-<BuffSkillBreakdownRow {skill} {color} {groupedSynergies} width={$tweenedValue} {index} />
+<BuffSkillBreakdownRow {skill} {color} {groupedSynergies} width={tweenedValue.current} {index} />

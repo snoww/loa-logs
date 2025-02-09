@@ -10,36 +10,38 @@
     import { localPlayer, takingScreenshot } from "$lib/utils/stores";
     import { HexToRgba, RGBLinearShade } from "$lib/utils/colors";
 
-    export let entity: Entity;
-    export let duration: number;
-    export let totalDamageDealt: number;
-
-    let color = "#ffffff";
-    let skills: Array<Skill> = [];
-    let skillDamagePercentages: Array<number> = [];
-    let abbreviatedSkillDamage: Array<(string | number)[]> = [];
-    let skillDps: Array<(string | number)[]> = [];
-    let skillDpsRaw: Array<number> = [];
-
-    let hasBackAttacks = false;
-    let hasFrontAttacks = false;
-    let anySupportBrand = false;
-    let anySupportIdentity = false;
-    let anySupportBuff = false;
-
-    let playerName: string;
-
-    $: {
-        playerName = formatPlayerName(entity, $settings.general);
+    interface Props {
+        entity: Entity;
+        duration: number;
+        totalDamageDealt: number;
     }
+
+    let { entity, duration, totalDamageDealt }: Props = $props();
+
+    let color = $state("#ffffff");
+    let skills: Array<Skill> = $state([]);
+    let skillDamagePercentages: Array<number> = $state([]);
+    let abbreviatedSkillDamage: Array<(string | number)[]> = $state([]);
+    let skillDps: Array<(string | number)[]> = $state([]);
+    let skillDpsRaw: Array<number> = $state([]);
+
+    let hasBackAttacks = $state(false);
+    let hasFrontAttacks = $state(false);
+    let anySupportBrand = $state(false);
+    let anySupportIdentity = $state(false);
+    let anySupportBuff = $state(false);
+
+    let playerName: string = $derived(formatPlayerName(entity, $settings.general));
+
+    
     let dps = abbreviateNumberSplit(entity.damageStats.dps);
     let damageDealt = abbreviateNumberSplit(entity.damageStats.damageDealt);
     let damagePercentage = ((entity.damageStats.damageDealt / totalDamageDealt) * 100).toFixed(1);
 
-    let critPercentage = "0.0";
-    let critDmgPercentage = "0.0";
-    let baPercentage = "0.0";
-    let faPercentage = "0.0";
+    let critPercentage = $state("0.0");
+    let critDmgPercentage = $state("0.0");
+    let baPercentage = $state("0.0");
+    let faPercentage = $state("0.0");
 
     if (entity.skillStats.hits !== 0) {
         critDmgPercentage = round((entity.damageStats.critDamage / entity.damageStats.damageDealt) * 100);
@@ -56,10 +58,13 @@
         }
     }
 
-    skills = Object.values(entity.skills).sort((a, b) => b.totalDamage - a.totalDamage);
-    if (entity.class === "Arcanist") {
-        skills = skills.filter((skill) => !cardIds.includes(skill.id));
-    }
+    $effect(() => {
+        if (entity.class === "Arcanist") {
+            skills = Object.values(entity.skills).sort((a, b) => b.totalDamage - a.totalDamage).filter((skill) => !cardIds.includes(skill.id));
+        } else {
+            skills = Object.values(entity.skills).sort((a, b) => b.totalDamage - a.totalDamage);
+        }
+    });
 
     if (Object.hasOwn($colors, entity.class)) {
         if ($settings.general.constantLocalPlayerColor && $localPlayer == entity.name) {
@@ -71,25 +76,25 @@
         color = "#4dc8d0";
     }
 
-    if (skills.length > 0) {
-        let mostDamageSkill = skills[0].totalDamage;
-        skillDamagePercentages = skills.map((skill) => (skill.totalDamage / mostDamageSkill) * 100);
-        abbreviatedSkillDamage = skills.map((skill) => abbreviateNumberSplit(skill.totalDamage));
-        skillDps = skills.map((skill) => abbreviateNumberSplit(skill.totalDamage / (duration / 1000)));
-        skillDpsRaw = skills.map((skill) => Math.round(skill.totalDamage / (duration / 1000)));
-        hasBackAttacks = skills.some((skill) => skill.backAttacks > 0);
-        hasFrontAttacks = skills.some((skill) => skill.frontAttacks > 0);
-        anySupportBuff = skills.some((skill) => skill.buffedBySupport > 0);
-        anySupportIdentity = skills.some((skill) => skill.buffedByIdentity > 0);
-        anySupportBrand = skills.some((skill) => skill.debuffedBySupport > 0);
-    }
+    $effect(() => {
+        if (skills.length > 0) {
+            let mostDamageSkill = skills[0].totalDamage;
+            skillDamagePercentages = skills.map((skill) => (skill.totalDamage / mostDamageSkill) * 100);
+            abbreviatedSkillDamage = skills.map((skill) => abbreviateNumberSplit(skill.totalDamage));
+            skillDps = skills.map((skill) => abbreviateNumberSplit(skill.totalDamage / (duration / 1000)));
+            skillDpsRaw = skills.map((skill) => Math.round(skill.totalDamage / (duration / 1000)));
+            hasBackAttacks = skills.some((skill) => skill.backAttacks > 0);
+            hasFrontAttacks = skills.some((skill) => skill.frontAttacks > 0);
+            anySupportBuff = skills.some((skill) => skill.buffedBySupport > 0);
+            anySupportIdentity = skills.some((skill) => skill.buffedByIdentity > 0);
+            anySupportBrand = skills.some((skill) => skill.debuffedBySupport > 0);
+        }
+    });
+
 </script>
 
 <thead
-    class="z-30 h-6"
-    on:contextmenu|preventDefault={() => {
-        console.log("titlebar clicked");
-    }}>
+    class="z-30 h-6">
     <tr class="bg-zinc-900">
         <PlayerBreakdownHeader
             meterSettings={"logs"}
@@ -241,12 +246,12 @@
                     {/if}
                 </td>
             {/if}
-            <div
+            <td
                 class="absolute left-0 -z-10 h-7 px-2 py-1"
                 class:shadow-md={!$takingScreenshot}
                 style="background-color: {$settings.general.splitLines
                     ? RGBLinearShade(HexToRgba(color, 0.6))
-                    : HexToRgba(color, 0.6)}; width: 100%" />
+                    : HexToRgba(color, 0.6)}; width: 100%"></td>
         </tr>
     {/if}
     {#each skills as skill, i (skill.id)}

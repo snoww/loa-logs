@@ -7,17 +7,31 @@
     import BossOnlyDamage from "../shared/BossOnlyDamage.svelte";
     import type { Entity } from "$lib/types";
 
-    export let difficulty: string | undefined;
-    export let date: string;
-    export let encounterDuration: string;
-    export let totalDamageDealt: number;
-    export let dps: number;
-    export let cleared: boolean;
-    export let bossOnlyDamage: boolean;
-    export let raidGate: string | undefined;
-    export let boss: Entity;
+    interface Props {
+        difficulty: string | undefined;
+        date: string;
+        encounterDuration: string;
+        totalDamageDealt: number;
+        dps: number;
+        cleared: boolean;
+        bossOnlyDamage: boolean;
+        raidGate: string | undefined;
+        boss: Entity;
+    }
 
-    let bossHpBars: number | undefined;
+    let {
+        difficulty,
+        date,
+        encounterDuration,
+        totalDamageDealt,
+        dps,
+        cleared,
+        bossOnlyDamage,
+        raidGate,
+        boss
+    }: Props = $props();
+
+    let bossHpBars: number | undefined = $state();
 
     if (boss) {
         let bossMaxHpBars = getBossHpBars(boss.name, boss.maxHp);

@@ -3,11 +3,21 @@
     import type { Skill, StatusEffect } from "$lib/types";
     import BuffSkillBreakdownRow from "../shared/BuffSkillBreakdownRow.svelte";
 
-    export let skill: Skill;
-    export let color: string;
-    export let damagePercentage: number;
-    export let groupedSynergies: Map<string, Map<number, StatusEffect>>;
-    export let index: number;
+    interface Props {
+        skill: Skill;
+        color: string;
+        damagePercentage: number;
+        groupedSynergies: Map<string, Map<number, StatusEffect>>;
+        index: number;
+    }
+
+    let {
+        skill,
+        color,
+        damagePercentage,
+        groupedSynergies,
+        index
+    }: Props = $props();
 </script>
 
 <BuffSkillBreakdownRow

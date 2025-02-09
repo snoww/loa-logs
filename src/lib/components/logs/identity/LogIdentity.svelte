@@ -4,8 +4,12 @@
     import ArtistBard from "./ArtistBard.svelte";
     import GenericClass from "./GenericClass.svelte";
 
-    export let localPlayer: Entity;
-    export let duration: number;
+    interface Props {
+        localPlayer: Entity;
+        duration: number;
+    }
+
+    let { localPlayer, duration }: Props = $props();
 
     let identityStats: IdentityStats = JSON.parse(localPlayer.skillStats.identityStats!);
 </script>

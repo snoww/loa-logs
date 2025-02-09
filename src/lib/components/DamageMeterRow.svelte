@@ -1,52 +1,71 @@
 <script lang="ts">
     import type { Entity } from "$lib/types";
     import { cubicOut } from "svelte/easing";
-    import { tweened } from "svelte/motion";
+    import { Tween } from "svelte/motion";
     import { abbreviateNumberSplit } from "$lib/utils/numbers";
     import { settings } from "$lib/utils/settings";
     import PlayerRow from "./shared/PlayerRow.svelte";
 
-    export let entity: Entity;
-    export let percentage: number;
-    export let duration: number;
-    export let totalDamageDealt: number;
-    export let lastCombatPacket: number;
-    export let anyDead: boolean;
-    export let multipleDeaths: boolean;
-    export let anyFrontAtk: boolean;
-    export let anyBackAtk: boolean;
-    export let anySupportBuff: boolean;
-    export let anySupportIdentity: boolean;
-    export let anySupportBrand: boolean;
-    export let anyRdpsData: boolean;
-    export let isSolo: boolean;
+    interface Props {
+        entity: Entity;
+        percentage: number;
+        duration: number;
+        totalDamageDealt: number;
+        lastCombatPacket: number;
+        anyDead: boolean;
+        multipleDeaths: boolean;
+        anyFrontAtk: boolean;
+        anyBackAtk: boolean;
+        anySupportBuff: boolean;
+        anySupportIdentity: boolean;
+        anySupportBrand: boolean;
+        anyRdpsData: boolean;
+        isSolo: boolean;
+    }
 
-    let alpha = 0.6;
+    let {
+        entity,
+        percentage,
+        duration,
+        totalDamageDealt,
+        lastCombatPacket,
+        anyDead,
+        multipleDeaths,
+        anyFrontAtk,
+        anyBackAtk,
+        anySupportBuff,
+        anySupportIdentity,
+        anySupportBrand,
+        anyRdpsData,
+        isSolo
+    }: Props = $props();
 
-    const tweenedValue = tweened(0, {
+    let alpha = $state(0.6);
+
+    const tweenedValue = new Tween(0, {
         duration: 400,
         easing: cubicOut
     });
+    tweenedValue.target = percentage;
 
-    let dps: (string | number)[];
-    let dpsRaw = 0;
+    let dps: (string | number)[] = $state([]);
+    let dpsRaw = $derived(Math.round(entity.damageStats.damageDealt / (duration / 1000)));
 
-    $: {
-        tweenedValue.set(percentage);
-
+    $effect(() => {
         if (duration > 0) {
-            dpsRaw = Math.round(entity.damageStats.damageDealt / (duration / 1000));
             dps = abbreviateNumberSplit(dpsRaw);
         } else {
             dps = ["0", ""];
         }
+    });
 
+    $effect(() => {
         if (!$settings.meter.showClassColors) {
             alpha = 0;
         } else {
             alpha = 0.6;
         }
-    }
+    });
 </script>
 
 <PlayerRow
@@ -64,6 +83,6 @@
     end={lastCombatPacket}
     {dps}
     {alpha}
-    width={$tweenedValue}
+    width={tweenedValue.current}
     meterSettings={$settings.meter}
     {isSolo} />

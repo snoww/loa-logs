@@ -7,26 +7,26 @@
     import { generateSkillTooltip, tooltip } from "$lib/utils/tooltip";
     import BuffTooltipDetail from "./BuffTooltipDetail.svelte";
 
-    export let skill: Skill;
-    export let color: string;
-    export let groupedSynergies: Map<string, Map<number, StatusEffect>>;
-    export let width: number;
-    export let shadow = false;
-    export let index: number;
-
-    let synergyPercentageDetails: Array<BuffDetails>;
-
-    let isHyperAwakening = false;
-
-    $: {
-        if (groupedSynergies.size > 0) {
-            synergyPercentageDetails = getSynergyPercentageDetails(groupedSynergies, skill);
-        }
-
-        if (hyperAwakeningIds.has(skill.id)) {
-            isHyperAwakening = true;
-        }
+    interface Props {
+        skill: Skill;
+        color: string;
+        groupedSynergies: Map<string, Map<number, StatusEffect>>;
+        width: number;
+        shadow?: boolean;
+        index: number;
     }
+
+    let {
+        skill,
+        color,
+        groupedSynergies,
+        width,
+        shadow = false,
+        index
+    }: Props = $props();
+
+    let synergyPercentageDetails: Array<BuffDetails> = $state(getSynergyPercentageDetails(groupedSynergies, skill));
+    let isHyperAwakening = hyperAwakeningIds.has(skill.id);
 </script>
 
 <tr class="h-7 px-2 py-1 text-3xs {$settings.general.underlineHovered ? 'hover:underline' : ''}">
@@ -55,10 +55,10 @@
             </td>
         {/each}
     {/if}
-    <div
+    <td
         class="absolute left-0 -z-10 h-7 px-2 py-1"
         class:shadow-md={shadow}
         style="background-color: {index % 2 === 1 && $settings.general.splitLines
             ? RGBLinearShade(HexToRgba(color, 0.6))
-            : HexToRgba(color, 0.6)}; width: {width}%" />
+            : HexToRgba(color, 0.6)}; width: {width}%"></td>
 </tr>

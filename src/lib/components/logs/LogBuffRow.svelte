@@ -9,13 +9,17 @@
     import { round } from "$lib/utils/numbers";
     import { addBardBubbles, supportSkills } from "$lib/utils/buffs";
 
-    export let player: Entity;
-    export let groupedSynergies: Map<string, Map<number, StatusEffect>>;
-    export let percentage: number;
+    interface Props {
+        player: Entity;
+        groupedSynergies: Map<string, Map<number, StatusEffect>>;
+        percentage: number;
+    }
 
-    let color = "#ffffff";
-    let playerName: string;
-    let synergyPercentageDetails: Array<BuffDetails>;
+    let { player, groupedSynergies, percentage }: Props = $props();
+
+    let color = $state("#ffffff");
+    let playerName: string = $derived(formatPlayerName(player, $settings.general));
+    let synergyPercentageDetails: Array<BuffDetails> = $state([]);
 
     if (Object.hasOwn($colors, player.class)) {
         if ($settings.general.constantLocalPlayerColor && $localPlayer == player.name) {
@@ -23,10 +27,6 @@
         } else {
             color = $colors[player.class].color;
         }
-    }
-
-    $: {
-        playerName = formatPlayerName(player, $settings.general);
     }
 
     let damageDealt = player.damageStats.damageDealt;
@@ -96,7 +96,7 @@
         </td>
     {/each}
 {/if}
-<div
+<td
     class="absolute left-0 -z-10 h-7 px-2 py-1"
     class:shadow-md={!$takingScreenshot}
-    style="background-color: {HexToRgba(color, 0.6)}; width: {percentage}%" />
+    style="background-color: {HexToRgba(color, 0.6)}; width: {percentage}%"></td>

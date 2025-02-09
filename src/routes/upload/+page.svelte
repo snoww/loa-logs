@@ -9,8 +9,8 @@
     import { syncStore } from "$lib/utils/stores.js";
     import SettingItem from "$lib/components/settings/SettingItem.svelte";
 
-    let hidden: boolean = true;
-    let message = "";
+    let hidden: boolean = $state(true);
+    let message = $state("");
 
     onMount(async () => {
         await check();
@@ -81,7 +81,7 @@
     }
 </script>
 
-<svelte:window on:contextmenu|preventDefault />
+<svelte:window oncontextmenu={((e) => e.preventDefault())} />
 <LogSidebar bind:hidden />
 <div class="custom-scroll h-screen overflow-y-scroll bg-zinc-800 pb-8">
     <div class="sticky top-0 flex h-16 justify-between bg-zinc-800 px-8 py-5 shadow-md">
@@ -114,7 +114,7 @@
                     </a>
                 {/if}
                 <button
-                    on:click={check}
+                    onclick={check}
                     class="mr-0.5 inline w-fit rounded-md bg-zinc-600 px-1.5 py-1 text-xs hover:bg-zinc-700">
                     Check
                 </button>
@@ -170,19 +170,19 @@
                 {#if !$syncStore.syncing}
                     <button
                         class="rounded-md bg-zinc-600 p-1 hover:bg-zinc-700"
-                        on:click={() => {
+                        onclick={() => {
                             syncPastLogs();
                         }}>Sync</button>
                     <button
                         class="rounded-md bg-zinc-600 p-1 hover:bg-zinc-700"
-                        on:click={() => {
+                        onclick={() => {
                             syncPastLogs(true);
                         }}>Force Re-sync</button>
                 {:else}
                     <button class="rounded-md bg-zinc-600 p-1 hover:bg-zinc-700" disabled>Syncing...</button>
                     <button
                         class="rounded-md bg-zinc-600 p-1 hover:bg-zinc-700"
-                        on:click={() => {
+                        onclick={() => {
                             $syncStore.stop = true;
                         }}>Stop</button>
                 {/if}

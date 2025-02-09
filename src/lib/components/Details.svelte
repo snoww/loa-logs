@@ -3,15 +3,15 @@
     import { emit, listen, type UnlistenFn } from "@tauri-apps/api/event";
     import { onDestroy, onMount } from "svelte";
 
-    let identity: IdentityEvent = { gauge1: 0, gauge2: 0, gauge3: 0 };
-    let stagger: StaggerEvent = { current: 0, max: 0 };
-    let staggerPercent = "";
+    let identity: IdentityEvent = $state({ gauge1: 0, gauge2: 0, gauge3: 0 });
+    let stagger: StaggerEvent = $state({ current: 0, max: 0 });
+    let staggerPercent = $state("");
 
-    $: {
+    $effect(() => {
         if (stagger.max > 0) {
             staggerPercent = "(" + (((stagger.max - stagger.current) / stagger.max) * 100).toFixed(1) + "%)";
         }
-    }
+    });
 
     let events: Array<UnlistenFn> = [];
     onMount(() => {

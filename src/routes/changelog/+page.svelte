@@ -6,7 +6,7 @@
     import ChangelogMarkdown from "$lib/data/changelog.md?raw";
     import { miscSettings } from "$lib/utils/settings";
 
-    let hidden: boolean = true;
+    let hidden: boolean = $state(true);
 
     onMount(() => {
         $pageStore = 1;

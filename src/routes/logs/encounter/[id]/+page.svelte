@@ -18,10 +18,17 @@
     import BossOnlyDamage from "$lib/components/shared/BossOnlyDamage.svelte";
     import type { PageData } from "./$types";
 
-    export let data: PageData;
-    $: encounter = data.encounter;
-    $: fav = encounter.favorite;
-    $: raidGate = $raidGates.get(encounter.currentBossName);
+    interface Props {
+        data: PageData;
+    }
+
+    let { data }: Props = $props();
+    let encounter = $derived(data.encounter);
+    let fav = $state(false);
+    $effect(() => {
+        fav = encounter.favorite;
+    });
+    let raidGate = $derived($raidGates.get(encounter.currentBossName));
 
     onMount(() => {
         if ($searchStore.length > 0) {
@@ -34,9 +41,9 @@
         fav = !fav;
     }
 
-    let bossHpBars: number | undefined;
+    let bossHpBars: number | undefined = $state();
 
-    $: {
+    $effect(() => {
         if (encounter) {
             let boss = encounter.entities[encounter.currentBossName];
             if (boss) {
@@ -44,8 +51,7 @@
                 bossHpBars = Math.ceil((boss.currentHp / boss.maxHp) * bossMaxHpBars);
             }
         }
-
-    }
+    });
 
 </script>
 
@@ -63,7 +69,7 @@
             <div class="flex items-center truncate pl-1 text-xl tracking-tighter">
                 <button
                     use:tooltip={{ content: `${fav ? "Remove from" : "Add to"} Favorites` }}
-                    on:click={toggle_favorite}>
+                    onclick={toggle_favorite}>
                     {#if fav}
                         <svg class="size-7 fill-yellow-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"
                             ><path

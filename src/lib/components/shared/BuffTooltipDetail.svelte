@@ -3,7 +3,11 @@
     import { skillIcon } from "$lib/utils/settings";
     import { generateTooltipContent, tooltip } from "$lib/utils/tooltip";
 
-    export let synergy: BuffDetails;
+    interface Props {
+        synergy: BuffDetails;
+    }
+
+    let { synergy }: Props = $props();
 </script>
 
 <div class="relative z-20" use:tooltip={{ content: generateTooltipContent(synergy, $skillIcon.path) }}>

@@ -4,12 +4,12 @@
     import { generateShieldTooltipContent, tooltip } from "$lib/utils/tooltip";
     import { abbreviateNumberSplit } from "$lib/utils/numbers";
 
-    export let shieldDetails: ShieldDetails;
-    let shield: (string | number)[];
-
-    $: {
-        shield = abbreviateNumberSplit(shieldDetails.total);
+    interface Props {
+        shieldDetails: ShieldDetails;
     }
+
+    let { shieldDetails }: Props = $props();
+    let shield: (string | number)[] = $derived(abbreviateNumberSplit(shieldDetails.total));
 </script>
 
 <div class="relative z-20" use:tooltip={{ content: generateShieldTooltipContent(shieldDetails, $skillIcon.path) }}>

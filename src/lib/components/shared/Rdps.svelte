@@ -1,24 +1,36 @@
 <script lang="ts">
+    import { run } from 'svelte/legacy';
+
     import RdpsHeader from "$lib/components/shared/RdpsHeader.svelte";
     import { type Entity, EntityType, type PartyInfo } from "$lib/types";
     import RdpsRow from "$lib/components/shared/RdpsRow.svelte";
     import { getRDamage } from "$lib/utils/numbers";
     import { rdpsEventDetails, takingScreenshot } from "$lib/utils/stores";
 
-    export let players: Array<Entity>;
-    export let totalDamageDealt: number;
-    export let duration: number;
-    export let meterSettings: any;
-    export let encounterPartyInfo: PartyInfo | undefined;
+    interface Props {
+        players: Array<Entity>;
+        totalDamageDealt: number;
+        duration: number;
+        meterSettings: any;
+        encounterPartyInfo: PartyInfo | undefined;
+    }
 
-    let sortedPlayers: Entity[] = [];
-    let topRDamage: number;
-    let playerRDamagePercentages: number[];
-    let alpha: number;
-    let partySortedPlayers: Array<Array<Entity>> = [];
-    let partyRDamagePercentages: number[][];
+    let {
+        players,
+        totalDamageDealt,
+        duration,
+        meterSettings,
+        encounterPartyInfo
+    }: Props = $props();
+
+    let sortedPlayers: Entity[] = $state([]);
+    let topRDamage: number = $state(0);
+    let playerRDamagePercentages: number[] = $state([]);
+    let alpha: number = $state(0);
+    let partySortedPlayers: Array<Array<Entity>> = $state([]);
+    let partyRDamagePercentages: number[][] = $state([]);
     let isLiveMeter = meterSettings.bossHp !== undefined;
-    $: {
+    $effect.pre(() => {
         if (players.length > 0) {
             sortedPlayers = players
                 .filter((p) => p.entityType == EntityType.PLAYER)
@@ -55,13 +67,16 @@
                 partyRDamagePercentages = partyPercentages;
             }
         }
+    });
 
+    $effect(() => {
         if (meterSettings.showClassColors !== undefined && !meterSettings.showClassColors) {
             alpha = 0;
         } else {
             alpha = 0.6;
         }
-    }
+    });
+
 </script>
 
 {#if players.length > 0 && $rdpsEventDetails === "" && meterSettings.rdpsSplitParty && encounterPartyInfo && partySortedPlayers.length > 1}

@@ -22,12 +22,12 @@
                     type="color"
                     id={"Local"}
                     bind:value={$colors["Local"].color}
-                    on:change={(event) => {
+                    onchange={(event) => {
                         if (event) $colors[$colors["Local"]].color = event.currentTarget.value;
                     }} />
                 <button
                     class="rounded-md bg-zinc-600 p-1 text-xs hover:bg-zinc-700"
-                    on:click={() => resetDefaultColor("Local")}
+                    onclick={() => resetDefaultColor("Local")}
                     >Reset
                 </button>
             </div>
@@ -51,12 +51,12 @@
                         type="color"
                         id={classColor[0]}
                         bind:value={classColor[1].color}
-                        on:change={(event) => {
+                        onchange={(event) => {
                             if (event) $colors[classColor[0]].color = event.currentTarget.value;
                         }} />
                     <button
                         class="rounded-md bg-zinc-600 p-1 text-xs hover:bg-zinc-700"
-                        on:click={() => resetDefaultColor(classColor[0])}
+                        onclick={() => resetDefaultColor(classColor[0])}
                         >Reset
                     </button>
                 </div>

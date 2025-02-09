@@ -1,7 +1,11 @@
 <script lang="ts">
-    export let name: string;
-    export let description: string;
-    export let setting: boolean;
+    interface Props {
+        name: string;
+        description: string;
+        setting: boolean;
+    }
+
+    let { name, description, setting = $bindable() }: Props = $props();
 </script>
 
 <div class="">

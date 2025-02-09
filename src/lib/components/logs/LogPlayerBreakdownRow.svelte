@@ -4,20 +4,39 @@
     import { takingScreenshot } from "$lib/utils/stores";
     import PlayerBreakdownRow from "../shared/PlayerBreakdownRow.svelte";
 
-    export let skill: Skill;
-    export let color: string;
-    export let hasFrontAttacks: boolean;
-    export let hasBackAttacks: boolean;
-    export let anySupportBuff: boolean;
-    export let anySupportIdentity: boolean;
-    export let anySupportBrand: boolean;
-    export let abbreviatedSkillDamage: (string | number)[];
-    export let skillDps: (string | number)[];
-    export let playerDamageDealt: number;
-    export let damagePercentage: number;
-    export let duration: number;
-    export let index: number;
-    export let skillDpsRaw: number;
+    interface Props {
+        skill: Skill;
+        color: string;
+        hasFrontAttacks: boolean;
+        hasBackAttacks: boolean;
+        anySupportBuff: boolean;
+        anySupportIdentity: boolean;
+        anySupportBrand: boolean;
+        abbreviatedSkillDamage: (string | number)[];
+        skillDps: (string | number)[];
+        playerDamageDealt: number;
+        damagePercentage: number;
+        duration: number;
+        index: number;
+        skillDpsRaw: number;
+    }
+
+    let {
+        skill,
+        color,
+        hasFrontAttacks,
+        hasBackAttacks,
+        anySupportBuff,
+        anySupportIdentity,
+        anySupportBrand,
+        abbreviatedSkillDamage,
+        skillDps,
+        playerDamageDealt,
+        damagePercentage,
+        duration,
+        index,
+        skillDpsRaw
+    }: Props = $props();
 </script>
 
 <tr class="h-7 px-2 py-1 text-3xs {$settings.general.underlineHovered ? 'hover:underline' : ''}">

@@ -1,6 +1,6 @@
 <script lang="ts">
     import { cardIds } from "$lib/constants/cards";
-    import { MeterTab, type Entity, type StatusEffect, BuffDetails } from "$lib/types";
+    import { MeterTab, type Entity, type StatusEffect, BuffDetails, type Skill } from "$lib/types";
     import { getSynergyPercentageDetailsSum } from "$lib/utils/buffs";
     import { HexToRgba, RGBLinearShade } from "$lib/utils/colors";
     import { colors, classIconCache, settings } from "$lib/utils/settings";
@@ -10,39 +10,51 @@
     import BuffTooltipDetail from "../shared/BuffTooltipDetail.svelte";
     import LogBuffBreakdownRow from "./LogBuffBreakdownRow.svelte";
 
-    export let groupedSynergies: Map<string, Map<number, StatusEffect>>;
-    export let player: Entity;
-    export let tab: MeterTab;
-
-    let playerName: string;
-
-    $: {
-        playerName = formatPlayerName(player, $settings.general);
+    interface Props {
+        groupedSynergies: Map<string, Map<number, StatusEffect>>;
+        player: Entity;
+        tab: MeterTab;
     }
 
-    let color: string;
-    let skillDamagePercentages: Array<number> = [];
+    let { groupedSynergies, player, tab }: Props = $props();
 
-    let skills = Object.values(player.skills).sort((a, b) => b.totalDamage - a.totalDamage);
-    if (player.class === "Arcanist") {
-        skills = skills.filter((skill) => !cardIds.includes(skill.id));
-    }
-    if (Object.hasOwn($colors, player.class)) {
-        if ($settings.general.constantLocalPlayerColor && $localPlayer == player.name) {
-            color = $colors["Local"].color;
+    let playerName: string = $derived(formatPlayerName(player, $settings.general));
+
+    
+
+    let color: string = $state("");
+    let skillDamagePercentages: Array<number> = $state([]);
+
+    let skills: Skill[] = $state([]);
+    let buffSummary: BuffDetails[] = $state([]);
+    $effect(() => {
+        let s = Object.values(player.skills).sort((a, b) => b.totalDamage - a.totalDamage);
+        if (player.class === "Arcanist") {
+            skills = s.filter((skill) => !cardIds.includes(skill.id));
         } else {
-            color = $colors[player.class].color;
+            skills = s;
         }
-    }
+    });
+    $effect(() => {
+        if (skills.length > 0) {
+            let mostDamageSkill = skills[0].totalDamage;
+            skillDamagePercentages = skills.map((skill) => (skill.totalDamage / mostDamageSkill) * 100);
+        }
+        if (tab === MeterTab.SELF_BUFFS || tab === MeterTab.PARTY_BUFFS) {
+            buffSummary = getSynergyPercentageDetailsSum(groupedSynergies, skills, player.damageStats);
+        }
+    });
 
-    if (skills.length > 0) {
-        let mostDamageSkill = skills[0].totalDamage;
-        skillDamagePercentages = skills.map((skill) => (skill.totalDamage / mostDamageSkill) * 100);
-    }
-    let buffSummary: BuffDetails[];
-    if (tab === MeterTab.SELF_BUFFS || tab === MeterTab.PARTY_BUFFS) {
-        buffSummary = getSynergyPercentageDetailsSum(groupedSynergies, skills, player.damageStats);
-    }
+    $effect(() => {
+        if (Object.hasOwn($colors, player.class)) {
+            if ($settings.general.constantLocalPlayerColor && $localPlayer == player.name) {
+                color = $colors["Local"].color;
+            } else {
+                color = $colors[player.class].color;
+            }
+        }
+    });
+
 </script>
 
 {#if tab === MeterTab.SELF_BUFFS || tab === MeterTab.PARTY_BUFFS}
@@ -70,12 +82,12 @@
                 </td>
             {/each}
         {/if}
-        <div
+        <td
             class="absolute left-0 -z-10 h-7 w-full px-2 py-1"
             class:shadow-md={!$takingScreenshot}
             style="background-color: {$settings.general.splitLines
                 ? RGBLinearShade(HexToRgba(color, 0.6))
-                : HexToRgba(color, 0.6)}" />
+                : HexToRgba(color, 0.6)}"></td>
     </tr>
 {/if}
 {#each skills as skill, i (skill.id)}

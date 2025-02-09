@@ -23,11 +23,11 @@
         await invoke("set_start_on_boot", { set: $settings.general.startOnBoot });
     }
 
-    $: {
+    $effect.pre(() => {
         (async () => {
             $settings.general.startOnBoot = await invoke("check_start_on_boot");
         })();
-    }
+    });
 </script>
 
 <div class="flex flex-col space-y-4 divide-y-[1px]">
@@ -64,7 +64,7 @@
             <input
                 type="checkbox"
                 bind:checked={$settings.general.startOnBoot}
-                on:change={setStartOnBoot}
+                onchange={setStartOnBoot}
                 class="text-accent-500 size-5 rounded bg-zinc-700 focus:ring-0 focus:ring-offset-0" />
             <div class="ml-5">
                 <div class="text-gray-100">Start with Windows</div>
@@ -93,7 +93,7 @@
                     <input
                         type="checkbox"
                         bind:checked={$settings.general.blurWin11}
-                        on:change={toggleBlurWin11}
+                        onchange={toggleBlurWin11}
                         class="text-accent-500 size-5 rounded bg-zinc-700 focus:ring-0 focus:ring-offset-0" />
                     <div class="ml-5">
                         <div class="text-gray-100">Blur Meter Background</div>
@@ -108,7 +108,7 @@
                     <input
                         type="checkbox"
                         bind:checked={$settings.general.blur}
-                        on:change={toggleBlur}
+                        onchange={toggleBlur}
                         class="text-accent-500 size-5 rounded bg-zinc-700 focus:ring-0 focus:ring-offset-0" />
                     <div class="ml-5">
                         <div class="text-gray-100">Blur Meter Background</div>
