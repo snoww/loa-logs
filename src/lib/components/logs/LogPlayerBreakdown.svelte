@@ -36,6 +36,7 @@
     let dps = abbreviateNumberSplit(entity.damageStats.dps);
     let damageDealt = abbreviateNumberSplit(entity.damageStats.damageDealt);
     let damagePercentage = ((entity.damageStats.damageDealt / totalDamageDealt) * 100).toFixed(1);
+    let damageWithoutHa = entity.damageStats.damageDealt - (entity.damageStats.hyperAwakeningDamage ?? 0);
 
     let critPercentage = $state("0.0");
     let critDmgPercentage = $state("0.0");
@@ -161,19 +162,19 @@
             {/if}
             {#if anySupportBuff && $settings.logs.breakdown.percentBuffBySup}
                 <td class="px-1 text-center">
-                    {round((entity.damageStats.buffedBySupport / entity.damageStats.damageDealt) * 100)}<span
+                    {round((entity.damageStats.buffedBySupport / damageWithoutHa) * 100)}<span
                         class="text-3xs text-gray-300">%</span>
                 </td>
             {/if}
             {#if anySupportBrand && $settings.logs.breakdown.percentBrand}
                 <td class="px-1 text-center">
-                    {round((entity.damageStats.debuffedBySupport / entity.damageStats.damageDealt) * 100)}<span
+                    {round((entity.damageStats.debuffedBySupport / damageWithoutHa) * 100)}<span
                         class="text-3xs text-gray-300">%</span>
                 </td>
             {/if}
             {#if anySupportIdentity && $settings.logs.breakdown.percentIdentityBySup}
                 <td class="px-1 text-center">
-                    {round((entity.damageStats.buffedByIdentity / entity.damageStats.damageDealt) * 100)}<span
+                    {round((entity.damageStats.buffedByIdentity / damageWithoutHa) * 100)}<span
                         class="text-3xs text-gray-300">%</span>
                 </td>
             {/if}

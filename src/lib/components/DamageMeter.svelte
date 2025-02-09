@@ -330,7 +330,7 @@
                 lastCombatPacket = encounter.lastCombatPacket;
             }
 
-            if (encounter.currentBoss !== undefined) {
+            if (encounter.currentBoss) {
                 currentBoss = encounter.currentBoss;
             }
 

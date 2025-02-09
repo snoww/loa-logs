@@ -46,7 +46,9 @@
         duration: 400,
         easing: cubicOut
     });
-    tweenedValue.target = percentage;
+    $effect(() => {
+        tweenedValue.target = percentage;
+    });
 
     let dps: (string | number)[] = $state([]);
     let dpsRaw = $derived(Math.round(entity.damageStats.damageDealt / (duration / 1000)));

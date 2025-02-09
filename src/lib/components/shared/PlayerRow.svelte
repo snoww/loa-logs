@@ -49,7 +49,7 @@
         isSolo
     }: Props = $props();
 
-    let damageDealtRaw: number = $state(entity.damageStats.damageDealt);
+    let damageDealtRaw: number = $derived(entity.damageStats.damageDealt);
     let damageDealt: (string | number)[] = $derived(abbreviateNumberSplit(damageDealtRaw));
     let damageWithoutHa: number = $derived(damageDealtRaw - (entity.damageStats.hyperAwakeningDamage ?? 0));
     let damagePercentage: string = $derived(((damageDealtRaw / totalDamageDealt) * 100).toFixed(1));
@@ -58,7 +58,7 @@
     let color = $state("#ffffff");
     let deadFor: string = $state("");
 
-    let baseDamage = $state(getBaseDamage(entity.damageStats));
+    let baseDamage = $derived(getBaseDamage(entity.damageStats));
     let sSynPercentage = $derived(((entity.damageStats.rdpsDamageReceivedSupport / baseDamage) * 100).toFixed(1));
 
     let critPercentage = $state("0.0");
