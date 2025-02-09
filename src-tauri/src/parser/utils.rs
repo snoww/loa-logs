@@ -981,10 +981,12 @@ pub fn insert_data(
                     calculate_average_dps(damage_log, fight_start_sec, fight_end_sec);
             }
 
-            entity.spec = Some(get_player_spec(
+            let spec = get_player_spec(
                 entity,
                 &encounter.encounter_damage_stats.buffs,
-            ));
+            );
+            
+            entity.spec = Some(spec.clone());
 
             if let Some(info) = player_info
                 .as_ref()
@@ -1023,18 +1025,20 @@ pub fn insert_data(
                 let (class, other) = get_engravings(entity.class_id, &info.engravings);
                 entity.engraving_data = other;
                 if info.ark_passive_enabled {
-                    // not reliable enough
-                    // if let Some(tree) = info.ark_passive_data.as_ref() {
-                    //     if let Some(enlightenment) = tree.enlightenment.as_ref() {
-                    //         for node in enlightenment.iter() {
-                    //             let spec = get_spec_from_ark_passive(node);
-                    //             if spec != "Unknown" {
-                    //                 entity.spec = Some(spec);
-                    //                 break;
-                    //             }
-                    //         }
-                    //     }
-                    // }
+                    if spec == "Unknown" { 
+                        // not reliable enough to be used on its own
+                        if let Some(tree) = info.ark_passive_data.as_ref() {
+                            if let Some(enlightenment) = tree.enlightenment.as_ref() {
+                                for node in enlightenment.iter() {
+                                    let spec = get_spec_from_ark_passive(node);
+                                    if spec != "Unknown" {
+                                        entity.spec = Some(spec);
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
                     entity.ark_passive_data = info.ark_passive_data.clone();
                 } else if class.len() == 1 {
                     entity.spec = Some(class[0].clone());
