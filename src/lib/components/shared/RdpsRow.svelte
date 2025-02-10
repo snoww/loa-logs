@@ -54,7 +54,7 @@
     });
 
     $effect(() => {
-        tweenedValue.set(width);
+        tweenedValue.set(width ?? 0);
     });
 
     $effect.pre(() => {

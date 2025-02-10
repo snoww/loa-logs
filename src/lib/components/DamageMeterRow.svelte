@@ -47,7 +47,7 @@
         easing: cubicOut
     });
     $effect(() => {
-        tweenedValue.target = percentage;
+        tweenedValue.set(percentage ?? 0);
     });
 
     let dps: (string | number)[] = $state([]);

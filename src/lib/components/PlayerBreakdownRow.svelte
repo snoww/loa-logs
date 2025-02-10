@@ -44,7 +44,7 @@
     });
 
     $effect(() => {
-        tweenedValue.set(damagePercentage);
+        tweenedValue.set(damagePercentage ?? 0);
     });
 </script>
 

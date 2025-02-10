@@ -30,9 +30,7 @@
     });
 
     $effect(() => {
-        if (percentage) {
-            tweenedValue.set(percentage);
-        }
+        tweenedValue.set(percentage ?? 0);
     });
 
     $effect(() => {

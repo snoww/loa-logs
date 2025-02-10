@@ -24,7 +24,7 @@
     });
 
     $effect(() => {
-        tweenedValue.set(width);
+        tweenedValue.set(width ?? 0);
     });
 
     let color = "#164e63";

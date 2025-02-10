@@ -261,6 +261,9 @@ export function getPartyShields(
 ) {
     const parties = new Array<Array<Entity>>();
     const partyPercentages = new Array<number[]>();
+    if (!encounterPartyInfo) {
+        return { parties, partyPercentages };
+    }
     const partyInfo = Object.entries(encounterPartyInfo);
     let shieldValue = "";
     let shieldBy = "";

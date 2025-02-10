@@ -25,8 +25,9 @@
         duration: 400,
         easing: cubicOut
     });
+
     $effect(() => {
-        tweenedValue.set(percentage);
+        tweenedValue.set(percentage ?? 0);
     });
 
     $effect(() => {
@@ -70,4 +71,4 @@
 {/if}
 <td
     class="absolute left-0 -z-10 h-7 px-2 py-1"
-    style="background-color: {HexToRgba(color, alpha)}; width: {tweenedValue}%"></td>
+    style="background-color: {HexToRgba(color, alpha)}; width: {tweenedValue.current}%"></td>

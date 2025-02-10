@@ -23,8 +23,9 @@
         duration: 400,
         easing: cubicOut
     });
+
     $effect(() => {
-        tweenedValue.set(width);
+        tweenedValue.set(width  ?? 0);
     });
 
     let color = $state("#ffffff");

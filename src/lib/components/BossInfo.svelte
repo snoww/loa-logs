@@ -36,16 +36,18 @@
         easing: linear
     });
 
-    let bossCurrentHp: (string | number)[] = $derived(abbreviateNumberSplit(bossHp));
-    let bossMaxHp: (string | number)[] = $derived(abbreviateNumberSplit(boss.maxHp));
-    let bossShieldHp: (string | number)[] = $derived(abbreviateNumberSplit(bossShield));
+    let bossCurrentHp: (string | number)[] = $state([]);
+    let bossMaxHp: (string | number)[] = $state([]);
+    let bossShieldHp: (string | number)[] = $state([]);
 
-    $effect(() => {
+    $effect.pre(() => {
         bossCurrentPercentage = (bossHp / boss.maxHp) * 100;
-        bossBarColor = [bossHpBarColors[colorIndex], bossHpBarColors[colorIndex + 1]];
+        bossCurrentHp = abbreviateNumberSplit(bossHp);
+        bossMaxHp = abbreviateNumberSplit(boss.maxHp);
+        bossShieldHp = abbreviateNumberSplit(bossShield);
     });
-
-    $effect(() => {
+    
+    $effect.pre(() => {
         if (Object.hasOwn(bossHpMap, boss.name) && $settings.meter.bossHpBar) {
             bossHPBars = getBossHpBars(boss.name, boss.maxHp);
         } else {
@@ -54,7 +56,7 @@
         }
     });
 
-    $effect(() => {
+    $effect.pre(() => {
         if (bossHPBars !== 0 && !boss.isDead) {
             if (bossHp === boss.maxHp) {
                 bossCurrentBars = bossHPBars;
@@ -88,9 +90,10 @@
         }
     });
 
-    $effect(() => {
+    $effect.pre(() => {
         if (boss.isDead || bossHp < 0) {
             colorIndex = 0;
+            bossCurrentHp = abbreviateNumberSplit(0);
             bossCurrentPercentage = 0;
             bossCurrentBars = 0;
             tweenBossHpBar.set(0);
