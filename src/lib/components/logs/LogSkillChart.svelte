@@ -121,6 +121,7 @@
                 </button>
                 <button
                     use:tooltip={{ content: "Previous Cast" }}
+                    aria-label="Previous Cast"
                     class="pr-1"
                     onclick={() => {
                         if ($focusedSkillCast.cast > 0) {
@@ -138,6 +139,7 @@
                 </button>
                 <button
                     use:tooltip={{ content: "Next Cast" }}
+                    aria-label="Next Cast"
                     class="px-1"
                     onclick={() => {
                         if ($focusedSkillCast.cast < skill.skillCastLog.length - 1) $focusedSkillCast.cast += 1;
