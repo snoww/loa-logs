@@ -1,11 +1,11 @@
 {
-    "version": "v1.23.1",
-    "notes": "### v1.23.1\n\n#### BUG FIXES AND IMPROVEMENTS\n- fix filtering of new brelshaza raid logs\n- removed prokel's shadow as boss\n\nsend bug reports/suggestions to [ramen shop server](https://discord.gg/RXvTMV2YHu)\n",
-    "pub_date": "2025-01-23T22:37:46.489Z",
+    "version": "v1.24.0",
+    "notes": "### v1.24.0\n\n#### NEW FEATURES\n- update meter for random feb patch\n\n#### BUG FIXES AND IMPROVEMENTS\n\n- fix some hyper awakenings counting towards buff uptime\n- somewhat fixed act 2: brel g2 phase 1 hp bar amount\n- add hp bar at time of wipe to wiped logs\n\nsend bug reports/suggestions to [ramen shop server](https://discord.gg/RXvTMV2YHu)\n",
+    "pub_date": "2025-02-12T21:13:01.437Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.23.1/LOA.Logs_1.23.1_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlpsOENxNlJWbmNNWE92Q0lURlRiNUx6WHJ5ZHlPWWxiZi9VZVFwTWpUeHdDdWlWdnpNdEZBQ3ZZcGVWcmRUeEtTelFYYzZLRU5HbTlKZzlPSHM3Nmd3PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzM3NjcxNjkxCWZpbGU6TE9BIExvZ3NfMS4yMy4xX3g2NC1zZXR1cC5uc2lzLnppcApCejlxUEN3UGVrQkFzRlB0RDAzWEN2WVMvQS9pcDF6T0R4SVdBTE5kSTgzRkZpTzRKQkthd0JqTW1mSnhSRHh6S0M0bitkblhkaENhdlU4UmQ5YzJDUT09Cg=="
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.24.0/LOA.Logs_1.24.0_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlk0bHdxSmZYbk9EeGhWOEMyMFJKYzFlRFBKdWZFQmlQY0NjQkRFOHRVZGNwNVJ5T0diSDlQdFpxMmZsU3o4cGN4Yk04ODE4bUN4VkJvY1hLdWcxZ1FZPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzM5Mzk0OTEwCWZpbGU6TE9BIExvZ3NfMS4yMy4yX3g2NC1zZXR1cC5uc2lzLnppcApZcVYzMloxSSsrL05qanRBOUtLMHRFcVVGQ1JqMGVTWlJXWHF0RktiTjlUM01pdWtvTXNLYlQwRU5PbFFLTGZ2ZVd3b0ZVQ1JHRFZ4Mm5ST2V5dGxDUT09Cg=="
         }
     }
 }

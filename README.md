@@ -41,7 +41,7 @@ A: This is normal. The meter will not work after a major game patch. The game sh
 
 #### Q: Missing `WinDivert64.sys`
 
-A: You need to reinstall meter. The meter uses the WinDivert driver to listen to game packets. You either removed the file or your antivirus removed it. 
+A: You need to reinstall meter. The meter uses the WinDivert driver to listen to game packets. You either removed the file or your antivirus removed it.
 
 #### Q: Meter isn't detecting anything...
 
@@ -49,11 +49,11 @@ A: There can be multiple reasons. If you have NordVPN installed, meter will not 
 
 #### Q: How to use ExitLag with LOA Logs?
 
-A: ExitLag recently updated their settings which changed how they redirect packets. Change your ExitLag settings to _Packet redirection method > Legacy - NDIS_. 
+A: ExitLag recently updated their settings which changed how they redirect packets. Change your ExitLag settings to _Packet redirection method > Legacy - NDIS_.
 
 #### Q: How to use other ping reducers with LOA Logs?
 
-A: If there is an option to use NDIS packet redirection in your app, select that setting. 
+A: If there is an option to use NDIS packet redirection in your app, select that setting.
 
 #### Q: How to use a traditional VPN with LOA Logs?
 

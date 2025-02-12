@@ -1,30 +1,48 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.23.1
+    v1.24.0
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
   </div>
 </div>
 
+#### NEW FEATURES
+- update meter for random feb patch
 
 #### BUG FIXES AND IMPROVEMENTS
+
+- fix some hyper awakenings counting towards buff uptime
+- somewhat fixed act 2: brel g2 phase 1 hp bar amount
+- add hp bar at time of wipe to wiped logs
+
+### v1.23.1
+
+#### BUG FIXES AND IMPROVEMENTS
+
 - fix filtering of new brelshaza raid logs
 - removed prokel's shadow as boss
 
 ### v1.23.0
+
 #### NEW FEATURES
+
 - update meter for act 2: brelshaza patch
 
 #### BUG FIXES AND IMPROVEMENTS
+
 - fix sharpshooter loyal companion classification
 
 ### v1.23.0
+
 #### BUG FIXES AND IMPROVEMENTS
+
 - fixed rare case of damage values being incorrect
 
 ### v1.22.3
+
 #### NEW FEATURES
+
 - added ark passive details on hover over character in logs
 
 ![ark passive details](https://i.imgur.com/nA1u5DG.png)
@@ -32,21 +50,27 @@
 NOTE: this data is NOT always accurate. obvious invalid data (e.g. completely different spec) will not be shown. however more subtle issues/differences may be present. take the info with a grain of salt.
 
 ### v1.22.2
-#### NEW FEATURES
-- added new optional column _"Adjusted Crit Rate"_ for skill breakdowns (Settings > Logs > Scroll down to Skill Breakdown > Check "Adjusted Crit Rate")
-  - calculates crit rate based on damage hits that do more than 5% of the average cast. this provides a more accurate crit rate for skills that have a big hit and multiple small hits or dots (e.g. Doomsday)
-  - only shows on logs and not live meter
 
+#### NEW FEATURES
+
+- added new optional column _"Adjusted Crit Rate"_ for skill breakdowns (Settings > Logs > Scroll down to Skill Breakdown > Check "Adjusted Crit Rate")
+    - calculates crit rate based on damage hits that do more than 5% of the average cast. this provides a more accurate crit rate for skills that have a big hit and multiple small hits or dots (e.g. Doomsday)
+    - only shows on logs and not live meter
 
 ### v1.22.1
+
 #### BUG FIXES AND IMPROVEMENTS
+
 - fixed spec classification of destroyer and scouters
 
 ### v1.22.0
+
 #### NEW FEATURES
+
 - update meter for winter soloist patch
 
 #### BUG FIXES AND IMPROVEMENTS
+
 - fixed stabilized status buff showing when filtering "offensive buffs only"
 - fixed punishing strike tripod counting as different skill
 - fixed some errors in buff calculations
@@ -55,18 +79,22 @@ NOTE: this data is NOT always accurate. obvious invalid data (e.g. completely di
 - separated dark bomb and atropine buffs in self buffs
 
 ### v1.21.0
+
 #### NEW FEATURES
+
 - update meter for weekly maintenance
 
 ### v1.20.2
 
 #### BUG FIXES AND IMPROVEMENTS
+
 - fix certain damage skills not being correctly tracked due to new encryption
 - fix source skills of certain buffs
 
 ### v1.20.1
 
 #### BUG FIXES AND IMPROVEMENTS
+
 - fix pants transcendence label
 - fix battle items labels
 - fix certain skills being separated
@@ -74,16 +102,19 @@ NOTE: this data is NOT always accurate. obvious invalid data (e.g. completely di
 ### v1.20.0
 
 #### NEW FEATURES
+
 - updated meter for thanksgiving patch
 
 #### BUG FIXES AND IMPROVEMENTS
+
 - added _estimate_ for stabilized status uptime (actual uptime will be equal or higher)
 
 ### v1.19.3
 
 #### BUG FIXES AND IMPROVEMENTS
+
 - updated icon to higher resolution (ty @raeinor)
-- yet *another* fix to start with windows setting (turn off and on again to reset it)
+- yet _another_ fix to start with windows setting (turn off and on again to reset it)
 - fix gems showing wrong tier in certain cases
 - fix serenade of amplification showing as 10% serenade
 - fix scrapper spec classification
@@ -91,24 +122,30 @@ NOTE: this data is NOT always accurate. obvious invalid data (e.g. completely di
 ### v1.19.1
 
 #### NEW FEATURES
+
 - updated meter icon from suggestions
 
 #### BUG FIXES AND IMPROVEMENTS
-- *actually* fixed start with windows setting (turn off and on again to reset it)
+
+- _actually_ fixed start with windows setting (turn off and on again to reset it)
 - remove movement speed buff from serenade percentage
 - fix arcana sovereign and chancellor buffs being grouped together
 
 ### v1.19.0
+
 #### NEW FEATURES
+
 - updated meter for weekly reset
 - count argeos ball towards dps to encourage ball hitting
 
 #### BUG FIXES AND IMPROVEMENTS
+
 - capture driver will be unloaded automatically when quitting meter
 - capture driver will no longer prevent auto updater from updating for future updates after this one (hopefully)
 - fixed start on boot option to use task scheduler (need to turn it off and back on for it to work)
 - fix certain buff tooltips being incorrect
 - moved ark passive self buffs into character breakdown
+
 ### v1.18.1
 
 #### ADDITIONAL NOTES
