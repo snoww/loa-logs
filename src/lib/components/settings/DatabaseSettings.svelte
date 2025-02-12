@@ -8,7 +8,11 @@
     import SettingItem from "$lib/components/settings/SettingItem.svelte";
     import { writable } from "svelte/store";
 
-    let encounterDbInfo: EncounterDbInfo = $state({} as EncounterDbInfo);
+    let encounterDbInfo: EncounterDbInfo = $state({
+        totalEncounters: 0,
+        totalEncountersFiltered: 0,
+        size: ""
+    } as EncounterDbInfo);
     let deleteConfirm = $state(false);
     let deleteInProgress = $state(false);
     let deleteMsg = $state("");
