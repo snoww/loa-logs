@@ -22,7 +22,7 @@
         <Title text="Changelog" bind:hidden />
     </div>
     <div
-        class="prose-a:text-accent-500 prose prose-sm prose-zinc prose-invert mx-14 my-6 tracking-tight text-gray-200 prose-img:-my-2 prose-img:rounded-md prose-img:border prose-img:border-zinc-600 prose-img:shadow-md">
+        class="prose-a:text-accent-500 prose prose-sm prose-zinc prose-invert mx-14 my-6 tracking-tight text-gray-200 prose-headings:text-gray-200 prose-img:-my-2 prose-img:rounded-md prose-img:border prose-img:border-zinc-600 prose-img:shadow-md">
         {@html $markdownIt.render(ChangelogMarkdown)}
     </div>
 </div>

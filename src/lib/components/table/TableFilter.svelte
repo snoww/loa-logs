@@ -109,7 +109,7 @@
                     </button>
                     {#if filterMenu}
                         <div
-                            class="absolute -left-2 top-9 z-40 h-44 w-96 rounded bg-zinc-700 shadow-lg"
+                            class="absolute -left-2 top-9 z-40 h-44 w-96 rounded-sm bg-zinc-700 shadow-lg"
                             bind:this={filterDiv}>
                             <div class="flex items-center justify-between shadow-md">
                                 <div class="mx-2 my-1 flex items-center space-x-2">
@@ -151,7 +151,7 @@
                                     </button>
                                 </div>
                                 <button
-                                    class="mx-2 rounded bg-zinc-800 px-1 text-xs hover:bg-zinc-600"
+                                    class="mx-2 rounded-sm bg-zinc-800 px-1 text-xs hover:bg-zinc-600"
                                     onclick={() => {
                                         let sf = new SearchFilter($settings.logs.minEncounterDuration);
                                         sf.sort = $searchFilter.sort;
@@ -170,21 +170,21 @@
                                             <input
                                                 type="checkbox"
                                                 bind:checked={$searchFilter.cleared}
-                                                class="text-accent-500 size-4 rounded bg-zinc-700 focus:ring-0 focus:ring-offset-0" />
+                                                class="text-accent-500 size-4 rounded-sm bg-zinc-700 focus:ring-0 focus:ring-offset-0" />
                                         </label>
                                         <label class="flex items-center">
                                             <div class="mr-2 text-gray-100">Favorites</div>
                                             <input
                                                 type="checkbox"
                                                 bind:checked={$searchFilter.favorite}
-                                                class="text-accent-500 size-4 rounded bg-zinc-700 focus:ring-0 focus:ring-offset-0" />
+                                                class="text-accent-500 size-4 rounded-sm bg-zinc-700 focus:ring-0 focus:ring-offset-0" />
                                         </label>
                                         <label class="flex items-center">
                                             <div class="mr-2 text-gray-100">Boss Only</div>
                                             <input
                                                 type="checkbox"
                                                 bind:checked={$searchFilter.bossOnlyDamage}
-                                                class="text-accent-500 size-4 rounded bg-zinc-700 focus:ring-0 focus:ring-offset-0" />
+                                                class="text-accent-500 size-4 rounded-sm bg-zinc-700 focus:ring-0 focus:ring-offset-0" />
                                         </label>
                                     </div>
                                     <div class="flex flex-wrap">
@@ -241,21 +241,21 @@
                                             <input
                                                 type="checkbox"
                                                 bind:checked={$searchFilter.cleared}
-                                                class="text-accent-500 size-4 rounded bg-zinc-700 focus:ring-0 focus:ring-offset-0" />
+                                                class="text-accent-500 size-4 rounded-sm bg-zinc-700 focus:ring-0 focus:ring-offset-0" />
                                         </label>
                                         <label class="flex items-center">
                                             <div class="mr-2 text-gray-100">Favorites</div>
                                             <input
                                                 type="checkbox"
                                                 bind:checked={$searchFilter.favorite}
-                                                class="text-accent-500 size-4 rounded bg-zinc-700 focus:ring-0 focus:ring-offset-0" />
+                                                class="text-accent-500 size-4 rounded-sm bg-zinc-700 focus:ring-0 focus:ring-offset-0" />
                                         </label>
                                         <label class="flex items-center">
                                             <div class="mr-2 text-gray-100">Boss Only</div>
                                             <input
                                                 type="checkbox"
                                                 bind:checked={$searchFilter.bossOnlyDamage}
-                                                class="text-accent-500 size-4 rounded bg-zinc-700 focus:ring-0 focus:ring-offset-0" />
+                                                class="text-accent-500 size-4 rounded-sm bg-zinc-700 focus:ring-0 focus:ring-offset-0" />
                                         </label>
                                     </div>
                                     <div class="flex flex-wrap">
@@ -285,7 +285,7 @@
                                 <div class="flex h-36 flex-wrap overflow-auto px-2 py-1 text-xs">
                                     {#each classList.sort() as className (className)}
                                         <button
-                                            class="m-1 truncate rounded border border-gray-500 p-1"
+                                            class="m-1 truncate rounded-sm border border-gray-500 p-1"
                                             onclick={() => {
                                                 search += ` ${className.toLowerCase()}:`;
                                                 $searchStore = search;
@@ -312,7 +312,7 @@
                                                 <div class="ml-2">seconds</div>
                                             </label>
                                             <button
-                                                class="mx-2 h-6 rounded bg-zinc-800 px-1 text-xs hover:bg-zinc-600"
+                                                class="mx-2 h-6 rounded-sm bg-zinc-800 px-1 text-xs hover:bg-zinc-600"
                                                 onclick={() => {
                                                     $searchFilter.minDuration = $settings.logs.minEncounterDuration;
                                                 }}>
@@ -384,7 +384,7 @@
             <div class="relative mx-auto flex flex-col rounded-lg border-gray-700 bg-zinc-800 text-gray-400 shadow-md">
                 <button
                     type="button"
-                    class="absolute right-2.5 top-3 ml-auto whitespace-normal rounded-lg p-1.5 hover:bg-zinc-600 focus:outline-none"
+                    class="absolute right-2.5 top-3 ml-auto whitespace-normal rounded-lg p-1.5 hover:bg-zinc-600 focus:outline-hidden"
                     aria-label="Close modal"
                     onclick={() => (deleteConfirm = false)}>
                     <span class="sr-only">Close modal</span>
@@ -414,13 +414,13 @@
                         </h3>
                         <button
                             type="button"
-                            class="mr-2 inline-flex items-center justify-center rounded-lg bg-red-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-red-800 focus:outline-none"
+                            class="mr-2 inline-flex items-center justify-center rounded-lg bg-red-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-red-800 focus:outline-hidden"
                             onclick={deleteSelected}>
                             Yes, I'm sure
                         </button>
                         <button
                             type="button"
-                            class="inline-flex items-center justify-center rounded-lg bg-gray-800 bg-transparent px-5 py-2.5 text-center text-sm font-medium text-gray-400 hover:bg-zinc-700 hover:text-white focus:text-white focus:outline-none"
+                            class="inline-flex items-center justify-center rounded-lg bg-gray-800 bg-transparent px-5 py-2.5 text-center text-sm font-medium text-gray-400 hover:bg-zinc-700 hover:text-white focus:text-white focus:outline-hidden"
                             onclick={() => (deleteConfirm = false)}>
                             No, cancel
                         </button>

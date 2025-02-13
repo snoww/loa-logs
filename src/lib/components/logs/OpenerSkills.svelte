@@ -36,7 +36,7 @@
         {#each openerSkills as skill, i (i)}
             <div use:tooltip={{ content: skill.name }}>
                 <img
-                    class="m-1 h-10 w-10 rounded-sm"
+                    class="m-1 h-10 w-10 rounded-xs"
                     src={$skillIcon.path + getSkillIcon(skill.icon)}
                     alt={skill.name} />
             </div>

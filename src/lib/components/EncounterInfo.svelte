@@ -90,7 +90,7 @@
                     use:tooltip={{ content: "Boss Only Damage" }}
                     src={$imagePath.path + getImagePath("icons/boss.png")}
                     alt="Boss Only Damage"
-                    class="!-mx-1 size-5"
+                    class="-mx-1! size-5"
                     data-tauri-drag-region />
             {/if}
             <div data-tauri-drag-region>
@@ -100,7 +100,7 @@
                 data-tauri-drag-region
                 class="flex space-x-1 tracking-tighter text-gray-400"
                 use:menuTooltip={{ content: `Total Damage ${totalDamageDealt.toLocaleString()}` }}>
-                <div class="flex-shrink-0" data-tauri-drag-region>T. DMG</div>
+                <div class="shrink-0" data-tauri-drag-region>T. DMG</div>
                 {#if $settings.meter.abbreviateHeader}
                     <div data-tauri-drag-region>
                         {abbreviateNumber(totalDamageDealt)}
@@ -112,7 +112,7 @@
                 {/if}
             </div>
             <div class="flex space-x-1 tracking-tighter text-gray-400" use:menuTooltip={{ content: `Total DPS` }}>
-                <div class="flex-shrink-0" data-tauri-drag-region>T. DPS</div>
+                <div class="shrink-0" data-tauri-drag-region>T. DPS</div>
                 {#if $settings.meter.abbreviateHeader}
                     <div data-tauri-drag-region>
                         {abbreviateNumber(dps)}
@@ -222,7 +222,7 @@
                         <div class="absolute -right-5 top-6 z-50 rounded-md bg-zinc-700 shadow-md">
                             <div class="flex flex-col space-y-px p-1 text-gray-400">
                                 {#if $updateSettings.available}
-                                    <button class="flex-shrink-0 hover:text-gray-50" onclick={openUpdateWindow}>
+                                    <button class="shrink-0 hover:text-gray-50" onclick={openUpdateWindow}>
                                         <div class="text-accent-500 flex space-x-1 tracking-tight">
                                             <svg
                                                 xmlns="http://www.w3.org/2000/svg"
@@ -348,7 +348,7 @@
                         <div class="absolute -right-5 top-6 z-50 rounded-md bg-zinc-700 shadow-md">
                             <div class="flex flex-col space-y-px p-1 text-gray-400">
                                 {#if $updateSettings.available}
-                                    <button class="flex-shrink-0 hover:text-gray-50" onclick={openUpdateWindow}>
+                                    <button class="shrink-0 hover:text-gray-50" onclick={openUpdateWindow}>
                                         <div class="text-accent-500 flex space-x-1 tracking-tight">
                                             <svg
                                                 xmlns="http://www.w3.org/2000/svg"

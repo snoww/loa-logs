@@ -1,6 +1,6 @@
 <script lang="ts">
     import LogDamageMeter from "$lib/components/logs/LogDamageMeter.svelte";
-    import { formatTimestamp, getBossHpBars } from "$lib/utils/numbers";
+    import { formatTimestamp, getBossHpBars, getRaidGate } from "$lib/utils/numbers";
     import {
         backNavStore,
         ifaceChangedStore,

@@ -14,14 +14,14 @@
                         Only show encounters that are longer than the specified duration
                     </div>
                 </div>
-                <div class="rounded bg-zinc-700 px-2 py-1">
+                <div class="rounded-sm bg-zinc-700 px-2 py-1">
                     {formatDurationFromS($settings.logs.minEncounterDuration)}
                 </div>
             </div>
             <input
                 type="range"
                 bind:value={$settings.logs.minEncounterDuration}
-                class="accent-accent-700"
+                class="accent-accent-800"
                 list="markers"
                 min="0"
                 max="300"

@@ -689,7 +689,7 @@ export function getFormattedBuffString(groupedBuffs: Map<string, Array<StatusEff
     buffString += "<div class='flex'>";
     for (const [, buffs] of groupedBuffs) {
         for (const buff of buffs) {
-            buffString += `<img class="size-6 rounded-sm" src="${iconPath + getSkillIcon(buff.statusEffect.source.icon)}" alt="${buff.statusEffect.source.skill?.name}"/>`;
+            buffString += `<img class="size-6 rounded-xs" src="${iconPath + getSkillIcon(buff.statusEffect.source.icon)}" alt="${buff.statusEffect.source.skill?.name}"/>`;
         }
     }
     buffString += "</div>";

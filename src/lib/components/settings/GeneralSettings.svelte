@@ -48,7 +48,7 @@
                 </div>
             </div>
             {#if colorDropdownOpen}
-                <div id="dropdown" class="absolute -left-1 mt-2 w-28 cursor-pointer rounded-lg shadow">
+                <div id="dropdown" class="absolute -left-1 mt-2 w-28 cursor-pointer rounded-lg shadow-sm">
                     <ul class="text-sm text-gray-200" aria-labelledby="dropdownDefaultButton">
                         <li>
                             <button
@@ -158,7 +158,7 @@
                 onchange={() => {
                     emit("boss-only-damage-request", $settings.general.bossOnlyDamage);
                 }}
-                class="text-accent-500 size-5 rounded bg-zinc-700 focus:ring-0 focus:ring-offset-0" />
+                class="checked:bg-accent-500 size-5 rounded-sm bg-zinc-700 focus:ring-0 focus:ring-offset-0" />
             <div class="ml-5">
                 <div class="text-gray-100">Boss Only Damage</div>
                 <div class="text-xs text-gray-300">Only track damage dealt to bosses.</div>
@@ -198,7 +198,7 @@
                     type="checkbox"
                     bind:checked={$settings.general.alwaysOnTop}
                     onchange={toggleAlwaysOnTop}
-                    class="text-accent-500 size-5 rounded bg-zinc-700 focus:ring-0 focus:ring-offset-0" />
+                    class="checked:bg-accent-500 size-5 rounded-sm bg-zinc-700 focus:ring-0 focus:ring-offset-0" />
                 <div class="ml-5">
                     <div class="text-gray-100">Always on Top</div>
                     <div class="text-xs text-gray-300">Sets the live meter to always be on top of other windows.</div>
@@ -217,7 +217,7 @@
                     onchange={() => {
                         $ifaceChangedStore = true;
                     }}
-                    class="text-accent-500 size-5 rounded bg-zinc-700 focus:ring-0 focus:ring-offset-0" />
+                    class="checked:bg-accent-500 size-5 rounded-sm bg-zinc-700 focus:ring-0 focus:ring-offset-0" />
                 <div class="ml-5">
                     <div class="text-gray-100">Auto Port Selection</div>
                     <div class="text-xs text-gray-300">Automatically select port to listen on.</div>

@@ -182,7 +182,7 @@
                 <button
                     type="button"
                     class:invisible={deleteInProgress}
-                    class="absolute right-2.5 top-3 ml-auto whitespace-normal rounded-lg p-1.5 hover:bg-zinc-600 focus:outline-none"
+                    class="absolute right-2.5 top-3 ml-auto whitespace-normal rounded-lg p-1.5 hover:bg-zinc-600 focus:outline-hidden"
                     aria-label="Close modal"
                     onclick={() => (deleteConfirm = false)}>
                     <span class="sr-only">Close modal</span>
@@ -215,13 +215,13 @@
                         {#if !deleteInProgress}
                             <button
                                 type="button"
-                                class="mr-2 inline-flex items-center justify-center rounded-lg bg-red-700 px-5 py-2.5 text-center text-sm text-white hover:bg-red-800 focus:outline-none"
+                                class="mr-2 inline-flex items-center justify-center rounded-lg bg-red-700 px-5 py-2.5 text-center text-sm text-white hover:bg-red-800 focus:outline-hidden"
                                 onclick={deleteFn}>
                                 Yes, I'm sure
                             </button>
                             <button
                                 type="button"
-                                class="inline-flex items-center justify-center rounded-lg bg-gray-800 bg-transparent px-5 py-2.5 text-center text-sm text-gray-400 hover:bg-zinc-700 hover:text-white focus:text-white focus:outline-none"
+                                class="inline-flex items-center justify-center rounded-lg bg-gray-800 bg-transparent px-5 py-2.5 text-center text-sm text-gray-400 hover:bg-zinc-700 hover:text-white focus:text-white focus:outline-hidden"
                                 onclick={() => (deleteConfirm = false)}>
                                 No, cancel
                             </button>

@@ -37,7 +37,7 @@
                 <select
                     id="modifiers"
                     bind:value={$settings.general.scale}
-                    class="focus:ring-accent-500 focus:border-accent-500 yx-2 block w-28 rounded-lg border border-gray-600 bg-gray-700 py-1 text-sm text-white placeholder-gray-400">
+                    class="focus:ring-accent-500 focus:border-accent-500 yx-2 block w-28 rounded-lg border border-gray-600 bg-zinc-700 py-1 text-sm text-white placeholder-gray-400">
                     <option value="0">Small</option>
                     <option value="1">Normal</option>
                     <option value="2">Large</option>
@@ -51,7 +51,7 @@
                 <select
                     id="modifiers"
                     bind:value={$settings.general.logScale}
-                    class="focus:ring-accent-500 focus:border-accent-500 yx-2 block w-28 rounded-lg border border-gray-600 bg-gray-700 py-1 text-sm text-white placeholder-gray-400">
+                    class="focus:ring-accent-500 focus:border-accent-500 yx-2 block w-28 rounded-lg border border-gray-600 bg-zinc-700 py-1 text-sm text-white placeholder-gray-400">
                     <option value="0">Small</option>
                     <option value="1">Normal</option>
                     <option value="2">Large</option>
@@ -65,7 +65,7 @@
                 type="checkbox"
                 bind:checked={$settings.general.startOnBoot}
                 onchange={setStartOnBoot}
-                class="text-accent-500 size-5 rounded bg-zinc-700 focus:ring-0 focus:ring-offset-0" />
+                class="checked:bg-accent-500 size-5 rounded-sm bg-zinc-700 focus:ring-0 focus:ring-offset-0" />
             <div class="ml-5">
                 <div class="text-gray-100">Start with Windows</div>
                 <div class="text-xs text-gray-300">Automatically start the app when Windows boots up.</div>
@@ -94,7 +94,7 @@
                         type="checkbox"
                         bind:checked={$settings.general.blurWin11}
                         onchange={toggleBlurWin11}
-                        class="text-accent-500 size-5 rounded bg-zinc-700 focus:ring-0 focus:ring-offset-0" />
+                        class="checked:bg-accent-500 size-5 rounded-sm bg-zinc-700 focus:ring-0 focus:ring-offset-0" />
                     <div class="ml-5">
                         <div class="text-gray-100">Blur Meter Background</div>
                         <div class="text-xs text-gray-300">
@@ -109,7 +109,7 @@
                         type="checkbox"
                         bind:checked={$settings.general.blur}
                         onchange={toggleBlur}
-                        class="text-accent-500 size-5 rounded bg-zinc-700 focus:ring-0 focus:ring-offset-0" />
+                        class="checked:bg-accent-500 size-5 rounded-sm bg-zinc-700 focus:ring-0 focus:ring-offset-0" />
                     <div class="ml-5">
                         <div class="text-gray-100">Blur Meter Background</div>
                         <div class="text-xs text-gray-300">Adds background blur effect to live meter.</div>
@@ -120,7 +120,7 @@
         {#if $settings.general.isWin11}
             <SettingItem
                 name="Transparent Meter"
-                description="Turn off to enable Dark Mode for Windows 11 (with blur setting off)."
+                description="Turn off to enable Dark Mode for Windows 11 (with blur-sm setting off)."
                 bind:setting={$settings.general.transparent} />
         {:else}
             <SettingItem

@@ -61,7 +61,7 @@
 <div class="fixed bottom-0 z-30 h-6 w-full bg-zinc-800/[.8] text-gray-300" id="footer">
     <div class="">
         <div
-            class="flex items-center !overflow-x-auto"
+            class="flex items-center overflow-x-auto!"
             style="width: calc(100vw - 7rem); -webkit-mask-image: linear-gradient(to right, black 90%, transparent 100%);"
             bind:this={div}>
             <button
@@ -79,14 +79,14 @@
             <!--                RDPS-->
             <!--            </button>-->
             <button
-                class="h-6 flex-shrink-0 border-0 border-b-[3px] px-1.5 {tab === MeterTab.PARTY_BUFFS
+                class="h-6 shrink-0 border-0 border-b-[3px] px-1.5 {tab === MeterTab.PARTY_BUFFS
                     ? 'border-zinc-500'
                     : 'border-zinc-800'}"
                 onclick={() => setTab(MeterTab.PARTY_BUFFS)}>
                 Party Buffs
             </button>
             <button
-                class="h-6 flex-shrink-0 border-0 border-b-[3px] px-1.5 {tab === MeterTab.SELF_BUFFS
+                class="h-6 shrink-0 border-0 border-b-[3px] px-1.5 {tab === MeterTab.SELF_BUFFS
                     ? 'border-zinc-500'
                     : 'border-zinc-800'}"
                 onclick={() => setTab(MeterTab.SELF_BUFFS)}>
@@ -112,7 +112,7 @@
             {/if}
             {#if $settings.general.showDetails}
                 <button
-                    class="h-6 flex-shrink-0 border-0 border-b-[3px] px-1.5 {tab === MeterTab.DETAILS
+                    class="h-6 shrink-0 border-0 border-b-[3px] px-1.5 {tab === MeterTab.DETAILS
                         ? 'border-zinc-500'
                         : 'border-zinc-800'}"
                     onclick={() => setTab(MeterTab.DETAILS)}>

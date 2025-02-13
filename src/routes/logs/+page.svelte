@@ -223,7 +223,7 @@
                             <th scope="col" class="w-14 px-2 py-3">
                                 <input
                                     type="checkbox"
-                                    class="text-accent-500 size-5 rounded bg-zinc-700 focus:ring-0 focus:ring-offset-0"
+                                    class="text-accent-500 size-5 rounded-sm bg-zinc-700 focus:ring-0 focus:ring-offset-0"
                                     checked={encounters.every((encounter) => $selectedEncounters.has(encounter.id))}
                                     onchange={() => {
                                         if (encounters.every((encounter) => $selectedEncounters.has(encounter.id))) {
@@ -308,7 +308,7 @@
                                     <div>
                                         <input
                                             type="checkbox"
-                                            class="text-accent-500 size-5 rounded bg-zinc-700 focus:ring-0 focus:ring-offset-0"
+                                            class="text-accent-500 size-5 rounded-sm bg-zinc-700 focus:ring-0 focus:ring-offset-0"
                                             checked={$selectedEncounters.has(encounter.id)}
                                             onchange={() => {
                                                 if ($selectedEncounters.has(encounter.id)) {
@@ -344,7 +344,7 @@
                                     use:tooltip={{ content: encounter.bossName }}>
                                     {#if encounter.favorite}
                                         <svg
-                                            class="mr-1 size-5 flex-shrink-0 fill-yellow-400"
+                                            class="mr-1 size-5 shrink-0 fill-yellow-400"
                                             xmlns="http://www.w3.org/2000/svg"
                                             viewBox="0 -960 960 960">
                                             <path

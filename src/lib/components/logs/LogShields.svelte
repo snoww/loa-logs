@@ -41,7 +41,7 @@
 <svelte:window bind:innerWidth={vw} />
 <div class="flex items-center divide-x divide-gray-600">
     <button
-        class="rounded-sm border-t border-t-gray-600 px-2 py-1"
+        class="rounded-xs border-t border-t-gray-600 px-2 py-1"
         class:bg-accent-900={tab === ShieldTab.GIVEN}
         class:bg-gray-700={tab !== ShieldTab.GIVEN}
         onclick={() => {
@@ -51,7 +51,7 @@
         Given
     </button>
     <button
-        class="rounded-sm border-t border-t-gray-600 px-2 py-1"
+        class="rounded-xs border-t border-t-gray-600 px-2 py-1"
         class:bg-accent-900={tab === ShieldTab.RECEIVED}
         class:bg-gray-700={tab !== ShieldTab.RECEIVED}
         onclick={() => {
@@ -61,7 +61,7 @@
         Received
     </button>
     <button
-        class="rounded-sm border-t border-t-gray-600 px-2 py-1"
+        class="rounded-xs border-t border-t-gray-600 px-2 py-1"
         class:bg-accent-900={tab === ShieldTab.E_GIVEN}
         class:bg-gray-700={tab !== ShieldTab.E_GIVEN}
         onclick={() => {
@@ -71,7 +71,7 @@
         Total Blocked
     </button>
     <button
-        class="rounded-sm border-t border-t-gray-600 px-2 py-1"
+        class="rounded-xs border-t border-t-gray-600 px-2 py-1"
         class:bg-accent-900={tab === ShieldTab.E_RECEIVED}
         class:bg-gray-700={tab !== ShieldTab.E_RECEIVED}
         onclick={() => {

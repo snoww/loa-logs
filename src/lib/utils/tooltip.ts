@@ -47,7 +47,7 @@ export function generateTooltipContent(buffs: BuffDetails, iconPath: string) {
             str += `<div class="flex items-center">`;
             str += `<img src=${
                 iconPath + getSkillIcon(buff.sourceIcon)
-            } alt="buff_source_icon" class="size-5 rounded mr-1"/>`;
+            } alt="buff_source_icon" class="size-5 rounded-sm mr-1"/>`;
             if (buff.bonus) {
                 str += `[${buff.bonus}<span class="text-3xs text-gray-300">%</span>] `;
             }
@@ -55,7 +55,7 @@ export function generateTooltipContent(buffs: BuffDetails, iconPath: string) {
             str += `</div>`;
         } else {
             str += `<div class="flex items-center">`;
-            str += `<img src=${iconPath + getSkillIcon(buff.icon)} alt="buff_icon" class="size-5 rounded mr-1"/>`;
+            str += `<img src=${iconPath + getSkillIcon(buff.icon)} alt="buff_icon" class="size-5 rounded-sm mr-1"/>`;
             str += `${buff.percentage}<span class="text-3xs text-gray-300">%</span>`;
             str += `</div>`;
         }
@@ -69,7 +69,7 @@ export function generateShieldTooltipContent(buffs: ShieldDetails, iconPath: str
     for (const buff of buffs.buffs) {
         const shield = abbreviateNumberSplit(buff.value);
         str += `<div class="flex items-center">`;
-        str += `<img src=${iconPath + getSkillIcon(buff.icon)} alt="buff_icon" class="size-5 rounded mr-1"/>`;
+        str += `<img src=${iconPath + getSkillIcon(buff.icon)} alt="buff_icon" class="size-5 rounded-sm mr-1"/>`;
         str += `${shield[0]}<span class="text-3xs text-gray-300">${shield[1]}</span>`;
         str += `</div>`;
     }

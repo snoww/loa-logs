@@ -21,7 +21,7 @@
     let events: Set<UnlistenFn> = new Set();
 
     NProgress.configure({
-        template: '<div class="bar !bg-gray-500" role="bar"><div class="peg !shadow-gray-500"></div></div>'
+        template: '<div class="bar bg-gray-500!" role="bar"><div class="peg shadow-gray-500!"></div></div>'
     });
 
     onMount(() => {

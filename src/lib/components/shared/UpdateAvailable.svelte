@@ -15,7 +15,7 @@
             <div class="relative mx-auto flex flex-col rounded-lg border-gray-700 bg-zinc-800 text-gray-400 shadow-md">
                 <button
                     type="button"
-                    class="absolute right-2.5 top-3 ml-auto whitespace-normal rounded-lg p-1.5 hover:bg-zinc-600 focus:outline-none"
+                    class="absolute right-2.5 top-3 ml-auto whitespace-normal rounded-lg p-1.5 hover:bg-zinc-600 focus:outline-hidden"
                     aria-label="Close modal"
                     onclick={() => ($updateSettings.dismissed = true)}>
                     <span class="sr-only">Close modal</span>
@@ -51,7 +51,7 @@
                             <div class="flex justify-center">
                                 <button
                                     type="button"
-                                    class="bg-accent-900 hover:bg-accent-800 mr-2 inline-flex items-center justify-center rounded-lg px-5 py-2.5 text-center text-sm text-white focus:outline-none"
+                                    class="bg-accent-900 hover:bg-accent-800 mr-2 inline-flex items-center justify-center rounded-lg px-5 py-2.5 text-center text-sm text-white focus:outline-hidden"
                                     onclick={async () => {
                                         $updateText = "Updating...";
                                         await invoke("unload_driver");

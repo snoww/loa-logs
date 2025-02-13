@@ -52,7 +52,7 @@
 <Drawer
     width="w-52"
     bgColor="bg-zinc-900"
-    bgOpacity="bg-opacity-50"
+    bgOpacity="opacity-50"
     divClass="bg-zinc-800 z-50"
     transitionType="fly"
     {transitionParams}

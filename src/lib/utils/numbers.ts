@@ -1,5 +1,8 @@
 import { BossHpLog, type DamageStats, type IdentityLogType, type IdentityLogTypeValue } from "$lib/types";
 import { bossHpMap } from "$lib/constants/bossHpBars";
+import { raidGates } from "$lib/utils/stores";
+import { get } from "svelte/store";
+import { getName } from "@tauri-apps/api/app";
 
 export function tryParseInt(intString: string | number, defaultValue = 0) {
     if (typeof intString === "number") {

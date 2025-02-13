@@ -168,7 +168,7 @@
                 </span>
             </div>
             <div class="flex items-center space-x-2">
-                <img class="size-7 rounded-sm" src={$skillIcon.path + getSkillIcon(skill.icon)} alt={skill.name} />
+                <img class="size-7 rounded-xs" src={$skillIcon.path + getSkillIcon(skill.icon)} alt={skill.name} />
                 <div class="font-semibold">
                     {skill.name} #{$focusedSkillCast.cast + 1}
                 </div>

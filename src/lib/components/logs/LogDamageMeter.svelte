@@ -420,7 +420,7 @@
         <div class="mt-2 flex justify-between" style="width: calc(100vw - 4.5rem);">
             <div class="flex divide-x divide-gray-600">
                 <button
-                    class="rounded-sm px-2 py-1"
+                    class="rounded-xs px-2 py-1"
                     class:bg-accent-900={tab === MeterTab.DAMAGE}
                     class:bg-gray-700={tab !== MeterTab.DAMAGE}
                     onclick={damageTab}>
@@ -428,7 +428,7 @@
                 </button>
                 <!--{#if anyRdpsData || $rdpsEventDetails !== ""}-->
                 <!--    <button-->
-                <!--        class="flex-shrink-0 rounded-sm px-3 py-1"-->
+                <!--        class="shrink-0 rounded-xs px-3 py-1"-->
                 <!--        class:bg-accent-900={tab === MeterTab.RDPS}-->
                 <!--        class:bg-gray-700={tab !== MeterTab.RDPS}-->
                 <!--        on:click={RDPSTab}>-->
@@ -436,14 +436,14 @@
                 <!--    </button>-->
                 <!--{/if}-->
                 <button
-                    class="flex-shrink-0 rounded-sm px-2 py-1"
+                    class="shrink-0 rounded-xs px-2 py-1"
                     class:bg-accent-900={tab === MeterTab.PARTY_BUFFS}
                     class:bg-gray-700={tab !== MeterTab.PARTY_BUFFS}
                     onclick={partySynergyTab}>
                     Party Buffs
                 </button>
                 <button
-                    class="flex-shrink-0 rounded-sm px-2 py-1"
+                    class="shrink-0 rounded-xs px-2 py-1"
                     class:bg-accent-900={tab === MeterTab.SELF_BUFFS}
                     class:bg-gray-700={tab !== MeterTab.SELF_BUFFS}
                     onclick={selfSynergyTab}>
@@ -451,7 +451,7 @@
                 </button>
                 {#if $settings.general.showShields && encounter.encounterDamageStats.totalShielding > 0}
                     <button
-                        class="rounded-sm px-2 py-1"
+                        class="rounded-xs px-2 py-1"
                         class:bg-accent-900={tab === MeterTab.SHIELDS}
                         class:bg-gray-700={tab !== MeterTab.SHIELDS}
                         onclick={shieldTab}>
@@ -460,7 +460,7 @@
                 {/if}
                 {#if $settings.general.showTanked && encounter.encounterDamageStats.totalDamageTaken > 0}
                     <button
-                        class="rounded-sm px-2 py-1"
+                        class="rounded-xs px-2 py-1"
                         class:bg-accent-900={tab === MeterTab.TANK}
                         class:bg-gray-700={tab !== MeterTab.TANK}
                         onclick={tankTab}>
@@ -469,7 +469,7 @@
                 {/if}
                 {#if $settings.general.showBosses && bosses.length > 0}
                     <button
-                        class="rounded-sm px-2 py-1"
+                        class="rounded-xs px-2 py-1"
                         class:bg-accent-900={tab === MeterTab.BOSS}
                         class:bg-gray-700={tab !== MeterTab.BOSS}
                         onclick={bossTab}>
@@ -478,7 +478,7 @@
                 {/if}
                 {#if localPlayerEntity && localPlayerEntity.skillStats.identityStats}
                     <button
-                        class="rounded-sm px-2 py-1"
+                        class="rounded-xs px-2 py-1"
                         class:bg-accent-900={tab === MeterTab.IDENTITY}
                         class:bg-gray-700={tab !== MeterTab.IDENTITY}
                         onclick={identityTab}>
@@ -487,7 +487,7 @@
                 {/if}
                 {#if encounter.encounterDamageStats.staggerStats}
                     <button
-                        class="rounded-sm px-2 py-1"
+                        class="rounded-xs px-2 py-1"
                         class:bg-accent-900={tab === MeterTab.STAGGER}
                         class:bg-gray-700={tab !== MeterTab.STAGGER}
                         onclick={staggerTab}>
@@ -495,7 +495,7 @@
                     </button>
                 {/if}
                 <button
-                    class="rounded-sm bg-gray-700 px-2 py-1"
+                    class="rounded-xs bg-gray-700 px-2 py-1"
                     aria-label="Take Screenshot"
                     use:tooltip={{ content: "Take Screenshot" }}
                     onclick={captureScreenshot}>
@@ -509,7 +509,7 @@
                 </button>
                 {#if encounter.cleared && $settings.sync.enabled && $settings.sync.accessToken && $settings.sync.validToken}
                     {#if uploading}
-                        <div class="rounded-sm bg-gray-700 px-2 py-1" use:tooltip={{ content: "Uploading..." }}>
+                        <div class="rounded-xs bg-gray-700 px-2 py-1" use:tooltip={{ content: "Uploading..." }}>
                             <svg
                                 class="hover:fill-accent-800 h-5 w-5 animate-spin fill-zinc-300"
                                 xmlns="http://www.w3.org/2000/svg"
@@ -521,7 +521,7 @@
                         </div>
                     {:else if !encounter.sync}
                         <button
-                            class="rounded-sm bg-gray-700 px-2 py-1"
+                            class="rounded-xs bg-gray-700 px-2 py-1"
                             aria-label="Sync to logs.snow.xyz"
                             use:tooltip={{ content: "Sync to logs.snow.xyz" }}
                             onclick={upload}>
@@ -536,7 +536,7 @@
                         </button>
                     {:else}
                         <a
-                            class="rounded-sm bg-gray-700 px-2 py-1"
+                            class="rounded-xs bg-gray-700 px-2 py-1"
                             aria-label="Open on logs.snow.xyz"
                             use:tooltip={{ content: "Open on logs.snow.xyz" }}
                             href={LOG_SITE_URL + "/logs/" + encounter.sync}
@@ -552,7 +552,7 @@
                         </a>
                     {/if}
                 {/if}
-                <div class="relative flex items-center rounded-sm bg-gray-700" onfocusout={handleDropdownFocusLoss}>
+                <div class="relative flex items-center rounded-xs bg-gray-700" onfocusout={handleDropdownFocusLoss}>
                     <button onclick={handleDropdownClick} class="h-full px-2" aria-label="Settings">
                         <svg
                             class="h-4 w-4"
@@ -583,7 +583,7 @@
                                             class="peer sr-only"
                                             bind:checked={$settings.general.showNames} />
                                         <div
-                                            class="peer-checked:bg-accent-800 peer h-5 w-9 rounded-full border-gray-600 bg-gray-800 after:absolute after:left-[2px] after:top-[2px] after:h-4 after:w-4 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none">
+                                            class="peer-checked:bg-accent-800 peer h-5 w-9 rounded-full border-gray-600 bg-gray-800 after:absolute after:left-[2px] after:top-[2px] after:h-4 after:w-4 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-hidden">
                                         </div>
                                     </label>
                                 </button>
@@ -596,7 +596,7 @@
                                             class="peer sr-only"
                                             bind:checked={$settings.logs.splitPartyDamage} />
                                         <div
-                                            class="peer-checked:bg-accent-800 peer h-5 w-9 rounded-full border-gray-600 bg-gray-800 after:absolute after:left-[2px] after:top-[2px] after:h-4 after:w-4 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none">
+                                            class="peer-checked:bg-accent-800 peer h-5 w-9 rounded-full border-gray-600 bg-gray-800 after:absolute after:left-[2px] after:top-[2px] after:h-4 after:w-4 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-hidden">
                                         </div>
                                     </label>
                                 </button>
@@ -609,7 +609,7 @@
                                             class="peer sr-only"
                                             bind:checked={$settings.general.showEsther} />
                                         <div
-                                            class="peer-checked:bg-accent-800 peer h-5 w-9 rounded-full border-gray-600 bg-gray-800 after:absolute after:left-[2px] after:top-[2px] after:h-4 after:w-4 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none">
+                                            class="peer-checked:bg-accent-800 peer h-5 w-9 rounded-full border-gray-600 bg-gray-800 after:absolute after:left-[2px] after:top-[2px] after:h-4 after:w-4 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-hidden">
                                         </div>
                                     </label>
                                 </button>
@@ -635,7 +635,7 @@
                             class="relative mx-auto flex flex-col rounded-lg border-gray-700 bg-zinc-800 text-gray-400 shadow-md">
                             <button
                                 type="button"
-                                class="absolute right-2.5 top-3 ml-auto whitespace-normal rounded-lg p-1.5 hover:bg-zinc-600 focus:outline-none"
+                                class="absolute right-2.5 top-3 ml-auto whitespace-normal rounded-lg p-1.5 hover:bg-zinc-600 focus:outline-hidden"
                                 aria-label="Close modal"
                                 onclick={() => (deleteConfirm = false)}>
                                 <span class="sr-only">Close modal</span>
@@ -671,13 +671,13 @@
                                     </h3>
                                     <button
                                         type="button"
-                                        class="mr-2 inline-flex items-center justify-center rounded-lg bg-red-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-red-800 focus:outline-none"
+                                        class="mr-2 inline-flex items-center justify-center rounded-lg bg-red-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-red-800 focus:outline-hidden"
                                         onclick={deleteEncounter}>
                                         Yes, I'm sure
                                     </button>
                                     <button
                                         type="button"
-                                        class="inline-flex items-center justify-center rounded-lg bg-gray-800 bg-transparent px-5 py-2.5 text-center text-sm font-medium text-gray-400 hover:bg-zinc-700 hover:text-white focus:text-white focus:outline-none"
+                                        class="inline-flex items-center justify-center rounded-lg bg-gray-800 bg-transparent px-5 py-2.5 text-center text-sm font-medium text-gray-400 hover:bg-zinc-700 hover:text-white focus:text-white focus:outline-hidden"
                                         onclick={() => (deleteConfirm = false)}>
                                         No, cancel
                                     </button>
@@ -829,14 +829,14 @@
             <div class="mt-2 flex divide-x divide-gray-600">
                 {#if playerName === "" && meterState === MeterState.PARTY}
                     <button
-                        class="rounded-sm px-2 py-1"
+                        class="rounded-xs px-2 py-1"
                         class:bg-accent-900={chartType === ChartType.AVERAGE_DPS}
                         class:bg-gray-700={chartType !== ChartType.AVERAGE_DPS}
                         onclick={() => (chartType = ChartType.AVERAGE_DPS)}>
                         Average DPS
                     </button>
                     <button
-                        class="rounded-sm px-2 py-1"
+                        class="rounded-xs px-2 py-1"
                         class:bg-accent-900={chartType === ChartType.ROLLING_DPS}
                         class:bg-gray-700={chartType !== ChartType.ROLLING_DPS}
                         onclick={() => (chartType = ChartType.ROLLING_DPS)}>
