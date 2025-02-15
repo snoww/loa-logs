@@ -90,7 +90,7 @@
                     use:tooltip={{ content: "Boss Only Damage" }}
                     src={$imagePath.path + getImagePath("icons/boss.png")}
                     alt="Boss Only Damage"
-                    class="-mx-1! size-5"
+                    class="-ml-1! mr-1 size-5"
                     data-tauri-drag-region />
             {/if}
             <div data-tauri-drag-region>
