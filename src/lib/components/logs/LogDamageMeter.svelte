@@ -352,6 +352,18 @@
             return;
         }
 
+        if (!$settings.sync.enabled) {
+            $uploadErrorStore = true;
+            $uploadErrorMessage = "Upload not enabled";
+            return;
+        }
+
+        if (!$settings.sync.accessToken || !$settings.sync.validToken) {
+            $uploadErrorStore = true;
+            $uploadErrorMessage = "Upload token is invalid";
+            return;
+        }
+
         uploading = true;
         let result = await uploadLog(id, encounter, $settings.sync);
         if (result.error) {
@@ -403,7 +415,7 @@
 <!-- svelte-ignore a11y_no_static_element_interactions -->
 <div
     bind:this={targetDiv}
-    class="scroll-ml-8 scroll-mt-2 text-gray-100"
+    class="scroll-mt-2 scroll-ml-8 text-gray-100"
     class:p-4={$takingScreenshot}
     oncontextmenu={handleRightClick}>
     <LogEncounterInfo
@@ -507,17 +519,22 @@
                             d="M479.5-269.5q71.75 0 119.625-47.875T647-437q0-71-47.875-118.75T479.5-603.5q-71.75 0-119.125 47.75T313-437q0 71.75 47.375 119.625T479.5-269.5Zm0-57.5q-47 0-78-31.145T370.5-437q0-47 31-78t78-31q47 0 78.5 31t31.5 78.25q0 47.25-31.5 78.5T479.5-327Zm-328 227.5q-38.019 0-64.76-26.741Q60-152.981 60-191v-491.5q0-37.431 26.74-64.966Q113.482-775 151.5-775h132l83.057-97.5H594.5l82 97.5h132q37.431 0 64.966 27.534Q901-719.931 901-682.5V-191q0 38.019-27.534 64.759Q845.931-99.5 808.5-99.5h-657Zm657-91.5v-491.5H635L552.5-780H408.451L325.5-682.5h-174V-191h657ZM480-436.5Z" />
                     </svg>
                 </button>
-                {#if encounter.cleared && $settings.sync.enabled && $settings.sync.accessToken && $settings.sync.validToken}
+                {#if encounter.cleared}
                     {#if uploading}
                         <div class="rounded-xs bg-gray-700 px-2 py-1" use:tooltip={{ content: "Uploading..." }}>
-                            <svg
-                                class="hover:fill-accent-800 h-5 w-5 animate-spin fill-zinc-300"
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 -960 960 960">
-                                <path
+                            <div class="group flex space-x-1">
+                                <svg
+                                    class="group-hover:fill-accent-800 h-5 w-5 animate-spin fill-zinc-300"
                                     xmlns="http://www.w3.org/2000/svg"
-                                    d="M160-160v-80h110l-16-14q-52-46-73-105t-21-119q0-111 66.5-197.5T400-790v84q-72 26-116 88.5T240-478q0 45 17 87.5t53 78.5l10 10v-98h80v240H160Zm400-10v-84q72-26 116-88.5T720-482q0-45-17-87.5T650-648l-10-10v98h-80v-240h240v80H690l16 14q49 49 71.5 106.5T800-482q0 111-66.5 197.5T560-170Z" />
-                            </svg>
+                                    viewBox="0 -960 960 960">
+                                    <path
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        d="M160-160v-80h110l-16-14q-52-46-73-105t-21-119q0-111 66.5-197.5T400-790v84q-72 26-116 88.5T240-478q0 45 17 87.5t53 78.5l10 10v-98h80v240H160Zm400-10v-84q72-26 116-88.5T720-482q0-45-17-87.5T650-648l-10-10v98h-80v-240h240v80H690l16 14q49 49 71.5 106.5T800-482q0 111-66.5 197.5T560-170Z" />
+                                </svg>
+                                <div class="group-hover:text-accent-800">
+                                    Uploading...
+                                </div>
+                            </div>
                         </div>
                     {:else if !encounter.sync}
                         <button
@@ -525,14 +542,17 @@
                             aria-label="Sync to logs.snow.xyz"
                             use:tooltip={{ content: "Sync to logs.snow.xyz" }}
                             onclick={upload}>
-                            <svg
-                                class="hover:fill-accent-800 h-5 w-5 fill-zinc-300"
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 -960 960 960">
-                                <path
+                            <div class="group flex space-x-1">
+                                <svg
+                                    class="group-hover:fill-accent-800 h-5 w-5 fill-zinc-300"
                                     xmlns="http://www.w3.org/2000/svg"
-                                    d="M450-313v-371L330-564l-43-43 193-193 193 193-43 43-120-120v371h-60ZM220-160q-24 0-42-18t-18-42v-143h60v143h520v-143h60v143q0 24-18 42t-42 18H220Z" />
-                            </svg>
+                                    viewBox="0 -960 960 960">
+                                    <path
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        d="M450-313v-371L330-564l-43-43 193-193 193 193-43 43-120-120v371h-60ZM220-160q-24 0-42-18t-18-42v-143h60v143h520v-143h60v143q0 24-18 42t-42 18H220Z" />
+                                </svg>
+                                <div class="group-hover:text-accent-800">Upload</div>
+                            </div>
                         </button>
                     {:else}
                         <a
@@ -541,14 +561,17 @@
                             use:tooltip={{ content: "Open on logs.snow.xyz" }}
                             href={LOG_SITE_URL + "/logs/" + encounter.sync}
                             target="_blank">
-                            <svg
-                                class="hover:fill-accent-800 h-5 w-5 fill-zinc-300"
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 -960 960 960">
-                                <path
+                            <div class="group flex space-x-1">
+                                <svg
+                                    class="group-hover:fill-accent-800 h-5 w-5 fill-zinc-300"
                                     xmlns="http://www.w3.org/2000/svg"
-                                    d="m414-280 226-226-58-58-169 169-84-84-57 57 142 142ZM260-160q-91 0-155.5-63T40-377q0-78 47-139t123-78q25-92 100-149t170-57q117 0 198.5 81.5T760-520q69 8 114.5 59.5T920-340q0 75-52.5 127.5T740-160H260Zm0-80h480q42 0 71-29t29-71q0-42-29-71t-71-29h-60v-80q0-83-58.5-141.5T480-720q-83 0-141.5 58.5T280-520h-20q-58 0-99 41t-41 99q0 58 41 99t99 41Zm220-240Z" />
-                            </svg>
+                                    viewBox="0 -960 960 960">
+                                    <path
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        d="m414-280 226-226-58-58-169 169-84-84-57 57 142 142ZM260-160q-91 0-155.5-63T40-377q0-78 47-139t123-78q25-92 100-149t170-57q117 0 198.5 81.5T760-520q69 8 114.5 59.5T920-340q0 75-52.5 127.5T740-160H260Zm0-80h480q42 0 71-29t29-71q0-42-29-71t-71-29h-60v-80q0-83-58.5-141.5T480-720q-83 0-141.5 58.5T280-520h-20q-58 0-99 41t-41 99q0 58 41 99t99 41Zm220-240Z" />
+                                </svg>
+                                <div class="group-hover:text-accent-800">Share Log</div>
+                            </div>
                         </a>
                     {/if}
                 {/if}
@@ -564,7 +587,7 @@
                         </svg>
                     </button>
                     {#if dropdownOpen}
-                        <div class="absolute left-9 top-0 z-50 rounded-md bg-gray-700">
+                        <div class="absolute top-0 left-9 z-50 rounded-md bg-gray-700">
                             <div class="flex w-48 flex-col divide-y-2 divide-gray-600 px-2 py-1">
                                 <button
                                     class="hover:text-accent-500 p-1 text-left"
@@ -583,7 +606,7 @@
                                             class="peer sr-only"
                                             bind:checked={$settings.general.showNames} />
                                         <div
-                                            class="peer-checked:bg-accent-800 peer h-5 w-9 rounded-full border-gray-600 bg-gray-800 after:absolute after:left-[2px] after:top-[2px] after:h-4 after:w-4 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-hidden">
+                                            class="peer-checked:bg-accent-800 peer h-5 w-9 rounded-full border-gray-600 bg-gray-800 peer-focus:outline-hidden after:absolute after:top-[2px] after:left-[2px] after:h-4 after:w-4 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:after:translate-x-full peer-checked:after:border-white">
                                         </div>
                                     </label>
                                 </button>
@@ -596,7 +619,7 @@
                                             class="peer sr-only"
                                             bind:checked={$settings.logs.splitPartyDamage} />
                                         <div
-                                            class="peer-checked:bg-accent-800 peer h-5 w-9 rounded-full border-gray-600 bg-gray-800 after:absolute after:left-[2px] after:top-[2px] after:h-4 after:w-4 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-hidden">
+                                            class="peer-checked:bg-accent-800 peer h-5 w-9 rounded-full border-gray-600 bg-gray-800 peer-focus:outline-hidden after:absolute after:top-[2px] after:left-[2px] after:h-4 after:w-4 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:after:translate-x-full peer-checked:after:border-white">
                                         </div>
                                     </label>
                                 </button>
@@ -609,7 +632,7 @@
                                             class="peer sr-only"
                                             bind:checked={$settings.general.showEsther} />
                                         <div
-                                            class="peer-checked:bg-accent-800 peer h-5 w-9 rounded-full border-gray-600 bg-gray-800 after:absolute after:left-[2px] after:top-[2px] after:h-4 after:w-4 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-hidden">
+                                            class="peer-checked:bg-accent-800 peer h-5 w-9 rounded-full border-gray-600 bg-gray-800 peer-focus:outline-hidden after:absolute after:top-[2px] after:left-[2px] after:h-4 after:w-4 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:after:translate-x-full peer-checked:after:border-white">
                                         </div>
                                     </label>
                                 </button>
@@ -628,14 +651,14 @@
             </div>
 
             {#if deleteConfirm}
-                <div class="fixed inset-0 z-50 bg-zinc-900 bg-opacity-80"></div>
-                <div class="fixed left-0 right-0 top-0 z-50 h-modal w-full items-center justify-center p-4">
+                <div class="bg-opacity-80 fixed inset-0 z-50 bg-zinc-900"></div>
+                <div class="h-modal fixed top-0 right-0 left-0 z-50 w-full items-center justify-center p-4">
                     <div class="relative top-[25%] mx-auto flex max-h-full w-full max-w-md">
                         <div
                             class="relative mx-auto flex flex-col rounded-lg border-gray-700 bg-zinc-800 text-gray-400 shadow-md">
                             <button
                                 type="button"
-                                class="absolute right-2.5 top-3 ml-auto whitespace-normal rounded-lg p-1.5 hover:bg-zinc-600 focus:outline-hidden"
+                                class="absolute top-3 right-2.5 ml-auto rounded-lg p-1.5 whitespace-normal hover:bg-zinc-600 focus:outline-hidden"
                                 aria-label="Close modal"
                                 onclick={() => (deleteConfirm = false)}>
                                 <span class="sr-only">Close modal</span>
