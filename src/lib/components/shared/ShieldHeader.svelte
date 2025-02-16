@@ -1,6 +1,4 @@
 <script lang="ts">
-    import { run } from "svelte/legacy";
-
     import type { StatusEffect } from "$lib/types";
     import ShieldTooltip from "$lib/components/shared/ShieldTooltip.svelte";
 

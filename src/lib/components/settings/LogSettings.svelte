@@ -5,7 +5,7 @@
 </script>
 
 <div class="flex flex-col space-y-4 divide-y-[1px]">
-    <div class="mt-4 flex flex-col space-y-2 px-2">
+    <div class="mt-4 flex flex-col space-y-2 px-2 pb-4">
         <label class="flex flex-col pb-4 pt-2">
             <div class="flex items-center justify-between px-2">
                 <div class="pb-2">
