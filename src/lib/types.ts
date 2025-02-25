@@ -12,7 +12,7 @@ export interface Encounter {
     lastCombatPacket: number;
     fightStart: number;
     localPlayer: string;
-    entities: { [key: string]: Entity };
+    entities: Record<string, Entity>;
     currentBossName: string;
     currentBoss: Entity | null;
     encounterDamageStats: EncounterDamageStats;
@@ -109,7 +109,7 @@ export interface Entity {
     maxHp: number;
     currentShield: number;
     isDead: boolean;
-    skills: { [skillId: number]: Skill };
+    skills: Record<number, Skill>;
     damageStats: DamageStats;
     skillStats: SkillStats;
     engravingData?: Array<string>;

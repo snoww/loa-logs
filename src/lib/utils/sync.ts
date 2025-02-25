@@ -115,10 +115,7 @@ export async function uploadLog(id: string | number, encounter: Encounter, setti
         return { id: 0, error: body.error };
     }
 
-    let upstream = body.id;
-    if (body.duplicate) {
-        upstream = upstream + "-" + body.duplicate;
-    }
+    const upstream = body.id;
 
     await invoke("write_log", {
         message: "uploaded encounter " + id + " (" + encounter.currentBossName + ") upstream: " + upstream
