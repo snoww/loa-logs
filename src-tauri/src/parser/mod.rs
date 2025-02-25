@@ -17,7 +17,7 @@ use crate::parser::models::{
     DamageData, EntityType, Identity, LocalInfo, LocalPlayer, Stagger, VALID_ZONES,
 };
 use crate::parser::party_tracker::PartyTracker;
-use crate::parser::stats_api::{StatsApi, API_URL};
+use crate::parser::stats_api::{StatsApi};
 use crate::parser::status_tracker::{
     get_status_effect_value, StatusEffectDetails, StatusEffectTargetType, StatusEffectType,
     StatusTracker,

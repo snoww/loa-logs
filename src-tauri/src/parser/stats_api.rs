@@ -16,7 +16,6 @@ use std::sync::Arc;
 use std::time::Duration;
 use tauri::{Manager, Window, Wry};
 
-pub const API_URL: &str = "https://inspect.fau.dev";
 pub const INSPECT_API_URL: &str = "https://api.snow.xyz";
 
 #[derive(Clone)]
@@ -212,69 +211,69 @@ impl StatsApi {
             .expect("failed to emit rdps message");
     }
 
-    pub fn send_raid_info(&mut self, state: &EncounterState) {
-        if !((self.valid_zone
-            && (state.raid_difficulty == "Normal" || state.raid_difficulty == "Hard"))
-            || (state.raid_difficulty == "Inferno"
-                || state.raid_difficulty == "Trial"
-                || state.raid_difficulty == "The First"))
-        {
-            debug_print(format_args!("not valid for raid info"));
-            return;
-        }
-
-        let players: HashMap<String, u64> = state
-            .encounter
-            .entities
-            .iter()
-            .filter_map(|(_, e)| {
-                if e.entity_type == EntityType::PLAYER {
-                    Some((e.name.clone(), e.character_id))
-                } else {
-                    None
-                }
-            })
-            .collect();
-
-        if players.len() > 16 {
-            warn!("invalid zone. num players: {}", players.len());
-            return;
-        }
-
-        let client = self.client.clone();
-        let client_id = self.client_id.clone();
-        let version = self.window.app_handle().package_info().version.to_string();
-        let region = self.region.clone();
-        let boss_name = state.encounter.current_boss_name.clone();
-        let difficulty = state.raid_difficulty.clone();
-        let cleared = state.raid_clear;
-
-        tokio::task::spawn(async move {
-            let request_body = json!({
-                "id": client_id,
-                "version": version,
-                "region": region,
-                "boss": boss_name,
-                "difficulty": difficulty,
-                "characters": players,
-                "cleared": cleared,
-            });
-
-            match client
-                .post(format!("{API_URL}/raid"))
-                .json(&request_body)
-                .send()
-                .await
-            {
-                Ok(_) => {
-                    debug_print(format_args!("sent raid info"));
-                }
-                Err(e) => {
-                    warn!("failed to send raid info: {:?}", e);
-                }
-            }
-        });
-    }
+    // pub fn send_raid_info(&mut self, state: &EncounterState) {
+    //     if !((self.valid_zone
+    //         && (state.raid_difficulty == "Normal" || state.raid_difficulty == "Hard"))
+    //         || (state.raid_difficulty == "Inferno"
+    //             || state.raid_difficulty == "Trial"
+    //             || state.raid_difficulty == "The First"))
+    //     {
+    //         debug_print(format_args!("not valid for raid info"));
+    //         return;
+    //     }
+    // 
+    //     let players: HashMap<String, u64> = state
+    //         .encounter
+    //         .entities
+    //         .iter()
+    //         .filter_map(|(_, e)| {
+    //             if e.entity_type == EntityType::PLAYER {
+    //                 Some((e.name.clone(), e.character_id))
+    //             } else {
+    //                 None
+    //             }
+    //         })
+    //         .collect();
+    // 
+    //     if players.len() > 16 {
+    //         warn!("invalid zone. num players: {}", players.len());
+    //         return;
+    //     }
+    // 
+    //     let client = self.client.clone();
+    //     let client_id = self.client_id.clone();
+    //     let version = self.window.app_handle().package_info().version.to_string();
+    //     let region = self.region.clone();
+    //     let boss_name = state.encounter.current_boss_name.clone();
+    //     let difficulty = state.raid_difficulty.clone();
+    //     let cleared = state.raid_clear;
+    // 
+    //     tokio::task::spawn(async move {
+    //         let request_body = json!({
+    //             "id": client_id,
+    //             "version": version,
+    //             "region": region,
+    //             "boss": boss_name,
+    //             "difficulty": difficulty,
+    //             "characters": players,
+    //             "cleared": cleared,
+    //         });
+    // 
+    //         match client
+    //             .post(format!("{API_URL}/raid"))
+    //             .json(&request_body)
+    //             .send()
+    //             .await
+    //         {
+    //             Ok(_) => {
+    //                 debug_print(format_args!("sent raid info"));
+    //             }
+    //             Err(e) => {
+    //                 warn!("failed to send raid info: {:?}", e);
+    //             }
+    //         }
+    //     });
+    // }
 
     pub async fn get_character_info(&self, boss_name: &str, players: Vec<String>, region: Option<String>) -> Option<HashMap<String, PlayerStats>> {
         if region.is_none() {
