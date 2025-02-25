@@ -479,7 +479,7 @@ pub fn get_class_from_id(class_id: &u32) -> String {
         601 => "Specialist",
         602 => "Artist",
         603 => "Aeromancer",
-        604 => "Alchemist",
+        604 => "Wildsoul",
         _ => "Unknown",
     };
 

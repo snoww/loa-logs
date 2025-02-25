@@ -37,10 +37,10 @@ export const classesMap: ClassMap = {
     601: "Specialist",
     602: "Artist",
     603: "Aeromancer",
-    604: "Alchemist"
+    604: "Wildsoul"
 };
 
-export const classNameToClassId: { [key: string]: number | undefined } = {
+export const classNameToClassId: Record<string, number> = {
     Unknown: 0,
     "Warrior (Male)": 101,
     Berserker: 102,
@@ -77,7 +77,7 @@ export const classNameToClassId: { [key: string]: number | undefined } = {
     Specialist: 601,
     Artist: 602,
     Aeromancer: 603,
-    Alchemist: 604
+    Wildsoul: 604
 };
 
 export const classList = [
@@ -106,5 +106,6 @@ export const classList = [
     "Machinist",
     "Gunslinger",
     "Artist",
-    "Aeromancer"
+    "Aeromancer",
+    "Wildsoul"
 ];
