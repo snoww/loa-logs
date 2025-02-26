@@ -21,14 +21,6 @@ https://github.com/snoww/loa-logs/releases
 
 \*currently only Windows 7 and up is supported
 
-> [!IMPORTANT]
->
-> ### Prerequisites
->
-> Npcap is required to run LOA Logs.
->
-> Download [here](https://npcap.com/#download).
-
 # Supporting the Project
 
 You can support me directly by buying me a [coffee.](https://www.buymeacoffee.com/synow)
