@@ -89,16 +89,19 @@
     </div>
     <div class="mx-8 my-4 tracking-tight text-gray-200">
         <p class="px-2 text-base">
-            Uploading is currently in alpha, progress is being made by migrating from faust's website.
+            Uploading is currently in beta, progress is slowly being made...
+        </p>
+        <p class="px-2 text-md text-neutral-400">
+            individual logs are not searchable at the moment.
         </p>
         <div class="mt-2 px-2">
             <SettingItem
-                name="Sync (logs.snow.xyz)"
+                name="Uploads (logs.snow.xyz)"
                 description="Enable log uploads"
                 bind:setting={$settings.sync.enabled} />
         </div>
         <div class="mt-4 flex flex-col space-y-2 px-2">
-            <p>Access Token</p>
+            <p>Upload Access Token</p>
             <input
                 type="password"
                 bind:value={$settings.sync.accessToken}
@@ -126,11 +129,12 @@
         <div class="mt-4 px-2">
             <SettingItem
                 name="Auto Upload"
-                description="Automatically logs when cleared"
+                description="Automatically uploads logs when cleared (uses visibility settings below)"
                 bind:setting={$settings.sync.auto} />
         </div>
         <div class="mt-4 px-2">
-            <div class="pb-2">Log Visibility Settings (for future uploads)</div>
+            <div class="">Log Visibility Settings (for future uploads)</div>
+            <div class="pb-2 text-neutral-400 text-sm">note: in case of duplicate logs, preferences of the earliest uploader is respected</div>
             <div class="flex flex-col">
                 <div class="flex items-center space-x-2">
                     <input
