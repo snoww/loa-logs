@@ -31,7 +31,7 @@
         localPlayer,
         missingInfo
     } from "$lib/utils/stores";
-    import html2canvas from "html2canvas";
+    import html2canvas from 'html2canvas-pro';
     import Details from "./Details.svelte";
     import DamageTaken from "./shared/DamageTaken.svelte";
     import BossTable from "./shared/BossTable.svelte";

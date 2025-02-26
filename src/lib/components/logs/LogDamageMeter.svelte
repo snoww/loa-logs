@@ -18,7 +18,7 @@
     import { chartable, type EChartsOptions } from "$lib/utils/charts";
     import { colors, settings, skillIcon } from "$lib/utils/settings";
     import { goto } from "$app/navigation";
-    import html2canvas from "html2canvas";
+    import html2canvas from 'html2canvas-pro';
     import {
         screenshotAlert,
         screenshotError,

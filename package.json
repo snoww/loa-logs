@@ -51,7 +51,7 @@
         "flowbite": "^1.6.4",
         "flowbite-svelte": "^0.47.4",
         "heap-js": "^2.3.0",
-        "html2canvas": "^1.4.1",
+        "html2canvas-pro": "^1.5.8",
         "lodash-es": "^4.17.21",
         "markdown-it": "^14.1.0",
         "nprogress": "^0.2.0",
