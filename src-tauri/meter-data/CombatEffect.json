@@ -5122,6 +5122,137 @@
       }
     ]
   },
+  "12727": {
+    "id": 12727,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 3000,
+        "conditions": [],
+        "actions": [
+          {
+            "actionType": "exec_when_be_killed",
+            "actorType": "caster",
+            "args": [
+              0,
+              0,
+              12687,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "12728": {
+    "id": 12728,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 3000,
+        "conditions": [],
+        "actions": [
+          {
+            "actionType": "exec_when_be_killed",
+            "actorType": "caster",
+            "args": [
+              0,
+              0,
+              12689,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "12693": {
+    "id": 12693,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "npc_id",
+            "actorType": "target",
+            "arg": 312014
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "exec_active_effect_when_kill",
+            "actorType": "caster",
+            "args": [
+              0,
+              0,
+              12694,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "12729": {
+    "id": 12729,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 3000,
+        "conditions": [],
+        "actions": [
+          {
+            "actionType": "exec_when_be_killed",
+            "actorType": "caster",
+            "args": [
+              0,
+              0,
+              12692,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "12732": {
+    "id": 12732,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 3000,
+        "conditions": [],
+        "actions": [
+          {
+            "actionType": "exec_when_be_killed",
+            "actorType": "caster",
+            "args": [
+              0,
+              0,
+              12668,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
   "92256": {
     "id": 92256,
     "effects": [
@@ -6652,6 +6783,58 @@
             ]
           }
         ]
+      },
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "current_skill",
+            "actorType": "self",
+            "arg": 33520
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "exec_after_skill",
+            "actorType": "self",
+            "args": [
+              578301,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "current_skill",
+            "actorType": "self",
+            "arg": 33530
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "exec_after_skill",
+            "actorType": "self",
+            "args": [
+              578301,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
       }
     ]
   },
@@ -6791,6 +6974,176 @@
             "actorType": "target",
             "args": [
               -9500,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "542810": {
+    "id": 542810,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [],
+        "actions": [
+          {
+            "actionType": "modify_penetration",
+            "actorType": "target",
+            "args": [
+              10000,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "abnormal_move",
+            "actorType": "target",
+            "arg": 4
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              10000,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "541150": {
+    "id": 541150,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [],
+        "actions": [
+          {
+            "actionType": "modify_penetration",
+            "actorType": "target",
+            "args": [
+              10000,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [],
+        "actions": [
+          {
+            "actionType": "modify_damage_shield_multiplier",
+            "actorType": "target",
+            "args": [
+              10000,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "4351010": {
+    "id": 4351010,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [],
+        "actions": [
+          {
+            "actionType": "exec_active_effect_when_damage",
+            "actorType": "self",
+            "args": [
+              4351010,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "actionType": "exec_active_effect_when_damage",
+            "actorType": "self",
+            "args": [
+              4351020,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "4351012": {
+    "id": 4351012,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [],
+        "actions": [
+          {
+            "actionType": "exec_active_effect_when_damage",
+            "actorType": "self",
+            "args": [
+              4351010,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "actionType": "exec_active_effect_when_damage",
+            "actorType": "self",
+            "args": [
+              4351020,
               0,
               0,
               0,
@@ -60510,7 +60863,13 @@
         "desc": null,
         "cooldown": 0,
         "ratio": 10000,
-        "conditions": [],
+        "conditions": [
+          {
+            "conditionType": "npc_scaled_level_greater",
+            "actorType": "target",
+            "arg": 0
+          }
+        ],
         "actions": [
           {
             "actionType": "exec_active_effect_when_damage",
@@ -60535,7 +60894,13 @@
         "desc": null,
         "cooldown": 0,
         "ratio": 10000,
-        "conditions": [],
+        "conditions": [
+          {
+            "conditionType": "npc_scaled_level_greater",
+            "actorType": "target",
+            "arg": 0
+          }
+        ],
         "actions": [
           {
             "actionType": "exec_active_effect_when_damage",
@@ -60560,7 +60925,13 @@
         "desc": null,
         "cooldown": 0,
         "ratio": 10000,
-        "conditions": [],
+        "conditions": [
+          {
+            "conditionType": "npc_scaled_level_greater",
+            "actorType": "target",
+            "arg": 0
+          }
+        ],
         "actions": [
           {
             "actionType": "exec_active_effect_when_damage",
@@ -60585,7 +60956,13 @@
         "desc": null,
         "cooldown": 0,
         "ratio": 10000,
-        "conditions": [],
+        "conditions": [
+          {
+            "conditionType": "npc_scaled_level_greater",
+            "actorType": "target",
+            "arg": 0
+          }
+        ],
         "actions": [
           {
             "actionType": "exec_active_effect_when_damage",
@@ -60610,7 +60987,13 @@
         "desc": null,
         "cooldown": 0,
         "ratio": 10000,
-        "conditions": [],
+        "conditions": [
+          {
+            "conditionType": "npc_scaled_level_greater",
+            "actorType": "target",
+            "arg": 0
+          }
+        ],
         "actions": [
           {
             "actionType": "exec_active_effect_when_damage",
@@ -60635,7 +61018,13 @@
         "desc": null,
         "cooldown": 0,
         "ratio": 10000,
-        "conditions": [],
+        "conditions": [
+          {
+            "conditionType": "npc_scaled_level_greater",
+            "actorType": "target",
+            "arg": 0
+          }
+        ],
         "actions": [
           {
             "actionType": "exec_active_effect_when_damage",
@@ -60660,7 +61049,13 @@
         "desc": null,
         "cooldown": 0,
         "ratio": 10000,
-        "conditions": [],
+        "conditions": [
+          {
+            "conditionType": "npc_scaled_level_greater",
+            "actorType": "target",
+            "arg": 0
+          }
+        ],
         "actions": [
           {
             "actionType": "exec_active_effect_when_damage",
@@ -60685,7 +61080,13 @@
         "desc": null,
         "cooldown": 0,
         "ratio": 10000,
-        "conditions": [],
+        "conditions": [
+          {
+            "conditionType": "npc_scaled_level_greater",
+            "actorType": "target",
+            "arg": 0
+          }
+        ],
         "actions": [
           {
             "actionType": "exec_active_effect_when_damage",
@@ -60934,7 +61335,13 @@
         "desc": null,
         "cooldown": 0,
         "ratio": 10000,
-        "conditions": [],
+        "conditions": [
+          {
+            "conditionType": "npc_scaled_level_greater",
+            "actorType": "target",
+            "arg": 0
+          }
+        ],
         "actions": [
           {
             "actionType": "exec_active_effect_when_damage",
@@ -60959,7 +61366,13 @@
         "desc": null,
         "cooldown": 0,
         "ratio": 10000,
-        "conditions": [],
+        "conditions": [
+          {
+            "conditionType": "npc_scaled_level_greater",
+            "actorType": "target",
+            "arg": 0
+          }
+        ],
         "actions": [
           {
             "actionType": "exec_active_effect_when_damage",
@@ -60984,7 +61397,13 @@
         "desc": null,
         "cooldown": 0,
         "ratio": 10000,
-        "conditions": [],
+        "conditions": [
+          {
+            "conditionType": "npc_scaled_level_greater",
+            "actorType": "target",
+            "arg": 0
+          }
+        ],
         "actions": [
           {
             "actionType": "exec_active_effect_when_damage",
@@ -61009,7 +61428,13 @@
         "desc": null,
         "cooldown": 0,
         "ratio": 10000,
-        "conditions": [],
+        "conditions": [
+          {
+            "conditionType": "npc_scaled_level_greater",
+            "actorType": "target",
+            "arg": 0
+          }
+        ],
         "actions": [
           {
             "actionType": "exec_active_effect_when_damage",
@@ -74721,6 +75146,2637 @@
       }
     ]
   },
+  "331060": {
+    "id": 331060,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "npc_grade_less",
+            "actorType": "target",
+            "arg": 5
+          },
+          {
+            "conditionType": "current_skill",
+            "actorType": "self",
+            "arg": 33100
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              14500,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "331160": {
+    "id": 331160,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "pc",
+            "actorType": "target",
+            "arg": 0
+          },
+          {
+            "conditionType": "current_skill",
+            "actorType": "self",
+            "arg": 33110
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "exec_active_effect_when_damage",
+            "actorType": "target",
+            "args": [
+              331162,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "331170": {
+    "id": 331170,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "abnormal_move_immune",
+            "actorType": "target",
+            "arg": 0
+          },
+          {
+            "conditionType": "current_skill",
+            "actorType": "self",
+            "arg": 33110
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              6000,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "331180": {
+    "id": 331180,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "npc_grade_less",
+            "actorType": "target",
+            "arg": 5
+          },
+          {
+            "conditionType": "current_skill",
+            "actorType": "self",
+            "arg": 33110
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              20000,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "331230": {
+    "id": 331230,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "current_skill",
+            "actorType": "self",
+            "arg": 33120
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "exec_after_skill",
+            "actorType": "self",
+            "args": [
+              331230,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "331231": {
+    "id": 331231,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "current_skill",
+            "actorType": "self",
+            "arg": 33120
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "exec_after_skill",
+            "actorType": "self",
+            "args": [
+              331231,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "331232": {
+    "id": 331232,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "current_skill",
+            "actorType": "self",
+            "arg": 33120
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "exec_after_skill",
+            "actorType": "self",
+            "args": [
+              331232,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "331233": {
+    "id": 331233,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "current_skill",
+            "actorType": "self",
+            "arg": 33120
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "exec_after_skill",
+            "actorType": "self",
+            "args": [
+              331233,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "331234": {
+    "id": 331234,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "current_skill",
+            "actorType": "self",
+            "arg": 33120
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "exec_after_skill",
+            "actorType": "self",
+            "args": [
+              331234,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "331270": {
+    "id": 331270,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "npc_grade_less",
+            "actorType": "target",
+            "arg": 5
+          },
+          {
+            "conditionType": "current_skill",
+            "actorType": "self",
+            "arg": 33120
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              20000,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "331450": {
+    "id": 331450,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "abnormal_move_immune",
+            "actorType": "target",
+            "arg": 0
+          },
+          {
+            "conditionType": "current_skill",
+            "actorType": "self",
+            "arg": 33140
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              3500,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "331460": {
+    "id": 331460,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "npc_grade_less",
+            "actorType": "target",
+            "arg": 5
+          },
+          {
+            "conditionType": "current_skill",
+            "actorType": "self",
+            "arg": 33140
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              14500,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "331540": {
+    "id": 331540,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "npc_grade_less",
+            "actorType": "target",
+            "arg": 5
+          },
+          {
+            "conditionType": "current_skill",
+            "actorType": "self",
+            "arg": 33150
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              14500,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "331550": {
+    "id": 331550,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "abnormal_move_immune",
+            "actorType": "target",
+            "arg": 0
+          },
+          {
+            "conditionType": "current_skill",
+            "actorType": "self",
+            "arg": 33150
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              3500,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "331670": {
+    "id": 331670,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "abnormal_move_immune",
+            "actorType": "target",
+            "arg": 0
+          },
+          {
+            "conditionType": "current_skill",
+            "actorType": "self",
+            "arg": 33160
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              6000,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "331750": {
+    "id": 331750,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "npc_grade_less",
+            "actorType": "target",
+            "arg": 5
+          },
+          {
+            "conditionType": "current_skill",
+            "actorType": "self",
+            "arg": 33170
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              14500,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "332050": {
+    "id": 332050,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "current_skill",
+            "actorType": "self",
+            "arg": 33200
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "exec_after_skill",
+            "actorType": "self",
+            "args": [
+              332052,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "332070": {
+    "id": 332070,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "abnormal_move_immune",
+            "actorType": "target",
+            "arg": 0
+          },
+          {
+            "conditionType": "current_skill",
+            "actorType": "self",
+            "arg": 33200
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              6000,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "332071": {
+    "id": 332071,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "abnormal_move_immune",
+            "actorType": "target",
+            "arg": 0
+          },
+          {
+            "conditionType": "current_skill",
+            "actorType": "self",
+            "arg": 33201
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              6000,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "332080": {
+    "id": 332080,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "npc_grade_less",
+            "actorType": "target",
+            "arg": 5
+          },
+          {
+            "conditionType": "current_skill",
+            "actorType": "self",
+            "arg": 33201
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              9000,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "332160": {
+    "id": 332160,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "current_skill",
+            "actorType": "self",
+            "arg": 33210
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "exec_after_skill",
+            "actorType": "self",
+            "args": [
+              332161,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "332210": {
+    "id": 332210,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "current_skill",
+            "actorType": "self",
+            "arg": 33220
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "exec_start_skill",
+            "actorType": "self",
+            "args": [
+              332210,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "332240": {
+    "id": 332240,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "npc_grade_less",
+            "actorType": "target",
+            "arg": 5
+          },
+          {
+            "conditionType": "current_skill",
+            "actorType": "self",
+            "arg": 33220
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              9000,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "332241": {
+    "id": 332241,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "current_skill",
+            "actorType": "self",
+            "arg": 33220
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "exec_after_skill",
+            "actorType": "self",
+            "args": [
+              332241,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "332250": {
+    "id": 332250,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "current_skill",
+            "actorType": "self",
+            "arg": 33220
+          },
+          {
+            "conditionType": "abnormal_move_immune",
+            "actorType": "target",
+            "arg": 0
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              3500,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "332370": {
+    "id": 332370,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "current_skill",
+            "actorType": "self",
+            "arg": 33230
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "exec_after_skill",
+            "actorType": "self",
+            "args": [
+              332371,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "333020": {
+    "id": 333020,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "current_skill",
+            "actorType": "self",
+            "arg": 33300
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "exec_after_skill",
+            "actorType": "self",
+            "args": [
+              333020,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "333021": {
+    "id": 333021,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "current_skill",
+            "actorType": "self",
+            "arg": 33300
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "exec_after_skill",
+            "actorType": "self",
+            "args": [
+              333021,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "333022": {
+    "id": 333022,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "current_skill",
+            "actorType": "self",
+            "arg": 33300
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "exec_after_skill",
+            "actorType": "self",
+            "args": [
+              333022,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "333023": {
+    "id": 333023,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "current_skill",
+            "actorType": "self",
+            "arg": 33300
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "exec_after_skill",
+            "actorType": "self",
+            "args": [
+              333023,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "333024": {
+    "id": 333024,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "current_skill",
+            "actorType": "self",
+            "arg": 33300
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "exec_after_skill",
+            "actorType": "self",
+            "args": [
+              333024,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "333120": {
+    "id": 333120,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "current_skill",
+            "actorType": "self",
+            "arg": 33310
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "exec_after_skill",
+            "actorType": "self",
+            "args": [
+              333120,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "333121": {
+    "id": 333121,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "current_skill",
+            "actorType": "self",
+            "arg": 33311
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "exec_after_skill",
+            "actorType": "self",
+            "args": [
+              333120,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "335000": {
+    "id": 335000,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "current_skill",
+            "actorType": "self",
+            "arg": 33500
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "exec_after_skill",
+            "actorType": "self",
+            "args": [
+              335010,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "335200": {
+    "id": 335200,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "current_skill",
+            "actorType": "self",
+            "arg": 33520
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "exec_after_skill",
+            "actorType": "self",
+            "args": [
+              335210,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "2330000": {
+    "id": 2330000,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "current_skill_group",
+            "actorType": "self",
+            "arg": 2330000
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              400,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "2330001": {
+    "id": 2330001,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "current_skill_group",
+            "actorType": "self",
+            "arg": 2330000
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              1200,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "2330002": {
+    "id": 2330002,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "current_skill_group",
+            "actorType": "self",
+            "arg": 2330000
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              2000,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "2330010": {
+    "id": 2330010,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 10000,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "current_skill_group",
+            "actorType": "self",
+            "arg": 2330000
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "exec_start_skill",
+            "actorType": "self",
+            "args": [
+              2330010,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "2330020": {
+    "id": 2330020,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 10000,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "identity_element_value",
+            "actorType": "self",
+            "arg": 3
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "exec_active_effect_when_damage",
+            "actorType": "target",
+            "args": [
+              0,
+              0,
+              2330020,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "2330100": {
+    "id": 2330100,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "current_skill_group",
+            "actorType": "self",
+            "arg": 2330100
+          },
+          {
+            "conditionType": "identity_stance",
+            "actorType": "self",
+            "arg": 3
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              800,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "2330101": {
+    "id": 2330101,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "current_skill_group",
+            "actorType": "self",
+            "arg": 2330100
+          },
+          {
+            "conditionType": "identity_stance",
+            "actorType": "self",
+            "arg": 3
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              1500,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "2330102": {
+    "id": 2330102,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "current_skill_group",
+            "actorType": "self",
+            "arg": 2330100
+          },
+          {
+            "conditionType": "identity_stance",
+            "actorType": "self",
+            "arg": 3
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              2200,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "2330200": {
+    "id": 2330200,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "current_skill_group",
+            "actorType": "self",
+            "arg": 2330200
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              100,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "2330201": {
+    "id": 2330201,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "current_skill_group",
+            "actorType": "self",
+            "arg": 2330200
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              200,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "2330202": {
+    "id": 2330202,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "current_skill_group",
+            "actorType": "self",
+            "arg": 2330200
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              300,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "2330203": {
+    "id": 2330203,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "current_skill_group",
+            "actorType": "self",
+            "arg": 2330200
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              400,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "2330204": {
+    "id": 2330204,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "current_skill_group",
+            "actorType": "self",
+            "arg": 2330200
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              500,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "2330210": {
+    "id": 2330210,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "current_skill_group",
+            "actorType": "self",
+            "arg": 2330000
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "modify_critical_ratio",
+            "actorType": "target",
+            "args": [
+              1000,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "2330211": {
+    "id": 2330211,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "current_skill_group",
+            "actorType": "self",
+            "arg": 2330000
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "modify_critical_ratio",
+            "actorType": "target",
+            "args": [
+              2000,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "2330212": {
+    "id": 2330212,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "current_skill_group",
+            "actorType": "self",
+            "arg": 2330000
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "modify_critical_ratio",
+            "actorType": "target",
+            "args": [
+              3000,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "2330300": {
+    "id": 2330300,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "current_skill_group",
+            "actorType": "self",
+            "arg": 2330300
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              100,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "2330301": {
+    "id": 2330301,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "current_skill_group",
+            "actorType": "self",
+            "arg": 2330300
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              200,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "2330302": {
+    "id": 2330302,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "current_skill_group",
+            "actorType": "self",
+            "arg": 2330300
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              300,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "2330303": {
+    "id": 2330303,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "current_skill_group",
+            "actorType": "self",
+            "arg": 2330300
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              400,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "2330304": {
+    "id": 2330304,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "current_skill_group",
+            "actorType": "self",
+            "arg": 2330300
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              500,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "2330310": {
+    "id": 2330310,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "current_skill_group",
+            "actorType": "self",
+            "arg": 2331000
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              600,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "2330311": {
+    "id": 2330311,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "current_skill_group",
+            "actorType": "self",
+            "arg": 2331000
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              1200,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "2330312": {
+    "id": 2330312,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "current_skill_group",
+            "actorType": "self",
+            "arg": 2331000
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              2000,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "2330500": {
+    "id": 2330500,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "current_skill_group",
+            "actorType": "self",
+            "arg": 2330500
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "exec_start_skill",
+            "actorType": "self",
+            "args": [
+              2330500,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "current_skill_group",
+            "actorType": "self",
+            "arg": 2330510
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "exec_start_skill",
+            "actorType": "self",
+            "args": [
+              2330510,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "2330700": {
+    "id": 2330700,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 1000,
+        "conditions": [
+          {
+            "conditionType": "current_skill_group",
+            "actorType": "self",
+            "arg": 2330100
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              1200,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "2330701": {
+    "id": 2330701,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 1000,
+        "conditions": [
+          {
+            "conditionType": "current_skill_group",
+            "actorType": "self",
+            "arg": 2330100
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              2400,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "2330702": {
+    "id": 2330702,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 1000,
+        "conditions": [
+          {
+            "conditionType": "current_skill_group",
+            "actorType": "self",
+            "arg": 2330100
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              3600,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "2330703": {
+    "id": 2330703,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 1000,
+        "conditions": [
+          {
+            "conditionType": "current_skill_group",
+            "actorType": "self",
+            "arg": 2330100
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              4800,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "2330704": {
+    "id": 2330704,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 1000,
+        "conditions": [
+          {
+            "conditionType": "current_skill_group",
+            "actorType": "self",
+            "arg": 2330100
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              6000,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "2330900": {
+    "id": 2330900,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "current_skill_group",
+            "actorType": "self",
+            "arg": 2330000
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              450,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "2330901": {
+    "id": 2330901,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "current_skill_group",
+            "actorType": "self",
+            "arg": 2330000
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              1200,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "2330902": {
+    "id": 2330902,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "current_skill_group",
+            "actorType": "self",
+            "arg": 2330000
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              2000,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "2331000": {
+    "id": 2331000,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "current_skill_group",
+            "actorType": "self",
+            "arg": 2331000
+          },
+          {
+            "conditionType": "identity_stance",
+            "actorType": "self",
+            "arg": 3
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "modify_critical_multiplier",
+            "actorType": "target",
+            "args": [
+              2000,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "2331001": {
+    "id": 2331001,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "current_skill_group",
+            "actorType": "self",
+            "arg": 2331000
+          },
+          {
+            "conditionType": "identity_stance",
+            "actorType": "self",
+            "arg": 3
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "modify_critical_multiplier",
+            "actorType": "target",
+            "args": [
+              4000,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "2331002": {
+    "id": 2331002,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "current_skill_group",
+            "actorType": "self",
+            "arg": 2331000
+          },
+          {
+            "conditionType": "identity_stance",
+            "actorType": "self",
+            "arg": 3
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "modify_critical_multiplier",
+            "actorType": "target",
+            "args": [
+              6000,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "2335300": {
+    "id": 2335300,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "current_skill_group",
+            "actorType": "self",
+            "arg": 2335300
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              300,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "2335301": {
+    "id": 2335301,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "current_skill_group",
+            "actorType": "self",
+            "arg": 2335300
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              600,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "2335302": {
+    "id": 2335302,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "current_skill_group",
+            "actorType": "self",
+            "arg": 2335300
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              900,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "2335303": {
+    "id": 2335303,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "current_skill_group",
+            "actorType": "self",
+            "arg": 2335300
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              1200,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "2335304": {
+    "id": 2335304,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "current_skill_group",
+            "actorType": "self",
+            "arg": 2335300
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              1500,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "2335600": {
+    "id": 2335600,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "current_skill",
+            "actorType": "self",
+            "arg": 33450
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "exec_after_skill",
+            "actorType": "self",
+            "args": [
+              334512,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "2335900": {
+    "id": 2335900,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "abnormal_move_immune",
+            "actorType": "target",
+            "arg": 0
+          },
+          {
+            "conditionType": "current_skill",
+            "actorType": "self",
+            "arg": 33460
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              1500,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "2335901": {
+    "id": 2335901,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "abnormal_move_immune",
+            "actorType": "target",
+            "arg": 0
+          },
+          {
+            "conditionType": "current_skill",
+            "actorType": "self",
+            "arg": 33460
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              3750,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "2335902": {
+    "id": 2335902,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "abnormal_move_immune",
+            "actorType": "target",
+            "arg": 0
+          },
+          {
+            "conditionType": "current_skill",
+            "actorType": "self",
+            "arg": 33460
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              6000,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
   "9910141": {
     "id": 9910141,
     "effects": [
@@ -76956,7 +80012,13 @@
         "desc": null,
         "cooldown": 60000,
         "ratio": 2000,
-        "conditions": [],
+        "conditions": [
+          {
+            "conditionType": 50,
+            "actorType": "target",
+            "arg": 0
+          }
+        ],
         "actions": [
           {
             "actionType": "exec_active_effect_when_damage",
@@ -76993,7 +80055,13 @@
         "desc": null,
         "cooldown": 60000,
         "ratio": 2000,
-        "conditions": [],
+        "conditions": [
+          {
+            "conditionType": 50,
+            "actorType": "target",
+            "arg": 0
+          }
+        ],
         "actions": [
           {
             "actionType": "exec_active_effect_when_damage",
@@ -77519,7 +80587,13 @@
         "desc": null,
         "cooldown": 60000,
         "ratio": 2000,
-        "conditions": [],
+        "conditions": [
+          {
+            "conditionType": 50,
+            "actorType": "target",
+            "arg": 0
+          }
+        ],
         "actions": [
           {
             "actionType": "exec_active_effect_when_damage",
@@ -77556,7 +80630,13 @@
         "desc": null,
         "cooldown": 60000,
         "ratio": 2000,
-        "conditions": [],
+        "conditions": [
+          {
+            "conditionType": 50,
+            "actorType": "target",
+            "arg": 0
+          }
+        ],
         "actions": [
           {
             "actionType": "exec_active_effect_when_damage",
@@ -77976,7 +81056,13 @@
         "desc": null,
         "cooldown": 60000,
         "ratio": 2000,
-        "conditions": [],
+        "conditions": [
+          {
+            "conditionType": 50,
+            "actorType": "target",
+            "arg": 0
+          }
+        ],
         "actions": [
           {
             "actionType": "exec_active_effect_when_damage",
@@ -78013,7 +81099,13 @@
         "desc": null,
         "cooldown": 60000,
         "ratio": 2000,
-        "conditions": [],
+        "conditions": [
+          {
+            "conditionType": 50,
+            "actorType": "target",
+            "arg": 0
+          }
+        ],
         "actions": [
           {
             "actionType": "exec_active_effect_when_damage",
@@ -108762,6 +111854,231 @@
       }
     ]
   },
+  "621000010": {
+    "id": 621000010,
+    "effects": [
+      {
+        "desc": "Outgoing Damage {0}%",
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              24,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "621000011": {
+    "id": 621000011,
+    "effects": [
+      {
+        "desc": "Outgoing Damage {0}%",
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              54,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "621000012": {
+    "id": 621000012,
+    "effects": [
+      {
+        "desc": "Outgoing Damage {0}%",
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              90,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "621000020": {
+    "id": 621000020,
+    "effects": [
+      {
+        "desc": "Outgoing Damage {0}%",
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              30,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "621000021": {
+    "id": 621000021,
+    "effects": [
+      {
+        "desc": "Outgoing Damage {0}%",
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              69,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "621000022": {
+    "id": 621000022,
+    "effects": [
+      {
+        "desc": "Outgoing Damage {0}%",
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              115,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "621000030": {
+    "id": 621000030,
+    "effects": [
+      {
+        "desc": "Outgoing Damage {0}%",
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              37,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "621000031": {
+    "id": 621000031,
+    "effects": [
+      {
+        "desc": "Outgoing Damage {0}%",
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              84,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "621000032": {
+    "id": 621000032,
+    "effects": [
+      {
+        "desc": "Outgoing Damage {0}%",
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [],
+        "actions": [
+          {
+            "actionType": "modify_damage",
+            "actorType": "target",
+            "args": [
+              140,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
   "602000080": {
     "id": 602000080,
     "effects": [
@@ -128094,6 +131411,827 @@
       }
     ]
   },
+  "428450005": {
+    "id": 428450005,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "pc",
+            "actorType": "target",
+            "arg": 0
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "exec_after_effect",
+            "actorType": "target",
+            "args": [
+              428450011,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "pc",
+            "actorType": "target",
+            "arg": 0
+          },
+          {
+            "conditionType": "status_effect_on",
+            "actorType": "target",
+            "arg": 428450012
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "exec_after_effect",
+            "actorType": "target",
+            "args": [
+              428450021,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "pc",
+            "actorType": "target",
+            "arg": 0
+          },
+          {
+            "conditionType": "status_effect_on",
+            "actorType": "target",
+            "arg": 428450022
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "exec_after_effect",
+            "actorType": "target",
+            "args": [
+              428450031,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "pc",
+            "actorType": "target",
+            "arg": 0
+          },
+          {
+            "conditionType": "status_effect_on",
+            "actorType": "target",
+            "arg": 428450032
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "exec_after_effect",
+            "actorType": "target",
+            "args": [
+              428450041,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "pc",
+            "actorType": "target",
+            "arg": 0
+          },
+          {
+            "conditionType": "status_effect_on",
+            "actorType": "target",
+            "arg": 428450042
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "exec_after_effect",
+            "actorType": "target",
+            "args": [
+              428450051,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "pc",
+            "actorType": "target",
+            "arg": 0
+          },
+          {
+            "conditionType": "status_effect_on",
+            "actorType": "target",
+            "arg": 428450052
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "exec_after_effect",
+            "actorType": "target",
+            "args": [
+              428450051,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "428453901": {
+    "id": 428453901,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "npc_id",
+            "actorType": "target",
+            "arg": 485600
+          },
+          {
+            "conditionType": "status_effect_on",
+            "actorType": "target",
+            "arg": 0
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "exec_active_effect_when_damage",
+            "actorType": "self",
+            "args": [
+              428450011,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "npc_id",
+            "actorType": "target",
+            "arg": 485600
+          },
+          {
+            "conditionType": "status_effect_on",
+            "actorType": "target",
+            "arg": 428450012
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "exec_active_effect_when_damage",
+            "actorType": "self",
+            "args": [
+              428450021,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "npc_id",
+            "actorType": "target",
+            "arg": 485600
+          },
+          {
+            "conditionType": "status_effect_on",
+            "actorType": "target",
+            "arg": 428450022
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "exec_active_effect_when_damage",
+            "actorType": "self",
+            "args": [
+              428450031,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "npc_id",
+            "actorType": "target",
+            "arg": 485600
+          },
+          {
+            "conditionType": "status_effect_on",
+            "actorType": "target",
+            "arg": 428450032
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "exec_active_effect_when_damage",
+            "actorType": "self",
+            "args": [
+              428450041,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "npc_id",
+            "actorType": "target",
+            "arg": 485600
+          },
+          {
+            "conditionType": "status_effect_on",
+            "actorType": "target",
+            "arg": 428450042
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "exec_active_effect_when_damage",
+            "actorType": "self",
+            "args": [
+              428450051,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "npc_id",
+            "actorType": "target",
+            "arg": 485600
+          },
+          {
+            "conditionType": "status_effect_on",
+            "actorType": "target",
+            "arg": 428450052
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "exec_active_effect_when_damage",
+            "actorType": "self",
+            "args": [
+              428450051,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "428453922": {
+    "id": 428453922,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "pc",
+            "actorType": "target",
+            "arg": 0
+          },
+          {
+            "conditionType": "status_effect_on",
+            "actorType": "target",
+            "arg": 0
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "exec_after_effect",
+            "actorType": "target",
+            "args": [
+              428450011,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "pc",
+            "actorType": "target",
+            "arg": 0
+          },
+          {
+            "conditionType": "status_effect_on",
+            "actorType": "target",
+            "arg": 428450012
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "exec_after_effect",
+            "actorType": "target",
+            "args": [
+              428450021,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "pc",
+            "actorType": "target",
+            "arg": 0
+          },
+          {
+            "conditionType": "status_effect_on",
+            "actorType": "target",
+            "arg": 428450022
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "exec_after_effect",
+            "actorType": "target",
+            "args": [
+              428450031,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "pc",
+            "actorType": "target",
+            "arg": 0
+          },
+          {
+            "conditionType": "status_effect_on",
+            "actorType": "target",
+            "arg": 428450032
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "exec_after_effect",
+            "actorType": "target",
+            "args": [
+              428450041,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "pc",
+            "actorType": "target",
+            "arg": 0
+          },
+          {
+            "conditionType": "status_effect_on",
+            "actorType": "target",
+            "arg": 428450042
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "exec_after_effect",
+            "actorType": "target",
+            "args": [
+              428450051,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "pc",
+            "actorType": "target",
+            "arg": 0
+          },
+          {
+            "conditionType": "status_effect_on",
+            "actorType": "target",
+            "arg": 428450052
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "exec_after_effect",
+            "actorType": "target",
+            "args": [
+              428450051,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "428454312": {
+    "id": 428454312,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "pc",
+            "actorType": "target",
+            "arg": 0
+          },
+          {
+            "conditionType": "status_effect_on",
+            "actorType": "target",
+            "arg": 0
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "exec_after_effect",
+            "actorType": "target",
+            "args": [
+              428450011,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "pc",
+            "actorType": "target",
+            "arg": 0
+          },
+          {
+            "conditionType": "status_effect_on",
+            "actorType": "target",
+            "arg": 428450012
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "exec_after_effect",
+            "actorType": "target",
+            "args": [
+              428450021,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "pc",
+            "actorType": "target",
+            "arg": 0
+          },
+          {
+            "conditionType": "status_effect_on",
+            "actorType": "target",
+            "arg": 428450022
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "exec_after_effect",
+            "actorType": "target",
+            "args": [
+              428450031,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "pc",
+            "actorType": "target",
+            "arg": 0
+          },
+          {
+            "conditionType": "status_effect_on",
+            "actorType": "target",
+            "arg": 428450032
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "exec_after_effect",
+            "actorType": "target",
+            "args": [
+              428450041,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "pc",
+            "actorType": "target",
+            "arg": 0
+          },
+          {
+            "conditionType": "status_effect_on",
+            "actorType": "target",
+            "arg": 428450042
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "exec_after_effect",
+            "actorType": "target",
+            "args": [
+              428450051,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "pc",
+            "actorType": "target",
+            "arg": 0
+          },
+          {
+            "conditionType": "status_effect_on",
+            "actorType": "target",
+            "arg": 428450052
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "exec_after_effect",
+            "actorType": "target",
+            "args": [
+              428450051,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "428461589": {
+    "id": 428461589,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "pc",
+            "actorType": "target",
+            "arg": 0
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "exec_active_effect_when_damage",
+            "actorType": "target",
+            "args": [
+              0,
+              0,
+              428469170,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "428461590": {
+    "id": 428461590,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 0,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "pc",
+            "actorType": "target",
+            "arg": 0
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "exec_active_effect_when_damage",
+            "actorType": "target",
+            "args": [
+              0,
+              0,
+              428469171,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
   "260400": {
     "id": 260400,
     "effects": [
@@ -130708,36 +134846,20 @@
       }
     ]
   },
-  "2260500": {
-    "id": 2260500,
+  "2260506": {
+    "id": 2260506,
     "effects": [
       {
         "desc": null,
         "cooldown": 0,
         "ratio": 10000,
-        "conditions": [
-          {
-            "conditionType": "identity_stance",
-            "actorType": "self",
-            "arg": 2
-          },
-          {
-            "conditionType": "status_effect_on",
-            "actorType": "self",
-            "arg": 2260501
-          },
-          {
-            "conditionType": "current_skill_group",
-            "actorType": "self",
-            "arg": 2260500
-          }
-        ],
+        "conditions": [],
         "actions": [
           {
-            "actionType": "exec_after_skill",
+            "actionType": "exec_after_effect",
             "actorType": "self",
             "args": [
-              2260512,
+              2260506,
               0,
               0,
               0,
@@ -130749,36 +134871,20 @@
       }
     ]
   },
-  "2260501": {
-    "id": 2260501,
+  "2260507": {
+    "id": 2260507,
     "effects": [
       {
         "desc": null,
         "cooldown": 0,
         "ratio": 10000,
-        "conditions": [
-          {
-            "conditionType": "identity_stance",
-            "actorType": "self",
-            "arg": 2
-          },
-          {
-            "conditionType": "status_effect_on",
-            "actorType": "self",
-            "arg": 2260503
-          },
-          {
-            "conditionType": "current_skill_group",
-            "actorType": "self",
-            "arg": 2260500
-          }
-        ],
+        "conditions": [],
         "actions": [
           {
-            "actionType": "exec_after_skill",
+            "actionType": "exec_after_effect",
             "actorType": "self",
             "args": [
-              2260513,
+              2260507,
               0,
               0,
               0,
@@ -130790,36 +134896,20 @@
       }
     ]
   },
-  "2260502": {
-    "id": 2260502,
+  "2260508": {
+    "id": 2260508,
     "effects": [
       {
         "desc": null,
         "cooldown": 0,
         "ratio": 10000,
-        "conditions": [
-          {
-            "conditionType": "identity_stance",
-            "actorType": "self",
-            "arg": 2
-          },
-          {
-            "conditionType": "status_effect_on",
-            "actorType": "self",
-            "arg": 2260505
-          },
-          {
-            "conditionType": "current_skill_group",
-            "actorType": "self",
-            "arg": 2260500
-          }
-        ],
+        "conditions": [],
         "actions": [
           {
-            "actionType": "exec_after_skill",
+            "actionType": "exec_after_effect",
             "actorType": "self",
             "args": [
-              2260514,
+              2260508,
               0,
               0,
               0,
@@ -200422,7 +204512,7 @@
           {
             "conditionType": "current_skill",
             "actorType": "self",
-            "arg": 17021
+            "arg": 17020
           }
         ],
         "actions": [
@@ -200453,7 +204543,7 @@
           {
             "conditionType": "current_skill",
             "actorType": "self",
-            "arg": 17021
+            "arg": 17020
           }
         ],
         "actions": [
@@ -200484,7 +204574,7 @@
           {
             "conditionType": "current_skill",
             "actorType": "self",
-            "arg": 17021
+            "arg": 17020
           }
         ],
         "actions": [
@@ -200515,7 +204605,7 @@
           {
             "conditionType": "current_skill",
             "actorType": "self",
-            "arg": 17021
+            "arg": 17020
           }
         ],
         "actions": [
@@ -200546,7 +204636,7 @@
           {
             "conditionType": "current_skill",
             "actorType": "self",
-            "arg": 17021
+            "arg": 17020
           }
         ],
         "actions": [

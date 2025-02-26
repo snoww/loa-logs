@@ -839,5 +839,7 @@ export const hyperAwakeningIds: Set<number> = new Set([
         31920 |
         31930 | // artist
         32290 |
-        32300 // aeromancer
+        32300 | // aeromancer
+        33520 |
+        33530 // wildsoul
 ]);

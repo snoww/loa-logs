@@ -690,6 +690,7 @@ pub fn is_hyper_awakening_skill(skill_id: u32) -> bool {
             | 38320 | 38330 // gunslinger
             | 31920 | 31930 // artist
             | 32290 | 32300 // aeromancer
+            | 33520 | 33530 // wildsoul
     )
 }
 
@@ -1566,8 +1567,11 @@ fn get_player_spec(player: &EncounterEntity, buffs: &HashMap<u32, StatusEffect>)
             }
         }
         "Wildsoul" => {
-            //todo
-            "Unknown".to_string()
+            if player.skills.contains_key(&33400) || player.skills.contains_key(&33410) { 
+                "Ferality".to_string()
+            } else {
+                "Phantom Beast Awakening".to_string()
+            }
         }
         _ => "Unknown".to_string(),
     }
@@ -1638,8 +1642,8 @@ fn get_spec_from_ark_passive(node: &ArkPassiveNode) -> String {
         2320600 => "Drizzle",
         2310000 => "Full Bloom",
         2310600 => "Recurrence",
-        // wildsoul 1
-        // wildsoul 2
+        2330000 => "Ferality",
+        2330100 => "Phantom Beast Awakening",
         _ => "Unknown",
     }
     .to_string()

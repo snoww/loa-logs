@@ -64,7 +64,17 @@
     "levels": {
       "1": {
         "name": "Limit Break",
-        "desc": "On reaching max Surge Enhancement stacks, the Damage Increase of Deathblade Surge via the Orb Compression effect <FONT COLOR='#99ff99'>doubles</FONT>.",
+        "desc": "On reaching max Surge Enhancement stacks, Deathblade Surge's Orb Compression effect Damage +<FONT COLOR='#99ff99'>30%</FONT>.",
+        "icon": "ark_passive_bl_3.png"
+      },
+      "2": {
+        "name": "Limit Break",
+        "desc": "On reaching max Surge Enhancement stacks, Deathblade Surge's Orb Compression effect Damage +<FONT COLOR='#99ff99'>55%</FONT>.",
+        "icon": "ark_passive_bl_3.png"
+      },
+      "3": {
+        "name": "Limit Break",
+        "desc": "On reaching max Surge Enhancement stacks, Deathblade Surge's Orb Compression effect Damage +<FONT COLOR='#99ff99'>80%</FONT>.",
         "icon": "ark_passive_bl_3.png"
       }
     }
@@ -1124,17 +1134,17 @@
     "levels": {
       "1": {
         "name": "Vital Point Secured",
-        "desc": "When a Swoop Skill hits as a Back Attack while in Persona Mode, gain the Weak Point Dismantle effect. The Weak Point Dismantle effect lasts for <FONT COLOR='#ffff99'><$CALC %1 <$TABLE_SKILLBUFF DURATION 2260500 />/1000/>s</FONT>. Upon gaining <FONT COLOR='#ffff99'>3</FONT> stacks, obtains the Shadow Blade effect. Shadow Blade effect lasts for <FONT COLOR='#ffff99'><$CALC %1 <$TABLE_SKILLBUFF DURATION 2260500 />/1000/>s</FONT>. Swoop Skill outgoing Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_SKILLBUFF ValueB 2260501/>/100/>%</FONT> and all Swoop Skills hit as Back Attacks. Shadow Blade effect will end upon using a Swoop Skill.",
+        "desc": "When a Swoop Skill hits as a Back Attack while in Persona Mode, gain the Weak Point Dismantle effect. The Weak Point Dismantle effect lasts for <FONT COLOR='#ffff99'><$CALC %1 <$TABLE_SKILLBUFF DURATION 2260500 />/1000/>s</FONT>. Upon gaining <FONT COLOR='#ffff99'>3</FONT> stacks, obtain the Shadow Blade effect. Shadow Blade effect lasts for <FONT COLOR='#ffff99'><$CALC %1 <$TABLE_SKILLBUFF DURATION 2260500 />/1000/>s</FONT>. Swoop Skill outgoing Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value02 2260200 1 />/100 />%</FONT>, and all Swoop Skills hit as Back Attacks. Shadow Blade effect ends upon using a Swoop Skill.",
         "icon": "ark_passive_rp_4.png"
       },
       "2": {
         "name": "Vital Point Secured",
-        "desc": "When a Swoop Skill hits as a Back Attack while in Persona Mode, gain the Weak Point Dismantle effect. The Weak Point Dismantle effect lasts for <FONT COLOR='#ffff99'><$CALC %1 <$TABLE_SKILLBUFF DURATION 2260502 />/1000/>s</FONT>. Upon gaining <FONT COLOR='#ffff99'>3</FONT> stacks, obtains the Shadow Blade effect. Shadow Blade effect lasts for <FONT COLOR='#ffff99'><$CALC %1 <$TABLE_SKILLBUFF DURATION 2260503 />/1000/>s</FONT>. Swoop Skill outgoing Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_SKILLBUFF ValueB 2260503/>/100/>%</FONT> and all Swoop Skills hit as Back Attacks. Shadow Blade effect will end upon using a Swoop Skill.",
+        "desc": "When a Swoop Skill hits as a Back Attack while in Persona Mode, gain the Weak Point Dismantle effect. The Weak Point Dismantle effect lasts for <FONT COLOR='#ffff99'><$CALC %1 <$TABLE_SKILLBUFF DURATION 2260502 />/1000/>s</FONT>. Upon gaining <FONT COLOR='#ffff99'>3</FONT> stacks, obtain the Shadow Blade effect. Shadow Blade effect lasts for <FONT COLOR='#ffff99'><$CALC %1 <$TABLE_SKILLBUFF DURATION 2260503 />/1000/>s</FONT>. Swoop Skill outgoing Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value02 2260200 2 />/100 />%</FONT>, and all Swoop Skills hit as Back Attacks. Shadow Blade effect ends upon using a Swoop Skill.",
         "icon": "ark_passive_rp_4.png"
       },
       "3": {
         "name": "Vital Point Secured",
-        "desc": "When a Swoop Skill hits as a Back Attack while in Persona Mode, gain the Weak Point Dismantle effect. The Weak Point Dismantle effect lasts for <FONT COLOR='#ffff99'><$CALC %1 <$TABLE_SKILLBUFF DURATION 2260504 />/1000/>s</FONT>. Upon gaining <FONT COLOR='#ffff99'>3</FONT> stacks, obtains the Shadow Blade effect. Shadow Blade effect lasts for <FONT COLOR='#ffff99'><$CALC %1 <$TABLE_SKILLBUFF DURATION 2260505 />/1000/>s</FONT>. Swoop Skill outgoing Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_SKILLBUFF ValueB 2260505/>/100/>%</FONT> and all Swoop Skills hit as Back Attacks. Shadow Blade effect will end upon using a Swoop Skill.",
+        "desc": "When a Swoop Skill hits as a Back Attack while in Persona Mode, gain the Weak Point Dismantle effect. The Weak Point Dismantle effect lasts for <FONT COLOR='#ffff99'><$CALC %1 <$TABLE_SKILLBUFF DURATION 2260504 />/1000/>s</FONT>. Upon gaining <FONT COLOR='#ffff99'>3</FONT> stacks, obtain the Shadow Blade effect. Shadow Blade effect lasts for <FONT COLOR='#ffff99'><$CALC %1 <$TABLE_SKILLBUFF DURATION 2260505 />/1000/>s</FONT>. Swoop Skill outgoing Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value02 2260200 3 />/100 />%</FONT>, and all Swoop Skills hit as Back Attacks. Shadow Blade effect ends upon using a Swoop Skill.",
         "icon": "ark_passive_rp_4.png"
       }
     }
@@ -3614,17 +3624,17 @@
     "levels": {
       "1": {
         "name": "Ultimate Skill: Taijutsu",
-        "desc": "Stamina Skill Crit Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value01 2230000 7 />/100 />%</FONT>, but Shock Skill Damage -<FONT COLOR='#ff9999'><$CALC %1 <$TABLE_ABILITYFEATURE Value02 2230000 7 />/100 />%</FONT>.",
+        "desc": "Stamina Skill Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value01 2230000 7 />/100 />%</FONT>, but Shock Skill Damage -<FONT COLOR='#ff9999'><$CALC %1 <$TABLE_ABILITYFEATURE Value02 2230000 7 />/100 />%</FONT>.",
         "icon": "ark_passive_if_1.png"
       },
       "2": {
         "name": "Ultimate Skill: Taijutsu",
-        "desc": "Stamina Skill Crit Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value01 2230000 8 />/100 />%</FONT>, but Shock Skill Damage -<FONT COLOR='#ff9999'><$CALC %1 <$TABLE_ABILITYFEATURE Value02 2230000 8 />/100 />%</FONT>.",
+        "desc": "Stamina Skill Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value01 2230000 8 />/100 />%</FONT>, but Shock Skill Damage -<FONT COLOR='#ff9999'><$CALC %1 <$TABLE_ABILITYFEATURE Value02 2230000 8 />/100 />%</FONT>.",
         "icon": "ark_passive_if_1.png"
       },
       "3": {
         "name": "Ultimate Skill: Taijutsu",
-        "desc": "Stamina Skill Crit Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value01 2230000 9 />/100 />%</FONT>, but Shock Skill Damage -<FONT COLOR='#ff9999'><$CALC %1 <$TABLE_ABILITYFEATURE Value02 2230000 9 />/100 />%</FONT>.",
+        "desc": "Stamina Skill Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value01 2230000 9 />/100 />%</FONT>, but Shock Skill Damage -<FONT COLOR='#ff9999'><$CALC %1 <$TABLE_ABILITYFEATURE Value02 2230000 9 />/100 />%</FONT>.",
         "icon": "ark_passive_if_1.png"
       }
     }
@@ -3884,12 +3894,12 @@
     "levels": {
       "1": {
         "name": "First Intention",
-        "desc": "Disables Esoteric Meter gain. Outgoing Damage +<FONT COLOR='#99ff99'>10%</FONT>.",
+        "desc": "Disables Esoteric Meter gain. Outgoing Damage +<FONT COLOR='#99ff99'>15%</FONT>.",
         "icon": "ark_passive_bm_1.png"
       },
       "2": {
         "name": "First Intention",
-        "desc": "Disables Esoteric Meter gain. Outgoing Damage +<FONT COLOR='#99ff99'>22%</FONT>.",
+        "desc": "Disables Esoteric Meter gain. Outgoing Damage +<FONT COLOR='#99ff99'>25%</FONT>.",
         "icon": "ark_passive_bm_1.png"
       },
       "3": {
@@ -7039,27 +7049,27 @@
     "levels": {
       "1": {
         "name": "Kindle",
-        "desc": "When the Firepower Meter reaches <FONT COLOR='#ffff99'>100%</FONT>, the Kindle Skill is activated. Press [<FONT COLOR='#ffff99'>X</FONT>] to gain the Kindle buff. When the Kindle buff ends, Firepower Meter -<FONT COLOR='#ff9999'>100%</FONT>.\n\nKindle: Cooldown of all skills excluding Barrage Skills -<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_SKILLBUFF PassiveOptionValue1 303801/>/100/>%</FONT> and Atk. Speed +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_SKILLBUFF PassiveOptionValue0 303801/>/100/>%</FONT> for <FONT COLOR='#ffff99'>8s</FONT>. ",
+        "desc": "When the Firepower Meter reaches <FONT COLOR='#ffff99'>100%</FONT>, the Kindle Skill is activated. Press [<FONT COLOR='#ffff99'>X</FONT>] to gain the Kindle buff for <FONT COLOR='#ffff99'>8</FONT>s. When the Kindle buff ends, Firepower Meter -<FONT COLOR='#ff9999'>100%</FONT>.\n\nKindle: Atk. Speed +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_SKILLBUFF PassiveOptionValue0 303801/>/100/>%</FONT>. Cooldown of all skills excluding Barrage Skills, Movement Skills, and Stand Ups -<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_SKILLBUFF PassiveOptionValue1 303801/>/100/>%</FONT>.",
         "icon": "ark_passive_bs_6.png"
       },
       "2": {
         "name": "Kindle",
-        "desc": "Crit Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2304401/> /100 />%</FONT>. When the Firepower Meter reaches <FONT COLOR='#ffff99'>100%</FONT>, the Kindle Skill is activated. Press [<FONT COLOR='#ffff99'>X</FONT>] to gain the Kindle buff. When the Kindle buff ends, Firepower Meter -<FONT COLOR='#ff9999'>100%</FONT>.\n\nKindle: Cooldown of all skills excluding Barrage Skills -<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_SKILLBUFF PassiveOptionValue1 303801/>/100/>%</FONT> and Atk. Speed +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_SKILLBUFF PassiveOptionValue0 303801/>/100/>%</FONT> for <FONT COLOR='#ffff99'>8s</FONT>. ",
+        "desc": "Crit Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2304401/> /100 />%</FONT>. When the Firepower Meter reaches <FONT COLOR='#ffff99'>100%</FONT>, the Kindle Skill is activated. Press [<FONT COLOR='#ffff99'>X</FONT>] to gain the Kindle buff for <FONT COLOR='#ffff99'>8</FONT>s. When the Kindle buff ends, Firepower Meter -<FONT COLOR='#ff9999'>100%</FONT>.\n\nKindle: Atk. Speed +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_SKILLBUFF PassiveOptionValue0 303801/>/100/>%</FONT>. Cooldown of all skills excluding Barrage Skills, Movement Skills, and Stand Ups -<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_SKILLBUFF PassiveOptionValue1 303801/>/100/>%</FONT>.",
         "icon": "ark_passive_bs_6.png"
       },
       "3": {
         "name": "Kindle",
-        "desc": "Crit Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2304402/> /100 />%</FONT>. When the Firepower Meter reaches <FONT COLOR='#ffff99'>100%</FONT>, the Kindle Skill is activated. Press [<FONT COLOR='#ffff99'>X</FONT>] to gain the Kindle buff. When the Kindle buff ends, Firepower Meter -<FONT COLOR='#ff9999'>100%</FONT>.\n\nKindle: Cooldown of all skills excluding Barrage Skills -<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_SKILLBUFF PassiveOptionValue1 303801/>/100/>%</FONT> and Atk. Speed +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_SKILLBUFF PassiveOptionValue0 303801/>/100/>%</FONT> for <FONT COLOR='#ffff99'>8s</FONT>. ",
+        "desc": "Crit Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2304402/> /100 />%</FONT>. When the Firepower Meter reaches <FONT COLOR='#ffff99'>100%</FONT>, the Kindle Skill is activated. Press [<FONT COLOR='#ffff99'>X</FONT>] to gain the Kindle buff for <FONT COLOR='#ffff99'>8</FONT>s. When the Kindle buff ends, Firepower Meter -<FONT COLOR='#ff9999'>100%</FONT>.\n\nKindle: Atk. Speed +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_SKILLBUFF PassiveOptionValue0 303801/>/100/>%</FONT>. Cooldown of all skills excluding Barrage Skills, Movement Skills, and Stand Ups -<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_SKILLBUFF PassiveOptionValue1 303801/>/100/>%</FONT>.",
         "icon": "ark_passive_bs_6.png"
       },
       "4": {
         "name": "Kindle",
-        "desc": "Crit Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2304403/> /100 />%</FONT>. When the Firepower Meter reaches <FONT COLOR='#ffff99'>100%</FONT>, the Kindle Skill is activated. Press [<FONT COLOR='#ffff99'>X</FONT>] to gain the Kindle buff. When the Kindle buff ends, Firepower Meter -<FONT COLOR='#ff9999'>100%</FONT>.\n\nKindle: Cooldown of all skills excluding Barrage Skills -<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_SKILLBUFF PassiveOptionValue1 303801/>/100/>%</FONT> and Atk. Speed +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_SKILLBUFF PassiveOptionValue0 303801/>/100/>%</FONT> for <FONT COLOR='#ffff99'>8s</FONT>. ",
+        "desc": "Crit Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2304403/> /100 />%</FONT>. When the Firepower Meter reaches <FONT COLOR='#ffff99'>100%</FONT>, the Kindle Skill is activated. Press [<FONT COLOR='#ffff99'>X</FONT>] to gain the Kindle buff for <FONT COLOR='#ffff99'>8</FONT>s. When the Kindle buff ends, Firepower Meter -<FONT COLOR='#ff9999'>100%</FONT>.\n\nKindle: Atk. Speed +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_SKILLBUFF PassiveOptionValue0 303801/>/100/>%</FONT>. Cooldown of all skills excluding Barrage Skills, Movement Skills, and Stand Ups -<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_SKILLBUFF PassiveOptionValue1 303801/>/100/>%</FONT>.",
         "icon": "ark_passive_bs_6.png"
       },
       "5": {
         "name": "Kindle",
-        "desc": "Crit Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2304404/> /100 />%</FONT>. When the Firepower Meter reaches <FONT COLOR='#ffff99'>100%</FONT>, the Kindle Skill is activated. Press [<FONT COLOR='#ffff99'>X</FONT>] to gain the Kindle buff. When the Kindle buff ends, Firepower Meter -<FONT COLOR='#ff9999'>100%</FONT>.\n\nKindle: Cooldown of all skills excluding Barrage Skills -<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_SKILLBUFF PassiveOptionValue1 303801/>/100/>%</FONT> and Atk. Speed +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_SKILLBUFF PassiveOptionValue0 303801/>/100/>%</FONT> for <FONT COLOR='#ffff99'>8s</FONT>. ",
+        "desc": "Crit Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2304404/> /100 />%</FONT>. When the Firepower Meter reaches <FONT COLOR='#ffff99'>100%</FONT>, the Kindle Skill is activated. Press [<FONT COLOR='#ffff99'>X</FONT>] to gain the Kindle buff for <FONT COLOR='#ffff99'>8</FONT>s. When the Kindle buff ends, Firepower Meter -<FONT COLOR='#ff9999'>100%</FONT>.\n\nKindle: Atk. Speed +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_SKILLBUFF PassiveOptionValue0 303801/>/100/>%</FONT>. Cooldown of all skills excluding Barrage Skills, Movement Skills, and Stand Ups -<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_SKILLBUFF PassiveOptionValue1 303801/>/100/>%</FONT>.",
         "icon": "ark_passive_bs_6.png"
       }
     }
@@ -11974,6 +11984,516 @@
       }
     }
   },
+  "2330000": {
+    "id": 2330000,
+    "levels": {
+      "1": {
+        "name": "Ferality",
+        "desc": "On using Shapeshift Skills except for <FONT COLOR='#ffff99'>Forbidden Sorcery: Ripping Bear and Forbidden Sorcery: Fox Star Rainstorm</FONT>, gain the <FONT COLOR='#ffff99'>Ferality</FONT> effect. The <FONT COLOR='#ffff99'>Ferality</FONT> effect can stack up to <FONT COLOR='#ffff99'>3</FONT> times and gains new effects based on the number of stacks. If a non-Shapeshift Skill is used, the <FONT COLOR='#ffff99'>Ferality</FONT> effect disappears.\n\n<FONT COLOR='#ffff99'>Ferality</FONT> 1 stack: On using Shapeshift Skill, Max HP is recovered by <FONT COLOR='#99ff99'><$CALC %1 <$TABLE_SKILLEFFECT ValueB 2330010/>/100/>%</FONT> once every <FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Cooldown 2330010/> /1000/>s</FONT>.\n<FONT COLOR='#ffff99'>Ferality</FONT> 2 stacks: Shapeshift Skill's Atk. Speed +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_SKILLBUFF PassiveOptionValue0 2330010/>/100 />%</FONT>.\n<FONT COLOR='#ffff99'>Ferality</FONT> 3 stacks: Defense of target hit by Shapeshift Skill -<FONT COLOR='#99ff99'><$CALC_COMMA %1 <$TABLE_SKILLBUFF ValueC 2330020 />/100/>%</FONT> for <$MACRO bufftime @1:2330020/>s.",
+        "icon": "ark_passive_dr_1.png"
+      },
+      "2": {
+        "name": "Ferality",
+        "desc": "On using Shapeshift Skills except for <FONT COLOR='#ffff99'>Forbidden Sorcery: Ripping Bear and Forbidden Sorcery: Fox Star Rainstorm</FONT>, gain the <FONT COLOR='#ffff99'>Ferality</FONT> effect. The <FONT COLOR='#ffff99'>Ferality</FONT> effect can stack up to <FONT COLOR='#ffff99'>3</FONT> times and gains new effects based on the number of stacks. If a non-Shapeshift Skill is used, the <FONT COLOR='#ffff99'>Ferality</FONT> effect disappears.\n\n<FONT COLOR='#ffff99'>Ferality</FONT> 1 stack: On using Shapeshift Skill, Max HP is recovered by <FONT COLOR='#99ff99'><$CALC %1 <$TABLE_SKILLEFFECT ValueB 2330010/>/100/>%</FONT> once every <FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Cooldown 2330010/> /1000/>s</FONT>.\n<FONT COLOR='#ffff99'>Ferality</FONT> 2 stacks: Shapeshift Skill's Atk. Speed +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_SKILLBUFF PassiveOptionValue0 2330011/>/100 />%</FONT>.\n<FONT COLOR='#ffff99'>Ferality</FONT> 3 stacks: Defense of target hit by Shapeshift Skill -<FONT COLOR='#99ff99'><$CALC_COMMA %1 <$TABLE_SKILLBUFF ValueC 2330020 />/100/>%</FONT> for <$MACRO bufftime @1:2330020/>s.",
+        "icon": "ark_passive_dr_1.png"
+      },
+      "3": {
+        "name": "Ferality",
+        "desc": "On using Shapeshift Skills except for <FONT COLOR='#ffff99'>Forbidden Sorcery: Ripping Bear and Forbidden Sorcery: Fox Star Rainstorm</FONT>, gain the <FONT COLOR='#ffff99'>Ferality</FONT> effect. The <FONT COLOR='#ffff99'>Ferality</FONT> effect can stack up to <FONT COLOR='#ffff99'>3</FONT> times and gains new effects based on the number of stacks. If a non-Shapeshift Skill is used, the <FONT COLOR='#ffff99'>Ferality</FONT> effect disappears.\n\n<FONT COLOR='#ffff99'>Ferality</FONT> 1 stack: On using Shapeshift Skill, Max HP is recovered by <FONT COLOR='#99ff99'><$CALC %1 <$TABLE_SKILLEFFECT ValueB 2330010/>/100/>%</FONT> once every <FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Cooldown 2330010/> /1000/>s</FONT>.\n<FONT COLOR='#ffff99'>Ferality</FONT> 2 stacks: Shapeshift Skill's Atk. Speed +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_SKILLBUFF PassiveOptionValue0 2330012/>/100 />%</FONT>.\n<FONT COLOR='#ffff99'>Ferality</FONT> 3 stacks: Defense of target hit by Shapeshift Skill -<FONT COLOR='#99ff99'><$CALC_COMMA %1 <$TABLE_SKILLBUFF ValueC 2330020 />/100/>%</FONT> for <$MACRO bufftime @1:2330020/>s.",
+        "icon": "ark_passive_dr_1.png"
+      }
+    }
+  },
+  "2330100": {
+    "id": 2330100,
+    "levels": {
+      "1": {
+        "name": "Phantom Beast Awakening",
+        "desc": "When Phantom Beast Energy is at <FONT COLOR='#ffff99'>100%</FONT>, press [<FONT COLOR='#ffff99'>Z</FONT>] to go into the <FONT COLOR='#ffff99'>Phantom Beast Awakening</FONT> state. Press [<FONT COLOR='#ffff99'>X</FONT>] to cancel the <FONT COLOR='#ffff99'>Phantom Beast Awakening</FONT> state. In the <FONT COLOR='#ffff99'>Phantom Beast Awakening</FONT> state, cannot gain Phantom Beast Energy through skills, and Phantom Beast Energy is constantly consumed, but Atk. Speed and Move Speed +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_SKILLBUFF PassiveOptionValue0 2330100/>/100 />%</FONT>. While in <FONT COLOR='#ffff99'>Phantom Beast Awakening</FONT> state, cannot use Shapeshift Skills, Earthquake Pound, or Smack Smite.",
+        "icon": "dr_skill_01_24.png"
+      }
+    }
+  },
+  "2330200": {
+    "id": 2330200,
+    "levels": {
+      "1": {
+        "name": "Awakened Potential",
+        "desc": "Shapeshift Skill Crit Rate +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2330210/> /100 />%</FONT>.\n\nBear Form: Incoming Damage -<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_SKILLBUFF PassiveOptionValue0 2330030/>/100 -10 />%</FONT>.\nFox Form: Atk. Speed +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_SKILLBUFF PassiveOptionValue0 2330040/>/100 />%</FONT>.",
+        "icon": "ark_passive_dr_2.png"
+      },
+      "2": {
+        "name": "Awakened Potential",
+        "desc": "Shapeshift Skill Crit Rate +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2330211/> /100 />%</FONT>.\n\nBear Form: Incoming Damage -<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_SKILLBUFF PassiveOptionValue0 2330031/>/100 -10 />%</FONT>.\nFox Form: Atk. Speed +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_SKILLBUFF PassiveOptionValue0 2330041/>/100 />%</FONT>.",
+        "icon": "ark_passive_dr_2.png"
+      },
+      "3": {
+        "name": "Awakened Potential",
+        "desc": "Shapeshift Skill Crit Rate +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2330212/> /100 />%</FONT>.\n\nBear Form: Incoming Damage -<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_SKILLBUFF PassiveOptionValue0 2330032/>/100 -10 />%</FONT>.\nFox Form: Atk. Speed +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_SKILLBUFF PassiveOptionValue0 2330042/>/100 />%</FONT>.",
+        "icon": "ark_passive_dr_2.png"
+      }
+    }
+  },
+  "2330300": {
+    "id": 2330300,
+    "levels": {
+      "1": {
+        "name": "Vigor",
+        "desc": "Phantom Beast Skill Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2330310/> /100 />%</FONT>.\n\nPhantom Beast Energy gained +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value00 2330100 2 />/100 />%</FONT>. On Crit Hit, Phantom Beast Energy gained +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value01 2330100 2 />/100 />%</FONT> and Natural Recovery +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value02 2330100 2 />/100 />%</FONT>.",
+        "icon": "ark_passive_01_52.png"
+      },
+      "2": {
+        "name": "Vigor",
+        "desc": "Phantom Beast Skill Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2330311/> /100 />%</FONT>.\n\nPhantom Beast Energy gained +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value00 2330100 3 />/100 />%</FONT>. On Crit Hit, Phantom Beast Energy gained +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value01 2330100 3 />/100 />%</FONT> and Natural Recovery +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value02 2330100 3 />/100 />%</FONT>.",
+        "icon": "ark_passive_01_52.png"
+      },
+      "3": {
+        "name": "Vigor",
+        "desc": "Phantom Beast Skill Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2330312/> /100 />%</FONT>.\n\nPhantom Beast Energy gained +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value00 2330100 4 />/100 />%</FONT>. On Crit Hit, Phantom Beast Energy gained +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value01 2330100 4 />/100 />%</FONT> and Natural Recovery +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value02 2330100 4 />/100 />%</FONT>.",
+        "icon": "ark_passive_01_52.png"
+      }
+    }
+  },
+  "2330400": {
+    "id": 2330400,
+    "levels": {
+      "1": {
+        "name": "Bestial Resonance",
+        "desc": "Shapeshift Skill Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2330200/> /100 />%</FONT>.\n\nWhen shapeshifting from a bear to a fox, Bear Shapeshift Skill cooldown -<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value00 2330200 1 />/100 />%</FONT>. When shapeshifting from a fox to a bear, Fox Shapeshift Skill cooldown -<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value00 2330200 1 />/100 />%</FONT>. This effect activates once every <FONT COLOR='#ffff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value01 2330200 1 />/1000 />s</FONT>.",
+        "icon": "ark_passive_dr_3.png"
+      },
+      "2": {
+        "name": "Bestial Resonance",
+        "desc": "Shapeshift Skill Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2330201/> /100 />%</FONT>.\n\nWhen shapeshifting from a bear to a fox, Bear Shapeshift Skill cooldown -<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value00 2330200 2 />/100 />%</FONT>. When shapeshifting from a fox to a bear, Fox Shapeshift Skill cooldown -<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value00 2330200 2 />/100 />%</FONT>. This effect activates once every <FONT COLOR='#ffff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value01 2330200 2 />/1000 />s</FONT>.",
+        "icon": "ark_passive_dr_3.png"
+      },
+      "3": {
+        "name": "Bestial Resonance",
+        "desc": "Shapeshift Skill Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2330202/> /100 />%</FONT>.\n\nWhen shapeshifting from a bear to a fox, Bear Shapeshift Skill cooldown -<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value00 2330200 3 />/100 />%</FONT>. When shapeshifting from a fox to a bear, Fox Shapeshift Skill cooldown -<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value00 2330200 3 />/100 />%</FONT>. This effect activates once every <FONT COLOR='#ffff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value01 2330200 3 />/1000 />s</FONT>.",
+        "icon": "ark_passive_dr_3.png"
+      },
+      "4": {
+        "name": "Bestial Resonance",
+        "desc": "Shapeshift Skill Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2330203/> /100 />%</FONT>.\n\nWhen shapeshifting from a bear to a fox, Bear Shapeshift Skill cooldown -<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value00 2330200 4 />/100 />%</FONT>. When shapeshifting from a fox to a bear, Fox Shapeshift Skill cooldown -<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value00 2330200 4 />/100 />%</FONT>. This effect activates once every <FONT COLOR='#ffff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value01 2330200 1 />/1000 />s</FONT>.",
+        "icon": "ark_passive_dr_3.png"
+      },
+      "5": {
+        "name": "Bestial Resonance",
+        "desc": "Shapeshift Skill Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2330204/> /100 />%</FONT>.\n\nWhen shapeshifting from a bear to a fox, Bear Shapeshift Skill cooldown -<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value00 2330200 5 />/100 />%</FONT>. When shapeshifting from a fox to a bear, Fox Shapeshift Skill cooldown -<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value00 2330200 5 />/100 />%</FONT>. This effect activates once every <FONT COLOR='#ffff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value01 2330200 5 />/1000 />s</FONT>.",
+        "icon": "ark_passive_dr_3.png"
+      }
+    }
+  },
+  "2330500": {
+    "id": 2330500,
+    "levels": {
+      "1": {
+        "name": "Wild Impulse",
+        "desc": "Shapeshift Skill Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2330000/> /100 />%</FONT>.\n\nOn using Shapeshift Skill that consumes Phantom Beast Energy, gain <FONT COLOR='#99ff99'><$CALC <$TABLE_SKILLEFFECT ValueB 2330500/>/></FONT> Bear or Fox Energy, based on the shapeshifted form.",
+        "icon": "ark_passive_dr_4.png"
+      },
+      "2": {
+        "name": "Wild Impulse",
+        "desc": "Shapeshift Skill Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2330001/> /100 />%</FONT>.\n\nOn using Shapeshift Skill that consumes Phantom Beast Energy, gain <FONT COLOR='#99ff99'><$CALC <$TABLE_SKILLEFFECT ValueB 2330500/>/></FONT> Bear or Fox Energy, based on the shapeshifted form.",
+        "icon": "ark_passive_dr_4.png"
+      },
+      "3": {
+        "name": "Wild Impulse",
+        "desc": "Shapeshift Skill Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2330002/> /100 />%</FONT>.\n\nOn using Shapeshift Skill that consumes Phantom Beast Energy, gain <FONT COLOR='#99ff99'><$CALC <$TABLE_SKILLEFFECT ValueB 2330500/>/></FONT> Bear or Fox Energy, based on the shapeshifted form.",
+        "icon": "ark_passive_dr_4.png"
+      }
+    }
+  },
+  "2330600": {
+    "id": 2330600,
+    "levels": {
+      "1": {
+        "name": "Phantom Beast Spirit",
+        "desc": "In the <FONT COLOR='#ffff99'>Phantom Beast Awakening</FONT> state, Phantom Beast Skill Crit Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2331000/>/100 />%</FONT> and absorbs <FONT COLOR='#ffff99'>Phantom Beast Spirit</FONT> from foes within <FONT COLOR='#ffff99'>24 meters</FONT> once every <FONT COLOR='#ffff99'>1s</FONT>.\n<FONT COLOR='#ffff99'>Phantom Beast Spirit</FONT> stacks up to <FONT COLOR='#ffff99'><$TABLE_SKILLBUFF Overlap 2330601/></FONT> times and can be used by pressing [<FONT COLOR='#ffff99'>Z</FONT>]. With each stack, MP is recovered by <FONT COLOR='#99ff99'><$CALC %1 <$TABLE_SKILLEFFECT ValueB 2330621/>/100/>%</FONT>, and the Cooldown of Phantom Beast Skills except for the Hyper Awakening Technique skill -<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_SKILLEFFECT ValueB 2330601/>/>%</FONT>.",
+        "icon": "ark_passive_dr_9.png"
+      },
+      "2": {
+        "name": "Phantom Beast Spirit",
+        "desc": "In the <FONT COLOR='#ffff99'>Phantom Beast Awakening</FONT> state, Phantom Beast Skill Crit Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2331001/>/100 />%</FONT> and absorbs <FONT COLOR='#ffff99'>Phantom Beast Spirit</FONT> from foes within <FONT COLOR='#ffff99'>24 meters</FONT> once every <FONT COLOR='#ffff99'>1s</FONT>.\n<FONT COLOR='#ffff99'>Phantom Beast Spirit</FONT> can be used by pressing [<FONT COLOR='#ffff99'>Z</FONT>] and stacks up to <FONT COLOR='#ffff99'><$TABLE_SKILLBUFF Overlap 2330601/></FONT> times. With each stack, MP is recovered by <FONT COLOR='#99ff99'><$CALC %1 <$TABLE_SKILLEFFECT ValueB 2330621/>/100/>%</FONT>, and the Cooldown of Phantom Beast Skills except for the Hyper Awakening Technique skill -<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_SKILLEFFECT ValueB 2330601/>/>%</FONT>.",
+        "icon": "ark_passive_dr_9.png"
+      },
+      "3": {
+        "name": "Phantom Beast Spirit",
+        "desc": "In the <FONT COLOR='#ffff99'>Phantom Beast Awakening</FONT> state, Phantom Beast Skill Crit Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2331002/>/100 />%</FONT> and absorbs <FONT COLOR='#ffff99'>Phantom Beast Spirit</FONT> from foes within <FONT COLOR='#ffff99'>24 meters</FONT> once every <FONT COLOR='#ffff99'>1s</FONT>.\n<FONT COLOR='#ffff99'>Phantom Beast Spirit</FONT> can be used by pressing [<FONT COLOR='#ffff99'>Z</FONT>] and stacks up to <FONT COLOR='#ffff99'><$TABLE_SKILLBUFF Overlap 2330601/></FONT> times. With each stack, MP is recovered by <FONT COLOR='#99ff99'><$CALC %1 <$TABLE_SKILLEFFECT ValueB 2330621/>/100/>%</FONT>, and the Cooldown of Phantom Beast Skills except for the Hyper Awakening Technique skill -<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_SKILLEFFECT ValueB 2330601/>/>%</FONT>.",
+        "icon": "ark_passive_dr_9.png"
+      }
+    }
+  },
+  "2330700": {
+    "id": 2330700,
+    "levels": {
+      "1": {
+        "name": "Natural Talent",
+        "desc": "On Phantom Beast Skill hit, each time Damage is dealt causes <FONT COLOR='#ffff99'><$CALC %1 <$TABLE_COMBATEFFECT Ratio 2330700/> /100 />%</FONT> chance of outgoing Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2330700/> /100 />%</FONT>.",
+        "icon": "ark_passive_01_18.png"
+      },
+      "2": {
+        "name": "Natural Talent",
+        "desc": "On Phantom Beast Skill hit, each time Damage is dealt causes  <FONT COLOR='#ffff99'><$CALC %1 <$TABLE_COMBATEFFECT Ratio 2330701/> /100 />%</FONT> chance of outgoing Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2330701/> /100 />%</FONT>.",
+        "icon": "ark_passive_01_18.png"
+      },
+      "3": {
+        "name": "Natural Talent",
+        "desc": "On Phantom Beast Skill hit, each time Damage is dealt causes  <FONT COLOR='#ffff99'><$CALC %1 <$TABLE_COMBATEFFECT Ratio 2330702/> /100 />%</FONT> chance of outgoing Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2330702/> /100 />%</FONT>.",
+        "icon": "ark_passive_01_18.png"
+      },
+      "4": {
+        "name": "Natural Talent",
+        "desc": "On Phantom Beast Skill hit, each time Damage is dealt causes  <FONT COLOR='#ffff99'><$CALC %1 <$TABLE_COMBATEFFECT Ratio 2330703/> /100 />%</FONT> chance of outgoing Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2330703/> /100 />%</FONT>.",
+        "icon": "ark_passive_01_18.png"
+      },
+      "5": {
+        "name": "Natural Talent",
+        "desc": "On Phantom Beast Skill hit, each time Damage is dealt causes  <FONT COLOR='#ffff99'><$CALC %1 <$TABLE_COMBATEFFECT Ratio 2330704/> /100 />%</FONT> chance of outgoing Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2330704/> /100 />%</FONT>.",
+        "icon": "ark_passive_01_18.png"
+      }
+    }
+  },
+  "2330800": {
+    "id": 2330800,
+    "levels": {
+      "1": {
+        "name": "Swiftness",
+        "desc": "Shapeshift Skill Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2330300/> /100 />%</FONT>.\n\nWhen shapeshifting into the Human, Bear, or Fox forms, resets Movement Skill cooldown once every <FONT COLOR='#ffff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value00 2330300 1 />/1000 />s</FONT>.",
+        "icon": "ark_passive_dr_7.png"
+      },
+      "2": {
+        "name": "Swiftness",
+        "desc": "Shapeshift Skill Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2330301/> /100 />%</FONT>.\n\nWhen shapeshifting into the Human, Bear, or Fox forms, resets Movement Skill cooldown once every <FONT COLOR='#ffff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value00 2330300 2 />/1000 />s</FONT>.",
+        "icon": "ark_passive_dr_7.png"
+      },
+      "3": {
+        "name": "Swiftness",
+        "desc": "Shapeshift Skill Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2330302/> /100 />%</FONT>.\n\nWhen shapeshifting into the Human, Bear, or Fox forms, resets Movement Skill cooldown once every <FONT COLOR='#ffff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value00 2330300 3 />/1000 />s</FONT>.",
+        "icon": "ark_passive_dr_7.png"
+      },
+      "4": {
+        "name": "Swiftness",
+        "desc": "Shapeshift Skill Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2330303/> /100 />%</FONT>.\n\nWhen shapeshifting into the Human, Bear, or Fox forms, resets Movement Skill cooldown once every <FONT COLOR='#ffff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value00 2330300 4 />/1000 />s</FONT>.",
+        "icon": "ark_passive_dr_7.png"
+      },
+      "5": {
+        "name": "Swiftness",
+        "desc": "Shapeshift Skill Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2330304/> /100 />%</FONT>.\n\nWhen shapeshifting into the Human, Bear, or Fox forms, resets Movement Skill cooldown once every <FONT COLOR='#ffff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value00 2330300 5 />/1000 />s</FONT>.",
+        "icon": "ark_passive_dr_7.png"
+      }
+    }
+  },
+  "2330900": {
+    "id": 2330900,
+    "levels": {
+      "1": {
+        "name": "Hunter Instinct",
+        "desc": "Shapeshift Skill Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2330900/> /100 />%</FONT>.\n\nWhen the <FONT COLOR='#ffff99'>Ferality</FONT> effect reaches <FONT COLOR='#ffff99'>3</FONT> stacks and the <FONT COLOR='#ffff99'>Forbidden Sorcery: Ripping Bear or Forbidden Sorcery: Fox Star Rainstorm</FONT> skills are used, the skill becomes even more enhanced, inflicting +<FONT COLOR='#99ff99'>40%</FONT> Damage, but the <FONT COLOR='#ffff99'>Ferality</FONT> effect disappears.",
+        "icon": "ark_passive_dr_8.png"
+      },
+      "2": {
+        "name": "Hunter Instinct",
+        "desc": "Shapeshift Skill Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2330901/> /100 />%</FONT>.\n\nWhen the <FONT COLOR='#ffff99'>Ferality</FONT> effect reaches <FONT COLOR='#ffff99'>3</FONT> stacks and the <FONT COLOR='#ffff99'>Forbidden Sorcery: Ripping Bear or Forbidden Sorcery: Fox Star Rainstorm</FONT> skills are used, the skill becomes even more enhanced, inflicting +<FONT COLOR='#99ff99'>40%</FONT> Damage, but the <FONT COLOR='#ffff99'>Ferality</FONT> effect disappears.",
+        "icon": "ark_passive_dr_8.png"
+      },
+      "3": {
+        "name": "Hunter Instinct",
+        "desc": "Shapeshift Skill Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2330902/> /100 />%</FONT>.\n\nWhen the <FONT COLOR='#ffff99'>Ferality</FONT> effect reaches <FONT COLOR='#ffff99'>3</FONT> stacks and the <FONT COLOR='#ffff99'>Forbidden Sorcery: Ripping Bear or Forbidden Sorcery: Fox Star Rainstorm</FONT> skills are used, the skill becomes even more enhanced, inflicting +<FONT COLOR='#99ff99'>40%</FONT> Damage, but the <FONT COLOR='#ffff99'>Ferality</FONT> effect disappears.",
+        "icon": "ark_passive_dr_8.png"
+      }
+    }
+  },
+  "2331000": {
+    "id": 2331000,
+    "levels": {
+      "1": {
+        "name": "Agile Gait",
+        "desc": "In the <FONT COLOR='#ffff99'>Phantom Beast Awakening</FONT> state, Phantom Beast Skill Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2330100/> /100 />%</FONT>. Movement Skill is replaced with Dart. Can stack up to <FONT COLOR='#ffff99'>2</FONT> times, but cooldown +<FONT COLOR='#ff9999'>1s</FONT>. On Phantom Beast Skill hit, Dart cooldown -<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value04 2330100 8 />/1000 />s</FONT>, <FONT COLOR='#ffff99'>1</FONT> time per skill.",
+        "icon": "ark_passive_dr_5.png"
+      },
+      "2": {
+        "name": "Agile Gait",
+        "desc": "In the <FONT COLOR='#ffff99'>Phantom Beast Awakening</FONT> state, Phantom Beast Skill Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2330101/> /100 />%</FONT>. Movement Skill is replaced with Dart. Can stack up to <FONT COLOR='#ffff99'>2</FONT> times, but cooldown +<FONT COLOR='#ff9999'>1s</FONT>. On Phantom Beast Skill hit, Dart cooldown -<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value04 2330100 9 />/1000 />s</FONT>, <FONT COLOR='#ffff99'>1</FONT> time per skill.",
+        "icon": "ark_passive_dr_5.png"
+      },
+      "3": {
+        "name": "Agile Gait",
+        "desc": "In the <FONT COLOR='#ffff99'>Phantom Beast Awakening</FONT> state, Phantom Beast Skill Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2330102/> /100 />%</FONT>. Movement Skill is replaced with Dart. Can stack up to <FONT COLOR='#ffff99'>2</FONT> times, but cooldown +<FONT COLOR='#ff9999'>1s</FONT>. On Phantom Beast Skill hit, Dart cooldown -<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value04 2330100 10 />/1000 />s</FONT>, <FONT COLOR='#ffff99'>1</FONT> time per skill.",
+        "icon": "ark_passive_dr_5.png"
+      }
+    }
+  },
+  "2331100": {
+    "id": 2331100,
+    "levels": {
+      "1": {
+        "name": "Phantom Beast Shaman",
+        "desc": "Phantom Beast Skill MP Cost -<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value00 2330500 1 />/100 />%</FONT>. Outgoing Damage with Phantom Beast Skill +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value01 2330500 1 />/100 />%</FONT>.",
+        "icon": "ark_passive_01_55.png"
+      },
+      "2": {
+        "name": "Phantom Beast Shaman",
+        "desc": "Phantom Beast Skill MP Cost -<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value00 2330500 2 />/100 />%</FONT>. Outgoing Damage with Phantom Beast Skill +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value01 2330500 2 />/100 />%</FONT>.",
+        "icon": "ark_passive_01_55.png"
+      },
+      "3": {
+        "name": "Phantom Beast Shaman",
+        "desc": "Phantom Beast Skill MP Cost -<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value00 2330500 3 />/100 />%</FONT>. Outgoing Damage with Phantom Beast Skill +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value01 2330500 3 />/100 />%</FONT>.",
+        "icon": "ark_passive_01_55.png"
+      },
+      "4": {
+        "name": "Phantom Beast Shaman",
+        "desc": "Phantom Beast Skill MP Cost -<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value00 2330500 4 />/100 />%</FONT>. Outgoing Damage with Phantom Beast Skill +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value01 2330500 4 />/100 />%</FONT>.",
+        "icon": "ark_passive_01_55.png"
+      },
+      "5": {
+        "name": "Phantom Beast Shaman",
+        "desc": "Phantom Beast Skill MP Cost -<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value00 2330500 5 />/100 />%</FONT>. Outgoing Damage with Phantom Beast Skill +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value01 2330500 5 />/100 />%</FONT>.",
+        "icon": "ark_passive_01_55.png"
+      }
+    }
+  },
+  "2335000": {
+    "id": 2335000,
+    "levels": {
+      "1": {
+        "name": "Transcendent Power",
+        "desc": "Hyper Awakening Skill Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ADDONSKILLFEATURE Param1 2335000/> />%</FONT>.",
+        "icon": "ark_passive_02_3.png"
+      },
+      "2": {
+        "name": "Transcendent Power",
+        "desc": "Hyper Awakening Skill Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ADDONSKILLFEATURE Param1 2335001/> />%</FONT>.",
+        "icon": "ark_passive_02_3.png"
+      },
+      "3": {
+        "name": "Transcendent Power",
+        "desc": "Hyper Awakening Skill Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ADDONSKILLFEATURE Param1 2335002/> />%</FONT>.",
+        "icon": "ark_passive_02_3.png"
+      },
+      "4": {
+        "name": "Transcendent Power",
+        "desc": "Hyper Awakening Skill Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ADDONSKILLFEATURE Param1 2335003/> />%</FONT>.",
+        "icon": "ark_passive_02_3.png"
+      },
+      "5": {
+        "name": "Transcendent Power",
+        "desc": "Hyper Awakening Skill Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ADDONSKILLFEATURE Param1 2335004/> />%</FONT>.",
+        "icon": "ark_passive_02_3.png"
+      }
+    }
+  },
+  "2335100": {
+    "id": 2335100,
+    "levels": {
+      "1": {
+        "name": "Charged Fury",
+        "desc": "When Hyper Awakening Skill Meter is full, Awakening Skill's remaining cooldown -<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value00 2335100 1 />/100 />%</FONT>.",
+        "icon": "ark_passive_02_1.png"
+      },
+      "2": {
+        "name": "Charged Fury",
+        "desc": "When Hyper Awakening Skill Meter is full, Awakening Skill's remaining cooldown -<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value00 2335100 2 />/100 />%</FONT>.",
+        "icon": "ark_passive_02_1.png"
+      },
+      "3": {
+        "name": "Charged Fury",
+        "desc": "When Hyper Awakening Skill Meter is full, Awakening Skill's remaining cooldown -<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value00 2335100 3 />/100 />%</FONT>.",
+        "icon": "ark_passive_02_1.png"
+      },
+      "4": {
+        "name": "Charged Fury",
+        "desc": "When Hyper Awakening Skill Meter is full, Awakening Skill's remaining cooldown -<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value00 2335100 4 />/100 />%</FONT>.",
+        "icon": "ark_passive_02_1.png"
+      },
+      "5": {
+        "name": "Charged Fury",
+        "desc": "When Hyper Awakening Skill Meter is full, Awakening Skill's remaining cooldown -<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value00 2335100 5 />/100 />%</FONT>.",
+        "icon": "ark_passive_02_1.png"
+      }
+    }
+  },
+  "2335200": {
+    "id": 2335200,
+    "levels": {
+      "1": {
+        "name": "Awakening Amplifier",
+        "desc": "Chance to use Awakening Skills +<FONT COLOR='#99ff99'>1</FONT>.",
+        "icon": "ark_passive_01_54.png"
+      },
+      "2": {
+        "name": "Awakening Amplifier",
+        "desc": "Chance to use Awakening Skills +<FONT COLOR='#99ff99'>2</FONT>.",
+        "icon": "ark_passive_01_54.png"
+      },
+      "3": {
+        "name": "Awakening Amplifier",
+        "desc": "Chance to use Awakening Skills +<FONT COLOR='#99ff99'>3</FONT>.",
+        "icon": "ark_passive_01_54.png"
+      }
+    }
+  },
+  "2335300": {
+    "id": 2335300,
+    "levels": {
+      "1": {
+        "name": "Unleashed Power",
+        "desc": "Hyper Awakening Technique Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2335300/>/100/>%</FONT>.",
+        "icon": "ark_passive_02_2.png"
+      },
+      "2": {
+        "name": "Unleashed Power",
+        "desc": "Hyper Awakening Technique Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2335301/>/100/>%</FONT>.",
+        "icon": "ark_passive_02_2.png"
+      },
+      "3": {
+        "name": "Unleashed Power",
+        "desc": "Hyper Awakening Technique Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2335302/>/100/>%</FONT>.",
+        "icon": "ark_passive_02_2.png"
+      },
+      "4": {
+        "name": "Unleashed Power",
+        "desc": "Hyper Awakening Technique Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2335303/>/100/>%</FONT>.",
+        "icon": "ark_passive_02_2.png"
+      },
+      "5": {
+        "name": "Unleashed Power",
+        "desc": "Hyper Awakening Technique Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2335304/>/100/>%</FONT>.",
+        "icon": "ark_passive_02_2.png"
+      }
+    }
+  },
+  "2335400": {
+    "id": 2335400,
+    "levels": {
+      "1": {
+        "name": "Release Potential",
+        "desc": "Hyper Awakening Technique Cooldown -<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ADDONSKILLFEATURE Param0 2185400/>/>%</FONT>.",
+        "icon": "ark_passive_01_10.png"
+      },
+      "2": {
+        "name": "Release Potential",
+        "desc": "Hyper Awakening Technique Cooldown -<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ADDONSKILLFEATURE Param0 2185401/>/>%</FONT>.",
+        "icon": "ark_passive_01_10.png"
+      },
+      "3": {
+        "name": "Release Potential",
+        "desc": "Hyper Awakening Technique Cooldown -<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ADDONSKILLFEATURE Param0 2185402/>/>%</FONT>.",
+        "icon": "ark_passive_01_10.png"
+      },
+      "4": {
+        "name": "Release Potential",
+        "desc": "Hyper Awakening Technique Cooldown -<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ADDONSKILLFEATURE Param0 2185403/>/>%</FONT>.",
+        "icon": "ark_passive_01_10.png"
+      },
+      "5": {
+        "name": "Release Potential",
+        "desc": "Hyper Awakening Technique Cooldown -<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ADDONSKILLFEATURE Param0 2185404/>/>%</FONT>.",
+        "icon": "ark_passive_01_10.png"
+      }
+    }
+  },
+  "2335500": {
+    "id": 2335500,
+    "levels": {
+      "1": {
+        "name": "Instant Spell",
+        "desc": "Hyper Awakening Technique Casting Speed +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ADDONSKILLFEATURE Param0 2335500/> />%</FONT>. MP Cost -<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ADDONSKILLFEATURE Param0 2335510/> />%</FONT>.",
+        "icon": "ark_passive_02_5.png"
+      },
+      "2": {
+        "name": "Instant Spell",
+        "desc": "Hyper Awakening Technique Casting Speed +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ADDONSKILLFEATURE Param0 2335501/> />%</FONT>. MP Cost -<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ADDONSKILLFEATURE Param0 2335511/> />%</FONT>.",
+        "icon": "ark_passive_02_5.png"
+      },
+      "3": {
+        "name": "Instant Spell",
+        "desc": "Hyper Awakening Technique Casting Speed +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ADDONSKILLFEATURE Param0 2335502/> />%</FONT>. MP Cost -<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ADDONSKILLFEATURE Param0 2335512/> />%</FONT>.",
+        "icon": "ark_passive_02_5.png"
+      }
+    }
+  },
+  "2335600": {
+    "id": 2335600,
+    "levels": {
+      "1": {
+        "name": "Ancient Strength",
+        "desc": "When using One-Hit Bear, an ancient strength awakens, causing a growth in size and Attack Range +<FONT COLOR='#99ff99'>20%</FONT>. Immediately flies forward and attacks. Outgoing Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ADDONSKILLFEATURE Param1 2335610/> />%</FONT>.",
+        "icon": "ark_passive_dr_10.png"
+      },
+      "2": {
+        "name": "Ancient Strength",
+        "desc": "When using One-Hit Bear, an ancient strength awakens, causing a growth in size and Attack Range +<FONT COLOR='#99ff99'>20%</FONT>. Immediately flies forward and attacks. Outgoing Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ADDONSKILLFEATURE Param1 2335611/> />%</FONT>.",
+        "icon": "ark_passive_dr_10.png"
+      },
+      "3": {
+        "name": "Ancient Strength",
+        "desc": "When using One-Hit Bear, an ancient strength awakens, causing a growth in size and Attack Range +<FONT COLOR='#99ff99'>20%</FONT>. Immediately flies forward and attacks. Outgoing Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ADDONSKILLFEATURE Param1 2335612/> />%</FONT>.",
+        "icon": "ark_passive_dr_10.png"
+      }
+    }
+  },
+  "2335700": {
+    "id": 2335700,
+    "levels": {
+      "1": {
+        "name": "Nimble Movement",
+        "desc": "One-Hit Bear's Outgoing Damage -<FONT COLOR='#ff9999'><$CALC %1 <$TABLE_ADDONSKILLFEATURE Param1 2335710/>/>%</FONT>, but can stack up to <FONT COLOR='#ffff99'>2</FONT> times. Cooldown -<FONT COLOR='#99ff99'>50%</FONT>.",
+        "icon": "ark_passive_dr_11.png"
+      },
+      "2": {
+        "name": "Nimble Movement",
+        "desc": "One-Hit Bear's Outgoing Damage -<FONT COLOR='#ff9999'><$CALC %1 <$TABLE_ADDONSKILLFEATURE Param1 2335711/>/>%</FONT>, but can stack up to <FONT COLOR='#ffff99'>2</FONT> times. Cooldown -<FONT COLOR='#99ff99'>50%</FONT>.",
+        "icon": "ark_passive_dr_11.png"
+      },
+      "3": {
+        "name": "Nimble Movement",
+        "desc": "One-Hit Bear's Outgoing Damage -<FONT COLOR='#ff9999'><$CALC %1 <$TABLE_ADDONSKILLFEATURE Param1 2335712/>/>%</FONT>, but can stack up to <FONT COLOR='#ffff99'>2</FONT> times. Cooldown -<FONT COLOR='#99ff99'>50%</FONT>.",
+        "icon": "ark_passive_dr_11.png"
+      }
+    }
+  },
+  "2335800": {
+    "id": 2335800,
+    "levels": {
+      "1": {
+        "name": "Enhance Unity",
+        "desc": "Floating Foxbear's AoE Radius +<FONT COLOR='#99ff99'>20.0%</FONT>, and Crit Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ADDONSKILLFEATURE Param1 2335810/>/100/>%</FONT>.",
+        "icon": "ark_passive_dr_12.png"
+      },
+      "2": {
+        "name": "Enhance Unity",
+        "desc": "Floating Foxbear's AoE Radius +<FONT COLOR='#99ff99'>20.0%</FONT>, and Crit Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ADDONSKILLFEATURE Param1 2335811/>/100/>%</FONT>.",
+        "icon": "ark_passive_dr_12.png"
+      },
+      "3": {
+        "name": "Enhance Unity",
+        "desc": "Floating Foxbear's AoE Radius +<FONT COLOR='#99ff99'>20.0%</FONT>, and Crit Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ADDONSKILLFEATURE Param1 2335812/>/100/>%</FONT>.",
+        "icon": "ark_passive_dr_12.png"
+      }
+    }
+  },
+  "2335900": {
+    "id": 2335900,
+    "levels": {
+      "1": {
+        "name": "Foxbear Fury",
+        "desc": "Floating Foxbear's Damage to Push-Immune foes +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2335900/> /100 />%</FONT>. Cooldown -<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ADDONSKILLFEATURE Param0 2335900/>/>%</FONT>.",
+        "icon": "ark_passive_dr_13.png"
+      },
+      "2": {
+        "name": "Foxbear Fury",
+        "desc": "Floating Foxbear's Damage to Push-Immune foes +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2335901/> /100 />%</FONT>. Cooldown -<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ADDONSKILLFEATURE Param0 2335901/>/>%</FONT>.",
+        "icon": "ark_passive_dr_13.png"
+      },
+      "3": {
+        "name": "Foxbear Fury",
+        "desc": "Floating Foxbear's Damage to Push-Immune foes +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2335902/> /100 />%</FONT>. Cooldown -<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ADDONSKILLFEATURE Param0 2335902/>/>%</FONT>.",
+        "icon": "ark_passive_dr_13.png"
+      }
+    }
+  },
   "2160000": {
     "id": 2160000,
     "levels": {
@@ -12749,28 +13269,28 @@
     "levels": {
       "1": {
         "name": "Strategic Move",
-        "desc": "On using a Movement Skill, change to move forward. Atk. Speed +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_SKILLBUFF PassiveOptionValue0 2170110/>/100 />%</FONT> for <$MACRO bufftime_st @1:2170110/>s. Can use Skills immediately while moving.\nGunlance and Normal Skill Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2170110/> /100 />%</FONT>.",
-        "icon": "ark_passive_gl_8.png"
+        "desc": "Movement Skill cooldown -<FONT COLOR='#ffff99'>1</FONT>s. Can immediately use skills while moving. On using a Movement Skill, Atk. Speed +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_SKILLBUFF PassiveOptionValue0 2170110/>/100 />%</FONT> for <$MACRO bufftime_st @1:2170110/>s.\nGunlance and Normal Skill Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2170110/> /100 />%</FONT>.",
+        "icon": "ark_passive_gl_15.png"
       },
       "2": {
         "name": "Strategic Move",
-        "desc": "On using a Movement Skill, change to move forward. Atk. Speed +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_SKILLBUFF PassiveOptionValue0 2170111/>/100 />%</FONT> for <$MACRO bufftime_st @1:2170111/>s. Can use Skills immediately while moving.\nGunlance and Normal Skill Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2170111/> /100 />%</FONT>.",
-        "icon": "ark_passive_gl_8.png"
+        "desc": "Movement Skill cooldown -<FONT COLOR='#ffff99'>1</FONT>s. Can immediately use skills while moving. On using a Movement Skill, Atk. Speed +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_SKILLBUFF PassiveOptionValue0 2170111/>/100 />%</FONT> for <$MACRO bufftime_st @1:2170111/>s.\nGunlance and Normal Skill Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2170111/> /100 />%</FONT>.",
+        "icon": "ark_passive_gl_15.png"
       },
       "3": {
         "name": "Strategic Move",
-        "desc": "On using a Movement Skill, change to move forward. Atk. Speed +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_SKILLBUFF PassiveOptionValue0 2170112/>/100 />%</FONT> for <$MACRO bufftime_st @1:2170112/>s. Can use Skills immediately while moving.\nGunlance and Normal Skill Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2170112/> /100 />%</FONT>.",
-        "icon": "ark_passive_gl_8.png"
+        "desc": "Movement Skill cooldown -<FONT COLOR='#ffff99'>1</FONT>s. Can immediately use skills while moving. On using a Movement Skill, Atk. Speed +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_SKILLBUFF PassiveOptionValue0 2170112/>/100 />%</FONT> for <$MACRO bufftime_st @1:2170112/>s.\nGunlance and Normal Skill Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2170112/> /100 />%</FONT>.",
+        "icon": "ark_passive_gl_15.png"
       },
       "4": {
         "name": "Strategic Move",
-        "desc": "On using a Movement Skill, change to move forward. Atk. Speed +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_SKILLBUFF PassiveOptionValue0 2170113/>/100 />%</FONT> for <$MACRO bufftime_st @1:2170113/>s. Can use Skills immediately while moving.\nGunlance and Normal Skill Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2170113/> /100 />%</FONT>.",
-        "icon": "ark_passive_gl_8.png"
+        "desc": "Movement Skill cooldown -<FONT COLOR='#ffff99'>1</FONT>s. Can immediately use skills while moving. On using a Movement Skill, Atk. Speed +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_SKILLBUFF PassiveOptionValue0 2170113/>/100 />%</FONT> for <$MACRO bufftime_st @1:2170113/>s.\nGunlance and Normal Skill Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2170113/> /100 />%</FONT>.",
+        "icon": "ark_passive_gl_15.png"
       },
       "5": {
         "name": "Strategic Move",
-        "desc": "On using a Movement Skill, change to move forward. Atk. Speed +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_SKILLBUFF PassiveOptionValue0 2170114/>/100 />%</FONT> for <$MACRO bufftime_st @1:2170114/>s. Can use Skills immediately while moving.\nGunlance and Normal Skill Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2170114/> /100 />%</FONT>.",
-        "icon": "ark_passive_gl_8.png"
+        "desc": "Movement Skill cooldown -<FONT COLOR='#ffff99'>1</FONT>s. Can immediately use skills while moving. On using a Movement Skill, Atk. Speed +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_SKILLBUFF PassiveOptionValue0 2170114/>/100 />%</FONT> for <$MACRO bufftime_st @1:2170114/>s.\nGunlance and Normal Skill Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2170114/> /100 />%</FONT>.",
+        "icon": "ark_passive_gl_15.png"
       }
     }
   },
