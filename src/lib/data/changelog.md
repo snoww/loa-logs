@@ -1,12 +1,22 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.24.0
+    v1.25.0
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
   </div>
 </div>
 
+#### NEW FEATURES
+- update meter for wildsoul patch (as always, thanks @poont for the packet data)
+- added data relating to new wildsoul class
+
+#### BUG FIXES AND IMPROVEMENTS
+
+- fix database tab not working in settings
+- added clearer buttons for uploading and sharing logs
+
+### v1.24.0
 #### NEW FEATURES
 - update meter for random feb patch
 

@@ -1,11 +1,11 @@
 {
-    "version": "v1.24.0",
-    "notes": "### v1.24.0\n\n#### NEW FEATURES\n- update meter for random feb patch\n\n#### BUG FIXES AND IMPROVEMENTS\n\n- fix some hyper awakenings counting towards buff uptime\n- somewhat fixed act 2: brel g2 phase 1 hp bar amount\n- add hp bar at time of wipe to wiped logs\n\nsend bug reports/suggestions to [ramen shop server](https://discord.gg/RXvTMV2YHu)\n",
-    "pub_date": "2025-02-12T21:13:01.437Z",
+    "version": "v1.25.0",
+    "notes": "### v1.25.0\n\n#### NEW FEATURES\n- update meter for wildsoul patch (as always, thanks @poont for the packet data)\n- added data relating to new wildsoul class\n\n#### BUG FIXES AND IMPROVEMENTS\n\n- fix database tab not working in settings\n- added clearer buttons for uploading and sharing logs\n\nsend bug reports/suggestions to [ramen shop server](https://discord.gg/RXvTMV2YHu)\n",
+    "pub_date": "2025-02-26T22:47:24.361Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.24.0/LOA.Logs_1.24.0_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlhtdEJDZ0lyazFXV1o5S0oyZGRSMEtuVnJMSlQwT2FUQTlHeWU1cURNSFpuME5zb1hIOEdPL3IrRzVTV1hYc3RNeGY2YTdiQTcwU0xrNk4zMkEvM1EwPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzM5Mzk1NDQ4CWZpbGU6TE9BIExvZ3NfMS4yNC4wX3g2NC1zZXR1cC5uc2lzLnppcAptMzdUc1hqZlZHUTZyQ1BkWUxUaGdGOEc1WnZPNThna1hLZ1BwdGQ4RkpGWGlTN3VMbDdEa0QxY0lETVpKT2NkbzAwZXlML0NSUGxoNEROWW9oQU1DQT09Cg=="
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.25.0/LOA.Logs_1.25.0_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlEyR2J2UFN3UmJBL2xlUTV5M2kxcFptcy9lc1FTQTFpZ0ZPV2JReHRhaUQwUlYrZHBmNWJQZy9Jb3JSS1ZBVHpCbUhaWDlRcjgveHhITDZ1YWxMZndZPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzQwNjEwMjgzCWZpbGU6TE9BIExvZ3NfMS4yNS4wX3g2NC1zZXR1cC5uc2lzLnppcApQQmdCeHFHRXRlSm1wTVRlaGFiTGpsbnVmeC95T3dNWVY0UnBzTVovcUhnOVY5SXFwd0J5Rzl4alMwcmdXem5LTEx2R2dXRzQ0NzR5cG5KWXhPTHdEUT09Cg=="
         }
     }
 }
