@@ -2,7 +2,7 @@ use crate::parser::debug_print;
 use crate::parser::encounter_state::EncounterState;
 use crate::parser::entity_tracker::Entity;
 use crate::parser::models::{ArkPassiveData, EntityType};
-use async_recursion::async_recursion;
+use crate::parser::utils::boss_to_raid_map;
 use hashbrown::HashMap;
 use log::{info, warn};
 use md5::compute;
@@ -16,7 +16,8 @@ use std::sync::Arc;
 use std::time::Duration;
 use tauri::{Manager, Window, Wry};
 
-pub const INSPECT_API_URL: &str = "https://api.snow.xyz";
+// pub const API_URL: &str = "http://localhost:5180";
+pub const API_URL: &str = "https://api.snow.xyz";
 
 #[derive(Clone)]
 pub struct StatsApi {
@@ -212,100 +213,109 @@ impl StatsApi {
     }
 
     pub fn send_raid_info(&mut self, state: &EncounterState) {
-        // if !((self.valid_zone
-        //     && (state.raid_difficulty == "Normal" || state.raid_difficulty == "Hard"))
-        //     || (state.raid_difficulty == "Inferno"
-        //         || state.raid_difficulty == "Trial"
-        //         || state.raid_difficulty == "The First"))
-        // {
-        //     debug_print(format_args!("not valid for raid info"));
-        //     return;
-        // }
-        // 
-        // let players: HashMap<String, u64> = state
-        //     .encounter
-        //     .entities
-        //     .iter()
-        //     .filter_map(|(_, e)| {
-        //         if e.entity_type == EntityType::PLAYER {
-        //             Some((e.name.clone(), e.character_id))
-        //         } else {
-        //             None
-        //         }
-        //     })
-        //     .collect();
-        // 
-        // if players.len() > 16 {
-        //     return;
-        // }
-        // 
-        // let client = self.client.clone();
-        // let client_id = self.client_id.clone();
-        // let version = self.window.app_handle().package_info().version.to_string();
-        // let region = self.region.clone();
-        // let boss_name = state.encounter.current_boss_name.clone();
-        // let difficulty = state.raid_difficulty.clone();
-        // let cleared = state.raid_clear;
-        // 
-        // tokio::task::spawn(async move {
-        //     let request_body = json!({
-        //         "id": client_id,
-        //         "version": version,
-        //         "region": region,
-        //         "boss": boss_name,
-        //         "difficulty": difficulty,
-        //         "characters": players,
-        //         "cleared": cleared,
-        //     });
-        // 
-        //     match client
-        //         .post(format!("{API_URL}/raid"))
-        //         .json(&request_body)
-        //         .send()
-        //         .await
-        //     {
-        //         Ok(_) => {
-        //             debug_print(format_args!("sent raid info"));
-        //         }
-        //         Err(e) => {
-        //             warn!("failed to send raid info: {:?}", e);
-        //         }
-        //     }
-        // });
+        if !(state.raid_difficulty == "Normal"
+            || state.raid_difficulty == "Hard"
+            || state.raid_difficulty == "Inferno"
+            || state.raid_difficulty == "Trial"
+            || state.raid_difficulty == "The First")
+        {
+            debug_print(format_args!("not valid for raid info"));
+            return;
+        }
+
+        let boss_name = state.encounter.current_boss_name.clone();
+        let raid_name = if let Some(boss) = state.encounter.entities.get(&boss_name) {
+            boss_to_raid_map(&boss_name, boss.max_hp)
+        } else {
+            return;
+        };
+        
+        if !is_valid_raid(&raid_name) {
+            debug_print(format_args!("not valid for raid info"));
+            return;
+        }
+        
+        let players: Vec<String> = state
+            .encounter
+            .entities
+            .iter()
+            .filter_map(|(_, e)| {
+                if e.entity_type == EntityType::PLAYER {
+                    Some(e.name.clone())
+                } else {
+                    None
+                }
+            })
+            .collect();
+
+        if players.len() > 16 {
+            return;
+        }
+
+        let client = self.client.clone();
+        let difficulty = state.raid_difficulty.clone();
+        let cleared = state.raid_clear;
+
+        tokio::task::spawn(async move {
+            let request_body = json!({
+                "raidName": raid_name,
+                "difficulty": difficulty,
+                "players": players,
+                "cleared": cleared,
+            });
+
+            match client
+                .post(format!("{API_URL}/stats/raid"))
+                .json(&request_body)
+                .send()
+                .await
+            {
+                Ok(_) => {
+                    debug_print(format_args!("sent raid info"));
+                }
+                Err(e) => {
+                    warn!("failed to send raid info: {:?}", e);
+                }
+            }
+        });
     }
 
-    pub async fn get_character_info(&self, boss_name: &str, players: Vec<String>, region: Option<String>) -> Option<HashMap<String, PlayerStats>> {
+    pub async fn get_character_info(
+        &self,
+        boss_name: &str,
+        players: Vec<String>,
+        region: Option<String>,
+    ) -> Option<HashMap<String, PlayerStats>> {
         if region.is_none() {
             warn!("region is not set");
             return None;
         }
-        
+
         let request_body = json!({
-                "clientId": self.client_id,
-                "version": self.window.app_handle().package_info().version.to_string(),
-                "region": region.unwrap(),
-                "boss": boss_name,
-                "characters": players,
-            });
-        
-        match self.client
-            .post(format!("{INSPECT_API_URL}/inspect"))
+            "clientId": self.client_id,
+            "version": self.window.app_handle().package_info().version.to_string(),
+            "region": region.unwrap(),
+            "boss": boss_name,
+            "characters": players,
+        });
+
+        match self
+            .client
+            .post(format!("{API_URL}/inspect"))
             .json(&request_body)
             .send()
             .await
         {
-            Ok(res) => {
-                match res.json::<HashMap<String, PlayerStats>>().await {
-                    Ok(data) => {
-                        debug_print(format_args!("received player stats"));
-                        Some(data)
-                    }
-                    Err(e) => {
-                        warn!("failed to parse player stats: {:?}", e);
-                        None
-                    }
+            Ok(res) => match res.json::<HashMap<String, PlayerStats>>().await {
+                Ok(data) => {
+                    debug_print(format_args!("received player stats"));
+                    Some(data)
                 }
-            }
+                Err(e) => {
+                    warn!("failed to parse player stats: {:?}", e);
+                    None
+                }
+            },
             Err(e) => {
                 warn!("failed to get inspect data: {:?}", e);
                 None
@@ -314,136 +324,25 @@ impl StatsApi {
     }
 }
 
-// #[async_recursion]
-// async fn make_request(
-//     client_id: &str,
-//     client: &Client,
-//     window: &Arc<Window<Wry>>,
-//     region: &str,
-//     stats_cache: Cache<String, PlayerStats>,
-//     request_cache: Cache<String, PlayerStats>,
-//     inflight_cache: Cache<String, u8>,
-//     cancel_queue: Cache<String, String>,
-//     mut player: PlayerHash,
-//     current_retries: usize,
-//     mut final_attempt: bool,
-// ) {
-//     if current_retries >= 10 {
-//         warn!(
-//             "# of retries exceeded, failed to fetch player stats for {:?}",
-//             player
-//         );
-//         inflight_cache.invalidate(&player.hash);
-//         cancel_queue.invalidate(&player.name);
-//
-//         if !final_attempt {
-//             final_attempt = true;
-//             player.hash = "".to_string();
-//             warn!("final attempt for {:?} without hash", player.name);
-//         } else {
-//             window
-//                 .emit("rdps", "request_failed")
-//                 .expect("failed to emit rdps message");
-//             warn!("unable to find player {:?} on {:?}", player.name, region);
-//             return;
-//         }
-//     }
-//
-//     let version = window.app_handle().package_info().version.to_string();
-//     let request_body = json!({
-//         "id": client_id,
-//         "version": version,
-//         "region": region,
-//         "player": player.clone(),
-//     });
-//     debug_print(format_args!("requesting player stats for {:?}", player));
-//     // debug_print(format_args!("{:?}", players));
-//     // println!("{:?}", request_body);
-//
-//     match client
-//         .post(format!("{API_URL}/query"))
-//         .json(&request_body)
-//         .send()
-//         .await
-//     {
-//         Ok(res) => match res.status() {
-//             StatusCode::OK => {
-//                 let data = res.json::<PlayerStats>().await;
-//                 match data {
-//                     Ok(data) => {
-//                         debug_print(format_args!("received player stats for {:?}", player.name));
-//                         inflight_cache.invalidate(&data.hash);
-//                         stats_cache.insert(player.name.clone(), data.clone());
-//                         request_cache.insert(data.hash.clone(), data);
-//                         window
-//                             .emit("rdps", "request_success")
-//                             .expect("failed to emit rdps message");
-//                     }
-//                     Err(e) => {
-//                         inflight_cache.invalidate(&player.hash);
-//                         warn!("failed to parse player stats: {:?}", e);
-//                         window
-//                             .emit("rdps", "api_error")
-//                             .expect("failed to emit rdps message");
-//                     }
-//                 }
-//             }
-//             StatusCode::NOT_FOUND => {
-//                 window
-//                     .emit("rdps", "request_failed_retrying")
-//                     .expect("failed to emit rdps message");
-//                 for _ in 0..20 {
-//                     if let Some(cancel_hash) = cancel_queue.get(&player.name) {
-//                         if cancel_hash != player.hash {
-//                             cancel_queue.invalidate(&player.name);
-//                             debug_print(format_args!(
-//                                 "request cancelled for {:?}, using newer hash: {:?}",
-//                                 player, cancel_hash
-//                             ));
-//                             return;
-//                         }
-//                     }
-//                     tokio::time::sleep(Duration::from_millis(100)).await;
-//                 }
-//                 warn!(
-//                     "missing stats for: {:?}, retrying, attempt {}",
-//                     player,
-//                     current_retries + 1
-//                 );
-//                 // retry request with missing players
-//                 // until we receive stats for all players
-//                 make_request(
-//                     client_id,
-//                     client,
-//                     window,
-//                     region,
-//                     stats_cache,
-//                     request_cache,
-//                     inflight_cache,
-//                     cancel_queue,
-//                     player,
-//                     current_retries + 1,
-//                     final_attempt,
-//                 )
-//                 .await;
-//             }
-//             _ => {
-//                 warn!("failed to fetch player stats: api error {:?}", res.status());
-//                 inflight_cache.invalidate(&player.hash);
-//                 window
-//                     .emit("rdps", "api_error")
-//                     .expect("failed to emit rdps message");
-//             }
-//         },
-//         Err(e) => {
-//             warn!("failed to send api request: {:?}", e);
-//             inflight_cache.invalidate(&player.hash);
-//             window
-//                 .emit("rdps", "api_error")
-//                 .expect("failed to emit rdps message");
-//         }
-//     }
-// }
+fn is_valid_raid(raid_name: &str) -> bool {
+    matches!(
+        raid_name,
+        "Act 2: Brelshaza G1" | 
+        "Act 2: Brelshaza G2" | 
+        "Aegir G1" |
+        "Aegir G2" |
+        "Behemoth G1" |
+        "Behemoth G2" |
+        "Echidna G1"|
+        "Echidna G2"|
+        "Thaemine G1"|
+        "Thaemine G2"|
+        "Thaemine G3"|
+        // g-raids
+        "Skolakia"|
+        "Argeos"
+    )
+}
 
 #[derive(Debug, Default, Clone)]
 pub struct Stats {
@@ -462,7 +361,6 @@ pub struct PlayerStats {
     pub ark_passive_data: Option<ArkPassiveData>,
     pub engravings: Option<Vec<u32>>,
     pub gems: Option<Vec<GemData>>,
-
 }
 
 #[derive(Debug, Default, Clone, Deserialize)]

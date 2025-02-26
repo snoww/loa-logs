@@ -9,6 +9,7 @@ mod stats_api;
 mod status_tracker;
 mod utils;
 
+use crate::parser::stats_api::API_URL;
 use self::models::{Settings, TripodIndex, TripodLevel};
 use crate::parser::encounter_state::EncounterState;
 use crate::parser::entity_tracker::{get_current_and_max_hp, EntityTracker};
@@ -1076,37 +1077,37 @@ pub fn start(window: Window<Wry>, port: u16, settings: Option<Settings>) -> Resu
             party_map_cache = HashMap::new();
         }
 
-        // if last_heartbeat.elapsed() >= heartbeat_duration {
-        //     let client = client.clone();
-        //     let client_id = client_id.clone();
-        //     let version = window.app_handle().package_info().version.to_string();
-        //     let region = match state.region {
-        //         Some(ref region) => region.clone(),
-        //         None => continue,
-        //     };
-        //     tokio::task::spawn(async move {
-        //         let request_body = json!({
-        //             "id": client_id,
-        //             "version": version,
-        //             "region": region,
-        //         });
-        //
-        //         match client
-        //             .post(format!("{API_URL}/heartbeat"))
-        //             .json(&request_body)
-        //             .send()
-        //             .await
-        //         {
-        //             Ok(_) => {
-        //                 debug_print(format_args!("sent heartbeat"));
-        //             }
-        //             Err(e) => {
-        //                 warn!("failed to send heartbeat: {:?}", e);
-        //             }
-        //         }
-        //     });
-        //     last_heartbeat = Instant::now();
-        // }
+        if last_heartbeat.elapsed() >= heartbeat_duration {
+            let client = client.clone();
+            let client_id = client_id.clone();
+            let version = window.app_handle().package_info().version.to_string();
+            let region = match state.region {
+                Some(ref region) => region.clone(),
+                None => continue,
+            };
+            tokio::task::spawn(async move {
+                let request_body = json!({
+                    "id": client_id,
+                    "version": version,
+                    "region": region,
+                });
+        
+                match client
+                    .post(format!("{API_URL}/stats/heartbeat"))
+                    .json(&request_body)
+                    .send()
+                    .await
+                {
+                    Ok(_) => {
+                        debug_print(format_args!("sent heartbeat"));
+                    }
+                    Err(e) => {
+                        warn!("failed to send heartbeat: {:?}", e);
+                    }
+                }
+            });
+            last_heartbeat = Instant::now();
+        }
     }
 
     Ok(())

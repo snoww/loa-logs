@@ -981,11 +981,8 @@ pub fn insert_data(
                     calculate_average_dps(damage_log, fight_start_sec, fight_end_sec);
             }
 
-            let spec = get_player_spec(
-                entity,
-                &encounter.encounter_damage_stats.buffs,
-            );
-            
+            let spec = get_player_spec(entity, &encounter.encounter_damage_stats.buffs);
+
             entity.spec = Some(spec.clone());
 
             if let Some(info) = player_info
@@ -1025,7 +1022,7 @@ pub fn insert_data(
                 let (class, other) = get_engravings(entity.class_id, &info.engravings);
                 entity.engraving_data = other;
                 if info.ark_passive_enabled {
-                    if spec == "Unknown" { 
+                    if spec == "Unknown" {
                         // not reliable enough to be used on its own
                         if let Some(tree) = info.ark_passive_data.as_ref() {
                             if let Some(enlightenment) = tree.enlightenment.as_ref() {
@@ -1568,6 +1565,10 @@ fn get_player_spec(player: &EncounterEntity, buffs: &HashMap<u32, StatusEffect>)
                 "Drizzle".to_string()
             }
         }
+        "Wildsoul" => {
+            //todo
+            "Unknown".to_string()
+        }
         _ => "Unknown".to_string(),
     }
 }
@@ -1637,7 +1638,45 @@ fn get_spec_from_ark_passive(node: &ArkPassiveNode) -> String {
         2320600 => "Drizzle",
         2310000 => "Full Bloom",
         2310600 => "Recurrence",
+        // wildsoul 1
+        // wildsoul 2
         _ => "Unknown",
     }
     .to_string()
+}
+
+pub fn boss_to_raid_map(boss: &str, max_hp: i64) -> String {
+    match boss {
+        "Killineza the Dark Worshipper" => "Thaemine G1",
+        "Valinak, Knight of Darkness" | "Valinak, Taboo Usurper" | "Valinak, Herald of the End" => {
+            "Thaemine G2"
+        }
+        "Thaemine the Lightqueller" | "Dark Greatsword" => "Thaemine G3",
+        "Darkness Legion Commander Thaemine"
+        | "Thaemine Prokel"
+        | "Thaemine, Conqueror of Stars" => "Thaemine G4",
+        "Red Doom Narkiel" | "Agris" => "Echidna G1",
+        "Echidna"
+        | "Covetous Master Echidna"
+        | "Desire in Full Bloom, Echidna"
+        | "Alcaone, the Twisted Venom" => "Echidna G2",
+        "Behemoth, the Storm Commander"
+        | "Despicable Skolakia"
+        | "Untrue Crimson Yoho"
+        | "Ruthless Lakadroff"
+        | "Vicious Argeos" => "Behemoth G1",
+        "Behemoth, Cruel Storm Slayer" => "Behemoth G2",
+        "Akkan, Lord of Death" | "Abyss Monarch Aegir" => "Aegir G1",
+        "Aegir, the Oppressor" | "Pulsating Giant's Heart" => "Aegir G2",
+        "Narok the Butcher" => "Act 2: Brelshaza G1",
+        "Phantom Manifester Brelshaza" => "Act 2: Brelshaza G2",
+        "Phantom Legion Commander Brelshaza" => {
+            if max_hp > 100_000_000_000 {
+                "Act 2: Brelshaza G2"
+            } else {
+                "Brelshaza G6"
+            }
+        }
+        _ => boss,
+    }.to_string()
 }
