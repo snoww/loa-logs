@@ -213,16 +213,6 @@ impl StatsApi {
     }
 
     pub fn send_raid_info(&mut self, state: &EncounterState) {
-        if !(state.raid_difficulty == "Normal"
-            || state.raid_difficulty == "Hard"
-            || state.raid_difficulty == "Inferno"
-            || state.raid_difficulty == "Trial"
-            || state.raid_difficulty == "The First")
-        {
-            debug_print(format_args!("not valid for raid info"));
-            return;
-        }
-
         let boss_name = state.encounter.current_boss_name.clone();
         let raid_name = if let Some(boss) = state.encounter.entities.get(&boss_name) {
             boss_to_raid_map(&boss_name, boss.max_hp)
