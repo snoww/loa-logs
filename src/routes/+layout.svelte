@@ -102,7 +102,7 @@
     });
 </script>
 
-<div class={$settings.general.accentColor}>
+<div class="{$settings.general.accentColor} text-sm">
     {@render children?.()}
     {#if location.pathname !== "/"}
         <UpdateAvailable />

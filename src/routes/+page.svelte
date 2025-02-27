@@ -68,11 +68,7 @@
                     if (oldManifest?.version !== $updateSettings.manifest?.version) {
                         $updateSettings.dismissed = false;
                     }
-                    if (manifest?.version.includes("2024")) {
-                        $updateSettings.isNotice = true;
-                    } else {
-                        $updateSettings.isNotice = false;
-                    }
+                    $updateSettings.isNotice = manifest?.version.includes("2024");
                 }
             } catch (e) {
                 await invoke("write_log", { message: String(e) });

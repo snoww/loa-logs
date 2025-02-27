@@ -9,13 +9,13 @@
 </script>
 
 {#if $updateSettings.available && $updateSettings.manifest && !$updateSettings.dismissed}
-    <div class="fixed inset-0 z-50 bg-zinc-900 bg-opacity-80"></div>
-    <div class="fixed left-0 right-0 top-0 z-50 h-modal w-full items-center justify-center p-4">
+    <div class="bg-opacity-80 fixed inset-0 z-50 bg-zinc-900"></div>
+    <div class="h-modal fixed top-0 right-0 left-0 z-50 w-full items-center justify-center p-4">
         <div class="relative top-[10%] mx-auto flex max-h-[95%] w-full max-w-md md:max-w-lg lg:max-w-2xl xl:max-w-3xl">
             <div class="relative mx-auto flex flex-col rounded-lg border-gray-700 bg-zinc-800 text-gray-400 shadow-md">
                 <button
                     type="button"
-                    class="absolute right-2.5 top-3 ml-auto whitespace-normal rounded-lg p-1.5 hover:bg-zinc-600 focus:outline-hidden"
+                    class="absolute top-3 right-2.5 ml-auto rounded-lg p-1.5 whitespace-normal hover:bg-zinc-600 focus:outline-hidden"
                     aria-label="Close modal"
                     onclick={() => ($updateSettings.dismissed = true)}>
                     <span class="sr-only">Close modal</span>
@@ -43,7 +43,7 @@
                             {/if}
                         </div>
                         <div
-                            class="prose-a:text-accent-500 prose prose-sm prose-zinc prose-invert mb-5 prose-img:-my-2 prose-img:rounded-md prose-img:border prose-img:border-zinc-600 prose-img:shadow-md"
+                            class="prose-headings:text-gray-200 prose-a:text-accent-500 prose prose-sm prose-zinc prose-invert prose-img:-my-2 prose-img:rounded-md prose-img:border prose-img:border-zinc-600 prose-img:shadow-md mb-5 text-gray-200"
                             id="notes">
                             {@html $markdownIt.render($updateSettings.manifest.body)}
                         </div>
