@@ -1,6 +1,6 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.25.1
+    v1.25.2
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
@@ -16,6 +16,7 @@
 - fix database tab not working in settings
 - added clearer buttons for uploading and sharing logs
 - fix screenshots not working
+- fix large font size (maybe)
 
 ### v1.24.0
 #### NEW FEATURES

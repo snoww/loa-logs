@@ -1,11 +1,11 @@
 {
-    "version": "v1.25.1",
-    "notes": "### v1.25.1\n\n#### NEW FEATURES\n- update meter for wildsoul patch (as always, thanks @poont for the packet data)\n- added data relating to new wildsoul class\n\n#### BUG FIXES AND IMPROVEMENTS\n\n- fix database tab not working in settings\n- added clearer buttons for uploading and sharing logs\n- fix screenshots not working\n\nsend bug reports/suggestions to [ramen shop server](https://discord.gg/RXvTMV2YHu)\n",
-    "pub_date": "2025-02-26T23:29:37.255Z",
+    "version": "v1.25.2",
+    "notes": "### v1.25.2\n\n#### NEW FEATURES\n- update meter for wildsoul patch (as always, thanks @poont for the packet data)\n- added data relating to new wildsoul class\n\n#### BUG FIXES AND IMPROVEMENTS\n\n- fix database tab not working in settings\n- added clearer buttons for uploading and sharing logs\n- fix screenshots not working\n- fix large font size (maybe)",
+    "pub_date": "2025-02-27T03:58:13.067Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.25.1/LOA.Logs_1.25.1_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmR2OVhBT0MvdDh4UGI2NWxKTkFKYk1FQm9mdFpFN0t0K3dSaXFyMnNWZWx3cDY4Z09uRk4zdDYvVkhFSllIMTNJcG5CbndtSzhRQitmbUp2Qi9QblF3PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzQwNjEyNDQxCWZpbGU6TE9BIExvZ3NfMS4yNS4xX3g2NC1zZXR1cC5uc2lzLnppcApBOUhQVTd1ZlN6eHlNazl3N1VQU0VSUDkyM0tQaXRqd1ozSUFZNExvV2FJNVJZN1N4YW9hY0tXZzNzdGs0S29YcnoxL256d3ozTWRCVk8yTVptQjlCdz09Cg=="
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.25.2/LOA.Logs_1.25.2_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmJvSDMzRDB6ZTdZa1JRT1JPcnRnbUI5dUxuVmtETUozL01tb2RjeGp6c1lXNHhQcU1XbFZHZlladHo2Sko1RDdqTzFoWHgraXo3c0dEY3dZVmdRbEFNPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzQwNjI5OTQ0CWZpbGU6TE9BIExvZ3NfMS4yNS4yX3g2NC1zZXR1cC5uc2lzLnppcAozYzlRcTlxakhUUDRVR2JoeTJyQS9KeEVUVDFBV1V3V1ZIUlVWR1ZkN29MZTVKUkg5My9CNmxlQ2ViSHBxL2d6eklvcjFQeURSeU5EVzJiOTQzU0REUT09Cg=="
         }
     }
 }
