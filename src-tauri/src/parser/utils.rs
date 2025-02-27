@@ -1,3 +1,4 @@
+use crate::constants::DB_VERSION;
 use crate::parser::entity_tracker::Entity;
 use crate::parser::models::*;
 use crate::parser::skill_tracker::SkillTracker;

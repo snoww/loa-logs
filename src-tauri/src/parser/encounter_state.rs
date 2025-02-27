@@ -8,6 +8,7 @@ use rusqlite::Connection;
 use std::cmp::{max, Ordering};
 use std::default::Default;
 
+use crate::constants::DATABASE_FILE_NAME;
 use crate::parser::debug_print;
 use tauri::{Manager, Window, Wry};
 use tokio::task;
@@ -1911,7 +1912,7 @@ impl EncounterState {
             .path_resolver()
             .resource_dir()
             .expect("could not get resource dir");
-        path.push("encounters.db");
+        path.push(DATABASE_FILE_NAME);
         let prev_stagger = self.prev_stagger;
 
         let damage_log = self.damage_log.clone();
