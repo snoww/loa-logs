@@ -1,3 +1,6 @@
+@import "@fontsource-variable/inter";
+@import '@fontsource-variable/geist-mono';
+
 @import "tailwindcss";
 
 @plugin 'flowbite/plugin';
@@ -6,8 +9,8 @@
 @source '../node_modules/flowbite-svelte/**/*.{html,js,svelte,ts}';
 
 @theme inline {
-    --font-sans: Inter Variable;
-    --font-mono: JetBrains Mono;
+    --font-sans: "Inter Variable", sans-serif;
+    --font-mono: "Geist Mono Variable", monospace;
 
     --text-xxs: 0.875rem;
     --text-3xs: 0.75rem;

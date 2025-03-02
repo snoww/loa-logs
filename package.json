@@ -41,6 +41,7 @@
     },
     "type": "module",
     "dependencies": {
+        "@fontsource-variable/geist-mono": "^5.0.1",
         "@fontsource-variable/inter": "^5.0.12",
         "@fontsource-variable/jetbrains-mono": "^5.0.21",
         "@popperjs/core": "^2.11.7",

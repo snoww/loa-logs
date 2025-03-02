@@ -1,6 +1,4 @@
 <script lang="ts">
-    import "@fontsource-variable/inter";
-    import "@fontsource-variable/jetbrains-mono";
     import "../app.css";
     import { onDestroy, onMount } from "svelte";
     import { listen, type UnlistenFn } from "@tauri-apps/api/event";
@@ -78,11 +76,7 @@
                 if (oldManifest?.version !== $updateSettings.manifest?.version) {
                     $updateSettings.dismissed = false;
                 }
-                if (manifest?.version.includes("2025")) {
-                    $updateSettings.isNotice = true;
-                } else {
-                    $updateSettings.isNotice = false;
-                }
+                $updateSettings.isNotice = !!manifest?.version.includes("2025");
             }
         } catch (e) {
             await invoke("write_log", { message: e });
