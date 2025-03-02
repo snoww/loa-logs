@@ -1,0 +1,11 @@
+[package]
+name = "meter-core"
+description = "Empty shell only meant to get project build"
+version = "0.1.0"
+license = "GNU General Public License v3.0"
+repository = "https://github.com/snoww/loa-logs"
+edition = "2021"
+rust-version = "1.77.0"
+
+[dependencies]
+anyhow = "1.0.75"

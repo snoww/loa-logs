@@ -10,8 +10,6 @@ use serde_json::Value;
 use serde_with::serde_as;
 use serde_with::DefaultOnError;
 
-pub const DB_VERSION: i32 = 5;
-
 #[derive(Debug, Default, Serialize, Deserialize, PartialEq, Copy, Clone)]
 #[allow(non_camel_case_types)]
 pub enum EntityType {
