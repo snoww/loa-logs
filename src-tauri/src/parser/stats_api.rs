@@ -328,6 +328,7 @@ fn is_valid_raid(raid_name: &str) -> bool {
         "Thaemine G1"|
         "Thaemine G2"|
         "Thaemine G3"|
+        "Thaemine G4"|
         // g-raids
         "Skolakia"|
         "Argeos"
