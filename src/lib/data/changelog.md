@@ -1,12 +1,19 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.25.2
+    v1.25.3
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
   </div>
 </div>
 
+#### BUG FIXES AND IMPROVEMENTS
+- fixed wildsoul fox orb skill showing as skill id
+- fixed act 2: brel npc names counting as bosses
+- fixed thaemine prokel name
+
+
+### V1.25.2
 #### NEW FEATURES
 - update meter for wildsoul patch (as always, thanks @poont for the packet data)
 - added data relating to new wildsoul class
