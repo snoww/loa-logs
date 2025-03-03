@@ -573,17 +573,6 @@ pub struct CombatEffectAction {
     pub args: Vec<i32>,
 }
 
-#[derive(Debug, Default, Deserialize, Clone)]
-pub struct SkillFeatureLevelData {
-    pub tripods: HashMap<u8, Tripod>,
-}
-
-#[derive(Debug, Default, Deserialize, Clone)]
-pub struct Tripod {
-    pub name: String,
-    pub entries: Vec<SkillFeatureOption>,
-}
-
 #[derive(Debug, Default, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase", default)]
 pub struct SkillFeatureOption {
@@ -594,28 +583,6 @@ pub struct SkillFeatureOption {
     pub param_type: String,
     pub param: Vec<i32>,
 }
-
-#[derive(Debug, Default, Deserialize, Clone)]
-pub struct ItemSet {
-    #[serde(rename(deserialize = "itemids"))]
-    pub item_ids: Vec<u32>,
-    pub value: HashMap<u8, ItemSetDetails>,
-}
-
-#[derive(Debug, Default, Deserialize, Clone)]
-pub struct ItemSetDetails {
-    pub desc: String,
-    pub options: Vec<PassiveOption>,
-}
-
-#[derive(Debug, Default, Deserialize, Clone)]
-pub struct ItemSetShort {
-    pub set_name: String,
-    pub level: u8,
-}
-
-pub type ItemSetLevel = HashMap<u8, ItemSetCount>;
-pub type ItemSetCount = HashMap<u8, ItemSetDetails>;
 
 #[derive(Debug, Default, Deserialize, Clone)]
 pub struct EngravingData {

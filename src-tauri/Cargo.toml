@@ -33,7 +33,6 @@ serde_with = "3.5.1"
 log = "0.4.18"
 flexi_logger = { version = "0.29.4", default-features = false }
 reqwest = { version = "0.12", features = ["json"] }
-md5 = "0.7.0"
 uuid = { version = "1.8.0", features = ["v4"] }
 moka = { version = "0.12.7", features = ["sync"] }
 rsntp = { version = "4.0.0", default-features = false, features = ["chrono"]  }
@@ -44,7 +43,7 @@ meter-core = { git = "https://github.com/snoww/meter-core-rs", optional = true }
 [features]
 # by default Tauri runs in production mode
 # when `tauri dev` runs it is executed with `cargo run --no-default-features` if `devPath` is an URL
-default = ["custom-protocol"]
+default = ["custom-protocol", "meter-core"]
 # this feature is used for production builds where `devPath` points to the filesystem
 # DO NOT remove this
 custom-protocol = ["tauri/custom-protocol"]

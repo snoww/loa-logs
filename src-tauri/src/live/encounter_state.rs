@@ -5,22 +5,18 @@ use meter_core::packets::definitions::PKTIdentityGaugeChangeNotify;
 use moka::sync::Cache;
 use rsntp::SntpClient;
 use rusqlite::Connection;
-use std::cmp::{max, Ordering};
+use std::cmp::max;
 use std::default::Default;
 
-use crate::live::debug_print;
 use tauri::{Manager, Window, Wry};
 use tokio::task;
 
 use crate::live::entity_tracker::{Entity, EntityTracker};
-use crate::live::models::*;
-use crate::live::rdps::*;
 use crate::live::skill_tracker::SkillTracker;
 use crate::live::stats_api::{PlayerStats, StatsApi};
 use crate::live::status_tracker::StatusEffectDetails;
 use crate::live::utils::*;
-
-const RDPS_VALID_LIMIT: i64 = 25_000;
+use crate::parser::models::*;
 
 #[derive(Debug)]
 pub struct EncounterState {
@@ -469,8 +465,7 @@ impl EncounterState {
             tripod_change = true;
         }
         if tripod_change {
-            // let mut tripod_data: Vec<TripodData> = vec![];
-            if let (Some(tripod_index), Some(tripod_level)) = (tripod_index, tripod_level) {
+            if let (Some(tripod_index), Some(_tripod_level)) = (tripod_index, tripod_level) {
                 let mut indexes = vec![tripod_index.first];
                 if tripod_index.second != 0 {
                     indexes.push(tripod_index.second + 3);
@@ -523,9 +518,9 @@ impl EncounterState {
         damage_data: DamageData,
         se_on_source: Vec<StatusEffectDetails>,
         se_on_target: Vec<StatusEffectDetails>,
-        target_count: i32,
-        entity_tracker: &EntityTracker,
-        player_stats: &Option<Cache<String, PlayerStats>>,
+        _target_count: i32,
+        _entity_tracker: &EntityTracker,
+        _player_stats: &Option<Cache<String, PlayerStats>>,
         timestamp: i64,
     ) {
         let hit_flag = match damage_data.modifier & 0xf {

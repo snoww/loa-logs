@@ -142,7 +142,6 @@ dependencies = [
  "hashbrown 0.15.2",
  "lazy_static",
  "log",
- "md5",
  "meter-core",
  "moka",
  "reqwest 0.12.9",
@@ -2713,12 +2712,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "2532096657941c2fea9c289d370a250971c689d4f143798ff67113ec042024a5"
 
 [[package]]
-name = "md5"
-version = "0.7.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "490cc448043f947bae3cbee9c203358d62dbee0db12107a74be5c30ccfd09771"
-
-[[package]]
 name = "memchr"
 version = "2.7.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2745,7 +2738,6 @@ dependencies = [
 [[package]]
 name = "meter-core"
 version = "0.1.0"
-source = "git+https://github.com/snoww/meter-core-rs#8fd08b53bad6dcdcce289f96daa58b87c7b4520e"
 dependencies = [
  "anyhow",
  "byteorder",

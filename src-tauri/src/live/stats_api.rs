@@ -1,19 +1,16 @@
 use crate::live::debug_print;
 use crate::live::encounter_state::EncounterState;
-use crate::live::entity_tracker::Entity;
-use crate::live::models::{ArkPassiveData, EntityType};
 use crate::live::utils::boss_to_raid_map;
+use crate::parser::models::{ArkPassiveData, EntityType};
 use hashbrown::HashMap;
-use log::{info, warn};
-use md5::compute;
+use log::warn;
 use moka::sync::Cache;
-use reqwest::{Client, StatusCode};
+use reqwest::Client;
 use serde::de::{MapAccess, Visitor};
 use serde::{Deserialize, Deserializer, Serialize};
 use serde_json::json;
 use std::fmt;
 use std::sync::Arc;
-use std::time::Duration;
 use tauri::{Manager, Window, Wry};
 
 // pub const API_URL: &str = "http://localhost:5180";
@@ -26,168 +23,17 @@ pub struct StatsApi {
     window: Arc<Window<Wry>>,
     pub valid_zone: bool,
     stats_cache: Cache<String, PlayerStats>,
-    request_cache: Cache<String, PlayerStats>,
-    inflight_cache: Cache<String, u8>,
-    cancel_queue: Cache<String, String>,
-
-    region_file_path: String,
-
-    pub region: String,
 }
 
 impl StatsApi {
-    pub fn new(window: Window<Wry>, region_file_path: String) -> Self {
+    pub fn new(window: Window<Wry>) -> Self {
         Self {
             client_id: String::new(),
             window: Arc::new(window),
             client: Client::new(),
             valid_zone: false,
             stats_cache: Cache::builder().max_capacity(64).build(),
-            request_cache: Cache::builder().max_capacity(64).build(),
-            inflight_cache: Cache::builder().max_capacity(32).build(),
-            cancel_queue: Cache::builder()
-                .max_capacity(16)
-                .time_to_live(Duration::from_secs(15))
-                .build(),
-            region_file_path,
-
-            region: "".to_string(),
         }
-    }
-
-    // pub fn sync(&mut self, player: &Entity, state: &EncounterState) {
-    //     // todo
-    //     return;
-    //     if state.encounter.fight_start > 0
-    //         && state.encounter.last_combat_packet - state.encounter.fight_start > 1_000
-    //     {
-    //         debug_print(format_args!("fight in progress, ignoring sync"));
-    //         return;
-    //     }
-    //
-    //     if !self.valid_difficulty(&state.raid_difficulty) {
-    //         self.broadcast("invalid_zone");
-    //         return;
-    //     }
-    //
-    //     let region = match state.region.as_ref() {
-    //         Some(region) => region.clone(),
-    //         None => std::fs::read_to_string(&self.region_file_path).unwrap_or_else(|e| {
-    //             warn!("failed to read region file. {}", e);
-    //             "".to_string()
-    //         }),
-    //     };
-    //
-    //     if region.is_empty() {
-    //         warn!("region is not set");
-    //         self.broadcast("missing_info");
-    //         return;
-    //     }
-    //
-    //     self.region.clone_from(&region);
-    //
-    //     if player.entity_type != EntityType::PLAYER {
-    //         warn!("invalid entity type: {:?}", player);
-    //         return;
-    //     }
-    //
-    //     let player_hash = if let Some(hash) = self.get_hash(player) {
-    //         if let Some(cached) = self.request_cache.get(&hash) {
-    //             info!("using cached stats for {:?}", player.name);
-    //             self.stats_cache.insert(player.name.clone(), cached.clone());
-    //             return;
-    //         } else if !self.inflight_cache.contains_key(&hash) {
-    //             self.inflight_cache.insert(hash.clone(), 0);
-    //             self.stats_cache.invalidate(&player.name);
-    //             self.cancel_queue.insert(player.name.clone(), hash.clone());
-    //             PlayerHash {
-    //                 name: player.name.clone(),
-    //                 id: player.character_id,
-    //                 hash,
-    //             }
-    //         } else {
-    //             return;
-    //         }
-    //     } else {
-    //         warn!("missing info for {:?}, could not generate hash", player);
-    //         self.broadcast("missing_info");
-    //         return;
-    //     };
-    //
-    //     self.request(region, player_hash);
-    // }
-
-    // fn request(&mut self, region: String, player: PlayerHash) {
-    //     let client_clone = self.client.clone();
-    //     let client_id_clone = self.client_id.clone();
-    //
-    //     let stats_cache = self.stats_cache.clone();
-    //     let request_cache = self.request_cache.clone();
-    //     let inflight_cache = self.inflight_cache.clone();
-    //     let cancel_queue = self.cancel_queue.clone();
-    //
-    //     let window_clone = Arc::clone(&self.window);
-    //
-    //     self.broadcast("requesting_stats");
-    //     tokio::task::spawn(async move {
-    //         make_request(
-    //             &client_id_clone,
-    //             &client_clone,
-    //             &window_clone,
-    //             &region,
-    //             stats_cache,
-    //             request_cache,
-    //             inflight_cache,
-    //             cancel_queue,
-    //             player,
-    //             0,
-    //             false,
-    //         )
-    //         .await;
-    //     });
-    // }
-
-    pub fn get_hash(&self, player: &Entity) -> Option<String> {
-        if player.gear_level < 0.0
-            || player.character_id == 0
-            || player.class_id == 0
-            || player.name == "You"
-            || !player
-                .name
-                .chars()
-                .next()
-                .unwrap_or_default()
-                .is_uppercase()
-        {
-            return None;
-        }
-
-        let mut equip_data: [u32; 32] = [0; 32];
-        if let Some(equip_list) = player.items.equip_list.as_ref() {
-            for item in equip_list.iter() {
-                if item.slot >= 32 {
-                    continue;
-                }
-                equip_data[item.slot as usize] = item.id;
-            }
-        }
-
-        if equip_data[..26].iter().all(|&x| x == 0) {
-            warn!("missing equipment data for {:?}", player);
-            return Some("".to_string());
-        }
-
-        // {player_name}{xxxx.xx}{xxx}{character_id}{equip_data}
-        let data = format!(
-            "{}{:.02}{}{}{}",
-            player.name,
-            player.gear_level,
-            player.class_id,
-            player.character_id,
-            equip_data.iter().map(|x| x.to_string()).collect::<String>()
-        );
-
-        Some(format!("{:x}", compute(data)))
     }
 
     pub fn get_stats(&mut self, state: &EncounterState) -> Option<Cache<String, PlayerStats>> {
@@ -204,12 +50,6 @@ impl StatsApi {
                 || difficulty == "Hard"
                 || difficulty == "The First"
                 || difficulty == "Trial")
-    }
-
-    pub fn broadcast(&mut self, message: &str) {
-        self.window
-            .emit("rdps", message)
-            .expect("failed to emit rdps message");
     }
 
     pub fn send_raid_info(&mut self, state: &EncounterState) {

@@ -1,3 +1,4 @@
+mod encounter_state;
 mod entity_tracker;
 mod id_tracker;
 mod party_tracker;
@@ -6,6 +7,7 @@ mod stats_api;
 mod status_tracker;
 mod utils;
 
+use crate::live::encounter_state::EncounterState;
 use crate::live::entity_tracker::{get_current_and_max_hp, EntityTracker};
 use crate::live::id_tracker::IdTracker;
 use crate::live::party_tracker::PartyTracker;
@@ -16,9 +18,9 @@ use crate::live::status_tracker::{
     StatusTracker,
 };
 use crate::live::utils::get_class_from_id;
-use crate::parser::encounter_state::EncounterState;
 use crate::parser::models::{
-    DamageData, EntityType, Identity, LocalInfo, LocalPlayer, Stagger, VALID_ZONES,
+    DamageData, EntityType, Identity, LocalInfo, LocalPlayer, Settings, TripodIndex, TripodLevel,
+    VALID_ZONES,
 };
 use anyhow::Result;
 use chrono::Utc;
@@ -27,7 +29,6 @@ use log::{info, warn};
 use meter_core::packets::definitions::*;
 use meter_core::packets::opcodes::Pkt;
 use meter_core::start_capture;
-use parser::models::{Settings, TripodIndex, TripodLevel};
 use reqwest::Client;
 use serde_json::json;
 use std::cell::RefCell;
@@ -52,7 +53,7 @@ pub fn start(window: Window<Wry>, port: u16, settings: Option<Settings>) -> Resu
     let mut resource_path = window.app_handle().path_resolver().resource_dir().unwrap();
     resource_path.push("current_region");
     let region_file_path = resource_path.to_string_lossy();
-    let mut stats_api = StatsApi::new(window.clone(), region_file_path.to_string());
+    let mut stats_api = StatsApi::new(window.clone());
     let rx = match start_capture(port, region_file_path.to_string()) {
         Ok(rx) => rx,
         Err(e) => {
@@ -224,13 +225,6 @@ pub fn start(window: Window<Wry>, port: u16, settings: Option<Settings>) -> Resu
                     }
                 }
             }
-            // Pkt::EquipChangeNotify => {
-            //     if let Some(pkt) =
-            //         parse_pkt(&data, PKTEquipChangeNotify::new, "PKTEquipChangeNotify")
-            //     {
-            //         entity_tracker.get_player_set_options(pkt.object_id, pkt.equip_item_data_list);
-            //     }
-            // }
             Pkt::IdentityGaugeChangeNotify => {
                 if let Some(pkt) = parse_pkt(
                     &data,
@@ -707,7 +701,6 @@ pub fn start(window: Window<Wry>, port: u16, settings: Option<Settings>) -> Resu
                     PKTPartyStatusEffectRemoveNotify::new,
                     "PKTPartyStatusEffectRemoveNotify",
                 ) {
-                    let character_id = pkt.character_id;
                     let (is_shield, shields_broken, _left_workshop) =
                         entity_tracker.party_status_effect_remove(pkt);
                     if is_shield {
