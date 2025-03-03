@@ -1,10 +1,10 @@
-use crate::parser::entity_tracker::Entity;
-use crate::parser::models::{EncounterEntity, EntityType, SKILL_BUFF_DATA};
-use crate::parser::party_tracker::PartyTracker;
-use crate::parser::status_tracker::StatusEffectBuffCategory::{BattleItem, Bracelet, Elixir, Etc};
-use crate::parser::status_tracker::StatusEffectCategory::Debuff;
-use crate::parser::status_tracker::StatusEffectShowType::All;
-use crate::parser::utils::get_new_id;
+use crate::live::entity_tracker::Entity;
+use crate::live::models::{EncounterEntity, EntityType, SKILL_BUFF_DATA};
+use crate::live::party_tracker::PartyTracker;
+use crate::live::status_tracker::StatusEffectBuffCategory::{BattleItem, Bracelet, Elixir, Etc};
+use crate::live::status_tracker::StatusEffectCategory::Debuff;
+use crate::live::status_tracker::StatusEffectShowType::All;
+use crate::live::utils::get_new_id;
 use chrono::{DateTime, Duration, Utc};
 use hashbrown::HashMap;
 use log::warn;
@@ -395,7 +395,7 @@ pub fn build_status_effect(
                                     if tripods.second != 2 {
                                         continue;
                                     }
-                                } else { 
+                                } else {
                                     continue;
                                 }
                             }

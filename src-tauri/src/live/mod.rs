@@ -9,21 +9,21 @@ mod stats_api;
 mod status_tracker;
 mod utils;
 
-use crate::parser::stats_api::API_URL;
 use self::models::{Settings, TripodIndex, TripodLevel};
-use crate::parser::encounter_state::EncounterState;
-use crate::parser::entity_tracker::{get_current_and_max_hp, EntityTracker};
-use crate::parser::id_tracker::IdTracker;
-use crate::parser::models::{
+use crate::live::encounter_state::EncounterState;
+use crate::live::entity_tracker::{get_current_and_max_hp, EntityTracker};
+use crate::live::id_tracker::IdTracker;
+use crate::live::models::{
     DamageData, EntityType, Identity, LocalInfo, LocalPlayer, Stagger, VALID_ZONES,
 };
-use crate::parser::party_tracker::PartyTracker;
-use crate::parser::stats_api::{StatsApi};
-use crate::parser::status_tracker::{
+use crate::live::party_tracker::PartyTracker;
+use crate::live::stats_api::StatsApi;
+use crate::live::stats_api::API_URL;
+use crate::live::status_tracker::{
     get_status_effect_value, StatusEffectDetails, StatusEffectTargetType, StatusEffectType,
     StatusTracker,
 };
-use crate::parser::utils::get_class_from_id;
+use crate::live::utils::get_class_from_id;
 use anyhow::Result;
 use chrono::Utc;
 use hashbrown::HashMap;
@@ -471,6 +471,9 @@ pub fn start(window: Window<Wry>, port: u16, settings: Option<Settings>) -> Resu
                 if let Some(pkt) = parse_pkt(&data, PKTSkillCastNotify::new, "PKTSkillCastNotify") {
                     let mut entity = entity_tracker.get_source_entity(pkt.source_id);
                     entity_tracker.guess_is_player(&mut entity, pkt.skill_id);
+                    if entity.entity_type == EntityType::PLAYER {
+                        info!("{} cast {}", entity.name, pkt.skill_id);
+                    }
                     if entity.class_id == 202 {
                         state.on_skill_start(
                             &entity,
@@ -482,11 +485,17 @@ pub fn start(window: Window<Wry>, port: u16, settings: Option<Settings>) -> Resu
                     }
                 }
             }
+            Pkt::Move => {
+                info!("move");
+            }
             Pkt::SkillStartNotify => {
                 if let Some(pkt) = parse_pkt(&data, PKTSkillStartNotify::new, "PKTSkillStartNotify")
                 {
                     let mut entity = entity_tracker.get_source_entity(pkt.source_id);
                     entity_tracker.guess_is_player(&mut entity, pkt.skill_id);
+                    if entity.entity_type == EntityType::PLAYER {
+                        info!("{} cast {}", entity.name, pkt.skill_id);
+                    }
                     let tripod_index =
                         pkt.skill_option_data
                             .tripod_index
@@ -549,6 +558,18 @@ pub fn start(window: Window<Wry>, port: u16, settings: Option<Settings>) -> Resu
                         let target_entity =
                             entity_tracker.get_or_create_entity(event.skill_damage_event.target_id);
                         let source_entity = entity_tracker.get_or_create_entity(pkt.source_id);
+                        if target_entity.entity_type == EntityType::PLAYER {
+                            info!(
+                                "abnormal damage: {} -> {}, move_time={:?}, stand_up_time={:?}, down_time={:?}, freeze_time={:?}, move_height={:?}, farmost_dist={:?}",
+                                source_entity.name, target_entity.name,
+                                event.skill_move_option_data.move_time,
+                                event.skill_move_option_data.stand_up_time,
+                                event.skill_move_option_data.down_time,
+                                event.skill_move_option_data.freeze_time,
+                                event.skill_move_option_data.move_height,
+                                event.skill_move_option_data.farmost_dist
+                            );
+                        }
                         let (se_on_source, se_on_target) = status_tracker
                             .borrow_mut()
                             .get_status_effects(&owner, &target_entity, local_character_id);
@@ -1091,7 +1112,7 @@ pub fn start(window: Window<Wry>, port: u16, settings: Option<Settings>) -> Resu
                     "version": version,
                     "region": region,
                 });
-        
+
                 match client
                     .post(format!("{API_URL}/stats/heartbeat"))
                     .json(&request_body)

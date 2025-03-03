@@ -8,17 +8,17 @@ use rusqlite::Connection;
 use std::cmp::{max, Ordering};
 use std::default::Default;
 
-use crate::parser::debug_print;
+use crate::live::debug_print;
 use tauri::{Manager, Window, Wry};
 use tokio::task;
 
-use crate::parser::entity_tracker::{Entity, EntityTracker};
-use crate::parser::models::*;
-use crate::parser::rdps::*;
-use crate::parser::skill_tracker::SkillTracker;
-use crate::parser::stats_api::{PlayerStats, StatsApi};
-use crate::parser::status_tracker::StatusEffectDetails;
-use crate::parser::utils::*;
+use crate::live::entity_tracker::{Entity, EntityTracker};
+use crate::live::models::*;
+use crate::live::rdps::*;
+use crate::live::skill_tracker::SkillTracker;
+use crate::live::stats_api::{PlayerStats, StatsApi};
+use crate::live::status_tracker::StatusEffectDetails;
+use crate::live::utils::*;
 
 const RDPS_VALID_LIMIT: i64 = 25_000;
 
@@ -126,7 +126,7 @@ impl EncounterState {
         self.skill_tracker = SkillTracker::new();
 
         self.custom_id_map = HashMap::new();
-        
+
         for (key, entity) in clone.entities.into_iter().filter(|(_, e)| {
             e.entity_type == EntityType::PLAYER
                 || (keep_bosses && e.entity_type == EntityType::BOSS)
@@ -1956,8 +1956,8 @@ impl EncounterState {
                     .filter(|e| is_valid_player(e))
                     .map(|e| e.name.clone())
                     .collect::<Vec<_>>();
-                
-                if !players.is_empty() && players.len() <= 16 { 
+
+                if !players.is_empty() && players.len() <= 16 {
                     stats_api
                         .get_character_info(&encounter.current_boss_name, players, region.clone())
                         .await

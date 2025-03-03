@@ -1,7 +1,7 @@
 use std::fmt::Display;
 use std::str::FromStr;
 
-use crate::parser::entity_tracker::Entity;
+use crate::live::entity_tracker::Entity;
 use bitflags::bitflags;
 use hashbrown::{HashMap, HashSet};
 use lazy_static::lazy_static;
@@ -1017,7 +1017,7 @@ lazy_static! {
     // pub static ref ITEM_SET_INFO: ItemSetInfo = {
     //     let mut item_set_ids: HashMap<u32, ItemSetShort> = HashMap::new();
     //     let mut item_set_names: HashMap<String, ItemSetLevel> = HashMap::new();
-    // 
+    //
     //     for (set_name, set_name_data) in ITEM_SET_DATA.iter() {
     //         let mut item_set_level: ItemSetLevel = HashMap::new();
     //         for (level, set_level_data) in set_name_data.iter() {
@@ -1038,7 +1038,7 @@ lazy_static! {
     //         }
     //         item_set_names.insert(set_name.clone(), item_set_level);
     //     }
-    // 
+    //
     //     ItemSetInfo {
     //         item_ids: item_set_ids,
     //         set_names: item_set_names,
@@ -1282,7 +1282,7 @@ lazy_static! {
 #[serde(rename_all = "camelCase", default)]
 pub struct LocalInfo {
     pub client_id: String,
-    pub local_players: HashMap<u64, LocalPlayer>
+    pub local_players: HashMap<u64, LocalPlayer>,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]

@@ -1,8 +1,11 @@
-use crate::parser::id_tracker::IdTracker;
-use crate::parser::models::EntityType::*;
-use crate::parser::models::{EncounterEntity, EntityType, Esther, LocalInfo, LocalPlayer, PassiveOption, ESTHER_DATA, NPC_DATA, SKILL_DATA};
-use crate::parser::party_tracker::PartyTracker;
-use crate::parser::status_tracker::{
+use crate::live::id_tracker::IdTracker;
+use crate::live::models::EntityType::*;
+use crate::live::models::{
+    EncounterEntity, EntityType, Esther, LocalInfo, LocalPlayer, PassiveOption, ESTHER_DATA,
+    NPC_DATA, SKILL_DATA,
+};
+use crate::live::party_tracker::PartyTracker;
+use crate::live::status_tracker::{
     build_status_effect, StatusEffectDetails, StatusEffectTargetType, StatusEffectType,
     StatusTracker,
 };
@@ -373,7 +376,9 @@ impl EntityTracker {
                 })
                 .collect::<Vec<&LocalPlayer>>();
             party_locals.sort_by(|a, b| b.count.cmp(&a.count));
-            party_locals.first().map_or_else(String::new, |p| p.name.clone())
+            party_locals
+                .first()
+                .map_or_else(String::new, |p| p.name.clone())
         } else {
             "".to_string()
         };
