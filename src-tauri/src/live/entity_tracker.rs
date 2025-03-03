@@ -1,13 +1,13 @@
 use crate::live::id_tracker::IdTracker;
-use crate::live::models::EntityType::*;
-use crate::live::models::{
-    EncounterEntity, EntityType, Esther, LocalInfo, LocalPlayer, PassiveOption, ESTHER_DATA,
-    NPC_DATA, SKILL_DATA,
-};
 use crate::live::party_tracker::PartyTracker;
 use crate::live::status_tracker::{
     build_status_effect, StatusEffectDetails, StatusEffectTargetType, StatusEffectType,
     StatusTracker,
+};
+use crate::parser::models::EntityType::*;
+use crate::parser::models::{
+    EncounterEntity, EntityType, Esther, LocalInfo, LocalPlayer, PassiveOption, ESTHER_DATA,
+    NPC_DATA, SKILL_DATA,
 };
 
 use chrono::{DateTime, Utc};

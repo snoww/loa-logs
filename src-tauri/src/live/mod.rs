@@ -1,21 +1,13 @@
-pub mod encounter_state;
 mod entity_tracker;
 mod id_tracker;
-pub mod models;
 mod party_tracker;
-mod rdps;
 mod skill_tracker;
 mod stats_api;
 mod status_tracker;
 mod utils;
 
-use self::models::{Settings, TripodIndex, TripodLevel};
-use crate::live::encounter_state::EncounterState;
 use crate::live::entity_tracker::{get_current_and_max_hp, EntityTracker};
 use crate::live::id_tracker::IdTracker;
-use crate::live::models::{
-    DamageData, EntityType, Identity, LocalInfo, LocalPlayer, Stagger, VALID_ZONES,
-};
 use crate::live::party_tracker::PartyTracker;
 use crate::live::stats_api::StatsApi;
 use crate::live::stats_api::API_URL;
@@ -24,6 +16,10 @@ use crate::live::status_tracker::{
     StatusTracker,
 };
 use crate::live::utils::get_class_from_id;
+use crate::parser::encounter_state::EncounterState;
+use crate::parser::models::{
+    DamageData, EntityType, Identity, LocalInfo, LocalPlayer, Stagger, VALID_ZONES,
+};
 use anyhow::Result;
 use chrono::Utc;
 use hashbrown::HashMap;
@@ -31,6 +27,7 @@ use log::{info, warn};
 use meter_core::packets::definitions::*;
 use meter_core::packets::opcodes::Pkt;
 use meter_core::start_capture;
+use parser::models::{Settings, TripodIndex, TripodLevel};
 use reqwest::Client;
 use serde_json::json;
 use std::cell::RefCell;

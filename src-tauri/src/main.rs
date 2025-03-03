@@ -4,7 +4,9 @@
 )]
 
 mod app;
+#[cfg(feature = "meter-core")]
 mod live;
+mod parser;
 
 use std::{
     fs::{self, File},
@@ -16,8 +18,8 @@ use std::{
 use anyhow::Result;
 use flate2::read::GzDecoder;
 use hashbrown::HashMap;
-use live::models::*;
 use log::{error, info, warn};
+use parser::models::*;
 
 use rusqlite::{params, params_from_iter, Connection, Transaction};
 use sysinfo::System;
@@ -26,7 +28,6 @@ use tauri::{
     SystemTray, SystemTrayEvent, SystemTrayMenu, SystemTrayMenuItem,
 };
 use tauri_plugin_window_state::{AppHandleExt, StateFlags, WindowExt};
-use tokio::task;
 use window_vibrancy::{apply_blur, clear_blur};
 
 const METER_WINDOW_LABEL: &str = "main";
@@ -164,11 +165,16 @@ async fn main() -> Result<()> {
 
             info!("listening on port: {}", port);
             remove_driver();
-            task::spawn_blocking(move || {
-                live::start(meter_window, port, settings).map_err(|e| {
-                    error!("unexpected error occurred in parser: {}", e);
-                })
-            });
+
+            // only start listening if we have live meter
+            #[cfg(feature = "meter-core")]
+            {
+                tokio::task::spawn_blocking(move || {
+                    live::start(meter_window, port, settings).map_err(|e| {
+                        error!("unexpected error occurred in parser: {}", e);
+                    })
+                });
+            }
 
             // #[cfg(debug_assertions)]
             // {

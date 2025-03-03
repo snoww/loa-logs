@@ -134,7 +134,6 @@ name = "app"
 version = "0.1.0"
 dependencies = [
  "anyhow",
- "async-recursion",
  "bitflags 2.6.0",
  "chrono",
  "embed-resource",
@@ -2746,6 +2745,7 @@ dependencies = [
 [[package]]
 name = "meter-core"
 version = "0.1.0"
+source = "git+https://github.com/snoww/meter-core-rs#8fd08b53bad6dcdcce289f96daa58b87c7b4520e"
 dependencies = [
  "anyhow",
  "byteorder",
