@@ -11,6 +11,7 @@
         anySupportIdentity: boolean;
         anySupportBrand: boolean;
         anyRdpsData: boolean;
+        anyPlayerIncapacitated: boolean;
         isSolo: boolean;
     }
 
@@ -23,6 +24,7 @@
         anySupportIdentity,
         anySupportBrand,
         anyRdpsData,
+        anyPlayerIncapacitated,
         isSolo
     }: Props = $props();
 </script>
@@ -32,6 +34,13 @@
 {/if}
 {#if multipleDeaths && $settings.logs.deathTime}
     <th class="w-14 font-normal" use:tooltip={{ content: "Death Count" }}>Deaths</th>
+{/if}
+{#if anyPlayerIncapacitated && $settings.logs.incapacitatedTime}
+    <th
+        class="w-14 font-normal"
+        use:tooltip={{
+            content: "Time spent in the air, on the floor, or affected by crowd control effects."
+        }}>INCAP</th>
 {/if}
 {#if $settings.logs.damage}
     <th class="w-14 font-normal" use:tooltip={{ content: "Damage Dealt" }}>DMG</th>

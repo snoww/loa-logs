@@ -42,6 +42,10 @@
             description="Show how long a party member has died"
             bind:setting={$settings.meter.deathTime} />
         <SettingItem
+            name="Incapacitated Time"
+            description="Show how long a party member has been incapacitated for (e.g. on the floor, stunned, trapped)"
+            bind:setting={$settings.meter.incapacitatedTime} />
+        <SettingItem
             name="Damage"
             description="Show the damage dealt by player in the current encounter"
             bind:setting={$settings.meter.damage} />

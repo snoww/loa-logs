@@ -20,6 +20,7 @@
         anySupportIdentity: boolean;
         anySupportBrand: boolean;
         anyRdpsData: boolean;
+        anyPlayerIncapacitated: boolean;
         isSolo: boolean;
     }
 
@@ -37,6 +38,7 @@
         anySupportIdentity,
         anySupportBrand,
         anyRdpsData,
+        anyPlayerIncapacitated,
         isSolo
     }: Props = $props();
 
@@ -81,6 +83,7 @@
     {anySupportIdentity}
     {anySupportBrand}
     {anyRdpsData}
+    {anyPlayerIncapacitated}
     {dpsRaw}
     end={lastCombatPacket}
     {dps}

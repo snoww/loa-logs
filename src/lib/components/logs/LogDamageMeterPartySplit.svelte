@@ -17,6 +17,7 @@
         anySupportIdentity: boolean;
         anySupportBrand: boolean;
         anyRdpsData: boolean;
+        anyPlayerIncapacitated: boolean;
         end: number;
         isSolo: boolean;
         inspectPlayer: (name: string) => void;
@@ -33,6 +34,7 @@
         anySupportIdentity,
         anySupportBrand,
         anyRdpsData,
+        anyPlayerIncapacitated,
         end,
         isSolo,
         inspectPlayer
@@ -92,7 +94,7 @@
             <table class="w-full table-fixed">
                 <thead class="z-40 h-6">
                     <tr class="bg-zinc-900">
-                        <th class="w-7 whitespace-nowrap px-2 font-normal tracking-tight">Party {+partyId + 1}</th>
+                        <th class="w-7 px-2 font-normal tracking-tight whitespace-nowrap">Party {+partyId + 1}</th>
                         <th class="w-20 px-2 text-left font-normal"></th>
                         <th class="w-full"></th>
                         <LogDamageMeterHeader
@@ -104,6 +106,7 @@
                             {anySupportIdentity}
                             {anySupportBrand}
                             {anyRdpsData}
+                            {anyPlayerIncapacitated}
                             {isSolo} />
                     </tr>
                 </thead>
@@ -124,6 +127,7 @@
                                 {anySupportIdentity}
                                 {anySupportBrand}
                                 {anyRdpsData}
+                                {anyPlayerIncapacitated}
                                 {end}
                                 {isSolo} />
                         </tr>
@@ -136,12 +140,13 @@
         <table class="w-full table-fixed">
             <thead class="z-40 h-6">
                 <tr class="bg-zinc-900">
-                    <th class="w-7 whitespace-nowrap px-2 font-normal tracking-tight">Esthers</th>
+                    <th class="w-7 px-2 font-normal tracking-tight whitespace-nowrap">Esthers</th>
                     <th class="w-20 px-2 text-left font-normal"></th>
                     <th class="w-full"></th>
                     <LogDamageMeterHeader
                         anyDead={false}
                         multipleDeaths={false}
+                        anyPlayerIncapacitated={false}
                         {anyFrontAtk}
                         {anyBackAtk}
                         {anySupportBuff}
@@ -167,6 +172,7 @@
                             {anySupportBuff}
                             {anySupportIdentity}
                             {anySupportBrand}
+                            {anyPlayerIncapacitated}
                             {anyRdpsData}
                             {end}
                             {isSolo} />

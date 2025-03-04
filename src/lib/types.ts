@@ -218,6 +218,7 @@ export interface DamageStats {
     rdpsDamageReceived: number;
     rdpsDamageReceivedSupport: number;
     rdpsDamageGiven: number;
+    incapacitations: IncapacitatedEvent[];
     [key: string]: any;
 }
 
@@ -308,6 +309,16 @@ export interface IdentityEvent {
 export interface StaggerEvent {
     current: number;
     max: number;
+}
+
+export interface IncapacitatedEvent {
+    type: IncapacitationEventType;
+    timestamp: number;
+    duration: number;
+}
+
+export enum IncapacitationEventType {
+    FALL_DOWN = "FALL_DOWN"
 }
 
 export enum EntityType {
