@@ -4,6 +4,8 @@
 )]
 
 mod app;
+#[cfg(feature = "meter-core")]
+mod live;
 mod parser;
 
 use std::{
@@ -26,7 +28,6 @@ use tauri::{
     SystemTray, SystemTrayEvent, SystemTrayMenu, SystemTrayMenuItem,
 };
 use tauri_plugin_window_state::{AppHandleExt, StateFlags, WindowExt};
-use tokio::task;
 use window_vibrancy::{apply_blur, clear_blur};
 
 const METER_WINDOW_LABEL: &str = "main";
@@ -69,7 +70,7 @@ async fn main() -> Result<()> {
         .add_item(quit);
 
     let system_tray = SystemTray::new().with_menu(tray_menu);
-    
+
     tauri::Builder::default()
         .setup(|app| {
             info!("starting app v{}", app.package_info().version.to_string());
@@ -164,11 +165,16 @@ async fn main() -> Result<()> {
 
             info!("listening on port: {}", port);
             remove_driver();
-            task::spawn_blocking(move || {
-                parser::start(meter_window, port, settings).map_err(|e| {
-                    error!("unexpected error occurred in parser: {}", e);
-                })
-            });
+
+            // only start listening if we have live meter
+            #[cfg(feature = "meter-core")]
+            {
+                tokio::task::spawn_blocking(move || {
+                    live::start(meter_window, port, settings).map_err(|e| {
+                        error!("unexpected error occurred in parser: {}", e);
+                    })
+                });
+            }
 
             // #[cfg(debug_assertions)]
             // {
@@ -1519,7 +1525,10 @@ fn set_clickthrough(window: tauri::Window, set: bool) {
 
 #[tauri::command]
 fn remove_driver() {
-    Command::new("sc").args(["delete", "windivert"]).output().expect("unable to delete driver");
+    Command::new("sc")
+        .args(["delete", "windivert"])
+        .output()
+        .expect("unable to delete driver");
 }
 
 #[tauri::command]
@@ -1566,11 +1575,20 @@ fn set_start_on_boot(set: bool) {
     if set {
         Command::new("schtasks")
             .args(["/delete", "/tn", task_name, "/f"])
-            .output().ok();
-        
+            .output()
+            .ok();
+
         let output = Command::new("schtasks")
             .args([
-                "/create", "/tn", task_name, "/tr", &format!("\"{}\"", &app_path), "/sc", "onlogon", "/rl", "highest",
+                "/create",
+                "/tn",
+                task_name,
+                "/tr",
+                &format!("\"{}\"", &app_path),
+                "/sc",
+                "onlogon",
+                "/rl",
+                "highest",
             ])
             .output();
 

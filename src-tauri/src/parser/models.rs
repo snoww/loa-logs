@@ -1,7 +1,8 @@
+// Some of these are unused if live meter is not enabled, don't warn about that.
+#![cfg_attr(not(feature = "meter-core"), allow(dead_code))]
 use std::fmt::Display;
 use std::str::FromStr;
 
-use crate::parser::entity_tracker::Entity;
 use bitflags::bitflags;
 use hashbrown::{HashMap, HashSet};
 use lazy_static::lazy_static;
@@ -572,17 +573,6 @@ pub struct CombatEffectAction {
     pub args: Vec<i32>,
 }
 
-#[derive(Debug, Default, Deserialize, Clone)]
-pub struct SkillFeatureLevelData {
-    pub tripods: HashMap<u8, Tripod>,
-}
-
-#[derive(Debug, Default, Deserialize, Clone)]
-pub struct Tripod {
-    pub name: String,
-    pub entries: Vec<SkillFeatureOption>,
-}
-
 #[derive(Debug, Default, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase", default)]
 pub struct SkillFeatureOption {
@@ -593,28 +583,6 @@ pub struct SkillFeatureOption {
     pub param_type: String,
     pub param: Vec<i32>,
 }
-
-#[derive(Debug, Default, Deserialize, Clone)]
-pub struct ItemSet {
-    #[serde(rename(deserialize = "itemids"))]
-    pub item_ids: Vec<u32>,
-    pub value: HashMap<u8, ItemSetDetails>,
-}
-
-#[derive(Debug, Default, Deserialize, Clone)]
-pub struct ItemSetDetails {
-    pub desc: String,
-    pub options: Vec<PassiveOption>,
-}
-
-#[derive(Debug, Default, Deserialize, Clone)]
-pub struct ItemSetShort {
-    pub set_name: String,
-    pub level: u8,
-}
-
-pub type ItemSetLevel = HashMap<u8, ItemSetCount>;
-pub type ItemSetCount = HashMap<u8, ItemSetDetails>;
 
 #[derive(Debug, Default, Deserialize, Clone)]
 pub struct EngravingData {
@@ -912,75 +880,6 @@ pub enum HitFlag {
     MAX,
 }
 
-pub struct CombatEffectConditionData<'a> {
-    pub self_entity: &'a Entity,
-    pub target_entity: &'a Entity,
-    pub caster_entity: &'a Entity,
-    pub skill: Option<&'a SkillData>,
-    pub hit_option: i32,
-    pub target_count: i32,
-}
-
-#[derive(Debug, Clone)]
-pub struct RdpsData {
-    pub multi_dmg: RdpsRates,
-    pub atk_pow_sub_rate_2: RdpsSelfRates,
-    pub atk_pow_sub_rate_1: RdpsRates,
-    pub skill_dmg_rate: RdpsSelfRates,
-    pub atk_pow_amplify: Vec<RdpsBuffData>,
-    pub crit: RdpsSelfRates,
-    pub crit_dmg_rate: f64,
-}
-
-impl Default for RdpsData {
-    fn default() -> Self {
-        Self {
-            multi_dmg: RdpsRates::default(),
-            atk_pow_sub_rate_2: RdpsSelfRates::default(),
-            atk_pow_sub_rate_1: RdpsRates::default(),
-            skill_dmg_rate: RdpsSelfRates::default(),
-            atk_pow_amplify: Vec::new(),
-            crit: RdpsSelfRates::default(),
-            crit_dmg_rate: 2.0,
-        }
-    }
-}
-
-#[derive(Debug, Clone)]
-pub struct RdpsRates {
-    pub sum_rate: f64,
-    pub total_rate: f64,
-    pub values: Vec<RdpsBuffData>,
-}
-
-impl Default for RdpsRates {
-    fn default() -> Self {
-        Self {
-            sum_rate: 0.0,
-            total_rate: 1.0,
-            values: Vec::new(),
-        }
-    }
-}
-
-#[derive(Debug, Default, Clone)]
-pub struct RdpsSelfRates {
-    pub self_sum_rate: f64,
-    pub sum_rate: f64,
-    pub values: Vec<RdpsBuffData>,
-}
-
-#[derive(Debug, Default, Clone)]
-pub struct RdpsBuffData {
-    pub caster: String,
-    pub rate: f64,
-}
-
-pub struct ItemSetInfo {
-    pub item_ids: HashMap<u32, ItemSetShort>,
-    pub set_names: HashMap<String, ItemSetLevel>,
-}
-
 lazy_static! {
     pub static ref NPC_DATA: HashMap<u32, Npc> = {
         let json_str = include_str!("../../meter-data/Npc.json");
@@ -1002,48 +901,10 @@ lazy_static! {
         let json_str = include_str!("../../meter-data/CombatEffect.json");
         serde_json::from_str(json_str).unwrap()
     };
-    // pub static ref SKILL_FEATURE_DATA: HashMap<u32, SkillFeatureLevelData> = {
-    //     let json_str = include_str!("../../meter-data/SkillFeature.json");
-    //     serde_json::from_str(json_str).unwrap()
-    // };
     pub static ref ENGRAVING_DATA: HashMap<u32, EngravingData> = {
         let json_str = include_str!("../../meter-data/Ability.json");
         serde_json::from_str(json_str).unwrap()
     };
-    // pub static ref ITEM_SET_DATA: HashMap<String, HashMap<u8, ItemSet>> = {
-    //     let json_str = include_str!("../../meter-data/ItemSet.json");
-    //     serde_json::from_str(json_str).unwrap()
-    // };
-    // pub static ref ITEM_SET_INFO: ItemSetInfo = {
-    //     let mut item_set_ids: HashMap<u32, ItemSetShort> = HashMap::new();
-    //     let mut item_set_names: HashMap<String, ItemSetLevel> = HashMap::new();
-    // 
-    //     for (set_name, set_name_data) in ITEM_SET_DATA.iter() {
-    //         let mut item_set_level: ItemSetLevel = HashMap::new();
-    //         for (level, set_level_data) in set_name_data.iter() {
-    //             let mut item_set_count: ItemSetCount = HashMap::new();
-    //             for (count, set_count_data) in set_level_data.value.iter() {
-    //                 item_set_count.insert(*count, set_count_data.clone());
-    //             }
-    //             item_set_level.insert(*level, item_set_count);
-    //             for item_id in set_level_data.item_ids.iter() {
-    //                 item_set_ids.insert(
-    //                     *item_id,
-    //                     ItemSetShort {
-    //                         set_name: set_name.clone(),
-    //                         level: *level,
-    //                     },
-    //                 );
-    //             }
-    //         }
-    //         item_set_names.insert(set_name.clone(), item_set_level);
-    //     }
-    // 
-    //     ItemSetInfo {
-    //         item_ids: item_set_ids,
-    //         set_names: item_set_names,
-    //     }
-    // };
     pub static ref ESTHER_DATA: Vec<Esther> = {
         let json_str = include_str!("../../meter-data/Esther.json");
         serde_json::from_str(json_str).unwrap()
@@ -1057,7 +918,7 @@ lazy_static! {
             308022, 308023, 308024, 308025, 308026, 308027, 308028, 308029, 308030, 308037, 308039,
             308040, 308041, 308042, 308043, 308044, 308239, 308339, 308410, 308411, 308412, 308414,
             308415, 308416, 308417, 308418, 308419, 308420, 308421, 308422, 308423, 308424, 308425,
-            308426, 308428, 308429, 308430, 308437, 309020, 30865, 30866
+            308426, 308428, 308429, 308430, 308437, 309020, 30865, 30866,
         ];
 
         valid_zones.iter().cloned().collect()
@@ -1282,7 +1143,7 @@ lazy_static! {
 #[serde(rename_all = "camelCase", default)]
 pub struct LocalInfo {
     pub client_id: String,
-    pub local_players: HashMap<u64, LocalPlayer>
+    pub local_players: HashMap<u64, LocalPlayer>,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]

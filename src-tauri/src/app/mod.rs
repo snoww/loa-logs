@@ -2,7 +2,7 @@ use flexi_logger::{
     Cleanup, Criterion, DeferredNow, Duplicate, FileSpec, Logger, LoggerHandle, Naming, WriteMode,
 };
 
-use log::{error, info, warn, Record};
+use log::{error, Record};
 
 use std::sync::{Mutex, OnceLock};
 

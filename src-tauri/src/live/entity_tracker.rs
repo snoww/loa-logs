@@ -1,17 +1,20 @@
-use crate::parser::id_tracker::IdTracker;
-use crate::parser::models::EntityType::*;
-use crate::parser::models::{EncounterEntity, EntityType, Esther, LocalInfo, LocalPlayer, PassiveOption, ESTHER_DATA, NPC_DATA, SKILL_DATA};
-use crate::parser::party_tracker::PartyTracker;
-use crate::parser::status_tracker::{
+use crate::live::id_tracker::IdTracker;
+use crate::live::party_tracker::PartyTracker;
+use crate::live::status_tracker::{
     build_status_effect, StatusEffectDetails, StatusEffectTargetType, StatusEffectType,
     StatusTracker,
+};
+use crate::parser::models::EntityType::*;
+use crate::parser::models::{
+    EncounterEntity, EntityType, Esther, LocalInfo, LocalPlayer, PassiveOption, ESTHER_DATA,
+    NPC_DATA, SKILL_DATA,
 };
 
 use chrono::{DateTime, Utc};
 use hashbrown::HashMap;
 use log::{info, warn};
 use meter_core::packets::definitions::*;
-use meter_core::packets::structures::{EquipItemData, NpcStruct, StatPair, StatusEffectData};
+use meter_core::packets::structures::{NpcStruct, StatPair, StatusEffectData};
 use std::cell::RefCell;
 use std::rc::Rc;
 
@@ -167,7 +170,7 @@ impl EntityTracker {
     // }
 
     pub fn new_pc(&mut self, pkt: PKTNewPC) -> Entity {
-        let mut entity = Entity {
+        let entity = Entity {
             id: pkt.pc_struct.player_id,
             entity_type: PLAYER,
             name: pkt.pc_struct.name.clone(),
@@ -182,11 +185,6 @@ impl EntityTracker {
                 .collect(),
             ..Default::default()
         };
-
-        let (player_set, player_equip_list) = get_player_equipment(&pkt.pc_struct.equip_item_datas);
-        let player_item_set = get_player_item_set(player_set);
-        entity.items.equip_list = Some(player_equip_list);
-        entity.item_set = Some(player_item_set);
 
         self.entities.insert(entity.id, entity.clone());
         let old_entity_id = self
@@ -373,7 +371,9 @@ impl EntityTracker {
                 })
                 .collect::<Vec<&LocalPlayer>>();
             party_locals.sort_by(|a, b| b.count.cmp(&a.count));
-            party_locals.first().map_or_else(String::new, |p| p.name.clone())
+            party_locals
+                .first()
+                .map_or_else(String::new, |p| p.name.clone())
         } else {
             "".to_string()
         };
@@ -535,129 +535,6 @@ impl EntityTracker {
     pub fn get_entity_ref(&self, id: u64) -> Option<&Entity> {
         self.entities.get(&id)
     }
-
-    pub fn get_player_set_options(&mut self, id: u64, equip_list: Vec<EquipItemData>) {
-        let entity = match self.entities.get_mut(&id) {
-            Some(entity) => entity,
-            None => return,
-        };
-
-        if entity.entity_type != PLAYER {
-            return;
-        }
-
-        let (player_set, player_equip_list) = get_player_equipment(&equip_list);
-        let player_item_set = get_player_item_set(player_set);
-
-        entity.items.equip_list = Some(player_equip_list);
-        entity.item_set = Some(player_item_set);
-    }
-
-    //     pub fn get_local_player_set_options(&mut self, equip_list: Vec<ItemData>) {
-    //         let entity = match self.entities.get_mut(&self.local_entity_id) {
-    //             Some(entity) => entity,
-    //             None => return,
-    //         };
-
-    //         if entity.entity_type != PLAYER {
-    //             return;
-    //         }
-
-    //         let mut player_set: HashMap<String, HashMap<u8, u8>> = HashMap::new();
-    //         let mut player_equip_list: Vec<PlayerItemData> = Vec::new();
-    //         for item in equip_list {
-    //             // 1 -> weapon
-    //             // 6 -> pauldron
-    //             if item.slot >= 1 && item.slot <= 6 {
-    //                 if let Some(item_set) = ITEM_SET_INFO.item_ids.get(&item.id) {
-    //                     let set_entry = player_set
-    //                         .entry(item_set.set_name.clone())
-    //                         .or_insert(HashMap::new());
-    //                     let level = set_entry.get(&item_set.level).cloned().unwrap_or_default();
-    //                     set_entry.insert(item_set.level, level + 1);
-    //                 }
-    //             }
-    //             player_equip_list.push(PlayerItemData {
-    //                 id: item.id,
-    //                 slot: item.slot,
-    //             });
-    //         }
-    //         entity.items.equip_list = Some(player_equip_list);
-    //         let mut effective_options: Vec<PassiveOption> = Vec::new();
-    //         for (set_name, set_entry) in player_set {
-    //             if let Some(effect) = ITEM_SET_INFO.set_names.get(&set_name) {
-    //                 let mut max_count_applied: u8 = 0;
-    //                 let mut higher_level_count = 0;
-    //                 for (level, count) in set_entry {
-    //                     if let Some(effect_level) = effect.get(&level) {
-    //                         for (required_level, options) in effect_level {
-    //                             if *required_level > max_count_applied
-    //                                 && count + higher_level_count >= *required_level
-    //                             {
-    //                                 effective_options.extend(options.options.iter().cloned());
-    //                                 max_count_applied = max_count_applied.max(*required_level);
-    //                             }
-    //                         }
-    //                         higher_level_count = count;
-    //                     }
-    //                 }
-    //             }
-    //         }
-
-    //         entity.item_set = Some(effective_options);
-    //     }
-}
-
-pub fn get_player_equipment(
-    equip_list: &Vec<EquipItemData>,
-) -> (HashMap<String, HashMap<u8, u8>>, Vec<PlayerItemData>) {
-    let mut player_set: HashMap<String, HashMap<u8, u8>> = HashMap::new();
-    let mut player_equip_list: Vec<PlayerItemData> = Vec::new();
-
-    // for item in equip_list {
-    //     // 1 -> weapon
-    //     // 6 -> pauldron
-    //     if item.slot >= 1 && item.slot <= 6 {
-    //         if let Some(item_set) = ITEM_SET_INFO.item_ids.get(&item.item_id) {
-    //             let set_entry = player_set
-    //                 .entry(item_set.set_name.clone())
-    //                 .or_insert(HashMap::new());
-    //             let level = set_entry.get(&item_set.level).cloned().unwrap_or_default();
-    //             set_entry.insert(item_set.level, level + 1);
-    //         }
-    //     }
-    //     player_equip_list.push(PlayerItemData {
-    //         id: item.item_id,
-    //         slot: item.slot,
-    //     });
-    // }
-
-    (player_set, player_equip_list)
-}
-
-pub fn get_player_item_set(player_set: HashMap<String, HashMap<u8, u8>>) -> Vec<PassiveOption> {
-    let mut effective_options: Vec<PassiveOption> = Vec::new();
-    // for (set_name, set_entry) in player_set {
-    //     if let Some(effect) = ITEM_SET_INFO.set_names.get(&set_name) {
-    //         let mut max_count_applied: u8 = 0;
-    //         let mut higher_level_count = 0;
-    //         for (level, count) in set_entry {
-    //             if let Some(effect_level) = effect.get(&level) {
-    //                 for (required_level, options) in effect_level {
-    //                     if *required_level > max_count_applied
-    //                         && count + higher_level_count >= *required_level
-    //                     {
-    //                         effective_options.extend(options.options.iter().cloned());
-    //                         max_count_applied = max_count_applied.max(*required_level);
-    //                     }
-    //                 }
-    //                 higher_level_count = count;
-    //             }
-    //         }
-    //     }
-    // }
-
-    effective_options
 }
 
 pub fn get_current_and_max_hp(stat_pair: &Vec<StatPair>) -> (i64, i64) {
@@ -739,18 +616,4 @@ pub struct Entity {
     pub push_immune: bool,
     pub level: u16,
     pub balance_level: u16,
-    pub item_set: Option<Vec<PassiveOption>>,
-    pub items: Items,
-}
-
-#[derive(Debug, Default, Clone)]
-pub struct Items {
-    pub life_tool_list: Option<Vec<PlayerItemData>>,
-    pub equip_list: Option<Vec<PlayerItemData>>,
-}
-
-#[derive(Debug, Default, Clone)]
-pub struct PlayerItemData {
-    pub id: u32,
-    pub slot: u16,
 }
