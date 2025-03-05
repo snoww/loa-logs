@@ -453,7 +453,7 @@ pub struct Esther {
 pub struct SkillData {
     pub id: i32,
     pub name: Option<String>,
-    #[serde(rename = "type")]
+    #[serde(rename = "type", default)]
     pub skill_type: String,
     pub desc: Option<String>,
     pub class_id: u32,
@@ -743,6 +743,7 @@ pub struct LogTabs {
     pub dps: bool,
     pub damage_percent: bool,
     pub death_time: bool,
+    pub incapacitated_time: bool,
     pub crit_rate: bool,
     pub crit_dmg: bool,
     pub front_atk: bool,
@@ -794,6 +795,7 @@ pub struct MeterTabs {
     pub dps: bool,
     pub damage_percent: bool,
     pub death_time: bool,
+    pub incapacitated_time: bool,
     pub crit_rate: bool,
     pub crit_dmg: bool,
     pub front_atk: bool,

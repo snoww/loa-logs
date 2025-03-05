@@ -462,9 +462,6 @@ pub fn start(window: Window<Wry>, port: u16, settings: Option<Settings>) -> Resu
                 if let Some(pkt) = parse_pkt(&data, PKTSkillCastNotify::new, "PKTSkillCastNotify") {
                     let mut entity = entity_tracker.get_source_entity(pkt.source_id);
                     entity_tracker.guess_is_player(&mut entity, pkt.skill_id);
-                    if entity.entity_type == EntityType::PLAYER {
-                        info!("{} cast {}", entity.name, pkt.skill_id);
-                    }
                     if entity.class_id == 202 {
                         state.on_skill_start(
                             &entity,
