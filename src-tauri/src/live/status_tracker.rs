@@ -80,7 +80,12 @@ impl StatusTracker {
         instance_id: Vec<u32>,
         reason: u8,
         sett: StatusEffectTargetType,
-    ) -> (bool, Vec<StatusEffectDetails>, bool) {
+    ) -> (
+        bool,
+        Vec<StatusEffectDetails>,
+        Vec<StatusEffectDetails>,
+        bool,
+    ) {
         let registry = match sett {
             StatusEffectTargetType::Local => &mut self.local_status_effect_registry,
             StatusEffectTargetType::Party => &mut self.party_status_effect_registry,
@@ -89,6 +94,7 @@ impl StatusTracker {
         let mut has_shield_buff = false;
         let mut shields_broken: Vec<StatusEffectDetails> = Vec::new();
         let mut left_workshop = false;
+        let mut effects_removed = Vec::new();
 
         if let Some(ser) = registry.get_mut(&target_id) {
             for id in instance_id {
@@ -100,13 +106,20 @@ impl StatusTracker {
                         has_shield_buff = true;
                         if reason == 4 {
                             shields_broken.push(se);
+                            continue;
                         }
                     }
+                    effects_removed.push(se);
                 }
             }
         }
 
-        (has_shield_buff, shields_broken, left_workshop)
+        (
+            has_shield_buff,
+            shields_broken,
+            effects_removed,
+            left_workshop,
+        )
     }
 
     pub fn update_status_duration(
@@ -375,9 +388,14 @@ pub fn build_status_effect(
         if effect.icon_show_type.clone().unwrap_or_default() == "all" {
             show_type = All
         }
-        if effect.buff_type.as_str() == "shield" {
-            status_effect_type = StatusEffectType::Shield
-        }
+        status_effect_type = match effect.buff_type.as_str() {
+            "shield" => StatusEffectType::Shield,
+            "freeze" | "fear" | "stun" | "sleep" | "earthquake" | "electrocution"
+            | "polymorph_pc" | "forced_move" | "mind_control" | "paralyzation" => {
+                StatusEffectType::HardCrowdControl
+            }
+            _ => StatusEffectType::Other,
+        };
         db_target_type = effect.target.to_string();
 
         if let Some(source_skills) = effect.source_skills.as_ref() {
@@ -492,6 +510,7 @@ pub enum StatusEffectType {
     #[default]
     Shield = 0,
     Other = 1,
+    HardCrowdControl = 2, // stun, root, MC, etc
 }
 
 #[derive(Debug, Default, Clone)]

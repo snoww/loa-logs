@@ -6,8 +6,7 @@ use crate::live::status_tracker::{
 };
 use crate::parser::models::EntityType::*;
 use crate::parser::models::{
-    EncounterEntity, EntityType, Esther, LocalInfo, LocalPlayer, PassiveOption, ESTHER_DATA,
-    NPC_DATA, SKILL_DATA,
+    EncounterEntity, EntityType, Esther, LocalInfo, LocalPlayer, ESTHER_DATA, NPC_DATA, SKILL_DATA,
 };
 
 use chrono::{DateTime, Utc};
@@ -304,7 +303,12 @@ impl EntityTracker {
     pub fn party_status_effect_remove(
         &mut self,
         pkt: PKTPartyStatusEffectRemoveNotify,
-    ) -> (bool, Vec<StatusEffectDetails>, bool) {
+    ) -> (
+        bool,
+        Vec<StatusEffectDetails>,
+        Vec<StatusEffectDetails>,
+        bool,
+    ) {
         self.status_tracker.borrow_mut().remove_status_effects(
             pkt.character_id,
             pkt.status_effect_instance_ids,

@@ -271,6 +271,8 @@ pub struct DamageStats {
     pub rdps_damage_received: i64,
     pub rdps_damage_received_support: i64,
     pub rdps_damage_given: i64,
+    #[serde(default)]
+    pub incapacitations: Vec<IncapacitatedEvent>,
 }
 
 #[derive(Debug, Default, Serialize, Deserialize, Clone)]
@@ -333,6 +335,22 @@ pub struct Identity {
 pub struct Stagger {
     pub current: u32,
     pub max: u32,
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
+#[serde(rename_all = "camelCase")]
+pub struct IncapacitatedEvent {
+    #[serde(rename = "type")]
+    pub event_type: IncapacitationEventType,
+    pub timestamp: i64,
+    pub duration: i64, // in a live meter, this might be retroactively updated to be shortened if the user uses get up or gets incapacitated with the same type again
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
+#[allow(non_camel_case_types)]
+pub enum IncapacitationEventType {
+    FALL_DOWN,
+    CROWD_CONTROL,
 }
 
 pub type IdentityLog = Vec<(i64, (u32, u32, u32))>;
@@ -435,6 +453,8 @@ pub struct Esther {
 pub struct SkillData {
     pub id: i32,
     pub name: Option<String>,
+    #[serde(rename = "type", default)]
+    pub skill_type: String,
     pub desc: Option<String>,
     pub class_id: u32,
     pub icon: Option<String>,
@@ -723,6 +743,7 @@ pub struct LogTabs {
     pub dps: bool,
     pub damage_percent: bool,
     pub death_time: bool,
+    pub incapacitated_time: bool,
     pub crit_rate: bool,
     pub crit_dmg: bool,
     pub front_atk: bool,
@@ -774,6 +795,7 @@ pub struct MeterTabs {
     pub dps: bool,
     pub damage_percent: bool,
     pub death_time: bool,
+    pub incapacitated_time: bool,
     pub crit_rate: bool,
     pub crit_dmg: bool,
     pub front_atk: bool,

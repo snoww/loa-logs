@@ -6,7 +6,7 @@
 
 <div class="flex flex-col space-y-4 divide-y-[1px]">
     <div class="mt-4 flex flex-col space-y-2 px-2 pb-4">
-        <label class="flex flex-col pb-4 pt-2">
+        <label class="flex flex-col pt-2 pb-4">
             <div class="flex items-center justify-between px-2">
                 <div class="pb-2">
                     <div class="text-gray-100">Minimum Encounter Duration</div>
@@ -48,6 +48,10 @@
             name="Death Time"
             description="Show how long a party member has died"
             bind:setting={$settings.logs.deathTime} />
+        <SettingItem
+            name="Incapacitated Time"
+            description="Show how long a party member has been incapacitated for (e.g. on the floor, stunned, trapped)"
+            bind:setting={$settings.logs.incapacitatedTime} />
         <SettingItem
             name="Damage"
             description="Show the damage dealt by the player in the current encounter"

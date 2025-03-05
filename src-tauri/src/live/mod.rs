@@ -462,9 +462,6 @@ pub fn start(window: Window<Wry>, port: u16, settings: Option<Settings>) -> Resu
                 if let Some(pkt) = parse_pkt(&data, PKTSkillCastNotify::new, "PKTSkillCastNotify") {
                     let mut entity = entity_tracker.get_source_entity(pkt.source_id);
                     entity_tracker.guess_is_player(&mut entity, pkt.skill_id);
-                    if entity.entity_type == EntityType::PLAYER {
-                        info!("{} cast {}", entity.name, pkt.skill_id);
-                    }
                     if entity.class_id == 202 {
                         state.on_skill_start(
                             &entity,
@@ -476,17 +473,11 @@ pub fn start(window: Window<Wry>, port: u16, settings: Option<Settings>) -> Resu
                     }
                 }
             }
-            Pkt::Move => {
-                info!("move");
-            }
             Pkt::SkillStartNotify => {
                 if let Some(pkt) = parse_pkt(&data, PKTSkillStartNotify::new, "PKTSkillStartNotify")
                 {
                     let mut entity = entity_tracker.get_source_entity(pkt.source_id);
                     entity_tracker.guess_is_player(&mut entity, pkt.skill_id);
-                    if entity.entity_type == EntityType::PLAYER {
-                        info!("{} cast {}", entity.name, pkt.skill_id);
-                    }
                     let tripod_index =
                         pkt.skill_option_data
                             .tripod_index
@@ -549,18 +540,10 @@ pub fn start(window: Window<Wry>, port: u16, settings: Option<Settings>) -> Resu
                         let target_entity =
                             entity_tracker.get_or_create_entity(event.skill_damage_event.target_id);
                         let source_entity = entity_tracker.get_or_create_entity(pkt.source_id);
-                        if target_entity.entity_type == EntityType::PLAYER {
-                            info!(
-                                "abnormal damage: {} -> {}, move_time={:?}, stand_up_time={:?}, down_time={:?}, freeze_time={:?}, move_height={:?}, farmost_dist={:?}",
-                                source_entity.name, target_entity.name,
-                                event.skill_move_option_data.move_time,
-                                event.skill_move_option_data.stand_up_time,
-                                event.skill_move_option_data.down_time,
-                                event.skill_move_option_data.freeze_time,
-                                event.skill_move_option_data.move_height,
-                                event.skill_move_option_data.farmost_dist
-                            );
-                        }
+
+                        // track potential knockdown
+                        state.on_abnormal_move(&target_entity, &event.skill_move_option_data, now);
+
                         let (se_on_source, se_on_target) = status_tracker
                             .borrow_mut()
                             .get_status_effects(&owner, &target_entity, local_character_id);
@@ -701,7 +684,7 @@ pub fn start(window: Window<Wry>, port: u16, settings: Option<Settings>) -> Resu
                     PKTPartyStatusEffectRemoveNotify::new,
                     "PKTPartyStatusEffectRemoveNotify",
                 ) {
-                    let (is_shield, shields_broken, _left_workshop) =
+                    let (is_shield, shields_broken, _effects_removed, _left_workshop) =
                         entity_tracker.party_status_effect_remove(pkt);
                     if is_shield {
                         for status_effect in shields_broken {
@@ -745,6 +728,7 @@ pub fn start(window: Window<Wry>, port: u16, settings: Option<Settings>) -> Resu
                         Utc::now(),
                         Some(&state.encounter.entities),
                     );
+
                     if status_effect.status_effect_type == StatusEffectType::Shield {
                         let source = entity_tracker.get_source_entity(status_effect.source_id);
                         let target_id =
@@ -764,6 +748,13 @@ pub fn start(window: Window<Wry>, port: u16, settings: Option<Settings>) -> Resu
                             status_effect.status_effect_id,
                             status_effect.value,
                         );
+                    }
+
+                    if status_effect.status_effect_type == StatusEffectType::HardCrowdControl {
+                        let target = entity_tracker.get_source_entity(status_effect.target_id);
+                        if target.entity_type == EntityType::PLAYER {
+                            state.on_cc_applied(&target, &status_effect);
+                        }
                     }
                 }
             }
@@ -787,7 +778,7 @@ pub fn start(window: Window<Wry>, port: u16, settings: Option<Settings>) -> Resu
                     PKTStatusEffectRemoveNotify::new,
                     "PKTStatusEffectRemoveNotify",
                 ) {
-                    let (is_shield, shields_broken, _left_workshop) =
+                    let (is_shield, shields_broken, effects_removed, _left_workshop) =
                         status_tracker.borrow_mut().remove_status_effects(
                             pkt.object_id,
                             pkt.status_effect_instance_ids,
@@ -808,6 +799,15 @@ pub fn start(window: Window<Wry>, port: u16, settings: Option<Settings>) -> Resu
                                     status_effect,
                                     change,
                                 );
+                            }
+                        }
+                    }
+                    let now = Utc::now().timestamp_millis();
+                    for effect_removed in effects_removed {
+                        if effect_removed.status_effect_type == StatusEffectType::HardCrowdControl {
+                            let target = entity_tracker.get_source_entity(effect_removed.target_id);
+                            if target.entity_type == EntityType::PLAYER {
+                                state.on_cc_removed(&target, &effect_removed, now);
                             }
                         }
                     }

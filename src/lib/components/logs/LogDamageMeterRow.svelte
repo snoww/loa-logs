@@ -17,6 +17,7 @@
         anySupportIdentity: boolean;
         anySupportBrand: boolean;
         anyRdpsData: boolean;
+        anyPlayerIncapacitated: boolean;
         end: number;
         isSolo: boolean;
     }
@@ -33,6 +34,7 @@
         anySupportIdentity,
         anySupportBrand,
         anyRdpsData,
+        anyPlayerIncapacitated,
         end,
         isSolo
     }: Props = $props();
@@ -51,6 +53,7 @@
     {anySupportIdentity}
     {anySupportBrand}
     {anyRdpsData}
+    {anyPlayerIncapacitated}
     {end}
     {dps}
     dpsRaw={entity.damageStats.dps}

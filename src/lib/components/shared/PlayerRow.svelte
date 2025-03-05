@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { EntityType, type Entity } from "$lib/types";
+    import { EntityType, type Entity, type IncapacitatedEvent } from "$lib/types";
     import { HexToRgba } from "$lib/utils/colors";
     import { abbreviateNumberSplit, getBaseDamage, round } from "$lib/utils/numbers";
     import { colors, classIconCache, settings } from "$lib/utils/settings";
@@ -18,6 +18,7 @@
         anySupportIdentity: boolean;
         anySupportBrand: boolean;
         anyRdpsData: boolean;
+        anyPlayerIncapacitated: boolean;
         end: number;
         dps: (string | number)[];
         dpsRaw: number;
@@ -39,6 +40,7 @@
         anySupportIdentity,
         anySupportBrand,
         anyRdpsData,
+        anyPlayerIncapacitated,
         end,
         dps,
         dpsRaw,
@@ -113,6 +115,60 @@
             }
         }
     });
+
+    // compute total sum of time spent incapacitated for given events, accounting for overlap
+    function computeIncapacitatedTime(events: IncapacitatedEvent[]) {
+        if (!events.length) return 0;
+
+        let totalTimeIncapacitated = 0;
+
+        function addInterval(ivStart: number, ivEnd: number) {
+            // clamp interval to the most recent damage event, such that
+            // we don't count time spent incapacitated that has yet to happen
+            ivStart = Math.min(ivStart, end);
+            ivEnd = Math.min(ivEnd, end);
+            totalTimeIncapacitated += Math.max(0, ivEnd - ivStart);
+        }
+
+        // collapse concurrent events so that we don't count the same time twice
+        // note that the events array is guaranteed to be sorted by start time
+        let curIntervalStart = events[0].timestamp;
+        let curIntervalEnd = events[0].timestamp + events[0].duration;
+        for (let i = 1; i < events.length; i++) {
+            const event = events[i];
+
+            // if this event starts after the current interval ends, add the current interval to the total
+            if (event.timestamp > curIntervalEnd) {
+                addInterval(curIntervalStart, curIntervalEnd);
+                curIntervalStart = event.timestamp;
+                curIntervalEnd = event.timestamp + event.duration;
+            } else {
+                // otherwise, extend the current interval
+                curIntervalEnd = Math.max(curIntervalEnd, event.timestamp + event.duration);
+            }
+        }
+
+        // add the last interval to the total
+        addInterval(curIntervalStart, curIntervalEnd);
+        return totalTimeIncapacitated;
+    }
+
+    const incapacitatedTimeMs = $derived.by(() => {
+        const events = entity.damageStats.incapacitations;
+        return {
+            total: computeIncapacitatedTime(events),
+            knockDown: computeIncapacitatedTime(events.filter((event) => event.type === "FALL_DOWN")),
+            cc: computeIncapacitatedTime(events.filter((event) => event.type === "CROWD_CONTROL"))
+        };
+    });
+
+    const incapacitationTooltip = $derived.by(() => {
+        const { knockDown, cc } = incapacitatedTimeMs;
+        return `<div class="font-normal text-xs flex flex-col space-y-1 -mx-px py-px">
+            <span class="3xs text-gray-300">Knockdowns: ${(knockDown / 1000).toFixed(1)}s</span>
+            <span class="3xs text-gray-300">Crowd control: ${(cc / 1000).toFixed(1)}s</span>
+        </div>`;
+    });
 </script>
 
 <td class="pl-1">
@@ -146,6 +202,15 @@
             {entity.damageStats.deaths}
         {:else}
             -
+        {/if}
+    </td>
+{/if}
+{#if anyPlayerIncapacitated && meterSettings.incapacitatedTime}
+    <td class="px-1 text-center">
+        {#if incapacitatedTimeMs.total > 0}
+            <span use:tooltip={{ content: incapacitationTooltip }}>
+                {(incapacitatedTimeMs.total / 1000).toFixed(1)}s
+            </span>
         {/if}
     </td>
 {/if}

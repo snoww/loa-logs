@@ -31,7 +31,7 @@
         localPlayer,
         missingInfo
     } from "$lib/utils/stores";
-    import html2canvas from 'html2canvas-pro';
+    import html2canvas from "html2canvas-pro";
     import Details from "./Details.svelte";
     import DamageTaken from "./shared/DamageTaken.svelte";
     import BossTable from "./shared/BossTable.svelte";
@@ -344,6 +344,11 @@
         }
     });
 
+    let anyPlayerIncapacitated = $derived.by(() => {
+        if (!encounter) return false;
+        return Object.values(encounter.entities).some((e) => e.damageStats.incapacitations.length > 0);
+    });
+
     function inspectPlayer(name: string) {
         meterState = MeterState.PLAYER;
         playerName = name;
@@ -455,7 +460,7 @@
         </div>
     {/if}
     <div
-        class="relative top-7 scroll-ml-8 scroll-mt-2 overflow-scroll"
+        class="relative top-7 scroll-mt-2 scroll-ml-8 overflow-scroll"
         style="height: calc(100vh - 1.5rem - 1.75rem {currentBoss !== null ? ' - 1.75rem' : ''});">
         {#if tab === MeterTab.DAMAGE}
             {#if meterState === MeterState.PARTY}
@@ -472,6 +477,14 @@
                             {/if}
                             {#if multipleDeaths && $settings.meter.deathTime}
                                 <th class="w-14 font-normal" use:tooltip={{ content: "Death Count" }}>Deaths</th>
+                            {/if}
+                            {#if anyPlayerIncapacitated && $settings.meter.incapacitatedTime}
+                                <th
+                                    class="w-14 font-normal"
+                                    use:tooltip={{
+                                        content:
+                                            "Time spent in the air, on the floor, or affected by crowd control effects."
+                                    }}>INCAP</th>
                             {/if}
                             {#if $settings.meter.damage}
                                 <th class="w-14 font-normal" use:tooltip={{ content: "Damage Dealt" }}>DMG</th>
@@ -541,6 +554,7 @@
                                     {anySupportBuff}
                                     {anySupportIdentity}
                                     {anySupportBrand}
+                                    {anyPlayerIncapacitated}
                                     anyRdpsData={anyRdpsData && $rdpsEventDetails === ""}
                                     {isSolo} />
                             </tr>
