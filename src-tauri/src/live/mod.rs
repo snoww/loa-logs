@@ -687,7 +687,7 @@ pub fn start(window: Window<Wry>, port: u16, settings: Option<Settings>) -> Resu
                     PKTPartyStatusEffectRemoveNotify::new,
                     "PKTPartyStatusEffectRemoveNotify",
                 ) {
-                    let (is_shield, shields_broken, _left_workshop) =
+                    let (is_shield, shields_broken, _effects_removed, _left_workshop) =
                         entity_tracker.party_status_effect_remove(pkt);
                     if is_shield {
                         for status_effect in shields_broken {
@@ -731,6 +731,7 @@ pub fn start(window: Window<Wry>, port: u16, settings: Option<Settings>) -> Resu
                         Utc::now(),
                         Some(&state.encounter.entities),
                     );
+
                     if status_effect.status_effect_type == StatusEffectType::Shield {
                         let source = entity_tracker.get_source_entity(status_effect.source_id);
                         let target_id =
@@ -750,6 +751,13 @@ pub fn start(window: Window<Wry>, port: u16, settings: Option<Settings>) -> Resu
                             status_effect.status_effect_id,
                             status_effect.value,
                         );
+                    }
+
+                    if status_effect.status_effect_type == StatusEffectType::HardCrowdControl {
+                        let target = entity_tracker.get_source_entity(status_effect.target_id);
+                        if target.entity_type == EntityType::PLAYER {
+                            state.on_cc_applied(&target, &status_effect);
+                        }
                     }
                 }
             }
@@ -773,7 +781,7 @@ pub fn start(window: Window<Wry>, port: u16, settings: Option<Settings>) -> Resu
                     PKTStatusEffectRemoveNotify::new,
                     "PKTStatusEffectRemoveNotify",
                 ) {
-                    let (is_shield, shields_broken, _left_workshop) =
+                    let (is_shield, shields_broken, effects_removed, _left_workshop) =
                         status_tracker.borrow_mut().remove_status_effects(
                             pkt.object_id,
                             pkt.status_effect_instance_ids,
@@ -794,6 +802,15 @@ pub fn start(window: Window<Wry>, port: u16, settings: Option<Settings>) -> Resu
                                     status_effect,
                                     change,
                                 );
+                            }
+                        }
+                    }
+                    let now = Utc::now().timestamp_millis();
+                    for effect_removed in effects_removed {
+                        if effect_removed.status_effect_type == StatusEffectType::HardCrowdControl {
+                            let target = entity_tracker.get_source_entity(effect_removed.target_id);
+                            if target.entity_type == EntityType::PLAYER {
+                                state.on_cc_removed(&target, &effect_removed, now);
                             }
                         }
                     }

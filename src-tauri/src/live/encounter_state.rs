@@ -1120,6 +1120,71 @@ impl EncounterState {
         );
     }
 
+    pub fn on_cc_applied(&mut self, victim_entity: &Entity, status_effect: &StatusEffectDetails) {
+        let victim_entity_state = self
+            .encounter
+            .entities
+            .entry(victim_entity.name.clone())
+            .or_insert_with(|| encounter_entity_from_entity(victim_entity));
+
+        // expiration delay is negative for permanent status effects, model them as a very long duration
+        // and then we can just stop them when they expire
+        let duration_ms = if status_effect.expiration_delay <= 0.0 {
+            30.0 * 60.0 * 1000.0
+        } else {
+            status_effect.expiration_delay * 1000.0
+        };
+
+        let new_event = IncapacitatedEvent {
+            timestamp: status_effect.timestamp.timestamp_millis(),
+            duration: duration_ms as i64,
+            event_type: IncapacitationEventType::CROWD_CONTROL,
+        };
+        info!(
+            "Player {} will be status-effect incapacitated for {}ms",
+            victim_entity_state.name, duration_ms
+        );
+        victim_entity_state
+            .damage_stats
+            .incapacitations
+            .push(new_event);
+    }
+
+    pub fn on_cc_removed(
+        &mut self,
+        victim_entity: &Entity,
+        status_effect: &StatusEffectDetails,
+        timestamp: i64,
+    ) {
+        let victim_entity_state = self
+            .encounter
+            .entities
+            .entry(victim_entity.name.clone())
+            .or_insert_with(|| encounter_entity_from_entity(victim_entity));
+
+        // we use the application timestamp as the key. Attempt to find all buff instances that started
+        // at this time and cap their duration to the current timestamp
+        for event in victim_entity_state
+            .damage_stats
+            .incapacitations
+            .iter_mut()
+            .rev()
+            .take_while(|e| e.timestamp + e.duration > timestamp)
+        {
+            if event.event_type == IncapacitationEventType::CROWD_CONTROL
+                && event.timestamp == status_effect.timestamp.timestamp_millis()
+            {
+                info!(
+                    "Removing status-effect incapacitation for player {} (shortened {}ms to {}ms)",
+                    victim_entity_state.name,
+                    event.duration,
+                    timestamp - event.timestamp
+                );
+                event.duration = timestamp - event.timestamp;
+            }
+        }
+    }
+
     pub fn on_identity_gain(&mut self, pkt: &PKTIdentityGaugeChangeNotify) {
         if self.encounter.fight_start == 0 {
             return;

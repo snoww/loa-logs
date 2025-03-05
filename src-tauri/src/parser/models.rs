@@ -350,6 +350,7 @@ pub struct IncapacitatedEvent {
 #[allow(non_camel_case_types)]
 pub enum IncapacitationEventType {
     FALL_DOWN,
+    CROWD_CONTROL,
 }
 
 pub type IdentityLog = Vec<(i64, (u32, u32, u32))>;
