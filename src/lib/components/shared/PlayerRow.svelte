@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { EntityType, type Entity } from "$lib/types";
+    import { EntityType, type Entity, type IncapacitatedEvent } from "$lib/types";
     import { HexToRgba } from "$lib/utils/colors";
     import { abbreviateNumberSplit, getBaseDamage, round } from "$lib/utils/numbers";
     import { colors, classIconCache, settings } from "$lib/utils/settings";
@@ -116,8 +116,8 @@
         }
     });
 
-    const incapacitatedTimeMs = $derived.by(() => {
-        const events = entity.damageStats.incapacitations;
+    // compute total sum of time spent incapacitated for given events, accounting for overlap
+    function computeIncapacitatedTime(events: IncapacitatedEvent[]) {
         if (!events.length) return 0;
 
         let totalTimeIncapacitated = 0;
@@ -151,6 +151,23 @@
         // add the last interval to the total
         addInterval(curIntervalStart, curIntervalEnd);
         return totalTimeIncapacitated;
+    }
+
+    const incapacitatedTimeMs = $derived.by(() => {
+        const events = entity.damageStats.incapacitations;
+        return {
+            total: computeIncapacitatedTime(events),
+            knockDown: computeIncapacitatedTime(events.filter((event) => event.type === "FALL_DOWN")),
+            cc: computeIncapacitatedTime(events.filter((event) => event.type === "CROWD_CONTROL"))
+        };
+    });
+
+    const incapacitationTooltip = $derived.by(() => {
+        const { knockDown, cc } = incapacitatedTimeMs;
+        return `<div class="font-normal text-xs flex flex-col space-y-1 -mx-px py-px">
+            <span class="3xs text-gray-300">Knockdowns: ${(knockDown / 1000).toFixed(1)}s</span>
+            <span class="3xs text-gray-300">Crowd control: ${(cc / 1000).toFixed(1)}s</span>
+        </div>`;
     });
 </script>
 
@@ -190,8 +207,10 @@
 {/if}
 {#if anyPlayerIncapacitated && meterSettings.incapacitatedTime}
     <td class="px-1 text-center">
-        {#if incapacitatedTimeMs > 0}
-            {(incapacitatedTimeMs / 1000).toFixed(1)}s
+        {#if incapacitatedTimeMs.total > 0}
+            <span use:tooltip={{ content: incapacitationTooltip }}>
+                {(incapacitatedTimeMs.total / 1000).toFixed(1)}s
+            </span>
         {/if}
     </td>
 {/if}
