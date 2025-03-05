@@ -152,7 +152,9 @@
     let anySupportBuff: boolean = $derived(players.some((player) => player.damageStats.buffedBySupport > 0));
     let anySupportIdentity: boolean = $derived(players.some((player) => player.damageStats.buffedByIdentity > 0));
     let anySupportBrand: boolean = $derived(players.some((player) => player.damageStats.debuffedBySupport > 0));
-    let anySupportHat: boolean = $derived(players.some((player) => player.damageStats.buffedByHat && player.damageStats.buffedByHat > 0));
+    let anySupportHat: boolean = $derived(
+        players.some((player) => player.damageStats.buffedByHat && player.damageStats.buffedByHat > 0)
+    );
     let isSolo = $derived(players.length === 1);
 
     let meterState = $state(MeterState.PARTY);
@@ -229,9 +231,13 @@
         }
     });
 
+    $inspect(encounter)
+
     let anyPlayerIncapacitated = $derived.by(() => {
         if (!encounter) return false;
-        return Object.values(encounter.entities).some((e) => e.damageStats.incapacitations.length > 0);
+        return Object.values(encounter.entities).some(
+            (e) => e.damageStats.incapacitations && e.damageStats.incapacitations.length > 0
+        );
     });
 
     function inspectPlayer(name: string) {

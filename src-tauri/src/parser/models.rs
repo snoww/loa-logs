@@ -743,6 +743,7 @@ pub struct LogTabs {
     pub dps: bool,
     pub damage_percent: bool,
     pub death_time: bool,
+    #[serde(default = "default_true")]
     pub incapacitated_time: bool,
     pub crit_rate: bool,
     pub crit_dmg: bool,
