@@ -9,11 +9,9 @@
 
 [!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/synow)
 
-LOA Logs is a "blazingly fast" open source Lost Ark DPS meter, written in Rust by [Snow](https://github.com/snoww).
+LOA Logs is a "blazingly fast" open source Lost Ark DPS meter, written in Rust by [Snow](https://github.com/snoww), and many other great contributors from the community.
 
-This project is an opinionated flavor of [LOA Details](https://github.com/lost-ark-dev/loa-details) by Herysia and Mathi, but should share very similar user interfaces and settings. The packet sniffing and processing has been completely ported over to Rust, with [`meter-core-rs`](https://github.com/snoww/meter-core-rs). The Rust port could not be made without Herysia and Henjuro's work on [`meter-core`](https://github.com/lost-ark-dev/meter-core).
-
-This project was designed specifically with hell-raiding in mind.
+This project originated as an opinionated flavor of [LOA Details](https://github.com/lost-ark-dev/loa-details) by Herysia and Mathi. However, since then it has been completely independent and rewritten from scratch. The meter couldn't exist without the help from [@poont](https://github.com/Irrialite), [@molenzwiebel](https://github.com/molenzwiebel), [@mathi](https://github.com/Mathicha), and others.
 
 # Download
 
@@ -25,7 +23,47 @@ https://github.com/snoww/loa-logs/releases
 
 You can support me directly by buying me a [coffee.](https://www.buymeacoffee.com/synow)
 
+# Contributing to Meter
+
+Due to the nature of the encryption of the packets, the source for meter-core-rs is not public. That means you won't have access to live meter when building on your own. However, you can contribute to the UI and other parts of the project. The frontend is written in [Svelte](https://svelte.dev/), interfacing with the backend through [tauri v1](https://v1.tauri.app/v1/guides/getting-started/prerequisites) in Rust. If you're interested in contributing, please familiarize yourself with the tools and join the discord server using the panel above.
+
+### Prerequisites
+- Some version of [Node.js](https://nodejs.org/en/download/)
+- tauri & Rust (see [tauri v1 getting started](https://v1.tauri.app/v1/guides/getting-started/prerequisites))
+- Clone the repository
+- Install dependencies
+
+```bash
+npm install
+```
+
+### Setup
+
+After everything has been installed, you should be able to build the dev version of the meter. Note, without meter-core-rs, you will not get live meter to show data, however, you can still interact with previously saved logs.
+
+```bash
+npm run tauri dev
+```
+
 # FAQ
+
+### Table of Contents
+- [METER NOT WORKING AFTER MAJOR PATCH!!!](#q-meter-not-working-after-major-patch)
+- [Missing `WinDivert64.sys`](#q-missing-windivert64sys)
+- [Meter isn't detecting anything...](#q-meter-isnt-detecting-anything)
+- [How to use ExitLag?](#q-how-to-use-exitlag-with-loa-logs)
+- [How to use other ping reducers?](#q-how-to-use-other-ping-reducers-with-loa-logs)
+- [How to use a traditional VPN (e.g. NordVPN)?](#q-how-to-use-a-traditional-vpn-with-loa-logs)
+- [Class not swapping or character name is stuck on the previous character](#q-class-not-swapping-or-character-name-is-stuck-on-the-previous-character)
+- [Should I run it in a VM?](#q-should-i-run-it-in-a-vm)
+- [Meter window is missing / meter window is tiny](#q-meter-window-is-missing--meter-window-is-tiny)
+- [The installer crashes or takes forever to install](#q-the-installer-crashes-or-takes-forever-to-install)
+- [The meter crashes immediately when trying to open it. EdgeWebview2 Error.](#q-the-meter-crashes-immediately-when-trying-to-open-it-edgewebview2-error)
+- [The meter window lags a lot when dragging around.](#q-the-meter-window-lags-a-lot-when-dragging-around)
+- [Why isn't my item level shown next to my name when others have it?](#q-why-isnt-my-item-level-shown-next-to-my-name-when-others-have-it)
+- [There are too many/too few columns in the meter.](#q-there-are-too-manytoo-few-columns-in-the-meter)
+- [rDPS?](#q-are-you-going-to-implement-rdps-like-loa-details)
+- [Help, my issue isn't listed here](#q-help-my-issue-isnt-listed-here-or-youve-tried-all-these-solutions-and-it-still-doesnt-work)
 
 #### Q: METER NOT WORKING AFTER MAJOR PATCH!!!
 
@@ -33,7 +71,7 @@ A: This is normal. The meter will not work after a major game patch. The game sh
 
 #### Q: Missing `WinDivert64.sys`
 
-A: You need to reinstall meter. The meter uses the WinDivert driver to listen to game packets. You either removed the file or your antivirus removed it.
+A: You need to reinstall meter. The meter uses the WinDivert driver to listen to game packets. You either removed the file or your antivirus removed it. Please create an exception for the entire meter folder, and then reinstall the meter. After reinstalling, you should restart your computer before launching meter.
 
 #### Q: Meter isn't detecting anything...
 
@@ -87,9 +125,9 @@ A: You can change whatever column you want to show in the settings. TIP: you can
 
 A: rDPS is no longer working due to missing packets.
 
-#### Q: Help, my issue isn't listed here.
+#### Q: Help, my issue isn't listed here. Or you've tried all these solutions, and it still doesn't work.
 
-A: Create an issue here on GitHub, or send a message in the #troubleshooting channel on Discord. [(invite)](https://discord.gg/HMtnzPFHTG)
+A: Search the message history in the [#troubleshooting]((https://discord.gg/HMtnzPFHTG)) channel on Discord. If you can't find a solution there, please provide your log file and describe your issue. Open Meter > Settings > Database Tab > Open Folder > Copy the `loa_logs_rCURRENT.log` file. The log file does not contain any personal ips other than your local ip, and the ip addresses of the game servers hosted by amazon.
 
 #### Q: Is it really "blazingly fast"?
 
