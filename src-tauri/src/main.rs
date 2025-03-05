@@ -163,12 +163,12 @@ async fn main() -> Result<()> {
                 logs_window.show().unwrap();
             }
 
-            info!("listening on port: {}", port);
             remove_driver();
 
             // only start listening if we have live meter
             #[cfg(feature = "meter-core")]
             {
+                info!("listening on port: {}", port);
                 tokio::task::spawn_blocking(move || {
                     live::start(meter_window, port, settings).map_err(|e| {
                         error!("unexpected error occurred in parser: {}", e);
