@@ -30,6 +30,7 @@
     let anySupportBrand = $state(false);
     let anySupportIdentity = $state(false);
     let anySupportBuff = $state(false);
+    let anySupportHat = $state(false);
 
     let playerName: string = $derived(formatPlayerName(entity, $settings.general));
 
@@ -90,6 +91,7 @@
             anySupportBuff = skills.some((skill) => skill.buffedBySupport > 0);
             anySupportIdentity = skills.some((skill) => skill.buffedByIdentity > 0);
             anySupportBrand = skills.some((skill) => skill.debuffedBySupport > 0);
+            anySupportHat = skills.some((skill) => skill.buffedByHat && skill.buffedByHat > 0);
         }
     });
 </script>
@@ -102,6 +104,7 @@
             {hasBackAttacks}
             {anySupportBuff}
             {anySupportIdentity}
+            {anySupportHat}
             {anySupportBrand} />
     </tr>
 </thead>
@@ -176,6 +179,12 @@
                 <td class="px-1 text-center">
                     {round((entity.damageStats.buffedByIdentity / damageWithoutHa) * 100)}<span
                         class="text-3xs text-gray-300">%</span>
+                </td>
+            {/if}
+            {#if anySupportHat && $settings.logs.breakdown.percentHatBySup}
+                <td class="px-1 text-center">
+                    {round(((entity.damageStats.buffedByHat ?? 0) / entity.damageStats.damageDealt) * 100)}<span
+                    class="text-3xs text-gray-300">%</span>
                 </td>
             {/if}
             {#if $settings.logs.breakdown.avgDamage}
@@ -262,6 +271,7 @@
             {hasBackAttacks}
             {anySupportBuff}
             {anySupportIdentity}
+            {anySupportHat}
             {anySupportBrand}
             abbreviatedSkillDamage={abbreviatedSkillDamage[i]}
             playerDamageDealt={entity.damageStats.damageDealt}

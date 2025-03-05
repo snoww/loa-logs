@@ -231,8 +231,6 @@
         }
     });
 
-    $inspect(encounter)
-
     let anyPlayerIncapacitated = $derived.by(() => {
         if (!encounter) return false;
         return Object.values(encounter.entities).some(
