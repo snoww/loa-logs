@@ -194,6 +194,7 @@
     let anySupportBuff: boolean = $state(false);
     let anySupportIdentity: boolean = $state(false);
     let anySupportBrand: boolean = $state(false);
+    let anySupportHat: boolean = $state(false);
     let anyRdpsData: boolean = $state(false);
     let isSolo: boolean = $state(true);
 
@@ -315,6 +316,9 @@
                 }
                 if (!anySupportBrand) {
                     anySupportBrand = players.some((player) => player.damageStats.debuffedBySupport > 0);
+                }
+                if (!anySupportHat) {
+                    anySupportHat = players.some((player) => player.damageStats.buffedByHat && player.damageStats.buffedByHat > 0);
                 }
                 if (!anyRdpsData) {
                     anyRdpsData = players.some((player) => player.damageStats.rdpsDamageReceived > 0);
@@ -525,6 +529,13 @@
                                     >Iden%
                                 </th>
                             {/if}
+                            {#if anySupportHat && $settings.meter.percentHatBySup}
+                                <th
+                                    class="w-12 font-normal"
+                                    use:tooltip={{ content: "% Damage buffed by Support Hyper Awakening Technique (T Skill)" }}
+                                >HAT%
+                                </th>
+                            {/if}
                             {#if anyRdpsData && $rdpsEventDetails === "" && $settings.meter.ssyn}
                                 <th class="w-12 font-normal" use:tooltip={{ content: "% Damage gained from Support" }}
                                     >sSyn%
@@ -553,6 +564,7 @@
                                     {anyBackAtk}
                                     {anySupportBuff}
                                     {anySupportIdentity}
+                                    {anySupportHat}
                                     {anySupportBrand}
                                     {anyPlayerIncapacitated}
                                     anyRdpsData={anyRdpsData && $rdpsEventDetails === ""}

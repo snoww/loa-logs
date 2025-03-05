@@ -97,6 +97,10 @@
             name="Support Identity %"
             description="Show the percentage of damage buffed by support identity"
             bind:setting={$settings.logs.percentIdentityBySup} />
+        <SettingItem
+            name="Support HAT %"
+            description="Show the percentage of damage buffed by support hyper awakening technique"
+            bind:setting={$settings.logs.percentHatBySup} />
         <!--        <SettingItem-->
         <!--            name="Support Synergy %"-->
         <!--            description="Show the percentage of damage gained from support synergies"-->
@@ -194,6 +198,10 @@
                 name="Support Identity %"
                 description="Show the percentage of damage of the skill buffed by support identity"
                 bind:setting={$settings.logs.breakdown.percentIdentityBySup} />
+            <SettingItem
+                name="Support HAT %"
+                description="Show the percentage of damage of the skill buffed by support hyper awakening technique"
+                bind:setting={$settings.logs.breakdown.percentHatBySup} />
             <SettingItem
                 name="Skill Average Damage"
                 description="Show the average damage dealt by the skill"

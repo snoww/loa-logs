@@ -14,6 +14,7 @@
         anySupportBuff: boolean;
         anySupportIdentity: boolean;
         anySupportBrand: boolean;
+        anySupportHat: boolean;
         abbreviatedSkillDamage: (string | number)[];
         skillDps: (string | number)[];
         skillDpsRaw: number;
@@ -33,6 +34,7 @@
         anySupportBuff,
         anySupportIdentity,
         anySupportBrand,
+        anySupportHat,
         abbreviatedSkillDamage,
         skillDps,
         skillDpsRaw,
@@ -175,6 +177,15 @@
     <td class="px-1 text-center">
         {#if skill.totalDamage > 0}
             {round((skill.buffedByIdentity / skill.totalDamage) * 100)}<span class="text-3xs text-gray-300">%</span>
+        {:else}
+            0.0<span class="text-3xs text-gray-300">%</span>
+        {/if}
+    </td>
+{/if}
+{#if anySupportHat && currentSettings.breakdown.percentHatBySup}
+    <td class="px-1 text-center">
+        {#if skill.totalDamage > 0}
+            {round(((skill.buffedByHat ?? 0) / skill.totalDamage) * 100)}<span class="text-3xs text-gray-300">%</span>
         {:else}
             0.0<span class="text-3xs text-gray-300">%</span>
         {/if}

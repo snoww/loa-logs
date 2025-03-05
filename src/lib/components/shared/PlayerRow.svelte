@@ -17,6 +17,7 @@
         anySupportBuff: boolean;
         anySupportIdentity: boolean;
         anySupportBrand: boolean;
+        anySupportHat: boolean;
         anyRdpsData: boolean;
         anyPlayerIncapacitated: boolean;
         end: number;
@@ -39,6 +40,7 @@
         anySupportBuff,
         anySupportIdentity,
         anySupportBrand,
+        anySupportHat,
         anyRdpsData,
         anyPlayerIncapacitated,
         end,
@@ -265,6 +267,12 @@
     <td class="px-1 text-center">
         {round((entity.damageStats.buffedByIdentity / damageWithoutHa) * 100)}<span class="text-3xs text-gray-300"
             >%</span>
+    </td>
+{/if}
+{#if anySupportHat && meterSettings.percentHatBySup}
+    <td class="px-1 text-center">
+        {round(((entity.damageStats.buffedByHat ?? 0) / damageDealtRaw) * 100)}<span class="text-3xs text-gray-300"
+    >%</span>
     </td>
 {/if}
 {#if anyRdpsData && meterSettings.ssyn}

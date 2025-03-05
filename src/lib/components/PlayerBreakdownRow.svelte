@@ -12,6 +12,7 @@
         anySupportBuff: boolean;
         anySupportIdentity: boolean;
         anySupportBrand: boolean;
+        anySupportHat: boolean;
         abbreviatedSkillDamage: (string | number)[];
         skillDps: (string | number)[];
         skillDpsRaw: number;
@@ -29,6 +30,7 @@
         anySupportBuff,
         anySupportIdentity,
         anySupportBrand,
+        anySupportHat,
         abbreviatedSkillDamage,
         skillDps,
         skillDpsRaw,
@@ -56,6 +58,7 @@
     {anySupportBuff}
     {anySupportIdentity}
     {anySupportBrand}
+    {anySupportHat}
     {abbreviatedSkillDamage}
     {skillDps}
     {skillDpsRaw}

@@ -9,6 +9,7 @@
         anySupportBrand?: boolean;
         anySupportBuff?: boolean;
         anySupportIdentity?: boolean;
+        anySupportHat?: boolean;
     }
 
     let {
@@ -17,7 +18,8 @@
         hasFrontAttacks = true,
         anySupportBrand = false,
         anySupportBuff = false,
-        anySupportIdentity = false
+        anySupportIdentity = false,
+        anySupportHat = false
     }: Props = $props();
 
     let currentSettings = $state($settings.logs);
@@ -72,6 +74,9 @@
 {/if}
 {#if anySupportIdentity && currentSettings.breakdown.percentIdentityBySup}
     <th class="w-12 font-normal" use:tooltip={{ content: "% Damage buffed by Support Identity" }}>Iden%</th>
+{/if}
+{#if anySupportHat && currentSettings.breakdown.percentHatBySup}
+    <th class="w-12 font-normal" use:tooltip={{ content: "% Damage buffed by Support Hyper Awakening Technique (T Skill)" }}>HAT%</th>
 {/if}
 {#if currentSettings.breakdown.avgDamage}
     <th class="w-12 font-normal" use:tooltip={{ content: "Skill Average Damage per Hit" }}>APH</th>

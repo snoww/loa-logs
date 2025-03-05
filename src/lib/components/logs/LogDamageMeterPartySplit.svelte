@@ -16,6 +16,7 @@
         anySupportBuff: boolean;
         anySupportIdentity: boolean;
         anySupportBrand: boolean;
+        anySupportHat: boolean;
         anyRdpsData: boolean;
         anyPlayerIncapacitated: boolean;
         end: number;
@@ -33,6 +34,7 @@
         anySupportBuff,
         anySupportIdentity,
         anySupportBrand,
+        anySupportHat,
         anyRdpsData,
         anyPlayerIncapacitated,
         end,
@@ -105,6 +107,7 @@
                             {anySupportBuff}
                             {anySupportIdentity}
                             {anySupportBrand}
+                            {anySupportHat}
                             {anyRdpsData}
                             {anyPlayerIncapacitated}
                             {isSolo} />
@@ -126,6 +129,7 @@
                                 {anySupportBuff}
                                 {anySupportIdentity}
                                 {anySupportBrand}
+                                {anySupportHat}
                                 {anyRdpsData}
                                 {anyPlayerIncapacitated}
                                 {end}
@@ -152,6 +156,7 @@
                         {anySupportBuff}
                         {anySupportIdentity}
                         {anySupportBrand}
+                        {anySupportHat}
                         {anyRdpsData}
                         {isSolo} />
                 </tr>
@@ -172,6 +177,7 @@
                             {anySupportBuff}
                             {anySupportIdentity}
                             {anySupportBrand}
+                            {anySupportHat}
                             {anyPlayerIncapacitated}
                             {anyRdpsData}
                             {end}

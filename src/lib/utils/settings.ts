@@ -11,7 +11,7 @@ export const defaultSettings = {
         startLoaOnStart: false,
         lowPerformanceMode: false,
         showNames: true,
-        showGearScore: false,
+        showGearScore: true,
         hideNames: false,
         showEsther: true,
         hideLogo: false,
@@ -19,10 +19,10 @@ export const defaultSettings = {
         showDifficulty: true,
         showGate: false,
         showDetails: false,
-        showShields: false,
+        showShields: true,
         showTanked: false,
         showBosses: false,
-        splitLines: false,
+        splitLines: true,
         underlineHovered: false,
         accentColor: "theme-pink",
         rawSocket: false,
@@ -37,7 +37,7 @@ export const defaultSettings = {
         scale: "1",
         logScale: "1",
         alwaysOnTop: true,
-        bossOnlyDamage: false,
+        bossOnlyDamage: true,
         keepFavorites: true,
         hideMeterOnStart: false,
         hideLogsOnStart: false,
@@ -99,6 +99,7 @@ export const defaultSettings = {
         percentBuffBySup: false,
         percentIdentityBySup: false,
         percentBrand: false,
+        percentHatBySup: false,
         rdpsSplitParty: true,
         rdpsDamageGiven: false,
         rdpsDamageReceived: false,
@@ -125,7 +126,8 @@ export const defaultSettings = {
             hpm: false,
             percentBuffBySup: false,
             percentIdentityBySup: false,
-            percentBrand: false
+            percentBrand: false,
+            percentHatBySup: false
         }
     },
     logs: {
@@ -141,12 +143,13 @@ export const defaultSettings = {
         critDmg: false,
         frontAtk: true,
         backAtk: true,
-        counters: false,
+        counters: true,
         minEncounterDuration: 30,
         positionalDmgPercent: true,
-        percentBuffBySup: false,
-        percentIdentityBySup: false,
-        percentBrand: false,
+        percentBuffBySup: true,
+        percentIdentityBySup: true,
+        percentHatBySup: true,
+        percentBrand: true,
         rdpsSplitParty: true,
         rdpsDamageGiven: true,
         rdpsDamageReceived: true,
@@ -174,7 +177,8 @@ export const defaultSettings = {
             hpm: false,
             percentBuffBySup: false,
             percentIdentityBySup: false,
-            percentBrand: false
+            percentBrand: false,
+            percentHatBySup: false
         }
     },
     buffs: {

@@ -152,6 +152,7 @@
     let anySupportBuff: boolean = $derived(players.some((player) => player.damageStats.buffedBySupport > 0));
     let anySupportIdentity: boolean = $derived(players.some((player) => player.damageStats.buffedByIdentity > 0));
     let anySupportBrand: boolean = $derived(players.some((player) => player.damageStats.debuffedBySupport > 0));
+    let anySupportHat: boolean = $derived(players.some((player) => player.damageStats.buffedByHat && player.damageStats.buffedByHat > 0));
     let isSolo = $derived(players.length === 1);
 
     let meterState = $state(MeterState.PARTY);
@@ -734,6 +735,7 @@
                             {anySupportBuff}
                             {anySupportIdentity}
                             {anySupportBrand}
+                            {anySupportHat}
                             {anyRdpsData}
                             {anyPlayerIncapacitated}
                             end={encounter.lastCombatPacket}
@@ -754,6 +756,7 @@
                                         {anySupportBuff}
                                         {anySupportIdentity}
                                         {anySupportBrand}
+                                        {anySupportHat}
                                         {anyRdpsData}
                                         {anyPlayerIncapacitated}
                                         {isSolo} />
@@ -777,6 +780,7 @@
                                             {anySupportBuff}
                                             {anySupportIdentity}
                                             {anySupportBrand}
+                                            {anySupportHat}
                                             {anyRdpsData}
                                             {anyPlayerIncapacitated}
                                             end={encounter.lastCombatPacket}

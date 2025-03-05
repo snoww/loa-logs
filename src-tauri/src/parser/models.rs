@@ -748,11 +748,16 @@ pub struct LogTabs {
     pub crit_dmg: bool,
     pub front_atk: bool,
     pub back_atk: bool,
+    #[serde(default = "default_true")]
     pub percent_buff_by_sup: bool,
+    #[serde(default = "default_true")]
     pub percent_identity_by_sup: bool,
     #[serde(default = "default_true")]
-    pub positional_dmg_percent: bool,
     pub percent_brand: bool,
+    #[serde(default = "default_true")]
+    pub percent_hat_by_sup: bool,
+    #[serde(default = "default_true")]
+    pub positional_dmg_percent: bool,
     pub counters: bool,
     pub min_encounter_duration: i32,
     #[serde(default = "default_true")]
@@ -800,11 +805,12 @@ pub struct MeterTabs {
     pub crit_dmg: bool,
     pub front_atk: bool,
     pub back_atk: bool,
+    pub percent_brand: bool,
     pub percent_buff_by_sup: bool,
     pub percent_identity_by_sup: bool,
+    pub percent_hat_by_sup: bool,
     #[serde(default = "default_true")]
     pub positional_dmg_percent: bool,
-    pub percent_brand: bool,
     pub counters: bool,
     #[serde(default = "default_true")]
     pub rdps_split_party: bool,
@@ -836,6 +842,7 @@ pub struct BreakdownTabs {
     pub back_atk: bool,
     pub percent_buff_by_sup: bool,
     pub percent_identity_by_sup: bool,
+    pub percent_hat_by_sup: bool,
     pub percent_brand: bool,
     pub avg_damage: bool,
     pub max_damage: bool,

@@ -28,6 +28,7 @@
     let anySupportBrand = $state(false);
     let anySupportIdentity = $state(false);
     let anySupportBuff = $state(false);
+    let anySupportHat = $state(false);
 
     $effect(() => {
         if (entity) {
@@ -53,6 +54,7 @@
             anySupportBuff = skills.some((skill) => skill.buffedBySupport > 0);
             anySupportIdentity = skills.some((skill) => skill.buffedByIdentity > 0);
             anySupportBrand = skills.some((skill) => skill.debuffedBySupport > 0);
+            anySupportHat = skills.some((skill) => skill.buffedByHat && skill.buffedByHat > 0);
         }
     });
 
@@ -79,14 +81,15 @@
             {hasBackAttacks}
             {anySupportBuff}
             {anySupportIdentity}
-            {anySupportBrand} />
+            {anySupportBrand}
+            {anySupportHat} />
     </tr>
 </thead>
 <tbody oncontextmenu={handleRightClick} class="relative z-10">
     {#if entity}
         {#each skills as skill, i (skill.id)}
             <tr
-                class="h-7 px-2 py-1 text-3xs {$settings.general.underlineHovered ? 'hover:underline' : ''}"
+                class="text-3xs h-7 px-2 py-1 {$settings.general.underlineHovered ? 'hover:underline' : ''}"
                 animate:flip={{ duration: 200 }}>
                 <PlayerBreakdownRow
                     {skill}
@@ -96,6 +99,7 @@
                     {anySupportBuff}
                     {anySupportIdentity}
                     {anySupportBrand}
+                    {anySupportHat}
                     abbreviatedSkillDamage={abbreviatedSkillDamage[i]}
                     playerDamageDealt={entity.damageStats.damageDealt}
                     damagePercentage={skillDamagePercentages[i]}

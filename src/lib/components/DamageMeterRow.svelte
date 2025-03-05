@@ -19,6 +19,7 @@
         anySupportBuff: boolean;
         anySupportIdentity: boolean;
         anySupportBrand: boolean;
+        anySupportHat: boolean;
         anyRdpsData: boolean;
         anyPlayerIncapacitated: boolean;
         isSolo: boolean;
@@ -37,6 +38,7 @@
         anySupportBuff,
         anySupportIdentity,
         anySupportBrand,
+        anySupportHat,
         anyRdpsData,
         anyPlayerIncapacitated,
         isSolo
@@ -82,6 +84,7 @@
     {anySupportBuff}
     {anySupportIdentity}
     {anySupportBrand}
+    {anySupportHat}
     {anyRdpsData}
     {anyPlayerIncapacitated}
     {dpsRaw}

@@ -10,6 +10,7 @@
         anySupportBuff: boolean;
         anySupportIdentity: boolean;
         anySupportBrand: boolean;
+        anySupportHat: boolean;
         anyRdpsData: boolean;
         anyPlayerIncapacitated: boolean;
         isSolo: boolean;
@@ -23,6 +24,7 @@
         anySupportBuff,
         anySupportIdentity,
         anySupportBrand,
+        anySupportHat,
         anyRdpsData,
         anyPlayerIncapacitated,
         isSolo
@@ -71,6 +73,9 @@
 {/if}
 {#if anySupportIdentity && $settings.logs.percentIdentityBySup}
     <th class="w-12 font-normal" use:tooltip={{ content: "% Damage buffed by Support Identity" }}>Iden% </th>
+{/if}
+{#if anySupportHat && $settings.logs.percentHatBySup}
+    <th class="w-12 font-normal" use:tooltip={{ content: "% Damage buffed by Support Hyper Awakening Technique" }}>HAT% </th>
 {/if}
 {#if anyRdpsData && $settings.logs.ssyn}
     <th class="w-12 font-normal" use:tooltip={{ content: "% Damage gained from Support" }}>sSyn% </th>
