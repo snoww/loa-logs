@@ -1127,22 +1127,22 @@ impl EncounterState {
             .entry(victim_entity.name.clone())
             .or_insert_with(|| encounter_entity_from_entity(victim_entity));
 
-        // expiration delay is negative for permanent status effects, model them as a very long duration
-        // and then we can just stop them when they expire
-        let duration_ms = if status_effect.expiration_delay <= 0.0 {
-            30.0 * 60.0 * 1000.0
-        } else {
-            status_effect.expiration_delay * 1000.0
-        };
+        // expiration delay is zero or negative for infinite effects. Instead of applying them now,
+        // only apply them after they've been removed (this avoids an issue where if we miss the removal
+        // we end up applying a very long incapacitation)
+        if status_effect_is_infinite(status_effect) {
+            return;
+        }
 
+        let duration_ms = status_effect.expiration_delay * 1000.0;
         let new_event = IncapacitatedEvent {
             timestamp: status_effect.timestamp.timestamp_millis(),
             duration: duration_ms as i64,
             event_type: IncapacitationEventType::CROWD_CONTROL,
         };
         info!(
-            "Player {} will be status-effect incapacitated for {}ms",
-            victim_entity_state.name, duration_ms
+            "Player {} will be status-effect incapacitated for {}ms by buff {}",
+            victim_entity_state.name, duration_ms, status_effect.status_effect_id
         );
         victim_entity_state
             .damage_stats
@@ -1162,6 +1162,31 @@ impl EncounterState {
             .entry(victim_entity.name.clone())
             .or_insert_with(|| encounter_entity_from_entity(victim_entity));
 
+        if status_effect_is_infinite(status_effect) {
+            // this status effect was infinite, meaning we didn't apply it on_cc_applied
+            // apply it now retroactively, then sort the events to ensure that our sorted
+            // invariant does not get violated
+            let duration_ms = timestamp - status_effect.timestamp.timestamp_millis();
+            let new_event = IncapacitatedEvent {
+                timestamp: status_effect.timestamp.timestamp_millis(),
+                duration: duration_ms,
+                event_type: IncapacitationEventType::CROWD_CONTROL,
+            };
+            info!(
+                "Player {} was incapacitated by an infinite status effect buff for {}ms",
+                victim_entity_state.name, duration_ms
+            );
+            victim_entity_state
+                .damage_stats
+                .incapacitations
+                .push(new_event);
+            victim_entity_state
+                .damage_stats
+                .incapacitations
+                .sort_by_key(|x| x.timestamp);
+            return;
+        }
+
         // we use the application timestamp as the key. Attempt to find all buff instances that started
         // at this time and cap their duration to the current timestamp
         for event in victim_entity_state
@@ -1175,7 +1200,8 @@ impl EncounterState {
                 && event.timestamp == status_effect.timestamp.timestamp_millis()
             {
                 info!(
-                    "Removing status-effect incapacitation for player {} (shortened {}ms to {}ms)",
+                    "Removing status-effect {} incapacitation for player {} (shortened {}ms to {}ms)",
+                    status_effect.status_effect_id,
                     victim_entity_state.name,
                     event.duration,
                     timestamp - event.timestamp
@@ -1576,4 +1602,9 @@ impl EncounterState {
             }
         });
     }
+}
+
+fn status_effect_is_infinite(status_effect: &StatusEffectDetails) -> bool {
+    // infinite if duration is (sub-)zero or longer than an hour
+    status_effect.expiration_delay <= 0.0 || status_effect.expiration_delay > 3600.0
 }
