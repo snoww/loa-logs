@@ -533,7 +533,7 @@
                                 <th
                                     class="w-12 font-normal"
                                     use:tooltip={{ content: "% Damage buffed by Support Hyper Awakening Technique (T Skill)" }}
-                                >HAT%
+                                >T%
                                 </th>
                             {/if}
                             {#if anyRdpsData && $rdpsEventDetails === "" && $settings.meter.ssyn}

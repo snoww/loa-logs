@@ -76,7 +76,7 @@
     <th class="w-12 font-normal" use:tooltip={{ content: "% Damage buffed by Support Identity" }}>Iden%</th>
 {/if}
 {#if anySupportHat && currentSettings.breakdown.percentHatBySup}
-    <th class="w-12 font-normal" use:tooltip={{ content: "% Damage buffed by Support Hyper Awakening Technique (T Skill)" }}>HAT%</th>
+    <th class="w-12 font-normal" use:tooltip={{ content: "% Damage buffed by Support Hyper Awakening Technique (T Skill)" }}>T%</th>
 {/if}
 {#if currentSettings.breakdown.avgDamage}
     <th class="w-12 font-normal" use:tooltip={{ content: "Skill Average Damage per Hit" }}>APH</th>
