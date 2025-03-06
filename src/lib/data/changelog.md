@@ -1,17 +1,29 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.25.3
+    v1.25.4
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
   </div>
 </div>
 
+
+#### NEW FEATURES
+- added new column **_Incapacitated_** (i.e. floor pov timer) to both meter and log (thanks to @molenzwiebel)
+
+![incap](https://i.imgur.com/JZaVY95.png)
+- added new column **_HAT%_** to both meter and log to show support hyper awakening technique percentage in damage tab
+
+![hat](https://i.imgur.com/drhg8kS.png)
+
+- [dev] added development environment setup in readme for people looking to help contribute to the project
+
+
+### v1.25.4
 #### BUG FIXES AND IMPROVEMENTS
 - fixed wildsoul fox orb skill showing as skill id
 - fixed act 2: brel npc names counting as bosses
 - fixed thaemine prokel name
-
 
 ### V1.25.2
 #### NEW FEATURES

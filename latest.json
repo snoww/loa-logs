@@ -1,11 +1,11 @@
 {
-    "version": "v1.25.3",
-    "notes": "### v1.25.3\n\n#### BUG FIXES AND IMPROVEMENTS\n- fixed wildsoul fox orb skill showing as skill id\n- fixed act 2: brel npc names counting as bosses\n- fixed thaemine prokel name\n\n\nsend bug reports/suggestions to [ramen shop server](https://discord.gg/RXvTMV2YHu)\n",
-    "pub_date": "2025-03-02T00:39:54.507Z",
+    "version": "v1.25.4",
+    "notes": "### v1.25.4\n\n#### NEW FEATURES\n- added new column **_Incapacitated_** (i.e. floor pov timer) to both meter and log (thanks to @molenzwiebel)\n\n![incap](https://i.imgur.com/JZaVY95.png)\n- added new column **_HAT%_** to both meter and log to show support hyper awakening technique percentage in damage tab\n\n![hat](https://i.imgur.com/drhg8kS.png)\n\n\n- [dev] added development environment setup in readme for people looking to help contribute to the project\n\nsend bug reports/suggestions to [ramen shop server](https://discord.gg/RXvTMV2YHu)\n",
+    "pub_date": "2025-03-06T04:32:13.288Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.25.3/LOA.Logs_1.25.3_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmU4NWR1RWZCOWpScUVEaXdKRi9Lekw5dHpGejhOdmtmbnZmRlN1eGNVTG8xTlhFdWZSWXZYcElqNVpSU1IzNUFjRmZxRENCVWYzbU9CRlBXc0RkblFjPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzQwODc2MDA5CWZpbGU6TE9BIExvZ3NfMS4yNS4zX3g2NC1zZXR1cC5uc2lzLnppcAp2UDhGTTM3aDlkZm82TmxUMThqcFRwR2ZncFVWL0xjd3pxR3dHbTh5amFKUEx0RkdzYUZpN3YxMHg5T1l2Vjc2ckQ0YkZNM05QU3hFQkptY24rVzdCZz09Cg=="
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.25.4/LOA.Logs_1.25.4_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmZpSkxRMU5za2luRGt0ZjF2aG1Oa3RVaks0VjFaMThIRWFWR1NaSHBlS2QySHpuWGJDK0xrbU9uTnhUTHplWVZ1ZEZwcWFZUGpOd2NQcFRXRVlieVFvPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzQxMjM1NzE2CWZpbGU6TE9BIExvZ3NfMS4yNS40X3g2NC1zZXR1cC5uc2lzLnppcApqdVJ4MlBDY21WSTF3VG9ld3FwdHl6VGoyd3V5OERxQldsTVVDS1ZBZUxZbEZESlphdm05eGF3cDZNVzN0LzZhQ0RTazBOS21hVXVYb0kycUwvdlNBQT09Cg=="
         }
     }
 }
