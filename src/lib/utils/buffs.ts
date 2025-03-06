@@ -267,7 +267,7 @@ export function calculatePartyWidth(
     return partyWidths;
 }
 
-export function addBardBubbles(key: string, buff: Buff, syn: StatusEffect) {
+export function addBardBubbles(key: string, buff: { bonus?: number }, syn: StatusEffect) {
     if (key.includes("serenadeofcourage")) {
         if (syn.source.desc.includes("15%")) {
             buff.bonus = 15;
@@ -290,7 +290,7 @@ export function addBardBubbles(key: string, buff: Buff, syn: StatusEffect) {
 
 const supportClasses = [classNameToClassId["Paladin"], classNameToClassId["Bard"], classNameToClassId["Artist"]];
 
-function isSupportBuff(statusEffect: StatusEffect) {
+export function isSupportBuff(statusEffect: StatusEffect) {
     if ([2000260, 2000360].includes(statusEffect.uniqueGroup)) {
         return true;
     }
@@ -355,7 +355,7 @@ export const supportSkills = {
     ]
 };
 
-function makeSupportBuffKey(statusEffect: StatusEffect) {
+export function makeSupportBuffKey(statusEffect: StatusEffect) {
     const skillId = statusEffect.source.skill?.id ?? 0;
     let key = "__";
     key += `${classesMap[statusEffect.source.skill?.classId ?? 0]}`;
@@ -394,7 +394,7 @@ const buffCategories = {
     other: ["etc", "arkpassive"]
 };
 
-function isPartySynergy(statusEffect: StatusEffect) {
+export function isPartySynergy(statusEffect: StatusEffect) {
     return (
         buffCategories.partySynergy.includes(statusEffect.buffCategory) &&
         statusEffect.target === StatusEffectTarget.PARTY
