@@ -43,7 +43,7 @@
                             {/if}
                         </div>
                         <div
-                            class="prose-headings:text-gray-200 prose-a:text-accent-500 prose prose-sm prose-zinc prose-invert prose-img:-my-2 prose-img:rounded-md prose-img:border prose-img:border-zinc-600 prose-img:shadow-md mb-5 text-gray-200"
+                            class="prose-strong:text-gray-200 prose-em:text-gray-200 prose-headings:text-gray-200 prose-a:text-accent-500 prose prose-sm prose-zinc prose-invert prose-img:-my-2 prose-img:rounded-md prose-img:border prose-img:border-zinc-600 prose-img:shadow-md mb-5 text-gray-200"
                             id="notes">
                             {@html $markdownIt.render($updateSettings.manifest.body)}
                         </div>
