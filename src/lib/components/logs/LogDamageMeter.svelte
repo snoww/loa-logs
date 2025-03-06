@@ -43,6 +43,7 @@
         getSkillLogChart,
         getSkillLogChartOld
     } from "$lib/utils/dpsCharts";
+    import { getSupportSynergiesOverTime, getSupportSynergiesOverTimeChart } from "$lib/utils/supportBuffCharts";
     import OpenerSkills from "./OpenerSkills.svelte";
     import ArcanistCardTable from "../shared/ArcanistCardTable.svelte";
     import DamageTaken from "../shared/DamageTaken.svelte";
@@ -197,6 +198,82 @@
                     1
                 );
                 chartOptions = getRollingDpsChart(chartablePlayers, legendNames, chartPlayers, bossChart, deathTimes);
+            } else if (chartType === ChartType.BRAND_BUFF) {
+                const legendNames = new Array<string>();
+                const intervalMs = 5000;
+                let buffsSeries = getSupportSynergiesOverTime(
+                    encounter,
+                    chartablePlayers,
+                    encounter.encounterDamageStats.misc?.partyInfo! || {},
+                    encounter.fightStart,
+                    encounter.lastCombatPacket,
+                    intervalMs,
+                    legendNames,
+                );
+                let bossChart = getBossHpSeries(
+                    bossHpLogs,
+                    legendNames,
+                    buffsSeries[0].data.length,
+                    5
+                );
+                chartOptions = getSupportSynergiesOverTimeChart(legendNames, buffsSeries, '_1_', bossChart, $skillIcon.path);
+            } else if (chartType === ChartType.AP_BUFF) {
+                const legendNames = new Array<string>();
+                const intervalMs = 5000;
+                let buffsSeries = getSupportSynergiesOverTime(
+                    encounter,
+                    chartablePlayers,
+                    encounter.encounterDamageStats.misc?.partyInfo! || {},
+                    encounter.fightStart,
+                    encounter.lastCombatPacket,
+                    intervalMs,
+                    legendNames,
+                );
+                let bossChart = getBossHpSeries(
+                    bossHpLogs,
+                    legendNames,
+                    buffsSeries[0].data.length,
+                    5
+                );
+                chartOptions = getSupportSynergiesOverTimeChart(legendNames, buffsSeries, '_0_', bossChart, $skillIcon.path);
+            } else if (chartType === ChartType.IDENTITY_BUFF) {
+                const legendNames = new Array<string>();
+                const intervalMs = 5000;
+                let buffsSeries = getSupportSynergiesOverTime(
+                    encounter,
+                    chartablePlayers,
+                    encounter.encounterDamageStats.misc?.partyInfo! || {},
+                    encounter.fightStart,
+                    encounter.lastCombatPacket,
+                    intervalMs,
+                    legendNames,
+                );
+                let bossChart = getBossHpSeries(
+                    bossHpLogs,
+                    legendNames,
+                    buffsSeries[0].data.length,
+                    5
+                );
+                chartOptions = getSupportSynergiesOverTimeChart(legendNames, buffsSeries, '_2_', bossChart, $skillIcon.path);
+            } else if (chartType === ChartType.HAT_BUFF) {
+                const legendNames = new Array<string>();
+                const intervalMs = 5000;
+                let buffsSeries = getSupportSynergiesOverTime(
+                    encounter,
+                    chartablePlayers,
+                    encounter.encounterDamageStats.misc?.partyInfo! || {},
+                    encounter.fightStart,
+                    encounter.lastCombatPacket,
+                    intervalMs,
+                    legendNames,
+                );
+                let bossChart = getBossHpSeries(
+                    bossHpLogs,
+                    legendNames,
+                    buffsSeries[0].data.length,
+                    5
+                );
+                chartOptions = getSupportSynergiesOverTimeChart(legendNames, buffsSeries, '_3_', bossChart, $skillIcon.path);
             } else if (chartType === ChartType.SKILL_LOG && player && player.entityType === EntityType.PLAYER) {
                 if (
                     Object.entries(player.skills).some(
@@ -879,6 +956,34 @@
                         onclick={() => (chartType = ChartType.ROLLING_DPS)}>
                         10s DPS Window
                     </button>
+                    <button
+                        class="rounded-sm px-2 py-1"
+                        class:bg-accent-900={chartType === ChartType.BRAND_BUFF}
+                        class:bg-gray-700={chartType !== ChartType.BRAND_BUFF}
+                        onclick={() => (chartType = ChartType.BRAND_BUFF)}>
+                        Brand Buffs
+                    </button>
+                    <button
+                        class="rounded-sm px-2 py-1"
+                        class:bg-accent-900={chartType === ChartType.AP_BUFF}
+                        class:bg-gray-700={chartType !== ChartType.AP_BUFF}
+                        onclick={() => (chartType = ChartType.AP_BUFF)}>
+                        AP Buffs
+                    </button>
+                    <button
+                        class="rounded-sm px-2 py-1"
+                        class:bg-accent-900={chartType === ChartType.IDENTITY_BUFF}
+                        class:bg-gray-700={chartType !== ChartType.IDENTITY_BUFF}
+                        onclick={() => (chartType = ChartType.IDENTITY_BUFF)}>
+                        Identity Buffs
+                    </button>
+                    <button
+                        class="rounded-sm px-2 py-1"
+                        class:bg-accent-900={chartType === ChartType.HAT_BUFF}
+                        class:bg-gray-700={chartType !== ChartType.HAT_BUFF}
+                        onclick={() => (chartType = ChartType.HAT_BUFF)}>
+                        Hyper Awakening Technique Buffs
+                    </button>
                 {:else if playerName !== "" && meterState === MeterState.PLAYER}
                     <!--  -->
                 {/if}
@@ -896,6 +1001,14 @@
             {:else}
                 <div class="mt-2 h-[300px]" use:chartable={chartOptions} style="width: calc(100vw - 4.5rem);"></div>
             {/if}
+        {:else if chartType === ChartType.BRAND_BUFF}
+            <div class="mt-2 h-[300px]" use:chartable={chartOptions} style="width: calc(100vw - 4.5rem);"></div>
+        {:else if chartType === ChartType.AP_BUFF}
+            <div class="mt-2 h-[300px]" use:chartable={chartOptions} style="width: calc(100vw - 4.5rem);"></div>
+        {:else if chartType === ChartType.IDENTITY_BUFF}
+            <div class="mt-2 h-[300px]" use:chartable={chartOptions} style="width: calc(100vw - 4.5rem);"></div>
+        {:else if chartType === ChartType.HAT_BUFF}
+            <div class="mt-2 h-[300px]" use:chartable={chartOptions} style="width: calc(100vw - 4.5rem);"></div>
         {:else if chartType === ChartType.SKILL_LOG}
             {#if player && player.entityType === EntityType.PLAYER && hasSkillCastLog}
                 <LogSkillChart {chartOptions} {player} encounterDamageStats={encounter.encounterDamageStats} />
