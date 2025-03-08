@@ -90,6 +90,14 @@
 
     let encounterPartyInfo: PartyInfo | undefined = $state(encounter.encounterDamageStats.misc?.partyInfo);
 
+    const hasAnySkillCastLog = $derived.by(() => {
+        return players.some((player) => {
+            return Object.entries(player.skills).some(([, skill]) => {
+                return skill.skillCastLog && skill.skillCastLog.length > 0;
+            });
+        });
+    });
+
     $effect(() => {
         if ($settings.general.showBosses) {
             bosses = Object.values(encounter.entities)
@@ -208,15 +216,16 @@
                     encounter.fightStart,
                     encounter.lastCombatPacket,
                     intervalMs,
-                    legendNames,
+                    legendNames
                 );
-                let bossChart = getBossHpSeries(
-                    bossHpLogs,
+                let bossChart = getBossHpSeries(bossHpLogs, legendNames, buffsSeries[0].data.length, 5);
+                chartOptions = getSupportSynergiesOverTimeChart(
                     legendNames,
-                    buffsSeries[0].data.length,
-                    5
+                    buffsSeries,
+                    "_1_",
+                    bossChart,
+                    $skillIcon.path
                 );
-                chartOptions = getSupportSynergiesOverTimeChart(legendNames, buffsSeries, '_1_', bossChart, $skillIcon.path);
             } else if (chartType === ChartType.AP_BUFF) {
                 const legendNames = new Array<string>();
                 const intervalMs = 5000;
@@ -227,15 +236,16 @@
                     encounter.fightStart,
                     encounter.lastCombatPacket,
                     intervalMs,
-                    legendNames,
+                    legendNames
                 );
-                let bossChart = getBossHpSeries(
-                    bossHpLogs,
+                let bossChart = getBossHpSeries(bossHpLogs, legendNames, buffsSeries[0].data.length, 5);
+                chartOptions = getSupportSynergiesOverTimeChart(
                     legendNames,
-                    buffsSeries[0].data.length,
-                    5
+                    buffsSeries,
+                    "_0_",
+                    bossChart,
+                    $skillIcon.path
                 );
-                chartOptions = getSupportSynergiesOverTimeChart(legendNames, buffsSeries, '_0_', bossChart, $skillIcon.path);
             } else if (chartType === ChartType.IDENTITY_BUFF) {
                 const legendNames = new Array<string>();
                 const intervalMs = 5000;
@@ -246,15 +256,16 @@
                     encounter.fightStart,
                     encounter.lastCombatPacket,
                     intervalMs,
-                    legendNames,
+                    legendNames
                 );
-                let bossChart = getBossHpSeries(
-                    bossHpLogs,
+                let bossChart = getBossHpSeries(bossHpLogs, legendNames, buffsSeries[0].data.length, 5);
+                chartOptions = getSupportSynergiesOverTimeChart(
                     legendNames,
-                    buffsSeries[0].data.length,
-                    5
+                    buffsSeries,
+                    "_2_",
+                    bossChart,
+                    $skillIcon.path
                 );
-                chartOptions = getSupportSynergiesOverTimeChart(legendNames, buffsSeries, '_2_', bossChart, $skillIcon.path);
             } else if (chartType === ChartType.HAT_BUFF) {
                 const legendNames = new Array<string>();
                 const intervalMs = 5000;
@@ -265,15 +276,16 @@
                     encounter.fightStart,
                     encounter.lastCombatPacket,
                     intervalMs,
-                    legendNames,
+                    legendNames
                 );
-                let bossChart = getBossHpSeries(
-                    bossHpLogs,
+                let bossChart = getBossHpSeries(bossHpLogs, legendNames, buffsSeries[0].data.length, 5);
+                chartOptions = getSupportSynergiesOverTimeChart(
                     legendNames,
-                    buffsSeries[0].data.length,
-                    5
+                    buffsSeries,
+                    "_3_",
+                    bossChart,
+                    $skillIcon.path
                 );
-                chartOptions = getSupportSynergiesOverTimeChart(legendNames, buffsSeries, '_3_', bossChart, $skillIcon.path);
             } else if (chartType === ChartType.SKILL_LOG && player && player.entityType === EntityType.PLAYER) {
                 if (
                     Object.entries(player.skills).some(
@@ -471,10 +483,7 @@
                 return;
             }
 
-            const canvas = await html2canvas(targetDiv, {
-                useCORS: true,
-                backgroundColor: "#27272A"
-            });
+            const canvas = await html2canvas(targetDiv, { useCORS: true, backgroundColor: "#27272A" });
 
             canvas.toBlob(async (blob) => {
                 if (!blob) return;
@@ -956,34 +965,44 @@
                         onclick={() => (chartType = ChartType.ROLLING_DPS)}>
                         10s DPS Window
                     </button>
-                    <button
-                        class="rounded-sm px-2 py-1"
-                        class:bg-accent-900={chartType === ChartType.BRAND_BUFF}
-                        class:bg-gray-700={chartType !== ChartType.BRAND_BUFF}
-                        onclick={() => (chartType = ChartType.BRAND_BUFF)}>
-                        Brand Buffs
-                    </button>
-                    <button
-                        class="rounded-sm px-2 py-1"
-                        class:bg-accent-900={chartType === ChartType.AP_BUFF}
-                        class:bg-gray-700={chartType !== ChartType.AP_BUFF}
-                        onclick={() => (chartType = ChartType.AP_BUFF)}>
-                        AP Buffs
-                    </button>
-                    <button
-                        class="rounded-sm px-2 py-1"
-                        class:bg-accent-900={chartType === ChartType.IDENTITY_BUFF}
-                        class:bg-gray-700={chartType !== ChartType.IDENTITY_BUFF}
-                        onclick={() => (chartType = ChartType.IDENTITY_BUFF)}>
-                        Identity Buffs
-                    </button>
-                    <button
-                        class="rounded-sm px-2 py-1"
-                        class:bg-accent-900={chartType === ChartType.HAT_BUFF}
-                        class:bg-gray-700={chartType !== ChartType.HAT_BUFF}
-                        onclick={() => (chartType = ChartType.HAT_BUFF)}>
-                        Hyper Awakening Technique Buffs
-                    </button>
+                    {#if hasAnySkillCastLog}
+                        {#if anySupportBrand}
+                            <button
+                                class="rounded-sm px-2 py-1"
+                                class:bg-accent-900={chartType === ChartType.BRAND_BUFF}
+                                class:bg-gray-700={chartType !== ChartType.BRAND_BUFF}
+                                onclick={() => (chartType = ChartType.BRAND_BUFF)}>
+                                Brand Buffs
+                            </button>
+                        {/if}
+                        {#if anySupportBuff}
+                            <button
+                                class="rounded-sm px-2 py-1"
+                                class:bg-accent-900={chartType === ChartType.AP_BUFF}
+                                class:bg-gray-700={chartType !== ChartType.AP_BUFF}
+                                onclick={() => (chartType = ChartType.AP_BUFF)}>
+                                AP Buffs
+                            </button>
+                        {/if}
+                        {#if anySupportIdentity}
+                            <button
+                                class="rounded-sm px-2 py-1"
+                                class:bg-accent-900={chartType === ChartType.IDENTITY_BUFF}
+                                class:bg-gray-700={chartType !== ChartType.IDENTITY_BUFF}
+                                onclick={() => (chartType = ChartType.IDENTITY_BUFF)}>
+                                Identity Buffs
+                            </button>
+                        {/if}
+                        {#if anySupportHat}
+                            <button
+                                class="rounded-sm px-2 py-1"
+                                class:bg-accent-900={chartType === ChartType.HAT_BUFF}
+                                class:bg-gray-700={chartType !== ChartType.HAT_BUFF}
+                                onclick={() => (chartType = ChartType.HAT_BUFF)}>
+                                Hyper Awakening Technique Buffs
+                            </button>
+                        {/if}
+                    {/if}
                 {:else if playerName !== "" && meterState === MeterState.PLAYER}
                     <!--  -->
                 {/if}
