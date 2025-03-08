@@ -19,6 +19,7 @@ import { getSkillIcon } from "./strings";
 
 const partyRegex = /^Party #(\d)$/;
 const partyColors = ['#008000', '#800080', '#87CEEB', '#FFFF00']
+const buffBreakdownTooltipWidth = 120;
 
 class SupportSynergyDataPoint {
     totalDamage: number;
@@ -98,6 +99,9 @@ function addStatusEffect(map: Map<string, Map<number, StatusEffect>>, effect: [s
         return;
     }
     const key = makeSupportBuffKey(statusEffect);
+    if (key.includes("Moonfall")) {
+        return;
+    }
     const idNumber = Number(id);
     groupedSynergiesAdd(map, key, idNumber, statusEffect, null, true);
 }
@@ -272,7 +276,8 @@ export function getSupportSynergiesOverTimeChart(
             formatter: function (params: any[]) {
                 const time = params[0].name;
                 const bossTooltips = new Array<string>();
-                const buffToolTips = new Array<string>();
+                const buffToolTips = new Array<(name: number) => string>();
+                let maxNumberOfBuffs = 1;
                 params.forEach((param) => {
                     let label: string = param.seriesName;
                     let value = param.value[1];
@@ -280,39 +285,40 @@ export function getSupportSynergiesOverTimeChart(
                     if (partyNumber) {
                         const partyId = parseInt(partyNumber[1]) - 1;
                         const synergies: SupportSynergyDataPoint = chartBuffs[partyId].data[param.dataIndex][1];
-                        let buffBreakdown = "<div>";
+                        let buffBreakdown = "";
                         synergies.buffs.forEach((buffPoint, key) => {
                             if (key.includes(buffSubstring)) {
+                                let numBuffs = 0;
                                 for (const buff of buffPoint) {
                                     const buffedDamage = round(buff.buffedDamage / buff.totalDamage * 100);
                                     if (buffedDamage === "0.0") {
                                         continue;
                                     }
-                                    if (buffBreakdown.length > 5) {
-                                        buffBreakdown += " + ";
-                                    }
+                                    numBuffs++;
+                                    let buffed = `<div style="min-width: ${buffBreakdownTooltipWidth}px">`;
                                     if (buff.sourceIcon) {
-                                        buffBreakdown += `<img src=${iconPath + getSkillIcon(buff.sourceIcon)} alt="buff_source_icon" class="size-5 rounded mr-1"/>`;
+                                        buffed += `<img src=${iconPath + getSkillIcon(buff.sourceIcon)} alt="buff_source_icon" class="size-5 rounded mr-1"/>`;
                                         if (buff.bonus) {
-                                            buffBreakdown += `[${buff.bonus}%] `;
+                                            buffed += `[${buff.bonus}%] `;
                                         }
                                     } else {
-                                        buffBreakdown += `<img src=${iconPath + getSkillIcon(buff.icon)} alt="buff_icon" class="size-5 rounded mr-1"/>`;
+                                        buffed += `<img src=${iconPath + getSkillIcon(buff.icon)} alt="buff_icon" class="size-5 rounded mr-1"/>`;
                                     }
-                                    buffBreakdown += `${buffedDamage}%`;
+                                    buffBreakdown += `${buffed}${buffedDamage}%</div>`;
                                 }
+                                maxNumberOfBuffs = Math.max(maxNumberOfBuffs, numBuffs);
                             }
                         });
-                        buffBreakdown += "</div>"
-                        value = round(value);
-                        label =
-                            `<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:${param.color}"></span>` +
-                            label;
-                        buffToolTips.push(
-                            `<div style="display:flex; justify-content: space-between;">
-                                <div>${label}</div> ${buffBreakdown} <div style="">${value}%</div>
+                        buffToolTips.push((numBuffs: number) => {
+                            let finalBreakdown = `<div style="min-width: ${numBuffs * buffBreakdownTooltipWidth}px; display: flex; justify-content: space-between">${buffBreakdown}</div>`
+                            let finalValue = round(value);
+                            let finalLabel =
+                                `<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:${param.color}"></span>` +
+                                label;
+                            return `<div style="display:flex; justify-content: space-between;">
+                                <div style="min-width: 75px">${finalLabel}</div> ${finalBreakdown} <div style="min-width: 50px">${finalValue}%</div>
                             </div>`
-                        )
+                        });
                     } else {
                         value += "%";
                         if (Object.hasOwn(bossHpMap, label)) {
@@ -325,7 +331,7 @@ export function getSupportSynergiesOverTimeChart(
                         )
                     }
                 });
-                return `<div>${time}</div><div style="min-width: 32rem;">${bossTooltips.join("")}${buffToolTips.join("")}</div>`;
+                return `<div>${time}</div><div style="min-width: 10rem;">${bossTooltips.join("")}${buffToolTips.map((f) => f(maxNumberOfBuffs)).join("")}</div>`;
             }
         },
         xAxis: {
