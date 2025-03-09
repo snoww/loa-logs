@@ -20,6 +20,8 @@ import { getSkillIcon } from "./strings";
 const partyRegex = /^Party #(\d)$/;
 const partyColors = ['#008000', '#800080', '#87CEEB', '#FFFF00']
 const buffBreakdownTooltipWidth = 120;
+const bardSerenadeOfAmplification = "Serenade of Amplification";
+const artistBlessingOfTheSun = "'Blessing of the Sun'";
 
 class SupportSynergyDataPoint {
     totalDamage: number;
@@ -95,11 +97,11 @@ interface SupportBuffPoint {
 
 function addStatusEffect(map: Map<string, Map<number, StatusEffect>>, effect: [string, StatusEffect]) {
     const [id, statusEffect] = effect;
-    if (!isPartySynergy(statusEffect) || !isSupportBuff(statusEffect) || statusEffect.source.name === "Serenade of Amplification") {
+    if (!isPartySynergy(statusEffect) || !isSupportBuff(statusEffect) || statusEffect.source.name === bardSerenadeOfAmplification) {
         return;
     }
     const key = makeSupportBuffKey(statusEffect);
-    if (key.includes("Moonfall")) {
+    if (statusEffect.source.name === artistBlessingOfTheSun) {
         return;
     }
     const idNumber = Number(id);
