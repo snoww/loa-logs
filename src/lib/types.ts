@@ -366,7 +366,11 @@ export enum ChartType {
     ROLLING_DPS,
     SKILL_LOG,
     IDENTITY,
-    STAGGER
+    STAGGER,
+    BRAND_BUFF,
+    AP_BUFF,
+    IDENTITY_BUFF,
+    HAT_BUFF
 }
 
 export enum ShieldTab {
