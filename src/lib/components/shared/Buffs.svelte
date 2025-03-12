@@ -46,7 +46,7 @@
 
 <svelte:window bind:innerWidth={vw} />
 {#if enc.curSettings.splitPartyBuffs && buffs.buffParties.length > 1 && buffs.partyGroupedSynergies.size > 1 && buffs.buffParties.length === buffs.partyGroupedSynergies.size && tab === MeterTab.PARTY_BUFFS && !focusedPlayer}
-    <div class="flex flex-col {enc.live ? '' : 'space-y-2'}">
+    <div class="flex flex-col {enc.live ? '' : 'space-y-2'}" id="live-meter-table">
         {#each buffs.partyGroupedSynergies as [partyId, synergies], i (partyId)}
             {#if buffs.buffParties[i] && buffs.buffParties[i].length > 0}
                 <table class="{enc.live ? 'w-full' : ''} table-fixed" style="width: {partyWidths[partyId]};">
@@ -81,7 +81,7 @@
         {/each}
     </div>
 {:else}
-    <table class="w-full table-fixed">
+    <table class="w-full table-fixed" id="live-meter-table">
         <thead class="{enc.live ? 'sticky top-0' : 'relative'} z-40 h-6">
             <tr class="bg-zinc-900">
                 <th class="w-7 px-2 font-normal"></th>
