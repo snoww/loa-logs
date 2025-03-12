@@ -1,15 +1,13 @@
 <script lang="ts">
-    import type { Entity } from "$lib/types";
-    import { HexToRgba } from "$lib/utils/colors";
-    import { abbreviateNumberSplit } from "$lib/utils/numbers";
-    import { colors, classIconCache, settings } from "$lib/utils/settings";
-    import { formatPlayerName } from "$lib/utils/strings";
-    import { generateClassTooltip, tooltip } from "$lib/utils/tooltip";
-    import { cubicOut } from "svelte/easing";
-    import { localPlayer, takingScreenshot } from "$lib/utils/stores";
-    import { Tween } from "svelte/motion";
     import type { EncounterState } from "$lib/encounter.svelte";
     import { EntityState } from "$lib/entity.svelte";
+    import type { Entity } from "$lib/types";
+    import { HexToRgba } from "$lib/utils/colors";
+    import { classIconCache } from "$lib/utils/settings";
+    import { takingScreenshot } from "$lib/utils/stores";
+    import { generateClassTooltip, tooltip } from "$lib/utils/tooltip";
+    import { cubicOut } from "svelte/easing";
+    import { Tween } from "svelte/motion";
 
     interface Props {
         enc: EncounterState;
@@ -17,7 +15,7 @@
         width: number;
     }
 
-    let { enc, player, width}: Props = $props();
+    let { enc, player, width }: Props = $props();
     let entityState = $derived(new EntityState(player, enc));
 
     const tweenedValue = new Tween(enc.live ? 0 : width, {
@@ -26,9 +24,8 @@
     });
 
     $effect(() => {
-        tweenedValue.set(width  ?? 0);
+        tweenedValue.set(width ?? 0);
     });
-
 
     let alpha = $derived(enc.live && !enc.curSettings.showClassColors ? 0 : 0.6);
 </script>
@@ -47,7 +44,7 @@
         </span>
     </div>
 </td>
-<td class="pl-1 pr-2 text-right">
+<td class="pr-2 pl-1 text-right">
     <span use:tooltip={{ content: player.damageStats.damageTaken.toLocaleString() }}>
         {entityState.damageTakenString[0]}<span class="text-3xs text-gray-300">{entityState.damageTakenString[1]}</span>
     </span>

@@ -1,33 +1,19 @@
 <script lang="ts">
+    import { goto } from "$app/navigation";
+    import { page } from "$app/state";
+    import LogShields from "$lib/components/logs/LogShields.svelte";
+    import Notification from "$lib/components/shared/Notification.svelte";
+    import { EncounterState } from "$lib/encounter.svelte";
     import {
+        ChartType,
+        EntityType,
         MeterState,
         MeterTab,
         type Encounter,
-        ChartType,
-        EntityType,
-        type PartyInfo,
-        type Entity
+        type Entity,
+        type PartyInfo
     } from "$lib/types";
-    import { formatTimestampDate, millisToMinutesAndSeconds } from "$lib/utils/numbers";
-    import { invoke } from "@tauri-apps/api/tauri";
-    import LogPlayerBreakdown from "./LogPlayerBreakdown.svelte";
-    import LogEncounterInfo from "./LogEncounterInfo.svelte";
-    import { page } from "$app/state";
     import { chartable, type EChartsOptions } from "$lib/utils/charts";
-    import { colors, settings, skillIcon } from "$lib/utils/settings";
-    import { goto } from "$app/navigation";
-    import html2canvas from "html2canvas-pro";
-    import {
-        screenshotAlert,
-        screenshotError,
-        takingScreenshot,
-        raidGates,
-        uploadErrorStore,
-        uploadErrorMessage
-    } from "$lib/utils/stores";
-    import LogIdentity from "./identity/LogIdentity.svelte";
-    import LogStagger from "./stagger/LogStagger.svelte";
-    import { tooltip } from "$lib/utils/tooltip";
     import {
         getAverageDpsChart,
         getAveragePlayerSeries,
@@ -39,20 +25,34 @@
         getSkillLogChart,
         getSkillLogChartOld
     } from "$lib/utils/dpsCharts";
-    import OpenerSkills from "./OpenerSkills.svelte";
-    import ArcanistCardTable from "../shared/ArcanistCardTable.svelte";
-    import DamageTaken from "../shared/DamageTaken.svelte";
-    import BossTable from "../shared/BossTable.svelte";
-    import BossBreakdown from "../shared/BossBreakdown.svelte";
-    import LogShields from "$lib/components/logs/LogShields.svelte";
-    import LogSkillChart from "./LogSkillChart.svelte";
-    import LogDamageMeterPartySplit from "./LogDamageMeterPartySplit.svelte";
+    import { formatTimestampDate, millisToMinutesAndSeconds } from "$lib/utils/numbers";
+    import { colors, settings, skillIcon } from "$lib/utils/settings";
+    import {
+        raidGates,
+        screenshotAlert,
+        screenshotError,
+        takingScreenshot,
+        uploadErrorMessage,
+        uploadErrorStore
+    } from "$lib/utils/stores";
     import { LOG_SITE_URL, uploadLog } from "$lib/utils/sync";
-    import Notification from "$lib/components/shared/Notification.svelte";
-    import { EncounterState } from "$lib/encounter.svelte";
-    import DamageMeterHeader from "../shared/DamageMeterHeader.svelte";
-    import PlayerRow from "../shared/PlayerRow.svelte";
+    import { tooltip } from "$lib/utils/tooltip";
+    import { invoke } from "@tauri-apps/api/tauri";
+    import html2canvas from "html2canvas-pro";
+    import ArcanistCardTable from "../shared/ArcanistCardTable.svelte";
+    import BossBreakdown from "../shared/BossBreakdown.svelte";
+    import BossTable from "../shared/BossTable.svelte";
     import Buffs from "../shared/Buffs.svelte";
+    import DamageMeterHeader from "../shared/DamageMeterHeader.svelte";
+    import DamageTaken from "../shared/DamageTaken.svelte";
+    import PlayerRow from "../shared/PlayerRow.svelte";
+    import LogIdentity from "./identity/LogIdentity.svelte";
+    import LogDamageMeterPartySplit from "./LogDamageMeterPartySplit.svelte";
+    import LogEncounterInfo from "./LogEncounterInfo.svelte";
+    import LogPlayerBreakdown from "./LogPlayerBreakdown.svelte";
+    import LogSkillChart from "./LogSkillChart.svelte";
+    import OpenerSkills from "./OpenerSkills.svelte";
+    import LogStagger from "./stagger/LogStagger.svelte";
 
     interface Props {
         id: string;

@@ -1,5 +1,5 @@
-import type { Skill } from "./types";
 import type { EntityState } from "./entity.svelte";
+import type { Skill } from "./types";
 import { abbreviateNumberSplit, round } from "./utils/numbers";
 
 export class SkillState {

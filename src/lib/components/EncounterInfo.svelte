@@ -1,6 +1,6 @@
 <script lang="ts">
     import { abbreviateNumber } from "$lib/utils/numbers";
-    import { settings, imagePath, updateSettings } from "$lib/utils/settings";
+    import { imagePath, settings, updateSettings } from "$lib/utils/settings";
     import { takingScreenshot } from "$lib/utils/stores";
     import { getImagePath } from "$lib/utils/strings";
     import { menuTooltip, tooltip } from "$lib/utils/tooltip";
@@ -82,7 +82,7 @@
     };
 </script>
 
-<div class="fixed left-0 top-0 z-50 h-7 w-full bg-zinc-900/[.6] px-2 py-1 text-sm" id="header">
+<div class="fixed top-0 left-0 z-50 h-7 w-full bg-zinc-900/[.6] px-2 py-1 text-sm" id="header">
     <div data-tauri-drag-region class="flex justify-between">
         <div data-tauri-drag-region class="flex space-x-2">
             {#if $settings.general.bossOnlyDamage}
@@ -90,7 +90,7 @@
                     use:tooltip={{ content: "Boss Only Damage" }}
                     src={$imagePath.path + getImagePath("icons/boss.png")}
                     alt="Boss Only Damage"
-                    class="-ml-1! mr-1 size-5"
+                    class="mr-1 -ml-1! size-5"
                     data-tauri-drag-region />
             {/if}
             <div data-tauri-drag-region>
@@ -195,7 +195,7 @@
                 </button>
                 <div class="relative flex items-center" onfocusout={handleDropdownFocusLoss}>
                     {#if $updateSettings.available}
-                        <span class="absolute right-0.5 top-0 -z-10 flex size-2">
+                        <span class="absolute top-0 right-0.5 -z-10 flex size-2">
                             <span
                                 class="bg-accent-500 absolute inline-flex h-full w-full animate-ping rounded-full opacity-75"
                             ></span>
@@ -219,7 +219,7 @@
                                 d="M19 9l-7 7-7-7" /></svg>
                     </button>
                     {#if dropdownOpen}
-                        <div class="absolute -right-5 top-6 z-50 rounded-md bg-zinc-700 shadow-md">
+                        <div class="absolute top-6 -right-5 z-50 rounded-md bg-zinc-700 shadow-md">
                             <div class="flex flex-col space-y-px p-1 text-gray-400">
                                 {#if $updateSettings.available}
                                     <button class="shrink-0 hover:text-gray-50" onclick={openUpdateWindow}>
@@ -321,7 +321,7 @@
                     : 'min-[420px]:hidden'}">
                 <div class="relative flex items-center" onfocusout={handleMiniDropdownFocusLoss}>
                     {#if $updateSettings.available}
-                        <span class="absolute right-0.5 top-0 -z-10 flex size-2">
+                        <span class="absolute top-0 right-0.5 -z-10 flex size-2">
                             <span
                                 class="bg-accent-500 absolute inline-flex h-full w-full animate-ping rounded-full opacity-75"
                             ></span>
@@ -345,7 +345,7 @@
                                 d="M19 9l-7 7-7-7" /></svg>
                     </button>
                     {#if miniDropdownOpen}
-                        <div class="absolute -right-5 top-6 z-50 rounded-md bg-zinc-700 shadow-md">
+                        <div class="absolute top-6 -right-5 z-50 rounded-md bg-zinc-700 shadow-md">
                             <div class="flex flex-col space-y-px p-1 text-gray-400">
                                 {#if $updateSettings.available}
                                     <button class="shrink-0 hover:text-gray-50" onclick={openUpdateWindow}>

@@ -1,11 +1,11 @@
 <script lang="ts">
+    import type { Entity } from "$lib/types";
     import { abbreviateNumber, getBossHpBars } from "$lib/utils/numbers";
     import { settings } from "$lib/utils/settings";
     import { takingScreenshot } from "$lib/utils/stores";
     import { getVersion } from "@tauri-apps/api/app";
-    import DifficultyLabel from "../shared/DifficultyLabel.svelte";
     import BossOnlyDamage from "../shared/BossOnlyDamage.svelte";
-    import type { Entity } from "$lib/types";
+    import DifficultyLabel from "../shared/DifficultyLabel.svelte";
 
     interface Props {
         difficulty: string | undefined;

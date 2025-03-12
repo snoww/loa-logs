@@ -3,14 +3,14 @@ import * as echarts from "echarts/core";
 import { LineChart, ScatterChart } from "echarts/charts";
 
 import {
-    TitleComponent,
-    TooltipComponent,
+    DatasetComponent,
     DataZoomComponent,
     GridComponent,
-    DatasetComponent,
-    ToolboxComponent,
     LegendComponent,
-    MarkPointComponent
+    MarkPointComponent,
+    TitleComponent,
+    ToolboxComponent,
+    TooltipComponent
 } from "echarts/components";
 
 import { CanvasRenderer } from "echarts/renderers";

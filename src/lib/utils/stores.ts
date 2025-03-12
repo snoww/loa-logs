@@ -1,7 +1,7 @@
 import { encounterMap } from "$lib/constants/encounters";
 import { SearchFilter, type SkillCastInfo } from "$lib/types";
-import { readable, writable, type Writable } from "svelte/store";
 import MarkdownIt from "markdown-it";
+import { readable, writable, type Writable } from "svelte/store";
 
 export const takingScreenshot = writable(false);
 

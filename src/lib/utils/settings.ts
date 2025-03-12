@@ -1,10 +1,10 @@
 import { classColors } from "$lib/constants/colors";
+import { clickthroughStore } from "$lib/utils/stores";
 import { invoke } from "@tauri-apps/api";
 import { emit } from "@tauri-apps/api/event";
 import { register, unregisterAll } from "@tauri-apps/api/globalShortcut";
 import { get, writable } from "svelte/store";
 import { hideAll } from "tippy.js";
-import { clickthroughStore } from "$lib/utils/stores";
 
 export const defaultSettings = {
     general: {

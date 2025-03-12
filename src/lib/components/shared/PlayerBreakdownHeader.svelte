@@ -3,7 +3,6 @@
     import { tooltip } from "$lib/utils/tooltip";
 
     let { entityState }: { entityState: EntityState } = $props();
-
 </script>
 
 <th class="w-7 px-2 font-normal"></th>

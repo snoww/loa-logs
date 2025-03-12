@@ -1,3 +1,5 @@
+import ArkPassives from "$lib/constants/ArkPassives.json";
+import { classesMap } from "$lib/constants/classes";
 import {
     type ArkPassiveData,
     type ArkPassiveNode,
@@ -7,14 +9,12 @@ import {
     type Skill,
     type StatusEffect
 } from "$lib/types";
+import { abbreviateNumberSplit } from "$lib/utils/numbers";
 import { createTippy } from "svelte-tippy";
+import { roundArrow } from "tippy.js";
 import "tippy.js/animations/perspective-subtle.css";
 import "tippy.js/dist/svg-arrow.css";
 import { getSkillIcon, removeUnknownHtmlTags } from "./strings";
-import { roundArrow } from "tippy.js";
-import { classesMap } from "$lib/constants/classes";
-import { abbreviateNumberSplit } from "$lib/utils/numbers";
-import ArkPassives from "$lib/constants/ArkPassives.json";
 
 export const tooltip = createTippy({
     allowHTML: true,

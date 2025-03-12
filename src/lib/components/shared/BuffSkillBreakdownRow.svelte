@@ -1,15 +1,15 @@
 <script lang="ts">
+    import type { EntityState } from "$lib/entity.svelte";
     import type { BuffDetails, Skill, StatusEffect } from "$lib/types";
     import { getSynergyPercentageDetails, hyperAwakeningIds } from "$lib/utils/buffs";
     import { HexToRgba, RGBLinearShade } from "$lib/utils/colors";
     import { settings, skillIcon } from "$lib/utils/settings";
+    import { takingScreenshot } from "$lib/utils/stores";
     import { getSkillIcon } from "$lib/utils/strings";
     import { generateSkillTooltip, tooltip } from "$lib/utils/tooltip";
     import { cubicOut } from "svelte/easing";
     import { Tween } from "svelte/motion";
     import BuffTooltipDetail from "./BuffTooltipDetail.svelte";
-    import type { EntityState } from "$lib/entity.svelte";
-    import { takingScreenshot } from "$lib/utils/stores";
 
     interface Props {
         skill: Skill;

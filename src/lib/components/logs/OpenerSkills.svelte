@@ -28,7 +28,7 @@
     let openerSkills = getOpenerSkills(skillsArray, 15);
 </script>
 
-<div class="mb-4 mt-2">
+<div class="mt-2 mb-4">
     <div class="flex justify-start text-lg font-medium">
         <div use:menuTooltip={{ content: "First 15 skills casted" }}>Opener Rotation</div>
     </div>

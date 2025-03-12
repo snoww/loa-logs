@@ -213,7 +213,7 @@
             <TableFilter bind:selectMode refreshFn={refresh} />
         </div>
         <div
-            class="relative overflow-y-auto overflow-x-hidden"
+            class="relative overflow-x-hidden overflow-y-auto"
             style="height: calc(100vh - 8.25rem - 2.5rem);"
             id="logs-table">
             <table class="w-full table-fixed text-left text-gray-400" id="table">

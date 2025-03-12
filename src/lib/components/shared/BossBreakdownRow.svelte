@@ -17,12 +17,7 @@
         index: number;
     }
 
-    let {
-        entityState,
-        skill,
-        width,
-        index
-    }: Props = $props();
+    let { entityState, skill, width, index }: Props = $props();
 
     let skillState = $derived(new SkillState(skill, entityState));
 

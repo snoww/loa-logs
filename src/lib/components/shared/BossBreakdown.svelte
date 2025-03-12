@@ -1,12 +1,11 @@
 <script lang="ts">
-    import type { Entity, Skill } from "$lib/types";
-    import { abbreviateNumberSplit } from "$lib/utils/numbers";
+    import type { EncounterState } from "$lib/encounter.svelte";
+    import { EntityState } from "$lib/entity.svelte";
+    import type { Entity } from "$lib/types";
     import { settings } from "$lib/utils/settings";
     import { tooltip } from "$lib/utils/tooltip";
     import { flip } from "svelte/animate";
     import BossBreakdownRow from "./BossBreakdownRow.svelte";
-    import type { EncounterState } from "$lib/encounter.svelte";
-    import { EntityState } from "$lib/entity.svelte";
 
     interface Props {
         enc: EncounterState;

@@ -1,6 +1,4 @@
 <script lang="ts">
-    import { run } from "svelte/legacy";
-
     import { tooltip } from "$lib/utils/tooltip";
     import { classIconCache, colors, settings } from "$lib/utils/settings";
     import type { Entity } from "$lib/types";

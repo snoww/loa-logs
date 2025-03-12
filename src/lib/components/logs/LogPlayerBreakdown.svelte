@@ -1,15 +1,13 @@
 <script lang="ts">
-    import { EntityType, type Entity, type Skill } from "$lib/types";
-    import { abbreviateNumberSplit, round } from "$lib/utils/numbers";
-    import { classIconCache, colors, settings } from "$lib/utils/settings";
-    import PlayerBreakdownHeader from "../shared/PlayerBreakdownHeader.svelte";
-    import { cardIds } from "$lib/constants/cards";
-    import { generateArkPassiveTooltip, generateClassTooltip, tooltip } from "$lib/utils/tooltip";
-    import { formatPlayerName } from "$lib/utils/strings";
-    import { localPlayer, takingScreenshot } from "$lib/utils/stores";
-    import { HexToRgba, RGBLinearShade } from "$lib/utils/colors";
     import type { EncounterState } from "$lib/encounter.svelte";
     import { EntityState } from "$lib/entity.svelte";
+    import { EntityType, type Entity } from "$lib/types";
+    import { HexToRgba, RGBLinearShade } from "$lib/utils/colors";
+    import { abbreviateNumberSplit, round } from "$lib/utils/numbers";
+    import { classIconCache, settings } from "$lib/utils/settings";
+    import { takingScreenshot } from "$lib/utils/stores";
+    import { generateArkPassiveTooltip, generateClassTooltip, tooltip } from "$lib/utils/tooltip";
+    import PlayerBreakdownHeader from "../shared/PlayerBreakdownHeader.svelte";
     import PlayerBreakdownRow from "../shared/PlayerBreakdownRow.svelte";
 
     interface Props {
@@ -38,7 +36,10 @@
             </td>
             <td colspan="2">
                 <div class="truncate">
-                    <span use:tooltip={{ content: generateArkPassiveTooltip(entityState.name, entity.arkPassiveData, entity.spec) }}>
+                    <span
+                        use:tooltip={{
+                            content: generateArkPassiveTooltip(entityState.name, entity.arkPassiveData, entity.spec)
+                        }}>
                         {entityState.name}
                     </span>
                 </div>

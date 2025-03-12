@@ -159,8 +159,8 @@
     {/if}
 </div>
 {#if $optimizing}
-    <div class="fixed inset-0 z-50 bg-zinc-900 bg-opacity-80"></div>
-    <div class="fixed left-0 right-0 top-0 z-50 h-modal w-full items-center justify-center p-4">
+    <div class="bg-opacity-80 fixed inset-0 z-50 bg-zinc-900"></div>
+    <div class="h-modal fixed top-0 right-0 left-0 z-50 w-full items-center justify-center p-4">
         <div class="relative top-[40%] mx-auto flex max-h-full w-full max-w-md">
             <div class="relative mx-auto flex flex-col rounded-lg border-gray-700 bg-zinc-800 text-gray-400 shadow-md">
                 <div id="modal" class="flex-1 space-y-2 overflow-y-auto overscroll-contain p-6 text-center">
@@ -175,14 +175,14 @@
     </div>
 {/if}
 {#if deleteConfirm && encounterDbInfo}
-    <div class="fixed inset-0 z-50 bg-zinc-900 bg-opacity-80"></div>
-    <div class="fixed left-0 right-0 top-0 z-50 h-modal w-full items-center justify-center p-4">
+    <div class="bg-opacity-80 fixed inset-0 z-50 bg-zinc-900"></div>
+    <div class="h-modal fixed top-0 right-0 left-0 z-50 w-full items-center justify-center p-4">
         <div class="relative top-[25%] mx-auto flex max-h-full w-full max-w-md">
             <div class="relative mx-auto flex flex-col rounded-lg border-gray-700 bg-zinc-800 text-gray-400 shadow-md">
                 <button
                     type="button"
                     class:invisible={deleteInProgress}
-                    class="absolute right-2.5 top-3 ml-auto whitespace-normal rounded-lg p-1.5 hover:bg-zinc-600 focus:outline-hidden"
+                    class="absolute top-3 right-2.5 ml-auto rounded-lg p-1.5 whitespace-normal hover:bg-zinc-600 focus:outline-hidden"
                     aria-label="Close modal"
                     onclick={() => (deleteConfirm = false)}>
                     <span class="sr-only">Close modal</span>

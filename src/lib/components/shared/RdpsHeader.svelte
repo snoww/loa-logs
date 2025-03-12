@@ -39,7 +39,7 @@
             </th>
         {:else}
             {#if partyId !== undefined && partyId >= 0}
-                <th class="w-7 whitespace-nowrap px-2 font-normal tracking-tight">Party {+partyId + 1}</th>
+                <th class="w-7 px-2 font-normal tracking-tight whitespace-nowrap">Party {+partyId + 1}</th>
             {:else}
                 <th class="w-7 px-2 font-normal"></th>
             {/if}

@@ -121,9 +121,9 @@
             {/if}
             <div class="px-1">&nbsp;</div>
         </div>
-        <div class="fixed bottom-0 right-0 flex items-center">
+        <div class="fixed right-0 bottom-0 flex items-center">
             <div class="h-6">LOA Logs</div>
-            <div class="ml-1 mr-2 text-xs text-gray-500">
+            <div class="mr-2 ml-1 text-xs text-gray-500">
                 {#await getVersion()}
                     v
                 {:then version}

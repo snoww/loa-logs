@@ -1,40 +1,37 @@
 <script lang="ts">
+    import { EncounterState } from "$lib/encounter.svelte";
     import {
+        EntityType,
         MeterState,
         MeterTab,
         type Encounter,
         type EncounterEvent,
-        type Entity,
-        EntityType,
-        type PartyInfo,
         type PartyEvent
     } from "$lib/types";
     import { millisToMinutesAndSeconds } from "$lib/utils/numbers";
+    import { colors, settings } from "$lib/utils/settings";
+    import { localPlayer, missingInfo, screenshotAlert, screenshotError, takingScreenshot } from "$lib/utils/stores";
+    import { isValidName } from "$lib/utils/strings";
+    import { uploadLog } from "$lib/utils/sync";
+    import { invoke } from "@tauri-apps/api";
     import { listen, type UnlistenFn } from "@tauri-apps/api/event";
+    import html2canvas from "html2canvas-pro";
     import { onDestroy, onMount } from "svelte";
     import { flip } from "svelte/animate";
-    import EncounterInfo from "./EncounterInfo.svelte";
-    import BossInfo from "./BossInfo.svelte";
-    import PlayerBreakdown from "./PlayerBreakdown.svelte";
-    import Footer from "./Footer.svelte";
-    import { colors, settings } from "$lib/utils/settings";
-    import { tooltip } from "$lib/utils/tooltip";
     import { writable } from "svelte/store";
-    import Notification from "./shared/Notification.svelte";
-    import { takingScreenshot, screenshotAlert, screenshotError, localPlayer, missingInfo } from "$lib/utils/stores";
-    import html2canvas from "html2canvas-pro";
+    import BossInfo from "./BossInfo.svelte";
     import Details from "./Details.svelte";
-    import DamageTaken from "./shared/DamageTaken.svelte";
-    import BossTable from "./shared/BossTable.svelte";
+    import EncounterInfo from "./EncounterInfo.svelte";
+    import Footer from "./Footer.svelte";
+    import PlayerBreakdown from "./PlayerBreakdown.svelte";
     import BossBreakdown from "./shared/BossBreakdown.svelte";
-    import { isValidName } from "$lib/utils/strings";
-    import MissingInfo from "./shared/MissingInfo.svelte";
-    import { invoke } from "@tauri-apps/api";
-    import { uploadLog } from "$lib/utils/sync";
-    import { EncounterState } from "$lib/encounter.svelte";
-    import DamageMeterHeader from "./shared/DamageMeterHeader.svelte";
-    import PlayerRow from "./shared/PlayerRow.svelte";
+    import BossTable from "./shared/BossTable.svelte";
     import Buffs from "./shared/Buffs.svelte";
+    import DamageMeterHeader from "./shared/DamageMeterHeader.svelte";
+    import DamageTaken from "./shared/DamageTaken.svelte";
+    import MissingInfo from "./shared/MissingInfo.svelte";
+    import Notification from "./shared/Notification.svelte";
+    import PlayerRow from "./shared/PlayerRow.svelte";
 
     let time = $state(+Date.now());
 

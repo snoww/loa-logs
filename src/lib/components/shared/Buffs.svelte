@@ -1,14 +1,14 @@
 <script lang="ts">
-    import { MeterTab, type Entity, EntityType } from "$lib/types";
-    import { calculatePartyWidth } from "$lib/utils/buffs";
-    import { flip } from "svelte/animate";
-    import { settings } from "$lib/utils/settings";
-    import PartyBuffRow from "./PartyBuffRow.svelte";
-    import type { EncounterState } from "$lib/encounter.svelte";
     import { BuffState } from "$lib/buffs.svelte";
-    import BuffRow from "./BuffRow.svelte";
+    import type { EncounterState } from "$lib/encounter.svelte";
+    import { EntityType, MeterTab, type Entity } from "$lib/types";
+    import { calculatePartyWidth } from "$lib/utils/buffs";
+    import { settings } from "$lib/utils/settings";
+    import { flip } from "svelte/animate";
     import BuffHeader from "./BuffHeader.svelte";
+    import BuffRow from "./BuffRow.svelte";
     import BuffSkillBreakdown from "./BuffSkillBreakdown.svelte";
+    import PartyBuffRow from "./PartyBuffRow.svelte";
 
     interface Props {
         tab: MeterTab;
@@ -101,7 +101,11 @@
                         class="h-7 px-2 py-1 {$settings.general.underlineHovered ? 'hover:underline' : ''}"
                         animate:flip={{ duration: 200 }}
                         onclick={() => inspectPlayer(player.name)}>
-                        <BuffRow {enc} {player} groupedSynergies={buffs.groupedSynergies} percentage={buffs.percentages[i]} />
+                        <BuffRow
+                            {enc}
+                            {player}
+                            groupedSynergies={buffs.groupedSynergies}
+                            percentage={buffs.percentages[i]} />
                     </tr>
                 {/each}
             {:else}

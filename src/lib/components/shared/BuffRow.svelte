@@ -1,17 +1,16 @@
 <script lang="ts">
+    import type { EncounterState } from "$lib/encounter.svelte";
+    import { EntityState } from "$lib/entity.svelte";
     import { Buff, BuffDetails, type Entity, type StatusEffect } from "$lib/types";
+    import { addBardBubbles, supportSkills } from "$lib/utils/buffs";
     import { HexToRgba } from "$lib/utils/colors";
+    import { round } from "$lib/utils/numbers";
+    import { classIconCache } from "$lib/utils/settings";
+    import { takingScreenshot } from "$lib/utils/stores";
+    import { generateClassTooltip, tooltip } from "$lib/utils/tooltip";
     import { cubicOut } from "svelte/easing";
     import { Tween } from "svelte/motion";
     import BuffTooltipDetail from "./BuffTooltipDetail.svelte";
-    import { colors, classIconCache, settings } from "$lib/utils/settings";
-    import { formatPlayerName } from "$lib/utils/strings";
-    import { generateClassTooltip, tooltip } from "$lib/utils/tooltip";
-    import { round } from "$lib/utils/numbers";
-    import { addBardBubbles, supportSkills } from "$lib/utils/buffs";
-    import { localPlayer, takingScreenshot } from "$lib/utils/stores";
-    import type { EncounterState } from "$lib/encounter.svelte";
-    import { EntityState } from "$lib/entity.svelte";
 
     interface Props {
         enc: EncounterState;
@@ -102,7 +101,7 @@
 </td>
 {#if groupedSynergies.size > 0}
     {#each synergyPercentageDetails as synergy}
-        <td class="px-1 text-center text-3xs">
+        <td class="text-3xs px-1 text-center">
             {#if synergy.percentage}
                 <BuffTooltipDetail {synergy} />
             {/if}

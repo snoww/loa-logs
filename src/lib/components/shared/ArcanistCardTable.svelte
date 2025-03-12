@@ -1,10 +1,10 @@
 <script lang="ts">
     import { cardIds } from "$lib/constants/cards";
+    import type { Entity } from "$lib/types";
     import { HexToRgba, RGBLinearShade } from "$lib/utils/colors";
-    import { getSkillIcon } from "$lib/utils/strings";
     import { colors, settings, skillIcon } from "$lib/utils/settings";
     import { takingScreenshot } from "$lib/utils/stores";
-    import type { Entity } from "$lib/types";
+    import { getSkillIcon } from "$lib/utils/strings";
 
     export let player: Entity;
     export let duration: number;
@@ -46,7 +46,7 @@
         </thead>
         <tbody class="relative z-10">
             {#each cards as card, i}
-                <tr class="h-6 px-2 py-1 text-3xs {$settings.general.underlineHovered ? 'hover:underline' : ''}">
+                <tr class="text-3xs h-6 px-2 py-1 {$settings.general.underlineHovered ? 'hover:underline' : ''}">
                     <td class="px-1">
                         <div class="flex items-center space-x-1">
                             <img class="size-5" src={$skillIcon.path + getSkillIcon(card.icon)} alt={card.name} />

@@ -5,7 +5,8 @@
         Skill,
         SkillCast,
         SkillChartModInfo,
-        SkillChartSupportDamage, SkillHit,
+        SkillChartSupportDamage,
+        SkillHit,
         StatusEffectWithId
     } from "$lib/types";
     import { getSkillCastBuffs } from "$lib/utils/buffs";
@@ -16,8 +17,8 @@
     import { getSkillIcon } from "$lib/utils/strings";
     import { menuTooltip, tooltip } from "$lib/utils/tooltip";
     import { onDestroy, onMount } from "svelte";
-    import BuffTooltip from "../shared/BuffTooltip.svelte";
     import { writable } from "svelte/store";
+    import BuffTooltip from "../shared/BuffTooltip.svelte";
 
     interface Props {
         chartOptions: any;
@@ -108,7 +109,7 @@
 
 <div class="mt-2 h-[400px]" use:chartable={chartOptions} style="width: calc(100vw - 4.5rem);"></div>
 
-<div class="mb-4 mt-2 min-h-[30rem]">
+<div class="mt-2 mb-4 min-h-[30rem]">
     <div class="flex justify-start text-lg font-medium">
         <div use:menuTooltip={{ content: "Details about a skill casted during the raid" }}>Skill Cast Details</div>
     </div>
@@ -116,7 +117,7 @@
         <div>Click on a skill cast to show details.</div>
     {:else if skill}
         <div class="px-1 pb-2">
-            <div class="flex items-center pb-2 pt-1">
+            <div class="flex items-center pt-1 pb-2">
                 <button
                     use:tooltip={{ content: "Go to highest damage cast." }}
                     class="bg-accent-500 hover:bg-accent-800 mr-4 rounded-md p-1 text-sm"

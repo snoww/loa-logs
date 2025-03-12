@@ -1,6 +1,4 @@
 <script lang="ts">
-    import { run } from "svelte/legacy";
-
     import { bossHpMap } from "$lib/constants/bossHpBars";
     import { bossHpBarColors } from "$lib/constants/colors";
     import type { Entity } from "$lib/types";
@@ -46,7 +44,7 @@
         bossMaxHp = abbreviateNumberSplit(boss.maxHp);
         bossShieldHp = abbreviateNumberSplit(bossShield);
     });
-    
+
     $effect.pre(() => {
         if (Object.hasOwn(bossHpMap, boss.name) && $settings.meter.bossHpBar) {
             bossHPBars = getBossHpBars(boss.name, boss.maxHp);
@@ -152,11 +150,11 @@
             </div>
         </div>
         {#if bossHp <= 0}
-            <div class="absolute inset-y-0 right-0 h-7 pb-px pr-2">
+            <div class="absolute inset-y-0 right-0 h-7 pr-2 pb-px">
                 <div class="flex h-7 items-center justify-center">Dead</div>
             </div>
         {:else if bossCurrentBars > 1}
-            <div class="absolute inset-y-0 right-0 h-7 pb-px pr-2">
+            <div class="absolute inset-y-0 right-0 h-7 pr-2 pb-px">
                 <div class="flex h-7 items-center justify-center">
                     {bossCurrentBars}x
                 </div>

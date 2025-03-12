@@ -1,16 +1,11 @@
 <script lang="ts">
-    import { EntityType, type Entity, type Skill } from "$lib/types";
-    import { abbreviateNumberSplit } from "$lib/utils/numbers";
-    import { flip } from "svelte/animate";
-    import { colors, settings } from "$lib/utils/settings";
-    import PlayerBreakdownHeader from "./shared/PlayerBreakdownHeader.svelte";
-    import { cardIds } from "$lib/constants/cards";
-    import { localPlayer } from "$lib/utils/stores";
-    import { EntityState } from "$lib/entity.svelte";
     import type { EncounterState } from "$lib/encounter.svelte";
+    import { EntityState } from "$lib/entity.svelte";
+    import { type Entity } from "$lib/types";
+    import { settings } from "$lib/utils/settings";
+    import { flip } from "svelte/animate";
+    import PlayerBreakdownHeader from "./shared/PlayerBreakdownHeader.svelte";
     import PlayerBreakdownRow from "./shared/PlayerBreakdownRow.svelte";
-    import { Tween } from "svelte/motion";
-    import { cubicOut } from "svelte/easing";
 
     interface Props {
         entity: Entity;

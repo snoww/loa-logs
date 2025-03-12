@@ -1,9 +1,7 @@
 <script lang="ts">
-    import { run } from "svelte/legacy";
-
-    import RdpsHeader from "$lib/components/shared/RdpsHeader.svelte";
-    import { type Entity, EntityType, type PartyInfo } from "$lib/types";
+        import RdpsHeader from "$lib/components/shared/RdpsHeader.svelte";
     import RdpsRow from "$lib/components/shared/RdpsRow.svelte";
+    import { type Entity, EntityType, type PartyInfo } from "$lib/types";
     import { getRDamage } from "$lib/utils/numbers";
     import { rdpsEventDetails, takingScreenshot } from "$lib/utils/stores";
 

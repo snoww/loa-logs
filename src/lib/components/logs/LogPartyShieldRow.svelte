@@ -1,14 +1,13 @@
 <script lang="ts">
-    import { HexToRgba } from "$lib/utils/colors";
-    import { formatPlayerName } from "$lib/utils/strings";
-    import { colors, classIconCache, settings } from "$lib/utils/settings";
-    import { localPlayer, takingScreenshot } from "$lib/utils/stores";
-    import { generateClassTooltip, tooltip } from "$lib/utils/tooltip";
-    import { type Entity, ShieldDetails } from "$lib/types";
     import ShieldTooltipDetail from "$lib/components/shared/ShieldTooltipDetail.svelte";
-    import { abbreviateNumberSplit } from "$lib/utils/numbers";
     import type { EncounterState } from "$lib/encounter.svelte";
     import { EntityState } from "$lib/entity.svelte";
+    import { type Entity, ShieldDetails } from "$lib/types";
+    import { HexToRgba } from "$lib/utils/colors";
+    import { abbreviateNumberSplit } from "$lib/utils/numbers";
+    import { classIconCache } from "$lib/utils/settings";
+    import { takingScreenshot } from "$lib/utils/stores";
+    import { generateClassTooltip, tooltip } from "$lib/utils/tooltip";
 
     interface Props {
         enc: EncounterState;
@@ -38,12 +37,12 @@
         </span>
     </div>
 </td>
-<td class="px-1 text-center text-3xs" use:tooltip={{ content: totalShield.toLocaleString() }}>
+<td class="text-3xs px-1 text-center" use:tooltip={{ content: totalShield.toLocaleString() }}>
     {totalShieldStr[0]}<span class="text-3xs text-gray-300">{totalShieldStr[1]}</span>
 </td>
 {#if playerShields.length > 0}
     {#each playerShields as shield (shield.id)}
-        <td class="px-1 text-center text-3xs">
+        <td class="text-3xs px-1 text-center">
             {#if shield.total}
                 <ShieldTooltipDetail shieldDetails={shield} />
             {/if}

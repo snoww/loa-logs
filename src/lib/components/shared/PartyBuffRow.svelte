@@ -1,15 +1,13 @@
 <script lang="ts">
-    import { HexToRgba } from "$lib/utils/colors";
-    import { formatPlayerName } from "$lib/utils/strings";
-    import { colors, classIconCache, settings } from "$lib/utils/settings";
-    import { generateClassTooltip, tooltip } from "$lib/utils/tooltip";
-    import type { BuffDetails, Entity } from "$lib/types";
-    import { Tween } from "svelte/motion";
-    import { cubicOut } from "svelte/easing";
-    import { localPlayer } from "$lib/utils/stores";
-    import BuffTooltipDetail from "./BuffTooltipDetail.svelte";
-    import { EntityState } from "$lib/entity.svelte";
     import type { EncounterState } from "$lib/encounter.svelte";
+    import { EntityState } from "$lib/entity.svelte";
+    import type { BuffDetails, Entity } from "$lib/types";
+    import { HexToRgba } from "$lib/utils/colors";
+    import { classIconCache } from "$lib/utils/settings";
+    import { generateClassTooltip, tooltip } from "$lib/utils/tooltip";
+    import { cubicOut } from "svelte/easing";
+    import { Tween } from "svelte/motion";
+    import BuffTooltipDetail from "./BuffTooltipDetail.svelte";
 
     interface Props {
         player: Entity;
@@ -49,7 +47,7 @@
 </td>
 {#if playerBuffs.length > 0}
     {#each playerBuffs as buff (buff.id)}
-        <td class="px-1 text-center text-3xs">
+        <td class="text-3xs px-1 text-center">
             {#if buff.percentage}
                 <BuffTooltipDetail synergy={buff} />
             {/if}

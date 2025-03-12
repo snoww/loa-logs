@@ -119,7 +119,7 @@
             </div>
         </div>
     </div>
-    <div class="overflow-auto bg-zinc-800 pb-8 pl-8 pt-2" style="height: calc(100vh - 4rem);" id="log-breakdown">
+    <div class="overflow-auto bg-zinc-800 pt-2 pb-8 pl-8" style="height: calc(100vh - 4rem);" id="log-breakdown">
         <div class="relative inline-block min-w-[calc(100%-4rem)]">
             <div class="pr-8">
                 {#key data.id}

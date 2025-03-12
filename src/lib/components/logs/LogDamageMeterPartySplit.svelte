@@ -1,10 +1,9 @@
 <script lang="ts">
+    import type { EncounterState } from "$lib/encounter.svelte";
     import { EntityType, type Entity } from "$lib/types";
     import { settings } from "$lib/utils/settings";
-    import type { EncounterState } from "$lib/encounter.svelte";
     import DamageMeterHeader from "../shared/DamageMeterHeader.svelte";
     import PlayerRow from "../shared/PlayerRow.svelte";
-    import { abbreviateNumberSplit } from "$lib/utils/numbers";
 
     interface Props {
         enc: EncounterState;

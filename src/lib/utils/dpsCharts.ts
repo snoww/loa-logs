@@ -1,33 +1,32 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { bossHpMap } from "$lib/constants/bossHpBars";
+import { classesMap } from "$lib/constants/classes";
 import {
-    EntityType,
-    type Entity,
     BossHpLog,
-    OpenerSkill,
+    EntityType,
     MiniSkill,
-    type SkillCast,
+    OpenerSkill,
     type EncounterDamageStats,
-    type SkillChartSupportDamage,
-    type SkillChartModInfo
+    type Entity,
+    type SkillCast,
+    type SkillChartModInfo,
+    type SkillChartSupportDamage
 } from "$lib/types";
 import Heap from "heap-js";
+import BTree from "sorted-btree";
+import { getFormattedBuffString, getSkillCastBuffs } from "./buffs";
 import { defaultOptions } from "./charts";
 import {
     abbreviateNumber,
     formatDurationFromMs,
     formatDurationFromS,
-    getBossHpBars,
     resampleData,
     round,
     round2,
     timeToSeconds
 } from "./numbers";
-import { getSkillIcon, isValidName } from "./strings";
-import { bossHpMap } from "$lib/constants/bossHpBars";
-import { classesMap } from "$lib/constants/classes";
-import BTree from "sorted-btree";
-import { getFormattedBuffString, getSkillCastBuffs } from "./buffs";
 import { focusedSkillCast } from "./stores";
+import { getSkillIcon, isValidName } from "./strings";
 
 export function getLegendNames(chartablePlayers: Entity[], showNames: boolean) {
     if (!showNames) {

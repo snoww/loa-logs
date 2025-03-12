@@ -1,5 +1,5 @@
-import { invoke } from "@tauri-apps/api";
 import type { Encounter } from "$lib/types";
+import { invoke } from "@tauri-apps/api";
 import pako from "pako";
 
 export const LOG_SITE_URL = "https://logs.snow.xyz";

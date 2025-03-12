@@ -1,12 +1,12 @@
 <script lang="ts">
-    import { calculatePartyWidth, filterStatusEffects, getPartyShields } from "$lib/utils/buffs";
-    import { type EncounterDamageStats, type Entity, ShieldTab, type StatusEffect } from "$lib/types";
-    import { settings } from "$lib/utils/settings";
-    import ShieldHeader from "$lib/components/shared/ShieldHeader.svelte";
-    import LogPartyShieldRow from "$lib/components/logs/LogPartyShieldRow.svelte";
-    import { tooltip } from "$lib/utils/tooltip";
-    import type { EncounterState } from "$lib/encounter.svelte";
     import { BuffState } from "$lib/buffs.svelte";
+    import LogPartyShieldRow from "$lib/components/logs/LogPartyShieldRow.svelte";
+    import ShieldHeader from "$lib/components/shared/ShieldHeader.svelte";
+    import type { EncounterState } from "$lib/encounter.svelte";
+    import { ShieldTab } from "$lib/types";
+    import { calculatePartyWidth } from "$lib/utils/buffs";
+    import { settings } from "$lib/utils/settings";
+    import { tooltip } from "$lib/utils/tooltip";
 
     interface Props {
         enc: EncounterState;

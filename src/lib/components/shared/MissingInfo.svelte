@@ -5,7 +5,7 @@
 
 {#if $missingInfo}
     <div
-        class="whitespace-nowrap text-left font-normal text-red-400"
+        class="text-left font-normal whitespace-nowrap text-red-400"
         use:tooltip={{
             content:
                 "METER OPENED TOO LATE, UNABLE TO READ DAMAGE DATA. Please go to CHARACTER SELECT or SWAP CHARACTERS."
