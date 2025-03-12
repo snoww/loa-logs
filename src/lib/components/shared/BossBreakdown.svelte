@@ -5,36 +5,17 @@
     import { tooltip } from "$lib/utils/tooltip";
     import { flip } from "svelte/animate";
     import BossBreakdownRow from "./BossBreakdownRow.svelte";
+    import type { EncounterState } from "$lib/encounter.svelte";
+    import { EntityState } from "$lib/entity.svelte";
 
     interface Props {
-        boss: Entity | undefined;
-        duration: number;
+        enc: EncounterState;
+        boss: Entity;
         handleRightClick: () => void;
-        tween?: boolean;
     }
 
-    let { boss, duration, handleRightClick, tween = true }: Props = $props();
-
-    let skills: Array<Skill> = $state([]);
-    let skillDamagePercentages: Array<number> = $state([]);
-    let abbreviatedSkillDamage: Array<(string | number)[]> = $derived(
-        skills.map((skill) => abbreviateNumberSplit(skill.totalDamage))
-    );
-    let skillDps: Array<(string | number)[]> = $derived(
-        skills.map((skill) => abbreviateNumberSplit(skill.totalDamage / (duration / 1000)))
-    );
-
-    $effect(() => {
-        if (boss) {
-            skills = Object.values(boss.skills).sort((a, b) => b.totalDamage - a.totalDamage);
-        }
-    });
-    $effect(() => {
-        if (skills.length > 0) {
-            let mostDamageSkill = skills[0].totalDamage;
-            skillDamagePercentages = skills.map((skill) => (skill.totalDamage / mostDamageSkill) * 100);
-        }
-    });
+    let { enc, boss, handleRightClick }: Props = $props();
+    let entityState = $derived(new EntityState(boss, enc));
 </script>
 
 <table class="relative w-full table-fixed">
@@ -51,19 +32,11 @@
     </thead>
     <tbody oncontextmenu={handleRightClick} class="relative z-10">
         {#if boss}
-            {#each skills as skill, i (skill.id)}
+            {#each entityState.skills as skill, i (skill.id)}
                 <tr
-                    class="h-7 px-2 py-1 text-3xs {$settings.general.underlineHovered ? 'hover:underline' : ''}"
+                    class="text-3xs h-7 px-2 py-1 {$settings.general.underlineHovered ? 'hover:underline' : ''}"
                     animate:flip={{ duration: 200 }}>
-                    <BossBreakdownRow
-                        {skill}
-                        abbreviatedSkillDamage={abbreviatedSkillDamage[i]}
-                        skillDps={skillDps[i]}
-                        width={skillDamagePercentages[i]}
-                        index={i}
-                        {duration}
-                        totalDamageDealt={boss.damageStats.damageDealt}
-                        {tween} />
+                    <BossBreakdownRow {entityState} {skill} width={entityState.skillDamagePercentages[i]} index={i} />
                 </tr>
             {/each}
         {/if}

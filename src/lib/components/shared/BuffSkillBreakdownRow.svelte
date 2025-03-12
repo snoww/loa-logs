@@ -5,24 +5,35 @@
     import { settings, skillIcon } from "$lib/utils/settings";
     import { getSkillIcon } from "$lib/utils/strings";
     import { generateSkillTooltip, tooltip } from "$lib/utils/tooltip";
+    import { cubicOut } from "svelte/easing";
+    import { Tween } from "svelte/motion";
     import BuffTooltipDetail from "./BuffTooltipDetail.svelte";
+    import type { EntityState } from "$lib/entity.svelte";
+    import { takingScreenshot } from "$lib/utils/stores";
 
     interface Props {
         skill: Skill;
-        color: string;
+        entityState: EntityState;
         groupedSynergies: Map<string, Map<number, StatusEffect>>;
         width: number;
-        shadow?: boolean;
         index: number;
     }
 
-    let { skill, color, groupedSynergies, width, shadow = false, index }: Props = $props();
+    let { skill, entityState, groupedSynergies, width, index }: Props = $props();
 
-    let synergyPercentageDetails: Array<BuffDetails> = $state(getSynergyPercentageDetails(groupedSynergies, skill));
+    let synergyPercentageDetails: Array<BuffDetails> = $derived(getSynergyPercentageDetails(groupedSynergies, skill));
     let isHyperAwakening = hyperAwakeningIds.has(skill.id);
+
+    const tweenedValue = new Tween(entityState.enc.live ? 0 : width, {
+        duration: 400,
+        easing: cubicOut
+    });
+    $effect(() => {
+        tweenedValue.set(width ?? 0);
+    });
 </script>
 
-<tr class="h-7 px-2 py-1 text-3xs {$settings.general.underlineHovered ? 'hover:underline' : ''}">
+<tr class="text-3xs h-7 px-2 py-1 {$settings.general.underlineHovered ? 'hover:underline' : ''}">
     <td class="pl-1">
         <img
             class="size-5"
@@ -50,8 +61,8 @@
     {/if}
     <td
         class="absolute left-0 -z-10 h-7 px-2 py-1"
-        class:shadow-md={shadow}
+        class:shadow-md={!takingScreenshot}
         style="background-color: {index % 2 === 1 && $settings.general.splitLines
-            ? RGBLinearShade(HexToRgba(color, 0.6))
-            : HexToRgba(color, 0.6)}; width: {width}%"></td>
+            ? RGBLinearShade(HexToRgba(entityState.color, 0.6))
+            : HexToRgba(entityState.color, 0.6)}; width: {tweenedValue.current}%"></td>
 </tr>

@@ -1,21 +1,20 @@
 <script lang="ts">
-    import type { Entity } from "$lib/types";
     import { settings } from "$lib/utils/settings";
     import { tooltip } from "$lib/utils/tooltip";
     import { flip } from "svelte/animate";
     import BossRow from "./BossRow.svelte";
+    import type { EncounterState } from "$lib/encounter.svelte";
 
     interface Props {
-        bosses: Array<Entity>;
-        tween?: boolean;
-        duration: number;
+        enc: EncounterState;
         inspectBoss: (boss: string) => void;
     }
 
-    let { bosses, tween = true, duration, inspectBoss }: Props = $props();
+    let { enc, inspectBoss }: Props = $props();
 
+    let mostDamageDealtBoss = $derived(enc.bosses[0]?.damageStats.damageDealt ?? 1);
     let bossDamageDealtPercentages: Array<number> = $derived(
-        bosses.map((boss) => (boss.damageStats.damageDealt / bosses[0].damageStats.damageDealt!) * 100)
+        enc.bosses.map((boss) => (boss.damageStats.damageDealt / mostDamageDealtBoss) * 100)
     );
 </script>
 
@@ -29,12 +28,12 @@
         </tr>
     </thead>
     <tbody class="relative z-10">
-        {#each bosses as boss, i (boss.name)}
+        {#each enc.bosses as boss, i (boss.name)}
             <tr
                 class="h-7 px-2 py-1 {$settings.general.underlineHovered ? 'hover:underline' : ''}"
                 animate:flip={{ duration: 200 }}
                 onclick={() => inspectBoss(boss.name)}>
-                <BossRow {duration} {boss} width={bossDamageDealtPercentages[i]} {tween} index={i} />
+                <BossRow {boss} {enc} width={bossDamageDealtPercentages[i]} index={i} />
             </tr>
         {/each}
     </tbody>

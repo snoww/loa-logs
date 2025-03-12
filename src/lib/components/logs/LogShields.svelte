@@ -5,34 +5,27 @@
     import ShieldHeader from "$lib/components/shared/ShieldHeader.svelte";
     import LogPartyShieldRow from "$lib/components/logs/LogPartyShieldRow.svelte";
     import { tooltip } from "$lib/utils/tooltip";
+    import type { EncounterState } from "$lib/encounter.svelte";
+    import { BuffState } from "$lib/buffs.svelte";
 
     interface Props {
-        players: Array<Entity>;
-        encounterDamageStats: EncounterDamageStats;
+        enc: EncounterState;
     }
 
-    let { players, encounterDamageStats }: Props = $props();
+    let { enc }: Props = $props();
+    let buffs = $derived(new BuffState(enc));
 
     let tab = $state(ShieldTab.GIVEN);
 
-    let a = new Map<string, Map<number, StatusEffect>>();
-    for (const [id, buff] of Object.entries(encounterDamageStats.appliedShieldBuffs)) {
-        filterStatusEffects(a, buff, Number(id), null, null, false, true);
-    }
-
-    let groupedShields = $derived(new Map([...a.entries()].sort()));
-    let obj = $derived(getPartyShields(players, encounterDamageStats.misc?.partyInfo ?? {}, groupedShields, tab));
-
-    let parties = $derived(obj.parties);
-    let partyGroupedShields = $derived(obj.partyGroupedShields);
-    let partyPercentages = $derived(obj.partyPercentages);
-    let partyShields = $derived(obj.partyShields);
+    $effect.pre(() => {
+        buffs.setShieldTab(tab);
+    });
 
     let vw: number = $state(0);
     let partyWidths: { [key: string]: string } = $derived.by(() => {
-        if (partyGroupedShields.size > 0) {
+        if (buffs.partyGroupedShields.size > 0) {
             const remToPx = parseFloat(getComputedStyle(document.documentElement).fontSize);
-            return calculatePartyWidth(partyGroupedShields, remToPx, vw);
+            return calculatePartyWidth(buffs.partyGroupedShields, remToPx, vw);
         }
         return {};
     });
@@ -82,14 +75,14 @@
     </button>
 </div>
 <div class="flex flex-col space-y-2">
-    {#if encounterDamageStats.misc?.partyInfo && partyGroupedShields.size > 0}
-        {#each [...partyGroupedShields] as [partyId, synergies], i (partyId)}
-            {#if parties[i] && parties[i].length > 0}
+    {#if enc.partyInfo && buffs.partyGroupedShields.size > 0 && buffs.shieldParties.length > 0}
+        {#each buffs.partyGroupedShields as [partyId, synergies], i (partyId)}
+            {#if buffs.shieldParties[i] && buffs.shieldParties[i].length > 0}
                 <table class="table-fixed" style="width: {partyWidths[partyId]};">
                     <thead class="z-40 h-6" id="buff-head">
                         <tr class="bg-zinc-900">
-                            {#if parties.length > 1}
-                                <th class="w-7 whitespace-nowrap px-2 font-normal tracking-tight"
+                            {#if buffs.shieldParties.length > 1}
+                                <th class="w-7 px-2 font-normal tracking-tight whitespace-nowrap"
                                     >Party {+partyId + 1}</th>
                             {:else}
                                 <th class="w-7 px-2 font-normal"></th>
@@ -98,19 +91,20 @@
                             <th class="w-full"></th>
                             <th class="w-20 font-normal">Total</th>
                             {#each synergies as synergy (synergy)}
-                                {@const syns = groupedShields.get(synergy) || new Map()}
+                                {@const syns = buffs.groupedShields.get(synergy) || new Map()}
                                 <ShieldHeader shields={syns} />
                             {/each}
                         </tr>
                     </thead>
                     <tbody class="relative z-10">
-                        {#each parties[i] as player, playerIndex (player.name)}
-                            {@const shields = partyShields.get(partyId)?.get(player.name) ?? []}
+                        {#each buffs.shieldParties[i] as player, playerIndex (player.name)}
+                            {@const shields = buffs.partyShields.get(partyId)?.get(player.name) ?? []}
                             <tr class="h-7 px-2 py-1 {$settings.general.underlineHovered ? 'hover:underline' : ''}">
                                 <LogPartyShieldRow
+                                    {enc}
                                     {player}
                                     playerShields={shields}
-                                    percentage={partyPercentages[i][playerIndex]} />
+                                    percentage={buffs.shieldPartyPercentages[i][playerIndex]} />
                             </tr>
                         {/each}
                     </tbody>

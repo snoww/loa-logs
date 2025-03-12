@@ -8,13 +8,7 @@
 
     let { shields }: Props = $props();
 
-    let width = $state("3.5rem");
-
-    $effect.pre(() => {
-        if (shields.size > 1) {
-            width = `${shields.size * 1.5 + 1}rem`;
-        }
-    });
+    let width = $derived(shields.size > 1 ? `${shields.size * 1.5 + 1}rem` : "3.5rem");
 </script>
 
 <th class="" style="width: {width}">

@@ -1,99 +1,32 @@
 <script lang="ts">
+    import type { EntityState } from "$lib/entity.svelte";
+    import { SkillState } from "$lib/skill.svelte";
     import type { Skill } from "$lib/types";
     import { HexToRgba, RGBLinearShade } from "$lib/utils/colors";
     import { abbreviateNumberSplit, round } from "$lib/utils/numbers";
     import { settings, skillIcon } from "$lib/utils/settings";
     import { getSkillIcon } from "$lib/utils/strings";
     import { generateSkillTooltip, tooltip } from "$lib/utils/tooltip";
+    import { cubicOut } from "svelte/easing";
+    import { Tween } from "svelte/motion";
 
     interface Props {
         skill: Skill;
-        color: string;
-        hasFrontAttacks: boolean;
-        hasBackAttacks: boolean;
-        anySupportBuff: boolean;
-        anySupportIdentity: boolean;
-        anySupportBrand: boolean;
-        anySupportHat: boolean;
-        abbreviatedSkillDamage: (string | number)[];
-        skillDps: (string | number)[];
-        skillDpsRaw: number;
-        playerDamageDealt: number;
+        entityState: EntityState;
         width: number;
-        duration: number;
-        meterSettings: string;
         shadow?: boolean;
         index: number;
     }
 
-    let {
-        skill,
-        color,
-        hasFrontAttacks,
-        hasBackAttacks,
-        anySupportBuff,
-        anySupportIdentity,
-        anySupportBrand,
-        anySupportHat,
-        abbreviatedSkillDamage,
-        skillDps,
-        skillDpsRaw,
-        playerDamageDealt,
-        width,
-        duration,
-        meterSettings,
-        shadow = false,
-        index
-    }: Props = $props();
+    let { skill, entityState, width, shadow = false, index }: Props = $props();
 
-    let critPercentage = $state("0.0");
-    let critDmgPercentage = $state("0.0");
-    let baPercentage = $state("0.0");
-    let faPercentage = $state("0.0");
-    let averagePerCast = $derived(skill.totalDamage / skill.casts);
-    let adjustedCritPercentage: string | undefined = $state(undefined);
-
-    let currentSettings = $state($settings.logs);
-    if (meterSettings === "logs") {
-        currentSettings = $settings.logs;
-    } else {
-        currentSettings = $settings.meter;
-    }
-
+    let skillState = $derived(new SkillState(skill, entityState));
+    let tweenedValue = new Tween(entityState.enc.live ? 0 : width, {
+        duration: 400,
+        easing: cubicOut
+    });
     $effect(() => {
-        if (currentSettings.breakdown.adjustedCritRate) {
-            if (skill.adjustedCrit) {
-                adjustedCritPercentage = round(skill.adjustedCrit * 100);
-            } else {
-                let filter = averagePerCast * 0.05;
-                let adjustedCrits = 0;
-                let adjustedHits = 0;
-                if (skill.skillCastLog.length > 0) {
-                    for (const c of skill.skillCastLog) {
-                        for (const h of c.hits) {
-                            if (h.damage > filter) {
-                                adjustedCrits += h.crit ? 1 : 0;
-                                adjustedHits += 1;
-                            }
-                        }
-                    }
-                    if (adjustedHits > 0) {
-                        adjustedCritPercentage = round((adjustedCrits / adjustedHits) * 100);
-                    }
-                }
-            }
-        }
-        if (skill.hits !== 0) {
-            critDmgPercentage = round((skill.critDamage / skill.totalDamage) * 100);
-            critPercentage = round((skill.crits / skill.hits) * 100);
-            if (currentSettings.positionalDmgPercent && (skill.frontAttackDamage > 0 || skill.backAttackDamage > 0)) {
-                faPercentage = round((skill.frontAttackDamage / skill.totalDamage) * 100);
-                baPercentage = round((skill.backAttackDamage / skill.totalDamage) * 100);
-            } else {
-                faPercentage = round((skill.frontAttacks / skill.hits) * 100);
-                baPercentage = round((skill.backAttacks / skill.hits) * 100);
-            }
-        }
+        tweenedValue.set(width ?? 0);
     });
 </script>
 
@@ -111,51 +44,51 @@
         </span>
     </div>
 </td>
-{#if currentSettings.breakdown.damage}
+{#if entityState.enc.curSettings.breakdown.damage}
     <td class="px-1 text-center" use:tooltip={{ content: skill.totalDamage.toLocaleString() }}>
-        {abbreviatedSkillDamage[0]}<span class="text-3xs text-gray-300">{abbreviatedSkillDamage[1]}</span>
+        {skillState.skillDamageString[0]}<span class="text-3xs text-gray-300">{skillState.skillDamageString[1]}</span>
     </td>
 {/if}
-{#if currentSettings.breakdown.dps}
-    <td class="px-1 text-center" use:tooltip={{ content: skillDpsRaw.toLocaleString() }}>
-        {skillDps[0]}<span class="text-3xs text-gray-300">{skillDps[1]}</span>
+{#if entityState.enc.curSettings.breakdown.dps}
+    <td class="px-1 text-center" use:tooltip={{ content: skillState.skillDps.toLocaleString() }}>
+        {skillState.skillDpsString[0]}<span class="text-3xs text-gray-300">{skillState.skillDpsString[1]}</span>
     </td>
 {/if}
-{#if currentSettings.breakdown.damagePercent}
+{#if entityState.enc.curSettings.breakdown.damagePercent}
     <td class="px-1 text-center">
-        {round((skill.totalDamage / playerDamageDealt) * 100)}<span class="text-xs text-gray-300">%</span>
+        {round((skill.totalDamage / entityState.damageDealt) * 100)}<span class="text-xs text-gray-300">%</span>
     </td>
 {/if}
-{#if currentSettings.breakdown.critRate}
+{#if entityState.enc.curSettings.breakdown.critRate}
     <td class="px-1 text-center">
-        {critPercentage}<span class="text-3xs text-gray-300">%</span>
+        {skillState.critPercentage}<span class="text-3xs text-gray-300">%</span>
     </td>
 {/if}
-{#if meterSettings === "logs" && currentSettings.breakdown.adjustedCritRate}
+{#if !entityState.enc.live && entityState.enc.curSettings.breakdown.adjustedCritRate}
     <td class="px-1 text-center">
-        {#if adjustedCritPercentage}
-            {adjustedCritPercentage}<span class="text-3xs text-gray-300">%</span>
+        {#if skillState.adjustedCrit}
+            {skillState.adjustedCrit}<span class="text-3xs text-gray-300">%</span>
         {:else}
             -
         {/if}
     </td>
 {/if}
-{#if currentSettings.breakdown.critDmg}
+{#if entityState.enc.curSettings.breakdown.critDmg}
     <td class="px-1 text-center">
-        {critDmgPercentage}<span class="text-3xs text-gray-300">%</span>
+        {skillState.critDmgPercentage}<span class="text-3xs text-gray-300">%</span>
     </td>
 {/if}
-{#if hasFrontAttacks && currentSettings.breakdown.frontAtk}
+{#if entityState.anyFrontAttacks && entityState.enc.curSettings.breakdown.frontAtk}
     <td class="px-1 text-center">
-        {faPercentage}<span class="text-3xs text-gray-300">%</span>
+        {skillState.faPercentage}<span class="text-3xs text-gray-300">%</span>
     </td>
 {/if}
-{#if hasBackAttacks && currentSettings.breakdown.backAtk}
+{#if entityState.anyBackAttacks && entityState.enc.curSettings.breakdown.backAtk}
     <td class="px-1 text-center">
-        {baPercentage}<span class="text-3xs text-gray-300">%</span>
+        {skillState.baPercentage}<span class="text-3xs text-gray-300">%</span>
     </td>
 {/if}
-{#if anySupportBuff && currentSettings.breakdown.percentBuffBySup}
+{#if entityState.anySupportBuff && entityState.enc.curSettings.breakdown.percentBuffBySup}
     <td class="px-1 text-center">
         {#if skill.totalDamage > 0}
             {round((skill.buffedBySupport / skill.totalDamage) * 100)}<span class="text-3xs text-gray-300">%</span>
@@ -164,7 +97,7 @@
         {/if}
     </td>
 {/if}
-{#if anySupportBrand && currentSettings.breakdown.percentBrand}
+{#if entityState.anySupportBrand && entityState.enc.curSettings.breakdown.percentBrand}
     <td class="px-1 text-center">
         {#if skill.totalDamage > 0}
             {round((skill.debuffedBySupport / skill.totalDamage) * 100)}<span class="text-3xs text-gray-300">%</span>
@@ -173,7 +106,7 @@
         {/if}
     </td>
 {/if}
-{#if anySupportIdentity && currentSettings.breakdown.percentIdentityBySup}
+{#if entityState.anySupportIdentity && entityState.enc.curSettings.breakdown.percentIdentityBySup}
     <td class="px-1 text-center">
         {#if skill.totalDamage > 0}
             {round((skill.buffedByIdentity / skill.totalDamage) * 100)}<span class="text-3xs text-gray-300">%</span>
@@ -182,7 +115,7 @@
         {/if}
     </td>
 {/if}
-{#if anySupportHat && currentSettings.breakdown.percentHatBySup}
+{#if entityState.anySupportHat && entityState.enc.curSettings.breakdown.percentHatBySup}
     <td class="px-1 text-center">
         {#if skill.totalDamage > 0}
             {round(((skill.buffedByHat ?? 0) / skill.totalDamage) * 100)}<span class="text-3xs text-gray-300">%</span>
@@ -191,23 +124,23 @@
         {/if}
     </td>
 {/if}
-{#if currentSettings.breakdown.avgDamage}
+{#if entityState.enc.curSettings.breakdown.avgDamage}
     {@const averagePerHit = skill.totalDamage / skill.hits}
     <td class="px-1 text-center" use:tooltip={{ content: Math.round(averagePerHit).toLocaleString() }}>
         {abbreviateNumberSplit(averagePerHit)[0]}<span class="text-3xs text-gray-300"
             >{abbreviateNumberSplit(averagePerHit)[1]}</span>
     </td>
-    <td class="px-1 text-center" use:tooltip={{ content: Math.round(averagePerCast).toLocaleString() }}>
-        {abbreviateNumberSplit(averagePerCast)[0]}<span class="text-3xs text-gray-300"
-            >{abbreviateNumberSplit(averagePerCast)[1]}</span>
+    <td class="px-1 text-center" use:tooltip={{ content: Math.round(skillState.averagePerCast).toLocaleString() }}>
+        {abbreviateNumberSplit(skillState.averagePerCast)[0]}<span class="text-3xs text-gray-300"
+            >{abbreviateNumberSplit(skillState.averagePerCast)[1]}</span>
     </td>
 {/if}
-{#if currentSettings.breakdown.maxDamage}
+{#if entityState.enc.curSettings.breakdown.maxDamage}
     <td class="px-1 text-center" use:tooltip={{ content: skill.maxDamage.toLocaleString() }}>
         {abbreviateNumberSplit(skill.maxDamage)[0]}<span class="text-3xs text-gray-300"
             >{abbreviateNumberSplit(skill.maxDamage)[1]}</span>
     </td>
-    {#if meterSettings === "logs"}
+    {#if !entityState.enc.live}
         {#if skill.maxDamageCast}
             <td class="px-1 text-center" use:tooltip={{ content: skill.maxDamageCast.toLocaleString() }}>
                 {abbreviateNumberSplit(skill.maxDamageCast)[0]}<span class="text-3xs text-gray-300"
@@ -218,7 +151,7 @@
         {/if}
     {/if}
 {/if}
-{#if currentSettings.breakdown.casts}
+{#if entityState.enc.curSettings.breakdown.casts}
     <td
         class="px-1 text-center"
         use:tooltip={{
@@ -230,7 +163,7 @@
             >{abbreviateNumberSplit(skill.casts)[1]}</span>
     </td>
 {/if}
-{#if currentSettings.breakdown.cpm}
+{#if entityState.enc.curSettings.breakdown.cpm}
     <td class="px-1 text-center">
         <div
             use:tooltip={{
@@ -238,11 +171,11 @@
                     skill.casts.toLocaleString() + " " + (skill.casts === 1 ? "cast" : "casts")
                 }</div>`
             }}>
-            {round(skill.casts / (duration / 1000 / 60))}
+            {round(skill.casts / (entityState.enc.duration / 1000 / 60))}
         </div>
     </td>
 {/if}
-{#if currentSettings.breakdown.hits}
+{#if entityState.enc.curSettings.breakdown.hits}
     <td
         class="px-1 text-center"
         use:tooltip={{
@@ -254,7 +187,7 @@
             >{abbreviateNumberSplit(skill.hits)[1]}</span>
     </td>
 {/if}
-{#if currentSettings.breakdown.hpm}
+{#if entityState.enc.curSettings.breakdown.hpm}
     <td class="px-1 text-center">
         {#if skill.hits === 0}
             <div class="">0</div>
@@ -265,7 +198,7 @@
                         skill.hits.toLocaleString() + " " + (skill.hits === 1 ? "hit" : "hits")
                     }</div>`
                 }}>
-                {round(skill.hits / (duration / 1000 / 60))}
+                {round(skill.hits / (entityState.enc.duration / 1000 / 60))}
             </div>
         {/if}
     </td>
@@ -274,5 +207,5 @@
     class="absolute left-0 -z-10 h-7 px-2 py-1"
     class:shadow-md={shadow}
     style="background-color: {index % 2 === 1 && $settings.general.splitLines
-        ? RGBLinearShade(HexToRgba(color, 0.6))
-        : HexToRgba(color, 0.6)}; width: {width}%"></td>
+        ? RGBLinearShade(HexToRgba(entityState.color, 0.6))
+        : HexToRgba(entityState.color, 0.6)}; width: {tweenedValue.current}%"></td>

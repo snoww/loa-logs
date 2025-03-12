@@ -7,30 +7,21 @@
     import { type Entity, ShieldDetails } from "$lib/types";
     import ShieldTooltipDetail from "$lib/components/shared/ShieldTooltipDetail.svelte";
     import { abbreviateNumberSplit } from "$lib/utils/numbers";
+    import type { EncounterState } from "$lib/encounter.svelte";
+    import { EntityState } from "$lib/entity.svelte";
 
     interface Props {
+        enc: EncounterState;
         player: Entity;
         playerShields: Array<ShieldDetails>;
         percentage: number;
     }
 
-    let { player, playerShields, percentage }: Props = $props();
+    let { enc, player, playerShields, percentage }: Props = $props();
+    let entityState = $derived(new EntityState(player, enc));
 
-    let color = $state("#ffffff");
-    let playerName: string = $derived(formatPlayerName(player, $settings.general));
-
-    if (Object.hasOwn($colors, player.class)) {
-        if ($settings.general.constantLocalPlayerColor && $localPlayer == player.name) {
-            color = $colors["Local"].color;
-        } else {
-            color = $colors[player.class].color;
-        }
-    }
-
-    let totalShieldStr: (string | number)[] = $derived.by(() => {
-        let totalShield = playerShields.reduce((acc, buff) => acc + buff.total, 0);
-        return abbreviateNumberSplit(totalShield);
-    });
+    let totalShield = $derived(playerShields.reduce((acc, buff) => acc + buff.total, 0));
+    let totalShieldStr = $derived(abbreviateNumberSplit(totalShield));
 </script>
 
 <td class="pl-1">
@@ -42,12 +33,12 @@
 </td>
 <td colspan="2">
     <div class="truncate">
-        <span use:tooltip={{ content: playerName }}>
-            {playerName}
+        <span use:tooltip={{ content: entityState.name }}>
+            {entityState.name}
         </span>
     </div>
 </td>
-<td class="px-1 text-center text-3xs">
+<td class="px-1 text-center text-3xs" use:tooltip={{ content: totalShield.toLocaleString() }}>
     {totalShieldStr[0]}<span class="text-3xs text-gray-300">{totalShieldStr[1]}</span>
 </td>
 {#if playerShields.length > 0}
@@ -62,4 +53,4 @@
 <td
     class="absolute left-0 -z-10 h-7 px-2 py-1"
     class:shadow-md={!$takingScreenshot}
-    style="background-color: {HexToRgba(color, 0.6)}; width: {percentage}%"></td>
+    style="background-color: {HexToRgba(entityState.color, 0.6)}; width: {percentage}%"></td>

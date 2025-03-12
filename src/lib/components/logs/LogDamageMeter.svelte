@@ -2,18 +2,16 @@
     import {
         MeterState,
         MeterTab,
-        type Entity,
         type Encounter,
         ChartType,
         EntityType,
-        type PartyInfo
+        type PartyInfo,
+        type Entity
     } from "$lib/types";
     import { formatTimestampDate, millisToMinutesAndSeconds } from "$lib/utils/numbers";
     import { invoke } from "@tauri-apps/api/tauri";
-    import LogDamageMeterRow from "./LogDamageMeterRow.svelte";
     import LogPlayerBreakdown from "./LogPlayerBreakdown.svelte";
     import LogEncounterInfo from "./LogEncounterInfo.svelte";
-    import LogBuffs from "./LogBuffs.svelte";
     import { page } from "$app/state";
     import { chartable, type EChartsOptions } from "$lib/utils/charts";
     import { colors, settings, skillIcon } from "$lib/utils/settings";
@@ -24,8 +22,6 @@
         screenshotError,
         takingScreenshot,
         raidGates,
-        localPlayer,
-        rdpsEventDetails,
         uploadErrorStore,
         uploadErrorMessage
     } from "$lib/utils/stores";
@@ -49,12 +45,14 @@
     import BossTable from "../shared/BossTable.svelte";
     import BossBreakdown from "../shared/BossBreakdown.svelte";
     import LogShields from "$lib/components/logs/LogShields.svelte";
-    import Rdps from "$lib/components/shared/Rdps.svelte";
     import LogSkillChart from "./LogSkillChart.svelte";
     import LogDamageMeterPartySplit from "./LogDamageMeterPartySplit.svelte";
-    import LogDamageMeterHeader from "./LogDamageMeterHeader.svelte";
     import { LOG_SITE_URL, uploadLog } from "$lib/utils/sync";
     import Notification from "$lib/components/shared/Notification.svelte";
+    import { EncounterState } from "$lib/encounter.svelte";
+    import DamageMeterHeader from "../shared/DamageMeterHeader.svelte";
+    import PlayerRow from "../shared/PlayerRow.svelte";
+    import Buffs from "../shared/Buffs.svelte";
 
     interface Props {
         id: string;
@@ -63,25 +61,7 @@
 
     let { id, encounter = $bindable() }: Props = $props();
 
-    let players: Array<Entity> = $derived.by(() => {
-        if ($settings.general.showEsther) {
-            return Object.values(encounter.entities)
-                .filter(
-                    (e) =>
-                        e.damageStats.damageDealt > 0 &&
-                        (e.entityType === EntityType.ESTHER || (e.entityType === EntityType.PLAYER && e.classId != 0))
-                )
-                .sort((a, b) => b.damageStats.damageDealt - a.damageStats.damageDealt);
-        } else {
-            return Object.values(encounter.entities)
-                .filter((e) => e.damageStats.damageDealt > 0 && e.entityType === EntityType.PLAYER && e.classId != 0)
-                .sort((a, b) => b.damageStats.damageDealt - a.damageStats.damageDealt);
-        }
-    });
-    let bosses: Array<Entity> = $state([]);
-    let player: Entity | null = $state(null);
-    let totalDamageDealt = $state(0);
-    let anyRdpsData: boolean = $state(false);
+    let enc = $derived(new EncounterState(encounter, $settings, false, $colors));
 
     let hasSkillCastLog = $state(false);
 
@@ -89,78 +69,13 @@
 
     let encounterPartyInfo: PartyInfo | undefined = $state(encounter.encounterDamageStats.misc?.partyInfo);
 
-    $effect(() => {
-        if ($settings.general.showBosses) {
-            bosses = Object.values(encounter.entities)
-                .filter((e) => e.damageStats.damageDealt > 0 && e.entityType === EntityType.BOSS)
-                .sort((a, b) => b.damageStats.damageDealt - a.damageStats.damageDealt);
-        }
-        $localPlayer = encounter.localPlayer;
-        if (!anyDead) {
-            multipleDeaths = players.some((player) => player.damageStats.deaths > 0);
-        } else {
-            multipleDeaths = players.some((player) => player.damageStats.deaths > 1);
-        }
-
-        // if (
-        //     encounter.encounterDamageStats.misc?.rdpsValid === undefined ||
-        //     encounter.encounterDamageStats.misc?.rdpsValid
-        // ) {
-        //     anyRdpsData = players.some((player) => player.damageStats.rdpsDamageReceived > 0);
-        // }
-        // if (
-        //     encounter.encounterDamageStats.misc?.rdpsMessage === undefined ||
-        //     encounter.encounterDamageStats.misc?.rdpsMessage
-        // ) {
-        //     $rdpsEventDetails = encounter.encounterDamageStats.misc?.rdpsMessage || "";
-        // } else {
-        //     $rdpsEventDetails = "";
-        // }
-        if ($settings.general.showEsther) {
-            totalDamageDealt =
-                encounter.encounterDamageStats.totalDamageDealt +
-                players
-                    .filter((e) => e.damageStats.damageDealt > 0 && e.entityType === EntityType.ESTHER)
-                    .reduce((a, b) => a + b.damageStats.damageDealt, 0);
-        } else {
-            totalDamageDealt = encounter.encounterDamageStats.totalDamageDealt;
-        }
-
-        if (encounter.localPlayer) {
-            localPlayerEntity = encounter.entities[encounter.localPlayer];
-        }
-
-        if (playerName) {
-            player = encounter.entities[playerName];
-            meterState = MeterState.PLAYER;
-        } else {
-            player = null;
-            meterState = MeterState.PARTY;
-        }
-    });
-
-    let playerDamagePercentages: Array<number> = $derived(
-        players.map((player) => (player.damageStats.damageDealt / topDamageDealt) * 100)
-    );
-    let topDamageDealt = $derived(encounter.encounterDamageStats.topDamageDealt);
-    let localPlayerEntity: Entity | null = $state(null);
-
-    let anyDead: boolean = $derived(players.some((player) => player.isDead));
-    let multipleDeaths: boolean = $state(false);
-    let anyFrontAtk: boolean = $derived(players.some((player) => player.skillStats.frontAttacks > 0));
-    let anyBackAtk: boolean = $derived(players.some((player) => player.skillStats.backAttacks > 0));
-    let anySupportBuff: boolean = $derived(players.some((player) => player.damageStats.buffedBySupport > 0));
-    let anySupportIdentity: boolean = $derived(players.some((player) => player.damageStats.buffedByIdentity > 0));
-    let anySupportBrand: boolean = $derived(players.some((player) => player.damageStats.debuffedBySupport > 0));
-    let anySupportHat: boolean = $derived(
-        players.some((player) => player.damageStats.buffedByHat && player.damageStats.buffedByHat > 0)
-    );
-    let isSolo = $derived(players.length === 1);
+    let localPlayerEntity = $derived(encounter.entities[enc.localPlayer]);
 
     let meterState = $state(MeterState.PARTY);
     let tab = $state(MeterTab.DAMAGE);
     let chartType = $state(ChartType.AVERAGE_DPS);
     let playerName = $state("");
+    let player: Entity | undefined = $derived(encounter.entities[playerName]);
     let focusedBoss = $state("");
 
     let chartOptions: EChartsOptions = $state({});
@@ -220,7 +135,7 @@
                     );
                 }
             } else if (chartType === ChartType.SKILL_LOG && focusedBoss) {
-                let boss = bosses.find((boss) => boss.name === focusedBoss);
+                let boss = enc.bosses.find((boss) => boss.name === focusedBoss);
                 chartOptions = getSkillLogChartOld(
                     boss!,
                     $skillIcon.path,
@@ -229,13 +144,6 @@
                 );
             }
         }
-    });
-
-    let anyPlayerIncapacitated = $derived.by(() => {
-        if (!encounter) return false;
-        return Object.values(encounter.entities).some(
-            (e) => e.damageStats.incapacitations && e.damageStats.incapacitations.length > 0
-        );
     });
 
     function inspectPlayer(name: string) {
@@ -315,7 +223,6 @@
         }
         if (meterState === MeterState.PLAYER) {
             meterState = MeterState.PARTY;
-            player = null;
             playerName = "";
             chartType = ChartType.AVERAGE_DPS;
             scrollToTop();
@@ -433,7 +340,7 @@
         difficulty={encounter.difficulty}
         date={formatTimestampDate(encounter.fightStart, true)}
         encounterDuration={millisToMinutesAndSeconds(encounter.duration)}
-        {totalDamageDealt}
+        totalDamageDealt={enc.totalDamageDealt}
         dps={encounter.encounterDamageStats.dps}
         cleared={encounter.cleared}
         bossOnlyDamage={encounter.bossOnlyDamage}
@@ -489,7 +396,7 @@
                         Tanked
                     </button>
                 {/if}
-                {#if $settings.general.showBosses && bosses.length > 0}
+                {#if $settings.general.showBosses && enc.bosses.length > 0}
                     <button
                         class="rounded-xs px-2 py-1"
                         class:bg-accent-900={tab === MeterTab.BOSS}
@@ -729,66 +636,27 @@
             {#if tab === MeterTab.DAMAGE}
                 {#if meterState === MeterState.PARTY}
                     {#if $settings.logs.splitPartyDamage && encounterPartyInfo && Object.keys(encounterPartyInfo).length >= 2}
-                        <LogDamageMeterPartySplit
-                            {players}
-                            {encounterPartyInfo}
-                            {topDamageDealt}
-                            {totalDamageDealt}
-                            {anyFrontAtk}
-                            {anyBackAtk}
-                            {anySupportBuff}
-                            {anySupportIdentity}
-                            {anySupportBrand}
-                            {anySupportHat}
-                            {anyRdpsData}
-                            {anyPlayerIncapacitated}
-                            end={encounter.lastCombatPacket}
-                            {isSolo}
-                            {inspectPlayer} />
+                        <LogDamageMeterPartySplit {enc} {inspectPlayer} />
                     {:else}
                         <table class="relative w-full table-fixed">
                             <thead class="z-30 h-6">
                                 <tr class="bg-zinc-900">
                                     <th class="w-7 px-2 font-normal"></th>
-                                    <th class="w-14 px-2 text-left font-normal"></th>
-                                    <th class="w-full"></th>
-                                    <LogDamageMeterHeader
-                                        {anyDead}
-                                        {multipleDeaths}
-                                        {anyFrontAtk}
-                                        {anyBackAtk}
-                                        {anySupportBuff}
-                                        {anySupportIdentity}
-                                        {anySupportBrand}
-                                        {anySupportHat}
-                                        {anyRdpsData}
-                                        {anyPlayerIncapacitated}
-                                        {isSolo} />
+                                    <DamageMeterHeader {enc} />
                                 </tr>
                             </thead>
                             <tbody class="relative z-10">
-                                {#each players as player, i (player.name)}
+                                {#each enc.players as player, i (player.name)}
                                     <tr
                                         class="h-7 px-2 py-1 {$settings.general.underlineHovered
                                             ? 'hover:underline'
                                             : ''}"
                                         onclick={() => inspectPlayer(player.name)}>
-                                        <LogDamageMeterRow
+                                        <PlayerRow
+                                            {enc}
                                             entity={player}
-                                            percentage={playerDamagePercentages[i]}
-                                            {totalDamageDealt}
-                                            {anyDead}
-                                            {multipleDeaths}
-                                            {anyFrontAtk}
-                                            {anyBackAtk}
-                                            {anySupportBuff}
-                                            {anySupportIdentity}
-                                            {anySupportBrand}
-                                            {anySupportHat}
-                                            {anyRdpsData}
-                                            {anyPlayerIncapacitated}
-                                            end={encounter.lastCombatPacket}
-                                            {isSolo} />
+                                            width={enc.playerDamagePercentages[i]}
+                                            anyDead={false} />
                                     </tr>
                                 {/each}
                             </tbody>
@@ -796,7 +664,7 @@
                     {/if}
                 {:else if meterState === MeterState.PLAYER && player !== null}
                     <table class="relative w-full table-fixed">
-                        <LogPlayerBreakdown entity={player} duration={encounter.duration} {totalDamageDealt} />
+                        <LogPlayerBreakdown entity={player} {enc} />
                     </table>
                     {#if player.class === "Arcanist"}
                         <table class="relative w-full table-fixed">
@@ -804,50 +672,22 @@
                         </table>
                     {/if}
                 {/if}
-            {:else if tab === MeterTab.RDPS}
-                <Rdps
-                    meterSettings={$settings.logs}
-                    {players}
-                    totalDamageDealt={encounter.encounterDamageStats.totalDamageDealt}
-                    duration={encounter.duration}
-                    {encounterPartyInfo} />
-            {:else if tab === MeterTab.PARTY_BUFFS}
-                {#if meterState === MeterState.PARTY}
-                    <LogBuffs {tab} encounterDamageStats={encounter.encounterDamageStats} {players} {inspectPlayer} />
-                {:else}
-                    <LogBuffs
-                        {tab}
-                        encounterDamageStats={encounter.encounterDamageStats}
-                        {players}
-                        focusedPlayer={player}
-                        {inspectPlayer} />
-                {/if}
-            {:else if tab === MeterTab.SELF_BUFFS}
-                {#if meterState === MeterState.PARTY}
-                    <LogBuffs {tab} encounterDamageStats={encounter.encounterDamageStats} {players} {inspectPlayer} />
-                {:else}
-                    <LogBuffs
-                        {tab}
-                        encounterDamageStats={encounter.encounterDamageStats}
-                        {players}
-                        focusedPlayer={player}
-                        {inspectPlayer} />
-                {/if}
+            {:else if tab === MeterTab.PARTY_BUFFS || tab === MeterTab.SELF_BUFFS}
+                <Buffs {tab} {enc} focusedPlayer={player} {inspectPlayer} {handleRightClick} />
             {:else if tab === MeterTab.TANK}
-                <DamageTaken {players} topDamageTaken={encounter.encounterDamageStats.topDamageTaken} tween={false} />
+                <DamageTaken {enc} />
             {:else if tab === MeterTab.SHIELDS}
-                <LogShields {players} encounterDamageStats={encounter.encounterDamageStats} />
+                <LogShields {enc} />
             {:else if tab === MeterTab.BOSS}
                 {#if !focusedBoss}
-                    <BossTable {bosses} duration={encounter.duration} {inspectBoss} tween={false} />
+                    <BossTable {enc} {inspectBoss} />
                 {:else}
                     <BossBreakdown
+                        {enc}
                         boss={encounter.entities[focusedBoss]}
-                        duration={encounter.duration}
                         handleRightClick={() => {
                             focusedBoss = "";
-                        }}
-                        tween={false} />
+                        }} />
                 {/if}
             {/if}
         </div>

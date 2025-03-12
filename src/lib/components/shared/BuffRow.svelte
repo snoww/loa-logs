@@ -3,40 +3,30 @@
     import { HexToRgba } from "$lib/utils/colors";
     import { cubicOut } from "svelte/easing";
     import { Tween } from "svelte/motion";
-    import BuffTooltipDetail from "./shared/BuffTooltipDetail.svelte";
+    import BuffTooltipDetail from "./BuffTooltipDetail.svelte";
     import { colors, classIconCache, settings } from "$lib/utils/settings";
     import { formatPlayerName } from "$lib/utils/strings";
-    import { tooltip } from "$lib/utils/tooltip";
+    import { generateClassTooltip, tooltip } from "$lib/utils/tooltip";
     import { round } from "$lib/utils/numbers";
     import { addBardBubbles, supportSkills } from "$lib/utils/buffs";
-    import { localPlayer } from "$lib/utils/stores";
+    import { localPlayer, takingScreenshot } from "$lib/utils/stores";
+    import type { EncounterState } from "$lib/encounter.svelte";
+    import { EntityState } from "$lib/entity.svelte";
 
     interface Props {
+        enc: EncounterState;
         player: Entity;
         groupedSynergies: Map<string, Map<number, StatusEffect>>;
         percentage: number;
     }
 
-    let { player, groupedSynergies, percentage }: Props = $props();
+    let { enc, player, groupedSynergies, percentage }: Props = $props();
 
-    let color = $state("#ffffff");
-    let alpha = $state(0.6);
-    let playerName: string = $derived(formatPlayerName(player, $settings.general));
-    let synergyPercentageDetails: Array<BuffDetails> = $state([]);
+    let entityState = $derived(new EntityState(player, enc));
 
-    const tweenedValue = new Tween(0, {
-        duration: 400,
-        easing: cubicOut
-    });
-
-    $effect(() => {
-        tweenedValue.set(percentage ?? 0);
-    });
-
-    $effect(() => {
+    let synergyPercentageDetails: Array<BuffDetails> = $derived.by(() => {
         let damageDealt = player.damageStats.damageDealt;
         let damageDealtWithoutHA = player.damageStats.damageDealt - (player.damageStats.hyperAwakeningDamage ?? 0);
-
         if (groupedSynergies.size > 0) {
             let tempSynergyPercentageDetails: Array<BuffDetails> = [];
             groupedSynergies.forEach((synergies, key) => {
@@ -79,25 +69,21 @@
                 tempSynergyPercentageDetails.push(buff);
             });
 
-            synergyPercentageDetails = tempSynergyPercentageDetails;
+            return tempSynergyPercentageDetails;
         }
+        return [];
+    });
+
+    const tweenedValue = new Tween(enc.live ? 0 : percentage, {
+        duration: 400,
+        easing: cubicOut
     });
 
     $effect(() => {
-        if (Object.hasOwn($colors, player.class)) {
-            if ($settings.general.constantLocalPlayerColor && $localPlayer == player.name) {
-                color = $colors["Local"].color;
-            } else {
-                color = $colors[player.class].color;
-            }
-        }
-
-        if (!$settings.meter.showClassColors) {
-            alpha = 0;
-        } else {
-            alpha = 0.6;
-        }
+        tweenedValue.set(percentage ?? 0);
     });
+
+    let alpha = $derived(enc.live && !enc.curSettings.showClassColors ? 0 : 0.6);
 </script>
 
 <td class="pl-1">
@@ -105,18 +91,18 @@
         class="table-cell size-5"
         src={$classIconCache[player.classId]}
         alt={player.class}
-        use:tooltip={{ content: player.class }} />
+        use:tooltip={{ content: generateClassTooltip(player) }} />
 </td>
 <td colspan="2">
     <div class="truncate">
-        <span use:tooltip={{ content: playerName }}>
-            {playerName}
+        <span use:tooltip={{ content: entityState.name }}>
+            {entityState.name}
         </span>
     </div>
 </td>
 {#if groupedSynergies.size > 0}
     {#each synergyPercentageDetails as synergy}
-        <td class="px-1 text-center">
+        <td class="px-1 text-center text-3xs">
             {#if synergy.percentage}
                 <BuffTooltipDetail {synergy} />
             {/if}
@@ -125,4 +111,5 @@
 {/if}
 <td
     class="absolute left-0 -z-10 h-7 px-2 py-1"
-    style="background-color: {HexToRgba(color, alpha)}; width: {tweenedValue.current}%"></td>
+    class:shadow-md={!$takingScreenshot}
+    style="background-color: {HexToRgba(entityState.color, alpha)}; width: {tweenedValue.current}%"></td>
