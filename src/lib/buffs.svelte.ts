@@ -195,7 +195,7 @@ export class BuffState {
             }
         });
 
-        return temp.length >= 2 ? temp : [this.players];
+        return temp.length >= 2 ? temp : [this.players.toSorted((a, b) => b.damageStats[this.shieldValue] - a.damageStats[this.shieldValue])];
     });
 
     shieldPartyPercentages = $derived(
