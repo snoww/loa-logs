@@ -23,10 +23,36 @@
     });
 
     let bossShield = $derived(boss.currentShield);
-    let bossHPBars = $state(0);
-    let bossCurrentBars = $state(0);
+    let bossHPBars = $derived.by(() => {
+        if (Object.hasOwn(bossHpMap, boss.name) && $settings.meter.bossHpBar) {
+            return getBossHpBars(boss.name, boss.maxHp);
+        } else {
+            return 0;
+        }
+    });
+    let bossCurrentBars = $derived.by(() => {
+        if (bossHPBars !== 0 && !boss.isDead) {
+            if (bossHp === boss.maxHp) {
+                return bossHPBars;
+            } else {
+                if (bossShield > 0) {
+                    return Math.round(((bossHp + bossShield) / boss.maxHp) * bossHPBars);
+                } else {
+                    return Math.ceil((bossHp / boss.maxHp) * bossHPBars);
+                }
+            }
+        } else {
+            return 0;
+        }
+    });
     let bossPreviousBars = $state(0);
-    let bossCurrentPercentage = $state(0);
+    let bossCurrentPercentage = $derived.by(() => {
+        if (boss.isDead || bossHp < 0) {
+            return 0;
+        } else {
+            return (bossHp / boss.maxHp) * 100;
+        }
+    });
     let colorIndex = $state(0);
     let bossBarColor = $state([bossHpBarColors[0], bossHpBarColors[1]]);
     const tweenBossHpBar = new Tween(100, {
@@ -34,42 +60,25 @@
         easing: linear
     });
 
-    let bossCurrentHp: (string | number)[] = $state([]);
-    let bossMaxHp: (string | number)[] = $state([]);
-    let bossShieldHp: (string | number)[] = $state([]);
-
-    $effect.pre(() => {
-        bossCurrentPercentage = (bossHp / boss.maxHp) * 100;
-        bossCurrentHp = abbreviateNumberSplit(bossHp);
-        bossMaxHp = abbreviateNumberSplit(boss.maxHp);
-        bossShieldHp = abbreviateNumberSplit(bossShield);
-    });
-
-    $effect.pre(() => {
-        if (Object.hasOwn(bossHpMap, boss.name) && $settings.meter.bossHpBar) {
-            bossHPBars = getBossHpBars(boss.name, boss.maxHp);
+    let bossCurrentHp = $derived.by(() => {
+        if (boss.isDead || bossHp < 0) {
+            return abbreviateNumberSplit(0);
         } else {
-            bossHPBars = 0;
-            bossCurrentBars = 0;
+            return abbreviateNumberSplit(bossHp);
         }
     });
+    let bossMaxHp = $derived(abbreviateNumberSplit(boss.maxHp));
+    let bossShieldHp = $derived(abbreviateNumberSplit(bossShield));
 
     $effect.pre(() => {
         if (bossHPBars !== 0 && !boss.isDead) {
             if (bossHp === boss.maxHp) {
-                bossCurrentBars = bossHPBars;
                 bossPreviousBars = bossCurrentBars;
-            } else {
-                if (bossShield > 0) {
-                    bossCurrentBars = Math.round(((bossHp + bossShield) / boss.maxHp) * bossHPBars);
-                } else {
-                    bossCurrentBars = Math.ceil((bossHp / boss.maxHp) * bossHPBars);
-                }
             }
             if (bossPreviousBars === 0) {
                 bossPreviousBars = bossCurrentBars;
             }
-            if (bossCurrentBars < bossPreviousBars) {
+            if (bossCurrentBars !== bossPreviousBars) {
                 bossPreviousBars = bossCurrentBars;
                 colorIndex++;
                 bossBarColor = [
@@ -91,9 +100,6 @@
     $effect.pre(() => {
         if (boss.isDead || bossHp < 0) {
             colorIndex = 0;
-            bossCurrentHp = abbreviateNumberSplit(0);
-            bossCurrentPercentage = 0;
-            bossCurrentBars = 0;
             tweenBossHpBar.set(0);
         }
     });
