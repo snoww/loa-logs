@@ -18,20 +18,24 @@ export class BuffState {
     focusedPlayer: Entity | undefined = $state();
     tab: MeterTab | undefined = $state();
 
-    players = $derived(this.enc.players.filter((player) => player.entityType === EntityType.PLAYER));
+    players = $derived.by(() => {
+        if (!this.enc) return [];
+        return this.enc.players.filter((player) => player.entityType === EntityType.PLAYER);
+    });
     percentages = $derived(
         this.players.map((player) => (player.damageStats.damageDealt / this.enc.topDamageDealt) * 100)
     );
 
     groupedSynergies: Map<string, Map<number, StatusEffect>> = $derived.by(() => {
+        if (!this.enc.encounter) return new Map();
         const temp = new Map();
-        for (const [id, buff] of Object.entries(this.enc.encounter!.encounterDamageStats.buffs)) {
+        for (const [id, buff] of Object.entries(this.enc.encounter.encounterDamageStats.buffs)) {
             if (this.focusedPlayer && !Object.hasOwn(this.focusedPlayer.damageStats.buffedBy, id)) {
                 continue;
             }
             filterStatusEffects(temp, buff, Number(id), this.focusedPlayer, this.tab, this.enc.settings.buffs.default);
         }
-        for (const [id, debuff] of Object.entries(this.enc.encounter!.encounterDamageStats.debuffs)) {
+        for (const [id, debuff] of Object.entries(this.enc.encounter.encounterDamageStats.debuffs)) {
             if (this.focusedPlayer && !Object.hasOwn(this.focusedPlayer.damageStats.debuffedBy, id)) {
                 continue;
             }
@@ -168,8 +172,9 @@ export class BuffState {
     topShield = $derived(Math.max(...this.players.map((player) => player.damageStats[this.shieldValue])));
 
     groupedShields: Map<string, Map<number, StatusEffect>> = $derived.by(() => {
+        if (!this.enc.encounter) return new Map();
         const temp = new Map();
-        for (const [id, shield] of Object.entries(this.enc.encounter!.encounterDamageStats.appliedShieldBuffs)) {
+        for (const [id, shield] of Object.entries(this.enc.encounter.encounterDamageStats.appliedShieldBuffs)) {
             filterStatusEffects(temp, shield, Number(id), undefined, undefined, false, true);
         }
 
@@ -195,7 +200,9 @@ export class BuffState {
             }
         });
 
-        return temp.length >= 2 ? temp : [this.players.toSorted((a, b) => b.damageStats[this.shieldValue] - a.damageStats[this.shieldValue])];
+        return temp.length >= 2
+            ? temp
+            : [this.players.toSorted((a, b) => b.damageStats[this.shieldValue] - a.damageStats[this.shieldValue])];
     });
 
     shieldPartyPercentages = $derived(
