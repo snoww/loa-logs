@@ -49,7 +49,13 @@
     <div class="flex flex-col {enc.live ? '' : 'space-y-2'}" id="live-meter-table">
         {#each buffs.partyGroupedSynergies as [partyId, synergies], i (partyId)}
             {#if buffs.buffParties[i] && buffs.buffParties[i].length > 0}
-                <table class="{enc.live ? 'w-full' : ''} table-fixed" style="width: {partyWidths[partyId]};">
+                <table
+                    class="{enc.live ? 'w-full' : ''} table-fixed {enc.live &&
+                    enc.curSettings.pinSelfParty &&
+                    buffs.buffParties[i].some((player) => player.name === enc.localPlayer)
+                        ? 'order-first'
+                        : ''}"  
+                    style="width: {partyWidths[partyId]};">
                     <thead class="z-40 h-6" id="buff-head">
                         <tr class="bg-zinc-900">
                             <th class="w-7 px-2 font-normal tracking-tight whitespace-nowrap">Party {+partyId + 1}</th>
