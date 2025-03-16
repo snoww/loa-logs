@@ -2,11 +2,8 @@
     import type {
         EncounterDamageStats,
         Entity,
-        Skill,
-        SkillCast,
         SkillChartModInfo,
         SkillChartSupportDamage,
-        SkillHit,
         StatusEffectWithId
     } from "$lib/types";
     import { getSkillCastBuffs } from "$lib/utils/buffs";
@@ -38,9 +35,27 @@
 
     let buffType = writable("party");
 
-    let skill: Skill = $state({ skillCastLog: Array<SkillCast>() } as Skill);
-    let skillCast: SkillCast = $state({ hits: Array<SkillHit>() } as SkillCast);
-    let totalDamage: number = $state(0);
+    let skill = $derived.by(() => {
+        if ($focusedSkillCast.skillId > 0 && player) {
+            return player.skills[$focusedSkillCast.skillId];
+        } else {
+            return undefined;
+        }
+    });
+    let skillCast = $derived.by(() => {
+        if (skill) {
+            return skill.skillCastLog[$focusedSkillCast.cast];
+        }
+
+        return undefined;
+    });
+    let totalDamage: number = $derived.by(() => {
+        if (skillCast) {
+            return skillCast.hits.map((hit) => hit.damage).reduce((a, b) => a + b, 0);
+        } else {
+            return 0;
+        }
+    });
 
     let supportBuffs: SkillChartSupportDamage = $state({ buff: 0, brand: 0, identity: 0 });
     let modInfo: SkillChartModInfo = $state({ crit: 0, critDamage: 0, ba: 0, fa: 0 });
@@ -48,15 +63,7 @@
     let allGroupedBuffs: Map<string, Array<StatusEffectWithId>>[] = $state([]);
 
     $effect(() => {
-        if ($focusedSkillCast.skillId > 0 && player) {
-            skill = player.skills[$focusedSkillCast.skillId];
-            skillCast = skill.skillCastLog[$focusedSkillCast.cast];
-            totalDamage = skillCast.hits.map((hit) => hit.damage).reduce((a, b) => a + b, 0);
-        }
-    });
-
-    $effect(() => {
-        if ($focusedSkillCast.skillId > 0 && player) {
+        if ($focusedSkillCast.skillId > 0 && player && skillCast) {
             let groupedBuffs = [];
             let tempModInfo = { crit: 0, critDamage: 0, ba: 0, fa: 0 };
             let tempSupportBuffs = { buff: 0, brand: 0, identity: 0 };
@@ -94,6 +101,7 @@
     });
 
     function getHighestDamageCastIndex(): number {
+        if (!skill) return 0;
         let highestDamage = 0;
         let highestIndex = 0;
         for (const [i, cast] of skill.skillCastLog.entries()) {
@@ -115,7 +123,7 @@
     </div>
     {#if $focusedSkillCast.skillId === 0}
         <div>Click on a skill cast to show details.</div>
-    {:else if skill}
+    {:else if skill && skillCast}
         <div class="px-1 pb-2">
             <div class="flex items-center pt-1 pb-2">
                 <button
@@ -284,7 +292,7 @@
                                 </td>
                                 <td>
                                     <div class="flex">
-                                        {#if allGroupedBuffs[i].size > 0}
+                                        {#if allGroupedBuffs[i] && allGroupedBuffs[i].size > 0}
                                             {#each allGroupedBuffs[i] as [_, groupedBuffs]}
                                                 {#each groupedBuffs as buff}
                                                     <BuffTooltip synergy={buff.statusEffect} size={"size-6"} />
