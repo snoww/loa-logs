@@ -66,7 +66,7 @@ pub fn start(window: Window<Wry>, port: u16, settings: Option<Settings>) -> Resu
     let damage_handler = damage_handler.start()?;
 
     let mut last_update = Instant::now();
-    let mut duration = Duration::from_millis(500);
+    let mut duration = Duration::from_millis(200);
     let mut last_party_update = Instant::now();
     let party_duration = Duration::from_millis(2000);
     let mut raid_end_cd = Instant::now();
