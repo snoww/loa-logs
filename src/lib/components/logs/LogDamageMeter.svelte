@@ -241,53 +241,17 @@
         focusedBoss = name;
     }
 
-    function damageTab() {
-        tab = MeterTab.DAMAGE;
+    function updateTab(setTab: MeterTab) {
+        if (tab === MeterTab.TANK || tab === MeterTab.SHIELDS || tab === MeterTab.BOSS) {
+            handleRightClick();
+        } else if (tab === MeterTab.IDENTITY) {
+            if (!localPlayerEntity) return;
+            chartType = ChartType.IDENTITY;
+        } else if (tab === MeterTab.STAGGER) {
+            chartType = ChartType.STAGGER;
+        }
+        tab = setTab;
         setChartView();
-    }
-
-    // function RDPSTab() {
-    //     tab = MeterTab.RDPS;
-    //     setChartView();
-    // }
-
-    function partySynergyTab() {
-        tab = MeterTab.PARTY_BUFFS;
-        setChartView();
-    }
-
-    function selfSynergyTab() {
-        tab = MeterTab.SELF_BUFFS;
-        setChartView();
-    }
-
-    function tankTab() {
-        handleRightClick();
-        tab = MeterTab.TANK;
-        setChartView();
-    }
-
-    function shieldTab() {
-        handleRightClick();
-        tab = MeterTab.SHIELDS;
-        setChartView();
-    }
-
-    function bossTab() {
-        handleRightClick();
-        tab = MeterTab.BOSS;
-        setChartView();
-    }
-
-    function identityTab() {
-        if (!localPlayerEntity) return;
-        tab = MeterTab.IDENTITY;
-        chartType = ChartType.IDENTITY;
-    }
-
-    function staggerTab() {
-        tab = MeterTab.STAGGER;
-        chartType = ChartType.STAGGER;
     }
 
     function setChartView() {
@@ -430,7 +394,7 @@
                     class="rounded-xs px-2 py-1"
                     class:bg-accent-900={tab === MeterTab.DAMAGE}
                     class:bg-gray-700={tab !== MeterTab.DAMAGE}
-                    onclick={damageTab}>
+                    onclick={() => updateTab(MeterTab.DAMAGE)}>
                     Damage
                 </button>
                 <!--{#if anyRdpsData || $rdpsEventDetails !== ""}-->
@@ -446,14 +410,14 @@
                     class="shrink-0 rounded-xs px-2 py-1"
                     class:bg-accent-900={tab === MeterTab.PARTY_BUFFS}
                     class:bg-gray-700={tab !== MeterTab.PARTY_BUFFS}
-                    onclick={partySynergyTab}>
+                    onclick={() => updateTab(MeterTab.PARTY_BUFFS)}>
                     Party Buffs
                 </button>
                 <button
                     class="shrink-0 rounded-xs px-2 py-1"
                     class:bg-accent-900={tab === MeterTab.SELF_BUFFS}
                     class:bg-gray-700={tab !== MeterTab.SELF_BUFFS}
-                    onclick={selfSynergyTab}>
+                    onclick={() => updateTab(MeterTab.SELF_BUFFS)}>
                     Self Buffs
                 </button>
                 {#if $settings.general.showShields && encounter.encounterDamageStats.totalShielding > 0}
@@ -461,7 +425,7 @@
                         class="rounded-xs px-2 py-1"
                         class:bg-accent-900={tab === MeterTab.SHIELDS}
                         class:bg-gray-700={tab !== MeterTab.SHIELDS}
-                        onclick={shieldTab}>
+                        onclick={() => updateTab(MeterTab.SHIELDS)}>
                         Shields
                     </button>
                 {/if}
@@ -470,7 +434,7 @@
                         class="rounded-xs px-2 py-1"
                         class:bg-accent-900={tab === MeterTab.TANK}
                         class:bg-gray-700={tab !== MeterTab.TANK}
-                        onclick={tankTab}>
+                        onclick={() => updateTab(MeterTab.TANK)}>
                         Tanked
                     </button>
                 {/if}
@@ -479,7 +443,7 @@
                         class="rounded-xs px-2 py-1"
                         class:bg-accent-900={tab === MeterTab.BOSS}
                         class:bg-gray-700={tab !== MeterTab.BOSS}
-                        onclick={bossTab}>
+                        onclick={() => updateTab(MeterTab.BOSS)}>
                         Bosses
                     </button>
                 {/if}
@@ -488,7 +452,7 @@
                         class="rounded-xs px-2 py-1"
                         class:bg-accent-900={tab === MeterTab.IDENTITY}
                         class:bg-gray-700={tab !== MeterTab.IDENTITY}
-                        onclick={identityTab}>
+                        onclick={() => updateTab(MeterTab.IDENTITY)}>
                         Identity
                     </button>
                 {/if}
@@ -497,7 +461,7 @@
                         class="rounded-xs px-2 py-1"
                         class:bg-accent-900={tab === MeterTab.STAGGER}
                         class:bg-gray-700={tab !== MeterTab.STAGGER}
-                        onclick={staggerTab}>
+                        onclick={() => updateTab(MeterTab.STAGGER)}>
                         Stagger
                     </button>
                 {/if}
