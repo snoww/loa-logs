@@ -91,8 +91,6 @@
             <thead class="z-40 h-6">
                 <tr class="bg-zinc-900">
                     <th class="w-7 px-2 font-normal tracking-tight whitespace-nowrap">Esthers</th>
-                    <th class="w-20 px-2 text-left font-normal"></th>
-                    <th class="w-full"></th>
                     <DamageMeterHeader anyDead={false} {enc} />
                 </tr>
             </thead>
