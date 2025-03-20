@@ -74,23 +74,19 @@ export class EntityState {
         return "0.0";
     });
     baPercentage = $derived.by(() => {
-        if (this.entity.skillStats.hits > 0) {
-            if (this.enc.curSettings.positionalDmgPercent && this.entity.damageStats.backAttackDamage > 0) {
-                return round((this.entity.damageStats.backAttackDamage / this.damageDealt) * 100);
-            } else {
-                return round((this.entity.skillStats.frontAttacks / this.entity.skillStats.hits) * 100);
-            }
+        if (this.enc.curSettings.positionalDmgPercent && this.entity.damageStats.backAttackDamage > 0) {
+            return round((this.entity.damageStats.backAttackDamage / this.damageDealt) * 100);
+        } else if (this.entity.skillStats.hits > 0) {
+            return round((this.entity.skillStats.backAttacks / this.entity.skillStats.hits) * 100);
         }
 
         return "0.0";
     });
     faPercentage = $derived.by(() => {
-        if (this.entity.skillStats.hits > 0) {
-            if (this.enc.curSettings.positionalDmgPercent && this.entity.damageStats.frontAttackDamage > 0) {
-                return round((this.entity.damageStats.frontAttackDamage / this.damageDealt) * 100);
-            } else {
-                return round((this.entity.skillStats.frontAttacks / this.entity.skillStats.hits) * 100);
-            }
+        if (this.enc.curSettings.positionalDmgPercent && this.entity.damageStats.frontAttackDamage > 0) {
+            return round((this.entity.damageStats.frontAttackDamage / this.damageDealt) * 100);
+        } else if (this.entity.skillStats.hits > 0) {
+            return round((this.entity.skillStats.frontAttacks / this.entity.skillStats.hits) * 100);
         }
 
         return "0.0";

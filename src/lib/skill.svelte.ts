@@ -22,7 +22,7 @@ export class SkillState {
         return "0.0";
     });
     critDmgPercentage = $derived.by(() => {
-        if (this.skill.hits > 0) {
+        if (this.skill.hits > 0 && this.skill.totalDamage > 0) {
             return round((this.skill.critDamage / this.skill.totalDamage) * 100);
         }
         return "0.0";
@@ -30,14 +30,18 @@ export class SkillState {
     baPercentage = $derived.by(() => {
         if (this.entity.enc.curSettings.positionalDmgPercent && this.skill.backAttackDamage > 0) {
             return round((this.skill.backAttackDamage / this.skill.totalDamage) * 100);
+        } else if (this.skill.hits > 0) {
+            return round((this.skill.backAttacks / this.skill.hits) * 100);
         }
-        return round((this.skill.backAttacks / this.skill.hits) * 100);
+        return "0.0";
     });
     faPercentage = $derived.by(() => {
         if (this.entity.enc.curSettings.positionalDmgPercent && this.skill.frontAttackDamage > 0) {
             return round((this.skill.frontAttackDamage / this.skill.totalDamage) * 100);
+        } else if (this.skill.hits > 0) {
+            return round((this.skill.frontAttacks / this.skill.hits) * 100);
         }
-        return round((this.skill.frontAttacks / this.skill.hits) * 100);
+        return "0.0";
     });
     averagePerCast = $derived(this.skill.totalDamage / this.skill.casts);
     adjustedCrit = $derived.by(() => {
