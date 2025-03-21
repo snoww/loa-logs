@@ -694,11 +694,7 @@
                                             ? 'hover:underline'
                                             : ''}"
                                         onclick={() => inspectPlayer(player.name)}>
-                                        <PlayerRow
-                                            {enc}
-                                            entity={player}
-                                            width={enc.playerDamagePercentages[i]}
-                                            anyDead={false} />
+                                        <PlayerRow {enc} entity={player} width={enc.playerDamagePercentages[i]} />
                                     </tr>
                                 {/each}
                             </tbody>
