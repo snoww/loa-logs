@@ -1,25 +1,21 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {
-    EntityType,
-    type Encounter,
-    type Entity,
-    type StatusEffect,
-    type PartyInfo,
-    type SkillHit
-} from "$lib/types";
-import { defaultOptions } from "./charts";
-import {
-    abbreviateNumber,
-    formatDurationFromMs,
-    round
-} from "./numbers";
-import { isPartySynergy, isSupportBuff, makeSupportBuffKey, supportSkills, hyperAwakeningIds, groupedSynergiesAdd, addBardBubbles } from "./buffs";
 import { bossHpMap } from "$lib/constants/bossHpBars";
+import { EntityType, type Encounter, type Entity, type PartyInfo, type SkillHit, type StatusEffect } from "$lib/types";
+import {
+    addBardBubbles,
+    groupedSynergiesAdd,
+    hyperAwakeningIds,
+    isPartySynergy,
+    isSupportBuff,
+    makeSupportBuffKey,
+    supportSkills
+} from "./buffs";
+import { defaultOptions } from "./charts";
+import { abbreviateNumber, formatDurationFromMs, round } from "./numbers";
 import { getSkillIcon } from "./strings";
 
-const partyRegex = /^Party #(\d)$/;
-const partyColors = ['#008000', '#800080', '#87CEEB', '#FFFF00']
-const buffBreakdownTooltipWidth = 120;
+const partyRegex = /^Party (\d)$/;
+const partyColors = ["#54AD56", "#C3B1E1", "#A7C7E7", "#FDFD96"];
 const bardSerenadeOfAmplification = "Serenade of Amplification";
 const artistBlessingOfTheSun = "Blessing of the Sun";
 
@@ -34,15 +30,15 @@ class SupportSynergyDataPoint {
 
     add(hit: SkillHit, key: string, id: number, effect: StatusEffect) {
         const buffPoints = this.buffs.get(key) || [];
-        let index = buffPoints.findIndex((b) => b.id === id);
+        const index = buffPoints.findIndex((b) => b.id === id);
         let buffPoint: SupportBuffPoint = {
             id: id,
             bonus: 0,
             buffedDamage: 0,
             totalDamage: hit.damage,
             icon: effect.source.icon,
-            sourceIcon: effect.source.skill?.icon,
-        }
+            sourceIcon: effect.source.skill?.icon
+        };
         if (index !== -1) {
             buffPoint = buffPoints[index];
             buffPoint.totalDamage += hit.damage;
@@ -61,15 +57,15 @@ class SupportSynergyDataPoint {
 
     merge(other: SupportSynergyDataPoint) {
         const keys = new Set([...this.buffs.keys(), ...other.buffs.keys()]);
-        let totalDamage = 0
+        let totalDamage = 0;
         for (const key of keys) {
             const buffPointsA = this.buffs.get(key) || [];
             const buffPointsB = other.buffs.get(key) || [];
             const buffPointsIds = new Set([...buffPointsA.map((b) => b.id), ...buffPointsB.map((b) => b.id)]);
             const result = new Array<SupportBuffPoint>();
             for (const buffPointId of buffPointsIds) {
-                const a = buffPointsA.find((bp) => bp.id === buffPointId) || {} as SupportBuffPoint;
-                const b = buffPointsB.find((bp) => bp.id === buffPointId) || {} as SupportBuffPoint;
+                const a = buffPointsA.find((bp) => bp.id === buffPointId) || ({} as SupportBuffPoint);
+                const b = buffPointsB.find((bp) => bp.id === buffPointId) || ({} as SupportBuffPoint);
                 totalDamage = (a.totalDamage || 0) + (b.totalDamage || 0);
                 result.push({
                     id: a.id || b.id,
@@ -77,8 +73,8 @@ class SupportSynergyDataPoint {
                     totalDamage: totalDamage,
                     buffedDamage: (a.buffedDamage || 0) + (b.buffedDamage || 0),
                     icon: a.icon || b.icon,
-                    sourceIcon: a.sourceIcon || b.sourceIcon,
-                })
+                    sourceIcon: a.sourceIcon || b.sourceIcon
+                });
             }
             this.buffs.set(key, result);
         }
@@ -89,15 +85,19 @@ class SupportSynergyDataPoint {
 interface SupportBuffPoint {
     id: number;
     bonus?: number;
-    buffedDamage: number
-    totalDamage: number
+    buffedDamage: number;
+    totalDamage: number;
     icon: string;
     sourceIcon?: string;
 }
 
 function addStatusEffect(map: Map<string, Map<number, StatusEffect>>, effect: [string, StatusEffect]) {
     const [id, statusEffect] = effect;
-    if (!isPartySynergy(statusEffect) || !isSupportBuff(statusEffect) || statusEffect.source.name === bardSerenadeOfAmplification) {
+    if (
+        !isPartySynergy(statusEffect) ||
+        !isSupportBuff(statusEffect) ||
+        statusEffect.source.name === bardSerenadeOfAmplification
+    ) {
         return;
     }
     const key = makeSupportBuffKey(statusEffect);
@@ -115,13 +115,15 @@ export function getSupportSynergiesOverTime(
     fightStartMs: number,
     fightEndMs: number,
     intervalMs: number,
-    legendNames: string[],
+    legendNames: string[]
 ) {
     const groupedSupportSynergies = new Map<string, Map<number, StatusEffect>>();
-    Object.entries(encounter.encounterDamageStats.buffs)
-        .forEach((effect) => addStatusEffect(groupedSupportSynergies, effect));
-    Object.entries(encounter.encounterDamageStats.debuffs)
-        .forEach((effect) => addStatusEffect(groupedSupportSynergies, effect));
+    Object.entries(encounter.encounterDamageStats.buffs).forEach((effect) =>
+        addStatusEffect(groupedSupportSynergies, effect)
+    );
+    Object.entries(encounter.encounterDamageStats.debuffs).forEach((effect) =>
+        addStatusEffect(groupedSupportSynergies, effect)
+    );
 
     const parties = new Array<Array<Entity>>();
     const partyInfo = Object.entries(encounterPartyInfo);
@@ -130,7 +132,9 @@ export function getSupportSynergiesOverTime(
             const partyId = Number(partyIdStr);
             parties[partyId] = [];
             for (const name of names) {
-                const player = entities.find((player) => player.entityType === EntityType.PLAYER && player.name === name);
+                const player = entities.find(
+                    (player) => player.entityType === EntityType.PLAYER && player.name === name
+                );
                 if (player) {
                     parties[partyId].push(player);
                 }
@@ -186,7 +190,8 @@ export function getSupportSynergiesOverTime(
                             }
                             for (const skillCast of skill.skillCastLog) {
                                 for (const hit of skillCast.hits) {
-                                    const synergyPoint = partyBuffs[partyId].get(hit.timestamp) || new SupportSynergyDataPoint();
+                                    const synergyPoint =
+                                        partyBuffs[partyId].get(hit.timestamp) || new SupportSynergyDataPoint();
                                     synergyPoint.add(hit, key, id, syn);
                                     partyBuffs[partyId].set(hit.timestamp, synergyPoint);
                                 }
@@ -198,15 +203,15 @@ export function getSupportSynergiesOverTime(
         });
     }
 
-    const partySupportSynergyTimeline = new Array<Array<[number, SupportSynergyDataPoint]>>;
+    const partySupportSynergyTimeline = new Array<Array<[number, SupportSynergyDataPoint]>>();
     for (const map of partyBuffs) {
         partySupportSynergyTimeline.push([...map.entries()].sort((a, b) => a[0] - b[0]));
     }
-    const supportSynergiesOverTime = new Array<Array<[string, SupportSynergyDataPoint]>>;
+    const supportSynergiesOverTime = new Array<Array<[string, SupportSynergyDataPoint]>>();
     partySupportSynergyTimeline.map((partyTimeline, partyId) => {
-        let synergyPoint = new SupportSynergyDataPoint();
+        const synergyPoint = new SupportSynergyDataPoint();
         supportSynergiesOverTime[partyId] = [];
-        legendNames.push(`Party #${partyId + 1}`);
+        legendNames.push(`Party ${partyId + 1}`);
         for (let t = 0, index = 0; t <= fightEndMs - fightStartMs; t += intervalMs) {
             while (index < partyTimeline.length && partyTimeline[index][0] <= t) {
                 synergyPoint.merge(partyTimeline[index][1]);
@@ -228,7 +233,7 @@ export function getSupportSynergiesOverTime(
             smooth: 0.1,
             markPoint: {},
             yAxisIndex: 1
-        }
+        };
     });
 }
 
@@ -239,22 +244,21 @@ export function getSupportSynergiesOverTimeChart(
     chartBosses: any[],
     iconPath: string
 ) {
-
-    const buffSeries = chartBuffs.map(chartOptions => {
+    const buffSeries = chartBuffs.map((chartOptions) => {
         return {
             ...chartOptions,
             data: chartOptions.data.map((dataPoint: [string, SupportSynergyDataPoint]) => {
                 const time = dataPoint[0];
                 const synergies: SupportSynergyDataPoint = dataPoint[1];
-                for (let [key, buffs] of synergies.buffs) {
+                for (const [key, buffs] of synergies.buffs) {
                     if (key.includes(buffSubstring)) {
                         const buffedDamage = buffs.reduce((sum, buff) => buff.buffedDamage + sum, 0);
-                        return [time, buffedDamage / synergies.totalDamage * 100];
+                        return [time, (buffedDamage / synergies.totalDamage) * 100];
                     }
                 }
                 return [time, 0];
             })
-        }
+        };
     });
 
     return {
@@ -278,26 +282,23 @@ export function getSupportSynergiesOverTimeChart(
             formatter: function (params: any[]) {
                 const time = params[0].name;
                 const bossTooltips = new Array<string>();
-                const buffToolTips = new Array<(name: number) => string>();
-                let maxNumberOfBuffs = 1;
+                const buffToolTips: string[] = [];
                 params.forEach((param) => {
-                    let label: string = param.seriesName;
+                    const partyLabel: string = param.seriesName;
                     let value = param.value[1];
-                    let partyNumber = partyRegex.exec(label);
+                    const partyNumber = partyRegex.exec(partyLabel);
                     if (partyNumber) {
                         const partyId = parseInt(partyNumber[1]) - 1;
                         const synergies: SupportSynergyDataPoint = chartBuffs[partyId].data[param.dataIndex][1];
                         let buffBreakdown = "";
                         synergies.buffs.forEach((buffPoint, key) => {
                             if (key.includes(buffSubstring)) {
-                                let numBuffs = 0;
                                 for (const buff of buffPoint) {
-                                    const buffedDamage = round(buff.buffedDamage / buff.totalDamage * 100);
+                                    const buffedDamage = round((buff.buffedDamage / buff.totalDamage) * 100);
                                     if (buffedDamage === "0.0") {
                                         continue;
                                     }
-                                    numBuffs++;
-                                    let buffed = `<div style="min-width: ${buffBreakdownTooltipWidth}px">`;
+                                    let buffed = `<div class="min-w-[4.5rem]">`;
                                     if (buff.sourceIcon) {
                                         buffed += `<img src=${iconPath + getSkillIcon(buff.sourceIcon)} alt="buff_source_icon" class="size-5 rounded mr-1"/>`;
                                         if (buff.bonus) {
@@ -308,32 +309,29 @@ export function getSupportSynergiesOverTimeChart(
                                     }
                                     buffBreakdown += `${buffed}${buffedDamage}%</div>`;
                                 }
-                                maxNumberOfBuffs = Math.max(maxNumberOfBuffs, numBuffs);
                             }
                         });
-                        buffToolTips.push((numBuffs: number) => {
-                            let finalBreakdown = `<div style="min-width: ${numBuffs * buffBreakdownTooltipWidth}px; display: flex; justify-content: space-between">${buffBreakdown}</div>`
-                            let finalValue = round(value);
-                            let finalLabel =
-                                `<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:${param.color}"></span>` +
-                                label;
-                            return `<div style="display:flex; justify-content: space-between;">
-                                <div style="min-width: 75px">${finalLabel}</div> ${finalBreakdown} <div style="min-width: 50px">${finalValue}%</div>
-                            </div>`
-                        });
+                        const finalBreakdown = `<div class="flex gap-1">${buffBreakdown}</div>`;
+                        const finalValue = round(value);
+                        const finalLabel =
+                            `<span class="inline-block mr-1 rounded-full size-2.5" style="background-color:${param.color}"></span>` +
+                            partyLabel;
+                        buffToolTips.push(`<div class="flex gap-3 w-full justify-between">
+                                <div class="flex gap-3"><div class="w-14">${finalLabel}</div> ${finalBreakdown}</div> <div class="font-bold">${finalValue}%</div>
+                            </div>`);
                     } else {
                         value += "%";
-                        if (Object.hasOwn(bossHpMap, label)) {
-                            const bossMaxHpBars = bossHpMap[label];
+                        if (Object.hasOwn(bossHpMap, partyLabel)) {
+                            const bossMaxHpBars = bossHpMap[partyLabel];
                             const bossHpBars = Math.floor(bossMaxHpBars * (parseFloat(value) / 100));
                             value = `${bossHpBars}x (${value})`;
                         }
                         bossTooltips.push(
-                            `<div style="display:flex; justify-content: space-between;"><div style="padding-right: 1rem;font-weight: 600;">${label}</div><div style="font-weight: 600;">${value}</div></div>`
-                        )
+                            `<div class="flex"><div class="pr-1 font-bold">${partyLabel}</div><div class="font-bold">${value}</div></div>`
+                        );
                     }
                 });
-                return `<div>${time}</div><div style="min-width: 10rem;">${bossTooltips.join("")}${buffToolTips.map((f) => f(maxNumberOfBuffs)).join("")}</div>`;
+                return `<div>${time}</div><div>${bossTooltips.join("")}${buffToolTips.join("")}</div>`;
             }
         },
         xAxis: {

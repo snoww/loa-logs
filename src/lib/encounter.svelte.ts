@@ -103,7 +103,7 @@ export class EncounterState {
 
     partyInfo: PartyInfo | undefined = $state();
 
-    hasAnySkillCastLog = $derived.by(() => {
+    anySkillCastLog = $derived.by(() => {
         return this.players.some((player) => {
             return Object.entries(player.skills).some(([, skill]) => {
                 return skill.skillCastLog && skill.skillCastLog.length > 0;

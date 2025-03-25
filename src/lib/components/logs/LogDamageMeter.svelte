@@ -119,7 +119,7 @@
                 let buffsSeries = getSupportSynergiesOverTime(
                     encounter,
                     chartablePlayers,
-                    encounter.encounterDamageStats.misc?.partyInfo! || {},
+                    enc.partyInfo!,
                     encounter.fightStart,
                     encounter.lastCombatPacket,
                     intervalMs,
@@ -139,7 +139,7 @@
                 let buffsSeries = getSupportSynergiesOverTime(
                     encounter,
                     chartablePlayers,
-                    encounter.encounterDamageStats.misc?.partyInfo! || {},
+                    enc.partyInfo!,
                     encounter.fightStart,
                     encounter.lastCombatPacket,
                     intervalMs,
@@ -159,7 +159,7 @@
                 let buffsSeries = getSupportSynergiesOverTime(
                     encounter,
                     chartablePlayers,
-                    encounter.encounterDamageStats.misc?.partyInfo! || {},
+                    enc.partyInfo!,
                     encounter.fightStart,
                     encounter.lastCombatPacket,
                     intervalMs,
@@ -179,7 +179,7 @@
                 let buffsSeries = getSupportSynergiesOverTime(
                     encounter,
                     chartablePlayers,
-                    encounter.encounterDamageStats.misc?.partyInfo! || {},
+                    enc.partyInfo!,
                     encounter.fightStart,
                     encounter.lastCombatPacket,
                     intervalMs,
@@ -797,16 +797,7 @@
                         onclick={() => (chartType = ChartType.ROLLING_DPS)}>
                         10s DPS Window
                     </button>
-                    {#if enc.hasAnySkillCastLog}
-                        {#if enc.anySupportBrand}
-                            <button
-                                class="rounded-sm px-2 py-1"
-                                class:bg-accent-900={chartType === ChartType.BRAND_BUFF}
-                                class:bg-gray-700={chartType !== ChartType.BRAND_BUFF}
-                                onclick={() => (chartType = ChartType.BRAND_BUFF)}>
-                                Brand Buffs
-                            </button>
-                        {/if}
+                    {#if enc.anySkillCastLog}
                         {#if enc.anySupportBuff}
                             <button
                                 class="rounded-sm px-2 py-1"
@@ -816,13 +807,22 @@
                                 AP Buffs
                             </button>
                         {/if}
+                        {#if enc.anySupportBrand}
+                            <button
+                                class="rounded-sm px-2 py-1"
+                                class:bg-accent-900={chartType === ChartType.BRAND_BUFF}
+                                class:bg-gray-700={chartType !== ChartType.BRAND_BUFF}
+                                onclick={() => (chartType = ChartType.BRAND_BUFF)}>
+                                Brand
+                            </button>
+                        {/if}
                         {#if enc.anySupportIdentity}
                             <button
                                 class="rounded-sm px-2 py-1"
                                 class:bg-accent-900={chartType === ChartType.IDENTITY_BUFF}
                                 class:bg-gray-700={chartType !== ChartType.IDENTITY_BUFF}
                                 onclick={() => (chartType = ChartType.IDENTITY_BUFF)}>
-                                Identity Buffs
+                                Identity
                             </button>
                         {/if}
                         {#if enc.anySupportHat}
@@ -831,7 +831,7 @@
                                 class:bg-accent-900={chartType === ChartType.HAT_BUFF}
                                 class:bg-gray-700={chartType !== ChartType.HAT_BUFF}
                                 onclick={() => (chartType = ChartType.HAT_BUFF)}>
-                                Hyper Awakening Technique Buffs
+                                H.A Skill
                             </button>
                         {/if}
                     {/if}
