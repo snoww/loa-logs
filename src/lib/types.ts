@@ -67,6 +67,7 @@ export interface EncounterMisc {
     partyInfo?: PartyInfo;
     rdpsValid?: boolean;
     rdpsMessage?: string;
+    region?: string;
 }
 
 export interface PartyInfo {

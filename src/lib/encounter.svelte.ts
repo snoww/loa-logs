@@ -12,6 +12,13 @@ export class EncounterState {
     end = $derived(this.encounter?.lastCombatPacket ?? 0);
 
     duration = $state(0);
+    region = $derived.by(() => {
+        const region = this.encounter?.encounterDamageStats.misc?.region ?? "";
+        if (region && region === "EUC") {
+            return "CE";
+        }
+        return region;
+    });
 
     players = $derived.by(() => {
         if (!this.encounter || !this.encounter.entities) return [];

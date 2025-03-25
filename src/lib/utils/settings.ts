@@ -6,6 +6,8 @@ import { register, unregisterAll } from "@tauri-apps/api/globalShortcut";
 import { get, writable } from "svelte/store";
 import { hideAll } from "tippy.js";
 
+export const UWUOWO_URL = "https://uwuowo.mathi.moe";
+
 export const defaultSettings = {
     general: {
         startLoaOnStart: false,

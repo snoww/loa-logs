@@ -2,12 +2,14 @@
     import { EntityType, type Entity } from "$lib/types";
     import { HexToRgba } from "$lib/utils/colors";
     import { round } from "$lib/utils/numbers";
-    import { classIconCache, settings } from "$lib/utils/settings";
+    import { classIconCache, settings, UWUOWO_URL } from "$lib/utils/settings";
     import { generateArkPassiveTooltip, generateClassTooltip, tooltip } from "$lib/utils/tooltip";
     import type { EncounterState } from "$lib/encounter.svelte";
     import { EntityState } from "$lib/entity.svelte";
     import { Tween } from "svelte/motion";
     import { cubicOut } from "svelte/easing";
+    import { isValidName } from "$lib/utils/strings";
+    import { open } from "@tauri-apps/api/shell";
 
     interface Props {
         enc: EncounterState;
@@ -38,6 +40,8 @@
     $effect(() => {
         tweenedValue.set(width ?? 0);
     });
+
+    let hovering = $state(false);
 </script>
 
 <td class="pl-1">
@@ -55,12 +59,26 @@
             use:tooltip={{ content: generateClassTooltip(entity) }} />
     {/if}
 </td>
-<td colspan="2">
-    <div class="truncate">
-        <span
-            use:tooltip={{ content: generateArkPassiveTooltip(entityState.name, entity.arkPassiveData, entity.spec) }}>
-            {entityState.name}
-        </span>
+<td colspan="2" onmouseenter={() => (hovering = true)} onmouseleave={() => (hovering = false)}>
+    <div class="flex gap-1">
+        <div class="truncate">
+            <span
+                use:tooltip={{
+                    content: generateArkPassiveTooltip(entityState.name, entity.arkPassiveData, entity.spec)
+                }}>
+                {entityState.name}
+            </span>
+        </div>
+        {#if isValidName(entityState.entity.name) && hovering && entityState.entity.entityType === EntityType.PLAYER}
+            <span>
+                <button
+                    class="flex-1 tracking-tighter hover:underline"
+                    onclick={(e) => {
+                        e.stopPropagation();
+                        open(UWUOWO_URL + "/character/" + enc.region + "/" + entityState.entity.name);
+                    }}>uwu</button>
+            </span>
+        {/if}
     </div>
 </td>
 {#if anyDead !== undefined ? anyDead : enc.anyDead && enc.curSettings.deathTime}
