@@ -1179,7 +1179,8 @@ fn write_local_players(local_info: &LocalInfo, path: &PathBuf) -> Result<()> {
 fn get_and_set_region(path: &str, state: &mut EncounterState) {
     match std::fs::read_to_string(path) {
         Ok(region) => {
-            state.region = Some(region);
+            state.region = Some(region.clone());
+            state.encounter.region = Some(region);
         }
         Err(_) => {
             // warn!("failed to read region file. {}", e);

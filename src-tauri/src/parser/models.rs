@@ -78,6 +78,7 @@ pub struct Encounter {
     pub cleared: bool,
     pub boss_only_damage: bool,
     pub sync: Option<String>,
+    pub region: Option<String>,
 }
 
 #[derive(Debug, Serialize, Clone, Default)]

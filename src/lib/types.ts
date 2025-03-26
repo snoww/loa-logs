@@ -23,6 +23,7 @@ export interface Encounter {
     cleared: boolean;
     bossOnlyDamage: boolean;
     sync?: string;
+    region?: string;
 }
 
 export interface EncountersOverview {

@@ -13,7 +13,7 @@ export class EncounterState {
 
     duration = $state(0);
     region = $derived.by(() => {
-        const region = this.encounter?.encounterDamageStats.misc?.region ?? "";
+        const region = this.encounter?.encounterDamageStats.misc?.region ?? this.encounter?.region ?? "";
         if (region && region === "EUC") {
             return "CE";
         }
