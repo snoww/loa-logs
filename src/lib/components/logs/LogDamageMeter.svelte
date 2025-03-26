@@ -35,6 +35,7 @@
         uploadErrorMessage,
         uploadErrorStore
     } from "$lib/utils/stores";
+    import { getSupportSynergiesOverTime, getSupportSynergiesOverTimeChart } from "$lib/utils/supportBuffCharts";
     import { LOG_SITE_URL, uploadLog } from "$lib/utils/sync";
     import { tooltip } from "$lib/utils/tooltip";
     import { invoke } from "@tauri-apps/api/tauri";
@@ -112,6 +113,86 @@
                     1
                 );
                 chartOptions = getRollingDpsChart(chartablePlayers, legendNames, chartPlayers, bossChart, deathTimes);
+            } else if (chartType === ChartType.BRAND_BUFF) {
+                const legendNames = new Array<string>();
+                const intervalMs = 5000;
+                let buffsSeries = getSupportSynergiesOverTime(
+                    encounter,
+                    chartablePlayers,
+                    enc.partyInfo!,
+                    encounter.fightStart,
+                    encounter.lastCombatPacket,
+                    intervalMs,
+                    legendNames
+                );
+                let bossChart = getBossHpSeries(bossHpLogs, legendNames, buffsSeries[0].data.length, 5);
+                chartOptions = getSupportSynergiesOverTimeChart(
+                    legendNames,
+                    buffsSeries,
+                    "_1_",
+                    bossChart,
+                    $skillIcon.path
+                );
+            } else if (chartType === ChartType.AP_BUFF) {
+                const legendNames = new Array<string>();
+                const intervalMs = 5000;
+                let buffsSeries = getSupportSynergiesOverTime(
+                    encounter,
+                    chartablePlayers,
+                    enc.partyInfo!,
+                    encounter.fightStart,
+                    encounter.lastCombatPacket,
+                    intervalMs,
+                    legendNames
+                );
+                let bossChart = getBossHpSeries(bossHpLogs, legendNames, buffsSeries[0].data.length, 5);
+                chartOptions = getSupportSynergiesOverTimeChart(
+                    legendNames,
+                    buffsSeries,
+                    "_0_",
+                    bossChart,
+                    $skillIcon.path
+                );
+            } else if (chartType === ChartType.IDENTITY_BUFF) {
+                const legendNames = new Array<string>();
+                const intervalMs = 5000;
+                let buffsSeries = getSupportSynergiesOverTime(
+                    encounter,
+                    chartablePlayers,
+                    enc.partyInfo!,
+                    encounter.fightStart,
+                    encounter.lastCombatPacket,
+                    intervalMs,
+                    legendNames
+                );
+                let bossChart = getBossHpSeries(bossHpLogs, legendNames, buffsSeries[0].data.length, 5);
+                chartOptions = getSupportSynergiesOverTimeChart(
+                    legendNames,
+                    buffsSeries,
+                    "_2_",
+                    bossChart,
+                    $skillIcon.path
+                );
+            } else if (chartType === ChartType.HAT_BUFF) {
+                const legendNames = new Array<string>();
+                const intervalMs = 5000;
+                let buffsSeries = getSupportSynergiesOverTime(
+                    encounter,
+                    chartablePlayers,
+                    enc.partyInfo!,
+                    encounter.fightStart,
+                    encounter.lastCombatPacket,
+                    intervalMs,
+                    legendNames
+                );
+                let bossChart = getBossHpSeries(bossHpLogs, legendNames, buffsSeries[0].data.length, 5);
+                chartOptions = getSupportSynergiesOverTimeChart(
+                    legendNames,
+                    buffsSeries,
+                    "_3_",
+                    bossChart,
+                    $skillIcon.path
+                );
             } else if (chartType === ChartType.SKILL_LOG && player && player.entityType === EntityType.PLAYER) {
                 if (
                     Object.entries(player.skills).some(
@@ -301,10 +382,7 @@
                 return;
             }
 
-            const canvas = await html2canvas(targetDiv, {
-                useCORS: true,
-                backgroundColor: "#27272A"
-            });
+            const canvas = await html2canvas(targetDiv, { useCORS: true, backgroundColor: "#27272A" });
 
             canvas.toBlob(async (blob) => {
                 if (!blob) return;
@@ -719,6 +797,44 @@
                         onclick={() => (chartType = ChartType.ROLLING_DPS)}>
                         10s DPS Window
                     </button>
+                    {#if enc.anySkillCastLog}
+                        {#if enc.anySupportBuff}
+                            <button
+                                class="rounded-sm px-2 py-1"
+                                class:bg-accent-900={chartType === ChartType.AP_BUFF}
+                                class:bg-gray-700={chartType !== ChartType.AP_BUFF}
+                                onclick={() => (chartType = ChartType.AP_BUFF)}>
+                                AP Buffs
+                            </button>
+                        {/if}
+                        {#if enc.anySupportBrand}
+                            <button
+                                class="rounded-sm px-2 py-1"
+                                class:bg-accent-900={chartType === ChartType.BRAND_BUFF}
+                                class:bg-gray-700={chartType !== ChartType.BRAND_BUFF}
+                                onclick={() => (chartType = ChartType.BRAND_BUFF)}>
+                                Brand
+                            </button>
+                        {/if}
+                        {#if enc.anySupportIdentity}
+                            <button
+                                class="rounded-sm px-2 py-1"
+                                class:bg-accent-900={chartType === ChartType.IDENTITY_BUFF}
+                                class:bg-gray-700={chartType !== ChartType.IDENTITY_BUFF}
+                                onclick={() => (chartType = ChartType.IDENTITY_BUFF)}>
+                                Identity
+                            </button>
+                        {/if}
+                        {#if enc.anySupportHat}
+                            <button
+                                class="rounded-sm px-2 py-1"
+                                class:bg-accent-900={chartType === ChartType.HAT_BUFF}
+                                class:bg-gray-700={chartType !== ChartType.HAT_BUFF}
+                                onclick={() => (chartType = ChartType.HAT_BUFF)}>
+                                H.A Skill
+                            </button>
+                        {/if}
+                    {/if}
                 {:else if playerName !== "" && meterState === MeterState.PLAYER}
                     <!--  -->
                 {/if}
@@ -736,6 +852,14 @@
             {:else}
                 <div class="mt-2 h-[300px]" use:chartable={chartOptions} style="width: calc(100vw - 4.5rem);"></div>
             {/if}
+        {:else if chartType === ChartType.BRAND_BUFF}
+            <div class="mt-2 h-[300px]" use:chartable={chartOptions} style="width: calc(100vw - 4.5rem);"></div>
+        {:else if chartType === ChartType.AP_BUFF}
+            <div class="mt-2 h-[300px]" use:chartable={chartOptions} style="width: calc(100vw - 4.5rem);"></div>
+        {:else if chartType === ChartType.IDENTITY_BUFF}
+            <div class="mt-2 h-[300px]" use:chartable={chartOptions} style="width: calc(100vw - 4.5rem);"></div>
+        {:else if chartType === ChartType.HAT_BUFF}
+            <div class="mt-2 h-[300px]" use:chartable={chartOptions} style="width: calc(100vw - 4.5rem);"></div>
         {:else if chartType === ChartType.SKILL_LOG}
             {#if player && player.entityType === EntityType.PLAYER && hasSkillCastLog}
                 <LogSkillChart {chartOptions} {player} encounterDamageStats={encounter.encounterDamageStats} />
