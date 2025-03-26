@@ -87,8 +87,6 @@
         <Title text="Uploading" bind:hidden />
     </div>
     <div class="mx-8 my-4 tracking-tight text-gray-200">
-        <p class="px-2 text-base">Uploading is currently in beta, progress is slowly being made...</p>
-        <p class="text-md px-2 text-neutral-400">individual logs are not searchable at the moment.</p>
         <div class="mt-2 px-2">
             <SettingItem
                 name="Uploads (logs.snow.xyz)"
