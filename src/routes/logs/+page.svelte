@@ -199,7 +199,6 @@
     let hidden: boolean = $state(true);
 </script>
 
-<svelte:window oncontextmenu={(e) => e.preventDefault()} />
 <LogSidebar bind:hidden />
 <div class="h-screen bg-zinc-800">
     <div class="flex h-16 items-center justify-between px-8 py-5 shadow-md">

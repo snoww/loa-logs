@@ -1,7 +1,4 @@
 <script lang="ts">
-    import { createBubbler, preventDefault } from "svelte/legacy";
-
-    const bubble = createBubbler();
     import LogSidebar from "$lib/components/logs/LogSidebar.svelte";
     import { backNavStore, pageStore, searchStore } from "$lib/utils/stores";
     import { getVersion } from "@tauri-apps/api/app";
@@ -18,7 +15,6 @@
     });
 </script>
 
-<svelte:window oncontextmenu={preventDefault(bubble("contextmenu"))} />
 <LogSidebar bind:hidden />
 <div class="custom-scroll h-screen overflow-y-scroll bg-zinc-800 pb-8">
     <div class="sticky top-0 flex h-16 justify-between bg-zinc-800 px-8 py-5 shadow-md">

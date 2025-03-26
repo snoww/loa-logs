@@ -370,7 +370,6 @@
     }
 </script>
 
-<svelte:window oncontextmenu={(e) => e.preventDefault()} />
 <!-- svelte-ignore a11y_no_static_element_interactions -->
 <div
     bind:this={targetDiv}

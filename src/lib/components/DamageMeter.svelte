@@ -315,7 +315,6 @@
     }
 </script>
 
-<svelte:window oncontextmenu={(e) => e.preventDefault()} />
 <div bind:this={screenshotAreaDiv} style="height: calc(100vh - 1.5rem);">
     <EncounterInfo
         {encounterDuration}

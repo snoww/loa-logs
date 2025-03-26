@@ -10,6 +10,7 @@
     import { checkUpdate } from "@tauri-apps/api/updater";
     import { invoke } from "@tauri-apps/api";
     import UpdateAvailable from "$lib/components/shared/UpdateAvailable.svelte";
+    import LogSidebar from "$lib/components/logs/LogSidebar.svelte";
     interface Props {
         children?: import("svelte").Snippet;
     }
@@ -96,6 +97,7 @@
     });
 </script>
 
+<svelte:window oncontextmenu={(e) => e.preventDefault()} />
 <div class="{$settings.general.accentColor} text-sm">
     {@render children?.()}
     {#if location.pathname !== "/"}
