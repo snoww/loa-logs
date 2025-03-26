@@ -638,7 +638,7 @@ fn is_class_engraving(class_id: u32, engraving_id: u32) -> bool {
         125 | 188 => class_id == 102, // mayhem, berserker's technique
         196 | 197 => class_id == 103, // rage hammer, gravity training
         224 | 225 => class_id == 104, // combat readiness, lone knight
-        282 | 283 => class_id == 105, // judgement, blessed aura
+        282 | 283 => class_id == 105, // Judgment, blessed aura
         309 | 320 => class_id == 112, // predator, punisher
         200 | 201 => class_id == 202, // empress's grace, order of the emperor
         198 | 199 => class_id == 203, // master summoner, communication overflow
@@ -1394,7 +1394,7 @@ fn get_player_spec(player: &EncounterEntity, buffs: &HashMap<u32, StatusEffect>)
             {
                 "Blessed Aura".to_string()
             } else {
-                "Judgement".to_string()
+                "Judgment".to_string()
             }
         }
         "Slayer" => {
@@ -1600,7 +1600,7 @@ fn get_spec_from_ark_passive(node: &ArkPassiveNode) -> String {
         2170010 => "Combat Readiness",
         2180000 => "Rage Hammer",
         2180010 => "Gravity Training",
-        2360000 => "Judgement",
+        2360000 => "Judgment",
         2360010 => "Blessed Aura",
         2450000 => "Punisher",
         2450010 => "Predator",

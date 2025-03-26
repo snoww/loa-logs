@@ -306,7 +306,7 @@ function getSpecFromArkPassive(node: ArkPassiveNode): string {
         case 2180010:
             return "Gravity Training";
         case 2360000:
-            return "Judgement";
+            return "Judgment";
         case 2360010:
             return "Blessed Aura";
         case 2450000:
