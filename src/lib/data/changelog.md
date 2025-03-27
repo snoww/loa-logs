@@ -1,12 +1,34 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.25.4
+    v1.26.0 - March 27th, 2025
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
   </div>
 </div>
 
+#### NEW FEATURES
+
+- updated meter for end of march patch
+
+![raid stats](https://i.imgur.com/KcJRmqw.png)
+
+- class performance stats in raids are now available on uwuowo! check it out here at [uwuowo.mathi.moe/stats/raids](https://uwuowo.mathi.moe/stats/raids)
+  - stats directly come from logs uploaded to [logs.snow.xyz](https://logs.snow.xyz/upload), please upload your logs to improve data accuracy (note: private logs are excluded from stats)
+  - logs uploaded have random ids to prevent sequential scraping
+  - raid charts on uwuowo are inspired by Andrex and his work on [raided.pro](https://raided.pro)
+- added various party buff % over time graphs in logs - [@TheRealImaginary](https://github.com/TheRealImaginary)
+- added uwuowo shortcut when hovering over players in live meter and logs
+
+#### BUG FIXES AND IMPROVEMENTS
+- fix pin self party option, your own party's buffs now stay at the top regardless of raid
+- increase tick rate of meter updates
+- fix esther column alignment in logs
+- fix columns shifting weirdly in logs
+- fix incorrect back attack calculation in logs
+- fix wildsoul synergy grouping
+
+### v1.25.5
 
 #### NEW FEATURES
 - added new column **_Incapacitated_** (i.e. floor pov timer) to both meter and log (thanks to @molenzwiebel)
