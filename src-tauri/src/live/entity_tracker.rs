@@ -224,7 +224,7 @@ impl EntityTracker {
             grade,
             npc_id: pkt.npc_struct.type_id,
             level: pkt.npc_struct.level,
-            balance_level: pkt.npc_struct.balance_level.unwrap_or(pkt.npc_struct.level),
+            balance_level: pkt.npc_struct.balance_level.value.unwrap_or(pkt.npc_struct.level),
             push_immune: entity_type == BOSS,
             stats: pkt
                 .npc_struct
@@ -255,7 +255,7 @@ impl EntityTracker {
             npc_id: pkt.npc_struct.type_id,
             owner_id: pkt.owner_id,
             level: pkt.npc_struct.level,
-            balance_level: pkt.npc_struct.balance_level.unwrap_or(pkt.npc_struct.level),
+            balance_level: pkt.npc_struct.balance_level.value.unwrap_or(pkt.npc_struct.level),
             push_immune: entity_type == BOSS,
             stats: pkt
                 .npc_struct

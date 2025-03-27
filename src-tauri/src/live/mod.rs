@@ -964,7 +964,7 @@ pub fn start(window: Window<Wry>, port: u16, settings: Option<Settings>) -> Resu
                                 });
                         }
                         for se in pkt.status_effect_datas.iter() {
-                            let val = get_status_effect_value(&se.value);
+                            let val = get_status_effect_value(&se.value.bytearray_0);
                             let (status_effect, old_value) =
                                 status_tracker.borrow_mut().sync_status_effect(
                                     se.status_effect_instance_id,
