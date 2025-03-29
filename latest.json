@@ -1,11 +1,11 @@
 {
-    "version": "v1.26.0",
-    "notes": "### v1.26.0\n\n#### NEW FEATURES\n\n- updated meter for end of march patch\n\n![raid stats](https://i.imgur.com/KcJRmqw.png)\n\n- class performance stats in raids are now available on uwuowo! check it out here at [uwuowo.mathi.moe/stats/raids](https://uwuowo.mathi.moe/stats/raids)\n  - stats directly come from logs uploaded to [logs.snow.xyz](https://logs.snow.xyz/upload), please upload your logs to improve data accuracy (note: private logs are excluded from stats)\n  - logs uploaded have random ids to prevent sequential scraping\n  - raid charts on uwuowo are inspired by Andrex and his work on [raided.pro](https://raided.pro)\n- added various party buff % over time graphs in logs - [@TheRealImaginary](https://github.com/TheRealImaginary)\n- added uwuowo shortcut when hovering over players in live meter and logs\n\n#### BUG FIXES AND IMPROVEMENTS\n- fix pin self party option, your own party's buffs now stay at the top regardless of raid\n- increase tick rate of meter updates\n- fix esther column alignment in logs\n- fix columns shifting weirdly in logs\n- fix incorrect back attack calculation in logs\n- fix wildsoul synergy grouping\n\nsend bug reports/suggestions to [ramen shop server](https://discord.gg/RXvTMV2YHu)\n",
-    "pub_date": "2025-03-27T21:00:00.397Z",
+    "version": "v1.26.1",
+    "notes": "### v1.26.1\n#### BUG FIXES AND IMPROVEMENTS\n- remove uwu shortcut in live meter, only show in logs\n- adjust bard classification between support and dps spec\n\nsend bug reports/suggestions to [ramen shop server](https://discord.gg/RXvTMV2YHu)",
+    "pub_date": "2025-03-29T22:49:21.822Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.26.0/LOA.Logs_1.26.0_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmNtWkd2YjFBdTIreWJ1cWRYQmxYUElCZFlhbDgrbGc3OWJLMkltSjRkekZVeHNGYXEzM2VWc2k4QVBkTTBPMHdZRk1WdDIvenZ5S0Z5aUFYdXNGbHdnPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzQzMTA3NzMzCWZpbGU6TE9BIExvZ3NfMS4yNi4wX3g2NC1zZXR1cC5uc2lzLnppcApJOHZYVUhhd2FHcVlPNU9IZEJHL0tsYVgzOGx4M0dvNk5HTG9IUXhuQklzb3pEZW5veTl1Nzl3aTZtV25iOGpzMXlEVFEvVU9zaVhlNEZEMnJTd0xCUT09Cg=="
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.26.1/LOA.Logs_1.26.1_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlRyS3pZOEY2ZkU3TjhpRGdMc2JiTnBSTHVSL3ByTC9sK1FHYU5DL3o5a1ZDaTFQZW5FVFlyVkhORThybm5YdVdUbWNqdU9BZzZNeW9IZ1FXSmY2bHc0PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzQzMjg4NjIyCWZpbGU6TE9BIExvZ3NfMS4yNi4xX3g2NC1zZXR1cC5uc2lzLnppcApSdnQxMmNJb09yZjBJaERxTWxYNWZzZnZwem9QbFZ1LzcyL3BCWVFSczlpYkZ3WSsza1hwcEoyRHo0bFkwYUJlcEV5WmtvR0tld3g4bmpKRHFMMDNCUT09Cg=="
         }
     }
 }

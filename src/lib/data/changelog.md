@@ -1,12 +1,17 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.26.0 - March 27th, 2025
+    v1.26.1 - March 30th, 2025
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
   </div>
 </div>
 
+#### BUG FIXES AND IMPROVEMENTS
+- remove uwu shortcut in live meter, only logs
+- adjust bard classification between support and dps spec
+
+### v1.26.0 - March 27th, 2025
 #### NEW FEATURES
 
 - updated meter for end of march patch
