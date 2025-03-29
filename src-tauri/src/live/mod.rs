@@ -435,7 +435,7 @@ pub fn start(window: Window<Wry>, port: u16, settings: Option<Settings>) -> Resu
             Pkt::RaidBossKillNotify => {
                 state.on_phase_transition(1, &mut stats_api);
                 state.raid_clear = true;
-                debug_print(format_args!("phase: 1 - RaidBossKillNotify"));
+                info!("phase: 1 - RaidBossKillNotify");
             }
             Pkt::RaidResult => {
                 party_freeze = true;
@@ -446,7 +446,7 @@ pub fn start(window: Window<Wry>, port: u16, settings: Option<Settings>) -> Resu
                 };
                 state.on_phase_transition(0, &mut stats_api);
                 raid_end_cd = Instant::now();
-                debug_print(format_args!("phase: 0 - RaidResult"));
+                info!("phase: 0 - RaidResult");
             }
             Pkt::RemoveObject => {
                 if let Some(pkt) = parse_pkt(&data, PKTRemoveObject::new, "PKTRemoveObject") {
@@ -840,7 +840,7 @@ pub fn start(window: Window<Wry>, port: u16, settings: Option<Settings>) -> Resu
                             state.raid_clear = true;
                             state.on_phase_transition(2, &mut stats_api);
                             raid_end_cd = Instant::now();
-                            debug_print(format_args!("phase: 2 - clear - TriggerStartNotify"));
+                            info!("phase: 2 - clear - TriggerStartNotify");
                         }
                         58 | 60 | 62 | 64 | 75 | 77 => {
                             party_freeze = true;
@@ -852,7 +852,7 @@ pub fn start(window: Window<Wry>, port: u16, settings: Option<Settings>) -> Resu
                             state.raid_clear = false;
                             state.on_phase_transition(4, &mut stats_api);
                             raid_end_cd = Instant::now();
-                            debug_print(format_args!("phase: 4 - wipe - TriggerStartNotify"));
+                            info!("phase: 4 - wipe - TriggerStartNotify");
                         }
                         27 | 10 | 11 => {
                             // debug_print(format_args!("old rdps sync time - {}", pkt.trigger_signal_type));
