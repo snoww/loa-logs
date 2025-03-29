@@ -1024,27 +1024,23 @@ pub fn insert_data(
 
                 entity.ark_passive_active = Some(info.ark_passive_enabled);
 
-                let (class, other) = get_engravings(entity.class_id, &info.engravings);
+                let (_, other) = get_engravings(entity.class_id, &info.engravings);
                 entity.engraving_data = other;
-                if info.ark_passive_enabled {
-                    if spec == "Unknown" {
-                        // not reliable enough to be used on its own
-                        if let Some(tree) = info.ark_passive_data.as_ref() {
-                            if let Some(enlightenment) = tree.enlightenment.as_ref() {
-                                for node in enlightenment.iter() {
-                                    let spec = get_spec_from_ark_passive(node);
-                                    if spec != "Unknown" {
-                                        entity.spec = Some(spec);
-                                        break;
-                                    }
+                if spec == "Unknown" {
+                    // not reliable enough to be used on its own
+                    if let Some(tree) = info.ark_passive_data.as_ref() {
+                        if let Some(enlightenment) = tree.enlightenment.as_ref() {
+                            for node in enlightenment.iter() {
+                                let spec = get_spec_from_ark_passive(node);
+                                if spec != "Unknown" {
+                                    entity.spec = Some(spec);
+                                    break;
                                 }
                             }
                         }
                     }
-                    entity.ark_passive_data = info.ark_passive_data.clone();
-                } else if class.len() == 1 {
-                    entity.spec = Some(class[0].clone());
                 }
+                entity.ark_passive_data = info.ark_passive_data.clone();
             }
         }
 
@@ -1423,7 +1419,7 @@ fn get_player_spec(player: &EncounterEntity, buffs: &HashMap<u32, StatusEffect>)
             }
         }
         "Bard" => {
-            if player.skills.contains_key(&21250) && player.skills.contains_key(&21080) {
+            if player.skills.contains_key(&21250) && player.skills.contains_key(&21160) {
                 "Desperate Salvation".to_string()
             } else {
                 "True Courage".to_string()
