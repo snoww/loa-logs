@@ -1,7 +1,6 @@
 import { EntityType, type Encounter, type Entity, type PartyInfo } from "$lib/types";
 
 export class EncounterState {
-    paused = $state(false);
     live = false;
 
     encounter: Encounter | undefined = $state();
@@ -143,14 +142,9 @@ export class EncounterState {
         this.partyInfo = partyInfo;
     }
 
-    pause() {
-        this.paused = true;
-    }
-
     reset() {
         this.encounter = undefined;
         this.duration = 0;
         this.partyInfo = undefined;
-        this.paused = false;
     }
 }
