@@ -1025,8 +1025,13 @@ pub fn insert_data(
                 entity.ark_passive_active = Some(info.ark_passive_enabled);
 
                 let (_, other) = get_engravings(entity.class_id, &info.engravings);
-                entity.engraving_data = other;
-                if spec == "Unknown" {
+                if entity.class_id == 104
+                    && other.as_ref().is_some_and(|engravings| {
+                        engravings.contains(&"Drops of Ether".to_string())
+                    })
+                {
+                    entity.spec = Some("Princess".to_string());
+                } else if spec == "Unknown" {
                     // not reliable enough to be used on its own
                     if let Some(tree) = info.ark_passive_data.as_ref() {
                         if let Some(enlightenment) = tree.enlightenment.as_ref() {
@@ -1040,6 +1045,8 @@ pub fn insert_data(
                         }
                     }
                 }
+
+                entity.engraving_data = other;
                 entity.ark_passive_data = info.ark_passive_data.clone();
             }
         }
@@ -1374,7 +1381,7 @@ fn get_player_spec(player: &EncounterEntity, buffs: &HashMap<u32, StatusEffect>)
         "Gunlancer" => {
             if player.skills.contains_key(&17200) && player.skills.contains_key(&17210) {
                 "Lone Knight".to_string()
-            } else if player.skills.contains_key(&17140) {
+            } else if player.skills.contains_key(&17140) && player.skills.contains_key(&17110) {
                 "Combat Readiness".to_string()
             } else {
                 "Princess".to_string()
@@ -1552,7 +1559,8 @@ fn get_player_spec(player: &EncounterEntity, buffs: &HashMap<u32, StatusEffect>)
         "Artist" => {
             if player.skills.contains_key(&31400)
                 && player.skills.contains_key(&31410)
-                && player.skills.contains_key(&31420)
+                && !player.skills.contains_key(&31940)
+            // doesn't contain cattle drive, dps skill
             {
                 "Full Bloom".to_string()
             } else {
