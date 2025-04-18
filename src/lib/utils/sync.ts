@@ -33,7 +33,7 @@ export const bosses = [
     // "Thaemine the Lightqueller",
     // "Thaemine, Conqueror of Stars",
     // "Red Doom Narkiel",
-    "Covetous Master Echidna",
+    // "Covetous Master Echidna",
     "Behemoth, the Storm Commander",
     "Behemoth, Cruel Storm Slayer",
     "Akkan, Lord of Death",
@@ -43,7 +43,7 @@ export const bosses = [
 ];
 
 export async function uploadLog(id: string | number, encounter: Encounter, settings: any) {
-    if (!bosses.includes(encounter.currentBossName) || !encounter.cleared) {
+    if (!bosses.includes(encounter.currentBossName) || !encounter.cleared || !encounter.bossOnlyDamage) {
         return { id: 0, error: "Invalid Encounter" };
     }
 
