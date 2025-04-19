@@ -1027,7 +1027,9 @@ pub fn insert_data(
                 let (_, other) = get_engravings(entity.class_id, &info.engravings);
                 if entity.class_id == 104
                     && other.as_ref().is_some_and(|engravings| {
-                        engravings.contains(&"Drops of Ether".to_string())
+                        engravings
+                            .iter()
+                            .any(|e| e == "Awakening" || e == "Drops of Ether")
                     })
                 {
                     entity.spec = Some("Princess".to_string());
