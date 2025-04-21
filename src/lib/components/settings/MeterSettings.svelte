@@ -22,6 +22,10 @@
             description="Abbreviates the Total DMG and Total DPS numbers in the header"
             bind:setting={$settings.meter.abbreviateHeader} />
         <SettingItem
+            name="Profile Shortcut"
+            description="Show uwu shortcut when hovering over player name"
+            bind:setting={$settings.meter.profileShortcut} />
+        <SettingItem
             name="Show Time To Kill"
             description="Shows approximate time until Boss HP reaches 0"
             bind:setting={$settings.meter.showTimeUntilKill} />

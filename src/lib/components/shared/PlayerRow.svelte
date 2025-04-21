@@ -69,7 +69,7 @@
                 {entityState.name}
             </span>
         </div>
-        {#if !enc.live && isValidName(entityState.entity.name) && hovering && entityState.entity.entityType === EntityType.PLAYER}
+        {#if enc.curSettings.profileShortcut && isValidName(entityState.entity.name) && hovering && entityState.entity.entityType === EntityType.PLAYER}
             <span>
                 <button
                     class="flex-1 tracking-tighter hover:underline"

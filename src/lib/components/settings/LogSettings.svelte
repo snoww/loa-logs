@@ -45,6 +45,10 @@
             description="Split players into their respective parties for party buffs"
             bind:setting={$settings.logs.splitPartyBuffs} />
         <SettingItem
+            name="Profile Shortcut"
+            description="Show uwu shortcut when hovering over player name"
+            bind:setting={$settings.logs.profileShortcut} />
+        <SettingItem
             name="Death Time"
             description="Show how long a party member has died"
             bind:setting={$settings.logs.deathTime} />
