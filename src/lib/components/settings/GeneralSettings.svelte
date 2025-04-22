@@ -239,5 +239,9 @@
                 </label>
             </div>
         {/if}
+        <SettingItem
+            name="Enable Experimental Features"
+            description={"Enables experimental features that may not be fully complete or stable."}
+            bind:setting={$settings.general.experimentalFeatures} />
     </div>
 </div>

@@ -2,9 +2,11 @@
     import { bossHpMap } from "$lib/constants/bossHpBars";
     import { bossHpBarColors } from "$lib/constants/colors";
     import type { Entity } from "$lib/types";
+    import { broadcastLiveMessage } from "$lib/utils/live";
     import { abbreviateNumberSplit, getBossHpBars } from "$lib/utils/numbers";
     import { settings } from "$lib/utils/settings";
     import { menuTooltip } from "$lib/utils/tooltip";
+    import { onDestroy } from "svelte";
     import { linear } from "svelte/easing";
     import { Tween } from "svelte/motion";
 
@@ -69,6 +71,32 @@
     });
     let bossMaxHp = $derived(abbreviateNumberSplit(boss.maxHp));
     let bossShieldHp = $derived(abbreviateNumberSplit(bossShield));
+
+    $effect.pre(() => {
+        if ($settings.general.experimentalFeatures) {
+            broadcastLiveMessage({
+                type: "bossStatus",
+                data: {
+                    name: boss.name,
+                    isDead: boss.isDead,
+                    currentHp: boss.currentHp,
+                    maxHp: boss.maxHp,
+                    currentShield: boss.currentShield,
+                    totalBars: bossHPBars,
+                    currentBars: bossCurrentBars
+                }
+            });
+        }
+    });
+
+    onDestroy(() => {
+        if ($settings.general.experimentalFeatures) {
+            broadcastLiveMessage({
+                type: "bossStatus",
+                data: null
+            });
+        }
+    });
 
     $effect.pre(() => {
         if (bossHPBars !== 0 && !boss.isDead) {
