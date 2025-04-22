@@ -76,7 +76,11 @@
     let tab = $state(MeterTab.DAMAGE);
     let chartType = $state(ChartType.AVERAGE_DPS);
     let playerName = $state("");
-    let player: Entity | undefined = $derived(encounter.entities[playerName]);
+    let player: Entity | undefined = $derived.by(() => {
+        if (playerName) {
+            return encounter.entities[playerName];
+        }
+    });
     let focusedBoss = $state("");
 
     let chartOptions: EChartsOptions = $state({});
