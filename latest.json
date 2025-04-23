@@ -1,11 +1,11 @@
 {
-    "version": "v1.26.1",
-    "notes": "### v1.26.1\n#### BUG FIXES AND IMPROVEMENTS\n- remove uwu shortcut in live meter, only show in logs\n- adjust bard classification between support and dps spec\n\nsend bug reports/suggestions to [ramen shop server](https://discord.gg/RXvTMV2YHu)",
-    "pub_date": "2025-03-29T22:49:21.822Z",
+    "version": "v1.27.0",
+    "notes": "### v1.27.0\n#### NEW FEATURES\n- update meter for april balance patch (thanks to poont for packets)\n  - updated uwuowo raid stats for april balance patch, please upload your logs!\n- damage towards shields is now counted towards dps\n\n\n#### BUG FIXES AND IMPROVEMENTS\n- added option for uwu shortcut for players in live meter (or logs)\n- fix slayer party synergy grouping\n- fix spec detection for supports running stagger builds\n- fix gems for dps spec of supports\n\nsend bug reports/suggestions to [ramen shop server](https://discord.gg/RXvTMV2YHu)\n",
+    "pub_date": "2025-04-23T21:49:37.084Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.26.1/LOA.Logs_1.26.1_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlRyS3pZOEY2ZkU3TjhpRGdMc2JiTnBSTHVSL3ByTC9sK1FHYU5DL3o5a1ZDaTFQZW5FVFlyVkhORThybm5YdVdUbWNqdU9BZzZNeW9IZ1FXSmY2bHc0PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzQzMjg4NjIyCWZpbGU6TE9BIExvZ3NfMS4yNi4xX3g2NC1zZXR1cC5uc2lzLnppcApSdnQxMmNJb09yZjBJaERxTWxYNWZzZnZwem9QbFZ1LzcyL3BCWVFSczlpYkZ3WSsza1hwcEoyRHo0bFkwYUJlcEV5WmtvR0tld3g4bmpKRHFMMDNCUT09Cg=="
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.27.0/LOA.Logs_1.27.0_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmN2M0p4WmZ2Y1hIRW1tVmYvcllBZ3ozMndtU0d0RWpNaFl6Z3d0WkRVMk9ydDJRN2lXSDBlUC95S0tYZWtvZTBZdmFtMkF2Q3I1ZkNjejB4T2laT3dVPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzQ1NDQ1NTY4CWZpbGU6TE9BIExvZ3NfMS4yNy4wX3g2NC1zZXR1cC5uc2lzLnppcAprd0lYN3p3T3FGS0ZrN21rTFpZalVabjA0UEFOSzhwKzJZRWV6RVIzWVJOZjFyMmtqVTFWT3pXdWxzQUY3NEVWZkNMWUM3UjBneW9lRHY2blRnZmZBZz09Cg=="
         }
     }
 }

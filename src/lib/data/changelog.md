@@ -1,12 +1,24 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.26.1 - March 30th, 2025
+    v1.27.0 - April 23rd, 2025
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
   </div>
 </div>
 
+#### NEW FEATURES
+- update meter for april balance patch (thanks to poont for packets)
+  - updated uwuowo raid stats for april balance patch, please upload your logs!
+- damage towards shields is now counted towards dps (on bosses that support it)
+
+#### BUG FIXES AND IMPROVEMENTS
+- added option for uwu shortcut for players in live meter (or logs)
+- fix slayer party synergy grouping
+- fix spec detection for supports running stagger builds
+- fix gems for dps spec of supports
+
+### v1.26.1 - March 30th, 2025
 #### BUG FIXES AND IMPROVEMENTS
 - remove uwu shortcut in live meter, only logs
 - adjust bard classification between support and dps spec
