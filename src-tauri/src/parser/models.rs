@@ -664,51 +664,17 @@ pub struct GeneralSettings {
     pub start_loa_on_start: bool,
     pub low_performance_mode: bool,
     #[serde(default = "default_true")]
-    pub show_names: bool,
-    pub show_gear_score: bool,
-    pub hide_names: bool,
-    #[serde(default = "default_true")]
-    pub show_esther: bool,
-    #[serde(default = "default_true")]
-    pub show_date: bool,
-    #[serde(default = "default_true")]
-    pub show_difficulty: bool,
-    pub show_gate: bool,
-    #[serde(default = "default_true")]
-    pub split_lines: bool,
-    pub underline_hovered: bool,
-    pub show_details: bool,
-    pub show_shields: bool,
-    pub show_tanked: bool,
-    pub show_bosses: bool,
-    pub hide_logo: bool,
-    pub accent_color: String,
-    pub raw_socket: bool,
-    #[serde(default = "default_true")]
     pub auto_iface: bool,
-    pub if_desc: String,
-    pub ip: String,
     pub port: u16,
-    pub blur: bool,
-    pub blur_win11: bool,
-    pub transparent: bool,
-    #[serde(default = "default_scale")]
-    pub scale: String,
-    #[serde(default = "default_scale")]
-    pub log_scale: String,
     #[serde(default = "default_true")]
     pub always_on_top: bool,
     #[serde(default = "default_true")]
     pub boss_only_damage: bool,
     #[serde(default = "default_true")]
-    pub keep_favorites: bool,
     pub hide_meter_on_start: bool,
     pub hide_logs_on_start: bool,
-    pub constant_local_player_color: bool,
-    #[serde(default = "default_true")]
-    pub boss_only_damage_default_on: bool,
-    pub start_on_boot: bool,
-    pub logs_per_page: i32,
+    #[serde(flatten)]
+    pub extra: Map<String, Value>
 }
 
 #[derive(Default, Debug, Serialize)]
@@ -1025,20 +991,4 @@ pub struct LocalPlayer {
 
 fn default_true() -> bool {
     true
-}
-
-fn default_scale() -> String {
-    "1".to_string()
-}
-
-fn int_or_string_as_string<'de, D>(deserializer: D) -> Result<String, D::Error>
-where
-    D: Deserializer<'de>,
-{
-    let value = Value::deserialize(deserializer)?;
-    match value {
-        Value::String(s) => Ok(s),
-        Value::Number(n) => Ok(n.to_string()),
-        _ => Err(serde::de::Error::custom("Expected a string or an integer")),
-    }
 }
