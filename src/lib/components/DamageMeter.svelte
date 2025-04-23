@@ -1,13 +1,6 @@
 <script lang="ts">
     import { EncounterState } from "$lib/encounter.svelte";
-    import {
-        EntityType,
-        MeterState,
-        MeterTab,
-        type Encounter,
-        type EncounterEvent,
-        type PartyEvent
-    } from "$lib/types";
+    import { EntityType, MeterState, MeterTab, type Encounter, type EncounterEvent, type PartyEvent } from "$lib/types";
     import { millisToMinutesAndSeconds } from "$lib/utils/numbers";
     import { colors, settings } from "$lib/utils/settings";
     import { localPlayer, missingInfo, screenshotAlert, screenshotError, takingScreenshot } from "$lib/utils/stores";
@@ -32,6 +25,7 @@
     import MissingInfo from "./shared/MissingInfo.svelte";
     import Notification from "./shared/Notification.svelte";
     import PlayerRow from "./shared/PlayerRow.svelte";
+    import { liveServerListeningAlert } from "$lib/utils/live";
 
     let time = $state(+Date.now());
 
@@ -416,6 +410,13 @@
             text={"Error Taking Screenshot"}
             width="15rem"
             isError={true}
+            dismissable={false} />
+    {/if}
+    {#if $liveServerListeningAlert}
+        <Notification
+            bind:showAlert={$liveServerListeningAlert}
+            text="Copied Live Sharing URL To Clipboard"
+            width="20rem"
             dismissable={false} />
     {/if}
     <Footer bind:tab />

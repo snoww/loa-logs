@@ -10,6 +10,8 @@
     import { appWindow } from "@tauri-apps/api/window";
     import { writable } from "svelte/store";
     import { hideAll } from "tippy.js";
+    import LiveShareButton from "./shared/LiveShareButton.svelte";
+    import { broadcastLiveMessage } from "$lib/utils/live";
 
     interface Props {
         encounterDuration: string;
@@ -80,6 +82,19 @@
             document.body.style.pointerEvents = "auto";
         }, 1500);
     };
+
+    $effect.pre(() => {
+        if ($settings.general.experimentalFeatures) {
+            broadcastLiveMessage({
+                type: "encounterInfo",
+                data: {
+                    totalDamageDealt,
+                    dps,
+                    encounterDuration
+                }
+            });
+        }
+    });
 </script>
 
 <div class="fixed top-0 left-0 z-50 h-7 w-full bg-zinc-900/[.6] px-2 py-1 text-sm" id="header">
@@ -193,6 +208,9 @@
                         ><path
                             d="M479.5-269.5q71.75 0 119.625-47.875T647-437q0-71-47.875-118.75T479.5-603.5q-71.75 0-119.125 47.75T313-437q0 71.75 47.375 119.625T479.5-269.5Zm0-57.5q-47 0-78-31.145T370.5-437q0-47 31-78t78-31q47 0 78.5 31t31.5 78.25q0 47.25-31.5 78.5T479.5-327Zm-328 227.5q-38.019 0-64.76-26.741Q60-152.981 60-191v-491.5q0-37.431 26.74-64.966Q113.482-775 151.5-775h132l83.057-97.5H594.5l82 97.5h132q37.431 0 64.966 27.534Q901-719.931 901-682.5V-191q0 38.019-27.534 64.759Q845.931-99.5 808.5-99.5h-657Zm657-91.5v-491.5H635L552.5-780H408.451L325.5-682.5h-174V-191h657ZM480-436.5Z" /></svg>
                 </button>
+                {#if $settings.general.experimentalFeatures}
+                    <LiveShareButton />
+                {/if}
                 <div class="relative flex items-center" onfocusout={handleDropdownFocusLoss}>
                     {#if $updateSettings.available}
                         <span class="absolute top-0 right-0.5 -z-10 flex size-2">
