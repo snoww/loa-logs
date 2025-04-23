@@ -581,12 +581,16 @@ fn gem_skill_id_to_skill_ids(skill_id: u32) -> Vec<u32> {
             35720, 35750, 35760, 35761, 35770, 35771, 35780, 35781, 35790, 35800,
         ], // machinist transformation skills
         62000 => vec![32040, 32041],         // aeromancer sun shower
-        24000 => vec![21140, 21141, 21142, 21143, 21130, 21131, 21132, 21133], // bard serenade skills
+        24000 => vec![
+            21140, 21141, 21142, 21143, 21130, 21131, 21132, 21133, // bard serenade skills
+            21147, // bard tempest
+        ],
         47000 => vec![47950], // bk breaker identity
         60000 => vec![
-            31050, 31051, 31110, 31120, 31121, 31130, 31131, 31140, 31141,
-        ], // artist moonfall
-        19030 => vec![19290, 19030, 19300], // arcana evokes
+            31050, 31051, 31110, 31120, 31121, 31130, 31131, 31140, 31141, // artist moonfall
+            31145, // artist rising moon
+        ],
+        19030 => vec![19290, 19030, 19300],  // arcana evokes
         63000 | 63001 => vec![33200, 33201], // wildsoul swish bear
         63002 | 63003 => vec![33230, 33231], // wildsoul boulder bear
         63004 | 63005 => vec![33330, 33331], // wildsoul fox leap
@@ -596,41 +600,21 @@ fn gem_skill_id_to_skill_ids(skill_id: u32) -> Vec<u32> {
     }
 }
 
-pub fn get_engravings(
-    class_id: u32,
-    engravings: &Option<Vec<u32>>,
-) -> (Vec<String>, Option<Vec<String>>) {
-    let engravings = match engravings {
+pub fn get_engravings(engraving_ids: &Option<Vec<u32>>) -> Option<Vec<String>> {
+    let ids = match engraving_ids {
         Some(engravings) => engravings,
-        None => return (vec![], None),
+        None => return None,
     };
+    let mut engravings: Vec<String> = Vec::new();
 
-    let mut class_engravings: Vec<String> = Vec::new();
-    let mut other_engravings: Vec<String> = Vec::new();
-
-    for engraving_id in engravings.iter() {
+    for engraving_id in ids.iter() {
         if let Some(engraving_data) = ENGRAVING_DATA.get(engraving_id) {
-            let player_engraving = engraving_data.name.clone();
-            if is_class_engraving(class_id, engraving_data.id) {
-                class_engravings.push(player_engraving.clone().unwrap_or("Unknown".to_string()));
-            } else {
-                other_engravings.push(player_engraving.unwrap_or("Unknown".to_string()));
-            }
+            engravings.push(engraving_data.name.clone().unwrap_or("Unknown".to_string()));
         }
     }
 
-    other_engravings.sort_unstable();
-    let sorted_engravings: Vec<String> = class_engravings
-        .iter()
-        .cloned()
-        .chain(other_engravings)
-        .collect();
-
-    if sorted_engravings.is_empty() {
-        (class_engravings, None)
-    } else {
-        (class_engravings, Some(sorted_engravings))
-    }
+    engravings.sort_unstable();
+    Some(engravings)
 }
 
 fn is_class_engraving(class_id: u32, engraving_id: u32) -> bool {
@@ -1024,9 +1008,9 @@ pub fn insert_data(
 
                 entity.ark_passive_active = Some(info.ark_passive_enabled);
 
-                let (_, other) = get_engravings(entity.class_id, &info.engravings);
+                let engravings = get_engravings(&info.engravings);
                 if entity.class_id == 104
-                    && other.as_ref().is_some_and(|engravings| {
+                    && engravings.as_ref().is_some_and(|engravings| {
                         engravings
                             .iter()
                             .any(|e| e == "Awakening" || e == "Drops of Ether")
@@ -1048,7 +1032,7 @@ pub fn insert_data(
                     }
                 }
 
-                entity.engraving_data = other;
+                entity.engraving_data = engravings;
                 entity.ark_passive_data = info.ark_passive_data.clone();
             }
         }
