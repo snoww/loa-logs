@@ -667,7 +667,7 @@ impl EncounterState {
             target_entity.max_hp = damage_data.target_max_hp;
         }
 
-        let mut damage = damage_data.damage;
+        let mut damage = damage_data.damage + damage_data.shield_damage.unwrap_or(0);
         if target_entity.entity_type != EntityType::PLAYER && damage_data.target_current_hp < 0 {
             damage += damage_data.target_current_hp;
         }

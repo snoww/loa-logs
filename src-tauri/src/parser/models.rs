@@ -316,6 +316,7 @@ pub struct DamageData {
     pub skill_id: u32,
     pub skill_effect_id: u32,
     pub damage: i64,
+    pub shield_damage: Option<i64>,
     pub modifier: i32,
     pub target_current_hp: i64,
     pub target_max_hp: i64,

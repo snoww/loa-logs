@@ -551,6 +551,10 @@ pub fn start(window: Window<Wry>, port: u16, settings: Option<Settings>) -> Resu
                             skill_id: pkt.skill_id,
                             skill_effect_id: pkt.skill_effect_id,
                             damage: event.skill_damage_event.damage,
+                            shield_damage: event
+                                .skill_damage_event
+                                .sub_p_k_t_skill_damage_abnormal_move_notify_4_2_9
+                                .p64_0,
                             modifier: event.skill_damage_event.modifier as i32,
                             target_current_hp: event.skill_damage_event.cur_hp,
                             target_max_hp: event.skill_damage_event.max_hp,
@@ -604,6 +608,9 @@ pub fn start(window: Window<Wry>, port: u16, settings: Option<Settings>) -> Resu
                             skill_id: pkt.skill_id,
                             skill_effect_id: pkt.skill_effect_id.unwrap_or_default(),
                             damage: event.damage,
+                            shield_damage: event
+                                .sub_p_k_t_skill_damage_abnormal_move_notify_4_2_9
+                                .p64_0,
                             modifier: event.modifier as i32,
                             target_current_hp: event.cur_hp,
                             target_max_hp: event.max_hp,
