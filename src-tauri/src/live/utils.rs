@@ -1352,25 +1352,25 @@ fn get_player_spec(player: &EncounterEntity, buffs: &HashMap<u32, StatusEffect>)
     match player.class.as_str() {
         "Berserker" => {
             if player.skills.contains_key(&16140) {
-                "Berserker Technique".to_string()
+                "Berserker Technique"
             } else {
-                "Mayhem".to_string()
+                "Mayhem"
             }
         }
         "Destroyer" => {
             if player.skills.contains_key(&18090) {
-                "Gravity Training".to_string()
+                "Gravity Training"
             } else {
-                "Rage Hammer".to_string()
+                "Rage Hammer"
             }
         }
         "Gunlancer" => {
             if player.skills.contains_key(&17200) && player.skills.contains_key(&17210) {
-                "Lone Knight".to_string()
+                "Lone Knight"
             } else if player.skills.contains_key(&17140) && player.skills.contains_key(&17110) {
-                "Combat Readiness".to_string()
+                "Combat Readiness"
             } else {
-                "Princess".to_string()
+                "Princess"
             }
         }
         "Paladin" => {
@@ -1382,23 +1382,23 @@ fn get_player_spec(player: &EncounterEntity, buffs: &HashMap<u32, StatusEffect>)
                 && player.skills.contains_key(&36200)
                 && player.skills.contains_key(&36170)
             {
-                "Blessed Aura".to_string()
+                "Blessed Aura"
             } else {
-                "Judgment".to_string()
+                "Judgment"
             }
         }
         "Slayer" => {
             if player.skills.contains_key(&45004) {
-                "Punisher".to_string()
+                "Punisher"
             } else {
-                "Predator".to_string()
+                "Predator"
             }
         }
         "Arcanist" => {
             if player.skills.contains_key(&19282) {
-                "Order of the Emperor".to_string()
+                "Order of the Emperor"
             } else {
-                "Grace of the Empress".to_string()
+                "Grace of the Empress"
             }
         }
         "Summoner" => {
@@ -1407,9 +1407,9 @@ fn get_player_spec(player: &EncounterEntity, buffs: &HashMap<u32, StatusEffect>)
                 .iter()
                 .any(|(_, skill)| skill.name.contains("Kelsion"))
             {
-                "Communication Overflow".to_string()
+                "Communication Overflow"
             } else {
-                "Master Summoner".to_string()
+                "Master Summoner"
             }
         }
         "Bard" => {
@@ -1419,9 +1419,9 @@ fn get_player_spec(player: &EncounterEntity, buffs: &HashMap<u32, StatusEffect>)
                 || player.skills.contains_key(&21070))
                 && player.skills.contains_key(&21160)
             {
-                "Desperate Salvation".to_string()
+                "Desperate Salvation"
             } else {
-                "True Courage".to_string()
+                "True Courage"
             }
         }
         "Sorceress" => {
@@ -1429,80 +1429,80 @@ fn get_player_spec(player: &EncounterEntity, buffs: &HashMap<u32, StatusEffect>)
                 && player.skills.contains_key(&37270)
                 && player.skills.contains_key(&37330)
             {
-                "Igniter".to_string()
+                "Igniter"
             } else {
-                "Reflux".to_string()
+                "Reflux"
             }
         }
         "Wardancer" => {
             if player.skills.contains_key(&22340) {
-                "Esoteric Skill Enhancement".to_string()
+                "Esoteric Skill Enhancement"
             } else {
-                "First Intention".to_string()
+                "First Intention"
             }
         }
         "Scrapper" => {
             if player.skills.contains_key(&23230) {
-                "Ultimate Skill: Taijutsu".to_string()
+                "Ultimate Skill: Taijutsu"
             } else {
-                "Shock Training".to_string()
+                "Shock Training"
             }
         }
         "Soulfist" => {
             if player.skills.contains_key(&24200) {
-                "Energy Overflow".to_string()
+                "Energy Overflow"
             } else {
-                "Robust Spirit".to_string()
+                "Robust Spirit"
             }
         }
         "Glaivier" => {
             if player.skills.contains_key(&34590) {
-                "Pinnacle".to_string()
+                "Pinnacle"
             } else {
-                "Control".to_string()
+                "Control"
             }
         }
         "Striker" => {
-            if player.skills.contains_key(&39110) {
-                "Esoteric Flurry".to_string()
+            if player.skills.contains_key(&39290) {
+                "Deathblow"
             } else {
-                "Deathblow".to_string()
+                "Esoteric Flurry"
             }
         }
         "Breaker" => {
             if player.skills.contains_key(&47020) {
-                "Asura's Path".to_string()
+                "Asura's Path"
             } else {
-                "Brawl King Storm".to_string()
+                "Brawl King Storm"
             }
         }
         "Deathblade" => {
             if player.skills.contains_key(&25038) {
-                "Surge".to_string()
+                "Surge"
             } else {
-                "Remaining Energy".to_string()
+                "Remaining Energy"
             }
         }
         "Shadowhunter" => {
             if player.skills.contains_key(&27860) {
-                "Demonic Impulse".to_string()
+                "Demonic Impulse"
             } else {
-                "Perfect Suppression".to_string()
+                "Perfect Suppression"
             }
         }
         "Reaper" => {
             let buff_names = get_buff_names(player, buffs);
             if buff_names.iter().any(|s| s.contains("Lunar Voice")) {
-                "Lunar Voice".to_string()
+                "Lunar Voice"
             } else {
-                "Hunger".to_string()
+                "Hunger"
             }
         }
         "Souleater" => {
             if player.skills.contains_key(&46250) {
-                "Night's Edge".to_string()
+                "Night's Edge"
             } else {
-                "Full Moon Harvester".to_string()
+                "Full Moon Harvester"
             }
         }
         "Sharpshooter" => {
@@ -1511,23 +1511,23 @@ fn get_player_spec(player: &EncounterEntity, buffs: &HashMap<u32, StatusEffect>)
                 .iter()
                 .any(|s| s.contains("Loyal Companion") || s.contains("Hawk Support"))
             {
-                "Loyal Companion".to_string()
+                "Loyal Companion"
             } else {
-                "Death Strike".to_string()
+                "Death Strike"
             }
         }
         "Deadeye" => {
             if player.skills.contains_key(&29300) {
-                "Enhanced Weapon".to_string()
+                "Enhanced Weapon"
             } else {
-                "Pistoleer".to_string()
+                "Pistoleer"
             }
         }
         "Artillerist" => {
             if player.skills.contains_key(&30260) {
-                "Barrage Enhancement".to_string()
+                "Barrage Enhancement"
             } else {
-                "Firepower Enhancement".to_string()
+                "Firepower Enhancement"
             }
         }
         "Machinist" => {
@@ -1536,16 +1536,16 @@ fn get_player_spec(player: &EncounterEntity, buffs: &HashMap<u32, StatusEffect>)
                 .iter()
                 .any(|s| s.contains("Combat Mode") || s.contains("Evolutionary Legacy"))
             {
-                "Evolutionary Legacy".to_string()
+                "Evolutionary Legacy"
             } else {
-                "Arthetinean Skill".to_string()
+                "Arthetinean Skill"
             }
         }
         "Gunslinger" => {
             if player.skills.contains_key(&38110) {
-                "Peacemaker".to_string()
+                "Peacemaker"
             } else {
-                "Time to Hunt".to_string()
+                "Time to Hunt"
             }
         }
         "Artist" => {
@@ -1558,27 +1558,28 @@ fn get_player_spec(player: &EncounterEntity, buffs: &HashMap<u32, StatusEffect>)
                 && player.skills.contains_key(&31410)
                 && !player.skills.contains_key(&31940)
             {
-                "Full Bloom".to_string()
+                "Full Bloom"
             } else {
-                "Recurrence".to_string()
+                "Recurrence"
             }
         }
         "Aeromancer" => {
             if player.skills.contains_key(&32250) && player.skills.contains_key(&32260) {
-                "Wind Fury".to_string()
+                "Wind Fury"
             } else {
-                "Drizzle".to_string()
+                "Drizzle"
             }
         }
         "Wildsoul" => {
             if player.skills.contains_key(&33400) || player.skills.contains_key(&33410) {
-                "Ferality".to_string()
+                "Ferality"
             } else {
-                "Phantom Beast Awakening".to_string()
+                "Phantom Beast Awakening"
             }
         }
-        _ => "Unknown".to_string(),
+        _ => "Unknown",
     }
+    .to_string()
 }
 
 fn get_buff_names(player: &EncounterEntity, buffs: &HashMap<u32, StatusEffect>) -> Vec<String> {
