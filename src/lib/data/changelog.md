@@ -1,12 +1,16 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.27.0 - April 23rd, 2025
+    v1.27.1 - April 24th, 2025
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
   </div>
 </div>
 
+#### BUG FIXES AND IMPROVEMENTS
+- fix striker spec classification
+
+### v1.27.0 - April 23rd, 2025
 #### NEW FEATURES
 - update meter for april balance patch (thanks to poont for packets)
   - updated uwuowo raid stats for april balance patch, please upload your logs!
