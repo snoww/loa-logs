@@ -703,7 +703,7 @@
                             </tbody>
                         </table>
                     {/if}
-                {:else if meterState === MeterState.PLAYER && player !== null}
+                {:else if meterState === MeterState.PLAYER && player !== undefined}
                     <table class="relative w-full table-fixed">
                         <LogPlayerBreakdown entity={player} {enc} />
                     </table>
