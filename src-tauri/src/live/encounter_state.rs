@@ -681,9 +681,11 @@ impl EncounterState {
         let skill_data = get_skill(&skill_id);
         let mut skill_name = "".to_string();
         let mut skill_summon_sources: Option<Vec<u32>> = None;
+        let mut is_hyper_awakening = false;
         if let Some(skill_data) = skill_data.as_ref() {
             skill_name = skill_data.name.clone().unwrap_or_default();
             skill_summon_sources.clone_from(&skill_data.summon_source_skills);
+            is_hyper_awakening = skill_data.is_hyper_awakening;
         }
 
         if skill_name.is_empty() {
@@ -747,8 +749,7 @@ impl EncounterState {
         skill.last_timestamp = timestamp;
 
         source_entity.damage_stats.damage_dealt += damage;
-
-        let is_hyper_awakening = is_hyper_awakening_skill(skill.id);
+        
         if is_hyper_awakening {
             source_entity.damage_stats.hyper_awakening_damage += damage;
         }
