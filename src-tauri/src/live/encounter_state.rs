@@ -302,7 +302,7 @@ impl EncounterState {
                     .encounter
                     .entities
                     .get(&self.encounter.current_boss_name)
-                    .map_or(true, |boss| npc.max_hp >= boss.max_hp || boss.is_dead)
+                    .is_none_or(|boss| npc.max_hp >= boss.max_hp || boss.is_dead)
                 {
                     entity_name
                 } else {
@@ -749,7 +749,7 @@ impl EncounterState {
         skill.last_timestamp = timestamp;
 
         source_entity.damage_stats.damage_dealt += damage;
-        
+
         if is_hyper_awakening {
             source_entity.damage_stats.hyper_awakening_damage += damage;
         }

@@ -45,7 +45,7 @@ impl EntityTracker {
     }
 
     pub fn init_env(&mut self, pkt: PKTInitEnv) -> Entity {
-        if !self.local_entity_id == 0 {
+        if self.local_entity_id != 0 {
             let party_id = self
                 .party_tracker
                 .borrow_mut()
@@ -572,7 +572,7 @@ fn get_npc_entity_type_name_grade(npc: &NpcStruct, max_hp: i64) -> (EntityType, 
             || npc_info.grade == "commander")
             && max_hp > 10_000
             && !npc_name.contains('_')
-            && npc_name.chars().all(|c| c.is_ascii())
+            && npc_name.is_ascii()
         {
             (BOSS, npc_name.clone(), npc_info.grade.clone())
         } else {
