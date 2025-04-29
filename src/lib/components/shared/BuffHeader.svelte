@@ -8,12 +8,11 @@
 
     let { synergies }: Props = $props();
 
-    let width = $state("3.5rem");
-
-    $effect(() => {
+    let width = $derived.by(() => {
         if (synergies.size > 1) {
-            width = `${synergies.size * 1.5 + 1}rem`;
+            return `${synergies.size * 1.5 + 1}rem`;
         }
+        return "3.5rem";
     });
 </script>
 
