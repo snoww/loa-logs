@@ -124,7 +124,7 @@ export class BuffState {
                             isHat = true;
                         }
 
-                        if (player.damageStats.buffedBy[id]) {
+                        if (player.damageStats.buffedBy[id] && syn.category === "buff") {
                             const b = new Buff(
                                 syn.source.icon,
                                 round(
@@ -138,7 +138,7 @@ export class BuffState {
                             buffDetails.buffs.push(b);
                             buffDamage += player.damageStats.buffedBy[id];
                         }
-                        if (player.damageStats.debuffedBy[id]) {
+                        if (player.damageStats.debuffedBy[id] && syn.category === "debuff") {
                             buffDetails.buffs.push(
                                 new Buff(
                                     syn.source.icon,
