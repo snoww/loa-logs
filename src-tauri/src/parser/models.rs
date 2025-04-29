@@ -465,6 +465,7 @@ pub struct SkillData {
     pub groups: Option<Vec<i32>>,
     pub summon_source_skills: Option<Vec<u32>>,
     pub source_skills: Option<Vec<u32>>,
+    #[serde(default)]
     pub is_hyper_awakening: bool,
 }
 
