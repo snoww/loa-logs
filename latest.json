@@ -1,11 +1,11 @@
 {
-    "version": "v1.27.1",
-    "notes": "### v1.27.1\n#### BUG FIXES AND IMPROVEMENTS\n- fix striker spec classification\n\n### v1.27.0\n#### NEW FEATURES\n- update meter for april balance patch (thanks to poont for packets)\n  - updated uwuowo raid stats for april balance patch, please upload your logs!\n- damage towards shields is now counted towards dps (on bosses that support it)\n\n\n#### BUG FIXES AND IMPROVEMENTS\n- added option for uwu shortcut for players in live meter (or logs)\n- fix slayer party synergy grouping\n- fix spec detection for supports running stagger builds\n- fix gems for dps spec of supports\n\nsend bug reports/suggestions to [ramen shop server](https://discord.gg/RXvTMV2YHu)\n",
-    "pub_date": "2025-04-24T08:12:43.351Z",
+    "version": "v1.27.2",
+    "notes": "### v1.27.2\n#### BUG FIXES AND IMPROVEMENTS\n- fix machinist hyper awakening check\n- fix certain debuffs going over 100%\n- minor ui fixes\n\nsend bug reports/suggestions to [ramen shop server](https://discord.gg/RXvTMV2YHu)\n",
+    "pub_date": "2025-04-29T07:30:23.850Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.27.1/LOA.Logs_1.27.1_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlMvbkwyY1NYa0NrdEg0OXU3TVFBY29uZjZrdWJGOG1WVkFqcHgzUzUyWkYwUmlxZHEydngyano4bk1kUk9MQnBqbUxVQ3NtaWZoaGFVUTJuZjVZRFFrPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzQ1NDgyMTY3CWZpbGU6TE9BIExvZ3NfMS4yNy4xX3g2NC1zZXR1cC5uc2lzLnppcApJYUhVeEg1NEVLbTdMdjJyU1U0dFRxZXdxSy9jeGxaZ3JZNVNzK1ZaWkpmR3B6bHVTUXU1SnowRDcyajVIdXFab2s2RFVZMG52UUIrN0hPbDArUTlEUT09Cg=="
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.27.2/LOA.Logs_1.27.2_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmFOREZRdFRhcExUNGY3aGZlSm1nNDhYZGVkbHJvMDdCUm14QkZwTjdnZ1F6Mndtci9rVnNILzlQYjRwTG8wYm5TQklXb2g0S05FV1FMdVRCVXFycUFFPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzQ1OTExODAyCWZpbGU6TE9BIExvZ3NfMS4yNy4yX3g2NC1zZXR1cC5uc2lzLnppcAo3VDhuUVg5WHV5b3JBYktBN1NDaUsyaDZScUd0aGoyOTVQRFRXeUI5YUZNVlIxSk96WUxIOWNKNkxObEd2RHo3ZmQwRXRXRzRTdEZDK21lbGd1TmhDUT09Cg=="
         }
     }
 }
