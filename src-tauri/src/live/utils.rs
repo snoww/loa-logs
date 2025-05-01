@@ -1360,10 +1360,8 @@ fn get_player_spec(player: &EncounterEntity, buffs: &HashMap<u32, StatusEffect>)
             }
         }
         "Sorceress" => {
-            if player.skills.contains_key(&37350)
-                && player.skills.contains_key(&37270)
-                && player.skills.contains_key(&37330)
-            {
+            // if has arcane rupture
+            if player.skills.contains_key(&37100) || player.skills.contains_key(&37101) {
                 "Igniter"
             } else {
                 "Reflux"
