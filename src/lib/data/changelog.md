@@ -1,12 +1,18 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.27.2 - April 29th, 2025
+    v1.28.0 - May 21st, 2025
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
   </div>
 </div>
 
+#### NEW FEATURES
+- updated meter for rimeria patch (thanks to poont)
+#### BUG FIXES AND IMPROVEMENTS
+- updated detection for sorceress specs
+
+### v1.27.2 - April 29th, 2025
 #### BUG FIXES AND IMPROVEMENTS
 - fix machinist hyper awakening check
 - fix certain debuffs going over 100%
