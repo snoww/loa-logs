@@ -1,11 +1,11 @@
 {
-    "version": "v1.27.2",
-    "notes": "### v1.27.2\n#### BUG FIXES AND IMPROVEMENTS\n- fix machinist hyper awakening check\n- fix certain debuffs going over 100%\n- minor ui fixes\n\nsend bug reports/suggestions to [ramen shop server](https://discord.gg/RXvTMV2YHu)\n",
-    "pub_date": "2025-04-29T07:30:23.850Z",
+    "version": "v1.28.0",
+    "notes": "### v1.28.0\n#### NEW FEATURES\n- updated meter for rimeria patch (thanks to poont)\n#### BUG FIXES AND IMPROVEMENTS\n- updated detection for sorceress specs\n\nsend bug reports/suggestions to [ramen shop server](https://discord.gg/RXvTMV2YHu)\n",
+    "pub_date": "2025-05-21T20:59:27.075Z",
     "platforms": {
         "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.27.2/LOA.Logs_1.27.2_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmFOREZRdFRhcExUNGY3aGZlSm1nNDhYZGVkbHJvMDdCUm14QkZwTjdnZ1F6Mndtci9rVnNILzlQYjRwTG8wYm5TQklXb2g0S05FV1FMdVRCVXFycUFFPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzQ1OTExODAyCWZpbGU6TE9BIExvZ3NfMS4yNy4yX3g2NC1zZXR1cC5uc2lzLnppcAo3VDhuUVg5WHV5b3JBYktBN1NDaUsyaDZScUd0aGoyOTVQRFRXeUI5YUZNVlIxSk96WUxIOWNKNkxObEd2RHo3ZmQwRXRXRzRTdEZDK21lbGd1TmhDUT09Cg=="
+            "url": "https://github.com/snoww/loa-logs/releases/download/v1.28.0/LOA.Logs_1.28.0_x64-setup.nsis.zip",
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlY1eFF2NEloMEpCNDNaOVRYR0dsbzJnRTQrRUtacHdMdnlqRENxYzRVKzZEdUpmeEdjZXl0cnRZRzZBeWs2cWFHeHR2S3ZNZytTNGFpWHVhS0Z0aHdvPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzQ3ODYxMzE2CWZpbGU6TE9BIExvZ3NfMS4yOC4wX3g2NC1zZXR1cC5uc2lzLnppcApWK3dRQS91U2R5NEVickhzSnhTclVNUXYwN2RoaHRQU0VBM1hGS2RjVWNEOWs4Z0ZoQnFaeHVWZEZ0WlRtejdiK1BWRDBWcURWWGkzNFErM053c3JCZz09Cg=="
         }
     }
 }
