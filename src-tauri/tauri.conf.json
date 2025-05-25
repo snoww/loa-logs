@@ -119,6 +119,7 @@
       {
         "label": "main",
         "title": "LOA Logs",
+        "url": "live",
         "fullscreen": false,
         "width": 500,
         "height": 350,

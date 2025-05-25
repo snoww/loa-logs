@@ -24,9 +24,7 @@
   } from "$lib/utils/stores";
   import { tooltip } from "$lib/utils/tooltip";
   import { invoke } from "@tauri-apps/api";
-  import NProgress from "nprogress";
   import { goto } from "$app/navigation";
-  import "nprogress/nprogress.css";
   import Notification from "$lib/components/shared/Notification.svelte";
   import { classNameToClassId } from "$lib/constants/classes";
   import { encounterMap } from "$lib/constants/encounters";
@@ -95,7 +93,6 @@
     search: string,
     page: number
   ): Promise<Array<EncounterPreview>> {
-    NProgress.start();
     let raidBosses = Array.from(searchFilter.bosses);
     if (searchFilter.encounters.size > 0) {
       for (const encounter of searchFilter.encounters) {
@@ -130,7 +127,6 @@
 
     encounters = overview.encounters;
     totalEncounters = overview.totalEncounters;
-    NProgress.done();
     return encounters;
   }
 
@@ -199,7 +195,6 @@
   let hidden: boolean = $state(true);
 </script>
 
-<LogSidebar bind:hidden />
 <div class="h-screen bg-zinc-800">
   <div class="flex h-16 items-center justify-between px-8 py-5 shadow-md">
     <Title text="Past Encounters" bind:hidden />
