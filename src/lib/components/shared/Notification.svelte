@@ -1,5 +1,4 @@
 <script lang="ts">
-    import { Alert } from "flowbite-svelte";
     import { fade } from "svelte/transition";
 
     interface Props {
@@ -22,7 +21,7 @@
 </script>
 
 <div transition:fade|global>
-    <Alert
+    <!-- <Alert
         color="none"
         class="{isError ? 'bg-red-800' : 'bg-accent-800'} {fixed
             ? 'fixed bottom-20'
@@ -43,5 +42,5 @@
                     clip-rule="evenodd" /></svg>
         </span>
         {text}
-    </Alert>
+    </Alert> -->
 </div>

@@ -4,7 +4,6 @@
     import { invoke } from "@tauri-apps/api";
     import { getVersion } from "@tauri-apps/api/app";
     import { checkUpdate } from "@tauri-apps/api/updater";
-    import { Drawer } from "flowbite-svelte";
     import { onMount } from "svelte";
     import { sineIn } from "svelte/easing";
     import { writable } from "svelte/store";
@@ -48,7 +47,7 @@
         }
     });
 </script>
-
+<!-- 
 <Drawer
     width="w-52"
     bgColor="bg-zinc-900"
@@ -171,4 +170,4 @@
             </div>
         </div>
     </div>
-</Drawer>
+</Drawer> -->
