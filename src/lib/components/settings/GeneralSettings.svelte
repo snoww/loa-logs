@@ -1,247 +1,278 @@
 <script lang="ts">
-    import { settings } from "$lib/utils/settings";
-    import { invoke } from "@tauri-apps/api";
-    import SettingItem from "./SettingItem.svelte";
-    import { ifaceChangedStore } from "$lib/utils/stores";
-    import { emit } from "@tauri-apps/api/event";
+  import { settings } from "$lib/utils/settings";
+  import { invoke } from "@tauri-apps/api";
+  import SettingItem from "./SettingItem.svelte";
+  import { ifaceChangedStore } from "$lib/utils/stores";
+  import { emit } from "@tauri-apps/api/event";
 
-    let colorDropdownOpen = $state(false);
+  let colorDropdownOpen = $state(false);
 
-    const handleColorDropdownFocusLoss = (event: FocusEvent) => {
-        const relatedTarget = event.relatedTarget as HTMLElement;
-        const currentTarget = event.currentTarget as HTMLElement;
+  const handleColorDropdownFocusLoss = (event: FocusEvent) => {
+    const relatedTarget = event.relatedTarget as HTMLElement;
+    const currentTarget = event.currentTarget as HTMLElement;
 
-        if (currentTarget.contains(relatedTarget)) return;
-        colorDropdownOpen = false;
-    };
+    if (currentTarget.contains(relatedTarget)) return;
+    colorDropdownOpen = false;
+  };
 
-    const handleColorDropdownClick = () => {
-        colorDropdownOpen = !colorDropdownOpen;
-    };
+  const handleColorDropdownClick = () => {
+    colorDropdownOpen = !colorDropdownOpen;
+  };
 
-    async function toggleAlwaysOnTop() {
-        if ($settings.general.alwaysOnTop) {
-            await invoke("enable_aot");
-        } else {
-            await invoke("disable_aot");
-        }
+  async function toggleAlwaysOnTop() {
+    if ($settings.general.alwaysOnTop) {
+      await invoke("enable_aot");
+    } else {
+      await invoke("disable_aot");
     }
+  }
 </script>
 
 <div class="flex flex-col space-y-4 divide-y-[1px]">
-    <div class="mt-4 flex flex-col space-y-2 px-2">
-        <div class="relative pt-2" onfocusout={handleColorDropdownFocusLoss}>
-            <div class="flex items-center">
-                <button
-                    aria-label="Open color dropdown"
-                    id=""
-                    class="bg-accent-800 inline-flex items-center rounded-lg px-2 py-2 text-center text-sm"
-                    type="button"
-                    onclick={handleColorDropdownClick}>
-                    <svg class="size-4 fill-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960"
-                        ><path
-                            d="M480 996q-86.035 0-162.566-33.158t-133.825-90.451q-57.293-57.294-90.451-133.802Q60 662.08 60 576.062 60 487 93.196 410.724q33.196-76.275 91.5-133.25Q243 220.5 320.769 187.75 398.538 155 487.189 155q83.023 0 157.706 28.207 74.683 28.207 131.885 77.88 57.202 49.672 90.711 118.242Q901 447.9 901 527q0 112.5-62.75 184.5t-175.664 72H605.5q-17 0-29.5 13.25T563.5 827q0 25.447 10 36.224 10 10.776 10 32.276 0 40-28.55 70.25T480 996Zm0-420Zm-222.5 24.5q19.7 0 34.1-14.4Q306 571.7 306 552q0-19.7-14.4-34.1-14.4-14.4-34.1-14.4-19.7 0-34.1 14.4Q209 532.3 209 552q0 19.7 14.4 34.1 14.4 14.4 34.1 14.4Zm121-162q20.2 0 34.6-14.4 14.4-14.4 14.4-34.1 0-20.7-14.4-34.6-14.4-13.9-34.1-13.9-20.7 0-34.6 13.9-13.9 13.9-13.9 34.1 0 20.2 13.9 34.6 13.9 14.4 34.1 14.4Zm203.5 0q20.2 0 34.6-14.4Q631 409.7 631 390q0-20.7-14.4-34.6-14.4-13.9-34.1-13.9-20.7 0-34.6 13.9-13.9 13.9-13.9 34.1 0 20.2 13.9 34.6 13.9 14.4 34.1 14.4Zm123.5 162q19.7 0 34.1-14.4Q754 571.7 754 552q0-19.7-14.4-34.1-14.4-14.4-34.1-14.4-20.7 0-34.6 14.4Q657 532.3 657 552q0 19.7 13.9 34.1 13.9 14.4 34.6 14.4Zm-229.342 304q7.592 0 11.717-3.545Q492 897.41 492 888.938 492 874.5 477.25 865q-14.75-9.5-14.75-47.5 0-48.674 32.73-87.087Q527.96 692 576.25 692h86.25q74 0 110-43.75t36-115.25q0-131-97.843-208.25t-223.16-77.25q-140.595 0-238.296 95.919T151.5 576.479q0 136.521 95.211 232.271t229.447 95.75Z" /></svg>
-                </button>
-                <div class="ml-5">
-                    <div class="text-gray-100">Accent Color</div>
-                    <div class="text-xs text-gray-300">Set the accent color for the app</div>
-                </div>
-            </div>
-            {#if colorDropdownOpen}
-                <div id="dropdown" class="absolute -left-1 mt-2 w-28 cursor-pointer rounded-lg shadow-sm">
-                    <ul class="text-sm text-gray-200" aria-labelledby="dropdownDefaultButton">
-                        <li>
-                            <button
-                                class="block w-full rounded-t-lg bg-red-800 px-4 py-2 text-left"
-                                onclick={() => {
-                                    $settings.general.accentColor = "theme-red";
-                                    colorDropdownOpen = false;
-                                }}>Red</button>
-                        </li>
-                        <li>
-                            <button
-                                class="block w-full px-4 py-2 text-left"
-                                style="background-color: rgb(218, 124, 160)"
-                                onclick={() => {
-                                    $settings.general.accentColor = "theme-rose";
-                                    colorDropdownOpen = false;
-                                }}>Rose</button>
-                        </li>
-                        <li>
-                            <button
-                                class="block w-full bg-pink-800 px-4 py-2 text-left"
-                                onclick={() => {
-                                    $settings.general.accentColor = "theme-pink";
-                                    colorDropdownOpen = false;
-                                }}>Pink</button>
-                        </li>
-                        <li>
-                            <button
-                                class="block w-full bg-violet-500 px-4 py-2 text-left"
-                                onclick={() => {
-                                    $settings.general.accentColor = "theme-violet";
-                                    colorDropdownOpen = false;
-                                }}>Violet</button>
-                        </li>
-                        <li>
-                            <button
-                                class="block w-full bg-purple-800 px-4 py-2 text-left"
-                                onclick={() => {
-                                    $settings.general.accentColor = "theme-purple";
-                                    colorDropdownOpen = false;
-                                }}>Purple</button>
-                        </li>
-                        <li>
-                            <button
-                                class="block w-full bg-sky-800 px-4 py-2 text-left"
-                                onclick={() => {
-                                    $settings.general.accentColor = "theme-blue";
-                                    colorDropdownOpen = false;
-                                }}>Blue</button>
-                        </li>
-                        <li>
-                            <button
-                                class="block w-full bg-green-800 px-4 py-2 text-left"
-                                onclick={() => {
-                                    $settings.general.accentColor = "theme-green";
-                                    colorDropdownOpen = false;
-                                }}>Green</button>
-                        </li>
-                        <li>
-                            <button
-                                class="block w-full bg-yellow-400 px-4 py-2 text-left"
-                                onclick={() => {
-                                    $settings.general.accentColor = "theme-yellow";
-                                    colorDropdownOpen = false;
-                                }}>Yellow</button>
-                        </li>
-                        <li>
-                            <button
-                                class="block w-full rounded-b-lg bg-orange-500 px-4 py-2 text-left"
-                                onclick={() => {
-                                    $settings.general.accentColor = "theme-orange";
-                                    colorDropdownOpen = false;
-                                }}>Orange</button>
-                        </li>
-                    </ul>
-                </div>
-            {/if}
+  <div class="mt-4 flex flex-col space-y-2 px-2">
+    <div class="relative pt-2" onfocusout={handleColorDropdownFocusLoss}>
+      <div class="flex items-center">
+        <button
+          aria-label="Open color dropdown"
+          id=""
+          class="bg-accent-800 inline-flex items-center rounded-lg px-2 py-2 text-center text-sm"
+          type="button"
+          onclick={handleColorDropdownClick}
+        >
+          <svg class="size-4 fill-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960"
+            ><path
+              d="M480 996q-86.035 0-162.566-33.158t-133.825-90.451q-57.293-57.294-90.451-133.802Q60 662.08 60 576.062 60 487 93.196 410.724q33.196-76.275 91.5-133.25Q243 220.5 320.769 187.75 398.538 155 487.189 155q83.023 0 157.706 28.207 74.683 28.207 131.885 77.88 57.202 49.672 90.711 118.242Q901 447.9 901 527q0 112.5-62.75 184.5t-175.664 72H605.5q-17 0-29.5 13.25T563.5 827q0 25.447 10 36.224 10 10.776 10 32.276 0 40-28.55 70.25T480 996Zm0-420Zm-222.5 24.5q19.7 0 34.1-14.4Q306 571.7 306 552q0-19.7-14.4-34.1-14.4-14.4-34.1-14.4-19.7 0-34.1 14.4Q209 532.3 209 552q0 19.7 14.4 34.1 14.4 14.4 34.1 14.4Zm121-162q20.2 0 34.6-14.4 14.4-14.4 14.4-34.1 0-20.7-14.4-34.6-14.4-13.9-34.1-13.9-20.7 0-34.6 13.9-13.9 13.9-13.9 34.1 0 20.2 13.9 34.6 13.9 14.4 34.1 14.4Zm203.5 0q20.2 0 34.6-14.4Q631 409.7 631 390q0-20.7-14.4-34.6-14.4-13.9-34.1-13.9-20.7 0-34.6 13.9-13.9 13.9-13.9 34.1 0 20.2 13.9 34.6 13.9 14.4 34.1 14.4Zm123.5 162q19.7 0 34.1-14.4Q754 571.7 754 552q0-19.7-14.4-34.1-14.4-14.4-34.1-14.4-20.7 0-34.6 14.4Q657 532.3 657 552q0 19.7 13.9 34.1 13.9 14.4 34.6 14.4Zm-229.342 304q7.592 0 11.717-3.545Q492 897.41 492 888.938 492 874.5 477.25 865q-14.75-9.5-14.75-47.5 0-48.674 32.73-87.087Q527.96 692 576.25 692h86.25q74 0 110-43.75t36-115.25q0-131-97.843-208.25t-223.16-77.25q-140.595 0-238.296 95.919T151.5 576.479q0 136.521 95.211 232.271t229.447 95.75Z"
+            /></svg
+          >
+        </button>
+        <div class="ml-5">
+          <div class="text-gray-100">Accent Color</div>
+          <div class="text-xs text-gray-300">Set the accent color for the app</div>
         </div>
-        <SettingItem
-            name="Auto Launch Lost Ark"
-            description="Automatically start Lost Ark when the app is opened."
-            bind:setting={$settings.general.startLoaOnStart} />
-        <SettingItem
-            name="Low Performance Mode"
-            description="Lowers meter update frequency to reduce CPU usage. (Requires Restart)"
-            bind:setting={$settings.general.lowPerformanceMode} />
-        <SettingItem
-            name="Show Player Names"
-            description="Show player names if it's loaded. If disabled, it will show the class name (e.g. Arcanist)."
-            bind:setting={$settings.general.showNames} />
-        <SettingItem
-            name="Show Gear Score"
-            description="Show player's item level if it's loaded."
-            bind:setting={$settings.general.showGearScore} />
-        <SettingItem
-            name="Hide Names"
-            description="Hides player names completely, will not show class name either."
-            bind:setting={$settings.general.hideNames} />
-        <SettingItem
-            name="Show Esther"
-            description="Show damage dealt by Esther skills in meter and log view."
-            bind:setting={$settings.general.showEsther} />
-        <label class="flex items-center">
-            <input
-                type="checkbox"
-                bind:checked={$settings.general.bossOnlyDamage}
-                onchange={() => {
-                    emit("boss-only-damage-request", $settings.general.bossOnlyDamage);
-                }}
-                class="checked:bg-accent-500 size-5 rounded-sm bg-zinc-700 focus:ring-0 focus:ring-offset-0" />
-            <div class="ml-5">
-                <div class="text-gray-100">Boss Only Damage</div>
-                <div class="text-xs text-gray-300">Only track damage dealt to bosses.</div>
-            </div>
-        </label>
-        <SettingItem
-            name="Boss Only Damage Default On"
-            description={"This setting makes it so that the meter will start with boss only damage turned on every time."}
-            bind:setting={$settings.general.bossOnlyDamageDefaultOn} />
-        <SettingItem
-            name="Show Raid Difficulty"
-            description={"Shows the difficulty of the raid."}
-            bind:setting={$settings.general.showDifficulty} />
-        <SettingItem
-            name="Show Raid Gate"
-            description={"Shows the gate of the raid."}
-            bind:setting={$settings.general.showGate} />
-        <SettingItem
-            name="Show Shield Tab"
-            description={"Shows the shield stats for the raid."}
-            bind:setting={$settings.general.showShields} />
-        <SettingItem
-            name="Show Tanked Tab"
-            description={"Shows the damage taken by players."}
-            bind:setting={$settings.general.showTanked} />
-        <SettingItem
-            name="Show Bosses Tab"
-            description={"Shows the damage dealt by bosses and its skill breakdowns."}
-            bind:setting={$settings.general.showBosses} />
-        <SettingItem
-            name="Show Details Tab"
-            description={"Shows an additional tab in meter for raw identity and stagger data."}
-            bind:setting={$settings.general.showDetails} />
-        <div class="">
-            <label class="flex items-center">
-                <input
-                    type="checkbox"
-                    bind:checked={$settings.general.alwaysOnTop}
-                    onchange={toggleAlwaysOnTop}
-                    class="checked:bg-accent-500 size-5 rounded-sm bg-zinc-700 focus:ring-0 focus:ring-offset-0" />
-                <div class="ml-5">
-                    <div class="text-gray-100">Always on Top</div>
-                    <div class="text-xs text-gray-300">Sets the live meter to always be on top of other windows.</div>
-                </div>
-            </label>
+      </div>
+      {#if colorDropdownOpen}
+        <div id="dropdown" class="absolute -left-1 mt-2 w-28 cursor-pointer rounded-lg shadow-sm">
+          <ul class="text-sm text-gray-200" aria-labelledby="dropdownDefaultButton">
+            <li>
+              <button
+                class="block w-full rounded-t-lg bg-red-800 px-4 py-2 text-left"
+                onclick={() => {
+                  $settings.general.accentColor = "theme-red";
+                  colorDropdownOpen = false;
+                }}>Red</button
+              >
+            </li>
+            <li>
+              <button
+                class="block w-full px-4 py-2 text-left"
+                style="background-color: rgb(218, 124, 160)"
+                onclick={() => {
+                  $settings.general.accentColor = "theme-rose";
+                  colorDropdownOpen = false;
+                }}>Rose</button
+              >
+            </li>
+            <li>
+              <button
+                class="block w-full bg-pink-800 px-4 py-2 text-left"
+                onclick={() => {
+                  $settings.general.accentColor = "theme-pink";
+                  colorDropdownOpen = false;
+                }}>Pink</button
+              >
+            </li>
+            <li>
+              <button
+                class="block w-full bg-violet-500 px-4 py-2 text-left"
+                onclick={() => {
+                  $settings.general.accentColor = "theme-violet";
+                  colorDropdownOpen = false;
+                }}>Violet</button
+              >
+            </li>
+            <li>
+              <button
+                class="block w-full bg-purple-800 px-4 py-2 text-left"
+                onclick={() => {
+                  $settings.general.accentColor = "theme-purple";
+                  colorDropdownOpen = false;
+                }}>Purple</button
+              >
+            </li>
+            <li>
+              <button
+                class="block w-full bg-sky-800 px-4 py-2 text-left"
+                onclick={() => {
+                  $settings.general.accentColor = "theme-blue";
+                  colorDropdownOpen = false;
+                }}>Blue</button
+              >
+            </li>
+            <li>
+              <button
+                class="block w-full bg-green-800 px-4 py-2 text-left"
+                onclick={() => {
+                  $settings.general.accentColor = "theme-green";
+                  colorDropdownOpen = false;
+                }}>Green</button
+              >
+            </li>
+            <li>
+              <button
+                class="block w-full bg-yellow-400 px-4 py-2 text-left"
+                onclick={() => {
+                  $settings.general.accentColor = "theme-yellow";
+                  colorDropdownOpen = false;
+                }}>Yellow</button
+              >
+            </li>
+            <li>
+              <button
+                class="block w-full rounded-b-lg bg-orange-500 px-4 py-2 text-left"
+                onclick={() => {
+                  $settings.general.accentColor = "theme-orange";
+                  colorDropdownOpen = false;
+                }}>Orange</button
+              >
+            </li>
+          </ul>
         </div>
-        <SettingItem
-            name="Hide Logo in Screenshot"
-            description={'Hides the meter name "LOA Logs" in the screenshot.'}
-            bind:setting={$settings.general.hideLogo} />
-        <div>
-            <label class="flex items-center">
-                <input
-                    type="checkbox"
-                    bind:checked={$settings.general.autoIface}
-                    onchange={() => {
-                        $ifaceChangedStore = true;
-                    }}
-                    class="checked:bg-accent-500 size-5 rounded-sm bg-zinc-700 focus:ring-0 focus:ring-offset-0" />
-                <div class="ml-5">
-                    <div class="text-gray-100">Auto Port Selection</div>
-                    <div class="text-xs text-gray-300">Automatically select port to listen on.</div>
-                </div>
-            </label>
-        </div>
-        {#if !$settings.general.autoIface}
-            <div>
-                <label class="flex items-center">
-                    <input
-                        type="number"
-                        class="h-8 w-24 rounded-md bg-zinc-700 text-sm text-gray-300"
-                        bind:value={$settings.general.port}
-                        placeholder={$settings.general.port} />
-                    <div class="ml-5">
-                        <div class="text-gray-100">Port</div>
-                        <div class="text-xs text-gray-300">Set custom port if not using default. Default is 6040.</div>
-                    </div>
-                </label>
-            </div>
-        {/if}
-        <SettingItem
-            name="Enable Experimental Features"
-            description={"Enables experimental features that may not be fully complete or stable."}
-            bind:setting={$settings.general.experimentalFeatures} />
+      {/if}
     </div>
+    <SettingItem
+      name="Auto Launch Lost Ark"
+      description="Automatically start Lost Ark when the app is opened."
+      bind:setting={$settings.general.startLoaOnStart}
+    />
+    <SettingItem
+      name="Low Performance Mode"
+      description="Lowers meter update frequency to reduce CPU usage. (Requires Restart)"
+      bind:setting={$settings.general.lowPerformanceMode}
+    />
+    <SettingItem
+      name="Show Player Names"
+      description="Show player names if it's loaded. If disabled, it will show the class name (e.g. Arcanist)."
+      bind:setting={$settings.general.showNames}
+    />
+    <SettingItem
+      name="Show Gear Score"
+      description="Show player's item level if it's loaded."
+      bind:setting={$settings.general.showGearScore}
+    />
+    <SettingItem
+      name="Hide Names"
+      description="Hides player names completely, will not show class name either."
+      bind:setting={$settings.general.hideNames}
+    />
+    <SettingItem
+      name="Show Esther"
+      description="Show damage dealt by Esther skills in meter and log view."
+      bind:setting={$settings.general.showEsther}
+    />
+    <label class="flex items-center">
+      <input
+        type="checkbox"
+        bind:checked={$settings.general.bossOnlyDamage}
+        onchange={() => {
+          emit("boss-only-damage-request", $settings.general.bossOnlyDamage);
+        }}
+        class="checked:bg-accent-500 size-5 rounded-sm bg-zinc-700 focus:ring-0 focus:ring-offset-0"
+      />
+      <div class="ml-5">
+        <div class="text-gray-100">Boss Only Damage</div>
+        <div class="text-xs text-gray-300">Only track damage dealt to bosses.</div>
+      </div>
+    </label>
+    <SettingItem
+      name="Boss Only Damage Default On"
+      description={"This setting makes it so that the meter will start with boss only damage turned on every time."}
+      bind:setting={$settings.general.bossOnlyDamageDefaultOn}
+    />
+    <SettingItem
+      name="Show Raid Difficulty"
+      description={"Shows the difficulty of the raid."}
+      bind:setting={$settings.general.showDifficulty}
+    />
+    <SettingItem
+      name="Show Raid Gate"
+      description={"Shows the gate of the raid."}
+      bind:setting={$settings.general.showGate}
+    />
+    <SettingItem
+      name="Show Shield Tab"
+      description={"Shows the shield stats for the raid."}
+      bind:setting={$settings.general.showShields}
+    />
+    <SettingItem
+      name="Show Tanked Tab"
+      description={"Shows the damage taken by players."}
+      bind:setting={$settings.general.showTanked}
+    />
+    <SettingItem
+      name="Show Bosses Tab"
+      description={"Shows the damage dealt by bosses and its skill breakdowns."}
+      bind:setting={$settings.general.showBosses}
+    />
+    <SettingItem
+      name="Show Details Tab"
+      description={"Shows an additional tab in meter for raw identity and stagger data."}
+      bind:setting={$settings.general.showDetails}
+    />
+    <div class="">
+      <label class="flex items-center">
+        <input
+          type="checkbox"
+          bind:checked={$settings.general.alwaysOnTop}
+          onchange={toggleAlwaysOnTop}
+          class="checked:bg-accent-500 size-5 rounded-sm bg-zinc-700 focus:ring-0 focus:ring-offset-0"
+        />
+        <div class="ml-5">
+          <div class="text-gray-100">Always on Top</div>
+          <div class="text-xs text-gray-300">Sets the live meter to always be on top of other windows.</div>
+        </div>
+      </label>
+    </div>
+    <SettingItem
+      name="Hide Logo in Screenshot"
+      description={'Hides the meter name "LOA Logs" in the screenshot.'}
+      bind:setting={$settings.general.hideLogo}
+    />
+    <div>
+      <label class="flex items-center">
+        <input
+          type="checkbox"
+          bind:checked={$settings.general.autoIface}
+          onchange={() => {
+            $ifaceChangedStore = true;
+          }}
+          class="checked:bg-accent-500 size-5 rounded-sm bg-zinc-700 focus:ring-0 focus:ring-offset-0"
+        />
+        <div class="ml-5">
+          <div class="text-gray-100">Auto Port Selection</div>
+          <div class="text-xs text-gray-300">Automatically select port to listen on.</div>
+        </div>
+      </label>
+    </div>
+    {#if !$settings.general.autoIface}
+      <div>
+        <label class="flex items-center">
+          <input
+            type="number"
+            class="h-8 w-24 rounded-md bg-zinc-700 text-sm text-gray-300"
+            bind:value={$settings.general.port}
+            placeholder={$settings.general.port}
+          />
+          <div class="ml-5">
+            <div class="text-gray-100">Port</div>
+            <div class="text-xs text-gray-300">Set custom port if not using default. Default is 6040.</div>
+          </div>
+        </label>
+      </div>
+    {/if}
+    <SettingItem
+      name="Enable Experimental Features"
+      description={"Enables experimental features that may not be fully complete or stable."}
+      bind:setting={$settings.general.experimentalFeatures}
+    />
+  </div>
 </div>

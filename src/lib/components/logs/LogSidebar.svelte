@@ -1,52 +1,53 @@
 <script lang="ts">
-    import { updateSettings } from "$lib/utils/settings";
-    import { tooltip } from "$lib/utils/tooltip";
-    import { invoke } from "@tauri-apps/api";
-    import { getVersion } from "@tauri-apps/api/app";
-    import { checkUpdate } from "@tauri-apps/api/updater";
-    import { onMount } from "svelte";
-    import { sineIn } from "svelte/easing";
-    import { writable } from "svelte/store";
+  import { updateSettings } from "$lib/utils/settings";
+  import { tooltip } from "$lib/utils/tooltip";
+  import { invoke } from "@tauri-apps/api";
+  import { getVersion } from "@tauri-apps/api/app";
+  import { checkUpdate } from "@tauri-apps/api/updater";
+  import { onMount } from "svelte";
+  import { sineIn } from "svelte/easing";
+  import { writable } from "svelte/store";
 
-    interface Props {
-        hidden?: boolean;
-    }
+  interface Props {
+    hidden?: boolean;
+  }
 
-    let { hidden = $bindable(true) }: Props = $props();
+  let { hidden = $bindable(true) }: Props = $props();
 
-    let transitionParams = {
-        x: -320,
-        duration: 200,
-        easing: sineIn
-    };
-    let spin = writable(false);
-    let updateText = writable("Check for Updates");
+  let transitionParams = {
+    x: -320,
+    duration: 200,
+    easing: sineIn
+  };
+  let spin = writable(false);
+  let updateText = writable("Check for Updates");
 
-    let loaRunning = $state(false);
+  let loaRunning = $state(false);
 
-    onMount(() => {
+  onMount(() => {
+    checkLoaRunning();
+  });
+
+  async function checkLoaRunning() {
+    loaRunning = await invoke("check_loa_running");
+  }
+
+  function startLoa() {
+    invoke("start_loa_process");
+  }
+  let starting = $state(false);
+
+  $effect(() => {
+    if (!hidden) {
+      checkLoaRunning();
+
+      setInterval(() => {
         checkLoaRunning();
-    });
-
-    async function checkLoaRunning() {
-        loaRunning = await invoke("check_loa_running");
+      }, 5000);
     }
-
-    function startLoa() {
-        invoke("start_loa_process");
-    }
-    let starting = $state(false);
-
-    $effect(() => {
-        if (!hidden) {
-            checkLoaRunning();
-
-            setInterval(() => {
-                checkLoaRunning();
-            }, 5000);
-        }
-    });
+  });
 </script>
+
 <!-- 
 <Drawer
     width="w-52"

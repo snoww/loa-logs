@@ -1,27 +1,27 @@
 <script lang="ts">
-    import { fade } from "svelte/transition";
+  import { fade } from "svelte/transition";
 
-    interface Props {
-        showAlert: any;
-        text?: string;
-        dismissable?: boolean;
-        width: string;
-        isError?: boolean;
-        fixed?: boolean;
-    }
+  interface Props {
+    showAlert: any;
+    text?: string;
+    dismissable?: boolean;
+    width: string;
+    isError?: boolean;
+    fixed?: boolean;
+  }
 
-    let {
-        showAlert = $bindable(),
-        text = "",
-        dismissable = true,
-        width,
-        isError = false,
-        fixed = false
-    }: Props = $props();
+  let {
+    showAlert = $bindable(),
+    text = "",
+    dismissable = true,
+    width,
+    isError = false,
+    fixed = false
+  }: Props = $props();
 </script>
 
 <div transition:fade|global>
-    <!-- <Alert
+  <!-- <Alert
         color="none"
         class="{isError ? 'bg-red-800' : 'bg-accent-800'} {fixed
             ? 'fixed bottom-20'
