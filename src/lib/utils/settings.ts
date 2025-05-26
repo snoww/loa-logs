@@ -255,7 +255,7 @@ const settingsStore = (key: string, defaultSettings: object) => {
     set: (value: object) => {
       localStorage.setItem(key, JSON.stringify(value));
       if (key === "settings") {
-        invoke("save_settings", { settings: value });
+        // invoke("save_settings", { settings: value });
       }
       store.set(value);
     },

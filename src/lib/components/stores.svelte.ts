@@ -36,12 +36,15 @@ class Settings {
       this.classIconPath = convertFileSrc(await join(await resourceDir(), "images", "classes"));
     })();
     if (localStorage) {
-      const updateSettings = (settings: string | null) => {
+      const updateSettings = (settings: string | null, init = false) => {
         this.lockUpdate = true;
         if (settings) {
           try {
             const settingsFromStorage = JSON.parse(settings) as LogSettings;
-            mergeSettings(defaultSettings, settingsFromStorage);
+            mergeSettings(this.appSettings, settingsFromStorage);
+            if (!init) {
+              invoke("save_settings", { settings: this.appSettings });
+            }
           } catch (e) {
             console.error(e);
           }
@@ -64,14 +67,13 @@ class Settings {
         this.lockUpdate = false;
       };
 
-      updateSettings(localStorage.getItem("appSettings"));
+      updateSettings(localStorage.getItem("appSettings"), true);
       updateClassColors(localStorage.getItem("classColors"));
 
       $effect.root(() => {
         $effect(() => {
           if (this.lockUpdate) return;
           localStorage.setItem("appSettings", JSON.stringify(this.appSettings));
-          invoke("save_settings", { settings: this.appSettings });
         });
         $effect(() => {
           if (this.lockUpdate) return;
