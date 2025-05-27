@@ -93,3 +93,9 @@ export const difficultyMap: Array<string> = [
   "Extreme",
   "The First"
 ];
+
+export const raidGates: Record<string, string> = Object.fromEntries(
+  Object.values(encounterMap)
+    .flatMap(raid => Object.entries(raid))
+    .flatMap(([gate, bosses]) => bosses.map(boss => [boss, gate]))
+);

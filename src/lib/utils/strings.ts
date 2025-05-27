@@ -1,3 +1,4 @@
+import { settings } from "$lib/stores.svelte";
 import { estherMap } from "$lib/constants/esthers";
 import type { Entity } from "$lib/types";
 import { round2 } from "./numbers";
@@ -48,6 +49,10 @@ export function truncateString(str: string, len = 10): string {
 
 export function getSkillIcon(skillIcon: string): string {
   return encodeURIComponent("\\" + (skillIcon !== "" ? skillIcon : "unknown.png")) + queryParam;
+}
+
+export function getClassIcon(classIcon: number): string {
+  return settings.classIconPath + encodeURIComponent("\\" + classIcon + ".png");
 }
 
 export function getImagePath(path: string): string {

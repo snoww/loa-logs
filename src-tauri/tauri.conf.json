@@ -134,6 +134,7 @@
       {
         "label": "logs",
         "title": "LOA Logs",
+        "userAgent": "LOA Logs App",
         "url": "logs",
         "minWidth": 650,
         "minHeight": 300,

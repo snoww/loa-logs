@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { settings } from "$lib/components/stores.svelte";
+  import { settings } from "$lib/stores.svelte";
   import "../app.css";
 
   interface Props {

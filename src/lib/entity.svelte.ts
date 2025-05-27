@@ -21,11 +21,11 @@ export class EntityState {
     if (this.entity.entityType === EntityType.ESTHER) {
       return "#4dc8d0";
     }
-    if (Object.hasOwn(this.enc.colorStore, this.entity.class)) {
+    if (Object.hasOwn(this.enc.colors, this.entity.class)) {
       if (this.enc.settings.general.constantLocalPlayerColor && this.enc.localPlayer == this.entity.name) {
-        return this.enc.colorStore["Local"].color;
+        return this.enc.colors["Local"].color;
       } else {
-        return this.enc.colorStore[this.entity.class].color;
+        return this.enc.colors[this.entity.class].color;
       }
     }
 

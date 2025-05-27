@@ -1,6 +1,6 @@
 <script lang="ts">
   import DamageMeter from "$lib/components/DamageMeter.svelte";
-  import { settings } from "$lib/components/stores.svelte";
+  import { settings } from "$lib/stores.svelte";
   import type { LogSettings } from "$lib/utils/settings";
   import { invoke } from "@tauri-apps/api";
   import { emit } from "@tauri-apps/api/event";

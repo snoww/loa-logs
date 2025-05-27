@@ -45,6 +45,11 @@
   color utility to any element that depends on these defaults.
 */
 @layer base {
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+  
   .theme-red {
     --accent-50: theme(--color-red-50);
     --accent-100: theme(--color-red-100);

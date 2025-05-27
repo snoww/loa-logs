@@ -18,9 +18,8 @@
     getSkillLogChartOld
   } from "$lib/utils/dpsCharts";
   import { formatTimestampDate, millisToMinutesAndSeconds } from "$lib/utils/numbers";
-  import { colors, settings, skillIcon } from "$lib/utils/settings";
+  import { colors, skillIcon } from "$lib/utils/settings";
   import {
-    raidGates,
     screenshotAlert,
     screenshotError,
     takingScreenshot,
@@ -46,6 +45,8 @@
   import LogSkillChart from "./LogSkillChart.svelte";
   import OpenerSkills from "./OpenerSkills.svelte";
   import LogStagger from "./stagger/LogStagger.svelte";
+  import { settings } from "../../stores.svelte";
+  import { raidGates } from "$lib/constants/encounters";
 
   interface Props {
     id: string;
@@ -54,7 +55,7 @@
 
   let { id, encounter = $bindable() }: Props = $props();
 
-  let enc = $derived(new EncounterState(encounter, $settings, false, $colors));
+  let enc = $derived(new EncounterState(encounter, settings.appSettings, false, settings.classColors));
 
   let hasSkillCastLog = $state(false);
 
@@ -87,7 +88,7 @@
       chartablePlayers[0].damageStats.dpsAverage.length > 0 &&
       chartablePlayers[0].damageStats.dpsRolling10sAvg.length > 0
     ) {
-      let legendNames = getLegendNames(chartablePlayers, $settings.general.showNames);
+      let legendNames = getLegendNames(chartablePlayers, settings.appSettings.general.showNames);
       let deathTimes = getDeathTimes(chartablePlayers, legendNames, encounter.fightStart);
       let bossHpLogs = Object.entries(encounter.encounterDamageStats.bossHpLog || {});
 
@@ -267,20 +268,20 @@
       return;
     }
 
-    if (!$settings.sync.enabled) {
+    if (!settings.appSettings.sync.enabled) {
       $uploadErrorStore = true;
       $uploadErrorMessage = "Upload not enabled";
       return;
     }
 
-    if (!$settings.sync.accessToken || !$settings.sync.validToken) {
+    if (!settings.appSettings.sync.accessToken || !settings.appSettings.sync.validToken) {
       $uploadErrorStore = true;
       $uploadErrorMessage = "Upload token is invalid";
       return;
     }
 
     uploading = true;
-    let result = await uploadLog(id, encounter, $settings.sync);
+    let result = await uploadLog(id, encounter, settings.appSettings.sync);
     if (result.error) {
       $uploadErrorStore = true;
       $uploadErrorMessage = "upload error: " + result.error;
@@ -339,7 +340,7 @@
     dps={encounter.encounterDamageStats.dps}
     cleared={encounter.cleared}
     bossOnlyDamage={encounter.bossOnlyDamage}
-    raidGate={$raidGates.get(encounter.currentBossName)}
+    raidGate={raidGates[encounter.currentBossName]}
   />
   {#if !$takingScreenshot}
     <div class="mt-2 flex justify-between" style="width: calc(100vw - 4.5rem);">
@@ -377,7 +378,7 @@
         >
           Self Buffs
         </button>
-        {#if $settings.general.showShields && encounter.encounterDamageStats.totalShielding > 0}
+        {#if settings.appSettings.general.showShields && encounter.encounterDamageStats.totalShielding > 0}
           <button
             class="rounded-xs px-2 py-1"
             class:bg-accent-900={tab === MeterTab.SHIELDS}
@@ -387,7 +388,7 @@
             Shields
           </button>
         {/if}
-        {#if $settings.general.showTanked && encounter.encounterDamageStats.totalDamageTaken > 0}
+        {#if settings.appSettings.general.showTanked && encounter.encounterDamageStats.totalDamageTaken > 0}
           <button
             class="rounded-xs px-2 py-1"
             class:bg-accent-900={tab === MeterTab.TANK}
@@ -397,7 +398,7 @@
             Tanked
           </button>
         {/if}
-        {#if $settings.general.showBosses && enc.bosses.length > 0}
+        {#if settings.appSettings.general.showBosses && enc.bosses.length > 0}
           <button
             class="rounded-xs px-2 py-1"
             class:bg-accent-900={tab === MeterTab.BOSS}
@@ -532,7 +533,7 @@
                 <button class="flex items-center justify-between bg-gray-700 p-1">
                   <span class="text-sm">Show Names</span>
                   <label class="relative inline-flex cursor-pointer items-center">
-                    <input type="checkbox" value="" class="peer sr-only" bind:checked={$settings.general.showNames} />
+                    <input type="checkbox" value="" class="peer sr-only" bind:checked={settings.appSettings.general.showNames} />
                     <div
                       class="peer-checked:bg-accent-800 peer-focus:outline-hidden peer h-5 w-9 rounded-full border-gray-600 bg-gray-800 after:absolute after:left-[2px] after:top-[2px] after:h-4 after:w-4 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:after:translate-x-full peer-checked:after:border-white"
                     ></div>
@@ -545,7 +546,7 @@
                       type="checkbox"
                       value=""
                       class="peer sr-only"
-                      bind:checked={$settings.logs.splitPartyDamage}
+                      bind:checked={settings.appSettings.logs.splitPartyDamage}
                     />
                     <div
                       class="peer-checked:bg-accent-800 peer-focus:outline-hidden peer h-5 w-9 rounded-full border-gray-600 bg-gray-800 after:absolute after:left-[2px] after:top-[2px] after:h-4 after:w-4 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:after:translate-x-full peer-checked:after:border-white"
@@ -555,7 +556,7 @@
                 <button class="flex items-center justify-between bg-gray-700 p-1">
                   <span class="text-sm">Show Esther</span>
                   <label class="relative inline-flex cursor-pointer items-center">
-                    <input type="checkbox" value="" class="peer sr-only" bind:checked={$settings.general.showEsther} />
+                    <input type="checkbox" value="" class="peer sr-only" bind:checked={settings.appSettings.general.showEsther} />
                     <div
                       class="peer-checked:bg-accent-800 peer-focus:outline-hidden peer h-5 w-9 rounded-full border-gray-600 bg-gray-800 after:absolute after:left-[2px] after:top-[2px] after:h-4 after:w-4 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:after:translate-x-full peer-checked:after:border-white"
                     ></div>
@@ -647,7 +648,7 @@
     <div class="px relative top-0 overflow-x-auto overflow-y-visible">
       {#if tab === MeterTab.DAMAGE}
         {#if meterState === MeterState.PARTY}
-          {#if $settings.logs.splitPartyDamage && encounterPartyInfo && Object.keys(encounterPartyInfo).length >= 2}
+          {#if settings.appSettings.logs.splitPartyDamage && encounterPartyInfo && Object.keys(encounterPartyInfo).length >= 2}
             <LogDamageMeterPartySplit {enc} {inspectPlayer} />
           {:else}
             <table class="relative w-full table-fixed">
@@ -660,7 +661,7 @@
               <tbody class="relative z-10">
                 {#each enc.players as player, i (player.name)}
                   <tr
-                    class="h-7 px-2 py-1 {$settings.general.underlineHovered ? 'hover:underline' : ''}"
+                    class="h-7 px-2 py-1 {settings.appSettings.general.underlineHovered ? 'hover:underline' : ''}"
                     onclick={() => inspectPlayer(player.name)}
                   >
                     <PlayerRow {enc} entity={player} width={enc.playerDamagePercentages[i]} />
@@ -777,13 +778,13 @@
       </div>
     {/if}
     {#if chartType === ChartType.AVERAGE_DPS}
-      {#if !$settings.general.showNames}
+      {#if !settings.appSettings.general.showNames}
         <div class="mt-2 h-[300px]" use:chartable={chartOptions} style="width: calc(100vw - 4.5rem);"></div>
       {:else}
         <div class="mt-2 h-[300px]" use:chartable={chartOptions} style="width: calc(100vw - 4.5rem);"></div>
       {/if}
     {:else if chartType === ChartType.ROLLING_DPS}
-      {#if !$settings.general.showNames}
+      {#if !settings.appSettings.general.showNames}
         <div class="mt-2 h-[300px]" use:chartable={chartOptions} style="width: calc(100vw - 4.5rem);"></div>
       {:else}
         <div class="mt-2 h-[300px]" use:chartable={chartOptions} style="width: calc(100vw - 4.5rem);"></div>

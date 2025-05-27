@@ -201,6 +201,7 @@ export const defaultSettings = {
 };
 
 export const defaultClassColors: Record<string, string> = {
+  Local: "#FFC9ED",
   Berserker: "#ee2e48",
   Destroyer: "#7b9aa2",
   Gunlancer: "#e1907e",

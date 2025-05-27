@@ -20,22 +20,6 @@ export const searchFilter = writable(new SearchFilter());
 
 export const selectedEncounters = writable(new Set<number>());
 
-export const raidGates = readable(new Map<string, string>(), (set) => {
-  const newMap = new Map<string, string>();
-
-  Object.values(encounterMap).forEach((raid) => {
-    Object.entries(raid).forEach(([gate, bosses]) => {
-      bosses.forEach((boss) => {
-        newMap.set(boss, gate);
-      });
-    });
-  });
-
-  set(newMap);
-
-  return () => {};
-});
-
 export const clickthroughStore = writable(false);
 export const rdpsEventDetails = writable("");
 export const localPlayer = writable("");

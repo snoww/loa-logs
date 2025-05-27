@@ -3,7 +3,6 @@
   import { onDestroy, onMount } from "svelte";
 
   import { goto, invalidateAll } from "$app/navigation";
-  import { page } from "$app/state";
   import { settings, updateSettings } from "$lib/utils/settings";
   import { invoke } from "@tauri-apps/api";
   import { checkUpdate } from "@tauri-apps/api/updater";
@@ -80,4 +79,19 @@
   });
 </script>
 
-{@render children?.()}
+<div class="h-screen bg-neutral-900 select-none">
+  {@render children?.()}
+</div>
+
+<style lang="postcss">
+  @reference "../../app.css";
+  :global(*::-webkit-scrollbar) {
+    @apply right-0! block! size-2! bg-neutral-800! rounded-md!;
+  }
+  :global(*::-webkit-scrollbar-thumb) {
+    @apply rounded-md! bg-neutral-600!;
+  }
+  :global(*::-webkit-scrollbar-corner) {
+    @apply bg-neutral-800!;
+  }
+</style>

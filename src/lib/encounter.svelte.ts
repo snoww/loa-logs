@@ -6,7 +6,7 @@ export class EncounterState {
   encounter: Encounter | undefined = $state();
 
   settings: any = $state()!;
-  colorStore: any = $state()!;
+  colors: any = $state()!;
   curSettings = $derived(this.live ? this.settings.meter : this.settings.logs);
   end = $derived(this.encounter?.lastCombatPacket ?? 0);
 
@@ -123,7 +123,7 @@ export class EncounterState {
     this.duration = encounter?.duration ?? 0;
     this.partyInfo = encounter?.encounterDamageStats.misc?.partyInfo;
     this.settings = settings;
-    this.colorStore = colors;
+    this.colors = colors;
   }
 
   updateEncounter(encounter: Encounter) {

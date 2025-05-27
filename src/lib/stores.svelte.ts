@@ -28,13 +28,14 @@ class Settings {
   lockUpdate = false;
 
   constructor() {
-    if (!browser) return;
-
     (async () => {
       this.imagePath = convertFileSrc(await join(await resourceDir(), "images"));
       this.iconPath = convertFileSrc(await join(await resourceDir(), "images", "skills"));
       this.classIconPath = convertFileSrc(await join(await resourceDir(), "images", "classes"));
     })();
+
+    if (!browser) return;
+
     if (localStorage) {
       const updateSettings = (settings: string | null, init = false) => {
         this.lockUpdate = true;
@@ -95,4 +96,31 @@ class Settings {
   }
 }
 
+export class EncounterFilter {
+  search = $state("");
+  page = $state(1);
+  bosses = $state(new Set<string>());
+  encounters = $state(new Set<string>());
+  favorite = $state(false);
+  cleared = $state(false);
+  difficulty = $state("");
+  sort = $state("id");
+  order = $state(2);
+  minDuration = $derived(settings.appSettings.logs.minEncounterDuration);
+  toggle = $state(false);
+
+  reset() {
+    this.search = "";
+    this.page = 1;
+    this.bosses = new Set();
+    this.encounters = new Set();
+    this.favorite = false;
+    this.cleared = false;
+    this.difficulty = "";
+    this.sort = "id";
+    this.order = 2;
+  }
+}
+
 export const settings = new Settings();
+export const encounterFilter = new EncounterFilter();
