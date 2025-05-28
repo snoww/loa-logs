@@ -4,8 +4,25 @@
   import Header from "../Header.svelte";
   import { invoke } from "@tauri-apps/api";
   import DatabaseInfo from "./DatabaseInfo.svelte";
+  import { createSlider, melt } from "@melt-ui/svelte";
+  import { writable } from "svelte/store";
 
   let currentTab = $state("General");
+
+  let minDuration = writable([settings.appSettings.logs.minEncounterDuration]);
+  const {
+    elements: { root, range, thumbs, ticks }
+  } = createSlider({
+    defaultValue: $minDuration,
+    value: minDuration,
+    min: 0,
+    step: 10,
+    max: 300
+  });
+
+  $effect(() => {
+    settings.appSettings.logs.minEncounterDuration = $minDuration[0];
+  });
 
   const themes = [
     {
@@ -126,7 +143,7 @@
 {/snippet}
 
 <Header title="Settings" sticky={true} />
-<div class="px-8 py-4">
+<div class="mx-auto max-w-7xl px-8 py-4">
   <div class="flex flex-col gap-2">
     <div class="flex gap-2 overflow-x-auto px-2 max-md:max-w-[100vw]">
       {@render settingsTab("General")}
@@ -244,6 +261,28 @@
           "Enables experimental features that may not be fully complete or stable."
         )}
       {:else if currentTab === "Logs"}
+        <div class="flex flex-col gap-2">
+          <label class="flex items-center justify-between gap-2">
+            <div>Minimum Encounter Duration (to be shown)</div>
+            <input
+              type="text"
+              disabled
+              class="form-input h-8 w-16 rounded-md border-0 bg-neutral-700 text-sm focus:ring-0"
+              value={$minDuration[0] + "s"}
+            />
+          </label>
+          <span use:melt={$root} class="relative flex h-[20px] items-center">
+            <span class="h-[3px] w-full bg-neutral-700">
+              <span use:melt={$range} class="bg-accent-500/80 h-[3px]"></span>
+            </span>
+
+            {#each $ticks as tick}
+              <span use:melt={tick} class="h-[3px] w-[3px] rounded-full bg-neutral-300/50"></span>
+            {/each}
+
+            <span use:melt={$thumbs[0]} class="h-5 w-5 rounded-full bg-white focus:ring-0"></span>
+          </span>
+        </div>
         {@render settingOption(
           "logs",
           "abbreviateHeader",
