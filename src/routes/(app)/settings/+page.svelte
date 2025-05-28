@@ -1,126 +1,667 @@
 <script lang="ts">
-  import LogSidebar from "$lib/components/logs/LogSidebar.svelte";
-  import { onMount } from "svelte";
-  import { backNavStore, ifaceChangedStore, pageStore, searchStore } from "$lib/utils/stores";
-  import Notification from "$lib/components/shared/Notification.svelte";
-  import GeneralSettings from "$lib/components/settings/GeneralSettings.svelte";
-  import MeterSettings from "$lib/components/settings/MeterSettings.svelte";
-  import LogSettings from "$lib/components/settings/LogSettings.svelte";
-  import BuffSettings from "$lib/components/settings/BuffSettings.svelte";
-  import ShortcutSettings from "$lib/components/settings/ShortcutSettings.svelte";
-  import ColorSettings from "$lib/components/settings/ColorSettings.svelte";
-  import AccessibilitySettings from "$lib/components/settings/AccessibilitySettings.svelte";
-  import DatabaseSettings from "$lib/components/settings/DatabaseSettings.svelte";
-  import Title from "$lib/components/shared/Title.svelte";
+  import { settings } from "$lib/stores.svelte";
+  import { emit } from "@tauri-apps/api/event";
+  import Header from "../Header.svelte";
+  import { invoke } from "@tauri-apps/api";
+  import DatabaseInfo from "./DatabaseInfo.svelte";
 
-  let currentTab = $state(0);
-  let hidden: boolean = $state(true);
+  let currentTab = $state("General");
 
-  onMount(() => {
-    // dunno if this is good lol XD
-    $pageStore = 1;
-    $backNavStore = false;
-    $searchStore = "";
-  });
+  const themes = [
+    {
+      name: "theme-red",
+      color: "--color-red-500"
+    },
+    {
+      name: "theme-pink",
+      color: "--color-pink-500"
+    },
+    {
+      name: "theme-rose",
+      color: "oklch(69.9% 0.123 356.37)"
+    },
+    {
+      name: "theme-violet",
+      color: "oklch(72.3% 0.15 293.69)"
+    },
+    {
+      name: "theme-purple",
+      color: "--color-purple-500"
+    },
+    {
+      name: "theme-blue",
+      color: "--color-blue-500"
+    },
+    {
+      name: "theme-green",
+      color: "--color-green-500"
+    },
+    {
+      name: "theme-yellow",
+      color: "--color-yellow-500"
+    },
+    {
+      name: "theme-orange",
+      color: "--color-orange-500"
+    }
+  ];
 </script>
 
-<LogSidebar bind:hidden />
-<div class="custom-scroll h-screen overflow-y-scroll bg-zinc-800 pb-8">
-  <div class="sticky top-0 z-10 flex h-16 justify-between bg-zinc-800 px-8 py-5 shadow-md">
-    <Title text="Settings" bind:hidden />
+{#snippet settingsTab(tabName: string)}
+  <button
+    class="focus:outline-hidden text-nowrap rounded-sm px-2 py-1 text-sm text-white transition {tabName === currentTab
+      ? 'bg-accent-600/80 border-transparent'
+      : 'bg-transparent hover:bg-neutral-700/60'}"
+    onclick={() => {
+      currentTab = tabName;
+    }}
+  >
+    {tabName}
+  </button>
+{/snippet}
+{#snippet settingOption(category: string, setting: string, name: string, description?: string, breakdown?: boolean)}
+  {@const appSettings = settings.appSettings as any}
+  <div class="w-fit">
+    <label class="flex items-center gap-2">
+      {#if !breakdown}
+        <input
+          type="checkbox"
+          bind:checked={appSettings[category][setting]}
+          class="form-checkbox checked:text-accent-600/80 size-5 rounded-sm border-0 bg-neutral-700 focus:ring-0"
+        />
+      {:else}
+        <input
+          type="checkbox"
+          bind:checked={appSettings[category]["breakdown"][setting]}
+          class="form-checkbox checked:text-accent-600/80 size-5 rounded-sm border-0 bg-neutral-700 focus:ring-0"
+        />
+      {/if}
+      <div class="ml-5">
+        <div class="text-sm">{name}</div>
+        {#if description}
+          <div class="text-xs text-neutral-300">{description}</div>
+        {/if}
+      </div>
+    </label>
   </div>
-  <div class="px-8">
-    <div class="flex flex-wrap">
-      <button
-        class="border-b px-3 py-4 {currentTab === 0
-          ? 'text-accent-500 border-accent-500'
-          : 'border-zinc-500 text-gray-400 hover:text-gray-200'}"
-        onclick={() => (currentTab = 0)}
+{/snippet}
+{#snippet scaleOption(tab: string)}
+  <div class="flex items-center gap-2 py-1">
+    <div>
+      <select
+        id="modifiers"
+        bind:value={settings.appSettings.general[tab === "meter" ? "scale" : "logScale"]}
+        class="focus:ring-accent-500 focus:border-accent-500 w-28 rounded-lg bg-neutral-700 py-1 text-sm placeholder-neutral-400"
       >
-        General
-      </button>
-      <button
-        class="border-b px-3 py-4 {currentTab === 1
-          ? 'text-accent-500 border-accent-500'
-          : 'border-zinc-500 text-gray-400 hover:text-gray-200'}"
-        onclick={() => (currentTab = 1)}
-      >
-        Live Meter
-      </button>
-      <button
-        class="border-b px-3 py-4 {currentTab === 2
-          ? 'text-accent-500 border-accent-500'
-          : 'border-zinc-500 text-gray-400 hover:text-gray-200'}"
-        onclick={() => (currentTab = 2)}
-      >
-        Logs
-      </button>
-      <button
-        class="border-b px-3 py-4 {currentTab === 3
-          ? 'text-accent-500 border-accent-500'
-          : 'border-zinc-500 text-gray-400 hover:text-gray-200'}"
-        onclick={() => (currentTab = 3)}
-      >
-        Buffs
-      </button>
-      <button
-        class="border-b px-3 py-4 {currentTab === 4
-          ? 'text-accent-500 border-accent-500'
-          : 'border-zinc-500 text-gray-400 hover:text-gray-200'}"
-        onclick={() => (currentTab = 4)}
-      >
-        Shortcuts
-      </button>
-      <button
-        class="border-b px-3 py-4 {currentTab === 5
-          ? 'text-accent-500 border-accent-500'
-          : 'border-zinc-500 text-gray-400 hover:text-gray-200'}"
-        onclick={() => (currentTab = 5)}
-      >
-        Class Colors
-      </button>
-      <button
-        class="border-b px-3 py-4 {currentTab === 6
-          ? 'text-accent-500 border-accent-500'
-          : 'border-zinc-500 text-gray-400 hover:text-gray-200'}"
-        onclick={() => (currentTab = 6)}
-      >
-        Accessibility
-      </button>
-      <button
-        class="border-b px-3 py-4 {currentTab === 7
-          ? 'text-accent-500 border-accent-500'
-          : 'border-zinc-500 text-gray-400 hover:text-gray-200'}"
-        onclick={() => (currentTab = 7)}
-      >
-        Database
-      </button>
+        <option value="0">Small</option>
+        <option value="1">Normal</option>
+        <option value="2">Large</option>
+        <option value="3">Largest</option>
+      </select>
     </div>
-    {#if currentTab === 0}
-      <GeneralSettings />
-    {:else if currentTab === 1}
-      <MeterSettings />
-    {:else if currentTab === 2}
-      <LogSettings />
-    {:else if currentTab === 3}
-      <BuffSettings />
-    {:else if currentTab === 4}
-      <ShortcutSettings />
-    {:else if currentTab === 5}
-      <ColorSettings />
-    {:else if currentTab === 6}
-      <AccessibilitySettings />
-    {:else if currentTab === 7}
-      <DatabaseSettings />
-    {/if}
+    <div>{tab === "meter" ? "Meter" : "Logs"} UI Scale</div>
   </div>
-  {#if $ifaceChangedStore}
-    <Notification
-      bind:showAlert={$ifaceChangedStore}
-      text={"Network Interface Changed. Please fully Restart the App."}
-      dismissable={false}
-      width="18rem"
-      isError={true}
-    />
-  {/if}
+{/snippet}
+{#snippet themeSetting()}
+  <div class="flex flex-col gap-2 py-2">
+    <div class="text-sm">Color Theme</div>
+    <div class="flex items-center gap-2">
+      {#each themes as theme}
+        {@render themePreview(theme.name, theme.color)}
+      {/each}
+    </div>
+  </div>
+{/snippet}
+{#snippet themePreview(theme: string, color: string)}
+  <button
+    class="size-8 rounded-full opacity-90 hover:opacity-100 {theme === settings.appSettings.general.accentColor
+      ? 'border-2 border-white'
+      : ''}"
+    style="background-color: var({color}); background-color: {color}"
+    aria-label={theme}
+    onclick={() => {
+      settings.appSettings.general.accentColor = theme;
+    }}
+  ></button>
+{/snippet}
+
+<Header title="Settings" sticky={true} />
+<div class="px-8 py-4">
+  <div class="flex flex-col gap-2">
+    <div class="flex gap-2 overflow-x-auto px-2 max-md:max-w-[100vw]">
+      {@render settingsTab("General")}
+      {@render settingsTab("Logs")}
+      {@render settingsTab("Meter")}
+      {@render settingsTab("Buffs")}
+      {@render settingsTab("Accessibility")}
+      {@render settingsTab("Database")}
+    </div>
+    <div class="flex flex-col gap-2 px-4 py-2">
+      {#if currentTab === "General"}
+        {@render themeSetting()}
+        {@render settingOption(
+          "general",
+          "startLoaOnStart",
+          "Auto Launch Lost Ark",
+          "Automatically start Lost Ark when the app is opened"
+        )}
+        {@render settingOption(
+          "general",
+          "lowPerformanceMode",
+          "Low Performance Mode",
+          "Lowers meter update frequency to reduce CPU usage. (Requires Restart)"
+        )}
+        {@render settingOption(
+          "general",
+          "showNames",
+          "Show Player Names",
+          "Show player names if it's loaded. If disabled, it will show the class name (e.g. Arcanist)."
+        )}
+        {@render settingOption(
+          "general",
+          "showGearScore",
+          "Show Gear Score",
+          "Show player's item level if it's loaded."
+        )}
+        {@render settingOption(
+          "general",
+          "hideNames",
+          "Hide Names",
+          "Hides player names completely, will not show class name either."
+        )}
+        {@render settingOption(
+          "general",
+          "showEsther",
+          "Show Esther",
+          "Show damage dealt by Esther skills in meter and log view"
+        )}
+        {@render settingOption(
+          "general",
+          "hideLogo",
+          "Hide Logo in Screenshot",
+          'Hides the meter name "LOA Logs" in the screenshot.'
+        )}
+        <label class="flex items-center gap-2">
+          <input
+            type="checkbox"
+            bind:checked={settings.appSettings.general.bossOnlyDamage}
+            onchange={() => {
+              emit("boss-only-damage-request", settings.appSettings.general.bossOnlyDamage);
+            }}
+            class="form-checkbox checked:text-accent-600/80 size-5 rounded-sm border-0 bg-neutral-700 focus:ring-0"
+          />
+          <div class="ml-5">
+            <div>Boss Only Damage</div>
+            <div class="text-xs text-neutral-300">Only track damage dealt to bosses.</div>
+          </div>
+        </label>
+        {@render settingOption(
+          "general",
+          "bossOnlyDamageDefaultOn",
+          "Boss Only Damage Default On",
+          "This setting makes it so that the meter will start with boss only damage turned on every time."
+        )}
+        {@render settingOption(
+          "general",
+          "showDetails",
+          "Show Details Tab",
+          "Shows an additional tab in meter for raw identity and stagger data."
+        )}
+        <label class="flex items-center gap-2">
+          <input
+            type="checkbox"
+            bind:checked={settings.appSettings.general.autoIface}
+            onchange={() => {}}
+            class="form-checkbox checked:text-accent-600/80 size-5 rounded-sm border-0 bg-neutral-700 focus:ring-0"
+          />
+          <div class="ml-5">
+            <div>Auto Port Selection</div>
+            <div class="text-xs text-neutral-300">Automatically select port to listen on. (Requires Restart)</div>
+          </div>
+        </label>
+        {#if !settings.appSettings.general.autoIface}
+          <div>
+            <label class="flex items-center">
+              <input
+                type="number"
+                class="form-input h-8 w-24 rounded-md border-0 bg-neutral-700 text-sm focus:ring-0"
+                bind:value={settings.appSettings.general.port}
+                placeholder={settings.appSettings.general.port.toString()}
+              />
+              <div class="ml-5">
+                <div>Port</div>
+                <div class="text-xs text-neutral-300">
+                  Set custom port if not using default. Default is 6040. (Requires Restart)
+                </div>
+              </div>
+            </label>
+          </div>
+        {/if}
+        {@render settingOption(
+          "general",
+          "experimentalFeatures",
+          "Enable Experimental Features",
+          "Enables experimental features that may not be fully complete or stable."
+        )}
+      {:else if currentTab === "Logs"}
+        {@render settingOption(
+          "logs",
+          "abbreviateHeader",
+          "Abbreviate Header",
+          "Abbreviates the Total DMG and Total DPS numbers in the header"
+        )}
+        {@render settingOption(
+          "logs",
+          "splitPartyDamage",
+          "Split Party Damage",
+          "Split players into their respective parties for damage dealt"
+        )}
+        {@render settingOption(
+          "logs",
+          "splitPartyBuffs",
+          "Split Party Buffs",
+          "Split players into their respective parties for party buffs"
+        )}
+        {@render settingOption("logs", "deathTime", "Death Time", "Show how long a party member has died")}
+        {@render settingOption(
+          "logs",
+          "incapacitatedTime",
+          "Incapacitated Time",
+          "Show how long a party member has been incapacitated for (e.g. on the floor, stunned, trapped)"
+        )}
+        {@render settingOption(
+          "logs",
+          "damage",
+          "Damage",
+          "Show the damage dealt by the player in the current encounter"
+        )}
+        {@render settingOption(
+          "logs",
+          "damagePercent",
+          "Damage %",
+          "Show the damage percentage of the player relative to the entire raid"
+        )}
+        {@render settingOption("logs", "dps", "DPS", "Show the current damage per second")}
+        {@render settingOption("logs", "critRate", "Crit Rate", "Show the critical strike rate")}
+        {@render settingOption("logs", "critDmg", "Crit Damage", "Show percentage of damage that crit")}
+        {@render settingOption("logs", "frontAtk", "Front Attack", "Show the front attack percentage")}
+        {@render settingOption("logs", "backAtk", "Back Attack", "Show the back attack percentage")}
+        {@render settingOption(
+          "logs",
+          "positionalDmgPercent",
+          "Positional Damage %",
+          "Show front/back attack percentage as % of total damage"
+        )}
+        {@render settingOption(
+          "logs",
+          "percentBuffBySup",
+          "Support Buff %",
+          "Show the percentage of damage buffed by support attack power buff"
+        )}
+        {@render settingOption(
+          "logs",
+          "percentBrand",
+          "Support Brand %",
+          "Show the percentage of damage buffed by support's brand skill (e.g. Bard's Sound Shock)"
+        )}
+        {@render settingOption(
+          "logs",
+          "percentIdentityBySup",
+          "Support Identity %",
+          "Show the percentage of damage buffed by support identity"
+        )}
+        {@render settingOption(
+          "logs",
+          "percentHatBySup",
+          "Support Hyper %",
+          "Show the percentage of damage buffed by support hyper awakening skill (T Skill)"
+        )}
+        {@render settingOption("logs", "counters", "Counters", "Show the number of counters hit")}
+        <div class="mt-4 h-px w-full bg-neutral-600"></div>
+        <div class="py-2 text-sm">Skill Breakdown</div>
+        {@render settingOption("logs", "damage", "Skill Damage", "Show the total damage dealt by the skill", true)}
+        {@render settingOption(
+          "logs",
+          "damagePercent",
+          "Skill Damage %",
+          "Show the damage percentage of the skill relative to all skills",
+          true
+        )}
+        {@render settingOption("logs", "dps", "Skill DPS", "Show the damage per second of the skill", true)}
+        {@render settingOption(
+          "logs",
+          "critRate",
+          "Skill Crit Rate",
+          "Show the critical strike rate of the skill",
+          true
+        )}
+        {@render settingOption(
+          "logs",
+          "adjustedCritRate",
+          "Skill Adjusted Crit Rate",
+          "Show the adjusted critical strike rate. Hits that are less than 5% of the average cast are excluded. Useful for skills with one big hit and many smaller hits like Doomsday.",
+          true
+        )}
+        {@render settingOption(
+          "logs",
+          "critDmg",
+          "Skill Crit Damage",
+          "Show the percentage of damage that crit for the skill",
+          true
+        )}
+        {@render settingOption(
+          "logs",
+          "frontAtk",
+          "Skill Front Attack",
+          "Show the front attack percentage of the skill",
+          true
+        )}
+        {@render settingOption(
+          "logs",
+          "backAtk",
+          "Skill Back Attack",
+          "Show the back attack percentage of the skill",
+          true
+        )}
+        {@render settingOption(
+          "logs",
+          "percentBuffBySup",
+          "Support Buff %",
+          "Show the percentage of damage of the skill buffed by support",
+          true
+        )}
+        {@render settingOption(
+          "logs",
+          "percentBrand",
+          "Support Brand %",
+          "Show the percentage of damage of the skill buffed by support's brand skill (e.g. Bard's Sound Shock)",
+          true
+        )}
+        {@render settingOption(
+          "logs",
+          "percentIdentityBySup",
+          "Support Identity %",
+          "Show the percentage of damage of the skill buffed by support identity",
+          true
+        )}
+        {@render settingOption(
+          "logs",
+          "percentHatBySup",
+          "Support Hyper %",
+          "Show the percentage of damage of the skill buffed by support hyper awakening skill (T Skill)",
+          true
+        )}
+        {@render settingOption(
+          "logs",
+          "avgDamage",
+          "Skill Average Damage",
+          "Show the average damage dealt by the skill",
+          true
+        )}
+        {@render settingOption(
+          "logs",
+          "maxDamage",
+          "Skill Max Damage",
+          "Show the maximum damage dealt by the skill",
+          true
+        )}
+        {@render settingOption(
+          "logs",
+          "casts",
+          "Skill Casts",
+          "Show the total number of casts of the skill (note: cancelled skills still count as cast)",
+          true
+        )}
+        {@render settingOption("logs", "cpm", "Skill Casts/min", "Show the casts per minute of the skill", true)}
+        {@render settingOption(
+          "logs",
+          "hits",
+          "Skill Hits",
+          "Show the hits of the skill (note: each tick of a multi-hit skill is counted as a hit)",
+          true
+        )}
+        {@render settingOption("logs", "hpm", "Skill Hits/min", "Show the hits per minute of the skill", true)}
+      {:else if currentTab === "Meter"}
+        {@render settingOption("meter", "bossHp", "Boss HP", "Show the HP bar for the current boss")}
+        {@render settingOption(
+          "meter",
+          "bossHpBar",
+          "Boss HP Bars",
+          "Show boss HP bars (e.g. x65), turn off to show HP percentage for all bosses"
+        )}
+        {@render settingOption(
+          "meter",
+          "splitBossHpBar",
+          "Split Boss HP Bar",
+          "Add vertical bars to the boss hp at 25%, 50%, and 75% intervals."
+        )}
+        {@render settingOption(
+          "meter",
+          "abbreviateHeader",
+          "Abbreviate Header",
+          "Abbreviates the Total DMG and Total DPS numbers in the header"
+        )}
+        {@render settingOption(
+          "meter",
+          "profileShortcut",
+          "Profile Shortcut",
+          "Show uwu shortcut when hovering over player name"
+        )}
+        {@render settingOption(
+          "meter",
+          "showTimeUntilKill",
+          "Show Time To Kill",
+          "Shows approximate time until Boss HP reaches 0"
+        )}
+        {@render settingOption(
+          "meter",
+          "showClassColors",
+          "Show Class Colors",
+          "Shows class colors in the meter. Width of the bar shows relative % damage dealt."
+        )}
+        {@render settingOption(
+          "meter",
+          "splitPartyBuffs",
+          "Split Party Buffs",
+          "Split players into their respective parties for party buffs"
+        )}
+        {@render settingOption(
+          "meter",
+          "pinSelfParty",
+          "Pin Player Party",
+          "Pin the local player's party to the top of the meter in the when party buffs are split."
+        )}
+        {@render settingOption("meter", "deathTime", "Death Time", "Show how long a party member has died")}
+        {@render settingOption(
+          "meter",
+          "incapacitatedTime",
+          "Incapacitated Time",
+          "Show how long a party member has been incapacitated for (e.g. on the floor, stunned, trapped)"
+        )}
+        {@render settingOption("meter", "damage", "Damage", "Show the damage dealt by player in the current encounter")}
+        {@render settingOption("meter", "dps", "DPS", "Show the current damage per second")}
+        {@render settingOption("meter", "critRate", "Crit Rate", "Show the critical strike rate")}
+        {@render settingOption("meter", "critDmg", "Crit Damage", "Show percentage of damage that crit")}
+        {@render settingOption("meter", "frontAtk", "Front Attack", "Show the front attack percentage")}
+        {@render settingOption("meter", "backAtk", "Back Attack", "Show the back attack percentage")}
+        {@render settingOption(
+          "meter",
+          "positionalDmgPercent",
+          "Positional Damage %",
+          "Show front/back attack percentage as % of total damage instead of % of hits"
+        )}
+        {@render settingOption(
+          "meter",
+          "percentBuffBySup",
+          "Support Buff %",
+          "Show the percentage of damage buffed by support attack power buff"
+        )}
+        {@render settingOption(
+          "meter",
+          "percentBrand",
+          "Support Brand %",
+          "Show the percentage of damage buffed by support's brand skill (e.g. Bard's Sound Shock)"
+        )}
+        {@render settingOption(
+          "meter",
+          "percentIdentityBySup",
+          "Support Identity %",
+          "Show the percentage of damage buffed by support identity"
+        )}
+        {@render settingOption(
+          "meter",
+          "percentHatBySup",
+          "Support HAT %",
+          "Show the percentage of damage buffed by support hyper awakening technique"
+        )}
+        {@render settingOption("meter", "counters", "Counters", "Show the number of counters hit")}
+        <div class="mt-4 h-px w-full bg-neutral-600"></div>
+        <div class="py-2 text-sm">Skill Breakdown</div>
+        {@render settingOption("meter", "damage", "Skill Damage", "Show the total damage dealt by the skill", true)}
+        {@render settingOption(
+          "meter",
+          "damagePercent",
+          "Skill Damage %",
+          "Show the damage percentage of the skill relative to all skills",
+          true
+        )}
+        {@render settingOption("meter", "dps", "Skill DPS", "Show the damage per second of the skill", true)}
+        {@render settingOption(
+          "meter",
+          "critRate",
+          "Skill Crit Rate",
+          "Show the critical strike rate of the skill",
+          true
+        )}
+        {@render settingOption(
+          "meter",
+          "adjustedCritRate",
+          "Skill Adjusted Crit Rate",
+          "Show the adjusted critical strike rate. Hits that are less than 5% of the average cast are excluded. Useful for skills with one big hit and many smaller hits like Doomsday.",
+          true
+        )}
+        {@render settingOption(
+          "meter",
+          "critDmg",
+          "Skill Crit Damage",
+          "Show the percentage of damage that crit for the skill",
+          true
+        )}
+        {@render settingOption(
+          "meter",
+          "frontAtk",
+          "Skill Front Attack",
+          "Show the front attack percentage of the skill",
+          true
+        )}
+        {@render settingOption(
+          "meter",
+          "backAtk",
+          "Skill Back Attack",
+          "Show the back attack percentage of the skill",
+          true
+        )}
+        {@render settingOption(
+          "meter",
+          "percentBuffBySup",
+          "Support Buff %",
+          "Show the percentage of damage of the skill buffed by support",
+          true
+        )}
+        {@render settingOption(
+          "meter",
+          "percentBrand",
+          "Support Brand %",
+          "Show the percentage of damage of the skill buffed by support's brand skill (e.g. Bard's Sound Shock)",
+          true
+        )}
+        {@render settingOption(
+          "meter",
+          "percentIdentityBySup",
+          "Support Identity %",
+          "Show the percentage of damage of the skill buffed by support identity",
+          true
+        )}
+        {@render settingOption(
+          "meter",
+          "percentHatBySup",
+          "Support Hyper %",
+          "Show the percentage of damage of the skill buffed by support hyper awakening skill (T Skill)",
+          true
+        )}
+        {@render settingOption(
+          "meter",
+          "avgDamage",
+          "Skill Average Damage",
+          "Show the average damage dealt by the skill",
+          true
+        )}
+        {@render settingOption(
+          "meter",
+          "maxDamage",
+          "Skill Max Damage",
+          "Show the maximum damage dealt by the skill",
+          true
+        )}
+        {@render settingOption(
+          "meter",
+          "casts",
+          "Skill Casts",
+          "Show the total number of casts of the skill (note: cancelled skills still count as cast)",
+          true
+        )}
+        {@render settingOption("meter", "cpm", "Skill Casts/min", "Show the casts per minute of the skill", true)}
+        {@render settingOption(
+          "logs",
+          "hits",
+          "Skill Hits",
+          "Show the hits of the skill (note: each tick of a multi-hit skill is counted as a hit)",
+          true
+        )}
+        {@render settingOption("meter", "hpm", "Skill Hits/min", "Show the hits per minute of the skill", true)}
+      {:else if currentTab === "Buffs"}
+        {@render settingOption(
+          "buffs",
+          "default",
+          "Offensive Buffs Only",
+          "Only show Damage, Crit, Atk Speed, and Cooldown buffs. Disabling this will show all buffs"
+        )}
+      {:else if currentTab === "Accessibility"}
+        {@render scaleOption("meter")}
+        {@render scaleOption("logs")}
+        <label class="flex items-center gap-2">
+          <input
+            type="checkbox"
+            bind:checked={settings.appSettings.general.alwaysOnTop}
+            onchange={async () => {
+              if (settings.appSettings.general.alwaysOnTop) {
+                await invoke("enable_aot");
+              } else {
+                await invoke("disable_aot");
+              }
+            }}
+            class="form-checkbox checked:text-accent-600 size-5 rounded-sm border-0 bg-neutral-700 focus:ring-0"
+          />
+          <div class="ml-5">
+            <div>Always on Top</div>
+            <div class="text-xs text-neutral-300">Sets the live meter to always be on top of other windows.</div>
+          </div>
+        </label>
+        {@render settingOption(
+          "general",
+          "splitLines",
+          "Split Lines",
+          "Split breakdown lines with alternating background colors for better readability"
+        )}
+        {@render settingOption(
+          "general",
+          "underlineHovered",
+          "Underline Hovered",
+          "Underlines the text in the row when hovering over it for better readability"
+        )}
+      {:else if currentTab === "Database"}
+        <DatabaseInfo />
+      {/if}
+    </div>
+  </div>
 </div>

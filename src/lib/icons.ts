@@ -7,6 +7,7 @@ import IconChevronRight from "~icons/lucide/chevron-right";
 import IconChevronFirst from "~icons/lucide/chevron-first";
 import IconChevronLast from "~icons/lucide/chevron-last";
 import IconFilter from "~icons/lucide/filter";
+import IconTrash from "~icons/lucide/trash-2";
 
 export {
   IconX,
@@ -17,5 +18,6 @@ export {
   IconChevronRight,
   IconChevronFirst,
   IconChevronLast,
-  IconFilter
+  IconFilter,
+  IconTrash
 };

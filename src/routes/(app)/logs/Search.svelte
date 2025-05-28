@@ -1,12 +1,20 @@
 <script lang="ts">
+  import QuickTooltip from "$lib/components/QuickTooltip.svelte";
   import { bossList } from "$lib/constants/bosses";
   import { classList } from "$lib/constants/classes";
   import { difficultyMap, encounterMap } from "$lib/constants/encounters";
-  import { IconFilter, IconX } from "$lib/icons";
+  import { IconFilter, IconTrash, IconX } from "$lib/icons";
   import { encounterFilter, settings } from "$lib/stores.svelte";
-  import { createDropdownMenu, melt } from "@melt-ui/svelte";
+  import { createDialog, createDropdownMenu, melt } from "@melt-ui/svelte";
+  import { invoke } from "@tauri-apps/api";
   import type { FormEventHandler } from "svelte/elements";
-  import { fly } from "svelte/transition";
+  import { fade, fly } from "svelte/transition";
+
+  let {
+    selectMode = $bindable(),
+    selected = $bindable(),
+    refresh = $bindable()
+  }: { selectMode: boolean; selected: Set<number>; refresh: boolean } = $props();
 
   const {
     elements: { menu, trigger },
@@ -19,6 +27,11 @@
       gutter: 16
     }
   });
+
+  const {
+    elements: { trigger: dialogTrigger, portalled, overlay, content, title, description, close },
+    states: { open: dialogOpen }
+  } = createDialog();
 
   let currentTab = $state("Encounters");
   let search = $state(encounterFilter.search || "");
@@ -80,7 +93,26 @@
       <IconX />
     </button>
   </div>
-  <div>select mode</div>
+  <div class="flex items-center gap-4">
+    {#if selectMode && selected.size > 0}
+      <button class="group rounded-md border border-neutral-700 p-1" use:melt={$dialogTrigger}>
+        <QuickTooltip tooltip="Delete selected encounters">
+          <IconTrash class="text-neutral-300 group-hover:text-red-500/70" />
+        </QuickTooltip>
+      </button>
+    {/if}
+    <button
+      class="mr-2 rounded-md border border-neutral-700 px-1 py-0.5 {selectMode
+        ? 'bg-accent-500/80'
+        : 'bg-neutral-800/80 hover:bg-neutral-700/70'}"
+      onclick={() => {
+        selectMode = !selectMode;
+        if (!selectMode) {
+          selected = new Set();
+        }
+      }}>select</button
+    >
+  </div>
 </div>
 
 {#if $open}
@@ -194,5 +226,36 @@
         {/each}
       </div>
     {/if}
+  </div>
+{/if}
+
+{#if $dialogOpen}
+  <div use:melt={$portalled}>
+    <div use:melt={$overlay} class="fixed inset-0 z-50 bg-black/50" transition:fade={{ duration: 150 }}></div>
+    <div
+      class="fixed left-1/2 top-1/2 z-50 max-h-[85vh] w-[90vw] max-w-[450px] -translate-x-1/2 -translate-y-1/2 rounded-xl bg-neutral-800 p-4 shadow-lg
+      {settings.appSettings.general.accentColor} flex flex-col items-center gap-4 text-white"
+      use:melt={$content}
+    >
+      <h2 use:melt={$title} class="font-semibold">Delete Encounters</h2>
+      <p use:melt={$description} class="text-center">
+        Are you sure you want to delete the {selected.size} selected encounter(s)? This action is irreversible.
+      </p>
+      <div class="flex items-center gap-28 pt-5">
+        <button use:melt={$close} class="rounded-md bg-neutral-700 p-1 hover:bg-neutral-700/80"> Close </button>
+        <button
+          use:melt={$close}
+          class="rounded-md bg-red-500/70 p-1 hover:bg-red-500/60"
+          onclick={async () => {
+            await invoke("delete_encounters", { ids: [...selected] });
+            selected = new Set();
+            selectMode = false;
+            refresh = !refresh;
+          }}
+        >
+          Confirm
+        </button>
+      </div>
+    </div>
   </div>
 {/if}

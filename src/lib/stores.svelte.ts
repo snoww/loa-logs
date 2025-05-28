@@ -107,7 +107,6 @@ export class EncounterFilter {
   sort = $state("id");
   order = $state(2);
   minDuration = $derived(settings.appSettings.logs.minEncounterDuration);
-  toggle = $state(false);
 
   reset() {
     this.search = "";

@@ -6,16 +6,37 @@
   import { abbreviateNumber, formatDurationFromMs, formatTimestamp } from "$lib/utils/numbers";
   import { getClassIcon } from "$lib/utils/strings";
 
-  let { overview }: { overview: EncountersOverview } = $props();
+  let {
+    overview,
+    selectMode,
+    selected = $bindable()
+  }: { overview: EncountersOverview; selectMode: boolean; selected: Set<number> } = $props();
+
+  let allSelected = $derived(overview.encounters.every((enc) => selected.has(enc.id)));
 </script>
 
+{#snippet checkbox(id: number)}
+  <input
+    type="checkbox"
+    checked={selected.has(id)}
+    onchange={() => {
+      selected.has(id) ? selected.delete(id) : selected.add(id);
+      selected = new Set(selected);
+    }}
+    class="form-checkbox checked:text-accent-600/80 size-5 rounded-sm border-0 bg-neutral-700 focus:ring-0"
+  />
+{/snippet}
 {#snippet encounterPreview(encounter: EncounterPreview)}
   {@const gate = raidGates[encounter.bossName]}
   <tr class="items-center border-b border-neutral-700/50 hover:bg-neutral-800">
-    <td>
-      <div class="p-2" class:text-lime-400={encounter.cleared}>
-        #{encounter.id}
-      </div>
+    <td class="text-center">
+      {#if !selectMode}
+        <div class="p-2" class:text-lime-400={encounter.cleared}>
+          #{encounter.id}
+        </div>
+      {:else}
+        {@render checkbox(encounter.id)}
+      {/if}
     </td>
     <td class="w-full p-2 font-medium">
       <div class="flex flex-col gap-1">
@@ -83,13 +104,35 @@
 <table class="w-full table-fixed">
   <thead class="sticky top-0 z-10 bg-[#121212]/95 shadow-lg backdrop-blur-lg">
     <tr>
-      <th class="w-14 p-3">ID</th>
+      <th class="w-14 p-3">
+        {#if !selectMode}
+          ID
+        {:else}
+          <input
+            type="checkbox"
+            checked={allSelected}
+            onchange={() => {
+              if (allSelected) {
+                for (const enc of overview.encounters) {
+                  selected.delete(enc.id);
+                }
+              } else {
+                for (const enc of overview.encounters) {
+                  selected.add(enc.id);
+                }
+              }
+              selected = new Set(selected);
+            }}
+            class="form-checkbox checked:text-accent-600/80 size-4.5 rounded-sm border-0 bg-neutral-700 focus:ring-0"
+          />
+        {/if}
+      </th>
       <th class="w-[25%] p-3 text-left">Encounter</th>
       <th class="p-3 text-left">Classes</th>
       <th class="w-24 px-1 text-left lg:w-32">Name</th>
       <th class="hidden w-20 px-1 text-right md:table-cell">DPS</th>
       <th class="w-24 px-1 text-right">Duration</th>
-      <th class="w-24 pr-2 text-right">Date</th>
+      <th class="w-24 pr-2 text-right xl:w-36">Date</th>
     </tr>
   </thead>
   <tbody class="text-neutral-200">

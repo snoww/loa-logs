@@ -6,7 +6,7 @@ export class EncounterState {
   encounter: Encounter | undefined = $state();
 
   settings: any = $state()!;
-  colors: any = $state()!;
+  colors: Record<string, string> = $state()!;
   curSettings = $derived(this.live ? this.settings.meter : this.settings.logs);
   end = $derived(this.encounter?.lastCombatPacket ?? 0);
 

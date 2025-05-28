@@ -12,9 +12,10 @@
   let overview: EncountersOverview | null = $state(null);
   let container = $state<HTMLDivElement | null>(null);
 
-  async function loadEncounters() {
-    encounterFilter.toggle;
+  let selectMode = $state(false);
+  let selected = $state(new Set<number>());
 
+  async function loadEncounters() {
     // start or space (^|\s) + word (\w+) + colon or space or end (:|\s|$)
     // using lookbehind (?<=) and lookahead (?=) https://regex101.com/r/1cMFH8/4
     // if word is a valid className, replace it with the classId
@@ -50,7 +51,10 @@
     return overview;
   }
 
+  let refresh = $state(false);
+
   $effect.pre(() => {
+    refresh;
     (async () => {
       overview = await loadEncounters();
       if (container) {
@@ -75,18 +79,28 @@
   });
 </script>
 
-<div class="overflow-hidden">
-  <Header title="Past Encounters" />
+<div>
+  <Header title="Past Encounters">
+    <button
+      class="bg-accent-500/70 hover:bg-accent-500/60 rounded-md p-1"
+      onclick={() => {
+        refresh = !refresh;
+        encounterFilter.page = 1;
+      }}
+    >
+      Refresh
+    </button>
+  </Header>
   <div class="mx-auto flex max-w-[100rem] flex-col justify-between gap-1 px-6 py-1" style="height: calc(100vh - 4rem);">
     <div class="flex flex-col gap-1">
-      <Search />
+      <Search bind:selectMode bind:selected bind:refresh/>
       <div
-        class="h-auto overflow-y-auto overflow-x-hidden rounded-md border border-neutral-700/70"
+        class="overflow-y-auto overflow-x-hidden rounded-md border border-neutral-700/70"
         style="max-height: calc(100vh - 10.5rem);"
         bind:this={container}
       >
         {#if overview}
-          <EncountersTable {overview} />
+          <EncountersTable {overview} {selectMode} bind:selected />
         {/if}
       </div>
       {#if !overview || overview?.encounters.length === 0}

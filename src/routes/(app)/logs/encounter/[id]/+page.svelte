@@ -4,7 +4,6 @@
   import {
     backNavStore,
     ifaceChangedStore,
-    raidGates,
     screenshotAlert,
     screenshotError,
     searchStore
@@ -17,6 +16,7 @@
   import DifficultyLabel from "$lib/components/shared/DifficultyLabel.svelte";
   import BossOnlyDamage from "$lib/components/shared/BossOnlyDamage.svelte";
   import type { PageData } from "./$types";
+  import { raidGates } from "$lib/constants/encounters";
 
   interface Props {
     data: PageData;
@@ -28,7 +28,7 @@
   $effect(() => {
     fav = encounter.favorite;
   });
-  let raidGate = $derived($raidGates.get(encounter.currentBossName));
+  let raidGate = $derived(raidGates[encounter.currentBossName]);
 
   onMount(() => {
     if ($searchStore.length > 0) {

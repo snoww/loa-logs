@@ -7,7 +7,7 @@
   import { onMount, type Snippet } from "svelte";
   import { fade, fly } from "svelte/transition";
 
-  const { title, children }: { title: string; children?: Snippet } = $props();
+  const { title, sticky = false, children }: { title: string; sticky?: boolean; children?: Snippet } = $props();
 
   let pathname = $derived(page.url.pathname);
 
@@ -27,7 +27,11 @@
   });
 </script>
 
-<div class="flex h-16 justify-between bg-neutral-900/70 px-8 py-5 shadow-sm shadow-neutral-800">
+<div
+  class="flex h-16 items-center justify-between bg-neutral-900/70 px-8 py-5 shadow-sm shadow-neutral-800 {sticky
+    ? 'sticky top-0 z-20 drop-shadow-lg backdrop-blur-lg'
+    : ''}"
+>
   <div class="flex items-center gap-4">
     <button use:melt={$trigger}>
       <IconMenu class="size-7 hover:opacity-60" />
@@ -50,7 +54,7 @@
     <div use:melt={$overlay} class="fixed inset-0 z-30 bg-neutral-950/50" transition:fade={{ duration: 100 }}></div>
     <div
       use:melt={$content}
-      class="shadow-md fixed left-0 top-0 z-30 flex h-screen min-w-[15rem] flex-col bg-neutral-900"
+      class="fixed left-0 top-0 z-30 flex h-screen min-w-[15rem] flex-col bg-neutral-900 shadow-md"
       transition:fly={{ x: -240, duration: 100 }}
     >
       <div class="m-4 flex items-center">
