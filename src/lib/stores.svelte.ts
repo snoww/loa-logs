@@ -1,8 +1,9 @@
 import { browser } from "$app/environment";
-import { defaultClassColors, defaultSettings, type LogSettings } from "$lib/utils/settings";
 import { invoke } from "@tauri-apps/api";
 import { join, resourceDir } from "@tauri-apps/api/path";
 import { convertFileSrc } from "@tauri-apps/api/tauri";
+import MarkdownIt from "markdown-it";
+import { readable } from "svelte/store";
 
 /**
  * Merge settings from local storage into default settings.
@@ -20,20 +21,12 @@ export const mergeSettings = (defaultSettings: any, storageSettings: any) => {
 };
 
 class Settings {
-  appSettings = $state(defaultSettings);
+  app = $state(defaultSettings);
+  sync = $state(syncSettings);
   classColors = $state<Record<string, string>>(defaultClassColors);
-  imagePath = $state("");
-  iconPath = $state("");
-  classIconPath = $state("");
   lockUpdate = false;
 
   constructor() {
-    (async () => {
-      this.imagePath = convertFileSrc(await join(await resourceDir(), "images"));
-      this.iconPath = convertFileSrc(await join(await resourceDir(), "images", "skills"));
-      this.classIconPath = convertFileSrc(await join(await resourceDir(), "images", "classes"));
-    })();
-
     if (!browser) return;
 
     if (localStorage) {
@@ -42,9 +35,9 @@ class Settings {
         if (settings) {
           try {
             const settingsFromStorage = JSON.parse(settings) as LogSettings;
-            mergeSettings(this.appSettings, settingsFromStorage);
+            mergeSettings(this.app, settingsFromStorage);
             if (!init) {
-              invoke("save_settings", { settings: this.appSettings });
+              invoke("save_settings", { settings: this.app });
             }
           } catch (e) {
             console.error(e);
@@ -68,17 +61,33 @@ class Settings {
         this.lockUpdate = false;
       };
 
+      const updateSyncSettings = (settings: string | null) => {
+        this.lockUpdate = true;
+        if (settings) {
+          try {
+            const syncSettings = JSON.parse(settings) as SyncSettings;
+            mergeSettings(this.sync, syncSettings);
+          } catch (e) {}
+        }
+        this.lockUpdate = false;
+      };
+
       updateSettings(localStorage.getItem("appSettings"), true);
       updateClassColors(localStorage.getItem("classColors"));
+      updateSyncSettings(localStorage.getItem("syncSettings"));
 
       $effect.root(() => {
         $effect(() => {
           if (this.lockUpdate) return;
-          localStorage.setItem("appSettings", JSON.stringify(this.appSettings));
+          localStorage.setItem("appSettings", JSON.stringify(this.app));
         });
         $effect(() => {
           if (this.lockUpdate) return;
           localStorage.setItem("classColors", JSON.stringify(this.classColors));
+        });
+        $effect(() => {
+          if (this.lockUpdate) return;
+          localStorage.setItem("syncSettings", JSON.stringify(this.sync));
         });
       });
 
@@ -88,6 +97,7 @@ class Settings {
         if (storageArea !== localStorage) return;
         if (key === "appSettings") updateSettings(newValue);
         else if (key === "classColors") updateClassColors(newValue);
+        else if (key === "syncSettings") updateSyncSettings(newValue);
         else return;
       });
     } else {
@@ -106,7 +116,7 @@ export class EncounterFilter {
   difficulty = $state("");
   sort = $state("id");
   order = $state(2);
-  minDuration = $derived(settings.appSettings.logs.minEncounterDuration);
+  minDuration = $derived(settings.app.logs.minEncounterDuration);
 
   reset() {
     this.search = "";
@@ -121,5 +131,242 @@ export class EncounterFilter {
   }
 }
 
+export type LogSettings = typeof defaultSettings;
+export const defaultSettings = {
+  general: {
+    startLoaOnStart: false,
+    lowPerformanceMode: false,
+    showNames: true,
+    showGearScore: true,
+    hideNames: false,
+    showEsther: true,
+    hideLogo: false,
+    showDate: true,
+    showDifficulty: true,
+    showGate: false,
+    showDetails: false,
+    showShields: true,
+    showTanked: false,
+    showBosses: false,
+    splitLines: true,
+    underlineHovered: false,
+    accentColor: "theme-pink",
+    rawSocket: false,
+    autoIface: true,
+    ifDesc: "",
+    ip: "",
+    port: 6040,
+    blur: true,
+    blurWin11: false,
+    isWin11: false,
+    transparent: true,
+    scale: "1",
+    logScale: "1",
+    alwaysOnTop: true,
+    bossOnlyDamage: true,
+    keepFavorites: true,
+    hideMeterOnStart: false,
+    hideLogsOnStart: false,
+    constantLocalPlayerColor: false,
+    bossOnlyDamageDefaultOn: true,
+    startOnBoot: false,
+    logsPerPage: 10,
+    experimentalFeatures: false
+  },
+  shortcuts: {
+    hideMeter: "Control+ArrowDown",
+    showLogs: "Control+ArrowUp",
+    showLatestEncounter: "",
+    resetSession: "",
+    pauseSession: "",
+    manualSave: "",
+    disableClickthrough: ""
+  },
+  meter: {
+    bossHp: true,
+    bossHpBar: true,
+    splitBossHpBar: false,
+    abbreviateHeader: true,
+    showTimeUntilKill: false,
+    splitPartyBuffs: true,
+    pinSelfParty: true,
+    showClassColors: true,
+    profileShortcut: false,
+    damage: false,
+    dps: true,
+    damagePercent: true,
+    deathTime: false,
+    incapacitatedTime: false,
+    critRate: true,
+    critDmg: false,
+    frontAtk: true,
+    backAtk: true,
+    counters: false,
+    positionalDmgPercent: true,
+    percentBuffBySup: false,
+    percentIdentityBySup: false,
+    percentBrand: false,
+    percentHatBySup: false,
+    rdpsSplitParty: true,
+    rdpsDamageGiven: false,
+    rdpsDamageReceived: false,
+    rdpsContribution: false,
+    rdpsSContribution: false,
+    rdpsDContribution: false,
+    rdpsSyn: true,
+    rdpsSSyn: true,
+    rdpsDSyn: true,
+    ssyn: true,
+    breakdown: {
+      damage: true,
+      dps: true,
+      damagePercent: true,
+      critRate: true,
+      critDmg: false,
+      frontAtk: true,
+      backAtk: true,
+      avgDamage: false,
+      maxDamage: false,
+      casts: true,
+      cpm: true,
+      hits: false,
+      hpm: false,
+      percentBuffBySup: false,
+      percentIdentityBySup: false,
+      percentBrand: false,
+      percentHatBySup: false
+    }
+  },
+  logs: {
+    abbreviateHeader: false,
+    splitPartyDamage: true,
+    splitPartyBuffs: true,
+    profileShortcut: true,
+    damage: true,
+    dps: true,
+    damagePercent: true,
+    deathTime: true,
+    incapacitatedTime: true,
+    critRate: true,
+    critDmg: false,
+    frontAtk: true,
+    backAtk: true,
+    counters: true,
+    minEncounterDuration: 30,
+    positionalDmgPercent: true,
+    percentBuffBySup: true,
+    percentIdentityBySup: true,
+    percentHatBySup: true,
+    percentBrand: true,
+    rdpsSplitParty: true,
+    rdpsDamageGiven: true,
+    rdpsDamageReceived: true,
+    rdpsContribution: false,
+    rdpsSContribution: true,
+    rdpsDContribution: false,
+    rdpsSyn: true,
+    rdpssSyn: true,
+    rdpsdSyn: true,
+    ssyn: true,
+    breakdown: {
+      damage: true,
+      dps: true,
+      damagePercent: true,
+      critRate: true,
+      adjustedCritRate: false,
+      critDmg: false,
+      frontAtk: true,
+      backAtk: true,
+      avgDamage: false,
+      maxDamage: false,
+      casts: true,
+      cpm: true,
+      hits: false,
+      hpm: false,
+      percentBuffBySup: false,
+      percentIdentityBySup: false,
+      percentBrand: false,
+      percentHatBySup: false
+    }
+  },
+  buffs: {
+    default: true
+  }
+};
+
+export type SyncSettings = typeof syncSettings;
+export const syncSettings = {
+  accessToken: "",
+  validToken: false,
+  auto: false,
+  visibility: "0"
+};
+
+export const defaultClassColors: Record<string, string> = {
+  Local: "#FFC9ED",
+  Berserker: "#ee2e48",
+  Destroyer: "#7b9aa2",
+  Gunlancer: "#e1907e",
+  Paladin: "#ff9900",
+  Slayer: "#db6a42",
+  Arcanist: "#b38915",
+  Summoner: "#22aa99",
+  Bard: "#674598",
+  Sorceress: "#66aa00",
+  Wardancer: "#aaaa11",
+  Scrapper: "#990099",
+  Soulfist: "#316395",
+  Glaivier: "#f6da6a",
+  Striker: "#994499",
+  Breaker: "#4de3d1",
+  Deathblade: "#a91a16",
+  Shadowhunter: "#0099c6",
+  Reaper: "#109618",
+  Souleater: "#c16ed0",
+  Sharpshooter: "#dd4477",
+  Deadeye: "#4442a8",
+  Artillerist: "#33670b",
+  Machinist: "#3b4292",
+  Gunslinger: "#6bcec2",
+  Artist: "#a34af0",
+  Aeromancer: "#084ba3",
+  Wildsoul: "#3a945e"
+};
+
+export class Misc {
+
+}
+
+export class SyncProgress {
+  syncing = $state(false);
+  uploaded = $state(0);
+  total = $state(0);
+  message = $state("");
+  stop = $state(false);
+}
+
 export const settings = new Settings();
 export const encounterFilter = new EncounterFilter();
+export const misc = new Misc();
+export const syncProgress = new SyncProgress();
+
+const md = new MarkdownIt({
+  html: true
+});
+
+// Remember the old renderer if overridden, or proxy to the default renderer.
+const defaultRender =
+  md.renderer.rules.link_open ||
+  function (tokens, idx, options, env, self) {
+    return self.renderToken(tokens, idx, options);
+  };
+
+md.renderer.rules.link_open = function (tokens, idx, options, env, self) {
+  // Add a new `target` attribute, or replace the value of the existing one.
+  tokens[idx].attrSet("target", "_blank");
+
+  // Pass the token to the default renderer.
+  return defaultRender(tokens, idx, options, env, self);
+};
+
+export const markdownIt = readable(md);

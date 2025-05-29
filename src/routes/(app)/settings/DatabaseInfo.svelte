@@ -29,7 +29,7 @@
   $effect.pre(() => {
     refresh;
     (async () => {
-      encounterDbInfo = await invoke("get_db_info", { minDuration: settings.appSettings.logs.minEncounterDuration });
+      encounterDbInfo = await invoke("get_db_info", { minDuration: settings.app.logs.minEncounterDuration });
     })();
   });
 </script>
@@ -37,7 +37,7 @@
 <div class="flex items-center gap-2">
   <div>Database Folder:</div>
   <button
-    class="rounded-md bg-neutral-600 p-1 hover:bg-neutral-700"
+    class="rounded-md bg-neutral-700 p-1 hover:bg-neutral-700/80"
     onclick={async () => {
       await invoke("open_db_path");
     }}
@@ -75,7 +75,7 @@
 <label class="flex items-center gap-2">
   <input
     type="checkbox"
-    bind:checked={settings.appSettings.general.keepFavorites}
+    bind:checked={settings.app.general.keepFavorites}
     class="form-checkbox checked:text-accent-600 size-5 rounded-sm border-0 bg-neutral-700 focus:ring-0"
   />
   <div class="ml-5">
@@ -116,8 +116,8 @@
             "Are you sure you want to delete all encounters below the minimum duration? This action cannot be undone.",
           action: async () => {
             await invoke("delete_encounters_below_min_duration", {
-              minDuration: settings.appSettings.logs.minEncounterDuration,
-              keepFavorites: settings.appSettings.general.keepFavorites
+              minDuration: settings.app.logs.minEncounterDuration,
+              keepFavorites: settings.app.general.keepFavorites
             });
             refresh = !refresh;
             $open = false;
@@ -141,7 +141,7 @@
           message: "Are you sure you want to delete all uncleared encounters? This action cannot be undone.",
           action: async () => {
             await invoke("delete_all_uncleared_encounters", {
-              keepFavorites: settings.appSettings.general.keepFavorites
+              keepFavorites: settings.app.general.keepFavorites
             });
             refresh = !refresh;
             $open = false;
@@ -164,7 +164,7 @@
           title: "Delete All Encounters",
           message: "Are you sure you want to delete all encounters? This action cannot be undone.",
           action: async () => {
-            await invoke("delete_all_encounters", { keepFavorites: settings.appSettings.general.keepFavorites });
+            await invoke("delete_all_encounters", { keepFavorites: settings.app.general.keepFavorites });
             refresh = !refresh;
             $open = false;
           }
@@ -181,7 +181,7 @@
     <div use:melt={$overlay} class="fixed inset-0 z-50 bg-black/50" transition:fade={{ duration: 150 }}></div>
     <div
       class="fixed left-1/2 top-1/2 z-50 max-h-[85vh] w-[90vw] max-w-[450px] -translate-x-1/2 -translate-y-1/2 rounded-xl bg-neutral-800 p-4 shadow-lg
-      {settings.appSettings.general.accentColor} flex flex-col items-center gap-4 text-white"
+      {settings.app.general.accentColor} flex flex-col items-center gap-4 text-white"
       use:melt={$content}
     >
       <h2 use:melt={$title} class="font-semibold">{dialogInfo.title}</h2>

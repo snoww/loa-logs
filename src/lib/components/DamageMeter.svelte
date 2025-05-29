@@ -1,6 +1,8 @@
 <script lang="ts">
   import { EncounterState } from "$lib/encounter.svelte";
+  import { settings } from "$lib/stores.svelte";
   import { EntityType, MeterState, MeterTab, type Encounter, type EncounterEvent, type PartyEvent } from "$lib/types";
+  import { liveServerListeningAlert } from "$lib/utils/live";
   import { millisToMinutesAndSeconds } from "$lib/utils/numbers";
   import { localPlayer, missingInfo, screenshotAlert, screenshotError, takingScreenshot } from "$lib/utils/stores";
   import { isValidName } from "$lib/utils/strings";
@@ -24,12 +26,10 @@
   import MissingInfo from "./shared/MissingInfo.svelte";
   import Notification from "./shared/Notification.svelte";
   import PlayerRow from "./shared/PlayerRow.svelte";
-  import { liveServerListeningAlert } from "$lib/utils/live";
-  import { settings } from "$lib/stores.svelte";
 
   let time = $state(+Date.now());
 
-  let enc = $derived(new EncounterState(undefined, settings.appSettings, true, settings.classColors));
+  let enc = $derived(new EncounterState(undefined, settings.app, true, settings.classColors));
 
   let events: Array<UnlistenFn> = [];
 
@@ -117,13 +117,13 @@
         $raidInProgress = false;
       });
       let clearEncounterEvent = await listen("clear-encounter", async (event: any) => {
-        if (!settings.appSettings.sync.auto) {
+        if (!settings.app.sync.auto) {
           return;
         }
 
         let id = event.payload.toString();
         const encounter = (await invoke("load_encounter", { id })) as Encounter;
-        await uploadLog(id, encounter, settings.appSettings.sync);
+        await uploadLog(id, encounter, settings.app.sync);
       });
       let adminErrorEvent = await listen("admin", () => {
         adminAlert = true;
@@ -174,7 +174,7 @@
     if (duration < 0) {
       return "00:00";
     }
-    if (settings.appSettings.meter.showTimeUntilKill && enc.encounter && enc.encounter.currentBoss) {
+    if (settings.app.meter.showTimeUntilKill && enc.encounter && enc.encounter.currentBoss) {
       let remainingDpm =
         enc.players
           .filter((e) => e.damageStats.damageDealt > 0 && !e.isDead && e.entityType == EntityType.PLAYER)
@@ -317,7 +317,7 @@
     {timeUntilKill}
     screenshotFn={captureScreenshot}
   />
-  {#if enc.encounter?.currentBoss && settings.appSettings.meter.bossHp}
+  {#if enc.encounter?.currentBoss && settings.app.meter.bossHp}
     <div class="relative top-7">
       <BossInfo boss={enc.encounter?.currentBoss} />
     </div>
@@ -340,7 +340,7 @@
           <tbody>
             {#each enc.players as entity, i (entity.name)}
               <tr
-                class="h-7 px-2 py-1 {settings.appSettings.general.underlineHovered ? 'hover:underline' : ''}"
+                class="h-7 px-2 py-1 {settings.app.general.underlineHovered ? 'hover:underline' : ''}"
                 animate:flip={{ duration: 200 }}
                 onclick={() => inspectPlayer(entity.name)}
               >

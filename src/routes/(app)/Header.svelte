@@ -1,13 +1,13 @@
 <script lang="ts">
   import { page } from "$app/state";
+  import { IconDiscord, IconExternalLink, IconMenu, IconX } from "$lib/icons";
   import { settings } from "$lib/stores.svelte";
-  import { IconExternalLink, IconMenu, IconX } from "$lib/icons";
   import { createDialog, melt } from "@melt-ui/svelte";
   import { getVersion } from "@tauri-apps/api/app";
   import { onMount, type Snippet } from "svelte";
   import { fade, fly } from "svelte/transition";
 
-  const { title, sticky = false, children }: { title: string; sticky?: boolean; children?: Snippet } = $props();
+  const { title, children }: { title: string; children?: Snippet } = $props();
 
   let pathname = $derived(page.url.pathname);
 
@@ -28,9 +28,7 @@
 </script>
 
 <div
-  class="h-16 bg-neutral-900/70 px-8 py-5 shadow-sm shadow-neutral-800 {sticky
-    ? 'sticky top-0 z-20 drop-shadow-lg backdrop-blur-lg'
-    : ''}"
+  class="sticky top-0 z-20 h-16 bg-neutral-900/70 px-8 py-5 shadow-sm shadow-neutral-800 drop-shadow-lg backdrop-blur-lg"
 >
   <div class="mx-auto flex max-w-[100rem] items-center justify-between">
     <div class="flex items-center gap-4">
@@ -52,7 +50,7 @@
 {/snippet}
 
 {#if $open}
-  <div use:melt={$portalled} class="select-none text-white {settings.appSettings.general.accentColor}">
+  <div use:melt={$portalled} class="select-none text-white {settings.app.general.accentColor}">
     <div use:melt={$overlay} class="fixed inset-0 z-30 bg-neutral-950/50" transition:fade={{ duration: 100 }}></div>
     <div
       use:melt={$content}
@@ -73,7 +71,8 @@
         {@render route("Settings", "/settings")}
       </div>
       <div class="m-2 h-px bg-neutral-700"></div>
-      <div class="grid gap-1 px-2">
+
+      <div class="flex gap-1 px-2">
         <a
           href="https://ko-fi.com/synow"
           target="_blank"
@@ -81,6 +80,16 @@
         >
           <div>Donate</div>
           <IconExternalLink class="size-4" />
+        </a>
+      </div>
+      <div class="flex items-center gap-1 px-2">
+        <a
+          href="https://discord.gg/RXvTMV2YHu"
+          target="_blank"
+          class="hover:text-accent-500 flex items-center gap-2 rounded-md px-3 py-1"
+        >
+          <div>ramen shop</div>
+          <IconDiscord class="size-4" />
         </a>
       </div>
       <!-- todo donate, lostark running, version check -->

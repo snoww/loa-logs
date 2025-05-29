@@ -119,7 +119,7 @@
   <div
     use:melt={$menu}
     class="z-20 flex max-h-80 w-96 flex-col rounded-md border border-neutral-600 bg-neutral-800/80 text-sm text-neutral-200 shadow-lg backdrop-blur-lg {settings
-      .appSettings.general.accentColor}"
+      .app.general.accentColor}"
     transition:fly={{ duration: 150, y: -10 }}
   >
     <div class="sticky top-0 flex items-center justify-between gap-2 rounded-t bg-neutral-900">
@@ -234,7 +234,7 @@
     <div use:melt={$overlay} class="fixed inset-0 z-50 bg-black/50" transition:fade={{ duration: 150 }}></div>
     <div
       class="fixed left-1/2 top-1/2 z-50 max-h-[85vh] w-[90vw] max-w-[450px] -translate-x-1/2 -translate-y-1/2 rounded-xl bg-neutral-800 p-4 shadow-lg
-      {settings.appSettings.general.accentColor} flex flex-col items-center gap-4 text-white"
+      {settings.app.general.accentColor} flex flex-col items-center gap-4 text-white"
       use:melt={$content}
     >
       <h2 use:melt={$title} class="font-semibold">Delete Encounters</h2>

@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { classNameToClassId } from "$lib/constants/classes";
+  import { encounterMap } from "$lib/constants/encounters";
   import { encounterFilter, settings } from "$lib/stores.svelte";
   import { type EncountersOverview } from "$lib/types";
   import { invoke } from "@tauri-apps/api";
@@ -6,8 +8,6 @@
   import EncountersTable from "./EncountersTable.svelte";
   import Pages from "./Pages.svelte";
   import Search from "./Search.svelte";
-  import { classNameToClassId } from "$lib/constants/classes";
-  import { encounterMap } from "$lib/constants/encounters";
 
   let overview: EncountersOverview | null = $state(null);
   let container = $state<HTMLDivElement | null>(null);
@@ -35,7 +35,7 @@
 
     let overview: EncountersOverview = await invoke("load_encounters_preview", {
       page: encounterFilter.page,
-      pageSize: settings.appSettings.general.logsPerPage,
+      pageSize: settings.app.general.logsPerPage,
       search: searchQuery,
       filter: {
         minDuration: encounterFilter.minDuration,

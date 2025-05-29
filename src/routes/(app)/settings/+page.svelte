@@ -1,18 +1,18 @@
 <script lang="ts">
   import { settings } from "$lib/stores.svelte";
-  import { emit } from "@tauri-apps/api/event";
-  import Header from "../Header.svelte";
-  import { invoke } from "@tauri-apps/api";
-  import DatabaseInfo from "./DatabaseInfo.svelte";
   import { createSlider, melt } from "@melt-ui/svelte";
-  import { writable } from "svelte/store";
+  import { invoke } from "@tauri-apps/api";
+  import { emit } from "@tauri-apps/api/event";
   import { onMount } from "svelte";
+  import { writable } from "svelte/store";
+  import Header from "../Header.svelte";
   import ClassColors from "./ClassColors.svelte";
+  import DatabaseInfo from "./DatabaseInfo.svelte";
   import Shortcuts from "./Shortcuts.svelte";
 
   let currentTab = $state("General");
 
-  let minDuration = writable([settings.appSettings.logs.minEncounterDuration]);
+  let minDuration = writable([settings.app.logs.minEncounterDuration]);
   const {
     elements: { root, range, thumbs, ticks }
   } = createSlider({
@@ -24,12 +24,12 @@
   });
 
   $effect(() => {
-    settings.appSettings.logs.minEncounterDuration = $minDuration[0];
+    settings.app.logs.minEncounterDuration = $minDuration[0];
   });
 
   onMount(() => {
     (async () => {
-      settings.appSettings.general.startOnBoot = await invoke("check_start_on_boot");
+      settings.app.general.startOnBoot = await invoke("check_start_on_boot");
     })();
   });
 
@@ -86,7 +86,7 @@
   </button>
 {/snippet}
 {#snippet settingOption(category: string, setting: string, name: string, description?: string, breakdown?: boolean)}
-  {@const appSettings = settings.appSettings as any}
+  {@const appSettings = settings.app as any}
   <div class="w-fit">
     <label class="flex items-center gap-2">
       {#if !breakdown}
@@ -116,7 +116,7 @@
     <div>
       <select
         id="modifiers"
-        bind:value={settings.appSettings.general[tab === "meter" ? "scale" : "logScale"]}
+        bind:value={settings.app.general[tab === "meter" ? "scale" : "logScale"]}
         class="focus:ring-accent-500 focus:border-accent-500 w-28 rounded-lg bg-neutral-700 py-1 text-sm placeholder-neutral-400"
       >
         <option value="0">Small</option>
@@ -140,18 +140,18 @@
 {/snippet}
 {#snippet themePreview(theme: string, color: string)}
   <button
-    class="size-8 rounded-full opacity-90 hover:opacity-100 {theme === settings.appSettings.general.accentColor
+    class="size-8 rounded-full opacity-90 hover:opacity-100 {theme === settings.app.general.accentColor
       ? 'border-2 border-white'
       : ''}"
     style="background-color: var({color}); background-color: {color}"
     aria-label={theme}
     onclick={() => {
-      settings.appSettings.general.accentColor = theme;
+      settings.app.general.accentColor = theme;
     }}
   ></button>
 {/snippet}
 
-<Header title="Settings" sticky={true} />
+<Header title="Settings" />
 <div class="mx-auto max-w-7xl px-8 py-4">
   <div class="flex flex-col gap-2">
     <div class="flex gap-2 overflow-x-auto px-2 max-md:max-w-[100vw]">
@@ -176,9 +176,9 @@
         <label class="flex items-center gap-2">
           <input
             type="checkbox"
-            bind:checked={settings.appSettings.general.startOnBoot}
+            bind:checked={settings.app.general.startOnBoot}
             onchange={async () => {
-              await invoke("set_start_on_boot", { set: settings.appSettings.general.startOnBoot });
+              await invoke("set_start_on_boot", { set: settings.app.general.startOnBoot });
             }}
             class="form-checkbox checked:text-accent-600 size-5 rounded-sm border-0 bg-neutral-700 focus:ring-0"
           />
@@ -226,9 +226,9 @@
         <label class="flex items-center gap-2">
           <input
             type="checkbox"
-            bind:checked={settings.appSettings.general.bossOnlyDamage}
+            bind:checked={settings.app.general.bossOnlyDamage}
             onchange={() => {
-              emit("boss-only-damage-request", settings.appSettings.general.bossOnlyDamage);
+              emit("boss-only-damage-request", settings.app.general.bossOnlyDamage);
             }}
             class="form-checkbox checked:text-accent-600/80 size-5 rounded-sm border-0 bg-neutral-700 focus:ring-0"
           />
@@ -252,7 +252,7 @@
         <label class="flex items-center gap-2">
           <input
             type="checkbox"
-            bind:checked={settings.appSettings.general.autoIface}
+            bind:checked={settings.app.general.autoIface}
             onchange={() => {}}
             class="form-checkbox checked:text-accent-600/80 size-5 rounded-sm border-0 bg-neutral-700 focus:ring-0"
           />
@@ -261,14 +261,14 @@
             <div class="text-xs text-neutral-300">Automatically select port to listen on. (Requires Restart)</div>
           </div>
         </label>
-        {#if !settings.appSettings.general.autoIface}
+        {#if !settings.app.general.autoIface}
           <div>
             <label class="flex items-center">
               <input
                 type="number"
                 class="form-input h-8 w-24 rounded-md border-0 bg-neutral-700 text-sm focus:ring-0"
-                bind:value={settings.appSettings.general.port}
-                placeholder={settings.appSettings.general.port.toString()}
+                bind:value={settings.app.general.port}
+                placeholder={settings.app.general.port.toString()}
               />
               <div class="ml-5">
                 <div>Port</div>
@@ -696,9 +696,9 @@
         <label class="flex items-center gap-2">
           <input
             type="checkbox"
-            bind:checked={settings.appSettings.general.alwaysOnTop}
+            bind:checked={settings.app.general.alwaysOnTop}
             onchange={async () => {
-              settings.appSettings.general.alwaysOnTop ? await invoke("disable_aot") : await invoke("enable_aot");
+              settings.app.general.alwaysOnTop ? await invoke("disable_aot") : await invoke("enable_aot");
             }}
             class="form-checkbox checked:text-accent-600 size-5 rounded-sm border-0 bg-neutral-700 focus:ring-0"
           />
@@ -743,13 +743,13 @@
           "Transparent Meter",
           "Windows 11: turns off to enable Dark Mode for live meter. Windows 10: toggles transparent background for live meter."
         )}
-        {#if !settings.appSettings.general.isWin11}
+        {#if !settings.app.general.isWin11}
           <label class="flex items-center gap-2">
             <input
               type="checkbox"
-              bind:checked={settings.appSettings.general.blur}
+              bind:checked={settings.app.general.blur}
               onchange={async () => {
-                settings.appSettings.general.blur ? await invoke("enable_blur") : await invoke("disable_blur");
+                settings.app.general.blur ? await invoke("enable_blur") : await invoke("disable_blur");
               }}
               class="form-checkbox checked:text-accent-600 size-5 rounded-sm border-0 bg-neutral-700 focus:ring-0"
             />

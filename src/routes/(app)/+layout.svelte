@@ -3,11 +3,8 @@
   import { onDestroy, onMount } from "svelte";
 
   import { goto, invalidateAll } from "$app/navigation";
-  import { updateSettings } from "$lib/utils/settings";
-  import { invoke } from "@tauri-apps/api";
-  import { checkUpdate } from "@tauri-apps/api/updater";
-  import { appWindow } from "@tauri-apps/api/window";
   import { settings } from "$lib/stores.svelte";
+  import { appWindow } from "@tauri-apps/api/window";
   interface Props {
     children?: import("svelte").Snippet;
   }
@@ -20,9 +17,9 @@
     (async () => {
       // await checkForUpdate();
 
-      if ($updateSettings.available) {
-        await showWindow();
-      }
+      // if ($updateSettings.available) {
+      //   await showWindow();
+      // }
 
       let encounterUpdateEvent = await listen("show-latest-encounter", async (event) => {
         await goto("/logs/encounter/" + event.payload);
@@ -68,13 +65,13 @@
   // }
 
   $effect.pre(() => {
-    if (settings.appSettings.general.logScale === "1") {
+    if (settings.app.general.logScale === "1") {
       document.documentElement.style.setProperty("font-size", "medium");
-    } else if (settings.appSettings.general.logScale === "2") {
+    } else if (settings.app.general.logScale === "2") {
       document.documentElement.style.setProperty("font-size", "large");
-    } else if (settings.appSettings.general.logScale === "3") {
+    } else if (settings.app.general.logScale === "3") {
       document.documentElement.style.setProperty("font-size", "x-large");
-    } else if (settings.appSettings.general.logScale === "0") {
+    } else if (settings.app.general.logScale === "0") {
       document.documentElement.style.setProperty("font-size", "small");
     }
   });

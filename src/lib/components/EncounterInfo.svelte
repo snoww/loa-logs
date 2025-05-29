@@ -1,8 +1,7 @@
 <script lang="ts">
   import { abbreviateNumber } from "$lib/utils/numbers";
-  import { imagePath, settings, updateSettings } from "$lib/utils/settings";
+  import { updateSettings } from "$lib/utils/settings";
   import { takingScreenshot } from "$lib/utils/stores";
-  import { getImagePath } from "$lib/utils/strings";
   import { menuTooltip, tooltip } from "$lib/utils/tooltip";
   import { getVersion } from "@tauri-apps/api/app";
   import { emit } from "@tauri-apps/api/event";
@@ -12,6 +11,7 @@
   import { hideAll } from "tippy.js";
   import LiveShareButton from "./shared/LiveShareButton.svelte";
   import { broadcastLiveMessage } from "$lib/utils/live";
+  import { settings } from "$lib/stores.svelte";
 
   interface Props {
     encounterDuration: string;
@@ -84,7 +84,7 @@
   };
 
   $effect.pre(() => {
-    if ($settings.general.experimentalFeatures) {
+    if (settings.app.general.experimentalFeatures) {
       broadcastLiveMessage({
         type: "encounterInfo",
         data: {
@@ -100,10 +100,10 @@
 <div class="fixed left-0 top-0 z-50 h-7 w-full bg-zinc-900/[.6] px-2 py-1 text-sm" id="header">
   <div data-tauri-drag-region class="flex justify-between">
     <div data-tauri-drag-region class="flex space-x-2">
-      {#if $settings.general.bossOnlyDamage}
+      {#if settings.app.general.bossOnlyDamage}
         <img
           use:tooltip={{ content: "Boss Only Damage" }}
-          src={$imagePath.path + getImagePath("icons/boss.png")}
+          src="/images/icons/boss.png"
           alt="Boss Only Damage"
           class="-ml-1! mr-1 size-5"
           data-tauri-drag-region
@@ -118,7 +118,7 @@
         use:menuTooltip={{ content: `Total Damage ${totalDamageDealt.toLocaleString()}` }}
       >
         <div class="shrink-0" data-tauri-drag-region>T. DMG</div>
-        {#if $settings.meter.abbreviateHeader}
+        {#if settings.app.meter.abbreviateHeader}
           <div data-tauri-drag-region>
             {abbreviateNumber(totalDamageDealt)}
           </div>
@@ -130,7 +130,7 @@
       </div>
       <div class="flex space-x-1 tracking-tighter text-gray-400" use:menuTooltip={{ content: `Total DPS` }}>
         <div class="shrink-0" data-tauri-drag-region>T. DPS</div>
-        {#if $settings.meter.abbreviateHeader}
+        {#if settings.app.meter.abbreviateHeader}
           <div data-tauri-drag-region>
             {abbreviateNumber(dps)}
           </div>
@@ -143,7 +143,7 @@
           </div>
         {/if}
       </div>
-      {#if $settings.meter.showTimeUntilKill}
+      {#if settings.app.meter.showTimeUntilKill}
         <div
           class="flex space-x-1 tracking-tighter text-gray-400"
           use:menuTooltip={{ content: `Expected Time to Kill` }}
@@ -158,7 +158,7 @@
     {#if !$takingScreenshot}
       <div
         data-tauri-drag-region
-        class="flex items-center space-x-px {$settings.meter.showTimeUntilKill
+        class="flex items-center space-x-px {settings.app.meter.showTimeUntilKill
           ? 'max-[499px]:hidden'
           : 'max-[419px]:hidden'}"
       >
@@ -216,7 +216,7 @@
             /></svg
           >
         </button>
-        {#if $settings.general.experimentalFeatures}
+        {#if settings.app.general.experimentalFeatures}
           <LiveShareButton />
         {/if}
         <div class="relative flex items-center" onfocusout={handleDropdownFocusLoss}>
@@ -290,7 +290,7 @@
       </div>
       <div
         data-tauri-drag-region
-        class="flex items-center space-x-px {$settings.meter.showTimeUntilKill
+        class="flex items-center space-x-px {settings.app.meter.showTimeUntilKill
           ? 'min-[500px]:hidden'
           : 'min-[420px]:hidden'}"
       >
@@ -434,7 +434,7 @@
       </div>
     {:else}
       <div class="flex items-center">
-        {#if !$settings.general.hideLogo}
+        {#if !settings.app.general.hideLogo}
           <div class="h-6">LOA Logs</div>
         {/if}
         <div class="ml-1 text-xs text-gray-500">

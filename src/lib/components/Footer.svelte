@@ -1,6 +1,6 @@
 <script lang="ts">
+  import { settings } from "$lib/stores.svelte";
   import { MeterTab } from "$lib/types";
-  import { settings } from "$lib/utils/settings";
   import { getVersion } from "@tauri-apps/api/app";
   import { onMount } from "svelte";
   interface Props {
@@ -94,7 +94,7 @@
       >
         Self Buffs
       </button>
-      {#if $settings.general.showTanked}
+      {#if settings.app.general.showTanked}
         <button
           class="h-6 border-0 border-b-[3px] px-1.5 {tab === MeterTab.TANK ? 'border-zinc-500' : 'border-zinc-800'}"
           onclick={() => setTab(MeterTab.TANK)}
@@ -102,7 +102,7 @@
           Tanked
         </button>
       {/if}
-      {#if $settings.general.showBosses}
+      {#if settings.app.general.showBosses}
         <button
           class="h-6 border-0 border-b-[3px] px-1.5 {tab === MeterTab.BOSS ? 'border-zinc-500' : 'border-zinc-800'}"
           onclick={() => setTab(MeterTab.BOSS)}
@@ -110,7 +110,7 @@
           Bosses
         </button>
       {/if}
-      {#if $settings.general.showDetails}
+      {#if settings.app.general.showDetails}
         <button
           class="h-6 shrink-0 border-0 border-b-[3px] px-1.5 {tab === MeterTab.DETAILS
             ? 'border-zinc-500'

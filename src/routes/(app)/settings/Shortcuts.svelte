@@ -66,11 +66,9 @@
 
 {#snippet shortcutOption(action: string, shortcut: string)}
   <div class="flex min-w-80 items-center justify-between gap-2 rounded px-2 py-1 hover:bg-neutral-700/60">
-    <div class="flex items-center gap-1">
-      <p>{shortcuts[action].name}</p>
-    </div>
+    <p>{shortcuts[action].name}</p>
     <button
-      class="min-w-40 rounded-md bg-neutral-700 px-2 py-1 font-mono text-xs hover:bg-neutral-700/80"
+      class="min-w-40 rounded-md bg-neutral-700 px-2 py-1 font-mono text-xs"
       onclick={() => {
         currentAction = action;
         listen();
@@ -82,10 +80,8 @@
   </div>
 {/snippet}
 <div class="flex flex-col gap-2">
-  <div class="rounded-md px-2 py-1 bg-red-500/40 w-fit">
-    Shortcuts are disabled until you leave this page
-  </div>
-  {#each Object.entries(settings.appSettings.shortcuts) as shortcut}
+  <div class="w-fit rounded-md bg-red-500/40 px-2 py-1">Shortcuts are disabled until you leave this page</div>
+  {#each Object.entries(settings.app.shortcuts) as shortcut}
     {@render shortcutOption(shortcut[0], shortcut[1])}
   {/each}
 </div>
@@ -95,7 +91,7 @@
     <div use:melt={$overlay} class="fixed inset-0 z-50 bg-black/50" transition:fade={{ duration: 150 }}></div>
     <div
       class="fixed left-1/2 top-1/2 z-50 max-h-[85vh] w-[90vw] max-w-[450px] -translate-x-1/2 -translate-y-1/2 rounded-xl bg-neutral-800 p-4 shadow-lg
-      {settings.appSettings.general.accentColor} flex flex-col items-center gap-4 text-white"
+      {settings.app.general.accentColor} flex flex-col items-center gap-4 text-white"
       use:melt={$content}
     >
       <h2 use:melt={$title} class="font-semibold">Record Shortcut</h2>
@@ -109,8 +105,7 @@
           onclick={() => {
             if (currentAction) {
               console.log("saving");
-              settings.appSettings.shortcuts[currentAction as keyof typeof settings.appSettings.shortcuts] =
-                keys.join("+");
+              settings.app.shortcuts[currentAction as keyof typeof settings.app.shortcuts] = keys.join("+");
             }
           }}
         >

@@ -40,23 +40,12 @@ export function formatPlayerName(player: Entity, generalSettings: any): string {
   return playerName;
 }
 
-export function truncateString(str: string, len = 10): string {
-  if (str.length > len) {
-    return str.slice(0, len) + "...";
-  }
-  return str;
-}
-
 export function getSkillIcon(skillIcon: string): string {
-  return encodeURIComponent("\\" + (skillIcon !== "" ? skillIcon : "unknown.png")) + queryParam;
+  return "/images/" + skillIcon !== "" ? skillIcon : "unknown.png";
 }
 
 export function getClassIcon(classIcon: number): string {
-  return settings.classIconPath + encodeURIComponent("\\" + classIcon + ".png");
-}
-
-export function getImagePath(path: string): string {
-  return encodeURIComponent("\\" + path.replaceAll("/", "\\")) + queryParam;
+  return "/images/classes/" + classIcon + ".png";
 }
 
 export function getEstherFromNpcId(npcId: number): string {
@@ -66,7 +55,3 @@ export function getEstherFromNpcId(npcId: number): string {
 
   return "Unknown";
 }
-
-// this is used to invalidate caches when loading images
-// change this value when images are updated
-export const queryParam: string = "?194";

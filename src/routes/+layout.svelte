@@ -10,6 +10,6 @@
 </script>
 
 <svelte:window oncontextmenu={(e) => e.preventDefault()} />
-<div class="{settings.appSettings.general.accentColor} text-sm text-white">
+<div class="{settings.app.general.accentColor} text-sm text-white">
   {@render children?.()}
 </div>

@@ -1,10 +1,10 @@
 <script lang="ts">
   import DamageMeter from "$lib/components/DamageMeter.svelte";
-  import { settings } from "$lib/stores.svelte";
-  import { registerShortcuts, shortcuts, type LogSettings } from "$lib/utils/settings";
+  import { settings, type LogSettings } from "$lib/stores.svelte";
+  import { registerShortcuts } from "$lib/utils/settings";
   import { invoke } from "@tauri-apps/api";
   import { emit } from "@tauri-apps/api/event";
-  import { register, unregister, unregisterAll } from "@tauri-apps/api/globalShortcut";
+  import { unregisterAll } from "@tauri-apps/api/globalShortcut";
   import { appWindow } from "@tauri-apps/api/window";
   import { onMount } from "svelte";
 
@@ -13,18 +13,18 @@
       await invoke("write_log", { message: "setting up live meter" });
       let data = (await invoke("get_settings")) as LogSettings;
       if (data) {
-        settings.appSettings = data;
+        settings.app = data;
       }
 
       // updateSettings.set(update);
-      if (settings.appSettings.general.alwaysOnTop) {
+      if (settings.app.general.alwaysOnTop) {
         await appWindow.setAlwaysOnTop(true);
       } else {
         await appWindow.setAlwaysOnTop(false);
       }
 
-      if (settings.appSettings.general.bossOnlyDamageDefaultOn && !settings.appSettings.general.bossOnlyDamage) {
-        settings.appSettings.general.bossOnlyDamage = true;
+      if (settings.app.general.bossOnlyDamageDefaultOn && !settings.app.general.bossOnlyDamage) {
+        settings.app.general.bossOnlyDamage = true;
         await emit("boss-only-damage-request", true);
       }
 
@@ -50,13 +50,13 @@
       if (navigator.userAgentData.platform === "Windows") {
         const majorPlatformVersion = Number(ua.platformVersion.split(".")[0]);
         if (majorPlatformVersion >= 13) {
-          settings.appSettings.general.isWin11 = true;
-          if (settings.appSettings.general.blurWin11) {
+          settings.app.general.isWin11 = true;
+          if (settings.app.general.blurWin11) {
             await invoke("enable_blur");
           } else {
             await invoke("disable_blur");
           }
-        } else if (settings.appSettings.general.blur) {
+        } else if (settings.app.general.blur) {
           await invoke("enable_blur");
         } else {
           await invoke("disable_blur");
@@ -68,25 +68,25 @@
   });
 
   $effect.pre(() => {
-    if (settings.appSettings.general.scale === "1") {
+    if (settings.app.general.scale === "1") {
       document.documentElement.style.setProperty("font-size", "medium");
-    } else if (settings.appSettings.general.scale === "2") {
+    } else if (settings.app.general.scale === "2") {
       document.documentElement.style.setProperty("font-size", "large");
-    } else if (settings.appSettings.general.scale === "3") {
+    } else if (settings.app.general.scale === "3") {
       document.documentElement.style.setProperty("font-size", "x-large");
-    } else if (settings.appSettings.general.scale === "0") {
+    } else if (settings.app.general.scale === "0") {
       document.documentElement.style.setProperty("font-size", "small");
     }
   });
 
   $effect.pre(() => {
-    settings.appSettings.shortcuts.hideMeter;
-    settings.appSettings.shortcuts.showLogs;
-    settings.appSettings.shortcuts.showLatestEncounter;
-    settings.appSettings.shortcuts.resetSession;
-    settings.appSettings.shortcuts.pauseSession;
-    settings.appSettings.shortcuts.manualSave;
-    settings.appSettings.shortcuts.disableClickthrough;
+    settings.app.shortcuts.hideMeter;
+    settings.app.shortcuts.showLogs;
+    settings.app.shortcuts.showLatestEncounter;
+    settings.app.shortcuts.resetSession;
+    settings.app.shortcuts.pauseSession;
+    settings.app.shortcuts.manualSave;
+    settings.app.shortcuts.disableClickthrough;
 
     (async () => {
       await unregisterAll();
@@ -96,7 +96,7 @@
 </script>
 
 <div
-  class="live-meter h-screen overflow-hidden {settings.appSettings.general.transparent
+  class="live-meter h-screen overflow-hidden {settings.app.general.transparent
     ? 'bg-zinc-800/[.2]'
     : 'bg-zinc-800 opacity-95'}"
 >

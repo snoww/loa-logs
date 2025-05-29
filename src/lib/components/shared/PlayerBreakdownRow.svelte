@@ -1,10 +1,10 @@
 <script lang="ts">
   import type { EntityState } from "$lib/entity.svelte";
   import { SkillState } from "$lib/skill.svelte";
+  import { settings } from "$lib/stores.svelte";
   import type { Skill } from "$lib/types";
   import { HexToRgba, RGBLinearShade } from "$lib/utils/colors";
   import { abbreviateNumberSplit, round } from "$lib/utils/numbers";
-  import { settings, skillIcon } from "$lib/utils/settings";
   import { getSkillIcon } from "$lib/utils/strings";
   import { generateSkillTooltip, tooltip } from "$lib/utils/tooltip";
   import { cubicOut } from "svelte/easing";
@@ -33,7 +33,7 @@
 <td class="pl-1">
   <img
     class="size-5"
-    src={$skillIcon.path + getSkillIcon(skill.icon)}
+    src={getSkillIcon(skill.icon)}
     alt={skill.name}
     use:tooltip={{ content: skill.name }}
   />
@@ -211,7 +211,7 @@
 <td
   class="absolute left-0 -z-10 h-7 px-2 py-1"
   class:shadow-md={shadow}
-  style="background-color: {index % 2 === 1 && $settings.general.splitLines
+  style="background-color: {index % 2 === 1 && settings.app.general.splitLines
     ? RGBLinearShade(HexToRgba(entityState.color, 0.6))
     : HexToRgba(entityState.color, 0.6)}; width: {tweenedValue.current}%"
 ></td>

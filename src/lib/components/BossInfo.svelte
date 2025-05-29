@@ -1,10 +1,10 @@
 <script lang="ts">
   import { bossHpMap } from "$lib/constants/bossHpBars";
   import { bossHpBarColors } from "$lib/constants/colors";
+  import { settings } from "$lib/stores.svelte";
   import type { Entity } from "$lib/types";
   import { broadcastLiveMessage } from "$lib/utils/live";
   import { abbreviateNumberSplit, getBossHpBars } from "$lib/utils/numbers";
-  import { settings } from "$lib/utils/settings";
   import { menuTooltip } from "$lib/utils/tooltip";
   import { onDestroy } from "svelte";
   import { linear } from "svelte/easing";
@@ -26,7 +26,7 @@
 
   let bossShield = $derived(boss.currentShield);
   let bossHPBars = $derived.by(() => {
-    if (Object.hasOwn(bossHpMap, boss.name) && $settings.meter.bossHpBar) {
+    if (Object.hasOwn(bossHpMap, boss.name) && settings.app.meter.bossHpBar) {
       return getBossHpBars(boss.name, boss.maxHp);
     } else {
       return 0;
@@ -73,7 +73,7 @@
   let bossShieldHp = $derived(abbreviateNumberSplit(bossShield));
 
   $effect.pre(() => {
-    if ($settings.general.experimentalFeatures) {
+    if (settings.app.general.experimentalFeatures) {
       broadcastLiveMessage({
         type: "bossStatus",
         data: {
@@ -90,7 +90,7 @@
   });
 
   onDestroy(() => {
-    if ($settings.general.experimentalFeatures) {
+    if (settings.app.general.experimentalFeatures) {
       broadcastLiveMessage({
         type: "bossStatus",
         data: null
@@ -148,7 +148,7 @@
     {:else}
       <div class="absolute -z-20 h-7 w-full" style="background-color: {bossBarColor[1]};"></div>
     {/if}
-    {#if $settings.meter.splitBossHpBar}
+    {#if settings.app.meter.splitBossHpBar}
       <div class="absolute h-7 w-full">
         <div class="grid h-7 grid-cols-4 divide-x-2 divide-zinc-800/60">
           <div></div>

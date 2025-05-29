@@ -1,205 +1,191 @@
 <script lang="ts">
-  import { settings } from "$lib/utils/settings";
-  import LogSidebar from "$lib/components/logs/LogSidebar.svelte";
-  import Title from "$lib/components/shared/Title.svelte";
-  import { onMount } from "svelte";
-  import { invoke } from "@tauri-apps/api";
+  import { settings, syncProgress } from "$lib/stores.svelte";
   import { checkAccessToken, LOG_SITE_URL, uploadLog } from "$lib/utils/sync";
+  import { createRadioGroup, melt } from "@melt-ui/svelte";
+  import Header from "../Header.svelte";
+  import QuickTooltip from "$lib/components/QuickTooltip.svelte";
+  import { invoke } from "@tauri-apps/api";
   import type { Encounter } from "$lib/types";
-  import { syncStore } from "$lib/utils/stores.js";
-  import SettingItem from "$lib/components/settings/SettingItem.svelte";
 
-  let hidden: boolean = $state(true);
-  let message = $state("");
-
-  onMount(async () => {
-    await check();
-
-    if (!$syncStore.syncing || $syncStore.stop) {
-      syncStore.set({ syncing: false, synced: 0, total: 0, message: "", stop: false });
-    }
+  const {
+    elements: { root, item, hiddenInput },
+    helpers: { isChecked }
+  } = createRadioGroup({
+    defaultValue: settings.sync.visibility
   });
 
-  async function check() {
-    $settings.sync.validToken = await checkAccessToken($settings.sync.accessToken);
-    if ($settings.sync.validToken) {
-      message = "Valid access token.";
-    } else {
-      message = "Invalid access token, please generate a new one.";
+  const visibilityOptions = [
+    {
+      value: "0",
+      label: "Show All Names (default)"
+    },
+    {
+      value: "1",
+      label: "Hide Others (only show self)"
+    },
+    {
+      value: "2",
+      label: "Hide All (anonymous upload)"
     }
-  }
+  ];
+
+  let token: string = $state(settings.sync.accessToken || "");
+  let timer: number | undefined;
+  const debounce = (v: string) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      settings.sync.accessToken = v;
+    }, 750);
+  };
+
+  $effect.pre(() => {
+    (async () => {
+      settings.sync.validToken = await checkAccessToken(settings.sync.accessToken);
+    })();
+  });
 
   function syncPastLogs(force = false) {
-    if (!$settings.sync.enabled) {
-      $syncStore.message = "Sync is not enabled.";
+    if (!settings.sync.validToken) {
+      syncProgress.message = "Check your access token before syncing past logs.";
       return;
     }
 
-    if (!$settings.sync.validToken) {
-      $syncStore.message = "Check your access token before syncing past logs.";
+    if (syncProgress.syncing) {
       return;
     }
 
-    if ($syncStore.syncing) {
-      return;
-    }
-
-    $syncStore.syncing = true;
-    $syncStore.synced = 0;
+    syncProgress.syncing = true;
+    syncProgress.uploaded = 0;
 
     (async () => {
       const ids = (await invoke("get_sync_candidates", { forceResync: force })) as number[];
       console.log(ids);
-      $syncStore.total = ids.length;
+      syncProgress.total = ids.length;
 
       for (let i = 0; i < ids.length; i++) {
         let id = ids[i];
         const encounter = (await invoke("load_encounter", { id: id.toString() })) as Encounter;
-        let upstream = await uploadLog(id, encounter, $settings.sync);
+        let upstream = await uploadLog(id, encounter, settings.sync);
         if (upstream.id) {
-          $syncStore.synced++;
+          syncProgress.uploaded++;
         }
-        $syncStore.message = "Processing logs... (" + i + "/" + ids.length + ")";
-        if ($syncStore.stop) {
+        syncProgress.message = "Processing logs... (" + i + "/" + ids.length + ")";
+        if (syncProgress.stop) {
           break;
         }
       }
-      $syncStore.syncing = false;
+      syncProgress.syncing = false;
 
-      if ($syncStore.synced > 0) {
-        $syncStore.message = "Uploaded " + $syncStore.synced + " logs.";
+      if (syncProgress.uploaded > 0) {
+        syncProgress.message = "Uploaded " + syncProgress.uploaded + " logs.";
       } else {
-        $syncStore.message = "No new logs were uploaded.";
+        syncProgress.message = "No new logs were uploaded.";
       }
 
-      if ($syncStore.stop) {
-        $syncStore.synced = 0;
-        $syncStore.total = 0;
-        $syncStore.stop = false;
+      if (syncProgress.stop) {
+        syncProgress.uploaded = 0;
+        syncProgress.total = 0;
+        syncProgress.stop = false;
       }
     })();
   }
 </script>
 
-<LogSidebar bind:hidden />
-<div class="custom-scroll h-screen overflow-y-scroll bg-zinc-800 pb-8">
-  <div class="sticky top-0 flex h-16 justify-between bg-zinc-800 px-8 py-5 shadow-md">
-    <Title text="Uploading" bind:hidden />
-  </div>
-  <div class="mx-8 my-4 tracking-tight text-gray-200">
-    <div class="mt-2 px-2">
-      <SettingItem
-        name="Uploads (logs.snow.xyz)"
-        description="Enable log uploads"
-        bind:setting={$settings.sync.enabled}
-      />
-    </div>
-    <div class="mt-4 flex flex-col space-y-2 px-2">
-      <p>Upload Access Token</p>
+{#snippet settingOption(setting: string, name: string, description: string)}
+  {@const syncSettings = settings.sync as any}
+  <div class="w-fit">
+    <label class="flex items-center gap-2">
       <input
-        type="password"
-        bind:value={$settings.sync.accessToken}
-        class="focus:border-accent-500 block w-80 rounded-lg border border-gray-600 bg-zinc-700 text-xs text-zinc-300 placeholder-gray-400 focus:ring-0"
-        placeholder="paste access token"
+        type="checkbox"
+        bind:checked={syncSettings[setting]}
+        class="form-checkbox checked:text-accent-600/80 size-5 rounded-sm border-0 bg-neutral-700 focus:ring-0"
       />
-      <div class="flex space-x-1">
-        {#if !$settings.sync.validToken}
-          <a
-            href={LOG_SITE_URL + "/profile"}
-            target="_blank"
-            class="mr-0.5 inline w-fit rounded-md bg-zinc-600 px-1.5 py-1 text-xs hover:bg-zinc-700"
+      <div class="ml-5">
+        <div class="text-sm">{name}</div>
+        <div class="text-xs text-neutral-300">{description}</div>
+      </div>
+    </label>
+  </div>
+{/snippet}
+
+<Header title="Uploading" />
+<div class="mx-auto flex max-w-7xl flex-col gap-4 px-12 py-4">
+  <div class="flex flex-col gap-2 rounded">
+    <div class="flex items-center gap-4">
+      <p class="text-base font-semibold">Upload Token</p>
+      <a
+        href={LOG_SITE_URL + "/profile"}
+        target="_blank"
+        class="bg-accent-500/80 hover:bg-accent-500/70 w-fit rounded-md border border-neutral-700 p-1 text-xs"
+      >
+        Get Token
+      </a>
+    </div>
+    <input
+      type="password"
+      bind:value={
+        () => token,
+        (v) => {
+          token = v;
+          debounce(v);
+        }
+      }
+      class="focus:border-accent-500 block w-80 rounded-lg border border-neutral-600 bg-neutral-700 text-xs text-neutral-300 placeholder-neutral-400 focus:ring-0"
+      placeholder="paste access token"
+    />
+    {#if !settings.sync.validToken && settings.sync.accessToken}
+      <p class="text-red-500">Invalid token, please generate a new one</p>
+    {:else if settings.sync.validToken && settings.sync.accessToken}
+      <p class="text-green-500">Valid token</p>
+    {/if}
+  </div>
+  {@render settingOption(
+    "auto",
+    "Auto Upload",
+    "Automatically uploads logs when cleared (end game relevant raids, hell modes)"
+  )}
+  <div class="flex flex-col gap-2">
+    <p class="font-semibold">Upload Visibility Settings</p>
+    <p class="-mt-1 pb-2 text-xs text-neutral-300">
+      note: in case of duplicate uploads, preferences of the earliest uploader is respected
+    </p>
+    <div use:melt={$root} class="flex flex-col gap-2">
+      {#each visibilityOptions as option}
+        <div class="flex items-center gap-2">
+          <button
+            use:melt={$item(option.value)}
+            class="size-5 cursor-default place-items-center rounded-full bg-neutral-600 shadow-sm hover:bg-neutral-600/80"
+            id={option.value}
           >
-            Get Access Token
-          </a>
-        {/if}
-        <button
-          onclick={check}
-          class="mr-0.5 inline w-fit rounded-md bg-zinc-600 px-1.5 py-1 text-xs hover:bg-zinc-700"
-        >
-          Check
+            {#if $isChecked(option.value)}
+              <div class="bg-accent-500 h-3 w-3 rounded-full"></div>
+            {/if}
+          </button>
+          <label class="pl-5" for={option.value} id="{option}-label">
+            {option.label}
+          </label>
+        </div>
+      {/each}
+    </div>
+  </div>
+  <div class="flex flex-col gap-2">
+    <p class="text-base font-semibold">Upload Past Logs</p>
+    <div class="flex items-center gap-2">
+      {#if !syncProgress.syncing}
+        <button class="rounded-md border border-neutral-700 bg-neutral-800/80 px-2 py-1 hover:bg-neutral-700/80">
+          <QuickTooltip tooltip="Upload all eligible logs in the database">Upload</QuickTooltip>
         </button>
-      </div>
-      <div class={$settings.sync.validToken ? "text-green-400" : "text-red-500"}>
-        {message}
-      </div>
-    </div>
-    <div class="mt-4 px-2">
-      <SettingItem
-        name="Auto Upload"
-        description="Automatically uploads logs when cleared (uses visibility settings below)"
-        bind:setting={$settings.sync.auto}
-      />
-    </div>
-    <div class="mt-4 px-2">
-      <div class="">Log Visibility Settings (for future uploads)</div>
-      <div class="pb-2 text-sm text-neutral-400">
-        note: in case of duplicate logs, preferences of the earliest uploader is respected
-      </div>
-      <div class="flex flex-col">
-        <div class="flex items-center space-x-2">
-          <input
-            class="checked:bg-accent-500"
-            type="radio"
-            id="op1"
-            name="vis"
-            bind:group={$settings.sync.visibility}
-            value="0"
-          />
-          <label for="op1">Show All Names</label>
-        </div>
-        <div class="flex items-center space-x-2">
-          <input
-            class="checked:bg-accent-500"
-            type="radio"
-            id="op2"
-            name="vis"
-            bind:group={$settings.sync.visibility}
-            value="1"
-          />
-          <label for="op2">Hide Others (only show self)</label>
-        </div>
-        <div class="flex items-center space-x-2">
-          <input
-            class="checked:bg-accent-500"
-            type="radio"
-            id="op3"
-            name="vis"
-            bind:group={$settings.sync.visibility}
-            value="2"
-          />
-          <label for="op3">Hide All (anonymous upload)</label>
-        </div>
-      </div>
-    </div>
-    <div class="mt-4 flex flex-col space-y-2 px-2">
-      <div class="flex items-center space-x-2">
-        <div>Sync Past Logs:</div>
-        {#if !$syncStore.syncing}
-          <button
-            class="rounded-md bg-zinc-600 p-1 hover:bg-zinc-700"
-            onclick={() => {
-              syncPastLogs();
-            }}>Sync</button
-          >
-          <button
-            class="rounded-md bg-zinc-600 p-1 hover:bg-zinc-700"
-            onclick={() => {
-              syncPastLogs(true);
-            }}>Force Re-sync</button
-          >
-        {:else}
-          <button class="rounded-md bg-zinc-600 p-1 hover:bg-zinc-700" disabled>Syncing...</button>
-          <button
-            class="rounded-md bg-zinc-600 p-1 hover:bg-zinc-700"
-            onclick={() => {
-              $syncStore.stop = true;
-            }}>Stop</button
-          >
-        {/if}
-      </div>
-      {#if $syncStore.message}
-        <p>{$syncStore.message}</p>
+        <button class="rounded-md border border-neutral-700 bg-neutral-800/80 px-2 py-1 hover:bg-neutral-700/80">
+          <QuickTooltip tooltip="Retry uploading of all logs">Force Re-upload</QuickTooltip>
+        </button>
+      {:else}
+        <button class="rounded-md border border-neutral-700 bg-neutral-800/80 px-2 py-1 hover:bg-neutral-700/80">
+          Stop Sync
+        </button>
       {/if}
     </div>
+    {#if !syncProgress.message}
+      <p class="text-neutral-200">{syncProgress.message}</p>
+    {/if}
   </div>
 </div>

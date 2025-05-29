@@ -2,10 +2,10 @@
   import type { EncounterState } from "$lib/encounter.svelte";
   import { EntityState } from "$lib/entity.svelte";
   import { type Entity } from "$lib/types";
-  import { settings } from "$lib/utils/settings";
   import { flip } from "svelte/animate";
   import PlayerBreakdownHeader from "./shared/PlayerBreakdownHeader.svelte";
   import PlayerBreakdownRow from "./shared/PlayerBreakdownRow.svelte";
+  import { settings } from "$lib/stores.svelte";
 
   interface Props {
     entity: Entity;
@@ -26,7 +26,7 @@
 <tbody oncontextmenu={handleRightClick} class="relative z-10">
   {#each entityState.skills as skill, i (skill.id)}
     <tr
-      class="text-3xs h-7 px-2 py-1 {$settings.general.underlineHovered ? 'hover:underline' : ''}"
+      class="text-3xs h-7 px-2 py-1 {settings.app.general.underlineHovered ? 'hover:underline' : ''}"
       animate:flip={{ duration: 200 }}
     >
       <PlayerBreakdownRow {skill} {entityState} index={i} width={entityState.skillDamagePercentages[i]} />

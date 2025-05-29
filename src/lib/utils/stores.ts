@@ -26,27 +26,6 @@ export const localPlayer = writable("");
 export const missingInfo = writable(false);
 export const focusedSkillCast: Writable<SkillCastInfo> = writable({ skillId: 0, cast: 0 });
 
-const md = new MarkdownIt({
-  html: true
-});
-
-// Remember the old renderer if overridden, or proxy to the default renderer.
-const defaultRender =
-  md.renderer.rules.link_open ||
-  function (tokens, idx, options, env, self) {
-    return self.renderToken(tokens, idx, options);
-  };
-
-md.renderer.rules.link_open = function (tokens, idx, options, env, self) {
-  // Add a new `target` attribute, or replace the value of the existing one.
-  tokens[idx].attrSet("target", "_blank");
-
-  // Pass the token to the default renderer.
-  return defaultRender(tokens, idx, options, env, self);
-};
-
-export const markdownIt = readable(md);
-
 export const syncStore = writable({
   syncing: false,
   synced: 0,

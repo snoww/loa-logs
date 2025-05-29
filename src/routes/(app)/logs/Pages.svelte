@@ -1,9 +1,9 @@
 <script lang="ts">
-  import { settings } from "$lib/stores.svelte";
   import { IconChevronFirst, IconChevronLast, IconChevronLeft, IconChevronRight } from "$lib/icons";
+  import { settings } from "$lib/stores.svelte";
 
   let { page = $bindable(), total }: { page: number; total?: number } = $props();
-  let logsPerPage = $derived(settings.appSettings.general.logsPerPage);
+  let logsPerPage = $derived(settings.app.general.logsPerPage);
   let from = $derived(total === 0 ? 0 : (page - 1) * logsPerPage + 1);
   let to = $derived(Math.min((page - 1) * logsPerPage + logsPerPage, total || 0));
 </script>
@@ -15,7 +15,7 @@
       id="rowsPerPage"
       class="focus:border-accent-500 inline rounded-lg border border-neutral-700 bg-neutral-800 p-1 text-sm focus:ring-0"
       onchange={(e) => {
-        settings.appSettings.general.logsPerPage = parseInt((e.target as HTMLSelectElement).value);
+        settings.app.general.logsPerPage = parseInt((e.target as HTMLSelectElement).value);
       }}
     >
       <option selected={logsPerPage === 10}>10</option>
