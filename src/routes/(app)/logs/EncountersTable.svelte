@@ -38,7 +38,7 @@
         {@render checkbox(encounter.id)}
       {/if}
     </td>
-    <td class="w-full p-2 font-medium">
+    <td class="w-full py-2 pl-3 pr-1 font-medium">
       <div class="flex flex-col gap-1">
         <div class="flex gap-1 text-nowrap text-neutral-300">
           {#if encounter.difficulty}

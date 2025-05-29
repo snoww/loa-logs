@@ -1,0 +1,122 @@
+<script lang="ts">
+  import { settings } from "$lib/stores.svelte";
+  import { registerShortcuts, shortcuts } from "$lib/utils/settings";
+  import { createDialog, melt } from "@melt-ui/svelte";
+  import { unregisterAll } from "@tauri-apps/api/globalShortcut";
+  import { onDestroy, onMount } from "svelte";
+  import { fade } from "svelte/transition";
+
+  const {
+    elements: { trigger, portalled, overlay, content, title, description, close },
+    states: { open }
+  } = createDialog();
+
+  let keys: string[] = $state([]);
+  let currentAction: string | null = $state(null);
+
+  let keyUp = $state(true);
+  const handleKeydown = (e: KeyboardEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (keyUp) {
+      keys = [];
+      keyUp = false;
+    }
+
+    if (keys.indexOf(e.key) === -1) {
+      keys.push(e.key);
+    }
+  };
+
+  const handleKeyUp = () => {
+    keyUp = true;
+  };
+
+  const listen = () => {
+    keys = [];
+    document.addEventListener("keydown", handleKeydown);
+    document.addEventListener("keyup", handleKeyUp);
+  };
+
+  $effect(() => {
+    $inspect(keys);
+    $inspect(currentAction);
+  });
+
+  $effect(() => {
+    if (!$open) {
+      document.removeEventListener("keydown", handleKeydown);
+      document.removeEventListener("keyup", handleKeyUp);
+    }
+  });
+
+  onMount(() => {
+    (async () => {
+      await unregisterAll();
+    })();
+  });
+
+  onDestroy(() => {
+    document.removeEventListener("keydown", handleKeydown);
+    document.removeEventListener("keyup", handleKeyUp);
+    registerShortcuts();
+  });
+</script>
+
+{#snippet shortcutOption(action: string, shortcut: string)}
+  <div class="flex min-w-80 items-center justify-between gap-2 rounded px-2 py-1 hover:bg-neutral-700/60">
+    <div class="flex items-center gap-1">
+      <p>{shortcuts[action].name}</p>
+    </div>
+    <button
+      class="min-w-40 rounded-md bg-neutral-700 px-2 py-1 font-mono text-xs hover:bg-neutral-700/80"
+      onclick={() => {
+        currentAction = action;
+        listen();
+      }}
+      use:melt={$trigger}
+    >
+      {shortcut || "None"}
+    </button>
+  </div>
+{/snippet}
+<div class="flex flex-col gap-2">
+  <div class="rounded-md px-2 py-1 bg-red-500/40 w-fit">
+    Shortcuts are disabled until you leave this page
+  </div>
+  {#each Object.entries(settings.appSettings.shortcuts) as shortcut}
+    {@render shortcutOption(shortcut[0], shortcut[1])}
+  {/each}
+</div>
+
+{#if $open}
+  <div use:melt={$portalled}>
+    <div use:melt={$overlay} class="fixed inset-0 z-50 bg-black/50" transition:fade={{ duration: 150 }}></div>
+    <div
+      class="fixed left-1/2 top-1/2 z-50 max-h-[85vh] w-[90vw] max-w-[450px] -translate-x-1/2 -translate-y-1/2 rounded-xl bg-neutral-800 p-4 shadow-lg
+      {settings.appSettings.general.accentColor} flex flex-col items-center gap-4 text-white"
+      use:melt={$content}
+    >
+      <h2 use:melt={$title} class="font-semibold">Record Shortcut</h2>
+      <p use:melt={$description} class="min-w-40 rounded bg-neutral-900 px-4 text-center font-mono">
+        {keys.length === 0 ? "listening..." : keys.join(" + ")}
+      </p>
+      <div class="gap-30 flex items-center pt-5">
+        <button
+          use:melt={$close}
+          class="bg-accent-500/70 hover:bg-accent-500/60 rounded-md px-2 py-1"
+          onclick={() => {
+            if (currentAction) {
+              console.log("saving");
+              settings.appSettings.shortcuts[currentAction as keyof typeof settings.appSettings.shortcuts] =
+                keys.join("+");
+            }
+          }}
+        >
+          Save
+        </button>
+      </div>
+    </div>
+  </div>
+{/if}

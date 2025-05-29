@@ -1,9 +1,10 @@
 <script lang="ts">
   import DamageMeter from "$lib/components/DamageMeter.svelte";
   import { settings } from "$lib/stores.svelte";
-  import type { LogSettings } from "$lib/utils/settings";
+  import { registerShortcuts, shortcuts, type LogSettings } from "$lib/utils/settings";
   import { invoke } from "@tauri-apps/api";
   import { emit } from "@tauri-apps/api/event";
+  import { register, unregister, unregisterAll } from "@tauri-apps/api/globalShortcut";
   import { appWindow } from "@tauri-apps/api/window";
   import { onMount } from "svelte";
 
@@ -66,7 +67,7 @@
     })();
   });
 
-  $effect(() => {
+  $effect.pre(() => {
     if (settings.appSettings.general.scale === "1") {
       document.documentElement.style.setProperty("font-size", "medium");
     } else if (settings.appSettings.general.scale === "2") {
@@ -76,6 +77,21 @@
     } else if (settings.appSettings.general.scale === "0") {
       document.documentElement.style.setProperty("font-size", "small");
     }
+  });
+
+  $effect.pre(() => {
+    settings.appSettings.shortcuts.hideMeter;
+    settings.appSettings.shortcuts.showLogs;
+    settings.appSettings.shortcuts.showLatestEncounter;
+    settings.appSettings.shortcuts.resetSession;
+    settings.appSettings.shortcuts.pauseSession;
+    settings.appSettings.shortcuts.manualSave;
+    settings.appSettings.shortcuts.disableClickthrough;
+
+    (async () => {
+      await unregisterAll();
+      await registerShortcuts();
+    })();
   });
 </script>
 

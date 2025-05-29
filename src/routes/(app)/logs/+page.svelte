@@ -93,7 +93,7 @@
   </Header>
   <div class="mx-auto flex max-w-[100rem] flex-col justify-between gap-1 px-6 py-1" style="height: calc(100vh - 4rem);">
     <div class="flex flex-col gap-1">
-      <Search bind:selectMode bind:selected bind:refresh/>
+      <Search bind:selectMode bind:selected bind:refresh />
       <div
         class="overflow-y-auto overflow-x-hidden rounded-md border border-neutral-700/70"
         style="max-height: calc(100vh - 10.5rem);"

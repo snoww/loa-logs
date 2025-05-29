@@ -28,19 +28,21 @@
 </script>
 
 <div
-  class="flex h-16 items-center justify-between bg-neutral-900/70 px-8 py-5 shadow-sm shadow-neutral-800 {sticky
+  class="h-16 bg-neutral-900/70 px-8 py-5 shadow-sm shadow-neutral-800 {sticky
     ? 'sticky top-0 z-20 drop-shadow-lg backdrop-blur-lg'
     : ''}"
 >
-  <div class="flex items-center gap-4">
-    <button use:melt={$trigger}>
-      <IconMenu class="size-7 hover:opacity-60" />
-    </button>
-    <div class="text-xl font-medium">{title}</div>
+  <div class="mx-auto flex max-w-[100rem] items-center justify-between">
+    <div class="flex items-center gap-4">
+      <button use:melt={$trigger}>
+        <IconMenu class="size-7 hover:opacity-60" />
+      </button>
+      <div class="text-xl font-medium">{title}</div>
+    </div>
+    {#if children}
+      {@render children()}
+    {/if}
   </div>
-  {#if children}
-    {@render children()}
-  {/if}
 </div>
 
 {#snippet route(name: string, path: string)}

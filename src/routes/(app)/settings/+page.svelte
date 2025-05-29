@@ -6,6 +6,9 @@
   import DatabaseInfo from "./DatabaseInfo.svelte";
   import { createSlider, melt } from "@melt-ui/svelte";
   import { writable } from "svelte/store";
+  import { onMount } from "svelte";
+  import ClassColors from "./ClassColors.svelte";
+  import Shortcuts from "./Shortcuts.svelte";
 
   let currentTab = $state("General");
 
@@ -22,6 +25,12 @@
 
   $effect(() => {
     settings.appSettings.logs.minEncounterDuration = $minDuration[0];
+  });
+
+  onMount(() => {
+    (async () => {
+      settings.appSettings.general.startOnBoot = await invoke("check_start_on_boot");
+    })();
   });
 
   const themes = [
@@ -147,10 +156,12 @@
   <div class="flex flex-col gap-2">
     <div class="flex gap-2 overflow-x-auto px-2 max-md:max-w-[100vw]">
       {@render settingsTab("General")}
+      {@render settingsTab("Accessibility")}
       {@render settingsTab("Logs")}
       {@render settingsTab("Meter")}
       {@render settingsTab("Buffs")}
-      {@render settingsTab("Accessibility")}
+      {@render settingsTab("Colors")}
+      {@render settingsTab("Shortcuts")}
       {@render settingsTab("Database")}
     </div>
     <div class="flex flex-col gap-2 px-4 py-2">
@@ -162,6 +173,20 @@
           "Auto Launch Lost Ark",
           "Automatically start Lost Ark when the app is opened"
         )}
+        <label class="flex items-center gap-2">
+          <input
+            type="checkbox"
+            bind:checked={settings.appSettings.general.startOnBoot}
+            onchange={async () => {
+              await invoke("set_start_on_boot", { set: settings.appSettings.general.startOnBoot });
+            }}
+            class="form-checkbox checked:text-accent-600 size-5 rounded-sm border-0 bg-neutral-700 focus:ring-0"
+          />
+          <div class="ml-5">
+            <div>Start with Windows</div>
+            <div class="text-xs text-neutral-300">Automatically start the app when Windows boots up.</div>
+          </div>
+        </label>
         {@render settingOption(
           "general",
           "lowPerformanceMode",
@@ -673,11 +698,7 @@
             type="checkbox"
             bind:checked={settings.appSettings.general.alwaysOnTop}
             onchange={async () => {
-              if (settings.appSettings.general.alwaysOnTop) {
-                await invoke("enable_aot");
-              } else {
-                await invoke("disable_aot");
-              }
+              settings.appSettings.general.alwaysOnTop ? await invoke("disable_aot") : await invoke("enable_aot");
             }}
             class="form-checkbox checked:text-accent-600 size-5 rounded-sm border-0 bg-neutral-700 focus:ring-0"
           />
@@ -686,6 +707,12 @@
             <div class="text-xs text-neutral-300">Sets the live meter to always be on top of other windows.</div>
           </div>
         </label>
+        {@render settingOption(
+          "general",
+          "constantLocalPlayerColor",
+          "Constant Local Player Color",
+          "Keeps the color for the local player the same regardless of class. (Change in Class Colors)"
+        )}
         {@render settingOption(
           "general",
           "splitLines",
@@ -698,8 +725,48 @@
           "Underline Hovered",
           "Underlines the text in the row when hovering over it for better readability"
         )}
+        {@render settingOption(
+          "general",
+          "hideMeterOnStart",
+          "Hide Meter on Launch",
+          "Hide the meter window when starting the app."
+        )}
+        {@render settingOption(
+          "general",
+          "hideLogsOnStart",
+          "Hide Logs on Launch",
+          "Hide the logs window when starting the app."
+        )}
+        {@render settingOption(
+          "general",
+          "transparent",
+          "Transparent Meter",
+          "Windows 11: turns off to enable Dark Mode for live meter. Windows 10: toggles transparent background for live meter."
+        )}
+        {#if !settings.appSettings.general.isWin11}
+          <label class="flex items-center gap-2">
+            <input
+              type="checkbox"
+              bind:checked={settings.appSettings.general.blur}
+              onchange={async () => {
+                settings.appSettings.general.blur ? await invoke("enable_blur") : await invoke("disable_blur");
+              }}
+              class="form-checkbox checked:text-accent-600 size-5 rounded-sm border-0 bg-neutral-700 focus:ring-0"
+            />
+            <div class="ml-5">
+              <div>Blur Meter Background</div>
+              <div class="text-xs text-neutral-300">
+                Adds background blur effect to live meter (only works on Windows 10).
+              </div>
+            </div>
+          </label>
+        {/if}
       {:else if currentTab === "Database"}
         <DatabaseInfo />
+      {:else if currentTab === "Colors"}
+        <ClassColors />
+      {:else if currentTab === "Shortcuts"}
+        <Shortcuts />
       {/if}
     </div>
   </div>

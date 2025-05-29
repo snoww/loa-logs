@@ -1,4 +1,5 @@
 import { classColors } from "$lib/constants/colors";
+import { settings } from "$lib/stores.svelte";
 import { clickthroughStore } from "$lib/utils/stores";
 import { invoke } from "@tauri-apps/api";
 import { emit } from "@tauri-apps/api/event";
@@ -51,34 +52,13 @@ export const defaultSettings = {
     experimentalFeatures: false
   },
   shortcuts: {
-    hideMeter: {
-      modifier: "Ctrl",
-      key: "ArrowDown"
-    },
-    showLogs: {
-      modifier: "Ctrl",
-      key: "ArrowUp"
-    },
-    showLatestEncounter: {
-      modifier: "Ctrl",
-      key: "ArrowRight"
-    },
-    resetSession: {
-      modifier: "",
-      key: ""
-    },
-    pauseSession: {
-      modifier: "",
-      key: ""
-    },
-    manualSave: {
-      modifier: "",
-      key: ""
-    },
-    disableClickthrough: {
-      modifier: "",
-      key: ""
-    }
+    hideMeter: "Control+ArrowDown",
+    showLogs: "Control+ArrowUp",
+    showLatestEncounter: "",
+    resetSession: "",
+    pauseSession: "",
+    manualSave: "",
+    disableClickthrough: ""
   },
   meter: {
     bossHp: true,
@@ -231,6 +211,65 @@ export const defaultClassColors: Record<string, string> = {
   Wildsoul: "#3a945e"
 };
 
+export type Shortcut = {
+  name: string;
+  action: () => void | Promise<void>;
+};
+export const shortcuts: Record<string, Shortcut> = {
+  hideMeter: {
+    name: "Hide Meter",
+    action: () => invoke("toggle_meter_window")
+  },
+  showLogs: {
+    name: "Show Logs",
+    action: () => invoke("toggle_logs_window")
+  },
+  showLatestEncounter: {
+    name: "Show Latest Encounter",
+    action: () => invoke("open_most_recent_encounter")
+  },
+  resetSession: {
+    name: "Reset Session",
+    action: () => emit("reset-request")
+  },
+  pauseSession: {
+    name: "Pause Session",
+    action: () => emit("pause-request")
+  },
+  manualSave: {
+    name: "Manual Save",
+    action: () => emit("save-request")
+  },
+  disableClickthrough: {
+    name: "Disable Clickthrough",
+    action: async () => {
+      if (get(clickthroughStore)) {
+        await invoke("set_clickthrough", { set: false });
+        await invoke("write_log", { message: "disabling clickthrough" });
+        clickthroughStore.update(() => false);
+      } else {
+        await invoke("set_clickthrough", { set: true });
+        await invoke("write_log", { message: "enabling clickthrough" });
+        clickthroughStore.update(() => true);
+      }
+    }
+  }
+};
+
+export async function registerShortcuts() {
+  try {
+    for (const sc of Object.entries(shortcuts)) {
+      const shortcut = settings.appSettings.shortcuts[sc[0] as keyof typeof settings.appSettings.shortcuts];
+      if (shortcut) {
+        await register(shortcut, () => {
+          sc[1].action();
+        });
+      }
+    }
+  } catch (error) {
+    await invoke("write_log", { message: "[live_meter::register_shortcuts] " + error });
+  }
+}
 
 export const update = {
   available: false,
@@ -264,122 +303,6 @@ const settingsStore = (key: string, defaultSettings: object) => {
   };
 };
 
-export const settings = settingsStore("settings", defaultSettings);
-export const colors = settingsStore("classColors", classColors);
 export const updateSettings = settingsStore("updateSettings", update);
 
 export const miscSettings = settingsStore("miscSettings", {});
-
-export async function registerShortcuts(shortcuts: any) {
-  try {
-    await unregisterAll();
-
-    if (shortcuts.hideMeter.modifier && shortcuts.hideMeter.key) {
-      await register(shortcuts.hideMeter.modifier + "+" + shortcuts.hideMeter.key, async () => {
-        await invoke("toggle_meter_window");
-        hideAll();
-      });
-    }
-    if (shortcuts.showLogs.modifier && shortcuts.showLogs.key) {
-      await register(shortcuts.showLogs.modifier + "+" + shortcuts.showLogs.key, async () => {
-        await invoke("toggle_logs_window");
-      });
-    }
-    if (shortcuts.showLatestEncounter.modifier && shortcuts.showLatestEncounter.key) {
-      await register(shortcuts.showLatestEncounter.modifier + "+" + shortcuts.showLatestEncounter.key, async () => {
-        await invoke("open_most_recent_encounter");
-      });
-    }
-    if (shortcuts.resetSession.modifier && shortcuts.resetSession.key) {
-      await register(shortcuts.resetSession.modifier + "+" + shortcuts.resetSession.key, async () => {
-        await emit("reset-request");
-      });
-    }
-    if (shortcuts.pauseSession.modifier && shortcuts.pauseSession.key) {
-      await register(shortcuts.pauseSession.modifier + "+" + shortcuts.pauseSession.key, async () => {
-        await emit("pause-request");
-      });
-    }
-    if (shortcuts.manualSave.modifier && shortcuts.manualSave.key) {
-      await register(shortcuts.manualSave.modifier + "+" + shortcuts.manualSave.key, async () => {
-        await emit("save-request");
-      });
-    }
-
-    if (shortcuts.disableClickthrough.modifier && shortcuts.disableClickthrough.key) {
-      await register(shortcuts.disableClickthrough.modifier + "+" + shortcuts.disableClickthrough.key, async () => {
-        // if meter is clickthrough, disable it
-        if (get(clickthroughStore)) {
-          await invoke("set_clickthrough", { set: false });
-          await invoke("write_log", { message: "disabling clickthrough" });
-          clickthroughStore.update(() => false);
-        } else {
-          await invoke("set_clickthrough", { set: true });
-          await invoke("write_log", { message: "enabling clickthrough" });
-          clickthroughStore.update(() => true);
-        }
-      });
-    }
-  } catch (error) {
-    await invoke("write_log", { message: "[live_meter::register_shortcuts]" + error });
-  }
-}
-
-export const imagePath = settingsStore("imagePath", {});
-export const skillIcon = settingsStore("skillIcon", {});
-export const classIconCache = settingsStore("classIconCache", {});
-
-export const keyboardKeys = [
-  "a",
-  "b",
-  "c",
-  "d",
-  "e",
-  "f",
-  "g",
-  "h",
-  "i",
-  "j",
-  "k",
-  "l",
-  "m",
-  "n",
-  "o",
-  "p",
-  "q",
-  "r",
-  "s",
-  "t",
-  "u",
-  "v",
-  "w",
-  "x",
-  "y",
-  "z",
-  "0",
-  "1",
-  "2",
-  "3",
-  "4",
-  "5",
-  "6",
-  "7",
-  "8",
-  "9",
-  "F1",
-  "F2",
-  "F3",
-  "F4",
-  "F5",
-  "F6",
-  "F7",
-  "F8",
-  "F9",
-  "F10",
-  "F11",
-  "F12",
-  "ArrowUp",
-  "ArrowDown",
-  "ArrowLeft",
-  "ArrowRight"
-];
