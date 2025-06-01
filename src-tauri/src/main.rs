@@ -8,18 +8,19 @@ mod app;
 mod live;
 mod parser;
 
+use anyhow::Result;
+use flate2::read::GzDecoder;
+use hashbrown::HashMap;
+use log::{error, info, warn};
+use parser::models::*;
+use std::sync::atomic::{AtomicBool, Ordering};
+use std::sync::Arc;
 use std::{
     fs::{self, File},
     io::{Read, Write},
     path::{Path, PathBuf},
     str::FromStr,
 };
-
-use anyhow::Result;
-use flate2::read::GzDecoder;
-use hashbrown::HashMap;
-use log::{error, info, warn};
-use parser::models::*;
 
 use rusqlite::{params, params_from_iter, Connection, Transaction};
 use sysinfo::System;
@@ -73,7 +74,7 @@ async fn main() -> Result<()> {
 
     tauri::Builder::default()
         .setup(|app| {
-            info!("starting app v{}", app.package_info().version.to_string());
+            info!("starting app v{}", app.package_info().version);
 
             let resource_path = app
                 .path_resolver()
@@ -87,6 +88,8 @@ async fn main() -> Result<()> {
                 }
             }
 
+            let update_checked = Arc::new(AtomicBool::new(false));
+            let checked_clone = update_checked.clone();
             let handle = app.handle();
             tauri::async_runtime::spawn(async move {
                 match tauri::updater::builder(handle).check().await {
@@ -112,6 +115,7 @@ async fn main() -> Result<()> {
                             }
                         } else {
                             info!("no update available");
+                            checked_clone.store(true, Ordering::Relaxed);
                         }
                     }
                     Err(e) => {
@@ -168,8 +172,12 @@ async fn main() -> Result<()> {
             // only start listening if we have live meter
             #[cfg(feature = "meter-core")]
             {
-                info!("listening on port: {}", port);
                 tokio::task::spawn_blocking(move || {
+                    // only start listening when there's no update, otherwise unable to remove driver
+                    while !update_checked.load(Ordering::Relaxed) {
+                        std::thread::sleep(std::time::Duration::from_millis(100));
+                    }
+                    info!("listening on port: {}", port);
                     live::start(meter_window, port, settings).map_err(|e| {
                         error!("unexpected error occurred in parser: {}", e);
                     })

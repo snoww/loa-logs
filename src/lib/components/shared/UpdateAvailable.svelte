@@ -4,7 +4,7 @@
   import { fade } from "svelte/transition";
   import { markdown } from "../Markdown.svelte";
   import { invoke } from "@tauri-apps/api";
-  import { installUpdate } from "@tauri-apps/api/updater";
+  import { relaunch } from "@tauri-apps/api/process";
 
   const {
     elements: { portalled, overlay, content, title, description },
@@ -16,8 +16,6 @@
       $open = true;
     }
   });
-
-  let updating = $state(false);
 </script>
 
 {#if $open}
@@ -36,18 +34,14 @@
       {/if}
       <div class="flex items-center py-2">
         <button
-          class="bg-accent-500/70 hover:bg-accent-500/60 rounded-md px-2 py-1"
+          class="bg-accent-500/70 hover:bg-accent-500/60 rounded-md px-2 py-1 focus:ring-0"
           onclick={async () => {
             await invoke("unload_driver");
             await invoke("remove_driver");
-            await installUpdate();
+            await relaunch();
           }}
         >
-          {#if updating}
-            <span>Updating...</span>
-          {:else}
-            <span>Update Now</span>
-          {/if}
+          <span>Update Now</span>
         </button>
       </div>
     </div>
