@@ -4,7 +4,7 @@
   import { SkillState } from "$lib/skill.svelte";
   import { settings } from "$lib/stores.svelte";
   import { hyperAwakeningIds } from "$lib/utils/buffs";
-  import { customRound, abbreviateNumberSplit } from "$lib/utils/numbers";
+  import { abbreviateNumberSplit, customRound } from "$lib/utils";
 
   export const playerBreakdownColumns: LogColumn<EntityState, SkillState>[] = [
     // Damage

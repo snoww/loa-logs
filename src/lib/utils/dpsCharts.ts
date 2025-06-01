@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { bossHpMap } from "$lib/constants/bossHpBars";
 import { focusedCast, settings } from "$lib/stores.svelte";
 import {
   BossHpLog,
@@ -18,8 +17,15 @@ import Heap from "heap-js";
 import BTree from "sorted-btree";
 import { defaultOptions } from "../charts";
 import { getFormattedBuffString, getSkillCastBuffs, getSkillCastSupportBuffs } from "./buffs";
-import { abbreviateNumber, customRound, resampleData, timestampToMinutesAndSeconds, timeToSeconds } from "./numbers";
-import { getSkillIcon, isNameValid } from "./strings";
+import { bossHpMap } from "$lib/constants/encounters";
+import {
+  abbreviateNumber,
+  customRound,
+  getSkillIcon, isNameValid,
+  resampleData,
+  timestampToMinutesAndSeconds,
+  timeToSeconds
+} from "$lib/utils";
 
 const colors = ["#cc338b", "#A020F0", "#FFA500", "#800000"];
 

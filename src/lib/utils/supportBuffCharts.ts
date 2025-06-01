@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { bossHpMap } from "$lib/constants/bossHpBars";
+import { bossHpMap } from "$lib/constants/encounters";
 import type { EncounterState } from "$lib/encounter.svelte";
-import { EntityType, type Encounter, type Entity, type PartyInfo, type SkillHit, type StatusEffect } from "$lib/types";
+import { type SkillHit, type StatusEffect } from "$lib/types";
 import { defaultOptions } from "../charts";
 import {
   addBardBubbles,
@@ -12,8 +12,7 @@ import {
   makeSupportBuffKey,
   supportSkills
 } from "./buffs";
-import { abbreviateNumber, customRound, timestampToMinutesAndSeconds } from "./numbers";
-import { getSkillIcon } from "./strings";
+import { abbreviateNumber, customRound, getSkillIcon, timestampToMinutesAndSeconds } from "$lib/utils";
 
 const partyRegex = /^Party (\d)$/;
 const partyColors = ["#54AD56", "#C3B1E1", "#A7C7E7", "#FDFD96"];
@@ -113,7 +112,7 @@ export function getSupportSynergiesOverTime(
   state: EncounterState,
   fightStartMs: number,
   fightEndMs: number,
-  intervalMs: number,
+  intervalMs: number
 ) {
   const groupedSupportSynergies = new Map<string, Map<number, StatusEffect>>();
   Object.entries(state.encounter!.encounterDamageStats.buffs).forEach((effect) =>
@@ -215,7 +214,7 @@ export function getSupportSynergiesOverTimeChart(
   legendNames: string[],
   chartBuffs: any[],
   buffSubstring: string,
-  chartBosses: any[],
+  chartBosses: any[]
 ) {
   const buffSeries = chartBuffs.map((chartOptions) => {
     return {

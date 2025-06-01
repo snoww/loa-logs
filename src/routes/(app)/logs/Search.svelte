@@ -1,8 +1,7 @@
 <script lang="ts">
   import QuickTooltip from "$lib/components/QuickTooltip.svelte";
-  import { bossList } from "$lib/constants/bosses";
   import { classList } from "$lib/constants/classes";
-  import { difficultyMap, encounterMap } from "$lib/constants/encounters";
+  import { bossList, difficultyMap, encounterMap } from "$lib/constants/encounters";
   import { IconFilter, IconTrash, IconX } from "$lib/icons";
   import { encounterFilter, settings } from "$lib/stores.svelte";
   import { createDialog, createDropdownMenu, melt } from "@melt-ui/svelte";

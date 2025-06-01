@@ -3,16 +3,15 @@
   import type { EncounterState } from "$lib/encounter.svelte";
   import { EntityState } from "$lib/entity.svelte";
   import { IconExternalLink } from "$lib/icons";
+  import { settings } from "$lib/stores.svelte";
   import { EntityType, type Entity } from "$lib/types";
-  import { customRound } from "$lib/utils/numbers";
   import { UWUOWO_URL } from "$lib/utils/settings";
-  import { isNameValid, rgbLinearShadeAdjust } from "$lib/utils/strings";
   import { open } from "@tauri-apps/api/shell";
-  import PlayerBreakdownHeader from "./PlayerBreakdownHeader.svelte";
-  import PlayerBreakdownRow from "./PlayerBreakdownRow.svelte";
   import ArkPassiveTooltip from "../tooltips/ArkPassiveTooltip.svelte";
   import ClassTooltip from "../tooltips/ClassTooltip.svelte";
-  import { settings } from "$lib/stores.svelte";
+  import PlayerBreakdownHeader from "./PlayerBreakdownHeader.svelte";
+  import PlayerBreakdownRow from "./PlayerBreakdownRow.svelte";
+  import { customRound, isNameValid, rgbLinearShadeAdjust } from "$lib/utils";
 
   interface Props {
     handleRightClick: () => void;

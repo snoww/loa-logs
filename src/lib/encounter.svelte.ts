@@ -1,4 +1,4 @@
-import { EntityType, type Encounter, type Entity, type PartyInfo } from "$lib/types";
+import { EntityType, type Encounter, type Entity } from "$lib/types";
 import { settings } from "./stores.svelte";
 
 export class EncounterState {

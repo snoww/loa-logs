@@ -4,11 +4,11 @@
   import { settings } from "$lib/stores.svelte";
   import { BuffDetails, MeterTab, type Entity, type StatusEffect } from "$lib/types";
   import { getSynergyPercentageDetailsSum } from "$lib/utils/buffs";
-  import { rgbLinearShadeAdjust } from "$lib/utils/strings";
   import QuickTooltip from "../QuickTooltip.svelte";
   import BuffDetailTooltip from "../tooltips/BuffDetailTooltip.svelte";
   import ClassTooltip from "../tooltips/ClassTooltip.svelte";
   import BuffSkillBreakdownRow from "./BuffSkillBreakdownRow.svelte";
+  import { rgbLinearShadeAdjust } from "$lib/utils";
 
   interface Props {
     groupedSynergies: Map<string, Map<number, StatusEffect>>;

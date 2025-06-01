@@ -151,4 +151,4 @@ export const missingInfo: AddToastProps<ToastData> = {
     color: error
   },
   closeDelay: 10000 // 10 seconds
-}
+};

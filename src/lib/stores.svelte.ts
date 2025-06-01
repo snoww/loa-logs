@@ -1,7 +1,5 @@
 import { browser } from "$app/environment";
 import { invoke } from "@tauri-apps/api";
-import { join, resourceDir } from "@tauri-apps/api/path";
-import { convertFileSrc } from "@tauri-apps/api/tauri";
 import MarkdownIt from "markdown-it";
 import { SvelteSet } from "svelte/reactivity";
 import { readable } from "svelte/store";
@@ -222,6 +220,7 @@ export const defaultSettings = {
       damagePercent: true,
       critRate: true,
       critDmg: false,
+      adjustedCritRate: false,
       frontAtk: true,
       backAtk: true,
       avgDamage: false,

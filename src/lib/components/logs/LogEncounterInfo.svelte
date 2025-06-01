@@ -1,8 +1,8 @@
 <script lang="ts">
-  import { onMount } from "svelte";
-  import { screenshot, settings } from "$lib/stores.svelte";
-  import { abbreviateNumber, timestampToMinutesAndSeconds } from "$lib/utils/numbers";
   import type { EncounterState } from "$lib/encounter.svelte";
+  import { screenshot, settings } from "$lib/stores.svelte";
+  import { onMount } from "svelte";
+  import { abbreviateNumber, timestampToMinutesAndSeconds } from "$lib/utils";
 
   let { enc }: { enc: EncounterState } = $props();
 

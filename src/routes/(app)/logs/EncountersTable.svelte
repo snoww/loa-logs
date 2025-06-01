@@ -3,9 +3,8 @@
   import { raidGates } from "$lib/constants/encounters";
   import { IconStar } from "$lib/icons";
   import type { EncounterPreview, EncountersOverview } from "$lib/types";
-  import { abbreviateNumber, formatTimestamp, timestampToMinutesAndSeconds } from "$lib/utils/numbers";
-  import { getClassIcon } from "$lib/utils/strings";
   import type { SvelteSet } from "svelte/reactivity";
+  import { abbreviateNumber, formatTimestamp, getClassIcon, timestampToMinutesAndSeconds } from "$lib/utils";
 
   let {
     overview,
@@ -60,10 +59,7 @@
             </p>
           {/if}
         </div>
-        <a
-          href="/logs/{encounter.id}"
-          class="hover:text-accent-500 group flex items-center gap-1 hover:underline"
-        >
+        <a href="/logs/{encounter.id}" class="hover:text-accent-500 group flex items-center gap-1 hover:underline">
           {#if encounter.favorite}
             <IconStar class="shrink-0 text-yellow-400" />
           {/if}

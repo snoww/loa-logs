@@ -11,7 +11,8 @@ import {
   type StatusEffect
 } from "./types";
 import { addBardBubbles, filterStatusEffects, supportSkills } from "./utils/buffs";
-import { customRound } from "./utils/numbers";
+
+import { customRound } from "$lib/utils";
 
 export class BuffState {
   enc: EncounterState = $state()!;
@@ -120,7 +121,9 @@ export class BuffState {
             if (player.damageStats.buffedBy[id] && syn.category === "buff") {
               const b = new Buff(
                 syn.source.icon,
-                customRound((player.damageStats.buffedBy[id] / (isHat ? damageDealtWithHa : damageDealtWithoutHa)) * 100),
+                customRound(
+                  (player.damageStats.buffedBy[id] / (isHat ? damageDealtWithHa : damageDealtWithoutHa)) * 100
+                ),
                 syn.source.skill?.icon
               );
               addBardBubbles(key, b, syn);
@@ -131,7 +134,9 @@ export class BuffState {
               buffDetails.buffs.push(
                 new Buff(
                   syn.source.icon,
-                  customRound((player.damageStats.debuffedBy[id] / (isHat ? damageDealtWithHa : damageDealtWithoutHa)) * 100),
+                  customRound(
+                    (player.damageStats.debuffedBy[id] / (isHat ? damageDealtWithHa : damageDealtWithoutHa)) * 100
+                  ),
                   syn.source.skill?.icon
                 )
               );
@@ -139,7 +144,9 @@ export class BuffState {
             }
           });
           if (buffDamage > 0) {
-            buffDetails.percentage = customRound((buffDamage / (isHat ? damageDealtWithHa : damageDealtWithoutHa)) * 100);
+            buffDetails.percentage = customRound(
+              (buffDamage / (isHat ? damageDealtWithHa : damageDealtWithoutHa)) * 100
+            );
           }
 
           playerBuffs.push(buffDetails);

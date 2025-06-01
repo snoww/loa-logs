@@ -1,14 +1,14 @@
 <script lang="ts">
   import type { EntityState } from "$lib/entity.svelte";
   import { SkillState } from "$lib/skill.svelte";
+  import { settings } from "$lib/stores.svelte";
   import type { Skill } from "$lib/types";
-  import { getSkillIcon, rgbLinearShadeAdjust } from "$lib/utils/strings";
   import { cubicOut } from "svelte/easing";
   import { Tween } from "svelte/motion";
   import QuickTooltip from "../QuickTooltip.svelte";
   import SkillTooltip from "../tooltips/SkillTooltip.svelte";
   import { playerBreakdownColumns } from "./PlayerBreakdownColumns.svelte";
-  import { settings } from "$lib/stores.svelte";
+  import { getSkillIcon, rgbLinearShadeAdjust } from "$lib/utils";
 
   interface Props {
     skill: Skill;

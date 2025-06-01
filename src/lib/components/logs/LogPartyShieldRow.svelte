@@ -3,9 +3,9 @@
   import type { EncounterState } from "$lib/encounter.svelte";
   import { EntityState } from "$lib/entity.svelte";
   import type { Entity, ShieldDetails } from "$lib/types";
-  import { abbreviateNumberSplit } from "$lib/utils/numbers";
   import ClassTooltip from "../tooltips/ClassTooltip.svelte";
   import ShieldDetailTooltip from "../tooltips/ShieldDetailTooltip.svelte";
+  import { abbreviateNumberSplit } from "$lib/utils";
 
   interface Props {
     enc: EncounterState;

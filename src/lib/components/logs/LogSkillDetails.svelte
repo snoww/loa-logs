@@ -1,14 +1,13 @@
 <script lang="ts">
-  import { focusedCast, settings } from "$lib/stores.svelte";
-  import type { Entity, EncounterDamageStats, StatusEffectWithId } from "$lib/types";
+  import { IconChevronLeft, IconChevronRight } from "$lib/icons";
+  import { focusedCast } from "$lib/stores.svelte";
+  import type { EncounterDamageStats, Entity } from "$lib/types";
+  import { getSkillCastBuffs, getSkillCastSupportBuffs } from "$lib/utils/buffs";
   import { onDestroy } from "svelte";
   import Card from "../Card.svelte";
-  import { IconChevronLeft, IconChevronRight } from "$lib/icons";
   import QuickTooltip from "../QuickTooltip.svelte";
-  import { abbreviateNumber, customRound, timestampToMinutesAndSeconds } from "$lib/utils/numbers";
-  import { getSkillIcon } from "$lib/utils/strings";
-  import { getSkillCastBuffs, getSkillCastSupportBuffs } from "$lib/utils/buffs";
   import BuffTooltip from "../tooltips/BuffTooltip.svelte";
+  import { abbreviateNumber, customRound, getSkillIcon, timestampToMinutesAndSeconds } from "$lib/utils";
 
   let {
     player,

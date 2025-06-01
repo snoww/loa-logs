@@ -2,9 +2,9 @@
   import { raidGates } from "$lib/constants/encounters";
   import { screenshot, settings } from "$lib/stores.svelte";
   import type { Encounter } from "$lib/types";
-  import { abbreviateNumber, getBossHpBars, timestampToMinutesAndSeconds } from "$lib/utils/numbers";
   import { getVersion } from "@tauri-apps/api/app";
   import BossOnlyDamage from "../shared/BossOnlyDamage.svelte";
+  import { abbreviateNumber, getBossHpBars, timestampToMinutesAndSeconds } from "$lib/utils";
 
   let { encounter }: { encounter: Encounter } = $props();
 

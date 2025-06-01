@@ -27,8 +27,8 @@
 
 <div
   class="fixed top-auto z-50 m-4 flex flex-col {settings.app.general.accentColor} {live
-    ? 'inset-x-0 items-center gap-1 bottom-3'
-    : 'right-0 items-end gap-2 bottom-0'} 
+    ? 'inset-x-0 bottom-3 items-center gap-1'
+    : 'bottom-0 right-0 items-end gap-2'} 
   "
   use:portal
 >

@@ -2,18 +2,18 @@
   import type { EncounterState } from "$lib/encounter.svelte";
   import { misc, settings } from "$lib/stores.svelte";
   import { MeterState, MeterTab } from "$lib/types";
-  import DamageMeterPartySplit from "../shared/DamageMeterPartySplit.svelte";
-  import PlayerBreakdown from "../shared/PlayerBreakdown.svelte";
+  import { missingInfo } from "$lib/utils/toasts";
   import BossBreakdown from "../shared/BossBreakdown.svelte";
   import BossTable from "../shared/BossTable.svelte";
   import Buffs from "../shared/Buffs.svelte";
+  import DamageMeterPartySplit from "../shared/DamageMeterPartySplit.svelte";
   import DamageTaken from "../shared/DamageTaken.svelte";
+  import PlayerBreakdown from "../shared/PlayerBreakdown.svelte";
+  import { addToast } from "../Toaster.svelte";
   import LiveBossInfo from "./LiveBossInfo.svelte";
   import LiveEncounterInfo from "./LiveEncounterInfo.svelte";
   import LiveFooter from "./LiveFooter.svelte";
-  import { addToast } from "../Toaster.svelte";
-  import { missingInfo } from "$lib/utils/toasts";
-  import { isNameValid } from "$lib/utils/strings";
+  import { isNameValid } from "$lib/utils";
 
   let { enc }: { enc: EncounterState } = $props();
 

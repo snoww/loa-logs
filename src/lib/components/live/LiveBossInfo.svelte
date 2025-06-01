@@ -1,13 +1,12 @@
 <script lang="ts">
-  import { bossHpMap } from "$lib/constants/bossHpBars";
-  import { bossHpBarColors } from "$lib/constants/colors";
+  import { bossHpBarColors, bossHpMap } from "$lib/constants/encounters";
   import { settings } from "$lib/stores.svelte";
   import type { Entity } from "$lib/types";
   import { broadcastLiveMessage } from "$lib/utils/live.svelte";
-  import { abbreviateNumberSplit, getBossHpBars } from "$lib/utils/numbers";
-  import { onDestroy, untrack } from "svelte";
+  import { onDestroy } from "svelte";
   import { linear } from "svelte/easing";
   import { Tween } from "svelte/motion";
+  import { abbreviateNumberSplit, getBossHpBars } from "$lib/utils";
 
   let { boss }: { boss: Entity } = $props();
 

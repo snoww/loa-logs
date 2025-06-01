@@ -16,8 +16,7 @@ import {
   type StatusEffect,
   type StatusEffectWithId
 } from "$lib/types";
-import { customRound } from "./numbers";
-import { getSkillIcon } from "./strings";
+import { customRound, getSkillIcon } from "$lib/utils";
 
 export function defaultBuffFilter(buffType: number): boolean {
   return (

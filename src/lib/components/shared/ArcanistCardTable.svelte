@@ -2,7 +2,7 @@
   import { cardIds } from "$lib/constants/cards";
   import { settings } from "$lib/stores.svelte";
   import type { Entity } from "$lib/types";
-  import { getSkillIcon, rgbLinearShadeAdjust } from "$lib/utils/strings";
+  import { getSkillIcon, rgbLinearShadeAdjust } from "$lib/utils";
 
   interface Props {
     player: Entity;

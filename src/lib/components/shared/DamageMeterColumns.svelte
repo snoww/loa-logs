@@ -2,7 +2,8 @@
   import type { LogColumn } from "$lib/column";
   import type { EncounterState } from "$lib/encounter.svelte";
   import { EntityState } from "$lib/entity.svelte";
-  import { customRound } from "$lib/utils/numbers";
+
+  import { customRound } from "$lib/utils";
 
   export const logColumns: LogColumn<EncounterState, EntityState>[] = [
     // Dead for

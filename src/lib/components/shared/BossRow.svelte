@@ -1,13 +1,13 @@
 <script lang="ts">
   import type { EncounterState } from "$lib/encounter.svelte";
   import { EntityState } from "$lib/entity.svelte";
+  import { settings } from "$lib/stores.svelte";
   import type { Entity } from "$lib/types";
-  import { rgbLinearShadeAdjust } from "$lib/utils/strings";
   import { cubicOut } from "svelte/easing";
   import { Tween } from "svelte/motion";
   import QuickTooltip from "../QuickTooltip.svelte";
   import ArkPassiveTooltip from "../tooltips/ArkPassiveTooltip.svelte";
-  import { settings } from "$lib/stores.svelte";
+  import { rgbLinearShadeAdjust } from "$lib/utils";
 
   interface Props {
     enc: EncounterState;

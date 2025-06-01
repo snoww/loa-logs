@@ -4,7 +4,8 @@
   import { IconChevronRight } from "$lib/icons";
   import type { Skill } from "$lib/types";
   import { getOpenerSkills } from "$lib/utils/dpsCharts";
-  import { getSkillIcon } from "$lib/utils/strings";
+
+  import { getSkillIcon } from "$lib/utils";
 
   interface Props {
     skills: Record<number, Skill>;

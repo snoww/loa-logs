@@ -5,8 +5,8 @@
   import { raidGates } from "$lib/constants/encounters";
   import { IconArrowLeft, IconStar } from "$lib/icons";
   import type { Encounter } from "$lib/types";
-  import { formatTimestamp, getBossHpBars } from "$lib/utils/numbers";
   import { invoke } from "@tauri-apps/api";
+  import { formatTimestamp, getBossHpBars } from "$lib/utils";
 
   let { encounter }: { encounter: Encounter } = $props();
   let raidGate = $derived(raidGates[encounter.currentBossName]);

@@ -1,7 +1,7 @@
 <script lang="ts">
   import { chartable, type EChartsOptions } from "$lib/charts";
   import { EncounterState } from "$lib/encounter.svelte";
-  import { screenshot, settings } from "$lib/stores.svelte";
+  import { screenshot } from "$lib/stores.svelte";
   import { ChartType, EntityType, MeterState, MeterTab, type Encounter, type Entity } from "$lib/types";
   import {
     getAverageDpsChart,
@@ -21,10 +21,10 @@
   import BossBreakdown from "../shared/BossBreakdown.svelte";
   import BossTable from "../shared/BossTable.svelte";
   import Buffs from "../shared/Buffs.svelte";
-  import DamageTaken from "../shared/DamageTaken.svelte";
   import DamageMeterPartySplit from "../shared/DamageMeterPartySplit.svelte";
-  import LogEncounterInfo from "./LogEncounterInfo.svelte";
+  import DamageTaken from "../shared/DamageTaken.svelte";
   import LogPlayerBreakdown from "../shared/PlayerBreakdown.svelte";
+  import LogEncounterInfo from "./LogEncounterInfo.svelte";
   import LogQuickControls from "./LogQuickControls.svelte";
   import LogQuickSettings from "./LogQuickSettings.svelte";
   import LogScreenshotInfo from "./LogScreenshotInfo.svelte";

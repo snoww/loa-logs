@@ -4,9 +4,10 @@
   import type { BuffDetails, Entity } from "$lib/types";
   import { cubicOut } from "svelte/easing";
   import { Tween } from "svelte/motion";
-  import ClassTooltip from "../tooltips/ClassTooltip.svelte";
   import QuickTooltip from "../QuickTooltip.svelte";
   import BuffDetailTooltip from "../tooltips/BuffDetailTooltip.svelte";
+  import ClassTooltip from "../tooltips/ClassTooltip.svelte";
+  import { settings } from "$lib/stores.svelte";
 
   interface Props {
     player: Entity;
@@ -23,7 +24,7 @@
     easing: cubicOut
   });
 
-  let alpha = $derived(enc.live && !enc.curSettings.showClassColors ? 0 : 0.6);
+  let alpha = $derived(enc.live && !settings.app.meter.showClassColors ? 0 : 0.6);
 
   $effect(() => {
     tweenedValue.set(percentage ?? 0);

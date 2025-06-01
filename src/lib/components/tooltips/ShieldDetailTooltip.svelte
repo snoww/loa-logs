@@ -1,8 +1,7 @@
 <script lang="ts">
   import QuickTooltip from "$lib/components/QuickTooltip.svelte";
   import type { ShieldDetails } from "$lib/types";
-  import { abbreviateNumberSplit } from "$lib/utils/numbers";
-  import { getSkillIcon } from "$lib/utils/strings";
+  import { abbreviateNumberSplit, getSkillIcon } from "$lib/utils";
 
   interface Props {
     shieldDetails: ShieldDetails;

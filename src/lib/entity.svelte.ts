@@ -2,8 +2,7 @@ import { cardIds } from "./constants/cards";
 import type { EncounterState } from "./encounter.svelte";
 import { settings } from "./stores.svelte";
 import { EntityType, type Entity, type IncapacitatedEvent } from "./types";
-import { abbreviateNumberSplit, customRound } from "./utils/numbers";
-import { formatPlayerName, getEstherFromNpcId } from "./utils/strings";
+import { abbreviateNumberSplit, customRound, formatPlayerName, getEstherFromNpcId } from "$lib/utils";
 
 export class EntityState {
   entity: Entity = $state()!;

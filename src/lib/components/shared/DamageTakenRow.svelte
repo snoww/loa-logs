@@ -3,9 +3,10 @@
   import type { EncounterState } from "$lib/encounter.svelte";
   import { EntityState } from "$lib/entity.svelte";
   import type { Entity } from "$lib/types";
+  import { cubicOut } from "svelte/easing";
   import { Tween } from "svelte/motion";
   import ClassTooltip from "../tooltips/ClassTooltip.svelte";
-  import { cubicOut } from "svelte/easing";
+  import { settings } from "$lib/stores.svelte";
 
   interface Props {
     enc: EncounterState;
@@ -25,7 +26,7 @@
     tweenedValue.set(width ?? 0);
   });
 
-  let alpha = $derived(enc.live && !enc.curSettings.showClassColors ? 0 : 0.6);
+  let alpha = $derived(enc.live && !settings.app.meter.showClassColors ? 0 : 0.6);
 </script>
 
 <td class="pl-1">

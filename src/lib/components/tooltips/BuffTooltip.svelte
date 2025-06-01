@@ -2,9 +2,13 @@
   import QuickTooltip from "$lib/components/QuickTooltip.svelte";
   import { classesMap } from "$lib/constants/classes";
   import type { StatusEffect } from "$lib/types";
-  import { getSkillIcon, removeUnknownHtmlTags } from "$lib/utils/strings";
+  import { getSkillIcon, removeUnknownHtmlTags } from "$lib/utils";
 
-  const { buff, sourceSkillIcon, size = "size-5" }: { buff: StatusEffect; sourceSkillIcon?: boolean, size?: string } = $props();
+  const {
+    buff,
+    sourceSkillIcon,
+    size = "size-5"
+  }: { buff: StatusEffect; sourceSkillIcon?: boolean; size?: string } = $props();
 
   let icon = $derived.by(() => {
     if (sourceSkillIcon && buff.source.skill) {

@@ -1,7 +1,7 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
   import { page } from "$app/state";
-  import { IconChevronDown, IconExternalLink, IconTrash } from "$lib/icons";
+  import { IconChevronDown, IconTrash } from "$lib/icons";
   import { settings } from "$lib/stores.svelte";
   import { createDialog, createDropdownMenu, melt } from "@melt-ui/svelte";
   import { invoke } from "@tauri-apps/api";
@@ -32,7 +32,7 @@
     'bg-accent-600/60'}"
 >
   Settings
-  <IconChevronDown class="ml-0.5 mt-0.5 size-4 transition-all transform duration-300 {$open ? '-rotate-180' : ''}" />
+  <IconChevronDown class="ml-0.5 mt-0.5 size-4 transform transition-all duration-300 {$open ? '-rotate-180' : ''}" />
 </button>
 
 {#if $open}

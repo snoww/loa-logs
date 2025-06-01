@@ -1,6 +1,6 @@
 import type { EntityState } from "./entity.svelte";
 import type { Skill } from "./types";
-import { abbreviateNumberSplit, customRound } from "./utils/numbers";
+import { abbreviateNumberSplit, customRound } from "$lib/utils";
 
 export class SkillState {
   skill: Skill = $state()!;

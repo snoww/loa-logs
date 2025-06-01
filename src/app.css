@@ -49,7 +49,7 @@
   [role="button"]:not(:disabled) {
     cursor: pointer;
   }
-  
+
   .theme-red {
     --accent-50: theme(--color-red-50);
     --accent-100: theme(--color-red-100);

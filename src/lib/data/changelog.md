@@ -8,38 +8,51 @@
 </div>
 
 #### NEW FEATURES
+
 - updated meter for rimeria patch (thanks to poont)
+
 #### BUG FIXES AND IMPROVEMENTS
+
 - updated detection for sorceress specs
 
 ### v1.27.2 - April 29th, 2025
+
 #### BUG FIXES AND IMPROVEMENTS
+
 - fix machinist hyper awakening check
 - fix certain debuffs going over 100%
 - minor ui fixes
 
 ### v1.27.1 - April 24th, 2025
+
 #### BUG FIXES AND IMPROVEMENTS
+
 - fix striker spec classification
 
 ### v1.27.0 - April 23rd, 2025
+
 #### NEW FEATURES
+
 - update meter for april balance patch (thanks to poont for packets)
   - updated uwuowo raid stats for april balance patch, please upload your logs!
 - damage towards shields is now counted towards dps (on bosses that support it)
 
 #### BUG FIXES AND IMPROVEMENTS
+
 - added option for uwu shortcut for players in live meter (or logs)
 - fix slayer party synergy grouping
 - fix spec detection for supports running stagger builds
 - fix gems for dps spec of supports
 
 ### v1.26.1 - March 30th, 2025
+
 #### BUG FIXES AND IMPROVEMENTS
+
 - remove uwu shortcut in live meter, only logs
 - adjust bard classification between support and dps spec
 
 ### v1.26.0 - March 27th, 2025
+
 #### NEW FEATURES
 
 - updated meter for end of march patch
@@ -54,6 +67,7 @@
 - added uwuowo shortcut when hovering over players in live meter and logs
 
 #### BUG FIXES AND IMPROVEMENTS
+
 - fix pin self party option, your own party's buffs now stay at the top regardless of raid
 - increase tick rate of meter updates
 - fix esther column alignment in logs
@@ -64,24 +78,29 @@
 ### v1.25.5
 
 #### NEW FEATURES
+
 - added new column **_Incapacitated_** (i.e. floor pov timer) to both meter and log (thanks to @molenzwiebel)
 
 ![incap](https://i.imgur.com/JZaVY95.png)
+
 - added new column **_HAT%_** to both meter and log to show support hyper awakening technique percentage in damage tab
 
 ![hat](https://i.imgur.com/drhg8kS.png)
 
 - [dev] added development environment setup in readme for people looking to help contribute to the project
 
-
 ### v1.25.4
+
 #### BUG FIXES AND IMPROVEMENTS
+
 - fixed wildsoul fox orb skill showing as skill id
 - fixed act 2: brel npc names counting as bosses
 - fixed thaemine prokel name
 
 ### V1.25.2
+
 #### NEW FEATURES
+
 - update meter for wildsoul patch (as always, thanks @poont for the packet data)
 - added data relating to new wildsoul class
 
@@ -93,7 +112,9 @@
 - fix large font size (maybe)
 
 ### v1.24.0
+
 #### NEW FEATURES
+
 - update meter for random feb patch
 
 #### BUG FIXES AND IMPROVEMENTS
@@ -140,8 +161,8 @@ NOTE: this data is NOT always accurate. obvious invalid data (e.g. completely di
 #### NEW FEATURES
 
 - added new optional column _"Adjusted Crit Rate"_ for skill breakdowns (Settings > Logs > Scroll down to Skill Breakdown > Check "Adjusted Crit Rate")
-    - calculates crit rate based on damage hits that do more than 5% of the average cast. this provides a more accurate crit rate for skills that have a big hit and multiple small hits or dots (e.g. Doomsday)
-    - only shows on logs and not live meter
+  - calculates crit rate based on damage hits that do more than 5% of the average cast. this provides a more accurate crit rate for skills that have a big hit and multiple small hits or dots (e.g. Doomsday)
+  - only shows on logs and not live meter
 
 ### v1.22.1
 
@@ -419,7 +440,7 @@ NOTE: this data is NOT always accurate. obvious invalid data (e.g. completely di
 #### NEW FEATURES
 
 - greatly improved encounter searching and loading speed (@anyduck)
-    - NOTE: launching meter after the update will require up to 30 seconds of database migrations
+  - NOTE: launching meter after the update will require up to 30 seconds of database migrations
 - allow changing number of rows displayed in the log table
 - due to log sizes increasing because of every single skill cast being saved, future encounters will have fields
   compressed, greatly reducing database sizes for the future
@@ -487,8 +508,8 @@ NOTE: this data is NOT always accurate. obvious invalid data (e.g. completely di
 
 - updated meter for summer patch, thanks to @PetAndMet, @PoonT, @faust
 - skill cast tracking
-    - each damage tick of a skill is now tracked
-    - you can look at the details of a skill cast by clicking on a skill icon in the skill cast graph
+  - each damage tick of a skill is now tracked
+  - you can look at the details of a skill cast by clicking on a skill icon in the skill cast graph
 
 clicking on a skill icon in the graph brings up a tooltip that shows some basic info about the cast.
 
@@ -605,9 +626,9 @@ working again.
 #### BUG FIXES AND IMPROVEMENTS
 
 - more improvements to rdps reliability
-    - improved region detection for players that plays on multiple regions
-    - fix cases where a single person's rdps was incorrectly calculated
-    - fix cases where rdps will become inaccurate if players afk for too long (taking break between pulls)
+  - improved region detection for players that plays on multiple regions
+  - fix cases where a single person's rdps was incorrectly calculated
+  - fix cases where rdps will become inaccurate if players afk for too long (taking break between pulls)
 - show ip address of network interfaces when _automatic network selection_ is disabled
 - fix dead column still showing when players has respawned
 

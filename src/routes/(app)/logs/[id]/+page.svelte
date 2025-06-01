@@ -12,6 +12,6 @@
 </script>
 
 <Header {encounter} />
-<div class="mx-auto flex max-w-[100rem] flex-col gap-2 px-2 py-4 sm:px-4" >
+<div class="mx-auto flex max-w-[100rem] flex-col gap-2 px-2 py-4 sm:px-4">
   <LogDamageMeter {encounter} />
 </div>
