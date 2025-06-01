@@ -1,4 +1,4 @@
-import { EntityType, type Encounter, type Entity } from "$lib/types";
+import { EntityType, type Encounter, type Entity, type PartyInfo } from "$lib/types";
 import { settings } from "./stores.svelte";
 
 export class EncounterState {
@@ -131,7 +131,7 @@ export class EncounterState {
     );
   });
 
-  partyInfo = $state(this.encounter?.encounterDamageStats.misc?.partyInfo);
+  partyInfo: PartyInfo | undefined = $state(undefined);
 
   /**
    * Array of parties in the encounter, sorted by party order.
@@ -182,6 +182,7 @@ export class EncounterState {
 
   constructor(encounter?: Encounter, live: boolean = false) {
     this.encounter = encounter;
+    this.partyInfo = encounter?.encounterDamageStats.misc?.partyInfo;
     this.live = live;
   }
 
