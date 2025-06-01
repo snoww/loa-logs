@@ -6,7 +6,6 @@
   import { IconExternalLink } from "$lib/icons";
   import { settings } from "$lib/stores.svelte";
   import { EntityType, type Entity } from "$lib/types";
-  import { open } from "@tauri-apps/api/shell";
   import { cubicOut } from "svelte/easing";
   import { Tween } from "svelte/motion";
   import ArkPassiveTooltip from "../tooltips/ArkPassiveTooltip.svelte";

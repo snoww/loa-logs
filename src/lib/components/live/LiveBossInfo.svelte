@@ -102,7 +102,7 @@
   });
 </script>
 
-<div class="relative isolate h-7 select-none border-y border-black bg-neutral-900/30">
+<div class="relative isolate h-7 select-none border-y border-black bg-neutral-900/70">
   <!-- hp bar background -->
   {#if bossHp}
     {#if bossShield}
@@ -119,6 +119,14 @@
           class="absolute -z-20 h-full w-full"
           style="background-color: rgb(from {bossBarColor[1]} r g b / {0.95});"
         ></div>
+      {/if}
+      {#if settings.app.meter.splitBossHpBar}
+        <div class="absolute flex h-full w-full justify-evenly divide-x divide-neutral-900/50">
+          <div class="grow"></div>
+          <div class="grow"></div>
+          <div class="grow"></div>
+          <div class="grow"></div>
+        </div>
       {/if}
     {/if}
   {/if}
@@ -141,7 +149,7 @@
       </div>
     </div>
   </div>
-  {#if bossHp <= 0}
+  {#if boss.isDead || bossHp <= 0}
     <div class="absolute inset-y-0 right-0 pr-2 tracking-tight">
       <div class="flex h-full items-center justify-center">Dead</div>
     </div>

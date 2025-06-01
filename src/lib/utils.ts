@@ -2,11 +2,11 @@ import { bossHpMap } from "$lib/constants/encounters";
 import { estherMap } from "$lib/constants/esthers";
 import { BossHpLog, type DamageStats, type Entity, type IdentityLogType, type IdentityLogTypeValue } from "$lib/types";
 import { invoke } from "@tauri-apps/api";
+import { checkUpdate } from "@tauri-apps/api/updater";
 import html2canvas from "html2canvas-pro";
 import { addToast } from "./components/Toaster.svelte";
 import { screenshot, settings, updateInfo } from "./stores.svelte";
 import { screenshotError, screenshotSuccess } from "./utils/toasts";
-import { checkUpdate } from "@tauri-apps/api/updater";
 
 export const UWUOWO_URL = "https://uwuowo.mathi.moe";
 

@@ -498,24 +498,17 @@
         )}
         {@render settingOption("logs", "hpm", "Skill Hits/min", "Show the hits per minute of the skill", true)}
       {:else if currentTab === "Meter"}
-        {@render settingOption("meter", "bossHp", "Boss HP", "Show the HP bar for the current boss")}
         {@render settingOption(
           "meter",
           "bossHpBar",
           "Boss HP Bars",
-          "Show boss HP bars (e.g. x65), turn off to show HP percentage for all bosses"
+          "Show boss HP bars (e.g. x65) for the current boss."
         )}
         {@render settingOption(
           "meter",
           "splitBossHpBar",
           "Split Boss HP Bar",
           "Add vertical bars to the boss hp at 25%, 50%, and 75% intervals."
-        )}
-        {@render settingOption(
-          "meter",
-          "abbreviateHeader",
-          "Abbreviate Header",
-          "Abbreviates the Total DMG and Total DPS numbers in the header"
         )}
         {@render settingOption(
           "meter",
@@ -587,8 +580,8 @@
         {@render settingOption(
           "meter",
           "percentHatBySup",
-          "Support HAT %",
-          "Show the percentage of damage buffed by support hyper awakening technique"
+          "Support Hyper %",
+          "Show the percentage of damage buffed by support hyper awakening skill"
         )}
         {@render settingOption("meter", "counters", "Counters", "Show the number of counters hit")}
         <div class="mt-4 h-px w-full bg-neutral-600"></div>

@@ -211,6 +211,7 @@ export const defaultSettings = {
     frontAtk: true,
     backAtk: true,
     counters: false,
+    pinSelfParty: false,
     positionalDmgPercent: true,
     percentBuffBySup: true,
     percentIdentityBySup: true,

@@ -35,10 +35,16 @@
 </script>
 
 {#if enc.curSettings.splitPartyBuffs && enc.parties.length > 1 && buffs.partyGroupedSynergies.size > 1 && enc.parties.length === buffs.partyGroupedSynergies.size && tab === MeterTab.PARTY_BUFFS && !focusedPlayer}
-  <div class="flex flex-col space-y-2">
+  <div class="flex flex-col {enc.live ? '' : 'gap-2'}">
     {#each buffs.partyGroupedSynergies as [partyId, synergies], i (partyId)}
       {#if enc.parties[i] && enc.parties[i].length > 0}
-        <table class="isolate w-full table-fixed">
+        <table
+          class="isolate w-full table-fixed {enc.live &&
+          settings.app.meter.pinSelfParty &&
+          buffs.buffParties[i].some((player) => player.name === enc.localPlayer)
+            ? 'order-first'
+            : ''}"
+        >
           <thead class="z-40 h-6 {enc.live ? 'sticky top-0 backdrop-blur-lg' : ''}">
             <tr class="bg-neutral-900">
               <th class="w-7 whitespace-nowrap px-2 font-normal tracking-tight">Party {+partyId + 1}</th>
