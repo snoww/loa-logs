@@ -1,8 +1,7 @@
-import { misc, settings } from "$lib/stores.svelte";
+import { settings } from "$lib/stores.svelte";
 import { invoke } from "@tauri-apps/api";
 import { emit } from "@tauri-apps/api/event";
 import { register } from "@tauri-apps/api/globalShortcut";
-import { get } from "svelte/store";
 
 export const UWUOWO_URL = "https://uwuowo.mathi.moe";
 
@@ -57,10 +56,3 @@ export async function registerShortcuts() {
     await invoke("write_log", { message: "[live_meter::register_shortcuts] " + error });
   }
 }
-
-export const update = {
-  available: false,
-  manifest: undefined,
-  dismissed: false,
-  isNotice: false
-};

@@ -4,8 +4,9 @@ import { BossHpLog, type DamageStats, type Entity, type IdentityLogType, type Id
 import { invoke } from "@tauri-apps/api";
 import html2canvas from "html2canvas-pro";
 import { addToast } from "./components/Toaster.svelte";
-import { screenshot, settings } from "./stores.svelte";
+import { screenshot, settings, updateInfo } from "./stores.svelte";
 import { screenshotError, screenshotSuccess } from "./utils/toasts";
+import { checkUpdate } from "@tauri-apps/api/updater";
 
 export async function takeScreenshot(div?: HTMLElement) {
   if (!div) {
@@ -28,6 +29,22 @@ export async function takeScreenshot(div?: HTMLElement) {
       }
     });
   }, 100);
+}
+
+export async function checkForUpdate() {
+  try {
+    const { shouldUpdate, manifest } = await checkUpdate();
+    if (shouldUpdate) {
+      updateInfo.available = true;
+      updateInfo.manifest = manifest;
+    } else {
+      updateInfo.available = false;
+    }
+
+    return shouldUpdate;
+  } catch (e) {
+    await invoke("write_log", { message: e });
+  }
 }
 
 export function tryParseInt(intString: string | number, defaultValue = 0) {

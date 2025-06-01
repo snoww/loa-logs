@@ -2,6 +2,7 @@ import IconDiscord from "~icons/ic/baseline-discord";
 import IconCloudYes from "~icons/iconamoon/cloud-yes";
 import IconPlay from "~icons/iconoir/play-solid";
 import IconArrowLeft from "~icons/lucide/arrow-left";
+import IconArrowUp from "~icons/lucide/arrow-up";
 import IconCamera from "~icons/lucide/camera";
 import IconChevronDown from "~icons/lucide/chevron-down";
 import IconChevronFirst from "~icons/lucide/chevron-first";
@@ -29,6 +30,7 @@ import IconPause from "~icons/ph/pause-fill";
 
 export {
   IconArrowLeft,
+  IconArrowUp,
   IconCamera,
   IconChevronDown,
   IconChevronFirst,

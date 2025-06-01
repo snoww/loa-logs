@@ -58,8 +58,8 @@
       </a>
     {:else if uploading}
       <button
-        class="focus:outline-hidden active:bg-accent-500/80 flex items-center gap-1 text-nowrap rounded-lg px-2 py-0.5 text-sm transition hover:bg-neutral-800/40"
-        onclick={() => {}}
+        class="focus:outline-hidden flex items-center gap-1 text-nowrap rounded-lg px-2 py-0.5 text-sm transition"
+        disabled
       >
         <IconRefresh class="animate-[spin_1s_linear_infinite_reverse]" />
         Uploading

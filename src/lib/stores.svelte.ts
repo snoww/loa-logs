@@ -1,5 +1,6 @@
 import { browser } from "$app/environment";
 import { invoke } from "@tauri-apps/api";
+import type { UpdateManifest } from "@tauri-apps/api/updater";
 import MarkdownIt from "markdown-it";
 import { SvelteSet } from "svelte/reactivity";
 import { readable } from "svelte/store";
@@ -23,6 +24,7 @@ class Settings {
   app = $state(defaultSettings);
   sync = $state(syncSettings);
   classColors = $state<Record<string, string>>(defaultClassColors);
+  version = $state("");
   lockUpdate = false;
 
   constructor() {
@@ -71,9 +73,18 @@ class Settings {
         this.lockUpdate = false;
       };
 
+      const updateVersion = async (newVersion: string | null) => {
+        this.lockUpdate = true;
+        if (newVersion) {
+          this.version = newVersion;
+        }
+        this.lockUpdate = false;
+      };
+
       updateSettings(localStorage.getItem("appSettings"), true);
       updateClassColors(localStorage.getItem("classColors"));
       updateSyncSettings(localStorage.getItem("syncSettings"));
+      updateVersion(localStorage.getItem("version"));
 
       $effect.root(() => {
         $effect(() => {
@@ -88,6 +99,10 @@ class Settings {
           if (this.lockUpdate) return;
           localStorage.setItem("syncSettings", JSON.stringify(this.sync));
         });
+        $effect(() => {
+          if (this.lockUpdate) return;
+          localStorage.setItem("version", this.version);
+        });
       });
 
       window.addEventListener("storage", (e) => {
@@ -97,6 +112,7 @@ class Settings {
         if (key === "appSettings") updateSettings(newValue);
         else if (key === "classColors") updateClassColors(newValue);
         else if (key === "syncSettings") updateSyncSettings(newValue);
+        else if (key === "version") updateVersion(newValue);
         else return;
       });
     } else {
@@ -328,6 +344,11 @@ export class SkillCastInfo {
   cast = $state(0);
 }
 
+export class UpdateInfo {
+  available = $state(false);
+  manifest: UpdateManifest | undefined = $state(undefined);
+}
+
 export const settings = new Settings();
 export const encounterFilter = new EncounterFilter();
 export const misc = new Misc();
@@ -347,6 +368,7 @@ export const screenshot = (() => {
     }
   };
 })();
+export const updateInfo = new UpdateInfo();
 
 const md = new MarkdownIt({
   html: true
@@ -367,4 +389,4 @@ md.renderer.rules.link_open = function (tokens, idx, options, env, self) {
   return defaultRender(tokens, idx, options, env, self);
 };
 
-export const markdownIt = readable(md);
+export const markdownIt = md;

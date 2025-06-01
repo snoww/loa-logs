@@ -152,3 +152,12 @@ export const missingInfo: AddToastProps<ToastData> = {
   },
   closeDelay: 10000 // 10 seconds
 };
+
+export const noUpdateAvailable: AddToastProps<ToastData> = {
+  data: {
+    title: "",
+    description: "No update available, please check again later",
+    color: success
+  },
+  closeDelay: 2000
+}

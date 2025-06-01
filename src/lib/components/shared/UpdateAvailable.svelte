@@ -1,71 +1,54 @@
 <script lang="ts">
-  import { updateSettings } from "$lib/utils/settings";
-  import { markdownIt } from "$lib/utils/stores.js";
+  import { settings, updateInfo } from "$lib/stores.svelte";
+  import { createDialog, melt } from "@melt-ui/svelte";
+  import { fade } from "svelte/transition";
+  import { markdown } from "../Markdown.svelte";
   import { invoke } from "@tauri-apps/api";
   import { installUpdate } from "@tauri-apps/api/updater";
-  import { writable } from "svelte/store";
 
-  let updateText = writable("Update Now");
+  const {
+    elements: { portalled, overlay, content, title, description },
+    states: { open }
+  } = createDialog();
+
+  $effect(() => {
+    if (updateInfo.available) {
+      $open = true;
+    }
+  });
+
+  let updating = $state(false);
 </script>
 
-{#if $updateSettings.available && $updateSettings.manifest && !$updateSettings.dismissed}
-  <div class="fixed inset-0 z-50 bg-neutral-900 bg-opacity-80"></div>
-  <div class="h-modal fixed left-0 right-0 top-0 z-50 w-full items-center justify-center p-4">
-    <div class="relative top-[10%] mx-auto flex max-h-[95%] w-full max-w-md md:max-w-lg lg:max-w-2xl xl:max-w-3xl">
-      <div class="relative mx-auto flex flex-col rounded-lg border-gray-700 bg-zinc-800 text-gray-400 shadow-md">
-        <button
-          type="button"
-          class="focus:outline-hidden absolute right-2.5 top-3 ml-auto whitespace-normal rounded-lg p-1.5 hover:bg-zinc-600"
-          aria-label="Close modal"
-          onclick={() => ($updateSettings.dismissed = true)}
-        >
-          <span class="sr-only">Close modal</span>
-          <svg class="size-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-            <path
-              fill-rule="evenodd"
-              d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-              clip-rule="evenodd"
-            />
-          </svg>
-        </button>
-        <div id="modal" class="flex-1 space-y-6 overflow-y-auto overscroll-contain px-6 py-4">
-          <div class="">
-            <div class="mb-1 flex items-center justify-center space-x-1">
-              {#if $updateSettings.isNotice}
-                <div class="py-2 text-lg font-semibold text-gray-200">Notice</div>
-              {:else}
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" class="h-12 w-12 fill-gray-200">
-                  <path
-                    d="M281.5-165v-57.5H679v57.5H281.5Zm170-165v-356L329-563.5 289-604l191-191 191.5 191-40.5 40.5L509-686v356h-57.5Z"
-                  />
-                </svg>
-                <div class="text-lg font-semibold text-gray-200">New Update Available!</div>
-              {/if}
-            </div>
-            <div
-              class="prose-strong:text-gray-200 prose-em:text-gray-200 prose-headings:text-gray-200 prose-a:text-accent-500 prose prose-sm prose-zinc prose-invert prose-img:-my-2 prose-img:rounded-md prose-img:border prose-img:border-zinc-600 prose-img:shadow-md mb-5 text-gray-200"
-              id="notes"
-            >
-              {@html $markdownIt.render($updateSettings.manifest.body)}
-            </div>
-            {#if !$updateSettings.isNotice}
-              <div class="flex justify-center">
-                <button
-                  type="button"
-                  class="bg-accent-900 hover:bg-accent-800 focus:outline-hidden mr-2 inline-flex items-center justify-center rounded-lg px-5 py-2.5 text-center text-sm text-white"
-                  onclick={async () => {
-                    $updateText = "Updating...";
-                    await invoke("unload_driver");
-                    await invoke("remove_driver");
-                    await installUpdate();
-                  }}
-                >
-                  {$updateText}
-                </button>
-              </div>
-            {/if}
-          </div>
+{#if $open}
+  <div use:melt={$portalled}>
+    <div use:melt={$overlay} class="fixed inset-0 z-50 bg-black/50" transition:fade={{ duration: 150 }}></div>
+    <div
+      class="fixed left-1/2 top-1/2 z-50 max-h-[85vh] w-[40rem] max-w-[60rem] -translate-x-1/2 -translate-y-1/2 rounded-xl bg-neutral-800/40 p-4 shadow-lg drop-shadow-xl backdrop-blur-xl
+      {settings.app.general.accentColor} flex flex-col items-center gap-4 text-white"
+      use:melt={$content}
+    >
+      <h2 use:melt={$title} class="sticky top-0 py-2 text-xl font-semibold">New Update Available!</h2>
+      {#if updateInfo.manifest}
+        <div use:melt={$description} class="overflow-y-scroll rounded-md border border-neutral-700">
+          {@render markdown(updateInfo.manifest.body)}
         </div>
+      {/if}
+      <div class="flex items-center py-2">
+        <button
+          class="bg-accent-500/70 hover:bg-accent-500/60 rounded-md px-2 py-1"
+          onclick={async () => {
+            await invoke("unload_driver");
+            await invoke("remove_driver");
+            await installUpdate();
+          }}
+        >
+          {#if updating}
+            <span>Updating...</span>
+          {:else}
+            <span>Update Now</span>
+          {/if}
+        </button>
       </div>
     </div>
   </div>

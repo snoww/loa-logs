@@ -1,10 +1,13 @@
 <script lang="ts">
-  import { listen, type UnlistenFn } from "@tauri-apps/api/event";
-  import { onDestroy, onMount } from "svelte";
-  import { goto, invalidateAll } from "$app/navigation";
-  import { settings } from "$lib/stores.svelte";
-  import { appWindow } from "@tauri-apps/api/window";
+  import { goto } from "$app/navigation";
+  import UpdateAvailable from "$lib/components/shared/UpdateAvailable.svelte";
   import Toaster from "$lib/components/Toaster.svelte";
+  import { settings } from "$lib/stores.svelte";
+  import { checkForUpdate } from "$lib/utils";
+  import { getVersion } from "@tauri-apps/api/app";
+  import { listen, type UnlistenFn } from "@tauri-apps/api/event";
+  import { appWindow } from "@tauri-apps/api/window";
+  import { onDestroy, onMount } from "svelte";
 
   let { children }: { children?: import("svelte").Snippet } = $props();
 
@@ -12,12 +15,6 @@
 
   onMount(() => {
     (async () => {
-      // await checkForUpdate();
-
-      // if ($updateSettings.available) {
-      //   await showWindow();
-      // }
-
       let encounterUpdateEvent = await listen("show-latest-encounter", async (event) => {
         await goto("/logs/" + event.payload);
         await showWindow();
@@ -30,8 +27,19 @@
       events.add(encounterUpdateEvent);
       events.add(openUrlEvent);
 
-      // setInterval(checkForUpdate, 60 * 15 * 1000);
+      let version = await getVersion();
+      if (settings.version !== version) {
+        settings.version = version;
+        goto("/changelog");
+        await showWindow();
+      }
     })();
+
+    // check for app updates
+    const interval = setInterval(checkForUpdate, 60 * 15 * 1000);
+    return () => {
+      clearInterval(interval);
+    };
   });
   onDestroy(() => {
     events.forEach((unlisten) => unlisten());
@@ -42,23 +50,6 @@
     await appWindow.unminimize();
     await appWindow.setFocus();
   }
-
-  // async function checkForUpdate() {
-  //   try {
-  //     const { shouldUpdate, manifest } = await checkUpdate();
-  //     if (shouldUpdate) {
-  //       $updateSettings.available = true;
-  //       const oldManifest = $updateSettings.manifest;
-  //       $updateSettings.manifest = manifest;
-  //       if (oldManifest?.version !== $updateSettings.manifest?.version) {
-  //         $updateSettings.dismissed = false;
-  //       }
-  //       $updateSettings.isNotice = !!manifest?.version.includes("2025");
-  //     }
-  //   } catch (e) {
-  //     await invoke("write_log", { message: e });
-  //   }
-  // }
 
   $effect.pre(() => {
     if (settings.app.general.logScale === "1") {
@@ -73,6 +64,7 @@
   });
 </script>
 
+<UpdateAvailable />
 <Toaster />
 <div class="min-h-screen select-none bg-neutral-900">
   {@render children?.()}

@@ -1,7 +1,11 @@
 <script lang="ts">
   import { page } from "$app/state";
-  import { IconDiscord, IconExternalLink, IconMenu, IconX } from "$lib/icons";
-  import { settings } from "$lib/stores.svelte";
+  import QuickTooltip from "$lib/components/QuickTooltip.svelte";
+  import { addToast } from "$lib/components/Toaster.svelte";
+  import { IconArrowUp, IconDiscord, IconExternalLink, IconMenu, IconRefresh, IconX } from "$lib/icons";
+  import { settings, updateInfo } from "$lib/stores.svelte";
+  import { checkForUpdate } from "$lib/utils";
+  import { noUpdateAvailable } from "$lib/utils/toasts";
   import { createDialog, melt } from "@melt-ui/svelte";
   import { invoke } from "@tauri-apps/api";
   import { getVersion } from "@tauri-apps/api/app";
@@ -35,6 +39,8 @@
     }, 5000);
     return () => clearInterval(interval);
   });
+
+  let checking = $state(false);
 </script>
 
 <div
@@ -122,6 +128,42 @@
         <div class="absolute bottom-0 mx-4 my-2 p-1 text-sm">
           version {version}
         </div>
+      {/if}
+      {#if !updateInfo.available}
+        <button
+          class="group absolute bottom-3.5 right-4"
+          onclick={async () => {
+            checking = true;
+            const update = await checkForUpdate();
+            setTimeout(() => {
+              if (!update) {
+                addToast(noUpdateAvailable);
+              }
+              checking = false;
+            }, 900);
+          }}
+        >
+          <QuickTooltip tooltip="Check for updates">
+            <IconRefresh
+              class="group-hover:text-accent-500/80 size-4 transform {checking
+                ? 'animate-[spin_1s_linear_infinite_reverse]'
+                : ''}"
+            />
+          </QuickTooltip>
+        </button>
+      {:else}
+        <button
+          class="group absolute bottom-3.5 right-4"
+          onclick={async () => {
+            // emit update
+            updateInfo.available = false;
+            updateInfo.available = true;
+          }}
+        >
+          <QuickTooltip tooltip="Update available">
+            <IconArrowUp class="group-hover:text-accent-500/70 text-accent-500/80 size-4 animate-bounce" />
+          </QuickTooltip>
+        </button>
       {/if}
     </div>
   </div>

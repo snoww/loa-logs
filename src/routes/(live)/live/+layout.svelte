@@ -18,7 +18,6 @@
         settings.app = data;
       }
 
-      // updateSettings.set(update);
       if (settings.app.general.alwaysOnTop) {
         await appWindow.setAlwaysOnTop(true);
       } else {
@@ -29,23 +28,6 @@
         settings.app.general.bossOnlyDamage = true;
         await emit("boss-only-damage-request", true);
       }
-
-      // try {
-      //   const { shouldUpdate, manifest } = await checkUpdate();
-      //   if (shouldUpdate) {
-      //     $updateSettings.available = true;
-      //     const oldManifest = $updateSettings.manifest;
-      //     $updateSettings.manifest = manifest;
-      //     if (oldManifest?.version !== $updateSettings.manifest?.version) {
-      //       $updateSettings.dismissed = false;
-      //     }
-      //     $updateSettings.isNotice = manifest?.version.includes("2024");
-      //   }
-      // } catch (e) {
-      //   await invoke("write_log", { message: String(e) });
-      // }
-
-      // await registerShortcuts(settings.appSettings.shortcuts);
 
       // disable blur on windows 11
       let ua = await navigator.userAgentData.getHighEntropyValues(["platformVersion"]);
