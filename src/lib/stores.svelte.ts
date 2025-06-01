@@ -165,7 +165,7 @@ export const defaultSettings = {
     showBosses: false,
     splitLines: true,
     underlineHovered: false,
-    accentColor: "theme-pink",
+    accentColor: "theme-violet",
     autoIface: true,
     port: 6040,
     blur: true,
