@@ -8,7 +8,7 @@
   },
   "package": {
     "productName": "LOA Logs",
-    "version": "1.28.0"
+    "version": "2.0.0"
   },
   "tauri": {
     "allowlist": {
@@ -63,7 +63,6 @@
       "copyright": "GNU General Public License v3.0",
       "resources": [
         "meter-data/*.json",
-        "images/**/*.png",
         "WinDivert.dll",
         "WinDivert64.sys"
       ],
@@ -92,6 +91,7 @@
         "digestAlgorithm": "sha256",
         "timestampUrl": "",
         "nsis": {
+          "template": "./nsis/installer.nsi",
           "license": "../LICENSE",
           "installerIcon": "icons/icon.ico"
         }
