@@ -53,7 +53,7 @@
     <div class="truncate">
       <ArkPassiveTooltip state={entityState} />
     </div>
-    {#if isNameValid(entityState.entity.name) && hovering && entityState.entity.entityType === EntityType.PLAYER}
+    {#if (enc.live && settings.app.meter.profileShortcut) || (!enc.live && isNameValid(entityState.entity.name) && hovering && entityState.entity.entityType === EntityType.PLAYER)}
       <button
         class="shrink-0"
         onclick={(e) => {

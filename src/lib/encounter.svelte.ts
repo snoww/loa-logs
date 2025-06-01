@@ -183,6 +183,7 @@ export class EncounterState {
   constructor(encounter?: Encounter, live: boolean = false) {
     this.encounter = encounter;
     this.partyInfo = encounter?.encounterDamageStats.misc?.partyInfo;
+    this.duration = encounter?.duration ?? 0;
     this.live = live;
   }
 
