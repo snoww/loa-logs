@@ -106,7 +106,7 @@
     {
       show(enc) {
         if (!enc.curSettings.frontAtk) return false;
-        return enc.anyFrontAtk;
+        return !enc.curSettings.positionalDmgPercent && enc.anyFrontAtk;
       },
       headerText: "F.A",
       headerTooltip: "Front Attack %",
@@ -123,14 +123,14 @@
       headerText: "F.AD%",
       headerTooltip: "Front Attack Damage %",
       value: fadPct,
-      valueTooltip: null
+      valueTooltip: fadTooltip
     },
 
     // Back attack percentage
     {
       show(enc) {
         if (!enc.curSettings.backAtk) return false;
-        return enc.anyBackAtk;
+        return !enc.curSettings.positionalDmgPercent && enc.anyBackAtk;
       },
       headerText: "B.A",
       headerTooltip: "Back Attack %",
@@ -147,7 +147,7 @@
       headerText: "B.AD%",
       headerTooltip: "Back Attack Damage %",
       value: badPct,
-      valueTooltip: null
+      valueTooltip: badTooltip
     },
 
     // Support buff percentage
@@ -284,12 +284,26 @@
   {@render percentValue(state.fadPercentage)}
 {/snippet}
 
+{#snippet fadTooltip(state: EntityState)}
+  <span>
+    Raw Front Attack
+    {@render percentValue(state.faPercentage)}
+  </span>
+{/snippet}
+
 {#snippet baPct(state: EntityState)}
   {@render percentValue(state.baPercentage)}
 {/snippet}
 
 {#snippet badPct(state: EntityState)}
   {@render percentValue(state.badPercentage)}
+{/snippet}
+
+{#snippet badTooltip(state: EntityState)}
+  <span>
+    Raw Back Attack
+    {@render percentValue(state.baPercentage)}
+  </span>
 {/snippet}
 
 {#snippet buffPct(state: EntityState)}

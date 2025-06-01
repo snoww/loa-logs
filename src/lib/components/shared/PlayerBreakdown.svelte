@@ -23,6 +23,23 @@
   let entityState = $derived(new EntityState(entity, enc));
 </script>
 
+<!-- Render value + percent -->
+{#snippet percentValue(val: string | number)}
+  {val}<span class="text-3xs text-gray-300">%</span>
+{/snippet}
+{#snippet fadTooltip()}
+  <span>
+    Raw Front Attack
+    {@render percentValue(entityState.faPercentage)}
+  </span>
+{/snippet}
+{#snippet badTooltip()}
+  <span>
+    Raw Back Attack
+    {@render percentValue(entityState.baPercentage)}
+  </span>
+{/snippet}
+
 <thead class="z-30 h-6 {enc.live ? 'sticky top-0 backdrop-blur-lg' : ''}">
   <tr class="bg-neutral-950/80">
     <PlayerBreakdownHeader {entityState} {handleRightClick} />
@@ -87,24 +104,28 @@
           {entityState.critDmgPercentage}<span class="text-3xs text-gray-300">%</span>
         </td>
       {/if}
-      {#if entityState.anyFrontAttacks && enc.curSettings.breakdown.frontAtk}
+      {#if entityState.anyFrontAttacks && enc.curSettings.breakdown.frontAtk && !enc.curSettings.positionalDmgPercent}
         <td class="px-1 text-center">
           {entityState.faPercentage}<span class="text-3xs text-gray-300">%</span>
         </td>
       {/if}
       {#if entityState.anyFrontAttacks && enc.curSettings.breakdown.frontAtk && enc.curSettings.positionalDmgPercent}
         <td class="px-1 text-center">
-          {entityState.fadPercentage}<span class="text-3xs text-gray-300">%</span>
+          <QuickTooltip tooltip={fadTooltip}>
+            {entityState.fadPercentage}<span class="text-3xs text-gray-300">%</span>
+          </QuickTooltip>
         </td>
       {/if}
-      {#if entityState.anyBackAttacks && enc.curSettings.breakdown.backAtk}
+      {#if entityState.anyBackAttacks && enc.curSettings.breakdown.backAtk && !enc.curSettings.positionalDmgPercent}
         <td class="px-1 text-center">
           {entityState.baPercentage}<span class="text-3xs text-gray-300">%</span>
         </td>
       {/if}
       {#if entityState.anyBackAttacks && enc.curSettings.breakdown.backAtk && enc.curSettings.positionalDmgPercent}
         <td class="px-1 text-center">
-          {entityState.badPercentage}<span class="text-3xs text-gray-300">%</span>
+          <QuickTooltip tooltip={badTooltip}>
+            {entityState.badPercentage}<span class="text-3xs text-gray-300">%</span>
+          </QuickTooltip>
         </td>
       {/if}
       {#if entityState.anySupportBuff && enc.curSettings.breakdown.percentBuffBySup}

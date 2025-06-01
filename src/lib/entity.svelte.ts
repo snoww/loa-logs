@@ -74,9 +74,7 @@ export class EntityState {
     return "0";
   });
   baPercentage = $derived.by(() => {
-    if (this.encounter.curSettings.positionalDmgPercent && this.entity.damageStats.backAttackDamage > 0) {
-      return customRound((this.entity.damageStats.backAttackDamage / this.damageDealt) * 100);
-    } else if (this.entity.skillStats.hits > 0) {
+    if (this.entity.skillStats.hits > 0) {
       return customRound((this.entity.skillStats.backAttacks / this.entity.skillStats.hits) * 100);
     }
 

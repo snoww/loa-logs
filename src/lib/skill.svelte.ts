@@ -28,9 +28,7 @@ export class SkillState {
     return "0";
   });
   baPercentage = $derived.by(() => {
-    if (this.entity.encounter.curSettings.positionalDmgPercent && this.skill.backAttackDamage > 0) {
-      return customRound((this.skill.backAttackDamage / this.skill.totalDamage) * 100);
-    } else if (this.skill.hits > 0) {
+    if (this.skill.hits > 0) {
       return customRound((this.skill.backAttacks / this.skill.hits) * 100);
     }
     return "0";

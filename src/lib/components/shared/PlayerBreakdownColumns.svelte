@@ -76,45 +76,61 @@
     // Front Attack %
     {
       show(enc) {
-        return enc.encounter.curSettings.breakdown.frontAtk && enc.anyFrontAttacks;
+        return (
+          !enc.encounter.curSettings.positionalDmgPercent &&
+          enc.encounter.curSettings.breakdown.frontAtk &&
+          enc.anyFrontAttacks
+        );
       },
       headerText: "F.A",
       headerTooltip: frontAttackHeaderTooltip,
-      value: frontAttackPct,
+      value: faPct,
       valueTooltip: null
     },
 
     // Front Attack Damage %
     {
       show(enc) {
-        return enc.encounter.curSettings.positionalDmgPercent && enc.anyFrontAttacks;
+        return (
+          enc.encounter.curSettings.positionalDmgPercent &&
+          enc.encounter.curSettings.breakdown.frontAtk &&
+          enc.anyFrontAttacks
+        );
       },
       headerText: "F.AD%",
       headerTooltip: "Front Attack Damage %",
-      value: frontAttackDmgPct,
-      valueTooltip: null
+      value: fadPct,
+      valueTooltip: fadTooltip
     },
 
     // Back Attack %
     {
       show(enc) {
-        return enc.encounter.curSettings.breakdown.backAtk && enc.anyBackAttacks;
+        return (
+          !enc.encounter.curSettings.positionalDmgPercent &&
+          enc.encounter.curSettings.breakdown.backAtk &&
+          enc.anyBackAttacks
+        );
       },
       headerText: "B.A",
       headerTooltip: backAttackHeaderTooltip,
-      value: backAttackPct,
+      value: baPct,
       valueTooltip: null
     },
 
     // Back Attack Damage %
     {
       show(enc) {
-        return enc.encounter.curSettings.positionalDmgPercent && enc.anyBackAttacks;
+        return (
+          enc.encounter.curSettings.positionalDmgPercent &&
+          enc.encounter.curSettings.breakdown.backAtk &&
+          enc.anyBackAttacks
+        );
       },
       headerText: "B.AD%",
       headerTooltip: "Back Attack Damage %",
-      value: backAttackDmgPct,
-      valueTooltip: null
+      value: badPct,
+      valueTooltip: badTooltip
     },
 
     // Support Buff %
@@ -313,20 +329,34 @@
   {@render percentValue(state.critDmgPercentage)}
 {/snippet}
 
-{#snippet frontAttackPct(state: SkillState)}
+{#snippet faPct(state: SkillState)}
   {@render percentValue(state.faPercentage)}
 {/snippet}
 
-{#snippet frontAttackDmgPct(state: SkillState)}
+{#snippet fadPct(state: SkillState)}
   {@render percentValue(state.fadPercentage)}
 {/snippet}
 
-{#snippet backAttackPct(state: SkillState)}
+{#snippet fadTooltip(state: SkillState)}
+  <span>
+    Raw Front Attack
+    {@render percentValue(state.faPercentage)}
+  </span>
+{/snippet}
+
+{#snippet baPct(state: SkillState)}
   {@render percentValue(state.baPercentage)}
 {/snippet}
 
-{#snippet backAttackDmgPct(state: SkillState)}
+{#snippet badPct(state: SkillState)}
   {@render percentValue(state.badPercentage)}
+{/snippet}
+
+{#snippet badTooltip(state: SkillState)}
+  <span>
+    Raw Back Attack
+    {@render percentValue(state.baPercentage)}
+  </span>
 {/snippet}
 
 {#snippet buffPct(state: SkillState)}
