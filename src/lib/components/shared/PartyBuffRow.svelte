@@ -2,12 +2,11 @@
   import type { EncounterState } from "$lib/encounter.svelte";
   import { EntityState } from "$lib/entity.svelte";
   import type { BuffDetails, Entity } from "$lib/types";
-  import { HexToRgba } from "$lib/utils/colors";
-  import { classIconCache } from "$lib/utils/settings";
-  import { generateClassTooltip, tooltip } from "$lib/utils/tooltip";
   import { cubicOut } from "svelte/easing";
   import { Tween } from "svelte/motion";
-  import BuffTooltipDetail from "./BuffTooltipDetail.svelte";
+  import ClassTooltip from "../tooltips/ClassTooltip.svelte";
+  import QuickTooltip from "../QuickTooltip.svelte";
+  import BuffDetailTooltip from "../tooltips/BuffDetailTooltip.svelte";
 
   interface Props {
     player: Entity;
@@ -32,30 +31,25 @@
 </script>
 
 <td class="pl-1">
-  <img
-    class="table-cell size-5"
-    src={$classIconCache[player.classId]}
-    alt={player.class}
-    use:tooltip={{ content: generateClassTooltip(player) }}
-  />
+  <ClassTooltip entity={player} />
 </td>
 <td colspan="2">
-  <div class="truncate">
-    <span use:tooltip={{ content: entityState.name }}>
+  <div class="flex truncate">
+    <QuickTooltip tooltip={entityState.name}>
       {entityState.name}
-    </span>
+    </QuickTooltip>
   </div>
 </td>
 {#if playerBuffs.length > 0}
   {#each playerBuffs as buff (buff.id)}
     <td class="text-3xs px-1 text-center">
       {#if buff.percentage}
-        <BuffTooltipDetail synergy={buff} />
+        <BuffDetailTooltip buffDetails={buff} />
       {/if}
     </td>
   {/each}
 {/if}
 <td
   class="absolute left-0 -z-10 h-7 px-2 py-1"
-  style="background-color: {HexToRgba(entityState.color, alpha)}; width: {tweenedValue.current}%"
+  style="background-color: rgb(from {entityState.color} r g b / {alpha}); width: {percentage}%"
 ></td>

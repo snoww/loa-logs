@@ -1,15 +1,12 @@
 <script lang="ts">
   import { listen, type UnlistenFn } from "@tauri-apps/api/event";
   import { onDestroy, onMount } from "svelte";
-
   import { goto, invalidateAll } from "$app/navigation";
   import { settings } from "$lib/stores.svelte";
   import { appWindow } from "@tauri-apps/api/window";
-  interface Props {
-    children?: import("svelte").Snippet;
-  }
+  import Toaster from "$lib/components/Toaster.svelte";
 
-  let { children }: Props = $props();
+  let { children }: { children?: import("svelte").Snippet } = $props();
 
   let events: Set<UnlistenFn> = new Set();
 
@@ -22,11 +19,10 @@
       // }
 
       let encounterUpdateEvent = await listen("show-latest-encounter", async (event) => {
-        await goto("/logs/encounter/" + event.payload);
+        await goto("/logs/" + event.payload);
         await showWindow();
       });
       let openUrlEvent = await listen("redirect-url", async (event) => {
-        await invalidateAll();
         await goto("/" + event.payload);
         await showWindow();
       });
@@ -77,7 +73,8 @@
   });
 </script>
 
-<div class="min-h-screen bg-neutral-900 select-none">
+<Toaster />
+<div class="min-h-screen select-none bg-neutral-900">
   {@render children?.()}
 </div>
 

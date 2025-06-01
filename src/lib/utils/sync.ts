@@ -1,12 +1,15 @@
+import { addToast } from "$lib/components/Toaster.svelte";
+import { settings } from "$lib/stores.svelte";
 import type { Encounter } from "$lib/types";
 import { invoke } from "@tauri-apps/api";
 import pako from "pako";
+import { uploadError, uploadTokenError } from "./toasts";
 
 export const LOG_SITE_URL = "https://logs.snow.xyz";
 export const API_URL = "https://api.snow.xyz";
 // export const API_URL = "http://localhost:5180";
 
-export const bosses = [
+export const supportedBosses = [
   "Dark Mountain Predator",
   "Ravaged Tyrant of Beasts",
   // "Incubus Morphe",
@@ -42,13 +45,14 @@ export const bosses = [
   "Phantom Manifester Brelshaza"
 ];
 
-export async function uploadLog(id: string | number, encounter: Encounter, settings: any) {
-  if (!bosses.includes(encounter.currentBossName) || !encounter.cleared || !encounter.bossOnlyDamage) {
-    return { id: 0, error: "Invalid Encounter" };
-  }
-
-  if (!encounter.difficulty) {
-    return { id: 0, error: "Missing Difficulty" };
+export async function uploadLog(id: number | string, encounter: Encounter) {
+  if (
+    !supportedBosses.includes(encounter.currentBossName) ||
+    !encounter.cleared ||
+    !encounter.bossOnlyDamage ||
+    !encounter.difficulty
+  ) {
+    return;
   }
 
   const jsonString = JSON.stringify(encounter);
@@ -58,65 +62,60 @@ export async function uploadLog(id: string | number, encounter: Encounter, setti
   const resp = await fetch(API_URL + "/logs/upload", {
     method: "POST",
     headers: {
-      access_token: settings.accessToken,
+      access_token: settings.sync.accessToken,
       "Content-Encoding": "gzip",
       "Content-Type": "application/json",
-      visibility: settings.visibility ?? ""
+      visibility: settings.sync.visibility ?? ""
     },
     body: blob
   });
 
+  // basic errors
   if (!resp.ok && (resp.status === 500 || resp.status === 401)) {
     let error = "";
     if (resp.status == 500) {
       error = "server bwonk";
+      addToast(uploadError("server bwonk"));
     } else if (resp.status == 401) {
       error = "invalid access token";
+      addToast(uploadTokenError);
     }
 
     await invoke("write_log", {
-      message: "couldn't upload encounter " + id + " (" + encounter.currentBossName + ") - error: " + error
+      message: `couldn't upload encounter ${id} (${encounter.currentBossName}) - error: ${error}`
     });
-    return { id: 0, error: error };
+    return;
   }
+
+  // handle response
   const body = await resp.json();
+  // failed server side encounter validation
   if (body.error) {
     if (body.error === "duplicate log" && body.duplicate) {
       const duplicate = body.duplicate;
       await invoke("write_log", {
-        message:
-          "did not upload duplicate encounter " +
-          id +
-          " (" +
-          encounter.currentBossName +
-          ") using existing upstream: " +
-          duplicate
+        message: `did not upload duplicate encounter ${id} (${encounter.currentBossName}) using existing upstream: ${duplicate}`
       });
       await invoke("sync", { encounter: Number(id), upstream: duplicate.toString(), failed: false });
-      return { id: duplicate, error: "" };
+      return duplicate;
     }
 
     await invoke("write_log", {
-      message:
-        "couldn't upload encounter " + id + " (" + encounter.currentBossName + ") - error: " + body.error.toLowerCase()
+      message: `couldn't upload encounter ${id} (${encounter.currentBossName}) - error: ${body.error.toLowerCase()}`
     });
+    addToast(uploadError(body.error));
     await invoke("sync", { encounter: Number(id), upstream: "0", failed: true });
-    return { id: 0, error: body.error };
-  }
-  if (resp.status === 400) {
-    await invoke("write_log", {
-      message: "couldn't upload encounter " + id + " (" + encounter.currentBossName + ") - error: unknown error"
-    });
-    return { id: 0, error: body.error };
+    return;
   }
 
+  // successful upload
   const upstream = body.id;
 
   await invoke("write_log", {
-    message: "uploaded encounter " + id + " (" + encounter.currentBossName + ") upstream: " + upstream
+    message: `uploaded encounter ${id} (${encounter.currentBossName}) upstream: ${upstream}`
   });
   await invoke("sync", { encounter: Number(id), upstream: upstream.toString(), failed: false });
-  return { id: upstream, error: "" };
+  return upstream;
 }
 
 export async function checkAccessToken(accessToken: string) {

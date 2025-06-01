@@ -1,100 +1,51 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { bossHpMap } from "$lib/constants/bossHpBars";
-import { classesMap } from "$lib/constants/classes";
+import { focusedCast, settings } from "$lib/stores.svelte";
 import {
   BossHpLog,
   EntityType,
   MiniSkill,
   OpenerSkill,
+  type DamageStats,
   type EncounterDamageStats,
   type Entity,
+  type Skill,
   type SkillCast,
   type SkillChartModInfo,
   type SkillChartSupportDamage
 } from "$lib/types";
 import Heap from "heap-js";
 import BTree from "sorted-btree";
-import { getFormattedBuffString, getSkillCastBuffs } from "./buffs";
-import { defaultOptions } from "./charts";
-import {
-  abbreviateNumber,
-  formatDurationFromMs,
-  formatDurationFromS,
-  resampleData,
-  round,
-  round2,
-  timeToSeconds
-} from "./numbers";
-import { focusedSkillCast } from "./stores";
-import { getSkillIcon, isValidName } from "./strings";
+import { defaultOptions } from "../charts";
+import { getFormattedBuffString, getSkillCastBuffs, getSkillCastSupportBuffs } from "./buffs";
+import { abbreviateNumber, customRound, resampleData, timestampToMinutesAndSeconds, timeToSeconds } from "./numbers";
+import { getSkillIcon, isNameValid } from "./strings";
 
-export function getLegendNames(chartablePlayers: Entity[], showNames: boolean) {
-  if (!showNames) {
-    const map: { [key: string]: number } = {};
-    const count = chartablePlayers
-      .filter((e) => e.entityType === EntityType.PLAYER)
-      .map((e) => {
-        return (map[e.class] = typeof map[e.class] === "undefined" ? 1 : map[e.class] + 1);
-      });
-    return chartablePlayers
-      .filter((e) => e.entityType === EntityType.PLAYER)
-      .map((e, i) => {
-        if (map[e.class] === 1) {
-          return e.class;
-        } else {
-          return e.class + " " + count[i];
-        }
-      });
+const colors = ["#cc338b", "#A020F0", "#FFA500", "#800000"];
+
+export function getLegendNames(players: Entity[]) {
+  if (!settings.app.general.showNames) {
+    return players.map((player, i) => `${player.class} #${i + 1}`);
   }
-  return chartablePlayers
-    .filter((e) => e.entityType === EntityType.PLAYER)
-    .map((e) => (isValidName(e.name) ? e.name : e.class));
+
+  return players.map((player) => (isNameValid(player.name) ? player.name : player.class));
 }
 
 export function getDeathTimes(chartablePlayers: Entity[], legendNames: string[], fightStart: number) {
-  const deathTimes: { [key: string]: number } = {};
+  const deathTimes: Record<string, number> = {};
   chartablePlayers.forEach((player, i) => {
     if (player.isDead) {
-      deathTimes[legendNames[i]] = (player.damageStats.deathTime - fightStart) / 1000;
+      deathTimes[legendNames[i]!] = (player.damageStats.deathTime - fightStart) / 1000;
     }
   });
   return deathTimes;
 }
 
-const colors = ["#cc338b", "#A020F0", "#FFA500", "#800000"];
-
-export function getBossHpSeries(bosses: [string, BossHpLog[]][], legendNames: string[], len: number, interval: number) {
-  return bosses
-    .filter((e) => e[1].length > 1)
-    .sort((a, b) => {
-      return a[1][0].time - b[1][0].time;
-    })
-    .map((entry, i) => {
-      legendNames.push(entry[0]);
-      const resample = resampleData(entry[1], interval, len);
-      const data = resample.map((e) => {
-        return [formatDurationFromS(e.time), round2(e.p * 100, 1)];
-      });
-      return {
-        name: entry[0],
-        color: colors[i % colors.length],
-        type: "line",
-        data: data,
-        showSymbol: false,
-        smooth: 0.1,
-        yAxisIndex: 1,
-        lineStyle: {
-          type: "dotted"
-        }
-      };
-    });
-}
-
-export function getAveragePlayerSeries(
+export function getPlayerSeries(
   chartablePlayers: Entity[],
   legendNames: string[],
   fightStart: number,
-  classColors: any
+  field: keyof DamageStats
 ) {
   return chartablePlayers
     .filter((e) => e.entityType === EntityType.PLAYER)
@@ -109,22 +60,17 @@ export function getAveragePlayerSeries(
             {
               name: "Death",
               value: "💀",
-              coord: [index, player.damageStats.dpsAverage[index]]
+              coord: [index, player.damageStats[field][index]]
             }
           ]
         };
       }
 
-      let color = "gray";
-      if (classColors[classesMap[player.classId]]) {
-        color = classColors[classesMap[player.classId]].color;
-      }
-
       return {
         name: legendNames[i],
-        color: color,
+        color: settings.classColors[player.class] || "gray",
         type: "line",
-        data: player.damageStats.dpsAverage,
+        data: player.damageStats[field],
         showSymbol: false,
         smooth: 0.1,
         markPoint: markPoint,
@@ -133,44 +79,12 @@ export function getAveragePlayerSeries(
     });
 }
 
-export function getRollingPlayerSeries(
-  chartablePlayers: Entity[],
-  legendNames: string[],
-  fightStart: number,
-  classColors: any
-) {
-  return chartablePlayers
-    .filter((e) => e.entityType === EntityType.PLAYER)
-    .map((player, i) => {
-      let markPoint = {};
-      if (player.isDead) {
-        const index = Math.ceil((player.damageStats.deathTime - fightStart) / 1000);
-        markPoint = {
-          data: [
-            {
-              name: "Death",
-              value: "💀",
-              coord: [index, player.damageStats.dpsRolling10sAvg[index]]
-            }
-          ]
-        };
-      }
+export function getAveragePlayerSeries(chartablePlayers: Entity[], legendNames: string[], fightStart: number) {
+  return getPlayerSeries(chartablePlayers, legendNames, fightStart, "dpsAverage");
+}
 
-      let color = "gray";
-      if (classColors[classesMap[player.classId]]) {
-        color = classColors[classesMap[player.classId]].color;
-      }
-
-      return {
-        name: legendNames[i],
-        color: color,
-        type: "line",
-        data: player.damageStats.dpsRolling10sAvg,
-        showSymbol: false,
-        smooth: 0.1,
-        markPoint: markPoint
-      };
-    });
+export function getRollingPlayerSeries(chartablePlayers: Entity[], legendNames: string[], fightStart: number) {
+  return getPlayerSeries(chartablePlayers, legendNames, fightStart, "dpsRolling10sAvg");
 }
 
 export function getAverageDpsChart(
@@ -198,7 +112,7 @@ export function getAverageDpsChart(
     },
     tooltip: {
       trigger: "axis",
-      formatter: function (params: any[]) {
+      formatter(params: any[]) {
         const time = params[0].name;
         let tooltipStr = `<div>${time}</div><div style="min-width: 10rem">`;
         const bossTooltips: string[] = [];
@@ -206,7 +120,7 @@ export function getAverageDpsChart(
         const length = Object.keys(chartablePlayers).length;
         const totalDps = { value: 0 };
         params.forEach((param) => generateTooltip(param, bossTooltips, totalDps, tree, deathTimes, time, length));
-        const totalDpsString = `<div style="display:flex; justify-content: space-between;font-weight: 600;"><div style="padding-right: 1rem">Total DPS</div><div style="">${abbreviateNumber(totalDps.value)}</div></div>`;
+        const totalDpsString = `<div style="display:flex; justify-content: space-between;font-weight: 600;"><div style="padding-right: 1rem">Total DPS</div><div>${abbreviateNumber(totalDps.value)}</div></div>`;
         tooltipStr += bossTooltips.join("") + totalDpsString + tree.valuesArray().join("") + "</div>";
         return tooltipStr;
       }
@@ -217,7 +131,7 @@ export function getAverageDpsChart(
         show: false
       },
       data: Array.from({ length: chartablePlayers[0].damageStats.dpsAverage.length }, (_, i) =>
-        formatDurationFromS(i * 5)
+        secondsToMinutesAndSeconds(i * 5)
       ),
       boundaryGap: false,
       axisLabel: {
@@ -235,7 +149,7 @@ export function getAverageDpsChart(
         },
         axisLabel: {
           color: "white",
-          formatter: function (value: number) {
+          formatter(value: number) {
             return abbreviateNumber(value);
           }
         }
@@ -280,7 +194,7 @@ export function getRollingDpsChart(
     },
     tooltip: {
       trigger: "axis",
-      formatter: function (params: any[]) {
+      formatter(params: any[]) {
         const time = params[0].name;
         let tooltipStr = `<div>${time}</div><div style="min-width: 10rem">`;
         const bossTooltips: string[] = [];
@@ -288,7 +202,7 @@ export function getRollingDpsChart(
         const tree = new BTree(undefined, (a, b) => b - a);
         const totalDps = { value: 0 };
         params.forEach((param) => generateTooltip(param, bossTooltips, totalDps, tree, deathTimes, time, length));
-        const totalDpsString = `<div style="display:flex; justify-content: space-between;font-weight: 600;"><div style="padding-right: 1rem">Total DPS</div><div style="">${abbreviateNumber(totalDps.value)}</div></div>`;
+        const totalDpsString = `<div style="display:flex; justify-content: space-between;font-weight: 600;"><div style="padding-right: 1rem">Total DPS</div><div>${abbreviateNumber(totalDps.value)}</div></div>`;
         tooltipStr += bossTooltips.join("") + totalDpsString + tree.valuesArray().join("") + "</div>";
         return tooltipStr;
       }
@@ -299,7 +213,7 @@ export function getRollingDpsChart(
         show: false
       },
       data: Array.from({ length: chartablePlayers[0].damageStats.dpsRolling10sAvg.length }, (_, i) =>
-        formatDurationFromS(i)
+        secondsToMinutesAndSeconds(i)
       ),
       boundaryGap: false,
       axisLabel: {
@@ -317,7 +231,7 @@ export function getRollingDpsChart(
         },
         axisLabel: {
           color: "white",
-          formatter: function (value: number) {
+          formatter(value: number) {
             return abbreviateNumber(value);
           }
         }
@@ -337,9 +251,35 @@ export function getRollingDpsChart(
   };
 }
 
-export function getSkillLogChart(
+export function getBossHpSeries(bosses: [string, BossHpLog[]][], legendNames: string[], len: number, interval: number) {
+  return bosses
+    .filter((e) => e[1].length > 1)
+    .sort((a, b) => {
+      return a[1][0].time - b[1][0].time;
+    })
+    .map((entry, i) => {
+      legendNames.push(entry[0]);
+      const resample = resampleData(entry[1], interval, len);
+      const data = resample.map((e) => {
+        return [secondsToMinutesAndSeconds(e.time), customRound(e.p * 100, 1)];
+      });
+      return {
+        name: entry[0],
+        color: colors[i % colors.length],
+        type: "line",
+        data: data,
+        showSymbol: false,
+        smooth: 0.1,
+        yAxisIndex: 1,
+        lineStyle: {
+          type: "dotted"
+        }
+      };
+    });
+}
+
+export function getDetailedSkillLogChart(
   player: Entity,
-  skillIconPath: string,
   lastCombatPacket: number,
   fightStart: number,
   encounterDamageStats: EncounterDamageStats
@@ -414,7 +354,7 @@ export function getSkillLogChart(
         {
           length: (lastCombatPacket - fightStart) / 1000
         },
-        (_, i) => formatDurationFromS(i)
+        (_, i) => secondsToMinutesAndSeconds(i)
       ),
       boundaryGap: false,
       axisLabel: {
@@ -442,27 +382,33 @@ export function getSkillLogChart(
       return {
         name: skill.name,
         type: "scatter",
-        symbol: "image://" + skillIconPath + getSkillIcon(skill.icon),
+        symbol: "image://" + getSkillIcon(skill.icon),
         symbolSize: [20, 20],
         symbolKeepAspect: true,
-        data: skill.skillCastLog.map((cast) => [formatDurationFromMs(cast.timestamp), skill.name, cast, skill.icon]),
+        data: skill.skillCastLog.map((cast) => [
+          timestampToMinutesAndSeconds(cast.timestamp),
+          skill.name,
+          cast,
+          skill.icon
+        ]),
         tooltip: {
           formatter: function (param: any) {
-            focusedSkillCast.set({ skillId: skill.id, cast: param.dataIndex });
+            focusedCast.skillId = skill.id;
+            focusedCast.cast = param.dataIndex;
             let output = "<div class='tooltip-scroll overflow-y-auto max-h-56 pt-1 pb-2 px-2'>";
             output += `
                         <div class='flex justify-between'>
-                        <div class='font-semibold mb-1'>${param.name}-${formatDurationFromMs(param.value[2].last)} (${round((param.value[2].last - param.value[2].timestamp) / 1000)}s)</div>
+                        <div class='font-semibold mb-1'>${param.name}-${timestampToMinutesAndSeconds(param.value[2].last)} (${customRound((param.value[2].last - param.value[2].timestamp) / 1000)}s)</div>
                         <div class='tracking-tight text-sm'>Scroll Down for Details</div>
                         </div>
                         `;
             output += "<div>";
             output += "<div class='flex space-x-1'>";
-            output += `<img class="size-5 rounded-xs" src='${skillIconPath + getSkillIcon(param.value[3])}' alt='${param.seriesName}' />`;
+            output += `<img class="size-5 rounded-xs" src='${getSkillIcon(param.value[3])}' alt='${param.seriesName}' />`;
             output += `<div class='font-semibold'>${param.seriesName + " #" + (param.dataIndex + 1)}</div>`;
             output += "</div>";
             if (param.value[2].hits.length > 0) {
-              output += skillCastBreakdownTooltip(param.value[2], encounterDamageStats, skillIconPath);
+              output += skillCastBreakdownTooltip(player, param.value[2], encounterDamageStats);
             }
             output += "</div>";
             output += "</div>";
@@ -476,12 +422,7 @@ export function getSkillLogChart(
   };
 }
 
-export function getSkillLogChartOld(
-  player: Entity,
-  skillIconPath: string,
-  lastCombatPacket: number,
-  fightStart: number
-) {
+export function getBasicSkillLogChart(player: Entity, lastCombatPacket: number, fightStart: number) {
   const sortedSkills = Object.values(player.skills)
     .filter((skill) => skill.castLog.length > 0)
     .sort((a, b) => a.totalDamage - b.totalDamage);
@@ -522,7 +463,7 @@ export function getSkillLogChartOld(
     ],
     tooltip: {
       trigger: "axis",
-      formatter: function (params: any[]) {
+      formatter(params: any[]) {
         let output = `<span style="font-weight: 600">${params[0].name}</span>`;
         params.forEach((p) => {
           output += `<br/>${p.seriesName}`;
@@ -556,7 +497,7 @@ export function getSkillLogChartOld(
         {
           length: (lastCombatPacket - fightStart) / 1000
         },
-        (_, i) => formatDurationFromS(i)
+        (_, i) => secondsToMinutesAndSeconds(i)
       ),
       boundaryGap: false,
       axisLabel: {
@@ -573,32 +514,31 @@ export function getSkillLogChartOld(
       },
       axisLabel: {
         show: false
-      },
-      data: skills.map((skill) => {
-        return {
-          value: skill
-        };
-      })
+      }
     },
     series: sortedSkills.map((skill) => {
       return {
         name: skill.name,
         type: "scatter",
-        symbol: "image://" + skillIconPath + getSkillIcon(skill.icon),
+        symbol: "image://" + getSkillIcon(skill.icon),
         symbolSize: [20, 20],
         symbolKeepAspect: true,
-        data: skill.castLog.map((cast) => [formatDurationFromMs(cast), skill.name])
+        data: skill.castLog.map((cast) => [secondsToMinutesAndSeconds(cast / 1000), skill.name])
       };
     })
   };
 }
 
-export function getOpenerSkills(skills: MiniSkill[], x: number): OpenerSkill[] {
+export function getOpenerSkills(skills: Skill[], x: number): OpenerSkill[] {
   const comparator = (a: MiniSkill, b: MiniSkill) => a.castLog[0] - b.castLog[0];
 
   const minHeap = new Heap(comparator);
   for (const skill of skills) {
-    minHeap.push(skill);
+    minHeap.push({
+      name: skill.name,
+      icon: skill.icon,
+      castLog: skill.castLog.slice()
+    });
   }
 
   const result: OpenerSkill[] = [];
@@ -665,9 +605,9 @@ function generateTooltip(
 }
 
 function skillCastBreakdownTooltip(
+  player: Entity,
   skillCast: SkillCast,
-  encounterDamageStats: EncounterDamageStats,
-  iconPath: string
+  encounterDamageStats: EncounterDamageStats
 ): string {
   const totalDamage = skillCast.hits.map((hit) => hit.damage).reduce((a, b) => a + b, 0);
   let output = "<div class='flex flex-col'>";
@@ -685,18 +625,16 @@ function skillCastBreakdownTooltip(
         </thead>
         <tbody>
     `;
-  const supportBuffs: SkillChartSupportDamage = { buff: 0, brand: 0, identity: 0 };
+  const totalSupBuffs: SkillChartSupportDamage = { buff: 0, brand: 0, identity: 0 };
   const modInfo: SkillChartModInfo = { crit: 0, critDamage: 0, ba: 0, fa: 0 };
   for (const [i, hit] of skillCast.hits.entries()) {
-    const groupedBuffs = getSkillCastBuffs(
-      hit.damage,
-      hit.buffedBy,
-      hit.debuffedBy,
-      encounterDamageStats,
-      supportBuffs
-    );
+    const groupedBuffs = getSkillCastBuffs(hit, encounterDamageStats, player);
+    const supportBuffs = getSkillCastSupportBuffs(hit, encounterDamageStats);
+    totalSupBuffs.buff += supportBuffs.buff;
+    totalSupBuffs.brand += supportBuffs.brand;
+    totalSupBuffs.identity += supportBuffs.identity;
 
-    const buffString = getFormattedBuffString(groupedBuffs, iconPath);
+    const buffString = getFormattedBuffString(groupedBuffs);
 
     table += "<tr>";
     table += `<td class="font-mono">#${i + 1}</td>`;
@@ -721,22 +659,36 @@ function skillCastBreakdownTooltip(
   }
   table += "</tbody></table>";
   output += `<div>
-    Crit: <span class='font-semibold'>${round((modInfo.crit / skillCast.hits.length) * 100)}%</span>
-    | CDMG: <span class='font-semibold'>${totalDamage !== 0 ? round((modInfo.critDamage / totalDamage) * 100) : 0}%</span>`;
+    Crit: <span class='font-semibold'>${customRound((modInfo.crit / skillCast.hits.length) * 100)}%</span>
+    | CDMG: <span class='font-semibold'>${totalDamage !== 0 ? customRound((modInfo.critDamage / totalDamage) * 100) : 0}%</span>`;
   if (modInfo.ba > 0) {
-    output += ` | BA: <span class='font-semibold'>${round((modInfo.ba / skillCast.hits.length) * 100)}%</span>`;
+    output += ` | BA: <span class='font-semibold'>${customRound((modInfo.ba / skillCast.hits.length) * 100)}%</span>`;
   }
   if (modInfo.fa > 0) {
-    output += ` | FA: <span class='font-semibold'>${round((modInfo.fa / skillCast.hits.length) * 100)}%</span>`;
+    output += ` | FA: <span class='font-semibold'>${customRound((modInfo.fa / skillCast.hits.length) * 100)}%</span>`;
   }
   output += "</div>";
   output += `<div>
-    Buff: <span class='font-semibold'>${supportBuffs.buff > 0 ? round((supportBuffs.buff / totalDamage) * 100) : 0}%</span>`;
-  output += ` | B: <span class='font-semibold'>${supportBuffs.brand > 0 ? round((supportBuffs.brand / totalDamage) * 100) : 0}%</span>`;
-  output += ` | Iden: <span class='font-semibold'>${supportBuffs.identity > 0 ? round((supportBuffs.identity / totalDamage) * 100) : 0}%</span>
+    Buff: <span class='font-semibold'>${totalSupBuffs.buff > 0 ? customRound((totalSupBuffs.buff / totalDamage) * 100) : 0}%</span>`;
+  output += ` | B: <span class='font-semibold'>${totalSupBuffs.brand > 0 ? customRound((totalSupBuffs.brand / totalDamage) * 100) : 0}%</span>`;
+  output += ` | Iden: <span class='font-semibold'>${totalSupBuffs.identity > 0 ? customRound((totalSupBuffs.identity / totalDamage) * 100) : 0}%</span>
     </div>`;
   output += table;
   output += "</div></div>";
 
   return output;
+}
+
+function secondsToMinutesAndSeconds(seconds: number): string {
+  seconds = Math.round(seconds);
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = seconds % 60;
+  return `${minutes.toString().padStart(1, "0")}:${remainingSeconds.toString().padStart(2, "0")}`;
+}
+
+export function timeStringToSeconds(time: string): number {
+  const split = time.split(":");
+  const minutes = +split[0];
+  const seconds = +split[1];
+  return minutes * 60 + seconds;
 }

@@ -19,18 +19,16 @@ export function tryParseInt(intString: string | number, defaultValue = 0) {
   return intNum;
 }
 
-export function round(num: number, decimalPlaces = 1): string {
-  const r = num.toFixed(decimalPlaces);
-  if (r === "100.0") {
-    return "100";
-  }
-  return r;
-}
+/** Normalize an ilvl */
+export const normalizeIlvl = (ilvl: number) => ilvl.toFixed(2).replace(/\.?0+$/, "");
 
-export function round2(num: number, decimalPlaces = 1): number {
-  const p = Math.pow(10, decimalPlaces || 0);
+/**
+ * Round a number to a specific number of decimal places if necessary, returns a string
+ */
+export function customRound(num: number, decimalPlaces = 1) {
+  const p = Math.pow(10, decimalPlaces);
   const n = num * p * (1 + Number.EPSILON);
-  return Math.round(n) / p;
+  return (Math.round(n) / p).toString();
 }
 
 export function abbreviateNumber(n: number) {
@@ -41,34 +39,29 @@ export function abbreviateNumber(n: number) {
   else return tryParseInt(n).toFixed(0);
 }
 
-export function abbreviateNumberSplit(n: number) {
+/** Abbreviates a number into more compact representation, returning an array with the truncated number and the abbreviation */
+export function abbreviateNumberSplit(n: number): [number, string] {
   if (n >= 1e3 && n < 1e6) return [+(n / 1e3).toFixed(1), "k"];
   if (n >= 1e6 && n < 1e9) return [+(n / 1e6).toFixed(1), "m"];
   if (n >= 1e9 && n < 1e12) return [+(n / 1e9).toFixed(1), "b"];
   if (n >= 1e12) return [+(n / 1e12).toFixed(1), "t"];
-  else return [tryParseInt(n).toFixed(0), ""];
+  else return [+n.toFixed(0), ""];
 }
 
-export function millisToMinutesAndSeconds(millis: number) {
+/**
+ * Returns time from timestamp in minutes and seconds - 00:00
+ *
+ * when useText is true - 0m00s
+ */
+export function timestampToMinutesAndSeconds(millis: number, useText: boolean = false, showMs = false, extraPad = false): string {
   const hoursmillis = millis % (60 * 60 * 1000);
   const minutes = Math.floor(hoursmillis / (60 * 1000));
   const minutesmillis = millis % (60 * 1000);
   const sec = Math.floor(minutesmillis / 1000);
 
-  return String(minutes).padStart(2, "0") + ":" + String(sec).padStart(2, "0");
-}
-
-export function formatDurationFromMs(durationMs: number): string {
-  const seconds = Math.floor(durationMs / 1000);
-  const remainingSeconds = seconds % 60;
-  const minutes = Math.floor(seconds / 60);
-  return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
-}
-
-export function formatDurationFromS(seconds: number): string {
-  const minutes = Math.floor(seconds / 60);
-  const remainingSeconds = seconds % 60;
-  return `${minutes.toString().padStart(1, "0")}:${remainingSeconds.toString().padStart(2, "0")}`;
+  return useText
+    ? String(minutes).padStart(extraPad ? 2 : 1, "0") + "m" + String(sec).padStart(2, "0") + "s" + (showMs ? String(millis % 1000).padStart(3, "0") + "ms" : "")
+    : String(minutes).padStart(extraPad ? 2 : 1, "0") + ":" + String(sec).padStart(2, "0") + (showMs ? "." + String(millis % 1000).padStart(3, "0") : "");
 }
 
 export function formatTimestamp(timestampMs: number): string {

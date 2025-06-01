@@ -1,19 +1,20 @@
 import { cardIds } from "./constants/cards";
 import type { EncounterState } from "./encounter.svelte";
+import { settings } from "./stores.svelte";
 import { EntityType, type Entity, type IncapacitatedEvent } from "./types";
-import { abbreviateNumberSplit, round } from "./utils/numbers";
+import { abbreviateNumberSplit, customRound } from "./utils/numbers";
 import { formatPlayerName, getEstherFromNpcId } from "./utils/strings";
 
 export class EntityState {
   entity: Entity = $state()!;
-  enc: EncounterState = $state()!;
+  encounter: EncounterState = $state()!;
 
   name: string = $derived.by(() => {
     if (!this.entity) return "";
     if (this.entity.entityType === EntityType.ESTHER) {
       return getEstherFromNpcId(this.entity.npcId);
     } else {
-      return formatPlayerName(this.entity, this.enc.settings.general);
+      return formatPlayerName(this.entity);
     }
   });
 
@@ -21,11 +22,11 @@ export class EntityState {
     if (this.entity.entityType === EntityType.ESTHER) {
       return "#4dc8d0";
     }
-    if (Object.hasOwn(this.enc.colors, this.entity.class)) {
-      if (this.enc.settings.general.constantLocalPlayerColor && this.enc.localPlayer == this.entity.name) {
-        return this.enc.colors["Local"].color;
+    if (Object.hasOwn(settings.classColors, this.entity.class)) {
+      if (settings.app.general.constantLocalPlayerColor && this.encounter.localPlayer == this.entity.name) {
+        return settings.classColors["Local"];
       } else {
-        return this.enc.colors[this.entity.class].color;
+        return settings.classColors[this.entity.class];
       }
     }
 
@@ -33,63 +34,72 @@ export class EntityState {
   });
 
   dps = $derived.by(() => {
-    if (this.enc.live) {
-      return Math.round(this.entity.damageStats.damageDealt / (this.enc.duration / 1000));
+    if (this.encounter.live) {
+      return Math.round(this.entity.damageStats.damageDealt / (this.encounter.duration / 1000));
     } else {
       return this.entity.damageStats.dps;
     }
   });
 
   dpsString = $derived.by(() => {
-    if (this.enc.duration > 0 || !this.enc.live) {
+    if (this.encounter.duration > 0 || !this.encounter.live) {
       return abbreviateNumberSplit(this.dps);
     } else {
-      return ["0", ""];
+      return abbreviateNumberSplit(0);
     }
   });
 
   damageDealt = $derived(this.entity.damageStats.damageDealt);
   damageDealtString = $derived(abbreviateNumberSplit(this.damageDealt));
   damageDealtWithoutHa = $derived(this.damageDealt - (this.entity.damageStats.hyperAwakeningDamage ?? 0));
-  damagePercentage = $derived(((this.damageDealt / this.enc.totalDamageDealt) * 100).toFixed(1));
+  damagePercentage = $derived(((this.damageDealt / this.encounter.totalDamageDealt) * 100).toFixed(1));
   damageTakenString = $derived(abbreviateNumberSplit(this.entity.damageStats.damageTaken));
 
   deadFor: string = $derived.by(() => {
     if (this.entity.isDead) {
-      return Math.abs((this.enc.end - this.entity.damageStats.deathTime) / 1000).toFixed(0) + "s";
+      return Math.abs((this.encounter.end - this.entity.damageStats.deathTime) / 1000).toFixed(0) + "s";
     }
     return "";
   });
 
   critPercentage = $derived.by(() => {
     if (this.entity.skillStats.hits > 0) {
-      return round((this.entity.skillStats.crits / this.entity.skillStats.hits) * 100);
+      return customRound((this.entity.skillStats.crits / this.entity.skillStats.hits) * 100);
     }
-    return "0.0";
+    return "0";
   });
   critDmgPercentage = $derived.by(() => {
     if (this.entity.skillStats.hits > 0) {
-      return round((this.entity.damageStats.critDamage / this.damageDealt) * 100);
+      return customRound((this.entity.damageStats.critDamage / this.damageDealt) * 100);
     }
-    return "0.0";
+    return "0";
   });
   baPercentage = $derived.by(() => {
-    if (this.enc.curSettings.positionalDmgPercent && this.entity.damageStats.backAttackDamage > 0) {
-      return round((this.entity.damageStats.backAttackDamage / this.damageDealt) * 100);
+    if (this.encounter.curSettings.positionalDmgPercent && this.entity.damageStats.backAttackDamage > 0) {
+      return customRound((this.entity.damageStats.backAttackDamage / this.damageDealt) * 100);
     } else if (this.entity.skillStats.hits > 0) {
-      return round((this.entity.skillStats.backAttacks / this.entity.skillStats.hits) * 100);
+      return customRound((this.entity.skillStats.backAttacks / this.entity.skillStats.hits) * 100);
     }
 
-    return "0.0";
+    return "0";
+  });
+  badPercentage = $derived.by(() => {
+    if (this.entity.damageStats.backAttackDamage > 0) {
+      return customRound((this.entity.damageStats.backAttackDamage / this.damageDealt) * 100);
+    }
+    return "0";
   });
   faPercentage = $derived.by(() => {
-    if (this.enc.curSettings.positionalDmgPercent && this.entity.damageStats.frontAttackDamage > 0) {
-      return round((this.entity.damageStats.frontAttackDamage / this.damageDealt) * 100);
-    } else if (this.entity.skillStats.hits > 0) {
-      return round((this.entity.skillStats.frontAttacks / this.entity.skillStats.hits) * 100);
+    if (this.entity.skillStats.hits > 0) {
+      return customRound((this.entity.skillStats.frontAttacks / this.entity.skillStats.hits) * 100);
     }
-
-    return "0.0";
+    return "0";
+  });
+  fadPercentage = $derived.by(() => {
+    if (this.entity.damageStats.frontAttackDamage > 0) {
+      return customRound((this.entity.damageStats.frontAttackDamage / this.damageDealt) * 100);
+    }
+    return "0";
   });
 
   incapacitatedTimeMs = $derived.by(() => {
@@ -124,14 +134,14 @@ export class EntityState {
 
   constructor(entity: Entity, enc: EncounterState) {
     this.entity = entity;
-    this.enc = enc;
+    this.encounter = enc;
   }
 
   // compute total sum of time spent incapacitated for given events, accounting for overlap
   computeIncapacitatedTime(events: IncapacitatedEvent[]) {
     if (!events.length) return 0;
 
-    const enc = this.enc;
+    const enc = this.encounter;
     let totalTimeIncapacitated = 0;
 
     function addInterval(ivStart: number, ivEnd: number) {

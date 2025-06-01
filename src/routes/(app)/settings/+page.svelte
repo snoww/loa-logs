@@ -9,6 +9,8 @@
   import ClassColors from "./ClassColors.svelte";
   import DatabaseInfo from "./DatabaseInfo.svelte";
   import Shortcuts from "./Shortcuts.svelte";
+  import { addToast } from "$lib/components/Toaster.svelte";
+  import { networkSettingsChanged } from "$lib/utils/toasts";
 
   let currentTab = $state("General");
 
@@ -71,6 +73,22 @@
       color: "--color-orange-500"
     }
   ];
+
+  let before = $state(settings.app.general.autoIface);
+  let beforePort = $state(settings.app.general.port);
+  let networkChanged = $derived(before !== settings.app.general.autoIface || beforePort !== settings.app.general.port);
+  let networkNotification = $state(false);
+
+  $effect(() => {
+    if (networkChanged) {
+      if (!networkNotification) {
+        addToast(networkSettingsChanged);
+        setTimeout(() => {
+          networkNotification = false;
+        }, 20000);
+      }
+    }
+  });
 </script>
 
 {#snippet settingsTab(tabName: string)}
@@ -152,7 +170,7 @@
 {/snippet}
 
 <Header title="Settings" />
-<div class="mx-auto max-w-7xl px-8 py-4">
+<div class="mx-auto max-w-[100rem] px-8 py-4">
   <div class="flex flex-col gap-2">
     <div class="flex gap-2 overflow-x-auto px-2 max-md:max-w-[100vw]">
       {@render settingsTab("General")}
@@ -242,12 +260,6 @@
           "bossOnlyDamageDefaultOn",
           "Boss Only Damage Default On",
           "This setting makes it so that the meter will start with boss only damage turned on every time."
-        )}
-        {@render settingOption(
-          "general",
-          "showDetails",
-          "Show Details Tab",
-          "Shows an additional tab in meter for raw identity and stagger data."
         )}
         <label class="flex items-center gap-2">
           <input

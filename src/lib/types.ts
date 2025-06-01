@@ -372,7 +372,7 @@ export enum ChartType {
   BRAND_BUFF,
   AP_BUFF,
   IDENTITY_BUFF,
-  HAT_BUFF
+  HYPER_BUFF
 }
 
 export enum ShieldTab {

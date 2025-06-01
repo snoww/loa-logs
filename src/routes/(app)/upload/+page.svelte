@@ -6,6 +6,8 @@
   import QuickTooltip from "$lib/components/QuickTooltip.svelte";
   import { invoke } from "@tauri-apps/api";
   import type { Encounter } from "$lib/types";
+  import { addToast } from "$lib/components/Toaster.svelte";
+  import { uploadTokenError } from "$lib/utils/toasts";
 
   const {
     elements: { root, item, hiddenInput },
@@ -46,7 +48,7 @@
 
   function syncPastLogs(force = false) {
     if (!settings.sync.validToken) {
-      syncProgress.message = "Check your access token before syncing past logs.";
+      addToast(uploadTokenError);
       return;
     }
 
@@ -55,18 +57,18 @@
     }
 
     syncProgress.syncing = true;
+    syncProgress.stop = false;
     syncProgress.uploaded = 0;
 
     (async () => {
       const ids = (await invoke("get_sync_candidates", { forceResync: force })) as number[];
-      console.log(ids);
       syncProgress.total = ids.length;
 
       for (let i = 0; i < ids.length; i++) {
         let id = ids[i];
         const encounter = (await invoke("load_encounter", { id: id.toString() })) as Encounter;
-        let upstream = await uploadLog(id, encounter, settings.sync);
-        if (upstream.id) {
+        let upstream = await uploadLog(id, encounter);
+        if (upstream) {
           syncProgress.uploaded++;
         }
         syncProgress.message = "Processing logs... (" + i + "/" + ids.length + ")";
@@ -109,17 +111,19 @@
 {/snippet}
 
 <Header title="Uploading" />
-<div class="mx-auto flex max-w-7xl flex-col gap-4 px-12 py-4">
+<div class="mx-auto flex max-w-[100rem] flex-col gap-4 px-12 py-4">
   <div class="flex flex-col gap-2 rounded">
     <div class="flex items-center gap-4">
       <p class="text-base font-semibold">Upload Token</p>
-      <a
-        href={LOG_SITE_URL + "/profile"}
-        target="_blank"
-        class="bg-accent-500/80 hover:bg-accent-500/70 w-fit rounded-md border border-neutral-700 p-1 text-xs"
-      >
-        Get Token
-      </a>
+      {#if !settings.sync.validToken}
+        <a
+          href={LOG_SITE_URL + "/profile"}
+          target="_blank"
+          class="bg-accent-500/80 hover:bg-accent-500/70 w-fit rounded-md border border-neutral-700 p-1 text-xs"
+        >
+          Get Token
+        </a>
+      {/if}
     </div>
     <input
       type="password"
@@ -172,19 +176,28 @@
     <p class="text-base font-semibold">Upload Past Logs</p>
     <div class="flex items-center gap-2">
       {#if !syncProgress.syncing}
-        <button class="rounded-md border border-neutral-700 bg-neutral-800/80 px-2 py-1 hover:bg-neutral-700/80">
+        <button
+          class="rounded-md border border-neutral-700 bg-neutral-800/80 px-2 py-1 hover:bg-neutral-700/80"
+          onclick={() => syncPastLogs()}
+        >
           <QuickTooltip tooltip="Upload all eligible logs in the database">Upload</QuickTooltip>
         </button>
-        <button class="rounded-md border border-neutral-700 bg-neutral-800/80 px-2 py-1 hover:bg-neutral-700/80">
+        <button
+          class="rounded-md border border-neutral-700 bg-neutral-800/80 px-2 py-1 hover:bg-neutral-700/80"
+          onclick={() => syncPastLogs(true)}
+        >
           <QuickTooltip tooltip="Retry uploading of all logs">Force Re-upload</QuickTooltip>
         </button>
       {:else}
-        <button class="rounded-md border border-neutral-700 bg-neutral-800/80 px-2 py-1 hover:bg-neutral-700/80">
+        <button
+          class="rounded-md border border-neutral-700 bg-neutral-800/80 px-2 py-1 hover:bg-neutral-700/80"
+          onclick={() => (syncProgress.stop = true)}
+        >
           Stop Sync
         </button>
       {/if}
     </div>
-    {#if !syncProgress.message}
+    {#if syncProgress.message}
       <p class="text-neutral-200">{syncProgress.message}</p>
     {/if}
   </div>

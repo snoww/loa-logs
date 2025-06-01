@@ -1,37 +1,31 @@
 <script lang="ts">
-  import { EntityType, type Entity } from "$lib/types";
-  import { HexToRgba } from "$lib/utils/colors";
-  import { round } from "$lib/utils/numbers";
-  import { classIconCache, settings, UWUOWO_URL } from "$lib/utils/settings";
-  import { generateArkPassiveTooltip, generateClassTooltip, tooltip } from "$lib/utils/tooltip";
+  import QuickTooltip from "$lib/components/QuickTooltip.svelte";
+  import { estherNameToIcon } from "$lib/constants/esthers";
   import type { EncounterState } from "$lib/encounter.svelte";
   import { EntityState } from "$lib/entity.svelte";
-  import { Tween } from "svelte/motion";
-  import { cubicOut } from "svelte/easing";
-  import { isValidName } from "$lib/utils/strings";
+  import { IconExternalLink } from "$lib/icons";
+  import { EntityType, type Entity } from "$lib/types";
+  import { UWUOWO_URL } from "$lib/utils/settings";
+  import { getClassIcon, isNameValid } from "$lib/utils/strings";
   import { open } from "@tauri-apps/api/shell";
+  import { cubicOut } from "svelte/easing";
+  import { Tween } from "svelte/motion";
+  import ArkPassiveTooltip from "../tooltips/ArkPassiveTooltip.svelte";
+  import ClassTooltip from "../tooltips/ClassTooltip.svelte";
+  import { logColumns } from "./DamageMeterColumns.svelte";
+  import { settings } from "$lib/stores.svelte";
 
   interface Props {
     enc: EncounterState;
     entity: Entity;
     width: number;
     shadow?: boolean;
-    anyDead?: boolean;
   }
 
-  let { enc, entity, width, shadow = false, anyDead = undefined }: Props = $props();
+  let { enc, entity, width, shadow = false }: Props = $props();
 
   let entityState = $derived(new EntityState(entity, enc));
-
-  let alpha = $derived(enc.live && !enc.curSettings.showClassColors ? 0 : 0.6);
-
-  const incapacitationTooltip = $derived.by(() => {
-    const { knockDown, cc } = entityState.incapacitatedTimeMs;
-    return `<div class="font-normal text-xs flex flex-col space-y-1 -mx-px py-px">
-            <span class="3xs text-gray-300">Knockdowns: ${(knockDown / 1000).toFixed(1)}s</span>
-            <span class="3xs text-gray-300">Crowd control: ${(cc / 1000).toFixed(1)}s</span>
-        </div>`;
-  });
+  let hovering = $state(false);
 
   let tweenedValue = new Tween(enc.live ? 0 : width, {
     duration: 400,
@@ -41,145 +35,56 @@
     tweenedValue.set(width ?? 0);
   });
 
-  let hovering = $state(false);
+  let alpha = $derived(enc.live && !settings.app.meter.showClassColors ? 0 : 0.6);
 </script>
 
 <td class="pl-1">
-  {#if $settings.general.showEsther && entity.entityType === EntityType.ESTHER}
-    <img
-      class="table-cell size-5"
-      src={$classIconCache[entityState.name]}
-      alt={entityState.name}
-      use:tooltip={{ content: entityState.name }}
-    />
+  {#if settings.app.general.showEsther && entity.entityType === EntityType.ESTHER}
+    <QuickTooltip tooltip={entityState.name}>
+      <img class="table-cell size-5" src={getClassIcon(estherNameToIcon[entityState.name])} alt={entityState.name} />
+    </QuickTooltip>
   {:else}
-    <img
-      class="table-cell size-5"
-      src={$classIconCache[entity.classId]}
-      alt={entity.class}
-      use:tooltip={{ content: generateClassTooltip(entity) }}
-    />
+    <ClassTooltip {entity} />
   {/if}
 </td>
+
 <td colspan="2" onmouseenter={() => (hovering = true)} onmouseleave={() => (hovering = false)}>
   <div class="flex gap-1">
     <div class="truncate">
-      <span
-        use:tooltip={{
-          content: generateArkPassiveTooltip(entityState.name, entity.arkPassiveData, entity.spec)
+      <ArkPassiveTooltip state={entityState} />
+    </div>
+    {#if isNameValid(entityState.entity.name) && hovering && entityState.entity.entityType === EntityType.PLAYER}
+      <button
+        class="shrink-0"
+        onclick={(e) => {
+          e.stopPropagation();
+          open(UWUOWO_URL + "/character/" + enc.region + "/" + entityState.entity.name);
         }}
       >
-        {entityState.name}
-      </span>
-    </div>
-    {#if enc.curSettings.profileShortcut && isValidName(entityState.entity.name) && hovering && entityState.entity.entityType === EntityType.PLAYER}
-      <span>
-        <button
-          class="flex-1 tracking-tighter hover:underline"
-          onclick={(e) => {
-            e.stopPropagation();
-            open(UWUOWO_URL + "/character/" + enc.region + "/" + entityState.entity.name);
-          }}>uwu</button
-        >
-      </span>
+        <IconExternalLink class="size-3" />
+      </button>
     {/if}
   </div>
 </td>
-{#if anyDead !== undefined ? anyDead : enc.anyDead && enc.curSettings.deathTime}
-  <td class="px-1 text-center">
-    {#if entity.isDead}
-      {entityState.deadFor}
-    {/if}
-  </td>
-{/if}
-{#if enc.multipleDeaths && enc.curSettings.deathTime}
-  <td class="px-1 text-center">
-    {#if entity.damageStats.deaths > 0}
-      {entity.damageStats.deaths}
-    {:else}
-      -
-    {/if}
-  </td>
-{/if}
-{#if enc.anyPlayerIncapacitated && enc.curSettings.incapacitatedTime}
-  <td class="px-1 text-center">
-    {#if entityState.incapacitatedTimeMs.total > 0}
-      <span use:tooltip={{ content: incapacitationTooltip }}>
-        {(entityState.incapacitatedTimeMs.total / 1000).toFixed(1)}s
-      </span>
-    {/if}
-  </td>
-{/if}
-{#if enc.curSettings.damage}
-  <td class="px-1 text-center" use:tooltip={{ content: entityState.damageDealt.toLocaleString() }}>
-    {entityState.damageDealtString[0]}<span class="text-3xs text-gray-300">{entityState.damageDealtString[1]}</span>
-  </td>
-{/if}
-{#if enc.curSettings.dps}
-  <td class="px-1 text-center" use:tooltip={{ content: entityState.dps.toLocaleString() }}>
-    {entityState.dpsString[0]}<span class="text-3xs text-gray-300">{entityState.dpsString[1]}</span>
-  </td>
-{/if}
-{#if !enc.isSolo && enc.curSettings.damagePercent}
-  <td class="px-1 text-center">
-    {entityState.damagePercentage}<span class="text-xs text-gray-300">%</span>
-  </td>
-{/if}
-{#if enc.curSettings.critRate}
-  <td class="px-1 text-center">
-    {entityState.critPercentage}<span class="text-3xs text-gray-300">%</span>
-  </td>
-{/if}
-{#if enc.curSettings.critDmg}
-  <td class="px-1 text-center">
-    {entityState.critDmgPercentage}<span class="text-3xs text-gray-300">%</span>
-  </td>
-{/if}
-{#if enc.anyFrontAtk && enc.curSettings.frontAtk}
-  <td class="px-1 text-center">
-    {entityState.faPercentage}<span class="text-3xs text-gray-300">%</span>
-  </td>
-{/if}
-{#if enc.anyBackAtk && enc.curSettings.backAtk}
-  <td class="px-1 text-center">
-    {entityState.baPercentage}<span class="text-3xs text-gray-300">%</span>
-  </td>
-{/if}
-{#if enc.anySupportBuff && enc.curSettings.percentBuffBySup}
-  <td class="px-1 text-center">
-    {round((entity.damageStats.buffedBySupport / entityState.damageDealtWithoutHa) * 100)}<span
-      class="text-3xs text-gray-300">%</span
-    >
-  </td>
-{/if}
-{#if enc.anySupportBrand && enc.curSettings.percentBrand}
-  <td class="px-1 text-center">
-    {round((entity.damageStats.debuffedBySupport / entityState.damageDealtWithoutHa) * 100)}<span
-      class="text-3xs text-gray-300">%</span
-    >
-  </td>
-{/if}
-{#if enc.anySupportIdentity && enc.curSettings.percentIdentityBySup}
-  <td class="px-1 text-center">
-    {round((entity.damageStats.buffedByIdentity / entityState.damageDealtWithoutHa) * 100)}<span
-      class="text-3xs text-gray-300">%</span
-    >
-  </td>
-{/if}
-{#if enc.anySupportHat && enc.curSettings.percentHatBySup}
-  <td class="px-1 text-center">
-    {round(((entity.damageStats.buffedByHat ?? 0) / entityState.damageDealt) * 100)}<span class="text-3xs text-gray-300"
-      >%</span
-    >
-  </td>
-{/if}
-{#if enc.curSettings.counters}
-  <td class="px-1 text-center">
-    {entity.skillStats.counters}<span class="text-3xs text-gray-300"></span>
-  </td>
-{/if}
+
+{#each logColumns as columnDef}
+  {#if columnDef.show(enc)}
+    <td class="cursor-default px-1 text-center">
+      {#snippet tooltip()}
+        {#if columnDef.valueTooltip}
+          {@render columnDef.valueTooltip(entityState)}
+        {/if}
+      {/snippet}
+
+      <QuickTooltip tooltip={columnDef.valueTooltip ? tooltip : null}>
+        {@render columnDef.value(entityState)}
+      </QuickTooltip>
+    </td>
+  {/if}
+{/each}
+
 <td
   class="absolute left-0 -z-10 h-7 px-2 py-1"
   class:shadow-md={shadow}
-  style="background-color: {HexToRgba(entityState.color, alpha)}; width: {tweenedValue.current}%"
+  style="background-color: rgb(from {entityState.color} r g b / {alpha}); width: {tweenedValue.current}%"
 ></td>

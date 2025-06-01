@@ -2,13 +2,13 @@
   import type { EntityState } from "$lib/entity.svelte";
   import { SkillState } from "$lib/skill.svelte";
   import type { Skill } from "$lib/types";
-  import { HexToRgba, RGBLinearShade } from "$lib/utils/colors";
-  import { abbreviateNumberSplit, round } from "$lib/utils/numbers";
-  import { settings } from "$lib/utils/settings";
-  import { takingScreenshot } from "$lib/utils/stores";
-  import { tooltip } from "$lib/utils/tooltip";
+  import { abbreviateNumberSplit, customRound } from "$lib/utils/numbers";
+  import { getSkillIcon, rgbLinearShadeAdjust } from "$lib/utils/strings";
   import { cubicOut } from "svelte/easing";
   import { Tween } from "svelte/motion";
+  import QuickTooltip from "../QuickTooltip.svelte";
+  import SkillTooltip from "../tooltips/SkillTooltip.svelte";
+  import { settings } from "$lib/stores.svelte";
 
   interface Props {
     skill: Skill;
@@ -23,7 +23,7 @@
 
   let color = "#164e63";
 
-  const tweenedValue = new Tween(entityState.enc.live ? 0 : width, {
+  const tweenedValue = new Tween(entityState.encounter.live ? 0 : width, {
     duration: 400,
     easing: cubicOut
   });
@@ -33,45 +33,57 @@
   });
 </script>
 
-<td class="px-2" colspan="2">
-  <div class="truncate">
-    <span use:tooltip={{ content: skill.name }}>
+{#snippet skillTooltip()}
+  <SkillTooltip {skill} />
+{/snippet}
+<!-- Render value + units -->
+{#snippet damageValue(val: [number, string])}
+  {val[0]}<span class="text-3xs text-gray-300">{val[1]}</span>
+{/snippet}
+<!-- Render value + percent -->
+{#snippet percentValue(val: string | number)}
+  {val}<span class="text-3xs text-gray-300">%</span>
+{/snippet}
+
+<td class="pl-1">
+  <QuickTooltip tooltip={skill.name}>
+    <img class="size-5" src={getSkillIcon(skill.icon)} alt={skill.name} />
+  </QuickTooltip>
+</td>
+
+<td class="-left-px" colspan="2">
+  <div class="flex truncate">
+    <QuickTooltip tooltip={skillTooltip} class="truncate">
       {skill.name}
-    </span>
+    </QuickTooltip>
   </div>
 </td>
-<td class="px-1 text-center" use:tooltip={{ content: skill.totalDamage.toLocaleString() }}>
-  {skillState.skillDamageString[0]}<span class="text-3xs text-gray-300">{skillState.skillDamageString[1]}</span>
+<td class="px-1 text-center">
+  <QuickTooltip tooltip={skill.totalDamage.toLocaleString()}>
+    {@render damageValue(skillState.skillDamageString)}
+  </QuickTooltip>
 </td>
 <td class="px-1 text-center">
-  {skillState.skillDpsString[0]}<span class="text-3xs text-gray-300">{skillState.skillDpsString[1]}</span>
+  <QuickTooltip tooltip={skillState.skillDps.toLocaleString()}>
+    {@render damageValue(skillState.skillDpsString)}
+  </QuickTooltip>
 </td>
 <td class="px-1 text-center">
-  {round((skill.totalDamage / entityState.damageDealt) * 100)}<span class="text-xs text-gray-300">%</span>
-</td>
-<td
-  class="px-1 text-center"
-  use:tooltip={{
-    content: `<div class="py-1">${skill.casts.toLocaleString() + " " + (skill.casts === 1 ? "cast" : "casts")}</div>`
-  }}
->
-  {abbreviateNumberSplit(skill.casts)[0]}<span class="text-3xs text-gray-300"
-    >{abbreviateNumberSplit(skill.casts)[1]}</span
-  >
+  {@render percentValue(customRound((skill.totalDamage / entityState.damageDealt) * 100))}
 </td>
 <td class="px-1 text-center">
-  <div
-    use:tooltip={{
-      content: `<div class="py-1">${skill.casts.toLocaleString() + " " + (skill.casts === 1 ? "cast" : "casts")}</div>`
-    }}
-  >
-    {round(skill.casts / (entityState.enc.duration / 1000 / 60))}
-  </div>
+  <QuickTooltip tooltip={skill.casts.toLocaleString() + " " + (skill.casts === 1 ? "cast" : "casts")}>
+    {@render damageValue(abbreviateNumberSplit(skill.casts))}
+  </QuickTooltip>
+</td>
+<td class="px-1 text-center">
+  <QuickTooltip tooltip={skill.casts.toLocaleString() + " " + (skill.casts === 1 ? "cast" : "casts")}>
+    {customRound(skill.casts / (entityState.encounter.duration / 1000 / 60))}
+  </QuickTooltip>
 </td>
 <td
   class="absolute left-0 -z-10 h-7 px-2 py-1"
-  class:shadow-md={!takingScreenshot}
-  style="background-color: {index % 2 === 1 && $settings.general.splitLines
-    ? RGBLinearShade(HexToRgba(color, 0.6))
-    : HexToRgba(color, 0.6)}; width: {tweenedValue.current}%"
+  style="background-color: {index % 2 === 1 && settings.app.general.splitLines
+    ? rgbLinearShadeAdjust(color, -0.2, 0.6)
+    : `rgb(from ${color} r g b / 0.6)`}; width: {tweenedValue.current}%"
 ></td>

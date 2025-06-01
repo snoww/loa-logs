@@ -1060,20 +1060,20 @@ pub fn start(window: Window<Wry>, port: u16, settings: Option<Settings>) -> Resu
                 });
 
                 if !clone.entities.is_empty() {
-                    window
-                        .emit("encounter-update", Some(clone))
-                        .expect("failed to emit encounter-update");
-
                     if !damage_valid {
                         window
                             .emit("invalid-damage", "")
                             .expect("failed to emit invalid-damage");
-                    }
-
-                    if party_info.is_some() {
+                    } else {
                         window
-                            .emit("party-update", party_info)
-                            .expect("failed to emit party-update");
+                            .emit("encounter-update", Some(clone))
+                            .expect("failed to emit encounter-update");
+
+                        if party_info.is_some() {
+                            window
+                                .emit("party-update", party_info)
+                                .expect("failed to emit party-update");
+                        }
                     }
                 }
             });

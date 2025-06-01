@@ -1,47 +1,47 @@
 <script lang="ts">
-  import { MiniSkill, type Skill } from "$lib/types";
+  import Card from "$lib/components/Card.svelte";
+  import QuickTooltip from "$lib/components/QuickTooltip.svelte";
+  import { IconChevronRight } from "$lib/icons";
+  import type { Skill } from "$lib/types";
   import { getOpenerSkills } from "$lib/utils/dpsCharts";
-  import { skillIcon } from "$lib/utils/settings";
   import { getSkillIcon } from "$lib/utils/strings";
-  import { menuTooltip, tooltip } from "$lib/utils/tooltip";
 
   interface Props {
-    skills: { [skillId: number]: Skill };
+    skills: Record<number, Skill>;
   }
 
   let { skills }: Props = $props();
 
-  let skillsArray = Object.values(skills)
-    .sort((a, b) => b.totalDamage - a.totalDamage)
-    .filter(
-      (skill) =>
-        !skill.name.includes("(Summon)") &&
-        skill.name !== "Weapon Attack" &&
-        !skill.name.includes("Basic Attack") &&
-        skill.name !== "Bleed" &&
-        skill.castLog.length > 0
-    )
-    .map((skill) => {
-      return new MiniSkill(skill.name, skill.icon, [...skill.castLog]);
-    });
+  let skillsArray = $derived(
+    Object.values(skills)
+      .sort((a, b) => b.totalDamage - a.totalDamage)
+      .filter(
+        (skill) =>
+          !skill.name.includes("(Summon)") &&
+          skill.name !== "Weapon Attack" &&
+          !skill.name.includes("Basic Attack") &&
+          skill.name !== "Bleed" &&
+          skill.castLog.length > 0
+      )
+  );
 
-  let openerSkills = getOpenerSkills(skillsArray, 15);
+  let openerSkills = $derived(getOpenerSkills(skillsArray, 15));
 </script>
 
-<div class="mb-4 mt-2">
-  <div class="flex justify-start text-lg font-medium">
-    <div use:menuTooltip={{ content: "First 15 skills casted" }}>Opener Rotation</div>
+<Card class="mt-4">
+  <div class="flex bg-black/10 px-3 py-2 font-medium">
+    <QuickTooltip tooltip="First 15 skills caste">
+      <div>Opener Rotation</div>
+    </QuickTooltip>
   </div>
-  <div class="flex flex-wrap items-center pt-2" style="width: calc(100vw - 4.5rem);">
+  <div class="flex flex-wrap items-center p-2">
     {#each openerSkills as skill, i (i)}
-      <div use:tooltip={{ content: skill.name }}>
-        <img class="rounded-xs m-1 h-10 w-10" src={$skillIcon.path + getSkillIcon(skill.icon)} alt={skill.name} />
-      </div>
+      <QuickTooltip tooltip={skill.name}>
+        <img class="rounded-xs m-1 h-10 w-10" src={getSkillIcon(skill.icon)} alt={skill.name} />
+      </QuickTooltip>
       {#if i < openerSkills.length - 1}
-        <svg class="mx-2 size-5 fill-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"
-          ><path d="m305.5-62.5-78-79 341-340.5-341-341 78-78.5L725-482 305.5-62.5Z" /></svg
-        >
+        <IconChevronRight class="mx-2 size-5 text-neutral-400" />
       {/if}
     {/each}
   </div>
-</div>
+</Card>

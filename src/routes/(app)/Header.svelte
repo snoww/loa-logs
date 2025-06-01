@@ -3,6 +3,7 @@
   import { IconDiscord, IconExternalLink, IconMenu, IconX } from "$lib/icons";
   import { settings } from "$lib/stores.svelte";
   import { createDialog, melt } from "@melt-ui/svelte";
+  import { invoke } from "@tauri-apps/api";
   import { getVersion } from "@tauri-apps/api/app";
   import { onMount, type Snippet } from "svelte";
   import { fade, fly } from "svelte/transition";
@@ -19,11 +20,20 @@
   });
 
   let version = $state("");
+  let loaRunning = $state(false);
 
   onMount(() => {
     (async () => {
       version = await getVersion();
+      loaRunning = await invoke("check_loa_running");
     })();
+
+    const interval = setInterval(async () => {
+      if ($open) {
+        loaRunning = await invoke("check_loa_running");
+      }
+    }, 5000);
+    return () => clearInterval(interval);
   });
 </script>
 
@@ -92,7 +102,22 @@
           <IconDiscord class="size-4" />
         </a>
       </div>
-      <!-- todo donate, lostark running, version check -->
+      <div class="flex items-center justify-center gap-1 px-2 pt-4">
+        <button
+          class=" rounded-md bg-neutral-700/70 px-3 py-1 {loaRunning
+            ? 'cursor-default'
+            : 'hover:text-accent-500 hover:opacity-80'}"
+          onclick={() => invoke("start_loa_process")}
+          disabled={!loaRunning}
+        >
+          {#if loaRunning}
+            Lost Ark is running
+          {:else}
+            Start Lost Ark
+          {/if}
+        </button>
+      </div>
+      <!-- todo version check -->
       {#if version}
         <div class="absolute bottom-0 mx-4 my-2 p-1 text-sm">
           version {version}

@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { bossHpMap } from "$lib/constants/bossHpBars";
+import type { EncounterState } from "$lib/encounter.svelte";
 import { EntityType, type Encounter, type Entity, type PartyInfo, type SkillHit, type StatusEffect } from "$lib/types";
+import { defaultOptions } from "../charts";
 import {
   addBardBubbles,
   groupedSynergiesAdd,
@@ -10,8 +12,7 @@ import {
   makeSupportBuffKey,
   supportSkills
 } from "./buffs";
-import { defaultOptions } from "./charts";
-import { abbreviateNumber, formatDurationFromMs, round } from "./numbers";
+import { abbreviateNumber, customRound, timestampToMinutesAndSeconds } from "./numbers";
 import { getSkillIcon } from "./strings";
 
 const partyRegex = /^Party (\d)$/;
@@ -109,46 +110,23 @@ function addStatusEffect(map: Map<string, Map<number, StatusEffect>>, effect: [s
 }
 
 export function getSupportSynergiesOverTime(
-  encounter: Encounter,
-  entities: Entity[],
-  encounterPartyInfo: PartyInfo,
+  state: EncounterState,
   fightStartMs: number,
   fightEndMs: number,
   intervalMs: number,
-  legendNames: string[]
 ) {
   const groupedSupportSynergies = new Map<string, Map<number, StatusEffect>>();
-  Object.entries(encounter.encounterDamageStats.buffs).forEach((effect) =>
+  Object.entries(state.encounter!.encounterDamageStats.buffs).forEach((effect) =>
     addStatusEffect(groupedSupportSynergies, effect)
   );
-  Object.entries(encounter.encounterDamageStats.debuffs).forEach((effect) =>
+  Object.entries(state.encounter!.encounterDamageStats.debuffs).forEach((effect) =>
     addStatusEffect(groupedSupportSynergies, effect)
   );
-
-  const parties = new Array<Array<Entity>>();
-  const partyInfo = Object.entries(encounterPartyInfo);
-  if (partyInfo.length >= 2) {
-    for (const [partyIdStr, names] of partyInfo) {
-      const partyId = Number(partyIdStr);
-      parties[partyId] = [];
-      for (const name of names) {
-        const player = entities.find((player) => player.entityType === EntityType.PLAYER && player.name === name);
-        if (player) {
-          parties[partyId].push(player);
-        }
-      }
-      if (parties[partyId] && parties[partyId].length > 0) {
-        parties[partyId].sort((a, b) => b.damageStats.damageDealt - a.damageStats.damageDealt);
-      }
-    }
-  } else {
-    parties[0] = entities;
-  }
 
   const partyBuffs = new Array<Map<number, SupportSynergyDataPoint>>();
   const partyGroupedSupportSynergies = new Map<string, Set<string>>();
-  if (groupedSupportSynergies.size > 0 && parties.length >= 1) {
-    parties.forEach((party, partyId) => {
+  if (groupedSupportSynergies.size > 0 && state.parties.length >= 1) {
+    state.parties.forEach((party, partyId) => {
       partyGroupedSupportSynergies.set(partyId.toString(), new Set<string>());
       const partySyns = new Set<string>();
       for (const player of party) {
@@ -163,7 +141,7 @@ export function getSupportSynergiesOverTime(
       partyGroupedSupportSynergies.set(partyId.toString(), new Set([...partySyns].sort()));
     });
 
-    parties.forEach((party, partyId) => {
+    state.parties.forEach((party, partyId) => {
       partyBuffs[partyId] = new Map<number, SupportSynergyDataPoint>();
 
       partyGroupedSupportSynergies.get(partyId.toString())?.forEach((key) => {
@@ -208,7 +186,6 @@ export function getSupportSynergiesOverTime(
   partySupportSynergyTimeline.map((partyTimeline, partyId) => {
     const synergyPoint = new SupportSynergyDataPoint();
     supportSynergiesOverTime[partyId] = [];
-    legendNames.push(`Party ${partyId + 1}`);
     for (let t = 0, index = 0; t <= fightEndMs - fightStartMs; t += intervalMs) {
       while (index < partyTimeline.length && partyTimeline[index][0] <= t) {
         synergyPoint.merge(partyTimeline[index][1]);
@@ -216,13 +193,13 @@ export function getSupportSynergiesOverTime(
       }
       const copy = new SupportSynergyDataPoint();
       copy.merge(synergyPoint);
-      supportSynergiesOverTime[partyId].push([formatDurationFromMs(t), copy]);
+      supportSynergiesOverTime[partyId].push([timestampToMinutesAndSeconds(t), copy]);
     }
   });
 
   return supportSynergiesOverTime.map((data, partyId) => {
     return {
-      name: legendNames[partyId],
+      name: `Party ${partyId + 1}`,
       color: partyColors[partyId],
       type: "line",
       data: data,
@@ -239,7 +216,6 @@ export function getSupportSynergiesOverTimeChart(
   chartBuffs: any[],
   buffSubstring: string,
   chartBosses: any[],
-  iconPath: string
 ) {
   const buffSeries = chartBuffs.map((chartOptions) => {
     return {
@@ -291,25 +267,25 @@ export function getSupportSynergiesOverTimeChart(
             synergies.buffs.forEach((buffPoint, key) => {
               if (key.includes(buffSubstring)) {
                 for (const buff of buffPoint) {
-                  const buffedDamage = round((buff.buffedDamage / buff.totalDamage) * 100);
+                  const buffedDamage = customRound((buff.buffedDamage / buff.totalDamage) * 100);
                   if (buffedDamage === "0.0") {
                     continue;
                   }
-                  let buffed = `<div class="min-w-[4.5rem]">`;
+                  let buffed = `<div class="min-w-[4.5rem] flex items-center">`;
                   if (buff.sourceIcon) {
-                    buffed += `<img src=${iconPath + getSkillIcon(buff.sourceIcon)} alt="buff_source_icon" class="size-5 rounded mr-1"/>`;
+                    buffed += `<img src=${getSkillIcon(buff.sourceIcon)} alt="buff_source_icon" class="size-5 rounded mr-1"/>`;
                     if (buff.bonus) {
                       buffed += `[${buff.bonus}%] `;
                     }
                   } else {
-                    buffed += `<img src=${iconPath + getSkillIcon(buff.icon)} alt="buff_icon" class="size-5 rounded mr-1"/>`;
+                    buffed += `<img src=${getSkillIcon(buff.icon)} alt="buff_icon" class="size-5 rounded mr-1"/>`;
                   }
                   buffBreakdown += `${buffed}${buffedDamage}%</div>`;
                 }
               }
             });
             const finalBreakdown = `<div class="flex gap-1">${buffBreakdown}</div>`;
-            const finalValue = round(value);
+            const finalValue = customRound(value);
             const finalLabel =
               `<span class="inline-block mr-1 rounded-full size-2.5" style="background-color:${param.color}"></span>` +
               partyLabel;

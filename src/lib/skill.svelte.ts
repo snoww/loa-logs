@@ -1,14 +1,14 @@
 import type { EntityState } from "./entity.svelte";
 import type { Skill } from "./types";
-import { abbreviateNumberSplit, round } from "./utils/numbers";
+import { abbreviateNumberSplit, customRound } from "./utils/numbers";
 
 export class SkillState {
   skill: Skill = $state()!;
   entity: EntityState = $state()!;
 
   skillDps = $derived.by(() => {
-    if (this.entity.enc.live) {
-      return Math.round(this.skill.totalDamage / (this.entity.enc.duration / 1000));
+    if (this.entity.encounter.live) {
+      return Math.round(this.skill.totalDamage / (this.entity.encounter.duration / 1000));
     } else {
       return this.skill.dps;
     }
@@ -17,37 +17,47 @@ export class SkillState {
   skillDamageString = $derived(abbreviateNumberSplit(this.skill.totalDamage));
   critPercentage = $derived.by(() => {
     if (this.skill.hits > 0) {
-      return round((this.skill.crits / this.skill.hits) * 100);
+      return customRound((this.skill.crits / this.skill.hits) * 100);
     }
-    return "0.0";
+    return "0";
   });
   critDmgPercentage = $derived.by(() => {
     if (this.skill.hits > 0 && this.skill.totalDamage > 0) {
-      return round((this.skill.critDamage / this.skill.totalDamage) * 100);
+      return customRound((this.skill.critDamage / this.skill.totalDamage) * 100);
     }
-    return "0.0";
+    return "0";
   });
   baPercentage = $derived.by(() => {
-    if (this.entity.enc.curSettings.positionalDmgPercent && this.skill.backAttackDamage > 0) {
-      return round((this.skill.backAttackDamage / this.skill.totalDamage) * 100);
+    if (this.entity.encounter.curSettings.positionalDmgPercent && this.skill.backAttackDamage > 0) {
+      return customRound((this.skill.backAttackDamage / this.skill.totalDamage) * 100);
     } else if (this.skill.hits > 0) {
-      return round((this.skill.backAttacks / this.skill.hits) * 100);
+      return customRound((this.skill.backAttacks / this.skill.hits) * 100);
     }
-    return "0.0";
+    return "0";
+  });
+  badPercentage = $derived.by(() => {
+    if (this.skill.backAttackDamage > 0) {
+      return customRound((this.skill.backAttackDamage / this.skill.totalDamage) * 100);
+    }
+    return "0";
   });
   faPercentage = $derived.by(() => {
-    if (this.entity.enc.curSettings.positionalDmgPercent && this.skill.frontAttackDamage > 0) {
-      return round((this.skill.frontAttackDamage / this.skill.totalDamage) * 100);
-    } else if (this.skill.hits > 0) {
-      return round((this.skill.frontAttacks / this.skill.hits) * 100);
+    if (this.skill.hits > 0) {
+      return customRound((this.skill.frontAttacks / this.skill.hits) * 100);
     }
-    return "0.0";
+    return "0";
+  });
+  fadPercentage = $derived.by(() => {
+    if (this.skill.frontAttackDamage > 0) {
+      return customRound((this.skill.frontAttackDamage / this.skill.totalDamage) * 100);
+    }
+    return "0";
   });
   averagePerCast = $derived(this.skill.totalDamage / this.skill.casts);
   adjustedCrit = $derived.by(() => {
-    if (this.entity.enc.curSettings.breakdown.adjustedCritRate) {
+    if (this.entity.encounter.curSettings.breakdown.adjustedCritRate) {
       if (this.skill.adjustedCrit) {
-        return round(this.skill.adjustedCrit * 100);
+        return customRound(this.skill.adjustedCrit * 100);
       } else {
         const filter = this.averagePerCast * 0.05;
         let adjustedCrits = 0;
@@ -62,7 +72,7 @@ export class SkillState {
             }
           }
           if (adjustedHits > 0) {
-            return round((adjustedCrits / adjustedHits) * 100);
+            return customRound((adjustedCrits / adjustedHits) * 100);
           }
         }
       }

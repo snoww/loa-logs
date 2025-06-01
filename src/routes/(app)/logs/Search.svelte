@@ -8,13 +8,14 @@
   import { createDialog, createDropdownMenu, melt } from "@melt-ui/svelte";
   import { invoke } from "@tauri-apps/api";
   import type { FormEventHandler } from "svelte/elements";
+  import { SvelteSet } from "svelte/reactivity";
   import { fade, fly } from "svelte/transition";
 
   let {
     selectMode = $bindable(),
     selected = $bindable(),
     refresh = $bindable()
-  }: { selectMode: boolean; selected: Set<number>; refresh: boolean } = $props();
+  }: { selectMode: boolean; selected: SvelteSet<number>; refresh: boolean } = $props();
 
   const {
     elements: { menu, trigger },
@@ -62,7 +63,7 @@
 
 {#snippet tab(tab: string)}
   <button
-    class="hover:text-accent-500 p-2 first:rounded-tl {currentTab === tab ? 'text-accent-500 bg-neutral-800' : ''}"
+    class="hover:text-accent-500 p-2 first:rounded-tl {currentTab === tab ? 'bg-neutral-800' : ''}"
     onclick={() => (currentTab = tab)}
   >
     {tab}
@@ -72,7 +73,9 @@
 <div class="flex items-center justify-between py-1">
   <div class="relative flex items-center gap-2">
     <button class="hover:text-accent-500 absolute left-2.5" use:melt={$trigger}>
-      <IconFilter class={active ? "text-accent-500" : ""} />
+      <QuickTooltip tooltip="Filter encounters" placement="top">
+        <IconFilter class={active ? "text-accent-500" : ""} />
+      </QuickTooltip>
     </button>
     <input
       type="text"
@@ -108,7 +111,7 @@
       onclick={() => {
         selectMode = !selectMode;
         if (!selectMode) {
-          selected = new Set();
+          selected.clear();
         }
       }}>select</button
     >
@@ -129,7 +132,7 @@
         {@render tab("Classes")}
       </div>
       <button
-        class="hover:text-accent-500 px-2"
+        class="hover:text-accent-500 px-2 {active ? 'text-accent-500' : ''}"
         onclick={() => {
           search = "";
           encounterFilter.reset();
@@ -176,7 +179,7 @@
         <div class="flex flex-col px-1">
           {#each Object.entries(encounterMap).reverse() as raid}
             <div class="flex flex-wrap">
-              {#each Object.keys(raid[1]) as encounter (encounter)}
+              {#each Object.keys(raid[1]).reverse() as encounter}
                 <button
                   class="m-1 rounded border border-neutral-700 p-1 {encounterFilter.encounters.has(encounter)
                     ? 'bg-neutral-700'
@@ -185,7 +188,6 @@
                     encounterFilter.encounters.has(encounter)
                       ? encounterFilter.encounters.delete(encounter)
                       : encounterFilter.encounters.add(encounter);
-                    encounterFilter.encounters = new Set(encounterFilter.encounters);
                   }}
                 >
                   {encounter}
@@ -204,7 +206,6 @@
               : 'bg-neutral-800/80 hover:bg-neutral-700/80'}"
             onclick={() => {
               encounterFilter.bosses.has(boss) ? encounterFilter.bosses.delete(boss) : encounterFilter.bosses.add(boss);
-              encounterFilter.bosses = new Set(encounterFilter.bosses);
             }}
           >
             {boss}
@@ -248,7 +249,7 @@
           class="rounded-md bg-red-500/70 p-1 hover:bg-red-500/60"
           onclick={async () => {
             await invoke("delete_encounters", { ids: [...selected] });
-            selected = new Set();
+            selected.clear();
             selectMode = false;
             refresh = !refresh;
           }}

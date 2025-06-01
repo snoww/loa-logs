@@ -1,114 +1,132 @@
 <script lang="ts">
-  import DamageMeter from "$lib/components/DamageMeter.svelte";
-  import { settings, type LogSettings } from "$lib/stores.svelte";
-  import { registerShortcuts } from "$lib/utils/settings";
+  import LiveDamageMeter from "$lib/components/live/LiveDamageMeter.svelte";
+  import LiveFooter from "$lib/components/live/LiveFooter.svelte";
+  import { addToast } from "$lib/components/Toaster.svelte";
+  import { EncounterState } from "$lib/encounter.svelte";
+  import { misc, settings } from "$lib/stores.svelte";
+  import type { Encounter, EncounterEvent, PartyEvent } from "$lib/types";
+  import { uploadLog } from "$lib/utils/sync";
+  import {
+    bossDead,
+    pausing,
+    raidClear,
+    raidWipe,
+    resetting,
+    resuming,
+    saving as manualSave,
+    zoneChange,
+    adminAlert
+  } from "$lib/utils/toasts";
   import { invoke } from "@tauri-apps/api";
-  import { emit } from "@tauri-apps/api/event";
-  import { unregisterAll } from "@tauri-apps/api/globalShortcut";
-  import { appWindow } from "@tauri-apps/api/window";
+  import { listen, type UnlistenFn } from "@tauri-apps/api/event";
   import { onMount } from "svelte";
 
+  let enc = $derived(new EncounterState(undefined, true));
+  let time = $state(+Date.now());
+
   onMount(() => {
+    const interval = setInterval(() => {
+      if (misc.raidInProgress && !misc.paused) {
+        time = +Date.now();
+      }
+    }, 1000);
+
+    let events: Array<UnlistenFn> = [];
+
     (async () => {
-      await invoke("write_log", { message: "setting up live meter" });
-      let data = (await invoke("get_settings")) as LogSettings;
-      if (data) {
-        settings.app = data;
-      }
-
-      // updateSettings.set(update);
-      if (settings.app.general.alwaysOnTop) {
-        await appWindow.setAlwaysOnTop(true);
-      } else {
-        await appWindow.setAlwaysOnTop(false);
-      }
-
-      if (settings.app.general.bossOnlyDamageDefaultOn && !settings.app.general.bossOnlyDamage) {
-        settings.app.general.bossOnlyDamage = true;
-        await emit("boss-only-damage-request", true);
-      }
-
-      // try {
-      //   const { shouldUpdate, manifest } = await checkUpdate();
-      //   if (shouldUpdate) {
-      //     $updateSettings.available = true;
-      //     const oldManifest = $updateSettings.manifest;
-      //     $updateSettings.manifest = manifest;
-      //     if (oldManifest?.version !== $updateSettings.manifest?.version) {
-      //       $updateSettings.dismissed = false;
-      //     }
-      //     $updateSettings.isNotice = manifest?.version.includes("2024");
-      //   }
-      // } catch (e) {
-      //   await invoke("write_log", { message: String(e) });
-      // }
-
-      // await registerShortcuts(settings.appSettings.shortcuts);
-
-      // disable blur on windows 11
-      let ua = await navigator.userAgentData.getHighEntropyValues(["platformVersion"]);
-      if (navigator.userAgentData.platform === "Windows") {
-        const majorPlatformVersion = Number(ua.platformVersion.split(".")[0]);
-        if (majorPlatformVersion >= 13) {
-          settings.app.general.isWin11 = true;
-          if (settings.app.general.blurWin11) {
-            await invoke("enable_blur");
-          } else {
-            await invoke("disable_blur");
-          }
-        } else if (settings.app.general.blur) {
-          await invoke("enable_blur");
-        } else {
-          await invoke("disable_blur");
+      let encounterUpdateEvent = await listen("encounter-update", (event: EncounterEvent) => {
+        // console.log(+Date.now(), event.payload);
+        enc.encounter = event.payload;
+      });
+      let partyUpdateEvent = await listen("party-update", (event: PartyEvent) => {
+        if (event.payload) {
+          enc.partyInfo = event.payload;
         }
-      }
+      });
+      let invalidDamageEvent = await listen("invalid-damage", () => {
+        misc.missingInfo = true;
+      });
+      let zoneChangeEvent = await listen("zone-change", () => {
+        misc.raidInProgress = false;
+        addToast(zoneChange);
+        setTimeout(() => {
+          misc.raidInProgress = true;
+        }, 6000);
+      });
+      let raidStartEvent = await listen("raid-start", () => {
+        misc.raidInProgress = true;
+      });
+      let resetEncounterEvent = await listen("reset-encounter", () => {
+        // just need to trigger an update
+        misc.reset = !misc.reset;
+        addToast(resetting);
+      });
+      let pauseEncounterEvent = await listen("pause-encounter", () => {
+        if (misc.paused) {
+          addToast(pausing);
+        } else {
+          addToast(resuming);
+        }
+      });
+      let saveEncounterEvent = await listen("save-encounter", () => {
+        addToast(manualSave);
+        setTimeout(() => {
+          misc.reset = !misc.reset;
+        }, 1000);
+      });
+      let phaseTransitionEvent = await listen("phase-transition", (event: any) => {
+        let phaseCode = event.payload;
+        // console.log(Date.now() + ": phase transition event: ", event.payload)
+        if (phaseCode === 1) {
+          addToast(bossDead);
+        } else if (phaseCode === 2 && misc.raidInProgress) {
+          addToast(raidClear);
+        } else if (phaseCode === 4 && misc.raidInProgress) {
+          addToast(raidWipe);
+        }
+        misc.raidInProgress = false;
+      });
+      let adminErrorEvent = await listen("admin", () => {
+        addToast(adminAlert);
+      });
+      let clearEncounterEvent = await listen("clear-encounter", async (event: any) => {
+        if (settings.sync.auto) {
+          return;
+        }
 
-      await invoke("write_log", { message: "finished meter setup" });
+        let id = event.payload.toString();
+        const encounter = (await invoke("load_encounter", { id })) as Encounter;
+        await uploadLog(id, encounter);
+      });
+
+      events.push(
+        encounterUpdateEvent,
+        partyUpdateEvent,
+        invalidDamageEvent,
+        zoneChangeEvent,
+        raidStartEvent,
+        resetEncounterEvent,
+        pauseEncounterEvent,
+        saveEncounterEvent,
+        phaseTransitionEvent,
+        adminErrorEvent,
+        clearEncounterEvent
+      );
     })();
+
+    return () => {
+      events.forEach((f) => f());
+      clearInterval(interval);
+    };
   });
 
-  $effect.pre(() => {
-    if (settings.app.general.scale === "1") {
-      document.documentElement.style.setProperty("font-size", "medium");
-    } else if (settings.app.general.scale === "2") {
-      document.documentElement.style.setProperty("font-size", "large");
-    } else if (settings.app.general.scale === "3") {
-      document.documentElement.style.setProperty("font-size", "x-large");
-    } else if (settings.app.general.scale === "0") {
-      document.documentElement.style.setProperty("font-size", "small");
+  $effect(() => {
+    if (enc.encounter && enc.encounter.fightStart) {
+      enc.duration = time - enc.encounter.fightStart;
+    } else {
+      enc.duration = 0;
     }
-  });
-
-  $effect.pre(() => {
-    settings.app.shortcuts.hideMeter;
-    settings.app.shortcuts.showLogs;
-    settings.app.shortcuts.showLatestEncounter;
-    settings.app.shortcuts.resetSession;
-    settings.app.shortcuts.pauseSession;
-    settings.app.shortcuts.manualSave;
-    settings.app.shortcuts.disableClickthrough;
-
-    (async () => {
-      await unregisterAll();
-      await registerShortcuts();
-    })();
   });
 </script>
 
-<div
-  class="live-meter h-screen overflow-hidden {settings.app.general.transparent
-    ? 'bg-zinc-800/[.2]'
-    : 'bg-zinc-800 opacity-95'}"
->
-  <DamageMeter />
-</div>
-
-<style lang="postcss">
-  :global(.live-meter *) {
-    -ms-overflow-style: none;
-    scrollbar-width: auto;
-  }
-  :global(.live-meter *::-webkit-scrollbar) {
-    display: none;
-  }
-</style>
+<LiveDamageMeter {enc} />

@@ -2,12 +2,12 @@
   import type { EncounterState } from "$lib/encounter.svelte";
   import { EntityState } from "$lib/entity.svelte";
   import type { Entity } from "$lib/types";
-  import { HexToRgba, RGBLinearShade } from "$lib/utils/colors";
-  import { settings } from "$lib/utils/settings";
-  import { takingScreenshot } from "$lib/utils/stores";
-  import { tooltip } from "$lib/utils/tooltip";
+  import { rgbLinearShadeAdjust } from "$lib/utils/strings";
   import { cubicOut } from "svelte/easing";
   import { Tween } from "svelte/motion";
+  import QuickTooltip from "../QuickTooltip.svelte";
+  import ArkPassiveTooltip from "../tooltips/ArkPassiveTooltip.svelte";
+  import { settings } from "$lib/stores.svelte";
 
   interface Props {
     enc: EncounterState;
@@ -31,23 +31,29 @@
   let color = "#164e63";
 </script>
 
+<!-- Render value + units -->
+{#snippet damageValue(val: [number, string])}
+  {val[0]}<span class="text-3xs text-gray-300">{val[1]}</span>
+{/snippet}
+
 <td colspan="2" class="px-2">
-  <div class="truncate">
-    <span use:tooltip={{ content: boss.name }}>
-      {boss.name}
-    </span>
+  <div class="flex truncate">
+    <ArkPassiveTooltip state={entityState} />
   </div>
 </td>
-<td class="px-1 text-center" use:tooltip={{ content: boss.damageStats.damageDealt.toLocaleString() }}>
-  {entityState.damageDealtString[0]}<span class="text-3xs text-gray-300">{entityState.damageDealtString[1]}</span>
+<td class="px-1 text-center">
+  <QuickTooltip tooltip={entityState.damageDealt.toLocaleString()}>
+    {@render damageValue(entityState.damageDealtString)}
+  </QuickTooltip>
 </td>
 <td class="px-1 text-center">
-  {entityState.dpsString[0]}<span class="text-3xs text-gray-300">{entityState.dpsString[1]}</span>
+  <QuickTooltip tooltip={entityState.dps.toLocaleString()}>
+    {@render damageValue(entityState.dpsString)}
+  </QuickTooltip>
 </td>
 <td
   class="absolute left-0 -z-10 h-7 px-2 py-1"
-  class:shadow-md={!takingScreenshot}
-  style="background-color: {index % 2 === 1 && $settings.general.splitLines
-    ? RGBLinearShade(HexToRgba(color, 0.6))
-    : HexToRgba(color, 0.6)}; width: {tweenedValue.current}%"
+  style="background-color: {index % 2 === 1 && settings.app.general.splitLines
+    ? rgbLinearShadeAdjust(color, -0.2, 0.6)
+    : `rgb(from ${color} r g b / 0.6)`}; width: {tweenedValue.current}%"
 ></td>

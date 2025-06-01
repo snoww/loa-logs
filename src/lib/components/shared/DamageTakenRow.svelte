@@ -1,13 +1,11 @@
 <script lang="ts">
+  import QuickTooltip from "$lib/components/QuickTooltip.svelte";
   import type { EncounterState } from "$lib/encounter.svelte";
   import { EntityState } from "$lib/entity.svelte";
   import type { Entity } from "$lib/types";
-  import { HexToRgba } from "$lib/utils/colors";
-  import { classIconCache } from "$lib/utils/settings";
-  import { takingScreenshot } from "$lib/utils/stores";
-  import { generateClassTooltip, tooltip } from "$lib/utils/tooltip";
-  import { cubicOut } from "svelte/easing";
   import { Tween } from "svelte/motion";
+  import ClassTooltip from "../tooltips/ClassTooltip.svelte";
+  import { cubicOut } from "svelte/easing";
 
   interface Props {
     enc: EncounterState;
@@ -31,27 +29,21 @@
 </script>
 
 <td class="pl-1">
-  <img
-    class="table-cell size-5"
-    src={$classIconCache[player.classId]}
-    alt={player.class}
-    use:tooltip={{ content: generateClassTooltip(player) }}
-  />
+  <ClassTooltip entity={player} />
 </td>
 <td colspan="2">
-  <div class="truncate">
-    <span use:tooltip={{ content: entityState.name }}>
+  <div class="flex truncate">
+    <QuickTooltip tooltip={entityState.name}>
       {entityState.name}
-    </span>
+    </QuickTooltip>
   </div>
 </td>
 <td class="pl-1 pr-2 text-right">
-  <span use:tooltip={{ content: player.damageStats.damageTaken.toLocaleString() }}>
+  <QuickTooltip tooltip={player.damageStats.damageTaken.toLocaleString()}>
     {entityState.damageTakenString[0]}<span class="text-3xs text-gray-300">{entityState.damageTakenString[1]}</span>
-  </span>
+  </QuickTooltip>
 </td>
 <td
   class="absolute left-0 -z-10 h-7 px-2 py-1"
-  class:shadow-md={!$takingScreenshot}
-  style="background-color: {HexToRgba(entityState.color, alpha)}; width: {tweenedValue.current}%"
+  style="background-color: rgb(from {entityState.color} r g b / {alpha}); width: {tweenedValue.current}%"
 ></td>

@@ -11,7 +11,7 @@ import {
   type StatusEffect
 } from "./types";
 import { addBardBubbles, filterStatusEffects, supportSkills } from "./utils/buffs";
-import { round } from "./utils/numbers";
+import { customRound } from "./utils/numbers";
 
 export class BuffState {
   enc: EncounterState = $state()!;
@@ -33,13 +33,13 @@ export class BuffState {
       if (this.focusedPlayer && !Object.hasOwn(this.focusedPlayer.damageStats.buffedBy, id)) {
         continue;
       }
-      filterStatusEffects(temp, buff, Number(id), this.focusedPlayer, this.tab, this.enc.settings.buffs.default);
+      filterStatusEffects(temp, buff, Number(id), this.focusedPlayer, this.tab);
     }
     for (const [id, debuff] of Object.entries(this.enc.encounter.encounterDamageStats.debuffs)) {
       if (this.focusedPlayer && !Object.hasOwn(this.focusedPlayer.damageStats.debuffedBy, id)) {
         continue;
       }
-      filterStatusEffects(temp, debuff, Number(id), this.focusedPlayer, this.tab, this.enc.settings.buffs.default);
+      filterStatusEffects(temp, debuff, Number(id), this.focusedPlayer, this.tab);
     }
 
     return new Map([...temp.entries()].sort());
@@ -120,7 +120,7 @@ export class BuffState {
             if (player.damageStats.buffedBy[id] && syn.category === "buff") {
               const b = new Buff(
                 syn.source.icon,
-                round((player.damageStats.buffedBy[id] / (isHat ? damageDealtWithHa : damageDealtWithoutHa)) * 100),
+                customRound((player.damageStats.buffedBy[id] / (isHat ? damageDealtWithHa : damageDealtWithoutHa)) * 100),
                 syn.source.skill?.icon
               );
               addBardBubbles(key, b, syn);
@@ -131,7 +131,7 @@ export class BuffState {
               buffDetails.buffs.push(
                 new Buff(
                   syn.source.icon,
-                  round((player.damageStats.debuffedBy[id] / (isHat ? damageDealtWithHa : damageDealtWithoutHa)) * 100),
+                  customRound((player.damageStats.debuffedBy[id] / (isHat ? damageDealtWithHa : damageDealtWithoutHa)) * 100),
                   syn.source.skill?.icon
                 )
               );
@@ -139,7 +139,7 @@ export class BuffState {
             }
           });
           if (buffDamage > 0) {
-            buffDetails.percentage = round((buffDamage / (isHat ? damageDealtWithHa : damageDealtWithoutHa)) * 100);
+            buffDetails.percentage = customRound((buffDamage / (isHat ? damageDealtWithHa : damageDealtWithoutHa)) * 100);
           }
 
           playerBuffs.push(buffDetails);
@@ -158,7 +158,7 @@ export class BuffState {
     if (!this.enc.encounter) return new Map();
     const temp = new Map();
     for (const [id, shield] of Object.entries(this.enc.encounter.encounterDamageStats.appliedShieldBuffs)) {
-      filterStatusEffects(temp, shield, Number(id), undefined, undefined, false, true);
+      filterStatusEffects(temp, shield, Number(id), undefined, undefined, true);
     }
 
     return new Map([...temp.entries()].sort());

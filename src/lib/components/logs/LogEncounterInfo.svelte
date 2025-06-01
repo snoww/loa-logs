@@ -1,112 +1,59 @@
 <script lang="ts">
-  import type { Entity } from "$lib/types";
-  import { abbreviateNumber, getBossHpBars } from "$lib/utils/numbers";
-  import { settings } from "$lib/utils/settings";
-  import { takingScreenshot } from "$lib/utils/stores";
-  import { getVersion } from "@tauri-apps/api/app";
-  import BossOnlyDamage from "../shared/BossOnlyDamage.svelte";
-  import DifficultyLabel from "../shared/DifficultyLabel.svelte";
+  import { onMount } from "svelte";
+  import { screenshot, settings } from "$lib/stores.svelte";
+  import { abbreviateNumber, timestampToMinutesAndSeconds } from "$lib/utils/numbers";
+  import type { EncounterState } from "$lib/encounter.svelte";
 
-  interface Props {
-    difficulty: string | undefined;
-    date: string;
-    encounterDuration: string;
-    totalDamageDealt: number;
-    dps: number;
-    cleared: boolean;
-    bossOnlyDamage: boolean;
-    raidGate: string | undefined;
-    boss: Entity;
-  }
+  let { enc }: { enc: EncounterState } = $props();
 
-  let { difficulty, date, encounterDuration, totalDamageDealt, dps, cleared, bossOnlyDamage, raidGate, boss }: Props =
-    $props();
+  let locale: string | undefined = $state();
 
-  let bossHpBars: number | undefined = $state();
-
-  if (boss) {
-    let bossMaxHpBars = getBossHpBars(boss.name, boss.maxHp);
-    bossHpBars = Math.ceil((boss.currentHp / boss.maxHp) * bossMaxHpBars);
-  }
+  onMount(() => {
+    locale = window.navigator.language;
+  });
 </script>
 
-{#if $takingScreenshot}
-  <div class="flex items-center justify-between px-1 tracking-tight">
-    <div>
-      {#if cleared}
-        <span class="text-lime-400">[Cleared]</span>
-      {:else if !cleared && bossHpBars}
-        <span class="text-gray-400">[Wipe - {bossHpBars}x]</span>
-      {/if}
-      {#if bossOnlyDamage}
-        <BossOnlyDamage />
-      {/if}
-      <span class="font-medium">
-        {#if $settings.general.showDifficulty && difficulty}
-          <DifficultyLabel {difficulty} />
-          {#if $settings.general.showGate && raidGate}
-            <span class="text-sky-200">[{raidGate}]</span>
-          {/if}
-          {boss.name}
-        {:else}
-          {#if $settings.general.showGate && raidGate}
-            <span class="text-sky-200">[{raidGate}]</span>
-          {/if}
-          {boss.name}
-        {/if}
-      </span><span class="ml-2 font-mono text-xs">{date}</span>
+{#snippet middot()}
+  <div class="mx-1 text-neutral-400">&middot;</div>
+{/snippet}
+
+<div class="bg-black/10 px-3 py-2 text-sm" class:hidden={screenshot.state} id="header">
+  <div class="flex flex-row gap-1">
+    <div class="flex gap-1 text-neutral-300">
+      <div>Duration:</div>
+      <div class="text-white">
+        {timestampToMinutesAndSeconds(enc.duration)}
+      </div>
     </div>
-    {#await getVersion() then version}
-      {#if !$settings.general.hideLogo}
-        <div class="">
-          LOA Logs v{version}
+
+    {@render middot()}
+
+    <div class="flex gap-1 text-neutral-300">
+      <div>Total DMG:</div>
+      {#if settings.app.logs.abbreviateHeader}
+        <div class="text-white">
+          {abbreviateNumber(enc.totalDamageDealt)}
         </div>
       {:else}
-        <div class="font-mono text-xs">
-          v{version}
+        <div class="text-white">
+          {enc.totalDamageDealt.toLocaleString()}
         </div>
       {/if}
-    {/await}
-  </div>
-{/if}
-<div class="px-1 text-sm" class:pb-2={$takingScreenshot} id="header">
-  <div class="flex items-center justify-between">
-    <div class="flex space-x-2">
-      <div>
-        {encounterDuration}
-      </div>
-      <div class="flex space-x-1 tracking-tighter text-gray-300">
-        <div>Total DMG:</div>
-        {#if $settings.logs.abbreviateHeader}
-          <div class="text-white">
-            {abbreviateNumber(totalDamageDealt)}
-          </div>
-        {:else}
-          <div class="text-white">
-            {totalDamageDealt.toLocaleString()}
-          </div>
-        {/if}
-      </div>
-      <div class="flex space-x-1 tracking-tighter text-gray-300">
-        <div>Total DPS:</div>
-        {#if $settings.logs.abbreviateHeader}
-          <div class="text-white">
-            {abbreviateNumber(dps)}
-          </div>
-        {:else}
-          <div class="text-white">
-            {dps.toLocaleString(undefined, {
-              minimumFractionDigits: 0,
-              maximumFractionDigits: 0
-            })}
-          </div>
-        {/if}
-      </div>
     </div>
-    {#if $takingScreenshot && !$settings.general.hideLogo}
-      <div class="font-mono text-xs">
-        {"github.com/snoww/loa-logs"}
-      </div>
-    {/if}
+
+    {@render middot()}
+
+    <div class="flex gap-1 text-neutral-300">
+      <div>Total DPS:</div>
+      {#if settings.app.logs.abbreviateHeader}
+        <div class="text-white">
+          {abbreviateNumber(enc.encounter!.encounterDamageStats.dps)}
+        </div>
+      {:else}
+        <div class="text-white">
+          {enc.encounter!.encounterDamageStats.dps.toLocaleString()}
+        </div>
+      {/if}
+    </div>
   </div>
 </div>

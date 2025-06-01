@@ -8,12 +8,13 @@
   import EncountersTable from "./EncountersTable.svelte";
   import Pages from "./Pages.svelte";
   import Search from "./Search.svelte";
+  import { SvelteSet } from "svelte/reactivity";
 
   let overview: EncountersOverview | null = $state(null);
   let container = $state<HTMLDivElement | null>(null);
 
   let selectMode = $state(false);
-  let selected = $state(new Set<number>());
+  let selected = $state(new SvelteSet<number>());
 
   async function loadEncounters() {
     // start or space (^|\s) + word (\w+) + colon or space or end (:|\s|$)
@@ -63,7 +64,8 @@
     })();
   });
 
-  // Reset the page to 1 when any filter changes
+  let once = $state(false);
+  // Reset the page to 1 when any filter changes, except for the first load
   $effect(() => {
     encounterFilter.search;
     encounterFilter.minDuration;
@@ -75,7 +77,10 @@
     encounterFilter.sort;
     encounterFilter.order;
 
-    encounterFilter.page = 1;
+    if (once) {
+      encounterFilter.page = 1;
+      once = true;
+    }
   });
 </script>
 

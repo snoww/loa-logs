@@ -3,14 +3,15 @@
   import { raidGates } from "$lib/constants/encounters";
   import { IconStar } from "$lib/icons";
   import type { EncounterPreview, EncountersOverview } from "$lib/types";
-  import { abbreviateNumber, formatDurationFromMs, formatTimestamp } from "$lib/utils/numbers";
+  import { abbreviateNumber, formatTimestamp, timestampToMinutesAndSeconds } from "$lib/utils/numbers";
   import { getClassIcon } from "$lib/utils/strings";
+  import type { SvelteSet } from "svelte/reactivity";
 
   let {
     overview,
     selectMode,
     selected = $bindable()
-  }: { overview: EncountersOverview; selectMode: boolean; selected: Set<number> } = $props();
+  }: { overview: EncountersOverview; selectMode: boolean; selected: SvelteSet<number> } = $props();
 
   let allSelected = $derived(overview.encounters.every((enc) => selected.has(enc.id)));
 </script>
@@ -21,7 +22,6 @@
     checked={selected.has(id)}
     onchange={() => {
       selected.has(id) ? selected.delete(id) : selected.add(id);
-      selected = new Set(selected);
     }}
     class="form-checkbox checked:text-accent-600/80 size-5 rounded-sm border-0 bg-neutral-700 focus:ring-0"
   />
@@ -61,11 +61,11 @@
           {/if}
         </div>
         <a
-          href="/logs/encounter/{encounter.id}"
+          href="/logs/{encounter.id}"
           class="hover:text-accent-500 group flex items-center gap-1 hover:underline"
         >
           {#if encounter.favorite}
-            <IconStar class="shrink-0 text-yellow-400" style="fill: currentColor;" />
+            <IconStar class="shrink-0 text-yellow-400" />
           {/if}
           <QuickTooltip tooltip={encounter.bossName} class="truncate">
             {encounter.bossName}
@@ -93,7 +93,7 @@
       {abbreviateNumber(encounter.myDps)}
     </td>
     <td class="p-1 text-right">
-      {formatDurationFromMs(encounter.duration)}
+      {timestampToMinutesAndSeconds(encounter.duration)}
     </td>
     <td class="pr-2 text-right text-xs">
       {formatTimestamp(encounter.fightStart)}
@@ -121,7 +121,6 @@
                   selected.add(enc.id);
                 }
               }
-              selected = new Set(selected);
             }}
             class="form-checkbox checked:text-accent-600/80 size-4.5 rounded-sm border-0 bg-neutral-700 focus:ring-0"
           />

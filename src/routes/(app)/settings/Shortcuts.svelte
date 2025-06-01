@@ -40,11 +40,6 @@
   };
 
   $effect(() => {
-    $inspect(keys);
-    $inspect(currentAction);
-  });
-
-  $effect(() => {
     if (!$open) {
       document.removeEventListener("keydown", handleKeydown);
       document.removeEventListener("keyup", handleKeyUp);
@@ -104,7 +99,6 @@
           class="bg-accent-500/70 hover:bg-accent-500/60 rounded-md px-2 py-1"
           onclick={() => {
             if (currentAction) {
-              console.log("saving");
               settings.app.shortcuts[currentAction as keyof typeof settings.app.shortcuts] = keys.join("+");
             }
           }}

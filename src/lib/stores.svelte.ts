@@ -3,6 +3,7 @@ import { invoke } from "@tauri-apps/api";
 import { join, resourceDir } from "@tauri-apps/api/path";
 import { convertFileSrc } from "@tauri-apps/api/tauri";
 import MarkdownIt from "markdown-it";
+import { SvelteSet } from "svelte/reactivity";
 import { readable } from "svelte/store";
 
 /**
@@ -109,8 +110,8 @@ class Settings {
 export class EncounterFilter {
   search = $state("");
   page = $state(1);
-  bosses = $state(new Set<string>());
-  encounters = $state(new Set<string>());
+  bosses = $state(new SvelteSet<string>());
+  encounters = $state(new SvelteSet<string>());
   favorite = $state(false);
   cleared = $state(false);
   difficulty = $state("");
@@ -121,8 +122,8 @@ export class EncounterFilter {
   reset() {
     this.search = "";
     this.page = 1;
-    this.bosses = new Set();
-    this.encounters = new Set();
+    this.bosses = new SvelteSet();
+    this.encounters = new SvelteSet();
     this.favorite = false;
     this.cleared = false;
     this.difficulty = "";
@@ -183,10 +184,8 @@ export const defaultSettings = {
     disableClickthrough: ""
   },
   meter: {
-    bossHp: true,
     bossHpBar: true,
     splitBossHpBar: false,
-    abbreviateHeader: true,
     showTimeUntilKill: false,
     splitPartyBuffs: true,
     pinSelfParty: true,
@@ -334,7 +333,11 @@ export const defaultClassColors: Record<string, string> = {
 };
 
 export class Misc {
-
+  liveConnectionListening = $state(false);
+  raidInProgress = $state(false);
+  reset = $state(false);
+  paused = $state(false);
+  missingInfo = $state(false);
 }
 
 export class SyncProgress {
@@ -345,10 +348,30 @@ export class SyncProgress {
   stop = $state(false);
 }
 
+export class SkillCastInfo {
+  skillId = $state(0);
+  cast = $state(0);
+}
+
 export const settings = new Settings();
 export const encounterFilter = new EncounterFilter();
 export const misc = new Misc();
 export const syncProgress = new SyncProgress();
+export const focusedCast = new SkillCastInfo();
+export const screenshot = (() => {
+  let state = $state(false);
+  return {
+    get state() {
+      return state;
+    },
+    take() {
+      state = true;
+    },
+    done() {
+      state = false;
+    }
+  };
+})();
 
 const md = new MarkdownIt({
   html: true

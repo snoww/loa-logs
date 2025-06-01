@@ -3,18 +3,32 @@
   import type { Snippet } from "svelte";
   import { fade } from "svelte/transition";
 
-  const { tooltip, children, ...rest }: { children: Snippet; tooltip: string | Snippet | null; class?: string } =
-    $props();
+  const {
+    tooltip,
+    placement,
+    delay = 0,
+    children,
+    ...rest
+  }: {
+    delay?: number;
+    placement?: "top" | "bottom" | "left" | "right";
+    children: Snippet;
+    tooltip: string | Snippet | null;
+    class?: string;
+  } = $props();
 
   const {
     elements: { trigger, content, arrow },
     states: { open }
   } = createTooltip({
     group: true,
-    openDelay: 0,
+    openDelay: delay,
     closeDelay: 0,
     closeOnPointerDown: false,
-    forceVisible: true
+    forceVisible: true,
+    positioning: {
+      placement: placement
+    }
   });
 </script>
 
@@ -30,7 +44,7 @@
   <div
     use:melt={$content}
     transition:fade={{ duration: 100 }}
-    class="z-10 rounded-md border border-neutral-700 bg-neutral-800 p-0 shadow-xl"
+    class="z-50 rounded-md border border-neutral-700 bg-neutral-800 p-0 shadow-xl"
   >
     <div use:melt={$arrow} class="rounded-tl border-l border-t border-neutral-700"></div>
     <p class="px-2 py-1 text-sm text-neutral-100">

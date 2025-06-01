@@ -1,4 +1,4 @@
-<script lang="ts">
+<!-- <script lang="ts">
   import { missingInfo } from "$lib/utils/stores";
   import { tooltip } from "$lib/utils/tooltip";
 </script>
@@ -12,4 +12,4 @@
   >
     WARNING: INVALID DATA
   </div>
-{/if}
+{/if} -->
