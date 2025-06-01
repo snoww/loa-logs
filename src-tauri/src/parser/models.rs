@@ -97,15 +97,9 @@ pub struct EncounterDamageStats {
     pub applied_shield_buffs: HashMap<u32, StatusEffect>,
     #[serde(skip)]
     pub unknown_buffs: HashSet<u32>,
-    #[serde(skip)]
-    pub max_stagger: i32,
-    #[serde(skip)]
-    pub stagger_start: i64,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub misc: Option<EncounterMisc>,
     pub boss_hp_log: HashMap<String, Vec<BossHpLog>>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub stagger_stats: Option<StaggerStats>,
 }
 
 #[derive(Debug, Serialize, Clone, Default)]
@@ -332,13 +326,6 @@ pub struct Identity {
     pub gauge3: u32,
 }
 
-#[derive(Debug, Serialize, Clone, Default)]
-#[serde(rename_all = "camelCase")]
-pub struct Stagger {
-    pub current: u32,
-    pub max: u32,
-}
-
 #[derive(Debug, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct IncapacitatedEvent {
@@ -383,20 +370,9 @@ pub struct IdentityGeneric {
 }
 
 #[derive(Debug, Default, Serialize, Deserialize, Clone)]
-#[serde(rename_all = "camelCase")]
-pub struct StaggerStats {
-    pub average: f64,
-    #[serde(default)]
-    pub staggers_per_min: f64,
-    pub log: Vec<(i32, f32)>,
-}
-
-#[derive(Debug, Default, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase", default)]
 #[serde_as]
 pub struct EncounterMisc {
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub stagger_stats: Option<StaggerStats>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub boss_hp_log: Option<HashMap<String, Vec<BossHpLog>>>,
     #[serde(skip_serializing_if = "Option::is_none")]

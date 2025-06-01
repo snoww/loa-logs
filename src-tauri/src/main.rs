@@ -807,8 +807,7 @@ fn load_encounter(window: tauri::Window, id: String) -> Encounter {
        total_shielding,
        total_effective_shielding,
        applied_shield_buffs,
-       boss_hp_log,
-       stagger_log
+       boss_hp_log
     FROM encounter JOIN encounter_preview USING (id)
     WHERE id = ?
     ",
@@ -824,7 +823,6 @@ fn load_encounter(window: tauri::Window, id: String) -> Encounter {
                 .unwrap_or_default();
 
             let mut boss_hp_log: HashMap<String, Vec<BossHpLog>> = HashMap::new();
-            let mut stagger_stats: Option<StaggerStats> = None;
 
             if let Some(misc) = misc.as_ref() {
                 let version = misc
@@ -844,7 +842,6 @@ fn load_encounter(window: tauri::Window, id: String) -> Encounter {
 
                 if !compressed {
                     boss_hp_log = misc.boss_hp_log.clone().unwrap_or_default();
-                    stagger_stats.clone_from(&misc.stagger_stats);
                 }
             }
 
@@ -891,10 +888,6 @@ fn load_encounter(window: tauri::Window, id: String) -> Encounter {
                 boss_hp_log =
                     serde_json::from_str::<HashMap<String, Vec<BossHpLog>>>(boss_string.as_str())
                         .unwrap_or_default();
-
-                let stagger_str: String = row.get(21).unwrap_or_default();
-                stagger_stats = serde_json::from_str::<Option<StaggerStats>>(stagger_str.as_str())
-                    .unwrap_or_default();
             } else {
                 let buff_str: String = row.get(10).unwrap_or_default();
                 buffs = serde_json::from_str::<HashMap<u32, StatusEffect>>(buff_str.as_str())
@@ -931,7 +924,6 @@ fn load_encounter(window: tauri::Window, id: String) -> Encounter {
                     total_effective_shielding,
                     applied_shield_buffs,
                     boss_hp_log,
-                    stagger_stats,
                     ..Default::default()
                 },
                 difficulty: row.get(13)?,
