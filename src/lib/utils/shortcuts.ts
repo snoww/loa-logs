@@ -3,8 +3,6 @@ import { invoke } from "@tauri-apps/api";
 import { emit } from "@tauri-apps/api/event";
 import { register } from "@tauri-apps/api/globalShortcut";
 
-export const UWUOWO_URL = "https://uwuowo.mathi.moe";
-
 export type Shortcut = {
   name: string;
   action: () => void | Promise<void>;

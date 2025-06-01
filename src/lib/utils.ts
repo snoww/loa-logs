@@ -8,6 +8,8 @@ import { screenshot, settings, updateInfo } from "./stores.svelte";
 import { screenshotError, screenshotSuccess } from "./utils/toasts";
 import { checkUpdate } from "@tauri-apps/api/updater";
 
+export const UWUOWO_URL = "https://uwuowo.mathi.moe";
+
 export async function takeScreenshot(div?: HTMLElement) {
   if (!div) {
     return;
@@ -285,9 +287,6 @@ export function removeUnknownHtmlTags(input: string) {
 export function formatPlayerName(player: Entity): string {
   let playerName = player.name;
   const validName = isNameValid(playerName);
-  // if (!validName) {
-  //   missingInfo.set(true);
-  // }
   if (!validName || !settings.app.general.showNames) {
     if (player.class) {
       playerName = player.class;
@@ -322,14 +321,6 @@ export function getEstherFromNpcId(npcId: number): string {
   }
 
   return "Unknown";
-}
-
-export function normalizeRegion(region: string) {
-  if (region === "EUC") {
-    return "CE";
-  }
-
-  return region;
 }
 
 // from https://stackoverflow.com/a/13542669/11934162

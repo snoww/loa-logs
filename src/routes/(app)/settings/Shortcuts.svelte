@@ -1,6 +1,6 @@
 <script lang="ts">
   import { settings } from "$lib/stores.svelte";
-  import { registerShortcuts, shortcuts } from "$lib/utils/settings";
+  import { registerShortcuts, shortcuts } from "$lib/utils/shortcuts";
   import { createDialog, melt } from "@melt-ui/svelte";
   import { unregisterAll } from "@tauri-apps/api/globalShortcut";
   import { onDestroy, onMount } from "svelte";

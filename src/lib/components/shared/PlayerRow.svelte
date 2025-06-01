@@ -6,14 +6,13 @@
   import { IconExternalLink } from "$lib/icons";
   import { settings } from "$lib/stores.svelte";
   import { EntityType, type Entity } from "$lib/types";
-  import { UWUOWO_URL } from "$lib/utils/settings";
   import { open } from "@tauri-apps/api/shell";
   import { cubicOut } from "svelte/easing";
   import { Tween } from "svelte/motion";
   import ArkPassiveTooltip from "../tooltips/ArkPassiveTooltip.svelte";
   import ClassTooltip from "../tooltips/ClassTooltip.svelte";
   import { logColumns } from "./DamageMeterColumns.svelte";
-  import { getClassIcon, isNameValid } from "$lib/utils";
+  import { getClassIcon, isNameValid, UWUOWO_URL } from "$lib/utils";
 
   interface Props {
     enc: EncounterState;

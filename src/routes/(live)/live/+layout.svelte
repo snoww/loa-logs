@@ -1,7 +1,7 @@
 <script lang="ts">
   import Toaster from "$lib/components/Toaster.svelte";
   import { settings, type LogSettings } from "$lib/stores.svelte";
-  import { registerShortcuts } from "$lib/utils/settings";
+  import { registerShortcuts } from "$lib/utils/shortcuts";
   import { invoke } from "@tauri-apps/api";
   import { emit } from "@tauri-apps/api/event";
   import { unregisterAll } from "@tauri-apps/api/globalShortcut";

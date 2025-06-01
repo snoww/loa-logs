@@ -5,13 +5,12 @@
   import { IconExternalLink } from "$lib/icons";
   import { settings } from "$lib/stores.svelte";
   import { EntityType, type Entity } from "$lib/types";
-  import { UWUOWO_URL } from "$lib/utils/settings";
   import { open } from "@tauri-apps/api/shell";
   import ArkPassiveTooltip from "../tooltips/ArkPassiveTooltip.svelte";
   import ClassTooltip from "../tooltips/ClassTooltip.svelte";
   import PlayerBreakdownHeader from "./PlayerBreakdownHeader.svelte";
   import PlayerBreakdownRow from "./PlayerBreakdownRow.svelte";
-  import { customRound, isNameValid, rgbLinearShadeAdjust } from "$lib/utils";
+  import { customRound, isNameValid, rgbLinearShadeAdjust, UWUOWO_URL } from "$lib/utils";
 
   interface Props {
     handleRightClick: () => void;
