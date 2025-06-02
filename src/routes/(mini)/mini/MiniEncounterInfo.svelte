@@ -1,5 +1,6 @@
 <script lang="ts">
   import { EncounterState } from "$lib/encounter.svelte";
+  import { settings } from "$lib/stores.svelte";
   import { timestampToMinutesAndSeconds } from "$lib/utils";
 
   let { enc }: { enc: EncounterState } = $props();

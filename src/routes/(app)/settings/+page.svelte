@@ -1,6 +1,6 @@
 <script lang="ts">
   import { settings } from "$lib/stores.svelte";
-  import { createSlider, melt } from "@melt-ui/svelte";
+  import { createRadioGroup, createSlider, melt } from "@melt-ui/svelte";
   import { invoke } from "@tauri-apps/api";
   import { emit } from "@tauri-apps/api/event";
   import { onMount } from "svelte";
@@ -25,6 +25,24 @@
     step: 10,
     max: 300
   });
+
+  const {
+    elements: { root: radioRoot, item },
+    helpers: { isChecked }
+  } = createRadioGroup({
+    defaultValue: settings.app.mini.info
+  });
+
+  const infoOptions = [
+    {
+      value: "damage",
+      label: "Damage Percentage"
+    },
+    {
+      value: "buff",
+      label: "Support Buff Summary"
+    }
+  ];
 
   $effect(() => {
     settings.app.logs.minEncounterDuration = $minDuration[0];
@@ -189,6 +207,7 @@
       {@render settingsTab("Accessibility")}
       {@render settingsTab("Logs")}
       {@render settingsTab("Meter")}
+      {@render settingsTab("Mini")}
       {@render settingsTab("Buffs")}
       {@render settingsTab("Colors")}
       {@render settingsTab("Shortcuts")}
@@ -199,8 +218,19 @@
         {@render themeSetting()}
         {@render settingOption("general", "mini", "Mini Mode", "Experimental horizontal mode for live meter.")}
         {#if settings.app.general.mini}
-          {@render settingOption("general", "miniEdit", "Edit Mini Meter", "Enable this setting to drag window to desired position, turn off when finished.")}
+          {@render settingOption(
+            "general",
+            "miniEdit",
+            "Edit Mini Meter",
+            "Enable this setting to drag window to desired position, turn off when finished."
+          )}
         {/if}
+        {@render settingOption(
+          "general",
+          "autoShow",
+          "Auto Show/Hide",
+          "Automatically show and hide meter window when encounter starts and ends."
+        )}
         {@render settingOption(
           "general",
           "startLoaOnStart",
@@ -704,6 +734,29 @@
           true
         )}
         {@render settingOption("meter", "hpm", "Skill Hits/min", "Show the hits per minute of the skill", true)}
+      {:else if currentTab === "Mini"}
+        <div class="flex flex-col gap-2">
+          <p>Info Options</p>
+          <div use:melt={$radioRoot} class="flex flex-col gap-2">
+            {#each infoOptions as option}
+              <div class="flex items-center gap-2">
+                <button
+                  use:melt={$item(option.value)}
+                  class="size-5 cursor-default place-items-center rounded-full bg-neutral-600 shadow-sm hover:bg-neutral-600/80"
+                  onclick={() => (settings.app.mini.info = option.value)}
+                  id={option.value}
+                >
+                  {#if $isChecked(option.value)}
+                    <div class="bg-accent-500 h-3 w-3 rounded-full"></div>
+                  {/if}
+                </button>
+                <label class="pl-5" for={option.value} id="{option}-label">
+                  {option.label}
+                </label>
+              </div>
+            {/each}
+          </div>
+        </div>
       {:else if currentTab === "Buffs"}
         {@render settingOption(
           "buffs",

@@ -10,7 +10,7 @@
   import { uploadTokenError } from "$lib/utils/toasts";
 
   const {
-    elements: { root, item, hiddenInput },
+    elements: { root, item },
     helpers: { isChecked }
   } = createRadioGroup({
     defaultValue: settings.sync.visibility
@@ -159,6 +159,7 @@
           <button
             use:melt={$item(option.value)}
             class="size-5 cursor-default place-items-center rounded-full bg-neutral-600 shadow-sm hover:bg-neutral-600/80"
+            onclick={() => (settings.sync.visibility = option.value)}
             id={option.value}
           >
             {#if $isChecked(option.value)}

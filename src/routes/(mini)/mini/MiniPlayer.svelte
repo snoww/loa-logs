@@ -1,8 +1,10 @@
 <script lang="ts">
   import type { EncounterState } from "$lib/encounter.svelte";
   import { EntityState } from "$lib/entity.svelte";
+  import { settings } from "$lib/stores.svelte";
   import type { Entity } from "$lib/types";
-  import { getClassIcon } from "$lib/utils";
+  import { customRound, getClassIcon } from "$lib/utils";
+  import { dataDir } from "@tauri-apps/api/path";
   import { cubicOut } from "svelte/easing";
   import { Tween } from "svelte/motion";
 
@@ -26,6 +28,14 @@
 {#snippet percentValue(val: string | number)}
   {val}<span class="text-xxs text-gray-300">%</span>
 {/snippet}
+{#snippet buffSummary(entity: Entity)}
+  <span class="">
+    {customRound(entity.damageStats.buffedBySupport * 100, 0)}/{customRound(
+      entity.damageStats.debuffedBySupport * 100,
+      0
+    )}/{customRound(entity.damageStats.buffedByIdentity * 100, 0)}
+  </span>
+{/snippet}
 
 <!-- name -->
 <div class="flex items-center justify-center gap-1 truncate">
@@ -33,13 +43,19 @@
   <p class="truncate">{entity.name}</p>
 </div>
 <!-- stats -->
-<div class="flex h-6 w-full items-center justify-between px-2">
+<div class="flex h-6 w-full items-center justify-between truncate px-2">
   <div>
     {@render damageValue(state.dpsString)}
   </div>
-  <div>
-    {@render percentValue(state.damagePercentage)}
-  </div>
+  {#if settings.app.mini.info === "damage"}
+    <div>
+      {@render percentValue(state.damagePercentage)}
+    </div>
+  {:else if settings.app.mini.info === "buff"}
+    <div class="truncate">
+      {@render buffSummary(entity)}
+    </div>
+  {/if}
 </div>
 
 <!-- dmg% bar -->

@@ -185,7 +185,8 @@ export const defaultSettings = {
     logsPerPage: 10,
     experimentalFeatures: false,
     mini: false,
-    miniEdit: true,   
+    miniEdit: true,
+    autoShow: false
   },
   shortcuts: {
     hideMeter: "Control+ArrowDown",
@@ -239,6 +240,9 @@ export const defaultSettings = {
       percentBrand: false,
       percentHatBySup: false
     }
+  },
+  mini: {
+    info: "damage"
   },
   logs: {
     abbreviateHeader: false,

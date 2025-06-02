@@ -1,11 +1,12 @@
 <script lang="ts">
   import { EncounterState } from "$lib/encounter.svelte";
-  import { misc } from "$lib/stores.svelte";
+  import { misc, settings } from "$lib/stores.svelte";
   import type { EncounterEvent } from "$lib/types";
   import { listen, type UnlistenFn } from "@tauri-apps/api/event";
   import { onMount } from "svelte";
   import MiniEncounterInfo from "./MiniEncounterInfo.svelte";
   import MiniPlayers from "./MiniPlayers.svelte";
+  import { appWindow } from "@tauri-apps/api/window";
 
   let enc = $derived(new EncounterState(undefined, true));
   let time = $state(+Date.now());
@@ -40,6 +41,16 @@
       clearInterval(interval);
       events.forEach((unlisten) => unlisten());
     };
+  });
+
+  $effect(() => {
+    if (settings.app.general.autoShow && settings.app.general.mini) {
+      if (misc.raidInProgress && enc.encounter?.currentBossName) {
+        appWindow.show();
+      } else {
+        appWindow.hide();
+      }
+    }
   });
 
   $effect(() => {

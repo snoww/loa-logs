@@ -18,6 +18,7 @@
   } from "$lib/utils/toasts";
   import { invoke } from "@tauri-apps/api";
   import { listen, type UnlistenFn } from "@tauri-apps/api/event";
+  import { appWindow } from "@tauri-apps/api/window";
   import { onMount } from "svelte";
 
   let enc = $derived(new EncounterState(undefined, true));
@@ -124,6 +125,16 @@
       enc.duration = time - enc.encounter.fightStart;
     } else {
       enc.duration = 0;
+    }
+  });
+
+  $effect(() => {
+    if (settings.app.general.autoShow && !settings.app.general.mini) {
+      if (misc.raidInProgress && enc.encounter?.currentBossName) {
+        appWindow.show();
+      } else {
+        appWindow.hide();
+      }
     }
   });
 </script>
