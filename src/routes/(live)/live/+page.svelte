@@ -1,21 +1,20 @@
 <script lang="ts">
   import LiveDamageMeter from "$lib/components/live/LiveDamageMeter.svelte";
-  import LiveFooter from "$lib/components/live/LiveFooter.svelte";
   import { addToast } from "$lib/components/Toaster.svelte";
   import { EncounterState } from "$lib/encounter.svelte";
   import { misc, settings } from "$lib/stores.svelte";
   import type { Encounter, EncounterEvent, PartyEvent } from "$lib/types";
   import { uploadLog } from "$lib/utils/sync";
   import {
+    adminAlert,
     bossDead,
+    manualSave,
     pausing,
     raidClear,
     raidWipe,
     resetting,
     resuming,
-    saving as manualSave,
-    zoneChange,
-    adminAlert
+    zoneChange
   } from "$lib/utils/toasts";
   import { invoke } from "@tauri-apps/api";
   import { listen, type UnlistenFn } from "@tauri-apps/api/event";

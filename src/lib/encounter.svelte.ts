@@ -38,6 +38,22 @@ export class EncounterState {
   });
 
   /**
+   * Array of players in the encounter, irrespective of party membership, sorted by damage dealt (descending).
+   */
+  playersOnly = $derived.by(() => {
+    if (!this.encounter) return [];
+    return Object.values(this.encounter.entities)
+      .filter((e) => {
+        if (e.damageStats.damageDealt <= 0) return false;
+
+        const isValidPlayer = e.entityType === EntityType.PLAYER && e.classId !== 0;
+
+        return isValidPlayer;
+      })
+      .sort((a, b) => b.damageStats.damageDealt - a.damageStats.damageDealt);
+  });
+
+  /**
    * Array of bosses in the encounter, sorted by damage dealt (descending).
    */
   bosses = $derived.by(() => {
