@@ -1,8 +1,9 @@
 <script lang="ts" module>
-  export { damageValue, percentValue, skillTooltip, middot };
+  export { damageValue, percentValue, skillTooltip, middot, badTooltip, fadTooltip };
 </script>
 
 <script lang="ts">
+  import { EntityState } from "$lib/entity.svelte";
   import type { Skill } from "$lib/types";
   import SkillTooltip from "./tooltips/SkillTooltip.svelte";
 </script>
@@ -23,4 +24,18 @@
 <!-- Render value + percent -->
 {#snippet percentValue(val: string | number)}
   {val}<span class="text-xxs text-gray-300">%</span>
+{/snippet}
+
+{#snippet badTooltip(state: EntityState)}
+  <span>
+    Raw Back Attack
+    {@render percentValue(state.baPercentage)}
+  </span>
+{/snippet}
+
+{#snippet fadTooltip(state: EntityState)}
+  <span>
+    Raw Front Attack
+    {@render percentValue(state.faPercentage)}
+  </span>
 {/snippet}

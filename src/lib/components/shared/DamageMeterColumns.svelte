@@ -3,7 +3,7 @@
   import type { EncounterState } from "$lib/encounter.svelte";
   import { EntityState } from "$lib/entity.svelte";
   import { customRound } from "$lib/utils";
-  import { damageValue, percentValue } from "../Snippets.svelte";
+  import { badTooltip, damageValue, fadTooltip, percentValue } from "../Snippets.svelte";
 
   export const logColumns: LogColumn<EncounterState, EntityState>[] = [
     // Dead for
@@ -274,26 +274,12 @@
   {@render percentValue(state.fadPercentage)}
 {/snippet}
 
-{#snippet fadTooltip(state: EntityState)}
-  <span>
-    Raw Front Attack
-    {@render percentValue(state.faPercentage)}
-  </span>
-{/snippet}
-
 {#snippet baPct(state: EntityState)}
   {@render percentValue(state.baPercentage)}
 {/snippet}
 
 {#snippet badPct(state: EntityState)}
   {@render percentValue(state.badPercentage)}
-{/snippet}
-
-{#snippet badTooltip(state: EntityState)}
-  <span>
-    Raw Back Attack
-    {@render percentValue(state.baPercentage)}
-  </span>
 {/snippet}
 
 {#snippet buffPct(state: EntityState)}
