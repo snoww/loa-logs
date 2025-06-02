@@ -25,7 +25,7 @@
 
 <!-- Render value + percent -->
 {#snippet percentValue(val: string | number)}
-  {val}<span class="text-3xs text-gray-300">%</span>
+  {val}<span class="text-xxs text-gray-300">%</span>
 {/snippet}
 {#snippet fadTooltip()}
   <span>
@@ -48,7 +48,7 @@
 
 <tbody class="relative z-10">
   {#if entity.entityType !== EntityType.ESTHER}
-    <tr class="text-3xs h-7 px-2 py-1 {settings.app.general.underlineHovered ? 'hover:underline' : ''}">
+    <tr class="text-xxs h-7 px-2 py-1 {settings.app.general.underlineHovered ? 'hover:underline' : ''}">
       <td class="pl-1">
         <ClassTooltip {entity} />
       </td>
@@ -73,7 +73,7 @@
       {#if enc.curSettings.breakdown.damage}
         <td class="px-1 text-center">
           <QuickTooltip tooltip={entity.damageStats.damageDealt.toLocaleString()}>
-            {entityState.damageDealtString[0]}<span class="text-3xs text-gray-300"
+            {entityState.damageDealtString[0]}<span class="text-xxs text-gray-300"
               >{entityState.damageDealtString[1]}</span
             >
           </QuickTooltip>
@@ -82,7 +82,7 @@
       {#if enc.curSettings.breakdown.dps}
         <td class="px-1 text-center">
           <QuickTooltip tooltip={entity.damageStats.dps.toLocaleString()}>
-            {entityState.dpsString[0]}<span class="text-3xs text-gray-300">{entityState.dpsString[1]}</span>
+            {entityState.dpsString[0]}<span class="text-xxs text-gray-300">{entityState.dpsString[1]}</span>
           </QuickTooltip>
         </td>
       {/if}
@@ -93,7 +93,7 @@
       {/if}
       {#if enc.curSettings.breakdown.critRate}
         <td class="px-1 text-center">
-          {entityState.critPercentage}<span class="text-3xs text-gray-300">%</span>
+          {entityState.critPercentage}<span class="text-xxs text-gray-300">%</span>
         </td>
       {/if}
       {#if !enc.live && settings.app.logs.breakdown.adjustedCritRate}
@@ -101,58 +101,58 @@
       {/if}
       {#if enc.curSettings.breakdown.critDmg}
         <td class="px-1 text-center">
-          {entityState.critDmgPercentage}<span class="text-3xs text-gray-300">%</span>
+          {entityState.critDmgPercentage}<span class="text-xxs text-gray-300">%</span>
         </td>
       {/if}
       {#if entityState.anyFrontAttacks && enc.curSettings.breakdown.frontAtk && !enc.curSettings.positionalDmgPercent}
         <td class="px-1 text-center">
-          {entityState.faPercentage}<span class="text-3xs text-gray-300">%</span>
+          {entityState.faPercentage}<span class="text-xxs text-gray-300">%</span>
         </td>
       {/if}
       {#if entityState.anyFrontAttacks && enc.curSettings.breakdown.frontAtk && enc.curSettings.positionalDmgPercent}
         <td class="px-1 text-center">
           <QuickTooltip tooltip={fadTooltip}>
-            {entityState.fadPercentage}<span class="text-3xs text-gray-300">%</span>
+            {entityState.fadPercentage}<span class="text-xxs text-gray-300">%</span>
           </QuickTooltip>
         </td>
       {/if}
       {#if entityState.anyBackAttacks && enc.curSettings.breakdown.backAtk && !enc.curSettings.positionalDmgPercent}
         <td class="px-1 text-center">
-          {entityState.baPercentage}<span class="text-3xs text-gray-300">%</span>
+          {entityState.baPercentage}<span class="text-xxs text-gray-300">%</span>
         </td>
       {/if}
       {#if entityState.anyBackAttacks && enc.curSettings.breakdown.backAtk && enc.curSettings.positionalDmgPercent}
         <td class="px-1 text-center">
           <QuickTooltip tooltip={badTooltip}>
-            {entityState.badPercentage}<span class="text-3xs text-gray-300">%</span>
+            {entityState.badPercentage}<span class="text-xxs text-gray-300">%</span>
           </QuickTooltip>
         </td>
       {/if}
       {#if entityState.anySupportBuff && enc.curSettings.breakdown.percentBuffBySup}
         <td class="px-1 text-center">
           {customRound((entity.damageStats.buffedBySupport / entityState.damageDealtWithoutHa) * 100)}<span
-            class="text-3xs text-gray-300">%</span
+            class="text-xxs text-gray-300">%</span
           >
         </td>
       {/if}
       {#if entityState.anySupportBrand && enc.curSettings.breakdown.percentBrand}
         <td class="px-1 text-center">
           {customRound((entity.damageStats.debuffedBySupport / entityState.damageDealtWithoutHa) * 100)}<span
-            class="text-3xs text-gray-300">%</span
+            class="text-xxs text-gray-300">%</span
           >
         </td>
       {/if}
       {#if entityState.anySupportIdentity && enc.curSettings.breakdown.percentIdentityBySup}
         <td class="px-1 text-center">
           {customRound((entity.damageStats.buffedByIdentity / entityState.damageDealtWithoutHa) * 100)}<span
-            class="text-3xs text-gray-300">%</span
+            class="text-xxs text-gray-300">%</span
           >
         </td>
       {/if}
       {#if entityState.anySupportHat && enc.curSettings.breakdown.percentHatBySup}
         <td class="px-1 text-center">
           {customRound(((entity.damageStats.buffedByHat ?? 0) / entity.damageStats.damageDealt) * 100)}<span
-            class="text-3xs text-gray-300">%</span
+            class="text-xxs text-gray-300">%</span
           >
         </td>
       {/if}
@@ -199,7 +199,7 @@
   {#each entityState.skills as skill, i (skill.id)}
     <tr
       animate:flip={{ duration: 200 }}
-      class="text-3xs h-7 px-2 py-1 {settings.app.general.underlineHovered ? 'hover:underline' : ''}"
+      class="text-xxs h-7 px-2 py-1 {settings.app.general.underlineHovered ? 'hover:underline' : ''}"
     >
       <PlayerBreakdownRow {skill} {entityState} width={entityState.skillDamagePercentages[i]!} index={i} />
     </tr>

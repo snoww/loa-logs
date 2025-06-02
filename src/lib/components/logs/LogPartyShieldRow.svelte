@@ -31,12 +31,12 @@
     </QuickTooltip>
   </div>
 </td>
-<td class="text-3xs px-1 text-center">
-  {totalShieldStr[0]}<span class="text-3xs text-neutral-300">{totalShieldStr[1]}</span>
+<td class="text-xxs px-1 text-center">
+  {totalShieldStr[0]}<span class="text-xxs text-neutral-300">{totalShieldStr[1]}</span>
 </td>
 {#if playerShields.length > 0}
   {#each playerShields as shield (shield.id)}
-    <td class="text-3xs px-1 text-center">
+    <td class="text-xxs px-1 text-center">
       {#if shield.total}
         <ShieldDetailTooltip shieldDetails={shield} />
       {/if}

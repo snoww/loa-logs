@@ -47,7 +47,7 @@
     </thead>
     <tbody class="relative z-10">
       {#each cards as card, i}
-        <tr class="text-3xs h-6 px-2 py-1 {settings.app.general.underlineHovered ? 'hover:underline' : ''}">
+        <tr class="text-xxs h-6 px-2 py-1 {settings.app.general.underlineHovered ? 'hover:underline' : ''}">
           <td class="px-1">
             <div class="flex items-center space-x-1">
               <img class="size-5" src={getSkillIcon(card.icon)} alt={card.name} />
@@ -60,7 +60,7 @@
             {card.casts}
           </td>
           <td class="px-1 text-center">
-            {drawPercentages[i]!.toFixed(1)}<span class="text-3xs text-neutral-300">%</span>
+            {drawPercentages[i]!.toFixed(1)}<span class="text-xxs text-neutral-300">%</span>
           </td>
           <td
             class="absolute left-0 -z-10 h-6 px-2 py-1"

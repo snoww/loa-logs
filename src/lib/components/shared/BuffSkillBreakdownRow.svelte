@@ -36,7 +36,7 @@
   <SkillTooltip {skill} />
 {/snippet}
 
-<tr class="text-3xs h-7 px-2 py-1 {settings.app.general.underlineHovered ? 'hover:underline' : ''}">
+<tr class="text-xxs h-7 px-2 py-1 {settings.app.general.underlineHovered ? 'hover:underline' : ''}">
   <td class="pl-1">
     <QuickTooltip tooltip={skill.name}>
       <img class="size-5" src={getSkillIcon(skill.icon)} alt={skill.name} />
@@ -57,7 +57,7 @@
         {:else if isHyperAwakening}
           -
         {:else}
-          0<span class="text-3xs text-neutral-300">%</span>
+          0<span class="text-xxs text-neutral-300">%</span>
         {/if}
       </td>
     {/each}

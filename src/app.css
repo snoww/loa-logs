@@ -10,8 +10,8 @@
   --font-sans: "Inter Variable", sans-serif;
   --font-mono: "Geist Mono Variable", monospace;
 
-  --text-xxs: 0.875rem;
-  --text-3xs: 0.75rem;
+  --text-xxs: 0.7rem;
+  --text-3xs: 0.65rem;
 
   --color-accent-50: var(--accent-50);
   --color-accent-100: var(--accent-100);

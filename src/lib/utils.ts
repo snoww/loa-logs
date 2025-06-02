@@ -311,8 +311,8 @@ export function getSkillIcon(skillIcon: string): string {
   return "/images/skills/" + (skillIcon !== "" ? skillIcon : "unknown.png");
 }
 
-export function getClassIcon(classIcon: number | string): string {
-  return "/images/classes/" + classIcon + ".png";
+export function getClassIcon(classId: number | string): string {
+  return "/images/classes/" + classId + ".png";
 }
 
 export function getEstherFromNpcId(npcId: number): string {

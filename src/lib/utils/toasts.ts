@@ -91,7 +91,7 @@ export const resuming: AddToastProps<ToastData> = {
   closeDelay: 1000 // 1 second
 };
 
-export const saving: AddToastProps<ToastData> = {
+export const manualSave: AddToastProps<ToastData> = {
   data: {
     title: "",
     description: "saving session",

@@ -43,7 +43,7 @@
 </td>
 {#if playerBuffs.length > 0}
   {#each playerBuffs as buff (buff.id)}
-    <td class="text-3xs px-1 text-center">
+    <td class="text-xxs px-1 text-center">
       {#if buff.percentage}
         <BuffDetailTooltip buffDetails={buff} />
       {/if}

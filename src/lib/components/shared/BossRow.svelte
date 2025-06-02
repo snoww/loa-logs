@@ -33,7 +33,7 @@
 
 <!-- Render value + units -->
 {#snippet damageValue(val: [number, string])}
-  {val[0]}<span class="text-3xs text-gray-300">{val[1]}</span>
+  {val[0]}<span class="text-xxs text-gray-300">{val[1]}</span>
 {/snippet}
 
 <td colspan="2" class="px-2">

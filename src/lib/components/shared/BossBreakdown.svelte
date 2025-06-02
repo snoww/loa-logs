@@ -47,7 +47,7 @@
     {#if boss}
       {#each entityState.skills as skill, i (skill.id)}
         <tr
-          class="text-3xs h-7 px-2 py-1 {settings.app.general.underlineHovered ? 'hover:underline' : ''}"
+          class="text-xxs h-7 px-2 py-1 {settings.app.general.underlineHovered ? 'hover:underline' : ''}"
           animate:flip={{ duration: 200 }}
         >
           <BossBreakdownRow {entityState} {skill} width={entityState.skillDamagePercentages[i]} index={i} />

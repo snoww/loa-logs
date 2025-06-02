@@ -214,12 +214,12 @@
 
 <!-- Render value + units -->
 {#snippet damageValue(val: [number, string])}
-  {val[0]}<span class="text-3xs text-gray-300">{val[1]}</span>
+  {val[0]}<span class="text-xxs text-gray-300">{val[1]}</span>
 {/snippet}
 
 <!-- Render value + percent -->
 {#snippet percentValue(val: string | number)}
-  {val}<span class="text-3xs text-gray-300">%</span>
+  {val}<span class="text-xxs text-gray-300">%</span>
 {/snippet}
 
 {#snippet deadFor(state: EntityState)}

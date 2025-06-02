@@ -50,7 +50,5 @@ export async function registerShortcuts() {
         });
       }
     }
-  } catch (error) {
-    await invoke("write_log", { message: "[live_meter::register_shortcuts] " + error });
-  }
+  } catch {}
 }

@@ -18,14 +18,14 @@
         <div class="flex items-center">
           <img src={getSkillIcon(buff.sourceIcon)} alt={buff.sourceIcon} class="mr-1 size-5 rounded-sm" />
           {#if buff.bonus}
-            [{buff.bonus}<span class="text-3xs text-neutral-300">%</span>]
+            [{buff.bonus}<span class="text-xxs text-neutral-300">%</span>]
           {/if}
-          {buff.percentage}<span class="text-3xs text-neutral-300">%</span>
+          {buff.percentage}<span class="text-xxs text-neutral-300">%</span>
         </div>
       {:else}
         <div class="flex items-center">
           <img src={getSkillIcon(buff.icon)} alt={buff.icon} class="mr-1 size-5 rounded-sm" />
-          {buff.percentage}<span class="text-3xs text-neutral-300">%</span>
+          {buff.percentage}<span class="text-xxs text-neutral-300">%</span>
         </div>
       {/if}
     {/each}
@@ -34,6 +34,6 @@
 
 <QuickTooltip {tooltip}>
   <div class="relative z-20">
-    {buffDetails.percentage}<span class="text-3xs text-neutral-300">%</span>
+    {buffDetails.percentage}<span class="text-xxs text-neutral-300">%</span>
   </div>
 </QuickTooltip>
