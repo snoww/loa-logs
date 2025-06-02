@@ -40,6 +40,7 @@
     return () => clearInterval(interval);
   });
 
+  let starting = $state(false);
   let checking = $state(false);
 </script>
 
@@ -108,16 +109,24 @@
           <IconDiscord class="size-4" />
         </a>
       </div>
-      <div class="flex items-center justify-center gap-1 px-2 pt-4">
+      <div class="flex items-center gap-1 px-2 pt-1">
         <button
-          class=" rounded-md bg-neutral-700/70 px-3 py-1 {loaRunning
-            ? 'cursor-default'
-            : 'hover:text-accent-500 hover:opacity-80'}"
-          onclick={() => invoke("start_loa_process")}
-          disabled={!loaRunning}
+          class="flex items-center gap-2 rounded-md px-3 py-1 text-sm {loaRunning
+            ? 'cursor-default text-neutral-300/80'
+            : 'hover:text-accent-500'}"
+          onclick={() => {
+            starting = true;
+            invoke("start_loa_process");
+            setTimeout(() => {
+              starting = false;
+            }, 5000);
+          }}
+          disabled={loaRunning}
         >
           {#if loaRunning}
             Lost Ark is running
+          {:else if !loaRunning && starting}
+            starting...
           {:else}
             Start Lost Ark
           {/if}
