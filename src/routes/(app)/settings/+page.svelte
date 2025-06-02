@@ -207,7 +207,9 @@
       {@render settingsTab("Accessibility")}
       {@render settingsTab("Logs")}
       {@render settingsTab("Meter")}
-      {@render settingsTab("Mini")}
+      {#if settings.app.general.mini}
+        {@render settingsTab("Mini")}
+      {/if}
       {@render settingsTab("Buffs")}
       {@render settingsTab("Colors")}
       {@render settingsTab("Shortcuts")}
