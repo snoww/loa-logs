@@ -20,8 +20,9 @@
     let events: Array<UnlistenFn> = [];
     (async () => {
       let encounterUpdateEvent = await listen("encounter-update", (event: EncounterEvent) => {
-        // console.log(+Date.now(), event.payload);
-        enc.encounter = event.payload;
+        if (settings.app.general.mini) {
+          enc.encounter = event.payload;
+        }
       });
 
       let zoneChangeEvent = await listen("zone-change", () => {
