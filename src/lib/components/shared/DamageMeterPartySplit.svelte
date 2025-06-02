@@ -2,6 +2,7 @@
   import type { EncounterState } from "$lib/encounter.svelte";
   import { settings } from "$lib/stores.svelte";
   import { EntityType } from "$lib/types";
+  import { flip } from "svelte/animate";
   import DamageMeterHeader from "./DamageMeterHeader.svelte";
   import PlayerRow from "./PlayerRow.svelte";
 
@@ -68,7 +69,7 @@
       </thead>
       <tbody class="relative z-10 text-neutral-200">
         {#each party.members as member (member.entity.name)}
-          <tr
+          <tr animate:flip={{ duration: 200 }}
             class="h-7 px-2 py-1 {settings.app.general.underlineHovered ? 'hover:underline' : ''}"
             onclick={() => inspectPlayer(member.entity.name)}
           >

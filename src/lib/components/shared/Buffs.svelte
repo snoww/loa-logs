@@ -3,6 +3,7 @@
   import type { EncounterState } from "$lib/encounter.svelte";
   import { settings } from "$lib/stores.svelte";
   import { EntityType, MeterTab, type Entity } from "$lib/types";
+  import { flip } from "svelte/animate";
   import Back from "./Back.svelte";
   import BuffHeader from "./BuffHeader.svelte";
   import BuffRow from "./BuffRow.svelte";
@@ -60,6 +61,7 @@
             {#each enc.parties[i] as player, playerIndex (player.name)}
               {@const playerBuffs = buffs.partyBuffs.get(partyId)?.get(player.name) ?? []}
               <tr
+                animate:flip={{ duration: 200 }}
                 class="h-7 px-2 py-1 {settings.app.general.underlineHovered ? 'hover:underline' : ''}"
                 onclick={() => inspectPlayer(player.name)}
               >
@@ -93,6 +95,7 @@
       {#if !focusedPlayer}
         {#each buffs.players as player, i (player.name)}
           <tr
+            animate:flip={{ duration: 200 }}
             class="h-7 px-2 py-1 {settings.app.general.underlineHovered ? 'hover:underline' : ''}"
             onclick={() => inspectPlayer(player.name)}
           >

@@ -11,6 +11,7 @@
   import PlayerBreakdownHeader from "./PlayerBreakdownHeader.svelte";
   import PlayerBreakdownRow from "./PlayerBreakdownRow.svelte";
   import { customRound, isNameValid, rgbLinearShadeAdjust, UWUOWO_URL } from "$lib/utils";
+  import { flip } from "svelte/animate";
 
   interface Props {
     handleRightClick: () => void;
@@ -196,7 +197,10 @@
     </tr>
   {/if}
   {#each entityState.skills as skill, i (skill.id)}
-    <tr class="text-3xs h-7 px-2 py-1 {settings.app.general.underlineHovered ? 'hover:underline' : ''}">
+    <tr
+      animate:flip={{ duration: 200 }}
+      class="text-3xs h-7 px-2 py-1 {settings.app.general.underlineHovered ? 'hover:underline' : ''}"
+    >
       <PlayerBreakdownRow {skill} {entityState} width={entityState.skillDamagePercentages[i]!} index={i} />
     </tr>
   {/each}

@@ -2,6 +2,7 @@
   import QuickTooltip from "$lib/components/QuickTooltip.svelte";
   import type { EncounterState } from "$lib/encounter.svelte";
   import { settings } from "$lib/stores.svelte";
+  import { flip } from "svelte/animate";
   import DamageTakenRow from "./DamageTakenRow.svelte";
 
   interface Props {
@@ -24,7 +25,10 @@
   </thead>
   <tbody class="relative z-10">
     {#each enc.playerDamageTakenSorted as player, i (player.name)}
-      <tr class="h-7 px-2 py-1 {settings.app.general.underlineHovered ? 'hover:underline' : ''}">
+      <tr
+        animate:flip={{ duration: 200 }}
+        class="h-7 px-2 py-1 {settings.app.general.underlineHovered ? 'hover:underline' : ''}"
+      >
         <DamageTakenRow {enc} {player} width={enc.playerDamageTakenPercentages[i]!} />
       </tr>
     {/each}
