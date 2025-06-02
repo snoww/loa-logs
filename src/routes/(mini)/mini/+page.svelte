@@ -23,7 +23,18 @@
         enc.encounter = event.payload;
       });
 
-      events.push(encounterUpdateEvent);
+      let zoneChangeEvent = await listen("zone-change", () => {
+        misc.raidInProgress = false;
+        setTimeout(() => {
+          misc.raidInProgress = true;
+        }, 6000);
+      });
+      let phaseTransitionEvent = await listen("phase-transition", (event: any) => {
+        let phaseCode = event.payload;
+        misc.raidInProgress = false;
+      });
+
+      events.push(encounterUpdateEvent, zoneChangeEvent, phaseTransitionEvent);
     })();
 
     return () => {
@@ -31,9 +42,13 @@
       events.forEach((unlisten) => unlisten());
     };
   });
+
+  $effect(() => {
+    if (misc.raidInProgress) {
+      enc.reset();
+    }
+  });
 </script>
 
-<div class="h-full w-full border border-red-500 overflow-hidden select-none flex flex-col gap-2">
-  <MiniPlayers {enc} />
-  <MiniEncounterInfo {enc} />
-</div>
+<MiniPlayers {enc} />
+<MiniEncounterInfo {enc} />

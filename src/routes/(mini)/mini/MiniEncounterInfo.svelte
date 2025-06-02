@@ -19,7 +19,7 @@
       <div data-tauri-drag-region class="w-9">
         {durationPretty}
       </div>
-      <div class="truncate">
+      <div data-tauri-drag-region class="truncate">
         {enc.encounter?.currentBoss ? enc.encounter.currentBoss.name : "No Boss"}
       </div>
     </div>

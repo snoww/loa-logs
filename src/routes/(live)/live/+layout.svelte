@@ -61,6 +61,7 @@
   class="live-meter h-screen min-h-screen overflow-hidden {settings.app.general.transparent
     ? 'bg-neutral-900/25'
     : 'bg-neutral-900/95'}"
+  class:hidden={settings.app.general.mini}
 >
   {@render children?.()}
 </div>

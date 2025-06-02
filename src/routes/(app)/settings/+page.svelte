@@ -11,6 +11,7 @@
   import Shortcuts from "./Shortcuts.svelte";
   import { addToast } from "$lib/components/Toaster.svelte";
   import { networkSettingsChanged } from "$lib/utils/toasts";
+  import { WebviewWindow } from "@tauri-apps/api/window";
 
   let currentTab = $state("General");
 
@@ -27,6 +28,17 @@
 
   $effect(() => {
     settings.app.logs.minEncounterDuration = $minDuration[0];
+  });
+
+  $effect(() => {
+    const mini = WebviewWindow.getByLabel("mini");
+    const main = WebviewWindow.getByLabel("main");
+    if (settings.app.general.mini) {
+      main?.hide();
+      mini?.show();
+    } else {
+      mini?.hide();
+    }
   });
 
   onMount(() => {
@@ -185,11 +197,15 @@
     <div class="flex flex-col gap-2 px-4 py-2">
       {#if currentTab === "General"}
         {@render themeSetting()}
+        {@render settingOption("general", "mini", "Mini Mode", "Experimental horizontal mode for live meter.")}
+        {#if settings.app.general.mini}
+          {@render settingOption("general", "miniEdit", "Edit Mini Meter", "Enable this setting to drag window to desired position, turn off when finished.")}
+        {/if}
         {@render settingOption(
           "general",
           "startLoaOnStart",
           "Auto Launch Lost Ark",
-          "Automatically start Lost Ark when the app is opened"
+          "Automatically start Lost Ark when the app is opened."
         )}
         <label class="flex items-center gap-2">
           <input

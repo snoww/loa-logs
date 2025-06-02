@@ -37,10 +37,10 @@ use std::rc::Rc;
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
 use std::time::{Duration, Instant};
-use tauri::{Manager, Window, Wry};
+use tauri::{AppHandle, Manager, Window, Wry};
 use uuid::Uuid;
 
-pub fn start(window: Window<Wry>, port: u16, settings: Option<Settings>) -> Result<()> {
+pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()> {
     let id_tracker = Rc::new(RefCell::new(IdTracker::new()));
     let party_tracker = Rc::new(RefCell::new(PartyTracker::new(id_tracker.clone())));
     let status_tracker = Rc::new(RefCell::new(StatusTracker::new(party_tracker.clone())));
@@ -49,11 +49,11 @@ pub fn start(window: Window<Wry>, port: u16, settings: Option<Settings>) -> Resu
         id_tracker.clone(),
         party_tracker.clone(),
     );
-    let mut state = EncounterState::new(window.clone());
-    let mut resource_path = window.app_handle().path_resolver().resource_dir().unwrap();
+    let mut state = EncounterState::new(app.app_handle());
+    let mut resource_path = app.path_resolver().resource_dir().unwrap();
     resource_path.push("current_region");
     let region_file_path = resource_path.to_string_lossy();
-    let mut stats_api = StatsApi::new(window.clone());
+    let mut stats_api = StatsApi::new(app.app_handle());
     let rx = match start_capture(port, region_file_path.to_string()) {
         Ok(rx) => rx,
         Err(e) => {
@@ -93,7 +93,7 @@ pub fn start(window: Window<Wry>, port: u16, settings: Option<Settings>) -> Resu
     // read saved local players
     // this info is used in case meter was opened late
     let mut local_info: LocalInfo = LocalInfo::default();
-    let mut local_player_path = window.app_handle().path_resolver().resource_dir().unwrap();
+    let mut local_player_path = app.path_resolver().resource_dir().unwrap();
     let mut client_id = "".to_string();
     local_player_path.push("local_players.json");
 
@@ -115,30 +115,30 @@ pub fn start(window: Window<Wry>, port: u16, settings: Option<Settings>) -> Resu
 
     let emit_details = Arc::new(AtomicBool::new(false));
 
-    let meter_window_clone = window.clone();
-    window.listen_global("reset-request", {
+    let cloned = app.app_handle();
+    app.listen_global("reset-request", {
         let reset_clone = reset.clone();
-        let meter_window_clone = meter_window_clone.clone();
+        let app_clone = cloned.app_handle();
         move |_event| {
             reset_clone.store(true, Ordering::Relaxed);
             info!("resetting meter");
-            meter_window_clone.emit("reset-encounter", "").ok();
+            app_clone.emit_all("reset-encounter", "").ok();
         }
     });
 
-    window.listen_global("save-request", {
+    app.listen_global("save-request", {
         let save_clone = save.clone();
-        let meter_window_clone = meter_window_clone.clone();
+        let app_clone = cloned.app_handle();
         move |_event| {
             save_clone.store(true, Ordering::Relaxed);
             info!("manual saving encounter");
-            meter_window_clone.emit("save-encounter", "").ok();
+            app_clone.emit_all("save-encounter", "").ok();
         }
     });
 
-    window.listen_global("pause-request", {
+    app.listen_global("pause-request", {
         let pause_clone = pause.clone();
-        let meter_window_clone = meter_window_clone.clone();
+        let app_clone = cloned.app_handle();
         move |_event| {
             let prev = pause_clone.fetch_xor(true, Ordering::Relaxed);
             if prev {
@@ -146,11 +146,11 @@ pub fn start(window: Window<Wry>, port: u16, settings: Option<Settings>) -> Resu
             } else {
                 info!("pausing meter");
             }
-            meter_window_clone.emit("pause-encounter", "").ok();
+            app_clone.emit_all("pause-encounter", "").ok();
         }
     });
 
-    window.listen_global("boss-only-damage-request", {
+    app.listen_global("boss-only-damage-request", {
         let boss_only_damage = boss_only_damage.clone();
         move |event| {
             if let Some(bod) = event.payload() {
@@ -165,7 +165,7 @@ pub fn start(window: Window<Wry>, port: u16, settings: Option<Settings>) -> Resu
         }
     });
 
-    window.listen_global("emit-details-request", {
+    app.listen_global("emit-details-request", {
         let emit_clone = emit_details.clone();
         move |_event| {
             let prev = emit_clone.fetch_xor(true, Ordering::Relaxed);
@@ -225,25 +225,25 @@ pub fn start(window: Window<Wry>, port: u16, settings: Option<Settings>) -> Resu
                     }
                 }
             }
-            Pkt::IdentityGaugeChangeNotify => {
-                if let Some(pkt) = parse_pkt(
-                    &data,
-                    PKTIdentityGaugeChangeNotify::new,
-                    "PKTIdentityGaugeChangeNotify",
-                ) {
-                    state.on_identity_gain(&pkt);
-                    if emit_details.load(Ordering::Relaxed) {
-                        window.emit(
-                            "identity-update",
-                            Identity {
-                                gauge1: pkt.identity_gauge1,
-                                gauge2: pkt.identity_gauge2,
-                                gauge3: pkt.identity_gauge3,
-                            },
-                        )?;
-                    }
-                }
-            }
+            // Pkt::IdentityGaugeChangeNotify => {
+            //     if let Some(pkt) = parse_pkt(
+            //         &data,
+            //         PKTIdentityGaugeChangeNotify::new,
+            //         "PKTIdentityGaugeChangeNotify",
+            //     ) {
+            //         state.on_identity_gain(&pkt);
+            //         if emit_details.load(Ordering::Relaxed) {
+            //             app.emit_all(
+            //                 "identity-update",
+            //                 Identity {
+            //                     gauge1: pkt.identity_gauge1,
+            //                     gauge2: pkt.identity_gauge2,
+            //                     gauge3: pkt.identity_gauge3,
+            //                 },
+            //             )?;
+            //         }
+            //     }
+            // }
             // Pkt::IdentityStanceChangeNotify => {
             //     if let Some(pkt) = parse_pkt(
             //         &data,
@@ -1008,7 +1008,7 @@ pub fn start(window: Window<Wry>, port: u16, settings: Option<Settings>) -> Resu
             }
             let mut clone = state.encounter.clone();
             let damage_valid = state.damage_is_valid;
-            let window = window.clone();
+            let app_handle = app.app_handle();
 
             let party_info: Option<HashMap<i32, Vec<String>>> =
                 if last_party_update.elapsed() >= party_duration && !party_freeze {
@@ -1061,17 +1061,17 @@ pub fn start(window: Window<Wry>, port: u16, settings: Option<Settings>) -> Resu
 
                 if !clone.entities.is_empty() {
                     if !damage_valid {
-                        window
-                            .emit("invalid-damage", "")
+                        app_handle
+                            .emit_all("invalid-damage", "")
                             .expect("failed to emit invalid-damage");
                     } else {
-                        window
-                            .emit("encounter-update", Some(clone))
+                        app_handle
+                            .emit_all("encounter-update", Some(clone))
                             .expect("failed to emit encounter-update");
 
                         if party_info.is_some() {
-                            window
-                                .emit("party-update", party_info)
+                            app_handle
+                                .emit_all("party-update", party_info)
                                 .expect("failed to emit party-update");
                         }
                     }
@@ -1093,7 +1093,7 @@ pub fn start(window: Window<Wry>, port: u16, settings: Option<Settings>) -> Resu
         if last_heartbeat.elapsed() >= heartbeat_duration {
             let client = client.clone();
             let client_id = client_id.clone();
-            let version = window.app_handle().package_info().version.to_string();
+            let version = app.package_info().version.to_string();
             let region = match state.region {
                 Some(ref region) => region.clone(),
                 None => continue,

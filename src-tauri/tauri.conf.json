@@ -118,7 +118,8 @@
     "windows": [
       {
         "label": "main",
-        "title": "LOA Logs",
+        "title": "Meter | LOA Logs",
+        "userAgent": "LOA Logs App",
         "url": "live",
         "fullscreen": false,
         "width": 500,
@@ -142,6 +143,22 @@
         "height": 500,
         "decorations": true,
         "fileDropEnabled": false,
+        "visible": false
+      },
+      {
+        "label": "mini",
+        "title": "mini | LOA Logs",
+        "userAgent": "LOA Logs App",
+        "url": "mini",
+        "fullscreen": false,
+        "width": 1280,
+        "height": 500,
+        "resizable": false,
+        "decorations": false,
+        "transparent": true,
+        "minWidth": 1280,
+        "minHeight": 500,
+        "alwaysOnTop": true,
         "visible": false
       }
     ]

@@ -183,7 +183,9 @@ export const defaultSettings = {
     bossOnlyDamageDefaultOn: true,
     startOnBoot: false,
     logsPerPage: 10,
-    experimentalFeatures: false
+    experimentalFeatures: false,
+    mini: false,
+    miniEdit: true,   
   },
   shortcuts: {
     hideMeter: "Control+ArrowDown",

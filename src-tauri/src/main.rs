@@ -32,13 +32,14 @@ use tauri_plugin_window_state::{AppHandleExt, StateFlags, WindowExt};
 use window_vibrancy::{apply_blur, clear_blur};
 
 const METER_WINDOW_LABEL: &str = "main";
+const METER_MINI_WINDOW_LABEL: &str = "mini";
 const LOGS_WINDOW_LABEL: &str = "logs";
 const WINDOW_STATE_FLAGS: StateFlags = StateFlags::from_bits_truncate(
     StateFlags::FULLSCREEN.bits()
         | StateFlags::MAXIMIZED.bits()
+        | StateFlags::DECORATIONS.bits()
         | StateFlags::POSITION.bits()
         | StateFlags::SIZE.bits()
-        | StateFlags::VISIBLE.bits(),
 );
 
 #[tokio::main]
@@ -55,8 +56,6 @@ async fn main() -> Result<()> {
     let show_logs = CustomMenuItem::new("show-logs".to_string(), "Show Logs");
     let show_meter = CustomMenuItem::new("show-meter".to_string(), "Show Meter");
     let hide_meter = CustomMenuItem::new("hide".to_string(), "Hide Meter");
-    let load_saved_pos = CustomMenuItem::new("load".to_string(), "Load Saved");
-    let save_current_pos = CustomMenuItem::new("save".to_string(), "Save Position");
     let reset = CustomMenuItem::new("reset".to_string(), "Reset Window");
     let tray_menu = SystemTrayMenu::new()
         .add_item(show_logs)
@@ -64,8 +63,6 @@ async fn main() -> Result<()> {
         .add_item(show_meter)
         .add_item(hide_meter)
         .add_native_item(SystemTrayMenuItem::Separator)
-        .add_item(save_current_pos)
-        .add_item(load_saved_pos)
         .add_item(reset)
         .add_native_item(SystemTrayMenuItem::Separator)
         .add_item(quit);
@@ -130,6 +127,11 @@ async fn main() -> Result<()> {
             meter_window
                 .restore_state(WINDOW_STATE_FLAGS)
                 .expect("failed to restore window state");
+
+            let mini_window = app.get_window(METER_MINI_WINDOW_LABEL).unwrap();
+            meter_window
+                .restore_state(WINDOW_STATE_FLAGS)
+                .expect("failed to restore window state");
             // #[cfg(debug_assertions)]
             // {
             //     meter_window.open_devtools();
@@ -144,7 +146,9 @@ async fn main() -> Result<()> {
 
             if let Some(settings) = settings.clone() {
                 info!("settings loaded");
-                if !settings.general.hide_meter_on_start {
+                if settings.general.mini {
+                    mini_window.show().unwrap();
+                } else if !settings.general.hide_meter_on_start && !settings.general.mini {
                     meter_window.show().unwrap();
                 }
                 if !settings.general.hide_logs_on_start {
@@ -152,6 +156,9 @@ async fn main() -> Result<()> {
                 }
                 if !settings.general.always_on_top {
                     meter_window.set_always_on_top(false).unwrap();
+                    mini_window.set_always_on_top(false).unwrap();
+                } else {
+                    meter_window.set_always_on_top(true).unwrap();
                 }
 
                 if settings.general.auto_iface && settings.general.port > 0 {
@@ -172,13 +179,14 @@ async fn main() -> Result<()> {
             // only start listening if we have live meter
             #[cfg(feature = "meter-core")]
             {
+                let app = app.app_handle();
                 tokio::task::spawn_blocking(move || {
                     // only start listening when there's no update, otherwise unable to remove driver
                     while !update_checked.load(Ordering::Relaxed) {
                         std::thread::sleep(std::time::Duration::from_millis(100));
                     }
                     info!("listening on port: {}", port);
-                    live::start(meter_window, port, settings).map_err(|e| {
+                    live::start(app, port, settings).map_err(|e| {
                         error!("unexpected error occurred in parser: {}", e);
                     })
                 });
@@ -193,8 +201,7 @@ async fn main() -> Result<()> {
         })
         .plugin(
             tauri_plugin_window_state::Builder::new()
-                .skip_initial_state(METER_WINDOW_LABEL)
-                .skip_initial_state(LOGS_WINDOW_LABEL)
+                .with_state_flags(WINDOW_STATE_FLAGS)
                 .build(),
         )
         .plugin(tauri_plugin_single_instance::init(|_app, _argv, _cwd| {}))
@@ -202,7 +209,9 @@ async fn main() -> Result<()> {
             tauri::WindowEvent::CloseRequested { api, .. } => {
                 api.prevent_close();
 
-                if event.window().label() == METER_WINDOW_LABEL {
+                if event.window().label() == METER_WINDOW_LABEL
+                    || event.window().label() == METER_MINI_WINDOW_LABEL
+                {
                     let app_handle = event.window().app_handle();
                     let meter_window = app_handle.get_window(METER_WINDOW_LABEL).unwrap();
                     let logs_window = app_handle.get_window(LOGS_WINDOW_LABEL).unwrap();
@@ -236,76 +245,99 @@ async fn main() -> Result<()> {
             _ => {}
         })
         .system_tray(system_tray)
-        .on_system_tray_event(|app, event| match event {
-            SystemTrayEvent::LeftClick {
-                position: _,
-                size: _,
-                ..
-            } => {
-                if let Some(meter) = app.get_window(METER_WINDOW_LABEL) {
-                    meter.show().unwrap();
-                    meter.unminimize().unwrap();
-                    meter.set_ignore_cursor_events(false).unwrap()
+        .on_system_tray_event(|app, event| {
+            let resource_path = app
+                .path_resolver()
+                .resource_dir()
+                .expect("could not get resource dir");
+            let settings = read_settings(&resource_path).ok().unwrap_or_default();
+
+            let show_window = |window: &tauri::Window| {
+                window.show().unwrap();
+                window.unminimize().unwrap();
+                window.set_focus().unwrap();
+                if window.label() == "main" {
+                    window.set_ignore_cursor_events(false).unwrap();
                 }
-            }
-            SystemTrayEvent::MenuItemClick { id, .. } => match id.as_str() {
-                "quit" => {
-                    app.save_window_state(WINDOW_STATE_FLAGS)
-                        .expect("failed to save window state");
-                    unload_driver();
-                    app.exit(0);
-                }
-                "hide" => {
-                    if let Some(meter) = app.get_window(METER_WINDOW_LABEL) {
-                        meter.hide().unwrap();
+            };
+
+            let get_meter_window =
+                |app: &tauri::AppHandle, settings: &Settings| -> Option<tauri::Window> {
+                    let label = if settings.general.mini {
+                        METER_MINI_WINDOW_LABEL
+                    } else {
+                        METER_WINDOW_LABEL
+                    };
+                    app.get_window(label)
+                };
+
+            match event {
+                SystemTrayEvent::LeftClick { .. } => {
+                    if let Some(meter) = get_meter_window(app, &settings) {
+                        show_window(&meter);
                     }
                 }
-                "show-meter" => {
-                    if let Some(meter) = app.get_window(METER_WINDOW_LABEL) {
-                        meter.show().unwrap();
-                        meter.unminimize().unwrap();
-                        meter.set_ignore_cursor_events(false).unwrap()
+                SystemTrayEvent::MenuItemClick { id, .. } => match id.as_str() {
+                    "quit" => {
+                        app.save_window_state(WINDOW_STATE_FLAGS)
+                            .expect("failed to save window state");
+                        unload_driver();
+                        app.exit(0);
                     }
-                }
-                "load" => {
-                    if let Some(meter) = app.get_window(METER_WINDOW_LABEL) {
-                        meter.restore_state(WINDOW_STATE_FLAGS).unwrap();
+                    "hide" => {
+                        if let Some(meter) = app.get_window(METER_WINDOW_LABEL) {
+                            meter.hide().unwrap();
+                        }
+                        if let Some(mini) = app.get_window(METER_MINI_WINDOW_LABEL) {
+                            mini.hide().unwrap();
+                        }
                     }
-                }
-                "save" => {
-                    if let Some(meter) = app.get_window(METER_WINDOW_LABEL) {
-                        meter
-                            .app_handle()
-                            .save_window_state(WINDOW_STATE_FLAGS)
-                            .unwrap();
+                    "show-meter" => {
+                        if let Some(meter) = get_meter_window(app, &settings) {
+                            show_window(&meter);
+                        }
                     }
-                }
-                "reset" => {
-                    if let Some(meter) = app.get_window(METER_WINDOW_LABEL) {
-                        meter
-                            .set_size(Size::Logical(LogicalSize {
-                                width: 500.0,
-                                height: 350.0,
-                            }))
-                            .unwrap();
-                        meter
-                            .set_position(Position::Logical(LogicalPosition { x: 100.0, y: 100.0 }))
-                            .unwrap();
-                        meter.show().unwrap();
-                        meter.unminimize().unwrap();
-                        meter.set_focus().unwrap();
-                        meter.set_ignore_cursor_events(false).unwrap();
+                    "reset" => {
+                        if settings.general.mini {
+                            if let Some(mini) = app.get_window(METER_MINI_WINDOW_LABEL) {
+                                mini.set_size(Size::Logical(LogicalSize {
+                                    width: 1280.0,
+                                    height: 500.0,
+                                }))
+                                .unwrap();
+                                mini.set_position(Position::Logical(LogicalPosition {
+                                    x: 100.0,
+                                    y: 100.0,
+                                }))
+                                .unwrap();
+                                show_window(&mini);
+                            }
+                        } else if let Some(meter) = app.get_window(METER_WINDOW_LABEL) {
+                            meter
+                                .set_size(Size::Logical(LogicalSize {
+                                    width: 500.0,
+                                    height: 350.0,
+                                }))
+                                .unwrap();
+                            meter
+                                .set_position(Position::Logical(LogicalPosition {
+                                    x: 100.0,
+                                    y: 100.0,
+                                }))
+                                .unwrap();
+                            show_window(&meter);
+                        }
                     }
-                }
-                "show-logs" => {
-                    if let Some(logs) = app.get_window(LOGS_WINDOW_LABEL) {
-                        logs.show().unwrap();
-                        logs.unminimize().unwrap();
+                    "show-logs" => {
+                        if let Some(logs) = app.get_window(LOGS_WINDOW_LABEL) {
+                            logs.show().unwrap();
+                            logs.unminimize().unwrap();
+                        }
                     }
-                }
+                    _ => {}
+                },
                 _ => {}
-            },
-            _ => {}
+            }
         })
         .invoke_handler(tauri::generate_handler![
             load_encounters_preview,
@@ -1218,15 +1250,27 @@ fn delete_encounters(window: tauri::Window, ids: Vec<i32>) {
 
 #[tauri::command]
 fn toggle_meter_window(window: tauri::Window) {
-    if let Some(meter) = window.app_handle().get_window(METER_WINDOW_LABEL) {
-        if meter.is_visible().unwrap() {
-            // workaround for tauri not handling minimized state for windows without decorations
-            if meter.is_minimized().unwrap() {
-                meter.unminimize().unwrap();
-            }
-            meter.hide().unwrap();
+    let resource_path = window
+        .app_handle()
+        .path_resolver()
+        .resource_dir()
+        .expect("could not get resource dir");
+    if let Ok(settings) = read_settings(&resource_path) {
+        let label = if settings.general.mini {
+            METER_MINI_WINDOW_LABEL
         } else {
-            meter.show().unwrap();
+            METER_WINDOW_LABEL
+        };
+        if let Some(meter) = window.app_handle().get_window(label) {
+            if meter.is_visible().unwrap() {
+                // workaround for tauri not handling minimized state for windows without decorations
+                if meter.is_minimized().unwrap() {
+                    meter.unminimize().unwrap();
+                }
+                meter.hide().unwrap();
+            } else {
+                meter.show().unwrap();
+            }
         }
     }
 }

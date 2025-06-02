@@ -9,7 +9,7 @@ use rusqlite::Connection;
 use std::cmp::max;
 use std::default::Default;
 
-use tauri::{Manager, Window, Wry};
+use tauri::{AppHandle, Manager, Window, Wry};
 use tokio::task;
 
 use crate::live::entity_tracker::{Entity, EntityTracker};
@@ -21,7 +21,7 @@ use crate::parser::models::*;
 
 #[derive(Debug)]
 pub struct EncounterState {
-    pub window: Window<Wry>,
+    pub app: AppHandle,
     pub encounter: Encounter,
     pub resetting: bool,
     pub boss_dead_update: bool,
@@ -59,9 +59,9 @@ pub struct EncounterState {
 }
 
 impl EncounterState {
-    pub fn new(window: Window<Wry>) -> EncounterState {
+    pub fn new(window: AppHandle) -> EncounterState {
         EncounterState {
-            window,
+            app: window,
             encounter: Encounter::default(),
             resetting: false,
             raid_clear: false,
@@ -205,16 +205,16 @@ impl EncounterState {
             e.name == self.encounter.local_player || e.damage_stats.damage_dealt > 0
         });
 
-        self.window
-            .emit("zone-change", "")
+        self.app
+            .emit_all("zone-change", "")
             .expect("failed to emit zone-change");
 
         self.soft_reset(false);
     }
 
     pub fn on_phase_transition(&mut self, phase_code: i32, stats_api: &mut StatsApi) {
-        self.window
-            .emit("phase-transition", phase_code)
+        self.app
+            .emit_all("phase-transition", phase_code)
             .expect("failed to emit phase-transition");
 
         match phase_code {
@@ -653,8 +653,8 @@ impl EncounterState {
             };
 
             self.encounter.boss_only_damage = self.boss_only_damage;
-            self.window
-                .emit("raid-start", timestamp)
+            self.app
+                .emit_all("raid-start", timestamp)
                 .expect("failed to emit raid-start");
         }
 
@@ -1506,7 +1506,7 @@ impl EncounterState {
 
         let mut encounter = self.encounter.clone();
         let mut path = self
-            .window
+            .app
             .app_handle()
             .path_resolver()
             .resource_dir()
@@ -1524,7 +1524,7 @@ impl EncounterState {
         let party_info = self.party_info.clone();
         let raid_difficulty = self.raid_difficulty.clone();
         let region = self.region.clone();
-        let meter_version = self.window.app_handle().package_info().version.to_string();
+        let meter_version = self.app.app_handle().package_info().version.to_string();
 
         let ntp_fight_start = self.ntp_fight_start;
 
@@ -1544,7 +1544,7 @@ impl EncounterState {
 
         encounter.current_boss_name = update_current_boss_name(&encounter.current_boss_name);
 
-        let window = self.window.clone();
+        let window = self.app.clone();
         task::spawn(async move {
             let player_infos = if !raid_difficulty.is_empty()
                 && !encounter.current_boss_name.is_empty()
@@ -1598,7 +1598,7 @@ impl EncounterState {
 
             if raid_clear {
                 window
-                    .emit("clear-encounter", encounter_id)
+                    .emit_all("clear-encounter", encounter_id)
                     .expect("failed to emit clear-encounter");
             }
         });

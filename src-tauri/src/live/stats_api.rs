@@ -11,7 +11,7 @@ use serde::{Deserialize, Deserializer, Serialize};
 use serde_json::json;
 use std::fmt;
 use std::sync::Arc;
-use tauri::{Manager, Window, Wry};
+use tauri::{AppHandle, Manager, Window, Wry};
 
 // pub const API_URL: &str = "http://localhost:5180";
 pub const API_URL: &str = "https://api.snow.xyz";
@@ -20,16 +20,16 @@ pub const API_URL: &str = "https://api.snow.xyz";
 pub struct StatsApi {
     pub client_id: String,
     client: Client,
-    window: Arc<Window<Wry>>,
+    app: AppHandle,
     pub valid_zone: bool,
     stats_cache: Cache<String, PlayerStats>,
 }
 
 impl StatsApi {
-    pub fn new(window: Window<Wry>) -> Self {
+    pub fn new(app: AppHandle) -> Self {
         Self {
             client_id: String::new(),
-            window: Arc::new(window),
+            app,
             client: Client::new(),
             valid_zone: false,
             stats_cache: Cache::builder().max_capacity(64).build(),
@@ -123,7 +123,7 @@ impl StatsApi {
 
         let request_body = json!({
             "clientId": self.client_id,
-            "version": self.window.app_handle().package_info().version.to_string(),
+            "version": self.app.package_info().version.to_string(),
             "region": region.unwrap(),
             "boss": boss_name,
             "characters": players,
