@@ -111,7 +111,7 @@
       </div>
       <div class="flex items-center gap-1 px-2 pt-1">
         <button
-          class="flex items-center gap-2 rounded-md px-3 py-1 text-sm {loaRunning
+          class="flex items-center gap-2 rounded-md px-3 py-1 text-sm {loaRunning || starting
             ? 'cursor-default text-neutral-300/80'
             : 'hover:text-accent-500'}"
           onclick={() => {
@@ -121,7 +121,7 @@
               starting = false;
             }, 5000);
           }}
-          disabled={loaRunning}
+          disabled={loaRunning || starting}
         >
           {#if loaRunning}
             Lost Ark is running
