@@ -3,11 +3,11 @@
   import { SkillState } from "$lib/skill.svelte";
   import { settings } from "$lib/stores.svelte";
   import type { Skill } from "$lib/types";
+  import { abbreviateNumberSplit, customRound, getSkillIcon, rgbLinearShadeAdjust } from "$lib/utils";
   import { cubicOut } from "svelte/easing";
   import { Tween } from "svelte/motion";
   import QuickTooltip from "../QuickTooltip.svelte";
-  import SkillTooltip from "../tooltips/SkillTooltip.svelte";
-  import { abbreviateNumberSplit, customRound, getSkillIcon, rgbLinearShadeAdjust } from "$lib/utils";
+  import { damageValue, percentValue, skillTooltip } from "../Snippets.svelte";
 
   interface Props {
     skill: Skill;
@@ -32,18 +32,6 @@
   });
 </script>
 
-{#snippet skillTooltip()}
-  <SkillTooltip {skill} />
-{/snippet}
-<!-- Render value + units -->
-{#snippet damageValue(val: [number, string])}
-  {val[0]}<span class="text-xxs text-gray-300">{val[1]}</span>
-{/snippet}
-<!-- Render value + percent -->
-{#snippet percentValue(val: string | number)}
-  {val}<span class="text-xxs text-gray-300">%</span>
-{/snippet}
-
 <td class="pl-1">
   <QuickTooltip tooltip={skill.name}>
     <img class="size-5" src={getSkillIcon(skill.icon)} alt={skill.name} />
@@ -52,7 +40,7 @@
 
 <td class="-left-px" colspan="2">
   <div class="flex truncate">
-    <QuickTooltip tooltip={skillTooltip} class="truncate">
+    <QuickTooltip tooltip={skillTooltip} tooltipProps={skill} class="truncate">
       {skill.name}
     </QuickTooltip>
   </div>

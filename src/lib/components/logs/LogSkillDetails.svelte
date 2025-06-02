@@ -8,6 +8,7 @@
   import QuickTooltip from "../QuickTooltip.svelte";
   import BuffTooltip from "../tooltips/BuffTooltip.svelte";
   import { abbreviateNumber, customRound, getSkillIcon, timestampToMinutesAndSeconds } from "$lib/utils";
+  import { middot } from "../Snippets.svelte";
 
   let {
     player,
@@ -79,9 +80,6 @@
   <p>
     {stat}: <span class="font-semibold">{customRound(rate * 100)}%</span>
   </p>
-{/snippet}
-{#snippet middot()}
-  <div class="text-neutral-400">&middot;</div>
 {/snippet}
 {#snippet changeBuffType(type: buffTypes)}
   <button

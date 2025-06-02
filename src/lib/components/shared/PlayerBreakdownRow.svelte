@@ -3,12 +3,12 @@
   import { SkillState } from "$lib/skill.svelte";
   import { settings } from "$lib/stores.svelte";
   import type { Skill } from "$lib/types";
+  import { getSkillIcon, rgbLinearShadeAdjust } from "$lib/utils";
   import { cubicOut } from "svelte/easing";
   import { Tween } from "svelte/motion";
   import QuickTooltip from "../QuickTooltip.svelte";
-  import SkillTooltip from "../tooltips/SkillTooltip.svelte";
+  import { skillTooltip } from "../Snippets.svelte";
   import { playerBreakdownColumns } from "./PlayerBreakdownColumns.svelte";
-  import { getSkillIcon, rgbLinearShadeAdjust } from "$lib/utils";
 
   interface Props {
     skill: Skill;
@@ -30,10 +30,6 @@
   });
 </script>
 
-{#snippet skillTooltip()}
-  <SkillTooltip {skill} />
-{/snippet}
-
 <td class="pl-1">
   <QuickTooltip tooltip={skill.name}>
     <img class="size-5" src={getSkillIcon(skill.icon)} alt={skill.name} />
@@ -42,7 +38,7 @@
 
 <td class="-left-px" colspan="2">
   <div class="flex truncate">
-    <QuickTooltip tooltip={skillTooltip} class="truncate">
+    <QuickTooltip tooltip={skillTooltip} tooltipProps={skill} class="truncate">
       {skill.name}
     </QuickTooltip>
   </div>

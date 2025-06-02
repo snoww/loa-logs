@@ -5,6 +5,7 @@
   import { settings } from "$lib/stores.svelte";
   import { hyperAwakeningIds } from "$lib/utils/buffs";
   import { abbreviateNumberSplit, customRound } from "$lib/utils";
+  import { damageValue, percentValue } from "../Snippets.svelte";
 
   export const playerBreakdownColumns: LogColumn<EntityState, SkillState>[] = [
     // Damage
@@ -83,7 +84,7 @@
         );
       },
       headerText: "F.A",
-      headerTooltip: frontAttackHeaderTooltip,
+      headerTooltip: "Front Attack %",
       value: faPct,
       valueTooltip: null
     },
@@ -113,7 +114,7 @@
         );
       },
       headerText: "B.A",
-      headerTooltip: backAttackHeaderTooltip,
+      headerTooltip: "Back Attack %",
       value: baPct,
       valueTooltip: null
     },
@@ -266,32 +267,6 @@
     }
   ];
 </script>
-
-<!-- Render value + units -->
-{#snippet damageValue(val: [number, string])}
-  {val[0]}<span class="text-xxs text-gray-300">{val[1]}</span>
-{/snippet}
-
-<!-- Render value + percent -->
-{#snippet percentValue(val: string | number)}
-  {val}<span class="text-xxs text-gray-300">%</span>
-{/snippet}
-
-{#snippet frontAttackHeaderTooltip()}
-  {#if settings.app.logs.positionalDmgPercent}
-    % Damage from Front Attack
-  {:else}
-    Front Attack %
-  {/if}
-{/snippet}
-
-{#snippet backAttackHeaderTooltip()}
-  {#if settings.app.logs.positionalDmgPercent}
-    % Damage from Back Attack
-  {:else}
-    Back Attack %
-  {/if}
-{/snippet}
 
 {#snippet damage(state: SkillState)}
   {@render damageValue(state.skillDamageString)}

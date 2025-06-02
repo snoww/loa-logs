@@ -3,6 +3,7 @@
   import { screenshot, settings } from "$lib/stores.svelte";
   import { onMount } from "svelte";
   import { abbreviateNumber, timestampToMinutesAndSeconds } from "$lib/utils";
+  import { middot } from "../Snippets.svelte";
 
   let { enc }: { enc: EncounterState } = $props();
 
@@ -12,10 +13,6 @@
     locale = window.navigator.language;
   });
 </script>
-
-{#snippet middot()}
-  <div class="mx-1 text-neutral-400">&middot;</div>
-{/snippet}
 
 <div class="bg-black/10 px-3 py-2 text-sm" class:hidden={screenshot.state} id="header">
   <div class="flex flex-row gap-1">

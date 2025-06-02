@@ -5,6 +5,7 @@
 
   const {
     tooltip,
+    tooltipProps,
     placement,
     delay = 0,
     children,
@@ -13,7 +14,8 @@
     delay?: number;
     placement?: "top" | "bottom" | "left" | "right";
     children: Snippet;
-    tooltip: string | Snippet | null;
+    tooltip: string | Snippet | Snippet<[any]> | null;
+    tooltipProps?: any;
     class?: string;
   } = $props();
 
@@ -50,7 +52,11 @@
     <p class="px-2 py-1 text-sm text-neutral-100">
       {#if typeof tooltip === "string"}
         {tooltip}
+      {:else if tooltip && tooltipProps}
+        <!-- workaround for passing tooltips snippets that expect props -->
+        {@render tooltip(tooltipProps)}
       {:else if tooltip}
+      <!-- regular tooltip without any props -->
         {@render tooltip()}
       {/if}
     </p>

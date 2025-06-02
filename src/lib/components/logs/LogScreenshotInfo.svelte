@@ -5,6 +5,7 @@
   import { getVersion } from "@tauri-apps/api/app";
   import BossOnlyDamage from "../shared/BossOnlyDamage.svelte";
   import { abbreviateNumber, getBossHpBars, timestampToMinutesAndSeconds } from "$lib/utils";
+  import { middot } from "../Snippets.svelte";
 
   let { encounter }: { encounter: Encounter } = $props();
 
@@ -19,9 +20,6 @@
   });
 </script>
 
-{#snippet middot()}
-  <div class="mx-1 text-neutral-400">&middot;</div>
-{/snippet}
 <div class="flex flex-col gap-1 px-4 tracking-tight" class:hidden={!screenshot.state}>
   <div class="flex items-center justify-between gap-1">
     <div class="flex items-center gap-1">

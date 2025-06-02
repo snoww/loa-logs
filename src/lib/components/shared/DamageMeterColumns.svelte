@@ -2,8 +2,8 @@
   import type { LogColumn } from "$lib/column";
   import type { EncounterState } from "$lib/encounter.svelte";
   import { EntityState } from "$lib/entity.svelte";
-
   import { customRound } from "$lib/utils";
+  import { damageValue, percentValue } from "../Snippets.svelte";
 
   export const logColumns: LogColumn<EncounterState, EntityState>[] = [
     // Dead for
@@ -211,16 +211,6 @@
     }
   ];
 </script>
-
-<!-- Render value + units -->
-{#snippet damageValue(val: [number, string])}
-  {val[0]}<span class="text-xxs text-gray-300">{val[1]}</span>
-{/snippet}
-
-<!-- Render value + percent -->
-{#snippet percentValue(val: string | number)}
-  {val}<span class="text-xxs text-gray-300">%</span>
-{/snippet}
 
 {#snippet deadFor(state: EntityState)}
   {#if state.entity.isDead}

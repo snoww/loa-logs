@@ -1,10 +1,10 @@
 <script lang="ts">
+  import { damageValue, percentValue } from "$lib/components/Snippets.svelte";
   import type { EncounterState } from "$lib/encounter.svelte";
   import { EntityState } from "$lib/entity.svelte";
   import { settings } from "$lib/stores.svelte";
   import type { Entity } from "$lib/types";
   import { customRound, getClassIcon } from "$lib/utils";
-  import { dataDir } from "@tauri-apps/api/path";
   import { cubicOut } from "svelte/easing";
   import { Tween } from "svelte/motion";
 
@@ -22,12 +22,6 @@
   });
 </script>
 
-{#snippet damageValue(val: [number, string])}
-  {val[0]}<span class="text-xxs text-gray-300">{val[1]}</span>
-{/snippet}
-{#snippet percentValue(val: string | number)}
-  {val}<span class="text-xxs text-gray-300">%</span>
-{/snippet}
 {#snippet buffSummary(entity: Entity)}
   <span class="">
     {customRound(entity.damageStats.buffedBySupport * 100, 0)}/{customRound(

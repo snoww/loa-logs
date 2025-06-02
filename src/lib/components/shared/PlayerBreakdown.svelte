@@ -12,6 +12,7 @@
   import PlayerBreakdownRow from "./PlayerBreakdownRow.svelte";
   import { customRound, isNameValid, rgbLinearShadeAdjust, UWUOWO_URL } from "$lib/utils";
   import { flip } from "svelte/animate";
+  import { fadTooltip, badTooltip } from "../Snippets.svelte";
 
   interface Props {
     handleRightClick: () => void;
@@ -22,23 +23,6 @@
   let { entity, enc, handleRightClick }: Props = $props();
   let entityState = $derived(new EntityState(entity, enc));
 </script>
-
-<!-- Render value + percent -->
-{#snippet percentValue(val: string | number)}
-  {val}<span class="text-xxs text-gray-300">%</span>
-{/snippet}
-{#snippet fadTooltip()}
-  <span>
-    Raw Front Attack
-    {@render percentValue(entityState.faPercentage)}
-  </span>
-{/snippet}
-{#snippet badTooltip()}
-  <span>
-    Raw Back Attack
-    {@render percentValue(entityState.baPercentage)}
-  </span>
-{/snippet}
 
 <thead class="z-30 h-6 {enc.live ? 'sticky top-0 backdrop-blur-lg' : ''}">
   <tr class="bg-neutral-950/80">
@@ -111,7 +95,7 @@
       {/if}
       {#if entityState.anyFrontAttacks && enc.curSettings.breakdown.frontAtk && enc.curSettings.positionalDmgPercent}
         <td class="px-1 text-center">
-          <QuickTooltip tooltip={fadTooltip}>
+          <QuickTooltip tooltip={fadTooltip} tooltipProps={entityState}>
             {entityState.fadPercentage}<span class="text-xxs text-gray-300">%</span>
           </QuickTooltip>
         </td>
@@ -123,7 +107,7 @@
       {/if}
       {#if entityState.anyBackAttacks && enc.curSettings.breakdown.backAtk && enc.curSettings.positionalDmgPercent}
         <td class="px-1 text-center">
-          <QuickTooltip tooltip={badTooltip}>
+          <QuickTooltip tooltip={badTooltip} tooltipProps={entityState}>
             {entityState.badPercentage}<span class="text-xxs text-gray-300">%</span>
           </QuickTooltip>
         </td>

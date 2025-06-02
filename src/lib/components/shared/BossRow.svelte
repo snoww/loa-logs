@@ -8,6 +8,7 @@
   import QuickTooltip from "../QuickTooltip.svelte";
   import ArkPassiveTooltip from "../tooltips/ArkPassiveTooltip.svelte";
   import { rgbLinearShadeAdjust } from "$lib/utils";
+  import { damageValue } from "../Snippets.svelte";
 
   interface Props {
     enc: EncounterState;
@@ -30,11 +31,6 @@
 
   let color = "#164e63";
 </script>
-
-<!-- Render value + units -->
-{#snippet damageValue(val: [number, string])}
-  {val[0]}<span class="text-xxs text-gray-300">{val[1]}</span>
-{/snippet}
 
 <td colspan="2" class="px-2">
   <div class="flex truncate">
