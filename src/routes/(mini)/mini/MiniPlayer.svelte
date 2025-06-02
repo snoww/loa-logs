@@ -8,7 +8,7 @@
 
   let { entity, enc, width }: { entity: Entity; enc: EncounterState; width: number } = $props();
 
-  let state = new EntityState(entity, enc);
+  let state = $derived(new EntityState(entity, enc));
 
   let tweenedValue = new Tween(width, {
     duration: 400,

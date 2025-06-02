@@ -27,10 +27,9 @@
         misc.raidInProgress = false;
         setTimeout(() => {
           misc.raidInProgress = true;
-        }, 6000);
+        }, 8000);
       });
       let phaseTransitionEvent = await listen("phase-transition", (event: any) => {
-        let phaseCode = event.payload;
         misc.raidInProgress = false;
       });
 
@@ -46,6 +45,14 @@
   $effect(() => {
     if (misc.raidInProgress) {
       enc.reset();
+    }
+  });
+
+  $effect(() => {
+    if (enc.encounter && enc.encounter.fightStart) {
+      enc.duration = time - enc.encounter.fightStart;
+    } else {
+      enc.duration = 0;
     }
   });
 </script>

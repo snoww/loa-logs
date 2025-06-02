@@ -152,12 +152,12 @@
         "url": "mini",
         "fullscreen": false,
         "width": 1280,
-        "height": 500,
+        "height": 200,
         "resizable": false,
         "decorations": false,
         "transparent": true,
         "minWidth": 1280,
-        "minHeight": 500,
+        "minHeight": 200,
         "alwaysOnTop": true,
         "visible": false
       }

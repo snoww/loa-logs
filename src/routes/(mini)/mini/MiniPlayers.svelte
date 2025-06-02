@@ -26,7 +26,7 @@
 </script>
 
 <div class="flex gap-1 h-12 w-full items-center justify-center text-xs tracking-tight px-2 py-1 max-w-[70rem] mx-auto">
-    {#each enc.playersOnly as player, i (i)}
+    {#each enc.playersOnly as player, i (player.name)}
       <div class="relative flex w-32 flex-col justify-center gap-0.5" animate:flip={{ duration: 200 }}>
         <MiniPlayer entity={player} {enc} width={enc.playerDamagePercentages[i]}/>
       </div>
