@@ -59,7 +59,7 @@
 </script>
 
 <div class="flex flex-col space-y-2">
-  {#each partiesWithEsthers as party}
+  {#each partiesWithEsthers.filter(p => p.members.length > 0) as party}
     <table class="isolate w-full table-fixed">
       <thead class="z-40 h-6 {enc.live ? 'sticky top-0' : ''}">
         <tr class="bg-neutral-900">

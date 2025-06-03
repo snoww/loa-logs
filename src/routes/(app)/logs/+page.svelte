@@ -9,6 +9,7 @@
   import Pages from "./Pages.svelte";
   import Search from "./Search.svelte";
   import { SvelteSet } from "svelte/reactivity";
+  import { untrack } from "svelte";
 
   let overview: EncountersOverview | null = $state(null);
   let container = $state<HTMLDivElement | null>(null);
@@ -77,10 +78,12 @@
     encounterFilter.sort;
     encounterFilter.order;
 
-    if (once) {
+    // *searching* is true when its not the first load
+    const searching = untrack(() => once);
+    if (searching) {
       encounterFilter.page = 1;
-      once = true;
     }
+    once = true;
   });
 </script>
 

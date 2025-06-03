@@ -12,7 +12,7 @@
   let time = $state(+Date.now());
   onMount(() => {
     const interval = setInterval(() => {
-      if (misc.raidInProgress && !misc.paused) {
+      if (misc.raidInProgress) {
         time = +Date.now();
       }
     }, 1000);
@@ -24,7 +24,9 @@
           enc.encounter = event.payload;
         }
       });
-
+      let raidStartEvent = await listen("raid-start", () => {
+        misc.raidInProgress = true;
+      });
       let zoneChangeEvent = await listen("zone-change", () => {
         misc.raidInProgress = false;
         setTimeout(() => {
@@ -35,7 +37,7 @@
         misc.raidInProgress = false;
       });
 
-      events.push(encounterUpdateEvent, zoneChangeEvent, phaseTransitionEvent);
+      events.push(encounterUpdateEvent, zoneChangeEvent, phaseTransitionEvent, raidStartEvent);
     })();
 
     return () => {

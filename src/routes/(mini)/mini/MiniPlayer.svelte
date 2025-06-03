@@ -22,19 +22,19 @@
   });
 </script>
 
-{#snippet buffSummary(entity: Entity)}
+{#snippet buffSummary()}
   <span class="">
-    {customRound(entity.damageStats.buffedBySupport * 100, 0)}/{customRound(
-      entity.damageStats.debuffedBySupport * 100,
+    {customRound((state.entity.damageStats.buffedBySupport / state.damageDealtWithoutHa) * 100, 0)}/{customRound(
+      (state.entity.damageStats.debuffedBySupport / state.damageDealtWithoutHa) * 100,
       0
-    )}/{customRound(entity.damageStats.buffedByIdentity * 100, 0)}
+    )}/{customRound((state.entity.damageStats.buffedByIdentity / state.damageDealtWithoutHa) * 100, 0)}
   </span>
 {/snippet}
 
 <!-- name -->
 <div class="flex items-center justify-center gap-1 truncate">
   <img src={getClassIcon(state.entity.classId)} class="size-5" alt={state.entity.class} />
-  <p class="truncate">{entity.name}</p>
+  <p class="truncate">{state.name}</p>
 </div>
 <!-- stats -->
 <div class="flex h-6 w-full items-center justify-between truncate px-2">
@@ -47,7 +47,7 @@
     </div>
   {:else if settings.app.mini.info === "buff"}
     <div class="truncate">
-      {@render buffSummary(entity)}
+      {@render buffSummary()}
     </div>
   {/if}
 </div>

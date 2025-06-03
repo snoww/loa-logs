@@ -36,11 +36,11 @@
   const infoOptions = [
     {
       value: "damage",
-      label: "Damage Percentage"
+      label: "Damage %"
     },
     {
       value: "buff",
-      label: "Support Buff Summary"
+      label: "Support Buff Summary (Buff/Brand/Identity)"
     }
   ];
 
@@ -737,8 +737,14 @@
         )}
         {@render settingOption("meter", "hpm", "Skill Hits/min", "Show the hits per minute of the skill", true)}
       {:else if currentTab === "Mini"}
+        {@render settingOption(
+          "mini",
+          "bossHpBar",
+          "Boss HP Bars",
+          "Show boss HP bars (e.g. x65) for the current boss."
+        )}
         <div class="flex flex-col gap-2">
-          <p>Info Options</p>
+          <p>Player Info</p>
           <div use:melt={$radioRoot} class="flex flex-col gap-2">
             {#each infoOptions as option}
               <div class="flex items-center gap-2">

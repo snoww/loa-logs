@@ -242,7 +242,8 @@ export const defaultSettings = {
     }
   },
   mini: {
-    info: "damage"
+    info: "damage",
+    bossHpBar: false,
   },
   logs: {
     abbreviateHeader: false,
