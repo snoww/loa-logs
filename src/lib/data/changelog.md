@@ -1,6 +1,6 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.29.0 - June 4th, 2025
+    v1.29.1 - June 4th, 2025
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
@@ -9,6 +9,24 @@
 
 ### NOTE: you need to generate a new upload token [HERE](https://uwuowo.mathi.moe/me/logs)
 
+#### known issues:
+- sorting logs in the app is not working yet
+- some users having issues with class colors
+- settings being reset
+
+#### BUG FIXES AND IMPROVEMENTS
+- fixed g3 mordum not showing up in meter with boss only damage enabeld
+- fixed toggle clickthrough
+- fix in-app urls not opening in browser
+- maybe fixed meter window showing windows menu bar
+- maybe fixed blur not working for some users
+- fix mini meter boss hp % not being rounded
+- adjust some text sizes and colors
+- fix ap and brand chart
+
+note: removed behemoth raid from uploading
+
+### v1.29.0 June 4th, 2025
 #### NEW FEATURES
 - updated meter for act 3 raid (thanks to poont)
 - complete ui redesign
@@ -20,10 +38,6 @@
 - fixed app not reopening after updating
 - other small fixes and improvements
 - fixed summoner shrudi synergy
-
-note: removed behemoth raid from uploading
-
-known issues: sorting logs in the app is not working yet
 
 ### v1.28.0 - May 21st, 2025
 #### NEW FEATURES
