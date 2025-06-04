@@ -111,13 +111,13 @@
       <!-- current bar color -->
       <div
         class="absolute -z-10 h-full"
-        style="background-color: rgb(from {bossBarColor[0]} r g b / {0.95}); width: {tweenBossHpBar.current}%;"
+        style="background-color: rgb(from {bossBarColor[0]} r g b / {0.80}); width: {tweenBossHpBar.current}%;"
       ></div>
       {#if bossTotalBars > 1 && bossCurrentBars > 1}
         <!-- next bar color (i.e. background bar) -->
         <div
           class="absolute -z-20 h-full w-full"
-          style="background-color: rgb(from {bossBarColor[1]} r g b / {0.95});"
+          style="background-color: rgb(from {bossBarColor[1]} r g b / {0.80});"
         ></div>
       {/if}
       {#if settings.app.meter.splitBossHpBar}
