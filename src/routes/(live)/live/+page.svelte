@@ -92,7 +92,7 @@
         addToast(adminAlert);
       });
       let clearEncounterEvent = await listen("clear-encounter", async (event: any) => {
-        if (settings.sync.auto) {
+        if (!settings.sync.auto) {
           return;
         }
 
