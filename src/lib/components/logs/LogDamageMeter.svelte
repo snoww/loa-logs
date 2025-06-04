@@ -281,10 +281,10 @@
             {@render chartTab(ChartType.ROLLING_DPS, "10s DPS Window")}
             {#if hasSkillDetails}
               {#if enc.anySupportBuff}
-                {@render chartTab(ChartType.BRAND_BUFF, "AP Buffs", true)}
+                {@render chartTab(ChartType.AP_BUFF, "AP Buffs", true)}
               {/if}
               {#if enc.anySupportBrand}
-                {@render chartTab(ChartType.AP_BUFF, "Brand")}
+                {@render chartTab(ChartType.BRAND_BUFF, "Brand")}
               {/if}
               {#if enc.anySupportIdentity}
                 {@render chartTab(ChartType.IDENTITY, "Identity")}
