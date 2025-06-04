@@ -1,4 +1,4 @@
-import { settings } from "$lib/stores.svelte";
+import { misc, settings } from "$lib/stores.svelte";
 import { invoke } from "@tauri-apps/api";
 import { emit } from "@tauri-apps/api/event";
 import { register } from "@tauri-apps/api/globalShortcut";
@@ -33,9 +33,10 @@ export const shortcuts: Record<string, Shortcut> = {
     action: () => emit("save-request")
   },
   disableClickthrough: {
-    name: "Disable Clickthrough",
+    name: "Toggle Clickthrough",
     action: async () => {
-      await invoke("set_clickthrough", { set: false });
+      await invoke("set_clickthrough", { set: !misc.clickthrough });
+      misc.clickthrough = !misc.clickthrough;
     }
   }
 };
