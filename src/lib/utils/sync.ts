@@ -10,39 +10,32 @@ export const API_URL = "https://api.snow.xyz";
 // export const API_URL = "http://localhost:5180";
 
 export const supportedBosses = [
+  // valtan
   "Dark Mountain Predator",
   "Ravaged Tyrant of Beasts",
-  // "Incubus Morphe",
-  // "Nightmarish Morphe",
+  // vykas
   "Covetous Devourer Vykas",
   "Covetous Legion Commander Vykas",
+  // clown
   "Saydon",
   "Kakul",
   "Encore-Desiring Kakul-Saydon",
+  // brel
   "Brelshaza, Monarch of Nightmares",
   "Phantom Legion Commander Brelshaza",
-  // "Kaltaya, the Blooming Chaos",
-  // "Rakathus, the Lurking Arrogance",
-  // "Firehorn, Trampler of Earth",
-  // "Lazaram, the Trailblazer",
-  // "Gargadeth",
-  // "Hanumatan",
+
+  // challenge guardians
   "Caliligos",
   "Achates",
-  // "Veskal",
-  // "Argeos",
-  // "Killineza the Dark Worshipper",
-  // "Valinak, Herald of the End",
-  // "Thaemine the Lightqueller",
-  // "Thaemine, Conqueror of Stars",
-  // "Red Doom Narkiel",
-  // "Covetous Master Echidna",
-  "Behemoth, the Storm Commander",
-  "Behemoth, Cruel Storm Slayer",
+
+  // endgame raids
   "Akkan, Lord of Death",
   "Aegir, the Oppressor",
   "Narok the Butcher",
-  "Phantom Manifester Brelshaza"
+  "Phantom Manifester Brelshaza",
+  "Infernas",
+  "Blossoming Fear, Naitreya",
+  "Flash of Punishment"
 ];
 
 export async function uploadLog(id: number | string, encounter: Encounter) {

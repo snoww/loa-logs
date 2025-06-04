@@ -80,6 +80,11 @@ export const encounterMap: { [key: string]: { [key: string]: Array<string> } } =
   "Act 2: Brelshaza": {
     "Act 2: Brelshaza G1": ["Narok the Butcher"],
     "Act 2: Brelshaza G2": ["Phantom Legion Commander Brelshaza", "Phantom Manifester Brelshaza"]
+  },
+  "Act 3: Mordum": {
+    "Act 3: Mordum G1": ["Thaemine, Master of Darkness", "Infernas"],
+    "Act 3: Mordum G2": ["Blossoming Fear, Naitreya"],
+    "Act 3: Mordum G3": ["Mordum, the Abyssal Punisher", "Flash of Punishment"]
   }
 };
 
@@ -137,7 +142,12 @@ export const bossHpMap: Record<string, number> = {
   "Akkan, Lord of Death": 220,
   "Aegir, the Oppressor": 300,
   "Narok the Butcher": 300,
-  "Phantom Manifester Brelshaza": 420
+  "Phantom Manifester Brelshaza": 420,
+  "Thaemine, Master of Darkness": 300,
+  Infernas: 300,
+  "Blossoming Fear, Naitreya": 300,
+  "Mordum, the Abyssal Punisher": 500,
+  "Flash of Punishment": 350
 };
 
 export const difficultyMap: Array<string> = [
