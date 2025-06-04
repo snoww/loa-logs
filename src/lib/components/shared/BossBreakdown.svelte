@@ -43,7 +43,7 @@
       </th>
     </tr>
   </thead>
-  <tbody oncontextmenu={handleRightClick} class="relative z-10">
+  <tbody oncontextmenu={handleRightClick} class="relative z-10 text-neutral-200">
     {#if boss}
       {#each entityState.skills as skill, i (skill.id)}
         <tr

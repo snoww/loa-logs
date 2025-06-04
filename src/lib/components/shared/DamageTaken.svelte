@@ -23,7 +23,7 @@
       </th>
     </tr>
   </thead>
-  <tbody class="relative z-10">
+  <tbody class="relative z-10 text-neutral-200">
     {#each enc.playerDamageTakenSorted as player, i (player.name)}
       <tr
         animate:flip={{ duration: 200 }}

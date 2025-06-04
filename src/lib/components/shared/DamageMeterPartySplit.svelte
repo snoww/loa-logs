@@ -43,7 +43,7 @@
   const esthers = $derived(enc.players.filter((entity) => entity.entityType === EntityType.ESTHER));
   const partiesWithEsthers = $derived.by(() => {
     // don't add esther party if esthers aren't shown or parties aren't split
-    if (!esthers.length || !settings.app.general.showEsther || !settings.app.logs.splitPartyDamage) return parties;
+    if (!esthers.length || !settings.app.general.showEsther || !settings.app.logs.splitPartyDamage || enc.live) return parties;
 
     return [
       ...parties,

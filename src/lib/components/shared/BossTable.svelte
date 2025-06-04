@@ -31,7 +31,7 @@
       </th>
     </tr>
   </thead>
-  <tbody class="relative z-10">
+  <tbody class="relative z-10 text-neutral-200">
     {#each enc.bosses as boss, i (boss.name)}
       <tr
         class="h-7 px-2 py-1 {settings.app.general.underlineHovered ? 'hover:underline' : ''}"

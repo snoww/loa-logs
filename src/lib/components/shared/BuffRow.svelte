@@ -91,7 +91,7 @@
 </td>
 {#if groupedSynergies.size > 0}
   {#each synergyPercentageDetails as synergy}
-    <td class="text-3xs px-1 text-center">
+    <td class="text-sm px-1 text-center text-neutral-200">
       {#if synergy.percentage}
         <BuffDetailTooltip buffDetails={synergy} />
       {/if}

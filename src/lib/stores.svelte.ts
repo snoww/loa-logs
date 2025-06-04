@@ -337,6 +337,7 @@ export class Misc {
   reset = $state(false);
   paused = $state(false);
   missingInfo = $state(false);
+  clickthrough = $state(false);
 }
 
 export class SyncProgress {
