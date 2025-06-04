@@ -6,6 +6,7 @@
   import { settings } from "$lib/stores.svelte";
   import { EntityType, type Entity } from "$lib/types";
   import { customRound, isNameValid, rgbLinearShadeAdjust, UWUOWO_URL } from "$lib/utils";
+  import { open } from "@tauri-apps/api/shell";
   import { flip } from "svelte/animate";
   import { badTooltip, fadTooltip } from "../Snippets.svelte";
   import ArkPassiveTooltip from "../tooltips/ArkPassiveTooltip.svelte";
