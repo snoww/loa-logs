@@ -67,7 +67,7 @@
           {#if bossTotalBars > 1}
             {bossCurrentBars}x
           {:else}
-            {@render percentValue(bossCurrentPercentage)}
+            {@render percentValue(bossCurrentPercentage.toFixed(0))}
           {/if}
         {/if}
       </div>
