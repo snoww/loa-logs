@@ -1,12 +1,31 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.28.0 - May 21st, 2025
+    v1.29.0 - June 4th, 2025
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
   </div>
 </div>
 
+### NOTE: you need to generate a new upload token [HERE](https://uwuowo.mathi.moe/me/logs)
+
+#### NEW FEATURES
+- updated meter for act 3 raid (thanks to poont)
+- complete ui redesign
+- improved integration with uwuowo
+- new experimental horizontal meter (inspired by [ikegami](https://github.com/hibiyasleep/ikegami) from ffxiv)
+- auto show/hide meter setting when raid starts
+#### BUG FIXES AND IMPROVEMENTS
+- positional damage percent setting now shows raw values in tooltip
+- fixed app not reopening after updating
+- other small fixes and improvements
+- fixed summoner shrudi synergy
+
+note: removed behemoth raid from uploading
+
+known issues: sorting logs in the app is not working yet
+
+### v1.28.0 - May 21st, 2025
 #### NEW FEATURES
 
 - updated meter for rimeria patch (thanks to poont)

@@ -1,11 +1,11 @@
 {
-    "version": "v1.28.0",
-    "notes": "### v1.28.0\n#### NEW FEATURES\n- updated meter for rimeria patch (thanks to poont)\n#### BUG FIXES AND IMPROVEMENTS\n- updated detection for sorceress specs\n\nsend bug reports/suggestions to [ramen shop server](https://discord.gg/RXvTMV2YHu)\n",
-    "pub_date": "2025-05-21T20:59:27.075Z",
-    "platforms": {
-        "windows-x86_64": {
-            "url": "https://github.com/snoww/loa-logs/releases/download/v1.28.0/LOA.Logs_1.28.0_x64-setup.nsis.zip",
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlY1eFF2NEloMEpCNDNaOVRYR0dsbzJnRTQrRUtacHdMdnlqRENxYzRVKzZEdUpmeEdjZXl0cnRZRzZBeWs2cWFHeHR2S3ZNZytTNGFpWHVhS0Z0aHdvPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzQ3ODYxMzE2CWZpbGU6TE9BIExvZ3NfMS4yOC4wX3g2NC1zZXR1cC5uc2lzLnppcApWK3dRQS91U2R5NEVickhzSnhTclVNUXYwN2RoaHRQU0VBM1hGS2RjVWNEOWs4Z0ZoQnFaeHVWZEZ0WlRtejdiK1BWRDBWcURWWGkzNFErM053c3JCZz09Cg=="
-        }
+  "version": "v1.29.0",
+  "notes": "### v1.29.0 June 4th, 2025\n#### NEW FEATURES\n- updated meter for act 3 raid (thanks to poont)\n- complete ui redesign\n- in preparation for better integration with uwuowo, you need to generate a new upload token [HERE](https://uwuowo.mathi.moe/me/logs) \n- new experimental horizontal meter (inspired by [ikegami](https://github.com/hibiyasleep/ikegami) from ffxiv)\n- auto show/hide meter setting when raid starts\n#### BUG FIXES AND IMPROVEMENTS\n- positional damage percent setting now shows raw values in tooltip\n- fixed app not reopening after updating\n- other small fixes and improvements\n- fixed summoner shrudi synergy\n\nnote: removed behemoth raid from uploading\n\nknown issues: sorting logs in the app is not working yet",
+  "pub_date": "2025-06-04T16:16:33.036Z",
+  "platforms": {
+    "windows-x86_64": {
+      "url": "https://github.com/snoww/loa-logs/releases/download/v1.29.0/LOA.Logs_1.29.0_x64-setup.nsis.zip",
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmNMMjQ3Rk5SN2twb0c5cnNTSTM0aEJKUGtDRk9tRWJwTWw0a1ZueHBtWDdubTdDY2hSbk10eFBwQTV3SlJtZ1M3U0tBck8rTlViWjFxU2hzWU1aQVFrPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzQ5MDU4OTc5CWZpbGU6TE9BIExvZ3NfMS4yOS4wX3g2NC1zZXR1cC5uc2lzLnppcApxN2tBZDJCMTNBSkJMQkpXaGdtSm4wNWRyeDJzdjVwQ1hqSjlqM1BwZktMZ2ZHaEFZVlZkQUpwY04xSWFlOUZHemhVOFN1ZjRMTkJYdkIwc28wMHZEZz09Cg=="
     }
+  }
 }
