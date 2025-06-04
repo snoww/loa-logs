@@ -1098,8 +1098,8 @@ pub fn get_new_id(source_skill: u32) -> u32 {
     source_skill + 1_000_000_000
 }
 
-pub fn get_skill_id(new_skill: u32) -> u32 {
-    new_skill - 1_000_000_000
+pub fn get_skill_id(new_skill: u32, original_buff_id: u32) -> u32 {
+    new_skill - 1_000_000_000 - original_buff_id
 }
 
 pub fn compress_json<T>(value: &T) -> Vec<u8>

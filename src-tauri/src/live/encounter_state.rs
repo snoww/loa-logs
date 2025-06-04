@@ -815,7 +815,7 @@ impl EncounterState {
                 {
                     let mut source_id: Option<u32> = None;
                     let original_buff_id = if let Some(deref_id) = self.custom_id_map.get(buff_id) {
-                        source_id = Some(get_skill_id(*buff_id));
+                        source_id = Some(get_skill_id(*buff_id, *deref_id));
                         *deref_id
                     } else {
                         *buff_id
@@ -879,7 +879,7 @@ impl EncounterState {
                     let mut source_id: Option<u32> = None;
                     let original_debuff_id =
                         if let Some(deref_id) = self.custom_id_map.get(debuff_id) {
-                            source_id = Some(get_skill_id(*debuff_id));
+                            source_id = Some(get_skill_id(*debuff_id, *deref_id));
                             *deref_id
                         } else {
                             *debuff_id
@@ -1339,7 +1339,7 @@ impl EncounterState {
             {
                 let mut source_id: Option<u32> = None;
                 let original_buff_id = if let Some(deref_id) = self.custom_id_map.get(&buff_id) {
-                    source_id = Some(get_skill_id(buff_id));
+                    source_id = Some(get_skill_id(buff_id, *deref_id));
                     *deref_id
                 } else {
                     buff_id

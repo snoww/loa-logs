@@ -7,6 +7,7 @@ use crate::live::utils::get_new_id;
 use crate::parser::models::{EncounterEntity, EntityType, SKILL_BUFF_DATA};
 use chrono::{DateTime, Duration, Utc};
 use hashbrown::HashMap;
+use log::info;
 use meter_core::packets::definitions::PKTNewPC;
 use meter_core::packets::structures::StatusEffectData;
 use std::cell::RefCell;
@@ -399,12 +400,18 @@ pub fn build_status_effect(
         db_target_type = effect.target.to_string();
 
         if let Some(source_skills) = effect.source_skills.as_ref() {
+            // if skill has multiple source skills, we need to find the one that was last used
+            // e.g. bard brands have same buff id, but have different source skills (sound shock, harp)
+            // if skills only have one source skill, we dont care about it here and it gets handled later
             if source_skills.len() > 1 {
                 if let Some(source_entity) = source_entity {
                     let mut last_time = i64::MIN;
                     let mut last_skill = 0_u32;
                     for source_skill in source_skills {
                         if let Some(skill) = source_entity.skills.get(source_skill) {
+                            if skill.name.is_empty() {
+                                continue;
+                            }
                             // hard code check for stigma brand tripod
                             // maybe set up a map of tripods for other skills in future idk??
                             if skill.id == 21090 {
@@ -423,8 +430,12 @@ pub fn build_status_effect(
                         }
                     }
 
+                    // if such a skill exists, we assign a new custom buff id to distinguish it.
+                    // we encode the buff id as well too because there are multiple buffs that have 
+                    // the same source skill, that also have multiple source skills.
+                    // without it, it leads to customids that are different but end up sharing the same id
                     if last_skill > 0 {
-                        custom_id = get_new_id(last_skill);
+                        custom_id = get_new_id(last_skill + (effect.id as u32));
                     }
                 }
             }
