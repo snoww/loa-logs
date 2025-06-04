@@ -37,9 +37,9 @@ const LOGS_WINDOW_LABEL: &str = "logs";
 const WINDOW_STATE_FLAGS: StateFlags = StateFlags::from_bits_truncate(
     StateFlags::FULLSCREEN.bits()
         | StateFlags::MAXIMIZED.bits()
-        | StateFlags::DECORATIONS.bits()
         | StateFlags::POSITION.bits()
         | StateFlags::SIZE.bits()
+        | StateFlags::VISIBLE.bits(),
 );
 
 #[tokio::main]
@@ -201,7 +201,9 @@ async fn main() -> Result<()> {
         })
         .plugin(
             tauri_plugin_window_state::Builder::new()
-                .with_state_flags(WINDOW_STATE_FLAGS)
+                .skip_initial_state(METER_WINDOW_LABEL)
+                .skip_initial_state(METER_MINI_WINDOW_LABEL)
+                .skip_initial_state(LOGS_WINDOW_LABEL)
                 .build(),
         )
         .plugin(tauri_plugin_single_instance::init(|_app, _argv, _cwd| {}))
