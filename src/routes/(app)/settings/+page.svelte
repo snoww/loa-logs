@@ -729,7 +729,7 @@
         )}
         {@render settingOption("meter", "cpm", "Skill Casts/min", "Show the casts per minute of the skill", true)}
         {@render settingOption(
-          "logs",
+          "meter",
           "hits",
           "Skill Hits",
           "Show the hits of the skill (note: each tick of a multi-hit skill is counted as a hit)",
