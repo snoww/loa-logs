@@ -819,17 +819,11 @@
           "Hide Logs on Launch",
           "Hide the logs window when starting the app."
         )}
-        {@render settingOption(
-          "general",
-          "transparent",
-          "Transparent Meter",
-          "Windows 11: turns off to enable Dark Mode for live meter. Windows 10: toggles transparent background for live meter."
-        )}
-        {#if !settings.app.general.isWin11}
+        {#if settings.app.general.isWin11}
           <label class="flex items-center gap-2">
             <input
               type="checkbox"
-              bind:checked={settings.app.general.blur}
+              bind:checked={settings.app.general.blurWin11}
               onchange={async () => {
                 settings.app.general.blur ? await invoke("enable_blur") : await invoke("disable_blur");
               }}
@@ -842,6 +836,38 @@
               </div>
             </div>
           </label>
+        {:else}
+          <label class="flex items-center gap-2">
+            <input
+              type="checkbox"
+              bind:checked={settings.app.general.blur}
+              onchange={async () => {
+                settings.app.general.blur ? await invoke("enable_blur") : await invoke("disable_blur");
+              }}
+              class="form-checkbox checked:text-accent-600 size-5 rounded-sm border-0 bg-neutral-700 focus:ring-0"
+            />
+            <div class="ml-5">
+              <div>Blur Meter Background</div>
+              <div class="text-xs text-neutral-300">
+                Adds background blur effect to live meter.
+              </div>
+            </div>
+          </label>
+        {/if}
+        {#if settings.app.general.isWin11}
+          {@render settingOption(
+            "general",
+            "transparent",
+            "Transparent Meter",
+            "Turn off to enable Dark Mode for Windows 11 (with blur setting off)."
+          )}
+        {:else}
+          {@render settingOption(
+            "general",
+            "transparent",
+            "Transparent Meter",
+            "Toggle transparent background for live meter."
+          )}
         {/if}
       {:else if currentTab === "Database"}
         <DatabaseInfo />
