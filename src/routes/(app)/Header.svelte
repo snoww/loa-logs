@@ -119,7 +119,7 @@
             invoke("start_loa_process");
             setTimeout(() => {
               starting = false;
-            }, 5000);
+            }, 10000);
           }}
           disabled={loaRunning || starting}
         >
