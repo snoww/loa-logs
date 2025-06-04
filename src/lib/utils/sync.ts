@@ -5,7 +5,6 @@ import { invoke } from "@tauri-apps/api";
 import pako from "pako";
 import { uploadError, uploadTokenError } from "./toasts";
 
-export const LOG_SITE_URL = "https://logs.snow.xyz";
 export const API_URL = "https://api.snow.xyz";
 // export const API_URL = "http://localhost:5180";
 

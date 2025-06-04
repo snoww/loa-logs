@@ -3,8 +3,8 @@
   import { IconCamera, IconCloudUpload, IconCloudYes, IconRefresh } from "$lib/icons";
   import { settings } from "$lib/stores.svelte";
   import type { Encounter } from "$lib/types";
-  import { takeScreenshot } from "$lib/utils";
-  import { LOG_SITE_URL, supportedBosses, uploadLog } from "$lib/utils/sync";
+  import { takeScreenshot, UWUOWO_URL } from "$lib/utils";
+  import { supportedBosses, uploadLog } from "$lib/utils/sync";
   import { uploadSuccess, uploadTokenError } from "$lib/utils/toasts";
   import QuickTooltip from "../QuickTooltip.svelte";
   import { addToast } from "../Toaster.svelte";
@@ -46,7 +46,7 @@
   {#if encounter && encounter.cleared && encounter.difficulty && encounter.bossOnlyDamage && supportedBosses.includes(encounter.currentBossName)}
     {#if sync}
       <a
-        href={LOG_SITE_URL + "/logs/" + sync}
+        href={UWUOWO_URL + "/logs/" + sync}
         target="_blank"
         class="focus:outline-hidden active:bg-accent-500/80 text-nowrap rounded-lg px-2 py-0.5 text-sm transition hover:bg-neutral-800/40"
         onclick={() => {}}

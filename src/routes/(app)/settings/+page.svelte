@@ -1,17 +1,17 @@
 <script lang="ts">
+  import { addToast } from "$lib/components/Toaster.svelte";
   import { settings } from "$lib/stores.svelte";
+  import { networkSettingsChanged } from "$lib/utils/toasts";
   import { createRadioGroup, createSlider, melt } from "@melt-ui/svelte";
   import { invoke } from "@tauri-apps/api";
   import { emit } from "@tauri-apps/api/event";
+  import { WebviewWindow } from "@tauri-apps/api/window";
   import { onMount } from "svelte";
   import { writable } from "svelte/store";
   import Header from "../Header.svelte";
   import ClassColors from "./ClassColors.svelte";
   import DatabaseInfo from "./DatabaseInfo.svelte";
   import Shortcuts from "./Shortcuts.svelte";
-  import { addToast } from "$lib/components/Toaster.svelte";
-  import { networkSettingsChanged } from "$lib/utils/toasts";
-  import { WebviewWindow } from "@tauri-apps/api/window";
 
   let currentTab = $state("General");
 

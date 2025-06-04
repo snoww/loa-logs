@@ -1,6 +1,6 @@
 <script lang="ts">
   import { settings, syncProgress } from "$lib/stores.svelte";
-  import { checkAccessToken, LOG_SITE_URL, uploadLog } from "$lib/utils/sync";
+  import { checkAccessToken, uploadLog } from "$lib/utils/sync";
   import { createRadioGroup, melt } from "@melt-ui/svelte";
   import Header from "../Header.svelte";
   import QuickTooltip from "$lib/components/QuickTooltip.svelte";
@@ -8,6 +8,7 @@
   import type { Encounter } from "$lib/types";
   import { addToast } from "$lib/components/Toaster.svelte";
   import { uploadTokenError } from "$lib/utils/toasts";
+  import { UWUOWO_URL } from "$lib/utils";
 
   const {
     elements: { root, item },
@@ -117,7 +118,7 @@
       <p class="text-base font-semibold">Upload Token</p>
       {#if !settings.sync.validToken}
         <a
-          href={LOG_SITE_URL + "/profile"}
+          href={UWUOWO_URL + "/me/logs"}
           target="_blank"
           class="bg-accent-500/80 hover:bg-accent-500/70 w-fit rounded-md border border-neutral-700 p-1 text-xs"
         >
