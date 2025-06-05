@@ -84,7 +84,7 @@ export const encounterMap: { [key: string]: { [key: string]: Array<string> } } =
   "Act 3: Mordum": {
     "Act 3: Mordum G1": ["Thaemine, Master of Darkness", "Infernas"],
     "Act 3: Mordum G2": ["Blossoming Fear, Naitreya"],
-    "Act 3: Mordum G3": ["Mordum, the Abyssal Punisher", "Flash of Punishment"]
+    "Act 3: Mordum G3": ["Mordum, the Abyssal Punisher", "Mordum's Hammer", "Flash of Punishment"]
   }
 };
 
