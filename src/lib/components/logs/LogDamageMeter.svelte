@@ -175,9 +175,15 @@
       ? 'bg-accent-500/80'
       : 'hover:bg-neutral-800/40'}"
     onclick={() => {
-      if (selectedTab === MeterTab.BOSS || selectedTab === MeterTab.TANK || selectedTab === MeterTab.SHIELDS) {
+      if (
+        selectedTab === MeterTab.BOSS ||
+        selectedTab === MeterTab.TANK ||
+        selectedTab === MeterTab.SHIELDS ||
+        focusedBoss
+      ) {
         handleRightClick();
       }
+
       tab = selectedTab;
       setChartView();
     }}
