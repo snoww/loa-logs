@@ -18,7 +18,7 @@
   );
 </script>
 
-<table class="relative w-full table-fixed">
+<table class="relative isolate w-full table-fixed">
   <thead class="sticky top-0 z-40 h-6 {enc.live ? 'sticky top-0 backdrop-blur-lg' : ''}">
     <tr class="bg-neutral-900 tracking-tight">
       <th class="w-14 px-2 text-left font-normal"></th>
