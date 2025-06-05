@@ -21,7 +21,8 @@ import { bossHpMap } from "$lib/constants/encounters";
 import {
   abbreviateNumber,
   customRound,
-  getSkillIcon, isNameValid,
+  getSkillIcon,
+  isNameValid,
   resampleData,
   timestampToMinutesAndSeconds,
   timeToSeconds
@@ -59,7 +60,9 @@ export function getPlayerSeries(
       let markPoint = {};
       if (player.isDead) {
         const rounded = Math.ceil((player.damageStats.deathTime - fightStart) / 1000 / 5) * 5;
-        const index = Math.floor(rounded / 5);
+        const index = field === "dpsRolling10sAvg" 
+          ? Math.ceil((player.damageStats.deathTime - fightStart) / 1000)
+          : Math.floor(rounded / 5);
 
         markPoint = {
           data: [
