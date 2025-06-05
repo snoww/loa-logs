@@ -34,6 +34,7 @@ export const supportedBosses = [
   "Phantom Manifester Brelshaza",
   "Infernas",
   "Blossoming Fear, Naitreya",
+  "Mordum, the Abyssal Punisher",
   "Flash of Punishment"
 ];
 
