@@ -1,11 +1,11 @@
 {
-  "version": "v1.29.1",
-  "notes": "### v1.29.1 June 4th, 2025\n\n#### known issues: \n- sorting logs in the app is not working yet\n- some users having issues with class colors\n- settings being reset\n\n#### BUG FIXES AND IMPROVEMENTS\n- fixed g3 mordum not showing up in meter with boss only damage enabeld\n- fixed toggle clickthrough\n- fix in-app urls not opening in browser\n- maybe fixed meter window showing windows menu bar\n- maybe fixed blur not working for some users\n- fix mini meter boss hp % not being rounded\n- adjust some text sizes and colors\n- fix ap and brand chart\n\nnote: removed behemoth raid from uploading",
-  "pub_date": "2025-06-04T23:21:34.538Z",
+  "version": "v1.29.2",
+  "notes": "### v1.29.2 June 4th, 2025\n\n#### known issues: \n- sorting logs in the app is not working yet\n- some users having issues with class colors\n- settings being reset\n\n#### BUG FIXES AND IMPROVEMENTS\n- fixed g3 mordum not showing up in meter with boss only damage enabeld\n- fixed toggle clickthrough\n- fix in-app urls not opening in browser\n- maybe fixed meter window showing windows menu bar\n- maybe fixed blur not working for some users\n- fix mini meter boss hp % not being rounded\n- adjust some text sizes and colors\n- fix ap and brand chart\n- allow normal mordum logs to be uploaded\n\nnote: removed behemoth raid from uploading",
+  "pub_date": "2025-06-05T00:22:11.510Z",
   "platforms": {
     "windows-x86_64": {
-      "url": "https://github.com/snoww/loa-logs/releases/download/v1.29.1/LOA.Logs_1.29.1_x64-setup.nsis.zip",
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlkvYzFHaFZjbWIweG1tbVpNS0d2Sm4wY0lqUGNSUmJYbVdUQ0pHdXBwUm51eWFDTTVLaEs2MHpvSFc1QXFIMC9NeEMraVlYWWZ6U0JWY3FZVE9nSWdBPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzQ5MDc4OTU2CWZpbGU6TE9BIExvZ3NfMS4yOS4xX3g2NC1zZXR1cC5uc2lzLnppcApEK0dLSURWU2pPY3pHSTBuMWg2MFpJSUZGYUtuV2tGdUw3TE9BbGIrUzB1emdiNDFzTVhEMWR6eno0Q0NFbjlHdm1CdWc2SGVPTC9JSnM5QmZ5OGJCZz09Cg=="
+      "url": "https://github.com/snoww/loa-logs/releases/download/v1.29.2/LOA.Logs_1.29.2_x64-setup.nsis.zip",
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlpFM2E2WlhvYUJaRlJqa1BobGxvTks0Um1sN3RRdmZHNG5RTnYxbkNqcHhKbWdjYkQrVHFXYXpLWktVOVYxcXNWbEtRaGZyY3NNMnJTNWJ3b1F1QkFZPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzQ5MDgyOTA1CWZpbGU6TE9BIExvZ3NfMS4yOS4yX3g2NC1zZXR1cC5uc2lzLnppcAoyZUJnMTZHV21VWTF5Z2s5MHBPNGluSVVxK1BWK0luelBkMFRueVY3cUpaMXpLb1g2aUpyVTQzazRqWEswdkxWcnJRTU9JZlZKWFNTTi9MUnZXUmpCdz09Cg=="
     }
   }
 }

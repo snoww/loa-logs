@@ -1,6 +1,6 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.29.1 - June 4th, 2025
+    v1.29.2 - June 4th, 2025
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
@@ -23,6 +23,7 @@
 - fix mini meter boss hp % not being rounded
 - adjust some text sizes and colors
 - fix ap and brand chart
+- allow normal mordum logs to be uploaded
 
 note: removed behemoth raid from uploading
 
