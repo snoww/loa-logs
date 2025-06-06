@@ -99,7 +99,8 @@
       headerText: "CDMG",
       headerTooltip: "% Damage that Crit",
       value: critDmgPct,
-      valueTooltip: null
+      valueTooltip: null,
+      width: "w-14"
     },
 
     // Front attack percentage
@@ -123,7 +124,8 @@
       headerText: "F.AD%",
       headerTooltip: "Front Attack Damage %",
       value: fadPct,
-      valueTooltip: fadTooltip
+      valueTooltip: fadTooltip,
+      width: "w-14"
     },
 
     // Back attack percentage
@@ -147,7 +149,8 @@
       headerText: "B.AD%",
       headerTooltip: "Back Attack Damage %",
       value: badPct,
-      valueTooltip: badTooltip
+      valueTooltip: badTooltip,
+      width: "w-14"
     },
 
     // Support buff percentage
@@ -207,7 +210,8 @@
       headerText: "CTR",
       headerTooltip: "Counters",
       value: counters,
-      valueTooltip: null
+      valueTooltip: null,
+      width: "w-10"
     }
   ];
 </script>

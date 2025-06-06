@@ -60,7 +60,8 @@
       headerText: "aCRIT",
       headerTooltip: "Adjusted Crit %",
       value: adjCritPct,
-      valueTooltip: null
+      valueTooltip: null,
+      width: "w-14"
     },
 
     // Crit Damage %
@@ -71,7 +72,8 @@
       headerText: "CDMG",
       headerTooltip: "% Damage that Crit",
       value: critDmgPct,
-      valueTooltip: null
+      valueTooltip: null,
+      width: "w-14"
     },
 
     // Front Attack %
@@ -101,7 +103,8 @@
       headerText: "F.AD%",
       headerTooltip: "Front Attack Damage %",
       value: fadPct,
-      valueTooltip: fadTooltip
+      valueTooltip: fadTooltip,
+      width: "w-14"
     },
 
     // Back Attack %
@@ -131,7 +134,8 @@
       headerText: "B.AD%",
       headerTooltip: "Back Attack Damage %",
       value: badPct,
-      valueTooltip: badTooltip
+      valueTooltip: badTooltip,
+      width: "w-14"
     },
 
     // Support Buff %
@@ -252,7 +256,8 @@
       headerText: "Hits",
       headerTooltip: "Number of hits",
       value: hits,
-      valueTooltip: null
+      valueTooltip: null,
+      width: "w-10"
     },
 
     // HPM

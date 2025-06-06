@@ -14,7 +14,7 @@
 <th class="w-full"></th>
 {#each playerBreakdownColumns as columnDef}
   {#if columnDef.show(entityState)}
-    <th class="w-14 font-normal">
+    <th class="font-normal {columnDef.width ? columnDef.width : 'w-12'}">
       <QuickTooltip tooltip={columnDef.headerTooltip}>{columnDef.headerText}</QuickTooltip>
     </th>
   {/if}

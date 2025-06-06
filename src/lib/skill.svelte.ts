@@ -1,6 +1,7 @@
 import type { EntityState } from "./entity.svelte";
 import type { Skill } from "./types";
 import { abbreviateNumberSplit, customRound } from "$lib/utils";
+import { settings } from "./stores.svelte";
 
 export class SkillState {
   skill: Skill = $state()!;
@@ -53,7 +54,7 @@ export class SkillState {
   });
   averagePerCast = $derived(this.skill.totalDamage / this.skill.casts);
   adjustedCrit = $derived.by(() => {
-    if (this.entity.encounter.curSettings.breakdown.adjustedCritRate) {
+    if (settings.app.logs.breakdown.adjustedCritRate) {
       if (this.skill.adjustedCrit) {
         return customRound(this.skill.adjustedCrit * 100);
       } else {

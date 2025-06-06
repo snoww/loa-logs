@@ -226,7 +226,6 @@ export const defaultSettings = {
       damagePercent: true,
       critRate: true,
       critDmg: false,
-      adjustedCritRate: true,
       frontAtk: true,
       backAtk: true,
       avgDamage: false,

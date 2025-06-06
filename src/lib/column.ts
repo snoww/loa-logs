@@ -14,4 +14,6 @@ export interface LogColumn<S, E> {
   value: Snippet<[E]>;
   // Tooltip shown when hovering over the value
   valueTooltip: null | Snippet<[E]>;
+  // width of column
+  width?: string;
 }
