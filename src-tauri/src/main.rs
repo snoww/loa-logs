@@ -159,6 +159,7 @@ async fn main() -> Result<()> {
                     mini_window.set_always_on_top(false).unwrap();
                 } else {
                     meter_window.set_always_on_top(true).unwrap();
+                    mini_window.set_always_on_top(true).unwrap();
                 }
 
                 if settings.general.auto_iface && settings.general.port > 0 {
@@ -201,9 +202,7 @@ async fn main() -> Result<()> {
         })
         .plugin(
             tauri_plugin_window_state::Builder::new()
-                .skip_initial_state(METER_WINDOW_LABEL)
-                .skip_initial_state(METER_MINI_WINDOW_LABEL)
-                .skip_initial_state(LOGS_WINDOW_LABEL)
+                .with_state_flags(WINDOW_STATE_FLAGS)
                 .build(),
         )
         .plugin(tauri_plugin_single_instance::init(|_app, _argv, _cwd| {}))
@@ -1553,12 +1552,18 @@ fn enable_aot(window: tauri::Window) {
     if let Some(meter_window) = window.app_handle().get_window(METER_WINDOW_LABEL) {
         meter_window.set_always_on_top(true).ok();
     }
+    if let Some(mini_window) = window.app_handle().get_window(METER_MINI_WINDOW_LABEL) {
+        mini_window.set_always_on_top(true).ok();
+    }
 }
 
 #[tauri::command]
 fn disable_aot(window: tauri::Window) {
     if let Some(meter_window) = window.app_handle().get_window(METER_WINDOW_LABEL) {
         meter_window.set_always_on_top(false).ok();
+    }
+    if let Some(mini_window) = window.app_handle().get_window(METER_MINI_WINDOW_LABEL) {
+        mini_window.set_always_on_top(false).ok();
     }
 }
 
