@@ -41,28 +41,6 @@
     }
   });
 
-  let timeToKill = $derived.by(() => {
-    if (enc.duration < 0) {
-      return undefined;
-    }
-    if (settings.app.meter.showTimeUntilKill && enc.encounter?.currentBoss) {
-      let remainingDpm =
-        enc.players
-          .filter((e) => e.damageStats.damageDealt > 0 && !e.isDead && e.entityType == EntityType.PLAYER)
-          .reduce((a, b) => a + b.damageStats.damageDealt, 0) / enc.duration;
-      let remainingBossHealth = enc.encounter.currentBoss.currentHp + enc.encounter.currentBoss.currentShield;
-      let millisUntilKill = Math.max(remainingBossHealth / remainingDpm, 0);
-      if (millisUntilKill > 3.6e6) {
-        // 1 hr
-        return "∞";
-      } else {
-        return timestampToMinutesAndSeconds(millisUntilKill);
-      }
-    }
-
-    return undefined;
-  });
-
   const minWidth = new MediaQuery("min-width: 460px");
   const showTwo = new MediaQuery("min-width: 470px");
   const showThree = new MediaQuery("min-width: 480px");
@@ -104,8 +82,8 @@
           enc.totalDamageDealt.toLocaleString()
         )}
         {@render dataInfo("T. DPS", "Total DPS", abbreviateNumber(enc.dps), Math.round(enc.dps).toLocaleString())}
-        {#if timeToKill}
-          {@render dataInfo("TTK", "Time to Kill", timeToKill, timeToKill)}
+        {#if enc.timeToKill}
+          {@render dataInfo("TTK", "Time to Kill", enc.timeToKill, enc.timeToKill)}
         {/if}
       </div>
     </div>

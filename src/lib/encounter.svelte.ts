@@ -1,5 +1,6 @@
 import { EntityType, type Encounter, type Entity, type PartyInfo } from "$lib/types";
 import { settings } from "./stores.svelte";
+import { timestampToMinutesAndSeconds } from "./utils";
 
 export class EncounterState {
   live = false;
@@ -194,6 +195,28 @@ export class EncounterState {
         return skill.skillCastLog && skill.skillCastLog.length > 0;
       });
     });
+  });
+
+  timeToKill = $derived.by(() => {
+    if (this.duration < 0) {
+      return undefined;
+    }
+    if (settings.app.meter.showTimeUntilKill && this.encounter?.currentBoss) {
+      let remainingDpm =
+        this.players
+          .filter((e) => e.damageStats.damageDealt > 0 && !e.isDead && e.entityType == EntityType.PLAYER)
+          .reduce((a, b) => a + b.damageStats.damageDealt, 0) / this.duration;
+      let remainingBossHealth = this.encounter.currentBoss.currentHp + this.encounter.currentBoss.currentShield;
+      let millisUntilKill = Math.max(remainingBossHealth / remainingDpm, 0);
+      if (millisUntilKill > 3.6e6) {
+        // 1 hr
+        return "∞";
+      } else {
+        return timestampToMinutesAndSeconds(millisUntilKill);
+      }
+    }
+
+    return undefined;
   });
 
   constructor(encounter?: Encounter, live: boolean = false) {

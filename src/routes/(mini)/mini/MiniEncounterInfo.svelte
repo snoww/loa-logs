@@ -3,6 +3,7 @@
   import { bossHpMap } from "$lib/constants/encounters";
   import { EncounterState } from "$lib/encounter.svelte";
   import { settings } from "$lib/stores.svelte";
+  import { EntityType } from "$lib/types";
   import { getBossHpBars, timestampToMinutesAndSeconds } from "$lib/utils";
 
   let { enc }: { enc: EncounterState } = $props();
@@ -62,7 +63,7 @@
       <div data-tauri-drag-region class="truncate">
         {enc.encounter?.currentBoss ? enc.encounter.currentBoss.name : "No Boss"}
       </div>
-      <div class="text-neutral-300">
+      <div data-tauri-drag-region class="text-neutral-300">
         {#if boss && settings.app.mini.bossHpBar}
           {#if bossTotalBars > 1}
             {bossCurrentBars}x
@@ -72,8 +73,12 @@
         {/if}
       </div>
     </div>
-    <div>
-      <div data-tauri-drag-region class="text-nowrap">LOA Logs</div>
+    <div data-tauri-drag-region class="text-nowrap">
+      {#if enc.timeToKill}
+        TTK {enc.timeToKill}
+      {:else}
+        LOA Logs
+      {/if}
     </div>
   </div>
 </div>

@@ -1,6 +1,7 @@
 import { browser } from "$app/environment";
 import { invoke } from "@tauri-apps/api";
 import type { UpdateManifest } from "@tauri-apps/api/updater";
+import { time } from "echarts/core";
 import MarkdownIt from "markdown-it";
 import { SvelteSet } from "svelte/reactivity";
 import { readable } from "svelte/store";
@@ -196,7 +197,7 @@ export const defaultSettings = {
     resetSession: "",
     pauseSession: "",
     manualSave: "",
-    disableClickthrough: ""
+    disableClickthrough: "",
   },
   meter: {
     bossHpBar: true,
