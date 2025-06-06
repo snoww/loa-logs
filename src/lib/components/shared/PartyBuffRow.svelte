@@ -36,7 +36,7 @@
 </td>
 <td colspan="2">
   <div class="flex truncate">
-    <QuickTooltip tooltip={entityState.name}>
+    <QuickTooltip tooltip={entityState.name} class="truncate">
       {entityState.name}
     </QuickTooltip>
   </div>
