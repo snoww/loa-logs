@@ -42,6 +42,7 @@ export const shortcuts: Record<string, Shortcut> = {
 };
 
 export async function registerShortcuts() {
+  if (misc.modifyingShortcuts) return;
   try {
     for (const sc of Object.entries(shortcuts)) {
       const shortcut = settings.app.shortcuts[sc[0] as keyof typeof settings.app.shortcuts];

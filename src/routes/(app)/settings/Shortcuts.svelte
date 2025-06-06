@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { settings } from "$lib/stores.svelte";
+  import { misc, settings } from "$lib/stores.svelte";
   import { registerShortcuts, shortcuts } from "$lib/utils/shortcuts";
   import { createDialog, melt } from "@melt-ui/svelte";
   import { unregisterAll } from "@tauri-apps/api/globalShortcut";
@@ -24,8 +24,31 @@
       keyUp = false;
     }
 
-    if (keys.indexOf(e.key) === -1) {
-      keys.push(e.key);
+    // Handle modifier keys
+    const modifiers = [];
+    if (e.ctrlKey) modifiers.push("Ctrl");
+    if (e.altKey) modifiers.push("Alt");
+    if (e.shiftKey) modifiers.push("Shift");
+
+    // Get the physical key
+    let keyName = e.code;
+    if (keyName.startsWith("Key")) {
+      keyName = keyName.slice(3); // KeyA -> A
+    } else if (keyName.startsWith("Digit")) {
+      keyName = keyName.slice(5); // Digit1 -> 1
+    } else if (keyName.startsWith("Numpad")) {
+      keyName = keyName; // Keep as is for numpad keys
+    }
+    
+    // Don't add modifier keys as separate keys
+    if (!["Control", "Alt", "Shift"].includes(e.key)) {
+      const fullKey = [...modifiers, keyName].join("+");
+      if (keys.indexOf(fullKey) === -1) {
+        keys = [fullKey]; // Replace the array with the full combination
+      }
+    } else if (modifiers.length > 0) {
+      // Just show modifiers while they're being pressed
+      keys = [modifiers.join("+")];
     }
   };
 
@@ -47,12 +70,14 @@
   });
 
   onMount(() => {
+    misc.modifyingShortcuts = true;
     (async () => {
       await unregisterAll();
     })();
   });
 
   onDestroy(() => {
+    misc.modifyingShortcuts = false;
     document.removeEventListener("keydown", handleKeydown);
     document.removeEventListener("keyup", handleKeyUp);
     registerShortcuts();

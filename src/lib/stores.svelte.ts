@@ -336,6 +336,7 @@ export class Misc {
   paused = $state(false);
   missingInfo = $state(false);
   clickthrough = $state(false);
+  modifyingShortcuts = $state(false);
 }
 
 export class SyncProgress {
