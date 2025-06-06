@@ -51,7 +51,12 @@
       if (misc.raidInProgress && enc.encounter?.currentBossName) {
         appWindow.show();
       } else {
-        appWindow.hide();
+        // hide with delay
+        setTimeout(() => {
+          if (!misc.raidInProgress && !enc.encounter?.currentBossName) {
+            appWindow.hide();
+          }
+        }, 6000);
       }
     }
   });
