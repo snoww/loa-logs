@@ -625,7 +625,7 @@ pub struct SearchFilter {
     pub difficulty: String,
     pub boss_only_damage: bool,
     pub sort: String,
-    pub order: u8,
+    pub order: String,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]

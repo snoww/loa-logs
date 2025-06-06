@@ -720,7 +720,6 @@ fn load_encounters_preview(
         ""
     };
 
-    let order = if filter.order == 1 { "ASC" } else { "DESC" };
     let sort = format!("e.{}", filter.sort);
 
     let count_params = params.clone();
@@ -750,7 +749,7 @@ fn load_encounters_preview(
         difficulty_filter,
         boss_only_damage_filter,
         sort,
-        order
+        filter.order
     );
 
     let mut stmt = conn.prepare_cached(&query).unwrap();

@@ -5,6 +5,7 @@
   import type { EncounterPreview, EncountersOverview } from "$lib/types";
   import type { SvelteSet } from "svelte/reactivity";
   import { abbreviateNumber, formatTimestamp, getClassIcon, timestampToMinutesAndSeconds } from "$lib/utils";
+  import { encounterFilter, type sortColumns } from "$lib/stores.svelte";
 
   let {
     overview,
@@ -13,6 +14,11 @@
   }: { overview: EncountersOverview; selectMode: boolean; selected: SvelteSet<number> } = $props();
 
   let allSelected = $derived(overview.encounters.every((enc) => selected.has(enc.id)));
+
+  function changeSort(sort: sortColumns) {
+    encounterFilter.sort = sort;
+    encounterFilter.order = encounterFilter.order === "asc" ? "desc" : "asc";
+  }
 </script>
 
 {#snippet checkbox(id: number)}
@@ -100,10 +106,17 @@
 <table class="w-full table-fixed">
   <thead class="sticky top-0 z-10 bg-[#121212]/95 shadow-lg backdrop-blur-lg">
     <tr>
-      <th class="w-14 p-3">
-        {#if !selectMode}
+      {#if !selectMode}
+        <th
+          class="w-14 cursor-pointer p-3 {encounterFilter.sort === 'id' && encounterFilter.order === 'asc'
+            ? 'text-accent-500/80'
+            : 'hover:opacity-80'}"
+          onclick={() => changeSort("id")}
+        >
           ID
-        {:else}
+        </th>
+      {:else}
+        <th class="w-14 p-3">
           <input
             type="checkbox"
             checked={allSelected}
@@ -120,13 +133,23 @@
             }}
             class="form-checkbox checked:text-accent-600/80 size-4.5 rounded-sm border-0 bg-neutral-700 focus:ring-0"
           />
-        {/if}
-      </th>
+        </th>
+      {/if}
       <th class="w-[25%] p-3 text-left">Encounter</th>
       <th class="p-3 text-left">Classes</th>
       <th class="w-24 px-1 text-left lg:w-32">Name</th>
-      <th class="hidden w-20 px-1 text-right md:table-cell">DPS</th>
-      <th class="w-24 px-1 text-right">Duration</th>
+      <th
+        class="hidden w-20 cursor-pointer px-1 text-right md:table-cell {encounterFilter.sort === 'my_dps'
+          ? 'text-accent-500/80'
+          : 'hover:opacity-80'}"
+        onclick={() => changeSort("my_dps")}>DPS</th
+      >
+      <th
+        class="w-24 cursor-pointer px-1 text-right {encounterFilter.sort === 'duration'
+          ? 'text-accent-500/80'
+          : 'hover:opacity-80'}"
+        onclick={() => changeSort("duration")}>Duration</th
+      >
       <th class="w-24 pr-2 text-right xl:w-36">Date</th>
     </tr>
   </thead>

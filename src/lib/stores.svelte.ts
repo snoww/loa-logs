@@ -122,6 +122,9 @@ class Settings {
   }
 }
 
+export type sortColumns = "id" | "my_dps" | "duration"
+export type sortOrder = "asc" | "desc";
+
 export class EncounterFilter {
   search = $state("");
   page = $state(1);
@@ -130,8 +133,8 @@ export class EncounterFilter {
   favorite = $state(false);
   cleared = $state(false);
   difficulty = $state("");
-  sort = $state("id");
-  order = $state(2);
+  sort: sortColumns = $state("id");
+  order: sortOrder = $state("desc");
   minDuration = $derived(settings.app.logs.minEncounterDuration);
 
   reset() {
@@ -143,7 +146,7 @@ export class EncounterFilter {
     this.cleared = false;
     this.difficulty = "";
     this.sort = "id";
-    this.order = 2;
+    this.order = "desc";
   }
 }
 
