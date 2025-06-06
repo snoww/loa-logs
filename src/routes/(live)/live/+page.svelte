@@ -137,10 +137,10 @@
       } else {
         // hide with delay
         setTimeout(() => {
-          if (!misc.raidInProgress && !enc.encounter?.currentBossName) {
+          if (!enc.encounter) {
             appWindow.hide();
           }
-        }, 6000);
+        }, settings.app.general.autoHideDelay);
       }
     }
   });

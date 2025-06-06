@@ -233,6 +233,22 @@
           "Auto Show/Hide",
           "Automatically show and hide meter window when encounter starts and ends."
         )}
+        {#if settings.app.general.autoShow}
+          <div class="flex items-center">
+            <input
+              type="number"
+              class="form-input h-8 w-12 rounded-md border-0 bg-neutral-700 text-sm focus:ring-0"
+              bind:value={settings.app.general.autoHideDelay}
+              placeholder={settings.app.general.autoHideDelay.toString()}
+            />
+            <div class="ml-5">
+              <div>Hide Delay</div>
+              <div class="text-xs text-neutral-300">
+                Set a delay in seconds before the meter hides after an encounter ends.
+              </div>
+            </div>
+          </div>
+        {/if}
         {@render settingOption(
           "general",
           "startLoaOnStart",
@@ -326,7 +342,7 @@
             <label class="flex items-center">
               <input
                 type="number"
-                class="form-input h-8 w-24 rounded-md border-0 bg-neutral-700 text-sm focus:ring-0"
+                class="form-input w-18 h-8 rounded-md border-0 bg-neutral-700 text-sm focus:ring-0"
                 bind:value={settings.app.general.port}
                 placeholder={settings.app.general.port.toString()}
               />
@@ -834,9 +850,7 @@
             />
             <div class="ml-5">
               <div>Blur Meter Background</div>
-              <div class="text-xs text-neutral-300">
-                Adds background blur effect to live meter.
-              </div>
+              <div class="text-xs text-neutral-300">Adds background blur effect to live meter.</div>
             </div>
           </label>
         {/if}
@@ -865,3 +879,11 @@
     </div>
   </div>
 </div>
+
+<style>
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+</style>

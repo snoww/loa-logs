@@ -186,7 +186,8 @@ export const defaultSettings = {
     experimentalFeatures: false,
     mini: false,
     miniEdit: true,
-    autoShow: false
+    autoShow: false,
+    autoHideDelay: 5,
   },
   shortcuts: {
     hideMeter: "Control+ArrowDown",
