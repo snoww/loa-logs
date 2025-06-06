@@ -178,7 +178,7 @@
         <div class="flex flex-col px-1">
           {#each Object.entries(encounterMap).reverse() as raid}
             <div class="flex flex-wrap">
-              {#each Object.keys(raid[1]).reverse() as encounter}
+              {#each Object.keys(raid[1]) as encounter}
                 <button
                   class="m-1 rounded border border-neutral-700 p-1 {encounterFilter.encounters.has(encounter)
                     ? 'bg-neutral-700'
