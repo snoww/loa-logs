@@ -303,7 +303,7 @@ async fn main() -> Result<()> {
                             if let Some(mini) = app.get_window(METER_MINI_WINDOW_LABEL) {
                                 mini.set_size(Size::Logical(LogicalSize {
                                     width: 1280.0,
-                                    height: 500.0,
+                                    height: 200.0,
                                 }))
                                 .unwrap();
                                 mini.set_position(Position::Logical(LogicalPosition {
