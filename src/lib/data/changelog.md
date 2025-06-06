@@ -1,6 +1,6 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.29.2 - June 4th, 2025
+    v1.29.3 June 6th, 2025
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
@@ -10,9 +10,24 @@
 ### NOTE: you need to generate a new upload token [HERE](https://uwuowo.mathi.moe/me/logs)
 
 #### known issues:
-- sorting logs in the app is not working yet
 - some users having issues with class colors
 - settings being reset
+- issues with generating new upload tokens
+
+#### BUG FIXES AND IMPROVEMENTS
+- fixed encounter sorting
+- fixed damage tab not working when switching after inspecting boss
+- fixed 10s dps chart death timers
+- adjusted width of columns
+- adjusted max width of pages
+- fixed always on top setting not affecting mini meter
+- removed some meter settings that did not affect live meter
+- fixed shortcuts with combinations that included shifted keys
+- added option to add a delay for auto show/hide meter
+- ttk option now also shows on mini meter
+- various other small fixes
+
+### v1.29.2 - June 4th, 2025
 
 #### BUG FIXES AND IMPROVEMENTS
 - fixed g3 mordum not showing up in meter with boss only damage enabeld
