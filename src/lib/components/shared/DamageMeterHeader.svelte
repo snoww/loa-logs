@@ -11,7 +11,7 @@
 
 {#each logColumns as columnDef}
   {#if columnDef.show(enc)}
-    <th class="font-normal {columnDef.width ? columnDef.width : 'w-14'}">
+    <th class="font-normal {columnDef.width ? columnDef.width : 'w-12'}">
       <QuickTooltip tooltip={columnDef.headerTooltip}>{columnDef.headerText}</QuickTooltip>
     </th>
   {/if}

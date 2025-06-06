@@ -28,6 +28,7 @@
       headerTooltip: "Death Count",
       value: deaths,
       valueTooltip: null
+      ,width: "w-14"
     },
 
     // Incapacitation time
@@ -52,6 +53,7 @@
       headerTooltip: "Damage Dealt",
       value: damage,
       valueTooltip: damageTooltip
+      ,width: "w-14"
     },
 
     // Damage per second
@@ -64,6 +66,7 @@
       headerTooltip: "Damage per second",
       value: dps,
       valueTooltip: dpsTooltip
+      ,width: "w-14"
     },
 
     // Damage percentage
