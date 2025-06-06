@@ -117,6 +117,7 @@ async fn main() -> Result<()> {
                     }
                     Err(e) => {
                         warn!("failed to get update: {}", e);
+                        checked_clone.store(true, Ordering::Relaxed);
                     }
                 }
             });
