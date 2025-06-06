@@ -652,13 +652,6 @@
         )}
         {@render settingOption(
           "meter",
-          "adjustedCritRate",
-          "Skill Adjusted Crit Rate",
-          "Show the adjusted critical strike rate. Hits that are less than 5% of the average cast are excluded. Useful for skills with one big hit and many smaller hits like Doomsday.",
-          true
-        )}
-        {@render settingOption(
-          "meter",
           "critDmg",
           "Skill Crit Damage",
           "Show the percentage of damage that crit for the skill",
