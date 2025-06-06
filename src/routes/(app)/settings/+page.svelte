@@ -200,7 +200,7 @@
 {/snippet}
 
 <Header title="Settings" />
-<div class="mx-auto max-w-[100rem] px-8 py-4">
+<div class="mx-auto max-w-[180rem] px-8 py-4">
   <div class="flex flex-col gap-2">
     <div class="flex gap-2 overflow-x-auto px-2 max-md:max-w-[100vw]">
       {@render settingsTab("General")}

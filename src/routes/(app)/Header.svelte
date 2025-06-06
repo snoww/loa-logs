@@ -47,7 +47,7 @@
 <div
   class="sticky top-0 z-20 h-16 bg-neutral-900/70 px-8 py-5 shadow-sm shadow-neutral-800 drop-shadow-lg backdrop-blur-lg"
 >
-  <div class="mx-auto flex max-w-[100rem] items-center justify-between">
+  <div class="mx-auto flex max-w-[180rem] items-center justify-between">
     <div class="flex items-center gap-4">
       <button use:melt={$trigger}>
         <IconMenu class="size-7 hover:opacity-60" />

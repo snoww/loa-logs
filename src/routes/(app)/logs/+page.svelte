@@ -4,12 +4,12 @@
   import { encounterFilter, settings } from "$lib/stores.svelte";
   import { type EncountersOverview } from "$lib/types";
   import { invoke } from "@tauri-apps/api";
+  import { untrack } from "svelte";
+  import { SvelteSet } from "svelte/reactivity";
   import Header from "../Header.svelte";
   import EncountersTable from "./EncountersTable.svelte";
   import Pages from "./Pages.svelte";
   import Search from "./Search.svelte";
-  import { SvelteSet } from "svelte/reactivity";
-  import { untrack } from "svelte";
 
   let overview: EncountersOverview | null = $state(null);
   let container = $state<HTMLDivElement | null>(null);
@@ -99,7 +99,7 @@
       Refresh
     </button>
   </Header>
-  <div class="mx-auto flex max-w-[100rem] flex-col justify-between gap-1 px-6 py-1" style="height: calc(100vh - 4rem);">
+  <div class="mx-auto flex max-w-[180rem] flex-col justify-between gap-1 px-6 py-1" style="height: calc(100vh - 4rem);">
     <div class="flex flex-col gap-1">
       <Search bind:selectMode bind:selected bind:refresh />
       <div

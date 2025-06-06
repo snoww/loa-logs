@@ -1,14 +1,14 @@
 <script lang="ts">
-  import { settings, syncProgress } from "$lib/stores.svelte";
-  import { checkAccessToken, uploadLog } from "$lib/utils/sync";
-  import { createRadioGroup, melt } from "@melt-ui/svelte";
-  import Header from "../Header.svelte";
   import QuickTooltip from "$lib/components/QuickTooltip.svelte";
-  import { invoke } from "@tauri-apps/api";
-  import type { Encounter } from "$lib/types";
   import { addToast } from "$lib/components/Toaster.svelte";
-  import { uploadTokenError } from "$lib/utils/toasts";
+  import { settings, syncProgress } from "$lib/stores.svelte";
+  import type { Encounter } from "$lib/types";
   import { UWUOWO_URL } from "$lib/utils";
+  import { checkAccessToken, uploadLog } from "$lib/utils/sync";
+  import { uploadTokenError } from "$lib/utils/toasts";
+  import { createRadioGroup, melt } from "@melt-ui/svelte";
+  import { invoke } from "@tauri-apps/api";
+  import Header from "../Header.svelte";
 
   const {
     elements: { root, item },
@@ -112,7 +112,7 @@
 {/snippet}
 
 <Header title="Uploading" />
-<div class="mx-auto flex max-w-[100rem] flex-col gap-4 px-12 py-4">
+<div class="mx-auto flex max-w-[180rem] flex-col gap-4 px-12 py-4">
   <div class="flex flex-col gap-2 rounded">
     <div class="flex items-center gap-4">
       <p class="text-base font-semibold">Upload Token</p>

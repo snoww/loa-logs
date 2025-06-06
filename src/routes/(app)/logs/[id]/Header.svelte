@@ -5,8 +5,8 @@
   import { raidGates } from "$lib/constants/encounters";
   import { IconArrowLeft, IconStar } from "$lib/icons";
   import type { Encounter } from "$lib/types";
-  import { invoke } from "@tauri-apps/api";
   import { formatTimestamp, getBossHpBars } from "$lib/utils";
+  import { invoke } from "@tauri-apps/api";
 
   let { encounter }: { encounter: Encounter } = $props();
   let raidGate = $derived(raidGates[encounter.currentBossName]);
@@ -32,7 +32,7 @@
 {/snippet}
 
 <div class="sticky top-0 z-20 bg-neutral-900/70 px-6 shadow-md drop-shadow-lg backdrop-blur-lg">
-  <div class="h-18 mx-auto flex max-w-[100rem] items-center">
+  <div class="h-18 mx-auto flex max-w-[180rem] items-center">
     <div class="flex flex-col px-1 py-4">
       <div class="flex gap-2 overflow-y-auto text-nowrap py-1 text-xs">
         <a
