@@ -1,5 +1,5 @@
 <script lang="ts">
-  import LiveDamageMeter from "$lib/components/live/LiveDamageMeter.svelte";
+  import LiveDamageMeter from "./LiveDamageMeter.svelte";
   import { addToast } from "$lib/components/Toaster.svelte";
   import { EncounterState } from "$lib/encounter.svelte";
   import { misc, settings } from "$lib/stores.svelte";

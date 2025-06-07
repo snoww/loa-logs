@@ -1,6 +1,6 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
-  import UpdateAvailable from "$lib/components/shared/UpdateAvailable.svelte";
+  import UpdateAvailable from "$lib/components/UpdateAvailable.svelte";
   import Toaster from "$lib/components/Toaster.svelte";
   import { settings } from "$lib/stores.svelte";
   import { checkForUpdate } from "$lib/utils";

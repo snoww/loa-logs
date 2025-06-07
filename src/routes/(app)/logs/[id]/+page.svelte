@@ -1,5 +1,5 @@
 <script lang="ts">
-  import LogDamageMeter from "$lib/components/logs/LogDamageMeter.svelte";
+  import LogDamageMeter from "./LogDamageMeter.svelte";
   import type { PageData } from "./$types";
   import Header from "./Header.svelte";
 

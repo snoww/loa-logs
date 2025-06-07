@@ -1,7 +1,7 @@
 <script lang="ts">
   import { page } from "$app/state";
   import QuickTooltip from "$lib/components/QuickTooltip.svelte";
-  import BossOnlyDamage from "$lib/components/shared/BossOnlyDamage.svelte";
+  import BossOnlyDamage from "$lib/components/BossOnlyDamage.svelte";
   import { raidGates } from "$lib/constants/encounters";
   import { IconArrowLeft, IconStar } from "$lib/icons";
   import type { Encounter } from "$lib/types";
