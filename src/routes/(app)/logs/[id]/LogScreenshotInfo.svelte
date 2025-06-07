@@ -93,14 +93,11 @@
       <div>Total DPS:</div>
       {#if settings.app.logs.abbreviateHeader}
         <div class="text-white">
-          {abbreviateNumber(encounter!.encounterDamageStats.dps)}
+          {abbreviateNumber(encounter.encounterDamageStats.dps)}
         </div>
       {:else}
         <div class="text-white">
-          {encounter!.encounterDamageStats.dps.toLocaleString(undefined, {
-            minimumFractionDigits: 0,
-            maximumFractionDigits: 0
-          })}
+          {encounter.encounterDamageStats.dps.toLocaleString()}
         </div>
       {/if}
     </div>
