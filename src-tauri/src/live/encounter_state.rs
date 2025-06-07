@@ -28,18 +28,12 @@ pub struct EncounterState {
     pub saved: bool,
 
     pub raid_clear: bool,
-
-    prev_stagger: i32,
-
+    
     damage_log: HashMap<String, Vec<(i64, i64)>>,
-    identity_log: HashMap<String, IdentityLog>,
     cast_log: HashMap<String, HashMap<u32, Vec<i32>>>,
 
     boss_hp_log: HashMap<String, Vec<BossHpLog>>,
-
-    stagger_log: Vec<(i32, f32)>,
-    stagger_intervals: Vec<(i32, i32)>,
-
+    
     pub party_info: Vec<Vec<String>>,
     pub raid_difficulty: String,
     pub raid_difficulty_id: u32,
@@ -68,13 +62,9 @@ impl EncounterState {
             boss_dead_update: false,
             saved: false,
 
-            prev_stagger: 0,
             damage_log: HashMap::new(),
-            identity_log: HashMap::new(),
             boss_hp_log: HashMap::new(),
             cast_log: HashMap::new(),
-            stagger_log: Vec::new(),
-            stagger_intervals: Vec::new(),
 
             party_info: Vec::new(),
             raid_difficulty: "".to_string(),
@@ -105,15 +95,11 @@ impl EncounterState {
         self.encounter.entities = HashMap::new();
         self.encounter.current_boss_name = "".to_string();
         self.encounter.encounter_damage_stats = Default::default();
-        self.prev_stagger = 0;
         self.raid_clear = false;
 
         self.damage_log = HashMap::new();
-        self.identity_log = HashMap::new();
         self.cast_log = HashMap::new();
         self.boss_hp_log = HashMap::new();
-        self.stagger_log = Vec::new();
-        self.stagger_intervals = Vec::new();
         self.party_info = Vec::new();
 
         self.ntp_fight_start = 0;
@@ -1212,42 +1198,42 @@ impl EncounterState {
         }
     }
 
-    pub fn on_identity_gain(&mut self, pkt: &PKTIdentityGaugeChangeNotify) {
-        if self.encounter.fight_start == 0 {
-            return;
-        }
-
-        if self.encounter.local_player.is_empty() {
-            if let Some((_, entity)) = self
-                .encounter
-                .entities
-                .iter()
-                .find(|(_, e)| e.id == pkt.player_id)
-            {
-                self.encounter.local_player.clone_from(&entity.name);
-            } else {
-                return;
-            }
-        }
-
-        if let Some(entity) = self
-            .encounter
-            .entities
-            .get_mut(&self.encounter.local_player)
-        {
-            self.identity_log
-                .entry(entity.name.clone())
-                .or_default()
-                .push((
-                    Utc::now().timestamp_millis(),
-                    (
-                        pkt.identity_gauge1,
-                        pkt.identity_gauge2,
-                        pkt.identity_gauge3,
-                    ),
-                ));
-        }
-    }
+    // pub fn on_identity_gain(&mut self, pkt: &PKTIdentityGaugeChangeNotify) {
+    //     if self.encounter.fight_start == 0 {
+    //         return;
+    //     }
+    // 
+    //     if self.encounter.local_player.is_empty() {
+    //         if let Some((_, entity)) = self
+    //             .encounter
+    //             .entities
+    //             .iter()
+    //             .find(|(_, e)| e.id == pkt.player_id)
+    //         {
+    //             self.encounter.local_player.clone_from(&entity.name);
+    //         } else {
+    //             return;
+    //         }
+    //     }
+    // 
+    //     if let Some(entity) = self
+    //         .encounter
+    //         .entities
+    //         .get_mut(&self.encounter.local_player)
+    //     {
+    //         self.identity_log
+    //             .entry(entity.name.clone())
+    //             .or_default()
+    //             .push((
+    //                 Utc::now().timestamp_millis(),
+    //                 (
+    //                     pkt.identity_gauge1,
+    //                     pkt.identity_gauge2,
+    //                     pkt.identity_gauge3,
+    //                 ),
+    //             ));
+    //     }
+    // }
 
     // pub fn on_stagger_change(&mut self, pkt: &PKTParalyzationStateNotify) {
     //     if self.encounter.current_boss_name.is_empty() || self.encounter.fight_start == 0 {
@@ -1512,14 +1498,10 @@ impl EncounterState {
             .resource_dir()
             .expect("could not get resource dir");
         path.push("encounters.db");
-        let prev_stagger = self.prev_stagger;
 
         let damage_log = self.damage_log.clone();
-        let identity_log = self.identity_log.clone();
         let cast_log = self.cast_log.clone();
         let boss_hp_log = self.boss_hp_log.clone();
-        let stagger_log = self.stagger_log.clone();
-        let stagger_intervals = self.stagger_intervals.clone();
         let raid_clear = self.raid_clear;
         let party_info = self.party_info.clone();
         let raid_difficulty = self.raid_difficulty.clone();
@@ -1574,13 +1556,9 @@ impl EncounterState {
             let encounter_id = insert_data(
                 &tx,
                 encounter,
-                prev_stagger,
                 damage_log,
-                identity_log,
                 cast_log,
                 boss_hp_log,
-                stagger_log,
-                stagger_intervals,
                 raid_clear,
                 party_info,
                 raid_difficulty,

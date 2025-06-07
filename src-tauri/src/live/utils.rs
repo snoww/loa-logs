@@ -714,13 +714,9 @@ const WINDOW_S: i64 = 5;
 pub fn insert_data(
     tx: &Transaction,
     mut encounter: Encounter,
-    prev_stagger: i32,
     damage_log: HashMap<String, Vec<(i64, i64)>>,
-    identity_log: HashMap<String, IdentityLog>,
     cast_log: HashMap<String, HashMap<u32, Vec<i32>>>,
     boss_hp_log: HashMap<String, Vec<BossHpLog>>,
-    stagger_log: Vec<(i32, f32)>,
-    mut stagger_intervals: Vec<(i32, i32)>,
     raid_clear: bool,
     party_info: Vec<Vec<String>>,
     raid_difficulty: String,
