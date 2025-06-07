@@ -76,7 +76,7 @@
             </QuickTooltip>
           </button>
           <span class:text-lime-400={encounter.cleared}>#{page.params.id.toLocaleString()}: </span>
-          {encounter.currentBossName}
+          {encounter.currentBossName || "No Boss"}
         </h1>
       </div>
     </div>

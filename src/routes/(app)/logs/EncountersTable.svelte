@@ -69,8 +69,8 @@
           {#if encounter.favorite}
             <IconStar class="shrink-0 text-yellow-400" />
           {/if}
-          <QuickTooltip tooltip={encounter.bossName} class="truncate">
-            {encounter.bossName}
+          <QuickTooltip tooltip={encounter.bossName || "No Boss"} class="truncate">
+            {encounter.bossName || "No Boss"}
           </QuickTooltip>
         </a>
       </div>

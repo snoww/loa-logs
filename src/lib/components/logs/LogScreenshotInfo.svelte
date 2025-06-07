@@ -50,7 +50,7 @@
         </p>
       {/if}
       <p class="font-semibold">
-        {encounter.currentBossName}
+        {encounter.currentBossName || "No Boss"}
       </p>
     </div>
     <div class="flex items-center gap-1 font-mono text-xs">
