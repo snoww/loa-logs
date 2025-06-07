@@ -26,7 +26,6 @@
     group: true,
     openDelay: delay,
     closeDelay: 0,
-    closeOnPointerDown: false,
     forceVisible: true,
     positioning: {
       placement: placement
