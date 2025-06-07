@@ -1,6 +1,6 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.29.3 June 6th, 2025
+    v1.29.4 June 6th, 2025
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
@@ -12,7 +12,6 @@
 #### known issues:
 - some users having issues with class colors
 - settings being reset
-- issues with generating new upload tokens
 
 #### BUG FIXES AND IMPROVEMENTS
 - fixed encounter sorting
