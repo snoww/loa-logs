@@ -147,7 +147,7 @@
   {@render settingOption(
     "auto",
     "Auto Upload",
-    "Automatically uploads logs when cleared (end game relevant raids, hell modes)"
+    "Automatically uploads logs when cleared (end game relevant raids, hell modes, with boss only damage on)"
   )}
   <div class="flex flex-col gap-2">
     <p class="font-semibold">Upload Visibility Settings</p>
