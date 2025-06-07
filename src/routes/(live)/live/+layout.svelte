@@ -6,6 +6,7 @@
   import { invoke } from "@tauri-apps/api";
   import { emit } from "@tauri-apps/api/event";
   import { unregisterAll } from "@tauri-apps/api/globalShortcut";
+  import { appWindow } from "@tauri-apps/api/window";
   import { onMount } from "svelte";
 
   let { children }: { children?: import("svelte").Snippet } = $props();
@@ -53,6 +54,12 @@
       await unregisterAll();
       await registerShortcuts();
     })();
+  });
+
+  $effect.pre(() => {
+    if (settings.app.general.mini) {
+      appWindow.hide();
+    }
   });
 </script>
 
