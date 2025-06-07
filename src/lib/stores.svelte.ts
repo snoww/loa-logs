@@ -234,6 +234,7 @@ export const defaultSettings = {
       frontAtk: true,
       backAtk: true,
       avgDamage: false,
+      maxDamage: true,
       casts: true,
       cpm: true,
       hits: false,

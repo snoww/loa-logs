@@ -207,7 +207,7 @@
     // Max Hit
     {
       show(enc) {
-        return !enc.encounter.live && settings.app.logs.breakdown.maxDamage;
+        return enc.encounter.curSettings.breakdown.maxDamage;
       },
       headerText: "MaxH",
       headerTooltip: "Skill Max Hit Damage",
@@ -218,7 +218,7 @@
     // Max Cast
     {
       show(enc) {
-        return !enc.encounter.live && settings.app.logs.breakdown.maxDamage;
+        return !enc.encounter.live && enc.encounter.curSettings.breakdown.maxDamage;
       },
       headerText: "MaxC",
       headerTooltip: "Skill Max Cast Damage",

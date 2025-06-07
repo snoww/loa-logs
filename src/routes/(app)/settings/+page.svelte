@@ -724,6 +724,13 @@
         )}
         {@render settingOption(
           "meter",
+          "maxDamage",
+          "Skill Max Damage",
+          "Show the maximum damage dealt by the skill",
+          true
+        )}
+        {@render settingOption(
+          "meter",
           "casts",
           "Skill Casts",
           "Show the total number of casts of the skill (note: cancelled skills still count as cast)",
