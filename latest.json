@@ -1,11 +1,11 @@
 {
-  "version": "v1.29.4",
-  "notes": "### v1.29.4 June 6th, 2025\n\n#### known issues: \n- some users having issues with class colors\n- settings being reset\n- issues with generating new upload tokens\n\n#### BUG FIXES AND IMPROVEMENTS\n- fixed encounter sorting\n- fixed damage tab not working when switching after inspecting boss\n- fixed 10s dps chart death timers\n- adjusted width of columns\n- adjusted max width of pages\n- fixed always on top setting not affecting mini meter\n- removed some meter settings that did not affect live meter\n- fixed shortcuts with combinations that included shifted keys\n- added option to add a delay for auto show/hide meter\n- ttk option now also shows on mini meter\n- various other small fixes",
-  "pub_date": "2025-06-06T21:23:28.895Z",
+  "version": "v1.29.5",
+  "notes": "### v1.29.5 - June 7th, 2025\n\n#### known issues: \n- some users having issues with class colors\n- meter window position not saving\n\n#### BUG FIXES AND IMPROVEMENTS\n- fixed live meter not being resizable from the top\n- meter screenshot button now includes boss and raid info\n- skill max hit is back again on live meter\n- logs with no bosses can be viewed\n",
+  "pub_date": "2025-06-07T22:48:52.520Z",
   "platforms": {
     "windows-x86_64": {
-      "url": "https://github.com/snoww/loa-logs/releases/download/v1.29.4/LOA.Logs_1.29.4_x64-setup.nsis.zip",
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmE4b0d5bHN1blJKVU1FT1pqY2IyMmJaTEh0RVpUS290VjgyL2tYSS8rYkNrOWQvSTlDTlFvK0NjVDJadm5BeGVucWFtNkhjbDZSeTRQL3NKNkFkWkFNPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzQ5MjU5ODMwCWZpbGU6TE9BIExvZ3NfMS4yOS40X3g2NC1zZXR1cC5uc2lzLnppcApTcVU3elZxSnpiWCthRG1wTWttUi92c2doREx1VUVycDZkamFWaThzMjNZWktLUzV0VHpEb2ZQeG9ySVZnRHM4NGNpcHhvZnIvNlFjMmFTenRGR29BUT09Cg=="
+      "url": "https://github.com/snoww/loa-logs/releases/download/v1.29.5/LOA.Logs_1.29.5_x64-setup.nsis.zip",
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmVybjE1K2dhK1BycnI5SGVZUnIrc1dxa3JmQU1WajlvWDNxVTRvVEFMUlVlR051cHZpa1lNa0h5YTFkWmNyTmxVTWFCKzNzZTQ3TlhneDdLNWlUMUFFPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzQ5MzM0ODg4CWZpbGU6TE9BIExvZ3NfMS4yOS41X3g2NC1zZXR1cC5uc2lzLnppcApZWHJ6V2ZReDJYRmdOMHJHakJHOFZseHN2SlFTb05aMzg3UWhVVDlNbVRJVHYrbWtaTWtiU0hhSG5yWXQ4YXRVRXlVazNoWHJZY1RsbFBBZTRKTlBCUT09Cg=="
     }
   }
 }
