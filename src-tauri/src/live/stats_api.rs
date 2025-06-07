@@ -53,18 +53,17 @@ impl StatsApi {
     }
 
     pub fn send_raid_info(&mut self, state: &EncounterState) {
-        let boss_name = state.encounter.current_boss_name.clone();
-        let raid_name = if let Some(boss) = state.encounter.entities.get(&boss_name) {
-            boss_to_raid_map(&boss_name, boss.max_hp)
-        } else {
-            return;
+        let boss_name = state.encounter.current_boss_name.as_str();
+        let raid_name = match state
+            .encounter
+            .entities
+            .get(boss_name)
+            .and_then(|boss| boss_to_raid_map(boss_name, boss.max_hp))
+        {
+            Some(name) => name,
+            None => return,
         };
-
-        if !is_valid_raid(&raid_name) {
-            debug_print(format_args!("not valid for raid info"));
-            return;
-        }
-
+        
         let players: Vec<String> = state
             .encounter
             .entities
@@ -152,27 +151,6 @@ impl StatsApi {
             }
         }
     }
-}
-
-fn is_valid_raid(raid_name: &str) -> bool {
-    matches!(
-        raid_name,
-        "Act 2: Brelshaza G1" | 
-        "Act 2: Brelshaza G2" | 
-        "Aegir G1" |
-        "Aegir G2" |
-        "Behemoth G1" |
-        "Behemoth G2" |
-        "Echidna G1"|
-        "Echidna G2"|
-        "Thaemine G1"|
-        "Thaemine G2"|
-        "Thaemine G3"|
-        "Thaemine G4"|
-        // g-raids
-        "Skolakia"|
-        "Argeos"
-    )
 }
 
 #[derive(Debug, Default, Clone)]

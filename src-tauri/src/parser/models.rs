@@ -633,7 +633,7 @@ pub struct SearchFilter {
 pub struct Settings {
     pub general: GeneralSettings,
     #[serde(flatten)]
-    pub extra: Map<String, Value>
+    pub extra: Map<String, Value>,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -653,7 +653,7 @@ pub struct GeneralSettings {
     pub hide_logs_on_start: bool,
     pub mini: bool,
     #[serde(flatten)]
-    pub extra: Map<String, Value>
+    pub extra: Map<String, Value>,
 }
 
 #[derive(Default, Debug, Serialize)]
@@ -723,6 +723,17 @@ lazy_static! {
     pub static ref ESTHER_DATA: Vec<Esther> = {
         let json_str = include_str!("../../meter-data/Esther.json");
         serde_json::from_str(json_str).unwrap()
+    };
+    pub static ref RAID_MAP: HashMap<String, String> = {
+        let json_str = include_str!("../../meter-data/encounters.json");
+        let encounters =
+            serde_json::from_str::<HashMap<String, HashMap<String, Vec<String>>>>(json_str)
+                .unwrap();
+        encounters
+            .values()
+            .flat_map(|raid| raid.iter())
+            .flat_map(|(gate, bosses)| bosses.iter().map(move |boss| (boss.clone(), gate.clone())))
+            .collect()
     };
     pub static ref VALID_ZONES: HashSet<u32> = {
         let valid_zones = [
