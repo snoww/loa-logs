@@ -61,7 +61,7 @@
   </div>
 {/snippet}
 
-<div data-tauri-drag-region class="flex h-7 items-center bg-neutral-900/80 px-1 pr-2">
+<div class="flex h-7 items-center bg-neutral-900/80 px-1 pr-2">
   <div data-tauri-drag-region class="flex w-full items-center justify-between">
     <!-- encounter info -->
     <!-- time, dmg, dps, ttk -->
