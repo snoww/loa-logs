@@ -12,7 +12,7 @@
     IconSettings,
     IconUndo
   } from "$lib/icons";
-  import { misc, settings } from "$lib/stores.svelte";
+  import { misc, screenshot, settings } from "$lib/stores.svelte";
   import { EntityType } from "$lib/types";
   import { abbreviateNumber, takeScreenshot, timestampToMinutesAndSeconds } from "$lib/utils";
   import { createDropdownMenu, melt } from "@melt-ui/svelte";
@@ -88,66 +88,68 @@
       </div>
     </div>
 
-    <!-- menu icons depending on how big window is -->
-    <div class="flex items-center gap-0.5 text-neutral-300">
-      {#if minWidth.current}
-        <button class="group" onclick={() => invoke("open_most_recent_encounter")}>
-          <QuickTooltip tooltip="Open Recent Log">
-            <IconUndo class="group-hover:text-accent-500/80 size-5" />
-          </QuickTooltip>
-        </button>
-      {/if}
-      {#if showTwo.current}
-        <button class="group" onclick={() => takeScreenshot(screenshotDiv)}>
-          <QuickTooltip tooltip="Take Screenshot">
-            <IconCamera class="group-hover:text-accent-500/80 size-5" />
-          </QuickTooltip>
-        </button>
-      {/if}
-      {#if showThree.current}
-        <button class="group" onclick={() => emit("reset-request")}>
-          <QuickTooltip tooltip="Reset Session">
-            <IconRefresh class="group-hover:text-accent-500/80 size-4.5" />
-          </QuickTooltip>
-        </button>
-      {/if}
-      {#if showFour.current}
-        <button
-          class="group"
-          onclick={() => {
-            misc.paused = !misc.paused;
-            emit("pause-request");
-          }}
-        >
-          <QuickTooltip tooltip={misc.paused ? "Resume Session" : "Pause Session"}>
-            {#if misc.paused}
-              <IconPlay class="group-hover:text-accent-500/80 text-accent-500/80 size-5 animate-pulse" />
-            {:else}
-              <IconPause class="group-hover:text-accent-500/80 size-5 opacity-80" />
-            {/if}
-          </QuickTooltip>
-        </button>
-      {/if}
-      {#if settings.app.general.experimentalFeatures}
-        <LiveShareButton />
-      {/if}
+    {#if !screenshot.state}
+      <!-- menu icons depending on how big window is -->
+      <div class="flex items-center gap-0.5 text-neutral-300">
+        {#if minWidth.current}
+          <button class="group" onclick={() => invoke("open_most_recent_encounter")}>
+            <QuickTooltip tooltip="Open Recent Log">
+              <IconUndo class="group-hover:text-accent-500/80 size-5" />
+            </QuickTooltip>
+          </button>
+        {/if}
+        {#if showTwo.current}
+          <button class="group" onclick={() => takeScreenshot(screenshotDiv)}>
+            <QuickTooltip tooltip="Take Screenshot">
+              <IconCamera class="group-hover:text-accent-500/80 size-5" />
+            </QuickTooltip>
+          </button>
+        {/if}
+        {#if showThree.current}
+          <button class="group" onclick={() => emit("reset-request")}>
+            <QuickTooltip tooltip="Reset Session">
+              <IconRefresh class="group-hover:text-accent-500/80 size-4.5" />
+            </QuickTooltip>
+          </button>
+        {/if}
+        {#if showFour.current}
+          <button
+            class="group"
+            onclick={() => {
+              misc.paused = !misc.paused;
+              emit("pause-request");
+            }}
+          >
+            <QuickTooltip tooltip={misc.paused ? "Resume Session" : "Pause Session"}>
+              {#if misc.paused}
+                <IconPlay class="group-hover:text-accent-500/80 text-accent-500/80 size-5 animate-pulse" />
+              {:else}
+                <IconPause class="group-hover:text-accent-500/80 size-5 opacity-80" />
+              {/if}
+            </QuickTooltip>
+          </button>
+        {/if}
+        {#if settings.app.general.experimentalFeatures}
+          <LiveShareButton />
+        {/if}
 
-      <!-- dropdown menu trigger -->
-      <button use:melt={$trigger} class="">
-        <IconChevronDown
-          class="hover:text-accent-500/80 size-5 transform transition-all duration-300 {$open
-            ? 'text-accent-500/80 -rotate-180'
-            : ''}"
-        />
-      </button>
+        <!-- dropdown menu trigger -->
+        <button use:melt={$trigger} class="">
+          <IconChevronDown
+            class="hover:text-accent-500/80 size-5 transform transition-all duration-300 {$open
+              ? 'text-accent-500/80 -rotate-180'
+              : ''}"
+          />
+        </button>
 
-      <!-- minimize window -->
-      <button class="group" onclick={() => appWindow.hide()}>
-        <QuickTooltip tooltip="Minimize">
-          <IconMinus class="group-hover:text-accent-500/80 size-5" />
-        </QuickTooltip>
-      </button>
-    </div>
+        <!-- minimize window -->
+        <button class="group" onclick={() => appWindow.hide()}>
+          <QuickTooltip tooltip="Minimize">
+            <IconMinus class="group-hover:text-accent-500/80 size-5" />
+          </QuickTooltip>
+        </button>
+      </div>
+    {/if}
   </div>
 </div>
 

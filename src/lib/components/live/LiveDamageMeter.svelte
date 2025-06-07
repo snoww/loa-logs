@@ -90,37 +90,38 @@
   let screenshotDiv: HTMLDivElement | undefined = $state();
 </script>
 
-<LiveEncounterInfo {enc} {screenshotDiv} />
-{#if enc.encounter?.currentBoss && settings.app.meter.bossHpBar}
-  <LiveBossInfo boss={enc.encounter.currentBoss} />
-{/if}
-<!-- svelte-ignore a11y_no_static_element_interactions -->
-<div
-  class="select-none overflow-scroll"
-  style="height: calc(100% - 1.5rem - 1.75rem {enc.encounter?.currentBoss && settings.app.meter.bossHpBar
-    ? ' - 1.75rem'
-    : ''});"
-  bind:this={screenshotDiv}
-  oncontextmenu={handleRightClick}
->
-  {#if tab === MeterTab.DAMAGE}
-    {#if meterState === MeterState.PARTY}
-      <DamageMeterPartySplit {enc} {inspectPlayer} />
-    {:else if meterState === MeterState.PLAYER && player !== undefined}
-      <table class="relative isolate w-full table-fixed">
-        <PlayerBreakdown entity={player} {enc} {handleRightClick} />
-      </table>
-    {/if}
-  {:else if tab === MeterTab.PARTY_BUFFS || tab === MeterTab.SELF_BUFFS}
-    <Buffs {tab} {enc} focusedPlayer={player} {inspectPlayer} {handleRightClick} />
-  {:else if tab === MeterTab.TANK}
-    <DamageTaken {enc} />
-  {:else if tab === MeterTab.BOSS}
-    {#if !focusedBoss}
-      <BossTable {enc} {inspectBoss} />
-    {:else}
-      <BossBreakdown {enc} boss={enc.encounter!.entities[focusedBoss]} handleRightClick={() => (focusedBoss = "")} />
-    {/if}
+<div class="h-full" bind:this={screenshotDiv}>
+  <LiveEncounterInfo {enc} {screenshotDiv} />
+  {#if enc.encounter?.currentBoss && settings.app.meter.bossHpBar}
+    <LiveBossInfo boss={enc.encounter.currentBoss} />
   {/if}
+  <!-- svelte-ignore a11y_no_static_element_interactions -->
+  <div
+    class="select-none overflow-scroll"
+    style="height: calc(100% - 1.5rem - 1.75rem {enc.encounter?.currentBoss && settings.app.meter.bossHpBar
+      ? ' - 1.75rem'
+      : ''});"
+    oncontextmenu={handleRightClick}
+  >
+    {#if tab === MeterTab.DAMAGE}
+      {#if meterState === MeterState.PARTY}
+        <DamageMeterPartySplit {enc} {inspectPlayer} />
+      {:else if meterState === MeterState.PLAYER && player !== undefined}
+        <table class="relative isolate w-full table-fixed">
+          <PlayerBreakdown entity={player} {enc} {handleRightClick} />
+        </table>
+      {/if}
+    {:else if tab === MeterTab.PARTY_BUFFS || tab === MeterTab.SELF_BUFFS}
+      <Buffs {tab} {enc} focusedPlayer={player} {inspectPlayer} {handleRightClick} />
+    {:else if tab === MeterTab.TANK}
+      <DamageTaken {enc} />
+    {:else if tab === MeterTab.BOSS}
+      {#if !focusedBoss}
+        <BossTable {enc} {inspectBoss} />
+      {:else}
+        <BossBreakdown {enc} boss={enc.encounter!.entities[focusedBoss]} handleRightClick={() => (focusedBoss = "")} />
+      {/if}
+    {/if}
+  </div>
+  <LiveFooter bind:tab />
 </div>
-<LiveFooter bind:tab />
