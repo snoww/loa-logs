@@ -1,11 +1,11 @@
 {
-  "version": "v1.29.5",
-  "notes": "### v1.29.5 - June 7th, 2025\n\n#### known issues: \n- some users having issues with class colors\n- meter window position not saving\n\n#### BUG FIXES AND IMPROVEMENTS\n- fixed live meter not being resizable from the top\n- meter screenshot button now includes boss and raid info\n- skill max hit is back again on live meter\n- logs with no bosses can be viewed\n",
-  "pub_date": "2025-06-07T22:48:52.520Z",
+  "version": "v1.29.6",
+  "notes": "### v1.29.6 - June 8th, 2025\n\n_apologies for the frequent updates_\n#### known issues: \n- some users having issues with class colors\n- meter window position not saving\n\n#### BUG FIXES AND IMPROVEMENTS\n- fixed 0x wipes in mordum gate 3 not being saved in database",
+  "pub_date": "2025-06-08T20:24:44.555Z",
   "platforms": {
     "windows-x86_64": {
-      "url": "https://github.com/snoww/loa-logs/releases/download/v1.29.5/LOA.Logs_1.29.5_x64-setup.nsis.zip",
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmVybjE1K2dhK1BycnI5SGVZUnIrc1dxa3JmQU1WajlvWDNxVTRvVEFMUlVlR051cHZpa1lNa0h5YTFkWmNyTmxVTWFCKzNzZTQ3TlhneDdLNWlUMUFFPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzQ5MzM0ODg4CWZpbGU6TE9BIExvZ3NfMS4yOS41X3g2NC1zZXR1cC5uc2lzLnppcApZWHJ6V2ZReDJYRmdOMHJHakJHOFZseHN2SlFTb05aMzg3UWhVVDlNbVRJVHYrbWtaTWtiU0hhSG5yWXQ4YXRVRXlVazNoWHJZY1RsbFBBZTRKTlBCUT09Cg=="
+      "url": "https://github.com/snoww/loa-logs/releases/download/v1.29.6/LOA.Logs_1.29.6_x64-setup.nsis.zip",
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYllCeDBDaWIwMlVJa3FuVzlTdHB6aFNOZHMxeWhmYmQyS2NxSHBOVWZDVDdaTzZDeXJ4cDdpcTlUTUVFU2ZWeGdNTzI0UzQwZ0lFdTJTVERuNi85RXdRPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzQ5NDE0MDcxCWZpbGU6TE9BIExvZ3NfMS4yOS42X3g2NC1zZXR1cC5uc2lzLnppcApGWHZaVDA1V2wzckJzZDByRVQyUVdSR0xkL0gwL2o1WTlraDlEdFdhcCtpclFzWHVKZG84QUxoaXVoRVp3TW1RbWZJZzh0RHI0SW5LU1ZNNUoxNHNCQT09Cg=="
     }
   }
 }

@@ -1,6 +1,6 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.29.5 - June 7th, 2025
+    v1.29.6 - June 8th, 2025
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
@@ -9,10 +9,18 @@
 
 ### NOTE: you need to generate a new upload token [HERE](https://uwuowo.mathi.moe/me/logs)
 
+_apologies for the frequent updates_
+
 #### known issues:
 
 - some users having issues with class colors
 - meter window position not saving
+
+#### BUG FIXES AND IMPROVEMENTS
+
+- fixed 0x wipes in mordum gate 3 not being saved in database
+
+### v1.29.5 - June 7th, 2025
 
 #### BUG FIXES AND IMPROVEMENTS
 
@@ -21,7 +29,7 @@
 - skill max hit is back again on live meter
 - logs with no bosses can be viewed
 
-### v1.29.4 June 6th, 2025
+### v1.29.4 - June 6th, 2025
 
 #### BUG FIXES AND IMPROVEMENTS
 
