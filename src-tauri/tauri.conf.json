@@ -130,7 +130,9 @@
         "minWidth": 400,
         "minHeight": 120,
         "alwaysOnTop": true,
-        "visible": false
+        "visible": false,
+        "focus": false,
+        "skipTaskbar": true
       },
       {
         "label": "logs",
@@ -159,7 +161,9 @@
         "minWidth": 1280,
         "minHeight": 200,
         "alwaysOnTop": true,
-        "visible": false
+        "visible": false,
+        "focus": false,
+        "skipTaskbar": true
       }
     ]
   }
