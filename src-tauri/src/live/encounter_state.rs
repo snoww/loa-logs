@@ -28,12 +28,12 @@ pub struct EncounterState {
     pub saved: bool,
 
     pub raid_clear: bool,
-    
+
     damage_log: HashMap<String, Vec<(i64, i64)>>,
     cast_log: HashMap<String, HashMap<u32, Vec<i32>>>,
 
     boss_hp_log: HashMap<String, Vec<BossHpLog>>,
-    
+
     pub party_info: Vec<Vec<String>>,
     pub raid_difficulty: String,
     pub raid_difficulty_id: u32,
@@ -1202,7 +1202,7 @@ impl EncounterState {
     //     if self.encounter.fight_start == 0 {
     //         return;
     //     }
-    // 
+    //
     //     if self.encounter.local_player.is_empty() {
     //         if let Some((_, entity)) = self
     //             .encounter
@@ -1215,7 +1215,7 @@ impl EncounterState {
     //             return;
     //         }
     //     }
-    // 
+    //
     //     if let Some(entity) = self
     //         .encounter
     //         .entities
@@ -1459,31 +1459,19 @@ impl EncounterState {
     }
 
     pub fn save_to_db(&mut self, stats_api: &StatsApi, manual: bool) {
-        if !manual {
-            if self.encounter.fight_start == 0
+        if !manual
+            && (self.encounter.fight_start == 0
                 || self.encounter.current_boss_name.is_empty()
                 || !self
                     .encounter
                     .entities
                     .contains_key(&self.encounter.current_boss_name)
-                || !self
-                    .encounter
-                    .entities
-                    .values()
-                    .any(|e| e.entity_type == EntityType::PLAYER && e.damage_stats.damage_dealt > 0)
-            {
-                return;
-            }
-
-            if let Some(current_boss) = self
-                .encounter
-                .entities
-                .get(&self.encounter.current_boss_name)
-            {
-                if current_boss.current_hp == current_boss.max_hp {
-                    return;
-                }
-            }
+                || !self.encounter.entities.values().any(|e| {
+                    e.entity_type == EntityType::PLAYER && e.damage_stats.damage_dealt > 0
+                }))
+        {
+            info!("not saving to db, no players with damage dealt");
+            return;
         }
 
         if !self.damage_is_valid {
