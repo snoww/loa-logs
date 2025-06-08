@@ -73,7 +73,7 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
 
     let client = Client::new();
     let mut last_heartbeat = Instant::now();
-    let heartbeat_duration = Duration::from_secs(60 * 5);
+    let heartbeat_duration = Duration::from_secs(60 * 15);
 
     let reset = Arc::new(AtomicBool::new(false));
     let pause = Arc::new(AtomicBool::new(false));
