@@ -203,6 +203,7 @@ export const defaultSettings = {
     disableClickthrough: "",
   },
   meter: {
+    bossInfo: true,
     bossHpBar: true,
     splitBossHpBar: false,
     showTimeUntilKill: false,

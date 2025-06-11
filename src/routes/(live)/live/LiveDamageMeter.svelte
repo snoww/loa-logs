@@ -92,13 +92,13 @@
 
 <div class="h-full" bind:this={screenshotDiv}>
   <LiveEncounterInfo {enc} {screenshotDiv} />
-  {#if enc.encounter?.currentBoss && settings.app.meter.bossHpBar}
+  {#if enc.encounter?.currentBoss && settings.app.meter.bossInfo}
     <LiveBossInfo boss={enc.encounter.currentBoss} />
   {/if}
   <!-- svelte-ignore a11y_no_static_element_interactions -->
   <div
     class="select-none overflow-scroll"
-    style="height: calc(100% - 1.5rem - 1.75rem {enc.encounter?.currentBoss && settings.app.meter.bossHpBar
+    style="height: calc(100% - 1.5rem - 1.75rem {enc.encounter?.currentBoss && settings.app.meter.bossInfo
       ? ' - 1.75rem'
       : ''});"
     oncontextmenu={handleRightClick}

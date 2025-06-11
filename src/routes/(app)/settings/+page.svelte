@@ -564,9 +564,15 @@
       {:else if currentTab === "Meter"}
         {@render settingOption(
           "meter",
+          "bossHpInfo",
+          "Boss HP Info",
+          "Show boss info in live meter"
+        )}
+        {@render settingOption(
+          "meter",
           "bossHpBar",
           "Boss HP Bars",
-          "Show boss HP bars (e.g. x65) for the current boss."
+          "Show boss HP bars (e.g. x65) for the current boss. turn this off to show hp percentage."
         )}
         {@render settingOption(
           "meter",
