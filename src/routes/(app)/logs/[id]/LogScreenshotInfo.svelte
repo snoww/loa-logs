@@ -4,7 +4,7 @@
   import type { Encounter } from "$lib/types";
   import { getVersion } from "@tauri-apps/api/app";
   import BossOnlyDamage from "$lib/components/BossOnlyDamage.svelte";
-  import { abbreviateNumber, getBossHpBars, timestampToMinutesAndSeconds } from "$lib/utils";
+  import { abbreviateNumber, formatTimestampDate, formatTimestampTime, getBossHpBars, timestampToMinutesAndSeconds } from "$lib/utils";
   import { middot } from "$lib/components/Snippets.svelte";
 
   let { encounter }: { encounter: Encounter } = $props();
@@ -22,12 +22,12 @@
 
 <div class="flex flex-col gap-1 px-4 tracking-tight" class:hidden={!screenshot.state}>
   <div class="flex items-center justify-between gap-1">
-    <div class="flex items-center gap-1">
+    <div class="flex items-center gap-1 truncate">
       {#if encounter.cleared}
         <p class="text-lime-400">[Cleared]</p>
       {/if}
       {#if !encounter.cleared && bossHpBars}
-        <p class="text-neutral-500">[Wipe - {bossHpBars}x]</p>
+        <p class="text-neutral-400">[Wipe - {bossHpBars}x]</p>
       {/if}
       {#if encounter.bossOnlyDamage}
         <BossOnlyDamage />
@@ -49,8 +49,12 @@
           [{raidGate}]
         </p>
       {/if}
-      <p class="font-semibold">
+      <p class="font-semibold truncate">
         {encounter.currentBossName || "No Boss"}
+      </p>
+      {@render middot()}
+      <p class="text-neutral-300">
+        {formatTimestampDate(encounter.fightStart)}
       </p>
     </div>
     <div class="flex items-center gap-1 font-mono text-xs">
