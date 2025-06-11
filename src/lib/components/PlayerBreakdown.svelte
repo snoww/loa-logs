@@ -146,7 +146,7 @@
       {/if}
       {#if enc.curSettings.breakdown.maxDamage}
         <td class="px-1 text-center"> - </td>
-        <td class="px-1 text-center"> - </td>
+        <td class="px-1 text-center" class:hidden={enc.live}> - </td>
       {/if}
       {#if enc.curSettings.breakdown.casts}
         <td class="px-1 text-center">
