@@ -1,6 +1,6 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.29.7 - June 12th, 2025
+    v1.29.8 - June 12th, 2025
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
@@ -8,6 +8,13 @@
 </div>
 
 ### NOTE: you need to generate a new upload token [HERE](https://uwuowo.mathi.moe/me/logs)
+
+#### BUG FIXES AND IMPROVEMENTS
+
+- fixed boss info setting not working
+- added back taskbar icons
+
+### v1.29.7 - June 12th, 2025
 
 #### BUG FIXES AND IMPROVEMENTS
 

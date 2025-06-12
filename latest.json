@@ -1,11 +1,11 @@
 {
-  "version": "v1.29.7",
-  "notes": "### v1.29.7 - June 12th, 2025\n\n#### BUG FIXES AND IMPROVEMENTS\n- added back setting for boss hp percentage instead of bars\n- some screenshot changes\n- fixed misaligned columns in live meter\n- fixed buff filter settings not being applied\n- added perfect block text for normal mode\n- removed taskbar icons for live and mini meter\n",
-  "pub_date": "2025-06-12T07:02:45.084Z",
+  "version": "v1.29.8",
+  "notes": "### v1.29.8 - June 12th, 2025\n\n#### BUG FIXES AND IMPROVEMENTS\n- added back setting for boss hp percentage instead of bars\n- some screenshot changes\n- fixed misaligned columns in live meter\n- fixed buff filter settings not being applied\n- added perfect block text for normal mode\n- removed taskbar icons for live and mini meter\n",
+  "pub_date": "2025-06-12T15:25:05.390Z",
   "platforms": {
     "windows-x86_64": {
-      "url": "https://github.com/snoww/loa-logs/releases/download/v1.29.7/LOA.Logs_1.29.7_x64-setup.nsis.zip",
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmNJckZ4NUhiNU5wS3h4TnFWUStDN0RiQWYzSkl6RGwzU2QvSU1zdXpzRGJpWGNIRzh5Vm80U1lhZnNDdDJ3cTB1WVo2NnN0aUlHaXlHZDIrMEsyQUFvPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzQ5NzExOTcxCWZpbGU6TE9BIExvZ3NfMS4yOS43X3g2NC1zZXR1cC5uc2lzLnppcApDTGdkUy9MckZsZW9VUjE4Q0l1NU1DaS9PczVsd2xKaThxZjFnWUVUMkRSRGJ5WDBNbmgxUmJmNE9yQklOYmVoWE55STZjcU5pUVIybk1lcjIwcE9CZz09Cg=="
+      "url": "https://github.com/snoww/loa-logs/releases/download/v1.29.8/LOA.Logs_1.29.8_x64-setup.nsis.zip",
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlorQW1HTXp1TVArRDhGbWRJS3d3ak5oT3VUK3p3Nm4ydndwdCt2cVNURDZKOC9NdlVSN3JiYU00Y2Z5NVFKVEcxdjNlMnVwL0lnWXJoYjVwOW54dEEwPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzQ5NzQxODExCWZpbGU6TE9BIExvZ3NfMS4yOS44X3g2NC1zZXR1cC5uc2lzLnppcApmMmNQTkZzOEx3b2tuZll6dWo4eGdUNnY3ZFNHUEhHYjFpL3lvMjU1MWdFRzZnOHpkRWtDSmpvUnliRE9VL2oxVXg0dDRzQUExbnM3WXdzNEY2OGJDZz09Cg=="
     }
   }
 }
