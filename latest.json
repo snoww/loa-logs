@@ -1,6 +1,6 @@
 {
   "version": "v1.29.8",
-  "notes": "### v1.29.8 - June 12th, 2025\n\n#### BUG FIXES AND IMPROVEMENTS\n- added back setting for boss hp percentage instead of bars\n- some screenshot changes\n- fixed misaligned columns in live meter\n- fixed buff filter settings not being applied\n- added perfect block text for normal mode\n- removed taskbar icons for live and mini meter\n",
+  "notes": "### v1.29.8 - June 12th, 2025\n\n#### BUG FIXES AND IMPROVEMENTS\n- fixed boss info setting not working\n- added back taskbar icons",
   "pub_date": "2025-06-12T15:25:05.390Z",
   "platforms": {
     "windows-x86_64": {
