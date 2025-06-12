@@ -564,7 +564,7 @@
       {:else if currentTab === "Meter"}
         {@render settingOption(
           "meter",
-          "bossHpInfo",
+          "bossInfo",
           "Boss HP Info",
           "Show boss info in live meter"
         )}
