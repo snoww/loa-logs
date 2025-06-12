@@ -131,8 +131,7 @@
         "minHeight": 120,
         "alwaysOnTop": true,
         "visible": false,
-        "focus": false,
-        "skipTaskbar": true
+        "focus": false
       },
       {
         "label": "logs",
@@ -162,8 +161,7 @@
         "minHeight": 200,
         "alwaysOnTop": true,
         "visible": false,
-        "focus": false,
-        "skipTaskbar": true
+        "focus": false
       }
     ]
   }
