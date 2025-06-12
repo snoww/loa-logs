@@ -795,7 +795,7 @@
             type="checkbox"
             bind:checked={settings.app.general.alwaysOnTop}
             onchange={async () => {
-              settings.app.general.alwaysOnTop ? await invoke("disable_aot") : await invoke("enable_aot");
+              settings.app.general.alwaysOnTop ? await invoke("enable_aot") : await invoke("disable_aot");
             }}
             class="form-checkbox checked:text-accent-600 size-5 rounded-sm border-0 bg-neutral-700 focus:ring-0"
           />
