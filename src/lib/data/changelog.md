@@ -1,6 +1,6 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.29.6 - June 8th, 2025
+    v1.29.7 - June 12th, 2025
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
@@ -9,12 +9,16 @@
 
 ### NOTE: you need to generate a new upload token [HERE](https://uwuowo.mathi.moe/me/logs)
 
-_apologies for the frequent updates_
+#### BUG FIXES AND IMPROVEMENTS
 
-#### known issues:
+- added back setting for boss hp percentage instead of bars
+- some screenshot changes
+- fixed misaligned columns in live meter
+- fixed buff filter settings not being applied
+- added perfect block text for normal mode
+- removed taskbar icons for live and mini meter
 
-- some users having issues with class colors
-- meter window position not saving
+### v1.29.7 - June 12th, 2025
 
 #### BUG FIXES AND IMPROVEMENTS
 
