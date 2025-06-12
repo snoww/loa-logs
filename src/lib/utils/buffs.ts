@@ -10,11 +10,9 @@ import {
   type EncounterDamageStats,
   type Entity,
   type Skill,
-  type SkillChartModInfo,
   type SkillChartSupportDamage,
   type SkillHit,
-  type StatusEffect,
-  type StatusEffectWithId
+  type StatusEffect
 } from "$lib/types";
 import { customRound, getSkillIcon } from "$lib/utils";
 
@@ -41,7 +39,7 @@ export function groupedSynergiesAdd(
   // by default, only show dmg, crit, atk spd, cd buffs.
   // show all arcana cards for fun
   if (!shields && (!focusedPlayer || focusedPlayer.classId !== 202)) {
-    if (settings.app.buffs && !defaultBuffFilter(buff.buffType)) {
+    if (settings.app.buffs.default && !defaultBuffFilter(buff.buffType)) {
       return;
     }
   }
