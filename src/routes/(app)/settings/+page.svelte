@@ -840,7 +840,7 @@
               type="checkbox"
               bind:checked={settings.app.general.blurWin11}
               onchange={async () => {
-                settings.app.general.blur ? await invoke("enable_blur") : await invoke("disable_blur");
+                settings.app.general.blurWin11 ? await invoke("enable_blur") : await invoke("disable_blur");
               }}
               class="form-checkbox checked:text-accent-600 size-5 rounded-sm border-0 bg-neutral-700 focus:ring-0"
             />
