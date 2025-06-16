@@ -79,20 +79,20 @@ export function customRound(num: number, decimalPlaces = 1) {
   return (Math.round(n) / p).toString();
 }
 
-export function abbreviateNumber(n: number) {
+export function abbreviateNumber(n: number, customToFixed = 1) {
   if (n >= 1e3 && n < 1e6) return (n / 1e3).toFixed(1) + "k";
   if (n >= 1e6 && n < 1e9) return +(n / 1e6).toFixed(1) + "m";
-  if (n >= 1e9 && n < 1e12) return +(n / 1e9).toFixed(2) + "b";
-  if (n >= 1e12) return +(n / 1e12).toFixed(2) + "t";
+  if (n >= 1e9 && n < 1e12) return +(n / 1e9).toFixed(customToFixed) + "b";
+  if (n >= 1e12) return +(n / 1e12).toFixed(customToFixed) + "t";
   else return tryParseInt(n).toFixed(0);
 }
 
 /** Abbreviates a number into more compact representation, returning an array with the truncated number and the abbreviation */
-export function abbreviateNumberSplit(n: number): [number, string] {
+export function abbreviateNumberSplit(n: number): [number, string, customToFixed = 1] {
   if (n >= 1e3 && n < 1e6) return [+(n / 1e3).toFixed(1), "k"];
   if (n >= 1e6 && n < 1e9) return [+(n / 1e6).toFixed(1), "m"];
-  if (n >= 1e9 && n < 1e12) return [+(n / 1e9).toFixed(2), "b"];
-  if (n >= 1e12) return [+(n / 1e12).toFixed(2), "t"];
+  if (n >= 1e9 && n < 1e12) return [+(n / 1e9).toFixed(customToFixed), "b"];
+  if (n >= 1e12) return [+(n / 1e12).toFixed(customToFixed), "t"];
   else return [+n.toFixed(0), ""];
 }
 
