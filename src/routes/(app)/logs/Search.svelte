@@ -86,10 +86,11 @@
     />
     <button
       class="absolute inset-y-0 right-0 flex items-center pr-2"
-      class:hidden={search.length === 0}
+      class:hidden={search.length === 0 && !active}
       onclick={() => {
         search = "";
         encounterFilter.search = "";
+        encounterFilter.reset();
       }}
     >
       <IconX />
