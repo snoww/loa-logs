@@ -17,21 +17,6 @@
     defaultValue: settings.sync.visibility
   });
 
-  const visibilityOptions = [
-    {
-      value: "0",
-      label: "Show All Names (default)"
-    },
-    {
-      value: "1",
-      label: "Hide Others (only show self)"
-    },
-    {
-      value: "2",
-      label: "Hide All (anonymous upload)"
-    }
-  ];
-
   let token: string = $state(settings.sync.accessToken || "");
   let timer: number | undefined;
   const debounce = (v: string) => {
@@ -144,38 +129,26 @@
       <p class="text-green-500">Valid token</p>
     {/if}
   </div>
+  <div class="flex flex-col gap-1">
+    <p class="text-base font-semibold">Visibility Settings</p>
+    <p class="text-sm text-neutral-300">
+      All uploaded logs have names <span class="text-accent-500">hidden</span> by default.
+    </p>
+    <p class="text-sm text-neutral-300">
+      Visibility settings are character specific and can be changed once you link your roster on <a
+        href="{UWUOWO_URL}/me/rosters"
+        target="_blank"
+        class="text-accent-500 underline">uwuowo</a
+      >
+    </p>
+  </div>
   {@render settingOption(
     "auto",
     "Auto Upload",
     "Automatically uploads logs when cleared (end game relevant raids, hell modes, with boss only damage on)"
   )}
   <div class="flex flex-col gap-2">
-    <p class="font-semibold">Upload Visibility Settings</p>
-    <p class="-mt-1 pb-2 text-xs text-neutral-300">
-      note: in case of duplicate uploads, preferences of the earliest uploader is respected
-    </p>
-    <div use:melt={$root} class="flex flex-col gap-2">
-      {#each visibilityOptions as option}
-        <div class="flex items-center gap-2">
-          <button
-            use:melt={$item(option.value)}
-            class="size-5 cursor-default place-items-center rounded-full bg-neutral-600 shadow-sm hover:bg-neutral-600/80"
-            onclick={() => (settings.sync.visibility = option.value)}
-            id={option.value}
-          >
-            {#if $isChecked(option.value)}
-              <div class="bg-accent-500 h-3 w-3 rounded-full"></div>
-            {/if}
-          </button>
-          <label class="pl-5" for={option.value} id="{option}-label">
-            {option.label}
-          </label>
-        </div>
-      {/each}
-    </div>
-  </div>
-  <div class="flex flex-col gap-2">
-    <p class="text-base font-semibold">Upload Past Logs</p>
+    <p class="text-base font-semibold">Past Logs</p>
     <div class="flex items-center gap-2">
       {#if !syncProgress.syncing}
         <button
