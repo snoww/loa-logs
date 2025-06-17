@@ -103,7 +103,7 @@
       <p class="text-base font-semibold">Upload Token</p>
       {#if !settings.sync.validToken}
         <a
-          href={UWUOWO_URL + "/me/logs"}
+          href={UWUOWO_URL + "/me/upload"}
           target="_blank"
           class="bg-accent-500/80 hover:bg-accent-500/70 w-fit rounded-md border border-neutral-700 p-1 text-xs"
         >
