@@ -79,11 +79,11 @@ export function customRound(num: number, decimalPlaces = 1) {
   return (Math.round(n) / p).toString();
 }
 
-export function abbreviateNumber(n: number) {
+export function abbreviateNumber(n: number, round = 1) {
   if (n >= 1e3 && n < 1e6) return (n / 1e3).toFixed(1) + "k";
   if (n >= 1e6 && n < 1e9) return +(n / 1e6).toFixed(1) + "m";
-  if (n >= 1e9 && n < 1e12) return +(n / 1e9).toFixed(1) + "b";
-  if (n >= 1e12) return +(n / 1e12).toFixed(1) + "t";
+  if (n >= 1e9 && n < 1e12) return +(n / 1e9).toFixed(round) + "b";
+  if (n >= 1e12) return +(n / 1e12).toFixed(round) + "t";
   else return tryParseInt(n).toFixed(0);
 }
 

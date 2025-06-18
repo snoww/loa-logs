@@ -129,7 +129,7 @@ export function getAverageDpsChart(
         const length = Object.keys(chartablePlayers).length;
         const totalDps = { value: 0 };
         params.forEach((param) => generateTooltip(param, bossTooltips, totalDps, tree, deathTimes, time, length));
-        const totalDpsString = `<div style="display:flex; justify-content: space-between;font-weight: 600;"><div style="padding-right: 1rem">Total DPS</div><div>${abbreviateNumber(totalDps.value)}</div></div>`;
+        const totalDpsString = `<div style="display:flex; justify-content: space-between;font-weight: 600;"><div style="padding-right: 1rem">Total DPS</div><div>${abbreviateNumber(totalDps.value, 2)}</div></div>`;
         tooltipStr += bossTooltips.join("") + totalDpsString + tree.valuesArray().join("") + "</div>";
         return tooltipStr;
       }
@@ -211,7 +211,7 @@ export function getRollingDpsChart(
         const tree = new BTree(undefined, (a, b) => b - a);
         const totalDps = { value: 0 };
         params.forEach((param) => generateTooltip(param, bossTooltips, totalDps, tree, deathTimes, time, length));
-        const totalDpsString = `<div style="display:flex; justify-content: space-between;font-weight: 600;"><div style="padding-right: 1rem">Total DPS</div><div>${abbreviateNumber(totalDps.value)}</div></div>`;
+        const totalDpsString = `<div style="display:flex; justify-content: space-between;font-weight: 600;"><div style="padding-right: 1rem">Total DPS</div><div>${abbreviateNumber(totalDps.value, 2)}</div></div>`;
         tooltipStr += bossTooltips.join("") + totalDpsString + tree.valuesArray().join("") + "</div>";
         return tooltipStr;
       }
