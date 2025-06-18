@@ -1,13 +1,24 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.29.8 - June 12th, 2025
+    v1.29.9 - June 18th, 2025
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
   </div>
 </div>
 
-### NOTE: you need to generate a new upload token [HERE](https://uwuowo.mathi.moe/me/logs)
+#### BUG FIXES AND IMPROVEMENTS
+
+- now able to reset filters with x button in search box
+- fixed always on top setting not working as intended
+- fixed blur setting not working in windows 11
+- updated link to generate upload token
+- updated explanation for log visibility on uploads
+- show extra decimal place in dps charts tooltip
+
+---
+
+### v1.29.8 - June 12th, 2025
 
 #### BUG FIXES AND IMPROVEMENTS
 
@@ -25,7 +36,7 @@
 - added perfect block text for normal mode
 - removed taskbar icons for live and mini meter
 
-### v1.29.7 - June 12th, 2025
+### v1.29.6 - June 12th, 2025
 
 #### BUG FIXES AND IMPROVEMENTS
 

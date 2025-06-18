@@ -1,11 +1,11 @@
 {
-  "version": "v1.29.8",
-  "notes": "### v1.29.8 - June 12th, 2025\n\n#### BUG FIXES AND IMPROVEMENTS\n- fixed boss info setting not working\n- added back taskbar icons",
-  "pub_date": "2025-06-12T15:25:05.390Z",
+  "version": "v1.29.9",
+  "notes": "### v1.29.9 - June 18th, 2025\n\n#### BUG FIXES AND IMPROVEMENTS\n- now able to reset filters with x button in search box\n- fixed always on top setting not working as intended\n- fixed blur setting not working in windows 11\n- updated link to generate upload token\n- updated explanation for log visibility on uploads\n- show extra decimal place in dps charts tooltip",
+  "pub_date": "2025-06-18T18:01:45.945Z",
   "platforms": {
     "windows-x86_64": {
-      "url": "https://github.com/snoww/loa-logs/releases/download/v1.29.8/LOA.Logs_1.29.8_x64-setup.nsis.zip",
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlorQW1HTXp1TVArRDhGbWRJS3d3ak5oT3VUK3p3Nm4ydndwdCt2cVNURDZKOC9NdlVSN3JiYU00Y2Z5NVFKVEcxdjNlMnVwL0lnWXJoYjVwOW54dEEwPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzQ5NzQxODExCWZpbGU6TE9BIExvZ3NfMS4yOS44X3g2NC1zZXR1cC5uc2lzLnppcApmMmNQTkZzOEx3b2tuZll6dWo4eGdUNnY3ZFNHUEhHYjFpL3lvMjU1MWdFRzZnOHpkRWtDSmpvUnliRE9VL2oxVXg0dDRzQUExbnM3WXdzNEY2OGJDZz09Cg=="
+      "url": "https://github.com/snoww/loa-logs/releases/download/v1.29.9/LOA.Logs_1.29.9_x64-setup.nsis.zip",
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmRITWdIck1LQWhCZjN2bE1CS3VQSmlKSFcwL2pReHBYMll2V0ZydTVPRng4NFJIU0xTcjdETjVKbzlXc2VBRzV5eDMrV0Jpa3J5bXJrUHlTRVlqSkFvPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzUwMjY5ODIzCWZpbGU6TE9BIExvZ3NfMS4yOS45X3g2NC1zZXR1cC5uc2lzLnppcApjM1hERURTTkFhNXhqYWtqdVhKZnRwcTJHTkcyM1JtazdKb2F5MXp6UCtsUHNRYTZTQ2lmRzkrVWZmRE1ncmk1OVZSa1ZyYXd6VjFtT0F5MHZ5OFFDUT09Cg=="
     }
   }
 }
