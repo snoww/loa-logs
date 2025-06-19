@@ -344,3 +344,7 @@ export const rgbLinearShadeAdjust = (color: number | string, percentage: number 
   const P = lz ? 1 + percentage : 1 - percentage;
   return "rgba(" + r(a * P + t) + "," + r(b * P + t) + "," + r(c * P + t) + "," + alpha + ")";
 };
+
+export const normalize = (val: number, min: number, max: number): number => {
+  return (val - min) / (max - min);
+};

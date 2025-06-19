@@ -23,6 +23,7 @@ import {
   customRound,
   getSkillIcon,
   isNameValid,
+  normalize,
   resampleData,
   timestampToMinutesAndSeconds,
   timeToSeconds
@@ -60,9 +61,10 @@ export function getPlayerSeries(
       let markPoint = {};
       if (player.isDead) {
         const rounded = Math.ceil((player.damageStats.deathTime - fightStart) / 1000 / 5) * 5;
-        const index = field === "dpsRolling10sAvg" 
-          ? Math.ceil((player.damageStats.deathTime - fightStart) / 1000)
-          : Math.floor(rounded / 5);
+        const index =
+          field === "dpsRolling10sAvg"
+            ? Math.ceil((player.damageStats.deathTime - fightStart) / 1000)
+            : Math.floor(rounded / 5);
 
         markPoint = {
           data: [
@@ -268,7 +270,11 @@ export function getBossHpSeries(bosses: [string, BossHpLog[]][], legendNames: st
     })
     .map((entry, i) => {
       legendNames.push(entry[0]);
-      const resample = resampleData(entry[1], interval, len);
+      const max = entry[1][0].p;
+      // if boss starts off with more than 100% hp (e.g. mordum g3 hm 0x phase), we normalize the hp percent to 0-1
+      // boss hp bar x will be inaccurate
+      const log = max > 1 ? entry[1].map((e) => new BossHpLog(e.time, e.hp, normalize(e.p, 0, max))) : entry[1];
+      const resample = resampleData(log, interval, len);
       const data = resample.map((e) => {
         return [secondsToMinutesAndSeconds(e.time), customRound(e.p * 100, 1)];
       });
