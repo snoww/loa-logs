@@ -4,7 +4,7 @@
   import { settings } from "$lib/stores.svelte.js";
   import type { Encounter } from "$lib/types";
   import { takeScreenshot, UWUOWO_URL } from "$lib/utils";
-  import { supportedBosses, uploadLog } from "$lib/utils/sync";
+  import { uploadLog } from "$lib/utils/sync";
   import { uploadSuccess, uploadTokenError } from "$lib/utils/toasts";
   import QuickTooltip from "$lib/components/QuickTooltip.svelte";
   import { addToast } from "$lib/components/Toaster.svelte";
@@ -43,7 +43,7 @@
       Screenshot
     </QuickTooltip>
   </button>
-  {#if encounter && encounter.cleared && encounter.difficulty && encounter.bossOnlyDamage && supportedBosses.includes(encounter.currentBossName)}
+  {#if encounter && encounter.cleared && encounter.difficulty && encounter.bossOnlyDamage}
     {#if sync}
       <a
         href={UWUOWO_URL + "/logs/" + sync}

@@ -8,39 +8,8 @@ import { uploadError, uploadTokenError } from "./toasts";
 export const API_URL = "https://api.snow.xyz";
 // export const API_URL = "http://localhost:5180";
 
-export const supportedBosses = [
-  // valtan
-  "Dark Mountain Predator",
-  "Ravaged Tyrant of Beasts",
-  // vykas
-  "Covetous Devourer Vykas",
-  "Covetous Legion Commander Vykas",
-  // clown
-  "Saydon",
-  "Kakul",
-  "Encore-Desiring Kakul-Saydon",
-  // brel
-  "Brelshaza, Monarch of Nightmares",
-  "Phantom Legion Commander Brelshaza",
-
-  // challenge guardians
-  "Caliligos",
-  "Achates",
-
-  // endgame raids
-  "Akkan, Lord of Death",
-  "Aegir, the Oppressor",
-  "Narok the Butcher",
-  "Phantom Manifester Brelshaza",
-  "Infernas",
-  "Blossoming Fear, Naitreya",
-  "Mordum, the Abyssal Punisher",
-  "Flash of Punishment"
-];
-
 export async function uploadLog(id: number | string, encounter: Encounter) {
   if (
-    !supportedBosses.includes(encounter.currentBossName) ||
     !encounter.cleared ||
     !encounter.bossOnlyDamage ||
     !encounter.difficulty
