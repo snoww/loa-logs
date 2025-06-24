@@ -84,7 +84,7 @@ export async function uploadLog(id: number | string, encounter: Encounter) {
   const body = await resp.json();
   // failed server side encounter validation
   if (body.error) {
-    if (body.error === "duplicate log" && body.duplicate) {
+    if (body.duplicate) {
       const duplicate = body.duplicate;
       await invoke("write_log", {
         message: `did not upload duplicate encounter ${id} (${encounter.currentBossName}) using existing upstream: ${duplicate}`

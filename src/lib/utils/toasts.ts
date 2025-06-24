@@ -30,13 +30,14 @@ export const screenshotSuccess: AddToastProps<ToastData> = {
   }
 };
 
-export const uploadError = (error: string): AddToastProps<ToastData> => {
+export const uploadError = (errorMsg: string): AddToastProps<ToastData> => {
   return {
     data: {
       title: "Upload Error",
-      description: error,
-      color: success
-    }
+      description: errorMsg,
+      color: error
+    },
+    closeDelay: 5000 // 5 seconds
   };
 };
 
