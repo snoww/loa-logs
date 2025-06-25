@@ -1,11 +1,24 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.29.9 - June 18th, 2025
+    v1.30.0 - June 25th, 2025
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
   </div>
 </div>
+
+#### NEW FEATURES
+
+- updated meter for june patch
+
+#### BUG FIXES AND IMPROVEMENTS
+
+- fix g3 mordum hm 0x boss hp % in charts
+- fix upload error notifications
+
+---
+
+### v1.29.9 - June 18th, 2025
 
 #### BUG FIXES AND IMPROVEMENTS
 
@@ -15,8 +28,6 @@
 - updated link to generate upload token
 - updated explanation for log visibility on uploads
 - show extra decimal place in dps charts tooltip
-
----
 
 ### v1.29.8 - June 12th, 2025
 

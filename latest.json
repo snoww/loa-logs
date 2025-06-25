@@ -1,11 +1,11 @@
 {
-  "version": "v1.29.9",
-  "notes": "### v1.29.9 - June 18th, 2025\n\n#### BUG FIXES AND IMPROVEMENTS\n- now able to reset filters with x button in search box\n- fixed always on top setting not working as intended\n- fixed blur setting not working in windows 11\n- updated link to generate upload token\n- updated explanation for log visibility on uploads\n- show extra decimal place in dps charts tooltip",
-  "pub_date": "2025-06-18T18:01:45.945Z",
+  "version": "v1.30.0",
+  "notes": "### v1.30.0 - June 25th, 2025\n\n#### NEW FEATURES\n- updated meter for june patch\n\n#### BUG FIXES AND IMPROVEMENTS\n- fix g3 mordum hm 0x boss hp % in charts\n- fix upload error notifications\n",
+  "pub_date": "2025-06-25T17:55:14.105Z",
   "platforms": {
     "windows-x86_64": {
-      "url": "https://github.com/snoww/loa-logs/releases/download/v1.29.9/LOA.Logs_1.29.9_x64-setup.nsis.zip",
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmRITWdIck1LQWhCZjN2bE1CS3VQSmlKSFcwL2pReHBYMll2V0ZydTVPRng4NFJIU0xTcjdETjVKbzlXc2VBRzV5eDMrV0Jpa3J5bXJrUHlTRVlqSkFvPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzUwMjY5ODIzCWZpbGU6TE9BIExvZ3NfMS4yOS45X3g2NC1zZXR1cC5uc2lzLnppcApjM1hERURTTkFhNXhqYWtqdVhKZnRwcTJHTkcyM1JtazdKb2F5MXp6UCtsUHNRYTZTQ2lmRzkrVWZmRE1ncmk1OVZSa1ZyYXd6VjFtT0F5MHZ5OFFDUT09Cg=="
+      "url": "https://github.com/snoww/loa-logs/releases/download/v1.30.0/LOA.Logs_1.30.0_x64-setup.nsis.zip",
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlJTeDI4RHp6eGxuamZ2YWJZN0lYcGYzMGNaQTVEMmgvaUVSdWpwWVpnTkcwQUNudUVWVWh3b2tzMm1lVkh4dFQrZlVEenU0NDIvNng3ZFpNYzl6bHcwPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzUwODc0MzEwCWZpbGU6TE9BIExvZ3NfMS4zMC4wX3g2NC1zZXR1cC5uc2lzLnppcApJWDF2Q2tuOHFmTTVVbXk2T2FsUjlGYjNCeFU4UHRwYzllMFpJaXFYazRRN2dNZ1A4eHVhOTdmOFo2eGJmNzRIRkxmaW55WDI1ZkRDTStvdG5DRGZBUT09Cg=="
     }
   }
 }
