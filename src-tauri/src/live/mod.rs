@@ -1106,7 +1106,7 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
                 });
 
                 match client
-                    .post(format!("{API_URL}/stats/heartbeat"))
+                    .post(format!("{API_URL}/analytics/heartbeat"))
                     .json(&request_body)
                     .send()
                     .await

@@ -94,7 +94,7 @@ impl StatsApi {
             });
 
             match client
-                .post(format!("{API_URL}/stats/raid"))
+                .post(format!("{API_URL}/analytics/raid"))
                 .json(&request_body)
                 .send()
                 .await
