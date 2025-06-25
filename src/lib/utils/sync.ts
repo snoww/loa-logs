@@ -85,7 +85,7 @@ export async function checkAccessToken(accessToken: string) {
     return false;
   }
 
-  const resp = await fetch(API_URL + "/logs/token", {
+  const resp = await fetch(API_URL + "/auth/validate", {
     method: "GET",
     headers: {
       access_token: accessToken

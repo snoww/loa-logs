@@ -5,7 +5,7 @@
   import type { Encounter } from "$lib/types";
   import { UWUOWO_URL } from "$lib/utils";
   import { checkAccessToken, uploadLog } from "$lib/utils/sync";
-  import { uploadTokenError } from "$lib/utils/toasts";
+  import { uploadSuccess, uploadTokenError } from "$lib/utils/toasts";
   import { createRadioGroup, melt } from "@melt-ui/svelte";
   import { invoke } from "@tauri-apps/api";
   import Header from "../Header.svelte";
@@ -56,6 +56,7 @@
         let upstream = await uploadLog(id, encounter);
         if (upstream) {
           syncProgress.uploaded++;
+          addToast(uploadSuccess);
         }
         syncProgress.message = "Processing logs... (" + i + "/" + ids.length + ")";
         if (syncProgress.stop) {
