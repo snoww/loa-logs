@@ -74,13 +74,7 @@ export class EncounterState {
   // this section is used for conditional headers in the damage table
   isSolo = $derived(this.players.length === 1);
   anyDead = $derived(this.players.some((player) => player.isDead));
-  multipleDeaths = $derived.by(() => {
-    if (!this.anyDead) {
-      return this.players.some((player) => player.damageStats.deaths > 0);
-    } else {
-      return this.players.some((player) => player.damageStats.deaths > 1);
-    }
-  });
+  multipleDeaths = $derived(this.players.some((player) => player.damageStats.deaths > 0 && !player.isDead));
   anyFrontAtk = $derived(this.players.some((player) => player.skillStats.frontAttacks > 0));
   anyBackAtk = $derived(this.players.some((player) => player.skillStats.backAttacks > 0));
   anySupportBuff = $derived(this.players.some((player) => player.damageStats.buffedBySupport > 0));
