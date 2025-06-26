@@ -1,4 +1,5 @@
 import { addToast } from "$lib/components/Toaster.svelte";
+import { raidGates } from "$lib/constants/encounters";
 import { settings } from "$lib/stores.svelte";
 import type { Encounter } from "$lib/types";
 import { invoke } from "@tauri-apps/api";
@@ -8,11 +9,12 @@ import { uploadError, uploadTokenError } from "./toasts";
 export const API_URL = "https://api.snow.xyz";
 // export const API_URL = "http://localhost:5180";
 
-export async function uploadLog(id: number | string, encounter: Encounter) {
+export async function uploadLog(id: number | string, encounter: Encounter, showToast = true) {
   if (
     !encounter.cleared ||
     !encounter.bossOnlyDamage ||
-    !encounter.difficulty
+    !encounter.difficulty ||
+    !Object.hasOwn(raidGates, encounter.currentBossName)
   ) {
     return;
   }
@@ -33,14 +35,14 @@ export async function uploadLog(id: number | string, encounter: Encounter) {
   });
 
   // basic errors
-  if (!resp.ok && (resp.status === 500 || resp.status === 401)) {
+  if (!resp.ok && resp.status !== 400) {
     let error = "";
-    if (resp.status == 500) {
-      error = "server bwonk";
-      addToast(uploadError("server bwonk"));
-    } else if (resp.status == 401) {
+    if (resp.status == 401) {
       error = "invalid access token";
-      addToast(uploadTokenError);
+      if (showToast) addToast(uploadTokenError);
+    } else {
+      error = await resp.text();
+      if (showToast) addToast(uploadError("server bwonk"));
     }
 
     await invoke("write_log", {
@@ -65,7 +67,7 @@ export async function uploadLog(id: number | string, encounter: Encounter) {
     await invoke("write_log", {
       message: `couldn't upload encounter ${id} (${encounter.currentBossName}) - error: ${body.error.toLowerCase()}`
     });
-    addToast(uploadError(body.error));
+    if (showToast && !body.error.includes("Boss not supported")) addToast(uploadError(body.error));
     await invoke("sync", { encounter: Number(id), upstream: "0", failed: true });
     return;
   }
