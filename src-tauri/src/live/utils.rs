@@ -981,7 +981,7 @@ pub fn insert_data(
                 });
             }
         }
-        
+
         let compressed_skills = compress_json(&entity.skills);
         let compressed_damage_stats = compress_json(&entity.damage_stats);
 

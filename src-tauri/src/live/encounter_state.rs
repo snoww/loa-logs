@@ -1521,27 +1521,13 @@ impl EncounterState {
 
         let window = self.app.clone();
         task::spawn(async move {
-            let player_infos = if !raid_difficulty.is_empty()
-                && !encounter.current_boss_name.is_empty()
-            {
-                info!("fetching player info");
-                let players = encounter
-                    .entities
-                    .values()
-                    .filter(|e| is_valid_player(e))
-                    .map(|e| e.name.clone())
-                    .collect::<Vec<_>>();
-
-                if !players.is_empty() && players.len() <= 16 {
-                    stats_api
-                        .get_character_info(&encounter.current_boss_name, players, region.clone())
-                        .await
+            let player_infos =
+                if !raid_difficulty.is_empty() && !encounter.current_boss_name.is_empty() {
+                    info!("fetching player info");
+                    stats_api.get_character_info(&encounter).await
                 } else {
                     None
-                }
-            } else {
-                None
-            };
+                };
 
             let mut conn = Connection::open(path).expect("failed to open database");
             let tx = conn.transaction().expect("failed to create transaction");
