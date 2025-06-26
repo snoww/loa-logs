@@ -101,7 +101,8 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
         let local_players_file = std::fs::read_to_string(local_player_path.clone())?;
         local_info = serde_json::from_str(&local_players_file).unwrap_or_default();
         client_id = local_info.client_id.clone();
-        if client_id.is_empty() {
+        let valid_id = Uuid::try_parse(client_id.as_str()).is_ok();
+        if client_id.is_empty() || !valid_id {
             client_id = Uuid::new_v4().to_string();
             stats_api.client_id.clone_from(&client_id);
             local_info.client_id.clone_from(&client_id);
