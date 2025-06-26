@@ -1303,19 +1303,6 @@ impl EncounterState {
         if source_entity.entity_type == EntityType::PLAYER
             && target_entity.entity_type == EntityType::PLAYER
         {
-            let mut target_entity_state = self
-                .encounter
-                .entities
-                .entry(target_entity.name.clone())
-                .or_insert_with(|| encounter_entity_from_entity(target_entity))
-                .to_owned();
-            let mut source_entity_state = self
-                .encounter
-                .entities
-                .entry(source_entity.name.clone())
-                .or_insert_with(|| encounter_entity_from_entity(source_entity))
-                .to_owned();
-
             if !self
                 .encounter
                 .encounter_damage_stats
@@ -1338,7 +1325,16 @@ impl EncounterState {
                 }
             }
 
-            if source_entity.id == target_entity.id {
+            self.encounter.encounter_damage_stats.total_shielding += shield;
+
+            let source_entity_state = self
+                .encounter
+                .entities
+                .entry(source_entity.name.clone())
+                .or_insert_with(|| encounter_entity_from_entity(source_entity));
+
+            // shields on self
+            if source_entity.id == target_entity.id || source_entity.name == target_entity.name {
                 source_entity_state.damage_stats.shields_received += shield;
                 source_entity_state.damage_stats.shields_given += shield;
                 source_entity_state
@@ -1354,34 +1350,41 @@ impl EncounterState {
                     .and_modify(|e| *e += shield)
                     .or_insert(shield);
 
-                self.encounter
-                    .entities
-                    .insert(source_entity_state.name.clone(), source_entity_state);
-            } else {
-                target_entity_state.damage_stats.shields_received += shield;
-                source_entity_state.damage_stats.shields_given += shield;
-                source_entity_state
-                    .damage_stats
-                    .shields_given_by
-                    .entry(buff_id)
-                    .and_modify(|e| *e += shield)
-                    .or_insert(shield);
-                target_entity_state
-                    .damage_stats
-                    .shields_received_by
-                    .entry(buff_id)
-                    .and_modify(|e| *e += shield)
-                    .or_insert(shield);
-
-                self.encounter
-                    .entities
-                    .insert(target_entity_state.name.clone(), target_entity_state);
-                self.encounter
-                    .entities
-                    .insert(source_entity_state.name.clone(), source_entity_state);
+                return;
             }
 
-            self.encounter.encounter_damage_stats.total_shielding += shield;
+            // shields on others
+            self.encounter
+                .entities
+                .entry(target_entity.name.clone())
+                .or_insert_with(|| encounter_entity_from_entity(target_entity));
+
+            let [Some(source_entity_state), Some(target_entity_state)] = self
+                .encounter
+                .entities
+                .get_many_mut([&source_entity.name, &target_entity.name])
+            else {
+                warn!(
+                    "{}, {} not found in encounter entities",
+                    source_entity.name, target_entity.name
+                );
+                return;
+            };
+
+            target_entity_state.damage_stats.shields_received += shield;
+            source_entity_state.damage_stats.shields_given += shield;
+            source_entity_state
+                .damage_stats
+                .shields_given_by
+                .entry(buff_id)
+                .and_modify(|e| *e += shield)
+                .or_insert(shield);
+            target_entity_state
+                .damage_stats
+                .shields_received_by
+                .entry(buff_id)
+                .and_modify(|e| *e += shield)
+                .or_insert(shield);
         }
     }
 
@@ -1395,20 +1398,18 @@ impl EncounterState {
         if source_entity.entity_type == EntityType::PLAYER
             && target_entity.entity_type == EntityType::PLAYER
         {
-            let mut target_entity_state = self
-                .encounter
-                .entities
-                .entry(target_entity.name.clone())
-                .or_insert_with(|| encounter_entity_from_entity(target_entity))
-                .to_owned();
-            let mut source_entity_state = self
+            self.encounter
+                .encounter_damage_stats
+                .total_effective_shielding += shield_removed;
+
+            let source_entity_state = self
                 .encounter
                 .entities
                 .entry(source_entity.name.clone())
-                .or_insert_with(|| encounter_entity_from_entity(source_entity))
-                .to_owned();
+                .or_insert_with(|| encounter_entity_from_entity(source_entity));
 
-            if source_entity.id == target_entity.id {
+            // shields on self
+            if source_entity.id == target_entity.id || source_entity.name == target_entity.name {
                 source_entity_state.damage_stats.damage_absorbed += shield_removed;
                 source_entity_state.damage_stats.damage_absorbed_on_others += shield_removed;
                 source_entity_state
@@ -1424,36 +1425,41 @@ impl EncounterState {
                     .and_modify(|e| *e += shield_removed)
                     .or_insert(shield_removed);
 
-                self.encounter
-                    .entities
-                    .insert(source_entity_state.name.clone(), source_entity_state);
-            } else {
-                target_entity_state.damage_stats.damage_absorbed += shield_removed;
-                source_entity_state.damage_stats.damage_absorbed_on_others += shield_removed;
-                target_entity_state
-                    .damage_stats
-                    .damage_absorbed_by
-                    .entry(buff_id)
-                    .and_modify(|e| *e += shield_removed)
-                    .or_insert(shield_removed);
-                source_entity_state
-                    .damage_stats
-                    .damage_absorbed_on_others_by
-                    .entry(buff_id)
-                    .and_modify(|e| *e += shield_removed)
-                    .or_insert(shield_removed);
-
-                self.encounter
-                    .entities
-                    .insert(target_entity_state.name.clone(), target_entity_state);
-                self.encounter
-                    .entities
-                    .insert(source_entity_state.name.clone(), source_entity_state);
+                return;
             }
 
+            // shields on others
             self.encounter
-                .encounter_damage_stats
-                .total_effective_shielding += shield_removed;
+                .entities
+                .entry(target_entity.name.clone())
+                .or_insert_with(|| encounter_entity_from_entity(target_entity));
+
+            let [Some(source_entity_state), Some(target_entity_state)] = self
+                .encounter
+                .entities
+                .get_many_mut([&source_entity.name, &target_entity.name])
+            else {
+                warn!(
+                    "{}, {} not found in encounter entities",
+                    source_entity.name, target_entity.name
+                );
+                return;
+            };
+
+            target_entity_state.damage_stats.damage_absorbed += shield_removed;
+            source_entity_state.damage_stats.damage_absorbed_on_others += shield_removed;
+            target_entity_state
+                .damage_stats
+                .damage_absorbed_by
+                .entry(buff_id)
+                .and_modify(|e| *e += shield_removed)
+                .or_insert(shield_removed);
+            source_entity_state
+                .damage_stats
+                .damage_absorbed_on_others_by
+                .entry(buff_id)
+                .and_modify(|e| *e += shield_removed)
+                .or_insert(shield_removed);
         }
     }
 
