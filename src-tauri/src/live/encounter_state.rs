@@ -206,7 +206,6 @@ impl EncounterState {
         match phase_code {
             0 | 2 | 3 | 4 => {
                 if !self.encounter.current_boss_name.is_empty() {
-                    stats_api.send_raid_info(self);
                     if phase_code == 0 {
                         stats_api.valid_zone = false;
                     }

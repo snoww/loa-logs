@@ -1,7 +1,7 @@
 use crate::live::debug_print;
 use crate::live::encounter_state::EncounterState;
-use crate::live::utils::boss_to_raid_map;
-use crate::parser::models::{ArkPassiveData, EntityType};
+use crate::live::utils::{boss_to_raid_map, is_valid_player};
+use crate::parser::models::{ArkPassiveData, Encounter, EntityType};
 use hashbrown::HashMap;
 use log::warn;
 use moka::sync::Cache;
@@ -52,24 +52,25 @@ impl StatsApi {
                 || difficulty == "Trial")
     }
 
-    pub fn send_raid_info(&mut self, state: &EncounterState) {
-        let boss_name = state.encounter.current_boss_name.as_str();
-        let raid_name = match state
-            .encounter
+    pub async fn get_character_info(
+        &self,
+        encounter: &Encounter,
+    ) -> Option<HashMap<String, PlayerStats>> {
+        if encounter.region.is_none() {
+            warn!("region is not set");
+            return None;
+        }
+
+        let raid_name = encounter
             .entities
-            .get(boss_name)
-            .and_then(|boss| boss_to_raid_map(boss_name, boss.max_hp))
-        {
-            Some(name) => name,
-            None => return,
-        };
-        
-        let players: Vec<String> = state
-            .encounter
+            .get(&encounter.current_boss_name)
+            .and_then(|boss| boss_to_raid_map(&encounter.current_boss_name, boss.max_hp));
+
+        let players: Vec<String> = encounter
             .entities
             .iter()
             .filter_map(|(_, e)| {
-                if e.entity_type == EntityType::PLAYER {
+                if is_valid_player(e) {
                     Some(e.name.clone())
                 } else {
                     None
@@ -78,54 +79,18 @@ impl StatsApi {
             .collect();
 
         if players.len() > 16 {
-            return;
-        }
-
-        let client = self.client.clone();
-        let difficulty = state.raid_difficulty.clone();
-        let cleared = state.raid_clear;
-
-        tokio::task::spawn(async move {
-            let request_body = json!({
-                "raidName": raid_name,
-                "difficulty": difficulty,
-                "players": players,
-                "cleared": cleared,
-            });
-
-            match client
-                .post(format!("{API_URL}/analytics/raid"))
-                .json(&request_body)
-                .send()
-                .await
-            {
-                Ok(_) => {
-                    debug_print(format_args!("sent raid info"));
-                }
-                Err(e) => {
-                    warn!("failed to send raid info: {:?}", e);
-                }
-            }
-        });
-    }
-
-    pub async fn get_character_info(
-        &self,
-        boss_name: &str,
-        players: Vec<String>,
-        region: Option<String>,
-    ) -> Option<HashMap<String, PlayerStats>> {
-        if region.is_none() {
-            warn!("region is not set");
             return None;
         }
 
         let request_body = json!({
             "clientId": self.client_id,
             "version": self.app.package_info().version.to_string(),
-            "region": region.unwrap(),
-            "boss": boss_name,
+            "region": encounter.region.as_ref().unwrap(),
+            "raidName": raid_name.unwrap_or_default(),
+            "boss": encounter.current_boss_name,
             "characters": players,
+            "difficulty": encounter.difficulty,
+            "cleared": encounter.cleared,
         });
 
         match self
