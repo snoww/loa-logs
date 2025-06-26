@@ -42,7 +42,7 @@ export async function uploadLog(id: number | string, encounter: Encounter, showT
       if (showToast) addToast(uploadTokenError);
     } else {
       error = await resp.text();
-      if (showToast) addToast(uploadError("server bwonk"));
+      if (showToast) addToast(uploadError("server bwonk", id));
     }
 
     await invoke("write_log", {
@@ -67,7 +67,7 @@ export async function uploadLog(id: number | string, encounter: Encounter, showT
     await invoke("write_log", {
       message: `couldn't upload encounter ${id} (${encounter.currentBossName}) - error: ${body.error.toLowerCase()}`
     });
-    if (showToast && !body.error.includes("Boss not supported")) addToast(uploadError(body.error));
+    if (showToast && !body.error.includes("Boss not supported")) addToast(uploadError(body.error, id));
     await invoke("sync", { encounter: Number(id), upstream: "0", failed: true });
     return;
   }

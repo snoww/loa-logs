@@ -30,14 +30,14 @@ export const screenshotSuccess: AddToastProps<ToastData> = {
   }
 };
 
-export const uploadError = (errorMsg: string): AddToastProps<ToastData> => {
+export const uploadError = (errorMsg: string, logId: string | number): AddToastProps<ToastData> => {
   return {
     data: {
-      title: "Upload Error",
+      title: `#${logId} Upload Error`,
       description: errorMsg,
       color: error
     },
-    closeDelay: 5000 // 5 seconds
+    closeDelay: 3000 // 3 seconds
   };
 };
 
@@ -161,4 +161,4 @@ export const noUpdateAvailable: AddToastProps<ToastData> = {
     color: success
   },
   closeDelay: 2000
-}
+};
