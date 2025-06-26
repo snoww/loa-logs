@@ -98,7 +98,7 @@
 
         let id = event.payload.toString();
         const encounter = (await invoke("load_encounter", { id })) as Encounter;
-        await uploadLog(id, encounter);
+        await uploadLog(id, encounter, false);
       });
 
       events.push(
