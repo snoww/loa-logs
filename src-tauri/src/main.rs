@@ -52,20 +52,20 @@ async fn main() -> Result<()> {
         app::get_logger().unwrap().flush();
     }));
 
-    let quit = CustomMenuItem::new("quit".to_string(), "Quit");
-    let show_logs = CustomMenuItem::new("show-logs".to_string(), "Show Logs");
-    let show_meter = CustomMenuItem::new("show-meter".to_string(), "Show Meter");
-    let hide_meter = CustomMenuItem::new("hide".to_string(), "Hide Meter");
-    let reset = CustomMenuItem::new("reset".to_string(), "Reset Window");
     let tray_menu = SystemTrayMenu::new()
-        .add_item(show_logs)
+        .add_item(CustomMenuItem::new("show-logs".to_string(), "Show Logs"))
         .add_native_item(SystemTrayMenuItem::Separator)
-        .add_item(show_meter)
-        .add_item(hide_meter)
+        .add_item(CustomMenuItem::new("show-meter".to_string(), "Show Meter"))
+        .add_item(CustomMenuItem::new("hide".to_string(), "Hide Meter"))
         .add_native_item(SystemTrayMenuItem::Separator)
-        .add_item(reset)
+        .add_item(CustomMenuItem::new(
+            "start-loa".to_string(),
+            "Start Lost Ark",
+        ))
         .add_native_item(SystemTrayMenuItem::Separator)
-        .add_item(quit);
+        .add_item(CustomMenuItem::new("reset".to_string(), "Reset Window"))
+        .add_native_item(SystemTrayMenuItem::Separator)
+        .add_item(CustomMenuItem::new("quit".to_string(), "Quit"));
 
     let system_tray = SystemTray::new().with_menu(tray_menu);
 
@@ -335,6 +335,9 @@ async fn main() -> Result<()> {
                             logs.show().unwrap();
                             logs.unminimize().unwrap();
                         }
+                    }
+                    "start-loa" => {
+                        start_loa_process();
                     }
                     _ => {}
                 },
