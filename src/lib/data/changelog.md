@@ -1,11 +1,27 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.30.0 - June 25th, 2025
+    v1.30.1 - June 25th, 2025
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
   </div>
 </div>
+
+**note:** when players die and can respawn, they enter a "coma" state and aren't considered dead by the game, so theres no way (yet) to track multiple deaths
+
+#### NEW FEATURES
+
+- add shortcut to open lost ark in system tray
+
+#### BUG FIXES AND IMPROVEMENTS
+
+- fix players disappearing from log after they die and respawn
+- hide auto upload notifications in live meter
+- various performance improvements
+
+---
+
+### v1.30.0 - June 25th, 2025
 
 #### NEW FEATURES
 
@@ -15,8 +31,6 @@
 
 - fix g3 mordum hm 0x boss hp % in charts
 - fix upload error notifications
-
----
 
 ### v1.29.9 - June 18th, 2025
 
