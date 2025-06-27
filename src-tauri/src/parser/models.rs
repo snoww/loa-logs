@@ -89,7 +89,6 @@ pub struct EncounterDamageStats {
     pub total_damage_taken: i64,
     pub top_damage_taken: i64,
     pub dps: i64,
-    pub most_damage_taken_entity: MostDamageTakenEntity,
     pub buffs: HashMap<u32, StatusEffect>,
     pub debuffs: HashMap<u32, StatusEffect>,
     pub total_shielding: u64,
@@ -100,13 +99,6 @@ pub struct EncounterDamageStats {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub misc: Option<EncounterMisc>,
     pub boss_hp_log: HashMap<String, Vec<BossHpLog>>,
-}
-
-#[derive(Debug, Serialize, Clone, Default)]
-#[serde(rename_all = "camelCase")]
-pub struct MostDamageTakenEntity {
-    pub name: String,
-    pub damage_taken: i64,
 }
 
 #[derive(Debug, Default, Serialize, Deserialize, Clone)]
@@ -259,9 +251,9 @@ pub struct DamageStats {
     pub deaths: i64,
     pub death_time: i64,
     pub dps: i64,
-    #[serde_as(deserialize_as = "DefaultOnError")]
+    #[serde(default)]
     pub dps_average: Vec<i64>,
-    #[serde_as(deserialize_as = "DefaultOnError")]
+    #[serde(default)]
     pub dps_rolling_10s_avg: Vec<i64>,
     pub rdps_damage_received: i64,
     pub rdps_damage_received_support: i64,

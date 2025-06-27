@@ -9,15 +9,14 @@ use rusqlite::Connection;
 use std::cmp::max;
 use std::default::Default;
 
-use tauri::{AppHandle, Manager, Window, Wry};
-use tokio::task;
-
 use crate::live::entity_tracker::{Entity, EntityTracker};
 use crate::live::skill_tracker::SkillTracker;
 use crate::live::stats_api::{PlayerStats, StatsApi};
 use crate::live::status_tracker::StatusEffectDetails;
 use crate::live::utils::*;
 use crate::parser::models::*;
+use tauri::{AppHandle, Manager, Window, Wry};
+use tokio::task;
 
 #[derive(Debug)]
 pub struct EncounterState {
@@ -588,15 +587,14 @@ impl EncounterState {
             skill_effect_id = proj_entity.skill_effect_id;
         }
 
-        let mut source_entity = self
-            .encounter
+        // ensure source entity exists in encounter
+        self.encounter
             .entities
             .entry(dmg_src_entity.name.clone())
-            .or_insert_with(|| encounter_entity_from_entity(dmg_src_entity))
-            .to_owned();
+            .or_insert_with(|| encounter_entity_from_entity(dmg_src_entity));
 
-        let mut target_entity = self
-            .encounter
+        // ensure target entity exists in encounter
+        self.encounter
             .entities
             .entry(dmg_target_entity.name.clone())
             .or_insert_with(|| {
@@ -604,8 +602,24 @@ impl EncounterState {
                 target_entity.current_hp = damage_data.target_current_hp;
                 target_entity.max_hp = damage_data.target_max_hp;
                 target_entity
-            })
-            .to_owned();
+            });
+
+        if dmg_src_entity.name == dmg_target_entity.name {
+            info!("ignoring self damage from {}", dmg_src_entity.name);
+            return;
+        }
+
+        let [Some(source_entity), Some(target_entity)] = self
+            .encounter
+            .entities
+            .get_many_mut([&dmg_src_entity.name, &dmg_target_entity.name])
+        else {
+            warn!(
+                "{}, {} not found in encounter entities",
+                dmg_src_entity.name, dmg_target_entity.name
+            );
+            return;
+        };
 
         // if boss only damage is enabled
         // check if target is boss and not player
@@ -1018,13 +1032,6 @@ impl EncounterState {
                 skill_summon_sources,
             );
         }
-
-        self.encounter
-            .entities
-            .insert(source_entity.name.clone(), source_entity);
-        self.encounter
-            .entities
-            .insert(target_entity.name.clone(), target_entity);
     }
 
     pub fn on_counterattack(&mut self, source_entity: &Entity) {

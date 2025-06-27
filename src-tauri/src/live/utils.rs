@@ -1,3 +1,4 @@
+use crate::live::debug_print;
 use crate::live::entity_tracker::Entity;
 use crate::live::skill_tracker::SkillTracker;
 use crate::live::stats_api::PlayerStats;
@@ -839,7 +840,7 @@ pub fn insert_data(
     let fight_end = encounter.last_combat_packet;
 
     for (_key, entity) in encounter.entities.iter_mut().filter(|(_, e)| {
-        ((e.entity_type == EntityType::PLAYER && e.class_id != 0 && e.max_hp > 0)
+        ((e.entity_type == EntityType::PLAYER && e.class_id > 0)
             || e.name == encounter.local_player
             || e.entity_type == EntityType::ESTHER
             || (e.entity_type == EntityType::BOSS && e.max_hp > 0))
