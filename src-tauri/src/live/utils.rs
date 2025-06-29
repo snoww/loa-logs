@@ -975,9 +975,7 @@ pub fn insert_data(
                         .map(|cast| cast.hits.iter().map(|hit| hit.damage).sum::<i64>())
                         .max()
                         .unwrap_or_default();
-                    e.skill_cast_log = log
-                        .iter()
-                        .map(|(_, skill_casts)| skill_casts.clone())
+                    e.skill_cast_log = log.values().cloned()
                         .collect();
                 });
             }
