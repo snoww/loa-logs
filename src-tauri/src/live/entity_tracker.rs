@@ -224,7 +224,11 @@ impl EntityTracker {
             grade,
             npc_id: pkt.npc_struct.type_id,
             level: pkt.npc_struct.level,
-            balance_level: pkt.npc_struct.balance_level.value.unwrap_or(pkt.npc_struct.level),
+            balance_level: pkt
+                .npc_struct
+                .balance_level
+                .value
+                .unwrap_or(pkt.npc_struct.level),
             push_immune: entity_type == BOSS,
             stats: pkt
                 .npc_struct
@@ -255,7 +259,11 @@ impl EntityTracker {
             npc_id: pkt.npc_struct.type_id,
             owner_id: pkt.owner_id,
             level: pkt.npc_struct.level,
-            balance_level: pkt.npc_struct.balance_level.value.unwrap_or(pkt.npc_struct.level),
+            balance_level: pkt
+                .npc_struct
+                .balance_level
+                .value
+                .unwrap_or(pkt.npc_struct.level),
             push_immune: entity_type == BOSS,
             stats: pkt
                 .npc_struct
@@ -571,6 +579,7 @@ fn get_npc_entity_type_name_grade(npc: &NpcStruct, max_hp: i64) -> (EntityType, 
             || npc_info.grade == "epic_raid"
             || npc_info.grade == "commander")
             && max_hp > 10_000
+            && !npc_name.is_empty()
             && !npc_name.contains('_')
             && npc_name.is_ascii()
         {
