@@ -1,11 +1,11 @@
 {
-  "version": "v1.30.1",
-  "notes": "### v1.30.1 - June 25th, 2025\n\n**note:** when players die and can respawn, they enter a \"coma\" state and aren't considered dead by the game, so theres no way (yet) to track multiple deaths\n\n#### NEW FEATURES\n- add shortcut to open lost ark in system tray\n\n#### BUG FIXES AND IMPROVEMENTS\n- fix players disappearing from log after they die and respawn\n- hide auto upload notifications in live meter\n- various performance improvements\n",
-  "pub_date": "2025-06-27T02:24:17.855Z",
+  "version": "v1.30.2",
+  "notes": "### v1.30.2 - July 6th, 2025\n\n#### BUG FIXES AND IMPROVEMENTS\n- fix meter not saving when clearing valtan gate 2 and kakul saydon gate 3\n",
+  "pub_date": "2025-07-07T01:15:22.758Z",
   "platforms": {
     "windows-x86_64": {
-      "url": "https://github.com/snoww/loa-logs/releases/download/v1.30.1/LOA.Logs_1.30.1_x64-setup.nsis.zip",
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlZSVUV0RXo0SE9ibkl5SHVqOGZOWVE0NTVuNUc2VkFMOU4rNnpsR20wb0RvUjBrc2h1QjR3d3NLS1BOajczcHBPd3NEMG9NZEJXNlRuenU5NmFFNlFVPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzUwOTkxMTc5CWZpbGU6TE9BIExvZ3NfMS4zMC4xX3g2NC1zZXR1cC5uc2lzLnppcAo5cExwRFIwajZ3LzNkenlyeFVoR0hHS1lvYVp2WVV0dFQ0YU5qT2FrOWovZTJFYWpINEh6WTNBZEpDbXRuTHMwbnZUaFRrSzJGRWhqYWJtNE1NK1JEZz09Cg=="
+      "url": "https://github.com/snoww/loa-logs/releases/download/v1.30.2/LOA.Logs_1.30.2_x64-setup.nsis.zip",
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmIrUzRNbnVoN3IyZmNualFZTTRSdE12ajRoQkVBbXVNWFBmOHI5bGZmUmt0MTNsYUNtSm80aXloSXVaYTlpNDNtbWRMZ1E4MElFUkxKd3ArWElmVndVPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzUxODUxMDg5CWZpbGU6TE9BIExvZ3NfMS4zMC4yX3g2NC1zZXR1cC5uc2lzLnppcApvV0YxMUgzcDNUck9xZkRpOXN3dmlDN2RvdDlSc0h2MUZuZVdHRDJZUDVBZDdzODZoTVlXYkRzaDdNVUd1T0w4eXkyNWxodzJoSmkybzcrUXgreitEdz09Cg==\n"
     }
   }
 }

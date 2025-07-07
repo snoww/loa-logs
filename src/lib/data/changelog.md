@@ -1,11 +1,19 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.30.1 - June 25th, 2025
+    v1.30.2 - July 6th, 2025
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
   </div>
 </div>
+
+#### BUG FIXES AND IMPROVEMENTS
+
+- fix meter not saving when clearing valtan gate 2 and kakul saydon gate 3
+
+---
+
+### v1.30.1 - June 25th, 2025
 
 **note:** when players die and can respawn, they enter a "coma" state and aren't considered dead by the game, so theres no way (yet) to track multiple deaths
 
@@ -18,8 +26,6 @@
 - fix players disappearing from log after they die and respawn
 - hide auto upload notifications in live meter
 - various performance improvements
-
----
 
 ### v1.30.0 - June 25th, 2025
 
