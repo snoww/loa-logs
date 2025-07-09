@@ -107,7 +107,7 @@ A: Are you trying to install on a custom install folder with different permissio
 
 #### Q: The meter crashes immediately when trying to open it. EdgeWebview2 Error.
 
-A: There could be two possible reasons. 1. The meter needs Microsoft Edge Webview2 Runtime to run. Yours is probably missing or out of date. Go uninstall it first (it won't let you install it if you have an older version installed), then download and install from [here](https://go.microsoft.com/fwlink/p/?LinkId=2124703) (https://go.microsoft.com/fwlink/p/?LinkId=2124703). 2. If you installed the meter in another folder that might require elevated permissions, you would need to run the program in administrator mode.
+A: The meter needs Microsoft Edge Webview2 Runtime to run. Yours is probably missing or out of date. Go uninstall it first (it won't let you install it if you have an older version installed), then download and install from [here](https://go.microsoft.com/fwlink/p/?LinkId=2124703) (https://go.microsoft.com/fwlink/p/?LinkId=2124703).
 
 #### Q: The meter window lags a lot when dragging around.
 
@@ -137,36 +137,32 @@ A: [Yes.](https://i.imgur.com/QsLAntt.png)
 
 ### In-game Overlay (optional Boss HP bar)
 
-![log_image](https://i.imgur.com/luHu7Fz.png)
+![log_image](https://i.imgur.com/mnFD3Gk.png)
 
 ### Damage Breakdown with DPS Charts
 
-<img src="https://i.imgur.com/T4HX6XK.png" width="500"/>
-
-### rDPS
-
-<img src="https://i.imgur.com/cxKz9pP.png"/>
+<img src="https://i.imgur.com/L5drimn.png" width="500"/>
 
 ### Skill Breakdown
 
-<img src="https://i.imgur.com/P5Mb9oe.png" width="600"/>
+<img src="https://i.imgur.com/h1r7z11.png" width="600"/>
 
 ### Arcana Card Tracking
 
-<img src="https://i.imgur.com/afoAVOZ.png" width="500"/>
+<img src="https://i.imgur.com/0UaraGr.png" width="500"/>
 
 ### Buff Uptime Tracking
 
-<img src="https://i.imgur.com/9SkFQs3.png" width="800"/>
+<img src="https://i.imgur.com/OzkHxs8.png" width="800"/>
 
 ### Opener Rotation
 
-<img src="https://i.imgur.com/hcpHAKG.png" width="600"/>
+<img src="https://i.imgur.com/BKCsytl.png" width="600"/>
 
-### Past Encounters
+### Skill Cast Breakdown
 
-<img src="https://i.imgur.com/RZT6Rww.png" width="500"/>
+<img src="https://i.imgur.com/MLvM796.png" width="600"/>
 
 #### Search Filters
 
-<img src="https://i.imgur.com/5aJJISG.png" width="400"/>
+<img src="https://i.imgur.com/6EBinDT.png" width="400"/>
