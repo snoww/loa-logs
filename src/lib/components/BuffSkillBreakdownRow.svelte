@@ -63,6 +63,6 @@
     class="absolute left-0 -z-10 h-7 px-2 py-1"
     style="background-color: {index % 2 === 1 && settings.app.general.splitLines
       ? rgbLinearShadeAdjust(entityState.color, -0.2, 0.6)
-      : `rgb(from ${entityState.color} r g b / 0.6)`}; width: {width}%"
+      : `rgb(from ${entityState.color} r g b / 0.6)`}; width: {tweenedValue.current}%"
   ></td>
 </tr>

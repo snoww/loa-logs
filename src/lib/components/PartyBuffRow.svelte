@@ -52,5 +52,5 @@
 {/if}
 <td
   class="absolute left-0 -z-10 h-7 px-2 py-1"
-  style="background-color: rgb(from {entityState.color} r g b / {alpha}); width: {percentage}%"
+  style="background-color: rgb(from {entityState.color} r g b / {alpha}); width: {tweenedValue.current}%"
 ></td>
