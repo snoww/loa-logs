@@ -344,48 +344,31 @@ impl EncounterState {
         timestamp: i64,
     ) -> (u32, Option<Vec<u32>>) {
         // do not track skills if encounter not started
-        if self.encounter.fight_start == 0 {
+        if self.encounter.fight_start == 0 || skill_id == 0 {
             return (0, None);
         }
-        let skill_name = get_skill_name(&skill_id);
-        let mut tripod_change = false;
+
+        let (skill_name, skill_icon, summons) =
+            get_skill_name_and_icon(skill_id, 0, &self.skill_tracker, source_entity.id);
+
         let entity = self
             .encounter
             .entities
             .entry(source_entity.name.clone())
             .or_insert_with(|| {
-                let (skill_name, skill_icon, summons) = get_skill_name_and_icon(
-                    &skill_id,
-                    &0,
-                    skill_name.clone(),
-                    &self.skill_tracker,
-                    source_entity.id,
-                );
                 let mut entity = encounter_entity_from_entity(source_entity);
-                entity.skill_stats = SkillStats {
-                    casts: 0,
-                    ..Default::default()
-                };
                 entity.skills = HashMap::from([(
                     skill_id,
                     Skill {
                         id: skill_id,
-                        name: {
-                            if skill_name.is_empty() {
-                                skill_id.to_string()
-                            } else {
-                                skill_name
-                            }
-                        },
-                        icon: skill_icon,
+                        name: skill_name.clone(),
+                        icon: skill_icon.clone(),
                         tripod_index,
                         tripod_level,
-                        summon_sources: summons,
                         casts: 0,
                         ..Default::default()
                     },
                 )]);
-                tripod_change = true;
                 entity
             });
 
@@ -400,100 +383,44 @@ impl EncounterState {
         entity.is_dead = false;
         entity.skill_stats.casts += 1;
 
+        // if skills have different ids but the same name, we group them together
+        let mut skill_id = skill_id;
+        if let Some(skill) = entity.skills.get_mut(&skill_id) {
+            skill.casts += 1;
+            skill.tripod_index = tripod_index;
+            skill.tripod_level = tripod_level;
+        } else if let Some(skill) = entity
+            .skills
+            .values_mut()
+            .find(|s| s.name == skill_name.clone())
+        {
+            // no id match found, search skills by name
+            skill.casts += 1;
+            skill_id = skill.id;
+            skill.tripod_index = tripod_index;
+            skill.tripod_level = tripod_level;
+        } else {
+            // no match for id or name
+            entity.skills.insert(
+                skill_id,
+                Skill {
+                    id: skill_id,
+                    name: skill_name,
+                    icon: skill_icon,
+                    tripod_index,
+                    tripod_level,
+                    casts: 1,
+                    ..Default::default()
+                },
+            );
+        }
+
         let relative_timestamp = if self.encounter.fight_start == 0 {
             0
         } else {
             (timestamp - self.encounter.fight_start) as i32
         };
 
-        // if skills have different ids but the same name, we group them together
-        // dunno if this is right approach xd
-        let mut skill_id = skill_id;
-        let mut skill_summon_sources: Option<Vec<u32>> = None;
-        if let Some(skill) = entity.skills.get_mut(&skill_id) {
-            skill.casts += 1;
-            tripod_change = check_tripod_index_change(skill.tripod_index, tripod_index)
-                || check_tripod_level_change(skill.tripod_level, tripod_level);
-            skill.tripod_index = tripod_index;
-            skill.tripod_level = tripod_level;
-            skill_summon_sources.clone_from(&skill.summon_sources);
-        } else if let Some(skill) = entity
-            .skills
-            .values_mut()
-            .find(|s| s.name == skill_name.clone())
-        {
-            skill.casts += 1;
-            skill_id = skill.id;
-            tripod_change = check_tripod_index_change(skill.tripod_index, tripod_index)
-                || check_tripod_level_change(skill.tripod_level, tripod_level);
-            skill.tripod_index = tripod_index;
-            skill.tripod_level = tripod_level;
-            skill_summon_sources.clone_from(&skill.summon_sources);
-        } else {
-            let (skill_name, skill_icon, summons) = get_skill_name_and_icon(
-                &skill_id,
-                &0,
-                skill_name.clone(),
-                &self.skill_tracker,
-                source_entity.id,
-            );
-            skill_summon_sources.clone_from(&summons);
-            entity.skills.insert(
-                skill_id,
-                Skill {
-                    id: skill_id,
-                    name: {
-                        if skill_name.is_empty() {
-                            skill_id.to_string()
-                        } else {
-                            skill_name
-                        }
-                    },
-                    icon: skill_icon,
-                    tripod_index,
-                    tripod_level,
-                    summon_sources: summons,
-                    casts: 1,
-                    ..Default::default()
-                },
-            );
-            tripod_change = true;
-        }
-        if tripod_change {
-            if let (Some(tripod_index), Some(_tripod_level)) = (tripod_index, tripod_level) {
-                let mut indexes = vec![tripod_index.first];
-                if tripod_index.second != 0 {
-                    indexes.push(tripod_index.second + 3);
-                }
-                // third row should never be set if second is not set
-                if tripod_index.third != 0 {
-                    indexes.push(tripod_index.third + 6);
-                }
-                // let levels = [tripod_level.first, tripod_level.second, tripod_level.third];
-                // if let Some(effect) = SKILL_FEATURE_DATA.get(&skill_id) {
-                //     for i in 0..indexes.len() {
-                //         if let Some(entries) = effect.tripods.get(&indexes[i]) {
-                //             let mut options: Vec<SkillFeatureOption> = vec![];
-                //             for entry in &entries.entries {
-                //                 if entry.level > 0 && entry.level == levels[i] {
-                //                     options.push(entry.clone());
-                //                 }
-                //             }
-                //             tripod_data.push(TripodData {
-                //                 index: indexes[i],
-                //                 options,
-                //             });
-                //         }
-                //     }
-                // }
-            }
-
-            // if !tripod_data.is_empty() {
-            //     entity.skills.entry(skill_id).and_modify(|e| {
-            //         e.tripod_data = Some(tripod_data);
-            //     });
-            // }
-        }
         self.cast_log
             .entry(entity.name.clone())
             .or_default()
@@ -522,7 +449,7 @@ impl EncounterState {
             }
         }
 
-        (skill_id, skill_summon_sources)
+        (skill_id, summons)
     }
 
     #[allow(clippy::too_many_arguments)]
@@ -581,9 +508,8 @@ impl EncounterState {
         }
 
         let mut skill_effect_id = damage_data.skill_effect_id;
-        if proj_entity.entity_type == EntityType::PROJECTILE
-            && is_battle_item(&proj_entity.skill_effect_id, "attack")
-        {
+        let is_battle_item = is_battle_item(&proj_entity.skill_effect_id, "attack");
+        if proj_entity.entity_type == EntityType::PROJECTILE && is_battle_item {
             skill_effect_id = proj_entity.skill_effect_id;
         }
 
@@ -671,61 +597,40 @@ impl EncounterState {
             damage += damage_data.target_current_hp;
         }
 
-        let mut skill_id = if damage_data.skill_id != 0 {
-            damage_data.skill_id
-        } else {
+        let mut skill_key = if is_battle_item {
+            // pad battle item skill effect id to avoid overlap with skill ids
+            skill_effect_id + 1_000_000
+        } else if damage_data.skill_id == 0 {
             skill_effect_id
+        } else {
+            damage_data.skill_id
         };
 
-        let skill_data = get_skill(&skill_id);
-        let mut skill_name = "".to_string();
-        let mut skill_summon_sources: Option<Vec<u32>> = None;
-        let mut is_hyper_awakening = false;
-        if let Some(skill_data) = skill_data.as_ref() {
-            skill_name = skill_data.name.clone().unwrap_or_default();
-            skill_summon_sources.clone_from(&skill_data.summon_source_skills);
-            is_hyper_awakening = skill_data.is_hyper_awakening;
-        }
+        let is_hyper_awakening = SKILL_DATA
+            .get(&damage_data.skill_id)
+            .is_some_and(|s| s.is_hyper_awakening);
 
-        if skill_name.is_empty() {
-            (skill_name, _, skill_summon_sources) = get_skill_name_and_icon(
-                &skill_id,
-                &skill_effect_id,
-                skill_id.to_string(),
-                &self.skill_tracker,
-                source_entity.id,
-            );
-        }
-        let relative_timestamp = (timestamp - self.encounter.fight_start) as i32;
+        let (skill_name, skill_icon, skill_summon_sources) = get_skill_name_and_icon(
+            damage_data.skill_id,
+            skill_effect_id,
+            &self.skill_tracker,
+            source_entity.id,
+        );
 
-        if !source_entity.skills.contains_key(&skill_id) {
+        if !source_entity.skills.contains_key(&skill_key) {
             if let Some(skill) = source_entity
                 .skills
                 .values()
-                .find(|&s| s.name == *skill_name)
+                .find(|&s| s.name == skill_name)
             {
-                skill_id = skill.id;
+                skill_key = skill.id;
             } else {
-                let (skill_name, skill_icon, _) = get_skill_name_and_icon(
-                    &skill_id,
-                    &skill_effect_id,
-                    skill_name.clone(),
-                    &self.skill_tracker,
-                    source_entity.id,
-                );
                 source_entity.skills.insert(
-                    skill_id,
+                    skill_key,
                     Skill {
-                        id: skill_id,
-                        name: {
-                            if skill_name.is_empty() {
-                                skill_id.to_string()
-                            } else {
-                                skill_name
-                            }
-                        },
+                        id: skill_key,
+                        name: skill_name,
                         icon: skill_icon,
-                        summon_sources: skill_summon_sources.clone(),
                         casts: 1,
                         ..Default::default()
                     },
@@ -733,8 +638,9 @@ impl EncounterState {
             }
         }
 
-        let skill = source_entity.skills.get_mut(&skill_id).unwrap();
+        let skill = source_entity.skills.get_mut(&skill_key).unwrap();
 
+        let relative_timestamp = (timestamp - self.encounter.fight_start) as i32;
         let mut skill_hit = SkillHit {
             damage,
             timestamp: relative_timestamp as i64,
@@ -1023,11 +929,11 @@ impl EncounterState {
             }
         }
 
-        if skill_id > 0 {
+        if skill_key > 0 {
             self.skill_tracker.on_hit(
                 source_entity.id,
                 proj_entity.id,
-                skill_id,
+                skill_key,
                 skill_hit,
                 skill_summon_sources,
             );

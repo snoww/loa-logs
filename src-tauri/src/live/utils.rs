@@ -332,16 +332,15 @@ pub fn get_status_effect_buff_type_flags(buff: &SkillBuffData) -> u32 {
 }
 
 pub fn get_skill_name_and_icon(
-    skill_id: &u32,
-    skill_effect_id: &u32,
-    skill_name: String,
+    skill_id: u32,
+    skill_effect_id: u32,
     skill_tracker: &SkillTracker,
     entity_id: u64,
 ) -> (String, String, Option<Vec<u32>>) {
-    if (*skill_id == 0) && (*skill_effect_id == 0) {
+    if (skill_id == 0) && (skill_effect_id == 0) {
         ("Bleed".to_string(), "buff_168.png".to_string(), None)
-    } else if (*skill_effect_id != 0) && (*skill_effect_id == *skill_id) {
-        return if let Some(effect) = SKILL_EFFECT_DATA.get(skill_effect_id) {
+    } else if (skill_effect_id != 0) && (skill_id == 0) {
+        return if let Some(effect) = SKILL_EFFECT_DATA.get(&skill_effect_id) {
             if let Some(item_name) = effect.item_name.as_ref() {
                 return (
                     item_name.clone(),
@@ -352,24 +351,24 @@ pub fn get_skill_name_and_icon(
             if let Some(source_skill) = effect.source_skills.as_ref() {
                 if let Some(skill) = SKILL_DATA.get(source_skill.iter().min().unwrap_or(&0)) {
                     return (
-                        skill.name.clone().unwrap_or_default(),
+                        skill.name.clone().unwrap_or(skill.id.to_string()),
                         skill.icon.clone().unwrap_or_default(),
                         None,
                     );
                 }
             } else if let Some(skill) = SKILL_DATA.get(&(skill_effect_id / 10)) {
                 return (
-                    skill.name.clone().unwrap_or_default(),
+                    skill.name.clone().unwrap_or(skill.id.to_string()),
                     skill.icon.clone().unwrap_or_default(),
                     None,
                 );
             }
             (effect.comment.clone(), "".to_string(), None)
         } else {
-            (skill_name, "".to_string(), None)
+            (skill_id.to_string(), "".to_string(), None)
         };
     } else {
-        return if let Some(skill) = SKILL_DATA.get(skill_id) {
+        return if let Some(skill) = SKILL_DATA.get(&skill_id) {
             if let Some(summon_source_skill) = skill.summon_source_skills.as_ref() {
                 for source in summon_source_skill {
                     if skill_tracker
@@ -379,7 +378,7 @@ pub fn get_skill_name_and_icon(
                     {
                         if let Some(skill) = SKILL_DATA.get(source) {
                             return (
-                                skill.name.clone().unwrap_or_default() + " (Summon)",
+                                skill.name.clone().unwrap_or(skill.id.to_string()) + " (Summon)",
                                 skill.icon.clone().unwrap_or_default(),
                                 Some(summon_source_skill.clone()),
                             );
@@ -389,56 +388,40 @@ pub fn get_skill_name_and_icon(
                 if let Some(skill) = SKILL_DATA.get(summon_source_skill.iter().min().unwrap_or(&0))
                 {
                     (
-                        skill.name.clone().unwrap_or_default() + " (Summon)",
+                        skill.name.clone().unwrap_or(skill.id.to_string()) + " (Summon)",
                         skill.icon.clone().unwrap_or_default(),
                         Some(summon_source_skill.clone()),
                     )
                 } else {
-                    (skill_name, "".to_string(), None)
+                    (skill_id.to_string(), "".to_string(), None)
                 }
             } else if let Some(source_skill) = skill.source_skills.as_ref() {
                 if let Some(skill) = SKILL_DATA.get(source_skill.iter().min().unwrap_or(&0)) {
                     (
-                        skill.name.clone().unwrap_or_default(),
+                        skill.name.clone().unwrap_or(skill.id.to_string()),
                         skill.icon.clone().unwrap_or_default(),
                         None,
                     )
                 } else {
-                    (skill_name, "".to_string(), None)
+                    (skill_id.to_string(), "".to_string(), None)
                 }
             } else {
                 (
-                    skill.name.clone().unwrap_or_default(),
+                    skill.name.clone().unwrap_or(skill.id.to_string()),
                     skill.icon.clone().unwrap_or_default(),
                     None,
                 )
             }
         } else if let Some(skill) = SKILL_DATA.get(&(skill_id - (skill_id % 10))) {
             (
-                skill.name.clone().unwrap_or_default(),
+                skill.name.clone().unwrap_or(skill.id.to_string()),
                 skill.icon.clone().unwrap_or_default(),
                 None,
             )
         } else {
-            (skill_name, "".to_string(), None)
+            (skill_id.to_string(), "".to_string(), None)
         };
     }
-}
-
-pub fn get_skill_name(skill_id: &u32) -> String {
-    SKILL_DATA
-        .get(skill_id)
-        .map_or(skill_id.to_string(), |skill| {
-            if skill.name.is_none() {
-                skill_id.to_string()
-            } else {
-                skill.name.clone().unwrap_or_default()
-            }
-        })
-}
-
-pub fn get_skill(skill_id: &u32) -> Option<SkillData> {
-    SKILL_DATA.get(skill_id).cloned()
 }
 
 pub fn get_class_from_id(class_id: &u32) -> String {
@@ -975,8 +958,7 @@ pub fn insert_data(
                         .map(|cast| cast.hits.iter().map(|hit| hit.damage).sum::<i64>())
                         .max()
                         .unwrap_or_default();
-                    e.skill_cast_log = log.values().cloned()
-                        .collect();
+                    e.skill_cast_log = log.values().cloned().collect();
                 });
             }
         }
