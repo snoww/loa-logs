@@ -118,6 +118,8 @@ export interface Entity {
   arkPassiveActive?: boolean;
   arkPassiveData?: ArkPassiveData;
   spec?: string;
+  loadoutHash?: string;
+  combatScore?: number;
 }
 
 export interface ArkPassiveData {

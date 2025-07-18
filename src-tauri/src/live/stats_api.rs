@@ -115,7 +115,7 @@ pub struct InspectInfo {
     pub ark_passive_data: Option<ArkPassiveData>,
     pub engravings: Option<Vec<u32>>,
     pub gems: Option<Vec<GemData>>,
-    pub gear_hash: Option<String>,
+    pub loadout_hash: Option<String>,
 }
 
 #[derive(Debug, Default, Clone, Deserialize)]

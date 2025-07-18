@@ -123,8 +123,8 @@ pub struct EncounterEntity {
     pub ark_passive_active: Option<bool>,
     pub ark_passive_data: Option<ArkPassiveData>,
     pub spec: Option<String>,
+    pub loadout_hash: Option<String>,
     pub combat_score: Option<f32>,
-    pub gear_hash: Option<String>,
 }
 
 #[derive(Debug, Default, Serialize, Deserialize, Clone)]

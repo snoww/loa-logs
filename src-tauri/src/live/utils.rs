@@ -815,11 +815,12 @@ pub fn insert_data(
         dps,
         character_id,
         engravings,
-        gear_hash,
+        loadout_hash,
+        combat_score,
         ark_passive_active,
         spec,
         ark_passive_data
-    ) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17, ?18, ?19, ?20)",
+    ) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17, ?18, ?19, ?20, ?21)",
         )
         .expect("failed to prepare entity statement");
 
@@ -918,7 +919,7 @@ pub fn insert_data(
 
                 entity.engraving_data = engravings;
                 entity.ark_passive_data = info.ark_passive_data.clone();
-                entity.gear_hash = info.gear_hash.clone();
+                entity.loadout_hash = info.loadout_hash.clone();
             }
         }
 
@@ -989,7 +990,8 @@ pub fn insert_data(
                 entity.damage_stats.dps,
                 entity.character_id,
                 json!(entity.engraving_data),
-                entity.gear_hash,
+                entity.loadout_hash,
+                entity.combat_score,
                 entity.ark_passive_active,
                 entity.spec,
                 json!(entity.ark_passive_data)
