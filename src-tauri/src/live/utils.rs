@@ -363,7 +363,11 @@ pub fn get_skill_name_and_icon(
                     None,
                 );
             }
-            (effect.comment.clone(), "".to_string(), None)
+            if effect.comment.is_empty() {
+                (effect.id.to_string(), "".to_string(), None)
+            } else {
+                (effect.comment.clone(), "".to_string(), None)
+            }
         } else {
             (skill_id.to_string(), "".to_string(), None)
         };
