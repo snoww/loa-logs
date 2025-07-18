@@ -21,8 +21,6 @@ pub struct StatsApi {
     pub client_id: String,
     client: Client,
     app: AppHandle,
-    pub valid_zone: bool,
-    stats_cache: Cache<String, PlayerStats>,
 }
 
 impl StatsApi {
@@ -31,31 +29,13 @@ impl StatsApi {
             client_id: String::new(),
             app,
             client: Client::new(),
-            valid_zone: false,
-            stats_cache: Cache::builder().max_capacity(64).build(),
         }
-    }
-
-    pub fn get_stats(&mut self, state: &EncounterState) -> Option<Cache<String, PlayerStats>> {
-        if !self.valid_difficulty(&state.raid_difficulty) {
-            return None;
-        }
-
-        Some(self.stats_cache.clone())
-    }
-
-    fn valid_difficulty(&self, difficulty: &str) -> bool {
-        self.valid_zone
-            && (difficulty == "Normal"
-                || difficulty == "Hard"
-                || difficulty == "The First"
-                || difficulty == "Trial")
     }
 
     pub async fn get_character_info(
         &self,
         encounter: &Encounter,
-    ) -> Option<HashMap<String, PlayerStats>> {
+    ) -> Option<HashMap<String, InspectInfo>> {
         if encounter.region.is_none() {
             warn!("region is not set");
             return None;
@@ -100,7 +80,7 @@ impl StatsApi {
             .send()
             .await
         {
-            Ok(res) => match res.json::<HashMap<String, PlayerStats>>().await {
+            Ok(res) => match res.json::<HashMap<String, InspectInfo>>().await {
                 Ok(data) => {
                     debug_print(format_args!("received player stats"));
                     Some(data)
@@ -130,11 +110,12 @@ pub struct Stats {
 
 #[derive(Debug, Default, Clone, Deserialize)]
 #[serde(rename_all = "camelCase", default)]
-pub struct PlayerStats {
+pub struct InspectInfo {
     pub ark_passive_enabled: bool,
     pub ark_passive_data: Option<ArkPassiveData>,
     pub engravings: Option<Vec<u32>>,
     pub gems: Option<Vec<GemData>>,
+    pub gear_hash: Option<String>,
 }
 
 #[derive(Debug, Default, Clone, Deserialize)]

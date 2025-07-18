@@ -120,10 +120,11 @@ pub struct EncounterEntity {
     pub damage_stats: DamageStats,
     pub skill_stats: SkillStats,
     pub engraving_data: Option<Vec<String>>,
-    pub gear_hash: Option<String>,
     pub ark_passive_active: Option<bool>,
     pub ark_passive_data: Option<ArkPassiveData>,
     pub spec: Option<String>,
+    pub combat_score: Option<f32>,
+    pub gear_hash: Option<String>,
 }
 
 #[derive(Debug, Default, Serialize, Deserialize, Clone)]
@@ -158,8 +159,6 @@ pub struct Skill {
     pub gem_tier: Option<u8>,
     pub gem_damage: Option<u8>,
     pub gem_tier_dmg: Option<u8>,
-    #[serde(skip)]
-    pub tripod_data: Option<Vec<TripodData>>,
     pub rdps_damage_received: i64,
     pub rdps_damage_received_support: i64,
     pub rdps_damage_given: i64,

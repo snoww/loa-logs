@@ -11,7 +11,7 @@ use std::default::Default;
 
 use crate::live::entity_tracker::{Entity, EntityTracker};
 use crate::live::skill_tracker::SkillTracker;
-use crate::live::stats_api::{PlayerStats, StatsApi};
+use crate::live::stats_api::{InspectInfo, StatsApi};
 use crate::live::status_tracker::StatusEffectDetails;
 use crate::live::utils::*;
 use crate::parser::models::*;
@@ -205,9 +205,6 @@ impl EncounterState {
         match phase_code {
             0 | 2 | 3 | 4 => {
                 if !self.encounter.current_boss_name.is_empty() {
-                    if phase_code == 0 {
-                        stats_api.valid_zone = false;
-                    }
                     self.save_to_db(stats_api, false);
                     self.saved = true;
                 }
@@ -463,7 +460,6 @@ impl EncounterState {
         se_on_target: Vec<StatusEffectDetails>,
         _target_count: i32,
         _entity_tracker: &EntityTracker,
-        _player_stats: &Option<Cache<String, PlayerStats>>,
         timestamp: i64,
     ) {
         let hit_flag = match damage_data.modifier & 0xf {

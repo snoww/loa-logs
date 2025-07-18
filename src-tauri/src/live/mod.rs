@@ -274,7 +274,6 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
                     party_map_cache = HashMap::new();
                     let entity = entity_tracker.init_env(pkt);
                     state.on_init_env(entity, &stats_api);
-                    stats_api.valid_zone = false;
                     get_and_set_region(region_file_path.as_ref(), &mut state);
                     info!("region: {:?}", state.region);
                 }
@@ -429,8 +428,6 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
                             state.raid_difficulty_id = 0;
                         }
                     }
-
-                    stats_api.valid_zone = VALID_ZONES.contains(&pkt.raid_id);
                 }
             }
             Pkt::RaidBossKillNotify => {
@@ -532,7 +529,6 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
                         .borrow()
                         .get_local_character_id(entity_tracker.local_entity_id);
                     let target_count = pkt.skill_damage_abnormal_move_events.len() as i32;
-                    let player_stats = stats_api.get_stats(&state);
                     for mut event in pkt.skill_damage_abnormal_move_events.into_iter() {
                         if !damage_handler.decrypt_damage_event(&mut event.skill_damage_event) {
                             state.damage_is_valid = false;
@@ -569,7 +565,6 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
                             se_on_target,
                             target_count,
                             &entity_tracker,
-                            &player_stats,
                             now,
                         );
                     }
@@ -590,7 +585,6 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
                         .borrow()
                         .get_local_character_id(entity_tracker.local_entity_id);
                     let target_count = pkt.skill_damage_events.len() as i32;
-                    let player_stats = stats_api.get_stats(&state);
                     for mut event in pkt.skill_damage_events.into_iter() {
                         if !damage_handler.decrypt_damage_event(&mut event) {
                             state.damage_is_valid = false;
@@ -622,7 +616,6 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
                             se_on_target,
                             target_count,
                             &entity_tracker,
-                            &player_stats,
                             now,
                         );
                     }
@@ -870,8 +863,6 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
                     PKTZoneMemberLoadStatusNotify::new,
                     "PKTZoneMemberLoadStatusNotify",
                 ) {
-                    stats_api.valid_zone = VALID_ZONES.contains(&pkt.zone_id);
-
                     if state.raid_difficulty_id >= pkt.zone_id && !state.raid_difficulty.is_empty()
                     {
                         continue;

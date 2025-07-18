@@ -1,7 +1,7 @@
 use crate::live::debug_print;
 use crate::live::entity_tracker::Entity;
 use crate::live::skill_tracker::SkillTracker;
-use crate::live::stats_api::PlayerStats;
+use crate::live::stats_api::InspectInfo;
 use crate::live::status_tracker::StatusEffectDetails;
 use crate::parser::models::*;
 use flate2::write::GzEncoder;
@@ -709,7 +709,7 @@ pub fn insert_data(
     party_info: Vec<Vec<String>>,
     raid_difficulty: String,
     region: Option<String>,
-    player_info: Option<HashMap<String, PlayerStats>>,
+    player_info: Option<HashMap<String, InspectInfo>>,
     meter_version: String,
     ntp_fight_start: i64,
     rdps_valid: bool,
@@ -918,6 +918,7 @@ pub fn insert_data(
 
                 entity.engraving_data = engravings;
                 entity.ark_passive_data = info.ark_passive_data.clone();
+                entity.gear_hash = info.gear_hash.clone();
             }
         }
 
