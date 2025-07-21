@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { settings } from "$lib/stores.svelte";
   import { MeterTab } from "$lib/types";
   import { getVersion } from "@tauri-apps/api/app";
 
@@ -17,6 +18,9 @@
     {@render meterTab("SELF", MeterTab.SELF_BUFFS)}
     {@render meterTab("TANK", MeterTab.TANK)}
     {@render meterTab("BOSS", MeterTab.BOSS)}
+    {#if settings.app.general.showDetails}
+      {@render meterTab("DETAILS", MeterTab.DETAILS)}
+    {/if}
   </div>
   <div class="flex items-center gap-1 px-1 tracking-tighter">
     <div class="text-xs">LOA Logs</div>

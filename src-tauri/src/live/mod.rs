@@ -226,25 +226,24 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
                     }
                 }
             }
-            // Pkt::IdentityGaugeChangeNotify => {
-            //     if let Some(pkt) = parse_pkt(
-            //         &data,
-            //         PKTIdentityGaugeChangeNotify::new,
-            //         "PKTIdentityGaugeChangeNotify",
-            //     ) {
-            //         state.on_identity_gain(&pkt);
-            //         if emit_details.load(Ordering::Relaxed) {
-            //             app.emit_all(
-            //                 "identity-update",
-            //                 Identity {
-            //                     gauge1: pkt.identity_gauge1,
-            //                     gauge2: pkt.identity_gauge2,
-            //                     gauge3: pkt.identity_gauge3,
-            //                 },
-            //             )?;
-            //         }
-            //     }
-            // }
+            Pkt::IdentityGaugeChangeNotify => {
+                if let Some(pkt) = parse_pkt(
+                    &data,
+                    PKTIdentityGaugeChangeNotify::new,
+                    "PKTIdentityGaugeChangeNotify",
+                ) {
+                    if emit_details.load(Ordering::Relaxed) {
+                        app.emit_all(
+                            "identity-update",
+                            Identity {
+                                gauge1: pkt.identity_gauge1,
+                                gauge2: pkt.identity_gauge2,
+                                gauge3: pkt.identity_gauge3,
+                            },
+                        )?;
+                    }
+                }
+            }
             // Pkt::IdentityStanceChangeNotify => {
             //     if let Some(pkt) = parse_pkt(
             //         &data,

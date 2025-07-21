@@ -14,6 +14,7 @@
   import LiveEncounterInfo from "./LiveEncounterInfo.svelte";
   import LiveFooter from "./LiveFooter.svelte";
   import { isNameValid } from "$lib/utils";
+  import LiveDetails from "./LiveDetails.svelte";
 
   let { enc }: { enc: EncounterState } = $props();
 
@@ -121,6 +122,8 @@
       {:else}
         <BossBreakdown {enc} boss={enc.encounter!.entities[focusedBoss]} handleRightClick={() => (focusedBoss = "")} />
       {/if}
+    {:else if tab === MeterTab.DETAILS && settings.app.general.showDetails}
+      <LiveDetails />
     {/if}
   </div>
   <LiveFooter bind:tab />
