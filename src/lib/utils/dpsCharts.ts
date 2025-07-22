@@ -270,7 +270,7 @@ export function getBossHpSeries(bosses: [string, BossHpLog[]][], legendNames: st
     })
     .map((entry, i) => {
       legendNames.push(entry[0]);
-      const max = entry[1][0].p;
+      const max = Math.max(...entry[1].slice(0, 5).map((e) => e.p));
       // if boss starts off with more than 100% hp (e.g. mordum g3 hm 0x phase), we normalize the hp percent to 0-1
       // boss hp bar x will be inaccurate
       const log = max > 1 ? entry[1].map((e) => new BossHpLog(e.time, e.hp, normalize(e.p, 0, max))) : entry[1];
