@@ -16,6 +16,10 @@ export async function uploadLog(id: number | string, encounter: Encounter, showT
     !encounter.difficulty ||
     !Object.hasOwn(raidGates, encounter.currentBossName)
   ) {
+    if (showToast) {
+      addToast(uploadError("Log not supported for upload", id));
+    }
+
     return;
   }
 
@@ -28,8 +32,7 @@ export async function uploadLog(id: number | string, encounter: Encounter, showT
     headers: {
       access_token: settings.sync.accessToken,
       "Content-Encoding": "gzip",
-      "Content-Type": "application/json",
-      visibility: settings.sync.visibility ?? ""
+      "Content-Type": "application/json"
     },
     body: blob
   });
