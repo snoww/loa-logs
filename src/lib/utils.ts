@@ -348,3 +348,6 @@ export const rgbLinearShadeAdjust = (color: number | string, percentage: number 
 export const normalize = (val: number, min: number, max: number): number => {
   return (val - min) / (max - min);
 };
+
+export const isSupportSpec = (spec?: string): boolean =>
+  spec === "Desperate Salvation" || spec === "Full Bloom" || spec === "Blessed Aura";

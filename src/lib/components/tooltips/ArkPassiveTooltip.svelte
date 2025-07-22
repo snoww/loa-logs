@@ -4,6 +4,7 @@
   import { EFTable_ArkPassive } from "$lib/constants/EFTable_ArkPassive";
   import type { EntityState } from "$lib/entity.svelte";
   import type { ArkPassiveNode } from "$lib/types";
+  import { isSupportSpec, normalizeIlvl } from "$lib/utils";
 
   const { state }: { state: EntityState } = $props();
 
@@ -149,9 +150,12 @@
 
 {#snippet tooltip()}
   <div class="flex flex-col">
-    <div>
-      {state.name}
-    </div>
+    <p>{state.name}</p>
+    {#if state.entity.combatPower}
+      <p class="text-xs {isSupportSpec(state.entity.spec) ? 'text-green-400' : 'text-red-400'}">
+        {normalizeIlvl(state.entity.combatPower)} Combat Power
+      </p>
+    {/if}
     <div class="text-xs">
       {#if state.entity.arkPassiveData && state.entity.spec}
         {#if arkPassiveSpec == state.entity.spec}
