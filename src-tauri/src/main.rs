@@ -424,7 +424,7 @@ fn setup_db(resource_path: &Path) -> Result<(), rusqlite::Error> {
 
     migration_specs(&tx)?;
 
-    migration_combat_score(&tx)?;
+    migration_combat_power(&tx)?;
 
     stmt.finalize()?;
     info!("finished setting up database");
@@ -661,12 +661,12 @@ fn migration_specs(tx: &Transaction) -> Result<(), rusqlite::Error> {
     stmt.finalize()
 }
 
-fn migration_combat_score(tx: &Transaction) -> Result<(), rusqlite::Error> {
+fn migration_combat_power(tx: &Transaction) -> Result<(), rusqlite::Error> {
     let mut stmt = tx.prepare("SELECT 1 FROM pragma_table_info(?) WHERE name=?")?;
-    if !stmt.exists(["entity", "loadout_hash"])? {
+    if !stmt.exists(["entity", "combat_power"])? {
         info!("adding loadout hash and combat score columns");
         tx.execute("ALTER TABLE entity ADD COLUMN loadout_hash TEXT", [])?;
-        tx.execute("ALTER TABLE entity ADD COLUMN combat_score REAL", [])?;
+        tx.execute("ALTER TABLE entity ADD COLUMN combat_power REAL", [])?;
     }
 
     stmt.finalize()
@@ -1014,7 +1014,7 @@ fn load_encounter(window: tauri::Window, id: String) -> Encounter {
         ark_passive_active,
         ark_passive_data,
         loadout_hash,
-        combat_score
+        combat_power
     FROM entity
     WHERE encounter_id = ?;
     ",
@@ -1092,7 +1092,7 @@ fn load_encounter(window: tauri::Window, id: String) -> Encounter {
                 ark_passive_active,
                 ark_passive_data,
                 loadout_hash: row.get(18).unwrap_or_default(),
-                combat_score: row.get(19).unwrap_or_default(),
+                combat_power: row.get(19).unwrap_or_default(),
                 ..Default::default()
             })
         })

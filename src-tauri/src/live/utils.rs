@@ -816,7 +816,7 @@ pub fn insert_data(
         character_id,
         engravings,
         loadout_hash,
-        combat_score,
+        combat_power,
         ark_passive_active,
         spec,
         ark_passive_data
@@ -862,7 +862,7 @@ pub fn insert_data(
             if let Some(info) = player_info
                 .as_ref()
                 .and_then(|stats| stats.get(&entity.name))
-            {
+            {                
                 for gem in info.gems.iter().flatten() {
                     for skill_id in gem_skill_id_to_skill_ids(gem.skill_id) {
                         if let Some(skill) = entity.skills.get_mut(&skill_id) {
@@ -915,6 +915,10 @@ pub fn insert_data(
                             }
                         }
                     }
+                }
+                
+                if entity.combat_power.is_none() { 
+                    entity.combat_power = info.combat_power.as_ref().map(|c| c.score);
                 }
 
                 entity.engraving_data = engravings;
@@ -991,7 +995,7 @@ pub fn insert_data(
                 entity.character_id,
                 json!(entity.engraving_data),
                 entity.loadout_hash,
-                entity.combat_score,
+                entity.combat_power,
                 entity.ark_passive_active,
                 entity.spec,
                 json!(entity.ark_passive_data)
