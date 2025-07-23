@@ -923,7 +923,7 @@ pub fn insert_data(
 
                 entity.engraving_data = engravings;
                 entity.ark_passive_data = info.ark_passive_data.clone();
-                entity.loadout_hash = info.loadout_hash.clone();
+                entity.loadout_hash = info.loadout_snapshot.clone();
             }
         }
 
