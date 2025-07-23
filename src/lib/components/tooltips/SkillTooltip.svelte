@@ -36,15 +36,7 @@
     }
   }
 
-  function getColumnColor(col: number) {
-    if (col === 1) {
-      return "bg-blue-800";
-    } else if (col === 2) {
-      return "bg-lime-600";
-    } else {
-      return "bg-amber-600";
-    }
-  }
+  const TRIPOD_COLORS = ["bg-blue-800", "bg-lime-600", "bg-amber-600"];
 </script>
 
 {#snippet gem(tier: number, level: number, type: string)}
@@ -61,7 +53,7 @@
     <div class="flex justify-center gap-1 py-0.5">
       {#each opts as i}
         {#if i === index}
-          <div class="flex size-5 items-center justify-center rounded-full {getColumnColor(col)}">
+          <div class="flex size-5 items-center justify-center rounded-full {TRIPOD_COLORS[col - 1]}">
             <p class="text-neutral-200">{level || 1}</p>
           </div>
         {:else}
@@ -70,6 +62,12 @@
       {/each}
     </div>
   {/if}
+{/snippet}
+
+{#snippet tripod(col: number, index: number)}
+  <div class="flex size-5 items-center justify-center rounded-full {TRIPOD_COLORS[col - 1]}">
+    <p class="text-neutral-200">{index}</p>
+  </div>
 {/snippet}
 
 <div class="text-xs">
@@ -82,11 +80,19 @@
       {@render gem(skill.gemTier ?? 3, skill.gemCooldown, "CD")}
     {/if}
   </div>
-  {#if skill.tripodIndex}
+  <!-- logs before paradise update show tripod levels -->
+  {#if skill.tripodIndex && skill.tripodLevel}
     <div class="w-16">
       {@render tripodRow(1, skill.tripodIndex.first, skill.tripodLevel?.first)}
       {@render tripodRow(2, skill.tripodIndex.second, skill.tripodLevel?.second)}
       {@render tripodRow(3, skill.tripodIndex.third, skill.tripodLevel?.third)}
+    </div>
+    <!-- only show tripod index -->
+  {:else if skill.tripodIndex}
+    <div class="flex items-center gap-0.5 py-1">
+      {@render tripod(1, skill.tripodIndex.first)}
+      {@render tripod(2, skill.tripodIndex.second)}
+      {@render tripod(3, skill.tripodIndex.third)}
     </div>
   {/if}
 </div>

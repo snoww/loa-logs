@@ -464,7 +464,6 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
                             &entity,
                             pkt.skill_id,
                             None,
-                            None,
                             Utc::now().timestamp_millis(),
                         );
                     }
@@ -483,20 +482,11 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
                                 second: tripod_index.second,
                                 third: tripod_index.third,
                             });
-                    let tripod_level =
-                        pkt.skill_option_data
-                            .tripod_level
-                            .map(|tripod_level| TripodLevel {
-                                first: tripod_level.first,
-                                second: tripod_level.second,
-                                third: tripod_level.third,
-                            });
                     let timestamp = Utc::now().timestamp_millis();
                     let (skill_id, summon_source) = state.on_skill_start(
                         &entity,
                         pkt.skill_id,
                         tripod_index,
-                        tripod_level,
                         timestamp,
                     );
 

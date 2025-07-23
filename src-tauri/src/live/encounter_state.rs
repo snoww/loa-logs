@@ -337,7 +337,6 @@ impl EncounterState {
         source_entity: &Entity,
         skill_id: u32,
         tripod_index: Option<TripodIndex>,
-        tripod_level: Option<TripodLevel>,
         timestamp: i64,
     ) -> (u32, Option<Vec<u32>>) {
         // do not track skills if encounter not started
@@ -361,7 +360,6 @@ impl EncounterState {
                         name: skill_name.clone(),
                         icon: skill_icon.clone(),
                         tripod_index,
-                        tripod_level,
                         casts: 0,
                         ..Default::default()
                     },
@@ -385,7 +383,6 @@ impl EncounterState {
         if let Some(skill) = entity.skills.get_mut(&skill_id) {
             skill.casts += 1;
             skill.tripod_index = tripod_index;
-            skill.tripod_level = tripod_level;
         } else if let Some(skill) = entity
             .skills
             .values_mut()
@@ -395,7 +392,6 @@ impl EncounterState {
             skill.casts += 1;
             skill_id = skill.id;
             skill.tripod_index = tripod_index;
-            skill.tripod_level = tripod_level;
         } else {
             // no match for id or name
             entity.skills.insert(
@@ -405,7 +401,6 @@ impl EncounterState {
                     name: skill_name,
                     icon: skill_icon,
                     tripod_index,
-                    tripod_level,
                     casts: 1,
                     ..Default::default()
                 },
