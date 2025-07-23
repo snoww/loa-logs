@@ -6,6 +6,7 @@ use std::str::FromStr;
 use bitflags::bitflags;
 use hashbrown::{HashMap, HashSet};
 use lazy_static::lazy_static;
+use log::error;
 use serde::{Deserialize, Deserializer, Serialize};
 use serde_json::{Map, Value};
 use serde_with::serde_as;
@@ -421,6 +422,7 @@ pub struct SkillData {
     pub id: i32,
     pub name: Option<String>,
     #[serde(rename = "type", default)]
+    #[serde(deserialize_with = "int_or_string_as_string")]
     pub skill_type: String,
     pub desc: Option<String>,
     pub class_id: u32,
@@ -469,9 +471,16 @@ pub struct SkillBuffData {
     pub unique_group: u32,
     #[serde(rename(deserialize = "overlap"))]
     pub overlap_flag: i32,
-    pub passive_options: Vec<PassiveOption>,
+    pub per_level_data: HashMap<String, PerLevelData>,
     pub source_skills: Option<Vec<u32>>,
     pub set_name: Option<String>,
+}
+
+#[derive(Debug, Default, Deserialize, Clone)]
+#[serde(rename_all = "camelCase")]
+pub struct PerLevelData {
+    pub passive_options: Vec<PassiveOption>,
+    // pub status_effect_values: Vec<i32>
 }
 
 #[derive(Debug, Default, Deserialize, Clone)]
@@ -687,37 +696,61 @@ pub enum HitFlag {
 lazy_static! {
     pub static ref NPC_DATA: HashMap<u32, Npc> = {
         let json_str = include_str!("../../meter-data/Npc.json");
-        serde_json::from_str(json_str).unwrap()
+        serde_json::from_str(json_str).unwrap_or_else(|e| {
+            error!("Failed to parse NPC data: {}", e);
+            HashMap::new()
+        })
     };
     pub static ref SKILL_DATA: HashMap<u32, SkillData> = {
         let json_str = include_str!("../../meter-data/Skill.json");
-        serde_json::from_str(json_str).unwrap()
+        serde_json::from_str(json_str).unwrap_or_else(|e| {
+            error!("Failed to parse SkillData: {}", e);
+            HashMap::new()
+        })
     };
     pub static ref SKILL_EFFECT_DATA: HashMap<u32, SkillEffectData> = {
         let json_str = include_str!("../../meter-data/SkillEffect.json");
-        serde_json::from_str(json_str).unwrap()
+        serde_json::from_str(json_str).unwrap_or_else(|e| {
+            error!("Failed to parse SkillEffectData: {}", e);
+            HashMap::new()
+        })
     };
     pub static ref SKILL_BUFF_DATA: HashMap<u32, SkillBuffData> = {
         let json_str = include_str!("../../meter-data/SkillBuff.json");
-        serde_json::from_str(json_str).unwrap()
+        serde_json::from_str(json_str).unwrap_or_else(|e| {
+            error!("Failed to parse SkillBuffData: {}", e);
+            HashMap::new()
+        })
     };
     pub static ref COMBAT_EFFECT_DATA: HashMap<i32, CombatEffectData> = {
         let json_str = include_str!("../../meter-data/CombatEffect.json");
-        serde_json::from_str(json_str).unwrap()
+        serde_json::from_str(json_str).unwrap_or_else(|e| {
+            error!("Failed to parse CombatEffectData: {}", e);
+            HashMap::new()
+        })
     };
     pub static ref ENGRAVING_DATA: HashMap<u32, EngravingData> = {
         let json_str = include_str!("../../meter-data/Ability.json");
-        serde_json::from_str(json_str).unwrap()
+        serde_json::from_str(json_str).unwrap_or_else(|e| {
+            error!("Failed to parse EngravingData: {}", e);
+            HashMap::new()
+        })
     };
     pub static ref ESTHER_DATA: Vec<Esther> = {
         let json_str = include_str!("../../meter-data/Esther.json");
-        serde_json::from_str(json_str).unwrap()
+        serde_json::from_str(json_str).unwrap_or_else(|e| {
+            error!("Failed to parse EstherData: {}", e);
+            Vec::new()
+        })
     };
     pub static ref RAID_MAP: HashMap<String, String> = {
         let json_str = include_str!("../../meter-data/encounters.json");
         let encounters =
             serde_json::from_str::<HashMap<String, HashMap<String, Vec<String>>>>(json_str)
-                .unwrap();
+                .unwrap_or_else(|e| {
+                    error!("Failed to parse encounters.json: {}", e);
+                    HashMap::new()
+                });
         encounters
             .values()
             .flat_map(|raid| raid.iter())
