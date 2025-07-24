@@ -1153,17 +1153,11 @@ fn get_player_spec(player: &EncounterEntity, buffs: &HashMap<u32, StatusEffect>)
             }
         }
         "Paladin" => {
-            // contains one of light shock, sword of justice, god's decree, or holy explosion
-            if (player.skills.contains_key(&36050)
-                || player.skills.contains_key(&36080)
-                || player.skills.contains_key(&36150)
-                || player.skills.contains_key(&36100))
-                && player.skills.contains_key(&36200)
-                && player.skills.contains_key(&36170)
-            {
-                "Blessed Aura"
-            } else {
+            // if has execution of judgement, judgement blade
+            if player.skills.contains_key(&36250) || player.skills.contains_key(&36270) {
                 "Judgment"
+            } else {
+                "Blessed Aura"
             }
         }
         "Slayer" => {
@@ -1192,15 +1186,15 @@ fn get_player_spec(player: &EncounterEntity, buffs: &HashMap<u32, StatusEffect>)
             }
         }
         "Bard" => {
-            // contains one of guardian tune, rhapsody of light, or wind of music
-            if (player.skills.contains_key(&21250)
-                || player.skills.contains_key(&21260)
-                || player.skills.contains_key(&21070))
-                && player.skills.contains_key(&21160)
+            // if has tempest skill, or vivace
+            if (player.skills.contains_key(&21147)
+                && player.skills.contains_key(&21148)
+                && player.skills.contains_key(&21149))
+                || player.skills.contains_key(&21310)
             {
-                "Desperate Salvation"
-            } else {
                 "True Courage"
+            } else {
+                "Desperate Salvation"
             }
         }
         "Sorceress" => {
@@ -1326,18 +1320,11 @@ fn get_player_spec(player: &EncounterEntity, buffs: &HashMap<u32, StatusEffect>)
             }
         }
         "Artist" => {
-            // contains one of drawing orchids, starry night, or illusion door
-            // and doesn't contain cattle drive, dps skill
-            if (player.skills.contains_key(&31420)
-                || player.skills.contains_key(&31450)
-                || player.skills.contains_key(&31220))
-                && player.skills.contains_key(&31400)
-                && player.skills.contains_key(&31410)
-                && !player.skills.contains_key(&31940)
-            {
-                "Full Bloom"
-            } else {
+            // dps if has cattle drive or shattering strike
+            if player.skills.contains_key(&31940) || player.skills.contains_key(&31060) {
                 "Recurrence"
+            } else {
+                "Full Bloom"
             }
         }
         "Aeromancer" => {
