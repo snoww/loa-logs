@@ -1,11 +1,17 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.31.0 - July 23rd, 2025
+    v1.31.1 - July 23rd, 2025
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
   </div>
 </div>
+
+#### BUG FIXES AND IMPROVEMENTS
+
+- fix parties being incorrect sometimes
+
+## v1.31.0 - July 23rd, 2025
 
 #### NEW FEATURES
 
