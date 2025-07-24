@@ -1,11 +1,11 @@
 {
-  "version": "v1.31.1",
-  "notes": "### v1.31.1 - July 23rd, 2025\n\n#### BUG FIXES AND IMPROVEMENTS\n\n- fix parties being incorrect sometimes\n",
-  "pub_date": "",
+  "version": "v1.31.2",
+  "notes": "### v1.31.2 - July 24th, 2025\n\n#### BUG FIXES AND IMPROVEMENTS\n\n- fix berserker technique berserker classification\n- fix parties being incorrect sometimes\n",
+  "pub_date": "2025-07-24T08:34:35.993Z",
   "platforms": {
     "windows-x86_64": {
-      "url": "https://github.com/snoww/loa-logs/releases/download/v1.31.1/LOA.Logs_1.31.1_x64-setup.nsis.zip",
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlJUTzBUMXAyM1BjVzlTV3VobFJ5Z2YyL3VmNERxM2dBY1VJajhreFJkZC9JREJ4VVFaMVo4Y2NIUnhEQ1JGYmF2MkxhVnlIQ1Z0R0Q0cUQ1b0ZRaWc0PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzUzMzI2OTkwCWZpbGU6TE9BIExvZ3NfMS4zMS4xX3g2NC1zZXR1cC5uc2lzLnppcApRdnRLZkkwZ0ZzMnA2RUV1Nm9SYktVeThmQnh1M1ZvM0F4RHZmdjVWTkpMUzkvUFZkZTIrRHkzQjNoOUpFam5yQms0Qkt6elpJY2hMUmFmQUFUb0VCQT09Cg=="
+      "url": "https://github.com/snoww/loa-logs/releases/download/v1.31.2/LOA.Logs_1.31.2_x64-setup.nsis.zip",
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlN6cmFUUmxXb2NKZWcvRjEyZ25jWVFSbjVMK2ZScVJiSk11ZVgvaVJ3N0ZkNlFDQm4rTlhydXowNERlSWlmMzJUbVZYSnBBcmZDTUh6dUwzSTJZSXdvPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzUzMzQ2MjE3CWZpbGU6TE9BIExvZ3NfMS4zMS4yX3g2NC1zZXR1cC5uc2lzLnppcApibmtPMnBFYjFjRnM1d3MvR2QzMytkWTlucGtDUjdJczV2Wk5vZ0ZHaFBLY2tmYzdKNUlibWtNSDZhN0YrdjVUQXBsMThCempyMmF3d2JSMzNETElBdz09Cg=="
     }
   }
 }
