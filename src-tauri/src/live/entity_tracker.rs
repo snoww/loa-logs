@@ -13,7 +13,7 @@ use chrono::{DateTime, Utc};
 use hashbrown::HashMap;
 use log::{info, warn};
 use meter_core::packets::definitions::*;
-use meter_core::packets::structures::{NpcStruct, StatPair, StatusEffectData};
+use meter_core::packets::structures::{NpcStruct, PCStruct, StatPair, StatusEffectData};
 use std::cell::RefCell;
 use std::rc::Rc;
 
@@ -168,16 +168,15 @@ impl EntityTracker {
     //         });
     // }
 
-    pub fn new_pc(&mut self, pkt: PKTNewPC) -> Entity {
+    pub fn new_pc(&mut self, pc_struct: PCStruct) -> Entity {
         let entity = Entity {
-            id: pkt.pc_struct.player_id,
+            id: pc_struct.player_id,
             entity_type: PLAYER,
-            name: pkt.pc_struct.name.clone(),
-            class_id: pkt.pc_struct.class_id as u32,
-            gear_level: truncate_gear_level(pkt.pc_struct.max_item_level), // todo?
-            character_id: pkt.pc_struct.character_id,
-            stats: pkt
-                .pc_struct
+            name: pc_struct.name.clone(),
+            class_id: pc_struct.class_id as u32,
+            gear_level: truncate_gear_level(pc_struct.max_item_level), // todo?
+            character_id: pc_struct.character_id,
+            stats: pc_struct
                 .stat_pairs
                 .iter()
                 .map(|sp| (sp.stat_type, sp.value))
@@ -189,7 +188,7 @@ impl EntityTracker {
         let old_entity_id = self
             .id_tracker
             .borrow()
-            .get_entity_id(pkt.pc_struct.character_id);
+            .get_entity_id(pc_struct.character_id);
         if let Some(old_entity_id) = old_entity_id {
             self.party_tracker
                 .borrow_mut()
@@ -197,10 +196,10 @@ impl EntityTracker {
         }
         self.id_tracker
             .borrow_mut()
-            .add_mapping(pkt.pc_struct.character_id, pkt.pc_struct.player_id);
+            .add_mapping(pc_struct.character_id, pc_struct.player_id);
         self.party_tracker
             .borrow_mut()
-            .complete_entry(pkt.pc_struct.character_id, pkt.pc_struct.player_id);
+            .complete_entry(pc_struct.character_id, pc_struct.player_id);
         // println!("party status: {:?}", self.party_tracker.borrow().character_id_to_party_id);
         let local_character_id = if self.local_character_id != 0 {
             self.local_character_id
@@ -211,7 +210,7 @@ impl EntityTracker {
         };
         self.status_tracker
             .borrow_mut()
-            .new_pc(pkt, local_character_id);
+            .new_pc(pc_struct, local_character_id);
         entity
     }
 
@@ -432,19 +431,15 @@ impl EntityTracker {
     }
 
     pub fn get_source_entity(&mut self, id: u64) -> Entity {
-        let id = if let Some(entity) = self.entities.get(&id) {
+        let id = self.entities.get(&id).map_or(id, |entity| {
             if entity.entity_type == PROJECTILE || entity.entity_type == SUMMON {
                 entity.owner_id
             } else {
                 id
             }
-        } else {
-            id
-        };
+        });
 
-        if let Some(entity) = self.entities.get(&id) {
-            entity.clone()
-        } else {
+        self.entities.get(&id).cloned().unwrap_or_else(|| {
             let entity = Entity {
                 id,
                 entity_type: UNKNOWN,
@@ -453,7 +448,7 @@ impl EntityTracker {
             };
             self.entities.insert(entity.id, entity.clone());
             entity
-        }
+        })
     }
 
     pub fn id_is_player(&mut self, id: u64) -> bool {

@@ -324,7 +324,7 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
             Pkt::NewPC => {
                 if let Some(pkt) = parse_pkt(&data, PKTNewPC::new, "PKTNewPC") {
                     let (hp, max_hp) = get_current_and_max_hp(&pkt.pc_struct.stat_pairs);
-                    let entity = entity_tracker.new_pc(pkt);
+                    let entity = entity_tracker.new_pc(pkt.pc_struct);
                     debug_print(format_args!(
                         "new PC: {}, {}, {}, eid: {}, cid: {}",
                         entity.name,
@@ -334,6 +334,25 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
                         entity.character_id
                     ));
                     state.on_new_pc(entity, hp, max_hp);
+                }
+            }
+            Pkt::NewVehicle => {
+                if let Some(pkt) = parse_pkt(&data, PKTNewVehicle::new, "PKTNewVehicle") {
+                    if let Some(pc_struct) =
+                        pkt.vehicle_struct.sub_p_k_t_new_vehicle_2_2_397.p_c_struct
+                    {
+                        let (hp, max_hp) = get_current_and_max_hp(&pc_struct.stat_pairs);
+                        let entity = entity_tracker.new_pc(pc_struct);
+                        debug_print(format_args!(
+                            "new PC from vehicle: {}, {}, {}, eid: {}, cid: {}",
+                            entity.name,
+                            get_class_from_id(&entity.class_id),
+                            entity.gear_level,
+                            entity.id,
+                            entity.character_id
+                        ));
+                        state.on_new_pc(entity, hp, max_hp);
+                    }
                 }
             }
             Pkt::NewNpc => {

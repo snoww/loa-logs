@@ -9,7 +9,7 @@ use chrono::{DateTime, Duration, Utc};
 use hashbrown::HashMap;
 use log::info;
 use meter_core::packets::definitions::PKTNewPC;
-use meter_core::packets::structures::StatusEffectData;
+use meter_core::packets::structures::{PCStruct, StatusEffectData};
 use std::cell::RefCell;
 use std::rc::Rc;
 
@@ -33,21 +33,21 @@ impl StatusTracker {
         }
     }
 
-    pub fn new_pc(&mut self, pkt: PKTNewPC, local_character_id: u64) {
+    pub fn new_pc(&mut self, pc_struct: PCStruct, local_character_id: u64) {
         let use_party_status_effects =
-            self.should_use_party_status_effect(pkt.pc_struct.character_id, local_character_id);
+            self.should_use_party_status_effect(pc_struct.character_id, local_character_id);
         if use_party_status_effects {
-            self.remove_party_object(pkt.pc_struct.character_id);
+            self.remove_party_object(pc_struct.character_id);
         } else {
-            self.remove_local_object(pkt.pc_struct.character_id);
+            self.remove_local_object(pc_struct.character_id);
         }
         let (target_id, target_type) = if use_party_status_effects {
-            (pkt.pc_struct.character_id, StatusEffectTargetType::Party)
+            (pc_struct.character_id, StatusEffectTargetType::Party)
         } else {
-            (pkt.pc_struct.player_id, StatusEffectTargetType::Local)
+            (pc_struct.player_id, StatusEffectTargetType::Local)
         };
         let timestamp = Utc::now();
-        for sed in pkt.pc_struct.status_effect_datas.into_iter() {
+        for sed in pc_struct.status_effect_datas.into_iter() {
             let source_id = sed.source_id;
             let status_effect =
                 build_status_effect(sed, target_id, source_id, target_type, timestamp, None);
