@@ -1125,7 +1125,12 @@ fn get_player_spec(player: &EncounterEntity, buffs: &HashMap<u32, StatusEffect>)
 
     match player.class.as_str() {
         "Berserker" => {
-            if player.skills.contains_key(&16140) {
+            // if has bloody rush
+            if player.skills.contains_key(&16140)
+                || player.skills.contains_key(&16145)
+                || player.skills.contains_key(&16146)
+                || player.skills.contains_key(&16147)
+            {
                 "Berserker Technique"
             } else {
                 "Mayhem"
