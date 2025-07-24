@@ -483,12 +483,8 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
                                 third: tripod_index.third,
                             });
                     let timestamp = Utc::now().timestamp_millis();
-                    let (skill_id, summon_source) = state.on_skill_start(
-                        &entity,
-                        pkt.skill_id,
-                        tripod_index,
-                        timestamp,
-                    );
+                    let (skill_id, summon_source) =
+                        state.on_skill_start(&entity, pkt.skill_id, tripod_index, timestamp);
 
                     if entity.entity_type == EntityType::PLAYER && skill_id > 0 {
                         state
@@ -1118,6 +1114,17 @@ fn update_party(
             entity_tracker
                 .entities
                 .get(entity_id)
+                .iter()
+                .filter(|entity| {
+                    entity.character_id > 0
+                        && entity.class_id > 0
+                        && entity
+                            .name
+                            .chars()
+                            .next()
+                            .unwrap_or_default()
+                            .is_uppercase()
+                })
                 .map(|entity| entity.name.clone()),
         );
     }
