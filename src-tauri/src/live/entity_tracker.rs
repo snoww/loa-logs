@@ -482,8 +482,8 @@ impl EntityTracker {
                 entity.entity_type = PLAYER;
                 entity.class_id = class_id;
             }
+            self.entities.insert(entity.id, entity.clone());
         }
-        self.entities.insert(entity.id, entity.clone());
     }
 
     pub fn build_and_register_status_effect(

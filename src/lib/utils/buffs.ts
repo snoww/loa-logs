@@ -296,7 +296,10 @@ export function addBardBubbles(key: string, buff: { bonus?: number }, syn: Statu
 const supportClasses = [classNameToClassId["Paladin"], classNameToClassId["Bard"], classNameToClassId["Artist"]];
 
 export function isSupportBuff(statusEffect: StatusEffect) {
-  if ([2000260, 2000360].includes(statusEffect.uniqueGroup)) {
+  if (
+    supportSkills.evolutionGrp.includes(statusEffect.uniqueGroup) ||
+    supportSkills.enlightenmentGrp.includes(statusEffect.uniqueGroup)
+  ) {
     return true;
   }
 
@@ -357,6 +360,9 @@ export const supportSkills = {
   evolutionGrp: [
     2000260, // Combat Blessing
     2000360 // Dance of Passion
+  ],
+  enlightenmentGrp: [
+    214020 // Bard major chord
   ]
 };
 
@@ -368,7 +374,12 @@ export function makeSupportBuffKey(statusEffect: StatusEffect) {
     key += "_1";
   } else if (supportSkills.atkPwrGrp.includes(statusEffect.uniqueGroup)) {
     key += "_0";
-  } else if (supportSkills.identity.includes(skillId) || supportSkills.identityGrp.includes(statusEffect.uniqueGroup)) {
+  } else if (
+    supportSkills.identity.includes(skillId) ||
+    supportSkills.identityGrp.includes(statusEffect.uniqueGroup) ||
+    // contains new identity skills after paradise update
+    supportSkills.enlightenmentGrp.includes(statusEffect.uniqueGroup)
+  ) {
     key += "_2";
   } else if (supportSkills.haTechnique.includes(statusEffect.uniqueGroup)) {
     key += "_3";
