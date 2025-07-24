@@ -1,11 +1,11 @@
 {
-  "version": "v1.30.2",
-  "notes": "### v1.30.2 - July 6th, 2025\n\n#### BUG FIXES AND IMPROVEMENTS\n- fix meter not saving when clearing valtan gate 2 and kakul saydon gate 3\n",
-  "pub_date": "2025-07-07T01:15:22.758Z",
+  "version": "v1.31.0",
+  "notes": "### v1.31.0 - July 23rd, 2025\n\n#### NEW FEATURES\n\n- update meter for july paradise update (thanks poont for packets)\n- added back details tab (enable in settings > general > show details)\n  - shows your character's raw identity data\n    ![details](https://i.imgur.com/ivGiQ4R.png)\n- added combat power in tooltips\n\n#### BUG FIXES AND IMPROVEMENTS\n\n- improved skill grouping for some classes\n- updated tripods display\n- fixed boss hp chart for mordum g3 in certain cases\n- show upload error message on upload failure\n",
+  "pub_date": "2025-07-24T00:37:59.873Z",
   "platforms": {
     "windows-x86_64": {
-      "url": "https://github.com/snoww/loa-logs/releases/download/v1.30.2/LOA.Logs_1.30.2_x64-setup.nsis.zip",
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmIrUzRNbnVoN3IyZmNualFZTTRSdE12ajRoQkVBbXVNWFBmOHI5bGZmUmt0MTNsYUNtSm80aXloSXVaYTlpNDNtbWRMZ1E4MElFUkxKd3ArWElmVndVPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzUxODUxMDg5CWZpbGU6TE9BIExvZ3NfMS4zMC4yX3g2NC1zZXR1cC5uc2lzLnppcApvV0YxMUgzcDNUck9xZkRpOXN3dmlDN2RvdDlSc0h2MUZuZVdHRDJZUDVBZDdzODZoTVlXYkRzaDdNVUd1T0w4eXkyNWxodzJoSmkybzcrUXgreitEdz09Cg==\n"
+      "url": "https://github.com/snoww/loa-logs/releases/download/v1.31.0/LOA.Logs_1.31.0_x64-setup.nsis.zip",
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlpQWSt3WDh1TndDbDJHeWEzbi9zNkR4SFhkd3VCMjFtaGthUk5EUjNDbG1ScEhVS2ZIcCs2QXFhUVpXSUp3OG1FRndGNlhkUkJUZ3R3eU5QakN0WmdFPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzUzMzE3Njg2CWZpbGU6TE9BIExvZ3NfMS4zMS4wX3g2NC1zZXR1cC5uc2lzLnppcApWSmNPZG1CaVNxbXNQeWh0RVYwNmdybGdYVkc5UExwckFvUXBKV3Bpc1BiK2k5Wkpsd3pVRmd2LzF6YXZwZXYycCtVVE0xdldXK2pGQnVCTGRNQThBdz09Cg=="
     }
   }
 }
