@@ -1,6 +1,6 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.31.2 - July 24th, 2025
+    v1.31.3 - July 24th, 2025
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
@@ -9,8 +9,10 @@
 
 #### BUG FIXES AND IMPROVEMENTS
 
-- fix berserker technique berserker classification
-- fix parties being incorrect sometimes
+- updated classification of dps spec of supports
+- fixed player not being recognized when loading in on a mount
+- updated berserker technique berserker classification
+- fixed parties being incorrect sometimes
 
 ## v1.31.0 - July 23rd, 2025
 

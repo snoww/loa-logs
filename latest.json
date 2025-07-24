@@ -1,11 +1,11 @@
 {
-  "version": "v1.31.2",
-  "notes": "### v1.31.2 - July 24th, 2025\n\n#### BUG FIXES AND IMPROVEMENTS\n\n- fix berserker technique berserker classification\n- fix parties being incorrect sometimes\n",
-  "pub_date": "2025-07-24T08:34:35.993Z",
+  "version": "v1.31.3",
+  "notes": "### v1.31.3 - July 24th, 2025\n\n#### BUG FIXES AND IMPROVEMENTS\n\n- updated classification of dps spec of supports\n- fixed player not being recognized when loading in on a mount\n- updated berserker technique berserker classification\n- fixed parties being incorrect sometimes",
+  "pub_date": "2025-07-24T20:38:42.702Z",
   "platforms": {
     "windows-x86_64": {
-      "url": "https://github.com/snoww/loa-logs/releases/download/v1.31.2/LOA.Logs_1.31.2_x64-setup.nsis.zip",
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlN6cmFUUmxXb2NKZWcvRjEyZ25jWVFSbjVMK2ZScVJiSk11ZVgvaVJ3N0ZkNlFDQm4rTlhydXowNERlSWlmMzJUbVZYSnBBcmZDTUh6dUwzSTJZSXdvPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzUzMzQ2MjE3CWZpbGU6TE9BIExvZ3NfMS4zMS4yX3g2NC1zZXR1cC5uc2lzLnppcApibmtPMnBFYjFjRnM1d3MvR2QzMytkWTlucGtDUjdJczV2Wk5vZ0ZHaFBLY2tmYzdKNUlibWtNSDZhN0YrdjVUQXBsMThCempyMmF3d2JSMzNETElBdz09Cg=="
+      "url": "https://github.com/snoww/loa-logs/releases/download/v1.31.3/LOA.Logs_1.31.3_x64-setup.nsis.zip",
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmJ1bU9iSHFZa1ZMbEE2SEt0UzNzRlorR2xkMWh1VjEraTY2aWNONWlHSU9UekVnY0Y0KzBNUjNpeVFjcnV0U0hsVlBEUmdFaDl2SkZGTUdWTDRxL3dvPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzUzNDAxNDQ4CWZpbGU6TE9BIExvZ3NfMS4zMS4zX3g2NC1zZXR1cC5uc2lzLnppcAo2dStDWkpZSzdvUUR1K0doVjg3alJ6VVRCOXYzRDVLV3ZXL3dTZTllY2F1ei9mUTB5aE02Q3Fld1JPL1NjdzNtd09sNEpoN1p6QXJtbjdzTFgvRjBEUT09Cg=="
     }
   }
 }
