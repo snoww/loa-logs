@@ -167,6 +167,8 @@ export interface Skill {
   rdpsDamageReceivedSupport: number;
   rdpsDamageGiven: number;
   skillCastLog: Array<SkillCast>;
+  isHyperAwakening?: boolean;
+  special?: boolean; // if special, this skill is not modifiable by buffs or crits
 }
 
 export interface SkillCast {

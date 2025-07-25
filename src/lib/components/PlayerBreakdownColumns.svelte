@@ -5,7 +5,7 @@
   import { settings } from "$lib/stores.svelte.js";
   import { hyperAwakeningIds } from "$lib/utils/buffs";
   import { abbreviateNumberSplit, customRound } from "$lib/utils";
-  import { damageValue, percentValue } from "./Snippets.svelte";
+  import { damageValue, percentValue, skillTooltip } from "./Snippets.svelte";
 
   export const playerBreakdownColumns: LogColumn<EntityState, SkillState>[] = [
     // Damage
@@ -294,11 +294,15 @@
 {/snippet}
 
 {#snippet critPct(state: SkillState)}
-  {@render percentValue(state.critPercentage)}
+  {#if state.skill.special || state.skill.isHyperAwakening}
+    -
+  {:else}
+    {@render percentValue(state.critPercentage)}
+  {/if}
 {/snippet}
 
 {#snippet adjCritPct(state: SkillState)}
-  {#if state.adjustedCrit}
+  {#if state.adjustedCrit && !state.skill.special && !state.skill.isHyperAwakening}
     {@render percentValue(state.adjustedCrit)}
   {:else}
     -
@@ -306,15 +310,27 @@
 {/snippet}
 
 {#snippet critDmgPct(state: SkillState)}
-  {@render percentValue(state.critDmgPercentage)}
+  {#if state.skill.special || state.skill.isHyperAwakening}
+    -
+  {:else}
+    {@render percentValue(state.critDmgPercentage)}
+  {/if}
 {/snippet}
 
 {#snippet faPct(state: SkillState)}
-  {@render percentValue(state.faPercentage)}
+  {#if state.skill.special || state.skill.isHyperAwakening}
+    -
+  {:else}
+    {@render percentValue(state.faPercentage)}
+  {/if}
 {/snippet}
 
 {#snippet fadPct(state: SkillState)}
-  {@render percentValue(state.fadPercentage)}
+  {#if state.skill.special || state.skill.isHyperAwakening}
+    -
+  {:else}
+    {@render percentValue(state.fadPercentage)}
+  {/if}
 {/snippet}
 
 {#snippet fadTooltip(state: SkillState)}
@@ -325,11 +341,19 @@
 {/snippet}
 
 {#snippet baPct(state: SkillState)}
-  {@render percentValue(state.baPercentage)}
+  {#if state.skill.special || state.skill.isHyperAwakening}
+    -
+  {:else}
+    {@render percentValue(state.baPercentage)}
+  {/if}
 {/snippet}
 
 {#snippet badPct(state: SkillState)}
-  {@render percentValue(state.badPercentage)}
+  {#if state.skill.special || state.skill.isHyperAwakening}
+    -
+  {:else}
+    {@render percentValue(state.badPercentage)}
+  {/if}
 {/snippet}
 
 {#snippet badTooltip(state: SkillState)}
@@ -340,7 +364,7 @@
 {/snippet}
 
 {#snippet buffPct(state: SkillState)}
-  {#if hyperAwakeningIds.has(state.skill.id)}
+  {#if state.skill.special || state.skill.isHyperAwakening || hyperAwakeningIds.has(state.skill.id)}
     -
   {:else if state.skill.totalDamage > 0}
     {@render percentValue(customRound((state.skill.buffedBySupport / state.skill.totalDamage) * 100))}
@@ -350,7 +374,7 @@
 {/snippet}
 
 {#snippet brandPct(state: SkillState)}
-  {#if hyperAwakeningIds.has(state.skill.id)}
+  {#if state.skill.special || state.skill.isHyperAwakening || hyperAwakeningIds.has(state.skill.id)}
     -
   {:else if state.skill.totalDamage > 0}
     {@render percentValue(customRound((state.skill.debuffedBySupport / state.skill.totalDamage) * 100))}
@@ -360,7 +384,7 @@
 {/snippet}
 
 {#snippet idenPct(state: SkillState)}
-  {#if hyperAwakeningIds.has(state.skill.id)}
+  {#if state.skill.special || state.skill.isHyperAwakening || hyperAwakeningIds.has(state.skill.id)}
     -
   {:else if state.skill.totalDamage > 0}
     {@render percentValue(customRound((state.skill.buffedByIdentity / state.skill.totalDamage) * 100))}
@@ -370,7 +394,9 @@
 {/snippet}
 
 {#snippet tSkillPct(state: SkillState)}
-  {#if state.skill.totalDamage > 0}
+  {#if state.skill.special}
+    -
+  {:else if state.skill.totalDamage > 0}
     {@render percentValue(customRound(((state.skill.buffedByHat ?? 0) / state.skill.totalDamage) * 100))}
   {:else}
     {@render percentValue(0)}
@@ -404,7 +430,11 @@
 {/snippet}
 
 {#snippet maxCast(state: SkillState)}
-  {@render damageValue(abbreviateNumberSplit(state.skill.maxDamageCast))}
+  {#if state.skill.maxDamageCast > 0}
+    {@render damageValue(abbreviateNumberSplit(state.skill.maxDamageCast))}
+  {:else}
+    -
+  {/if}
 {/snippet}
 
 {#snippet maxCastTooltip(state: SkillState)}

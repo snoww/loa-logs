@@ -2,14 +2,13 @@
   import type { EntityState } from "$lib/entity.svelte.js";
   import { settings } from "$lib/stores.svelte.js";
   import type { BuffDetails, Skill, StatusEffect } from "$lib/types";
+  import { getSkillIcon, rgbLinearShadeAdjust } from "$lib/utils";
   import { getSynergyPercentageDetails, hyperAwakeningIds } from "$lib/utils/buffs";
   import { cubicOut } from "svelte/easing";
   import { Tween } from "svelte/motion";
   import QuickTooltip from "./QuickTooltip.svelte";
-  import BuffDetailTooltip from "./tooltips/BuffDetailTooltip.svelte";
-  import SkillTooltip from "./tooltips/SkillTooltip.svelte";
-  import { getSkillIcon, rgbLinearShadeAdjust } from "$lib/utils";
   import { skillTooltip } from "./Snippets.svelte";
+  import BuffDetailTooltip from "./tooltips/BuffDetailTooltip.svelte";
 
   interface Props {
     skill: Skill;
@@ -22,7 +21,7 @@
   let { skill, entityState, groupedSynergies, width, index }: Props = $props();
 
   let synergyPercentageDetails: Array<BuffDetails> = $derived(getSynergyPercentageDetails(groupedSynergies, skill));
-  let isHyperAwakening = hyperAwakeningIds.has(skill.id);
+  let isHyperAwakening = skill.isHyperAwakening || hyperAwakeningIds.has(skill.id);
 
   const tweenedValue = new Tween(entityState.encounter.live ? 0 : width, {
     duration: 400,
@@ -51,7 +50,7 @@
       <td class="px-1 text-center">
         {#if synergy.percentage}
           <BuffDetailTooltip buffDetails={synergy} />
-        {:else if isHyperAwakening}
+        {:else if skill.special || isHyperAwakening}
           -
         {:else}
           0<span class="text-xxs text-neutral-300">%</span>

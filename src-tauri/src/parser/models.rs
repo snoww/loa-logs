@@ -78,7 +78,9 @@ pub struct Encounter {
     pub favorite: bool,
     pub cleared: bool,
     pub boss_only_damage: bool,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub sync: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub region: Option<String>,
 }
 
@@ -120,11 +122,17 @@ pub struct EncounterEntity {
     pub skills: HashMap<u32, Skill>,
     pub damage_stats: DamageStats,
     pub skill_stats: SkillStats,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub engraving_data: Option<Vec<String>>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub ark_passive_active: Option<bool>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub ark_passive_data: Option<ArkPassiveData>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub spec: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub loadout_hash: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub combat_power: Option<f32>,
 }
 
@@ -146,6 +154,7 @@ pub struct Skill {
     pub casts: i64,
     pub hits: i64,
     pub crits: i64,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub adjusted_crit: Option<f64>,
     pub crit_damage: i64,
     pub back_attacks: i64,
@@ -154,16 +163,30 @@ pub struct Skill {
     pub front_attack_damage: i64,
     pub dps: i64,
     pub cast_log: Vec<i32>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub tripod_index: Option<TripodIndex>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub tripod_level: Option<TripodLevel>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub gem_cooldown: Option<u8>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub gem_tier: Option<u8>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub gem_damage: Option<u8>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub gem_tier_dmg: Option<u8>,
     pub rdps_damage_received: i64,
     pub rdps_damage_received_support: i64,
     pub rdps_damage_given: i64,
     pub skill_cast_log: Vec<SkillCast>,
+
+    #[serde(default)]
+    pub is_hyper_awakening: bool,
+    // for skills that cannot crit or be buffed
+    // like hyper awakening, paradise orb, transcendence, etc.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub special: Option<bool>,
+
     #[serde(skip)]
     pub last_timestamp: i64,
 }
@@ -449,6 +472,7 @@ pub struct SkillEffectData {
     pub item_desc: Option<String>,
     pub item_type: Option<String>,
     pub icon: Option<String>,
+    pub values: Vec<i32>,
 }
 
 #[derive(Debug, Default, Deserialize, Clone)]

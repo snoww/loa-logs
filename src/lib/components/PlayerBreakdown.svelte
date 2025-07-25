@@ -114,28 +114,28 @@
       {/if}
       {#if entityState.anySupportBuff && enc.curSettings.breakdown.percentBuffBySup}
         <td class="px-1 text-center">
-          {customRound((entity.damageStats.buffedBySupport / entityState.damageDealtWithoutHa) * 100)}<span
+          {customRound((entity.damageStats.buffedBySupport / entityState.damageDealtWithoutSpecialOrHa) * 100)}<span
             class="text-xxs text-gray-300">%</span
           >
         </td>
       {/if}
       {#if entityState.anySupportBrand && enc.curSettings.breakdown.percentBrand}
         <td class="px-1 text-center">
-          {customRound((entity.damageStats.debuffedBySupport / entityState.damageDealtWithoutHa) * 100)}<span
+          {customRound((entity.damageStats.debuffedBySupport / entityState.damageDealtWithoutSpecialOrHa) * 100)}<span
             class="text-xxs text-gray-300">%</span
           >
         </td>
       {/if}
       {#if entityState.anySupportIdentity && enc.curSettings.breakdown.percentIdentityBySup}
         <td class="px-1 text-center">
-          {customRound((entity.damageStats.buffedByIdentity / entityState.damageDealtWithoutHa) * 100)}<span
+          {customRound((entity.damageStats.buffedByIdentity / entityState.damageDealtWithoutSpecialOrHa) * 100)}<span
             class="text-xxs text-gray-300">%</span
           >
         </td>
       {/if}
       {#if entityState.anySupportHat && enc.curSettings.breakdown.percentHatBySup}
         <td class="px-1 text-center">
-          {customRound(((entity.damageStats.buffedByHat ?? 0) / entity.damageStats.damageDealt) * 100)}<span
+          {customRound(((entity.damageStats.buffedByHat ?? 0) / entityState.damageDealtWithoutSpecial) * 100)}<span
             class="text-xxs text-gray-300">%</span
           >
         </td>

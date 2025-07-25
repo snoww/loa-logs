@@ -27,8 +27,8 @@
       headerText: "Deaths",
       headerTooltip: "Death Count",
       value: deaths,
-      valueTooltip: null
-      ,width: "w-14"
+      valueTooltip: null,
+      width: "w-14"
     },
 
     // Incapacitation time
@@ -52,8 +52,8 @@
       headerText: "DMG",
       headerTooltip: "Damage Dealt",
       value: damage,
-      valueTooltip: damageTooltip
-      ,width: "w-14"
+      valueTooltip: damageTooltip,
+      width: "w-14"
     },
 
     // Damage per second
@@ -65,8 +65,8 @@
       headerText: "DPS",
       headerTooltip: "Damage per second",
       value: dps,
-      valueTooltip: dpsTooltip
-      ,width: "w-14"
+      valueTooltip: dpsTooltip,
+      width: "w-14"
     },
 
     // Damage percentage
@@ -290,19 +290,27 @@
 {/snippet}
 
 {#snippet buffPct(state: EntityState)}
-  {@render percentValue(customRound((state.entity.damageStats.buffedBySupport / state.damageDealtWithoutHa) * 100))}
+  {@render percentValue(
+    customRound((state.entity.damageStats.buffedBySupport / state.damageDealtWithoutSpecialOrHa) * 100)
+  )}
 {/snippet}
 
 {#snippet brandPct(state: EntityState)}
-  {@render percentValue(customRound((state.entity.damageStats.debuffedBySupport / state.damageDealtWithoutHa) * 100))}
+  {@render percentValue(
+    customRound((state.entity.damageStats.debuffedBySupport / state.damageDealtWithoutSpecialOrHa) * 100)
+  )}
 {/snippet}
 
 {#snippet identityPct(state: EntityState)}
-  {@render percentValue(customRound((state.entity.damageStats.buffedByIdentity / state.damageDealtWithoutHa) * 100))}
+  {@render percentValue(
+    customRound((state.entity.damageStats.buffedByIdentity / state.damageDealtWithoutSpecialOrHa) * 100)
+  )}
 {/snippet}
 
 {#snippet hatPct(state: EntityState)}
-  {@render percentValue(customRound(((state.entity.damageStats.buffedByHat ?? 0) / state.damageDealt) * 100))}
+  {@render percentValue(
+    customRound(((state.entity.damageStats.buffedByHat ?? 0) / state.damageDealtWithoutSpecial) * 100)
+  )}
 {/snippet}
 
 {#snippet counters(state: EntityState)}

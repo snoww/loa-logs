@@ -147,13 +147,16 @@ export function filterStatusEffects(
 
 export function getSynergyPercentageDetails(groupedSynergies: Map<string, Map<number, StatusEffect>>, skill: Skill) {
   const synergyPercentageDetails: BuffDetails[] = [];
-  const isHyperAwakening = hyperAwakeningIds.has(skill.id);
+  const isHyperAwakening = skill.isHyperAwakening || hyperAwakeningIds.has(skill.id);
   groupedSynergies.forEach((synergies, key) => {
     let synergyDamage = 0;
     const buff = new BuffDetails();
     buff.id = key;
 
     synergies.forEach((syn, id) => {
+      if (skill.special) {
+        return;
+      }
       if (isHyperAwakening) {
         if (supportSkills.haTechnique.includes(id)) {
           const b = new Buff(
@@ -220,7 +223,11 @@ export function getSynergyPercentageDetailsSum(
       addBardBubbles(key, buff, syn);
       let totalBuffed = 0;
       for (const skill of skills) {
-        if (hyperAwakeningIds.has(skill.id) && !isHat) {
+        // skill effects that cannot be modified by buffs
+        if (skill.special) {
+          continue;
+        }
+        if ((skill.isHyperAwakening || hyperAwakeningIds.has(skill.id)) && !isHat) {
           continue;
         }
         if (skill.buffedBy[id]) {

@@ -338,21 +338,36 @@ pub fn get_status_effect_buff_type_flags(buff: &SkillBuffData) -> u32 {
     buff_type.bits()
 }
 
+pub type SkillDetails = (
+    String,           // name
+    String,           // icon
+    Option<Vec<u32>>, // summon source skills
+    bool,             // if skill is special, i.e. cannot crit or be buffed
+    bool,             // is hyper awakening
+);
+
 pub fn get_skill_name_and_icon(
     skill_id: u32,
     skill_effect_id: u32,
     skill_tracker: &SkillTracker,
     entity_id: u64,
-) -> (String, String, Option<Vec<u32>>) {
+) -> SkillDetails {
     if (skill_id == 0) && (skill_effect_id == 0) {
-        ("Bleed".to_string(), "buff_168.png".to_string(), None)
+        ("Bleed".to_string(), "buff_168.png".to_string(), None, false, false)
     } else if (skill_effect_id != 0) && (skill_id == 0) {
         return if let Some(effect) = SKILL_EFFECT_DATA.get(&skill_effect_id) {
+            // if ValueJ is greater than 1,
+            // 1 = esther, 2 = fixed, 3 = not used, 4 = orb power
+            // these effects are not affected by crits or buffs
+            let special = effect.values[9] > 0;
+
             if let Some(item_name) = effect.item_name.as_ref() {
                 return (
                     item_name.clone(),
                     effect.icon.as_ref().cloned().unwrap_or_default(),
                     None,
+                    special,
+                    false,
                 );
             }
             if let Some(source_skill) = effect.source_skills.as_ref() {
@@ -361,6 +376,8 @@ pub fn get_skill_name_and_icon(
                         skill.name.clone().unwrap_or(skill.id.to_string()),
                         skill.icon.clone().unwrap_or_default(),
                         None,
+                        special,
+                        skill.is_hyper_awakening,
                     );
                 }
             } else if let Some(skill) = SKILL_DATA.get(&(skill_effect_id / 10)) {
@@ -368,15 +385,24 @@ pub fn get_skill_name_and_icon(
                     skill.name.clone().unwrap_or(skill.id.to_string()),
                     skill.icon.clone().unwrap_or_default(),
                     None,
+                    special,
+                    skill.is_hyper_awakening,
                 );
             }
+
             if effect.comment.is_empty() {
-                (effect.id.to_string(), "".to_string(), None)
+                (effect.id.to_string(), "".to_string(), None, special, false)
             } else {
-                (effect.comment.clone(), "".to_string(), None)
+                (
+                    effect.comment.clone(),
+                    "".to_string(),
+                    None,
+                    special,
+                    false,
+                )
             }
         } else {
-            (skill_id.to_string(), "".to_string(), None)
+            (skill_id.to_string(), "".to_string(), None, false, false)
         };
     } else {
         return if let Some(skill) = SKILL_DATA.get(&skill_id) {
@@ -392,6 +418,8 @@ pub fn get_skill_name_and_icon(
                                 skill.name.clone().unwrap_or(skill.id.to_string()) + " (Summon)",
                                 skill.icon.clone().unwrap_or_default(),
                                 Some(summon_source_skill.clone()),
+                                false,
+                                skill.is_hyper_awakening,
                             );
                         }
                     }
@@ -402,9 +430,11 @@ pub fn get_skill_name_and_icon(
                         skill.name.clone().unwrap_or(skill.id.to_string()) + " (Summon)",
                         skill.icon.clone().unwrap_or_default(),
                         Some(summon_source_skill.clone()),
+                        false,
+                        skill.is_hyper_awakening,
                     )
                 } else {
-                    (skill_id.to_string(), "".to_string(), None)
+                    (skill_id.to_string(), "".to_string(), None, false, false)
                 }
             } else if let Some(source_skill) = skill.source_skills.as_ref() {
                 if let Some(skill) = SKILL_DATA.get(source_skill.iter().min().unwrap_or(&0)) {
@@ -412,15 +442,19 @@ pub fn get_skill_name_and_icon(
                         skill.name.clone().unwrap_or(skill.id.to_string()),
                         skill.icon.clone().unwrap_or_default(),
                         None,
+                        false,
+                        skill.is_hyper_awakening,
                     )
                 } else {
-                    (skill_id.to_string(), "".to_string(), None)
+                    (skill_id.to_string(), "".to_string(), None, false, false)
                 }
             } else {
                 (
                     skill.name.clone().unwrap_or(skill.id.to_string()),
                     skill.icon.clone().unwrap_or_default(),
                     None,
+                    false,
+                    skill.is_hyper_awakening,
                 )
             }
         } else if let Some(skill) = SKILL_DATA.get(&(skill_id - (skill_id % 10))) {
@@ -428,9 +462,11 @@ pub fn get_skill_name_and_icon(
                 skill.name.clone().unwrap_or(skill.id.to_string()),
                 skill.icon.clone().unwrap_or_default(),
                 None,
+                false,
+                skill.is_hyper_awakening,
             )
         } else {
-            (skill_id.to_string(), "".to_string(), None)
+            (skill_id.to_string(), "".to_string(), None, false, false)
         };
     }
 }

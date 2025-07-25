@@ -344,7 +344,7 @@ impl EncounterState {
             return (0, None);
         }
 
-        let (skill_name, skill_icon, summons) =
+        let (skill_name, skill_icon, summons, _, is_hyper_awakening) =
             get_skill_name_and_icon(skill_id, 0, &self.skill_tracker, source_entity.id);
 
         let entity = self
@@ -361,6 +361,7 @@ impl EncounterState {
                         icon: skill_icon.clone(),
                         tripod_index,
                         casts: 0,
+                        is_hyper_awakening,
                         ..Default::default()
                     },
                 )]);
@@ -597,16 +598,13 @@ impl EncounterState {
             damage_data.skill_id
         };
 
-        let is_hyper_awakening = SKILL_DATA
-            .get(&damage_data.skill_id)
-            .is_some_and(|s| s.is_hyper_awakening);
-
-        let (skill_name, skill_icon, skill_summon_sources) = get_skill_name_and_icon(
-            damage_data.skill_id,
-            skill_effect_id,
-            &self.skill_tracker,
-            source_entity.id,
-        );
+        let (skill_name, skill_icon, skill_summon_sources, special, is_hyper_awakening) =
+            get_skill_name_and_icon(
+                damage_data.skill_id,
+                skill_effect_id,
+                &self.skill_tracker,
+                source_entity.id,
+            );
 
         if !source_entity.skills.contains_key(&skill_key) {
             if let Some(skill) = source_entity
@@ -630,6 +628,10 @@ impl EncounterState {
         }
 
         let skill = source_entity.skills.get_mut(&skill_key).unwrap();
+        skill.is_hyper_awakening = is_hyper_awakening;
+        if special {
+            skill.special = Some(true);
+        }
 
         let relative_timestamp = (timestamp - self.encounter.fight_start) as i32;
         let mut skill_hit = SkillHit {
@@ -693,188 +695,200 @@ impl EncounterState {
             let mut is_buffed_by_identity = false;
             let mut is_debuffed_by_support = false;
             let mut is_buffed_by_hat = false;
-            let se_on_source_ids = se_on_source
-                .iter()
-                .map(|se| map_status_effect(se, &mut self.custom_id_map))
-                .collect::<Vec<_>>();
-            for buff_id in se_on_source_ids.iter() {
-                if !self
-                    .encounter
-                    .encounter_damage_stats
-                    .unknown_buffs
-                    .contains(buff_id)
-                    && !self
+
+            if !special {
+                let se_on_source_ids = se_on_source
+                    .iter()
+                    .map(|se| map_status_effect(se, &mut self.custom_id_map))
+                    .collect::<Vec<_>>();
+                for buff_id in se_on_source_ids.iter() {
+                    if !self
                         .encounter
                         .encounter_damage_stats
-                        .buffs
-                        .contains_key(buff_id)
-                {
-                    let mut source_id: Option<u32> = None;
-                    let original_buff_id = if let Some(deref_id) = self.custom_id_map.get(buff_id) {
-                        source_id = Some(get_skill_id(*buff_id, *deref_id));
-                        *deref_id
-                    } else {
-                        *buff_id
-                    };
-
-                    if let Some(status_effect) = get_status_effect_data(original_buff_id, source_id)
-                    {
-                        self.encounter
+                        .unknown_buffs
+                        .contains(buff_id)
+                        && !self
+                            .encounter
                             .encounter_damage_stats
                             .buffs
-                            .insert(*buff_id, status_effect);
-                    } else {
-                        self.encounter
-                            .encounter_damage_stats
-                            .unknown_buffs
-                            .insert(*buff_id);
-                    }
-                }
-                if !is_buffed_by_support && !is_hat_buff(buff_id) {
-                    if let Some(buff) = self.encounter.encounter_damage_stats.buffs.get(buff_id) {
-                        if let Some(skill) = buff.source.skill.as_ref() {
-                            is_buffed_by_support = is_support_class_id(skill.class_id)
-                                && buff.buff_type & StatusEffectBuffTypeFlags::DMG.bits() != 0
-                                && buff.target == StatusEffectTarget::PARTY
-                                && (buff.buff_category == "classskill"
-                                    || buff.buff_category == "arkpassive");
-                        }
-                    }
-                }
-                if !is_buffed_by_identity {
-                    if let Some(buff) = self.encounter.encounter_damage_stats.buffs.get(buff_id) {
-                        if let Some(skill) = buff.source.skill.as_ref() {
-                            is_buffed_by_identity = is_support_class_id(skill.class_id)
-                                && buff.buff_type & StatusEffectBuffTypeFlags::DMG.bits() != 0
-                                && buff.target == StatusEffectTarget::PARTY
-                                && buff.buff_category == "identity";
-                        }
-                    }
-                }
+                            .contains_key(buff_id)
+                    {
+                        let mut source_id: Option<u32> = None;
+                        let original_buff_id =
+                            if let Some(deref_id) = self.custom_id_map.get(buff_id) {
+                                source_id = Some(get_skill_id(*buff_id, *deref_id));
+                                *deref_id
+                            } else {
+                                *buff_id
+                            };
 
-                if !is_buffed_by_hat && is_hat_buff(buff_id) {
-                    is_buffed_by_hat = true;
+                        if let Some(status_effect) =
+                            get_status_effect_data(original_buff_id, source_id)
+                        {
+                            self.encounter
+                                .encounter_damage_stats
+                                .buffs
+                                .insert(*buff_id, status_effect);
+                        } else {
+                            self.encounter
+                                .encounter_damage_stats
+                                .unknown_buffs
+                                .insert(*buff_id);
+                        }
+                    }
+                    if !is_buffed_by_support && !is_hat_buff(buff_id) {
+                        if let Some(buff) = self.encounter.encounter_damage_stats.buffs.get(buff_id)
+                        {
+                            if let Some(skill) = buff.source.skill.as_ref() {
+                                is_buffed_by_support = is_support_class_id(skill.class_id)
+                                    && buff.buff_type & StatusEffectBuffTypeFlags::DMG.bits() != 0
+                                    && buff.target == StatusEffectTarget::PARTY
+                                    && (buff.buff_category == "classskill"
+                                        || buff.buff_category == "arkpassive");
+                            }
+                        }
+                    }
+                    if !is_buffed_by_identity {
+                        if let Some(buff) = self.encounter.encounter_damage_stats.buffs.get(buff_id)
+                        {
+                            if let Some(skill) = buff.source.skill.as_ref() {
+                                is_buffed_by_identity = is_support_class_id(skill.class_id)
+                                    && buff.buff_type & StatusEffectBuffTypeFlags::DMG.bits() != 0
+                                    && buff.target == StatusEffectTarget::PARTY
+                                    && buff.buff_category == "identity";
+                            }
+                        }
+                    }
+
+                    if !is_buffed_by_hat && is_hat_buff(buff_id) {
+                        is_buffed_by_hat = true;
+                    }
                 }
-            }
-            let se_on_target_ids = se_on_target
-                .iter()
-                .map(|se| map_status_effect(se, &mut self.custom_id_map))
-                .collect::<Vec<_>>();
-            for debuff_id in se_on_target_ids.iter() {
-                if !self
-                    .encounter
-                    .encounter_damage_stats
-                    .unknown_buffs
-                    .contains(debuff_id)
-                    && !self
+                let se_on_target_ids = se_on_target
+                    .iter()
+                    .map(|se| map_status_effect(se, &mut self.custom_id_map))
+                    .collect::<Vec<_>>();
+                for debuff_id in se_on_target_ids.iter() {
+                    if !self
                         .encounter
                         .encounter_damage_stats
-                        .debuffs
-                        .contains_key(debuff_id)
-                {
-                    let mut source_id: Option<u32> = None;
-                    let original_debuff_id =
-                        if let Some(deref_id) = self.custom_id_map.get(debuff_id) {
-                            source_id = Some(get_skill_id(*debuff_id, *deref_id));
-                            *deref_id
-                        } else {
-                            *debuff_id
-                        };
-
-                    if let Some(status_effect) =
-                        get_status_effect_data(original_debuff_id, source_id)
-                    {
-                        self.encounter
+                        .unknown_buffs
+                        .contains(debuff_id)
+                        && !self
+                            .encounter
                             .encounter_damage_stats
                             .debuffs
-                            .insert(*debuff_id, status_effect);
-                    } else {
-                        self.encounter
-                            .encounter_damage_stats
-                            .unknown_buffs
-                            .insert(*debuff_id);
-                    }
-                }
-                if !is_debuffed_by_support {
-                    if let Some(debuff) =
-                        self.encounter.encounter_damage_stats.debuffs.get(debuff_id)
+                            .contains_key(debuff_id)
                     {
-                        if let Some(skill) = debuff.source.skill.as_ref() {
-                            is_debuffed_by_support = is_support_class_id(skill.class_id)
-                                && debuff.buff_type & StatusEffectBuffTypeFlags::DMG.bits() != 0
-                                && debuff.target == StatusEffectTarget::PARTY;
+                        let mut source_id: Option<u32> = None;
+                        let original_debuff_id =
+                            if let Some(deref_id) = self.custom_id_map.get(debuff_id) {
+                                source_id = Some(get_skill_id(*debuff_id, *deref_id));
+                                *deref_id
+                            } else {
+                                *debuff_id
+                            };
+
+                        if let Some(status_effect) =
+                            get_status_effect_data(original_debuff_id, source_id)
+                        {
+                            self.encounter
+                                .encounter_damage_stats
+                                .debuffs
+                                .insert(*debuff_id, status_effect);
+                        } else {
+                            self.encounter
+                                .encounter_damage_stats
+                                .unknown_buffs
+                                .insert(*debuff_id);
+                        }
+                    }
+                    if !is_debuffed_by_support {
+                        if let Some(debuff) =
+                            self.encounter.encounter_damage_stats.debuffs.get(debuff_id)
+                        {
+                            if let Some(skill) = debuff.source.skill.as_ref() {
+                                is_debuffed_by_support = is_support_class_id(skill.class_id)
+                                    && debuff.buff_type & StatusEffectBuffTypeFlags::DMG.bits()
+                                        != 0
+                                    && debuff.target == StatusEffectTarget::PARTY;
+                            }
                         }
                     }
                 }
-            }
 
-            if is_buffed_by_support && !is_hyper_awakening {
-                skill.buffed_by_support += damage;
-                source_entity.damage_stats.buffed_by_support += damage;
-            }
-            if is_buffed_by_identity && !is_hyper_awakening {
-                skill.buffed_by_identity += damage;
-                source_entity.damage_stats.buffed_by_identity += damage;
-            }
-            if is_debuffed_by_support && !is_hyper_awakening {
-                skill.debuffed_by_support += damage;
-                source_entity.damage_stats.debuffed_by_support += damage;
-            }
-            if is_buffed_by_hat {
-                skill.buffed_by_hat += damage;
-                source_entity.damage_stats.buffed_by_hat += damage;
-            }
-
-            let stabilized_status_active =
-                (source_entity.current_hp as f64 / source_entity.max_hp as f64) > 0.65;
-            let mut filtered_se_on_source_ids: Vec<u32> = vec![];
-
-            for buff_id in se_on_source_ids.iter() {
-                if is_hyper_awakening && !is_hat_buff(buff_id) {
-                    continue;
+                if is_buffed_by_support && !is_hyper_awakening {
+                    skill.buffed_by_support += damage;
+                    source_entity.damage_stats.buffed_by_support += damage;
+                }
+                if is_buffed_by_identity && !is_hyper_awakening {
+                    skill.buffed_by_identity += damage;
+                    source_entity.damage_stats.buffed_by_identity += damage;
+                }
+                if is_debuffed_by_support && !is_hyper_awakening {
+                    skill.debuffed_by_support += damage;
+                    source_entity.damage_stats.debuffed_by_support += damage;
+                }
+                if is_buffed_by_hat {
+                    skill.buffed_by_hat += damage;
+                    source_entity.damage_stats.buffed_by_hat += damage;
                 }
 
-                if let Some(buff) = self.encounter.encounter_damage_stats.buffs.get(buff_id) {
-                    if !stabilized_status_active && buff.source.name.contains("Stabilized Status") {
+                let stabilized_status_active =
+                    (source_entity.current_hp as f64 / source_entity.max_hp as f64) > 0.65;
+                let mut filtered_se_on_source_ids: Vec<u32> = vec![];
+
+                for buff_id in se_on_source_ids.iter() {
+                    // hyper only affected by hat buff
+                    if is_hyper_awakening && !is_hat_buff(buff_id) {
                         continue;
+                    } else if let Some(buff) =
+                        self.encounter.encounter_damage_stats.buffs.get(buff_id)
+                    {
+                        if !stabilized_status_active
+                            && buff.source.name.contains("Stabilized Status")
+                        {
+                            continue;
+                        }
                     }
+
+                    filtered_se_on_source_ids.push(*buff_id);
+
+                    skill
+                        .buffed_by
+                        .entry(*buff_id)
+                        .and_modify(|e| *e += damage)
+                        .or_insert(damage);
+                    source_entity
+                        .damage_stats
+                        .buffed_by
+                        .entry(*buff_id)
+                        .and_modify(|e| *e += damage)
+                        .or_insert(damage);
+                }
+                for debuff_id in se_on_target_ids.iter() {
+                    if is_hyper_awakening {
+                        break;
+                    }
+
+                    skill
+                        .debuffed_by
+                        .entry(*debuff_id)
+                        .and_modify(|e| *e += damage)
+                        .or_insert(damage);
+                    source_entity
+                        .damage_stats
+                        .debuffed_by
+                        .entry(*debuff_id)
+                        .and_modify(|e| *e += damage)
+                        .or_insert(damage);
                 }
 
-                filtered_se_on_source_ids.push(*buff_id);
-
-                skill
-                    .buffed_by
-                    .entry(*buff_id)
-                    .and_modify(|e| *e += damage)
-                    .or_insert(damage);
-                source_entity
-                    .damage_stats
-                    .buffed_by
-                    .entry(*buff_id)
-                    .and_modify(|e| *e += damage)
-                    .or_insert(damage);
-            }
-            for debuff_id in se_on_target_ids.iter() {
-                if is_hyper_awakening {
-                    break;
+                skill_hit.buffed_by = filtered_se_on_source_ids;
+                // no debuffs affect hyper
+                if !is_hyper_awakening {
+                    skill_hit.debuffed_by = se_on_target_ids;
                 }
-
-                skill
-                    .debuffed_by
-                    .entry(*debuff_id)
-                    .and_modify(|e| *e += damage)
-                    .or_insert(damage);
-                source_entity
-                    .damage_stats
-                    .debuffed_by
-                    .entry(*debuff_id)
-                    .and_modify(|e| *e += damage)
-                    .or_insert(damage);
-            }
-
-            skill_hit.buffed_by = filtered_se_on_source_ids;
-            if !is_hyper_awakening {
-                skill_hit.debuffed_by = se_on_target_ids;
             }
         }
 
