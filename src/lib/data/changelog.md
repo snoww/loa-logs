@@ -7,14 +7,21 @@
   </div>
 </div>
 
-#### BUG FIXES AND IMPROVEMENTS
-
 - updated classification of dps spec of supports
 - fixed player not being recognized when loading in on a mount
-- updated berserker technique berserker classification
-- fixed parties being incorrect sometimes
+- added missing gems for bard tempest, paladin divine wave, etc.
+- added skill tracking for bard major/minor chords
 
-## v1.31.0 - July 23rd, 2025
+--- 
+
+### v1.31.2 - July 24th, 2025
+
+#### BUG FIXES AND IMPROVEMENTS
+
+- fix berserker technique berserker classification
+- fix parties being incorrect sometimes
+
+### v1.31.0 - July 23rd, 2025
 
 #### NEW FEATURES
 

@@ -1,11 +1,11 @@
 {
   "version": "v1.31.3",
-  "notes": "### v1.31.3 - July 24th, 2025\n\n#### BUG FIXES AND IMPROVEMENTS\n\n- updated classification of dps spec of supports\n- fixed player not being recognized when loading in on a mount\n- updated berserker technique berserker classification\n- fixed parties being incorrect sometimes",
+  "notes": "### v1.31.3 - July 24th, 2025\n\n#### BUG FIXES AND IMPROVEMENTS\n\n- updated classification of dps spec of supports\n- fixed player not being recognized when loading in on a mount\n- added missing gems for bard tempest, paladin divine wave, etc.\n- added skill tracking for bard major/minor chords",
   "pub_date": "2025-07-24T20:38:42.702Z",
   "platforms": {
     "windows-x86_64": {
       "url": "https://github.com/snoww/loa-logs/releases/download/v1.31.3/LOA.Logs_1.31.3_x64-setup.nsis.zip",
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmJ1bU9iSHFZa1ZMbEE2SEt0UzNzRlorR2xkMWh1VjEraTY2aWNONWlHSU9UekVnY0Y0KzBNUjNpeVFjcnV0U0hsVlBEUmdFaDl2SkZGTUdWTDRxL3dvPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzUzNDAxNDQ4CWZpbGU6TE9BIExvZ3NfMS4zMS4zX3g2NC1zZXR1cC5uc2lzLnppcAo2dStDWkpZSzdvUUR1K0doVjg3alJ6VVRCOXYzRDVLV3ZXL3dTZTllY2F1ei9mUTB5aE02Q3Fld1JPL1NjdzNtd09sNEpoN1p6QXJtbjdzTFgvRjBEUT09Cg=="
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlRCeFowZUtkUWJaU0Ftb045ckUvRE5RTWtWVkFQakFYSldXazBWRzVaN25CeE15dlFtTG5DaWVkelFKZEo3cnZ2d3N4dGxhTFZoQjROeEpkV1RKQlFJPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzUzNDA1NTIzCWZpbGU6TE9BIExvZ3NfMS4zMS4zX3g2NC1zZXR1cC5uc2lzLnppcApZVHVRM2h6aDh4aW1tcUYxZGQzZHFlWUNGMzRORDNJMEs1ZldjbE44aUtyaSs4SDZ2RlIxQVV6dFFJcWd1N1RZUlJ4ODVmM3FYNWdRUnZYeVljdVFDZz09Cg=="
     }
   }
 }
