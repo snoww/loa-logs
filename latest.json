@@ -1,11 +1,11 @@
 {
-  "version": "v1.31.3",
-  "notes": "### v1.31.3 - July 24th, 2025\n\n#### BUG FIXES AND IMPROVEMENTS\n\n- updated classification of dps spec of supports\n- fixed player not being recognized when loading in on a mount\n- added missing gems for bard tempest, paladin divine wave, etc.\n- added skill tracking for bard major/minor chords",
-  "pub_date": "2025-07-24T20:38:42.702Z",
+  "version": "v1.31.4",
+  "notes": "### v1.31.4 - July 25th, 2025\n\n#### NEW FEATURES\n\n- miscellaneous encounters (cube, paradise, etc.) are hidden by default (settings > general > show raids only)\n- exclude hyper awakening, transcendence, perfect blocks, paradise orbs, etc. from buffs and other modifier calculations (only for logs recorded after this update)\n\n#### BUG FIXES AND IMPROVEMENTS\n\n- fixed bard bubble %s not showing on tooltips\n",
+  "pub_date": "2025-07-25T23:23:27.132Z",
   "platforms": {
     "windows-x86_64": {
-      "url": "https://github.com/snoww/loa-logs/releases/download/v1.31.3/LOA.Logs_1.31.3_x64-setup.nsis.zip",
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlRCeFowZUtkUWJaU0Ftb045ckUvRE5RTWtWVkFQakFYSldXazBWRzVaN25CeE15dlFtTG5DaWVkelFKZEo3cnZ2d3N4dGxhTFZoQjROeEpkV1RKQlFJPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzUzNDA1NTIzCWZpbGU6TE9BIExvZ3NfMS4zMS4zX3g2NC1zZXR1cC5uc2lzLnppcApZVHVRM2h6aDh4aW1tcUYxZGQzZHFlWUNGMzRORDNJMEs1ZldjbE44aUtyaSs4SDZ2RlIxQVV6dFFJcWd1N1RZUlJ4ODVmM3FYNWdRUnZYeVljdVFDZz09Cg=="
+      "url": "https://github.com/snoww/loa-logs/releases/download/v1.31.4/LOA.Logs_1.31.4_x64-setup.nsis.zip",
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlJUNVhuSkNzbElnVjB0WVllMzBqZWg2QnpkZ2JxUDMyZTY1QndpeGo0U1pqNU1lWVpycWREbWpDS2hjbUo1bU11MWd0MVpOVEZiWEhwOW10TStCMFFrPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzUzNDg2NjcwCWZpbGU6TE9BIExvZ3NfMS4zMS40X3g2NC1zZXR1cC5uc2lzLnppcApFVFM0Ym82bmZoVVVrVlJQRzlTUmNyNkxMRm5sSHBaUmlEL0o3dURlV21FNktyM052djVVaWFLUGtCNWV5dmZ0cy9QbGVCcGFBRUFURFo1T0JhWFVBUT09Cg=="
     }
   }
 }

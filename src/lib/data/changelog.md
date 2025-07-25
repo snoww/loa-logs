@@ -1,18 +1,31 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.31.3 - July 24th, 2025
+    v1.31.4 - July 25th, 2025
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
   </div>
 </div>
 
+#### NEW FEATURES
+
+- miscellaneous encounters (cube, paradise, etc.) are hidden by default (settings > general > show raids only)
+- exclude hyper awakening, transcendence, perfect blocks, paradise orbs, etc. from buffs and other modifier calculations (only for logs recorded after this update)
+
+#### BUG FIXES AND IMPROVEMENTS
+
+- fixed bard bubble %s not showing on tooltips
+
+---
+
+### v1.31.3 - July 24th, 2025
+
+#### BUG FIXES AND IMPROVEMENTS
+
 - updated classification of dps spec of supports
 - fixed player not being recognized when loading in on a mount
 - added missing gems for bard tempest, paladin divine wave, etc.
 - added skill tracking for bard major/minor chords
-
---- 
 
 ### v1.31.2 - July 24th, 2025
 
