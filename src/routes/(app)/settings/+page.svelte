@@ -331,6 +331,12 @@
           "Show Details",
           "Enables live details tab in live meter for your character."
         )}
+        {@render settingOption(
+          "general",
+          "showRaidsOnly",
+          "Show Raids Only",
+          "Only show raids in recent encounters (bosses with valid difficulty). Logs from cube, paradise, etc. will be hidden."
+        )}
         <label class="flex items-center gap-2">
           <input
             type="checkbox"
@@ -568,12 +574,7 @@
         )}
         {@render settingOption("logs", "hpm", "Skill Hits/min", "Show the hits per minute of the skill", true)}
       {:else if currentTab === "Meter"}
-        {@render settingOption(
-          "meter",
-          "bossInfo",
-          "Boss HP Info",
-          "Show boss info in live meter"
-        )}
+        {@render settingOption("meter", "bossInfo", "Boss HP Info", "Show boss info in live meter")}
         {@render settingOption(
           "meter",
           "bossHpBar",

@@ -122,7 +122,7 @@ class Settings {
   }
 }
 
-export type sortColumns = "id" | "my_dps" | "duration"
+export type sortColumns = "id" | "my_dps" | "duration";
 export type sortOrder = "asc" | "desc";
 
 export class EncounterFilter {
@@ -167,6 +167,7 @@ export const defaultSettings = {
     showShields: true,
     showTanked: false,
     showBosses: false,
+    showRaidsOnly: true,
     splitLines: true,
     underlineHovered: false,
     accentColor: "theme-violet",
@@ -191,7 +192,7 @@ export const defaultSettings = {
     mini: false,
     miniEdit: true,
     autoShow: false,
-    autoHideDelay: 5,
+    autoHideDelay: 5
   },
   shortcuts: {
     hideMeter: "Control+ArrowDown",
@@ -200,7 +201,7 @@ export const defaultSettings = {
     resetSession: "",
     pauseSession: "",
     manualSave: "",
-    disableClickthrough: "",
+    disableClickthrough: ""
   },
   meter: {
     bossInfo: true,
@@ -248,7 +249,7 @@ export const defaultSettings = {
   },
   mini: {
     info: "damage",
-    bossHpBar: false,
+    bossHpBar: false
   },
   logs: {
     abbreviateHeader: false,

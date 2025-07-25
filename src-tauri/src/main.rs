@@ -736,6 +736,12 @@ fn load_encounters_preview(
         ""
     };
 
+    let raids_only_filter = if filter.raids_only {
+        "AND difficulty IS NOT NULL and difficulty != ''"
+    } else {
+        ""
+    };
+
     let sort = format!("e.{}", filter.sort);
 
     let count_params = params.clone();
@@ -754,7 +760,7 @@ fn load_encounters_preview(
     e.players
     FROM encounter_preview e {}
     WHERE e.duration > ? {}
-    {} {} {} {}
+    {} {} {} {} {}
     ORDER BY {} {}
     LIMIT ?
     OFFSET ?",
@@ -763,6 +769,7 @@ fn load_encounters_preview(
         raid_clear_filter,
         favorite_filter,
         difficulty_filter,
+        raids_only_filter,
         boss_only_damage_filter,
         sort,
         filter.order

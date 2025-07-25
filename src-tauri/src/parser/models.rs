@@ -624,6 +624,7 @@ pub struct SearchFilter {
     pub boss_only_damage: bool,
     pub sort: String,
     pub order: String,
+    pub raids_only: bool,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]

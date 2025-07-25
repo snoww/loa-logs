@@ -46,7 +46,8 @@
         favorite: encounterFilter.favorite,
         difficulty: encounterFilter.difficulty,
         sort: encounterFilter.sort,
-        order: encounterFilter.order
+        order: encounterFilter.order,
+        raidsOnly: settings.app.general.showRaidsOnly
       }
     });
 
