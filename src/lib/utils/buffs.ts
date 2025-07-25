@@ -273,7 +273,8 @@ export function calculatePartyWidth(
 }
 
 export function addBardBubbles(key: string, buff: { bonus?: number }, syn: StatusEffect) {
-  if (key.includes("serenadeofcourage")) {
+  // bard serenade of courage
+  if (syn.uniqueGroup === 211400) {
     if (syn.source.desc.includes("15%")) {
       buff.bonus = 15;
     } else if (syn.source.desc.includes("10%")) {
