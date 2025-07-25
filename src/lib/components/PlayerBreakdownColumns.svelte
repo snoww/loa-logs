@@ -294,7 +294,7 @@
 {/snippet}
 
 {#snippet critPct(state: SkillState)}
-  {#if state.skill.special || state.skill.isHyperAwakening}
+  {#if state.skill.special || state.skill.isHyperAwakening || hyperAwakeningIds.has(state.skill.id)}
     -
   {:else}
     {@render percentValue(state.critPercentage)}
@@ -302,7 +302,7 @@
 {/snippet}
 
 {#snippet adjCritPct(state: SkillState)}
-  {#if state.adjustedCrit && !state.skill.special && !state.skill.isHyperAwakening}
+  {#if state.adjustedCrit && !state.skill.special && !state.skill.isHyperAwakening && !hyperAwakeningIds.has(state.skill.id)}
     {@render percentValue(state.adjustedCrit)}
   {:else}
     -
@@ -310,7 +310,7 @@
 {/snippet}
 
 {#snippet critDmgPct(state: SkillState)}
-  {#if state.skill.special || state.skill.isHyperAwakening}
+  {#if state.skill.special || state.skill.isHyperAwakening || hyperAwakeningIds.has(state.skill.id)}
     -
   {:else}
     {@render percentValue(state.critDmgPercentage)}
@@ -318,7 +318,7 @@
 {/snippet}
 
 {#snippet faPct(state: SkillState)}
-  {#if state.skill.special || state.skill.isHyperAwakening}
+  {#if state.skill.special || state.skill.isHyperAwakening || hyperAwakeningIds.has(state.skill.id)}
     -
   {:else}
     {@render percentValue(state.faPercentage)}
@@ -326,7 +326,7 @@
 {/snippet}
 
 {#snippet fadPct(state: SkillState)}
-  {#if state.skill.special || state.skill.isHyperAwakening}
+  {#if state.skill.special || state.skill.isHyperAwakening || hyperAwakeningIds.has(state.skill.id)}
     -
   {:else}
     {@render percentValue(state.fadPercentage)}
@@ -341,7 +341,7 @@
 {/snippet}
 
 {#snippet baPct(state: SkillState)}
-  {#if state.skill.special || state.skill.isHyperAwakening}
+  {#if state.skill.special || state.skill.isHyperAwakening || hyperAwakeningIds.has(state.skill.id)}
     -
   {:else}
     {@render percentValue(state.baPercentage)}
@@ -349,7 +349,7 @@
 {/snippet}
 
 {#snippet badPct(state: SkillState)}
-  {#if state.skill.special || state.skill.isHyperAwakening}
+  {#if state.skill.special || state.skill.isHyperAwakening || hyperAwakeningIds.has(state.skill.id)}
     -
   {:else}
     {@render percentValue(state.badPercentage)}

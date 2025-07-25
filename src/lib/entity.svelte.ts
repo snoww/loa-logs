@@ -3,6 +3,7 @@ import { cardIds } from "./constants/cards";
 import type { EncounterState } from "./encounter.svelte";
 import { settings } from "./stores.svelte";
 import { EntityType, type Entity, type IncapacitatedEvent } from "./types";
+import { hyperAwakeningIds } from "./utils/buffs";
 
 export class EntityState {
   entity: Entity = $state()!;
@@ -65,7 +66,7 @@ export class EntityState {
   hitsWithoutSpecial = $derived(
     this.entity.skillStats.hits -
       Object.values(this.entity.skills)
-        .filter((skill) => skill.special || skill.isHyperAwakening)
+        .filter((skill) => skill.special || skill.isHyperAwakening || hyperAwakeningIds.has(skill.id))
         .reduce((acc, skill) => acc + skill.hits, 0)
   );
 
