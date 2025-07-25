@@ -848,17 +848,20 @@ pub fn insert_data(
                     for skill_id in skill_ids {
                         if let Some(skill) = entity.skills.get_mut(&skill_id) {
                             match gem.gem_type {
-                                27 | 35 => { // cooldown gems
+                                27 | 35 => {
+                                    // cooldown gems
                                     skill.gem_cooldown =
                                         Some(cooldown_gem_value_to_level(gem.value, gem.tier));
                                     skill.gem_tier = Some(gem.tier);
                                 }
-                                64 | 65 => { // support effect damage gems
+                                64 | 65 => {
+                                    // support effect damage gems
                                     skill.gem_damage =
                                         Some(support_damage_gem_value_to_level(gem.value));
                                     skill.gem_tier_dmg = Some(gem.tier);
                                 }
-                                _ => { // damage gems
+                                _ => {
+                                    // damage gems
                                     skill.gem_damage =
                                         Some(damage_gem_value_to_level(gem.value, gem.tier));
                                     skill.gem_tier_dmg = Some(gem.tier);
@@ -1158,8 +1161,8 @@ fn get_player_spec(player: &EncounterEntity, buffs: &HashMap<u32, StatusEffect>)
         "Bard" => {
             // if has tempest skill, or vivace
             if (player.skills.contains_key(&21147)
-                && player.skills.contains_key(&21148)
-                && player.skills.contains_key(&21149))
+                || player.skills.contains_key(&21148)
+                || player.skills.contains_key(&21149))
                 || player.skills.contains_key(&21310)
             {
                 "True Courage"
