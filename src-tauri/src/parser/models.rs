@@ -757,6 +757,23 @@ lazy_static! {
             .flat_map(|(gate, bosses)| bosses.iter().map(move |boss| (boss.clone(), gate.clone())))
             .collect()
     };
+    pub static ref GEM_SKILL_MAP: HashMap<u32, Vec<u32>> = {
+        let json_str = include_str!("../../meter-data/GemSkillGroup.json");
+
+        #[derive(Deserialize)]
+        struct GemSkillEntry((), (), Vec<u32>);
+
+        let raw_map: HashMap<String, GemSkillEntry> = serde_json::from_str(json_str)
+            .unwrap_or_else(|e| {
+                error!("Failed to parse GemSkillGroup.json: {}", e);
+                HashMap::new()
+            });
+
+        raw_map
+            .into_iter()
+            .filter_map(|(key, entry)| key.parse::<u32>().ok().map(|id| (id, entry.2)))
+            .collect()
+    };
     pub static ref VALID_ZONES: HashSet<u32> = {
         let valid_zones = [
             30801, 30802, 30803, 30804, 30805, 30806, 30807, 30835, 37001, 37002, 37003, 37011,
