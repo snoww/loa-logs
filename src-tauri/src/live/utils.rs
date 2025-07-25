@@ -578,13 +578,14 @@ fn gem_skill_id_to_skill_ids(skill_id: u32) -> Vec<u32> {
         62000 => vec![32040, 32041],         // aeromancer sun shower
         24000 => vec![
             21140, 21141, 21142, 21143, 21130, 21131, 21132, 21133, // bard serenade skills
-            21147, // bard tempest
         ],
+        24001 => vec![21147], // bard tempest
         47000 => vec![47950], // bk breaker identity
         60000 => vec![
             31050, 31051, 31110, 31120, 31121, 31130, 31131, 31140, 31141, // artist moonfall
             31145, // artist rising moon
         ],
+        15000 | 15001 => vec![36800, 36280], // paladin holy aura, divine wave
         19030 => vec![19290, 19030, 19300],  // arcana evokes
         63000 | 63001 => vec![33200, 33201], // wildsoul swish bear
         63002 | 63003 => vec![33230, 33231], // wildsoul boulder bear

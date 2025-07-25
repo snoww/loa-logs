@@ -478,7 +478,8 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
                 if let Some(pkt) = parse_pkt(&data, PKTSkillCastNotify::new, "PKTSkillCastNotify") {
                     let mut entity = entity_tracker.get_source_entity(pkt.source_id);
                     entity_tracker.guess_is_player(&mut entity, pkt.skill_id);
-                    if entity.class_id == 202 {
+                    // tracking arcana cards, bard major/minor chords
+                    if entity.class_id == 202 || entity.class_id == 204 {
                         state.on_skill_start(
                             &entity,
                             pkt.skill_id,
