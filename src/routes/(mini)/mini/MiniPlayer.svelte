@@ -24,10 +24,13 @@
 
 {#snippet buffSummary()}
   <span class="">
-    {customRound((state.entity.damageStats.buffedBySupport / state.damageDealtWithoutHa) * 100, 0)}/{customRound(
-      (state.entity.damageStats.debuffedBySupport / state.damageDealtWithoutHa) * 100,
+    {customRound(
+      (state.entity.damageStats.buffedBySupport / state.damageDealtWithoutSpecialOrHa) * 100,
       0
-    )}/{customRound((state.entity.damageStats.buffedByIdentity / state.damageDealtWithoutHa) * 100, 0)}
+    )}/{customRound(
+      (state.entity.damageStats.debuffedBySupport / state.damageDealtWithoutSpecialOrHa) * 100,
+      0
+    )}/{customRound((state.entity.damageStats.buffedByIdentity / state.damageDealtWithoutSpecialOrHa) * 100, 0)}
   </span>
 {/snippet}
 
