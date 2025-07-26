@@ -13,7 +13,8 @@ use meter_core::packets::structures::{PCStruct, StatusEffectData};
 use std::cell::RefCell;
 use std::rc::Rc;
 
-const TIMEOUT_DELAY_MS: i64 = 1000;
+// expire buff after 1 min delay
+const TIMEOUT_DELAY_MS: i64 = 60_000;
 const WORKSHOP_BUFF_ID: u32 = 9701;
 
 pub type StatusEffectRegistry = HashMap<u32, StatusEffectDetails>;
@@ -305,7 +306,7 @@ impl StatusTracker {
         };
 
         // println!("ser before: {:?}", ser);
-        ser.retain(|_, se| se.expire_at.map_or(true, |expire_at| expire_at > timestamp));
+        ser.retain(|_, se| se.expire_at.is_none_or(|expire_at| expire_at > timestamp));
         let party_tracker = self.party_tracker.borrow();
         ser.values()
             .filter(|x| {
