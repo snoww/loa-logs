@@ -1,6 +1,6 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.31.4 - July 25th, 2025
+    v1.31.5 - July 25th, 2025
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
@@ -15,6 +15,7 @@
 #### BUG FIXES AND IMPROVEMENTS
 
 - fixed bard bubble %s not showing on tooltips
+- fixed mini meter buffs
 
 ---
 

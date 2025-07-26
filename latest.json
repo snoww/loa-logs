@@ -1,11 +1,11 @@
 {
-  "version": "v1.31.4",
-  "notes": "### v1.31.4 - July 25th, 2025\n\n#### NEW FEATURES\n\n- miscellaneous encounters (cube, paradise, etc.) are hidden by default (settings > general > show raids only)\n- exclude hyper awakening, transcendence, perfect blocks, paradise orbs, etc. from buffs and other modifier calculations (only for logs recorded after this update)\n\n#### BUG FIXES AND IMPROVEMENTS\n\n- fixed bard bubble %s not showing on tooltips\n",
-  "pub_date": "2025-07-25T23:23:27.132Z",
+  "version": "v1.31.5",
+  "notes": "### v1.31.5 - July 25th, 2025\n\n#### NEW FEATURES\n\n- miscellaneous encounters (cube, paradise, etc.) are hidden by default (settings > general > show raids only)\n- exclude hyper awakening, transcendence, perfect blocks, paradise orbs, etc. from buffs and other modifier calculations (only for logs recorded after this update)\n\n#### BUG FIXES AND IMPROVEMENTS\n\n- fixed bard bubble %s not showing on tooltips\n- fixed mini meter buffs\n",
+  "pub_date": "2025-07-26T00:26:03.312Z",
   "platforms": {
     "windows-x86_64": {
-      "url": "https://github.com/snoww/loa-logs/releases/download/v1.31.4/LOA.Logs_1.31.4_x64-setup.nsis.zip",
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlJUNVhuSkNzbElnVjB0WVllMzBqZWg2QnpkZ2JxUDMyZTY1QndpeGo0U1pqNU1lWVpycWREbWpDS2hjbUo1bU11MWd0MVpOVEZiWEhwOW10TStCMFFrPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzUzNDg2NjcwCWZpbGU6TE9BIExvZ3NfMS4zMS40X3g2NC1zZXR1cC5uc2lzLnppcApFVFM0Ym82bmZoVVVrVlJQRzlTUmNyNkxMRm5sSHBaUmlEL0o3dURlV21FNktyM052djVVaWFLUGtCNWV5dmZ0cy9QbGVCcGFBRUFURFo1T0JhWFVBUT09Cg=="
+      "url": "https://github.com/snoww/loa-logs/releases/download/v1.31.5/LOA.Logs_1.31.5_x64-setup.nsis.zip",
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmZ6UTRnVTMwbk5TVkgvczJNUm5BYmtVZVlPc1RWQ2wyblI4N3h1WEZEQVRmYTU0MS9ZZHV1MEZoTWo2SXB0Y0h5OGhFeEZnRzZQTXJ4NjV2NXJkd2dNPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzUzNDg5NjQ0CWZpbGU6TE9BIExvZ3NfMS4zMS41X3g2NC1zZXR1cC5uc2lzLnppcApiK1gweGdQSlBBNkx1ekNBZU0rS0FURnFJSmkwWit6elljNyt1RTBVZ0syOFVOeVUxbzZ0QWs2R2R0REJxNnYwQVlMTXZ1NDNqUXdJc3lRNkxlUFhCdz09Cg=="
     }
   }
 }
