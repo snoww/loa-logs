@@ -1,11 +1,11 @@
 {
-  "version": "v1.31.5",
-  "notes": "### v1.31.5 - July 25th, 2025\n\n#### NEW FEATURES\n\n- miscellaneous encounters (cube, paradise, etc.) are hidden by default (settings > general > show raids only)\n- exclude hyper awakening, transcendence, perfect blocks, paradise orbs, etc. from buffs and other modifier calculations (only for logs recorded after this update)\n\n#### BUG FIXES AND IMPROVEMENTS\n\n- fixed bard bubble %s not showing on tooltips\n- fixed mini meter buffs\n",
-  "pub_date": "2025-07-26T00:26:03.312Z",
+  "version": "v1.31.6",
+  "notes": "### v1.31.6 - July 25th, 2025\n\n#### BUG FIXES AND IMPROVEMENTS\n\n- fixed artist ink marble identity duration increase not being tracked\n- fixed gems for identity skills not being tracked\n- improved summoner summon skill labeling (big thanks to poont)",
+  "pub_date": "2025-07-27T20:07:34.231Z",
   "platforms": {
     "windows-x86_64": {
-      "url": "https://github.com/snoww/loa-logs/releases/download/v1.31.5/LOA.Logs_1.31.5_x64-setup.nsis.zip",
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmZ6UTRnVTMwbk5TVkgvczJNUm5BYmtVZVlPc1RWQ2wyblI4N3h1WEZEQVRmYTU0MS9ZZHV1MEZoTWo2SXB0Y0h5OGhFeEZnRzZQTXJ4NjV2NXJkd2dNPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzUzNDg5NjQ0CWZpbGU6TE9BIExvZ3NfMS4zMS41X3g2NC1zZXR1cC5uc2lzLnppcApiK1gweGdQSlBBNkx1ekNBZU0rS0FURnFJSmkwWit6elljNyt1RTBVZ0syOFVOeVUxbzZ0QWs2R2R0REJxNnYwQVlMTXZ1NDNqUXdJc3lRNkxlUFhCdz09Cg=="
+      "url": "https://github.com/snoww/loa-logs/releases/download/v1.31.6/LOA.Logs_1.31.6_x64-setup.nsis.zip",
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmJ3N01SQTdQL0pwYVVTeDV4VWVadTZLOUo1ZG5JRFNUUThtdFVqTk5SK3k5akQvWExxTjdWVEJJZjN1WThsY0dCc0IyRkxqT3EvUlJ1ay9YaHp6S0FVPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzUzNjQ2ODM5CWZpbGU6TE9BIExvZ3NfMS4zMS42X3g2NC1zZXR1cC5uc2lzLnppcApmeGsyNURPczJiVDJzRFNITWxrSitjcmlQa3A5UDcvZjhlcnRjQWJrMnAyU1paNHdLMmhFbitlLytUMlRLdEJvNEYxc1huaFlIMmRPWlpLSmR0UURCZz09Cg=="
     }
   }
 }

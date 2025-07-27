@@ -1,11 +1,21 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.31.5 - July 25th, 2025
+    v1.31.6 - July 27th, 2025
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
   </div>
 </div>
+
+#### BUG FIXES AND IMPROVEMENTS
+
+- fixed artist ink marble identity duration increase not being tracked
+- fixed gems for identity skills not being tracked
+- improved summoner summon skill labeling (big thanks to poont)
+
+---
+
+### v1.31.5 - July 25th, 2025
 
 #### NEW FEATURES
 
@@ -16,8 +26,6 @@
 
 - fixed bard bubble %s not showing on tooltips
 - fixed mini meter buffs
-
----
 
 ### v1.31.3 - July 24th, 2025
 
