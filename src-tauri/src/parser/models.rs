@@ -785,10 +785,7 @@ lazy_static! {
     pub static ref GEM_SKILL_MAP: HashMap<u32, Vec<u32>> = {
         let json_str = include_str!("../../meter-data/GemSkillGroup.json");
 
-        #[derive(Deserialize)]
-        struct GemSkillEntry((), (), Vec<u32>);
-
-        let raw_map: HashMap<String, GemSkillEntry> = serde_json::from_str(json_str)
+        let raw_map: HashMap<String, (String, String, Vec<u32>)> = serde_json::from_str(json_str)
             .unwrap_or_else(|e| {
                 error!("Failed to parse GemSkillGroup.json: {}", e);
                 HashMap::new()
