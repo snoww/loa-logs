@@ -410,7 +410,7 @@ export function getDetailedSkillLogChart(
           formatter: function (param: any) {
             focusedCast.skillId = skill.id;
             focusedCast.cast = param.dataIndex;
-            let output = "<div class='tooltip-scroll overflow-y-auto max-h-56 pt-1 pb-2 px-2'>";
+            let output = "<div class='overflow-y-auto max-h-56 pt-1 pb-2 px-2' style='scrollbar-width: thin;'>";
             output += `
                         <div class='flex justify-between'>
                         <div class='font-semibold mb-1'>${param.name}-${timestampToMinutesAndSeconds(param.value[2].last)} (${customRound((param.value[2].last - param.value[2].timestamp) / 1000)}s)</div>
