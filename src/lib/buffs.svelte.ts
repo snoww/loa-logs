@@ -46,38 +46,16 @@ export class BuffState {
     return new Map([...temp.entries()].sort());
   });
 
-  buffParties = $derived.by(() => {
-    if (!this.enc.partyInfo) return [];
-
-    const partyInfo = Object.entries(this.enc.partyInfo);
-    const temp: Entity[][] = [];
-
-    partyInfo.forEach(([partyIdStr, names]) => {
-      const partyId = Number(partyIdStr);
-      temp[partyId] = names
-        .map((name) => this.players.find((player) => player.name === name))
-        .filter((player) => player !== undefined) as Entity[];
-    });
-
-    temp.forEach((party) => {
-      if (party.length > 0) {
-        party.sort((a, b) => b.damageStats.damageDealt - a.damageStats.damageDealt);
-      }
-    });
-
-    return temp.length >= 2 ? temp : [this.players];
-  });
-
   partyPercentages = $derived(
-    this.buffParties.map((party) =>
+    this.enc.parties.map((party) =>
       party.map((player) => (player.damageStats.damageDealt / this.enc.topDamageDealt) * 100)
     )
   );
 
   partyGroupedSynergies: Map<string, Set<string>> = $derived.by(() => {
-    if (this.groupedSynergies.size === 0 || this.buffParties.length < 1) return new Map();
+    if (this.groupedSynergies.size === 0 || this.enc.parties.length < 1) return new Map();
     const temp = new Map();
-    this.buffParties.forEach((party, partyId) => {
+    this.enc.parties.forEach((party, partyId) => {
       temp.set(partyId.toString(), new Set<string>());
       const partySyns = new Set<string>();
       for (const player of party) {
@@ -97,14 +75,19 @@ export class BuffState {
 
   partyBuffs: Map<string, Map<string, Array<BuffDetails>>> = $derived.by(() => {
     const temp: Map<string, Map<string, Array<BuffDetails>>> = new Map();
-    this.buffParties.forEach((party, partyId) => {
+    this.enc.parties.forEach((party, partyId) => {
       temp.set(partyId.toString(), new Map<string, Array<BuffDetails>>());
       for (const player of party) {
         temp.get(partyId.toString())!.set(player.name, []);
         const playerBuffs = temp.get(partyId.toString())!.get(player.name)!;
 
-        const damageDealtWithHa = player.damageStats.damageDealt;
-        const damageDealtWithoutHa = damageDealtWithHa - (player.damageStats.hyperAwakeningDamage ?? 0);
+        const damageDealtWithoutSpecial =
+          player.damageStats.damageDealt -
+          Object.values(player.skills)
+            .filter((skill) => skill.special)
+            .reduce((acc, skill) => acc + skill.totalDamage, 0);
+        const damageDealtWithoutSpecialAndHa =
+          damageDealtWithoutSpecial - (player.damageStats.hyperAwakeningDamage ?? 0);
 
         this.partyGroupedSynergies.get(partyId.toString())?.forEach((key) => {
           const buffDetails = new BuffDetails();
@@ -122,7 +105,9 @@ export class BuffState {
               const b = new Buff(
                 syn.source.icon,
                 customRound(
-                  (player.damageStats.buffedBy[id] / (isHat ? damageDealtWithHa : damageDealtWithoutHa)) * 100
+                  (player.damageStats.buffedBy[id] /
+                    (isHat ? damageDealtWithoutSpecial : damageDealtWithoutSpecialAndHa)) *
+                    100
                 ),
                 syn.source.skill?.icon
               );
@@ -135,7 +120,9 @@ export class BuffState {
                 new Buff(
                   syn.source.icon,
                   customRound(
-                    (player.damageStats.debuffedBy[id] / (isHat ? damageDealtWithHa : damageDealtWithoutHa)) * 100
+                    (player.damageStats.debuffedBy[id] /
+                      (isHat ? damageDealtWithoutSpecial : damageDealtWithoutSpecialAndHa)) *
+                      100
                   ),
                   syn.source.skill?.icon
                 )
@@ -145,7 +132,7 @@ export class BuffState {
           });
           if (buffDamage > 0) {
             buffDetails.percentage = customRound(
-              (buffDamage / (isHat ? damageDealtWithHa : damageDealtWithoutHa)) * 100
+              (buffDamage / (isHat ? damageDealtWithoutSpecial : damageDealtWithoutSpecialAndHa)) * 100
             );
           }
 

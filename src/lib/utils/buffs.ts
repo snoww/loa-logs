@@ -1,4 +1,5 @@
 import { classesMap, classNameToClassId } from "$lib/constants/classes";
+import type { EntityState } from "$lib/entity.svelte";
 import { settings } from "$lib/stores.svelte";
 import {
   Buff,
@@ -204,12 +205,8 @@ export function getSynergyPercentageDetails(groupedSynergies: Map<string, Map<nu
 
 export function getSynergyPercentageDetailsSum(
   groupedSynergies: Map<string, Map<number, StatusEffect>>,
-  skills: Skill[],
-  damageStats: DamageStats
+  entityState: EntityState
 ) {
-  const totalDamage = damageStats.damageDealt;
-  const totalDamageWithoutHa = totalDamage - (damageStats.hyperAwakeningDamage ?? 0);
-
   const synergyPercentageDetails: BuffDetails[] = [];
   groupedSynergies.forEach((synergies, key) => {
     let synergyDamage = 0;
@@ -222,7 +219,7 @@ export function getSynergyPercentageDetailsSum(
       const buff = new Buff(syn.source.icon, "", syn.source.skill?.icon);
       addBardBubbles(key, buff, syn);
       let totalBuffed = 0;
-      for (const skill of skills) {
+      for (const skill of entityState.skills) {
         // skill effects that cannot be modified by buffs
         if (skill.special) {
           continue;
@@ -240,18 +237,18 @@ export function getSynergyPercentageDetailsSum(
         }
       }
       if (isHat) {
-        buff.percentage = customRound((totalBuffed / totalDamage) * 100);
+        buff.percentage = customRound((totalBuffed / entityState.damageDealtWithoutSpecial) * 100);
       } else {
-        buff.percentage = customRound((totalBuffed / totalDamageWithoutHa) * 100);
+        buff.percentage = customRound((totalBuffed / entityState.damageDealtWithoutSpecialOrHa) * 100);
       }
       buffs.buffs.push(buff);
     });
 
     if (synergyDamage > 0) {
       if (isHat) {
-        buffs.percentage = customRound((synergyDamage / totalDamage) * 100);
+        buffs.percentage = customRound((synergyDamage / entityState.damageDealtWithoutSpecial) * 100);
       } else {
-        buffs.percentage = customRound((synergyDamage / totalDamageWithoutHa) * 100);
+        buffs.percentage = customRound((synergyDamage / entityState.damageDealtWithoutSpecialOrHa) * 100);
       }
     }
     synergyPercentageDetails.push(buffs);

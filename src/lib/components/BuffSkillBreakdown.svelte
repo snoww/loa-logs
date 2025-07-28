@@ -22,7 +22,7 @@
 
   let buffSummary: BuffDetails[] = $derived.by(() => {
     if (tab === MeterTab.SELF_BUFFS || tab === MeterTab.PARTY_BUFFS) {
-      return getSynergyPercentageDetailsSum(groupedSynergies, entityState.skills, player.damageStats);
+      return getSynergyPercentageDetailsSum(groupedSynergies, entityState);
     }
     return [];
   });
