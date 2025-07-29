@@ -5,7 +5,7 @@
   import { settings } from "$lib/stores.svelte.js";
   import { hyperAwakeningIds } from "$lib/utils/buffs";
   import { abbreviateNumberSplit, customRound } from "$lib/utils";
-  import { damageValue, percentValue, skillTooltip } from "./Snippets.svelte";
+  import { damageValue, percentValue } from "./Snippets.svelte";
 
   export const playerBreakdownColumns: LogColumn<EntityState, SkillState>[] = [
     // Damage
@@ -274,10 +274,10 @@
     // Cooldown Efficiency
     {
       show(enc) {
-        return enc.anyCooldownEfficiency;
+        return enc.anyCooldownRatio;
       },
-      headerText: "CDE%",
-      headerTooltip: "Cooldown Efficiency %, percentage of time a skill was on cooldown",
+      headerText: "CDR%",
+      headerTooltip: "Cooldown Ratio % - Percentage of time a skill was on cooldown",
       value: cooldownEfficiency,
       valueTooltip: cooldownEfficiencyTooltip
     }
@@ -473,16 +473,16 @@
 {/snippet}
 
 {#snippet cooldownEfficiency(state: SkillState)}
-  {#if state.cooldownEfficiency}
-    {@render percentValue(state.cooldownEfficiency)}
+  {#if state.cooldownRatio}
+    {@render percentValue(state.cooldownRatio)}
   {:else}
     -
   {/if}
 {/snippet}
 
 {#snippet cooldownEfficiencyTooltip(state: SkillState)}
-  {#if state.skillAvailablePercent}
-    <span> {state.skill.name} was off cooldown for {customRound(state.skillAvailablePercent * 100)}% of the fight</span>
+  {#if state.cooldownRatio}
+    <span> {state.skill.name} was on cooldown for {state.cooldownRatio}% of the fight</span>
   {:else}
     <span>N/A</span>
   {/if}

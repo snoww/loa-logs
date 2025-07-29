@@ -78,14 +78,10 @@ export class SkillState {
     }
     return undefined;
   });
-  skillAvailablePercent = $derived.by(() => {
+
+  cooldownRatio = $derived.by(() => {
     if (this.skill.timeAvailable) {
-      return this.skill.timeAvailable / this.entity.encounter.duration;
-    }
-  });
-  cooldownEfficiency = $derived.by(() => {
-    if (this.skillAvailablePercent) {
-      return customRound((1 - this.skillAvailablePercent) * 100);
+      return customRound((1 - this.skill.timeAvailable / this.entity.encounter.duration) * 100);
     }
   });
 

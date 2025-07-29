@@ -8,11 +8,11 @@
   import { customRound, isNameValid, rgbLinearShadeAdjust, UWUOWO_URL } from "$lib/utils";
   import { open } from "@tauri-apps/api/shell";
   import { flip } from "svelte/animate";
+  import PlayerBreakdownHeader from "./PlayerBreakdownHeader.svelte";
+  import PlayerBreakdownRow from "./PlayerBreakdownRow.svelte";
   import { badTooltip, fadTooltip } from "./Snippets.svelte";
   import ArkPassiveTooltip from "./tooltips/ArkPassiveTooltip.svelte";
   import ClassTooltip from "./tooltips/ClassTooltip.svelte";
-  import PlayerBreakdownHeader from "./PlayerBreakdownHeader.svelte";
-  import PlayerBreakdownRow from "./PlayerBreakdownRow.svelte";
 
   interface Props {
     handleRightClick: () => void;
@@ -172,7 +172,7 @@
           {/if}
         </td>
       {/if}
-      {#if entityState.anyCooldownEfficiency}
+      {#if entityState.anyCooldownRatio}
         <td class="px-1 text-center">-</td>
       {/if}
       <td
