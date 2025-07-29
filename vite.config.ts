@@ -10,5 +10,8 @@ export default defineConfig({
     Icons({
       compiler: "svelte"
     })
-  ]
+  ],
+  server: {
+    watch: { ignored: ["**/src-tauri/**"] }
+  }
 });
