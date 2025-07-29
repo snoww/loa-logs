@@ -1,6 +1,6 @@
 use crate::live::debug_print;
 use crate::live::entity_tracker::Entity;
-use crate::live::skill_tracker::SkillTracker;
+use crate::live::skill_tracker::{CastEvent, SkillTracker};
 use crate::live::stats_api::InspectInfo;
 use crate::live::status_tracker::StatusEffectDetails;
 use crate::parser::models::*;
@@ -353,7 +353,13 @@ pub fn get_skill_name_and_icon(
     entity_id: u64,
 ) -> SkillDetails {
     if (skill_id == 0) && (skill_effect_id == 0) {
-        ("Bleed".to_string(), "buff_168.png".to_string(), None, false, false)
+        (
+            "Bleed".to_string(),
+            "buff_168.png".to_string(),
+            None,
+            false,
+            false,
+        )
     } else if (skill_effect_id != 0) && (skill_id == 0) {
         return if let Some(effect) = SKILL_EFFECT_DATA.get(&skill_effect_id) {
             // if ValueJ is greater than 1,
@@ -393,13 +399,7 @@ pub fn get_skill_name_and_icon(
             if effect.comment.is_empty() {
                 (effect.id.to_string(), "".to_string(), None, special, false)
             } else {
-                (
-                    effect.comment.clone(),
-                    "".to_string(),
-                    None,
-                    special,
-                    false,
-                )
+                (effect.comment.clone(), "".to_string(), None, special, false)
             }
         } else {
             (skill_id.to_string(), "".to_string(), None, false, false)
@@ -723,6 +723,7 @@ pub fn insert_data(
     rdps_valid: bool,
     manual: bool,
     skill_cast_log: HashMap<u64, HashMap<u32, BTreeMap<i64, SkillCast>>>,
+    skill_cooldowns: HashMap<u32, Vec<CastEvent>>,
 ) -> i64 {
     let mut encounter_stmt = tx
         .prepare_cached(
@@ -940,6 +941,15 @@ pub fn insert_data(
                 entity.engraving_data = engravings;
                 entity.ark_passive_data = info.ark_passive_data.clone();
                 entity.loadout_hash = info.loadout_snapshot.clone();
+            }
+        }
+
+        if entity.name == encounter.local_player {
+            for (skill_id, events) in skill_cooldowns.iter() {
+                if let Some(skill) = entity.skills.get_mut(skill_id) {
+                    skill.time_available =
+                        Some(get_total_available_time(events, fight_start, fight_end));
+                }
             }
         }
 
@@ -1438,4 +1448,28 @@ pub fn boss_to_raid_map(boss: &str, max_hp: i64) -> Option<String> {
         }
         _ => RAID_MAP.get(boss).cloned(),
     }
+}
+
+pub fn get_total_available_time(
+    skill_cooldown: &Vec<CastEvent>,
+    encounter_start: i64,
+    encounter_end: i64,
+) -> i64 {
+    let mut total_available_time = 0;
+    let mut current_available_from = encounter_start;
+
+    for event in skill_cooldown {
+        if event.timestamp > current_available_from {
+            total_available_time += event.timestamp - current_available_from;
+        }
+
+        let cooldown_end = event.timestamp + event.cooldown_duration_ms;
+        current_available_from = current_available_from.max(cooldown_end);
+    }
+
+    if encounter_end > current_available_from {
+        total_available_time += encounter_end - current_available_from;
+    }
+
+    total_available_time
 }

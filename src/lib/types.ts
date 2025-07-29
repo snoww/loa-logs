@@ -169,6 +169,7 @@ export interface Skill {
   skillCastLog: Array<SkillCast>;
   isHyperAwakening?: boolean;
   special?: boolean; // if special, this skill is not modifiable by buffs or crits
+  timeAvailable?: number; // the total time in milliseconds this skill was off cooldown during the encounter
 }
 
 export interface SkillCast {

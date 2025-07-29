@@ -10,6 +10,9 @@ pub struct SkillTracker {
     pub skills: HashMap<(u64, u32, i64), SkillCast>,
     pub projectile_id_to_timestamp: Cache<u64, i64>,
     pub skill_timestamp: Cache<(u64, u32), i64>,
+
+    // map of skill_id to a list of CastEvents
+    pub skill_cooldowns: HashMap<u32, Vec<CastEvent>>,
 }
 
 impl SkillTracker {
@@ -23,6 +26,7 @@ impl SkillTracker {
             skill_timestamp: Cache::builder()
                 .time_to_idle(Duration::from_secs(20))
                 .build(),
+            skill_cooldowns: HashMap::new(),
         }
     }
 
@@ -79,10 +83,10 @@ impl SkillTracker {
             source_timestamp
         } else if let Some(skill_timestamp) = self.projectile_id_to_timestamp.get(&projectile_id) {
             skill_timestamp
-        } else if let Some(skill_timestamp) = self.skill_timestamp.get(&(entity_id, skill_id)) {
-            skill_timestamp
         } else {
-            -1
+            self.skill_timestamp
+                .get(&(entity_id, skill_id))
+                .unwrap_or(-1)
         };
 
         if skill_timestamp >= 0 {
@@ -118,4 +122,10 @@ impl SkillTracker {
 
         cast_log
     }
+}
+
+#[derive(Debug, Clone)]
+pub struct CastEvent {
+    pub timestamp: i64,
+    pub cooldown_duration_ms: i64,
 }

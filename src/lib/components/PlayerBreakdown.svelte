@@ -172,6 +172,9 @@
           {/if}
         </td>
       {/if}
+      {#if entityState.anyCooldownEfficiency}
+        <td class="px-1 text-center">-</td>
+      {/if}
       <td
         class="absolute left-0 -z-10 h-7 px-2 py-1"
         style="background-color: {settings.app.general.splitLines

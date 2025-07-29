@@ -1,20 +1,20 @@
+use crate::live::entity_tracker::{Entity, EntityTracker};
+use crate::live::skill_tracker::{CastEvent, SkillTracker};
+use crate::live::stats_api::{InspectInfo, StatsApi};
+use crate::live::status_tracker::StatusEffectDetails;
+use crate::live::utils::*;
+use crate::parser::models::*;
 use chrono::Utc;
 use hashbrown::HashMap;
 use log::{info, warn};
 use meter_core::packets::common::SkillMoveOptionData;
 use meter_core::packets::definitions::PKTIdentityGaugeChangeNotify;
+use meter_core::packets::structures::SkillCooldownStruct;
 use moka::sync::Cache;
 use rsntp::SntpClient;
 use rusqlite::Connection;
 use std::cmp::max;
 use std::default::Default;
-
-use crate::live::entity_tracker::{Entity, EntityTracker};
-use crate::live::skill_tracker::SkillTracker;
-use crate::live::stats_api::{InspectInfo, StatsApi};
-use crate::live::status_tracker::StatusEffectDetails;
-use crate::live::utils::*;
-use crate::parser::models::*;
 use tauri::{AppHandle, Manager, Window, Wry};
 use tokio::task;
 
@@ -330,6 +330,55 @@ impl EncounterState {
                 // cap duration to death time if it exceeds it
                 x.duration = x.timestamp - entity.damage_stats.death_time;
             });
+    }
+
+    pub fn on_skill_cooldown(&mut self, cooldown_struct: SkillCooldownStruct) {
+        let now = Utc::now().timestamp_millis();
+
+        let cooldown_duration = if cooldown_struct.skill_cooldown_stack_data.has_stacks > 0 {
+            (cooldown_struct
+                .skill_cooldown_stack_data
+                .current_stack_cooldown
+                .unwrap_or_default()
+                * 1000.0) as i64
+        } else {
+            (cooldown_struct.current_cooldown * 1000.0) as i64
+        };
+
+        let cooldowns = self
+            .skill_tracker
+            .skill_cooldowns
+            .entry(cooldown_struct.skill_id)
+            .or_default();
+
+        // check if this is a cooldown reduction event (e.g. quick recharge, instant cooldown reduction)
+        if let Some(last_event) = cooldowns.last_mut() {
+            let last_cooldown_end = last_event.timestamp + last_event.cooldown_duration_ms;
+
+            // if skill is still on cooldown, this is a cooldown reduction
+            if now < last_cooldown_end {
+                // update the cooldown to end at: current_time + new_duration
+                // this means the total cooldown duration from cast time is:
+                // (timestamp - last_event.timestamp) + cooldown_duration
+                last_event.cooldown_duration_ms = (now - last_event.timestamp) + cooldown_duration;
+                return;
+            }
+        }
+        cooldowns.push(CastEvent {
+            timestamp: now,
+            cooldown_duration_ms: cooldown_duration,
+        });
+
+        // info!("skill cooldowns: {cooldowns:#?}");
+        // info!(
+        //     "total available time for {}: {}ms",
+        //     cooldown_struct.skill_id,
+        //     self.skill_tracker.calculate_total_available_time(
+        //         cooldown_struct.skill_id,
+        //         self.encounter.fight_start,
+        //         now
+        //     )
+        // );
     }
 
     pub fn on_skill_start(
@@ -1424,9 +1473,9 @@ impl EncounterState {
         let rdps_valid = self.rdps_valid;
 
         let skill_cast_log = self.skill_tracker.get_cast_log();
-
+        let skill_cooldowns = self.skill_tracker.skill_cooldowns.clone();
         let stats_api = stats_api.clone();
-
+        
         // debug_print(format_args!("skill cast log:\n{}", serde_json::to_string(&skill_cast_log).unwrap()));
 
         // debug_print(format_args!("rdps_data valid: [{}]", rdps_valid));
@@ -1466,6 +1515,7 @@ impl EncounterState {
                 rdps_valid,
                 manual,
                 skill_cast_log,
+                skill_cooldowns,
             );
 
             tx.commit().expect("failed to commit transaction");

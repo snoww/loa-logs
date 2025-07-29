@@ -1,7 +1,7 @@
-import type { EntityState } from "./entity.svelte";
-import type { Skill } from "./types";
 import { abbreviateNumberSplit, customRound } from "$lib/utils";
+import type { EntityState } from "./entity.svelte";
 import { settings } from "./stores.svelte";
+import type { Skill } from "./types";
 
 export class SkillState {
   skill: Skill = $state()!;
@@ -77,6 +77,16 @@ export class SkillState {
       }
     }
     return undefined;
+  });
+  skillAvailablePercent = $derived.by(() => {
+    if (this.skill.timeAvailable) {
+      return this.skill.timeAvailable / this.entity.encounter.duration;
+    }
+  });
+  cooldownEfficiency = $derived.by(() => {
+    if (this.skillAvailablePercent) {
+      return customRound((1 - this.skillAvailablePercent) * 100);
+    }
   });
 
   constructor(skill: Skill, entity: EntityState) {

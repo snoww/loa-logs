@@ -489,6 +489,13 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
                     }
                 }
             }
+            Pkt::SkillCooldownNotify => {
+                if let Some(pkt) = parse_pkt(&data, PKTSkillCooldownNotify::new, "PKTSkillCooldownNotify")
+                {
+                    // info!("SkillCooldownNotify: {:?}", pkt.skill_cooldown_struct);
+                    state.on_skill_cooldown(pkt.skill_cooldown_struct);
+                }
+            }
             Pkt::SkillStartNotify => {
                 if let Some(pkt) = parse_pkt(&data, PKTSkillStartNotify::new, "PKTSkillStartNotify")
                 {

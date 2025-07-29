@@ -269,6 +269,17 @@
       headerTooltip: "Hits per minute",
       value: hitsPerMinute,
       valueTooltip: null
+    },
+
+    // Cooldown Efficiency
+    {
+      show(enc) {
+        return enc.anyCooldownEfficiency;
+      },
+      headerText: "CDE%",
+      headerTooltip: "Cooldown Efficiency %, percentage of time a skill was on cooldown",
+      value: cooldownEfficiency,
+      valueTooltip: cooldownEfficiencyTooltip
     }
   ];
 </script>
@@ -458,5 +469,21 @@
     {customRound(state.skill.hits / (state.entity.encounter.duration / 1000 / 60))}
   {:else}
     0
+  {/if}
+{/snippet}
+
+{#snippet cooldownEfficiency(state: SkillState)}
+  {#if state.cooldownEfficiency}
+    {@render percentValue(state.cooldownEfficiency)}
+  {:else}
+    -
+  {/if}
+{/snippet}
+
+{#snippet cooldownEfficiencyTooltip(state: SkillState)}
+  {#if state.skillAvailablePercent}
+    <span> {state.skill.name} was off cooldown for {customRound(state.skillAvailablePercent * 100)}% of the fight</span>
+  {:else}
+    <span>N/A</span>
   {/if}
 {/snippet}

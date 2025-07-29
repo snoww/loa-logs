@@ -145,6 +145,8 @@ export class EntityState {
   anySupportBrand = $derived(this.skills.some((skill) => skill.debuffedBySupport > 0));
   anySupportHat = $derived(this.skills.some((skill) => skill.buffedByHat > 0));
 
+  anyCooldownEfficiency = $derived(this.skills.some((skill) => skill.timeAvailable));
+
   constructor(entity: Entity, enc: EncounterState) {
     this.entity = entity;
     this.encounter = enc;

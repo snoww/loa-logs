@@ -189,6 +189,9 @@ pub struct Skill {
 
     #[serde(skip)]
     pub last_timestamp: i64,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub time_available: Option<i64>, // total time skill was available to cast
 }
 
 #[derive(Debug, Default, Serialize, Deserialize, Clone)]
