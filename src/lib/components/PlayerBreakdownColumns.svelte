@@ -271,7 +271,7 @@
       valueTooltip: null
     },
 
-    // Cooldown Efficiency
+    // Cooldown Ratio %
     {
       show(enc) {
         return enc.anyCooldownRatio;

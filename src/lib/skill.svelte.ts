@@ -80,7 +80,7 @@ export class SkillState {
   });
 
   cooldownRatio = $derived.by(() => {
-    if (this.skill.timeAvailable) {
+    if (this.skill.timeAvailable && this.skill.timeAvailable <= this.entity.encounter.duration) {
       return customRound((1 - this.skill.timeAvailable / this.entity.encounter.duration) * 100);
     }
   });
