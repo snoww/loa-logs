@@ -1,19 +1,35 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.31.6 - July 27th, 2025
+    v1.31.7 - July 30th, 2025
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
   </div>
 </div>
 
+#### NEW FEATURES
+
+- added new column **_Cooldown Ratio %_** in log skill breakdowns
+  - based off official meter in korea
+  - shows percentage of time a skill was on cooldown for the duration of the encounter
+  - _only works for local player_
+  - will show in uploaded logs if you upload your pov
+
+![cdr%](https://i.imgur.com/svbYR2h.png)
+
+#### BUG FIXES AND IMPROVEMENTS
+
+- fixed buff average %s not summing correctly
+
+---
+
+### v1.31.6 - July 27th, 2025
+
 #### BUG FIXES AND IMPROVEMENTS
 
 - fixed artist ink marble identity duration increase not being tracked
 - fixed gems for identity skills not being tracked
 - improved summoner summon skill labeling (big thanks to poont)
-
----
 
 ### v1.31.5 - July 25th, 2025
 
