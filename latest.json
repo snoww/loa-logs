@@ -1,11 +1,11 @@
 {
-  "version": "v1.31.7",
-  "notes": "### v1.31.7 - July 30th, 2025\n\n#### NEW FEATURES\n- added new column **_Cooldown Ratio %_** in log skill breakdowns \n  - based off official meter in korea\n  - shows percentage of time a skill was on cooldown for the duration of the encounter\n  - _only works for local player_\n  - will show in uploaded logs if you upload your pov\n\n![cdr%](https://i.imgur.com/svbYR2h.png)\n\n#### BUG FIXES AND IMPROVEMENTS\n\n- fixed buff average %s not summing correctly",
-  "pub_date": "2025-07-30T02:34:25.810Z",
+  "version": "v1.31.8",
+  "notes": "### v1.31.8 - July 30th, 2025\n\n#### NEW FEATURES\n- added new column **_Cooldown Ratio %_** in log skill breakdowns \n  - based off official meter in korea\n  - shows percentage of time a skill was on cooldown for the duration of the encounter\n  - _only works for local player_\n  - will show in uploaded logs if you upload your pov\n\n![cdr%](https://i.imgur.com/svbYR2h.png)\n\n#### BUG FIXES AND IMPROVEMENTS\n\n- fixed buff average %s not summing correctly\n- fixed buff tab freezing in live meter",
+  "pub_date": "2025-07-30T18:56:26.789Z",
   "platforms": {
     "windows-x86_64": {
-      "url": "https://github.com/snoww/loa-logs/releases/download/v1.31.7/LOA.Logs_1.31.7_x64-setup.nsis.zip",
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlZObnB0UDhsYU1PRjBXaTMxUDUrSUhKaGd0azV5ZnJ3NkpSSmZDSDloTmFhZ3FQL05kbXgyWXlpMlJqMjJxaG5WeTVQRVRrMUN3Q256cSs0TkFHUWdFPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzUzODQyODc1CWZpbGU6TE9BIExvZ3NfMS4zMS43X3g2NC1zZXR1cC5uc2lzLnppcApwRG4rTXUvWVhZd3VMci9JbDRmM2krZE93R1Y5WWN4WE0yMjBWTCtreXZSeUpZVHl6UHJrTFZlS3RHSkM2cWNYMjQvc1JzRm5nWlVtSkZFSm1yT1VBZz09Cg=="
+      "url": "https://github.com/snoww/loa-logs/releases/download/v1.31.8/LOA.Logs_1.31.8_x64-setup.nsis.zip",
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmJXOWdkVHRPdTVSQWdPaTliTGh5R1hpcDRoYnMyakFFZHcrNlVJV1UyUTIvU201U1ExRERjZWhRclZ3YTFiV3FqakhBTjhVWlNjT1B5b295TnN4bHcwPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzUzOTAxNzc5CWZpbGU6TE9BIExvZ3NfMS4zMS44X3g2NC1zZXR1cC5uc2lzLnppcAoxbERDVHE1U3gzazZrb1A2MmJ2SkRuMjhWUDFOSUMwMm02Z2hkTTFKMEFYcTNFNlE4VzcvZHc0SkFJS3J0aEVoZDhHUTJPbWdVRkp0RkluR0xaWGZDQT09Cg=="
     }
   }
 }
