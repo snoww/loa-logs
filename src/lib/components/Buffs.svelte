@@ -42,7 +42,7 @@
         <table
           class="isolate w-full table-fixed {enc.live &&
           settings.app.meter.pinSelfParty &&
-          buffs.buffParties[i].some((player) => player.name === enc.localPlayer)
+          buffs.enc.parties[i].some((player) => player.name === enc.localPlayer)
             ? 'order-first'
             : ''}"
         >
