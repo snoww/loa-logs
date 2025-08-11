@@ -356,7 +356,6 @@ async fn main() -> Result<()> {
             open_url,
             save_settings,
             get_settings,
-            open_folder,
             open_db_path,
             delete_encounters_below_min_duration,
             get_db_info,
@@ -1378,18 +1377,6 @@ fn get_settings(window: tauri::Window) -> Option<Settings> {
         .resource_dir()
         .expect("could not get resource dir");
     read_settings(&path).ok()
-}
-
-#[tauri::command]
-fn open_folder(path: String) {
-    let mut path = path;
-    if path.contains("USERPROFILE") {
-        if let Ok(user_dir) = std::env::var("USERPROFILE") {
-            path = path.replace("USERPROFILE", user_dir.as_str());
-        }
-    }
-    info!("open_folder: {}", path);
-    Command::new("explorer").args([path.as_str()]).spawn().ok();
 }
 
 #[tauri::command]
