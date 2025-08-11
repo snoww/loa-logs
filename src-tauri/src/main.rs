@@ -23,10 +23,10 @@ use std::{
 };
 
 use rusqlite::{params, params_from_iter, Connection, Transaction};
-use sysinfo::System;
+use sysinfo::{ProcessRefreshKind, RefreshKind, System};
 use tauri::{
-    api::process::Command, CustomMenuItem, LogicalPosition, LogicalSize, Manager, Position, Size,
-    SystemTray, SystemTrayEvent, SystemTrayMenu, SystemTrayMenuItem,
+    api::process::Command, api::shell::open, CustomMenuItem, LogicalPosition, LogicalSize, Manager,
+    Position, Size, SystemTray, SystemTrayEvent, SystemTrayMenu, SystemTrayMenuItem,
 };
 use tauri_plugin_window_state::{AppHandleExt, StateFlags, WindowExt};
 use window_vibrancy::{apply_blur, clear_blur};
@@ -1721,16 +1721,14 @@ fn set_start_on_boot(set: bool) {
 
 #[tauri::command]
 fn check_loa_running() -> bool {
-    let system = System::new_all();
-    let process_name = "lostark.exe";
-
-    // Iterate through all running processes
-    for process in system.processes().values() {
-        if process.name().to_string_lossy().to_ascii_lowercase() == process_name {
-            return true;
-        }
-    }
-    false
+    let system = System::new_with_specifics(
+        RefreshKind::nothing().with_processes(ProcessRefreshKind::nothing().without_tasks()),
+    );
+    let process_name = "LOSTARK.exe";
+    system
+        .processes()
+        .values()
+        .any(|p| p.name().eq_ignore_ascii_case(process_name))
 }
 
 #[tauri::command]
