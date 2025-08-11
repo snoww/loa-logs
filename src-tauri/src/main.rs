@@ -169,7 +169,7 @@ async fn main() -> Result<()> {
 
                 if settings.general.start_loa_on_start {
                     info!("auto launch game enabled");
-                    start_loa_process();
+                    start_loa_process(app.handle());
                 }
             } else {
                 meter_window.show().unwrap();
@@ -337,7 +337,7 @@ async fn main() -> Result<()> {
                         }
                     }
                     "start-loa" => {
-                        start_loa_process();
+                        start_loa_process(app.clone());
                     }
                     _ => {}
                 },
@@ -1732,16 +1732,15 @@ fn check_loa_running() -> bool {
 }
 
 #[tauri::command]
-fn start_loa_process() {
-    if !check_loa_running() {
-        info!("starting lost ark process...");
-        Command::new("cmd")
-            .args(["/C", "start", "steam://rungameid/1599340"])
-            .spawn()
-            .map_err(|e| error!("could not open lost ark: {}", e))
-            .ok();
-    } else {
-        info!("lost ark already running")
+fn start_loa_process(app_handle: tauri::AppHandle) {
+    if check_loa_running() {
+        return info!("lost ark already running");
+    }
+    info!("starting lost ark process...");
+
+    let scope = app_handle.shell_scope();
+    if let Err(e) = open(&scope, "steam://rungameid/1599340", None) {
+        error!("could not open lost ark: {}", e);
     }
 }
 

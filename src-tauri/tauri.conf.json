@@ -29,7 +29,7 @@
         "all": true
       },
       "shell": {
-        "open": true
+        "open": "^((https?://\\w+)|(steam://rungameid/\\d+)).+"
       },
       "process": {
         "relaunch": true
