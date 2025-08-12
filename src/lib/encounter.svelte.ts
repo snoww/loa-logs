@@ -105,11 +105,10 @@ export class EncounterState {
     if (settings.app.general.showEsther) {
       // include esthers in the total damage dealt
       return (
-        this.encounter?.encounterDamageStats.totalDamageDealt ??
-        0 +
-          this.players
-            .filter((e) => e.entityType === EntityType.ESTHER)
-            .reduce((a, b) => a + b.damageStats.damageDealt, 0)
+        (this.encounter?.encounterDamageStats.totalDamageDealt ?? 0) +
+        this.players
+          .filter((e) => e.entityType === EntityType.ESTHER)
+          .reduce((a, b) => a + b.damageStats.damageDealt, 0)
       );
     }
 
