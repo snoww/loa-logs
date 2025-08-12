@@ -1475,7 +1475,7 @@ impl EncounterState {
         let skill_cast_log = self.skill_tracker.get_cast_log();
         let skill_cooldowns = self.skill_tracker.skill_cooldowns.clone();
         let stats_api = stats_api.clone();
-        
+
         // debug_print(format_args!("skill cast log:\n{}", serde_json::to_string(&skill_cast_log).unwrap()));
 
         // debug_print(format_args!("rdps_data valid: [{}]", rdps_valid));
@@ -1488,13 +1488,16 @@ impl EncounterState {
 
         let window = self.app.clone();
         task::spawn(async move {
-            let player_infos =
-                if !raid_difficulty.is_empty() && !encounter.current_boss_name.is_empty() {
-                    info!("fetching player info");
-                    stats_api.get_character_info(&encounter).await
-                } else {
-                    None
-                };
+            let player_infos = if !raid_difficulty.is_empty()
+                && raid_difficulty != "Inferno"
+                && raid_difficulty != "Trial"
+                && !encounter.current_boss_name.is_empty()
+            {
+                info!("fetching player info");
+                stats_api.get_character_info(&encounter).await
+            } else {
+                None
+            };
 
             let mut conn = Connection::open(path).expect("failed to open database");
             let tx = conn.transaction().expect("failed to create transaction");
