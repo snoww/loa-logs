@@ -1387,10 +1387,11 @@ fn open_db_path(window: tauri::Window) {
         .resource_dir()
         .expect("could not get resource dir");
     info!("open_db_path: {}", path.display());
-    Command::new("explorer")
-        .args([path.to_str().unwrap()])
-        .spawn()
-        .ok();
+
+    let scope = window.app_handle().shell_scope();
+    if let Err(e) = open(&scope, path.to_str().unwrap(), None) {
+        error!("Failed to open database path: {}", e);
+    }
 }
 
 #[tauri::command]
