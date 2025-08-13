@@ -1615,23 +1615,23 @@ fn set_clickthrough(window: tauri::Window, set: bool) {
 
 #[tauri::command]
 fn remove_driver() {
-    Command::new("sc")
-        .args(["delete", "windivert"])
-        .output()
-        .expect("unable to delete driver");
+    #[cfg(target_os = "windows")]
+    {
+        let command = Command::new("sc").args(["delete", "windivert"]);
+
+        command.output().expect("unable to delete driver");
+    }
 }
 
 #[tauri::command]
 fn unload_driver() {
-    let output = Command::new("sc").args(["stop", "windivert"]).output();
+    #[cfg(target_os = "windows")]
+    {
+        let command = Command::new("sc").args(["stop", "windivert"]);
 
-    match output {
-        Ok(output) => {
-            if output.status.success() {
-                info!("stopped driver");
-            }
-        }
-        Err(_) => {
+        if command.output().is_ok_and(|output| output.status.success()) {
+            info!("stopped driver");
+        } else {
             warn!("could not execute command to stop driver");
         }
     }
