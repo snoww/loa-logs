@@ -1,11 +1,17 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.31.8 - July 30th, 2025
+    v1.31.9 - August 13th, 2025
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
   </div>
 </div>
+
+#### BUG FIXES AND IMPROVEMENTS
+
+- fixed damage % not counting sidereal damage
+
+### v1.31.8 - July 30th, 2025
 
 #### NEW FEATURES
 

@@ -1,11 +1,11 @@
 {
-  "version": "v1.31.8",
-  "notes": "### v1.31.8 - July 30th, 2025\n\n#### NEW FEATURES\n- added new column **_Cooldown Ratio %_** in log skill breakdowns \n  - based off official meter in korea\n  - shows percentage of time a skill was on cooldown for the duration of the encounter\n  - _only works for local player_\n  - will show in uploaded logs if you upload your pov\n\n![cdr%](https://i.imgur.com/svbYR2h.png)\n\n#### BUG FIXES AND IMPROVEMENTS\n\n- fixed buff average %s not summing correctly\n- fixed buff tab freezing in live meter",
-  "pub_date": "2025-07-30T18:56:26.789Z",
+  "version": "v1.31.9",
+  "notes": "### v1.31.9 - August 13th, 2025\n\n#### BUG FIXES AND IMPROVEMENTS\n\n- fixed damage % not counting sidereal damage",
+  "pub_date": "2025-08-13T04:23:38.669Z",
   "platforms": {
     "windows-x86_64": {
-      "url": "https://github.com/snoww/loa-logs/releases/download/v1.31.8/LOA.Logs_1.31.8_x64-setup.nsis.zip",
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmJXOWdkVHRPdTVSQWdPaTliTGh5R1hpcDRoYnMyakFFZHcrNlVJV1UyUTIvU201U1ExRERjZWhRclZ3YTFiV3FqakhBTjhVWlNjT1B5b295TnN4bHcwPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzUzOTAxNzc5CWZpbGU6TE9BIExvZ3NfMS4zMS44X3g2NC1zZXR1cC5uc2lzLnppcAoxbERDVHE1U3gzazZrb1A2MmJ2SkRuMjhWUDFOSUMwMm02Z2hkTTFKMEFYcTNFNlE4VzcvZHc0SkFJS3J0aEVoZDhHUTJPbWdVRkp0RkluR0xaWGZDQT09Cg=="
+      "url": "https://github.com/snoww/loa-logs/releases/download/v1.31.9/LOA.Logs_1.31.9_x64-setup.nsis.zip",
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlM3TkpKNWM4WFZ3SFRlVkxSN21WSUVMNzQwZ3h2Vkt4VVY0bloxM0o2QTlTUnc2Mmc3VkFKalBqMW9kbGRVMWVDYy9PbGFnUldYOE5VQkdTSTVKclFVPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzU1MDU5MTQ4CWZpbGU6TE9BIExvZ3NfMS4zMS45X3g2NC1zZXR1cC5uc2lzLnppcApHNVAyT0RaUmN2OHo5Qjh6aksrWXUzVVl1VTlSZ0QvamJvUmN2OHJESERzbXY3QjFrNVlkeWRLVDdhQ3VjdUpFSjZBZE51YU4yeVBmOGo5Z2RqZGpCZz09Cg=="
     }
   }
 }
