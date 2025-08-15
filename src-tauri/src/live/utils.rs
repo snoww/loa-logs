@@ -870,9 +870,7 @@ pub fn insert_data(
                     calculate_average_dps(damage_log, fight_start_sec, fight_end_sec);
             }
 
-            // spec should be set from player casts, it will be None if 'Unknown'
-            // use inspect result as fallback
-            let spec = get_player_spec(entity, &encounter.encounter_damage_stats.buffs);
+            let spec = get_player_spec(entity, &encounter.encounter_damage_stats.buffs, false);
             entity.spec = Some(spec.clone());
 
             if let Some(info) = player_info
@@ -1144,8 +1142,12 @@ pub fn update_current_boss_name(boss_name: &str) -> String {
     .to_string()
 }
 
-pub fn get_player_spec(player: &EncounterEntity, buffs: &HashMap<u32, StatusEffect>) -> String {
-    if player.skills.len() < 8 {
+pub fn get_player_spec(
+    player: &EncounterEntity,
+    buffs: &HashMap<u32, StatusEffect>,
+    skip_min_check: bool,
+) -> String {
+    if !skip_min_check && player.skills.len() < 8 {
         return "Unknown".to_string();
     }
 
@@ -1182,8 +1184,14 @@ pub fn get_player_spec(player: &EncounterEntity, buffs: &HashMap<u32, StatusEffe
             // if has execution of judgement, judgement blade
             if player.skills.contains_key(&36250) || player.skills.contains_key(&36270) {
                 "Judgment"
-            } else {
+            } else if player.skills.contains_key(&36200)
+                || player.skills.contains_key(&36170)
+                || player.skills.contains_key(&36800)
+            {
+                // if has heavenly blessing, wrath of god, or holy aura
                 "Blessed Aura"
+            } else {
+                "Unknown"
             }
         }
         "Slayer" => {
@@ -1218,10 +1226,17 @@ pub fn get_player_spec(player: &EncounterEntity, buffs: &HashMap<u32, StatusEffe
                 || player.skills.contains_key(&21149))
                 || player.skills.contains_key(&21310)
             {
-                "True Courage"
-            } else {
-                "Desperate Salvation"
+                return "True Courage".to_string();
+            } else if player
+                .skills
+                .get(&21160)
+                .is_some_and(|s| s.tripod_index.is_some_and(|t| t.third == 1))
+            {
+                // if heavenly tune has atk pwr tripod
+                return "Desperate Salvation".to_string();
             }
+
+            "Unknown"
         }
         "Sorceress" => {
             // if has arcane rupture
@@ -1346,12 +1361,22 @@ pub fn get_player_spec(player: &EncounterEntity, buffs: &HashMap<u32, StatusEffe
             }
         }
         "Artist" => {
-            // dps if has cattle drive or shattering strike
-            if player.skills.contains_key(&31940) || player.skills.contains_key(&31060) {
-                "Recurrence"
-            } else {
-                "Full Bloom"
+            // dps if has cattle drive or shattering strike or rising moon
+            if player.skills.contains_key(&31940)
+                || player.skills.contains_key(&31060)
+                || player.skills.contains_key(&31145)
+            {
+                return "Recurrence".to_string();
+            } else if player
+                .skills
+                .get(&31400)
+                .is_some_and(|s| s.tripod_index.is_some_and(|t| t.third == 1))
+            {
+                // if sunsketch has atk pwr tripod
+                return "Full Bloom".to_string();
             }
+
+            "Unknown"
         }
         "Aeromancer" => {
             if player.skills.contains_key(&32250) && player.skills.contains_key(&32260) {
