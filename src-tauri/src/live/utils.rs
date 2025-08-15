@@ -42,8 +42,14 @@ pub fn update_player_entity(old: &mut EncounterEntity, new: &Entity) {
     old.gear_score = new.gear_level;
 }
 
-pub fn is_support_class_id(class_id: u32) -> bool {
-    class_id == 105 || class_id == 204 || class_id == 602
+pub fn is_support_class(class_id: &u32) -> bool {
+    matches!(class_id, 105 | 204 | 602 | 113)
+}
+pub fn is_support_spec(spec: &str) -> bool {
+    matches!(
+        spec,
+        "Desperate Salvation" | "Full Bloom" | "Blessed Aura" | "Liberator"
+    )
 }
 
 pub fn is_battle_item(skill_effect_id: &u32, _item_type: &str) -> bool {
@@ -864,8 +870,9 @@ pub fn insert_data(
                     calculate_average_dps(damage_log, fight_start_sec, fight_end_sec);
             }
 
+            // spec should be set from player casts, it will be None if 'Unknown'
+            // use inspect result as fallback
             let spec = get_player_spec(entity, &encounter.encounter_damage_stats.buffs);
-
             entity.spec = Some(spec.clone());
 
             if let Some(info) = player_info
@@ -1137,7 +1144,7 @@ pub fn update_current_boss_name(boss_name: &str) -> String {
     .to_string()
 }
 
-fn get_player_spec(player: &EncounterEntity, buffs: &HashMap<u32, StatusEffect>) -> String {
+pub fn get_player_spec(player: &EncounterEntity, buffs: &HashMap<u32, StatusEffect>) -> String {
     if player.skills.len() < 8 {
         return "Unknown".to_string();
     }

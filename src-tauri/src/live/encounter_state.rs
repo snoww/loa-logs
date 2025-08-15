@@ -491,6 +491,14 @@ impl EncounterState {
             }
         }
 
+        // set player spec if not unknown
+        if entity.spec.is_none() {
+            let spec = get_player_spec(entity, &self.encounter.encounter_damage_stats.buffs);
+            if spec != "Unknown" {
+                entity.spec = Some(spec);
+            }
+        }
+
         (skill_id, summons)
     }
 
@@ -748,9 +756,9 @@ impl EncounterState {
             if !special {
                 let se_on_source_ids = se_on_source
                     .iter()
-                    .map(|se| map_status_effect(se, &mut self.custom_id_map))
+                    .map(|se| (map_status_effect(se, &mut self.custom_id_map), se.from_support))
                     .collect::<Vec<_>>();
-                for buff_id in se_on_source_ids.iter() {
+                for (buff_id, is_support_buff) in se_on_source_ids.iter() {
                     if !self
                         .encounter
                         .encounter_damage_stats
@@ -785,27 +793,25 @@ impl EncounterState {
                                 .insert(*buff_id);
                         }
                     }
+
+                    // will count dps spec of supports as support buffs until proper spec is determined
                     if !is_buffed_by_support && !is_hat_buff(buff_id) {
                         if let Some(buff) = self.encounter.encounter_damage_stats.buffs.get(buff_id)
                         {
-                            if let Some(skill) = buff.source.skill.as_ref() {
-                                is_buffed_by_support = is_support_class_id(skill.class_id)
-                                    && buff.buff_type & StatusEffectBuffTypeFlags::DMG.bits() != 0
-                                    && buff.target == StatusEffectTarget::PARTY
-                                    && (buff.buff_category == "classskill"
-                                        || buff.buff_category == "arkpassive");
-                            }
+                            is_buffed_by_support = *is_support_buff
+                                && buff.buff_type & StatusEffectBuffTypeFlags::DMG.bits() != 0
+                                && buff.target == StatusEffectTarget::PARTY
+                                && (buff.buff_category == "classskill"
+                                    || buff.buff_category == "arkpassive");
                         }
                     }
                     if !is_buffed_by_identity {
                         if let Some(buff) = self.encounter.encounter_damage_stats.buffs.get(buff_id)
                         {
-                            if let Some(skill) = buff.source.skill.as_ref() {
-                                is_buffed_by_identity = is_support_class_id(skill.class_id)
-                                    && buff.buff_type & StatusEffectBuffTypeFlags::DMG.bits() != 0
-                                    && buff.target == StatusEffectTarget::PARTY
-                                    && buff.buff_category == "identity";
-                            }
+                            is_buffed_by_identity = *is_support_buff
+                                && buff.buff_type & StatusEffectBuffTypeFlags::DMG.bits() != 0
+                                && buff.target == StatusEffectTarget::PARTY
+                                && buff.buff_category == "identity";
                         }
                     }
 
@@ -815,9 +821,9 @@ impl EncounterState {
                 }
                 let se_on_target_ids = se_on_target
                     .iter()
-                    .map(|se| map_status_effect(se, &mut self.custom_id_map))
+                    .map(|se| (map_status_effect(se, &mut self.custom_id_map), se.from_support))
                     .collect::<Vec<_>>();
-                for debuff_id in se_on_target_ids.iter() {
+                for (debuff_id, is_support_debuff) in se_on_target_ids.iter() {
                     if !self
                         .encounter
                         .encounter_damage_stats
@@ -856,12 +862,9 @@ impl EncounterState {
                         if let Some(debuff) =
                             self.encounter.encounter_damage_stats.debuffs.get(debuff_id)
                         {
-                            if let Some(skill) = debuff.source.skill.as_ref() {
-                                is_debuffed_by_support = is_support_class_id(skill.class_id)
-                                    && debuff.buff_type & StatusEffectBuffTypeFlags::DMG.bits()
-                                        != 0
-                                    && debuff.target == StatusEffectTarget::PARTY;
-                            }
+                            is_debuffed_by_support = *is_support_debuff
+                                && debuff.buff_type & StatusEffectBuffTypeFlags::DMG.bits() != 0
+                                && debuff.target == StatusEffectTarget::PARTY;
                         }
                     }
                 }
@@ -887,7 +890,7 @@ impl EncounterState {
                     (source_entity.current_hp as f64 / source_entity.max_hp as f64) > 0.65;
                 let mut filtered_se_on_source_ids: Vec<u32> = vec![];
 
-                for buff_id in se_on_source_ids.iter() {
+                for (buff_id, _) in se_on_source_ids.iter() {
                     // hyper only affected by hat buff
                     if is_hyper_awakening && !is_hat_buff(buff_id) {
                         continue;
@@ -915,7 +918,7 @@ impl EncounterState {
                         .and_modify(|e| *e += damage)
                         .or_insert(damage);
                 }
-                for debuff_id in se_on_target_ids.iter() {
+                for (debuff_id, _) in se_on_target_ids.iter() {
                     if is_hyper_awakening {
                         break;
                     }
@@ -936,7 +939,7 @@ impl EncounterState {
                 skill_hit.buffed_by = filtered_se_on_source_ids;
                 // no debuffs affect hyper
                 if !is_hyper_awakening {
-                    skill_hit.debuffed_by = se_on_target_ids;
+                    skill_hit.debuffed_by = se_on_target_ids.into_iter().map(|se| se.0).collect();
                 }
             }
         }
