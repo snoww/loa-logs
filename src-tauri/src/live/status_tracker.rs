@@ -447,12 +447,9 @@ pub fn build_status_effect(
     // otherwise check if spec is support spec
     // this will cause a slight inaccuracy in the beginning of the encounter when specs have not been determined yet
     // as dps specs of supports will be counting as support
-    // better than nothing i suppose
     let is_support = source_entity.is_some_and(|entity| {
-        entity.spec.as_ref().map_or_else(
-            || is_support_class(&entity.class_id),
-            |spec| is_support_spec(spec),
-        )
+        is_support_class(&entity.class_id)
+            && entity.spec.as_ref().is_some_and(|s| is_support_spec(s))
     });
 
     let expiry = if se_data.total_time > 0. && se_data.total_time < 604800. {

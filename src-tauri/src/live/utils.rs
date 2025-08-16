@@ -1220,11 +1220,15 @@ pub fn get_player_spec(
             }
         }
         "Bard" => {
-            // if has tempest skill, or vivace
+            // if has tempest skill, or vivace, or heavenly tune with crit tripod
             if (player.skills.contains_key(&21147)
                 || player.skills.contains_key(&21148)
                 || player.skills.contains_key(&21149))
                 || player.skills.contains_key(&21310)
+                || player
+                    .skills
+                    .get(&21160)
+                    .is_some_and(|s| s.tripod_index.is_some_and(|t| t.third == 2))
             {
                 return "True Courage".to_string();
             } else if player
@@ -1362,9 +1366,14 @@ pub fn get_player_spec(
         }
         "Artist" => {
             // dps if has cattle drive or shattering strike or rising moon
+            // or sunsketch with crit tripod
             if player.skills.contains_key(&31940)
                 || player.skills.contains_key(&31060)
                 || player.skills.contains_key(&31145)
+                || player
+                    .skills
+                    .get(&31400)
+                    .is_some_and(|s| s.tripod_index.is_some_and(|t| t.third == 2))
             {
                 return "Recurrence".to_string();
             } else if player
