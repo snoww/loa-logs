@@ -1181,8 +1181,14 @@ pub fn get_player_spec(
             }
         }
         "Paladin" => {
-            // if has execution of judgement, judgement blade
-            if player.skills.contains_key(&36250) || player.skills.contains_key(&36270) {
+            // if has execution of judgement, judgement blade, or flash slash strength release tripod
+            if player.skills.contains_key(&36250)
+                || player.skills.contains_key(&36270)
+                || player
+                    .skills
+                    .get(&36090)
+                    .is_some_and(|s| s.tripod_index.is_some_and(|t| t.second == 3))
+            {
                 "Judgment"
             } else if player.skills.contains_key(&36200)
                 || player.skills.contains_key(&36170)
