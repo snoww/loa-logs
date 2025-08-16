@@ -449,7 +449,7 @@ pub fn build_status_effect(
     // as dps specs of supports will be counting as support
     let is_support = source_entity.is_some_and(|entity| {
         is_support_class(&entity.class_id)
-            && entity.spec.as_ref().is_some_and(|s| is_support_spec(s))
+            && entity.spec.as_ref().is_none_or(|s| is_support_spec(s))
     });
 
     let expiry = if se_data.total_time > 0. && se_data.total_time < 604800. {
