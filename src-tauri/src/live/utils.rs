@@ -42,9 +42,18 @@ pub fn update_player_entity(old: &mut EncounterEntity, new: &Entity) {
     old.gear_score = new.gear_level;
 }
 
+pub fn is_support(entity: &EncounterEntity) -> bool {
+    if let Some(spec) = &entity.spec {
+        is_support_spec(spec)
+    } else {
+        is_support_class(&entity.class_id)
+    }
+}
+
 pub fn is_support_class(class_id: &u32) -> bool {
     matches!(class_id, 105 | 204 | 602 | 113)
 }
+
 pub fn is_support_spec(spec: &str) -> bool {
     matches!(
         spec,
@@ -765,9 +774,9 @@ pub fn insert_data(
         } else {
             Some(
                 party_info
-                    .into_iter()
+                    .iter()
                     .enumerate()
-                    .map(|(index, party)| (index as i32, party))
+                    .map(|(index, party)| (index as i32, party.clone()))
                     .collect(),
             )
         },
@@ -834,19 +843,91 @@ pub fn insert_data(
         combat_power,
         ark_passive_active,
         spec,
-        ark_passive_data
-    ) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17, ?18, ?19, ?20, ?21)",
+        ark_passive_data,
+        support_ap,
+        support_brand,
+        support_identity,
+        support_hyper
+    ) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17, ?18, ?19, ?20, ?21, ?22, ?23, ?24, ?25)",
         )
         .expect("failed to prepare entity statement");
 
     let fight_start = encounter.fight_start;
     let fight_end = encounter.last_combat_packet;
 
+    // get average support buffs for supports
+    let mut buffs = HashMap::new();
+    for party in party_info.iter() {
+        let party_members: Vec<_> = encounter
+            .entities
+            .iter()
+            .filter(|(name, _)| party.contains(name))
+            .map(|(name, entity)| entity)
+            .collect();
+
+        // specs are not determined for dps classes, but should be set for supports
+        let party_without_support: Vec<_> = party_members
+            .iter()
+            .filter(|entity| !is_support(entity))
+            .collect();
+
+        if party_members.len() - party_without_support.len() == 1 {
+            let party_damage_total: i64 = party_without_support
+                .iter()
+                .map(|entity| {
+                    entity.damage_stats.damage_dealt - entity.damage_stats.hyper_awakening_damage
+                })
+                .sum();
+
+            if party_damage_total <= 0 {
+                continue;
+            }
+
+            let mut average_brand = 0.0;
+            let mut average_buff = 0.0;
+            let mut average_identity = 0.0;
+            let mut average_hyper = 0.0;
+
+            for player in party_without_support {
+                let damage_dealt = (player.damage_stats.damage_dealt
+                    - player.damage_stats.hyper_awakening_damage)
+                    as f64;
+
+                if damage_dealt <= 0.0 {
+                    continue;
+                }
+
+                let party_damage_percent = damage_dealt / party_damage_total as f64;
+
+                let brand_ratio = player.damage_stats.debuffed_by_support as f64 / damage_dealt;
+                let buff_ratio = player.damage_stats.buffed_by_support as f64 / damage_dealt;
+                let identity_ratio = player.damage_stats.buffed_by_identity as f64 / damage_dealt;
+
+                average_brand += brand_ratio * party_damage_percent;
+                average_buff += buff_ratio * party_damage_percent;
+                average_identity += identity_ratio * party_damage_percent;
+                average_hyper += (player.damage_stats.buffed_by_hat as f64
+                    / player.damage_stats.damage_dealt as f64)
+                    * party_damage_percent;
+            }
+
+            if let Some(support) = party_members.iter().find(|entity| is_support(entity)) {
+                buffs.insert(
+                    support.name.clone(),
+                    SupportBuffs {
+                        brand: average_brand,
+                        buff: average_buff,
+                        identity: average_identity,
+                        hyper: average_hyper,
+                    },
+                );
+            }
+        }
+    }
+
     for (_key, entity) in encounter.entities.iter_mut().filter(|(_, e)| {
         ((e.entity_type == EntityType::PLAYER && e.class_id > 0)
-            || e.name == encounter.local_player
-            || e.entity_type == EntityType::ESTHER
-            || (e.entity_type == EntityType::BOSS && e.max_hp > 0))
+            || e.name == encounter.local_player)
             && e.damage_stats.damage_dealt > 0
     }) {
         if entity.entity_type == EntityType::PLAYER {
@@ -1007,6 +1088,11 @@ pub fn insert_data(
         let compressed_skills = compress_json(&entity.skills);
         let compressed_damage_stats = compress_json(&entity.damage_stats);
 
+        let damage_dealt = entity.damage_stats.damage_dealt;
+        let damage_without_hyper =
+            (damage_dealt - entity.damage_stats.hyper_awakening_damage) as f64;
+        let support_buffs = buffs.get(&entity.name);
+
         entity_stmt
             .execute(params![
                 entity.name,
@@ -1029,7 +1115,19 @@ pub fn insert_data(
                 entity.combat_power,
                 entity.ark_passive_active,
                 entity.spec,
-                json!(entity.ark_passive_data)
+                json!(entity.ark_passive_data),
+                support_buffs
+                    .map(|b| b.buff)
+                    .unwrap_or(entity.damage_stats.buffed_by_support as f64 / damage_without_hyper),
+                support_buffs.map(|b| b.brand).unwrap_or(
+                    entity.damage_stats.debuffed_by_support as f64 / damage_without_hyper
+                ),
+                support_buffs.map(|b| b.identity).unwrap_or(
+                    entity.damage_stats.buffed_by_identity as f64 / damage_without_hyper
+                ),
+                support_buffs
+                    .map(|b| b.hyper)
+                    .unwrap_or(entity.damage_stats.buffed_by_hat as f64 / damage_without_hyper),
             ])
             .expect("failed to insert entity");
     }
@@ -1519,4 +1617,11 @@ pub fn get_total_available_time(
     }
 
     total_available_time
+}
+
+struct SupportBuffs {
+    brand: f64,
+    buff: f64,
+    identity: f64,
+    hyper: f64,
 }

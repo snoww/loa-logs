@@ -43,6 +43,11 @@ export interface EncounterPreview {
   myDps: number;
   favorite: boolean;
   cleared: boolean;
+  spec?: string;
+  supportAp?: number;
+  supportBrand?: number;
+  supportIdentity?: number;
+  supportHyper?: number;
 }
 
 export interface EncounterDamageStats {

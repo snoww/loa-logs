@@ -630,6 +630,11 @@ pub struct EncounterPreview {
     pub my_dps: i64,
     pub favorite: bool,
     pub cleared: bool,
+    pub spec: Option<String>,
+    pub support_ap: Option<f32>,
+    pub support_brand: Option<f32>,
+    pub support_identity: Option<f32>,
+    pub support_hyper: Option<f32>,
 }
 
 #[derive(Debug, Default, Serialize, Deserialize, Clone)]

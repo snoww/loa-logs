@@ -4,7 +4,13 @@
   import { IconStar } from "$lib/icons";
   import type { EncounterPreview, EncountersOverview } from "$lib/types";
   import type { SvelteSet } from "svelte/reactivity";
-  import { abbreviateNumber, formatTimestamp, getClassIcon, timestampToMinutesAndSeconds } from "$lib/utils";
+  import {
+    abbreviateNumber,
+    formatTimestamp,
+    getClassIcon,
+    isSupportSpec,
+    timestampToMinutesAndSeconds
+  } from "$lib/utils";
   import { encounterFilter, type sortColumns } from "$lib/stores.svelte";
 
   let {
@@ -19,6 +25,8 @@
     encounterFilter.sort = sort;
     encounterFilter.order = encounterFilter.order === "asc" ? "desc" : "asc";
   }
+
+  const buffColors = ["text-red-300", "text-green-300", "text-yellow-300", "text-blue-300"];
 </script>
 
 {#snippet checkbox(id: number)}
@@ -33,6 +41,8 @@
 {/snippet}
 {#snippet encounterPreview(encounter: EncounterPreview)}
   {@const gate = raidGates[encounter.bossName]}
+  {@const isSupport = isSupportSpec(encounter.spec)}
+  {@const buffs = [encounter.supportAp, encounter.supportBrand, encounter.supportIdentity, encounter.supportHyper]}
   <tr class="items-center border-b border-neutral-700/50 hover:bg-neutral-800">
     <td class="text-center">
       {#if !selectMode}
@@ -92,7 +102,22 @@
       </div>
     </td>
     <td class="hidden p-1 text-right md:table-cell">
-      {abbreviateNumber(encounter.myDps)}
+      {#if isSupport && buffs.some((b) => b)}
+        <QuickTooltip tooltip="AP · Brand · Identity · T">
+          <div class="flex items-center justify-end gap-0.5">
+            {#each buffs as buff, i}
+              <span class="text-sm {buffColors[i]}">
+                {(buff! * 100).toFixed(0)}
+              </span>
+              {#if i < buffs.length - 1}
+                <span class="text-neutral-400">·</span>
+              {/if}
+            {/each}
+          </div>
+        </QuickTooltip>
+      {:else}
+        {abbreviateNumber(encounter.myDps)}
+      {/if}
     </td>
     <td class="p-1 text-right">
       {timestampToMinutesAndSeconds(encounter.duration)}
@@ -139,10 +164,10 @@
       <th class="p-3 text-left">Classes</th>
       <th class="w-24 px-1 text-left lg:w-32">Name</th>
       <th
-        class="hidden w-20 cursor-pointer px-1 text-right md:table-cell {encounterFilter.sort === 'my_dps'
+        class="hidden w-28 cursor-pointer px-1 text-right md:table-cell {encounterFilter.sort === 'my_dps'
           ? 'text-accent-500/80'
           : 'hover:opacity-80'}"
-        onclick={() => changeSort("my_dps")}>DPS</th
+        onclick={() => changeSort("my_dps")}>Performance</th
       >
       <th
         class="w-24 cursor-pointer px-1 text-right {encounterFilter.sort === 'duration'

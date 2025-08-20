@@ -426,6 +426,8 @@ fn setup_db(resource_path: &Path) -> Result<(), rusqlite::Error> {
 
     migration_combat_power(&tx)?;
 
+    migration_buff_summary(&tx)?;
+
     stmt.finalize()?;
     info!("finished setting up database");
     tx.commit()
@@ -672,6 +674,19 @@ fn migration_combat_power(tx: &Transaction) -> Result<(), rusqlite::Error> {
     stmt.finalize()
 }
 
+fn migration_buff_summary(tx: &Transaction) -> Result<(), rusqlite::Error> {
+    let mut stmt = tx.prepare("SELECT 1 FROM pragma_table_info(?) WHERE name=?")?;
+    if !stmt.exists(["entity", "support_ap"])? {
+        info!("adding support buff summary columns");
+        tx.execute("ALTER TABLE entity ADD COLUMN support_ap REAL", [])?;
+        tx.execute("ALTER TABLE entity ADD COLUMN support_brand REAL", [])?;
+        tx.execute("ALTER TABLE entity ADD COLUMN support_identity REAL", [])?;
+        tx.execute("ALTER TABLE entity ADD COLUMN support_hyper REAL", [])?;
+    }
+
+    stmt.finalize()
+}
+
 #[tauri::command]
 fn load_encounters_preview(
     window: tauri::Window,
@@ -748,17 +763,24 @@ fn load_encounters_preview(
 
     let query = format!(
         "SELECT
-    e.id,
-    e.fight_start,
-    e.current_boss,
-    e.duration,
-    e.difficulty,
-    e.favorite,
-    e.cleared,
-    e.local_player,
-    e.my_dps,
-    e.players
-    FROM encounter_preview e {}
+    e.id,           -- 0
+    e.fight_start,  -- 1
+    e.current_boss, -- 2
+    e.duration,     -- 3
+    e.difficulty,   -- 4
+    e.favorite,     -- 5
+    e.cleared,      -- 6
+    e.local_player, -- 7
+    e.my_dps,       -- 8
+    e.players,      -- 9
+    le.spec,            -- 10
+    le.support_ap,      -- 11
+    le.support_brand,   -- 12
+    le.support_identity,-- 13
+    le.support_hyper    -- 14
+    FROM encounter_preview e
+    LEFT JOIN entity le ON le.encounter_id = e.id AND le.name = e.local_player
+    {}
     WHERE e.duration > ? {}
     {} {} {} {} {}
     ORDER BY {} {}
@@ -809,6 +831,11 @@ fn load_encounters_preview(
                 cleared: row.get(6)?,
                 local_player: row.get(7)?,
                 my_dps: row.get(8).unwrap_or(0),
+                spec: row.get(10).unwrap_or_default(),
+                support_ap: row.get(11).unwrap_or_default(),
+                support_brand: row.get(12).unwrap_or_default(),
+                support_identity: row.get(13).unwrap_or_default(),
+                support_hyper: row.get(14).unwrap_or_default(),
             })
         })
         .expect("could not query encounters");
