@@ -313,6 +313,7 @@ export const defaultClassColors: Record<string, string> = {
   Gunlancer: "#e1907e",
   Paladin: "#ff9900",
   Slayer: "#db6a42",
+  Valkyrie: "#ffbf00",
   Arcanist: "#b38915",
   Summoner: "#22aa99",
   Bard: "#674598",

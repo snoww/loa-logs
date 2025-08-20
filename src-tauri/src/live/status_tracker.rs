@@ -4,7 +4,7 @@ use crate::live::status_tracker::StatusEffectBuffCategory::{BattleItem, Bracelet
 use crate::live::status_tracker::StatusEffectCategory::Debuff;
 use crate::live::status_tracker::StatusEffectShowType::All;
 use crate::live::utils::{get_new_id, is_support_class, is_support_spec};
-use crate::parser::models::{EncounterEntity, EntityType, SKILL_BUFF_DATA};
+use crate::parser::models::{EncounterEntity, EntityType, SKILL_BUFF_DATA, SKILL_DATA};
 use chrono::{DateTime, Duration, Utc};
 use hashbrown::HashMap;
 use log::info;
@@ -443,15 +443,6 @@ pub fn build_status_effect(
         }
     }
 
-    // if spec is not determined yet, check if is support class
-    // otherwise check if spec is support spec
-    // this will cause a slight inaccuracy in the beginning of the encounter when specs have not been determined yet
-    // as dps specs of supports will be counting as support
-    let is_support = source_entity.is_some_and(|entity| {
-        is_support_class(&entity.class_id)
-            && entity.spec.as_ref().is_none_or(|s| is_support_spec(s))
-    });
-
     let expiry = if se_data.total_time > 0. && se_data.total_time < 604800. {
         Some(
             timestamp
@@ -465,7 +456,6 @@ pub fn build_status_effect(
         instance_id: se_data.status_effect_instance_id,
         source_id,
         target_id,
-        from_support: is_support,
         status_effect_id: se_data.status_effect_id,
         custom_id,
         target_type,
@@ -541,7 +531,6 @@ pub struct StatusEffectDetails {
     pub custom_id: u32,
     pub target_id: u64,
     pub source_id: u64,
-    pub from_support: bool,
     pub target_type: StatusEffectTargetType,
     pub db_target_type: String,
     pub value: u64,

@@ -298,9 +298,17 @@ export function addBardBubbles(key: string, buff: { bonus?: number }, syn: Statu
   }
 }
 
-const supportClasses = [classNameToClassId["Paladin"], classNameToClassId["Bard"], classNameToClassId["Artist"]];
+const supportClasses = [
+  classNameToClassId["Paladin"],
+  classNameToClassId["Bard"],
+  classNameToClassId["Artist"],
+  classNameToClassId["Valkyrie"]
+];
 
 export function isSupportBuff(statusEffect: StatusEffect) {
+  if (statusEffect.buffCategory === "supportbuff") {
+    return true;
+  }
   if (
     supportSkills.evolutionGrp.includes(statusEffect.uniqueGroup) ||
     supportSkills.enlightenmentGrp.includes(statusEffect.uniqueGroup)
@@ -317,6 +325,7 @@ export function isSupportBuff(statusEffect: StatusEffect) {
 
 export const supportSkills = {
   marking: [
+    // unused
     21020, // Sound shock, Stigma, Harp of Rythm
     21290, // Sonatina
     31420, // Paint: Drawing Orchids
@@ -325,12 +334,9 @@ export const supportSkills = {
     36150, // God’s Decree (Godsent Law)
     36100 // Holy Explosion
   ],
-  markingGrp: [
-    210230, // Pala marking
-    210230, // Artist marking
-    210230 // Bard marking
-  ],
+  markingGrp: [210230],
   atkPwr: [
+    // unused
     21170, // Sonic Vibration
     21160, // Heavenly Tune
     31400, // Paint: Sunsketch
@@ -341,26 +347,29 @@ export const supportSkills = {
   atkPwrGrp: [
     101105, // Pala atk power
     314004, // Artist atk power
-    101204 // Bard atk power
+    101204, // Bard atk power
+    480030 // Valkyrie atk power
   ],
   identity: [
-    21140, // Serenade of Courage 1
-    21141, // Serenade of Courage 2
-    21142, // Serenade of Courage 3
-    21143, // Serenade of Courage
+    21140, // Bard Serenade of Courage 1
+    21141, // Bard Serenade of Courage 2
+    21142, // Bard Serenade of Courage 3
+    21143, // Bard Serenade of Courage
     31050, // Moonfall 10%
     31051 // Moonfall 5%
     // 36800 // Holy Aura
   ],
   identityGrp: [
+    211400, // Bard Serenade of Courage
     368000, // Pala Holy aura group
-    310501 // Artist Moonfal group
-    // Bard Serenade of Courage - doesn't exist
+    310501, // Artist Moonfal group
+    480018 // Valkyrie Release Light group
   ],
   haTechnique: [
     362600, // Paladin
     212305, // Bard
-    319503 // Artist
+    319503, // Artist
+    485100 // Valkyrie
   ],
   evolutionGrp: [
     2000260, // Combat Blessing
@@ -374,7 +383,7 @@ export const supportSkills = {
 export function makeSupportBuffKey(statusEffect: StatusEffect) {
   const skillId = statusEffect.source.skill?.id ?? 0;
   let key = "__";
-  key += `${classesMap[statusEffect.source.skill?.classId ?? 0]}`;
+  key += `${statusEffect.source.skill?.classId ? "_" + classesMap[statusEffect.source.skill?.classId] : "unknown"}`;
   if (supportSkills.markingGrp.includes(statusEffect.uniqueGroup)) {
     key += "_1";
   } else if (supportSkills.atkPwrGrp.includes(statusEffect.uniqueGroup)) {
@@ -414,7 +423,9 @@ const buffCategories = {
 
 export function isPartySynergy(statusEffect: StatusEffect) {
   return (
-    buffCategories.partySynergy.includes(statusEffect.buffCategory) && statusEffect.target === StatusEffectTarget.PARTY
+    (buffCategories.partySynergy.includes(statusEffect.buffCategory) &&
+      statusEffect.target === StatusEffectTarget.PARTY) ||
+    statusEffect.buffCategory === "supportbuff"
   );
 }
 

@@ -110,15 +110,31 @@ pub fn get_status_effect_data(buff_id: u32, source_skill: Option<u32>) -> Option
         || buff_category == "arkpassive"
         || buff_category == "identity"
         || (buff_category == "ability" && buff.unique_group != 0)
+        || buff_category == "supportbuff"
     {
         if let Some(buff_source_skills) = buff.source_skills.as_ref() {
             if let Some(source_skill) = source_skill {
                 let skill = SKILL_DATA.get(&source_skill);
                 get_summon_source_skill(skill, &mut status_effect);
             } else {
-                let source_skill = buff_source_skills.first().unwrap_or(&0);
-                let skill = SKILL_DATA.get(source_skill);
-                get_summon_source_skill(skill, &mut status_effect);
+                // get the first skill that has a name, fall back to first if none
+                let source_skill = {
+                    let mut first_any = None;
+                    let mut first_named = None;
+                    for id in buff_source_skills {
+                        if let Some(skill) = SKILL_DATA.get(id) {
+                            if first_any.is_none() {
+                                first_any = Some(skill);
+                            }
+                            if skill.name.is_some() {
+                                first_named = Some(skill);
+                                break; // break once skill with name found
+                            }
+                        }
+                    }
+                    first_named.or(first_any)
+                };
+                get_summon_source_skill(source_skill, &mut status_effect);
             }
         } else if let Some(buff_source_skill) = SKILL_DATA.get(&(buff_id / 10)) {
             status_effect.source.skill = Some(buff_source_skill.clone());
@@ -496,6 +512,7 @@ pub fn get_class_from_id(class_id: &u32) -> String {
         105 => "Paladin",
         111 => "Female Warrior",
         112 => "Slayer",
+        113 => "Valkyrie",
         201 => "Mage",
         202 => "Arcanist",
         203 => "Summoner",
@@ -629,7 +646,7 @@ pub fn get_engravings(engraving_ids: &Option<Vec<u32>>) -> Option<Vec<String>> {
 }
 
 pub fn is_hat_buff(buff_id: &u32) -> bool {
-    matches!(buff_id, 362600 | 212305 | 319503)
+    matches!(buff_id, 362600 | 212305 | 319503 | 485100)
 }
 
 fn generate_intervals(start: i64, end: i64) -> Vec<i64> {
@@ -1305,6 +1322,30 @@ pub fn get_player_spec(
                 "Predator"
             }
         }
+        "Valkyrie" => {
+            if player.skills.contains_key(&48060)
+                || player.skills.contains_key(&48070)
+                || player.skills.contains_key(&48500)
+                || player.skills.contains_key(&48100)
+            {
+                // shining knight, final splendor, cataclysm, foresight slash
+                "Shining Knight"
+            } else if player.skills.contains_key(&48250)
+                || player.skills.contains_key(&48270)
+                || player.skills.contains_key(&48230)
+                || player.skills.contains_key(&48220)
+                || player.skills.contains_key(&48040)
+                || player.skills.contains_key(&48041)
+                || player.skills.contains_key(&48042)
+            {
+                // seraphic oath, seraphic leap,
+                // circle of truth, truth's decree
+                // release light
+                "Liberator"
+            } else {
+                "Unknown"
+            }
+        }
         "Arcanist" => {
             if player.skills.contains_key(&19282) {
                 "Order of the Emperor"
@@ -1533,6 +1574,8 @@ fn get_spec_from_ark_passive(node: &ArkPassiveNode) -> String {
         2360010 => "Blessed Aura",
         2450000 => "Punisher",
         2450010 => "Predator",
+        2480000 => "Shining Knight",
+        2480100 => "Liberator",
         2230000 => "Ultimate Skill: Taijutsu",
         2230100 => "Shock Training",
         2220000 => "First Intention",

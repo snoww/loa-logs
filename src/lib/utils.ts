@@ -350,4 +350,4 @@ export const normalize = (val: number, min: number, max: number): number => {
 };
 
 export const isSupportSpec = (spec?: string): boolean =>
-  spec === "Desperate Salvation" || spec === "Full Bloom" || spec === "Blessed Aura";
+  spec === "Desperate Salvation" || spec === "Full Bloom" || spec === "Blessed Aura" || spec === "Liberator";

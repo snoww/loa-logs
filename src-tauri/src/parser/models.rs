@@ -818,6 +818,24 @@ lazy_static! {
 
         valid_zones.iter().cloned().collect()
     };
+    pub static ref SUPPORT_AP_GROUP: HashSet<u32> = {
+        let mut set = HashSet::new();
+        set.insert(101204); // bard
+        set.insert(101105); // paladin
+        set.insert(314004); // artist
+        set.insert(480030); // valkyrie
+
+        set
+    };
+    pub static ref SUPPORT_IDENTITY_GROUP: HashSet<u32> = {
+        let mut set = HashSet::new();
+        set.insert(211400); // bard serenade of courage
+        set.insert(368000); // paladin holy aura
+        set.insert(310501); // artist moonfall
+        set.insert(480018); // valkyrie release light
+
+        set
+    };
     pub static ref STAT_TYPE_MAP: HashMap<&'static str, u32> = {
         let mut map = HashMap::new();
         map.insert("none", 0);
@@ -945,76 +963,6 @@ lazy_static! {
         map.insert("skill_damage_sub_rate_2", 148);
         map.insert("resource_recovery_rate", 149);
         map.insert("weapon_dam", 151);
-        map
-    };
-    pub static ref STAT_TYPE_MAP_TRA: HashMap<u32, &'static str> =
-        STAT_TYPE_MAP.iter().map(|(k, v)| (*v, *k)).collect();
-    pub static ref IDENTITY_CATEGORY: HashMap<&'static str, i32> = {
-        let mut map = HashMap::new();
-        map.insert("none", 0);
-        map.insert("berserker_normal", 1);
-        map.insert("berserker_rush", 2);
-        map.insert("warlord_normal", 3);
-        map.insert("warlord_shield_of_battlefield", 4);
-        map.insert("destroyer_normal", 5);
-        map.insert("destroyer_focus", 6);
-        map.insert("destroyer_release", 7);
-        map.insert("battle_master_normal", 8);
-        map.insert("battle_master_bubble", 9);
-        map.insert("infighter_normal", 10);
-        map.insert("infighter_vigor", 11);
-        map.insert("infighter_shock", 12);
-        map.insert("forcemaster_normal", 13);
-        map.insert("forcemaster_soul", 14);
-        map.insert("lance_master_normal", 15);
-        map.insert("lance_master_wild", 16);
-        map.insert("lance_master_focus", 17);
-        map.insert("devil_hunter_normal", 18);
-        map.insert("devil_hunter_pistol", 19);
-        map.insert("devil_hunter_shotgun", 20);
-        map.insert("devil_hunter_rifle", 21);
-        map.insert("blaster_normal", 22);
-        map.insert("blaster_cannon", 23);
-        map.insert("hawkeye_normal", 24);
-        map.insert("hawkeye_summon", 25);
-        map.insert("summoner_normal", 26);
-        map.insert("summoner_ancient", 27);
-        map.insert("arcana_normal", 28);
-        map.insert("arcana_stack", 29);
-        map.insert("arcana_ruin", 30);
-        map.insert("arcana_card", 31);
-        map.insert("bard_normal", 32);
-        map.insert("bard_serenade", 33);
-        map.insert("blade_burst", 34);
-        map.insert("holyknight_normal", 35);
-        map.insert("holyknight_holy", 36);
-        map.insert("holyknight_retribution", 37);
-        map.insert("demonic_normal", 38);
-        map.insert("demonic_capture", 39);
-        map.insert("demonic_demon", 40);
-        map.insert("warlord_lance", 41);
-        map.insert("reaper_normal", 42);
-        map.insert("reaper_dagger", 43);
-        map.insert("reaper_shadow", 44);
-        map.insert("reaper_swoop", 45);
-        map.insert("scouter_scout", 46);
-        map.insert("scouter_drone", 47);
-        map.insert("scouter_hyper_sync", 48);
-        map.insert("scouter_fusion", 49);
-        map.insert("blade_normal", 50);
-        map.insert("elemental_master_normal", 51);
-        map.insert("elemental_master_fire", 52);
-        map.insert("elemental_master_electricity", 53);
-        map.insert("elemental_master_ice", 54);
-        map.insert("yinyangshi_normal", 55);
-        map.insert("yinyangshi_yin", 56);
-        map.insert("yinyangshi_yang", 57);
-        map.insert("weather_artist_weapon", 58);
-        map.insert("weather_artist_weather", 59);
-        map.insert("summoner_summon", 60);
-        map.insert("soul_eater_hollow", 61);
-        map.insert("soul_eater_killer", 62);
-        map.insert("soul_eater_death", 63);
         map
     };
     pub static ref NPC_GRADE: HashMap<&'static str, i32> = {

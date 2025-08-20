@@ -998,7 +998,7 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
             }
             Pkt::NewTransit => {
                 if let Some(pkt) = parse_pkt(&data, PKTNewTransit::new, "PKTNewZoneKey") {
-                    damage_handler.update_zone_instance_id(pkt.channel_id);
+                    damage_handler.update_zone_instance_id(pkt.zone_instance_id);
                 }
             }
             _ => {}

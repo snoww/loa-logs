@@ -43,7 +43,8 @@
   const esthers = $derived(enc.players.filter((entity) => entity.entityType === EntityType.ESTHER));
   const partiesWithEsthers = $derived.by(() => {
     // don't add esther party if esthers aren't shown or parties aren't split
-    if (!esthers.length || !settings.app.general.showEsther || !settings.app.logs.splitPartyDamage || enc.live) return parties;
+    if (!esthers.length || !settings.app.general.showEsther || !settings.app.logs.splitPartyDamage || enc.live)
+      return parties;
 
     return [
       ...parties,
@@ -59,7 +60,7 @@
 </script>
 
 <div class="flex flex-col space-y-2">
-  {#each partiesWithEsthers.filter(p => p.members.length > 0) as party}
+  {#each partiesWithEsthers.filter((p) => p.members.length > 0) as party}
     <table class="isolate w-full table-fixed">
       <thead class="z-40 h-6 {enc.live ? 'sticky top-0' : ''}">
         <tr class="bg-neutral-900">
@@ -69,7 +70,8 @@
       </thead>
       <tbody class="relative z-10 text-neutral-200">
         {#each party.members as member (member.entity.name)}
-          <tr animate:flip={{ duration: 200 }}
+          <tr
+            animate:flip={{ duration: 200 }}
             class="h-7 px-2 py-1 {settings.app.general.underlineHovered ? 'hover:underline' : ''}"
             onclick={() => inspectPlayer(member.entity.name)}
           >
