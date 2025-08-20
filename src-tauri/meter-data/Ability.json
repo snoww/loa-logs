@@ -5743,7 +5743,7 @@
   },
   "263": {
     "id": 263,
-    "name": "Increase Fishing Tools",
+    "name": "Fishing Tools Increase",
     "icon": "ability_0.png",
     "levels": {
       "1": {
@@ -81378,6 +81378,431 @@
     "isEngrave": false,
     "isPenalty": false
   },
+  "2480000": {
+    "id": 0,
+    "name": null,
+    "icon": null,
+    "levels": {
+      "1": {
+        "desc": null,
+        "level": 1,
+        "values": [
+          667,
+          0,
+          0,
+          480051,
+          1,
+          1000,
+          480050,
+          0
+        ],
+        "addons": null
+      },
+      "2": {
+        "desc": null,
+        "level": 2,
+        "values": [
+          667,
+          0,
+          0,
+          480052,
+          1,
+          2250,
+          480050,
+          0
+        ],
+        "addons": null
+      },
+      "3": {
+        "desc": null,
+        "level": 3,
+        "values": [
+          667,
+          0,
+          0,
+          480053,
+          1,
+          3500,
+          480050,
+          0
+        ],
+        "addons": null
+      },
+      "4": {
+        "desc": null,
+        "level": 4,
+        "values": [
+          667,
+          500,
+          0,
+          480053,
+          1,
+          3500,
+          480050,
+          0
+        ],
+        "addons": null
+      },
+      "5": {
+        "desc": null,
+        "level": 5,
+        "values": [
+          667,
+          1000,
+          0,
+          480053,
+          1,
+          3500,
+          480050,
+          0
+        ],
+        "addons": null
+      },
+      "6": {
+        "desc": null,
+        "level": 6,
+        "values": [
+          667,
+          1500,
+          0,
+          480053,
+          1,
+          3500,
+          480050,
+          0
+        ],
+        "addons": null
+      },
+      "7": {
+        "desc": null,
+        "level": 7,
+        "values": [
+          667,
+          1500,
+          5000,
+          480053,
+          1,
+          3500,
+          480050,
+          1500
+        ],
+        "addons": null
+      },
+      "8": {
+        "desc": null,
+        "level": 8,
+        "values": [
+          667,
+          1500,
+          10000,
+          480053,
+          1,
+          3500,
+          480050,
+          3500
+        ],
+        "addons": null
+      },
+      "9": {
+        "desc": null,
+        "level": 9,
+        "values": [
+          667,
+          1500,
+          15000,
+          480053,
+          1,
+          3500,
+          480050,
+          5500
+        ],
+        "addons": null
+      },
+      "10": {
+        "desc": null,
+        "level": 10,
+        "values": [
+          667,
+          1500,
+          15000,
+          480054,
+          3,
+          3500,
+          480050,
+          5500
+        ],
+        "addons": null
+      }
+    },
+    "featureType": "ap_identity_holyknight_female_radiant",
+    "isEngrave": false,
+    "isPenalty": false
+  },
+  "2480100": {
+    "id": 0,
+    "name": null,
+    "icon": null,
+    "levels": {
+      "1": {
+        "desc": null,
+        "level": 1,
+        "values": [
+          48041,
+          480022,
+          48050,
+          48052,
+          48050,
+          48050,
+          0,
+          0
+        ],
+        "addons": null
+      },
+      "2": {
+        "desc": null,
+        "level": 2,
+        "values": [
+          48042,
+          480023,
+          48050,
+          48052,
+          48053,
+          48054,
+          0,
+          0
+        ],
+        "addons": null
+      }
+    },
+    "featureType": "ap_identity_holyknight_female_ascendant",
+    "isEngrave": false,
+    "isPenalty": false
+  },
+  "2480800": {
+    "id": 0,
+    "name": null,
+    "icon": null,
+    "levels": {
+      "1": {
+        "desc": null,
+        "level": 1,
+        "values": [
+          48060,
+          0,
+          48070,
+          0,
+          300,
+          2480800,
+          0,
+          0
+        ],
+        "addons": null
+      },
+      "2": {
+        "desc": null,
+        "level": 2,
+        "values": [
+          48060,
+          0,
+          48070,
+          0,
+          600,
+          2480801,
+          0,
+          0
+        ],
+        "addons": null
+      },
+      "3": {
+        "desc": null,
+        "level": 3,
+        "values": [
+          48060,
+          0,
+          48070,
+          0,
+          900,
+          2480802,
+          0,
+          0
+        ],
+        "addons": null
+      },
+      "4": {
+        "desc": null,
+        "level": 4,
+        "values": [
+          48060,
+          0,
+          48070,
+          0,
+          1200,
+          2480803,
+          0,
+          0
+        ],
+        "addons": null
+      },
+      "5": {
+        "desc": null,
+        "level": 5,
+        "values": [
+          48060,
+          0,
+          48070,
+          0,
+          1500,
+          2480804,
+          0,
+          0
+        ],
+        "addons": null
+      }
+    },
+    "featureType": "ap_next_skill_enhance",
+    "isEngrave": false,
+    "isPenalty": false
+  },
+  "2485100": {
+    "id": 0,
+    "name": null,
+    "icon": null,
+    "levels": {
+      "1": {
+        "desc": null,
+        "level": 1,
+        "values": [
+          1000,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "addons": null
+      },
+      "2": {
+        "desc": null,
+        "level": 2,
+        "values": [
+          2000,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "addons": null
+      },
+      "3": {
+        "desc": null,
+        "level": 3,
+        "values": [
+          3000,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "addons": null
+      },
+      "4": {
+        "desc": null,
+        "level": 4,
+        "values": [
+          4000,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "addons": null
+      },
+      "5": {
+        "desc": null,
+        "level": 5,
+        "values": [
+          5000,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "addons": null
+      }
+    },
+    "featureType": "ultimate_skill_charged_rage",
+    "isEngrave": false,
+    "isPenalty": false
+  },
+  "2485200": {
+    "id": 0,
+    "name": null,
+    "icon": null,
+    "levels": {
+      "1": {
+        "desc": null,
+        "level": 1,
+        "values": [
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "addons": null
+      },
+      "2": {
+        "desc": null,
+        "level": 2,
+        "values": [
+          0,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "addons": null
+      },
+      "3": {
+        "desc": null,
+        "level": 3,
+        "values": [
+          0,
+          3,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "addons": null
+      }
+    },
+    "featureType": "ap_awakening",
+    "isEngrave": false,
+    "isPenalty": false
+  },
   "2190000": {
     "id": 0,
     "name": null,
@@ -82244,7 +82669,7 @@
         "addons": null
       }
     },
-    "featureType": "vf_self_defence_delete__",
+    "featureType": "ap_identity_summoner_awaken_power",
     "isEngrave": false,
     "isPenalty": false
   },
@@ -82489,7 +82914,7 @@
         "addons": null
       }
     },
-    "featureType": "vf_shuffle_master_delete__",
+    "featureType": "ap_identity_bard_harmony",
     "isEngrave": false,
     "isPenalty": false
   },
@@ -82614,7 +83039,7 @@
         "addons": null
       }
     },
-    "featureType": "vf_wariness_delete__",
+    "featureType": "ap_identity_bard_changed_chord",
     "isEngrave": false,
     "isPenalty": false
   },
@@ -83453,7 +83878,7 @@
         "level": 1,
         "values": [
           313000,
-          0,
+          606110,
           0,
           0,
           0,
@@ -83468,7 +83893,7 @@
         "level": 2,
         "values": [
           313001,
-          0,
+          606111,
           0,
           0,
           0,
@@ -83483,7 +83908,7 @@
         "level": 3,
         "values": [
           313002,
-          0,
+          606112,
           0,
           0,
           0,
@@ -83494,7 +83919,7 @@
         "addons": null
       }
     },
-    "featureType": "vf_bonus_card_delete__",
+    "featureType": "ap_identity_yinyangshi_butterfly",
     "isEngrave": false,
     "isPenalty": false
   },
@@ -83532,7 +83957,7 @@
         "desc": null,
         "level": 1,
         "values": [
-          310900,
+          0,
           0,
           0,
           0,
@@ -83547,7 +83972,7 @@
         "desc": null,
         "level": 2,
         "values": [
-          310901,
+          310900,
           0,
           0,
           0,
@@ -83562,7 +83987,7 @@
         "desc": null,
         "level": 3,
         "values": [
-          310902,
+          310901,
           0,
           0,
           0,
@@ -83577,7 +84002,7 @@
         "desc": null,
         "level": 4,
         "values": [
-          310903,
+          310902,
           0,
           0,
           0,
@@ -83591,6 +84016,21 @@
       "5": {
         "desc": null,
         "level": 5,
+        "values": [
+          310903,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "addons": null
+      },
+      "6": {
+        "desc": null,
+        "level": 6,
         "values": [
           310904,
           0,
@@ -86598,7 +87038,7 @@
         "level": 10,
         "values": [
           600,
-          2100,
+          1900,
           2180002,
           2000,
           2180090,
@@ -86613,7 +87053,7 @@
         "level": 11,
         "values": [
           600,
-          2100,
+          1900,
           2180002,
           4500,
           2180090,
@@ -86628,7 +87068,7 @@
         "level": 12,
         "values": [
           600,
-          2100,
+          1900,
           2180002,
           7000,
           2180090,
