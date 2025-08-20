@@ -1,11 +1,24 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.31.9 - August 13th, 2025
+    v1.32.0 - August 20th, 2025
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
   </div>
 </div>
+
+#### NEW FEATURES
+
+- updated meter for valkyrie release (ty poon for the packets, niome for the class icon)
+- changed dps column to performance column, shows support buffs for supports now (due to database changes, will only show for new logs)
+
+#### BUG FIXES AND IMPROVEMENTS
+
+- fix dps specs of supports counting towards support buffs
+
+---
+
+### v1.31.9 - August 13th, 2025
 
 #### BUG FIXES AND IMPROVEMENTS
 
@@ -27,8 +40,6 @@
 
 - fixed buff average %s not summing correctly
 - fixed buff tab freezing in live meter
-
----
 
 ### v1.31.6 - July 27th, 2025
 
