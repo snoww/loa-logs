@@ -797,7 +797,13 @@ fn load_encounters_preview(
         filter.order
     );
 
-    let mut stmt = conn.prepare_cached(&query).unwrap();
+    let mut stmt = match conn.prepare_cached(&query) {
+        Ok(stmt) => stmt,
+        Err(e) => {
+            info!("database not setup yet");
+            return EncountersOverview::default();
+        }
+    };
 
     let offset = (page - 1) * page_size;
 
@@ -843,18 +849,10 @@ fn load_encounters_preview(
     let encounters: Vec<EncounterPreview> = encounter_iter.collect::<Result<_, _>>().unwrap();
 
     let query = format!(
-        "
-        SELECT COUNT(*)
-        FROM encounter_preview e {}
-        WHERE duration > ? {}
-        {} {} {} {}
-        ",
-        join_clause,
-        boss_filter,
-        raid_clear_filter,
-        favorite_filter,
-        difficulty_filter,
-        boss_only_damage_filter
+        "SELECT COUNT(*)
+        FROM encounter_preview e {join_clause}
+        WHERE duration > ? {boss_filter}
+        {raid_clear_filter} {favorite_filter} {difficulty_filter} {boss_only_damage_filter}"
     );
 
     let count: i32 = conn
