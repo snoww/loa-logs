@@ -1,11 +1,11 @@
 {
-  "version": "v1.32.2",
-  "notes": "### v1.32.2 - August 20th, 2025\n\n#### NEW FEATURES\n- updated meter for valkyrie release\n- changed dps column to performance column, shows support buffs for supports now (due to database changes, will only show for new logs)\n\n#### BUG FIXES AND IMPROVEMENTS\n- fix dps specs of supports counting towards support buffs",
-  "pub_date": "2025-08-20T21:10:17.979Z",
+  "version": "v1.32.3",
+  "notes": "### v1.32.3 - August 22th, 2025\n\n#### BUG FIXES AND IMPROVEMENTS\n- fix self buffs showing wrong source skills\n- fix buff summaries not excluding damage special skills",
+  "pub_date": "2025-08-22T09:03:20.518Z",
   "platforms": {
     "windows-x86_64": {
-      "url": "https://github.com/snoww/loa-logs/releases/download/v1.32.2/LOA.Logs_1.32.2_x64-setup.nsis.zip",
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlZSOWpKWGdjVStweXdEVE5meEQzaHgyOTFSbGVpT1hyMGszeVBnTDZ6YmgwNHJsUVZaZmdSOHpVbWhCMEdDa3ZWdk9FdC9ZSFI5Z1VqOFAyWWpxNkFFPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzU1NzI2NzQxCWZpbGU6TE9BIExvZ3NfMS4zMi4yX3g2NC1zZXR1cC5uc2lzLnppcApXY050aUpOZlc5KzJWVWppckU1VXF5UDFmR1c3MG5LSncwNDJyZG1CQjJvS1ZsVWdScWVVMXJ2TFRmRnphZVFtcmt0cWtXWDVnSGtUZnhKdTdKVkFDUT09Cg=="
+      "url": "https://github.com/snoww/loa-logs/releases/download/v1.32.3/LOA.Logs_1.32.3_x64-setup.nsis.zip",
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYldJVGRBM2JqZ3drblc5ZHJHendYang5TzFyQVBqZitTak5DWHBOS3NqUlZQUkxHZ2xJNFkyVmRLamtqOTE2UnU4NnhtQm1kcWNXS05JQmRSK2RiV2c4PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzU1ODUzNDQ2CWZpbGU6TE9BIExvZ3NfMS4zMi4zX3g2NC1zZXR1cC5uc2lzLnppcAo5bmVnZUpZaFA1SEcrbVZWMzdFUjl0akh4OFdLWlZuSDA4OHJVcXlPbGM1RTlOS0c4bGNDZE5DUlZ4S0lLeWsrQ1J5OTZKNW5OQTV4QU0zUHhNQ21BZz09Cg=="
     }
   }
 }
