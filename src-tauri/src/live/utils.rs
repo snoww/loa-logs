@@ -891,9 +891,7 @@ pub fn insert_data(
         if party_members.len() - party_without_support.len() == 1 {
             let party_damage_total: i64 = party_without_support
                 .iter()
-                .map(|entity| {
-                    entity.damage_stats.damage_dealt - entity.damage_stats.hyper_awakening_damage
-                })
+                .map(|e| get_damage_without_hyper_or_special(e))
                 .sum();
 
             if party_damage_total <= 0 {
@@ -906,9 +904,7 @@ pub fn insert_data(
             let mut average_hyper = 0.0;
 
             for player in party_without_support {
-                let damage_dealt = (player.damage_stats.damage_dealt
-                    - player.damage_stats.hyper_awakening_damage)
-                    as f64;
+                let damage_dealt = get_damage_without_hyper_or_special(player) as f64;
 
                 if damage_dealt <= 0.0 {
                     continue;
@@ -1660,6 +1656,17 @@ pub fn get_total_available_time(
     }
 
     total_available_time
+}
+
+fn get_damage_without_hyper_or_special(e: &EncounterEntity) -> i64 {
+    let hyper = e.damage_stats.hyper_awakening_damage;
+    let special = e
+        .skills
+        .values()
+        .filter(|s| s.special.unwrap_or(false))
+        .map(|s| s.total_damage)
+        .sum::<i64>();
+    e.damage_stats.damage_dealt - hyper - special
 }
 
 struct SupportBuffs {
