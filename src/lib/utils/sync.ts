@@ -9,14 +9,14 @@ import { uploadError, uploadTokenError } from "./toasts";
 export const API_URL = "https://api.snow.xyz";
 // export const API_URL = "http://localhost:5180";
 
-export async function uploadLog(id: number | string, encounter: Encounter, showToast = true) {
+export async function uploadLog(id: number | string, encounter: Encounter, showToast = true, bulk = false) {
   if (
     !encounter.cleared ||
     !encounter.bossOnlyDamage ||
     !encounter.difficulty ||
     !Object.hasOwn(raidGates, encounter.currentBossName)
   ) {
-    if (showToast) {
+    if (showToast && !bulk) {
       addToast(uploadError("Log not supported for upload", id));
     }
 

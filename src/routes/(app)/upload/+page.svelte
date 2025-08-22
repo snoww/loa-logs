@@ -53,7 +53,7 @@
       for (let i = 0; i < ids.length; i++) {
         let id = ids[i];
         const encounter = (await invoke("load_encounter", { id: id.toString() })) as Encounter;
-        let upstream = await uploadLog(id, encounter);
+        let upstream = await uploadLog(id, encounter, true, true);
         if (upstream) {
           syncProgress.uploaded++;
           addToast(uploadSuccess);
