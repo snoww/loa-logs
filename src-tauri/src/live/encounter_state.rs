@@ -681,6 +681,7 @@ impl EncounterState {
                         ..Default::default()
                     },
                 );
+                source_entity.skill_stats.casts += 1;
             }
         }
 
