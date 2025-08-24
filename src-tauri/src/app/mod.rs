@@ -1,3 +1,5 @@
+pub mod autostart;
+
 use flexi_logger::{
     Cleanup, Criterion, DeferredNow, Duplicate, FileSpec, Logger, LoggerHandle, Naming, WriteMode,
 };

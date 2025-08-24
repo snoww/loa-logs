@@ -39,6 +39,9 @@ flate2 = "1.0.30"
 sysinfo = "0.35.1"
 meter-core = { git = "https://github.com/snoww/meter-core-rs", optional = true }
 
+[target.'cfg(target_os = "linux")'.dependencies]
+auto-launch = "0.5.0"
+
 [features]
 # by default Tauri runs in production mode
 # when `tauri dev` runs it is executed with `cargo run --no-default-features` if `devPath` is an URL

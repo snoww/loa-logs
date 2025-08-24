@@ -22,11 +22,12 @@ use std::{
     str::FromStr,
 };
 
+use app::autostart::{AutoLaunch, AutoLaunchManager};
 use rusqlite::{params, params_from_iter, Connection, Transaction};
 use sysinfo::{ProcessRefreshKind, RefreshKind, System};
 use tauri::{
-    api::process::Command, api::shell::open, CustomMenuItem, LogicalPosition, LogicalSize, Manager,
-    Position, Size, SystemTray, SystemTrayEvent, SystemTrayMenu, SystemTrayMenuItem,
+    api::shell::open, CustomMenuItem, LogicalPosition, LogicalSize, Manager, Position, Size, State,
+    SystemTray, SystemTrayEvent, SystemTrayMenu, SystemTrayMenuItem,
 };
 use tauri_plugin_window_state::{AppHandleExt, StateFlags, WindowExt};
 use window_vibrancy::{apply_blur, clear_blur};
@@ -198,6 +199,9 @@ async fn main() -> Result<()> {
             // {
             //     _logs_window.open_devtools();
             // }
+
+            let app_path = std::env::current_exe()?.display().to_string();
+            app.manage(AutoLaunchManager::new(&app.package_info().name, &app_path));
 
             Ok(())
         })
@@ -1618,6 +1622,7 @@ fn set_clickthrough(window: tauri::Window, set: bool) {
 fn remove_driver() {
     #[cfg(target_os = "windows")]
     {
+        use tauri::api::process::Command;
         let command = Command::new("sc").args(["delete", "windivert"]);
 
         command.output().expect("unable to delete driver");
@@ -1628,6 +1633,7 @@ fn remove_driver() {
 fn unload_driver() {
     #[cfg(target_os = "windows")]
     {
+        use tauri::api::process::Command;
         let command = Command::new("sc").args(["stop", "windivert"]);
 
         if command.output().is_ok_and(|output| output.status.success()) {
@@ -1639,72 +1645,16 @@ fn unload_driver() {
 }
 
 #[tauri::command]
-fn check_start_on_boot() -> bool {
-    // Run the `schtasks` command to query the task
-    let output = Command::new("schtasks")
-        .args(["/query", "/tn", "LOA_Logs_Auto_Start"])
-        .output();
-
-    match output {
-        Ok(output) => output.status.success(),
-        Err(_) => false,
-    }
+fn check_start_on_boot(auto: State<AutoLaunchManager>) -> bool {
+    auto.is_enabled().unwrap_or(false)
 }
 
 #[tauri::command]
-fn set_start_on_boot(set: bool) {
-    let app_path = match std::env::current_exe() {
-        Ok(path) => path.to_string_lossy().to_string(),
-        Err(e) => {
-            warn!("could not get current exe path: {}", e);
-            return;
-        }
+fn set_start_on_boot(auto: State<AutoLaunchManager>, set: bool) {
+    let _ = match set {
+        true => auto.enable(),
+        false => auto.disable(),
     };
-
-    let task_name = "LOA_Logs_Auto_Start";
-
-    if set {
-        Command::new("schtasks")
-            .args(["/delete", "/tn", task_name, "/f"])
-            .output()
-            .ok();
-
-        let output = Command::new("schtasks")
-            .args([
-                "/create",
-                "/tn",
-                task_name,
-                "/tr",
-                &format!("\"{}\"", &app_path),
-                "/sc",
-                "onlogon",
-                "/rl",
-                "highest",
-            ])
-            .output();
-
-        match output {
-            Ok(_) => {
-                info!("enabled start on boot");
-            }
-            Err(e) => {
-                warn!("error enabling start on boot: {}", e);
-            }
-        }
-    } else {
-        let output = Command::new("schtasks")
-            .args(["/delete", "/tn", task_name, "/f"])
-            .output();
-
-        match output {
-            Ok(_) => {
-                info!("disabled start on boot");
-            }
-            Err(e) => {
-                warn!("error disabling start on boot: {}", e);
-            }
-        }
-    }
 }
 
 #[tauri::command]
