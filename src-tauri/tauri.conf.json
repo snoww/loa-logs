@@ -42,12 +42,6 @@
       "path": {
         "all": true
       },
-      "protocol": {
-        "asset": true,
-        "assetScope": [
-          "$RESOURCE/images/**/*.png"
-        ]
-      },
       "globalShortcut": {
         "all": true
       },
@@ -102,7 +96,7 @@
       "iconAsTemplate": true
     },
     "security": {
-      "csp": "default-src *; img-src https: data: asset: https://asset.localhost; style-src 'self' 'unsafe-inline'; font-src 'self' data:"
+      "csp": "default-src *; img-src 'self' https: data:; style-src 'self' 'unsafe-inline'; font-src 'self' data:"
     },
     "updater": {
       "active": true, 
