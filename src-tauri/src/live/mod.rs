@@ -7,6 +7,7 @@ mod stats_api;
 mod status_tracker;
 mod utils;
 
+use crate::app;
 use crate::live::encounter_state::EncounterState;
 use crate::live::entity_tracker::{get_current_and_max_hp, EntityTracker};
 use crate::live::id_tracker::IdTracker;
@@ -50,11 +51,9 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
         party_tracker.clone(),
     );
     let mut state = EncounterState::new(app.app_handle());
-    let mut resource_path = app.path_resolver().resource_dir().unwrap();
-    resource_path.push("current_region");
-    let region_file_path = resource_path.to_string_lossy();
+    let region_file_path = app::path::data_dir(&app).join("current_region");
     let mut stats_api = StatsApi::new(app.app_handle());
-    let rx = match start_capture(port, region_file_path.to_string()) {
+    let rx = match start_capture(port, region_file_path.display().to_string()) {
         Ok(rx) => rx,
         Err(e) => {
             warn!("Error starting capture: {}", e);
@@ -93,9 +92,8 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
     // read saved local players
     // this info is used in case meter was opened late
     let mut local_info: LocalInfo = LocalInfo::default();
-    let mut local_player_path = app.path_resolver().resource_dir().unwrap();
+    let mut local_player_path = app::path::data_dir(&app).join("local_players.json");
     let mut client_id = "".to_string();
-    local_player_path.push("local_players.json");
 
     if local_player_path.exists() {
         let local_players_file = std::fs::read_to_string(local_player_path.clone())?;

@@ -15,12 +15,7 @@ use log::{error, info, warn};
 use parser::models::*;
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
-use std::{
-    fs::{self, File},
-    io::{Read, Write},
-    path::{Path, PathBuf},
-    str::FromStr,
-};
+use std::{fs, io::Read, path::PathBuf, str::FromStr};
 
 use app::autostart::{AutoLaunch, AutoLaunchManager};
 use rusqlite::{params, params_from_iter, Connection, Transaction};
@@ -74,11 +69,6 @@ async fn main() -> Result<()> {
         .setup(|app| {
             info!("starting app v{}", app.package_info().version);
 
-            let resource_path = app
-                .path_resolver()
-                .resource_dir()
-                .expect("could not get resource dir");
-
             match setup_db(&app.handle()) {
                 Ok(_) => (),
                 Err(e) => {
@@ -123,7 +113,7 @@ async fn main() -> Result<()> {
                 }
             });
 
-            let settings = read_settings(&resource_path).ok();
+            let settings = read_settings(&app.handle()).ok();
 
             let meter_window = app.get_window(METER_WINDOW_LABEL).unwrap();
             meter_window
@@ -252,11 +242,7 @@ async fn main() -> Result<()> {
         })
         .system_tray(system_tray)
         .on_system_tray_event(|app, event| {
-            let resource_path = app
-                .path_resolver()
-                .resource_dir()
-                .expect("could not get resource dir");
-            let settings = read_settings(&resource_path).ok().unwrap_or_default();
+            let settings = read_settings(app).unwrap_or_default();
 
             let show_window = |window: &tauri::Window| {
                 window.show().unwrap();
@@ -389,11 +375,7 @@ async fn main() -> Result<()> {
 }
 
 fn get_db_path(app: &tauri::AppHandle) -> PathBuf {
-    let resource_path = app
-        .path_resolver()
-        .resource_dir()
-        .expect("could not get resource dir");
-    resource_path.join("encounters.db")
+    app::path::data_dir(app).join("encounters.db")
 }
 
 fn get_db_connection(app: &tauri::AppHandle) -> Result<Connection, rusqlite::Error> {
@@ -1207,7 +1189,7 @@ fn open_most_recent_encounter(app: tauri::AppHandle) {
 
     let id_result: Result<i32, rusqlite::Error> = stmt.query_row(params![], |row| row.get(0));
 
-    if let Some(logs) = app_handle.get_window(LOGS_WINDOW_LABEL) {
+    if let Some(logs) = app.get_window(LOGS_WINDOW_LABEL) {
         match id_result {
             Ok(id) => {
                 logs.emit("show-latest-encounter", id.to_string()).unwrap();
@@ -1272,19 +1254,14 @@ fn delete_encounters(app: tauri::AppHandle, ids: Vec<i32>) {
 }
 
 #[tauri::command]
-fn toggle_meter_window(window: tauri::Window) {
-    let resource_path = window
-        .app_handle()
-        .path_resolver()
-        .resource_dir()
-        .expect("could not get resource dir");
-    if let Ok(settings) = read_settings(&resource_path) {
+fn toggle_meter_window(app: tauri::AppHandle) {
+    if let Ok(settings) = read_settings(&app) {
         let label = if settings.general.mini {
             METER_MINI_WINDOW_LABEL
         } else {
             METER_WINDOW_LABEL
         };
-        if let Some(meter) = window.app_handle().get_window(label) {
+        if let Some(meter) = app.get_window(label) {
             if meter.is_visible().unwrap() {
                 // workaround for tauri not handling minimized state for windows without decorations
                 if meter.is_minimized().unwrap() {
@@ -1318,48 +1295,30 @@ fn open_url(window: tauri::Window, url: String) {
 }
 
 #[tauri::command]
-fn save_settings(window: tauri::Window, settings: Settings) {
-    let mut path: PathBuf = window
-        .app_handle()
-        .path_resolver()
-        .resource_dir()
-        .expect("could not get resource dir");
-    path.push("settings.json");
-    let mut file = File::create(path).expect("could not create settings file");
-    file.write_all(serde_json::to_string_pretty(&settings).unwrap().as_bytes())
-        .expect("could not write to settings file");
+fn save_settings(app: tauri::AppHandle, settings: Settings) {
+    let path = app::path::data_dir(&app).join("settings.json");
+    let contents = serde_json::to_string_pretty(&settings).unwrap();
+    fs::write(path, contents).expect("could not write to settings file");
 }
 
-fn read_settings(resource_path: &Path) -> Result<Settings, Box<dyn std::error::Error>> {
-    let mut path = resource_path.to_path_buf();
-    path.push("settings.json");
-    let mut file = File::open(path)?;
-    let mut contents = String::new();
-    file.read_to_string(&mut contents)?;
+fn read_settings(app: &tauri::AppHandle) -> Result<Settings, Box<dyn std::error::Error>> {
+    let path = app::path::data_dir(app).join("settings.json");
+    let contents = fs::read_to_string(path)?;
     let settings = serde_json::from_str(&contents)?;
     Ok(settings)
 }
 
 #[tauri::command]
-fn get_settings(window: tauri::Window) -> Option<Settings> {
-    let path = window
-        .app_handle()
-        .path_resolver()
-        .resource_dir()
-        .expect("could not get resource dir");
-    read_settings(&path).ok()
+fn get_settings(app: tauri::AppHandle) -> Option<Settings> {
+    read_settings(&app).ok()
 }
 
 #[tauri::command]
-fn open_db_path(window: tauri::Window) {
-    let path = window
-        .app_handle()
-        .path_resolver()
-        .resource_dir()
-        .expect("could not get resource dir");
+fn open_db_path(app: tauri::AppHandle) {
+    let path = app::path::data_dir(&app);
     info!("open_db_path: {}", path.display());
 
-    let scope = window.app_handle().shell_scope();
+    let scope = app.shell_scope();
     if let Err(e) = open(&scope, path.to_str().unwrap(), None) {
         error!("Failed to open database path: {}", e);
     }
