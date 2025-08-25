@@ -74,6 +74,7 @@
       },
       "shortDescription": "LOA Logs",
       "targets": [
+        "deb",
         "nsis",
         "updater"
       ],
