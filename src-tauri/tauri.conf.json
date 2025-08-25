@@ -29,7 +29,7 @@
         "all": true
       },
       "shell": {
-        "open": true
+        "open": ".+"
       },
       "process": {
         "relaunch": true
@@ -41,12 +41,6 @@
       },
       "path": {
         "all": true
-      },
-      "protocol": {
-        "asset": true,
-        "assetScope": [
-          "$RESOURCE/images/**/*.png"
-        ]
       },
       "globalShortcut": {
         "all": true
@@ -80,6 +74,7 @@
       },
       "shortDescription": "LOA Logs",
       "targets": [
+        "deb",
         "nsis",
         "updater"
       ],
@@ -102,7 +97,7 @@
       "iconAsTemplate": true
     },
     "security": {
-      "csp": "default-src *; img-src https: data: asset: https://asset.localhost; style-src 'self' 'unsafe-inline'; font-src 'self' data:"
+      "csp": "default-src *; img-src 'self' https: data:; style-src 'self' 'unsafe-inline'; font-src 'self' data:"
     },
     "updater": {
       "active": true, 

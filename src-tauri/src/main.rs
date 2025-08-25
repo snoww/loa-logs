@@ -15,17 +15,13 @@ use log::{error, info, warn};
 use parser::models::*;
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
-use std::{
-    fs::{self, File},
-    io::{Read, Write},
-    path::{Path, PathBuf},
-    str::FromStr,
-};
+use std::{fs, io::Read, path::PathBuf, str::FromStr};
 
+use app::autostart::{AutoLaunch, AutoLaunchManager};
 use rusqlite::{params, params_from_iter, Connection, Transaction};
-use sysinfo::System;
+use sysinfo::{ProcessRefreshKind, RefreshKind, System};
 use tauri::{
-    api::process::Command, CustomMenuItem, LogicalPosition, LogicalSize, Manager, Position, Size,
+    api::shell::open, CustomMenuItem, LogicalPosition, LogicalSize, Manager, Position, Size, State,
     SystemTray, SystemTrayEvent, SystemTrayMenu, SystemTrayMenuItem,
 };
 use tauri_plugin_window_state::{AppHandleExt, StateFlags, WindowExt};
@@ -73,12 +69,7 @@ async fn main() -> Result<()> {
         .setup(|app| {
             info!("starting app v{}", app.package_info().version);
 
-            let resource_path = app
-                .path_resolver()
-                .resource_dir()
-                .expect("could not get resource dir");
-
-            match setup_db(&resource_path) {
+            match setup_db(&app.handle()) {
                 Ok(_) => (),
                 Err(e) => {
                     warn!("error setting up database: {}", e);
@@ -122,7 +113,7 @@ async fn main() -> Result<()> {
                 }
             });
 
-            let settings = read_settings(&resource_path).ok();
+            let settings = read_settings(&app.handle()).ok();
 
             let meter_window = app.get_window(METER_WINDOW_LABEL).unwrap();
             meter_window
@@ -169,7 +160,7 @@ async fn main() -> Result<()> {
 
                 if settings.general.start_loa_on_start {
                     info!("auto launch game enabled");
-                    start_loa_process();
+                    start_loa_process(app.handle());
                 }
             } else {
                 meter_window.show().unwrap();
@@ -198,6 +189,9 @@ async fn main() -> Result<()> {
             // {
             //     _logs_window.open_devtools();
             // }
+
+            let app_path = std::env::current_exe()?.display().to_string();
+            app.manage(AutoLaunchManager::new(&app.package_info().name, &app_path));
 
             Ok(())
         })
@@ -248,11 +242,7 @@ async fn main() -> Result<()> {
         })
         .system_tray(system_tray)
         .on_system_tray_event(|app, event| {
-            let resource_path = app
-                .path_resolver()
-                .resource_dir()
-                .expect("could not get resource dir");
-            let settings = read_settings(&resource_path).ok().unwrap_or_default();
+            let settings = read_settings(app).unwrap_or_default();
 
             let show_window = |window: &tauri::Window| {
                 window.show().unwrap();
@@ -337,7 +327,7 @@ async fn main() -> Result<()> {
                         }
                     }
                     "start-loa" => {
-                        start_loa_process();
+                        start_loa_process(app.clone());
                     }
                     _ => {}
                 },
@@ -356,7 +346,6 @@ async fn main() -> Result<()> {
             open_url,
             save_settings,
             get_settings,
-            open_folder,
             open_db_path,
             delete_encounters_below_min_duration,
             get_db_info,
@@ -385,17 +374,21 @@ async fn main() -> Result<()> {
     Ok(())
 }
 
-fn get_db_connection(resource_path: &Path) -> Result<Connection, rusqlite::Error> {
-    let path = resource_path.join("encounters.db");
+fn get_db_path(app: &tauri::AppHandle) -> PathBuf {
+    app::path::data_dir(app).join("encounters.db")
+}
+
+fn get_db_connection(app: &tauri::AppHandle) -> Result<Connection, rusqlite::Error> {
+    let path = get_db_path(app);
     if !path.exists() {
-        setup_db(resource_path)?;
+        setup_db(app)?;
     }
     Connection::open(path)
 }
 
-fn setup_db(resource_path: &Path) -> Result<(), rusqlite::Error> {
+fn setup_db(app: &tauri::AppHandle) -> Result<(), rusqlite::Error> {
     info!("setting up database");
-    let mut conn = Connection::open(resource_path.join("encounters.db"))?;
+    let mut conn = Connection::open(get_db_path(app))?;
     let tx = conn.transaction()?;
 
     // FIXME: replace me with idempotent migrations
@@ -689,18 +682,13 @@ fn migration_buff_summary(tx: &Transaction) -> Result<(), rusqlite::Error> {
 
 #[tauri::command]
 fn load_encounters_preview(
-    window: tauri::Window,
+    app: tauri::AppHandle,
     page: i32,
     page_size: i32,
     search: String,
     filter: SearchFilter,
 ) -> EncountersOverview {
-    let path = window
-        .app_handle()
-        .path_resolver()
-        .resource_dir()
-        .expect("could not get resource dir");
-    let conn = get_db_connection(&path).expect("could not get db connection");
+    let conn = get_db_connection(&app).expect("could not get db connection");
     let mut params = vec![];
 
     let join_clause = if search.len() > 2 {
@@ -866,13 +854,8 @@ fn load_encounters_preview(
 }
 
 #[tauri::command(async)]
-fn load_encounter(window: tauri::Window, id: String) -> Encounter {
-    let path = window
-        .app_handle()
-        .path_resolver()
-        .resource_dir()
-        .expect("could not get resource dir");
-    let conn = get_db_connection(&path).expect("could not get db connection");
+fn load_encounter(app: tauri::AppHandle, id: String) -> Encounter {
+    let conn = get_db_connection(&app).expect("could not get db connection");
     let mut encounter_stmt = conn
         .prepare_cached(
             "
@@ -1154,13 +1137,8 @@ fn load_encounter(window: tauri::Window, id: String) -> Encounter {
 }
 
 #[tauri::command]
-fn get_sync_candidates(window: tauri::Window, force_resync: bool) -> Vec<i32> {
-    let path = window
-        .app_handle()
-        .path_resolver()
-        .resource_dir()
-        .expect("could not get resource dir");
-    let conn = get_db_connection(&path).expect("could not get db connection");
+fn get_sync_candidates(app: tauri::AppHandle, force_resync: bool) -> Vec<i32> {
+    let conn = get_db_connection(&app).expect("could not get db connection");
     let query = if force_resync { "= '0'" } else { "IS NULL" };
     let mut stmt = conn
         .prepare_cached(&format!(
@@ -1184,13 +1162,8 @@ fn get_sync_candidates(window: tauri::Window, force_resync: bool) -> Vec<i32> {
 }
 
 #[tauri::command]
-fn get_encounter_count(window: tauri::Window) -> i32 {
-    let path = window
-        .app_handle()
-        .path_resolver()
-        .resource_dir()
-        .expect("could not get resource dir");
-    let conn = get_db_connection(&path).expect("could not get db connection");
+fn get_encounter_count(app: tauri::AppHandle) -> i32 {
+    let conn = get_db_connection(&app).expect("could not get db connection");
     let mut stmt = conn
         .prepare_cached("SELECT COUNT(*) FROM encounter_preview")
         .unwrap();
@@ -1201,13 +1174,8 @@ fn get_encounter_count(window: tauri::Window) -> i32 {
 }
 
 #[tauri::command]
-fn open_most_recent_encounter(window: tauri::Window) {
-    let path = window
-        .app_handle()
-        .path_resolver()
-        .resource_dir()
-        .expect("could not get resource dir");
-    let conn = get_db_connection(&path).expect("could not get db connection");
+fn open_most_recent_encounter(app: tauri::AppHandle) {
+    let conn = get_db_connection(&app).expect("could not get db connection");
     let mut stmt = conn
         .prepare_cached(
             "
@@ -1221,7 +1189,7 @@ fn open_most_recent_encounter(window: tauri::Window) {
 
     let id_result: Result<i32, rusqlite::Error> = stmt.query_row(params![], |row| row.get(0));
 
-    if let Some(logs) = window.app_handle().get_window(LOGS_WINDOW_LABEL) {
+    if let Some(logs) = app.get_window(LOGS_WINDOW_LABEL) {
         match id_result {
             Ok(id) => {
                 logs.emit("show-latest-encounter", id.to_string()).unwrap();
@@ -1234,14 +1202,8 @@ fn open_most_recent_encounter(window: tauri::Window) {
 }
 
 #[tauri::command]
-fn toggle_encounter_favorite(window: tauri::Window, id: i32) {
-    let path = window
-        .app_handle()
-        .path_resolver()
-        .resource_dir()
-        .expect("could not get resource dir");
-
-    let conn = get_db_connection(&path).expect("could not get db connection");
+fn toggle_encounter_favorite(app: tauri::AppHandle, id: i32) {
+    let conn = get_db_connection(&app).expect("could not get db connection");
     let mut stmt = conn
         .prepare_cached(
             "
@@ -1256,13 +1218,8 @@ fn toggle_encounter_favorite(window: tauri::Window, id: i32) {
 }
 
 #[tauri::command]
-fn delete_encounter(window: tauri::Window, id: String) {
-    let path = window
-        .app_handle()
-        .path_resolver()
-        .resource_dir()
-        .expect("could not get resource dir");
-    let conn = get_db_connection(&path).expect("could not get db connection");
+fn delete_encounter(app: tauri::AppHandle, id: String) {
+    let conn = get_db_connection(&app).expect("could not get db connection");
     conn.execute("PRAGMA foreign_keys = ON;", params![])
         .unwrap();
     let mut stmt = conn
@@ -1280,13 +1237,8 @@ fn delete_encounter(window: tauri::Window, id: String) {
 }
 
 #[tauri::command]
-fn delete_encounters(window: tauri::Window, ids: Vec<i32>) {
-    let path = window
-        .app_handle()
-        .path_resolver()
-        .resource_dir()
-        .expect("could not get resource dir");
-    let conn = get_db_connection(&path).expect("could not get db connection");
+fn delete_encounters(app: tauri::AppHandle, ids: Vec<i32>) {
+    let conn = get_db_connection(&app).expect("could not get db connection");
     conn.execute("PRAGMA foreign_keys = ON;", params![])
         .unwrap();
 
@@ -1302,19 +1254,14 @@ fn delete_encounters(window: tauri::Window, ids: Vec<i32>) {
 }
 
 #[tauri::command]
-fn toggle_meter_window(window: tauri::Window) {
-    let resource_path = window
-        .app_handle()
-        .path_resolver()
-        .resource_dir()
-        .expect("could not get resource dir");
-    if let Ok(settings) = read_settings(&resource_path) {
+fn toggle_meter_window(app: tauri::AppHandle) {
+    if let Ok(settings) = read_settings(&app) {
         let label = if settings.general.mini {
             METER_MINI_WINDOW_LABEL
         } else {
             METER_WINDOW_LABEL
         };
-        if let Some(meter) = window.app_handle().get_window(label) {
+        if let Some(meter) = app.get_window(label) {
             if meter.is_visible().unwrap() {
                 // workaround for tauri not handling minimized state for windows without decorations
                 if meter.is_minimized().unwrap() {
@@ -1348,76 +1295,42 @@ fn open_url(window: tauri::Window, url: String) {
 }
 
 #[tauri::command]
-fn save_settings(window: tauri::Window, settings: Settings) {
-    let mut path: PathBuf = window
-        .app_handle()
-        .path_resolver()
-        .resource_dir()
-        .expect("could not get resource dir");
-    path.push("settings.json");
-    let mut file = File::create(path).expect("could not create settings file");
-    file.write_all(serde_json::to_string_pretty(&settings).unwrap().as_bytes())
-        .expect("could not write to settings file");
+fn save_settings(app: tauri::AppHandle, settings: Settings) {
+    let path = app::path::data_dir(&app).join("settings.json");
+    let contents = serde_json::to_string_pretty(&settings).unwrap();
+    fs::write(path, contents).expect("could not write to settings file");
 }
 
-fn read_settings(resource_path: &Path) -> Result<Settings, Box<dyn std::error::Error>> {
-    let mut path = resource_path.to_path_buf();
-    path.push("settings.json");
-    let mut file = File::open(path)?;
-    let mut contents = String::new();
-    file.read_to_string(&mut contents)?;
+fn read_settings(app: &tauri::AppHandle) -> Result<Settings, Box<dyn std::error::Error>> {
+    let path = app::path::data_dir(app).join("settings.json");
+    let contents = fs::read_to_string(path)?;
     let settings = serde_json::from_str(&contents)?;
     Ok(settings)
 }
 
 #[tauri::command]
-fn get_settings(window: tauri::Window) -> Option<Settings> {
-    let path = window
-        .app_handle()
-        .path_resolver()
-        .resource_dir()
-        .expect("could not get resource dir");
-    read_settings(&path).ok()
+fn get_settings(app: tauri::AppHandle) -> Option<Settings> {
+    read_settings(&app).ok()
 }
 
 #[tauri::command]
-fn open_folder(path: String) {
-    let mut path = path;
-    if path.contains("USERPROFILE") {
-        if let Ok(user_dir) = std::env::var("USERPROFILE") {
-            path = path.replace("USERPROFILE", user_dir.as_str());
-        }
-    }
-    info!("open_folder: {}", path);
-    Command::new("explorer").args([path.as_str()]).spawn().ok();
-}
-
-#[tauri::command]
-fn open_db_path(window: tauri::Window) {
-    let path = window
-        .app_handle()
-        .path_resolver()
-        .resource_dir()
-        .expect("could not get resource dir");
+fn open_db_path(app: tauri::AppHandle) {
+    let path = app::path::data_dir(&app);
     info!("open_db_path: {}", path.display());
-    Command::new("explorer")
-        .args([path.to_str().unwrap()])
-        .spawn()
-        .ok();
+
+    let scope = app.shell_scope();
+    if let Err(e) = open(&scope, path.to_str().unwrap(), None) {
+        error!("Failed to open database path: {}", e);
+    }
 }
 
 #[tauri::command]
 fn delete_encounters_below_min_duration(
-    window: tauri::Window,
+    app: tauri::AppHandle,
     min_duration: i64,
     keep_favorites: bool,
 ) {
-    let path = window
-        .app_handle()
-        .path_resolver()
-        .resource_dir()
-        .expect("could not get resource dir");
-    let conn = get_db_connection(&path).expect("could not get db connection");
+    let conn = get_db_connection(&app).expect("could not get db connection");
     if keep_favorites {
         conn.execute(
             "DELETE FROM encounter
@@ -1445,13 +1358,8 @@ fn delete_encounters_below_min_duration(
 }
 
 #[tauri::command]
-fn sync(window: tauri::Window, encounter: i32, upstream: String, failed: bool) {
-    let path = window
-        .app_handle()
-        .path_resolver()
-        .resource_dir()
-        .expect("could not get resource dir");
-    let conn = get_db_connection(&path).expect("could not get db connection");
+fn sync(app: tauri::AppHandle, encounter: i32, upstream: String, failed: bool) {
+    let conn = get_db_connection(&app).expect("could not get db connection");
 
     conn.execute(
         "
@@ -1464,13 +1372,8 @@ fn sync(window: tauri::Window, encounter: i32, upstream: String, failed: bool) {
 }
 
 #[tauri::command]
-fn delete_all_uncleared_encounters(window: tauri::Window, keep_favorites: bool) {
-    let path = window
-        .app_handle()
-        .path_resolver()
-        .resource_dir()
-        .expect("could not get resource dir");
-    let conn = get_db_connection(&path).expect("could not get db connection");
+fn delete_all_uncleared_encounters(app: tauri::AppHandle, keep_favorites: bool) {
+    let conn = get_db_connection(&app).expect("could not get db connection");
     if keep_favorites {
         conn.execute(
             "DELETE FROM encounter
@@ -1498,13 +1401,8 @@ fn delete_all_uncleared_encounters(window: tauri::Window, keep_favorites: bool) 
 }
 
 #[tauri::command]
-fn delete_all_encounters(window: tauri::Window, keep_favorites: bool) {
-    let path = window
-        .app_handle()
-        .path_resolver()
-        .resource_dir()
-        .expect("could not get resource dir");
-    let conn = get_db_connection(&path).expect("could not get db connection");
+fn delete_all_encounters(app: tauri::AppHandle, keep_favorites: bool) {
+    let conn = get_db_connection(&app).expect("could not get db connection");
 
     if keep_favorites {
         conn.execute(
@@ -1524,13 +1422,8 @@ fn delete_all_encounters(window: tauri::Window, keep_favorites: bool) {
 }
 
 #[tauri::command]
-fn get_db_info(window: tauri::Window, min_duration: i64) -> EncounterDbInfo {
-    let mut path = window
-        .app_handle()
-        .path_resolver()
-        .resource_dir()
-        .expect("could not get resource dir");
-    let conn = get_db_connection(&path).expect("could not get db connection");
+fn get_db_info(app: tauri::AppHandle, min_duration: i64) -> EncounterDbInfo {
+    let conn = get_db_connection(&app).expect("could not get db connection");
     let encounter_count = conn
         .query_row("SELECT COUNT(*) FROM encounter_preview", [], |row| {
             row.get(0)
@@ -1544,7 +1437,7 @@ fn get_db_info(window: tauri::Window, min_duration: i64) -> EncounterDbInfo {
         )
         .unwrap();
 
-    path.push("encounters.db");
+    let path = conn.path().expect("could not get db path");
     let metadata = fs::metadata(path).expect("could not get db metadata");
 
     let size_in_bytes = metadata.len();
@@ -1568,13 +1461,8 @@ fn get_db_info(window: tauri::Window, min_duration: i64) -> EncounterDbInfo {
 }
 
 #[tauri::command]
-fn optimize_database(window: tauri::Window) {
-    let path = window
-        .app_handle()
-        .path_resolver()
-        .resource_dir()
-        .expect("could not get resource dir");
-    let conn = get_db_connection(&path).expect("could not get db connection");
+fn optimize_database(app: tauri::AppHandle) {
+    let conn = get_db_connection(&app).expect("could not get db connection");
     conn.execute_batch(
         "
         INSERT INTO encounter_search(encounter_search) VALUES('optimize');
@@ -1628,122 +1516,65 @@ fn set_clickthrough(window: tauri::Window, set: bool) {
 
 #[tauri::command]
 fn remove_driver() {
-    Command::new("sc")
-        .args(["delete", "windivert"])
-        .output()
-        .expect("unable to delete driver");
+    #[cfg(target_os = "windows")]
+    {
+        use tauri::api::process::Command;
+        let command = Command::new("sc").args(["delete", "windivert"]);
+
+        command.output().expect("unable to delete driver");
+    }
 }
 
 #[tauri::command]
 fn unload_driver() {
-    let output = Command::new("sc").args(["stop", "windivert"]).output();
+    #[cfg(target_os = "windows")]
+    {
+        use tauri::api::process::Command;
+        let command = Command::new("sc").args(["stop", "windivert"]);
 
-    match output {
-        Ok(output) => {
-            if output.status.success() {
-                info!("stopped driver");
-            }
-        }
-        Err(_) => {
+        if command.output().is_ok_and(|output| output.status.success()) {
+            info!("stopped driver");
+        } else {
             warn!("could not execute command to stop driver");
         }
     }
 }
 
 #[tauri::command]
-fn check_start_on_boot() -> bool {
-    // Run the `schtasks` command to query the task
-    let output = Command::new("schtasks")
-        .args(["/query", "/tn", "LOA_Logs_Auto_Start"])
-        .output();
-
-    match output {
-        Ok(output) => output.status.success(),
-        Err(_) => false,
-    }
+fn check_start_on_boot(auto: State<AutoLaunchManager>) -> bool {
+    auto.is_enabled().unwrap_or(false)
 }
 
 #[tauri::command]
-fn set_start_on_boot(set: bool) {
-    let app_path = match std::env::current_exe() {
-        Ok(path) => path.to_string_lossy().to_string(),
-        Err(e) => {
-            warn!("could not get current exe path: {}", e);
-            return;
-        }
+fn set_start_on_boot(auto: State<AutoLaunchManager>, set: bool) {
+    let _ = match set {
+        true => auto.enable(),
+        false => auto.disable(),
     };
-
-    let task_name = "LOA_Logs_Auto_Start";
-
-    if set {
-        Command::new("schtasks")
-            .args(["/delete", "/tn", task_name, "/f"])
-            .output()
-            .ok();
-
-        let output = Command::new("schtasks")
-            .args([
-                "/create",
-                "/tn",
-                task_name,
-                "/tr",
-                &format!("\"{}\"", &app_path),
-                "/sc",
-                "onlogon",
-                "/rl",
-                "highest",
-            ])
-            .output();
-
-        match output {
-            Ok(_) => {
-                info!("enabled start on boot");
-            }
-            Err(e) => {
-                warn!("error enabling start on boot: {}", e);
-            }
-        }
-    } else {
-        let output = Command::new("schtasks")
-            .args(["/delete", "/tn", task_name, "/f"])
-            .output();
-
-        match output {
-            Ok(_) => {
-                info!("disabled start on boot");
-            }
-            Err(e) => {
-                warn!("error disabling start on boot: {}", e);
-            }
-        }
-    }
 }
 
 #[tauri::command]
 fn check_loa_running() -> bool {
-    let system = System::new_all();
-    let process_name = "lostark.exe";
-
-    // Iterate through all running processes
-    for process in system.processes().values() {
-        if process.name().to_string_lossy().to_ascii_lowercase() == process_name {
-            return true;
-        }
-    }
-    false
+    let system = System::new_with_specifics(
+        RefreshKind::nothing().with_processes(ProcessRefreshKind::nothing().without_tasks()),
+    );
+    let process_name = "LOSTARK.exe";
+    system
+        .processes()
+        .values()
+        .any(|p| p.name().eq_ignore_ascii_case(process_name))
 }
 
 #[tauri::command]
-fn start_loa_process() {
-    if !check_loa_running() {
-        info!("starting lost ark process...");
-        Command::new("cmd")
-            .args(["/C", "start", "steam://rungameid/1599340"])
-            .spawn()
-            .map_err(|e| error!("could not open lost ark: {}", e))
-            .ok();
-    } else {
-        info!("lost ark already running")
+fn start_loa_process(app_handle: tauri::AppHandle) {
+    if check_loa_running() {
+        return info!("lost ark already running");
+    }
+    info!("starting lost ark process...");
+
+    let scope = app_handle.shell_scope();
+    if let Err(e) = open(&scope, "steam://rungameid/1599340", None) {
+        error!("could not open lost ark: {}", e);
     }
 }
 

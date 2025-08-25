@@ -1,3 +1,6 @@
+pub mod autostart;
+pub mod path;
+
 use flexi_logger::{
     Cleanup, Criterion, DeferredNow, Duplicate, FileSpec, Logger, LoggerHandle, Naming, WriteMode,
 };
@@ -28,17 +31,13 @@ impl AppState {
             return;
         }
 
-        let mut resource_directory =
-            std::env::current_exe().expect("Can't find path to executable");
-        resource_directory.pop();
-
         let mut logger = Logger::try_with_str("info, tao=off")
             .unwrap()
             .log_to_file(
                 FileSpec::default()
                     .suppress_timestamp()
                     .basename("loa_logs")
-                    .directory(resource_directory),
+                    .directory(path::log_dir()),
             )
             .use_utc()
             .write_mode(WriteMode::BufferAndFlush)
