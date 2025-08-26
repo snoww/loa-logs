@@ -33,7 +33,7 @@ use meter_core::start_capture;
 use reqwest::Client;
 use serde_json::json;
 use std::cell::RefCell;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 use std::rc::Rc;
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
@@ -110,7 +110,7 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
         }
     }
 
-    get_and_set_region(region_file_path.as_ref(), &mut state);
+    get_and_set_region(&region_file_path, &mut state);
 
     let emit_details = Arc::new(AtomicBool::new(false));
 
@@ -271,7 +271,7 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
                     party_map_cache = HashMap::new();
                     let entity = entity_tracker.init_env(pkt);
                     state.on_init_env(entity, &stats_api);
-                    get_and_set_region(region_file_path.as_ref(), &mut state);
+                    get_and_set_region(&region_file_path, &mut state);
                     info!("region: {:?}", state.region);
                 }
             }
@@ -1190,7 +1190,7 @@ fn write_local_players(local_info: &LocalInfo, path: &PathBuf) -> Result<()> {
     Ok(())
 }
 
-fn get_and_set_region(path: &str, state: &mut EncounterState) {
+fn get_and_set_region<P: AsRef<Path>>(path: P, state: &mut EncounterState) {
     match std::fs::read_to_string(path) {
         Ok(region) => {
             state.region = Some(region.clone());

@@ -19,7 +19,7 @@ anyhow = "1.0.75"
 chrono = "0.4.31"
 serde_json = { version = "1.0", features = ["preserve_order"] }
 serde = { version = "1.0", features = ["derive"] }
-tauri = { version = "1.8.3", features = [ "http-all", "clipboard-all", "fs-copy-file", "fs-read-file", "global-shortcut-all", "path-all", "process-command-api", "process-relaunch", "protocol-asset", "shell-open", "system-tray", "updater", "window-hide", "window-maximize", "window-minimize", "window-set-always-on-top", "window-set-focus", "window-set-ignore-cursor-events", "window-show", "window-start-dragging", "window-unmaximize", "window-unminimize"] }
+tauri = { version = "1.8.3", features = [ "http-all", "clipboard-all", "fs-copy-file", "fs-read-file", "global-shortcut-all", "path-all", "process-command-api", "process-relaunch", "shell-open", "system-tray", "updater", "window-hide", "window-maximize", "window-minimize", "window-set-always-on-top", "window-set-focus", "window-set-ignore-cursor-events", "window-show", "window-start-dragging", "window-unmaximize", "window-unminimize"] }
 lazy_static = "1.4.0"
 tauri-plugin-window-state = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
 tauri-plugin-single-instance = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
