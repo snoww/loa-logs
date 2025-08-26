@@ -25,9 +25,7 @@
     "global-shortcut:allow-unregister",
     "global-shortcut:allow-unregister-all",
     "process:allow-restart",
-    "clipboard-manager:allow-read-text",
-    "clipboard-manager:allow-write-text",
-    "clipboard-manager:default",
+    "clipboard-manager:allow-write-image",
     "process:default"
   ]
 }
