@@ -1,4 +1,4 @@
-import { EntityType, type Encounter, type Entity, type PartyInfo } from "$lib/types";
+import { type Encounter, type Entity, EntityType } from "$lib/types";
 import { settings } from "./stores.svelte";
 import { timestampToMinutesAndSeconds } from "./utils";
 
@@ -47,9 +47,7 @@ export class EncounterState {
       .filter((e) => {
         if (e.damageStats.damageDealt <= 0) return false;
 
-        const isValidPlayer = e.entityType === EntityType.PLAYER && e.classId !== 0;
-
-        return isValidPlayer;
+        return e.entityType === EntityType.PLAYER && e.classId !== 0;
       })
       .sort((a, b) => b.damageStats.damageDealt - a.damageStats.damageDealt);
   });
@@ -141,7 +139,12 @@ export class EncounterState {
     );
   });
 
-  partyInfo: PartyInfo | undefined = $state(undefined);
+  /**
+   * Array of parties in the encounter, each party is an array of player names.
+   *
+   * e.g. [ ["Player1", "Player2", "Player3", "Player4"], ["Player5", "Player6", "Player7", "Player8"] ]
+   */
+  partyInfo: string[][] | undefined = $state(undefined);
 
   /**
    * Array of parties in the encounter, sorted by party order.
@@ -153,12 +156,12 @@ export class EncounterState {
 
     // resolve map of id->name to array of player entities
     const temp = new Array<Array<Entity>>();
-    for (const [partyIdStr, names] of Object.entries(this.partyInfo)) {
-      const partyId = Number(partyIdStr);
-      temp[partyId] = names
+
+    this.partyInfo.forEach((party, partyId) => {
+      temp[partyId] = party
         .map((name) => this.players.find((player) => player.name === name))
-        .filter((player) => player !== undefined) as Entity[];
-    }
+        .filter((player): player is Entity => player !== undefined);
+    });
 
     // sort parties by partyId
     for (const party of temp) {
@@ -214,7 +217,9 @@ export class EncounterState {
 
   constructor(encounter?: Encounter, live: boolean = false) {
     this.encounter = encounter;
-    this.partyInfo = encounter?.encounterDamageStats.misc?.partyInfo;
+    if (encounter?.encounterDamageStats.misc?.partyInfo) {
+      this.partyInfo = Object.values(encounter?.encounterDamageStats.misc?.partyInfo);
+    }
     this.duration = encounter?.duration ?? 0;
     this.live = live;
   }

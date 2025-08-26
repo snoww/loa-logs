@@ -161,14 +161,12 @@ export class BuffState {
   shieldParties = $derived.by(() => {
     if (!this.enc.partyInfo) return [];
 
-    const partyInfo = Object.entries(this.enc.partyInfo);
     const temp: Entity[][] = [];
 
-    partyInfo.forEach(([partyIdStr, names]) => {
-      const partyId = Number(partyIdStr);
-      temp[partyId] = names
+    this.enc.partyInfo.forEach((party, partyId) => {
+      temp[partyId] = party
         .map((name) => this.players.find((player) => player.name === name))
-        .filter((player) => player !== undefined) as Entity[];
+        .filter((player): player is Entity => player !== undefined);
     });
 
     temp.forEach((party) => {

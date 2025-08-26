@@ -180,7 +180,6 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
 
     let mut party_freeze = false;
     let mut party_cache: Option<Vec<Vec<String>>> = None;
-    let mut party_map_cache: HashMap<i32, Vec<String>> = HashMap::new();
 
     while let Ok((op, data)) = rx.recv() {
         if reset.load(Ordering::Relaxed) {
@@ -270,7 +269,6 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
                     state.raid_difficulty_id = 0;
                     state.damage_is_valid = true;
                     party_cache = None;
-                    party_map_cache = HashMap::new();
                     let entity = entity_tracker.init_env(pkt);
                     state.on_init_env(entity, &stats_api);
                     get_and_set_region(region_file_path.as_ref(), &mut state);
@@ -490,7 +488,8 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
                 }
             }
             Pkt::SkillCooldownNotify => {
-                if let Some(pkt) = parse_pkt(&data, PKTSkillCooldownNotify::new, "PKTSkillCooldownNotify")
+                if let Some(pkt) =
+                    parse_pkt(&data, PKTSkillCooldownNotify::new, "PKTSkillCooldownNotify")
                 {
                     state.on_skill_cooldown(pkt.skill_cooldown_struct);
                 }
@@ -640,7 +639,6 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
                         state.update_local_player(entity);
                     }
                     party_cache = None;
-                    party_map_cache = HashMap::new();
                 }
             }
             Pkt::PartyLeaveResult => {
@@ -650,7 +648,6 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
                         .borrow_mut()
                         .remove(pkt.party_instance_id, pkt.name);
                     party_cache = None;
-                    party_map_cache = HashMap::new();
                 }
             }
             Pkt::PartyStatusEffectAddNotify => {
@@ -1013,31 +1010,23 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
             let damage_valid = state.damage_is_valid;
             let app_handle = app.app_handle();
 
-            let party_info: Option<HashMap<i32, Vec<String>>> =
+            let party_info: Option<Vec<Vec<String>>> =
                 if last_party_update.elapsed() >= party_duration && !party_freeze {
                     last_party_update = Instant::now();
-                    // we used cached party if it exists
-                    if party_cache.is_some() {
-                        Some(party_map_cache.clone())
-                    } else {
+
+                    // use cache if available
+                    // otherwise get party info
+                    party_cache.clone().or_else(|| {
                         let party = update_party(&party_tracker, &entity_tracker);
                         if party.len() > 1 {
-                            let current_party: HashMap<i32, Vec<String>> = party
-                                .iter()
-                                .enumerate()
-                                .map(|(index, party)| (index as i32, party.clone()))
-                                .collect();
-
                             if party.iter().all(|p| p.len() == 4) {
                                 party_cache = Some(party.clone());
-                                party_map_cache.clone_from(&current_party);
                             }
-
-                            Some(current_party)
+                            Some(party)
                         } else {
                             None
                         }
-                    }
+                    })
                 } else {
                     None
                 };
@@ -1090,7 +1079,6 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
             state.saved = false;
             party_freeze = false;
             party_cache = None;
-            party_map_cache = HashMap::new();
         }
 
         if last_heartbeat.elapsed() >= heartbeat_duration {
@@ -1133,29 +1121,27 @@ fn update_party(
     party_tracker: &Rc<RefCell<PartyTracker>>,
     entity_tracker: &EntityTracker,
 ) -> Vec<Vec<String>> {
-    let mut party_info: HashMap<u32, Vec<String>> = HashMap::new();
+    let mut party_info = HashMap::new();
 
-    for (entity_id, party_id) in party_tracker.borrow().entity_id_to_party_id.iter() {
-        party_info.entry(*party_id).or_insert_with(Vec::new).extend(
-            entity_tracker
-                .entities
-                .get(entity_id)
-                .iter()
-                .filter(|entity| {
-                    entity.character_id > 0
-                        && entity.class_id > 0
-                        && entity
-                            .name
-                            .chars()
-                            .next()
-                            .unwrap_or_default()
-                            .is_uppercase()
-                })
-                .map(|entity| entity.name.clone()),
-        );
+    for (entity_id, party_id) in &party_tracker.borrow().entity_id_to_party_id {
+        let members = party_info.entry(*party_id).or_insert_with(Vec::new);
+        if let Some(entity) = entity_tracker.entities.get(entity_id) {
+            if entity.character_id > 0
+                && entity.class_id > 0
+                && entity
+                    .name
+                    .chars()
+                    .next()
+                    .unwrap_or_default()
+                    .is_uppercase()
+            {
+                members.push(entity.name.clone());
+            }
+        }
     }
+
     let mut sorted_parties = party_info.into_iter().collect::<Vec<(u32, Vec<String>)>>();
-    sorted_parties.sort_by_key(|&(party_id, _)| party_id);
+    sorted_parties.sort_unstable_by_key(|&(party_id, _)| party_id);
     sorted_parties
         .into_iter()
         .map(|(_, members)| members)

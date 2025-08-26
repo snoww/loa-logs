@@ -9,7 +9,6 @@ pub struct PartyTracker {
     pub character_id_to_party_id: HashMap<u64, u32>,
     pub entity_id_to_party_id: HashMap<u64, u32>,
     raid_instance_to_party_ids: HashMap<u32, HashSet<u32>>,
-    character_name_to_character_id: HashMap<String, u64>,
     name: Option<String>,
 }
 
@@ -20,7 +19,6 @@ impl PartyTracker {
             character_id_to_party_id: HashMap::new(),
             entity_id_to_party_id: HashMap::new(),
             raid_instance_to_party_ids: HashMap::new(),
-            character_name_to_character_id: HashMap::new(),
             name: None,
         }
     }
@@ -56,10 +54,6 @@ impl PartyTracker {
         if character_id > 0 {
             // println!("character_id: {}, entity_id: {}", character_id, entity_id);
             self.character_id_to_party_id.insert(character_id, party_id);
-            if let Some(name) = name {
-                self.character_name_to_character_id
-                    .insert(name, character_id);
-            }
         }
         if entity_id > 0 {
             self.entity_id_to_party_id.insert(entity_id, party_id);
