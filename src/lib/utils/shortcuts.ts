@@ -1,7 +1,7 @@
 import { misc, settings } from "$lib/stores.svelte";
-import { invoke } from "@tauri-apps/api";
+import { invoke } from "@tauri-apps/api/core";
 import { emit } from "@tauri-apps/api/event";
-import { register } from "@tauri-apps/api/globalShortcut";
+import { register } from "@tauri-apps/plugin-global-shortcut";
 
 export type Shortcut = {
   name: string;

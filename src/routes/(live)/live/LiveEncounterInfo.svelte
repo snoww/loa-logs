@@ -16,15 +16,17 @@
   import { EntityType } from "$lib/types";
   import { abbreviateNumber, takeScreenshot, timestampToMinutesAndSeconds } from "$lib/utils";
   import { createDropdownMenu, melt } from "@melt-ui/svelte";
-  import { invoke } from "@tauri-apps/api";
+  import { invoke } from "@tauri-apps/api/core";
   import { emit } from "@tauri-apps/api/event";
-  import { appWindow } from "@tauri-apps/api/window";
+  import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
   import { MediaQuery } from "svelte/reactivity";
   import { fly } from "svelte/transition";
   import QuickTooltip from "$lib/components/QuickTooltip.svelte";
   import LiveShareButton from "$lib/components/LiveShareButton.svelte";
 
   let { enc, screenshotDiv }: { enc: EncounterState; screenshotDiv?: HTMLElement } = $props();
+
+  const appWindow = getCurrentWebviewWindow();
 
   const {
     elements: { menu, item, trigger, arrow },
