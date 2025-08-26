@@ -1,3 +1,4 @@
+use crate::get_db_connection;
 use crate::live::entity_tracker::{Entity, EntityTracker};
 use crate::live::skill_tracker::{CastEvent, SkillTracker};
 use crate::live::stats_api::{InspectInfo, StatsApi};
@@ -12,7 +13,6 @@ use meter_core::packets::definitions::PKTIdentityGaugeChangeNotify;
 use meter_core::packets::structures::SkillCooldownStruct;
 use moka::sync::Cache;
 use rsntp::SntpClient;
-use rusqlite::Connection;
 use std::cmp::max;
 use std::default::Default;
 use tauri::{AppHandle, Manager, Window, Wry};
@@ -1457,13 +1457,6 @@ impl EncounterState {
         }
 
         let mut encounter = self.encounter.clone();
-        let mut path = self
-            .app
-            .app_handle()
-            .path_resolver()
-            .resource_dir()
-            .expect("could not get resource dir");
-        path.push("encounters.db");
 
         let damage_log = self.damage_log.clone();
         let cast_log = self.cast_log.clone();
@@ -1492,7 +1485,7 @@ impl EncounterState {
 
         encounter.current_boss_name = update_current_boss_name(&encounter.current_boss_name);
 
-        let window = self.app.clone();
+        let app = self.app.clone();
         task::spawn(async move {
             let player_infos = if !raid_difficulty.is_empty()
                 && raid_difficulty != "Inferno"
@@ -1505,7 +1498,7 @@ impl EncounterState {
                 None
             };
 
-            let mut conn = Connection::open(path).expect("failed to open database");
+            let mut conn = get_db_connection(&app).expect("failed to open database");
             let tx = conn.transaction().expect("failed to create transaction");
 
             let encounter_id = insert_data(
@@ -1531,8 +1524,7 @@ impl EncounterState {
             info!("saved to db");
 
             if raid_clear {
-                window
-                    .emit_all("clear-encounter", encounter_id)
+                app.emit_all("clear-encounter", encounter_id)
                     .expect("failed to emit clear-encounter");
             }
         });
