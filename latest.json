@@ -1,11 +1,11 @@
 {
-  "version": "v1.32.4",
-  "notes": "### v1.32.4 - August 27th, 2025\n\n#### BUG FIXES AND IMPROVEMENTS\n- fix boss details missing in logs\n- count skill effects to total casts\n- minor improvements and fixes",
-  "pub_date": "2025-08-27T06:36:40.175Z",
+  "version": "v1.32.5",
+  "notes": "### v1.32.5 - August 27th, 2025\n\n#### NEW FEATURES\n- update meter for weekly reset\n\n#### BUG FIXES AND IMPROVEMENTS\n- fix boss details missing in logs\n- count skill effects to total casts\n- minor improvements and fixes",
+  "pub_date": "2025-08-27T17:07:34.861Z",
   "platforms": {
     "windows-x86_64": {
-      "url": "https://github.com/snoww/loa-logs/releases/download/v1.32.4/LOA.Logs_1.32.4_x64-setup.nsis.zip",
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmI1SFpvdFdmVFQvYTN1RUxxN2NFVUE5WlovWFBDcTV5T3NHOHVLektJSzhqemRjSXZVcFZSUG9Tdk1tYWl6UnFwYkdYQXo0Q0VoSEk2WUFpMWF6ZXdNPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzU2Mjc2NjIxCWZpbGU6TE9BIExvZ3NfMS4zMi40X3g2NC1zZXR1cC5uc2lzLnppcApaV25Tb1JUcG04eXBmM0NlTXVadmVaY05wRk5HVll1dmIwcy9jYTBxLzhuQU00a2p5Y2pXaHBBVFpPQk4vUXdHU3VueS9YY2Z3S2FLTGI3ZTFEVkRCZz09Cg=="
+      "url": "https://github.com/snoww/loa-logs/releases/download/v1.32.5/LOA.Logs_1.32.5_x64-setup.nsis.zip",
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlRNaXdOanhYUVZEY3haWDYxYjlTMEoxTm96ejloclRLcEhzZ3U5a0F4WEsxTXIxdzV4bDBnT29WZkFpcFVCL2lEY2ZEVGFmeHI3SGZ3a1pYN29DcUFZPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzU2MzE0NjY0CWZpbGU6TE9BIExvZ3NfMS4zMi41X3g2NC1zZXR1cC5uc2lzLnppcAowVUdUUVBWNDJ2NEU2bGZ6OG5pemVnRGd4dHJscVZFNmtFVnlUUE5oRzdlUVFKWVhiaWdCQkVoZ0x0d0RCUHdFdndIYTB2b1NrbUIxZytITW1MY0dDdz09Cg=="
     }
   }
 }

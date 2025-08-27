@@ -1,14 +1,16 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.32.4 - August 27th, 2025
+    v1.32.5 - August 27th, 2025
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
   </div>
 </div>
 
-#### BUG FIXES AND IMPROVEMENTS
+#### NEW FEATURES
+- update meter for weekly reset
 
+#### BUG FIXES AND IMPROVEMENTS
 - fix boss details missing in logs
 - count skill effects to total casts
 - minor improvements and fixes
