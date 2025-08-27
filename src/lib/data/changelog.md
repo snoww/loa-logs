@@ -1,6 +1,6 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.32.3 - August 22th, 2025
+    v1.32.4 - August 27th, 2025
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
@@ -9,10 +9,18 @@
 
 #### BUG FIXES AND IMPROVEMENTS
 
-- fix self buffs showing wrong source skills
-- fix buff summaries not excluding damage special skills
+- fix boss details missing in logs
+- count skill effects to total casts
+- minor improvements and fixes
 
 ---
+
+### v1.32.3 - August 22th, 2025
+
+#### BUG FIXES AND IMPROVEMENTS
+
+- fix self buffs showing wrong source skills
+- fix buff summaries not excluding damage special skills
 
 ### v1.32.2 - August 20th, 2025
 

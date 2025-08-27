@@ -1,11 +1,11 @@
 {
-  "version": "v1.32.3",
-  "notes": "### v1.32.3 - August 22th, 2025\n\n#### BUG FIXES AND IMPROVEMENTS\n- fix self buffs showing wrong source skills\n- fix buff summaries not excluding damage special skills",
-  "pub_date": "2025-08-22T09:03:20.518Z",
+  "version": "v1.32.4",
+  "notes": "### v1.32.4 - August 27th, 2025\n\n#### BUG FIXES AND IMPROVEMENTS\n- fix boss details missing in logs\n- count skill effects to total casts\n- minor improvements and fixes",
+  "pub_date": "2025-08-27T06:36:40.175Z",
   "platforms": {
     "windows-x86_64": {
-      "url": "https://github.com/snoww/loa-logs/releases/download/v1.32.3/LOA.Logs_1.32.3_x64-setup.nsis.zip",
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYldJVGRBM2JqZ3drblc5ZHJHendYang5TzFyQVBqZitTak5DWHBOS3NqUlZQUkxHZ2xJNFkyVmRLamtqOTE2UnU4NnhtQm1kcWNXS05JQmRSK2RiV2c4PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzU1ODUzNDQ2CWZpbGU6TE9BIExvZ3NfMS4zMi4zX3g2NC1zZXR1cC5uc2lzLnppcAo5bmVnZUpZaFA1SEcrbVZWMzdFUjl0akh4OFdLWlZuSDA4OHJVcXlPbGM1RTlOS0c4bGNDZE5DUlZ4S0lLeWsrQ1J5OTZKNW5OQTV4QU0zUHhNQ21BZz09Cg=="
+      "url": "https://github.com/snoww/loa-logs/releases/download/v1.32.4/LOA.Logs_1.32.4_x64-setup.nsis.zip",
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmI1SFpvdFdmVFQvYTN1RUxxN2NFVUE5WlovWFBDcTV5T3NHOHVLektJSzhqemRjSXZVcFZSUG9Tdk1tYWl6UnFwYkdYQXo0Q0VoSEk2WUFpMWF6ZXdNPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzU2Mjc2NjIxCWZpbGU6TE9BIExvZ3NfMS4zMi40X3g2NC1zZXR1cC5uc2lzLnppcApaV25Tb1JUcG04eXBmM0NlTXVadmVaY05wRk5HVll1dmIwcy9jYTBxLzhuQU00a2p5Y2pXaHBBVFpPQk4vUXdHU3VueS9YY2Z3S2FLTGI3ZTFEVkRCZz09Cg=="
     }
   }
 }
