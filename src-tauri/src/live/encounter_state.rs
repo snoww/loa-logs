@@ -1,26 +1,25 @@
-use crate::get_db_connection;
+use crate::database::models::InsertEncounterArgs;
+use crate::database::Repository;
 use crate::live::entity_tracker::{Entity, EntityTracker};
 use crate::live::skill_tracker::{CastEvent, SkillTracker};
-use crate::live::stats_api::{InspectInfo, StatsApi};
+use crate::live::stats_api::StatsApi;
 use crate::live::status_tracker::StatusEffectDetails;
 use crate::live::utils::*;
+use crate::parser::data::*;
 use crate::parser::models::*;
 use chrono::Utc;
 use hashbrown::HashMap;
 use log::{info, warn};
 use meter_core::packets::common::SkillMoveOptionData;
-use meter_core::packets::definitions::PKTIdentityGaugeChangeNotify;
 use meter_core::packets::structures::SkillCooldownStruct;
-use moka::sync::Cache;
 use rsntp::SntpClient;
 use std::cmp::max;
 use std::default::Default;
-use tauri::{AppHandle, Manager, Window, Wry};
+use tauri::{AppHandle, Manager};
 use tokio::task;
 
 #[derive(Debug)]
 pub struct EncounterState {
-    pub app: AppHandle,
     pub encounter: Encounter,
     pub resetting: bool,
     pub boss_dead_update: bool,
@@ -52,9 +51,8 @@ pub struct EncounterState {
 }
 
 impl EncounterState {
-    pub fn new(window: AppHandle) -> EncounterState {
+    pub fn new() -> EncounterState {
         EncounterState {
-            app: window,
             encounter: Encounter::default(),
             resetting: false,
             raid_clear: false,
@@ -166,10 +164,10 @@ impl EncounterState {
         }
     }
 
-    pub fn on_init_env(&mut self, entity: Entity, stats_api: &StatsApi) {
+    pub fn on_init_env(&mut self, app: AppHandle, entity: Entity, stats_api: &StatsApi) {
         // if not already saved to db, we save again
         if !self.saved && !self.encounter.current_boss_name.is_empty() {
-            self.save_to_db(stats_api, false);
+            self.save_to_db(app.clone(), stats_api, false);
         }
 
         // replace or insert local player
@@ -190,22 +188,18 @@ impl EncounterState {
             e.name == self.encounter.local_player || e.damage_stats.damage_dealt > 0
         });
 
-        self.app
-            .emit_all("zone-change", "")
-            .expect("failed to emit zone-change");
+        app.emit_all("zone-change", "").expect("failed to emit zone-change");
 
         self.soft_reset(false);
     }
 
-    pub fn on_phase_transition(&mut self, phase_code: i32, stats_api: &mut StatsApi) {
-        self.app
-            .emit_all("phase-transition", phase_code)
-            .expect("failed to emit phase-transition");
+    pub fn on_phase_transition(&mut self, app: AppHandle, phase_code: i32, stats_api: &mut StatsApi) {
+        app.emit_all("phase-transition", phase_code).expect("failed to emit phase-transition");
 
         match phase_code {
             0 | 2 | 3 | 4 => {
                 if !self.encounter.current_boss_name.is_empty() {
-                    self.save_to_db(stats_api, false);
+                    self.save_to_db(app, stats_api, false);
                     self.saved = true;
                 }
                 self.resetting = true;
@@ -505,6 +499,7 @@ impl EncounterState {
     #[allow(clippy::too_many_arguments)]
     pub fn on_damage(
         &mut self,
+        app: AppHandle,
         dmg_src_entity: &Entity,
         proj_entity: &Entity,
         dmg_target_entity: &Entity,
@@ -627,8 +622,7 @@ impl EncounterState {
             };
 
             self.encounter.boss_only_damage = self.boss_only_damage;
-            self.app
-                .emit_all("raid-start", timestamp)
+            app.emit_all("raid-start", timestamp)
                 .expect("failed to emit raid-start");
         }
 
@@ -957,9 +951,13 @@ impl EncounterState {
         }
         // update current_boss
         else if target_entity.entity_type == EntityType::BOSS {
-            self.encounter
-                .current_boss_name
-                .clone_from(&target_entity.name);
+            
+            if self.encounter.current_boss_name != target_entity.name {
+                self.encounter
+                    .current_boss_name
+                    .clone_from(&target_entity.name);
+            }
+            
             target_entity.id = dmg_target_entity.id;
             target_entity.npc_id = dmg_target_entity.npc_id;
 
@@ -1437,7 +1435,7 @@ impl EncounterState {
         }
     }
 
-    pub fn save_to_db(&mut self, stats_api: &StatsApi, manual: bool) {
+    pub fn save_to_db(&mut self, app: AppHandle, stats_api: &StatsApi, manual: bool) {
         if !manual
             && (self.encounter.fight_start == 0
                 || self.encounter.current_boss_name.is_empty()
@@ -1466,7 +1464,7 @@ impl EncounterState {
         let party_info = self.party_info.clone();
         let raid_difficulty = self.raid_difficulty.clone();
         let region = self.region.clone();
-        let meter_version = self.app.app_handle().package_info().version.to_string();
+        let meter_version = app.package_info().version.to_string();
 
         let ntp_fight_start = self.ntp_fight_start;
 
@@ -1486,9 +1484,11 @@ impl EncounterState {
 
         encounter.current_boss_name = update_current_boss_name(&encounter.current_boss_name);
 
-        let app = self.app.clone();
+        let app = app.clone();
+        
         task::spawn(async move {
-            let player_infos = if !raid_difficulty.is_empty()
+
+            let player_info = if !raid_difficulty.is_empty()
                 && raid_difficulty != "Inferno"
                 && raid_difficulty != "Trial"
                 && !encounter.current_boss_name.is_empty()
@@ -1499,11 +1499,8 @@ impl EncounterState {
                 None
             };
 
-            let mut conn = get_db_connection(&app).expect("failed to open database");
-            let tx = conn.transaction().expect("failed to create transaction");
-
-            let encounter_id = insert_data(
-                &tx,
+            let repository = app.state::<Repository>();
+            let args = InsertEncounterArgs {
                 encounter,
                 damage_log,
                 cast_log,
@@ -1512,16 +1509,26 @@ impl EncounterState {
                 party_info,
                 raid_difficulty,
                 region,
-                player_infos,
+                player_info,
                 meter_version,
                 ntp_fight_start,
                 rdps_valid,
                 manual,
                 skill_cast_log,
                 skill_cooldowns,
-            );
+            };
 
-            tx.commit().expect("failed to commit transaction");
+            let encounter_id = repository.insert_data(args).expect("failed to save encounter");
+
+            // let mut conn = get_db_connection(&app).expect("failed to open database");
+            // let tx = conn.transaction().expect("failed to create transaction");
+
+            // let encounter_id = insert_data(
+            //     &tx,
+                
+            // );
+
+            // tx.commit().expect("failed to commit transaction");
             info!("saved to db");
 
             if raid_clear {

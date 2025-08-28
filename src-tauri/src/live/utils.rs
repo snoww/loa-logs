@@ -3,6 +3,7 @@ use crate::live::entity_tracker::Entity;
 use crate::live::skill_tracker::{CastEvent, SkillTracker};
 use crate::live::stats_api::InspectInfo;
 use crate::live::status_tracker::StatusEffectDetails;
+use crate::parser::data::*;
 use crate::parser::models::*;
 use flate2::write::GzEncoder;
 use flate2::Compression;
@@ -548,7 +549,7 @@ pub fn get_class_from_id(class_id: &u32) -> String {
     class.to_string()
 }
 
-fn damage_gem_value_to_level(value: u32, tier: u8) -> u8 {
+pub fn damage_gem_value_to_level(value: u32, tier: u8) -> u8 {
     if tier == 4 {
         match value {
             4400 => 10,
@@ -580,7 +581,7 @@ fn damage_gem_value_to_level(value: u32, tier: u8) -> u8 {
     }
 }
 
-fn cooldown_gem_value_to_level(value: u32, tier: u8) -> u8 {
+pub fn cooldown_gem_value_to_level(value: u32, tier: u8) -> u8 {
     if tier == 4 {
         match value {
             2400 => 10,
@@ -612,7 +613,7 @@ fn cooldown_gem_value_to_level(value: u32, tier: u8) -> u8 {
     }
 }
 
-fn support_damage_gem_value_to_level(value: u32) -> u8 {
+pub fn support_damage_gem_value_to_level(value: u32) -> u8 {
     match value {
         1000 => 10,
         900 => 9,
@@ -649,7 +650,7 @@ pub fn is_hat_buff(buff_id: &u32) -> bool {
     matches!(buff_id, 362600 | 212305 | 319503 | 485100)
 }
 
-fn generate_intervals(start: i64, end: i64) -> Vec<i64> {
+pub fn generate_intervals(start: i64, end: i64) -> Vec<i64> {
     if start >= end {
         return Vec::new();
     }
@@ -657,7 +658,7 @@ fn generate_intervals(start: i64, end: i64) -> Vec<i64> {
     (0..end - start).step_by(1_000).collect()
 }
 
-fn sum_in_range(vec: &[(i64, i64)], start: i64, end: i64) -> i64 {
+pub fn sum_in_range(vec: &[(i64, i64)], start: i64, end: i64) -> i64 {
     let start_idx = binary_search_left(vec, start);
     let end_idx = binary_search_left(vec, end + 1);
 
@@ -667,7 +668,7 @@ fn sum_in_range(vec: &[(i64, i64)], start: i64, end: i64) -> i64 {
         .sum()
 }
 
-fn binary_search_left(vec: &[(i64, i64)], target: i64) -> usize {
+pub fn binary_search_left(vec: &[(i64, i64)], target: i64) -> usize {
     let mut left = 0;
     let mut right = vec.len();
 
@@ -682,7 +683,7 @@ fn binary_search_left(vec: &[(i64, i64)], target: i64) -> usize {
     left
 }
 
-fn calculate_average_dps(data: &[(i64, i64)], start_time: i64, end_time: i64) -> Vec<i64> {
+pub fn calculate_average_dps(data: &[(i64, i64)], start_time: i64, end_time: i64) -> Vec<i64> {
     let step = 5;
     let mut results = vec![0; ((end_time - start_time) / step + 1) as usize];
     let mut current_sum = 0;
@@ -735,474 +736,6 @@ pub fn check_tripod_level_change(before: Option<TripodLevel>, after: Option<Trip
     before != after
 }
 
-const WINDOW_MS: i64 = 5_000;
-const WINDOW_S: i64 = 5;
-
-#[allow(clippy::too_many_arguments)]
-pub fn insert_data(
-    tx: &Transaction,
-    mut encounter: Encounter,
-    damage_log: HashMap<String, Vec<(i64, i64)>>,
-    cast_log: HashMap<String, HashMap<u32, Vec<i32>>>,
-    boss_hp_log: HashMap<String, Vec<BossHpLog>>,
-    raid_clear: bool,
-    party_info: Vec<Vec<String>>,
-    raid_difficulty: String,
-    region: Option<String>,
-    player_info: Option<HashMap<String, InspectInfo>>,
-    meter_version: String,
-    ntp_fight_start: i64,
-    rdps_valid: bool,
-    manual: bool,
-    skill_cast_log: HashMap<u64, HashMap<u32, BTreeMap<i64, SkillCast>>>,
-    skill_cooldowns: HashMap<u32, Vec<CastEvent>>,
-) -> i64 {
-    let mut encounter_stmt = tx
-        .prepare_cached(
-            "
-    INSERT INTO encounter (
-        last_combat_packet,
-        total_damage_dealt,
-        top_damage_dealt,
-        total_damage_taken,
-        top_damage_taken,
-        dps,
-        buffs,
-        debuffs,
-        total_shielding,
-        total_effective_shielding,
-        applied_shield_buffs,
-        misc,
-        version,
-        boss_hp_log
-    ) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14)",
-        )
-        .expect("failed to prepare encounter statement");
-
-    encounter.duration = encounter.last_combat_packet - encounter.fight_start;
-    let duration_seconds = max(encounter.duration / 1000, 1);
-    encounter.encounter_damage_stats.dps =
-        encounter.encounter_damage_stats.total_damage_dealt / duration_seconds;
-
-    let misc: EncounterMisc = EncounterMisc {
-        raid_clear: if raid_clear { Some(true) } else { None },
-        party_info: if party_info.is_empty() {
-            None
-        } else {
-            Some(
-                party_info
-                    .iter()
-                    .enumerate()
-                    .map(|(index, party)| (index as i32, party.clone()))
-                    .collect(),
-            )
-        },
-        region,
-        version: Some(meter_version),
-        rdps_valid: Some(rdps_valid),
-        rdps_message: if rdps_valid {
-            None
-        } else {
-            Some("invalid_stats".to_string())
-        },
-        ntp_fight_start: Some(ntp_fight_start),
-        manual_save: Some(manual),
-        ..Default::default()
-    };
-
-    let compressed_boss_hp = compress_json(&boss_hp_log);
-    let compressed_buffs = compress_json(&encounter.encounter_damage_stats.buffs);
-    let compressed_debuffs = compress_json(&encounter.encounter_damage_stats.debuffs);
-    let compressed_shields = compress_json(&encounter.encounter_damage_stats.applied_shield_buffs);
-
-    encounter_stmt
-        .execute(params![
-            encounter.last_combat_packet,
-            encounter.encounter_damage_stats.total_damage_dealt,
-            encounter.encounter_damage_stats.top_damage_dealt,
-            encounter.encounter_damage_stats.total_damage_taken,
-            encounter.encounter_damage_stats.top_damage_taken,
-            encounter.encounter_damage_stats.dps,
-            compressed_buffs,
-            compressed_debuffs,
-            encounter.encounter_damage_stats.total_shielding,
-            encounter.encounter_damage_stats.total_effective_shielding,
-            compressed_shields,
-            json!(misc),
-            DB_VERSION,
-            compressed_boss_hp,
-        ])
-        .expect("failed to insert encounter");
-
-    let last_insert_id = tx.last_insert_rowid();
-
-    let mut entity_stmt = tx
-        .prepare_cached(
-            "
-    INSERT INTO entity (
-        name,
-        encounter_id,
-        npc_id,
-        entity_type,
-        class_id,
-        class,
-        gear_score,
-        current_hp,
-        max_hp,
-        is_dead,
-        skills,
-        damage_stats,
-        skill_stats,
-        dps,
-        character_id,
-        engravings,
-        loadout_hash,
-        combat_power,
-        ark_passive_active,
-        spec,
-        ark_passive_data,
-        support_ap,
-        support_brand,
-        support_identity,
-        support_hyper
-    ) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17, ?18, ?19, ?20, ?21, ?22, ?23, ?24, ?25)",
-        )
-        .expect("failed to prepare entity statement");
-
-    let fight_start = encounter.fight_start;
-    let fight_end = encounter.last_combat_packet;
-
-    // get average support buffs for supports
-    let mut buffs = HashMap::new();
-    for party in party_info.iter() {
-        let party_members: Vec<_> = encounter
-            .entities
-            .iter()
-            .filter(|(name, _)| party.contains(name))
-            .map(|(name, entity)| entity)
-            .collect();
-
-        // specs are not determined for dps classes, but should be set for supports
-        let party_without_support: Vec<_> = party_members
-            .iter()
-            .filter(|entity| !is_support(entity))
-            .collect();
-
-        if party_members.len() - party_without_support.len() == 1 {
-            let party_damage_total: i64 = party_without_support
-                .iter()
-                .map(|e| get_damage_without_hyper_or_special(e))
-                .sum();
-
-            if party_damage_total <= 0 {
-                continue;
-            }
-
-            let mut average_brand = 0.0;
-            let mut average_buff = 0.0;
-            let mut average_identity = 0.0;
-            let mut average_hyper = 0.0;
-
-            for player in party_without_support {
-                let damage_dealt = get_damage_without_hyper_or_special(player) as f64;
-
-                if damage_dealt <= 0.0 {
-                    continue;
-                }
-
-                let party_damage_percent = damage_dealt / party_damage_total as f64;
-
-                let brand_ratio = player.damage_stats.debuffed_by_support as f64 / damage_dealt;
-                let buff_ratio = player.damage_stats.buffed_by_support as f64 / damage_dealt;
-                let identity_ratio = player.damage_stats.buffed_by_identity as f64 / damage_dealt;
-
-                average_brand += brand_ratio * party_damage_percent;
-                average_buff += buff_ratio * party_damage_percent;
-                average_identity += identity_ratio * party_damage_percent;
-                average_hyper += (player.damage_stats.buffed_by_hat as f64
-                    / player.damage_stats.damage_dealt as f64)
-                    * party_damage_percent;
-            }
-
-            if let Some(support) = party_members.iter().find(|entity| is_support(entity)) {
-                buffs.insert(
-                    support.name.clone(),
-                    SupportBuffs {
-                        brand: average_brand,
-                        buff: average_buff,
-                        identity: average_identity,
-                        hyper: average_hyper,
-                    },
-                );
-            }
-        }
-    }
-
-    for (_key, entity) in encounter.entities.iter_mut().filter(|(_, e)| {
-        ((e.entity_type == EntityType::PLAYER && e.class_id > 0)
-            || e.name == encounter.local_player
-            || e.entity_type == EntityType::ESTHER
-            || (e.entity_type == EntityType::BOSS && e.max_hp > 0))
-            && e.damage_stats.damage_dealt > 0
-    }) {
-        if entity.entity_type == EntityType::PLAYER {
-            let intervals = generate_intervals(fight_start, fight_end);
-            if let Some(damage_log) = damage_log.get(&entity.name) {
-                if !intervals.is_empty() {
-                    for interval in intervals {
-                        let start = fight_start + interval - WINDOW_MS;
-                        let end = fight_start + interval + WINDOW_MS;
-
-                        let damage = sum_in_range(damage_log, start, end);
-                        entity
-                            .damage_stats
-                            .dps_rolling_10s_avg
-                            .push(damage / (WINDOW_S * 2));
-                    }
-                }
-                let fight_start_sec = encounter.fight_start / 1000;
-                let fight_end_sec = encounter.last_combat_packet / 1000;
-                entity.damage_stats.dps_average =
-                    calculate_average_dps(damage_log, fight_start_sec, fight_end_sec);
-            }
-
-            let spec = get_player_spec(entity, &encounter.encounter_damage_stats.buffs, false);
-            entity.spec = Some(spec.clone());
-
-            if let Some(info) = player_info
-                .as_ref()
-                .and_then(|stats| stats.get(&entity.name))
-            {
-                for gem in info.gems.iter().flatten() {
-                    let skill_ids = if matches!(gem.gem_type, 34 | 35 | 65 | 63 | 61) {
-                        GEM_SKILL_MAP
-                            .get(&gem.skill_id)
-                            .cloned()
-                            .unwrap_or_default()
-                    } else {
-                        vec![gem.skill_id]
-                    };
-
-                    for skill_id in skill_ids {
-                        if let Some(skill) = entity.skills.get_mut(&skill_id) {
-                            match gem.gem_type {
-                                27 | 35 => {
-                                    // cooldown gems
-                                    skill.gem_cooldown =
-                                        Some(cooldown_gem_value_to_level(gem.value, gem.tier));
-                                    skill.gem_tier = Some(gem.tier);
-                                }
-                                64 | 65 => {
-                                    // support effect damage gems
-                                    skill.gem_damage =
-                                        Some(support_damage_gem_value_to_level(gem.value));
-                                    skill.gem_tier_dmg = Some(gem.tier);
-                                }
-                                _ => {
-                                    // damage gems
-                                    skill.gem_damage =
-                                        Some(damage_gem_value_to_level(gem.value, gem.tier));
-                                    skill.gem_tier_dmg = Some(gem.tier);
-                                }
-                            }
-                        }
-                    }
-                }
-
-                entity.ark_passive_active = Some(info.ark_passive_enabled);
-
-                let engravings = get_engravings(&info.engravings);
-                if entity.class_id == 104
-                    && engravings.as_ref().is_some_and(|engravings| {
-                        engravings
-                            .iter()
-                            .any(|e| e == "Awakening" || e == "Drops of Ether")
-                    })
-                {
-                    entity.spec = Some("Princess".to_string());
-                } else if spec == "Unknown" {
-                    // not reliable enough to be used on its own
-                    if let Some(tree) = info.ark_passive_data.as_ref() {
-                        if let Some(enlightenment) = tree.enlightenment.as_ref() {
-                            for node in enlightenment.iter() {
-                                let spec = get_spec_from_ark_passive(node);
-                                if spec != "Unknown" {
-                                    entity.spec = Some(spec);
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                }
-
-                if entity.combat_power.is_none() {
-                    entity.combat_power = info.combat_power.as_ref().map(|c| c.score);
-                }
-
-                entity.engraving_data = engravings;
-                entity.ark_passive_data = info.ark_passive_data.clone();
-                entity.loadout_hash = info.loadout_snapshot.clone();
-            }
-        }
-
-        if entity.name == encounter.local_player {
-            for (skill_id, events) in skill_cooldowns.iter() {
-                if let Some(skill) = entity.skills.get_mut(skill_id) {
-                    skill.time_available =
-                        Some(get_total_available_time(events, fight_start, fight_end));
-                }
-            }
-        }
-
-        entity.damage_stats.dps = entity.damage_stats.damage_dealt / duration_seconds;
-
-        for (_, skill) in entity.skills.iter_mut() {
-            skill.dps = skill.total_damage / duration_seconds;
-        }
-
-        for (_, cast_log) in cast_log.iter().filter(|&(s, _)| *s == entity.name) {
-            for (skill, log) in cast_log {
-                entity.skills.entry(*skill).and_modify(|e| {
-                    e.cast_log.clone_from(log);
-                });
-            }
-        }
-
-        for (_, skill_cast_log) in skill_cast_log.iter().filter(|&(s, _)| *s == entity.id) {
-            for (skill, log) in skill_cast_log {
-                entity.skills.entry(*skill).and_modify(|e| {
-                    let average_cast = e.total_damage as f64 / e.casts as f64;
-                    let filter = average_cast * 0.05;
-                    let mut adj_hits = 0;
-                    let mut adj_crits = 0;
-                    for cast in log.values() {
-                        for hit in cast.hits.iter() {
-                            if hit.damage as f64 > filter {
-                                adj_hits += 1;
-                                if hit.crit {
-                                    adj_crits += 1;
-                                }
-                            }
-                        }
-                    }
-
-                    if adj_hits > 0 {
-                        e.adjusted_crit = Some(adj_crits as f64 / adj_hits as f64);
-                    }
-
-                    e.max_damage_cast = log
-                        .values()
-                        .map(|cast| cast.hits.iter().map(|hit| hit.damage).sum::<i64>())
-                        .max()
-                        .unwrap_or_default();
-                    e.skill_cast_log = log.values().cloned().collect();
-                });
-            }
-        }
-
-        let compressed_skills = compress_json(&entity.skills);
-        let compressed_damage_stats = compress_json(&entity.damage_stats);
-
-        let damage_dealt = entity.damage_stats.damage_dealt;
-        let damage_without_hyper =
-            (damage_dealt - entity.damage_stats.hyper_awakening_damage) as f64;
-        let support_buffs = buffs.get(&entity.name);
-
-        entity_stmt
-            .execute(params![
-                entity.name,
-                last_insert_id,
-                entity.npc_id,
-                entity.entity_type.to_string(),
-                entity.class_id,
-                entity.class,
-                entity.gear_score,
-                entity.current_hp,
-                entity.max_hp,
-                entity.is_dead,
-                compressed_skills,
-                compressed_damage_stats,
-                json!(entity.skill_stats),
-                entity.damage_stats.dps,
-                entity.character_id,
-                json!(entity.engraving_data),
-                entity.loadout_hash,
-                entity.combat_power,
-                entity.ark_passive_active,
-                entity.spec,
-                json!(entity.ark_passive_data),
-                support_buffs
-                    .map(|b| b.buff)
-                    .unwrap_or(entity.damage_stats.buffed_by_support as f64 / damage_without_hyper),
-                support_buffs.map(|b| b.brand).unwrap_or(
-                    entity.damage_stats.debuffed_by_support as f64 / damage_without_hyper
-                ),
-                support_buffs.map(|b| b.identity).unwrap_or(
-                    entity.damage_stats.buffed_by_identity as f64 / damage_without_hyper
-                ),
-                support_buffs
-                    .map(|b| b.hyper)
-                    .unwrap_or(entity.damage_stats.buffed_by_hat as f64 / damage_without_hyper),
-            ])
-            .expect("failed to insert entity");
-    }
-
-    let mut players = encounter
-        .entities
-        .values()
-        .filter(|e| {
-            ((e.entity_type == EntityType::PLAYER && e.class_id != 0 && e.max_hp > 0)
-                || e.name == encounter.local_player)
-                && e.damage_stats.damage_dealt > 0
-        })
-        .collect::<Vec<_>>();
-    let local_player_dps = players
-        .iter()
-        .find(|e| e.name == encounter.local_player)
-        .map(|e| e.damage_stats.dps)
-        .unwrap_or_default();
-    players.sort_unstable_by_key(|e| Reverse(e.damage_stats.damage_dealt));
-    let preview_players = players
-        .into_iter()
-        .map(|e| format!("{}:{}", e.class_id, e.name))
-        .collect::<Vec<_>>()
-        .join(",");
-
-    let mut encounter_preview_stmt = tx
-        .prepare_cached(
-            "
-    INSERT INTO encounter_preview (
-        id,
-        fight_start,
-        current_boss,
-        duration,
-        players,
-        difficulty,
-        local_player,
-        my_dps,
-        cleared,
-        boss_only_damage
-    ) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10)",
-        )
-        .expect("failed to prepare encounter preview statement");
-    encounter_preview_stmt
-        .execute(params![
-            last_insert_id,
-            encounter.fight_start,
-            encounter.current_boss_name,
-            encounter.duration,
-            preview_players,
-            raid_difficulty,
-            encounter.local_player,
-            local_player_dps,
-            raid_clear,
-            encounter.boss_only_damage
-        ])
-        .expect("failed to insert encounter preview");
-
-    last_insert_id
-}
-
 pub fn map_status_effect(se: &StatusEffectDetails, custom_id_map: &mut HashMap<u32, u32>) -> u32 {
     if se.custom_id > 0 {
         custom_id_map.insert(se.custom_id, se.status_effect_id);
@@ -1232,16 +765,6 @@ pub fn get_new_id(source_skill: u32) -> u32 {
 
 pub fn get_skill_id(new_skill: u32, original_buff_id: u32) -> u32 {
     new_skill - 1_000_000_000 - original_buff_id
-}
-
-pub fn compress_json<T>(value: &T) -> Vec<u8>
-where
-    T: ?Sized + Serialize,
-{
-    let mut e = GzEncoder::new(Vec::new(), Compression::default());
-    let bytes = serde_json::to_vec(value).expect("unable to serialize json");
-    e.write_all(&bytes).expect("unable to write json to buffer");
-    e.finish().expect("unable to compress json")
 }
 
 pub fn update_current_boss_name(boss_name: &str) -> String {
@@ -1549,7 +1072,7 @@ pub fn get_player_spec(
     .to_string()
 }
 
-fn get_buff_names(player: &EncounterEntity, buffs: &HashMap<u32, StatusEffect>) -> Vec<String> {
+pub fn get_buff_names(player: &EncounterEntity, buffs: &HashMap<u32, StatusEffect>) -> Vec<String> {
     let mut names = Vec::new();
     for (id, _) in player.damage_stats.buffed_by.iter() {
         if let Some(buff) = buffs.get(id) {
@@ -1560,7 +1083,7 @@ fn get_buff_names(player: &EncounterEntity, buffs: &HashMap<u32, StatusEffect>) 
     names
 }
 
-fn get_spec_from_ark_passive(node: &ArkPassiveNode) -> String {
+pub fn get_spec_from_ark_passive(node: &ArkPassiveNode) -> String {
     match node.id {
         2160000 => "Berserker Technique",
         2160010 => "Mayhem",
@@ -1660,7 +1183,7 @@ pub fn get_total_available_time(
     total_available_time
 }
 
-fn get_damage_without_hyper_or_special(e: &EncounterEntity) -> i64 {
+pub fn get_damage_without_hyper_or_special(e: &EncounterEntity) -> i64 {
     let hyper = e.damage_stats.hyper_awakening_damage;
     let special = e
         .skills
@@ -1671,9 +1194,9 @@ fn get_damage_without_hyper_or_special(e: &EncounterEntity) -> i64 {
     e.damage_stats.damage_dealt - hyper - special
 }
 
-struct SupportBuffs {
-    brand: f64,
-    buff: f64,
-    identity: f64,
-    hyper: f64,
+pub struct SupportBuffs {
+    pub brand: f64,
+    pub buff: f64,
+    pub identity: f64,
+    pub hyper: f64,
 }

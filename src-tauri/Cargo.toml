@@ -7,7 +7,7 @@ license = "GNU General Public License v3.0"
 repository = "https://github.com/snoww/loa-logs"
 default-run = "app"
 edition = "2021"
-rust-version = "1.85.0"
+rust-version = "1.88.0"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -20,13 +20,11 @@ chrono = "0.4.31"
 serde_json = { version = "1.0", features = ["preserve_order"] }
 serde = { version = "1.0", features = ["derive"] }
 tauri = { version = "1.8.3", features = [ "http-all", "clipboard-all", "fs-copy-file", "fs-read-file", "global-shortcut-all", "path-all", "process-command-api", "process-relaunch", "shell-open", "system-tray", "updater", "window-hide", "window-maximize", "window-minimize", "window-set-always-on-top", "window-set-focus", "window-set-ignore-cursor-events", "window-show", "window-start-dragging", "window-unmaximize", "window-unminimize"] }
-lazy_static = "1.4.0"
 tauri-plugin-window-state = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
 tauri-plugin-single-instance = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
 bitflags = "2.4.1"
 window-vibrancy = "0.4.3"
 hashbrown = { version = "0.15.0", features = ["serde"] }
-rusqlite = { version = "0.36.0", features = ["bundled", "serde_json"] }
 tokio = { version = "1.45.1", features = ["rt", "macros"] }
 serde_with = "3.12.0"
 log = "0.4.18"
@@ -37,7 +35,13 @@ moka = { version = "0.12.7", features = ["sync"] }
 rsntp = { version = "4.0.0", default-features = false, features = ["chrono"]  }
 flate2 = "1.0.30"
 sysinfo = "0.35.1"
-meter-core = { git = "https://github.com/snoww/meter-core-rs", optional = true }
+once_cell = "1.21.3"
+single-instance = "0.3.3"
+r2d2_sqlite = "0.31.0"
+r2d2 = "0.8.10"
+rusqlite = { version = "0.37.0", features = ["bundled", "serde_json"] }
+# meter-core = { git = "https://github.com/snoww/meter-core-rs", optional = true }
+meter-core = { path = "../../lost-metrics-sniffer-stub", optional = true }
 
 [target.'cfg(target_os = "linux")'.dependencies]
 auto-launch = "0.5.0"

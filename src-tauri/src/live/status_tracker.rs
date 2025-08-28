@@ -4,7 +4,8 @@ use crate::live::status_tracker::StatusEffectBuffCategory::{BattleItem, Bracelet
 use crate::live::status_tracker::StatusEffectCategory::Debuff;
 use crate::live::status_tracker::StatusEffectShowType::All;
 use crate::live::utils::{get_new_id, is_support_class, is_support_spec};
-use crate::parser::models::{EncounterEntity, EntityType, SKILL_BUFF_DATA, SKILL_DATA};
+use crate::parser::data::SKILL_BUFF_DATA;
+use crate::parser::models::{EncounterEntity, EntityType};
 use chrono::{DateTime, Duration, Utc};
 use hashbrown::HashMap;
 use log::info;

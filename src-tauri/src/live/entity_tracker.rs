@@ -4,9 +4,10 @@ use crate::live::status_tracker::{
     build_status_effect, StatusEffectDetails, StatusEffectTargetType, StatusEffectType,
     StatusTracker,
 };
+use crate::parser::data::*;
 use crate::parser::models::EntityType::*;
 use crate::parser::models::{
-    EncounterEntity, EntityType, Esther, LocalInfo, LocalPlayer, ESTHER_DATA, NPC_DATA, SKILL_DATA,
+    EncounterEntity, EntityType, Esther, LocalInfo, LocalPlayer
 };
 
 use chrono::{DateTime, Utc};

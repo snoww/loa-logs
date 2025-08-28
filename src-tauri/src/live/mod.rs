@@ -2,46 +2,60 @@ mod encounter_state;
 mod entity_tracker;
 mod id_tracker;
 mod party_tracker;
-mod skill_tracker;
-mod stats_api;
+pub mod skill_tracker;
+pub mod stats_api;
 mod status_tracker;
-mod utils;
+pub mod utils;
+pub mod capture;
+pub mod local;
+pub mod region;
+pub mod heartbeat;
 
-use crate::app;
+pub use capture::*;
+
+use crate::live::capture::DamageEncryptionHandler;
 use crate::live::encounter_state::EncounterState;
 use crate::live::entity_tracker::{get_current_and_max_hp, EntityTracker};
+use crate::live::heartbeat::{HeartbeatApi, HeartbeatSendArgs};
 use crate::live::id_tracker::IdTracker;
+use crate::live::local::LocalPlayerRepository;
 use crate::live::party_tracker::PartyTracker;
+use crate::live::region::RegionAcessor;
 use crate::live::stats_api::StatsApi;
-use crate::live::stats_api::API_URL;
 use crate::live::status_tracker::{
     get_status_effect_value, StatusEffectDetails, StatusEffectTargetType, StatusEffectType,
     StatusTracker,
 };
 use crate::live::utils::get_class_from_id;
-use crate::parser::models::{
-    DamageData, EntityType, Identity, LocalInfo, LocalPlayer, Settings, TripodIndex, TripodLevel,
-    VALID_ZONES,
-};
+use crate::parser::models::*;
+use crate::parser::models::TripodIndex;
 use anyhow::Result;
 use chrono::Utc;
 use hashbrown::HashMap;
 use log::{info, warn};
 use meter_core::packets::definitions::*;
 use meter_core::packets::opcodes::Pkt;
-use meter_core::start_capture;
-use reqwest::Client;
-use serde_json::json;
+use std::any::type_name;
 use std::cell::RefCell;
-use std::path::{Path, PathBuf};
 use std::rc::Rc;
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
 use std::time::{Duration, Instant};
-use tauri::{AppHandle, Manager, Window, Wry};
-use uuid::Uuid;
+use tauri::{AppHandle, Manager};
 
-pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()> {
+pub fn start<
+    HC: HeartbeatApi,
+    DE: DamageEncryptionHandler,
+    PC: PacketCapture,
+    RC: RegionAcessor>(
+    mut heartbeat_api: HC,
+    region_accessor: RC,
+    packet_capture: PC,
+    mut damage_handler: DE,
+    app: AppHandle,
+    port: u16,
+    version: String,
+    settings: Settings) -> Result<()> {
     let id_tracker = Rc::new(RefCell::new(IdTracker::new()));
     let party_tracker = Rc::new(RefCell::new(PartyTracker::new(id_tracker.clone())));
     let status_tracker = Rc::new(RefCell::new(StatusTracker::new(party_tracker.clone())));
@@ -50,10 +64,12 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
         id_tracker.clone(),
         party_tracker.clone(),
     );
-    let mut state = EncounterState::new(app.app_handle());
-    let region_file_path = app::path::data_dir(&app).join("current_region");
+    let mut state = EncounterState::new();
+
+    let local_player_repository = app.state::<LocalPlayerRepository>();
+
     let mut stats_api = StatsApi::new(app.app_handle());
-    let rx = match start_capture(port, region_file_path.display().to_string()) {
+    let rx = match packet_capture.start(port) {
         Ok(rx) => rx,
         Err(e) => {
             warn!("Error starting capture: {}", e);
@@ -61,8 +77,7 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
         }
     };
 
-    let damage_handler = meter_core::decryption::DamageEncryptionHandler::new();
-    let damage_handler = damage_handler.start()?;
+    damage_handler.start()?;
 
     let mut last_update = Instant::now();
     let mut duration = Duration::from_millis(200);
@@ -70,47 +85,32 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
     let party_duration = Duration::from_millis(2000);
     let mut raid_end_cd = Instant::now();
 
-    let client = Client::new();
-    let mut last_heartbeat = Instant::now();
-    let heartbeat_duration = Duration::from_secs(60 * 15);
+    // let client = Client::new();
+    // let mut last_heartbeat = Instant::now();
+    // let heartbeat_duration = Duration::from_secs(60 * 15);
 
     let reset = Arc::new(AtomicBool::new(false));
     let pause = Arc::new(AtomicBool::new(false));
     let save = Arc::new(AtomicBool::new(false));
     let boss_only_damage = Arc::new(AtomicBool::new(false));
-    if let Some(settings) = settings {
-        if settings.general.boss_only_damage {
-            boss_only_damage.store(true, Ordering::Relaxed);
-            info!("boss only damage enabled")
-        }
-        if settings.general.low_performance_mode {
-            duration = Duration::from_millis(1500);
-            info!("low performance mode enabled")
-        }
+    
+    if settings.general.boss_only_damage {
+        boss_only_damage.store(true, Ordering::Relaxed);
+        info!("boss only damage enabled")
     }
 
-    // read saved local players
-    // this info is used in case meter was opened late
-    let mut local_info: LocalInfo = LocalInfo::default();
-    let mut local_player_path = app::path::data_dir(&app).join("local_players.json");
-    let mut client_id = "".to_string();
-
-    if local_player_path.exists() {
-        let local_players_file = std::fs::read_to_string(local_player_path.clone())?;
-        local_info = serde_json::from_str(&local_players_file).unwrap_or_default();
-        client_id = local_info.client_id.clone();
-        let valid_id = Uuid::try_parse(client_id.as_str()).is_ok();
-        if client_id.is_empty() || !valid_id {
-            client_id = Uuid::new_v4().to_string();
-            stats_api.client_id.clone_from(&client_id);
-            local_info.client_id.clone_from(&client_id);
-            write_local_players(&local_info, &local_player_path)?;
-        } else {
-            stats_api.client_id.clone_from(&client_id);
-        }
+    if settings.general.low_performance_mode {
+        duration = Duration::from_millis(1500);
+        info!("low performance mode enabled")
     }
 
-    get_and_set_region(&region_file_path, &mut state);
+    let mut local_info = local_player_repository.read()?;
+    stats_api.client_id = local_info.client_id.clone();
+    let client_id = local_info.client_id.clone();
+
+    let region = region_accessor.get();
+    state.region = region.clone();
+    state.encounter.region = region.clone();
 
     let emit_details = Arc::new(AtomicBool::new(false));
 
@@ -190,7 +190,7 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
         if save.load(Ordering::Relaxed) {
             save.store(false, Ordering::Relaxed);
             state.party_info = update_party(&party_tracker, &entity_tracker);
-            state.save_to_db(&stats_api, true);
+            state.save_to_db(app.clone(), &stats_api, true);
             state.saved = true;
             state.resetting = true;
         }
@@ -205,7 +205,7 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
         match op {
             Pkt::CounterAttackNotify => {
                 if let Some(pkt) =
-                    parse_pkt(&data, PKTCounterAttackNotify::new, "PKTCounterAttackNotify")
+                    parse_pkt(&data, PKTCounterAttackNotify::new, )
                 {
                     if let Some(entity) = entity_tracker.entities.get(&pkt.source_id) {
                         state.on_counterattack(entity);
@@ -213,7 +213,7 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
                 }
             }
             Pkt::DeathNotify => {
-                if let Some(pkt) = parse_pkt(&data, PKTDeathNotify::new, "PKTDeathNotify") {
+                if let Some(pkt) = parse_pkt(&data, PKTDeathNotify::new, ) {
                     if let Some(entity) = entity_tracker.entities.get(&pkt.target_id) {
                         debug_print(format_args!(
                             "death: {}, {}, {}",
@@ -224,11 +224,7 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
                 }
             }
             Pkt::IdentityGaugeChangeNotify => {
-                if let Some(pkt) = parse_pkt(
-                    &data,
-                    PKTIdentityGaugeChangeNotify::new,
-                    "PKTIdentityGaugeChangeNotify",
-                ) {
+                if let Some(pkt) = parse_pkt(&data, PKTIdentityGaugeChangeNotify::new) {
                     if emit_details.load(Ordering::Relaxed) {
                         app.emit_all(
                             "identity-update",
@@ -244,7 +240,7 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
             // Pkt::IdentityStanceChangeNotify => {
             //     if let Some(pkt) = parse_pkt(
             //         &data,
-            //         PKTIdentityStanceChangeNotify::new,
+            //         PKTIdentityStanceChangeNotif:new,
             //         "PKTIdentityStanceChangeNotify",
             //     ) {
             //         if let Some(entity) = entity_tracker.entities.get_mut(&pkt.object_id) {
@@ -261,20 +257,27 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
                 //    > character_id        > entity_id    > player_info
                 // 3. InitPC
 
-                if let Some(pkt) = parse_pkt(&data, PKTInitEnv::new, "PKTInitEnv") {
+                if let Some(pkt) = parse_pkt(&data, PKTInitEnv::new, ) {
                     party_tracker.borrow_mut().reset_party_mappings();
                     state.raid_difficulty = "".to_string();
                     state.raid_difficulty_id = 0;
                     state.damage_is_valid = true;
                     party_cache = None;
                     let entity = entity_tracker.init_env(pkt);
-                    state.on_init_env(entity, &stats_api);
-                    get_and_set_region(&region_file_path, &mut state);
+                    state.on_init_env(app.clone(), entity, &stats_api);
+                    
+                    let region = region_accessor.get();
+
+                    if let Some(region) = region {
+                        state.region = Some(region.clone());
+                        state.encounter.region = Some(region);
+                    }
+                    
                     info!("region: {:?}", state.region);
                 }
             }
             Pkt::InitPC => {
-                if let Some(pkt) = parse_pkt(&data, PKTInitPC::new, "PKTInitPC") {
+                if let Some(pkt) = parse_pkt(&data, PKTInitPC::new, ) {
                     let (hp, max_hp) = get_current_and_max_hp(&pkt.stat_pairs);
                     let entity = entity_tracker.init_pc(pkt);
                     info!(
@@ -298,27 +301,27 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
                             count: 1,
                         });
 
-                    write_local_players(&local_info, &local_player_path)?;
+                    local_player_repository.write(&local_info)?;
 
                     state.on_init_pc(entity, hp, max_hp)
                 }
             }
             // Pkt::InitItem => {
-            //     if let Some(pkt) = parse_pkt(&data, PKTInitItem::new, "PKTInitItem") {
+            //     if let Some(pkt) = parse_pkt(&data, PKTInitItem::new, ) {
             //         if pkt.storage_type == 1 || pkt.storage_type == 20 {
             //             entity_tracker.get_local_player_set_options(pkt.item_data_list);
             //         }
             //     }
             // }
             // Pkt::MigrationExecute => {
-            //     if let Some(pkt) = parse_pkt(&data, PKTMigrationExecute::new, "PKTMigrationExecute")
+            //     if let Some(pkt) = parse_pkt(&data, PKTMigrationExecute::new, )
             //     {
             //         entity_tracker.migration_execute(pkt);
             //         get_and_set_region(region_file_path.as_ref(), &mut state);
             //     }
             // }
             Pkt::NewPC => {
-                if let Some(pkt) = parse_pkt(&data, PKTNewPC::new, "PKTNewPC") {
+                if let Some(pkt) = parse_pkt(&data, PKTNewPC::new, ) {
                     let (hp, max_hp) = get_current_and_max_hp(&pkt.pc_struct.stat_pairs);
                     let entity = entity_tracker.new_pc(pkt.pc_struct);
                     debug_print(format_args!(
@@ -333,7 +336,7 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
                 }
             }
             Pkt::NewVehicle => {
-                if let Some(pkt) = parse_pkt(&data, PKTNewVehicle::new, "PKTNewVehicle") {
+                if let Some(pkt) = parse_pkt(&data, PKTNewVehicle::new, ) {
                     if let Some(pc_struct) =
                         pkt.vehicle_struct.sub_p_k_t_new_vehicle_2_2_397.p_c_struct
                     {
@@ -352,7 +355,7 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
                 }
             }
             Pkt::NewNpc => {
-                if let Some(pkt) = parse_pkt(&data, PKTNewNpc::new, "PKTNewNpc") {
+                if let Some(pkt) = parse_pkt(&data, PKTNewNpc::new, ) {
                     let (hp, max_hp) = get_current_and_max_hp(&pkt.npc_struct.stat_pairs);
                     let entity = entity_tracker.new_npc(pkt, max_hp);
                     debug_print(format_args!(
@@ -363,7 +366,7 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
                 }
             }
             Pkt::NewNpcSummon => {
-                if let Some(pkt) = parse_pkt(&data, PKTNewNpcSummon::new, "PKTNewNpcSummon") {
+                if let Some(pkt) = parse_pkt(&data, PKTNewNpcSummon::new, ) {
                     let (hp, max_hp) = get_current_and_max_hp(&pkt.npc_struct.stat_pairs);
                     let entity = entity_tracker.new_npc_summon(pkt, max_hp);
                     debug_print(format_args!(
@@ -374,7 +377,7 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
                 }
             }
             Pkt::NewProjectile => {
-                if let Some(pkt) = parse_pkt(&data, PKTNewProjectile::new, "PKTNewProjectile") {
+                if let Some(pkt) = parse_pkt(&data, PKTNewProjectile::new, ) {
                     entity_tracker.new_projectile(&pkt);
                     if entity_tracker.id_is_player(pkt.projectile_info.owner_id)
                         && pkt.projectile_info.skill_id > 0
@@ -390,7 +393,7 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
                 }
             }
             Pkt::NewTrap => {
-                if let Some(pkt) = parse_pkt(&data, PKTNewTrap::new, "PKTNewTrap") {
+                if let Some(pkt) = parse_pkt(&data, PKTNewTrap::new, ) {
                     entity_tracker.new_trap(&pkt);
                     if entity_tracker.id_is_player(pkt.trap_struct.owner_id)
                         && pkt.trap_struct.skill_id > 0
@@ -408,7 +411,7 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
             // Pkt::ParalyzationStateNotify => {
             //     if let Some(pkt) = parse_pkt(
             //         &data,
-            //         PKTParalyzationStateNotify::new,
+            //         PKTParalyzationStateNotif:new,
             //         "PKTParalyzationStateNotify",
             //     ) {
             //         state.on_stagger_change(&pkt);
@@ -424,7 +427,7 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
             //     }
             // }
             Pkt::RaidBegin => {
-                if let Some(pkt) = parse_pkt(&data, PKTRaidBegin::new, "PKTRaidBegin") {
+                if let Some(pkt) = parse_pkt(&data, PKTRaidBegin::new, ) {
                     debug_print(format_args!("raid begin: {}", pkt.raid_id));
                     match pkt.raid_id {
                         308226 | 308227 | 308239 | 308339 => {
@@ -445,7 +448,7 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
                 }
             }
             Pkt::RaidBossKillNotify => {
-                state.on_phase_transition(1, &mut stats_api);
+                state.on_phase_transition(app.clone(),1, &mut stats_api);
                 state.raid_clear = true;
                 info!("phase: 1 - RaidBossKillNotify");
             }
@@ -456,12 +459,12 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
                 } else {
                     update_party(&party_tracker, &entity_tracker)
                 };
-                state.on_phase_transition(0, &mut stats_api);
+                state.on_phase_transition(app.clone(),0, &mut stats_api);
                 raid_end_cd = Instant::now();
                 info!("phase: 0 - RaidResult");
             }
             Pkt::RemoveObject => {
-                if let Some(pkt) = parse_pkt(&data, PKTRemoveObject::new, "PKTRemoveObject") {
+                if let Some(pkt) = parse_pkt(&data, PKTRemoveObject::new, ) {
                     for upo in pkt.unpublished_objects {
                         entity_tracker.entities.remove(&upo.object_id);
                         status_tracker
@@ -471,7 +474,7 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
                 }
             }
             Pkt::SkillCastNotify => {
-                if let Some(pkt) = parse_pkt(&data, PKTSkillCastNotify::new, "PKTSkillCastNotify") {
+                if let Some(pkt) = parse_pkt(&data, PKTSkillCastNotify::new, ) {
                     let mut entity = entity_tracker.get_source_entity(pkt.source_id);
                     entity_tracker.guess_is_player(&mut entity, pkt.skill_id);
                     // tracking arcana cards, bard major/minor chords
@@ -487,13 +490,13 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
             }
             Pkt::SkillCooldownNotify => {
                 if let Some(pkt) =
-                    parse_pkt(&data, PKTSkillCooldownNotify::new, "PKTSkillCooldownNotify")
+                    parse_pkt(&data, PKTSkillCooldownNotify::new, )
                 {
                     state.on_skill_cooldown(pkt.skill_cooldown_struct);
                 }
             }
             Pkt::SkillStartNotify => {
-                if let Some(pkt) = parse_pkt(&data, PKTSkillStartNotify::new, "PKTSkillStartNotify")
+                if let Some(pkt) = parse_pkt(&data, PKTSkillStartNotify::new, )
                 {
                     let mut entity = entity_tracker.get_source_entity(pkt.source_id);
                     entity_tracker.guess_is_player(&mut entity, pkt.skill_id);
@@ -528,8 +531,7 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
                 }
                 if let Some(pkt) = parse_pkt(
                     &data,
-                    PKTSkillDamageAbnormalMoveNotify::new,
-                    "PKTSkillDamageAbnormalMoveNotify",
+                    PKTSkillDamageAbnormalMoveNotify::new
                 ) {
                     let now = Utc::now().timestamp_millis();
                     let owner = entity_tracker.get_source_entity(pkt.source_id);
@@ -565,6 +567,7 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
                         };
 
                         state.on_damage(
+                            app.clone(),
                             &owner,
                             &source_entity,
                             &target_entity,
@@ -585,7 +588,7 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
                     continue;
                 }
                 if let Some(pkt) =
-                    parse_pkt(&data, PKTSkillDamageNotify::new, "PktSkillDamageNotify")
+                    parse_pkt(&data, PKTSkillDamageNotify::new, )
                 {
                     let now = Utc::now().timestamp_millis();
                     let owner = entity_tracker.get_source_entity(pkt.source_id);
@@ -616,6 +619,7 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
                             damage_type: event.damage_type,
                         };
                         state.on_damage(
+                            app.clone(),
                             &owner,
                             &source_entity,
                             &target_entity,
@@ -630,7 +634,7 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
                 }
             }
             Pkt::PartyInfo => {
-                if let Some(pkt) = parse_pkt(&data, PKTPartyInfo::new, "PKTPartyInfo") {
+                if let Some(pkt) = parse_pkt(&data, PKTPartyInfo::new, ) {
                     entity_tracker.party_info(pkt, &local_info);
                     let local_player_id = entity_tracker.local_entity_id;
                     if let Some(entity) = entity_tracker.entities.get(&local_player_id) {
@@ -640,7 +644,7 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
                 }
             }
             Pkt::PartyLeaveResult => {
-                if let Some(pkt) = parse_pkt(&data, PKTPartyLeaveResult::new, "PKTPartyLeaveResult")
+                if let Some(pkt) = parse_pkt(&data, PKTPartyLeaveResult::new)
                 {
                     party_tracker
                         .borrow_mut()
@@ -649,11 +653,7 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
                 }
             }
             Pkt::PartyStatusEffectAddNotify => {
-                if let Some(pkt) = parse_pkt(
-                    &data,
-                    PKTPartyStatusEffectAddNotify::new,
-                    "PKTPartyStatusEffectAddNotify",
-                ) {
+                if let Some(pkt) = parse_pkt(&data, PKTPartyStatusEffectAddNotify::new) {
                     // info!("{:?}", pkt);
                     let shields =
                         entity_tracker.party_status_effect_add(pkt, &state.encounter.entities);
@@ -681,11 +681,7 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
                 }
             }
             Pkt::PartyStatusEffectRemoveNotify => {
-                if let Some(pkt) = parse_pkt(
-                    &data,
-                    PKTPartyStatusEffectRemoveNotify::new,
-                    "PKTPartyStatusEffectRemoveNotify",
-                ) {
+                if let Some(pkt) = parse_pkt(&data, PKTPartyStatusEffectRemoveNotify::new) {
                     let (is_shield, shields_broken, _effects_removed, _left_workshop) =
                         entity_tracker.party_status_effect_remove(pkt);
                     if is_shield {
@@ -703,11 +699,7 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
                 }
             }
             Pkt::PartyStatusEffectResultNotify => {
-                if let Some(pkt) = parse_pkt(
-                    &data,
-                    PKTPartyStatusEffectResultNotify::new,
-                    "PKTPartyStatusEffectResultNotify",
-                ) {
+                if let Some(pkt) = parse_pkt(&data, PKTPartyStatusEffectResultNotify::new) {
                     // info!("{:?}", pkt);
                     party_tracker.borrow_mut().add(
                         pkt.raid_instance_id,
@@ -719,11 +711,7 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
                 }
             }
             Pkt::StatusEffectAddNotify => {
-                if let Some(pkt) = parse_pkt(
-                    &data,
-                    PKTStatusEffectAddNotify::new,
-                    "PKTStatusEffectAddNotify",
-                ) {
+                if let Some(pkt) = parse_pkt(&data, PKTStatusEffectAddNotify::new) {
                     let status_effect = entity_tracker.build_and_register_status_effect(
                         &pkt.status_effect_data,
                         pkt.object_id,
@@ -763,7 +751,7 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
             // Pkt::StatusEffectDurationNotify => {
             //     if let Some(pkt) = parse_pkt(
             //         &data,
-            //         PKTStatusEffectDurationNotify::new,
+            //         PKTStatusEffectDurationNotif:new,
             //         "PKTStatusEffectDurationNotify",
             //     ) {
             //         status_tracker.borrow_mut().update_status_duration(
@@ -775,11 +763,7 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
             //     }
             // }
             Pkt::StatusEffectRemoveNotify => {
-                if let Some(pkt) = parse_pkt(
-                    &data,
-                    PKTStatusEffectRemoveNotify::new,
-                    "PKTStatusEffectRemoveNotify",
-                ) {
+                if let Some(pkt) = parse_pkt(&data, PKTStatusEffectRemoveNotify::new) {
                     let (is_shield, shields_broken, effects_removed, _left_workshop) =
                         status_tracker.borrow_mut().remove_status_effects(
                             pkt.object_id,
@@ -821,7 +805,7 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
                     || state.encounter.fight_start == 0
                     || state.encounter.current_boss_name == "Saydon"
                 {
-                    state.on_phase_transition(3, &mut stats_api);
+                    state.on_phase_transition(app.clone(), 3, &mut stats_api);
                     debug_print(format_args!(
                         "phase: 3 - resetting encounter - TriggerBossBattleStatus"
                     ));
@@ -829,7 +813,7 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
             }
             Pkt::TriggerStartNotify => {
                 if let Some(pkt) =
-                    parse_pkt(&data, PKTTriggerStartNotify::new, "PKTTriggerStartNotify")
+                    parse_pkt(&data, PKTTriggerStartNotify::new, )
                 {
                     match pkt.signal {
                         57 | 59 | 61 | 63 | 74 | 76 => {
@@ -840,7 +824,7 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
                                 update_party(&party_tracker, &entity_tracker)
                             };
                             state.raid_clear = true;
-                            state.on_phase_transition(2, &mut stats_api);
+                            state.on_phase_transition(app.clone(), 2, &mut stats_api);
                             raid_end_cd = Instant::now();
                             info!("phase: 2 - clear - TriggerStartNotify");
                         }
@@ -852,7 +836,7 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
                                 update_party(&party_tracker, &entity_tracker)
                             };
                             state.raid_clear = false;
-                            state.on_phase_transition(4, &mut stats_api);
+                            state.on_phase_transition(app.clone(), 4, &mut stats_api);
                             raid_end_cd = Instant::now();
                             info!("phase: 4 - wipe - TriggerStartNotify");
                         }
@@ -864,11 +848,7 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
                 }
             }
             Pkt::ZoneMemberLoadStatusNotify => {
-                if let Some(pkt) = parse_pkt(
-                    &data,
-                    PKTZoneMemberLoadStatusNotify::new,
-                    "PKTZoneMemberLoadStatusNotify",
-                ) {
+                if let Some(pkt) = parse_pkt(&data, PKTZoneMemberLoadStatusNotify::new) {
                     if state.raid_difficulty_id >= pkt.zone_id && !state.raid_difficulty.is_empty()
                     {
                         continue;
@@ -905,22 +885,14 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
                 }
             }
             Pkt::ZoneObjectUnpublishNotify => {
-                if let Some(pkt) = parse_pkt(
-                    &data,
-                    PKTZoneObjectUnpublishNotify::new,
-                    "PKTZoneObjectUnpublishNotify",
-                ) {
+                if let Some(pkt) = parse_pkt(&data, PKTZoneObjectUnpublishNotify::new) {
                     status_tracker
                         .borrow_mut()
                         .remove_local_object(pkt.object_id);
                 }
             }
             Pkt::StatusEffectSyncDataNotify => {
-                if let Some(pkt) = parse_pkt(
-                    &data,
-                    PKTStatusEffectSyncDataNotify::new,
-                    "PKTStatusEffectSyncDataNotify",
-                ) {
+                if let Some(pkt) = parse_pkt(&data, PKTStatusEffectSyncDataNotify::new) {
                     let (status_effect, old_value) =
                         status_tracker.borrow_mut().sync_status_effect(
                             pkt.status_effect_instance_id,
@@ -946,11 +918,7 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
                 }
             }
             Pkt::TroopMemberUpdateMinNotify => {
-                if let Some(pkt) = parse_pkt(
-                    &data,
-                    PKTTroopMemberUpdateMinNotify::new,
-                    "PKTTroopMemberUpdateMinNotify",
-                ) {
+                if let Some(pkt) = parse_pkt(&data, PKTTroopMemberUpdateMinNotify::new) {
                     // info!("{:?}", pkt);
                     if let Some(object_id) = id_tracker.borrow().get_entity_id(pkt.character_id) {
                         if let Some(entity) = entity_tracker.get_entity_ref(object_id) {
@@ -992,7 +960,7 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
                 }
             }
             Pkt::NewTransit => {
-                if let Some(pkt) = parse_pkt(&data, PKTNewTransit::new, "PKTNewZoneKey") {
+                if let Some(pkt) = parse_pkt(&data, PKTNewTransit::new, ) {
                     damage_handler.update_zone_instance_id(pkt.zone_instance_id);
                 }
             }
@@ -1079,36 +1047,14 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
             party_cache = None;
         }
 
-        if last_heartbeat.elapsed() >= heartbeat_duration {
-            let client = client.clone();
-            let client_id = client_id.clone();
-            let version = app.package_info().version.to_string();
-            let region = match state.region {
-                Some(ref region) => region.clone(),
-                None => continue,
+        if heartbeat_api.can_send() {
+            let args = HeartbeatSendArgs {
+                region: region.clone(),
+                client_id: client_id.clone(),
+                version: version.clone()
             };
-            tokio::task::spawn(async move {
-                let request_body = json!({
-                    "id": client_id,
-                    "version": version,
-                    "region": region,
-                });
 
-                match client
-                    .post(format!("{API_URL}/analytics/heartbeat"))
-                    .json(&request_body)
-                    .send()
-                    .await
-                {
-                    Ok(_) => {
-                        debug_print(format_args!("sent heartbeat"));
-                    }
-                    Err(e) => {
-                        warn!("failed to send heartbeat: {:?}", e);
-                    }
-                }
-            });
-            last_heartbeat = Instant::now();
+            heartbeat_api.send(args);
         }
     }
 
@@ -1170,32 +1116,14 @@ fn on_shield_change(
     state.on_shield_used(&source, &target, status_effect.status_effect_id, change);
 }
 
-fn write_local_players(local_info: &LocalInfo, path: &PathBuf) -> Result<()> {
-    let local_players_file = serde_json::to_string(local_info)?;
-    std::fs::write(path, local_players_file)?;
-    Ok(())
-}
-
-fn get_and_set_region<P: AsRef<Path>>(path: P, state: &mut EncounterState) {
-    match std::fs::read_to_string(path) {
-        Ok(region) => {
-            state.region = Some(region.clone());
-            state.encounter.region = Some(region);
-        }
-        Err(_) => {
-            // warn!("failed to read region file. {}", e);
-        }
-    }
-}
-
-fn parse_pkt<T, F>(data: &[u8], new_fn: F, pkt_name: &str) -> Option<T>
+fn parse_pkt<T, F>(data: &[u8], new_fn: F) -> Option<T>
 where
     F: FnOnce(&[u8]) -> Result<T, anyhow::Error>,
 {
     match new_fn(data) {
         Ok(packet) => Some(packet),
         Err(e) => {
-            warn!("Error parsing {}: {}", pkt_name, e);
+            warn!("Error parsing {}: {}", type_name::<T>(), e);
             None
         }
     }
