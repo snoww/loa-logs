@@ -47,8 +47,10 @@ export async function registerShortcuts() {
     for (const sc of Object.entries(shortcuts)) {
       const shortcut = settings.app.shortcuts[sc[0] as keyof typeof settings.app.shortcuts];
       if (shortcut) {
-        await register(shortcut, () => {
-          sc[1].action();
+        await register(shortcut, (event) => {
+          if (event.state === "Pressed") {
+            sc[1].action();
+          }
         });
       }
     }
