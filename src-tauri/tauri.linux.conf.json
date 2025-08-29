@@ -1,0 +1,10 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "bundle": {
+    "targets": [
+      "deb"
+    ]
+  },
+  "identifier": "xyz.snow.loa-logs",
+  "mainBinaryName": "loa-logs"
+}

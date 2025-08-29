@@ -1,5 +1,5 @@
 {
-  "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
+  "$schema": "https://schema.tauri.app/config/2",
   "build": {
     "beforeBuildCommand": "npm run build",
     "beforeDevCommand": "npm run dev",
@@ -11,36 +11,16 @@
     "category": "Utility",
     "copyright": "GNU General Public License v3.0",
     "resources": [
-      "meter-data/*.json",
-      "WinDivert.dll",
-      "WinDivert64.sys"
+      "meter-data/*.json"
     ],
     "icon": [
       "icons/icon.ico"
     ],
-    "windows": {
-      "webviewInstallMode": {
-        "type": "embedBootstrapper"
-      },
-      "certificateThumbprint": null,
-      "digestAlgorithm": "sha256",
-      "timestampUrl": "",
-      "nsis": {
-        "template": "./nsis/installer.nsi",
-        "installerIcon": "icons/icon.ico"
-      }
-    },
     "longDescription": "LOA Logs - Modern DPS Meter for Lost Ark written in Rust.",
     "shortDescription": "LOA Logs",
-    "targets": [
-      "deb",
-      "nsis"
-    ],
-    "licenseFile": "../LICENSE",
-    "createUpdaterArtifacts": "v1Compatible"
+    "licenseFile": "../LICENSE"
   },
   "productName": "LOA Logs",
-  "mainBinaryName": "LOA Logs",
   "version": "1.32.5",
   "identifier": "xyz.snow",
   "plugins": {
@@ -48,10 +28,7 @@
       "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDZEODU5MzNEODY0ODg0REEKUldUYWhFaUdQWk9GYlczc3VSODJPK01RRTlYUER6NzU0eDE1WDYwcmJsY1d4d2EwblZHNlJ4dW8K",
       "endpoints": [
         "https://snow.xyz/loa-logs/latest.json"
-      ],
-      "windows": {
-        "installMode": "passive"
-      }
+      ]
     }
   },
   "app": {
