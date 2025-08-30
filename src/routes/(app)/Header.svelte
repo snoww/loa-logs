@@ -7,7 +7,7 @@
   import { checkForUpdate } from "$lib/utils";
   import { noUpdateAvailable } from "$lib/utils/toasts";
   import { createDialog, melt } from "@melt-ui/svelte";
-  import { invoke } from "@tauri-apps/api";
+  import { invoke } from "@tauri-apps/api/core";
   import { getVersion } from "@tauri-apps/api/app";
   import { onMount, type Snippet } from "svelte";
   import { fade, fly } from "svelte/transition";

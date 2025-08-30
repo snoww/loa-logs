@@ -4,7 +4,7 @@
   import { IconChevronDown, IconTrash } from "$lib/icons";
   import { settings } from "$lib/stores.svelte.js";
   import { createDialog, createDropdownMenu, melt } from "@melt-ui/svelte";
-  import { invoke } from "@tauri-apps/api";
+  import { invoke } from "@tauri-apps/api/core";
   import { fade, fly } from "svelte/transition";
 
   const {

@@ -1,7 +1,7 @@
 import { misc, settings } from "$lib/stores.svelte";
-import { invoke } from "@tauri-apps/api";
+import { invoke } from "@tauri-apps/api/core";
 import { emit } from "@tauri-apps/api/event";
-import { register } from "@tauri-apps/api/globalShortcut";
+import { register } from "@tauri-apps/plugin-global-shortcut";
 
 export type Shortcut = {
   name: string;
@@ -47,8 +47,10 @@ export async function registerShortcuts() {
     for (const sc of Object.entries(shortcuts)) {
       const shortcut = settings.app.shortcuts[sc[0] as keyof typeof settings.app.shortcuts];
       if (shortcut) {
-        await register(shortcut, () => {
-          sc[1].action();
+        await register(shortcut, (event) => {
+          if (event.state === "Pressed") {
+            sc[1].action();
+          }
         });
       }
     }

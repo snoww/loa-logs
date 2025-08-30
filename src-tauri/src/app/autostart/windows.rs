@@ -1,6 +1,6 @@
+use crate::app::compat::Command;
 use anyhow::Result;
 use log::{info, warn};
-use tauri::api::process::Command;
 
 pub struct AutoLaunchManager {
     task_name: String,

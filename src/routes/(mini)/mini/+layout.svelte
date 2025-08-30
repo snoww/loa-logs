@@ -1,7 +1,7 @@
 <script lang="ts">
   import { settings } from "$lib/stores.svelte";
   import { setup } from "$lib/utils/setup";
-  import { appWindow } from "@tauri-apps/api/window";
+  import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
   import { onMount } from "svelte";
 
   let { children }: { children?: import("svelte").Snippet } = $props();
@@ -23,6 +23,7 @@
   });
 
   $effect(() => {
+    const appWindow = getCurrentWebviewWindow();
     if (settings.app.general.miniEdit) {
       appWindow.setIgnoreCursorEvents(false);
     } else {
@@ -32,7 +33,7 @@
 
   $effect.pre(() => {
     if (!settings.app.general.mini) {
-      appWindow.hide();
+      getCurrentWebviewWindow().hide();
     }
   });
 </script>

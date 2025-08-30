@@ -38,7 +38,7 @@ use std::rc::Rc;
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
 use std::time::{Duration, Instant};
-use tauri::{AppHandle, Manager, Window, Wry};
+use tauri::{AppHandle, Emitter, Listener, Manager, Window, Wry};
 use uuid::Uuid;
 
 pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()> {
@@ -50,13 +50,13 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
         id_tracker.clone(),
         party_tracker.clone(),
     );
-    let mut state = EncounterState::new(app.app_handle());
+    let mut state = EncounterState::new(app.clone());
     let region_file_path = app::path::data_dir(&app).join("current_region");
-    let mut stats_api = StatsApi::new(app.app_handle());
+    let mut stats_api = StatsApi::new(app.clone());
     let rx = match start_capture(port, region_file_path.display().to_string()) {
         Ok(rx) => rx,
         Err(e) => {
-            warn!("Error starting capture: {}", e);
+            warn!("Error starting capture: {e}");
             return Ok(());
         }
     };
@@ -92,7 +92,7 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
     // read saved local players
     // this info is used in case meter was opened late
     let mut local_info: LocalInfo = LocalInfo::default();
-    let mut local_player_path = app::path::data_dir(&app).join("local_players.json");
+    let local_player_path = app::path::data_dir(&app).join("local_players.json");
     let mut client_id = "".to_string();
 
     if local_player_path.exists() {
@@ -114,30 +114,30 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
 
     let emit_details = Arc::new(AtomicBool::new(false));
 
-    let cloned = app.app_handle();
-    app.listen_global("reset-request", {
+    let app_handle_clone = app.clone();
+    app.listen_any("reset-request", {
         let reset_clone = reset.clone();
-        let app_clone = cloned.app_handle();
+        let app_clone = app_handle_clone.clone();
         move |_event| {
             reset_clone.store(true, Ordering::Relaxed);
             info!("resetting meter");
-            app_clone.emit_all("reset-encounter", "").ok();
+            app_clone.emit("reset-encounter", "").ok();
         }
     });
 
-    app.listen_global("save-request", {
+    app.listen_any("save-request", {
         let save_clone = save.clone();
-        let app_clone = cloned.app_handle();
+        let app_clone = app_handle_clone.clone();
         move |_event| {
             save_clone.store(true, Ordering::Relaxed);
             info!("manual saving encounter");
-            app_clone.emit_all("save-encounter", "").ok();
+            app_clone.emit("save-encounter", "").ok();
         }
     });
 
-    app.listen_global("pause-request", {
+    app.listen_any("pause-request", {
         let pause_clone = pause.clone();
-        let app_clone = cloned.app_handle();
+        let app_clone = app_handle_clone.clone();
         move |_event| {
             let prev = pause_clone.fetch_xor(true, Ordering::Relaxed);
             if prev {
@@ -145,26 +145,25 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
             } else {
                 info!("pausing meter");
             }
-            app_clone.emit_all("pause-encounter", "").ok();
+            app_clone.emit("pause-encounter", "").ok();
         }
     });
 
-    app.listen_global("boss-only-damage-request", {
+    app.listen_any("boss-only-damage-request", {
         let boss_only_damage = boss_only_damage.clone();
         move |event| {
-            if let Some(bod) = event.payload() {
-                if bod == "true" {
-                    boss_only_damage.store(true, Ordering::Relaxed);
-                    info!("boss only damage enabled")
-                } else {
-                    boss_only_damage.store(false, Ordering::Relaxed);
-                    info!("boss only damage disabled")
-                }
+            let bod = event.payload();
+            if bod == "true" {
+                boss_only_damage.store(true, Ordering::Relaxed);
+                info!("boss only damage enabled")
+            } else {
+                boss_only_damage.store(false, Ordering::Relaxed);
+                info!("boss only damage disabled")
             }
         }
     });
 
-    app.listen_global("emit-details-request", {
+    app.listen_any("emit-details-request", {
         let emit_clone = emit_details.clone();
         move |_event| {
             let prev = emit_clone.fetch_xor(true, Ordering::Relaxed);
@@ -230,7 +229,7 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
                     "PKTIdentityGaugeChangeNotify",
                 ) {
                     if emit_details.load(Ordering::Relaxed) {
-                        app.emit_all(
+                        app.emit(
                             "identity-update",
                             Identity {
                                 gauge1: pkt.identity_gauge1,
@@ -1006,7 +1005,7 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
             }
             let mut clone = state.encounter.clone();
             let damage_valid = state.damage_is_valid;
-            let app_handle = app.app_handle();
+            let app_handle = app.clone();
 
             let party_info: Option<Vec<Vec<String>>> =
                 if last_party_update.elapsed() >= party_duration && !party_freeze {
@@ -1052,16 +1051,16 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
                 if !clone.entities.is_empty() {
                     if !damage_valid {
                         app_handle
-                            .emit_all("invalid-damage", "")
+                            .emit("invalid-damage", "")
                             .expect("failed to emit invalid-damage");
                     } else {
                         app_handle
-                            .emit_all("encounter-update", Some(clone))
+                            .emit("encounter-update", Some(clone))
                             .expect("failed to emit encounter-update");
 
                         if party_info.is_some() {
                             app_handle
-                                .emit_all("party-update", party_info)
+                                .emit("party-update", party_info)
                                 .expect("failed to emit party-update");
                         }
                     }

@@ -6,7 +6,7 @@
   import { onMount } from "svelte";
   import MiniEncounterInfo from "./MiniEncounterInfo.svelte";
   import MiniPlayers from "./MiniPlayers.svelte";
-  import { appWindow } from "@tauri-apps/api/window";
+  import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
 
   let enc = $derived(new EncounterState(undefined, true));
   let time = $state(+Date.now());
@@ -48,6 +48,7 @@
 
   $effect(() => {
     if (settings.app.general.autoShow && settings.app.general.mini) {
+      const appWindow = getCurrentWebviewWindow();
       if (misc.raidInProgress && enc.encounter?.currentBossName) {
         appWindow.show();
       } else {

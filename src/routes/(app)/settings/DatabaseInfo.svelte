@@ -3,7 +3,7 @@
   import { settings } from "$lib/stores.svelte";
   import type { EncounterDbInfo } from "$lib/types";
   import { createDialog, melt } from "@melt-ui/svelte";
-  import { invoke } from "@tauri-apps/api";
+  import { invoke } from "@tauri-apps/api/core";
   import { fade } from "svelte/transition";
 
   const {

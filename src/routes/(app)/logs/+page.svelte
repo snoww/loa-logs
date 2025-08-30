@@ -3,7 +3,7 @@
   import { encounterMap } from "$lib/constants/encounters";
   import { encounterFilter, settings } from "$lib/stores.svelte";
   import { type EncountersOverview } from "$lib/types";
-  import { invoke } from "@tauri-apps/api";
+  import { invoke } from "@tauri-apps/api/core";
   import { untrack } from "svelte";
   import { SvelteSet } from "svelte/reactivity";
   import Header from "../Header.svelte";

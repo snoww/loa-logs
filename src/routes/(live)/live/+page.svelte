@@ -16,9 +16,9 @@
     resuming,
     zoneChange
   } from "$lib/utils/toasts";
-  import { invoke } from "@tauri-apps/api";
+  import { invoke } from "@tauri-apps/api/core";
   import { listen, type UnlistenFn } from "@tauri-apps/api/event";
-  import { appWindow } from "@tauri-apps/api/window";
+  import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
   import { onMount } from "svelte";
 
   let enc = $derived(new EncounterState(undefined, true));
@@ -132,6 +132,7 @@
 
   $effect(() => {
     if (settings.app.general.autoShow && !settings.app.general.mini) {
+      const appWindow = getCurrentWebviewWindow();
       if (misc.raidInProgress && enc.encounter?.currentBossName) {
         appWindow.show();
       } else {

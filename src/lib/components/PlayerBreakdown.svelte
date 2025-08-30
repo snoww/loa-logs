@@ -6,7 +6,7 @@
   import { settings } from "$lib/stores.svelte.js";
   import { EntityType, type Entity } from "$lib/types";
   import { customRound, isNameValid, rgbLinearShadeAdjust, UWUOWO_URL } from "$lib/utils";
-  import { open } from "@tauri-apps/api/shell";
+  import { openUrl } from "@tauri-apps/plugin-opener";
   import { flip } from "svelte/animate";
   import PlayerBreakdownHeader from "./PlayerBreakdownHeader.svelte";
   import PlayerBreakdownRow from "./PlayerBreakdownRow.svelte";
@@ -46,7 +46,7 @@
               class="shrink-0"
               onclick={(e) => {
                 e.stopPropagation();
-                open(UWUOWO_URL + "/character/" + enc.region + "/" + entityState.entity.name);
+                openUrl(UWUOWO_URL + "/character/" + enc.region + "/" + entityState.entity.name);
               }}
             >
               <IconExternalLink class="size-3" />

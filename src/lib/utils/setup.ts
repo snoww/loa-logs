@@ -1,5 +1,5 @@
 import { settings } from "$lib/stores.svelte";
-import { invoke } from "@tauri-apps/api";
+import { invoke } from "@tauri-apps/api/core";
 
 export async function setup() {
   // disable blur on windows 11

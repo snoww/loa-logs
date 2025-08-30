@@ -1,4 +1,6 @@
 pub mod autostart;
+#[cfg(target_os = "windows")]
+pub mod compat;
 pub mod path;
 
 use flexi_logger::{

@@ -2,7 +2,7 @@
   import { misc, settings } from "$lib/stores.svelte";
   import { registerShortcuts, shortcuts } from "$lib/utils/shortcuts";
   import { createDialog, melt } from "@melt-ui/svelte";
-  import { unregisterAll } from "@tauri-apps/api/globalShortcut";
+  import { unregisterAll } from "@tauri-apps/plugin-global-shortcut";
   import { onDestroy, onMount } from "svelte";
   import { fade } from "svelte/transition";
 

@@ -1,6 +1,6 @@
 import { browser } from "$app/environment";
-import { invoke } from "@tauri-apps/api";
-import type { UpdateManifest } from "@tauri-apps/api/updater";
+import { invoke } from "@tauri-apps/api/core";
+import type { Update } from "@tauri-apps/plugin-updater";
 import { time } from "echarts/core";
 import MarkdownIt from "markdown-it";
 import { SvelteSet } from "svelte/reactivity";
@@ -363,7 +363,7 @@ export class SkillCastInfo {
 
 export class UpdateInfo {
   available = $state(false);
-  manifest: UpdateManifest | undefined = $state(undefined);
+  manifest: Update | undefined = $state(undefined);
 }
 
 export const settings = new Settings();

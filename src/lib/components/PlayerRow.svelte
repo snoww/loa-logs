@@ -7,7 +7,7 @@
   import { settings } from "$lib/stores.svelte.js";
   import { EntityType, type Entity } from "$lib/types";
   import { cubicOut } from "svelte/easing";
-  import { open } from "@tauri-apps/api/shell";
+  import { openUrl } from "@tauri-apps/plugin-opener";
   import { Tween } from "svelte/motion";
   import ArkPassiveTooltip from "./tooltips/ArkPassiveTooltip.svelte";
   import ClassTooltip from "./tooltips/ClassTooltip.svelte";
@@ -57,7 +57,7 @@
         class="shrink-0"
         onclick={(e) => {
           e.stopPropagation();
-          open(UWUOWO_URL + "/character/" + enc.region + "/" + entityState.entity.name);
+          openUrl(UWUOWO_URL + "/character/" + enc.region + "/" + entityState.entity.name);
         }}
       >
         <IconExternalLink class="size-3" />

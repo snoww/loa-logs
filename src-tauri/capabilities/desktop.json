@@ -1,0 +1,28 @@
+{
+  "identifier": "desktop-capability",
+  "platforms": [
+    "windows",
+    "linux"
+  ],
+  "windows": [
+    "logs",
+    "main",
+    "mini"
+  ],
+  "permissions": [
+    "core:default",
+    "core:window:allow-hide",
+    "core:window:allow-set-focus",
+    "core:window:allow-set-ignore-cursor-events",
+    "core:window:allow-show",
+    "core:window:allow-start-dragging",
+    "core:window:allow-unminimize",
+    "clipboard-manager:allow-write-image",
+    "global-shortcut:allow-register",
+    "global-shortcut:allow-unregister-all",
+    "opener:allow-open-url",
+    "opener:allow-default-urls",
+    "process:allow-restart",
+    "updater:default"
+  ]
+}
