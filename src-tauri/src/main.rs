@@ -158,15 +158,15 @@ async fn main() -> Result<()> {
             // only start listening if we have live meter
             #[cfg(feature = "meter-core")]
             {
-                let app = app.app_handle();
+                let app = app.app_handle().clone();
                 tokio::task::spawn_blocking(move || {
                     // only start listening when there's no update, otherwise unable to remove driver
                     while !update_checked.load(Ordering::Relaxed) {
                         std::thread::sleep(std::time::Duration::from_millis(100));
                     }
-                    info!("listening on port: {}", port);
+                    info!("listening on port: {port}");
                     live::start(app, port, settings).map_err(|e| {
-                        error!("unexpected error occurred in parser: {}", e);
+                        error!("unexpected error occurred in parser: {e}");
                     })
                 });
             }
