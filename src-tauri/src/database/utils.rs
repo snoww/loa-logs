@@ -9,7 +9,7 @@ use serde::de::DeserializeOwned;
 use serde::Serialize;
 use anyhow::Result;
 
-use crate::parser::models::*;
+use crate::live::models::*;
 
 pub fn map_encounter(row: &rusqlite::Row) -> rusqlite::Result<(Encounter, bool)> {
     let misc_str: String = row.get(12).unwrap_or_default();

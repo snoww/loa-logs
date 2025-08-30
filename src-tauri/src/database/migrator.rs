@@ -3,7 +3,7 @@ use r2d2::PooledConnection;
 use r2d2_sqlite::SqliteConnectionManager;
 use rusqlite::Transaction;
 
-use crate::{parser::models::DB_VERSION};
+use crate::{live::models::DB_VERSION};
 
 
 pub fn setup(mut connection: PooledConnection<SqliteConnectionManager>) -> Result<(), rusqlite::Error> {

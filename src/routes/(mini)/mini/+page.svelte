@@ -6,7 +6,7 @@
   import { onMount } from "svelte";
   import MiniEncounterInfo from "./MiniEncounterInfo.svelte";
   import MiniPlayers from "./MiniPlayers.svelte";
-  import { appWindow } from "@tauri-apps/api/window";
+  import { getCurrentWindow } from "@tauri-apps/api/window";
 
   let enc = $derived(new EncounterState(undefined, true));
   let time = $state(+Date.now());
@@ -47,18 +47,23 @@
   });
 
   $effect(() => {
-    if (settings.app.general.autoShow && settings.app.general.mini) {
-      if (misc.raidInProgress && enc.encounter?.currentBossName) {
-        appWindow.show();
-      } else {
-        // hide with delay
-        setTimeout(() => {
-          if (!enc.encounter) {
-            appWindow.hide();
-          }
-        }, settings.app.general.autoHideDelay);
+
+    (async () => {
+      if (settings.app.general.autoShow && settings.app.general.mini) {
+        if (misc.raidInProgress && enc.encounter?.currentBossName) {
+          const appWindow = getCurrentWindow();
+          await appWindow.show();
+        } else {
+          // hide with delay
+          setTimeout(async () => {
+            if (!enc.encounter) {
+              const appWindow = getCurrentWindow();
+              await appWindow.hide();
+            }
+          }, settings.app.general.autoHideDelay);
+        }
       }
-    }
+    })()
   });
 
   $effect(() => {

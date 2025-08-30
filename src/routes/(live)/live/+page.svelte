@@ -16,10 +16,10 @@
     resuming,
     zoneChange
   } from "$lib/utils/toasts";
-  import { invoke } from "@tauri-apps/api";
   import { listen, type UnlistenFn } from "@tauri-apps/api/event";
-  import { appWindow } from "@tauri-apps/api/window";
   import { onMount } from "svelte";
+  import { getCurrentWindow } from "@tauri-apps/api/window";
+  import { loadEncounter, onAdmin, onClearEncounter, onEncounterUpdate, onInvalidDamage, onPartyUpdate, onPauseEncounter, onPhaseTransition, onRaidStart, onResetEncounter, onSaveEncounter, onZoneChange, unregisterAll } from "$lib/api";
 
   let enc = $derived(new EncounterState(undefined, true));
   let time = $state(+Date.now());
@@ -31,54 +31,49 @@
       }
     }, 1000);
 
-    let events: Array<UnlistenFn> = [];
-
     (async () => {
-      let encounterUpdateEvent = await listen("encounter-update", (event: EncounterEvent) => {
-        // console.log(+Date.now(), event.payload);
+      onEncounterUpdate((payload) => {
         if (!settings.app.general.mini) {
-          enc.encounter = event.payload;
+          enc.encounter = payload;
         }
       });
-      let partyUpdateEvent = await listen("party-update", (event: PartyEvent) => {
-        if (event.payload) {
-          enc.partyInfo = event.payload;
+      onPartyUpdate((payload) => {
+        if (payload) {
+          enc.partyInfo = payload as any;
         }
       });
-      let invalidDamageEvent = await listen("invalid-damage", () => {
+      onInvalidDamage(() => {
         misc.missingInfo = true;
       });
-      let zoneChangeEvent = await listen("zone-change", () => {
+      onZoneChange(() => {
         misc.raidInProgress = false;
         addToast(zoneChange);
         setTimeout(() => {
           misc.raidInProgress = true;
         }, 6000);
       });
-      let raidStartEvent = await listen("raid-start", () => {
+      onRaidStart(() => {
         misc.raidInProgress = true;
       });
-      let resetEncounterEvent = await listen("reset-encounter", () => {
+      onResetEncounter(() => {
         // just need to trigger an update
         misc.reset = !misc.reset;
         addToast(resetting);
-      });
-      let pauseEncounterEvent = await listen("pause-encounter", () => {
+      })
+      onPauseEncounter(() => {
         if (misc.paused) {
           addToast(pausing);
         } else {
           addToast(resuming);
         }
-      });
-      let saveEncounterEvent = await listen("save-encounter", () => {
+      })
+      onSaveEncounter(() => {
         addToast(manualSave);
         setTimeout(() => {
           misc.reset = !misc.reset;
         }, 1000);
-      });
-      let phaseTransitionEvent = await listen("phase-transition", (event: any) => {
-        let phaseCode = event.payload;
-        // console.log(Date.now() + ": phase transition event: ", event.payload)
+      })
+      onPhaseTransition((phaseCode) => {
         if (phaseCode === 1) {
           addToast(bossDead);
         } else if (phaseCode === 2 && misc.raidInProgress) {
@@ -87,38 +82,25 @@
           addToast(raidWipe);
         }
         misc.raidInProgress = false;
-      });
-      let adminErrorEvent = await listen("admin", () => {
+      })
+      onAdmin(() => {
         addToast(adminAlert);
-      });
-      let clearEncounterEvent = await listen("clear-encounter", async (event: any) => {
+      })
+      onClearEncounter((id) => {
         if (!settings.sync.auto) {
           return;
         }
 
-        let id = event.payload.toString();
-        const encounter = (await invoke("load_encounter", { id })) as Encounter;
-        await uploadLog(id, encounter, false);
-      });
+        (async () => {
+          const encounter = await loadEncounter(id);
+          await uploadLog(id, encounter, false);
+        })()
+      })
 
-      events.push(
-        encounterUpdateEvent,
-        partyUpdateEvent,
-        invalidDamageEvent,
-        zoneChangeEvent,
-        raidStartEvent,
-        resetEncounterEvent,
-        pauseEncounterEvent,
-        saveEncounterEvent,
-        phaseTransitionEvent,
-        adminErrorEvent,
-        clearEncounterEvent
-      );
     })();
 
     return () => {
-      events.forEach((f) => f());
-      clearInterval(interval);
+      unregisterAll();
     };
   });
 
@@ -131,18 +113,23 @@
   });
 
   $effect(() => {
-    if (settings.app.general.autoShow && !settings.app.general.mini) {
-      if (misc.raidInProgress && enc.encounter?.currentBossName) {
-        appWindow.show();
-      } else {
-        // hide with delay
-        setTimeout(() => {
-          if (!enc.encounter) {
-            appWindow.hide();
-          }
-        }, settings.app.general.autoHideDelay);
+
+    (async () => {
+      if (settings.app.general.autoShow && !settings.app.general.mini) {
+        const appWindow = getCurrentWindow();
+        
+        if (misc.raidInProgress && enc.encounter?.currentBossName) {
+          await appWindow.show();
+        } else {
+          // hide with delay
+          setTimeout(async () => {
+            if (!enc.encounter) {
+              await appWindow.hide();
+            }
+          }, settings.app.general.autoHideDelay);
+        }
       }
-    }
+    })();
   });
 </script>
 

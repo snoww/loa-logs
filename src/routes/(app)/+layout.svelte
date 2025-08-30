@@ -6,7 +6,7 @@
   import { checkForUpdate } from "$lib/utils";
   import { getVersion } from "@tauri-apps/api/app";
   import { listen, type UnlistenFn } from "@tauri-apps/api/event";
-  import { appWindow } from "@tauri-apps/api/window";
+  import { getCurrentWindow } from "@tauri-apps/api/window";
   import { onDestroy, onMount } from "svelte";
 
   let { children }: { children?: import("svelte").Snippet } = $props();
@@ -46,6 +46,7 @@
   });
 
   async function showWindow() {
+    const appWindow = getCurrentWindow();
     await appWindow.show();
     await appWindow.unminimize();
     await appWindow.setFocus();

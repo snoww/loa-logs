@@ -449,9 +449,11 @@ pub struct SkillData {
     #[serde(rename = "type", default)]
     #[serde(deserialize_with = "int_or_string_as_string")]
     pub skill_type: String,
+    pub cooldown: u32,
     pub desc: Option<String>,
     pub class_id: u32,
     pub icon: Option<String>,
+    pub grade: String,
     pub identity_category: Option<String>,
     #[serde(alias = "groups")]
     pub groups: Option<Vec<i32>>,
@@ -658,12 +660,125 @@ pub struct SearchFilter {
     pub raids_only: bool,
 }
 
-#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", default)]
 pub struct Settings {
     pub general: GeneralSettings,
     #[serde(flatten)]
     pub extra: Map<String, Value>,
+}
+
+impl Default for Settings {
+    fn default() -> Self {
+        let mut extra = Map::new();
+
+        let shortcuts = serde_json::json!({
+            "hideMeter": "Control+ArrowDown",
+            "showLogs": "Control+ArrowUp",
+            "showLatestEncounter": "",
+            "resetSession": "",
+            "pauseSession": "",
+            "manualSave": "",
+            "disableClickthrough": ""
+        });
+        extra.insert("shortcuts".to_string(), shortcuts);
+
+        let meter = serde_json::json!({
+            "bossInfo": true,
+            "bossHpBar": true,
+            "splitBossHpBar": false,
+            "showTimeUntilKill": false,
+            "splitPartyBuffs": true,
+            "showClassColors": true,
+            "profileShortcut": false,
+            "damage": false,
+            "dps": true,
+            "damagePercent": true,
+            "deathTime": false,
+            "incapacitatedTime": false,
+            "critRate": true,
+            "critDmg": false,
+            "frontAtk": true,
+            "backAtk": true,
+            "counters": false,
+            "pinSelfParty": false,
+            "positionalDmgPercent": true,
+            "percentBuffBySup": true,
+            "percentIdentityBySup": true,
+            "percentBrand": true,
+            "percentHatBySup": true,
+            "breakdown": {
+                "damage": true,
+                "dps": true,
+                "damagePercent": true,
+                "critRate": true,
+                "critDmg": false,
+                "frontAtk": true,
+                "backAtk": true,
+                "avgDamage": false,
+                "maxDamage": true,
+                "casts": true,
+                "cpm": true,
+                "hits": false,
+                "hpm": false,
+                "percentBuffBySup": false,
+                "percentIdentityBySup": false,
+                "percentBrand": false,
+                "percentHatBySup": false
+            }
+        });
+
+        extra.insert("meter".to_string(), meter);
+
+        let logs = serde_json::json!({
+            "abbreviateHeader": false,
+            "splitPartyDamage": true,
+            "splitPartyBuffs": true,
+            "profileShortcut": true,
+            "damage": true,
+            "dps": true,
+            "damagePercent": true,
+            "deathTime": true,
+            "incapacitatedTime": true,
+            "critRate": true,
+            "critDmg": false,
+            "frontAtk": true,
+            "backAtk": true,
+            "counters": true,
+            "minEncounterDuration": 30,
+            "positionalDmgPercent": true,
+            "percentBuffBySup": true,
+            "percentIdentityBySup": true,
+            "percentHatBySup": true,
+            "percentBrand": true,
+            "breakdown": {
+                "damage": true,
+                "dps": true,
+                "damagePercent": true,
+                "critRate": true,
+                "adjustedCritRate": true,
+                "critDmg": false,
+                "frontAtk": true,
+                "backAtk": true,
+                "avgDamage": true,
+                "maxDamage": true,
+                "casts": true,
+                "cpm": true,
+                "hits": true,
+                "hpm": true,
+                "percentBuffBySup": false,
+                "percentIdentityBySup": false,
+                "percentBrand": false,
+                "percentHatBySup": false
+            }
+        });
+        extra.insert("logs".to_string(), logs);
+
+        Settings { 
+            general: GeneralSettings::default(),
+            extra
+        }
+    }
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]

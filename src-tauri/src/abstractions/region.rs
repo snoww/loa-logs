@@ -6,6 +6,7 @@ pub trait RegionAcessor {
 
 pub struct DefaultRegionAccessor(PathBuf);
 pub struct ProcessRegionAccessor;
+pub struct FakeRegionAccessor(String);
 
 impl RegionAcessor for ProcessRegionAccessor {
     fn get(&self) -> Option<String> {
@@ -19,8 +20,20 @@ impl RegionAcessor for DefaultRegionAccessor {
     }
 }
 
+impl RegionAcessor for FakeRegionAccessor {
+    fn get(&self) -> Option<String> {
+        Some(self.0.clone())
+    }
+}
+
 impl DefaultRegionAccessor {
     pub fn new(path: PathBuf) -> Self {
         Self(path)
+    }
+}
+
+impl FakeRegionAccessor {
+    pub fn new(name: String) -> Self {
+        Self(name)
     }
 }

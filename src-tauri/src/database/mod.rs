@@ -16,12 +16,12 @@ pub struct Database(r2d2::Pool<SqliteConnectionManager>, PathBuf);
 impl Database {
     pub fn new(path: PathBuf) -> Result<Self> {
 
-        let is_new = path.exists();
+        let is_new = !path.exists();
         let manager = SqliteConnectionManager::file(&path);
-        let pool: r2d2::Pool<SqliteConnectionManager> = r2d2::Pool::new(manager).unwrap();
+        let pool: r2d2::Pool<SqliteConnectionManager> = r2d2::Pool::new(manager)?;
 
-        if !is_new {
-            setup(pool.get()?);
+        if is_new {
+            setup(pool.get()?)?;
         }
     
         Ok(Self(pool, path))

@@ -21,7 +21,13 @@
     }
     uploading = true;
     try {
-      sync = await uploadLog(page.params.id, encounter);
+      const id = page.params.id;
+
+      if(!id) {
+        return;
+      }
+
+      sync = await uploadLog(id, encounter);
       if (sync) {
         addToast(uploadSuccess);
       }

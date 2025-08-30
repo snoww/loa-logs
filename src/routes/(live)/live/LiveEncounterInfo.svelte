@@ -16,13 +16,13 @@
   import { EntityType } from "$lib/types";
   import { abbreviateNumber, takeScreenshot, timestampToMinutesAndSeconds } from "$lib/utils";
   import { createDropdownMenu, melt } from "@melt-ui/svelte";
-  import { invoke } from "@tauri-apps/api";
   import { emit } from "@tauri-apps/api/event";
-  import { appWindow } from "@tauri-apps/api/window";
   import { MediaQuery } from "svelte/reactivity";
   import { fly } from "svelte/transition";
   import QuickTooltip from "$lib/components/QuickTooltip.svelte";
   import LiveShareButton from "$lib/components/LiveShareButton.svelte";
+  import { openMostRecentEncounter, openUrl } from "$lib/api";
+  import { getCurrentWindow } from "@tauri-apps/api/window";
 
   let { enc, screenshotDiv }: { enc: EncounterState; screenshotDiv?: HTMLElement } = $props();
 
@@ -92,7 +92,7 @@
       <!-- menu icons depending on how big window is -->
       <div class="flex items-center gap-0.5 text-neutral-300">
         {#if minWidth.current}
-          <button class="group" onclick={() => invoke("open_most_recent_encounter")}>
+          <button class="group" onclick={async () => await openMostRecentEncounter()}>
             <QuickTooltip tooltip="Open Recent Log">
               <IconUndo class="group-hover:text-accent-500/80 size-5" />
             </QuickTooltip>
@@ -143,7 +143,10 @@
         </button>
 
         <!-- minimize window -->
-        <button class="group" onclick={() => appWindow.hide()}>
+        <button class="group" onclick={() => {
+          const appWindow = getCurrentWindow();
+          appWindow.hide()
+        }}>
           <QuickTooltip tooltip="Minimize">
             <IconMinus class="group-hover:text-accent-500/80 size-5" />
           </QuickTooltip>
@@ -166,7 +169,7 @@
       <button
         use:melt={$item}
         class="group flex items-center justify-between gap-2"
-        onclick={() => invoke("open_most_recent_encounter")}
+        onclick={async () => await openMostRecentEncounter()}
       >
         <p class="group-hover:text-accent-500/80">Recent</p>
         <IconUndo class="group-hover:text-accent-500/80 size-5" />
@@ -223,7 +226,10 @@
       <button
         use:melt={$item}
         class="group flex items-center justify-between gap-2"
-        onclick={() => appWindow.setIgnoreCursorEvents(true)}
+        onclick={async () => {
+          const appWindow = getCurrentWindow();
+          await appWindow.setIgnoreCursorEvents(true)
+        }}
       >
         <p class="group-hover:text-accent-500/80">Clickthrough</p>
         <IconPointer class="group-hover:text-accent-500/80 size-5" />
@@ -232,7 +238,7 @@
     <button
       use:melt={$item}
       class="group flex items-center justify-between gap-2"
-      onclick={() => invoke("open_url", { url: "settings" })}
+      onclick={async () => await openUrl("settings")}
     >
       <p class="group-hover:text-accent-500/80">Settings</p>
       <IconSettings class="group-hover:text-accent-500/80 size-5" />

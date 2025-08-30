@@ -5,17 +5,16 @@ use crate::live::skill_tracker::{CastEvent, SkillTracker};
 use crate::live::stats_api::StatsApi;
 use crate::live::status_tracker::StatusEffectDetails;
 use crate::live::utils::*;
-use crate::parser::data::*;
-use crate::parser::models::*;
+use crate::live::data::*;
+use crate::live::models::*;
 use chrono::Utc;
 use hashbrown::HashMap;
 use log::{info, warn};
-use meter_core::packets::common::SkillMoveOptionData;
-use meter_core::packets::structures::SkillCooldownStruct;
+use crate::abstractions::structures::*;
 use rsntp::SntpClient;
 use std::cmp::max;
 use std::default::Default;
-use tauri::{AppHandle, Manager};
+use tauri::{AppHandle, Emitter, Manager};
 use tokio::task;
 
 #[derive(Debug)]
@@ -188,13 +187,13 @@ impl EncounterState {
             e.name == self.encounter.local_player || e.damage_stats.damage_dealt > 0
         });
 
-        app.emit_all("zone-change", "").expect("failed to emit zone-change");
+        app.emit("zone-change", "").expect("failed to emit zone-change");
 
         self.soft_reset(false);
     }
 
     pub fn on_phase_transition(&mut self, app: AppHandle, phase_code: i32, stats_api: &mut StatsApi) {
-        app.emit_all("phase-transition", phase_code).expect("failed to emit phase-transition");
+        app.emit("phase-transition", phase_code).expect("failed to emit phase-transition");
 
         match phase_code {
             0 | 2 | 3 | 4 => {
@@ -622,8 +621,7 @@ impl EncounterState {
             };
 
             self.encounter.boss_only_damage = self.boss_only_damage;
-            app.emit_all("raid-start", timestamp)
-                .expect("failed to emit raid-start");
+            app.emit("raid-start", timestamp).expect("failed to emit raid-start");
         }
 
         self.encounter.last_combat_packet = timestamp;
@@ -1519,20 +1517,10 @@ impl EncounterState {
             };
 
             let encounter_id = repository.insert_data(args).expect("failed to save encounter");
-
-            // let mut conn = get_db_connection(&app).expect("failed to open database");
-            // let tx = conn.transaction().expect("failed to create transaction");
-
-            // let encounter_id = insert_data(
-            //     &tx,
-                
-            // );
-
-            // tx.commit().expect("failed to commit transaction");
             info!("saved to db");
 
             if raid_clear {
-                app.emit_all("clear-encounter", encounter_id)
+                app.emit("clear-encounter", encounter_id)
                     .expect("failed to emit clear-encounter");
             }
         });

@@ -1,4 +1,4 @@
-use std::{cmp::{max, Reverse}, collections::BTreeMap};
+use std::cmp::{max, Reverse};
 use anyhow::{Ok, Result};
 use hashbrown::HashMap;
 use log::*;
@@ -6,7 +6,7 @@ use r2d2_sqlite::SqliteConnectionManager;
 use rusqlite::{params, params_from_iter, OptionalExtension};
 use serde_json::json;
 
-use crate::{constants::{WINDOW_MS, WINDOW_S}, database::{models::*, queries::*, utils::*}, live::{skill_tracker::CastEvent, stats_api::*, utils::*}, parser::{data::GEM_SKILL_MAP, models::*}};
+use crate::{constants::{WINDOW_MS, WINDOW_S}, database::{models::*, queries::*, utils::*}, live::utils::*, live::{data::GEM_SKILL_MAP, models::*}};
 pub struct Repository(r2d2::Pool<SqliteConnectionManager>);
 
 impl Repository {

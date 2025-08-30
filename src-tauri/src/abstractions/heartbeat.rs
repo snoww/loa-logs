@@ -16,13 +16,13 @@ pub trait HeartbeatApi {
     fn send(&mut self, args: HeartbeatSendArgs);
 }
 
-pub struct DefaultHeartbeatApi {
+pub struct SnowHeartbeatApi {
     client: Client,
     last_heartbeat: Instant,
     heartbeat_duration: Duration
 }
 
-impl HeartbeatApi for DefaultHeartbeatApi {
+impl HeartbeatApi for SnowHeartbeatApi {
     fn can_send(&self) -> bool {
         self.last_heartbeat.elapsed() >= self.heartbeat_duration
     }
@@ -67,13 +67,41 @@ impl HeartbeatApi for DefaultHeartbeatApi {
     }
 }
 
-impl DefaultHeartbeatApi {
+impl SnowHeartbeatApi {
     pub fn new() -> Self {
         let client = Client::new();
         let last_heartbeat = Instant::now();
         let heartbeat_duration = Duration::from_secs(60 * 15);
         Self {
             client,
+            last_heartbeat,
+            heartbeat_duration
+        }
+    }
+}
+
+pub struct FakeHeartbeatApi {
+    last_heartbeat: Instant,
+    heartbeat_duration: Duration
+}
+
+impl HeartbeatApi for FakeHeartbeatApi {
+    fn can_send(&self) -> bool {
+        self.last_heartbeat.elapsed() >= self.heartbeat_duration
+    }
+
+    fn send(&mut self, args: HeartbeatSendArgs) {
+        info!("heartbeat client_id: {} region: {:?} version: {}", args.client_id, args.region, args.version);
+        self.last_heartbeat = Instant::now();
+    }
+}
+
+impl FakeHeartbeatApi {
+    pub fn new() -> Self {
+        let last_heartbeat = Instant::now();
+        let heartbeat_duration = Duration::from_secs(60 * 15);
+
+        Self {
             last_heartbeat,
             heartbeat_duration
         }

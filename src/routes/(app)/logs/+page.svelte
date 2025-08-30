@@ -3,13 +3,13 @@
   import { encounterMap } from "$lib/constants/encounters";
   import { encounterFilter, settings } from "$lib/stores.svelte";
   import { type EncountersOverview } from "$lib/types";
-  import { invoke } from "@tauri-apps/api";
   import { untrack } from "svelte";
   import { SvelteSet } from "svelte/reactivity";
   import Header from "../Header.svelte";
   import EncountersTable from "./EncountersTable.svelte";
   import Pages from "./Pages.svelte";
   import Search from "./Search.svelte";
+  import { loadEncountersPreview } from "$lib/api";
 
   let overview: EncountersOverview | null = $state(null);
   let container = $state<HTMLDivElement | null>(null);
@@ -35,7 +35,7 @@
       }
     }
 
-    let overview: EncountersOverview = await invoke("load_encounters_preview", {
+    let overview = await loadEncountersPreview({
       page: encounterFilter.page,
       pageSize: settings.app.general.logsPerPage,
       search: searchQuery,

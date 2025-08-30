@@ -6,7 +6,7 @@
   import { IconArrowLeft, IconStar } from "$lib/icons";
   import type { Encounter } from "$lib/types";
   import { formatTimestamp, getBossHpBars } from "$lib/utils";
-  import { invoke } from "@tauri-apps/api";
+  import { toggleEncounterFavorite } from "$lib/api";
 
   let { encounter }: { encounter: Encounter } = $props();
   let raidGate = $derived(raidGates[encounter.currentBossName]);
@@ -22,7 +22,7 @@
   let fav = $state(encounter.favorite);
 
   async function toggleFavorite() {
-    await invoke("toggle_encounter_favorite", { id: Number(page.params.id) });
+    await toggleEncounterFavorite(Number(page.params.id));
     fav = !fav;
   }
 </script>
@@ -75,7 +75,7 @@
               <IconStar class="size-5 shrink-0 group-hover:text-yellow-400 {fav ? 'text-yellow-400' : ''}" />
             </QuickTooltip>
           </button>
-          <span class:text-lime-400={encounter.cleared}>#{page.params.id.toLocaleString()}: </span>
+          <span class:text-lime-400={encounter.cleared}>#{(page.params.id || "").toLocaleString()}: </span>
           {encounter.currentBossName || "No Boss"}
         </h1>
       </div>

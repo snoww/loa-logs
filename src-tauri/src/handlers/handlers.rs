@@ -1,5 +1,6 @@
 use log::*;
-use tauri::{command, generate_handler, AppHandle, Invoke, Manager, State, Window};
+use tauri::ipc::Invoke;
+use tauri::{command, generate_handler, AppHandle, Emitter, Manager, State, Window};
 use window_vibrancy::{apply_blur, clear_blur};
 
 use crate::autostart::{AutoLaunch, AutoLaunchManager};
@@ -7,11 +8,12 @@ use crate::constants::*;
 use crate::database::models::{GetEncounterPreviewArgs, InsertSyncLogsArgs};
 use crate::database::{Database, Repository};
 use crate::extensions::AppHandleExtensions;
-use crate::parser::models::*;
+use crate::handlers::error::AppError;
+use crate::live::models::*;
 use crate::settings::SettingsManager;
 use crate::shell::ShellManager;
 
-pub fn generate_handlers() -> Box<dyn Fn(Invoke) + Send + Sync> {
+pub fn generate_handlers() -> Box<dyn Fn(Invoke) -> bool + Send + Sync> {
     Box::new(generate_handler![
         load_encounters_preview,
         load_encounter,
@@ -138,7 +140,7 @@ pub fn toggle_meter_window(app: AppHandle, settings_manager: State<SettingsManag
         METER_WINDOW_LABEL
     };
 
-    if let Some(meter) = app.get_window(label) {
+    if let Some(meter) = app.get_webview_window(label) {
         if meter.is_visible().unwrap() {
             // workaround for tauri not handling minimized state for windows without decorations
             if meter.is_minimized().unwrap() {
@@ -153,7 +155,7 @@ pub fn toggle_meter_window(app: AppHandle, settings_manager: State<SettingsManag
 
 #[command]
 pub fn toggle_logs_window(app_handle: AppHandle) {
-    if let Some(logs) = app_handle.get_window(LOGS_WINDOW_LABEL) {
+    if let Some(logs) = app_handle.get_logs_window() {
         if logs.is_visible().unwrap() {
             logs.hide().unwrap();
         } else {
@@ -165,7 +167,7 @@ pub fn toggle_logs_window(app_handle: AppHandle) {
 
 #[command]
 pub fn open_url(app_handle: AppHandle, url: String) {
-    if let Some(logs) = app_handle.get_window(LOGS_WINDOW_LABEL) {
+    if let Some(logs) = app_handle.get_logs_window() {
         logs.emit("redirect-url", url).unwrap();
     }
 }
@@ -239,59 +241,74 @@ pub fn get_db_info(
 #[command]
 pub fn optimize_database(repository: State<Repository>) {
 
-    repository.optimize();
+    repository.optimize().expect("could not optimize database");
     info!("optimized database");
 }
 
 #[command]
-pub fn disable_blur(window: Window) {
-    if let Some(meter_window) = window.app_handle().get_window(METER_WINDOW_LABEL) {
-        clear_blur(&meter_window).ok();
+pub fn disable_blur(app_handle: AppHandle) -> Result<(), AppError> {
+    if let Some(meter_window) = app_handle.get_meter_window() {
+        clear_blur(&*meter_window).map_err(|err| AppError::Vibrancy(err))?;
     }
+
+    Ok(())
 }
 
 #[command]
-pub fn enable_blur(window: Window) {
-    if let Some(meter_window) = window.app_handle().get_window(METER_WINDOW_LABEL) {
-        apply_blur(&meter_window, Some((10, 10, 10, 50))).ok();
+pub fn enable_blur(app_handle: AppHandle) -> Result<(), AppError> {
+    if let Some(meter_window) = app_handle.get_meter_window() {
+        apply_blur(&*meter_window, Some(DEFAULT_BLUR)).map_err(|err| AppError::Vibrancy(err))?;
     }
+
+    Ok(())
 }
 
 #[command]
-pub fn enable_aot(window: Window) {
-    if let Some(meter_window) = window.app_handle().get_window(METER_WINDOW_LABEL) {
-        meter_window.set_always_on_top(true).ok();
+pub fn enable_aot(app_handle: AppHandle) -> Result<(), AppError> {
+    
+    if let Some(meter_window) = app_handle.get_meter_window() {
+        meter_window.set_always_on_top(true).map_err(|err| AppError::Ui(err))?;
     }
-    if let Some(mini_window) = window.app_handle().get_window(METER_MINI_WINDOW_LABEL) {
-        mini_window.set_always_on_top(true).ok();
+
+    if let Some(mini_window) = app_handle.get_mini_window() {
+        mini_window.set_always_on_top(true).map_err(|err| AppError::Ui(err))?;
     }
+
+    Ok(())
 }
 
 #[command]
-pub fn disable_aot(window: Window) {
-    if let Some(meter_window) = window.app_handle().get_window(METER_WINDOW_LABEL) {
-        meter_window.set_always_on_top(false).ok();
+pub fn disable_aot(app_handle: AppHandle) -> Result<(), AppError> {
+    if let Some(meter_window) = app_handle.get_meter_window() {
+        meter_window.set_always_on_top(false).map_err(|err| AppError::Ui(err))?;
     }
-    if let Some(mini_window) = window.app_handle().get_window(METER_MINI_WINDOW_LABEL) {
-        mini_window.set_always_on_top(false).ok();
+
+    if let Some(mini_window) = app_handle.get_mini_window() {
+        mini_window.set_always_on_top(false).map_err(|err| AppError::Ui(err))?;
     }
+
+    Ok(())
 }
 
 #[command]
-pub fn set_clickthrough(window: Window, set: bool) {
-    if let Some(meter_window) = window.app_handle().get_window(METER_WINDOW_LABEL) {
-        meter_window.set_ignore_cursor_events(set).unwrap();
+pub fn set_clickthrough(app_handle: AppHandle, set: bool) -> Result<(), AppError> {
+    if let Some(meter_window) = app_handle.get_meter_window() {
+        meter_window.set_ignore_cursor_events(set).map_err(|err| AppError::Ui(err))?;
     }
+
+    Ok(())
 }
 
 #[command]
-pub fn remove_driver(shell_manager: State<ShellManager>) {
-    shell_manager.remove_driver();
+pub async fn remove_driver(shell_manager: State<'_, ShellManager>) -> Result<(), AppError> {
+    shell_manager.remove_driver().await;
+    Ok(())
 }
 
 #[command]
-pub fn unload_driver(shell_manager: State<ShellManager>) {
-    shell_manager.unload_driver();
+pub async fn unload_driver(shell_manager: State<'_, ShellManager>)  -> Result<(), AppError> {
+    shell_manager.unload_driver().await;
+    Ok(())
 }
 
 #[command]

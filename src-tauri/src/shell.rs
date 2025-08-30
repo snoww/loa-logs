@@ -1,15 +1,16 @@
 use log::*;
 use sysinfo::{ProcessRefreshKind, RefreshKind, System};
-use tauri::api::process::Command;
-use tauri::ShellScope;
+use tauri::AppHandle;
+use tauri_plugin_opener::OpenerExt;
+use tauri_plugin_shell::ShellExt;
 
 use crate::{constants::{GAME_EXE_NAME, STEAM_GAME_URL}, context::AppContext};
 
-pub struct ShellManager(ShellScope, AppContext);
+pub struct ShellManager(AppHandle, AppContext);
 
 impl ShellManager {
-    pub fn new(scope: ShellScope, context: AppContext) -> Self {
-        Self(scope, context)
+    pub fn new(shell: AppHandle, context: AppContext) -> Self {
+        Self(shell, context)
     }
 
     pub fn open_db_path(&self) {
@@ -17,8 +18,8 @@ impl ShellManager {
         let path = &self.1.database_path;
         info!("open_db_path: {}", path.display());
 
-        if let Err(e) = self.0.open(path.to_str().unwrap(), None) {
-            error!("Failed to open database path: {}", e);
+        if let Err(err) = self.0.opener().open_path(path.to_str().unwrap(), None::<String>) {
+            error!("Failed to open database path: {}", err);
         }
     }
 
@@ -29,8 +30,8 @@ impl ShellManager {
 
         info!("starting lost ark process...");
 
-        if let Err(e) = self.0.open(STEAM_GAME_URL, None) {
-            error!("could not open lost ark: {}", e);
+        if let Err(err) = self.0.opener().open_path(STEAM_GAME_URL, None::<String>) {
+            error!("could not open lost ark: {}", err);
         }
     }
 
@@ -47,21 +48,24 @@ impl ShellManager {
             .any(|p| p.name().eq_ignore_ascii_case(process_name))
     }
 
-    pub fn remove_driver(&self) {
+    pub async fn remove_driver(&self) {
         #[cfg(target_os = "windows")]
         {
-            let command = Command::new("sc").args(["delete", "windivert"]);
+            use tauri_plugin_shell::ShellExt;
 
-            command.output().expect("unable to delete driver");
+            let command = self.0.shell().command("sc").args(["delete", "windivert"]);
+
+            command.output().await.expect("unable to delete driver");
         }
     }
 
-    pub fn unload_driver(&self) {
+    pub async fn unload_driver(&self) {
         #[cfg(target_os = "windows")]
         {  
-            let command = Command::new("sc").args(["stop", "windivert"]);
+            let command = self.0.shell().command("sc").args(["stop", "windivert"]);
+            let result = command.output().await;
 
-            if command.output().is_ok_and(|output| output.status.success()) {
+            if result.is_ok_and(|output| output.status.success()) {
                 info!("stopped driver");
             } else {
                 warn!("could not execute command to stop driver");

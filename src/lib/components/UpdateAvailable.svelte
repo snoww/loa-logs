@@ -3,8 +3,8 @@
   import { createDialog, melt } from "@melt-ui/svelte";
   import { fade } from "svelte/transition";
   import { markdown } from "./Markdown.svelte";
-  import { invoke } from "@tauri-apps/api";
-  import { relaunch } from "@tauri-apps/api/process";
+  import { relaunch } from "@tauri-apps/plugin-process";
+  import { removeDriver, unloadDriver } from "$lib/api";
 
   const {
     elements: { portalled, overlay, content, title, description },
@@ -36,8 +36,8 @@
         <button
           class="bg-accent-500/70 hover:bg-accent-500/60 rounded-md px-2 py-1 focus:ring-0"
           onclick={async () => {
-            await invoke("unload_driver");
-            await invoke("remove_driver");
+            await unloadDriver();
+            await removeDriver();
             await relaunch();
           }}
         >

@@ -6,7 +6,6 @@
   import { settings } from "$lib/stores.svelte.js";
   import { EntityType, type Entity } from "$lib/types";
   import { customRound, isNameValid, rgbLinearShadeAdjust, UWUOWO_URL } from "$lib/utils";
-  import { open } from "@tauri-apps/api/shell";
   import { flip } from "svelte/animate";
   import PlayerBreakdownHeader from "./PlayerBreakdownHeader.svelte";
   import PlayerBreakdownRow from "./PlayerBreakdownRow.svelte";

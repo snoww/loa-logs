@@ -1,7 +1,7 @@
 use std::collections::BTreeMap;
 use hashbrown::HashMap;
 
-use crate::{live::{skill_tracker::CastEvent, stats_api::*}, parser::models::*};
+use crate::{live::{skill_tracker::CastEvent, stats_api::*}, live::models::*};
 
 pub struct InsertSyncLogsArgs {
     pub encounter: i32,

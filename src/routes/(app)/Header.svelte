@@ -1,5 +1,6 @@
 <script lang="ts">
   import { page } from "$app/state";
+  import { checkLoaRunning, startLoaProcess } from "$lib/api";
   import QuickTooltip from "$lib/components/QuickTooltip.svelte";
   import { addToast } from "$lib/components/Toaster.svelte";
   import { IconArrowUp, IconDiscord, IconExternalLink, IconMenu, IconRefresh, IconX } from "$lib/icons";
@@ -7,7 +8,6 @@
   import { checkForUpdate } from "$lib/utils";
   import { noUpdateAvailable } from "$lib/utils/toasts";
   import { createDialog, melt } from "@melt-ui/svelte";
-  import { invoke } from "@tauri-apps/api";
   import { getVersion } from "@tauri-apps/api/app";
   import { onMount, type Snippet } from "svelte";
   import { fade, fly } from "svelte/transition";
@@ -29,12 +29,12 @@
   onMount(() => {
     (async () => {
       version = await getVersion();
-      loaRunning = await invoke("check_loa_running");
+      loaRunning = await checkLoaRunning()
     })();
 
     const interval = setInterval(async () => {
       if ($open) {
-        loaRunning = await invoke("check_loa_running");
+        loaRunning = await checkLoaRunning()
       }
     }, 5000);
     return () => clearInterval(interval);
@@ -114,9 +114,9 @@
           class="flex items-center gap-2 rounded-md px-3 py-1 text-sm {loaRunning || starting
             ? 'cursor-default text-neutral-300/80'
             : 'hover:text-accent-500'}"
-          onclick={() => {
+          onclick={async () => {
             starting = true;
-            invoke("start_loa_process");
+            await startLoaProcess();
             setTimeout(() => {
               starting = false;
             }, 10000);

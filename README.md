@@ -1,5 +1,9 @@
 # <img src="https://i.imgur.com/VzbJVpr.png" width="30"/> LOA Logs
 
+![rustc](https://img.shields.io/badge/rustc-1.88.0-blue.svg)
+![CI](https://github.com/averageeucplayer/sayafushi/actions/workflows/ci.yml/badge.svg)
+
+
 [![GitHub](https://img.shields.io/github/downloads/snoww/loa-logs/total?style=for-the-badge&color=%23ff9800)](https://github.com/snoww/loa-logs/releases/latest) [![Discord](https://img.shields.io/discord/1174544914139328572?color=%235865F2&label=Discord&style=for-the-badge)](https://discord.gg/RXvTMV2YHu)
 
 [![GitHub](https://img.shields.io/github/v/release/snoww/loa-logs?style=flat-square)](https://github.com/snoww/loa-logs/releases)

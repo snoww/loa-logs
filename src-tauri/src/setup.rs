@@ -2,12 +2,15 @@ use std::{error::Error, sync::{atomic::{AtomicBool, Ordering}, Arc}};
 
 use log::*;
 use tauri::{App, AppHandle, Manager};
+use tauri_plugin_updater::UpdaterExt;
 use tauri_plugin_window_state::WindowExt;
-use crate::{background::BackgroundWorker, context::AppContext, settings::SettingsManager, shell::ShellManager};
+use crate::background::BackgroundWorkerArgs;
+use crate::{background::BackgroundWorker, context::AppContext, extensions::AppHandleExtensions, settings::SettingsManager, shell::ShellManager, ui_events::create_system_tray_menu};
 
 use crate::{constants::*};
 
 pub fn setup(app: &mut App) -> Result<(), Box<dyn Error>> {
+    create_system_tray_menu(app)?;
 
     // #[cfg(debug_assertions)]
     // {
@@ -16,7 +19,7 @@ pub fn setup(app: &mut App) -> Result<(), Box<dyn Error>> {
 
     let app_handle = app.handle();
     let context = app.state::<AppContext>();
-    let shell_manger = ShellManager::new(app_handle.shell_scope(), context.inner().clone());
+    let shell_manger = ShellManager::new(app_handle.clone(), context.inner().clone());
     let settings_manager = app.state::<SettingsManager>();
     let version = app_handle.package_info().version.to_string();
 
@@ -29,22 +32,17 @@ pub fn setup(app: &mut App) -> Result<(), Box<dyn Error>> {
 
     let settings = settings_manager.read()?;
 
-    let meter_window = app.get_window(METER_WINDOW_LABEL).unwrap();
+    let meter_window = app_handle.get_meter_window().unwrap();
     meter_window
-        .restore_state(WINDOW_STATE_FLAGS)
-        .expect("failed to restore window state");
+        .restore_state(WINDOW_STATE_FLAGS)?;
 
-    let mini_window = app.get_window(METER_MINI_WINDOW_LABEL).unwrap();
+    let mini_window = app_handle.get_mini_window().unwrap();
     meter_window
-        .restore_state(WINDOW_STATE_FLAGS)
-        .expect("failed to restore window state");
+        .restore_state(WINDOW_STATE_FLAGS)?;
 
-    let logs_window = app.get_window(LOGS_WINDOW_LABEL).unwrap();
+    let logs_window = app_handle.get_logs_window().unwrap();
     logs_window
-        .restore_state(WINDOW_STATE_FLAGS)
-        .expect("failed to restore window state");
-
-    let mut port = 6040;
+        .restore_state(WINDOW_STATE_FLAGS)?;
 
     info!("settings loaded");
 
@@ -66,6 +64,8 @@ pub fn setup(app: &mut App) -> Result<(), Box<dyn Error>> {
         mini_window.set_always_on_top(true).unwrap();
     }
 
+    let mut port = DEFAULT_PORT;
+
     if settings.general.auto_iface && settings.general.port > 0 {
         port = settings.general.port;
     }
@@ -75,56 +75,51 @@ pub fn setup(app: &mut App) -> Result<(), Box<dyn Error>> {
         shell_manger.start_loa_process();
     }
 
-    shell_manger.remove_driver();
+    // shell_manger.remove_driver().await;
 
-    // only start listening if we have live meter
-    #[cfg(feature = "meter-core")]
-    {
-        use crate::background::BackgroundWorkerArgs;
+    app_handle.manage(shell_manger);
 
-        let mut background = BackgroundWorker::new();
+    let mut background = BackgroundWorker::new();
 
-        let args = BackgroundWorkerArgs {
-            update_checked,
-            app: app_handle.clone(),
-            port,
-            settings,
-            region_file_path: context.region_file_path.clone(),
-            version
-        };
+    let args = BackgroundWorkerArgs {
+        update_checked,
+        app: app_handle.clone(),
+        port,
+        settings,
+        region_file_path: context.region_file_path.clone(),
+        version
+    };
 
-        background.start(args);
-        app_handle.manage(background);
-    }
+    background.start(args);
+    app_handle.manage(background);
 
     Ok(())
 }
 
 fn check_updates(handle: AppHandle, checked_clone: Arc<AtomicBool>) {
      tauri::async_runtime::spawn(async move {
-        match tauri::updater::builder(handle.clone()).check().await {
+        let updater = handle.updater().unwrap();
+        let updater = updater.check().await;
+
+        match updater {
             Ok(update) => {
-                if update.is_update_available() {
+                if let Some(update) = update {
                     let manager = handle.state::<ShellManager>();
 
                     #[cfg(not(debug_assertions))]
                     {
-                        info!(
-                            "update available, downloading update: v{}",
-                            update.latest_version()
-                        );
+                        info!("update available, downloading update: v{}", update.version);
 
-                        manager.unload_driver();
-                        manager.remove_driver();
+                        manager.unload_driver().await;
+                        manager.remove_driver().await;
 
                         update
-                            .download_and_install()
-                            .await
-                            .map_err(|e| {
-                                error!("failed to download update: {}", e);
+                            .download_and_install(|_, _| {}, || {
+                                info!("finished download")
                             })
-                            .ok();
+                            .await.unwrap();
                     }
+
                 } else {
                     info!("no update available");
                     checked_clone.store(true, Ordering::Relaxed);

@@ -1,11 +1,11 @@
 <script lang="ts">
+  import { deleteEncounters } from "$lib/api";
   import QuickTooltip from "$lib/components/QuickTooltip.svelte";
   import { classList } from "$lib/constants/classes";
   import { bossList, difficultyMap, encounterMap } from "$lib/constants/encounters";
   import { IconFilter, IconTrash, IconX } from "$lib/icons";
   import { encounterFilter, settings } from "$lib/stores.svelte";
   import { createDialog, createDropdownMenu, melt } from "@melt-ui/svelte";
-  import { invoke } from "@tauri-apps/api";
   import type { FormEventHandler } from "svelte/elements";
   import { SvelteSet } from "svelte/reactivity";
   import { fade, fly } from "svelte/transition";
@@ -248,7 +248,7 @@
           use:melt={$close}
           class="rounded-md bg-red-500/70 p-1 hover:bg-red-500/60"
           onclick={async () => {
-            await invoke("delete_encounters", { ids: [...selected] });
+            await deleteEncounters([...selected]);
             selected.clear();
             selectMode = false;
             refresh = !refresh;

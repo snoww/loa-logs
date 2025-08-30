@@ -2,9 +2,10 @@ import { addToast } from "$lib/components/Toaster.svelte";
 import { raidGates } from "$lib/constants/encounters";
 import { settings } from "$lib/stores.svelte";
 import type { Encounter } from "$lib/types";
-import { invoke } from "@tauri-apps/api";
 import pako from "pako";
 import { uploadError, uploadTokenError } from "./toasts";
+import { info } from "@tauri-apps/plugin-log";
+import { sync } from "$lib/api";
 
 export const API_URL = "https://api.snow.xyz";
 // export const API_URL = "http://localhost:5180";
@@ -48,9 +49,7 @@ export async function uploadLog(id: number | string, encounter: Encounter, showT
       if (showToast) addToast(uploadError("server bwonk", id));
     }
 
-    await invoke("write_log", {
-      message: `couldn't upload encounter ${id} (${encounter.currentBossName}) - error: ${error}`
-    });
+    await info(`couldn't upload encounter ${id} (${encounter.currentBossName}) - error: ${error}`);
     return;
   }
 
@@ -60,28 +59,22 @@ export async function uploadLog(id: number | string, encounter: Encounter, showT
   if (body.error) {
     if (body.duplicate) {
       const duplicate = body.duplicate;
-      await invoke("write_log", {
-        message: `did not upload duplicate encounter ${id} (${encounter.currentBossName}) using existing upstream: ${duplicate}`
-      });
-      await invoke("sync", { encounter: Number(id), upstream: duplicate.toString(), failed: false });
+      await info(`did not upload duplicate encounter ${id} (${encounter.currentBossName}) using existing upstream: ${duplicate}`);
+      await sync({encounter: Number(id), upstream: duplicate.toString(), failed: false });
       return duplicate;
     }
 
-    await invoke("write_log", {
-      message: `couldn't upload encounter ${id} (${encounter.currentBossName}) - error: ${body.error.toLowerCase()}`
-    });
+    await info(`couldn't upload encounter ${id} (${encounter.currentBossName}) - error: ${body.error.toLowerCase()}`);
     if (showToast && !body.error.includes("Boss not supported")) addToast(uploadError(body.error, id));
-    await invoke("sync", { encounter: Number(id), upstream: "0", failed: true });
+    await sync({ encounter: Number(id), upstream: "0", failed: true });
     return;
   }
 
   // successful upload
   const upstream = body.id;
 
-  await invoke("write_log", {
-    message: `uploaded encounter ${id} (${encounter.currentBossName}) upstream: ${upstream}`
-  });
-  await invoke("sync", { encounter: Number(id), upstream: upstream.toString(), failed: false });
+  await info(`uploaded encounter ${id} (${encounter.currentBossName}) upstream: ${upstream}`);
+  await sync({ encounter: Number(id), upstream: upstream.toString(), failed: false });
   return upstream;
 }
 

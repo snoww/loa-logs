@@ -1,7 +1,7 @@
 use crate::live::debug_print;
 use crate::live::encounter_state::EncounterState;
 use crate::live::utils::{boss_to_raid_map, is_valid_player};
-use crate::parser::models::{ArkPassiveData, Encounter, EntityType};
+use crate::live::models::{ArkPassiveData, Encounter, EntityType};
 use hashbrown::HashMap;
 use log::warn;
 use moka::sync::Cache;

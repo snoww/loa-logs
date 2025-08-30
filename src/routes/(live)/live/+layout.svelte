@@ -3,19 +3,22 @@
   import { settings, type LogSettings } from "$lib/stores.svelte";
   import { setup } from "$lib/utils/setup";
   import { registerShortcuts } from "$lib/utils/shortcuts";
-  import { invoke } from "@tauri-apps/api";
   import { emit } from "@tauri-apps/api/event";
-  import { unregisterAll } from "@tauri-apps/api/globalShortcut";
-  import { appWindow } from "@tauri-apps/api/window";
   import { onMount } from "svelte";
+  import { info } from '@tauri-apps/plugin-log';
+  import { getSettings } from "$lib/api";
+  import { unregisterAll as unregisterAllShortcuts } from "@tauri-apps/plugin-global-shortcut";
+  import { getCurrentWindow } from "@tauri-apps/api/window";
 
   let { children }: { children?: import("svelte").Snippet } = $props();
 
   onMount(() => {
     setup();
     (async () => {
-      await invoke("write_log", { message: "setting up live meter" });
-      let data = (await invoke("get_settings")) as LogSettings;
+      await info("setting up live meter");
+
+      let data = await getSettings();
+
       if (data) {
         settings.app = data;
       }
@@ -25,7 +28,7 @@
         await emit("boss-only-damage-request", true);
       }
 
-      await invoke("write_log", { message: "finished meter setup" });
+      await info("finished meter setup");
     })();
   });
 
@@ -51,14 +54,17 @@
     settings.app.shortcuts.disableClickthrough;
 
     (async () => {
-      await unregisterAll();
+      await unregisterAllShortcuts();
       await registerShortcuts();
     })();
   });
 
   $effect.pre(() => {
     if (settings.app.general.mini) {
-      appWindow.hide();
+      (async () => {
+        const appWindow = getCurrentWindow();
+        appWindow.hide();
+      })()
     }
   });
 </script>

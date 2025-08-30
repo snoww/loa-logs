@@ -1,7 +1,7 @@
 use anyhow::Result;
 use std::{fs::File, path::PathBuf};
 
-use crate::parser::models::Settings;
+use crate::live::models::Settings;
 
 pub struct SettingsManager(PathBuf);
 
@@ -10,7 +10,8 @@ impl SettingsManager {
 
         if !path.exists() {
             let writer = File::create(&path)?;
-            serde_json::to_writer_pretty(writer, &Settings::default())?;
+            let settings = Settings::default();
+            serde_json::to_writer_pretty(writer, &settings)?;
         }
 
         Ok(Self(path))

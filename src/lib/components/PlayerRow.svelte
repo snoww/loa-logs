@@ -7,7 +7,6 @@
   import { settings } from "$lib/stores.svelte.js";
   import { EntityType, type Entity } from "$lib/types";
   import { cubicOut } from "svelte/easing";
-  import { open } from "@tauri-apps/api/shell";
   import { Tween } from "svelte/motion";
   import ArkPassiveTooltip from "./tooltips/ArkPassiveTooltip.svelte";
   import ClassTooltip from "./tooltips/ClassTooltip.svelte";

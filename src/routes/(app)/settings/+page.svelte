@@ -3,15 +3,14 @@
   import { settings } from "$lib/stores.svelte";
   import { networkSettingsChanged } from "$lib/utils/toasts";
   import { createRadioGroup, createSlider, melt } from "@melt-ui/svelte";
-  import { invoke } from "@tauri-apps/api";
   import { emit } from "@tauri-apps/api/event";
-  import { WebviewWindow } from "@tauri-apps/api/window";
   import { onMount } from "svelte";
   import { writable } from "svelte/store";
   import Header from "../Header.svelte";
   import ClassColors from "./ClassColors.svelte";
   import DatabaseInfo from "./DatabaseInfo.svelte";
   import Shortcuts from "./Shortcuts.svelte";
+  import { checkStartOnBoot, disableAot, disableBlur, enableAot, enableBlur, getMainWindow, getMiniWindow, setStartOnBoot } from "$lib/api";
 
   let currentTab = $state("General");
 
@@ -49,19 +48,23 @@
   });
 
   $effect(() => {
-    const mini = WebviewWindow.getByLabel("mini");
-    const main = WebviewWindow.getByLabel("main");
-    if (settings.app.general.mini) {
-      main?.hide();
-      mini?.show();
-    } else {
-      mini?.hide();
-    }
+    
+    (async () => {
+      const mini = await getMiniWindow();
+      const main = await getMainWindow();
+      
+      if (settings.app.general.mini) {
+        main?.hide();
+        mini?.show();
+      } else {
+        mini?.hide();
+      }
+    })()
   });
 
   onMount(() => {
     (async () => {
-      settings.app.general.startOnBoot = await invoke("check_start_on_boot");
+      settings.app.general.startOnBoot = await checkStartOnBoot();
     })();
   });
 
@@ -260,7 +263,7 @@
             type="checkbox"
             bind:checked={settings.app.general.startOnBoot}
             onchange={async () => {
-              await invoke("set_start_on_boot", { set: settings.app.general.startOnBoot });
+              await setStartOnBoot(settings.app.general.startOnBoot);
             }}
             class="form-checkbox checked:text-accent-600 size-5 rounded-sm border-0 bg-neutral-700 focus:ring-0"
           />
@@ -802,7 +805,7 @@
             type="checkbox"
             bind:checked={settings.app.general.alwaysOnTop}
             onchange={async () => {
-              settings.app.general.alwaysOnTop ? await invoke("enable_aot") : await invoke("disable_aot");
+              settings.app.general.alwaysOnTop ? await enableAot() : await disableAot();
             }}
             class="form-checkbox checked:text-accent-600 size-5 rounded-sm border-0 bg-neutral-700 focus:ring-0"
           />
@@ -847,7 +850,7 @@
               type="checkbox"
               bind:checked={settings.app.general.blurWin11}
               onchange={async () => {
-                settings.app.general.blurWin11 ? await invoke("enable_blur") : await invoke("disable_blur");
+                settings.app.general.blurWin11 ? await enableBlur() : await disableBlur();
               }}
               class="form-checkbox checked:text-accent-600 size-5 rounded-sm border-0 bg-neutral-700 focus:ring-0"
             />
@@ -864,7 +867,7 @@
               type="checkbox"
               bind:checked={settings.app.general.blur}
               onchange={async () => {
-                settings.app.general.blur ? await invoke("enable_blur") : await invoke("disable_blur");
+                settings.app.general.blur ? await enableBlur() : await disableBlur();
               }}
               class="form-checkbox checked:text-accent-600 size-5 rounded-sm border-0 bg-neutral-700 focus:ring-0"
             />

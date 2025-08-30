@@ -4,13 +4,12 @@ use crate::live::status_tracker::StatusEffectBuffCategory::{BattleItem, Bracelet
 use crate::live::status_tracker::StatusEffectCategory::Debuff;
 use crate::live::status_tracker::StatusEffectShowType::All;
 use crate::live::utils::{get_new_id, is_support_class, is_support_spec};
-use crate::parser::data::SKILL_BUFF_DATA;
-use crate::parser::models::{EncounterEntity, EntityType};
+use crate::live::data::SKILL_BUFF_DATA;
+use crate::live::models::{EncounterEntity, EntityType};
 use chrono::{DateTime, Duration, Utc};
 use hashbrown::HashMap;
 use log::info;
-use meter_core::packets::definitions::PKTNewPC;
-use meter_core::packets::structures::{PCStruct, StatusEffectData};
+use crate::abstractions::structures::*;
 use std::cell::RefCell;
 use std::rc::Rc;
 

@@ -4,17 +4,17 @@ use crate::live::status_tracker::{
     build_status_effect, StatusEffectDetails, StatusEffectTargetType, StatusEffectType,
     StatusTracker,
 };
-use crate::parser::data::*;
-use crate::parser::models::EntityType::*;
-use crate::parser::models::{
+use crate::live::data::*;
+use crate::live::models::EntityType::*;
+use crate::live::models::{
     EncounterEntity, EntityType, Esther, LocalInfo, LocalPlayer
 };
-
+use crate::abstractions::definitions::*;
+use crate::abstractions::structures::*;
 use chrono::{DateTime, Utc};
 use hashbrown::HashMap;
 use log::{info, warn};
-use meter_core::packets::definitions::*;
-use meter_core::packets::structures::{NpcStruct, PCStruct, StatPair, StatusEffectData};
+
 use std::cell::RefCell;
 use std::rc::Rc;
 

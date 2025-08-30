@@ -1,12 +1,12 @@
 import { bossHpMap } from "$lib/constants/encounters";
 import { estherMap } from "$lib/constants/esthers";
 import { BossHpLog, type DamageStats, type Entity, type IdentityLogType, type IdentityLogTypeValue } from "$lib/types";
-import { invoke } from "@tauri-apps/api";
-import { checkUpdate } from "@tauri-apps/api/updater";
 import html2canvas from "html2canvas-pro";
 import { addToast } from "./components/Toaster.svelte";
 import { screenshot, settings, updateInfo } from "./stores.svelte";
 import { screenshotError, screenshotSuccess } from "./utils/toasts";
+import { error, info } from "@tauri-apps/plugin-log";
+import { checkUpdate } from "./api";
 
 export const UWUOWO_URL = "https://uwuowo.mathi.moe";
 
@@ -25,7 +25,7 @@ export async function takeScreenshot(div?: HTMLElement) {
         addToast(screenshotSuccess);
       } catch (error) {
         addToast(screenshotError);
-        invoke("write_log", { message: "failed to take screenshot" });
+        await info("failed to take screenshot");
       } finally {
         screenshot.done();
       }
@@ -44,8 +44,8 @@ export async function checkForUpdate() {
     }
 
     return shouldUpdate;
-  } catch (e) {
-    await invoke("write_log", { message: e });
+  } catch (err) {
+    await error(String(err));
   }
 }
 

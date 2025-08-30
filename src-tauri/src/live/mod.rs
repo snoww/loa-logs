@@ -6,47 +6,43 @@ pub mod skill_tracker;
 pub mod stats_api;
 mod status_tracker;
 pub mod utils;
-pub mod capture;
 pub mod local;
-pub mod region;
-pub mod heartbeat;
+pub mod models;
+pub mod data;
 
-pub use capture::*;
-
-use crate::live::capture::DamageEncryptionHandler;
+use crate::abstractions::{DamageEncryptionHandler, HeartbeatApi, HeartbeatSendArgs, PacketReceiver, PacketSource, RegionAcessor};
+use crate::abstractions::definitions::*;
+use crate::abstractions::Pkt;
 use crate::live::encounter_state::EncounterState;
 use crate::live::entity_tracker::{get_current_and_max_hp, EntityTracker};
-use crate::live::heartbeat::{HeartbeatApi, HeartbeatSendArgs};
 use crate::live::id_tracker::IdTracker;
 use crate::live::local::LocalPlayerRepository;
 use crate::live::party_tracker::PartyTracker;
-use crate::live::region::RegionAcessor;
 use crate::live::stats_api::StatsApi;
 use crate::live::status_tracker::{
     get_status_effect_value, StatusEffectDetails, StatusEffectTargetType, StatusEffectType,
     StatusTracker,
 };
 use crate::live::utils::get_class_from_id;
-use crate::parser::models::*;
-use crate::parser::models::TripodIndex;
+use crate::live::models::*;
+use crate::live::models::TripodIndex;
 use anyhow::Result;
 use chrono::Utc;
 use hashbrown::HashMap;
 use log::{info, warn};
-use meter_core::packets::definitions::*;
-use meter_core::packets::opcodes::Pkt;
 use std::any::type_name;
 use std::cell::RefCell;
 use std::rc::Rc;
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
 use std::time::{Duration, Instant};
-use tauri::{AppHandle, Manager};
+use tauri::{AppHandle, Emitter, Listener, Manager};
 
 pub fn start<
     HC: HeartbeatApi,
     DE: DamageEncryptionHandler,
-    PC: PacketCapture,
+    PR: PacketReceiver,
+    PC: PacketSource<PR>,
     RC: RegionAcessor>(
     mut heartbeat_api: HC,
     region_accessor: RC,
@@ -68,8 +64,8 @@ pub fn start<
 
     let local_player_repository = app.state::<LocalPlayerRepository>();
 
-    let mut stats_api = StatsApi::new(app.app_handle());
-    let rx = match packet_capture.start(port) {
+    let mut stats_api = StatsApi::new(app.app_handle().clone());
+    let mut rx = match packet_capture.start(port) {
         Ok(rx) => rx,
         Err(e) => {
             warn!("Error starting capture: {}", e);
@@ -84,10 +80,6 @@ pub fn start<
     let mut last_party_update = Instant::now();
     let party_duration = Duration::from_millis(2000);
     let mut raid_end_cd = Instant::now();
-
-    // let client = Client::new();
-    // let mut last_heartbeat = Instant::now();
-    // let heartbeat_duration = Duration::from_secs(60 * 15);
 
     let reset = Arc::new(AtomicBool::new(false));
     let pause = Arc::new(AtomicBool::new(false));
@@ -114,30 +106,32 @@ pub fn start<
 
     let emit_details = Arc::new(AtomicBool::new(false));
 
-    let cloned = app.app_handle();
-    app.listen_global("reset-request", {
+    let cloned = app.clone();
+    app.listen_any("reset-request", {
         let reset_clone = reset.clone();
-        let app_clone = cloned.app_handle();
+        let app_clone = cloned;
         move |_event| {
             reset_clone.store(true, Ordering::Relaxed);
             info!("resetting meter");
-            app_clone.emit_all("reset-encounter", "").ok();
+            app_clone.emit("reset-encounter", "").ok();
         }
     });
 
-    app.listen_global("save-request", {
+    let cloned = app.clone();
+    app.listen_any("save-request", {
         let save_clone = save.clone();
-        let app_clone = cloned.app_handle();
+        let app_clone = cloned;
         move |_event| {
             save_clone.store(true, Ordering::Relaxed);
             info!("manual saving encounter");
-            app_clone.emit_all("save-encounter", "").ok();
+            app_clone.emit("save-encounter", "").ok();
         }
     });
 
-    app.listen_global("pause-request", {
+    let cloned = app.clone();
+    app.listen_any("pause-request", {
         let pause_clone = pause.clone();
-        let app_clone = cloned.app_handle();
+        let app_clone = cloned;
         move |_event| {
             let prev = pause_clone.fetch_xor(true, Ordering::Relaxed);
             if prev {
@@ -145,26 +139,26 @@ pub fn start<
             } else {
                 info!("pausing meter");
             }
-            app_clone.emit_all("pause-encounter", "").ok();
+            app_clone.emit("pause-encounter", "").ok();
         }
     });
 
-    app.listen_global("boss-only-damage-request", {
+    app.listen_any("boss-only-damage-request", {
         let boss_only_damage = boss_only_damage.clone();
         move |event| {
-            if let Some(bod) = event.payload() {
-                if bod == "true" {
-                    boss_only_damage.store(true, Ordering::Relaxed);
-                    info!("boss only damage enabled")
-                } else {
-                    boss_only_damage.store(false, Ordering::Relaxed);
-                    info!("boss only damage disabled")
-                }
+            let bod = event.payload();
+                
+            if bod == "true" {
+                boss_only_damage.store(true, Ordering::Relaxed);
+                info!("boss only damage enabled")
+            } else {
+                boss_only_damage.store(false, Ordering::Relaxed);
+                info!("boss only damage disabled")
             }
         }
     });
 
-    app.listen_global("emit-details-request", {
+    app.listen_any("emit-details-request", {
         let emit_clone = emit_details.clone();
         move |_event| {
             let prev = emit_clone.fetch_xor(true, Ordering::Relaxed);
@@ -205,7 +199,7 @@ pub fn start<
         match op {
             Pkt::CounterAttackNotify => {
                 if let Some(pkt) =
-                    parse_pkt(&data, PKTCounterAttackNotify::new, )
+                    parse_pkt(&data, PKTCounterAttackNotify::new)
                 {
                     if let Some(entity) = entity_tracker.entities.get(&pkt.source_id) {
                         state.on_counterattack(entity);
@@ -213,7 +207,7 @@ pub fn start<
                 }
             }
             Pkt::DeathNotify => {
-                if let Some(pkt) = parse_pkt(&data, PKTDeathNotify::new, ) {
+                if let Some(pkt) = parse_pkt(&data, PKTDeathNotify::new) {
                     if let Some(entity) = entity_tracker.entities.get(&pkt.target_id) {
                         debug_print(format_args!(
                             "death: {}, {}, {}",
@@ -226,7 +220,7 @@ pub fn start<
             Pkt::IdentityGaugeChangeNotify => {
                 if let Some(pkt) = parse_pkt(&data, PKTIdentityGaugeChangeNotify::new) {
                     if emit_details.load(Ordering::Relaxed) {
-                        app.emit_all(
+                        app.emit(
                             "identity-update",
                             Identity {
                                 gauge1: pkt.identity_gauge1,
@@ -257,7 +251,7 @@ pub fn start<
                 //    > character_id        > entity_id    > player_info
                 // 3. InitPC
 
-                if let Some(pkt) = parse_pkt(&data, PKTInitEnv::new, ) {
+                if let Some(pkt) = parse_pkt(&data, PKTInitEnv::new) {
                     party_tracker.borrow_mut().reset_party_mappings();
                     state.raid_difficulty = "".to_string();
                     state.raid_difficulty_id = 0;
@@ -277,7 +271,7 @@ pub fn start<
                 }
             }
             Pkt::InitPC => {
-                if let Some(pkt) = parse_pkt(&data, PKTInitPC::new, ) {
+                if let Some(pkt) = parse_pkt(&data, PKTInitPC::new) {
                     let (hp, max_hp) = get_current_and_max_hp(&pkt.stat_pairs);
                     let entity = entity_tracker.init_pc(pkt);
                     info!(
@@ -307,21 +301,21 @@ pub fn start<
                 }
             }
             // Pkt::InitItem => {
-            //     if let Some(pkt) = parse_pkt(&data, PKTInitItem::new, ) {
+            //     if let Some(pkt) = parse_pkt(&data, PKTInitItem::new) {
             //         if pkt.storage_type == 1 || pkt.storage_type == 20 {
             //             entity_tracker.get_local_player_set_options(pkt.item_data_list);
             //         }
             //     }
             // }
             // Pkt::MigrationExecute => {
-            //     if let Some(pkt) = parse_pkt(&data, PKTMigrationExecute::new, )
+            //     if let Some(pkt) = parse_pkt(&data, PKTMigrationExecute::new)
             //     {
             //         entity_tracker.migration_execute(pkt);
             //         get_and_set_region(region_file_path.as_ref(), &mut state);
             //     }
             // }
             Pkt::NewPC => {
-                if let Some(pkt) = parse_pkt(&data, PKTNewPC::new, ) {
+                if let Some(pkt) = parse_pkt(&data, PKTNewPC::new) {
                     let (hp, max_hp) = get_current_and_max_hp(&pkt.pc_struct.stat_pairs);
                     let entity = entity_tracker.new_pc(pkt.pc_struct);
                     debug_print(format_args!(
@@ -336,7 +330,7 @@ pub fn start<
                 }
             }
             Pkt::NewVehicle => {
-                if let Some(pkt) = parse_pkt(&data, PKTNewVehicle::new, ) {
+                if let Some(pkt) = parse_pkt(&data, PKTNewVehicle::new) {
                     if let Some(pc_struct) =
                         pkt.vehicle_struct.sub_p_k_t_new_vehicle_2_2_397.p_c_struct
                     {
@@ -355,7 +349,7 @@ pub fn start<
                 }
             }
             Pkt::NewNpc => {
-                if let Some(pkt) = parse_pkt(&data, PKTNewNpc::new, ) {
+                if let Some(pkt) = parse_pkt(&data, PKTNewNpc::new) {
                     let (hp, max_hp) = get_current_and_max_hp(&pkt.npc_struct.stat_pairs);
                     let entity = entity_tracker.new_npc(pkt, max_hp);
                     debug_print(format_args!(
@@ -366,7 +360,7 @@ pub fn start<
                 }
             }
             Pkt::NewNpcSummon => {
-                if let Some(pkt) = parse_pkt(&data, PKTNewNpcSummon::new, ) {
+                if let Some(pkt) = parse_pkt(&data, PKTNewNpcSummon::new) {
                     let (hp, max_hp) = get_current_and_max_hp(&pkt.npc_struct.stat_pairs);
                     let entity = entity_tracker.new_npc_summon(pkt, max_hp);
                     debug_print(format_args!(
@@ -377,7 +371,7 @@ pub fn start<
                 }
             }
             Pkt::NewProjectile => {
-                if let Some(pkt) = parse_pkt(&data, PKTNewProjectile::new, ) {
+                if let Some(pkt) = parse_pkt(&data, PKTNewProjectile::new) {
                     entity_tracker.new_projectile(&pkt);
                     if entity_tracker.id_is_player(pkt.projectile_info.owner_id)
                         && pkt.projectile_info.skill_id > 0
@@ -393,7 +387,7 @@ pub fn start<
                 }
             }
             Pkt::NewTrap => {
-                if let Some(pkt) = parse_pkt(&data, PKTNewTrap::new, ) {
+                if let Some(pkt) = parse_pkt(&data, PKTNewTrap::new) {
                     entity_tracker.new_trap(&pkt);
                     if entity_tracker.id_is_player(pkt.trap_struct.owner_id)
                         && pkt.trap_struct.skill_id > 0
@@ -427,7 +421,7 @@ pub fn start<
             //     }
             // }
             Pkt::RaidBegin => {
-                if let Some(pkt) = parse_pkt(&data, PKTRaidBegin::new, ) {
+                if let Some(pkt) = parse_pkt(&data, PKTRaidBegin::new) {
                     debug_print(format_args!("raid begin: {}", pkt.raid_id));
                     match pkt.raid_id {
                         308226 | 308227 | 308239 | 308339 => {
@@ -464,7 +458,7 @@ pub fn start<
                 info!("phase: 0 - RaidResult");
             }
             Pkt::RemoveObject => {
-                if let Some(pkt) = parse_pkt(&data, PKTRemoveObject::new, ) {
+                if let Some(pkt) = parse_pkt(&data, PKTRemoveObject::new) {
                     for upo in pkt.unpublished_objects {
                         entity_tracker.entities.remove(&upo.object_id);
                         status_tracker
@@ -474,7 +468,7 @@ pub fn start<
                 }
             }
             Pkt::SkillCastNotify => {
-                if let Some(pkt) = parse_pkt(&data, PKTSkillCastNotify::new, ) {
+                if let Some(pkt) = parse_pkt(&data, PKTSkillCastNotify::new) {
                     let mut entity = entity_tracker.get_source_entity(pkt.source_id);
                     entity_tracker.guess_is_player(&mut entity, pkt.skill_id);
                     // tracking arcana cards, bard major/minor chords
@@ -490,13 +484,13 @@ pub fn start<
             }
             Pkt::SkillCooldownNotify => {
                 if let Some(pkt) =
-                    parse_pkt(&data, PKTSkillCooldownNotify::new, )
+                    parse_pkt(&data, PKTSkillCooldownNotify::new)
                 {
                     state.on_skill_cooldown(pkt.skill_cooldown_struct);
                 }
             }
             Pkt::SkillStartNotify => {
-                if let Some(pkt) = parse_pkt(&data, PKTSkillStartNotify::new, )
+                if let Some(pkt) = parse_pkt(&data, PKTSkillStartNotify::new)
                 {
                     let mut entity = entity_tracker.get_source_entity(pkt.source_id);
                     entity_tracker.guess_is_player(&mut entity, pkt.skill_id);
@@ -588,7 +582,7 @@ pub fn start<
                     continue;
                 }
                 if let Some(pkt) =
-                    parse_pkt(&data, PKTSkillDamageNotify::new, )
+                    parse_pkt(&data, PKTSkillDamageNotify::new)
                 {
                     let now = Utc::now().timestamp_millis();
                     let owner = entity_tracker.get_source_entity(pkt.source_id);
@@ -634,7 +628,7 @@ pub fn start<
                 }
             }
             Pkt::PartyInfo => {
-                if let Some(pkt) = parse_pkt(&data, PKTPartyInfo::new, ) {
+                if let Some(pkt) = parse_pkt(&data, PKTPartyInfo::new) {
                     entity_tracker.party_info(pkt, &local_info);
                     let local_player_id = entity_tracker.local_entity_id;
                     if let Some(entity) = entity_tracker.entities.get(&local_player_id) {
@@ -813,7 +807,7 @@ pub fn start<
             }
             Pkt::TriggerStartNotify => {
                 if let Some(pkt) =
-                    parse_pkt(&data, PKTTriggerStartNotify::new, )
+                    parse_pkt(&data, PKTTriggerStartNotify::new)
                 {
                     match pkt.signal {
                         57 | 59 | 61 | 63 | 74 | 76 => {
@@ -960,7 +954,7 @@ pub fn start<
                 }
             }
             Pkt::NewTransit => {
-                if let Some(pkt) = parse_pkt(&data, PKTNewTransit::new, ) {
+                if let Some(pkt) = parse_pkt(&data, PKTNewTransit::new) {
                     damage_handler.update_zone_instance_id(pkt.zone_instance_id);
                 }
             }
@@ -974,7 +968,7 @@ pub fn start<
             }
             let mut clone = state.encounter.clone();
             let damage_valid = state.damage_is_valid;
-            let app_handle = app.app_handle();
+            let app_handle = app.clone();
 
             let party_info: Option<Vec<Vec<String>>> =
                 if last_party_update.elapsed() >= party_duration && !party_freeze {
@@ -1020,16 +1014,16 @@ pub fn start<
                 if !clone.entities.is_empty() {
                     if !damage_valid {
                         app_handle
-                            .emit_all("invalid-damage", "")
+                            .emit("invalid-damage", "")
                             .expect("failed to emit invalid-damage");
                     } else {
                         app_handle
-                            .emit_all("encounter-update", Some(clone))
+                            .emit("encounter-update", Some(clone))
                             .expect("failed to emit encounter-update");
 
                         if party_info.is_some() {
                             app_handle
-                                .emit_all("party-update", party_info)
+                                .emit("party-update", party_info)
                                 .expect("failed to emit party-update");
                         }
                     }

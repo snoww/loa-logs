@@ -1,6 +1,9 @@
+use std::process::Command;
+
 use anyhow::Result;
 use log::{info, warn};
-use tauri::api::process::Command;
+
+use crate::constants::TASK_NAME;
 
 pub struct AutoLaunchManager {
     task_name: String,
@@ -10,7 +13,7 @@ pub struct AutoLaunchManager {
 impl AutoLaunchManager {
     pub fn new(_app_name: &str, app_path: &str) -> Self {
         Self {
-            task_name: "LOA_Logs_Auto_Start".to_string(),
+            task_name: TASK_NAME.to_string(),
             app_path: app_path.to_string(),
         }
     }

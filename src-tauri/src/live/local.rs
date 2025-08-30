@@ -2,7 +2,7 @@ use anyhow::Result;
 use uuid::Uuid;
 use std::{fs::File, path::PathBuf};
 
-use crate::parser::models::LocalInfo;
+use crate::live::models::LocalInfo;
 
 pub struct LocalPlayerRepository(PathBuf);
 

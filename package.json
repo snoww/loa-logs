@@ -34,7 +34,8 @@
     "tslib": "^2.4.1",
     "typescript": "^5.8.3",
     "unplugin-icons": "^22.1.0",
-    "vite": "^6.3.2"
+    "vite": "^6.3.2",
+    "user-agent-data-types": "^0.4.2"
   },
   "type": "module",
   "dependencies": {
@@ -42,8 +43,13 @@
     "@fontsource-variable/inter": "^5.0.12",
     "@fontsource-variable/jetbrains-mono": "^5.0.21",
     "@tailwindcss/vite": "^4.0.6",
-    "@tauri-apps/api": "^1.5.6",
-    "@tauri-apps/cli": "^1.5.14",
+    "@tauri-apps/api": "^2.6.0",
+    "@tauri-apps/cli": "^2.6.2",
+    "@tauri-apps/plugin-global-shortcut": "2.3.0",
+    "@tauri-apps/plugin-log": "^2.6.0",
+    "@tauri-apps/plugin-process": "^2.3.0",
+    "@tauri-apps/plugin-shell": "^2.3.0",
+    "@tauri-apps/plugin-updater": "2.6.0",
     "heap-js": "^2.3.0",
     "html2canvas-pro": "^1.5.8",
     "markdown-it": "^14.1.0",
