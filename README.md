@@ -25,11 +25,11 @@ You can support me directly by buying me a [coffee.](https://www.buymeacoffee.co
 
 # Contributing to Meter
 
-Due to the nature of the encryption of the packets, the source for meter-core-rs is not public. That means you won't have access to live meter when building on your own. However, you can contribute to the UI and other parts of the project. The frontend is written in [Svelte](https://svelte.dev/), interfacing with the backend through [tauri v1](https://v1.tauri.app/v1/guides/getting-started/prerequisites) in Rust. If you're interested in contributing, please familiarize yourself with the tools and join the discord server using the panel above.
+Due to the nature of the encryption of the packets, the source for meter-core-rs is not public. That means you won't have access to live meter when building on your own. However, you can contribute to the UI and other parts of the project. The frontend is written in [Svelte](https://svelte.dev/), interfacing with the backend through [tauri](https://v2.tauri.app/start/prerequisites/) in Rust. If you're interested in contributing, please familiarize yourself with the tools and join the discord server using the panel above.
 
 ### Prerequisites
 - Some version of [Node.js](https://nodejs.org/en/download/)
-- tauri & Rust (see [tauri v1 getting started](https://v1.tauri.app/v1/guides/getting-started/prerequisites))
+- tauri & Rust (see [tauri getting started](https://v2.tauri.app/start/prerequisites/))
 - Clone the repository
 - Install dependencies
 

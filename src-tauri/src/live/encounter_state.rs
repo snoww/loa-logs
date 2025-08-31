@@ -15,7 +15,7 @@ use moka::sync::Cache;
 use rsntp::SntpClient;
 use std::cmp::max;
 use std::default::Default;
-use tauri::{AppHandle, Manager, Window, Wry};
+use tauri::{AppHandle, Emitter, Manager, Window, Wry};
 use tokio::task;
 
 #[derive(Debug)]
@@ -191,7 +191,7 @@ impl EncounterState {
         });
 
         self.app
-            .emit_all("zone-change", "")
+            .emit("zone-change", "")
             .expect("failed to emit zone-change");
 
         self.soft_reset(false);
@@ -199,7 +199,7 @@ impl EncounterState {
 
     pub fn on_phase_transition(&mut self, phase_code: i32, stats_api: &mut StatsApi) {
         self.app
-            .emit_all("phase-transition", phase_code)
+            .emit("phase-transition", phase_code)
             .expect("failed to emit phase-transition");
 
         match phase_code {
@@ -628,7 +628,7 @@ impl EncounterState {
 
             self.encounter.boss_only_damage = self.boss_only_damage;
             self.app
-                .emit_all("raid-start", timestamp)
+                .emit("raid-start", timestamp)
                 .expect("failed to emit raid-start");
         }
 
@@ -1525,7 +1525,7 @@ impl EncounterState {
             info!("saved to db");
 
             if raid_clear {
-                app.emit_all("clear-encounter", encounter_id)
+                app.emit("clear-encounter", encounter_id)
                     .expect("failed to emit clear-encounter");
             }
         });

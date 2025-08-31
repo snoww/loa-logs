@@ -1,115 +1,37 @@
 {
-  "$schema": "../node_modules/@tauri-apps/cli/schema.json",
+  "$schema": "https://schema.tauri.app/config/2",
   "build": {
     "beforeBuildCommand": "npm run build",
     "beforeDevCommand": "npm run dev",
-    "devPath": "http://localhost:5173",
-    "distDir": "../build"
+    "frontendDist": "../build",
+    "devUrl": "http://localhost:5173"
   },
-  "package": {
-    "productName": "LOA Logs",
-    "version": "1.32.5"
+  "bundle": {
+    "active": true,
+    "category": "Utility",
+    "copyright": "GNU General Public License v3.0",
+    "resources": [
+      "meter-data/*.json"
+    ],
+    "icon": [
+      "icons/icon.ico"
+    ],
+    "longDescription": "LOA Logs - Modern DPS Meter for Lost Ark written in Rust.",
+    "shortDescription": "LOA Logs",
+    "licenseFile": "../LICENSE"
   },
-  "tauri": {
-    "allowlist": {
-      "all": false,
-      "window": {
-        "startDragging": true,
-        "setAlwaysOnTop": true,
-        "setIgnoreCursorEvents": true,
-        "show": true,
-        "hide": true,
-        "maximize": true,
-        "minimize": true,
-        "unminimize": true,
-        "unmaximize": true,
-        "setFocus": true
-      },
-      "clipboard": {
-        "all": true
-      },
-      "shell": {
-        "open": ".+"
-      },
-      "process": {
-        "relaunch": true
-      },
-      "fs": {
-        "readFile": true,
-        "copyFile": true,
-        "scope": ["**"]
-      },
-      "path": {
-        "all": true
-      },
-      "globalShortcut": {
-        "all": true
-      },
-      "http": {
-        "all": true,
-        "request": true,
-        "scope": ["https://*"]
-      }
-    },
-    "bundle": {
-      "active": true,
-      "category": "Utility",
-      "copyright": "GNU General Public License v3.0",
-      "resources": [
-        "meter-data/*.json",
-        "WinDivert.dll",
-        "WinDivert64.sys"
-      ],
-      "icon": [
-        "icons/icon.ico"
-      ],
-      "identifier": "xyz.snow",
-      "longDescription": "LOA Logs - Modern DPS Meter for Lost Ark written in Rust.",
-      "macOS": {
-        "entitlements": null,
-        "exceptionDomain": "",
-        "frameworks": [],
-        "providerShortName": null,
-        "signingIdentity": null
-      },
-      "shortDescription": "LOA Logs",
-      "targets": [
-        "deb",
-        "nsis",
-        "updater"
-      ],
-      "windows": {
-        "webviewInstallMode": {
-          "type": "embedBootstrapper"
-        },
-        "certificateThumbprint": null,
-        "digestAlgorithm": "sha256",
-        "timestampUrl": "",
-        "nsis": {
-          "template": "./nsis/installer.nsi",
-          "license": "../LICENSE",
-          "installerIcon": "icons/icon.ico"
-        }
-      }
-    },
-    "systemTray": {
-      "iconPath": "icons/icon.png",
-      "iconAsTemplate": true
-    },
-    "security": {
-      "csp": "default-src *; img-src 'self' https: data:; style-src 'self' 'unsafe-inline'; font-src 'self' data:"
-    },
+  "productName": "LOA Logs",
+  "version": "1.32.5",
+  "identifier": "xyz.snow",
+  "plugins": {
     "updater": {
-      "active": true, 
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDZEODU5MzNEODY0ODg0REEKUldUYWhFaUdQWk9GYlczc3VSODJPK01RRTlYUER6NzU0eDE1WDYwcmJsY1d4d2EwblZHNlJ4dW8K",
       "endpoints": [
         "https://snow.xyz/loa-logs/latest.json"
-      ],
-      "dialog": false,
-      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDZEODU5MzNEODY0ODg0REEKUldUYWhFaUdQWk9GYlczc3VSODJPK01RRTlYUER6NzU0eDE1WDYwcmJsY1d4d2EwblZHNlJ4dW8K",
-      "windows": {
-        "installMode": "passive"
-      }
-    },
+      ]
+    }
+  },
+  "app": {
     "windows": [
       {
         "label": "main",
@@ -120,13 +42,15 @@
         "width": 500,
         "height": 350,
         "resizable": true,
+        "shadow": false,
         "decorations": false,
         "transparent": true,
         "minWidth": 400,
         "minHeight": 120,
         "alwaysOnTop": true,
         "visible": false,
-        "focus": false
+        "focus": false,
+        "useHttpsScheme": true
       },
       {
         "label": "logs",
@@ -138,8 +62,9 @@
         "width": 800,
         "height": 500,
         "decorations": true,
-        "fileDropEnabled": false,
-        "visible": false
+        "dragDropEnabled": false,
+        "visible": false,
+        "useHttpsScheme": true
       },
       {
         "label": "mini",
@@ -150,14 +75,24 @@
         "width": 1280,
         "height": 200,
         "resizable": true,
+        "shadow": false,
         "decorations": false,
         "transparent": true,
         "minWidth": 1280,
         "minHeight": 200,
         "alwaysOnTop": true,
         "visible": false,
-        "focus": false
+        "focus": false,
+        "useHttpsScheme": true
       }
-    ]
+    ],
+    "security": {
+      "csp": "default-src *; img-src 'self' https: data:; style-src 'self' 'unsafe-inline'; font-src 'self' data:; connect-src ipc: http://ipc.localhost"
+    },
+    "trayIcon": {
+      "iconPath": "icons/icon.png",
+      "id": "main",
+      "showMenuOnLeftClick": false
+    }
   }
 }

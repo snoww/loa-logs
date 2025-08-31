@@ -6,25 +6,30 @@ authors = ["Snow"]
 license = "GNU General Public License v3.0"
 repository = "https://github.com/snoww/loa-logs"
 default-run = "app"
-edition = "2021"
+edition = "2024"
 rust-version = "1.85.0"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [build-dependencies]
-tauri-build = { version = "1.5.6", features = [] }
+tauri-build = { version = "2", features = [] }
 
 [dependencies]
 anyhow = "1.0.75"
 chrono = "0.4.31"
 serde_json = { version = "1.0", features = ["preserve_order"] }
 serde = { version = "1.0", features = ["derive"] }
-tauri = { version = "1.8.3", features = [ "http-all", "clipboard-all", "fs-copy-file", "fs-read-file", "global-shortcut-all", "path-all", "process-command-api", "process-relaunch", "shell-open", "system-tray", "updater", "window-hide", "window-maximize", "window-minimize", "window-set-always-on-top", "window-set-focus", "window-set-ignore-cursor-events", "window-show", "window-start-dragging", "window-unmaximize", "window-unminimize"] }
+tauri = { version = "2", features = ["image-png", "tray-icon"] }
+tauri-plugin-clipboard-manager = "2"
+tauri-plugin-global-shortcut = "2"
+tauri-plugin-opener = "2.5"
+tauri-plugin-process = "2"
+tauri-plugin-single-instance = "2.3"
+tauri-plugin-updater = "2"
+tauri-plugin-window-state = "2"
 lazy_static = "1.4.0"
-tauri-plugin-window-state = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
-tauri-plugin-single-instance = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
 bitflags = "2.4.1"
-window-vibrancy = "0.4.3"
+window-vibrancy = "0.6"
 hashbrown = { version = "0.15.0", features = ["serde"] }
 rusqlite = { version = "0.36.0", features = ["bundled", "serde_json"] }
 tokio = { version = "1.45.1", features = ["rt", "macros"] }

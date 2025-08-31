@@ -3,10 +3,10 @@
   import { settings, type LogSettings } from "$lib/stores.svelte";
   import { setup } from "$lib/utils/setup";
   import { registerShortcuts } from "$lib/utils/shortcuts";
-  import { invoke } from "@tauri-apps/api";
+  import { invoke } from "@tauri-apps/api/core";
   import { emit } from "@tauri-apps/api/event";
-  import { unregisterAll } from "@tauri-apps/api/globalShortcut";
-  import { appWindow } from "@tauri-apps/api/window";
+  import { unregisterAll } from "@tauri-apps/plugin-global-shortcut";
+  import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
   import { onMount } from "svelte";
 
   let { children }: { children?: import("svelte").Snippet } = $props();
@@ -58,7 +58,7 @@
 
   $effect.pre(() => {
     if (settings.app.general.mini) {
-      appWindow.hide();
+      getCurrentWebviewWindow().hide();
     }
   });
 </script>

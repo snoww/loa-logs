@@ -3,8 +3,8 @@
   import { createDialog, melt } from "@melt-ui/svelte";
   import { fade } from "svelte/transition";
   import { markdown } from "./Markdown.svelte";
-  import { invoke } from "@tauri-apps/api";
-  import { relaunch } from "@tauri-apps/api/process";
+  import { invoke } from "@tauri-apps/api/core";
+  import { relaunch } from "@tauri-apps/plugin-process";
 
   const {
     elements: { portalled, overlay, content, title, description },
@@ -27,7 +27,7 @@
       use:melt={$content}
     >
       <h2 use:melt={$title} class="sticky top-0 py-2 text-xl font-semibold">New Update Available!</h2>
-      {#if updateInfo.manifest}
+      {#if updateInfo.manifest?.body}
         <div use:melt={$description} class="overflow-y-scroll rounded-md border border-neutral-700">
           {@render markdown(updateInfo.manifest.body)}
         </div>

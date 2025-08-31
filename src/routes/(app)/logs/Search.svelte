@@ -5,7 +5,7 @@
   import { IconFilter, IconTrash, IconX } from "$lib/icons";
   import { encounterFilter, settings } from "$lib/stores.svelte";
   import { createDialog, createDropdownMenu, melt } from "@melt-ui/svelte";
-  import { invoke } from "@tauri-apps/api";
+  import { invoke } from "@tauri-apps/api/core";
   import type { FormEventHandler } from "svelte/elements";
   import { SvelteSet } from "svelte/reactivity";
   import { fade, fly } from "svelte/transition";
