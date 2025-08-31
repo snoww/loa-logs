@@ -6,7 +6,7 @@ use anyhow::Result;
 ///
 /// ### Windows-specific
 /// This function is only relevant on Windows platforms. It is a workaround for cases where
-/// the DLL (`WinDivert.dll`) and SYS (`WinDivert64.sys`) driver files are locked by an already running kernel driver.
+/// the SYS (`WinDivert64.sys`) driver files are locked by an already running kernel driver.
 pub fn load_windivert(current_dir: &Path) -> Result<()> {
     #[cfg(all(target_os = "windows"))]
     {
