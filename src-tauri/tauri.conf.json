@@ -56,9 +56,7 @@
       "category": "Utility",
       "copyright": "GNU General Public License v3.0",
       "resources": [
-        "meter-data/*.json",
-        "WinDivert.dll",
-        "WinDivert64.sys"
+        "meter-data/*.json"
       ],
       "icon": [
         "icons/icon.ico"

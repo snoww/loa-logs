@@ -7,6 +7,9 @@ mod app;
 #[cfg(feature = "meter-core")]
 mod live;
 mod parser;
+mod misc;
+mod context;
+mod constants;
 
 use anyhow::Result;
 use flate2::read::GzDecoder;
@@ -27,19 +30,16 @@ use tauri::{
 use tauri_plugin_window_state::{AppHandleExt, StateFlags, WindowExt};
 use window_vibrancy::{apply_blur, clear_blur};
 
-const METER_WINDOW_LABEL: &str = "main";
-const METER_MINI_WINDOW_LABEL: &str = "mini";
-const LOGS_WINDOW_LABEL: &str = "logs";
-const WINDOW_STATE_FLAGS: StateFlags = StateFlags::from_bits_truncate(
-    StateFlags::FULLSCREEN.bits()
-        | StateFlags::MAXIMIZED.bits()
-        | StateFlags::POSITION.bits()
-        | StateFlags::SIZE.bits()
-        | StateFlags::VISIBLE.bits(),
-);
+use crate::constants::*;
+use crate::context::AppContext;
+use crate::live::data::AssetPreloader;
+use crate::misc::load_windivert;
 
 #[tokio::main]
 async fn main() -> Result<()> {
+    let context = AppContext::new()?;
+    load_windivert(&context.current_dir).expect("could not load windivert dependencies");
+    let loader = AssetPreloader::new();
     app::init();
 
     std::panic::set_hook(Box::new(|info| {

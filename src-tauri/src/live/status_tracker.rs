@@ -1,14 +1,13 @@
+use crate::live::data::SKILL_BUFF_DATA;
 use crate::live::entity_tracker::Entity;
 use crate::live::party_tracker::PartyTracker;
 use crate::live::status_tracker::StatusEffectBuffCategory::{BattleItem, Bracelet, Elixir, Etc};
 use crate::live::status_tracker::StatusEffectCategory::Debuff;
 use crate::live::status_tracker::StatusEffectShowType::All;
 use crate::live::utils::{get_new_id, is_support_class, is_support_spec};
-use crate::parser::models::{EncounterEntity, EntityType, SKILL_BUFF_DATA, SKILL_DATA};
+use crate::parser::models::{EncounterEntity, EntityType};
 use chrono::{DateTime, Duration, Utc};
 use hashbrown::HashMap;
-use log::info;
-use meter_core::packets::definitions::PKTNewPC;
 use meter_core::packets::structures::{PCStruct, StatusEffectData};
 use std::cell::RefCell;
 use std::rc::Rc;

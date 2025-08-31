@@ -1,3 +1,4 @@
+use crate::live::data::*;
 use crate::live::id_tracker::IdTracker;
 use crate::live::party_tracker::PartyTracker;
 use crate::live::status_tracker::{
@@ -5,9 +6,7 @@ use crate::live::status_tracker::{
     StatusTracker,
 };
 use crate::parser::models::EntityType::*;
-use crate::parser::models::{
-    EncounterEntity, EntityType, Esther, LocalInfo, LocalPlayer, ESTHER_DATA, NPC_DATA, SKILL_DATA,
-};
+use crate::parser::models::{EncounterEntity, EntityType, Esther, LocalInfo, LocalPlayer};
 
 use chrono::{DateTime, Utc};
 use hashbrown::HashMap;

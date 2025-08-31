@@ -26,7 +26,9 @@ tauri-plugin-single-instance = { git = "https://github.com/tauri-apps/plugins-wo
 bitflags = "2.4.1"
 window-vibrancy = "0.4.3"
 hashbrown = { version = "0.15.0", features = ["serde"] }
-rusqlite = { version = "0.36.0", features = ["bundled", "serde_json"] }
+r2d2_sqlite = "0.31.0"
+r2d2 = "0.8.10"
+rusqlite = { version = "0.37.0", features = ["bundled", "serde_json"] }
 tokio = { version = "1.45.1", features = ["rt", "macros"] }
 serde_with = "3.12.0"
 log = "0.4.18"
@@ -37,6 +39,8 @@ moka = { version = "0.12.7", features = ["sync"] }
 rsntp = { version = "4.0.0", default-features = false, features = ["chrono"]  }
 flate2 = "1.0.30"
 sysinfo = "0.35.1"
+once_cell = "1.21.3"
+single-instance = "0.3.3"
 meter-core = { git = "https://github.com/snoww/meter-core-rs", optional = true }
 
 [target.'cfg(target_os = "linux")'.dependencies]
