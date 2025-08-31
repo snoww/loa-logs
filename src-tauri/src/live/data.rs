@@ -1,3 +1,5 @@
+#![allow(dead_code)]
+
 use std::{fs::File, thread::{self, JoinHandle}};
 use anyhow::anyhow;
 use once_cell::sync::Lazy;

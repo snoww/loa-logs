@@ -1,3 +1,5 @@
+#![allow(dead_code)]
+
 use tauri::{LogicalPosition, LogicalSize, Position, Size};
 use tauri_plugin_window_state::StateFlags;
 use window_vibrancy::Color;
