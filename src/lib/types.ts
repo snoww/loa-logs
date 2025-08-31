@@ -5,7 +5,7 @@ export interface EncounterEvent {
 
 export interface PartyEvent {
   event: string;
-  payload?: PartyInfo;
+  payload?: string[][];
 }
 
 export interface Encounter {

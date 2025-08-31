@@ -1,7 +1,4 @@
-#![cfg_attr(
-    all(not(debug_assertions), target_os = "windows"),
-    windows_subsystem = "windows"
-)]
+#![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 mod app;
 #[cfg(feature = "meter-core")]
@@ -24,9 +21,12 @@ use app::autostart::{AutoLaunch, AutoLaunchManager};
 use rusqlite::{params, params_from_iter, Connection, Transaction};
 use sysinfo::{ProcessRefreshKind, RefreshKind, System};
 use tauri::{
-    api::shell::open, CustomMenuItem, LogicalPosition, LogicalSize, Manager, Position, Size, State,
-    SystemTray, SystemTrayEvent, SystemTrayMenu, SystemTrayMenuItem,
+    menu::MenuBuilder,
+    tray::{MouseButton, MouseButtonState, TrayIconEvent},
+    Emitter, LogicalPosition, LogicalSize, Manager, Position, Size, State, WindowEvent,
 };
+use tauri_plugin_opener::OpenerExt;
+use tauri_plugin_updater::UpdaterExt;
 use tauri_plugin_window_state::{AppHandleExt, StateFlags, WindowExt};
 use window_vibrancy::{apply_blur, clear_blur};
 
@@ -43,84 +43,70 @@ async fn main() -> Result<()> {
     app::init();
 
     std::panic::set_hook(Box::new(|info| {
-        error!("Panicked: {:?}", info);
+        error!("Panicked: {info:?}");
 
         app::get_logger().unwrap().flush();
     }));
 
-    let tray_menu = SystemTrayMenu::new()
-        .add_item(CustomMenuItem::new("show-logs".to_string(), "Show Logs"))
-        .add_native_item(SystemTrayMenuItem::Separator)
-        .add_item(CustomMenuItem::new("show-meter".to_string(), "Show Meter"))
-        .add_item(CustomMenuItem::new("hide".to_string(), "Hide Meter"))
-        .add_native_item(SystemTrayMenuItem::Separator)
-        .add_item(CustomMenuItem::new(
-            "start-loa".to_string(),
-            "Start Lost Ark",
-        ))
-        .add_native_item(SystemTrayMenuItem::Separator)
-        .add_item(CustomMenuItem::new("reset".to_string(), "Reset Window"))
-        .add_native_item(SystemTrayMenuItem::Separator)
-        .add_item(CustomMenuItem::new("quit".to_string(), "Quit"));
-
-    let system_tray = SystemTray::new().with_menu(tray_menu);
-
     tauri::Builder::default()
+        .plugin(tauri_plugin_clipboard_manager::init())
+        .plugin(tauri_plugin_global_shortcut::Builder::new().build())
+        .plugin(tauri_plugin_opener::init())
+        .plugin(tauri_plugin_process::init())
+        .plugin(tauri_plugin_single_instance::init(|_app, _argv, _cwd| {}))
+        .plugin(tauri_plugin_updater::Builder::new().build())
+        .plugin(
+            tauri_plugin_window_state::Builder::new()
+                .with_state_flags(WINDOW_STATE_FLAGS)
+                .build(),
+        )
         .setup(|app| {
             info!("starting app v{}", app.package_info().version);
 
-            match setup_db(&app.handle()) {
-                Ok(_) => (),
-                Err(e) => {
-                    warn!("error setting up database: {}", e);
-                }
+            if let Err(e) = setup_db(app.handle()) {
+                warn!("error setting up database: {e}");
             }
+
+            setup_tray(app.handle())?;
+
+            let app_path = std::env::current_exe()?.display().to_string();
+            app.manage(AutoLaunchManager::new(&app.package_info().name, &app_path));
 
             let update_checked = Arc::new(AtomicBool::new(false));
             let checked_clone = update_checked.clone();
-            let handle = app.handle();
+            let app_handle = app.handle().clone();
             tauri::async_runtime::spawn(async move {
-                match tauri::updater::builder(handle).check().await {
-                    Ok(update) => {
-                        if update.is_update_available() {
-                            #[cfg(not(debug_assertions))]
-                            {
-                                info!(
-                                    "update available, downloading update: v{}",
-                                    update.latest_version()
-                                );
+                match app_handle.updater().unwrap().check().await {
+                    #[cfg(not(debug_assertions))]
+                    Ok(Some(update)) => {
+                        info!("update available, downloading update: v{}", update.version);
 
-                                unload_driver();
-                                remove_driver();
+                        unload_driver();
+                        remove_driver();
 
-                                update
-                                    .download_and_install()
-                                    .await
-                                    .map_err(|e| {
-                                        error!("failed to download update: {}", e);
-                                    })
-                                    .ok();
-                            }
-                        } else {
-                            info!("no update available");
-                            checked_clone.store(true, Ordering::Relaxed);
+                        if let Err(e) = update.download_and_install(|_, _| {}, || {}).await {
+                            error!("failed to download update: {}", e);
                         }
                     }
                     Err(e) => {
-                        warn!("failed to get update: {}", e);
+                        warn!("failed to get update: {e}");
+                        checked_clone.store(true, Ordering::Relaxed);
+                    }
+                    _ => {
+                        info!("no update available");
                         checked_clone.store(true, Ordering::Relaxed);
                     }
                 }
             });
 
-            let settings = read_settings(&app.handle()).ok();
+            let settings = read_settings(app.handle()).ok();
 
-            let meter_window = app.get_window(METER_WINDOW_LABEL).unwrap();
+            let meter_window = app.get_webview_window(METER_WINDOW_LABEL).unwrap();
             meter_window
                 .restore_state(WINDOW_STATE_FLAGS)
                 .expect("failed to restore window state");
 
-            let mini_window = app.get_window(METER_MINI_WINDOW_LABEL).unwrap();
+            let mini_window = app.get_webview_window(METER_MINI_WINDOW_LABEL).unwrap();
             meter_window
                 .restore_state(WINDOW_STATE_FLAGS)
                 .expect("failed to restore window state");
@@ -129,7 +115,7 @@ async fn main() -> Result<()> {
             //     meter_window.open_devtools();
             // }
 
-            let logs_window = app.get_window(LOGS_WINDOW_LABEL).unwrap();
+            let logs_window = app.get_webview_window(LOGS_WINDOW_LABEL).unwrap();
             logs_window
                 .restore_state(WINDOW_STATE_FLAGS)
                 .expect("failed to restore window state");
@@ -160,7 +146,7 @@ async fn main() -> Result<()> {
 
                 if settings.general.start_loa_on_start {
                     info!("auto launch game enabled");
-                    start_loa_process(app.handle());
+                    start_loa_process(app.handle().clone());
                 }
             } else {
                 meter_window.show().unwrap();
@@ -172,15 +158,15 @@ async fn main() -> Result<()> {
             // only start listening if we have live meter
             #[cfg(feature = "meter-core")]
             {
-                let app = app.app_handle();
+                let app = app.app_handle().clone();
                 tokio::task::spawn_blocking(move || {
                     // only start listening when there's no update, otherwise unable to remove driver
                     while !update_checked.load(Ordering::Relaxed) {
                         std::thread::sleep(std::time::Duration::from_millis(100));
                     }
-                    info!("listening on port: {}", port);
+                    info!("listening on port: {port}");
                     live::start(app, port, settings).map_err(|e| {
-                        error!("unexpected error occurred in parser: {}", e);
+                        error!("unexpected error occurred in parser: {e}");
                     })
                 });
             }
@@ -190,27 +176,17 @@ async fn main() -> Result<()> {
             //     _logs_window.open_devtools();
             // }
 
-            let app_path = std::env::current_exe()?.display().to_string();
-            app.manage(AutoLaunchManager::new(&app.package_info().name, &app_path));
-
             Ok(())
         })
-        .plugin(
-            tauri_plugin_window_state::Builder::new()
-                .with_state_flags(WINDOW_STATE_FLAGS)
-                .build(),
-        )
-        .plugin(tauri_plugin_single_instance::init(|_app, _argv, _cwd| {}))
-        .on_window_event(|event| match event.event() {
-            tauri::WindowEvent::CloseRequested { api, .. } => {
+        .on_window_event(|window, event| match event {
+            WindowEvent::CloseRequested { api, .. } => {
                 api.prevent_close();
 
-                if event.window().label() == METER_WINDOW_LABEL
-                    || event.window().label() == METER_MINI_WINDOW_LABEL
+                if window.label() == METER_WINDOW_LABEL || window.label() == METER_MINI_WINDOW_LABEL
                 {
-                    let app_handle = event.window().app_handle();
-                    let meter_window = app_handle.get_window(METER_WINDOW_LABEL).unwrap();
-                    let logs_window = app_handle.get_window(LOGS_WINDOW_LABEL).unwrap();
+                    let app_handle = window.app_handle();
+                    let meter_window = app_handle.get_webview_window(METER_WINDOW_LABEL).unwrap();
+                    let logs_window = app_handle.get_webview_window(LOGS_WINDOW_LABEL).unwrap();
 
                     if logs_window.is_minimized().unwrap() {
                         logs_window.unminimize().unwrap();
@@ -225,114 +201,17 @@ async fn main() -> Result<()> {
                         .expect("failed to save window state");
                     unload_driver();
                     app_handle.exit(0);
-                } else if event.window().label() == LOGS_WINDOW_LABEL {
-                    event.window().hide().unwrap();
+                } else if window.label() == LOGS_WINDOW_LABEL {
+                    window.hide().unwrap();
                 }
             }
-            tauri::WindowEvent::Focused(focused) => {
-                if !focused {
-                    event
-                        .window()
-                        .app_handle()
-                        .save_window_state(WINDOW_STATE_FLAGS)
-                        .expect("failed to save window state");
-                }
+            WindowEvent::Focused(focused) if !focused => {
+                window
+                    .app_handle()
+                    .save_window_state(WINDOW_STATE_FLAGS)
+                    .expect("failed to save window state");
             }
             _ => {}
-        })
-        .system_tray(system_tray)
-        .on_system_tray_event(|app, event| {
-            let settings = read_settings(app).unwrap_or_default();
-
-            let show_window = |window: &tauri::Window| {
-                window.show().unwrap();
-                window.unminimize().unwrap();
-                window.set_focus().unwrap();
-                if window.label() == "main" {
-                    window.set_ignore_cursor_events(false).unwrap();
-                }
-            };
-
-            let get_meter_window =
-                |app: &tauri::AppHandle, settings: &Settings| -> Option<tauri::Window> {
-                    let label = if settings.general.mini {
-                        METER_MINI_WINDOW_LABEL
-                    } else {
-                        METER_WINDOW_LABEL
-                    };
-                    app.get_window(label)
-                };
-
-            match event {
-                SystemTrayEvent::LeftClick { .. } => {
-                    if let Some(meter) = get_meter_window(app, &settings) {
-                        show_window(&meter);
-                    }
-                }
-                SystemTrayEvent::MenuItemClick { id, .. } => match id.as_str() {
-                    "quit" => {
-                        app.save_window_state(WINDOW_STATE_FLAGS)
-                            .expect("failed to save window state");
-                        unload_driver();
-                        app.exit(0);
-                    }
-                    "hide" => {
-                        if let Some(meter) = app.get_window(METER_WINDOW_LABEL) {
-                            meter.hide().unwrap();
-                        }
-                        if let Some(mini) = app.get_window(METER_MINI_WINDOW_LABEL) {
-                            mini.hide().unwrap();
-                        }
-                    }
-                    "show-meter" => {
-                        if let Some(meter) = get_meter_window(app, &settings) {
-                            show_window(&meter);
-                        }
-                    }
-                    "reset" => {
-                        if settings.general.mini {
-                            if let Some(mini) = app.get_window(METER_MINI_WINDOW_LABEL) {
-                                mini.set_size(Size::Logical(LogicalSize {
-                                    width: 1280.0,
-                                    height: 200.0,
-                                }))
-                                .unwrap();
-                                mini.set_position(Position::Logical(LogicalPosition {
-                                    x: 100.0,
-                                    y: 100.0,
-                                }))
-                                .unwrap();
-                                show_window(&mini);
-                            }
-                        } else if let Some(meter) = app.get_window(METER_WINDOW_LABEL) {
-                            meter
-                                .set_size(Size::Logical(LogicalSize {
-                                    width: 500.0,
-                                    height: 350.0,
-                                }))
-                                .unwrap();
-                            meter
-                                .set_position(Position::Logical(LogicalPosition {
-                                    x: 100.0,
-                                    y: 100.0,
-                                }))
-                                .unwrap();
-                            show_window(&meter);
-                        }
-                    }
-                    "show-logs" => {
-                        if let Some(logs) = app.get_window(LOGS_WINDOW_LABEL) {
-                            logs.show().unwrap();
-                            logs.unminimize().unwrap();
-                        }
-                    }
-                    "start-loa" => {
-                        start_loa_process(app.clone());
-                    }
-                    _ => {}
-                },
-                _ => {}
-            }
         })
         .invoke_handler(tauri::generate_handler![
             load_encounters_preview,
@@ -370,6 +249,119 @@ async fn main() -> Result<()> {
         ])
         .run(tauri::generate_context!())
         .expect("error while running application");
+
+    Ok(())
+}
+
+fn setup_tray(app: &tauri::AppHandle) -> tauri::Result<()> {
+    let menu = MenuBuilder::new(app)
+        .text("show-logs", "Show Logs")
+        .separator()
+        .text("show-meter", "Show Meter")
+        .text("hide", "Hide Meter")
+        .separator()
+        .text("start-loa", "Start Lost Ark")
+        .separator()
+        .text("reset", "Reset Window")
+        .separator()
+        .text("quit", "Quit")
+        .build()?;
+
+    fn show_window(window: &tauri::WebviewWindow) {
+        window.show().unwrap();
+        window.unminimize().unwrap();
+        window.set_focus().unwrap();
+        if window.label() == METER_WINDOW_LABEL {
+            window.set_ignore_cursor_events(false).unwrap();
+        }
+    }
+
+    fn get_meter_window(
+        app: &tauri::AppHandle,
+        settings: &Settings,
+    ) -> Option<tauri::WebviewWindow> {
+        let label = if settings.general.mini {
+            METER_MINI_WINDOW_LABEL
+        } else {
+            METER_WINDOW_LABEL
+        };
+        app.get_webview_window(label)
+    }
+
+    let tray = app.tray_by_id("main").expect("should be in tauri config");
+    tray.set_menu(Some(menu))?;
+    tray.on_menu_event(move |app, event| match event.id().as_ref() {
+        "quit" => {
+            app.save_window_state(WINDOW_STATE_FLAGS)
+                .expect("failed to save window state");
+            unload_driver();
+            app.exit(0);
+        }
+        "hide" => {
+            if let Some(meter) = app.get_webview_window(METER_WINDOW_LABEL) {
+                meter.hide().unwrap();
+            }
+            if let Some(mini) = app.get_webview_window(METER_MINI_WINDOW_LABEL) {
+                mini.hide().unwrap();
+            }
+        }
+        "show-meter" => {
+            let settings = read_settings(app).unwrap_or_default();
+            if let Some(meter) = get_meter_window(app, &settings) {
+                show_window(&meter);
+            }
+        }
+        "reset" => {
+            let settings = read_settings(app).unwrap_or_default();
+            if settings.general.mini {
+                if let Some(mini) = app.get_webview_window(METER_MINI_WINDOW_LABEL) {
+                    mini.set_size(Size::Logical(LogicalSize {
+                        width: 1280.0,
+                        height: 200.0,
+                    }))
+                    .unwrap();
+                    mini.set_position(Position::Logical(LogicalPosition { x: 100.0, y: 100.0 }))
+                        .unwrap();
+                    show_window(&mini);
+                }
+            } else if let Some(meter) = app.get_webview_window(METER_WINDOW_LABEL) {
+                meter
+                    .set_size(Size::Logical(LogicalSize {
+                        width: 500.0,
+                        height: 350.0,
+                    }))
+                    .unwrap();
+                meter
+                    .set_position(Position::Logical(LogicalPosition { x: 100.0, y: 100.0 }))
+                    .unwrap();
+                show_window(&meter);
+            }
+        }
+        "show-logs" => {
+            if let Some(logs) = app.get_webview_window(LOGS_WINDOW_LABEL) {
+                logs.show().unwrap();
+                logs.unminimize().unwrap();
+            }
+        }
+        "start-loa" => {
+            start_loa_process(app.clone());
+        }
+        _ => {}
+    });
+    tray.on_tray_icon_event(|tray, event| {
+        if let TrayIconEvent::Click {
+            button: MouseButton::Left,
+            button_state: MouseButtonState::Up,
+            ..
+        } = event
+        {
+            let app = tray.app_handle();
+            let settings = read_settings(app).unwrap_or_default();
+            if let Some(meter) = get_meter_window(app, &settings) {
+                show_window(&meter);
+            }
+        }
+    });
 
     Ok(())
 }
@@ -1189,7 +1181,7 @@ fn open_most_recent_encounter(app: tauri::AppHandle) {
 
     let id_result: Result<i32, rusqlite::Error> = stmt.query_row(params![], |row| row.get(0));
 
-    if let Some(logs) = app.get_window(LOGS_WINDOW_LABEL) {
+    if let Some(logs) = app.get_webview_window(LOGS_WINDOW_LABEL) {
         match id_result {
             Ok(id) => {
                 logs.emit("show-latest-encounter", id.to_string()).unwrap();
@@ -1261,7 +1253,7 @@ fn toggle_meter_window(app: tauri::AppHandle) {
         } else {
             METER_WINDOW_LABEL
         };
-        if let Some(meter) = app.get_window(label) {
+        if let Some(meter) = app.get_webview_window(label) {
             if meter.is_visible().unwrap() {
                 // workaround for tauri not handling minimized state for windows without decorations
                 if meter.is_minimized().unwrap() {
@@ -1276,8 +1268,8 @@ fn toggle_meter_window(app: tauri::AppHandle) {
 }
 
 #[tauri::command]
-fn toggle_logs_window(window: tauri::Window) {
-    if let Some(logs) = window.app_handle().get_window(LOGS_WINDOW_LABEL) {
+fn toggle_logs_window(app: tauri::AppHandle) {
+    if let Some(logs) = app.get_webview_window(LOGS_WINDOW_LABEL) {
         if logs.is_visible().unwrap() {
             logs.hide().unwrap();
         } else {
@@ -1288,8 +1280,8 @@ fn toggle_logs_window(window: tauri::Window) {
 }
 
 #[tauri::command]
-fn open_url(window: tauri::Window, url: String) {
-    if let Some(logs) = window.app_handle().get_window(LOGS_WINDOW_LABEL) {
+fn open_url(app: tauri::AppHandle, url: String) {
+    if let Some(logs) = app.get_webview_window(LOGS_WINDOW_LABEL) {
         logs.emit("redirect-url", url).unwrap();
     }
 }
@@ -1315,11 +1307,10 @@ fn get_settings(app: tauri::AppHandle) -> Option<Settings> {
 
 #[tauri::command]
 fn open_db_path(app: tauri::AppHandle) {
-    let path = app::path::data_dir(&app);
-    info!("open_db_path: {}", path.display());
+    let path = app::path::data_dir(&app).display().to_string();
+    info!("open_db_path: {}", &path);
 
-    let scope = app.shell_scope();
-    if let Err(e) = open(&scope, path.to_str().unwrap(), None) {
+    if let Err(e) = app.opener().open_path(&path, None::<&str>) {
         error!("Failed to open database path: {}", e);
     }
 }
@@ -1474,42 +1465,42 @@ fn optimize_database(app: tauri::AppHandle) {
 }
 
 #[tauri::command]
-fn disable_blur(window: tauri::Window) {
-    if let Some(meter_window) = window.app_handle().get_window(METER_WINDOW_LABEL) {
+fn disable_blur(app: tauri::AppHandle) {
+    if let Some(meter_window) = app.get_webview_window(METER_WINDOW_LABEL) {
         clear_blur(&meter_window).ok();
     }
 }
 
 #[tauri::command]
-fn enable_blur(window: tauri::Window) {
-    if let Some(meter_window) = window.app_handle().get_window(METER_WINDOW_LABEL) {
+fn enable_blur(app: tauri::AppHandle) {
+    if let Some(meter_window) = app.get_webview_window(METER_WINDOW_LABEL) {
         apply_blur(&meter_window, Some((10, 10, 10, 50))).ok();
     }
 }
 
 #[tauri::command]
-fn enable_aot(window: tauri::Window) {
-    if let Some(meter_window) = window.app_handle().get_window(METER_WINDOW_LABEL) {
+fn enable_aot(app: tauri::AppHandle) {
+    if let Some(meter_window) = app.get_webview_window(METER_WINDOW_LABEL) {
         meter_window.set_always_on_top(true).ok();
     }
-    if let Some(mini_window) = window.app_handle().get_window(METER_MINI_WINDOW_LABEL) {
+    if let Some(mini_window) = app.get_webview_window(METER_MINI_WINDOW_LABEL) {
         mini_window.set_always_on_top(true).ok();
     }
 }
 
 #[tauri::command]
-fn disable_aot(window: tauri::Window) {
-    if let Some(meter_window) = window.app_handle().get_window(METER_WINDOW_LABEL) {
+fn disable_aot(app: tauri::AppHandle) {
+    if let Some(meter_window) = app.get_webview_window(METER_WINDOW_LABEL) {
         meter_window.set_always_on_top(false).ok();
     }
-    if let Some(mini_window) = window.app_handle().get_window(METER_MINI_WINDOW_LABEL) {
+    if let Some(mini_window) = app.get_webview_window(METER_MINI_WINDOW_LABEL) {
         mini_window.set_always_on_top(false).ok();
     }
 }
 
 #[tauri::command]
-fn set_clickthrough(window: tauri::Window, set: bool) {
-    if let Some(meter_window) = window.app_handle().get_window(METER_WINDOW_LABEL) {
+fn set_clickthrough(app: tauri::AppHandle, set: bool) {
+    if let Some(meter_window) = app.get_webview_window(METER_WINDOW_LABEL) {
         meter_window.set_ignore_cursor_events(set).unwrap();
     }
 }
@@ -1518,10 +1509,10 @@ fn set_clickthrough(window: tauri::Window, set: bool) {
 fn remove_driver() {
     #[cfg(target_os = "windows")]
     {
-        use tauri::api::process::Command;
-        let command = Command::new("sc").args(["delete", "windivert"]);
+        use app::compat::Command;
+        let status = Command::new("sc").args(["delete", "windivert"]).status();
 
-        command.output().expect("unable to delete driver");
+        status.expect("unable to delete driver");
     }
 }
 
@@ -1529,10 +1520,10 @@ fn remove_driver() {
 fn unload_driver() {
     #[cfg(target_os = "windows")]
     {
-        use tauri::api::process::Command;
-        let command = Command::new("sc").args(["stop", "windivert"]);
+        use app::compat::Command;
+        let status = Command::new("sc").args(["stop", "windivert"]).status();
 
-        if command.output().is_ok_and(|output| output.status.success()) {
+        if status.is_ok_and(|status| status.success()) {
             info!("stopped driver");
         } else {
             warn!("could not execute command to stop driver");
@@ -1566,14 +1557,16 @@ fn check_loa_running() -> bool {
 }
 
 #[tauri::command]
-fn start_loa_process(app_handle: tauri::AppHandle) {
+fn start_loa_process(app: tauri::AppHandle) {
     if check_loa_running() {
         return info!("lost ark already running");
     }
     info!("starting lost ark process...");
 
-    let scope = app_handle.shell_scope();
-    if let Err(e) = open(&scope, "steam://rungameid/1599340", None) {
+    if let Err(e) = app
+        .opener()
+        .open_url("steam://rungameid/1599340", None::<&str>)
+    {
         error!("could not open lost ark: {}", e);
     }
 }

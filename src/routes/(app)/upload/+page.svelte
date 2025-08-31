@@ -7,7 +7,7 @@
   import { checkAccessToken, uploadLog } from "$lib/utils/sync";
   import { uploadSuccess, uploadTokenError } from "$lib/utils/toasts";
   import { createRadioGroup, melt } from "@melt-ui/svelte";
-  import { invoke } from "@tauri-apps/api";
+  import { invoke } from "@tauri-apps/api/core";
   import Header from "../Header.svelte";
 
   const {

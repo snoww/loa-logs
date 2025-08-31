@@ -3,9 +3,9 @@
   import { settings } from "$lib/stores.svelte";
   import { networkSettingsChanged } from "$lib/utils/toasts";
   import { createRadioGroup, createSlider, melt } from "@melt-ui/svelte";
-  import { invoke } from "@tauri-apps/api";
+  import { invoke } from "@tauri-apps/api/core";
   import { emit } from "@tauri-apps/api/event";
-  import { WebviewWindow } from "@tauri-apps/api/window";
+  import { WebviewWindow } from "@tauri-apps/api/webviewWindow";
   import { onMount } from "svelte";
   import { writable } from "svelte/store";
   import Header from "../Header.svelte";
@@ -49,14 +49,17 @@
   });
 
   $effect(() => {
-    const mini = WebviewWindow.getByLabel("mini");
-    const main = WebviewWindow.getByLabel("main");
-    if (settings.app.general.mini) {
-      main?.hide();
-      mini?.show();
-    } else {
-      mini?.hide();
-    }
+    let isMini = settings.app.general.mini;
+    (async () => {
+      const mini = await WebviewWindow.getByLabel("mini");
+      const main = await WebviewWindow.getByLabel("main");
+      if (isMini) {
+        main?.hide();
+        mini?.show();
+      } else {
+        mini?.hide();
+      }
+    })();
   });
 
   onMount(() => {

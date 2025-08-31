@@ -2,7 +2,7 @@ import { addToast } from "$lib/components/Toaster.svelte";
 import { raidGates } from "$lib/constants/encounters";
 import { settings } from "$lib/stores.svelte";
 import type { Encounter } from "$lib/types";
-import { invoke } from "@tauri-apps/api";
+import { invoke } from "@tauri-apps/api/core";
 import pako from "pako";
 import { uploadError, uploadTokenError } from "./toasts";
 
