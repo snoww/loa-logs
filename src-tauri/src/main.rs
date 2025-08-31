@@ -43,7 +43,7 @@ async fn main() -> Result<()> {
     app::init();
 
     std::panic::set_hook(Box::new(|info| {
-        error!("Panicked: {:?}", info);
+        error!("Panicked: {info:?}");
 
         app::get_logger().unwrap().flush();
     }));
@@ -64,7 +64,7 @@ async fn main() -> Result<()> {
             info!("starting app v{}", app.package_info().version);
 
             if let Err(e) = setup_db(app.handle()) {
-                warn!("error setting up database: {}", e);
+                warn!("error setting up database: {e}");
             }
 
             setup_tray(app.handle())?;
@@ -89,7 +89,7 @@ async fn main() -> Result<()> {
                         }
                     }
                     Err(e) => {
-                        warn!("failed to get update: {}", e);
+                        warn!("failed to get update: {e}");
                         checked_clone.store(true, Ordering::Relaxed);
                     }
                     _ => {
