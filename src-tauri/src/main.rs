@@ -40,11 +40,18 @@ use crate::misc::load_windivert;
 async fn main() -> Result<()> {
     let context = AppContext::new()?;
     load_windivert(&context.current_dir).expect("could not load windivert dependencies");
-    let loader = AssetPreloader::new();
+    let _loader = AssetPreloader::new();
     app::init();
 
     std::panic::set_hook(Box::new(|info| {
-        error!("Panicked: {info:?}");
+        let payload = if let Some(s) = info.payload().downcast_ref::<&str>() {
+            (*s).to_string()
+        } else if let Some(s) = info.payload().downcast_ref::<String>() {
+            s.clone()
+        } else {
+            "non-string panic payload".to_string()
+        };
+        error!("Panicked: {:?}, location: {:?}", payload, info.location());
 
         app::get_logger().unwrap().flush();
     }));
