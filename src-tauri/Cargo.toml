@@ -20,7 +20,6 @@ chrono = "0.4.31"
 serde_json = { version = "1.0", features = ["preserve_order"] }
 serde = { version = "1.0", features = ["derive"] }
 tauri = { version = "2.8.4", features = ["image-png", "tray-icon"] }
-lazy_static = "1.4.0"
 bitflags = "2.4.1"
 window-vibrancy = "0.6"
 hashbrown = { version = "0.15.0", features = ["serde"] }
@@ -37,7 +36,6 @@ moka = { version = "0.12.7", features = ["sync"] }
 rsntp = { version = "4.0.0", default-features = false, features = ["chrono"]  }
 flate2 = "1.0.30"
 sysinfo = "0.35.1"
-single-instance = "0.3.3"
 meter-core = { git = "https://github.com/snoww/meter-core-rs", optional = true }
 
 [target.'cfg(not(any(target_os = "android", target_os = "ios")))'.dependencies]
@@ -74,3 +72,7 @@ strip = true # Remove debug symbols
 
 [profile.dev.package."*"]
 debug = false # Disable debug symbols for dependencies
+
+[profile.dev]
+incremental = true
+opt-level = 0

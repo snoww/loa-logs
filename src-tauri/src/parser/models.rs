@@ -5,7 +5,6 @@ use std::str::FromStr;
 
 use bitflags::bitflags;
 use hashbrown::{HashMap, HashSet};
-use lazy_static::lazy_static;
 use log::error;
 use serde::{Deserialize, Deserializer, Serialize};
 use serde_json::{Map, Value};
