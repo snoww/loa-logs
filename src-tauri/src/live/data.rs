@@ -1,112 +1,139 @@
 #![allow(dead_code)]
 #![allow(unsafe_op_in_unsafe_fn)]
 
-use std::{fs::File, io::BufReader, thread::{self, JoinHandle}};
+use std::{fs::File, io::{BufReader, Read}, ops::Deref, sync::OnceLock, thread::{self, JoinHandle}};
 use anyhow::anyhow;
 use serde::de::DeserializeOwned;
-use std::sync::LazyLock;
 use hashbrown::{HashMap, HashSet};
 
 use crate::parser::models::*;
 
-unsafe fn load_json<T: DeserializeOwned>(path: &str) -> T {
-    let file = File::open(path).unwrap_unchecked();
+fn load_json<T: DeserializeOwned>(path: &str) -> T {
+    let file = File::open(path).unwrap();
     let reader = BufReader::with_capacity(1024 * 1024, file);
-    serde_json::from_reader(reader).unwrap_unchecked()
+    serde_json::from_reader(reader).unwrap()
 }
 
-pub static COMBAT_EFFECT_DATA: LazyLock<HashMap<i32, CombatEffectData>> = LazyLock::new(|| {
-    unsafe { load_json("meter-data/CombatEffect.json") }
-});
+pub static COMBAT_EFFECT_DATA: OnceLockWrapper<HashMap<i32, CombatEffectData>> = OnceLockWrapper::new();
+pub static ENGRAVING_DATA: OnceLockWrapper<HashMap<u32, EngravingData>> = OnceLockWrapper::new();
+pub static SKILL_BUFF_DATA: OnceLockWrapper<HashMap<u32, SkillBuffData>> = OnceLockWrapper::new();
+pub static SKILL_DATA: OnceLockWrapper<HashMap<u32, SkillData>> = OnceLockWrapper::new();
+pub static SKILL_EFFECT_DATA: OnceLockWrapper<HashMap<u32, SkillEffectData>> = OnceLockWrapper::new();
+pub static SUPPORT_AP_GROUP: OnceLockWrapper<HashSet<u32>> = OnceLockWrapper::new();
+pub static SUPPORT_IDENTITY_GROUP: OnceLockWrapper<HashSet<u32>> = OnceLockWrapper::new();
+pub static STAT_TYPE_MAP: OnceLockWrapper<HashMap<String, u32>> = OnceLockWrapper::new();
+pub static ESTHER_DATA: OnceLockWrapper<Vec<Esther>> = OnceLockWrapper::new();
+pub static NPC_DATA: OnceLockWrapper<HashMap<u32, Npc>> = OnceLockWrapper::new();
+pub static GEM_SKILL_MAP: OnceLockWrapper<HashMap<u32, Vec<u32>>> = OnceLockWrapper::new();
+pub static RAID_MAP: OnceLockWrapper<HashMap<String, String>> = OnceLockWrapper::new();
 
-pub static ENGRAVING_DATA: LazyLock<HashMap<u32, EngravingData>> = LazyLock::new(|| {
-    unsafe { load_json("meter-data/Ability.json") }
-});
+pub struct OnceLockWrapper<T>(OnceLock<T>);
 
-pub static SKILL_BUFF_DATA: LazyLock<HashMap<u32, SkillBuffData>> = LazyLock::new(|| {
-    unsafe { load_json("meter-data/SkillBuff.json") }
-});
+impl<T> OnceLockWrapper<T> {
+    pub const fn new() -> Self {
+        Self(OnceLock::new())
+    }
 
-pub static SKILL_DATA: LazyLock<HashMap<u32, SkillData>> = LazyLock::new(|| {
-    unsafe { load_json("meter-data/Skill.json") }
-});
+    pub fn set(&self, value: T) -> Result<(), T> {
+        self.0.set(value)
+    }
+}
 
-pub static SKILL_EFFECT_DATA: LazyLock<HashMap<u32, SkillEffectData>> = LazyLock::new(|| {
-    unsafe { load_json("meter-data/SkillEffect.json") }
-});
+impl<T> Deref for OnceLockWrapper<T> {
+    type Target = T;
 
-pub static SUPPORT_AP_GROUP: LazyLock<HashSet<u32>> = LazyLock::new(|| {
-    let set = HashSet::from([
-        101204, // bard
-        101105, // paladin
-        314004, // artist
-        480030, // valkyrie
-    ]);
+    fn deref(&self) -> &Self::Target {
+        self.0.get().expect("OnceLockWrapper not initialized")
+    }
+}
 
-    set
-});
+pub struct AssetPreloader;
 
-pub static SUPPORT_IDENTITY_GROUP: LazyLock<HashSet<u32>> = LazyLock::new(|| {
-    let set = HashSet::from([
-        211400, // bard serenade of courage
-        368000, // paladin holy aura
-        310501, // artist moonfall
-        480018, // valkyrie release light
-    ]);
-
-    set
-});
-
-pub static STAT_TYPE_MAP: LazyLock<HashMap<String, u32>> = LazyLock::new(|| {
-    unsafe { load_json("meter-data/StatType.json") }
-});
-
-pub static ESTHER_DATA: LazyLock<Vec<Esther>> = LazyLock::new(|| {
-    unsafe { load_json("meter-data/Esther.json") }
-});
-
-pub static NPC_DATA: LazyLock<HashMap<u32, Npc>> = LazyLock::new(|| {
-    unsafe { load_json("meter-data/Npc.json") }
-});
-
-pub static GEM_SKILL_MAP: LazyLock<HashMap<u32, Vec<u32>>> = LazyLock::new(|| {
-    let raw_map: HashMap<String, (String, String, Vec<u32>)> = unsafe { load_json("meter-data/GemSkillGroup.json") };
-    
-    raw_map
-        .into_iter()
-        .filter_map(|(key, entry)| key.parse::<u32>().ok().map(|id| (id, entry.2)))
-        .collect()
-});
-
-pub static RAID_MAP: LazyLock<HashMap<String, String>> = LazyLock::new(|| {
-    let encounters: HashMap<String, HashMap<String, Vec<String>>> = unsafe { load_json("meter-data/encounters.json") };
-
-    encounters
-        .values()
-        .flat_map(|raid| raid.iter())
-        .flat_map(|(gate, bosses)| bosses.iter().map(move |boss| (boss.clone(), gate.clone())))
-        .collect()
-});
-
-pub struct AssetPreloader(JoinHandle<()>);
+fn load<T: DeserializeOwned>(path: &str, buffer: &mut Vec<u8>) -> T {
+    buffer.clear();
+    let mut file = File::open(path).unwrap();
+    file.read_to_end(buffer).unwrap();
+    serde_json::from_slice::<T>(buffer).unwrap()
+}
 
 impl AssetPreloader {
     pub fn new() -> Self {
-        let handle = thread::spawn(|| {
-            SKILL_BUFF_DATA.iter().next();
-            SKILL_BUFF_DATA.iter().next();
-            SKILL_DATA.iter().next();
-            STAT_TYPE_MAP.iter().next();
-            ESTHER_DATA.iter().next();
-            NPC_DATA.iter().next();
-            GEM_SKILL_MAP.iter().next();
-        });
+        let mut buffer = Vec::with_capacity(1024 * 1024 * 30);
 
-        Self(handle)
-    }
+        COMBAT_EFFECT_DATA
+            .set(load("meter-data/CombatEffect.json", &mut buffer))
+            .unwrap();
 
-    pub fn wait(self) -> anyhow::Result<()> {
-        self.0.join().map_err(|err| anyhow!("Could not load assets {:?}", err))?;
-        anyhow::Ok(())
+        ENGRAVING_DATA
+            .set(load("meter-data/Ability.json", &mut buffer))
+            .unwrap();
+
+        SKILL_BUFF_DATA
+            .set(load("meter-data/SkillBuff.json", &mut buffer))
+            .unwrap();
+
+        SKILL_DATA
+            .set(load("meter-data/Skill.json", &mut buffer))
+            .unwrap();
+
+        SKILL_EFFECT_DATA
+            .set(load("meter-data/SkillEffect.json", &mut buffer))
+            .unwrap();
+
+        STAT_TYPE_MAP
+            .set(load("meter-data/StatType.json", &mut buffer))
+            .unwrap();
+
+        ESTHER_DATA
+            .set(load("meter-data/Esther.json", &mut buffer))
+            .unwrap();
+
+        NPC_DATA
+            .set(load("meter-data/Npc.json", &mut buffer))
+            .unwrap();
+
+        GEM_SKILL_MAP
+            .set({
+                let raw: HashMap<String, (String, String, Vec<u32>)> =
+                    load("meter-data/GemSkillGroup.json", &mut buffer);
+                raw.into_iter()
+                    .filter_map(|(key, entry)| key.parse::<u32>().ok().map(|id| (id, entry.2)))
+                    .collect()
+            })
+            .unwrap();
+
+        RAID_MAP
+            .set({
+                let encounters: HashMap<String, HashMap<String, Vec<String>>> =
+                    load("meter-data/encounters.json", &mut buffer);
+                encounters
+                    .values()
+                    .flat_map(|raid| raid.iter())
+                    .flat_map(|(gate, bosses)| {
+                        bosses.iter().map(move |boss| (boss.clone(), gate.clone()))
+                    })
+                    .collect()
+            })
+            .unwrap();
+
+        SUPPORT_AP_GROUP
+            .set(HashSet::from([
+                101204, // bard
+                101105, // paladin
+                314004, // artist
+                480030, // valkyrie
+            ]))
+            .unwrap();
+
+        SUPPORT_IDENTITY_GROUP
+            .set(HashSet::from([
+                211400, // bard serenade of courage
+                368000, // paladin holy aura
+                310501, // artist moonfall
+                480018, // valkyrie release light
+            ]))
+            .unwrap();
+
+        Self
     }
 }
