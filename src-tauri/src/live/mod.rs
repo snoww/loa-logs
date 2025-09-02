@@ -6,7 +6,6 @@ mod skill_tracker;
 mod stats_api;
 mod status_tracker;
 mod utils;
-pub mod data;
 
 use crate::app;
 use crate::live::encounter_state::EncounterState;

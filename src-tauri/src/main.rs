@@ -7,6 +7,7 @@ mod parser;
 mod misc;
 mod context;
 mod constants;
+mod data;
 
 use anyhow::Result;
 use flate2::read::GzDecoder;
@@ -32,7 +33,7 @@ use window_vibrancy::{apply_blur, clear_blur};
 
 use crate::constants::*;
 use crate::context::AppContext;
-use crate::live::data::AssetPreloader;
+use crate::data::AssetPreloader;
 use crate::misc::load_windivert;
 
 #[tokio::main]

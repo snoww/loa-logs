@@ -1,4 +1,4 @@
-use crate::live::data::*;
+use crate::data::*;
 use crate::live::debug_print;
 use crate::live::entity_tracker::Entity;
 use crate::live::skill_tracker::{CastEvent, SkillTracker};
