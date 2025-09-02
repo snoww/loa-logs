@@ -8,12 +8,6 @@ use hashbrown::{HashMap, HashSet};
 
 use crate::parser::models::*;
 
-fn load_json<T: DeserializeOwned>(path: &str) -> T {
-    let file = File::open(path).unwrap();
-    let reader = BufReader::with_capacity(1024 * 1024, file);
-    serde_json::from_reader(reader).unwrap()
-}
-
 pub static COMBAT_EFFECT_DATA: OnceLockWrapper<HashMap<i32, CombatEffectData>> = OnceLockWrapper::new();
 pub static ENGRAVING_DATA: OnceLockWrapper<HashMap<u32, EngravingData>> = OnceLockWrapper::new();
 pub static SKILL_BUFF_DATA: OnceLockWrapper<HashMap<u32, SkillBuffData>> = OnceLockWrapper::new();
