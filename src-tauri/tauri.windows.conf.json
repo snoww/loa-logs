@@ -14,7 +14,8 @@
       "timestampUrl": "",
       "nsis": {
         "template": "./nsis/installer.nsi",
-        "installerIcon": "icons/icon.ico"
+        "installerIcon": "icons/icon.ico",
+        "minimumWebview2Version": "119.0.2151.97"
       }
     },
     "targets": [
