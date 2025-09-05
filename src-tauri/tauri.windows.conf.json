@@ -2,7 +2,8 @@
   "$schema": "https://schema.tauri.app/config/2",
   "bundle": {
     "resources": [
-      "WinDivert.dll"
+      "WinDivert.dll",
+      "meter-data/*.json"
     ],
     "windows": {
       "webviewInstallMode": {

@@ -19,7 +19,7 @@ pub struct AppContext {
 impl AppContext {
     pub fn new() -> Result<Self> {
 
-        let app_path = std::env::current_exe().unwrap();
+        let app_path = std::env::current_exe()?;
         let current_dir = app_path.parent().unwrap().to_path_buf();
         let settings_path = current_dir.join(SETTINGS_PATH);
         let database_path = current_dir.join(DATABASE_PATH);

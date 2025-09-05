@@ -38,11 +38,9 @@ use crate::misc::load_windivert;
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let context = AppContext::new()?;
-    load_windivert(&context.current_dir).expect("could not load windivert dependencies");
-    let _loader = AssetPreloader::new();
+    // initialize logger
     app::init();
-
+    // setup panic hook
     std::panic::set_hook(Box::new(|info| {
         let payload = if let Some(s) = info.payload().downcast_ref::<&str>() {
             (*s).to_string()
@@ -55,6 +53,11 @@ async fn main() -> Result<()> {
 
         app::get_logger().unwrap().flush();
     }));
+
+    let context = AppContext::new()?;
+    load_windivert(&context.current_dir).expect("could not load windivert dependencies");
+    // load meter-data
+    AssetPreloader::new()?;
 
     tauri::Builder::default()
         .plugin(tauri_plugin_clipboard_manager::init())
