@@ -7,7 +7,7 @@ license = "GNU General Public License v3.0"
 repository = "https://github.com/snoww/loa-logs"
 default-run = "app"
 edition = "2024"
-rust-version = "1.85.0"
+rust-version = "1.89.0"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -19,19 +19,13 @@ anyhow = "1.0.75"
 chrono = "0.4.31"
 serde_json = { version = "1.0", features = ["preserve_order"] }
 serde = { version = "1.0", features = ["derive"] }
-tauri = { version = "2", features = ["image-png", "tray-icon"] }
-tauri-plugin-clipboard-manager = "2"
-tauri-plugin-global-shortcut = "2"
-tauri-plugin-opener = "2.5"
-tauri-plugin-process = "2"
-tauri-plugin-single-instance = "2.3"
-tauri-plugin-updater = "2"
-tauri-plugin-window-state = "2"
-lazy_static = "1.4.0"
+tauri = { version = "2.8.4", features = ["image-png", "tray-icon"] }
 bitflags = "2.4.1"
 window-vibrancy = "0.6"
 hashbrown = { version = "0.15.0", features = ["serde"] }
-rusqlite = { version = "0.36.0", features = ["bundled", "serde_json"] }
+r2d2_sqlite = "0.31.0"
+r2d2 = "0.8.10"
+rusqlite = { version = "0.37.0", features = ["bundled", "serde_json"] }
 tokio = { version = "1.45.1", features = ["rt", "macros"] }
 serde_with = "3.12.0"
 log = "0.4.18"
@@ -43,6 +37,17 @@ rsntp = { version = "4.0.0", default-features = false, features = ["chrono"]  }
 flate2 = "1.0.30"
 sysinfo = "0.35.1"
 meter-core = { git = "https://github.com/snoww/meter-core-rs", optional = true }
+
+[target.'cfg(not(any(target_os = "android", target_os = "ios")))'.dependencies]
+tauri-plugin-clipboard-manager = "2"
+tauri-plugin-updater = "2.9.0"
+tauri-plugin-opener = "2.4.0"
+tauri-plugin-log = "2"
+tauri-plugin-dialog = "2"
+tauri-plugin-window-state = "2.4.0"
+tauri-plugin-process = "2"
+tauri-plugin-global-shortcut = "2"
+tauri-plugin-single-instance = "2"
 
 [target.'cfg(target_os = "linux")'.dependencies]
 auto-launch = "0.5.0"
@@ -67,3 +72,7 @@ strip = true # Remove debug symbols
 
 [profile.dev.package."*"]
 debug = false # Disable debug symbols for dependencies
+
+[profile.dev]
+incremental = true
+opt-level = 0

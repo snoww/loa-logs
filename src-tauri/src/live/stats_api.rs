@@ -1,17 +1,12 @@
 use crate::live::debug_print;
-use crate::live::encounter_state::EncounterState;
 use crate::live::utils::{boss_to_raid_map, is_valid_player};
-use crate::parser::models::{ArkPassiveData, Encounter, EntityType};
+use crate::parser::models::{ArkPassiveData, Encounter};
 use hashbrown::HashMap;
 use log::warn;
-use moka::sync::Cache;
 use reqwest::Client;
-use serde::de::{MapAccess, Visitor};
-use serde::{Deserialize, Deserializer, Serialize};
+use serde::{Deserialize, Serialize};
 use serde_json::json;
-use std::fmt;
-use std::sync::Arc;
-use tauri::{AppHandle, Manager, Window, Wry};
+use tauri::{AppHandle, Manager};
 
 // pub const API_URL: &str = "http://localhost:5180";
 pub const API_URL: &str = "https://api.snow.xyz";

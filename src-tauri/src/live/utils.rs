@@ -1,4 +1,4 @@
-use crate::live::debug_print;
+use crate::data::*;
 use crate::live::entity_tracker::Entity;
 use crate::live::skill_tracker::{CastEvent, SkillTracker};
 use crate::live::stats_api::InspectInfo;
@@ -62,11 +62,10 @@ pub fn is_support_spec(spec: &str) -> bool {
 }
 
 pub fn is_battle_item(skill_effect_id: &u32, _item_type: &str) -> bool {
-    if let Some(item) = SKILL_EFFECT_DATA.get(skill_effect_id) {
-        if let Some(category) = item.item_type.as_ref() {
+    if let Some(item) = SKILL_EFFECT_DATA.get(skill_effect_id)
+        && let Some(category) = item.item_type.as_ref() {
             return category == "useup";
         }
-    }
     false
 }
 
@@ -147,8 +146,8 @@ pub fn get_status_effect_data(buff_id: u32, source_skill: Option<u32>) -> Option
         }
     } else if buff_category == "set" && buff.set_name.is_some() {
         status_effect.source.set_name.clone_from(&buff.set_name);
-    } else if buff_category == "battleitem" {
-        if let Some(buff_source_item) = SKILL_EFFECT_DATA.get(&buff_id) {
+    } else if buff_category == "battleitem"
+        && let Some(buff_source_item) = SKILL_EFFECT_DATA.get(&buff_id) {
             if let Some(item_name) = buff_source_item.item_name.as_ref() {
                 status_effect.source.name.clone_from(item_name);
             }
@@ -159,7 +158,6 @@ pub fn get_status_effect_data(buff_id: u32, source_skill: Option<u32>) -> Option
                 status_effect.source.icon.clone_from(icon);
             }
         }
-    }
 
     Some(status_effect)
 }
@@ -168,11 +166,10 @@ fn get_summon_source_skill(skill: Option<&SkillData>, status_effect: &mut Status
     if let Some(skill) = skill {
         if let Some(summon_skills) = skill.summon_source_skills.as_ref() {
             let summon_source_skill = summon_skills.first().unwrap_or(&0);
-            if *summon_source_skill > 0 {
-                if let Some(summon_skill) = SKILL_DATA.get(summon_source_skill) {
+            if *summon_source_skill > 0
+                && let Some(summon_skill) = SKILL_DATA.get(summon_source_skill) {
                     status_effect.source.skill = Some(summon_skill.clone());
                 }
-            }
         } else {
             status_effect.source.skill = Some(skill.clone());
         }
@@ -339,8 +336,8 @@ pub fn get_status_effect_buff_type_flags(buff: &SkillBuffData) -> u32 {
                 buff_type |= StatusEffectBuffTypeFlags::COOLDOWN;
             } else if ["skill_mana_reduction", "mana_reduction"].contains(&option_type) {
                 buff_type |= StatusEffectBuffTypeFlags::RESOURCE;
-            } else if option_type == "combat_effect" {
-                if let Some(combat_effect) = COMBAT_EFFECT_DATA.get(&option.key_index) {
+            } else if option_type == "combat_effect"
+                && let Some(combat_effect) = COMBAT_EFFECT_DATA.get(&option.key_index) {
                     for effect in combat_effect.effects.iter() {
                         for action in effect.actions.iter() {
                             if [
@@ -362,7 +359,6 @@ pub fn get_status_effect_buff_type_flags(buff: &SkillBuffData) -> u32 {
                         }
                     }
                 }
-            }
         }
     }
 
@@ -392,7 +388,7 @@ pub fn get_skill_name_and_icon(
             false,
         )
     } else if (skill_effect_id != 0) && (skill_id == 0) {
-        return if let Some(effect) = SKILL_EFFECT_DATA.get(&skill_effect_id) {
+        if let Some(effect) = SKILL_EFFECT_DATA.get(&skill_effect_id) {
             // if ValueJ is greater than 1,
             // 1 = esther, 2 = fixed, 3 = not used, 4 = orb power
             // these effects are not affected by crits or buffs
@@ -434,52 +430,38 @@ pub fn get_skill_name_and_icon(
             }
         } else {
             (skill_id.to_string(), "".to_string(), None, false, false)
-        };
-    } else {
-        return if let Some(skill) = SKILL_DATA.get(&skill_id) {
-            if let Some(summon_source_skill) = skill.summon_source_skills.as_ref() {
-                for source in summon_source_skill {
-                    if skill_tracker
-                        .skill_timestamp
-                        .get(&(entity_id, *source))
-                        .is_some()
-                    {
-                        if let Some(skill) = SKILL_DATA.get(source) {
-                            return (
-                                skill.name.clone().unwrap_or(skill.id.to_string()) + " (Summon)",
-                                skill.icon.clone().unwrap_or_default(),
-                                Some(summon_source_skill.clone()),
-                                false,
-                                skill.is_hyper_awakening,
-                            );
-                        }
+        }
+    } else if let Some(skill) = SKILL_DATA.get(&skill_id) {
+        if let Some(summon_source_skill) = skill.summon_source_skills.as_ref() {
+            for source in summon_source_skill {
+                if skill_tracker
+                    .skill_timestamp
+                    .get(&(entity_id, *source))
+                    .is_some()
+                    && let Some(skill) = SKILL_DATA.get(source) {
+                        return (
+                            skill.name.clone().unwrap_or(skill.id.to_string()) + " (Summon)",
+                            skill.icon.clone().unwrap_or_default(),
+                            Some(summon_source_skill.clone()),
+                            false,
+                            skill.is_hyper_awakening,
+                        );
                     }
-                }
-                if let Some(skill) = SKILL_DATA.get(summon_source_skill.iter().min().unwrap_or(&0))
-                {
-                    (
-                        skill.name.clone().unwrap_or(skill.id.to_string()) + " (Summon)",
-                        skill.icon.clone().unwrap_or_default(),
-                        Some(summon_source_skill.clone()),
-                        false,
-                        skill.is_hyper_awakening,
-                    )
-                } else {
-                    (skill_id.to_string(), "".to_string(), None, false, false)
-                }
-            } else if let Some(source_skill) = skill.source_skills.as_ref() {
-                if let Some(skill) = SKILL_DATA.get(source_skill.iter().min().unwrap_or(&0)) {
-                    (
-                        skill.name.clone().unwrap_or(skill.id.to_string()),
-                        skill.icon.clone().unwrap_or_default(),
-                        None,
-                        false,
-                        skill.is_hyper_awakening,
-                    )
-                } else {
-                    (skill_id.to_string(), "".to_string(), None, false, false)
-                }
+            }
+            if let Some(skill) = SKILL_DATA.get(summon_source_skill.iter().min().unwrap_or(&0))
+            {
+                (
+                    skill.name.clone().unwrap_or(skill.id.to_string()) + " (Summon)",
+                    skill.icon.clone().unwrap_or_default(),
+                    Some(summon_source_skill.clone()),
+                    false,
+                    skill.is_hyper_awakening,
+                )
             } else {
+                (skill_id.to_string(), "".to_string(), None, false, false)
+            }
+        } else if let Some(source_skill) = skill.source_skills.as_ref() {
+            if let Some(skill) = SKILL_DATA.get(source_skill.iter().min().unwrap_or(&0)) {
                 (
                     skill.name.clone().unwrap_or(skill.id.to_string()),
                     skill.icon.clone().unwrap_or_default(),
@@ -487,8 +469,10 @@ pub fn get_skill_name_and_icon(
                     false,
                     skill.is_hyper_awakening,
                 )
+            } else {
+                (skill_id.to_string(), "".to_string(), None, false, false)
             }
-        } else if let Some(skill) = SKILL_DATA.get(&(skill_id - (skill_id % 10))) {
+        } else {
             (
                 skill.name.clone().unwrap_or(skill.id.to_string()),
                 skill.icon.clone().unwrap_or_default(),
@@ -496,9 +480,17 @@ pub fn get_skill_name_and_icon(
                 false,
                 skill.is_hyper_awakening,
             )
-        } else {
-            (skill_id.to_string(), "".to_string(), None, false, false)
-        };
+        }
+    } else if let Some(skill) = SKILL_DATA.get(&(skill_id - (skill_id % 10))) {
+        (
+            skill.name.clone().unwrap_or(skill.id.to_string()),
+            skill.icon.clone().unwrap_or_default(),
+            None,
+            false,
+            skill.is_hyper_awakening,
+        )
+    } else {
+        (skill_id.to_string(), "".to_string(), None, false, false)
     }
 }
 
@@ -1022,8 +1014,8 @@ pub fn insert_data(
                     entity.spec = Some("Princess".to_string());
                 } else if spec == "Unknown" {
                     // not reliable enough to be used on its own
-                    if let Some(tree) = info.ark_passive_data.as_ref() {
-                        if let Some(enlightenment) = tree.enlightenment.as_ref() {
+                    if let Some(tree) = info.ark_passive_data.as_ref()
+                        && let Some(enlightenment) = tree.enlightenment.as_ref() {
                             for node in enlightenment.iter() {
                                 let spec = get_spec_from_ark_passive(node);
                                 if spec != "Unknown" {
@@ -1032,7 +1024,6 @@ pub fn insert_data(
                                 }
                             }
                         }
-                    }
                 }
 
                 if entity.combat_power.is_none() {
