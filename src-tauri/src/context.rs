@@ -2,7 +2,7 @@
 
 use std::path::PathBuf;
 
-use anyhow::{Result, ensure};
+use anyhow::Result;
 
 use crate::constants::*;
 

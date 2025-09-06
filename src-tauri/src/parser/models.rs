@@ -5,11 +5,9 @@ use std::str::FromStr;
 
 use bitflags::bitflags;
 use hashbrown::{HashMap, HashSet};
-use log::error;
 use serde::{Deserialize, Deserializer, Serialize};
 use serde_json::{Map, Value};
 use serde_with::serde_as;
-use serde_with::DefaultOnError;
 
 pub const DB_VERSION: i32 = 5;
 

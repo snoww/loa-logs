@@ -19,7 +19,7 @@ use crate::live::status_tracker::{
     StatusTracker,
 };
 use crate::live::utils::get_class_from_id;
-use crate::parser::models::{DamageData, EntityType, Identity, LocalInfo, LocalPlayer, Settings, TripodIndex, TripodLevel};
+use crate::parser::models::{DamageData, EntityType, Identity, LocalInfo, LocalPlayer, Settings, TripodIndex};
 use anyhow::Result;
 use chrono::Utc;
 use hashbrown::HashMap;
@@ -35,7 +35,7 @@ use std::rc::Rc;
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
 use std::time::{Duration, Instant};
-use tauri::{AppHandle, Emitter, Listener, Manager, Window, Wry};
+use tauri::{AppHandle, Emitter, Listener, Manager};
 use uuid::Uuid;
 
 pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()> {

@@ -28,7 +28,7 @@ use tauri::{
 };
 use tauri_plugin_opener::OpenerExt;
 use tauri_plugin_updater::UpdaterExt;
-use tauri_plugin_window_state::{AppHandleExt, StateFlags, WindowExt};
+use tauri_plugin_window_state::{AppHandleExt, WindowExt};
 use window_vibrancy::{apply_blur, clear_blur};
 
 use crate::constants::*;
