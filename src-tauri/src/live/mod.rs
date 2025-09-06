@@ -19,10 +19,7 @@ use crate::live::status_tracker::{
     StatusTracker,
 };
 use crate::live::utils::get_class_from_id;
-use crate::parser::models::{
-    DamageData, EntityType, Identity, LocalInfo, LocalPlayer, Settings, TripodIndex, TripodLevel,
-    VALID_ZONES,
-};
+use crate::parser::models::{DamageData, EntityType, Identity, LocalInfo, LocalPlayer, Settings, TripodIndex, TripodLevel};
 use anyhow::Result;
 use chrono::Utc;
 use hashbrown::HashMap;
