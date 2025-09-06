@@ -202,30 +202,27 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
             Pkt::CounterAttackNotify => {
                 if let Some(pkt) =
                     parse_pkt(&data, PKTCounterAttackNotify::new, "PKTCounterAttackNotify")
-                {
-                    if let Some(entity) = entity_tracker.entities.get(&pkt.source_id) {
+                    && let Some(entity) = entity_tracker.entities.get(&pkt.source_id) {
                         state.on_counterattack(entity);
                     }
-                }
             }
             Pkt::DeathNotify => {
-                if let Some(pkt) = parse_pkt(&data, PKTDeathNotify::new, "PKTDeathNotify") {
-                    if let Some(entity) = entity_tracker.entities.get(&pkt.target_id) {
+                if let Some(pkt) = parse_pkt(&data, PKTDeathNotify::new, "PKTDeathNotify")
+                    && let Some(entity) = entity_tracker.entities.get(&pkt.target_id) {
                         debug_print(format_args!(
                             "death: {}, {}, {}",
                             entity.name, entity.entity_type, entity.id
                         ));
                         state.on_death(entity);
                     }
-                }
             }
             Pkt::IdentityGaugeChangeNotify => {
                 if let Some(pkt) = parse_pkt(
                     &data,
                     PKTIdentityGaugeChangeNotify::new,
                     "PKTIdentityGaugeChangeNotify",
-                ) {
-                    if emit_details.load(Ordering::Relaxed) {
+                )
+                    && emit_details.load(Ordering::Relaxed) {
                         app.emit(
                             "identity-update",
                             Identity {
@@ -235,7 +232,6 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
                             },
                         )?;
                     }
-                }
             }
             // Pkt::IdentityStanceChangeNotify => {
             //     if let Some(pkt) = parse_pkt(
@@ -329,8 +325,8 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
                 }
             }
             Pkt::NewVehicle => {
-                if let Some(pkt) = parse_pkt(&data, PKTNewVehicle::new, "PKTNewVehicle") {
-                    if let Some(pc_struct) =
+                if let Some(pkt) = parse_pkt(&data, PKTNewVehicle::new, "PKTNewVehicle")
+                    && let Some(pc_struct) =
                         pkt.vehicle_struct.sub_p_k_t_new_vehicle_2_2_397.p_c_struct
                     {
                         let (hp, max_hp) = get_current_and_max_hp(&pc_struct.stat_pairs);
@@ -345,7 +341,6 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
                         ));
                         state.on_new_pc(entity, hp, max_hp);
                     }
-                }
             }
             Pkt::NewNpc => {
                 if let Some(pkt) = parse_pkt(&data, PKTNewNpc::new, "PKTNewNpc") {
@@ -925,8 +920,8 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
                             pkt.value,
                             entity_tracker.local_character_id,
                         );
-                    if let Some(status_effect) = status_effect {
-                        if status_effect.status_effect_type == StatusEffectType::Shield {
+                    if let Some(status_effect) = status_effect
+                        && status_effect.status_effect_type == StatusEffectType::Shield {
                             let change = old_value
                                 .checked_sub(status_effect.value)
                                 .unwrap_or_default();
@@ -938,7 +933,6 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
                                 change,
                             );
                         }
-                    }
                 }
             }
             Pkt::TroopMemberUpdateMinNotify => {
@@ -969,8 +963,8 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
                                     val,
                                     entity_tracker.local_character_id,
                                 );
-                            if let Some(status_effect) = status_effect {
-                                if status_effect.status_effect_type == StatusEffectType::Shield {
+                            if let Some(status_effect) = status_effect
+                                && status_effect.status_effect_type == StatusEffectType::Shield {
                                     let change = old_value
                                         .checked_sub(status_effect.value)
                                         .unwrap_or_default();
@@ -982,7 +976,6 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
                                         change,
                                     );
                                 }
-                            }
                         }
                     }
                 }
@@ -1119,8 +1112,8 @@ fn update_party(
 
     for (entity_id, party_id) in &party_tracker.borrow().entity_id_to_party_id {
         let members = party_info.entry(*party_id).or_insert_with(Vec::new);
-        if let Some(entity) = entity_tracker.entities.get(entity_id) {
-            if entity.character_id > 0
+        if let Some(entity) = entity_tracker.entities.get(entity_id)
+            && entity.character_id > 0
                 && entity.class_id > 0
                 && entity
                     .name
@@ -1131,7 +1124,6 @@ fn update_party(
             {
                 members.push(entity.name.clone());
             }
-        }
     }
 
     let mut sorted_parties = party_info.into_iter().collect::<Vec<(u32, Vec<String>)>>();

@@ -379,8 +379,8 @@ impl EntityTracker {
         };
 
         for member in pkt.party_member_datas {
-            if unknown_local && member.name == most_likely_local_name {
-                if let Some(local_player) = self.entities.get_mut(&self.local_entity_id) {
+            if unknown_local && member.name == most_likely_local_name
+                && let Some(local_player) = self.entities.get_mut(&self.local_entity_id) {
                     unknown_local = false;
                     warn!(
                         "unknown local player, inferring from cache: {}",
@@ -398,17 +398,15 @@ impl EntityTracker {
                         .borrow_mut()
                         .set_name(member.name.clone());
                 }
-            }
 
             let entity_id = self.id_tracker.borrow().get_entity_id(member.character_id);
 
             if let Some(entity_id) = entity_id {
-                if let Some(entity) = self.entities.get_mut(&entity_id) {
-                    if entity.entity_type == PLAYER && entity.name == member.name {
+                if let Some(entity) = self.entities.get_mut(&entity_id)
+                    && entity.entity_type == PLAYER && entity.name == member.name {
                         entity.gear_level = truncate_gear_level(member.gear_level);
                         entity.class_id = member.class_id as u32;
                     }
-                }
 
                 self.party_tracker.borrow_mut().add(
                     pkt.raid_instance_id,

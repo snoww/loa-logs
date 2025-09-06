@@ -274,8 +274,8 @@ impl EncounterState {
                 npc
             });
 
-        if let Some(npc) = self.encounter.entities.get(&entity_name) {
-            if npc.entity_type == EntityType::BOSS {
+        if let Some(npc) = self.encounter.entities.get(&entity_name)
+            && npc.entity_type == EntityType::BOSS {
                 // if current encounter has no boss, we set the boss
                 // if current encounter has a boss, we check if new boss has more max hp, or if current boss is dead
                 self.encounter.current_boss_name = if self
@@ -289,7 +289,6 @@ impl EncounterState {
                     self.encounter.current_boss_name.clone()
                 };
             }
-        }
     }
 
     pub fn on_death(&mut self, dead_entity: &Entity) {
@@ -470,8 +469,8 @@ impl EncounterState {
             .push(relative_timestamp);
 
         // if this is a getup skill and we have an ongoing abnormal move incapacitation, this will end it
-        if let Some(skill_data) = SKILL_DATA.get(&skill_id) {
-            if skill_data.skill_type == "getup" {
+        if let Some(skill_data) = SKILL_DATA.get(&skill_id)
+            && skill_data.skill_type == "getup" {
                 for ongoing_event in entity
                     .damage_stats
                     .incapacitations
@@ -488,7 +487,6 @@ impl EncounterState {
                     ongoing_event.duration = timestamp - ongoing_event.timestamp;
                 }
             }
-        }
 
         // set spec for supports to determine buff source
         if is_support_class(&entity.class_id) && entity.spec.is_none() {
@@ -796,8 +794,8 @@ impl EncounterState {
 
                     // will count dps spec of supports as support buffs until proper spec is determined
                     let hat = is_hat_buff(buff_id);
-                    if (!is_buffed_by_support && !hat) || !is_buffed_by_identity {
-                        if let Some(buff) = self.encounter.encounter_damage_stats.buffs.get(buff_id)
+                    if ((!is_buffed_by_support && !hat) || !is_buffed_by_identity)
+                        && let Some(buff) = self.encounter.encounter_damage_stats.buffs.get(buff_id)
                         {
                             if !is_buffed_by_support
                                 && !hat
@@ -816,7 +814,6 @@ impl EncounterState {
                                 is_buffed_by_identity = true;
                             }
                         }
-                    }
 
                     if !is_buffed_by_hat && is_hat_buff(buff_id) {
                         is_buffed_by_hat = true;
@@ -861,15 +858,14 @@ impl EncounterState {
                                 .insert(*debuff_id);
                         }
                     }
-                    if !is_debuffed_by_support {
-                        if let Some(debuff) =
+                    if !is_debuffed_by_support
+                        && let Some(debuff) =
                             self.encounter.encounter_damage_stats.debuffs.get(debuff_id)
                         {
                             is_debuffed_by_support = debuff.unique_group == 210230 // brand group
                                 && debuff.buff_type & StatusEffectBuffTypeFlags::DMG.bits() != 0
                                 && debuff.target == StatusEffectTarget::PARTY;
                         }
-                    }
                 }
 
                 if is_buffed_by_support && !is_hyper_awakening {
@@ -899,13 +895,11 @@ impl EncounterState {
                         continue;
                     } else if let Some(buff) =
                         self.encounter.encounter_damage_stats.buffs.get(buff_id)
-                    {
-                        if !stabilized_status_active
+                        && !stabilized_status_active
                             && buff.source.name.contains("Stabilized Status")
                         {
                             continue;
                         }
-                    }
 
                     filtered_se_on_source_ids.push(*buff_id);
 

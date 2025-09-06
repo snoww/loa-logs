@@ -140,9 +140,9 @@ impl StatusTracker {
             None => return,
         };
 
-        if let Some(se) = ser.get_mut(&instance_id) {
-            if let Some(duration_ms) = timestamp.checked_sub(se.end_tick) {
-                if duration_ms > 0 && duration_ms < 10_000_000 {
+        if let Some(se) = ser.get_mut(&instance_id)
+            && let Some(duration_ms) = timestamp.checked_sub(se.end_tick)
+                && duration_ms > 0 && duration_ms < 10_000_000 {
                     se.end_tick = timestamp;
                     if let Some(expire_at) = se.expire_at {
                         se.expire_at = Some(
@@ -151,8 +151,6 @@ impl StatusTracker {
                         );
                     }
                 }
-            }
-        }
     }
 
     pub fn sync_status_effect(
@@ -283,7 +281,7 @@ impl StatusTracker {
             Some(ser) => ser,
             None => return Vec::new(),
         };
-        ser.retain(|_, se| se.expire_at.map_or(true, |expire_at| expire_at > timestamp));
+        ser.retain(|_, se| se.expire_at.is_none_or(|expire_at| expire_at > timestamp));
         ser.values().cloned().collect()
     }
 
@@ -403,8 +401,8 @@ pub fn build_status_effect(
             // if skill has multiple source skills, we need to find the one that was last used
             // e.g. bard brands have same buff id, but have different source skills (sound shock, harp)
             // if skills only have one source skill, we dont care about it here and it gets handled later
-            if source_skills.len() > 1 {
-                if let Some(source_entity) = source_entity {
+            if source_skills.len() > 1
+                && let Some(source_entity) = source_entity {
                     let mut last_time = i64::MIN;
                     let mut last_skill = 0_u32;
                     for source_skill in source_skills {
@@ -438,7 +436,6 @@ pub fn build_status_effect(
                         custom_id = get_new_id(last_skill + (effect.id as u32));
                     }
                 }
-            }
         }
     }
 
