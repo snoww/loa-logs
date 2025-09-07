@@ -8,7 +8,7 @@ use crate::constants::DEFAULT_SETTINGS_PATH;
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Settings {
-    pub env: EnvironmentSettings,
+    pub env: Option<EnvironmentSettings>,
     pub general: GeneralSettings,
     #[serde(flatten)]
     pub extra: Map<String, Value>,
@@ -49,19 +49,30 @@ pub struct GeneralSettings {
     pub extra: Map<String, Value>,
 }
 
-fn default_true() -> bool {
-    true
-}
-
 pub struct SettingsManager(PathBuf);
 
 impl SettingsManager {
     pub fn new(path: PathBuf) -> Result<Self> {
 
+        let default_settings = Settings::default();
+
         if !path.exists() {
-            let settings = Settings::default();
             let writer = File::create(&path)?;
-            serde_json::to_writer_pretty(writer, &settings)?;
+            serde_json::to_writer_pretty(writer, &default_settings)?;
+        }
+        else {
+            
+            let mut settings: Settings = {
+                let reader = File::open(&path)?;
+                serde_json::from_reader(reader)?
+            };
+
+            if settings.env.is_none() {
+                settings.env = default_settings.env;
+
+                let writer = File::create(&path)?;
+                serde_json::to_writer_pretty(writer, &settings)?;
+            }
         }
 
         Ok(Self(path))
@@ -80,4 +91,9 @@ impl SettingsManager {
 
         Ok(())
     }
+}
+
+
+fn default_true() -> bool {
+    true
 }
