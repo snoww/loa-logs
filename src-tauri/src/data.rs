@@ -3,7 +3,7 @@ use hashbrown::{HashMap, HashSet};
 use serde::de::DeserializeOwned;
 use std::{fs::File, io::Read, ops::Deref, sync::OnceLock};
 
-use crate::parser::models::*;
+use crate::models::*;
 
 pub static COMBAT_EFFECT_DATA: OnceLockWrapper<HashMap<i32, CombatEffectData>> =
     OnceLockWrapper::new();

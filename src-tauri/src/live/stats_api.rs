@@ -1,6 +1,6 @@
 use crate::live::debug_print;
 use crate::live::utils::{boss_to_raid_map, is_valid_player};
-use crate::parser::models::{ArkPassiveData, Encounter};
+use crate::models::{ArkPassiveData, Encounter};
 use hashbrown::HashMap;
 use log::warn;
 use reqwest::Client;

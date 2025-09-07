@@ -3,17 +3,19 @@
 mod app;
 #[cfg(feature = "meter-core")]
 mod live;
-mod parser;
 mod misc;
 mod context;
 mod constants;
 mod data;
+mod models;
+mod settings;
+mod local;
 
 use anyhow::Result;
 use flate2::read::GzDecoder;
 use hashbrown::HashMap;
 use log::{error, info, warn};
-use parser::models::*;
+use models::*;
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
 use std::{fs, io::Read, path::PathBuf, str::FromStr};
@@ -35,6 +37,7 @@ use crate::constants::*;
 use crate::context::AppContext;
 use crate::data::AssetPreloader;
 use crate::misc::load_windivert;
+use crate::settings::Settings;
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -1102,7 +1105,7 @@ fn load_encounter(app: tauri::AppHandle, id: String) -> Encounter {
                 damage_stats,
                 skill_stats,
                 entity_type: EntityType::from_str(entity_type.as_str())
-                    .unwrap_or(EntityType::UNKNOWN),
+                    .unwrap_or(EntityType::Unknown),
                 npc_id: row.get(12)?,
                 character_id: row.get(13).unwrap_or_default(),
                 engraving_data: engravings,

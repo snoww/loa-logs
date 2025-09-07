@@ -5,7 +5,7 @@ use crate::live::skill_tracker::{CastEvent, SkillTracker};
 use crate::live::stats_api::StatsApi;
 use crate::live::status_tracker::StatusEffectDetails;
 use crate::live::utils::*;
-use crate::parser::models::*;
+use crate::models::*;
 use chrono::Utc;
 use hashbrown::HashMap;
 use log::{info, warn};
@@ -109,8 +109,8 @@ impl EncounterState {
         self.custom_id_map = HashMap::new();
 
         for (key, entity) in clone.entities.into_iter().filter(|(_, e)| {
-            e.entity_type == EntityType::PLAYER
-                || (keep_bosses && e.entity_type == EntityType::BOSS)
+            e.entity_type == EntityType::Player
+                || (keep_bosses && e.entity_type == EntityType::Boss)
         }) {
             self.encounter.entities.insert(
                 key,
@@ -253,14 +253,14 @@ impl EncounterState {
             .entities
             .entry(entity_name.clone())
             .and_modify(|e| {
-                if entity.entity_type != EntityType::BOSS && e.entity_type != EntityType::BOSS {
+                if entity.entity_type != EntityType::Boss && e.entity_type != EntityType::Boss {
                     e.npc_id = entity.npc_id;
                     e.id = entity.id;
                     e.current_hp = hp;
                     e.max_hp = max_hp;
-                } else if entity.entity_type == EntityType::BOSS && e.entity_type == EntityType::NPC
+                } else if entity.entity_type == EntityType::Boss && e.entity_type == EntityType::Npc
                 {
-                    e.entity_type = EntityType::BOSS;
+                    e.entity_type = EntityType::Boss;
                     e.npc_id = entity.npc_id;
                     e.id = entity.id;
                     e.current_hp = hp;
@@ -275,7 +275,7 @@ impl EncounterState {
             });
 
         if let Some(npc) = self.encounter.entities.get(&entity_name)
-            && npc.entity_type == EntityType::BOSS {
+            && npc.entity_type == EntityType::Boss {
                 // if current encounter has no boss, we set the boss
                 // if current encounter has a boss, we check if new boss has more max hp, or if current boss is dead
                 self.encounter.current_boss_name = if self
@@ -298,16 +298,16 @@ impl EncounterState {
             .entry(dead_entity.name.clone())
             .or_insert_with(|| encounter_entity_from_entity(dead_entity));
 
-        if (dead_entity.entity_type != EntityType::PLAYER
-            && dead_entity.entity_type != EntityType::BOSS)
+        if (dead_entity.entity_type != EntityType::Player
+            && dead_entity.entity_type != EntityType::Boss)
             || entity.id != dead_entity.id
-            || (entity.entity_type == EntityType::BOSS && entity.npc_id != dead_entity.npc_id)
+            || (entity.entity_type == EntityType::Boss && entity.npc_id != dead_entity.npc_id)
         {
             return;
         }
 
-        if entity.entity_type == EntityType::BOSS
-            && dead_entity.entity_type == EntityType::BOSS
+        if entity.entity_type == EntityType::Boss
+            && dead_entity.entity_type == EntityType::Boss
             && entity.name == self.encounter.current_boss_name
             && !entity.is_dead
         {
@@ -416,7 +416,7 @@ impl EncounterState {
             });
 
         if entity.class_id == 0
-            && source_entity.entity_type == EntityType::PLAYER
+            && source_entity.entity_type == EntityType::Player
             && source_entity.class_id > 0
         {
             entity.class_id = source_entity.class_id;
@@ -555,7 +555,7 @@ impl EncounterState {
 
         let mut skill_effect_id = damage_data.skill_effect_id;
         let is_battle_item = is_battle_item(&proj_entity.skill_effect_id, "attack");
-        if proj_entity.entity_type == EntityType::PROJECTILE && is_battle_item {
+        if proj_entity.entity_type == EntityType::Projectile && is_battle_item {
             skill_effect_id = proj_entity.skill_effect_id;
         }
 
@@ -597,10 +597,10 @@ impl EncounterState {
         // check if target is boss and not player
         // check if target is player and source is boss
         if self.boss_only_damage
-            && ((target_entity.entity_type != EntityType::BOSS
-                && target_entity.entity_type != EntityType::PLAYER)
-                || (target_entity.entity_type == EntityType::PLAYER
-                    && source_entity.entity_type != EntityType::BOSS))
+            && ((target_entity.entity_type != EntityType::Boss
+                && target_entity.entity_type != EntityType::Player)
+                || (target_entity.entity_type == EntityType::Player
+                    && source_entity.entity_type != EntityType::Boss))
         {
             return;
         }
@@ -608,7 +608,7 @@ impl EncounterState {
         if self.encounter.fight_start == 0 {
             self.encounter.fight_start = timestamp;
             self.skill_tracker.fight_start = timestamp;
-            if source_entity.entity_type == EntityType::PLAYER && damage_data.skill_id > 0 {
+            if source_entity.entity_type == EntityType::Player && damage_data.skill_id > 0 {
                 self.skill_tracker.new_cast(
                     source_entity.id,
                     damage_data.skill_id,
@@ -639,7 +639,7 @@ impl EncounterState {
         }
 
         let mut damage = damage_data.damage + damage_data.shield_damage.unwrap_or(0);
-        if target_entity.entity_type != EntityType::PLAYER && damage_data.target_current_hp < 0 {
+        if target_entity.entity_type != EntityType::Player && damage_data.target_current_hp < 0 {
             damage += damage_data.target_current_hp;
         }
 
@@ -734,7 +734,7 @@ impl EncounterState {
             skill_hit.front_attack = true;
         }
 
-        if source_entity.entity_type == EntityType::PLAYER {
+        if source_entity.entity_type == EntityType::Player {
             self.encounter.encounter_damage_stats.total_damage_dealt += damage;
             self.encounter.encounter_damage_stats.top_damage_dealt = max(
                 self.encounter.encounter_damage_stats.top_damage_dealt,
@@ -941,7 +941,7 @@ impl EncounterState {
             }
         }
 
-        if target_entity.entity_type == EntityType::PLAYER {
+        if target_entity.entity_type == EntityType::Player {
             self.encounter.encounter_damage_stats.total_damage_taken += damage;
             self.encounter.encounter_damage_stats.top_damage_taken = max(
                 self.encounter.encounter_damage_stats.top_damage_taken,
@@ -949,7 +949,7 @@ impl EncounterState {
             );
         }
         // update current_boss
-        else if target_entity.entity_type == EntityType::BOSS {
+        else if target_entity.entity_type == EntityType::Boss {
             self.encounter
                 .current_boss_name
                 .clone_from(&target_entity.name);
@@ -1016,7 +1016,7 @@ impl EncounterState {
         movement: &SkillMoveOptionData,
         timestamp: i64,
     ) {
-        if victim_entity.entity_type != EntityType::PLAYER {
+        if victim_entity.entity_type != EntityType::Player {
             // we don't care about npc knockups
             return;
         }
@@ -1248,7 +1248,7 @@ impl EncounterState {
     // }
 
     pub fn on_boss_shield(&mut self, target_entity: &Entity, shield: u64) {
-        if target_entity.entity_type == EntityType::BOSS
+        if target_entity.entity_type == EntityType::Boss
             && target_entity.name == self.encounter.current_boss_name
         {
             self.encounter
@@ -1267,8 +1267,8 @@ impl EncounterState {
         buff_id: u32,
         shield: u64,
     ) {
-        if source_entity.entity_type == EntityType::PLAYER
-            && target_entity.entity_type == EntityType::PLAYER
+        if source_entity.entity_type == EntityType::Player
+            && target_entity.entity_type == EntityType::Player
         {
             if !self
                 .encounter
@@ -1362,8 +1362,8 @@ impl EncounterState {
         buff_id: u32,
         shield_removed: u64,
     ) {
-        if source_entity.entity_type == EntityType::PLAYER
-            && target_entity.entity_type == EntityType::PLAYER
+        if source_entity.entity_type == EntityType::Player
+            && target_entity.entity_type == EntityType::Player
         {
             self.encounter
                 .encounter_damage_stats
@@ -1439,7 +1439,7 @@ impl EncounterState {
                     .entities
                     .contains_key(&self.encounter.current_boss_name)
                 || !self.encounter.entities.values().any(|e| {
-                    e.entity_type == EntityType::PLAYER && e.damage_stats.damage_dealt > 0
+                    e.entity_type == EntityType::Player && e.damage_stats.damage_dealt > 0
                 }))
         {
             info!("not saving to db, no players with damage dealt");

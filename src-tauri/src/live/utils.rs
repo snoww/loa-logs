@@ -1,9 +1,10 @@
+use crate::constants::DB_VERSION;
 use crate::data::*;
 use crate::live::entity_tracker::Entity;
 use crate::live::skill_tracker::{CastEvent, SkillTracker};
 use crate::live::stats_api::InspectInfo;
 use crate::live::status_tracker::StatusEffectDetails;
-use crate::parser::models::*;
+use crate::models::*;
 use flate2::write::GzEncoder;
 use flate2::Compression;
 use hashbrown::HashMap;
@@ -931,13 +932,13 @@ pub fn insert_data(
     }
 
     for (_key, entity) in encounter.entities.iter_mut().filter(|(_, e)| {
-        ((e.entity_type == EntityType::PLAYER && e.class_id > 0)
+        ((e.entity_type == EntityType::Player && e.class_id > 0)
             || e.name == encounter.local_player
-            || e.entity_type == EntityType::ESTHER
-            || (e.entity_type == EntityType::BOSS && e.max_hp > 0))
+            || e.entity_type == EntityType::Esther
+            || (e.entity_type == EntityType::Boss && e.max_hp > 0))
             && e.damage_stats.damage_dealt > 0
     }) {
-        if entity.entity_type == EntityType::PLAYER {
+        if entity.entity_type == EntityType::Player {
             let intervals = generate_intervals(fight_start, fight_end);
             if let Some(damage_log) = damage_log.get(&entity.name) {
                 if !intervals.is_empty() {
@@ -1142,7 +1143,7 @@ pub fn insert_data(
         .entities
         .values()
         .filter(|e| {
-            ((e.entity_type == EntityType::PLAYER && e.class_id != 0 && e.max_hp > 0)
+            ((e.entity_type == EntityType::Player && e.class_id != 0 && e.max_hp > 0)
                 || e.name == encounter.local_player)
                 && e.damage_stats.damage_dealt > 0
         })
@@ -1205,7 +1206,7 @@ pub fn map_status_effect(se: &StatusEffectDetails, custom_id_map: &mut HashMap<u
 
 pub fn is_valid_player(player: &EncounterEntity) -> bool {
     player.gear_score >= 0.0
-        && player.entity_type == EntityType::PLAYER
+        && player.entity_type == EntityType::Player
         && player.character_id != 0
         && player.class_id != 0
         && player.name != "You"
