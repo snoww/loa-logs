@@ -39,19 +39,7 @@ use crate::misc::load_windivert;
 #[tokio::main]
 async fn main() -> Result<()> {
     let _ = app::logger::init();
-    // setup panic hook
-    std::panic::set_hook(Box::new(|info| {
-        let payload = if let Some(s) = info.payload().downcast_ref::<&str>() {
-            (*s).to_string()
-        } else if let Some(s) = info.payload().downcast_ref::<String>() {
-            s.clone()
-        } else {
-            "non-string panic payload".to_string()
-        };
-        error!("Panicked: {:?}, location: {:?}", payload, info.location());
-
-        log::logger().flush();
-    }));
+    app::panic::set_hook();
 
     let context = AppContext::new()?;
     load_windivert(&context.current_dir).expect("could not load windivert dependencies");
