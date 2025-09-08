@@ -38,7 +38,7 @@ use crate::misc::load_windivert;
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    app::logger::init();
+    let _ = app::logger::init();
     // setup panic hook
     std::panic::set_hook(Box::new(|info| {
         let payload = if let Some(s) = info.payload().downcast_ref::<&str>() {
@@ -50,7 +50,7 @@ async fn main() -> Result<()> {
         };
         error!("Panicked: {:?}, location: {:?}", payload, info.location());
 
-        app::logger::get_logger().unwrap().flush();
+        log::logger().flush();
     }));
 
     let context = AppContext::new()?;
