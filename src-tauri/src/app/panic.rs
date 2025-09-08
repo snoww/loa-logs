@@ -28,18 +28,30 @@ If the issue persists, report it to the developers in Discord.
 
 pub fn set_hook() {
     std::panic::set_hook(Box::new(|info| {
-        let payload = if let Some(s) = info.payload().downcast_ref::<&str>() {
-            (*s).to_string()
-        } else if let Some(s) = info.payload().downcast_ref::<String>() {
-            s.clone()
+        let message = if let Some(location) = info.location()
+            && let Some(payload) = payload_as_str(info)
+        {
+            format!("panicked at {location}: {payload}")
         } else {
-            "non-string panic payload".to_string()
+            format!("panicked: {info:?}")
         };
-        log::error!("Panicked: {:?}, location: {:?}", payload, info.location());
+        log::error!("{message}");
         log::logger().flush();
 
         if !cfg!(debug_assertions) {
             app::panic::show_dialog_on_panic(info);
         }
     }));
+}
+
+/// replace with `PanicHookInfo::payload_as_str()` when stabilized
+/// in 1.91.0 https://github.com/rust-lang/rust/pull/144861
+fn payload_as_str<'a>(info: &'a std::panic::PanicHookInfo) -> Option<&'a str> {
+    if let Some(s) = info.payload().downcast_ref::<&str>() {
+        Some(s)
+    } else if let Some(s) = info.payload().downcast_ref::<String>() {
+        Some(s)
+    } else {
+        None
+    }
 }
