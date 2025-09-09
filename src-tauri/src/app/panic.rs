@@ -7,11 +7,12 @@ pub fn show_dialog_on_panic(app: &tauri::AppHandle, panic_info: &std::panic::Pan
     const LOG_FILENAME: &str = "loa_logs_rCURRENT.log";
     const BUTTON_OPEN: &str = "Reveal Log File";
 
+    let version = &app.package_info().version;
     let dialog = MessageDialog::new()
         .set_title("An Unexpected Error")
         .set_description(format!(
             r#"
-LOA Logs has {panic_info}
+LOA Logs v{version} has {panic_info}
 
 There's a log file named "{LOG_FILENAME}" next to executale.
 
