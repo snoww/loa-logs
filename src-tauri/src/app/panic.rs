@@ -1,33 +1,39 @@
 use rfd::{MessageButtons, MessageDialog, MessageDialogResult, MessageLevel};
-use tauri_plugin_opener::open_path;
+use tauri_plugin_opener::OpenerExt;
 
 use crate::app;
 
-pub fn show_dialog_on_panic(panic_info: &std::panic::PanicHookInfo) {
-    let open_button = "Open Logs Folder";
+pub fn show_dialog_on_panic(app: &tauri::AppHandle, panic_info: &std::panic::PanicHookInfo) {
+    const LOG_FILENAME: &str = "loa_logs_rCURRENT.log";
+    const BUTTON_OPEN: &str = "Reveal Log File";
 
     let dialog = MessageDialog::new()
         .set_title("An Unexpected Error")
-        .set_description(format!(r#"
+        .set_description(format!(
+            r#"
 LOA Logs has {panic_info}
 
-There's a log file named "loa_logs_rCURRENT.log" next to executale.
+There's a log file named "{LOG_FILENAME}" next to executale.
 
 If the issue persists, report it to the developers in Discord.
-        "#))
+        "#
+        ))
         .set_level(MessageLevel::Error)
-        .set_buttons(MessageButtons::OkCustom(open_button.to_string()));
+        .set_buttons(MessageButtons::OkCustom(BUTTON_OPEN.to_string()));
 
     let result = dialog.show();
-    if cfg!(target_os = "windows") && result == MessageDialogResult::Custom(open_button.to_string())
+    if cfg!(target_os = "windows") && result == MessageDialogResult::Custom(BUTTON_OPEN.to_string())
         || cfg!(target_os = "linux") && result == MessageDialogResult::Ok
     {
-        let _ = open_path(app::path::log_dir(), None::<&str>);
+        let log_path = app::path::log_dir().join(LOG_FILENAME);
+        let _ = app.opener().reveal_item_in_dir(log_path);
     }
 }
 
-pub fn set_hook() {
-    std::panic::set_hook(Box::new(|info| {
+pub fn set_hook(app: &tauri::AppHandle) {
+    let app = app.clone();
+    
+    std::panic::set_hook(Box::new(move |info| {
         let message = if let Some(location) = info.location()
             && let Some(payload) = payload_as_str(info)
         {
@@ -39,7 +45,7 @@ pub fn set_hook() {
         log::logger().flush();
 
         if !cfg!(debug_assertions) {
-            app::panic::show_dialog_on_panic(info);
+            app::panic::show_dialog_on_panic(&app, info);
         }
     }));
 }

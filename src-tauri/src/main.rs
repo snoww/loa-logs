@@ -38,9 +38,7 @@ use crate::misc::load_windivert;
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let _ = app::logger::init();
-    app::panic::set_hook();
-
+    let _ = app::logger::init()?;
     let context = AppContext::new()?;
     load_windivert(&context.current_dir).expect("could not load windivert dependencies");
     // load meter-data
@@ -60,6 +58,7 @@ async fn main() -> Result<()> {
         )
         .setup(|app| {
             info!("starting app v{}", app.package_info().version);
+            app::panic::set_hook(app.handle());
 
             if let Err(e) = setup_db(app.handle()) {
                 warn!("error setting up database: {e}");
