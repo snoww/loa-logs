@@ -1,6 +1,6 @@
 <script lang="ts">
   import Toaster from "$lib/components/Toaster.svelte";
-  import { settings, type LogSettings } from "$lib/stores.svelte";
+  import { settings } from "$lib/stores.svelte";
   import { setup } from "$lib/utils/setup";
   import { registerShortcuts } from "$lib/utils/shortcuts";
   import { invoke } from "@tauri-apps/api/core";
@@ -8,6 +8,7 @@
   import { unregisterAll } from "@tauri-apps/plugin-global-shortcut";
   import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
   import { onMount } from "svelte";
+  import type { AppSettings } from "$lib/settings";
 
   let { children }: { children?: import("svelte").Snippet } = $props();
 
@@ -15,7 +16,7 @@
     setup();
     (async () => {
       await invoke("write_log", { message: "setting up live meter" });
-      let data = (await invoke("get_settings")) as LogSettings;
+      let data = (await invoke("get_settings")) as AppSettings;
       if (data) {
         settings.app = data;
       }

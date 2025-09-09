@@ -37,10 +37,11 @@ use crate::constants::*;
 use crate::context::AppContext;
 use crate::data::AssetPreloader;
 use crate::misc::load_windivert;
-use crate::settings::Settings;
+use crate::settings::{Settings, SettingsManager};
 
 #[tokio::main]
 async fn main() -> Result<()> {
+    let tauri_context = tauri::generate_context!();
     // initialize logger
     app::init();
     // setup panic hook
@@ -58,11 +59,14 @@ async fn main() -> Result<()> {
     }));
 
     let context = AppContext::new()?;
+    let package_info = tauri_context.package_info();
+    let settings_manager = SettingsManager::new(package_info.version.to_string(), context.settings_path).expect("could not create settings");
     load_windivert(&context.current_dir).expect("could not load windivert dependencies");
     // load meter-data
     AssetPreloader::new()?;
 
     tauri::Builder::default()
+        .manage(settings_manager)
         .plugin(tauri_plugin_clipboard_manager::init())
         .plugin(tauri_plugin_global_shortcut::Builder::new().build())
         .plugin(tauri_plugin_opener::init())
@@ -228,6 +232,7 @@ async fn main() -> Result<()> {
             _ => {}
         })
         .invoke_handler(tauri::generate_handler![
+            load,
             load_encounters_preview,
             load_encounter,
             get_encounter_count,
@@ -261,7 +266,7 @@ async fn main() -> Result<()> {
             remove_driver,
             unload_driver,
         ])
-        .run(tauri::generate_context!())
+        .run(tauri_context)
         .expect("error while running application");
 
     Ok(())
@@ -684,6 +689,14 @@ fn migration_buff_summary(tx: &Transaction) -> Result<(), rusqlite::Error> {
     }
 
     stmt.finalize()
+}
+
+#[tauri::command]
+fn load(settings_manager: State<SettingsManager>) -> LoadResult {
+
+    LoadResult {
+        settings: settings_manager.read().unwrap()
+    }
 }
 
 #[tauri::command]

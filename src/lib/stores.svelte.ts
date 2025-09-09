@@ -5,6 +5,7 @@ import { time } from "echarts/core";
 import MarkdownIt from "markdown-it";
 import { SvelteSet } from "svelte/reactivity";
 import { readable } from "svelte/store";
+import type { AppSettings } from "./settings";
 
 /**
  * Merge settings from local storage into default settings.
@@ -22,29 +23,23 @@ export const mergeSettings = (defaultSettings: any, storageSettings: any) => {
 };
 
 class Settings {
-  app = $state(defaultSettings);
+  app: AppSettings = $state({} as any)!;
   sync = $state(syncSettings);
   classColors = $state<Record<string, string>>(defaultClassColors);
   version = $state("");
   lockUpdate = false;
 
+  set(settings: AppSettings) {
+    Object.assign(this.app, settings);
+  }
+
   constructor() {
     if (!browser) return;
 
     if (localStorage) {
-      const updateSettings = (settings: string | null, init = false) => {
+      const updateSettings = (settings: AppSettings) => {
         this.lockUpdate = true;
-        if (settings) {
-          try {
-            const settingsFromStorage = JSON.parse(settings) as LogSettings;
-            mergeSettings(this.app, settingsFromStorage);
-            if (!init) {
-              invoke("save_settings", { settings: this.app });
-            }
-          } catch (e) {
-            console.error(e);
-          }
-        }
+        invoke("save_settings", { settings });
         this.lockUpdate = false;
       };
 
@@ -82,15 +77,18 @@ class Settings {
         this.lockUpdate = false;
       };
 
-      updateSettings(localStorage.getItem("appSettings"), true);
       updateClassColors(localStorage.getItem("classColors"));
       updateSyncSettings(localStorage.getItem("syncSettings"));
       updateVersion(localStorage.getItem("version"));
 
+      let hasLoaded = $derived(Object.keys(this.app).length > 0);
+
       $effect.root(() => {
         $effect(() => {
-          if (this.lockUpdate) return;
-          localStorage.setItem("appSettings", JSON.stringify(this.app));
+          if(!hasLoaded) {
+            return;
+          }
+          updateSettings(this.app);
         });
         $effect(() => {
           if (this.lockUpdate) return;
@@ -106,11 +104,11 @@ class Settings {
         });
       });
 
-      window.addEventListener("storage", (e) => {
+      window.addEventListener("storage", (event: StorageEvent) => {
         if (this.lockUpdate) return;
-        const { key, newValue, storageArea } = e;
+        const { key, newValue, storageArea } = event;
         if (storageArea !== localStorage) return;
-        if (key === "appSettings") updateSettings(newValue);
+
         else if (key === "classColors") updateClassColors(newValue);
         else if (key === "syncSettings") updateSyncSettings(newValue);
         else if (key === "version") updateVersion(newValue);
@@ -135,7 +133,11 @@ export class EncounterFilter {
   difficulty = $state("");
   sort: sortColumns = $state("id");
   order: sortOrder = $state("desc");
-  minDuration = $derived(settings.app.logs.minEncounterDuration);
+  minDuration = $derived(30);
+
+  setMinDuration(minDuration: number) {
+    this.minDuration = minDuration;
+  }
 
   reset() {
     this.search = "";
@@ -149,154 +151,6 @@ export class EncounterFilter {
     this.order = "desc";
   }
 }
-
-export type LogSettings = typeof defaultSettings;
-export const defaultSettings = {
-  general: {
-    startLoaOnStart: false,
-    lowPerformanceMode: false,
-    showNames: true,
-    showGearScore: true,
-    hideNames: false,
-    showEsther: true,
-    hideLogo: false,
-    showDate: true,
-    showDifficulty: true,
-    showGate: false,
-    showDetails: false,
-    showShields: true,
-    showTanked: false,
-    showBosses: false,
-    showRaidsOnly: true,
-    splitLines: true,
-    underlineHovered: false,
-    accentColor: "theme-violet",
-    autoIface: true,
-    port: 6040,
-    blur: true,
-    blurWin11: false,
-    isWin11: false,
-    transparent: true,
-    scale: "1",
-    logScale: "1",
-    alwaysOnTop: true,
-    bossOnlyDamage: true,
-    keepFavorites: true,
-    hideMeterOnStart: false,
-    hideLogsOnStart: false,
-    constantLocalPlayerColor: false,
-    bossOnlyDamageDefaultOn: true,
-    startOnBoot: false,
-    logsPerPage: 10,
-    experimentalFeatures: false,
-    mini: false,
-    miniEdit: true,
-    autoShow: false,
-    autoHideDelay: 5
-  },
-  shortcuts: {
-    hideMeter: "Control+ArrowDown",
-    showLogs: "Control+ArrowUp",
-    showLatestEncounter: "",
-    resetSession: "",
-    pauseSession: "",
-    manualSave: "",
-    disableClickthrough: ""
-  },
-  meter: {
-    bossInfo: true,
-    bossHpBar: true,
-    splitBossHpBar: false,
-    showTimeUntilKill: false,
-    splitPartyBuffs: true,
-    showClassColors: true,
-    profileShortcut: false,
-    damage: false,
-    dps: true,
-    damagePercent: true,
-    deathTime: false,
-    incapacitatedTime: false,
-    critRate: true,
-    critDmg: false,
-    frontAtk: true,
-    backAtk: true,
-    counters: false,
-    pinSelfParty: false,
-    positionalDmgPercent: true,
-    percentBuffBySup: true,
-    percentIdentityBySup: true,
-    percentBrand: true,
-    percentHatBySup: true,
-    breakdown: {
-      damage: true,
-      dps: true,
-      damagePercent: true,
-      critRate: true,
-      critDmg: false,
-      frontAtk: true,
-      backAtk: true,
-      avgDamage: false,
-      maxDamage: true,
-      casts: true,
-      cpm: true,
-      hits: false,
-      hpm: false,
-      percentBuffBySup: false,
-      percentIdentityBySup: false,
-      percentBrand: false,
-      percentHatBySup: false
-    }
-  },
-  mini: {
-    info: "damage",
-    bossHpBar: false
-  },
-  logs: {
-    abbreviateHeader: false,
-    splitPartyDamage: true,
-    splitPartyBuffs: true,
-    profileShortcut: true,
-    damage: true,
-    dps: true,
-    damagePercent: true,
-    deathTime: true,
-    incapacitatedTime: true,
-    critRate: true,
-    critDmg: false,
-    frontAtk: true,
-    backAtk: true,
-    counters: true,
-    minEncounterDuration: 30,
-    positionalDmgPercent: true,
-    percentBuffBySup: true,
-    percentIdentityBySup: true,
-    percentHatBySup: true,
-    percentBrand: true,
-    breakdown: {
-      damage: true,
-      dps: true,
-      damagePercent: true,
-      critRate: true,
-      adjustedCritRate: true,
-      critDmg: false,
-      frontAtk: true,
-      backAtk: true,
-      avgDamage: true,
-      maxDamage: true,
-      casts: true,
-      cpm: true,
-      hits: true,
-      hpm: true,
-      percentBuffBySup: false,
-      percentIdentityBySup: false,
-      percentBrand: false,
-      percentHatBySup: false
-    }
-  },
-  buffs: {
-    default: true
-  }
-};
 
 export type SyncSettings = typeof syncSettings;
 export const syncSettings = {
