@@ -38,22 +38,7 @@ use crate::misc::load_windivert;
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    // initialize logger
-    app::init();
-    // setup panic hook
-    std::panic::set_hook(Box::new(|info| {
-        let payload = if let Some(s) = info.payload().downcast_ref::<&str>() {
-            (*s).to_string()
-        } else if let Some(s) = info.payload().downcast_ref::<String>() {
-            s.clone()
-        } else {
-            "non-string panic payload".to_string()
-        };
-        error!("Panicked: {:?}, location: {:?}", payload, info.location());
-
-        app::get_logger().unwrap().flush();
-    }));
-
+    let _ = app::logger::init()?;
     let context = AppContext::new()?;
     load_windivert(&context.current_dir).expect("could not load windivert dependencies");
     // load meter-data
@@ -73,6 +58,7 @@ async fn main() -> Result<()> {
         )
         .setup(|app| {
             info!("starting app v{}", app.package_info().version);
+            app::panic::set_hook(app.handle());
 
             if let Err(e) = setup_db(app.handle()) {
                 warn!("error setting up database: {e}");

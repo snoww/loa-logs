@@ -33,7 +33,8 @@ flexi_logger = { version = "0.30.2", default-features = false }
 reqwest = { version = "0.12", features = ["json", "gzip"] }
 uuid = { version = "1.17.0", features = ["v4"] }
 moka = { version = "0.12.7", features = ["sync"] }
-rsntp = { version = "4.0.0", default-features = false, features = ["chrono"]  }
+rfd = { version = "0.15", features = ["common-controls-v6"] }
+rsntp = { version = "4.0.0", default-features = false, features = ["chrono"] }
 flate2 = "1.0.30"
 sysinfo = "0.35.1"
 meter-core = { git = "https://github.com/snoww/meter-core-rs", optional = true }
@@ -43,7 +44,6 @@ tauri-plugin-clipboard-manager = "2"
 tauri-plugin-updater = "2.9.0"
 tauri-plugin-opener = "2.4.0"
 tauri-plugin-log = "2"
-tauri-plugin-dialog = "2"
 tauri-plugin-window-state = "2.4.0"
 tauri-plugin-process = "2"
 tauri-plugin-global-shortcut = "2"
