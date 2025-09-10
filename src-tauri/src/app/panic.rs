@@ -14,9 +14,9 @@ pub fn show_dialog_on_panic(app: &tauri::AppHandle, panic_info: &std::panic::Pan
             r#"
 LOA Logs v{version} has {panic_info}
 
-There's a log file named "{LOG_FILENAME}" next to executale.
+There's a log file named "{LOG_FILENAME}" next to the executable.
 
-If the issue persists, report it to the developers in Discord.
+If the issue persists, report it to the developers on Discord.
         "#
         ))
         .set_level(MessageLevel::Error)
