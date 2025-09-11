@@ -41,8 +41,6 @@ use crate::settings::{Settings, SettingsManager};
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    // removes white background on tauri start https://github.com/tauri-apps/tauri/issues/5143
-    unsafe { std::env::set_var("WEBKIT_DISABLE_COMPOSITING_MODE", "1") };
     let _ = app::logger::init()?;
     let tauri_context = tauri::generate_context!();
     let context = AppContext::new()?;
