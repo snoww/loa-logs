@@ -16,19 +16,24 @@
 
   let { children }: Props = $props();
   let isLoading = $state(true);
+  let progress = $state(0);
 
   onMount(async () => {
     const loadResult = await invoke<LoadResult>("load");
     settings.set(loadResult.settings);
     encounterFilter.setMinDuration(loadResult.settings.logs.minEncounterDuration)
-    isLoading = false;
+    progress = 100;
+
+    setTimeout(() => {
+      isLoading = false;
+    }, 100);
 
   });
 </script>
 
 <svelte:window oncontextmenu={(e) => e.preventDefault()} />
   {#if isLoading}
-    <Loader />
+    <Loader progress={progress} />
   {:else}
     <div class="{settings.app.general.accentColor} text-sm text-white">
       {@render children?.()}
