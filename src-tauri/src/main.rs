@@ -229,7 +229,6 @@ async fn main() -> Result<()> {
             toggle_logs_window,
             open_url,
             save_settings,
-            get_settings,
             open_db_path,
             delete_encounters_below_min_duration,
             get_db_info,
@@ -1311,11 +1310,6 @@ fn read_settings(app: &tauri::AppHandle) -> Result<Settings, Box<dyn std::error:
     let contents = fs::read_to_string(path)?;
     let settings = serde_json::from_str(&contents)?;
     Ok(settings)
-}
-
-#[tauri::command]
-fn get_settings(app: tauri::AppHandle) -> Option<Settings> {
-    read_settings(&app).ok()
 }
 
 #[tauri::command]
