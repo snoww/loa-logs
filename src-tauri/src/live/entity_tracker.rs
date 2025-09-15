@@ -5,8 +5,9 @@ use crate::live::status_tracker::{
     build_status_effect, StatusEffectDetails, StatusEffectTargetType, StatusEffectType,
     StatusTracker,
 };
-use crate::parser::models::EntityType::*;
-use crate::parser::models::{EncounterEntity, EntityType, Esther, LocalInfo, LocalPlayer};
+use crate::local::{LocalInfo, LocalPlayer};
+use crate::models::EntityType::*;
+use crate::models::{EncounterEntity, EntityType, Esther};
 
 use chrono::{DateTime, Utc};
 use hashbrown::HashMap;
@@ -68,7 +69,7 @@ impl EntityTracker {
             .get(&self.local_entity_id)
             .cloned()
             .unwrap_or_else(|| Entity {
-                entity_type: PLAYER,
+                entity_type: Player,
                 name: "You".to_string(),
                 class_id: 0,
                 gear_level: 0.0,
@@ -99,7 +100,7 @@ impl EntityTracker {
     pub fn init_pc(&mut self, pkt: PKTInitPC) -> Entity {
         let player = Entity {
             id: pkt.player_id,
-            entity_type: PLAYER,
+            entity_type: Player,
             name: pkt.name,
             class_id: pkt.class_id as u32,
             gear_level: truncate_gear_level(pkt.gear_level),
@@ -160,7 +161,7 @@ impl EntityTracker {
     //             e.character_id = char_id;
     //         })
     //         .or_insert_with(|| Entity {
-    //             entity_type: PLAYER,
+    //             entity_type: Player,
     //             name: "You".to_string(),
     //             character_id: char_id,
     //             ..Default::default()
@@ -170,7 +171,7 @@ impl EntityTracker {
     pub fn new_pc(&mut self, pc_struct: PCStruct) -> Entity {
         let entity = Entity {
             id: pc_struct.player_id,
-            entity_type: PLAYER,
+            entity_type: Player,
             name: pc_struct.name.clone(),
             class_id: pc_struct.class_id as u32,
             gear_level: truncate_gear_level(pc_struct.max_item_level), // todo?
@@ -222,7 +223,7 @@ impl EntityTracker {
             grade,
             npc_id: pkt.npc_struct.type_id,
             level: pkt.npc_struct.level,
-            push_immune: entity_type == BOSS,
+            push_immune: entity_type == Boss,
             stats: pkt
                 .npc_struct
                 .stat_pairs
@@ -239,8 +240,8 @@ impl EntityTracker {
 
     pub fn new_npc_summon(&mut self, pkt: PKTNewNpcSummon, max_hp: i64) -> Entity {
         let (entity_type, name, grade) = get_npc_entity_type_name_grade(&pkt.npc_struct, max_hp);
-        let entity_type = if entity_type == NPC {
-            SUMMON
+        let entity_type = if entity_type == Npc {
+            Summon
         } else {
             entity_type
         };
@@ -252,7 +253,7 @@ impl EntityTracker {
             npc_id: pkt.npc_struct.type_id,
             owner_id: pkt.owner_id,
             level: pkt.npc_struct.level,
-            push_immune: entity_type == BOSS,
+            push_immune: entity_type == Boss,
             stats: pkt
                 .npc_struct
                 .stat_pairs
@@ -316,7 +317,7 @@ impl EntityTracker {
     pub fn new_projectile(&mut self, pkt: &PKTNewProjectile) {
         let projectile = Entity {
             id: pkt.projectile_info.projectile_id,
-            entity_type: PROJECTILE,
+            entity_type: EntityType::Projectile,
             name: format!("{:x}", pkt.projectile_info.projectile_id),
             owner_id: pkt.projectile_info.owner_id,
             skill_id: pkt.projectile_info.skill_id,
@@ -329,7 +330,7 @@ impl EntityTracker {
     pub fn new_trap(&mut self, pkt: &PKTNewTrap) {
         let trap: Entity = Entity {
             id: pkt.trap_struct.object_id,
-            entity_type: PROJECTILE,
+            entity_type: EntityType::Projectile,
             name: format!("{:x}", pkt.trap_struct.object_id),
             owner_id: pkt.trap_struct.owner_id,
             skill_id: pkt.trap_struct.skill_id,
@@ -386,7 +387,7 @@ impl EntityTracker {
                         "unknown local player, inferring from cache: {}",
                         member.name
                     );
-                    local_player.entity_type = PLAYER;
+                    local_player.entity_type = Player;
                     local_player.class_id = member.class_id as u32;
                     local_player.gear_level = truncate_gear_level(member.gear_level);
                     local_player.name.clone_from(&member.name);
@@ -403,7 +404,7 @@ impl EntityTracker {
 
             if let Some(entity_id) = entity_id {
                 if let Some(entity) = self.entities.get_mut(&entity_id)
-                    && entity.entity_type == PLAYER && entity.name == member.name {
+                    && entity.entity_type == Player && entity.name == member.name {
                         entity.gear_level = truncate_gear_level(member.gear_level);
                         entity.class_id = member.class_id as u32;
                     }
@@ -429,7 +430,7 @@ impl EntityTracker {
 
     pub fn get_source_entity(&mut self, id: u64) -> Entity {
         let id = self.entities.get(&id).map_or(id, |entity| {
-            if entity.entity_type == PROJECTILE || entity.entity_type == SUMMON {
+            if entity.entity_type == EntityType::Projectile || entity.entity_type == EntityType::Summon {
                 entity.owner_id
             } else {
                 id
@@ -439,7 +440,7 @@ impl EntityTracker {
         self.entities.get(&id).cloned().unwrap_or_else(|| {
             let entity = Entity {
                 id,
-                entity_type: UNKNOWN,
+                entity_type: EntityType::Unknown,
                 name: format!("{:x}", id),
                 ..Default::default()
             };
@@ -450,28 +451,28 @@ impl EntityTracker {
 
     pub fn id_is_player(&mut self, id: u64) -> bool {
         if let Some(entity) = self.entities.get(&id) {
-            entity.entity_type == PLAYER
+            entity.entity_type == EntityType::Player
         } else {
             false
         }
     }
 
     pub fn guess_is_player(&mut self, entity: &mut Entity, skill_id: u32) {
-        if (entity.entity_type != UNKNOWN && entity.entity_type != PLAYER)
-            || (entity.entity_type == PLAYER && entity.class_id != 0)
+        if (entity.entity_type != EntityType::Unknown && entity.entity_type != EntityType::Player)
+            || (entity.entity_type == EntityType::Player && entity.class_id != 0)
         {
             return;
         }
 
         let class_id = get_skill_class_id(&skill_id);
         if class_id != 0 {
-            if entity.entity_type == PLAYER {
+            if entity.entity_type == EntityType::Player {
                 if entity.class_id == class_id {
                     return;
                 }
                 entity.class_id = class_id;
             } else {
-                entity.entity_type = PLAYER;
+                entity.entity_type = Player;
                 entity.class_id = class_id;
             }
             self.entities.insert(entity.id, entity.clone());
@@ -518,7 +519,7 @@ impl EntityTracker {
 
         let entity = Entity {
             id,
-            entity_type: UNKNOWN,
+            entity_type: EntityType::Unknown,
             name: format!("{:x}", id),
             ..Default::default()
         };
@@ -551,7 +552,7 @@ pub fn get_current_and_max_hp(stat_pair: &Vec<StatPair>) -> (i64, i64) {
 
 fn get_npc_entity_type_name_grade(npc: &NpcStruct, max_hp: i64) -> (EntityType, String, String) {
     if let Some(esther) = get_esther_from_npc_id(npc.type_id) {
-        return (ESTHER, esther.name, "none".to_string());
+        return (EntityType::Esther, esther.name, "none".to_string());
     }
 
     if let Some((_, npc_info)) = NPC_DATA.get_key_value(&npc.type_id) {
@@ -565,12 +566,12 @@ fn get_npc_entity_type_name_grade(npc: &NpcStruct, max_hp: i64) -> (EntityType, 
             && !npc_name.contains('_')
             && npc_name.is_ascii()
         {
-            (BOSS, npc_name.clone(), npc_info.grade.clone())
+            (Boss, npc_name.clone(), npc_info.grade.clone())
         } else {
-            (NPC, npc_name.clone(), npc_info.grade.clone())
+            (EntityType::Npc, npc_name.clone(), npc_info.grade.clone())
         }
     } else {
-        (NPC, format!("{:x}", npc.object_id), "none".to_string())
+        (EntityType::Npc, format!("{:x}", npc.object_id), "none".to_string())
     }
 }
 

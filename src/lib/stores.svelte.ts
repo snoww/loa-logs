@@ -5,6 +5,7 @@ import { time } from "echarts/core";
 import MarkdownIt from "markdown-it";
 import { SvelteSet } from "svelte/reactivity";
 import { readable } from "svelte/store";
+import type { AppSettings } from "./settings";
 
 /**
  * Merge settings from local storage into default settings.
@@ -36,7 +37,7 @@ class Settings {
         this.lockUpdate = true;
         if (settings) {
           try {
-            const settingsFromStorage = JSON.parse(settings) as LogSettings;
+            const settingsFromStorage = JSON.parse(settings) as AppSettings;
             mergeSettings(this.app, settingsFromStorage);
             if (!init) {
               invoke("save_settings", { settings: this.app });
@@ -150,8 +151,7 @@ export class EncounterFilter {
   }
 }
 
-export type LogSettings = typeof defaultSettings;
-export const defaultSettings = {
+export const defaultSettings: AppSettings = {
   general: {
     startLoaOnStart: false,
     lowPerformanceMode: false,

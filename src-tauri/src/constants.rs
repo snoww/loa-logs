@@ -6,6 +6,7 @@ use window_vibrancy::Color;
 
 pub const WINDOW_MS: i64 = 5_000;
 pub const WINDOW_S: i64 = 5;
+pub const DB_VERSION: i32 = 5;
 pub const METER_WINDOW_LABEL: &str = "main";
 pub const METER_MINI_WINDOW_LABEL: &str = "mini";
 pub const LOGS_WINDOW_LABEL: &str = "logs";

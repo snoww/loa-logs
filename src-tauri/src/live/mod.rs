@@ -19,7 +19,9 @@ use crate::live::status_tracker::{
     StatusTracker,
 };
 use crate::live::utils::get_class_from_id;
-use crate::parser::models::{DamageData, EntityType, Identity, LocalInfo, LocalPlayer, Settings, TripodIndex};
+use crate::local::{LocalInfo, LocalPlayer};
+use crate::models::{DamageData, EntityType, Identity, TripodIndex};
+use crate::settings::Settings;
 use anyhow::Result;
 use chrono::Utc;
 use hashbrown::HashMap;
@@ -240,7 +242,7 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
             //         "PKTIdentityStanceChangeNotify",
             //     ) {
             //         if let Some(entity) = entity_tracker.entities.get_mut(&pkt.object_id) {
-            //             if entity.entity_type == EntityType::PLAYER {
+            //             if entity.entity_type == EntityType::Player {
             //                 entity.stance = pkt.stance;
             //             }
             //         }
@@ -500,7 +502,7 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
                     let (skill_id, summon_source) =
                         state.on_skill_start(&entity, pkt.skill_id, tripod_index, timestamp);
 
-                    if entity.entity_type == EntityType::PLAYER && skill_id > 0 {
+                    if entity.entity_type == EntityType::Player && skill_id > 0 {
                         state
                             .skill_tracker
                             .new_cast(entity.id, skill_id, summon_source, timestamp);
@@ -745,7 +747,7 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
 
                     if status_effect.status_effect_type == StatusEffectType::HardCrowdControl {
                         let target = entity_tracker.get_source_entity(status_effect.target_id);
-                        if target.entity_type == EntityType::PLAYER {
+                        if target.entity_type == EntityType::Player {
                             state.on_cc_applied(&target, &status_effect);
                         }
                     }
@@ -799,7 +801,7 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
                     for effect_removed in effects_removed {
                         if effect_removed.status_effect_type == StatusEffectType::HardCrowdControl {
                             let target = entity_tracker.get_source_entity(effect_removed.target_id);
-                            if target.entity_type == EntityType::PLAYER {
+                            if target.entity_type == EntityType::Player {
                                 state.on_cc_removed(&target, &effect_removed, now);
                             }
                         }
@@ -1032,9 +1034,9 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
                     }
                 }
                 clone.entities.retain(|_, e| {
-                    ((e.entity_type == EntityType::PLAYER && e.class_id > 0)
-                        || e.entity_type == EntityType::ESTHER
-                        || e.entity_type == EntityType::BOSS)
+                    ((e.entity_type == EntityType::Player && e.class_id > 0)
+                        || e.entity_type == EntityType::Esther
+                        || e.entity_type == EntityType::Boss)
                         && e.damage_stats.damage_dealt > 0
                 });
 

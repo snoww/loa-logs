@@ -3,17 +3,19 @@
 mod app;
 #[cfg(feature = "meter-core")]
 mod live;
-mod parser;
 mod misc;
 mod context;
 mod constants;
 mod data;
+mod models;
+mod settings;
+mod local;
 
 use anyhow::Result;
 use flate2::read::GzDecoder;
 use hashbrown::HashMap;
 use log::{error, info, warn};
-use parser::models::*;
+use models::*;
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
 use std::{fs, io::Read, path::PathBuf, str::FromStr};
@@ -35,16 +37,21 @@ use crate::constants::*;
 use crate::context::AppContext;
 use crate::data::AssetPreloader;
 use crate::misc::load_windivert;
+use crate::settings::{Settings, SettingsManager};
 
 #[tokio::main]
 async fn main() -> Result<()> {
     let _ = app::logger::init()?;
+    let tauri_context = tauri::generate_context!();
     let context = AppContext::new()?;
+    let package_info = tauri_context.package_info();
+    let settings_manager = SettingsManager::new(context.settings_path).expect("could not create settings");
     load_windivert(&context.current_dir).expect("could not load windivert dependencies");
     // load meter-data
     AssetPreloader::new()?;
 
     tauri::Builder::default()
+        .manage(settings_manager)
         .plugin(tauri_plugin_clipboard_manager::init())
         .plugin(tauri_plugin_global_shortcut::Builder::new().build())
         .plugin(tauri_plugin_opener::init())
@@ -57,6 +64,7 @@ async fn main() -> Result<()> {
                 .build(),
         )
         .setup(|app| {
+            let app_handle = app.handle();
             info!("starting app v{}", app.package_info().version);
             app::panic::set_hook(app.handle());
 
@@ -64,16 +72,16 @@ async fn main() -> Result<()> {
                 warn!("error setting up database: {e}");
             }
 
-            setup_tray(app.handle())?;
+            setup_tray(app_handle)?;
 
             let app_path = std::env::current_exe()?.display().to_string();
             app.manage(AutoLaunchManager::new(&app.package_info().name, &app_path));
 
             let update_checked = Arc::new(AtomicBool::new(false));
             let checked_clone = update_checked.clone();
-            let app_handle = app.handle().clone();
+            let cloned_app_handle = app_handle.clone();
             tauri::async_runtime::spawn(async move {
-                match app_handle.updater().unwrap().check().await {
+                match cloned_app_handle.updater().unwrap().check().await {
                     #[cfg(not(debug_assertions))]
                     Ok(Some(update)) => {
                         info!("update available, downloading update: v{}", update.version);
@@ -96,7 +104,8 @@ async fn main() -> Result<()> {
                 }
             });
 
-            let settings = read_settings(app.handle()).ok();
+            let settings_manager = app_handle.state::<SettingsManager>();
+            let settings = settings_manager.read()?;
 
             let meter_window = app.get_webview_window(METER_WINDOW_LABEL).unwrap();
             meter_window
@@ -221,7 +230,6 @@ async fn main() -> Result<()> {
             toggle_logs_window,
             open_url,
             save_settings,
-            get_settings,
             open_db_path,
             delete_encounters_below_min_duration,
             get_db_info,
@@ -244,7 +252,7 @@ async fn main() -> Result<()> {
             remove_driver,
             unload_driver,
         ])
-        .run(tauri::generate_context!())
+        .run(tauri_context)
         .expect("error while running application");
 
     Ok(())
@@ -303,13 +311,16 @@ fn setup_tray(app: &tauri::AppHandle) -> tauri::Result<()> {
             }
         }
         "show-meter" => {
-            let settings = read_settings(app).unwrap_or_default();
+            let settings_manager = app.state::<SettingsManager>();
+            let settings = settings_manager.read().unwrap().unwrap_or_default();
             if let Some(meter) = get_meter_window(app, &settings) {
                 show_window(&meter);
             }
         }
         "reset" => {
-            let settings = read_settings(app).unwrap_or_default();
+            let settings_manager = app.state::<SettingsManager>();
+            let settings = settings_manager.read().unwrap().unwrap_or_default();
+
             if settings.general.mini {
                 if let Some(mini) = app.get_webview_window(METER_MINI_WINDOW_LABEL) {
                     mini.set_size(Size::Logical(LogicalSize {
@@ -353,7 +364,9 @@ fn setup_tray(app: &tauri::AppHandle) -> tauri::Result<()> {
         } = event
         {
             let app = tray.app_handle();
-            let settings = read_settings(app).unwrap_or_default();
+            let settings_manager = app.state::<SettingsManager>();
+            let settings = settings_manager.read().unwrap().unwrap_or_default();
+
             if let Some(meter) = get_meter_window(app, &settings) {
                 show_window(&meter);
             }
@@ -1088,7 +1101,7 @@ fn load_encounter(app: tauri::AppHandle, id: String) -> Encounter {
                 damage_stats,
                 skill_stats,
                 entity_type: EntityType::from_str(entity_type.as_str())
-                    .unwrap_or(EntityType::UNKNOWN),
+                    .unwrap_or(EntityType::Unknown),
                 npc_id: row.get(12)?,
                 character_id: row.get(13).unwrap_or_default(),
                 engraving_data: engravings,
@@ -1244,7 +1257,10 @@ fn delete_encounters(app: tauri::AppHandle, ids: Vec<i32>) {
 
 #[tauri::command]
 fn toggle_meter_window(app: tauri::AppHandle) {
-    if let Ok(settings) = read_settings(&app) {
+    let settings_manager = app.state::<SettingsManager>();
+    let settings = settings_manager.read().unwrap();
+
+    if let Some(settings) = settings {
         let label = if settings.general.mini {
             METER_MINI_WINDOW_LABEL
         } else {
@@ -1288,18 +1304,6 @@ fn save_settings(app: tauri::AppHandle, settings: Settings) {
     let path = app::path::data_dir(&app).join("settings.json");
     let contents = serde_json::to_string_pretty(&settings).unwrap();
     fs::write(path, contents).expect("could not write to settings file");
-}
-
-fn read_settings(app: &tauri::AppHandle) -> Result<Settings, Box<dyn std::error::Error>> {
-    let path = app::path::data_dir(app).join("settings.json");
-    let contents = fs::read_to_string(path)?;
-    let settings = serde_json::from_str(&contents)?;
-    Ok(settings)
-}
-
-#[tauri::command]
-fn get_settings(app: tauri::AppHandle) -> Option<Settings> {
-    read_settings(&app).ok()
 }
 
 #[tauri::command]

@@ -1,4 +1,4 @@
-use crate::parser::models::{SkillCast, SkillHit};
+use crate::models::{SkillCast, SkillHit};
 use hashbrown::HashMap;
 use moka::sync::Cache;
 use std::collections::BTreeMap;
