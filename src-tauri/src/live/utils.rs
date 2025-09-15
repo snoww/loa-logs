@@ -1,7 +1,7 @@
 use crate::constants::DB_VERSION;
 use crate::data::*;
 use crate::live::entity_tracker::Entity;
-use crate::live::skill_tracker::{CastEvent, SkillTracker};
+use crate::live::skill_tracker::SkillTracker;
 use crate::live::stats_api::InspectInfo;
 use crate::live::status_tracker::StatusEffectDetails;
 use crate::models::*;
@@ -1661,11 +1661,4 @@ fn get_damage_without_hyper_or_special(e: &EncounterEntity) -> i64 {
         .map(|s| s.total_damage)
         .sum::<i64>();
     e.damage_stats.damage_dealt - hyper - special
-}
-
-struct SupportBuffs {
-    brand: f64,
-    buff: f64,
-    identity: f64,
-    hyper: f64,
 }

@@ -1,7 +1,7 @@
 use crate::get_db_connection;
 use crate::data::*;
 use crate::live::entity_tracker::{Entity, EntityTracker};
-use crate::live::skill_tracker::{CastEvent, SkillTracker};
+use crate::live::skill_tracker::SkillTracker;
 use crate::live::stats_api::StatsApi;
 use crate::live::status_tracker::StatusEffectDetails;
 use crate::live::utils::*;
