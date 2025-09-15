@@ -45,7 +45,7 @@ async fn main() -> Result<()> {
     let tauri_context = tauri::generate_context!();
     let context = AppContext::new()?;
     let package_info = tauri_context.package_info();
-    let settings_manager = SettingsManager::new(package_info.version.to_string(), context.settings_path).expect("could not create settings");
+    let settings_manager = SettingsManager::new(context.settings_path).expect("could not create settings");
     load_windivert(&context.current_dir).expect("could not load windivert dependencies");
     // load meter-data
     AssetPreloader::new()?;
@@ -64,6 +64,7 @@ async fn main() -> Result<()> {
                 .build(),
         )
         .setup(|app| {
+            let app_handle = app.handle();
             info!("starting app v{}", app.package_info().version);
             app::panic::set_hook(app.handle());
 
@@ -71,16 +72,16 @@ async fn main() -> Result<()> {
                 warn!("error setting up database: {e}");
             }
 
-            setup_tray(app.handle())?;
+            setup_tray(app_handle)?;
 
             let app_path = std::env::current_exe()?.display().to_string();
             app.manage(AutoLaunchManager::new(&app.package_info().name, &app_path));
 
             let update_checked = Arc::new(AtomicBool::new(false));
             let checked_clone = update_checked.clone();
-            let app_handle = app.handle().clone();
+            let cloned_app_handle = app_handle.clone();
             tauri::async_runtime::spawn(async move {
-                match app_handle.updater().unwrap().check().await {
+                match cloned_app_handle.updater().unwrap().check().await {
                     #[cfg(not(debug_assertions))]
                     Ok(Some(update)) => {
                         info!("update available, downloading update: v{}", update.version);
@@ -103,7 +104,8 @@ async fn main() -> Result<()> {
                 }
             });
 
-            let settings = read_settings(app.handle()).ok();
+            let settings_manager = app_handle.state::<SettingsManager>();
+            let settings = settings_manager.read()?;
 
             let meter_window = app.get_webview_window(METER_WINDOW_LABEL).unwrap();
             meter_window
@@ -218,7 +220,6 @@ async fn main() -> Result<()> {
             _ => {}
         })
         .invoke_handler(tauri::generate_handler![
-            load,
             load_encounters_preview,
             load_encounter,
             get_encounter_count,
@@ -310,13 +311,16 @@ fn setup_tray(app: &tauri::AppHandle) -> tauri::Result<()> {
             }
         }
         "show-meter" => {
-            let settings = read_settings(app).unwrap_or_default();
+            let settings_manager = app.state::<SettingsManager>();
+            let settings = settings_manager.read().unwrap().unwrap_or_default();
             if let Some(meter) = get_meter_window(app, &settings) {
                 show_window(&meter);
             }
         }
         "reset" => {
-            let settings = read_settings(app).unwrap_or_default();
+            let settings_manager = app.state::<SettingsManager>();
+            let settings = settings_manager.read().unwrap().unwrap_or_default();
+
             if settings.general.mini {
                 if let Some(mini) = app.get_webview_window(METER_MINI_WINDOW_LABEL) {
                     mini.set_size(Size::Logical(LogicalSize {
@@ -360,7 +364,9 @@ fn setup_tray(app: &tauri::AppHandle) -> tauri::Result<()> {
         } = event
         {
             let app = tray.app_handle();
-            let settings = read_settings(app).unwrap_or_default();
+            let settings_manager = app.state::<SettingsManager>();
+            let settings = settings_manager.read().unwrap().unwrap_or_default();
+
             if let Some(meter) = get_meter_window(app, &settings) {
                 show_window(&meter);
             }
@@ -674,14 +680,6 @@ fn migration_buff_summary(tx: &Transaction) -> Result<(), rusqlite::Error> {
     }
 
     stmt.finalize()
-}
-
-#[tauri::command]
-fn load(settings_manager: State<SettingsManager>) -> LoadResult {
-
-    LoadResult {
-        settings: settings_manager.read().unwrap()
-    }
 }
 
 #[tauri::command]
@@ -1259,7 +1257,10 @@ fn delete_encounters(app: tauri::AppHandle, ids: Vec<i32>) {
 
 #[tauri::command]
 fn toggle_meter_window(app: tauri::AppHandle) {
-    if let Ok(settings) = read_settings(&app) {
+    let settings_manager = app.state::<SettingsManager>();
+    let settings = settings_manager.read().unwrap();
+
+    if let Some(settings) = settings {
         let label = if settings.general.mini {
             METER_MINI_WINDOW_LABEL
         } else {
@@ -1303,13 +1304,6 @@ fn save_settings(app: tauri::AppHandle, settings: Settings) {
     let path = app::path::data_dir(&app).join("settings.json");
     let contents = serde_json::to_string_pretty(&settings).unwrap();
     fs::write(path, contents).expect("could not write to settings file");
-}
-
-fn read_settings(app: &tauri::AppHandle) -> Result<Settings, Box<dyn std::error::Error>> {
-    let path = app::path::data_dir(app).join("settings.json");
-    let contents = fs::read_to_string(path)?;
-    let settings = serde_json::from_str(&contents)?;
-    Ok(settings)
 }
 
 #[tauri::command]

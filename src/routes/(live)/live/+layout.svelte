@@ -14,19 +14,21 @@
 
   onMount(() => {
     setup();
-    onLoad();
+    (async () => {
+      await invoke("write_log", { message: "setting up live meter" });
+      let data = (await invoke("get_settings")) as AppSettings;
+      if (data) {
+        settings.app = data;
+      }
+
+      if (settings.app.general.bossOnlyDamageDefaultOn && !settings.app.general.bossOnlyDamage) {
+        settings.app.general.bossOnlyDamage = true;
+        await emit("boss-only-damage-request", true);
+      }
+
+      await invoke("write_log", { message: "finished meter setup" });
+    })();
   });
-
-  async function onLoad() {
-    await invoke("write_log", { message: "setting up live meter" });
-
-    if (settings.app.general.bossOnlyDamageDefaultOn && !settings.app.general.bossOnlyDamage) {
-      settings.app.general.bossOnlyDamage = true;
-      await emit("boss-only-damage-request", true);
-    }
-
-    await invoke("write_log", { message: "finished meter setup" });
-  }
 
   $effect.pre(() => {
     if (settings.app.general.scale === "1") {

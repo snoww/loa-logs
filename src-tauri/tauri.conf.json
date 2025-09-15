@@ -11,8 +11,7 @@
     "category": "Utility",
     "copyright": "GNU General Public License v3.0",
     "resources": [
-      "meter-data/*.json",
-      "settings.template.json"
+      "meter-data/*.json"
     ],
     "icon": [
       "icons/icon.ico"

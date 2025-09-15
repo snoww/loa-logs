@@ -1,32 +1,12 @@
 use serde::{Deserialize, Serialize};
 use serde_json::{Map, Value};
-use std::fs::File;
 
-use crate::constants::DEFAULT_SETTINGS_PATH;
-
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Settings {
-    pub version: Option<String>,
-    pub env: Option<EnvironmentSettings>,
     pub general: GeneralSettings,
     #[serde(flatten)]
     pub extra: Map<String, Value>,
-}
-
-impl Default for Settings {
-    fn default() -> Self {
-        let reader = File::open(DEFAULT_SETTINGS_PATH).expect("Missing default settings");
-        let settings = serde_json::from_reader(reader).expect("Invalid default settings");
-        settings
-    }
-}
-
-#[derive(Debug, Default, Clone, PartialEq, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
-pub struct EnvironmentSettings {
-    pub hearbeat_api_url: String,
-    pub stats_api_url: String
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
