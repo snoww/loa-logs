@@ -11,7 +11,8 @@
     "category": "Utility",
     "copyright": "GNU General Public License v3.0",
     "resources": [
-      "meter-data/*.json"
+      "meter-data/*.json",
+      "migrations/*.sql"
     ],
     "icon": [
       "icons/icon.ico"

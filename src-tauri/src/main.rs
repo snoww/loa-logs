@@ -15,6 +15,8 @@ mod shell;
 mod utils;
 mod setup;
 mod background;
+mod database;
+mod handlers;
 
 use anyhow::Result;
 use flate2::read::GzDecoder;

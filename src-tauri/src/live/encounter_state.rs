@@ -1512,7 +1512,7 @@ impl EncounterState {
                 manual,
                 skill_cast_log,
                 skill_cooldowns,
-            );
+            ).expect("could not save encounter");
 
             tx.commit().expect("failed to commit transaction");
             info!("saved to db");
