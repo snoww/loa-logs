@@ -1,6 +1,6 @@
 #![allow(dead_code)]
 
-use anyhow::Result;
+use anyhow::*;
 use tokio::task::JoinHandle;
 use std::{path::PathBuf, sync::{atomic::AtomicBool, Arc}};
 use log::*;
@@ -17,7 +17,7 @@ pub struct BackgroundWorkerArgs {
     pub version: String
 }
 
-pub struct BackgroundWorker(Option<JoinHandle<Result<()>>>);
+pub struct BackgroundWorker(Option<JoinHandle<()>>);
 
 impl BackgroundWorker {
     pub fn new() -> Self {
@@ -33,7 +33,7 @@ impl BackgroundWorker {
         Ok(())
     }
 
-    fn inner(args: BackgroundWorkerArgs) -> Result<()> {
+    fn inner(args: BackgroundWorkerArgs) {
         let BackgroundWorkerArgs {
             app_handle,
             update_checked,
@@ -55,12 +55,9 @@ impl BackgroundWorker {
             
             info!("listening on port: {port}");
             
-            live::start(app_handle, port, settings).map_err(|e| {
-                error!("unexpected error occurred in parser: {e}");
-            });
+            live::start(app_handle, port, settings).expect("unexpected error occurred in parser");
         }
 
-        Ok(())
     }
 
     pub fn is_running(&self) -> bool {
