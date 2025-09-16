@@ -1,4 +1,4 @@
-use crate::models::{SkillCast, SkillHit};
+use crate::models::{CastEvent, SkillCast, SkillHit};
 use hashbrown::HashMap;
 use moka::sync::Cache;
 use std::collections::BTreeMap;
@@ -122,10 +122,4 @@ impl SkillTracker {
 
         cast_log
     }
-}
-
-#[derive(Debug, Clone)]
-pub struct CastEvent {
-    pub timestamp: i64,
-    pub cooldown_duration_ms: i64,
 }

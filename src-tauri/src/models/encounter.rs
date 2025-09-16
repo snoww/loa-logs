@@ -1,6 +1,7 @@
 use hashbrown::{HashMap, HashSet};
 use serde::{Deserialize, Serialize};
 use serde_with::serde_as;
+use crate::models::ArkPassiveData;
 use crate::models::Skill;
 
 use crate::models::EntityType;
@@ -77,21 +78,6 @@ pub struct EncounterEntity {
     pub loadout_hash: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub combat_power: Option<f32>,
-}
-
-#[derive(Debug, Default, Clone, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase", default)]
-pub struct ArkPassiveData {
-    pub evolution: Option<Vec<ArkPassiveNode>>,
-    pub enlightenment: Option<Vec<ArkPassiveNode>>,
-    pub leap: Option<Vec<ArkPassiveNode>>,
-}
-
-#[derive(Debug, Default, Clone, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase", default)]
-pub struct ArkPassiveNode {
-    pub id: u32,
-    pub lv: u8,
 }
 
 #[serde_as]

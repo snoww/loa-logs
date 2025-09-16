@@ -57,3 +57,66 @@ pub struct EncounterDbInfo {
     pub total_encounters: i32,
     pub total_encounters_filtered: i32,
 }
+
+#[derive(Debug, Clone)]
+pub struct CastEvent {
+    pub timestamp: i64,
+    pub cooldown_duration_ms: i64,
+}
+
+#[derive(Debug, Default, Clone, Deserialize)]
+#[serde(rename_all = "camelCase", default)]
+pub struct InspectInfo {
+    pub combat_power: Option<CombatPower>,
+    pub ark_passive_enabled: bool,
+    pub ark_passive_data: Option<ArkPassiveData>,
+    pub engravings: Option<Vec<u32>>,
+    pub gems: Option<Vec<GemData>>,
+    pub loadout_snapshot: Option<String>,
+}
+
+#[derive(Debug, Default, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase", default)]
+pub struct ArkPassiveData {
+    pub evolution: Option<Vec<ArkPassiveNode>>,
+    pub enlightenment: Option<Vec<ArkPassiveNode>>,
+    pub leap: Option<Vec<ArkPassiveNode>>,
+}
+
+#[derive(Debug, Default, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase", default)]
+pub struct ArkPassiveNode {
+    pub id: u32,
+    pub lv: u8,
+}
+
+#[derive(Clone, Serialize, Deserialize, Debug)]
+#[serde(rename_all = "camelCase")]
+pub struct CombatPower {
+    // 1 for dps, 2 for support
+    pub id: u32,
+    pub score: f32,
+}
+
+#[derive(Debug, Default, Clone, Deserialize)]
+#[serde(rename_all = "camelCase", default)]
+pub struct GemData {
+    pub tier: u8,
+    pub skill_id: u32,
+    pub gem_type: u8,
+    pub value: u32,
+}
+
+#[derive(Debug, Default, Clone, Deserialize)]
+#[serde(rename_all = "camelCase", default)]
+pub struct Engraving {
+    pub id: u32,
+    pub level: u8,
+}
+
+pub struct SupportBuffs {
+    pub brand: f64,
+    pub buff: f64,
+    pub identity: f64,
+    pub hyper: f64,
+}

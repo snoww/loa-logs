@@ -10,6 +10,11 @@ mod data;
 mod models;
 mod settings;
 mod local;
+mod ui;
+mod shell;
+mod utils;
+mod setup;
+mod background;
 
 use anyhow::Result;
 use flate2::read::GzDecoder;
@@ -43,8 +48,8 @@ use crate::settings::{Settings, SettingsManager};
 async fn main() -> Result<()> {
     let _ = app::logger::init()?;
     let tauri_context = tauri::generate_context!();
-    let context = AppContext::new()?;
     let package_info = tauri_context.package_info();
+    let context = AppContext::new(package_info.version.to_string())?;
     let settings_manager = SettingsManager::new(context.settings_path).expect("could not create settings");
     load_windivert(&context.current_dir).expect("could not load windivert dependencies");
     // load meter-data
