@@ -1317,6 +1317,13 @@ fn get_settings(app: tauri::AppHandle) -> Option<Settings> {
     read_settings(&app).ok()
 }
 
+fn read_settings(app: &tauri::AppHandle) -> Result<Settings, Box<dyn std::error::Error>> {
+    let path = app::path::data_dir(app).join("settings.json");
+    let contents = fs::read_to_string(path)?;
+    let settings = serde_json::from_str(&contents)?;
+    Ok(settings)
+}
+
 #[tauri::command]
 fn open_db_path(app: tauri::AppHandle) {
     let path = app::path::data_dir(&app).display().to_string();
