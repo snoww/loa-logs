@@ -1,11 +1,11 @@
 {
-  "version": "v1.32.5",
-  "notes": "### v1.32.5 - August 27th, 2025\n\n#### NEW FEATURES\n- update meter for weekly reset\n\n#### BUG FIXES AND IMPROVEMENTS\n- fix boss details missing in logs\n- count skill effects to total casts\n- minor improvements and fixes",
-  "pub_date": "2025-08-27T17:07:34.861Z",
+  "version": "v1.33.0",
+  "notes": "### v1.33.0 - September 17th, 2025\n\n#### Known Issues\n- meter window position might be reset after update\n\n#### NEW FEATURES\n- updated meter for assault raids\n- added skill names for paradise items\n\n#### BUG FIXES AND IMPROVEMENTS\n- improved meter backend\n",
+  "pub_date": "2025-09-17T17:40:34.649Z",
   "platforms": {
     "windows-x86_64": {
-      "url": "https://github.com/snoww/loa-logs/releases/download/v1.32.5/LOA.Logs_1.32.5_x64-setup.nsis.zip",
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlRNaXdOanhYUVZEY3haWDYxYjlTMEoxTm96ejloclRLcEhzZ3U5a0F4WEsxTXIxdzV4bDBnT29WZkFpcFVCL2lEY2ZEVGFmeHI3SGZ3a1pYN29DcUFZPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzU2MzE0NjY0CWZpbGU6TE9BIExvZ3NfMS4zMi41X3g2NC1zZXR1cC5uc2lzLnppcAowVUdUUVBWNDJ2NEU2bGZ6OG5pemVnRGd4dHJscVZFNmtFVnlUUE5oRzdlUVFKWVhiaWdCQkVoZ0x0d0RCUHdFdndIYTB2b1NrbUIxZytITW1MY0dDdz09Cg=="
+      "url": "https://github.com/snoww/loa-logs/releases/download/v1.33.0/LOA.Logs_1.33.0_x64-setup.nsis.zip",
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlNramtJZjU4eFJOY0l1bVRRc2U2QzRqb0hKRXlvYmFuQ1pLMC93SG5NWUVDcUNRcTVCZ3p0WUdpWFIvWHNIU3VDOXRTZXhaTDJhRkUvMXllYmpuVVE0PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzU4MTMxNDQ5CWZpbGU6TE9BIExvZ3NfMS4zMy4wX3g2NC1zZXR1cC5uc2lzLnppcApkOEkzZWNWTUJOYjFpZG5pNDg4MlZWa3l4MVpkQ2JtMEdtekRtUmNpeUdXM2J0MWQ3MTdjbWViaTEybkd5OC92MjZvZ1ZsbjRQNU5sUjFlaFpkdndBZz09Cg=="
     }
   }
 }
