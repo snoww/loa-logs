@@ -124,7 +124,7 @@ impl EncounterState {
                     entity_type: entity.entity_type,
                     gear_score: entity.gear_score,
                     max_hp: entity.max_hp,
-                    current_hp: entity.current_hp,
+                    current_hp: entity.max_hp,
                     is_dead: entity.is_dead,
                     ..Default::default()
                 },
