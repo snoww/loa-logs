@@ -85,6 +85,12 @@ export const encounterMap: { [key: string]: { [key: string]: Array<string> } } =
     "Act 3: Mordum G1": ["Thaemine, Master of Darkness", "Infernas"],
     "Act 3: Mordum G2": ["Blossoming Fear, Naitreya"],
     "Act 3: Mordum G3": ["Mordum, the Abyssal Punisher", "Mordum's Hammer", "Flash of Punishment"]
+  },
+  "Assault: Crimson Abyss": {
+    "Assault: Crimson Abyss": ["Abyssal Beast, Narhash"]
+  },
+  "Assault: Flame of Destruction": {
+    "Assault: Flame of Destruction": ["Flame of Darkness, Tarkal"]
   }
 };
 
@@ -147,7 +153,9 @@ export const bossHpMap: Record<string, number> = {
   Infernas: 300,
   "Blossoming Fear, Naitreya": 300,
   "Mordum, the Abyssal Punisher": 500,
-  "Flash of Punishment": 350
+  "Flash of Punishment": 350,
+  "Abyssal Beast, Narhash": 100,
+  "Flame of Darkness, Tarkal": 300
 };
 
 export const difficultyMap: Array<string> = [

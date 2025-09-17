@@ -329,7 +329,7 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
             Pkt::NewVehicle => {
                 if let Some(pkt) = parse_pkt(&data, PKTNewVehicle::new, "PKTNewVehicle")
                     && let Some(pc_struct) =
-                        pkt.vehicle_struct.sub_p_k_t_new_vehicle_2_2_397.p_c_struct
+                        pkt.vehicle_struct.p_c_struct_conditional.p_c_struct
                     {
                         let (hp, max_hp) = get_current_and_max_hp(&pc_struct.stat_pairs);
                         let entity = entity_tracker.new_pc(pc_struct);
