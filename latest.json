@@ -1,11 +1,11 @@
 {
-  "version": "v1.33.1",
-  "notes": "### v1.33.1 - September 17th, 2025\n\n#### Known Issues\n- meter window position might be reset after update\n\n#### NEW FEATURES\n- updated meter for assault raids\n- added skill names for paradise items\n\n#### BUG FIXES AND IMPROVEMENTS\n- improved meter backend\n- fixed uploading not working\n\n",
+  "version": "v1.33.2",
+  "notes": "### v1.33.2 - September 17th, 2025\n\n#### Known Issues\n- meter window position might be reset after update\n\n#### NEW FEATURES\n- updated meter for assault raids\n- added skill names for paradise items\n\n#### BUG FIXES AND IMPROVEMENTS\n- improved meter backend\n- fixed uploading not working\n- fixed buffs not showing for older logs\n\n",
   "pub_date": "2025-09-17T17:40:34.649Z",
   "platforms": {
     "windows-x86_64": {
-      "url": "https://github.com/snoww/loa-logs/releases/download/v1.33.1/LOA.Logs_1.33.1_x64-setup.nsis.zip",
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlpVQ3FFNHkxNW9weHczN1luU3NwWXYzd2VpNW9qRWVIY1A5NVl1UGIraXNwRllhYUdGMU0vTG1wRW45OUErQ3FYQmlLV0k2ZVNyb0s5cDVsQlNpOEE4PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzU4MTQwNDI3CWZpbGU6TE9BIExvZ3NfMS4zMy4xX3g2NC1zZXR1cC5uc2lzLnppcAovcVdWTkg3L2JsTGUrQWE3Ym1MRGJRNVN0UXBWZ1FDSndUOWIxSDh3d2QrbWR4TnJuVjB6ZGVlRzRGY1hPZTRzNzdTeVVXYWxUSVVYSEVLRzBYOWdBUT09Cg=="
+      "url": "https://github.com/snoww/loa-logs/releases/download/v1.33.2/LOA.Logs_1.33.2_x64-setup.nsis.zip",
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlRHeVNCaUpUZ1JMYXA3bFlMRXhxUUhBMlYwdmVkUERsNnF6UWdMMTQvbXBvV0FscjRTSWxvc245VndpZmF6bjF0YnVMWGMyai9EdHhLK1dkMnhOWVF3PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzU4MTQ1NDQ0CWZpbGU6TE9BIExvZ3NfMS4zMy4yX3g2NC1zZXR1cC5uc2lzLnppcApROHdDRGVBUVdvV2UyT3Vta2M1ZlJyY0k4TGRFT1V1Q09rdkZMUHM5aGgxN3h4TjhlZzlhUWRQdUV1eWg0dFVqcWEzOU5Yb0ZlZVJ2YWJHWWVEaWtBZz09Cg=="
     }
   }
 }
