@@ -235,6 +235,7 @@ async fn main() -> Result<()> {
             toggle_logs_window,
             open_url,
             save_settings,
+            get_settings,
             open_db_path,
             delete_encounters_below_min_duration,
             get_db_info,
@@ -1309,6 +1310,11 @@ fn save_settings(app: tauri::AppHandle, settings: Settings) {
     let path = app::path::data_dir(&app).join("settings.json");
     let contents = serde_json::to_string_pretty(&settings).unwrap();
     fs::write(path, contents).expect("could not write to settings file");
+}
+
+#[tauri::command]
+fn get_settings(app: tauri::AppHandle) -> Option<Settings> {
+    read_settings(&app).ok()
 }
 
 #[tauri::command]
