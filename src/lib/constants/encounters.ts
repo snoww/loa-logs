@@ -87,10 +87,10 @@ export const encounterMap: { [key: string]: { [key: string]: Array<string> } } =
     "Act 3: Mordum G3": ["Mordum, the Abyssal Punisher", "Mordum's Hammer", "Flash of Punishment"]
   },
   "Assault: Crimson Abyss": {
-    "Assault: Crimson Abyss": ["Abyssal Beast, Narhash"]
+    "Assault: Crimson Abyss G1": ["Abyssal Beast, Narhash"]
   },
   "Assault: Flame of Destruction": {
-    "Assault: Flame of Destruction": ["Flame of Darkness, Tarkal"]
+    "Assault: Flame of Destruction G1": ["Flame of Darkness, Tarkal"]
   }
 };
 
