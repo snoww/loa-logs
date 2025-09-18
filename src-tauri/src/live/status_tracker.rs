@@ -372,8 +372,10 @@ pub fn build_status_effect(
     let mut name = "Unknown".to_string();
     let mut db_target_type = "".to_string();
     let mut custom_id = 0;
+    let mut unique_group = 0;
     if let Some(effect) = SKILL_BUFF_DATA.get(&se_data.status_effect_id) {
         name = effect.name.clone().unwrap_or_default();
+        unique_group = effect.unique_group;
         if effect.category.as_str() == "debuff" {
             status_effect_category = Debuff
         }
@@ -467,6 +469,7 @@ pub fn build_status_effect(
         end_tick: se_data.end_tick,
         name,
         timestamp,
+        unique_group,
     }
 }
 
@@ -540,4 +543,5 @@ pub struct StatusEffectDetails {
     pub end_tick: u64,
     pub timestamp: DateTime<Utc>,
     pub name: String,
+    pub unique_group: u32,
 }
