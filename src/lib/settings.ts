@@ -74,6 +74,7 @@ export interface AppSettings {
     percentIdentityBySup: boolean;
     percentBrand: boolean;
     percentHatBySup: boolean;
+    stagger: boolean;
     breakdown: {
       damage: boolean;
       dps: boolean;
@@ -119,6 +120,7 @@ export interface AppSettings {
     percentIdentityBySup: boolean;
     percentHatBySup: boolean;
     percentBrand: boolean;
+    stagger: boolean;
     breakdown: {
       damage: boolean;
       dps: boolean;

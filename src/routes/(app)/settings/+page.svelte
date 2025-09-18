@@ -471,6 +471,7 @@
           "Support Hyper %",
           "Show the percentage of damage buffed by support hyper awakening skill (T Skill)"
         )}
+        {@render settingOption("logs", "stagger", "Stagger", "Show the total stagger damage dealt")}
         {@render settingOption("logs", "counters", "Counters", "Show the number of counters hit")}
         <div class="mt-4 h-px w-full bg-neutral-600"></div>
         <div class="py-2 text-sm">Skill Breakdown</div>
@@ -663,6 +664,7 @@
           "Support Hyper %",
           "Show the percentage of damage buffed by support hyper awakening skill"
         )}
+        {@render settingOption("meter", "stagger", "Stagger", "Show the total stagger damage dealt")}
         {@render settingOption("meter", "counters", "Counters", "Show the number of counters hit")}
         <div class="mt-4 h-px w-full bg-neutral-600"></div>
         <div class="py-2 text-sm">Skill Breakdown</div>

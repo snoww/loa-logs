@@ -227,6 +227,7 @@ export const defaultSettings: AppSettings = {
     percentIdentityBySup: true,
     percentBrand: true,
     percentHatBySup: true,
+    stagger: false,
     breakdown: {
       damage: true,
       dps: true,
@@ -272,6 +273,7 @@ export const defaultSettings: AppSettings = {
     percentIdentityBySup: true,
     percentHatBySup: true,
     percentBrand: true,
+    stagger: true,
     breakdown: {
       damage: true,
       dps: true,

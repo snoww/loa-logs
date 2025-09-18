@@ -4,6 +4,7 @@
   import { EntityState } from "$lib/entity.svelte.js";
   import { abbreviateNumberSplit, customRound } from "$lib/utils";
   import { badTooltip, damageValue, fadTooltip, percentValue } from "./Snippets.svelte";
+  import { settings } from "$lib/stores.svelte";
 
   export const logColumns: LogColumn<EncounterState, EntityState>[] = [
     // Dead for
@@ -46,8 +47,7 @@
     // Damage dealt
     {
       show(enc) {
-        if (!enc.curSettings.damage) return false;
-        return true;
+        return enc.curSettings.damage;
       },
       headerText: "DMG",
       headerTooltip: "Damage Dealt",
@@ -59,8 +59,7 @@
     // Damage per second
     {
       show(enc) {
-        if (!enc.curSettings.dps) return false;
-        return true;
+        return enc.curSettings.dps;
       },
       headerText: "DPS",
       headerTooltip: "Damage per second",
@@ -84,8 +83,7 @@
     // Crit rate
     {
       show(enc) {
-        if (!enc.curSettings.critRate) return false;
-        return true;
+        return enc.curSettings.critRate;
       },
       headerText: "CRIT",
       headerTooltip: "Crit %",
@@ -96,8 +94,7 @@
     // Crit damage percentage
     {
       show(enc) {
-        if (!enc.curSettings.critDmg) return false;
-        return true;
+        return enc.curSettings.critDmg;
       },
       headerText: "CDMG",
       headerTooltip: "% Damage that Crit",
@@ -207,19 +204,18 @@
     // Stagger
     {
       show(enc) {
-        return enc.anyStagger;
+        return enc.curSettings.stagger && enc.anyStagger;
       },
       headerText: "STAG",
       headerTooltip: "Total Stagger Damage",
       value: stagger,
-      valueTooltip: staggerTooltip,
+      valueTooltip: staggerTooltip
     },
 
     // Counters
     {
       show(enc) {
-        if (!enc.curSettings.counters) return false;
-        return true;
+        return enc.curSettings.counters;
       },
       headerText: "CTR",
       headerTooltip: "Counters",
