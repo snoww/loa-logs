@@ -3,16 +3,16 @@ use tauri_plugin_opener::OpenerExt;
 
 use crate::app;
 
-pub fn show_dialog_on_panic(app: &tauri::AppHandle, panic_info: &std::panic::PanicHookInfo) {
+pub fn show_dialog_on_panic(app: &tauri::AppHandle, panic_message: &str) {
     const LOG_FILENAME: &str = "loa_logs_rCURRENT.log";
-    const BUTTON_OPEN: &str = "Reveal Log File";
+    const BUTTON_OPEN: &str = "Show Log File";
 
     let version = &app.package_info().version;
     let dialog = MessageDialog::new()
         .set_title("An Unexpected Error")
         .set_description(format!(
             r#"
-LOA Logs v{version} has {panic_info}
+LOA Logs v{version} has {panic_message}
 
 There's a log file named "{LOG_FILENAME}" next to the executable.
 
@@ -33,32 +33,14 @@ If the issue persists, report it to the developers on Discord.
 
 pub fn set_hook(app: &tauri::AppHandle) {
     let app = app.clone();
-    
+
     std::panic::set_hook(Box::new(move |info| {
-        let message = if let Some(location) = info.location()
-            && let Some(payload) = payload_as_str(info)
-        {
-            format!("panicked at {location}: {payload}")
-        } else {
-            format!("panicked: {info:?}")
-        };
-        log::error!("{message}");
+        let message = format!("{info}");
+        log::error!("{}", message.replace('\n', " "));
         log::logger().flush();
 
         if !cfg!(debug_assertions) {
-            app::panic::show_dialog_on_panic(&app, info);
+            app::panic::show_dialog_on_panic(&app, &message);
         }
     }));
-}
-
-/// replace with `PanicHookInfo::payload_as_str()` when stabilized
-/// in 1.91.0 https://github.com/rust-lang/rust/pull/144861
-fn payload_as_str<'a>(info: &'a std::panic::PanicHookInfo) -> Option<&'a str> {
-    if let Some(s) = info.payload().downcast_ref::<&str>() {
-        Some(s)
-    } else if let Some(s) = info.payload().downcast_ref::<String>() {
-        Some(s)
-    } else {
-        None
-    }
 }
