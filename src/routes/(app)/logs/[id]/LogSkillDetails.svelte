@@ -195,6 +195,9 @@
                   <QuickTooltip tooltip="Hit modifiers, e.g. Crit, BA, FA" class="w-fit">Mods</QuickTooltip>
                 </td>
                 <td class="w-16 font-semibold">
+                  <QuickTooltip tooltip="Hit damage" class="w-fit">Stagger</QuickTooltip>
+                </td>
+                <td class="w-16 font-semibold">
                   <QuickTooltip tooltip="Hit damage" class="w-fit">DMG</QuickTooltip>
                 </td>
                 <td class="font-semibold">
@@ -246,6 +249,15 @@
                         -
                       {/if}
                     </div>
+                  </td>
+                  <td class="font-mono">
+                    <QuickTooltip tooltip={hit.stagger ? hit.stagger.toLocaleString() : "N/A"} class="w-fit">
+                      {#if hit.stagger}
+                        {abbreviateNumber(hit.stagger)}
+                      {:else}
+                        -
+                      {/if}
+                    </QuickTooltip>
                   </td>
                   <td class="font-mono">
                     <QuickTooltip tooltip={hit.damage.toLocaleString()} class="w-fit">

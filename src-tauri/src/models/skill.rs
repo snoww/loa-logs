@@ -46,6 +46,9 @@ pub struct Skill {
     pub skill_cast_log: Vec<SkillCast>,
 
     #[serde(default)]
+    pub stagger: i64,
+
+    #[serde(default)]
     pub is_hyper_awakening: bool,
     // for skills that cannot crit or be buffed
     // like hyper awakening, paradise orb, transcendence, etc.
@@ -79,6 +82,8 @@ pub struct SkillHit {
     pub debuffed_by: Vec<u32>,
     pub rdps_damage_received: i64,
     pub rdps_damage_received_support: i64,
+    #[serde(default)]
+    pub stagger: i64
 }
 
 #[derive(Debug, Default, Serialize, Deserialize, Clone)]

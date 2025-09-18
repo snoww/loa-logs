@@ -175,6 +175,7 @@ export interface Skill {
   isHyperAwakening?: boolean;
   special?: boolean; // if special, this skill is not modifiable by buffs or crits
   timeAvailable?: number; // the total time in milliseconds this skill was off cooldown during the encounter
+  stagger: number;
 }
 
 export interface SkillCast {
@@ -186,6 +187,7 @@ export interface SkillCast {
 export interface SkillHit {
   timestamp: number;
   damage: number;
+  stagger?: number;
   crit: boolean;
   backAttack: boolean;
   frontAttack: boolean;
@@ -231,6 +233,7 @@ export interface DamageStats {
   rdpsDamageReceivedSupport: number;
   rdpsDamageGiven: number;
   incapacitations: IncapacitatedEvent[];
+  stagger: number;
   [key: string]: any;
 }
 

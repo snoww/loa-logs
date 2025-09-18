@@ -280,6 +280,17 @@
       headerTooltip: "Cooldown Ratio % - Percentage of time a skill was on cooldown",
       value: cooldownEfficiency,
       valueTooltip: cooldownEfficiencyTooltip
+    },
+
+    // Stagger
+    {
+      show(enc) {
+        return enc.anyStagger;
+      },
+      headerText: "STAG",
+      headerTooltip: "Total Stagger Damage",
+      value: stagger,
+      valueTooltip: staggerTooltip,
     }
   ];
 </script>
@@ -486,4 +497,16 @@
   {:else}
     <span>N/A</span>
   {/if}
+{/snippet}
+
+{#snippet stagger(state: SkillState)}
+  {#if state.skill.stagger > 0}
+    {@render damageValue(abbreviateNumberSplit(state.skill.stagger))}
+  {:else}
+    -
+  {/if}
+{/snippet}
+
+{#snippet staggerTooltip(state: SkillState)}
+  {state.skill.stagger ? state.skill.stagger.toLocaleString() : "N/A"}
 {/snippet}

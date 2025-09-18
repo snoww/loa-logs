@@ -5,7 +5,7 @@
   import { IconExternalLink } from "$lib/icons";
   import { settings } from "$lib/stores.svelte.js";
   import { EntityType, type Entity } from "$lib/types";
-  import { customRound, isNameValid, rgbLinearShadeAdjust, UWUOWO_URL } from "$lib/utils";
+  import { abbreviateNumberSplit, customRound, isNameValid, rgbLinearShadeAdjust, UWUOWO_URL } from "$lib/utils";
   import { openUrl } from "@tauri-apps/plugin-opener";
   import { flip } from "svelte/animate";
   import PlayerBreakdownHeader from "./PlayerBreakdownHeader.svelte";
@@ -174,6 +174,14 @@
       {/if}
       {#if entityState.anyCooldownRatio}
         <td class="px-1 text-center">-</td>
+      {/if}
+      {#if entityState.anyStagger}
+        {@const stagger = abbreviateNumberSplit(entity.damageStats.stagger)}
+        <td class="px-1 text-center"
+          ><QuickTooltip tooltip={entity.damageStats.stagger.toLocaleString()}>
+            {stagger[0]}<span class="text-xxs text-gray-300">{stagger[1]}</span>
+          </QuickTooltip></td
+        >
       {/if}
       <td
         class="absolute left-0 -z-10 h-7 px-2 py-1"

@@ -116,6 +116,8 @@ pub struct DamageStats {
     pub rdps_damage_given: i64,
     #[serde(default)]
     pub incapacitations: Vec<IncapacitatedEvent>,
+    #[serde(default)]
+    pub stagger: i64,
 }
 
 #[derive(Debug, Default, Serialize, Deserialize, Clone)]
@@ -142,6 +144,7 @@ pub struct DamageData {
     pub target_max_hp: i64,
     pub damage_attribute: Option<u8>,
     pub damage_type: u8,
+    pub stagger: u32,
 }
 
 #[derive(Debug, Serialize, Clone, Default)]

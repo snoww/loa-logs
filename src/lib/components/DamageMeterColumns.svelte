@@ -2,7 +2,7 @@
   import type { LogColumn } from "$lib/column";
   import type { EncounterState } from "$lib/encounter.svelte.js";
   import { EntityState } from "$lib/entity.svelte.js";
-  import { customRound } from "$lib/utils";
+  import { abbreviateNumberSplit, customRound } from "$lib/utils";
   import { badTooltip, damageValue, fadTooltip, percentValue } from "./Snippets.svelte";
 
   export const logColumns: LogColumn<EncounterState, EntityState>[] = [
@@ -204,6 +204,17 @@
       valueTooltip: null
     },
 
+    // Stagger
+    {
+      show(enc) {
+        return enc.anyStagger;
+      },
+      headerText: "STAG",
+      headerTooltip: "Total Stagger Damage",
+      value: stagger,
+      valueTooltip: staggerTooltip,
+    },
+
     // Counters
     {
       show(enc) {
@@ -315,4 +326,16 @@
 
 {#snippet counters(state: EntityState)}
   {state.entity.skillStats.counters}
+{/snippet}
+
+{#snippet stagger(state: EntityState)}
+  {#if state.entity.damageStats.stagger > 0}
+    {@render damageValue(abbreviateNumberSplit(state.entity.damageStats.stagger))}
+  {:else}
+    -
+  {/if}
+{/snippet}
+
+{#snippet staggerTooltip(state: EntityState)}
+  {state.entity.damageStats.stagger ? state.entity.damageStats.stagger.toLocaleString() : "N/A"}
 {/snippet}

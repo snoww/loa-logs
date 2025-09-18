@@ -555,6 +555,7 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
                             target_max_hp: event.skill_damage_event.max_hp,
                             damage_attribute: event.skill_damage_event.damage_attr,
                             damage_type: event.skill_damage_event.damage_type,
+                            stagger: event.skill_damage_event.u32_0,
                         };
 
                         state.on_damage(
@@ -607,6 +608,7 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
                             target_max_hp: event.max_hp,
                             damage_attribute: event.damage_attr,
                             damage_type: event.damage_type,
+                            stagger: event.u32_0,
                         };
                         state.on_damage(
                             &owner,
