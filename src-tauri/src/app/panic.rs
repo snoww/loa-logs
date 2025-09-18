@@ -3,7 +3,7 @@ use tauri_plugin_opener::OpenerExt;
 
 use crate::app;
 
-pub fn show_dialog_on_panic(app: &tauri::AppHandle, panic_message: &str) {
+fn show_dialog_on_panic(app: &tauri::AppHandle, panic_message: &str) {
     const LOG_FILENAME: &str = "loa_logs_rCURRENT.log";
     const BUTTON_OPEN: &str = "Show Log File";
 
@@ -37,10 +37,12 @@ pub fn set_hook(app: &tauri::AppHandle) {
     std::panic::set_hook(Box::new(move |info| {
         let message = format!("{info}");
         log::error!("{}", message.replace('\n', " "));
+        #[cfg(not(debug_assertions))]
+        log::error!("{:?}", std::backtrace::Backtrace::force_capture());
         log::logger().flush();
 
         if !cfg!(debug_assertions) {
-            app::panic::show_dialog_on_panic(&app, &message);
+            show_dialog_on_panic(&app, &message);
         }
     }));
 }
