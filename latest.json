@@ -1,11 +1,11 @@
 {
-  "version": "v1.33.2",
-  "notes": "### v1.33.2 - September 17th, 2025\n\n#### Known Issues\n- meter window position might be reset after update\n\n#### NEW FEATURES\n- updated meter for assault raids\n- added skill names for paradise items\n\n#### BUG FIXES AND IMPROVEMENTS\n- improved meter backend\n- fixed uploading not working\n- fixed buffs not showing for older logs\n\n",
+  "version": "v1.33.3",
+  "notes": "### v1.33.3 - September 17th, 2025\n\n#### P.S. If you see any of us in town or raid, consider dropping an honor! \n- Snowving on Luterra\n- Administrator on Ratik\n- Poont on Gienah\n\n#### NEW FEATURES\n- added new stagger column\n  - applies to skills, skill breakdowns, and skill hits\n\n![party_stagger](https://i.imgur.com/JOEoZdI.png)\n\n![skill_breakdown_stagger](https://i.imgur.com/UG7Zt8H.png)\n\n#### BUG FIXES AND IMPROVEMENTS\n- fix crashes when settings was malformed\n\n",
   "pub_date": "2025-09-17T17:40:34.649Z",
   "platforms": {
     "windows-x86_64": {
-      "url": "https://github.com/snoww/loa-logs/releases/download/v1.33.2/LOA.Logs_1.33.2_x64-setup.nsis.zip",
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlRHeVNCaUpUZ1JMYXA3bFlMRXhxUUhBMlYwdmVkUERsNnF6UWdMMTQvbXBvV0FscjRTSWxvc245VndpZmF6bjF0YnVMWGMyai9EdHhLK1dkMnhOWVF3PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzU4MTQ1NDQ0CWZpbGU6TE9BIExvZ3NfMS4zMy4yX3g2NC1zZXR1cC5uc2lzLnppcApROHdDRGVBUVdvV2UyT3Vta2M1ZlJyY0k4TGRFT1V1Q09rdkZMUHM5aGgxN3h4TjhlZzlhUWRQdUV1eWg0dFVqcWEzOU5Yb0ZlZVJ2YWJHWWVEaWtBZz09Cg=="
+      "url": "https://github.com/snoww/loa-logs/releases/download/v1.33.3/LOA.Logs_1.33.3_x64-setup.nsis.zip",
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlhuL29ZVC91NDNtV1FXa3U4RE94aEhackdxbHNMN3YrSEtwd3ZjQnovVW1CLytxYmZoNm5ZQVN1V3Q5aFZBKyt1WUNhN0RaRXEzelA3R0g4K0JUTUF3PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzU4MTU2MzIwCWZpbGU6TE9BIExvZ3NfMS4zMy4zX3g2NC1zZXR1cC5uc2lzLnppcAppZC9HdnJGTWtuU3c2T0xtMnFpekFBZ0FVNUlCOWxidVdNdkg0Vk41TnlqampsRjIrNkpldWE4TkkxNGU1bHFkQklNT2FPVlpGWEFyUjQwc2IrUzdEdz09Cg=="
     }
   }
 }

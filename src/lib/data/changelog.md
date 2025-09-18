@@ -1,11 +1,33 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.33.2 - September 17th, 2025
+    v1.33.3 - September 17th, 2025
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
   </div>
 </div>
+
+#### P.S. If you see any of us in town or raid, consider dropping an honor!
+- Snowving on Luterra
+- Administrator on Ratik
+- Poont on Gienah
+
+#### NEW FEATURES
+
+- added new stagger column
+  - applies to skills, skill breakdowns, and skill hits
+
+![party_stagger](https://i.imgur.com/JOEoZdI.png)
+
+![skill_breakdown_stagger](https://i.imgur.com/UG7Zt8H.png)
+
+#### BUG FIXES AND IMPROVEMENTS
+
+- fix crashes when settings was malformed
+
+---
+
+### v1.33.2 - September 17th, 2025
 
 #### Known Issues
 
