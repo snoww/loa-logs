@@ -1169,7 +1169,7 @@ pub fn insert_data(
         .entities
         .values()
         .filter(|e| {
-            ((e.entity_type == EntityType::Player && e.class_id != 0 && e.max_hp > 0)
+            ((e.entity_type == EntityType::Player && e.class_id > 0)
                 || e.name == encounter.local_player)
                 && e.damage_stats.damage_dealt > 0
         })

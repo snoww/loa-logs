@@ -232,7 +232,9 @@ impl EncounterState {
                 player.id = entity.id;
                 player.gear_score = entity.gear_level;
                 player.current_hp = hp;
-                player.max_hp = max_hp;
+                if max_hp > 0 {
+                    player.max_hp = max_hp;
+                }
                 if entity.character_id > 0 {
                     player.character_id = entity.character_id;
                 }
