@@ -1,4 +1,3 @@
-export type FontScale = "0" | "1" | "2" | "3";
 export interface AppSettings {
   general: {
     startLoaOnStart: boolean;
@@ -25,8 +24,8 @@ export interface AppSettings {
     blurWin11: boolean;
     isWin11: boolean;
     transparent: boolean;
-    scale: FontScale;
-    logScale: FontScale;
+    scale: string;
+    logScale: string;
     alwaysOnTop: boolean;
     bossOnlyDamage: boolean;
     keepFavorites: boolean;
