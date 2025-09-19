@@ -142,7 +142,6 @@ impl<'a> Migrator<'a> {
                 info!("⚠️ Found database without migrations, setting up migrations");
                 connection.execute(MIGRATIONS_TABLE_SQL, [])?;
                 migrations = collect_migrations(self.migrations_folder, None)?;
-                info!("📦 Collected {} migrations to apply", migrations.len());
             },
             DatabaseState::ExistingWithMigrations(ref migration) => {
                 info!(
