@@ -857,8 +857,10 @@ pub fn insert_data(
         support_ap,
         support_brand,
         support_identity,
-        support_hyper
-    ) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17, ?18, ?19, ?20, ?21, ?22, ?23, ?24, ?25)",
+        support_hyper,
+        unbuffed_damage,
+        unbuffed_dps
+    ) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17, ?18, ?19, ?20, ?21, ?22, ?23, ?24, ?25, ?26, ?27)",
         )
         .expect("failed to prepare entity statement");
 
@@ -1035,6 +1037,19 @@ pub fn insert_data(
                 entity.ark_passive_data = info.ark_passive_data.clone();
                 entity.loadout_hash = info.loadout_snapshot.clone();
             }
+
+            // sum pseudo rdps data
+            let mut buffed_damage = 0;
+            for skill in entity.skills.values() {
+                for (rdps_type, entry) in skill.rdps_received.iter() {
+                    if matches!(*rdps_type, 1 | 3 | 5) {
+                        buffed_damage += entry.values().sum::<i64>();
+                    }
+                }
+            }
+            entity.damage_stats.unbuffed_damage = entity.damage_stats.damage_dealt - buffed_damage;
+            entity.damage_stats.unbuffed_dps =
+                entity.damage_stats.unbuffed_damage / duration_seconds;
         }
 
         if entity.name == encounter.local_player {
@@ -1135,6 +1150,8 @@ pub fn insert_data(
                 support_buffs
                     .map(|b| b.hyper)
                     .unwrap_or(entity.damage_stats.buffed_by_hat as f64 / damage_without_hyper),
+                entity.damage_stats.unbuffed_damage,
+                entity.damage_stats.unbuffed_dps
             ])
             .expect("failed to insert entity");
     }

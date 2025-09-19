@@ -63,10 +63,26 @@
           </QuickTooltip>
         </td>
       {/if}
+      {#if enc.curSettings.breakdown.unbuffedDamage}
+        {@const unbuffedDamage = abbreviateNumberSplit(entity.damageStats.unbuffedDamage)}
+        <td class="px-1 text-center">
+          <QuickTooltip tooltip={entity.damageStats.unbuffedDamage.toLocaleString()}>
+            {unbuffedDamage[0]}<span class="text-xxs text-gray-300">{unbuffedDamage[1]}</span>
+          </QuickTooltip>
+        </td>
+      {/if}
       {#if enc.curSettings.breakdown.dps}
         <td class="px-1 text-center">
           <QuickTooltip tooltip={entity.damageStats.dps.toLocaleString()}>
             {entityState.dpsString[0]}<span class="text-xxs text-gray-300">{entityState.dpsString[1]}</span>
+          </QuickTooltip>
+        </td>
+      {/if}
+      {#if enc.curSettings.breakdown.unbuffedDps}
+        {@const unbuffedDps = abbreviateNumberSplit(entity.damageStats.unbuffedDps)}
+        <td class="px-1 text-center">
+          <QuickTooltip tooltip={entity.damageStats.unbuffedDps.toLocaleString()}>
+            {unbuffedDps[0]}<span class="text-xxs text-gray-300">{unbuffedDps[1]}</span>
           </QuickTooltip>
         </td>
       {/if}

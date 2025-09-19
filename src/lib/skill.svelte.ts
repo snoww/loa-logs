@@ -16,6 +16,28 @@ export class SkillState {
   });
   skillDpsString = $derived(abbreviateNumberSplit(this.skillDps));
   skillDamageString = $derived(abbreviateNumberSplit(this.skill.totalDamage));
+  skillUnbuffedDamage = $derived.by(() => {
+    const rdpsData = this.skill.rdpsReceived;
+    if (!rdpsData) return 0;
+
+    let sum = 0;
+    for (const rdpsType of [1, 3, 5]) {
+      const buffedBySkill = rdpsData[rdpsType];
+      if (!buffedBySkill) continue;
+      for (const value of Object.values(buffedBySkill)) {
+        sum += value;
+      }
+    }
+    return this.skill.totalDamage - sum;
+  });
+  skillUnbuffedDps = $derived.by(() => {
+    // the dps calculated here can slightly differ from one calculated in backend (prolly due to time/rounding? idk)
+    // so returning pre-calculated dps if unbuffed damage equals total damage
+    if (this.skillUnbuffedDamage === this.skill.totalDamage) return this.skillDps;
+    return Math.round(this.skillUnbuffedDamage / (this.entity.encounter.duration / 1000));
+  });
+  skillUnbuffedDamageString = $derived(abbreviateNumberSplit(this.skillUnbuffedDamage));
+  skillUnbuffedDpsString = $derived(abbreviateNumberSplit(this.skillUnbuffedDps));
   critPercentage = $derived.by(() => {
     if (this.skill.hits > 0) {
       return customRound((this.skill.crits / this.skill.hits) * 100);

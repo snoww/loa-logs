@@ -111,13 +111,14 @@ pub struct DamageStats {
     pub dps_average: Vec<i64>,
     #[serde(default)]
     pub dps_rolling_10s_avg: Vec<i64>,
-    pub rdps_damage_received: i64,
-    pub rdps_damage_received_support: i64,
-    pub rdps_damage_given: i64,
     #[serde(default)]
     pub incapacitations: Vec<IncapacitatedEvent>,
     #[serde(default)]
     pub stagger: i64,
+    #[serde(default)]
+    pub unbuffed_damage: i64,
+    #[serde(default)]
+    pub unbuffed_dps: i64,
 }
 
 #[derive(Debug, Default, Serialize, Deserialize, Clone)]
@@ -145,6 +146,15 @@ pub struct DamageData {
     pub damage_attribute: Option<u8>,
     pub damage_type: u8,
     pub stagger: u32,
+    pub rdps_data: Vec<RdpsData>
+}
+
+#[derive(Debug)]
+pub struct RdpsData {
+    pub rdps_type: u8,
+    pub value: i64,
+    pub source_character_id: u64, // character_id
+    pub skill_id: u32, // buff source skill
 }
 
 #[derive(Debug, Serialize, Clone, Default)]

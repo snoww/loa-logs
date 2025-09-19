@@ -60,6 +60,8 @@ export interface AppSettings {
     profileShortcut: boolean;
     damage: boolean;
     dps: boolean;
+    unbuffedDamage: boolean;
+    unbuffedDps: boolean;
     damagePercent: boolean;
     deathTime: boolean;
     incapacitatedTime: boolean;
@@ -78,6 +80,8 @@ export interface AppSettings {
     breakdown: {
       damage: boolean;
       dps: boolean;
+      unbuffedDamage: boolean;
+      unbuffedDps: boolean;
       damagePercent: boolean;
       critRate: boolean;
       critDmg: boolean;
@@ -106,6 +110,8 @@ export interface AppSettings {
     profileShortcut: boolean;
     damage: boolean;
     dps: boolean;
+    unbuffedDamage: boolean;
+    unbuffedDps: boolean;
     damagePercent: boolean;
     deathTime: boolean;
     incapacitatedTime: boolean;
@@ -124,6 +130,8 @@ export interface AppSettings {
     breakdown: {
       damage: boolean;
       dps: boolean;
+      unbuffedDamage: boolean;
+      unbuffedDps: boolean;
       damagePercent: boolean;
       critRate: boolean;
       adjustedCritRate: boolean;

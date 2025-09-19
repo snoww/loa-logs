@@ -1,5 +1,5 @@
-use crate::get_db_connection;
 use crate::data::*;
+use crate::get_db_connection;
 use crate::live::entity_tracker::{Entity, EntityTracker};
 use crate::live::skill_tracker::SkillTracker;
 use crate::live::stats_api::StatsApi;
@@ -560,13 +560,16 @@ impl EncounterState {
         }
 
         // ensure source entity exists in encounter
-        self.encounter
+        let source_type = self
+            .encounter
             .entities
             .entry(dmg_src_entity.name.clone())
-            .or_insert_with(|| encounter_entity_from_entity(dmg_src_entity));
+            .or_insert_with(|| encounter_entity_from_entity(dmg_src_entity))
+            .entity_type;
 
         // ensure target entity exists in encounter
-        self.encounter
+        let target_type = self
+            .encounter
             .entities
             .entry(dmg_target_entity.name.clone())
             .or_insert_with(|| {
@@ -574,33 +577,20 @@ impl EncounterState {
                 target_entity.current_hp = damage_data.target_current_hp;
                 target_entity.max_hp = damage_data.target_max_hp;
                 target_entity
-            });
+            })
+            .entity_type;
 
         if dmg_src_entity.name == dmg_target_entity.name {
             info!("ignoring self damage from {}", dmg_src_entity.name);
             return;
         }
 
-        let [Some(source_entity), Some(target_entity)] = self
-            .encounter
-            .entities
-            .get_many_mut([&dmg_src_entity.name, &dmg_target_entity.name])
-        else {
-            warn!(
-                "{}, {} not found in encounter entities",
-                dmg_src_entity.name, dmg_target_entity.name
-            );
-            return;
-        };
-
         // if boss only damage is enabled
         // check if target is boss and not player
         // check if target is player and source is boss
         if self.boss_only_damage
-            && ((target_entity.entity_type != EntityType::Boss
-                && target_entity.entity_type != EntityType::Player)
-                || (target_entity.entity_type == EntityType::Player
-                    && source_entity.entity_type != EntityType::Boss))
+            && ((target_type != EntityType::Boss && target_type != EntityType::Player)
+                || (target_type == EntityType::Player && source_type != EntityType::Boss))
         {
             return;
         }
@@ -608,9 +598,9 @@ impl EncounterState {
         if self.encounter.fight_start == 0 {
             self.encounter.fight_start = timestamp;
             self.skill_tracker.fight_start = timestamp;
-            if source_entity.entity_type == EntityType::Player && damage_data.skill_id > 0 {
+            if target_type == EntityType::Player && damage_data.skill_id > 0 {
                 self.skill_tracker.new_cast(
-                    source_entity.id,
+                    dmg_src_entity.id,
                     damage_data.skill_id,
                     None,
                     timestamp,
@@ -630,6 +620,35 @@ impl EncounterState {
         }
 
         self.encounter.last_combat_packet = timestamp;
+
+        // apply pseudo rdps contributions
+        for entry in damage_data.rdps_data.iter() {
+            // find entity that made this contribution and add to the skill for it.
+            if let Some((_, contributor_entity)) = self
+                .encounter
+                .entities
+                .iter_mut()
+                .find(|(_, e)| e.character_id == entry.source_character_id)
+                && let Some(contributor_skill) = contributor_entity.skills.get_mut(&entry.skill_id)
+            {
+                *contributor_skill
+                    .rdps_contributed
+                    .entry(entry.rdps_type)
+                    .or_default() += entry.value;
+            }
+        }
+
+        let [Some(source_entity), Some(target_entity)] = self
+            .encounter
+            .entities
+            .get_many_mut([&dmg_src_entity.name, &dmg_target_entity.name])
+        else {
+            warn!(
+                "{}, {} not found in encounter entities",
+                dmg_src_entity.name, dmg_target_entity.name
+            );
+            return;
+        };
 
         source_entity.id = dmg_src_entity.id;
 
@@ -706,6 +725,16 @@ impl EncounterState {
 
         skill.stagger += damage_data.stagger as i64;
         source_entity.damage_stats.stagger += damage_data.stagger as i64;
+
+        // apply pseudo rdps damage
+        for entry in damage_data.rdps_data {
+            *skill
+                .rdps_received
+                .entry(entry.rdps_type)
+                .or_default()
+                .entry(entry.skill_id)
+                .or_default() += entry.value;
+        }
 
         if is_hyper_awakening {
             source_entity.damage_stats.hyper_awakening_damage += damage;
@@ -800,24 +829,24 @@ impl EncounterState {
                     let hat = is_hat_buff(buff_id);
                     if ((!is_buffed_by_support && !hat) || !is_buffed_by_identity)
                         && let Some(buff) = self.encounter.encounter_damage_stats.buffs.get(buff_id)
+                    {
+                        if !is_buffed_by_support
+                            && !hat
+                            && buff.buff_type & StatusEffectBuffTypeFlags::DMG.bits() != 0
+                            && buff.buff_category == "supportbuff"
+                            && SUPPORT_AP_GROUP.contains(&buff.unique_group)
                         {
-                            if !is_buffed_by_support
-                                && !hat
-                                && buff.buff_type & StatusEffectBuffTypeFlags::DMG.bits() != 0
-                                && buff.buff_category == "supportbuff"
-                                && SUPPORT_AP_GROUP.contains(&buff.unique_group)
-                            {
-                                is_buffed_by_support = true;
-                            }
-
-                            if !is_buffed_by_identity
-                                && buff.buff_type & StatusEffectBuffTypeFlags::DMG.bits() != 0
-                                && buff.buff_category == "supportbuff"
-                                && SUPPORT_IDENTITY_GROUP.contains(&buff.unique_group)
-                            {
-                                is_buffed_by_identity = true;
-                            }
+                            is_buffed_by_support = true;
                         }
+
+                        if !is_buffed_by_identity
+                            && buff.buff_type & StatusEffectBuffTypeFlags::DMG.bits() != 0
+                            && buff.buff_category == "supportbuff"
+                            && SUPPORT_IDENTITY_GROUP.contains(&buff.unique_group)
+                        {
+                            is_buffed_by_identity = true;
+                        }
+                    }
 
                     if !is_buffed_by_hat && is_hat_buff(buff_id) {
                         is_buffed_by_hat = true;

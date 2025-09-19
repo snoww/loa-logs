@@ -545,6 +545,24 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
                         let (se_on_source, se_on_target) = status_tracker
                             .borrow_mut()
                             .get_status_effects(&owner, &target_entity, local_character_id);
+
+                        let mut rdps_data = Vec::new();
+
+                        if let Some(rdps) = event
+                            .skill_damage_event
+                            .sub_p_k_t_skill_damage_abnormal_move_notify_4_2_24
+                            .sub_p_k_t_skill_damage_abnormal_move_notify_5_5_23
+                        {
+                            for i in 0..rdps.p64_0.len() {
+                                rdps_data.push(RdpsData {
+                                    rdps_type: rdps.b_0[i],
+                                    value: rdps.p64_0[i],
+                                    source_character_id: rdps.u64_0[i],
+                                    skill_id: rdps.u32_0[i],
+                                });
+                            }
+                        }
+
                         let damage_data = DamageData {
                             skill_id: pkt.skill_id,
                             skill_effect_id: pkt.skill_effect_id,
@@ -556,6 +574,7 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
                             damage_attribute: event.skill_damage_event.damage_attr,
                             damage_type: event.skill_damage_event.damage_type,
                             stagger: event.skill_damage_event.u32_0,
+                            rdps_data,
                         };
 
                         state.on_damage(
@@ -598,6 +617,22 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
                         let (se_on_source, se_on_target) = status_tracker
                             .borrow_mut()
                             .get_status_effects(&owner, &target_entity, local_character_id);
+                        let mut rdps_data = Vec::new();
+
+                        if let Some(rdps) = event
+                            .sub_p_k_t_skill_damage_abnormal_move_notify_4_2_24
+                            .sub_p_k_t_skill_damage_abnormal_move_notify_5_5_23
+                        {
+                            for i in 0..rdps.p64_0.len() {
+                                rdps_data.push(RdpsData {
+                                    rdps_type: rdps.b_0[i],
+                                    value: rdps.p64_0[i],
+                                    source_character_id: rdps.u64_0[i],
+                                    skill_id: rdps.u32_0[i],
+                                });
+                            }
+                        }
+
                         let damage_data = DamageData {
                             skill_id: pkt.skill_id,
                             skill_effect_id: pkt.skill_effect_id.unwrap_or_default(),
@@ -609,6 +644,7 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
                             damage_attribute: event.damage_attr,
                             damage_type: event.damage_type,
                             stagger: event.u32_0,
+                            rdps_data,
                         };
                         state.on_damage(
                             &owner,

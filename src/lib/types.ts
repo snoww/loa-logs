@@ -168,14 +168,13 @@ export interface Skill {
   gemDamage?: number;
   gemTier?: number;
   gemTierDmg?: number;
-  rdpsDamageReceived: number;
-  rdpsDamageReceivedSupport: number;
-  rdpsDamageGiven: number;
   skillCastLog: Array<SkillCast>;
   isHyperAwakening?: boolean;
   special?: boolean; // if special, this skill is not modifiable by buffs or crits
   timeAvailable?: number; // the total time in milliseconds this skill was off cooldown during the encounter
   stagger: number;
+  rdpsReceived: Record<number, Record<number, number>>; // rdps type -> buffedBy skill -> damage
+  rdpsContributed: Record<number, number>; // rdps type -> amount
 }
 
 export interface SkillCast {
@@ -234,6 +233,8 @@ export interface DamageStats {
   rdpsDamageGiven: number;
   incapacitations: IncapacitatedEvent[];
   stagger: number;
+  unbuffedDamage: number;
+  unbuffedDps: number;
   [key: string]: any;
 }
 

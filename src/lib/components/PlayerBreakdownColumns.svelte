@@ -19,6 +19,18 @@
       valueTooltip: damageTooltip
     },
 
+    // Unbuffed damage dealt
+    {
+      show(enc) {
+        if (!enc.encounter.curSettings.breakdown.unbuffedDamage) return false;
+        return enc.anyUnbuffedDamage;
+      },
+      headerText: "uDMG",
+      headerTooltip: "Unbuffed Damage Dealt (damage dealt excluding buffs or debuffs from the support)",
+      value: unbuffedDamage,
+      valueTooltip: unbuffedDamageTooltip
+    },
+
     // DPS
     {
       show(enc) {
@@ -28,6 +40,18 @@
       headerTooltip: "Damage per second",
       value: dps,
       valueTooltip: dpsTooltip
+    },
+
+    // Unbuffed DPS
+    {
+      show(enc) {
+        if (!enc.encounter.curSettings.breakdown.unbuffedDps) return false;
+        return enc.anyUnbuffedDamage;
+      },
+      headerText: "uDPS",
+      headerTooltip: "Unbuffed Damage per second (DPS excluding buffs or debuffs from the support)",
+      value: unbuffedDps,
+      valueTooltip: unbuffedDpsTooltip
     },
 
     // Damage %
@@ -290,7 +314,7 @@
       headerText: "STAG",
       headerTooltip: "Total Stagger Damage",
       value: stagger,
-      valueTooltip: staggerTooltip,
+      valueTooltip: staggerTooltip
     }
   ];
 </script>
@@ -509,4 +533,36 @@
 
 {#snippet staggerTooltip(state: SkillState)}
   {state.skill.stagger ? state.skill.stagger.toLocaleString() : "N/A"}
+{/snippet}
+
+{#snippet unbuffedDamage(state: SkillState)}
+  {#if state.skill.special}
+    -
+  {:else}
+    {@render damageValue(state.skillUnbuffedDamageString)}
+  {/if}
+{/snippet}
+
+{#snippet unbuffedDamageTooltip(state: SkillState)}
+  {#if state.skill.special}
+    N/A
+  {:else}
+    {state.skillUnbuffedDamage.toLocaleString()}
+  {/if}
+{/snippet}
+
+{#snippet unbuffedDps(state: SkillState)}
+  {#if state.skill.special}
+    -
+  {:else}
+    {@render damageValue(state.skillUnbuffedDpsString)}
+  {/if}
+{/snippet}
+
+{#snippet unbuffedDpsTooltip(state: SkillState)}
+  {#if state.skill.special}
+    N/A
+  {:else}
+    {state.skillUnbuffedDps.toLocaleString()}
+  {/if}
 {/snippet}

@@ -56,6 +56,19 @@
       width: "w-14"
     },
 
+    // Unbuffed damage dealt
+    {
+      show(enc) {
+        if (!enc.curSettings.unbuffedDamage) return false;
+        return enc.anyUnbuffedDamage;
+      },
+      headerText: "uDMG",
+      headerTooltip: "Unbuffed Damage Dealt (damage dealt excluding buffs or debuffs from the support)",
+      value: unbuffedDamage,
+      valueTooltip: unbuffedDamageTooltip,
+      width: "w-14"
+    },
+
     // Damage per second
     {
       show(enc) {
@@ -65,6 +78,19 @@
       headerTooltip: "Damage per second",
       value: dps,
       valueTooltip: dpsTooltip,
+      width: "w-14"
+    },
+
+    // Unbuffed damage per second
+    {
+      show(enc) {
+        if (!enc.curSettings.unbuffedDps) return false;
+        return enc.anyUnbuffedDamage;
+      },
+      headerText: "uDPS",
+      headerTooltip: "Unbuffed Damage per second (DPS excluding buffs or debuffs from the support)",
+      value: unbuffedDps,
+      valueTooltip: unbuffedDpsTooltip,
       width: "w-14"
     },
 
@@ -334,4 +360,20 @@
 
 {#snippet staggerTooltip(state: EntityState)}
   {state.entity.damageStats.stagger ? state.entity.damageStats.stagger.toLocaleString() : "N/A"}
+{/snippet}
+
+{#snippet unbuffedDamage(state: EntityState)}
+  {@render damageValue(abbreviateNumberSplit(state.entity.damageStats.unbuffedDamage))}
+{/snippet}
+
+{#snippet unbuffedDamageTooltip(state: EntityState)}
+  {state.entity.damageStats.unbuffedDamage.toLocaleString()}
+{/snippet}
+
+{#snippet unbuffedDps(state: EntityState)}
+  {@render damageValue(abbreviateNumberSplit(state.entity.damageStats.unbuffedDps))}
+{/snippet}
+
+{#snippet unbuffedDpsTooltip(state: EntityState)}
+  {state.entity.damageStats.unbuffedDps.toLocaleString()}
 {/snippet}

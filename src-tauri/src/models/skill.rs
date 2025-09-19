@@ -40,9 +40,6 @@ pub struct Skill {
     pub gem_damage: Option<u8>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub gem_tier_dmg: Option<u8>,
-    pub rdps_damage_received: i64,
-    pub rdps_damage_received_support: i64,
-    pub rdps_damage_given: i64,
     pub skill_cast_log: Vec<SkillCast>,
 
     #[serde(default)]
@@ -60,6 +57,35 @@ pub struct Skill {
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub time_available: Option<i64>, // total time skill was available to cast
+
+    // rdps types:
+    // 1: damage bonuses that apply to the character
+    //  value is the bonus damage done
+    //  Support AP buffs (e.g. Heavenly Tune)
+    //  Support Identity (e.g. Serenade of Courage, Major Chord)
+    // 2: not seen
+    // 3: damage taken debuffs that apply to the boss
+    //  value is the bonus damage done
+    //  Support Brands (e.g. Sonatina)
+    // 4: damage reduction debuffs that apply to the character
+    //  value is the amount of damage blocked
+    //  Support DR (e.g. Guardian Tune)
+    //  Also seen for some other class DRs: Gunlancer DR, Soulfist DR
+    // 5: hyper awakening damage increase
+    //  value is the bonus damage done
+    //  Applies to HA only
+    //  Support T-skill (e.g. Aria)
+    // 6: attack damage debuffs that apply to the boss
+    //  value is the amount of damage blocked
+    //  Support DR (e.g. Heavenly Tune tripods)
+    //  Some other classes (e.g. Drizzle Aeromancer Sun Shower debuff)
+
+    // rDPS type -> BuffedBy skill_id -> damage received
+    #[serde(default)]
+    pub rdps_received: HashMap<u8, HashMap<u32, i64>>,
+    // rDPS type -> amount contributed
+    #[serde(default)]
+    pub rdps_contributed: HashMap<u8, i64>,
 }
 
 #[derive(Debug, Default, Serialize, Deserialize, Clone)]

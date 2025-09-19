@@ -147,6 +147,7 @@ export class EntityState {
 
   anyCooldownRatio = $derived(this.skills.some((skill) => skill.timeAvailable));
   anyStagger = $derived(this.entity.damageStats.stagger > 0);
+  anyUnbuffedDamage = $derived(this.entity.damageStats.unbuffedDamage > 0);
 
   constructor(entity: Entity, enc: EncounterState) {
     this.entity = entity;

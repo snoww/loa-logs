@@ -429,6 +429,8 @@ fn setup_db(app: &tauri::AppHandle) -> Result<(), rusqlite::Error> {
 
     migration_buff_summary(&tx)?;
 
+    migration_pseudo_rdps(&tx)?;
+
     stmt.finalize()?;
     info!("finished setting up database");
     tx.commit()
@@ -683,6 +685,17 @@ fn migration_buff_summary(tx: &Transaction) -> Result<(), rusqlite::Error> {
         tx.execute("ALTER TABLE entity ADD COLUMN support_brand REAL", [])?;
         tx.execute("ALTER TABLE entity ADD COLUMN support_identity REAL", [])?;
         tx.execute("ALTER TABLE entity ADD COLUMN support_hyper REAL", [])?;
+    }
+
+    stmt.finalize()
+}
+
+fn migration_pseudo_rdps(tx: &Transaction) -> Result<(), rusqlite::Error> {
+    let mut stmt = tx.prepare("SELECT 1 FROM pragma_table_info(?) WHERE name=?")?;
+    if !stmt.exists(["entity", "unbuffed_damage"])? {
+        info!("adding pseudo rdps columns");
+        tx.execute("ALTER TABLE entity ADD COLUMN unbuffed_damage INTEGER DEFAULT 0", [])?;
+        tx.execute("ALTER TABLE entity ADD COLUMN unbuffed_dps INTEGER DEFAULT 0", [])?;
     }
 
     stmt.finalize()
