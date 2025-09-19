@@ -23,7 +23,6 @@
 
   let { entity, enc, handleRightClick }: Props = $props();
   let entityState = $derived(new EntityState(entity, enc));
-  $inspect(entity);
 </script>
 
 <thead class="z-30 h-6 {enc.live ? 'sticky top-0 backdrop-blur-lg' : ''}">
