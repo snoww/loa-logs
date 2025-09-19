@@ -5,6 +5,7 @@
   import { abbreviateNumberSplit, customRound } from "$lib/utils";
   import { badTooltip, damageValue, fadTooltip, percentValue } from "./Snippets.svelte";
   import { settings } from "$lib/stores.svelte";
+  import { EntityType } from "$lib/types";
 
   export const logColumns: LogColumn<EncounterState, EntityState>[] = [
     // Dead for
@@ -267,15 +268,23 @@
 {/snippet}
 
 {#snippet incap(state: EntityState)}
-  {(state.incapacitatedTimeMs.total / 1000).toFixed(1)}s
+  {#if state.entity.entityType === EntityType.ESTHER}
+    -
+  {:else}
+    {(state.incapacitatedTimeMs.total / 1000).toFixed(1)}s
+  {/if}
 {/snippet}
 
 {#snippet incapTooltip(state: EntityState)}
-  {@const { knockDown, cc } = state.incapacitatedTimeMs}
-  <div class="-mx-px flex flex-col space-y-1 py-px text-xs font-normal">
-    <span class="text-gray-300">Knockdowns: {(knockDown / 1000).toFixed(1)}s</span>
-    <span class="text-gray-300">Crowd control: {(cc / 1000).toFixed(1)}s</span>
-  </div>
+  {#if state.entity.entityType === EntityType.ESTHER}
+    N/A
+  {:else}
+    {@const { knockDown, cc } = state.incapacitatedTimeMs}
+    <div class="-mx-px flex flex-col space-y-1 py-px text-xs font-normal">
+      <span class="text-gray-300">Knockdowns: {(knockDown / 1000).toFixed(1)}s</span>
+      <span class="text-gray-300">Crowd control: {(cc / 1000).toFixed(1)}s</span>
+    </div>
+  {/if}
 {/snippet}
 
 {#snippet damage(state: EntityState)}
@@ -347,7 +356,11 @@
 {/snippet}
 
 {#snippet counters(state: EntityState)}
-  {state.entity.skillStats.counters}
+  {#if state.entity.entityType === EntityType.ESTHER}
+    -
+  {:else}
+    {state.entity.skillStats.counters}
+  {/if}
 {/snippet}
 
 {#snippet stagger(state: EntityState)}
@@ -363,17 +376,33 @@
 {/snippet}
 
 {#snippet unbuffedDamage(state: EntityState)}
-  {@render damageValue(abbreviateNumberSplit(state.entity.damageStats.unbuffedDamage))}
+  {#if state.entity.entityType === EntityType.ESTHER}
+    -
+  {:else}
+    {@render damageValue(abbreviateNumberSplit(state.entity.damageStats.unbuffedDamage))}
+  {/if}
 {/snippet}
 
 {#snippet unbuffedDamageTooltip(state: EntityState)}
-  {state.entity.damageStats.unbuffedDamage.toLocaleString()}
+  {#if state.entity.entityType === EntityType.ESTHER}
+    N/A
+  {:else}
+    {state.entity.damageStats.unbuffedDamage.toLocaleString()}
+  {/if}
 {/snippet}
 
 {#snippet unbuffedDps(state: EntityState)}
-  {@render damageValue(abbreviateNumberSplit(state.entity.damageStats.unbuffedDps))}
+  {#if state.entity.entityType === EntityType.ESTHER}
+    -
+  {:else}
+    {@render damageValue(abbreviateNumberSplit(state.entity.damageStats.unbuffedDps))}
+  {/if}
 {/snippet}
 
 {#snippet unbuffedDpsTooltip(state: EntityState)}
-  {state.entity.damageStats.unbuffedDps.toLocaleString()}
+  {#if state.entity.entityType === EntityType.ESTHER}
+    N/A
+  {:else}
+    {state.entity.damageStats.unbuffedDps.toLocaleString()}
+  {/if}
 {/snippet}
