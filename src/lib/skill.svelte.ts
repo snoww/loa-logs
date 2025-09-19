@@ -17,12 +17,11 @@ export class SkillState {
   skillDpsString = $derived(abbreviateNumberSplit(this.skillDps));
   skillDamageString = $derived(abbreviateNumberSplit(this.skill.totalDamage));
   skillUnbuffedDamage = $derived.by(() => {
-    const rdpsData = this.skill.rdpsReceived;
-    if (!rdpsData) return 0;
+    if (!this.skill.rdpsReceived) return 0;
 
     let sum = 0;
     for (const rdpsType of [1, 3, 5]) {
-      const buffedBySkill = rdpsData[rdpsType];
+      const buffedBySkill = this.skill.rdpsReceived[rdpsType];
       if (!buffedBySkill) continue;
       for (const value of Object.values(buffedBySkill)) {
         sum += value;
@@ -38,6 +37,16 @@ export class SkillState {
   });
   skillUnbuffedDamageString = $derived(abbreviateNumberSplit(this.skillUnbuffedDamage));
   skillUnbuffedDpsString = $derived(abbreviateNumberSplit(this.skillUnbuffedDps));
+
+  skillBuffedDamage = $derived(sumRdpsContributed(this.skill, [1, 3, 5]));
+
+  skillBuffedDps = $derived.by(() => {
+    if (this.skillBuffedDamage === 0) return 0;
+    return Math.round(this.skillBuffedDamage / (this.entity.encounter.duration / 1000));
+  });
+
+  skillDamageReduced = $derived(sumRdpsContributed(this.skill, [4, 6]));
+
   critPercentage = $derived.by(() => {
     if (this.skill.hits > 0) {
       return customRound((this.skill.crits / this.skill.hits) * 100);
@@ -111,4 +120,18 @@ export class SkillState {
     this.entity = entity;
     this.skill = skill;
   }
+}
+
+// sums up all rdps contributed values for types 1, 3, and 5 (ap buff, brand, identity, t)
+export function sumRdpsContributed(skill: Skill, types: number[] = [1, 3, 5]): number {
+  if (!skill.rdpsContributed) return 0;
+
+  let sum = 0;
+  for (const t of types) {
+    const value = skill.rdpsContributed[t];
+    if (!value) continue;
+
+    sum += value;
+  }
+  return sum;
 }

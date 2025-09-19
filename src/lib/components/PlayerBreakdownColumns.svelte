@@ -3,8 +3,8 @@
   import { EntityState } from "$lib/entity.svelte.js";
   import { SkillState } from "$lib/skill.svelte.js";
   import { settings } from "$lib/stores.svelte.js";
+  import { abbreviateNumber, abbreviateNumberSplit, customRound, percentDifference } from "$lib/utils";
   import { hyperAwakeningIds } from "$lib/utils/buffs";
-  import { abbreviateNumberSplit, customRound } from "$lib/utils";
   import { damageValue, percentValue } from "./Snippets.svelte";
 
   export const playerBreakdownColumns: LogColumn<EntityState, SkillState>[] = [
@@ -31,6 +31,17 @@
       valueTooltip: unbuffedDamageTooltip
     },
 
+    // Buffed damage (support's view)
+    {
+      show(enc) {
+        return enc.hasRdpsContributions;
+      },
+      headerText: "bDMG",
+      headerTooltip: "Total Damage Buffed by Skill",
+      value: buffedDamage,
+      valueTooltip: buffedDamageTooltip
+    },
+
     // DPS
     {
       show(enc) {
@@ -54,6 +65,17 @@
       valueTooltip: unbuffedDpsTooltip
     },
 
+    // Buffed dps (support's view)
+    {
+      show(enc) {
+        return enc.hasRdpsContributions;
+      },
+      headerText: "bDPS",
+      headerTooltip: "Damage Per Second Buffed by Skill",
+      value: buffedDps,
+      valueTooltip: buffedDpsTooltip
+    },
+
     // Damage %
     {
       show(enc) {
@@ -62,6 +84,17 @@
       headerText: "D%",
       headerTooltip: "Damage %",
       value: damagePct,
+      valueTooltip: null
+    },
+
+    // Buffed damage % (support's view)
+    {
+      show(enc) {
+        return enc.hasRdpsContributions;
+      },
+      headerText: "bD%",
+      headerTooltip: "Percentage of Total Buffed by Skill",
+      value: buffedPct,
       valueTooltip: null
     },
 
@@ -315,6 +348,17 @@
       headerTooltip: "Total Stagger Damage",
       value: stagger,
       valueTooltip: staggerTooltip
+    },
+
+    // Damage reduced (support's view)
+    {
+      show(enc) {
+        return enc.hasDrContributions;
+      },
+      headerText: "DR",
+      headerTooltip: "Total Damage Reduced by Skill",
+      value: drDamage,
+      valueTooltip: drDamageTooltip
     }
   ];
 </script>
@@ -563,6 +607,68 @@
   {#if state.skill.special}
     N/A
   {:else}
-    {state.skillUnbuffedDps.toLocaleString()}
+    {@const unbuffed = state.skillUnbuffedDps}
+    {@const buffed = state.skillDps - unbuffed}
+    <div class="-mx-px flex flex-col space-y-1 py-px text-xs font-normal">
+      <span class="text-gray-300">Base: {abbreviateNumber(unbuffed, 2)}</span>
+      <span class="text-gray-300">Buffed: {abbreviateNumber(buffed, 2)}</span>
+      <span class="text-gray-300">Contribution: {percentDifference(state.skillDps, unbuffed).toFixed(1)}%</span>
+    </div>
+  {/if}
+{/snippet}
+
+{#snippet buffedDamage(state: SkillState)}
+  {#if state.skillBuffedDamage > 0}
+    {@render damageValue(abbreviateNumberSplit(state.skillBuffedDamage))}
+  {:else}
+    -
+  {/if}
+{/snippet}
+
+{#snippet buffedDamageTooltip(state: SkillState)}
+  {#if state.skillBuffedDamage > 0}
+    {state.skillBuffedDamage.toLocaleString()}
+  {:else}
+    N/A
+  {/if}
+{/snippet}
+
+{#snippet buffedDps(state: SkillState)}
+  {#if state.skillBuffedDamage > 0}
+    {@render damageValue(abbreviateNumberSplit(state.skillBuffedDps))}
+  {:else}
+    -
+  {/if}
+{/snippet}
+
+{#snippet buffedDpsTooltip(state: SkillState)}
+  {#if state.skillBuffedDamage > 0}
+    {state.skillBuffedDps.toLocaleString()}
+  {:else}
+    N/A
+  {/if}
+{/snippet}
+
+{#snippet buffedPct(state: SkillState)}
+  {#if state.skillBuffedDamage > 0}
+    {@render percentValue(customRound((state.skillBuffedDamage / state.entity.totalDamageBuffed) * 100))}
+  {:else}
+    -
+  {/if}
+{/snippet}
+
+{#snippet drDamage(state: SkillState)}
+  {#if state.skillDamageReduced > 0}
+    {@render damageValue(abbreviateNumberSplit(state.skillDamageReduced))}
+  {:else}
+    -
+  {/if}
+{/snippet}
+
+{#snippet drDamageTooltip(state: SkillState)}
+  {#if state.skillDamageReduced > 0}
+    {state.skillDamageReduced.toLocaleString()}
+  {:else}
+    N/A
   {/if}
 {/snippet}

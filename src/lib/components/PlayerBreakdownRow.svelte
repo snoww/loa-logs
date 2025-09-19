@@ -6,9 +6,9 @@
   import { getSkillIcon, rgbLinearShadeAdjust } from "$lib/utils";
   import { cubicOut } from "svelte/easing";
   import { Tween } from "svelte/motion";
+  import { playerBreakdownColumns } from "./PlayerBreakdownColumns.svelte";
   import QuickTooltip from "./QuickTooltip.svelte";
   import { skillTooltip } from "./Snippets.svelte";
-  import { playerBreakdownColumns } from "./PlayerBreakdownColumns.svelte";
 
   interface Props {
     skill: Skill;
