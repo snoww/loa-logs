@@ -113,7 +113,7 @@
       {#if enc.curSettings.breakdown.unbuffedDamage && entityState.hasRdpsContributions}
         {@const supportDamagePercent = ((entityState.totalDamageBuffed / enc.totalDamageDealt) * 100).toFixed(1)}
         <td class="px-1 text-center">
-          <QuickTooltip tooltip="Contributed {supportDamagePercent}% of total damage">
+          <QuickTooltip tooltip="Contributed {supportDamagePercent}% of total raid damage">
             {supportDamagePercent}<span class="text-xs text-gray-300">%</span>
           </QuickTooltip>
         </td>

@@ -37,7 +37,7 @@
         return enc.hasRdpsContributions;
       },
       headerText: "bDMG",
-      headerTooltip: "Total Damage Buffed by Skill",
+      headerTooltip: "Total Damage Buffed",
       value: buffedDamage,
       valueTooltip: buffedDamageTooltip
     },
@@ -71,7 +71,7 @@
         return enc.hasRdpsContributions;
       },
       headerText: "bDPS",
-      headerTooltip: "Damage Per Second Buffed by Skill",
+      headerTooltip: "Damage Per Second Buffed",
       value: buffedDps,
       valueTooltip: buffedDpsTooltip
     },
@@ -93,7 +93,7 @@
         return enc.hasRdpsContributions;
       },
       headerText: "bD%",
-      headerTooltip: "Percentage of Total Buffed by Skill",
+      headerTooltip: "Percentage of Total Buffed",
       value: buffedPct,
       valueTooltip: null
     },
