@@ -1,11 +1,11 @@
 {
-  "version": "v1.33.3",
-  "notes": "### v1.33.3 - September 17th, 2025\n\n#### P.S. If you see any of us in town or raid, consider dropping an honor! \n- Snowving on Luterra\n- Administrator on Ratik\n- Poont on Gienah\n\n#### NEW FEATURES\n- added new stagger column\n  - applies to skills, skill breakdowns, and skill hits\n\n![party_stagger](https://i.imgur.com/JOEoZdI.png)\n\n![skill_breakdown_stagger](https://i.imgur.com/UG7Zt8H.png)\n\n#### BUG FIXES AND IMPROVEMENTS\n- fix crashes when settings was malformed\n\n",
-  "pub_date": "2025-09-17T17:40:34.649Z",
+  "version": "v1.33.4",
+  "notes": "### v1.33.4 - September 19th, 2025\n\n#### P.S. If you see any of us in town or raid, consider dropping an honor! \n- Snowving on Luterra\n- Administrator on Ratik\n- Poont on Gienah\n\n#### NEW FEATURES\n- RDPS\n  - pseudo rdps based off of in-game Combat Analyzer (thanks to research by molen and poont)\n  - for DPS classes: \n    - **uDMG, uDPS (unbuffed)**: shows damage and dps without SUPPORT buffs (AP, Brand, Identity, and T). This is what the in-game combat analyzer uses to calculate rdps for supports\n  - for support classes: \n    - **bDMG, bDPS (buffed)**: the amount of  damage that the skill buffed. \n    - **bD%**: shows the amount of damage the support contributed relative to the entire raid (in support's breakdown). \n    - **DR**: shows the damage mitigated by the skill\n  - column visibility can be adjusted in settings, for logs and meter\n- Future statistics and percentiles will be based off pseudo rdps once enough data has been collected. Please upload all your logs after you update!\n\n#### BUG FIXES AND IMPROVEMENTS\n- fixed adrenaline crit rate buff missing\n- fixed players missing in encounter preview\n\n![udps](https://i.imgur.com/PpP8PlK.png)\n\n![udps breakdown](https://i.imgur.com/bdlweJ5.png)\n\n![bdps](https://i.imgur.com/IT2R9yl.png)\n",
+  "pub_date": "2025-09-19T22:41:07.067Z",
   "platforms": {
     "windows-x86_64": {
-      "url": "https://github.com/snoww/loa-logs/releases/download/v1.33.3/LOA.Logs_1.33.3_x64-setup.nsis.zip",
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlhuL29ZVC91NDNtV1FXa3U4RE94aEhackdxbHNMN3YrSEtwd3ZjQnovVW1CLytxYmZoNm5ZQVN1V3Q5aFZBKyt1WUNhN0RaRXEzelA3R0g4K0JUTUF3PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzU4MTU2MzIwCWZpbGU6TE9BIExvZ3NfMS4zMy4zX3g2NC1zZXR1cC5uc2lzLnppcAppZC9HdnJGTWtuU3c2T0xtMnFpekFBZ0FVNUlCOWxidVdNdkg0Vk41TnlqampsRjIrNkpldWE4TkkxNGU1bHFkQklNT2FPVlpGWEFyUjQwc2IrUzdEdz09Cg=="
+      "url": "https://github.com/snoww/loa-logs/releases/download/v1.33.4/LOA.Logs_1.33.4_x64-setup.nsis.zip",
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmJpMkJYNlN1M0ZTVm5ucnQ4Y0hxS01EOXg4RXBxS0F3NnErS3Fkb1d2VTd5T1RaamZEZU1aWUhLQ2ZrVHo1dUtyQVc3bzJ3ejJUMFBRbnREVWlzSHdZPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzU4MzIxNzEyCWZpbGU6TE9BIExvZ3NfMS4zMy40X3g2NC1zZXR1cC5uc2lzLnppcAp2UkhIeFhHMFJmWTRxMVRPOTdZSlZHMmJ1ZjZTeWRZOEkxQ0Y2aVd6UjFyNXhaK0hwa2tPeHBqcVMvcSs5VmNWVi80NFBjdWZDTFhxdnpHcDlTeCtEZz09Cg=="
     }
   }
 }
