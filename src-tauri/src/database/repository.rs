@@ -4,6 +4,7 @@ use hashbrown::HashMap;
 use log::*;
 use r2d2_sqlite::SqliteConnectionManager;
 use rusqlite::{params, params_from_iter, OptionalExtension, Transaction};
+use semver::Version;
 use serde_json::json;
 
 pub const DB_VERSION: i32 = 5;
@@ -186,14 +187,14 @@ impl Repository {
         let connection = self.0.get()?;
         let mut statement = connection.prepare_cached(SELECT_FROM_ENCOUNTER_JOIN_PREVIEW)?;
 
-        let (mut encounter, is_compressed) = statement
+        let (mut encounter, version) = statement
             .query_row(params![id], map_encounter)
-            .unwrap_or_else(|_| (Encounter::default(), false));
+            .unwrap_or_else(|_| (Encounter::default(), Version::new(0, 0, 0)));
 
         let mut statement = connection.prepare_cached(SELECT_ENTITIES_BY_ENCOUNTER)?;
 
         let entity_iter = statement
-            .query_map(params![id], |row| map_entity(row, is_compressed))?;
+            .query_map(params![id], |row| map_entity(row, &version))?;
 
         let mut entities: HashMap<String, EncounterEntity> = HashMap::new();
         for entity in entity_iter.flatten() {

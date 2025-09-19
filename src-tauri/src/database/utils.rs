@@ -5,6 +5,7 @@ use std::str::FromStr;
 use flate2::write::GzEncoder;
 use flate2::Compression;
 use hashbrown::HashMap;
+use semver::Version;
 use serde::Serialize;
 use anyhow::Result;
 
@@ -14,6 +15,8 @@ use crate::database::sql_types::{CompressedJson, JsonColumn};
 use crate::models::*;
 use crate::utils::*;
 use crate::{constants::{WINDOW_MS, WINDOW_S}};
+
+pub const VERSION_1_13_5: Version = Version::new(1, 13, 5);
 
 pub fn build_delete_encounters_query(ids_len: usize) -> String {
     let placeholders = std::iter::repeat("?").take(ids_len).collect::<Vec<_>>().join(",");
@@ -140,59 +143,21 @@ pub fn prepare_get_encounter_preview_query(search: String, filter: SearchFilter)
     (params, query, count_query)
 }
 
-pub fn map_encounter(row: &rusqlite::Row) -> rusqlite::Result<(Encounter, bool)> {
-    
+pub fn map_encounter(row: &rusqlite::Row) -> rusqlite::Result<(Encounter, Version)> {
     let misc_str: String = row.get(EncounterColumns::MISC).unwrap_or_default();
     let misc = serde_json::from_str::<EncounterMisc>(misc_str.as_str())
         .map(Some)
         .unwrap_or_default();
 
-    let compressed = misc.as_ref()
-        .and_then(|misc| {
-            parse_version(misc.version.as_ref().map(|x| x.as_str()))
-                .into_iter()
-                .find(|(major, minor, patch)| {
-                    (*major, *minor, *patch) >= (1, 14, 0)
-                        || (*major, *minor, *patch) >= (1, 13, 5)
-                })
-        })
-        .is_some();
-            
-    let (boss_hp_log, buffs, debuffs, applied_shield_buffs) = if compressed {
-        let CompressedJson(boss_hp_log): CompressedJson<HashMap<String, Vec<BossHpLog>>> = row.get(EncounterColumns::BOSS_HP_LOG)?;
-        let CompressedJson(buffs): CompressedJson<HashMap<u32, StatusEffect>> = row.get(EncounterColumns::BUFFS)?;
-        let CompressedJson(debuffs): CompressedJson<HashMap<u32, StatusEffect>> = row.get(EncounterColumns::DEBUFFS)?;
-        let CompressedJson(applied_shield_buffs): CompressedJson<HashMap<u32, StatusEffect>> = row.get(EncounterColumns::APPLIED_SHIELD_BUFFS)?;
+    let version: Version = misc.as_ref()
+        .and_then(|m| m.version.as_ref())
+        .and_then(|v| Version::parse(v).ok())
+        .unwrap_or_else(|| Version::new(0, 0, 0));
 
-        (boss_hp_log, buffs, debuffs, applied_shield_buffs)
-
+    let encounter_damage_stats = if version >= VERSION_1_13_5 {
+        stats_for_1_13_5_and_up(row, misc.clone())?
     } else {
-        let boss_hp_log: HashMap<String, Vec<BossHpLog>> = misc.as_ref()
-            .and_then(|pr| pr.boss_hp_log.clone())
-            .unwrap_or_default();
-        let JsonColumn(buffs): JsonColumn<HashMap<u32, StatusEffect>> = row.get(EncounterColumns::BUFFS)?;
-        let JsonColumn(debuffs): JsonColumn<HashMap<u32, StatusEffect>> = row.get(EncounterColumns::DEBUFFS)?;
-        let JsonColumn(applied_shield_buffs): JsonColumn<HashMap<u32, StatusEffect>> = row.get(EncounterColumns::APPLIED_SHIELD_BUFFS)?;
-
-        (boss_hp_log, buffs, debuffs, applied_shield_buffs)
-    };
-
-    let total_shielding = row.get(EncounterColumns::TOTAL_SHIELDING).unwrap_or_default();
-    let total_effective_shielding = row.get(EncounterColumns::TOTAL_EFFECTIVE_SHIELDING).unwrap_or_default();
-    let encounter_damage_stats = EncounterDamageStats {
-        total_damage_dealt: row.get(EncounterColumns::TOTAL_DAMAGE_DEALT)?,
-        top_damage_dealt: row.get(EncounterColumns::TOP_DAMAGE_DEALT)?,
-        total_damage_taken: row.get(EncounterColumns::TOTAL_DAMAGE_TAKEN)?,
-        top_damage_taken: row.get(EncounterColumns::TOP_DAMAGE_TAKEN)?,
-        dps: row.get(EncounterColumns::DPS)?,
-        buffs,
-        debuffs,
-        misc,
-        total_shielding,
-        total_effective_shielding,
-        applied_shield_buffs,
-        boss_hp_log,
-        ..Default::default()
+        stats_for_older_versions(row, misc.clone())?
     };
 
     let encounter = Encounter {
@@ -209,7 +174,62 @@ pub fn map_encounter(row: &rusqlite::Row) -> rusqlite::Result<(Encounter, bool)>
         ..Default::default()
     };
 
-    Ok((encounter, compressed))
+    Ok((encounter, version))
+}
+
+fn stats_for_1_13_5_and_up(row: &rusqlite::Row, misc: Option<EncounterMisc>) -> rusqlite::Result<EncounterDamageStats> {
+    let CompressedJson(boss_hp_log): CompressedJson<HashMap<String, Vec<BossHpLog>>> = row.get(EncounterColumns::BOSS_HP_LOG)?;
+    let CompressedJson(buffs): CompressedJson<HashMap<u32, StatusEffect>> = row.get(EncounterColumns::BUFFS)?;
+    let CompressedJson(debuffs): CompressedJson<HashMap<u32, StatusEffect>> = row.get(EncounterColumns::DEBUFFS)?;
+    let CompressedJson(applied_shield_buffs): CompressedJson<HashMap<u32, StatusEffect>> = row.get(EncounterColumns::APPLIED_SHIELD_BUFFS)?;
+
+    let total_shielding = row.get(EncounterColumns::TOTAL_SHIELDING).unwrap_or_default();
+    let total_effective_shielding = row.get(EncounterColumns::TOTAL_EFFECTIVE_SHIELDING).unwrap_or_default();
+
+    Ok(EncounterDamageStats {
+        total_damage_dealt: row.get(EncounterColumns::TOTAL_DAMAGE_DEALT)?,
+        top_damage_dealt: row.get(EncounterColumns::TOP_DAMAGE_DEALT)?,
+        total_damage_taken: row.get(EncounterColumns::TOTAL_DAMAGE_TAKEN)?,
+        top_damage_taken: row.get(EncounterColumns::TOP_DAMAGE_TAKEN)?,
+        dps: row.get(EncounterColumns::DPS)?,
+        buffs,
+        debuffs,
+        misc,
+        total_shielding,
+        total_effective_shielding,
+        applied_shield_buffs,
+        boss_hp_log,
+        ..Default::default()
+    })
+}
+
+fn stats_for_older_versions(row: &rusqlite::Row, misc: Option<EncounterMisc>) -> rusqlite::Result<EncounterDamageStats> {
+    let boss_hp_log: HashMap<String, Vec<BossHpLog>> = misc.as_ref()
+        .and_then(|pr| pr.boss_hp_log.clone())
+        .unwrap_or_default();
+
+    let JsonColumn(buffs): JsonColumn<HashMap<u32, StatusEffect>> = row.get(EncounterColumns::BUFFS)?;
+    let JsonColumn(debuffs): JsonColumn<HashMap<u32, StatusEffect>> = row.get(EncounterColumns::DEBUFFS)?;
+    let JsonColumn(applied_shield_buffs): JsonColumn<HashMap<u32, StatusEffect>> = row.get(EncounterColumns::APPLIED_SHIELD_BUFFS)?;
+
+    let total_shielding = row.get(EncounterColumns::TOTAL_SHIELDING).unwrap_or_default();
+    let total_effective_shielding = row.get(EncounterColumns::TOTAL_EFFECTIVE_SHIELDING).unwrap_or_default();
+
+    Ok(EncounterDamageStats {
+        total_damage_dealt: row.get(EncounterColumns::TOTAL_DAMAGE_DEALT)?,
+        top_damage_dealt: row.get(EncounterColumns::TOP_DAMAGE_DEALT)?,
+        total_damage_taken: row.get(EncounterColumns::TOTAL_DAMAGE_TAKEN)?,
+        top_damage_taken: row.get(EncounterColumns::TOP_DAMAGE_TAKEN)?,
+        dps: row.get(EncounterColumns::DPS)?,
+        buffs,
+        debuffs,
+        misc,
+        total_shielding,
+        total_effective_shielding,
+        applied_shield_buffs,
+        boss_hp_log,
+        ..Default::default()
+    })
 }
 
 pub fn map_encounter_preview(row: &rusqlite::Row) -> rusqlite::Result<EncounterPreview> {
@@ -236,9 +256,9 @@ pub fn map_encounter_preview(row: &rusqlite::Row) -> rusqlite::Result<EncounterP
     })
 }
 
-pub fn map_entity(row: &rusqlite::Row, is_compressed: bool) -> rusqlite::Result<EncounterEntity> {
+pub fn map_entity(row: &rusqlite::Row, version: &Version) -> rusqlite::Result<EncounterEntity> {
 
-    let (skills, damage_stats) = if is_compressed {
+    let (skills, damage_stats) = if version >= &VERSION_1_13_5 {
         let CompressedJson(skills): CompressedJson<HashMap<u32, Skill>> = row.get(EncounterEntityColumns::SKILLS)?;
         let CompressedJson(damage_stats): CompressedJson<DamageStats> = row.get(EncounterEntityColumns::DAMAGE_STATS)?;
         
@@ -296,19 +316,6 @@ fn parse_class_names(input: String) -> (Vec<i32>, Vec<String>) {
             }
         })
         .unzip()
-}
-
-fn parse_version(version: Option<&str>) -> Option<(i32, i32, i32)> {
-    match version {
-        Some(version) => {
-            let mut parts = version.split('.').map(|s| s.parse::<i32>().unwrap_or(0));
-            let major = parts.next().unwrap_or(0);
-            let minor = parts.next().unwrap_or(0);
-            let patch = parts.next().unwrap_or(0);
-            Some((major, minor, patch))
-        },
-        None => None,
-    }
 }
 
 pub fn compute_support_buffs(
