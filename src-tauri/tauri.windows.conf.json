@@ -3,7 +3,8 @@
   "bundle": {
     "resources": [
       "WinDivert.dll",
-      "meter-data/*.json"
+      "meter-data/*.json",
+      "migrations/*.sql"
     ],
     "windows": {
       "webviewInstallMode": {

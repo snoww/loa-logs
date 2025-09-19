@@ -1,19 +1,18 @@
 use crate::constants::DB_VERSION;
 use crate::data::*;
+use crate::database::utils::*;
 use crate::live::entity_tracker::Entity;
 use crate::live::skill_tracker::SkillTracker;
 use crate::live::stats_api::InspectInfo;
 use crate::live::status_tracker::StatusEffectDetails;
 use crate::models::*;
-use flate2::write::GzEncoder;
-use flate2::Compression;
+use crate::utils::*;
+use anyhow::Result;
 use hashbrown::HashMap;
 use rusqlite::{params, Transaction};
-use serde::Serialize;
 use serde_json::json;
 use std::cmp::{max, Ordering, Reverse};
 use std::collections::BTreeMap;
-use std::io::Write;
 
 pub fn encounter_entity_from_entity(entity: &Entity) -> EncounterEntity {
     let mut e = EncounterEntity {
@@ -541,161 +540,8 @@ pub fn get_class_from_id(class_id: &u32) -> String {
     class.to_string()
 }
 
-fn damage_gem_value_to_level(value: u32, tier: u8) -> u8 {
-    if tier == 4 {
-        match value {
-            4400 => 10,
-            4000 => 9,
-            3600 => 8,
-            3200 => 7,
-            2800 => 6,
-            2400 => 5,
-            2000 => 4,
-            1600 => 3,
-            1200 => 2,
-            800 => 1,
-            _ => 0,
-        }
-    } else {
-        match value {
-            4000 => 10,
-            3000 => 9,
-            2400 => 8,
-            2100 => 7,
-            1800 => 6,
-            1500 => 5,
-            1200 => 4,
-            900 => 3,
-            600 => 2,
-            300 => 1,
-            _ => 0,
-        }
-    }
-}
-
-fn cooldown_gem_value_to_level(value: u32, tier: u8) -> u8 {
-    if tier == 4 {
-        match value {
-            2400 => 10,
-            2200 => 9,
-            2000 => 8,
-            1800 => 7,
-            1600 => 6,
-            1400 => 5,
-            1200 => 4,
-            1000 => 3,
-            800 => 2,
-            600 => 1,
-            _ => 0,
-        }
-    } else {
-        match value {
-            2000 => 10,
-            1800 => 9,
-            1600 => 8,
-            1400 => 7,
-            1200 => 6,
-            1000 => 5,
-            800 => 4,
-            600 => 3,
-            400 => 2,
-            200 => 1,
-            _ => 0,
-        }
-    }
-}
-
-fn support_damage_gem_value_to_level(value: u32) -> u8 {
-    match value {
-        1000 => 10,
-        900 => 9,
-        800 => 8,
-        700 => 7,
-        600 => 6,
-        500 => 5,
-        400 => 4,
-        300 => 3,
-        200 => 2,
-        100 => 1,
-        _ => 0,
-    }
-}
-
-pub fn get_engravings(engraving_ids: &Option<Vec<u32>>) -> Option<Vec<String>> {
-    let ids = match engraving_ids {
-        Some(engravings) => engravings,
-        None => return None,
-    };
-    let mut engravings: Vec<String> = Vec::new();
-
-    for engraving_id in ids.iter() {
-        if let Some(engraving_data) = ENGRAVING_DATA.get(engraving_id) {
-            engravings.push(engraving_data.name.clone().unwrap_or("Unknown".to_string()));
-        }
-    }
-
-    engravings.sort_unstable();
-    Some(engravings)
-}
-
 pub fn is_hat_buff(buff_id: &u32) -> bool {
     matches!(buff_id, 362600 | 212305 | 319503 | 485100)
-}
-
-fn generate_intervals(start: i64, end: i64) -> Vec<i64> {
-    if start >= end {
-        return Vec::new();
-    }
-
-    (0..end - start).step_by(1_000).collect()
-}
-
-fn sum_in_range(vec: &[(i64, i64)], start: i64, end: i64) -> i64 {
-    let start_idx = binary_search_left(vec, start);
-    let end_idx = binary_search_left(vec, end + 1);
-
-    vec[start_idx..end_idx]
-        .iter()
-        .map(|&(_, second)| second)
-        .sum()
-}
-
-fn binary_search_left(vec: &[(i64, i64)], target: i64) -> usize {
-    let mut left = 0;
-    let mut right = vec.len();
-
-    while left < right {
-        let mid = left + (right - left) / 2;
-        match vec[mid].0.cmp(&target) {
-            Ordering::Less => left = mid + 1,
-            _ => right = mid,
-        }
-    }
-
-    left
-}
-
-fn calculate_average_dps(data: &[(i64, i64)], start_time: i64, end_time: i64) -> Vec<i64> {
-    let step = 5;
-    let mut results = vec![0; ((end_time - start_time) / step + 1) as usize];
-    let mut current_sum = 0;
-    let mut data_iter = data.iter();
-    let mut current_data = data_iter.next();
-
-    for t in (start_time..=end_time).step_by(step as usize) {
-        while let Some((timestamp, value)) = current_data {
-            if *timestamp / 1000 <= t {
-                current_sum += value;
-                current_data = data_iter.next();
-            } else {
-                break;
-            }
-        }
-
-        results[((t - start_time) / step) as usize] = current_sum / (t - start_time + 1);
-    }
-
-    results
 }
 
 pub fn check_tripod_index_change(before: Option<TripodIndex>, after: Option<TripodIndex>) -> bool {
@@ -749,7 +595,7 @@ pub fn insert_data(
     manual: bool,
     skill_cast_log: HashMap<u64, HashMap<u32, BTreeMap<i64, SkillCast>>>,
     skill_cooldowns: HashMap<u32, Vec<CastEvent>>,
-) -> i64 {
+) -> Result<i64> {
     let mut encounter_stmt = tx
         .prepare_cached(
             "
@@ -803,10 +649,10 @@ pub fn insert_data(
         ..Default::default()
     };
 
-    let compressed_boss_hp = compress_json(&boss_hp_log);
-    let compressed_buffs = compress_json(&encounter.encounter_damage_stats.buffs);
-    let compressed_debuffs = compress_json(&encounter.encounter_damage_stats.debuffs);
-    let compressed_shields = compress_json(&encounter.encounter_damage_stats.applied_shield_buffs);
+    let compressed_boss_hp = compress_json(&boss_hp_log)?;
+    let compressed_buffs = compress_json(&encounter.encounter_damage_stats.buffs)?;
+    let compressed_debuffs = compress_json(&encounter.encounter_damage_stats.debuffs)?;
+    let compressed_shields = compress_json(&encounter.encounter_damage_stats.applied_shield_buffs)?;
 
     encounter_stmt
         .execute(params![
@@ -1092,8 +938,8 @@ pub fn insert_data(
             }
         }
 
-        let compressed_skills = compress_json(&entity.skills);
-        let compressed_damage_stats = compress_json(&entity.damage_stats);
+        let compressed_skills = compress_json(&entity.skills)?;
+        let compressed_damage_stats = compress_json(&entity.damage_stats)?;
 
         let damage_dealt = entity.damage_stats.damage_dealt;
         let damage_without_hyper =
@@ -1192,7 +1038,7 @@ pub fn insert_data(
         ])
         .expect("failed to insert encounter preview");
 
-    last_insert_id
+    Ok(last_insert_id)
 }
 
 pub fn map_status_effect(se: &StatusEffectDetails, custom_id_map: &mut HashMap<u32, u32>) -> u32 {
@@ -1224,16 +1070,6 @@ pub fn get_new_id(source_skill: u32) -> u32 {
 
 pub fn get_skill_id(new_skill: u32, original_buff_id: u32) -> u32 {
     new_skill - 1_000_000_000 - original_buff_id
-}
-
-pub fn compress_json<T>(value: &T) -> Vec<u8>
-where
-    T: ?Sized + Serialize,
-{
-    let mut e = GzEncoder::new(Vec::new(), Compression::default());
-    let bytes = serde_json::to_vec(value).expect("unable to serialize json");
-    e.write_all(&bytes).expect("unable to write json to buffer");
-    e.finish().expect("unable to compress json")
 }
 
 pub fn update_current_boss_name(boss_name: &str) -> String {
@@ -1650,15 +1486,4 @@ pub fn get_total_available_time(
     }
 
     total_available_time
-}
-
-fn get_damage_without_hyper_or_special(e: &EncounterEntity) -> i64 {
-    let hyper = e.damage_stats.hyper_awakening_damage;
-    let special = e
-        .skills
-        .values()
-        .filter(|s| s.special.unwrap_or(false))
-        .map(|s| s.total_damage)
-        .sum::<i64>();
-    e.damage_stats.damage_dealt - hyper - special
 }
