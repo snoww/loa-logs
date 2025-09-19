@@ -275,20 +275,21 @@ impl EncounterState {
             });
 
         if let Some(npc) = self.encounter.entities.get(&entity_name)
-            && npc.entity_type == EntityType::Boss {
-                // if current encounter has no boss, we set the boss
-                // if current encounter has a boss, we check if new boss has more max hp, or if current boss is dead
-                self.encounter.current_boss_name = if self
-                    .encounter
-                    .entities
-                    .get(&self.encounter.current_boss_name)
-                    .is_none_or(|boss| npc.max_hp >= boss.max_hp || boss.is_dead)
-                {
-                    entity_name
-                } else {
-                    self.encounter.current_boss_name.clone()
-                };
-            }
+            && npc.entity_type == EntityType::Boss
+        {
+            // if current encounter has no boss, we set the boss
+            // if current encounter has a boss, we check if new boss has more max hp, or if current boss is dead
+            self.encounter.current_boss_name = if self
+                .encounter
+                .entities
+                .get(&self.encounter.current_boss_name)
+                .is_none_or(|boss| npc.max_hp >= boss.max_hp || boss.is_dead)
+            {
+                entity_name
+            } else {
+                self.encounter.current_boss_name.clone()
+            };
+        }
     }
 
     pub fn on_death(&mut self, dead_entity: &Entity) {
@@ -470,23 +471,24 @@ impl EncounterState {
 
         // if this is a getup skill and we have an ongoing abnormal move incapacitation, this will end it
         if let Some(skill_data) = SKILL_DATA.get(&skill_id)
-            && skill_data.skill_type == "getup" {
-                for ongoing_event in entity
-                    .damage_stats
-                    .incapacitations
-                    .iter_mut()
-                    .rev()
-                    .take_while(|x| x.timestamp + x.duration > timestamp)
-                    .filter(|x| x.event_type == IncapacitationEventType::FALL_DOWN)
-                {
-                    info!(
-                        "Shortening down duration from {} to {} because of getup skill",
-                        ongoing_event.duration,
-                        timestamp - ongoing_event.timestamp
-                    );
-                    ongoing_event.duration = timestamp - ongoing_event.timestamp;
-                }
+            && skill_data.skill_type == "getup"
+        {
+            for ongoing_event in entity
+                .damage_stats
+                .incapacitations
+                .iter_mut()
+                .rev()
+                .take_while(|x| x.timestamp + x.duration > timestamp)
+                .filter(|x| x.event_type == IncapacitationEventType::FALL_DOWN)
+            {
+                info!(
+                    "Shortening down duration from {} to {} because of getup skill",
+                    ongoing_event.duration,
+                    timestamp - ongoing_event.timestamp
+                );
+                ongoing_event.duration = timestamp - ongoing_event.timestamp;
             }
+        }
 
         // set spec for supports to determine buff source
         if is_support_class(&entity.class_id) && entity.spec.is_none() {
@@ -894,11 +896,11 @@ impl EncounterState {
                     if !is_debuffed_by_support
                         && let Some(debuff) =
                             self.encounter.encounter_damage_stats.debuffs.get(debuff_id)
-                        {
-                            is_debuffed_by_support = debuff.unique_group == 210230 // brand group
+                    {
+                        is_debuffed_by_support = debuff.unique_group == 210230 // brand group
                                 && debuff.buff_type & StatusEffectBuffTypeFlags::DMG.bits() != 0
                                 && debuff.target == StatusEffectTarget::PARTY;
-                        }
+                    }
                 }
 
                 if is_buffed_by_support && !is_hyper_awakening {
@@ -929,10 +931,10 @@ impl EncounterState {
                     } else if let Some(buff) =
                         self.encounter.encounter_damage_stats.buffs.get(buff_id)
                         && !stabilized_status_active
-                            && buff.source.name.contains("Stabilized Status")
-                        {
-                            continue;
-                        }
+                        && buff.source.name.contains("Stabilized Status")
+                    {
+                        continue;
+                    }
 
                     filtered_se_on_source_ids.push(*buff_id);
 

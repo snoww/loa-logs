@@ -9,18 +9,18 @@ mod utils;
 
 use crate::app;
 use crate::live::encounter_state::EncounterState;
-use crate::live::entity_tracker::{get_current_and_max_hp, EntityTracker};
+use crate::live::entity_tracker::{EntityTracker, get_current_and_max_hp};
 use crate::live::id_tracker::IdTracker;
 use crate::live::party_tracker::PartyTracker;
-use crate::live::stats_api::StatsApi;
 use crate::live::stats_api::API_URL;
+use crate::live::stats_api::StatsApi;
 use crate::live::status_tracker::{
-    get_status_effect_value, StatusEffectDetails, StatusEffectTargetType, StatusEffectType,
-    StatusTracker,
+    StatusEffectDetails, StatusEffectTargetType, StatusEffectType, StatusTracker,
+    get_status_effect_value,
 };
 use crate::live::utils::get_class_from_id;
 use crate::local::{LocalInfo, LocalPlayer};
-use crate::models::{DamageData, EntityType, Identity, TripodIndex};
+use crate::models::{DamageData, EntityType, Identity, RdpsData, TripodIndex};
 use crate::settings::Settings;
 use anyhow::Result;
 use chrono::Utc;
@@ -34,8 +34,8 @@ use serde_json::json;
 use std::cell::RefCell;
 use std::path::{Path, PathBuf};
 use std::rc::Rc;
-use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
+use std::sync::atomic::{AtomicBool, Ordering};
 use std::time::{Duration, Instant};
 use tauri::{AppHandle, Emitter, Listener, Manager};
 use uuid::Uuid;
@@ -204,36 +204,38 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
             Pkt::CounterAttackNotify => {
                 if let Some(pkt) =
                     parse_pkt(&data, PKTCounterAttackNotify::new, "PKTCounterAttackNotify")
-                    && let Some(entity) = entity_tracker.entities.get(&pkt.source_id) {
-                        state.on_counterattack(entity);
-                    }
+                    && let Some(entity) = entity_tracker.entities.get(&pkt.source_id)
+                {
+                    state.on_counterattack(entity);
+                }
             }
             Pkt::DeathNotify => {
                 if let Some(pkt) = parse_pkt(&data, PKTDeathNotify::new, "PKTDeathNotify")
-                    && let Some(entity) = entity_tracker.entities.get(&pkt.target_id) {
-                        debug_print(format_args!(
-                            "death: {}, {}, {}",
-                            entity.name, entity.entity_type, entity.id
-                        ));
-                        state.on_death(entity);
-                    }
+                    && let Some(entity) = entity_tracker.entities.get(&pkt.target_id)
+                {
+                    debug_print(format_args!(
+                        "death: {}, {}, {}",
+                        entity.name, entity.entity_type, entity.id
+                    ));
+                    state.on_death(entity);
+                }
             }
             Pkt::IdentityGaugeChangeNotify => {
                 if let Some(pkt) = parse_pkt(
                     &data,
                     PKTIdentityGaugeChangeNotify::new,
                     "PKTIdentityGaugeChangeNotify",
-                )
-                    && emit_details.load(Ordering::Relaxed) {
-                        app.emit(
-                            "identity-update",
-                            Identity {
-                                gauge1: pkt.identity_gauge1,
-                                gauge2: pkt.identity_gauge2,
-                                gauge3: pkt.identity_gauge3,
-                            },
-                        )?;
-                    }
+                ) && emit_details.load(Ordering::Relaxed)
+                {
+                    app.emit(
+                        "identity-update",
+                        Identity {
+                            gauge1: pkt.identity_gauge1,
+                            gauge2: pkt.identity_gauge2,
+                            gauge3: pkt.identity_gauge3,
+                        },
+                    )?;
+                }
             }
             // Pkt::IdentityStanceChangeNotify => {
             //     if let Some(pkt) = parse_pkt(
@@ -328,21 +330,20 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
             }
             Pkt::NewVehicle => {
                 if let Some(pkt) = parse_pkt(&data, PKTNewVehicle::new, "PKTNewVehicle")
-                    && let Some(pc_struct) =
-                        pkt.vehicle_struct.p_c_struct_conditional.p_c_struct
-                    {
-                        let (hp, max_hp) = get_current_and_max_hp(&pc_struct.stat_pairs);
-                        let entity = entity_tracker.new_pc(pc_struct);
-                        debug_print(format_args!(
-                            "new PC from vehicle: {}, {}, {}, eid: {}, cid: {}",
-                            entity.name,
-                            get_class_from_id(&entity.class_id),
-                            entity.gear_level,
-                            entity.id,
-                            entity.character_id
-                        ));
-                        state.on_new_pc(entity, hp, max_hp);
-                    }
+                    && let Some(pc_struct) = pkt.vehicle_struct.p_c_struct_conditional.p_c_struct
+                {
+                    let (hp, max_hp) = get_current_and_max_hp(&pc_struct.stat_pairs);
+                    let entity = entity_tracker.new_pc(pc_struct);
+                    debug_print(format_args!(
+                        "new PC from vehicle: {}, {}, {}, eid: {}, cid: {}",
+                        entity.name,
+                        get_class_from_id(&entity.class_id),
+                        entity.gear_level,
+                        entity.id,
+                        entity.character_id
+                    ));
+                    state.on_new_pc(entity, hp, max_hp);
+                }
             }
             Pkt::NewNpc => {
                 if let Some(pkt) = parse_pkt(&data, PKTNewNpc::new, "PKTNewNpc") {
@@ -961,18 +962,19 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
                             entity_tracker.local_character_id,
                         );
                     if let Some(status_effect) = status_effect
-                        && status_effect.status_effect_type == StatusEffectType::Shield {
-                            let change = old_value
-                                .checked_sub(status_effect.value)
-                                .unwrap_or_default();
-                            on_shield_change(
-                                &mut entity_tracker,
-                                &id_tracker,
-                                &mut state,
-                                status_effect,
-                                change,
-                            );
-                        }
+                        && status_effect.status_effect_type == StatusEffectType::Shield
+                    {
+                        let change = old_value
+                            .checked_sub(status_effect.value)
+                            .unwrap_or_default();
+                        on_shield_change(
+                            &mut entity_tracker,
+                            &id_tracker,
+                            &mut state,
+                            status_effect,
+                            change,
+                        );
+                    }
                 }
             }
             Pkt::TroopMemberUpdateMinNotify => {
@@ -1004,18 +1006,19 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
                                     entity_tracker.local_character_id,
                                 );
                             if let Some(status_effect) = status_effect
-                                && status_effect.status_effect_type == StatusEffectType::Shield {
-                                    let change = old_value
-                                        .checked_sub(status_effect.value)
-                                        .unwrap_or_default();
-                                    on_shield_change(
-                                        &mut entity_tracker,
-                                        &id_tracker,
-                                        &mut state,
-                                        status_effect,
-                                        change,
-                                    );
-                                }
+                                && status_effect.status_effect_type == StatusEffectType::Shield
+                            {
+                                let change = old_value
+                                    .checked_sub(status_effect.value)
+                                    .unwrap_or_default();
+                                on_shield_change(
+                                    &mut entity_tracker,
+                                    &id_tracker,
+                                    &mut state,
+                                    status_effect,
+                                    change,
+                                );
+                            }
                         }
                     }
                 }
@@ -1154,16 +1157,16 @@ fn update_party(
         let members = party_info.entry(*party_id).or_insert_with(Vec::new);
         if let Some(entity) = entity_tracker.entities.get(entity_id)
             && entity.character_id > 0
-                && entity.class_id > 0
-                && entity
-                    .name
-                    .chars()
-                    .next()
-                    .unwrap_or_default()
-                    .is_uppercase()
-            {
-                members.push(entity.name.clone());
-            }
+            && entity.class_id > 0
+            && entity
+                .name
+                .chars()
+                .next()
+                .unwrap_or_default()
+                .is_uppercase()
+        {
+            members.push(entity.name.clone());
+        }
     }
 
     let mut sorted_parties = party_info.into_iter().collect::<Vec<(u32, Vec<String>)>>();

@@ -5,13 +5,13 @@ use crate::live::skill_tracker::SkillTracker;
 use crate::live::stats_api::InspectInfo;
 use crate::live::status_tracker::StatusEffectDetails;
 use crate::models::*;
-use flate2::write::GzEncoder;
 use flate2::Compression;
+use flate2::write::GzEncoder;
 use hashbrown::HashMap;
-use rusqlite::{params, Transaction};
+use rusqlite::{Transaction, params};
 use serde::Serialize;
 use serde_json::json;
-use std::cmp::{max, Ordering, Reverse};
+use std::cmp::{Ordering, Reverse, max};
 use std::collections::BTreeMap;
 use std::io::Write;
 
@@ -64,9 +64,10 @@ pub fn is_support_spec(spec: &str) -> bool {
 
 pub fn is_battle_item(skill_effect_id: &u32, _item_type: &str) -> bool {
     if let Some(item) = SKILL_EFFECT_DATA.get(skill_effect_id)
-        && let Some(category) = item.item_type.as_ref() {
-            return category == "useup";
-        }
+        && let Some(category) = item.item_type.as_ref()
+    {
+        return category == "useup";
+    }
     false
 }
 
@@ -148,17 +149,18 @@ pub fn get_status_effect_data(buff_id: u32, source_skill: Option<u32>) -> Option
     } else if buff_category == "set" && buff.set_name.is_some() {
         status_effect.source.set_name.clone_from(&buff.set_name);
     } else if buff_category == "battleitem"
-        && let Some(buff_source_item) = SKILL_EFFECT_DATA.get(&buff_id) {
-            if let Some(item_name) = buff_source_item.item_name.as_ref() {
-                status_effect.source.name.clone_from(item_name);
-            }
-            if let Some(item_desc) = buff_source_item.item_desc.as_ref() {
-                status_effect.source.desc.clone_from(item_desc);
-            }
-            if let Some(icon) = buff_source_item.icon.as_ref() {
-                status_effect.source.icon.clone_from(icon);
-            }
+        && let Some(buff_source_item) = SKILL_EFFECT_DATA.get(&buff_id)
+    {
+        if let Some(item_name) = buff_source_item.item_name.as_ref() {
+            status_effect.source.name.clone_from(item_name);
         }
+        if let Some(item_desc) = buff_source_item.item_desc.as_ref() {
+            status_effect.source.desc.clone_from(item_desc);
+        }
+        if let Some(icon) = buff_source_item.icon.as_ref() {
+            status_effect.source.icon.clone_from(icon);
+        }
+    }
 
     Some(status_effect)
 }
@@ -168,9 +170,10 @@ fn get_summon_source_skill(skill: Option<&SkillData>, status_effect: &mut Status
         if let Some(summon_skills) = skill.summon_source_skills.as_ref() {
             let summon_source_skill = summon_skills.first().unwrap_or(&0);
             if *summon_source_skill > 0
-                && let Some(summon_skill) = SKILL_DATA.get(summon_source_skill) {
-                    status_effect.source.skill = Some(summon_skill.clone());
-                }
+                && let Some(summon_skill) = SKILL_DATA.get(summon_source_skill)
+            {
+                status_effect.source.skill = Some(summon_skill.clone());
+            }
         } else {
             status_effect.source.skill = Some(skill.clone());
         }
@@ -338,28 +341,29 @@ pub fn get_status_effect_buff_type_flags(buff: &SkillBuffData) -> u32 {
             } else if ["skill_mana_reduction", "mana_reduction"].contains(&option_type) {
                 buff_type |= StatusEffectBuffTypeFlags::RESOURCE;
             } else if option_type == "combat_effect"
-                && let Some(combat_effect) = COMBAT_EFFECT_DATA.get(&option.key_index) {
-                    for effect in combat_effect.effects.iter() {
-                        for action in effect.actions.iter() {
-                            if [
-                                "modify_damage",
-                                "modify_final_damage",
-                                "modify_critical_multiplier",
-                                "modify_penetration",
-                                "modify_penetration_when_critical",
-                                "modify_penetration_addend",
-                                "modify_penetration_addend_when_critical",
-                                "modify_damage_shield_multiplier",
-                            ]
-                            .contains(&action.action_type.as_str())
-                            {
-                                buff_type |= StatusEffectBuffTypeFlags::DMG;
-                            } else if action.action_type == "modify_critical_ratio" {
-                                buff_type |= StatusEffectBuffTypeFlags::CRIT;
-                            }
+                && let Some(combat_effect) = COMBAT_EFFECT_DATA.get(&option.key_index)
+            {
+                for effect in combat_effect.effects.iter() {
+                    for action in effect.actions.iter() {
+                        if [
+                            "modify_damage",
+                            "modify_final_damage",
+                            "modify_critical_multiplier",
+                            "modify_penetration",
+                            "modify_penetration_when_critical",
+                            "modify_penetration_addend",
+                            "modify_penetration_addend_when_critical",
+                            "modify_damage_shield_multiplier",
+                        ]
+                        .contains(&action.action_type.as_str())
+                        {
+                            buff_type |= StatusEffectBuffTypeFlags::DMG;
+                        } else if action.action_type == "modify_critical_ratio" {
+                            buff_type |= StatusEffectBuffTypeFlags::CRIT;
                         }
                     }
                 }
+            }
         }
     }
 
@@ -439,18 +443,18 @@ pub fn get_skill_name_and_icon(
                     .skill_timestamp
                     .get(&(entity_id, *source))
                     .is_some()
-                    && let Some(skill) = SKILL_DATA.get(source) {
-                        return (
-                            skill.name.clone().unwrap_or(skill.id.to_string()) + " (Summon)",
-                            skill.icon.clone().unwrap_or_default(),
-                            Some(summon_source_skill.clone()),
-                            false,
-                            skill.is_hyper_awakening,
-                        );
-                    }
+                    && let Some(skill) = SKILL_DATA.get(source)
+                {
+                    return (
+                        skill.name.clone().unwrap_or(skill.id.to_string()) + " (Summon)",
+                        skill.icon.clone().unwrap_or_default(),
+                        Some(summon_source_skill.clone()),
+                        false,
+                        skill.is_hyper_awakening,
+                    );
+                }
             }
-            if let Some(skill) = SKILL_DATA.get(summon_source_skill.iter().min().unwrap_or(&0))
-            {
+            if let Some(skill) = SKILL_DATA.get(summon_source_skill.iter().min().unwrap_or(&0)) {
                 (
                     skill.name.clone().unwrap_or(skill.id.to_string()) + " (Summon)",
                     skill.icon.clone().unwrap_or_default(),
@@ -1018,15 +1022,16 @@ pub fn insert_data(
                 } else if spec == "Unknown" {
                     // not reliable enough to be used on its own
                     if let Some(tree) = info.ark_passive_data.as_ref()
-                        && let Some(enlightenment) = tree.enlightenment.as_ref() {
-                            for node in enlightenment.iter() {
-                                let spec = get_spec_from_ark_passive(node);
-                                if spec != "Unknown" {
-                                    entity.spec = Some(spec);
-                                    break;
-                                }
+                        && let Some(enlightenment) = tree.enlightenment.as_ref()
+                    {
+                        for node in enlightenment.iter() {
+                            let spec = get_spec_from_ark_passive(node);
+                            if spec != "Unknown" {
+                                entity.spec = Some(spec);
+                                break;
                             }
                         }
+                    }
                 }
 
                 if entity.combat_power.is_none() {
