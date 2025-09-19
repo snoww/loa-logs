@@ -828,7 +828,7 @@ impl EncounterState {
                     }
 
                     // will count dps spec of supports as support buffs until proper spec is determined
-                    let hat = is_hat_buff(buff_id);
+                    let hat = is_hat_buff(buff_id) || is_hyper_hat_buff(buff_id);
                     if ((!is_buffed_by_support && !hat) || !is_buffed_by_identity)
                         && let Some(buff) = self.encounter.encounter_damage_stats.buffs.get(buff_id)
                     {
@@ -850,7 +850,13 @@ impl EncounterState {
                         }
                     }
 
-                    if !is_buffed_by_hat && is_hat_buff(buff_id) {
+                    // T skill has two buffs, one buffs hyper awakening damage, one buffs all other skill damage
+                    // if normal skill, check if normal buff
+                    // if hyper awakening, check if hyper buff
+                    if !is_buffed_by_hat
+                        && ((is_hat_buff(buff_id) && !is_hyper_awakening)
+                            || (is_hyper_hat_buff(buff_id) && is_hyper_awakening))
+                    {
                         is_buffed_by_hat = true;
                     }
                 }

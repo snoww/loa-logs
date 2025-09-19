@@ -643,7 +643,11 @@ pub fn get_engravings(engraving_ids: &Option<Vec<u32>>) -> Option<Vec<String>> {
 }
 
 pub fn is_hat_buff(buff_id: &u32) -> bool {
-    matches!(buff_id, 362600 | 212305 | 319503 | 485100)
+    matches!(buff_id, 362600 | 212305 | 319503 | 319504 | 485100)
+}
+
+pub fn is_hyper_hat_buff(buff_id: &u32) -> bool {
+    matches!(buff_id, 362601 | 212306 | 319506 | 485101)
 }
 
 fn generate_intervals(start: i64, end: i64) -> Vec<i64> {
