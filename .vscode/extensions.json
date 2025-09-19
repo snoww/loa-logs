@@ -1,0 +1,13 @@
+{
+    "recommendations": [
+        "rust-lang.rust-analyzer",
+        "1YiB.rust-bundle",
+        "vadimcn.vscode-lldb",
+        "dustypomerleau.rust-syntax",
+        "svelte.svelte-vscode",
+        "bradlc.vscode-tailwindcss",
+        "tauri-apps.tauri-vscode",
+        "esbenp.prettier-vscode",
+        "alexcvzz.vscode-sqlite"
+    ]
+}
