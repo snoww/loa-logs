@@ -72,12 +72,8 @@ pub fn is_battle_item(skill_effect_id: &u32, _item_type: &str) -> bool {
 }
 
 pub fn get_status_effect_data(buff_id: u32, source_skill: Option<u32>) -> Option<StatusEffect> {
-    let buff = SKILL_BUFF_DATA.get(&buff_id);
-    if buff.is_none() || buff.unwrap().icon_show_type.clone().unwrap_or_default() == "none" {
-        return None;
-    }
+    let buff = SKILL_BUFF_DATA.get(&buff_id)?;
 
-    let buff = buff.unwrap();
     let buff_category = if buff.buff_category.clone().unwrap_or_default() == "ability"
         && [501, 502, 503, 504, 505].contains(&buff.unique_group)
     {

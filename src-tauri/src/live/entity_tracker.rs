@@ -290,10 +290,6 @@ impl EntityTracker {
             if status_effect.status_effect_type == StatusEffectType::Shield {
                 shields.push(status_effect.clone());
             }
-            // hard-code adrenaline to not count unless it's at max stacks
-            if status_effect.unique_group == 521701 && status_effect.stack_count != 6 {
-                continue;
-            }
             self.status_tracker
                 .borrow_mut()
                 .register_status_effect(status_effect);
@@ -507,11 +503,6 @@ impl EntityTracker {
             timestamp,
             source_encounter_entity,
         );
-
-        // hard-code adrenaline to not count unless it's at max stacks
-        if status_effect.unique_group == 521701 && status_effect.stack_count != 6 {
-            return status_effect;
-        }
 
         self.status_tracker
             .borrow_mut()
