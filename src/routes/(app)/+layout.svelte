@@ -52,6 +52,17 @@
     await appWindow.setFocus();
   }
 
+  $effect.pre(() => {
+    if (settings.app.general.logScale === "1") {
+      document.documentElement.style.setProperty("font-size", "medium");
+    } else if (settings.app.general.logScale === "2") {
+      document.documentElement.style.setProperty("font-size", "large");
+    } else if (settings.app.general.logScale === "3") {
+      document.documentElement.style.setProperty("font-size", "x-large");
+    } else if (settings.app.general.logScale === "0") {
+      document.documentElement.style.setProperty("font-size", "small");
+    }
+  });
 </script>
 
 <UpdateAvailable />
@@ -59,3 +70,16 @@
 <div class="min-h-screen select-none bg-neutral-900">
   {@render children?.()}
 </div>
+
+<style lang="postcss">
+  @reference "../../app.css";
+  :global(*::-webkit-scrollbar) {
+    @apply right-0! block! size-2! bg-neutral-800!;
+  }
+  :global(*::-webkit-scrollbar-thumb) {
+    @apply rounded-md! bg-neutral-600!;
+  }
+  :global(*::-webkit-scrollbar-corner) {
+    @apply bg-neutral-800!;
+  }
+</style>

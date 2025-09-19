@@ -1,15 +1,15 @@
 <script lang="ts">
-  import type { Snippet } from "svelte";
+  import { settings } from "$lib/stores.svelte";
   import "../app.css";
-  import ThemeProvider from "./ThemeProvider.svelte";
 
   interface Props {
-    children?: Snippet;
+    children?: import("svelte").Snippet;
   }
 
   let { children }: Props = $props();
 </script>
 
 <svelte:window oncontextmenu={(e) => e.preventDefault()} />
-<ThemeProvider/>
-{@render children?.()}
+<div class="{settings.app.general.accentColor} text-sm text-white">
+  {@render children?.()}
+</div>
