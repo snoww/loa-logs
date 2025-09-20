@@ -612,7 +612,7 @@
     <div class="-mx-px flex flex-col space-y-1 py-px text-xs font-normal">
       <span class="text-gray-300">Base: {abbreviateNumber(unbuffed, 2)}</span>
       <span class="text-gray-300">Buffed: {abbreviateNumber(buffed, 2)}</span>
-      <span class="text-gray-300">Contribution: {percentDifference(state.skillDps, unbuffed).toFixed(1)}%</span>
+      <span class="text-gray-300">Contribution: {((buffed / state.skill.totalDamage) * 100).toFixed(1)}%</span>
     </div>
   {/if}
 {/snippet}
