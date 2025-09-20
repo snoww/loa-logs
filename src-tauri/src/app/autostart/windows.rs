@@ -1,72 +1,82 @@
-use crate::app::compat::Command;
 use anyhow::Result;
-use log::{info, warn};
+use std::path::{Path, PathBuf};
+use winsafe::{self as w, co, prelude::*};
 
 pub struct AutoLaunchManager {
     task_name: String,
-    app_path: String,
+    app_path: PathBuf,
 }
 
 impl AutoLaunchManager {
-    pub fn new(_app_name: &str, app_path: &str) -> Self {
+    pub fn new(_app_name: &str, app_path: &Path) -> Self {
         Self {
             task_name: "LOA_Logs_Auto_Start".to_string(),
-            app_path: app_path.to_string(),
+            app_path: app_path.to_path_buf(),
         }
     }
 }
 
 impl super::AutoLaunch for AutoLaunchManager {
     fn is_enabled(&self) -> Result<bool> {
-        let output = Command::new("schtasks")
-            .args(["/query", "/tn", &self.task_name])
-            .output();
-
-        let result = match output {
-            Ok(output) => output.status.success(),
+        let _scope = w::CoInitializeEx(co::COINIT::MULTITHREADED);
+        let service = w::CoCreateInstance::<w::ITaskService>(
+            &co::CLSID::TaskScheduler,
+            None::<&w::IUnknown>,
+            co::CLSCTX::INPROC_SERVER,
+        )?;
+        service.Connect(None, None, None, None)?;
+        let folder = service.GetFolder(r"\")?;
+        let is_enabled = match folder.GetTask(&self.task_name) {
+            Ok(t) => t.get_Enabled()?,
             Err(_) => false,
         };
-        Ok(result)
+        Ok(is_enabled)
     }
 
     fn enable(&self) -> Result<()> {
-        Command::new("schtasks")
-            .args(["/delete", "/tn", &self.task_name, "/f"])
-            .output()
-            .ok();
+        let _scope = w::CoInitializeEx(co::COINIT::MULTITHREADED);
+        let service = w::CoCreateInstance::<w::ITaskService>(
+            &co::CLSID::TaskScheduler,
+            None::<&w::IUnknown>,
+            co::CLSCTX::INPROC_SERVER,
+        )?;
+        service.Connect(None, None, None, None)?;
+        let folder = service.GetFolder(r"\")?;
+        let task = service.NewTask()?;
 
-        let output = Command::new("schtasks")
-            .args([
-                "/create",
-                "/tn",
-                &self.task_name,
-                "/tr",
-                &format!("\"{}\"", &self.app_path),
-                "/sc",
-                "onlogon",
-                "/rl",
-                "highest",
-            ])
-            .output();
+        task.get_Triggers()?.Create(co::TASK_TRIGGER_TYPE2::LOGON)?;
+        task.get_Principal()?
+            .put_RunLevel(co::TASK_RUNLEVEL_TYPE::HIGHEST)?;
 
-        match output {
-            Ok(o) if o.status.success() => info!("enabled start on boot"),
-            Ok(e) => warn!("error enabling start on boot: {:?}", e),
-            Err(e) => warn!("error enabling start on boot: {}", e),
-        };
+        let action = task
+            .get_Actions()?
+            .Create(co::TASK_ACTION_TYPE::EXEC)?
+            .QueryInterface::<w::IExecAction>()?;
+        action.put_Path(&self.app_path.display().to_string())?;
+        let working_directory = self.app_path.parent().expect("should have parent");
+        action.put_WorkingDirectory(&working_directory.display().to_string())?;
+
+        folder.RegisterTaskDefinition(
+            Some(&self.task_name),
+            &task,
+            co::TASK_CREATION::CREATE_OR_UPDATE,
+            None,
+            None,
+            co::TASK_LOGON::INTERACTIVE_TOKEN,
+            None,
+        )?;
         Ok(())
     }
 
     fn disable(&self) -> Result<()> {
-        let output = Command::new("schtasks")
-            .args(["/delete", "/tn", &self.task_name, "/f"])
-            .output();
-
-        match output {
-            Ok(o) if o.status.success() => info!("disabled start on boot"),
-            Ok(e) => warn!("error disabling start on boot: {:?}", e),
-            Err(e) => warn!("error disabling start on boot: {}", e),
-        };
+        let _scope = w::CoInitializeEx(co::COINIT::MULTITHREADED);
+        let service = w::CoCreateInstance::<w::ITaskService>(
+            &co::CLSID::TaskScheduler,
+            None::<&w::IUnknown>,
+            co::CLSCTX::INPROC_SERVER,
+        )?;
+        service.Connect(None, None, None, None)?;
+        service.GetFolder(r"\")?.DeleteTask(&self.task_name)?;
         Ok(())
     }
 }

@@ -79,8 +79,10 @@ async fn main() -> Result<()> {
 
             setup_tray(app_handle)?;
 
-            let app_path = std::env::current_exe()?.display().to_string();
-            app.manage(AutoLaunchManager::new(&app.package_info().name, &app_path));
+            app.manage(AutoLaunchManager::new(
+                &app.package_info().name,
+                &std::env::current_exe()?,
+            ));
 
             let update_checked = Arc::new(AtomicBool::new(false));
             let checked_clone = update_checked.clone();
@@ -1570,9 +1572,13 @@ fn check_start_on_boot(auto: State<AutoLaunchManager>) -> bool {
 
 #[tauri::command]
 fn set_start_on_boot(auto: State<AutoLaunchManager>, set: bool) {
-    let _ = match set {
+    let result = match set {
         true => auto.enable(),
         false => auto.disable(),
+    };
+    match result {
+        Ok(_) => info!("set start on boot to {}", set),
+        Err(e) => error!("could not set start on boot: {}", e),
     };
 }
 
