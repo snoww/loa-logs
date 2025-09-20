@@ -56,6 +56,7 @@ tauri-plugin-single-instance = "2.3.4"
 
 [target.'cfg(target_os = "windows")'.dependencies]
 nt_version = "0.1.3"
+winsafe = { version = "0.0.25", features = ["taskschd"] }
 
 [target.'cfg(target_os = "linux")'.dependencies]
 auto-launch = "0.5.0"
@@ -88,3 +89,5 @@ opt-level = 0
 [patch.crates-io]
 # Downgrade until https://github.com/tauri-apps/tao/issues/1140 is resolved
 tray-icon = { git = "https://github.com/tauri-apps/tray-icon.git", rev = "tray-icon-v0.21.0" }
+# Patch until https://github.com/rodrigocfd/winsafe/pull/168 is merged
+winsafe = { git = "https://github.com/anyduck/winsafe.git", rev = "1a6250e" }
