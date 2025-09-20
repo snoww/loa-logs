@@ -1,11 +1,11 @@
 {
-  "version": "v1.33.4",
-  "notes": "### v1.33.4 - September 19th, 2025\n\n#### P.S. If you see any of us in town or raid, consider dropping an honor! \n- Snowving on Luterra\n- Administrator on Ratik\n- Poont on Gienah\n\n#### NEW FEATURES\n- RDPS\n  - pseudo rdps based off of in-game Combat Analyzer (thanks to research by molen and poont)\n  - for DPS classes: \n    - **uDMG, uDPS (unbuffed)**: shows damage and dps without SUPPORT buffs (AP, Brand, Identity, and T). This is what the in-game combat analyzer uses to calculate rdps for supports\n  - for support classes: \n    - **bDMG, bDPS (buffed)**: the amount of  damage that the skill buffed. \n    - **bD%**: shows the amount of damage the support contributed relative to the entire raid (in support's breakdown). \n    - **DR**: shows the damage mitigated by the skill\n  - column visibility can be adjusted in settings, for logs and meter\n- Future statistics and percentiles will be based off pseudo rdps once enough data has been collected. Please upload all your logs after you update!\n\n#### BUG FIXES AND IMPROVEMENTS\n- fixed adrenaline crit rate buff missing\n- fixed players missing in encounter preview\n\n![udps](https://i.imgur.com/PpP8PlK.png)\n\n![udps breakdown](https://i.imgur.com/bdlweJ5.png)\n\n![bdps](https://i.imgur.com/IT2R9yl.png)\n",
-  "pub_date": "2025-09-19T22:41:07.067Z",
+  "version": "v1.33.5",
+  "notes": "### v1.33.5 - September 20th, 2025\n\n#### P.S. If you see any of us in town or raid, consider dropping an honor! \n- Snowving on Luterra\n- Administrator on Ratik\n- Poont on Gienah\n\n\n#### BUG FIXES AND IMPROVEMENTS\n- fixed contribution % showing incorrect value\n- fixed udmg and udps not available on live meter\n- fixed moonfall one bubble not tracking bdmg and bdps (and others)\n- fixed start with windows setting (toggle on and off to apply)",
+  "pub_date": "2025-09-20T20:28:09.789Z",
   "platforms": {
     "windows-x86_64": {
-      "url": "https://github.com/snoww/loa-logs/releases/download/v1.33.4/LOA.Logs_1.33.4_x64-setup.nsis.zip",
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmJpMkJYNlN1M0ZTVm5ucnQ4Y0hxS01EOXg4RXBxS0F3NnErS3Fkb1d2VTd5T1RaamZEZU1aWUhLQ2ZrVHo1dUtyQVc3bzJ3ejJUMFBRbnREVWlzSHdZPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzU4MzIxNzEyCWZpbGU6TE9BIExvZ3NfMS4zMy40X3g2NC1zZXR1cC5uc2lzLnppcAp2UkhIeFhHMFJmWTRxMVRPOTdZSlZHMmJ1ZjZTeWRZOEkxQ0Y2aVd6UjFyNXhaK0hwa2tPeHBqcVMvcSs5VmNWVi80NFBjdWZDTFhxdnpHcDlTeCtEZz09Cg=="
+      "url": "https://github.com/snoww/loa-logs/releases/download/v1.33.5/LOA.Logs_1.33.5_x64-setup.nsis.zip",
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmFJaHdlWmg1VDJOWXdFaDgrUDIreFZ6MGM3U1R2dHJvVDVjd0xGWVhaZTF2SzlIckFjR3EreFBvNmR0cm1PVkpyYkVFTDdhaDBzTXN0RDUzMUhsMHdNPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzU4NDAxNzcxCWZpbGU6TE9BIExvZ3NfMS4zMy41X3g2NC1zZXR1cC5uc2lzLnppcApxWmQySTR6cXRHa2VNYlhQdityNytuT1U2U0pJWnM0dHV3VmFZSTcyZ2h5UUNaTGQ0Z1lGNDEwYk96N0dVa3p5TWVMRHA3czh5K2ExWUZnNDcxMVJBdz09Cg=="
     }
   }
 }

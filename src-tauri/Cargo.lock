@@ -189,6 +189,7 @@ dependencies = [
  "tokio",
  "uuid",
  "window-vibrancy",
+ "winsafe",
 ]
 
 [[package]]
@@ -7061,6 +7062,11 @@ dependencies = [
  "cfg-if",
  "windows-sys 0.59.0",
 ]
+
+[[package]]
+name = "winsafe"
+version = "0.0.25"
+source = "git+https://github.com/anyduck/winsafe.git?rev=1a6250e#1a6250ec67c63b76d9a108af57c9e905962fa426"
 
 [[package]]
 name = "wit-bindgen"

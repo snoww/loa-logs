@@ -1,6 +1,6 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.33.4 - September 19th, 2025
+    v1.33.5 - September 20th, 2025
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
@@ -12,6 +12,17 @@
 - Snowving on Luterra
 - Administrator on Ratik
 - Poont on Gienah
+
+#### BUG FIXES AND IMPROVEMENTS
+
+- fixed contribution % showing incorrect value
+- fixed udmg and udps not available on live meter
+- fixed moonfall one bubble not tracking bdmg and bdps (and others)
+- fixed start with windows setting (toggle on and off to apply)
+
+---
+
+### v1.33.4 - September 19th, 2025
 
 #### NEW FEATURES
 
@@ -36,6 +47,8 @@
 ![udps breakdown](https://i.imgur.com/bdlweJ5.png)
 
 ![bdps](https://i.imgur.com/IT2R9yl.png)
+
+---
 
 ### v1.33.3 - September 17th, 2025
 
