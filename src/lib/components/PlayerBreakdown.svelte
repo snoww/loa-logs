@@ -226,7 +226,7 @@
           </QuickTooltip></td
         >
       {/if}
-      {#if enc.curSettings.breakdown.unbuffedDamage && entityState.hasDrContributions}
+      {#if entityState.hasDrContributions}
         <td class="px-1 text-center">
           <QuickTooltip tooltip={entityState.totalDamageReduced.toLocaleString()}>
             {entityState.totalDamageReducedString[0]}<span class="text-xxs text-gray-300"

@@ -34,6 +34,7 @@
     // Buffed damage (support's view)
     {
       show(enc) {
+        if (!enc.encounter.curSettings.breakdown.unbuffedDamage) return false;
         return enc.hasRdpsContributions;
       },
       headerText: "bDMG",
@@ -68,6 +69,7 @@
     // Buffed dps (support's view)
     {
       show(enc) {
+        if (!enc.encounter.curSettings.breakdown.unbuffedDps) return false;
         return enc.hasRdpsContributions;
       },
       headerText: "bDPS",
@@ -90,6 +92,7 @@
     // Buffed damage % (support's view)
     {
       show(enc) {
+        if (!enc.encounter.curSettings.breakdown.unbuffedDamage) return false;
         return enc.hasRdpsContributions;
       },
       headerText: "bD%",
