@@ -432,11 +432,23 @@
         )}
         {@render settingOption(
           "logs",
+          "unbuffedDamage",
+          "Unbuffed/Buffed Damage",
+          "Pseudo rDPS from in-game Combat Analyzer. Shows damage dealt without support buffs"
+        )}
+        {@render settingOption(
+          "logs",
           "damagePercent",
           "Damage %",
           "Show the damage percentage of the player relative to the entire raid"
         )}
         {@render settingOption("logs", "dps", "DPS", "Show the current damage per second")}
+        {@render settingOption(
+          "logs",
+          "unbuffedDps",
+          "Unbuffed/Buffed DPS",
+          "Pseudo rDPS from in-game Combat Analyzer. Shows damage per second without support buffs"
+        )}
         {@render settingOption("logs", "critRate", "Crit Rate", "Show the critical strike rate")}
         {@render settingOption("logs", "critDmg", "Crit Damage", "Show percentage of damage that crit")}
         {@render settingOption("logs", "frontAtk", "Front Attack", "Show the front attack percentage")}
@@ -471,10 +483,18 @@
           "Support Hyper %",
           "Show the percentage of damage buffed by support hyper awakening skill (T Skill)"
         )}
+        {@render settingOption("logs", "stagger", "Stagger", "Show the total stagger damage dealt")}
         {@render settingOption("logs", "counters", "Counters", "Show the number of counters hit")}
         <div class="mt-4 h-px w-full bg-neutral-600"></div>
         <div class="py-2 text-sm">Skill Breakdown</div>
         {@render settingOption("logs", "damage", "Skill Damage", "Show the total damage dealt by the skill", true)}
+        {@render settingOption(
+          "logs",
+          "unbuffedDamage",
+          "Skill Unbuffed/Buffed Damage",
+          "Pseudo rDPS from in-game Combat Analyzer. Show the total damage dealt by the skill without support buffs. For support skills, shows amount of damage buffed by skill",
+          true
+        )}
         {@render settingOption(
           "logs",
           "damagePercent",
@@ -483,6 +503,13 @@
           true
         )}
         {@render settingOption("logs", "dps", "Skill DPS", "Show the damage per second of the skill", true)}
+        {@render settingOption(
+          "logs",
+          "unbuffedDps",
+          "Skill Unbuffed/Buffed DPS",
+          "Pseudo rDPS from in-game Combat Analyzer. Show the dps of the skill without support buffs. For support skills, shows the dps buffed by skill",
+          true
+        )}
         {@render settingOption(
           "logs",
           "critRate",
@@ -628,7 +655,19 @@
           "Show how long a party member has been incapacitated for (e.g. on the floor, stunned, trapped)"
         )}
         {@render settingOption("meter", "damage", "Damage", "Show the damage dealt by player in the current encounter")}
+        {@render settingOption(
+          "meter",
+          "unbuffedDamage",
+          "Unbuffed/Buffed Damage",
+          "Pseudo rDPS from in-game Combat Analyzer. Shows damage dealt without support buffs"
+        )}
         {@render settingOption("meter", "dps", "DPS", "Show the current damage per second")}
+        {@render settingOption(
+          "meter",
+          "unbuffedDps",
+          "Unbuffed/Buffed DPS",
+          "Pseudo rDPS from in-game Combat Analyzer. Shows damage per second without support buffs"
+        )}
         {@render settingOption("meter", "critRate", "Crit Rate", "Show the critical strike rate")}
         {@render settingOption("meter", "critDmg", "Crit Damage", "Show percentage of damage that crit")}
         {@render settingOption("meter", "frontAtk", "Front Attack", "Show the front attack percentage")}
@@ -663,10 +702,18 @@
           "Support Hyper %",
           "Show the percentage of damage buffed by support hyper awakening skill"
         )}
+        {@render settingOption("meter", "stagger", "Stagger", "Show the total stagger damage dealt")}
         {@render settingOption("meter", "counters", "Counters", "Show the number of counters hit")}
         <div class="mt-4 h-px w-full bg-neutral-600"></div>
         <div class="py-2 text-sm">Skill Breakdown</div>
         {@render settingOption("meter", "damage", "Skill Damage", "Show the total damage dealt by the skill", true)}
+        {@render settingOption(
+          "meter",
+          "unbuffedDamage",
+          "Skill Unbuffed/Buffed Damage",
+          "Pseudo rDPS from in-game Combat Analyzer. Show the total damage dealt by the skill without support buffs. For support skills, shows amount of damage buffed by skill",
+          true
+        )}
         {@render settingOption(
           "meter",
           "damagePercent",
@@ -675,6 +722,13 @@
           true
         )}
         {@render settingOption("meter", "dps", "Skill DPS", "Show the damage per second of the skill", true)}
+        {@render settingOption(
+          "meter",
+          "unbuffedDps",
+          "Skill Unbuffed/Buffed DPS",
+          "Pseudo rDPS from in-game Combat Analyzer. Show the dps of the skill without support buffs. For support skills, shows the dps buffed by skill",
+          true
+        )}
         {@render settingOption(
           "meter",
           "critRate",

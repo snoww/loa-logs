@@ -1,11 +1,11 @@
 {
-  "version": "v1.32.5",
-  "notes": "### v1.32.5 - August 27th, 2025\n\n#### NEW FEATURES\n- update meter for weekly reset\n\n#### BUG FIXES AND IMPROVEMENTS\n- fix boss details missing in logs\n- count skill effects to total casts\n- minor improvements and fixes",
-  "pub_date": "2025-08-27T17:07:34.861Z",
+  "version": "v1.33.4",
+  "notes": "### v1.33.4 - September 19th, 2025\n\n#### P.S. If you see any of us in town or raid, consider dropping an honor! \n- Snowving on Luterra\n- Administrator on Ratik\n- Poont on Gienah\n\n#### NEW FEATURES\n- RDPS\n  - pseudo rdps based off of in-game Combat Analyzer (thanks to research by molen and poont)\n  - for DPS classes: \n    - **uDMG, uDPS (unbuffed)**: shows damage and dps without SUPPORT buffs (AP, Brand, Identity, and T). This is what the in-game combat analyzer uses to calculate rdps for supports\n  - for support classes: \n    - **bDMG, bDPS (buffed)**: the amount of  damage that the skill buffed. \n    - **bD%**: shows the amount of damage the support contributed relative to the entire raid (in support's breakdown). \n    - **DR**: shows the damage mitigated by the skill\n  - column visibility can be adjusted in settings, for logs and meter\n- Future statistics and percentiles will be based off pseudo rdps once enough data has been collected. Please upload all your logs after you update!\n\n#### BUG FIXES AND IMPROVEMENTS\n- fixed adrenaline crit rate buff missing\n- fixed players missing in encounter preview\n\n![udps](https://i.imgur.com/PpP8PlK.png)\n\n![udps breakdown](https://i.imgur.com/bdlweJ5.png)\n\n![bdps](https://i.imgur.com/IT2R9yl.png)\n",
+  "pub_date": "2025-09-19T22:41:07.067Z",
   "platforms": {
     "windows-x86_64": {
-      "url": "https://github.com/snoww/loa-logs/releases/download/v1.32.5/LOA.Logs_1.32.5_x64-setup.nsis.zip",
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlRNaXdOanhYUVZEY3haWDYxYjlTMEoxTm96ejloclRLcEhzZ3U5a0F4WEsxTXIxdzV4bDBnT29WZkFpcFVCL2lEY2ZEVGFmeHI3SGZ3a1pYN29DcUFZPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzU2MzE0NjY0CWZpbGU6TE9BIExvZ3NfMS4zMi41X3g2NC1zZXR1cC5uc2lzLnppcAowVUdUUVBWNDJ2NEU2bGZ6OG5pemVnRGd4dHJscVZFNmtFVnlUUE5oRzdlUVFKWVhiaWdCQkVoZ0x0d0RCUHdFdndIYTB2b1NrbUIxZytITW1MY0dDdz09Cg=="
+      "url": "https://github.com/snoww/loa-logs/releases/download/v1.33.4/LOA.Logs_1.33.4_x64-setup.nsis.zip",
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmJpMkJYNlN1M0ZTVm5ucnQ4Y0hxS01EOXg4RXBxS0F3NnErS3Fkb1d2VTd5T1RaamZEZU1aWUhLQ2ZrVHo1dUtyQVc3bzJ3ejJUMFBRbnREVWlzSHdZPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzU4MzIxNzEyCWZpbGU6TE9BIExvZ3NfMS4zMy40X3g2NC1zZXR1cC5uc2lzLnppcAp2UkhIeFhHMFJmWTRxMVRPOTdZSlZHMmJ1ZjZTeWRZOEkxQ0Y2aVd6UjFyNXhaK0hwa2tPeHBqcVMvcSs5VmNWVi80NFBjdWZDTFhxdnpHcDlTeCtEZz09Cg=="
     }
   }
 }

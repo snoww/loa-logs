@@ -45,6 +45,8 @@ CREATE TABLE IF NOT EXISTS entity (
 	support_brand REAL,
 	support_identity REAL,
 	support_hyper REAL,
+	unbuffed_damage INTEGER DEFAULT 0,
+	unbuffed_dps INTEGER DEFAULT 0
 	PRIMARY KEY (name, encounter_id),
 	FOREIGN KEY (encounter_id) REFERENCES encounter (id) ON DELETE CASCADE
 );

@@ -15,6 +15,7 @@
       "timestampUrl": "",
       "nsis": {
         "template": "./nsis/installer.nsi",
+        "installerHooks": "./nsis/hooks.nsh",
         "installerIcon": "icons/icon.ico",
         "minimumWebview2Version": "119.0.2151.97"
       }

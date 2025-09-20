@@ -60,6 +60,8 @@ export interface AppSettings {
     profileShortcut: boolean;
     damage: boolean;
     dps: boolean;
+    unbuffedDamage: boolean;
+    unbuffedDps: boolean;
     damagePercent: boolean;
     deathTime: boolean;
     incapacitatedTime: boolean;
@@ -74,9 +76,12 @@ export interface AppSettings {
     percentIdentityBySup: boolean;
     percentBrand: boolean;
     percentHatBySup: boolean;
+    stagger: boolean;
     breakdown: {
       damage: boolean;
       dps: boolean;
+      unbuffedDamage: boolean;
+      unbuffedDps: boolean;
       damagePercent: boolean;
       critRate: boolean;
       critDmg: boolean;
@@ -105,6 +110,8 @@ export interface AppSettings {
     profileShortcut: boolean;
     damage: boolean;
     dps: boolean;
+    unbuffedDamage: boolean;
+    unbuffedDps: boolean;
     damagePercent: boolean;
     deathTime: boolean;
     incapacitatedTime: boolean;
@@ -119,9 +126,12 @@ export interface AppSettings {
     percentIdentityBySup: boolean;
     percentHatBySup: boolean;
     percentBrand: boolean;
+    stagger: boolean;
     breakdown: {
       damage: boolean;
       dps: boolean;
+      unbuffedDamage: boolean;
+      unbuffedDps: boolean;
       damagePercent: boolean;
       critRate: boolean;
       adjustedCritRate: boolean;

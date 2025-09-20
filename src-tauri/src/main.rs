@@ -81,8 +81,10 @@ async fn main() -> Result<()> {
 
             setup_tray(app_handle)?;
 
-            let app_path = std::env::current_exe()?.display().to_string();
-            app.manage(AutoLaunchManager::new(&app.package_info().name, &app_path));
+            app.manage(AutoLaunchManager::new(
+                &app.package_info().name,
+                &std::env::current_exe()?,
+            ));
 
             let update_checked = Arc::new(AtomicBool::new(false));
             let checked_clone = update_checked.clone();
@@ -237,6 +239,7 @@ async fn main() -> Result<()> {
             toggle_logs_window,
             open_url,
             save_settings,
+            get_settings,
             open_db_path,
             delete_encounters_below_min_duration,
             get_db_info,
@@ -429,6 +432,8 @@ fn setup_db(app: &tauri::AppHandle) -> Result<(), rusqlite::Error> {
     migration_combat_power(&tx)?;
 
     migration_buff_summary(&tx)?;
+
+    migration_pseudo_rdps(&tx)?;
 
     stmt.finalize()?;
     info!("finished setting up database");
@@ -684,6 +689,17 @@ fn migration_buff_summary(tx: &Transaction) -> Result<(), rusqlite::Error> {
         tx.execute("ALTER TABLE entity ADD COLUMN support_brand REAL", [])?;
         tx.execute("ALTER TABLE entity ADD COLUMN support_identity REAL", [])?;
         tx.execute("ALTER TABLE entity ADD COLUMN support_hyper REAL", [])?;
+    }
+
+    stmt.finalize()
+}
+
+fn migration_pseudo_rdps(tx: &Transaction) -> Result<(), rusqlite::Error> {
+    let mut stmt = tx.prepare("SELECT 1 FROM pragma_table_info(?) WHERE name=?")?;
+    if !stmt.exists(["entity", "unbuffed_damage"])? {
+        info!("adding pseudo rdps columns");
+        tx.execute("ALTER TABLE entity ADD COLUMN unbuffed_damage INTEGER DEFAULT 0", [])?;
+        tx.execute("ALTER TABLE entity ADD COLUMN unbuffed_dps INTEGER DEFAULT 0", [])?;
     }
 
     stmt.finalize()
@@ -1314,6 +1330,18 @@ fn save_settings(app: tauri::AppHandle, settings: Settings) {
 }
 
 #[tauri::command]
+fn get_settings(app: tauri::AppHandle) -> Option<Settings> {
+    read_settings(&app).ok()
+}
+
+fn read_settings(app: &tauri::AppHandle) -> Result<Settings, Box<dyn std::error::Error>> {
+    let path = app::path::data_dir(app).join("settings.json");
+    let contents = fs::read_to_string(path)?;
+    let settings = serde_json::from_str(&contents)?;
+    Ok(settings)
+}
+
+#[tauri::command]
 fn open_db_path(app: tauri::AppHandle) {
     let path = app::path::data_dir(&app).display().to_string();
     info!("open_db_path: {}", &path);
@@ -1546,9 +1574,13 @@ fn check_start_on_boot(auto: State<AutoLaunchManager>) -> bool {
 
 #[tauri::command]
 fn set_start_on_boot(auto: State<AutoLaunchManager>, set: bool) {
-    let _ = match set {
+    let result = match set {
         true => auto.enable(),
         false => auto.disable(),
+    };
+    match result {
+        Ok(_) => info!("set start on boot to {}", set),
+        Err(e) => error!("could not set start on boot: {}", e),
     };
 }
 

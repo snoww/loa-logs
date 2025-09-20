@@ -84,6 +84,8 @@ export class EncounterState {
   anyPlayerIncapacitated = $derived(
     this.players.some((player) => player.damageStats.incapacitations && player.damageStats.incapacitations.length > 0)
   );
+  anyStagger = $derived(this.players.some((player) => player.damageStats.stagger > 0));
+  anyUnbuffedDamage = $derived(this.players.some((player) => player.damageStats.unbuffedDamage > 0));
   topDamageDealt = $derived(this.encounter?.encounterDamageStats.topDamageDealt ?? 0);
 
   /**

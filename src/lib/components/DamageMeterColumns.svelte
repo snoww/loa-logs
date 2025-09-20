@@ -2,8 +2,11 @@
   import type { LogColumn } from "$lib/column";
   import type { EncounterState } from "$lib/encounter.svelte.js";
   import { EntityState } from "$lib/entity.svelte.js";
-  import { customRound } from "$lib/utils";
+  import { EntityType } from "$lib/types";
+  import { abbreviateNumber, abbreviateNumberSplit, customRound, percentDifference } from "$lib/utils";
   import { badTooltip, damageValue, fadTooltip, percentValue } from "./Snippets.svelte";
+
+  export { unbuffedDpsTooltip };
 
   export const logColumns: LogColumn<EncounterState, EntityState>[] = [
     // Dead for
@@ -46,8 +49,7 @@
     // Damage dealt
     {
       show(enc) {
-        if (!enc.curSettings.damage) return false;
-        return true;
+        return enc.curSettings.damage;
       },
       headerText: "DMG",
       headerTooltip: "Damage Dealt",
@@ -56,16 +58,41 @@
       width: "w-14"
     },
 
+    // Unbuffed damage dealt
+    {
+      show(enc) {
+        if (!enc.curSettings.unbuffedDamage) return false;
+        return enc.anyUnbuffedDamage;
+      },
+      headerText: "uDMG",
+      headerTooltip: "Unbuffed Damage Dealt (damage dealt excluding buffs or debuffs from the support)",
+      value: unbuffedDamage,
+      valueTooltip: unbuffedDamageTooltip,
+      width: "w-14"
+    },
+
     // Damage per second
     {
       show(enc) {
-        if (!enc.curSettings.dps) return false;
-        return true;
+        return enc.curSettings.dps;
       },
       headerText: "DPS",
       headerTooltip: "Damage per second",
       value: dps,
       valueTooltip: dpsTooltip,
+      width: "w-14"
+    },
+
+    // Unbuffed damage per second
+    {
+      show(enc) {
+        if (!enc.curSettings.unbuffedDps) return false;
+        return enc.anyUnbuffedDamage;
+      },
+      headerText: "uDPS",
+      headerTooltip: "Unbuffed Damage per second (DPS excluding buffs or debuffs from the support)",
+      value: unbuffedDps,
+      valueTooltip: unbuffedDpsTooltip,
       width: "w-14"
     },
 
@@ -84,8 +111,7 @@
     // Crit rate
     {
       show(enc) {
-        if (!enc.curSettings.critRate) return false;
-        return true;
+        return enc.curSettings.critRate;
       },
       headerText: "CRIT",
       headerTooltip: "Crit %",
@@ -96,8 +122,7 @@
     // Crit damage percentage
     {
       show(enc) {
-        if (!enc.curSettings.critDmg) return false;
-        return true;
+        return enc.curSettings.critDmg;
       },
       headerText: "CDMG",
       headerTooltip: "% Damage that Crit",
@@ -204,11 +229,21 @@
       valueTooltip: null
     },
 
+    // Stagger
+    {
+      show(enc) {
+        return enc.curSettings.stagger && enc.anyStagger;
+      },
+      headerText: "STAG",
+      headerTooltip: "Total Stagger Damage",
+      value: stagger,
+      valueTooltip: staggerTooltip
+    },
+
     // Counters
     {
       show(enc) {
-        if (!enc.curSettings.counters) return false;
-        return true;
+        return enc.curSettings.counters;
       },
       headerText: "CTR",
       headerTooltip: "Counters",
@@ -234,15 +269,23 @@
 {/snippet}
 
 {#snippet incap(state: EntityState)}
-  {(state.incapacitatedTimeMs.total / 1000).toFixed(1)}s
+  {#if state.entity.entityType === EntityType.ESTHER}
+    -
+  {:else}
+    {(state.incapacitatedTimeMs.total / 1000).toFixed(1)}s
+  {/if}
 {/snippet}
 
 {#snippet incapTooltip(state: EntityState)}
-  {@const { knockDown, cc } = state.incapacitatedTimeMs}
-  <div class="-mx-px flex flex-col space-y-1 py-px text-xs font-normal">
-    <span class="text-gray-300">Knockdowns: {(knockDown / 1000).toFixed(1)}s</span>
-    <span class="text-gray-300">Crowd control: {(cc / 1000).toFixed(1)}s</span>
-  </div>
+  {#if state.entity.entityType === EntityType.ESTHER}
+    N/A
+  {:else}
+    {@const { knockDown, cc } = state.incapacitatedTimeMs}
+    <div class="-mx-px flex flex-col space-y-1 py-px text-xs font-normal">
+      <span class="text-gray-300">Knockdowns: {(knockDown / 1000).toFixed(1)}s</span>
+      <span class="text-gray-300">Crowd control: {(cc / 1000).toFixed(1)}s</span>
+    </div>
+  {/if}
 {/snippet}
 
 {#snippet damage(state: EntityState)}
@@ -314,5 +357,61 @@
 {/snippet}
 
 {#snippet counters(state: EntityState)}
-  {state.entity.skillStats.counters}
+  {#if state.entity.entityType === EntityType.ESTHER}
+    -
+  {:else}
+    {state.entity.skillStats.counters}
+  {/if}
+{/snippet}
+
+{#snippet stagger(state: EntityState)}
+  {#if state.entity.damageStats.stagger > 0}
+    {@render damageValue(abbreviateNumberSplit(state.entity.damageStats.stagger))}
+  {:else}
+    -
+  {/if}
+{/snippet}
+
+{#snippet staggerTooltip(state: EntityState)}
+  {state.entity.damageStats.stagger ? state.entity.damageStats.stagger.toLocaleString() : "N/A"}
+{/snippet}
+
+{#snippet unbuffedDamage(state: EntityState)}
+  {#if !state.anyUnbuffedDamage}
+    -
+  {:else}
+    {@render damageValue(abbreviateNumberSplit(state.entity.damageStats.unbuffedDamage))}
+  {/if}
+{/snippet}
+
+{#snippet unbuffedDamageTooltip(state: EntityState)}
+  {#if !state.anyUnbuffedDamage}
+    N/A
+  {:else}
+    {state.entity.damageStats.unbuffedDamage.toLocaleString()}
+  {/if}
+{/snippet}
+
+{#snippet unbuffedDps(state: EntityState)}
+  {#if !state.anyUnbuffedDamage}
+    -
+  {:else}
+    {@render damageValue(abbreviateNumberSplit(state.entity.damageStats.unbuffedDps))}
+  {/if}
+{/snippet}
+
+{#snippet unbuffedDpsTooltip(state: EntityState)}
+  {#if !state.anyUnbuffedDamage}
+    N/A
+  {:else}
+    {@const unbuffed = state.entity.damageStats.unbuffedDps}
+    {@const buffed = state.dps - unbuffed}
+    <div class="-mx-px flex flex-col space-y-1 py-px text-xs font-normal">
+      <span class="text-gray-300">Base: {abbreviateNumber(unbuffed, 2)}</span>
+      <span class="text-gray-300">Buffed: {abbreviateNumber(buffed, 2)}</span>
+      <span class="text-gray-300"
+        >Contribution: {percentDifference(state.entity.damageStats.dps, unbuffed).toFixed(1)}%</span
+      >
+    </div>
+  {/if}
 {/snippet}

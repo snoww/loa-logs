@@ -1,5 +1,13 @@
 <script lang="ts">
   import { chartable, type EChartsOptions } from "$lib/charts";
+  import ArcanistCardTable from "$lib/components/ArcanistCardTable.svelte";
+  import BossBreakdown from "$lib/components/BossBreakdown.svelte";
+  import BossTable from "$lib/components/BossTable.svelte";
+  import Buffs from "$lib/components/Buffs.svelte";
+  import Card from "$lib/components/Card.svelte";
+  import DamageMeterPartySplit from "$lib/components/DamageMeterPartySplit.svelte";
+  import DamageTaken from "$lib/components/DamageTaken.svelte";
+  import LogPlayerBreakdown from "$lib/components/PlayerBreakdown.svelte";
   import { EncounterState } from "$lib/encounter.svelte.js";
   import { screenshot } from "$lib/stores.svelte.js";
   import { ChartType, EntityType, MeterState, MeterTab, type Encounter, type Entity } from "$lib/types";
@@ -16,14 +24,6 @@
   } from "$lib/utils/dpsCharts";
   import { getSupportSynergiesOverTime, getSupportSynergiesOverTimeChart } from "$lib/utils/supportBuffCharts";
   import { onDestroy } from "svelte";
-  import Card from "$lib/components/Card.svelte";
-  import ArcanistCardTable from "$lib/components/ArcanistCardTable.svelte";
-  import BossBreakdown from "$lib/components/BossBreakdown.svelte";
-  import BossTable from "$lib/components/BossTable.svelte";
-  import Buffs from "$lib/components/Buffs.svelte";
-  import DamageMeterPartySplit from "$lib/components/DamageMeterPartySplit.svelte";
-  import DamageTaken from "$lib/components/DamageTaken.svelte";
-  import LogPlayerBreakdown from "$lib/components/PlayerBreakdown.svelte";
   import LogEncounterInfo from "./LogEncounterInfo.svelte";
   import LogQuickControls from "./LogQuickControls.svelte";
   import LogQuickSettings from "./LogQuickSettings.svelte";

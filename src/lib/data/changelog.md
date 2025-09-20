@@ -1,119 +1,76 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.32.5 - August 27th, 2025
+    v1.33.4 - September 19th, 2025
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
   </div>
 </div>
 
+#### P.S. If you see any of us in town or raid, consider dropping an honor!
+
+- Snowving on Luterra
+- Administrator on Ratik
+- Poont on Gienah
+
 #### NEW FEATURES
-- update meter for weekly reset
+
+- RDPS
+  - pseudo rdps based off of in-game Combat Analyzer (thanks to research by molen and poont)
+  - for DPS classes:
+    - **uDMG, uDPS (unbuffed)**: shows damage and dps without SUPPORT buffs (AP, Brand, Identity, and T). This is what the in-game combat analyzer uses to calculate rdps for supports
+  - for support classes:
+    - **bDMG, bDPS (buffed)**: the amount of damage that the skill buffed.
+    - **bD%**: shows the amount of damage the support contributed relative to the entire raid (in support's breakdown).
+    - **DR**: shows the damage mitigated by the skill
+  - column visibility can be adjusted in settings, for logs and meter
+- Future statistics and percentiles will be based off pseudo rdps once enough data has been collected. Please upload all your logs after you update!
 
 #### BUG FIXES AND IMPROVEMENTS
-- fix boss details missing in logs
-- count skill effects to total casts
-- minor improvements and fixes
+
+- fixed adrenaline crit rate buff missing
+- fixed players missing in encounter preview
+
+![udps](https://i.imgur.com/PpP8PlK.png)
+
+![udps breakdown](https://i.imgur.com/bdlweJ5.png)
+
+![bdps](https://i.imgur.com/IT2R9yl.png)
+
+### v1.33.3 - September 17th, 2025
+
+#### NEW FEATURES
+
+- added new stagger column
+  - applies to skills, skill breakdowns, and skill hits
+
+![party_stagger](https://i.imgur.com/JOEoZdI.png)
+
+![skill_breakdown_stagger](https://i.imgur.com/UG7Zt8H.png)
+
+#### BUG FIXES AND IMPROVEMENTS
+
+- fix crashes when settings was malformed
 
 ---
 
-### v1.32.3 - August 22th, 2025
+### v1.33.2 - September 17th, 2025
 
-#### BUG FIXES AND IMPROVEMENTS
+#### Known Issues
 
-- fix self buffs showing wrong source skills
-- fix buff summaries not excluding damage special skills
-
-### v1.32.2 - August 20th, 2025
+- meter window position might be reset after update
 
 #### NEW FEATURES
 
-- updated meter for valkyrie release (ty poon for the packets, niome for the class icon)
-- changed dps column to performance column, shows support buffs for supports now (due to database changes, will only show for new logs)
+- updated meter for assault raids
+- added skill names for paradise items
 
 #### BUG FIXES AND IMPROVEMENTS
 
-- fix dps specs of supports counting towards support buffs
-- fix paladin identity % not counting
+- improved meter backend
+- fixed uploading not working
+- fixed buffs not showing for older logs
 
 ---
 
-### v1.31.9 - August 13th, 2025
-
-#### BUG FIXES AND IMPROVEMENTS
-
-- fixed damage % not counting sidereal damage
-
-### v1.31.8 - July 30th, 2025
-
-#### NEW FEATURES
-
-- added new column **_Cooldown Ratio %_** in log skill breakdowns
-  - based off official meter in korea
-  - shows percentage of time a skill was on cooldown for the duration of the encounter
-  - _only works for local player_
-  - will show in uploaded logs if you upload your pov
-
-![cdr%](https://i.imgur.com/svbYR2h.png)
-
-#### BUG FIXES AND IMPROVEMENTS
-
-- fixed buff average %s not summing correctly
-- fixed buff tab freezing in live meter
-
-### v1.31.6 - July 27th, 2025
-
-#### BUG FIXES AND IMPROVEMENTS
-
-- fixed artist ink marble identity duration increase not being tracked
-- fixed gems for identity skills not being tracked
-- improved summoner summon skill labeling (big thanks to poont)
-
-### v1.31.5 - July 25th, 2025
-
-#### NEW FEATURES
-
-- miscellaneous encounters (cube, paradise, etc.) are hidden by default (settings > general > show raids only)
-- exclude hyper awakening, transcendence, perfect blocks, paradise orbs, etc. from buffs and other modifier calculations (only for logs recorded after this update)
-
-#### BUG FIXES AND IMPROVEMENTS
-
-- fixed bard bubble %s not showing on tooltips
-- fixed mini meter buffs
-
-### v1.31.3 - July 24th, 2025
-
-#### BUG FIXES AND IMPROVEMENTS
-
-- updated classification of dps spec of supports
-- fixed player not being recognized when loading in on a mount
-- added missing gems for bard tempest, paladin divine wave, etc.
-- added skill tracking for bard major/minor chords
-
-### v1.31.2 - July 24th, 2025
-
-#### BUG FIXES AND IMPROVEMENTS
-
-- fix berserker technique berserker classification
-- fix parties being incorrect sometimes
-
-### v1.31.0 - July 23rd, 2025
-
-#### NEW FEATURES
-
-- update meter for july paradise update (thanks poont for packets)
-- added back details tab (enable in settings > general > show details)
-  - shows your character's raw identity data
-    ![details](https://i.imgur.com/ivGiQ4R.png)
-- added combat power in tooltips
-
-#### BUG FIXES AND IMPROVEMENTS
-
-- improved skill grouping for some classes
-- updated tripods display
-- fixed boss hp chart for mordum g3 in certain cases
-- show upload error message on upload failure
-
----
-
-**Older Changelogs**: [link](https://github.com/snoww/loa-logs/releases/tag/v1.30.2)
+**Older Changelogs**: [link](https://github.com/snoww/loa-logs/releases/tag/v1.32.5)

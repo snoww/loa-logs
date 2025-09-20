@@ -1,6 +1,7 @@
 import { abbreviateNumberSplit, customRound, formatPlayerName, getEstherFromNpcId } from "$lib/utils";
 import { cardIds } from "./constants/cards";
 import type { EncounterState } from "./encounter.svelte";
+import { sumRdpsContributed } from "./skill.svelte";
 import { settings } from "./stores.svelte";
 import { EntityType, type Entity, type IncapacitatedEvent } from "./types";
 import { hyperAwakeningIds } from "./utils/buffs";
@@ -146,6 +147,33 @@ export class EntityState {
   anySupportHat = $derived(this.skills.some((skill) => skill.buffedByHat > 0));
 
   anyCooldownRatio = $derived(this.skills.some((skill) => skill.timeAvailable));
+  anyStagger = $derived(this.entity.damageStats.stagger > 0);
+  anyUnbuffedDamage = $derived(
+    this.entity.damageStats.unbuffedDamage > 0 &&
+      this.entity.damageStats.unbuffedDamage !== this.entity.damageStats.damageDealt
+  );
+
+  hasRdpsContributions = $derived(
+    Object.values(this.entity.skills).some((skill) => sumRdpsContributed(skill, [1, 3, 5]) > 0)
+  );
+  hasDrContributions = $derived(
+    Object.values(this.entity.skills).some((skill) => sumRdpsContributed(skill, [4, 6]) > 0)
+  );
+  totalDamageBuffed = $derived.by(() => {
+    if (!this.hasRdpsContributions) return 0;
+    return this.skills.reduce((acc, skill) => acc + sumRdpsContributed(skill), 0);
+  });
+  totalDamageBuffedString = $derived(abbreviateNumberSplit(this.totalDamageBuffed));
+  totalDpsBuffed = $derived.by(() => {
+    if (this.totalDamageBuffed <= 0) return 0;
+    return Math.round(this.totalDamageBuffed / (this.encounter.duration / 1000));
+  });
+  totalDpsBuffedString = $derived(abbreviateNumberSplit(this.totalDpsBuffed));
+  totalDamageReduced = $derived.by(() => {
+    if (!this.hasDrContributions) return 0;
+    return this.skills.reduce((acc, skill) => acc + sumRdpsContributed(skill, [4, 6]), 0);
+  });
+  totalDamageReducedString = $derived(abbreviateNumberSplit(this.totalDamageReduced));
 
   constructor(entity: Entity, enc: EncounterState) {
     this.entity = entity;

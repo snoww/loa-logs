@@ -352,3 +352,8 @@ export const normalize = (val: number, min: number, max: number): number => {
 
 export const isSupportSpec = (spec?: string): boolean =>
   spec === "Desperate Salvation" || spec === "Full Bloom" || spec === "Blessed Aura" || spec === "Liberator";
+
+export const percentDifference = (a: number, b: number): number => {
+  if (a === 0 && b === 0) return 0;
+  return (Math.abs(a - b) / ((a + b) / 2)) * 100;
+};

@@ -11,7 +11,7 @@ use anyhow::Result;
 use hashbrown::HashMap;
 use rusqlite::{params, Transaction};
 use serde_json::json;
-use std::cmp::{max, Ordering, Reverse};
+use std::cmp::{Ordering, Reverse, max};
 use std::collections::BTreeMap;
 
 pub fn encounter_entity_from_entity(entity: &Entity) -> EncounterEntity {
@@ -63,19 +63,16 @@ pub fn is_support_spec(spec: &str) -> bool {
 
 pub fn is_battle_item(skill_effect_id: &u32, _item_type: &str) -> bool {
     if let Some(item) = SKILL_EFFECT_DATA.get(skill_effect_id)
-        && let Some(category) = item.item_type.as_ref() {
-            return category == "useup";
-        }
+        && let Some(category) = item.item_type.as_ref()
+    {
+        return category == "useup";
+    }
     false
 }
 
 pub fn get_status_effect_data(buff_id: u32, source_skill: Option<u32>) -> Option<StatusEffect> {
-    let buff = SKILL_BUFF_DATA.get(&buff_id);
-    if buff.is_none() || buff.unwrap().icon_show_type.clone().unwrap_or_default() == "none" {
-        return None;
-    }
+    let buff = SKILL_BUFF_DATA.get(&buff_id)?;
 
-    let buff = buff.unwrap();
     let buff_category = if buff.buff_category.clone().unwrap_or_default() == "ability"
         && [501, 502, 503, 504, 505].contains(&buff.unique_group)
     {
@@ -147,17 +144,18 @@ pub fn get_status_effect_data(buff_id: u32, source_skill: Option<u32>) -> Option
     } else if buff_category == "set" && buff.set_name.is_some() {
         status_effect.source.set_name.clone_from(&buff.set_name);
     } else if buff_category == "battleitem"
-        && let Some(buff_source_item) = SKILL_EFFECT_DATA.get(&buff_id) {
-            if let Some(item_name) = buff_source_item.item_name.as_ref() {
-                status_effect.source.name.clone_from(item_name);
-            }
-            if let Some(item_desc) = buff_source_item.item_desc.as_ref() {
-                status_effect.source.desc.clone_from(item_desc);
-            }
-            if let Some(icon) = buff_source_item.icon.as_ref() {
-                status_effect.source.icon.clone_from(icon);
-            }
+        && let Some(buff_source_item) = SKILL_EFFECT_DATA.get(&buff_id)
+    {
+        if let Some(item_name) = buff_source_item.item_name.as_ref() {
+            status_effect.source.name.clone_from(item_name);
         }
+        if let Some(item_desc) = buff_source_item.item_desc.as_ref() {
+            status_effect.source.desc.clone_from(item_desc);
+        }
+        if let Some(icon) = buff_source_item.icon.as_ref() {
+            status_effect.source.icon.clone_from(icon);
+        }
+    }
 
     Some(status_effect)
 }
@@ -167,9 +165,10 @@ fn get_summon_source_skill(skill: Option<&SkillData>, status_effect: &mut Status
         if let Some(summon_skills) = skill.summon_source_skills.as_ref() {
             let summon_source_skill = summon_skills.first().unwrap_or(&0);
             if *summon_source_skill > 0
-                && let Some(summon_skill) = SKILL_DATA.get(summon_source_skill) {
-                    status_effect.source.skill = Some(summon_skill.clone());
-                }
+                && let Some(summon_skill) = SKILL_DATA.get(summon_source_skill)
+            {
+                status_effect.source.skill = Some(summon_skill.clone());
+            }
         } else {
             status_effect.source.skill = Some(skill.clone());
         }
@@ -337,28 +336,29 @@ pub fn get_status_effect_buff_type_flags(buff: &SkillBuffData) -> u32 {
             } else if ["skill_mana_reduction", "mana_reduction"].contains(&option_type) {
                 buff_type |= StatusEffectBuffTypeFlags::RESOURCE;
             } else if option_type == "combat_effect"
-                && let Some(combat_effect) = COMBAT_EFFECT_DATA.get(&option.key_index) {
-                    for effect in combat_effect.effects.iter() {
-                        for action in effect.actions.iter() {
-                            if [
-                                "modify_damage",
-                                "modify_final_damage",
-                                "modify_critical_multiplier",
-                                "modify_penetration",
-                                "modify_penetration_when_critical",
-                                "modify_penetration_addend",
-                                "modify_penetration_addend_when_critical",
-                                "modify_damage_shield_multiplier",
-                            ]
-                            .contains(&action.action_type.as_str())
-                            {
-                                buff_type |= StatusEffectBuffTypeFlags::DMG;
-                            } else if action.action_type == "modify_critical_ratio" {
-                                buff_type |= StatusEffectBuffTypeFlags::CRIT;
-                            }
+                && let Some(combat_effect) = COMBAT_EFFECT_DATA.get(&option.key_index)
+            {
+                for effect in combat_effect.effects.iter() {
+                    for action in effect.actions.iter() {
+                        if [
+                            "modify_damage",
+                            "modify_final_damage",
+                            "modify_critical_multiplier",
+                            "modify_penetration",
+                            "modify_penetration_when_critical",
+                            "modify_penetration_addend",
+                            "modify_penetration_addend_when_critical",
+                            "modify_damage_shield_multiplier",
+                        ]
+                        .contains(&action.action_type.as_str())
+                        {
+                            buff_type |= StatusEffectBuffTypeFlags::DMG;
+                        } else if action.action_type == "modify_critical_ratio" {
+                            buff_type |= StatusEffectBuffTypeFlags::CRIT;
                         }
                     }
                 }
+            }
         }
     }
 
@@ -438,18 +438,18 @@ pub fn get_skill_name_and_icon(
                     .skill_timestamp
                     .get(&(entity_id, *source))
                     .is_some()
-                    && let Some(skill) = SKILL_DATA.get(source) {
-                        return (
-                            skill.name.clone().unwrap_or(skill.id.to_string()) + " (Summon)",
-                            skill.icon.clone().unwrap_or_default(),
-                            Some(summon_source_skill.clone()),
-                            false,
-                            skill.is_hyper_awakening,
-                        );
-                    }
+                    && let Some(skill) = SKILL_DATA.get(source)
+                {
+                    return (
+                        skill.name.clone().unwrap_or(skill.id.to_string()) + " (Summon)",
+                        skill.icon.clone().unwrap_or_default(),
+                        Some(summon_source_skill.clone()),
+                        false,
+                        skill.is_hyper_awakening,
+                    );
+                }
             }
-            if let Some(skill) = SKILL_DATA.get(summon_source_skill.iter().min().unwrap_or(&0))
-            {
+            if let Some(skill) = SKILL_DATA.get(summon_source_skill.iter().min().unwrap_or(&0)) {
                 (
                     skill.name.clone().unwrap_or(skill.id.to_string()) + " (Summon)",
                     skill.icon.clone().unwrap_or_default(),
@@ -541,7 +541,11 @@ pub fn get_class_from_id(class_id: &u32) -> String {
 }
 
 pub fn is_hat_buff(buff_id: &u32) -> bool {
-    matches!(buff_id, 362600 | 212305 | 319503 | 485100)
+    matches!(buff_id, 362600 | 212305 | 319503 | 319504 | 485100)
+}
+
+pub fn is_hyper_hat_buff(buff_id: &u32) -> bool {
+    matches!(buff_id, 362601 | 212306 | 319506 | 485101)
 }
 
 pub fn check_tripod_index_change(before: Option<TripodIndex>, after: Option<TripodIndex>) -> bool {
@@ -703,8 +707,10 @@ pub fn insert_data(
         support_ap,
         support_brand,
         support_identity,
-        support_hyper
-    ) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17, ?18, ?19, ?20, ?21, ?22, ?23, ?24, ?25)",
+        support_hyper,
+        unbuffed_damage,
+        unbuffed_dps
+    ) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17, ?18, ?19, ?20, ?21, ?22, ?23, ?24, ?25, ?26, ?27)",
         )
         .expect("failed to prepare entity statement");
 
@@ -862,15 +868,16 @@ pub fn insert_data(
                 } else if spec == "Unknown" {
                     // not reliable enough to be used on its own
                     if let Some(tree) = info.ark_passive_data.as_ref()
-                        && let Some(enlightenment) = tree.enlightenment.as_ref() {
-                            for node in enlightenment.iter() {
-                                let spec = get_spec_from_ark_passive(node);
-                                if spec != "Unknown" {
-                                    entity.spec = Some(spec);
-                                    break;
-                                }
+                        && let Some(enlightenment) = tree.enlightenment.as_ref()
+                    {
+                        for node in enlightenment.iter() {
+                            let spec = get_spec_from_ark_passive(node);
+                            if spec != "Unknown" {
+                                entity.spec = Some(spec);
+                                break;
                             }
                         }
+                    }
                 }
 
                 if entity.combat_power.is_none() {
@@ -881,6 +888,19 @@ pub fn insert_data(
                 entity.ark_passive_data = info.ark_passive_data.clone();
                 entity.loadout_hash = info.loadout_snapshot.clone();
             }
+
+            // sum pseudo rdps data
+            let mut buffed_damage = 0;
+            for skill in entity.skills.values() {
+                for (rdps_type, entry) in skill.rdps_received.iter() {
+                    if matches!(*rdps_type, 1 | 3 | 5) {
+                        buffed_damage += entry.values().sum::<i64>();
+                    }
+                }
+            }
+            entity.damage_stats.unbuffed_damage = entity.damage_stats.damage_dealt - buffed_damage;
+            entity.damage_stats.unbuffed_dps =
+                entity.damage_stats.unbuffed_damage / duration_seconds;
         }
 
         if entity.name == encounter.local_player {
@@ -981,6 +1001,8 @@ pub fn insert_data(
                 support_buffs
                     .map(|b| b.hyper)
                     .unwrap_or(entity.damage_stats.buffed_by_hat as f64 / damage_without_hyper),
+                entity.damage_stats.unbuffed_damage,
+                entity.damage_stats.unbuffed_dps
             ])
             .expect("failed to insert entity");
     }
@@ -989,7 +1011,7 @@ pub fn insert_data(
         .entities
         .values()
         .filter(|e| {
-            ((e.entity_type == EntityType::Player && e.class_id != 0 && e.max_hp > 0)
+            ((e.entity_type == EntityType::Player && e.class_id > 0)
                 || e.name == encounter.local_player)
                 && e.damage_stats.damage_dealt > 0
         })
@@ -1486,4 +1508,15 @@ pub fn get_total_available_time(
     }
 
     total_available_time
+}
+
+fn get_damage_without_hyper_or_special(e: &EncounterEntity) -> i64 {
+    let hyper = e.damage_stats.hyper_awakening_damage;
+    let special = e
+        .skills
+        .values()
+        .filter(|s| s.special.unwrap_or(false))
+        .map(|s| s.total_damage)
+        .sum::<i64>();
+    e.damage_stats.damage_dealt - hyper - special
 }

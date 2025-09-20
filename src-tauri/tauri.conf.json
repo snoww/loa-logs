@@ -21,7 +21,7 @@
     "licenseFile": "../LICENSE"
   },
   "productName": "LOA Logs",
-  "version": "1.32.5",
+  "version": "1.33.4",
   "identifier": "xyz.snow",
   "plugins": {
     "updater": {
@@ -87,7 +87,7 @@
       }
     ],
     "security": {
-      "csp": "default-src *; img-src 'self' https: data:; style-src 'self' 'unsafe-inline'; font-src 'self' data:; connect-src ipc: http://ipc.localhost"
+      "csp": "default-src *; img-src 'self' https: data:; style-src 'self' 'unsafe-inline'; font-src 'self' data:; connect-src * ipc: http://ipc.localhost"
     },
     "trayIcon": {
       "iconPath": "icons/icon.png",
