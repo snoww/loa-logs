@@ -16,11 +16,11 @@ export class SkillState {
   });
   skillDpsString = $derived(abbreviateNumberSplit(this.skillDps));
   skillDamageString = $derived(abbreviateNumberSplit(this.skill.totalDamage));
-  skillUnbuffedDamage = $derived(sumRdpsReceived(this.skill, [1, 3, 5]));
+  skillUnbuffedDamage = $derived(this.skill.totalDamage - sumRdpsReceived(this.skill, [1, 3, 5]));
   skillUnbuffedDps = $derived.by(() => {
     // the dps calculated here can slightly differ from one calculated in backend (prolly due to time/rounding? idk)
     // so returning pre-calculated dps if unbuffed damage equals total damage
-    if (this.skillUnbuffedDamage === this.skill.totalDamage) return this.skillDps;
+    if (this.skillUnbuffedDamage === 0 || this.skillUnbuffedDamage === this.skill.totalDamage) return this.skillDps;
     return Math.round(this.skillUnbuffedDamage / (this.entity.encounter.duration / 1000));
   });
   skillUnbuffedDamageString = $derived(abbreviateNumberSplit(this.skillUnbuffedDamage));

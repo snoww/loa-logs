@@ -3,10 +3,10 @@
   import type { EncounterState } from "$lib/encounter.svelte.js";
   import { EntityState } from "$lib/entity.svelte.js";
   import { EntityType } from "$lib/types";
-  import { abbreviateNumber, abbreviateNumberSplit, customRound, percentDifference } from "$lib/utils";
+  import { abbreviateNumber, abbreviateNumberSplit, customRound } from "$lib/utils";
   import { badTooltip, damageValue, fadTooltip, percentValue } from "./Snippets.svelte";
 
-  export { unbuffedDpsTooltip };
+  export { unbuffedDamageTooltip, unbuffedDpsTooltip };
 
   export const logColumns: LogColumn<EncounterState, EntityState>[] = [
     // Dead for
@@ -388,7 +388,12 @@
   {#if !state.anyUnbuffedDamage}
     N/A
   {:else}
-    {state.entity.damageStats.unbuffedDamage.toLocaleString()}
+    {@const unbuffed = state.entity.damageStats.unbuffedDamage}
+    {@const buffed = state.damageDealt - unbuffed}
+    <div class="-mx-px flex flex-col space-y-1 py-px text-xs font-normal">
+      <span class="text-gray-300">Base: {abbreviateNumber(unbuffed, 2)}</span>
+      <span class="text-gray-300">Buffed: {abbreviateNumber(buffed, 2)}</span>
+    </div>
   {/if}
 {/snippet}
 
@@ -409,7 +414,9 @@
     <div class="-mx-px flex flex-col space-y-1 py-px text-xs font-normal">
       <span class="text-gray-300">Base: {abbreviateNumber(unbuffed, 2)}</span>
       <span class="text-gray-300">Buffed: {abbreviateNumber(buffed, 2)}</span>
-      <span class="text-gray-300">Contribution: {((buffed / state.dps) * 100).toFixed(1)}%</span>
+      {#if state.dps > 0}
+        <span class="text-gray-300">Contribution: {((buffed / state.dps) * 100).toFixed(1)}%</span>
+      {/if}
     </div>
   {/if}
 {/snippet}

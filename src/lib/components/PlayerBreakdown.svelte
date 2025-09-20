@@ -8,7 +8,7 @@
   import { abbreviateNumberSplit, customRound, isNameValid, rgbLinearShadeAdjust, UWUOWO_URL } from "$lib/utils";
   import { openUrl } from "@tauri-apps/plugin-opener";
   import { flip } from "svelte/animate";
-  import { unbuffedDpsTooltip } from "./DamageMeterColumns.svelte";
+  import { unbuffedDamageTooltip, unbuffedDpsTooltip } from "./DamageMeterColumns.svelte";
   import PlayerBreakdownHeader from "./PlayerBreakdownHeader.svelte";
   import PlayerBreakdownRow from "./PlayerBreakdownRow.svelte";
   import { badTooltip, fadTooltip } from "./Snippets.svelte";
@@ -67,7 +67,7 @@
       {#if enc.curSettings.breakdown.unbuffedDamage && entityState.anyUnbuffedDamage}
         {@const unbuffedDamage = abbreviateNumberSplit(entity.damageStats.unbuffedDamage)}
         <td class="px-1 text-center">
-          <QuickTooltip tooltip={entity.damageStats.unbuffedDamage.toLocaleString()}>
+          <QuickTooltip tooltip={unbuffedDamageTooltip} tooltipProps={entityState}>
             {unbuffedDamage[0]}<span class="text-xxs text-gray-300">{unbuffedDamage[1]}</span>
           </QuickTooltip>
         </td>
