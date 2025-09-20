@@ -80,7 +80,7 @@ async fn main() -> Result<()> {
             setup_tray(app_handle)?;
 
             let app_path = std::env::current_exe()?.display().to_string();
-            app.manage(AutoLaunchManager::new(&app.package_info().name, &app_path));
+            app.manage(AutoLaunchManager::new(&app_path));
 
             let update_checked = Arc::new(AtomicBool::new(false));
             let checked_clone = update_checked.clone();
