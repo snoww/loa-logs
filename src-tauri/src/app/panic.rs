@@ -37,8 +37,6 @@ pub fn set_hook(app: &tauri::AppHandle) {
     std::panic::set_hook(Box::new(move |info| {
         let message = format!("{info}");
         log::error!("{}", message.replace('\n', " "));
-        #[cfg(not(debug_assertions))]
-        log::error!("{:?}", std::backtrace::Backtrace::force_capture());
         log::logger().flush();
 
         if !cfg!(debug_assertions) {
