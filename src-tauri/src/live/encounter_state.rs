@@ -731,6 +731,7 @@ impl EncounterState {
         source_entity.damage_stats.stagger += damage_data.stagger as i64;
 
         // apply pseudo rdps damage
+        let mut buffed = 0_i64;
         for entry in damage_data.rdps_data {
             *skill
                 .rdps_received
@@ -738,7 +739,14 @@ impl EncounterState {
                 .or_default()
                 .entry(entry.skill_id)
                 .or_default() += entry.value;
+            if matches!(entry.rdps_type, 1 | 3 | 5) {
+                buffed += entry.value;
+            }
         }
+
+        source_entity.damage_stats.buffed_damage += buffed;
+        source_entity.damage_stats.unbuffed_damage =
+            source_entity.damage_stats.damage_dealt - source_entity.damage_stats.buffed_damage;
 
         if is_hyper_awakening {
             source_entity.damage_stats.hyper_awakening_damage += damage;

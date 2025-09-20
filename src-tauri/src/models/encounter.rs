@@ -115,6 +115,8 @@ pub struct DamageStats {
     pub incapacitations: Vec<IncapacitatedEvent>,
     #[serde(default)]
     pub stagger: i64,
+    #[serde(skip)]
+    pub buffed_damage: i64, // amount of damage buffed by supports, used to tally unbuffed damage
     #[serde(default)]
     pub unbuffed_damage: i64,
     #[serde(default)]

@@ -1042,17 +1042,7 @@ pub fn insert_data(
                 entity.ark_passive_data = info.ark_passive_data.clone();
                 entity.loadout_hash = info.loadout_snapshot.clone();
             }
-
-            // sum pseudo rdps data
-            let mut buffed_damage = 0;
-            for skill in entity.skills.values() {
-                for (rdps_type, entry) in skill.rdps_received.iter() {
-                    if matches!(*rdps_type, 1 | 3 | 5) {
-                        buffed_damage += entry.values().sum::<i64>();
-                    }
-                }
-            }
-            entity.damage_stats.unbuffed_damage = entity.damage_stats.damage_dealt - buffed_damage;
+            
             entity.damage_stats.unbuffed_dps =
                 entity.damage_stats.unbuffed_damage / duration_seconds;
         }

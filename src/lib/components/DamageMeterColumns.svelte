@@ -396,7 +396,7 @@
   {#if !state.anyUnbuffedDamage}
     -
   {:else}
-    {@render damageValue(abbreviateNumberSplit(state.entity.damageStats.unbuffedDps))}
+    {@render damageValue(abbreviateNumberSplit(state.unbuffedDps))}
   {/if}
 {/snippet}
 
@@ -404,7 +404,7 @@
   {#if !state.anyUnbuffedDamage}
     N/A
   {:else}
-    {@const unbuffed = state.entity.damageStats.unbuffedDps}
+    {@const unbuffed = state.unbuffedDps}
     {@const buffed = state.dps - unbuffed}
     <div class="-mx-px flex flex-col space-y-1 py-px text-xs font-normal">
       <span class="text-gray-300">Base: {abbreviateNumber(unbuffed, 2)}</span>
