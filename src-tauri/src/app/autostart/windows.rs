@@ -1,8 +1,10 @@
-use std::process::Command;
+use std::{os::windows::process::CommandExt, process::Command};
 use anyhow::Result;
 use log::*;
 
 use crate::constants::TASK_NAME;
+
+const CREATE_NO_WINDOW: u32 = 0x08000000;
 
 const IS_ENABLED_SCRIPT: &'static str = r#"Get-ScheduledTask -TaskName "{name}""#;
 
@@ -38,6 +40,7 @@ impl AutoLaunchManager {
 
     fn run_powershell(script: &str) -> Result<bool> {
         let output = Command::new("powershell")
+            .creation_flags(CREATE_NO_WINDOW) 
             .args(["-NoProfile", "-NonInteractive", "-Command", script])
             .output()?;
 
