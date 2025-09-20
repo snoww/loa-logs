@@ -513,7 +513,7 @@ impl EncounterState {
         se_on_source: Vec<StatusEffectDetails>,
         se_on_target: Vec<StatusEffectDetails>,
         _target_count: i32,
-        _entity_tracker: &EntityTracker,
+        entity_tracker: &EntityTracker,
         timestamp: i64,
     ) {
         let hit_flag = match damage_data.modifier & 0xf {
@@ -628,17 +628,29 @@ impl EncounterState {
         // apply pseudo rdps contributions
         for entry in damage_data.rdps_data.iter() {
             // find entity that made this contribution and add to the skill for it.
-            if let Some((_, contributor_entity)) = self
-                .encounter
-                .entities
-                .iter_mut()
-                .find(|(_, e)| e.character_id == entry.source_character_id)
-                && let Some(contributor_skill) = contributor_entity.skills.get_mut(&entry.skill_id)
+            if let Some(name) = entity_tracker
+                .character_id_to_name
+                .get(&entry.source_character_id)
+                && let Some(contributor_entity) = self.encounter.entities.get_mut(name)
             {
-                *contributor_skill
-                    .rdps_contributed
-                    .entry(entry.rdps_type)
-                    .or_default() += entry.value;
+                if let Some(contributor_skill) = contributor_entity.skills.get_mut(&entry.skill_id)
+                {
+                    *contributor_skill
+                        .rdps_contributed
+                        .entry(entry.rdps_type)
+                        .or_default() += entry.value;
+                } else if let Some(skill_data) = SKILL_DATA.get(&entry.skill_id)
+                    && let Some(skill_name) = skill_data.name.clone()
+                    && let Some(contributor_skill) = contributor_entity
+                        .skills
+                        .values_mut()
+                        .find(|s| s.name == skill_name)
+                {
+                    *contributor_skill
+                        .rdps_contributed
+                        .entry(entry.rdps_type)
+                        .or_default() += entry.value;
+                }
             }
         }
 

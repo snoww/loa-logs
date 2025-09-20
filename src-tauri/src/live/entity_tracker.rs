@@ -26,6 +26,7 @@ pub struct EntityTracker {
 
     pub local_entity_id: u64,
     pub local_character_id: u64,
+    pub character_id_to_name: HashMap<u64, String>,
 }
 
 impl EntityTracker {
@@ -41,6 +42,7 @@ impl EntityTracker {
             entities: HashMap::new(),
             local_entity_id: 0,
             local_character_id: 0,
+            character_id_to_name: HashMap::new(),
         }
     }
 
@@ -84,6 +86,8 @@ impl EntityTracker {
 
         self.entities.clear();
         self.entities.insert(local_player.id, local_player.clone());
+        self.character_id_to_name
+            .retain(|c_id, _| *c_id != local_player.character_id);
         self.id_tracker.borrow_mut().clear();
         self.status_tracker.borrow_mut().clear();
         if local_player.character_id > 0 {
@@ -129,6 +133,8 @@ impl EntityTracker {
         self.status_tracker
             .borrow_mut()
             .remove_local_object(player.id);
+        self.character_id_to_name
+            .insert(player.character_id, player.name.clone());
         self.build_and_register_status_effects(pkt.status_effect_datas, player.id);
         player
     }
@@ -200,6 +206,8 @@ impl EntityTracker {
         self.party_tracker
             .borrow_mut()
             .complete_entry(pc_struct.character_id, pc_struct.player_id);
+        self.character_id_to_name
+            .insert(pc_struct.character_id, pc_struct.name.clone());
         // println!("party status: {:?}", self.party_tracker.borrow().character_id_to_party_id);
         let local_character_id = if self.local_character_id != 0 {
             self.local_character_id
@@ -394,6 +402,8 @@ impl EntityTracker {
                 local_player.gear_level = truncate_gear_level(member.gear_level);
                 local_player.name.clone_from(&member.name);
                 local_player.character_id = member.character_id;
+                self.character_id_to_name
+                    .insert(member.character_id, member.name.clone());
                 self.id_tracker
                     .borrow_mut()
                     .add_mapping(member.character_id, self.local_entity_id);
