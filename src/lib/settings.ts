@@ -14,8 +14,6 @@ export interface DisplayFlags {
   percentIdentityBySup: boolean;
   percentBrand: boolean;
   percentHatBySup: boolean;
-  positionalDmgPercent: boolean;
-  stagger: boolean;
 }
 
 export interface BreakdownBase extends DisplayFlags {
@@ -93,6 +91,8 @@ export interface CommonSettings extends DisplayFlags {
   incapacitatedTime: boolean;
   deathTime: boolean;
   counters: boolean;
+  positionalDmgPercent: boolean;
+  stagger: boolean;
 }
 
 export interface MeterSettings extends CommonSettings {
