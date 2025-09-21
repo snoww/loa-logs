@@ -564,12 +564,57 @@ impl EncounterState {
         }
 
         // ensure source entity exists in encounter
-        let source_type = self
+        let source_entity = self
             .encounter
             .entities
             .entry(dmg_src_entity.name.clone())
-            .or_insert_with(|| encounter_entity_from_entity(dmg_src_entity))
-            .entity_type;
+            .or_insert_with(|| encounter_entity_from_entity(dmg_src_entity));
+        let source_type = source_entity.entity_type;
+
+        // get skill info here early for stagger tracking
+        // since we can stagger mobs that are not bosses that would otherwise be ignored
+        let mut skill_key = if is_battle_item {
+            // pad battle item skill effect id to avoid overlap with skill ids
+            skill_effect_id + 1_000_000
+        } else if damage_data.skill_id == 0 {
+            skill_effect_id
+        } else {
+            damage_data.skill_id
+        };
+
+        let (skill_name, skill_icon, skill_summon_sources, special, is_hyper_awakening) =
+            get_skill_name_and_icon(
+                damage_data.skill_id,
+                skill_effect_id,
+                &self.skill_tracker,
+                source_entity.id,
+            );
+
+        if !source_entity.skills.contains_key(&skill_key) {
+            if let Some(skill) = source_entity
+                .skills
+                .values()
+                .find(|&s| s.name == skill_name)
+            {
+                skill_key = skill.id;
+            } else {
+                source_entity.skills.insert(
+                    skill_key,
+                    Skill {
+                        id: skill_key,
+                        name: skill_name,
+                        icon: skill_icon,
+                        casts: 1,
+                        ..Default::default()
+                    },
+                );
+                source_entity.skill_stats.casts += 1;
+            }
+        }
+
+        // add stagger damage here
+        source_entity.skills.entry(skill_key).and_modify(|s| s.stagger += damage_data.stagger as i64);
+        source_entity.damage_stats.stagger += damage_data.stagger as i64;
 
         // ensure target entity exists in encounter
         let target_type = self
@@ -678,45 +723,6 @@ impl EncounterState {
             damage += damage_data.target_current_hp;
         }
 
-        let mut skill_key = if is_battle_item {
-            // pad battle item skill effect id to avoid overlap with skill ids
-            skill_effect_id + 1_000_000
-        } else if damage_data.skill_id == 0 {
-            skill_effect_id
-        } else {
-            damage_data.skill_id
-        };
-
-        let (skill_name, skill_icon, skill_summon_sources, special, is_hyper_awakening) =
-            get_skill_name_and_icon(
-                damage_data.skill_id,
-                skill_effect_id,
-                &self.skill_tracker,
-                source_entity.id,
-            );
-
-        if !source_entity.skills.contains_key(&skill_key) {
-            if let Some(skill) = source_entity
-                .skills
-                .values()
-                .find(|&s| s.name == skill_name)
-            {
-                skill_key = skill.id;
-            } else {
-                source_entity.skills.insert(
-                    skill_key,
-                    Skill {
-                        id: skill_key,
-                        name: skill_name,
-                        icon: skill_icon,
-                        casts: 1,
-                        ..Default::default()
-                    },
-                );
-                source_entity.skill_stats.casts += 1;
-            }
-        }
-
         let skill = source_entity.skills.get_mut(&skill_key).unwrap();
         skill.is_hyper_awakening = is_hyper_awakening;
         if special {
@@ -738,9 +744,6 @@ impl EncounterState {
         skill.last_timestamp = timestamp;
 
         source_entity.damage_stats.damage_dealt += damage;
-
-        skill.stagger += damage_data.stagger as i64;
-        source_entity.damage_stats.stagger += damage_data.stagger as i64;
 
         // apply pseudo rdps damage
         let mut buffed = 0_i64;
