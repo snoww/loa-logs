@@ -231,6 +231,8 @@ export const defaultSettings: AppSettings = {
     percentHatBySup: true,
     stagger: false,
     breakdown: {
+      positionalDmgPercent: false,
+      stagger: false,
       damage: true,
       dps: true,
       unbuffedDamage: false,
@@ -281,6 +283,8 @@ export const defaultSettings: AppSettings = {
     percentBrand: true,
     stagger: true,
     breakdown: {
+      positionalDmgPercent: false,
+      stagger: false,
       damage: true,
       dps: true,
       unbuffedDamage: true,

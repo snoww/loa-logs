@@ -14,8 +14,8 @@ export interface DisplayFlags {
   percentIdentityBySup: boolean;
   percentBrand: boolean;
   percentHatBySup: boolean;
-  positionalDmgPercent?: boolean;
-  stagger?: boolean;
+  positionalDmgPercent: boolean;
+  stagger: boolean;
 }
 
 export interface BreakdownBase extends DisplayFlags {
@@ -27,7 +27,8 @@ export interface BreakdownBase extends DisplayFlags {
   hpm: boolean;
 }
 
-export interface MeterBreakdown extends BreakdownBase {}
+export interface MeterBreakdown extends BreakdownBase {
+}
 
 export interface LogsBreakdown extends BreakdownBase {
   adjustedCritRate: boolean;
@@ -86,23 +87,27 @@ export interface Shortcuts {
   disableClickthrough: string;
 }
 
-export interface MeterSettings extends DisplayFlags {
+export interface CommonSettings extends DisplayFlags {
+  splitPartyBuffs: boolean;
+  profileShortcut: boolean;
+  incapacitatedTime: boolean;
+  deathTime: boolean;
+  counters: boolean;
+}
+
+export interface MeterSettings extends CommonSettings {
   bossInfo: boolean;
   bossHpBar: boolean;
   splitBossHpBar: boolean;
   showTimeUntilKill: boolean;
-  splitPartyBuffs: boolean;
   showClassColors: boolean;
-  profileShortcut: boolean;
   pinSelfParty: boolean;
   breakdown: MeterBreakdown;
 }
 
-export interface LogsSettings extends DisplayFlags {
+export interface LogsSettings extends CommonSettings {
   abbreviateHeader: boolean;
   splitPartyDamage: boolean;
-  splitPartyBuffs: boolean;
-  profileShortcut: boolean;
   minEncounterDuration: number;
   breakdown: LogsBreakdown;
 }
