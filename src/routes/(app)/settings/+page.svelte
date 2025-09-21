@@ -268,7 +268,7 @@
             class="form-checkbox checked:text-accent-600 size-5 rounded-sm border-0 bg-neutral-700 focus:ring-0"
           />
           <div class="ml-5">
-            <div>Start with Windows</div>
+            <div class="text-sm">Start with Windows</div>
             <div class="text-xs text-neutral-300">Automatically start the app when Windows boots up.</div>
           </div>
         </label>
@@ -318,7 +318,7 @@
             class="form-checkbox checked:text-accent-600/80 size-5 rounded-sm border-0 bg-neutral-700 focus:ring-0"
           />
           <div class="ml-5">
-            <div>Boss Only Damage</div>
+            <div class="text-sm">Boss Only Damage</div>
             <div class="text-xs text-neutral-300">Only track damage dealt to bosses.</div>
           </div>
         </label>
@@ -348,7 +348,7 @@
             class="form-checkbox checked:text-accent-600/80 size-5 rounded-sm border-0 bg-neutral-700 focus:ring-0"
           />
           <div class="ml-5">
-            <div>Auto Port Selection</div>
+            <div class="text-sm">Auto Port Selection</div>
             <div class="text-xs text-neutral-300">Automatically select port to listen on. (Requires Restart)</div>
           </div>
         </label>
@@ -864,7 +864,7 @@
             class="form-checkbox checked:text-accent-600 size-5 rounded-sm border-0 bg-neutral-700 focus:ring-0"
           />
           <div class="ml-5">
-            <div>Always on Top</div>
+            <div class="text-sm">Always on Top</div>
             <div class="text-xs text-neutral-300">Sets the live meter to always be on top of other windows.</div>
           </div>
         </label>
@@ -909,7 +909,7 @@
               class="form-checkbox checked:text-accent-600 size-5 rounded-sm border-0 bg-neutral-700 focus:ring-0"
             />
             <div class="ml-5">
-              <div>Blur Meter Background</div>
+              <div class="text-sm">Blur Meter Background</div>
               <div class="text-xs text-neutral-300">
                 Adds background blur effect to live meter (only works on Windows 10).
               </div>

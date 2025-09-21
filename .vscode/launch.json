@@ -1,0 +1,28 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "lldb",
+      "request": "launch",
+      "name": "Dev",
+      "cargo": {
+        "args": [
+          "build",
+          "--no-default-features",
+          "--manifest-path=./src-tauri/Cargo.toml"
+        ]
+      },
+      "cwd": "${workspaceFolder}/src-tauri",
+      "preLaunchTask": "ui:dev"
+    },
+    {
+      "type": "lldb",
+      "request": "launch",
+      "name": "Tauri Production Debug",
+      "cargo": {
+        "args": ["build", "--release", "--manifest-path=./src-tauri/Cargo.toml"]
+      },
+      "preLaunchTask": "ui:build"
+    }
+  ]
+}

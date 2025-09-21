@@ -31,18 +31,6 @@
   });
 
   $effect.pre(() => {
-    if (settings.app.general.scale === "1") {
-      document.documentElement.style.setProperty("font-size", "medium");
-    } else if (settings.app.general.scale === "2") {
-      document.documentElement.style.setProperty("font-size", "large");
-    } else if (settings.app.general.scale === "3") {
-      document.documentElement.style.setProperty("font-size", "x-large");
-    } else if (settings.app.general.scale === "0") {
-      document.documentElement.style.setProperty("font-size", "small");
-    }
-  });
-
-  $effect.pre(() => {
     settings.app.shortcuts.hideMeter;
     settings.app.shortcuts.showLogs;
     settings.app.shortcuts.showLatestEncounter;
