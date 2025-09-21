@@ -54,9 +54,12 @@
     cursor: pointer;
   }
 
-  html, body {
-    @apply text-sm text-white;
+  html {
     font-size: var(--font-size);
+  }
+
+  body {
+    @apply text-sm text-white;
   }
 
   [data-view="logs"] {
