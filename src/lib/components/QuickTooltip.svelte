@@ -56,7 +56,7 @@
         {@render tooltip(tooltipProps)}
       {:else if tooltip}
       <!-- regular tooltip without any props -->
-        {@render tooltip()}
+        {@render tooltip(undefined)}
       {/if}
     </p>
   </div>
