@@ -377,7 +377,9 @@
 {/snippet}
 
 {#snippet unbuffedDamage(state: EntityState)}
-  {#if !state.anyUnbuffedDamage}
+  {#if state.hasRdpsContributions}
+    {@render damageValue(state.totalDamageBuffedString)}
+  {:else if !state.anyUnbuffedDamage}
     -
   {:else}
     {@render damageValue(abbreviateNumberSplit(state.entity.damageStats.unbuffedDamage))}
@@ -385,7 +387,11 @@
 {/snippet}
 
 {#snippet unbuffedDamageTooltip(state: EntityState)}
-  {#if !state.anyUnbuffedDamage}
+  {#if state.hasRdpsContributions}
+    <div class="-mx-px flex flex-col space-y-1 py-px text-xs font-normal">
+      <span class="text-gray-300">Total Damage Buffed: {abbreviateNumber(state.totalDamageBuffed, 2)}</span>
+    </div>
+  {:else if !state.anyUnbuffedDamage}
     N/A
   {:else}
     {@const unbuffed = state.entity.damageStats.unbuffedDamage}
@@ -398,7 +404,9 @@
 {/snippet}
 
 {#snippet unbuffedDps(state: EntityState)}
-  {#if !state.anyUnbuffedDamage}
+  {#if state.hasRdpsContributions}
+    {@render damageValue(state.totalDpsBuffedString)}
+  {:else if !state.anyUnbuffedDamage}
     -
   {:else}
     {@render damageValue(abbreviateNumberSplit(state.unbuffedDps))}
@@ -406,7 +414,11 @@
 {/snippet}
 
 {#snippet unbuffedDpsTooltip(state: EntityState)}
-  {#if !state.anyUnbuffedDamage}
+  {#if state.hasRdpsContributions}
+    <div class="-mx-px flex flex-col space-y-1 py-px text-xs font-normal">
+      <span class="text-gray-300">Buff DPS: {abbreviateNumber(state.totalDpsBuffed, 2)}</span>
+    </div>
+  {:else if !state.anyUnbuffedDamage}
     N/A
   {:else}
     {@const unbuffed = state.unbuffedDps}
