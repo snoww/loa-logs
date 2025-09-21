@@ -1,6 +1,6 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.33.5 - September 20th, 2025
+    v1.33.6 - September 21th, 2025
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
@@ -12,6 +12,15 @@
 - Snowving on Luterra
 - Administrator on Ratik
 - Poont on Gienah
+
+#### BUG FIXES AND IMPROVEMENTS
+
+- support bdmg/bdps now shows in the bdps/udps column in overview
+- fixed stagger not counting when target was not a boss
+
+---
+
+### v1.33.5 - September 20th, 2025
 
 #### BUG FIXES AND IMPROVEMENTS
 

@@ -1,11 +1,11 @@
 {
-  "version": "v1.33.5",
-  "notes": "### v1.33.5 - September 20th, 2025\n\n#### P.S. If you see any of us in town or raid, consider dropping an honor! \n- Snowving on Luterra\n- Administrator on Ratik\n- Poont on Gienah\n\n\n#### BUG FIXES AND IMPROVEMENTS\n- fixed contribution % showing incorrect value\n- fixed udmg and udps not available on live meter\n- fixed moonfall one bubble not tracking bdmg and bdps (and others)\n- fixed start with windows setting (toggle on and off to apply)",
-  "pub_date": "2025-09-20T20:28:09.789Z",
+  "version": "v1.33.6",
+  "notes": "### v1.33.6 - September 21th, 2025\n\n#### P.S. If you see any of us in town or raid, consider dropping an honor! \n- Snowving on Luterra\n- Administrator on Ratik\n- Poont on Gienah\n\n\n#### BUG FIXES AND IMPROVEMENTS\n- support bdmg/bdps now shows in the bdps/udps column in overview \n- fixed stagger not counting when target was not a boss",
+  "pub_date": "2025-09-21T23:10:23.393Z",
   "platforms": {
     "windows-x86_64": {
-      "url": "https://github.com/snoww/loa-logs/releases/download/v1.33.5/LOA.Logs_1.33.5_x64-setup.nsis.zip",
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmFJaHdlWmg1VDJOWXdFaDgrUDIreFZ6MGM3U1R2dHJvVDVjd0xGWVhaZTF2SzlIckFjR3EreFBvNmR0cm1PVkpyYkVFTDdhaDBzTXN0RDUzMUhsMHdNPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzU4NDAxNzcxCWZpbGU6TE9BIExvZ3NfMS4zMy41X3g2NC1zZXR1cC5uc2lzLnppcApxWmQySTR6cXRHa2VNYlhQdityNytuT1U2U0pJWnM0dHV3VmFZSTcyZ2h5UUNaTGQ0Z1lGNDEwYk96N0dVa3p5TWVMRHA3czh5K2ExWUZnNDcxMVJBdz09Cg=="
+      "url": "https://github.com/snoww/loa-logs/releases/download/v1.33.6/LOA.Logs_1.33.6_x64-setup.nsis.zip",
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmMzblplMFJQVDM2MFlZTE04K2tuYllvcWozd3pwVFdldlJMTGQzM1hyeUlIL2lBUlFraHdLT0VqaFQwSXVadllZY2M0Ri9FMmNIckIwMVlGNU1TM2cwPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzU4NDk1Njc2CWZpbGU6TE9BIExvZ3NfMS4zMy42X3g2NC1zZXR1cC5uc2lzLnppcApEVnFGTGtVSHpWanJVNzRkTHAya2RZeHJTMU5oSGFuVDEwT1ZLRDh3amtENHUyb1JnVWUyenhxVFNyYlJTQzJKSWJUQlR3V0hYVnNMNlZWayt6dktEdz09Cg=="
     }
   }
 }
