@@ -613,7 +613,10 @@ impl EncounterState {
         }
 
         // add stagger damage here
-        source_entity.skills.entry(skill_key).and_modify(|s| s.stagger += damage_data.stagger as i64);
+        source_entity
+            .skills
+            .entry(skill_key)
+            .and_modify(|s| s.stagger += damage_data.stagger as i64);
         source_entity.damage_stats.stagger += damage_data.stagger as i64;
 
         // ensure target entity exists in encounter
@@ -673,11 +676,18 @@ impl EncounterState {
         // apply pseudo rdps contributions
         for entry in damage_data.rdps_data.iter() {
             // find entity that made this contribution and add to the skill for it.
-            if let Some(name) = entity_tracker
+            let contributor_entity = if let Some(name) = entity_tracker
                 .character_id_to_name
                 .get(&entry.source_character_id)
-                && let Some(contributor_entity) = self.encounter.entities.get_mut(name)
             {
+                self.encounter.entities.get_mut(name)
+            } else {
+                self.encounter
+                    .entities
+                    .values_mut()
+                    .find(|entity| entity.character_id == entry.source_character_id)
+            };
+            if let Some(contributor_entity) = contributor_entity {
                 if let Some(contributor_skill) = contributor_entity.skills.get_mut(&entry.skill_id)
                 {
                     *contributor_skill
