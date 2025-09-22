@@ -7,9 +7,7 @@ use rusqlite::{params, params_from_iter, OptionalExtension, Transaction};
 use semver::Version;
 use serde_json::json;
 
-pub const DB_VERSION: i32 = 5;
-
-use crate::{database::{models::*, queries::*, utils::*}, models::*};
+use crate::{constants::DB_VERSION, database::{models::*, queries::*, utils::*}, models::*};
 pub struct Repository(r2d2::Pool<SqliteConnectionManager>);
 
 impl Repository {
@@ -401,6 +399,8 @@ impl Repository {
                 support.map(|b| b.brand),
                 support.map(|b| b.identity),
                 support.map(|b| b.hyper),
+                entity.damage_stats.unbuffed_damage,
+                entity.damage_stats.unbuffed_dps
             ];
 
             statement.execute(params)?;

@@ -1,5 +1,5 @@
 use crate::data::*;
-use crate::get_db_connection;
+use crate::database::Database;
 use crate::live::entity_tracker::{Entity, EntityTracker};
 use crate::live::skill_tracker::SkillTracker;
 use crate::live::stats_api::StatsApi;
@@ -1535,7 +1535,8 @@ impl EncounterState {
                 None
             };
 
-            let mut conn = get_db_connection(&app).expect("failed to open database");
+            let database = app.state::<Database>();
+            let mut conn = database.get_connection();
             let tx = conn.transaction().expect("failed to create transaction");
 
             let encounter_id = insert_data(

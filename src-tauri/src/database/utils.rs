@@ -1,4 +1,4 @@
-use std::cmp::Ordering;
+use std::cmp::{max, Ordering};
 use std::collections::BTreeMap;
 use std::io::Write;
 use std::str::FromStr;
@@ -144,7 +144,7 @@ pub fn prepare_get_encounter_preview_query(search: String, filter: SearchFilter)
 }
 
 pub fn map_encounter(row: &rusqlite::Row) -> rusqlite::Result<(Encounter, Version)> {
-    let misc_str: String = row.get(EncounterColumns::MISC).unwrap_or_default();
+    let misc_str: String = row.get("misc").unwrap_or_default();
     let misc = serde_json::from_str::<EncounterMisc>(misc_str.as_str())
         .map(Some)
         .unwrap_or_default();
@@ -161,16 +161,16 @@ pub fn map_encounter(row: &rusqlite::Row) -> rusqlite::Result<(Encounter, Versio
     };
 
     let encounter = Encounter {
-        last_combat_packet: row.get(EncounterColumns::LAST_COMBAT_PACKET)?,
-        fight_start: row.get(EncounterColumns::FIGHT_START)?,
-        local_player: row.get(EncounterColumns::LOCAL_PLAYER).unwrap_or("You".to_string()),
-        current_boss_name: row.get(EncounterColumns::CURRENT_BOSS_NAME)?,
-        duration: row.get(EncounterColumns::DURATION)?,
+        last_combat_packet: row.get("last_combat_packet")?,
+        fight_start: row.get("fight_start")?,
+        local_player: row.get("local_player").unwrap_or("You".to_string()),
+        current_boss_name: row.get("current_boss_name")?,
+        duration: row.get("duration")?,
         encounter_damage_stats,
-        difficulty: row.get(EncounterColumns::DIFFICULTY)?,
-        favorite: row.get(EncounterColumns::FAVORITE)?,
-        cleared: row.get(EncounterColumns::CLEARED)?,
-        boss_only_damage: row.get(EncounterColumns::BOSS_ONLY_DAMAGE)?,
+        difficulty: row.get("encounter_damage_stats")?,
+        favorite: row.get("favorite")?,
+        cleared: row.get("cleared")?,
+        boss_only_damage: row.get("boss_only_damage")?,
         ..Default::default()
     };
 
@@ -178,20 +178,20 @@ pub fn map_encounter(row: &rusqlite::Row) -> rusqlite::Result<(Encounter, Versio
 }
 
 fn stats_for_1_13_5_and_up(row: &rusqlite::Row, misc: Option<EncounterMisc>) -> rusqlite::Result<EncounterDamageStats> {
-    let CompressedJson(boss_hp_log): CompressedJson<HashMap<String, Vec<BossHpLog>>> = row.get(EncounterColumns::BOSS_HP_LOG)?;
-    let CompressedJson(buffs): CompressedJson<HashMap<u32, StatusEffect>> = row.get(EncounterColumns::BUFFS)?;
-    let CompressedJson(debuffs): CompressedJson<HashMap<u32, StatusEffect>> = row.get(EncounterColumns::DEBUFFS)?;
-    let CompressedJson(applied_shield_buffs): CompressedJson<HashMap<u32, StatusEffect>> = row.get(EncounterColumns::APPLIED_SHIELD_BUFFS)?;
+    let CompressedJson(boss_hp_log): CompressedJson<HashMap<String, Vec<BossHpLog>>> = row.get("boss_hp_log")?;
+    let CompressedJson(buffs): CompressedJson<HashMap<u32, StatusEffect>> = row.get("buffs")?;
+    let CompressedJson(debuffs): CompressedJson<HashMap<u32, StatusEffect>> = row.get("debuffs")?;
+    let CompressedJson(applied_shield_buffs): CompressedJson<HashMap<u32, StatusEffect>> = row.get("applied_shield_buffs")?;
 
-    let total_shielding = row.get(EncounterColumns::TOTAL_SHIELDING).unwrap_or_default();
-    let total_effective_shielding = row.get(EncounterColumns::TOTAL_EFFECTIVE_SHIELDING).unwrap_or_default();
+    let total_shielding = row.get("total_shielding").unwrap_or_default();
+    let total_effective_shielding = row.get("total_effective_shielding").unwrap_or_default();
 
     Ok(EncounterDamageStats {
-        total_damage_dealt: row.get(EncounterColumns::TOTAL_DAMAGE_DEALT)?,
-        top_damage_dealt: row.get(EncounterColumns::TOP_DAMAGE_DEALT)?,
-        total_damage_taken: row.get(EncounterColumns::TOTAL_DAMAGE_TAKEN)?,
-        top_damage_taken: row.get(EncounterColumns::TOP_DAMAGE_TAKEN)?,
-        dps: row.get(EncounterColumns::DPS)?,
+        total_damage_dealt: row.get("total_damage_dealt")?,
+        top_damage_dealt: row.get("top_damage_dealt")?,
+        total_damage_taken: row.get("total_damage_taken")?,
+        top_damage_taken: row.get("top_damage_taken")?,
+        dps: row.get("dps")?,
         buffs,
         debuffs,
         misc,
@@ -208,19 +208,19 @@ fn stats_for_older_versions(row: &rusqlite::Row, misc: Option<EncounterMisc>) ->
         .and_then(|pr| pr.boss_hp_log.clone())
         .unwrap_or_default();
 
-    let JsonColumn(buffs): JsonColumn<HashMap<u32, StatusEffect>> = row.get(EncounterColumns::BUFFS)?;
-    let JsonColumn(debuffs): JsonColumn<HashMap<u32, StatusEffect>> = row.get(EncounterColumns::DEBUFFS)?;
-    let JsonColumn(applied_shield_buffs): JsonColumn<HashMap<u32, StatusEffect>> = row.get(EncounterColumns::APPLIED_SHIELD_BUFFS)?;
+    let JsonColumn(buffs): JsonColumn<HashMap<u32, StatusEffect>> = row.get("buffs")?;
+    let JsonColumn(debuffs): JsonColumn<HashMap<u32, StatusEffect>> = row.get("debuffs")?;
+    let JsonColumn(applied_shield_buffs): JsonColumn<HashMap<u32, StatusEffect>> = row.get("applied_shield_buffs")?;
 
-    let total_shielding = row.get(EncounterColumns::TOTAL_SHIELDING).unwrap_or_default();
-    let total_effective_shielding = row.get(EncounterColumns::TOTAL_EFFECTIVE_SHIELDING).unwrap_or_default();
+    let total_shielding = row.get("total_shielding").unwrap_or_default();
+    let total_effective_shielding = row.get("total_effective_shielding").unwrap_or_default();
 
     Ok(EncounterDamageStats {
-        total_damage_dealt: row.get(EncounterColumns::TOTAL_DAMAGE_DEALT)?,
-        top_damage_dealt: row.get(EncounterColumns::TOP_DAMAGE_DEALT)?,
-        total_damage_taken: row.get(EncounterColumns::TOTAL_DAMAGE_TAKEN)?,
-        top_damage_taken: row.get(EncounterColumns::TOP_DAMAGE_TAKEN)?,
-        dps: row.get(EncounterColumns::DPS)?,
+        total_damage_dealt: row.get("total_damage_dealt")?,
+        top_damage_dealt: row.get("top_damage_dealt")?,
+        total_damage_taken: row.get("total_damage_taken")?,
+        top_damage_taken: row.get("top_damage_taken")?,
+        dps: row.get("dps")?,
         buffs,
         debuffs,
         misc,
@@ -233,71 +233,72 @@ fn stats_for_older_versions(row: &rusqlite::Row, misc: Option<EncounterMisc>) ->
 }
 
 pub fn map_encounter_preview(row: &rusqlite::Row) -> rusqlite::Result<EncounterPreview> {
-    let classes_str: String = row.get(EncounterPreviewColumns::CLASS_NAMES).unwrap_or_default();
+    let classes_str: String = row.get("players").unwrap_or_default();
     let (classes, names) = parse_class_names(classes_str);
 
     Ok(EncounterPreview {
-        id: row.get(EncounterPreviewColumns::ID)?,
-        fight_start: row.get(EncounterPreviewColumns::FIGHT_START)?,
-        boss_name: row.get(EncounterPreviewColumns::BOSS_NAME)?,
-        duration: row.get(EncounterPreviewColumns::DURATION)?,
+        id: row.get("id")?,
+        fight_start: row.get("fight_start")?,
+        boss_name: row.get("boss_name")?,
+        duration: row.get("duration")?,
         classes,
         names,
-        difficulty: row.get(EncounterPreviewColumns::DIFFICULTY)?,
-        favorite: row.get(EncounterPreviewColumns::FAVORITE)?,
-        cleared: row.get(EncounterPreviewColumns::CLEARED)?,
-        local_player: row.get(EncounterPreviewColumns::LOCAL_PLAYER)?,
-        my_dps: row.get(EncounterPreviewColumns::MY_DPS).unwrap_or(0),
-        spec: row.get(EncounterPreviewColumns::SPEC).unwrap_or_default(),
-        support_ap: row.get(EncounterPreviewColumns::SUPPORT_AP).unwrap_or_default(),
-        support_brand: row.get(EncounterPreviewColumns::SUPPORT_BRAND).unwrap_or_default(),
-        support_identity: row.get(EncounterPreviewColumns::SUPPORT_IDENTITY).unwrap_or_default(),
-        support_hyper: row.get(EncounterPreviewColumns::SUPPORT_HYPER).unwrap_or_default(),
+        difficulty: row.get("difficulty")?,
+        favorite: row.get("favorite")?,
+        cleared: row.get("cleared")?,
+        local_player: row.get("local_player")?,
+        my_dps: row.get("my_dps").unwrap_or(0),
+        spec: row.get("spec").unwrap_or_default(),
+        support_ap: row.get("support_ap").unwrap_or_default(),
+        support_brand: row.get("support_brand").unwrap_or_default(),
+        support_identity: row.get("support_identity").unwrap_or_default(),
+        support_hyper: row.get("support_hyper").unwrap_or_default(),
     })
 }
 
 pub fn map_entity(row: &rusqlite::Row, version: &Version) -> rusqlite::Result<EncounterEntity> {
 
     let (skills, damage_stats) = if version >= &VERSION_1_13_5 {
-        let CompressedJson(skills): CompressedJson<HashMap<u32, Skill>> = row.get(EncounterEntityColumns::SKILLS)?;
-        let CompressedJson(damage_stats): CompressedJson<DamageStats> = row.get(EncounterEntityColumns::DAMAGE_STATS)?;
+        let CompressedJson(skills): CompressedJson<HashMap<u32, Skill>> = row.get("skills")?;
+        let CompressedJson(damage_stats): CompressedJson<DamageStats> = row.get("damage_stats")?;
         
         (skills, damage_stats)
     } else {
-        let JsonColumn(skills): JsonColumn<HashMap<u32, Skill>> = row.get(EncounterEntityColumns::SKILLS)?;
-        let JsonColumn(damage_stats): JsonColumn<DamageStats> = row.get(EncounterEntityColumns::DAMAGE_STATS)?;
+        let JsonColumn(skills): JsonColumn<HashMap<u32, Skill>> = row.get("skills")?;
+        let JsonColumn(damage_stats): JsonColumn<DamageStats> = row.get("damage_stats")?;
 
         (skills, damage_stats)
     };
 
-    let JsonColumn(skill_stats): JsonColumn<SkillStats> = row.get(EncounterEntityColumns::SKILL_STATS)?;
-    let entity_type: String = row.get(EncounterEntityColumns::ENTITY_TYPE).unwrap_or_default();
-    let JsonColumn(engraving_data): JsonColumn<Option<Vec<String>>> = row.get(EncounterEntityColumns::ENGRAVINGS)?;
-    let spec: Option<String> = row.get(EncounterEntityColumns::SPEC).unwrap_or_default();
-    let ark_passive_active: Option<bool> = row.get(EncounterEntityColumns::ARK_PASSIVE_ACTIVE).unwrap_or_default();
-    let JsonColumn(ark_passive_data): JsonColumn<Option<ArkPassiveData>> = row.get(EncounterEntityColumns::ARK_PASSIVE_DATA)?;
+    let JsonColumn(skill_stats): JsonColumn<SkillStats> = row.get("")?;
+    let entity_type: String = row.get("").unwrap_or_default();
+    let JsonColumn(engraving_data): JsonColumn<Option<Vec<String>>> = row.get("")?;
+    let spec: Option<String> = row.get("spec").unwrap_or_default();
+    let ark_passive_active: Option<bool> = row.get("").unwrap_or_default();
+    let JsonColumn(ark_passive_data): JsonColumn<Option<ArkPassiveData>> = row.get("")?;
 
     let entity = EncounterEntity {
-        name: row.get(EncounterEntityColumns::NAME)?,
-        class_id: row.get(EncounterEntityColumns::CLASS_ID)?,
-        class: row.get(EncounterEntityColumns::CLASS)?,
-        gear_score: row.get(EncounterEntityColumns::GEAR_SCORE)?,
-        current_hp: row.get(EncounterEntityColumns::CURRENT_HP)?,
-        max_hp: row.get(EncounterEntityColumns::MAX_HP)?,
-        is_dead: row.get(EncounterEntityColumns::IS_DEAD)?,
+        id: row.get("id")?,
+        name: row.get("name")?,
+        class_id: row.get("class_id")?,
+        class: row.get("class")?,
+        gear_score: row.get("gear_score")?,
+        current_hp: row.get("current_hp")?,
+        max_hp: row.get("max_hp")?,
+        is_dead: row.get("is_dead")?,
         skills,
         damage_stats,
         skill_stats,
         entity_type: EntityType::from_str(entity_type.as_str()).unwrap_or_default(),
-        npc_id: row.get(EncounterEntityColumns::NPC_ID)?,
-        character_id: row.get(EncounterEntityColumns::CHARACTER_ID).unwrap_or_default(),
+        npc_id: row.get("npc_id")?,
+        character_id: row.get("character_id").unwrap_or_default(),
         engraving_data,
         spec,
         ark_passive_active,
         ark_passive_data,
-        loadout_hash: row.get(EncounterEntityColumns::LOADOUT_HASH).unwrap_or_default(),
-        combat_power: row.get(EncounterEntityColumns::COMBAT_POWER).unwrap_or_default(),
-        current_shield: row.get(EncounterEntityColumns::CURRENT_SHIELD).unwrap_or(0),
+        loadout_hash: row.get("loadout_hash").unwrap_or_default(),
+        combat_power: row.get("combat_power").unwrap_or_default(),
+        current_shield: row.get("current_shield").unwrap_or(0),
         ..Default::default()
     };
 
@@ -398,6 +399,8 @@ pub fn update_entity_stats(
 ) {
     if entity.entity_type != EntityType::Player { return; }
 
+    let duration = fight_end - fight_start;
+    let duration_seconds = max(duration / 1000, 1);
     let intervals = generate_intervals(fight_start, fight_end);
     
     if let Some(player_log) = damage_log.get(&entity.name) {
@@ -413,6 +416,22 @@ pub fn update_entity_stats(
         entity.damage_stats.dps_average =
             calculate_average_dps(player_log, fight_start_sec, fight_end_sec);
     }
+    
+    let mut buffed_damage = 0;
+    for skill in entity.skills.values() {
+        for (rdps_type, entry) in skill.rdps_received.iter() {
+            if matches!(*rdps_type, 1 | 3 | 5) {
+                buffed_damage += entry.values().sum::<i64>();
+            }
+        }
+    }
+
+    let unbuffed_damage = entity.damage_stats.damage_dealt - buffed_damage;
+    let unbuffed_dps = entity.damage_stats.unbuffed_damage / duration_seconds;
+    
+    entity.damage_stats.unbuffed_damage = unbuffed_damage;
+    entity.damage_stats.unbuffed_dps = unbuffed_dps;
+
 }
 
 pub fn apply_player_info(

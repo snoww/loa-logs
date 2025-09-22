@@ -1,268 +1,330 @@
-use chrono::{Local, NaiveDateTime};
-use log::info;
+use log::*;
 use r2d2_sqlite::SqliteConnectionManager;
-use rusqlite::{params, Connection, OptionalExtension};
-use sha256::digest;
-use tar::Archive;
-use std::{fs::File, io::Read, path::Path};
-use anyhow::{anyhow, Result};
+use rusqlite::Transaction;
+use anyhow::Result;
 
-use crate::database::migrator;
-
-const MIGRATIONS_TABLE_SQL: &str = r#"
-CREATE TABLE IF NOT EXISTS migrations (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name NVARCHAR(50) NOT NULL UNIQUE,
-    executed_on NVARCHAR(20) NOT NULL,
-    app_version NVARCHAR(20) NOT NULL,
-    checksum NVARCHAR(64) NOT NULL
-)
-"#;
-
-const CONFIG_TABLE_SQL: &str = r#"
-CREATE TABLE IF NOT EXISTS config (
-    app_version NVARCHAR(20) NOT NULL PRIMARY KEY,
-    updated_on NVARCHAR(20) NOT NULL
-)
-"#;
-
-const INSERT_MIGRATION_SQL: &str = r#"
-INSERT INTO migrations (
-    name,
-    executed_on,
-    app_version,
-    checksum
-)
-VALUES
-(?1, ?2, ?3, ?4)
-"#;
-
-const INSERT_OR_UPDATE_CONFIG_SQL: &str = r#"
-INSERT INTO config (
-    app_version,
-    updated_on
-)
-    VALUES (?1, ?2)
-ON CONFLICT(app_version) DO UPDATE
-    SET updated_on = excluded.updated_on
-"#;
-
-const TABLE_EXISTS_SQL: &str = r#"
-SELECT
-    EXISTS(
-        SELECT 1
-        FROM sqlite_master
-        WHERE type='table'
-            AND name = ?1)
-"#;
-
-const LAST_MIGRATION_SQL: &str = r#"
-SELECT
-    id,
-    name
-FROM migrations
-ORDER BY id DESC
-LIMIT 1
-"#;
-
-
-#[derive(Debug, Clone)]
-pub enum DatabaseState {
-    New,
-    ExistingNoMigrations,
-    ExistingWithMigrations(AppliedMigration),
-}
-
-impl DatabaseState {
-    pub fn new(connection: &Connection, is_new: bool) -> Result<Self> {
-
-        if is_new {
-            return Ok(Self::New);
-        }
-
-        let migrations_exist = table_exists(&connection, "migrations")?;
-
-        if migrations_exist {
-            let migration = last_migration(&connection)?.ok_or_else(|| anyhow!("Corrupted database, migration table does not have a single record?"))?;
-            return Ok(Self::ExistingWithMigrations(migration));
-        }        
-
-        Ok(Self::ExistingNoMigrations)
-    }
-}
-
-#[derive(Debug, Clone)]
-pub struct UnappliedMigration {
-    name: String,
-    query: String,
-}
-
-#[derive(Debug, Clone)]
-pub struct AppliedMigration {
-    id: u32,
-    name: String,
-}
+use crate::constants::DB_VERSION;
 
 pub struct Migrator<'a> {
     pool: r2d2::Pool<SqliteConnectionManager>,
-    state: DatabaseState,
-    migrations_folder: &'a Path,
     app_version: &'a str
 }
 
 impl<'a> Migrator<'a> {
-    pub fn new(
-        pool: r2d2::Pool<SqliteConnectionManager>,
-        state: DatabaseState,
-        migrations_folder: &'a Path,
-        app_version: &'a str) -> Self {
+    pub fn new(pool: r2d2::Pool<SqliteConnectionManager>, app_version: &'a str) -> Self {
         Self {
             pool,
-            state,
-            migrations_folder,
             app_version
         }
     }
 
-    pub fn run(mut self) -> Result<()> {
-        let connection = self.pool.get()?;
-        let app_version = self.app_version;
+    pub fn run(self) -> Result<()> {
 
-        connection.execute(CONFIG_TABLE_SQL, [])?;
-        let mut migrations: Vec<UnappliedMigration> = vec![];
+        let mut connection = self.pool.get()?;
+        let tx = connection.transaction()?;
 
-        match self.state {
-            DatabaseState::New => {
-                info!("🆕 Detected a new database, setting up migrations");
-                connection.execute(MIGRATIONS_TABLE_SQL, [])?;
-                migrations = collect_migrations(self.migrations_folder, None)?;
-                info!("📦 Collected {} migrations to apply", migrations.len());
-            },
-            DatabaseState::ExistingNoMigrations => {
-                info!("⚠️ Found database without migrations, setting up migrations");
-                connection.execute(MIGRATIONS_TABLE_SQL, [])?;
-                migrations = collect_migrations(self.migrations_folder, None)?;
-            },
-            DatabaseState::ExistingWithMigrations(ref migration) => {
-                info!(
-                    "✅ Found database with migrations, last applied: {} (id = {})",
-                    migration.name, migration.id
-                );
-
-                let last_migration = Some(migration.clone());
-                migrations = collect_migrations(self.migrations_folder, last_migration)?;
-            },
+        let mut stmt = tx.prepare("SELECT 1 FROM sqlite_master WHERE type=? AND name=?")?;
+        if !stmt.exists(["table", "encounter"])? {
+            info!("creating tables");
+            migration_legacy_encounter(&tx)?;
+            migration_legacy_entity(&tx)?;
         }
 
-        if migrations.is_empty() {
-            info!("✨ No new migrations to apply");
+        migration_legacy_entity(&tx)?;
+
+        if !stmt.exists(["table", "encounter_preview"])? {
+            info!("optimizing searches");
+            migration_legacy_encounter(&tx)?;
+            migration_legacy_entity(&tx)?;
+            migration_full_text_search(&tx)?;
         }
-        else {
-            info!("📦 Found {} unapplied migrations", migrations.len());
+
+        if !stmt.exists(["table", "sync_logs"])? {
+            info!("adding sync table");
+            migration_sync(&tx)?;
         }
 
-        self.apply_migrations(migrations, app_version)?;
+        migration_specs(&tx)?;
 
-        let updated_on = Local::now().naive_local();
-        self.update_config(app_version, updated_on)?;
+        migration_combat_power(&tx)?;
 
-        info!("🎉 Finished migrating database to version: {}", app_version);
+        migration_buff_summary(&tx)?;
 
-        Ok(())
-    }
+        migration_pseudo_rdps(&tx)?;
 
-    fn apply_migrations(&mut self, migrations: Vec<UnappliedMigration>, app_version: &str) -> Result<()> {
+        stmt.finalize()?;
+        info!("finished setting up database");
         
-        for migration in migrations {
-            let executed_on = Local::now().naive_local();
-            info!("🚀 Applying migration: {}", migration.name);
-            self.apply_migration(migration, executed_on, app_version)?;
-        }
-        
-        Ok(())
-    }
-
-    fn apply_migration(&mut self, migration: UnappliedMigration, executed_on: NaiveDateTime, app_version: &str) -> Result<()> {
-        let connection = self.pool.get()?;
-        let query = &migration.query;
-        connection.execute_batch(query)?;
-        self.record_migration(&migration, executed_on, app_version, )?;
+        tx.commit()?;
 
         Ok(())
     }
 
-    fn update_config(&mut self, app_version: &str, updated_on: NaiveDateTime) -> Result<()> {
-        let connection = self.pool.get()?;
-        let params = params![app_version, updated_on.to_string()];
-        connection.execute(INSERT_OR_UPDATE_CONFIG_SQL, params)?;
 
-        Ok(())
+}
+
+
+pub fn migration_legacy_encounter(tx: &Transaction) -> Result<(), rusqlite::Error> {
+    tx.execute_batch(&format!(
+        "
+    CREATE TABLE IF NOT EXISTS encounter (
+        id INTEGER PRIMARY KEY,
+        last_combat_packet INTEGER,
+        fight_start INTEGER,
+        local_player TEXT,
+        current_boss TEXT,
+        duration INTEGER,
+        total_damage_dealt INTEGER,
+        top_damage_dealt INTEGER,
+        total_damage_taken INTEGER,
+        top_damage_taken INTEGER,
+        dps INTEGER,
+        buffs TEXT,
+        debuffs TEXT,
+        total_shielding INTEGER DEFAULT 0,
+        total_effective_shielding INTEGER DEFAULT 0,
+        applied_shield_buffs TEXT,
+        misc TEXT,
+        difficulty TEXT,
+        favorite BOOLEAN NOT NULL DEFAULT 0,
+        cleared BOOLEAN,
+        version INTEGER NOT NULL DEFAULT {},
+        boss_only_damage BOOLEAN NOT NULL DEFAULT 0
+    );
+    CREATE INDEX IF NOT EXISTS encounter_fight_start_index
+    ON encounter (fight_start desc);
+    CREATE INDEX IF NOT EXISTS encounter_current_boss_index
+    ON encounter (current_boss);
+    ",
+        DB_VERSION
+    ))?;
+
+    let mut stmt = tx.prepare("SELECT 1 FROM pragma_table_info(?) WHERE name=?")?;
+    if !stmt.exists(["encounter", "misc"])? {
+        tx.execute("ALTER TABLE encounter ADD COLUMN misc TEXT", [])?;
+    }
+    if !stmt.exists(["encounter", "difficulty"])? {
+        tx.execute("ALTER TABLE encounter ADD COLUMN difficulty TEXT", [])?;
+    }
+    if !stmt.exists(["encounter", "favorite"])? {
+        tx.execute_batch(&format!(
+            "
+            ALTER TABLE encounter ADD COLUMN favorite BOOLEAN DEFAULT 0;
+            ALTER TABLE encounter ADD COLUMN version INTEGER DEFAULT {};
+            ALTER TABLE encounter ADD COLUMN cleared BOOLEAN;
+            ",
+            DB_VERSION,
+        ))?;
+    }
+    if !stmt.exists(["encounter", "boss_only_damage"])? {
+        tx.execute(
+            "ALTER TABLE encounter ADD COLUMN boss_only_damage BOOLEAN NOT NULL DEFAULT 0",
+            [],
+        )?;
+    }
+    if !stmt.exists(["encounter", "total_shielding"])? {
+        tx.execute_batch(
+            "
+                ALTER TABLE encounter ADD COLUMN total_shielding INTEGER DEFAULT 0;
+                ALTER TABLE encounter ADD COLUMN total_effective_shielding INTEGER DEFAULT 0;
+                ALTER TABLE encounter ADD COLUMN applied_shield_buffs TEXT;
+                ",
+        )?;
+    }
+    tx.execute("UPDATE encounter SET cleared = coalesce(json_extract(misc, '$.raidClear'), 0) WHERE cleared IS NULL;", [])?;
+    stmt.finalize()
+}
+
+pub fn migration_legacy_entity(tx: &Transaction) -> Result<(), rusqlite::Error> {
+    tx.execute_batch(
+        "
+        CREATE TABLE IF NOT EXISTS entity (
+            name TEXT,
+            character_id INTEGER,
+            encounter_id INTEGER NOT NULL,
+            npc_id INTEGER,
+            entity_type TEXT,
+            class_id INTEGER,
+            class TEXT,
+            gear_score REAL,
+            current_hp INTEGER,
+            max_hp INTEGER,
+            is_dead INTEGER,
+            skills TEXT,
+            damage_stats TEXT,
+            dps INTEGER,
+            skill_stats TEXT,
+            last_update INTEGER,
+            engravings TEXT,
+            PRIMARY KEY (name, encounter_id),
+            FOREIGN KEY (encounter_id) REFERENCES encounter (id) ON DELETE CASCADE
+        );
+        CREATE INDEX IF NOT EXISTS entity_encounter_id_index
+        ON entity (encounter_id desc);
+        CREATE INDEX IF NOT EXISTS entity_name_index
+        ON entity (name);
+        CREATE INDEX IF NOT EXISTS entity_class_index
+        ON entity (class);
+        ",
+    )?;
+
+    let mut stmt = tx.prepare("SELECT 1 FROM pragma_table_info(?) WHERE name=?")?;
+    if !stmt.exists(["entity", "dps"])? {
+        tx.execute("ALTER TABLE entity ADD COLUMN dps INTEGER", [])?;
+    }
+    if !stmt.exists(["entity", "character_id"])? {
+        tx.execute("ALTER TABLE entity ADD COLUMN character_id INTEGER", [])?;
+    }
+    if !stmt.exists(["entity", "engravings"])? {
+        tx.execute("ALTER TABLE entity ADD COLUMN engravings TEXT", [])?;
+    }
+    if !stmt.exists(["entity", "gear_hash"])? {
+        tx.execute("ALTER TABLE entity ADD COLUMN gear_hash TEXT", [])?;
+    }
+    tx.execute("UPDATE entity SET dps = coalesce(json_extract(damage_stats, '$.dps'), 0) WHERE dps IS NULL;", [])?;
+    stmt.finalize()
+}
+
+pub fn migration_full_text_search(tx: &Transaction) -> Result<(), rusqlite::Error> {
+    tx.execute_batch(
+        "
+        CREATE TABLE encounter_preview (
+            id INTEGER PRIMARY KEY,
+            fight_start INTEGER,
+            current_boss TEXT,
+            duration INTEGER,
+            players TEXT,
+            difficulty TEXT,
+            local_player TEXT,
+            my_dps INTEGER,
+            favorite BOOLEAN NOT NULL DEFAULT 0,
+            cleared BOOLEAN,
+            boss_only_damage BOOLEAN NOT NULL DEFAULT 0,
+            FOREIGN KEY (id) REFERENCES encounter(id) ON DELETE CASCADE
+        );
+
+        INSERT INTO encounter_preview SELECT
+            id, fight_start, current_boss, duration, 
+            (
+                SELECT GROUP_CONCAT(class_id || ':' || name ORDER BY dps DESC)
+                FROM entity
+                WHERE encounter_id = encounter.id AND entity_type = 'PLAYER'
+            ) AS players,
+            difficulty, local_player,
+            (
+                SELECT dps
+                FROM entity
+                WHERE encounter_id = encounter.id AND name = encounter.local_player
+            ) AS my_dps,
+            favorite, cleared, boss_only_damage
+        FROM encounter;
+
+        DROP INDEX IF EXISTS encounter_fight_start_index;
+        DROP INDEX IF EXISTS encounter_current_boss_index;
+        DROP INDEX IF EXISTS encounter_favorite_index;
+        DROP INDEX IF EXISTS entity_name_index;
+        DROP INDEX IF EXISTS entity_class_index;
+
+        ALTER TABLE encounter DROP COLUMN fight_start;
+        ALTER TABLE encounter DROP COLUMN current_boss;
+        ALTER TABLE encounter DROP COLUMN duration;
+        ALTER TABLE encounter DROP COLUMN difficulty;
+        ALTER TABLE encounter DROP COLUMN local_player;
+        ALTER TABLE encounter DROP COLUMN favorite;
+        ALTER TABLE encounter DROP COLUMN cleared;
+        ALTER TABLE encounter DROP COLUMN boss_only_damage;
+
+        ALTER TABLE encounter ADD COLUMN boss_hp_log BLOB;
+        ALTER TABLE encounter ADD COLUMN stagger_log TEXT;
+
+        CREATE INDEX encounter_preview_favorite_index ON encounter_preview(favorite);
+        CREATE INDEX encounter_preview_fight_start_index ON encounter_preview(fight_start);
+        CREATE INDEX encounter_preview_my_dps_index ON encounter_preview(my_dps);
+        CREATE INDEX encounter_preview_duration_index ON encounter_preview(duration);
+
+        CREATE VIRTUAL TABLE encounter_search USING fts5(
+            current_boss, players, columnsize=0, detail=full,
+            tokenize='trigram remove_diacritics 1',
+            content=encounter_preview, content_rowid=id
+        );
+        INSERT INTO encounter_search(encounter_search) VALUES('rebuild');
+        CREATE TRIGGER encounter_preview_ai AFTER INSERT ON encounter_preview BEGIN
+            INSERT INTO encounter_search(rowid, current_boss, players)
+            VALUES (new.id, new.current_boss, new.players);
+        END;
+        CREATE TRIGGER encounter_preview_ad AFTER DELETE ON encounter_preview BEGIN
+            INSERT INTO encounter_search(encounter_search, rowid, current_boss, players)
+            VALUES('delete', old.id, old.current_boss, old.players);
+        END;
+        CREATE TRIGGER encounter_preview_au AFTER UPDATE OF current_boss, players ON encounter_preview BEGIN
+            INSERT INTO encounter_search(encounter_search, rowid, current_boss, players)
+            VALUES('delete', old.id, old.current_boss, old.players);
+            INSERT INTO encounter_search(rowid, current_boss, players)
+            VALUES (new.id, new.current_boss, new.players);
+        END;
+        ",
+    )
+}
+
+pub fn migration_sync(tx: &Transaction) -> Result<(), rusqlite::Error> {
+    tx.execute_batch(
+        "
+        CREATE TABLE IF NOT EXISTS sync_logs (
+        encounter_id INTEGER PRIMARY KEY,
+        upstream_id TEXT,
+        failed BOOLEAN NOT NULL DEFAULT 0,
+        FOREIGN KEY (encounter_id) REFERENCES encounter (id) ON DELETE CASCADE
+    );",
+    )
+}
+
+pub fn migration_specs(tx: &Transaction) -> Result<(), rusqlite::Error> {
+    let mut stmt = tx.prepare("SELECT 1 FROM pragma_table_info(?) WHERE name=?")?;
+    if !stmt.exists(["entity", "spec"])? {
+        info!("adding spec info columns");
+        tx.execute_batch(
+            "
+                ALTER TABLE entity ADD COLUMN spec TEXT;
+                ALTER TABLE entity ADD COLUMN ark_passive_active BOOLEAN;
+                ALTER TABLE entity ADD COLUMN ark_passive_data TEXT;
+                ",
+        )?;
     }
 
-    fn record_migration(&mut self, migration: &UnappliedMigration, executed_on: NaiveDateTime, app_version: &str) -> Result<()> {
-        let connection = self.pool.get()?;
-        let checksum = digest(&migration.query);
-        let params = params![migration.name, executed_on.to_string(), app_version, checksum];
-        connection.execute(INSERT_MIGRATION_SQL, params)?;
+    stmt.finalize()
+}
 
-        Ok(())
+pub fn migration_combat_power(tx: &Transaction) -> Result<(), rusqlite::Error> {
+    let mut stmt = tx.prepare("SELECT 1 FROM pragma_table_info(?) WHERE name=?")?;
+    if !stmt.exists(["entity", "combat_power"])? {
+        info!("adding loadout hash and combat score columns");
+        tx.execute("ALTER TABLE entity ADD COLUMN loadout_hash TEXT", [])?;
+        tx.execute("ALTER TABLE entity ADD COLUMN combat_power REAL", [])?;
     }
 
+    stmt.finalize()
 }
 
-fn table_exists(connection: &Connection, table_name: &str) -> Result<bool> {
-    Ok(connection.query_row(TABLE_EXISTS_SQL, [table_name], exists_query_result)?)
-}
-
-fn collect_migrations(folder_path: &Path, last_migration: Option<AppliedMigration>) -> Result<Vec<UnappliedMigration>> {
-    let file = File::open(folder_path).unwrap();
-    let mut archive = Archive::new(file);
-    let mut migrations = vec![];
-
-    for entry in archive.entries()?{
-        let mut entry = entry?;
-        let path = entry.path()?;
-        let file_name = path.file_name()
-            .ok_or_else(|| anyhow!("Invalid migration filename: {:?}", path))?
-            .to_string_lossy()
-            .to_string();
-
-        if let Some(last) = &last_migration {
-            if file_name <= last.name {
-                info!("⏩ Skipping migration: {}", file_name);
-                continue;
-            }
-        }
-
-        let mut query = String::new();
-        entry.read_to_string(&mut query)?;
-        
-        let migration = UnappliedMigration {
-            name: file_name,
-            query,
-        };
-
-        migrations.push(migration);
+pub fn migration_buff_summary(tx: &Transaction) -> Result<(), rusqlite::Error> {
+    let mut stmt = tx.prepare("SELECT 1 FROM pragma_table_info(?) WHERE name=?")?;
+    if !stmt.exists(["entity", "support_ap"])? {
+        info!("adding support buff summary columns");
+        tx.execute("ALTER TABLE entity ADD COLUMN support_ap REAL", [])?;
+        tx.execute("ALTER TABLE entity ADD COLUMN support_brand REAL", [])?;
+        tx.execute("ALTER TABLE entity ADD COLUMN support_identity REAL", [])?;
+        tx.execute("ALTER TABLE entity ADD COLUMN support_hyper REAL", [])?;
     }
 
-
-    Ok(migrations)
+    stmt.finalize()
 }
 
-fn exists_query_result<T: rusqlite::types::FromSql>(row: &rusqlite::Row) -> rusqlite::Result<T> {
-    row.get(0)
-}
+pub fn migration_pseudo_rdps(tx: &Transaction) -> Result<(), rusqlite::Error> {
+    let mut stmt = tx.prepare("SELECT 1 FROM pragma_table_info(?) WHERE name=?")?;
+    if !stmt.exists(["entity", "unbuffed_damage"])? {
+        info!("adding pseudo rdps columns");
+        tx.execute("ALTER TABLE entity ADD COLUMN unbuffed_damage INTEGER DEFAULT 0", [])?;
+        tx.execute("ALTER TABLE entity ADD COLUMN unbuffed_dps INTEGER DEFAULT 0", [])?;
+    }
 
-pub fn last_migration(connection: &Connection) -> Result<Option<AppliedMigration>> {
-
-    let last: Option<AppliedMigration> = connection
-        .query_row(LAST_MIGRATION_SQL, [], |row| {
-            Ok(AppliedMigration {
-                id: row.get(0)?,
-                name: row.get(1)?
-            })
-        })
-        .optional()?;
-
-    Ok(last)
+    stmt.finalize()
 }
