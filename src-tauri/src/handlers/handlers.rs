@@ -132,7 +132,7 @@ pub fn delete_encounters(repository: State<Repository>, ids: Vec<i32>) {
 
 #[command]
 pub fn toggle_meter_window(app: AppHandle, settings_manager: State<SettingsManager>) {
-    let settings = settings_manager.read().expect("could not read settings");
+    let settings = settings_manager.read().ok().flatten().expect("could not read settings");
 
     let label = if settings.general.mini {
         METER_MINI_WINDOW_LABEL
@@ -179,7 +179,7 @@ pub fn save_settings(settings_manager: State<SettingsManager>, settings: Setting
 
 #[command]
 pub fn get_settings(settings_manager: State<SettingsManager>) -> Settings {
-    settings_manager.read().expect("could not read settings file")
+    settings_manager.read().ok().flatten().expect("could not read settings file")
 }
 
 #[command]

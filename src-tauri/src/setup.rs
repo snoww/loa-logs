@@ -63,8 +63,9 @@ fn check_updates(app_handle: &AppHandle) -> Arc<AtomicBool> {
                 Ok(Some(update)) => {
                     info!("update available, downloading update: v{}", update.version);
 
-                    unload_driver();
-                    remove_driver();
+                    let shell_manager = app_handle.state::<ShellManager>();
+                    shell_manager.unload_driver().await;
+                    shell_manager.remove_driver().await;
 
                     if let Err(e) = update.download_and_install(|_, _| {}, || {}).await {
                         error!("failed to download update: {}", e);

@@ -5,6 +5,7 @@ use std::str::FromStr;
 use flate2::write::GzEncoder;
 use flate2::Compression;
 use hashbrown::HashMap;
+use log::info;
 use semver::Version;
 use serde::Serialize;
 use anyhow::Result;
@@ -164,10 +165,10 @@ pub fn map_encounter(row: &rusqlite::Row) -> rusqlite::Result<(Encounter, Versio
         last_combat_packet: row.get("last_combat_packet")?,
         fight_start: row.get("fight_start")?,
         local_player: row.get("local_player").unwrap_or("You".to_string()),
-        current_boss_name: row.get("current_boss_name")?,
+        current_boss_name: row.get("current_boss")?,
         duration: row.get("duration")?,
         encounter_damage_stats,
-        difficulty: row.get("encounter_damage_stats")?,
+        difficulty: row.get("difficulty")?,
         favorite: row.get("favorite")?,
         cleared: row.get("cleared")?,
         boss_only_damage: row.get("boss_only_damage")?,
@@ -239,7 +240,7 @@ pub fn map_encounter_preview(row: &rusqlite::Row) -> rusqlite::Result<EncounterP
     Ok(EncounterPreview {
         id: row.get("id")?,
         fight_start: row.get("fight_start")?,
-        boss_name: row.get("boss_name")?,
+        boss_name: row.get("current_boss")?,
         duration: row.get("duration")?,
         classes,
         names,
@@ -270,15 +271,14 @@ pub fn map_entity(row: &rusqlite::Row, version: &Version) -> rusqlite::Result<En
         (skills, damage_stats)
     };
 
-    let JsonColumn(skill_stats): JsonColumn<SkillStats> = row.get("")?;
-    let entity_type: String = row.get("").unwrap_or_default();
-    let JsonColumn(engraving_data): JsonColumn<Option<Vec<String>>> = row.get("")?;
+    let JsonColumn(skill_stats): JsonColumn<SkillStats> = row.get("skill_stats")?;
+    let entity_type: String = row.get("entity_type").unwrap_or_default();
+    let JsonColumn(engraving_data): JsonColumn<Option<Vec<String>>> = row.get("engravings")?;
     let spec: Option<String> = row.get("spec").unwrap_or_default();
-    let ark_passive_active: Option<bool> = row.get("").unwrap_or_default();
-    let JsonColumn(ark_passive_data): JsonColumn<Option<ArkPassiveData>> = row.get("")?;
+    let ark_passive_active: Option<bool> = row.get("ark_passive_active").unwrap_or_default();
+    let JsonColumn(ark_passive_data): JsonColumn<Option<ArkPassiveData>> = row.get("ark_passive_data")?;
 
     let entity = EncounterEntity {
-        id: row.get("id")?,
         name: row.get("name")?,
         class_id: row.get("class_id")?,
         class: row.get("class")?,
@@ -298,7 +298,6 @@ pub fn map_entity(row: &rusqlite::Row, version: &Version) -> rusqlite::Result<En
         ark_passive_data,
         loadout_hash: row.get("loadout_hash").unwrap_or_default(),
         combat_power: row.get("combat_power").unwrap_or_default(),
-        current_shield: row.get("current_shield").unwrap_or(0),
         ..Default::default()
     };
 
