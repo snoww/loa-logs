@@ -1,11 +1,11 @@
 {
-  "version": "v1.33.6",
-  "notes": "### v1.33.6 - September 21th, 2025\n\n#### P.S. If you see any of us in town or raid, consider dropping an honor! \n- Snowving on Luterra\n- Administrator on Ratik\n- Poont on Gienah\n\n\n#### BUG FIXES AND IMPROVEMENTS\n- support bdmg/bdps now shows in the bdps/udps column in overview \n- fixed stagger not counting when target was not a boss",
-  "pub_date": "2025-09-21T23:10:23.393Z",
+  "version": "v1.33.7",
+  "notes": "### v1.33.7 - September 21th, 2025\n\n#### P.S. If you see any of us in town or raid, consider dropping an honor! \n- Snowving on Luterra\n- Administrator on Ratik\n- Poont on Gienah\n\n\n#### BUG FIXES AND IMPROVEMENTS\n- fixed support bdmg/bdps not showing when meter opened late",
+  "pub_date": "2025-09-22T22:54:19.610Z",
   "platforms": {
     "windows-x86_64": {
-      "url": "https://github.com/snoww/loa-logs/releases/download/v1.33.6/LOA.Logs_1.33.6_x64-setup.nsis.zip",
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmMzblplMFJQVDM2MFlZTE04K2tuYllvcWozd3pwVFdldlJMTGQzM1hyeUlIL2lBUlFraHdLT0VqaFQwSXVadllZY2M0Ri9FMmNIckIwMVlGNU1TM2cwPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzU4NDk1Njc2CWZpbGU6TE9BIExvZ3NfMS4zMy42X3g2NC1zZXR1cC5uc2lzLnppcApEVnFGTGtVSHpWanJVNzRkTHAya2RZeHJTMU5oSGFuVDEwT1ZLRDh3amtENHUyb1JnVWUyenhxVFNyYlJTQzJKSWJUQlR3V0hYVnNMNlZWayt6dktEdz09Cg=="
+      "url": "https://github.com/snoww/loa-logs/releases/download/v1.33.7/LOA.Logs_1.33.7_x64-setup.nsis.zip",
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlRPRS90Z3pGRHVLMGUxbVhVTE9tVHdjVlBqc2NVWUZqZ0Q3QkNMRzU1TStId25yOVorU3RndWdlQ1p0TE5ZUlZtbWtaNHZmVE52a3EySCtOc1NMY2djPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzU4NTgxODEyCWZpbGU6TE9BIExvZ3NfMS4zMy43X3g2NC1zZXR1cC5uc2lzLnppcAo3NURYazZBU3o4eTJ6Yzl2c0thQnl1YTBRMmhQdldISkJ0VnN4L1Q2UVRNa2J6S1NodEdMNmw3dDYrb0VVcVFFNnFNdG5NU2NIVXFkRDRpK2dwTm9Edz09Cg=="
     }
   }
 }
