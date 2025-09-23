@@ -8,7 +8,7 @@ pub struct CompressedJson<T>(pub T);
 
 impl<T> FromSql for CompressedJson<T>
 where
-    T: DeserializeOwned,
+    T: DeserializeOwned + Default,
 {
     fn column_result(value: ValueRef<'_>) -> FromSqlResult<Self> {
         match value {
@@ -24,6 +24,9 @@ where
                 })?;
                 Ok(CompressedJson(parsed))
             }
+            ValueRef::Null => {
+                Ok(CompressedJson(T::default()))
+            }
             _ => Err(rusqlite::types::FromSqlError::InvalidType),
         }
     }
@@ -33,7 +36,7 @@ pub struct JsonColumn<T>(pub T);
 
 impl<T> FromSql for JsonColumn<T>
 where
-    T: DeserializeOwned,
+    T: DeserializeOwned + Default
 {
     fn column_result(value: ValueRef<'_>) -> FromSqlResult<Self> {
         match value {
@@ -42,6 +45,9 @@ where
                     rusqlite::types::FromSqlError::Other(Box::new(e))
                 })?;
                 Ok(JsonColumn(parsed))
+            }
+            ValueRef::Null => {
+                Ok(JsonColumn(T::default()))
             }
             _ => Err(rusqlite::types::FromSqlError::InvalidType),
         }
