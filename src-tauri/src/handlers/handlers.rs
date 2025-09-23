@@ -1,14 +1,15 @@
+use anyhow::{anyhow, Context};
 use log::*;
 use tauri::ipc::Invoke;
 use tauri::{command, generate_handler, AppHandle, Emitter, Manager, State};
 use window_vibrancy::{apply_blur, clear_blur};
+use super::error::*;
 
 use crate::app::autostart::{AutoLaunch, AutoLaunchManager};
 use crate::constants::*;
 use crate::database::models::{GetEncounterPreviewArgs, InsertSyncLogsArgs};
 use crate::database::{Database, Repository};
 use crate::ui::AppHandleExtensions;
-use crate::handlers::error::AppError;
 use crate::models::*;
 use crate::settings::{Settings, SettingsManager};
 use crate::shell::ShellManager;
@@ -57,7 +58,7 @@ pub fn load_encounters_preview(
     page_size: i32,
     search: String,
     filter: SearchFilter,
-) -> EncountersOverview {
+) -> Result<EncountersOverview> {
 
     let args = GetEncounterPreviewArgs {
         page,
@@ -66,39 +67,38 @@ pub fn load_encounters_preview(
         filter
     };
     
-    let encounter = repository.get_encounter_preview(args).expect("could not get encounter preview");
+    let encounter = repository.get_encounter_preview(args)?;
 
-    encounter
-}
-
-#[command(async)]
-pub fn load_encounter(repository: State<Repository>, id: String) -> Encounter {
-
-    let encounter = repository.get_encounter(id).expect("could not get encounter");
-
-    encounter
+    Ok(encounter)
 }
 
 #[command]
-pub fn get_sync_candidates(repository: State<Repository>, force_resync: bool) -> Vec<i32> {
+pub async fn load_encounter(repository: State<'_, Repository>, id: String) -> Result<Encounter> {
 
-    let ids = repository.get_sync_candidates(force_resync).expect("could not get sync candidates");
-
-    ids
+    let encounter = repository.get_encounter(&id).context(format!("could not get encounter by id {}", &id))?;
+    Ok(encounter)
 }
 
 #[command]
-pub fn get_encounter_count(repository: State<Repository>) -> i32 {
+pub fn get_sync_candidates(repository: State<Repository>, force_resync: bool) -> Result<Vec<i32>> {
 
-    let count = repository.get_encounter_count().expect("could not get encounter count");
+    let ids = repository.get_sync_candidates(force_resync).context("could not get sync candidates")?;
 
-    count
+    Ok(ids)
 }
 
 #[command]
-pub fn open_most_recent_encounter(app_handle: AppHandle, repository: State<Repository>) {
+pub fn get_encounter_count(repository: State<Repository>) -> Result<i32> {
+
+    let count = repository.get_encounter_count().context("could not get encounter count")?;
+
+    Ok(count)
+}
+
+#[command]
+pub fn open_most_recent_encounter(app_handle: AppHandle, repository: State<Repository>) -> Result<()> {
     
-    let id = repository.get_last_encounter_id().expect("could not get last encounter");
+    let id = repository.get_last_encounter_id().context("could not get last encounter")?;
 
     if let Some(logs) = app_handle.get_logs_window() {
         match id {
@@ -110,29 +110,37 @@ pub fn open_most_recent_encounter(app_handle: AppHandle, repository: State<Repos
             }
         }
     }
+
+    Ok(())
 }
 
 #[command]
-pub fn toggle_encounter_favorite(repository: State<Repository>, id: i32) {
+pub fn toggle_encounter_favorite(repository: State<Repository>, id: i32) -> Result<()> {
 
-    repository.toggle_encounter_favorite(id).expect("could not update encounter");
+    repository.toggle_encounter_favorite(id).context("could not update encounter")?;
+
+    Ok(())
 }
 
 #[command]
-pub fn delete_encounter(repository: State<Repository>, id: String) {
+pub fn delete_encounter(repository: State<Repository>, id: String) -> Result<()> {
 
-    repository.delete_encounter(id).expect("could not delete encounter");
+    repository.delete_encounter(id).context("could not delete encounters")?;
+     
+    Ok(())
 }
 
 #[command]
-pub fn delete_encounters(repository: State<Repository>, ids: Vec<i32>) {
+pub fn delete_encounters(repository: State<Repository>, ids: Vec<i32>) -> Result<()> {
 
-    repository.delete_encounters(ids).expect("");
+    repository.delete_encounters(ids).context("could not delete encounters")?;
+
+    Ok(())
 }
 
 #[command]
-pub fn toggle_meter_window(app: AppHandle, settings_manager: State<SettingsManager>) {
-    let settings = settings_manager.read().ok().flatten().expect("could not read settings");
+pub fn toggle_meter_window(app: AppHandle, settings_manager: State<SettingsManager>) -> Result<()> {
+    let settings = settings_manager.read().ok().flatten().context("could not read settings")?;
 
     let label = if settings.general.mini {
         METER_MINI_WINDOW_LABEL
@@ -151,6 +159,8 @@ pub fn toggle_meter_window(app: AppHandle, settings_manager: State<SettingsManag
             meter.show().unwrap();
         }
     }
+
+    Ok(())
 }
 
 #[command]
@@ -173,13 +183,17 @@ pub fn open_url(app_handle: AppHandle, url: String) {
 }
 
 #[command]
-pub fn save_settings(settings_manager: State<SettingsManager>, settings: Settings) {
-    settings_manager.save(&settings).expect("could not write to settings file");
+pub fn save_settings(settings_manager: State<SettingsManager>, settings: Settings) -> Result<()> {
+    settings_manager.save(&settings).context("could not write to settings file")?;
+
+    Ok(())
 }
 
 #[command]
-pub fn get_settings(settings_manager: State<SettingsManager>) -> Settings {
-    settings_manager.read().ok().flatten().expect("could not read settings file")
+pub fn get_settings(settings_manager: State<SettingsManager>) -> Result<Option<Settings>> {
+    let settings = settings_manager.read().ok().flatten();
+
+    Ok(settings)
 }
 
 #[command]
@@ -192,13 +206,15 @@ pub fn delete_encounters_below_min_duration(
     repository: State<Repository>,
     min_duration: i64,
     keep_favorites: bool,
-) {
+) -> Result<()> {
 
-    repository.delete_encounters_below_min_duration(min_duration, keep_favorites).expect("could not delete encounters");
+    repository.delete_encounters_below_min_duration(min_duration, keep_favorites).context("could not delete encounters")?;
+
+    Ok(())
 }
 
 #[command]
-pub fn sync(repository: State<Repository>, encounter: i32, upstream: String, failed: bool) {
+pub fn sync(repository: State<Repository>, encounter: i32, upstream: String, failed: bool) -> Result<()> {
     
     let args = InsertSyncLogsArgs {
         encounter,
@@ -206,107 +222,117 @@ pub fn sync(repository: State<Repository>, encounter: i32, upstream: String, fai
         failed
     };
 
-    repository.insert_sync_logs(args).expect("could not insert sync logs");
+    repository.insert_sync_logs(args).context("could not insert sync logs")?;
+
+    Ok(())
 }
 
 #[command]
-pub fn delete_all_uncleared_encounters(repository: State<Repository>, keep_favorites: bool) {
+pub fn delete_all_uncleared_encounters(repository: State<Repository>, keep_favorites: bool) -> Result<()> {
     
-    repository.delete_all_uncleared_encounters(keep_favorites).expect("could not delete encounters");
+    repository.delete_all_uncleared_encounters(keep_favorites).context("could not delete encounters")?;
+
+    Ok(())
 }
 
 #[command]
-pub fn delete_all_encounters(repository: State<Repository>, keep_favorites: bool) {
+pub fn delete_all_encounters(repository: State<Repository>, keep_favorites: bool) -> Result<()> {
 
-    repository.delete_all_encounters(keep_favorites).expect("could not delete encounters");
+    repository.delete_all_encounters(keep_favorites).context("could not delete encounters")?;
+
+    Ok(())
 }
 
 #[command]
 pub fn get_db_info(
     database: State<Database>,
     repository: State<Repository>,
-    min_duration: i64) -> EncounterDbInfo {
+    min_duration: i64) -> Result<EncounterDbInfo> {
     let (total_encounters, total_encounters_filtered) = repository.get_db_stats(min_duration)
-        .expect("could not get db stats");
+        .context("could not get db stats")?;
 
-    let size = database.get_metadata().expect("could not get db metadata");
+    let size = database.get_metadata().context("could not get db metadata")?;
 
-    EncounterDbInfo {
+    let info = EncounterDbInfo {
         size,
         total_encounters,
         total_encounters_filtered,
-    }
+    };
+
+    Ok(info)
 }
 
 #[command]
-pub fn optimize_database(repository: State<Repository>) {
+pub fn optimize_database(repository: State<Repository>) -> Result<()> {
 
-    repository.optimize().expect("could not optimize database");
+    repository.optimize()?;
     info!("optimized database");
+
+    Ok(())
 }
 
 #[command]
-pub fn disable_blur(app_handle: AppHandle) -> Result<(), AppError> {
+pub fn disable_blur(app_handle: AppHandle) -> Result<()> {
     if let Some(meter_window) = app_handle.get_meter_window() {
-        clear_blur(&*meter_window).map_err(|err| AppError::Vibrancy(err))?;
+        clear_blur(&*meter_window)?;
     }
 
     Ok(())
 }
 
 #[command]
-pub fn enable_blur(app_handle: AppHandle) -> Result<(), AppError> {
+pub fn enable_blur(app_handle: AppHandle) -> Result<()> {
     if let Some(meter_window) = app_handle.get_meter_window() {
-        apply_blur(&*meter_window, Some(DEFAULT_BLUR)).map_err(|err| AppError::Vibrancy(err))?;
+        apply_blur(&*meter_window, Some(DEFAULT_BLUR))?;
     }
 
     Ok(())
 }
 
 #[command]
-pub fn enable_aot(app_handle: AppHandle) -> Result<(), AppError> {
+pub fn enable_aot(app_handle: AppHandle) -> Result<()> {
     
     if let Some(meter_window) = app_handle.get_meter_window() {
-        meter_window.set_always_on_top(true).map_err(|err| AppError::Ui(err))?;
+        meter_window.set_always_on_top(true)?;
     }
 
     if let Some(mini_window) = app_handle.get_mini_window() {
-        mini_window.set_always_on_top(true).map_err(|err| AppError::Ui(err))?;
+        mini_window.set_always_on_top(true)?;
     }
 
     Ok(())
 }
 
 #[command]
-pub fn disable_aot(app_handle: AppHandle) -> Result<(), AppError> {
+pub fn disable_aot(app_handle: AppHandle) -> Result<()> {
     if let Some(meter_window) = app_handle.get_meter_window() {
-        meter_window.set_always_on_top(false).map_err(|err| AppError::Ui(err))?;
+        meter_window.set_always_on_top(false)?;
     }
 
     if let Some(mini_window) = app_handle.get_mini_window() {
-        mini_window.set_always_on_top(false).map_err(|err| AppError::Ui(err))?;
+        mini_window.set_always_on_top(false)?;
     }
 
     Ok(())
 }
 
 #[command]
-pub fn set_clickthrough(app_handle: AppHandle, set: bool) -> Result<(), AppError> {
+pub fn set_clickthrough(app_handle: AppHandle, set: bool) -> Result<()> {
     if let Some(meter_window) = app_handle.get_meter_window() {
-        meter_window.set_ignore_cursor_events(set).map_err(|err| AppError::Ui(err))?;
+        meter_window.set_ignore_cursor_events(set)?;
     }
 
     Ok(())
 }
 
 #[command]
-pub async fn remove_driver(shell_manager: State<'_, ShellManager>) -> Result<(), AppError> {
+pub async fn remove_driver(shell_manager: State<'_, ShellManager>) -> Result<()> {
     shell_manager.remove_driver().await;
     Ok(())
 }
 
 #[command]
-pub async fn unload_driver(shell_manager: State<'_, ShellManager>)  -> Result<(), AppError> {
+pub async fn unload_driver(shell_manager: State<'_, ShellManager>) -> Result<()> {
     shell_manager.unload_driver().await;
     Ok(())
 }

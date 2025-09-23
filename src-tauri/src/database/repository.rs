@@ -137,7 +137,7 @@ impl Repository {
         let params= params_from_iter(params);    
         let encounter_iter = statement.query_map(params, map_encounter_preview)?;
         
-        let encounters: Vec<EncounterPreview> = encounter_iter.collect::<Result<_, _>>().unwrap();
+        let encounters: Vec<EncounterPreview> = encounter_iter.collect::<Result<_, _>>()?;
 
         let count: i32 = connection
             .query_row_and_then(&count_query, params_from_iter(count_params), |row| row.get(0))?;
@@ -180,22 +180,22 @@ impl Repository {
         Ok(())
     }
 
-    pub fn get_encounter(&self, id: String) -> Result<Encounter> {
+    pub fn get_encounter(&self, id: &str) -> Result<Encounter> {
 
         let connection = self.0.get()?;
         let mut statement = connection.prepare_cached(SELECT_FROM_ENCOUNTER_JOIN_PREVIEW)?;
 
         let (mut encounter, version) = statement
-            .query_row(params![id], map_encounter)
-            .unwrap_or_else(|_| (Encounter::default(), Version::new(0, 0, 0)));
+            .query_row(params![id], map_encounter)?;
 
         let mut statement = connection.prepare_cached(SELECT_ENTITIES_BY_ENCOUNTER)?;
 
-        let entity_iter = statement
+        let entities_query = statement
             .query_map(params![id], |row| map_entity(row, &version))?;
 
         let mut entities: HashMap<String, EncounterEntity> = HashMap::new();
-        for entity in entity_iter.flatten() {
+        for entity in entities_query {
+            let entity = entity?;
             entities.insert(entity.name.to_string(), entity);
         }
 

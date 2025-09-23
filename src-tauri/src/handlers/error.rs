@@ -1,5 +1,7 @@
+use log::{error, info};
 use serde::Serialize;
 use thiserror::Error;
+use std::error::Error as StdError;
 
 #[derive(Debug, Error)]
 pub enum AppError {
@@ -12,18 +14,24 @@ pub enum AppError {
     #[error("I/O error: {0}")]
     Io(#[from] std::io::Error),
 
-    #[error("Database error: {0}")]
-    Db(#[from] rusqlite::Error),
-
-    #[error("{0}")]
-    Message(String),
+    #[error("Command error: {0}")]
+    Command(#[from] anyhow::Error),
 }
 
+pub type Result<T> = std::result::Result<T, AppError>;
+
 impl Serialize for AppError {
-    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
         S: serde::Serializer,
     {
+        let error = self.source().unwrap();
+        error!("{}", error);
+
+        if let Some(inner) = error.source() {
+            error!("caused by: {}", inner);
+        }
+        
         serializer.serialize_str(&self.to_string())
     }
 }
