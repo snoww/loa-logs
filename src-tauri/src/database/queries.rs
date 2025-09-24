@@ -100,10 +100,12 @@ INSERT INTO entity (
     support_ap,
     support_brand,
     support_identity,
-    support_hyper
+    support_hyper,
+    unbuffed_damage,
+    unbuffed_dps
 )
 VALUES
-(?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17, ?18, ?19, ?20, ?21, ?22, ?23, ?24, ?25)";
+(?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17, ?18, ?19, ?20, ?21, ?22, ?23, ?24, ?25, ?26, ?27)";
 
 pub const INSERT_ENCOUNTER_PREVIEW: &str = r"
 INSERT INTO encounter_preview

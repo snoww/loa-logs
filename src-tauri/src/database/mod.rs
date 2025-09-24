@@ -18,11 +18,9 @@ pub use repository::Repository;
 pub struct Database(r2d2::Pool<SqliteConnectionManager>, PathBuf);
 
 impl Database {
-    pub fn memory(
-        path: PathBuf,
-        app_version: &str) -> Result<Self> {
+    #[cfg(test)]
+    pub fn memory(app_version: &str) -> Result<Self> {
 
-        let is_new = true;
         let manager = SqliteConnectionManager::memory();
 
         let pool: r2d2::Pool<SqliteConnectionManager> = r2d2::Pool::new(manager)?;
@@ -32,14 +30,12 @@ impl Database {
             app_version);
         migrator.run()?;
     
-        Ok(Self(pool, path))
+        Ok(Self(pool, PathBuf::new()))
     }
 
     pub fn new(
         path: PathBuf,
         app_version: &str) -> Result<Self> {
-
-        let is_new = !path.exists();
 
         let manager = SqliteConnectionManager::file(&path);
 

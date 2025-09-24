@@ -3,7 +3,6 @@ use crate::data::*;
 use crate::database::utils::*;
 use crate::live::entity_tracker::Entity;
 use crate::live::skill_tracker::SkillTracker;
-use crate::live::stats_api::InspectInfo;
 use crate::live::status_tracker::StatusEffectDetails;
 use crate::models::*;
 use crate::utils::*;
@@ -11,7 +10,7 @@ use anyhow::Result;
 use hashbrown::HashMap;
 use rusqlite::{params, Transaction};
 use serde_json::json;
-use std::cmp::{Ordering, Reverse, max};
+use std::cmp::{Reverse, max};
 use std::collections::BTreeMap;
 
 pub fn encounter_entity_from_entity(entity: &Entity) -> EncounterEntity {
