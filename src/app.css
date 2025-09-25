@@ -6,6 +6,10 @@
 @plugin '@tailwindcss/typography';
 @plugin '@tailwindcss/forms';
 
+:root {
+  --font-size: medium;
+}
+
 @theme inline {
   --font-sans: "Inter Variable", sans-serif;
   --font-mono: "Geist Mono Variable", monospace;
@@ -50,7 +54,30 @@
     cursor: pointer;
   }
 
-  .theme-red {
+  html {
+    font-size: var(--font-size);
+  }
+
+  body {
+    @apply text-sm text-white;
+  }
+
+  [data-view="logs"] {
+    
+    *::-webkit-scrollbar {
+      @apply right-0! block! size-2! bg-neutral-800!;
+    }
+
+    *::-webkit-scrollbar-thumb {
+      @apply rounded-md! bg-neutral-600!;
+    }
+
+    *::-webkit-scrollbar-corner {
+      @apply bg-neutral-800!;
+    }
+  }
+
+  [data-theme="red"] {
     --accent-50: theme(--color-red-50);
     --accent-100: theme(--color-red-100);
     --accent-200: theme(--color-red-200);
@@ -63,7 +90,7 @@
     --accent-900: theme(--color-red-900);
   }
 
-  .theme-pink {
+  [data-theme="pink"] {
     --accent-50: theme(--color-pink-50);
     --accent-100: theme(--color-pink-100);
     --accent-200: theme(--color-pink-200);
@@ -76,7 +103,7 @@
     --accent-900: theme(--color-pink-900);
   }
 
-  .theme-rose {
+  [data-theme="rose"] {
     --accent-50: oklch(98.13% 0.007 354.79);
     --accent-100: oklch(95.28% 0.017 349.49);
     --accent-200: oklch(90.63% 0.035 352.91);
@@ -90,7 +117,7 @@
     --accent-950: oklch(32.29% 0.095 0.57);
   }
 
-  .theme-violet {
+  [data-theme="violet"] {
     --accent-50: oklch(97.53% 0.014 299.8);
     --accent-100: oklch(96.23% 0.019 299.07);
     --accent-200: oklch(91.37% 0.044 296.97);
@@ -104,7 +131,7 @@
     --accent-950: oklch(36.92% 0.223 277.17);
   }
 
-  .theme-purple {
+  [data-theme="purple"] {
     --accent-50: theme(--color-purple-50);
     --accent-100: theme(--color-purple-100);
     --accent-200: theme(--color-purple-200);
@@ -117,7 +144,7 @@
     --accent-900: theme(--color-purple-900);
   }
 
-  .theme-blue {
+  [data-theme="blue"] {
     --accent-50: theme(--color-sky-50);
     --accent-100: theme(--color-sky-100);
     --accent-200: theme(--color-sky-200);
@@ -130,7 +157,7 @@
     --accent-900: theme(--color-sky-900);
   }
 
-  .theme-green {
+  [data-theme="green"] {
     --accent-50: theme(--color-green-50);
     --accent-100: theme(--color-green-100);
     --accent-200: theme(--color-green-200);
@@ -143,7 +170,7 @@
     --accent-900: theme(--color-green-900);
   }
 
-  .theme-yellow {
+  [data-theme="yellow"] {
     --accent-50: theme(--color-yellow-50);
     --accent-100: theme(--color-yellow-100);
     --accent-200: theme(--color-yellow-200);
@@ -156,7 +183,7 @@
     --accent-900: theme(--color-yellow-900);
   }
 
-  .theme-orange {
+  [data-theme="orange"] {
     --accent-50: theme(--color-orange-50);
     --accent-100: theme(--color-orange-100);
     --accent-200: theme(--color-orange-200);

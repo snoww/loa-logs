@@ -63,6 +63,14 @@ export class EntityState {
   );
   damagePercentage = $derived(((this.damageDealt / this.encounter.totalDamageDealt) * 100).toFixed(1));
   damageTakenString = $derived(abbreviateNumberSplit(this.entity.damageStats.damageTaken));
+  unbuffedDps = $derived.by(() => {
+    if (this.encounter.live) {
+      if (this.entity.damageStats.unbuffedDamage === 0) return this.dps;
+      return Math.round(this.entity.damageStats.unbuffedDamage / (this.encounter.duration / 1000));
+    } else {
+      return this.entity.damageStats.unbuffedDps ? this.entity.damageStats.unbuffedDps : this.dps;
+    }
+  });
 
   hitsWithoutSpecial = $derived(
     this.entity.skillStats.hits -

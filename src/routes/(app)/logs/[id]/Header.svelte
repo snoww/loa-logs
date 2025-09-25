@@ -10,6 +10,7 @@
 
   let { encounter }: { encounter: Encounter } = $props();
   let raidGate = $derived(raidGates[encounter.currentBossName]);
+  const id = (page.params.id || "").toLocaleString();
 
   let bossHpBars = $derived.by(() => {
     let boss = encounter.entities[encounter.currentBossName];
@@ -75,7 +76,7 @@
               <IconStar class="size-5 shrink-0 group-hover:text-yellow-400 {fav ? 'text-yellow-400' : ''}" />
             </QuickTooltip>
           </button>
-          <span class:text-lime-400={encounter.cleared}>#{page.params.id.toLocaleString()}: </span>
+          <span class:text-lime-400={encounter.cleared}>#{id}: </span>
           {encounter.currentBossName || "No Boss"}
         </h1>
       </div>

@@ -11,6 +11,7 @@
 
   let { encounter = $bindable(), screenshotDiv }: { encounter: Encounter; screenshotDiv?: HTMLElement } = $props();
   let uploading = $state(false);
+  const id = page.params.id || "";
 
   let sync = $derived(encounter.sync);
 
@@ -21,7 +22,7 @@
     }
     uploading = true;
     try {
-      sync = await uploadLog(page.params.id, encounter);
+      sync = await uploadLog(id, encounter);
       if (sync) {
         addToast(uploadSuccess);
       }

@@ -61,7 +61,7 @@
 </div>
 
 {#snippet route(name: string, path: string)}
-  <a href={path} class="hover:text-accent-500 rounded-md px-3 py-1" class:bg-neutral-800={pathname.startsWith(path)}>
+  <a href={path} class="hover:text-accent-500 rounded-md px-3 py-1 text-base" class:bg-neutral-800={pathname.startsWith(path)}>
     {name}
   </a>
 {/snippet}

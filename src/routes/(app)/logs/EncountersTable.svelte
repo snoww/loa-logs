@@ -75,7 +75,7 @@
             </p>
           {/if}
         </div>
-        <a href="/logs/{encounter.id}" class="hover:text-accent-500 group flex items-center gap-1 hover:underline">
+        <a href="/logs/{encounter.id}" class="hover:text-accent-500 group flex items-center gap-1 hover:underline text-sm">
           {#if encounter.favorite}
             <IconStar class="shrink-0 text-yellow-400" />
           {/if}
@@ -128,7 +128,7 @@
   </tr>
 {/snippet}
 
-<table class="w-full table-fixed">
+<table data-table="encounters" class="w-full table-fixed">
   <thead class="sticky top-0 z-10 bg-[#121212]/95 shadow-lg backdrop-blur-lg">
     <tr>
       {#if !selectMode}

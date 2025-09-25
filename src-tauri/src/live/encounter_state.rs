@@ -514,7 +514,7 @@ impl EncounterState {
         se_on_source: Vec<StatusEffectDetails>,
         se_on_target: Vec<StatusEffectDetails>,
         _target_count: i32,
-        _entity_tracker: &EntityTracker,
+        entity_tracker: &EntityTracker,
         timestamp: i64,
     ) {
         let hit_flag = match damage_data.modifier & 0xf {
@@ -565,12 +565,60 @@ impl EncounterState {
         }
 
         // ensure source entity exists in encounter
-        let source_type = self
+        let source_entity = self
             .encounter
             .entities
             .entry(dmg_src_entity.name.clone())
-            .or_insert_with(|| encounter_entity_from_entity(dmg_src_entity))
-            .entity_type;
+            .or_insert_with(|| encounter_entity_from_entity(dmg_src_entity));
+        let source_type = source_entity.entity_type;
+
+        // get skill info here early for stagger tracking
+        // since we can stagger mobs that are not bosses that would otherwise be ignored
+        let mut skill_key = if is_battle_item {
+            // pad battle item skill effect id to avoid overlap with skill ids
+            skill_effect_id + 1_000_000
+        } else if damage_data.skill_id == 0 {
+            skill_effect_id
+        } else {
+            damage_data.skill_id
+        };
+
+        let (skill_name, skill_icon, skill_summon_sources, special, is_hyper_awakening) =
+            get_skill_name_and_icon(
+                damage_data.skill_id,
+                skill_effect_id,
+                &self.skill_tracker,
+                source_entity.id,
+            );
+
+        if !source_entity.skills.contains_key(&skill_key) {
+            if let Some(skill) = source_entity
+                .skills
+                .values()
+                .find(|&s| s.name == skill_name)
+            {
+                skill_key = skill.id;
+            } else {
+                source_entity.skills.insert(
+                    skill_key,
+                    Skill {
+                        id: skill_key,
+                        name: skill_name,
+                        icon: skill_icon,
+                        casts: 1,
+                        ..Default::default()
+                    },
+                );
+                source_entity.skill_stats.casts += 1;
+            }
+        }
+
+        // add stagger damage here
+        source_entity
+            .skills
+            .entry(skill_key)
+            .and_modify(|s| s.stagger += damage_data.stagger as i64);
+        source_entity.damage_stats.stagger += damage_data.stagger as i64;
 
         // ensure target entity exists in encounter
         let target_type = self
@@ -629,17 +677,36 @@ impl EncounterState {
         // apply pseudo rdps contributions
         for entry in damage_data.rdps_data.iter() {
             // find entity that made this contribution and add to the skill for it.
-            if let Some((_, contributor_entity)) = self
-                .encounter
-                .entities
-                .iter_mut()
-                .find(|(_, e)| e.character_id == entry.source_character_id)
-                && let Some(contributor_skill) = contributor_entity.skills.get_mut(&entry.skill_id)
+            let contributor_entity = if let Some(name) = entity_tracker
+                .character_id_to_name
+                .get(&entry.source_character_id)
             {
-                *contributor_skill
-                    .rdps_contributed
-                    .entry(entry.rdps_type)
-                    .or_default() += entry.value;
+                self.encounter.entities.get_mut(name)
+            } else {
+                self.encounter
+                    .entities
+                    .values_mut()
+                    .find(|entity| entity.character_id == entry.source_character_id)
+            };
+            if let Some(contributor_entity) = contributor_entity {
+                if let Some(contributor_skill) = contributor_entity.skills.get_mut(&entry.skill_id)
+                {
+                    *contributor_skill
+                        .rdps_contributed
+                        .entry(entry.rdps_type)
+                        .or_default() += entry.value;
+                } else if let Some(skill_data) = SKILL_DATA.get(&entry.skill_id)
+                    && let Some(skill_name) = skill_data.name.clone()
+                    && let Some(contributor_skill) = contributor_entity
+                        .skills
+                        .values_mut()
+                        .find(|s| s.name == skill_name)
+                {
+                    *contributor_skill
+                        .rdps_contributed
+                        .entry(entry.rdps_type)
+                        .or_default() += entry.value;
+                }
             }
         }
 
@@ -667,45 +734,6 @@ impl EncounterState {
             damage += damage_data.target_current_hp;
         }
 
-        let mut skill_key = if is_battle_item {
-            // pad battle item skill effect id to avoid overlap with skill ids
-            skill_effect_id + 1_000_000
-        } else if damage_data.skill_id == 0 {
-            skill_effect_id
-        } else {
-            damage_data.skill_id
-        };
-
-        let (skill_name, skill_icon, skill_summon_sources, special, is_hyper_awakening) =
-            get_skill_name_and_icon(
-                damage_data.skill_id,
-                skill_effect_id,
-                &self.skill_tracker,
-                source_entity.id,
-            );
-
-        if !source_entity.skills.contains_key(&skill_key) {
-            if let Some(skill) = source_entity
-                .skills
-                .values()
-                .find(|&s| s.name == skill_name)
-            {
-                skill_key = skill.id;
-            } else {
-                source_entity.skills.insert(
-                    skill_key,
-                    Skill {
-                        id: skill_key,
-                        name: skill_name,
-                        icon: skill_icon,
-                        casts: 1,
-                        ..Default::default()
-                    },
-                );
-                source_entity.skill_stats.casts += 1;
-            }
-        }
-
         let skill = source_entity.skills.get_mut(&skill_key).unwrap();
         skill.is_hyper_awakening = is_hyper_awakening;
         if special {
@@ -728,10 +756,8 @@ impl EncounterState {
 
         source_entity.damage_stats.damage_dealt += damage;
 
-        skill.stagger += damage_data.stagger as i64;
-        source_entity.damage_stats.stagger += damage_data.stagger as i64;
-
         // apply pseudo rdps damage
+        let mut buffed = 0_i64;
         for entry in damage_data.rdps_data {
             *skill
                 .rdps_received
@@ -739,7 +765,14 @@ impl EncounterState {
                 .or_default()
                 .entry(entry.skill_id)
                 .or_default() += entry.value;
+            if matches!(entry.rdps_type, 1 | 3 | 5) {
+                buffed += entry.value;
+            }
         }
+
+        source_entity.damage_stats.buffed_damage += buffed;
+        source_entity.damage_stats.unbuffed_damage =
+            source_entity.damage_stats.damage_dealt - source_entity.damage_stats.buffed_damage;
 
         if is_hyper_awakening {
             source_entity.damage_stats.hyper_awakening_damage += damage;
