@@ -45,7 +45,7 @@ strum = "0.27"
 strum_macros = "0.27"
 async-trait = "0.1.89"
 semver = "1.0.27"
-meter-core = { path = "../../lost-metrics-sniffer-stub", optional = true }
+meter-core = { git = "https://github.com/snoww/meter-core-rs", optional = true }
 
 [target.'cfg(not(any(target_os = "android", target_os = "ios")))'.dependencies]
 tauri-plugin-shell = "2.3.1"

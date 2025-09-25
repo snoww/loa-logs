@@ -1,7 +1,7 @@
 use anyhow::Result;
 use std::{
     fs::File,
-    path::{Path, PathBuf},
+    path::PathBuf,
 };
 
 use crate::settings::Settings;

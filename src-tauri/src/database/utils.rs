@@ -5,13 +5,11 @@ use std::str::FromStr;
 use flate2::write::GzEncoder;
 use flate2::Compression;
 use hashbrown::HashMap;
-use log::info;
 use semver::Version;
 use serde::Serialize;
 use anyhow::Result;
 
 use crate::data::{ENGRAVING_DATA, GEM_SKILL_MAP};
-use crate::database::models::*;
 use crate::database::sql_types::{CompressedJson, JsonColumn};
 use crate::models::*;
 use crate::utils::*;
@@ -20,7 +18,7 @@ use crate::{constants::{WINDOW_MS, WINDOW_S}};
 pub const VERSION_1_13_5: Version = Version::new(1, 13, 5);
 
 pub fn build_delete_encounters_query(ids_len: usize) -> String {
-    let placeholders = std::iter::repeat("?").take(ids_len).collect::<Vec<_>>().join(",");
+    let placeholders = std::iter::repeat_n("?", ids_len).collect::<Vec<_>>().join(",");
     format!("DELETE FROM encounter WHERE id IN ({})", placeholders)
 }
 
@@ -471,18 +469,16 @@ pub fn apply_player_info(
     entity.combat_power = info.combat_power.as_ref().map(|c| c.score);
 
     // Set spec for special cases
-    if entity.class_id == 104 {
-        if let Some(engr) = &entity.engraving_data {
-            if engr.iter().any(|e| e == "Awakening" || e == "Drops of Ether") {
+    if entity.class_id == 104
+        && let Some(engr) = &entity.engraving_data
+            && engr.iter().any(|e| e == "Awakening" || e == "Drops of Ether") {
                 entity.spec = Some("Princess".to_string());
             }
-        }
-    }
 
     // Fallback spec detection
-    if entity.spec.as_deref() == Some("Unknown") {
-        if let Some(tree) = info.ark_passive_data.as_ref() {
-            if let Some(enlightenment) = tree.enlightenment.as_ref() {
+    if entity.spec.as_deref() == Some("Unknown")
+        && let Some(tree) = info.ark_passive_data.as_ref()
+            && let Some(enlightenment) = tree.enlightenment.as_ref() {
                 for node in enlightenment.iter() {
                     let spec = get_spec_from_ark_passive(node);
                     if spec != "Unknown" {
@@ -491,8 +487,6 @@ pub fn apply_player_info(
                     }
                 }
             }
-        }
-    }
 }
 
 pub fn apply_cast_logs(

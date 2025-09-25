@@ -1,4 +1,4 @@
-use log::{error, info};
+use log::error;
 use serde::Serialize;
 use thiserror::Error;
 use std::error::Error as StdError;

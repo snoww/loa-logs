@@ -4,7 +4,6 @@ use hashbrown::HashMap;
 use log::*;
 use r2d2_sqlite::SqliteConnectionManager;
 use rusqlite::{params, params_from_iter, OptionalExtension, Transaction};
-use semver::Version;
 use serde_json::json;
 
 use crate::{constants::DB_VERSION, database::{models::*, queries::*, utils::*}, models::*};
@@ -349,7 +348,7 @@ impl Repository {
         let fight_start = encounter.fight_start;
         let fight_end = encounter.last_combat_packet;
 
-        let buffs = compute_support_buffs(&encounter, party_info);
+        let buffs = compute_support_buffs(encounter, party_info);
 
         let mut statement = transaction.prepare_cached(INSERT_ENTITY)?;
 

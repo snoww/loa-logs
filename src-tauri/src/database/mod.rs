@@ -6,11 +6,9 @@ pub mod migrator;
 pub mod repository;
 
 use anyhow::Result;
-use chrono::Local;
-use log::info;
 use r2d2::{Pool, PooledConnection};
 use r2d2_sqlite::SqliteConnectionManager;
-use std::{fs, path::{Path, PathBuf}};
+use std::{fs, path::PathBuf};
 
 pub use migrator::*;
 pub use repository::Repository;

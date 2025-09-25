@@ -1,4 +1,4 @@
-use anyhow::{anyhow, Context};
+use anyhow::Context;
 use log::*;
 use tauri::ipc::Invoke;
 use tauri::{command, generate_handler, AppHandle, Emitter, Manager, State};

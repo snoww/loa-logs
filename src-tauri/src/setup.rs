@@ -21,7 +21,7 @@ pub fn setup(app: &mut App) -> Result<(), Box<dyn Error>> {
     let settings = settings_manager.read().expect("Could not read settings");
 
     let port = initialize_windows_and_settings(
-        &app_handle,
+        app_handle,
         settings.as_ref(),
         &shell_manger
     );
@@ -98,7 +98,7 @@ fn initialize_windows_and_settings(
     let mini_window = app_handle.get_mini_window().unwrap();
     let logs_window = app_handle.get_logs_window().unwrap();
     
-    if let Some(settings) = settings.clone() {
+    if let Some(settings) = settings {
 
         info!("settings loaded");
         if settings.general.mini {
