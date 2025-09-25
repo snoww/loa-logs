@@ -54,8 +54,7 @@ async fn main() -> Result<()> {
     let context = AppContext::new(package_info.version.to_string())?;
     let settings_manager = SettingsManager::new(context.settings_path).expect("could not create settings");
     load_windivert(&context.current_dir).expect("could not load windivert dependencies");
-    // load meter-data
-    AssetPreloader::new()?;
+    AssetPreloader::new().expect("could not load meter-data");
 
     tauri::Builder::default()
         .manage(settings_manager)
