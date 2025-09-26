@@ -424,8 +424,9 @@ pub fn update_entity_stats(
     }
 
     let unbuffed_damage = entity.damage_stats.damage_dealt - buffed_damage;
-    let unbuffed_dps = entity.damage_stats.unbuffed_damage / duration_seconds;
+    let unbuffed_dps = unbuffed_damage / duration_seconds;
     
+    entity.damage_stats.dps = entity.damage_stats.damage_dealt / duration_seconds;
     entity.damage_stats.unbuffed_damage = unbuffed_damage;
     entity.damage_stats.unbuffed_dps = unbuffed_dps;
 

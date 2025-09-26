@@ -465,7 +465,7 @@ mod tests {
 
     use chrono::Utc;
     use hashbrown::HashSet;
-    use rand::{rngs::ThreadRng, Rng};
+    use rand::{rngs::ThreadRng, seq::IndexedRandom, Rng};
     use crate::database::Database;
 
     use super::*;
@@ -495,6 +495,7 @@ mod tests {
             .set_boss("Mordum, the Abyssal Punisher", 485800, 1_100_000_000_000, 15)
             .set_region("EUC")
             .set_version(version)
+            .set_damage_range(1_000_000, 2_000_000)
             .set_difficulty("Hard");
 
         let args = raid_builder.build();
@@ -536,13 +537,32 @@ mod tests {
         let mut actual: Vec<_> = actual_encounter.entities.values().collect();
         actual.sort_by_key(|e| &e.name);
 
-        expected_encounter.entities.remove("Mordum, the Abyssal Punisher");
         let mut expected: Vec<_> = expected_encounter.entities.values().collect();
         expected.sort_by_key(|e| &e.name);
 
         for (actual, expected) in actual.iter().zip(expected.iter()) {
             assert_eq!(actual.name, expected.name);
+
+            if actual.entity_type == EntityType::Boss {
+                assert!(actual.damage_stats.damage_dealt > 0);
+                assert!(actual.damage_stats.damage_taken > 0);
+                continue;
+            }
+
+            assert!(actual.damage_stats.unbuffed_damage > 0);
+            assert!(actual.damage_stats.unbuffed_dps > 0);
             assert!(actual.damage_stats.damage_dealt > 0);
+            assert!(actual.damage_stats.hyper_awakening_damage > 0);
+            assert!(actual.damage_stats.dps > 0);
+            assert!(actual.damage_stats.damage_taken > 0);
+            assert!(actual.damage_stats.shields_given > 0);
+            assert!(!actual.damage_stats.shields_given_by.is_empty());
+            assert!(actual.damage_stats.shields_received > 0);
+            assert!(!actual.damage_stats.shields_received_by.is_empty());
+            assert!(actual.damage_stats.damage_absorbed > 0);
+            assert!(!actual.damage_stats.damage_absorbed_by.is_empty());
+            assert!(actual.damage_stats.damage_absorbed_on_others > 0);
+            assert!(!actual.damage_stats.damage_absorbed_on_others_by.is_empty());
         }
 
         let preview = paged.encounters.first().unwrap();
@@ -573,6 +593,8 @@ mod tests {
         version: String,
         difficulty: String,
         rng: ThreadRng,
+        damage_range: (i64, i64),
+        damage_taken_range: (i64, i64),
     }
 
     impl RaidBuilder {
@@ -587,6 +609,8 @@ mod tests {
                 version: "0.0.1".to_string(),
                 difficulty: "Hard".to_string(),
                 rng: rand::rng(),
+                damage_range: (500, 1500),
+                damage_taken_range: (500, 1000)
             }
         }
 
@@ -618,6 +642,12 @@ mod tests {
             self
         }
 
+        fn set_damage_range(mut self, min: i64, max: i64) -> Self {
+            assert!(min > 0 && max >= min, "Invalid damage range");
+            self.damage_range = (min, max);
+            self
+        }
+
         fn build(mut self) -> InsertEncounterArgs {
             let fight_start = Utc::now().timestamp_millis();
             let last_combat_packet = fight_start + self.duration_minutes * 60 * 1000;
@@ -633,7 +663,10 @@ mod tests {
                 &mut self.rng,
                 per_player_total_damage);
 
-            let boss = self.generate_boss_entity();
+            let mut boss = self.generate_boss_entity();
+
+            boss.damage_stats.damage_dealt += self.rng.random_range(self.damage_range.0..self.damage_range.1);
+
             entities.insert(boss.name.clone(), boss.clone());
 
             let mut boss_hp_logs: HashMap<String, Vec<BossHpLog>> = HashMap::new();
@@ -657,11 +690,13 @@ mod tests {
             }        
 
             let mut encounter_entities_with_stats = HashMap::new();
-            for (name, mut e) in entities.into_iter() {
-                if e.entity_type == EntityType::Player {
-                    update_skill_and_damage_stats(&mut self.rng, &mut e);
+            for (name, mut entity) in entities.into_iter() {
+                if entity.entity_type == EntityType::Player {
+                    update_skill_and_damage_stats(self.damage_range, &mut self.rng, &mut entity);
+                    update_damage_taken(self.damage_taken_range, &mut self.rng, &mut entity);
+                    update_buffs_heals_and_absorb(&mut self.rng, &mut entity);
                 }
-                encounter_entities_with_stats.insert(name, e);
+                encounter_entities_with_stats.insert(name, entity);
             }
 
             let misc = EncounterMisc {
@@ -745,7 +780,10 @@ mod tests {
                 current_shield: 0,
                 is_dead: false,
                 skills: HashMap::new(),
-                damage_stats: DamageStats::default(),
+                damage_stats: DamageStats {
+                    damage_taken: self.boss_hp,
+                    ..Default::default()
+                },
                 skill_stats: SkillStats::default(),
                 engraving_data: None,
                 ark_passive_active: None,
@@ -758,7 +796,7 @@ mod tests {
 
     }
 
-    fn update_skill_and_damage_stats(rng: &mut ThreadRng, entity: &mut EncounterEntity) {
+    fn update_skill_and_damage_stats(damage_range: (i64, i64), rng: &mut ThreadRng, entity: &mut EncounterEntity) {
         entity.skill_stats = SkillStats::default();
         entity.damage_stats = DamageStats::default();
 
@@ -768,7 +806,7 @@ mod tests {
             skill.crits = 0;
 
             for _ in 0..100 {
-                let dmg = rng.random_range(500..=1500);
+                let dmg = rng.random_range(damage_range.0..=damage_range.1);
                 let is_crit = rng.random_bool(entity.skill_stats.crits as f64 / 100.0);
                 skill.casts += 1;
                 skill.hits += 1;
@@ -778,9 +816,42 @@ mod tests {
                 entity.damage_stats.damage_dealt += dmg;
             }
         }
+
+        entity.damage_stats.hyper_awakening_damage += rng.random_range(1_000_000_000..2_000_000_000);
         entity.skill_stats.casts = entity.skills.values().map(|s| s.casts).sum();
         entity.skill_stats.hits = entity.skills.values().map(|s| s.hits).sum();
         entity.skill_stats.crits = entity.skills.values().map(|s| s.crits).sum();
+    }
+
+    fn update_damage_taken(damage_taken: (i64, i64), rng: &mut ThreadRng, entity: &mut EncounterEntity) {
+        entity.damage_stats.damage_taken += rng.random_range(damage_taken.0..damage_taken.1)
+    }
+
+    fn update_buffs_heals_and_absorb(rng: &mut ThreadRng, entity: &mut EncounterEntity) {
+        let support_buff_ids = [101u32, 102u32, 103u32];
+        let pick_count = rng.random_range(1..=3);
+
+        for buff_id in support_buff_ids.choose_multiple(rng, pick_count) {
+            let value = rng.random_range(1_000..=2_000);
+            entity.damage_stats.buffed_by_support += value;
+            entity.damage_stats.debuffed_by.insert(*buff_id, value / 2);
+        }
+
+        entity.damage_stats.buffed_by_identity += rng.random_range(0..=5);
+        entity.damage_stats.buffed_by_hat += rng.random_range(0..=5);
+        entity.damage_stats.debuffed_by_support += rng.random_range(0..=3);
+
+        let absorb_value = rng.random_range(10_000..=100_000);
+        entity.damage_stats.damage_absorbed += absorb_value;
+        entity.damage_stats.damage_absorbed_by.insert(1, absorb_value);
+
+        let shield_value = rng.random_range(5_000..=50_000);
+        entity.damage_stats.shields_given += shield_value;
+        entity.damage_stats.shields_given_by.insert(1, shield_value);
+        entity.damage_stats.shields_received += shield_value / 2;
+        entity.damage_stats.shields_received_by.insert(1, shield_value / 2);
+        entity.damage_stats.damage_absorbed_on_others += shield_value / 3;
+        entity.damage_stats.damage_absorbed_on_others_by.insert(1, shield_value / 3);
     }
 
     fn generate_entities_for_parties(
