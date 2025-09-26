@@ -5,10 +5,15 @@ use hashbrown::HashMap;
 use log::warn;
 use reqwest::Client;
 use serde_json::json;
+use std::time::Duration;
 use tauri::{AppHandle, Manager};
+use tokio::time::sleep;
 
 // pub const API_URL: &str = "http://localhost:5180";
 pub const API_URL: &str = "https://api.snow.xyz";
+
+pub const RETRIES: u8 = 3;
+pub const RETRY_DELAY_MS: u64 = 250;
 
 #[derive(Clone)]
 pub struct StatsApi {
@@ -67,27 +72,41 @@ impl StatsApi {
             "cleared": encounter.cleared,
         });
 
-        match self
-            .client
-            .post(format!("{API_URL}/inspect"))
-            .json(&request_body)
-            .send()
-            .await
-        {
-            Ok(res) => match res.json::<HashMap<String, InspectInfo>>().await {
-                Ok(data) => {
-                    debug_print(format_args!("received player stats"));
-                    Some(data)
-                }
+        for attempt in 1..=RETRIES {
+            let response = self
+                .client
+                .post(format!("{API_URL}/inspect"))
+                .json(&request_body)
+                .send()
+                .await;
+
+            match response {
+                Ok(res) => match res.json::<HashMap<String, InspectInfo>>().await {
+                    Ok(data) => {
+                        debug_print(format_args!("received player stats"));
+                        return Some(data);
+                    }
+                    Err(e) => {
+                        warn!(
+                            "failed to parse player stats (attempt {}/{}): {:?}",
+                            attempt, RETRIES, e
+                        );
+                    }
+                },
                 Err(e) => {
-                    warn!("failed to parse player stats: {:?}", e);
-                    None
+                    warn!(
+                        "failed to get inspect data (attempt {}/{}): {:?}",
+                        attempt, RETRIES, e
+                    );
                 }
-            },
-            Err(e) => {
-                warn!("failed to get inspect data: {:?}", e);
-                None
+            }
+
+            if attempt < RETRIES {
+                let backoff = RETRY_DELAY_MS.saturating_mul(1 << (attempt - 1));
+                sleep(Duration::from_millis(backoff)).await;
             }
         }
+
+        None
     }
 }
