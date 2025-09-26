@@ -423,7 +423,7 @@ impl Repository {
         } = args;
 
         let mut players: Vec<_> = encounter.entities.values()
-            .filter(|e| ((e.entity_type == EntityType::Player && e.class_id != 0 && e.max_hp > 0)
+            .filter(|e| ((e.entity_type == EntityType::Player && e.class_id != 0)
                 || e.name == encounter.local_player)
                 && e.damage_stats.damage_dealt > 0)
             .collect();
@@ -484,7 +484,7 @@ mod tests {
         let player13 = PlayerSpec { class_id: 302, class_name: "Wardancer".to_string(), is_support: false, crit_rate: 0.30, gear_score: 1580.0, hp: 1_000_000 };
         let player14 = PlayerSpec { class_id: 204, class_name: "Bard".to_string(), is_support: true, crit_rate: 0.15, gear_score: 1500.0, hp: 1_000_000 };
 
-        let player21 = PlayerSpec { class_id: 603, class_name: "Aeromancer".to_string(), is_support: false, crit_rate: 0.25, gear_score: 1620.0, hp: 1_000_000 };
+        let player21 = PlayerSpec { class_id: 603, class_name: "Aeromancer".to_string(), is_support: false, crit_rate: 0.25, gear_score: 1620.0, hp: 0 };
         let player22 = PlayerSpec { class_id: 504, class_name: "Artillerist".to_string(), is_support: false, crit_rate: 0.28, gear_score: 1600.0, hp: 1_000_000 };
         let player23 = PlayerSpec { class_id: 402, class_name: "Deathblade".to_string(), is_support: false, crit_rate: 0.30, gear_score: 1580.0, hp: 1_000_000 };
         let player24 = PlayerSpec { class_id: 105, class_name: "Paladin".to_string(), is_support: true, crit_rate: 0.15, gear_score: 1500.0, hp: 1_000_000 };
