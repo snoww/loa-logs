@@ -1,6 +1,7 @@
 <script lang="ts">
   import { percentValue } from "$lib/components/Snippets.svelte";
   import { bossHpMap } from "$lib/constants/encounters";
+  import { appContext } from "$lib/context.svelte";
   import { EncounterState } from "$lib/encounter.svelte";
   import { settings } from "$lib/stores.svelte";
   import { EntityType } from "$lib/types";
@@ -77,7 +78,7 @@
       {#if enc.timeToKill}
         TTK {enc.timeToKill}
       {:else}
-        LOA Logs
+        {$appContext.productName}
       {/if}
     </div>
   </div>

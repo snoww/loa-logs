@@ -1,11 +1,11 @@
 import { browser } from "$app/environment";
-import { invoke } from "@tauri-apps/api/core";
 import type { Update } from "@tauri-apps/plugin-updater";
 import { time } from "echarts/core";
 import MarkdownIt from "markdown-it";
 import { SvelteSet } from "svelte/reactivity";
 import { readable } from "svelte/store";
 import type { AppSettings } from "./settings";
+import { saveSettings } from "./api";
 
 /**
  * Merge settings from local storage into default settings.
@@ -40,7 +40,7 @@ class Settings {
             const settingsFromStorage = JSON.parse(settings) as AppSettings;
             mergeSettings(this.app, settingsFromStorage);
             if (!init) {
-              invoke("save_settings", { settings: this.app });
+              saveSettings(this.app)
             }
           } catch (e) {
             console.error(e);

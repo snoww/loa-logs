@@ -2,10 +2,10 @@
   import { raidGates } from "$lib/constants/encounters";
   import { screenshot, settings } from "$lib/stores.svelte.js";
   import type { Encounter } from "$lib/types";
-  import { getVersion } from "@tauri-apps/api/app";
   import BossOnlyDamage from "$lib/components/BossOnlyDamage.svelte";
   import { abbreviateNumber, formatTimestampDate, formatTimestampTime, getBossHpBars, timestampToMinutesAndSeconds } from "$lib/utils";
   import { middot } from "$lib/components/Snippets.svelte";
+  import { appContext } from "$lib/context.svelte";
 
   let { encounter }: { encounter: Encounter } = $props();
 
@@ -59,13 +59,9 @@
     </div>
     <div class="flex items-center gap-1 font-mono text-xs">
       {#if !settings.app.general.hideLogo}
-        <p>LOA Logs</p>
+        <p>{$appContext.productName}</p>
       {/if}
-      {#await getVersion() then version}
-        <p>
-          v{version}
-        </p>
-      {/await}
+      {$appContext.version}
     </div>
   </div>
   <div class="flex items-center">

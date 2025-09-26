@@ -3,32 +3,33 @@
   import { settings } from "$lib/stores.svelte";
   import { setup } from "$lib/utils/setup";
   import { registerShortcuts } from "$lib/utils/shortcuts";
-  import { invoke } from "@tauri-apps/api/core";
-  import { emit } from "@tauri-apps/api/event";
   import { unregisterAll } from "@tauri-apps/plugin-global-shortcut";
   import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
   import { onMount } from "svelte";
-  import type { AppSettings } from "$lib/settings";
+  import { getSettings, setBossOnlyDamage, writeLog } from "$lib/api";
 
   let { children }: { children?: import("svelte").Snippet } = $props();
 
   onMount(() => {
     setup();
-    (async () => {
-      await invoke("write_log", { message: "setting up live meter" });
-      let data = (await invoke("get_settings")) as AppSettings;
-      if (data) {
-        settings.app = data;
-      }
-
-      if (settings.app.general.bossOnlyDamageDefaultOn && !settings.app.general.bossOnlyDamage) {
-        settings.app.general.bossOnlyDamage = true;
-        await emit("boss-only-damage-request", true);
-      }
-
-      await invoke("write_log", { message: "finished meter setup" });
-    })();
+    onLoad();
   });
+
+  async function onLoad() {
+     writeLog("setting up live meter");
+
+    let data = await getSettings();
+    if (data) {
+      settings.app = data;
+    }
+
+    if (settings.app.general.bossOnlyDamageDefaultOn && !settings.app.general.bossOnlyDamage) {
+      settings.app.general.bossOnlyDamage = true;
+      await setBossOnlyDamage(true);
+    }
+
+    writeLog("finished meter setup");
+  }
 
   $effect.pre(() => {
     settings.app.shortcuts.hideMeter;
