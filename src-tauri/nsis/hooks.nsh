@@ -5,7 +5,11 @@
 !macroend
 
 !macro NSIS_HOOK_POSTINSTALL
-
+  ; Update auto start task action if exists
+  nsExec::Exec `powershell -NoProfile -ExecutionPolicy Bypass -Command "\
+    Set-ScheduledTask -TaskName '${TASK_NAME}' -Action @(               \
+      New-ScheduledTaskAction -Execute '$INSTDIR\${MAINBINARYNAME}.exe' \
+    )"`
 !macroend
 
 !macro NSIS_HOOK_PREUNINSTALL
@@ -16,10 +20,7 @@
   Delete /REBOOTOK "$INSTDIR\WinDivert64.sys"
 
   ; Remove auto start task if not updating
-  nsExec::Exec 'schtasks.exe /query /tn "${TASK_NAME}"'
-  Pop $0 ; Return
   ${If} $UpdateMode <> 1
-  ${AndIf} $0 == 0
-    ExecShellWait 'runas' 'schtasks.exe' '/delete /tn "${TASK_NAME}" /f' SW_HIDE
+    nsExec::Exec 'schtasks /delete /tn "${TASK_NAME}" /f'
   ${EndIf}
 !macroend
