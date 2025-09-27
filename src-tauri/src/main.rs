@@ -47,13 +47,14 @@ use crate::settings::{Settings, SettingsManager};
 #[tokio::main]
 async fn main() -> Result<()> {
     let _ = app::logger::init()?;
+    app::panic::set_hook_with_logger();
+
     let tauri_context = tauri::generate_context!();
     let package_info = tauri_context.package_info();
     let context = AppContext::new(package_info.version.to_string())?;
     let settings_manager = SettingsManager::new(context.settings_path).expect("could not create settings");
     load_windivert(&context.current_dir).expect("could not load windivert dependencies");
-    // load meter-data
-    AssetPreloader::new()?;
+    AssetPreloader::new(&context.current_dir).expect("could not load meter-data");
 
     tauri::Builder::default()
         .manage(settings_manager)
@@ -71,7 +72,8 @@ async fn main() -> Result<()> {
         .setup(|app| {
             let app_handle = app.handle();
             info!("starting app v{}", app.package_info().version);
-            app::panic::set_hook(app.handle());
+            #[cfg(not(debug_assertions))]
+            app::panic::add_hook_with_dialog(app.handle());
 
             if let Err(e) = setup_db(app.handle()) {
                 warn!("error setting up database: {e}");
