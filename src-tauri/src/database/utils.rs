@@ -10,6 +10,7 @@ use serde::Serialize;
 use anyhow::Result;
 
 use crate::data::{ENGRAVING_DATA, GEM_SKILL_MAP};
+use crate::database::models::InsertEncounterArgs;
 use crate::database::sql_types::{CompressedJson, JsonColumn};
 use crate::models::*;
 use crate::utils::*;
@@ -315,6 +316,72 @@ fn parse_class_names(input: String) -> (Vec<i32>, Vec<String>) {
         })
         .unzip()
 }
+
+pub fn calculate_entities(args: &mut InsertEncounterArgs) -> Result<()> {
+    let InsertEncounterArgs {
+        encounter,
+        cast_log,
+        damage_log,
+        skill_cast_log,
+        player_info,
+        skill_cooldowns,
+        ..
+    } = args;
+
+    let fight_start = encounter.fight_start;
+    let fight_end = encounter.last_combat_packet;
+    let local_player_str = encounter.local_player.as_str();
+ 
+    for (name, entity) in encounter.entities.iter_mut() {
+        if !should_insert_entity(entity, &encounter.local_player) {
+            continue;
+        }
+
+        update_entity_stats(entity, fight_start, fight_end, damage_log);
+
+        if let Some(info) = player_info.as_ref().and_then(|stats| stats.get(&entity.name)) {
+            apply_player_info(entity, info);
+        }
+
+        apply_cast_logs(entity, cast_log, skill_cast_log);
+
+        if name == local_player_str {
+            for (skill_id, events) in skill_cooldowns.iter() {
+                if let Some(skill) = entity.skills.get_mut(skill_id) {
+                    skill.time_available =
+                        Some(get_total_available_time(events, fight_start, fight_end));
+                }
+            }
+        }
+    }
+
+    Ok(())
+}
+
+pub fn get_total_available_time(
+    skill_cooldown: &Vec<CastEvent>,
+    encounter_start: i64,
+    encounter_end: i64,
+) -> i64 {
+    let mut total_available_time = 0;
+    let mut current_available_from = encounter_start;
+
+    for event in skill_cooldown {
+        if event.timestamp > current_available_from {
+            total_available_time += event.timestamp - current_available_from;
+        }
+
+        let cooldown_end = event.timestamp + event.cooldown_duration_ms;
+        current_available_from = current_available_from.max(cooldown_end);
+    }
+
+    if encounter_end > current_available_from {
+        total_available_time += encounter_end - current_available_from;
+    }
+
+    total_available_time
+}
+
 
 pub fn compute_support_buffs(
     encounter: &Encounter,

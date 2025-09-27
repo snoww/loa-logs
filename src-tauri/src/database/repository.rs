@@ -248,13 +248,15 @@ impl Repository {
         Ok(ids)
     }
 
-    pub fn insert_data(&self, args: InsertEncounterArgs) -> Result<i64> {
+    pub fn insert_data(&self, mut args: InsertEncounterArgs) -> Result<i64> {
         let mut connection = self.0.get()?;
         let transaction = connection.transaction()?;
 
         let last_insert_id = self.insert_encounter(&transaction, &args)?;
-        self.insert_entities(&transaction, &args, last_insert_id)?;
-        self.insert_encounter_preview(&transaction, &args, last_insert_id)?;
+        calculate_entities(&mut args)?;
+        let buffs = compute_support_buffs(&args.encounter, &args.party_info);
+        self.insert_entities(&transaction, &args, buffs, last_insert_id)?;
+        self.insert_encounter_preview(&transaction, args, last_insert_id)?;
 
         transaction.commit()?;
 
@@ -332,23 +334,14 @@ impl Repository {
         &self,
         transaction: &Transaction,
         args: &InsertEncounterArgs,
+        buffs: HashMap<String, SupportBuffs>,
         encounter_id: i64,
     ) -> Result<()> {
 
         let InsertEncounterArgs {
             encounter,
-            cast_log,
-            damage_log,
-            skill_cast_log,
-            player_info,
-            party_info,
             ..
         } = args;
-
-        let fight_start = encounter.fight_start;
-        let fight_end = encounter.last_combat_packet;
-
-        let buffs = compute_support_buffs(encounter, party_info);
 
         let mut statement = transaction.prepare_cached(INSERT_ENTITY)?;
 
@@ -356,16 +349,6 @@ impl Repository {
             if !should_insert_entity(entity, &encounter.local_player) {
                 continue;
             }
-
-            let mut entity = entity.clone();
-
-            update_entity_stats(&mut entity, fight_start, fight_end, damage_log);
-
-            if let Some(info) = player_info.as_ref().and_then(|stats| stats.get(&entity.name)) {
-                apply_player_info(&mut entity, info);
-            }
-
-            apply_cast_logs(&mut entity, cast_log, skill_cast_log);
 
             let compressed_skills = compress_json(&entity.skills)?;
             let compressed_damage_stats = compress_json(&entity.damage_stats)?;
@@ -411,7 +394,7 @@ impl Repository {
     fn insert_encounter_preview(
         &self,
         transaction: &Transaction,
-        args: &InsertEncounterArgs,
+        args: InsertEncounterArgs,
         encounter_id: i64,
     ) -> Result<()> {
 
@@ -463,6 +446,8 @@ impl Repository {
 #[cfg(test)]
 mod tests {
 
+    use std::collections::BTreeMap;
+
     use chrono::Utc;
     use hashbrown::HashSet;
     use rand::{rngs::ThreadRng, seq::IndexedRandom, Rng};
@@ -496,10 +481,17 @@ mod tests {
             .set_region("EUC")
             .set_version(version)
             .set_damage_range(1_000_000, 2_000_000)
-            .set_difficulty("Hard");
+            .set_difficulty("Hard")
+            .set_cleared(true);
 
         let args = raid_builder.build();
-        let mut expected_encounter = args.encounter.clone();
+
+        let expected_encounter = {
+            let mut cloned = args.clone();
+            calculate_entities(&mut cloned).unwrap();
+            let encounter = cloned.encounter;
+            encounter
+        };
 
         let id = repository.insert_data(args).unwrap();
         let id_str = id.to_string();
@@ -525,15 +517,18 @@ mod tests {
             filter,
         }).unwrap();
 
-        expected_encounter.last_combat_packet = actual_encounter.last_combat_packet;
-        expected_encounter.fight_start = actual_encounter.fight_start;
-
         assert_eq!(actual_encounter.current_boss_name, expected_encounter.current_boss_name);
         assert_eq!(actual_encounter.duration, expected_encounter.duration);
         assert_eq!(actual_encounter.difficulty, expected_encounter.difficulty);
         assert_eq!(actual_encounter.cleared, expected_encounter.cleared);
         assert_eq!(actual_encounter.boss_only_damage, expected_encounter.boss_only_damage);
-        
+
+        assert_eq!(actual_encounter.encounter_damage_stats.top_damage_dealt, expected_encounter.encounter_damage_stats.top_damage_dealt);
+        assert_eq!(actual_encounter.encounter_damage_stats.top_damage_taken, expected_encounter.encounter_damage_stats.top_damage_taken);
+        assert_eq!(actual_encounter.encounter_damage_stats.total_damage_dealt, expected_encounter.encounter_damage_stats.total_damage_dealt);
+        assert_eq!(actual_encounter.encounter_damage_stats.total_damage_taken, expected_encounter.encounter_damage_stats.total_damage_taken);
+        assert_eq!(actual_encounter.encounter_damage_stats.total_effective_shielding, expected_encounter.encounter_damage_stats.total_effective_shielding);
+
         let mut actual: Vec<_> = actual_encounter.entities.values().collect();
         actual.sort_by_key(|e| &e.name);
 
@@ -547,6 +542,18 @@ mod tests {
                 assert!(actual.damage_stats.damage_dealt > 0);
                 assert!(actual.damage_stats.damage_taken > 0);
                 continue;
+            }
+
+            assert!(actual.skill_stats.casts > 0);
+            assert!(actual.skill_stats.crits > 0);
+            assert!(actual.skill_stats.hits > 0);
+
+            for (_, skill) in actual.skills.iter() {
+                assert!(skill.dps > 0);
+                assert!(skill.hits > 0);
+                assert!(skill.crits > 0);
+                assert!(skill.total_damage > 0);
+                assert!(skill.cast_log.len() > 0);
             }
 
             assert!(actual.damage_stats.unbuffed_damage > 0);
@@ -568,8 +575,20 @@ mod tests {
         let preview = paged.encounters.first().unwrap();
 
         assert_eq!(preview.duration, expected_encounter.duration);
+        assert_eq!(preview.classes.len(), 8);
+        assert_eq!(preview.names.len(), 8);
+        assert_eq!(preview.fight_start, expected_encounter.fight_start);
         assert_eq!(preview.difficulty, expected_encounter.difficulty);
         assert_eq!(preview.boss_name, expected_encounter.current_boss_name);
+        assert_eq!(preview.cleared, true);
+        assert_eq!(preview.cleared, expected_encounter.cleared);
+
+        {
+            let local_player_name = &expected_encounter.local_player;
+            let local_player = expected_encounter.entities.get(local_player_name).unwrap();
+            assert!(preview.my_dps > 0);
+            assert_eq!(preview.my_dps, local_player.damage_stats.dps);
+        }
     }
 
 
@@ -592,6 +611,7 @@ mod tests {
         region: String,
         version: String,
         difficulty: String,
+        cleared: bool,
         rng: ThreadRng,
         damage_range: (i64, i64),
         damage_taken_range: (i64, i64),
@@ -604,6 +624,7 @@ mod tests {
                 boss_name: String::new(),
                 boss_npc_id: 0,
                 boss_hp: 0,
+                cleared: false,
                 duration_minutes: 15,
                 region: "EUC".to_string(),
                 version: "0.0.1".to_string(),
@@ -637,6 +658,11 @@ mod tests {
             self
         }
 
+        fn set_cleared(mut self, cleared: bool) -> Self {
+            self.cleared = cleared;
+            self
+        }
+
         fn set_difficulty(mut self, difficulty: &str) -> Self {
             self.difficulty = difficulty.to_string();
             self
@@ -658,16 +684,15 @@ mod tests {
             let raid_dps: i64 = self.boss_hp / duration_s;
             let per_player_total_damage: i64 = raid_dps / total_players as i64 * duration_s;
 
-            let (mut entities, player_names) = generate_entities_for_parties(
+            let (entities_with_spec, player_names) = generate_entities_for_parties(
                 &self.parties,
                 &mut self.rng,
                 per_player_total_damage);
 
+            let local_player = player_names[0].clone();
             let mut boss = self.generate_boss_entity();
 
             boss.damage_stats.damage_dealt += self.rng.random_range(self.damage_range.0..self.damage_range.1);
-
-            entities.insert(boss.name.clone(), boss.clone());
 
             let mut boss_hp_logs: HashMap<String, Vec<BossHpLog>> = HashMap::new();
             let mut boss_hp_log = Vec::with_capacity(duration_s as usize + 1);
@@ -690,13 +715,34 @@ mod tests {
             }        
 
             let mut encounter_entities_with_stats = HashMap::new();
-            for (name, mut entity) in entities.into_iter() {
+            let mut cast_log: HashMap<String, HashMap<u32, Vec<i32>>> = HashMap::new();
+            let mut skill_cast_log: HashMap<u64, HashMap<u32, BTreeMap<i64, SkillCast>>> = HashMap::new();
+            for (name, (spec, mut entity)) in entities_with_spec.into_iter() {
                 if entity.entity_type == EntityType::Player {
-                    update_skill_and_damage_stats(self.damage_range, &mut self.rng, &mut entity);
+                    update_skill_and_damage_stats(
+                        duration_s,
+                        &spec,
+                        &mut cast_log,
+                        &mut skill_cast_log,
+                        self.damage_range,
+                        &mut self.rng,
+                        &mut entity);
                     update_damage_taken(self.damage_taken_range, &mut self.rng, &mut entity);
                     update_buffs_heals_and_absorb(&mut self.rng, &mut entity);
                 }
                 encounter_entities_with_stats.insert(name, entity);
+            }
+
+            encounter_entities_with_stats.insert(boss.name.clone(), boss.clone());
+
+            let local_player_entity = encounter_entities_with_stats.get(&local_player).unwrap();
+            let mut skill_cooldowns = HashMap::new();
+
+            for (id, _) in local_player_entity.skills.iter() {
+                skill_cooldowns.insert(*id, vec![CastEvent {
+                    cooldown_duration_ms: self.rng.random_range(1000..5000),
+                    timestamp: self.rng.random_range(1000..5000),
+                }]);
             }
 
             let misc = EncounterMisc {
@@ -730,7 +776,7 @@ mod tests {
             let encounter = Encounter {
                 last_combat_packet,
                 fight_start,
-                local_player: player_names[0].clone(),
+                local_player,
                 entities: encounter_entities_with_stats.clone(),
                 current_boss_name: boss.name.clone(),
                 current_boss: Some(boss),
@@ -747,7 +793,7 @@ mod tests {
             let insert_args = InsertEncounterArgs {
                 encounter,
                 damage_log: HashMap::new(),
-                cast_log: HashMap::new(),
+                cast_log,
                 boss_hp_log: HashMap::new(),
                 raid_clear: true,
                 party_info: party_vec,
@@ -758,8 +804,8 @@ mod tests {
                 ntp_fight_start: fight_start,
                 rdps_valid: true,
                 manual: false,
-                skill_cast_log: HashMap::new(),
-                skill_cooldowns: HashMap::new(),
+                skill_cast_log,
+                skill_cooldowns,
             };
 
             insert_args
@@ -796,7 +842,14 @@ mod tests {
 
     }
 
-    fn update_skill_and_damage_stats(damage_range: (i64, i64), rng: &mut ThreadRng, entity: &mut EncounterEntity) {
+    fn update_skill_and_damage_stats(
+        duration_seconds: i64,
+        spec: &PlayerSpec,
+        cast_log: &mut HashMap<String, HashMap<u32, Vec<i32>>>,
+        skill_cast_log: &mut HashMap<u64, HashMap<u32, BTreeMap<i64, SkillCast>>>,
+        damage_range: (i64, i64),
+        rng: &mut ThreadRng,
+        entity: &mut EncounterEntity) {
         entity.skill_stats = SkillStats::default();
         entity.damage_stats = DamageStats::default();
 
@@ -805,22 +858,59 @@ mod tests {
             skill.hits = 0;
             skill.crits = 0;
 
-            for _ in 0..100 {
+            let mut per_skill_map: BTreeMap<i64, SkillCast> = BTreeMap::new();
+            let mut per_skill_vec: Vec<i32> = Vec::new();
+
+            for it in 0..100 {
                 let dmg = rng.random_range(damage_range.0..=damage_range.1);
-                let is_crit = rng.random_bool(entity.skill_stats.crits as f64 / 100.0);
+                let is_crit = rng.random_bool(spec.crit_rate);
+                let timestamp = it * 1000;
                 skill.casts += 1;
+                entity.skill_stats.casts += 1;
                 skill.hits += 1;
+                entity.skill_stats.hits += 1;
+                skill.total_damage += dmg;
+
+                let mut skill_hit = SkillHit {
+                    damage: dmg,
+                    timestamp,
+                    ..Default::default()
+                };
+
                 if is_crit {
+                    entity.skill_stats.crits += 1;
+                    skill_hit.crit = true;
                     skill.crits += 1;
                 }
+
                 entity.damage_stats.damage_dealt += dmg;
+
+                let skill_cast = SkillCast {
+                    hits: vec![skill_hit],
+                    last: timestamp, 
+                    timestamp,
+                    ..Default::default()
+                };
+
+                per_skill_vec.push(timestamp as i32);
+                per_skill_map.insert(timestamp, skill_cast);
             }
+
+            skill.dps = skill.total_damage / duration_seconds;
+
+            cast_log
+                .entry(entity.name.clone())
+                .or_default()
+                .insert(skill.id, per_skill_vec);
+
+            skill_cast_log
+                .entry(entity.id)
+                .or_default()
+                .insert(skill.id, per_skill_map);
+
         }
 
         entity.damage_stats.hyper_awakening_damage += rng.random_range(1_000_000_000..2_000_000_000);
-        entity.skill_stats.casts = entity.skills.values().map(|s| s.casts).sum();
-        entity.skill_stats.hits = entity.skills.values().map(|s| s.hits).sum();
-        entity.skill_stats.crits = entity.skills.values().map(|s| s.crits).sum();
     }
 
     fn update_damage_taken(damage_taken: (i64, i64), rng: &mut ThreadRng, entity: &mut EncounterEntity) {
@@ -854,82 +944,69 @@ mod tests {
         entity.damage_stats.damage_absorbed_on_others_by.insert(1, shield_value / 3);
     }
 
+    fn build_entity_from_spec(
+        name: &str,
+        spec: &PlayerSpec,
+        idx: usize,
+    ) -> EncounterEntity {
+        let skills: HashMap<u32, Skill> = (1..=10)
+            .map(|skill_id| {
+                (
+                    skill_id + idx as u32,
+                    Skill {
+                        id: skill_id + idx as u32,
+                        name: format!("Skill{}", skill_id + idx as u32),
+                        icon: String::new(),
+                        casts: 0,
+                        hits: 0,
+                        crits: 0,
+                        ..Default::default()
+                    },
+                )
+            })
+            .collect();
+
+        let entity = EncounterEntity {
+            id: idx as u64 + 1,
+            character_id: idx as u64 + 101,
+            npc_id: 0,
+            name: name.to_string(),
+            entity_type: EntityType::Player,
+            class_id: spec.class_id,
+            class: spec.class_name.clone(),
+            gear_score: spec.gear_score,
+            current_hp: spec.hp,
+            max_hp: spec.hp,
+            current_shield: 0,
+            is_dead: false,
+            skills,
+            damage_stats: DamageStats::default(),
+            skill_stats: SkillStats::default(),
+            engraving_data: None,
+            ark_passive_active: Some(!spec.is_support),
+            ark_passive_data: None,
+            spec: Some(spec.class_name.clone()),
+            loadout_hash: None,
+            combat_power: Some(2000.0),
+        };
+
+        entity
+    }
+
     fn generate_entities_for_parties(
         parties: &[Vec<PlayerSpec>],
         rng: &mut ThreadRng,
         per_player_total_damage: i64,
-    ) -> (HashMap<String, EncounterEntity>, Vec<String>) {
-        let mut entities = HashMap::new();
+    ) -> (HashMap<String, (PlayerSpec, EncounterEntity)>, Vec<String>) {
+        let mut entities: HashMap<String, (PlayerSpec, EncounterEntity)> = HashMap::new();
         let mut player_names = Vec::new();
 
         for party in parties {
             for (idx, spec) in party.iter().enumerate() {
                 let name = format!("Player{}", player_names.len() + 1);
-                let skills: HashMap<u32, Skill> = (1..=10)
-                    .map(|skill_id| {(
-                    skill_id,
-                    Skill {
-                            id: skill_id,
-                            name: format!("Skill{}", skill_id),
-                            icon: String::new(),
-                            casts: 0,
-                            hits: 0,
-                            crits: 0,
-                            ..Default::default()
-                        },
-                    )
-                    })
-                .collect();
+                let entity = build_entity_from_spec(&name, spec, idx);
 
-                let mut entity = EncounterEntity {
-                    id: idx as u64 + 1,
-                    character_id: idx as u64 + 101,
-                    npc_id: 0,
-                    name: name.clone(),
-                    entity_type: EntityType::Player,
-                    class_id: spec.class_id,
-                    class: spec.class_name.clone(),
-                    gear_score: spec.gear_score,
-                    current_hp: spec.hp,
-                    max_hp: spec.hp,
-                    current_shield: 0,
-                    is_dead: false,
-                    skills,
-                    damage_stats: DamageStats::default(),
-                    skill_stats: SkillStats::default(),
-                    engraving_data: None,
-                    ark_passive_active: Some(!spec.is_support),
-                    ark_passive_data: None,
-                    spec: Some(spec.class_name.clone()),
-                    loadout_hash: None,
-                    combat_power: Some(2000.0),
-                };
-
-                for skill in entity.skills.values_mut() {
-                    for _ in 0..100 {
-                        if entity.damage_stats.damage_dealt >= per_player_total_damage {
-                            break;
-                        }
-
-                        let damage = rng.random_range(500..=1500);
-                        let is_crit = rng.random_bool(spec.crit_rate);
-                        skill.casts += 1;
-                        skill.hits += 1;
-                        skill.rdps_received.insert(1, HashMap::from([(1, damage / 3)]));
-                        
-                        if is_crit {
-                            skill.crits += 1;
-                        }
-
-                        entity.damage_stats.damage_dealt += damage;
-                    }
-                }
-
-                entity.skill_stats.casts = entity.skills.values().map(|s| s.casts).sum();
-                entity.skill_stats.hits = entity.skills.values().map(|s| s.hits).sum();
-                entity.skill_stats.crits = entity.skills.values().map(|s| s.crits).sum();
-
-                entities.insert(name.clone(), entity);
+                entities.insert(name.clone(), (spec.clone(), entity));
                 player_names.push(name);
             }
         }

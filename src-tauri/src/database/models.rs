@@ -16,6 +16,7 @@ pub struct GetEncounterPreviewArgs {
     pub filter: SearchFilter,
 }
 
+#[derive(Debug, Clone)]
 pub struct InsertEncounterArgs {
     pub encounter: Encounter,
     pub damage_log: HashMap<String, Vec<(i64, i64)>>,
@@ -31,5 +32,5 @@ pub struct InsertEncounterArgs {
     pub rdps_valid: bool,
     pub manual: bool,
     pub skill_cast_log: HashMap<u64, HashMap<u32, BTreeMap<i64, SkillCast>>>,
-    pub skill_cooldowns: HashMap<u32, Vec<CastEvent>>,
+    pub skill_cooldowns: HashMap<u32, Vec<CastEvent>>
 }

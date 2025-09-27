@@ -1475,30 +1475,6 @@ pub fn boss_to_raid_map(boss: &str, max_hp: i64) -> Option<String> {
     }
 }
 
-pub fn get_total_available_time(
-    skill_cooldown: &Vec<CastEvent>,
-    encounter_start: i64,
-    encounter_end: i64,
-) -> i64 {
-    let mut total_available_time = 0;
-    let mut current_available_from = encounter_start;
-
-    for event in skill_cooldown {
-        if event.timestamp > current_available_from {
-            total_available_time += event.timestamp - current_available_from;
-        }
-
-        let cooldown_end = event.timestamp + event.cooldown_duration_ms;
-        current_available_from = current_available_from.max(cooldown_end);
-    }
-
-    if encounter_end > current_available_from {
-        total_available_time += encounter_end - current_available_from;
-    }
-
-    total_available_time
-}
-
 fn get_damage_without_hyper_or_special(e: &EncounterEntity) -> i64 {
     let hyper = e.damage_stats.hyper_awakening_damage;
     let special = e
