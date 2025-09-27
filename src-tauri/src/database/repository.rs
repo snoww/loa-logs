@@ -462,40 +462,19 @@ mod tests {
     use chrono::Utc;
     use hashbrown::HashSet;
     use rand::{rngs::ThreadRng, seq::IndexedRandom, Rng};
-    use crate::database::Database;
+    use crate::{data::AssetPreloader, database::Database};
 
     use super::*;
 
     #[test]
     fn should_insert_encounter() {
-        
         let version = "1.14.0";
-
+        let current_dir = std::env::current_dir().unwrap();
+        AssetPreloader::new(&current_dir).unwrap();
         let database = Database::memory(version).unwrap();
 
         let repository = database.create_repository();
-
-        let player11 = PlayerSpec { class_id: 102, class_name: "Berserker".to_string(), specialisation: "Mayhem", is_support: false, crit_rate: 0.25, gear_score: 1620.0, hp: 1_000_000 };
-        let player12 = PlayerSpec { class_id: 502, class_name: "Sharpshooter".to_string(), specialisation: "Loyal Companion", is_support: false, crit_rate: 0.28, gear_score: 1600.0, hp: 1_000_000 };
-        let player13 = PlayerSpec { class_id: 302, class_name: "Wardancer".to_string(), specialisation: "Esoteric Skill Enhancement", is_support: false, crit_rate: 0.30, gear_score: 1580.0, hp: 1_000_000 };
-        let player14 = PlayerSpec { class_id: 204, class_name: "Bard".to_string(), specialisation: "Desperate Salvation", is_support: true, crit_rate: 0.15, gear_score: 1500.0, hp: 1_000_000 };
-
-        let player21 = PlayerSpec { class_id: 603, class_name: "Aeromancer".to_string(), specialisation: "Drizzle", is_support: false, crit_rate: 0.25, gear_score: 1620.0, hp: 0 };
-        let player22 = PlayerSpec { class_id: 504, class_name: "Artillerist".to_string(), specialisation: "Barrage Enhancement", is_support: false, crit_rate: 0.28, gear_score: 1600.0, hp: 1_000_000 };
-        let player23 = PlayerSpec { class_id: 402, class_name: "Deathblade".to_string(), specialisation: "Remaining Energy", is_support: false, crit_rate: 0.30, gear_score: 1580.0, hp: 1_000_000 };
-        let player24 = PlayerSpec { class_id: 105, class_name: "Paladin".to_string(), specialisation: "Blessed Aura", is_support: true, crit_rate: 0.15, gear_score: 1500.0, hp: 1_000_000 };
-
-        let raid_builder = RaidBuilder::new()
-            .add_party((player11, player12, player13, player14))
-            .add_party((player21, player22, player23, player24))
-            .set_boss("Mordum, the Abyssal Punisher", 485800, 1_100_000_000_000, 15)
-            .set_region("EUC")
-            .set_version(version)
-            .set_damage_range(1_000_000, 2_000_000)
-            .set_difficulty("Hard")
-            .set_cleared(true);
-
-        let args = raid_builder.build();
+        let args = build_args(version);
 
         let expected_encounter = {
             let mut cloned = args.clone();
@@ -572,6 +551,15 @@ mod tests {
                 assert!(skill.cast_log.len() > 0);
             }
 
+            assert!(actual.combat_power.filter(|pr| *pr > 1500.0).is_some());
+            assert!(actual.loadout_hash.is_some());
+            assert!(actual.engraving_data.as_ref().filter(|pr| pr.len() > 1).is_some());
+            assert!(actual.ark_passive_active.unwrap());
+            assert!(actual.ark_passive_data.as_ref().filter(|pr| 
+                pr.enlightenment.is_some()
+                && pr.leap.is_some()
+                && pr.evolution.is_some()).is_some());
+
             assert!(actual.damage_stats.unbuffed_damage > 0);
             assert!(actual.damage_stats.unbuffed_dps > 0);
             assert!(actual.damage_stats.damage_dealt > 0);
@@ -612,16 +600,298 @@ mod tests {
         }
     }
 
+    fn build_args(version: &str) -> InsertEncounterArgs {
+        let player11 = PlayerSpec { 
+            class_id: 102, class_name: "Berserker".to_string(), specialisation: "Mayhem",
+            crit_rate: 0.25, gear_score: 1620.0, hp: 1_000_000,
+             info: InspectInfo { 
+                combat_power: Some(CombatPower {
+                    id: 1,
+                    score: 1800.0,
+                }),
+                ark_passive_enabled: true,
+                ark_passive_data: Some(ArkPassiveData { 
+                    evolution: Some(vec![
+                        ArkPassiveNode { id: 1, lv: 1 }
+                    ]),
+                    enlightenment: Some(vec![
+                        ArkPassiveNode { id: 1, lv: 1 }
+                    ]),
+                    leap: Some(vec![
+                        ArkPassiveNode { id: 1, lv: 1 }
+                    ]),
+                }),
+                engravings: Some(vec![1118, 1299]),
+                gems: Some(vec![
+                    GemData { tier: 2, skill_id: 16640, gem_type: 63, value: 4400 },
+                    GemData { tier: 2, skill_id: 16120, gem_type: 63, value: 4400 },
+                    GemData { tier: 2, skill_id: 16080, gem_type: 63, value: 4400 },
+                    GemData { tier: 2, skill_id: 16300, gem_type: 63, value: 4400 },
+                    GemData { tier: 2, skill_id: 16050, gem_type: 63, value: 4400 },
+                ]),
+                loadout_snapshot: Some(String::from(""))
+            }
+        };
+        let player12 = PlayerSpec { 
+            class_id: 502, class_name: "Sharpshooter".to_string(), specialisation: "Loyal Companion",
+            crit_rate: 0.28, gear_score: 1600.0, hp: 1_000_000,
+            info: InspectInfo { 
+                combat_power: Some(CombatPower {
+                    id: 1,
+                    score: 1800.0,
+                }),
+                ark_passive_enabled: true,
+                ark_passive_data: Some(ArkPassiveData { 
+                    evolution: Some(vec![
+                        ArkPassiveNode { id: 1, lv: 1 }
+                    ]),
+                    enlightenment: Some(vec![
+                        ArkPassiveNode { id: 1, lv: 1 }
+                    ]),
+                    leap: Some(vec![
+                        ArkPassiveNode { id: 1, lv: 1 }
+                    ]),
+                }),
+                engravings: Some(vec![1118, 1299]),
+                gems: Some(vec![
+                    GemData { tier: 2, skill_id: 50010, gem_type: 63, value: 4400 },
+                    GemData { tier: 2, skill_id: 28220, gem_type: 63, value: 4400 },
+                    GemData { tier: 2, skill_id: 28090, gem_type: 63, value: 4400 },
+                    GemData { tier: 2, skill_id: 28250, gem_type: 63, value: 4400 },
+                    GemData { tier: 2, skill_id: 28070, gem_type: 63, value: 4400 },
+                    GemData { tier: 2, skill_id: 28110, gem_type: 63, value: 4400 },
+                    GemData { tier: 2, skill_id: 28130, gem_type: 63, value: 4400 },
+                    GemData { tier: 2, skill_id: 28150, gem_type: 63, value: 4400 },
+                ]),
+                loadout_snapshot: Some(String::from(""))
+            }
+        };
+        let player13 = PlayerSpec { 
+            class_id: 302, class_name: "Wardancer".to_string(), specialisation: "Esoteric Skill Enhancement",
+            crit_rate: 0.30, gear_score: 1580.0, hp: 1_000_000,
+            info: InspectInfo { 
+                combat_power: Some(CombatPower {
+                    id: 1,
+                    score: 1800.0,
+                }),
+                ark_passive_enabled: true,
+                ark_passive_data: Some(ArkPassiveData { 
+                    evolution: Some(vec![
+                        ArkPassiveNode { id: 1, lv: 1 }
+                    ]),
+                    enlightenment: Some(vec![
+                        ArkPassiveNode { id: 1, lv: 1 }
+                    ]),
+                    leap: Some(vec![
+                        ArkPassiveNode { id: 1, lv: 1 }
+                    ]),
+                }),
+                engravings: Some(vec![1118, 1299]),
+                gems: Some(vec![
+                    GemData { tier: 2, skill_id: 22340, gem_type: 63, value: 4400 },
+                    GemData { tier: 2, skill_id: 22080, gem_type: 63, value: 4400 },
+                    GemData { tier: 2, skill_id: 22120, gem_type: 63, value: 4400 },
+                    GemData { tier: 2, skill_id: 22310, gem_type: 63, value: 4400 },
+                    GemData { tier: 2, skill_id: 22270, gem_type: 63, value: 4400 },
+                    GemData { tier: 2, skill_id: 22240, gem_type: 63, value: 4400 },
+                    GemData { tier: 2, skill_id: 22210, gem_type: 63, value: 4400 },
+                    GemData { tier: 2, skill_id: 22160, gem_type: 63, value: 4400 },
+                ]),
+                loadout_snapshot: Some(String::from(""))
+            }
+        };
+        let player14 = PlayerSpec { 
+            class_id: 204, class_name: "Bard".to_string(), specialisation: "Desperate Salvation",
+            crit_rate: 0.15, gear_score: 1500.0, hp: 1_000_000,
+            info: InspectInfo { 
+                combat_power: Some(CombatPower {
+                    id: 2,
+                    score: 1800.0,
+                }),
+                ark_passive_enabled: true,
+                ark_passive_data: Some(ArkPassiveData { 
+                    evolution: Some(vec![
+                        ArkPassiveNode { id: 1, lv: 1 }
+                    ]),
+                    enlightenment: Some(vec![
+                        ArkPassiveNode { id: 1, lv: 1 }
+                    ]),
+                    leap: Some(vec![
+                        ArkPassiveNode { id: 1, lv: 1 }
+                    ]),
+                }),
+                engravings: Some(vec![1255, 1251, 1134, 1167, 77300001]),
+                gems: Some(vec![
+                    GemData { tier: 2, skill_id: 21170, gem_type: 35, value: 2400 },
+                    GemData { tier: 2, skill_id: 21080, gem_type: 35, value: 2400 },
+                    GemData { tier: 2, skill_id: 21250, gem_type: 35, value: 2400 },
+                    GemData { tier: 2, skill_id: 21290, gem_type: 35, value: 2400 },
+                    GemData { tier: 2, skill_id: 21160, gem_type: 35, value: 2400 },
+                    GemData { tier: 2, skill_id: 21160, gem_type: 64, value: 1000 },
+                ]),
+                loadout_snapshot: Some(String::from(""))
+            }
+        };
+
+        let player21 = PlayerSpec { 
+            class_id: 603, class_name: "Aeromancer".to_string(), specialisation: "Drizzle",
+            crit_rate: 0.25, gear_score: 1620.0, hp: 0,
+            info: InspectInfo { 
+                combat_power: Some(CombatPower {
+                    id: 1,
+                    score: 1800.0,
+                }),
+                ark_passive_enabled: true,
+                ark_passive_data: Some(ArkPassiveData { 
+                    evolution: Some(vec![
+                        ArkPassiveNode { id: 1, lv: 1 }
+                    ]),
+                    enlightenment: Some(vec![
+                        ArkPassiveNode { id: 1, lv: 1 }
+                    ]),
+                    leap: Some(vec![
+                        ArkPassiveNode { id: 1, lv: 1 }
+                    ]),
+                }),
+                engravings: Some(vec![1118, 1299]),
+                gems: Some(vec![
+                    GemData { tier: 2, skill_id: 32010, gem_type: 63, value: 4400 },
+                    GemData { tier: 2, skill_id: 32150, gem_type: 63, value: 4400 },
+                    GemData { tier: 2, skill_id: 32160, gem_type: 63, value: 4400 },
+                    GemData { tier: 2, skill_id: 32170, gem_type: 63, value: 4400 },
+                    GemData { tier: 2, skill_id: 32190, gem_type: 63, value: 4400 },
+                    GemData { tier: 2, skill_id: 32210, gem_type: 63, value: 4400 },
+                    GemData { tier: 2, skill_id: 32220, gem_type: 63, value: 4400 },
+                    GemData { tier: 2, skill_id: 32230, gem_type: 63, value: 4400 },
+                ]),
+                loadout_snapshot: Some(String::from(""))
+            }
+        };
+        let player22 = PlayerSpec { 
+            class_id: 504, class_name: "Artillerist".to_string(), specialisation: "Barrage Enhancement",
+            crit_rate: 0.28, gear_score: 1600.0, hp: 1_000_000,
+            info: InspectInfo { 
+                combat_power: Some(CombatPower {
+                    id: 1,
+                    score: 1800.0,
+                }),
+                ark_passive_enabled: true,
+                ark_passive_data: Some(ArkPassiveData { 
+                    evolution: Some(vec![
+                        ArkPassiveNode { id: 1, lv: 1 }
+                    ]),
+                    enlightenment: Some(vec![
+                        ArkPassiveNode { id: 1, lv: 1 }
+                    ]),
+                    leap: Some(vec![
+                        ArkPassiveNode { id: 1, lv: 1 }
+                    ]),
+                }),
+                engravings: Some(vec![1118, 1299]),
+                gems: Some(vec![
+                    GemData { tier: 2, skill_id: 30260, gem_type: 63, value: 4400 },
+                    GemData { tier: 2, skill_id: 30270, gem_type: 63, value: 4400 },
+                    GemData { tier: 2, skill_id: 30290, gem_type: 63, value: 4400 },
+                    GemData { tier: 2, skill_id: 30340, gem_type: 63, value: 4400 },
+                    GemData { tier: 2, skill_id: 30380, gem_type: 63, value: 4400 },
+                    GemData { tier: 2, skill_id: 30310, gem_type: 63, value: 4400 },
+                    GemData { tier: 2, skill_id: 30320, gem_type: 63, value: 4400 },
+                    GemData { tier: 2, skill_id: 30392, gem_type: 63, value: 4400 },
+                ]),
+                loadout_snapshot: Some(String::from(""))
+            }
+        };
+        let player23 = PlayerSpec { 
+            class_id: 402, class_name: "Deathblade".to_string(), specialisation: "Remaining Energy",
+            crit_rate: 0.30, gear_score: 1580.0, hp: 1_000_000,
+            info: InspectInfo { 
+                combat_power: Some(CombatPower {
+                    id: 1,
+                    score: 1800.0,
+                }),
+                ark_passive_enabled: true,
+                ark_passive_data: Some(ArkPassiveData { 
+                    evolution: Some(vec![
+                        ArkPassiveNode { id: 1, lv: 1 }
+                    ]),
+                    enlightenment: Some(vec![
+                        ArkPassiveNode { id: 1, lv: 1 }
+                    ]),
+                    leap: Some(vec![
+                        ArkPassiveNode { id: 1, lv: 1 }
+                    ]),
+                }),
+                engravings: Some(vec![1118, 1299]),
+                gems: Some(vec![
+                    GemData { tier: 2, skill_id: 25010, gem_type: 63, value: 4400 },
+                    GemData { tier: 2, skill_id: 25180, gem_type: 63, value: 4400 },
+                    GemData { tier: 2, skill_id: 25160, gem_type: 63, value: 4400 },
+                    GemData { tier: 2, skill_id: 25110, gem_type: 63, value: 4400 },
+                    GemData { tier: 2, skill_id: 25120, gem_type: 63, value: 4400 },
+                    GemData { tier: 2, skill_id: 25030, gem_type: 63, value: 4400 },
+                    GemData { tier: 2, skill_id: 25040, gem_type: 63, value: 4400 },
+                    GemData { tier: 2, skill_id: 25050, gem_type: 63, value: 4400 },
+                ]),
+                loadout_snapshot: Some(String::from(""))
+            }
+        };
+        let player24 = PlayerSpec { 
+            class_id: 105, class_name: "Paladin".to_string(), specialisation: "Blessed Aura",
+            crit_rate: 0.15, gear_score: 1500.0, hp: 1_000_000,
+            info: InspectInfo { 
+                combat_power: Some(CombatPower {
+                    id: 2,
+                    score: 1800.0,
+                }),
+                ark_passive_enabled: true,
+                ark_passive_data: Some(ArkPassiveData { 
+                    evolution: Some(vec![
+                        ArkPassiveNode { id: 1, lv: 1 }
+                    ]),
+                    enlightenment: Some(vec![
+                        ArkPassiveNode { id: 1, lv: 1 }
+                    ]),
+                    leap: Some(vec![
+                        ArkPassiveNode { id: 1, lv: 1 }
+                    ]),
+                }),
+                engravings: Some(vec![1255, 1251, 1134, 1167, 77300001]),
+                gems: Some(vec![
+                    GemData { tier: 2, skill_id: 36080, gem_type: 35, value: 2400 },
+                    GemData { tier: 2, skill_id: 36120, gem_type: 35, value: 2400 },
+                    GemData { tier: 2, skill_id: 36220, gem_type: 35, value: 2400 },
+                    GemData { tier: 2, skill_id: 36170, gem_type: 35, value: 2400 },
+                    GemData { tier: 2, skill_id: 36200, gem_type: 35, value: 2400 },
+                    GemData { tier: 2, skill_id: 36200, gem_type: 64, value: 1000 },
+                ]),
+                loadout_snapshot: Some(String::from(""))
+            }
+        };
+
+        let raid_builder = RaidBuilder::new()
+            .add_party((player11, player12, player13, player14))
+            .add_party((player21, player22, player23, player24))
+            .set_boss("Mordum, the Abyssal Punisher", 485800, 1_100_000_000_000, 15)
+            .set_region("EUC")
+            .set_version(version)
+            .set_damage_range(1_000_000, 2_000_000)
+            .set_difficulty("Hard")
+            .set_cleared(true);
+
+        let args = raid_builder.build();
+
+        args
+    }
 
     #[derive(Clone)]
     struct PlayerSpec {
         class_id: u32,
         class_name: String,
         specialisation: &'static str,
-        is_support: bool,
         crit_rate: f64,
         gear_score: f32,
         hp: i64,
+        info: InspectInfo
     }
 
     struct RaidBuilder {
@@ -736,6 +1006,7 @@ mod tests {
             let mut encounter_entities_with_stats = HashMap::new();
             let mut cast_log: HashMap<String, HashMap<u32, Vec<i32>>> = HashMap::new();
             let mut skill_cast_log: HashMap<u64, HashMap<u32, BTreeMap<i64, SkillCast>>> = HashMap::new();
+            let mut player_info: HashMap<String, InspectInfo> = HashMap::new();
             for (name, (spec, mut entity)) in entities_with_spec.into_iter() {
                 if entity.entity_type == EntityType::Player {
                     update_skill_and_damage_stats(
@@ -746,6 +1017,7 @@ mod tests {
                         self.damage_range,
                         &mut self.rng,
                         &mut entity);
+                    player_info.insert(name.clone(), spec.info);
                     update_damage_taken(self.damage_taken_range, &mut self.rng, &mut entity);
                     update_buffs_heals_and_absorb(&mut self.rng, &mut entity);
                 }
@@ -818,7 +1090,7 @@ mod tests {
                 party_info: party_vec,
                 raid_difficulty: self.difficulty.clone(),
                 region: Some(self.region.clone()),
-                player_info: None,
+                player_info: Some(player_info),
                 meter_version: self.version.clone(),
                 ntp_fight_start: fight_start,
                 rdps_valid: true,
@@ -1036,12 +1308,13 @@ mod tests {
             skills,
             damage_stats: DamageStats::default(),
             skill_stats: SkillStats::default(),
-            engraving_data: None,
-            ark_passive_active: Some(!spec.is_support),
-            ark_passive_data: None,
-            spec: Some(spec.class_name.clone()),
-            loadout_hash: None,
-            combat_power: Some(2000.0),
+            ..Default::default()
+            // engraving_data: spec.info.engravings,
+            // ark_passive_active: spec.info.ark_passive_enabled,
+            // ark_passive_data: spec.info.ark_passive_data.clone(),
+            // spec: Some(spec.class_name.clone()),
+            // loadout_hash: spec.info.loadout_snapshot.clone(),
+            // combat_power: spec.info.combat_power.clone(),
         };
 
         entity
