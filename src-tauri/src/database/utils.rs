@@ -353,6 +353,9 @@ pub fn calculate_entities(args: &mut InsertEncounterArgs) -> Result<()> {
                 }
             }
         }
+
+        let spec = get_player_spec(entity, &encounter.encounter_damage_stats.buffs, false);
+        entity.spec = Some(spec.clone());
     }
 
     Ok(())

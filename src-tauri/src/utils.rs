@@ -1,6 +1,8 @@
 #![allow(dead_code)]
 
-use crate::models::{ArkPassiveNode, EncounterEntity};
+use hashbrown::HashMap;
+
+use crate::models::{ArkPassiveNode, EncounterEntity, StatusEffect};
 
 pub fn is_support(entity: &EncounterEntity) -> bool {
     if let Some(spec) = &entity.spec {
@@ -208,4 +210,309 @@ pub fn support_damage_gem_value_to_level(value: u32) -> u8 {
         100 => 1,
         _ => 0,
     }
+}
+
+pub fn get_buff_names(player: &EncounterEntity, buffs: &HashMap<u32, StatusEffect>) -> Vec<String> {
+    let mut names = Vec::new();
+    for (id, _) in player.damage_stats.buffed_by.iter() {
+        if let Some(buff) = buffs.get(id) {
+            names.push(buff.source.name.clone());
+        }
+    }
+
+    names
+}
+
+pub fn get_player_spec(
+    player: &EncounterEntity,
+    buffs: &HashMap<u32, StatusEffect>,
+    skip_min_check: bool,
+) -> String {
+    if !skip_min_check && player.skills.len() < 8 {
+        return "Unknown".to_string();
+    }
+
+    match player.class.as_str() {
+        "Berserker" => {
+            // if has bloody rush
+            if player.skills.contains_key(&16140)
+                || player.skills.contains_key(&16145)
+                || player.skills.contains_key(&16146)
+                || player.skills.contains_key(&16147)
+            {
+                "Berserker Technique"
+            } else {
+                "Mayhem"
+            }
+        }
+        "Destroyer" => {
+            if player.skills.contains_key(&18090) {
+                "Gravity Training"
+            } else {
+                "Rage Hammer"
+            }
+        }
+        "Gunlancer" => {
+            if player.skills.contains_key(&17200) && player.skills.contains_key(&17210) {
+                "Lone Knight"
+            } else if player.skills.contains_key(&17140) && player.skills.contains_key(&17110) {
+                "Combat Readiness"
+            } else {
+                "Princess"
+            }
+        }
+        "Paladin" => {
+            // if has execution of judgement, judgement blade, or flash slash strength release tripod
+            if player.skills.contains_key(&36250)
+                || player.skills.contains_key(&36270)
+                || player
+                    .skills
+                    .get(&36090)
+                    .is_some_and(|s| s.tripod_index.is_some_and(|t| t.second == 3))
+            {
+                "Judgment"
+            } else if player.skills.contains_key(&36200)
+                || player.skills.contains_key(&36170)
+                || player.skills.contains_key(&36800)
+            {
+                // if has heavenly blessing, wrath of god, or holy aura
+                "Blessed Aura"
+            } else {
+                "Unknown"
+            }
+        }
+        "Slayer" => {
+            if player.skills.contains_key(&45004) {
+                "Punisher"
+            } else {
+                "Predator"
+            }
+        }
+        "Valkyrie" => {
+            if player.skills.contains_key(&48060)
+                || player.skills.contains_key(&48070)
+                || player.skills.contains_key(&48500)
+                || player.skills.contains_key(&48100)
+            {
+                // shining knight, final splendor, cataclysm, foresight slash
+                "Shining Knight"
+            } else if player.skills.contains_key(&48250)
+                || player.skills.contains_key(&48270)
+                || player.skills.contains_key(&48230)
+                || player.skills.contains_key(&48220)
+                || player.skills.contains_key(&48040)
+                || player.skills.contains_key(&48041)
+                || player.skills.contains_key(&48042)
+            {
+                // seraphic oath, seraphic leap,
+                // circle of truth, truth's decree
+                // release light
+                "Liberator"
+            } else {
+                "Unknown"
+            }
+        }
+        "Arcanist" => {
+            if player.skills.contains_key(&19282) {
+                "Order of the Emperor"
+            } else {
+                "Grace of the Empress"
+            }
+        }
+        "Summoner" => {
+            if player
+                .skills
+                .iter()
+                .any(|(_, skill)| skill.name.contains("Kelsion"))
+            {
+                "Communication Overflow"
+            } else {
+                "Master Summoner"
+            }
+        }
+        "Bard" => {
+            // if has tempest skill, or vivace, or heavenly tune with crit tripod
+            if (player.skills.contains_key(&21147)
+                || player.skills.contains_key(&21148)
+                || player.skills.contains_key(&21149))
+                || player.skills.contains_key(&21310)
+                || player
+                    .skills
+                    .get(&21160)
+                    .is_some_and(|s| s.tripod_index.is_some_and(|t| t.third == 2))
+            {
+                return "True Courage".to_string();
+            } else if player
+                .skills
+                .get(&21160)
+                .is_some_and(|s| s.tripod_index.is_some_and(|t| t.third == 1))
+            {
+                // if heavenly tune has atk pwr tripod
+                return "Desperate Salvation".to_string();
+            }
+
+            "Unknown"
+        }
+        "Sorceress" => {
+            // if has arcane rupture
+            if player.skills.contains_key(&37100) || player.skills.contains_key(&37101) {
+                "Igniter"
+            } else {
+                "Reflux"
+            }
+        }
+        "Wardancer" => {
+            if player.skills.contains_key(&22340) {
+                "Esoteric Skill Enhancement"
+            } else {
+                "First Intention"
+            }
+        }
+        "Scrapper" => {
+            if player.skills.contains_key(&23230) {
+                "Ultimate Skill: Taijutsu"
+            } else {
+                "Shock Training"
+            }
+        }
+        "Soulfist" => {
+            if player.skills.contains_key(&24200) {
+                "Energy Overflow"
+            } else {
+                "Robust Spirit"
+            }
+        }
+        "Glaivier" => {
+            if player.skills.contains_key(&34590) {
+                "Pinnacle"
+            } else {
+                "Control"
+            }
+        }
+        "Striker" => {
+            if player.skills.contains_key(&39290) {
+                "Deathblow"
+            } else {
+                "Esoteric Flurry"
+            }
+        }
+        "Breaker" => {
+            if player.skills.contains_key(&47020) {
+                "Asura's Path"
+            } else {
+                "Brawl King Storm"
+            }
+        }
+        "Deathblade" => {
+            if player.skills.contains_key(&25038) {
+                "Surge"
+            } else {
+                "Remaining Energy"
+            }
+        }
+        "Shadowhunter" => {
+            if player.skills.contains_key(&27860) {
+                "Demonic Impulse"
+            } else {
+                "Perfect Suppression"
+            }
+        }
+        "Reaper" => {
+            let buff_names = get_buff_names(player, buffs);
+            if buff_names.iter().any(|s| s.contains("Lunar Voice")) {
+                "Lunar Voice"
+            } else {
+                "Hunger"
+            }
+        }
+        "Souleater" => {
+            if player.skills.contains_key(&46250) {
+                "Night's Edge"
+            } else {
+                "Full Moon Harvester"
+            }
+        }
+        "Sharpshooter" => {
+            let buff_names = get_buff_names(player, buffs);
+            if buff_names
+                .iter()
+                .any(|s| s.contains("Loyal Companion") || s.contains("Hawk Support"))
+            {
+                "Loyal Companion"
+            } else {
+                "Death Strike"
+            }
+        }
+        "Deadeye" => {
+            if player.skills.contains_key(&29300) {
+                "Enhanced Weapon"
+            } else {
+                "Pistoleer"
+            }
+        }
+        "Artillerist" => {
+            if player.skills.contains_key(&30260) {
+                "Barrage Enhancement"
+            } else {
+                "Firepower Enhancement"
+            }
+        }
+        "Machinist" => {
+            let buff_names = get_buff_names(player, buffs);
+            if buff_names
+                .iter()
+                .any(|s| s.contains("Combat Mode") || s.contains("Evolutionary Legacy"))
+            {
+                "Evolutionary Legacy"
+            } else {
+                "Arthetinean Skill"
+            }
+        }
+        "Gunslinger" => {
+            if player.skills.contains_key(&38110) {
+                "Peacemaker"
+            } else {
+                "Time to Hunt"
+            }
+        }
+        "Artist" => {
+            // dps if has cattle drive or shattering strike or rising moon
+            // or sunsketch with crit tripod
+            if player.skills.contains_key(&31940)
+                || player.skills.contains_key(&31060)
+                || player.skills.contains_key(&31145)
+                || player
+                    .skills
+                    .get(&31400)
+                    .is_some_and(|s| s.tripod_index.is_some_and(|t| t.third == 2))
+            {
+                return "Recurrence".to_string();
+            } else if player
+                .skills
+                .get(&31400)
+                .is_some_and(|s| s.tripod_index.is_some_and(|t| t.third == 1))
+            {
+                // if sunsketch has atk pwr tripod
+                return "Full Bloom".to_string();
+            }
+
+            "Unknown"
+        }
+        "Aeromancer" => {
+            if player.skills.contains_key(&32250) && player.skills.contains_key(&32260) {
+                "Wind Fury"
+            } else {
+                "Drizzle"
+            }
+        }
+        "Wildsoul" => {
+            if player.skills.contains_key(&33400) || player.skills.contains_key(&33410) {
+                "Ferality"
+            } else {
+                "Phantom Beast Awakening"
+            }
+        }
+        _ => "Unknown",
+    }
+    .to_string()
 }

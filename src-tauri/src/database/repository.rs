@@ -350,10 +350,13 @@ impl Repository {
                 continue;
             }
 
+            let damage_dealt = entity.damage_stats.damage_dealt;
+            let damage_without_hyper =
+                (damage_dealt - entity.damage_stats.hyper_awakening_damage) as f64;
             let compressed_skills = compress_json(&entity.skills)?;
             let compressed_damage_stats = compress_json(&entity.damage_stats)?;
 
-            let support = buffs.get(&entity.name);
+            let support_buffs = buffs.get(&entity.name);
 
             let params = params![
                 entity.name,
@@ -377,10 +380,18 @@ impl Repository {
                 entity.ark_passive_active,
                 entity.spec,
                 json!(entity.ark_passive_data),
-                support.map(|b| b.buff),
-                support.map(|b| b.brand),
-                support.map(|b| b.identity),
-                support.map(|b| b.hyper),
+                support_buffs
+                    .map(|b| b.buff)
+                    .unwrap_or(entity.damage_stats.buffed_by_support as f64 / damage_without_hyper),
+                support_buffs.map(|b| b.brand).unwrap_or(
+                    entity.damage_stats.debuffed_by_support as f64 / damage_without_hyper
+                ),
+                support_buffs.map(|b| b.identity).unwrap_or(
+                    entity.damage_stats.buffed_by_identity as f64 / damage_without_hyper
+                ),
+                support_buffs
+                    .map(|b| b.hyper)
+                    .unwrap_or(entity.damage_stats.buffed_by_hat as f64 / damage_without_hyper),
                 entity.damage_stats.unbuffed_damage,
                 entity.damage_stats.unbuffed_dps
             ];
@@ -464,15 +475,15 @@ mod tests {
 
         let repository = database.create_repository();
 
-        let player11 = PlayerSpec { class_id: 102, class_name: "Berserker".to_string(), is_support: false, crit_rate: 0.25, gear_score: 1620.0, hp: 1_000_000 };
-        let player12 = PlayerSpec { class_id: 502, class_name: "Sharpshooter".to_string(), is_support: false, crit_rate: 0.28, gear_score: 1600.0, hp: 1_000_000 };
-        let player13 = PlayerSpec { class_id: 302, class_name: "Wardancer".to_string(), is_support: false, crit_rate: 0.30, gear_score: 1580.0, hp: 1_000_000 };
-        let player14 = PlayerSpec { class_id: 204, class_name: "Bard".to_string(), is_support: true, crit_rate: 0.15, gear_score: 1500.0, hp: 1_000_000 };
+        let player11 = PlayerSpec { class_id: 102, class_name: "Berserker".to_string(), specialisation: "Mayhem", is_support: false, crit_rate: 0.25, gear_score: 1620.0, hp: 1_000_000 };
+        let player12 = PlayerSpec { class_id: 502, class_name: "Sharpshooter".to_string(), specialisation: "Loyal Companion", is_support: false, crit_rate: 0.28, gear_score: 1600.0, hp: 1_000_000 };
+        let player13 = PlayerSpec { class_id: 302, class_name: "Wardancer".to_string(), specialisation: "Esoteric Skill Enhancement", is_support: false, crit_rate: 0.30, gear_score: 1580.0, hp: 1_000_000 };
+        let player14 = PlayerSpec { class_id: 204, class_name: "Bard".to_string(), specialisation: "Desperate Salvation", is_support: true, crit_rate: 0.15, gear_score: 1500.0, hp: 1_000_000 };
 
-        let player21 = PlayerSpec { class_id: 603, class_name: "Aeromancer".to_string(), is_support: false, crit_rate: 0.25, gear_score: 1620.0, hp: 0 };
-        let player22 = PlayerSpec { class_id: 504, class_name: "Artillerist".to_string(), is_support: false, crit_rate: 0.28, gear_score: 1600.0, hp: 1_000_000 };
-        let player23 = PlayerSpec { class_id: 402, class_name: "Deathblade".to_string(), is_support: false, crit_rate: 0.30, gear_score: 1580.0, hp: 1_000_000 };
-        let player24 = PlayerSpec { class_id: 105, class_name: "Paladin".to_string(), is_support: true, crit_rate: 0.15, gear_score: 1500.0, hp: 1_000_000 };
+        let player21 = PlayerSpec { class_id: 603, class_name: "Aeromancer".to_string(), specialisation: "Drizzle", is_support: false, crit_rate: 0.25, gear_score: 1620.0, hp: 0 };
+        let player22 = PlayerSpec { class_id: 504, class_name: "Artillerist".to_string(), specialisation: "Barrage Enhancement", is_support: false, crit_rate: 0.28, gear_score: 1600.0, hp: 1_000_000 };
+        let player23 = PlayerSpec { class_id: 402, class_name: "Deathblade".to_string(), specialisation: "Remaining Energy", is_support: false, crit_rate: 0.30, gear_score: 1580.0, hp: 1_000_000 };
+        let player24 = PlayerSpec { class_id: 105, class_name: "Paladin".to_string(), specialisation: "Blessed Aura", is_support: true, crit_rate: 0.15, gear_score: 1500.0, hp: 1_000_000 };
 
         let raid_builder = RaidBuilder::new()
             .add_party((player11, player12, player13, player14))
@@ -545,7 +556,10 @@ mod tests {
                 assert!(actual.damage_stats.damage_taken > 0);
                 continue;
             }
-
+            
+            assert_eq!(actual.gear_score, expected.gear_score);
+            assert!(actual.spec.is_some());
+            assert_eq!(actual.spec, expected.spec);
             assert!(actual.skill_stats.casts > 0);
             assert!(actual.skill_stats.crits > 0);
             assert!(actual.skill_stats.hits > 0);
@@ -585,6 +599,11 @@ mod tests {
         assert_eq!(preview.cleared, true);
         assert_eq!(preview.cleared, expected_encounter.cleared);
 
+        assert!(preview.support_ap.is_some());
+        assert!(preview.support_brand.is_some());
+        assert!(preview.support_identity.is_some());
+        assert!(preview.support_hyper.is_some());
+
         {
             let local_player_name = &expected_encounter.local_player;
             let local_player = expected_encounter.entities.get(local_player_name).unwrap();
@@ -598,6 +617,7 @@ mod tests {
     struct PlayerSpec {
         class_id: u32,
         class_name: String,
+        specialisation: &'static str,
         is_support: bool,
         crit_rate: f64,
         gear_score: f32,
@@ -686,10 +706,7 @@ mod tests {
             let raid_dps: i64 = self.boss_hp / duration_s;
             let per_player_total_damage: i64 = raid_dps / total_players as i64 * duration_s;
 
-            let (entities_with_spec, player_names) = generate_entities_for_parties(
-                &self.parties,
-                &mut self.rng,
-                per_player_total_damage);
+            let (entities_with_spec, player_names) = generate_entities_for_parties(&self.parties);
 
             let local_player = player_names[0].clone();
             let mut boss = self.generate_boss_entity();
@@ -946,27 +963,62 @@ mod tests {
         entity.damage_stats.damage_absorbed_on_others_by.insert(1, shield_value / 3);
     }
 
+    fn get_skills_by_spec(specialisation: &str) -> HashMap<u32, Skill> {
+        let mut skills = HashMap::new();
+
+        match specialisation {
+            "Mayhem" => {
+                for id in [16010, 16640, 16120, 16080, 16300, 16050, 16220, 16030] {
+                    skills.insert(id, Skill { id, name: format!("Skill {}", id), ..Default::default() });
+                }
+            }
+            "Loyal Companion" => {
+                for id in [50010, 28220, 28090, 28250, 28070, 28110, 28130, 28150] {
+                    skills.insert(id, Skill { id, name: format!("Skill {}", id), ..Default::default() });
+                }
+            }
+            "Esoteric Skill Enhancement" => {
+                for id in [22340, 22080, 22120, 22160, 22210, 22240, 22270, 22310] {
+                    skills.insert(id, Skill { id, name: format!("Skill {}", id), ..Default::default() });
+                }
+            }
+            "Desperate Salvation" => {
+                for id in [21290, 21170, 21080, 21160, 21250, 21040, 21020, 21210] {
+                    skills.insert(id, Skill { id, name: format!("Skill {}", id), ..Default::default() });
+                }
+            }
+            "Drizzle" => {
+                for id in [32010, 32150, 32160, 32170, 32190, 32210, 32220, 32230] {
+                    skills.insert(id, Skill { id, name: format!("Skill {}", id), ..Default::default() });
+                }
+            }
+            "Barrage Enhancement" => {
+                for id in [30260, 30270, 30290, 30340, 30392, 30320, 30310, 30380] {
+                    skills.insert(id, Skill { id, name: format!("Skill {}", id), ..Default::default() });
+                }
+            }
+            "Remaining Energy" => {
+                for id in [25010, 25180, 25160, 25110, 25120, 25030, 25040, 25050] {
+                    skills.insert(id, Skill { id, name: format!("Skill {}", id), ..Default::default() });
+                }
+            }
+            "Blessed Aura" => {
+                for id in [36080, 36120, 36200, 36170, 36800, 36040, 36020, 36220] {
+                    skills.insert(id, Skill { id, name: format!("Skill {}", id), ..Default::default() });
+                }
+            }
+            _ => {}
+        }
+
+        skills
+    }
+
     fn build_entity_from_spec(
         name: &str,
         spec: &PlayerSpec,
         idx: usize,
     ) -> EncounterEntity {
-        let skills: HashMap<u32, Skill> = (1..=10)
-            .map(|skill_id| {
-                (
-                    skill_id + idx as u32,
-                    Skill {
-                        id: skill_id + idx as u32,
-                        name: format!("Skill{}", skill_id + idx as u32),
-                        icon: String::new(),
-                        casts: 0,
-                        hits: 0,
-                        crits: 0,
-                        ..Default::default()
-                    },
-                )
-            })
-            .collect();
+        let skills = get_skills_by_spec(&spec.specialisation);
 
         let entity = EncounterEntity {
             id: idx as u64 + 1,
@@ -997,8 +1049,6 @@ mod tests {
 
     fn generate_entities_for_parties(
         parties: &[Vec<PlayerSpec>],
-        rng: &mut ThreadRng,
-        per_player_total_damage: i64,
     ) -> (HashMap<String, (PlayerSpec, EncounterEntity)>, Vec<String>) {
         let mut entities: HashMap<String, (PlayerSpec, EncounterEntity)> = HashMap::new();
         let mut player_names = Vec::new();
