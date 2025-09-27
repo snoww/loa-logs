@@ -523,8 +523,10 @@ mod tests {
         assert_eq!(actual_encounter.cleared, expected_encounter.cleared);
         assert_eq!(actual_encounter.boss_only_damage, expected_encounter.boss_only_damage);
 
+        assert!(actual_encounter.encounter_damage_stats.top_damage_dealt > 0);
         assert_eq!(actual_encounter.encounter_damage_stats.top_damage_dealt, expected_encounter.encounter_damage_stats.top_damage_dealt);
         assert_eq!(actual_encounter.encounter_damage_stats.top_damage_taken, expected_encounter.encounter_damage_stats.top_damage_taken);
+        assert!(actual_encounter.encounter_damage_stats.total_damage_dealt > 0);
         assert_eq!(actual_encounter.encounter_damage_stats.total_damage_dealt, expected_encounter.encounter_damage_stats.total_damage_dealt);
         assert_eq!(actual_encounter.encounter_damage_stats.total_damage_taken, expected_encounter.encounter_damage_stats.total_damage_taken);
         assert_eq!(actual_encounter.encounter_damage_stats.total_effective_shielding, expected_encounter.encounter_damage_stats.total_effective_shielding);
