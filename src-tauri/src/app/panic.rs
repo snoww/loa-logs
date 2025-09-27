@@ -3,7 +3,7 @@ use tauri_plugin_opener::OpenerExt;
 
 use crate::app;
 
-fn show_dialog_on_panic(app: &tauri::AppHandle, panic_message: &str) {
+fn show_dialog_on_panic(app: &tauri::AppHandle, panic_info: &std::panic::PanicHookInfo) {
     const LOG_FILENAME: &str = "loa_logs_rCURRENT.log";
     const BUTTON_OPEN: &str = "Show Log File";
 
@@ -12,7 +12,7 @@ fn show_dialog_on_panic(app: &tauri::AppHandle, panic_message: &str) {
         .set_title("An Unexpected Error")
         .set_description(format!(
             r#"
-LOA Logs v{version} has {panic_message}
+LOA Logs v{version} has {panic_info}
 
 There's a log file named "{LOG_FILENAME}" next to the executable.
 
@@ -31,16 +31,21 @@ If the issue persists, report it to the developers on Discord.
     }
 }
 
-pub fn set_hook(app: &tauri::AppHandle) {
+pub fn set_hook_with_logger() {
+    std::panic::set_hook(Box::new(move |info| {
+        let message = format!("{info}").replace('\n', " ");
+        log::error!("{message}");
+        log::logger().flush();
+    }));
+}
+
+#[allow(dead_code)]
+pub fn add_hook_with_dialog(app: &tauri::AppHandle) {
     let app = app.clone();
+    let original_hook = std::panic::take_hook();
 
     std::panic::set_hook(Box::new(move |info| {
-        let message = format!("{info}");
-        log::error!("{}", message.replace('\n', " "));
-        log::logger().flush();
-
-        if !cfg!(debug_assertions) {
-            show_dialog_on_panic(&app, &message);
-        }
+        original_hook(info);
+        show_dialog_on_panic(&app, info);
     }));
 }

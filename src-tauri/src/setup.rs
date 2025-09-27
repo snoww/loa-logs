@@ -3,10 +3,14 @@ use std::{error::Error, sync::{atomic::{AtomicBool, Ordering}, Arc}};
 use log::*;
 use tauri::{App, AppHandle, Manager};
 use tauri_plugin_updater::UpdaterExt;
+use crate::app::{self};
 
 use crate::{background::{BackgroundWorker, BackgroundWorkerArgs}, constants::DEFAULT_PORT, context::AppContext, settings::*, shell::ShellManager, ui::{setup_tray, AppHandleExtensions, WindowExtensions}};
 
 pub fn setup(app: &mut App) -> Result<(), Box<dyn Error>> {
+
+    #[cfg(not(debug_assertions))]
+    app::panic::add_hook_with_dialog(app.handle());
 
     let app_handle = app.handle();
 
