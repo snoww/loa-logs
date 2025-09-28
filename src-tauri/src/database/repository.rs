@@ -513,6 +513,8 @@ mod tests {
         assert_eq!(actual_encounter.cleared, expected_encounter.cleared);
         assert_eq!(actual_encounter.boss_only_damage, expected_encounter.boss_only_damage);
 
+        assert!(actual_encounter.encounter_damage_stats.dps > 0);
+        assert_eq!(actual_encounter.encounter_damage_stats.dps, expected_encounter.encounter_damage_stats.dps);
         assert!(actual_encounter.encounter_damage_stats.top_damage_dealt > 0);
         assert_eq!(actual_encounter.encounter_damage_stats.top_damage_dealt, expected_encounter.encounter_damage_stats.top_damage_dealt);
         assert_eq!(actual_encounter.encounter_damage_stats.top_damage_taken, expected_encounter.encounter_damage_stats.top_damage_taken);
@@ -520,6 +522,13 @@ mod tests {
         assert_eq!(actual_encounter.encounter_damage_stats.total_damage_dealt, expected_encounter.encounter_damage_stats.total_damage_dealt);
         assert_eq!(actual_encounter.encounter_damage_stats.total_damage_taken, expected_encounter.encounter_damage_stats.total_damage_taken);
         assert_eq!(actual_encounter.encounter_damage_stats.total_effective_shielding, expected_encounter.encounter_damage_stats.total_effective_shielding);
+        assert!(actual_encounter.encounter_damage_stats.boss_hp_log.len() > 0);
+
+        let actual_misc = actual_encounter.encounter_damage_stats.misc.unwrap();
+        assert!(actual_misc.raid_clear.filter(|pr| *pr).is_some());
+        assert!(actual_misc.region.filter(|pr| !pr.is_empty()).is_some());
+        assert!(actual_misc.version.filter(|pr| !pr.is_empty()).is_some());
+        assert!(actual_misc.party_info.filter(|pr| !pr.is_empty()).is_some());
 
         let mut actual: Vec<_> = actual_encounter.entities.values().collect();
         actual.sort_by_key(|e| &e.name);
@@ -565,6 +574,8 @@ mod tests {
             assert!(actual.damage_stats.damage_dealt > 0);
             assert!(actual.damage_stats.hyper_awakening_damage > 0);
             assert!(actual.damage_stats.dps > 0);
+            assert!(actual.damage_stats.dps_average.len() > 0);
+            assert!(actual.damage_stats.dps_rolling_10s_avg.len() > 0);
             assert!(actual.damage_stats.damage_taken > 0);
             assert!(actual.damage_stats.shields_given > 0);
             assert!(!actual.damage_stats.shields_given_by.is_empty());
@@ -1004,6 +1015,7 @@ mod tests {
             }        
 
             let mut encounter_entities_with_stats = HashMap::new();
+            let mut damage_log: HashMap<String, Vec<(i64, i64)>> = HashMap::new();
             let mut cast_log: HashMap<String, HashMap<u32, Vec<i32>>> = HashMap::new();
             let mut skill_cast_log: HashMap<u64, HashMap<u32, BTreeMap<i64, SkillCast>>> = HashMap::new();
             let mut player_info: HashMap<String, InspectInfo> = HashMap::new();
@@ -1012,6 +1024,7 @@ mod tests {
                     update_skill_and_damage_stats(
                         duration_s,
                         &spec,
+                        &mut damage_log,
                         &mut cast_log,
                         &mut skill_cast_log,
                         self.damage_range,
@@ -1061,7 +1074,7 @@ mod tests {
                 applied_shield_buffs: HashMap::new(),
                 unknown_buffs: HashSet::new(),
                 misc: Some(misc.clone()),
-                boss_hp_log: boss_hp_logs,
+                boss_hp_log: boss_hp_logs.clone(),
             };
 
             let encounter = Encounter {
@@ -1083,9 +1096,9 @@ mod tests {
 
             let insert_args = InsertEncounterArgs {
                 encounter,
-                damage_log: HashMap::new(),
+                damage_log,
                 cast_log,
-                boss_hp_log: HashMap::new(),
+                boss_hp_log: boss_hp_logs,
                 raid_clear: true,
                 party_info: party_vec,
                 raid_difficulty: self.difficulty.clone(),
@@ -1136,6 +1149,7 @@ mod tests {
     fn update_skill_and_damage_stats(
         duration_seconds: i64,
         spec: &PlayerSpec,
+        entities_damage_log: &mut HashMap<String, Vec<(i64, i64)>>,
         cast_log: &mut HashMap<String, HashMap<u32, Vec<i32>>>,
         skill_cast_log: &mut HashMap<u64, HashMap<u32, BTreeMap<i64, SkillCast>>>,
         damage_range: (i64, i64),
@@ -1143,6 +1157,8 @@ mod tests {
         entity: &mut EncounterEntity) {
         entity.skill_stats = SkillStats::default();
         entity.damage_stats = DamageStats::default();
+
+        let damage_log = entities_damage_log.entry(entity.name.clone()).or_default();
 
         for skill in entity.skills.values_mut() {
             skill.casts = 0;
@@ -1175,6 +1191,8 @@ mod tests {
                 }
 
                 entity.damage_stats.damage_dealt += dmg;
+
+                damage_log.push((timestamp, dmg));
 
                 let skill_cast = SkillCast {
                     hits: vec![skill_hit],
@@ -1309,12 +1327,6 @@ mod tests {
             damage_stats: DamageStats::default(),
             skill_stats: SkillStats::default(),
             ..Default::default()
-            // engraving_data: spec.info.engravings,
-            // ark_passive_active: spec.info.ark_passive_enabled,
-            // ark_passive_data: spec.info.ark_passive_data.clone(),
-            // spec: Some(spec.class_name.clone()),
-            // loadout_hash: spec.info.loadout_snapshot.clone(),
-            // combat_power: spec.info.combat_power.clone(),
         };
 
         entity
