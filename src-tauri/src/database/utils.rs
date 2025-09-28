@@ -317,50 +317,6 @@ fn parse_class_names(input: String) -> (Vec<i32>, Vec<String>) {
         .unzip()
 }
 
-pub fn calculate_entities(args: &mut InsertEncounterArgs) -> Result<()> {
-    let InsertEncounterArgs {
-        encounter,
-        cast_log,
-        damage_log,
-        skill_cast_log,
-        player_info,
-        skill_cooldowns,
-        ..
-    } = args;
-
-    let fight_start = encounter.fight_start;
-    let fight_end = encounter.last_combat_packet;
-    let local_player_str = encounter.local_player.as_str();
- 
-    for (name, entity) in encounter.entities.iter_mut() {
-        if !should_insert_entity(entity, &encounter.local_player) {
-            continue;
-        }
-
-        update_entity_stats(entity, fight_start, fight_end, damage_log);
-
-        if let Some(info) = player_info.as_ref().and_then(|stats| stats.get(&entity.name)) {
-            apply_player_info(entity, info);
-        }
-
-        apply_cast_logs(entity, cast_log, skill_cast_log);
-
-        if name == local_player_str {
-            for (skill_id, events) in skill_cooldowns.iter() {
-                if let Some(skill) = entity.skills.get_mut(skill_id) {
-                    skill.time_available =
-                        Some(get_total_available_time(events, fight_start, fight_end));
-                }
-            }
-        }
-
-        let spec = get_player_spec(entity, &encounter.encounter_damage_stats.buffs, false);
-        entity.spec = Some(spec.clone());
-    }
-
-    Ok(())
-}
-
 pub fn get_total_available_time(
     skill_cooldown: &Vec<CastEvent>,
     encounter_start: i64,
@@ -383,71 +339,6 @@ pub fn get_total_available_time(
     }
 
     total_available_time
-}
-
-
-pub fn compute_support_buffs(
-    encounter: &Encounter,
-    party_info: &[Vec<String>],
-) -> HashMap<String, SupportBuffs> {
-    let mut buffs = HashMap::new();
-
-    for party in party_info.iter() {
-        let party_members: Vec<_> = encounter
-            .entities
-            .iter()
-            .filter(|(name, _)| party.contains(name))
-            .map(|(_, entity)| entity)
-            .collect();
-
-        let party_without_support: Vec<_> = party_members
-            .iter()
-            .filter(|entity| !is_support(entity))
-            .collect();
-
-        if party_members.len() - party_without_support.len() != 1 {
-            continue;
-        }
-
-        let party_damage_total: i64 = party_without_support
-            .iter()
-            .map(|e| get_damage_without_hyper_or_special(e))
-            .sum();
-
-        if party_damage_total <= 0 {
-            continue;
-        }
-
-        let mut average_brand = 0.0;
-        let mut average_buff = 0.0;
-        let mut average_identity = 0.0;
-        let mut average_hyper = 0.0;
-
-        for player in party_without_support {
-            let damage_dealt = get_damage_without_hyper_or_special(player) as f64;
-            if damage_dealt <= 0.0 { continue; }
-            let party_damage_percent = damage_dealt / party_damage_total as f64;
-
-            average_brand += (player.damage_stats.debuffed_by_support as f64 / damage_dealt) * party_damage_percent;
-            average_buff += (player.damage_stats.buffed_by_support as f64 / damage_dealt) * party_damage_percent;
-            average_identity += (player.damage_stats.buffed_by_identity as f64 / damage_dealt) * party_damage_percent;
-            average_hyper += (player.damage_stats.buffed_by_hat as f64 / damage_dealt) * party_damage_percent;
-        }
-
-        if let Some(support) = party_members.iter().find(|e| is_support(e)) {
-            buffs.insert(
-                support.name.clone(),
-                SupportBuffs {
-                    brand: average_brand,
-                    buff: average_buff,
-                    identity: average_identity,
-                    hyper: average_hyper,
-                },
-            );
-        }
-    }
-
-    buffs
 }
 
 pub fn should_insert_entity(entity: &EncounterEntity, local_player: &str) -> bool {
