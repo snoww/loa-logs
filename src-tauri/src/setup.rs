@@ -8,6 +8,9 @@ use crate::{background::{BackgroundWorker, BackgroundWorkerArgs}, constants::DEF
 
 pub fn setup(app: &mut App) -> Result<(), Box<dyn Error>> {
 
+    #[cfg(not(debug_assertions))]
+    app::panic::add_hook_with_dialog(app.handle());
+
     let app_handle = app.handle();
 
     let context = app.state::<AppContext>();
@@ -21,7 +24,7 @@ pub fn setup(app: &mut App) -> Result<(), Box<dyn Error>> {
     let settings = settings_manager.read().expect("Could not read settings");
 
     let port = initialize_windows_and_settings(
-        &app_handle,
+        app_handle,
         settings.as_ref(),
         &shell_manger
     );
@@ -63,8 +66,9 @@ fn check_updates(app_handle: &AppHandle) -> Arc<AtomicBool> {
                 Ok(Some(update)) => {
                     info!("update available, downloading update: v{}", update.version);
 
-                    unload_driver();
-                    remove_driver();
+                    let shell_manager = app_handle.state::<ShellManager>();
+                    shell_manager.unload_driver().await;
+                    shell_manager.remove_driver().await;
 
                     if let Err(e) = update.download_and_install(|_, _| {}, || {}).await {
                         error!("failed to download update: {}", e);
@@ -97,7 +101,7 @@ fn initialize_windows_and_settings(
     let mini_window = app_handle.get_mini_window().unwrap();
     let logs_window = app_handle.get_logs_window().unwrap();
     
-    if let Some(settings) = settings.clone() {
+    if let Some(settings) = settings {
 
         info!("settings loaded");
         if settings.general.mini {

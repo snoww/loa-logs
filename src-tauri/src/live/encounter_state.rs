@@ -1,11 +1,13 @@
 use crate::data::*;
-use crate::get_db_connection;
+use crate::database::models::InsertEncounterArgs;
+use crate::database::Repository;
 use crate::live::entity_tracker::{Entity, EntityTracker};
 use crate::live::skill_tracker::SkillTracker;
 use crate::live::stats_api::StatsApi;
 use crate::live::status_tracker::StatusEffectDetails;
 use crate::live::utils::*;
 use crate::models::*;
+use crate::utils::get_player_spec;
 use chrono::Utc;
 use hashbrown::HashMap;
 use log::{info, warn};
@@ -1557,7 +1559,7 @@ impl EncounterState {
 
         let app = self.app.clone();
         task::spawn(async move {
-            let player_infos = if !raid_difficulty.is_empty()
+            let player_info = if !raid_difficulty.is_empty()
                 && raid_difficulty != "Inferno"
                 && raid_difficulty != "Trial"
                 && !encounter.current_boss_name.is_empty()
@@ -1568,11 +1570,9 @@ impl EncounterState {
                 None
             };
 
-            let mut conn = get_db_connection(&app).expect("failed to open database");
-            let tx = conn.transaction().expect("failed to create transaction");
+            let repository = app.state::<Repository>();
 
-            let encounter_id = insert_data(
-                &tx,
+            let args = InsertEncounterArgs {
                 encounter,
                 damage_log,
                 cast_log,
@@ -1581,16 +1581,17 @@ impl EncounterState {
                 party_info,
                 raid_difficulty,
                 region,
-                player_infos,
+                player_info,
                 meter_version,
                 ntp_fight_start,
                 rdps_valid,
                 manual,
                 skill_cast_log,
                 skill_cooldowns,
-            );
+            };
 
-            tx.commit().expect("failed to commit transaction");
+            let encounter_id = repository.insert_data(args).expect("could not save encounter");
+
             info!("saved to db");
 
             if raid_clear {

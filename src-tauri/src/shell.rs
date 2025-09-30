@@ -15,7 +15,7 @@ impl ShellManager {
 
     pub fn open_db_path(&self) {
         
-        let path = &self.1.database_path;
+        let path = &self.1.current_dir;
         info!("open_db_path: {}", path.display());
 
         if let Err(err) = self.0.opener().open_path(path.to_str().unwrap(), None::<String>) {

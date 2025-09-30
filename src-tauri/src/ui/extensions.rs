@@ -31,13 +31,31 @@ impl AppHandleExtensions for &AppHandle {
     }
 
     fn get_window(&self, is_mini: bool) -> Box<dyn WindowExtensions> {
-        let window = if is_mini {
+        
+
+        (if is_mini {
             Box::new(self.get_mini_window().unwrap()) as Box<dyn WindowExtensions>
         } else {
             Box::new(self.get_meter_window().unwrap()) as Box<dyn WindowExtensions>
-        };
+        }) as _
+    }
+}
 
-        window
+impl AppHandleExtensions for AppHandle {
+    fn get_logs_window(&self) -> Option<OtherWindow> {
+        (&self).get_logs_window()
+    }
+    
+    fn get_meter_window(&self) -> Option<MeterWindow> {
+        (&self).get_meter_window()
+    }
+    
+    fn get_mini_window(&self) -> Option<OtherWindow> {
+        (&self).get_mini_window()
+    }
+
+    fn get_window(&self, is_mini: bool) -> Box<dyn WindowExtensions> {
+        (&self).get_window(is_mini)
     }
 }
 

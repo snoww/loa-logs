@@ -1,19 +1,17 @@
 use crate::constants::DB_VERSION;
 use crate::data::*;
+use crate::database::utils::*;
 use crate::live::entity_tracker::Entity;
 use crate::live::skill_tracker::SkillTracker;
-use crate::live::stats_api::InspectInfo;
 use crate::live::status_tracker::StatusEffectDetails;
 use crate::models::*;
-use flate2::Compression;
-use flate2::write::GzEncoder;
+use crate::utils::*;
+use anyhow::Result;
 use hashbrown::HashMap;
-use rusqlite::{Transaction, params};
-use serde::Serialize;
+use rusqlite::{params, Transaction};
 use serde_json::json;
-use std::cmp::{Ordering, Reverse, max};
+use std::cmp::{Reverse, max};
 use std::collections::BTreeMap;
-use std::io::Write;
 
 pub fn encounter_entity_from_entity(entity: &Entity) -> EncounterEntity {
     let mut e = EncounterEntity {
@@ -541,165 +539,12 @@ pub fn get_class_from_id(class_id: &u32) -> String {
     class.to_string()
 }
 
-fn damage_gem_value_to_level(value: u32, tier: u8) -> u8 {
-    if tier == 4 {
-        match value {
-            4400 => 10,
-            4000 => 9,
-            3600 => 8,
-            3200 => 7,
-            2800 => 6,
-            2400 => 5,
-            2000 => 4,
-            1600 => 3,
-            1200 => 2,
-            800 => 1,
-            _ => 0,
-        }
-    } else {
-        match value {
-            4000 => 10,
-            3000 => 9,
-            2400 => 8,
-            2100 => 7,
-            1800 => 6,
-            1500 => 5,
-            1200 => 4,
-            900 => 3,
-            600 => 2,
-            300 => 1,
-            _ => 0,
-        }
-    }
-}
-
-fn cooldown_gem_value_to_level(value: u32, tier: u8) -> u8 {
-    if tier == 4 {
-        match value {
-            2400 => 10,
-            2200 => 9,
-            2000 => 8,
-            1800 => 7,
-            1600 => 6,
-            1400 => 5,
-            1200 => 4,
-            1000 => 3,
-            800 => 2,
-            600 => 1,
-            _ => 0,
-        }
-    } else {
-        match value {
-            2000 => 10,
-            1800 => 9,
-            1600 => 8,
-            1400 => 7,
-            1200 => 6,
-            1000 => 5,
-            800 => 4,
-            600 => 3,
-            400 => 2,
-            200 => 1,
-            _ => 0,
-        }
-    }
-}
-
-fn support_damage_gem_value_to_level(value: u32) -> u8 {
-    match value {
-        1000 => 10,
-        900 => 9,
-        800 => 8,
-        700 => 7,
-        600 => 6,
-        500 => 5,
-        400 => 4,
-        300 => 3,
-        200 => 2,
-        100 => 1,
-        _ => 0,
-    }
-}
-
-pub fn get_engravings(engraving_ids: &Option<Vec<u32>>) -> Option<Vec<String>> {
-    let ids = match engraving_ids {
-        Some(engravings) => engravings,
-        None => return None,
-    };
-    let mut engravings: Vec<String> = Vec::new();
-
-    for engraving_id in ids.iter() {
-        if let Some(engraving_data) = ENGRAVING_DATA.get(engraving_id) {
-            engravings.push(engraving_data.name.clone().unwrap_or("Unknown".to_string()));
-        }
-    }
-
-    engravings.sort_unstable();
-    Some(engravings)
-}
-
 pub fn is_hat_buff(buff_id: &u32) -> bool {
     matches!(buff_id, 362600 | 212305 | 319503 | 319504 | 485100)
 }
 
 pub fn is_hyper_hat_buff(buff_id: &u32) -> bool {
     matches!(buff_id, 362601 | 212306 | 319506 | 485101)
-}
-
-fn generate_intervals(start: i64, end: i64) -> Vec<i64> {
-    if start >= end {
-        return Vec::new();
-    }
-
-    (0..end - start).step_by(1_000).collect()
-}
-
-fn sum_in_range(vec: &[(i64, i64)], start: i64, end: i64) -> i64 {
-    let start_idx = binary_search_left(vec, start);
-    let end_idx = binary_search_left(vec, end + 1);
-
-    vec[start_idx..end_idx]
-        .iter()
-        .map(|&(_, second)| second)
-        .sum()
-}
-
-fn binary_search_left(vec: &[(i64, i64)], target: i64) -> usize {
-    let mut left = 0;
-    let mut right = vec.len();
-
-    while left < right {
-        let mid = left + (right - left) / 2;
-        match vec[mid].0.cmp(&target) {
-            Ordering::Less => left = mid + 1,
-            _ => right = mid,
-        }
-    }
-
-    left
-}
-
-fn calculate_average_dps(data: &[(i64, i64)], start_time: i64, end_time: i64) -> Vec<i64> {
-    let step = 5;
-    let mut results = vec![0; ((end_time - start_time) / step + 1) as usize];
-    let mut current_sum = 0;
-    let mut data_iter = data.iter();
-    let mut current_data = data_iter.next();
-
-    for t in (start_time..=end_time).step_by(step as usize) {
-        while let Some((timestamp, value)) = current_data {
-            if *timestamp / 1000 <= t {
-                current_sum += value;
-                current_data = data_iter.next();
-            } else {
-                break;
-            }
-        }
-
-        results[((t - start_time) / step) as usize] = current_sum / (t - start_time + 1);
-    }
-
-    results
 }
 
 pub fn check_tripod_index_change(before: Option<TripodIndex>, after: Option<TripodIndex>) -> bool {
@@ -753,7 +598,7 @@ pub fn insert_data(
     manual: bool,
     skill_cast_log: HashMap<u64, HashMap<u32, BTreeMap<i64, SkillCast>>>,
     skill_cooldowns: HashMap<u32, Vec<CastEvent>>,
-) -> i64 {
+) -> Result<i64> {
     let mut encounter_stmt = tx
         .prepare_cached(
             "
@@ -807,10 +652,10 @@ pub fn insert_data(
         ..Default::default()
     };
 
-    let compressed_boss_hp = compress_json(&boss_hp_log);
-    let compressed_buffs = compress_json(&encounter.encounter_damage_stats.buffs);
-    let compressed_debuffs = compress_json(&encounter.encounter_damage_stats.debuffs);
-    let compressed_shields = compress_json(&encounter.encounter_damage_stats.applied_shield_buffs);
+    let compressed_boss_hp = compress_json(&boss_hp_log)?;
+    let compressed_buffs = compress_json(&encounter.encounter_damage_stats.buffs)?;
+    let compressed_debuffs = compress_json(&encounter.encounter_damage_stats.debuffs)?;
+    let compressed_shields = compress_json(&encounter.encounter_damage_stats.applied_shield_buffs)?;
 
     encounter_stmt
         .execute(params![
@@ -1102,8 +947,8 @@ pub fn insert_data(
             }
         }
 
-        let compressed_skills = compress_json(&entity.skills);
-        let compressed_damage_stats = compress_json(&entity.damage_stats);
+        let compressed_skills = compress_json(&entity.skills)?;
+        let compressed_damage_stats = compress_json(&entity.damage_stats)?;
 
         let damage_dealt = entity.damage_stats.damage_dealt;
         let damage_without_hyper =
@@ -1204,7 +1049,7 @@ pub fn insert_data(
         ])
         .expect("failed to insert encounter preview");
 
-    last_insert_id
+    Ok(last_insert_id)
 }
 
 pub fn map_status_effect(se: &StatusEffectDetails, custom_id_map: &mut HashMap<u32, u32>) -> u32 {
@@ -1238,16 +1083,6 @@ pub fn get_skill_id(new_skill: u32, original_buff_id: u32) -> u32 {
     new_skill - 1_000_000_000 - original_buff_id
 }
 
-pub fn compress_json<T>(value: &T) -> Vec<u8>
-where
-    T: ?Sized + Serialize,
-{
-    let mut e = GzEncoder::new(Vec::new(), Compression::default());
-    let bytes = serde_json::to_vec(value).expect("unable to serialize json");
-    e.write_all(&bytes).expect("unable to write json to buffer");
-    e.finish().expect("unable to compress json")
-}
-
 pub fn update_current_boss_name(boss_name: &str) -> String {
     match boss_name {
         "Chaos Lightning Dragon Jade" => "Argeos",
@@ -1255,374 +1090,6 @@ pub fn update_current_boss_name(boss_name: &str) -> String {
             "Behemoth, the Storm Commander"
         }
         _ => boss_name,
-    }
-    .to_string()
-}
-
-pub fn get_player_spec(
-    player: &EncounterEntity,
-    buffs: &HashMap<u32, StatusEffect>,
-    skip_min_check: bool,
-) -> String {
-    if !skip_min_check && player.skills.len() < 8 {
-        return "Unknown".to_string();
-    }
-
-    match player.class.as_str() {
-        "Berserker" => {
-            // if has bloody rush
-            if player.skills.contains_key(&16140)
-                || player.skills.contains_key(&16145)
-                || player.skills.contains_key(&16146)
-                || player.skills.contains_key(&16147)
-            {
-                "Berserker Technique"
-            } else {
-                "Mayhem"
-            }
-        }
-        "Destroyer" => {
-            if player.skills.contains_key(&18090) {
-                "Gravity Training"
-            } else {
-                "Rage Hammer"
-            }
-        }
-        "Gunlancer" => {
-            if player.skills.contains_key(&17200) && player.skills.contains_key(&17210) {
-                "Lone Knight"
-            } else if player.skills.contains_key(&17140) && player.skills.contains_key(&17110) {
-                "Combat Readiness"
-            } else {
-                "Princess"
-            }
-        }
-        "Paladin" => {
-            // if has execution of judgement, judgement blade, or flash slash strength release tripod
-            if player.skills.contains_key(&36250)
-                || player.skills.contains_key(&36270)
-                || player
-                    .skills
-                    .get(&36090)
-                    .is_some_and(|s| s.tripod_index.is_some_and(|t| t.second == 3))
-            {
-                "Judgment"
-            } else if player.skills.contains_key(&36200)
-                || player.skills.contains_key(&36170)
-                || player.skills.contains_key(&36800)
-            {
-                // if has heavenly blessing, wrath of god, or holy aura
-                "Blessed Aura"
-            } else {
-                "Unknown"
-            }
-        }
-        "Slayer" => {
-            if player.skills.contains_key(&45004) {
-                "Punisher"
-            } else {
-                "Predator"
-            }
-        }
-        "Valkyrie" => {
-            if player.skills.contains_key(&48060)
-                || player.skills.contains_key(&48070)
-                || player.skills.contains_key(&48500)
-                || player.skills.contains_key(&48100)
-            {
-                // shining knight, final splendor, cataclysm, foresight slash
-                "Shining Knight"
-            } else if player.skills.contains_key(&48250)
-                || player.skills.contains_key(&48270)
-                || player.skills.contains_key(&48230)
-                || player.skills.contains_key(&48220)
-                || player.skills.contains_key(&48040)
-                || player.skills.contains_key(&48041)
-                || player.skills.contains_key(&48042)
-            {
-                // seraphic oath, seraphic leap,
-                // circle of truth, truth's decree
-                // release light
-                "Liberator"
-            } else {
-                "Unknown"
-            }
-        }
-        "Arcanist" => {
-            if player.skills.contains_key(&19282) {
-                "Order of the Emperor"
-            } else {
-                "Grace of the Empress"
-            }
-        }
-        "Summoner" => {
-            if player
-                .skills
-                .iter()
-                .any(|(_, skill)| skill.name.contains("Kelsion"))
-            {
-                "Communication Overflow"
-            } else {
-                "Master Summoner"
-            }
-        }
-        "Bard" => {
-            // if has tempest skill, or vivace, or heavenly tune with crit tripod
-            if (player.skills.contains_key(&21147)
-                || player.skills.contains_key(&21148)
-                || player.skills.contains_key(&21149))
-                || player.skills.contains_key(&21310)
-                || player
-                    .skills
-                    .get(&21160)
-                    .is_some_and(|s| s.tripod_index.is_some_and(|t| t.third == 2))
-            {
-                return "True Courage".to_string();
-            } else if player
-                .skills
-                .get(&21160)
-                .is_some_and(|s| s.tripod_index.is_some_and(|t| t.third == 1))
-            {
-                // if heavenly tune has atk pwr tripod
-                return "Desperate Salvation".to_string();
-            }
-
-            "Unknown"
-        }
-        "Sorceress" => {
-            // if has arcane rupture
-            if player.skills.contains_key(&37100) || player.skills.contains_key(&37101) {
-                "Igniter"
-            } else {
-                "Reflux"
-            }
-        }
-        "Wardancer" => {
-            if player.skills.contains_key(&22340) {
-                "Esoteric Skill Enhancement"
-            } else {
-                "First Intention"
-            }
-        }
-        "Scrapper" => {
-            if player.skills.contains_key(&23230) {
-                "Ultimate Skill: Taijutsu"
-            } else {
-                "Shock Training"
-            }
-        }
-        "Soulfist" => {
-            if player.skills.contains_key(&24200) {
-                "Energy Overflow"
-            } else {
-                "Robust Spirit"
-            }
-        }
-        "Glaivier" => {
-            if player.skills.contains_key(&34590) {
-                "Pinnacle"
-            } else {
-                "Control"
-            }
-        }
-        "Striker" => {
-            if player.skills.contains_key(&39290) {
-                "Deathblow"
-            } else {
-                "Esoteric Flurry"
-            }
-        }
-        "Breaker" => {
-            if player.skills.contains_key(&47020) {
-                "Asura's Path"
-            } else {
-                "Brawl King Storm"
-            }
-        }
-        "Deathblade" => {
-            if player.skills.contains_key(&25038) {
-                "Surge"
-            } else {
-                "Remaining Energy"
-            }
-        }
-        "Shadowhunter" => {
-            if player.skills.contains_key(&27860) {
-                "Demonic Impulse"
-            } else {
-                "Perfect Suppression"
-            }
-        }
-        "Reaper" => {
-            let buff_names = get_buff_names(player, buffs);
-            if buff_names.iter().any(|s| s.contains("Lunar Voice")) {
-                "Lunar Voice"
-            } else {
-                "Hunger"
-            }
-        }
-        "Souleater" => {
-            if player.skills.contains_key(&46250) {
-                "Night's Edge"
-            } else {
-                "Full Moon Harvester"
-            }
-        }
-        "Sharpshooter" => {
-            let buff_names = get_buff_names(player, buffs);
-            if buff_names
-                .iter()
-                .any(|s| s.contains("Loyal Companion") || s.contains("Hawk Support"))
-            {
-                "Loyal Companion"
-            } else {
-                "Death Strike"
-            }
-        }
-        "Deadeye" => {
-            if player.skills.contains_key(&29300) {
-                "Enhanced Weapon"
-            } else {
-                "Pistoleer"
-            }
-        }
-        "Artillerist" => {
-            if player.skills.contains_key(&30260) {
-                "Barrage Enhancement"
-            } else {
-                "Firepower Enhancement"
-            }
-        }
-        "Machinist" => {
-            let buff_names = get_buff_names(player, buffs);
-            if buff_names
-                .iter()
-                .any(|s| s.contains("Combat Mode") || s.contains("Evolutionary Legacy"))
-            {
-                "Evolutionary Legacy"
-            } else {
-                "Arthetinean Skill"
-            }
-        }
-        "Gunslinger" => {
-            if player.skills.contains_key(&38110) {
-                "Peacemaker"
-            } else {
-                "Time to Hunt"
-            }
-        }
-        "Artist" => {
-            // dps if has cattle drive or shattering strike or rising moon
-            // or sunsketch with crit tripod
-            if player.skills.contains_key(&31940)
-                || player.skills.contains_key(&31060)
-                || player.skills.contains_key(&31145)
-                || player
-                    .skills
-                    .get(&31400)
-                    .is_some_and(|s| s.tripod_index.is_some_and(|t| t.third == 2))
-            {
-                return "Recurrence".to_string();
-            } else if player
-                .skills
-                .get(&31400)
-                .is_some_and(|s| s.tripod_index.is_some_and(|t| t.third == 1))
-            {
-                // if sunsketch has atk pwr tripod
-                return "Full Bloom".to_string();
-            }
-
-            "Unknown"
-        }
-        "Aeromancer" => {
-            if player.skills.contains_key(&32250) && player.skills.contains_key(&32260) {
-                "Wind Fury"
-            } else {
-                "Drizzle"
-            }
-        }
-        "Wildsoul" => {
-            if player.skills.contains_key(&33400) || player.skills.contains_key(&33410) {
-                "Ferality"
-            } else {
-                "Phantom Beast Awakening"
-            }
-        }
-        _ => "Unknown",
-    }
-    .to_string()
-}
-
-fn get_buff_names(player: &EncounterEntity, buffs: &HashMap<u32, StatusEffect>) -> Vec<String> {
-    let mut names = Vec::new();
-    for (id, _) in player.damage_stats.buffed_by.iter() {
-        if let Some(buff) = buffs.get(id) {
-            names.push(buff.source.name.clone());
-        }
-    }
-
-    names
-}
-
-fn get_spec_from_ark_passive(node: &ArkPassiveNode) -> String {
-    match node.id {
-        2160000 => "Berserker Technique",
-        2160010 => "Mayhem",
-        2170000 => "Lone Knight",
-        2170010 => "Combat Readiness",
-        2180000 => "Rage Hammer",
-        2180010 => "Gravity Training",
-        2360000 => "Judgment",
-        2360010 => "Blessed Aura",
-        2450000 => "Punisher",
-        2450010 => "Predator",
-        2480000 => "Shining Knight",
-        2480100 => "Liberator",
-        2230000 => "Ultimate Skill: Taijutsu",
-        2230100 => "Shock Training",
-        2220000 => "First Intention",
-        2220100 => "Esoteric Skill Enhancement",
-        2240000 => "Energy Overflow",
-        2240100 => "Robust Spirit",
-        2340000 => "Control",
-        2340100 => "Pinnacle",
-        2470000 => "Brawl King Storm",
-        2470100 => "Asura's Path",
-        2390000 => "Esoteric Flurry",
-        2390010 => "Deathblow",
-        2300000 => "Barrage Enhancement",
-        2300100 => "Firepower Enhancement",
-        2290000 => "Enhanced Weapon",
-        2290100 => "Pistoleer",
-        2280000 => "Death Strike",
-        2280100 => "Loyal Companion",
-        2350000 => "Evolutionary Legacy",
-        2350100 => "Arthetinean Skill",
-        2380000 => "Peacemaker",
-        2380100 => "Time to Hunt",
-        2370000 => "Igniter",
-        2370100 => "Reflux",
-        2190000 => "Grace of the Empress",
-        2190100 => "Order of the Emperor",
-        2200000 => "Communication Overflow",
-        2200100 => "Master Summoner",
-        2210000 => "Desperate Salvation",
-        2210100 => "True Courage",
-        2270000 => "Demonic Impulse",
-        2270600 => "Perfect Suppression",
-        2250000 => "Surge",
-        2250600 => "Remaining Energy",
-        2260000 => "Lunar Voice",
-        2260600 => "Hunger",
-        2460000 => "Full Moon Harvester",
-        2460600 => "Night's Edge",
-        2320000 => "Wind Fury",
-        2320600 => "Drizzle",
-        2310000 => "Full Bloom",
-        2310600 => "Recurrence",
-        2330000 => "Ferality",
-        2330100 => "Phantom Beast Awakening",
-        _ => "Unknown",
     }
     .to_string()
 }
@@ -1638,30 +1105,6 @@ pub fn boss_to_raid_map(boss: &str, max_hp: i64) -> Option<String> {
         }
         _ => RAID_MAP.get(boss).cloned(),
     }
-}
-
-pub fn get_total_available_time(
-    skill_cooldown: &Vec<CastEvent>,
-    encounter_start: i64,
-    encounter_end: i64,
-) -> i64 {
-    let mut total_available_time = 0;
-    let mut current_available_from = encounter_start;
-
-    for event in skill_cooldown {
-        if event.timestamp > current_available_from {
-            total_available_time += event.timestamp - current_available_from;
-        }
-
-        let cooldown_end = event.timestamp + event.cooldown_duration_ms;
-        current_available_from = current_available_from.max(cooldown_end);
-    }
-
-    if encounter_end > current_available_from {
-        total_available_time += encounter_end - current_available_from;
-    }
-
-    total_available_time
 }
 
 fn get_damage_without_hyper_or_special(e: &EncounterEntity) -> i64 {

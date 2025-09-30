@@ -45,7 +45,7 @@ impl<T> Deref for OnceLockWrapper<T> {
 pub struct AssetPreloader;
 
 fn load<T: DeserializeOwned>(path: &Path) -> Result<T> {
-    let s = fs::read_to_string(&path).with_context(|| anyhow!("Missing file at: {path:?}"))?;
+    let s = fs::read_to_string(path).with_context(|| anyhow!("Missing file at: {path:?}"))?;
     serde_json::from_str::<T>(&s).with_context(|| anyhow!("Error parsing JSON in {path:?}"))
 }
 
