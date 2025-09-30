@@ -10,7 +10,6 @@ use serde::Serialize;
 use anyhow::Result;
 
 use crate::data::{ENGRAVING_DATA, GEM_SKILL_MAP};
-use crate::database::models::InsertEncounterArgs;
 use crate::database::sql_types::{CompressedJson, JsonColumn};
 use crate::models::*;
 use crate::utils::*;
