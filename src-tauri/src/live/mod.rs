@@ -6,11 +6,13 @@ mod skill_tracker;
 mod stats_api;
 mod status_tracker;
 mod utils;
+mod manager;
 
 use crate::app;
 use crate::live::encounter_state::EncounterState;
 use crate::live::entity_tracker::{EntityTracker, get_current_and_max_hp};
 use crate::live::id_tracker::IdTracker;
+use crate::live::manager::LiveManager;
 use crate::live::party_tracker::PartyTracker;
 use crate::live::stats_api::API_URL;
 use crate::live::stats_api::StatsApi;
@@ -34,13 +36,12 @@ use serde_json::json;
 use std::cell::RefCell;
 use std::path::{Path, PathBuf};
 use std::rc::Rc;
-use std::sync::Arc;
-use std::sync::atomic::{AtomicBool, Ordering};
 use std::time::{Duration, Instant};
-use tauri::{AppHandle, Emitter, Listener, Manager};
+use tauri::{AppHandle, Emitter};
 use uuid::Uuid;
 
 pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()> {
+    let manager = LiveManager::new(app.clone());
     let id_tracker = Rc::new(RefCell::new(IdTracker::new()));
     let party_tracker = Rc::new(RefCell::new(PartyTracker::new(id_tracker.clone())));
     let status_tracker = Rc::new(RefCell::new(StatusTracker::new(party_tracker.clone())));
@@ -73,13 +74,9 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
     let mut last_heartbeat = Instant::now();
     let heartbeat_duration = Duration::from_secs(60 * 15);
 
-    let reset = Arc::new(AtomicBool::new(false));
-    let pause = Arc::new(AtomicBool::new(false));
-    let save = Arc::new(AtomicBool::new(false));
-    let boss_only_damage = Arc::new(AtomicBool::new(false));
     if let Some(settings) = settings {
         if settings.general.boss_only_damage {
-            boss_only_damage.store(true, Ordering::Relaxed);
+            manager.set_boss_only_damage();
             info!("boss only damage enabled")
         }
         if settings.general.low_performance_mode {
@@ -111,89 +108,26 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
 
     get_and_set_region(&region_file_path, &mut state);
 
-    let emit_details = Arc::new(AtomicBool::new(false));
-
-    let app_handle_clone = app.clone();
-    app.listen_any("reset-request", {
-        let reset_clone = reset.clone();
-        let app_clone = app_handle_clone.clone();
-        move |_event| {
-            reset_clone.store(true, Ordering::Relaxed);
-            info!("resetting meter");
-            app_clone.emit("reset-encounter", "").ok();
-        }
-    });
-
-    app.listen_any("save-request", {
-        let save_clone = save.clone();
-        let app_clone = app_handle_clone.clone();
-        move |_event| {
-            save_clone.store(true, Ordering::Relaxed);
-            info!("manual saving encounter");
-            app_clone.emit("save-encounter", "").ok();
-        }
-    });
-
-    app.listen_any("pause-request", {
-        let pause_clone = pause.clone();
-        let app_clone = app_handle_clone.clone();
-        move |_event| {
-            let prev = pause_clone.fetch_xor(true, Ordering::Relaxed);
-            if prev {
-                info!("unpausing meter");
-            } else {
-                info!("pausing meter");
-            }
-            app_clone.emit("pause-encounter", "").ok();
-        }
-    });
-
-    app.listen_any("boss-only-damage-request", {
-        let boss_only_damage = boss_only_damage.clone();
-        move |event| {
-            let bod = event.payload();
-            if bod == "true" {
-                boss_only_damage.store(true, Ordering::Relaxed);
-                info!("boss only damage enabled")
-            } else {
-                boss_only_damage.store(false, Ordering::Relaxed);
-                info!("boss only damage disabled")
-            }
-        }
-    });
-
-    app.listen_any("emit-details-request", {
-        let emit_clone = emit_details.clone();
-        move |_event| {
-            let prev = emit_clone.fetch_xor(true, Ordering::Relaxed);
-            if prev {
-                info!("stopped sending details");
-            } else {
-                info!("sending details");
-            }
-        }
-    });
-
     let mut party_freeze = false;
     let mut party_cache: Option<Vec<Vec<String>>> = None;
 
     while let Ok((op, data)) = rx.recv() {
-        if reset.load(Ordering::Relaxed) {
+        if manager.has_reset() {
             state.soft_reset(true);
-            reset.store(false, Ordering::Relaxed);
         }
-        if pause.load(Ordering::Relaxed) {
+
+        if manager.has_paused() {
             continue;
         }
-        if save.load(Ordering::Relaxed) {
-            save.store(false, Ordering::Relaxed);
+
+        if manager.has_saved() {
             state.party_info = update_party(&party_tracker, &entity_tracker);
-            state.save_to_db(&stats_api, true);
+            state.save_to_db(&mut stats_api, true);
             state.saved = true;
             state.resetting = true;
         }
 
-        if boss_only_damage.load(Ordering::Relaxed) {
+        if manager.has_toggled_boss_only_damage() {
             state.boss_only_damage = true;
         } else {
             state.boss_only_damage = false;
@@ -225,7 +159,7 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
                     &data,
                     PKTIdentityGaugeChangeNotify::new,
                     "PKTIdentityGaugeChangeNotify",
-                ) && emit_details.load(Ordering::Relaxed)
+                ) && manager.can_emit_details()
                 {
                     app.emit(
                         "identity-update",
