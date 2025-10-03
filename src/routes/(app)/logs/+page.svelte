@@ -10,6 +10,7 @@
   import EncountersTable from "./EncountersTable.svelte";
   import Pages from "./Pages.svelte";
   import Search from "./Search.svelte";
+  import { loadEncountersPreview } from "$lib/api";
 
   let overview: EncountersOverview | null = $state(null);
   let container = $state<HTMLDivElement | null>(null);
@@ -35,7 +36,7 @@
       }
     }
 
-    let overview: EncountersOverview = await invoke("load_encounters_preview", {
+    const criteria = {
       page: encounterFilter.page,
       pageSize: settings.app.general.logsPerPage,
       search: searchQuery,
@@ -49,7 +50,8 @@
         order: encounterFilter.order,
         raidsOnly: settings.app.general.showRaidsOnly
       }
-    });
+    };
+    let overview: EncountersOverview = await loadEncountersPreview(criteria);
 
     return overview;
   }
