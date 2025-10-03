@@ -12,7 +12,7 @@ use crate::app;
 use crate::live::encounter_state::EncounterState;
 use crate::live::entity_tracker::{EntityTracker, get_current_and_max_hp};
 use crate::live::id_tracker::IdTracker;
-use crate::live::manager::LiveManager;
+use crate::live::manager::EventManager;
 use crate::live::party_tracker::PartyTracker;
 use crate::live::stats_api::API_URL;
 use crate::live::stats_api::StatsApi;
@@ -41,7 +41,7 @@ use tauri::{AppHandle, Emitter};
 use uuid::Uuid;
 
 pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()> {
-    let manager = LiveManager::new(app.clone());
+    let manager = EventManager::new(app.clone());
     let id_tracker = Rc::new(RefCell::new(IdTracker::new()));
     let party_tracker = Rc::new(RefCell::new(PartyTracker::new(id_tracker.clone())));
     let status_tracker = Rc::new(RefCell::new(StatusTracker::new(party_tracker.clone())));

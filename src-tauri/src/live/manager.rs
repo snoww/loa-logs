@@ -3,7 +3,7 @@ use std::sync::{atomic::{AtomicBool, Ordering}, Arc, Mutex};
 use log::*;
 use tauri::{AppHandle, Emitter, Event, EventId, Listener};
 
-pub struct LiveManager {
+pub struct EventManager {
     app_handle: AppHandle,
     subscriptions: Mutex<Vec<EventId>>,
     reset: AtomicBool,
@@ -13,7 +13,7 @@ pub struct LiveManager {
     emit_details: AtomicBool,
 }
 
-impl LiveManager {
+impl EventManager {
     pub fn new(app_handle: AppHandle) -> Arc<Self> {
 
         let reset = AtomicBool::new(false);
@@ -53,7 +53,7 @@ impl LiveManager {
         listener
     }
 
-    fn on_reset(context: Arc<LiveManager>) -> impl Fn(Event) + Send + 'static {
+    fn on_reset(context: Arc<EventManager>) -> impl Fn(Event) + Send + 'static {
         
         move |_| {
             context.reset.store(true, Ordering::Relaxed);
@@ -62,7 +62,7 @@ impl LiveManager {
         }
     }
 
-    fn on_save(context: Arc<LiveManager>) -> impl Fn(Event) + Send + 'static {
+    fn on_save(context: Arc<EventManager>) -> impl Fn(Event) + Send + 'static {
         move |_| {
             context.save.store(true, Ordering::Relaxed);
             info!("manual saving encounter");
@@ -70,7 +70,7 @@ impl LiveManager {
         }
     }
 
-    fn on_pause(context: Arc<LiveManager>) -> impl Fn(Event) + Send + 'static {
+    fn on_pause(context: Arc<EventManager>) -> impl Fn(Event) + Send + 'static {
         move |_| {
             let prev = context.pause.fetch_xor(true, Ordering::Relaxed);
 
@@ -84,7 +84,7 @@ impl LiveManager {
         }
     }
 
-    fn on_boss_only_damage(context: Arc<LiveManager>) -> impl Fn(Event) + Send + 'static {
+    fn on_boss_only_damage(context: Arc<EventManager>) -> impl Fn(Event) + Send + 'static {
         move |event: Event| {
             let bod = event.payload();
 
@@ -98,7 +98,7 @@ impl LiveManager {
         }
     }
 
-    fn on_emit_details(context: Arc<LiveManager>) -> impl Fn(Event) + Send + 'static {
+    fn on_emit_details(context: Arc<EventManager>) -> impl Fn(Event) + Send + 'static {
         move |_event: Event| {
             
             let prev = context.emit_details.fetch_xor(true, Ordering::Relaxed);
@@ -149,7 +149,7 @@ impl LiveManager {
 }
 
 
-impl Drop for LiveManager {
+impl Drop for EventManager {
     fn drop(&mut self) {
         for subscription in self.subscriptions.lock().unwrap().drain(..) {
             self.app_handle.unlisten(subscription);
