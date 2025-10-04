@@ -390,6 +390,10 @@ pub fn update_entity_stats(
     entity.damage_stats.unbuffed_damage = unbuffed_damage;
     entity.damage_stats.unbuffed_dps = unbuffed_dps;
 
+    for (_, skill) in entity.skills.iter_mut() {
+        skill.dps = skill.total_damage / duration_seconds;
+    }
+
 }
 
 pub fn apply_player_info(

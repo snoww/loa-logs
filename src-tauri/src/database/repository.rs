@@ -1313,8 +1313,6 @@ mod tests {
                 per_skill_map.insert(timestamp, skill_cast);
             }
 
-            skill.dps = skill.total_damage / duration_seconds;
-
             cast_log
                 .entry(entity.name.clone())
                 .or_default()
