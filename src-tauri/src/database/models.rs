@@ -1,12 +1,12 @@
-use std::collections::BTreeMap;
 use hashbrown::HashMap;
+use std::collections::BTreeMap;
 
 use crate::models::*;
 
 pub struct InsertSyncLogsArgs {
     pub encounter: i32,
     pub upstream: String,
-    pub failed: bool
+    pub failed: bool,
 }
 
 pub struct GetEncounterPreviewArgs {
@@ -32,5 +32,5 @@ pub struct InsertEncounterArgs {
     pub rdps_valid: bool,
     pub manual: bool,
     pub skill_cast_log: HashMap<u64, HashMap<u32, BTreeMap<i64, SkillCast>>>,
-    pub skill_cooldowns: HashMap<u32, Vec<CastEvent>>
+    pub skill_cooldowns: HashMap<u32, Vec<CastEvent>>,
 }

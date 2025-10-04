@@ -1,12 +1,17 @@
-use std::cmp::{max, Reverse};
 use anyhow::{Ok, Result};
 use hashbrown::HashMap;
 use log::*;
 use r2d2_sqlite::SqliteConnectionManager;
 use rusqlite::{params, params_from_iter, OptionalExtension, Transaction};
 use serde_json::json;
+use std::cmp::{max, Reverse};
 
-use crate::{constants::DB_VERSION, database::{models::*, queries::*, utils::*}, models::*, utils::*};
+use crate::{
+    constants::DB_VERSION,
+    database::{models::*, queries::*, utils::*},
+    models::*,
+    utils::*,
+};
 pub struct Repository(r2d2::Pool<SqliteConnectionManager>);
 
 impl Repository {
@@ -22,11 +27,10 @@ impl Repository {
     }
 
     pub fn insert_sync_logs(&self, args: InsertSyncLogsArgs) -> Result<()> {
-
         let InsertSyncLogsArgs {
             encounter,
             failed,
-            upstream
+            upstream,
         } = args;
 
         let connection = self.0.get()?;
@@ -38,7 +42,6 @@ impl Repository {
     }
 
     pub fn toggle_encounter_favorite(&self, id: i32) -> Result<()> {
-
         let connection = self.0.get()?;
         let mut statement = connection.prepare_cached(UPDATE_ENCOUNTER_SET_FAV_BY_ID)?;
 
@@ -48,17 +51,16 @@ impl Repository {
     }
 
     pub fn get_db_stats(&self, min_duration: i64) -> Result<(i32, i32)> {
-
         let connection = self.0.get()?;
 
-        let encounter_count = connection
-        .query_row(SELECT_ENCOUNTER_PREVIEW_COUNT, [], |row| {
-            row.get(0)
-        })?;
+        let encounter_count =
+            connection.query_row(SELECT_ENCOUNTER_PREVIEW_COUNT, [], |row| row.get(0))?;
 
         let params = params![min_duration * 1000];
-        let encounter_filtered_count = connection
-            .query_row(SELECT_ENCOUNTER_PREVIEW_BY_GE_DURATION, params, |row| row.get(0))?;
+        let encounter_filtered_count =
+            connection.query_row(SELECT_ENCOUNTER_PREVIEW_BY_GE_DURATION, params, |row| {
+                row.get(0)
+            })?;
 
         Ok((encounter_count, encounter_filtered_count))
     }
@@ -80,7 +82,6 @@ impl Repository {
     }
 
     pub fn delete_encounter(&self, id: String) -> Result<()> {
-
         let connection = self.0.get()?;
 
         connection.execute(PRAGMA_FOREIGN_KEYS_ON, params![])?;
@@ -97,8 +98,8 @@ impl Repository {
     pub fn delete_encounters_below_min_duration(
         &self,
         min_duration: i64,
-        keep_favorites: bool,) -> Result<()> {
-
+        keep_favorites: bool,
+    ) -> Result<()> {
         let connection = self.0.get()?;
         let params = params![min_duration * 1000];
 
@@ -113,13 +114,15 @@ impl Repository {
         Ok(())
     }
 
-    pub fn get_encounter_preview(&self, args: GetEncounterPreviewArgs) -> Result<EncountersOverview> {
-
+    pub fn get_encounter_preview(
+        &self,
+        args: GetEncounterPreviewArgs,
+    ) -> Result<EncountersOverview> {
         let GetEncounterPreviewArgs {
             filter,
             page,
             page_size,
-            search
+            search,
         } = args;
 
         let connection = self.0.get()?;
@@ -133,13 +136,15 @@ impl Repository {
         params.push(page_size.to_string());
         params.push(offset.to_string());
 
-        let params= params_from_iter(params);    
+        let params = params_from_iter(params);
         let encounter_iter = statement.query_map(params, map_encounter_preview)?;
-        
+
         let encounters: Vec<EncounterPreview> = encounter_iter.collect::<Result<_, _>>()?;
 
-        let count: i32 = connection
-            .query_row_and_then(&count_query, params_from_iter(count_params), |row| row.get(0))?;
+        let count: i32 =
+            connection.query_row_and_then(&count_query, params_from_iter(count_params), |row| {
+                row.get(0)
+            })?;
 
         let value = EncountersOverview {
             encounters,
@@ -150,11 +155,10 @@ impl Repository {
     }
 
     pub fn delete_all_uncleared_encounters(&self, keep_favorites: bool) -> Result<()> {
-        
         let connection = self.0.get()?;
 
         if keep_favorites {
-            connection.execute(DELETE_NOT_FAV_UNCLEARED_ENCOUNTERS,[])?;
+            connection.execute(DELETE_NOT_FAV_UNCLEARED_ENCOUNTERS, [])?;
         } else {
             connection.execute(DELETE_UNCLEARED_ENCOUNTERS, [])?;
         }
@@ -165,7 +169,6 @@ impl Repository {
     }
 
     pub fn delete_all_encounters(&self, keep_favorites: bool) -> Result<()> {
-
         let connection = self.0.get()?;
 
         if keep_favorites {
@@ -173,24 +176,21 @@ impl Repository {
         } else {
             connection.execute(DELETE_ENCOUNTERS, [])?;
         }
-        
+
         connection.execute(VACUUM, [])?;
 
         Ok(())
     }
 
     pub fn get_encounter(&self, id: &str) -> Result<Encounter> {
-
         let connection = self.0.get()?;
         let mut statement = connection.prepare_cached(SELECT_FROM_ENCOUNTER_JOIN_PREVIEW)?;
 
-        let (mut encounter, version) = statement
-            .query_row(params![id], map_encounter)?;
+        let (mut encounter, version) = statement.query_row(params![id], map_encounter)?;
 
         let mut statement = connection.prepare_cached(SELECT_ENTITIES_BY_ENCOUNTER)?;
 
-        let entities_query = statement
-            .query_map(params![id], |row| map_entity(row, &version))?;
+        let entities_query = statement.query_map(params![id], |row| map_entity(row, &version))?;
 
         let mut entities: HashMap<String, EncounterEntity> = HashMap::new();
         for entity in entities_query {
@@ -200,7 +200,9 @@ impl Repository {
 
         let mut statement = connection.prepare_cached(SELECT_SYNC_LOGS)?;
 
-        let sync: Option<String> = statement.query_row(params![id], |row| row.get(0)).optional()?;
+        let sync: Option<String> = statement
+            .query_row(params![id], |row| row.get(0))
+            .optional()?;
         encounter.sync = sync;
 
         encounter.entities = entities;
@@ -209,18 +211,17 @@ impl Repository {
     }
 
     pub fn get_last_encounter_id(&self) -> Result<Option<i32>> {
-        
         let connection = self.0.get()?;
         let mut statement = connection.prepare_cached(GET_TOP_ENCOUNTER_ID)?;
-    
-        let id: Option<i32> = statement.query_row(params![], |row| row.get(0))
+
+        let id: Option<i32> = statement
+            .query_row(params![], |row| row.get(0))
             .optional()?;
 
         Ok(id)
     }
 
     pub fn get_encounter_count(&self) -> Result<i32> {
-        
         let connection = self.0.get()?;
         let mut statement = connection.prepare_cached(SELECT_ENCOUNTER_PREVIEW_COUNT)?;
 
@@ -232,7 +233,6 @@ impl Repository {
     }
 
     pub fn get_sync_candidates(&self, force_resync: bool) -> Result<Vec<i32>> {
-        
         let connection = self.0.get()?;
 
         let query = build_sync_candidates_query(force_resync);
@@ -240,7 +240,7 @@ impl Repository {
         let rows = statement.query_map([], |row| row.get(0))?;
 
         let mut ids = Vec::new();
-        
+
         for id_result in rows {
             ids.push(id_result.unwrap_or(0));
         }
@@ -301,7 +301,11 @@ impl Repository {
             region: region.clone(),
             version: Some(meter_version.clone()),
             rdps_valid: Some(*rdps_valid),
-            rdps_message: if *rdps_valid { None } else { Some("invalid_stats".into()) },
+            rdps_message: if *rdps_valid {
+                None
+            } else {
+                Some("invalid_stats".into())
+            },
             ntp_fight_start: Some(*ntp_fight_start),
             manual_save: Some(args.manual),
             ..Default::default()
@@ -337,11 +341,7 @@ impl Repository {
         buffs: HashMap<String, SupportBuffs>,
         encounter_id: i64,
     ) -> Result<()> {
-
-        let InsertEncounterArgs {
-            encounter,
-            ..
-        } = args;
+        let InsertEncounterArgs { encounter, .. } = args;
 
         let mut statement = transaction.prepare_cached(INSERT_ENTITY)?;
 
@@ -408,7 +408,6 @@ impl Repository {
         args: InsertEncounterArgs,
         encounter_id: i64,
     ) -> Result<()> {
-
         let InsertEncounterArgs {
             encounter,
             raid_clear,
@@ -416,20 +415,26 @@ impl Repository {
             ..
         } = args;
 
-        let mut players: Vec<_> = encounter.entities.values()
-            .filter(|e| ((e.entity_type == EntityType::Player && e.class_id != 0)
-                || e.name == encounter.local_player)
-                && e.damage_stats.damage_dealt > 0)
+        let mut players: Vec<_> = encounter
+            .entities
+            .values()
+            .filter(|e| {
+                ((e.entity_type == EntityType::Player && e.class_id != 0)
+                    || e.name == encounter.local_player)
+                    && e.damage_stats.damage_dealt > 0
+            })
             .collect();
 
-        let local_player_dps = players.iter()
+        let local_player_dps = players
+            .iter()
             .find(|e| e.name == encounter.local_player)
             .map(|e| e.damage_stats.dps)
             .unwrap_or_default();
 
         players.sort_unstable_by_key(|e| Reverse(e.damage_stats.damage_dealt));
 
-        let preview_players = players.iter()
+        let preview_players = players
+            .iter()
             .map(|e| format!("{}:{}", e.class_id, e.name))
             .collect::<Vec<_>>()
             .join(",");
@@ -447,11 +452,12 @@ impl Repository {
             encounter.boss_only_damage,
         ];
 
-        transaction.prepare_cached(INSERT_ENCOUNTER_PREVIEW)?.execute(params)?;
+        transaction
+            .prepare_cached(INSERT_ENCOUNTER_PREVIEW)?
+            .execute(params)?;
 
         Ok(())
     }
-
 }
 
 pub fn calculate_entities(args: &mut InsertEncounterArgs) -> Result<()> {
@@ -468,7 +474,7 @@ pub fn calculate_entities(args: &mut InsertEncounterArgs) -> Result<()> {
     let fight_start = encounter.fight_start;
     let fight_end = encounter.last_combat_packet;
     let local_player_str = encounter.local_player.as_str();
- 
+
     for (name, entity) in encounter.entities.iter_mut() {
         if !should_insert_entity(entity, &encounter.local_player) {
             continue;
@@ -476,7 +482,10 @@ pub fn calculate_entities(args: &mut InsertEncounterArgs) -> Result<()> {
 
         update_entity_stats(entity, fight_start, fight_end, damage_log);
 
-        if let Some(info) = player_info.as_ref().and_then(|stats| stats.get(&entity.name)) {
+        if let Some(info) = player_info
+            .as_ref()
+            .and_then(|stats| stats.get(&entity.name))
+        {
             apply_player_info(entity, info);
         }
 
@@ -537,13 +546,19 @@ pub fn compute_support_buffs(
 
         for player in party_without_support {
             let damage_dealt = get_damage_without_hyper_or_special(player) as f64;
-            if damage_dealt <= 0.0 { continue; }
+            if damage_dealt <= 0.0 {
+                continue;
+            }
             let party_damage_percent = damage_dealt / party_damage_total as f64;
 
-            average_brand += (player.damage_stats.debuffed_by_support as f64 / damage_dealt) * party_damage_percent;
-            average_buff += (player.damage_stats.buffed_by_support as f64 / damage_dealt) * party_damage_percent;
-            average_identity += (player.damage_stats.buffed_by_identity as f64 / damage_dealt) * party_damage_percent;
-            average_hyper += (player.damage_stats.buffed_by_hat as f64 / damage_dealt) * party_damage_percent;
+            average_brand += (player.damage_stats.debuffed_by_support as f64 / damage_dealt)
+                * party_damage_percent;
+            average_buff += (player.damage_stats.buffed_by_support as f64 / damage_dealt)
+                * party_damage_percent;
+            average_identity += (player.damage_stats.buffed_by_identity as f64 / damage_dealt)
+                * party_damage_percent;
+            average_hyper +=
+                (player.damage_stats.buffed_by_hat as f64 / damage_dealt) * party_damage_percent;
         }
 
         if let Some(support) = party_members.iter().find(|e| is_support(e)) {
@@ -564,13 +579,12 @@ pub fn compute_support_buffs(
 
 #[cfg(test)]
 mod tests {
-
     use std::collections::BTreeMap;
 
+    use crate::{data::AssetPreloader, database::Database};
     use chrono::Utc;
     use hashbrown::HashSet;
     use rand::{rngs::ThreadRng, seq::IndexedRandom, Rng};
-    use crate::{data::AssetPreloader, database::Database};
 
     use super::*;
 
@@ -608,28 +622,58 @@ mod tests {
             raids_only: true,
         };
 
-        let paged = repository.get_encounter_preview(GetEncounterPreviewArgs {
-            page: 0,
-            page_size: 10,
-            search: "".to_string(),
-            filter,
-        }).unwrap();
+        let paged = repository
+            .get_encounter_preview(GetEncounterPreviewArgs {
+                page: 0,
+                page_size: 10,
+                search: "".to_string(),
+                filter,
+            })
+            .unwrap();
 
-        assert_eq!(actual_encounter.current_boss_name, expected_encounter.current_boss_name);
+        assert_eq!(
+            actual_encounter.current_boss_name,
+            expected_encounter.current_boss_name
+        );
         assert_eq!(actual_encounter.duration, expected_encounter.duration);
         assert_eq!(actual_encounter.difficulty, expected_encounter.difficulty);
         assert_eq!(actual_encounter.cleared, expected_encounter.cleared);
-        assert_eq!(actual_encounter.boss_only_damage, expected_encounter.boss_only_damage);
+        assert_eq!(
+            actual_encounter.boss_only_damage,
+            expected_encounter.boss_only_damage
+        );
 
         assert!(actual_encounter.encounter_damage_stats.dps > 0);
-        assert_eq!(actual_encounter.encounter_damage_stats.dps, expected_encounter.encounter_damage_stats.dps);
+        assert_eq!(
+            actual_encounter.encounter_damage_stats.dps,
+            expected_encounter.encounter_damage_stats.dps
+        );
         assert!(actual_encounter.encounter_damage_stats.top_damage_dealt > 0);
-        assert_eq!(actual_encounter.encounter_damage_stats.top_damage_dealt, expected_encounter.encounter_damage_stats.top_damage_dealt);
-        assert_eq!(actual_encounter.encounter_damage_stats.top_damage_taken, expected_encounter.encounter_damage_stats.top_damage_taken);
+        assert_eq!(
+            actual_encounter.encounter_damage_stats.top_damage_dealt,
+            expected_encounter.encounter_damage_stats.top_damage_dealt
+        );
+        assert_eq!(
+            actual_encounter.encounter_damage_stats.top_damage_taken,
+            expected_encounter.encounter_damage_stats.top_damage_taken
+        );
         assert!(actual_encounter.encounter_damage_stats.total_damage_dealt > 0);
-        assert_eq!(actual_encounter.encounter_damage_stats.total_damage_dealt, expected_encounter.encounter_damage_stats.total_damage_dealt);
-        assert_eq!(actual_encounter.encounter_damage_stats.total_damage_taken, expected_encounter.encounter_damage_stats.total_damage_taken);
-        assert_eq!(actual_encounter.encounter_damage_stats.total_effective_shielding, expected_encounter.encounter_damage_stats.total_effective_shielding);
+        assert_eq!(
+            actual_encounter.encounter_damage_stats.total_damage_dealt,
+            expected_encounter.encounter_damage_stats.total_damage_dealt
+        );
+        assert_eq!(
+            actual_encounter.encounter_damage_stats.total_damage_taken,
+            expected_encounter.encounter_damage_stats.total_damage_taken
+        );
+        assert_eq!(
+            actual_encounter
+                .encounter_damage_stats
+                .total_effective_shielding,
+            expected_encounter
+                .encounter_damage_stats
+                .total_effective_shielding
+        );
         assert!(actual_encounter.encounter_damage_stats.boss_hp_log.len() > 0);
 
         let actual_misc = actual_encounter.encounter_damage_stats.misc.unwrap();
@@ -652,7 +696,7 @@ mod tests {
                 assert!(actual.damage_stats.damage_taken > 0);
                 continue;
             }
-            
+
             assert_eq!(actual.gear_score, expected.gear_score);
             assert!(actual.spec.is_some());
             assert_eq!(actual.spec, expected.spec);
@@ -670,12 +714,23 @@ mod tests {
 
             assert!(actual.combat_power.filter(|pr| *pr > 1500.0).is_some());
             assert!(actual.loadout_hash.is_some());
-            assert!(actual.engraving_data.as_ref().filter(|pr| pr.len() > 1).is_some());
+            assert!(
+                actual
+                    .engraving_data
+                    .as_ref()
+                    .filter(|pr| pr.len() > 1)
+                    .is_some()
+            );
             assert!(actual.ark_passive_active.unwrap());
-            assert!(actual.ark_passive_data.as_ref().filter(|pr| 
-                pr.enlightenment.is_some()
-                && pr.leap.is_some()
-                && pr.evolution.is_some()).is_some());
+            assert!(
+                actual
+                    .ark_passive_data
+                    .as_ref()
+                    .filter(|pr| pr.enlightenment.is_some()
+                        && pr.leap.is_some()
+                        && pr.evolution.is_some())
+                    .is_some()
+            );
 
             assert!(actual.damage_stats.unbuffed_damage > 0);
             assert!(actual.damage_stats.unbuffed_dps > 0);
@@ -720,277 +775,551 @@ mod tests {
     }
 
     fn build_args(version: &str) -> InsertEncounterArgs {
-        let player11 = PlayerSpec { 
-            class_id: 102, class_name: "Berserker".to_string(), specialisation: "Mayhem",
-            crit_rate: 0.25, gear_score: 1620.0, hp: 1_000_000,
-             info: InspectInfo { 
+        let player11 = PlayerSpec {
+            class_id: 102,
+            class_name: "Berserker".to_string(),
+            specialisation: "Mayhem",
+            crit_rate: 0.25,
+            gear_score: 1620.0,
+            hp: 1_000_000,
+            info: InspectInfo {
                 combat_power: Some(CombatPower {
                     id: 1,
                     score: 1800.0,
                 }),
                 ark_passive_enabled: true,
-                ark_passive_data: Some(ArkPassiveData { 
-                    evolution: Some(vec![
-                        ArkPassiveNode { id: 1, lv: 1 }
-                    ]),
-                    enlightenment: Some(vec![
-                        ArkPassiveNode { id: 1, lv: 1 }
-                    ]),
-                    leap: Some(vec![
-                        ArkPassiveNode { id: 1, lv: 1 }
-                    ]),
+                ark_passive_data: Some(ArkPassiveData {
+                    evolution: Some(vec![ArkPassiveNode { id: 1, lv: 1 }]),
+                    enlightenment: Some(vec![ArkPassiveNode { id: 1, lv: 1 }]),
+                    leap: Some(vec![ArkPassiveNode { id: 1, lv: 1 }]),
                 }),
                 engravings: Some(vec![1118, 1299]),
                 gems: Some(vec![
-                    GemData { tier: 2, skill_id: 16640, gem_type: 63, value: 4400 },
-                    GemData { tier: 2, skill_id: 16120, gem_type: 63, value: 4400 },
-                    GemData { tier: 2, skill_id: 16080, gem_type: 63, value: 4400 },
-                    GemData { tier: 2, skill_id: 16300, gem_type: 63, value: 4400 },
-                    GemData { tier: 2, skill_id: 16050, gem_type: 63, value: 4400 },
+                    GemData {
+                        tier: 2,
+                        skill_id: 16640,
+                        gem_type: 63,
+                        value: 4400,
+                    },
+                    GemData {
+                        tier: 2,
+                        skill_id: 16120,
+                        gem_type: 63,
+                        value: 4400,
+                    },
+                    GemData {
+                        tier: 2,
+                        skill_id: 16080,
+                        gem_type: 63,
+                        value: 4400,
+                    },
+                    GemData {
+                        tier: 2,
+                        skill_id: 16300,
+                        gem_type: 63,
+                        value: 4400,
+                    },
+                    GemData {
+                        tier: 2,
+                        skill_id: 16050,
+                        gem_type: 63,
+                        value: 4400,
+                    },
                 ]),
-                loadout_snapshot: Some(String::from(""))
-            }
+                loadout_snapshot: Some(String::from("")),
+            },
         };
-        let player12 = PlayerSpec { 
-            class_id: 502, class_name: "Sharpshooter".to_string(), specialisation: "Loyal Companion",
-            crit_rate: 0.28, gear_score: 1600.0, hp: 1_000_000,
-            info: InspectInfo { 
+        let player12 = PlayerSpec {
+            class_id: 502,
+            class_name: "Sharpshooter".to_string(),
+            specialisation: "Loyal Companion",
+            crit_rate: 0.28,
+            gear_score: 1600.0,
+            hp: 1_000_000,
+            info: InspectInfo {
                 combat_power: Some(CombatPower {
                     id: 1,
                     score: 1800.0,
                 }),
                 ark_passive_enabled: true,
-                ark_passive_data: Some(ArkPassiveData { 
-                    evolution: Some(vec![
-                        ArkPassiveNode { id: 1, lv: 1 }
-                    ]),
-                    enlightenment: Some(vec![
-                        ArkPassiveNode { id: 1, lv: 1 }
-                    ]),
-                    leap: Some(vec![
-                        ArkPassiveNode { id: 1, lv: 1 }
-                    ]),
+                ark_passive_data: Some(ArkPassiveData {
+                    evolution: Some(vec![ArkPassiveNode { id: 1, lv: 1 }]),
+                    enlightenment: Some(vec![ArkPassiveNode { id: 1, lv: 1 }]),
+                    leap: Some(vec![ArkPassiveNode { id: 1, lv: 1 }]),
                 }),
                 engravings: Some(vec![1118, 1299]),
                 gems: Some(vec![
-                    GemData { tier: 2, skill_id: 50010, gem_type: 63, value: 4400 },
-                    GemData { tier: 2, skill_id: 28220, gem_type: 63, value: 4400 },
-                    GemData { tier: 2, skill_id: 28090, gem_type: 63, value: 4400 },
-                    GemData { tier: 2, skill_id: 28250, gem_type: 63, value: 4400 },
-                    GemData { tier: 2, skill_id: 28070, gem_type: 63, value: 4400 },
-                    GemData { tier: 2, skill_id: 28110, gem_type: 63, value: 4400 },
-                    GemData { tier: 2, skill_id: 28130, gem_type: 63, value: 4400 },
-                    GemData { tier: 2, skill_id: 28150, gem_type: 63, value: 4400 },
+                    GemData {
+                        tier: 2,
+                        skill_id: 50010,
+                        gem_type: 63,
+                        value: 4400,
+                    },
+                    GemData {
+                        tier: 2,
+                        skill_id: 28220,
+                        gem_type: 63,
+                        value: 4400,
+                    },
+                    GemData {
+                        tier: 2,
+                        skill_id: 28090,
+                        gem_type: 63,
+                        value: 4400,
+                    },
+                    GemData {
+                        tier: 2,
+                        skill_id: 28250,
+                        gem_type: 63,
+                        value: 4400,
+                    },
+                    GemData {
+                        tier: 2,
+                        skill_id: 28070,
+                        gem_type: 63,
+                        value: 4400,
+                    },
+                    GemData {
+                        tier: 2,
+                        skill_id: 28110,
+                        gem_type: 63,
+                        value: 4400,
+                    },
+                    GemData {
+                        tier: 2,
+                        skill_id: 28130,
+                        gem_type: 63,
+                        value: 4400,
+                    },
+                    GemData {
+                        tier: 2,
+                        skill_id: 28150,
+                        gem_type: 63,
+                        value: 4400,
+                    },
                 ]),
-                loadout_snapshot: Some(String::from(""))
-            }
+                loadout_snapshot: Some(String::from("")),
+            },
         };
-        let player13 = PlayerSpec { 
-            class_id: 302, class_name: "Wardancer".to_string(), specialisation: "Esoteric Skill Enhancement",
-            crit_rate: 0.30, gear_score: 1580.0, hp: 1_000_000,
-            info: InspectInfo { 
+        let player13 = PlayerSpec {
+            class_id: 302,
+            class_name: "Wardancer".to_string(),
+            specialisation: "Esoteric Skill Enhancement",
+            crit_rate: 0.30,
+            gear_score: 1580.0,
+            hp: 1_000_000,
+            info: InspectInfo {
                 combat_power: Some(CombatPower {
                     id: 1,
                     score: 1800.0,
                 }),
                 ark_passive_enabled: true,
-                ark_passive_data: Some(ArkPassiveData { 
-                    evolution: Some(vec![
-                        ArkPassiveNode { id: 1, lv: 1 }
-                    ]),
-                    enlightenment: Some(vec![
-                        ArkPassiveNode { id: 1, lv: 1 }
-                    ]),
-                    leap: Some(vec![
-                        ArkPassiveNode { id: 1, lv: 1 }
-                    ]),
+                ark_passive_data: Some(ArkPassiveData {
+                    evolution: Some(vec![ArkPassiveNode { id: 1, lv: 1 }]),
+                    enlightenment: Some(vec![ArkPassiveNode { id: 1, lv: 1 }]),
+                    leap: Some(vec![ArkPassiveNode { id: 1, lv: 1 }]),
                 }),
                 engravings: Some(vec![1118, 1299]),
                 gems: Some(vec![
-                    GemData { tier: 2, skill_id: 22340, gem_type: 63, value: 4400 },
-                    GemData { tier: 2, skill_id: 22080, gem_type: 63, value: 4400 },
-                    GemData { tier: 2, skill_id: 22120, gem_type: 63, value: 4400 },
-                    GemData { tier: 2, skill_id: 22310, gem_type: 63, value: 4400 },
-                    GemData { tier: 2, skill_id: 22270, gem_type: 63, value: 4400 },
-                    GemData { tier: 2, skill_id: 22240, gem_type: 63, value: 4400 },
-                    GemData { tier: 2, skill_id: 22210, gem_type: 63, value: 4400 },
-                    GemData { tier: 2, skill_id: 22160, gem_type: 63, value: 4400 },
+                    GemData {
+                        tier: 2,
+                        skill_id: 22340,
+                        gem_type: 63,
+                        value: 4400,
+                    },
+                    GemData {
+                        tier: 2,
+                        skill_id: 22080,
+                        gem_type: 63,
+                        value: 4400,
+                    },
+                    GemData {
+                        tier: 2,
+                        skill_id: 22120,
+                        gem_type: 63,
+                        value: 4400,
+                    },
+                    GemData {
+                        tier: 2,
+                        skill_id: 22310,
+                        gem_type: 63,
+                        value: 4400,
+                    },
+                    GemData {
+                        tier: 2,
+                        skill_id: 22270,
+                        gem_type: 63,
+                        value: 4400,
+                    },
+                    GemData {
+                        tier: 2,
+                        skill_id: 22240,
+                        gem_type: 63,
+                        value: 4400,
+                    },
+                    GemData {
+                        tier: 2,
+                        skill_id: 22210,
+                        gem_type: 63,
+                        value: 4400,
+                    },
+                    GemData {
+                        tier: 2,
+                        skill_id: 22160,
+                        gem_type: 63,
+                        value: 4400,
+                    },
                 ]),
-                loadout_snapshot: Some(String::from(""))
-            }
+                loadout_snapshot: Some(String::from("")),
+            },
         };
-        let player14 = PlayerSpec { 
-            class_id: 204, class_name: "Bard".to_string(), specialisation: "Desperate Salvation",
-            crit_rate: 0.15, gear_score: 1500.0, hp: 1_000_000,
-            info: InspectInfo { 
+        let player14 = PlayerSpec {
+            class_id: 204,
+            class_name: "Bard".to_string(),
+            specialisation: "Desperate Salvation",
+            crit_rate: 0.15,
+            gear_score: 1500.0,
+            hp: 1_000_000,
+            info: InspectInfo {
                 combat_power: Some(CombatPower {
                     id: 2,
                     score: 1800.0,
                 }),
                 ark_passive_enabled: true,
-                ark_passive_data: Some(ArkPassiveData { 
-                    evolution: Some(vec![
-                        ArkPassiveNode { id: 1, lv: 1 }
-                    ]),
-                    enlightenment: Some(vec![
-                        ArkPassiveNode { id: 1, lv: 1 }
-                    ]),
-                    leap: Some(vec![
-                        ArkPassiveNode { id: 1, lv: 1 }
-                    ]),
+                ark_passive_data: Some(ArkPassiveData {
+                    evolution: Some(vec![ArkPassiveNode { id: 1, lv: 1 }]),
+                    enlightenment: Some(vec![ArkPassiveNode { id: 1, lv: 1 }]),
+                    leap: Some(vec![ArkPassiveNode { id: 1, lv: 1 }]),
                 }),
                 engravings: Some(vec![1255, 1251, 1134, 1167, 77300001]),
                 gems: Some(vec![
-                    GemData { tier: 2, skill_id: 21170, gem_type: 35, value: 2400 },
-                    GemData { tier: 2, skill_id: 21080, gem_type: 35, value: 2400 },
-                    GemData { tier: 2, skill_id: 21250, gem_type: 35, value: 2400 },
-                    GemData { tier: 2, skill_id: 21290, gem_type: 35, value: 2400 },
-                    GemData { tier: 2, skill_id: 21160, gem_type: 35, value: 2400 },
-                    GemData { tier: 2, skill_id: 21160, gem_type: 64, value: 1000 },
+                    GemData {
+                        tier: 2,
+                        skill_id: 21170,
+                        gem_type: 35,
+                        value: 2400,
+                    },
+                    GemData {
+                        tier: 2,
+                        skill_id: 21080,
+                        gem_type: 35,
+                        value: 2400,
+                    },
+                    GemData {
+                        tier: 2,
+                        skill_id: 21250,
+                        gem_type: 35,
+                        value: 2400,
+                    },
+                    GemData {
+                        tier: 2,
+                        skill_id: 21290,
+                        gem_type: 35,
+                        value: 2400,
+                    },
+                    GemData {
+                        tier: 2,
+                        skill_id: 21160,
+                        gem_type: 35,
+                        value: 2400,
+                    },
+                    GemData {
+                        tier: 2,
+                        skill_id: 21160,
+                        gem_type: 64,
+                        value: 1000,
+                    },
                 ]),
-                loadout_snapshot: Some(String::from(""))
-            }
+                loadout_snapshot: Some(String::from("")),
+            },
         };
 
-        let player21 = PlayerSpec { 
-            class_id: 603, class_name: "Aeromancer".to_string(), specialisation: "Drizzle",
-            crit_rate: 0.25, gear_score: 1620.0, hp: 0,
-            info: InspectInfo { 
+        let player21 = PlayerSpec {
+            class_id: 603,
+            class_name: "Aeromancer".to_string(),
+            specialisation: "Drizzle",
+            crit_rate: 0.25,
+            gear_score: 1620.0,
+            hp: 0,
+            info: InspectInfo {
                 combat_power: Some(CombatPower {
                     id: 1,
                     score: 1800.0,
                 }),
                 ark_passive_enabled: true,
-                ark_passive_data: Some(ArkPassiveData { 
-                    evolution: Some(vec![
-                        ArkPassiveNode { id: 1, lv: 1 }
-                    ]),
-                    enlightenment: Some(vec![
-                        ArkPassiveNode { id: 1, lv: 1 }
-                    ]),
-                    leap: Some(vec![
-                        ArkPassiveNode { id: 1, lv: 1 }
-                    ]),
+                ark_passive_data: Some(ArkPassiveData {
+                    evolution: Some(vec![ArkPassiveNode { id: 1, lv: 1 }]),
+                    enlightenment: Some(vec![ArkPassiveNode { id: 1, lv: 1 }]),
+                    leap: Some(vec![ArkPassiveNode { id: 1, lv: 1 }]),
                 }),
                 engravings: Some(vec![1118, 1299]),
                 gems: Some(vec![
-                    GemData { tier: 2, skill_id: 32010, gem_type: 63, value: 4400 },
-                    GemData { tier: 2, skill_id: 32150, gem_type: 63, value: 4400 },
-                    GemData { tier: 2, skill_id: 32160, gem_type: 63, value: 4400 },
-                    GemData { tier: 2, skill_id: 32170, gem_type: 63, value: 4400 },
-                    GemData { tier: 2, skill_id: 32190, gem_type: 63, value: 4400 },
-                    GemData { tier: 2, skill_id: 32210, gem_type: 63, value: 4400 },
-                    GemData { tier: 2, skill_id: 32220, gem_type: 63, value: 4400 },
-                    GemData { tier: 2, skill_id: 32230, gem_type: 63, value: 4400 },
+                    GemData {
+                        tier: 2,
+                        skill_id: 32010,
+                        gem_type: 63,
+                        value: 4400,
+                    },
+                    GemData {
+                        tier: 2,
+                        skill_id: 32150,
+                        gem_type: 63,
+                        value: 4400,
+                    },
+                    GemData {
+                        tier: 2,
+                        skill_id: 32160,
+                        gem_type: 63,
+                        value: 4400,
+                    },
+                    GemData {
+                        tier: 2,
+                        skill_id: 32170,
+                        gem_type: 63,
+                        value: 4400,
+                    },
+                    GemData {
+                        tier: 2,
+                        skill_id: 32190,
+                        gem_type: 63,
+                        value: 4400,
+                    },
+                    GemData {
+                        tier: 2,
+                        skill_id: 32210,
+                        gem_type: 63,
+                        value: 4400,
+                    },
+                    GemData {
+                        tier: 2,
+                        skill_id: 32220,
+                        gem_type: 63,
+                        value: 4400,
+                    },
+                    GemData {
+                        tier: 2,
+                        skill_id: 32230,
+                        gem_type: 63,
+                        value: 4400,
+                    },
                 ]),
-                loadout_snapshot: Some(String::from(""))
-            }
+                loadout_snapshot: Some(String::from("")),
+            },
         };
-        let player22 = PlayerSpec { 
-            class_id: 504, class_name: "Artillerist".to_string(), specialisation: "Barrage Enhancement",
-            crit_rate: 0.28, gear_score: 1600.0, hp: 1_000_000,
-            info: InspectInfo { 
+        let player22 = PlayerSpec {
+            class_id: 504,
+            class_name: "Artillerist".to_string(),
+            specialisation: "Barrage Enhancement",
+            crit_rate: 0.28,
+            gear_score: 1600.0,
+            hp: 1_000_000,
+            info: InspectInfo {
                 combat_power: Some(CombatPower {
                     id: 1,
                     score: 1800.0,
                 }),
                 ark_passive_enabled: true,
-                ark_passive_data: Some(ArkPassiveData { 
-                    evolution: Some(vec![
-                        ArkPassiveNode { id: 1, lv: 1 }
-                    ]),
-                    enlightenment: Some(vec![
-                        ArkPassiveNode { id: 1, lv: 1 }
-                    ]),
-                    leap: Some(vec![
-                        ArkPassiveNode { id: 1, lv: 1 }
-                    ]),
+                ark_passive_data: Some(ArkPassiveData {
+                    evolution: Some(vec![ArkPassiveNode { id: 1, lv: 1 }]),
+                    enlightenment: Some(vec![ArkPassiveNode { id: 1, lv: 1 }]),
+                    leap: Some(vec![ArkPassiveNode { id: 1, lv: 1 }]),
                 }),
                 engravings: Some(vec![1118, 1299]),
                 gems: Some(vec![
-                    GemData { tier: 2, skill_id: 30260, gem_type: 63, value: 4400 },
-                    GemData { tier: 2, skill_id: 30270, gem_type: 63, value: 4400 },
-                    GemData { tier: 2, skill_id: 30290, gem_type: 63, value: 4400 },
-                    GemData { tier: 2, skill_id: 30340, gem_type: 63, value: 4400 },
-                    GemData { tier: 2, skill_id: 30380, gem_type: 63, value: 4400 },
-                    GemData { tier: 2, skill_id: 30310, gem_type: 63, value: 4400 },
-                    GemData { tier: 2, skill_id: 30320, gem_type: 63, value: 4400 },
-                    GemData { tier: 2, skill_id: 30392, gem_type: 63, value: 4400 },
+                    GemData {
+                        tier: 2,
+                        skill_id: 30260,
+                        gem_type: 63,
+                        value: 4400,
+                    },
+                    GemData {
+                        tier: 2,
+                        skill_id: 30270,
+                        gem_type: 63,
+                        value: 4400,
+                    },
+                    GemData {
+                        tier: 2,
+                        skill_id: 30290,
+                        gem_type: 63,
+                        value: 4400,
+                    },
+                    GemData {
+                        tier: 2,
+                        skill_id: 30340,
+                        gem_type: 63,
+                        value: 4400,
+                    },
+                    GemData {
+                        tier: 2,
+                        skill_id: 30380,
+                        gem_type: 63,
+                        value: 4400,
+                    },
+                    GemData {
+                        tier: 2,
+                        skill_id: 30310,
+                        gem_type: 63,
+                        value: 4400,
+                    },
+                    GemData {
+                        tier: 2,
+                        skill_id: 30320,
+                        gem_type: 63,
+                        value: 4400,
+                    },
+                    GemData {
+                        tier: 2,
+                        skill_id: 30392,
+                        gem_type: 63,
+                        value: 4400,
+                    },
                 ]),
-                loadout_snapshot: Some(String::from(""))
-            }
+                loadout_snapshot: Some(String::from("")),
+            },
         };
-        let player23 = PlayerSpec { 
-            class_id: 402, class_name: "Deathblade".to_string(), specialisation: "Remaining Energy",
-            crit_rate: 0.30, gear_score: 1580.0, hp: 1_000_000,
-            info: InspectInfo { 
+        let player23 = PlayerSpec {
+            class_id: 402,
+            class_name: "Deathblade".to_string(),
+            specialisation: "Remaining Energy",
+            crit_rate: 0.30,
+            gear_score: 1580.0,
+            hp: 1_000_000,
+            info: InspectInfo {
                 combat_power: Some(CombatPower {
                     id: 1,
                     score: 1800.0,
                 }),
                 ark_passive_enabled: true,
-                ark_passive_data: Some(ArkPassiveData { 
-                    evolution: Some(vec![
-                        ArkPassiveNode { id: 1, lv: 1 }
-                    ]),
-                    enlightenment: Some(vec![
-                        ArkPassiveNode { id: 1, lv: 1 }
-                    ]),
-                    leap: Some(vec![
-                        ArkPassiveNode { id: 1, lv: 1 }
-                    ]),
+                ark_passive_data: Some(ArkPassiveData {
+                    evolution: Some(vec![ArkPassiveNode { id: 1, lv: 1 }]),
+                    enlightenment: Some(vec![ArkPassiveNode { id: 1, lv: 1 }]),
+                    leap: Some(vec![ArkPassiveNode { id: 1, lv: 1 }]),
                 }),
                 engravings: Some(vec![1118, 1299]),
                 gems: Some(vec![
-                    GemData { tier: 2, skill_id: 25010, gem_type: 63, value: 4400 },
-                    GemData { tier: 2, skill_id: 25180, gem_type: 63, value: 4400 },
-                    GemData { tier: 2, skill_id: 25160, gem_type: 63, value: 4400 },
-                    GemData { tier: 2, skill_id: 25110, gem_type: 63, value: 4400 },
-                    GemData { tier: 2, skill_id: 25120, gem_type: 63, value: 4400 },
-                    GemData { tier: 2, skill_id: 25030, gem_type: 63, value: 4400 },
-                    GemData { tier: 2, skill_id: 25040, gem_type: 63, value: 4400 },
-                    GemData { tier: 2, skill_id: 25050, gem_type: 63, value: 4400 },
+                    GemData {
+                        tier: 2,
+                        skill_id: 25010,
+                        gem_type: 63,
+                        value: 4400,
+                    },
+                    GemData {
+                        tier: 2,
+                        skill_id: 25180,
+                        gem_type: 63,
+                        value: 4400,
+                    },
+                    GemData {
+                        tier: 2,
+                        skill_id: 25160,
+                        gem_type: 63,
+                        value: 4400,
+                    },
+                    GemData {
+                        tier: 2,
+                        skill_id: 25110,
+                        gem_type: 63,
+                        value: 4400,
+                    },
+                    GemData {
+                        tier: 2,
+                        skill_id: 25120,
+                        gem_type: 63,
+                        value: 4400,
+                    },
+                    GemData {
+                        tier: 2,
+                        skill_id: 25030,
+                        gem_type: 63,
+                        value: 4400,
+                    },
+                    GemData {
+                        tier: 2,
+                        skill_id: 25040,
+                        gem_type: 63,
+                        value: 4400,
+                    },
+                    GemData {
+                        tier: 2,
+                        skill_id: 25050,
+                        gem_type: 63,
+                        value: 4400,
+                    },
                 ]),
-                loadout_snapshot: Some(String::from(""))
-            }
+                loadout_snapshot: Some(String::from("")),
+            },
         };
-        let player24 = PlayerSpec { 
-            class_id: 105, class_name: "Paladin".to_string(), specialisation: "Blessed Aura",
-            crit_rate: 0.15, gear_score: 1500.0, hp: 1_000_000,
-            info: InspectInfo { 
+        let player24 = PlayerSpec {
+            class_id: 105,
+            class_name: "Paladin".to_string(),
+            specialisation: "Blessed Aura",
+            crit_rate: 0.15,
+            gear_score: 1500.0,
+            hp: 1_000_000,
+            info: InspectInfo {
                 combat_power: Some(CombatPower {
                     id: 2,
                     score: 1800.0,
                 }),
                 ark_passive_enabled: true,
-                ark_passive_data: Some(ArkPassiveData { 
-                    evolution: Some(vec![
-                        ArkPassiveNode { id: 1, lv: 1 }
-                    ]),
-                    enlightenment: Some(vec![
-                        ArkPassiveNode { id: 1, lv: 1 }
-                    ]),
-                    leap: Some(vec![
-                        ArkPassiveNode { id: 1, lv: 1 }
-                    ]),
+                ark_passive_data: Some(ArkPassiveData {
+                    evolution: Some(vec![ArkPassiveNode { id: 1, lv: 1 }]),
+                    enlightenment: Some(vec![ArkPassiveNode { id: 1, lv: 1 }]),
+                    leap: Some(vec![ArkPassiveNode { id: 1, lv: 1 }]),
                 }),
                 engravings: Some(vec![1255, 1251, 1134, 1167, 77300001]),
                 gems: Some(vec![
-                    GemData { tier: 2, skill_id: 36080, gem_type: 35, value: 2400 },
-                    GemData { tier: 2, skill_id: 36120, gem_type: 35, value: 2400 },
-                    GemData { tier: 2, skill_id: 36220, gem_type: 35, value: 2400 },
-                    GemData { tier: 2, skill_id: 36170, gem_type: 35, value: 2400 },
-                    GemData { tier: 2, skill_id: 36200, gem_type: 35, value: 2400 },
-                    GemData { tier: 2, skill_id: 36200, gem_type: 64, value: 1000 },
+                    GemData {
+                        tier: 2,
+                        skill_id: 36080,
+                        gem_type: 35,
+                        value: 2400,
+                    },
+                    GemData {
+                        tier: 2,
+                        skill_id: 36120,
+                        gem_type: 35,
+                        value: 2400,
+                    },
+                    GemData {
+                        tier: 2,
+                        skill_id: 36220,
+                        gem_type: 35,
+                        value: 2400,
+                    },
+                    GemData {
+                        tier: 2,
+                        skill_id: 36170,
+                        gem_type: 35,
+                        value: 2400,
+                    },
+                    GemData {
+                        tier: 2,
+                        skill_id: 36200,
+                        gem_type: 35,
+                        value: 2400,
+                    },
+                    GemData {
+                        tier: 2,
+                        skill_id: 36200,
+                        gem_type: 64,
+                        value: 1000,
+                    },
                 ]),
-                loadout_snapshot: Some(String::from(""))
-            }
+                loadout_snapshot: Some(String::from("")),
+            },
         };
 
         let raid_builder = RaidBuilder::new()
             .add_party((player11, player12, player13, player14))
             .add_party((player21, player22, player23, player24))
-            .set_boss("Mordum, the Abyssal Punisher", 485800, 1_100_000_000_000, 15)
+            .set_boss(
+                "Mordum, the Abyssal Punisher",
+                485800,
+                1_100_000_000_000,
+                15,
+            )
             .set_region("EUC")
             .set_version(version)
             .set_damage_range(1_000_000, 2_000_000)
@@ -1010,7 +1339,7 @@ mod tests {
         crit_rate: f64,
         gear_score: f32,
         hp: i64,
-        info: InspectInfo
+        info: InspectInfo,
     }
 
     struct RaidBuilder {
@@ -1042,12 +1371,13 @@ mod tests {
                 difficulty: "Hard".to_string(),
                 rng: rand::rng(),
                 damage_range: (500, 1500),
-                damage_taken_range: (500, 1000)
+                damage_taken_range: (500, 1000),
             }
         }
 
         fn add_party(mut self, players: (PlayerSpec, PlayerSpec, PlayerSpec, PlayerSpec)) -> Self {
-            self.parties.push(vec![players.0, players.1, players.2, players.3]);
+            self.parties
+                .push(vec![players.0, players.1, players.2, players.3]);
             self
         }
 
@@ -1100,7 +1430,9 @@ mod tests {
             let local_player = player_names[0].clone();
             let mut boss = self.generate_boss_entity();
 
-            boss.damage_stats.damage_dealt += self.rng.random_range(self.damage_range.0..self.damage_range.1);
+            boss.damage_stats.damage_dealt += self
+                .rng
+                .random_range(self.damage_range.0..self.damage_range.1);
 
             let mut boss_hp_logs: HashMap<String, Vec<BossHpLog>> = HashMap::new();
             let mut boss_hp_log = Vec::with_capacity(duration_s as usize + 1);
@@ -1112,20 +1444,19 @@ mod tests {
             }
             boss_hp_logs.insert(boss.name.clone(), boss_hp_log);
 
-            let party_vec: Vec<Vec<String>> = player_names.chunks(4)
-                .map(|chunk| chunk.to_vec())
-                .collect();
-
+            let party_vec: Vec<Vec<String>> =
+                player_names.chunks(4).map(|chunk| chunk.to_vec()).collect();
 
             let mut party_info: HashMap<i32, Vec<String>> = HashMap::new();
             for (idx, party) in player_names.chunks(4).enumerate() {
                 party_info.insert(idx as i32 + 1, party.to_vec());
-            }        
+            }
 
             let mut encounter_entities_with_stats = HashMap::new();
             let mut damage_log: HashMap<String, Vec<(i64, i64)>> = HashMap::new();
             let mut cast_log: HashMap<String, HashMap<u32, Vec<i32>>> = HashMap::new();
-            let mut skill_cast_log: HashMap<u64, HashMap<u32, BTreeMap<i64, SkillCast>>> = HashMap::new();
+            let mut skill_cast_log: HashMap<u64, HashMap<u32, BTreeMap<i64, SkillCast>>> =
+                HashMap::new();
             let mut player_info: HashMap<String, InspectInfo> = HashMap::new();
             for (name, (spec, mut entity)) in entities_with_spec.into_iter() {
                 if entity.entity_type == EntityType::Player {
@@ -1137,7 +1468,8 @@ mod tests {
                         &mut skill_cast_log,
                         self.damage_range,
                         &mut self.rng,
-                        &mut entity);
+                        &mut entity,
+                    );
                     player_info.insert(name.clone(), spec.info);
                     update_damage_taken(self.damage_taken_range, &mut self.rng, &mut entity);
                     update_buffs_heals_and_absorb(&mut self.rng, &mut entity);
@@ -1151,10 +1483,13 @@ mod tests {
             let mut skill_cooldowns = HashMap::new();
 
             for (id, _) in local_player_entity.skills.iter() {
-                skill_cooldowns.insert(*id, vec![CastEvent {
-                    cooldown_duration_ms: self.rng.random_range(1000..5000),
-                    timestamp: self.rng.random_range(1000..5000),
-                }]);
+                skill_cooldowns.insert(
+                    *id,
+                    vec![CastEvent {
+                        cooldown_duration_ms: self.rng.random_range(1000..5000),
+                        timestamp: self.rng.random_range(1000..5000),
+                    }],
+                );
             }
 
             let misc = EncounterMisc {
@@ -1251,7 +1586,6 @@ mod tests {
                 combat_power: None,
             }
         }
-
     }
 
     fn update_skill_and_damage_stats(
@@ -1262,7 +1596,8 @@ mod tests {
         skill_cast_log: &mut HashMap<u64, HashMap<u32, BTreeMap<i64, SkillCast>>>,
         damage_range: (i64, i64),
         rng: &mut ThreadRng,
-        entity: &mut EncounterEntity) {
+        entity: &mut EncounterEntity,
+    ) {
         entity.skill_stats = SkillStats::default();
         entity.damage_stats = DamageStats::default();
 
@@ -1304,7 +1639,7 @@ mod tests {
 
                 let skill_cast = SkillCast {
                     hits: vec![skill_hit],
-                    last: timestamp, 
+                    last: timestamp,
                     timestamp,
                     ..Default::default()
                 };
@@ -1322,13 +1657,17 @@ mod tests {
                 .entry(entity.id)
                 .or_default()
                 .insert(skill.id, per_skill_map);
-
         }
 
-        entity.damage_stats.hyper_awakening_damage += rng.random_range(1_000_000_000..2_000_000_000);
+        entity.damage_stats.hyper_awakening_damage +=
+            rng.random_range(1_000_000_000..2_000_000_000);
     }
 
-    fn update_damage_taken(damage_taken: (i64, i64), rng: &mut ThreadRng, entity: &mut EncounterEntity) {
+    fn update_damage_taken(
+        damage_taken: (i64, i64),
+        rng: &mut ThreadRng,
+        entity: &mut EncounterEntity,
+    ) {
         entity.damage_stats.damage_taken += rng.random_range(damage_taken.0..damage_taken.1)
     }
 
@@ -1348,15 +1687,24 @@ mod tests {
 
         let absorb_value = rng.random_range(10_000..=100_000);
         entity.damage_stats.damage_absorbed += absorb_value;
-        entity.damage_stats.damage_absorbed_by.insert(1, absorb_value);
+        entity
+            .damage_stats
+            .damage_absorbed_by
+            .insert(1, absorb_value);
 
         let shield_value = rng.random_range(5_000..=50_000);
         entity.damage_stats.shields_given += shield_value;
         entity.damage_stats.shields_given_by.insert(1, shield_value);
         entity.damage_stats.shields_received += shield_value / 2;
-        entity.damage_stats.shields_received_by.insert(1, shield_value / 2);
+        entity
+            .damage_stats
+            .shields_received_by
+            .insert(1, shield_value / 2);
         entity.damage_stats.damage_absorbed_on_others += shield_value / 3;
-        entity.damage_stats.damage_absorbed_on_others_by.insert(1, shield_value / 3);
+        entity
+            .damage_stats
+            .damage_absorbed_on_others_by
+            .insert(1, shield_value / 3);
     }
 
     fn get_skills_by_spec(specialisation: &str) -> HashMap<u32, Skill> {
@@ -1365,42 +1713,98 @@ mod tests {
         match specialisation {
             "Mayhem" => {
                 for id in [16010, 16640, 16120, 16080, 16300, 16050, 16220, 16030] {
-                    skills.insert(id, Skill { id, name: format!("Skill {}", id), ..Default::default() });
+                    skills.insert(
+                        id,
+                        Skill {
+                            id,
+                            name: format!("Skill {}", id),
+                            ..Default::default()
+                        },
+                    );
                 }
             }
             "Loyal Companion" => {
                 for id in [50010, 28220, 28090, 28250, 28070, 28110, 28130, 28150] {
-                    skills.insert(id, Skill { id, name: format!("Skill {}", id), ..Default::default() });
+                    skills.insert(
+                        id,
+                        Skill {
+                            id,
+                            name: format!("Skill {}", id),
+                            ..Default::default()
+                        },
+                    );
                 }
             }
             "Esoteric Skill Enhancement" => {
                 for id in [22340, 22080, 22120, 22160, 22210, 22240, 22270, 22310] {
-                    skills.insert(id, Skill { id, name: format!("Skill {}", id), ..Default::default() });
+                    skills.insert(
+                        id,
+                        Skill {
+                            id,
+                            name: format!("Skill {}", id),
+                            ..Default::default()
+                        },
+                    );
                 }
             }
             "Desperate Salvation" => {
                 for id in [21290, 21170, 21080, 21160, 21250, 21040, 21020, 21210] {
-                    skills.insert(id, Skill { id, name: format!("Skill {}", id), ..Default::default() });
+                    skills.insert(
+                        id,
+                        Skill {
+                            id,
+                            name: format!("Skill {}", id),
+                            ..Default::default()
+                        },
+                    );
                 }
             }
             "Drizzle" => {
                 for id in [32010, 32150, 32160, 32170, 32190, 32210, 32220, 32230] {
-                    skills.insert(id, Skill { id, name: format!("Skill {}", id), ..Default::default() });
+                    skills.insert(
+                        id,
+                        Skill {
+                            id,
+                            name: format!("Skill {}", id),
+                            ..Default::default()
+                        },
+                    );
                 }
             }
             "Barrage Enhancement" => {
                 for id in [30260, 30270, 30290, 30340, 30392, 30320, 30310, 30380] {
-                    skills.insert(id, Skill { id, name: format!("Skill {}", id), ..Default::default() });
+                    skills.insert(
+                        id,
+                        Skill {
+                            id,
+                            name: format!("Skill {}", id),
+                            ..Default::default()
+                        },
+                    );
                 }
             }
             "Remaining Energy" => {
                 for id in [25010, 25180, 25160, 25110, 25120, 25030, 25040, 25050] {
-                    skills.insert(id, Skill { id, name: format!("Skill {}", id), ..Default::default() });
+                    skills.insert(
+                        id,
+                        Skill {
+                            id,
+                            name: format!("Skill {}", id),
+                            ..Default::default()
+                        },
+                    );
                 }
             }
             "Blessed Aura" => {
                 for id in [36080, 36120, 36200, 36170, 36800, 36040, 36020, 36220] {
-                    skills.insert(id, Skill { id, name: format!("Skill {}", id), ..Default::default() });
+                    skills.insert(
+                        id,
+                        Skill {
+                            id,
+                            name: format!("Skill {}", id),
+                            ..Default::default()
+                        },
+                    );
                 }
             }
             _ => {}
@@ -1409,11 +1813,7 @@ mod tests {
         skills
     }
 
-    fn build_entity_from_spec(
-        name: &str,
-        spec: &PlayerSpec,
-        idx: usize,
-    ) -> EncounterEntity {
+    fn build_entity_from_spec(name: &str, spec: &PlayerSpec, idx: usize) -> EncounterEntity {
         let skills = get_skills_by_spec(&spec.specialisation);
 
         let entity = EncounterEntity {

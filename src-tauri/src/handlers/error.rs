@@ -1,7 +1,7 @@
 use log::error;
 use serde::Serialize;
-use thiserror::Error;
 use std::error::Error as StdError;
+use thiserror::Error;
 
 #[derive(Debug, Error)]
 pub enum AppError {
@@ -31,7 +31,7 @@ impl Serialize for AppError {
         if let Some(inner) = error.source() {
             error!("caused by: {}", inner);
         }
-        
+
         serializer.serialize_str(&self.to_string())
     }
 }

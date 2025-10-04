@@ -1,9 +1,9 @@
-mod queries;
-pub mod utils;
-mod sql_types;
-pub mod models;
 pub mod migrator;
+pub mod models;
+mod queries;
 pub mod repository;
+mod sql_types;
+pub mod utils;
 
 use anyhow::Result;
 use r2d2::{Pool, PooledConnection};
@@ -18,32 +18,24 @@ pub struct Database(r2d2::Pool<SqliteConnectionManager>, PathBuf);
 impl Database {
     #[cfg(test)]
     pub fn memory(app_version: &str) -> Result<Self> {
-
         let manager = SqliteConnectionManager::memory();
 
         let pool: r2d2::Pool<SqliteConnectionManager> = r2d2::Pool::new(manager)?;
 
-        let migrator = Migrator::new(
-            pool.clone(),
-            app_version);
+        let migrator = Migrator::new(pool.clone(), app_version);
         migrator.run()?;
-    
+
         Ok(Self(pool, PathBuf::new()))
     }
 
-    pub fn new(
-        path: PathBuf,
-        app_version: &str) -> Result<Self> {
-
+    pub fn new(path: PathBuf, app_version: &str) -> Result<Self> {
         let manager = SqliteConnectionManager::file(&path);
 
         let pool: r2d2::Pool<SqliteConnectionManager> = r2d2::Pool::new(manager)?;
 
-        let migrator = Migrator::new(
-            pool.clone(),
-            app_version);
+        let migrator = Migrator::new(pool.clone(), app_version);
         migrator.run()?;
-    
+
         Ok(Self(pool, path))
     }
 

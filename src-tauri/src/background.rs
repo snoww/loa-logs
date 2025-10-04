@@ -1,10 +1,13 @@
 #![allow(dead_code)]
 
 use anyhow::*;
-use tokio::task::JoinHandle;
-use std::{path::PathBuf, sync::{atomic::AtomicBool, Arc}};
 use log::*;
+use std::{
+    path::PathBuf,
+    sync::{atomic::AtomicBool, Arc},
+};
 use tauri::AppHandle;
+use tokio::task::JoinHandle;
 
 use crate::settings::Settings;
 
@@ -14,7 +17,7 @@ pub struct BackgroundWorkerArgs {
     pub port: u16,
     pub region_file_path: PathBuf,
     pub settings: Option<Settings>,
-    pub version: String
+    pub version: String,
 }
 
 pub struct BackgroundWorker(Option<JoinHandle<()>>);
@@ -25,7 +28,6 @@ impl BackgroundWorker {
     }
 
     pub fn start(&mut self, args: BackgroundWorkerArgs) -> Result<()> {
-      
         let handle = tokio::task::spawn_blocking(move || Self::inner(args));
 
         self.0 = Some(handle);
@@ -40,9 +42,9 @@ impl BackgroundWorker {
             port,
             region_file_path,
             settings,
-            version
+            version,
         } = args;
-        
+
         #[cfg(feature = "meter-core")]
         {
             use std::sync::atomic::Ordering;
@@ -52,12 +54,11 @@ impl BackgroundWorker {
             while !update_checked.load(Ordering::Relaxed) {
                 std::thread::sleep(std::time::Duration::from_millis(100));
             }
-            
+
             info!("listening on port: {port}");
-            
+
             live::start(app_handle, port, settings).expect("unexpected error occurred in parser");
         }
-
     }
 
     pub fn is_running(&self) -> bool {

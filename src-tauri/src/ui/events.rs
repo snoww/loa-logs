@@ -1,14 +1,23 @@
 use std::str::FromStr;
 
-use log::*;
 use anyhow::Result;
-use tauri::{async_runtime, menu::MenuEvent, tray::{MouseButton, MouseButtonState, TrayIcon, TrayIconEvent}, AppHandle, Manager, Window, WindowEvent};
+use log::*;
+use tauri::{
+    async_runtime, menu::MenuEvent, tray::{MouseButton, MouseButtonState, TrayIcon, TrayIconEvent}, AppHandle, Manager,
+    Window,
+    WindowEvent,
+};
 use tauri_plugin_window_state::AppHandleExt;
 
-use crate::{constants::*, settings::SettingsManager, shell::ShellManager, ui::{AppHandleExtensions, TrayCommand, WindowExtensions}};
+use crate::{
+    constants::*,
+    settings::SettingsManager,
+    shell::ShellManager,
+    ui::{AppHandleExtensions, TrayCommand, WindowExtensions},
+};
 
 pub fn on_tray_icon_event(tray: &TrayIcon, event: TrayIconEvent) {
-     {
+    {
         if let TrayIconEvent::Click {
             button: MouseButton::Left,
             button_state: MouseButtonState::Up,
@@ -36,12 +45,12 @@ pub fn on_menu_event_inner(app_handle: &AppHandle, event: MenuEvent) -> Result<(
     match TrayCommand::from_str(menu_item_id)? {
         TrayCommand::Quit => {
             app_handle.save_window_state(WINDOW_STATE_FLAGS)?;
-            
+
             let shell_manager = app_handle.state::<ShellManager>();
             async_runtime::block_on(async {
                 shell_manager.unload_driver().await;
             });
-        
+
             app_handle.exit(0);
         }
         TrayCommand::Hide => {
@@ -69,7 +78,7 @@ pub fn on_menu_event_inner(app_handle: &AppHandle, event: MenuEvent) -> Result<(
                     mini.restore_and_focus();
                 }
 
-                return Ok(())
+                return Ok(());
             }
 
             if let Some(meter) = app_handle.get_meter_window() {
@@ -95,7 +104,8 @@ pub fn on_menu_event_inner(app_handle: &AppHandle, event: MenuEvent) -> Result<(
 
 pub fn on_window_event(window: &Window, event: &WindowEvent) {
     let label = window.label();
-    on_window_event_inner(label, window, event).expect("An error occurred whilst handling window event");
+    on_window_event_inner(label, window, event)
+        .expect("An error occurred whilst handling window event");
 }
 
 pub fn on_window_event_inner(label: &str, window: &Window, event: &WindowEvent) -> Result<()> {
@@ -106,7 +116,7 @@ pub fn on_window_event_inner(label: &str, window: &Window, event: &WindowEvent) 
             if label == LOGS_WINDOW_LABEL {
                 window.hide()?;
 
-                return Ok(())
+                return Ok(());
             }
 
             let app_handle = window.app_handle();
@@ -119,7 +129,7 @@ pub fn on_window_event_inner(label: &str, window: &Window, event: &WindowEvent) 
 
             if meter_window.is_minimized()? {
                 meter_window.unminimize()?;
-            } 
+            }
 
             let shell_manager = app_handle.state::<ShellManager>();
             async_runtime::block_on(async {
@@ -129,17 +139,17 @@ pub fn on_window_event_inner(label: &str, window: &Window, event: &WindowEvent) 
             app_handle.exit(0);
 
             Ok(())
-        },
+        }
         WindowEvent::Focused(focused) => {
             if *focused {
-                return Ok(())
+                return Ok(());
             }
 
             let app_handle = window.app_handle();
             app_handle.save_window_state(WINDOW_STATE_FLAGS)?;
 
             Ok(())
-        },
+        }
         _ => Ok(()),
     }
 }

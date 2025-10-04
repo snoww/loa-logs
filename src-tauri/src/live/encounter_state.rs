@@ -1590,7 +1590,9 @@ impl EncounterState {
                 skill_cooldowns,
             };
 
-            let encounter_id = repository.insert_data(args).expect("could not save encounter");
+            let encounter_id = repository
+                .insert_data(args)
+                .expect("could not save encounter");
 
             info!("saved to db");
 

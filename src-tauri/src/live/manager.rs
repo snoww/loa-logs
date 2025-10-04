@@ -1,4 +1,7 @@
-use std::sync::{atomic::{AtomicBool, Ordering}, Arc, Mutex};
+use std::sync::{
+    atomic::{AtomicBool, Ordering}, Arc,
+    Mutex,
+};
 
 use log::*;
 use tauri::{AppHandle, Emitter, Event, EventId, Listener};
@@ -15,7 +18,6 @@ pub struct EventManager {
 
 impl EventManager {
     pub fn new(app_handle: AppHandle) -> Arc<Self> {
-
         let reset = AtomicBool::new(false);
         let pause = AtomicBool::new(false);
         let save = AtomicBool::new(false);
@@ -29,23 +31,29 @@ impl EventManager {
             save,
             pause,
             boss_only_damage,
-            emit_details
+            emit_details,
         });
-        
+
         let mut subscriptions = vec![];
         let id = app_handle.listen_any("reset-request", Self::on_reset(listener.clone()));
         subscriptions.push(id);
-        
+
         let id = app_handle.listen_any("save-request", Self::on_save(listener.clone()));
         subscriptions.push(id);
 
         let id = app_handle.listen_any("pause-request", Self::on_pause(listener.clone()));
         subscriptions.push(id);
 
-        let id = app_handle.listen_any("boss-only-damage-request", Self::on_boss_only_damage(listener.clone()));
+        let id = app_handle.listen_any(
+            "boss-only-damage-request",
+            Self::on_boss_only_damage(listener.clone()),
+        );
         subscriptions.push(id);
 
-        let id = app_handle.listen_any("emit-details-request", Self::on_emit_details(listener.clone()));
+        let id = app_handle.listen_any(
+            "emit-details-request",
+            Self::on_emit_details(listener.clone()),
+        );
         subscriptions.push(id);
 
         *listener.subscriptions.lock().unwrap() = subscriptions;
@@ -54,7 +62,6 @@ impl EventManager {
     }
 
     fn on_reset(context: Arc<EventManager>) -> impl Fn(Event) + Send + 'static {
-        
         move |_| {
             context.reset.store(true, Ordering::Relaxed);
             info!("resetting meter");
@@ -79,7 +86,7 @@ impl EventManager {
             } else {
                 info!("pausing meter");
             }
-            
+
             context.app_handle.emit("pause-encounter", "").unwrap();
         }
     }
@@ -100,7 +107,6 @@ impl EventManager {
 
     fn on_emit_details(context: Arc<EventManager>) -> impl Fn(Event) + Send + 'static {
         move |_event: Event| {
-            
             let prev = context.emit_details.fetch_xor(true, Ordering::Relaxed);
 
             if prev {
@@ -147,7 +153,6 @@ impl EventManager {
         self.boss_only_damage.load(Ordering::Relaxed)
     }
 }
-
 
 impl Drop for EventManager {
     fn drop(&mut self) {

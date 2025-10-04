@@ -1,9 +1,15 @@
 use anyhow::anyhow;
 use strum::EnumProperty;
 use strum_macros::{AsRefStr, EnumProperty, EnumString};
-use tauri::{menu::{Menu, MenuBuilder}, AppHandle, Runtime};
+use tauri::{
+    menu::{Menu, MenuBuilder}, AppHandle,
+    Runtime,
+};
 
-use crate::{constants::*, ui::{on_menu_event, on_tray_icon_event}};
+use crate::{
+    constants::*,
+    ui::{on_menu_event, on_tray_icon_event},
+};
 
 #[derive(Debug, EnumString, EnumProperty, AsRefStr)]
 #[strum(serialize_all = "kebab_case")]
@@ -27,9 +33,7 @@ pub enum TrayCommand {
     Quit,
 }
 
-pub struct LoaMenuBuilder<'a, R: Runtime>(
-    MenuBuilder<'a, R, AppHandle<R>>
-);
+pub struct LoaMenuBuilder<'a, R: Runtime>(MenuBuilder<'a, R, AppHandle<R>>);
 
 impl<'a, R: Runtime> LoaMenuBuilder<'a, R> {
     pub fn new(app: &'a AppHandle<R>) -> Self {
@@ -52,7 +56,7 @@ impl<'a, R: Runtime> LoaMenuBuilder<'a, R> {
 }
 
 pub fn setup_tray(app: &AppHandle) -> tauri::Result<()> {
-     let menu = LoaMenuBuilder::new(app)
+    let menu = LoaMenuBuilder::new(app)
         .command(TrayCommand::ShowLogs)
         .separator()
         .command(TrayCommand::ShowMeter)
@@ -65,7 +69,9 @@ pub fn setup_tray(app: &AppHandle) -> tauri::Result<()> {
         .command(TrayCommand::Quit)
         .build()?;
 
-    let tray = app.tray_by_id(METER_WINDOW_LABEL).ok_or_else(|| anyhow!("Could not find main window"))?;
+    let tray = app
+        .tray_by_id(METER_WINDOW_LABEL)
+        .ok_or_else(|| anyhow!("Could not find main window"))?;
     tray.set_menu(Some(menu))?;
     tray.on_menu_event(on_menu_event);
     tray.on_tray_icon_event(on_tray_icon_event);

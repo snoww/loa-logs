@@ -1,24 +1,26 @@
-use std::cmp::{max, Ordering};
-use std::collections::BTreeMap;
-use std::io::Write;
-use std::str::FromStr;
+use anyhow::Result;
 use flate2::write::GzEncoder;
 use flate2::Compression;
 use hashbrown::HashMap;
 use semver::Version;
 use serde::Serialize;
-use anyhow::Result;
+use std::cmp::{max, Ordering};
+use std::collections::BTreeMap;
+use std::io::Write;
+use std::str::FromStr;
 
+use crate::constants::{WINDOW_MS, WINDOW_S};
 use crate::data::{ENGRAVING_DATA, GEM_SKILL_MAP};
 use crate::database::sql_types::{CompressedJson, JsonColumn};
 use crate::models::*;
 use crate::utils::*;
-use crate::{constants::{WINDOW_MS, WINDOW_S}};
 
 pub const VERSION_1_13_5: Version = Version::new(1, 13, 5);
 
 pub fn build_delete_encounters_query(ids_len: usize) -> String {
-    let placeholders = std::iter::repeat_n("?", ids_len).collect::<Vec<_>>().join(",");
+    let placeholders = std::iter::repeat_n("?", ids_len)
+        .collect::<Vec<_>>()
+        .join(",");
     format!("DELETE FROM encounter WHERE id IN ({})", placeholders)
 }
 
@@ -36,7 +38,10 @@ pub fn build_sync_candidates_query(force_resync: bool) -> String {
     )
 }
 
-pub fn prepare_get_encounter_preview_query(search: String, filter: SearchFilter) -> (Vec<String>, String, String) {
+pub fn prepare_get_encounter_preview_query(
+    search: String,
+    filter: SearchFilter,
+) -> (Vec<String>, String, String) {
     let mut params = vec![];
 
     let join_clause = if search.len() > 2 {
@@ -138,7 +143,6 @@ pub fn prepare_get_encounter_preview_query(search: String, filter: SearchFilter)
         {raid_clear_filter} {favorite_filter} {difficulty_filter} {boss_only_damage_filter}"
     );
 
-
     (params, query, count_query)
 }
 
@@ -148,7 +152,8 @@ pub fn map_encounter(row: &rusqlite::Row) -> rusqlite::Result<(Encounter, Versio
         .map(Some)
         .unwrap_or_default();
 
-    let version: Version = misc.as_ref()
+    let version: Version = misc
+        .as_ref()
         .and_then(|m| m.version.as_ref())
         .and_then(|v| Version::parse(v).ok())
         .unwrap_or_else(|| Version::new(0, 0, 0));
@@ -176,11 +181,16 @@ pub fn map_encounter(row: &rusqlite::Row) -> rusqlite::Result<(Encounter, Versio
     Ok((encounter, version))
 }
 
-fn stats_for_1_13_5_and_up(row: &rusqlite::Row, misc: Option<EncounterMisc>) -> rusqlite::Result<EncounterDamageStats> {
-    let CompressedJson(boss_hp_log): CompressedJson<HashMap<String, Vec<BossHpLog>>> = row.get("boss_hp_log")?;
+fn stats_for_1_13_5_and_up(
+    row: &rusqlite::Row,
+    misc: Option<EncounterMisc>,
+) -> rusqlite::Result<EncounterDamageStats> {
+    let CompressedJson(boss_hp_log): CompressedJson<HashMap<String, Vec<BossHpLog>>> =
+        row.get("boss_hp_log")?;
     let CompressedJson(buffs): CompressedJson<HashMap<u32, StatusEffect>> = row.get("buffs")?;
     let CompressedJson(debuffs): CompressedJson<HashMap<u32, StatusEffect>> = row.get("debuffs")?;
-    let CompressedJson(applied_shield_buffs): CompressedJson<HashMap<u32, StatusEffect>> = row.get("applied_shield_buffs")?;
+    let CompressedJson(applied_shield_buffs): CompressedJson<HashMap<u32, StatusEffect>> =
+        row.get("applied_shield_buffs")?;
 
     let total_shielding = row.get("total_shielding").unwrap_or_default();
     let total_effective_shielding = row.get("total_effective_shielding").unwrap_or_default();
@@ -202,14 +212,19 @@ fn stats_for_1_13_5_and_up(row: &rusqlite::Row, misc: Option<EncounterMisc>) -> 
     })
 }
 
-fn stats_for_older_versions(row: &rusqlite::Row, misc: Option<EncounterMisc>) -> rusqlite::Result<EncounterDamageStats> {
-    let boss_hp_log: HashMap<String, Vec<BossHpLog>> = misc.as_ref()
+fn stats_for_older_versions(
+    row: &rusqlite::Row,
+    misc: Option<EncounterMisc>,
+) -> rusqlite::Result<EncounterDamageStats> {
+    let boss_hp_log: HashMap<String, Vec<BossHpLog>> = misc
+        .as_ref()
         .and_then(|pr| pr.boss_hp_log.clone())
         .unwrap_or_default();
 
     let JsonColumn(buffs): JsonColumn<HashMap<u32, StatusEffect>> = row.get("buffs")?;
     let JsonColumn(debuffs): JsonColumn<HashMap<u32, StatusEffect>> = row.get("debuffs")?;
-    let JsonColumn(applied_shield_buffs): JsonColumn<HashMap<u32, StatusEffect>> = row.get("applied_shield_buffs")?;
+    let JsonColumn(applied_shield_buffs): JsonColumn<HashMap<u32, StatusEffect>> =
+        row.get("applied_shield_buffs")?;
 
     let total_shielding = row.get("total_shielding").unwrap_or_default();
     let total_effective_shielding = row.get("total_effective_shielding").unwrap_or_default();
@@ -256,11 +271,10 @@ pub fn map_encounter_preview(row: &rusqlite::Row) -> rusqlite::Result<EncounterP
 }
 
 pub fn map_entity(row: &rusqlite::Row, version: &Version) -> rusqlite::Result<EncounterEntity> {
-
     let (skills, damage_stats) = if version >= &VERSION_1_13_5 {
         let CompressedJson(skills): CompressedJson<HashMap<u32, Skill>> = row.get("skills")?;
         let CompressedJson(damage_stats): CompressedJson<DamageStats> = row.get("damage_stats")?;
-        
+
         (skills, damage_stats)
     } else {
         let JsonColumn(skills): JsonColumn<HashMap<u32, Skill>> = row.get("skills")?;
@@ -274,7 +288,8 @@ pub fn map_entity(row: &rusqlite::Row, version: &Version) -> rusqlite::Result<En
     let JsonColumn(engraving_data): JsonColumn<Option<Vec<String>>> = row.get("engravings")?;
     let spec: Option<String> = row.get("spec").unwrap_or_default();
     let ark_passive_active: Option<bool> = row.get("ark_passive_active").unwrap_or_default();
-    let JsonColumn(ark_passive_data): JsonColumn<Option<ArkPassiveData>> = row.get("ark_passive_data")?;
+    let JsonColumn(ark_passive_data): JsonColumn<Option<ArkPassiveData>> =
+        row.get("ark_passive_data")?;
 
     let entity = EncounterEntity {
         name: row.get("name")?,
@@ -354,18 +369,23 @@ pub fn update_entity_stats(
     fight_end: i64,
     damage_log: &HashMap<String, Vec<(i64, i64)>>,
 ) {
-    if entity.entity_type != EntityType::Player { return; }
+    if entity.entity_type != EntityType::Player {
+        return;
+    }
 
     let duration = fight_end - fight_start;
     let duration_seconds = max(duration / 1000, 1);
     let intervals = generate_intervals(fight_start, fight_end);
-    
+
     if let Some(player_log) = damage_log.get(&entity.name) {
         for interval in intervals {
             let start = fight_start + interval - WINDOW_MS;
             let end = fight_start + interval + WINDOW_MS;
             let damage = sum_in_range(player_log, start, end);
-            entity.damage_stats.dps_rolling_10s_avg.push(damage / (WINDOW_S * 2));
+            entity
+                .damage_stats
+                .dps_rolling_10s_avg
+                .push(damage / (WINDOW_S * 2));
         }
 
         let fight_start_sec = fight_start / 1000;
@@ -373,7 +393,7 @@ pub fn update_entity_stats(
         entity.damage_stats.dps_average =
             calculate_average_dps(player_log, fight_start_sec, fight_end_sec);
     }
-    
+
     let mut buffed_damage = 0;
     for skill in entity.skills.values() {
         for (rdps_type, entry) in skill.rdps_received.iter() {
@@ -385,7 +405,7 @@ pub fn update_entity_stats(
 
     let unbuffed_damage = entity.damage_stats.damage_dealt - buffed_damage;
     let unbuffed_dps = unbuffed_damage / duration_seconds;
-    
+
     entity.damage_stats.dps = entity.damage_stats.damage_dealt / duration_seconds;
     entity.damage_stats.unbuffed_damage = unbuffed_damage;
     entity.damage_stats.unbuffed_dps = unbuffed_dps;
@@ -393,16 +413,15 @@ pub fn update_entity_stats(
     for (_, skill) in entity.skills.iter_mut() {
         skill.dps = skill.total_damage / duration_seconds;
     }
-
 }
 
-pub fn apply_player_info(
-    entity: &mut EncounterEntity,
-    info: &InspectInfo,
-) {
+pub fn apply_player_info(entity: &mut EncounterEntity, info: &InspectInfo) {
     for gem in info.gems.iter().flatten() {
         let skill_ids = if matches!(gem.gem_type, 34 | 35 | 65 | 63 | 61) {
-            GEM_SKILL_MAP.get(&gem.skill_id).cloned().unwrap_or_default()
+            GEM_SKILL_MAP
+                .get(&gem.skill_id)
+                .cloned()
+                .unwrap_or_default()
         } else {
             vec![gem.skill_id]
         };
@@ -436,22 +455,26 @@ pub fn apply_player_info(
     // Set spec for special cases
     if entity.class_id == 104
         && let Some(engr) = &entity.engraving_data
-            && engr.iter().any(|e| e == "Awakening" || e == "Drops of Ether") {
-                entity.spec = Some("Princess".to_string());
-            }
+        && engr
+            .iter()
+            .any(|e| e == "Awakening" || e == "Drops of Ether")
+    {
+        entity.spec = Some("Princess".to_string());
+    }
 
     // Fallback spec detection
     if entity.spec.as_deref() == Some("Unknown")
         && let Some(tree) = info.ark_passive_data.as_ref()
-            && let Some(enlightenment) = tree.enlightenment.as_ref() {
-                for node in enlightenment.iter() {
-                    let spec = get_spec_from_ark_passive(node);
-                    if spec != "Unknown" {
-                        entity.spec = Some(spec);
-                        break;
-                    }
-                }
+        && let Some(enlightenment) = tree.enlightenment.as_ref()
+    {
+        for node in enlightenment.iter() {
+            let spec = get_spec_from_ark_passive(node);
+            if spec != "Unknown" {
+                entity.spec = Some(spec);
+                break;
             }
+        }
+    }
 }
 
 pub fn apply_cast_logs(

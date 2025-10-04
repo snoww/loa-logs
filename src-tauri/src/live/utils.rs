@@ -10,7 +10,7 @@ use anyhow::Result;
 use hashbrown::HashMap;
 use rusqlite::{params, Transaction};
 use serde_json::json;
-use std::cmp::{Reverse, max};
+use std::cmp::{max, Reverse};
 use std::collections::BTreeMap;
 
 pub fn encounter_entity_from_entity(entity: &Entity) -> EncounterEntity {
@@ -887,7 +887,7 @@ pub fn insert_data(
                 entity.ark_passive_data = info.ark_passive_data.clone();
                 entity.loadout_hash = info.loadout_snapshot.clone();
             }
-            
+
             entity.damage_stats.unbuffed_dps =
                 entity.damage_stats.unbuffed_damage / duration_seconds;
         }

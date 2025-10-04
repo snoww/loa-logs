@@ -1,25 +1,21 @@
+use anyhow::Result;
 use log::*;
 use r2d2_sqlite::SqliteConnectionManager;
 use rusqlite::Transaction;
-use anyhow::Result;
 
 use crate::constants::DB_VERSION;
 
 pub struct Migrator<'a> {
     pool: r2d2::Pool<SqliteConnectionManager>,
-    app_version: &'a str
+    app_version: &'a str,
 }
 
 impl<'a> Migrator<'a> {
     pub fn new(pool: r2d2::Pool<SqliteConnectionManager>, app_version: &'a str) -> Self {
-        Self {
-            pool,
-            app_version
-        }
+        Self { pool, app_version }
     }
 
     pub fn run(self) -> Result<()> {
-
         let mut connection = self.pool.get()?;
         let tx = connection.transaction()?;
 
@@ -54,15 +50,12 @@ impl<'a> Migrator<'a> {
 
         stmt.finalize()?;
         info!("finished setting up database");
-        
+
         tx.commit()?;
 
         Ok(())
     }
-
-
 }
-
 
 pub fn migration_legacy_encounter(tx: &Transaction) -> Result<(), rusqlite::Error> {
     tx.execute_batch(&format!(
@@ -322,8 +315,14 @@ pub fn migration_pseudo_rdps(tx: &Transaction) -> Result<(), rusqlite::Error> {
     let mut stmt = tx.prepare("SELECT 1 FROM pragma_table_info(?) WHERE name=?")?;
     if !stmt.exists(["entity", "unbuffed_damage"])? {
         info!("adding pseudo rdps columns");
-        tx.execute("ALTER TABLE entity ADD COLUMN unbuffed_damage INTEGER DEFAULT 0", [])?;
-        tx.execute("ALTER TABLE entity ADD COLUMN unbuffed_dps INTEGER DEFAULT 0", [])?;
+        tx.execute(
+            "ALTER TABLE entity ADD COLUMN unbuffed_damage INTEGER DEFAULT 0",
+            [],
+        )?;
+        tx.execute(
+            "ALTER TABLE entity ADD COLUMN unbuffed_dps INTEGER DEFAULT 0",
+            [],
+        )?;
     }
 
     stmt.finalize()

@@ -1,13 +1,25 @@
-use std::{error::Error, sync::{atomic::{AtomicBool, Ordering}, Arc}};
+use std::{
+    error::Error,
+    sync::{
+        atomic::{AtomicBool, Ordering},
+        Arc,
+    },
+};
 
 use log::*;
 use tauri::{App, AppHandle, Manager};
 use tauri_plugin_updater::UpdaterExt;
 
-use crate::{background::{BackgroundWorker, BackgroundWorkerArgs}, constants::DEFAULT_PORT, context::AppContext, settings::*, shell::ShellManager, ui::{setup_tray, AppHandleExtensions, WindowExtensions}};
+use crate::{
+    background::{BackgroundWorker, BackgroundWorkerArgs},
+    constants::DEFAULT_PORT,
+    context::AppContext,
+    settings::*,
+    shell::ShellManager,
+    ui::{setup_tray, AppHandleExtensions, WindowExtensions},
+};
 
 pub fn setup(app: &mut App) -> Result<(), Box<dyn Error>> {
-
     #[cfg(not(debug_assertions))]
     app::panic::add_hook_with_dialog(app.handle());
 
@@ -16,18 +28,14 @@ pub fn setup(app: &mut App) -> Result<(), Box<dyn Error>> {
     let context = app.state::<AppContext>();
     let shell_manger = ShellManager::new(app_handle.clone(), context.inner().clone());
     let settings_manager = app.state::<SettingsManager>();
-    
+
     info!("starting app v{}", context.version);
     setup_tray(app_handle)?;
     let update_checked: Arc<AtomicBool> = check_updates(app_handle);
 
     let settings = settings_manager.read().expect("Could not read settings");
 
-    let port = initialize_windows_and_settings(
-        app_handle,
-        settings.as_ref(),
-        &shell_manger
-    );
+    let port = initialize_windows_and_settings(app_handle, settings.as_ref(), &shell_manger);
 
     app_handle.manage(shell_manger);
 
@@ -39,7 +47,7 @@ pub fn setup(app: &mut App) -> Result<(), Box<dyn Error>> {
         port,
         settings,
         region_file_path: context.region_file_path.clone(),
-        version: context.version.clone()
+        version: context.version.clone(),
     };
 
     background.start(args)?;
@@ -94,15 +102,14 @@ fn check_updates(app_handle: &AppHandle) -> Arc<AtomicBool> {
 fn initialize_windows_and_settings(
     app_handle: &AppHandle,
     settings: Option<&Settings>,
-    shell_manger: &ShellManager) -> u16 {
-
+    shell_manger: &ShellManager,
+) -> u16 {
     let mut port = DEFAULT_PORT;
     let meter_window = app_handle.get_meter_window().unwrap();
     let mini_window = app_handle.get_mini_window().unwrap();
     let logs_window = app_handle.get_logs_window().unwrap();
-    
-    if let Some(settings) = settings {
 
+    if let Some(settings) = settings {
         info!("settings loaded");
         if settings.general.mini {
             mini_window.restore_default_state();
@@ -111,7 +118,7 @@ fn initialize_windows_and_settings(
             meter_window.restore_default_state();
             meter_window.show().unwrap();
         }
-        
+
         if !settings.general.hide_logs_on_start {
             logs_window.restore_default_state();
             logs_window.show().unwrap();
@@ -122,7 +129,7 @@ fn initialize_windows_and_settings(
             mini_window.set_always_on_top(true).unwrap();
         } else {
             meter_window.set_always_on_top(false).unwrap();
-            mini_window.set_always_on_top(false).unwrap();    
+            mini_window.set_always_on_top(false).unwrap();
         }
 
         if settings.general.auto_iface && settings.general.port > 0 {
@@ -133,8 +140,7 @@ fn initialize_windows_and_settings(
             info!("auto launch game enabled");
             shell_manger.start_loa_process();
         }
-    }
-    else {
+    } else {
         meter_window.show().unwrap();
         logs_window.show().unwrap();
     }

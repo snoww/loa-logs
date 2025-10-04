@@ -4,7 +4,7 @@ use crate::settings::Settings;
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct LoadResult {
-    pub settings: Settings
+    pub settings: Settings,
 }
 
 #[derive(Debug, Default, Serialize, Deserialize, Clone)]

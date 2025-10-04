@@ -1,24 +1,23 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 mod app;
-#[cfg(feature = "meter-core")]
-mod live;
-mod misc;
-mod context;
-mod constants;
-mod data;
-mod models;
-mod settings;
-mod local;
-mod ui;
-mod shell;
-mod utils;
-mod setup;
 mod background;
+mod constants;
+mod context;
+mod data;
 mod database;
 mod handlers;
+#[cfg(feature = "meter-core")]
+mod live;
+mod local;
+mod misc;
+mod models;
+mod settings;
+mod setup;
+mod shell;
+mod ui;
+mod utils;
 
-use anyhow::Result;
 use crate::constants::*;
 use crate::context::AppContext;
 use crate::data::AssetPreloader;
@@ -28,6 +27,7 @@ use crate::misc::load_windivert;
 use crate::settings::SettingsManager;
 use crate::setup::setup;
 use crate::ui::on_window_event;
+use anyhow::Result;
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -37,13 +37,13 @@ async fn main() -> Result<()> {
     let tauri_context = tauri::generate_context!();
     let package_info = tauri_context.package_info();
     let context = AppContext::new(package_info.version.to_string())?;
-    let settings_manager = SettingsManager::new(context.settings_path.clone()).expect("could not create settings");
+    let settings_manager =
+        SettingsManager::new(context.settings_path.clone()).expect("could not create settings");
     load_windivert(&context.current_dir).expect("could not load windivert dependencies");
     // load meter-data
     AssetPreloader::new(&context.current_dir)?;
-    let database = Database::new(
-        context.database_path.clone(),
-        &context.version).expect("error setting up database: {}");
+    let database = Database::new(context.database_path.clone(), &context.version)
+        .expect("error setting up database: {}");
     let repository = database.create_repository();
 
     tauri::Builder::default()

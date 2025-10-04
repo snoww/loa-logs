@@ -1,24 +1,24 @@
 mod encounter_state;
 mod entity_tracker;
 mod id_tracker;
+mod manager;
 mod party_tracker;
 mod skill_tracker;
 mod stats_api;
 mod status_tracker;
 mod utils;
-mod manager;
 
 use crate::app;
 use crate::live::encounter_state::EncounterState;
-use crate::live::entity_tracker::{EntityTracker, get_current_and_max_hp};
+use crate::live::entity_tracker::{get_current_and_max_hp, EntityTracker};
 use crate::live::id_tracker::IdTracker;
 use crate::live::manager::EventManager;
 use crate::live::party_tracker::PartyTracker;
-use crate::live::stats_api::API_URL;
 use crate::live::stats_api::StatsApi;
+use crate::live::stats_api::API_URL;
 use crate::live::status_tracker::{
-    StatusEffectDetails, StatusEffectTargetType, StatusEffectType, StatusTracker,
-    get_status_effect_value,
+    get_status_effect_value, StatusEffectDetails, StatusEffectTargetType, StatusEffectType,
+    StatusTracker,
 };
 use crate::live::utils::get_class_from_id;
 use crate::local::{LocalInfo, LocalPlayer};

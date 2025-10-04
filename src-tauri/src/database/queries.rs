@@ -158,7 +158,7 @@ DELETE FROM encounter
 WHERE id = ?;
 ";
 
-pub const GET_TOP_ENCOUNTER_ID: &str ="
+pub const GET_TOP_ENCOUNTER_ID: &str = "
 SELECT id
 FROM encounter_preview
 ORDER BY fight_start DESC
@@ -166,7 +166,8 @@ LIMIT 1;
 ";
 
 pub const SELECT_ENCOUNTER_PREVIEW_COUNT: &str = "SELECT COUNT(*) FROM encounter_preview";
-pub const SELECT_ENCOUNTER_PREVIEW_BY_GE_DURATION: &str = "SELECT COUNT(*) FROM encounter_preview WHERE duration >= ?";
+pub const SELECT_ENCOUNTER_PREVIEW_BY_GE_DURATION: &str =
+    "SELECT COUNT(*) FROM encounter_preview WHERE duration >= ?";
 
 pub const SELECT_SYNC_LOGS: &str = r"
 SELECT upstream_id
@@ -180,7 +181,7 @@ VALUES
 (?, ?, ?);
 ";
 
-pub const UPDATE_ENCOUNTER_SET_FAV_BY_ID: &str =  "
+pub const UPDATE_ENCOUNTER_SET_FAV_BY_ID: &str = "
 UPDATE encounter_preview
 SET favorite = NOT favorite
 WHERE id = ?;
