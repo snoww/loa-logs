@@ -1,4 +1,3 @@
-use anyhow::Result;
 use auto_launch::{AutoLaunch, AutoLaunchBuilder};
 use std::path::Path;
 

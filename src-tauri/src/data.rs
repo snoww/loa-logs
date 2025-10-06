@@ -1,7 +1,7 @@
-use anyhow::{Result, anyhow, Context};
+use anyhow::{anyhow, Context, Result};
 use hashbrown::{HashMap, HashSet};
 use serde::de::DeserializeOwned;
-use std::{fs::File, io::Read, ops::Deref, sync::OnceLock};
+use std::{fs, ops::Deref, path::Path, sync::OnceLock};
 
 use crate::models::*;
 
@@ -44,32 +44,31 @@ impl<T> Deref for OnceLockWrapper<T> {
 
 pub struct AssetPreloader;
 
-fn load<T: DeserializeOwned>(path: &str) -> Result<T> {
-    let mut s = String::new();
-    File::open(path).with_context(|| anyhow!("Missing file at: {path}"))?.read_to_string(&mut s)?;
-    serde_json::from_str::<T>(&s).with_context(|| anyhow!("Error parsing JSON in {path}"))
+fn load<T: DeserializeOwned>(path: &Path) -> Result<T> {
+    let s = fs::read_to_string(path).with_context(|| anyhow!("Missing file at: {path:?}"))?;
+    serde_json::from_str::<T>(&s).with_context(|| anyhow!("Error parsing JSON in {path:?}"))
 }
 
 impl AssetPreloader {
-    pub fn new() -> Result<Self> {
-        COMBAT_EFFECT_DATA.set(load("meter-data/CombatEffect.json")?)?;
-        ENGRAVING_DATA.set(load("meter-data/Ability.json")?)?;
-        SKILL_BUFF_DATA.set(load("meter-data/SkillBuff.json")?)?;
-        SKILL_DATA.set(load("meter-data/Skill.json")?)?;
-        SKILL_EFFECT_DATA.set(load("meter-data/SkillEffect.json")?)?;
-        STAT_TYPE_MAP.set(load("meter-data/StatType.json")?)?;
-        ESTHER_DATA.set(load("meter-data/Esther.json")?)?;
-        NPC_DATA.set(load("meter-data/Npc.json")?)?;
+    pub fn new(resource_dir: &Path) -> Result<Self> {
+        COMBAT_EFFECT_DATA.set(load(&resource_dir.join("meter-data/CombatEffect.json"))?)?;
+        ENGRAVING_DATA.set(load(&resource_dir.join("meter-data/Ability.json"))?)?;
+        SKILL_BUFF_DATA.set(load(&resource_dir.join("meter-data/SkillBuff.json"))?)?;
+        SKILL_DATA.set(load(&resource_dir.join("meter-data/Skill.json"))?)?;
+        SKILL_EFFECT_DATA.set(load(&resource_dir.join("meter-data/SkillEffect.json"))?)?;
+        STAT_TYPE_MAP.set(load(&resource_dir.join("meter-data/StatType.json"))?)?;
+        ESTHER_DATA.set(load(&resource_dir.join("meter-data/Esther.json"))?)?;
+        NPC_DATA.set(load(&resource_dir.join("meter-data/Npc.json"))?)?;
         GEM_SKILL_MAP.set({
             let raw: HashMap<String, (String, String, Vec<u32>)> =
-                load("meter-data/GemSkillGroup.json")?;
+                load(&resource_dir.join("meter-data/GemSkillGroup.json"))?;
             raw.into_iter()
                 .filter_map(|(key, entry)| key.parse::<u32>().ok().map(|id| (id, entry.2)))
                 .collect()
         })?;
         RAID_MAP.set({
             let encounters: HashMap<String, HashMap<String, Vec<String>>> =
-                load("meter-data/encounters.json")?;
+                load(&resource_dir.join("meter-data/encounters.json"))?;
             encounters
                 .values()
                 .flat_map(|raid| raid.iter())

@@ -4,7 +4,10 @@ use tauri::AppHandle;
 use tauri_plugin_opener::OpenerExt;
 use tauri_plugin_shell::ShellExt;
 
-use crate::{constants::{GAME_EXE_NAME, STEAM_GAME_URL}, context::AppContext};
+use crate::{
+    constants::{GAME_EXE_NAME, STEAM_GAME_URL},
+    context::AppContext,
+};
 
 pub struct ShellManager(AppHandle, AppContext);
 
@@ -14,11 +17,14 @@ impl ShellManager {
     }
 
     pub fn open_db_path(&self) {
-        
-        let path = &self.1.database_path;
+        let path = &self.1.current_dir;
         info!("open_db_path: {}", path.display());
 
-        if let Err(err) = self.0.opener().open_path(path.to_str().unwrap(), None::<String>) {
+        if let Err(err) = self
+            .0
+            .opener()
+            .open_path(path.to_str().unwrap(), None::<String>)
+        {
             error!("Failed to open database path: {}", err);
         }
     }
@@ -39,7 +45,7 @@ impl ShellManager {
         let system = System::new_with_specifics(
             RefreshKind::nothing().with_processes(ProcessRefreshKind::nothing().without_tasks()),
         );
-        
+
         let process_name = GAME_EXE_NAME;
 
         system
@@ -61,7 +67,7 @@ impl ShellManager {
 
     pub async fn unload_driver(&self) {
         #[cfg(target_os = "windows")]
-        {  
+        {
             let command = self.0.shell().command("sc").args(["stop", "windivert"]);
             let result = command.output().await;
 

@@ -20,7 +20,6 @@ pub struct AppContext {
 
 impl AppContext {
     pub fn new(version: String) -> Result<Self> {
-
         let app_path = std::env::current_exe()?;
         let current_dir = app_path.parent().unwrap().to_path_buf();
         let settings_path = current_dir.join(SETTINGS_PATH);
@@ -37,7 +36,7 @@ impl AppContext {
             database_path,
             migrations_path,
             local_player_path,
-            region_file_path
+            region_file_path,
         })
     }
 }

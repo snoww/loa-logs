@@ -63,9 +63,10 @@ impl PartyTracker {
 
     pub fn remove(&mut self, party_instance_id: u32, name: String) {
         if let Some(local_name) = self.name.as_ref()
-            && local_name == &name {
-                self.remove_party_mappings(party_instance_id);
-            }
+            && local_name == &name
+        {
+            self.remove_party_mappings(party_instance_id);
+        }
     }
 
     pub fn reset_party_mappings(&mut self) {

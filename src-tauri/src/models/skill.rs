@@ -109,7 +109,7 @@ pub struct SkillHit {
     pub rdps_damage_received: i64,
     pub rdps_damage_received_support: i64,
     #[serde(default)]
-    pub stagger: i64
+    pub stagger: i64,
 }
 
 #[derive(Debug, Default, Serialize, Deserialize, Clone)]

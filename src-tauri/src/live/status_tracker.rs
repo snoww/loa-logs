@@ -142,15 +142,15 @@ impl StatusTracker {
 
         if let Some(se) = ser.get_mut(&instance_id)
             && let Some(duration_ms) = timestamp.checked_sub(se.end_tick)
-                && duration_ms > 0 && duration_ms < 10_000_000 {
-                    se.end_tick = timestamp;
-                    if let Some(expire_at) = se.expire_at {
-                        se.expire_at = Some(
-                            expire_at
-                                + Duration::milliseconds(duration_ms as i64 + TIMEOUT_DELAY_MS),
-                        );
-                    }
-                }
+            && duration_ms > 0
+            && duration_ms < 10_000_000
+        {
+            se.end_tick = timestamp;
+            if let Some(expire_at) = se.expire_at {
+                se.expire_at =
+                    Some(expire_at + Duration::milliseconds(duration_ms as i64 + TIMEOUT_DELAY_MS));
+            }
+        }
     }
 
     pub fn sync_status_effect(
@@ -404,40 +404,41 @@ pub fn build_status_effect(
             // e.g. bard brands have same buff id, but have different source skills (sound shock, harp)
             // if skills only have one source skill, we dont care about it here and it gets handled later
             if source_skills.len() > 1
-                && let Some(source_entity) = source_entity {
-                    let mut last_time = i64::MIN;
-                    let mut last_skill = 0_u32;
-                    for source_skill in source_skills {
-                        if let Some(skill) = source_entity.skills.get(source_skill) {
-                            if skill.name.is_empty() {
-                                continue;
-                            }
-                            // hard code check for stigma brand tripod
-                            // maybe set up a map of tripods for other skills in future idk??
-                            if skill.id == 21090 {
-                                if let Some(tripods) = skill.tripod_index {
-                                    if tripods.second != 2 {
-                                        continue;
-                                    }
-                                } else {
+                && let Some(source_entity) = source_entity
+            {
+                let mut last_time = i64::MIN;
+                let mut last_skill = 0_u32;
+                for source_skill in source_skills {
+                    if let Some(skill) = source_entity.skills.get(source_skill) {
+                        if skill.name.is_empty() {
+                            continue;
+                        }
+                        // hard code check for stigma brand tripod
+                        // maybe set up a map of tripods for other skills in future idk??
+                        if skill.id == 21090 {
+                            if let Some(tripods) = skill.tripod_index {
+                                if tripods.second != 2 {
                                     continue;
                                 }
-                            }
-                            if skill.last_timestamp > last_time {
-                                last_skill = *source_skill;
-                                last_time = skill.last_timestamp;
+                            } else {
+                                continue;
                             }
                         }
-                    }
-
-                    // if such a skill exists, we assign a new custom buff id to distinguish it.
-                    // we encode the buff id as well too because there are multiple buffs that have
-                    // the same source skill, that also have multiple source skills.
-                    // without it, it leads to customids that are different but end up sharing the same id
-                    if last_skill > 0 {
-                        custom_id = get_new_id(last_skill + (effect.id as u32));
+                        if skill.last_timestamp > last_time {
+                            last_skill = *source_skill;
+                            last_time = skill.last_timestamp;
+                        }
                     }
                 }
+
+                // if such a skill exists, we assign a new custom buff id to distinguish it.
+                // we encode the buff id as well too because there are multiple buffs that have
+                // the same source skill, that also have multiple source skills.
+                // without it, it leads to customids that are different but end up sharing the same id
+                if last_skill > 0 {
+                    custom_id = get_new_id(last_skill + (effect.id as u32));
+                }
+            }
         }
     }
 

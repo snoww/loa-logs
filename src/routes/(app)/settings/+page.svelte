@@ -661,6 +661,12 @@
           "Unbuffed/Buffed Damage",
           "Pseudo rDPS from in-game Combat Analyzer. Shows damage dealt without support buffs"
         )}
+        {@render settingOption(
+          "meter",
+          "damagePercent",
+          "Damage %",
+          "Show the damage percentage of the player relative to the entire raid"
+        )}
         {@render settingOption("meter", "dps", "DPS", "Show the current damage per second")}
         {@render settingOption(
           "meter",

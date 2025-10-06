@@ -14,6 +14,9 @@ rust-version = "1.89.0"
 [build-dependencies]
 tauri-build = { version = "2", features = [] }
 
+[dev-dependencies]
+rand = "0.9.0"
+
 [dependencies]
 anyhow = "1.0.75"
 chrono = "0.4.31"
@@ -41,6 +44,7 @@ thiserror = "2.0.16"
 strum = "0.27"
 strum_macros = "0.27"
 async-trait = "0.1.89"
+semver = "1.0.27"
 meter-core = { git = "https://github.com/snoww/meter-core-rs", optional = true }
 
 [target.'cfg(not(any(target_os = "android", target_os = "ios")))'.dependencies]

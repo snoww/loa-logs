@@ -1,6 +1,6 @@
+use serde::{Deserialize, Serialize};
 use std::fmt::Display;
 use std::str::FromStr;
-use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Default, Serialize, Deserialize, PartialEq, Copy, Clone)]
 pub enum EntityType {
@@ -58,4 +58,3 @@ impl FromStr for EntityType {
         }
     }
 }
-

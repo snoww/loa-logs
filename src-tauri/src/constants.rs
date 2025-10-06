@@ -11,7 +11,7 @@ pub const METER_WINDOW_LABEL: &str = "main";
 pub const METER_MINI_WINDOW_LABEL: &str = "mini";
 pub const LOGS_WINDOW_LABEL: &str = "logs";
 pub const DATABASE_PATH: &str = "encounters.db";
-pub const MIGRATIONS_PATH: &str = "migrations";
+pub const MIGRATIONS_PATH: &str = "migrations.tar";
 pub const SETTINGS_PATH: &str = "settings.json";
 pub const LOCAL_PLAYERS_PATH: &str = "local_players.json";
 pub const REGION_PATH: &str = "current_region";
@@ -20,10 +20,7 @@ pub const GAME_EXE_NAME: &str = "LOSTARK.exe";
 pub const TASK_NAME: &str = "LOA_Logs_Auto_Start";
 pub const DEFAULT_BLUR: Color = (10, 10, 10, 50);
 pub const DEFAULT_PORT: u16 = 6040;
-pub const WINDOW_POSITION: Position = Position::Logical(LogicalPosition {
-    x: 100.0,
-    y: 100.0,
-});
+pub const WINDOW_POSITION: Position = Position::Logical(LogicalPosition { x: 100.0, y: 100.0 });
 pub const DEFAULT_MINI_METER_WINDOW_SIZE: Size = Size::Logical(LogicalSize {
     width: 1280.0,
     height: 200.0,

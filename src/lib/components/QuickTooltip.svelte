@@ -1,6 +1,6 @@
 <script lang="ts">
   import { createTooltip, melt } from "@melt-ui/svelte";
-  import type { Snippet } from "svelte";
+  import { onDestroy, onMount, type Snippet } from "svelte";
   import { fade } from "svelte/transition";
 
   const {
@@ -31,6 +31,14 @@
       placement: placement
     }
   });
+
+  // custom event handler to close the tooltip when the cursor leaves the meter window
+  const handlePointerOut = (event: PointerEvent) => {
+    if (!event.relatedTarget) open.set(false);
+  };
+
+  onMount(() => window.addEventListener("pointerout", handlePointerOut));
+  onDestroy(() => window.removeEventListener("pointerout", handlePointerOut));
 </script>
 
 {#if tooltip}
@@ -55,7 +63,7 @@
         <!-- workaround for passing tooltips snippets that expect props -->
         {@render tooltip(tooltipProps)}
       {:else if tooltip}
-      <!-- regular tooltip without any props -->
+        <!-- regular tooltip without any props -->
         {@render tooltip(undefined)}
       {/if}
     </p>

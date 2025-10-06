@@ -2,8 +2,8 @@ use crate::data::*;
 use crate::live::id_tracker::IdTracker;
 use crate::live::party_tracker::PartyTracker;
 use crate::live::status_tracker::{
-    StatusEffectDetails, StatusEffectTargetType, StatusEffectType, StatusTracker,
-    build_status_effect,
+    build_status_effect, StatusEffectDetails, StatusEffectTargetType, StatusEffectType,
+    StatusTracker,
 };
 use crate::local::{LocalInfo, LocalPlayer};
 use crate::models::EntityType::*;
