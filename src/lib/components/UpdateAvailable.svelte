@@ -32,10 +32,7 @@
         </div>
       {/if}
       <div class="flex items-center py-2">
-        <button
-          class="bg-accent-500/70 hover:bg-accent-500/60 rounded-md px-2 py-1 focus:ring-0"
-          onclick={relaunchApp}
-        >
+        <button class="bg-accent-500/70 hover:bg-accent-500/60 rounded-md px-2 py-1 focus:ring-0" onclick={relaunchApp}>
           <span>Update Now</span>
         </button>
       </div>
