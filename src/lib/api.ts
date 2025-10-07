@@ -7,7 +7,7 @@ import type { AppSettings } from "./settings";
 
 export const getAppVersion = async (): Promise<string> => `v${await getVersion()}`;
 
-export const openUrl = (): Promise<void> => invoke("open_url", { url: "settings" });
+export const openUrl = (url: string): Promise<void> => invoke("open_url", { url });
 
 export enum Window {
   Logs,
