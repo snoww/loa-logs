@@ -228,7 +228,7 @@
         <IconPointer class="group-hover:text-accent-500/80 size-5" />
       </button>
     </QuickTooltip>
-    <button use:melt={$item} class="group flex items-center justify-between gap-2" onclick={() => openUrl()}>
+    <button use:melt={$item} class="group flex items-center justify-between gap-2" onclick={() => openUrl("settings")}>
       <p class="group-hover:text-accent-500/80">Settings</p>
       <IconSettings class="group-hover:text-accent-500/80 size-5" />
     </button>
