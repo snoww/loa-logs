@@ -9,24 +9,25 @@
   import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
   import { onMount } from "svelte";
   import type { AppSettings } from "$lib/settings";
+  import { getSettings, setBossOnlyDamage, writeLog } from "$lib/api";
 
   let { children }: { children?: import("svelte").Snippet } = $props();
 
   onMount(() => {
     setup();
     (async () => {
-      await invoke("write_log", { message: "setting up live meter" });
-      let data = (await invoke("get_settings")) as AppSettings;
+      await writeLog("setting up live meter");
+      let data = await getSettings();
       if (data) {
         settings.app = data;
       }
 
       if (settings.app.general.bossOnlyDamageDefaultOn && !settings.app.general.bossOnlyDamage) {
         settings.app.general.bossOnlyDamage = true;
-        await emit("boss-only-damage-request", true);
+        await setBossOnlyDamage(true);
       }
 
-      await invoke("write_log", { message: "finished meter setup" });
+      await writeLog("finished meter setup");
     })();
   });
 

@@ -320,6 +320,7 @@ export interface IdentityEvent {
   gauge1: number;
   gauge2: number;
   gauge3: number;
+  timestamp: number;
 }
 
 export interface StaggerEvent {

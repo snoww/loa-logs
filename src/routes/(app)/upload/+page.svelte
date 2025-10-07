@@ -9,6 +9,7 @@
   import { createRadioGroup, melt } from "@melt-ui/svelte";
   import { invoke } from "@tauri-apps/api/core";
   import Header from "../Header.svelte";
+  import { getSyncCandidates, loadEncounter } from "$lib/api";
 
   const {
     elements: { root, item },
@@ -47,12 +48,12 @@
     syncProgress.uploaded = 0;
 
     (async () => {
-      const ids = (await invoke("get_sync_candidates", { forceResync: force })) as number[];
+      const ids = await getSyncCandidates(force);
       syncProgress.total = ids.length;
 
       for (let i = 0; i < ids.length; i++) {
         let id = ids[i];
-        const encounter = (await invoke("load_encounter", { id: id.toString() })) as Encounter;
+        const encounter = await loadEncounter(id.toString());
         let upstream = await uploadLog(id, encounter, true, true);
         if (upstream) {
           syncProgress.uploaded++;

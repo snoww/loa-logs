@@ -20,9 +20,11 @@
   import { listen, type UnlistenFn } from "@tauri-apps/api/event";
   import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
   import { onMount } from "svelte";
+  import { loadEncounter, onLiveEvent, type LiveEvent } from "$lib/api";
 
   let enc = $derived(new EncounterState(undefined, true));
   let time = $state(+Date.now());
+  let unsubscribe: (() => void) | null = null;
 
   onMount(() => {
     const interval = setInterval(() => {
@@ -31,54 +33,60 @@
       }
     }, 1000);
 
-    let events: Array<UnlistenFn> = [];
+    onLoad();
 
-    (async () => {
-      let encounterUpdateEvent = await listen("encounter-update", (event: EncounterEvent) => {
-        // console.log(+Date.now(), event.payload);
+    return () => {
+      unsubscribe && unsubscribe();
+      clearInterval(interval);
+    };
+  });
+
+  async function onEvent(event: LiveEvent) {
+    switch (event.type) {
+      case "encounter-update":
         if (!settings.app.general.mini) {
           enc.encounter = event.payload;
         }
-      });
-      let partyUpdateEvent = await listen("party-update", (event: PartyEvent) => {
+        break;
+      case "party-update":
         if (event.payload) {
           enc.partyInfo = event.payload;
         }
-      });
-      let invalidDamageEvent = await listen("invalid-damage", () => {
+        break;
+      case "invalid-damage":
         misc.missingInfo = true;
-      });
-      let zoneChangeEvent = await listen("zone-change", () => {
+        break;
+      case "zone-change":
         misc.raidInProgress = false;
         addToast(zoneChange);
         setTimeout(() => {
           misc.raidInProgress = true;
         }, 6000);
-      });
-      let raidStartEvent = await listen("raid-start", () => {
+        break;
+      case "raid-start":
         misc.raidInProgress = true;
-      });
-      let resetEncounterEvent = await listen("reset-encounter", () => {
+        break;
+      case "reset-encounter":
         // just need to trigger an update
         misc.reset = !misc.reset;
         addToast(resetting);
-      });
-      let pauseEncounterEvent = await listen("pause-encounter", () => {
+        break;
+      case "pause-encounter":
         if (misc.paused) {
           addToast(pausing);
         } else {
           addToast(resuming);
         }
-      });
-      let saveEncounterEvent = await listen("save-encounter", () => {
+        break;
+      case "save-encounter":
         addToast(manualSave);
         setTimeout(() => {
           misc.reset = !misc.reset;
         }, 1000);
-      });
-      let phaseTransitionEvent = await listen("phase-transition", (event: any) => {
+        break;
+      case "phase-transition":
         let phaseCode = event.payload;
-        // console.log(Date.now() + ": phase transition event: ", event.payload)
+
         if (phaseCode === 1) {
           addToast(bossDead);
         } else if (phaseCode === 2 && misc.raidInProgress) {
@@ -87,40 +95,25 @@
           addToast(raidWipe);
         }
         misc.raidInProgress = false;
-      });
-      let adminErrorEvent = await listen("admin", () => {
+        break;
+      case "admin":
         addToast(adminAlert);
-      });
-      let clearEncounterEvent = await listen("clear-encounter", async (event: any) => {
+        break;
+      case "clear-encounter":
         if (!settings.sync.auto) {
           return;
         }
 
         let id = event.payload.toString();
-        const encounter = (await invoke("load_encounter", { id })) as Encounter;
+        const encounter = await loadEncounter(id);
         await uploadLog(id, encounter, false);
-      });
+        break;
+    }
+  }
 
-      events.push(
-        encounterUpdateEvent,
-        partyUpdateEvent,
-        invalidDamageEvent,
-        zoneChangeEvent,
-        raidStartEvent,
-        resetEncounterEvent,
-        pauseEncounterEvent,
-        saveEncounterEvent,
-        phaseTransitionEvent,
-        adminErrorEvent,
-        clearEncounterEvent
-      );
-    })();
-
-    return () => {
-      events.forEach((f) => f());
-      clearInterval(interval);
-    };
-  });
+  async function onLoad() {
+    unsubscribe = await onLiveEvent(onEvent);
+  }
 
   $effect(() => {
     if (enc.encounter && enc.encounter.fightStart) {

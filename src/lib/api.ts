@@ -148,6 +148,10 @@ export const emitDetailsRequest = (): Promise<void> => emit("emit-details-reques
 
 export const setBossOnlyDamage = (enabled: boolean): Promise<void> => emit("boss-only-damage-request", enabled);
 
+export const onLatestEncounter = (handler: (event: any) => void) => listen("show-latest-encounter", handler);
+
+export const onRedirectUrl = (handler: (event: any) => void) => listen("redirect-url", handler);
+
 export const onIdentityUpdate = (handler: (event: IdentityEvent) => void) =>
   listen<IdentityEvent>("identity-update", (event) =>
     handler({
@@ -195,7 +199,7 @@ export type LiveEvent =
       payload: number;
     };
 
-export const onLiveEvent = async (handler: (event: LiveEvent) => void): Promise<any> => {
+export const onLiveEvent = async (handler: (event: LiveEvent) => void): Promise<() => void> => {
   const callback: EventCallback<any> = (event) => {
     handler({
       type: event.event as any,

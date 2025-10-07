@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { deleteEncounters, getDbInfo, openDbPath, optimizeDatabase, writeLog } from "$lib/api";
   import QuickTooltip from "$lib/components/QuickTooltip.svelte";
   import { settings } from "$lib/stores.svelte";
   import type { EncounterDbInfo } from "$lib/types";
@@ -29,7 +30,7 @@
   $effect.pre(() => {
     refresh;
     (async () => {
-      encounterDbInfo = await invoke("get_db_info", { minDuration: settings.app.logs.minEncounterDuration });
+      encounterDbInfo = await getDbInfo(settings.app.logs.minEncounterDuration);
     })();
   });
 </script>
@@ -39,7 +40,7 @@
   <button
     class="rounded-md bg-neutral-700 p-1 hover:bg-neutral-700/80"
     onclick={async () => {
-      await invoke("open_db_path");
+      await openDbPath();
     }}
   >
     Open</button
@@ -56,8 +57,8 @@
         message:
           "Are you sure you want to optimize the database? You should only do this your search is slow. This may take some time and the app might freeze.",
         action: async () => {
-          await invoke("write_log", { message: "optimizing database..." });
-          await invoke("optimize_database");
+          await writeLog("optimizing database...");
+          await optimizeDatabase();
           optimized = true;
           refresh = !refresh;
           $open = false;
@@ -115,7 +116,8 @@
           message:
             "Are you sure you want to delete all encounters below the minimum duration? This action cannot be undone.",
           action: async () => {
-            await invoke("delete_encounters_below_min_duration", {
+            await deleteEncounters({
+              type: "duration",
               minDuration: settings.app.logs.minEncounterDuration,
               keepFavorites: settings.app.general.keepFavorites
             });
@@ -140,7 +142,8 @@
           title: "Delete Uncleared Encounters",
           message: "Are you sure you want to delete all uncleared encounters? This action cannot be undone.",
           action: async () => {
-            await invoke("delete_all_uncleared_encounters", {
+            await deleteEncounters({
+              type: "uncleared",
               keepFavorites: settings.app.general.keepFavorites
             });
             refresh = !refresh;
@@ -164,7 +167,10 @@
           title: "Delete All Encounters",
           message: "Are you sure you want to delete all encounters? This action cannot be undone.",
           action: async () => {
-            await invoke("delete_all_encounters", { keepFavorites: settings.app.general.keepFavorites });
+            await deleteEncounters({
+              type: "all",
+              keepFavorites: settings.app.general.keepFavorites
+            });
             refresh = !refresh;
             $open = false;
           }

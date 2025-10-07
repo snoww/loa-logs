@@ -6,6 +6,7 @@ import MarkdownIt from "markdown-it";
 import { SvelteSet } from "svelte/reactivity";
 import { readable } from "svelte/store";
 import type { AppSettings } from "./settings";
+import { saveSettings } from "./api";
 
 /**
  * Merge settings from local storage into default settings.
@@ -40,7 +41,7 @@ class Settings {
             const settingsFromStorage = JSON.parse(settings) as AppSettings;
             mergeSettings(this.app, settingsFromStorage);
             if (!init) {
-              invoke("save_settings", { settings: this.app });
+              saveSettings(this.app);
             }
           } catch (e) {
             console.error(e);

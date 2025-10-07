@@ -7,9 +7,12 @@
   import MiniEncounterInfo from "./MiniEncounterInfo.svelte";
   import MiniPlayers from "./MiniPlayers.svelte";
   import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
+  import { onLiveEvent, type LiveEvent } from "$lib/api";
 
   let enc = $derived(new EncounterState(undefined, true));
   let time = $state(+Date.now());
+  let unsubscribe: (() => void) | null = null;
+
   onMount(() => {
     const interval = setInterval(() => {
       if (misc.raidInProgress) {
@@ -17,34 +20,41 @@
       }
     }, 1000);
 
-    let events: Array<UnlistenFn> = [];
-    (async () => {
-      let encounterUpdateEvent = await listen("encounter-update", (event: EncounterEvent) => {
+    onLoad();
+
+    return () => {
+      unsubscribe && unsubscribe();
+      clearInterval(interval);
+    };
+  });
+
+  async function onEvent(event: LiveEvent) {
+    switch (event.type) {
+      case "encounter-update":
         if (settings.app.general.mini) {
           enc.encounter = event.payload;
         }
-      });
-      let raidStartEvent = await listen("raid-start", () => {
+        break;
+      case "raid-start":
         misc.raidInProgress = true;
-      });
-      let zoneChangeEvent = await listen("zone-change", () => {
+        break;
+      case "zone-change":
         misc.raidInProgress = false;
         setTimeout(() => {
           misc.raidInProgress = true;
         }, 8000);
-      });
-      let phaseTransitionEvent = await listen("phase-transition", (event: any) => {
+        break;
+      case "phase-transition":
         misc.raidInProgress = false;
-      });
+        break;
+      default:
+        break;
+    }
+  }
 
-      events.push(encounterUpdateEvent, zoneChangeEvent, phaseTransitionEvent, raidStartEvent);
-    })();
-
-    return () => {
-      clearInterval(interval);
-      events.forEach((unlisten) => unlisten());
-    };
-  });
+  async function onLoad() {
+    unsubscribe = await onLiveEvent(onEvent);
+  }
 
   $effect(() => {
     if (settings.app.general.autoShow && settings.app.general.mini) {

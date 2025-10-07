@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { emitDetailsRequest, onIdentityUpdate } from "$lib/api";
   import { customRound } from "$lib/utils";
   import { emit, listen, type UnlistenFn } from "@tauri-apps/api/event";
   import { onDestroy, onMount } from "svelte";
@@ -16,14 +17,12 @@
   onMount(() => {
     let events: Array<UnlistenFn> = [];
     (async () => {
-      await emit("emit-details-request");
-      let identityEvent = await listen("identity-update", (event: any) => {
-        const identityEvent = event.payload as IdentityEvent;
-        identityEvent.timestamp = +Date.now();
+      await emitDetailsRequest();
+      let identityEvent = await onIdentityUpdate((event) => {
         if (!startTime) {
-          startTime = identityEvent.timestamp;
+          startTime = event.timestamp;
         }
-        identityEvents.push(identityEvent);
+        identityEvents.push(event);
       });
       events.push(identityEvent);
     })();
@@ -34,7 +33,7 @@
   });
 
   onDestroy(() => {
-    emit("emit-details-request");
+    emitDetailsRequest();
   });
 </script>
 
