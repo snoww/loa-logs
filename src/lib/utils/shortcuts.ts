@@ -1,6 +1,13 @@
+import {
+  openMostRecentEncounter,
+  pauseRequest,
+  resetRequest,
+  saveRequest,
+  setClickthrough,
+  toggleWindow,
+  Window
+} from "$lib/api";
 import { misc, settings } from "$lib/stores.svelte";
-import { invoke } from "@tauri-apps/api/core";
-import { emit } from "@tauri-apps/api/event";
 import { register } from "@tauri-apps/plugin-global-shortcut";
 
 export type Shortcut = {
@@ -10,32 +17,32 @@ export type Shortcut = {
 export const shortcuts: Record<string, Shortcut> = {
   hideMeter: {
     name: "Hide Meter",
-    action: () => invoke("toggle_meter_window")
+    action: () => toggleWindow(Window.Meter)
   },
   showLogs: {
     name: "Show Logs",
-    action: () => invoke("toggle_logs_window")
+    action: () => toggleWindow(Window.Logs)
   },
   showLatestEncounter: {
     name: "Show Latest Encounter",
-    action: () => invoke("open_most_recent_encounter")
+    action: () => openMostRecentEncounter()
   },
   resetSession: {
     name: "Reset Session",
-    action: () => emit("reset-request")
+    action: () => resetRequest()
   },
   pauseSession: {
     name: "Pause Session",
-    action: () => emit("pause-request")
+    action: () => pauseRequest()
   },
   manualSave: {
     name: "Manual Save",
-    action: () => emit("save-request")
+    action: () => saveRequest()
   },
   disableClickthrough: {
     name: "Toggle Clickthrough",
     action: async () => {
-      await invoke("set_clickthrough", { set: !misc.clickthrough });
+      await setClickthrough(!misc.clickthrough);
       misc.clickthrough = !misc.clickthrough;
     }
   }

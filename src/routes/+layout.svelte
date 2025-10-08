@@ -11,5 +11,5 @@
 </script>
 
 <svelte:window oncontextmenu={(e) => e.preventDefault()} />
-<ThemeProvider/>
+<ThemeProvider />
 {@render children?.()}

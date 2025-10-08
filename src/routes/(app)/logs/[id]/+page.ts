@@ -1,10 +1,9 @@
-import type { Encounter } from "$lib/types";
-import { invoke } from "@tauri-apps/api/core";
 import type { PageLoad } from "./$types";
+import { loadEncounter } from "$lib/api";
 
 export const prerender: boolean = false;
 
 export const load: PageLoad = async ({ params }) => {
-  const encounter = (await invoke("load_encounter", { id: params.id })) as Encounter;
-  return encounter;
+  const id = params.id;
+  return await loadEncounter(id);
 };

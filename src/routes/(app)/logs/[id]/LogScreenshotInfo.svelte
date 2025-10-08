@@ -4,7 +4,13 @@
   import type { Encounter } from "$lib/types";
   import { getVersion } from "@tauri-apps/api/app";
   import BossOnlyDamage from "$lib/components/BossOnlyDamage.svelte";
-  import { abbreviateNumber, formatTimestampDate, formatTimestampTime, getBossHpBars, timestampToMinutesAndSeconds } from "$lib/utils";
+  import {
+    abbreviateNumber,
+    formatTimestampDate,
+    formatTimestampTime,
+    getBossHpBars,
+    timestampToMinutesAndSeconds
+  } from "$lib/utils";
   import { middot } from "$lib/components/Snippets.svelte";
 
   let { encounter }: { encounter: Encounter } = $props();
@@ -49,7 +55,7 @@
           [{raidGate}]
         </p>
       {/if}
-      <p class="font-semibold truncate">
+      <p class="truncate font-semibold">
         {encounter.currentBossName || "No Boss"}
       </p>
       {@render middot()}

@@ -16,13 +16,27 @@
     resuming,
     zoneChange
   } from "$lib/utils/toasts";
-  import { invoke } from "@tauri-apps/api/core";
-  import { listen, type UnlistenFn } from "@tauri-apps/api/event";
   import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
   import { onMount } from "svelte";
+  import {
+    loadEncounter,
+    onEncounterUpdate,
+    onPartyUpdate,
+    onInvalidDamage,
+    onZoneChange,
+    onRaidStart,
+    onResetEncounter,
+    onPauseEncounter,
+    onSaveEncounter,
+    onPhaseTransition,
+    onAdmin,
+    onClearEncounter
+  } from "$lib/api";
+  import type { UnlistenFn } from "@tauri-apps/api/event";
 
   let enc = $derived(new EncounterState(undefined, true));
   let time = $state(+Date.now());
+  let unsubscribe: (() => void) | null = null;
 
   onMount(() => {
     const interval = setInterval(() => {
@@ -31,96 +45,114 @@
       }
     }, 1000);
 
-    let events: Array<UnlistenFn> = [];
-
-    (async () => {
-      let encounterUpdateEvent = await listen("encounter-update", (event: EncounterEvent) => {
-        // console.log(+Date.now(), event.payload);
-        if (!settings.app.general.mini) {
-          enc.encounter = event.payload;
-        }
-      });
-      let partyUpdateEvent = await listen("party-update", (event: PartyEvent) => {
-        if (event.payload) {
-          enc.partyInfo = event.payload;
-        }
-      });
-      let invalidDamageEvent = await listen("invalid-damage", () => {
-        misc.missingInfo = true;
-      });
-      let zoneChangeEvent = await listen("zone-change", () => {
-        misc.raidInProgress = false;
-        addToast(zoneChange);
-        setTimeout(() => {
-          misc.raidInProgress = true;
-        }, 6000);
-      });
-      let raidStartEvent = await listen("raid-start", () => {
-        misc.raidInProgress = true;
-      });
-      let resetEncounterEvent = await listen("reset-encounter", () => {
-        // just need to trigger an update
-        misc.reset = !misc.reset;
-        addToast(resetting);
-      });
-      let pauseEncounterEvent = await listen("pause-encounter", () => {
-        if (misc.paused) {
-          addToast(pausing);
-        } else {
-          addToast(resuming);
-        }
-      });
-      let saveEncounterEvent = await listen("save-encounter", () => {
-        addToast(manualSave);
-        setTimeout(() => {
-          misc.reset = !misc.reset;
-        }, 1000);
-      });
-      let phaseTransitionEvent = await listen("phase-transition", (event: any) => {
-        let phaseCode = event.payload;
-        // console.log(Date.now() + ": phase transition event: ", event.payload)
-        if (phaseCode === 1) {
-          addToast(bossDead);
-        } else if (phaseCode === 2 && misc.raidInProgress) {
-          addToast(raidClear);
-        } else if (phaseCode === 4 && misc.raidInProgress) {
-          addToast(raidWipe);
-        }
-        misc.raidInProgress = false;
-      });
-      let adminErrorEvent = await listen("admin", () => {
-        addToast(adminAlert);
-      });
-      let clearEncounterEvent = await listen("clear-encounter", async (event: any) => {
-        if (!settings.sync.auto) {
-          return;
-        }
-
-        let id = event.payload.toString();
-        const encounter = (await invoke("load_encounter", { id })) as Encounter;
-        await uploadLog(id, encounter, false);
-      });
-
-      events.push(
-        encounterUpdateEvent,
-        partyUpdateEvent,
-        invalidDamageEvent,
-        zoneChangeEvent,
-        raidStartEvent,
-        resetEncounterEvent,
-        pauseEncounterEvent,
-        saveEncounterEvent,
-        phaseTransitionEvent,
-        adminErrorEvent,
-        clearEncounterEvent
-      );
-    })();
+    onLoad();
 
     return () => {
-      events.forEach((f) => f());
+      unsubscribe && unsubscribe();
       clearInterval(interval);
     };
   });
+
+  async function listenEvents() {
+    let handles: Array<UnlistenFn> = [];
+
+    let handle = await onEncounterUpdate((event) => {
+      if (!settings.app.general.mini) {
+        enc.encounter = event.payload;
+      }
+    });
+    handles.push(handle);
+
+    handle = await onPartyUpdate((event) => {
+      if (event.payload) {
+        enc.partyInfo = event.payload;
+      }
+    });
+    handles.push(handle);
+
+    handle = await onInvalidDamage(() => {
+      misc.missingInfo = true;
+    });
+    handles.push(handle);
+
+    handle = await onZoneChange(() => {
+      misc.raidInProgress = false;
+      addToast(zoneChange);
+      setTimeout(() => {
+        misc.raidInProgress = true;
+      }, 6000);
+    });
+    handles.push(handle);
+
+    handle = await onRaidStart(() => {
+      misc.raidInProgress = true;
+    });
+    handles.push(handle);
+
+    handle = await onResetEncounter(() => {
+      // just need to trigger an update
+      misc.reset = !misc.reset;
+      addToast(resetting);
+    });
+    handles.push(handle);
+
+    handle = await onPauseEncounter(() => {
+      if (misc.paused) {
+        addToast(pausing);
+      } else {
+        addToast(resuming);
+      }
+    });
+    handles.push(handle);
+
+    handle = await onSaveEncounter(() => {
+      addToast(manualSave);
+      setTimeout(() => {
+        misc.reset = !misc.reset;
+      }, 1000);
+    });
+    handles.push(handle);
+
+    handle = await onPhaseTransition((event) => {
+      let phaseCode = event.payload;
+
+      if (phaseCode === 1) {
+        addToast(bossDead);
+      } else if (phaseCode === 2 && misc.raidInProgress) {
+        addToast(raidClear);
+      } else if (phaseCode === 4 && misc.raidInProgress) {
+        addToast(raidWipe);
+      }
+      misc.raidInProgress = false;
+    });
+    handles.push(handle);
+
+    handle = await onAdmin(() => {
+      addToast(adminAlert);
+    });
+    handles.push(handle);
+
+    handle = await onClearEncounter(async (event) => {
+      if (!settings.sync.auto) {
+        return;
+      }
+
+      let id = event.payload.toString();
+      const encounter = await loadEncounter(id);
+      await uploadLog(id, encounter, false);
+    });
+    handles.push(handle);
+
+    return () => {
+      for (const unlisten of handles) {
+        unlisten();
+      }
+    };
+  }
+
+  async function onLoad() {
+    unsubscribe = await listenEvents();
+  }
 
   $effect(() => {
     if (enc.encounter && enc.encounter.fightStart) {

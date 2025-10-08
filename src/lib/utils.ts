@@ -8,6 +8,7 @@ import html2canvas from "html2canvas-pro";
 import { addToast } from "./components/Toaster.svelte";
 import { screenshot, settings, updateInfo } from "./stores.svelte";
 import { screenshotError, screenshotSuccess } from "./utils/toasts";
+import { writeLog } from "./api";
 
 export const UWUOWO_URL = "https://uwuowo.mathi.moe";
 
@@ -25,7 +26,7 @@ export async function takeScreenshot(div?: HTMLElement) {
         addToast(screenshotSuccess);
       } catch (error) {
         addToast(screenshotError);
-        invoke("write_log", { message: "failed to take screenshot: " + error });
+        await writeLog("failed to take screenshot: " + error);
       } finally {
         screenshot.done();
       }
@@ -45,8 +46,8 @@ export async function checkForUpdate() {
     }
 
     return updateInfo.available;
-  } catch (e) {
-    await invoke("write_log", { message: e });
+  } catch (err) {
+    await writeLog(String(err));
   }
 }
 

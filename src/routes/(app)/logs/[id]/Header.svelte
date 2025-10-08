@@ -7,6 +7,7 @@
   import type { Encounter } from "$lib/types";
   import { formatTimestamp, getBossHpBars } from "$lib/utils";
   import { invoke } from "@tauri-apps/api/core";
+  import { toggleEncounterFavorite } from "$lib/api";
 
   let { encounter }: { encounter: Encounter } = $props();
   let raidGate = $derived(raidGates[encounter.currentBossName]);
@@ -23,7 +24,7 @@
   let fav = $state(encounter.favorite);
 
   async function toggleFavorite() {
-    await invoke("toggle_encounter_favorite", { id: Number(page.params.id) });
+    await toggleEncounterFavorite(Number(page.params.id));
     fav = !fav;
   }
 </script>

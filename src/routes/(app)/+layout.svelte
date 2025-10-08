@@ -5,9 +5,10 @@
   import { settings } from "$lib/stores.svelte";
   import { checkForUpdate } from "$lib/utils";
   import { getVersion } from "@tauri-apps/api/app";
-  import { listen, type UnlistenFn } from "@tauri-apps/api/event";
+  import { type UnlistenFn } from "@tauri-apps/api/event";
   import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
   import { onDestroy, onMount } from "svelte";
+  import { onLatestEncounter, onRedirectUrl } from "$lib/api";
 
   let { children }: { children?: import("svelte").Snippet } = $props();
 
@@ -15,11 +16,11 @@
 
   onMount(() => {
     (async () => {
-      let encounterUpdateEvent = await listen("show-latest-encounter", async (event) => {
+      let encounterUpdateEvent = await onLatestEncounter(async (event) => {
         await goto("/logs/" + event.payload);
         await showWindow();
       });
-      let openUrlEvent = await listen("redirect-url", async (event) => {
+      let openUrlEvent = await onRedirectUrl(async (event) => {
         await goto("/" + event.payload);
         await showWindow();
       });

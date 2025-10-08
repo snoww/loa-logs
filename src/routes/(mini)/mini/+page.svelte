@@ -7,9 +7,12 @@
   import MiniEncounterInfo from "./MiniEncounterInfo.svelte";
   import MiniPlayers from "./MiniPlayers.svelte";
   import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
+  import { onEncounterUpdate, onPhaseTransition, onRaidStart, onZoneChange } from "$lib/api";
 
   let enc = $derived(new EncounterState(undefined, true));
   let time = $state(+Date.now());
+  let unsubscribe: (() => void) | null = null;
+
   onMount(() => {
     const interval = setInterval(() => {
       if (misc.raidInProgress) {
@@ -17,34 +20,52 @@
       }
     }, 1000);
 
-    let events: Array<UnlistenFn> = [];
-    (async () => {
-      let encounterUpdateEvent = await listen("encounter-update", (event: EncounterEvent) => {
-        if (settings.app.general.mini) {
-          enc.encounter = event.payload;
-        }
-      });
-      let raidStartEvent = await listen("raid-start", () => {
-        misc.raidInProgress = true;
-      });
-      let zoneChangeEvent = await listen("zone-change", () => {
-        misc.raidInProgress = false;
-        setTimeout(() => {
-          misc.raidInProgress = true;
-        }, 8000);
-      });
-      let phaseTransitionEvent = await listen("phase-transition", (event: any) => {
-        misc.raidInProgress = false;
-      });
-
-      events.push(encounterUpdateEvent, zoneChangeEvent, phaseTransitionEvent, raidStartEvent);
-    })();
+    onLoad();
 
     return () => {
+      unsubscribe && unsubscribe();
       clearInterval(interval);
-      events.forEach((unlisten) => unlisten());
     };
   });
+
+  async function listenEvents() {
+    let handles: Array<UnlistenFn> = [];
+
+    let handle = await onEncounterUpdate((event) => {
+      if (settings.app.general.mini) {
+        enc.encounter = event.payload;
+      }
+    });
+    handles.push(handle);
+
+    handle = await onRaidStart(() => {
+      misc.raidInProgress = true;
+    });
+    handles.push(handle);
+
+    handle = await onZoneChange(() => {
+      misc.raidInProgress = false;
+      setTimeout(() => {
+        misc.raidInProgress = true;
+      }, 8000);
+    });
+    handles.push(handle);
+
+    handle = await onPhaseTransition((_) => {
+      misc.raidInProgress = false;
+    });
+    handles.push(handle);
+
+    return () => {
+      for (const unlisten of handles) {
+        unlisten();
+      }
+    };
+  }
+
+  async function onLoad() {
+    unsubscribe = await listenEvents();
+  }
 
   $effect(() => {
     if (settings.app.general.autoShow && settings.app.general.mini) {

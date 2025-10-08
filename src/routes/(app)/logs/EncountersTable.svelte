@@ -75,7 +75,10 @@
             </p>
           {/if}
         </div>
-        <a href="/logs/{encounter.id}" class="hover:text-accent-500 group flex items-center gap-1 hover:underline text-sm">
+        <a
+          href="/logs/{encounter.id}"
+          class="hover:text-accent-500 group flex items-center gap-1 text-sm hover:underline"
+        >
           {#if encounter.favorite}
             <IconStar class="shrink-0 text-yellow-400" />
           {/if}

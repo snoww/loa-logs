@@ -25,8 +25,7 @@ export interface BreakdownBase extends DisplayFlags {
   hpm: boolean;
 }
 
-export interface MeterBreakdown extends BreakdownBase {
-}
+export interface MeterBreakdown extends BreakdownBase {}
 
 export interface LogsBreakdown extends BreakdownBase {
   adjustedCritRate: boolean;

@@ -12,6 +12,7 @@
   import ClassColors from "./ClassColors.svelte";
   import DatabaseInfo from "./DatabaseInfo.svelte";
   import Shortcuts from "./Shortcuts.svelte";
+  import { checkStartOnBoot, setAlwaysOnTop, setBlur, setBossOnlyDamage, setStartOnBoot } from "$lib/api";
 
   let currentTab = $state("General");
 
@@ -64,7 +65,7 @@
 
   onMount(() => {
     (async () => {
-      settings.app.general.startOnBoot = await invoke("check_start_on_boot");
+      settings.app.general.startOnBoot = await checkStartOnBoot();
     })();
   });
 
@@ -263,7 +264,7 @@
             type="checkbox"
             bind:checked={settings.app.general.startOnBoot}
             onchange={async () => {
-              await invoke("set_start_on_boot", { set: settings.app.general.startOnBoot });
+              await setStartOnBoot(settings.app.general.startOnBoot);
             }}
             class="form-checkbox checked:text-accent-600 size-5 rounded-sm border-0 bg-neutral-700 focus:ring-0"
           />
@@ -313,7 +314,7 @@
             type="checkbox"
             bind:checked={settings.app.general.bossOnlyDamage}
             onchange={() => {
-              emit("boss-only-damage-request", settings.app.general.bossOnlyDamage);
+              setBossOnlyDamage(settings.app.general.bossOnlyDamage);
             }}
             class="form-checkbox checked:text-accent-600/80 size-5 rounded-sm border-0 bg-neutral-700 focus:ring-0"
           />
@@ -865,7 +866,7 @@
             type="checkbox"
             bind:checked={settings.app.general.alwaysOnTop}
             onchange={async () => {
-              settings.app.general.alwaysOnTop ? await invoke("enable_aot") : await invoke("disable_aot");
+              await setAlwaysOnTop(settings.app.general.alwaysOnTop);
             }}
             class="form-checkbox checked:text-accent-600 size-5 rounded-sm border-0 bg-neutral-700 focus:ring-0"
           />
@@ -910,7 +911,7 @@
               type="checkbox"
               bind:checked={settings.app.general.blurWin11}
               onchange={async () => {
-                settings.app.general.blurWin11 ? await invoke("enable_blur") : await invoke("disable_blur");
+                await setBlur(settings.app.general.blurWin11);
               }}
               class="form-checkbox checked:text-accent-600 size-5 rounded-sm border-0 bg-neutral-700 focus:ring-0"
             />
@@ -927,7 +928,7 @@
               type="checkbox"
               bind:checked={settings.app.general.blur}
               onchange={async () => {
-                settings.app.general.blur ? await invoke("enable_blur") : await invoke("disable_blur");
+                await setBlur(settings.app.general.blur);
               }}
               class="form-checkbox checked:text-accent-600 size-5 rounded-sm border-0 bg-neutral-700 focus:ring-0"
             />

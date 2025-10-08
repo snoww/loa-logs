@@ -15,18 +15,15 @@
     const documentElement = document.documentElement;
     const general = settings.app.general;
 
-    if(currentWindow.label === "logs") {
+    if (currentWindow.label === "logs") {
       const fontSize = scaleMap[general.logScale] ?? "medium";
       documentElement.style.setProperty("--font-size", fontSize);
-    }
-    else {
+    } else {
       const fontSize = scaleMap[general.scale] ?? "medium";
       documentElement.style.setProperty("--font-size", fontSize);
     }
 
-    const palette = general.accentColor.split("-")[1];
-    documentElement.dataset.theme = palette;
+    documentElement.dataset.theme = general.accentColor.split("-")[1];
     documentElement.dataset.view = currentWindow.label;
   });
-
 </script>

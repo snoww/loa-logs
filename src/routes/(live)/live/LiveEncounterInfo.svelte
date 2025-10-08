@@ -16,13 +16,12 @@
   import { EntityType } from "$lib/types";
   import { abbreviateNumber, takeScreenshot, timestampToMinutesAndSeconds } from "$lib/utils";
   import { createDropdownMenu, melt } from "@melt-ui/svelte";
-  import { invoke } from "@tauri-apps/api/core";
-  import { emit } from "@tauri-apps/api/event";
   import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
   import { MediaQuery } from "svelte/reactivity";
   import { fly } from "svelte/transition";
   import QuickTooltip from "$lib/components/QuickTooltip.svelte";
   import LiveShareButton from "$lib/components/LiveShareButton.svelte";
+  import { openMostRecentEncounter, openUrl, pauseRequest, resetRequest, saveRequest } from "$lib/api";
 
   let { enc, screenshotDiv }: { enc: EncounterState; screenshotDiv?: HTMLElement } = $props();
 
@@ -94,7 +93,7 @@
       <!-- menu icons depending on how big window is -->
       <div class="flex items-center gap-0.5 text-neutral-300">
         {#if minWidth.current}
-          <button class="group" onclick={() => invoke("open_most_recent_encounter")}>
+          <button class="group" onclick={() => openMostRecentEncounter()}>
             <QuickTooltip tooltip="Open Recent Log">
               <IconUndo class="group-hover:text-accent-500/80 size-5" />
             </QuickTooltip>
@@ -108,7 +107,7 @@
           </button>
         {/if}
         {#if showThree.current}
-          <button class="group" onclick={() => emit("reset-request")}>
+          <button class="group" onclick={() => resetRequest()}>
             <QuickTooltip tooltip="Reset Session">
               <IconRefresh class="group-hover:text-accent-500/80 size-4.5" />
             </QuickTooltip>
@@ -119,7 +118,7 @@
             class="group"
             onclick={() => {
               misc.paused = !misc.paused;
-              emit("pause-request");
+              pauseRequest();
             }}
           >
             <QuickTooltip tooltip={misc.paused ? "Resume Session" : "Pause Session"}>
@@ -168,7 +167,7 @@
       <button
         use:melt={$item}
         class="group flex items-center justify-between gap-2"
-        onclick={() => invoke("open_most_recent_encounter")}
+        onclick={() => openMostRecentEncounter()}
       >
         <p class="group-hover:text-accent-500/80">Recent</p>
         <IconUndo class="group-hover:text-accent-500/80 size-5" />
@@ -185,11 +184,7 @@
       </button>
     {/if}
     {#if !showThree.current}
-      <button
-        use:melt={$item}
-        class="group flex items-center justify-between gap-2"
-        onclick={() => emit("reset-request")}
-      >
+      <button use:melt={$item} class="group flex items-center justify-between gap-2" onclick={() => resetRequest()}>
         <p class="group-hover:text-accent-500/80">Reset</p>
         <IconRefresh class="group-hover:text-accent-500/80 size-5" />
       </button>
@@ -200,7 +195,7 @@
         class="group flex items-center justify-between gap-2"
         onclick={() => {
           misc.paused = !misc.paused;
-          emit("pause-request");
+          pauseRequest();
         }}
       >
         <p class="group-hover:text-accent-500/80">{misc.paused ? "Resume" : "Pause"}</p>
@@ -215,7 +210,9 @@
       use:melt={$item}
       class="group flex items-center justify-between gap-2"
       onclick={() => {
-        if (enc.encounter) emit("save-request");
+        if (enc.encounter) {
+          saveRequest();
+        }
       }}
     >
       <p class="group-hover:text-accent-500/80">Save</p>
@@ -231,11 +228,7 @@
         <IconPointer class="group-hover:text-accent-500/80 size-5" />
       </button>
     </QuickTooltip>
-    <button
-      use:melt={$item}
-      class="group flex items-center justify-between gap-2"
-      onclick={() => invoke("open_url", { url: "settings" })}
-    >
+    <button use:melt={$item} class="group flex items-center justify-between gap-2" onclick={() => openUrl("settings")}>
       <p class="group-hover:text-accent-500/80">Settings</p>
       <IconSettings class="group-hover:text-accent-500/80 size-5" />
     </button>

@@ -7,10 +7,10 @@
   import { checkForUpdate } from "$lib/utils";
   import { noUpdateAvailable } from "$lib/utils/toasts";
   import { createDialog, melt } from "@melt-ui/svelte";
-  import { invoke } from "@tauri-apps/api/core";
   import { getVersion } from "@tauri-apps/api/app";
   import { onMount, type Snippet } from "svelte";
   import { fade, fly } from "svelte/transition";
+  import { checkLoaRunning, startLoaProcess } from "$lib/api";
 
   const { title, children }: { title: string; children?: Snippet } = $props();
 
@@ -29,12 +29,12 @@
   onMount(() => {
     (async () => {
       version = await getVersion();
-      loaRunning = await invoke("check_loa_running");
+      loaRunning = await checkLoaRunning();
     })();
 
     const interval = setInterval(async () => {
       if ($open) {
-        loaRunning = await invoke("check_loa_running");
+        loaRunning = await checkLoaRunning();
       }
     }, 5000);
     return () => clearInterval(interval);
@@ -61,7 +61,11 @@
 </div>
 
 {#snippet route(name: string, path: string)}
-  <a href={path} class="hover:text-accent-500 rounded-md px-3 py-1 text-base" class:bg-neutral-800={pathname.startsWith(path)}>
+  <a
+    href={path}
+    class="hover:text-accent-500 rounded-md px-3 py-1 text-base"
+    class:bg-neutral-800={pathname.startsWith(path)}
+  >
     {name}
   </a>
 {/snippet}
@@ -116,7 +120,7 @@
             : 'hover:text-accent-500'}"
           onclick={() => {
             starting = true;
-            invoke("start_loa_process");
+            startLoaProcess();
             setTimeout(() => {
               starting = false;
             }, 10000);

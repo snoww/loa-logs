@@ -1,10 +1,10 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
   import { page } from "$app/state";
+  import { deleteEncounter } from "$lib/api";
   import { IconChevronDown, IconTrash } from "$lib/icons";
   import { settings } from "$lib/stores.svelte.js";
   import { createDialog, createDropdownMenu, melt } from "@melt-ui/svelte";
-  import { invoke } from "@tauri-apps/api/core";
   import { fade, fly } from "svelte/transition";
 
   const {
@@ -145,7 +145,7 @@
           use:melt={$close}
           class="rounded-md bg-red-500/70 p-1 hover:bg-red-500/60"
           on:click={async () => {
-            await invoke("delete_encounter", { id: page.params.id });
+            await deleteEncounter(page.params.id!);
             goto("/logs");
           }}
         >
