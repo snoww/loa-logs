@@ -51,9 +51,8 @@
         raidsOnly: settings.app.general.showRaidsOnly
       }
     };
-    let overview: EncountersOverview = await loadEncountersPreview(criteria);
 
-    return overview;
+    return await loadEncountersPreview(criteria);
   }
 
   let refresh = $state(false);

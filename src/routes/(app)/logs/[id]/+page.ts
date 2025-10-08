@@ -5,6 +5,5 @@ export const prerender: boolean = false;
 
 export const load: PageLoad = async ({ params }) => {
   const id = params.id;
-  const encounter = await loadEncounter(id);
-  return encounter;
+  return await loadEncounter(id);
 };

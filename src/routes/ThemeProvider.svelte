@@ -23,8 +23,7 @@
       documentElement.style.setProperty("--font-size", fontSize);
     }
 
-    const palette = general.accentColor.split("-")[1];
-    documentElement.dataset.theme = palette;
+    documentElement.dataset.theme = general.accentColor.split("-")[1];
     documentElement.dataset.view = currentWindow.label;
   });
 </script>
