@@ -7,7 +7,7 @@
   import MiniEncounterInfo from "./MiniEncounterInfo.svelte";
   import MiniPlayers from "./MiniPlayers.svelte";
   import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
-  import { onLiveEvent, type LiveEvent } from "$lib/api";
+  import { onEncounterUpdate, onPhaseTransition, onRaidStart, onZoneChange } from "$lib/api";
 
   let enc = $derived(new EncounterState(undefined, true));
   let time = $state(+Date.now());
@@ -28,32 +28,43 @@
     };
   });
 
-  async function onEvent(event: LiveEvent) {
-    switch (event.type) {
-      case "encounter-update":
-        if (settings.app.general.mini) {
-          enc.encounter = event.payload;
-        }
-        break;
-      case "raid-start":
+  async function listenEvents() {
+    let handles: Array<UnlistenFn> = [];
+
+    let handle = await onEncounterUpdate((event) => {
+      if (settings.app.general.mini) {
+        enc.encounter = event.payload;
+      }
+    });
+    handles.push(handle);
+
+    handle = await onRaidStart((_) => {
+      misc.raidInProgress = true;
+    });
+    handles.push(handle);
+
+    handle = await onZoneChange((_) => {
+      misc.raidInProgress = false;
+      setTimeout(() => {
         misc.raidInProgress = true;
-        break;
-      case "zone-change":
-        misc.raidInProgress = false;
-        setTimeout(() => {
-          misc.raidInProgress = true;
-        }, 8000);
-        break;
-      case "phase-transition":
-        misc.raidInProgress = false;
-        break;
-      default:
-        break;
-    }
+      }, 8000);
+    });
+    handles.push(handle);
+
+    handle = await onPhaseTransition((_) => {
+      misc.raidInProgress = false;
+    });
+    handles.push(handle);
+
+    return () => {
+      for (const unlisten of handles) {
+        unlisten();
+      }
+    };
   }
 
   async function onLoad() {
-    unsubscribe = await onLiveEvent(onEvent);
+    unsubscribe = await listenEvents();
   }
 
   $effect(() => {

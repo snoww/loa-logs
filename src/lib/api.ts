@@ -2,7 +2,14 @@ import { getVersion } from "@tauri-apps/api/app";
 import { invoke } from "@tauri-apps/api/core";
 import { emit, listen, type EventCallback, type UnlistenFn } from "@tauri-apps/api/event";
 import { relaunch } from "@tauri-apps/plugin-process";
-import type { Encounter, EncounterDbInfo, EncountersOverview, IdentityEvent } from "./types";
+import type {
+  Encounter,
+  EncounterDbInfo,
+  EncounterEvent,
+  EncountersOverview,
+  IdentityEvent,
+  PartyEvent
+} from "./types";
 import type { AppSettings } from "./settings";
 
 export const getAppVersion = async (): Promise<string> => `v${await getVersion()}`;
@@ -160,70 +167,24 @@ export const onIdentityUpdate = (handler: (event: IdentityEvent) => void) =>
     })
   );
 
-export type LiveEvent =
-  | {
-      type: "encounter-update";
-      payload: Encounter;
-    }
-  | {
-      type: "party-update";
-      payload?: string[][];
-    }
-  | {
-      type: "invalid-damage";
-    }
-  | {
-      type: "zone-change";
-    }
-  | {
-      type: "raid-start";
-    }
-  | {
-      type: "reset-encounter";
-    }
-  | {
-      type: "pause-encounter";
-    }
-  | {
-      type: "save-encounter";
-    }
-  | {
-      type: "phase-transition";
-      payload: number;
-    }
-  | {
-      type: "admin";
-    }
-  | {
-      type: "clear-encounter";
-      payload: number;
-    };
+export const onEncounterUpdate = (handler: (event: EncounterEvent) => void) => listen("encounter-update", handler);
 
-export const onLiveEvent = async (handler: (event: LiveEvent) => void): Promise<() => void> => {
-  const callback: EventCallback<any> = (event) => {
-    handler({
-      type: event.event as any,
-      payload: event.payload
-    });
-  };
+export const onPartyUpdate = (handler: (event: PartyEvent) => void) => listen("party-update", handler);
 
-  let events: Array<UnlistenFn> = [];
+export const onInvalidDamage = (handler: (event: unknown) => void) => listen("invalid-damage", handler);
 
-  events.push(await listen("encounter-update", callback));
-  events.push(await listen("party-update", callback));
-  events.push(await listen("invalid-damage", callback));
-  events.push(await listen("zone-change", callback));
-  events.push(await listen("raid-start", callback));
-  events.push(await listen("reset-encounter", callback));
-  events.push(await listen("pause-encounter", callback));
-  events.push(await listen("save-encounter", callback));
-  events.push(await listen("phase-transition", callback));
-  events.push(await listen("admin", callback));
-  events.push(await listen("clear-encounter", callback));
+export const onZoneChange = (handler: (event: unknown) => void) => listen("zone-change", handler);
 
-  return () => {
-    for (const unlisten of events) {
-      unlisten();
-    }
-  };
-};
+export const onRaidStart = (handler: (event: unknown) => void) => listen("raid-start", handler);
+
+export const onResetEncounter = (handler: (event: unknown) => void) => listen("reset-encounter", handler);
+
+export const onPauseEncounter = (handler: (event: unknown) => void) => listen("pause-encounter", handler);
+
+export const onSaveEncounter = (handler: (event: unknown) => void) => listen("save-encounter", handler);
+
+export const onPhaseTransition = (handler: (event: { payload: number }) => void) => listen("phase-transition", handler);
+
+export const onAdmin = (handler: (event: unknown) => void) => listen("admin", handler);
+
+export const onClearEncounter = (handler: (event: { payload: number }) => void) => listen("clear-encounter", handler);
