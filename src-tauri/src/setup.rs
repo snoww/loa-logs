@@ -1,8 +1,8 @@
 use std::{
     error::Error,
     sync::{
-        atomic::{AtomicBool, Ordering},
         Arc,
+        atomic::{AtomicBool, Ordering},
     },
 };
 
@@ -11,12 +11,13 @@ use tauri::{App, AppHandle, Manager};
 use tauri_plugin_updater::UpdaterExt;
 
 use crate::{
+    app,
     background::{BackgroundWorker, BackgroundWorkerArgs},
     constants::DEFAULT_PORT,
     context::AppContext,
     settings::*,
     shell::ShellManager,
-    ui::{setup_tray, AppHandleExtensions, WindowExtensions},
+    ui::{AppHandleExtensions, WindowExtensions, setup_tray},
 };
 
 pub fn setup(app: &mut App) -> Result<(), Box<dyn Error>> {

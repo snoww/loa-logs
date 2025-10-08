@@ -1,17 +1,27 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.33.7 - September 21th, 2025
+    ### v1.33.8 - October 7th, 2025
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
   </div>
 </div>
 
-#### P.S. If you see any of us in town or raid, consider dropping an honor!
+#### P.S. If you see any of us in town or raid, feel free to drop an honor!
 
 - Snowving on Luterra
 - Administrator on Ratik
 - Poont on Gienah
+
+#### BUG FIXES AND IMPROVEMENTS
+
+- another speculative for start with windows setting (toggle setting to activate)
+- fixed tooltips staying on screen even after mouse leaving meter window
+- fixed missing damage % setting in live meter
+
+---
+
+### v1.33.7 - September 21th, 2025
 
 #### BUG FIXES AND IMPROVEMENTS
 

@@ -1,11 +1,11 @@
 {
-  "version": "v1.33.7",
-  "notes": "### v1.33.7 - September 21th, 2025\n\n#### P.S. If you see any of us in town or raid, consider dropping an honor! \n- Snowving on Luterra\n- Administrator on Ratik\n- Poont on Gienah\n\n\n#### BUG FIXES AND IMPROVEMENTS\n- fixed support bdmg/bdps not showing when meter opened late",
-  "pub_date": "2025-09-22T22:54:19.610Z",
+  "version": "v1.33.8",
+  "notes": "### v1.33.8 - October 7th, 2025\n\n#### P.S. If you see any of us in town or raid, feel free to drop an honor! \n- Snowving on Luterra\n- Administrator on Ratik\n- Poont on Gienah\n\n\n#### BUG FIXES AND IMPROVEMENTS\n- another speculative for start with windows setting (toggle setting to activate)\n- fixed tooltips staying on screen even after mouse leaving meter window\n- fixed missing damage % setting in live meter",
+  "pub_date": "2025-10-08T03:57:26.137Z",
   "platforms": {
     "windows-x86_64": {
-      "url": "https://github.com/snoww/loa-logs/releases/download/v1.33.7/LOA.Logs_1.33.7_x64-setup.nsis.zip",
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlRPRS90Z3pGRHVLMGUxbVhVTE9tVHdjVlBqc2NVWUZqZ0Q3QkNMRzU1TStId25yOVorU3RndWdlQ1p0TE5ZUlZtbWtaNHZmVE52a3EySCtOc1NMY2djPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzU4NTgxODEyCWZpbGU6TE9BIExvZ3NfMS4zMy43X3g2NC1zZXR1cC5uc2lzLnppcAo3NURYazZBU3o4eTJ6Yzl2c0thQnl1YTBRMmhQdldISkJ0VnN4L1Q2UVRNa2J6S1NodEdMNmw3dDYrb0VVcVFFNnFNdG5NU2NIVXFkRDRpK2dwTm9Edz09Cg=="
+      "url": "https://github.com/snoww/loa-logs/releases/download/v1.33.8/LOA.Logs_1.33.8_x64-setup.nsis.zip",
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlVQR2hxNGZmMS85QnprdUdJR3hLckVmS3hyTFFMWWNMTmQxQkFwU0M3S2dMVXBZYkhyY0JSaTVCUEJSTlhzbTBWQmFYYzBBV2ZFTm05TXpybUFobmdVPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzU5ODk2MjE0CWZpbGU6TE9BIExvZ3NfMS4zMy44X3g2NC1zZXR1cC5uc2lzLnppcApuOXdyUmd2Q3JrOEp1TVc4Qnk4VWJRcnVJQnJFUlh6amJZYmFST2VGVmVVSEtId25RYW8zWUpIODJ5WFA4ZEh0VzlVYjlFRmFScUovMVlKMDdHK01BZz09Cg=="
     }
   }
 }
