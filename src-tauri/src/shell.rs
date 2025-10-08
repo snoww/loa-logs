@@ -9,6 +9,7 @@ use crate::{
     context::AppContext,
 };
 
+#[derive(Debug)]
 pub struct ShellManager(AppHandle, AppContext);
 
 impl ShellManager {
@@ -61,7 +62,29 @@ impl ShellManager {
 
             let command = self.0.shell().command("sc").args(["delete", "windivert"]);
 
-            command.output().await.expect("unable to delete driver");
+            match command.output().await {
+                Ok(output) => {
+                    let stdout = String::from_utf8_lossy(&output.stdout)
+                        .lines()
+                        .map(|line| line.trim())
+                        .filter(|line| !line.is_empty())
+                        .collect::<Vec<_>>()
+                        .join(" ");
+
+                    if output.status.success() {
+                        info!("Driver removed successfully");
+                    } else {
+                        warn!(
+                            "Failed to remove driver. Exit code {} - stdout: {}",
+                            output.status.code().unwrap_or(-1),
+                            stdout
+                        );
+                    }
+                }
+                Err(err) => {
+                    warn!("Failed to execute remove driver command: {}", err);
+                }
+            }
         }
     }
 
@@ -69,12 +92,29 @@ impl ShellManager {
         #[cfg(target_os = "windows")]
         {
             let command = self.0.shell().command("sc").args(["stop", "windivert"]);
-            let result = command.output().await;
 
-            if result.is_ok_and(|output| output.status.success()) {
-                info!("stopped driver");
-            } else {
-                warn!("could not execute command to stop driver");
+            match command.output().await {
+                Ok(output) => {
+                    let stdout = String::from_utf8_lossy(&output.stdout)
+                        .lines()
+                        .map(|line| line.trim())
+                        .filter(|line| !line.is_empty())
+                        .collect::<Vec<_>>()
+                        .join(" ");
+
+                    if output.status.success() {
+                        info!("Driver stopped successfully");
+                    } else {
+                        warn!(
+                            "Failed to stop driver. Exit code: {} - stdout: {}",
+                            output.status.code().unwrap_or(-1),
+                            stdout
+                        );
+                    }
+                }
+                Err(err) => {
+                    warn!("Failed to execute driver stop command: {}", err);
+                }
             }
         }
     }
