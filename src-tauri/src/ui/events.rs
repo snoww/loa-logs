@@ -3,7 +3,7 @@ use std::str::FromStr;
 use anyhow::Result;
 use log::*;
 use tauri::{
-    async_runtime, menu::MenuEvent, tray::{MouseButton, MouseButtonState, TrayIcon, TrayIconEvent}, AppHandle, Manager,
+    menu::MenuEvent, tray::{MouseButton, MouseButtonState, TrayIcon, TrayIconEvent}, AppHandle, Manager,
     Window,
     WindowEvent,
 };
@@ -15,6 +15,27 @@ use crate::{
     shell::ShellManager,
     ui::{AppHandleExtensions, TrayCommand, WindowExtensions},
 };
+
+/// Runs an async future to completion from a synchronous callback.
+///
+/// Intended for use in Tauri tray or window event handlers where `.await` cannot be used.
+///
+/// Calling `Handle::current().block_on` or `async_runtime::block_on` in this context
+/// would panic because the callback is already running on a Tokio runtime thread.
+/// This function executes the future safely by:
+/// 1. Using `tokio::task::block_in_place` to temporarily block the current thread
+///    while allowing the runtime to continue scheduling other tasks.
+/// 2. Creating a temporary single-threaded (current-thread) Tokio runtime to run
+///    the future without interfering with the existing runtime.
+pub fn block_on_local<F, T>(future: F) -> T
+where
+    F: Future<Output = T>,
+{
+    tokio::task::block_in_place(|| {
+        let rt = tokio::runtime::Builder::new_current_thread().enable_all().build().unwrap();
+        rt.block_on(future)
+    })
+}
 
 pub fn on_tray_icon_event(tray: &TrayIcon, event: TrayIconEvent) {
     {
@@ -47,10 +68,11 @@ pub fn on_menu_event_inner(app_handle: &AppHandle, event: MenuEvent) -> Result<(
             app_handle.save_window_state(WINDOW_STATE_FLAGS)?;
 
             let shell_manager = app_handle.state::<ShellManager>();
-            async_runtime::block_on(async {
+            block_on_local(async {
                 shell_manager.unload_driver().await;
             });
 
+            log::logger().flush();
             app_handle.exit(0);
         }
         TrayCommand::Hide => {
@@ -132,10 +154,11 @@ pub fn on_window_event_inner(label: &str, window: &Window, event: &WindowEvent) 
             }
 
             let shell_manager = app_handle.state::<ShellManager>();
-            async_runtime::block_on(async {
+            block_on_local(async {
                 shell_manager.unload_driver().await;
             });
 
+            log::logger().flush();
             app_handle.exit(0);
 
             Ok(())
