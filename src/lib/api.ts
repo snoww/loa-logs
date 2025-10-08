@@ -171,20 +171,20 @@ export const onEncounterUpdate = (handler: (event: EncounterEvent) => void) => l
 
 export const onPartyUpdate = (handler: (event: PartyEvent) => void) => listen("party-update", handler);
 
-export const onInvalidDamage = (handler: (event: unknown) => void) => listen("invalid-damage", handler);
+export const onInvalidDamage = (handler: () => void) => listen("invalid-damage", handler);
 
-export const onZoneChange = (handler: (event: unknown) => void) => listen("zone-change", handler);
+export const onZoneChange = (handler: () => void) => listen("zone-change", handler);
 
-export const onRaidStart = (handler: (event: unknown) => void) => listen("raid-start", handler);
+export const onRaidStart = (handler: () => void) => listen("raid-start", handler);
 
-export const onResetEncounter = (handler: (event: unknown) => void) => listen("reset-encounter", handler);
+export const onResetEncounter = (handler: () => void) => listen("reset-encounter", handler);
 
-export const onPauseEncounter = (handler: (event: unknown) => void) => listen("pause-encounter", handler);
+export const onPauseEncounter = (handler: () => void) => listen("pause-encounter", handler);
 
-export const onSaveEncounter = (handler: (event: unknown) => void) => listen("save-encounter", handler);
+export const onSaveEncounter = (handler: () => void) => listen("save-encounter", handler);
 
 export const onPhaseTransition = (handler: (event: { payload: number }) => void) => listen("phase-transition", handler);
 
-export const onAdmin = (handler: (event: unknown) => void) => listen("admin", handler);
+export const onAdmin = (handler: () => void) => listen("admin", handler);
 
 export const onClearEncounter = (handler: (event: { payload: number }) => void) => listen("clear-encounter", handler);

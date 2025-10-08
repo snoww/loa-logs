@@ -70,12 +70,12 @@
     });
     handles.push(handle);
 
-    handle = await onInvalidDamage((_) => {
+    handle = await onInvalidDamage(() => {
       misc.missingInfo = true;
     });
     handles.push(handle);
 
-    handle = await onZoneChange((_) => {
+    handle = await onZoneChange(() => {
       misc.raidInProgress = false;
       addToast(zoneChange);
       setTimeout(() => {
@@ -84,19 +84,19 @@
     });
     handles.push(handle);
 
-    handle = await onRaidStart((_) => {
+    handle = await onRaidStart(() => {
       misc.raidInProgress = true;
     });
     handles.push(handle);
 
-    handle = await onResetEncounter((_) => {
+    handle = await onResetEncounter(() => {
       // just need to trigger an update
       misc.reset = !misc.reset;
       addToast(resetting);
     });
     handles.push(handle);
 
-    handle = await onPauseEncounter((_) => {
+    handle = await onPauseEncounter(() => {
       if (misc.paused) {
         addToast(pausing);
       } else {
@@ -105,7 +105,7 @@
     });
     handles.push(handle);
 
-    handle = await onSaveEncounter((_) => {
+    handle = await onSaveEncounter(() => {
       addToast(manualSave);
       setTimeout(() => {
         misc.reset = !misc.reset;
@@ -127,7 +127,7 @@
     });
     handles.push(handle);
 
-    handle = await onAdmin((_) => {
+    handle = await onAdmin(() => {
       addToast(adminAlert);
     });
     handles.push(handle);

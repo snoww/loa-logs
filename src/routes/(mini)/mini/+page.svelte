@@ -38,12 +38,12 @@
     });
     handles.push(handle);
 
-    handle = await onRaidStart((_) => {
+    handle = await onRaidStart(() => {
       misc.raidInProgress = true;
     });
     handles.push(handle);
 
-    handle = await onZoneChange((_) => {
+    handle = await onZoneChange(() => {
       misc.raidInProgress = false;
       setTimeout(() => {
         misc.raidInProgress = true;
