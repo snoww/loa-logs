@@ -1,11 +1,11 @@
 {
-  "version": "v1.33.9",
-  "notes": "### v1.33.9 - October 7th, 2025\n\n#### P.S. If you see any of us in town or raid, feel free to drop an honor! \n- Snowving on Luterra\n- Administrator on Ratik\n- Poont on Gienah\n\n\n#### BUG FIXES AND IMPROVEMENTS\n- fix error popup when quitting meter",
-  "pub_date": "2025-10-08T22:44:42.955Z",
+  "version": "v1.33.10",
+  "notes": "### v1.33.10 - October 7th, 2025\n\n#### P.S. If you see any of us in town or raid, feel free to drop an honor! \n- Snowving on Luterra\n- Administrator on Ratik\n- Poont on Gienah\n\n### IF GET AN ERROR UPDATING, PLEASE DOWNLOAD ON GITHUB MANUALLY [>>> HERE <<<](https://github.com/snoww/loa-logs/releases/tag/v1.33.10)\n\n\n#### BUG FIXES AND IMPROVEMENTS\n- improved skill grouping for certain tripods of skills\n- fixed manual upload button not working\n- fixed share log button not working\n- fixed issue when trying to open certain old logs",
+  "pub_date": "2025-10-09T00:55:53.919Z",
   "platforms": {
     "windows-x86_64": {
-      "url": "https://github.com/snoww/loa-logs/releases/download/v1.33.9/LOA.Logs_1.33.9_x64-setup.nsis.zip",
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlJnWERhcnd4TnpteGg1QVlnbTZLUkVMMFRMZWlBOG14MEJSazJXU3BsOVB6OUhMaEwxT1FEeWlxN1FMMFg5RytCK2xVcWVYbzBRY2t4aWF6akp4akFFPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzU5OTYzMzMwCWZpbGU6TE9BIExvZ3NfMS4zMy45X3g2NC1zZXR1cC5uc2lzLnppcAo2YjlQNVZVVDNQRzlXbTZRRW9PRHNMOFBTUDV2TDRRODVObVpub3lSaEJPeWhkQnAwdXZ5VDRiakdkbnBOZXVYMkFoS1ZtcG9Xcmt6RDFkeHBQaHhCUT09Cg=="
+      "url": "https://github.com/snoww/loa-logs/releases/download/v1.33.10/LOA.Logs_1.33.10_x64-setup.nsis.zip",
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmFaUElBU3FWMlhMRVg4RkVZS05wajJsZVRjQ2w3dnZyd1ZDMlBLamJHcmhMclREYS9nWVM5b2dlQjRrczRvRzl3NUtpb2JsV1gzaVRVd3ZVMHhjUFFnPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzU5OTcxNzk1CWZpbGU6TE9BIExvZ3NfMS4zMy4xMF94NjQtc2V0dXAubnNpcy56aXAKMWQ2YnhxUmFJa2VMR29xeXY1UWxLTnp5Vy9SNWxYa0dYdjd0ZExEc05CVmMvdmo0K1dVSkJTWG9IWFhzb3NaUXFPMHBlTWpyVURCMkJreVpySkJtQkE9PQo="
     }
   }
 }
