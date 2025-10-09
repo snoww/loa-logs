@@ -88,7 +88,7 @@ export interface SyncArgs {
   failed: boolean;
 }
 
-export const sync = (args: SyncArgs): Promise<void> => invoke("sync", { args });
+export const sync = (args: SyncArgs): Promise<void> => invoke("sync", { ...args });
 
 export type DeleteEncountersArgs =
   | {

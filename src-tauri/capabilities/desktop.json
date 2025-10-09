@@ -25,6 +25,8 @@
     "opener:allow-open-url",
     "opener:allow-default-urls",
     "process:allow-restart",
+    "shell:allow-open",
+    "shell:default",
     "updater:default"
   ]
 }
