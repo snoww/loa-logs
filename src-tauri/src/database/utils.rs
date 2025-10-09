@@ -1,10 +1,10 @@
 use anyhow::Result;
-use flate2::write::GzEncoder;
 use flate2::Compression;
+use flate2::write::GzEncoder;
 use hashbrown::HashMap;
 use semver::Version;
 use serde::Serialize;
-use std::cmp::{max, Ordering};
+use std::cmp::{Ordering, max};
 use std::collections::BTreeMap;
 use std::io::Write;
 use std::str::FromStr;
@@ -285,7 +285,10 @@ pub fn map_entity(row: &rusqlite::Row, version: &Version) -> rusqlite::Result<En
 
     let JsonColumn(skill_stats): JsonColumn<SkillStats> = row.get("skill_stats")?;
     let entity_type: String = row.get("entity_type").unwrap_or_default();
-    let JsonColumn(engraving_data): JsonColumn<Option<Vec<String>>> = row.get("engravings")?;
+    let engraving_data: Option<Vec<String>> = row
+        .get::<_, JsonColumn<Option<Vec<String>>>>("engravings")
+        .ok()
+        .and_then(|JsonColumn(inner)| inner);
     let spec: Option<String> = row.get("spec").unwrap_or_default();
     let ark_passive_active: Option<bool> = row.get("ark_passive_active").unwrap_or_default();
     let JsonColumn(ark_passive_data): JsonColumn<Option<ArkPassiveData>> =
