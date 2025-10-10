@@ -3,7 +3,6 @@ use crate::data::*;
 use crate::database::utils::*;
 use crate::live::entity_tracker::Entity;
 use crate::live::skill_tracker::SkillTracker;
-use crate::live::status_tracker::StatusEffectDetails;
 use crate::models::*;
 use crate::utils::*;
 use anyhow::Result;
@@ -72,26 +71,32 @@ pub fn is_battle_item(skill_effect_id: &u32, _item_type: &str) -> bool {
 pub fn get_status_effect_data(buff_id: u32, source_skill: Option<u32>) -> Option<StatusEffect> {
     let buff = SKILL_BUFF_DATA.get(&buff_id)?;
 
-    let buff_category = if buff.buff_category.clone().unwrap_or_default() == "ability"
+    let buff_category = if buff.buff_category == StatusEffectBuffCategory::Ability
         && [501, 502, 503, 504, 505].contains(&buff.unique_group)
     {
-        "dropsofether".to_string()
+        StatusEffectBuffCategory::DropsOfEther
     } else {
-        buff.buff_category.clone().unwrap_or_default()
+        buff.buff_category
     };
+
+    let target = if buff.target == "none" {
+        StatusEffectTarget::OTHER
+    } else if buff.target == "self" {
+        StatusEffectTarget::SELF
+    } else {
+        StatusEffectTarget::PARTY
+    };
+
+    let buff_type = get_status_effect_buff_type_flags(
+        buff.buff_type,
+        buff.category,
+        buff.per_level_data.get("1").map(|pr| pr.passive_options.as_slice()));
+
     let mut status_effect = StatusEffect {
-        target: {
-            if buff.target == "none" {
-                StatusEffectTarget::OTHER
-            } else if buff.target == "self" {
-                StatusEffectTarget::SELF
-            } else {
-                StatusEffectTarget::PARTY
-            }
-        },
-        category: buff.category.clone(),
-        buff_category: buff_category.clone(),
-        buff_type: get_status_effect_buff_type_flags(buff),
+        target,
+        category: buff.category.as_ref().to_string(),
+        buff_category: buff_category.as_ref().to_string(),
+        buff_type,
         unique_group: buff.unique_group,
         source: StatusEffectSource {
             name: buff.name.clone()?,
@@ -101,12 +106,13 @@ pub fn get_status_effect_data(buff_id: u32, source_skill: Option<u32>) -> Option
         },
     };
 
-    if buff_category == "classskill"
-        || buff_category == "arkpassive"
-        || buff_category == "identity"
-        || (buff_category == "ability" && buff.unique_group != 0)
-        || buff_category == "supportbuff"
-    {
+    let is_from_player = buff_category == StatusEffectBuffCategory::ClassSkill
+        || buff_category == StatusEffectBuffCategory::ArkPassive
+        || buff_category == StatusEffectBuffCategory::Identity
+        || (buff_category == StatusEffectBuffCategory::Ability && buff.unique_group != 0)
+        || buff_category == StatusEffectBuffCategory::SupportBuff;
+
+    if is_from_player {
         if let Some(buff_source_skills) = buff.source_skills.as_ref() {
             if let Some(source_skill) = source_skill {
                 let skill = SKILL_DATA.get(&source_skill);
@@ -140,9 +146,9 @@ pub fn get_status_effect_data(buff_id: u32, source_skill: Option<u32>) -> Option
             let buff_source_skill = SKILL_DATA.get(&skill_id);
             status_effect.source.skill = buff_source_skill.cloned();
         }
-    } else if buff_category == "set" && buff.set_name.is_some() {
+    } else if buff_category == StatusEffectBuffCategory::Set && buff.set_name.is_some() {
         status_effect.source.set_name.clone_from(&buff.set_name);
-    } else if buff_category == "battleitem"
+    } else if buff_category == StatusEffectBuffCategory::BattleItem
         && let Some(buff_source_item) = SKILL_EFFECT_DATA.get(&buff_id)
     {
         if let Some(item_name) = buff_source_item.item_name.as_ref() {
@@ -174,194 +180,121 @@ fn get_summon_source_skill(skill: Option<&SkillData>, status_effect: &mut Status
     }
 }
 
-pub fn get_status_effect_buff_type_flags(buff: &SkillBuffData) -> u32 {
-    let dmg_buffs = [
-        "weaken_defense",
-        "weaken_resistance",
-        "skill_damage_amplify",
-        "beattacked_damage_amplify",
-        "skill_damage_amplify_attack",
-        "directional_attack_amplify",
-        "instant_stat_amplify",
-        "attack_power_amplify",
-        "instant_stat_amplify_by_contents",
-        "evolution_type_damage",
-    ];
+pub fn get_status_effect_buff_type_flags(
+    buff_type: StatusEffectType,
+    category: StatusEffectCategory,
+    passive_options: Option<&[PassiveOption]>
+) -> u32 {
+    let mut buff_type_flag = StatusEffectBuffTypeFlags::NONE;
 
-    let mut buff_type = StatusEffectBuffTypeFlags::NONE;
-    if dmg_buffs.contains(&buff.buff_type.as_str()) {
-        buff_type |= StatusEffectBuffTypeFlags::DMG;
-    } else if ["move_speed_down", "all_speed_down"].contains(&buff.buff_type.as_str()) {
-        buff_type |= StatusEffectBuffTypeFlags::MOVESPEED;
-    } else if buff.buff_type == "reset_cooldown" {
-        buff_type |= StatusEffectBuffTypeFlags::COOLDOWN;
-    } else if ["change_ai_point", "ai_point_amplify"].contains(&buff.buff_type.as_str()) {
-        buff_type |= StatusEffectBuffTypeFlags::STAGGER;
-    } else if buff.buff_type == "increase_identity_gauge" {
-        buff_type |= StatusEffectBuffTypeFlags::RESOURCE;
+    match buff_type {
+        t if t.is_damage_amplify() => buff_type_flag |= StatusEffectBuffTypeFlags::DMG,
+        StatusEffectType::MoveSpeedDown | StatusEffectType::AllSpeedDown => {
+            buff_type_flag |= StatusEffectBuffTypeFlags::MOVESPEED
+        }
+        StatusEffectType::ResetCooldown => buff_type_flag |= StatusEffectBuffTypeFlags::COOLDOWN,
+        StatusEffectType::ChangeAiPoint | StatusEffectType::AiPointAmplify => {
+            buff_type_flag |= StatusEffectBuffTypeFlags::STAGGER
+        }
+        StatusEffectType::IncreaseIdentityGauge => buff_type_flag |= StatusEffectBuffTypeFlags::RESOURCE,
+        _ => {}
     }
 
-    if let Some(passive_option) = buff
-        .per_level_data
-        .get("1")
-        .map(|data| &data.passive_options)
-    {
-        for option in passive_option {
-            let key_stat_str = option.key_stat.as_str();
-            let option_type = option.option_type.as_str();
-            if option_type == "stat" {
-                let stat = STAT_TYPE_MAP.get(key_stat_str);
-                if stat.is_none() {
-                    continue;
-                }
-                let stat = stat.unwrap().to_owned();
-                if ["mastery", "mastery_x", "paralyzation_point_rate"].contains(&key_stat_str) {
-                    buff_type |= StatusEffectBuffTypeFlags::STAGGER;
-                } else if ["rapidity", "rapidity_x", "cooldown_reduction"].contains(&key_stat_str) {
-                    buff_type |= StatusEffectBuffTypeFlags::COOLDOWN;
-                } else if [
-                    "max_mp",
-                    "max_mp_x",
-                    "max_mp_x_x",
-                    "normal_mp_recovery",
-                    "combat_mp_recovery",
-                    "normal_mp_recovery_rate",
-                    "combat_mp_recovery_rate",
-                    "resource_recovery_rate",
-                ]
-                .contains(&key_stat_str)
-                {
-                    buff_type |= StatusEffectBuffTypeFlags::RESOURCE;
-                } else if [
-                    "con",
-                    "con_x",
-                    "max_hp",
-                    "max_hp_x",
-                    "max_hp_x_x",
-                    "normal_hp_recovery",
-                    "combat_hp_recovery",
-                    "normal_hp_recovery_rate",
-                    "combat_hp_recovery_rate",
-                    "self_recovery_rate",
-                    "drain_hp_dam_rate",
-                    "vitality",
-                ]
-                .contains(&key_stat_str)
-                {
-                    buff_type |= StatusEffectBuffTypeFlags::HP;
-                } else if STAT_TYPE_MAP["def"] <= stat && stat <= STAT_TYPE_MAP["magical_inc_rate"]
-                    || ["endurance", "endurance_x"].contains(&option.key_stat.as_str())
-                {
-                    if buff.category == "buff" && option.value >= 0
-                        || buff.category == "debuff" && option.value <= 0
-                    {
-                        buff_type |= StatusEffectBuffTypeFlags::DMG;
-                    } else {
-                        buff_type |= StatusEffectBuffTypeFlags::DEFENSE;
+    let passive_options = match passive_options {
+            Some(value) => value,
+            None => {
+                return buff_type_flag.bits()
+            },
+    };
+
+    for option in passive_options {
+        let key_stat: StatType = option.key_stat;
+        let option_type = option.option_type;
+        let buff_flag = if (category == StatusEffectCategory::Buff && option.value >= 0)
+            || (category == StatusEffectCategory::Debuff && option.value <= 0)
+        {
+            StatusEffectBuffTypeFlags::DMG
+        } else {
+            StatusEffectBuffTypeFlags::DEFENSE
+        };
+
+        if option_type == PassiveOptionType::Stat {
+
+            let stat = match STAT_TYPE_MAP.get(&key_stat) {
+                Some(&s) => s,
+                None => continue,
+            };
+
+            if key_stat.is_stag_stat() {
+                buff_type_flag |= StatusEffectBuffTypeFlags::STAGGER;
+            } else if key_stat.is_cooldown_stat() {
+                buff_type_flag |= StatusEffectBuffTypeFlags::COOLDOWN;
+            } else if key_stat.is_resource_stat() {
+                buff_type_flag |= StatusEffectBuffTypeFlags::RESOURCE;
+            } else if key_stat.is_hp_stat() {
+                buff_type_flag |= StatusEffectBuffTypeFlags::HP;
+            } else if StatType::Def as u32 <= stat && stat <= StatType::MagicalIncRate as u32
+                || key_stat.is_endurance_stat() {
+                buff_type_flag |= buff_flag;
+            } else if StatType::MoveSpeed as u32 <= stat
+                && stat <= StatType::VehicleMoveSpeedRate as u32
+            {
+                buff_type_flag |= StatusEffectBuffTypeFlags::MOVESPEED;
+            }
+            if key_stat.is_atk_speed_stat() {
+                buff_type_flag |= StatusEffectBuffTypeFlags::ATKSPEED;
+            } else if key_stat.is_crit_stat() {
+                buff_type_flag |= StatusEffectBuffTypeFlags::CRIT;
+            } else if StatType::AttackPowerSubRate1 as u32 <= stat
+                && stat <= StatType::SkillDamageSubRate2 as u32
+                || StatType::FireDamRate as u32 <= stat
+                    && stat <= StatType::ElementsDamRate as u32
+                || key_stat.is_offensive_stat() {
+                buff_type_flag |= buff_flag
+            }
+
+            continue;
+        }
+        
+        if option_type == PassiveOptionType::SkillCriticalRatio {
+            buff_type_flag |= StatusEffectBuffTypeFlags::CRIT;
+            continue;
+        }
+        
+        if option_type.is_skill_option() {
+            buff_type_flag |= buff_flag;
+            continue;
+        }
+        
+        if option_type.is_cooldown_reduction() {
+            buff_type_flag |= StatusEffectBuffTypeFlags::COOLDOWN;
+            continue;
+        } 
+        
+        if option_type.is_resource() {
+            buff_type_flag |= StatusEffectBuffTypeFlags::RESOURCE;
+            continue;
+        }
+        
+        if option_type == PassiveOptionType::CombatEffect
+            && let Some(combat_effect) = COMBAT_EFFECT_DATA.get(&option.key_index)
+        {
+            for effect in combat_effect.effects.iter() {
+                for action in effect.actions.iter() {
+                    
+                    if action.action_type.is_damage_modifier() {
+                        buff_type_flag |= StatusEffectBuffTypeFlags::DMG;
                     }
-                } else if STAT_TYPE_MAP["move_speed"] <= stat
-                    && stat <= STAT_TYPE_MAP["vehicle_move_speed_rate"]
-                {
-                    buff_type |= StatusEffectBuffTypeFlags::MOVESPEED;
-                }
-                if [
-                    "attack_speed",
-                    "attack_speed_rate",
-                    "rapidity",
-                    "rapidity_x",
-                ]
-                .contains(&key_stat_str)
-                {
-                    buff_type |= StatusEffectBuffTypeFlags::ATKSPEED;
-                } else if ["critical_hit_rate", "criticalhit", "criticalhit_x"]
-                    .contains(&key_stat_str)
-                {
-                    buff_type |= StatusEffectBuffTypeFlags::CRIT;
-                } else if STAT_TYPE_MAP["attack_power_sub_rate_1"] <= stat
-                    && stat <= STAT_TYPE_MAP["skill_damage_sub_rate_2"]
-                    || STAT_TYPE_MAP["fire_dam_rate"] <= stat
-                        && stat <= STAT_TYPE_MAP["elements_dam_rate"]
-                    || [
-                        "str",
-                        "agi",
-                        "int",
-                        "str_x",
-                        "agi_x",
-                        "int_x",
-                        "char_attack_dam",
-                        "attack_power_rate",
-                        "skill_damage_rate",
-                        "attack_power_rate_x",
-                        "skill_damage_rate_x",
-                        "hit_rate",
-                        "dodge_rate",
-                        "critical_dam_rate",
-                        "awakening_dam_rate",
-                        "attack_power_addend",
-                        "weapon_dam",
-                    ]
-                    .contains(&key_stat_str)
-                {
-                    if buff.category == "buff" && option.value >= 0
-                        || buff.category == "debuff" && option.value <= 0
-                    {
-                        buff_type |= StatusEffectBuffTypeFlags::DMG;
-                    } else {
-                        buff_type |= StatusEffectBuffTypeFlags::DEFENSE;
-                    }
-                }
-            } else if option_type == "skill_critical_ratio" {
-                buff_type |= StatusEffectBuffTypeFlags::CRIT;
-            } else if [
-                "skill_damage",
-                "class_option",
-                "skill_group_damage",
-                "skill_critical_damage",
-                "skill_penetration",
-            ]
-            .contains(&option_type)
-            {
-                if buff.category == "buff" && option.value >= 0
-                    || buff.category == "debuff" && option.value <= 0
-                {
-                    buff_type |= StatusEffectBuffTypeFlags::DMG;
-                } else {
-                    buff_type |= StatusEffectBuffTypeFlags::DEFENSE;
-                }
-            } else if ["skill_cooldown_reduction", "skill_group_cooldown_reduction"]
-                .contains(&option_type)
-            {
-                buff_type |= StatusEffectBuffTypeFlags::COOLDOWN;
-            } else if ["skill_mana_reduction", "mana_reduction"].contains(&option_type) {
-                buff_type |= StatusEffectBuffTypeFlags::RESOURCE;
-            } else if option_type == "combat_effect"
-                && let Some(combat_effect) = COMBAT_EFFECT_DATA.get(&option.key_index)
-            {
-                for effect in combat_effect.effects.iter() {
-                    for action in effect.actions.iter() {
-                        if [
-                            "modify_damage",
-                            "modify_final_damage",
-                            "modify_critical_multiplier",
-                            "modify_penetration",
-                            "modify_penetration_when_critical",
-                            "modify_penetration_addend",
-                            "modify_penetration_addend_when_critical",
-                            "modify_damage_shield_multiplier",
-                        ]
-                        .contains(&action.action_type.as_str())
-                        {
-                            buff_type |= StatusEffectBuffTypeFlags::DMG;
-                        } else if action.action_type == "modify_critical_ratio" {
-                            buff_type |= StatusEffectBuffTypeFlags::CRIT;
-                        }
+                    
+                    if action.action_type.is_crit_modifier() {
+                        buff_type_flag |= StatusEffectBuffTypeFlags::CRIT;
                     }
                 }
             }
         }
     }
 
-    buff_type.bits()
+    buff_type_flag.bits()
 }
 
 pub type SkillDetails = (
@@ -1116,4 +1049,147 @@ fn get_damage_without_hyper_or_special(e: &EncounterEntity) -> i64 {
         .map(|s| s.total_damage)
         .sum::<i64>();
     e.damage_stats.damage_dealt - hyper - special
+}
+
+pub fn get_status_effect_value(value: Option<Vec<u8>>) -> u64 {
+    value.map_or(0, |v| {
+        let c1 = v
+            .get(0..8)
+            .map_or(0, |bytes| u64::from_le_bytes(bytes.try_into().unwrap()));
+        let c2 = v
+            .get(8..16)
+            .map_or(0, |bytes| u64::from_le_bytes(bytes.try_into().unwrap()));
+        c1.min(c2)
+    })
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn should_calculate_flags() {
+        let current_dir = std::env::current_dir().unwrap();
+        AssetPreloader::new(&current_dir).unwrap();
+       
+        for (buff_type, category, passive_options, expected) in setup_test_data() {
+            let actual = get_status_effect_buff_type_flags(buff_type, category, passive_options.as_deref());
+            assert_eq!(actual, expected, "Failed for StatusEffectType::{:?}\nStatusEffectCategory::{:?}\nPassiveOptions: {:?}\nActual Flags: {:?}\nExpected Flags: {:?}",
+                buff_type,
+                category,
+                passive_options,
+                StatusEffectBuffTypeFlags::from_bits(actual).unwrap(),
+                StatusEffectBuffTypeFlags::from_bits(expected).unwrap());
+        }
+    }
+
+    fn setup_test_data() -> Vec<(StatusEffectType, StatusEffectCategory, Option<Vec<PassiveOption>>, u32)> {
+        vec![
+            (StatusEffectType::SkillDamageAmplify, StatusEffectCategory::Buff, None, StatusEffectBuffTypeFlags::DMG.bits()),
+            (StatusEffectType::MoveSpeedDown, StatusEffectCategory::Buff, None, StatusEffectBuffTypeFlags::MOVESPEED.bits()),
+            (StatusEffectType::ResetCooldown, StatusEffectCategory::Buff, None, StatusEffectBuffTypeFlags::COOLDOWN.bits()),
+            (StatusEffectType::IncreaseIdentityGauge, StatusEffectCategory::Buff, None, StatusEffectBuffTypeFlags::RESOURCE.bits()),
+            (StatusEffectType::Other, StatusEffectCategory::Buff, None, StatusEffectBuffTypeFlags::NONE.bits()),
+
+            (
+                StatusEffectType::Other,
+                StatusEffectCategory::Buff,
+                Some(vec![PassiveOption {
+                    key_stat: StatType::AttackPowerRate,
+                    option_type: PassiveOptionType::Stat,
+                    value: 10,
+                    key_index: 0,
+                }]),
+                StatusEffectBuffTypeFlags::DMG.bits()
+            ),
+            (
+                StatusEffectType::Other,
+                StatusEffectCategory::Buff,
+                Some(vec![PassiveOption {
+                    key_stat: StatType::MaxHp,
+                    option_type: PassiveOptionType::Stat,
+                    value: 5,
+                    key_index: 1,
+                }]),
+                StatusEffectBuffTypeFlags::HP.bits()
+            ),
+            (
+                StatusEffectType::Other,
+                StatusEffectCategory::Buff,
+                Some(vec![PassiveOption {
+                    key_stat: StatType::CriticalHitRate,
+                    option_type: PassiveOptionType::SkillCriticalRatio,
+                    value: 0,
+                    key_index: 2,
+                }]),
+                StatusEffectBuffTypeFlags::CRIT.bits()
+            ),
+            (
+                StatusEffectType::Other,
+                StatusEffectCategory::Debuff,
+                Some(vec![PassiveOption {
+                    key_stat: StatType::AttackPowerRate,
+                    option_type: PassiveOptionType::Stat,
+                    value: -10,
+                    key_index: 3,
+                }]),
+                StatusEffectBuffTypeFlags::DMG.bits()
+            ),
+            (
+                StatusEffectType::Other,
+                StatusEffectCategory::Other,
+                Some(vec![PassiveOption {
+                    key_stat: StatType::Other,
+                    option_type: PassiveOptionType::SkillCooldownReduction,
+                    value: -10,
+                    key_index: 3,
+                }]),
+                StatusEffectBuffTypeFlags::COOLDOWN.bits()
+            ),
+             (
+                StatusEffectType::Other,
+                StatusEffectCategory::Other,
+                Some(vec![PassiveOption {
+                    key_stat: StatType::MoveSpeed,
+                    option_type: PassiveOptionType::Stat,
+                    value: -10,
+                    key_index: 3,
+                }]),
+                StatusEffectBuffTypeFlags::MOVESPEED.bits()
+            ),
+            (
+                StatusEffectType::Other,
+                StatusEffectCategory::Other,
+                Some(vec![PassiveOption {
+                    key_stat: StatType::Other,
+                    option_type: PassiveOptionType::CombatEffect,
+                    value: 0,
+                    key_index: 1000,
+                }]),
+                StatusEffectBuffTypeFlags::DMG.bits()
+            ),
+              (
+                StatusEffectType::Other,
+                StatusEffectCategory::Other,
+                Some(vec![PassiveOption {
+                    key_stat: StatType::Other,
+                    option_type: PassiveOptionType::CombatEffect,
+                    value: 0,
+                    key_index: 557300,
+                }]),
+                StatusEffectBuffTypeFlags::DMG.bits()
+            ),
+            (
+                StatusEffectType::Other,
+                StatusEffectCategory::Other,
+                Some(vec![PassiveOption {
+                    key_stat: StatType::Other,
+                    option_type: PassiveOptionType::CombatEffect,
+                    value: 0,
+                    key_index: 2200400,
+                }]),
+                StatusEffectBuffTypeFlags::CRIT.bits()
+            ),
+        ]
+    }
 }

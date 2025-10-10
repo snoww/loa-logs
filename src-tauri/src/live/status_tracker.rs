@@ -1,11 +1,8 @@
 use crate::data::*;
 use crate::live::entity_tracker::Entity;
 use crate::live::party_tracker::PartyTracker;
-use crate::live::status_tracker::StatusEffectBuffCategory::{BattleItem, Bracelet, Elixir, Etc};
-use crate::live::status_tracker::StatusEffectCategory::Debuff;
-use crate::live::status_tracker::StatusEffectShowType::All;
-use crate::live::utils::get_new_id;
-use crate::models::{EncounterEntity, EntityType};
+use crate::live::utils::{get_new_id, get_status_effect_value};
+use crate::models::*;
 use chrono::{DateTime, Duration, Utc};
 use hashbrown::HashMap;
 use meter_core::packets::structures::{PCStruct, StatusEffectData};
@@ -258,7 +255,7 @@ impl StatusTracker {
         //     status_effects_on_source, status_effects_on_target);
         status_effects_on_target.retain(|se| {
             !(se.target_type == StatusEffectTargetType::Local
-                && se.category == Debuff
+                && se.category == StatusEffectCategory::Debuff
                 && se.source_id != source_id
                 && se.db_target_type == "self")
         });
@@ -348,12 +345,12 @@ impl StatusTracker {
 }
 
 fn is_valid_for_raid(status_effect: &StatusEffectDetails) -> bool {
-    (status_effect.buff_category == BattleItem
-        || status_effect.buff_category == Bracelet
-        || status_effect.buff_category == Elixir
-        || status_effect.buff_category == Etc)
-        && status_effect.category == Debuff
-        && status_effect.show_type == All
+    (status_effect.buff_category == StatusEffectBuffCategory::BattleItem
+        || status_effect.buff_category == StatusEffectBuffCategory::Bracelet
+        || status_effect.buff_category == StatusEffectBuffCategory::Elixir
+        || status_effect.buff_category == StatusEffectBuffCategory::Etc)
+        && status_effect.category == StatusEffectCategory::Debuff
+        && status_effect.show_type == StatusEffectShowType::All
 }
 
 pub fn build_status_effect(
@@ -362,10 +359,20 @@ pub fn build_status_effect(
     source_id: u64,
     target_type: StatusEffectTargetType,
     timestamp: DateTime<Utc>,
-    source_entity: Option<&EncounterEntity>,
+    source_entity_skills: Option<&HashMap<u32, Skill>>,
 ) -> StatusEffectDetails {
-    let value = get_status_effect_value(&se_data.value.bytearray_0);
-    let mut status_effect_category = StatusEffectCategory::Other;
+    let StatusEffectData {
+        value,
+        status_effect_id,
+        status_effect_instance_id: instance_id,
+        stack_count,
+        end_tick,
+        total_time: expiration_delay,
+        ..
+    } = se_data;
+
+    let value = get_status_effect_value(value.bytearray_0);
+    let mut category = StatusEffectCategory::Other;
     let mut buff_category = StatusEffectBuffCategory::Other;
     let mut show_type = StatusEffectShowType::Other;
     let mut status_effect_type = StatusEffectType::Other;
@@ -373,30 +380,14 @@ pub fn build_status_effect(
     let mut db_target_type = "".to_string();
     let mut custom_id = 0;
     let mut unique_group = 0;
-    if let Some(effect) = SKILL_BUFF_DATA.get(&se_data.status_effect_id) {
+
+    if let Some(effect) = SKILL_BUFF_DATA.get(&status_effect_id) {
         name = effect.name.clone().unwrap_or_default();
         unique_group = effect.unique_group;
-        if effect.category.as_str() == "debuff" {
-            status_effect_category = Debuff
-        }
-        match effect.buff_category.clone().unwrap_or_default().as_str() {
-            "bracelet" => buff_category = Bracelet,
-            "etc" => buff_category = Etc,
-            "battleitem" => buff_category = BattleItem,
-            "elixir" => buff_category = Elixir,
-            _ => {}
-        }
-        if effect.icon_show_type.clone().unwrap_or_default() == "all" {
-            show_type = All
-        }
-        status_effect_type = match effect.buff_type.as_str() {
-            "shield" => StatusEffectType::Shield,
-            "freeze" | "fear" | "stun" | "sleep" | "earthquake" | "electrocution"
-            | "polymorph_pc" | "forced_move" | "mind_control" | "paralyzation" => {
-                StatusEffectType::HardCrowdControl
-            }
-            _ => StatusEffectType::Other,
-        };
+        category = effect.category;
+        buff_category = effect.buff_category;
+        show_type = effect.icon_show_type;
+        status_effect_type = effect.buff_type;
         db_target_type = effect.target.to_string();
 
         if let Some(source_skills) = effect.source_skills.as_ref() {
@@ -404,12 +395,12 @@ pub fn build_status_effect(
             // e.g. bard brands have same buff id, but have different source skills (sound shock, harp)
             // if skills only have one source skill, we dont care about it here and it gets handled later
             if source_skills.len() > 1
-                && let Some(source_entity) = source_entity
+                && let Some(skills) = source_entity_skills
             {
                 let mut last_time = i64::MIN;
                 let mut last_skill = 0_u32;
                 for source_skill in source_skills {
-                    if let Some(skill) = source_entity.skills.get(source_skill) {
+                    if let Some(skill) = skills.get(source_skill) {
                         if skill.name.is_empty() {
                             continue;
                         }
@@ -442,107 +433,97 @@ pub fn build_status_effect(
         }
     }
 
-    let expiry = if se_data.total_time > 0. && se_data.total_time < 604800. {
+    let expire_at = if expiration_delay > 0. && expiration_delay < 604800. {
         Some(
             timestamp
-                + Duration::milliseconds((se_data.total_time as i64) * 1000 + TIMEOUT_DELAY_MS),
+                + Duration::milliseconds((expiration_delay as i64) * 1000 + TIMEOUT_DELAY_MS),
         )
     } else {
         None
     };
 
     StatusEffectDetails {
-        instance_id: se_data.status_effect_instance_id,
+        instance_id,
         source_id,
         target_id,
-        status_effect_id: se_data.status_effect_id,
+        status_effect_id,
         custom_id,
         target_type,
         db_target_type,
         value,
-        stack_count: se_data.stack_count,
+        stack_count,
         buff_category,
-        category: status_effect_category,
+        category,
         status_effect_type,
         show_type,
-        expiration_delay: se_data.total_time,
-        expire_at: expiry,
-        end_tick: se_data.end_tick,
+        expiration_delay,
+        expire_at,
+        end_tick,
         name,
         timestamp,
         unique_group,
     }
 }
 
-pub fn get_status_effect_value(value: &Option<Vec<u8>>) -> u64 {
-    value.as_ref().map_or(0, |v| {
-        let c1 = v
-            .get(0..8)
-            .map_or(0, |bytes| u64::from_le_bytes(bytes.try_into().unwrap()));
-        let c2 = v
-            .get(8..16)
-            .map_or(0, |bytes| u64::from_le_bytes(bytes.try_into().unwrap()));
-        c1.min(c2)
-    })
-}
-#[derive(Debug, Default, Copy, Clone, PartialEq, Eq)]
-pub enum StatusEffectTargetType {
-    #[default]
-    Party = 0,
-    Local = 1,
-}
+#[cfg(test)]
+mod tests {
+    use super::*;
 
-#[derive(Debug, Default, Copy, Clone, PartialEq, Eq)]
-pub enum StatusEffectCategory {
-    #[default]
-    Other = 0,
-    Debuff = 1,
-}
+    #[test]
+    fn should_build_status_effect() {
+        let current_dir = std::env::current_dir().unwrap();
+        AssetPreloader::new(&current_dir).unwrap();
 
-#[derive(Debug, Default, Copy, Clone, PartialEq, Eq)]
-pub enum StatusEffectBuffCategory {
-    #[default]
-    Other = 0,
-    Bracelet = 1,
-    Etc = 2,
-    BattleItem = 3,
-    Elixir = 4,
-}
+        let se_data = StatusEffectData {
+            status_effect_id: 362008,
+            ..Default::default()
+        };
+        let source_entity_skills = None;
+        let timestamp = Utc::now();
+        let details = build_status_effect(se_data, 0, 0, StatusEffectTargetType::Party, timestamp, source_entity_skills);
 
-#[derive(Debug, Default, Copy, Clone, PartialEq, Eq)]
-pub enum StatusEffectShowType {
-    #[default]
-    Other = 0,
-    All = 1,
-}
+        assert_eq!(details.category, StatusEffectCategory::Buff);
+        assert_eq!(details.buff_category, StatusEffectBuffCategory::SupportBuff);
+        assert_eq!(details.db_target_type, "self_party");
+    }
 
-#[derive(Debug, Default, Copy, Clone, PartialEq, Eq)]
-pub enum StatusEffectType {
-    #[default]
-    Shield = 0,
-    Other = 1,
-    HardCrowdControl = 2, // stun, root, MC, etc
-}
+    #[test]
+    fn should_build_status_effect_case_infinite() {
+        let current_dir = std::env::current_dir().unwrap();
+        AssetPreloader::new(&current_dir).unwrap();
 
-#[derive(Debug, Default, Clone)]
-pub struct StatusEffectDetails {
-    pub instance_id: u32,
-    pub status_effect_id: u32,
-    pub custom_id: u32,
-    pub target_id: u64,
-    pub source_id: u64,
-    pub target_type: StatusEffectTargetType,
-    pub db_target_type: String,
-    pub value: u64,
-    pub stack_count: u8,
-    pub category: StatusEffectCategory,
-    pub buff_category: StatusEffectBuffCategory,
-    pub show_type: StatusEffectShowType,
-    pub status_effect_type: StatusEffectType,
-    pub expiration_delay: f32,
-    pub expire_at: Option<DateTime<Utc>>,
-    pub end_tick: u64,
-    pub timestamp: DateTime<Utc>,
-    pub name: String,
-    pub unique_group: u32,
+        let se_data = StatusEffectData {
+            status_effect_id: 1,
+            total_time: 604801.0,
+            ..Default::default()
+        };
+        let source_entity_skills = None;
+        let timestamp = Utc::now();
+        let details = build_status_effect(se_data, 0, 0, StatusEffectTargetType::Party, timestamp, source_entity_skills);
+
+        assert_eq!(details.expire_at, None);
+    }
+
+    #[test]
+    fn should_build_status_effect_case_custom_id() {
+        let current_dir = std::env::current_dir().unwrap();
+        AssetPreloader::new(&current_dir).unwrap();
+
+        let se_data = StatusEffectData {
+            status_effect_id: 210230,
+            ..Default::default()
+        };
+        let timestamp = Utc::now();
+        let mut skills = HashMap::new();
+        skills.insert(21090, Skill {
+            name: "Stigma".to_string(),
+            last_timestamp: timestamp.timestamp_millis(),
+            tripod_index: Some(TripodIndex { first: 0, second: 2, third: 0 }),
+            ..Default::default()
+        });
+        let source_entity_skills = Some(&skills);
+        let details = build_status_effect(se_data, 0, 0, StatusEffectTargetType::Party, timestamp, source_entity_skills);
+
+        assert!(details.custom_id > 0);
+    }
 }

@@ -10,10 +10,7 @@ use tauri::{
 use tauri_plugin_window_state::AppHandleExt;
 
 use crate::{
-    constants::*,
-    settings::SettingsManager,
-    shell::ShellManager,
-    ui::{AppHandleExtensions, TrayCommand, WindowExtensions},
+    background::BackgroundWorker, constants::*, settings::SettingsManager, shell::ShellManager, ui::{AppHandleExtensions, TrayCommand, WindowExtensions}
 };
 
 /// Runs an async future to completion from a synchronous callback.
@@ -67,13 +64,7 @@ pub fn on_menu_event_inner(app_handle: &AppHandle, event: MenuEvent) -> Result<(
         TrayCommand::Quit => {
             app_handle.save_window_state(WINDOW_STATE_FLAGS)?;
 
-            let shell_manager = app_handle.state::<ShellManager>();
-            block_on_local(async {
-                shell_manager.unload_driver().await;
-            });
-
-            log::logger().flush();
-            app_handle.exit(0);
+            teardown(app_handle);
         }
         TrayCommand::Hide => {
             if let Some(meter) = app_handle.get_meter_window() {
@@ -153,13 +144,7 @@ pub fn on_window_event_inner(label: &str, window: &Window, event: &WindowEvent) 
                 meter_window.unminimize()?;
             }
 
-            let shell_manager = app_handle.state::<ShellManager>();
-            block_on_local(async {
-                shell_manager.unload_driver().await;
-            });
-
-            log::logger().flush();
-            app_handle.exit(0);
+            teardown(app_handle);
 
             Ok(())
         }
@@ -175,4 +160,21 @@ pub fn on_window_event_inner(label: &str, window: &Window, event: &WindowEvent) 
         }
         _ => Ok(()),
     }
+}
+
+pub fn teardown(app_handle: &AppHandle) {
+
+    let background = app_handle.state::<BackgroundWorker>();
+    let shell_manager = app_handle.state::<ShellManager>();
+
+    block_on_local(async {
+        if let Err(err) = background.stop().await {
+            warn!("Could not stop background worker: {}", err);
+        }
+
+        shell_manager.unload_driver().await;
+    });
+
+    log::logger().flush();
+    app_handle.exit(0);
 }
