@@ -4,7 +4,6 @@ use crate::database::Repository;
 use crate::live::entity_tracker::{Entity, EntityTracker};
 use crate::live::skill_tracker::SkillTracker;
 use crate::live::stats_api::StatsApi;
-use crate::live::status_tracker::StatusEffectDetails;
 use crate::live::utils::*;
 use crate::models::*;
 use crate::utils::get_player_spec;

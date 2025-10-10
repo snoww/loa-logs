@@ -1,12 +1,9 @@
 use crate::data::*;
 use crate::live::id_tracker::IdTracker;
 use crate::live::party_tracker::PartyTracker;
-use crate::live::status_tracker::{
-    build_status_effect, StatusEffectDetails, StatusEffectTargetType, StatusEffectType,
-    StatusTracker,
-};
+use crate::live::status_tracker::{build_status_effect, StatusTracker};
 use crate::local::{LocalInfo, LocalPlayer};
-use crate::models::EntityType::*;
+use crate::models::{EntityType::*, StatusEffectDetails, StatusEffectTargetType, StatusEffectType};
 use crate::models::{EncounterEntity, EntityType, Esther};
 
 use chrono::{DateTime, Utc};
@@ -293,7 +290,7 @@ impl EntityTracker {
                 entity.id,
                 StatusEffectTargetType::Party,
                 timestamp,
-                encounter_entity,
+                encounter_entity.map(|pr| &pr.skills),
             );
             if status_effect.status_effect_type == StatusEffectType::Shield {
                 shields.push(status_effect.clone());
@@ -511,7 +508,7 @@ impl EntityTracker {
             source_entity.id,
             StatusEffectTargetType::Local,
             timestamp,
-            source_encounter_entity,
+            source_encounter_entity.map(|pr| &pr.skills),
         );
 
         self.status_tracker

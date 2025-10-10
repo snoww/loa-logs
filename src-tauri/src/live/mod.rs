@@ -16,13 +16,10 @@ use crate::live::manager::EventManager;
 use crate::live::party_tracker::PartyTracker;
 use crate::live::stats_api::StatsApi;
 use crate::live::stats_api::API_URL;
-use crate::live::status_tracker::{
-    get_status_effect_value, StatusEffectDetails, StatusEffectTargetType, StatusEffectType,
-    StatusTracker,
-};
-use crate::live::utils::get_class_from_id;
+use crate::live::status_tracker::StatusTracker;
+use crate::live::utils::{get_class_from_id, get_status_effect_value};
 use crate::local::{LocalInfo, LocalPlayer};
-use crate::models::{DamageData, EntityType, Identity, RdpsData, TripodIndex};
+use crate::models::{DamageData, EntityType, Identity, RdpsData, StatusEffectDetails, StatusEffectTargetType, StatusEffectType, TripodIndex};
 use crate::settings::Settings;
 use anyhow::Result;
 use chrono::Utc;
@@ -33,6 +30,7 @@ use meter_core::packets::opcodes::Pkt;
 use meter_core::start_capture;
 use reqwest::Client;
 use serde_json::json;
+use tokio::sync::watch;
 use std::cell::RefCell;
 use std::path::{Path, PathBuf};
 use std::rc::Rc;
@@ -40,7 +38,21 @@ use std::time::{Duration, Instant};
 use tauri::{AppHandle, Emitter};
 use uuid::Uuid;
 
-pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()> {
+pub struct StartArgs {
+    pub app: AppHandle,
+    pub port: u16,
+    pub settings: Option<Settings>,
+    pub shutdown_rx: watch::Receiver<bool>
+}
+
+pub fn start(args: StartArgs) -> Result<()> {
+    let StartArgs {
+        app,
+        port,
+        settings,
+        shutdown_rx
+    } = args;
+
     let manager = EventManager::new(app.clone());
     let id_tracker = Rc::new(RefCell::new(IdTracker::new()));
     let party_tracker = Rc::new(RefCell::new(PartyTracker::new(id_tracker.clone())));
@@ -53,6 +65,7 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
     let mut state = EncounterState::new(app.clone());
     let region_file_path = app::path::data_dir(&app).join("current_region");
     let mut stats_api = StatsApi::new(app.clone());
+    // TO-DO pass shutdown_rx
     let rx = match start_capture(port, region_file_path.display().to_string()) {
         Ok(rx) => rx,
         Err(e) => {
@@ -718,7 +731,7 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
                         );
                     }
 
-                    if status_effect.status_effect_type == StatusEffectType::HardCrowdControl {
+                    if status_effect.status_effect_type.is_hard_crowd_control() {
                         let target = entity_tracker.get_source_entity(status_effect.target_id);
                         if target.entity_type == EntityType::Player {
                             state.on_cc_applied(&target, &status_effect);
@@ -772,7 +785,7 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
                     }
                     let now = Utc::now().timestamp_millis();
                     for effect_removed in effects_removed {
-                        if effect_removed.status_effect_type == StatusEffectType::HardCrowdControl {
+                        if effect_removed.status_effect_type.is_hard_crowd_control() {
                             let target = entity_tracker.get_source_entity(effect_removed.target_id);
                             if target.entity_type == EntityType::Player {
                                 state.on_cc_removed(&target, &effect_removed, now);
@@ -929,8 +942,8 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
                                     e.max_hp = pkt.max_hp;
                                 });
                         }
-                        for se in pkt.status_effect_datas.iter() {
-                            let val = get_status_effect_value(&se.value.bytearray_0);
+                        for se in pkt.status_effect_datas {
+                            let val = get_status_effect_value(se.value.bytearray_0);
                             let (status_effect, old_value) =
                                 status_tracker.borrow_mut().sync_status_effect(
                                     se.status_effect_instance_id,

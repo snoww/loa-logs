@@ -14,7 +14,7 @@ pub static SKILL_EFFECT_DATA: OnceLockWrapper<HashMap<u32, SkillEffectData>> =
     OnceLockWrapper::new();
 pub static SUPPORT_AP_GROUP: OnceLockWrapper<HashSet<u32>> = OnceLockWrapper::new();
 pub static SUPPORT_IDENTITY_GROUP: OnceLockWrapper<HashSet<u32>> = OnceLockWrapper::new();
-pub static STAT_TYPE_MAP: OnceLockWrapper<HashMap<String, u32>> = OnceLockWrapper::new();
+pub static STAT_TYPE_MAP: OnceLockWrapper<HashMap<StatType, u32>> = OnceLockWrapper::new();
 pub static ESTHER_DATA: OnceLockWrapper<Vec<Esther>> = OnceLockWrapper::new();
 pub static NPC_DATA: OnceLockWrapper<HashMap<u32, Npc>> = OnceLockWrapper::new();
 pub static GEM_SKILL_MAP: OnceLockWrapper<HashMap<u32, Vec<u32>>> = OnceLockWrapper::new();
@@ -91,5 +91,17 @@ impl AssetPreloader {
         ]))?;
 
         Ok(Self)
+    }
+}
+
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn should_load_assets() {
+        let current_dir = std::env::current_dir().unwrap();
+        AssetPreloader::new(&current_dir).unwrap();
     }
 }

@@ -2,12 +2,11 @@
 
 use anyhow::*;
 use log::*;
+use tokio::{sync::watch, task::JoinHandle};
 use std::{
     path::PathBuf,
-    sync::{atomic::AtomicBool, Arc},
-};
+    sync::{atomic::AtomicBool, Arc, Mutex}};
 use tauri::AppHandle;
-use tokio::task::JoinHandle;
 
 use crate::settings::Settings;
 
@@ -20,22 +19,33 @@ pub struct BackgroundWorkerArgs {
     pub version: String,
 }
 
-pub struct BackgroundWorker(Option<JoinHandle<()>>);
+pub struct BackgroundWorker {
+    shutdown_tx: watch::Sender<bool>,
+    shutdown_rx: watch::Receiver<bool>,
+    handle: Mutex<Option<JoinHandle<()>>>
+}
 
 impl BackgroundWorker {
     pub fn new() -> Self {
-        Self(None)
+        let (shutdown_tx, shutdown_rx) = watch::channel(false);
+
+        Self {
+            handle: Mutex::new(None),
+            shutdown_tx,
+            shutdown_rx,
+        }
     }
 
-    pub fn start(&mut self, args: BackgroundWorkerArgs) -> Result<()> {
-        let handle = tokio::task::spawn_blocking(move || Self::inner(args));
+    pub fn start(&self, args: BackgroundWorkerArgs) -> Result<()> {
+        let shutdown_rx = self.shutdown_rx.clone();
+        let handle = tokio::task::spawn_blocking(move || Self::inner(args, shutdown_rx));
 
-        self.0 = Some(handle);
+        *self.handle.lock().unwrap() = Some(handle);
 
         Ok(())
     }
 
-    fn inner(args: BackgroundWorkerArgs) {
+    fn inner(args: BackgroundWorkerArgs, shutdown_rx: watch::Receiver<bool>) {
         let BackgroundWorkerArgs {
             app_handle,
             update_checked,
@@ -49,7 +59,7 @@ impl BackgroundWorker {
         {
             use std::sync::atomic::Ordering;
 
-            use crate::live;
+            use crate::live::{self, StartArgs};
 
             while !update_checked.load(Ordering::Relaxed) {
                 std::thread::sleep(std::time::Duration::from_millis(100));
@@ -57,11 +67,34 @@ impl BackgroundWorker {
 
             info!("listening on port: {port}");
 
-            live::start(app_handle, port, settings).expect("unexpected error occurred in parser");
+            let args = StartArgs {
+                app: app_handle,
+                port,
+                settings,
+                shutdown_rx
+            };
+
+            live::start(args).expect("unexpected error occurred in parser");
         }
     }
 
+    pub async fn stop(&self) -> Result<()> {
+        self.shutdown_tx.send(true)?;
+
+        let mut guard = self.handle.lock().unwrap();
+        
+        if let Some(handle) = guard.take().filter(|pr| !pr.is_finished()) {
+            // TO-DO
+            // Send signal to meter-core
+            // handle.await?;
+        }
+
+        Ok(())
+    }
+
     pub fn is_running(&self) -> bool {
-        self.0.as_ref().is_some_and(|handle| !handle.is_finished())
+        let guard = self.handle.lock().unwrap();
+
+        guard.as_ref().is_some_and(|handle| !handle.is_finished())
     }
 }
