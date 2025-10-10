@@ -304,7 +304,7 @@ impl StatusTracker {
         let party_tracker = self.party_tracker.borrow();
         ser.values()
             .filter(|x| {
-                is_valid_for_raid(x)
+                x.is_valid_for_raid()
                     || *party_id
                         == party_tracker
                             .entity_id_to_party_id
@@ -342,15 +342,6 @@ impl StatusTracker {
         self.local_status_effect_registry.clear();
         self.party_status_effect_registry.clear();
     }
-}
-
-fn is_valid_for_raid(status_effect: &StatusEffectDetails) -> bool {
-    (status_effect.buff_category == StatusEffectBuffCategory::BattleItem
-        || status_effect.buff_category == StatusEffectBuffCategory::Bracelet
-        || status_effect.buff_category == StatusEffectBuffCategory::Elixir
-        || status_effect.buff_category == StatusEffectBuffCategory::Etc)
-        && status_effect.category == StatusEffectCategory::Debuff
-        && status_effect.show_type == StatusEffectShowType::All
 }
 
 pub fn build_status_effect(
