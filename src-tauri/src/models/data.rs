@@ -119,6 +119,14 @@ pub enum StatType {
     Endurance = 19,
     EnduranceX = 25,
     Def = 55,
+    Res = 56,
+    DefX = 57,
+    ResX = 58,
+    DefXX = 59,
+    ResXX = 60,
+    DefPenRate = 67,
+    ResPenRate = 68,
+    PhysicalIncRate = 69,
     MagicalIncRate = 70,
 
     // Attack speed-related
@@ -147,6 +155,10 @@ pub enum StatType {
     // Additional damage subrate / elemental damage stats
     AttackPowerSubRate1 = 141,
     AttackPowerSubRate2 = 142,
+    PhysicalIncSubRate1 = 143,
+    PhysicalIncSubRate2 = 144,
+    MagicalIncSubRate1 = 145,
+    MagicalIncSubRate2 = 146,
     SkillDamageSubRate1 = 147,
     SkillDamageSubRate2 = 148,
     FireDamRate = 87,
@@ -164,8 +176,50 @@ pub enum StatType {
 
     // Movement speed
     MoveSpeed = 79,
+    MoveSpeedRate = 80,
+    PropMoveSpeed = 81,
+    PropMoveSpeedRate = 82,
+    VehicleMoveSpeed = 83,
     MountMoveSpeed = 85,
     VehicleMoveSpeedRate = 84,
+    ShipMoveSpeedRate = 86,
+
+    // Rest
+    Hp = 1,
+    Mp = 2,
+    Specialty = 16,
+    Oppression = 17,
+    CriticalResRate = 75,
+    SelfShieldRate = 71,
+    ElectricityResRate = 97,
+    EarthResRate = 99,
+    DarkResRate = 100,
+    HolyResRate = 101,
+    ElementsResRate = 102,
+    SelfCcTimeRate = 105,
+    EnemyCcTimeRate = 106,
+    IdentityValue1 = 107,
+    IdentityValue2 = 108,
+    IdentityValue3 = 109,
+    ItemDropRate = 111,
+    GoldRate = 112,
+    ExpRate = 113,
+    NpcSpeciesHumanoidDamRate = 125,
+    NpcSpeciesDevilDamRate = 126,
+    NpcSpeciesSubstanceDamRate = 127,
+    NpcSpeciesUndeadDamRate = 128,
+    NpcSpeciesPlantDamRate = 129,
+    NpcSpeciesInsectDamRate = 130,
+    NpcSpeciesSpiritDamRate = 131,
+    NpcSpeciesWildBeastDamRate = 132,
+    NpcSpeciesMechanicDamRate = 133,
+    NpcSpeciesAncientDamRate = 134,
+    NpcSpeciesGodDamRate = 135,
+    NpcSpeciesArchfiendDamRate = 136,
+    ShipBooterSpeed = 138,
+    ShipWreckSpeedRate = 139,
+    IslandSpeedRate = 140,
+    SkillEffectDamAddend = 48,
 
     #[default]
     #[serde(other)]
@@ -173,12 +227,58 @@ pub enum StatType {
 }
 
 impl StatType {
+   pub fn is_damage_stat(&self) -> bool {
+        matches!(
+            self,
+            Self::AttackPowerSubRate1
+                | Self::AttackPowerSubRate2
+                | Self::SkillDamageSubRate1
+                | Self::SkillDamageSubRate2
+                | Self::FireDamRate
+                | Self::WaterDamRate
+                | Self::EarthDamRate
+                | Self::WindDamRate
+                | Self::LightDamRate
+                | Self::DarkDamRate
+                | Self::ElementsDamRate
+        )
+    }
+
     pub fn is_stag_stat(&self) -> bool {
         matches!(
             self,
             Self::Mastery
             | Self::MasteryX
             | Self::ParalyzationPointRate)
+    }
+
+    pub fn is_defense_stat(&self) -> bool {
+        matches!(
+            self,
+            Self::Def
+                | Self::Res
+                | Self::DefX
+                | Self::ResX
+                | Self::DefXX
+                | Self::ResXX
+                | Self::DefPenRate
+                | Self::ResPenRate
+                | Self::PhysicalIncRate
+                | Self::MagicalIncRate
+        )
+    }
+
+    pub fn is_movement_stat(&self) -> bool {
+        matches!(
+            self,
+            Self::MoveSpeed
+                | Self::MoveSpeedRate
+                | Self::PropMoveSpeed
+                | Self::PropMoveSpeedRate
+                | Self::VehicleMoveSpeed
+                | Self::VehicleMoveSpeedRate
+                | Self::MountMoveSpeed
+        )
     }
 
     pub fn is_endurance_stat(&self) -> bool {

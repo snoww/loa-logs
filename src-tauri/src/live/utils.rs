@@ -220,11 +220,6 @@ pub fn get_status_effect_buff_type_flags(
 
         if option_type == PassiveOptionType::Stat {
 
-            let stat = match STAT_TYPE_MAP.get(&key_stat) {
-                Some(&s) => s,
-                None => continue,
-            };
-
             if key_stat.is_stag_stat() {
                 buff_type_flag |= StatusEffectBuffTypeFlags::STAGGER;
             } else if key_stat.is_cooldown_stat() {
@@ -233,23 +228,16 @@ pub fn get_status_effect_buff_type_flags(
                 buff_type_flag |= StatusEffectBuffTypeFlags::RESOURCE;
             } else if key_stat.is_hp_stat() {
                 buff_type_flag |= StatusEffectBuffTypeFlags::HP;
-            } else if StatType::Def as u32 <= stat && stat <= StatType::MagicalIncRate as u32
-                || key_stat.is_endurance_stat() {
+            } else if key_stat.is_defense_stat() || key_stat.is_endurance_stat() {
                 buff_type_flag |= buff_flag;
-            } else if StatType::MoveSpeed as u32 <= stat
-                && stat <= StatType::VehicleMoveSpeedRate as u32
-            {
+            } else if key_stat.is_movement_stat() {
                 buff_type_flag |= StatusEffectBuffTypeFlags::MOVESPEED;
             }
             if key_stat.is_atk_speed_stat() {
                 buff_type_flag |= StatusEffectBuffTypeFlags::ATKSPEED;
             } else if key_stat.is_crit_stat() {
                 buff_type_flag |= StatusEffectBuffTypeFlags::CRIT;
-            } else if StatType::AttackPowerSubRate1 as u32 <= stat
-                && stat <= StatType::SkillDamageSubRate2 as u32
-                || StatType::FireDamRate as u32 <= stat
-                    && stat <= StatType::ElementsDamRate as u32
-                || key_stat.is_offensive_stat() {
+            } else if key_stat.is_damage_stat() || key_stat.is_offensive_stat() {
                 buff_type_flag |= buff_flag
             }
 
@@ -1146,7 +1134,7 @@ mod tests {
                 }]),
                 StatusEffectBuffTypeFlags::COOLDOWN.bits()
             ),
-             (
+            (
                 StatusEffectType::Other,
                 StatusEffectCategory::Other,
                 Some(vec![PassiveOption {
@@ -1161,6 +1149,61 @@ mod tests {
                 StatusEffectType::Other,
                 StatusEffectCategory::Other,
                 Some(vec![PassiveOption {
+                    key_stat: StatType::AttackSpeed,
+                    option_type: PassiveOptionType::Stat,
+                    value: 0,
+                    key_index: 0,
+                }]),
+                StatusEffectBuffTypeFlags::ATKSPEED.bits()
+            ),
+            (
+                StatusEffectType::Other,
+                StatusEffectCategory::Other,
+                Some(vec![PassiveOption {
+                    key_stat: StatType::CriticalHitRate,
+                    option_type: PassiveOptionType::Stat,
+                    value: 0,
+                    key_index: 0,
+                }]),
+                StatusEffectBuffTypeFlags::CRIT.bits()
+            ),
+            (
+                StatusEffectType::Other,
+                StatusEffectCategory::Other,
+                Some(vec![PassiveOption {
+                    key_stat: StatType::ResourceRecoveryRate,
+                    option_type: PassiveOptionType::Stat,
+                    value: 0,
+                    key_index: 0,
+                }]),
+                StatusEffectBuffTypeFlags::RESOURCE.bits()
+            ),
+            (
+                StatusEffectType::Other,
+                StatusEffectCategory::Other,
+                Some(vec![PassiveOption {
+                    key_stat: StatType::CooldownReduction,
+                    option_type: PassiveOptionType::Stat,
+                    value: 0,
+                    key_index: 0,
+                }]),
+                StatusEffectBuffTypeFlags::COOLDOWN.bits()
+            ),
+            (
+                StatusEffectType::Other,
+                StatusEffectCategory::Other,
+                Some(vec![PassiveOption {
+                    key_stat: StatType::ParalyzationPointRate,
+                    option_type: PassiveOptionType::Stat,
+                    value: 0,
+                    key_index: 0,
+                }]),
+                StatusEffectBuffTypeFlags::STAGGER.bits()
+            ),
+            (
+                StatusEffectType::Other,
+                StatusEffectCategory::Other,
+                Some(vec![PassiveOption {
                     key_stat: StatType::Other,
                     option_type: PassiveOptionType::CombatEffect,
                     value: 0,
@@ -1168,7 +1211,7 @@ mod tests {
                 }]),
                 StatusEffectBuffTypeFlags::DMG.bits()
             ),
-              (
+            (
                 StatusEffectType::Other,
                 StatusEffectCategory::Other,
                 Some(vec![PassiveOption {
