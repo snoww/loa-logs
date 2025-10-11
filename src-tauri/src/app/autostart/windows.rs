@@ -44,7 +44,11 @@ impl super::AutoLaunch for AutoLaunchManager {
         let folder = service.GetFolder(r"\")?;
         let task = service.NewTask()?;
 
-        task.get_Triggers()?.Create(co::TASK_TRIGGER_TYPE2::LOGON)?;
+        let trigger = task.get_Triggers()?
+            .Create(co::TASK_TRIGGER_TYPE2::LOGON)?
+            .QueryInterface::<w::ILogonTrigger>()?;
+        trigger.put_Delay("PT10S")?; // 10 seconds delay ISO8601
+
         task.get_Principal()?
             .put_RunLevel(co::TASK_RUNLEVEL_TYPE::HIGHEST)?;
 
@@ -53,8 +57,6 @@ impl super::AutoLaunch for AutoLaunchManager {
             .Create(co::TASK_ACTION_TYPE::EXEC)?
             .QueryInterface::<w::IExecAction>()?;
         action.put_Path(&self.app_path.display().to_string())?;
-        let working_directory = self.app_path.parent().expect("should have parent");
-        action.put_WorkingDirectory(&working_directory.display().to_string())?;
 
         folder.RegisterTaskDefinition(
             Some(&self.task_name),
