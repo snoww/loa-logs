@@ -27,6 +27,7 @@ use crate::misc::load_windivert;
 use crate::settings::SettingsManager;
 use crate::setup::setup;
 use crate::ui::on_window_event;
+use crate::app::autostart::AutoLaunchManager;
 use anyhow::Result;
 
 #[tokio::main]
@@ -45,8 +46,13 @@ async fn main() -> Result<()> {
     let database = Database::new(context.database_path.clone(), &context.version)
         .expect("error setting up database: {}");
     let repository = database.create_repository();
-
+    let auto_launch_manager = AutoLaunchManager::new(
+        &package_info.name,
+        &context.app_path,
+    );
+        
     tauri::Builder::default()
+        .manage(auto_launch_manager)
         .manage(context)
         .manage(database)
         .manage(repository)
