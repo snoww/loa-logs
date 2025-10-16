@@ -8,9 +8,9 @@ use crate::models::*;
 use crate::utils::*;
 use anyhow::Result;
 use hashbrown::HashMap;
-use rusqlite::{params, Transaction};
+use rusqlite::{Transaction, params};
 use serde_json::json;
-use std::cmp::{max, Reverse};
+use std::cmp::{Reverse, max};
 use std::collections::BTreeMap;
 
 pub fn encounter_entity_from_entity(entity: &Entity) -> EncounterEntity {
@@ -402,8 +402,20 @@ pub fn get_skill_name_and_icon(
                     false,
                 );
             }
-            if let Some(source_skill) = effect.source_skills.as_ref() {
-                if let Some(skill) = SKILL_DATA.get(source_skill.iter().min().unwrap_or(&0)) {
+            if let Some(source_skills) = effect.source_skills.as_ref() {
+                let source_skill = if source_skills.len() == 1 {
+                    source_skills.first().cloned().unwrap_or_default()
+                } else {
+                    // take skill_effect_id e.g. 370015
+                    // get base skill id -> 37000
+                    let skill_effect_base = (skill_effect_id - (skill_effect_id % 1000)) / 10;
+                    source_skills
+                        .iter()
+                        .find(|id| (*id - (*id % 1000)) == skill_effect_base)
+                        .cloned()
+                        .unwrap_or_default()
+                };
+                if let Some(skill) = SKILL_DATA.get(&source_skill) {
                     return (
                         skill.name.clone().unwrap_or(skill.id.to_string()),
                         skill.icon.clone().unwrap_or_default(),
