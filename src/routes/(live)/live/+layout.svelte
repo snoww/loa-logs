@@ -1,15 +1,11 @@
 <script lang="ts">
+  import { getSettings, setBossOnlyDamage, writeLog } from "$lib/api";
   import Toaster from "$lib/components/Toaster.svelte";
   import { settings } from "$lib/stores.svelte";
   import { setup } from "$lib/utils/setup";
   import { registerShortcuts } from "$lib/utils/shortcuts";
-  import { invoke } from "@tauri-apps/api/core";
-  import { emit } from "@tauri-apps/api/event";
-  import { unregisterAll } from "@tauri-apps/plugin-global-shortcut";
   import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
   import { onMount } from "svelte";
-  import type { AppSettings } from "$lib/settings";
-  import { getSettings, setBossOnlyDamage, writeLog } from "$lib/api";
 
   let { children }: { children?: import("svelte").Snippet } = $props();
 
@@ -41,7 +37,6 @@
     settings.app.shortcuts.disableClickthrough;
 
     (async () => {
-      await unregisterAll();
       await registerShortcuts();
     })();
   });
