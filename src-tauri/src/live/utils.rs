@@ -578,14 +578,3 @@ pub fn boss_to_raid_map(boss: &str, max_hp: i64) -> Option<String> {
         _ => RAID_MAP.get(boss).cloned(),
     }
 }
-
-fn get_damage_without_hyper_or_special(e: &EncounterEntity) -> i64 {
-    let hyper = e.damage_stats.hyper_awakening_damage;
-    let special = e
-        .skills
-        .values()
-        .filter(|s| s.special.unwrap_or(false))
-        .map(|s| s.total_damage)
-        .sum::<i64>();
-    e.damage_stats.damage_dealt - hyper - special
-}
