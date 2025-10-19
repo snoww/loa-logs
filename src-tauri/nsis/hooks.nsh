@@ -5,11 +5,16 @@
 !macroend
 
 !macro NSIS_HOOK_POSTINSTALL
-  ; Update auto start task action if exists
+  ; Update auto start action target if exists
   nsExec::Exec `powershell -NoProfile -ExecutionPolicy Bypass -Command "\
     Set-ScheduledTask -TaskName '${TASK_NAME}' -Action @(               \
       New-ScheduledTaskAction -Execute '$INSTDIR\${MAINBINARYNAME}.exe' \
     )"`
+  ; Add delay to auto start trigger if exists
+  nsExec::Exec `powershell -NoProfile -ExecutionPolicy Bypass -Command "\
+    $$Trigger = New-ScheduledTaskTrigger -AtLogOn;                      \
+    $$Trigger.Delay = 'PT10S';                                          \
+    Set-ScheduledTask -TaskName '${TASK_NAME}' -Trigger @($$Trigger)"`
 !macroend
 
 !macro NSIS_HOOK_PREUNINSTALL

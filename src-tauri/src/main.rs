@@ -37,12 +37,12 @@ async fn main() -> Result<()> {
 
     let tauri_context = tauri::generate_context!();
     let package_info = tauri_context.package_info();
-    let context = AppContext::new(package_info.version.to_string())?;
+    let context =
+        AppContext::new(package_info.version.to_string()).expect("could not create context");
     let settings_manager =
         SettingsManager::new(context.settings_path.clone()).expect("could not create settings");
     load_windivert(&context.current_dir).expect("could not load windivert dependencies");
-    // load meter-data
-    AssetPreloader::new(&context.current_dir)?;
+    AssetPreloader::new(&context.current_dir).expect("could not load meter-data");
     let database = Database::new(context.database_path.clone(), &context.version)
         .expect("error setting up database: {}");
     let repository = database.create_repository();
