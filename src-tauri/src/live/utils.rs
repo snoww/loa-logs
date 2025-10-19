@@ -392,7 +392,7 @@ pub fn get_skill_name_and_icon(
                     let skill_effect_base = (skill_effect_id - (skill_effect_id % 1000)) / 10;
                     source_skills
                         .iter()
-                        .find(|id| (*id - (*id % 1000)) == skill_effect_base)
+                        .find(|id| (*id - (*id % 100)) == skill_effect_base)
                         .cloned()
                         .unwrap_or_default()
                 };
