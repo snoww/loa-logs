@@ -10,20 +10,20 @@ mod utils;
 
 use crate::app;
 use crate::live::encounter_state::EncounterState;
-use crate::live::entity_tracker::{get_current_and_max_hp, EntityTracker};
+use crate::live::entity_tracker::{EntityTracker, get_current_and_max_hp};
 use crate::live::id_tracker::IdTracker;
 use crate::live::manager::EventManager;
 use crate::live::party_tracker::PartyTracker;
-use crate::live::stats_api::StatsApi;
 use crate::live::stats_api::API_URL;
+use crate::live::stats_api::StatsApi;
 use crate::live::status_tracker::{
-    get_status_effect_value, StatusEffectDetails, StatusEffectTargetType, StatusEffectType,
-    StatusTracker,
+    StatusEffectDetails, StatusEffectTargetType, StatusEffectType, StatusTracker,
+    get_status_effect_value,
 };
-use crate::live::utils::get_class_from_id;
 use crate::local::{LocalInfo, LocalPlayer};
 use crate::models::{DamageData, EntityType, Identity, RdpsData, TripodIndex};
 use crate::settings::Settings;
+use crate::utils::get_class_from_id;
 use anyhow::Result;
 use chrono::Utc;
 use hashbrown::HashMap;
