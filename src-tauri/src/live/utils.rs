@@ -383,7 +383,9 @@ pub fn get_skill_name_and_icon(
                     false,
                 );
             }
-            if let Some(source_skills) = effect.source_skills.as_ref() {
+            if let Some(source_skills) = effect.source_skills.as_ref()
+                && !source_skills.is_empty()
+            {
                 let source_skill = if source_skills.len() == 1 {
                     source_skills.first().cloned().unwrap_or_default()
                 } else {
@@ -424,8 +426,10 @@ pub fn get_skill_name_and_icon(
             (skill_id.to_string(), "".to_string(), None, false, false)
         }
     } else if let Some(skill) = SKILL_DATA.get(&skill_id) {
-        if let Some(summon_source_skill) = skill.summon_source_skills.as_ref() {
-            for source in summon_source_skill {
+        if let Some(summon_source_skills) = skill.summon_source_skills.as_ref()
+            && !summon_source_skills.is_empty()
+        {
+            for source in summon_source_skills {
                 if skill_tracker
                     .skill_timestamp
                     .get(&(entity_id, *source))
@@ -435,25 +439,27 @@ pub fn get_skill_name_and_icon(
                     return (
                         skill.name.clone().unwrap_or(skill.id.to_string()) + " (Summon)",
                         skill.icon.clone().unwrap_or_default(),
-                        Some(summon_source_skill.clone()),
+                        Some(summon_source_skills.clone()),
                         false,
                         skill.is_hyper_awakening,
                     );
                 }
             }
-            if let Some(skill) = SKILL_DATA.get(summon_source_skill.iter().min().unwrap_or(&0)) {
+            if let Some(skill) = SKILL_DATA.get(summon_source_skills.iter().min().unwrap_or(&0)) {
                 (
                     skill.name.clone().unwrap_or(skill.id.to_string()) + " (Summon)",
                     skill.icon.clone().unwrap_or_default(),
-                    Some(summon_source_skill.clone()),
+                    Some(summon_source_skills.clone()),
                     false,
                     skill.is_hyper_awakening,
                 )
             } else {
                 (skill_id.to_string(), "".to_string(), None, false, false)
             }
-        } else if let Some(source_skill) = skill.source_skills.as_ref() {
-            if let Some(skill) = SKILL_DATA.get(source_skill.iter().min().unwrap_or(&0)) {
+        } else if let Some(source_skills) = skill.source_skills.as_ref()
+            && !source_skills.is_empty()
+        {
+            if let Some(skill) = SKILL_DATA.get(source_skills.iter().min().unwrap_or(&0)) {
                 (
                     skill.name.clone().unwrap_or(skill.id.to_string()),
                     skill.icon.clone().unwrap_or_default(),
