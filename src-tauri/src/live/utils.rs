@@ -1061,20 +1061,6 @@ pub fn map_status_effect(se: &StatusEffectDetails, custom_id_map: &mut HashMap<u
     }
 }
 
-pub fn is_valid_player(player: &EncounterEntity) -> bool {
-    player.gear_score >= 0.0
-        && player.entity_type == EntityType::Player
-        && player.character_id != 0
-        && player.class_id != 0
-        && player.name != "You"
-        && player
-            .name
-            .chars()
-            .next()
-            .unwrap_or_default()
-            .is_uppercase()
-}
-
 pub fn get_new_id(source_skill: u32) -> u32 {
     source_skill + 1_000_000_000
 }
@@ -1092,19 +1078,6 @@ pub fn update_current_boss_name(boss_name: &str) -> String {
         _ => boss_name,
     }
     .to_string()
-}
-
-pub fn boss_to_raid_map(boss: &str, max_hp: i64) -> Option<String> {
-    match boss {
-        "Phantom Legion Commander Brelshaza" => {
-            if max_hp > 100_000_000_000 {
-                Some("Act 2: Brelshaza G2".to_string())
-            } else {
-                Some("Brelshaza G6".to_string())
-            }
-        }
-        _ => RAID_MAP.get(boss).cloned(),
-    }
 }
 
 fn get_damage_without_hyper_or_special(e: &EncounterEntity) -> i64 {

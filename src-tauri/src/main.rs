@@ -17,6 +17,7 @@ mod setup;
 mod shell;
 mod ui;
 mod utils;
+mod api;
 
 use crate::constants::*;
 use crate::context::AppContext;
@@ -28,14 +29,17 @@ use crate::settings::SettingsManager;
 use crate::setup::setup;
 use crate::ui::on_window_event;
 use anyhow::Result;
+use tauri::async_runtime;
+use tokio::runtime::Handle;
 
 #[tokio::main]
 async fn main() -> Result<()> {
     let _ = app::logger::init()?;
     app::panic::set_hook_with_logger();
 
-    let tauri_context = tauri::generate_context!();
-    let package_info = tauri_context.package_info();
+    let tauri_context: tauri::Context = tauri::generate_context!();
+    let package_info: &tauri::PackageInfo = tauri_context.package_info();
+
     let context = AppContext::new(package_info.version.to_string())?;
     let settings_manager =
         SettingsManager::new(context.settings_path.clone()).expect("could not create settings");
@@ -45,6 +49,9 @@ async fn main() -> Result<()> {
     let database = Database::new(context.database_path.clone(), &context.version)
         .expect("error setting up database: {}");
     let repository = database.create_repository();
+
+    let handle = Handle::current();
+    async_runtime::set(handle.into());
 
     tauri::Builder::default()
         .manage(context)
