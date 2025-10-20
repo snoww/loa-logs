@@ -47,7 +47,7 @@ export const getDbInfo = (minDuration: number): Promise<EncounterDbInfo> => invo
 
 export const openDbPath = (): Promise<void> => invoke("open_db_path");
 
-export const setStartOnBoot = (set: boolean): Promise<void> => invoke("set_start_on_boot");
+export const setStartOnBoot = (set: boolean): Promise<void> => invoke("set_start_on_boot", { set });
 
 export const setAlwaysOnTop = (enabled: boolean): Promise<void> => {
   if (enabled) {

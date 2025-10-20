@@ -28,6 +28,7 @@ use crate::misc::load_windivert;
 use crate::settings::SettingsManager;
 use crate::setup::setup;
 use crate::ui::on_window_event;
+use crate::app::autostart::AutoLaunchManager;
 use anyhow::Result;
 use tauri::async_runtime;
 use tokio::runtime::Handle;
@@ -37,23 +38,28 @@ async fn main() -> Result<()> {
     let _ = app::logger::init()?;
     app::panic::set_hook_with_logger();
 
-    let tauri_context: tauri::Context = tauri::generate_context!();
-    let package_info: &tauri::PackageInfo = tauri_context.package_info();
-
-    let context = AppContext::new(package_info.version.to_string())?;
+    let tauri_context = tauri::generate_context!();
+    let package_info = tauri_context.package_info();
+    let context =
+        AppContext::new(package_info.version.to_string()).expect("could not create context");
     let settings_manager =
         SettingsManager::new(context.settings_path.clone()).expect("could not create settings");
     load_windivert(&context.current_dir).expect("could not load windivert dependencies");
     // load meter-data
-    AssetPreloader::new(&context.current_dir)?;
+    AssetPreloader::new(&context.current_dir).expect("could not load meter-data");
     let database = Database::new(context.database_path.clone(), &context.version)
         .expect("error setting up database: {}");
     let repository = database.create_repository();
+    let auto_launch_manager = AutoLaunchManager::new(
+        &package_info.name,
+        &context.app_path,
+    );
 
     let handle = Handle::current();
     async_runtime::set(handle.into());
-
+        
     tauri::Builder::default()
+        .manage(auto_launch_manager)
         .manage(context)
         .manage(database)
         .manage(repository)
