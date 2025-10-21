@@ -969,7 +969,7 @@ impl EncounterState {
 
                 for buff_id in se_on_source_ids.iter() {
                     // hyper only affected by hat buff
-                    if is_hyper_awakening && !is_hat_buff(buff_id) {
+                    if is_hyper_awakening && !is_hyper_hat_buff(buff_id) {
                         continue;
                     } else if let Some(buff) =
                         self.encounter.encounter_damage_stats.buffs.get(buff_id)

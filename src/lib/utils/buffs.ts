@@ -159,7 +159,8 @@ export function getSynergyPercentageDetails(groupedSynergies: Map<string, Map<nu
         return;
       }
       if (isHyperAwakening) {
-        if (supportSkills.haTechnique.includes(id)) {
+        // should technically be only the latter check, but was bugged for earlier logs so we just check both
+        if (supportSkills.haTechnique.includes(id) || supportSkills.hyperHat.includes(id)) {
           const b = new Buff(
             syn.source.icon,
             customRound((skill.buffedBy[id] / skill.totalDamage) * 100),
@@ -371,6 +372,12 @@ export const supportSkills = {
     319503, // Artist
     485100 // Valkyrie
   ],
+  hyperHat: [
+    362601, // Paladin
+    212306, // Bard
+    319506, // Artist
+    485101 // Valkyrie
+  ],
   evolutionGrp: [
     2000260, // Combat Blessing
     2000360 // Dance of Passion
@@ -395,7 +402,10 @@ export function makeSupportBuffKey(statusEffect: StatusEffect) {
     supportSkills.enlightenmentGrp.includes(statusEffect.uniqueGroup)
   ) {
     key += "_2";
-  } else if (supportSkills.haTechnique.includes(statusEffect.uniqueGroup)) {
+  } else if (
+    supportSkills.haTechnique.includes(statusEffect.uniqueGroup) ||
+    supportSkills.hyperHat.includes(statusEffect.uniqueGroup)
+  ) {
     key += "_3";
   } else {
     key += "_5";
