@@ -108,6 +108,7 @@ export interface Entity {
   id: number;
   npcId: number;
   name: string;
+  characterId: string;
   entityType: EntityType;
   classId: number;
   class: string;

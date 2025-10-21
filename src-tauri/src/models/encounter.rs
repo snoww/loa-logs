@@ -1,3 +1,4 @@
+use serde_with::DisplayFromStr;
 use crate::models::ArkPassiveData;
 use crate::models::Skill;
 use hashbrown::{HashMap, HashSet};
@@ -48,10 +49,12 @@ pub struct EncounterDamageStats {
     pub boss_hp_log: HashMap<String, Vec<BossHpLog>>,
 }
 
-#[derive(Debug, Default, Serialize, Deserialize, Clone)]
+#[serde_as]
+#[derive(Debug, Default, Serialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct EncounterEntity {
     pub id: u64,
+    #[serde_as(as = "DisplayFromStr")]
     pub character_id: u64,
     pub npc_id: u32,
     pub name: String,
