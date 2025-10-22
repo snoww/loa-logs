@@ -8,7 +8,7 @@ import {
   Window
 } from "$lib/api";
 import { misc, settings } from "$lib/stores.svelte";
-import { register } from "@tauri-apps/plugin-global-shortcut";
+import { register, unregisterAll } from "@tauri-apps/plugin-global-shortcut";
 
 export type Shortcut = {
   name: string;
@@ -51,6 +51,7 @@ export const shortcuts: Record<string, Shortcut> = {
 export async function registerShortcuts() {
   if (misc.modifyingShortcuts) return;
   try {
+    await unregisterAll();
     for (const sc of Object.entries(shortcuts)) {
       const shortcut = settings.app.shortcuts[sc[0] as keyof typeof settings.app.shortcuts];
       if (shortcut) {

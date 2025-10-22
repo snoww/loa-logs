@@ -1,13 +1,13 @@
 use crate::api::{GetCharacterInfoArgs, StatsApi};
 use crate::data::*;
-use crate::database::models::InsertEncounterArgs;
 use crate::database::Repository;
+use crate::database::models::InsertEncounterArgs;
 use crate::live::entity_tracker::{Entity, EntityTracker};
 use crate::live::skill_tracker::SkillTracker;
 use crate::live::status_tracker::StatusEffectDetails;
 use crate::live::utils::*;
 use crate::models::*;
-use crate::utils::get_player_spec;
+use crate::utils::{get_class_from_id, get_player_spec, is_support_class};
 use chrono::Utc;
 use hashbrown::HashMap;
 use log::{info, warn};
@@ -969,7 +969,7 @@ impl EncounterState {
 
                 for buff_id in se_on_source_ids.iter() {
                     // hyper only affected by hat buff
-                    if is_hyper_awakening && !is_hat_buff(buff_id) {
+                    if is_hyper_awakening && !is_hyper_hat_buff(buff_id) {
                         continue;
                     } else if let Some(buff) =
                         self.encounter.encounter_damage_stats.buffs.get(buff_id)

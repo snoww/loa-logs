@@ -8,20 +8,19 @@ mod status_tracker;
 mod utils;
 
 use crate::api::HeartBeatApi;
-use crate::app;
 use crate::live::encounter_state::EncounterState;
-use crate::live::entity_tracker::{get_current_and_max_hp, EntityTracker};
+use crate::live::entity_tracker::{EntityTracker, get_current_and_max_hp};
 use crate::live::id_tracker::IdTracker;
 use crate::live::manager::EventManager;
 use crate::live::party_tracker::PartyTracker;
 use crate::live::status_tracker::{
-    get_status_effect_value, StatusEffectDetails, StatusEffectTargetType, StatusEffectType,
-    StatusTracker,
+    StatusEffectDetails, StatusEffectTargetType, StatusEffectType, StatusTracker,
+    get_status_effect_value,
 };
-use crate::live::utils::get_class_from_id;
 use crate::local::{LocalInfo, LocalPlayer, LocalPlayerRepository};
 use crate::models::{DamageData, EntityType, Identity, RdpsData, TripodIndex};
 use crate::settings::Settings;
+use crate::utils::get_class_from_id;
 use anyhow::Result;
 use chrono::Utc;
 use hashbrown::HashMap;
@@ -31,7 +30,6 @@ use meter_core::packets::opcodes::Pkt;
 use meter_core::start_capture;
 use tokio::sync::watch;
 use std::cell::RefCell;
-use std::path::{Path, PathBuf};
 use std::rc::Rc;
 use std::time::{Duration, Instant};
 use tauri::{AppHandle, Emitter};
@@ -476,15 +474,15 @@ pub fn start(args: StartArgs) -> Result<()> {
 
                         if let Some(rdps) = event
                             .skill_damage_event
-                            .sub_p_k_t_skill_damage_abnormal_move_notify_4_2_24
-                            .sub_p_k_t_skill_damage_abnormal_move_notify_5_5_23
+                            .rdps_data_conditional
+                            .rdps_data
                         {
-                            for i in 0..rdps.p64_0.len() {
+                            for i in 0..rdps.event_type.len() {
                                 rdps_data.push(RdpsData {
-                                    rdps_type: rdps.b_0[i],
-                                    value: rdps.p64_0[i],
-                                    source_character_id: rdps.u64_0[i],
-                                    skill_id: rdps.u32_0[i],
+                                    rdps_type: rdps.event_type[i],
+                                    value: rdps.value[i],
+                                    source_character_id: rdps.source_character_id[i],
+                                    skill_id: rdps.skill_id[i],
                                 });
                             }
                         }
@@ -499,7 +497,7 @@ pub fn start(args: StartArgs) -> Result<()> {
                             target_max_hp: event.skill_damage_event.max_hp,
                             damage_attribute: event.skill_damage_event.damage_attr,
                             damage_type: event.skill_damage_event.damage_type,
-                            stagger: event.skill_damage_event.u32_0,
+                            stagger: event.skill_damage_event.stagger_amount,
                             rdps_data,
                         };
 
@@ -546,15 +544,15 @@ pub fn start(args: StartArgs) -> Result<()> {
                         let mut rdps_data = Vec::new();
 
                         if let Some(rdps) = event
-                            .sub_p_k_t_skill_damage_abnormal_move_notify_4_2_24
-                            .sub_p_k_t_skill_damage_abnormal_move_notify_5_5_23
+                            .rdps_data_conditional
+                            .rdps_data
                         {
-                            for i in 0..rdps.p64_0.len() {
+                            for i in 0..rdps.event_type.len() {
                                 rdps_data.push(RdpsData {
-                                    rdps_type: rdps.b_0[i],
-                                    value: rdps.p64_0[i],
-                                    source_character_id: rdps.u64_0[i],
-                                    skill_id: rdps.u32_0[i],
+                                    rdps_type: rdps.event_type[i],
+                                    value: rdps.value[i],
+                                    source_character_id: rdps.source_character_id[i],
+                                    skill_id: rdps.skill_id[i],
                                 });
                             }
                         }
@@ -569,7 +567,7 @@ pub fn start(args: StartArgs) -> Result<()> {
                             target_max_hp: event.max_hp,
                             damage_attribute: event.damage_attr,
                             damage_type: event.damage_type,
-                            stagger: event.u32_0,
+                            stagger: event.stagger_amount,
                             rdps_data,
                         };
                         state.on_damage(
