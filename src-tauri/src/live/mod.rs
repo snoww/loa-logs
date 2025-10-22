@@ -485,15 +485,15 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
 
                         if let Some(rdps) = event
                             .skill_damage_event
-                            .sub_p_k_t_skill_damage_abnormal_move_notify_4_2_24
-                            .sub_p_k_t_skill_damage_abnormal_move_notify_5_5_23
+                            .rdps_data_conditional
+                            .rdps_data
                         {
-                            for i in 0..rdps.p64_0.len() {
+                            for i in 0..rdps.event_type.len() {
                                 rdps_data.push(RdpsData {
-                                    rdps_type: rdps.b_0[i],
-                                    value: rdps.p64_0[i],
-                                    source_character_id: rdps.u64_0[i],
-                                    skill_id: rdps.u32_0[i],
+                                    rdps_type: rdps.event_type[i],
+                                    value: rdps.value[i],
+                                    source_character_id: rdps.source_character_id[i],
+                                    skill_id: rdps.skill_id[i],
                                 });
                             }
                         }
@@ -508,7 +508,7 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
                             target_max_hp: event.skill_damage_event.max_hp,
                             damage_attribute: event.skill_damage_event.damage_attr,
                             damage_type: event.skill_damage_event.damage_type,
-                            stagger: event.skill_damage_event.u32_0,
+                            stagger: event.skill_damage_event.stagger_amount,
                             rdps_data,
                         };
 
@@ -555,15 +555,15 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
                         let mut rdps_data = Vec::new();
 
                         if let Some(rdps) = event
-                            .sub_p_k_t_skill_damage_abnormal_move_notify_4_2_24
-                            .sub_p_k_t_skill_damage_abnormal_move_notify_5_5_23
+                            .rdps_data_conditional
+                            .rdps_data
                         {
-                            for i in 0..rdps.p64_0.len() {
+                            for i in 0..rdps.event_type.len() {
                                 rdps_data.push(RdpsData {
-                                    rdps_type: rdps.b_0[i],
-                                    value: rdps.p64_0[i],
-                                    source_character_id: rdps.u64_0[i],
-                                    skill_id: rdps.u32_0[i],
+                                    rdps_type: rdps.event_type[i],
+                                    value: rdps.value[i],
+                                    source_character_id: rdps.source_character_id[i],
+                                    skill_id: rdps.skill_id[i],
                                 });
                             }
                         }
@@ -578,7 +578,7 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
                             target_max_hp: event.max_hp,
                             damage_attribute: event.damage_attr,
                             damage_type: event.damage_type,
-                            stagger: event.u32_0,
+                            stagger: event.stagger_amount,
                             rdps_data,
                         };
                         state.on_damage(
