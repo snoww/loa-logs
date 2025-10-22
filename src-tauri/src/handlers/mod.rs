@@ -10,6 +10,7 @@ use crate::constants::*;
 use crate::database::models::{GetEncounterPreviewArgs, InsertSyncLogsArgs};
 use crate::database::{Database, Repository};
 use crate::models::*;
+use crate::notifier::SetupEndedNotifier;
 use crate::settings::{Settings, SettingsManager};
 use crate::shell::ShellManager;
 use crate::ui::AppHandleExtensions;
@@ -383,12 +384,20 @@ pub fn set_start_on_boot(auto: State<AutoLaunchManager>, set: bool) {
 }
 
 #[command]
-pub fn check_loa_running(shell_manager: State<ShellManager>) -> bool {
+pub async fn check_loa_running(app_handle: AppHandle) -> bool {
+    let setup_ended = app_handle.state::<SetupEndedNotifier>();
+    setup_ended.wait_loaded().await;
+
+    let shell_manager = app_handle.state::<ShellManager>();
     shell_manager.check_loa_running()
 }
 
 #[command]
-pub fn start_loa_process(shell_manager: State<ShellManager>) {
+pub async fn start_loa_process(app_handle: AppHandle) {
+    let setup_ended = app_handle.state::<SetupEndedNotifier>();
+    setup_ended.wait_loaded().await;
+
+    let shell_manager = app_handle.state::<ShellManager>();;
     shell_manager.start_loa_process();
 }
 

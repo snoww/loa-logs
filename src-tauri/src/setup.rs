@@ -11,13 +11,7 @@ use tauri::{App, AppHandle, Manager};
 use tauri_plugin_updater::UpdaterExt;
 
 use crate::{
-    app,
-    background::{BackgroundWorker, BackgroundWorkerArgs},
-    constants::DEFAULT_PORT,
-    context::AppContext,
-    settings::*,
-    shell::ShellManager,
-    ui::{AppHandleExtensions, WindowExtensions, setup_tray},
+    app, background::{BackgroundWorker, BackgroundWorkerArgs}, constants::DEFAULT_PORT, context::AppContext, notifier::SetupEndedNotifier, settings::*, shell::ShellManager, ui::{setup_tray, AppHandleExtensions, WindowExtensions}
 };
 
 pub fn setup(app: &mut App) -> Result<(), Box<dyn Error>> {
@@ -53,6 +47,9 @@ pub fn setup(app: &mut App) -> Result<(), Box<dyn Error>> {
 
     background.start(args)?;
     app_handle.manage(background);
+
+    let setup_ended = app.state::<SetupEndedNotifier>();
+    setup_ended.notify_loaded();
 
     // #[cfg(debug_assertions)]
     // {
