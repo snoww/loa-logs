@@ -17,6 +17,7 @@ mod setup;
 mod shell;
 mod ui;
 mod utils;
+mod notifier;
 
 use crate::constants::*;
 use crate::context::AppContext;
@@ -24,6 +25,7 @@ use crate::data::AssetPreloader;
 use crate::database::Database;
 use crate::handlers::generate_handlers;
 use crate::misc::load_windivert;
+use crate::notifier::SetupEndedNotifier;
 use crate::settings::SettingsManager;
 use crate::setup::setup;
 use crate::ui::on_window_event;
@@ -52,6 +54,7 @@ async fn main() -> Result<()> {
     );
         
     tauri::Builder::default()
+        .manage(SetupEndedNotifier::new())
         .manage(auto_launch_manager)
         .manage(context)
         .manage(database)
