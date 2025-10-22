@@ -1,11 +1,11 @@
 {
-  "version": "v1.33.10",
-  "notes": "### v1.33.10 - October 7th, 2025\n\n#### P.S. If you see any of us in town or raid, feel free to drop an honor! \n- Snowving on Luterra\n- Administrator on Ratik\n- Poont on Gienah\n\n### IF GET AN ERROR UPDATING, PLEASE DOWNLOAD ON GITHUB MANUALLY [>>> HERE <<<](https://github.com/snoww/loa-logs/releases/tag/v1.33.10)\n\n\n#### BUG FIXES AND IMPROVEMENTS\n- improved skill grouping for certain tripods of skills\n- fixed manual upload button not working\n- fixed share log button not working\n- fixed issue when trying to open certain old logs",
-  "pub_date": "2025-10-09T00:55:53.919Z",
+  "version": "v1.33.11",
+  "notes": "### v1.33.11 - October 22nd, 2025\n\n#### P.S. If you see any of us in town or raid, feel free to drop an honor! \n- **Snowving** on Luterra\n- **Administrator** on Ratik\n- **Poont** on Gienah\n\n#### BUG FIXES AND IMPROVEMENTS\n- adjusted log uploads for region merge\n- another speculative fix for \"start with windows\" setting, toggle on/off to apply\n- fixed some skill tripod groupings\n- fixed hyper awakening damage being counted in the non-ha dmg part of T skill under buff breakdown (overall T% still correct)",
+  "pub_date": "2025-10-22T06:19:43.299Z",
   "platforms": {
     "windows-x86_64": {
-      "url": "https://github.com/snoww/loa-logs/releases/download/v1.33.10/LOA.Logs_1.33.10_x64-setup.nsis.zip",
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmFaUElBU3FWMlhMRVg4RkVZS05wajJsZVRjQ2w3dnZyd1ZDMlBLamJHcmhMclREYS9nWVM5b2dlQjRrczRvRzl3NUtpb2JsV1gzaVRVd3ZVMHhjUFFnPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzU5OTcxNzk1CWZpbGU6TE9BIExvZ3NfMS4zMy4xMF94NjQtc2V0dXAubnNpcy56aXAKMWQ2YnhxUmFJa2VMR29xeXY1UWxLTnp5Vy9SNWxYa0dYdjd0ZExEc05CVmMvdmo0K1dVSkJTWG9IWFhzb3NaUXFPMHBlTWpyVURCMkJreVpySkJtQkE9PQo="
+      "url": "https://github.com/snoww/loa-logs/releases/download/v1.33.11/LOA.Logs_1.33.11_x64-setup.nsis.zip",
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmNiOUhPc0RVQkN1dVA5dW9BblJXSnF3elRHbkRuaEJYT0REclNXZlByR2NUZEJ6SnJMK0tUallvanlHcmc5V2VMWWxsaWRKUVdYb3c2ZDVLVHRwNlEwPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzYxMTE0MTcxCWZpbGU6TE9BIExvZ3NfMS4zMy4xMV94NjQtc2V0dXAubnNpcy56aXAKdzNZYXhmTVkvVVpEMDZsd1VzZ1V3SnpHbVdkNlJYVGJoRVdRL3A4Zk1VYjdQR1k4RGxXeGtFSGNQYS9uUWFFN3E5Vys1MzlBQ085d1QxWERhQUFKQnc9PQo="
     }
   }
 }

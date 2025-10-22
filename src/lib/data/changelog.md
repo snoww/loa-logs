@@ -1,6 +1,6 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.33.10 - October 9th, 2025
+    v1.33.11 - October 22nd, 2025
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
@@ -9,9 +9,20 @@
 
 #### P.S. If you see any of us in town or raid, feel free to drop an honor!
 
-- Snowving on Luterra
-- Administrator on Ratik
-- Poont on Gienah
+- **Snowving** on Luterra
+- **Administrator** on Ratik
+- **Poont** on Gienah
+
+#### BUG FIXES AND IMPROVEMENTS
+
+- adjusted log uploads for region merge
+- another speculative fix for "start with windows" setting, toggle on/off to apply
+- fixed some skill tripod groupings
+- fixed hyper awakening damage being counted in the non-ha dmg part of T skill under buff breakdown (overall T% still correct)
+
+---
+
+### v1.33.10 - October 9th, 2025
 
 #### BUG FIXES AND IMPROVEMENTS
 
