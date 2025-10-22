@@ -1,11 +1,11 @@
 {
-  "version": "v1.34.0",
-  "notes": "### v1.34.0 - October 22nd, 2025\n\n#### P.S. If you see any of us in town or raid, feel free to drop an honor! \n- **Snowving** on Luterra\n- **Administrator** on Ratik\n- **Poont** on Gienah\n\n#### NEW FEATURES\n- updated meter for region merge patch\n\n#### BUG FIXES AND IMPROVEMENTS\n- adjusted log uploads for region merge\n- another speculative fix for \"start with windows\" setting, toggle on/off to apply\n- fixed some skill tripod groupings\n- fixed hyper awakening damage being counted in the non-ha dmg part of T skill under buff breakdown (overall T% still correct)",
+  "version": "v1.34.1",
+  "notes": "### v1.34.1 - October 22nd, 2025\n\n#### P.S. If you see any of us in town or raid, feel free to drop an honor! \n- **Snowving** on Luterra\n- **Administrator** on Ratik\n- **Poont** on Gienah\n\n#### NEW FEATURES\n- updated meter for region merge patch\n\n#### BUG FIXES AND IMPROVEMENTS\n- adjusted log uploads for region merge\n- another speculative fix for \"start with windows\" setting, toggle on/off to apply\n- fixed some skill tripod groupings\n- fixed hyper awakening damage being counted in the non-ha dmg part of T skill under buff breakdown (overall T% still correct)\n- fixed buffs/self-buffs tabs not working",
   "pub_date": "2025-10-22T06:19:43.299Z",
   "platforms": {
     "windows-x86_64": {
-      "url": "https://github.com/snoww/loa-logs/releases/download/v1.34.0/LOA.Logs_1.34.0_x64-setup.nsis.zip",
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmJDNTNra0g0OG1xMkpNV2tieFo1a1o3WllxaTNCZmZqRGhCeTVmMGxkbWg5WUgrWnk2Sno2OHhjOGpmNzZFODl0UC91RVlBd2Z5OFZFcmQraWh1VHdnPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzYxMTUzNjMzCWZpbGU6TE9BIExvZ3NfMS4zNC4wX3g2NC1zZXR1cC5uc2lzLnppcApXWHp6SktlYW91N2RVbko0elJ1RU5VaWRBMzJKU0gzUTRUUlQvZ05GYk1RWkNPVmxoRlFRNStrWjFObWMrUzllUEs4S0k3ZlR3eGZSemZDL3ovTkhCQT09Cg=="
+      "url": "https://github.com/snoww/loa-logs/releases/download/v1.34.1/LOA.Logs_1.34.1_x64-setup.nsis.zip",
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmJ5RGkwTkVyVGwxZVpKZGtyQzZWZTRHL1dBRXErZTB3TDNGYnJYcDdobDJzbU43VFFsdXVNTXMyQUc0WTlyMzhlVTFjSTRXN1hrZXFqc25vUUNsRGdRPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzYxMTYwMzI1CWZpbGU6TE9BIExvZ3NfMS4zNC4xX3g2NC1zZXR1cC5uc2lzLnppcApIL2t5dGNZbmZiV2N6TThpT25DSjhHR2dDSzZ0cWJkdlpObDJkV1NYRWduN1JRWDNneTZmUWo1SkZDUHdUSFhmQktSaE5aZGlGK3FEQm5lMHR5alJCdz09Cg=="
     }
   }
 }
