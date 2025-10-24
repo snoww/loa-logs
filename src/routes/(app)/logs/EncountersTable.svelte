@@ -44,6 +44,7 @@
   {@const isSupport = isSupportSpec(encounter.spec)}
   {@const buffs = [encounter.supportAp, encounter.supportBrand, encounter.supportIdentity, encounter.supportHyper]}
   <tr class="items-center border-b border-neutral-700/50 hover:bg-neutral-800">
+    <!-- Encounter ID -->
     <td class="text-center">
       {#if !selectMode}
         <div class="p-2" class:text-lime-400={encounter.cleared}>
@@ -53,6 +54,7 @@
         {@render checkbox(encounter.id)}
       {/if}
     </td>
+    <!-- Encounter info: Difficulty, Gate, Name, Favorite -->
     <td class="w-full py-2 pl-3 pr-1 font-medium">
       <div class="flex flex-col gap-1">
         <div class="flex gap-1 text-nowrap text-neutral-300">
@@ -88,6 +90,7 @@
         </a>
       </div>
     </td>
+    <!-- Classes -->
     <td class="p-3">
       <div class="mask-r-from-80% mask-r-to-100% flex">
         {#each encounter.classes as classId, i}
@@ -97,6 +100,7 @@
         {/each}
       </div>
     </td>
+    <!-- Local Player Name -->
     <td class="p-1">
       <div class="flex">
         <QuickTooltip tooltip={encounter.localPlayer} class="truncate">
@@ -104,6 +108,7 @@
         </QuickTooltip>
       </div>
     </td>
+    <!-- Performance (DPS / Buffs) -->
     <td class="hidden p-1 text-right md:table-cell">
       {#if isSupport && buffs.some((b) => b)}
         <QuickTooltip tooltip="AP · Brand · Identity · T">
@@ -122,9 +127,18 @@
         {abbreviateNumber(encounter.myDps)}
       {/if}
     </td>
+    <td class="hidden p-1 text-right lg:table-cell">
+      {#if encounter.udps && encounter.udps !== encounter.myDps}
+        {abbreviateNumber(encounter.udps)}
+      {:else}
+        -
+      {/if}
+    </td>
+    <!-- Duration -->
     <td class="p-1 text-right">
       {timestampToMinutesAndSeconds(encounter.duration)}
     </td>
+    <!-- Date -->
     <td class="pr-2 text-right text-xs">
       {formatTimestamp(encounter.fightStart)}
     </td>
@@ -172,6 +186,7 @@
           : 'hover:opacity-80'}"
         onclick={() => changeSort("my_dps")}>Performance</th
       >
+      <th class="hidden w-20 px-1 text-right lg:table-cell">uDPS</th>
       <th
         class="w-24 cursor-pointer px-1 text-right {encounterFilter.sort === 'duration'
           ? 'text-accent-500/80'
