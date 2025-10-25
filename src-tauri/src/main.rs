@@ -17,6 +17,7 @@ mod setup;
 mod shell;
 mod ui;
 mod utils;
+mod api;
 
 use crate::constants::*;
 use crate::context::AppContext;
@@ -29,6 +30,8 @@ use crate::setup::setup;
 use crate::ui::on_window_event;
 use crate::app::autostart::AutoLaunchManager;
 use anyhow::Result;
+use tauri::async_runtime;
+use tokio::runtime::Handle;
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -42,6 +45,7 @@ async fn main() -> Result<()> {
     let settings_manager =
         SettingsManager::new(context.settings_path.clone()).expect("could not create settings");
     load_windivert(&context.current_dir).expect("could not load windivert dependencies");
+    // load meter-data
     AssetPreloader::new(&context.current_dir).expect("could not load meter-data");
     let database = Database::new(context.database_path.clone(), &context.version)
         .expect("error setting up database: {}");
@@ -50,6 +54,9 @@ async fn main() -> Result<()> {
         &package_info.name,
         &context.app_path,
     );
+
+    let handle = Handle::current();
+    async_runtime::set(handle.into());
         
     tauri::Builder::default()
         .manage(auto_launch_manager)

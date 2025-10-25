@@ -40,14 +40,12 @@ pub fn setup(app: &mut App) -> Result<(), Box<dyn Error>> {
 
     app_handle.manage(shell_manger);
 
-    let mut background = BackgroundWorker::new();
+    let mut background = BackgroundWorker::new(app_handle.clone());
 
     let args = BackgroundWorkerArgs {
-        app_handle: app_handle.clone(),
         update_checked,
         port,
         settings,
-        region_file_path: context.region_file_path.clone(),
         version: context.version.clone(),
     };
 
