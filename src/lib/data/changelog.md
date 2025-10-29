@@ -1,6 +1,6 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.35.0 - October 29nd, 2025
+    v1.35.1 - October 29nd, 2025
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
@@ -12,6 +12,15 @@
 - **Snowving** on Luterra
 - **Administrator** on Ratik
 - **Poont** on Gienah
+
+#### BUG FIXES AND IMPROVEMENTS
+
+- added sort for udps column
+- fixed app error when trying to update
+
+---
+
+### v1.35.0 - October 29nd, 2025
 
 #### NEW FEATURES
 

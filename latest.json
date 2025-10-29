@@ -1,11 +1,11 @@
 {
-  "version": "v1.35.0",
-  "notes": "### v1.35.0 - October 29nd, 2025\n\n#### P.S. If you see any of us in town or raid, feel free to drop an honor! \n- **Snowving** on Luterra\n- **Administrator** on Ratik\n- **Poont** on Gienah\n\n#### NEW FEATURES\n- updated meter for november patch\n\n#### BUG FIXES AND IMPROVEMENTS\n- added udps column in past encounters",
-  "pub_date": "2025-10-29T16:36:11.567Z",
+  "version": "v1.35.1",
+  "notes": "### v1.35.1 - October 29nd, 2025\n\n#### P.S. If you see any of us in town or raid, feel free to drop an honor! \n- **Snowving** on Luterra\n- **Administrator** on Ratik\n- **Poont** on Gienah\n\n#### BUG FIXES AND IMPROVEMENTS\n- added sort for udps column\n- fixed app error when trying to update",
+  "pub_date": "2025-10-29T20:25:58.446Z",
   "platforms": {
     "windows-x86_64": {
-      "url": "https://github.com/snoww/loa-logs/releases/download/v1.35.0/LOA.Logs_1.35.0_x64-setup.nsis.zip",
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlVjcTRScVJ2RkdlSXNRYkFQSE0zWHRiR3lIazFWSmIzTEVSZjA2ZXhwSEhzeUJxUGFYYlkyaHdOVG51aUdLcWtUVzRSVVBXQTZEWFJWaFQ0TTd5dHdVPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzYxNzU1NzI1CWZpbGU6TE9BIExvZ3NfMS4zNS4wX3g2NC1zZXR1cC5uc2lzLnppcApGeVZvWGpndFBiOGppanZ3eTcvUjFtTEEyWjlLMWxvWGE4dWRqb25uT2J3MXczWjQ0NlFxeWYwNE9uY21WNFJDZ1lNQnlXa3lNazRVbHVxSmErdi9CZz09Cg=="
+      "url": "https://github.com/snoww/loa-logs/releases/download/v1.35.1/LOA.Logs_1.35.1_x64-setup.nsis.zip",
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlFMelQ2QVQ0WEFpaDk2OGxzdjNrUUo3V0lTZTYxQ3pwVUQ4NFJ0QURqQzhVdDczTHI5dngxdjE1dExNYmNUVTZSRktiUXlxTzZOWnZ1NCtHVnBZSEFRPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzYxNzcxNTc2CWZpbGU6TE9BIExvZ3NfMS4zNS4xX3g2NC1zZXR1cC5uc2lzLnppcApnNU5UdmhaaUpralZZT3pMdmhUV0s5c2Q1QVhpTjh2alpNQ212Q2VwZ3UxVHhYQ0o3OGdBR0wzZmtSeTJWZmNLSzZYdVFTbGZkN3RVM2hUcUFYdmVCUT09Cg=="
     }
   }
 }
