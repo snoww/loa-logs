@@ -1,6 +1,6 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.35.1 - October 29nd, 2025
+    v1.35.2 - October 29nd, 2025
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
