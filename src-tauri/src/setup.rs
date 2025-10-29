@@ -30,15 +30,15 @@ pub fn setup(app: &mut App) -> Result<(), Box<dyn Error>> {
     let shell_manger = ShellManager::new(app_handle.clone(), context.inner().clone());
     let settings_manager = app.state::<SettingsManager>();
 
-    info!("starting app v{}", context.version);
-    setup_tray(app_handle)?;
-    let update_checked: Arc<AtomicBool> = check_updates(app_handle);
-
     let settings = settings_manager.read().expect("Could not read settings");
 
     let port = initialize_windows_and_settings(app_handle, settings.as_ref(), &shell_manger);
 
     app_handle.manage(shell_manger);
+
+    info!("starting app v{}", context.version);
+    setup_tray(app_handle)?;
+    let update_checked: Arc<AtomicBool> = check_updates(app_handle);
 
     let mut background = BackgroundWorker::new();
 
