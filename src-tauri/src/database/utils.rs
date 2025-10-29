@@ -98,8 +98,6 @@ pub fn prepare_get_encounter_preview_query(
         ""
     };
 
-    let sort = format!("e.{}", filter.sort);
-
     let query = format!(
         "SELECT
     e.id,               -- 0
@@ -133,7 +131,7 @@ pub fn prepare_get_encounter_preview_query(
         difficulty_filter,
         raids_only_filter,
         boss_only_damage_filter,
-        sort,
+        filter.sort,
         filter.order
     );
 
