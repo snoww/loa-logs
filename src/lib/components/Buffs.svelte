@@ -20,7 +20,7 @@
 
   let { tab, enc, focusedPlayer = $bindable(), inspectPlayer, handleRightClick }: Props = $props();
 
-  let buffs = $derived(new BuffState(enc));
+  let buffs = new BuffState(enc, tab);
 
   $effect(() => {
     if (focusedPlayer && focusedPlayer.entityType === EntityType.ESTHER) {
@@ -30,9 +30,6 @@
     }
   });
 
-  $effect(() => {
-    buffs.setTab(tab);
-  });
 </script>
 
 {#if enc.curSettings.splitPartyBuffs && enc.parties.length > 1 && buffs.partyGroupedSynergies.size > 1 && enc.parties.length === buffs.partyGroupedSynergies.size && tab === MeterTab.PARTY_BUFFS && !focusedPlayer}

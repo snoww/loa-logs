@@ -12,7 +12,7 @@
   }
 
   let { enc }: Props = $props();
-  let buffs = $derived(new BuffState(enc));
+  let buffs = new BuffState(enc, undefined);
 
   let tab = $state(ShieldTab.GIVEN);
 

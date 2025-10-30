@@ -235,16 +235,13 @@ export class BuffState {
     return temp;
   });
 
-  constructor(enc: EncounterState) {
+  constructor(enc: EncounterState, tab: MeterTab | undefined) {
     this.enc = enc;
+    this.tab = tab;
   }
 
   setFocusedPlayer(player: Entity | undefined) {
     this.focusedPlayer = player;
-  }
-
-  setTab(tab: MeterTab | undefined) {
-    this.tab = tab;
   }
 
   setShieldTab(shieldTab: ShieldTab | undefined) {
