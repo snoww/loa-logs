@@ -139,7 +139,7 @@ pub fn prepare_get_encounter_preview_query(
         "SELECT COUNT(*)
         FROM encounter_preview e {join_clause}
         WHERE duration > ? {boss_filter}
-        {raid_clear_filter} {favorite_filter} {difficulty_filter} {boss_only_damage_filter}"
+        {raid_clear_filter} {raids_only_filter} {favorite_filter} {difficulty_filter} {boss_only_damage_filter}"
     );
 
     (params, query, count_query)
