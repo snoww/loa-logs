@@ -235,7 +235,7 @@ export class BuffState {
     return temp;
   });
 
-  constructor(enc: EncounterState, tab: MeterTab | undefined) {
+  constructor(enc: EncounterState, tab?: MeterTab) {
     this.enc = enc;
     this.tab = tab;
   }
