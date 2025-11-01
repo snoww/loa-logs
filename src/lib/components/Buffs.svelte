@@ -20,7 +20,7 @@
 
   let { tab, enc, focusedPlayer = $bindable(), inspectPlayer, handleRightClick }: Props = $props();
 
-  let buffs = $derived(new BuffState(enc));
+  let buffs = $derived(new BuffState(enc, tab));
 
   $effect(() => {
     if (focusedPlayer && focusedPlayer.entityType === EntityType.ESTHER) {
@@ -28,10 +28,6 @@
     } else {
       buffs.setFocusedPlayer(focusedPlayer);
     }
-  });
-
-  $effect(() => {
-    buffs.setTab(tab);
   });
 </script>
 
