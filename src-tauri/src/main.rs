@@ -56,7 +56,7 @@ async fn main() -> Result<()> {
     );
 
     let handle = Handle::current();
-    async_runtime::set(handle.into());
+    async_runtime::set(handle);
         
     tauri::Builder::default()
         .manage(auto_launch_manager)

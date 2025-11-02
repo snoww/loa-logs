@@ -30,10 +30,7 @@ impl<'a> GetCharacterInfoArgs<'a> {
             return None
         }
         
-        let boss: &str = match (!encounter.current_boss_name.is_empty()).then(|| encounter.current_boss_name.as_ref()) {
-            Some(boss) => boss,
-            None => return None
-        };
+        let boss: &str = (!encounter.current_boss_name.is_empty()).then(|| encounter.current_boss_name.as_ref())?;
 
         let region = match encounter.region.as_ref() {
             Some(region) => region,
@@ -73,7 +70,7 @@ impl<'a> GetCharacterInfoArgs<'a> {
             characters,
             cleared: encounter.cleared,
             region,
-            difficulty: difficulty
+            difficulty
         })
     }
 }

@@ -34,7 +34,7 @@ impl HeartBeatApi {
             let args = SendHeartbeatArgs {
                 id: &self.client_id,
                 version: &self.version,
-                region: &region,
+                region
             };
             let body = serde_json::to_value(args).unwrap();
 

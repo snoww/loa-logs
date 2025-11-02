@@ -1,8 +1,7 @@
-use crate::{api::GetCharacterInfoArgs, models::*, utils::boss_to_raid_map};
+use crate::{api::GetCharacterInfoArgs, models::*};
 use hashbrown::HashMap;
 use log::*;
 use reqwest::Client;
-use serde::Serialize;
 use std::time::Duration;
 use tokio::time::sleep;
 
