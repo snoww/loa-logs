@@ -12,9 +12,8 @@
   }
 
   let { enc }: Props = $props();
-  let buffs = $derived(new BuffState(enc));
-
   let tab = $state(ShieldTab.GIVEN);
+  let buffs = new BuffState(enc);
 
   $effect.pre(() => {
     buffs.setShieldTab(tab);

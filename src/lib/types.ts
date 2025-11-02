@@ -48,6 +48,7 @@ export interface EncounterPreview {
   supportBrand?: number;
   supportIdentity?: number;
   supportHyper?: number;
+  udps?: number;
 }
 
 export interface EncounterDamageStats {

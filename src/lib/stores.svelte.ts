@@ -124,7 +124,7 @@ class Settings {
   }
 }
 
-export type sortColumns = "id" | "my_dps" | "duration";
+export type sortColumns = "id" | "my_dps" | "duration" | "unbuffed_dps";
 export type sortOrder = "asc" | "desc";
 
 export class EncounterFilter {

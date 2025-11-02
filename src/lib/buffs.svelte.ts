@@ -18,6 +18,8 @@ export class BuffState {
   enc: EncounterState = $state()!;
   focusedPlayer: Entity | undefined = $state();
   tab: MeterTab | undefined = $state();
+  shieldBy = $state("");
+  shieldValue = $state("");
 
   players = $derived.by(() => {
     if (!this.enc) return [];
@@ -144,8 +146,6 @@ export class BuffState {
     return temp;
   });
 
-  shieldBy = $state("");
-  shieldValue = $state("");
   topShield = $derived(Math.max(...this.players.map((player) => player.damageStats[this.shieldValue])));
 
   groupedShields: Map<string, Map<number, StatusEffect>> = $derived.by(() => {
@@ -235,16 +235,13 @@ export class BuffState {
     return temp;
   });
 
-  constructor(enc: EncounterState) {
+  constructor(enc: EncounterState, tab?: MeterTab) {
     this.enc = enc;
+    this.tab = tab;
   }
 
   setFocusedPlayer(player: Entity | undefined) {
     this.focusedPlayer = player;
-  }
-
-  setTab(tab: MeterTab | undefined) {
-    this.tab = tab;
   }
 
   setShieldTab(shieldTab: ShieldTab | undefined) {

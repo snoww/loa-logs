@@ -98,25 +98,24 @@ pub fn prepare_get_encounter_preview_query(
         ""
     };
 
-    let sort = format!("e.{}", filter.sort);
-
     let query = format!(
         "SELECT
-    e.id,           -- 0
-    e.fight_start,  -- 1
-    e.current_boss, -- 2
-    e.duration,     -- 3
-    e.difficulty,   -- 4
-    e.favorite,     -- 5
-    e.cleared,      -- 6
-    e.local_player, -- 7
-    e.my_dps,       -- 8
-    e.players,      -- 9
+    e.id,               -- 0
+    e.fight_start,      -- 1
+    e.current_boss,     -- 2
+    e.duration,         -- 3
+    e.difficulty,       -- 4
+    e.favorite,         -- 5
+    e.cleared,          -- 6
+    e.local_player,     -- 7
+    e.my_dps,           -- 8
+    e.players,          -- 9
     le.spec,            -- 10
     le.support_ap,      -- 11
     le.support_brand,   -- 12
     le.support_identity,-- 13
-    le.support_hyper    -- 14
+    le.support_hyper,   -- 14
+    le.unbuffed_dps     -- 15
     FROM encounter_preview e
     LEFT JOIN entity le ON le.encounter_id = e.id AND le.name = e.local_player
     {}
@@ -132,7 +131,7 @@ pub fn prepare_get_encounter_preview_query(
         difficulty_filter,
         raids_only_filter,
         boss_only_damage_filter,
-        sort,
+        filter.sort,
         filter.order
     );
 
@@ -140,7 +139,7 @@ pub fn prepare_get_encounter_preview_query(
         "SELECT COUNT(*)
         FROM encounter_preview e {join_clause}
         WHERE duration > ? {boss_filter}
-        {raid_clear_filter} {favorite_filter} {difficulty_filter} {boss_only_damage_filter}"
+        {raid_clear_filter} {raids_only_filter} {favorite_filter} {difficulty_filter} {boss_only_damage_filter}"
     );
 
     (params, query, count_query)
@@ -267,6 +266,7 @@ pub fn map_encounter_preview(row: &rusqlite::Row) -> rusqlite::Result<EncounterP
         support_brand: row.get("support_brand").unwrap_or_default(),
         support_identity: row.get("support_identity").unwrap_or_default(),
         support_hyper: row.get("support_hyper").unwrap_or_default(),
+        udps: row.get("unbuffed_dps").unwrap_or_default(),
     })
 }
 
