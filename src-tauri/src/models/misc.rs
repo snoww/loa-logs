@@ -1,6 +1,7 @@
 use serde::{Deserialize, Serialize};
+use strum_macros::{AsRefStr, EnumString};
 
-use crate::settings::Settings;
+use crate::{models::{HitFlag, HitOption}, settings::Settings};
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct LoadResult {
@@ -120,4 +121,67 @@ pub struct SupportBuffs {
     pub buff: f64,
     pub identity: f64,
     pub hyper: f64,
+}
+
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq, EnumString, AsRefStr)]
+#[strum(serialize_all = "title_case")]
+#[repr(u32)]
+pub enum RaidDifficulty {
+    #[default]
+    Unknown = 255,
+    Normal = 0,
+    Hard = 1,
+    Inferno = 2,
+    Challenge = 3,
+    Solo = 4,
+    TheFirst = 5,
+    Trial = 7
+}
+
+impl RaidDifficulty {
+    pub fn from_raid_id(value: u32) -> Self {
+        match value {
+            308226 | 308227 | 308239 | 308339 => {
+                Self::Trial
+            }
+            308428 | 308429 | 308420 | 308410 | 308411 | 308414 | 308422 | 308424
+            | 308421 | 308412 | 308423 | 308426 | 308416 | 308419 | 308415 | 308437
+            | 308417 | 308418 | 308425 | 308430 => {
+                Self::Challenge
+            }
+            _ => {
+                Self::Unknown
+            }
+        }
+    }
+}
+
+impl From<u32> for RaidDifficulty {
+    fn from(value: u32) -> Self {
+        match value {
+            0 => Self::Normal,
+            1 => Self::Hard,
+            2 => Self::Inferno,
+            3 => Self::Challenge,
+            4 => Self::Solo,
+            5 => Self::TheFirst,
+            _ => Self::Unknown,
+        }
+    }
+}
+
+pub enum TriggerSignal {
+    Unknown(u32),
+    Clear(u32),
+    Wipe(u32)
+}
+
+impl From<u32> for TriggerSignal {
+    fn from(value: u32) -> Self {
+        match value {
+            57 | 59 | 61 | 63 | 74 | 76 => Self::Clear(value),
+            58 | 60 | 62 | 64 | 75 | 77 => Self::Wipe(value),
+            value => Self::Unknown(value)
+        }
+    }
 }

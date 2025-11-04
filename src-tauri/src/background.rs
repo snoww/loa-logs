@@ -49,7 +49,10 @@ impl BackgroundWorker {
         {
             use std::sync::atomic::Ordering;
 
-            use crate::live;
+            use tauri::Manager;
+            use tokio::sync::watch;
+
+            use crate::{app, context::AppContext, emitter::TauriAppEmitter, live::{self, *}, local::LocalPlayerRepository};
 
             while !update_checked.load(Ordering::Relaxed) {
                 std::thread::sleep(std::time::Duration::from_millis(100));
@@ -57,7 +60,31 @@ impl BackgroundWorker {
 
             info!("listening on port: {port}");
 
-            live::start(app_handle, port, settings).expect("unexpected error occurred in parser");
+            let (_shutdown_tx, shutdown_rx) = watch::channel(false);
+            let context = app_handle.state::<AppContext>();
+            let capture = SnowPacketCapture::new(port, region_file_path);
+            let encounter_service = DefaultEncounterService::new(app_handle.clone(), version);
+            let emitter = TauriAppEmitter::new(app_handle.clone());
+            let manager = TauriEventManager::new(app_handle.clone());
+            let local_player_path = context.local_player_path.clone();
+            let local_player_repository = LocalPlayerRepository::new(local_player_path).expect("could not read local players");
+            let local_info = local_player_repository.read().expect("could not read local players");
+            let sntp_client = SntpTimeSyncClient::new("time.cloudflare.com");
+
+            let args = StartArgs {
+                capture,
+                settings,
+                shutdown_rx,
+                local_info,
+                local_player_repository,
+                // heartbeat_api: todo!(),
+                encounter_service,
+                emitter,
+                manager,
+                sntp_client
+            };
+
+            live::start(args).expect("unexpected error occurred in parser");
         }
     }
 
