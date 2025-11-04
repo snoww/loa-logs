@@ -1,87 +1,68 @@
 use crate::data::*;
-use crate::database::Repository;
-use crate::database::models::InsertEncounterArgs;
-use crate::live::entity_tracker::{Entity, EntityTracker};
+use crate::emitter::AppEmitter;
+use crate::live::encounter_service::EncounterService;
 use crate::live::skill_tracker::SkillTracker;
-use crate::live::stats_api::StatsApi;
-use crate::live::status_tracker::StatusEffectDetails;
-use crate::live::utils::*;
+use crate::live::sntp::TimeSyncClient;
+use crate::live::{utils::*, SaveEncounterArgs};
 use crate::models::*;
 use crate::utils::{get_class_from_id, get_player_spec, is_support_class};
 use chrono::Utc;
 use hashbrown::HashMap;
-use log::{info, warn};
+use log::*;
 use meter_core::packets::common::SkillMoveOptionData;
 use meter_core::packets::structures::SkillCooldownStruct;
-use rsntp::SntpClient;
 use std::cmp::max;
 use std::default::Default;
-use tauri::{AppHandle, Emitter, Manager};
-use tokio::task;
 
 #[derive(Debug)]
-pub struct EncounterState {
-    pub app: AppHandle,
-    pub encounter: Encounter,
-    pub resetting: bool,
+pub struct EncounterState<'a, T: TimeSyncClient, R: EncounterService, E: AppEmitter> {
     pub boss_dead_update: bool,
-    pub saved: bool,
-
-    pub raid_clear: bool,
-
-    damage_log: HashMap<String, Vec<(i64, i64)>>,
-    cast_log: HashMap<String, HashMap<u32, Vec<i32>>>,
-
-    boss_hp_log: HashMap<String, Vec<BossHpLog>>,
-
+    pub boss_only_damage: bool,
+    pub boss_hp_log: HashMap<String, Vec<BossHpLog>>,
+    pub custom_id_map: HashMap<u32, u32>,
+    pub damage_is_valid: bool,
+    pub encounter: Encounter,
     pub party_info: Vec<Vec<String>>,
+    pub raid_clear: bool,
     pub raid_difficulty: String,
     pub raid_difficulty_id: u32,
-    pub boss_only_damage: bool,
-    pub region: Option<String>,
-
-    sntp_client: SntpClient,
-    ntp_fight_start: i64,
-
     pub rdps_valid: bool,
-
+    pub region: Option<String>,
+    pub resetting: bool,
+    pub saved: bool,
     pub skill_tracker: SkillTracker,
 
-    custom_id_map: HashMap<u32, u32>,
-
-    pub damage_is_valid: bool,
+    cast_log: HashMap<String, HashMap<u32, Vec<i32>>>,
+    damage_log: HashMap<String, Vec<(i64, i64)>>,
+    ntp_fight_start: i64,
+    sntp_client: T,
+    encounter_service: &'a R,
+    emitter: &'a E,
 }
 
-impl EncounterState {
-    pub fn new(window: AppHandle) -> EncounterState {
-        EncounterState {
-            app: window,
+impl<'a, T: TimeSyncClient, R: EncounterService, E: AppEmitter> EncounterState<'a, T, R, E> {
+    pub fn new(sntp_client: T, encounter_service: &'a R, emitter: &'a E) -> Self {
+        Self {
+            sntp_client,
+            encounter_service,
+            emitter,
             encounter: Encounter::default(),
             resetting: false,
             raid_clear: false,
             boss_dead_update: false,
             saved: false,
-
             damage_log: HashMap::new(),
             boss_hp_log: HashMap::new(),
             cast_log: HashMap::new(),
-
             party_info: Vec::new(),
             raid_difficulty: "".to_string(),
             raid_difficulty_id: 0,
             boss_only_damage: false,
             region: None,
-
-            sntp_client: SntpClient::new(),
             ntp_fight_start: 0,
-
-            // todo
             rdps_valid: false,
-
             skill_tracker: SkillTracker::new(),
-
             custom_id_map: HashMap::new(),
-
             damage_is_valid: true,
         }
     }
@@ -103,11 +84,8 @@ impl EncounterState {
         self.party_info = Vec::new();
 
         self.ntp_fight_start = 0;
-
         self.rdps_valid = false;
-
         self.skill_tracker = SkillTracker::new();
-
         self.custom_id_map = HashMap::new();
 
         for (key, entity) in clone.entities.into_iter().filter(|(_, e)| {
@@ -167,10 +145,10 @@ impl EncounterState {
         }
     }
 
-    pub fn on_init_env(&mut self, entity: Entity, stats_api: &StatsApi) {
+    pub fn on_init_env(&mut self, entity: Entity) {
         // if not already saved to db, we save again
         if !self.saved && !self.encounter.current_boss_name.is_empty() {
-            self.save_to_db(stats_api, false);
+            self.save_to_db(false);
         }
 
         // replace or insert local player
@@ -191,22 +169,18 @@ impl EncounterState {
             e.name == self.encounter.local_player || e.damage_stats.damage_dealt > 0
         });
 
-        self.app
-            .emit("zone-change", "")
-            .expect("failed to emit zone-change");
+        self.emitter.emit("zone-change", "");
 
         self.soft_reset(false);
     }
 
-    pub fn on_phase_transition(&mut self, phase_code: i32, stats_api: &mut StatsApi) {
-        self.app
-            .emit("phase-transition", phase_code)
-            .expect("failed to emit phase-transition");
+    pub fn on_phase_transition(&mut self, phase_code: i32) {
+        self.emitter.emit("phase-transition", phase_code);
 
         match phase_code {
             0 | 2 | 3 | 4 => {
                 if !self.encounter.current_boss_name.is_empty() {
-                    self.save_to_db(stats_api, false);
+                    self.save_to_db(false);
                     self.saved = true;
                 }
                 self.resetting = true;
@@ -397,7 +371,7 @@ impl EncounterState {
         }
 
         let (skill_name, skill_icon, summons, _, is_hyper_awakening) =
-            get_skill_name_and_icon(skill_id, 0, &self.skill_tracker, source_entity.id);
+            get_skill_name_and_icon(skill_id, 0, &self.skill_tracker.skill_timestamp, source_entity.id);
 
         let entity = self
             .encounter
@@ -505,61 +479,38 @@ impl EncounterState {
         (skill_id, summons)
     }
 
-    #[allow(clippy::too_many_arguments)]
-    pub fn on_damage(
-        &mut self,
-        dmg_src_entity: &Entity,
-        proj_entity: &Entity,
-        dmg_target_entity: &Entity,
-        damage_data: DamageData,
-        se_on_source: Vec<StatusEffectDetails>,
-        se_on_target: Vec<StatusEffectDetails>,
-        _target_count: i32,
-        entity_tracker: &EntityTracker,
-        timestamp: i64,
-    ) {
-        let hit_flag = match damage_data.modifier & 0xf {
-            0 => HitFlag::NORMAL,
-            1 => HitFlag::CRITICAL,
-            2 => HitFlag::MISS,
-            3 => HitFlag::INVINCIBLE,
-            4 => HitFlag::DOT,
-            5 => HitFlag::IMMUNE,
-            6 => HitFlag::IMMUNE_SILENCED,
-            7 => HitFlag::FONT_SILENCED,
-            8 => HitFlag::DOT_CRITICAL,
-            9 => HitFlag::DODGE,
-            10 => HitFlag::REFLECT,
-            11 => HitFlag::DAMAGE_SHARE,
-            12 => HitFlag::DODGE_HIT,
-            13 => HitFlag::MAX,
-            _ => {
-                return;
-            }
-        };
-        let hit_option_raw = ((damage_data.modifier >> 4) & 0x7) - 1;
-        let hit_option = match hit_option_raw {
-            -1 => HitOption::NONE,
-            0 => HitOption::BACK_ATTACK,
-            1 => HitOption::FRONTAL_ATTACK,
-            2 => HitOption::FLANK_ATTACK,
-            3 => HitOption::MAX,
-            _ => {
-                return;
-            }
-        };
+    pub fn on_damage(&mut self, event: DamageEventContext) {
 
-        if hit_flag == HitFlag::INVINCIBLE {
+        let DamageEventContext {
+            mut damage,
+            stagger,
+            skill_id,
+            mut skill_effect_id,
+            target_current_hp,
+            target_max_hp,
+            rdps_data,
+            dmg_src_entity,
+            proj_entity,
+            dmg_target_entity,
+            se_on_source_ids,
+            se_on_target_ids,
+            hit_flag,
+            hit_option,
+            timestamp,
+            character_id_to_name
+        } = event;
+
+        if hit_flag == HitFlag::Invincible {
             return;
         }
-        if hit_flag == HitFlag::DAMAGE_SHARE
-            && damage_data.skill_id == 0
-            && damage_data.skill_effect_id == 0
+      
+        if hit_flag == HitFlag::DamageShare
+            && skill_id == 0
+            && skill_effect_id == 0
         {
             return;
         }
 
-        let mut skill_effect_id = damage_data.skill_effect_id;
         let is_battle_item = is_battle_item(&proj_entity.skill_effect_id, "attack");
         if proj_entity.entity_type == EntityType::Projectile && is_battle_item {
             skill_effect_id = proj_entity.skill_effect_id;
@@ -578,17 +529,17 @@ impl EncounterState {
         let mut skill_key = if is_battle_item {
             // pad battle item skill effect id to avoid overlap with skill ids
             skill_effect_id + 1_000_000
-        } else if damage_data.skill_id == 0 {
+        } else if skill_id == 0 {
             skill_effect_id
         } else {
-            damage_data.skill_id
+            skill_id
         };
 
         let (skill_name, skill_icon, skill_summon_sources, special, is_hyper_awakening) =
             get_skill_name_and_icon(
-                damage_data.skill_id,
+                skill_id,
                 skill_effect_id,
-                &self.skill_tracker,
+                &self.skill_tracker.skill_timestamp,
                 source_entity.id,
             );
 
@@ -618,18 +569,17 @@ impl EncounterState {
         source_entity
             .skills
             .entry(skill_key)
-            .and_modify(|s| s.stagger += damage_data.stagger as i64);
-        source_entity.damage_stats.stagger += damage_data.stagger as i64;
+            .and_modify(|s| s.stagger += stagger);
+        source_entity.damage_stats.stagger += stagger;
+        let encounter_entities = &mut self.encounter.entities;
 
         // ensure target entity exists in encounter
-        let target_type = self
-            .encounter
-            .entities
+        let target_type = encounter_entities
             .entry(dmg_target_entity.name.clone())
             .or_insert_with(|| {
                 let mut target_entity = encounter_entity_from_entity(dmg_target_entity);
-                target_entity.current_hp = damage_data.target_current_hp;
-                target_entity.max_hp = damage_data.target_max_hp;
+                target_entity.current_hp = target_current_hp;
+                target_entity.max_hp = target_max_hp;
                 target_entity
             })
             .entity_type;
@@ -652,40 +602,35 @@ impl EncounterState {
         if self.encounter.fight_start == 0 {
             self.encounter.fight_start = timestamp;
             self.skill_tracker.fight_start = timestamp;
-            if target_type == EntityType::Player && damage_data.skill_id > 0 {
+            if target_type == EntityType::Player && skill_id > 0 {
                 self.skill_tracker.new_cast(
                     dmg_src_entity.id,
-                    damage_data.skill_id,
+                    skill_id,
                     None,
                     timestamp,
                 );
             }
 
-            if let Ok(result) = self.sntp_client.synchronize("time.cloudflare.com") {
-                let dt = result.datetime().into_chrono_datetime().unwrap_or_default();
-                self.ntp_fight_start = dt.timestamp_millis();
+            if let Some(ntp_fight_start) = self.sntp_client.synchronize() {
+                self.ntp_fight_start = ntp_fight_start;
                 // debug_print(format_args!("fight start local: {}, ntp: {}", Utc::now().to_rfc3339(), dt.to_rfc3339()));
             };
 
             self.encounter.boss_only_damage = self.boss_only_damage;
-            self.app
-                .emit("raid-start", timestamp)
-                .expect("failed to emit raid-start");
+            self.emitter.emit("raid-start", timestamp)
         }
 
         self.encounter.last_combat_packet = timestamp;
 
         // apply pseudo rdps contributions
-        for entry in damage_data.rdps_data.iter() {
+        for entry in rdps_data.iter() {
             // find entity that made this contribution and add to the skill for it.
-            let contributor_entity = if let Some(name) = entity_tracker
-                .character_id_to_name
+            let contributor_entity = if let Some(name) = character_id_to_name
                 .get(&entry.source_character_id)
             {
-                self.encounter.entities.get_mut(name)
+                encounter_entities.get_mut(name)
             } else {
-                self.encounter
-                    .entities
+                encounter_entities
                     .values_mut()
                     .find(|entity| entity.character_id == entry.source_character_id)
             };
@@ -711,9 +656,7 @@ impl EncounterState {
             }
         }
 
-        let [Some(source_entity), Some(target_entity)] = self
-            .encounter
-            .entities
+        let [Some(source_entity), Some(target_entity)] = encounter_entities
             .get_many_mut([&dmg_src_entity.name, &dmg_target_entity.name])
         else {
             warn!(
@@ -726,13 +669,12 @@ impl EncounterState {
         source_entity.id = dmg_src_entity.id;
 
         if target_entity.id == dmg_target_entity.id {
-            target_entity.current_hp = damage_data.target_current_hp;
-            target_entity.max_hp = damage_data.target_max_hp;
+            target_entity.current_hp = target_current_hp;
+            target_entity.max_hp = target_max_hp;
         }
 
-        let mut damage = damage_data.damage + damage_data.shield_damage.unwrap_or(0);
-        if target_entity.entity_type != EntityType::Player && damage_data.target_current_hp < 0 {
-            damage += damage_data.target_current_hp;
+        if target_entity.entity_type != EntityType::Player && target_current_hp < 0 {
+            damage += target_current_hp;
         }
 
         let skill = source_entity.skills.get_mut(&skill_key).unwrap();
@@ -744,7 +686,7 @@ impl EncounterState {
         let relative_timestamp = (timestamp - self.encounter.fight_start) as i32;
         let mut skill_hit = SkillHit {
             damage,
-            stagger: damage_data.stagger as i64,
+            stagger,
             timestamp: relative_timestamp as i64,
             ..Default::default()
         };
@@ -755,11 +697,12 @@ impl EncounterState {
         }
         skill.last_timestamp = timestamp;
 
-        source_entity.damage_stats.damage_dealt += damage;
+        let source_stats = &mut source_entity.damage_stats;
+        source_stats.damage_dealt += damage;
 
         // apply pseudo rdps damage
         let mut buffed = 0_i64;
-        for entry in damage_data.rdps_data {
+        for entry in rdps_data {
             *skill
                 .rdps_received
                 .entry(entry.rdps_type)
@@ -771,12 +714,12 @@ impl EncounterState {
             }
         }
 
-        source_entity.damage_stats.buffed_damage += buffed;
-        source_entity.damage_stats.unbuffed_damage =
-            source_entity.damage_stats.damage_dealt - source_entity.damage_stats.buffed_damage;
+        source_stats.buffed_damage += buffed;
+        source_stats.unbuffed_damage =
+            source_stats.damage_dealt - source_stats.buffed_damage;
 
         if is_hyper_awakening {
-            source_entity.damage_stats.hyper_awakening_damage += damage;
+            source_stats.hyper_awakening_damage += damage;
         }
 
         target_entity.damage_stats.damage_taken += damage;
@@ -784,33 +727,35 @@ impl EncounterState {
         source_entity.skill_stats.hits += 1;
         skill.hits += 1;
 
-        if hit_flag == HitFlag::CRITICAL || hit_flag == HitFlag::DOT_CRITICAL {
+        if hit_flag == HitFlag::Critical || hit_flag == HitFlag::DotCritical {
             source_entity.skill_stats.crits += 1;
-            source_entity.damage_stats.crit_damage += damage;
+            source_stats.crit_damage += damage;
             skill.crits += 1;
             skill.crit_damage += damage;
             skill_hit.crit = true;
         }
-        if hit_option == HitOption::BACK_ATTACK {
+        if hit_option == HitOption::BackAttack {
             source_entity.skill_stats.back_attacks += 1;
-            source_entity.damage_stats.back_attack_damage += damage;
+            source_stats.back_attack_damage += damage;
             skill.back_attacks += 1;
             skill.back_attack_damage += damage;
             skill_hit.back_attack = true;
         }
-        if hit_option == HitOption::FRONTAL_ATTACK {
+        if hit_option == HitOption::FrontalAttack {
             source_entity.skill_stats.front_attacks += 1;
-            source_entity.damage_stats.front_attack_damage += damage;
+            source_stats.front_attack_damage += damage;
             skill.front_attacks += 1;
             skill.front_attack_damage += damage;
             skill_hit.front_attack = true;
         }
 
+        let damage_stats = &mut self.encounter.encounter_damage_stats;
+
         if source_entity.entity_type == EntityType::Player {
-            self.encounter.encounter_damage_stats.total_damage_dealt += damage;
-            self.encounter.encounter_damage_stats.top_damage_dealt = max(
-                self.encounter.encounter_damage_stats.top_damage_dealt,
-                source_entity.damage_stats.damage_dealt,
+            damage_stats.total_damage_dealt += damage;
+            damage_stats.top_damage_dealt = max(
+                damage_stats.top_damage_dealt,
+                source_stats.damage_dealt,
             );
 
             self.damage_log
@@ -824,50 +769,25 @@ impl EncounterState {
             let mut is_buffed_by_hat = false;
 
             if !special {
-                let se_on_source_ids = se_on_source
-                    .iter()
-                    .map(|se| map_status_effect(se, &mut self.custom_id_map))
-                    .collect::<Vec<_>>();
                 for buff_id in se_on_source_ids.iter() {
-                    if !self
-                        .encounter
-                        .encounter_damage_stats
-                        .unknown_buffs
-                        .contains(buff_id)
-                        && !self
-                            .encounter
-                            .encounter_damage_stats
-                            .buffs
-                            .contains_key(buff_id)
+                    if !damage_stats.unknown_buffs.contains(buff_id)
+                        && !damage_stats.buffs.contains_key(buff_id)
                     {
-                        let mut source_id: Option<u32> = None;
-                        let original_buff_id =
-                            if let Some(deref_id) = self.custom_id_map.get(buff_id) {
-                                source_id = Some(get_skill_id(*buff_id, *deref_id));
-                                *deref_id
-                            } else {
-                                *buff_id
-                            };
+                        let (original_buff_id, source_id) = Self::get_original_buff(&self.custom_id_map, *buff_id);
 
                         if let Some(status_effect) =
                             get_status_effect_data(original_buff_id, source_id)
                         {
-                            self.encounter
-                                .encounter_damage_stats
-                                .buffs
-                                .insert(*buff_id, status_effect);
+                            damage_stats.buffs.insert(*buff_id, status_effect);
                         } else {
-                            self.encounter
-                                .encounter_damage_stats
-                                .unknown_buffs
-                                .insert(*buff_id);
+                            damage_stats.unknown_buffs.insert(*buff_id);
                         }
                     }
 
                     // will count dps spec of supports as support buffs until proper spec is determined
                     let hat = is_hat_buff(buff_id) || is_hyper_hat_buff(buff_id);
                     if ((!is_buffed_by_support && !hat) || !is_buffed_by_identity)
-                        && let Some(buff) = self.encounter.encounter_damage_stats.buffs.get(buff_id)
+                        && let Some(buff) = damage_stats.buffs.get(buff_id)
                     {
                         if !is_buffed_by_support
                             && !hat
@@ -897,48 +817,24 @@ impl EncounterState {
                         is_buffed_by_hat = true;
                     }
                 }
-                let se_on_target_ids = se_on_target
-                    .iter()
-                    .map(|se| map_status_effect(se, &mut self.custom_id_map))
-                    .collect::<Vec<_>>();
+     
                 for debuff_id in se_on_target_ids.iter() {
-                    if !self
-                        .encounter
-                        .encounter_damage_stats
-                        .unknown_buffs
-                        .contains(debuff_id)
-                        && !self
-                            .encounter
-                            .encounter_damage_stats
-                            .debuffs
-                            .contains_key(debuff_id)
+                    if !damage_stats.unknown_buffs.contains(debuff_id)
+                        && !damage_stats.debuffs.contains_key(debuff_id)
                     {
-                        let mut source_id: Option<u32> = None;
-                        let original_debuff_id =
-                            if let Some(deref_id) = self.custom_id_map.get(debuff_id) {
-                                source_id = Some(get_skill_id(*debuff_id, *deref_id));
-                                *deref_id
-                            } else {
-                                *debuff_id
-                            };
+                        let (original_debuff_id, source_id) = Self::get_original_buff(&self.custom_id_map, *debuff_id);
 
                         if let Some(status_effect) =
                             get_status_effect_data(original_debuff_id, source_id)
                         {
-                            self.encounter
-                                .encounter_damage_stats
-                                .debuffs
-                                .insert(*debuff_id, status_effect);
+                            damage_stats.debuffs.insert(*debuff_id, status_effect);
                         } else {
-                            self.encounter
-                                .encounter_damage_stats
-                                .unknown_buffs
-                                .insert(*debuff_id);
+                            damage_stats.unknown_buffs.insert(*debuff_id);
                         }
                     }
                     if !is_debuffed_by_support
                         && let Some(debuff) =
-                            self.encounter.encounter_damage_stats.debuffs.get(debuff_id)
+                            damage_stats.debuffs.get(debuff_id)
                     {
                         is_debuffed_by_support = debuff.unique_group == 210230 // brand group
                                 && debuff.buff_type & StatusEffectBuffTypeFlags::DMG.bits() != 0
@@ -948,19 +844,19 @@ impl EncounterState {
 
                 if is_buffed_by_support && !is_hyper_awakening {
                     skill.buffed_by_support += damage;
-                    source_entity.damage_stats.buffed_by_support += damage;
+                    source_stats.buffed_by_support += damage;
                 }
                 if is_buffed_by_identity && !is_hyper_awakening {
                     skill.buffed_by_identity += damage;
-                    source_entity.damage_stats.buffed_by_identity += damage;
+                    source_stats.buffed_by_identity += damage;
                 }
                 if is_debuffed_by_support && !is_hyper_awakening {
                     skill.debuffed_by_support += damage;
-                    source_entity.damage_stats.debuffed_by_support += damage;
+                    source_stats.debuffed_by_support += damage;
                 }
                 if is_buffed_by_hat {
                     skill.buffed_by_hat += damage;
-                    source_entity.damage_stats.buffed_by_hat += damage;
+                    source_stats.buffed_by_hat += damage;
                 }
 
                 let stabilized_status_active =
@@ -972,7 +868,7 @@ impl EncounterState {
                     if is_hyper_awakening && !is_hyper_hat_buff(buff_id) {
                         continue;
                     } else if let Some(buff) =
-                        self.encounter.encounter_damage_stats.buffs.get(buff_id)
+                        damage_stats.buffs.get(buff_id)
                         && !stabilized_status_active
                         && buff.source.name.contains("Stabilized Status")
                     {
@@ -1020,9 +916,9 @@ impl EncounterState {
         }
 
         if target_entity.entity_type == EntityType::Player {
-            self.encounter.encounter_damage_stats.total_damage_taken += damage;
-            self.encounter.encounter_damage_stats.top_damage_taken = max(
-                self.encounter.encounter_damage_stats.top_damage_taken,
+            damage_stats.total_damage_taken += damage;
+            damage_stats.top_damage_taken = max(
+                damage_stats.top_damage_taken,
                 target_entity.damage_stats.damage_taken,
             );
         }
@@ -1325,6 +1221,12 @@ impl EncounterState {
     //     }
     // }
 
+    pub fn get_original_buff(custom_id_map: &HashMap<u32, u32>, id: u32) -> (u32, Option<u32>) {
+        custom_id_map.get(&id)
+            .map(|pr| (*pr, Some(get_skill_id(id, *pr))))
+            .unwrap_or_else(|| (id, None))
+    }
+
     pub fn on_boss_shield(&mut self, target_entity: &Entity, shield: u64) {
         if target_entity.entity_type == EntityType::Boss
             && target_entity.name == self.encounter.current_boss_name
@@ -1508,7 +1410,7 @@ impl EncounterState {
         }
     }
 
-    pub fn save_to_db(&mut self, stats_api: &StatsApi, manual: bool) {
+    pub fn save_to_db(&mut self, manual: bool) {
         if !manual
             && (self.encounter.fight_start == 0
                 || self.encounter.current_boss_name.is_empty()
@@ -1528,8 +1430,7 @@ impl EncounterState {
             warn!("damage decryption is invalid, not saving to db");
         }
 
-        let mut encounter = self.encounter.clone();
-
+        let encounter = self.encounter.clone();
         let damage_log = self.damage_log.clone();
         let cast_log = self.cast_log.clone();
         let boss_hp_log = self.boss_hp_log.clone();
@@ -1537,74 +1438,197 @@ impl EncounterState {
         let party_info = self.party_info.clone();
         let raid_difficulty = self.raid_difficulty.clone();
         let region = self.region.clone();
-        let meter_version = self.app.app_handle().package_info().version.to_string();
-
         let ntp_fight_start = self.ntp_fight_start;
-
         let rdps_valid = self.rdps_valid;
-
         let skill_cast_log = self.skill_tracker.get_cast_log();
         let skill_cooldowns = self.skill_tracker.skill_cooldowns.clone();
-        let stats_api = stats_api.clone();
+        let current_boss_name = update_current_boss_name(&encounter.current_boss_name);
+        
+        let args = SaveEncounterArgs {
+            encounter,
+            damage_log,
+            cast_log,
+            boss_hp_log,
+            raid_clear,
+            raid_difficulty,
+            region,
+            ntp_fight_start,
+            rdps_valid,
+            manual,
+            skill_cast_log,
+            skill_cooldowns,
+            party_info,
+            current_boss_name
+        };
 
-        // debug_print(format_args!("skill cast log:\n{}", serde_json::to_string(&skill_cast_log).unwrap()));
-
-        // debug_print(format_args!("rdps_data valid: [{}]", rdps_valid));
-        info!(
-            "saving to db - cleared: [{}], difficulty: [{}] {}",
-            raid_clear, self.raid_difficulty, encounter.current_boss_name
-        );
-
-        encounter.current_boss_name = update_current_boss_name(&encounter.current_boss_name);
-
-        let app = self.app.clone();
-        task::spawn(async move {
-            let player_info = if !raid_difficulty.is_empty()
-                && raid_difficulty != "Inferno"
-                && raid_difficulty != "Trial"
-                && !encounter.current_boss_name.is_empty()
-            {
-                info!("fetching player info");
-                stats_api.get_character_info(&encounter).await
-            } else {
-                None
-            };
-
-            let repository = app.state::<Repository>();
-
-            let args = InsertEncounterArgs {
-                encounter,
-                damage_log,
-                cast_log,
-                boss_hp_log,
-                raid_clear,
-                party_info,
-                raid_difficulty,
-                region,
-                player_info,
-                meter_version,
-                ntp_fight_start,
-                rdps_valid,
-                manual,
-                skill_cast_log,
-                skill_cooldowns,
-            };
-
-            let encounter_id = repository
-                .insert_data(args)
-                .expect("could not save encounter");
-
-            info!("saved to db");
-
-            if raid_clear {
-                app.emit("clear-encounter", encounter_id)
-                    .expect("failed to emit clear-encounter");
-            }
-        });
+        self.encounter_service.save(args);
+    
     }
 }
 
 fn status_effect_is_infinite(status_effect: &StatusEffectDetails) -> bool {
     // infinite if duration is (sub-)zero or longer than an hour
     status_effect.expiration_delay <= 0.0 || status_effect.expiration_delay > 3600.0
+}
+
+#[cfg(test)]
+mod tests {
+    use mockall::predicate::{eq, always};
+    use crate::{emitter::MockAppEmitter, live::{MockTimeSyncClient, MockEncounterService}};
+
+    use super::*;
+
+    fn setup_encounter_state() -> EncounterState<'static, MockTimeSyncClient, MockEncounterService, MockAppEmitter> {
+        let current_dir = std::env::current_dir().unwrap();
+        AssetPreloader::new(&current_dir).unwrap();
+
+        // Leak mocks to extend their lifetime to 'static
+        let mut sntp_client = MockTimeSyncClient::new();
+        let encounter_service = Box::leak(Box::new(MockEncounterService::new()));
+        let mut emitter = Box::leak(Box::new(MockAppEmitter::new()));
+
+        sntp_client
+            .expect_synchronize()
+            .times(1)
+            .return_const(1);
+
+        emitter
+            .expect_emit::<i64>()
+            .with(eq("raid-start"), always())
+            .times(1)
+            .return_const(());
+
+        EncounterState::new(
+            sntp_client,
+            encounter_service,
+            emitter)
+    }
+
+    fn make_player_entity() -> Entity {
+        Entity {
+            id: 1,
+            character_id: 1,
+            class_id: 102,
+            entity_type: EntityType::Player,
+            name: "Player".into(),
+            ..Default::default()
+        }
+    }
+
+    fn make_boss_entity() -> Entity {
+        Entity {
+            id: 2,
+            entity_type: EntityType::Boss,
+            name: "Flame of Darkness, Tarkal".into(),
+            ..Default::default()
+        }
+    }
+
+    #[test]
+    fn should_update_damage_stats() {
+        let mut state = setup_encounter_state();
+
+        let source_entity = make_player_entity();
+        let target_entity = make_boss_entity();
+
+        let damage = 100_000_000;
+
+        let event = DamageEventContext {
+            damage,
+            stagger: 1,
+            skill_id: 16140,
+            skill_effect_id: 0,
+            target_current_hp: damage,
+            target_max_hp: damage,
+            rdps_data: vec![],
+            dmg_src_entity: &source_entity,
+            proj_entity: &source_entity,
+            dmg_target_entity: &target_entity,
+            se_on_source_ids: vec![],
+            se_on_target_ids: vec![],
+            hit_flag: HitFlag::Normal,
+            hit_option: HitOption::FlankAttack,
+            timestamp: Utc::now().timestamp_millis(),
+            character_id_to_name: &HashMap::from([(1u64, String::from("Player"))]),
+        };
+
+        state.on_damage(event);
+
+        let player = &state.encounter.entities["Player"];
+
+        assert_eq!(player.damage_stats.damage_dealt, damage);
+        assert_eq!(state.encounter.encounter_damage_stats.total_damage_dealt, damage);
+        assert_eq!(state.encounter.encounter_damage_stats.top_damage_dealt, damage);
+        assert_eq!(player.skills[&16140].total_damage, damage);
+
+        let boss = &state.encounter.entities["Flame of Darkness, Tarkal"];
+
+        assert_eq!(boss.damage_stats.damage_taken, damage);
+    }
+
+    #[test]
+    fn should_update_buffed_stats() {
+        let mut state = setup_encounter_state();
+
+        let source_entity = make_player_entity();
+        let target_entity = make_boss_entity();
+
+        let damage = 100_000_000;
+
+        let rdps_data = vec![
+            RdpsData {
+                rdps_type: 1,
+                skill_id: 16140,
+                source_character_id: 1,
+                value: damage,
+            }
+        ];
+
+
+        // LWC
+        let card_debuff_id = 610001002;
+        // Bard
+        let atk_buff_id = 211606;
+        let identity_buff_id = 211420;
+        let hat_buff_id = 212305;
+        // "Note Brand"
+        let brand_buff_id = 210230;
+        let brand_skill_id = 21020;
+        let custom_id  = get_new_id(brand_skill_id + brand_buff_id);
+        state.custom_id_map.insert(custom_id, brand_buff_id);
+
+        let event = DamageEventContext {
+            damage,
+            stagger: 1,
+            skill_id: 16140,
+            skill_effect_id: 0,
+            target_current_hp: damage,
+            target_max_hp: damage,
+            rdps_data,
+            dmg_src_entity: &source_entity,
+            proj_entity: &source_entity,
+            dmg_target_entity: &target_entity,
+            se_on_source_ids: vec![atk_buff_id, identity_buff_id, hat_buff_id],
+            se_on_target_ids: vec![card_debuff_id, custom_id],
+            hit_flag: HitFlag::Critical,
+            hit_option: HitOption::FlankAttack,
+            timestamp: Utc::now().timestamp_millis(),
+            character_id_to_name: &HashMap::from([(1u64, String::from("Player"))]),
+        };
+
+        state.on_damage(event);
+
+        let player = &state.encounter.entities["Player"];
+
+        assert_eq!(player.damage_stats.buffed_by[&atk_buff_id], damage);
+        assert_eq!(player.damage_stats.buffed_damage, damage);
+        assert_eq!(player.damage_stats.unbuffed_damage, 0);
+        assert_eq!(player.damage_stats.crit_damage, damage);
+        assert_eq!(player.damage_stats.debuffed_by[&card_debuff_id], damage);
+        assert_eq!(player.damage_stats.debuffed_by[&custom_id], damage);
+        assert_eq!(player.damage_stats.debuffed_by_support, damage);
+        assert_eq!(player.damage_stats.buffed_by_support, damage);
+        assert_eq!(player.damage_stats.buffed_by_identity, damage);
+        assert_eq!(player.damage_stats.buffed_by_hat, damage);
+    }
 }

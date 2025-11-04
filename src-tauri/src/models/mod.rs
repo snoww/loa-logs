@@ -4,6 +4,7 @@ pub mod entity;
 pub mod misc;
 pub mod skill;
 pub mod status_effect;
+pub mod dps;
 mod utils;
 
 pub use data::*;
@@ -12,3 +13,4 @@ pub use entity::*;
 pub use misc::*;
 pub use skill::*;
 pub use status_effect::*;
+pub use dps::*;

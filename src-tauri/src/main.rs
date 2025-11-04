@@ -17,6 +17,8 @@ mod setup;
 mod shell;
 mod ui;
 mod utils;
+mod emitter;
+mod region;
 
 use crate::constants::*;
 use crate::context::AppContext;

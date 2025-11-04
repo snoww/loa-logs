@@ -1,4 +1,6 @@
+use chrono::{DateTime, Utc};
 use bitflags::bitflags;
+use hashbrown::HashMap;
 use serde::{Deserialize, Serialize};
 
 use crate::models::SkillData;
@@ -49,4 +51,70 @@ bitflags! {
 
         const ANY = 1 << 20;
     }
+}
+
+pub type StatusEffectRegistry = HashMap<u32, StatusEffectDetails>;
+
+
+#[derive(Debug, Default, Copy, Clone, PartialEq, Eq)]
+pub enum StatusEffectTargetType {
+    #[default]
+    Party = 0,
+    Local = 1,
+}
+
+#[derive(Debug, Default, Copy, Clone, PartialEq, Eq)]
+pub enum StatusEffectCategory {
+    #[default]
+    Other = 0,
+    Debuff = 1,
+}
+
+#[derive(Debug, Default, Copy, Clone, PartialEq, Eq)]
+pub enum StatusEffectBuffCategory {
+    #[default]
+    Other = 0,
+    Bracelet = 1,
+    Etc = 2,
+    BattleItem = 3,
+    Elixir = 4,
+}
+
+#[derive(Debug, Default, Copy, Clone, PartialEq, Eq)]
+pub enum StatusEffectShowType {
+    #[default]
+    Other = 0,
+    All = 1,
+}
+
+#[derive(Debug, Default, Copy, Clone, PartialEq, Eq)]
+pub enum StatusEffectType {
+    #[default]
+    Shield = 0,
+    Other = 1,
+    HardCrowdControl = 2, // stun, root, MC, etc
+}
+
+#[derive(Debug, Default, Clone)]
+pub struct StatusEffectDetails {
+    pub id: u32,
+    pub instance_id: u32,
+    pub status_effect_id: u32,
+    pub custom_id: u32,
+    pub target_id: u64,
+    pub source_id: u64,
+    pub target_type: StatusEffectTargetType,
+    pub db_target_type: String,
+    pub value: u64,
+    pub stack_count: u8,
+    pub category: StatusEffectCategory,
+    pub buff_category: StatusEffectBuffCategory,
+    pub show_type: StatusEffectShowType,
+    pub status_effect_type: StatusEffectType,
+    pub expiration_delay: f32,
+    pub expire_at: Option<DateTime<Utc>>,
+    pub end_tick: u64,
+    pub timestamp: DateTime<Utc>,
+    pub name: String,
+    pub unique_group: u32,
 }

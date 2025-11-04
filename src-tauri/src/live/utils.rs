@@ -1,17 +1,7 @@
-use crate::constants::DB_VERSION;
 use crate::data::*;
-use crate::database::utils::*;
-use crate::live::entity_tracker::Entity;
-use crate::live::skill_tracker::SkillTracker;
-use crate::live::status_tracker::StatusEffectDetails;
 use crate::models::*;
 use crate::utils::*;
-use anyhow::Result;
-use hashbrown::HashMap;
-use rusqlite::{Transaction, params};
-use serde_json::json;
-use std::cmp::{Reverse, max};
-use std::collections::BTreeMap;
+use moka::sync::Cache;
 
 pub fn encounter_entity_from_entity(entity: &Entity) -> EncounterEntity {
     let mut e = EncounterEntity {
@@ -356,7 +346,7 @@ pub type SkillDetails = (
 pub fn get_skill_name_and_icon(
     skill_id: u32,
     skill_effect_id: u32,
-    skill_tracker: &SkillTracker,
+    skill_timestamp: &Cache<(u64, u32), i64>,
     entity_id: u64,
 ) -> SkillDetails {
     if (skill_id == 0) && (skill_effect_id == 0) {
@@ -430,8 +420,7 @@ pub fn get_skill_name_and_icon(
             && !summon_source_skills.is_empty()
         {
             for source in summon_source_skills {
-                if skill_tracker
-                    .skill_timestamp
+                if skill_timestamp
                     .get(&(entity_id, *source))
                     .is_some()
                     && let Some(skill) = SKILL_DATA.get(source)
@@ -528,15 +517,6 @@ pub fn check_tripod_level_change(before: Option<TripodLevel>, after: Option<Trip
     let after = after.unwrap();
 
     before != after
-}
-
-pub fn map_status_effect(se: &StatusEffectDetails, custom_id_map: &mut HashMap<u32, u32>) -> u32 {
-    if se.custom_id > 0 {
-        custom_id_map.insert(se.custom_id, se.status_effect_id);
-        se.custom_id
-    } else {
-        se.status_effect_id
-    }
 }
 
 pub fn is_valid_player(player: &EncounterEntity) -> bool {

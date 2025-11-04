@@ -11,13 +11,7 @@ use tauri::{App, AppHandle, Manager};
 use tauri_plugin_updater::UpdaterExt;
 
 use crate::{
-    app,
-    background::{BackgroundWorker, BackgroundWorkerArgs},
-    constants::DEFAULT_PORT,
-    context::AppContext,
-    settings::*,
-    shell::ShellManager,
-    ui::{AppHandleExtensions, WindowExtensions, setup_tray},
+    app, background::{BackgroundWorker, BackgroundWorkerArgs}, constants::DEFAULT_PORT, context::AppContext, emitter::TauriAppEmitter, settings::*, shell::ShellManager, ui::{setup_tray, AppHandleExtensions, WindowExtensions}
 };
 
 pub fn setup(app: &mut App) -> Result<(), Box<dyn Error>> {
@@ -25,6 +19,9 @@ pub fn setup(app: &mut App) -> Result<(), Box<dyn Error>> {
     app::panic::add_hook_with_dialog(app.handle());
 
     let app_handle = app.handle();
+
+    let emitter = TauriAppEmitter::new(app_handle.clone());
+    app_handle.manage(emitter);
 
     let context = app.state::<AppContext>();
     let shell_manger = ShellManager::new(app_handle.clone(), context.inner().clone());

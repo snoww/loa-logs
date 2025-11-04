@@ -1,8 +1,7 @@
-use crate::live::debug_print;
 use crate::live::utils::{boss_to_raid_map, is_valid_player};
 use crate::models::*;
 use hashbrown::HashMap;
-use log::warn;
+use log::*;
 use reqwest::Client;
 use serde_json::json;
 use std::time::Duration;
@@ -83,7 +82,7 @@ impl StatsApi {
             match response {
                 Ok(res) => match res.json::<HashMap<String, InspectInfo>>().await {
                     Ok(data) => {
-                        debug_print(format_args!("received player stats"));
+                        info!("received player stats");
                         return Some(data);
                     }
                     Err(e) => {

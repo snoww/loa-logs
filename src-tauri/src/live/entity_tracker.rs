@@ -2,13 +2,11 @@ use crate::data::*;
 use crate::live::id_tracker::IdTracker;
 use crate::live::party_tracker::PartyTracker;
 use crate::live::status_tracker::{
-    build_status_effect, StatusEffectDetails, StatusEffectTargetType, StatusEffectType,
+    build_status_effect,
     StatusTracker,
 };
 use crate::local::{LocalInfo, LocalPlayer};
-use crate::models::EntityType::*;
-use crate::models::{EncounterEntity, EntityType, Esther};
-
+use crate::models::*;
 use chrono::{DateTime, Utc};
 use hashbrown::HashMap;
 use log::{info, warn};
@@ -71,7 +69,7 @@ impl EntityTracker {
             .get(&self.local_entity_id)
             .cloned()
             .unwrap_or_else(|| Entity {
-                entity_type: Player,
+                entity_type: EntityType::Player,
                 name: "You".to_string(),
                 class_id: 0,
                 gear_level: 0.0,
@@ -104,7 +102,7 @@ impl EntityTracker {
     pub fn init_pc(&mut self, pkt: PKTInitPC) -> Entity {
         let player = Entity {
             id: pkt.player_id,
-            entity_type: Player,
+            entity_type: EntityType::Player,
             name: pkt.name,
             class_id: pkt.class_id as u32,
             gear_level: truncate_gear_level(pkt.gear_level),
@@ -177,7 +175,7 @@ impl EntityTracker {
     pub fn new_pc(&mut self, pc_struct: PCStruct) -> Entity {
         let entity = Entity {
             id: pc_struct.player_id,
-            entity_type: Player,
+            entity_type: EntityType::Player,
             name: pc_struct.name.clone(),
             class_id: pc_struct.class_id as u32,
             gear_level: truncate_gear_level(pc_struct.max_item_level), // todo?
@@ -223,7 +221,10 @@ impl EntityTracker {
     }
 
     pub fn new_npc(&mut self, pkt: PKTNewNpc, max_hp: i64) -> Entity {
-        let (entity_type, name, grade) = get_npc_entity_type_name_grade(&pkt.npc_struct, max_hp);
+        let (entity_type, name, grade) = get_npc_entity_type_name_grade(
+            pkt.npc_struct.object_id,
+            pkt.npc_struct.type_id,
+            max_hp);
         let npc = Entity {
             id: pkt.npc_struct.object_id,
             entity_type,
@@ -231,7 +232,7 @@ impl EntityTracker {
             grade,
             npc_id: pkt.npc_struct.type_id,
             level: pkt.npc_struct.level,
-            push_immune: entity_type == Boss,
+            push_immune: entity_type == EntityType::Boss,
             stats: pkt
                 .npc_struct
                 .stat_pairs
@@ -247,9 +248,12 @@ impl EntityTracker {
     }
 
     pub fn new_npc_summon(&mut self, pkt: PKTNewNpcSummon, max_hp: i64) -> Entity {
-        let (entity_type, name, grade) = get_npc_entity_type_name_grade(&pkt.npc_struct, max_hp);
-        let entity_type = if entity_type == Npc {
-            Summon
+        let (entity_type, name, grade) = get_npc_entity_type_name_grade(
+            pkt.npc_struct.object_id,
+            pkt.npc_struct.type_id,
+            max_hp);
+        let entity_type = if entity_type == EntityType::Npc {
+            EntityType::Summon
         } else {
             entity_type
         };
@@ -261,7 +265,7 @@ impl EntityTracker {
             npc_id: pkt.npc_struct.type_id,
             owner_id: pkt.owner_id,
             level: pkt.npc_struct.level,
-            push_immune: entity_type == Boss,
+            push_immune: entity_type == EntityType::Boss,
             stats: pkt
                 .npc_struct
                 .stat_pairs
@@ -280,12 +284,15 @@ impl EntityTracker {
         &mut self,
         pkt: PKTPartyStatusEffectAddNotify,
         entities: &HashMap<String, EncounterEntity>,
+        custom_id_map: &mut HashMap<u32, u32>,
     ) -> Vec<StatusEffectDetails> {
         let timestamp = Utc::now();
         let mut shields: Vec<StatusEffectDetails> = Vec::new();
         for sed in pkt.status_effect_datas {
             let entity = self.get_source_entity(sed.source_id);
             let encounter_entity = entities.get(&entity.name);
+            let source_entity_skills = encounter_entity.map(|pr| &pr.skills);
+
             // println!("entity: {:?}", entity);
             let status_effect = build_status_effect(
                 sed,
@@ -293,11 +300,17 @@ impl EntityTracker {
                 entity.id,
                 StatusEffectTargetType::Party,
                 timestamp,
-                encounter_entity,
+                source_entity_skills,
             );
+
+            if status_effect.custom_id > 0 {
+                custom_id_map.insert(status_effect.custom_id, status_effect.status_effect_id);
+            }
+                
             if status_effect.status_effect_type == StatusEffectType::Shield {
                 shields.push(status_effect.clone());
             }
+
             self.status_tracker
                 .borrow_mut()
                 .register_status_effect(status_effect);
@@ -397,7 +410,7 @@ impl EntityTracker {
                     "unknown local player, inferring from cache: {}",
                     member.name
                 );
-                local_player.entity_type = Player;
+                local_player.entity_type = EntityType::Player;
                 local_player.class_id = member.class_id as u32;
                 local_player.gear_level = truncate_gear_level(member.gear_level);
                 local_player.name.clone_from(&member.name);
@@ -416,7 +429,7 @@ impl EntityTracker {
 
             if let Some(entity_id) = entity_id {
                 if let Some(entity) = self.entities.get_mut(&entity_id)
-                    && entity.entity_type == Player
+                    && entity.entity_type == EntityType::Player
                     && entity.name == member.name
                 {
                     entity.gear_level = truncate_gear_level(member.gear_level);
@@ -488,7 +501,7 @@ impl EntityTracker {
                 }
                 entity.class_id = class_id;
             } else {
-                entity.entity_type = Player;
+                entity.entity_type = EntityType::Player;
                 entity.class_id = class_id;
             }
             self.entities.insert(entity.id, entity.clone());
@@ -501,18 +514,25 @@ impl EntityTracker {
         target_id: u64,
         timestamp: DateTime<Utc>,
         entities: Option<&HashMap<String, EncounterEntity>>,
+        custom_id_map: &mut HashMap<u32, u32>,
     ) -> StatusEffectDetails {
         let source_entity = self.get_source_entity(sed.source_id);
         let source_encounter_entity =
             entities.and_then(|entities| entities.get(&source_entity.name));
+        let source_entity_skills = source_encounter_entity.map(|pr| &pr.skills);
+
         let status_effect = build_status_effect(
             sed.clone(),
             target_id,
             source_entity.id,
             StatusEffectTargetType::Local,
             timestamp,
-            source_encounter_entity,
+            source_entity_skills,
         );
+
+        if status_effect.custom_id > 0 {
+            custom_id_map.insert(status_effect.custom_id, status_effect.status_effect_id);
+        }
 
         self.status_tracker
             .borrow_mut()
@@ -524,7 +544,7 @@ impl EntityTracker {
     fn build_and_register_status_effects(&mut self, seds: Vec<StatusEffectData>, target_id: u64) {
         let timestamp = Utc::now();
         for sed in seds.into_iter() {
-            self.build_and_register_status_effect(&sed, target_id, timestamp, None);
+            self.build_and_register_status_effect(&sed, target_id, timestamp, None, &mut HashMap::new());
         }
     }
 
@@ -548,7 +568,7 @@ impl EntityTracker {
     }
 }
 
-pub fn get_current_and_max_hp(stat_pair: &Vec<StatPair>) -> (i64, i64) {
+pub fn get_current_and_max_hp(stat_pair: &[StatPair]) -> (i64, i64) {
     let mut hp: Option<i64> = None;
     let mut max_hp: Option<i64> = None;
 
@@ -566,12 +586,12 @@ pub fn get_current_and_max_hp(stat_pair: &Vec<StatPair>) -> (i64, i64) {
     (hp.unwrap_or_default(), max_hp.unwrap_or_default())
 }
 
-fn get_npc_entity_type_name_grade(npc: &NpcStruct, max_hp: i64) -> (EntityType, String, String) {
-    if let Some(esther) = get_esther_from_npc_id(npc.type_id) {
+fn get_npc_entity_type_name_grade(id: u64, type_id: u32, max_hp: i64) -> (EntityType, String, String) {
+    if let Some(esther) = get_esther_from_npc_id(type_id) {
         return (EntityType::Esther, esther.name, "none".to_string());
     }
 
-    if let Some((_, npc_info)) = NPC_DATA.get_key_value(&npc.type_id) {
+    if let Some((_, npc_info)) = NPC_DATA.get_key_value(&type_id) {
         let npc_name = npc_info.name.clone().unwrap_or_default();
         if (npc_info.grade == "boss"
             || npc_info.grade == "raid"
@@ -582,14 +602,14 @@ fn get_npc_entity_type_name_grade(npc: &NpcStruct, max_hp: i64) -> (EntityType, 
             && !npc_name.contains('_')
             && npc_name.is_ascii()
         {
-            (Boss, npc_name.clone(), npc_info.grade.clone())
+            (EntityType::Boss, npc_name.clone(), npc_info.grade.clone())
         } else {
             (EntityType::Npc, npc_name.clone(), npc_info.grade.clone())
         }
     } else {
         (
             EntityType::Npc,
-            format!("{:x}", npc.object_id),
+            format!("{:x}", id),
             "none".to_string(),
         )
     }
@@ -612,23 +632,4 @@ pub fn get_skill_class_id(skill_id: &u32) -> u32 {
 
 fn truncate_gear_level(gear_level: f32) -> f32 {
     f32::trunc(gear_level * 100.) / 100.
-}
-
-#[derive(Debug, Default, Clone)]
-pub struct Entity {
-    pub id: u64,
-    pub entity_type: EntityType,
-    pub name: String,
-    pub npc_id: u32,
-    pub class_id: u32,
-    pub gear_level: f32,
-    pub character_id: u64,
-    pub owner_id: u64,
-    pub skill_effect_id: u32,
-    pub skill_id: u32,
-    pub stats: HashMap<u8, i64>,
-    pub stance: u8,
-    pub grade: String,
-    pub push_immune: bool,
-    pub level: u16,
 }
