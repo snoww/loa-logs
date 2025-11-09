@@ -1,10 +1,8 @@
 import { browser } from "$app/environment";
-import { invoke } from "@tauri-apps/api/core";
 import type { Update } from "@tauri-apps/plugin-updater";
 import { time } from "echarts/core";
 import MarkdownIt from "markdown-it";
-import { SvelteSet } from "svelte/reactivity";
-import { readable } from "svelte/store";
+import { readable, writable } from "svelte/store";
 import type { AppSettings } from "./settings";
 import { saveSettings } from "./api";
 
@@ -124,32 +122,19 @@ class Settings {
   }
 }
 
-export type sortColumns = "id" | "my_dps" | "duration" | "unbuffed_dps";
-export type sortOrder = "asc" | "desc";
-
-export class EncounterFilter {
-  search = $state("");
-  page = $state(1);
-  bosses = $state(new SvelteSet<string>());
-  encounters = $state(new SvelteSet<string>());
-  favorite = $state(false);
-  cleared = $state(false);
-  difficulty = $state("");
-  sort: sortColumns = $state("id");
-  order: sortOrder = $state("desc");
-  minDuration = $derived(settings.app.logs.minEncounterDuration);
-
-  reset() {
-    this.search = "";
-    this.page = 1;
-    this.bosses = new SvelteSet();
-    this.encounters = new SvelteSet();
-    this.favorite = false;
-    this.cleared = false;
-    this.difficulty = "";
-    this.sort = "id";
-    this.order = "desc";
-  }
+export type SortColumns = "id" | "my_dps" | "duration" | "unbuffed_dps";
+export type SortOrder = "asc" | "desc";
+export interface EncounterFilter {
+  search: string;
+  page: number;
+  bosses: Set<string>;
+  encounters: Set<string>;
+  favorite: boolean;
+  cleared: boolean;
+  difficulty: string;
+  sort: SortColumns;
+  order: SortOrder;
+  minDuration: number;
 }
 
 export const defaultSettings: AppSettings = {
@@ -378,7 +363,19 @@ export class UpdateInfo {
 }
 
 export const settings = new Settings();
-export const encounterFilter = new EncounterFilter();
+export const encounterFilter = writable<EncounterFilter>({
+  search: "",
+  page: 1,
+  bosses: new Set(),
+  encounters: new Set(),
+  favorite: false,
+  cleared: false,
+  difficulty: "",
+  minDuration: 30,
+  sort: "id",
+    order: "desc"
+});
+
 export const misc = new Misc();
 export const syncProgress = new SyncProgress();
 export const focusedCast = new SkillCastInfo();

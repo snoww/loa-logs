@@ -1,3 +1,24 @@
+pub const SELECT_FROM_ENCOUNTER_STATS: &str = r"
+SELECT
+    enp.current_boss,
+    enp.fight_start,
+    enc.dps,
+    ent.spec,
+    ent.support_ap,
+    ent.support_brand,
+    ent.support_identity,
+    ent.support_hyper
+FROM encounter enc
+JOIN encounter_preview enp
+    USING (id)
+JOIN entity ent
+    ON enc.id = ent.encounter_id
+WHERE enp.cleared = 1
+    AND enp.fight_start >= ? 
+    AND enp.fight_start <= ?
+    AND enp.local_player = ent.name
+";
+
 pub const SELECT_FROM_ENCOUNTER_JOIN_PREVIEW: &str = r"
 SELECT
     last_combat_packet,

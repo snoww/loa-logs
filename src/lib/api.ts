@@ -11,6 +11,7 @@ import type {
   PartyEvent
 } from "./types";
 import type { AppSettings } from "./settings";
+import type { GetStatsArgs, GetStatsResponse } from "./stats";
 
 export const getAppVersion = async (): Promise<string> => `v${await getVersion()}`;
 
@@ -28,6 +29,8 @@ export const toggleWindow = (window: Window): Promise<void> => {
 
   return invoke("toggle_meter_window");
 };
+
+export const getRaidStats = (args: GetStatsArgs): Promise<GetStatsResponse> => invoke("get_raid_stats", { args });
 
 export const openMostRecentEncounter = (): Promise<void> => invoke("open_most_recent_encounter");
 

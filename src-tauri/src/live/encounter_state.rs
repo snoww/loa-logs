@@ -1,5 +1,5 @@
 use crate::data::*;
-use crate::database::Repository;
+use crate::database::EncounterRepository as Repository;
 use crate::database::models::InsertEncounterArgs;
 use crate::live::entity_tracker::{Entity, EntityTracker};
 use crate::live::skill_tracker::SkillTracker;

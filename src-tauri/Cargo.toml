@@ -19,7 +19,7 @@ rand = "0.9.0"
 
 [dependencies]
 anyhow = "1.0.100"
-chrono = "0.4.42"
+chrono = { version = "0.4.42", features = ["serde"] }
 serde_json = { version = "1.0", features = ["preserve_order"] }
 serde = { version = "1.0", features = ["derive"] }
 tauri = { version = "2.9.1", features = ["image-png", "tray-icon"] }

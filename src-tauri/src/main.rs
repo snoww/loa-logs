@@ -45,24 +45,25 @@ async fn main() -> Result<()> {
     AssetPreloader::new(&context.current_dir).expect("could not load meter-data");
     let database = Database::new(context.database_path.clone(), &context.version)
         .expect("error setting up database: {}");
-    let repository = database.create_repository();
+    let encounter_repository = database.create_encounter_repository();
+    let stats_repository = database.create_stats_repository();
     let auto_launch_manager = AutoLaunchManager::new(
         &package_info.name,
         &context.app_path,
     );
-        
-    tauri::Builder::default()
+
+    let mut builder = tauri::Builder::default()
         .manage(auto_launch_manager)
         .manage(context)
         .manage(database)
-        .manage(repository)
+        .manage(encounter_repository)
+        .manage(stats_repository)
         .manage(settings_manager)
         .plugin(tauri_plugin_clipboard_manager::init())
         .plugin(tauri_plugin_global_shortcut::Builder::new().build())
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_process::init())
         .plugin(tauri_plugin_shell::init())
-        .plugin(tauri_plugin_single_instance::init(|_app, _argv, _cwd| {}))
         .plugin(tauri_plugin_updater::Builder::new().build())
         .plugin(
             tauri_plugin_window_state::Builder::new()
@@ -71,7 +72,14 @@ async fn main() -> Result<()> {
         )
         .setup(setup)
         .on_window_event(on_window_event)
-        .invoke_handler(generate_handlers())
+        .invoke_handler(generate_handlers());
+
+    #[cfg(not(debug_assertions))]    
+    {
+        builder = builder.plugin(tauri_plugin_single_instance::init(|_app, _argv, _cwd| {}));
+    }
+
+    builder
         .run(tauri_context)
         .expect("error while running application");
 

@@ -12,6 +12,24 @@ import { writeLog } from "./api";
 
 export const UWUOWO_URL = "https://uwuowo.mathi.moe";
 
+/**
+ * Replaces valid class names in a search string with their corresponding class IDs.
+ *
+ * Example:
+ *   Input:  "bard:Anyduck shadowhunter"
+ *   Output: "204:Anyduck 403"
+ *
+ * @param search The raw search string
+ * @param classMap A map of className => classId
+ * @returns The search string with class names replaced by class IDs
+ */
+export function replaceClassNamesWithIds(search: string, classMap: Record<string, number>): string {
+  return search.replace(/(?<=^|\s)\w+(?=:|\s|$)/g, (word: string) => {
+    const className = word[0].toUpperCase() + word.substring(1).toLowerCase();
+    return String(classMap[className] ?? word);
+  });
+}
+
 export async function takeScreenshot(div?: HTMLElement) {
   if (!div) {
     return;

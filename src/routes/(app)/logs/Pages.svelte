@@ -1,9 +1,13 @@
 <script lang="ts">
   import { IconChevronFirst, IconChevronLast, IconChevronLeft, IconChevronRight } from "$lib/icons";
-  import { settings } from "$lib/stores.svelte";
 
-  let { page = $bindable(), total }: { page: number; total?: number } = $props();
-  let logsPerPage = $derived(settings.app.general.logsPerPage);
+  interface Props {
+    page: number;
+    total?: number;
+    logsPerPage: number;
+  }
+
+  let { page = $bindable(), total, logsPerPage = $bindable() }: Props = $props();
   let from = $derived(total === 0 ? 0 : (page - 1) * logsPerPage + 1);
   let to = $derived(Math.min((page - 1) * logsPerPage + logsPerPage, total || 0));
 </script>
@@ -12,16 +16,14 @@
   <div class="flex items-center gap-2">
     <label for="rowsPerPage">Rows per page:</label>
     <select
+      bind:value={logsPerPage}
       id="rowsPerPage"
       class="focus:border-accent-500 inline rounded-lg border border-neutral-700 bg-neutral-800 p-1 text-sm focus:ring-0"
-      onchange={(e) => {
-        settings.app.general.logsPerPage = parseInt((e.target as HTMLSelectElement).value);
-      }}
     >
-      <option selected={logsPerPage === 10}>10</option>
-      <option selected={logsPerPage === 25}>25</option>
-      <option selected={logsPerPage === 50}>50</option>
-      <option selected={logsPerPage === 100}>100</option>
+      <option value={10}>10</option>
+      <option value={25}>25</option>
+      <option value={50}>50</option>
+      <option value={100}>100</option>
     </select>
     <div class="">
       Showing

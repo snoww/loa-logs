@@ -6,15 +6,20 @@
   import { IconFilter, IconTrash, IconX } from "$lib/icons";
   import { encounterFilter, settings } from "$lib/stores.svelte";
   import { createDialog, createDropdownMenu, melt } from "@melt-ui/svelte";
-  import type { FormEventHandler } from "svelte/elements";
+  import type { FormEventHandler, MouseEventHandler } from "svelte/elements";
   import { SvelteSet } from "svelte/reactivity";
   import { fade, fly } from "svelte/transition";
+  import { page } from "$app/state";
+
+  interface Props {
+    selectMode: boolean;
+    selected: SvelteSet<number>;
+  }
 
   let {
     selectMode = $bindable(),
-    selected = $bindable(),
-    refresh = $bindable()
-  }: { selectMode: boolean; selected: SvelteSet<number>; refresh: boolean } = $props();
+    selected = $bindable()
+  }: Props = $props();
 
   const {
     elements: { menu, trigger },
@@ -34,13 +39,13 @@
   } = createDialog();
 
   let currentTab = $state("Encounters");
-  let search = $state(encounterFilter.search || "");
+  let search = $state($encounterFilter.search || "");
   let active = $derived(
-    encounterFilter.encounters.size > 0 ||
-      encounterFilter.bosses.size > 0 ||
-      encounterFilter.cleared ||
-      encounterFilter.favorite ||
-      encounterFilter.difficulty !== "" ||
+    $encounterFilter.encounters.size > 0 ||
+      $encounterFilter.bosses.size > 0 ||
+      $encounterFilter.cleared ||
+      $encounterFilter.favorite ||
+      $encounterFilter.difficulty !== "" ||
       search.length >= 1
   );
 
@@ -55,15 +60,104 @@
     };
   }
 
+  const clearSearchQuery = () => {
+    page.url.searchParams.delete("raidType");
+  }
+
   const handleSearchInput = debounce(() => {
-    encounterFilter.search = search.length >= 1 ? search : "";
+    $encounterFilter.search = search.length >= 1 ? search : "";
   }, 300);
+
+  const onDelete: MouseEventHandler<HTMLElement> = async (event) => {
+    await deleteEncounters({
+      type: "ids",
+      ids: [...selected]
+    });
+    selected.clear();
+    selectMode = false;
+    encounterFilter.update(filter => filter);
+  }
+
+  const onClearSelected: MouseEventHandler<HTMLElement> = (event) => {
+    selectMode = !selectMode;
+    if (!selectMode) {
+      selected.clear();
+    }
+  }
+
+  const onClear: MouseEventHandler<HTMLElement> = (event) => {
+    clearSearchQuery();
+    search = "";
+    encounterFilter.update(filter => {
+      filter.search = "";
+      filter.page = 1;
+      filter.bosses = new SvelteSet();
+      filter.encounters = new SvelteSet();
+      filter.favorite = false;
+      filter.cleared = false;
+      filter.difficulty = "";
+      filter.sort = "id";
+      filter.order = "desc";
+      return filter;
+    })
+  }
+
+  const onDifficultySelect: MouseEventHandler<HTMLElement> = (event) => {
+    clearSearchQuery();
+    const difficulty = event.currentTarget.dataset.difficulty!;
+    encounterFilter.update((filter) => {
+      filter.page = 1;
+      filter.difficulty = filter.difficulty === difficulty ? "" : difficulty;
+      return filter;
+    })
+  }
+
+  const onEncounterSelect: MouseEventHandler<HTMLElement> = (event) => {
+    clearSearchQuery();
+    const encounter = event.currentTarget.dataset.encounter!;
+    encounterFilter.update((filter) => {
+      filter.page = 1;
+      filter.encounters.has(encounter)
+        ? filter.encounters.delete(encounter)
+        : filter.encounters.add(encounter);
+      return filter
+    })
+  }
+
+  const onBossSelect: MouseEventHandler<HTMLElement> = (event) => {
+    clearSearchQuery();
+    const boss = event.currentTarget.dataset.boss!;
+    encounterFilter.update((filter) => {
+      filter.page = 1;
+      filter.bosses.has(boss) ? filter.bosses.delete(boss) : filter.bosses.add(boss);
+      return filter
+    })
+  }
+
+  const onClassSelect: MouseEventHandler<HTMLElement> = (event) => {
+    clearSearchQuery();
+    const className = event.currentTarget.dataset.classname!;
+    search += ` ${className.toLowerCase()}:`;
+    encounterFilter.update((filter) => {
+      filter.page = 1;
+      filter.search = search;
+      return filter
+    })
+  }
+
+  const onTab: MouseEventHandler<HTMLElement> = (event) => {
+    const tab = event.currentTarget.dataset.tab!;
+    currentTab = tab;
+  }
+
 </script>
 
 {#snippet tab(tab: string)}
   <button
+    type="button"
+    data-tab={tab}
     class="hover:text-accent-500 p-2 first:rounded-tl {currentTab === tab ? 'bg-neutral-800' : ''}"
-    onclick={() => (currentTab = tab)}
+    onclick={onTab}
   >
     {tab}
   </button>
@@ -87,11 +181,7 @@
     <button
       class="absolute inset-y-0 right-0 flex items-center pr-2"
       class:hidden={search.length === 0 && !active}
-      onclick={() => {
-        search = "";
-        encounterFilter.search = "";
-        encounterFilter.reset();
-      }}
+      onclick={onClear}
     >
       <IconX />
     </button>
@@ -108,12 +198,7 @@
       class="mr-2 rounded-md border border-neutral-700 px-1 py-0.5 {selectMode
         ? 'bg-accent-500/80'
         : 'bg-neutral-800/80 hover:bg-neutral-700/70'}"
-      onclick={() => {
-        selectMode = !selectMode;
-        if (!selectMode) {
-          selected.clear();
-        }
-      }}>select</button
+      onclick={onClearSelected}>select</button
     >
   </div>
 </div>
@@ -132,11 +217,9 @@
         {@render tab("Classes")}
       </div>
       <button
+        type="button"
         class="hover:text-accent-500 px-2 {active ? 'text-accent-500' : ''}"
-        onclick={() => {
-          search = "";
-          encounterFilter.reset();
-        }}
+        onclick={onClear}
       >
         reset
       </button>
@@ -148,7 +231,7 @@
             <div class="mr-2">Raid Cleared</div>
             <input
               type="checkbox"
-              bind:checked={encounterFilter.cleared}
+              bind:checked={$encounterFilter.cleared}
               class="form-checkbox checked:text-accent-500 size-4 rounded-sm bg-neutral-700 focus:ring-0 focus:ring-offset-0"
             />
           </label>
@@ -156,7 +239,7 @@
             <div class="mr-2">Favorites</div>
             <input
               type="checkbox"
-              bind:checked={encounterFilter.favorite}
+              bind:checked={$encounterFilter.favorite}
               class="form-checkbox checked:text-accent-500 size-4 rounded-sm bg-neutral-700 focus:ring-0 focus:ring-offset-0"
             />
           </label>
@@ -164,12 +247,13 @@
         <div class="flex flex-wrap px-1">
           {#each difficultyMap as difficulty}
             <button
-              class="m-1 rounded border border-neutral-700 px-1 {encounterFilter.difficulty === difficulty
+              type="button"
+              data-difficulty={difficulty}
+              data-selected={$encounterFilter.difficulty === difficulty}
+              class="m-1 rounded border border-neutral-700 px-1 {$encounterFilter.difficulty === difficulty
                 ? 'bg-neutral-700'
                 : 'bg-neutral-800/80 hover:bg-neutral-700/80'}"
-              onclick={() => {
-                encounterFilter.difficulty = encounterFilter.difficulty === difficulty ? "" : difficulty;
-              }}
+              onclick={onDifficultySelect}
             >
               {difficulty}
             </button>
@@ -181,14 +265,13 @@
             <div class="flex flex-wrap">
               {#each Object.keys(raid[1]) as encounter}
                 <button
-                  class="m-1 rounded border border-neutral-700 p-1 {encounterFilter.encounters.has(encounter)
+                  type="button"
+                  data-encounter={encounter}
+                  data-selected={$encounterFilter.encounters.has(encounter)}
+                  class="m-1 rounded border border-neutral-700 p-1 {$encounterFilter.encounters.has(encounter)
                     ? 'bg-neutral-700'
                     : 'bg-neutral-800/80 hover:bg-neutral-700/80'}"
-                  onclick={() => {
-                    encounterFilter.encounters.has(encounter)
-                      ? encounterFilter.encounters.delete(encounter)
-                      : encounterFilter.encounters.add(encounter);
-                  }}
+                  onclick={onEncounterSelect}
                 >
                   {encounter}
                 </button>
@@ -201,12 +284,13 @@
       <div class="flex flex-wrap px-1 py-2 text-xs">
         {#each bossList as boss}
           <button
-            class="m-1 rounded border border-neutral-700 p-1 {encounterFilter.bosses.has(boss)
+            type="button"
+            data-boss={boss}
+            data-selected={$encounterFilter.bosses.has(boss)}
+            class="m-1 rounded border border-neutral-700 p-1 {$encounterFilter.bosses.has(boss)
               ? 'bg-neutral-700'
               : 'bg-neutral-800/80 hover:bg-neutral-700/80'}"
-            onclick={() => {
-              encounterFilter.bosses.has(boss) ? encounterFilter.bosses.delete(boss) : encounterFilter.bosses.add(boss);
-            }}
+            onclick={onBossSelect}
           >
             {boss}
           </button>
@@ -216,11 +300,11 @@
       <div class="flex flex-wrap px-1 py-2 text-xs">
         {#each classList.sort() as className (className)}
           <button
+            type="button"
+            data-classname={className}
+            data-selected={search.includes(className)}
             class="m-1 rounded border border-neutral-700 p-1"
-            onclick={() => {
-              search += ` ${className.toLowerCase()}:`;
-              encounterFilter.search = search;
-            }}
+            onclick={onClassSelect}
           >
             {className}
           </button>
@@ -243,19 +327,12 @@
         Are you sure you want to delete the {selected.size} selected encounter(s)? This action is irreversible.
       </p>
       <div class="flex items-center gap-28 pt-5">
-        <button use:melt={$close} class="rounded-md bg-neutral-700 p-1 hover:bg-neutral-700/80"> Close </button>
+        <button type="button" use:melt={$close} class="rounded-md bg-neutral-700 p-1 hover:bg-neutral-700/80"> Close </button>
         <button
+          type="button"
           use:melt={$close}
           class="rounded-md bg-red-500/70 p-1 hover:bg-red-500/60"
-          onclick={async () => {
-            await deleteEncounters({
-              type: "ids",
-              ids: [...selected]
-            });
-            selected.clear();
-            selectMode = false;
-            refresh = !refresh;
-          }}
+          onclick={onDelete}
         >
           Confirm
         </button>
