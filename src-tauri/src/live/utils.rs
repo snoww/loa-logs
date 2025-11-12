@@ -8,6 +8,7 @@ use crate::models::*;
 use crate::utils::*;
 use anyhow::Result;
 use hashbrown::HashMap;
+use log::info;
 use rusqlite::{Transaction, params};
 use serde_json::json;
 use std::cmp::{Reverse, max};
@@ -392,9 +393,11 @@ pub fn get_skill_name_and_icon(
                     // take skill_effect_id e.g. 370015
                     // get base skill id -> 37000
                     let skill_effect_base = (skill_effect_id - (skill_effect_id % 1000)) / 10;
+                    // get first skill that is furthest away from base (i.e. weapon attack)
                     source_skills
                         .iter()
-                        .find(|id| (*id - (*id % 100)) == skill_effect_base)
+                        .filter(|id| (**id as i32 - skill_effect_base as i32).abs() < 10000)
+                        .max()
                         .cloned()
                         .unwrap_or_default()
                 };
