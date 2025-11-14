@@ -107,7 +107,7 @@ impl ShellManager {
                     } else {
                         let code = output.status.code().unwrap_or(-1);
                         // ignore error if driver is not running
-                        if code == 1062 {
+                        if matches!(code, 1060 | 1062) {
                             return;
                         }
                         warn!("Failed to stop driver. Exit code: {code} - stdout: {stdout}");
