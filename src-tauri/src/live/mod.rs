@@ -135,6 +135,13 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
         }
 
         match op {
+            Pkt::BattleItemUseNotify => {
+                if let Some(pkt) =
+                    parse_pkt(&data, PKTBattleItemUseNotify::new, "PKTBattleItemUseNotify")
+                {
+                    state.on_battle_item_use(&pkt.item_id);
+                }
+            }
             Pkt::CounterAttackNotify => {
                 if let Some(pkt) =
                     parse_pkt(&data, PKTCounterAttackNotify::new, "PKTCounterAttackNotify")

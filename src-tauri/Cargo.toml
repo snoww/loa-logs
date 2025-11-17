@@ -46,6 +46,7 @@ strum_macros = "0.27.2"
 async-trait = "0.1.89"
 semver = "1.0.27"
 meter-core = { git = "https://github.com/snoww/meter-core-rs", optional = true }
+sha2 = "0.10.9"
 
 
 [target.'cfg(not(any(target_os = "android", target_os = "ios")))'.dependencies]

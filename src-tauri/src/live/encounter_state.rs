@@ -34,6 +34,11 @@ pub struct EncounterState {
 
     boss_hp_log: HashMap<String, Vec<BossHpLog>>,
 
+    // item_id -> count
+    battle_item_tracker: HashMap<u32, u32>,
+    // buff_id -> count
+    crowd_control_tracker: HashMap<u32, u32>,
+
     pub party_info: Vec<Vec<String>>,
     pub raid_difficulty: String,
     pub raid_difficulty_id: u32,
@@ -65,6 +70,8 @@ impl EncounterState {
             damage_log: HashMap::new(),
             boss_hp_log: HashMap::new(),
             cast_log: HashMap::new(),
+            battle_item_tracker: HashMap::new(),
+            crowd_control_tracker: HashMap::new(),
 
             party_info: Vec::new(),
             raid_difficulty: "".to_string(),
@@ -100,6 +107,8 @@ impl EncounterState {
         self.damage_log = HashMap::new();
         self.cast_log = HashMap::new();
         self.boss_hp_log = HashMap::new();
+        self.battle_item_tracker = HashMap::new();
+        self.crowd_control_tracker = HashMap::new();
         self.party_info = Vec::new();
 
         self.ntp_fight_start = 0;
@@ -297,6 +306,14 @@ impl EncounterState {
     }
 
     pub fn on_death(&mut self, dead_entity: &Entity) {
+        // get current boss hp
+        let boss_hp = self
+            .encounter
+            .entities
+            .get(&self.encounter.current_boss_name)
+            .map(|b| b.current_hp)
+            .unwrap_or_default();
+
         let entity = self
             .encounter
             .entities
@@ -323,6 +340,9 @@ impl EncounterState {
         entity.is_dead = true;
         entity.damage_stats.deaths += 1;
         entity.damage_stats.death_time = Utc::now().timestamp_millis();
+        // record boss hp at time of death
+        entity.damage_stats.boss_hp_at_death = Some(boss_hp);
+
         entity
             .damage_stats
             .incapacitations
@@ -1158,6 +1178,12 @@ impl EncounterState {
             .entry(victim_entity.name.clone())
             .or_insert_with(|| encounter_entity_from_entity(victim_entity));
 
+        // track number of crowd control effects applied
+        *self
+            .crowd_control_tracker
+            .entry(status_effect.status_effect_id)
+            .or_insert(0) += 1;
+
         // expiration delay is zero or negative for infinite effects. Instead of applying them now,
         // only apply them after they've been removed (this avoids an issue where if we miss the removal
         // we end up applying a very long incapacitation)
@@ -1508,6 +1534,18 @@ impl EncounterState {
         }
     }
 
+    // track battle items used in an encounter
+    pub fn on_battle_item_use(&mut self, battle_item_id: &u32) {
+        if self.encounter.fight_start == 0 {
+            return;
+        }
+
+        self.battle_item_tracker
+            .entry(*battle_item_id)
+            .and_modify(|e| *e += 1)
+            .or_insert(1);
+    }
+
     pub fn save_to_db(&mut self, stats_api: &StatsApi, manual: bool) {
         if !manual
             && (self.encounter.fight_start == 0
@@ -1545,6 +1583,8 @@ impl EncounterState {
 
         let skill_cast_log = self.skill_tracker.get_cast_log();
         let skill_cooldowns = self.skill_tracker.skill_cooldowns.clone();
+        let battle_items = self.battle_item_tracker.clone();
+        let cc_tracker = self.crowd_control_tracker.clone();
         let stats_api = stats_api.clone();
 
         // debug_print(format_args!("skill cast log:\n{}", serde_json::to_string(&skill_cast_log).unwrap()));
@@ -1565,6 +1605,9 @@ impl EncounterState {
                 && !encounter.current_boss_name.is_empty()
             {
                 info!("fetching player info");
+                stats_api
+                    .send_raid_analytics(&encounter, battle_items, cc_tracker)
+                    .await;
                 stats_api.get_character_info(&encounter).await
             } else {
                 None
