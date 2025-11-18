@@ -40,8 +40,7 @@ pub struct EncounterState {
     crowd_control_tracker: HashMap<u32, u32>,
 
     pub party_info: Vec<Vec<String>>,
-    pub raid_difficulty: String,
-    pub raid_difficulty_id: u32,
+    pub raid_difficulty: Option<String>,
     pub boss_only_damage: bool,
     pub region: Option<String>,
 
@@ -74,8 +73,7 @@ impl EncounterState {
             crowd_control_tracker: HashMap::new(),
 
             party_info: Vec::new(),
-            raid_difficulty: "".to_string(),
-            raid_difficulty_id: 0,
+            raid_difficulty: None,
             boss_only_damage: false,
             region: None,
 
@@ -194,7 +192,9 @@ impl EncounterState {
             self.encounter.entities.insert(entity.name.clone(), entity);
         }
         self.encounter.local_player = entity.name;
+    }
 
+    pub fn on_transit(&mut self) {
         // remove unrelated entities
         self.encounter.entities.retain(|_, e| {
             e.name == self.encounter.local_player || e.damage_stats.damage_dealt > 0
@@ -1573,7 +1573,7 @@ impl EncounterState {
         let boss_hp_log = self.boss_hp_log.clone();
         let raid_clear = self.raid_clear;
         let party_info = self.party_info.clone();
-        let raid_difficulty = self.raid_difficulty.clone();
+        let raid_difficulty = self.raid_difficulty.clone().unwrap_or_default();
         let region = self.region.clone();
         let meter_version = self.app.app_handle().package_info().version.to_string();
 
@@ -1592,7 +1592,7 @@ impl EncounterState {
         // debug_print(format_args!("rdps_data valid: [{}]", rdps_valid));
         info!(
             "saving to db - cleared: [{}], difficulty: [{}] {}",
-            raid_clear, self.raid_difficulty, encounter.current_boss_name
+            raid_clear, raid_difficulty, encounter.current_boss_name
         );
 
         encounter.current_boss_name = update_current_boss_name(&encounter.current_boss_name);
