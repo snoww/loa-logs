@@ -200,6 +200,7 @@ impl StatsApi {
 }
 
 #[derive(Debug, Serialize, Clone)]
+#[serde(rename_all = "camelCase")]
 struct ParticipantInfo {
     pub class: String,
     pub damage_done: i64,
