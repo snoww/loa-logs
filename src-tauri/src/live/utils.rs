@@ -562,6 +562,7 @@ pub fn update_current_boss_name(boss_name: &str) -> String {
         "Vicious Argeos" | "Ruthless Lakadroff" | "Untrue Crimson Yoho" | "Despicable Skolakia" => {
             "Behemoth, the Storm Commander"
         }
+        "Krathoios's Tail" => "Krathoios",
         _ => boss_name,
     }
     .to_string()
