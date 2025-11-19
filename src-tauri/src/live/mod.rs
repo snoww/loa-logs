@@ -830,7 +830,7 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
                     PKTZoneMemberLoadStatusNotify::new,
                     "PKTZoneMemberLoadStatusNotify",
                 ) {
-                    if state.raid_difficulty.is_some() {
+                    if state.raid_difficulty.as_deref().is_some_and(|d| !d.is_empty()) {
                         continue;
                     }
                     debug_print(format_args!("raid zone id: {}", &pkt.zone_id));
