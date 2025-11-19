@@ -1,6 +1,6 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.35.2 - October 29nd, 2025
+    v1.36.0 - Novemeber 19th, 2025
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
@@ -13,23 +13,14 @@
 - **Administrator** on Ratik
 - **Poont** on Gienah
 
-#### BUG FIXES AND IMPROVEMENTS
-
-- added sort for udps column
-- fixed app error when trying to update
-
----
-
-### v1.35.0 - October 29nd, 2025
-
 #### NEW FEATURES
-
-- updated meter for november patch
+- updated meter for kazeros release (thanks poont for the packets)
 
 #### BUG FIXES AND IMPROVEMENTS
-
-- added udps column in past encounters
+- fixed meter not resetting after field boss/chaos gate
+- fixed doomsday burn tripod counting as weapon attack
+- fixed some issues with driver loading
 
 ---
 
-**Older Changelogs**: [link](https://github.com/snoww/loa-logs/releases/tag/v1.34.1)
+**Older Changelogs**: [link](https://github.com/snoww/loa-logs/releases/tag/v1.35.2)
