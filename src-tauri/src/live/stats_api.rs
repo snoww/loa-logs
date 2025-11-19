@@ -152,11 +152,13 @@ impl StatsApi {
 
         let hash = Sha256::digest(player_names.join("").as_bytes());
         let duration_s = (encounter.last_combat_packet - encounter.fight_start) / 1000;
-        let boss_hp = encounter
+        let boss = match encounter
             .entities
-            .get(&encounter.current_boss_name)
-            .map(|boss| boss.current_hp)
-            .unwrap_or_default();
+            .get(&encounter.current_boss_name) {
+            Some(b) => b,
+            None => return,
+        };
+
         let mut esther_skills: HashMap<u32, u32> = HashMap::new();
         encounter
             .entities
@@ -178,7 +180,8 @@ impl StatsApi {
             "startTime": encounter.fight_start,
             "duration": duration_s,
             "clear": encounter.cleared,
-            "finalBossHP": boss_hp,
+            "finalBossHP": boss.current_hp,
+            "bossMaxHP": boss.max_hp,
             "battleItemsUsed": battle_items,
             "crowdControlDebuffs": cc_tracker,
             "estherCasts": esther_skills,
@@ -187,7 +190,7 @@ impl StatsApi {
 
         let _ = self
             .client
-            .post(format!("{API_URL}/analytics/raid"))
+            .post("https://recap.ags.lol/api/report")
             .json(&request_body)
             .send()
             .await;
