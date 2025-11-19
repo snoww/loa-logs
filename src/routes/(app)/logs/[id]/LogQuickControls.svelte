@@ -44,7 +44,7 @@
       Screenshot
     </QuickTooltip>
   </button>
-  {#if encounter && encounter.cleared && encounter.difficulty && encounter.bossOnlyDamage}
+  {#if encounter && encounter.cleared && encounter.difficulty}
     {#if sync}
       <a
         href={UWUOWO_URL + "/logs/" + sync}

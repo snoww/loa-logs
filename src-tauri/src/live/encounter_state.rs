@@ -1,4 +1,4 @@
-use crate::api::{GetCharacterInfoArgs, StatsApi};
+use crate::api::{GetCharacterInfoArgs, SendRaidAnalytics, StatsApi};
 use crate::data::*;
 use crate::database::Repository;
 use crate::database::models::InsertEncounterArgs;
@@ -34,9 +34,13 @@ pub struct EncounterState {
 
     boss_hp_log: HashMap<String, Vec<BossHpLog>>,
 
+    // item_id -> count
+    battle_item_tracker: HashMap<u32, u32>,
+    // buff_id -> count
+    crowd_control_tracker: HashMap<u32, u32>,
+
     pub party_info: Vec<Vec<String>>,
-    pub raid_difficulty: String,
-    pub raid_difficulty_id: u32,
+    pub raid_difficulty: Option<String>,
     pub boss_only_damage: bool,
     pub region: Option<String>,
 
@@ -65,10 +69,11 @@ impl EncounterState {
             damage_log: HashMap::new(),
             boss_hp_log: HashMap::new(),
             cast_log: HashMap::new(),
+            battle_item_tracker: HashMap::new(),
+            crowd_control_tracker: HashMap::new(),
 
             party_info: Vec::new(),
-            raid_difficulty: "".to_string(),
-            raid_difficulty_id: 0,
+            raid_difficulty: None,
             boss_only_damage: false,
             region: None,
 
@@ -100,6 +105,8 @@ impl EncounterState {
         self.damage_log = HashMap::new();
         self.cast_log = HashMap::new();
         self.boss_hp_log = HashMap::new();
+        self.battle_item_tracker = HashMap::new();
+        self.crowd_control_tracker = HashMap::new();
         self.party_info = Vec::new();
 
         self.ntp_fight_start = 0;
@@ -185,7 +192,9 @@ impl EncounterState {
             self.encounter.entities.insert(entity.name.clone(), entity);
         }
         self.encounter.local_player = entity.name;
+    }
 
+    pub fn on_transit(&mut self) {
         // remove unrelated entities
         self.encounter.entities.retain(|_, e| {
             e.name == self.encounter.local_player || e.damage_stats.damage_dealt > 0
@@ -297,6 +306,14 @@ impl EncounterState {
     }
 
     pub fn on_death(&mut self, dead_entity: &Entity) {
+        // get current boss hp
+        let boss_hp = self
+            .encounter
+            .entities
+            .get(&self.encounter.current_boss_name)
+            .map(|b| b.current_hp)
+            .unwrap_or_default();
+
         let entity = self
             .encounter
             .entities
@@ -323,6 +340,9 @@ impl EncounterState {
         entity.is_dead = true;
         entity.damage_stats.deaths += 1;
         entity.damage_stats.death_time = Utc::now().timestamp_millis();
+        // record boss hp at time of death
+        entity.damage_stats.boss_hp_at_death = Some(boss_hp);
+
         entity
             .damage_stats
             .incapacitations
@@ -1158,6 +1178,12 @@ impl EncounterState {
             .entry(victim_entity.name.clone())
             .or_insert_with(|| encounter_entity_from_entity(victim_entity));
 
+        // track number of crowd control effects applied
+        *self
+            .crowd_control_tracker
+            .entry(status_effect.status_effect_id)
+            .or_insert(0) += 1;
+
         // expiration delay is zero or negative for infinite effects. Instead of applying them now,
         // only apply them after they've been removed (this avoids an issue where if we miss the removal
         // we end up applying a very long incapacitation)
@@ -1508,6 +1534,18 @@ impl EncounterState {
         }
     }
 
+    // track battle items used in an encounter
+    pub fn on_battle_item_use(&mut self, battle_item_id: &u32) {
+        if self.encounter.fight_start == 0 {
+            return;
+        }
+
+        self.battle_item_tracker
+            .entry(*battle_item_id)
+            .and_modify(|e| *e += 1)
+            .or_insert(1);
+    }
+
     pub fn save_to_db(&mut self, manual: bool) {
         if !manual
             && (self.encounter.fight_start == 0
@@ -1535,7 +1573,7 @@ impl EncounterState {
         let boss_hp_log = self.boss_hp_log.clone();
         let raid_clear = self.raid_clear;
         let party_info = self.party_info.clone();
-        let raid_difficulty = self.raid_difficulty.clone();
+        let raid_difficulty = self.raid_difficulty.clone().unwrap_or_default();
         let region = self.region.clone();
         let meter_version = self.app.app_handle().package_info().version.to_string();
 
@@ -1545,13 +1583,15 @@ impl EncounterState {
 
         let skill_cast_log = self.skill_tracker.get_cast_log();
         let skill_cooldowns = self.skill_tracker.skill_cooldowns.clone();
+        let battle_items = self.battle_item_tracker.clone();
+        let cc_tracker = self.crowd_control_tracker.clone();
 
         // debug_print(format_args!("skill cast log:\n{}", serde_json::to_string(&skill_cast_log).unwrap()));
 
         // debug_print(format_args!("rdps_data valid: [{}]", rdps_valid));
         info!(
             "saving to db - cleared: [{}], difficulty: [{}] {}",
-            raid_clear, self.raid_difficulty, encounter.current_boss_name
+            raid_clear, raid_difficulty, encounter.current_boss_name
         );
 
         encounter.current_boss_name = update_current_boss_name(&encounter.current_boss_name);
@@ -1561,10 +1601,21 @@ impl EncounterState {
             let mut player_info = None;
             let stats_api = app.state::<StatsApi>();
 
-            if let Some(args) = GetCharacterInfoArgs::new(&encounter, &raid_difficulty) {
+            player_info = if let Some(args) = GetCharacterInfoArgs::new(&encounter, &raid_difficulty) {
                 info!("fetching player info");
-                player_info = stats_api.get_character_info(args).await;
-            }
+
+                if let Some(args) = SendRaidAnalytics::new(
+                    &encounter,
+                    &raid_difficulty,
+                    battle_items,
+                    cc_tracker) {
+                    stats_api.send_raid_analytics(args).await;
+                }
+
+                stats_api.get_character_info(args).await
+            } else {
+                None
+            };
 
             let repository = app.state::<Repository>();
 

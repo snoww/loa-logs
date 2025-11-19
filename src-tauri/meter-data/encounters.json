@@ -91,5 +91,13 @@
   },
   "Assault: Flame of Destruction": {
     "Assault: Flame of Destruction": ["Flame of Darkness, Tarkal"]
+  },
+  "Act 4: Armoche": {
+    "Act 4: Armoche G1": ["Act 4: Covetous Master Echidna", "Brelshaza, Ember in the Ashes"],
+    "Act 4: Armoche G2": ["Armoche, Sentinel of the Abyss"]
+  },
+  "Final Act: Kazeros": {
+    "Final Act: Kazeros G1": ["Abyss Lord Kazeros", "Abyssal Afterimage"],
+    "Final Act: Kazeros G2": ["Archdemon Kazeros", "Death Incarnate Kazeros"]
   }
 }

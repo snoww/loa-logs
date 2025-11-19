@@ -1,7 +1,7 @@
 import { addToast } from "$lib/components/Toaster.svelte";
 import { raidGates } from "$lib/constants/encounters";
 import { settings } from "$lib/stores.svelte";
-import type { Encounter } from "$lib/types";
+import { type Encounter, EntityType } from "$lib/types";
 import pako from "pako";
 import { uploadError, uploadTokenError } from "./toasts";
 import { sync, writeLog } from "$lib/api";
@@ -10,10 +10,19 @@ export const API_URL = "https://api.snow.xyz";
 // export const API_URL = "http://localhost:5180";
 
 export async function uploadLog(id: number | string, encounter: Encounter, showToast = true, bulk = false) {
+  if (!encounter.bossOnlyDamage) {
+    if (showToast && !bulk) {
+      addToast(uploadError("Boss only damage not enabled for this log", id));
+    }
+
+    return;
+  }
+
   if (
     !encounter.cleared ||
-    !encounter.bossOnlyDamage ||
     !encounter.difficulty ||
+    encounter.difficulty === "Solo" ||
+    Object.values(encounter.entities).filter((e) => e.entityType === EntityType.PLAYER).length > 8 ||
     !Object.hasOwn(raidGates, encounter.currentBossName)
   ) {
     if (showToast && !bulk) {

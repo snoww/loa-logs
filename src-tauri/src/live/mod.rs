@@ -124,6 +124,13 @@ pub fn start(args: StartArgs) -> Result<()> {
         }
 
         match op {
+            Pkt::BattleItemUseNotify => {
+                if let Some(pkt) =
+                    parse_pkt(&data, PKTBattleItemUseNotify::new, "PKTBattleItemUseNotify")
+                {
+                    state.on_battle_item_use(&pkt.item_id);
+                }
+            }
             Pkt::CounterAttackNotify => {
                 if let Some(pkt) =
                     parse_pkt(&data, PKTCounterAttackNotify::new, "PKTCounterAttackNotify")
@@ -182,9 +189,6 @@ pub fn start(args: StartArgs) -> Result<()> {
 
                 if let Some(pkt) = parse_pkt(&data, PKTInitEnv::new, "PKTInitEnv") {
                     party_tracker.borrow_mut().reset_party_mappings();
-                    state.raid_difficulty = "".to_string();
-                    state.raid_difficulty_id = 0;
-                    state.damage_is_valid = true;
                     party_cache = None;
                     let entity = entity_tracker.init_env(pkt);
                     state.on_init_env(entity);
@@ -345,18 +349,15 @@ pub fn start(args: StartArgs) -> Result<()> {
                     debug_print(format_args!("raid begin: {}", pkt.raid_id));
                     match pkt.raid_id {
                         308226 | 308227 | 308239 | 308339 => {
-                            state.raid_difficulty = "Trial".to_string();
-                            state.raid_difficulty_id = 7;
+                            state.raid_difficulty = "Trial".to_string().into();
                         }
                         308428 | 308429 | 308420 | 308410 | 308411 | 308414 | 308422 | 308424
                         | 308421 | 308412 | 308423 | 308426 | 308416 | 308419 | 308415 | 308437
                         | 308417 | 308418 | 308425 | 308430 => {
-                            state.raid_difficulty = "Challenge".to_string();
-                            state.raid_difficulty_id = 8;
+                            state.raid_difficulty = "Challenge".to_string().into();
                         }
                         _ => {
-                            state.raid_difficulty = "".to_string();
-                            state.raid_difficulty_id = 0;
+                            state.raid_difficulty = None;
                         }
                     }
                 }
@@ -472,10 +473,7 @@ pub fn start(args: StartArgs) -> Result<()> {
 
                         let mut rdps_data = Vec::new();
 
-                        if let Some(rdps) = event
-                            .skill_damage_event
-                            .rdps_data_conditional
-                            .rdps_data
+                        if let Some(rdps) = event.skill_damage_event.rdps_data_conditional.rdps_data
                         {
                             for i in 0..rdps.event_type.len() {
                                 rdps_data.push(RdpsData {
@@ -543,10 +541,7 @@ pub fn start(args: StartArgs) -> Result<()> {
                             .get_status_effects(&owner, &target_entity, local_character_id);
                         let mut rdps_data = Vec::new();
 
-                        if let Some(rdps) = event
-                            .rdps_data_conditional
-                            .rdps_data
-                        {
+                        if let Some(rdps) = event.rdps_data_conditional.rdps_data {
                             for i in 0..rdps.event_type.len() {
                                 rdps_data.push(RdpsData {
                                     rdps_type: rdps.event_type[i],
@@ -824,36 +819,29 @@ pub fn start(args: StartArgs) -> Result<()> {
                     PKTZoneMemberLoadStatusNotify::new,
                     "PKTZoneMemberLoadStatusNotify",
                 ) {
-                    if state.raid_difficulty_id >= pkt.zone_id && !state.raid_difficulty.is_empty()
-                    {
+                    if state.raid_difficulty.as_deref().is_some_and(|d| !d.is_empty()) {
                         continue;
                     }
                     debug_print(format_args!("raid zone id: {}", &pkt.zone_id));
                     debug_print(format_args!("raid zone id: {}", &pkt.zone_level));
                     match pkt.zone_level {
                         0 => {
-                            state.raid_difficulty = "Normal".to_string();
-                            state.raid_difficulty_id = 0;
+                            state.raid_difficulty = "Normal".to_string().into();
                         }
                         1 => {
-                            state.raid_difficulty = "Hard".to_string();
-                            state.raid_difficulty_id = 1;
+                            state.raid_difficulty = "Hard".to_string().into();
                         }
                         2 => {
-                            state.raid_difficulty = "Inferno".to_string();
-                            state.raid_difficulty_id = 2;
+                            state.raid_difficulty = "Inferno".to_string().into();
                         }
                         3 => {
-                            state.raid_difficulty = "Challenge".to_string();
-                            state.raid_difficulty_id = 3;
+                            state.raid_difficulty = "Challenge".to_string().into();
                         }
                         4 => {
-                            state.raid_difficulty = "Solo".to_string();
-                            state.raid_difficulty_id = 4;
+                            state.raid_difficulty = "Solo".to_string().into();
                         }
                         5 => {
-                            state.raid_difficulty = "The First".to_string();
-                            state.raid_difficulty_id = 5;
+                            state.raid_difficulty = "The First".to_string().into();
                         }
                         _ => {}
                     }
@@ -948,7 +936,11 @@ pub fn start(args: StartArgs) -> Result<()> {
             }
             Pkt::NewTransit => {
                 if let Some(pkt) = parse_pkt(&data, PKTNewTransit::new, "PKTNewZoneKey") {
+                    debug_print(format_args!("transit zone id: {}", &pkt.zone_id));
+                    state.raid_difficulty = "".to_string().into();
+                    state.damage_is_valid = true;
                     damage_handler.update_zone_instance_id(pkt.zone_instance_id);
+                    state.on_transit();
                 }
             }
             _ => {}

@@ -1,17 +1,10 @@
-use crate::constants::DB_VERSION;
 use crate::data::*;
-use crate::database::utils::*;
 use crate::live::entity_tracker::Entity;
 use crate::live::skill_tracker::SkillTracker;
 use crate::live::status_tracker::StatusEffectDetails;
 use crate::models::*;
 use crate::utils::*;
-use anyhow::Result;
 use hashbrown::HashMap;
-use rusqlite::{Transaction, params};
-use serde_json::json;
-use std::cmp::{Reverse, max};
-use std::collections::BTreeMap;
 
 pub fn encounter_entity_from_entity(entity: &Entity) -> EncounterEntity {
     let mut e = EncounterEntity {
@@ -392,9 +385,11 @@ pub fn get_skill_name_and_icon(
                     // take skill_effect_id e.g. 370015
                     // get base skill id -> 37000
                     let skill_effect_base = (skill_effect_id - (skill_effect_id % 1000)) / 10;
+                    // get first skill that is furthest away from base (i.e. weapon attack)
                     source_skills
                         .iter()
-                        .find(|id| (*id - (*id % 100)) == skill_effect_base)
+                        .filter(|id| (**id as i32 - skill_effect_base as i32).abs() < 10000)
+                        .max()
                         .cloned()
                         .unwrap_or_default()
                 };

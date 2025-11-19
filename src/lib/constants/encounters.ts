@@ -73,6 +73,12 @@ export const encounterMap: { [key: string]: { [key: string]: Array<string> } } =
     ],
     "Behemoth G2": ["Behemoth, Cruel Storm Slayer"]
   },
+  "Assault: Crimson Abyss": {
+    "Assault: Crimson Abyss G1": ["Abyssal Beast, Narhash"]
+  },
+  "Assault: Flame of Destruction": {
+    "Assault: Flame of Destruction G1": ["Flame of Darkness, Tarkal"]
+  },
   Aegir: {
     "Aegir G1": ["Akkan, Lord of Death", "Abyss Monarch Aegir"],
     "Aegir G2": ["Aegir, the Oppressor", "Pulsating Giant's Heart"]
@@ -86,11 +92,13 @@ export const encounterMap: { [key: string]: { [key: string]: Array<string> } } =
     "Act 3: Mordum G2": ["Blossoming Fear, Naitreya"],
     "Act 3: Mordum G3": ["Mordum, the Abyssal Punisher", "Mordum's Hammer", "Flash of Punishment"]
   },
-  "Assault: Crimson Abyss": {
-    "Assault: Crimson Abyss G1": ["Abyssal Beast, Narhash"]
+  "Act 4: Armoche": {
+    "Act 4: Armoche G1": ["Act 4: Covetous Master Echidna", "Brelshaza, Ember in the Ashes"],
+    "Act 4: Armoche G2": ["Armoche, Sentinel of the Abyss"]
   },
-  "Assault: Flame of Destruction": {
-    "Assault: Flame of Destruction G1": ["Flame of Darkness, Tarkal"]
+  "Final Act: Kazeros": {
+    "Final Act: Kazeros G1": ["Abyss Lord Kazeros", "Abyssal Afterimage"],
+    "Final Act: Kazeros G2": ["Archdemon Kazeros", "Death Incarnate Kazeros"]
   }
 };
 
@@ -155,7 +163,13 @@ export const bossHpMap: Record<string, number> = {
   "Mordum, the Abyssal Punisher": 500,
   "Flash of Punishment": 350,
   "Abyssal Beast, Narhash": 100,
-  "Flame of Darkness, Tarkal": 300
+  "Flame of Darkness, Tarkal": 300,
+  "Act 4: Covetous Master Echidna": 300,
+  "Brelshaza, Ember in the Ashes": 450,
+  "Armoche, Sentinel of the Abyss": 450,
+  "Abyss Lord Kazeros": 999,
+  "Archdemon Kazeros": 999,
+  "Death Incarnate Kazeros": 777
 };
 
 export const difficultyMap: Array<string> = [
@@ -177,6 +191,7 @@ export const raidGates: Record<string, string> = Object.fromEntries(
 
 export const bossList = [
   // guardian raids
+  "Krathios",
   "Drextalas",
   "Skolakia",
   "Argeos",

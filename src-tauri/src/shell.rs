@@ -26,7 +26,7 @@ impl ShellManager {
             .opener()
             .open_path(path.to_str().unwrap(), None::<String>)
         {
-            error!("Failed to open database path: {}", err);
+            error!("Failed to open database path: {err}");
         }
     }
 
@@ -38,7 +38,7 @@ impl ShellManager {
         info!("starting lost ark process...");
 
         if let Err(err) = self.0.opener().open_path(STEAM_GAME_URL, None::<String>) {
-            error!("could not open lost ark: {}", err);
+            error!("could not open lost ark: {err}");
         }
     }
 
@@ -82,7 +82,7 @@ impl ShellManager {
                     }
                 }
                 Err(err) => {
-                    warn!("Failed to execute remove driver command: {}", err);
+                    warn!("Failed to execute remove driver command: {err}");
                 }
             }
         }
@@ -105,15 +105,16 @@ impl ShellManager {
                     if output.status.success() {
                         info!("Driver stopped successfully");
                     } else {
-                        warn!(
-                            "Failed to stop driver. Exit code: {} - stdout: {}",
-                            output.status.code().unwrap_or(-1),
-                            stdout
-                        );
+                        let code = output.status.code().unwrap_or(-1);
+                        // ignore error if driver is not running
+                        if matches!(code, 1060 | 1062) {
+                            return;
+                        }
+                        warn!("Failed to stop driver. Exit code: {code} - stdout: {stdout}");
                     }
                 }
                 Err(err) => {
-                    warn!("Failed to execute driver stop command: {}", err);
+                    warn!("Failed to execute driver stop command: {err}");
                 }
             }
         }
