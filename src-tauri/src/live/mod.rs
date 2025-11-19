@@ -368,7 +368,7 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
                             state.raid_difficulty = "Challenge".to_string().into();
                         }
                         _ => {
-                            state.raid_difficulty = "".to_string().into();
+                            state.raid_difficulty = None;
                         }
                     }
                 }

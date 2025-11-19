@@ -4,10 +4,10 @@ use crate::models::*;
 use hashbrown::HashMap;
 use log::warn;
 use reqwest::Client;
+use serde::Serialize;
 use serde_json::json;
 use sha2::{Digest, Sha256};
 use std::time::Duration;
-use serde::Serialize;
 use tauri::{AppHandle, Manager};
 use tokio::time::sleep;
 
@@ -143,7 +143,11 @@ impl StatsApi {
                 damage_done: player.damage_stats.damage_dealt,
                 damage_taken: player.damage_stats.damage_taken,
                 counters: player.skill_stats.counters,
-                died_at: if player.damage_stats.deaths > 0 { Some(player.damage_stats.death_time) } else { None },
+                died_at: if player.damage_stats.deaths > 0 {
+                    Some(player.damage_stats.death_time)
+                } else {
+                    None
+                },
                 boss_hp_at_death: player.damage_stats.boss_hp_at_death,
             })
         }
@@ -152,9 +156,7 @@ impl StatsApi {
 
         let hash = Sha256::digest(player_names.join("").as_bytes());
         let duration_s = (encounter.last_combat_packet - encounter.fight_start) / 1000;
-        let boss = match encounter
-            .entities
-            .get(&encounter.current_boss_name) {
+        let boss = match encounter.entities.get(&encounter.current_boss_name) {
             Some(b) => b,
             None => return,
         };
@@ -176,7 +178,7 @@ impl StatsApi {
         let request_body = json!({
             "participantsHash": format!("{:x}", hash),
             "boss": encounter.current_boss_name,
-            "difficulty": encounter.difficulty,
+            "difficulty": encounter.difficulty.clone().unwrap_or_default(),
             "startTime": encounter.fight_start,
             "duration": duration_s,
             "clear": encounter.cleared,
