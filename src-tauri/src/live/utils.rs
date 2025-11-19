@@ -1,18 +1,10 @@
-use crate::constants::DB_VERSION;
 use crate::data::*;
-use crate::database::utils::*;
 use crate::live::entity_tracker::Entity;
 use crate::live::skill_tracker::SkillTracker;
 use crate::live::status_tracker::StatusEffectDetails;
 use crate::models::*;
 use crate::utils::*;
-use anyhow::Result;
 use hashbrown::HashMap;
-use log::info;
-use rusqlite::{Transaction, params};
-use serde_json::json;
-use std::cmp::{Reverse, max};
-use std::collections::BTreeMap;
 
 pub fn encounter_entity_from_entity(entity: &Entity) -> EncounterEntity {
     let mut e = EncounterEntity {
