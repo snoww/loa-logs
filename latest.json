@@ -1,11 +1,11 @@
 {
-  "version": "v1.36.2",
-  "notes": "### v1.36.2 - Novemeber 19th, 2025\n\n#### P.S. If you see any of us in town or raid, feel free to drop an honor! \n- **Snowving** on Luterra\n- **Administrator** on Ratik\n- **Poont** on Gienah\n\n#### NEW FEATURES\n- updated meter for kazeros release (thanks poont for the packets)\n\n#### BUG FIXES AND IMPROVEMENTS\n- fixed meter not resetting after field boss/chaos gate\n- fixed doomsday burn tripod counting as weapon attack\n- fixed some issues with driver loading",
-  "pub_date": "2025-11-19T13:46:36.242Z",
+  "version": "v1.36.3",
+  "notes": "### v1.36.3 - Novemeber 19th, 2025\n\n#### P.S. If you see any of us in town or raid, feel free to drop an honor! \n- **Snowving** on Luterra\n- **Administrator** on Ratik\n- **Poont** on Gienah\n\n#### NEW FEATURES\n- updated meter for kazeros release (thanks poont for the packets)\n\n#### BUG FIXES AND IMPROVEMENTS\n- fixed meter not resetting after field boss/chaos gate\n- fixed doomsday burn tripod counting as weapon attack\n- fixed some issues with driver loading",
+  "pub_date": "2025-11-19T13:46:36.342Z",
   "platforms": {
     "windows-x86_64": {
-      "url": "https://github.com/snoww/loa-logs/releases/download/v1.36.2/LOA.Logs_1.36.2_x64-setup.nsis.zip",
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlIrL0Jnc2V5Tnp4em05K0V5S25XaWdsUGZVT3hza21LN3BSQkRHN0FLZVFzN25OV3B2WFk1MkNpR2hZTVJ6Z0x3ajM2VEdNUmRqWEl2ZGw4c1A5THdzPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzYzNTY1Mzc0CWZpbGU6TE9BIExvZ3NfMS4zNi4yX3g2NC1zZXR1cC5uc2lzLnppcApDMGxXQ1NLTVoyQzZWK0lhSDdadDVLdXBKb2FaSGE3djhNQW9TUDJNUjFFbHp3V3MvMDV2QllPdFA0dWkwQXFmU0E2aHYyK2N1TmU0N2xJeFYxMFVCQT09Cg=="
+      "url": "https://github.com/snoww/loa-logs/releases/download/v1.36.3/LOA.Logs_1.36.3_x64-setup.nsis.zip",
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlJpVzVzaDFyKzFwTTJkc3NxUmU2dUZVeVN1dzFRQk9NamlJRXZCWGozcUlpUXZoVUdyNWROdG5md1Z6dUt5R3JzRTFZRHdhaHFuZlh0Z05vWXpwV0FrPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzYzNTY4NTkxCWZpbGU6TE9BIExvZ3NfMS4zNi4zX3g2NC1zZXR1cC5uc2lzLnppcApsZW5ucjQ0SnZqRU1QcXZKc3RiOGlydis3NjZIVmgwSmYySGlFeDBXcVMzUDhCbmMvanhaYlRoT0VMQUJXV0RsbWJYNUNrditNUnhlTjduZDBwRDhCUT09Cg=="
     }
   }
 }
