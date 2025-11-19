@@ -1577,6 +1577,7 @@ impl EncounterState {
         encounter.cleared = raid_clear;
         let party_info = self.party_info.clone();
         let raid_difficulty = self.raid_difficulty.clone();
+        encounter.difficulty = raid_difficulty.clone().into();
         let region = self.region.clone();
         let meter_version = self.app.app_handle().package_info().version.to_string();
 
