@@ -1,11 +1,11 @@
 {
-  "version": "v1.36.4",
-  "notes": "### v1.36.4 - Novemeber 19th, 2025\n\n#### P.S. If you see any of us in town or raid, feel free to drop an honor! \n- **Snowving** on Luterra\n- **Administrator** on Ratik\n- **Poont** on Gienah\n\n#### NEW FEATURES\n- updated meter for kazeros release (thanks poont for the packets)\n\n#### BUG FIXES AND IMPROVEMENTS\n- fixed meter not resetting after field boss/chaos gate\n- fixed doomsday burn tripod counting as weapon attack\n- fixed some issues with driver loading",
-  "pub_date": "2025-11-19T13:46:36.442Z",
+  "version": "v1.36.5",
+  "notes": "### v1.36.5 - Novemeber 19th, 2025\n\n#### P.S. If you see any of us in town or raid, feel free to drop an honor! \n- **Snowving** on Luterra\n- **Administrator** on Ratik\n- **Poont** on Gienah\n\n#### BUG FIXES AND IMPROVEMENTS\n- fixed entering final act gate 2-2 resetting meter",
+  "pub_date": "2025-11-19T13:46:36.542Z",
   "platforms": {
     "windows-x86_64": {
-      "url": "https://github.com/snoww/loa-logs/releases/download/v1.36.4/LOA.Logs_1.36.4_x64-setup.nsis.zip",
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlh1ZStOT01pSERtajZUK0c1ZVlwU21DQllyR3Mwek5CdldZaVJTc05oZzdZUFZwdmtYS2ZPQ2tVR2VDWW1mcFl4RmpIWGNuNCtUOWsrZ1NzU1FMNFE0PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzYzNTcwOTE3CWZpbGU6TE9BIExvZ3NfMS4zNi40X3g2NC1zZXR1cC5uc2lzLnppcApQdEFZV0lpOTVMSmdFRXVKc3c1VnBUMENoZjJSYjQva292UUpjZVdPVThMTGRrK292bmJpNnJyanp5R0R1WFdoM0ZpbUxQRmZlNnRVSHJnK25vNWJBQT09Cg=="
+      "url": "https://github.com/snoww/loa-logs/releases/download/v1.36.5/LOA.Logs_1.36.5_x64-setup.nsis.zip",
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYllhOFRiOEQ0eXJGUVZ0RWJIY3lSVG04V1JsZHlTb1RSN08wV2FINUs1ZllqQkxXdGx1MkNFYU1RY1EyOS9od0wwVnM1aFhvdFdlTHBWOXA3STFUQVFVPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzYzNjAwMzc1CWZpbGU6TE9BIExvZ3NfMS4zNi41X3g2NC1zZXR1cC5uc2lzLnppcAo5RlBDalA1Q0oyZ3FVZUtWSUVLVkxBaWVPbG4zS0RNcFNMYzlXTVdkUEUzeVJ6RGVjYy9zYUVRSGhLaUZuR0d2YlA4MW9PMGlVTGdTT21ZL3I0YWdBdz09Cg=="
     }
   }
 }

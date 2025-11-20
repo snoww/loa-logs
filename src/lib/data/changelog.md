@@ -1,6 +1,6 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.36.3 - Novemeber 19th, 2025
+    v1.36.5 - Novemeber 19th, 2025
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
@@ -13,10 +13,18 @@
 - **Administrator** on Ratik
 - **Poont** on Gienah
 
+#### BUG FIXES AND IMPROVEMENTS
+
+- fixed entering final act gate 2-2 resetting meter
+
+### v1.36.3 - Novemeber 19th, 2025
+
 #### NEW FEATURES
+
 - updated meter for kazeros release (thanks poont for the packets)
 
 #### BUG FIXES AND IMPROVEMENTS
+
 - fixed meter not resetting after field boss/chaos gate
 - fixed doomsday burn tripod counting as weapon attack
 - fixed some issues with driver loading
