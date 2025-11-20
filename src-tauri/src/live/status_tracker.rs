@@ -392,7 +392,7 @@ pub fn build_status_effect(
         status_effect_type = match effect.buff_type.as_str() {
             "shield" => StatusEffectType::Shield,
             "freeze" | "fear" | "stun" | "sleep" | "earthquake" | "electrocution"
-            | "polymorph_pc" | "forced_move" | "mind_control" | "paralyzation" => {
+            | "polymorph_pc" | "forced_move" | "mind_control" | "paralyzation" | "psychokinesis" => {
                 StatusEffectType::HardCrowdControl
             }
             _ => StatusEffectType::Other,
