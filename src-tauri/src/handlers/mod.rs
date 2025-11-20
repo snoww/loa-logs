@@ -8,7 +8,7 @@ use window_vibrancy::{apply_blur, clear_blur};
 use crate::app::autostart::{AutoLaunch, AutoLaunchManager};
 use crate::constants::*;
 use crate::database::models::{GetEncounterPreviewArgs, InsertSyncLogsArgs};
-use crate::database::{Database, Repository};
+use crate::database::{Database, EncounterRepository as Repository};
 use crate::models::*;
 use crate::settings::{Settings, SettingsManager};
 use crate::shell::ShellManager;
@@ -16,9 +16,11 @@ use crate::ui::AppHandleExtensions;
 
 mod error;
 mod models;
+mod stats;
 
 pub fn generate_handlers() -> Box<dyn Fn(Invoke) -> bool + Send + Sync> {
     Box::new(generate_handler![
+        stats::get_raid_stats,
         load_encounters_preview,
         load_encounter,
         get_encounter_count,

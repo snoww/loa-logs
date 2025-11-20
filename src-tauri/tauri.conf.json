@@ -56,7 +56,7 @@
         "label": "logs",
         "title": "LOA Logs",
         "userAgent": "LOA Logs App",
-        "url": "logs",
+        "url": "dashboard",
         "minWidth": 650,
         "minHeight": 300,
         "width": 800,

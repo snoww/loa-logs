@@ -1,7 +1,7 @@
 pub mod migrator;
 pub mod models;
 mod queries;
-pub mod repository;
+pub mod repositories;
 mod sql_types;
 pub mod utils;
 
@@ -11,7 +11,7 @@ use r2d2_sqlite::SqliteConnectionManager;
 use std::{fs, path::PathBuf};
 
 pub use migrator::*;
-pub use repository::Repository;
+pub use repositories::*;
 
 pub struct Database(r2d2::Pool<SqliteConnectionManager>, PathBuf);
 
@@ -39,8 +39,12 @@ impl Database {
         Ok(Self(pool, path))
     }
 
-    pub fn create_repository(&self) -> Repository {
-        Repository::new(Pool::clone(&self.0))
+    pub fn create_encounter_repository(&self) -> EncounterRepository {
+        EncounterRepository::new(Pool::clone(&self.0))
+    }
+
+    pub fn create_stats_repository(&self) -> StatsRepository {
+        StatsRepository::new(Pool::clone(&self.0))
     }
 
     pub fn get_connection(&self) -> PooledConnection<SqliteConnectionManager> {

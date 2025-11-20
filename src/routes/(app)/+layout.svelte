@@ -57,6 +57,6 @@
 
 <UpdateAvailable />
 <Toaster />
-<div class="min-h-screen select-none bg-neutral-900">
+<div class="flex flex-col min-h-screen select-none bg-neutral-900">
   {@render children?.()}
 </div>

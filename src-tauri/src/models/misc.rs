@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use crate::settings::Settings;
+use crate::{models::RaidType, settings::Settings};
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct LoadResult {
@@ -36,9 +36,10 @@ pub struct EncountersOverview {
     pub total_encounters: i32,
 }
 
-#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase", default)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct SearchFilter {
+    pub raid_type: Option<RaidType>,
     pub bosses: Vec<String>,
     pub min_duration: i32,
     pub max_duration: i32,

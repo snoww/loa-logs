@@ -58,13 +58,21 @@ pub fn prepare_get_encounter_preview_query(
 
     params.push((filter.min_duration * 1000).to_string());
 
-    let boss_filter = if !filter.bosses.is_empty() {
+    let boss_filter = if filter.bosses.is_empty() {
+        if let Some(raid_type) = filter.raid_type {
+            let bosses = raid_type.get_bosses();
+            let mut placeholders = "?,".repeat(bosses.len());
+            placeholders.pop();
+            params.extend(bosses.iter().map(|s| s.to_string()));
+            format!("AND e.current_boss IN ({})", placeholders)
+        } else {
+            "".to_string()
+        }
+    } else {  
         let mut placeholders = "?,".repeat(filter.bosses.len());
         placeholders.pop(); // remove trailing comma
         params.extend(filter.bosses);
         format!("AND e.current_boss IN ({})", placeholders)
-    } else {
-        "".to_string()
     };
 
     let raid_clear_filter = if filter.cleared {

@@ -1,109 +1,101 @@
 <script lang="ts">
   import { classNameToClassId } from "$lib/constants/classes";
   import { encounterMap } from "$lib/constants/encounters";
-  import { encounterFilter, settings } from "$lib/stores.svelte";
+  import { encounterFilter, settings, type EncounterFilter } from "$lib/stores.svelte";
   import { type EncountersOverview } from "$lib/types";
-  import { invoke } from "@tauri-apps/api/core";
-  import { untrack } from "svelte";
+  import { page } from "$app/state";
+  import { onMount } from "svelte";
   import { SvelteSet } from "svelte/reactivity";
   import Header from "../Header.svelte";
   import EncountersTable from "./EncountersTable.svelte";
   import Pages from "./Pages.svelte";
   import Search from "./Search.svelte";
   import { loadEncountersPreview } from "$lib/api";
+  import type { MouseEventHandler } from "svelte/elements";
+  import { replaceClassNamesWithIds } from "$lib/utils";
 
   let overview: EncountersOverview | null = $state(null);
   let container = $state<HTMLDivElement | null>(null);
-
   let selectMode = $state(false);
   let selected = $state(new SvelteSet<number>());
 
-  async function loadEncounters() {
-    // start or space (^|\s) + word (\w+) + colon or space or end (:|\s|$)
-    // using lookbehind (?<=) and lookahead (?=) https://regex101.com/r/1cMFH8/4
-    // if word is a valid className, replace it with the classId
-    // example: "bard:Anyduck shadowhunter" -> "204:Anyduck 403"
-    let searchQuery = encounterFilter.search.replace(/(?<=^|\s)\w+(?=:|\s|$)/g, (word: string) => {
-      const className = word[0].toUpperCase() + word.substring(1).toLowerCase();
-      return String(classNameToClassId[className] || word);
-    });
+  onMount(() => {
 
-    let raidBosses = Array.from(encounterFilter.bosses);
-    if (encounterFilter.encounters.size > 0) {
-      for (const encounter of encounterFilter.encounters) {
+    encounterFilter.update(filter => {
+      filter.minDuration = settings.app.logs.minEncounterDuration;
+      return filter
+    })
+
+    encounterFilter.subscribe((value: EncounterFilter) => {
+      if (container) {
+        container.scrollTop = 0;
+      }
+      loadEncounters(value);
+    })
+  })
+
+  const onLogsPerPage = (value: number) => {
+    settings.app.general.logsPerPage = value;
+    encounterFilter.update(filter => filter);
+  }
+
+  const onRefresh: MouseEventHandler<HTMLElement> = () => {
+    encounterFilter.update(filter => {
+      filter.page = 1;
+      return filter
+    });
+  }
+
+  async function loadEncounters(filter: EncounterFilter): Promise<void> {
+    
+    let searchQuery = replaceClassNamesWithIds(filter.search, classNameToClassId);
+    let raidBosses = Array.from(filter.bosses);
+    if (filter.encounters.size > 0) {
+      for (const encounter of filter.encounters) {
         const raid = encounter.substring(0, encounter.lastIndexOf(" "));
         raidBosses.push(...encounterMap[raid][encounter]);
       }
     }
 
+    const raidType = page.url.searchParams.get("raidType");
+    const { showRaidsOnly, logsPerPage } = settings.app.general;
     const criteria = {
-      page: encounterFilter.page,
-      pageSize: settings.app.general.logsPerPage,
+      page: filter.page,
+      pageSize: logsPerPage,
       search: searchQuery,
       filter: {
-        minDuration: encounterFilter.minDuration,
+        raidType,
+        minDuration: filter.minDuration,
+        maxDuration: 3600,
         bosses: raidBosses,
-        cleared: encounterFilter.cleared,
-        favorite: encounterFilter.favorite,
-        difficulty: encounterFilter.difficulty,
-        sort: encounterFilter.sort,
-        order: encounterFilter.order,
-        raidsOnly: settings.app.general.showRaidsOnly
+        cleared: filter.cleared,
+        favorite: filter.favorite,
+        difficulty: filter.difficulty,
+        sort: filter.sort,
+        order: filter.order,
+        raidsOnly: showRaidsOnly,
+        bossOnlyDamage: false,
       }
     };
 
-    return await loadEncountersPreview(criteria);
+    console.log(criteria);
+    overview = await loadEncountersPreview(criteria);
   }
 
-  let refresh = $state(false);
-
-  $effect.pre(() => {
-    refresh;
-    (async () => {
-      overview = await loadEncounters();
-      if (container) {
-        container.scrollTop = 0;
-      }
-    })();
-  });
-
-  let once = $state(false);
-  // Reset the page to 1 when any filter changes, except for the first load
-  $effect(() => {
-    encounterFilter.search;
-    encounterFilter.minDuration;
-    encounterFilter.encounters;
-    encounterFilter.bosses;
-    encounterFilter.cleared;
-    encounterFilter.favorite;
-    encounterFilter.difficulty;
-    encounterFilter.sort;
-    encounterFilter.order;
-
-    // *searching* is true when its not the first load
-    const searching = untrack(() => once);
-    if (searching) {
-      encounterFilter.page = 1;
-    }
-    once = true;
-  });
 </script>
 
 <div>
   <Header title="Past Encounters">
     <button
       class="bg-accent-500/70 hover:bg-accent-500/60 rounded-md p-1"
-      onclick={() => {
-        refresh = !refresh;
-        encounterFilter.page = 1;
-      }}
+      onclick={onRefresh}
     >
       Refresh
     </button>
   </Header>
   <div class="mx-auto flex max-w-[180rem] flex-col justify-between gap-1 px-6 py-1" style="height: calc(100vh - 4rem);">
     <div class="flex flex-col gap-1">
-      <Search bind:selectMode bind:selected bind:refresh />
+      <Search bind:selectMode bind:selected />
       <div
         class="overflow-y-auto overflow-x-hidden rounded-md border border-neutral-700/70"
         style="max-height: calc(100vh - 10.5rem);"
@@ -117,6 +109,6 @@
         <p class="p-2">No encounters found.</p>
       {/if}
     </div>
-    <Pages bind:page={encounterFilter.page} total={overview?.totalEncounters} />
+    <Pages bind:logsPerPage={() => settings.app.general.logsPerPage, onLogsPerPage} bind:page={$encounterFilter.page} total={overview?.totalEncounters} />
   </div>
 </div>
