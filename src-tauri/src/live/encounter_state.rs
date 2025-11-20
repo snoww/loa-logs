@@ -196,7 +196,12 @@ impl EncounterState {
         self.encounter.local_player = entity.name;
     }
 
-    pub fn on_transit(&mut self) {
+    pub fn on_transit(&mut self, zone_id: u32) {
+        if matches!(zone_id, 37544 | 37545 | 37546) {
+            // do not reset on kazeros g2
+            return;
+        }
+
         // remove unrelated entities
         self.encounter.entities.retain(|_, e| {
             e.name == self.encounter.local_player || e.damage_stats.damage_dealt > 0
