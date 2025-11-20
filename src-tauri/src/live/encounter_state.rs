@@ -194,13 +194,6 @@ impl EncounterState {
             self.encounter.entities.insert(entity.name.clone(), entity);
         }
         self.encounter.local_player = entity.name;
-    }
-
-    pub fn on_transit(&mut self, zone_id: u32) {
-        if matches!(zone_id, 37544 | 37545 | 37546) {
-            // do not reset on kazeros g2
-            return;
-        }
 
         // remove unrelated entities
         self.encounter.entities.retain(|_, e| {
@@ -209,6 +202,19 @@ impl EncounterState {
 
         self.app
             .emit("zone-change", "")
+            .expect("failed to emit zone-change");
+
+        self.soft_reset(false);
+    }
+
+    pub fn on_transit(&mut self, zone_id: u32) {
+        // do not reset on kazeros g2
+        if matches!(zone_id, 37544 | 37545 | 37546) {
+            return;
+        }
+
+        self.app
+            .emit("zone-change", "no-toast")
             .expect("failed to emit zone-change");
 
         self.soft_reset(false);

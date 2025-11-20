@@ -75,9 +75,11 @@
     });
     handles.push(handle);
 
-    handle = await onZoneChange(() => {
+    handle = await onZoneChange((event) => {
       misc.raidInProgress = false;
-      addToast(zoneChange);
+      if (!event.payload) {
+        addToast(zoneChange);
+      }
       setTimeout(() => {
         misc.raidInProgress = true;
       }, 6000);

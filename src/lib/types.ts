@@ -8,6 +8,11 @@ export interface PartyEvent {
   payload?: string[][];
 }
 
+export interface ZoneChangeEvent {
+  event: string;
+  payload?: string;
+}
+
 export interface Encounter {
   lastCombatPacket: number;
   fightStart: number;
