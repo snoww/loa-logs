@@ -8,7 +8,8 @@ import type {
   EncounterEvent,
   EncountersOverview,
   IdentityEvent,
-  PartyEvent
+  PartyEvent,
+  ZoneChangeEvent
 } from "./types";
 import type { AppSettings } from "./settings";
 
@@ -173,7 +174,7 @@ export const onPartyUpdate = (handler: (event: PartyEvent) => void) => listen("p
 
 export const onInvalidDamage = (handler: () => void) => listen("invalid-damage", handler);
 
-export const onZoneChange = (handler: () => void) => listen("zone-change", handler);
+export const onZoneChange = (handler: (event: ZoneChangeEvent) => void) => listen("zone-change", handler);
 
 export const onRaidStart = (handler: () => void) => listen("raid-start", handler);
 
