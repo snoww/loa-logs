@@ -1,9 +1,9 @@
+use crate::api::{GetCharacterInfoArgs, SendRaidAnalyticsArgs, StatsApi};
 use crate::data::*;
 use crate::database::Repository;
 use crate::database::models::InsertEncounterArgs;
 use crate::live::entity_tracker::{Entity, EntityTracker};
 use crate::live::skill_tracker::SkillTracker;
-use crate::live::stats_api::StatsApi;
 use crate::live::status_tracker::StatusEffectDetails;
 use crate::live::utils::*;
 use crate::models::*;
@@ -176,10 +176,10 @@ impl EncounterState {
         }
     }
 
-    pub fn on_init_env(&mut self, entity: Entity, stats_api: &StatsApi) {
+    pub fn on_init_env(&mut self, entity: Entity) {
         // if not already saved to db, we save again
         if !self.saved && !self.encounter.current_boss_name.is_empty() {
-            self.save_to_db(stats_api, false);
+            self.save_to_db(false);
         }
 
         // replace or insert local player
@@ -220,7 +220,7 @@ impl EncounterState {
         self.soft_reset(false);
     }
 
-    pub fn on_phase_transition(&mut self, phase_code: i32, stats_api: &mut StatsApi) {
+    pub fn on_phase_transition(&mut self, phase_code: i32) {
         self.app
             .emit("phase-transition", phase_code)
             .expect("failed to emit phase-transition");
@@ -228,7 +228,7 @@ impl EncounterState {
         match phase_code {
             0 | 2 | 3 | 4 => {
                 if !self.encounter.current_boss_name.is_empty() {
-                    self.save_to_db(stats_api, false);
+                    self.save_to_db(false);
                     self.saved = true;
                 }
                 self.resetting = true;
@@ -1559,7 +1559,7 @@ impl EncounterState {
             .or_insert(1);
     }
 
-    pub fn save_to_db(&mut self, stats_api: &StatsApi, manual: bool) {
+    pub fn save_to_db(&mut self, manual: bool) {
         if !manual
             && (self.encounter.fight_start == 0
                 || self.encounter.current_boss_name.is_empty()
@@ -1600,7 +1600,6 @@ impl EncounterState {
         let skill_cooldowns = self.skill_tracker.skill_cooldowns.clone();
         let battle_items = self.battle_item_tracker.clone();
         let cc_tracker = self.crowd_control_tracker.clone();
-        let stats_api = stats_api.clone();
 
         // debug_print(format_args!("skill cast log:\n{}", serde_json::to_string(&skill_cast_log).unwrap()));
 
@@ -1614,16 +1613,21 @@ impl EncounterState {
 
         let app = self.app.clone();
         task::spawn(async move {
-            let player_info = if !raid_difficulty.is_empty()
-                && raid_difficulty != "Inferno"
-                && raid_difficulty != "Trial"
-                && !encounter.current_boss_name.is_empty()
-            {
+            let mut player_info = None;
+            let stats_api = app.state::<StatsApi>();
+
+            player_info = if let Some(args) = GetCharacterInfoArgs::new(&encounter, &raid_difficulty) {
                 info!("fetching player info");
-                stats_api
-                    .send_raid_analytics(&encounter, battle_items, cc_tracker)
-                    .await;
-                stats_api.get_character_info(&encounter).await
+
+                if let Some(args) = SendRaidAnalyticsArgs::new(
+                    &encounter,
+                    &raid_difficulty,
+                    battle_items,
+                    cc_tracker) {
+                    stats_api.send_raid_analytics(args).await;
+                }
+
+                stats_api.get_character_info(args).await
             } else {
                 None
             };
