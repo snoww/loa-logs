@@ -1,4 +1,4 @@
-use crate::api::{GetCharacterInfoArgs, SendRaidAnalytics, StatsApi};
+use crate::api::{GetCharacterInfoArgs, SendRaidAnalyticsArgs, StatsApi};
 use crate::data::*;
 use crate::database::Repository;
 use crate::database::models::InsertEncounterArgs;
@@ -1619,7 +1619,7 @@ impl EncounterState {
             player_info = if let Some(args) = GetCharacterInfoArgs::new(&encounter, &raid_difficulty) {
                 info!("fetching player info");
 
-                if let Some(args) = SendRaidAnalytics::new(
+                if let Some(args) = SendRaidAnalyticsArgs::new(
                     &encounter,
                     &raid_difficulty,
                     battle_items,

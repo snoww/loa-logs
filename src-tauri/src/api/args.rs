@@ -37,7 +37,7 @@ pub struct GetCharacterInfoArgs<'a> {
 
 #[derive(Clone, Serialize)]
 #[serde(rename_all = "camelCase")]
-pub struct SendRaidAnalytics<'a> {
+pub struct SendRaidAnalyticsArgs<'a> {
     participants_hash: String,
     boss: &'a str,
     difficulty: &'a str,
@@ -54,7 +54,7 @@ pub struct SendRaidAnalytics<'a> {
     participants: Vec<ParticipantInfo<'a>>,
 }
 
-impl<'a> SendRaidAnalytics<'a> {
+impl<'a> SendRaidAnalyticsArgs<'a> {
     pub fn new(
         encounter: &'a Encounter,
         difficulty: &'a str,
