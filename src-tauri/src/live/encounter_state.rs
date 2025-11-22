@@ -220,7 +220,7 @@ impl EncounterState {
         self.soft_reset(false);
     }
 
-    pub fn on_phase_transition(&mut self, phase_code: i32, stats_api: &mut StatsApi) {
+    pub fn on_phase_transition(&mut self, phase_code: i32) {
         self.app
             .emit("phase-transition", phase_code)
             .expect("failed to emit phase-transition");
