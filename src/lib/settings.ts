@@ -64,7 +64,6 @@ export interface GeneralSettings {
   hideMeterOnStart: boolean;
   hideLogsOnStart: boolean;
   constantLocalPlayerColor: boolean;
-  bossOnlyDamageDefaultOn: boolean;
   startOnBoot: boolean;
   logsPerPage: number;
   experimentalFeatures: boolean;

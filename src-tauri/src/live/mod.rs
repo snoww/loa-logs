@@ -83,6 +83,8 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
             duration = Duration::from_millis(1500);
             info!("low performance mode enabled")
         }
+    } else {
+        info!("no settings found, using defaults");
     }
 
     // read saved local players

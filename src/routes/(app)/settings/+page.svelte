@@ -325,12 +325,6 @@
         </label>
         {@render settingOption(
           "general",
-          "bossOnlyDamageDefaultOn",
-          "Boss Only Damage Default On",
-          "This setting makes it so that the meter will start with boss only damage turned on every time."
-        )}
-        {@render settingOption(
-          "general",
           "showDetails",
           "Show Details",
           "Enables live details tab in live meter for your character."
