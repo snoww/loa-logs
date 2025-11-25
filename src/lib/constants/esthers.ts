@@ -114,13 +114,13 @@ export const estherMap = [
     name: "Armen Attack",
     icon: "combined_18.png",
     skills: [],
-    npcs: [59640, 59641, 59642]
+    npcs: [59640, 59641, 59642, 59644]
   },
   {
     name: "Armen Defense",
     icon: "combined_19.png",
     skills: [],
-    npcs: [59643, 59644]
+    npcs: [59643]
   }
 ];
 
