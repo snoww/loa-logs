@@ -237,6 +237,11 @@ pub struct EncounterMisc {
     pub ntp_fight_start: Option<i64>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub manual_save: Option<bool>,
+    // time spent in kazeros g2-2 starting zone
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub intermission_start: Option<i64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub intermission_end: Option<i64>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]

@@ -370,13 +370,14 @@ pub fn update_entity_stats(
     entity: &mut EncounterEntity,
     fight_start: i64,
     fight_end: i64,
+    intermission_duration: i64,
     damage_log: &HashMap<String, Vec<(i64, i64)>>,
 ) {
     if entity.entity_type != EntityType::Player {
         return;
     }
 
-    let duration = fight_end - fight_start;
+    let duration = fight_end - fight_start - intermission_duration;
     let duration_seconds = max(duration / 1000, 1);
     let intervals = generate_intervals(fight_start, fight_end);
 

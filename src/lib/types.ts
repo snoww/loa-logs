@@ -80,6 +80,8 @@ export interface EncounterMisc {
   rdpsValid?: boolean;
   rdpsMessage?: string;
   region?: string;
+  intermissionStart?: number;
+  intermissionEnd?: number;
 }
 
 export interface PartyInfo {

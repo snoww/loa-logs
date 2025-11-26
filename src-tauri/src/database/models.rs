@@ -33,4 +33,6 @@ pub struct InsertEncounterArgs {
     pub manual: bool,
     pub skill_cast_log: HashMap<u64, HashMap<u32, BTreeMap<i64, SkillCast>>>,
     pub skill_cooldowns: HashMap<u32, Vec<CastEvent>>,
+    pub intermission_start: Option<i64>,
+    pub intermission_end: Option<i64>,
 }
