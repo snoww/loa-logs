@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { bossHpMap } from "$lib/constants/encounters";
 import { focusedCast, settings } from "$lib/stores.svelte";
 import {
   BossHpLog,
@@ -6,6 +7,7 @@ import {
   MiniSkill,
   OpenerSkill,
   type DamageStats,
+  type DeathInfo,
   type EncounterDamageStats,
   type Entity,
   type Skill,
@@ -13,11 +15,6 @@ import {
   type SkillChartModInfo,
   type SkillChartSupportDamage
 } from "$lib/types";
-import Heap from "heap-js";
-import BTree from "sorted-btree";
-import { defaultOptions } from "../charts";
-import { getFormattedBuffString, getSkillCastBuffs, getSkillCastSupportBuffs } from "./buffs";
-import { bossHpMap } from "$lib/constants/encounters";
 import {
   abbreviateNumber,
   customRound,
@@ -28,6 +25,10 @@ import {
   timestampToMinutesAndSeconds,
   timeToSeconds
 } from "$lib/utils";
+import Heap from "heap-js";
+import BTree from "sorted-btree";
+import { defaultOptions } from "../charts";
+import { getFormattedBuffString, getSkillCastBuffs, getSkillCastSupportBuffs } from "./buffs";
 
 const colors = ["#cc338b", "#A020F0", "#FFA500", "#800000"];
 
@@ -39,14 +40,14 @@ export function getLegendNames(players: Entity[]) {
   return players.map((player) => (isNameValid(player.name) ? player.name : player.class));
 }
 
-export function getDeathTimes(chartablePlayers: Entity[], legendNames: string[], fightStart: number) {
-  const deathTimes: Record<string, number> = {};
+export function getAllDeathInfo(chartablePlayers: Entity[], legendNames: string[], fightStart: number) {
+  const allDeathInfo: Record<string, DeathInfo[]> = {};
   chartablePlayers.forEach((player, i) => {
-    if (player.isDead) {
-      deathTimes[legendNames[i]!] = (player.damageStats.deathTime - fightStart) / 1000;
+    if (player.isDead || player.damageStats.deathInfo) {
+      allDeathInfo[legendNames[i]] = getRelativeDeathInfo(player, fightStart);
     }
   });
-  return deathTimes;
+  return allDeathInfo;
 }
 
 export function getPlayerSeries(
@@ -59,12 +60,12 @@ export function getPlayerSeries(
     .filter((e) => e.entityType === EntityType.PLAYER)
     .map((player: Entity, i: number) => {
       let markPoints = [];
-      if (player.isDead || player.damageStats.deathTimes) {
-        let deathTimes = player.damageStats.deathTimes ? player.damageStats.deathTimes : [player.damageStats.deathTime];
-        for (const deathTime of deathTimes) {
-          const rounded = Math.ceil((deathTime - fightStart) / 1000 / 5) * 5;
+      if (player.isDead || player.damageStats.deathInfo) {
+        let deathInfo = getRelativeDeathInfo(player);
+        for (const death of deathInfo) {
+          const rounded = Math.ceil((death.deathTime - fightStart) / 1000 / 5) * 5;
           const index =
-            field === "dpsRolling10sAvg" ? Math.ceil((deathTime - fightStart) / 1000) : Math.floor(rounded / 5);
+            field === "dpsRolling10sAvg" ? Math.ceil((death.deathTime - fightStart) / 1000) : Math.floor(rounded / 5);
           markPoints.push({
             name: "Death",
             value: "💀",
@@ -72,7 +73,6 @@ export function getPlayerSeries(
           });
         }
       }
-      console.log(markPoints);
       return {
         name: legendNames[i],
         color: settings.classColors[player.class] || "gray",
@@ -101,7 +101,7 @@ export function getAverageDpsChart(
   legendNames: string[],
   chartPlayers: any[],
   chartBosses: any[],
-  deathTimes: { [key: string]: number }
+  deathInfo: Record<string, DeathInfo[]>
 ) {
   return {
     ...defaultOptions,
@@ -128,7 +128,7 @@ export function getAverageDpsChart(
         const tree = new BTree(undefined, (a, b) => b - a);
         const length = Object.keys(chartablePlayers).length;
         const totalDps = { value: 0 };
-        params.forEach((param) => generateTooltip(param, bossTooltips, totalDps, tree, deathTimes, time, length));
+        params.forEach((param) => generateTooltip(param, bossTooltips, totalDps, tree, deathInfo, time, length));
         const totalDpsString = `<div style="display:flex; justify-content: space-between;font-weight: 600;"><div style="padding-right: 1rem">Total DPS</div><div>${abbreviateNumber(totalDps.value, 2)}</div></div>`;
         tooltipStr += bossTooltips.join("") + totalDpsString + tree.valuesArray().join("") + "</div>";
         return tooltipStr;
@@ -183,7 +183,7 @@ export function getRollingDpsChart(
   legendNames: string[],
   chartPlayers: any[],
   chartBosses: any[],
-  deathTimes: { [key: string]: number }
+  deathInfo: Record<string, DeathInfo[]>
 ) {
   return {
     ...defaultOptions,
@@ -210,7 +210,7 @@ export function getRollingDpsChart(
         const length = Object.keys(chartablePlayers).length;
         const tree = new BTree(undefined, (a, b) => b - a);
         const totalDps = { value: 0 };
-        params.forEach((param) => generateTooltip(param, bossTooltips, totalDps, tree, deathTimes, time, length));
+        params.forEach((param) => generateTooltip(param, bossTooltips, totalDps, tree, deathInfo, time, length));
         const totalDpsString = `<div style="display:flex; justify-content: space-between;font-weight: 600;"><div style="padding-right: 1rem">Total DPS</div><div>${abbreviateNumber(totalDps.value, 2)}</div></div>`;
         tooltipStr += bossTooltips.join("") + totalDpsString + tree.valuesArray().join("") + "</div>";
         return tooltipStr;
@@ -584,11 +584,11 @@ function generateTooltip(
   bossTooltips: string[],
   totalDps: { value: number },
   tree: BTree,
-  deathTimes: { [key: string]: number },
+  deathInfo: Record<string, DeathInfo[]>,
   time: string,
   chartablePlayersLength: number
 ) {
-  let label = param.seriesName;
+  const label = param.seriesName;
   let value = param.value;
   if (param.seriesIndex >= chartablePlayersLength) {
     value = value[1] + "%";
@@ -601,18 +601,26 @@ function generateTooltip(
       `<div style="display:flex; justify-content: space-between;"><div style="padding-right: 1rem;font-weight: 600;">${label}</div><div style="font-weight: 600;">${value}</div></div>`
     );
   } else {
-    if (deathTimes[label] && deathTimes[label] < timeToSeconds(time)) {
-      label = "💀 " + label;
-    }
+    const playerDeathInfo = deathInfo[label];
+    const currentTimeMs = timeToSeconds(time) * 1000;
+    const isDead =
+      playerDeathInfo?.some(({ deathTime, deadFor }) => {
+        if (deadFor === null || deadFor === undefined) {
+          return currentTimeMs >= deathTime;
+        }
+        const deathEnd = deathTime + deadFor;
+        return currentTimeMs >= deathTime && currentTimeMs <= deathEnd;
+      }) ?? false;
+    const labelWithStatus = isDead ? "💀 " + label : label;
     const dps = Number(value);
     totalDps.value += dps;
     value = abbreviateNumber(value);
-    label =
+    const coloredLabel =
       `<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:${param.color}"></span>` +
-      label;
+      labelWithStatus;
     tree.set(
       dps,
-      `<div style="display:flex; justify-content: space-between;"><div style="padding-right: 1rem">${label}</div><div style="">${value}</div></div>`
+      `<div style="display:flex; justify-content: space-between;"><div style="padding-right: 1rem">${coloredLabel}</div><div style="">${value}</div></div>`
     );
   }
 }
@@ -704,4 +712,17 @@ export function timeStringToSeconds(time: string): number {
   const minutes = +split[0];
   const seconds = +split[1];
   return minutes * 60 + seconds;
+}
+
+function getRelativeDeathInfo(entity: Entity, fightStart?: number): DeathInfo[] {
+  if (entity.damageStats.deathInfo) {
+    return entity.damageStats.deathInfo.map((death) => {
+      return {
+        deathTime: death.deathTime - (fightStart || 0),
+        deadFor: death.deadFor
+      };
+    });
+  }
+
+  return [{ deathTime: entity.damageStats.deathTime - (fightStart || 0) }];
 }

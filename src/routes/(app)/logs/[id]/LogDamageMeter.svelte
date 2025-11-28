@@ -12,11 +12,11 @@
   import { screenshot } from "$lib/stores.svelte.js";
   import { ChartType, EntityType, MeterState, MeterTab, type Encounter, type Entity } from "$lib/types";
   import {
+    getAllDeathInfo,
     getAverageDpsChart,
     getAveragePlayerSeries,
     getBasicSkillLogChart,
     getBossHpSeries,
-    getDeathTimes,
     getDetailedSkillLogChart,
     getLegendNames,
     getRollingDpsChart,
@@ -104,11 +104,11 @@
       chartablePlayers[0]!.damageStats.dpsAverage.length > 0 &&
       chartablePlayers[0]!.damageStats.dpsRolling10sAvg.length > 0
     ) {
-      let deathTimes = getDeathTimes(chartablePlayers, legendNames, encounter.fightStart);
+      let deathInfo = getAllDeathInfo(chartablePlayers, legendNames, encounter.fightStart);
       if (chartType === ChartType.AVERAGE_DPS) {
         let chartPlayers = getAveragePlayerSeries(chartablePlayers, legendNames, encounter.fightStart);
         let bossChart = getBossHpSeries(bossHpLogs, legendNames, chartablePlayers[0].damageStats.dpsAverage.length, 5);
-        chartOptions = getAverageDpsChart(chartablePlayers, legendNames, chartPlayers, bossChart, deathTimes);
+        chartOptions = getAverageDpsChart(chartablePlayers, legendNames, chartPlayers, bossChart, deathInfo);
       } else if (chartType === ChartType.ROLLING_DPS) {
         let chartPlayers = getRollingPlayerSeries(chartablePlayers, legendNames, encounter.fightStart);
         let bossChart = getBossHpSeries(
@@ -117,7 +117,7 @@
           chartablePlayers[0].damageStats.dpsRolling10sAvg.length,
           1
         );
-        chartOptions = getRollingDpsChart(chartablePlayers, legendNames, chartPlayers, bossChart, deathTimes);
+        chartOptions = getRollingDpsChart(chartablePlayers, legendNames, chartPlayers, bossChart, deathInfo);
       } else if (chartType === ChartType.SKILL_LOG && player && player.entityType === EntityType.PLAYER) {
         if (hasSkillDetails) {
           chartOptions = getDetailedSkillLogChart(

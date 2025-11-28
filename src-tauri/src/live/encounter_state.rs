@@ -218,8 +218,24 @@ impl EncounterState {
         // do not reset on kazeros g2
         if matches!(zone_id, 37544 | 37545 | 37546) {
             if zone_id == 37545 {
-                self.intermission_start = Some(Utc::now().timestamp_millis());
+                let now = Utc::now().timestamp_millis();
+                self.intermission_start = Some(now);
                 info!("starting intermission");
+                for entity in self
+                    .encounter
+                    .entities
+                    .values_mut()
+                    .filter(|e| e.entity_type == EntityType::Player)
+                {
+                    if let Some(death) = entity
+                        .damage_stats
+                        .death_info
+                        .as_mut()
+                        .and_then(|info| info.last_mut())
+                    {
+                        death.dead_for = Some(now - death.death_time);
+                    }
+                }
             }
 
             return;
@@ -377,9 +393,12 @@ impl EncounterState {
         entity.damage_stats.death_time = now;
         entity
             .damage_stats
-            .death_times
+            .death_info
             .get_or_insert_default()
-            .push(now);
+            .push(DeathInfo {
+                death_time: now,
+                dead_for: None,
+            });
         // record boss hp at time of death
         entity.damage_stats.boss_hp_at_death = Some(boss_hp);
 
@@ -488,7 +507,18 @@ impl EncounterState {
             entity.class = get_class_from_id(&source_entity.class_id);
         }
 
-        entity.is_dead = false;
+        if entity.is_dead {
+            entity.is_dead = false;
+            if let Some(death) = entity
+                .damage_stats
+                .death_info
+                .as_mut()
+                .and_then(|info| info.last_mut())
+                .filter(|death| death.dead_for.is_none())
+            {
+                death.dead_for = Some(timestamp - death.death_time);
+            }
+        }
         entity.skill_stats.casts += 1;
 
         // if skills have different ids but the same name, we group them together

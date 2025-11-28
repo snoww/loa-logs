@@ -234,7 +234,7 @@ export interface DamageStats {
   damageAbsorbedOnOthersBy: { [key: number]: number };
   deaths: number;
   deathTime: number;
-  deathTimes?: number[];
+  deathInfo?: DeathInfo[];
   dps: number;
   dpsAverage: [number, number];
   dpsRolling10sAvg: [number, number];
@@ -246,6 +246,11 @@ export interface DamageStats {
   unbuffedDamage: number;
   unbuffedDps: number;
   [key: string]: any;
+}
+
+export interface DeathInfo {
+  deathTime: number;
+  deadFor?: number;
 }
 
 export interface SkillStats {
