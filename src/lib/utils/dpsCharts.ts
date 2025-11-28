@@ -58,25 +58,21 @@ export function getPlayerSeries(
   return chartablePlayers
     .filter((e) => e.entityType === EntityType.PLAYER)
     .map((player: Entity, i: number) => {
-      let markPoint = {};
-      if (player.isDead) {
-        const rounded = Math.ceil((player.damageStats.deathTime - fightStart) / 1000 / 5) * 5;
-        const index =
-          field === "dpsRolling10sAvg"
-            ? Math.ceil((player.damageStats.deathTime - fightStart) / 1000)
-            : Math.floor(rounded / 5);
-
-        markPoint = {
-          data: [
-            {
-              name: "Death",
-              value: "💀",
-              coord: [index, player.damageStats[field][index]]
-            }
-          ]
-        };
+      let markPoints = [];
+      if (player.isDead || player.damageStats.deathTimes) {
+        let deathTimes = player.damageStats.deathTimes ? player.damageStats.deathTimes : [player.damageStats.deathTime];
+        for (const deathTime of deathTimes) {
+          const rounded = Math.ceil((deathTime - fightStart) / 1000 / 5) * 5;
+          const index =
+            field === "dpsRolling10sAvg" ? Math.ceil((deathTime - fightStart) / 1000) : Math.floor(rounded / 5);
+          markPoints.push({
+            name: "Death",
+            value: "💀",
+            coord: [index, player.damageStats[field][index]]
+          });
+        }
       }
-
+      console.log(markPoints);
       return {
         name: legendNames[i],
         color: settings.classColors[player.class] || "gray",
@@ -84,7 +80,9 @@ export function getPlayerSeries(
         data: player.damageStats[field],
         showSymbol: false,
         smooth: 0.1,
-        markPoint: markPoint,
+        markPoint: {
+          data: markPoints
+        },
         yAxisIndex: 0
       };
     });

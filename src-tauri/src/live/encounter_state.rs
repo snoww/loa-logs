@@ -370,10 +370,16 @@ impl EncounterState {
             self.boss_dead_update = true;
         }
 
+        let now = Utc::now().timestamp_millis();
         entity.current_hp = 0;
         entity.is_dead = true;
         entity.damage_stats.deaths += 1;
-        entity.damage_stats.death_time = Utc::now().timestamp_millis();
+        entity.damage_stats.death_time = now;
+        entity
+            .damage_stats
+            .death_times
+            .get_or_insert_default()
+            .push(now);
         // record boss hp at time of death
         entity.damage_stats.boss_hp_at_death = Some(boss_hp);
 
@@ -1671,7 +1677,7 @@ impl EncounterState {
                 skill_cast_log,
                 skill_cooldowns,
                 intermission_start,
-                intermission_end
+                intermission_end,
             };
 
             let encounter_id = repository

@@ -234,6 +234,7 @@ export interface DamageStats {
   damageAbsorbedOnOthersBy: { [key: number]: number };
   deaths: number;
   deathTime: number;
+  deathTimes?: number[];
   dps: number;
   dpsAverage: [number, number];
   dpsRolling10sAvg: [number, number];

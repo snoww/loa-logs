@@ -109,6 +109,8 @@ pub struct DamageStats {
     pub damage_absorbed_on_others_by: HashMap<u32, u64>,
     pub deaths: i64,
     pub death_time: i64,
+    #[serde(default)]
+    pub death_times: Option<Vec<i64>>,
     #[serde(skip)]
     pub boss_hp_at_death: Option<i64>,
     pub dps: i64,
