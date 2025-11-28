@@ -4,6 +4,7 @@
   import { onMount } from "svelte";
   import { abbreviateNumber, timestampToMinutesAndSeconds } from "$lib/utils";
   import { middot } from "$lib/components/Snippets.svelte";
+  import QuickTooltip from "$lib/components/QuickTooltip.svelte";
 
   let { enc }: { enc: EncounterState } = $props();
 
@@ -12,15 +13,27 @@
   onMount(() => {
     locale = window.navigator.language;
   });
+
+  let intermissionDuration = $derived(
+    (enc.encounter?.encounterDamageStats.misc?.intermissionEnd ?? 0) -
+      (enc.encounter?.encounterDamageStats.misc?.intermissionStart ?? 0)
+  );
 </script>
 
 <div class="bg-black/10 px-3 py-2 text-sm" class:hidden={screenshot.state} id="header">
   <div class="flex flex-row gap-1">
-    <div class="flex gap-1 text-neutral-300">
+    <div class="flex items-baseline gap-1 text-neutral-300">
       <div>Duration:</div>
       <div class="text-white">
         {timestampToMinutesAndSeconds(enc.duration)}
       </div>
+      {#if intermissionDuration}
+        <QuickTooltip tooltip="Time spent in Intermission (DPS excludes intermission time)">
+          <div class="-ml-0.5 text-xs">
+            +{timestampToMinutesAndSeconds(intermissionDuration)}
+          </div>
+        </QuickTooltip>
+      {/if}
     </div>
 
     {@render middot()}
