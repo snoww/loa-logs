@@ -493,17 +493,27 @@ pub fn calculate_entities(args: &mut InsertEncounterArgs) -> Result<()> {
     let fight_end = encounter.last_combat_packet;
     let local_player_str = encounter.local_player.as_str();
 
-    let intermission_duration = match (intermission_start, intermission_end) {
-        (Some(start), Some(end)) => *end - *start,
-        _ => 0,
-    };
+    let (intermission_duration, intermission_range_seconds) =
+        match (&intermission_start, &intermission_end) {
+            (Some(start), Some(end)) if end > start => {
+                (*end - *start, Some((*start / 1000, *end / 1000)))
+            }
+            _ => (0, None),
+        };
 
     for (name, entity) in encounter.entities.iter_mut() {
         if !should_insert_entity(entity, &encounter.local_player) {
             continue;
         }
 
-        update_entity_stats(entity, fight_start, fight_end, intermission_duration, damage_log);
+        update_entity_stats(
+            entity,
+            fight_start,
+            fight_end,
+            intermission_duration,
+            intermission_range_seconds,
+            damage_log,
+        );
 
         if let Some(info) = player_info
             .as_ref()
@@ -517,8 +527,10 @@ pub fn calculate_entities(args: &mut InsertEncounterArgs) -> Result<()> {
         if name == local_player_str {
             for (skill_id, events) in skill_cooldowns.iter() {
                 if let Some(skill) = entity.skills.get_mut(skill_id) {
-                    skill.time_available =
-                        Some(get_total_available_time(events, fight_start, fight_end) - intermission_duration);
+                    skill.time_available = Some(
+                        get_total_available_time(events, fight_start, fight_end)
+                            - intermission_duration,
+                    );
                 }
             }
         }
