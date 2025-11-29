@@ -1,11 +1,11 @@
 {
-  "version": "v1.36.5",
-  "notes": "### v1.36.5 - Novemeber 19th, 2025\n\n#### P.S. If you see any of us in town or raid, feel free to drop an honor! \n- **Snowving** on Luterra\n- **Administrator** on Ratik\n- **Poont** on Gienah\n\n#### BUG FIXES AND IMPROVEMENTS\n- fixed entering final act gate 2-2 resetting meter",
-  "pub_date": "2025-11-19T13:46:36.542Z",
+  "version": "v1.36.6",
+  "notes": "### v1.36.6 - Novemeber 29th, 2025\n\n#### P.S. If you see any of us in town or raid, feel free to drop an honor! \n- **Snowving** on Luterra\n- **Administrator** on Ratik\n- **Poont** on Gienah\n\n#### NEW FEATURES\n- added intermission time during kazeros gate 2-1 to gate 2-2 transition\n  - dps calculations excludes intermission time\n- added multideath counters in dps charts for kazeros g2-2\n\n#### BUG FIXES AND IMPROVEMENTS\n- fixed dps of sidereals and bosses not being calculated\n- fixed special armen classification\n- boss only damage will now always turn on when meter restarts",
+  "pub_date": "2025-11-29T08:45:43.662Z",
   "platforms": {
     "windows-x86_64": {
-      "url": "https://github.com/snoww/loa-logs/releases/download/v1.36.5/LOA.Logs_1.36.5_x64-setup.nsis.zip",
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYllhOFRiOEQ0eXJGUVZ0RWJIY3lSVG04V1JsZHlTb1RSN08wV2FINUs1ZllqQkxXdGx1MkNFYU1RY1EyOS9od0wwVnM1aFhvdFdlTHBWOXA3STFUQVFVPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzYzNjAwMzc1CWZpbGU6TE9BIExvZ3NfMS4zNi41X3g2NC1zZXR1cC5uc2lzLnppcAo5RlBDalA1Q0oyZ3FVZUtWSUVLVkxBaWVPbG4zS0RNcFNMYzlXTVdkUEUzeVJ6RGVjYy9zYUVRSGhLaUZuR0d2YlA4MW9PMGlVTGdTT21ZL3I0YWdBdz09Cg=="
+      "url": "https://github.com/snoww/loa-logs/releases/download/v1.36.6/LOA.Logs_1.36.5_x64-setup.nsis.zip",
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmViUG9lL2pDcnhySWxIeE1BNTNvMUtJU3JzZmI2ZnhzQ2V1UkgxaXAyOEFtaW16aURkd0IyN1QrSVAxb2VPWHVsOHVCY0MwOTZuSXB6aEg3VisrOVF3PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzY0NDA0OTg1CWZpbGU6TE9BIExvZ3NfMS4zNi42X3g2NC1zZXR1cC5uc2lzLnppcAorelZXZ0JQejBZMnJOcnBrUHdlSktoQzF1ZHRTN0toRjhZMkhkWkc0SkkxcWFybjVHQ1JXNFBOdGk0cFZidnZxQW1xYVlMaFUrN0VSVTdjTG1pSU5DZz09Cg=="
     }
   }
 }
