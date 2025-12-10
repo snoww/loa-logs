@@ -80,6 +80,8 @@ export interface EncounterMisc {
   rdpsValid?: boolean;
   rdpsMessage?: string;
   region?: string;
+  intermissionStart?: number;
+  intermissionEnd?: number;
 }
 
 export interface PartyInfo {
@@ -232,6 +234,7 @@ export interface DamageStats {
   damageAbsorbedOnOthersBy: { [key: number]: number };
   deaths: number;
   deathTime: number;
+  deathInfo?: DeathInfo[];
   dps: number;
   dpsAverage: [number, number];
   dpsRolling10sAvg: [number, number];
@@ -243,6 +246,11 @@ export interface DamageStats {
   unbuffedDamage: number;
   unbuffedDps: number;
   [key: string]: any;
+}
+
+export interface DeathInfo {
+  deathTime: number;
+  deadFor?: number;
 }
 
 export interface SkillStats {

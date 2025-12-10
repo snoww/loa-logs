@@ -21,7 +21,7 @@ impl EventManager {
         let reset = AtomicBool::new(false);
         let pause = AtomicBool::new(false);
         let save = AtomicBool::new(false);
-        let boss_only_damage = AtomicBool::new(false);
+        let boss_only_damage = AtomicBool::new(true);
         let emit_details = AtomicBool::new(false);
 
         let listener = Arc::new(Self {

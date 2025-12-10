@@ -1,8 +1,8 @@
-use serde_with::DisplayFromStr;
 use crate::models::ArkPassiveData;
 use crate::models::Skill;
 use hashbrown::{HashMap, HashSet};
 use serde::{Deserialize, Serialize};
+use serde_with::DisplayFromStr;
 use serde_with::serde_as;
 
 use crate::models::EntityType;
@@ -109,6 +109,8 @@ pub struct DamageStats {
     pub damage_absorbed_on_others_by: HashMap<u32, u64>,
     pub deaths: i64,
     pub death_time: i64,
+    #[serde(default)]
+    pub death_info: Option<Vec<DeathInfo>>, // only used to track kazeros gate 2 deaths, where there are multiple respawns
     #[serde(skip)]
     pub boss_hp_at_death: Option<i64>,
     pub dps: i64,
@@ -126,6 +128,13 @@ pub struct DamageStats {
     pub unbuffed_damage: i64,
     #[serde(default)]
     pub unbuffed_dps: i64,
+}
+
+#[derive(Debug, Default, Serialize, Deserialize, Clone)]
+#[serde(rename_all = "camelCase", default)]
+pub struct DeathInfo {
+    pub death_time: i64,
+    pub dead_for: Option<i64>,
 }
 
 #[derive(Debug, Default, Serialize, Deserialize, Clone)]
@@ -237,6 +246,11 @@ pub struct EncounterMisc {
     pub ntp_fight_start: Option<i64>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub manual_save: Option<bool>,
+    // time spent in kazeros g2-2 starting zone
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub intermission_start: Option<i64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub intermission_end: Option<i64>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]

@@ -93,6 +93,8 @@ pub fn start(args: StartArgs) -> Result<()> {
             duration = Duration::from_millis(1500);
             info!("low performance mode enabled")
         }
+    } else {
+        info!("no settings found, using defaults");
     }
 
     get_and_set_region(&region_file_path, &mut state);

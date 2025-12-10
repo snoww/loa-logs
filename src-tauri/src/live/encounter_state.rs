@@ -39,6 +39,9 @@ pub struct EncounterState {
     // buff_id -> count
     crowd_control_tracker: HashMap<u32, u32>,
 
+    pub intermission_start: Option<i64>,
+    pub intermission_end: Option<i64>,
+
     pub party_info: Vec<Vec<String>>,
     pub raid_difficulty: String,
     pub raid_difficulty_id: u32,
@@ -72,6 +75,8 @@ impl EncounterState {
             cast_log: HashMap::new(),
             battle_item_tracker: HashMap::new(),
             crowd_control_tracker: HashMap::new(),
+            intermission_start: None,
+            intermission_end: None,
 
             party_info: Vec::new(),
             raid_difficulty: "".to_string(),
@@ -109,6 +114,8 @@ impl EncounterState {
         self.boss_hp_log = HashMap::new();
         self.battle_item_tracker = HashMap::new();
         self.crowd_control_tracker = HashMap::new();
+        self.intermission_start = None;
+        self.intermission_end = None;
         self.party_info = Vec::new();
 
         self.ntp_fight_start = 0;
@@ -210,6 +217,27 @@ impl EncounterState {
     pub fn on_transit(&mut self, zone_id: u32) {
         // do not reset on kazeros g2
         if matches!(zone_id, 37544 | 37545 | 37546) {
+            if zone_id == 37545 {
+                let now = Utc::now().timestamp_millis();
+                self.intermission_start = Some(now);
+                info!("starting intermission");
+                for entity in self
+                    .encounter
+                    .entities
+                    .values_mut()
+                    .filter(|e| e.entity_type == EntityType::Player)
+                {
+                    if let Some(death) = entity
+                        .damage_stats
+                        .death_info
+                        .as_mut()
+                        .and_then(|info| info.last_mut())
+                    {
+                        death.dead_for = Some(now - death.death_time);
+                    }
+                }
+            }
+
             return;
         }
 
@@ -315,6 +343,15 @@ impl EncounterState {
             } else {
                 self.encounter.current_boss_name.clone()
             };
+
+            // set intermission end if boss is kazeros g2
+            if self.encounter.current_boss_name == "Death Incarnate Kazeros"
+                && self.intermission_start.is_some()
+                && self.intermission_end.is_none()
+            {
+                self.intermission_end = Some(Utc::now().timestamp_millis());
+                info!("ending intermission");
+            }
         }
     }
 
@@ -349,10 +386,19 @@ impl EncounterState {
             self.boss_dead_update = true;
         }
 
+        let now = Utc::now().timestamp_millis();
         entity.current_hp = 0;
         entity.is_dead = true;
         entity.damage_stats.deaths += 1;
-        entity.damage_stats.death_time = Utc::now().timestamp_millis();
+        entity.damage_stats.death_time = now;
+        entity
+            .damage_stats
+            .death_info
+            .get_or_insert_default()
+            .push(DeathInfo {
+                death_time: now,
+                dead_for: None,
+            });
         // record boss hp at time of death
         entity.damage_stats.boss_hp_at_death = Some(boss_hp);
 
@@ -461,7 +507,18 @@ impl EncounterState {
             entity.class = get_class_from_id(&source_entity.class_id);
         }
 
-        entity.is_dead = false;
+        if entity.is_dead {
+            entity.is_dead = false;
+            if let Some(death) = entity
+                .damage_stats
+                .death_info
+                .as_mut()
+                .and_then(|info| info.last_mut())
+                .filter(|death| death.dead_for.is_none())
+            {
+                death.dead_for = Some(timestamp - death.death_time);
+            }
+        }
         entity.skill_stats.casts += 1;
 
         // if skills have different ids but the same name, we group them together
@@ -1600,6 +1657,8 @@ impl EncounterState {
         let skill_cooldowns = self.skill_tracker.skill_cooldowns.clone();
         let battle_items = self.battle_item_tracker.clone();
         let cc_tracker = self.crowd_control_tracker.clone();
+        let intermission_start = self.intermission_start;
+        let intermission_end = self.intermission_end;
 
         // debug_print(format_args!("skill cast log:\n{}", serde_json::to_string(&skill_cast_log).unwrap()));
 
@@ -1650,6 +1709,8 @@ impl EncounterState {
                 manual,
                 skill_cast_log,
                 skill_cooldowns,
+                intermission_start,
+                intermission_end,
             };
 
             let encounter_id = repository

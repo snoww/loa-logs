@@ -18,11 +18,6 @@
         settings.app = data;
       }
 
-      if (settings.app.general.bossOnlyDamageDefaultOn && !settings.app.general.bossOnlyDamage) {
-        settings.app.general.bossOnlyDamage = true;
-        await setBossOnlyDamage(true);
-      }
-
       await writeLog("finished meter setup");
     })();
   });

@@ -2,9 +2,9 @@ use anyhow::{Ok, Result};
 use hashbrown::HashMap;
 use log::*;
 use r2d2_sqlite::SqliteConnectionManager;
-use rusqlite::{params, params_from_iter, OptionalExtension, Transaction};
+use rusqlite::{OptionalExtension, Transaction, params, params_from_iter};
 use serde_json::json;
-use std::cmp::{max, Reverse};
+use std::cmp::{Reverse, max};
 
 use crate::{
     constants::DB_VERSION,
@@ -277,10 +277,17 @@ impl Repository {
             rdps_valid,
             ntp_fight_start,
             region,
+            intermission_start,
+            intermission_end,
             ..
         } = args;
 
-        let duration = encounter.last_combat_packet - encounter.fight_start;
+        let intermission_duration = match (intermission_start, intermission_end) {
+            (Some(start), Some(end)) => end - start,
+            _ => 0,
+        };
+
+        let duration = encounter.last_combat_packet - encounter.fight_start - intermission_duration;
         let duration_seconds = max(duration / 1000, 1);
         let mut stats = encounter.encounter_damage_stats.clone();
         stats.dps = stats.total_damage_dealt / duration_seconds;
@@ -308,6 +315,8 @@ impl Repository {
             },
             ntp_fight_start: Some(*ntp_fight_start),
             manual_save: Some(args.manual),
+            intermission_start: *intermission_start,
+            intermission_end: *intermission_end,
             ..Default::default()
         };
 
@@ -412,6 +421,8 @@ impl Repository {
             encounter,
             raid_clear,
             raid_difficulty,
+            intermission_start,
+            intermission_end,
             ..
         } = args;
 
@@ -439,11 +450,16 @@ impl Repository {
             .collect::<Vec<_>>()
             .join(",");
 
+        let intermission_duration = match (intermission_start, intermission_end) {
+            (Some(start), Some(end)) => end - start,
+            _ => 0,
+        };
+
         let params = params![
             encounter_id,
             encounter.fight_start,
             encounter.current_boss_name,
-            encounter.last_combat_packet - encounter.fight_start,
+            encounter.last_combat_packet - encounter.fight_start - intermission_duration,
             preview_players,
             raid_difficulty,
             encounter.local_player,
@@ -468,6 +484,8 @@ pub fn calculate_entities(args: &mut InsertEncounterArgs) -> Result<()> {
         skill_cast_log,
         player_info,
         skill_cooldowns,
+        intermission_start,
+        intermission_end,
         ..
     } = args;
 
@@ -475,12 +493,27 @@ pub fn calculate_entities(args: &mut InsertEncounterArgs) -> Result<()> {
     let fight_end = encounter.last_combat_packet;
     let local_player_str = encounter.local_player.as_str();
 
+    let (intermission_duration, intermission_range_seconds) =
+        match (&intermission_start, &intermission_end) {
+            (Some(start), Some(end)) if end > start => {
+                (*end - *start, Some((*start / 1000, *end / 1000)))
+            }
+            _ => (0, None),
+        };
+
     for (name, entity) in encounter.entities.iter_mut() {
         if !should_insert_entity(entity, &encounter.local_player) {
             continue;
         }
 
-        update_entity_stats(entity, fight_start, fight_end, damage_log);
+        update_entity_stats(
+            entity,
+            fight_start,
+            fight_end,
+            intermission_duration,
+            intermission_range_seconds,
+            damage_log,
+        );
 
         if let Some(info) = player_info
             .as_ref()
@@ -494,8 +527,10 @@ pub fn calculate_entities(args: &mut InsertEncounterArgs) -> Result<()> {
         if name == local_player_str {
             for (skill_id, events) in skill_cooldowns.iter() {
                 if let Some(skill) = entity.skills.get_mut(skill_id) {
-                    skill.time_available =
-                        Some(get_total_available_time(events, fight_start, fight_end));
+                    skill.time_available = Some(
+                        get_total_available_time(events, fight_start, fight_end)
+                            - intermission_duration,
+                    );
                 }
             }
         }
@@ -584,7 +619,7 @@ mod tests {
     use crate::{data::AssetPreloader, database::Database};
     use chrono::Utc;
     use hashbrown::HashSet;
-    use rand::{rngs::ThreadRng, seq::IndexedRandom, Rng};
+    use rand::{Rng, rngs::ThreadRng, seq::IndexedRandom};
 
     use super::*;
 
@@ -1502,6 +1537,8 @@ mod tests {
                 rdps_message: None,
                 ntp_fight_start: Some(fight_start),
                 manual_save: None,
+                intermission_start: None,
+                intermission_end: None,
             };
 
             let encounter_damage_stats = EncounterDamageStats {
@@ -1553,6 +1590,8 @@ mod tests {
                 manual: false,
                 skill_cast_log,
                 skill_cooldowns,
+                intermission_start: None,
+                intermission_end: None,
             };
 
             insert_args

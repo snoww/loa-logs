@@ -370,48 +370,48 @@ pub fn update_entity_stats(
     entity: &mut EncounterEntity,
     fight_start: i64,
     fight_end: i64,
+    intermission_duration: i64,
+    intermission: Option<(i64, i64)>,
     damage_log: &HashMap<String, Vec<(i64, i64)>>,
 ) {
-    if entity.entity_type != EntityType::Player {
-        return;
-    }
-
-    let duration = fight_end - fight_start;
+    let duration = fight_end - fight_start - intermission_duration;
     let duration_seconds = max(duration / 1000, 1);
     let intervals = generate_intervals(fight_start, fight_end);
 
-    if let Some(player_log) = damage_log.get(&entity.name) {
-        for interval in intervals {
-            let start = fight_start + interval - WINDOW_MS;
-            let end = fight_start + interval + WINDOW_MS;
-            let damage = sum_in_range(player_log, start, end);
-            entity
-                .damage_stats
-                .dps_rolling_10s_avg
-                .push(damage / (WINDOW_S * 2));
+    if entity.entity_type == EntityType::Player {
+        if let Some(player_log) = damage_log.get(&entity.name) {
+            for interval in intervals {
+                let start = fight_start + interval - WINDOW_MS;
+                let end = fight_start + interval + WINDOW_MS;
+                let damage = sum_in_range(player_log, start, end);
+                entity
+                    .damage_stats
+                    .dps_rolling_10s_avg
+                    .push(damage / (WINDOW_S * 2));
+            }
+
+            let fight_start_sec = fight_start / 1000;
+            let fight_end_sec = fight_end / 1000;
+            entity.damage_stats.dps_average =
+                calculate_average_dps(player_log, fight_start_sec, fight_end_sec, intermission);
         }
 
-        let fight_start_sec = fight_start / 1000;
-        let fight_end_sec = fight_end / 1000;
-        entity.damage_stats.dps_average =
-            calculate_average_dps(player_log, fight_start_sec, fight_end_sec);
-    }
-
-    let mut buffed_damage = 0;
-    for skill in entity.skills.values() {
-        for (rdps_type, entry) in skill.rdps_received.iter() {
-            if matches!(*rdps_type, 1 | 3 | 5) {
-                buffed_damage += entry.values().sum::<i64>();
+        let mut buffed_damage = 0;
+        for skill in entity.skills.values() {
+            for (rdps_type, entry) in skill.rdps_received.iter() {
+                if matches!(*rdps_type, 1 | 3 | 5) {
+                    buffed_damage += entry.values().sum::<i64>();
+                }
             }
         }
+
+        let unbuffed_damage = entity.damage_stats.damage_dealt - buffed_damage;
+        let unbuffed_dps = unbuffed_damage / duration_seconds;
+        entity.damage_stats.unbuffed_damage = unbuffed_damage;
+        entity.damage_stats.unbuffed_dps = unbuffed_dps;
     }
 
-    let unbuffed_damage = entity.damage_stats.damage_dealt - buffed_damage;
-    let unbuffed_dps = unbuffed_damage / duration_seconds;
-
     entity.damage_stats.dps = entity.damage_stats.damage_dealt / duration_seconds;
-    entity.damage_stats.unbuffed_damage = unbuffed_damage;
-    entity.damage_stats.unbuffed_dps = unbuffed_dps;
 
     for (_, skill) in entity.skills.iter_mut() {
         skill.dps = skill.total_damage / duration_seconds;
@@ -526,12 +526,21 @@ pub fn apply_cast_logs(
     }
 }
 
-pub fn calculate_average_dps(data: &[(i64, i64)], start_time: i64, end_time: i64) -> Vec<i64> {
+pub fn calculate_average_dps(
+    data: &[(i64, i64)],
+    start_time: i64,
+    end_time: i64,
+    intermission: Option<(i64, i64)>,
+) -> Vec<i64> {
     let step = 5;
     let mut results = vec![0; ((end_time - start_time) / step + 1) as usize];
     let mut current_sum = 0;
     let mut data_iter = data.iter();
     let mut current_data = data_iter.next();
+    let intermission = intermission
+        .filter(|(start, end)| end > start)
+        .map(|(start, end)| (max(start, start_time), end.min(end_time)))
+        .filter(|(start, end)| end > start);
 
     for t in (start_time..=end_time).step_by(step as usize) {
         while let Some((timestamp, value)) = current_data {
@@ -543,7 +552,20 @@ pub fn calculate_average_dps(data: &[(i64, i64)], start_time: i64, end_time: i64
             }
         }
 
-        results[((t - start_time) / step) as usize] = current_sum / (t - start_time + 1);
+        let paused_time = if let Some((inter_start, inter_end)) = intermission {
+            if t < inter_start {
+                0
+            } else if t >= inter_end {
+                inter_end - inter_start
+            } else {
+                t - inter_start + 1
+            }
+        } else {
+            0
+        };
+
+        let elapsed = max((t - start_time + 1) - paused_time, 1);
+        results[((t - start_time) / step) as usize] = current_sum / elapsed;
     }
 
     results
