@@ -45,6 +45,7 @@ strum = "0.27.2"
 strum_macros = "0.27.2"
 async-trait = "0.1.89"
 semver = "1.0.27"
+dirs = "6.0.0"
 meter-core = { git = "https://github.com/snoww/meter-core-rs", optional = true }
 sha2 = "0.10.9"
 

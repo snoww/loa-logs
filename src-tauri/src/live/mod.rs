@@ -4,23 +4,20 @@ mod id_tracker;
 mod manager;
 mod party_tracker;
 mod skill_tracker;
-mod stats_api;
 mod status_tracker;
 mod utils;
 
-use crate::app;
+use crate::api::HeartBeatApi;
 use crate::live::encounter_state::EncounterState;
 use crate::live::entity_tracker::{EntityTracker, get_current_and_max_hp};
 use crate::live::id_tracker::IdTracker;
 use crate::live::manager::EventManager;
 use crate::live::party_tracker::PartyTracker;
-use crate::live::stats_api::API_URL;
-use crate::live::stats_api::StatsApi;
 use crate::live::status_tracker::{
     StatusEffectDetails, StatusEffectTargetType, StatusEffectType, StatusTracker,
     get_status_effect_value,
 };
-use crate::local::{LocalInfo, LocalPlayer};
+use crate::local::{LocalInfo, LocalPlayer, LocalPlayerRepository};
 use crate::models::{DamageData, EntityType, Identity, RdpsData, TripodIndex};
 use crate::settings::Settings;
 use crate::utils::get_class_from_id;
@@ -31,16 +28,34 @@ use log::{info, warn};
 use meter_core::packets::definitions::*;
 use meter_core::packets::opcodes::Pkt;
 use meter_core::start_capture;
-use reqwest::Client;
-use serde_json::json;
 use std::cell::RefCell;
-use std::path::{Path, PathBuf};
 use std::rc::Rc;
 use std::time::{Duration, Instant};
 use tauri::{AppHandle, Emitter};
-use uuid::Uuid;
+use tokio::sync::watch;
 
-pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()> {
+pub struct StartArgs {
+    pub app: AppHandle,
+    pub port: u16,
+    pub settings: Option<Settings>,
+    pub shutdown_rx: watch::Receiver<bool>,
+    pub local_info: LocalInfo,
+    pub local_player_repository: LocalPlayerRepository,
+    pub heartbeat_api: HeartBeatApi,
+    pub region_file_path: String,
+}
+
+pub fn start(args: StartArgs) -> Result<()> {
+    let StartArgs {
+        app,
+        port,
+        settings,
+        shutdown_rx,
+        mut local_info,
+        local_player_repository,
+        mut heartbeat_api,
+        region_file_path,
+    } = args;
     let manager = EventManager::new(app.clone());
     let id_tracker = Rc::new(RefCell::new(IdTracker::new()));
     let party_tracker = Rc::new(RefCell::new(PartyTracker::new(id_tracker.clone())));
@@ -51,9 +66,8 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
         party_tracker.clone(),
     );
     let mut state = EncounterState::new(app.clone());
-    let region_file_path = app::path::data_dir(&app).join("current_region");
-    let mut stats_api = StatsApi::new(app.clone());
-    let rx = match start_capture(port, region_file_path.display().to_string()) {
+
+    let rx = match start_capture(port, region_file_path.clone()) {
         Ok(rx) => rx,
         Err(e) => {
             warn!("Error starting capture: {e}");
@@ -70,10 +84,6 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
     let party_duration = Duration::from_millis(2000);
     let mut raid_end_cd = Instant::now();
 
-    let client = Client::new();
-    let mut last_heartbeat = Instant::now();
-    let heartbeat_duration = Duration::from_secs(60 * 15);
-
     if let Some(settings) = settings {
         if settings.general.boss_only_damage {
             manager.set_boss_only_damage();
@@ -85,27 +95,6 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
         }
     } else {
         info!("no settings found, using defaults");
-    }
-
-    // read saved local players
-    // this info is used in case meter was opened late
-    let mut local_info: LocalInfo = LocalInfo::default();
-    let local_player_path = app::path::data_dir(&app).join("local_players.json");
-    let mut client_id = "".to_string();
-
-    if local_player_path.exists() {
-        let local_players_file = std::fs::read_to_string(local_player_path.clone())?;
-        local_info = serde_json::from_str(&local_players_file).unwrap_or_default();
-        client_id = local_info.client_id.clone();
-        let valid_id = Uuid::try_parse(client_id.as_str()).is_ok();
-        if client_id.is_empty() || !valid_id {
-            client_id = Uuid::new_v4().to_string();
-            stats_api.client_id.clone_from(&client_id);
-            local_info.client_id.clone_from(&client_id);
-            write_local_players(&local_info, &local_player_path)?;
-        } else {
-            stats_api.client_id.clone_from(&client_id);
-        }
     }
 
     get_and_set_region(&region_file_path, &mut state);
@@ -124,7 +113,7 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
 
         if manager.has_saved() {
             state.party_info = update_party(&party_tracker, &entity_tracker);
-            state.save_to_db(&mut stats_api, true);
+            state.save_to_db(true);
             state.saved = true;
             state.resetting = true;
         }
@@ -206,7 +195,7 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
                     state.raid_difficulty_id = 0;
                     party_cache = None;
                     let entity = entity_tracker.init_env(pkt);
-                    state.on_init_env(entity, &stats_api);
+                    state.on_init_env(entity);
                     get_and_set_region(&region_file_path, &mut state);
                     info!("region: {:?}", state.region);
                 }
@@ -236,7 +225,9 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
                             count: 1,
                         });
 
-                    write_local_players(&local_info, &local_player_path)?;
+                    local_player_repository
+                        .write(&local_info)
+                        .expect("could not save local players");
 
                     state.on_init_pc(entity, hp, max_hp)
                 }
@@ -381,7 +372,7 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
                 }
             }
             Pkt::RaidBossKillNotify => {
-                state.on_phase_transition(1, &mut stats_api);
+                state.on_phase_transition(1);
                 state.raid_clear = true;
                 info!("phase: 1 - RaidBossKillNotify");
             }
@@ -392,7 +383,7 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
                 } else {
                     update_party(&party_tracker, &entity_tracker)
                 };
-                state.on_phase_transition(0, &mut stats_api);
+                state.on_phase_transition(0);
                 raid_end_cd = Instant::now();
                 info!("phase: 0 - RaidResult");
             }
@@ -789,7 +780,7 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
                     || state.encounter.fight_start == 0
                     || state.encounter.current_boss_name == "Saydon"
                 {
-                    state.on_phase_transition(3, &mut stats_api);
+                    state.on_phase_transition(3);
                     debug_print(format_args!(
                         "phase: 3 - resetting encounter - TriggerBossBattleStatus"
                     ));
@@ -808,7 +799,7 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
                                 update_party(&party_tracker, &entity_tracker)
                             };
                             state.raid_clear = true;
-                            state.on_phase_transition(2, &mut stats_api);
+                            state.on_phase_transition(2);
                             raid_end_cd = Instant::now();
                             info!("phase: 2 - clear - TriggerStartNotify");
                         }
@@ -820,7 +811,7 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
                                 update_party(&party_tracker, &entity_tracker)
                             };
                             state.raid_clear = false;
-                            state.on_phase_transition(4, &mut stats_api);
+                            state.on_phase_transition(4);
                             raid_end_cd = Instant::now();
                             info!("phase: 4 - wipe - TriggerStartNotify");
                         }
@@ -1050,36 +1041,8 @@ pub fn start(app: AppHandle, port: u16, settings: Option<Settings>) -> Result<()
             party_cache = None;
         }
 
-        if last_heartbeat.elapsed() >= heartbeat_duration {
-            let client = client.clone();
-            let client_id = client_id.clone();
-            let version = app.package_info().version.to_string();
-            let region = match state.region {
-                Some(ref region) => region.clone(),
-                None => continue,
-            };
-            tokio::task::spawn(async move {
-                let request_body = json!({
-                    "id": client_id,
-                    "version": version,
-                    "region": region,
-                });
-
-                match client
-                    .post(format!("{API_URL}/analytics/heartbeat"))
-                    .json(&request_body)
-                    .send()
-                    .await
-                {
-                    Ok(_) => {
-                        debug_print(format_args!("sent heartbeat"));
-                    }
-                    Err(e) => {
-                        warn!("failed to send heartbeat: {:?}", e);
-                    }
-                }
-            });
-            last_heartbeat = Instant::now();
+        if let Some(ref region) = state.region {
+            heartbeat_api.heartbeat(region);
         }
     }
 
@@ -1140,13 +1103,7 @@ fn on_shield_change(
     state.on_shield_used(&source, &target, status_effect.status_effect_id, change);
 }
 
-fn write_local_players(local_info: &LocalInfo, path: &PathBuf) -> Result<()> {
-    let local_players_file = serde_json::to_string(local_info)?;
-    std::fs::write(path, local_players_file)?;
-    Ok(())
-}
-
-fn get_and_set_region<P: AsRef<Path>>(path: P, state: &mut EncounterState) {
+fn get_and_set_region(path: &str, state: &mut EncounterState) {
     match std::fs::read_to_string(path) {
         Ok(region) => {
             state.region = Some(region.clone());

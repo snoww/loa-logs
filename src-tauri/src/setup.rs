@@ -11,7 +11,6 @@ use tauri::{App, AppHandle, Manager};
 use tauri_plugin_updater::UpdaterExt;
 
 use crate::{
-    app,
     background::{BackgroundWorker, BackgroundWorkerArgs},
     constants::DEFAULT_PORT,
     context::AppContext,
@@ -40,14 +39,12 @@ pub fn setup(app: &mut App) -> Result<(), Box<dyn Error>> {
     setup_tray(app_handle)?;
     let update_checked: Arc<AtomicBool> = check_updates(app_handle);
 
-    let mut background = BackgroundWorker::new();
+    let mut background = BackgroundWorker::new(app_handle.clone());
 
     let args = BackgroundWorkerArgs {
-        app_handle: app_handle.clone(),
         update_checked,
         port,
         settings,
-        region_file_path: context.region_file_path.clone(),
         version: context.version.clone(),
     };
 

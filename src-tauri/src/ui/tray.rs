@@ -2,8 +2,8 @@ use anyhow::anyhow;
 use strum::EnumProperty;
 use strum_macros::{AsRefStr, EnumProperty, EnumString};
 use tauri::{
-    menu::{Menu, MenuBuilder}, AppHandle,
-    Runtime,
+    AppHandle, Runtime,
+    menu::{Menu, MenuBuilder},
 };
 
 use crate::{

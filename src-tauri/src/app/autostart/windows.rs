@@ -44,7 +44,8 @@ impl super::AutoLaunch for AutoLaunchManager {
         let folder = service.GetFolder(r"\")?;
         let task = service.NewTask()?;
 
-        let trigger = task.get_Triggers()?
+        let trigger = task
+            .get_Triggers()?
             .Create(co::TASK_TRIGGER_TYPE2::LOGON)?
             .QueryInterface::<w::ILogonTrigger>()?;
         trigger.put_Delay("PT10S")?; // 10 seconds delay ISO8601

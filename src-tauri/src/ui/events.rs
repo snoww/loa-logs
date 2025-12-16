@@ -3,13 +3,14 @@ use std::str::FromStr;
 use anyhow::Result;
 use log::*;
 use tauri::{
-    menu::MenuEvent, tray::{MouseButton, MouseButtonState, TrayIcon, TrayIconEvent}, AppHandle, Manager,
-    Window,
-    WindowEvent,
+    AppHandle, Manager, Window, WindowEvent,
+    menu::MenuEvent,
+    tray::{MouseButton, MouseButtonState, TrayIcon, TrayIconEvent},
 };
 use tauri_plugin_window_state::AppHandleExt;
 
 use crate::{
+    background::BackgroundWorker,
     constants::*,
     settings::SettingsManager,
     shell::ShellManager,
@@ -32,7 +33,10 @@ where
     F: Future<Output = T>,
 {
     tokio::task::block_in_place(|| {
-        let rt = tokio::runtime::Builder::new_current_thread().enable_all().build().unwrap();
+        let rt = tokio::runtime::Builder::new_current_thread()
+            .enable_all()
+            .build()
+            .unwrap();
         rt.block_on(future)
     })
 }
@@ -67,13 +71,7 @@ pub fn on_menu_event_inner(app_handle: &AppHandle, event: MenuEvent) -> Result<(
         TrayCommand::Quit => {
             app_handle.save_window_state(WINDOW_STATE_FLAGS)?;
 
-            let shell_manager = app_handle.state::<ShellManager>();
-            block_on_local(async {
-                shell_manager.unload_driver().await;
-            });
-
-            log::logger().flush();
-            app_handle.exit(0);
+            teardown(app_handle);
         }
         TrayCommand::Hide => {
             if let Some(meter) = app_handle.get_meter_window() {
@@ -153,13 +151,7 @@ pub fn on_window_event_inner(label: &str, window: &Window, event: &WindowEvent) 
                 meter_window.unminimize()?;
             }
 
-            let shell_manager = app_handle.state::<ShellManager>();
-            block_on_local(async {
-                shell_manager.unload_driver().await;
-            });
-
-            log::logger().flush();
-            app_handle.exit(0);
+            teardown(app_handle);
 
             Ok(())
         }
@@ -175,4 +167,20 @@ pub fn on_window_event_inner(label: &str, window: &Window, event: &WindowEvent) 
         }
         _ => Ok(()),
     }
+}
+
+pub fn teardown(app_handle: &AppHandle) {
+    let background = app_handle.state::<BackgroundWorker>();
+    let shell_manager = app_handle.state::<ShellManager>();
+
+    block_on_local(async {
+        if let Err(err) = background.stop().await {
+            warn!("Could not stop background worker: {}", err);
+        }
+
+        shell_manager.unload_driver().await;
+    });
+
+    logger().flush();
+    app_handle.exit(0);
 }
