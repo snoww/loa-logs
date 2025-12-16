@@ -1,8 +1,11 @@
+use crate::{
+    models::{Encounter, EntityType},
+    utils::{boss_to_raid_map, is_valid_player},
+};
 use hashbrown::HashMap;
-use serde::Serialize;
 use log::*;
+use serde::Serialize;
 use sha2::{Digest, Sha256};
-use crate::{models::{Encounter, EntityType}, utils::{boss_to_raid_map, is_valid_player}};
 
 #[derive(Debug, Serialize, Clone)]
 struct ParticipantInfo<'a> {
@@ -19,7 +22,7 @@ struct ParticipantInfo<'a> {
 pub struct SendHeartbeatArgs<'a> {
     pub id: &'a str,
     pub version: &'a str,
-    pub region: &'a str
+    pub region: &'a str,
 }
 
 #[derive(Clone, Serialize)]
@@ -59,9 +62,9 @@ impl<'a> SendRaidAnalyticsArgs<'a> {
         encounter: &'a Encounter,
         difficulty: &'a str,
         battle_items_used: HashMap<u32, u32>,
-        crowd_control_debuffs: HashMap<u32, u32>) -> Option<Self> {
-        
-        let Encounter { 
+        crowd_control_debuffs: HashMap<u32, u32>,
+    ) -> Option<Self> {
+        let Encounter {
             last_combat_packet,
             fight_start,
             local_player,
@@ -70,7 +73,7 @@ impl<'a> SendRaidAnalyticsArgs<'a> {
             cleared,
             ..
         } = encounter;
-        
+
         if let Some(local_player) = entities.get(local_player) {
             if !is_valid_player(local_player) {
                 return None;
@@ -83,8 +86,7 @@ impl<'a> SendRaidAnalyticsArgs<'a> {
         let mut participants: Vec<ParticipantInfo> = Vec::new();
         let entities_iter = entities.values();
 
-        for player in entities_iter.filter(|e| e.entity_type == EntityType::Player)
-        {
+        for player in entities_iter.filter(|e| e.entity_type == EntityType::Player) {
             player_names.push(&player.name);
             let info: ParticipantInfo = ParticipantInfo {
                 class: &player.class,
@@ -107,12 +109,9 @@ impl<'a> SendRaidAnalyticsArgs<'a> {
             let hash = Sha256::digest(player_names.join("").as_bytes());
             format!("{:x}", hash)
         };
-        
+
         let duration = (last_combat_packet - fight_start) / 1000;
-        let boss = match entities.get(current_boss_name) {
-            Some(value) => value,
-            None => return None,
-        };
+        let boss = entities.get(current_boss_name)?;
 
         let entities_iter = entities.values();
         let esther_casts = entities_iter
@@ -145,19 +144,19 @@ impl<'a> SendRaidAnalyticsArgs<'a> {
             battle_items_used,
             crowd_control_debuffs,
             esther_casts,
-            participants
+            participants,
         })
     }
 }
 
 impl<'a> GetCharacterInfoArgs<'a> {
     pub fn new(encounter: &'a Encounter, difficulty: &'a str) -> Option<Self> {
-
         if difficulty.is_empty() || matches!(difficulty, "Inferno" | "Trial") {
-            return None
+            return None;
         }
-        
-        let boss: &str = (!encounter.current_boss_name.is_empty()).then(|| encounter.current_boss_name.as_ref())?;
+
+        let boss: &str = (!encounter.current_boss_name.is_empty())
+            .then(|| encounter.current_boss_name.as_ref())?;
 
         let region = match encounter.region.as_ref() {
             Some(region) => region,
@@ -197,7 +196,7 @@ impl<'a> GetCharacterInfoArgs<'a> {
             characters,
             cleared: encounter.cleared,
             region,
-            difficulty
+            difficulty,
         })
     }
 }

@@ -140,6 +140,7 @@ dependencies = [
  "auto-launch",
  "bitflags 2.10.0",
  "chrono",
+ "dirs 6.0.0",
  "flate2",
  "flexi_logger",
  "hashbrown 0.16.0",

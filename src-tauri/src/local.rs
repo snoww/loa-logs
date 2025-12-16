@@ -24,8 +24,10 @@ impl LocalPlayerRepository {
     pub fn new(path: PathBuf) -> Result<Self> {
         if !path.exists() {
             let client_id = Uuid::new_v4().to_string();
-            let mut value = LocalInfo::default();
-            value.client_id = client_id;
+            let value = LocalInfo {
+                client_id,
+                ..Default::default()
+            };
 
             let writer = File::create(&path)?;
             serde_json::to_writer_pretty(writer, &value)?;

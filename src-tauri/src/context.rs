@@ -20,7 +20,6 @@ pub struct AppContext {
 
 impl AppContext {
     pub fn new(version: String) -> Result<Self> {
-
         #[cfg(target_os = "linux")]
         let assets_path = dirs::app_data_dir();
 

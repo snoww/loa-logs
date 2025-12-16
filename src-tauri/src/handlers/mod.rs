@@ -2,7 +2,7 @@ use anyhow::Context;
 use error::*;
 use log::*;
 use tauri::ipc::Invoke;
-use tauri::{command, generate_handler, AppHandle, Emitter, Manager, State};
+use tauri::{AppHandle, Emitter, Manager, State, command, generate_handler};
 use window_vibrancy::{apply_blur, clear_blur};
 
 use crate::app::autostart::{AutoLaunch, AutoLaunchManager};

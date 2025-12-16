@@ -1,6 +1,4 @@
-
 fn main() {
-
     if cfg!(debug_assertions) {
         println!("DEV BUILD");
         tauri_build::build();

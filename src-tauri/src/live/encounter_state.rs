@@ -1675,21 +1675,23 @@ impl EncounterState {
             let mut player_info = None;
             let stats_api = app.state::<StatsApi>();
 
-            player_info = if let Some(args) = GetCharacterInfoArgs::new(&encounter, &raid_difficulty) {
-                info!("fetching player info");
+            player_info =
+                if let Some(args) = GetCharacterInfoArgs::new(&encounter, &raid_difficulty) {
+                    info!("fetching player info");
 
-                if let Some(args) = SendRaidAnalyticsArgs::new(
-                    &encounter,
-                    &raid_difficulty,
-                    battle_items,
-                    cc_tracker) {
-                    stats_api.send_raid_analytics(args).await;
-                }
+                    if let Some(args) = SendRaidAnalyticsArgs::new(
+                        &encounter,
+                        &raid_difficulty,
+                        battle_items,
+                        cc_tracker,
+                    ) {
+                        stats_api.send_raid_analytics(args).await;
+                    }
 
-                stats_api.get_character_info(args).await
-            } else {
-                None
-            };
+                    stats_api.get_character_info(args).await
+                } else {
+                    None
+                };
 
             let repository = app.state::<Repository>();
 

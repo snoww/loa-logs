@@ -2,7 +2,10 @@
 
 use hashbrown::HashMap;
 
-use crate::{data::RAID_MAP, models::{ArkPassiveNode, EncounterEntity, EntityType, StatusEffect}};
+use crate::{
+    data::RAID_MAP,
+    models::{ArkPassiveNode, EncounterEntity, EntityType, StatusEffect},
+};
 
 pub fn is_support(entity: &EncounterEntity) -> bool {
     if let Some(spec) = &entity.spec {

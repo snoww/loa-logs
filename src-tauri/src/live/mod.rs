@@ -28,11 +28,11 @@ use log::{info, warn};
 use meter_core::packets::definitions::*;
 use meter_core::packets::opcodes::Pkt;
 use meter_core::start_capture;
-use tokio::sync::watch;
 use std::cell::RefCell;
 use std::rc::Rc;
 use std::time::{Duration, Instant};
 use tauri::{AppHandle, Emitter};
+use tokio::sync::watch;
 
 pub struct StartArgs {
     pub app: AppHandle,
@@ -42,7 +42,7 @@ pub struct StartArgs {
     pub local_info: LocalInfo,
     pub local_player_repository: LocalPlayerRepository,
     pub heartbeat_api: HeartBeatApi,
-    pub region_file_path: String
+    pub region_file_path: String,
 }
 
 pub fn start(args: StartArgs) -> Result<()> {
@@ -54,7 +54,7 @@ pub fn start(args: StartArgs) -> Result<()> {
         mut local_info,
         local_player_repository,
         mut heartbeat_api,
-        region_file_path
+        region_file_path,
     } = args;
     let manager = EventManager::new(app.clone());
     let id_tracker = Rc::new(RefCell::new(IdTracker::new()));
@@ -66,7 +66,7 @@ pub fn start(args: StartArgs) -> Result<()> {
         party_tracker.clone(),
     );
     let mut state = EncounterState::new(app.clone());
-    
+
     let rx = match start_capture(port, region_file_path.clone()) {
         Ok(rx) => rx,
         Err(e) => {
@@ -225,7 +225,9 @@ pub fn start(args: StartArgs) -> Result<()> {
                             count: 1,
                         });
 
-                    local_player_repository.write(&local_info).expect("could not save local players");
+                    local_player_repository
+                        .write(&local_info)
+                        .expect("could not save local players");
 
                     state.on_init_pc(entity, hp, max_hp)
                 }
@@ -1040,7 +1042,7 @@ pub fn start(args: StartArgs) -> Result<()> {
         }
 
         if let Some(ref region) = state.region {
-            heartbeat_api.heartbeat(&region);
+            heartbeat_api.heartbeat(region);
         }
     }
 

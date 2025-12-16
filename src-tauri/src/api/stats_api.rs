@@ -1,4 +1,7 @@
-use crate::{api::{GetCharacterInfoArgs, SendRaidAnalyticsArgs}, models::*};
+use crate::{
+    api::{GetCharacterInfoArgs, SendRaidAnalyticsArgs},
+    models::*,
+};
 use hashbrown::HashMap;
 use log::*;
 use reqwest::Client;
@@ -26,31 +29,23 @@ impl StatsApi {
         }
     }
 
-    pub async fn send_raid_analytics<'a>(&self, args: SendRaidAnalyticsArgs<'a>)  {
+    pub async fn send_raid_analytics<'a>(&self, args: SendRaidAnalyticsArgs<'a>) {
         let url = "https://recap.ags.lol/api/report";
 
-        let _ = self
-            .client
-            .post(url)
-            .json(&args)
-            .send()
-            .await;
+        let _ = self.client.post(url).json(&args).send().await;
     }
 
-    pub async fn get_character_info<'a>(&self, mut args: GetCharacterInfoArgs<'a>) -> Option<HashMap<String, InspectInfo>> {
-        
+    pub async fn get_character_info<'a>(
+        &self,
+        mut args: GetCharacterInfoArgs<'a>,
+    ) -> Option<HashMap<String, InspectInfo>> {
         args.client_id = &self.client_id;
         args.version = &self.version;
         let url = format!("{}/inspect", self.base_url);
         let body = serde_json::to_value(&args).unwrap();
 
         for attempt in 1..=RETRIES {
-            let response = self
-                .client
-                .post(&url)
-                .json(&body)
-                .send()
-                .await;
+            let response = self.client.post(&url).json(&body).send().await;
 
             match response {
                 Ok(res) => match res.json::<HashMap<String, InspectInfo>>().await {

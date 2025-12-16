@@ -1,5 +1,6 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
+mod api;
 mod app;
 mod background;
 mod constants;
@@ -17,8 +18,8 @@ mod setup;
 mod shell;
 mod ui;
 mod utils;
-mod api;
 
+use crate::app::autostart::AutoLaunchManager;
 use crate::constants::*;
 use crate::context::AppContext;
 use crate::data::AssetPreloader;
@@ -28,7 +29,6 @@ use crate::misc::load_windivert;
 use crate::settings::SettingsManager;
 use crate::setup::setup;
 use crate::ui::on_window_event;
-use crate::app::autostart::AutoLaunchManager;
 use anyhow::Result;
 use tauri::async_runtime;
 use tokio::runtime::Handle;
@@ -50,14 +50,11 @@ async fn main() -> Result<()> {
     let database = Database::new(context.database_path.clone(), &context.version)
         .expect("error setting up database: {}");
     let repository = database.create_repository();
-    let auto_launch_manager = AutoLaunchManager::new(
-        &package_info.name,
-        &context.app_path,
-    );
+    let auto_launch_manager = AutoLaunchManager::new(&package_info.name, &context.app_path);
 
     let handle = Handle::current();
     async_runtime::set(handle);
-        
+
     tauri::Builder::default()
         .manage(auto_launch_manager)
         .manage(context)

@@ -3,14 +3,18 @@ use std::str::FromStr;
 use anyhow::Result;
 use log::*;
 use tauri::{
-    menu::MenuEvent, tray::{MouseButton, MouseButtonState, TrayIcon, TrayIconEvent}, AppHandle, Manager,
-    Window,
-    WindowEvent,
+    AppHandle, Manager, Window, WindowEvent,
+    menu::MenuEvent,
+    tray::{MouseButton, MouseButtonState, TrayIcon, TrayIconEvent},
 };
 use tauri_plugin_window_state::AppHandleExt;
 
 use crate::{
-    background::BackgroundWorker, constants::*, settings::SettingsManager, shell::ShellManager, ui::{AppHandleExtensions, TrayCommand, WindowExtensions}
+    background::BackgroundWorker,
+    constants::*,
+    settings::SettingsManager,
+    shell::ShellManager,
+    ui::{AppHandleExtensions, TrayCommand, WindowExtensions},
 };
 
 /// Runs an async future to completion from a synchronous callback.
@@ -29,7 +33,10 @@ where
     F: Future<Output = T>,
 {
     tokio::task::block_in_place(|| {
-        let rt = tokio::runtime::Builder::new_current_thread().enable_all().build().unwrap();
+        let rt = tokio::runtime::Builder::new_current_thread()
+            .enable_all()
+            .build()
+            .unwrap();
         rt.block_on(future)
     })
 }
@@ -163,7 +170,6 @@ pub fn on_window_event_inner(label: &str, window: &Window, event: &WindowEvent) 
 }
 
 pub fn teardown(app_handle: &AppHandle) {
-
     let background = app_handle.state::<BackgroundWorker>();
     let shell_manager = app_handle.state::<ShellManager>();
 
@@ -175,6 +181,6 @@ pub fn teardown(app_handle: &AppHandle) {
         shell_manager.unload_driver().await;
     });
 
-    log::logger().flush();
+    logger().flush();
     app_handle.exit(0);
 }

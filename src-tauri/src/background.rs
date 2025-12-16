@@ -2,10 +2,7 @@
 
 use anyhow::*;
 use log::*;
-use std::{
-    path::PathBuf,
-    sync::{atomic::AtomicBool, Arc, Mutex},
-};
+use std::sync::{Arc, Mutex, atomic::AtomicBool};
 use tauri::AppHandle;
 use tokio::{sync::watch, task::JoinHandle};
 
@@ -22,7 +19,7 @@ pub struct BackgroundWorker {
     app_handle: AppHandle,
     shutdown_tx: watch::Sender<bool>,
     shutdown_rx: watch::Receiver<bool>,
-    handle: Mutex<Option<JoinHandle<()>>>
+    handle: Mutex<Option<JoinHandle<()>>>,
 }
 
 impl BackgroundWorker {
@@ -40,15 +37,19 @@ impl BackgroundWorker {
     pub fn start(&mut self, args: BackgroundWorkerArgs) -> Result<()> {
         let app_handle = self.app_handle.clone();
         let shutdown_rx = self.shutdown_rx.clone();
-        let handle = tokio::task::spawn_blocking(move || Self::inner(app_handle, args, shutdown_rx));
+        let handle =
+            tokio::task::spawn_blocking(move || Self::inner(app_handle, args, shutdown_rx));
 
         *self.handle.lock().unwrap() = Some(handle);
 
         Ok(())
     }
 
-    fn inner(app_handle: AppHandle, args: BackgroundWorkerArgs, shutdown_rx: watch::Receiver<bool>) {
-        
+    fn inner(
+        app_handle: AppHandle,
+        args: BackgroundWorkerArgs,
+        shutdown_rx: watch::Receiver<bool>,
+    ) {
         let BackgroundWorkerArgs {
             update_checked,
             port,
@@ -62,7 +63,12 @@ impl BackgroundWorker {
 
             use tauri::Manager;
 
-            use crate::{api::*, context::AppContext, live::{self, StartArgs}, local::LocalPlayerRepository};
+            use crate::{
+                api::*,
+                context::AppContext,
+                live::{self, StartArgs},
+                local::LocalPlayerRepository,
+            };
 
             while !update_checked.load(Ordering::Relaxed) {
                 std::thread::sleep(std::time::Duration::from_millis(100));
@@ -73,14 +79,27 @@ impl BackgroundWorker {
             let context = app_handle.state::<AppContext>();
 
             // usage pwsh: $env:STATS_API = "http://localhost:5180"; cargo tauri dev
-            let base_url = option_env!("STATS_API").unwrap_or("https://api.snow.xyz").to_owned();
+            let base_url = option_env!("STATS_API")
+                .unwrap_or("https://api.snow.xyz")
+                .to_owned();
             let local_player_path = context.local_player_path.clone();
-            let local_player_repository = LocalPlayerRepository::new(local_player_path).expect("could not read local players");
-            let local_info = local_player_repository.read().expect("could not read local players");
-            let heartbeat_api = HeartBeatApi::new(base_url.clone(), local_info.client_id.clone(), version.clone());
-            app_handle.manage(StatsApi::new(base_url, local_info.client_id.clone(), version.clone()));
+            let local_player_repository = LocalPlayerRepository::new(local_player_path)
+                .expect("could not read local players");
+            let local_info = local_player_repository
+                .read()
+                .expect("could not read local players");
+            let heartbeat_api = HeartBeatApi::new(
+                base_url.clone(),
+                local_info.client_id.clone(),
+                version.clone(),
+            );
+            app_handle.manage(StatsApi::new(
+                base_url,
+                local_info.client_id.clone(),
+                version.clone(),
+            ));
             let region_file_path = context.region_file_path.display().to_string();
-            
+
             let args = StartArgs {
                 app: app_handle,
                 port,
@@ -89,7 +108,7 @@ impl BackgroundWorker {
                 local_info,
                 local_player_repository,
                 heartbeat_api,
-                region_file_path
+                region_file_path,
             };
 
             live::start(args).expect("unexpected error occurred in parser");
