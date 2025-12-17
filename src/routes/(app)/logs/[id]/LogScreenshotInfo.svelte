@@ -24,6 +24,11 @@
     }
     return undefined;
   });
+
+  let intermissionDuration = $derived(
+    (encounter.encounterDamageStats.misc?.intermissionEnd ?? 0) -
+      (encounter.encounterDamageStats.misc?.intermissionStart ?? 0)
+  );
 </script>
 
 <div class="flex flex-col gap-1 px-4 tracking-tight" class:hidden={!screenshot.state}>
@@ -75,11 +80,16 @@
     </div>
   </div>
   <div class="flex items-center">
-    <div class="flex gap-1 text-neutral-300">
+    <div class="flex items-baseline gap-1 text-neutral-300">
       <div>Duration:</div>
       <div class="text-white">
         {timestampToMinutesAndSeconds(encounter.duration)}
       </div>
+      {#if intermissionDuration}
+        <div class="-ml-0.5 text-xs">
+          +{timestampToMinutesAndSeconds(intermissionDuration)}
+        </div>
+      {/if}
     </div>
 
     {@render middot()}

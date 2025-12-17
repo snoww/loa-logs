@@ -301,6 +301,11 @@ impl EntityTracker {
             if status_effect.status_effect_type == StatusEffectType::Shield {
                 shields.push(status_effect.clone());
             }
+
+            if !buff_at_max_stacks(&status_effect) {
+                continue;
+            }
+            
             self.status_tracker
                 .borrow_mut()
                 .register_status_effect(status_effect);
@@ -522,6 +527,10 @@ impl EntityTracker {
         if status_effect.custom_id > 0 {
             custom_id_map.insert(status_effect.custom_id, status_effect.status_effect_id);
         }
+        
+        if !buff_at_max_stacks(&status_effect) {
+            return status_effect;
+        }
 
         self.status_tracker
             .borrow_mut()
@@ -616,6 +625,16 @@ pub fn get_skill_class_id(skill_id: &u32) -> u32 {
         skill.class_id
     } else {
         0
+    }
+}
+
+// only track certain buffs when they are at max stacks
+pub fn buff_at_max_stacks(status_effect: &StatusEffectDetails) -> bool {
+    match status_effect.unique_group {
+        2000440 => status_effect.stack_count == 6, // standing strike
+        2003220 => status_effect.stack_count == 5, // master
+        2003240 => status_effect.stack_count == 5, // luminary
+        _ => true,
     }
 }
 

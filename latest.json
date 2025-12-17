@@ -1,11 +1,11 @@
 {
-  "version": "v1.36.6",
-  "notes": "### v1.36.6 - Novemeber 29th, 2025\n\n#### P.S. If you see any of us in town or raid, feel free to drop an honor! \n- **Snowving** on Luterra\n- **Administrator** on Ratik\n- **Poont** on Gienah\n\n#### NEW FEATURES\n- added intermission time during kazeros gate 2-1 to gate 2-2 transition\n  - dps calculations excludes intermission time\n- added multideath counters in dps charts for kazeros g2-2\n\n#### BUG FIXES AND IMPROVEMENTS\n- fixed dps of sidereals and bosses not being calculated\n- fixed special armen classification\n- boss only damage will now always turn on when meter restarts",
-  "pub_date": "2025-11-29T08:45:43.662Z",
+  "version": "v1.37.0",
+  "notes": "### v1.37.0 - December 17th, 2025\n\n#### P.S. If you see any of us in town or raid, feel free to drop an honor! \n- **Snowving** on Luterra\n- **Administrator** on Ratik\n- **Poont** on Gienah\n\n#### NEW FEATURES\n- updated meter for december patch\n\n#### BUG FIXES AND IMPROVEMENTS\n- standing striker/luminary/master only tracks when at max stacks\n- updated class spec detection for ark grid\n- intermission time now shows in screenshots",
+  "pub_date": "2025-12-17T19:05:25.637Z",
   "platforms": {
     "windows-x86_64": {
-      "url": "https://github.com/snoww/loa-logs/releases/download/v1.36.6/LOA.Logs_1.36.6_x64-setup.nsis.zip",
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmViUG9lL2pDcnhySWxIeE1BNTNvMUtJU3JzZmI2ZnhzQ2V1UkgxaXAyOEFtaW16aURkd0IyN1QrSVAxb2VPWHVsOHVCY0MwOTZuSXB6aEg3VisrOVF3PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzY0NDA0OTg1CWZpbGU6TE9BIExvZ3NfMS4zNi42X3g2NC1zZXR1cC5uc2lzLnppcAorelZXZ0JQejBZMnJOcnBrUHdlSktoQzF1ZHRTN0toRjhZMkhkWkc0SkkxcWFybjVHQ1JXNFBOdGk0cFZidnZxQW1xYVlMaFUrN0VSVTdjTG1pSU5DZz09Cg=="
+      "url": "https://github.com/snoww/loa-logs/releases/download/v1.37.0/LOA.Logs_1.37.0_x64-setup.nsis.zip",
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmNvMFlmM2hPcTYyamJUZHpkZng0MFRyZmN5cGRKOEFwdnFZL1dhL1JXL1RMcHNYNmVWenJxckZ5Q1dxRlpSNGthaFNQUmREeDN5Y0IyV29uZnNaRGdBPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzY1OTk4Mzc2CWZpbGU6TE9BIExvZ3NfMS4zNy4wX3g2NC1zZXR1cC5uc2lzLnppcApFK25jeng4b2krN1JmS2lIYkZWUjRwUlMwcVJlYkU1SmQwUzAvUFNRYkxwNVVMTUtlaHBEa3p0U0RFYktuZ1pJb2I0c3EwdHpGM0FKUi9ObGpkekFEZz09Cg=="
     }
   }
 }

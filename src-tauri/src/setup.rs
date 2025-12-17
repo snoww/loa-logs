@@ -10,14 +10,7 @@ use log::*;
 use tauri::{App, AppHandle, Manager};
 use tauri_plugin_updater::UpdaterExt;
 
-use crate::{
-    background::{BackgroundWorker, BackgroundWorkerArgs},
-    constants::DEFAULT_PORT,
-    context::AppContext,
-    settings::*,
-    shell::ShellManager,
-    ui::{AppHandleExtensions, WindowExtensions, setup_tray},
-};
+use crate::{app, background::{BackgroundWorker, BackgroundWorkerArgs}, constants::DEFAULT_PORT, context::AppContext, settings::*, shell::ShellManager, ui::{AppHandleExtensions, WindowExtensions, setup_tray}};
 
 pub fn setup(app: &mut App) -> Result<(), Box<dyn Error>> {
     #[cfg(not(debug_assertions))]

@@ -249,13 +249,21 @@ pub fn get_player_spec(
             }
         }
         "Destroyer" => {
-            if player.skills.contains_key(&18090) {
+            // chain strike or basic attack is highest dps
+            if player.skills.contains_key(&18260)
+                || player
+                    .skills
+                    .values()
+                    .max_by(|a, b| a.total_damage.cmp(&b.total_damage))
+                    .is_some_and(|s| s.name == "Basic Attack")
+            {
                 "Gravity Training"
             } else {
                 "Rage Hammer"
             }
         }
         "Gunlancer" => {
+            //todo
             if player.skills.contains_key(&17200) && player.skills.contains_key(&17210) {
                 "Lone Knight"
             } else if player.skills.contains_key(&17140) && player.skills.contains_key(&17110) {
@@ -365,21 +373,27 @@ pub fn get_player_spec(
             }
         }
         "Wardancer" => {
-            if player.skills.contains_key(&22340) {
-                "Esoteric Skill Enhancement"
-            } else {
+            // has esoteric origin
+            if player.skills.contains_key(&22400) {
                 "First Intention"
+            } else {
+                "Esoteric Skill Enhancement"
             }
         }
         "Scrapper" => {
-            if player.skills.contains_key(&23230) {
+            // has blazing bombardment
+            if player.skills.contains_key(&23420) {
                 "Ultimate Skill: Taijutsu"
             } else {
                 "Shock Training"
             }
         }
         "Soulfist" => {
-            if player.skills.contains_key(&24200) {
+            // if has hype level 1 or 2, or no hype
+            if player.skills.contains_key(&24020)
+                || player.skills.contains_key(&24021)
+                || player.skills.values().all(|s| !s.name.contains("Hype"))
+            {
                 "Energy Overflow"
             } else {
                 "Robust Spirit"
@@ -393,7 +407,8 @@ pub fn get_player_spec(
             }
         }
         "Striker" => {
-            if player.skills.contains_key(&39290) {
+            // has charging kick
+            if player.skills.contains_key(&39360) {
                 "Deathblow"
             } else {
                 "Esoteric Flurry"
@@ -429,10 +444,11 @@ pub fn get_player_spec(
             }
         }
         "Souleater" => {
-            if player.skills.contains_key(&46250) {
-                "Night's Edge"
-            } else {
+            // has deathlord mode
+            if player.skills.contains_key(&46050) {
                 "Full Moon Harvester"
+            } else {
+                "Night's Edge"
             }
         }
         "Sharpshooter" => {
@@ -447,17 +463,19 @@ pub fn get_player_spec(
             }
         }
         "Deadeye" => {
-            if player.skills.contains_key(&29300) {
-                "Enhanced Weapon"
-            } else {
+            // has secret weapon or quick fire
+            if player.skills.contains_key(&29380) || player.skills.contains_key(&29330) {
                 "Pistoleer"
+            } else {
+                "Enhanced Weapon"
             }
         }
         "Artillerist" => {
-            if player.skills.contains_key(&30260) {
-                "Barrage Enhancement"
-            } else {
+            // if has barrage attack (disables wheelchair)
+            if player.skills.contains_key(&30370) {
                 "Firepower Enhancement"
+            } else {
+                "Barrage Enhancement"
             }
         }
         "Machinist" => {
@@ -472,10 +490,11 @@ pub fn get_player_spec(
             }
         }
         "Gunslinger" => {
-            if player.skills.contains_key(&38110) {
-                "Peacemaker"
-            } else {
+            // has rose blossom
+            if player.skills.contains_key(&38340) {
                 "Time to Hunt"
+            } else {
+                "Peacemaker"
             }
         }
         "Artist" => {
