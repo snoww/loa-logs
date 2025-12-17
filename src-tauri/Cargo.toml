@@ -16,6 +16,7 @@ tauri-build = { version = "2.5.1", features = [] }
 
 [dev-dependencies]
 rand = "0.9.0"
+mockall = "0.13.1"
 
 [dependencies]
 anyhow = "1.0.100"

@@ -1,11 +1,7 @@
 use crate::data::*;
-use crate::live::entity_tracker::Entity;
 use crate::live::party_tracker::PartyTracker;
-use crate::live::status_tracker::StatusEffectBuffCategory::{BattleItem, Bracelet, Elixir, Etc};
-use crate::live::status_tracker::StatusEffectCategory::Debuff;
-use crate::live::status_tracker::StatusEffectShowType::All;
 use crate::live::utils::get_new_id;
-use crate::models::{EncounterEntity, EntityType};
+use crate::models::*;
 use chrono::{DateTime, Duration, Utc};
 use hashbrown::HashMap;
 use meter_core::packets::structures::{PCStruct, StatusEffectData};
@@ -15,8 +11,6 @@ use std::rc::Rc;
 // expire buff after 1 min delay
 const TIMEOUT_DELAY_MS: i64 = 60_000;
 const WORKSHOP_BUFF_ID: u32 = 9701;
-
-pub type StatusEffectRegistry = HashMap<u32, StatusEffectDetails>;
 
 pub struct StatusTracker {
     party_tracker: Rc<RefCell<PartyTracker>>,
@@ -258,7 +252,7 @@ impl StatusTracker {
         //     status_effects_on_source, status_effects_on_target);
         status_effects_on_target.retain(|se| {
             !(se.target_type == StatusEffectTargetType::Local
-                && se.category == Debuff
+                && se.category == StatusEffectCategory::Debuff
                 && se.source_id != source_id
                 && se.db_target_type == "self")
         });
@@ -348,12 +342,12 @@ impl StatusTracker {
 }
 
 fn is_valid_for_raid(status_effect: &StatusEffectDetails) -> bool {
-    (status_effect.buff_category == BattleItem
-        || status_effect.buff_category == Bracelet
-        || status_effect.buff_category == Elixir
-        || status_effect.buff_category == Etc)
-        && status_effect.category == Debuff
-        && status_effect.show_type == All
+    (status_effect.buff_category == StatusEffectBuffCategory::BattleItem
+        || status_effect.buff_category == StatusEffectBuffCategory::Bracelet
+        || status_effect.buff_category == StatusEffectBuffCategory::Elixir
+        || status_effect.buff_category == StatusEffectBuffCategory::Etc)
+        && status_effect.category == StatusEffectCategory::Debuff
+        && status_effect.show_type == StatusEffectShowType::All
 }
 
 pub fn build_status_effect(
@@ -362,10 +356,22 @@ pub fn build_status_effect(
     source_id: u64,
     target_type: StatusEffectTargetType,
     timestamp: DateTime<Utc>,
-    source_entity: Option<&EncounterEntity>,
+    source_entity_skills: Option<&HashMap<u32, Skill>>,
 ) -> StatusEffectDetails {
-    let value = get_status_effect_value(&se_data.value.bytearray_0);
-    let mut status_effect_category = StatusEffectCategory::Other;
+    
+    let StatusEffectData {
+        source_id,
+        status_effect_id,
+        status_effect_instance_id: instance_id,
+        value,
+        total_time,
+        stack_count,
+        end_tick,
+    } = se_data;
+
+    let value = get_status_effect_value(value.bytearray_0);
+
+    let mut category = StatusEffectCategory::Other;
     let mut buff_category = StatusEffectBuffCategory::Other;
     let mut show_type = StatusEffectShowType::Other;
     let mut status_effect_type = StatusEffectType::Other;
@@ -373,21 +379,21 @@ pub fn build_status_effect(
     let mut db_target_type = "".to_string();
     let mut custom_id = 0;
     let mut unique_group = 0;
-    if let Some(effect) = SKILL_BUFF_DATA.get(&se_data.status_effect_id) {
+    if let Some(effect) = SKILL_BUFF_DATA.get(&status_effect_id) {
         name = effect.name.clone().unwrap_or_default();
         unique_group = effect.unique_group;
         if effect.category.as_str() == "debuff" {
-            status_effect_category = Debuff
+            category = StatusEffectCategory::Debuff
         }
         match effect.buff_category.clone().unwrap_or_default().as_str() {
-            "bracelet" => buff_category = Bracelet,
-            "etc" => buff_category = Etc,
-            "battleitem" => buff_category = BattleItem,
-            "elixir" => buff_category = Elixir,
+            "bracelet" => buff_category = StatusEffectBuffCategory::Bracelet,
+            "etc" => buff_category = StatusEffectBuffCategory::Etc,
+            "battleitem" => buff_category = StatusEffectBuffCategory::BattleItem,
+            "elixir" => buff_category = StatusEffectBuffCategory::Elixir,
             _ => {}
         }
         if effect.icon_show_type.clone().unwrap_or_default() == "all" {
-            show_type = All
+            show_type = StatusEffectShowType::All
         }
         status_effect_type = match effect.buff_type.as_str() {
             "shield" => StatusEffectType::Shield,
@@ -398,82 +404,86 @@ pub fn build_status_effect(
         };
         db_target_type = effect.target.to_string();
 
-        if let Some(source_skills) = effect.source_skills.as_ref() {
-            // if skill has multiple source skills, we need to find the one that was last used
-            // e.g. bard brands have same buff id, but have different source skills (sound shock, harp)
-            // if skills only have one source skill, we dont care about it here and it gets handled later
-            if source_skills.len() > 1
-                && let Some(source_entity) = source_entity
-            {
-                let mut last_time = i64::MIN;
-                let mut last_skill = 0_u32;
-                for source_skill in source_skills {
-                    if let Some(skill) = source_entity.skills.get(source_skill) {
-                        if skill.name.is_empty() {
-                            continue;
-                        }
-                        // hard code check for stigma brand tripod
-                        // maybe set up a map of tripods for other skills in future idk??
-                        if skill.id == 21090 {
-                            if let Some(tripods) = skill.tripod_index {
-                                if tripods.second != 2 {
-                                    continue;
-                                }
-                            } else {
+        let source_skills = effect.source_skills.as_ref().filter(|pr| pr.len() > 1);
+
+        // if skill has multiple source skills, we need to find the one that was last used
+        // e.g. bard brands have same buff id, but have different source skills (sound shock, harp)
+        // if skills only have one source skill, we dont care about it here and it gets handled later
+        if let Some((source_skills, source_entity_skills)) = source_skills.zip(source_entity_skills) {
+            let mut last_time = i64::MIN;
+            let mut last_skill = 0_u32;
+
+            for source_skill_id in source_skills {
+
+                if let Some(skill) = source_entity_skills.get(source_skill_id) {
+                    if skill.name.is_empty() {
+                        continue;
+                    }
+                    // hard code check for stigma brand tripod
+                    // maybe set up a map of tripods for other skills in future idk??
+                    if skill.id == 21090 {
+                        if let Some(tripods) = skill.tripod_index {
+                            if tripods.second != 2 {
                                 continue;
                             }
-                        }
-                        if skill.last_timestamp > last_time {
-                            last_skill = *source_skill;
-                            last_time = skill.last_timestamp;
+                        } else {
+                            continue;
                         }
                     }
+                    
+                    if skill.last_timestamp > last_time {
+                        last_skill = *source_skill_id;
+                        last_time = skill.last_timestamp;
+                    }
                 }
+            }
 
-                // if such a skill exists, we assign a new custom buff id to distinguish it.
-                // we encode the buff id as well too because there are multiple buffs that have
-                // the same source skill, that also have multiple source skills.
-                // without it, it leads to customids that are different but end up sharing the same id
-                if last_skill > 0 {
-                    custom_id = get_new_id(last_skill + (effect.id as u32));
-                }
+            // if such a skill exists, we assign a new custom buff id to distinguish it.
+            // we encode the buff id as well too because there are multiple buffs that have
+            // the same source skill, that also have multiple source skills.
+            // without it, it leads to customids that are different but end up sharing the same id
+            if last_skill > 0 {
+                custom_id = get_new_id(last_skill + (effect.id as u32));
             }
         }
     }
 
-    let expiry = if se_data.total_time > 0. && se_data.total_time < 604800. {
+    let expire_at = if total_time > 0. && total_time < 604800. {
         Some(
             timestamp
-                + Duration::milliseconds((se_data.total_time as i64) * 1000 + TIMEOUT_DELAY_MS),
+                + Duration::milliseconds((total_time as i64) * 1000 + TIMEOUT_DELAY_MS),
         )
     } else {
         None
     };
 
+    let id = if custom_id > 0 { custom_id } else { status_effect_id };
+
     StatusEffectDetails {
-        instance_id: se_data.status_effect_instance_id,
+        id,
+        instance_id,
         source_id,
         target_id,
-        status_effect_id: se_data.status_effect_id,
+        status_effect_id,
         custom_id,
         target_type,
         db_target_type,
         value,
-        stack_count: se_data.stack_count,
+        stack_count,
         buff_category,
-        category: status_effect_category,
+        category,
         status_effect_type,
         show_type,
-        expiration_delay: se_data.total_time,
-        expire_at: expiry,
-        end_tick: se_data.end_tick,
+        expiration_delay: total_time,
+        expire_at,
+        end_tick,
         name,
         timestamp,
         unique_group,
     }
 }
 
-pub fn get_status_effect_value(value: &Option<Vec<u8>>) -> u64 {
+pub fn get_status_effect_value(value: Option<Vec<u8>>) -> u64 {
     value.as_ref().map_or(0, |v| {
         let c1 = v
             .get(0..8)
@@ -483,65 +493,4 @@ pub fn get_status_effect_value(value: &Option<Vec<u8>>) -> u64 {
             .map_or(0, |bytes| u64::from_le_bytes(bytes.try_into().unwrap()));
         c1.min(c2)
     })
-}
-#[derive(Debug, Default, Copy, Clone, PartialEq, Eq)]
-pub enum StatusEffectTargetType {
-    #[default]
-    Party = 0,
-    Local = 1,
-}
-
-#[derive(Debug, Default, Copy, Clone, PartialEq, Eq)]
-pub enum StatusEffectCategory {
-    #[default]
-    Other = 0,
-    Debuff = 1,
-}
-
-#[derive(Debug, Default, Copy, Clone, PartialEq, Eq)]
-pub enum StatusEffectBuffCategory {
-    #[default]
-    Other = 0,
-    Bracelet = 1,
-    Etc = 2,
-    BattleItem = 3,
-    Elixir = 4,
-}
-
-#[derive(Debug, Default, Copy, Clone, PartialEq, Eq)]
-pub enum StatusEffectShowType {
-    #[default]
-    Other = 0,
-    All = 1,
-}
-
-#[derive(Debug, Default, Copy, Clone, PartialEq, Eq)]
-pub enum StatusEffectType {
-    #[default]
-    Shield = 0,
-    Other = 1,
-    HardCrowdControl = 2, // stun, root, MC, etc
-}
-
-#[derive(Debug, Default, Clone)]
-pub struct StatusEffectDetails {
-    pub instance_id: u32,
-    pub status_effect_id: u32,
-    pub custom_id: u32,
-    pub target_id: u64,
-    pub source_id: u64,
-    pub target_type: StatusEffectTargetType,
-    pub db_target_type: String,
-    pub value: u64,
-    pub stack_count: u8,
-    pub category: StatusEffectCategory,
-    pub buff_category: StatusEffectBuffCategory,
-    pub show_type: StatusEffectShowType,
-    pub status_effect_type: StatusEffectType,
-    pub expiration_delay: f32,
-    pub expire_at: Option<DateTime<Utc>>,
-    pub end_tick: u64,
-    pub timestamp: DateTime<Utc>,
-    pub name: String,
-    pub unique_group: u32,
 }
