@@ -249,8 +249,9 @@ pub fn get_player_spec(
             }
         }
         "Destroyer" => {
-            // chain strike or basic attack is highest dps
+            // chain strike or vortex gravity or basic attack is highest dps
             if player.skills.contains_key(&18260)
+                || player.skills.contains_key(&18011)
                 || player
                     .skills
                     .values()
