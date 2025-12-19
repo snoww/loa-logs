@@ -249,8 +249,9 @@ pub fn get_player_spec(
             }
         }
         "Destroyer" => {
-            // chain strike or basic attack is highest dps
+            // chain strike or vortex gravity or basic attack is highest dps
             if player.skills.contains_key(&18260)
+                || player.skills.contains_key(&18011)
                 || player
                     .skills
                     .values()
@@ -263,8 +264,9 @@ pub fn get_player_spec(
             }
         }
         "Gunlancer" => {
-            //todo
-            if player.skills.contains_key(&17200) && player.skills.contains_key(&17210) {
+            // todo
+            // surge cannon
+            if player.skills.contains_key(&17200) {
                 "Lone Knight"
             } else if player.skills.contains_key(&17140) && player.skills.contains_key(&17110) {
                 "Combat Readiness"

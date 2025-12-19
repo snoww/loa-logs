@@ -275,7 +275,11 @@ impl StatusTracker {
             Some(ser) => ser,
             None => return Vec::new(),
         };
-        ser.retain(|_, se| se.expire_at.is_none_or(|expire_at| expire_at > timestamp));
+        
+        ser.retain(|_, se| {
+            se.expire_at.is_none_or(|expire_at| expire_at > timestamp) && buff_at_max_stacks(se)
+        });
+        
         ser.values().cloned().collect()
     }
 
@@ -493,4 +497,14 @@ pub fn get_status_effect_value(value: Option<Vec<u8>>) -> u64 {
             .map_or(0, |bytes| u64::from_le_bytes(bytes.try_into().unwrap()));
         c1.min(c2)
     })
+}
+
+// only track certain buffs when they are at max stacks
+pub fn buff_at_max_stacks(status_effect: &StatusEffectDetails) -> bool {
+    match status_effect.unique_group {
+        2000440 => status_effect.stack_count == 6, // standing strike
+        2003220 => status_effect.stack_count == 5, // master
+        2003240 => status_effect.stack_count == 5, // luminary
+        _ => true,
+    }
 }

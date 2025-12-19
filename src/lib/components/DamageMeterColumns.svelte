@@ -55,7 +55,7 @@
       headerTooltip: "Damage Dealt",
       value: damage,
       valueTooltip: damageTooltip,
-      width: "w-14"
+      width: "w-15"
     },
 
     // Unbuffed damage dealt
@@ -68,7 +68,7 @@
       headerTooltip: "Unbuffed Damage Dealt (damage dealt excluding buffs or debuffs from the support)",
       value: unbuffedDamage,
       valueTooltip: unbuffedDamageTooltip,
-      width: "w-14"
+      width: "w-15"
     },
 
     // Damage per second
