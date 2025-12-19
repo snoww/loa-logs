@@ -17,15 +17,17 @@ import {
 } from "$lib/types";
 import { customRound, getSkillIcon } from "$lib/utils";
 
-export function defaultBuffFilter(buffType: number): boolean {
+export function defaultBuffFilter(buff: StatusEffect): boolean {
   return (
     ((StatusEffectBuffTypeFlags.DMG |
       StatusEffectBuffTypeFlags.CRIT |
       StatusEffectBuffTypeFlags.ATKSPEED |
       StatusEffectBuffTypeFlags.MOVESPEED |
       StatusEffectBuffTypeFlags.COOLDOWN) &
-      buffType) !==
-    0
+      buff.buffType) !==
+      0 ||
+    buff.buffCategory === "arkgrid" ||
+    buff.buffCategory === "arkpassive"
   );
 }
 
@@ -40,7 +42,7 @@ export function groupedSynergiesAdd(
   // by default, only show dmg, crit, atk spd, cd buffs.
   // show all arcana cards for fun
   if (!shields && (!focusedPlayer || focusedPlayer.classId !== 202)) {
-    if (settings.app.buffs.default && !defaultBuffFilter(buff.buffType)) {
+    if (settings.app.buffs.default && !defaultBuffFilter(buff)) {
       return;
     }
   }
@@ -113,7 +115,7 @@ export function filterStatusEffects(
   else if (isSelfSkillSynergy(buff)) {
     if ((!tab || tab === MeterTab.SELF_BUFFS) && focusedPlayer) {
       if (!skillCastLogFilter || skillCastLogFilter === "Self") {
-        if (buff.buffCategory === "ability" || buff.buffCategory === "arkpassive") {
+        if (buff.buffCategory === "ability" || buff.buffCategory === "arkpassive" || buff.buffCategory === "arkgrid") {
           key = `${buff.uniqueGroup ? buff.uniqueGroup : id}`;
         } else {
           if (focusedPlayer.classId !== buff.source.skill?.classId) {
@@ -427,8 +429,8 @@ const buffCategories = {
   partySynergy: ["classskill", "identity", "ability", "arkpassive"],
   selfItemSynergy: ["pet", "cook", "battleitem", "dropsofether", "bracelet", "elixir"],
   setSynergy: ["set", "arkpassive"],
-  selfSkillSynergy: ["classskill", "identity", "ability", "arkpassive"],
-  other: ["etc", "arkpassive"]
+  selfSkillSynergy: ["classskill", "identity", "ability", "arkpassive", "arkgrid"],
+  other: ["etc", "arkpassive", "arkgrid"]
 };
 
 export function isPartySynergy(statusEffect: StatusEffect) {
