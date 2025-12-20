@@ -77,6 +77,7 @@
 
     handle = await onZoneChange((event) => {
       misc.raidInProgress = false;
+      misc.missingInfo = false;
       if (!event.payload) {
         addToast(zoneChange);
       }

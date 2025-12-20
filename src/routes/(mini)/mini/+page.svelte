@@ -45,6 +45,7 @@
 
     handle = await onZoneChange(() => {
       misc.raidInProgress = false;
+      misc.missingInfo = false;
       setTimeout(() => {
         misc.raidInProgress = true;
       }, 8000);
