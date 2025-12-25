@@ -501,10 +501,14 @@ pub fn get_player_spec(
         }
         "Artist" => {
             // dps if has cattle drive or shattering strike or rising moon
+            // - check rising moon damage due to sup artist using dps ark grid core to get full bubbles
             // or sunsketch with crit tripod
             if player.skills.contains_key(&31940)
                 || player.skills.contains_key(&31060)
-                || player.skills.contains_key(&31145)
+                || player
+                    .skills
+                    .get(&31145)
+                    .is_some_and(|s| s.total_damage > 0)
                 || player
                     .skills
                     .get(&31400)
