@@ -525,7 +525,9 @@ impl EncounterState {
         let mut skill_id = skill_id;
         if let Some(skill) = entity.skills.get_mut(&skill_id) {
             skill.casts += 1;
-            skill.tripod_index = tripod_index;
+            if tripod_index.is_some() {
+                skill.tripod_index = tripod_index;
+            }
         } else if let Some(skill) = entity
             .skills
             .values_mut()
@@ -534,7 +536,9 @@ impl EncounterState {
             // no id match found, search skills by name
             skill.casts += 1;
             skill_id = skill.id;
-            skill.tripod_index = tripod_index;
+            if tripod_index.is_some() {
+                skill.tripod_index = tripod_index;
+            }
         } else {
             // no match for id or name
             entity.skills.insert(
