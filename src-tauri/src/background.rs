@@ -109,6 +109,7 @@ impl BackgroundWorker {
                 local_player_repository,
                 heartbeat_api,
                 region_file_path,
+                version
             };
 
             live::start(args).expect("unexpected error occurred in parser");

@@ -1,9 +1,10 @@
-pub mod data;
-pub mod encounter;
-pub mod entity;
-pub mod misc;
-pub mod skill;
-pub mod status_effect;
+mod data;
+mod encounter;
+mod entity;
+mod misc;
+mod skill;
+mod status_effect;
+mod dps;
 mod utils;
 
 pub use data::*;
@@ -12,3 +13,4 @@ pub use entity::*;
 pub use misc::*;
 pub use skill::*;
 pub use status_effect::*;
+pub use dps::*;

@@ -1,6 +1,26 @@
+use hashbrown::HashMap;
 use serde::{Deserialize, Serialize};
 use std::fmt::Display;
 use std::str::FromStr;
+
+#[derive(Debug, Default, Clone)]
+pub struct Entity {
+    pub id: u64,
+    pub entity_type: EntityType,
+    pub name: String,
+    pub npc_id: u32,
+    pub class_id: u32,
+    pub gear_level: f32,
+    pub character_id: u64,
+    pub owner_id: u64,
+    pub skill_effect_id: u32,
+    pub skill_id: u32,
+    pub stats: HashMap<u8, i64>,
+    pub stance: u8,
+    pub grade: String,
+    pub push_immune: bool,
+    pub level: u16,
+}
 
 #[derive(Debug, Default, Serialize, Deserialize, PartialEq, Copy, Clone)]
 pub enum EntityType {

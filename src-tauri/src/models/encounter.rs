@@ -151,21 +151,6 @@ pub struct SkillStats {
 }
 
 #[derive(Debug)]
-pub struct DamageData {
-    pub skill_id: u32,
-    pub skill_effect_id: u32,
-    pub damage: i64,
-    pub shield_damage: Option<i64>,
-    pub modifier: i32,
-    pub target_current_hp: i64,
-    pub target_max_hp: i64,
-    pub damage_attribute: Option<u8>,
-    pub damage_type: u8,
-    pub stagger: u32,
-    pub rdps_data: Vec<RdpsData>,
-}
-
-#[derive(Debug)]
 pub struct RdpsData {
     pub rdps_type: u8,
     pub value: i64,
@@ -273,35 +258,4 @@ pub struct EngravingData {
     pub id: u32,
     pub name: Option<String>,
     pub icon: Option<String>,
-}
-
-#[derive(Debug, PartialEq)]
-#[allow(non_camel_case_types)]
-#[repr(i32)]
-pub enum HitOption {
-    NONE,
-    BACK_ATTACK,
-    FRONTAL_ATTACK,
-    FLANK_ATTACK,
-    MAX,
-}
-
-#[derive(Debug, PartialEq)]
-#[allow(non_camel_case_types)]
-#[repr(u32)]
-pub enum HitFlag {
-    NORMAL,
-    CRITICAL,
-    MISS,
-    INVINCIBLE,
-    DOT,
-    IMMUNE,
-    IMMUNE_SILENCED,
-    FONT_SILENCED,
-    DOT_CRITICAL,
-    DODGE,
-    REFLECT,
-    DAMAGE_SHARE,
-    DODGE_HIT,
-    MAX,
 }

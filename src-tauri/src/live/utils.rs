@@ -1,10 +1,7 @@
 use crate::data::*;
-use crate::live::entity_tracker::Entity;
 use crate::live::skill_tracker::SkillTracker;
-use crate::live::status_tracker::StatusEffectDetails;
 use crate::models::*;
 use crate::utils::*;
-use hashbrown::HashMap;
 
 pub fn encounter_entity_from_entity(entity: &Entity) -> EncounterEntity {
     let mut e = EncounterEntity {
@@ -523,15 +520,6 @@ pub fn check_tripod_level_change(before: Option<TripodLevel>, after: Option<Trip
     let after = after.unwrap();
 
     before != after
-}
-
-pub fn map_status_effect(se: &StatusEffectDetails, custom_id_map: &mut HashMap<u32, u32>) -> u32 {
-    if se.custom_id > 0 {
-        custom_id_map.insert(se.custom_id, se.status_effect_id);
-        se.custom_id
-    } else {
-        se.status_effect_id
-    }
 }
 
 pub fn get_new_id(source_skill: u32) -> u32 {
