@@ -755,10 +755,15 @@ impl EncounterState {
                 );
             }
 
-            if let Ok(result) = self.sntp_client.synchronize("time.cloudflare.com") {
-                let dt = result.datetime().into_chrono_datetime().unwrap_or_default();
-                self.ntp_fight_start = dt.timestamp_millis();
-                // debug_print(format_args!("fight start local: {}, ntp: {}", Utc::now().to_rfc3339(), dt.to_rfc3339()));
+            match self.sntp_client.synchronize("time.cloudflare.com") {
+                Ok(result) => {
+                    let dt = result.datetime().into_chrono_datetime().unwrap_or_default();
+                    self.ntp_fight_start = dt.timestamp_millis();
+                    // debug_print(format_args!("fight start local: {}, ntp: {}", Utc::now().to_rfc3339(), dt.to_rfc3339()));
+                }
+                Err(e) => {
+                    warn!("failed to get NTP timestamp: {}", e);
+                }
             };
 
             self.encounter.boss_only_damage = self.boss_only_damage;
