@@ -1,11 +1,11 @@
 {
-  "version": "v1.37.1",
-  "notes": "### v1.37.1 - December 17th, 2025\n\n#### P.S. If you see any of us in town or raid, feel free to drop an honor! \n- **Snowving** on Luterra\n- **Administrator** on Ratik\n- **Poont** on Gienah\n\n#### NEW FEATURES\n- updated meter for december patch\n\n#### BUG FIXES AND IMPROVEMENTS\n- standing striker/luminary/master only tracks when at max stacks\n- updated class spec detection for ark grid\n- intermission time now shows in screenshots",
-  "pub_date": "2025-12-19T19:05:25.637Z",
+  "version": "v1.37.2",
+  "notes": "### v1.37.2 - December 31st, 2025\n\n#### P.S. If you see any of us in town or raid, feel free to drop an honor!\n\n- **Snowving** on Luterra\n- **Administrator** on Ratik\n- **Poont** on Gienah\n\n#### BUG FIXES AND IMPROVEMENTS\n\n- entering new zone will reset meter from meter dmg bug\n- fixed support artists being labeled as dps when using rising moon core for bubbles\n- fixed \"hide meter\" and \"hide logs\" settings not working correctly\n- adjusted some gunlancer class spec detections\n",
+  "pub_date": "2025-12-31T00:20:40.690Z",
   "platforms": {
     "windows-x86_64": {
-      "url": "https://github.com/snoww/loa-logs/releases/download/v1.37.1/LOA.Logs_1.37.1_x64-setup.nsis.zip",
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlZCRUJnQTVGVWF6S0c4UlN5aWwrOVAzZGdyZGN0MHJCL3lvQ3NMRGE3cEorbVVSV01XSVZjcXBZSkxhUXFDWGZvSFBCS0hZNktBeGp4ZDFwZG5PVFE4PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzY2MTIzMzY5CWZpbGU6TE9BIExvZ3NfMS4zNy4xX3g2NC1zZXR1cC5uc2lzLnppcApLdXdlN2FYVU01dmhlZnRMYWE1TGdqNXkzaWcrNS9ObEJMNUZHaGxmVGVVd0RZM1MwZkJLM3JJeVlWSkVycGNic2VSS042eUVTamVEYjNzc1JGOWpBdz09Cg=="
+      "url": "https://github.com/snoww/loa-logs/releases/download/v1.37.2/LOA.Logs_1.37.1_x64-setup.nsis.zip",
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmJQMWdOeEdXRC9HRG52UjdOUXNtLy9XUVBjUW0xNHR4UHg1TmU3dmRuaHcrTjZyY24vUWVHWDg3Mm1oWWExNTAzbTQ5SDZPOW1jWlVuNElxMjZvQmd3PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzY3MTcwMjU1CWZpbGU6TE9BIExvZ3NfMS4zNy4yX3g2NC1zZXR1cC5uc2lzLnppcAo5SVRnWmtpVmdqWFNnSkdzS3ZoRnZ3cHdYN3o3alN6YjdMVU1keTVNRzd5SGZlb09pMm0za0ZrY21meEVKbHpsclhpSk93aDlTWVViaUlzOE9qSGtEZz09Cg=="
     }
   }
 }
