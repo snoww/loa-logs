@@ -265,10 +265,11 @@ pub fn get_player_spec(
         }
         "Gunlancer" => {
             // todo
-            // surge cannon
-            if player.skills.contains_key(&17200) {
+            // surge cannon and no guardian thundercrack
+            if player.skills.contains_key(&17200) && !player.skills.contains_key(&17140) {
                 "Lone Knight"
             } else if player.skills.contains_key(&17140) && player.skills.contains_key(&17110) {
+                // has guardian thundercrack and leap attack
                 "Combat Readiness"
             } else {
                 "Princess"
@@ -501,10 +502,14 @@ pub fn get_player_spec(
         }
         "Artist" => {
             // dps if has cattle drive or shattering strike or rising moon
+            // - check rising moon damage due to sup artist using dps ark grid core to get full bubbles
             // or sunsketch with crit tripod
             if player.skills.contains_key(&31940)
                 || player.skills.contains_key(&31060)
-                || player.skills.contains_key(&31145)
+                || player
+                    .skills
+                    .get(&31145)
+                    .is_some_and(|s| s.total_damage > 0)
                 || player
                     .skills
                     .get(&31400)

@@ -10,7 +10,15 @@ use log::*;
 use tauri::{App, AppHandle, Manager};
 use tauri_plugin_updater::UpdaterExt;
 
-use crate::{app, background::{BackgroundWorker, BackgroundWorkerArgs}, constants::DEFAULT_PORT, context::AppContext, settings::*, shell::ShellManager, ui::{AppHandleExtensions, WindowExtensions, setup_tray}};
+use crate::{
+    app,
+    background::{BackgroundWorker, BackgroundWorkerArgs},
+    constants::DEFAULT_PORT,
+    context::AppContext,
+    settings::*,
+    shell::ShellManager,
+    ui::{AppHandleExtensions, WindowExtensions, setup_tray},
+};
 
 pub fn setup(app: &mut App) -> Result<(), Box<dyn Error>> {
     #[cfg(not(debug_assertions))]
@@ -108,11 +116,16 @@ fn initialize_windows_and_settings(
         } else if !settings.general.hide_meter_on_start && !settings.general.mini {
             meter_window.restore_default_state();
             meter_window.show().unwrap();
+        } else {
+            meter_window.hide().unwrap();
+            mini_window.hide().unwrap()
         }
 
         if !settings.general.hide_logs_on_start {
             logs_window.restore_default_state();
             logs_window.show().unwrap();
+        } else {
+            logs_window.hide().unwrap();
         }
 
         if settings.general.always_on_top {

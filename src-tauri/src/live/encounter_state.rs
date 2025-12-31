@@ -521,7 +521,9 @@ impl EncounterState {
         let mut skill_id = skill_id;
         if let Some(skill) = entity.skills.get_mut(&skill_id) {
             skill.casts += 1;
-            skill.tripod_index = tripod_index;
+            if tripod_index.is_some() {
+                skill.tripod_index = tripod_index;
+            }
         } else if let Some(skill) = entity
             .skills
             .values_mut()
@@ -530,7 +532,9 @@ impl EncounterState {
             // no id match found, search skills by name
             skill.casts += 1;
             skill_id = skill.id;
-            skill.tripod_index = tripod_index;
+            if tripod_index.is_some() {
+                skill.tripod_index = tripod_index;
+            }
         } else {
             // no match for id or name
             entity.skills.insert(
@@ -724,9 +728,15 @@ impl EncounterState {
                 );
             }
 
-            if let Some(ntp_fight_start) = sntp_client.synchronize() {
-                self.ntp_fight_start = ntp_fight_start;
-                // debug_print(format_args!("fight start local: {}, ntp: {}", Utc::now().to_rfc3339(), dt.to_rfc3339()));
+            match self.sntp_client.synchronize("time.cloudflare.com") {
+                Ok(result) => {
+                    let dt = result.datetime().into_chrono_datetime().unwrap_or_default();
+                    self.ntp_fight_start = dt.timestamp_millis();
+                    // debug_print(format_args!("fight start local: {}, ntp: {}", Utc::now().to_rfc3339(), dt.to_rfc3339()));
+                }
+                Err(e) => {
+                    warn!("failed to get NTP timestamp: {}", e);
+                }
             };
 
             self.encounter.boss_only_damage = self.boss_only_damage;

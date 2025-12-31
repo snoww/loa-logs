@@ -1,11 +1,26 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.37.1 - December 19th, 2025
+    v1.37.2 - December 31st, 2025
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
   </div>
 </div>
+
+#### P.S. If you see any of us in town or raid, feel free to drop an honor!
+
+- **Snowving** on Luterra
+- **Administrator** on Ratik
+- **Poont** on Gienah
+
+#### BUG FIXES AND IMPROVEMENTS
+
+- entering new zone will reset meter from meter dmg bug
+- fixed support artists being labeled as dps when using rising moon core for bubbles
+- fixed "hide meter" and "hide logs" settings not working correctly
+- adjusted some gunlancer class spec detections
+
+### v1.37.1 - December 19th, 2025
 
 #### NEW FEATURES
 
