@@ -51,7 +51,7 @@ impl super::AutoLaunch for AutoLaunchManager {
         trigger.put_Delay("PT10S")?; // 10 seconds delay ISO8601
 
         task.get_Principal()?
-            .put_RunLevel(co::TASK_RUNLEVEL_TYPE::HIGHEST)?;
+            .put_RunLevel(co::TASK_RUNLEVEL::HIGHEST)?;
 
         let action = task
             .get_Actions()?

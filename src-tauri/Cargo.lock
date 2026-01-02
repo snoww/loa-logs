@@ -7072,8 +7072,9 @@ dependencies = [
 
 [[package]]
 name = "winsafe"
-version = "0.0.25"
-source = "git+https://github.com/anyduck/winsafe.git?rev=1a6250e#1a6250ec67c63b76d9a108af57c9e905962fa426"
+version = "0.0.27"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "bcfff8264c3af1b0352006934e2265365ecb5a145aee88e770dc8b82e0456f4f"
 
 [[package]]
 name = "wit-bindgen"
