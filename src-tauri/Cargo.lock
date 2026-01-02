@@ -5950,8 +5950,9 @@ dependencies = [
 
 [[package]]
 name = "tray-icon"
-version = "0.21.0"
-source = "git+https://github.com/tauri-apps/tray-icon.git?rev=tray-icon-v0.21.0#34a3442868725d53c042d619f5c60c84dc5072df"
+version = "0.21.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a5e85aa143ceb072062fc4d6356c1b520a51d636e7bc8e77ec94be3608e5e80c"
 dependencies = [
  "crossbeam-channel",
  "dirs 6.0.0",
@@ -5966,7 +5967,7 @@ dependencies = [
  "png 0.17.16",
  "serde",
  "thiserror 2.0.17",
- "windows-sys 0.59.0",
+ "windows-sys 0.60.2",
 ]
 
 [[package]]

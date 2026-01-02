@@ -1,15 +1,12 @@
-use anyhow::anyhow;
 use strum::EnumProperty;
 use strum_macros::{AsRefStr, EnumProperty, EnumString};
 use tauri::{
     AppHandle, Runtime,
     menu::{Menu, MenuBuilder},
+    tray::TrayIconBuilder,
 };
 
-use crate::{
-    constants::*,
-    ui::{on_menu_event, on_tray_icon_event},
-};
+use crate::ui::{on_menu_event, on_tray_icon_event};
 
 #[derive(Debug, EnumString, EnumProperty, AsRefStr)]
 #[strum(serialize_all = "kebab_case")]
@@ -69,12 +66,12 @@ pub fn setup_tray(app: &AppHandle) -> tauri::Result<()> {
         .command(TrayCommand::Quit)
         .build()?;
 
-    let tray = app
-        .tray_by_id(METER_WINDOW_LABEL)
-        .ok_or_else(|| anyhow!("Could not find main window"))?;
-    tray.set_menu(Some(menu))?;
-    tray.on_menu_event(on_menu_event);
-    tray.on_tray_icon_event(on_tray_icon_event);
+    let tray = TrayIconBuilder::new()
+        .icon(tauri::include_image!("icons/icon.png"))
+        .menu(&menu)
+        .on_menu_event(on_menu_event)
+        .on_tray_icon_event(on_tray_icon_event)
+        .show_menu_on_left_click(false);
 
-    Ok(())
+    tray.build(app).map(|_| ())
 }

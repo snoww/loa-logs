@@ -88,11 +88,3 @@ strip = true # Remove debug symbols
 
 [profile.dev.package."*"]
 debug = false # Disable debug symbols for dependencies
-
-[profile.dev]
-incremental = true
-opt-level = 0
-
-[patch.crates-io]
-# Downgrade until https://github.com/tauri-apps/tao/issues/1140 is resolved
-tray-icon = { git = "https://github.com/tauri-apps/tray-icon.git", rev = "tray-icon-v0.21.0" }
