@@ -10,10 +10,9 @@
     Set-ScheduledTask -TaskName '${TASK_NAME}' -Action @(               \
       New-ScheduledTaskAction -Execute '$INSTDIR\${MAINBINARYNAME}.exe' \
     )"`
-  ; Add delay to auto start trigger if exists
+  ; Remove delay to auto start trigger if exists
   nsExec::Exec `powershell -NoProfile -ExecutionPolicy Bypass -Command "\
     $$Trigger = New-ScheduledTaskTrigger -AtLogOn;                      \
-    $$Trigger.Delay = 'PT10S';                                          \
     Set-ScheduledTask -TaskName '${TASK_NAME}' -Trigger @($$Trigger)"`
 !macroend
 
