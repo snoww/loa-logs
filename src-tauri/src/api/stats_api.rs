@@ -1,7 +1,4 @@
-use crate::{
-    api::{GetCharacterInfoArgs, SendRaidAnalyticsArgs},
-    models::*,
-};
+use crate::{api::GetCharacterInfoArgs, models::*};
 use hashbrown::HashMap;
 use log::*;
 use reqwest::Client;
@@ -27,12 +24,6 @@ impl StatsApi {
             version,
             client: Client::new(),
         }
-    }
-
-    pub async fn send_raid_analytics<'a>(&self, args: SendRaidAnalyticsArgs<'a>) {
-        let url = "https://recap.ags.lol/api/report";
-
-        let _ = self.client.post(url).json(&args).send().await;
     }
 
     pub async fn get_character_info<'a>(

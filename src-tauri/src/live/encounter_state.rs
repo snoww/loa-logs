@@ -1,4 +1,4 @@
-use crate::api::{GetCharacterInfoArgs, SendRaidAnalyticsArgs, StatsApi};
+use crate::api::{GetCharacterInfoArgs, StatsApi};
 use crate::data::*;
 use crate::database::Repository;
 use crate::database::models::InsertEncounterArgs;
@@ -34,11 +34,6 @@ pub struct EncounterState {
 
     boss_hp_log: HashMap<String, Vec<BossHpLog>>,
 
-    // item_id -> count
-    battle_item_tracker: HashMap<u32, u32>,
-    // buff_id -> count
-    crowd_control_tracker: HashMap<u32, u32>,
-
     pub intermission_start: Option<i64>,
     pub intermission_end: Option<i64>,
 
@@ -73,8 +68,6 @@ impl EncounterState {
             damage_log: HashMap::new(),
             boss_hp_log: HashMap::new(),
             cast_log: HashMap::new(),
-            battle_item_tracker: HashMap::new(),
-            crowd_control_tracker: HashMap::new(),
             intermission_start: None,
             intermission_end: None,
 
@@ -112,8 +105,6 @@ impl EncounterState {
         self.damage_log = HashMap::new();
         self.cast_log = HashMap::new();
         self.boss_hp_log = HashMap::new();
-        self.battle_item_tracker = HashMap::new();
-        self.crowd_control_tracker = HashMap::new();
         self.intermission_start = None;
         self.intermission_end = None;
         self.party_info = Vec::new();
@@ -1237,12 +1228,6 @@ impl EncounterState {
             .entry(victim_entity.name.clone())
             .or_insert_with(|| encounter_entity_from_entity(victim_entity));
 
-        // track number of crowd control effects applied
-        *self
-            .crowd_control_tracker
-            .entry(status_effect.status_effect_id)
-            .or_insert(0) += 1;
-
         // expiration delay is zero or negative for infinite effects. Instead of applying them now,
         // only apply them after they've been removed (this avoids an issue where if we miss the removal
         // we end up applying a very long incapacitation)
@@ -1598,11 +1583,6 @@ impl EncounterState {
         if self.encounter.fight_start == 0 {
             return;
         }
-
-        self.battle_item_tracker
-            .entry(*battle_item_id)
-            .and_modify(|e| *e += 1)
-            .or_insert(1);
     }
 
     pub fn save_to_db(&mut self, manual: bool) {
@@ -1644,8 +1624,6 @@ impl EncounterState {
 
         let skill_cast_log = self.skill_tracker.get_cast_log();
         let skill_cooldowns = self.skill_tracker.skill_cooldowns.clone();
-        let battle_items = self.battle_item_tracker.clone();
-        let cc_tracker = self.crowd_control_tracker.clone();
         let intermission_start = self.intermission_start;
         let intermission_end = self.intermission_end;
 
@@ -1661,21 +1639,10 @@ impl EncounterState {
 
         let app = self.app.clone();
         task::spawn(async move {
-            let mut player_info = None;
             let stats_api = app.state::<StatsApi>();
-
-            player_info =
+            let player_info =
                 if let Some(args) = GetCharacterInfoArgs::new(&encounter, &raid_difficulty) {
                     info!("fetching player info");
-
-                    if let Some(args) = SendRaidAnalyticsArgs::new(
-                        &encounter,
-                        &raid_difficulty,
-                        battle_items,
-                        cc_tracker,
-                    ) {
-                        stats_api.send_raid_analytics(args).await;
-                    }
 
                     stats_api.get_character_info(args).await
                 } else {
