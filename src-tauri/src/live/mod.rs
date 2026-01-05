@@ -955,6 +955,12 @@ pub fn start(args: StartArgs) -> Result<()> {
                     debug_print(format_args!("transit zone id: {}", pkt.zone_id));
                     state.damage_is_valid = true;
                     damage_handler.update_zone_instance_id(pkt.zone_instance_id);
+                    // update party info
+                    state.party_info = if let Some(party) = party_cache.clone() {
+                        party
+                    } else {
+                        update_party(&party_tracker, &entity_tracker)
+                    };
                     state.on_transit(pkt.zone_id);
                 }
             }

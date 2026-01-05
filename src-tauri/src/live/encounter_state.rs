@@ -215,30 +215,10 @@ impl EncounterState {
     }
 
     pub fn on_transit(&mut self, zone_id: u32) {
-        // do not reset on kazeros g2
-        if matches!(zone_id, 37544 | 37545 | 37546) {
-            if zone_id == 37545 {
-                let now = Utc::now().timestamp_millis();
-                self.intermission_start = Some(now);
-                info!("starting intermission");
-                for entity in self
-                    .encounter
-                    .entities
-                    .values_mut()
-                    .filter(|e| e.entity_type == EntityType::Player)
-                {
-                    if let Some(death) = entity
-                        .damage_stats
-                        .death_info
-                        .as_mut()
-                        .and_then(|info| info.last_mut())
-                    {
-                        death.dead_for = Some(now - death.death_time);
-                    }
-                }
-            }
-
-            return;
+        if zone_id == 37545 {
+            // split encounter for kazeros g2 intermission
+            info!("starting intermission");
+            self.on_phase_transition(2);
         }
 
         self.app
@@ -345,13 +325,13 @@ impl EncounterState {
             };
 
             // set intermission end if boss is kazeros g2
-            if self.encounter.current_boss_name == "Death Incarnate Kazeros"
-                && self.intermission_start.is_some()
-                && self.intermission_end.is_none()
-            {
-                self.intermission_end = Some(Utc::now().timestamp_millis());
-                info!("ending intermission");
-            }
+            // if self.encounter.current_boss_name == "Death Incarnate Kazeros"
+            //     && self.intermission_start.is_some()
+            //     && self.intermission_end.is_none()
+            // {
+            //     self.intermission_end = Some(Utc::now().timestamp_millis());
+            //     info!("ending intermission");
+            // }
         }
     }
 
