@@ -1,20 +1,23 @@
 use rsntp::SntpClient;
+use anyhow::Result;
 
 #[cfg(test)]
 use mockall::{automock, predicate::*};
 
 #[cfg_attr(test, automock)]
 pub trait TimeSyncClient {
-    fn synchronize(&self) -> Option<i64>;
+    fn synchronize(&self) -> Result<i64>;
 }
 
 pub struct SntpTimeSyncClient<'a>(SntpClient, &'a str);
 
 impl<'a> TimeSyncClient for SntpTimeSyncClient<'a> {
-    fn synchronize(&self) -> Option<i64> {
+    fn synchronize(&self) -> Result<i64> {
 
-        self.0.synchronize(self.1).ok()
-            .map(|pr| pr.datetime().into_chrono_datetime().unwrap_or_default().timestamp_millis())
+        let result = self.0.synchronize(self.1)
+            .map(|pr| pr.datetime().into_chrono_datetime().unwrap_or_default().timestamp_millis())?;
+
+        Ok(result)
     }
 }
 

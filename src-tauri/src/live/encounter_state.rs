@@ -1,4 +1,4 @@
-use crate::api::{GetCharacterInfoArgs, SendRaidAnalyticsArgs, StatsApi};
+use crate::api::{GetCharacterInfoArgs, StatsApi};
 use crate::data::*;
 use crate::database::Repository;
 use crate::database::models::InsertEncounterArgs;
@@ -33,11 +33,6 @@ pub struct EncounterState {
 
     boss_hp_log: HashMap<String, Vec<BossHpLog>>,
 
-    // item_id -> count
-    battle_item_tracker: HashMap<u32, u32>,
-    // buff_id -> count
-    crowd_control_tracker: HashMap<u32, u32>,
-
     pub intermission_start: Option<i64>,
     pub intermission_end: Option<i64>,
 
@@ -47,7 +42,6 @@ pub struct EncounterState {
     pub boss_only_damage: bool,
     pub region: Option<String>,
 
-    sntp_client: SntpClient,
     ntp_fight_start: i64,
 
     pub rdps_valid: bool,
@@ -71,8 +65,6 @@ impl EncounterState {
             damage_log: HashMap::new(),
             boss_hp_log: HashMap::new(),
             cast_log: HashMap::new(),
-            battle_item_tracker: HashMap::new(),
-            crowd_control_tracker: HashMap::new(),
             intermission_start: None,
             intermission_end: None,
 
@@ -82,7 +74,6 @@ impl EncounterState {
             boss_only_damage: false,
             region: None,
 
-            sntp_client: SntpClient::new(),
             ntp_fight_start: 0,
 
             // todo
@@ -110,8 +101,6 @@ impl EncounterState {
         self.damage_log = HashMap::new();
         self.cast_log = HashMap::new();
         self.boss_hp_log = HashMap::new();
-        self.battle_item_tracker = HashMap::new();
-        self.crowd_control_tracker = HashMap::new();
         self.intermission_start = None;
         self.intermission_end = None;
         self.party_info = Vec::new();
@@ -210,35 +199,11 @@ impl EncounterState {
         self.soft_reset(false);
     }
 
-    pub fn on_transit<E: AppEmitter>(&mut self, zone_id: u32, emitter: &E) {
-        // do not reset on kazeros g2
-        // Zones
-        // Flickering Land
-        // Land of Death and Order
-        // Collapsed Diaspero
-        if matches!(zone_id, 37544 | 37545 | 37546) {
-            if zone_id == 37545 {
-                let now = Utc::now().timestamp_millis();
-                self.intermission_start = Some(now);
-                info!("starting intermission");
-                for entity in self
-                    .encounter
-                    .entities
-                    .values_mut()
-                    .filter(|e| e.entity_type == EntityType::Player)
-                {
-                    if let Some(death) = entity
-                        .damage_stats
-                        .death_info
-                        .as_mut()
-                        .and_then(|info| info.last_mut())
-                    {
-                        death.dead_for = Some(now - death.death_time);
-                    }
-                }
-            }
-
-            return;
+    pub fn on_transit<E: AppEmitter>(&mut self, zone_id: u32, emitter: &E, app: &AppHandle, version: &str) {
+        if zone_id == 37545 {
+            // split encounter for kazeros g2 intermission
+            info!("starting intermission");
+            self.on_phase_transition(2, emitter, app, version);
         }
 
         emitter.emit("zone-change", "no-toast");
@@ -341,13 +306,13 @@ impl EncounterState {
             };
 
             // set intermission end if boss is kazeros g2
-            if self.encounter.current_boss_name == "Death Incarnate Kazeros"
-                && self.intermission_start.is_some()
-                && self.intermission_end.is_none()
-            {
-                self.intermission_end = Some(Utc::now().timestamp_millis());
-                info!("ending intermission");
-            }
+            // if self.encounter.current_boss_name == "Death Incarnate Kazeros"
+            //     && self.intermission_start.is_some()
+            //     && self.intermission_end.is_none()
+            // {
+            //     self.intermission_end = Some(Utc::now().timestamp_millis());
+            //     info!("ending intermission");
+            // }
         }
     }
 
@@ -728,10 +693,9 @@ impl EncounterState {
                 );
             }
 
-            match self.sntp_client.synchronize("time.cloudflare.com") {
-                Ok(result) => {
-                    let dt = result.datetime().into_chrono_datetime().unwrap_or_default();
-                    self.ntp_fight_start = dt.timestamp_millis();
+            match sntp_client.synchronize() {
+                Ok(ntp_fight_start) => {
+                    self.ntp_fight_start = ntp_fight_start;
                     // debug_print(format_args!("fight start local: {}, ntp: {}", Utc::now().to_rfc3339(), dt.to_rfc3339()));
                 }
                 Err(e) => {
@@ -1220,12 +1184,6 @@ impl EncounterState {
             .entry(victim_entity.name.clone())
             .or_insert_with(|| encounter_entity_from_entity(victim_entity));
 
-        // track number of crowd control effects applied
-        *self
-            .crowd_control_tracker
-            .entry(status_effect.status_effect_id)
-            .or_insert(0) += 1;
-
         // expiration delay is zero or negative for infinite effects. Instead of applying them now,
         // only apply them after they've been removed (this avoids an issue where if we miss the removal
         // we end up applying a very long incapacitation)
@@ -1581,11 +1539,6 @@ impl EncounterState {
         if self.encounter.fight_start == 0 {
             return;
         }
-
-        self.battle_item_tracker
-            .entry(*battle_item_id)
-            .and_modify(|e| *e += 1)
-            .or_insert(1);
     }
 
     pub fn save_to_db(&mut self, app: AppHandle, meter_version: String, manual: bool) {
@@ -1626,8 +1579,6 @@ impl EncounterState {
 
         let skill_cast_log = self.skill_tracker.get_cast_log();
         let skill_cooldowns = self.skill_tracker.skill_cooldowns.clone();
-        let battle_items = self.battle_item_tracker.clone();
-        let cc_tracker = self.crowd_control_tracker.clone();
         let intermission_start = self.intermission_start;
         let intermission_end = self.intermission_end;
 
@@ -1642,21 +1593,10 @@ impl EncounterState {
         encounter.current_boss_name = update_current_boss_name(&encounter.current_boss_name);
 
         task::spawn(async move {
-            let mut player_info = None;
             let stats_api = app.state::<StatsApi>();
-
-            player_info =
+            let player_info =
                 if let Some(args) = GetCharacterInfoArgs::new(&encounter, &raid_difficulty) {
                     info!("fetching player info");
-
-                    if let Some(args) = SendRaidAnalyticsArgs::new(
-                        &encounter,
-                        &raid_difficulty,
-                        battle_items,
-                        cc_tracker,
-                    ) {
-                        stats_api.send_raid_analytics(args).await;
-                    }
 
                     stats_api.get_character_info(args).await
                 } else {
@@ -1736,26 +1676,6 @@ mod tests {
     }
 
     #[test]
-    fn should_set_intermission() {
-        let mut state = setup_encounter_state();
-        let emitter = MockAppEmitter::new();
-        
-        let entity = Entity {
-            id: 1,
-            entity_type: EntityType::Boss,
-            npc_id: 486301,
-            name: "Death Incarnate Kazeros".into(),
-            ..Default::default()
-        };
-        
-        state.on_transit(37545, &emitter);
-        state.on_new_npc(entity, 1e16 as i64, 1e16 as i64);
-
-        assert!(state.intermission_start.is_some());
-        assert!(state.intermission_end.is_some());
-    }
-
-    #[test]
     fn should_update_damage_stats() {
         let mut state = setup_encounter_state();
 
@@ -1768,7 +1688,7 @@ mod tests {
         sntp_client
             .expect_synchronize()
             .times(1)
-            .return_const(1);
+            .returning(|| Ok(1));
 
         emitter
             .expect_emit::<i64>()
@@ -1826,7 +1746,7 @@ mod tests {
         sntp_client
             .expect_synchronize()
             .times(1)
-            .return_const(1);
+            .returning(|| Ok(1));
 
         emitter
             .expect_emit::<i64>()

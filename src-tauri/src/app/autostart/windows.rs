@@ -2,6 +2,8 @@ use anyhow::Result;
 use std::path::{Path, PathBuf};
 use winsafe::{self as w, co, prelude::*};
 
+use crate::constants::TASK_NAME;
+
 pub struct AutoLaunchManager {
     task_name: String,
     app_path: PathBuf,
@@ -10,7 +12,7 @@ pub struct AutoLaunchManager {
 impl AutoLaunchManager {
     pub fn new(_app_name: &str, app_path: &Path) -> Self {
         Self {
-            task_name: "LOA_Logs_Auto_Start".to_string(),
+            task_name: TASK_NAME.to_string(),
             app_path: app_path.to_path_buf(),
         }
     }
@@ -44,14 +46,10 @@ impl super::AutoLaunch for AutoLaunchManager {
         let folder = service.GetFolder(r"\")?;
         let task = service.NewTask()?;
 
-        let trigger = task
-            .get_Triggers()?
-            .Create(co::TASK_TRIGGER_TYPE2::LOGON)?
-            .QueryInterface::<w::ILogonTrigger>()?;
-        trigger.put_Delay("PT10S")?; // 10 seconds delay ISO8601
+        task.get_Triggers()?.Create(co::TASK_TRIGGER_TYPE2::LOGON)?;
 
         task.get_Principal()?
-            .put_RunLevel(co::TASK_RUNLEVEL_TYPE::HIGHEST)?;
+            .put_RunLevel(co::TASK_RUNLEVEL::HIGHEST)?;
 
         let action = task
             .get_Actions()?

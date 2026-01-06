@@ -1022,7 +1022,7 @@ pub fn start(args: StartArgs) -> Result<()> {
                     debug_print(format_args!("transit zone id: {}", pkt.zone_id));
                     state.damage_is_valid = true;
                     damage_handler.update_zone_instance_id(pkt.zone_instance_id);
-                    state.on_transit(pkt.zone_id, &emitter);
+                    state.on_transit(pkt.zone_id, &emitter, &app, &version);
                 }
             }
             _ => {}
