@@ -345,15 +345,10 @@ pub fn get_player_spec(
             }
         }
         "Bard" => {
-            // if has tempest skill, or vivace, or heavenly tune with crit tripod
-            if (player.skills.contains_key(&21147)
-                || player.skills.contains_key(&21148)
-                || player.skills.contains_key(&21149))
-                || player.skills.contains_key(&21310)
-                || player
-                    .skills
-                    .get(&21160)
-                    .is_some_and(|s| s.tripod_index.is_some_and(|t| t.third == 2))
+            // if has tempest skill has damage
+            if (player.skills.get(&21147).is_some_and(|s| s.total_damage > 0)
+                || player.skills.get(&21148).is_some_and(|s| s.total_damage > 0)
+                || player.skills.get(&21149).is_some_and(|s| s.total_damage > 0))
             {
                 return "True Courage".to_string();
             } else if player
@@ -501,19 +496,12 @@ pub fn get_player_spec(
             }
         }
         "Artist" => {
-            // dps if has cattle drive or shattering strike or rising moon
-            // - check rising moon damage due to sup artist using dps ark grid core to get full bubbles
-            // or sunsketch with crit tripod
-            if player.skills.contains_key(&31940)
-                || player.skills.contains_key(&31060)
+            // dps if has shattering strike damage or rising moon damage
+            if player.skills.get(&31060).is_some_and(|s| s.total_damage > 0)
                 || player
                     .skills
                     .get(&31145)
                     .is_some_and(|s| s.total_damage > 0)
-                || player
-                    .skills
-                    .get(&31400)
-                    .is_some_and(|s| s.tripod_index.is_some_and(|t| t.third == 2))
             {
                 return "Recurrence".to_string();
             } else if player
