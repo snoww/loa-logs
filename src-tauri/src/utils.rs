@@ -345,7 +345,7 @@ pub fn get_player_spec(
             }
         }
         "Bard" => {
-            // if has tempest skill has damage
+            // dps if tempest skill has damage
             if (player.skills.get(&21147).is_some_and(|s| s.total_damage > 0)
                 || player.skills.get(&21148).is_some_and(|s| s.total_damage > 0)
                 || player.skills.get(&21149).is_some_and(|s| s.total_damage > 0))
