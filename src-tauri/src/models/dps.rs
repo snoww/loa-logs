@@ -25,10 +25,10 @@ pub struct DamageEventContext<'a> {
 #[derive(Debug, Clone, Copy)]
 pub struct HitInfo(pub HitOption, pub HitFlag);
 
-impl TryFrom<i32> for HitInfo {
+impl TryFrom<u8> for HitInfo {
     type Error = anyhow::Error;
 
-    fn try_from(value: i32) -> Result<Self> {
+    fn try_from(value: u8) -> Result<Self> {
         let flag_raw = (value & 0xF) as u8;
         let flag = match flag_raw {
             0 => HitFlag::Normal,
@@ -50,7 +50,6 @@ impl TryFrom<i32> for HitInfo {
 
         let option_raw = ((value >> 4) & 0x7) - 1;
         let option = match option_raw {
-            -1 => HitOption::None,
             0 => HitOption::BackAttack,
             1 => HitOption::FrontalAttack,
             2 => HitOption::FlankAttack,

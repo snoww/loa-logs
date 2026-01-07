@@ -355,15 +355,7 @@ fn is_valid_for_raid(status_effect: &StatusEffectDetails) -> bool {
 }
 
 pub fn build_status_effect(
-    se_data: StatusEffectData,
-    target_id: u64,
-    source_id: u64,
-    target_type: StatusEffectTargetType,
-    timestamp: DateTime<Utc>,
-    source_entity_skills: Option<&HashMap<u32, Skill>>,
-) -> StatusEffectDetails {
-    
-    let StatusEffectData {
+    StatusEffectData {
         source_id,
         status_effect_id,
         status_effect_instance_id: instance_id,
@@ -371,7 +363,14 @@ pub fn build_status_effect(
         total_time,
         stack_count,
         end_tick,
-    } = se_data;
+        ..
+    }: StatusEffectData,
+    target_id: u64,
+    _source_id: u64,
+    target_type: StatusEffectTargetType,
+    timestamp: DateTime<Utc>,
+    source_entity_skills: Option<&HashMap<u32, Skill>>,
+) -> StatusEffectDetails {
 
     let value = get_status_effect_value(value.bytearray_0);
 
