@@ -1,5 +1,6 @@
 use anyhow::Result;
 use hashbrown::HashMap;
+use log::info;
 use serde::{Deserialize, Serialize};
 use std::{fs::File, path::PathBuf};
 use uuid::Uuid;
@@ -23,12 +24,7 @@ pub struct LocalPlayerRepository(PathBuf);
 impl LocalPlayerRepository {
     pub fn new(path: PathBuf) -> Result<Self> {
         if !path.exists() {
-            let client_id = Uuid::new_v4().to_string();
-            let value = LocalInfo {
-                client_id,
-                ..Default::default()
-            };
-
+            let value = Self::create()?;
             let writer = File::create(&path)?;
             serde_json::to_writer_pretty(writer, &value)?;
         }
@@ -45,9 +41,13 @@ impl LocalPlayerRepository {
     /// Returns an error if the file cannot be opened or if deserialization fails.
     pub fn read(&self) -> Result<LocalInfo> {
         let reader = File::open(&self.0)?;
-        let value = serde_json::from_reader(reader)?;
-
-        Ok(value)
+        match serde_json::from_reader(reader) {
+            Ok(v) => Ok(v),
+            Err(_) => {
+                info!("failed to parse local info file, creating a new one.");
+                Self::create()
+            }
+        }
     }
 
     pub fn write(&self, value: &LocalInfo) -> Result<()> {
@@ -55,5 +55,12 @@ impl LocalPlayerRepository {
         serde_json::to_writer_pretty(writer, value)?;
 
         Ok(())
+    }
+
+    pub fn create() -> Result<LocalInfo> {
+        Ok(LocalInfo {
+            client_id: Uuid::new_v4().to_string(),
+            ..Default::default()
+        })
     }
 }
