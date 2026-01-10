@@ -195,6 +195,7 @@ export interface SkillCast {
 export interface SkillHit {
   timestamp: number;
   damage: number;
+  unbuffedDamage?: number;
   stagger?: number;
   crit: boolean;
   backAttack: boolean;

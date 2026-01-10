@@ -23,6 +23,9 @@
   let skill = $derived(focusedCast.skillId ? player.skills[focusedCast.skillId] : undefined);
   let cast = $derived(skill ? skill.skillCastLog[focusedCast.cast] : undefined);
   let totalCastDamage = $derived(cast ? cast.hits.map((hit) => hit.damage).reduce((a, b) => a + b, 0) : 0);
+  let totalCastUnbuffedDamage = $derived(
+    cast ? cast.hits.map((hit) => hit.unbuffedDamage || 0).reduce((a, b) => a + b, 0) : 0
+  );
 
   // focused cast info
   let crits = $derived(cast ? cast.hits.filter((hit) => hit.crit).length : 0);
@@ -150,8 +153,15 @@
         </div>
 
         <!-- cast summary -->
-        <div>
-          Total Damage: <span class="font-semibold">{abbreviateNumber(totalCastDamage)}</span>
+        <div class="flex flex-col gap-0.5">
+          <div>
+            Total Damage: <span class="font-semibold">{abbreviateNumber(totalCastDamage)}</span>
+          </div>
+          <div>
+            Total Unbuffed Damage: <span class="font-semibold"
+              >{totalCastUnbuffedDamage > 0 ? abbreviateNumber(totalCastUnbuffedDamage) : "N/A"}</span
+            >
+          </div>
         </div>
         {#if !cast.hits.length}
           <div>No Hits</div>
@@ -199,6 +209,9 @@
                 </td>
                 <td class="w-16 font-semibold">
                   <QuickTooltip tooltip="Hit damage" class="w-fit">DMG</QuickTooltip>
+                </td>
+                <td class="w-16 font-semibold">
+                  <QuickTooltip tooltip="Hit unbuffed damage" class="w-fit">uDMG</QuickTooltip>
                 </td>
                 <td class="font-semibold">
                   <QuickTooltip tooltip="Choose which buffs to view" class="flex w-fit items-center gap-1">
@@ -263,6 +276,15 @@
                     <QuickTooltip tooltip={hit.damage.toLocaleString()} class="w-fit">
                       {abbreviateNumber(hit.damage)}
                     </QuickTooltip>
+                  </td>
+                  <td class="font-mono">
+                    {#if hit.unbuffedDamage}
+                      <QuickTooltip tooltip={hit.unbuffedDamage.toLocaleString()} class="w-fit">
+                        {abbreviateNumber(hit.unbuffedDamage)}
+                      </QuickTooltip>
+                    {:else}
+                      -
+                    {/if}
                   </td>
                   <td>
                     <div class="flex">

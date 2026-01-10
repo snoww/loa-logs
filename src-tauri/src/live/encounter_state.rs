@@ -844,6 +844,7 @@ impl EncounterState {
         source_entity.damage_stats.buffed_damage += buffed;
         source_entity.damage_stats.unbuffed_damage =
             source_entity.damage_stats.damage_dealt - source_entity.damage_stats.buffed_damage;
+        skill_hit.unbuffed_damage = damage - buffed;
 
         if is_hyper_awakening {
             source_entity.damage_stats.hyper_awakening_damage += damage;
