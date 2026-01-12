@@ -717,10 +717,10 @@ impl EncounterState {
         if self.encounter.fight_start == 0 {
             self.encounter.fight_start = timestamp;
             self.skill_tracker.fight_start = timestamp;
-            if target_type == EntityType::Player && damage_data.skill_id > 0 {
+            if target_type == EntityType::Player && skill_key > 0 {
                 self.skill_tracker.new_cast(
                     dmg_src_entity.id,
-                    damage_data.skill_id,
+                    skill_key,
                     None,
                     timestamp,
                 );
