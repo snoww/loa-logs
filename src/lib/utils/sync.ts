@@ -81,7 +81,8 @@ export async function uploadLog(id: number | string, encounter: Encounter, showT
     await writeLog(
       `couldn't upload encounter ${id} (${encounter.currentBossName}) - error: ${body.error.toLowerCase()}`
     );
-    if (showToast && body.error.includes("Boss not supported")) addToast(uploadError(body.error, id));
+    if ((showToast && !bulk) || (bulk && !body.error.includes("Boss not supported")))
+      addToast(uploadError(body.error, id));
     await sync({ encounter: Number(id), upstream: "0", failed: true });
     return;
   }

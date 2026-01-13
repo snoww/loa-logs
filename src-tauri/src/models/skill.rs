@@ -101,13 +101,13 @@ pub struct SkillCast {
 pub struct SkillHit {
     pub timestamp: i64,
     pub damage: i64,
+    #[serde(default)]
+    pub unbuffed_damage: i64,
     pub crit: bool,
     pub back_attack: bool,
     pub front_attack: bool,
     pub buffed_by: Vec<u32>,
     pub debuffed_by: Vec<u32>,
-    pub rdps_damage_received: i64,
-    pub rdps_damage_received_support: i64,
     #[serde(default)]
     pub stagger: i64,
 }

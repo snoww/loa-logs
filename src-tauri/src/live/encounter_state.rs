@@ -684,10 +684,10 @@ impl EncounterState {
         if self.encounter.fight_start == 0 {
             self.encounter.fight_start = timestamp;
             self.skill_tracker.fight_start = timestamp;
-            if target_type == EntityType::Player && skill_id > 0 {
+            if target_type == EntityType::Player && skill_key > 0 {
                 self.skill_tracker.new_cast(
                     dmg_src_entity.id,
-                    skill_id,
+                    skill_key,
                     None,
                     timestamp,
                 );
@@ -806,6 +806,7 @@ impl EncounterState {
         source_entity.damage_stats.buffed_damage += buffed;
         source_entity.damage_stats.unbuffed_damage =
             source_entity.damage_stats.damage_dealt - source_entity.damage_stats.buffed_damage;
+        skill_hit.unbuffed_damage = damage - buffed;
 
         if is_hyper_awakening {
             source_entity.damage_stats.hyper_awakening_damage += damage;
