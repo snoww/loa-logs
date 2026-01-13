@@ -50,7 +50,7 @@
             encounter.difficulty === "Challenge" ||
             encounter.difficulty === "Trial"}
           class:text-cyan-400={encounter.difficulty === "Solo"}
-          class:text-purple-500={encounter.difficulty === "Extreme" || encounter.difficulty === "The First"}
+          class:text-purple-500={encounter.difficulty.includes("Extreme") || encounter.difficulty === "The First"}
         >
           [{encounter.difficulty}]
         </p>
