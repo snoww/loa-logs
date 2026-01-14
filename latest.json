@@ -1,11 +1,11 @@
 {
-  "version": "v1.38.2",
-  "notes": "### v1.38.2 - January 14th, 2026\n\n#### P.S. If you see any of us in town or raid, feel free to drop an honor!\n\n- **Snowving** on Luterra\n- **Administrator** on Ratik\n- **Poont** on Gienah\n\n#### NEW FEATURES\n- updated meter for january content patch and extreme thaemine raid\n- kazeros gate 2 will now be split into two logs 2-1, and 2-2/3\n    - only 2-2/3 portion will be uploaded for stats\n\n#### BUG FIXES AND IMPROVEMENTS\n- removed kazeros raid analytics\n- added missing thirain sidereal in act 4 gate 1\n- updated dps bard and artist detection\n- updated gunlancer detection\n- fixed upload notifications\n- added udmg to skill cast/hit breakdowns\n- fixed issue with corrupt local players file causing meter crash\n- fixed artist identity not extending past 1 minute",
+  "version": "v1.38.3",
+  "notes": "### v1.38.3 - January 14th, 2026\n\n#### P.S. If you see any of us in town or raid, feel free to drop an honor!\n\n- **Snowving** on Luterra\n- **Administrator** on Ratik\n- **Poont** on Gienah\n\n#### NEW FEATURES\n- updated meter for january content patch and extreme thaemine raid\n- kazeros gate 2 will now be split into two logs 2-1, and 2-2/3\n    - only 2-2/3 portion will be uploaded for stats\n\n#### BUG FIXES AND IMPROVEMENTS\n- removed kazeros raid analytics\n- added missing thirain sidereal in act 4 gate 1\n- updated dps bard and artist detection\n- updated gunlancer detection\n- fixed upload notifications\n- added udmg to skill cast/hit breakdowns\n- fixed issue with corrupt local players file causing meter crash\n- fixed artist identity not extending past 1 minute",
   "pub_date": "2026-01-14T11:45:56.131Z",
   "platforms": {
     "windows-x86_64": {
-      "url": "https://github.com/snoww/loa-logs/releases/download/v1.38.2/LOA.Logs_1.38.2_x64-setup.nsis.zip",
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmJsNmdNNWFLMVlsYjVsZklVZER2WkZZL2hYNWRPc3FndVYrVGY1QzBDZlVBOTBLdkh6SUZpOFFyVHBQWTdxWGtUL1UxYmlKU1pCWUN0Z2VZalVxZndzPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzY4NDA2Njg4CWZpbGU6TE9BIExvZ3NfMS4zOC4yX3g2NC1zZXR1cC5uc2lzLnppcApFalVrRUpITWRad3RGUkt4dnQvb3MyTWpoemlDM3lDc3ZCY2NpY0lNS0Jub0tvWEpDSzFuQnZTcmJEMFhhK3gycWN6akJPTlVQMzE2ZmtoVllra3JDQT09Cg=="
+      "url": "https://github.com/snoww/loa-logs/releases/download/v1.38.3/LOA.Logs_1.38.3_x64-setup.nsis.zip",
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmZGVkdVL05SQXdNT2t2NDc5UkZtK2pkZkZxcHVISGRBdnd1QVNKNzdoWWMxTHpzQmo4YUQ5c3RRZXM5Nkd2ZEJjVE02OVJSWEk5LzdGNXJsUGFSV1FNPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzY4NDA5NjgxCWZpbGU6TE9BIExvZ3NfMS4zOC4zX3g2NC1zZXR1cC5uc2lzLnppcAp3SnI2bzV6Y2xsL3Bjc0ZmRmlnREZhd2I3UE5EMytWRk5DSXpnZWJpS1FGZDA5bHpkaXpWb3dGUXhLNDBXR3J0VzNxMUxGM2JtcUZsZ1dCSVJSUVVCUT09Cg=="
     }
   }
 }

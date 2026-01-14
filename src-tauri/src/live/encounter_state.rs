@@ -209,7 +209,7 @@ impl EncounterState {
         if zone_id == 37545 {
             // split encounter for kazeros g2 intermission
             self.on_phase_transition(2);
-        } else if matches!(zone_id, (37121..37124) | (37817..37819)) {
+        } else if matches!(zone_id, (37121..=37124) | (37817..=37819)) {
             // not resetting for thaemine gate 4
             let now = Utc::now().timestamp_millis();
             self.intermission_start = Some(now);
