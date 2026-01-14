@@ -186,7 +186,6 @@ export const defaultSettings: AppSettings = {
     hideMeterOnStart: false,
     hideLogsOnStart: false,
     constantLocalPlayerColor: false,
-    bossOnlyDamageDefaultOn: true,
     startOnBoot: false,
     logsPerPage: 10,
     experimentalFeatures: false,
