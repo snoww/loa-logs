@@ -833,7 +833,7 @@ pub fn start(args: StartArgs) -> Result<()> {
                         continue;
                     }
                     debug_print(format_args!("raid zone id: {}", &pkt.zone_id));
-                    debug_print(format_args!("raid zone id: {}", &pkt.zone_level));
+                    debug_print(format_args!("raid zone level: {}", &pkt.zone_level));
                     match pkt.zone_level {
                         0 => {
                             state.raid_difficulty = "Normal".to_string();
@@ -856,7 +856,11 @@ pub fn start(args: StartArgs) -> Result<()> {
                             state.raid_difficulty_id = 4;
                         }
                         5 => {
-                            state.raid_difficulty = "The First".to_string();
+                            if matches!(pkt.zone_id, (37121..37124) | (37817..37819)) {
+                                state.raid_difficulty = "Extreme".to_string();
+                            } else {
+                                state.raid_difficulty = "The First".to_string();
+                            }
                             state.raid_difficulty_id = 5;
                         }
                         _ => {}
