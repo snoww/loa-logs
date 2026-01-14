@@ -1,6 +1,6 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.38.0 - January 14th, 2026
+    v1.38.1 - January 14th, 2026
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
@@ -26,6 +26,7 @@
 - fixed upload notifications
 - added udmg to skill cast/hit breakdowns
 - fixed issue with corrupt local players file causing meter crash
+- fixed artist identity not extending past 1 minute
 
 ---
 
