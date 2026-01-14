@@ -8,8 +8,6 @@ use meter_core::packets::structures::{PCStruct, StatusEffectData};
 use std::cell::RefCell;
 use std::rc::Rc;
 
-// expire buff after 1 min delay
-const TIMEOUT_DELAY_MS: i64 = 60_000;
 const WORKSHOP_BUFF_ID: u32 = 9701;
 
 pub struct StatusTracker {
@@ -129,22 +127,10 @@ impl StatusTracker {
             StatusEffectTargetType::Party => &mut self.party_status_effect_registry,
         };
 
-        let ser = match registry.get_mut(&target_id) {
+        let _ = match registry.get_mut(&target_id) {
             Some(ser) => ser,
             None => return,
         };
-
-        if let Some(se) = ser.get_mut(&instance_id)
-            && let Some(duration_ms) = timestamp.checked_sub(se.end_tick)
-            && duration_ms > 0
-            && duration_ms < 10_000_000
-        {
-            se.end_tick = timestamp;
-            if let Some(expire_at) = se.expire_at {
-                se.expire_at =
-                    Some(expire_at + Duration::milliseconds(duration_ms as i64 + TIMEOUT_DELAY_MS));
-            }
-        }
     }
 
     pub fn sync_status_effect(
@@ -275,11 +261,8 @@ impl StatusTracker {
             Some(ser) => ser,
             None => return Vec::new(),
         };
-        
-        ser.retain(|_, se| {
-            se.expire_at.is_none_or(|expire_at| expire_at > timestamp) && buff_at_max_stacks(se)
-        });
-        
+
+        ser.retain(|_, se| buff_at_max_stacks(se));
         ser.values().cloned().collect()
     }
 
@@ -451,15 +434,6 @@ pub fn build_status_effect(
         }
     }
 
-    let expire_at = if total_time > 0. && total_time < 604800. {
-        Some(
-            timestamp
-                + Duration::milliseconds((total_time as i64) * 1000 + TIMEOUT_DELAY_MS),
-        )
-    } else {
-        None
-    };
-
     let id = if custom_id > 0 { custom_id } else { status_effect_id };
 
     StatusEffectDetails {
@@ -478,7 +452,7 @@ pub fn build_status_effect(
         status_effect_type,
         show_type,
         expiration_delay: total_time,
-        expire_at,
+        expire_at: None,
         end_tick,
         name,
         timestamp,
