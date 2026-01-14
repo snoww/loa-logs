@@ -264,9 +264,8 @@ pub fn get_player_spec(
             }
         }
         "Gunlancer" => {
-            // todo
-            // surge cannon and no guardian thundercrack
-            if player.skills.contains_key(&17200) && !player.skills.contains_key(&17140) {
+            // has warblade
+            if player.skills.contains_key(&17840) {
                 "Lone Knight"
             } else if player.skills.contains_key(&17140) && player.skills.contains_key(&17110) {
                 // has guardian thundercrack and leap attack

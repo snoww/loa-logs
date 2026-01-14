@@ -3182,7 +3182,7 @@
     "icon": "ability_267.png",
     "levels": {
       "1": {
-        "desc": "Gunlance skill Damage and Crit Rate +<FONT COLOR='#99ff99'>5%</FONT>. Crit Damage +<FONT COLOR='#99ff99'>30%</FONT>. Battlefield Shield cannot be used. Consumption of the Shield Meter during Defensive Stance +<FONT COLOR='#ff9999'>100%</FONT>.",
+        "desc": "Gunlance skill Damage and Crit Rate +<FONT COLOR='#99ff99'>5%</FONT>. Crit Damage +<FONT COLOR='#99ff99'>30%</FONT>. Battlefield Shield cannot be used. Shield Meter consumption during Defensive Stance +<FONT COLOR='#ff9999'>100%</FONT>.",
         "level": 1,
         "values": [
           100,
@@ -3210,7 +3210,7 @@
         ]
       },
       "2": {
-        "desc": "Gunlance skill Damage and Crit Rate +<FONT COLOR='#99ff99'>10%</FONT>. Crit Damage +<FONT COLOR='#99ff99'>40%</FONT>. Battlefield Shield cannot be used. Consumption of the Shield Meter during Defensive Stance +<FONT COLOR='#ff9999'>100%</FONT>.",
+        "desc": "Gunlance skill Damage and Crit Rate +<FONT COLOR='#99ff99'>10%</FONT>. Crit Damage +<FONT COLOR='#99ff99'>40%</FONT>. Battlefield Shield cannot be used. Shield Meter consumption during Defensive Stance +<FONT COLOR='#ff9999'>100%</FONT>.",
         "level": 2,
         "values": [
           100,
@@ -3238,7 +3238,7 @@
         ]
       },
       "3": {
-        "desc": "Gunlance skill Damage and Crit Rate +<FONT COLOR='#99ff99'>15%</FONT>. Crit Damage +<FONT COLOR='#99ff99'>50%</FONT>. Battlefield Shield cannot be used. Consumption of the Shield Meter during Defensive Stance +<FONT COLOR='#ff9999'>100%</FONT>.",
+        "desc": "Gunlance skill Damage and Crit Rate +<FONT COLOR='#99ff99'>15%</FONT>. Crit Damage +<FONT COLOR='#99ff99'>50%</FONT>. Battlefield Shield cannot be used. Shield Meter consumption during Defensive Stance +<FONT COLOR='#ff9999'>100%</FONT>.",
         "level": 3,
         "values": [
           100,
@@ -9965,7 +9965,7 @@
   },
   "187": {
     "id": 187,
-    "name": "Darkness Immunity Rate",
+    "name": "Darkness Immunity",
     "icon": null,
     "levels": {
       "1": {
@@ -17446,7 +17446,7 @@
     "icon": "buff_239.png",
     "levels": {
       "1": {
-        "desc": "Become immune to all Status Ailments while affected by shields, but -<FONT COLOR='#ff9999'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1242 5/>/100/>%</FONT> to Shield HP and Defensive Stance's Damage absorption. (Not applicable to Battlefield Shield)",
+        "desc": "Become immune to all Status Ailments while shielded, but -<FONT COLOR='#ff9999'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1242 5/>/100/>%</FONT> to Shield HP and Defensive Stance's Damage absorption. (Not applicable to Battlefield Shield)",
         "level": 1,
         "values": [
           7200,
@@ -17468,7 +17468,7 @@
         ]
       },
       "2": {
-        "desc": "Become immune to all Status Ailments while affected by shields, but -<FONT COLOR='#ff9999'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1242 6/>/100/>%</FONT> to Shield HP and Defensive Stance's Damage absorption. (Not applicable to Battlefield Shield)",
+        "desc": "Become immune to all Status Ailments while shielded, but -<FONT COLOR='#ff9999'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1242 6/>/100/>%</FONT> to Shield HP and Defensive Stance's Damage absorption. (Not applicable to Battlefield Shield)",
         "level": 2,
         "values": [
           7000,
@@ -17490,7 +17490,7 @@
         ]
       },
       "3": {
-        "desc": "Become immune to all Status Ailments while affected by shields, but -<FONT COLOR='#ff9999'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1242 7/>/100/>%</FONT> to Shield HP and Defensive Stance's Damage absorption. (Not applicable to Battlefield Shield)",
+        "desc": "Become immune to all Status Ailments while shielded, but -<FONT COLOR='#ff9999'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1242 7/>/100/>%</FONT> to Shield HP and Defensive Stance's Damage absorption. (Not applicable to Battlefield Shield)",
         "level": 3,
         "values": [
           6800,
@@ -17512,7 +17512,7 @@
         ]
       },
       "4": {
-        "desc": "Become immune to all Status Ailments while affected by shields, but -<FONT COLOR='#ff9999'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1242 8/>/100/>%</FONT> to Shield HP and Defensive Stance's Damage absorption. (Not applicable to Battlefield Shield)",
+        "desc": "Become immune to all Status Ailments while shielded, but -<FONT COLOR='#ff9999'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1242 8/>/100/>%</FONT> to Shield HP and Defensive Stance's Damage absorption. (Not applicable to Battlefield Shield)",
         "level": 4,
         "values": [
           6600,
@@ -17534,7 +17534,7 @@
         ]
       },
       "5": {
-        "desc": "Become immune to all Status Ailments while affected by shields, but -<FONT COLOR='#ff9999'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1242 9/>/100/>%</FONT> to Shield HP and Defensive Stance's Damage absorption. (Not applicable to Battlefield Shield)",
+        "desc": "Become immune to all Status Ailments while shielded, but -<FONT COLOR='#ff9999'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1242 9/>/100/>%</FONT> to Shield HP and Defensive Stance's Damage absorption. (Not applicable to Battlefield Shield)",
         "level": 5,
         "values": [
           6400,
@@ -17556,7 +17556,7 @@
         ]
       },
       "6": {
-        "desc": "Become immune to all Status Ailments while affected by shields, but -<FONT COLOR='#ff9999'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1242 10/>/100/>%</FONT> to Shield HP and Defensive Stance's Damage absorption. (Not applicable to Battlefield Shield)",
+        "desc": "Become immune to all Status Ailments while shielded, but -<FONT COLOR='#ff9999'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1242 10/>/100/>%</FONT> to Shield HP and Defensive Stance's Damage absorption. (Not applicable to Battlefield Shield)",
         "level": 6,
         "values": [
           6200,
@@ -17578,7 +17578,7 @@
         ]
       },
       "7": {
-        "desc": "Become immune to all Status Ailments while affected by shields, but -<FONT COLOR='#ff9999'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1242 11/>/100/>%</FONT> to Shield HP and Defensive Stance's Damage absorption. (Not applicable to Battlefield Shield)",
+        "desc": "Become immune to all Status Ailments while shielded, but -<FONT COLOR='#ff9999'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1242 11/>/100/>%</FONT> to Shield HP and Defensive Stance's Damage absorption. (Not applicable to Battlefield Shield)",
         "level": 7,
         "values": [
           6000,
@@ -17600,7 +17600,7 @@
         ]
       },
       "8": {
-        "desc": "Become immune to all Status Ailments while affected by shields, but -<FONT COLOR='#ff9999'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1242 12/>/100/>%</FONT> to Shield HP and Defensive Stance's Damage absorption. (Not applicable to Battlefield Shield)",
+        "desc": "Become immune to all Status Ailments while shielded, but -<FONT COLOR='#ff9999'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1242 12/>/100/>%</FONT> to Shield HP and Defensive Stance's Damage absorption. (Not applicable to Battlefield Shield)",
         "level": 8,
         "values": [
           5800,
@@ -17622,7 +17622,7 @@
         ]
       },
       "9": {
-        "desc": "Become immune to all Status Ailments while affected by shields, but -<FONT COLOR='#ff9999'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1242 13/>/100/>%</FONT> to Shield HP and Defensive Stance's Damage absorption. (Not applicable to Battlefield Shield)",
+        "desc": "Become immune to all Status Ailments while shielded, but -<FONT COLOR='#ff9999'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1242 13/>/100/>%</FONT> to Shield HP and Defensive Stance's Damage absorption. (Not applicable to Battlefield Shield)",
         "level": 9,
         "values": [
           5600,
@@ -17644,7 +17644,7 @@
         ]
       },
       "21": {
-        "desc": "Become immune to all Status Ailments while affected by shields, but -<FONT COLOR='#ff9999'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1242 25/>/100/>%</FONT> to Shield HP and Defensive Stance's Damage absorption. (Not applicable to Battlefield Shield)",
+        "desc": "Become immune to all Status Ailments while shielded, but -<FONT COLOR='#ff9999'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1242 25/>/100/>%</FONT> to Shield HP and Defensive Stance's Damage absorption. (Not applicable to Battlefield Shield)",
         "level": 21,
         "values": [
           6600,
@@ -17666,7 +17666,7 @@
         ]
       },
       "22": {
-        "desc": "Become immune to all Status Ailments while affected by shields, but -<FONT COLOR='#ff9999'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1242 26/>/100/>%</FONT> to Shield HP and Defensive Stance's Damage absorption. (Not applicable to Battlefield Shield)",
+        "desc": "Become immune to all Status Ailments while shielded, but -<FONT COLOR='#ff9999'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1242 26/>/100/>%</FONT> to Shield HP and Defensive Stance's Damage absorption. (Not applicable to Battlefield Shield)",
         "level": 22,
         "values": [
           6400,
@@ -17688,7 +17688,7 @@
         ]
       },
       "23": {
-        "desc": "Become immune to all Status Ailments while affected by shields, but -<FONT COLOR='#ff9999'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1242 27/>/100/>%</FONT> to Shield HP and Defensive Stance's Damage absorption. (Not applicable to Battlefield Shield)",
+        "desc": "Become immune to all Status Ailments while shielded, but -<FONT COLOR='#ff9999'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1242 27/>/100/>%</FONT> to Shield HP and Defensive Stance's Damage absorption. (Not applicable to Battlefield Shield)",
         "level": 23,
         "values": [
           6200,
@@ -17710,7 +17710,7 @@
         ]
       },
       "24": {
-        "desc": "Become immune to all Debuffs while affected by shields, but -<FONT COLOR='#ff9999'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1242 28/>/100/>%</FONT> to Shield HP and Defensive Stance's Damage absorption. (Not applicable to Battlefield Shield)",
+        "desc": "Become immune to all Status Ailments while shielded, but -<FONT COLOR='#ff9999'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1242 28/>/100/>%</FONT> to Shield HP and Defensive Stance's Damage absorption. (Not applicable to Battlefield Shield)",
         "level": 24,
         "values": [
           6000,
@@ -17732,7 +17732,7 @@
         ]
       },
       "25": {
-        "desc": "Become immune to all Status Ailments while affected by shields, but -<FONT COLOR='#ff9999'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1242 29/>/100/>%</FONT> to Shield HP and Defensive Stance's Damage absorption. (Not applicable to Battlefield Shield)",
+        "desc": "Become immune to all Status Ailments while shielded, but -<FONT COLOR='#ff9999'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1242 29/>/100/>%</FONT> to Shield HP and Defensive Stance's Damage absorption. (Not applicable to Battlefield Shield)",
         "level": 25,
         "values": [
           5800,
@@ -17754,7 +17754,7 @@
         ]
       },
       "26": {
-        "desc": "Become immune to all Status Ailments while affected by shields, but -<FONT COLOR='#ff9999'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1242 30/>/100/>%</FONT> to Shield HP and Defensive Stance's Damage absorption. (Not applicable to Battlefield Shield)",
+        "desc": "Become immune to all Status Ailments while shielded, but -<FONT COLOR='#ff9999'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1242 30/>/100/>%</FONT> to Shield HP and Defensive Stance's Damage absorption. (Not applicable to Battlefield Shield)",
         "level": 26,
         "values": [
           5600,
@@ -17776,7 +17776,7 @@
         ]
       },
       "27": {
-        "desc": "Become immune to all Status Ailments while affected by shields, but -<FONT COLOR='#ff9999'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1242 31/>/100/>%</FONT> to Shield HP and Defensive Stance's Damage absorption. (Not applicable to Battlefield Shield)",
+        "desc": "Become immune to all Status Ailments while shielded, but -<FONT COLOR='#ff9999'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1242 31/>/100/>%</FONT> to Shield HP and Defensive Stance's Damage absorption. (Not applicable to Battlefield Shield)",
         "level": 27,
         "values": [
           5400,
@@ -17798,7 +17798,7 @@
         ]
       },
       "28": {
-        "desc": "Become immune to all Status Ailments while affected by shields, but -<FONT COLOR='#ff9999'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1242 32/>/100/>%</FONT> to Shield HP and Defensive Stance's Damage absorption. (Not applicable to Battlefield Shield)",
+        "desc": "Become immune to all Status Ailments while shielded, but -<FONT COLOR='#ff9999'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1242 32/>/100/>%</FONT> to Shield HP and Defensive Stance's Damage absorption. (Not applicable to Battlefield Shield)",
         "level": 28,
         "values": [
           5200,
@@ -17820,7 +17820,7 @@
         ]
       },
       "29": {
-        "desc": "Become immune to all Status Ailments while affected by shields, but -<FONT COLOR='#ff9999'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1242 33/>/100/>%</FONT> to Shield HP and Defensive Stance's Damage absorption. (Not applicable to Battlefield Shield)",
+        "desc": "Become immune to all Status Ailments while shielded, but -<FONT COLOR='#ff9999'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1242 33/>/100/>%</FONT> to Shield HP and Defensive Stance's Damage absorption. (Not applicable to Battlefield Shield)",
         "level": 29,
         "values": [
           5000,
@@ -17842,7 +17842,7 @@
         ]
       },
       "41": {
-        "desc": "Become immune to all Status Ailments while affected by shields, but -<FONT COLOR='#ff9999'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1242 45/>/100/>%</FONT> to Shield HP and Defensive Stance's Damage absorption. (Not applicable to Battlefield Shield)",
+        "desc": "Become immune to all Status Ailments while shielded, but -<FONT COLOR='#ff9999'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1242 45/>/100/>%</FONT> to Shield HP and Defensive Stance's Damage absorption. (Not applicable to Battlefield Shield)",
         "level": 41,
         "values": [
           6450,
@@ -17864,7 +17864,7 @@
         ]
       },
       "42": {
-        "desc": "Become immune to all Status Ailments while affected by shields, but -<FONT COLOR='#ff9999'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1242 46/>/100/>%</FONT> to Shield HP and Defensive Stance's Damage absorption. (Not applicable to Battlefield Shield)",
+        "desc": "Become immune to all Status Ailments while shielded, but -<FONT COLOR='#ff9999'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1242 46/>/100/>%</FONT> to Shield HP and Defensive Stance's Damage absorption. (Not applicable to Battlefield Shield)",
         "level": 42,
         "values": [
           6250,
@@ -17886,7 +17886,7 @@
         ]
       },
       "43": {
-        "desc": "Become immune to all Status Ailments while affected by shields, but -<FONT COLOR='#ff9999'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1242 47/>/100/>%</FONT> to Shield HP and Defensive Stance's Damage absorption. (Not applicable to Battlefield Shield)",
+        "desc": "Become immune to all Status Ailments while shielded, but -<FONT COLOR='#ff9999'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1242 47/>/100/>%</FONT> to Shield HP and Defensive Stance's Damage absorption. (Not applicable to Battlefield Shield)",
         "level": 43,
         "values": [
           6050,
@@ -17908,7 +17908,7 @@
         ]
       },
       "44": {
-        "desc": "Become immune to all Status Ailments while affected by shields, but -<FONT COLOR='#ff9999'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1242 48/>/100/>%</FONT> to Shield HP and Defensive Stance's Damage absorption. (Not applicable to Battlefield Shield)",
+        "desc": "Become immune to all Status Ailments while shielded, but -<FONT COLOR='#ff9999'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1242 48/>/100/>%</FONT> to Shield HP and Defensive Stance's Damage absorption. (Not applicable to Battlefield Shield)",
         "level": 44,
         "values": [
           5850,
@@ -17930,7 +17930,7 @@
         ]
       },
       "45": {
-        "desc": "Become immune to all Status Ailments while affected by shields, but -<FONT COLOR='#ff9999'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1242 49/>/100/>%</FONT> to Shield HP and Defensive Stance's Damage absorption. (Not applicable to Battlefield Shield)",
+        "desc": "Become immune to all Status Ailments while shielded, but -<FONT COLOR='#ff9999'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1242 49/>/100/>%</FONT> to Shield HP and Defensive Stance's Damage absorption. (Not applicable to Battlefield Shield)",
         "level": 45,
         "values": [
           5650,
@@ -17952,7 +17952,7 @@
         ]
       },
       "46": {
-        "desc": "Become immune to all Status Ailments while affected by shields, but -<FONT COLOR='#ff9999'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1242 50/>/100/>%</FONT> to Shield HP and Defensive Stance's Damage absorption. (Not applicable to Battlefield Shield)",
+        "desc": "Become immune to all Status Ailments while shielded, but -<FONT COLOR='#ff9999'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1242 50/>/100/>%</FONT> to Shield HP and Defensive Stance's Damage absorption. (Not applicable to Battlefield Shield)",
         "level": 46,
         "values": [
           5450,
@@ -17974,7 +17974,7 @@
         ]
       },
       "47": {
-        "desc": "Become immune to all Status Ailments while affected by shields, but -<FONT COLOR='#ff9999'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1242 51/>/100/>%</FONT> to Shield HP and Defensive Stance's Damage absorption. (Not applicable to Battlefield Shield)",
+        "desc": "Become immune to all Status Ailments while shielded, but -<FONT COLOR='#ff9999'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1242 51/>/100/>%</FONT> to Shield HP and Defensive Stance's Damage absorption. (Not applicable to Battlefield Shield)",
         "level": 47,
         "values": [
           5250,
@@ -17996,7 +17996,7 @@
         ]
       },
       "48": {
-        "desc": "Become immune to all Status Ailments while affected by shields, but -<FONT COLOR='#ff9999'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1242 52/>/100/>%</FONT> to Shield HP and Defensive Stance's Damage absorption. (Not applicable to Battlefield Shield)",
+        "desc": "Become immune to all Status Ailments while shielded, but -<FONT COLOR='#ff9999'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1242 52/>/100/>%</FONT> to Shield HP and Defensive Stance's Damage absorption. (Not applicable to Battlefield Shield)",
         "level": 48,
         "values": [
           5050,
@@ -18018,7 +18018,7 @@
         ]
       },
       "49": {
-        "desc": "Become immune to all Status Ailments while affected by shields, but -<FONT COLOR='#ff9999'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1242 53/>/100/>%</FONT> to Shield HP and Defensive Stance's Damage absorption. (Not applicable to Battlefield Shield)",
+        "desc": "Become immune to all Status Ailments while shielded, but -<FONT COLOR='#ff9999'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1242 53/>/100/>%</FONT> to Shield HP and Defensive Stance's Damage absorption. (Not applicable to Battlefield Shield)",
         "level": 49,
         "values": [
           4850,
@@ -18040,7 +18040,7 @@
         ]
       },
       "61": {
-        "desc": "Become immune to all Status Ailments while affected by shields, but -<FONT COLOR='#ff9999'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1242 65/>/100/>%</FONT> to Shield HP and Defensive Stance's Damage absorption. (Not applicable to Battlefield Shield)",
+        "desc": "Become immune to all Status Ailments while shielded, but -<FONT COLOR='#ff9999'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1242 65/>/100/>%</FONT> to Shield HP and Defensive Stance's Damage absorption. (Not applicable to Battlefield Shield)",
         "level": 61,
         "values": [
           6150,
@@ -18062,7 +18062,7 @@
         ]
       },
       "62": {
-        "desc": "Become immune to all Status Ailments while affected by shields, but -<FONT COLOR='#ff9999'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1242 66/>/100/>%</FONT> to Shield HP and Defensive Stance's Damage absorption. (Not applicable to Battlefield Shield)",
+        "desc": "Become immune to all Status Ailments while shielded, but -<FONT COLOR='#ff9999'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1242 66/>/100/>%</FONT> to Shield HP and Defensive Stance's Damage absorption. (Not applicable to Battlefield Shield)",
         "level": 62,
         "values": [
           5950,
@@ -18084,7 +18084,7 @@
         ]
       },
       "63": {
-        "desc": "Become immune to all Status Ailments while affected by shields, but -<FONT COLOR='#ff9999'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1242 67/>/100/>%</FONT> to Shield HP and Defensive Stance's Damage absorption. (Not applicable to Battlefield Shield)",
+        "desc": "Become immune to all Status Ailments while shielded, but -<FONT COLOR='#ff9999'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1242 67/>/100/>%</FONT> to Shield HP and Defensive Stance's Damage absorption. (Not applicable to Battlefield Shield)",
         "level": 63,
         "values": [
           5750,
@@ -18106,7 +18106,7 @@
         ]
       },
       "64": {
-        "desc": "Become immune to all Status Ailments while affected by shields, but -<FONT COLOR='#ff9999'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1242 68/>/100/>%</FONT> to Shield HP and Defensive Stance's Damage absorption. (Not applicable to Battlefield Shield)",
+        "desc": "Become immune to all Status Ailments while shielded, but -<FONT COLOR='#ff9999'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1242 68/>/100/>%</FONT> to Shield HP and Defensive Stance's Damage absorption. (Not applicable to Battlefield Shield)",
         "level": 64,
         "values": [
           5550,
@@ -18128,7 +18128,7 @@
         ]
       },
       "65": {
-        "desc": "Become immune to all Status Ailments while affected by shields, but -<FONT COLOR='#ff9999'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1242 69/>/100/>%</FONT> to Shield HP and Defensive Stance's Damage absorption. (Not applicable to Battlefield Shield)",
+        "desc": "Become immune to all Status Ailments while shielded, but -<FONT COLOR='#ff9999'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1242 69/>/100/>%</FONT> to Shield HP and Defensive Stance's Damage absorption. (Not applicable to Battlefield Shield)",
         "level": 65,
         "values": [
           5350,
@@ -18150,7 +18150,7 @@
         ]
       },
       "66": {
-        "desc": "Become immune to all Status Ailments while affected by shields, but -<FONT COLOR='#ff9999'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1242 70/>/100/>%</FONT> to Shield HP and Defensive Stance's Damage absorption. (Not applicable to Battlefield Shield)",
+        "desc": "Become immune to all Status Ailments while shielded, but -<FONT COLOR='#ff9999'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1242 70/>/100/>%</FONT> to Shield HP and Defensive Stance's Damage absorption. (Not applicable to Battlefield Shield)",
         "level": 66,
         "values": [
           5150,
@@ -18172,7 +18172,7 @@
         ]
       },
       "67": {
-        "desc": "Become immune to all Status Ailments while affected by shields, but -<FONT COLOR='#ff9999'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1242 71/>/100/>%</FONT> to Shield HP and Defensive Stance's Damage absorption. (Not applicable to Battlefield Shield)",
+        "desc": "Become immune to all Status Ailments while shielded, but -<FONT COLOR='#ff9999'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1242 71/>/100/>%</FONT> to Shield HP and Defensive Stance's Damage absorption. (Not applicable to Battlefield Shield)",
         "level": 67,
         "values": [
           4950,
@@ -18194,7 +18194,7 @@
         ]
       },
       "68": {
-        "desc": "Become immune to all Status Ailments while affected by shields, but -<FONT COLOR='#ff9999'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1242 72/>/100/>%</FONT> to Shield HP and Defensive Stance's Damage absorption. (Not applicable to Battlefield Shield)",
+        "desc": "Become immune to all Status Ailments while shielded, but -<FONT COLOR='#ff9999'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1242 72/>/100/>%</FONT> to Shield HP and Defensive Stance's Damage absorption. (Not applicable to Battlefield Shield)",
         "level": 68,
         "values": [
           4750,
@@ -18216,7 +18216,7 @@
         ]
       },
       "69": {
-        "desc": "Become immune to all Status Ailments while affected by shields, but -<FONT COLOR='#ff9999'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1242 73/>/100/>%</FONT> to Shield HP and Defensive Stance's Damage absorption. (Not applicable to Battlefield Shield)",
+        "desc": "Become immune to all Status Ailments while shielded, but -<FONT COLOR='#ff9999'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1242 73/>/100/>%</FONT> to Shield HP and Defensive Stance's Damage absorption. (Not applicable to Battlefield Shield)",
         "level": 69,
         "values": [
           4550,
@@ -18238,7 +18238,7 @@
         ]
       },
       "81": {
-        "desc": "Become immune to all Status Ailments while affected by shields, but -<FONT COLOR='#ff9999'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1242 85/>/100/>%</FONT> to Shield HP and Defensive Stance's Damage absorption. (Not applicable to Battlefield Shield)",
+        "desc": "Become immune to all Status Ailments while shielded, but -<FONT COLOR='#ff9999'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1242 85/>/100/>%</FONT> to Shield HP and Defensive Stance's Damage absorption. (Not applicable to Battlefield Shield)",
         "level": 81,
         "values": [
           6000,
@@ -18260,7 +18260,7 @@
         ]
       },
       "82": {
-        "desc": "Become immune to all Status Ailments while affected by shields, but -<FONT COLOR='#ff9999'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1242 86/>/100/>%</FONT> to Shield HP and Defensive Stance's Damage absorption. (Not applicable to Battlefield Shield)",
+        "desc": "Become immune to all Status Ailments while shielded, but -<FONT COLOR='#ff9999'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1242 86/>/100/>%</FONT> to Shield HP and Defensive Stance's Damage absorption. (Not applicable to Battlefield Shield)",
         "level": 82,
         "values": [
           5800,
@@ -18282,7 +18282,7 @@
         ]
       },
       "83": {
-        "desc": "Become immune to all Status Ailments while affected by shields, but -<FONT COLOR='#ff9999'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1242 87/>/100/>%</FONT> to Shield HP and Defensive Stance's Damage absorption. (Not applicable to Battlefield Shield)",
+        "desc": "Become immune to all Status Ailments while shielded, but -<FONT COLOR='#ff9999'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1242 87/>/100/>%</FONT> to Shield HP and Defensive Stance's Damage absorption. (Not applicable to Battlefield Shield)",
         "level": 83,
         "values": [
           5600,
@@ -18304,7 +18304,7 @@
         ]
       },
       "84": {
-        "desc": "Become immune to all Status Ailments while affected by shields, but -<FONT COLOR='#ff9999'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1242 88/>/100/>%</FONT> to Shield HP and Defensive Stance's Damage absorption. (Not applicable to Battlefield Shield)",
+        "desc": "Become immune to all Status Ailments while shielded, but -<FONT COLOR='#ff9999'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1242 88/>/100/>%</FONT> to Shield HP and Defensive Stance's Damage absorption. (Not applicable to Battlefield Shield)",
         "level": 84,
         "values": [
           5400,
@@ -18326,7 +18326,7 @@
         ]
       },
       "85": {
-        "desc": "Become immune to all Status Ailments while affected by shields, but -<FONT COLOR='#ff9999'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1242 89/>/100/>%</FONT> to Shield HP and Defensive Stance's Damage absorption. (Not applicable to Battlefield Shield)",
+        "desc": "Become immune to all Status Ailments while shielded, but -<FONT COLOR='#ff9999'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1242 89/>/100/>%</FONT> to Shield HP and Defensive Stance's Damage absorption. (Not applicable to Battlefield Shield)",
         "level": 85,
         "values": [
           5200,
@@ -18348,7 +18348,7 @@
         ]
       },
       "86": {
-        "desc": "Become immune to all Status Ailments while affected by shields, but -<FONT COLOR='#ff9999'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1242 90/>/100/>%</FONT> to Shield HP and Defensive Stance's Damage absorption. (Not applicable to Battlefield Shield)",
+        "desc": "Become immune to all Status Ailments while shielded, but -<FONT COLOR='#ff9999'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1242 90/>/100/>%</FONT> to Shield HP and Defensive Stance's Damage absorption. (Not applicable to Battlefield Shield)",
         "level": 86,
         "values": [
           5000,
@@ -18370,7 +18370,7 @@
         ]
       },
       "87": {
-        "desc": "Become immune to all Status Ailments while affected by shields, but -<FONT COLOR='#ff9999'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1242 91/>/100/>%</FONT> to Shield HP and Defensive Stance's Damage absorption. (Not applicable to Battlefield Shield)",
+        "desc": "Become immune to all Status Ailments while shielded, but -<FONT COLOR='#ff9999'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1242 91/>/100/>%</FONT> to Shield HP and Defensive Stance's Damage absorption. (Not applicable to Battlefield Shield)",
         "level": 87,
         "values": [
           4800,
@@ -18392,7 +18392,7 @@
         ]
       },
       "88": {
-        "desc": "Become immune to all Status Ailments while affected by shields, but -<FONT COLOR='#ff9999'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1242 92/>/100/>%</FONT> to Shield HP and Defensive Stance's Damage absorption. (Not applicable to Battlefield Shield)",
+        "desc": "Become immune to all Status Ailments while shielded, but -<FONT COLOR='#ff9999'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1242 92/>/100/>%</FONT> to Shield HP and Defensive Stance's Damage absorption. (Not applicable to Battlefield Shield)",
         "level": 88,
         "values": [
           4600,
@@ -18414,7 +18414,7 @@
         ]
       },
       "89": {
-        "desc": "Become immune to all Status Ailments while affected by shields, but -<FONT COLOR='#ff9999'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1242 93/>/100/>%</FONT> to Shield HP and Defensive Stance's Damage absorption. (Not applicable to Battlefield Shield)",
+        "desc": "Become immune to all Status Ailments while shielded, but -<FONT COLOR='#ff9999'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE00 1242 93/>/100/>%</FONT> to Shield HP and Defensive Stance's Damage absorption. (Not applicable to Battlefield Shield)",
         "level": 89,
         "values": [
           4400,
@@ -74120,7 +74120,7 @@
           0,
           3252100,
           0,
-          3
+          4
         ],
         "addons": null
       }
@@ -74181,7 +74181,7 @@
           1,
           25190,
           0,
-          3000,
+          4000,
           0,
           3252600,
           0,
@@ -76231,7 +76231,7 @@
           1,
           0,
           3260100,
-          3260110,
+          0,
           0,
           0,
           0,
@@ -76294,8 +76294,23 @@
         "level": 1,
         "values": [
           1,
-          0,
+          500,
           3260600,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "addons": null
+      },
+      "2": {
+        "desc": null,
+        "level": 2,
+        "values": [
+          1,
+          500,
+          3260700,
           0,
           0,
           0,
@@ -76306,46 +76321,6 @@
       }
     },
     "featureType": "ag_alpha_instant_skilleffect",
-    "isEngrave": false,
-    "isPenalty": false
-  },
-  "3260700": {
-    "id": 0,
-    "name": null,
-    "icon": null,
-    "levels": {
-      "1": {
-        "desc": null,
-        "level": 1,
-        "values": [
-          1,
-          26100,
-          0,
-          15000,
-          0,
-          3260700,
-          0,
-          1
-        ],
-        "addons": null
-      },
-      "2": {
-        "desc": null,
-        "level": 2,
-        "values": [
-          1,
-          26100,
-          0,
-          15000,
-          0,
-          3260701,
-          0,
-          1
-        ],
-        "addons": null
-      }
-    },
-    "featureType": "ag_alpha_next_skill_enhance",
     "isEngrave": false,
     "isPenalty": false
   },
@@ -77728,7 +77703,7 @@
           3461100,
           8000,
           0,
-          3461200,
+          3461201,
           13000,
           2
         ],
@@ -78189,8 +78164,8 @@
         "level": 1,
         "values": [
           8000,
-          12000,
-          4250,
+          12500,
+          4500,
           0,
           0,
           0,
@@ -78204,8 +78179,8 @@
         "level": 2,
         "values": [
           8000,
-          14000,
-          5500,
+          15000,
+          6000,
           0,
           0,
           0,
@@ -78270,7 +78245,7 @@
         "values": [
           2000441,
           2000,
-          1,
+          0,
           3,
           500,
           0,
@@ -78285,7 +78260,7 @@
         "values": [
           2000442,
           2000,
-          1,
+          0,
           3,
           500,
           0,
@@ -78844,7 +78819,7 @@
         "level": 7,
         "values": [
           60000,
-          3200,
+          4000,
           3000,
           500,
           1,
@@ -78859,7 +78834,7 @@
         "level": 8,
         "values": [
           60000,
-          4400,
+          5200,
           3000,
           500,
           1,
@@ -78874,7 +78849,7 @@
         "level": 9,
         "values": [
           60000,
-          5600,
+          6400,
           3000,
           500,
           1,
@@ -79588,7 +79563,7 @@
         "desc": null,
         "level": 3,
         "values": [
-          600,
+          700,
           3000,
           1,
           1,
@@ -79603,7 +79578,7 @@
         "desc": null,
         "level": 4,
         "values": [
-          1200,
+          1400,
           3000,
           1,
           1,
@@ -79618,7 +79593,7 @@
         "desc": null,
         "level": 5,
         "values": [
-          1800,
+          2100,
           3000,
           1,
           1,
@@ -81126,7 +81101,7 @@
           1,
           100,
           3231100,
-          0,
+          3231102,
           0,
           0,
           0,
@@ -81141,7 +81116,7 @@
           1,
           100,
           3231200,
-          0,
+          3231102,
           0,
           0,
           0,
@@ -81156,7 +81131,7 @@
           1,
           100,
           3231300,
-          0,
+          3231102,
           0,
           0,
           0,
@@ -81236,9 +81211,9 @@
           1,
           0,
           3234100,
-          3,
+          4,
           100,
-          0,
+          3234100,
           0,
           0
         ],
@@ -81286,7 +81261,7 @@
           3231601,
           23440,
           0,
-          800,
+          1000,
           3231602,
           0,
           0,
@@ -81443,7 +81418,7 @@
           3235600,
           4,
           100,
-          0,
+          3235600,
           0,
           0
         ],
@@ -81473,6 +81448,21 @@
           0
         ],
         "addons": null
+      },
+      "2": {
+        "desc": null,
+        "level": 2,
+        "values": [
+          1,
+          0,
+          3340100,
+          3340200,
+          0,
+          0,
+          0,
+          0
+        ],
+        "addons": null
       }
     },
     "featureType": "ag_alpha_instant_skilleffect",
@@ -81488,14 +81478,14 @@
         "desc": null,
         "level": 1,
         "values": [
-          1,
+          3340200,
           34590,
           0,
           1000,
           0,
-          3340200,
-          0,
-          1
+          1,
+          1,
+          2
         ],
         "addons": null
       },
@@ -81503,19 +81493,19 @@
         "desc": null,
         "level": 2,
         "values": [
-          1,
+          3340200,
           34590,
           0,
           1000,
           0,
-          3340200,
-          0,
-          1
+          1,
+          1,
+          2
         ],
         "addons": null
       }
     },
-    "featureType": "ag_alpha_next_skill_enhance",
+    "featureType": "ag_status_stack_damage",
     "isEngrave": false,
     "isPenalty": false
   },
@@ -81538,6 +81528,21 @@
           0
         ],
         "addons": null
+      },
+      "2": {
+        "desc": null,
+        "level": 2,
+        "values": [
+          1,
+          0,
+          3340600,
+          3340700,
+          0,
+          0,
+          0,
+          0
+        ],
+        "addons": null
       }
     },
     "featureType": "ag_alpha_instant_skilleffect",
@@ -81553,14 +81558,14 @@
         "desc": null,
         "level": 1,
         "values": [
-          1,
+          3340700,
           0,
           3340701,
           500,
           0,
-          3340700,
-          0,
-          3
+          1,
+          1,
+          0
         ],
         "addons": null
       },
@@ -81568,19 +81573,19 @@
         "desc": null,
         "level": 2,
         "values": [
-          1,
+          3340700,
           0,
           3340701,
           500,
           0,
-          3340700,
-          0,
-          3
+          1,
+          1,
+          0
         ],
         "addons": null
       }
     },
-    "featureType": "ag_alpha_next_skill_enhance",
+    "featureType": "ag_status_stack_damage",
     "isEngrave": false,
     "isPenalty": false
   },
@@ -81594,33 +81599,8 @@
         "level": 1,
         "values": [
           1,
-          0,
-          3340601,
-          500,
-          0,
+          100,
           3341100,
-          0,
-          2
-        ],
-        "addons": null
-      }
-    },
-    "featureType": "ag_alpha_next_skill_enhance",
-    "isEngrave": false,
-    "isPenalty": false
-  },
-  "3341200": {
-    "id": 0,
-    "name": null,
-    "icon": null,
-    "levels": {
-      "1": {
-        "desc": null,
-        "level": 1,
-        "values": [
-          1,
-          3341200,
-          0,
           0,
           0,
           0,
@@ -81634,9 +81614,24 @@
         "level": 2,
         "values": [
           1,
+          100,
+          3341100,
+          3341200,
+          0,
+          0,
+          0,
+          0
+        ],
+        "addons": null
+      },
+      "3": {
+        "desc": null,
+        "level": 3,
+        "values": [
+          1,
+          100,
+          3341100,
           3341201,
-          0,
-          0,
           0,
           0,
           0,
@@ -81645,7 +81640,7 @@
         "addons": null
       }
     },
-    "featureType": "ag_alpha_instant_skilleffect_end",
+    "featureType": "ag_alpha_instant_skilleffect",
     "isEngrave": false,
     "isPenalty": false
   },
@@ -81954,9 +81949,9 @@
         "level": 1,
         "values": [
           1,
-          34020,
+          2,
+          3345100,
           0,
-          1,
           0,
           0,
           0,
@@ -81965,7 +81960,7 @@
         "addons": null
       }
     },
-    "featureType": "ag_beta_use_skill",
+    "featureType": "ag_beta_stance_buff_check",
     "isEngrave": false,
     "isPenalty": false
   },
@@ -82031,8 +82026,8 @@
           1,
           24210,
           0,
-          1500,
-          2000,
+          4000,
+          0,
           3240200,
           10000,
           1
@@ -82046,9 +82041,9 @@
           1,
           24210,
           0,
-          2000,
-          2000,
-          3240200,
+          4500,
+          0,
+          3240300,
           10000,
           1
         ],
@@ -83846,7 +83841,7 @@
           1,
           100,
           3392600,
-          0,
+          3392601,
           0,
           0,
           0,
@@ -83861,7 +83856,7 @@
           1,
           100,
           3392700,
-          0,
+          3392601,
           0,
           0,
           0,
@@ -83876,7 +83871,7 @@
           1,
           100,
           3392800,
-          0,
+          3392601,
           0,
           0,
           0,
@@ -83951,7 +83946,7 @@
           1,
           47970,
           0,
-          2000,
+          3400,
           0,
           3470200,
           0,
@@ -83966,7 +83961,7 @@
           1,
           47970,
           0,
-          2800,
+          4200,
           0,
           3470201,
           0,
@@ -85206,7 +85201,7 @@
           3281100,
           0,
           3281100,
-          1500,
+          1000,
           0,
           1,
           1,
@@ -85221,7 +85216,7 @@
           3281100,
           0,
           3281100,
-          2500,
+          2000,
           0,
           1,
           1,
@@ -85236,7 +85231,7 @@
           3281100,
           0,
           3281100,
-          2700,
+          2200,
           0,
           1,
           1,
@@ -85351,7 +85346,7 @@
           1,
           100,
           3282600,
-          0,
+          3282601,
           0,
           0,
           0,
@@ -85366,7 +85361,22 @@
           1,
           100,
           3282700,
+          3282701,
           0,
+          0,
+          0,
+          0
+        ],
+        "addons": null
+      },
+      "3": {
+        "desc": null,
+        "level": 3,
+        "values": [
+          1,
+          100,
+          3282800,
+          3282801,
           0,
           0,
           0,
@@ -85619,6 +85629,21 @@
           2292232,
           0,
           0,
+          0,
+          0
+        ],
+        "addons": null
+      },
+      "6": {
+        "desc": null,
+        "level": 6,
+        "values": [
+          2292220,
+          3,
+          900,
+          2292232,
+          2290400,
+          1,
           0,
           0
         ],
@@ -86176,7 +86201,7 @@
           3292110,
           29380,
           0,
-          70,
+          100,
           3292111,
           0,
           0,
@@ -86191,7 +86216,7 @@
           3292210,
           29380,
           0,
-          70,
+          100,
           3292111,
           0,
           0,
@@ -87071,7 +87096,7 @@
           3302200,
           30180,
           0,
-          300,
+          400,
           3302201,
           0,
           0,
@@ -87086,7 +87111,7 @@
           3302300,
           30180,
           0,
-          340,
+          450,
           3302201,
           0,
           0,
@@ -88145,7 +88170,7 @@
         "values": [
           1,
           0,
-          3353100,
+          3353101,
           1,
           10000,
           0,
@@ -88169,7 +88194,7 @@
         "level": 1,
         "values": [
           1,
-          35170,
+          35040,
           0,
           1,
           10000,
@@ -90290,7 +90315,7 @@
         "values": [
           19282,
           8000,
-          2500,
+          2700,
           19287,
           19286,
           0,
@@ -90305,7 +90330,7 @@
         "values": [
           19282,
           8000,
-          3400,
+          3700,
           19287,
           19286,
           0,
@@ -90320,7 +90345,7 @@
         "values": [
           19282,
           8000,
-          4300,
+          4700,
           19287,
           19286,
           0,
@@ -90335,7 +90360,7 @@
         "values": [
           19282,
           8000,
-          4300,
+          4700,
           19287,
           19286,
           192820,
@@ -90350,7 +90375,7 @@
         "values": [
           19282,
           12000,
-          4300,
+          4700,
           19287,
           19286,
           192820,
@@ -90365,7 +90390,7 @@
         "values": [
           19282,
           16000,
-          4300,
+          4700,
           19287,
           19286,
           192820,
@@ -90784,7 +90809,7 @@
         "level": 2,
         "values": [
           1,
-          500,
+          700,
           0,
           0,
           0,
@@ -90799,7 +90824,7 @@
         "level": 3,
         "values": [
           1,
-          1000,
+          1400,
           0,
           0,
           0,
@@ -90814,7 +90839,7 @@
         "level": 4,
         "values": [
           1,
-          1500,
+          2100,
           0,
           0,
           0,
@@ -90829,7 +90854,7 @@
         "level": 5,
         "values": [
           1,
-          1500,
+          2100,
           500,
           0,
           0,
@@ -90844,7 +90869,7 @@
         "level": 6,
         "values": [
           1,
-          1500,
+          2100,
           1000,
           0,
           0,
@@ -90859,7 +90884,7 @@
         "level": 7,
         "values": [
           1,
-          1500,
+          2100,
           1600,
           0,
           0,
@@ -90874,7 +90899,7 @@
         "level": 8,
         "values": [
           1,
-          2100,
+          2800,
           1600,
           40,
           0,
@@ -90889,7 +90914,7 @@
         "level": 9,
         "values": [
           1,
-          2800,
+          3500,
           1600,
           70,
           0,
@@ -90904,7 +90929,7 @@
         "level": 10,
         "values": [
           1,
-          3500,
+          4200,
           1600,
           100,
           0,
@@ -91775,7 +91800,7 @@
         "values": [
           37110,
           1000,
-          1700,
+          2000,
           1000,
           0,
           0,
@@ -91790,7 +91815,7 @@
         "values": [
           37110,
           1000,
-          2800,
+          3100,
           1000,
           0,
           0,
@@ -91805,7 +91830,7 @@
         "values": [
           37110,
           1000,
-          3900,
+          4200,
           1000,
           0,
           0,
@@ -91820,7 +91845,7 @@
         "values": [
           37110,
           1000,
-          3900,
+          4200,
           1000,
           0,
           370020,
@@ -91835,7 +91860,7 @@
         "values": [
           37110,
           1000,
-          3900,
+          4200,
           1000,
           0,
           370026,
@@ -91850,7 +91875,7 @@
         "values": [
           37110,
           1000,
-          3900,
+          4200,
           1000,
           0,
           370027,
@@ -92556,7 +92581,7 @@
           1,
           0,
           2190903,
-          3,
+          2,
           0,
           0,
           0,
@@ -92683,7 +92708,7 @@
           1,
           0,
           2370900,
-          10000,
+          12500,
           0,
           3370600
         ],
@@ -92698,7 +92723,7 @@
           1,
           0,
           2370900,
-          12000,
+          14500,
           0,
           3370700
         ],
@@ -92713,7 +92738,7 @@
           1,
           0,
           2370900,
-          12300,
+          14800,
           0,
           3370800
         ],
@@ -92840,8 +92865,8 @@
         "values": [
           1,
           11,
-          2200,
-          1200,
+          3000,
+          2500,
           0,
           3372100,
           8000,
@@ -92855,8 +92880,8 @@
         "values": [
           1,
           11,
-          2200,
-          1200,
+          3000,
+          2500,
           0,
           3372200,
           8000,
@@ -92870,8 +92895,8 @@
         "values": [
           1,
           11,
-          2200,
-          1200,
+          3000,
+          2500,
           0,
           3372300,
           8000,
@@ -93183,7 +93208,7 @@
           0,
           2,
           0,
-          0,
+          3375600,
           0,
           0
         ],
@@ -93436,7 +93461,7 @@
           1,
           20260,
           0,
-          3000,
+          2500,
           0,
           3202100,
           0,
@@ -93451,7 +93476,7 @@
           1,
           20260,
           0,
-          5500,
+          4500,
           0,
           3202200,
           0,
@@ -93466,7 +93491,7 @@
           1,
           20260,
           0,
-          6000,
+          4900,
           0,
           3202300,
           0,
@@ -93672,7 +93697,7 @@
           3000,
           20260,
           0,
-          8000,
+          7200,
           3205101,
           0,
           0
@@ -93687,7 +93712,7 @@
           3000,
           20260,
           0,
-          10000,
+          8500,
           3205101,
           0,
           0
@@ -93702,7 +93727,7 @@
           3000,
           20260,
           0,
-          10500,
+          8900,
           3205101,
           0,
           0
@@ -94373,38 +94398,8 @@
         "desc": null,
         "level": 1,
         "values": [
-          313000,
-          606110,
+          313030,
           0,
-          0,
-          0,
-          0,
-          0,
-          0
-        ],
-        "addons": null
-      },
-      "2": {
-        "desc": null,
-        "level": 2,
-        "values": [
-          313001,
-          606111,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0
-        ],
-        "addons": null
-      },
-      "3": {
-        "desc": null,
-        "level": 3,
-        "values": [
-          313002,
-          606112,
           0,
           0,
           0,
@@ -95896,7 +95891,7 @@
           1,
           32150,
           0,
-          2400,
+          3500,
           0,
           3322200,
           0,
@@ -95911,7 +95906,7 @@
           1,
           32150,
           0,
-          3200,
+          4500,
           0,
           3322201,
           0,
@@ -97106,7 +97101,7 @@
           1,
           33400,
           0,
-          1200,
+          1400,
           0,
           3330700,
           0,
@@ -97121,7 +97116,7 @@
           1,
           33400,
           0,
-          1350,
+          1550,
           0,
           3330701,
           0,
@@ -98183,14 +98178,14 @@
         "desc": null,
         "level": 1,
         "values": [
-          0,
-          500,
-          0,
+          3000,
           0,
           0,
+          2170090,
           0,
-          0,
-          0
+          1300,
+          2170093,
+          2170092
         ],
         "addons": null
       },
@@ -98198,14 +98193,14 @@
         "desc": null,
         "level": 2,
         "values": [
-          0,
-          1000,
-          0,
+          3000,
           0,
           0,
+          2170090,
           0,
-          0,
-          0
+          2600,
+          2170094,
+          2170092
         ],
         "addons": null
       },
@@ -98213,14 +98208,14 @@
         "desc": null,
         "level": 3,
         "values": [
-          0,
-          1500,
-          0,
+          3000,
           0,
           0,
+          2170090,
           0,
-          0,
-          0
+          4000,
+          2170095,
+          2170092
         ],
         "addons": null
       },
@@ -98228,14 +98223,14 @@
         "desc": null,
         "level": 4,
         "values": [
-          0,
-          1500,
-          1000,
+          3000,
           0,
           0,
+          2170090,
           0,
-          0,
-          0
+          4000,
+          2170095,
+          2170092
         ],
         "addons": null
       },
@@ -98243,14 +98238,14 @@
         "desc": null,
         "level": 5,
         "values": [
-          0,
-          1500,
           3000,
           0,
           0,
+          2170090,
           0,
-          0,
-          0
+          4000,
+          2170095,
+          2170092
         ],
         "addons": null
       },
@@ -98258,14 +98253,14 @@
         "desc": null,
         "level": 6,
         "values": [
-          0,
-          1500,
-          5000,
+          3000,
           0,
           0,
+          2170090,
           0,
-          0,
-          0
+          4000,
+          2170095,
+          2170092
         ],
         "addons": null
       },
@@ -98273,14 +98268,14 @@
         "desc": null,
         "level": 7,
         "values": [
-          0,
-          1500,
-          5000,
-          1,
+          3000,
           0,
           0,
-          0,
-          0
+          2170090,
+          2000,
+          4000,
+          2170095,
+          2170092
         ],
         "addons": null
       },
@@ -98288,14 +98283,14 @@
         "desc": null,
         "level": 8,
         "values": [
-          0,
-          1500,
-          5000,
-          1,
+          3000,
           0,
           0,
-          0,
-          0
+          2170090,
+          4000,
+          4000,
+          2170095,
+          2170092
         ],
         "addons": null
       },
@@ -98303,44 +98298,64 @@
         "desc": null,
         "level": 9,
         "values": [
-          0,
-          1500,
-          5000,
-          1,
+          3000,
           0,
           0,
+          2170090,
+          6000,
+          4000,
+          2170095,
+          2170092
+        ],
+        "addons": null
+      },
+      "10": {
+        "desc": null,
+        "level": 10,
+        "values": [
+          3000,
           0,
-          0
+          0,
+          2170090,
+          6000,
+          4000,
+          2170095,
+          2170092
+        ],
+        "addons": null
+      },
+      "11": {
+        "desc": null,
+        "level": 11,
+        "values": [
+          3000,
+          0,
+          0,
+          2170090,
+          6000,
+          4000,
+          2170095,
+          2170092
+        ],
+        "addons": null
+      },
+      "12": {
+        "desc": null,
+        "level": 12,
+        "values": [
+          3000,
+          0,
+          0,
+          2170090,
+          6000,
+          4000,
+          2170095,
+          2170092
         ],
         "addons": null
       }
     },
     "featureType": "ap_identity_warlord_lonely_knight",
-    "isEngrave": false,
-    "isPenalty": false
-  },
-  "2170010": {
-    "id": 0,
-    "name": null,
-    "icon": null,
-    "levels": {
-      "1": {
-        "desc": null,
-        "level": 1,
-        "values": [
-          0,
-          17820,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0
-        ],
-        "addons": null
-      }
-    },
-    "featureType": "ap_add_skill_variation_1",
     "isEngrave": false,
     "isPenalty": false
   },
@@ -98398,11 +98413,11 @@
         "desc": null,
         "level": 4,
         "values": [
-          2170030,
           1000,
+          2170100,
           0,
           5000,
-          2170030,
+          0,
           0,
           0,
           0
@@ -98413,11 +98428,11 @@
         "desc": null,
         "level": 5,
         "values": [
-          2170031,
-          1000,
+          1500,
+          2170100,
           0,
           5000,
-          2170031,
+          0,
           0,
           0,
           0
@@ -98428,11 +98443,11 @@
         "desc": null,
         "level": 6,
         "values": [
-          2170032,
-          1000,
+          2000,
+          2170100,
           0,
           5000,
-          2170032,
+          0,
           0,
           0,
           0
@@ -98443,11 +98458,11 @@
         "desc": null,
         "level": 7,
         "values": [
-          2170032,
-          1000,
+          2000,
+          2170100,
           1200,
           5000,
-          2170032,
+          0,
           0,
           0,
           0
@@ -98458,11 +98473,11 @@
         "desc": null,
         "level": 8,
         "values": [
-          2170032,
-          1000,
+          2000,
+          2170100,
           2400,
           5000,
-          2170032,
+          0,
           0,
           0,
           0
@@ -98473,11 +98488,11 @@
         "desc": null,
         "level": 9,
         "values": [
-          2170032,
-          1000,
+          2000,
+          2170100,
           3600,
           5000,
-          2170032,
+          0,
           0,
           0,
           0
@@ -98488,12 +98503,12 @@
         "desc": null,
         "level": 10,
         "values": [
-          2170101,
-          500,
+          2600,
+          2170100,
           3600,
           5000,
-          2170101,
-          2170104,
+          2000,
+          2170100,
           0,
           0
         ],
@@ -98503,12 +98518,12 @@
         "desc": null,
         "level": 11,
         "values": [
-          2170102,
-          500,
+          3500,
+          2170100,
           3600,
           5000,
-          2170102,
-          2170105,
+          2000,
+          2170100,
           0,
           0
         ],
@@ -98518,12 +98533,12 @@
         "desc": null,
         "level": 12,
         "values": [
-          2170103,
-          500,
+          4500,
+          2170100,
           3600,
           5000,
-          2170103,
-          2170106,
+          2000,
+          2170100,
           0,
           0
         ],
@@ -98531,116 +98546,6 @@
       }
     },
     "featureType": "ap_identity_warlord_light_sheild",
-    "isEngrave": false,
-    "isPenalty": false
-  },
-  "2170200": {
-    "id": 0,
-    "name": null,
-    "icon": null,
-    "levels": {
-      "1": {
-        "desc": null,
-        "level": 1,
-        "values": [
-          2170200,
-          2000,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0
-        ],
-        "addons": null
-      },
-      "2": {
-        "desc": null,
-        "level": 2,
-        "values": [
-          2170201,
-          2000,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0
-        ],
-        "addons": null
-      },
-      "3": {
-        "desc": null,
-        "level": 3,
-        "values": [
-          2170202,
-          2000,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0
-        ],
-        "addons": null
-      }
-    },
-    "featureType": "ap_identity_warlord_great_sheild",
-    "isEngrave": false,
-    "isPenalty": false
-  },
-  "2170400": {
-    "id": 0,
-    "name": null,
-    "icon": null,
-    "levels": {
-      "1": {
-        "desc": null,
-        "level": 1,
-        "values": [
-          0,
-          800,
-          2170090,
-          0,
-          0,
-          0,
-          0,
-          0
-        ],
-        "addons": null
-      },
-      "2": {
-        "desc": null,
-        "level": 2,
-        "values": [
-          0,
-          1600,
-          2170090,
-          0,
-          0,
-          0,
-          0,
-          0
-        ],
-        "addons": null
-      },
-      "3": {
-        "desc": null,
-        "level": 3,
-        "values": [
-          0,
-          2400,
-          2170090,
-          0,
-          0,
-          0,
-          0,
-          0
-        ],
-        "addons": null
-      }
-    },
-    "featureType": "ap_identity_warlord_lance_stance",
     "isEngrave": false,
     "isPenalty": false
   },
@@ -99168,7 +99073,7 @@
         "desc": null,
         "level": 1,
         "values": [
-          400,
+          360,
           0,
           0,
           0,
@@ -99183,7 +99088,7 @@
         "desc": null,
         "level": 2,
         "values": [
-          800,
+          720,
           0,
           0,
           0,
@@ -99198,7 +99103,7 @@
         "desc": null,
         "level": 3,
         "values": [
-          1200,
+          1080,
           0,
           0,
           0,
@@ -99213,7 +99118,7 @@
         "desc": null,
         "level": 4,
         "values": [
-          1600,
+          1440,
           0,
           0,
           0,
@@ -99228,7 +99133,7 @@
         "desc": null,
         "level": 5,
         "values": [
-          2000,
+          1800,
           0,
           0,
           0,
@@ -99986,7 +99891,7 @@
           1,
           16640,
           0,
-          3500,
+          1500,
           0,
           3160600,
           0,
@@ -100081,7 +99986,7 @@
           1,
           1000,
           3161300,
-          3161302,
+          3161301,
           0,
           0,
           0,
@@ -100216,7 +100121,7 @@
           3162200,
           16640,
           0,
-          800,
+          1300,
           0,
           0,
           0,
@@ -100241,7 +100146,7 @@
           3162300,
           16640,
           0,
-          1000,
+          1500,
           0,
           0,
           0,
@@ -100715,8 +100620,8 @@
         "values": [
           1,
           1000,
+          3172100,
           3172200,
-          0,
           0,
           0,
           0,
@@ -100730,8 +100635,8 @@
         "values": [
           1,
           1000,
+          3172100,
           3172300,
-          0,
           0,
           0,
           0,
@@ -100809,7 +100714,7 @@
         "level": 1,
         "values": [
           1,
-          17180,
+          17840,
           0,
           1,
           10000,
@@ -100859,7 +100764,7 @@
         "level": 1,
         "values": [
           1,
-          17070,
+          17840,
           0,
           1,
           10000,
@@ -101330,7 +101235,7 @@
         "values": [
           1,
           0,
-          3182600,
+          3182601,
           0,
           0,
           0,
@@ -101356,7 +101261,7 @@
           1,
           18011,
           0,
-          1500,
+          1000,
           0,
           3182700,
           0,
@@ -101381,7 +101286,7 @@
           1,
           18011,
           0,
-          1700,
+          1200,
           0,
           3182800,
           0,
@@ -101636,11 +101541,41 @@
           1,
           36190,
           0,
-          4000,
+          3500,
           0,
           3360600,
           0,
           1
+        ],
+        "addons": null
+      },
+      "2": {
+        "desc": null,
+        "level": 2,
+        "values": [
+          1,
+          36190,
+          0,
+          5500,
+          0,
+          3360701,
+          0,
+          0
+        ],
+        "addons": null
+      },
+      "3": {
+        "desc": null,
+        "level": 3,
+        "values": [
+          1,
+          36190,
+          0,
+          6200,
+          0,
+          3360801,
+          0,
+          0
         ],
         "addons": null
       }
@@ -101660,7 +101595,7 @@
         "values": [
           1,
           0,
-          3360700,
+          3360001,
           0,
           0,
           0,
@@ -101671,31 +101606,6 @@
       }
     },
     "featureType": "ag_alpha_instant_skilleffect",
-    "isEngrave": false,
-    "isPenalty": false
-  },
-  "3360701": {
-    "id": 0,
-    "name": null,
-    "icon": null,
-    "levels": {
-      "1": {
-        "desc": null,
-        "level": 1,
-        "values": [
-          3360701,
-          36190,
-          0,
-          6200,
-          3360001,
-          0,
-          0,
-          0
-        ],
-        "addons": null
-      }
-    },
-    "featureType": "ag_status_stack_damage",
     "isEngrave": false,
     "isPenalty": false
   },
@@ -101710,7 +101620,7 @@
         "values": [
           1,
           0,
-          3360800,
+          3360001,
           0,
           0,
           0,
@@ -101721,31 +101631,6 @@
       }
     },
     "featureType": "ag_alpha_instant_skilleffect",
-    "isEngrave": false,
-    "isPenalty": false
-  },
-  "3360801": {
-    "id": 0,
-    "name": null,
-    "icon": null,
-    "levels": {
-      "1": {
-        "desc": null,
-        "level": 1,
-        "values": [
-          3360801,
-          36190,
-          0,
-          7700,
-          3360001,
-          0,
-          0,
-          0
-        ],
-        "addons": null
-      }
-    },
-    "featureType": "ag_status_stack_damage",
     "isEngrave": false,
     "isPenalty": false
   },
@@ -102004,7 +101889,7 @@
         "level": 1,
         "values": [
           1,
-          36180,
+          36190,
           0,
           1,
           10000,
@@ -102104,7 +101989,7 @@
         "level": 1,
         "values": [
           1,
-          36100,
+          36280,
           0,
           1,
           10000,
@@ -102931,7 +102816,7 @@
           45730,
           0,
           54,
-          4300,
+          5000,
           3450001,
           1,
           0,
@@ -102946,7 +102831,7 @@
           45730,
           0,
           59,
-          4700,
+          5500,
           3450001,
           1,
           0,
@@ -103026,7 +102911,7 @@
           3451700,
           45730,
           0,
-          1000,
+          1400,
           3450001,
           2,
           0,
@@ -103041,7 +102926,7 @@
           3451800,
           45730,
           0,
-          1200,
+          1600,
           3450001,
           2,
           0,
@@ -103080,7 +102965,7 @@
         "values": [
           1,
           10000,
-          2500,
+          700,
           0,
           3450000,
           0,
@@ -103095,7 +102980,7 @@
         "values": [
           1,
           10000,
-          3200,
+          700,
           0,
           3450000,
           0,

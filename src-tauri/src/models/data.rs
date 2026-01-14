@@ -1,4 +1,4 @@
-use crate::models::utils::int_or_string_as_string;
+use crate::models::utils::{int_or_string_as_option_string, int_or_string_as_string};
 use hashbrown::HashMap;
 use serde::{Deserialize, Serialize};
 
@@ -53,6 +53,7 @@ pub struct SkillBuffData {
     #[serde(deserialize_with = "int_or_string_as_string")]
     pub buff_type: String,
     pub status_effect_values: Option<Vec<i32>>,
+    #[serde(deserialize_with = "int_or_string_as_option_string")]
     pub buff_category: Option<String>,
     pub target: String,
     pub unique_group: u32,

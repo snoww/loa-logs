@@ -202,8 +202,28 @@ impl EncounterState {
     pub fn on_transit<E: AppEmitter>(&mut self, zone_id: u32, emitter: &E, app: &AppHandle, version: &str) {
         if zone_id == 37545 {
             // split encounter for kazeros g2 intermission
-            info!("starting intermission");
             self.on_phase_transition(2, emitter, app, version);
+        } else if matches!(zone_id, (37121..37124) | (37817..37819)) {
+            // not resetting for thaemine gate 4
+            let now = Utc::now().timestamp_millis();
+            self.intermission_start = Some(now);
+            info!("starting intermission");
+            for entity in self
+                .encounter
+                .entities
+                .values_mut()
+                .filter(|e| e.entity_type == EntityType::Player)
+            {
+                if let Some(death) = entity
+                    .damage_stats
+                    .death_info
+                    .as_mut()
+                    .and_then(|info| info.last_mut())
+                {
+                    death.dead_for = Some(now - death.death_time);
+                }
+            }
+            return;
         }
 
         emitter.emit("zone-change", "no-toast");
@@ -305,14 +325,20 @@ impl EncounterState {
                 self.encounter.current_boss_name.clone()
             };
 
-            // set intermission end if boss is kazeros g2
-            // if self.encounter.current_boss_name == "Death Incarnate Kazeros"
-            //     && self.intermission_start.is_some()
-            //     && self.intermission_end.is_none()
-            // {
-            //     self.intermission_end = Some(Utc::now().timestamp_millis());
-            //     info!("ending intermission");
-            // }
+            // set intermission end and difficulty if boss is thaemine
+            if self.encounter.current_boss_name == "Darkness Legion Commander Thaemine" {
+                if self.raid_difficulty == "Extreme" {
+                    if npc.max_hp > 1_500_000_000_000 {
+                        self.raid_difficulty = "Extreme Hard".to_string();
+                    } else {
+                        self.raid_difficulty = "Extreme Normal".to_string();
+                    }
+                }
+                if self.intermission_start.is_some() && self.intermission_end.is_none() {
+                    self.intermission_end = Some(Utc::now().timestamp_millis());
+                    info!("ending intermission");
+                }
+            }
         }
     }
 
