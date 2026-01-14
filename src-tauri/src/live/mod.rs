@@ -26,7 +26,7 @@ use crate::utils::get_class_from_id;
 use anyhow::Result;
 use chrono::Utc;
 use hashbrown::HashMap;
-use log::{info, warn};
+use log::*;
 use meter_core::packets::definitions::*;
 use meter_core::packets::opcodes::Pkt;
 use meter_core::packets::structures::SkillDamageEvent;
@@ -1048,7 +1048,7 @@ pub fn start(args: StartArgs) -> Result<()> {
             }
             _ => {}
         }
-
+        
         if last_update.elapsed() >= duration || state.resetting || state.boss_dead_update {
             let boss_dead = state.boss_dead_update;
             if state.boss_dead_update {

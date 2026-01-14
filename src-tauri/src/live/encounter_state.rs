@@ -202,7 +202,7 @@ impl EncounterState {
     pub fn on_transit<E: AppEmitter>(&mut self, zone_id: u32, emitter: &E, app: &AppHandle, version: &str) {
         if zone_id == 37545 {
             // split encounter for kazeros g2 intermission
-            self.on_phase_transition(2);
+            self.on_phase_transition(2, emitter, app, version);
         } else if matches!(zone_id, (37121..=37124) | (37817..=37819)) {
             // not resetting for thaemine gate 4
             let now = Utc::now().timestamp_millis();
