@@ -5,28 +5,31 @@ mod manager;
 mod party_tracker;
 mod skill_tracker;
 mod status_tracker;
+mod emitter;
+mod sntp;
 mod utils;
+mod processor;
 
 use crate::api::HeartBeatApi;
+use crate::live::emitter::TauriAppEmitter;
 use crate::live::encounter_state::EncounterState;
 use crate::live::entity_tracker::{EntityTracker, get_current_and_max_hp};
 use crate::live::id_tracker::IdTracker;
 use crate::live::manager::EventManager;
 use crate::live::party_tracker::PartyTracker;
-use crate::live::status_tracker::{
-    StatusEffectDetails, StatusEffectTargetType, StatusEffectType, StatusTracker,
-    get_status_effect_value,
-};
+use crate::live::sntp::SntpTimeSyncClient;
+use crate::live::status_tracker::{StatusTracker, get_status_effect_value};
 use crate::local::{LocalInfo, LocalPlayer, LocalPlayerRepository};
-use crate::models::{DamageData, EntityType, Identity, RdpsData, TripodIndex};
+use crate::models::{DamageEventContext, EntityType, HitInfo, Identity, RdpsData, StatusEffectDetails, StatusEffectTargetType, StatusEffectType, TripodIndex};
 use crate::settings::Settings;
 use crate::utils::get_class_from_id;
 use anyhow::Result;
 use chrono::Utc;
 use hashbrown::HashMap;
-use log::{info, warn};
+use log::*;
 use meter_core::packets::definitions::*;
 use meter_core::packets::opcodes::Pkt;
+use meter_core::packets::structures::SkillDamageEvent;
 use meter_core::start_capture;
 use std::cell::RefCell;
 use std::rc::Rc;
@@ -35,6 +38,7 @@ use tauri::{AppHandle, Emitter};
 use tokio::sync::watch;
 
 pub struct StartArgs {
+    pub version: String,
     pub app: AppHandle,
     pub port: u16,
     pub settings: Option<Settings>,
@@ -50,11 +54,12 @@ pub fn start(args: StartArgs) -> Result<()> {
         app,
         port,
         settings,
-        shutdown_rx,
         mut local_info,
         local_player_repository,
         mut heartbeat_api,
         region_file_path,
+        version,
+        ..
     } = args;
     let manager = EventManager::new(app.clone());
     let id_tracker = Rc::new(RefCell::new(IdTracker::new()));
@@ -65,7 +70,7 @@ pub fn start(args: StartArgs) -> Result<()> {
         id_tracker.clone(),
         party_tracker.clone(),
     );
-    let mut state = EncounterState::new(app.clone());
+    let mut state = EncounterState::new();
 
     let rx = match start_capture(port, region_file_path.clone()) {
         Ok(rx) => rx,
@@ -77,6 +82,9 @@ pub fn start(args: StartArgs) -> Result<()> {
 
     let damage_handler = meter_core::decryption::DamageEncryptionHandler::new();
     let damage_handler = damage_handler.start()?;
+
+    let emitter = TauriAppEmitter::new(app.clone());
+    let sntp_client = SntpTimeSyncClient::new("time.cloudflare.com");
 
     let mut last_update = Instant::now();
     let mut duration = Duration::from_millis(200);
@@ -113,7 +121,7 @@ pub fn start(args: StartArgs) -> Result<()> {
 
         if manager.has_saved() {
             state.party_info = update_party(&party_tracker, &entity_tracker);
-            state.save_to_db(true);
+            state.save_to_db(app.clone(), version.clone(), true);
             state.saved = true;
             state.resetting = true;
         }
@@ -126,13 +134,13 @@ pub fn start(args: StartArgs) -> Result<()> {
         }
 
         match op {
-            // Pkt::BattleItemUseNotify => {
-            //     if let Some(pkt) =
-            //         parse_pkt(&data, PKTBattleItemUseNotify::new, "PKTBattleItemUseNotify")
-            //     {
-            //         state.on_battle_item_use(&pkt.item_id);
-            //     }
-            // }
+            Pkt::BattleItemUseNotify => {
+                if let Some(pkt) =
+                    parse_pkt(&data, PKTBattleItemUseNotify::new, "PKTBattleItemUseNotify")
+                {
+                    state.on_battle_item_use(&pkt.item_id);
+                }
+            }
             Pkt::CounterAttackNotify => {
                 if let Some(pkt) =
                     parse_pkt(&data, PKTCounterAttackNotify::new, "PKTCounterAttackNotify")
@@ -195,7 +203,7 @@ pub fn start(args: StartArgs) -> Result<()> {
                     state.raid_difficulty_id = 0;
                     party_cache = None;
                     let entity = entity_tracker.init_env(pkt);
-                    state.on_init_env(entity);
+                    state.on_init_env(entity, &emitter, &app, &version);
                     get_and_set_region(&region_file_path, &mut state);
                     info!("region: {:?}", state.region);
                 }
@@ -372,7 +380,7 @@ pub fn start(args: StartArgs) -> Result<()> {
                 }
             }
             Pkt::RaidBossKillNotify => {
-                state.on_phase_transition(1);
+                state.on_phase_transition(1, &emitter, &app, &version);
                 state.raid_clear = true;
                 info!("phase: 1 - RaidBossKillNotify");
             }
@@ -383,7 +391,7 @@ pub fn start(args: StartArgs) -> Result<()> {
                 } else {
                     update_party(&party_tracker, &entity_tracker)
                 };
-                state.on_phase_transition(0);
+                state.on_phase_transition(0, &emitter, &app, &version);
                 raid_end_cd = Instant::now();
                 info!("phase: 0 - RaidResult");
             }
@@ -459,19 +467,40 @@ pub fn start(args: StartArgs) -> Result<()> {
                     "PKTSkillDamageAbnormalMoveNotify",
                 ) {
                     let now = Utc::now().timestamp_millis();
-                    let owner = entity_tracker.get_source_entity(pkt.source_id);
+
+                    let PKTSkillDamageAbnormalMoveNotify {
+                        source_id,
+                        skill_damage_abnormal_move_events: events,
+                        skill_effect_id,
+                        skill_id,
+                    } = pkt;
+
+                    let owner = entity_tracker.get_source_entity(source_id);
                     let local_character_id = id_tracker
                         .borrow()
                         .get_local_character_id(entity_tracker.local_entity_id);
-                    let target_count = pkt.skill_damage_abnormal_move_events.len() as i32;
-                    for mut event in pkt.skill_damage_abnormal_move_events.into_iter() {
+                    let target_count = events.len() as i32;
+                    for mut event in events.into_iter() {
                         if !damage_handler.decrypt_damage_event(&mut event.skill_damage_event) {
                             state.damage_is_valid = false;
                             continue;
                         }
+
+                        let SkillDamageEvent {
+                            cur_hp,
+                            damage,
+                            max_hp,
+                            modifier,
+                            rdps_data_conditional,
+                            shield_damage,
+                            stagger_amount,
+                            target_id,
+                            ..
+                        } = event.skill_damage_event;
+
                         let target_entity =
-                            entity_tracker.get_or_create_entity(event.skill_damage_event.target_id);
-                        let source_entity = entity_tracker.get_or_create_entity(pkt.source_id);
+                            entity_tracker.get_or_create_entity(target_id);
+                        let source_entity = entity_tracker.get_or_create_entity(source_id);
 
                         // track potential knockdown
                         state.on_abnormal_move(&target_entity, &event.skill_move_option_data, now);
@@ -480,45 +509,56 @@ pub fn start(args: StartArgs) -> Result<()> {
                             .borrow_mut()
                             .get_status_effects(&owner, &target_entity, local_character_id);
 
-                        let mut rdps_data = Vec::new();
+                        let se_on_source_ids = se_on_source
+                            .into_iter()
+                            .map(|se| se.id)
+                            .collect::<Vec<_>>();
+                        let se_on_target_ids = se_on_target
+                            .into_iter()
+                            .map(|se| se.id)
+                            .collect::<Vec<_>>();
 
-                        if let Some(rdps) = event.skill_damage_event.rdps_data_conditional.rdps_data
-                        {
-                            for i in 0..rdps.event_type.len() {
-                                rdps_data.push(RdpsData {
-                                    rdps_type: rdps.event_type[i],
-                                    value: rdps.value[i],
-                                    source_character_id: rdps.source_character_id[i],
-                                    skill_id: rdps.skill_id[i],
-                                });
-                            }
-                        }
+                        let rdps_data: Vec<_> = rdps_data_conditional
+                            .rdps_data
+                            .map(|rdps| {
+                                rdps.event_type
+                                    .into_iter()
+                                    .enumerate()
+                                    .map(|(i, rdps_type)| RdpsData {
+                                        rdps_type,
+                                        value: rdps.value[i],
+                                        source_character_id: rdps.source_character_id[i],
+                                        skill_id: rdps.skill_id[i],
+                                    })
+                                    .collect::<Vec<_>>()
+                            })
+                            .unwrap_or_default();
 
-                        let damage_data = DamageData {
-                            skill_id: pkt.skill_id,
-                            skill_effect_id: pkt.skill_effect_id,
-                            damage: event.skill_damage_event.damage,
-                            shield_damage: event.skill_damage_event.shield_damage.p64_0,
-                            modifier: event.skill_damage_event.modifier as i32,
-                            target_current_hp: event.skill_damage_event.cur_hp,
-                            target_max_hp: event.skill_damage_event.max_hp,
-                            damage_attribute: event.skill_damage_event.damage_attr,
-                            damage_type: event.skill_damage_event.damage_type,
-                            stagger: event.skill_damage_event.stagger_amount,
-                            rdps_data,
+                        let HitInfo(hit_option, hit_flag) = match HitInfo::try_from(modifier) {
+                            Ok(value) => value,
+                            Err(_) => continue,
                         };
 
-                        state.on_damage(
-                            &owner,
-                            &source_entity,
-                            &target_entity,
-                            damage_data,
-                            se_on_source,
-                            se_on_target,
-                            target_count,
-                            &entity_tracker,
-                            now,
-                        );
+                        let context = DamageEventContext {
+                            damage: damage + shield_damage.p64_0.unwrap_or_default(),
+                            stagger: stagger_amount as i64,
+                            skill_id: skill_id,
+                            skill_effect_id: skill_effect_id,
+                            target_current_hp: cur_hp,
+                            target_max_hp: max_hp,
+                            rdps_data,
+                            dmg_src_entity: &owner,
+                            proj_entity: &source_entity,
+                            dmg_target_entity: &target_entity,
+                            se_on_source_ids,
+                            se_on_target_ids,
+                            hit_flag,
+                            hit_option,
+                            timestamp: now,
+                            character_id_to_name: &entity_tracker.character_id_to_name,
+                        };
+
+                        state.on_damage(context, &emitter, &sntp_client);
                     }
                 }
             }
@@ -532,59 +572,96 @@ pub fn start(args: StartArgs) -> Result<()> {
                     parse_pkt(&data, PKTSkillDamageNotify::new, "PktSkillDamageNotify")
                 {
                     let now = Utc::now().timestamp_millis();
-                    let owner = entity_tracker.get_source_entity(pkt.source_id);
+
+                    let PKTSkillDamageNotify {
+                        source_id,
+                        skill_damage_events: events,
+                        skill_effect_id,
+                        skill_id,
+                    } = pkt;
+
+                    let owner = entity_tracker.get_source_entity(source_id);
                     let local_character_id = id_tracker
                         .borrow()
                         .get_local_character_id(entity_tracker.local_entity_id);
-                    let target_count = pkt.skill_damage_events.len() as i32;
-                    for mut event in pkt.skill_damage_events.into_iter() {
+                    let target_count = events.len() as i32;
+                    for mut event in events.into_iter() {
                         if !damage_handler.decrypt_damage_event(&mut event) {
                             state.damage_is_valid = false;
                             continue;
                         }
-                        let target_entity = entity_tracker.get_or_create_entity(event.target_id);
+                        
+                        let SkillDamageEvent {
+                            cur_hp,
+                            damage,
+                            max_hp,
+                            modifier,
+                            rdps_data_conditional,
+                            shield_damage,
+                            stagger_amount,
+                            target_id,
+                            ..
+                        } = event;
+                        
+                        let target_entity = entity_tracker.get_or_create_entity(target_id);
                         // source_entity is to determine battle item
                         let source_entity = entity_tracker.get_or_create_entity(pkt.source_id);
+                      
                         let (se_on_source, se_on_target) = status_tracker
                             .borrow_mut()
                             .get_status_effects(&owner, &target_entity, local_character_id);
-                        let mut rdps_data = Vec::new();
 
-                        if let Some(rdps) = event.rdps_data_conditional.rdps_data {
-                            for i in 0..rdps.event_type.len() {
-                                rdps_data.push(RdpsData {
-                                    rdps_type: rdps.event_type[i],
-                                    value: rdps.value[i],
-                                    source_character_id: rdps.source_character_id[i],
-                                    skill_id: rdps.skill_id[i],
-                                });
-                            }
-                        }
+                        let se_on_source_ids = se_on_source
+                            .into_iter()
+                            .map(|se| se.id)
+                            .collect::<Vec<_>>();
+        
+                        let se_on_target_ids = se_on_target
+                            .into_iter()
+                            .map(|se| se.id)
+                            .collect::<Vec<_>>();
 
-                        let damage_data = DamageData {
-                            skill_id: pkt.skill_id,
-                            skill_effect_id: pkt.skill_effect_id.unwrap_or_default(),
-                            damage: event.damage,
-                            shield_damage: event.shield_damage.p64_0,
-                            modifier: event.modifier as i32,
-                            target_current_hp: event.cur_hp,
-                            target_max_hp: event.max_hp,
-                            damage_attribute: event.damage_attr,
-                            damage_type: event.damage_type,
-                            stagger: event.stagger_amount,
-                            rdps_data,
+                        let rdps_data: Vec<_> = rdps_data_conditional
+                            .rdps_data
+                            .map(|rdps| {
+                                rdps.event_type
+                                    .into_iter()
+                                    .enumerate()
+                                    .map(|(i, rdps_type)| RdpsData {
+                                        rdps_type,
+                                        value: rdps.value[i],
+                                        source_character_id: rdps.source_character_id[i],
+                                        skill_id: rdps.skill_id[i],
+                                    })
+                                    .collect::<Vec<_>>()
+                            })
+                            .unwrap_or_default();
+
+                        let HitInfo(hit_option, hit_flag) = match HitInfo::try_from(modifier) {
+                            Ok(value) => value,
+                            Err(_) => continue,
                         };
-                        state.on_damage(
-                            &owner,
-                            &source_entity,
-                            &target_entity,
-                            damage_data,
-                            se_on_source,
-                            se_on_target,
-                            target_count,
-                            &entity_tracker,
-                            now,
-                        );
+
+                        let context = DamageEventContext {
+                            damage: damage + shield_damage.p64_0.unwrap_or_default(),
+                            stagger: stagger_amount as i64,
+                            skill_id: skill_id,
+                            skill_effect_id: skill_effect_id.unwrap_or_default(),
+                            target_current_hp: cur_hp,
+                            target_max_hp: max_hp,
+                            rdps_data,
+                                dmg_src_entity: &owner,
+                            proj_entity: &source_entity,
+                            dmg_target_entity: &target_entity,
+                            se_on_source_ids,
+                            se_on_target_ids,
+                            hit_flag,
+                            hit_option,
+                            timestamp: now,
+                            character_id_to_name: &entity_tracker.character_id_to_name,
+                        };
+                        
+                        state.on_damage(context, &emitter, &sntp_client);
                     }
                 }
             }
@@ -615,7 +692,7 @@ pub fn start(args: StartArgs) -> Result<()> {
                 ) {
                     // info!("{:?}", pkt);
                     let shields =
-                        entity_tracker.party_status_effect_add(pkt, &state.encounter.entities);
+                        entity_tracker.party_status_effect_add(pkt, &state.encounter.entities, &mut state.custom_id_map);
                     for status_effect in shields {
                         let source = entity_tracker.get_source_entity(status_effect.source_id);
                         let target_id =
@@ -684,10 +761,11 @@ pub fn start(args: StartArgs) -> Result<()> {
                     "PKTStatusEffectAddNotify",
                 ) {
                     let status_effect = entity_tracker.build_and_register_status_effect(
-                        &pkt.status_effect_data,
+                        pkt.status_effect_data,
                         pkt.object_id,
                         Utc::now(),
                         Some(&state.encounter.entities),
+                        &mut state.custom_id_map
                     );
 
                     if status_effect.status_effect_type == StatusEffectType::Shield {
@@ -780,7 +858,7 @@ pub fn start(args: StartArgs) -> Result<()> {
                     || state.encounter.fight_start == 0
                     || state.encounter.current_boss_name == "Saydon"
                 {
-                    state.on_phase_transition(3);
+                    state.on_phase_transition(3, &emitter, &app, &version);
                     debug_print(format_args!(
                         "phase: 3 - resetting encounter - TriggerBossBattleStatus"
                     ));
@@ -799,7 +877,7 @@ pub fn start(args: StartArgs) -> Result<()> {
                                 update_party(&party_tracker, &entity_tracker)
                             };
                             state.raid_clear = true;
-                            state.on_phase_transition(2);
+                            state.on_phase_transition(2, &emitter, &app, &version);
                             raid_end_cd = Instant::now();
                             info!("phase: 2 - clear - TriggerStartNotify");
                         }
@@ -811,7 +889,7 @@ pub fn start(args: StartArgs) -> Result<()> {
                                 update_party(&party_tracker, &entity_tracker)
                             };
                             state.raid_clear = false;
-                            state.on_phase_transition(4);
+                            state.on_phase_transition(4, &emitter, &app, &version);
                             raid_end_cd = Instant::now();
                             info!("phase: 4 - wipe - TriggerStartNotify");
                         }
@@ -926,8 +1004,8 @@ pub fn start(args: StartArgs) -> Result<()> {
                                     e.max_hp = pkt.max_hp;
                                 });
                         }
-                        for se in pkt.status_effect_datas.iter() {
-                            let val = get_status_effect_value(&se.value.bytearray_0);
+                        for se in pkt.status_effect_datas {
+                            let val = get_status_effect_value(se.value.bytearray_0);
                             let (status_effect, old_value) =
                                 status_tracker.borrow_mut().sync_status_effect(
                                     se.status_effect_instance_id,
@@ -965,12 +1043,12 @@ pub fn start(args: StartArgs) -> Result<()> {
                     } else {
                         update_party(&party_tracker, &entity_tracker)
                     };
-                    state.on_transit(pkt.zone_id);
+                    state.on_transit(pkt.zone_id, &emitter, &app, &version);
                 }
             }
             _ => {}
         }
-
+        
         if last_update.elapsed() >= duration || state.resetting || state.boss_dead_update {
             let boss_dead = state.boss_dead_update;
             if state.boss_dead_update {
