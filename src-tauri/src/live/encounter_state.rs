@@ -336,7 +336,7 @@ impl EncounterState {
             };
 
             // set intermission end and difficulty if boss is thaemine
-            if self.encounter.current_boss_name == "Darkness Legion Commander Thaemine" {
+            if self.encounter.current_boss_name == "Thaemine, Conqueror of Stars" {
                 if self.raid_difficulty == "Extreme" {
                     if npc.max_hp > 1_500_000_000_000 {
                         self.raid_difficulty = "Extreme Hard".to_string();
