@@ -66,7 +66,7 @@ impl BackgroundWorker {
             use crate::{
                 api::*,
                 context::AppContext,
-                live::{self, StartArgs},
+                live::{self, broadcast::DefaultBroadcastManager, capture::SnowPacketCapture, region::DefaultRegionAccessor, StartArgs},
                 local::LocalPlayerRepository,
             };
 
@@ -98,17 +98,22 @@ impl BackgroundWorker {
                 local_info.client_id.clone(),
                 version.clone(),
             ));
+            let region_accessor = DefaultRegionAccessor::new(context.region_file_path.clone());
             let region_file_path = context.region_file_path.display().to_string();
+            let capture = SnowPacketCapture::new(region_file_path.clone());
+            let broadcast = DefaultBroadcastManager::new(version.clone());
 
             let args = StartArgs {
+                capture,
+                broadcast,
+                region_accessor,
                 app: app_handle,
                 port,
                 settings,
                 shutdown_rx,
                 local_info,
                 local_player_repository,
-                heartbeat_api,
-                region_file_path,
+                heartbeat_api
             };
 
             live::start(args).expect("unexpected error occurred in parser");

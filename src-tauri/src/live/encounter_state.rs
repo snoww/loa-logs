@@ -1188,7 +1188,7 @@ impl EncounterState {
     pub fn on_abnormal_move(
         &mut self,
         victim_entity: &Entity,
-        movement: &SkillMoveOptionData,
+        movement: SkillMoveOptionData,
         timestamp: i64,
     ) {
         if victim_entity.entity_type != EntityType::Player {
