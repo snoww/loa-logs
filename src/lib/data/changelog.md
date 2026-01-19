@@ -1,6 +1,6 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.38.3 - January 14th, 2026
+    v1.38.4 - January 19th, 2026
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
@@ -13,20 +13,8 @@
 - **Administrator** on Ratik
 - **Poont** on Gienah
 
-#### NEW FEATURES
-- updated meter for january content patch and extreme thaemine raid
-- kazeros gate 2 will now be split into two logs 2-1, and 2-2/3
-  - only 2-2/3 portion will be uploaded for stats
-
 #### BUG FIXES AND IMPROVEMENTS
-- removed kazeros raid analytics
-- added missing thirain sidereal in act 4 gate 1
-- updated dps bard and artist detection
-- updated gunlancer detection
-- fixed upload notifications
-- added udmg to skill cast/hit breakdowns
-- fixed issue with corrupt local players file causing meter crash
-- fixed artist identity not extending past 1 minute
+- fixed some synergies/buffs not having correct source
 
 ---
 
