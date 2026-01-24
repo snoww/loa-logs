@@ -2,8 +2,7 @@
   import LiveDamageMeter from "./LiveDamageMeter.svelte";
   import { addToast } from "$lib/components/Toaster.svelte";
   import { EncounterState } from "$lib/encounter.svelte";
-  import { misc, settings } from "$lib/stores.svelte";
-  import type { Encounter, EncounterEvent, PartyEvent } from "$lib/types";
+  import { misc, nineveh, settings } from "$lib/stores.svelte";
   import { uploadLog } from "$lib/utils/sync";
   import {
     adminAlert,
@@ -30,7 +29,9 @@
     onSaveEncounter,
     onPhaseTransition,
     onAdmin,
-    onClearEncounter
+    onClearEncounter,
+    onNinevehUpdate,
+    ninevehStateRequest
   } from "$lib/api";
   import type { UnlistenFn } from "@tauri-apps/api/event";
 
@@ -146,6 +147,11 @@
     });
     handles.push(handle);
 
+    handle = await onNinevehUpdate((event) => {
+      nineveh.connections = event.payload;
+    });
+    handles.push(handle);
+
     return () => {
       for (const unlisten of handles) {
         unlisten();
@@ -155,6 +161,7 @@
 
   async function onLoad() {
     unsubscribe = await listenEvents();
+    await ninevehStateRequest();
   }
 
   $effect(() => {
@@ -183,3 +190,4 @@
 </script>
 
 <LiveDamageMeter {enc} />
+

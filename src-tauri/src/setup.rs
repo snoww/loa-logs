@@ -11,8 +11,6 @@ use tauri::{App, AppHandle, Manager};
 use tauri_plugin_updater::UpdaterExt;
 
 use crate::{
-    app,
-    background::{BackgroundWorker, BackgroundWorkerArgs},
     constants::DEFAULT_PORT,
     context::AppContext,
     settings::*,
@@ -32,7 +30,7 @@ pub fn setup(app: &mut App) -> Result<(), Box<dyn Error>> {
 
     let settings = settings_manager.read().expect("Could not read settings");
 
-    let port = initialize_windows_and_settings(app_handle, settings.as_ref(), &shell_manger);
+    initialize_windows_and_settings(app_handle, settings.as_ref(), &shell_manger);
 
     app_handle.manage(shell_manger);
 
@@ -40,17 +38,62 @@ pub fn setup(app: &mut App) -> Result<(), Box<dyn Error>> {
     setup_tray(app_handle)?;
     let update_checked: Arc<AtomicBool> = check_updates(app_handle);
 
-    let mut background = BackgroundWorker::new(app_handle.clone());
+    let app_handle = app_handle.clone();
+    #[cfg(feature = "meter-core")]
+    tokio::task::spawn(async move {
+        while !update_checked.load(Ordering::Relaxed) {
+            std::thread::sleep(std::time::Duration::from_millis(100));
+        }
 
-    let args = BackgroundWorkerArgs {
-        update_checked,
-        port,
-        settings,
-        version: context.version.clone(),
-    };
+        info!("done checking for updates, starting packet handling");
 
-    background.start(args)?;
-    app_handle.manage(background);
+        let ipc = crate::nineveh::setup_nineveh(app_handle.clone())
+            .await
+            .expect("could not setup nineveh IPC");
+
+        use crate::{
+            api::{HeartBeatApi, StatsApi},
+            live::StartArgs,
+            local::LocalPlayerRepository,
+        };
+
+        let context = app_handle.state::<AppContext>();
+
+        let base_url = option_env!("STATS_API")
+            .unwrap_or("https://api.snow.xyz")
+            .to_owned();
+        let local_player_path = context.local_player_path.clone();
+        let local_player_repository =
+            LocalPlayerRepository::new(local_player_path).expect("could not read local players");
+        let local_info = local_player_repository
+            .read()
+            .expect("could not read local players");
+        let heartbeat_api = HeartBeatApi::new(
+            base_url.clone(),
+            local_info.client_id.clone(),
+            context.version.clone(),
+        );
+        app_handle.manage(StatsApi::new(
+            base_url,
+            local_info.client_id.clone(),
+            context.version.clone(),
+        ));
+        let region_file_path = context.region_file_path.display().to_string();
+
+        let args = StartArgs {
+            app: app_handle,
+            ipc,
+            settings,
+            local_info,
+            local_player_repository,
+            heartbeat_api,
+            region_file_path,
+        };
+
+        tokio::task::spawn_blocking(move || {
+            crate::live::start(args).expect("unexpected error occurred in parser");
+        });
+    });
 
     // #[cfg(debug_assertions)]
     // {

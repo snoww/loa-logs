@@ -11,8 +11,8 @@ use crate::utils::{get_class_from_id, get_player_spec, is_support_class};
 use chrono::Utc;
 use hashbrown::HashMap;
 use log::{info, warn};
-use meter_core::packets::common::SkillMoveOptionData;
-use meter_core::packets::structures::SkillCooldownStruct;
+use meter_defs::defs::SkillCooldownStruct;
+use meter_defs::types::SkillMoveOptionData;
 use rsntp::SntpClient;
 use std::cmp::max;
 use std::default::Default;
@@ -719,12 +719,8 @@ impl EncounterState {
             self.encounter.fight_start = timestamp;
             self.skill_tracker.fight_start = timestamp;
             if target_type == EntityType::Player && skill_key > 0 {
-                self.skill_tracker.new_cast(
-                    dmg_src_entity.id,
-                    skill_key,
-                    None,
-                    timestamp,
-                );
+                self.skill_tracker
+                    .new_cast(dmg_src_entity.id, skill_key, None, timestamp);
             }
 
             match self.sntp_client.synchronize("time.cloudflare.com") {

@@ -12,8 +12,7 @@ use crate::models::{EncounterEntity, EntityType, Esther};
 use chrono::{DateTime, Utc};
 use hashbrown::HashMap;
 use log::{info, warn};
-use meter_core::packets::definitions::*;
-use meter_core::packets::structures::{NpcStruct, PCStruct, StatPair, StatusEffectData};
+use meter_defs::defs::*;
 use std::cell::RefCell;
 use std::rc::Rc;
 
@@ -288,7 +287,7 @@ impl EntityTracker {
             let encounter_entity = entities.get(&entity.name);
             // println!("entity: {:?}", entity);
             let status_effect = build_status_effect(
-                sed,
+                &sed,
                 pkt.character_id,
                 entity.id,
                 StatusEffectTargetType::Party,
@@ -507,7 +506,7 @@ impl EntityTracker {
         let source_encounter_entity =
             entities.and_then(|entities| entities.get(&source_entity.name));
         let status_effect = build_status_effect(
-            sed.clone(),
+            &sed,
             target_id,
             source_entity.id,
             StatusEffectTargetType::Local,

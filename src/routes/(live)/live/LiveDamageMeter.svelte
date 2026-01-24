@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { EncounterState } from "$lib/encounter.svelte.js";
-  import { misc, settings } from "$lib/stores.svelte.js";
+  import { misc, nineveh, settings } from "$lib/stores.svelte.js";
   import { MeterState, MeterTab } from "$lib/types";
   import { missingInfo } from "$lib/utils/toasts";
   import BossBreakdown from "$lib/components/BossBreakdown.svelte";
@@ -96,6 +96,12 @@
   {#if enc.encounter?.currentBoss && settings.app.meter.bossInfo}
     <LiveBossInfo boss={enc.encounter.currentBoss} />
   {/if}
+  {#if !nineveh.connections.length}
+    <div class="absolute left-0 right-0 top-7 bg-black/70 p-2 text-red-500">
+      No active game connections. If you're already in game, please go back to the server select screen and re-enter the
+      game.
+    </div>
+  {/if}
   <!-- svelte-ignore a11y_no_static_element_interactions -->
   <div
     class="select-none overflow-scroll"
@@ -128,3 +134,4 @@
   </div>
   <LiveFooter bind:tab />
 </div>
+
