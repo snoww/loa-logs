@@ -2,7 +2,6 @@
 
 mod api;
 mod app;
-mod background;
 mod constants;
 mod context;
 mod data;
@@ -13,6 +12,7 @@ mod live;
 mod local;
 mod misc;
 mod models;
+mod nineveh;
 mod settings;
 mod setup;
 mod shell;

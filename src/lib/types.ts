@@ -13,6 +13,17 @@ export interface ZoneChangeEvent {
   payload?: string;
 }
 
+export interface NinevehEvent {
+  event: string;
+  payload: NinevehConnectionInfo[];
+}
+
+export interface NinevehConnectionInfo {
+  id: string;
+  remote_addr: string;
+  remote_port: number;
+}
+
 export interface Encounter {
   lastCombatPacket: number;
   fightStart: number;
@@ -539,3 +550,4 @@ export interface PartyBuffs {
   partyPercentages: Array<number[]>;
   partyBuffs: Map<string, Map<string, Array<BuffDetails>>>;
 }
+

@@ -7,6 +7,7 @@ import { SvelteSet } from "svelte/reactivity";
 import { readable } from "svelte/store";
 import type { AppSettings } from "./settings";
 import { saveSettings } from "./api";
+import type { NinevehConnectionInfo } from "./types";
 
 /**
  * Merge settings from local storage into default settings.
@@ -376,6 +377,10 @@ export class UpdateInfo {
   manifest: Update | undefined = $state(undefined);
 }
 
+export class Nineveh {
+  connections: NinevehConnectionInfo[] = $state([]);
+}
+
 export const settings = new Settings();
 export const encounterFilter = new EncounterFilter();
 export const misc = new Misc();
@@ -396,6 +401,7 @@ export const screenshot = (() => {
   };
 })();
 export const updateInfo = new UpdateInfo();
+export const nineveh = new Nineveh();
 
 const md = new MarkdownIt({
   html: true
@@ -417,3 +423,4 @@ md.renderer.rules.link_open = function (tokens, idx, options, env, self) {
 };
 
 export const markdownIt = md;
+

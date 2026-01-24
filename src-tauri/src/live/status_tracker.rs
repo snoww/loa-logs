@@ -6,9 +6,9 @@ use crate::live::status_tracker::StatusEffectCategory::Debuff;
 use crate::live::status_tracker::StatusEffectShowType::All;
 use crate::live::utils::get_new_id;
 use crate::models::{EncounterEntity, EntityType};
-use chrono::{DateTime, Duration, Utc};
+use chrono::{DateTime, Utc};
 use hashbrown::HashMap;
-use meter_core::packets::structures::{PCStruct, StatusEffectData};
+use meter_defs::defs::{PCStruct, StatusEffectData};
 use std::cell::RefCell;
 use std::rc::Rc;
 
@@ -48,7 +48,7 @@ impl StatusTracker {
         for sed in pc_struct.status_effect_datas.into_iter() {
             let source_id = sed.source_id;
             let status_effect =
-                build_status_effect(sed, target_id, source_id, target_type, timestamp, None);
+                build_status_effect(&sed, target_id, source_id, target_type, timestamp, None);
             self.register_status_effect(status_effect);
         }
     }
@@ -344,7 +344,7 @@ fn is_valid_for_raid(status_effect: &StatusEffectDetails) -> bool {
 }
 
 pub fn build_status_effect(
-    se_data: StatusEffectData,
+    se_data: &StatusEffectData,
     target_id: u64,
     source_id: u64,
     target_type: StatusEffectTargetType,

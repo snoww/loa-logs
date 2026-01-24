@@ -10,7 +10,6 @@ use tauri::{
 use tauri_plugin_window_state::AppHandleExt;
 
 use crate::{
-    background::BackgroundWorker,
     constants::*,
     settings::SettingsManager,
     shell::ShellManager,
@@ -170,14 +169,9 @@ pub fn on_window_event_inner(label: &str, window: &Window, event: &WindowEvent) 
 }
 
 pub fn teardown(app_handle: &AppHandle) {
-    let background = app_handle.state::<BackgroundWorker>();
     let shell_manager = app_handle.state::<ShellManager>();
 
     block_on_local(async {
-        if let Err(err) = background.stop().await {
-            warn!("Could not stop background worker: {}", err);
-        }
-
         shell_manager.unload_driver().await;
     });
 

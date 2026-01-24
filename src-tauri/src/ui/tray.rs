@@ -1,5 +1,5 @@
 use strum::EnumProperty;
-use strum_macros::{AsRefStr, EnumProperty, EnumString};
+use strum_macros::{AsRefStr, EnumString};
 use tauri::{
     AppHandle, Runtime,
     menu::{Menu, MenuBuilder},
