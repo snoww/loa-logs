@@ -12,7 +12,7 @@ rust-version = "1.90.0"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [build-dependencies]
-tauri-build = { version = "2.5.1", features = [] }
+tauri-build = { version = "2.5.3", features = [] }
 
 [dev-dependencies]
 rand = "0.9.0"
@@ -22,9 +22,9 @@ anyhow = "1.0.100"
 chrono = "0.4.42"
 serde_json = { version = "1.0", features = ["preserve_order"] }
 serde = { version = "1.0", features = ["derive"] }
-tauri = { version = "2.9.1", features = ["image-png", "tray-icon"] }
+tauri = { version = "2.9.5", features = ["image-png", "tray-icon"] }
 bitflags = "2.10.0"
-window-vibrancy = "0.6"
+window-vibrancy = "0.7.1"
 hashbrown = { version = "0.16.0", features = ["serde"] }
 r2d2_sqlite = "0.31.0"
 r2d2 = "0.8.10"
@@ -33,17 +33,16 @@ tokio = { version = "1.48.0", features = ["rt", "macros"] }
 serde_with = "3.12.0"
 log = "0.4.18"
 flexi_logger = { version = "0.31.7", default-features = false }
-reqwest = { version = "0.12", features = ["json", "gzip"] }
+reqwest = { version = "0.13.1", features = ["json", "gzip"] }
 uuid = { version = "1.17.0", features = ["v4"] }
 moka = { version = "0.12.7", features = ["sync"] }
-rfd = { version = "0.15.4", features = ["common-controls-v6"] }
+rfd = { version = "0.17.2", features = ["common-controls-v6"] }
 rsntp = { version = "4.0.0", default-features = false, features = ["chrono"] }
 flate2 = "1.0.30"
-sysinfo = "0.35.1"
+sysinfo = "0.37.2"
 thiserror = "2.0.17"
 strum = "0.27.2"
 strum_macros = "0.27.2"
-async-trait = "0.1.89"
 semver = "1.0.27"
 dirs = "6.0.0"
 meter-core = { git = "https://github.com/snoww/meter-core-rs", optional = true }
