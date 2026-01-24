@@ -315,13 +315,13 @@ impl EncounterState {
             };
 
             // set difficulty if boss is thaemine
-            if self.encounter.current_boss_name == "Thaemine, Conqueror of Stars" {
-                if self.raid_difficulty == "Extreme" {
-                    if npc.max_hp > 1_500_000_000_000 {
-                        self.raid_difficulty = "Extreme Hard".to_string();
-                    } else {
-                        self.raid_difficulty = "Extreme Normal".to_string();
-                    }
+            if self.encounter.current_boss_name == "Darkness Legion Commander Thaemine"
+                && self.raid_difficulty == "Extreme"
+            {
+                if npc.max_hp > 1_500_000_000_000 {
+                    self.raid_difficulty = "Extreme Hard".to_string();
+                } else {
+                    self.raid_difficulty = "Extreme Normal".to_string();
                 }
             }
         }
@@ -719,12 +719,8 @@ impl EncounterState {
             self.encounter.fight_start = timestamp;
             self.skill_tracker.fight_start = timestamp;
             if target_type == EntityType::Player && skill_key > 0 {
-                self.skill_tracker.new_cast(
-                    dmg_src_entity.id,
-                    skill_key,
-                    None,
-                    timestamp,
-                );
+                self.skill_tracker
+                    .new_cast(dmg_src_entity.id, skill_key, None, timestamp);
             }
 
             match self.sntp_client.synchronize("time.cloudflare.com") {
