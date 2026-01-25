@@ -75,11 +75,10 @@ pub fn get_status_effect_data(buff_id: u32, source_skill: Option<u32>) -> Option
         },
     };
 
-    if buff_category == "classskill"
-        || buff_category == "arkpassive"
-        || buff_category == "identity"
-        || (buff_category == "ability" && buff.unique_group != 0)
-        || buff_category == "supportbuff"
+    if matches!(
+        buff_category.as_str(),
+        "classskill" | "arkpassive" | "arkgrid" | "identity" | "supportbuff"
+    ) || (buff_category == "ability" && buff.unique_group != 0)
     {
         if let Some(buff_source_skills) = buff.source_skills.as_ref() {
             if let Some(source_skill) = source_skill {
