@@ -2725,7 +2725,6 @@ dependencies = [
 [[package]]
 name = "meter-core"
 version = "0.1.0"
-source = "git+https://github.com/snoww/meter-core-rs#f8dacf78e5a7008734be1ca118fae7e580926c23"
 dependencies = [
  "anyhow",
  "byteorder",
