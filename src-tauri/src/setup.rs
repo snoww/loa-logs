@@ -42,7 +42,7 @@ pub fn setup(app: &mut App) -> Result<(), Box<dyn Error>> {
     #[cfg(feature = "meter-core")]
     tokio::task::spawn(async move {
         while !update_checked.load(Ordering::Relaxed) {
-            std::thread::sleep(std::time::Duration::from_millis(100));
+            tokio::time::sleep(std::time::Duration::from_millis(100)).await;
         }
 
         info!("done checking for updates, starting packet handling");
@@ -92,7 +92,9 @@ pub fn setup(app: &mut App) -> Result<(), Box<dyn Error>> {
 
         tokio::task::spawn_blocking(move || {
             crate::live::start(args).expect("unexpected error occurred in parser");
-        });
+        })
+        .await
+        .expect("parser live thread panicked");
     });
 
     // #[cfg(debug_assertions)]

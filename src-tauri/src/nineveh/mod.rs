@@ -2,9 +2,10 @@ use anyhow::Result;
 use nineveh_formats::ipc::{IPCClientToServerMessage, IPCServerToClientMessage};
 use rfd::{MessageButtons, MessageDialog, MessageLevel};
 use std::net::{IpAddr, Ipv4Addr, SocketAddr};
-use std::sync::{Arc, Mutex};
+use std::sync::Arc;
 use sysinfo::{ProcessRefreshKind, RefreshKind, System};
 use tauri::{AppHandle, Emitter, Listener};
+use tokio::sync::Mutex;
 use tokio::{
     sync::mpsc::{UnboundedReceiver, UnboundedSender},
     task::JoinHandle,
@@ -41,10 +42,16 @@ async fn handle_nineveh_ipc_messages(
     let app_responder = app.clone();
     let conns = active_connections.clone();
     app.listen("nineveh-update-request", move |_event| {
-        // send current connection state to app when it boots
-        app_responder
-            .emit("nineveh-update", &*conns.lock().unwrap())
-            .unwrap();
+        let app_responder = app_responder.clone();
+        let conns = conns.clone();
+        // app events are emitted inside a spawned task, so we cannot use blocking_lock as
+        // tokio will (rightfully) panic if we try to block the event loop; kick off a new
+        // task where we can properly wait for the lock
+        tokio::spawn(async move {
+            // send current connection state to app when it boots
+            let conns = conns.lock().await.clone();
+            app_responder.emit("nineveh-update", &conns).unwrap();
+        });
     });
 
     loop {
@@ -74,22 +81,23 @@ async fn handle_nineveh_ipc_messages(
                         continue;
                     },
                     IPCServerToClientMessage::Connected { connections } => {
-                        let mut active_connections = active_connections.lock().unwrap();
+                        let mut active_connections = active_connections.lock().await;
                         active_connections.clear();
                         active_connections.extend(connections.iter().cloned());
                     },
                     IPCServerToClientMessage::NewConnection { info } => {
-                        let mut active_connections = active_connections.lock().unwrap();
+                        let mut active_connections = active_connections.lock().await;
                         active_connections.push(info.clone());
                     },
                     IPCServerToClientMessage::ConnectionClosed { id } => {
-                        let mut active_connections = active_connections.lock().unwrap();
+                        let mut active_connections = active_connections.lock().await;
                         active_connections.retain(|c| &c.id != id);
                     },
                 };
 
                 // send new connection state to app
-                app.emit("nineveh-update", &*active_connections.lock().unwrap()).unwrap();
+                let conns = active_connections.lock().await.clone();
+                app.emit("nineveh-update", &conns).unwrap();
             }
         }
     }
