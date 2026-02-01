@@ -1,11 +1,11 @@
 {
-  "version": "v1.38.4",
-  "notes": "### v1.38.4 - January 19th, 2026\n\n#### P.S. If you see any of us in town or raid, feel free to drop an honor!\n\n- **Snowving** on Luterra\n- **Administrator** on Ratik\n- **Poont** on Giena\n\n#### BUG FIXES AND IMPROVEMENTS\n- fixed some synergies/buffs not having correct source",
-  "pub_date": "2026-01-19T11:45:56.131Z",
+  "version": "v1.38.5",
+  "notes": "### v1.38.5 - January 27th, 2026\n\n#### P.S. If you see any of us in town or raid, feel free to drop an honor!\n\n- **Snowving** on Luterra\n- **Administrator** on Ratik\n- **Poont** on Giena\n\n#### BUG FIXES AND IMPROVEMENTS\n- fixed deadeye and gunslinger crit synergies not appearing in party buffs\n- fixed extreme thaemine difficulty classification",
+  "pub_date": "2026-01-26T23:22:04.125Z",
   "platforms": {
     "windows-x86_64": {
-      "url": "https://github.com/snoww/loa-logs/releases/download/v1.38.4/LOA.Logs_1.38.4_x64-setup.nsis.zip",
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlN0VytiaFU2OERWRC81VTZONHhSMkQzUFc4b0dwV1BFUlRVTUVyRG1JVzkwV0J1Qk9NeUVpSHhVcURUREFkb0JTellUVVFSNjlqQjFjcXRmZTVHQXc4PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzY4ODIzNTM4CWZpbGU6TE9BIExvZ3NfMS4zOC40X3g2NC1zZXR1cC5uc2lzLnppcApNaEZiMHBORGNtUG1SU3RWMHFNOGx5aVY2d1o1eWJ3UGJvMlMrOTF0N28vd0sxek5KdHNnYVJKZW0rajRuaTZkdW9PUWRpRXRnVmprMHd2L2t5TzVCdz09Cg=="
+      "url": "https://github.com/snoww/loa-logs/releases/download/v1.38.5/LOA.Logs_1.38.5_x64-setup.exe",
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmI3cENmMHNWbFk3WnVGWFU5NTIzSkNkRXk3R1ZOS2U4ci9TNGxFazNzdk1uTUJFRTJhT2Z3UWtFUnZBS08wd3U2Um1pVE1GRTRTdXUxZ2J6MG9VUFE0PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzY5NDY5ODU4CWZpbGU6TE9BIExvZ3NfMS4zOC41X3g2NC1zZXR1cC5leGUKbllJWk9TU0p5cWJFNnV1ZHJCdU1MbEZpeHIvaFRnTmRhdnBIUzFDdXJrTHZjRWl3VHVDZGQvdm1VOUZuanEreUppWWkrQWtwU2pKZWlaQW84b3lmRFE9PQo="
     }
   }
 }
