@@ -346,7 +346,7 @@ export const defaultClassColors: Record<string, string> = {
   Artist: "#a34af0",
   Aeromancer: "#084ba3",
   Wildsoul: "#3a945e",
-  Guardianknight: "#b71d22"
+  Guardianknight: "#f4554b"
 };
 
 export class Misc {
