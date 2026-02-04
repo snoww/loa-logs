@@ -531,10 +531,11 @@ pub fn get_player_spec(
             }
         }
         "Guardianknight" => {
-            if player.skills.contains_key(&1) || player.skills.contains_key(&2) {
-                "Hellfire Successor"
-            } else {
+            // has guardian's roar or guardian's scale
+            if player.skills.contains_key(&49340) || player.skills.contains_key(&49350) {
                 "Dreadful Roar"
+            } else {
+                "Hellfire Successor"
             }
         },
         _ => "Unknown",
