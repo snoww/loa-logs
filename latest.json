@@ -1,11 +1,11 @@
 {
-  "version": "v1.38.5",
-  "notes": "### v1.38.5 - January 27th, 2026\n\n#### P.S. If you see any of us in town or raid, feel free to drop an honor!\n\n- **Snowving** on Luterra\n- **Administrator** on Ratik\n- **Poont** on Giena\n\n#### BUG FIXES AND IMPROVEMENTS\n- fixed deadeye and gunslinger crit synergies not appearing in party buffs\n- fixed extreme thaemine difficulty classification",
-  "pub_date": "2026-01-26T23:22:04.125Z",
+  "version": "v1.39.0",
+  "notes": "### v1.39.0 - February 4th, 2026\n\n#### P.S. If you see any of us in town or raid, feel free to drop an honor!\n\n- **Snowving** on Luterra\n- **Administrator** on Ratik\n- **Poont** on Giena\n\n#### NEW FEATURES\n- updated meter for february patch\n- added new class guardianknight\n\n#### BUG FIXES AND IMPROVEMENTS\n- added boss hp line to skill cast chart",
+  "pub_date": "2026-02-04T15:59:50.042Z",
   "platforms": {
     "windows-x86_64": {
-      "url": "https://github.com/snoww/loa-logs/releases/download/v1.38.5/LOA.Logs_1.38.5_x64-setup.exe",
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmI3cENmMHNWbFk3WnVGWFU5NTIzSkNkRXk3R1ZOS2U4ci9TNGxFazNzdk1uTUJFRTJhT2Z3UWtFUnZBS08wd3U2Um1pVE1GRTRTdXUxZ2J6MG9VUFE0PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzY5NDY5ODU4CWZpbGU6TE9BIExvZ3NfMS4zOC41X3g2NC1zZXR1cC5leGUKbllJWk9TU0p5cWJFNnV1ZHJCdU1MbEZpeHIvaFRnTmRhdnBIUzFDdXJrTHZjRWl3VHVDZGQvdm1VOUZuanEreUppWWkrQWtwU2pKZWlaQW84b3lmRFE9PQo="
+      "url": "https://github.com/snoww/loa-logs/releases/download/v1.39.0/LOA.Logs_1.39.0_x64-setup.exe",
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmNwYmFkSXdMYjBudGVsQ2Q4OEZwVGh0Q3BRU0sxWHVzQkkzR3BMQksrYTBFeFZEeTNYL3VMMC9Tc29vd05hOFZmQnZJYjNlZWswYkFsanNLZVF2M1FRPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzcwMjIxMjU2CWZpbGU6TE9BIExvZ3NfMS4zOS4wX3g2NC1zZXR1cC5leGUKRUpUZk5uRzNpYUFFMWlWYVZiZWFmUWFRU1F2cXMwbDJISUNTLzBld3dwWTJvcjZLcHR2TU9iSTBadGhtNndKOGk3VjFlbW05S2xCMXk0dXUzZnJtRFE9PQo="
     }
   }
 }
