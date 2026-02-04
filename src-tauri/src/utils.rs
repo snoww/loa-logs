@@ -129,6 +129,8 @@ pub fn get_class_from_id(class_id: &u32) -> String {
         602 => "Artist",
         603 => "Aeromancer",
         604 => "Wildsoul",
+        701 => "Guardianknight",
+        702 => "Guardianknight",
         _ => "Unknown",
     };
 
@@ -528,6 +530,13 @@ pub fn get_player_spec(
                 "Phantom Beast Awakening"
             }
         }
+        "Guardianknight" => {
+            if player.skills.contains_key(&1) || player.skills.contains_key(&2) {
+                "Hellfire Successor"
+            } else {
+                "Dreadful Roar"
+            }
+        },
         _ => "Unknown",
     }
     .to_string()
