@@ -402,7 +402,8 @@ pub fn start(args: StartArgs) -> Result<()> {
                     let mut entity = entity_tracker.get_source_entity(pkt.source_id);
                     entity_tracker.guess_is_player(&mut entity, pkt.skill_id);
                     // tracking arcana cards, bard major/minor chords
-                    if entity.class_id == 202 || entity.class_id == 204 {
+                    // machinist transform x skill
+                    if entity.class_id == 202 || entity.class_id == 204 || entity.class_id == 505 {
                         state.on_skill_start(
                             &entity,
                             pkt.skill_id,
