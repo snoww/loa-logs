@@ -451,7 +451,7 @@ pub fn get_skill_name_and_icon(
                 (skill_id.to_string(), "".to_string(), None, false, false)
             }
         } else if let Some(source_skills) = skill.source_skills.as_ref()
-            && !source_skills.is_empty()
+            && !source_skills.is_empty() && !source_skills.contains(&skill_id)
         {
             if let Some(skill) = SKILL_DATA.get(source_skills.iter().min().unwrap_or(&0)) {
                 (
