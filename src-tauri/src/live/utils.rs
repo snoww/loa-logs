@@ -69,7 +69,10 @@ pub fn get_status_effect_data(buff_id: u32, source_skill: Option<u32>) -> Option
         unique_group: buff.unique_group,
         source: StatusEffectSource {
             name: buff.name.clone()?,
-            desc: buff.desc.clone()?,
+            desc: buff
+                .desc
+                .clone()
+                .unwrap_or("No buff description available.".to_string()),
             icon: buff.icon.clone()?,
             ..Default::default()
         },
@@ -232,6 +235,10 @@ pub fn get_status_effect_buff_type_flags(buff: &SkillBuffData) -> u32 {
                     } else {
                         buff_type |= StatusEffectBuffTypeFlags::DEFENSE;
                     }
+                } else if STAT_TYPE_MAP["fire_res_rate"] <= stat
+                    && stat <= STAT_TYPE_MAP["elements_res_rate"]
+                {
+                    buff_type |= StatusEffectBuffTypeFlags::DEFENSE;
                 } else if STAT_TYPE_MAP["move_speed"] <= stat
                     && stat <= STAT_TYPE_MAP["vehicle_move_speed_rate"]
                 {
@@ -451,7 +458,8 @@ pub fn get_skill_name_and_icon(
                 (skill_id.to_string(), "".to_string(), None, false, false)
             }
         } else if let Some(source_skills) = skill.source_skills.as_ref()
-            && !source_skills.is_empty() && !source_skills.contains(&skill_id)
+            && !source_skills.is_empty()
+            && !source_skills.contains(&skill_id)
         {
             if let Some(skill) = SKILL_DATA.get(source_skills.iter().min().unwrap_or(&0)) {
                 (
