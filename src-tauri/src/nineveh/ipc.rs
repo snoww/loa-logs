@@ -55,32 +55,41 @@ pub async fn connect_to_nineveh(
     let (incoming_tx, incoming_rx) = tokio::sync::mpsc::unbounded_channel();
     let (outgoing_tx, mut outgoing_rx) = tokio::sync::mpsc::unbounded_channel();
 
-    let handle = tokio::spawn(async move {
+    let recv_handle = tokio::spawn(async move {
         loop {
-            tokio::select! {
-                // Read incoming messages
-                result = nineveh_formats::io::read(&mut read_half) => {
-                    match result {
-                        Ok(msg) => {
-                            if incoming_tx.send(msg).is_err() {
-                                error!("Failed to send incoming message to channel");
-                                break;
-                            }
-                        }
-                        Err(e) => {
-                            error!("Error reading IPC message: {}", e);
-                            break;
-                        }
-                    }
-                }
+            let result = nineveh_formats::io::read(&mut read_half).await;
 
-                // Write outgoing messages
-                Some(msg) = outgoing_rx.recv() => {
-                    if let Err(e) = nineveh_formats::io::write(&mut write_half, &msg).await {
-                        error!("Error writing IPC message: {}", e);
+            match result {
+                Ok(msg) => {
+                    if incoming_tx.send(msg).is_err() {
+                        error!("Failed to send incoming message to channel");
                         break;
                     }
                 }
+                Err(e) => {
+                    error!("Error reading IPC message: {}", e);
+                    break;
+                }
+            }
+        }
+    });
+
+    let send_handle = tokio::spawn(async move {
+        while let Some(msg) = outgoing_rx.recv().await {
+            if let Err(e) = nineveh_formats::io::write(&mut write_half, &msg).await {
+                error!("Error writing IPC message: {}", e);
+                break;
+            }
+        }
+    });
+
+    let handle = tokio::spawn(async move {
+        tokio::select! {
+            _ = recv_handle => {
+                log::info!("Receive loop ended, closing connection");
+            }
+            _ = send_handle => {
+                log::info!("Send loop ended, closing connection");
             }
         }
     });
