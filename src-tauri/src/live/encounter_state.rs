@@ -1647,38 +1647,41 @@ impl EncounterState {
                     None
                 };
 
-            let repository = app.state::<Repository>();
+            let _ = task::spawn_blocking(move || {
+                let repository = app.state::<Repository>();
 
-            let args = InsertEncounterArgs {
-                encounter,
-                damage_log,
-                cast_log,
-                boss_hp_log,
-                raid_clear,
-                party_info,
-                raid_difficulty,
-                region,
-                player_info,
-                meter_version,
-                ntp_fight_start,
-                rdps_valid,
-                manual,
-                skill_cast_log,
-                skill_cooldowns,
-                intermission_start,
-                intermission_end,
-            };
+                let args = InsertEncounterArgs {
+                    encounter,
+                    damage_log,
+                    cast_log,
+                    boss_hp_log,
+                    raid_clear,
+                    party_info,
+                    raid_difficulty,
+                    region,
+                    player_info,
+                    meter_version,
+                    ntp_fight_start,
+                    rdps_valid,
+                    manual,
+                    skill_cast_log,
+                    skill_cooldowns,
+                    intermission_start,
+                    intermission_end,
+                };
 
-            let encounter_id = repository
-                .insert_data(args)
-                .expect("could not save encounter");
+                let encounter_id = repository
+                    .insert_data(args)
+                    .expect("could not save encounter");
 
-            info!("saved to db");
+                info!("saved to db");
 
-            if raid_clear {
-                app.emit("clear-encounter", encounter_id)
-                    .expect("failed to emit clear-encounter");
-            }
+                if raid_clear {
+                    app.emit("clear-encounter", encounter_id)
+                        .expect("failed to emit clear-encounter");
+                }
+            })
+            .await;
         });
     }
 }
