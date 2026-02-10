@@ -22,7 +22,7 @@
     "licenseFile": "../LICENSE"
   },
   "productName": "LOA Logs",
-  "version": "1.39.0",
+  "version": "1.39.1",
   "identifier": "xyz.snow",
   "plugins": {
     "updater": {
