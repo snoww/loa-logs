@@ -1,11 +1,11 @@
 {
-  "version": "v1.38.4",
-  "notes": "### v1.38.4 - January 19th, 2026\n\n#### P.S. If you see any of us in town or raid, feel free to drop an honor!\n\n- **Snowving** on Luterra\n- **Administrator** on Ratik\n- **Poont** on Giena\n\n#### BUG FIXES AND IMPROVEMENTS\n- fixed some synergies/buffs not having correct source",
-  "pub_date": "2026-01-19T11:45:56.131Z",
+  "version": "v1.39.1",
+  "notes": "### v1.39.1 - February 6th, 2026\n\n#### P.S. If you see any of us in town or raid, feel free to drop an honor!\n\n- **Snowving** on Luterra\n- **Administrator** on Ratik\n- **Poont** on Giena\n\n#### BUG FIXES AND IMPROVEMENTS\n- fixed guardianknight transformation skills not being tracked separately\n- fixed transformation scouter x skill's cast not being counted properly\n  - fixed several classes identity skills' casts not being counted  ",
+  "pub_date": "2026-02-10T04:43:47.620Z",
   "platforms": {
     "windows-x86_64": {
-      "url": "https://github.com/snoww/loa-logs/releases/download/v1.38.4/LOA.Logs_1.38.4_x64-setup.nsis.zip",
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlN0VytiaFU2OERWRC81VTZONHhSMkQzUFc4b0dwV1BFUlRVTUVyRG1JVzkwV0J1Qk9NeUVpSHhVcURUREFkb0JTellUVVFSNjlqQjFjcXRmZTVHQXc4PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzY4ODIzNTM4CWZpbGU6TE9BIExvZ3NfMS4zOC40X3g2NC1zZXR1cC5uc2lzLnppcApNaEZiMHBORGNtUG1SU3RWMHFNOGx5aVY2d1o1eWJ3UGJvMlMrOTF0N28vd0sxek5KdHNnYVJKZW0rajRuaTZkdW9PUWRpRXRnVmprMHd2L2t5TzVCdz09Cg=="
+      "url": "https://github.com/snoww/loa-logs/releases/download/v1.39.1/LOA.Logs_1.39.1_x64-setup.exe",
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmUxcktwd2laMmIyUGF6MU1aQmhQNHdENHUzbW5PeXc4WSs3RmpESGRsd0p3V2ptT2xnYWNoMHROM01JUzNVTmZ5K24xWXhGdmVQaWtDRVhIdjRnWEFjPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzcwNjk4Mzk0CWZpbGU6TE9BIExvZ3NfMS4zOS4xX3g2NC1zZXR1cC5leGUKQzRIQ3V4MjE4VzF4QkN4S3UyZDk4eWtrVW0waGx2dUlUaFVaZ3Bxa3pFdVVjQ2t6NzN3VlJ1NVNid0xFbFYyN0VtVDc3TzRFanFOMk13YkE5bXBWQUE9PQo="
     }
   }
 }

@@ -13,6 +13,7 @@ pub struct SkillData {
     pub desc: Option<String>,
     pub class_id: u32,
     pub icon: Option<String>,
+    #[serde(deserialize_with = "int_or_string_as_option_string")]
     pub identity_category: Option<String>,
     #[serde(alias = "groups")]
     pub groups: Option<Vec<i32>>,

@@ -38,7 +38,9 @@ export const classesMap: ClassMap = {
   601: "Specialist",
   602: "Artist",
   603: "Aeromancer",
-  604: "Wildsoul"
+  604: "Wildsoul",
+  701: "Guardianknight",
+  702: "Guardianknight"
 };
 
 export const classNameToClassId: Record<string, number> = {
@@ -79,7 +81,8 @@ export const classNameToClassId: Record<string, number> = {
   Specialist: 601,
   Artist: 602,
   Aeromancer: 603,
-  Wildsoul: 604
+  Wildsoul: 604,
+  Guardianknight: 702
 };
 
 export const classList = [
@@ -110,7 +113,8 @@ export const classList = [
   "Gunslinger",
   "Artist",
   "Aeromancer",
-  "Wildsoul"
+  "Wildsoul",
+  "Guardianknight"
 ];
 
 export type APTypes = "evolution" | "enlightenment" | "leap";
