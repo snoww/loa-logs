@@ -36,7 +36,7 @@ flexi_logger = { version = "0.31.7", default-features = false }
 reqwest = { version = "0.12", features = ["json", "gzip"] }
 uuid = { version = "1.17.0", features = ["v4"] }
 moka = { version = "0.12.7", features = ["sync"] }
-rfd = { version = "0.15.4", features = ["common-controls-v6"] }
+rfd = { version = "0.17.2", default-features = false, features = ["common-controls-v6", "gtk3"] }
 rsntp = { version = "4.0.0", default-features = false, features = ["chrono"] }
 flate2 = "1.0.30"
 sysinfo = "0.35.1"
@@ -48,9 +48,9 @@ semver = "1.0.27"
 dirs = "6.0.0"
 sha2 = "0.10.9"
 
-nineveh-formats = { git = "https://github.com/molenzwiebel/nineveh", features = ["io"], optional = true }
-meter-defs = { git = "https://github.com/molenzwiebel/nineveh", default-features = false, optional = true }
-meter-decryption = { git = "https://github.com/molenzwiebel/nineveh", default-features = false, optional = true }
+nineveh-formats = { git = "ssh://git@github.com/molenzwiebel/nineveh", features = ["io"], optional = true }
+meter-defs = { git = "ssh://git@github.com/molenzwiebel/nineveh", default-features = false, optional = true }
+meter-decryption = { git = "ssh://git@github.com/molenzwiebel/nineveh", default-features = false, optional = true }
 
 [target.'cfg(not(any(target_os = "android", target_os = "ios")))'.dependencies]
 tauri-plugin-shell = "2.3.1"
