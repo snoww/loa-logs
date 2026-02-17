@@ -106,15 +106,17 @@ pub fn start(args: StartArgs) -> Result<()> {
         };
 
         // always unconditionally forward, but let the damage handler process first
-        let _ = ipc.0.send(IPCClientToServerMessage::PacketAction {
-            connection_id,
-            packet_id,
-            action: PacketAction::Send(
-                damage_handler
-                    .process_packet(&packet)
-                    .unwrap_or_else(|| packet.clone()),
-            ),
-        });
+        if packet_id != 0 {
+            let _ = ipc.0.send(IPCClientToServerMessage::PacketAction {
+                connection_id,
+                packet_id,
+                action: PacketAction::Send(
+                    damage_handler
+                        .process_packet(&packet)
+                        .unwrap_or_else(|| packet.clone()),
+                ),
+            });
+        }
 
         if matches!(direction, PacketDirection::ClientToServer) {
             // ignore c2s packets
