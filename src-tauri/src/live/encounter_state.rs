@@ -781,7 +781,7 @@ impl EncounterState {
         let [Some(source_entity), Some(target_entity)] = self
             .encounter
             .entities
-            .get_many_mut([&dmg_src_entity.name, &dmg_target_entity.name])
+            .get_disjoint_mut([&dmg_src_entity.name, &dmg_target_entity.name])
         else {
             warn!(
                 "{}, {} not found in encounter entities",
