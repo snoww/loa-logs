@@ -22,7 +22,9 @@
   let bossShield = $derived(boss?.currentShield ?? 0);
 
   let bossTotalBars = $derived.by(() => {
-    if (boss && Object.hasOwn(bossHpMap, boss.name) && settings.app.meter.bossHpBar) {
+    if (boss?.hpBars) {
+      return boss.hpBars;
+    } else if (boss && Object.hasOwn(bossHpMap, boss.name) && settings.app.meter.bossHpBar) {
       return getBossHpBars(boss.name, boss.maxHp);
     } else {
       return 1;

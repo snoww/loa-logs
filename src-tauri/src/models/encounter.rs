@@ -57,6 +57,8 @@ pub struct EncounterEntity {
     #[serde_as(as = "DisplayFromStr")]
     pub character_id: u64,
     pub npc_id: u32,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub hp_bars: Option<u32>,
     pub name: String,
     pub entity_type: EntityType,
     pub class_id: u32,

@@ -113,12 +113,14 @@ pub struct CombatEffectAction {
 }
 
 #[derive(Debug, Default, Deserialize, Clone)]
+#[serde(rename_all = "camelCase", default)]
 pub struct Npc {
     pub id: Option<i32>,
     pub name: Option<String>,
     pub grade: String,
     #[serde(rename = "type")]
     pub npc_type: Option<String>,
+    pub hp_bars: u32,
 }
 
 #[derive(Debug, Default, Deserialize, Clone)]

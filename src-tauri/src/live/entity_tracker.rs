@@ -223,13 +223,15 @@ impl EntityTracker {
     }
 
     pub fn new_npc(&mut self, pkt: PKTNewNpc, max_hp: i64) -> Entity {
-        let (entity_type, name, grade) = get_npc_entity_type_name_grade(&pkt.npc_struct, max_hp);
+        let (entity_type, name, grade, bars) =
+            get_npc_entity_type_name_grade_bars(&pkt.npc_struct, max_hp);
         let npc = Entity {
             id: pkt.npc_struct.object_id,
             entity_type,
             name,
             grade,
             npc_id: pkt.npc_struct.type_id,
+            hp_bars: bars,
             level: pkt.npc_struct.level,
             push_immune: entity_type == Boss,
             stats: pkt
@@ -247,7 +249,8 @@ impl EntityTracker {
     }
 
     pub fn new_npc_summon(&mut self, pkt: PKTNewNpcSummon, max_hp: i64) -> Entity {
-        let (entity_type, name, grade) = get_npc_entity_type_name_grade(&pkt.npc_struct, max_hp);
+        let (entity_type, name, grade, bars) =
+            get_npc_entity_type_name_grade_bars(&pkt.npc_struct, max_hp);
         let entity_type = if entity_type == Npc {
             Summon
         } else {
@@ -259,6 +262,7 @@ impl EntityTracker {
             name,
             grade,
             npc_id: pkt.npc_struct.type_id,
+            hp_bars: bars,
             owner_id: pkt.owner_id,
             level: pkt.npc_struct.level,
             push_immune: entity_type == Boss,
@@ -567,12 +571,20 @@ pub fn get_current_and_max_hp(stat_pair: &Vec<StatPair>) -> (i64, i64) {
     (hp.unwrap_or_default(), max_hp.unwrap_or_default())
 }
 
-fn get_npc_entity_type_name_grade(npc: &NpcStruct, max_hp: i64) -> (EntityType, String, String) {
+fn get_npc_entity_type_name_grade_bars(
+    npc: &NpcStruct,
+    max_hp: i64,
+) -> (EntityType, String, String, Option<u32>) {
     if let Some(esther) = get_esther_from_npc_id(npc.type_id) {
-        return (EntityType::Esther, esther.name, "none".to_string());
+        return (EntityType::Esther, esther.name, "none".to_string(), None);
     }
 
     if let Some((_, npc_info)) = NPC_DATA.get_key_value(&npc.type_id) {
+        let hp_bars = if npc_info.hp_bars > 1 {
+            Some(npc_info.hp_bars)
+        } else {
+            None
+        };
         let npc_name = npc_info.name.clone().unwrap_or_default();
         if (npc_info.grade == "boss"
             || npc_info.grade == "raid"
@@ -583,15 +595,21 @@ fn get_npc_entity_type_name_grade(npc: &NpcStruct, max_hp: i64) -> (EntityType, 
             && !npc_name.contains('_')
             && npc_name.is_ascii()
         {
-            (Boss, npc_name.clone(), npc_info.grade.clone())
+            (Boss, npc_name.clone(), npc_info.grade.clone(), hp_bars)
         } else {
-            (EntityType::Npc, npc_name.clone(), npc_info.grade.clone())
+            (
+                EntityType::Npc,
+                npc_name.clone(),
+                npc_info.grade.clone(),
+                hp_bars,
+            )
         }
     } else {
         (
             EntityType::Npc,
             format!("{:x}", npc.object_id),
             "none".to_string(),
+            None,
         )
     }
 }
@@ -621,6 +639,7 @@ pub struct Entity {
     pub entity_type: EntityType,
     pub name: String,
     pub npc_id: u32,
+    pub hp_bars: Option<u32>,
     pub class_id: u32,
     pub gear_level: f32,
     pub character_id: u64,
