@@ -7,7 +7,7 @@ use crate::app;
 
 pub fn init() -> Result<LoggerHandle, FlexiLoggerError> {
     let mut logger = if cfg!(debug_assertions) {
-        Logger::try_with_str("info, tao=off")?
+        Logger::try_with_str("info, live=debug, tao=off")?
     } else {
         Logger::try_with_str("info, live=warn, stats_api=warn, heartbeat_api=warn, tao=off")?
     };
