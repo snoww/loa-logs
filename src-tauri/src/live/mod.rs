@@ -1018,6 +1018,25 @@ pub fn start(args: StartArgs) -> Result<()> {
                         && e.damage_stats.damage_dealt > 0
                 });
 
+                // strip data not needed for live meter to reduce payload size and frontend memory
+                clone.encounter_damage_stats.boss_hp_log.clear();
+                for entity in clone.entities.values_mut() {
+                    entity.damage_stats.dps_average.clear();
+                    entity.damage_stats.dps_rolling_10s_avg.clear();
+                    for skill in entity.skills.values_mut() {
+                        skill.cast_log.clear();
+                        skill.skill_cast_log.clear();
+                    }
+                }
+                if let Some(ref mut boss) = clone.current_boss {
+                    boss.damage_stats.dps_average.clear();
+                    boss.damage_stats.dps_rolling_10s_avg.clear();
+                    for skill in boss.skills.values_mut() {
+                        skill.cast_log.clear();
+                        skill.skill_cast_log.clear();
+                    }
+                }
+
                 if !clone.entities.is_empty() {
                     if !damage_valid {
                         app_handle
