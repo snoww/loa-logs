@@ -479,17 +479,17 @@ pub fn start(args: StartArgs) -> Result<()> {
 
                         let mut rdps_data = Vec::new();
 
-                        if let Some(rdps) = event.skill_damage_event.rdps_data_conditional.rdps_data
-                        {
-                            for i in 0..rdps.event_type.len() {
-                                rdps_data.push(RdpsData {
-                                    rdps_type: rdps.event_type[i],
-                                    value: rdps.value[i],
-                                    source_character_id: rdps.source_character_id[i],
-                                    skill_id: rdps.skill_id[i],
-                                });
-                            }
-                        }
+                        // if let Some(rdps) = event.skill_damage_event.rdps_data_conditional.rdps_data
+                        // {
+                        //     for i in 0..rdps.event_type.len() {
+                        //         rdps_data.push(RdpsData {
+                        //             rdps_type: rdps.event_type[i],
+                        //             value: rdps.value[i],
+                        //             source_character_id: rdps.source_character_id[i],
+                        //             skill_id: rdps.skill_id[i],
+                        //         });
+                        //     }
+                        // }
 
                         let damage_data = DamageData {
                             skill_id: pkt.skill_id,
@@ -547,16 +547,16 @@ pub fn start(args: StartArgs) -> Result<()> {
                             .get_status_effects(&owner, &target_entity, local_character_id);
                         let mut rdps_data = Vec::new();
 
-                        if let Some(rdps) = event.rdps_data_conditional.rdps_data {
-                            for i in 0..rdps.event_type.len() {
-                                rdps_data.push(RdpsData {
-                                    rdps_type: rdps.event_type[i],
-                                    value: rdps.value[i],
-                                    source_character_id: rdps.source_character_id[i],
-                                    skill_id: rdps.skill_id[i],
-                                });
-                            }
-                        }
+                        // if let Some(rdps) = event.rdps_data_conditional.rdps_data {
+                        //     for i in 0..rdps.event_type.len() {
+                        //         rdps_data.push(RdpsData {
+                        //             rdps_type: rdps.event_type[i],
+                        //             value: rdps.value[i],
+                        //             source_character_id: rdps.source_character_id[i],
+                        //             skill_id: rdps.skill_id[i],
+                        //         });
+                        //     }
+                        // }
 
                         let damage_data = DamageData {
                             skill_id: pkt.skill_id,
