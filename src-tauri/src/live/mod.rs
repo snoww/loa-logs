@@ -18,7 +18,9 @@ use crate::live::status_tracker::{
     get_status_effect_value,
 };
 use crate::local::{LocalInfo, LocalPlayer, LocalPlayerRepository};
-use crate::models::{DamageData, EntityType, Identity, RdpsData, TripodIndex};
+use crate::models::*;
+use crate::models::{TripodIndex, TripodLevel};
+use crate::services::{prepare_ui_payload, UiSender};
 use crate::settings::Settings;
 use crate::utils::get_class_from_id;
 use anyhow::Result;
@@ -66,6 +68,7 @@ pub fn start(args: StartArgs) -> Result<()> {
         party_tracker.clone(),
     );
     let mut state = EncounterState::new(app.clone());
+    let mut ui_sender = UiSender::new(app.clone());
 
     let rx = match start_capture(port, region_file_path.clone()) {
         Ok(rx) => rx,
@@ -78,8 +81,6 @@ pub fn start(args: StartArgs) -> Result<()> {
     let damage_handler = meter_core::decryption::DamageEncryptionHandler::new();
     let damage_handler = damage_handler.start()?;
 
-    let mut last_update = Instant::now();
-    let mut duration = Duration::from_millis(200);
     let mut last_party_update = Instant::now();
     let party_duration = Duration::from_millis(2000);
     let mut raid_end_cd = Instant::now();
@@ -90,7 +91,7 @@ pub fn start(args: StartArgs) -> Result<()> {
             info!("boss only damage enabled")
         }
         if settings.general.low_performance_mode {
-            duration = Duration::from_millis(1500);
+            ui_sender.set_interval(Duration::from_millis(1500));
             info!("low performance mode enabled")
         }
     } else {
@@ -968,95 +969,29 @@ pub fn start(args: StartArgs) -> Result<()> {
             _ => {}
         }
 
-        if last_update.elapsed() >= duration || state.resetting || state.boss_dead_update {
+        if ui_sender.can_send() && state.resetting || state.boss_dead_update {
             let boss_dead = state.boss_dead_update;
-            if state.boss_dead_update {
-                state.boss_dead_update = false;
-            }
-            let mut clone = state.encounter.clone();
             let damage_valid = state.damage_is_valid;
-            let app_handle = app.clone();
+            try_recalculate_party(
+                &party_tracker,
+                &entity_tracker,
+                &mut party_cache,
+                &mut last_party_update,
+                party_duration,
+                party_freeze,
+            );
+            let payload = prepare_ui_payload(
+                &state.encounter,
+                party_cache.as_deref(),
+                damage_valid,
+                boss_dead
+            );
+            
+            ui_sender.try_send(payload);
+        }
 
-            let party_info: Option<Vec<Vec<String>>> =
-                if last_party_update.elapsed() >= party_duration && !party_freeze {
-                    last_party_update = Instant::now();
-
-                    // use cache if available
-                    // otherwise get party info
-                    party_cache.clone().or_else(|| {
-                        let party = update_party(&party_tracker, &entity_tracker);
-                        if party.len() > 1 {
-                            if party.iter().all(|p| p.len() == 4) {
-                                party_cache = Some(party.clone());
-                            }
-                            Some(party)
-                        } else {
-                            None
-                        }
-                    })
-                } else {
-                    None
-                };
-
-            tokio::task::spawn(async move {
-                if !clone.current_boss_name.is_empty() {
-                    let current_boss = clone.entities.get(&clone.current_boss_name).cloned();
-                    if let Some(mut current_boss) = current_boss {
-                        if boss_dead {
-                            current_boss.is_dead = true;
-                            current_boss.current_hp = 0;
-                        }
-                        clone.current_boss = Some(current_boss);
-                    } else {
-                        clone.current_boss_name = String::new();
-                    }
-                }
-                clone.entities.retain(|_, e| {
-                    ((e.entity_type == EntityType::Player && e.class_id > 0)
-                        || e.entity_type == EntityType::Esther
-                        || e.entity_type == EntityType::Boss)
-                        && e.damage_stats.damage_dealt > 0
-                });
-
-                // strip data not needed for live meter to reduce payload size and frontend memory
-                clone.encounter_damage_stats.boss_hp_log.clear();
-                for entity in clone.entities.values_mut() {
-                    entity.damage_stats.dps_average.clear();
-                    entity.damage_stats.dps_rolling_10s_avg.clear();
-                    for skill in entity.skills.values_mut() {
-                        skill.cast_log.clear();
-                        skill.skill_cast_log.clear();
-                    }
-                }
-                if let Some(ref mut boss) = clone.current_boss {
-                    boss.damage_stats.dps_average.clear();
-                    boss.damage_stats.dps_rolling_10s_avg.clear();
-                    for skill in boss.skills.values_mut() {
-                        skill.cast_log.clear();
-                        skill.skill_cast_log.clear();
-                    }
-                }
-
-                if !clone.entities.is_empty() {
-                    if !damage_valid {
-                        app_handle
-                            .emit("invalid-damage", "")
-                            .expect("failed to emit invalid-damage");
-                    } else {
-                        app_handle
-                            .emit("encounter-update", Some(clone))
-                            .expect("failed to emit encounter-update");
-
-                        if party_info.is_some() {
-                            app_handle
-                                .emit("party-update", party_info)
-                                .expect("failed to emit party-update");
-                        }
-                    }
-                }
-            });
-
-            last_update = Instant::now();
+        if state.boss_dead_update {
+            state.boss_dead_update = false;
         }
 
         if state.resetting {
@@ -1073,6 +1008,28 @@ pub fn start(args: StartArgs) -> Result<()> {
     }
 
     Ok(())
+}
+
+fn try_recalculate_party(
+    party_tracker: &Rc<RefCell<PartyTracker>>,
+    entity_tracker: &EntityTracker,
+    party_cache: &mut Option<Vec<Vec<String>>>,
+    last_party_update: &mut Instant,
+    party_duration: Duration,
+    party_freeze: bool,
+) {
+    if last_party_update.elapsed() >= party_duration && !party_freeze {
+        *last_party_update = Instant::now();
+
+        if party_cache.is_none() {
+            let party = update_party(&party_tracker, &entity_tracker);
+            if party.len() > 1 {
+                if party.iter().all(|p| p.len() == 4) {
+                    *party_cache = Some(party);
+                }
+            }
+        }
+    }
 }
 
 fn update_party(
