@@ -295,7 +295,8 @@ export function getDetailedSkillLogChart(
   player: Entity,
   lastCombatPacket: number,
   fightStart: number,
-  encounterDamageStats: EncounterDamageStats
+  encounterDamageStats: EncounterDamageStats,
+  chartBosses: any[] = []
 ) {
   const sortedSkills = Object.values(player.skills)
     .filter((skill) => skill.skillCastLog.length > 0)
@@ -374,72 +375,111 @@ export function getDetailedSkillLogChart(
         color: "white"
       }
     },
-    yAxis: {
-      type: "category",
-      splitLine: {
-        show: true,
-        lineStyle: {
-          color: "#333"
+    yAxis: [
+      {
+        type: "category",
+        splitLine: {
+          show: true,
+          lineStyle: {
+            color: "#333"
+          }
+        },
+        axisLabel: {
+          show: false
+        },
+        data: skills.map((skill) => {
+          return {
+            value: skill
+          };
+        })
+      },
+      {
+        type: "value",
+        splitLine: {
+          show: false
+        },
+        axisLabel: {
+          color: "white",
+          formatter: "{value}%"
         }
-      },
-      axisLabel: {
-        show: false
-      },
-      data: skills.map((skill) => {
+      }
+    ],
+    series: [
+      ...sortedSkills.map((skill) => {
         return {
-          value: skill
-        };
-      })
-    },
-    series: sortedSkills.map((skill) => {
-      return {
-        name: skill.name,
-        type: "scatter",
-        symbol: "image://" + getSkillIcon(skill.icon),
-        symbolSize: [20, 20],
-        symbolKeepAspect: true,
-        data: skill.skillCastLog.map((cast) => [
-          timestampToMinutesAndSeconds(cast.timestamp),
-          skill.name,
-          cast,
-          skill.icon
-        ]),
-        tooltip: {
-          formatter: function (param: any) {
-            focusedCast.skillId = skill.id;
-            focusedCast.cast = param.dataIndex;
-            let output = "<div class='overflow-y-auto max-h-56 pt-1 pb-2 px-2' style='scrollbar-width: thin;'>";
-            output += `
+          name: skill.name,
+          type: "scatter",
+          symbol: "image://" + getSkillIcon(skill.icon),
+          symbolSize: [20, 20],
+          symbolKeepAspect: true,
+          yAxisIndex: 0,
+          data: skill.skillCastLog.map((cast) => [
+            timestampToMinutesAndSeconds(cast.timestamp),
+            skill.name,
+            cast,
+            skill.icon
+          ]),
+          tooltip: {
+            formatter: function (param: any) {
+              focusedCast.skillId = skill.id;
+              focusedCast.cast = param.dataIndex;
+              let output = "<div class='overflow-y-auto max-h-56 pt-1 pb-2 px-2' style='scrollbar-width: thin;'>";
+              output += `
                         <div class='flex justify-between'>
                         <div class='font-semibold mb-1'>${param.name}-${timestampToMinutesAndSeconds(param.value[2].last)} (${customRound((param.value[2].last - param.value[2].timestamp) / 1000)}s)</div>
                         <div class='tracking-tight text-sm'>Scroll Down for Details</div>
                         </div>
                         `;
-            output += "<div>";
-            output += "<div class='flex space-x-1'>";
-            output += `<img class="size-5 rounded-xs" src='${getSkillIcon(param.value[3])}' alt='${param.seriesName}' />`;
-            output += `<div class='font-semibold'>${param.seriesName + " #" + (param.dataIndex + 1)}</div>`;
-            output += "</div>";
-            if (param.value[2].hits.length > 0) {
-              output += skillCastBreakdownTooltip(player, param.value[2], encounterDamageStats);
-            }
-            output += "</div>";
-            output += "</div>";
-            return output;
-          },
-          borderColor: "#fff",
-          extraCssText: "pointer-events: auto !important; padding: 0"
-        }
-      };
-    })
+              // add boss HP bar into tooltip at this timestamp
+              if (chartBosses.length > 0) {
+                const timeStr = param.name;
+                for (const boss of chartBosses) {
+                  const bossData = boss.data.find((d: any) => d[0] === timeStr);
+                  if (bossData) {
+                    let value = bossData[1] + "%";
+                    const label = boss.name;
+                    if (Object.hasOwn(bossHpMap, label)) {
+                      const bossMaxHpBars = bossHpMap[label];
+                      const bossHpBars = Math.floor(bossMaxHpBars * (bossData[1] / 100));
+                      value = bossHpBars + "x (" + value + ")";
+                    }
+                    output += `<div class='flex justify-between'><div class='font-semibold pr-4'>${label}</div><div class='font-semibold'>${value}</div></div>`;
+                  }
+                }
+              }
+              output += "<div>";
+              output += "<div class='flex space-x-1'>";
+              output += `<img class="size-5 rounded-xs" src='${getSkillIcon(param.value[3])}' alt='${param.seriesName}' />`;
+              output += `<div class='font-semibold'>${param.seriesName + " #" + (param.dataIndex + 1)}</div>`;
+              output += "</div>";
+              if (param.value[2].hits.length > 0) {
+                output += skillCastBreakdownTooltip(player, param.value[2], encounterDamageStats);
+              }
+              output += "</div>";
+              output += "</div>";
+              return output;
+            },
+            borderColor: "#fff",
+            extraCssText: "pointer-events: auto !important; padding: 0"
+          }
+        };
+      }),
+      ...chartBosses
+    ]
   };
 }
 
-export function getBasicSkillLogChart(player: Entity, lastCombatPacket: number, fightStart: number) {
+export function getBasicSkillLogChart(
+  player: Entity,
+  lastCombatPacket: number,
+  fightStart: number,
+  chartBosses: any[] = []
+) {
   const sortedSkills = Object.values(player.skills)
     .filter((skill) => skill.castLog.length > 0)
     .sort((a, b) => a.totalDamage - b.totalDamage);
   const skills = sortedSkills.map((skill) => skill.name);
+  const skillCount = sortedSkills.length;
 
   return {
     ...defaultOptions,
@@ -477,11 +517,31 @@ export function getBasicSkillLogChart(player: Entity, lastCombatPacket: number, 
     tooltip: {
       trigger: "axis",
       formatter(params: any[]) {
-        let output = `<span style="font-weight: 600">${params[0].name}</span>`;
+        let output = `<div style="font-weight: 600">${params[0].name}</div><div style="min-width: 10rem">`;
+        const bossTooltips: string[] = [];
+        const skillTooltips: string[] = [];
         params.forEach((p) => {
-          output += `<br/>${p.seriesName}`;
+          if (p.seriesIndex >= skillCount) {
+            // Boss HP series
+            let value = p.value[1] + "%";
+            const label = p.seriesName;
+            if (Object.hasOwn(bossHpMap, label)) {
+              const bossMaxHpBars = bossHpMap[label];
+              const bossHpBars = Math.floor(bossMaxHpBars * (parseFloat(value) / 100));
+              value = bossHpBars + "x (" + value + ")";
+            }
+            bossTooltips.push(
+              `<div style="display:flex; justify-content: space-between;"><div style="padding-right: 1rem;font-weight: 600;">${label}</div><div style="font-weight: 600;">${value}</div></div>`
+            );
+          } else {
+            skillTooltips.push(p.seriesName);
+          }
         });
-
+        output += bossTooltips.join("");
+        if (skillTooltips.length > 0) {
+          output += skillTooltips.join("<br/>");
+        }
+        output += "</div>";
         return output;
       }
     } as any,
@@ -517,28 +577,44 @@ export function getBasicSkillLogChart(player: Entity, lastCombatPacket: number, 
         color: "white"
       }
     },
-    yAxis: {
-      type: "category",
-      splitLine: {
-        show: true,
-        lineStyle: {
-          color: "#333"
+    yAxis: [
+      {
+        type: "category",
+        splitLine: {
+          show: true,
+          lineStyle: {
+            color: "#333"
+          }
+        },
+        axisLabel: {
+          show: false
         }
       },
-      axisLabel: {
-        show: false
+      {
+        type: "value",
+        splitLine: {
+          show: false
+        },
+        axisLabel: {
+          color: "white",
+          formatter: "{value}%"
+        }
       }
-    },
-    series: sortedSkills.map((skill) => {
-      return {
-        name: skill.name,
-        type: "scatter",
-        symbol: "image://" + getSkillIcon(skill.icon),
-        symbolSize: [20, 20],
-        symbolKeepAspect: true,
-        data: skill.castLog.map((cast) => [secondsToMinutesAndSeconds(cast / 1000), skill.name])
-      };
-    })
+    ],
+    series: [
+      ...sortedSkills.map((skill) => {
+        return {
+          name: skill.name,
+          type: "scatter",
+          symbol: "image://" + getSkillIcon(skill.icon),
+          symbolSize: [20, 20],
+          symbolKeepAspect: true,
+          yAxisIndex: 0,
+          data: skill.castLog.map((cast) => [secondsToMinutesAndSeconds(cast / 1000), skill.name])
+        };
+      }),
+      ...chartBosses
+    ]
   };
 }
 

@@ -42,6 +42,7 @@ SELECT
     last_update,
     entity_type,
     npc_id,
+    hp_bars,
     character_id,
     engravings,
     spec,
@@ -79,6 +80,7 @@ INSERT INTO entity (
     name,
     encounter_id,
     npc_id,
+    hp_bars,
     entity_type,
     class_id,
     class,
@@ -105,7 +107,7 @@ INSERT INTO entity (
     unbuffed_dps
 )
 VALUES
-(?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17, ?18, ?19, ?20, ?21, ?22, ?23, ?24, ?25, ?26, ?27)";
+(?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17, ?18, ?19, ?20, ?21, ?22, ?23, ?24, ?25, ?26, ?27, ?28)";
 
 pub const INSERT_ENCOUNTER_PREVIEW: &str = r"
 INSERT INTO encounter_preview

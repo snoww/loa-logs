@@ -126,6 +126,7 @@ export interface Entity {
   lastUpdate: number;
   id: number;
   npcId: number;
+  hpBars?: number;
   name: string;
   characterId: string;
   entityType: EntityType;

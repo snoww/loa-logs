@@ -38,6 +38,16 @@
   let enc = $derived(new EncounterState(undefined, true));
   let time = $state(+Date.now());
   let unsubscribe: (() => void) | null = null;
+  let pendingTimeouts: ReturnType<typeof setTimeout>[] = [];
+
+  function trackTimeout(fn: () => void, ms: number) {
+    const id = setTimeout(() => {
+      pendingTimeouts = pendingTimeouts.filter((t) => t !== id);
+      fn();
+    }, ms);
+    pendingTimeouts.push(id);
+    return id;
+  }
 
   onMount(() => {
     const interval = setInterval(() => {
@@ -46,11 +56,17 @@
       }
     }, 1000);
 
-    onLoad();
+    listenEvents().then((unsub) => {
+      unsubscribe = unsub;
+    });
+
+    ninevehStateRequest();
 
     return () => {
-      unsubscribe && unsubscribe();
+      unsubscribe?.();
       clearInterval(interval);
+      for (const id of pendingTimeouts) clearTimeout(id);
+      pendingTimeouts = [];
     };
   });
 
@@ -82,7 +98,7 @@
       if (!event.payload) {
         addToast(zoneChange);
       }
-      setTimeout(() => {
+      trackTimeout(() => {
         misc.raidInProgress = true;
       }, 6000);
     });
@@ -111,7 +127,7 @@
 
     handle = await onSaveEncounter(() => {
       addToast(manualSave);
-      setTimeout(() => {
+      trackTimeout(() => {
         misc.reset = !misc.reset;
       }, 1000);
     });
@@ -159,11 +175,6 @@
     };
   }
 
-  async function onLoad() {
-    unsubscribe = await listenEvents();
-    await ninevehStateRequest();
-  }
-
   $effect(() => {
     if (enc.encounter && enc.encounter.fightStart) {
       enc.duration = time - enc.encounter.fightStart;
@@ -173,19 +184,23 @@
   });
 
   $effect(() => {
+    let hideTimeout: ReturnType<typeof setTimeout> | undefined;
     if (settings.app.general.autoShow && !settings.app.general.mini) {
       const appWindow = getCurrentWebviewWindow();
       if (misc.raidInProgress && enc.encounter?.currentBossName) {
         appWindow.show();
       } else {
         // hide with delay
-        setTimeout(() => {
+        hideTimeout = setTimeout(() => {
           if (!enc.encounter) {
             appWindow.hide();
           }
         }, settings.app.general.autoHideDelay);
       }
     }
+    return () => {
+      if (hideTimeout) clearTimeout(hideTimeout);
+    };
   });
 </script>
 

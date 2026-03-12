@@ -7,7 +7,6 @@ import {
   MeterTab,
   StatusEffectBuffTypeFlags,
   StatusEffectTarget,
-  type DamageStats,
   type EncounterDamageStats,
   type Entity,
   type Skill,
@@ -426,7 +425,7 @@ export function makeSupportBuffKey(statusEffect: StatusEffect) {
 }
 
 const buffCategories = {
-  partySynergy: ["classskill", "identity", "ability", "arkpassive"],
+  partySynergy: ["classskill", "identity", "ability", "arkpassive", "arkgrid"],
   selfItemSynergy: ["pet", "cook", "battleitem", "dropsofether", "bracelet", "elixir"],
   setSynergy: ["set", "arkpassive"],
   selfSkillSynergy: ["classskill", "identity", "ability", "arkpassive", "arkgrid"],

@@ -21,8 +21,7 @@
     },
     "targets": [
       "nsis"
-    ],
-    "createUpdaterArtifacts": "v1Compatible"
+    ]
   },
   "mainBinaryName": "LOA Logs",
   "plugins": {

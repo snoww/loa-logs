@@ -119,15 +119,19 @@
         );
         chartOptions = getRollingDpsChart(chartablePlayers, legendNames, chartPlayers, bossChart, deathInfo);
       } else if (chartType === ChartType.SKILL_LOG && player && player.entityType === EntityType.PLAYER) {
+        const skillLogLen = Math.floor((encounter.lastCombatPacket - encounter.fightStart) / 1000);
+        const skillLogLegend: string[] = [];
+        const skillLogBosses = getBossHpSeries(bossHpLogs, skillLogLegend, skillLogLen, 1);
         if (hasSkillDetails) {
           chartOptions = getDetailedSkillLogChart(
             player,
             encounter.lastCombatPacket,
             encounter.fightStart,
-            encounter.encounterDamageStats
+            encounter.encounterDamageStats,
+            skillLogBosses
           );
         } else {
-          chartOptions = getBasicSkillLogChart(player, encounter.lastCombatPacket, encounter.fightStart);
+          chartOptions = getBasicSkillLogChart(player, encounter.lastCombatPacket, encounter.fightStart, skillLogBosses);
         }
       } else if (chartType === ChartType.BRAND_BUFF) {
         chartOptions = getSupportSynergiesOverTimeChart(buffChartLegend, buffChartSeries, "_1_", buffChartBosses);

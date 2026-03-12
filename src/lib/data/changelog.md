@@ -1,6 +1,6 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.38.4 - January 19th, 2026
+    v1.40.0 - March 10th, 2026
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
@@ -13,9 +13,17 @@
 - **Administrator** on Ratik
 - **Poont** on Gienah
 
+### NOTE: uDPS/bDPS is no longer available in meter. Smilegate changed how they deliver udps data and we no longer have access to that information. Workarounds are being explored.
+
+#### NEW FEATURES
+
+- updated meter for march patch
+
 #### BUG FIXES AND IMPROVEMENTS
-- fixed some synergies/buffs not having correct source
+
+- recombined kazeros g2-1 and 2-2/3 into single encounter (the first difficulty remains separated)
+- added option to force-reupload uploaded logs (press ctrl+hover share button)
 
 ---
 
-**Older Changelogs**: [link](https://github.com/snoww/loa-logs/releases/tag/v1.37.2)
+**Older Changelogs**: [link](https://github.com/snoww/loa-logs/releases/tag/v1.39.1)
