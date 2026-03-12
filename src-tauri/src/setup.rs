@@ -20,7 +20,7 @@ use crate::{
 
 pub fn setup(app: &mut App) -> Result<(), Box<dyn Error>> {
     #[cfg(not(debug_assertions))]
-    app::panic::add_hook_with_dialog(app.handle());
+    crate::app::panic::add_hook_with_dialog(app.handle());
 
     let app_handle = app.handle();
 

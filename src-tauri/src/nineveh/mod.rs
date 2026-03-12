@@ -111,6 +111,7 @@ pub type NinevehIPCPair = (
 /// Attempt to connect to an existing Nineveh IPC server or start a new one if not found. Returns
 /// channels for receiving packet events from Nineveh and sending commands to it. Connections will
 /// be automatically managed and synchronized with the frontend.
+#[cfg(windows)]
 pub async fn setup_nineveh(app: AppHandle) -> Result<NinevehIPCPair> {
     let (from_tx, from_rx) = tokio::sync::mpsc::unbounded_channel();
     let (to_tx, to_rx) = tokio::sync::mpsc::unbounded_channel();
@@ -203,4 +204,22 @@ pub async fn setup_nineveh(app: AppHandle) -> Result<NinevehIPCPair> {
             }
         }
     }
+}
+
+#[cfg(unix)]
+pub async fn setup_nineveh(app: AppHandle) -> Result<NinevehIPCPair> {
+    let (from_tx, from_rx) = tokio::sync::mpsc::unbounded_channel();
+    let (to_tx, to_rx) = tokio::sync::mpsc::unbounded_channel();
+
+    // try to connect to existing server
+    if let Ok((rx, tx, handle)) = ipc::connect_to_nineveh(NINEVEH_ENDPOINT).await {
+        log::info!("Connected to existing Nineveh IPC server");
+        tokio::spawn(handle_nineveh_ipc_messages(
+            app, from_rx, to_tx, rx, tx, handle,
+        ));
+        return Ok((from_tx, to_rx));
+    }
+
+    // no existing server or froze, tell user to spawn one
+    error_and_exit("Backend Not Found", "Could not connect to a running `nineveh` instance. Make sure that the Nineveh binary is running and responsive.")
 }
