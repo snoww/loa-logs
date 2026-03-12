@@ -18,7 +18,11 @@
   }
 
   let { groupedSynergies, player, enc, tab }: Props = $props();
-  let entityState = $derived(new EntityState(player, enc));
+  let entityState = new EntityState(player, enc);
+  $effect(() => {
+    entityState.entity = player;
+    entityState.encounter = enc;
+  });
 
   let buffSummary: BuffDetails[] = $derived.by(() => {
     if (tab === MeterTab.SELF_BUFFS || tab === MeterTab.PARTY_BUFFS) {

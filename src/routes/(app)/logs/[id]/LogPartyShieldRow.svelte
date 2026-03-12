@@ -15,7 +15,11 @@
   }
 
   let { enc, player, playerShields, percentage }: Props = $props();
-  let entityState = $derived(new EntityState(player, enc));
+  let entityState = new EntityState(player, enc);
+  $effect(() => {
+    entityState.entity = player;
+    entityState.encounter = enc;
+  });
 
   let totalShield = $derived(playerShields.reduce((acc, buff) => acc + buff.total, 0));
   let totalShieldStr = $derived(abbreviateNumberSplit(totalShield));
