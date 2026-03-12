@@ -207,7 +207,7 @@ impl EncounterState {
 
     pub fn on_transit(&mut self, zone_id: u32) {
         // do not reset on kazeros g2
-        if matches!(zone_id, 37544 | 37545 | 37546) && self.encounter.difficulty.as_ref().is_some_and(|d| d != "The First") {
+        if matches!(zone_id, 37544 | 37545 | 37546) && self.raid_difficulty != "The First" {
             if zone_id == 37545 {
                 let now = Utc::now().timestamp_millis();
                 self.intermission_start = Some(now);
