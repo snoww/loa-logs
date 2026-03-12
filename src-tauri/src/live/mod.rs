@@ -969,7 +969,7 @@ pub fn start(args: StartArgs) -> Result<()> {
             _ => {}
         }
 
-        if ui_sender.can_send() && state.resetting || state.boss_dead_update {
+        if ui_sender.can_send() || state.resetting || state.boss_dead_update {
             let boss_dead = state.boss_dead_update;
             let damage_valid = state.damage_is_valid;
             try_recalculate_party(
