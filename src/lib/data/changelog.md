@@ -13,6 +13,8 @@
 - **Administrator** on Ratik
 - **Poont** on Gienah
 
+### NOTE: uDPS/bDPS is no longer available in meter. Smilegate changed how they deliver udps data and we no longer have access to that information. Workarounds are being explored.
+
 #### NEW FEATURES
 
 - updated meter for march patch
