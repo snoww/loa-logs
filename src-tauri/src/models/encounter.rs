@@ -164,15 +164,6 @@ pub struct DamageData {
     pub damage_attribute: Option<u8>,
     pub damage_type: u8,
     pub stagger: u32,
-    pub rdps_data: Vec<RdpsData>,
-}
-
-#[derive(Debug)]
-pub struct RdpsData {
-    pub rdps_type: u8,
-    pub value: i64,
-    pub source_character_id: u64, // character_id
-    pub skill_id: u32,            // buff source skill
 }
 
 #[derive(Debug, Serialize, Clone, Default)]

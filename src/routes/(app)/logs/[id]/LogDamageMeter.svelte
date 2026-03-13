@@ -131,7 +131,12 @@
             skillLogBosses
           );
         } else {
-          chartOptions = getBasicSkillLogChart(player, encounter.lastCombatPacket, encounter.fightStart, skillLogBosses);
+          chartOptions = getBasicSkillLogChart(
+            player,
+            encounter.lastCombatPacket,
+            encounter.fightStart,
+            skillLogBosses
+          );
         }
       } else if (chartType === ChartType.BRAND_BUFF) {
         chartOptions = getSupportSynergiesOverTimeChart(buffChartLegend, buffChartSeries, "_1_", buffChartBosses);
@@ -175,7 +180,7 @@
 
 {#snippet logTab(selectedTab: MeterTab, tabName: string)}
   <button
-    class="focus:outline-hidden text-nowrap rounded-lg px-2 py-1 text-sm text-white transition {tab === selectedTab
+    class="rounded-lg px-2 py-1 text-sm text-nowrap text-white transition focus:outline-hidden {tab === selectedTab
       ? 'bg-accent-500/80'
       : 'hover:bg-neutral-800/40'}"
     onclick={() => {
@@ -198,7 +203,7 @@
 
 {#snippet chartTab(selectedTab: ChartType, tabName: string, border = false)}
   <button
-    class="focus:outline-hidden text-nowrap px-2 py-1 text-sm text-white transition first:rounded-l-lg last:rounded-r-lg {chartType ===
+    class="px-2 py-1 text-sm text-nowrap text-white transition first:rounded-l-lg last:rounded-r-lg focus:outline-hidden {chartType ===
     selectedTab
       ? 'bg-accent-500/80'
       : 'hover:bg-neutral-800/40'} {border ? 'border-l-1 border-neutral-900/80' : ''}

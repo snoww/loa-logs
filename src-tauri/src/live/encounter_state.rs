@@ -12,7 +12,7 @@ use chrono::Utc;
 use hashbrown::HashMap;
 use log::{info, warn};
 use meter_core::packets::common::SkillMoveOptionData;
-use meter_core::packets::structures::SkillCooldownStruct;
+use meter_core::packets::structures::{SkillCooldownStruct, SupportCombatAnalyzerEvent};
 use rsntp::SntpClient;
 use std::cmp::max;
 use std::default::Default;
@@ -303,6 +303,7 @@ impl EncounterState {
                     e.id = entity.id;
                     e.current_hp = hp;
                     e.max_hp = max_hp;
+                    e.hp_bars = entity.hp_bars;
                 } else if entity.entity_type == EntityType::Boss && e.entity_type == EntityType::Npc
                 {
                     e.entity_type = EntityType::Boss;
@@ -310,12 +311,14 @@ impl EncounterState {
                     e.id = entity.id;
                     e.current_hp = hp;
                     e.max_hp = max_hp;
+                    e.hp_bars = entity.hp_bars;
                 }
             })
             .or_insert_with(|| {
                 let mut npc = encounter_entity_from_entity(&entity);
                 npc.current_hp = hp;
                 npc.max_hp = max_hp;
+                npc.hp_bars = entity.hp_bars;
                 npc
             });
 
@@ -772,42 +775,6 @@ impl EncounterState {
 
         self.encounter.last_combat_packet = timestamp;
 
-        // apply pseudo rdps contributions
-        for entry in damage_data.rdps_data.iter() {
-            // find entity that made this contribution and add to the skill for it.
-            let contributor_entity = if let Some(name) = entity_tracker
-                .character_id_to_name
-                .get(&entry.source_character_id)
-            {
-                self.encounter.entities.get_mut(name)
-            } else {
-                self.encounter
-                    .entities
-                    .values_mut()
-                    .find(|entity| entity.character_id == entry.source_character_id)
-            };
-            if let Some(contributor_entity) = contributor_entity {
-                if let Some(contributor_skill) = contributor_entity.skills.get_mut(&entry.skill_id)
-                {
-                    *contributor_skill
-                        .rdps_contributed
-                        .entry(entry.rdps_type)
-                        .or_default() += entry.value;
-                } else if let Some(skill_data) = SKILL_DATA.get(&entry.skill_id)
-                    && let Some(skill_name) = skill_data.name.clone()
-                    && let Some(contributor_skill) = contributor_entity
-                        .skills
-                        .values_mut()
-                        .find(|s| s.name == skill_name)
-                {
-                    *contributor_skill
-                        .rdps_contributed
-                        .entry(entry.rdps_type)
-                        .or_default() += entry.value;
-                }
-            }
-        }
-
         let [Some(source_entity), Some(target_entity)] = self
             .encounter
             .entities
@@ -853,25 +820,6 @@ impl EncounterState {
         skill.last_timestamp = timestamp;
 
         source_entity.damage_stats.damage_dealt += damage;
-
-        // apply pseudo rdps damage
-        let mut buffed = 0_i64;
-        for entry in damage_data.rdps_data {
-            *skill
-                .rdps_received
-                .entry(entry.rdps_type)
-                .or_default()
-                .entry(entry.skill_id)
-                .or_default() += entry.value;
-            if matches!(entry.rdps_type, 1 | 3 | 5) {
-                buffed += entry.value;
-            }
-        }
-
-        source_entity.damage_stats.buffed_damage += buffed;
-        source_entity.damage_stats.unbuffed_damage =
-            source_entity.damage_stats.damage_dealt - source_entity.damage_stats.buffed_damage;
-        skill_hit.unbuffed_damage = damage - buffed;
 
         if is_hyper_awakening {
             source_entity.damage_stats.hyper_awakening_damage += damage;
@@ -1167,6 +1115,73 @@ impl EncounterState {
                 skill_hit,
                 skill_summon_sources,
             );
+        }
+    }
+
+
+    pub fn on_support_combat_analyzer_data(
+        &mut self,
+        events: Vec<SupportCombatAnalyzerEvent>,
+        entity_tracker: &EntityTracker,
+    ) {
+        for event in events {
+            // find the source entity by source_id
+            let source_name = if let Some(entity) = entity_tracker.entities.get(&event.source_id) {
+                entity.name.clone()
+            } else {
+                continue;
+            };
+
+            // find the support (contributor) entity by support_character_id
+            let contributor_name = if let Some(name) = entity_tracker
+                .character_id_to_name
+                .get(&event.support_character_id)
+            {
+                name.clone()
+            } else if let Some(entity) = self
+                .encounter
+                .entities
+                .values()
+                .find(|e| e.character_id == event.support_character_id)
+            {
+                entity.name.clone()
+            } else {
+                continue;
+            };
+
+            // add rdps_contributed to the support's skill
+            if let Some(contributor_entity) = self.encounter.entities.get_mut(&contributor_name) {
+                if let Some(contributor_skill) =
+                    contributor_entity.skills.get_mut(&event.skill_id)
+                {
+                    *contributor_skill
+                        .rdps_contributed
+                        .entry(event.event_type)
+                        .or_default() += event.value;
+                } else if let Some(skill_data) = SKILL_DATA.get(&event.skill_id)
+                    && let Some(skill_name) = skill_data.name.clone()
+                    && let Some(contributor_skill) = contributor_entity
+                        .skills
+                        .values_mut()
+                        .find(|s| s.name == skill_name)
+                {
+                    *contributor_skill
+                        .rdps_contributed
+                        .entry(event.event_type)
+                        .or_default() += event.value;
+                }
+            }
+
+            // only track at entity level, can't reliably attribute to a specific skill
+            if let Some(source_entity) = self.encounter.entities.get_mut(&source_name) {
+                if matches!(event.event_type, 1 | 3 | 5) {
+                    source_entity.damage_stats.buffed_damage += event.value;
+                }
+                source_entity.damage_stats.unbuffed_damage = source_entity
+                    .damage_stats
+                    .damage_dealt
+                    - source_entity.damage_stats.buffed_damage;
+            }
         }
     }
 

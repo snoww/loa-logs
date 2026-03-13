@@ -10,7 +10,11 @@
 
   let { entity, enc, width }: { entity: Entity; enc: EncounterState; width: number } = $props();
 
-  let state = $derived(new EntityState(entity, enc));
+  let state = new EntityState(entity, enc);
+  $effect(() => {
+    state.entity = entity;
+    state.encounter = enc;
+  });
 
   let tweenedValue = new Tween(width, {
     duration: 400,
