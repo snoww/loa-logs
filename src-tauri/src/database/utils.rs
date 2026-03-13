@@ -397,16 +397,17 @@ pub fn update_entity_stats(
                 calculate_average_dps(player_log, fight_start_sec, fight_end_sec, intermission);
         }
 
-        let mut buffed_damage = 0;
-        for skill in entity.skills.values() {
-            for (rdps_type, entry) in skill.rdps_received.iter() {
-                if matches!(*rdps_type, 1 | 3 | 5) {
-                    buffed_damage += entry.values().sum::<i64>();
-                }
-            }
-        }
-
-        let unbuffed_damage = entity.damage_stats.damage_dealt - buffed_damage;
+        // let mut buffed_damage = 0;
+        // for skill in entity.skills.values() {
+        //     for (rdps_type, entry) in skill.rdps_received.iter() {
+        //         if matches!(*rdps_type, 1 | 3 | 5) {
+        //             buffed_damage += entry.values().sum::<i64>();
+        //         }
+        //     }
+        // }
+        //
+        // let unbuffed_damage = entity.damage_stats.damage_dealt - buffed_damage;
+        let unbuffed_damage = entity.damage_stats.damage_dealt - entity.damage_stats.buffed_damage;
         let unbuffed_dps = unbuffed_damage / duration_seconds;
         entity.damage_stats.unbuffed_damage = unbuffed_damage;
         entity.damage_stats.unbuffed_dps = unbuffed_dps;

@@ -583,7 +583,7 @@
 {/snippet}
 
 {#snippet unbuffedDamage(state: SkillState)}
-  {#if state.skill.special}
+  {#if state.skill.special || !Object.keys(state.skill.rdpsReceived).length}
     -
   {:else}
     {@render damageValue(state.skillUnbuffedDamageString)}
@@ -604,7 +604,7 @@
 {/snippet}
 
 {#snippet unbuffedDps(state: SkillState)}
-  {#if state.skill.special}
+  {#if state.skill.special || !Object.keys(state.skill.rdpsReceived).length}
     -
   {:else}
     {@render damageValue(state.skillUnbuffedDpsString)}

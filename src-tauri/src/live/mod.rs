@@ -18,7 +18,7 @@ use crate::live::status_tracker::{
     get_status_effect_value,
 };
 use crate::local::{LocalInfo, LocalPlayer, LocalPlayerRepository};
-use crate::models::{DamageData, EntityType, Identity, RdpsData, TripodIndex};
+use crate::models::{DamageData, EntityType, Identity, TripodIndex};
 use crate::settings::Settings;
 use crate::utils::get_class_from_id;
 use anyhow::Result;
@@ -477,20 +477,6 @@ pub fn start(args: StartArgs) -> Result<()> {
                             .borrow_mut()
                             .get_status_effects(&owner, &target_entity, local_character_id);
 
-                        let mut rdps_data = Vec::new();
-
-                        // if let Some(rdps) = event.skill_damage_event.rdps_data_conditional.rdps_data
-                        // {
-                        //     for i in 0..rdps.event_type.len() {
-                        //         rdps_data.push(RdpsData {
-                        //             rdps_type: rdps.event_type[i],
-                        //             value: rdps.value[i],
-                        //             source_character_id: rdps.source_character_id[i],
-                        //             skill_id: rdps.skill_id[i],
-                        //         });
-                        //     }
-                        // }
-
                         let damage_data = DamageData {
                             skill_id: pkt.skill_id,
                             skill_effect_id: pkt.skill_effect_id,
@@ -502,7 +488,6 @@ pub fn start(args: StartArgs) -> Result<()> {
                             damage_attribute: event.skill_damage_event.damage_attr,
                             damage_type: event.skill_damage_event.damage_type,
                             stagger: event.skill_damage_event.stagger_amount,
-                            rdps_data,
                         };
 
                         state.on_damage(
@@ -545,19 +530,6 @@ pub fn start(args: StartArgs) -> Result<()> {
                         let (se_on_source, se_on_target) = status_tracker
                             .borrow_mut()
                             .get_status_effects(&owner, &target_entity, local_character_id);
-                        let mut rdps_data = Vec::new();
-
-                        // if let Some(rdps) = event.rdps_data_conditional.rdps_data {
-                        //     for i in 0..rdps.event_type.len() {
-                        //         rdps_data.push(RdpsData {
-                        //             rdps_type: rdps.event_type[i],
-                        //             value: rdps.value[i],
-                        //             source_character_id: rdps.source_character_id[i],
-                        //             skill_id: rdps.skill_id[i],
-                        //         });
-                        //     }
-                        // }
-
                         let damage_data = DamageData {
                             skill_id: pkt.skill_id,
                             skill_effect_id: pkt.skill_effect_id.unwrap_or_default(),
@@ -569,7 +541,6 @@ pub fn start(args: StartArgs) -> Result<()> {
                             damage_attribute: event.damage_attr,
                             damage_type: event.damage_type,
                             stagger: event.stagger_amount,
-                            rdps_data,
                         };
                         state.on_damage(
                             &owner,
@@ -583,6 +554,18 @@ pub fn start(args: StartArgs) -> Result<()> {
                             now,
                         );
                     }
+                }
+            }
+            Pkt::SupportCombatAnalyzerDataNotify => {
+                if let Some(pkt) = parse_pkt(
+                    &data,
+                    PKTSupportCombatAnalyzerDataNotify::new,
+                    "PktSupportCombatAnalyzerDataNotify",
+                ) {
+                    state.on_support_combat_analyzer_data(
+                        pkt.events,
+                        &entity_tracker,
+                    );
                 }
             }
             Pkt::PartyInfo => {

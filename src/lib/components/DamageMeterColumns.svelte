@@ -62,7 +62,7 @@
     {
       show(enc) {
         if (!enc.curSettings.unbuffedDamage) return false;
-        return enc.anyUnbuffedDamage;
+        return enc.anyUnbuffedDamage || enc.anyRdpsContributions;
       },
       headerText: "uDMG",
       headerTooltip: "Unbuffed Damage Dealt (damage dealt excluding buffs or debuffs from the support)",
@@ -87,7 +87,7 @@
     {
       show(enc) {
         if (!enc.curSettings.unbuffedDps) return false;
-        return enc.anyUnbuffedDamage;
+        return enc.anyUnbuffedDamage || enc.anyRdpsContributions;
       },
       headerText: "uDPS",
       headerTooltip: "Unbuffed Damage per second (DPS excluding buffs or debuffs from the support)",
