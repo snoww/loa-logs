@@ -303,6 +303,7 @@ impl EncounterState {
                     e.id = entity.id;
                     e.current_hp = hp;
                     e.max_hp = max_hp;
+                    e.hp_bars = entity.hp_bars;
                 } else if entity.entity_type == EntityType::Boss && e.entity_type == EntityType::Npc
                 {
                     e.entity_type = EntityType::Boss;
@@ -310,12 +311,14 @@ impl EncounterState {
                     e.id = entity.id;
                     e.current_hp = hp;
                     e.max_hp = max_hp;
+                    e.hp_bars = entity.hp_bars;
                 }
             })
             .or_insert_with(|| {
                 let mut npc = encounter_entity_from_entity(&entity);
                 npc.current_hp = hp;
                 npc.max_hp = max_hp;
+                npc.hp_bars = entity.hp_bars;
                 npc
             });
 
@@ -871,7 +874,11 @@ impl EncounterState {
         source_entity.damage_stats.buffed_damage += buffed;
         source_entity.damage_stats.unbuffed_damage =
             source_entity.damage_stats.damage_dealt - source_entity.damage_stats.buffed_damage;
-        skill_hit.unbuffed_damage = damage - buffed;
+        skill_hit.unbuffed_damage = if buffed > 0 {
+            Some(damage - buffed)
+        } else {
+            None
+        };
 
         if is_hyper_awakening {
             source_entity.damage_stats.hyper_awakening_damage += damage;
@@ -1169,6 +1176,7 @@ impl EncounterState {
             );
         }
     }
+
 
     pub fn on_counterattack(&mut self, source_entity: &Entity) {
         let entity = self

@@ -26,6 +26,9 @@
   let totalCastUnbuffedDamage = $derived(
     cast ? cast.hits.map((hit) => hit.unbuffedDamage || 0).reduce((a, b) => a + b, 0) : 0
   );
+  let anyUdmg = $derived(
+    cast ? cast.hits.some((hit) => hit.unbuffedDamage && hit.unbuffedDamage !== hit.damage) : false
+  );
 
   // focused cast info
   let crits = $derived(cast ? cast.hits.filter((hit) => hit.crit).length : 0);
@@ -93,7 +96,7 @@
   </button>
 {/snippet}
 
-<Card class="mb-80 mt-4">
+<Card class="mt-4 mb-80">
   <div class="bg-black/10 px-3 py-2 font-medium">Skill Cast Details</div>
   <div class="overflow-x-scroll px-3 py-2">
     {#if focusedCast.skillId === 0}
@@ -103,13 +106,13 @@
         <!-- cast controls -->
         <div class="flex items-center gap-2">
           <button
-            class="bg-accent-500/70 hover:bg-accent-500/80 rounded-sm px-1 py-0.5"
+            class="rounded-sm bg-accent-500/70 px-1 py-0.5 hover:bg-accent-500/80"
             onclick={getHighestDamageCastIndex}
           >
             <QuickTooltip tooltip="Show Highest Damage Cast" placement="top">Max Cast</QuickTooltip>
           </button>
           <button
-            class="hover:text-accent-500/80 px-2"
+            class="px-2 hover:text-accent-500/80"
             onclick={() => {
               focusedCast.cast = Math.max(0, focusedCast.cast - 1);
             }}
@@ -119,7 +122,7 @@
             </QuickTooltip>
           </button>
           <button
-            class="hover:text-accent-500/80 px-2"
+            class="px-2 hover:text-accent-500/80"
             onclick={() => {
               focusedCast.cast = Math.min(skill!.skillCastLog.length - 1, focusedCast.cast + 1);
             }}
@@ -139,7 +142,7 @@
         </div>
 
         <!-- cast time -->
-        <div class="select-text font-mono text-xs">
+        <div class="font-mono text-xs select-text">
           {#if cast.last - cast.timestamp === 0}
             <!-- instant cast / instant hit / no hit -->
             {timestampToMinutesAndSeconds(cast.timestamp, false, true)}
@@ -210,9 +213,11 @@
                 <td class="w-16 font-semibold">
                   <QuickTooltip tooltip="Hit damage" class="w-fit">DMG</QuickTooltip>
                 </td>
-                <td class="w-16 font-semibold">
-                  <QuickTooltip tooltip="Hit unbuffed damage" class="w-fit">uDMG</QuickTooltip>
-                </td>
+                {#if anyUdmg}
+                  <td class="w-16 font-semibold">
+                    <QuickTooltip tooltip="Hit unbuffed damage" class="w-fit">uDMG</QuickTooltip>
+                  </td>
+                {/if}
                 <td class="font-semibold">
                   <QuickTooltip tooltip="Choose which buffs to view" class="flex w-fit items-center gap-1">
                     {@render changeBuffType("Party")}
@@ -277,15 +282,17 @@
                       {abbreviateNumber(hit.damage)}
                     </QuickTooltip>
                   </td>
-                  <td class="font-mono">
-                    {#if hit.unbuffedDamage}
-                      <QuickTooltip tooltip={hit.unbuffedDamage.toLocaleString()} class="w-fit">
-                        {abbreviateNumber(hit.unbuffedDamage)}
-                      </QuickTooltip>
-                    {:else}
-                      -
-                    {/if}
-                  </td>
+                  {#if anyUdmg}
+                    <td class="font-mono">
+                      {#if hit.unbuffedDamage && hit.unbuffedDamage !== hit.damage}
+                        <QuickTooltip tooltip={hit.unbuffedDamage.toLocaleString()} class="w-fit">
+                          {abbreviateNumber(hit.unbuffedDamage)}
+                        </QuickTooltip>
+                      {:else}
+                        -
+                      {/if}
+                    </td>
+                  {/if}
                   <td>
                     <div class="flex">
                       {#if allGroupedBuffs && allGroupedBuffs[i] && allGroupedBuffs[i].size > 0}
