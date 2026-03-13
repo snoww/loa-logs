@@ -1151,8 +1151,7 @@ impl EncounterState {
 
             // add rdps_contributed to the support's skill
             if let Some(contributor_entity) = self.encounter.entities.get_mut(&contributor_name) {
-                if let Some(contributor_skill) =
-                    contributor_entity.skills.get_mut(&event.skill_id)
+                if let Some(contributor_skill) = contributor_entity.skills.get_mut(&event.skill_id)
                 {
                     *contributor_skill
                         .rdps_contributed
@@ -1177,10 +1176,9 @@ impl EncounterState {
                 if matches!(event.event_type, 1 | 3 | 5) {
                     source_entity.damage_stats.buffed_damage += event.value;
                 }
-                source_entity.damage_stats.unbuffed_damage = source_entity
-                    .damage_stats
-                    .damage_dealt
-                    - source_entity.damage_stats.buffed_damage;
+                source_entity.damage_stats.unbuffed_damage =
+                    source_entity.damage_stats.damage_dealt
+                        - source_entity.damage_stats.buffed_damage;
             }
         }
     }
