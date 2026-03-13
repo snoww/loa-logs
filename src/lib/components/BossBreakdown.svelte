@@ -15,7 +15,11 @@
   }
 
   let { enc, boss, handleRightClick }: Props = $props();
-  let entityState = $derived(new EntityState(boss, enc));
+  let entityState = new EntityState(boss, enc);
+  $effect(() => {
+    entityState.entity = boss;
+    entityState.encounter = enc;
+  });
 </script>
 
 <table class="relative isolate w-full table-fixed">

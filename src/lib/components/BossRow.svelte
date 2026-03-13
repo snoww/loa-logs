@@ -18,7 +18,11 @@
   }
 
   let { enc, boss, width, index }: Props = $props();
-  let entityState = $derived(new EntityState(boss, enc));
+  let entityState = new EntityState(boss, enc);
+  $effect(() => {
+    entityState.entity = boss;
+    entityState.encounter = enc;
+  });
 
   const tweenedValue = new Tween(enc.live ? 0 : width, {
     duration: 400,

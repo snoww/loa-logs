@@ -35,7 +35,7 @@
   } from "$lib/api";
   import type { UnlistenFn } from "@tauri-apps/api/event";
 
-  let enc = $derived(new EncounterState(undefined, true));
+  let enc = new EncounterState(undefined, true);
   let time = $state(+Date.now());
   let unsubscribe: (() => void) | null = null;
   let pendingTimeouts: ReturnType<typeof setTimeout>[] = [];

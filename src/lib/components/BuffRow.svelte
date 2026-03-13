@@ -19,7 +19,11 @@
 
   let { enc, player, groupedSynergies, percentage }: Props = $props();
 
-  let entityState = $derived(new EntityState(player, enc));
+  let entityState = new EntityState(player, enc);
+  $effect(() => {
+    entityState.entity = player;
+    entityState.encounter = enc;
+  });
 
   let synergyPercentageDetails: Array<BuffDetails> = $derived(
     getSynergyPercentageDetailsSum(groupedSynergies, entityState)

@@ -102,7 +102,7 @@ pub struct SkillHit {
     pub timestamp: i64,
     pub damage: i64,
     #[serde(default)]
-    pub unbuffed_damage: i64,
+    pub unbuffed_damage: Option<i64>,
     pub crit: bool,
     pub back_attack: bool,
     pub front_attack: bool,

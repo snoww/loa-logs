@@ -17,7 +17,11 @@
   }
 
   let { player, enc, playerBuffs, percentage }: Props = $props();
-  let entityState = $derived(new EntityState(player, enc));
+  let entityState = new EntityState(player, enc);
+  $effect(() => {
+    entityState.entity = player;
+    entityState.encounter = enc;
+  });
 
   const tweenedValue = new Tween(enc.live ? 0 : percentage, {
     duration: 400,

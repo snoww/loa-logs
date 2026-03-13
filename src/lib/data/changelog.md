@@ -1,6 +1,6 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.40.0 - March 10th, 2026
+    v1.40.2 - March 13th, 2026
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
@@ -13,7 +13,14 @@
 - **Administrator** on Ratik
 - **Poont** on Gienah
 
-### NOTE: uDPS/bDPS is no longer available in meter. Smilegate changed how they deliver udps data and we no longer have access to that information. Workarounds are being explored.
+#### BUG FIXES AND IMPROVEMENTS
+
+- re-added udps/bdps
+  - udps will no longer be available for skill breakdowns, due to the way how udps data is delivered
+
+---
+
+### v1.40.0 - March 10th, 2026
 
 #### NEW FEATURES
 

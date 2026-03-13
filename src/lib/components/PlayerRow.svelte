@@ -23,7 +23,11 @@
 
   let { enc, entity, width, shadow = false }: Props = $props();
 
-  let entityState = $derived(new EntityState(entity, enc));
+  let entityState = new EntityState(entity, enc);
+  $effect(() => {
+    entityState.entity = entity;
+    entityState.encounter = enc;
+  });
   let hovering = $state(false);
 
   let tweenedValue = new Tween(enc.live ? 0 : width, {
