@@ -1,11 +1,11 @@
 {
-  "version": "v1.40.1",
-  "notes": "### v1.40.1 - March 10th, 2026\n\n#### P.S. If you see any of us in town or raid, feel free to drop an honor!\n\n- **Snowving** on Luterra\n- **Administrator** on Ratik\n- **Poont** on Giena\n\n### NOTE: uDPS/bDPS no longer works. smilegate changed how they deliver udps info, and it is no longer available.\n\n#### NEW FEATURES\n- updated meter for march patch\n\n#### BUG FIXES AND IMPROVEMENTS\n- recombined kazeros g2-1 and 2-2/3 into single encounter (the first difficulty remains separated)\n- added option to force-reupload uploaded logs (press ctrl+hover share button)\n",
-  "pub_date": "2026-03-11T17:24:29.305Z",
+  "version": "v1.40.2",
+  "notes": "### v1.40.2 - March 13th, 2026\n\n#### P.S. If you see any of us in town or raid, feel free to drop an honor!\n\n- **Snowving** on Luterra\n- **Administrator** on Ratik\n- **Poont** on Giena\n\n#### BUG FIXES AND IMPROVEMENTS\n- re-added udps/bdps\n  - udps will no longer be available for skill breakdowns, due to the way how udps data is delivered",
+  "pub_date": "2026-03-13T04:59:15.040Z",
   "platforms": {
     "windows-x86_64": {
-      "url": "https://github.com/snoww/loa-logs/releases/download/v1.40.1/LOA.Logs_1.40.1_x64-setup.exe",
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYldIQkV3WFBQS1IvMU10YWw4ci84eGlaM3FNY1NyVUhRNmdkQW9UdEVDVDh3YTRCbnBnNjBtTW5wTGszdHpkYzZEdHVvT25vVEx6MUx0SHhwdnNheFE0PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzczMjgxOTEwCWZpbGU6TE9BIExvZ3NfMS40MC4xX3g2NC1zZXR1cC5leGUKNXByWmQ3VzFOY2o3c3pmeFNyc0llamlDdHJSbzR6YWl5M2RROUNvdmRHUk96U2xGSHZFTDRwR2xjUFVPb0p3TFlTYW4zdUxhb3N2MGlBNE5SdldXREE9PQo="
+      "url": "https://github.com/snoww/loa-logs/releases/download/v1.40.2/LOA.Logs_1.40.2_x64-setup.exe",
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlJaYjMxZDN3MnVIZGt1UE5JM1JPME96bTFxaEhiaHBoalpVdXZLWTFWNE8rVTdKTWJaZFRaNkkrSVN4STVhd0w4a09SMy85cHNaQmtWK0VXVXQxWlFRPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzczMzc3NjkzCWZpbGU6TE9BIExvZ3NfMS40MC4yX3g2NC1zZXR1cC5leGUKNHdnU3R2dldzV2E2ZERUSUNrREJvWVNSMDdjVzFsZmI3V0NFeVJ3NmdGVjY3MWk4TmdnTFlXMEJ1SzNEM3hGdlM1TmV6dnZVMW1RRGRualpwWG5qQXc9PQo="
     }
   }
 }
