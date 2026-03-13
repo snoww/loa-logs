@@ -1,11 +1,11 @@
 {
-  "version": "v1.39.1",
-  "notes": "### v1.39.1 - February 6th, 2026\n\n#### P.S. If you see any of us in town or raid, feel free to drop an honor!\n\n- **Snowving** on Luterra\n- **Administrator** on Ratik\n- **Poont** on Giena\n\n#### BUG FIXES AND IMPROVEMENTS\n- fixed guardianknight transformation skills not being tracked separately\n- fixed transformation scouter x skill's cast not being counted properly\n  - fixed several classes identity skills' casts not being counted  ",
-  "pub_date": "2026-02-10T04:43:47.620Z",
+  "version": "v1.40.1",
+  "notes": "### v1.40.1 - March 10th, 2026\n\n#### P.S. If you see any of us in town or raid, feel free to drop an honor!\n\n- **Snowving** on Luterra\n- **Administrator** on Ratik\n- **Poont** on Giena\n\n### NOTE: uDPS/bDPS no longer works. smilegate changed how they deliver udps info, and it is no longer available.\n\n#### NEW FEATURES\n- updated meter for march patch\n\n#### BUG FIXES AND IMPROVEMENTS\n- recombined kazeros g2-1 and 2-2/3 into single encounter (the first difficulty remains separated)\n- added option to force-reupload uploaded logs (press ctrl+hover share button)\n",
+  "pub_date": "2026-03-11T17:24:29.305Z",
   "platforms": {
     "windows-x86_64": {
-      "url": "https://github.com/snoww/loa-logs/releases/download/v1.39.1/LOA.Logs_1.39.1_x64-setup.exe",
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmUxcktwd2laMmIyUGF6MU1aQmhQNHdENHUzbW5PeXc4WSs3RmpESGRsd0p3V2ptT2xnYWNoMHROM01JUzNVTmZ5K24xWXhGdmVQaWtDRVhIdjRnWEFjPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzcwNjk4Mzk0CWZpbGU6TE9BIExvZ3NfMS4zOS4xX3g2NC1zZXR1cC5leGUKQzRIQ3V4MjE4VzF4QkN4S3UyZDk4eWtrVW0waGx2dUlUaFVaZ3Bxa3pFdVVjQ2t6NzN3VlJ1NVNid0xFbFYyN0VtVDc3TzRFanFOMk13YkE5bXBWQUE9PQo="
+      "url": "https://github.com/snoww/loa-logs/releases/download/v1.40.1/LOA.Logs_1.40.1_x64-setup.exe",
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYldIQkV3WFBQS1IvMU10YWw4ci84eGlaM3FNY1NyVUhRNmdkQW9UdEVDVDh3YTRCbnBnNjBtTW5wTGszdHpkYzZEdHVvT25vVEx6MUx0SHhwdnNheFE0PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzczMjgxOTEwCWZpbGU6TE9BIExvZ3NfMS40MC4xX3g2NC1zZXR1cC5leGUKNXByWmQ3VzFOY2o3c3pmeFNyc0llamlDdHJSbzR6YWl5M2RROUNvdmRHUk96U2xGSHZFTDRwR2xjUFVPb0p3TFlTYW4zdUxhb3N2MGlBNE5SdldXREE9PQo="
     }
   }
 }

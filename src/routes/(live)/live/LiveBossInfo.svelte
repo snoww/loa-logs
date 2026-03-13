@@ -13,7 +13,9 @@
   let bossHp = $derived(boss.currentHp < 0 ? 0 : boss.currentHp);
   let bossShield = $derived(boss.currentShield);
   let bossTotalBars = $derived.by(() => {
-    if (Object.hasOwn(bossHpMap, boss.name) && settings.app.meter.bossHpBar) {
+    if (boss.hpBars) {
+      return boss.hpBars;
+    } else if (Object.hasOwn(bossHpMap, boss.name) && settings.app.meter.bossHpBar) {
       return getBossHpBars(boss.name, boss.maxHp);
     } else {
       return 1;
@@ -102,7 +104,7 @@
   });
 </script>
 
-<div class="relative isolate h-7 select-none border-y border-black bg-neutral-900/70">
+<div class="relative isolate h-7 border-y border-black bg-neutral-900/70 select-none">
   <!-- hp bar background -->
   {#if bossHp}
     {#if bossShield}
@@ -111,13 +113,13 @@
       <!-- current bar color -->
       <div
         class="absolute -z-10 h-full"
-        style="background-color: rgb(from {bossBarColor[0]} r g b / {0.80}); width: {tweenBossHpBar.current}%;"
+        style="background-color: rgb(from {bossBarColor[0]} r g b / {0.8}); width: {tweenBossHpBar.current}%;"
       ></div>
       {#if bossTotalBars > 1 && bossCurrentBars > 1}
         <!-- next bar color (i.e. background bar) -->
         <div
           class="absolute -z-20 h-full w-full"
-          style="background-color: rgb(from {bossBarColor[1]} r g b / {0.80});"
+          style="background-color: rgb(from {bossBarColor[1]} r g b / {0.8});"
         ></div>
       {/if}
       {#if settings.app.meter.splitBossHpBar}

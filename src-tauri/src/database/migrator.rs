@@ -48,6 +48,8 @@ impl<'a> Migrator<'a> {
 
         migration_pseudo_rdps(&tx)?;
 
+        migration_boss_hp(&tx)?;
+
         stmt.finalize()?;
         info!("finished setting up database");
 
@@ -321,6 +323,19 @@ pub fn migration_pseudo_rdps(tx: &Transaction) -> Result<(), rusqlite::Error> {
         )?;
         tx.execute(
             "ALTER TABLE entity ADD COLUMN unbuffed_dps INTEGER DEFAULT 0",
+            [],
+        )?;
+    }
+
+    stmt.finalize()
+}
+
+pub fn migration_boss_hp(tx: &Transaction) -> Result<(), rusqlite::Error> {
+    let mut stmt = tx.prepare("SELECT 1 FROM pragma_table_info(?) WHERE name=?")?;
+    if !stmt.exists(["entity", "hp_bars"])? {
+        info!("adding boss hp column");
+        tx.execute(
+            "ALTER TABLE entity ADD COLUMN hp_bars INTEGER DEFAULT NULL",
             [],
         )?;
     }

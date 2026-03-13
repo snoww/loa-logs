@@ -1,6 +1,6 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.39.1 - February 6th, 2026
+    v1.40.0 - March 10th, 2026
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
@@ -13,25 +13,17 @@
 - **Administrator** on Ratik
 - **Poont** on Gienah
 
-#### BUG FIXES AND IMPROVEMENTS
-
-- fixed guardianknight transformation skills not being tracked separately
-- fixed transformation scouter x skill's cast not being counted properly
-  - fixed several classes identity skills' casts not being counted
-
----
-
-### v1.39.0 - February 4th, 2026
+### NOTE: uDPS/bDPS is no longer available in meter. Smilegate changed how they deliver udps data and we no longer have access to that information. Workarounds are being explored.
 
 #### NEW FEATURES
 
-- updated meter for february patch
-- added new class guardianknight
+- updated meter for march patch
 
 #### BUG FIXES AND IMPROVEMENTS
 
-- added boss hp line to skill cast chart
+- recombined kazeros g2-1 and 2-2/3 into single encounter (the first difficulty remains separated)
+- added option to force-reupload uploaded logs (press ctrl+hover share button)
 
 ---
 
-**Older Changelogs**: [link](https://github.com/snoww/loa-logs/releases/tag/v1.38.5)
+**Older Changelogs**: [link](https://github.com/snoww/loa-logs/releases/tag/v1.39.1)

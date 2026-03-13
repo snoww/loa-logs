@@ -1,10 +1,10 @@
-use std::net::SocketAddr;
 use std::collections::BTreeSet;
+use std::net::SocketAddr;
 
 use anyhow::{Result, anyhow};
 use log::error;
 use nineveh_formats::ipc::{
-    IPCClientToServerMessage, IPCServerToClientMessage, PacketSubscription, PacketFilter
+    IPCClientToServerMessage, IPCServerToClientMessage, PacketFilter, PacketSubscription,
 };
 use tokio::{
     sync::mpsc::{UnboundedReceiver, UnboundedSender},
@@ -30,7 +30,7 @@ pub async fn connect_to_nineveh(
     let handshake_msg = IPCClientToServerMessage::Handshake {
         subscription: PacketSubscription {
             notify: PacketFilter::ALL,
-            modify: PacketFilter::Include(BTreeSet::from([0xC101, 0x2B57]))
+            modify: PacketFilter::Include(BTreeSet::from([0xE66E, 0x4CB8])),
         },
     };
     nineveh_formats::io::write(&mut write_half, &handshake_msg).await?;

@@ -307,6 +307,7 @@ pub fn map_entity(row: &rusqlite::Row, version: &Version) -> rusqlite::Result<En
         skill_stats,
         entity_type: EntityType::from_str(entity_type.as_str()).unwrap_or_default(),
         npc_id: row.get("npc_id")?,
+        hp_bars: row.get("hp_bars").unwrap_or_default(),
         character_id: row.get("character_id").unwrap_or_default(),
         engraving_data,
         spec,

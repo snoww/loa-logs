@@ -15,6 +15,14 @@
 
   let sync = $derived(encounter.sync);
 
+  let showReupload = $state(false);
+
+  async function forceReupload() {
+    showReupload = false;
+    sync = undefined;
+    await upload();
+  }
+
   async function upload() {
     if (!settings.sync.validToken) {
       addToast(uploadTokenError);
@@ -36,7 +44,7 @@
 
 <div class="flex border-l border-neutral-900/80 pl-1">
   <button
-    class="focus:outline-hidden active:bg-accent-500/80 text-nowrap rounded-lg px-2 py-1 text-sm transition hover:bg-neutral-800/40"
+    class="rounded-lg px-2 py-1 text-sm text-nowrap transition hover:bg-neutral-800/40 focus:outline-hidden active:bg-accent-500/80"
     onclick={() => takeScreenshot(screenshotDiv)}
   >
     <QuickTooltip tooltip="Take screenshot and copy to clipboard" placement="top" class="flex items-center gap-1">
@@ -46,20 +54,35 @@
   </button>
   {#if encounter && encounter.cleared && encounter.difficulty}
     {#if sync}
-      <a
-        href={UWUOWO_URL + "/logs/" + sync}
-        target="_blank"
-        class="focus:outline-hidden active:bg-accent-500/80 text-nowrap rounded-lg px-2 py-0.5 text-sm transition hover:bg-neutral-800/40"
-        onclick={() => {}}
-      >
-        <QuickTooltip tooltip="Open log in browser" placement="top" class="flex items-center gap-1">
-          <IconCloudYes class="size-5.5" />
-          Share
-        </QuickTooltip>
-      </a>
+      {#if showReupload}
+        <button
+          class="rounded-lg px-2 py-0.5 text-sm text-nowrap transition hover:bg-neutral-800/40 focus:outline-hidden active:bg-accent-500/80"
+          onclick={() => forceReupload()}
+          onmouseleave={() => (showReupload = false)}
+        >
+          <QuickTooltip tooltip="Re-upload log" placement="top" class="flex items-center gap-1">
+            <IconCloudUpload class="size-5" />
+            Reupload
+          </QuickTooltip>
+        </button>
+      {:else}
+        <a
+          href={UWUOWO_URL + "/logs/" + sync}
+          target="_blank"
+          class="rounded-lg px-2 py-0.5 text-sm text-nowrap transition hover:bg-neutral-800/40 focus:outline-hidden active:bg-accent-500/80"
+          onpointermove={(e) => {
+            if (e.ctrlKey) showReupload = true;
+          }}
+        >
+          <QuickTooltip tooltip="Open log in browser" placement="top" class="flex items-center gap-1">
+            <IconCloudYes class="size-5.5" />
+            Share
+          </QuickTooltip>
+        </a>
+      {/if}
     {:else if uploading}
       <button
-        class="focus:outline-hidden flex items-center gap-1 text-nowrap rounded-lg px-2 py-0.5 text-sm transition"
+        class="flex items-center gap-1 rounded-lg px-2 py-0.5 text-sm text-nowrap transition focus:outline-hidden"
         disabled
       >
         <IconRefresh class="animate-[spin_1s_linear_infinite_reverse]" />
@@ -67,7 +90,7 @@
       </button>
     {:else}
       <button
-        class="focus:outline-hidden active:bg-accent-500/80 text-nowrap rounded-lg px-2 py-0.5 text-sm transition hover:bg-neutral-800/40"
+        class="rounded-lg px-2 py-0.5 text-sm text-nowrap transition hover:bg-neutral-800/40 focus:outline-hidden active:bg-accent-500/80"
         onclick={() => upload()}
       >
         <QuickTooltip tooltip="Upload log" placement="top" class="flex items-center gap-1">
