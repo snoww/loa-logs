@@ -18,6 +18,7 @@ mod setup;
 mod shell;
 mod ui;
 mod utils;
+mod services;
 
 use crate::app::autostart::AutoLaunchManager;
 use crate::constants::*;
