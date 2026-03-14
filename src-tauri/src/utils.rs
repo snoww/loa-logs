@@ -251,18 +251,16 @@ pub fn get_player_spec(
             }
         }
         "Destroyer" => {
-            // chain strike or vortex gravity or basic attack is highest dps
-            if player.skills.contains_key(&18260)
-                || player.skills.contains_key(&18011)
-                || player
-                    .skills
-                    .values()
-                    .max_by(|a, b| a.total_damage.cmp(&b.total_damage))
-                    .is_some_and(|s| s.name == "Basic Attack")
+            // perfect swing is highest dps or supernova is highest dps
+            if player
+                .skills
+                .values()
+                .max_by(|a, b| a.total_damage.cmp(&b.total_damage))
+                .is_some_and(|s| s.id == 18170 || s.id == 18270)
             {
-                "Gravity Training"
-            } else {
                 "Rage Hammer"
+            } else {
+                "Gravity Training"
             }
         }
         "Gunlancer" => {
@@ -347,9 +345,18 @@ pub fn get_player_spec(
         }
         "Bard" => {
             // dps if tempest skill has damage
-            if (player.skills.get(&21147).is_some_and(|s| s.total_damage > 0)
-                || player.skills.get(&21148).is_some_and(|s| s.total_damage > 0)
-                || player.skills.get(&21149).is_some_and(|s| s.total_damage > 0))
+            if (player
+                .skills
+                .get(&21147)
+                .is_some_and(|s| s.total_damage > 0)
+                || player
+                    .skills
+                    .get(&21148)
+                    .is_some_and(|s| s.total_damage > 0)
+                || player
+                    .skills
+                    .get(&21149)
+                    .is_some_and(|s| s.total_damage > 0))
             {
                 return "True Courage".to_string();
             } else if player
@@ -498,7 +505,10 @@ pub fn get_player_spec(
         }
         "Artist" => {
             // dps if has shattering strike damage or rising moon damage
-            if player.skills.get(&31060).is_some_and(|s| s.total_damage > 0)
+            if player
+                .skills
+                .get(&31060)
+                .is_some_and(|s| s.total_damage > 0)
                 || player
                     .skills
                     .get(&31145)
@@ -537,7 +547,7 @@ pub fn get_player_spec(
             } else {
                 "Hellfire Successor"
             }
-        },
+        }
         _ => "Unknown",
     }
     .to_string()

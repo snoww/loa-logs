@@ -206,9 +206,9 @@ impl EncounterState {
     }
 
     pub fn on_transit(&mut self, zone_id: u32) {
-        // do not reset on kazeros g2
-        if matches!(zone_id, 37544 | 37545 | 37546) && self.raid_difficulty != "The First" {
-            if zone_id == 37545 {
+        if zone_id == 37545 {
+            // do not reset on kazeros g2-2 for nm/hm
+            if self.raid_difficulty != "The First" {
                 let now = Utc::now().timestamp_millis();
                 self.intermission_start = Some(now);
                 info!("starting intermission");
@@ -227,8 +227,9 @@ impl EncounterState {
                         death.dead_for = Some(now - death.death_time);
                     }
                 }
+            } else {
+                self.on_phase_transition(2);
             }
-
             return;
         }
 
