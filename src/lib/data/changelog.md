@@ -1,6 +1,6 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.40.2 - March 13th, 2026
+    v1.40.3 - March 14th, 2026
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
@@ -12,6 +12,16 @@
 - **Snowving** on Luterra
 - **Administrator** on Ratik
 - **Poont** on Gienah
+
+#### BUG FIXES AND IMPROVEMENTS
+
+- fixed boss hp percentage option
+- fixed rage hammer destroyer classification
+- fixed kazeros 2-1 logs not being saved for tfm
+
+---
+
+### v1.40.2 - March 13th, 2026
 
 #### BUG FIXES AND IMPROVEMENTS
 
