@@ -128,6 +128,7 @@ impl EncounterState {
                     id: entity.id,
                     character_id: entity.character_id,
                     npc_id: entity.npc_id,
+                    hp_bars: entity.hp_bars,
                     class: entity.class,
                     class_id: entity.class_id,
                     entity_type: entity.entity_type,
@@ -1080,6 +1081,7 @@ impl EncounterState {
                 .clone_from(&target_entity.name);
             target_entity.id = dmg_target_entity.id;
             target_entity.npc_id = dmg_target_entity.npc_id;
+            target_entity.hp_bars = dmg_target_entity.hp_bars;
 
             let log = self
                 .boss_hp_log

@@ -562,10 +562,7 @@ pub fn start(args: StartArgs) -> Result<()> {
                     PKTSupportCombatAnalyzerDataNotify::new,
                     "PktSupportCombatAnalyzerDataNotify",
                 ) {
-                    state.on_support_combat_analyzer_data(
-                        pkt.events,
-                        &entity_tracker,
-                    );
+                    state.on_support_combat_analyzer_data(pkt.events, &entity_tracker);
                 }
             }
             Pkt::PartyInfo => {
