@@ -4,21 +4,20 @@ use tauri::AppHandle;
 use tauri_plugin_opener::OpenerExt;
 use tauri_plugin_shell::ShellExt;
 
-use crate::{
-    constants::{GAME_EXE_NAME, STEAM_GAME_URL},
-    context::AppContext,
-};
+use std::path::PathBuf;
+
+use crate::constants::{GAME_EXE_NAME, STEAM_GAME_URL};
 
 #[derive(Debug)]
-pub struct ShellManager(AppHandle, AppContext);
+pub struct ShellManager(AppHandle, PathBuf);
 
 impl ShellManager {
-    pub fn new(shell: AppHandle, context: AppContext) -> Self {
-        Self(shell, context)
+    pub fn new(shell: AppHandle, database_path: PathBuf) -> Self {
+        Self(shell, database_path)
     }
 
     pub fn open_db_path(&self) {
-        let path = &self.1.database_path.parent().unwrap();
+        let path = &self.1.parent().unwrap();
         info!("open_db_path: {}", path.display());
 
         if let Err(err) = self

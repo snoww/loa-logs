@@ -33,7 +33,9 @@ use nineveh_formats::ipc::{
 use std::cell::RefCell;
 use std::rc::Rc;
 use std::time::{Duration, Instant};
-use tauri::{AppHandle, Emitter};
+use tauri::{AppHandle, Emitter, Manager};
+
+use crate::context::AppContext;
 
 pub struct StartArgs {
     pub app: AppHandle,
@@ -42,7 +44,6 @@ pub struct StartArgs {
     pub local_info: LocalInfo,
     pub local_player_repository: LocalPlayerRepository,
     pub heartbeat_api: HeartBeatApi,
-    pub region_file_path: String,
 }
 
 pub fn start(args: StartArgs) -> Result<()> {
@@ -54,7 +55,6 @@ pub fn start(args: StartArgs) -> Result<()> {
         mut local_info,
         local_player_repository,
         mut heartbeat_api,
-        region_file_path,
     } = args;
     let manager = EventManager::new(app.clone());
     let id_tracker = Rc::new(RefCell::new(IdTracker::new()));
@@ -88,7 +88,7 @@ pub fn start(args: StartArgs) -> Result<()> {
         info!("no settings found, using defaults");
     }
 
-    get_and_set_region(&region_file_path, &mut state);
+    get_and_set_region(&app, &mut state);
 
     let mut party_freeze = false;
     let mut party_cache: Option<Vec<Vec<String>>> = None;
@@ -213,7 +213,7 @@ pub fn start(args: StartArgs) -> Result<()> {
                     party_cache = None;
                     let entity = entity_tracker.init_env(pkt);
                     state.on_init_env(entity);
-                    get_and_set_region(&region_file_path, &mut state);
+                    get_and_set_region(&app, &mut state);
                     info!("region: {:?}", state.region);
                 }
             }
@@ -1094,15 +1094,11 @@ fn on_shield_change(
     state.on_shield_used(&source, &target, status_effect.status_effect_id, change);
 }
 
-fn get_and_set_region(path: &str, state: &mut EncounterState) {
-    match std::fs::read_to_string(path) {
-        Ok(region) => {
-            state.region = Some(region.clone());
-            state.encounter.region = Some(region);
-        }
-        Err(_) => {
-            // warn!("failed to read region file. {}", e);
-        }
+fn get_and_set_region(app: &AppHandle, state: &mut EncounterState) {
+    let ctx = app.state::<AppContext>();
+    if let Ok(region) = ctx.region.read() {
+        state.region = region.clone();
+        state.encounter.region = region.clone();
     }
 }
 

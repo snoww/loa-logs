@@ -4,12 +4,15 @@ use rfd::{MessageButtons, MessageDialog, MessageLevel};
 use std::net::{IpAddr, Ipv4Addr, SocketAddr};
 use std::sync::Arc;
 use sysinfo::{ProcessRefreshKind, RefreshKind, System};
-use tauri::{AppHandle, Emitter, Listener};
+use tauri::{AppHandle, Emitter, Listener, Manager};
 use tokio::sync::Mutex;
 use tokio::{
     sync::mpsc::{UnboundedReceiver, UnboundedSender},
     task::JoinHandle,
 };
+
+use crate::context::AppContext;
+use crate::data::get_region_from_ip;
 
 mod ipc;
 
@@ -86,6 +89,13 @@ async fn handle_nineveh_ipc_messages(
                         active_connections.extend(connections.iter().cloned());
                     },
                     IPCServerToClientMessage::NewConnection { info } => {
+                        if let Some(region) = get_region_from_ip(info.remote_addr) {
+                            let ctx = app.state::<AppContext>();
+                            if let Ok(mut r) = ctx.region.write() {
+                                log::info!("region set to {} from IP {}", region, info.remote_addr);
+                                *r = Some(region);
+                            }
+                        }
                         let mut active_connections = active_connections.lock().await;
                         active_connections.push(info.clone());
                     },
@@ -221,5 +231,8 @@ pub async fn setup_nineveh(app: AppHandle) -> Result<NinevehIPCPair> {
     }
 
     // no existing server or froze, tell user to spawn one
-    error_and_exit("Backend Not Found", "Could not connect to a running `nineveh` instance. Make sure that the Nineveh binary is running and responsive.")
+    error_and_exit(
+        "Backend Not Found",
+        "Could not connect to a running `nineveh` instance. Make sure that the Nineveh binary is running and responsive.",
+    )
 }

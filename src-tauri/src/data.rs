@@ -1,6 +1,9 @@
 use anyhow::{Context, Result, anyhow};
 use hashbrown::{HashMap, HashSet};
+use ipnet::Ipv4Net;
 use serde::de::DeserializeOwned;
+use std::net::Ipv4Addr;
+use std::str::FromStr;
 use std::{fs, ops::Deref, path::Path, sync::OnceLock};
 
 use crate::models::*;
@@ -19,6 +22,7 @@ pub static ESTHER_DATA: OnceLockWrapper<Vec<Esther>> = OnceLockWrapper::new();
 pub static NPC_DATA: OnceLockWrapper<HashMap<u32, Npc>> = OnceLockWrapper::new();
 pub static GEM_SKILL_MAP: OnceLockWrapper<HashMap<u32, Vec<u32>>> = OnceLockWrapper::new();
 pub static RAID_MAP: OnceLockWrapper<HashMap<String, String>> = OnceLockWrapper::new();
+pub static IP_RANGES: OnceLockWrapper<Vec<IpRangeEntry>> = OnceLockWrapper::new();
 
 pub struct OnceLockWrapper<T>(OnceLock<T>);
 
@@ -89,7 +93,53 @@ impl AssetPreloader {
             310501, // artist moonfall
             480018, // valkyrie release light
         ]))?;
+        IP_RANGES.set({
+            let raw: AwsIpRanges = load(&resource_dir.join("meter-data/ip-ranges.json"))?;
+            raw.prefixes
+                .into_iter()
+                .filter(|p| {
+                    p.region == "us-east-1" || p.region == "us-west-2" || p.region == "eu-central-1"
+                })
+                .filter_map(|p| {
+                    Ipv4Net::from_str(&p.ip_prefix)
+                        .ok()
+                        .map(|net| IpRangeEntry {
+                            net,
+                            region: p.region,
+                        })
+                })
+                .collect()
+        })?;
 
         Ok(Self)
     }
+}
+
+#[derive(Debug, serde::Deserialize)]
+struct AwsIpRanges {
+    prefixes: Vec<AwsPrefix>,
+}
+
+#[derive(Debug, serde::Deserialize)]
+struct AwsPrefix {
+    ip_prefix: String,
+    region: String,
+}
+
+pub struct IpRangeEntry {
+    pub net: Ipv4Net,
+    pub region: String,
+}
+
+pub fn get_region_from_ip(ip: Ipv4Addr) -> Option<String> {
+    for entry in IP_RANGES.iter() {
+        if entry.net.contains(&ip) {
+            return match entry.region.as_str() {
+                "us-east-1" | "us-west-2" => Some("NA".to_string()),
+                "eu-central-1" => Some("EUC".to_string()),
+                _ => None,
+            };
+        }
+    }
+    None
 }

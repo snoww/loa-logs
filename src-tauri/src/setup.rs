@@ -25,7 +25,7 @@ pub fn setup(app: &mut App) -> Result<(), Box<dyn Error>> {
     let app_handle = app.handle();
 
     let context = app.state::<AppContext>();
-    let shell_manger = ShellManager::new(app_handle.clone(), context.inner().clone());
+    let shell_manger = ShellManager::new(app_handle.clone(), context.database_path.clone());
     let settings_manager = app.state::<SettingsManager>();
 
     let settings = settings_manager.read().expect("Could not read settings");
@@ -78,8 +78,6 @@ pub fn setup(app: &mut App) -> Result<(), Box<dyn Error>> {
             local_info.client_id.clone(),
             context.version.clone(),
         ));
-        let region_file_path = context.region_file_path.display().to_string();
-
         let args = StartArgs {
             app: app_handle,
             ipc,
@@ -87,7 +85,6 @@ pub fn setup(app: &mut App) -> Result<(), Box<dyn Error>> {
             local_info,
             local_player_repository,
             heartbeat_api,
-            region_file_path,
         };
 
         tokio::task::spawn_blocking(move || {

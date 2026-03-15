@@ -46,6 +46,7 @@ strum_macros = "0.27.2"
 semver = "1.0.27"
 dirs = "6.0.0"
 sha2 = "0.10.9"
+ipnet = "2.11.0"
 
 nineveh-formats = { git = "ssh://git@github.com/molenzwiebel/nineveh", features = ["io"], optional = true }
 meter-defs = { git = "ssh://git@github.com/molenzwiebel/nineveh", default-features = false, optional = true }

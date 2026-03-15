@@ -14,7 +14,6 @@ pub const DATABASE_PATH: &str = "encounters.db";
 pub const MIGRATIONS_PATH: &str = "migrations.tar";
 pub const SETTINGS_PATH: &str = "settings.json";
 pub const LOCAL_PLAYERS_PATH: &str = "local_players.json";
-pub const REGION_PATH: &str = "current_region";
 pub const STEAM_GAME_URL: &str = "steam://rungameid/1599340";
 pub const GAME_EXE_NAME: &str = "LOSTARK.exe";
 pub const TASK_NAME: &str = "LOA_Logs_Auto_Start";
