@@ -27,6 +27,8 @@
         return boss.hpBars;
       } else if (boss && Object.hasOwn(bossHpMap, boss.name)) {
         return getBossHpBars(boss.name, boss.maxHp);
+      } else {
+        return 1;
       }
     } else {
       return 1;
