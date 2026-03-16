@@ -371,6 +371,12 @@
           "Enable Experimental Features",
           "Enables experimental features that may not be fully complete or stable."
         )}
+        {@render settingOption(
+          "general",
+          "betaChannel",
+          "Beta Channel",
+          "Opt-in to beta updates. Test out new features before they are officially released."
+        )}
       {:else if currentTab === "Logs"}
         <div class="flex flex-col gap-2">
           <label class="flex items-center justify-between gap-2">

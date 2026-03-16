@@ -175,6 +175,7 @@ dependencies = [
  "tauri-plugin-window-state",
  "thiserror 2.0.18",
  "tokio",
+ "url",
  "uuid",
  "window-vibrancy 0.7.1",
  "winsafe",

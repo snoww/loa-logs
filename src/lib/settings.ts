@@ -71,6 +71,7 @@ export interface GeneralSettings {
   miniEdit: boolean;
   autoShow: boolean;
   autoHideDelay: number;
+  betaChannel: boolean;
 }
 
 export interface Shortcuts {
