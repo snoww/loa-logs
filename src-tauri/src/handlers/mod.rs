@@ -3,6 +3,7 @@ use error::*;
 use log::*;
 use tauri::ipc::Invoke;
 use tauri::{AppHandle, Emitter, Manager, State, command, generate_handler};
+use tauri_plugin_updater::UpdaterExt;
 use window_vibrancy::{apply_blur, clear_blur};
 
 use crate::app::autostart::{AutoLaunch, AutoLaunchManager};
@@ -51,6 +52,8 @@ pub fn generate_handlers() -> Box<dyn Fn(Invoke) -> bool + Send + Sync> {
         sync,
         remove_driver,
         unload_driver,
+        check_beta_update,
+        install_beta_update,
     ])
 }
 
@@ -395,4 +398,47 @@ pub fn start_loa_process(shell_manager: State<ShellManager>) {
 #[command]
 pub fn write_log(message: String) {
     info!("{}", message);
+}
+
+#[derive(serde::Serialize)]
+pub struct UpdateManifest {
+    version: String,
+    body: Option<String>,
+}
+
+#[command]
+pub async fn check_beta_update(app_handle: AppHandle) -> Result<Option<UpdateManifest>> {
+    let beta_url = url::Url::parse(BETA_ENDPOINT).map_err(anyhow::Error::new)?;
+    let updater = app_handle
+        .updater_builder()
+        .endpoints(vec![beta_url])
+        .and_then(|b| b.build())
+        .map_err(anyhow::Error::new)?;
+
+    match updater.check().await.map_err(anyhow::Error::new)? {
+        Some(update) => Ok(Some(UpdateManifest {
+            version: update.version.clone(),
+            body: update.body.clone(),
+        })),
+        None => Ok(None),
+    }
+}
+
+#[command]
+pub async fn install_beta_update(app_handle: AppHandle) -> Result<()> {
+    let shell_manager = app_handle.state::<ShellManager>();
+    let beta_url = url::Url::parse(BETA_ENDPOINT).map_err(anyhow::Error::new)?;
+    let updater = app_handle
+        .updater_builder()
+        .endpoints(vec![beta_url])
+        .and_then(|b| b.build())
+        .map_err(anyhow::Error::new)?;
+
+    if let Some(update) = updater.check().await.map_err(anyhow::Error::new)? {
+        info!("installing beta update: v{}", update.version);
+        shell_manager.remove_driver().await;
+        update.download_and_install(|_, _| {}, || {}).await.map_err(anyhow::Error::new)?;
+    }
+
+    Ok(())
 }

@@ -3,8 +3,6 @@
   import { settings } from "$lib/stores.svelte";
   import { networkSettingsChanged } from "$lib/utils/toasts";
   import { createRadioGroup, createSlider, melt } from "@melt-ui/svelte";
-  import { invoke } from "@tauri-apps/api/core";
-  import { emit } from "@tauri-apps/api/event";
   import { WebviewWindow } from "@tauri-apps/api/webviewWindow";
   import { onMount } from "svelte";
   import { writable } from "svelte/store";
@@ -13,6 +11,7 @@
   import DatabaseInfo from "./DatabaseInfo.svelte";
   import Shortcuts from "./Shortcuts.svelte";
   import { checkStartOnBoot, setAlwaysOnTop, setBlur, setBossOnlyDamage, setStartOnBoot } from "$lib/api";
+  import { checkForUpdate } from "$lib/utils";
 
   let currentTab = $state("General");
 
@@ -61,6 +60,15 @@
         mini?.hide();
       }
     })();
+  });
+
+  let prevBetaChannel = $state(settings.app.general.betaChannel);
+  $effect(() => {
+    let isBeta = settings.app.general.betaChannel;
+    if (isBeta !== prevBetaChannel) {
+      prevBetaChannel = isBeta;
+      checkForUpdate(isBeta);
+    }
   });
 
   onMount(() => {
@@ -127,8 +135,8 @@
 
 {#snippet settingsTab(tabName: string)}
   <button
-    class="focus:outline-hidden text-nowrap rounded-sm px-2 py-1 text-sm text-white transition {tabName === currentTab
-      ? 'bg-accent-600/80 border-transparent'
+    class="rounded-sm px-2 py-1 text-sm text-nowrap text-white transition focus:outline-hidden {tabName === currentTab
+      ? 'border-transparent bg-accent-600/80'
       : 'bg-transparent hover:bg-neutral-700/60'}"
     onclick={() => {
       currentTab = tabName;
@@ -145,13 +153,13 @@
         <input
           type="checkbox"
           bind:checked={appSettings[category][setting]}
-          class="form-checkbox checked:text-accent-600/80 size-5 rounded-sm border-0 bg-neutral-700 focus:ring-0"
+          class="form-checkbox size-5 rounded-sm border-0 bg-neutral-700 checked:text-accent-600/80 focus:ring-0"
         />
       {:else}
         <input
           type="checkbox"
           bind:checked={appSettings[category]["breakdown"][setting]}
-          class="form-checkbox checked:text-accent-600/80 size-5 rounded-sm border-0 bg-neutral-700 focus:ring-0"
+          class="form-checkbox size-5 rounded-sm border-0 bg-neutral-700 checked:text-accent-600/80 focus:ring-0"
         />
       {/if}
       <div class="ml-5">
@@ -169,7 +177,7 @@
       <select
         id="modifiers"
         bind:value={settings.app.general[tab === "meter" ? "scale" : "logScale"]}
-        class="focus:ring-accent-500 focus:border-accent-500 w-28 rounded-lg bg-neutral-700 py-1 text-sm placeholder-neutral-400"
+        class="w-28 rounded-lg bg-neutral-700 py-1 text-sm placeholder-neutral-400 focus:border-accent-500 focus:ring-accent-500"
       >
         <option value="0">Small</option>
         <option value="1">Normal</option>
@@ -266,7 +274,7 @@
             onchange={async () => {
               await setStartOnBoot(settings.app.general.startOnBoot);
             }}
-            class="form-checkbox checked:text-accent-600 size-5 rounded-sm border-0 bg-neutral-700 focus:ring-0"
+            class="form-checkbox size-5 rounded-sm border-0 bg-neutral-700 checked:text-accent-600 focus:ring-0"
           />
           <div class="ml-5">
             <div class="text-sm">Start with Windows</div>
@@ -316,7 +324,7 @@
             onchange={() => {
               setBossOnlyDamage(settings.app.general.bossOnlyDamage);
             }}
-            class="form-checkbox checked:text-accent-600/80 size-5 rounded-sm border-0 bg-neutral-700 focus:ring-0"
+            class="form-checkbox size-5 rounded-sm border-0 bg-neutral-700 checked:text-accent-600/80 focus:ring-0"
           />
           <div class="ml-5">
             <div class="text-sm">Boss Only Damage</div>
@@ -340,7 +348,7 @@
             type="checkbox"
             bind:checked={settings.app.general.autoIface}
             onchange={() => {}}
-            class="form-checkbox checked:text-accent-600/80 size-5 rounded-sm border-0 bg-neutral-700 focus:ring-0"
+            class="form-checkbox size-5 rounded-sm border-0 bg-neutral-700 checked:text-accent-600/80 focus:ring-0"
           />
           <div class="ml-5">
             <div class="text-sm">Auto Port Selection</div>
@@ -352,7 +360,7 @@
             <label class="flex items-center">
               <input
                 type="number"
-                class="form-input w-18 h-8 rounded-md border-0 bg-neutral-700 text-sm focus:ring-0"
+                class="form-input h-8 w-18 rounded-md border-0 bg-neutral-700 text-sm focus:ring-0"
                 bind:value={settings.app.general.port}
                 placeholder={settings.app.general.port.toString()}
               />
@@ -390,7 +398,7 @@
           </label>
           <span use:melt={$root} class="relative flex h-[20px] items-center">
             <span class="h-[3px] w-full bg-neutral-700">
-              <span use:melt={$range} class="bg-accent-500/80 h-[3px]"></span>
+              <span use:melt={$range} class="h-[3px] bg-accent-500/80"></span>
             </span>
 
             {#each $ticks as tick}
@@ -841,7 +849,7 @@
                   id={option.value}
                 >
                   {#if $isChecked(option.value)}
-                    <div class="bg-accent-500 h-3 w-3 rounded-full"></div>
+                    <div class="h-3 w-3 rounded-full bg-accent-500"></div>
                   {/if}
                 </button>
                 <label class="pl-5" for={option.value} id="{option}-label">
@@ -868,7 +876,7 @@
             onchange={async () => {
               await setAlwaysOnTop(settings.app.general.alwaysOnTop);
             }}
-            class="form-checkbox checked:text-accent-600 size-5 rounded-sm border-0 bg-neutral-700 focus:ring-0"
+            class="form-checkbox size-5 rounded-sm border-0 bg-neutral-700 checked:text-accent-600 focus:ring-0"
           />
           <div class="ml-5">
             <div class="text-sm">Always on Top</div>
@@ -913,7 +921,7 @@
               onchange={async () => {
                 await setBlur(settings.app.general.blurWin11);
               }}
-              class="form-checkbox checked:text-accent-600 size-5 rounded-sm border-0 bg-neutral-700 focus:ring-0"
+              class="form-checkbox size-5 rounded-sm border-0 bg-neutral-700 checked:text-accent-600 focus:ring-0"
             />
             <div class="ml-5">
               <div class="text-sm">Blur Meter Background</div>
@@ -930,7 +938,7 @@
               onchange={async () => {
                 await setBlur(settings.app.general.blur);
               }}
-              class="form-checkbox checked:text-accent-600 size-5 rounded-sm border-0 bg-neutral-700 focus:ring-0"
+              class="form-checkbox size-5 rounded-sm border-0 bg-neutral-700 checked:text-accent-600 focus:ring-0"
             />
             <div class="ml-5">
               <div>Blur Meter Background</div>
@@ -964,10 +972,4 @@
   </div>
 </div>
 
-<style>
-  input::-webkit-outer-spin-button,
-  input::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-  }
-</style>
+<style ✂prettier:content✂="CiAgaW5wdXQ6Oi13ZWJraXQtb3V0ZXItc3Bpbi1idXR0b24sCiAgaW5wdXQ6Oi13ZWJraXQtaW5uZXItc3Bpbi1idXR0b24gewogICAgLXdlYmtpdC1hcHBlYXJhbmNlOiBub25lOwogICAgbWFyZ2luOiAwOwogIH0K"></style>

@@ -375,7 +375,8 @@ export class SkillCastInfo {
 
 export class UpdateInfo {
   available = $state(false);
-  manifest: Update | undefined = $state(undefined);
+  isBeta = $state(false);
+  manifest: Update | { body?: string } | undefined = $state(undefined);
 }
 
 export const settings = new Settings();

@@ -13,7 +13,7 @@ use tauri_plugin_updater::UpdaterExt;
 use crate::{
     app,
     background::{BackgroundWorker, BackgroundWorkerArgs},
-    constants::DEFAULT_PORT,
+    constants::{BETA_ENDPOINT, DEFAULT_PORT},
     context::AppContext,
     settings::*,
     shell::ShellManager,
@@ -60,8 +60,6 @@ pub fn setup(app: &mut App) -> Result<(), Box<dyn Error>> {
 
     Ok(())
 }
-
-const BETA_ENDPOINT: &str = "https://snow.xyz/loa-logs/beta.json";
 
 fn check_updates(app_handle: &AppHandle, is_beta: bool) -> Arc<AtomicBool> {
     let update_checked = Arc::new(AtomicBool::new(false));
