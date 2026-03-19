@@ -65,6 +65,8 @@ export const checkBetaUpdate = (): Promise<{ version: string; body?: string } | 
 
 export const installBetaUpdate = (): Promise<void> => invoke("install_beta_update");
 
+export const installStableUpdate = (): Promise<void> => invoke("install_stable_update");
+
 export const optimizeDatabase = (): Promise<void> => invoke("optimize_database");
 
 export const startLoaProcess = (): Promise<void> => invoke("start_loa_process");

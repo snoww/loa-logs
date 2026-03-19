@@ -54,6 +54,7 @@ pub fn generate_handlers() -> Box<dyn Fn(Invoke) -> bool + Send + Sync> {
         unload_driver,
         check_beta_update,
         install_beta_update,
+        install_stable_update,
     ])
 }
 
@@ -434,10 +435,36 @@ pub async fn install_beta_update(app_handle: AppHandle) -> Result<()> {
         .and_then(|b| b.build())
         .map_err(anyhow::Error::new)?;
 
+    #[cfg(not(debug_assertions))]
     if let Some(update) = updater.check().await.map_err(anyhow::Error::new)? {
         info!("installing beta update: v{}", update.version);
         shell_manager.remove_driver().await;
-        update.download_and_install(|_, _| {}, || {}).await.map_err(anyhow::Error::new)?;
+        update
+            .download_and_install(|_, _| {}, || {})
+            .await
+            .map_err(anyhow::Error::new)?;
+    }
+
+    Ok(())
+}
+
+#[command]
+pub async fn install_stable_update(app_handle: AppHandle) -> Result<()> {
+    let shell_manager = app_handle.state::<ShellManager>();
+    let updater = app_handle
+        .updater_builder()
+        .version_comparator(|_current, _remote| true)
+        .build()
+        .map_err(anyhow::Error::new)?;
+
+    #[cfg(not(debug_assertions))]
+    if let Some(update) = updater.check().await.map_err(anyhow::Error::new)? {
+        info!("installing stable update: v{}", update.version);
+        shell_manager.remove_driver().await;
+        update
+            .download_and_install(|_, _| {}, || {})
+            .await
+            .map_err(anyhow::Error::new)?;
     }
 
     Ok(())
