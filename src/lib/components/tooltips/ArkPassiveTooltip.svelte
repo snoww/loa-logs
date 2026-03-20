@@ -4,7 +4,8 @@
   import { EFTable_ArkPassive } from "$lib/constants/EFTable_ArkPassive";
   import type { EntityState } from "$lib/entity.svelte";
   import type { ArkPassiveNode } from "$lib/types";
-  import { isSupportSpec, normalizeIlvl } from "$lib/utils";
+  import { isSupportSpec, LOA_BIBLE_URL, normalizeIlvl } from "$lib/utils";
+  import { openUrl } from "@tauri-apps/plugin-opener";
 
   const { state }: { state: EntityState } = $props();
 
@@ -150,7 +151,21 @@
 
 {#snippet tooltip()}
   <div class="flex flex-col">
-    <p>{state.name}</p>
+    <div class="flex items-center gap-1">
+      <p>{state.name}</p>
+      {#if state.entity.loadoutHash}
+        <button
+          class="text-xs text-neutral-300 underline"
+          title="View Loadout Snapshot"
+          onclick={(e) => {
+            e.stopPropagation();
+            openUrl(LOA_BIBLE_URL + `/character/snapshot/${state.entity.loadoutHash}`);
+          }}
+        >
+          Loadout Snapshot
+        </button>
+      {/if}
+    </div>
     {#if state.entity.combatPower}
       <p class="text-xs {isSupportSpec(state.entity.spec) ? 'text-green-400' : 'text-red-400'}">
         {normalizeIlvl(state.entity.combatPower)} Combat Power

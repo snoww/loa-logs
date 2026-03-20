@@ -11,6 +11,7 @@ import IconChevronLeft from "~icons/lucide/chevron-left";
 import IconChevronRight from "~icons/lucide/chevron-right";
 import IconCornerLeftUp from "~icons/lucide/corner-left-up";
 import IconExternalLink from "~icons/lucide/external-link";
+import IconFileClock from "~icons/lucide/file-clock";
 import IconFilter from "~icons/lucide/filter";
 import IconMenu from "~icons/lucide/menu";
 import IconMinus from "~icons/lucide/minus";
@@ -42,6 +43,7 @@ export {
   IconCornerLeftUp,
   IconDiscord,
   IconExternalLink,
+  IconFileClock,
   IconFilter,
   IconMenu,
   IconMinus,

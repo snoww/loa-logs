@@ -2,7 +2,7 @@
   import QuickTooltip from "$lib/components/QuickTooltip.svelte";
   import type { EncounterState } from "$lib/encounter.svelte.js";
   import { EntityState } from "$lib/entity.svelte.js";
-  import { IconExternalLink } from "$lib/icons";
+  import { IconExternalLink, IconFileClock } from "$lib/icons";
   import { settings } from "$lib/stores.svelte.js";
   import { EntityType, type Entity } from "$lib/types";
   import { abbreviateNumberSplit, customRound, isNameValid, LOA_BIBLE_URL, rgbLinearShadeAdjust } from "$lib/utils";
@@ -49,12 +49,25 @@
           {#if isNameValid(entityState.entity.name) && entityState.entity.entityType === EntityType.PLAYER}
             <button
               class="shrink-0"
+              title="View Character Profile"
               onclick={(e) => {
                 e.stopPropagation();
                 openUrl(LOA_BIBLE_URL + "/character/" + enc.region + "/" + entityState.entity.name);
               }}
             >
               <IconExternalLink class="size-3" />
+            </button>
+          {/if}
+          {#if entityState.entity.loadoutHash}
+            <button
+              class="shrink-0 tracking-tighter hover:underline"
+              title="View Loadout Snapshot"
+              onclick={(e) => {
+                e.stopPropagation();
+                openUrl(LOA_BIBLE_URL + `/character/snapshot/${entityState.entity.loadoutHash}`);
+              }}
+            >
+              <IconFileClock class="size-3" />
             </button>
           {/if}
         </div>
