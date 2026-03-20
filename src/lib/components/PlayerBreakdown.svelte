@@ -5,7 +5,7 @@
   import { IconExternalLink } from "$lib/icons";
   import { settings } from "$lib/stores.svelte.js";
   import { EntityType, type Entity } from "$lib/types";
-  import { abbreviateNumberSplit, customRound, isNameValid, rgbLinearShadeAdjust, UWUOWO_URL } from "$lib/utils";
+  import { abbreviateNumberSplit, customRound, isNameValid, LOA_BIBLE_URL, rgbLinearShadeAdjust } from "$lib/utils";
   import { openUrl } from "@tauri-apps/plugin-opener";
   import { flip } from "svelte/animate";
   import { unbuffedDamageTooltip, unbuffedDpsTooltip } from "./DamageMeterColumns.svelte";
@@ -37,7 +37,7 @@
 
 <tbody class="relative z-10">
   {#if entity.entityType !== EntityType.ESTHER}
-    <tr class="text-xxs h-7 px-2 py-1 {settings.app.general.underlineHovered ? 'hover:underline' : ''}">
+    <tr class="h-7 px-2 py-1 text-xxs {settings.app.general.underlineHovered ? 'hover:underline' : ''}">
       <td class="pl-1">
         <ClassTooltip {entity} />
       </td>
@@ -51,7 +51,7 @@
               class="shrink-0"
               onclick={(e) => {
                 e.stopPropagation();
-                openUrl(UWUOWO_URL + "/character/" + enc.region + "/" + entityState.entity.name);
+                openUrl(LOA_BIBLE_URL + "/character/" + enc.region + "/" + entityState.entity.name);
               }}
             >
               <IconExternalLink class="size-3" />
@@ -250,7 +250,7 @@
   {#each entityState.skills as skill, i (skill.id)}
     <tr
       animate:flip={{ duration: 200 }}
-      class="text-xxs h-7 px-2 py-1 {settings.app.general.underlineHovered ? 'hover:underline' : ''}"
+      class="h-7 px-2 py-1 text-xxs {settings.app.general.underlineHovered ? 'hover:underline' : ''}"
     >
       <PlayerBreakdownRow {skill} {entityState} width={entityState.skillDamagePercentages[i]!} index={i} />
     </tr>

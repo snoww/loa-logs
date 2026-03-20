@@ -1,15 +1,13 @@
 <script lang="ts">
+  import { getSyncCandidates, loadEncounter } from "$lib/api";
   import QuickTooltip from "$lib/components/QuickTooltip.svelte";
   import { addToast } from "$lib/components/Toaster.svelte";
   import { settings, syncProgress } from "$lib/stores.svelte";
-  import type { Encounter } from "$lib/types";
-  import { UWUOWO_URL } from "$lib/utils";
+  import { LOA_BIBLE_URL } from "$lib/utils";
   import { checkAccessToken, uploadLog } from "$lib/utils/sync";
   import { uploadSuccess, uploadTokenError } from "$lib/utils/toasts";
-  import { createRadioGroup, melt } from "@melt-ui/svelte";
-  import { invoke } from "@tauri-apps/api/core";
+  import { createRadioGroup } from "@melt-ui/svelte";
   import Header from "../Header.svelte";
-  import { getSyncCandidates, loadEncounter } from "$lib/api";
 
   const {
     elements: { root, item },
@@ -88,7 +86,7 @@
       <input
         type="checkbox"
         bind:checked={syncSettings[setting]}
-        class="form-checkbox checked:text-accent-600/80 size-5 rounded-sm border-0 bg-neutral-700 focus:ring-0"
+        class="form-checkbox size-5 rounded-sm border-0 bg-neutral-700 checked:text-accent-600/80 focus:ring-0"
       />
       <div class="ml-5">
         <div class="text-sm">{name}</div>
@@ -105,9 +103,9 @@
       <p class="text-base font-semibold">Upload Token</p>
       {#if !settings.sync.validToken}
         <a
-          href={UWUOWO_URL + "/me/upload"}
+          href={LOA_BIBLE_URL + "/me/upload"}
           target="_blank"
-          class="bg-accent-500/80 hover:bg-accent-500/70 w-fit rounded-md border border-neutral-700 p-1 text-xs"
+          class="w-fit rounded-md border border-neutral-700 bg-accent-500/80 p-1 text-xs hover:bg-accent-500/70"
         >
           Get Token
         </a>
@@ -122,7 +120,7 @@
           debounce(v);
         }
       }
-      class="focus:border-accent-500 block w-80 rounded-lg border border-neutral-600 bg-neutral-700 text-xs text-neutral-300 placeholder-neutral-400 focus:ring-0"
+      class="block w-80 rounded-lg border border-neutral-600 bg-neutral-700 text-xs text-neutral-300 placeholder-neutral-400 focus:border-accent-500 focus:ring-0"
       placeholder="paste access token"
     />
     {#if !settings.sync.validToken && settings.sync.accessToken}
@@ -138,9 +136,9 @@
     </p>
     <p class="text-sm text-neutral-300">
       Visibility settings are character specific and can be changed once you link your roster on <a
-        href="{UWUOWO_URL}/me/rosters"
+        href="{LOA_BIBLE_URL}/me/rosters"
         target="_blank"
-        class="text-accent-500 underline">uwuowo</a
+        class="text-accent-500 underline">lostark.bible</a
       >
     </p>
   </div>

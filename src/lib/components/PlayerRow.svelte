@@ -6,7 +6,7 @@
   import { IconExternalLink } from "$lib/icons";
   import { settings } from "$lib/stores.svelte.js";
   import { EntityType, type Entity } from "$lib/types";
-  import { getClassIcon, isNameValid, UWUOWO_URL } from "$lib/utils";
+  import { getClassIcon, isNameValid, LOA_BIBLE_URL } from "$lib/utils";
   import { openUrl } from "@tauri-apps/plugin-opener";
   import { cubicOut } from "svelte/easing";
   import { Tween } from "svelte/motion";
@@ -61,7 +61,7 @@
         class="shrink-0"
         onclick={(e) => {
           e.stopPropagation();
-          openUrl(UWUOWO_URL + "/character/" + enc.region + "/" + entityState.entity.name);
+          openUrl(LOA_BIBLE_URL + "/character/" + enc.region + "/" + entityState.entity.name);
         }}
       >
         <IconExternalLink class="size-3" />

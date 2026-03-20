@@ -1,13 +1,13 @@
 <script lang="ts">
   import { page } from "$app/state";
+  import QuickTooltip from "$lib/components/QuickTooltip.svelte";
+  import { addToast } from "$lib/components/Toaster.svelte";
   import { IconCamera, IconCloudUpload, IconCloudYes, IconRefresh } from "$lib/icons";
   import { settings } from "$lib/stores.svelte.js";
   import type { Encounter } from "$lib/types";
-  import { takeScreenshot, UWUOWO_URL } from "$lib/utils";
+  import { LOA_BIBLE_URL, takeScreenshot } from "$lib/utils";
   import { uploadLog } from "$lib/utils/sync";
   import { uploadSuccess, uploadTokenError } from "$lib/utils/toasts";
-  import QuickTooltip from "$lib/components/QuickTooltip.svelte";
-  import { addToast } from "$lib/components/Toaster.svelte";
 
   let { encounter = $bindable(), screenshotDiv }: { encounter: Encounter; screenshotDiv?: HTMLElement } = $props();
   let uploading = $state(false);
@@ -67,7 +67,7 @@
         </button>
       {:else}
         <a
-          href={UWUOWO_URL + "/logs/" + sync}
+          href={LOA_BIBLE_URL + "/logs/" + sync}
           target="_blank"
           class="rounded-lg px-2 py-0.5 text-sm text-nowrap transition hover:bg-neutral-800/40 focus:outline-hidden active:bg-accent-500/80"
           onpointermove={(e) => {
