@@ -428,7 +428,7 @@
               }}
             />
             <div class="ml-5">
-              <div class="text-sm">Beta Channel</div>
+              <div class="text-sm">Enable Beta Updates</div>
               <div class="text-xs text-neutral-300">
                 Opt-in to beta updates. Test out new features before they are officially released.
               </div>
