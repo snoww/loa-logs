@@ -230,6 +230,7 @@ export const defaultSettings: AppSettings = {
     percentIdentityBySup: true,
     percentBrand: true,
     percentHatBySup: true,
+    supportContrib: false,
     stagger: false,
     breakdown: {
       damage: true,
@@ -250,7 +251,8 @@ export const defaultSettings: AppSettings = {
       percentBuffBySup: false,
       percentIdentityBySup: false,
       percentBrand: false,
-      percentHatBySup: false
+      percentHatBySup: false,
+      supportContrib: false
     }
   },
   mini: {
@@ -280,6 +282,7 @@ export const defaultSettings: AppSettings = {
     percentIdentityBySup: true,
     percentHatBySup: true,
     percentBrand: true,
+    supportContrib: true,
     stagger: true,
     breakdown: {
       damage: true,
@@ -301,7 +304,8 @@ export const defaultSettings: AppSettings = {
       percentBuffBySup: false,
       percentIdentityBySup: false,
       percentBrand: false,
-      percentHatBySup: false
+      percentHatBySup: false,
+      supportContrib: false
     }
   },
   buffs: {

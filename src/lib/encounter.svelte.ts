@@ -92,6 +92,7 @@ export class EncounterState {
       Object.values(player.skills).some((skill) => sumRdpsContributed(skill, [1, 3, 5]) > 0)
     )
   );
+
   topDamageDealt = $derived(this.encounter?.encounterDamageStats.topDamageDealt ?? 0);
 
   /**

@@ -3,7 +3,7 @@ import { cardIds } from "./constants/cards";
 import type { EncounterState } from "./encounter.svelte";
 import { sumRdpsContributed } from "./skill.svelte";
 import { settings } from "./stores.svelte";
-import { EntityType, type Entity, type IncapacitatedEvent } from "./types";
+import { type Entity, EntityType, type IncapacitatedEvent } from "./types";
 import { hyperAwakeningIds } from "./utils/buffs";
 
 export class EntityState {
@@ -164,6 +164,30 @@ export class EntityState {
   hasRdpsContributions = $derived(
     Object.values(this.entity.skills).some((skill) => sumRdpsContributed(skill, [1, 3, 5]) > 0)
   );
+
+  /**
+   * Weighted average buff contribution % for this support, scoped to their own party.
+   * Falls back to all players if party info is unavailable.
+   * Equivalent to sum(buffed) / sum(damage) across DPS party members with unbuffed data.
+   */
+  supportContribPercent = $derived.by(() => {
+    const name = this.entity.name;
+    const parties = this.encounter.parties;
+    const partyMembers =
+      parties.length > 0
+        ? (parties.find((party) => party.some((p) => p.name === name)) ?? this.encounter.playersOnly)
+        : this.encounter.playersOnly;
+    const partyDpsPlayers = partyMembers.filter((p) => {
+      const isSupport = Object.values(p.skills).some((skill) => sumRdpsContributed(skill, [1, 3, 5]) > 0);
+      return (
+        !isSupport && p.damageStats.unbuffedDamage > 0 && p.damageStats.unbuffedDamage !== p.damageStats.damageDealt
+      );
+    });
+    const partyTotalDmg = partyDpsPlayers.reduce((acc, p) => acc + p.damageStats.damageDealt, 0);
+    const partyTotalUnbuffed = partyDpsPlayers.reduce((acc, p) => acc + p.damageStats.unbuffedDamage, 0);
+    if (partyTotalDmg === 0) return 0;
+    return ((partyTotalDmg - partyTotalUnbuffed) / partyTotalDmg) * 100;
+  });
   hasDrContributions = $derived(
     Object.values(this.entity.skills).some((skill) => sumRdpsContributed(skill, [4, 6]) > 0)
   );

@@ -498,6 +498,12 @@
         )}
         {@render settingOption(
           "logs",
+          "supportContrib",
+          "Support Contribution %",
+          "Show the support's % contribution to total party damage via buffs"
+        )}
+        {@render settingOption(
+          "logs",
           "damagePercent",
           "Damage %",
           "Show the damage percentage of the player relative to the entire raid"
@@ -569,6 +575,12 @@
           "Skill Unbuffed/Buffed DPS",
           "Pseudo rDPS from in-game Combat Analyzer. Show the dps of the skill without support buffs. For support skills, shows the dps buffed by skill",
           true
+        )}
+        {@render settingOption(
+          "meter",
+          "supportContrib",
+          "Support Contribution %",
+          "Show the support's % contribution to total party damage via buffs"
         )}
         {@render settingOption(
           "logs",

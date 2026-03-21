@@ -14,6 +14,7 @@ export interface DisplayFlags {
   percentIdentityBySup: boolean;
   percentBrand: boolean;
   percentHatBySup: boolean;
+  supportContrib: boolean;
 }
 
 export interface BreakdownBase extends DisplayFlags {
