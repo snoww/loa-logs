@@ -13,6 +13,7 @@
   import { checkForUpdate } from "$lib/utils";
   import { networkSettingsChanged } from "$lib/utils/toasts";
   import { createDialog, createRadioGroup, createSlider, melt } from "@melt-ui/svelte";
+  import { getVersion } from "@tauri-apps/api/app";
   import { WebviewWindow } from "@tauri-apps/api/webviewWindow";
   import { onMount } from "svelte";
   import { writable } from "svelte/store";
@@ -1032,7 +1033,7 @@
     >
       <h2 use:melt={$optInTitle} class="text-lg font-semibold">Switch to Beta Channel</h2>
       <p use:melt={$optInDescription} class="text-sm text-neutral-300">
-        Your app will relaunch and check for beta updates. You may test out new features before they are released.
+        Your app will check for beta updates. You may test out new features before they are released.
       </p>
       <div class="flex justify-end gap-3">
         <button
@@ -1047,7 +1048,12 @@
           class="rounded-md bg-accent-500/70 px-3 py-1.5 text-sm hover:bg-accent-500/60 focus:ring-0"
           onclick={async () => {
             settings.app.general.betaChannel = true;
-            await relaunchApp();
+            const hasUpdate = await checkForUpdate(true);
+            if (hasUpdate) {
+              await relaunchApp();
+            } else {
+              $optInOpen = false;
+            }
           }}
         >
           Confirm
@@ -1067,7 +1073,7 @@
     >
       <h2 use:melt={$optOutTitle} class="text-lg font-semibold">Switch to Stable Release</h2>
       <p use:melt={$optOutDescription} class="text-sm text-neutral-300">
-        Your app will download the latest stable release and relaunch. You will no longer receive beta updates.
+        The latest stable release will be installed. You will no longer receive beta updates.
       </p>
       <div class="flex justify-end gap-3">
         <button
@@ -1084,8 +1090,14 @@
           onclick={async () => {
             installingStable = true;
             settings.app.general.betaChannel = false;
-            await installStableUpdate();
-            await relaunchApp();
+            const currentVersion = await getVersion();
+            if (currentVersion.includes("-")) {
+              await installStableUpdate();
+              await relaunchApp();
+            } else {
+              installingStable = false;
+              $optOutOpen = false;
+            }
           }}
         >
           {installingStable ? "Switching..." : "Confirm"}
@@ -1094,4 +1106,3 @@
     </div>
   </div>
 {/if}
-
