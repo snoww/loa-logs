@@ -814,8 +814,8 @@ export function getPlayerIncapSeries(
   const ccData = new Array(durationSec).fill(0);
 
   for (const event of incaps) {
-    const startSec = Math.max(0, Math.round((event.timestamp - fightStart) / 1000));
-    const endSec = Math.min(durationSec, Math.round((event.timestamp - fightStart + event.duration) / 1000));
+    const startSec = Math.max(0, Math.floor((event.timestamp - fightStart) / 1000));
+    const endSec = Math.min(durationSec - 1, Math.floor((event.timestamp - fightStart + event.duration) / 1000));
     const arr = event.type === IncapacitationEventType.FALL_DOWN ? fallDownData : ccData;
     for (let i = startSec; i <= endSec; i++) {
       arr[i] = 100;
