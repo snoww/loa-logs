@@ -810,24 +810,24 @@ export function getPlayerIncapSeries(
   if (!incaps || incaps.length === 0) return [];
 
   const durationSec = Math.ceil((lastCombatPacket - fightStart) / 1000);
-  const fallDownData = new Array(durationSec).fill(0);
+  const knockdownData = new Array(durationSec).fill(0);
   const ccData = new Array(durationSec).fill(0);
 
   for (const event of incaps) {
     const startSec = Math.max(0, Math.floor((event.timestamp - fightStart) / 1000));
     const endSec = Math.min(durationSec - 1, Math.floor((event.timestamp - fightStart + event.duration) / 1000));
-    const arr = event.type === IncapacitationEventType.FALL_DOWN ? fallDownData : ccData;
+    const arr = event.type === IncapacitationEventType.FALL_DOWN ? knockdownData : ccData;
     for (let i = startSec; i <= endSec; i++) {
       arr[i] = 100;
     }
   }
 
   const series: any[] = [];
-  if (fallDownData.some((v) => v > 0)) {
+  if (knockdownData.some((v) => v > 0)) {
     series.push({
-      name: "Fall Down",
+      name: "Knockdown",
       type: "line",
-      data: fallDownData,
+      data: knockdownData,
       showSymbol: false,
       step: "end",
       lineStyle: { opacity: 0 },
