@@ -11,7 +11,7 @@ use crate::utils::{get_class_from_id, get_player_spec, is_support_class};
 use chrono::Utc;
 use hashbrown::HashMap;
 use log::{info, warn};
-use meter_defs::defs::{SkillCooldownStruct, SupportCombatAnalyzerEvent};
+use meter_defs::defs::{CombatAnalyzerEntry, SkillCooldownStruct};
 use meter_defs::types::SkillMoveOptionData;
 use rsntp::SntpClient;
 use std::cmp::max;
