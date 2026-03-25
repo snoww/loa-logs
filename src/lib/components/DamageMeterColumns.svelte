@@ -96,6 +96,18 @@
       width: "w-14"
     },
 
+    // Support contribution percentage
+    {
+      show(enc) {
+        if (!enc.curSettings.supportContrib) return false;
+        return enc.anyRdpsContributions;
+      },
+      headerText: "Con%",
+      headerTooltip: "Support's % contribution to total party damage via buffs",
+      value: supportContribPct,
+      valueTooltip: supportContribTooltip
+    },
+
     // Damage percentage
     {
       show(enc) {
@@ -430,5 +442,25 @@
         <span class="text-gray-300">Contribution: {((buffed / state.dps) * 100).toFixed(1)}%</span>
       {/if}
     </div>
+  {/if}
+{/snippet}
+
+{#snippet supportContribPct(state: EntityState)}
+  {#if state.hasRdpsContributions}
+    {@render percentValue(customRound(state.supportContribPercent))}
+  {:else if state.anyUnbuffedDamage}
+    {@const buffed = state.damageDealt - state.entity.damageStats.unbuffedDamage}
+    {@render percentValue(customRound((buffed / state.damageDealt) * 100))}
+  {:else}
+    -
+  {/if}
+{/snippet}
+
+{#snippet supportContribTooltip(state: EntityState)}
+  {#if state.hasRdpsContributions}
+    The support contributed {customRound(state.supportContribPercent)}% damage to the party
+  {:else if state.anyUnbuffedDamage}
+    {@const buffed = state.damageDealt - state.entity.damageStats.unbuffedDamage}
+    The support contributed {customRound((buffed / state.damageDealt) * 100)}% of the damage
   {/if}
 {/snippet}

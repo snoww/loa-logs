@@ -11,7 +11,8 @@ use tauri::{App, AppHandle, Manager};
 use tauri_plugin_updater::UpdaterExt;
 
 use crate::{
-    constants::DEFAULT_PORT,
+    app,
+    constants::{BETA_ENDPOINT, DEFAULT_PORT},
     context::AppContext,
     settings::*,
     shell::ShellManager,
@@ -36,7 +37,8 @@ pub fn setup(app: &mut App) -> Result<(), Box<dyn Error>> {
 
     info!("starting app v{}", context.version);
     setup_tray(app_handle)?;
-    let update_checked: Arc<AtomicBool> = check_updates(app_handle);
+    let is_beta = settings.as_ref().map(|s| s.general.beta_channel).unwrap_or(false);
+    let update_checked: Arc<AtomicBool> = check_updates(app_handle, is_beta);
 
     let app_handle = app_handle.clone();
     #[cfg(feature = "meter-core")]
@@ -102,7 +104,7 @@ pub fn setup(app: &mut App) -> Result<(), Box<dyn Error>> {
     Ok(())
 }
 
-fn check_updates(app_handle: &AppHandle) -> Arc<AtomicBool> {
+fn check_updates(app_handle: &AppHandle, is_beta: bool) -> Arc<AtomicBool> {
     let update_checked = Arc::new(AtomicBool::new(false));
 
     {
@@ -114,7 +116,21 @@ fn check_updates(app_handle: &AppHandle) -> Arc<AtomicBool> {
             let shell_manager = app_handle.state::<ShellManager>();
             shell_manager.unload_driver().await;
 
-            match app_handle.updater().unwrap().check().await {
+            let check_result = if is_beta {
+                let beta_url = url::Url::parse(BETA_ENDPOINT).expect("beta endpoint URL is valid");
+                match app_handle.updater_builder().endpoints(vec![beta_url]).and_then(|b| b.build()) {
+                    Ok(updater) => updater.check().await,
+                    Err(e) => {
+                        warn!("failed to build beta updater: {e}");
+                        update_checked.store(true, Ordering::Relaxed);
+                        return;
+                    }
+                }
+            } else {
+                app_handle.updater().unwrap().check().await
+            };
+
+            match check_result {
                 #[cfg(not(debug_assertions))]
                 Ok(Some(update)) => {
                     info!("update available, downloading update: v{}", update.version);

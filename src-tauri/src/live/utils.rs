@@ -12,6 +12,7 @@ pub fn encounter_entity_from_entity(entity: &Entity) -> EncounterEntity {
         name: entity.name.clone(),
         entity_type: entity.entity_type,
         npc_id: entity.npc_id,
+        hp_bars: entity.hp_bars,
         class_id: entity.class_id,
         class: get_class_from_id(&entity.class_id),
         gear_score: entity.gear_level,

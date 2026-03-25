@@ -1,16 +1,15 @@
 import { bossHpMap } from "$lib/constants/encounters";
 import { estherMap } from "$lib/constants/esthers";
 import { BossHpLog, type DamageStats, type Entity, type IdentityLogType, type IdentityLogTypeValue } from "$lib/types";
-import { invoke } from "@tauri-apps/api/core";
 import { writeImage } from "@tauri-apps/plugin-clipboard-manager";
 import { check as checkUpdate } from "@tauri-apps/plugin-updater";
 import html2canvas from "html2canvas-pro";
+import { checkBetaUpdate, writeLog } from "./api";
 import { addToast } from "./components/Toaster.svelte";
 import { screenshot, settings, updateInfo } from "./stores.svelte";
 import { screenshotError, screenshotSuccess } from "./utils/toasts";
-import { writeLog } from "./api";
 
-export const UWUOWO_URL = "https://uwuowo.mathi.moe";
+export const LOA_BIBLE_URL = "https://lostark.bible";
 
 export async function takeScreenshot(div?: HTMLElement) {
   if (!div) {
@@ -34,12 +33,24 @@ export async function takeScreenshot(div?: HTMLElement) {
   }, 100);
 }
 
-export async function checkForUpdate() {
+export async function checkForUpdate(isBeta = false) {
   try {
-    const manifest = await checkUpdate();
+    if (isBeta) {
+      const manifest = await checkBetaUpdate();
+      if (manifest) {
+        updateInfo.available = true;
+        updateInfo.isBeta = true;
+        updateInfo.manifest = { body: manifest.body };
+      } else {
+        updateInfo.available = false;
+      }
+      return updateInfo.available;
+    }
 
+    const manifest = await checkUpdate();
     if (manifest !== null) {
       updateInfo.available = true;
+      updateInfo.isBeta = false;
       updateInfo.manifest = manifest;
     } else {
       updateInfo.available = false;

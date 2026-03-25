@@ -10,7 +10,7 @@
   import LogPlayerBreakdown from "$lib/components/PlayerBreakdown.svelte";
   import { EncounterState } from "$lib/encounter.svelte.js";
   import { screenshot } from "$lib/stores.svelte.js";
-  import { ChartType, EntityType, MeterState, MeterTab, type Encounter, type Entity } from "$lib/types";
+  import { ChartType, type Encounter, type Entity, EntityType, MeterState, MeterTab } from "$lib/types";
   import {
     getAllDeathInfo,
     getAverageDpsChart,
@@ -19,6 +19,7 @@
     getBossHpSeries,
     getDetailedSkillLogChart,
     getLegendNames,
+    getPlayerIncapSeries,
     getRollingDpsChart,
     getRollingPlayerSeries
   } from "$lib/utils/dpsCharts";
@@ -48,6 +49,14 @@
   });
 
   let focusedBoss = $state("");
+
+  $effect(() => {
+    encounter.fightStart;
+    playerName = "";
+    focusedBoss = "";
+    meterState = MeterState.PARTY;
+    chartType = ChartType.AVERAGE_DPS;
+  });
 
   function inspectPlayer(name: string) {
     meterState = MeterState.PLAYER;
@@ -121,7 +130,10 @@
       } else if (chartType === ChartType.SKILL_LOG && player && player.entityType === EntityType.PLAYER) {
         const skillLogLen = Math.floor((encounter.lastCombatPacket - encounter.fightStart) / 1000);
         const skillLogLegend: string[] = [];
-        const skillLogBosses = getBossHpSeries(bossHpLogs, skillLogLegend, skillLogLen, 1);
+        const skillLogBosses = [
+          ...getBossHpSeries(bossHpLogs, skillLogLegend, skillLogLen, 1),
+          ...getPlayerIncapSeries(player, encounter.fightStart, encounter.lastCombatPacket)
+        ];
         if (hasSkillDetails) {
           chartOptions = getDetailedSkillLogChart(
             player,

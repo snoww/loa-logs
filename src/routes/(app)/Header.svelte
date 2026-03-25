@@ -147,7 +147,7 @@
           class="group absolute bottom-3.5 right-4"
           onclick={async () => {
             checking = true;
-            const update = await checkForUpdate();
+            const update = await checkForUpdate(settings.app.general.betaChannel);
             setTimeout(() => {
               if (!update) {
                 addToast(noUpdateAvailable);

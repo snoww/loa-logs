@@ -3,7 +3,7 @@
   import { createDialog, melt } from "@melt-ui/svelte";
   import { fade } from "svelte/transition";
   import { markdown } from "./Markdown.svelte";
-  import { relaunchApp } from "$lib/api";
+  import { installBetaUpdate, relaunchApp } from "$lib/api";
 
   const {
     elements: { portalled, overlay, content, title, description },
@@ -21,7 +21,7 @@
   <div use:melt={$portalled}>
     <div use:melt={$overlay} class="fixed inset-0 z-50 bg-black/50" transition:fade={{ duration: 150 }}></div>
     <div
-      class="fixed left-1/2 top-1/2 z-50 max-h-[85vh] w-[40rem] max-w-[60rem] -translate-x-1/2 -translate-y-1/2 rounded-xl bg-neutral-800/40 p-4 shadow-lg drop-shadow-xl backdrop-blur-xl
+      class="fixed top-1/2 left-1/2 z-50 max-h-[85vh] w-[40rem] max-w-[60rem] -translate-x-1/2 -translate-y-1/2 rounded-xl bg-neutral-800/40 p-4 shadow-lg drop-shadow-xl backdrop-blur-xl
       {settings.app.general.accentColor} flex flex-col items-center gap-4 text-white"
       use:melt={$content}
     >
@@ -32,7 +32,15 @@
         </div>
       {/if}
       <div class="flex items-center py-2">
-        <button class="bg-accent-500/70 hover:bg-accent-500/60 rounded-md px-2 py-1 focus:ring-0" onclick={relaunchApp}>
+        <button
+          class="rounded-md bg-accent-500/70 px-2 py-1 hover:bg-accent-500/60 focus:ring-0"
+          onclick={async () => {
+            if (updateInfo.isBeta) {
+              await installBetaUpdate();
+            }
+            await relaunchApp();
+          }}
+        >
           <span>Update Now</span>
         </button>
       </div>

@@ -193,7 +193,8 @@ export const defaultSettings: AppSettings = {
     mini: false,
     miniEdit: true,
     autoShow: false,
-    autoHideDelay: 5
+    autoHideDelay: 5,
+    betaChannel: false
   },
   shortcuts: {
     hideMeter: "Control+ArrowDown",
@@ -230,6 +231,7 @@ export const defaultSettings: AppSettings = {
     percentIdentityBySup: true,
     percentBrand: true,
     percentHatBySup: true,
+    supportContrib: false,
     stagger: false,
     breakdown: {
       damage: true,
@@ -250,7 +252,8 @@ export const defaultSettings: AppSettings = {
       percentBuffBySup: false,
       percentIdentityBySup: false,
       percentBrand: false,
-      percentHatBySup: false
+      percentHatBySup: false,
+      supportContrib: false
     }
   },
   mini: {
@@ -280,6 +283,7 @@ export const defaultSettings: AppSettings = {
     percentIdentityBySup: true,
     percentHatBySup: true,
     percentBrand: true,
+    supportContrib: true,
     stagger: true,
     breakdown: {
       damage: true,
@@ -301,7 +305,8 @@ export const defaultSettings: AppSettings = {
       percentBuffBySup: false,
       percentIdentityBySup: false,
       percentBrand: false,
-      percentHatBySup: false
+      percentHatBySup: false,
+      supportContrib: false
     }
   },
   buffs: {
@@ -375,7 +380,8 @@ export class SkillCastInfo {
 
 export class UpdateInfo {
   available = $state(false);
-  manifest: Update | undefined = $state(undefined);
+  isBeta = $state(false);
+  manifest: Update | { body?: string } | undefined = $state(undefined);
 }
 
 export class Nineveh {

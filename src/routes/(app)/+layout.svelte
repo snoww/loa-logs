@@ -37,7 +37,7 @@
     })();
 
     // check for app updates
-    const interval = setInterval(checkForUpdate, 60 * 15 * 1000);
+    const interval = setInterval(() => checkForUpdate(settings.app.general.betaChannel), 60 * 15 * 1000);
     return () => {
       clearInterval(interval);
     };
@@ -52,11 +52,10 @@
     await appWindow.unminimize();
     await appWindow.setFocus();
   }
-
 </script>
 
 <UpdateAvailable />
 <Toaster />
-<div class="min-h-screen select-none bg-neutral-900">
+<div class="min-h-screen bg-neutral-900 select-none">
   {@render children?.()}
 </div>

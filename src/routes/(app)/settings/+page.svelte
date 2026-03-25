@@ -1,18 +1,27 @@
 <script lang="ts">
+  import {
+    checkStartOnBoot,
+    installStableUpdate,
+    relaunchApp,
+    setAlwaysOnTop,
+    setBlur,
+    setBossOnlyDamage,
+    setStartOnBoot
+  } from "$lib/api";
   import { addToast } from "$lib/components/Toaster.svelte";
   import { settings } from "$lib/stores.svelte";
+  import { checkForUpdate } from "$lib/utils";
   import { networkSettingsChanged } from "$lib/utils/toasts";
-  import { createRadioGroup, createSlider, melt } from "@melt-ui/svelte";
-  import { invoke } from "@tauri-apps/api/core";
-  import { emit } from "@tauri-apps/api/event";
+  import { createDialog, createRadioGroup, createSlider, melt } from "@melt-ui/svelte";
+  import { getVersion } from "@tauri-apps/api/app";
   import { WebviewWindow } from "@tauri-apps/api/webviewWindow";
   import { onMount } from "svelte";
   import { writable } from "svelte/store";
+  import { fade } from "svelte/transition";
   import Header from "../Header.svelte";
   import ClassColors from "./ClassColors.svelte";
   import DatabaseInfo from "./DatabaseInfo.svelte";
   import Shortcuts from "./Shortcuts.svelte";
-  import { checkStartOnBoot, setAlwaysOnTop, setBlur, setBossOnlyDamage, setStartOnBoot } from "$lib/api";
 
   let currentTab = $state("General");
 
@@ -62,6 +71,39 @@
       }
     })();
   });
+
+  let prevBetaChannel = $state(settings.app.general.betaChannel);
+  $effect(() => {
+    let isBeta = settings.app.general.betaChannel;
+    if (isBeta !== prevBetaChannel) {
+      prevBetaChannel = isBeta;
+      checkForUpdate(isBeta);
+    }
+  });
+
+  const {
+    elements: {
+      portalled: optOutPortalled,
+      overlay: optOutOverlay,
+      content: optOutContent,
+      title: optOutTitle,
+      description: optOutDescription
+    },
+    states: { open: optOutOpen }
+  } = createDialog();
+
+  let installingStable = $state(false);
+
+  const {
+    elements: {
+      portalled: optInPortalled,
+      overlay: optInOverlay,
+      content: optInContent,
+      title: optInTitle,
+      description: optInDescription
+    },
+    states: { open: optInOpen }
+  } = createDialog();
 
   onMount(() => {
     (async () => {
@@ -127,8 +169,8 @@
 
 {#snippet settingsTab(tabName: string)}
   <button
-    class="focus:outline-hidden text-nowrap rounded-sm px-2 py-1 text-sm text-white transition {tabName === currentTab
-      ? 'bg-accent-600/80 border-transparent'
+    class="rounded-sm px-2 py-1 text-sm text-nowrap text-white transition focus:outline-hidden {tabName === currentTab
+      ? 'border-transparent bg-accent-600/80'
       : 'bg-transparent hover:bg-neutral-700/60'}"
     onclick={() => {
       currentTab = tabName;
@@ -145,13 +187,13 @@
         <input
           type="checkbox"
           bind:checked={appSettings[category][setting]}
-          class="form-checkbox checked:text-accent-600/80 size-5 rounded-sm border-0 bg-neutral-700 focus:ring-0"
+          class="form-checkbox size-5 rounded-sm border-0 bg-neutral-700 checked:text-accent-600/80 focus:ring-0"
         />
       {:else}
         <input
           type="checkbox"
           bind:checked={appSettings[category]["breakdown"][setting]}
-          class="form-checkbox checked:text-accent-600/80 size-5 rounded-sm border-0 bg-neutral-700 focus:ring-0"
+          class="form-checkbox size-5 rounded-sm border-0 bg-neutral-700 checked:text-accent-600/80 focus:ring-0"
         />
       {/if}
       <div class="ml-5">
@@ -169,7 +211,7 @@
       <select
         id="modifiers"
         bind:value={settings.app.general[tab === "meter" ? "scale" : "logScale"]}
-        class="focus:ring-accent-500 focus:border-accent-500 w-28 rounded-lg bg-neutral-700 py-1 text-sm placeholder-neutral-400"
+        class="w-28 rounded-lg bg-neutral-700 py-1 text-sm placeholder-neutral-400 focus:border-accent-500 focus:ring-accent-500"
       >
         <option value="0">Small</option>
         <option value="1">Normal</option>
@@ -266,7 +308,7 @@
             onchange={async () => {
               await setStartOnBoot(settings.app.general.startOnBoot);
             }}
-            class="form-checkbox checked:text-accent-600 size-5 rounded-sm border-0 bg-neutral-700 focus:ring-0"
+            class="form-checkbox size-5 rounded-sm border-0 bg-neutral-700 checked:text-accent-600 focus:ring-0"
           />
           <div class="ml-5">
             <div class="text-sm">Start with Windows</div>
@@ -316,7 +358,7 @@
             onchange={() => {
               setBossOnlyDamage(settings.app.general.bossOnlyDamage);
             }}
-            class="form-checkbox checked:text-accent-600/80 size-5 rounded-sm border-0 bg-neutral-700 focus:ring-0"
+            class="form-checkbox size-5 rounded-sm border-0 bg-neutral-700 checked:text-accent-600/80 focus:ring-0"
           />
           <div class="ml-5">
             <div class="text-sm">Boss Only Damage</div>
@@ -340,7 +382,7 @@
             type="checkbox"
             bind:checked={settings.app.general.autoIface}
             onchange={() => {}}
-            class="form-checkbox checked:text-accent-600/80 size-5 rounded-sm border-0 bg-neutral-700 focus:ring-0"
+            class="form-checkbox size-5 rounded-sm border-0 bg-neutral-700 checked:text-accent-600/80 focus:ring-0"
           />
           <div class="ml-5">
             <div class="text-sm">Auto Port Selection</div>
@@ -352,7 +394,7 @@
             <label class="flex items-center">
               <input
                 type="number"
-                class="form-input w-18 h-8 rounded-md border-0 bg-neutral-700 text-sm focus:ring-0"
+                class="form-input h-8 w-18 rounded-md border-0 bg-neutral-700 text-sm focus:ring-0"
                 bind:value={settings.app.general.port}
                 placeholder={settings.app.general.port.toString()}
               />
@@ -371,6 +413,29 @@
           "Enable Experimental Features",
           "Enables experimental features that may not be fully complete or stable."
         )}
+        <div class="w-fit">
+          <label class="flex items-center gap-2">
+            <input
+              type="checkbox"
+              checked={settings.app.general.betaChannel}
+              class="form-checkbox size-5 rounded-sm border-0 bg-neutral-700 checked:text-accent-600/80 focus:ring-0"
+              onclick={(e) => {
+                e.preventDefault();
+                if (settings.app.general.betaChannel) {
+                  $optOutOpen = true;
+                } else {
+                  $optInOpen = true;
+                }
+              }}
+            />
+            <div class="ml-5">
+              <div class="text-sm">Enable Beta Updates</div>
+              <div class="text-xs text-neutral-300">
+                Opt-in to beta updates. Test out new features before they are officially released.
+              </div>
+            </div>
+          </label>
+        </div>
       {:else if currentTab === "Logs"}
         <div class="flex flex-col gap-2">
           <label class="flex items-center justify-between gap-2">
@@ -384,7 +449,7 @@
           </label>
           <span use:melt={$root} class="relative flex h-[20px] items-center">
             <span class="h-[3px] w-full bg-neutral-700">
-              <span use:melt={$range} class="bg-accent-500/80 h-[3px]"></span>
+              <span use:melt={$range} class="h-[3px] bg-accent-500/80"></span>
             </span>
 
             {#each $ticks as tick}
@@ -430,6 +495,12 @@
           "unbuffedDamage",
           "Unbuffed/Buffed Damage",
           "Pseudo rDPS from in-game Combat Analyzer. Shows damage dealt without support buffs"
+        )}
+        {@render settingOption(
+          "logs",
+          "supportContrib",
+          "Support Contribution %",
+          "Show the support's % contribution to total party damage via buffs"
         )}
         {@render settingOption(
           "logs",
@@ -504,6 +575,12 @@
           "Skill Unbuffed/Buffed DPS",
           "Pseudo rDPS from in-game Combat Analyzer. Show the dps of the skill without support buffs. For support skills, shows the dps buffed by skill",
           true
+        )}
+        {@render settingOption(
+          "meter",
+          "supportContrib",
+          "Support Contribution %",
+          "Show the support's % contribution to total party damage via buffs"
         )}
         {@render settingOption(
           "logs",
@@ -835,7 +912,7 @@
                   id={option.value}
                 >
                   {#if $isChecked(option.value)}
-                    <div class="bg-accent-500 h-3 w-3 rounded-full"></div>
+                    <div class="h-3 w-3 rounded-full bg-accent-500"></div>
                   {/if}
                 </button>
                 <label class="pl-5" for={option.value} id="{option}-label">
@@ -862,7 +939,7 @@
             onchange={async () => {
               await setAlwaysOnTop(settings.app.general.alwaysOnTop);
             }}
-            class="form-checkbox checked:text-accent-600 size-5 rounded-sm border-0 bg-neutral-700 focus:ring-0"
+            class="form-checkbox size-5 rounded-sm border-0 bg-neutral-700 checked:text-accent-600 focus:ring-0"
           />
           <div class="ml-5">
             <div class="text-sm">Always on Top</div>
@@ -907,7 +984,7 @@
               onchange={async () => {
                 await setBlur(settings.app.general.blurWin11);
               }}
-              class="form-checkbox checked:text-accent-600 size-5 rounded-sm border-0 bg-neutral-700 focus:ring-0"
+              class="form-checkbox size-5 rounded-sm border-0 bg-neutral-700 checked:text-accent-600 focus:ring-0"
             />
             <div class="ml-5">
               <div class="text-sm">Blur Meter Background</div>
@@ -924,7 +1001,7 @@
               onchange={async () => {
                 await setBlur(settings.app.general.blur);
               }}
-              class="form-checkbox checked:text-accent-600 size-5 rounded-sm border-0 bg-neutral-700 focus:ring-0"
+              class="form-checkbox size-5 rounded-sm border-0 bg-neutral-700 checked:text-accent-600 focus:ring-0"
             />
             <div class="ml-5">
               <div>Blur Meter Background</div>
@@ -958,10 +1035,86 @@
   </div>
 </div>
 
-<style>
-  input::-webkit-outer-spin-button,
-  input::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-  }
-</style>
+{#if $optInOpen}
+  <div use:melt={$optInPortalled}>
+    <div use:melt={$optInOverlay} class="fixed inset-0 z-50 bg-black/50" transition:fade={{ duration: 150 }}></div>
+    <div
+      class="fixed top-1/2 left-1/2 z-50 w-[28rem] -translate-x-1/2 -translate-y-1/2 rounded-xl bg-neutral-800/40 p-6 shadow-lg drop-shadow-xl backdrop-blur-xl
+      {settings.app.general.accentColor} flex flex-col gap-4 text-white"
+      use:melt={$optInContent}
+    >
+      <h2 use:melt={$optInTitle} class="text-lg font-semibold">Switch to Beta Channel</h2>
+      <p use:melt={$optInDescription} class="text-sm text-neutral-300">
+        Your app will check for beta updates. You may test out new features before they are released.
+      </p>
+      <div class="flex justify-end gap-3">
+        <button
+          class="rounded-md bg-neutral-700 px-3 py-1.5 text-sm hover:bg-neutral-600 focus:ring-0"
+          onclick={() => {
+            $optInOpen = false;
+          }}
+        >
+          Cancel
+        </button>
+        <button
+          class="rounded-md bg-accent-500/70 px-3 py-1.5 text-sm hover:bg-accent-500/60 focus:ring-0"
+          onclick={async () => {
+            settings.app.general.betaChannel = true;
+            const hasUpdate = await checkForUpdate(true);
+            if (hasUpdate) {
+              await relaunchApp();
+            } else {
+              $optInOpen = false;
+            }
+          }}
+        >
+          Confirm
+        </button>
+      </div>
+    </div>
+  </div>
+{/if}
+
+{#if $optOutOpen}
+  <div use:melt={$optOutPortalled}>
+    <div use:melt={$optOutOverlay} class="fixed inset-0 z-50 bg-black/50" transition:fade={{ duration: 150 }}></div>
+    <div
+      class="fixed top-1/2 left-1/2 z-50 w-[28rem] -translate-x-1/2 -translate-y-1/2 rounded-xl bg-neutral-800/40 p-6 shadow-lg drop-shadow-xl backdrop-blur-xl
+      {settings.app.general.accentColor} flex flex-col gap-4 text-white"
+      use:melt={$optOutContent}
+    >
+      <h2 use:melt={$optOutTitle} class="text-lg font-semibold">Switch to Stable Release</h2>
+      <p use:melt={$optOutDescription} class="text-sm text-neutral-300">
+        The latest stable release will be installed. You will no longer receive beta updates.
+      </p>
+      <div class="flex justify-end gap-3">
+        <button
+          class="rounded-md bg-neutral-700 px-3 py-1.5 text-sm hover:bg-neutral-600 focus:ring-0"
+          onclick={() => {
+            $optOutOpen = false;
+          }}
+        >
+          Cancel
+        </button>
+        <button
+          class="rounded-md bg-accent-500/70 px-3 py-1.5 text-sm hover:bg-accent-500/60 focus:ring-0 disabled:opacity-50"
+          disabled={installingStable}
+          onclick={async () => {
+            installingStable = true;
+            settings.app.general.betaChannel = false;
+            const currentVersion = await getVersion();
+            if (currentVersion.includes("-")) {
+              await installStableUpdate();
+              await relaunchApp();
+            } else {
+              installingStable = false;
+              $optOutOpen = false;
+            }
+          }}
+        >
+          {installingStable ? "Switching..." : "Confirm"}
+        </button>
+      </div>
+    </div>
+  </div>
+{/if}

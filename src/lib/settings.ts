@@ -14,6 +14,7 @@ export interface DisplayFlags {
   percentIdentityBySup: boolean;
   percentBrand: boolean;
   percentHatBySup: boolean;
+  supportContrib: boolean;
 }
 
 export interface BreakdownBase extends DisplayFlags {
@@ -71,6 +72,7 @@ export interface GeneralSettings {
   miniEdit: boolean;
   autoShow: boolean;
   autoHideDelay: number;
+  betaChannel: boolean;
 }
 
 export interface Shortcuts {
