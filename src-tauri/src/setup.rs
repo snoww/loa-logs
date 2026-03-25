@@ -37,7 +37,10 @@ pub fn setup(app: &mut App) -> Result<(), Box<dyn Error>> {
 
     info!("starting app v{}", context.version);
     setup_tray(app_handle)?;
-    let is_beta = settings.as_ref().map(|s| s.general.beta_channel).unwrap_or(false);
+    let is_beta = settings
+        .as_ref()
+        .map(|s| s.general.beta_channel)
+        .unwrap_or(false);
     let update_checked: Arc<AtomicBool> = check_updates(app_handle, is_beta);
 
     let app_handle = app_handle.clone();
@@ -118,7 +121,11 @@ fn check_updates(app_handle: &AppHandle, is_beta: bool) -> Arc<AtomicBool> {
 
             let check_result = if is_beta {
                 let beta_url = url::Url::parse(BETA_ENDPOINT).expect("beta endpoint URL is valid");
-                match app_handle.updater_builder().endpoints(vec![beta_url]).and_then(|b| b.build()) {
+                match app_handle
+                    .updater_builder()
+                    .endpoints(vec![beta_url])
+                    .and_then(|b| b.build())
+                {
                     Ok(updater) => updater.check().await,
                     Err(e) => {
                         warn!("failed to build beta updater: {e}");
