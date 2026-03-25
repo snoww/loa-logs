@@ -560,7 +560,7 @@ pub fn start(args: StartArgs) -> Result<()> {
                 if let Some(pkt) = parse_pkt(
                     &data,
                     PKTCombatAnalyzerNotify::new,
-                    "PktSupportCombatAnalyzerDataNotify",
+                    "PKTCombatAnalyzerNotify",
                 ) {
                     state.on_support_combat_analyzer_data(pkt.entries, &entity_tracker);
                 }
