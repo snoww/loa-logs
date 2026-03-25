@@ -12,7 +12,7 @@ use chrono::Utc;
 use hashbrown::HashMap;
 use log::{info, warn};
 use meter_core::packets::common::SkillMoveOptionData;
-use meter_core::packets::structures::{SkillCooldownStruct, SupportCombatAnalyzerEvent};
+use meter_core::packets::structures::{CombatAnalyzerEntry, SkillCooldownStruct};
 use rsntp::SntpClient;
 use std::cmp::max;
 use std::default::Default;
@@ -1123,7 +1123,7 @@ impl EncounterState {
 
     pub fn on_support_combat_analyzer_data(
         &mut self,
-        events: Vec<SupportCombatAnalyzerEvent>,
+        events: Vec<CombatAnalyzerEntry>,
         entity_tracker: &EntityTracker,
     ) {
         for event in events {

@@ -556,13 +556,13 @@ pub fn start(args: StartArgs) -> Result<()> {
                     }
                 }
             }
-            Pkt::SupportCombatAnalyzerDataNotify => {
+            Pkt::CombatAnalyzerNotify => {
                 if let Some(pkt) = parse_pkt(
                     &data,
-                    PKTSupportCombatAnalyzerDataNotify::new,
+                    PKTCombatAnalyzerNotify::new,
                     "PktSupportCombatAnalyzerDataNotify",
                 ) {
-                    state.on_support_combat_analyzer_data(pkt.events, &entity_tracker);
+                    state.on_support_combat_analyzer_data(pkt.entries, &entity_tracker);
                 }
             }
             Pkt::PartyInfo => {
