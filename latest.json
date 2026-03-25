@@ -1,11 +1,11 @@
 {
-  "version": "v1.40.3",
-  "notes": "### v1.40.3 - March 13th, 2026\n\n#### P.S. If you see any of us in town or raid, feel free to drop an honor!\n\n- **Snowving** on Luterra\n- **Administrator** on Ratik\n- **Poont** on Giena\n\n#### BUG FIXES AND IMPROVEMENTS\n- fixed boss hp percentage option\n- fixed rage hammer destroyer classification\n- fixed kazeros 2-1 logs not being saved for tfm",
-  "pub_date": "2026-03-14T02:13:17.009Z",
+  "version": "v1.40.4",
+  "notes": "### v1.40.4 - March 25th, 2026\n\n#### P.S. If you see any of us in town or raid, feel free to drop an honor!\n\n- **Snowving** on Luterra\n- **Administrator** on Ratik\n- **Poont** on Giena\n\n#### NEW FEATURES\n\n- added dedicated column for support contribution % (toggleable in settings)\n- added incap visualization in player breakdown charts (@jeditobe1)\n\n#### BUG FIXES AND IMPROVEMENTS\n\n- fixed paladin holy sword brand\n- added loadout snapshot shortcut in logs\n",
+  "pub_date": "2026-03-25T05:57:39.792Z",
   "platforms": {
     "windows-x86_64": {
-      "url": "https://github.com/snoww/loa-logs/releases/download/v1.40.3/LOA.Logs_1.40.3_x64-setup.exe",
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmIvT1dvM3RIZ005elRBMXFSTlZJeWUyU1Nuc1BOd1BqaDI4b0ZidUs4QnBMRFlZenBSYWVQQlBMSGR3TlNKak1HSmt1UisyN0xhdG9VajhMVnRDcndJPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzczNDU0NDAxCWZpbGU6TE9BIExvZ3NfMS40MC4zX3g2NC1zZXR1cC5leGUKSm01L0w2Vi91dEZlcWFoenNKVG1rK1J2ak1RZnNtUUFzMlpTK01WUnNPSHBtTk5Obm5yVkZiUHFzZnpIcTdYdXBjd25LZm50Rk9lbmZLUkwwbGpKQkE9PQo="
+      "url": "https://github.com/snoww/loa-logs/releases/download/v1.40.4/LOA.Logs_1.40.4_x64-setup.exe",
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlFCMlUwSUJFeGhDV1JFWEEwY2VLUzRiYlVCVURkTTMrQTBYaTZoenNLbGZxa3k2VVUrejlKdG5qRXE3SUdtRE5NRkVranhGc1FGTHR5UVpjY1pqRkFVPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzc0NDE4MDAyCWZpbGU6TE9BIExvZ3NfMS40MC40X3g2NC1zZXR1cC5leGUKdWt2NEZqNk00dy9VcFRmbkRCdERveWhnTThxOW1QUk1KcjdOcE1xNUxVcTFnMUdTY0YzVURiZTZkZ0hTM2t4cGV6VkthRDk2bzJJTkZERVBjWTZyQ1E9PQo="
     }
   }
 }

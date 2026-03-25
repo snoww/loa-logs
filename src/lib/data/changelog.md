@@ -1,6 +1,6 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.40.3 - March 14th, 2026
+    v1.40.4 - March 25th, 2026
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
@@ -12,6 +12,20 @@
 - **Snowving** on Luterra
 - **Administrator** on Ratik
 - **Poont** on Gienah
+
+#### NEW FEATURES
+
+- added dedicated column for support contribution % (toggleable in settings)
+- added incap visualization in player breakdown charts (@jeditobe1)
+
+#### BUG FIXES AND IMPROVEMENTS
+
+- fixed paladin holy sword brand
+- added loadout snapshot shortcut in logs
+
+---
+
+### v1.40.3 - March 14th, 2026
 
 #### BUG FIXES AND IMPROVEMENTS
 
