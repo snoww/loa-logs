@@ -19,6 +19,7 @@
     getBossHpSeries,
     getDetailedSkillLogChart,
     getLegendNames,
+    getPlayerIncapSeries,
     getRollingDpsChart,
     getRollingPlayerSeries
   } from "$lib/utils/dpsCharts";
@@ -129,7 +130,10 @@
       } else if (chartType === ChartType.SKILL_LOG && player && player.entityType === EntityType.PLAYER) {
         const skillLogLen = Math.floor((encounter.lastCombatPacket - encounter.fightStart) / 1000);
         const skillLogLegend: string[] = [];
-        const skillLogBosses = getBossHpSeries(bossHpLogs, skillLogLegend, skillLogLen, 1);
+        const skillLogBosses = [
+          ...getBossHpSeries(bossHpLogs, skillLogLegend, skillLogLen, 1),
+          ...getPlayerIncapSeries(player, encounter.fightStart, encounter.lastCombatPacket)
+        ];
         if (hasSkillDetails) {
           chartOptions = getDetailedSkillLogChart(
             player,

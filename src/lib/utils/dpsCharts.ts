@@ -4,6 +4,7 @@ import { focusedCast, settings } from "$lib/stores.svelte";
 import {
   BossHpLog,
   EntityType,
+  IncapacitationEventType,
   MiniSkill,
   OpenerSkill,
   type DamageStats,
@@ -303,13 +304,16 @@ export function getDetailedSkillLogChart(
     .sort((a, b) => a.totalDamage - b.totalDamage);
   const skills = sortedSkills.map((skill) => skill.name);
 
+  const hasOverlays = chartBosses.length > 0;
+  const overlayNames = chartBosses.map((s: any) => s.name);
+
   return {
     ...defaultOptions,
     grid: {
       left: "2%",
       right: "5%",
       bottom: "18%",
-      top: "10%",
+      top: hasOverlays ? "22%" : "10%",
       containLabel: true
     },
     dataZoom: [
@@ -343,22 +347,36 @@ export function getDetailedSkillLogChart(
       transitionDuration: 0,
       extraCssText: "pointer-events: auto !important; padding: 0"
     } as any,
-    legend: {
-      data: [...skills].reverse(),
-      textStyle: {
-        color: "white"
+    legend: [
+      {
+        data: [...skills].reverse(),
+        top: 0,
+        textStyle: { color: "white" },
+        type: "scroll",
+        width: "90%",
+        pageIconInactiveColor: "#313131",
+        pageIconColor: "#aaa",
+        pageTextStyle: { color: "#aaa" },
+        itemWidth: 20,
+        itemHeight: 20,
+        selector: true
       },
-      type: "scroll",
-      width: "90%",
-      pageIconInactiveColor: "#313131",
-      pageIconColor: "#aaa",
-      pageTextStyle: {
-        color: "#aaa"
-      },
-      itemWidth: 20,
-      itemHeight: 20,
-      selector: true
-    },
+      ...(hasOverlays
+        ? [
+            {
+              data: overlayNames,
+              top: 30,
+              textStyle: { color: "white" },
+              type: "scroll",
+              width: "90%",
+              pageIconInactiveColor: "#313131",
+              pageIconColor: "#aaa",
+              pageTextStyle: { color: "#aaa" },
+              selector: true
+            }
+          ]
+        : [])
+    ],
     xAxis: {
       type: "category",
       splitLine: {
@@ -781,6 +799,57 @@ function secondsToMinutesAndSeconds(seconds: number): string {
   const minutes = Math.floor(seconds / 60);
   const remainingSeconds = seconds % 60;
   return `${minutes.toString().padStart(1, "0")}:${remainingSeconds.toString().padStart(2, "0")}`;
+}
+
+export function getPlayerIncapSeries(
+  player: Entity,
+  fightStart: number,
+  lastCombatPacket: number
+): any[] {
+  const incaps = player.damageStats.incapacitations;
+  if (!incaps || incaps.length === 0) return [];
+
+  const durationSec = Math.ceil((lastCombatPacket - fightStart) / 1000);
+  const knockdownData = new Array(durationSec).fill(0);
+  const ccData = new Array(durationSec).fill(0);
+
+  for (const event of incaps) {
+    const startSec = Math.max(0, Math.floor((event.timestamp - fightStart) / 1000));
+    const endSec = Math.min(durationSec - 1, Math.floor((event.timestamp - fightStart + event.duration) / 1000));
+    const arr = event.type === IncapacitationEventType.FALL_DOWN ? knockdownData : ccData;
+    for (let i = startSec; i <= endSec; i++) {
+      arr[i] = 100;
+    }
+  }
+
+  const series: any[] = [];
+  if (knockdownData.some((v) => v > 0)) {
+    series.push({
+      name: "Knockdown",
+      type: "line",
+      data: knockdownData,
+      showSymbol: false,
+      step: "end",
+      lineStyle: { opacity: 0 },
+      areaStyle: { color: "rgba(255, 165, 0, 0.2)" },
+      yAxisIndex: 1,
+      z: 1
+    });
+  }
+  if (ccData.some((v) => v > 0)) {
+    series.push({
+      name: "Crowd Control",
+      type: "line",
+      data: ccData,
+      showSymbol: false,
+      step: "end",
+      lineStyle: { opacity: 0 },
+      areaStyle: { color: "rgba(147, 51, 234, 0.2)" },
+      yAxisIndex: 1,
+      z: 1
+    });
+  }
+  return series;
 }
 
 export function timeStringToSeconds(time: string): number {
