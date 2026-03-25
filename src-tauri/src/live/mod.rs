@@ -567,11 +567,11 @@ pub fn start(args: StartArgs) -> Result<()> {
                     }
                 }
             }
-            PKTSupportCombatAnalyzerDataNotify::OPCODE => {
+            PKTCombatAnalyzerNotify::OPCODE => {
                 if let Some(pkt) = packet
-                    .try_parse::<PKTSupportCombatAnalyzerDataNotify>()
+                    .try_parse::<PKTCombatAnalyzerNotify>()
                     .unwrap()
-                {
+                ) {
                     state.on_support_combat_analyzer_data(pkt.events, &entity_tracker);
                 }
             }

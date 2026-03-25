@@ -1123,7 +1123,7 @@ impl EncounterState {
 
     pub fn on_support_combat_analyzer_data(
         &mut self,
-        events: Vec<SupportCombatAnalyzerEvent>,
+        events: Vec<CombatAnalyzerEntry>,
         entity_tracker: &EntityTracker,
     ) {
         for event in events {
