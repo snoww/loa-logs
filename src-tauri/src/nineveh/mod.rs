@@ -157,13 +157,11 @@ pub async fn setup_nineveh(app: AppHandle) -> Result<NinevehIPCPair> {
 
     // start new nineveh process
     log::info!("Starting new Nineveh IPC server process");
-    // let nineveh_path = std::env::current_exe()
-    //     .expect("could not get current exe")
-    //     .parent()
-    //     .expect("could not get exe parent")
-    //     .join("nineveh.exe");
-    let nineveh_path =
-        "C:\\Users\\thijs\\Documents\\Projects\\LostArk\\nineveh\\target\\release\\nineveh.exe";
+    let nineveh_path = std::env::current_exe()
+        .expect("could not get current exe")
+        .parent()
+        .expect("could not get exe parent")
+        .join("nineveh.exe");
     let mut command = tokio::process::Command::new(nineveh_path);
     command.arg("--ipc-port").arg("6971");
 
