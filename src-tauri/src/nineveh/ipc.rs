@@ -3,6 +3,8 @@ use std::net::SocketAddr;
 
 use anyhow::{Result, anyhow};
 use log::error;
+use meter_defs::GamePacket;
+use meter_defs::defs::{PKTDamageEncryptionKeyRequest, PKTDamageEncryptionKeyResult};
 use nineveh_formats::ipc::{
     IPCClientToServerMessage, IPCServerToClientMessage, PacketFilter, PacketSubscription,
 };
@@ -30,7 +32,10 @@ pub async fn connect_to_nineveh(
     let handshake_msg = IPCClientToServerMessage::Handshake {
         subscription: PacketSubscription {
             notify: PacketFilter::ALL,
-            modify: PacketFilter::Include(BTreeSet::from([0xE66E, 0x4CB8])),
+            modify: PacketFilter::Include(BTreeSet::from([
+                PKTDamageEncryptionKeyRequest::OPCODE,
+                PKTDamageEncryptionKeyResult::OPCODE,
+            ])),
         },
     };
     nineveh_formats::io::write(&mut write_half, &handshake_msg).await?;
