@@ -756,9 +756,9 @@ dependencies = [
 
 [[package]]
 name = "cmake"
-version = "0.1.57"
+version = "0.1.58"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "75443c44cd6b379beb8c5b45d85d0773baf31cce901fe7bb252f4eff3008ef7d"
+checksum = "c0f78a02292a74a88ac736019ab962ece0bc380e3f977bf72e376c5d78ff0678"
 dependencies = [
  "cc",
 ]
@@ -2744,7 +2744,7 @@ dependencies = [
 [[package]]
 name = "meter-decryption"
 version = "0.1.0"
-source = "git+ssh://git@github.com/molenzwiebel/nineveh#ef33e58727b75cf967928d9ac80f5b033390782c"
+source = "git+ssh://git@github.com/molenzwiebel/nineveh#6aacc9d1918d4d2a40c671b27dd764b83a67f6b7"
 dependencies = [
  "meter-defs",
  "nineveh-formats",
@@ -2754,7 +2754,7 @@ dependencies = [
 [[package]]
 name = "meter-defs"
 version = "0.1.0"
-source = "git+ssh://git@github.com/molenzwiebel/nineveh#ef33e58727b75cf967928d9ac80f5b033390782c"
+source = "git+ssh://git@github.com/molenzwiebel/nineveh#6aacc9d1918d4d2a40c671b27dd764b83a67f6b7"
 dependencies = [
  "anyhow",
  "byteorder",
@@ -2883,7 +2883,7 @@ checksum = "650eef8c711430f1a879fdd01d4745a7deea475becfb90269c06775983bbf086"
 [[package]]
 name = "nineveh-formats"
 version = "0.1.0"
-source = "git+ssh://git@github.com/molenzwiebel/nineveh#ef33e58727b75cf967928d9ac80f5b033390782c"
+source = "git+ssh://git@github.com/molenzwiebel/nineveh#6aacc9d1918d4d2a40c671b27dd764b83a67f6b7"
 dependencies = [
  "bitcode",
  "serde",
@@ -5951,9 +5951,9 @@ checksum = "e6e4313cd5fcd3dad5cafa179702e2b244f760991f45397d14d4ebf38247da75"
 
 [[package]]
 name = "unicode-segmentation"
-version = "1.13.1"
+version = "1.13.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "da36089a805484bcccfffe0739803392c8298778a2d2f09febf76fac5ad9025b"
+checksum = "9629274872b2bfaf8d66f5f15725007f635594914870f65218920345aa11aa8c"
 
 [[package]]
 name = "unicode-xid"
