@@ -6,6 +6,10 @@
     "windows-x86_64": {
       "url": "https://github.com/snoww/loa-logs/releases/download/v1.41.0/LOA.Logs_1.41.0_x64-setup.exe",
       "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYldNVmFBWUNKcUtHM1o0UUduT2dDNEhqcFl4bG1mTDNYS3Rxd2JUd2Z1dVRqSDZNYm54Ym4yR2FUelRjZnlHYURyU1cxclVRb1F0MFlQTDFNS2FmakFjPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzc0NDY0MjY4CWZpbGU6TE9BIExvZ3NfMS40MS4wX3g2NC1zZXR1cC5leGUKVnluNTJkL21WTEF0MTc0ekNVdVJRQ0RjcHo1SzNPOEZIK0djbmdUVTZ0N3A3NnFPREUzSEd1dm9BNGdzWEcyTjRNMXppMUhjRmJJZ1BvT3FLL1p1RHc9PQo="
+    },
+    "linux-x86_64": {
+      "url": "https://github.com/snoww/loa-logs/releases/download/v1.41.0/LOA.Logs_1.41.0_amd64.AppImage",
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmVIYUIya2xwdFc2eFBGZjIvSXIwV0pmWnJENHg5eENkRWk3UWhmb21hOWdSMVRPdlJzV3RmbC9YeFhFY1Urb2FHL0hlZ3BhTWduTlVOQmlYdjAxT2c4PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzc0NDgzNTk4CWZpbGU6TE9BIExvZ3NfMS40MS4wX2FtZDY0LkFwcEltYWdlCldVS09lT3lQZ3dNNHhpYnhkMCtLT1VnWUxLUWdtaUl6N1ROV0FMV2pueit1NmZYa21hRE9FcFJpZlVkY0lKN3VMVmJPS0hTdytNdUVKNkUwR3Y3bkRBPT0K"
     }
   }
 }
