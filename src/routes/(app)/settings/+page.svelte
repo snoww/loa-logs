@@ -577,12 +577,6 @@
           true
         )}
         {@render settingOption(
-          "meter",
-          "supportContrib",
-          "Support Contribution %",
-          "Show the support's % contribution to total party damage via buffs"
-        )}
-        {@render settingOption(
           "logs",
           "critRate",
           "Skill Crit Rate",
@@ -732,6 +726,12 @@
           "unbuffedDamage",
           "Unbuffed/Buffed Damage",
           "Pseudo rDPS from in-game Combat Analyzer. Shows damage dealt without support buffs"
+        )}
+        {@render settingOption(
+          "meter",
+          "supportContrib",
+          "Support Contribution %",
+          "Show the support's % contribution to total party damage via buffs"
         )}
         {@render settingOption(
           "meter",
