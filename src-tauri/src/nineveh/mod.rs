@@ -92,7 +92,7 @@ async fn handle_nineveh_ipc_messages(
                         if let Some(region) = get_region_from_ip(info.remote_addr) {
                             let ctx = app.state::<AppContext>();
                             if let Ok(mut r) = ctx.region.write() {
-                                log::info!("region set to {} from IP {}", region, info.remote_addr);
+                                log::info!("region set to {}", region);
                                 *r = Some(region);
                             }
                         }
