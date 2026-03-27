@@ -169,6 +169,9 @@ pub async fn setup_nineveh(app: AppHandle) -> Result<NinevehIPCPair> {
     command.stdout(std::process::Stdio::inherit());
     command.stderr(std::process::Stdio::inherit());
 
+    // suppress console window
+    command.creation_flags(0x08000000); // CREATE_NO_WINDOW
+
     // launch command, then keep attempting to connect until either we have a success, or the
     // child process exits.
     let mut child = match command.spawn() {
