@@ -2,6 +2,7 @@ use crate::api::{GetCharacterInfoArgs, StatsApi};
 use crate::data::*;
 use crate::database::Repository;
 use crate::database::models::InsertEncounterArgs;
+use crate::live::debug_print;
 use crate::live::entity_tracker::{Entity, EntityTracker};
 use crate::live::skill_tracker::SkillTracker;
 use crate::live::status_tracker::StatusEffectDetails;
@@ -693,6 +694,8 @@ impl EncounterState {
                 source_entity.id,
             );
 
+        let battle_item_name = skill_name.clone();
+
         if !source_entity.skills.contains_key(&skill_key) {
             if let Some(skill) = source_entity
                 .skills
@@ -788,6 +791,13 @@ impl EncounterState {
             );
             return;
         };
+
+        if is_battle_item && battle_item_name.contains("Dark") {
+            debug_print(format_args!(
+                "from: {}, hit: {}",
+                source_entity.name, battle_item_name
+            ))
+        }
 
         source_entity.id = dmg_src_entity.id;
 

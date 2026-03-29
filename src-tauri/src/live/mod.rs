@@ -126,13 +126,24 @@ pub fn start(args: StartArgs) -> Result<()> {
         }
 
         match op {
-            // Pkt::BattleItemUseNotify => {
-            //     if let Some(pkt) =
-            //         parse_pkt(&data, PKTBattleItemUseNotify::new, "PKTBattleItemUseNotify")
-            //     {
-            //         state.on_battle_item_use(&pkt.item_id);
-            //     }
-            // }
+            Pkt::BattleItemUseNotify => {
+                if let Some(pkt) =
+                    parse_pkt(&data, PKTBattleItemUseNotify::new, "PKTBattleItemUseNotify")
+                {
+                    state.on_battle_item_use(&pkt.item_id);
+
+                    if let Some(character_id) = pkt.character_id.value
+                        && let Some(entity_id) = id_tracker.borrow().get_entity_id(character_id)
+                        && let Some(player) = entity_tracker.entities.get(&entity_id)
+                    {
+                        if pkt.item_id == 101151 || pkt.item_id == 102151 {
+                            debug_print(format_args!("from: {}, used: Dark Grenade", player.name))
+                        } else if pkt.item_id == 101924 || pkt.item_id == 102924 {
+                            debug_print(format_args!("from: {}, used: Splendid Dark Grenade", player.name))
+                        }
+                    }
+                }
+            }
             Pkt::CounterAttackNotify => {
                 if let Some(pkt) =
                     parse_pkt(&data, PKTCounterAttackNotify::new, "PKTCounterAttackNotify")
