@@ -32,15 +32,14 @@
         Welcome to LOA Logs <span class="text-accent-500">Beta</span>
       </h2>
       <div use:melt={$description} class="flex flex-col gap-2 text-sm text-neutral-300">
+        <p>This build of LOA Logs uses the new "Nineveh" packet library, which is still in beta.</p>
         <p>
-          You're running a beta build of LOA Logs. This version includes experimental features and changes that are
-          still being tested before a stable release.
+          While we have tested it extensively and are confident in its stability, there may still be some edge cases
+          that cause crashes or other issues.
         </p>
         <p>
-          This version will
-        </p>
-        <p>
-          Please report any issues on Discord.
+          Please make sure that you're aware of the quirks of the beta and report any issues you encounter to us so we
+          can continue improving it!
         </p>
       </div>
       <div class="flex justify-end">
