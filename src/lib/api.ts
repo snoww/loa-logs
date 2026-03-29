@@ -14,6 +14,8 @@ import type {
 } from "./types";
 import type { AppSettings } from "./settings";
 
+export const BETA_MODAL_KEY = "betaPopupShown";
+
 export const getAppVersion = async (): Promise<string> => `v${await getVersion()}`;
 
 export const openUrl = (url: string): Promise<void> => invoke("open_url", { url });

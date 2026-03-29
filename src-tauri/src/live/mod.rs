@@ -214,7 +214,6 @@ pub fn start(args: StartArgs) -> Result<()> {
                     let entity = entity_tracker.init_env(pkt);
                     state.on_init_env(entity);
                     get_and_set_region(&app, &mut state);
-                    info!("region: {:?}", state.region);
                 }
             }
             PKTInitPC::OPCODE => {

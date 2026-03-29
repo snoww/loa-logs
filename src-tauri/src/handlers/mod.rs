@@ -438,6 +438,7 @@ pub async fn install_beta_update(app_handle: AppHandle) -> Result<()> {
     #[cfg(not(debug_assertions))]
     if let Some(update) = updater.check().await.map_err(anyhow::Error::new)? {
         info!("installing beta update: v{}", update.version);
+        shell_manager.unload_driver().await;
         shell_manager.remove_driver().await;
         update
             .download_and_install(|_, _| {}, || {})
@@ -460,6 +461,7 @@ pub async fn install_stable_update(app_handle: AppHandle) -> Result<()> {
     #[cfg(not(debug_assertions))]
     if let Some(update) = updater.check().await.map_err(anyhow::Error::new)? {
         info!("installing stable update: v{}", update.version);
+        shell_manager.unload_driver().await;
         shell_manager.remove_driver().await;
         update
             .download_and_install(|_, _| {}, || {})

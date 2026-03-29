@@ -97,14 +97,18 @@
     <LiveBossInfo boss={enc.encounter.currentBoss} />
   {/if}
   {#if !nineveh.connections.length}
-    <div class="absolute left-0 right-0 top-7 bg-black/70 p-2 text-red-500">
-      No active game connections. If you're already in game, please go back to the server select screen and re-enter the
-      game.
+    <div class="absolute top-7 right-0 left-0 flex flex-col gap-1 bg-black/70 p-2 text-red-500 pt-7"
+         style="height: calc(100% - 1.5rem - 1.75rem)">
+      <div>Warning: No active game connections.</div>
+      <div>
+        If you're already in game, please go back to the <span class="font-bold">Server Select</span> screen (NOT character
+        select) and re-enter the game.
+      </div>
     </div>
   {/if}
   <!-- svelte-ignore a11y_no_static_element_interactions -->
   <div
-    class="select-none overflow-scroll"
+    class="overflow-scroll select-none"
     style="height: calc(100% - 1.5rem - 1.75rem {enc.encounter?.currentBoss && settings.app.meter.bossInfo
       ? ' - 1.75rem'
       : ''});"
@@ -134,4 +138,3 @@
   </div>
   <LiveFooter bind:tab />
 </div>
-

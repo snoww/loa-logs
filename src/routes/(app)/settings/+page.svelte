@@ -1,5 +1,6 @@
 <script lang="ts">
   import {
+    BETA_MODAL_KEY,
     checkStartOnBoot,
     installStableUpdate,
     relaunchApp,
@@ -75,6 +76,9 @@
   let prevBetaChannel = $state(settings.app.general.betaChannel);
   $effect(() => {
     let isBeta = settings.app.general.betaChannel;
+    if (!isBeta) {
+      localStorage.removeItem(BETA_MODAL_KEY);
+    }
     if (isBeta !== prevBetaChannel) {
       prevBetaChannel = isBeta;
       checkForUpdate(isBeta);

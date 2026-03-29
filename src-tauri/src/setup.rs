@@ -37,10 +37,11 @@ pub fn setup(app: &mut App) -> Result<(), Box<dyn Error>> {
 
     info!("starting app v{}", context.version);
     setup_tray(app_handle)?;
-    let is_beta = settings
-        .as_ref()
-        .map(|s| s.general.beta_channel)
-        .unwrap_or(false);
+    let is_beta = context.version.contains("beta")
+        || settings
+            .as_ref()
+            .map(|s| s.general.beta_channel)
+            .unwrap_or(false);
     let update_checked: Arc<AtomicBool> = check_updates(app_handle, is_beta);
 
     let app_handle = app_handle.clone();
