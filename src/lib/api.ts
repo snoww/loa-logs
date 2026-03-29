@@ -74,6 +74,8 @@ export const optimizeDatabase = (): Promise<void> => invoke("optimize_database")
 
 export const startLoaProcess = (): Promise<void> => invoke("start_loa_process");
 
+export const checkNinevehRunning = (): Promise<boolean> => invoke("check_nineveh_running");
+
 interface LoadEncountersCriteria {
   page: number;
   pageSize: number;

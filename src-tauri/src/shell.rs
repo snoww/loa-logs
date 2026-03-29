@@ -54,6 +54,31 @@ impl ShellManager {
             .any(|p| p.name().eq_ignore_ascii_case(process_name))
     }
 
+    pub fn check_nineveh_running(&self) -> bool {
+        let system = System::new_with_specifics(
+            RefreshKind::nothing().with_processes(ProcessRefreshKind::nothing().without_tasks()),
+        );
+        system
+            .processes()
+            .values()
+            .any(|p| p.name().eq_ignore_ascii_case("nineveh.exe"))
+    }
+
+    pub fn kill_nineveh_process(&self) {
+        let system = System::new_with_specifics(
+            RefreshKind::nothing().with_processes(ProcessRefreshKind::nothing().without_tasks()),
+        );
+        for process in system.processes().values() {
+            if process.name().eq_ignore_ascii_case("nineveh.exe") {
+                if process.kill() {
+                    info!("stopped nineveh.exe (pid: {})", process.pid());
+                } else {
+                    warn!("failed to stop nineveh.exe (pid: {})", process.pid());
+                }
+            }
+        }
+    }
+
     pub async fn remove_driver(&self) {
         #[cfg(target_os = "windows")]
         {

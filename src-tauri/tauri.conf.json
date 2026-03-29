@@ -14,6 +14,9 @@
     "resources": [
       "meter-data/*.json"
     ],
+    "externalBin": [
+      "nineveh"
+    ],
     "icon": [
       "icons/icon.ico",
       "icons/icon.png"
@@ -56,7 +59,7 @@
       },
       {
         "label": "logs",
-        "title": "LOA Logs",
+        "title": "LOA Logs Beta",
         "userAgent": "LOA Logs App",
         "url": "logs",
         "minWidth": 650,

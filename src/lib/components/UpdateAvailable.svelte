@@ -3,18 +3,42 @@
   import { createDialog, melt } from "@melt-ui/svelte";
   import { fade } from "svelte/transition";
   import { markdown } from "./Markdown.svelte";
-  import { installBetaUpdate, relaunchApp } from "$lib/api";
+  import { checkNinevehRunning, installBetaUpdate, relaunchApp } from "$lib/api";
 
   const {
     elements: { portalled, overlay, content, title, description },
     states: { open }
   } = createDialog();
 
+  let ninevehWarning = $state(false);
+  let installing = $state(false);
+
   $effect(() => {
     if (updateInfo.available) {
       $open = true;
     }
   });
+
+  async function doUpdate() {
+    installing = true;
+    if (updateInfo.isBeta) {
+      await installBetaUpdate();
+    }
+    await relaunchApp();
+  }
+
+  async function onUpdateClick() {
+    const ninevehRunning = await checkNinevehRunning();
+    if (ninevehRunning) {
+      ninevehWarning = true;
+    } else {
+      await doUpdate();
+    }
+  }
+
+  async function onConfirmUpdate() {
+    await doUpdate();
+  }
 </script>
 
 {#if $open}
@@ -26,24 +50,41 @@
       use:melt={$content}
     >
       <h2 use:melt={$title} class="sticky top-0 py-2 text-xl font-semibold">New Update Available!</h2>
-      {#if updateInfo.manifest?.body}
-        <div use:melt={$description} class="overflow-y-scroll rounded-md border border-neutral-700">
-          {@render markdown(updateInfo.manifest.body)}
+      {#if ninevehWarning}
+        <p use:melt={$description} class="text-center text-sm text-neutral-300">
+          Updating will close any active game connections. Do you want to proceed?
+        </p>
+        <div class="flex items-center gap-3 py-2">
+          <button
+            class="rounded-md bg-neutral-600/70 px-2 py-1 hover:bg-neutral-600/60 focus:ring-0"
+            onclick={() => (ninevehWarning = false)}
+          >
+            Cancel
+          </button>
+          <button
+            class="rounded-md bg-accent-500/70 px-2 py-1 hover:bg-accent-500/60 focus:ring-0 disabled:opacity-50"
+            disabled={installing}
+            onclick={onConfirmUpdate}
+          >
+            {installing ? "Updating..." : "Update Now"}
+          </button>
+        </div>
+      {:else}
+        {#if updateInfo.manifest?.body}
+          <div use:melt={$description} class="overflow-y-scroll rounded-md border border-neutral-700">
+            {@render markdown(updateInfo.manifest.body)}
+          </div>
+        {/if}
+        <div class="flex items-center py-2">
+          <button
+            class="rounded-md bg-accent-500/70 px-2 py-1 hover:bg-accent-500/60 focus:ring-0 disabled:opacity-50"
+            disabled={installing}
+            onclick={onUpdateClick}
+          >
+            {installing ? "Updating..." : "Update Now"}
+          </button>
         </div>
       {/if}
-      <div class="flex items-center py-2">
-        <button
-          class="rounded-md bg-accent-500/70 px-2 py-1 hover:bg-accent-500/60 focus:ring-0"
-          onclick={async () => {
-            if (updateInfo.isBeta) {
-              await installBetaUpdate();
-            }
-            await relaunchApp();
-          }}
-        >
-          <span>Update Now</span>
-        </button>
-      </div>
     </div>
   </div>
 {/if}
