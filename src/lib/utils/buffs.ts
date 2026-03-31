@@ -147,9 +147,18 @@ export function filterStatusEffects(
   }
 }
 
-export function getSynergyPercentageDetails(groupedSynergies: Map<string, Map<number, StatusEffect>>, skill: Skill) {
+export function getSynergyPercentageDetails(
+  groupedSynergies: Map<string, Map<number, StatusEffect>>,
+  skill: Skill,
+  entityState?: EntityState
+) {
   const synergyPercentageDetails: BuffDetails[] = [];
   const isHyperAwakening = skill.isHyperAwakening || hyperAwakeningIds.has(skill.id);
+  const ws = entityState?.ws;
+  const emptyBuffs: { [key: number]: number } = {};
+  const sBuffedBy = ws ? (ws.skillBuffedBy.get(skill.id) ?? emptyBuffs) : skill.buffedBy;
+  const sDebuffedBy = ws ? (ws.skillDebuffedBy.get(skill.id) ?? emptyBuffs) : skill.debuffedBy;
+  const sTotalDamage = ws ? (ws.skillDamage.get(skill.id) ?? 0) : skill.totalDamage;
   groupedSynergies.forEach((synergies, key) => {
     let synergyDamage = 0;
     const buff = new BuffDetails();
@@ -164,40 +173,40 @@ export function getSynergyPercentageDetails(groupedSynergies: Map<string, Map<nu
         if (supportSkills.haTechnique.includes(id) || supportSkills.hyperHat.includes(id)) {
           const b = new Buff(
             syn.source.icon,
-            customRound((skill.buffedBy[id] / skill.totalDamage) * 100),
+            customRound(((sBuffedBy[id] ?? 0) / sTotalDamage) * 100),
             syn.source.skill?.icon
           );
 
           buff.buffs.push(b);
-          synergyDamage += skill.buffedBy[id];
+          synergyDamage += sBuffedBy[id] ?? 0;
         }
 
         return;
       }
 
-      if (skill.buffedBy[id]) {
+      if (sBuffedBy[id]) {
         const b = new Buff(
           syn.source.icon,
-          customRound((skill.buffedBy[id] / skill.totalDamage) * 100),
+          customRound((sBuffedBy[id] / sTotalDamage) * 100),
           syn.source.skill?.icon
         );
         addBardBubbles(key, b, syn);
         buff.buffs.push(b);
-        synergyDamage += skill.buffedBy[id];
-      } else if (skill.debuffedBy[id]) {
+        synergyDamage += sBuffedBy[id];
+      } else if (sDebuffedBy[id]) {
         buff.buffs.push(
           new Buff(
             syn.source.icon,
-            customRound((skill.debuffedBy[id] / skill.totalDamage) * 100),
+            customRound((sDebuffedBy[id] / sTotalDamage) * 100),
             syn.source.skill?.icon
           )
         );
-        synergyDamage += skill.debuffedBy[id];
+        synergyDamage += sDebuffedBy[id];
       }
     });
 
     if (synergyDamage > 0) {
-      buff.percentage = customRound((synergyDamage / skill.totalDamage) * 100);
+      buff.percentage = customRound((synergyDamage / sTotalDamage) * 100);
     }
     synergyPercentageDetails.push(buff);
   });
@@ -210,6 +219,7 @@ export function getSynergyPercentageDetailsSum(
   entityState: EntityState
 ) {
   const synergyPercentageDetails: BuffDetails[] = [];
+  const ws = entityState.ws;
   groupedSynergies.forEach((synergies, key) => {
     let synergyDamage = 0;
     const buffs = new BuffDetails();
@@ -229,13 +239,16 @@ export function getSynergyPercentageDetailsSum(
         if ((skill.isHyperAwakening || hyperAwakeningIds.has(skill.id)) && !isHat) {
           continue;
         }
-        if (skill.buffedBy[id]) {
-          totalBuffed += skill.buffedBy[id];
-          synergyDamage += skill.buffedBy[id];
+        const emptyBuffs: { [key: number]: number } = {};
+        const sBuffedBy = ws ? (ws.skillBuffedBy.get(skill.id) ?? emptyBuffs) : skill.buffedBy;
+        const sDebuffedBy = ws ? (ws.skillDebuffedBy.get(skill.id) ?? emptyBuffs) : skill.debuffedBy;
+        if (sBuffedBy[id]) {
+          totalBuffed += sBuffedBy[id];
+          synergyDamage += sBuffedBy[id];
         }
-        if (skill.debuffedBy[id]) {
-          totalBuffed += skill.debuffedBy[id];
-          synergyDamage += skill.debuffedBy[id];
+        if (sDebuffedBy[id]) {
+          totalBuffed += sDebuffedBy[id];
+          synergyDamage += sDebuffedBy[id];
         }
       }
       if (isHat) {

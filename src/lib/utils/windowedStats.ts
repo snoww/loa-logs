@@ -27,6 +27,11 @@ export interface WindowedEntityStats {
   frontAttacks: number;
   hitsSpecialOrHa: number; // for hitsWithoutSpecial denominator
   skillDamage: Map<number, number>; // skillId -> totalDamage in window
+  // per-buff damage (mirrors entity.damageStats.buffedBy/debuffedBy and skill.buffedBy/debuffedBy)
+  buffedBy: { [key: number]: number };
+  debuffedBy: { [key: number]: number };
+  skillBuffedBy: Map<number, { [key: number]: number }>; // skillId -> buffId -> damage
+  skillDebuffedBy: Map<number, { [key: number]: number }>; // skillId -> buffId -> damage
 }
 
 export function computeWindowedEntityStats(
@@ -59,7 +64,11 @@ export function computeWindowedEntityStats(
     backAttacks: 0,
     frontAttacks: 0,
     hitsSpecialOrHa: 0,
-    skillDamage: new Map()
+    skillDamage: new Map(),
+    buffedBy: {},
+    debuffedBy: {},
+    skillBuffedBy: new Map(),
+    skillDebuffedBy: new Map()
   };
 
   const fightStart = encounter.fightStart;
@@ -113,6 +122,20 @@ export function computeWindowedEntityStats(
         result.debuffedBySupport += supportBuffs.brand;
         result.buffedByIdentity += supportBuffs.identity;
         result.buffedByHat += supportBuffs.hat;
+
+        // per-buff damage for buff percentage calculations
+        for (const buffId of hit.buffedBy) {
+          result.buffedBy[buffId] = (result.buffedBy[buffId] ?? 0) + hit.damage;
+          let sb = result.skillBuffedBy.get(skill.id);
+          if (!sb) { sb = {}; result.skillBuffedBy.set(skill.id, sb); }
+          sb[buffId] = (sb[buffId] ?? 0) + hit.damage;
+        }
+        for (const buffId of hit.debuffedBy) {
+          result.debuffedBy[buffId] = (result.debuffedBy[buffId] ?? 0) + hit.damage;
+          let sd = result.skillDebuffedBy.get(skill.id);
+          if (!sd) { sd = {}; result.skillDebuffedBy.set(skill.id, sd); }
+          sd[buffId] = (sd[buffId] ?? 0) + hit.damage;
+        }
       }
     }
   }
