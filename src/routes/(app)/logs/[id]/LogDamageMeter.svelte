@@ -10,7 +10,9 @@
   import LogPlayerBreakdown from "$lib/components/PlayerBreakdown.svelte";
   import { EncounterState } from "$lib/encounter.svelte.js";
   import { screenshot } from "$lib/stores.svelte.js";
-  import { ChartType, type Encounter, type Entity, EntityType, MeterState, MeterTab } from "$lib/types";
+  import { bossHpMap } from "$lib/constants/encounters";
+  import { BossHpLog, ChartType, type Encounter, type Entity, EntityType, MeterState, MeterTab } from "$lib/types";
+  import { resampleData } from "$lib/utils";
   import {
     getAllDeathInfo,
     getAverageDpsChart,
@@ -40,6 +42,8 @@
   let meterState = $state(MeterState.PARTY);
   let tab = $state(MeterTab.DAMAGE);
   let chartType = $state(ChartType.AVERAGE_DPS);
+  let timeWindow: { startMs: number; endMs: number } | null = $state(null);
+  let echartsInst: ReturnType<typeof chartable>["echartsInstance"] | null = $state(null);
 
   let playerName = $state("");
   let player: Entity | undefined = $derived.by(() => {
@@ -56,6 +60,11 @@
     focusedBoss = "";
     meterState = MeterState.PARTY;
     chartType = ChartType.AVERAGE_DPS;
+    timeWindow = null;
+  });
+
+  $effect(() => {
+    enc.timeWindow = timeWindow;
   });
 
   function inspectPlayer(name: string) {
@@ -86,6 +95,31 @@
   );
   let bossHpLogs = $derived(Object.entries(encounter.encounterDamageStats.bossHpLog || {}));
   let legendNames = $derived(getLegendNames(chartablePlayers));
+  let aggregateDps = $derived.by(() => {
+    if (chartablePlayers.length === 0) return [];
+    const len = chartablePlayers[0].damageStats.dpsAverage.length;
+    const result = new Array(len).fill(0);
+    for (const p of chartablePlayers) {
+      const arr = p.damageStats.dpsAverage;
+      for (let i = 0; i < Math.min(arr.length, len); i++) {
+        result[i] += arr[i];
+      }
+    }
+    return result;
+  });
+  let bossHpResampled = $derived.by(() => {
+    const len = aggregateDps.length;
+    if (len === 0 || bossHpLogs.length === 0) return [];
+    const primary = bossHpLogs.reduce((a, b) => (a[1].length >= b[1].length ? a : b));
+    const bossName = primary[0];
+    const log = primary[1];
+    if (log.length < 2) return [];
+    const max = Math.max(...log.slice(0, 5).map((e) => e.p));
+    const normalized = max > 1 ? log.map((e) => new BossHpLog(e.time, e.hp, e.p / max)) : log;
+    const resampled = resampleData(normalized, 5, len);
+    const totalBars = bossHpMap[bossName] ?? 0;
+    return resampled.map((e) => ({ bars: totalBars > 0 ? Math.round(e.p * totalBars) : 0, p: e.p }));
+  });
   let buffChartLegend = $derived(enc.parties.map((_, i) => "Party " + (i + 1)));
   let buffChartSeries = $derived(
     getSupportSynergiesOverTime(enc, encounter.fightStart, encounter.lastCombatPacket, 5000)
@@ -97,10 +131,26 @@
 
   $effect(() => {
     if (chartDiv) {
-      const { destroy } = chartable(chartDiv, chartOptions);
+      const { destroy, echartsInstance } = chartable(chartDiv, chartOptions);
       destroyChart = destroy;
+      echartsInst = echartsInstance;
     }
   });
+
+  function commitTimeWindow(w: { startSec: number; endSec: number } | null) {
+    timeWindow = w ? { startMs: w.startSec * 1000, endMs: w.endSec * 1000 } : null;
+    applyWindowToCharts(w?.startSec ?? 0, w?.endSec ?? encounter.duration / 1000);
+  }
+
+  function applyWindowToCharts(startSec: number, endSec: number) {
+    const durSec = encounter.duration / 1000;
+    if (durSec <= 0) return;
+    echartsInst?.dispatchAction({
+      type: "dataZoom",
+      start: (startSec / durSec) * 100,
+      end: (endSec / durSec) * 100
+    });
+  }
 
   onDestroy(() => {
     if (destroyChart) destroyChart();
@@ -232,7 +282,7 @@
 <div class="overflow-hidden text-neutral-100" oncontextmenu={handleRightClick}>
   <Card bind:self={screenshotDiv}>
     <!-- Enocunter summary -->
-    <LogEncounterInfo {enc} />
+    <LogEncounterInfo {enc} durationSec={Math.floor(encounter.duration / 1000)} dpsData={aggregateDps} bossHpData={bossHpResampled} oncommit={commitTimeWindow} />
 
     <!-- Content and tabs -->
     <div class="flex flex-col gap-2 py-2">

@@ -26,7 +26,10 @@ export class BuffState {
     return this.enc.players.filter((player) => player.entityType === EntityType.PLAYER);
   });
   percentages = $derived(
-    this.players.map((player) => (player.damageStats.damageDealt / this.enc.topDamageDealt) * 100)
+    this.players.map((player) => {
+      const dmg = this.enc.windowedStats?.get(player.name)?.damageDealt ?? player.damageStats.damageDealt;
+      return (dmg / this.enc.topDamageDealt) * 100;
+    })
   );
 
   groupedSynergies: Map<string, Map<number, StatusEffect>> = $derived.by(() => {
@@ -83,13 +86,19 @@ export class BuffState {
         temp.get(partyId.toString())!.set(player.name, []);
         const playerBuffs = temp.get(partyId.toString())!.get(player.name)!;
 
-        const damageDealtWithoutSpecial =
-          player.damageStats.damageDealt -
-          Object.values(player.skills)
-            .filter((skill) => skill.special)
-            .reduce((acc, skill) => acc + skill.totalDamage, 0);
-        const damageDealtWithoutSpecialAndHa =
-          damageDealtWithoutSpecial - (player.damageStats.hyperAwakeningDamage ?? 0);
+        const ws = this.enc.windowedStats?.get(player.name);
+        const pBuffedBy = ws?.buffedBy ?? player.damageStats.buffedBy;
+        const pDebuffedBy = ws?.debuffedBy ?? player.damageStats.debuffedBy;
+        const pDamageDealt = ws?.damageDealt ?? player.damageStats.damageDealt;
+        const pSpecialDmg = ws
+          ? ws.specialDamage
+          : Object.values(player.skills)
+              .filter((skill) => skill.special)
+              .reduce((acc, skill) => acc + skill.totalDamage, 0);
+        const pHaDmg = ws?.hyperAwakeningDamage ?? (player.damageStats.hyperAwakeningDamage ?? 0);
+
+        const damageDealtWithoutSpecial = pDamageDealt - pSpecialDmg;
+        const damageDealtWithoutSpecialAndHa = damageDealtWithoutSpecial - pHaDmg;
 
         this.partyGroupedSynergies.get(partyId.toString())?.forEach((key) => {
           const buffDetails = new BuffDetails();
@@ -103,11 +112,11 @@ export class BuffState {
               isHat = true;
             }
 
-            if (player.damageStats.buffedBy[id] && syn.category === "buff") {
+            if (pBuffedBy[id] && syn.category === "buff") {
               const b = new Buff(
                 syn.source.icon,
                 customRound(
-                  (player.damageStats.buffedBy[id] /
+                  (pBuffedBy[id] /
                     (isHat ? damageDealtWithoutSpecial : damageDealtWithoutSpecialAndHa)) *
                     100
                 ),
@@ -115,21 +124,21 @@ export class BuffState {
               );
               addBardBubbles(key, b, syn);
               buffDetails.buffs.push(b);
-              buffDamage += player.damageStats.buffedBy[id];
+              buffDamage += pBuffedBy[id];
             }
-            if (player.damageStats.debuffedBy[id] && syn.category === "debuff") {
+            if (pDebuffedBy[id] && syn.category === "debuff") {
               buffDetails.buffs.push(
                 new Buff(
                   syn.source.icon,
                   customRound(
-                    (player.damageStats.debuffedBy[id] /
+                    (pDebuffedBy[id] /
                       (isHat ? damageDealtWithoutSpecial : damageDealtWithoutSpecialAndHa)) *
                       100
                   ),
                   syn.source.skill?.icon
                 )
               );
-              buffDamage += player.damageStats.debuffedBy[id];
+              buffDamage += pDebuffedBy[id];
             }
           });
           if (buffDamage > 0) {

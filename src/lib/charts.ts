@@ -101,7 +101,8 @@ export const defaultOptions: EChartsOptions = {
       },
       moveHandleStyle: {
         color: "rgba(136,136,136)"
-      }
+      },
+      moveHandleSize: 0
     }
   ]
 };

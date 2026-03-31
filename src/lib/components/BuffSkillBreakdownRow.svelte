@@ -20,7 +20,7 @@
 
   let { skill, entityState, groupedSynergies, width, index }: Props = $props();
 
-  let synergyPercentageDetails: Array<BuffDetails> = $derived(getSynergyPercentageDetails(groupedSynergies, skill));
+  let synergyPercentageDetails: Array<BuffDetails> = $derived(getSynergyPercentageDetails(groupedSynergies, skill, entityState));
   let isHyperAwakening = skill.isHyperAwakening || hyperAwakeningIds.has(skill.id);
 
   const tweenedValue = new Tween(entityState.encounter.live ? 0 : width, {

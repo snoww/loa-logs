@@ -371,7 +371,7 @@
 {/snippet}
 
 {#snippet damageTooltip(state: SkillState)}
-  {state.skill.totalDamage.toLocaleString()}
+  {state.totalDamage.toLocaleString()}
 {/snippet}
 
 {#snippet dps(state: SkillState)}
@@ -383,7 +383,7 @@
 {/snippet}
 
 {#snippet damagePct(state: SkillState)}
-  {@render percentValue(customRound((state.skill.totalDamage / state.entity.damageDealt) * 100))}
+  {@render percentValue(customRound((state.totalDamage / state.entity.damageDealt) * 100))}
 {/snippet}
 
 {#snippet critPct(state: SkillState)}
@@ -459,8 +459,8 @@
 {#snippet buffPct(state: SkillState)}
   {#if state.skill.special || state.skill.isHyperAwakening || hyperAwakeningIds.has(state.skill.id)}
     -
-  {:else if state.skill.totalDamage > 0}
-    {@render percentValue(customRound((state.skill.buffedBySupport / state.skill.totalDamage) * 100))}
+  {:else if state.totalDamage > 0}
+    {@render percentValue(customRound((state.skill.buffedBySupport / state.totalDamage) * 100))}
   {:else}
     {@render percentValue(0)}
   {/if}
@@ -469,8 +469,8 @@
 {#snippet brandPct(state: SkillState)}
   {#if state.skill.special || state.skill.isHyperAwakening || hyperAwakeningIds.has(state.skill.id)}
     -
-  {:else if state.skill.totalDamage > 0}
-    {@render percentValue(customRound((state.skill.debuffedBySupport / state.skill.totalDamage) * 100))}
+  {:else if state.totalDamage > 0}
+    {@render percentValue(customRound((state.skill.debuffedBySupport / state.totalDamage) * 100))}
   {:else}
     {@render percentValue(0)}
   {/if}
@@ -479,8 +479,8 @@
 {#snippet idenPct(state: SkillState)}
   {#if state.skill.special || state.skill.isHyperAwakening || hyperAwakeningIds.has(state.skill.id)}
     -
-  {:else if state.skill.totalDamage > 0}
-    {@render percentValue(customRound((state.skill.buffedByIdentity / state.skill.totalDamage) * 100))}
+  {:else if state.totalDamage > 0}
+    {@render percentValue(customRound((state.skill.buffedByIdentity / state.totalDamage) * 100))}
   {:else}
     {@render percentValue(0)}
   {/if}
@@ -489,20 +489,20 @@
 {#snippet tSkillPct(state: SkillState)}
   {#if state.skill.special}
     -
-  {:else if state.skill.totalDamage > 0}
-    {@render percentValue(customRound(((state.skill.buffedByHat ?? 0) / state.skill.totalDamage) * 100))}
+  {:else if state.totalDamage > 0}
+    {@render percentValue(customRound(((state.skill.buffedByHat ?? 0) / state.totalDamage) * 100))}
   {:else}
     {@render percentValue(0)}
   {/if}
 {/snippet}
 
 {#snippet avgPerHit(state: SkillState)}
-  {@const averagePerHit = state.skill.hits > 0 ? state.skill.totalDamage / state.skill.hits : 0}
+  {@const averagePerHit = state.hits > 0 ? state.totalDamage / state.hits : 0}
   {@render damageValue(abbreviateNumberSplit(averagePerHit))}
 {/snippet}
 
 {#snippet avgPerHitTooltip(state: SkillState)}
-  {@const averagePerHit = state.skill.hits > 0 ? state.skill.totalDamage / state.skill.hits : 0}
+  {@const averagePerHit = state.hits > 0 ? state.totalDamage / state.hits : 0}
   {Math.round(averagePerHit).toLocaleString()}
 {/snippet}
 
@@ -515,11 +515,11 @@
 {/snippet}
 
 {#snippet maxHit(state: SkillState)}
-  {@render damageValue(abbreviateNumberSplit(state.skill.maxDamage))}
+  {@render damageValue(abbreviateNumberSplit(state.maxDmg))}
 {/snippet}
 
 {#snippet maxHitTooltip(state: SkillState)}
-  {state.skill.maxDamage.toLocaleString()}
+  {state.maxDmg.toLocaleString()}
 {/snippet}
 
 {#snippet maxCast(state: SkillState)}
@@ -535,20 +535,22 @@
 {/snippet}
 
 {#snippet casts(state: SkillState)}
-  {state.skill.casts}
+  {state.casts}
 {/snippet}
 
 {#snippet castsPerMinute(state: SkillState)}
-  {customRound(state.skill.casts / (state.entity.encounter.duration / 1000 / 60))}
+  {@const dur = state.wss ? state.entity.wDurMs : state.entity.encounter.duration}
+  {customRound(state.casts / (dur / 1000 / 60))}
 {/snippet}
 
 {#snippet hits(state: SkillState)}
-  {state.skill.hits}
+  {state.hits}
 {/snippet}
 
 {#snippet hitsPerMinute(state: SkillState)}
-  {#if state.skill.hits > 0}
-    {customRound(state.skill.hits / (state.entity.encounter.duration / 1000 / 60))}
+  {#if state.hits > 0}
+    {@const dur = state.wss ? state.entity.wDurMs : state.entity.encounter.duration}
+    {customRound(state.hits / (dur / 1000 / 60))}
   {:else}
     0
   {/if}
@@ -571,15 +573,17 @@
 {/snippet}
 
 {#snippet stagger(state: SkillState)}
-  {#if state.skill.stagger > 0}
-    {@render damageValue(abbreviateNumberSplit(state.skill.stagger))}
+  {@const stag = state.wss?.stagger ?? state.skill.stagger}
+  {#if stag > 0}
+    {@render damageValue(abbreviateNumberSplit(stag))}
   {:else}
     -
   {/if}
 {/snippet}
 
 {#snippet staggerTooltip(state: SkillState)}
-  {state.skill.stagger ? state.skill.stagger.toLocaleString() : "N/A"}
+  {@const stag = state.wss?.stagger ?? state.skill.stagger}
+  {stag ? stag.toLocaleString() : "N/A"}
 {/snippet}
 
 {#snippet unbuffedDamage(state: SkillState)}
@@ -595,7 +599,7 @@
     N/A
   {:else}
     {@const unbuffed = state.skillUnbuffedDamage}
-    {@const buffed = state.skill.totalDamage - unbuffed}
+    {@const buffed = state.totalDamage - unbuffed}
     <div class="-mx-px flex flex-col space-y-1 py-px text-xs font-normal">
       <span class="text-gray-300">Base: {abbreviateNumber(unbuffed, 2)}</span>
       <span class="text-gray-300">Buffed: {abbreviateNumber(buffed, 2)}</span>

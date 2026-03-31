@@ -294,6 +294,7 @@ export interface SkillChartSupportDamage {
   buff: number;
   brand: number;
   identity: number;
+  hat: number;
 }
 
 export interface SkillChartModInfo {

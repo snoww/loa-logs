@@ -5,8 +5,21 @@
   import { abbreviateNumber, timestampToMinutesAndSeconds } from "$lib/utils";
   import { middot } from "$lib/components/Snippets.svelte";
   import QuickTooltip from "$lib/components/QuickTooltip.svelte";
+  import TimeWindowSlider from "$lib/components/TimeWindowSlider.svelte";
 
-  let { enc }: { enc: EncounterState } = $props();
+  let {
+    enc,
+    durationSec,
+    dpsData,
+    bossHpData,
+    oncommit
+  }: {
+    enc: EncounterState;
+    durationSec: number;
+    dpsData: number[];
+    bossHpData: { bars: number; p: number }[];
+    oncommit: (w: { startSec: number; endSec: number } | null) => void;
+  } = $props();
 
   let locale: string | undefined = $state();
 
@@ -21,6 +34,7 @@
 </script>
 
 <div class="bg-black/10 px-3 py-2 text-sm" class:hidden={screenshot.state} id="header">
+  <TimeWindowSlider {durationSec} {dpsData} {bossHpData} {oncommit} class="-mx-3 mb-1" />
   <div class="flex flex-row gap-1">
     <div class="flex items-baseline gap-1 text-neutral-300">
       <div>Duration:</div>
