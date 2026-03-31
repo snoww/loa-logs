@@ -481,13 +481,13 @@ export function getSkillCastBuffs(
 }
 
 export function getSkillCastSupportBuffs(hit: SkillHit, encounterDamageStats: EncounterDamageStats) {
-  const supportBuffs: SkillChartSupportDamage = { buff: 0, brand: 0, identity: 0 };
+  const supportBuffs: SkillChartSupportDamage = { buff: 0, brand: 0, identity: 0, hat: 0 };
 
   for (const type of buffTypes) {
     for (const buffId of (hit as any)[type.key1]) {
       const buffs = (encounterDamageStats as any)[type.key2];
       if (buffs.hasOwnProperty(buffId)) {
-        if (supportBuffs.brand > 0 && supportBuffs.buff > 0 && supportBuffs.identity > 0) {
+        if (supportBuffs.brand > 0 && supportBuffs.buff > 0 && supportBuffs.identity > 0 && supportBuffs.hat > 0) {
           return supportBuffs;
         }
         getHitSupportBuffs(hit.damage, buffs[buffId], supportBuffs);
@@ -518,6 +518,8 @@ function getHitSupportBuffs(hitDamage: number, buff: StatusEffect, supportBuffs:
       supportBuffs.brand += hitDamage;
     } else if (key.includes("_2_") && !supportBuffs.identity) {
       supportBuffs.identity += hitDamage;
+    } else if (key.includes("_3_") && !supportBuffs.hat) {
+      supportBuffs.hat += hitDamage;
     }
   }
 }

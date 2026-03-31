@@ -2,6 +2,7 @@ import { type Encounter, type Entity, EntityType } from "$lib/types";
 import { sumRdpsContributed } from "./skill.svelte";
 import { settings } from "./stores.svelte";
 import { timestampToMinutesAndSeconds } from "./utils";
+import { computeWindowedEntityStats, type WindowedEntityStats } from "./utils/windowedStats";
 
 export class EncounterState {
   live = false;
@@ -9,6 +10,30 @@ export class EncounterState {
   encounter: Encounter | undefined = $state();
   curSettings = $derived(this.live ? settings.app.meter : settings.app.logs);
   end = $derived(this.encounter?.lastCombatPacket ?? 0);
+
+  timeWindow: { startMs: number; endMs: number } | null = $state(null);
+
+  windowDurationMs = $derived(
+    this.timeWindow ? this.timeWindow.endMs - this.timeWindow.startMs : (this.encounter?.duration ?? 0)
+  );
+
+  windowedStats = $derived.by((): Map<string, WindowedEntityStats> | null => {
+    if (!this.timeWindow || !this.encounter) return null;
+    const map = new Map<string, WindowedEntityStats>();
+    for (const player of this.players) {
+      map.set(
+        player.name,
+        computeWindowedEntityStats(
+          player,
+          this.encounter,
+          this.timeWindow.startMs,
+          this.timeWindow.endMs,
+          this.timeWindow.endMs - this.timeWindow.startMs
+        )
+      );
+    }
+    return map;
+  });
 
   duration = $state(this.encounter?.duration ?? 0);
   region = $derived.by(() => {
@@ -93,7 +118,16 @@ export class EncounterState {
     )
   );
 
-  topDamageDealt = $derived(this.encounter?.encounterDamageStats.topDamageDealt ?? 0);
+  topDamageDealt = $derived.by(() => {
+    if (this.windowedStats) {
+      let max = 0;
+      for (const ws of this.windowedStats.values()) {
+        if (ws.damageDealt > max) max = ws.damageDealt;
+      }
+      return max;
+    }
+    return this.encounter?.encounterDamageStats.topDamageDealt ?? 0;
+  });
 
   /**
    * Array of damage dealt percentages for each player in the encounter, relative to the highest damage dealt.
@@ -102,13 +136,21 @@ export class EncounterState {
    */
   playerDamagePercentages = $derived.by(() => {
     if (this.topDamageDealt === 0) return [];
-    return this.players.map((player) => (player.damageStats.damageDealt / this.topDamageDealt) * 100);
+    return this.players.map((player) => {
+      const dmg = this.windowedStats?.get(player.name)?.damageDealt ?? player.damageStats.damageDealt;
+      return (dmg / this.topDamageDealt) * 100;
+    });
   });
 
   /**
    * Sum of all damage dealt by players in the encounter, including esthers if showEsther is enabled.
    */
   totalDamageDealt = $derived.by(() => {
+    if (this.windowedStats) {
+      let total = 0;
+      for (const ws of this.windowedStats.values()) total += ws.damageDealt;
+      return total;
+    }
     if (settings.app.general.showEsther) {
       // include esthers in the total damage dealt
       return (
@@ -186,7 +228,12 @@ export class EncounterState {
    * Indexes in the array, and sub array correspond to the indexes in `this.parties`
    */
   partyDamagePercentages = $derived(
-    this.parties.map((party) => party.map((player) => (player.damageStats.damageDealt / this.topDamageDealt) * 100))
+    this.parties.map((party) =>
+      party.map((player) => {
+        const dmg = this.windowedStats?.get(player.name)?.damageDealt ?? player.damageStats.damageDealt;
+        return (dmg / this.topDamageDealt) * 100;
+      })
+    )
   );
 
   /**

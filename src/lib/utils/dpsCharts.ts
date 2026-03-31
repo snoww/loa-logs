@@ -326,7 +326,8 @@ export function getDetailedSkillLogChart(
         },
         moveHandleStyle: {
           color: "rgba(136,136,136)"
-        }
+        },
+        moveHandleSize: 0
       },
       {
         type: "inside",
@@ -518,7 +519,8 @@ export function getBasicSkillLogChart(
         },
         moveHandleStyle: {
           color: "rgba(136,136,136)"
-        }
+        },
+        moveHandleSize: 0
       },
       {
         type: "inside",
@@ -740,7 +742,7 @@ function skillCastBreakdownTooltip(
         </thead>
         <tbody>
     `;
-  const totalSupBuffs: SkillChartSupportDamage = { buff: 0, brand: 0, identity: 0 };
+  const totalSupBuffs: SkillChartSupportDamage = { buff: 0, brand: 0, identity: 0, hat: 0 };
   const modInfo: SkillChartModInfo = { crit: 0, critDamage: 0, ba: 0, fa: 0 };
   for (const [i, hit] of skillCast.hits.entries()) {
     const groupedBuffs = getSkillCastBuffs(hit, encounterDamageStats, player);

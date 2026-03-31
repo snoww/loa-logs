@@ -52,7 +52,7 @@
         acc.identity += buffs.identity;
         return acc;
       },
-      { buff: 0, brand: 0, identity: 0 }
+      { buff: 0, brand: 0, identity: 0, hat: 0 }
     );
   });
 

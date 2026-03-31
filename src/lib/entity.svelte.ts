@@ -5,10 +5,14 @@ import { sumRdpsContributed } from "./skill.svelte";
 import { settings } from "./stores.svelte";
 import { type Entity, EntityType, type IncapacitatedEvent } from "./types";
 import { hyperAwakeningIds } from "./utils/buffs";
+import type { WindowedEntityStats } from "./utils/windowedStats";
 
 export class EntityState {
   entity: Entity = $state()!;
   encounter: EncounterState = $state()!;
+
+  ws: WindowedEntityStats | undefined = $derived(this.encounter.windowedStats?.get(this.entity.name));
+  wDurMs: number = $derived(this.encounter.windowDurationMs);
 
   name: string = $derived.by(() => {
     if (!this.entity) return "";
@@ -35,6 +39,7 @@ export class EntityState {
   });
 
   dps = $derived.by(() => {
+    if (this.ws) return this.ws.dps;
     if (this.encounter.live) {
       return Math.round(this.entity.damageStats.damageDealt / (this.encounter.duration / 1000));
     } else {
@@ -50,20 +55,25 @@ export class EntityState {
     }
   });
 
-  damageDealt = $derived(this.entity.damageStats.damageDealt);
+  damageDealt = $derived(this.ws?.damageDealt ?? this.entity.damageStats.damageDealt);
   damageDealtString = $derived(abbreviateNumberSplit(this.damageDealt));
   damageDealtWithoutSpecial = $derived(
-    this.damageDealt -
-      Object.values(this.entity.skills)
-        .filter((skill) => skill.special)
-        .reduce((acc, skill) => acc + skill.totalDamage, 0)
+    this.ws
+      ? this.ws.damageDealt - this.ws.specialDamage
+      : this.damageDealt -
+          Object.values(this.entity.skills)
+            .filter((skill) => skill.special)
+            .reduce((acc, skill) => acc + skill.totalDamage, 0)
   );
   damageDealtWithoutSpecialOrHa = $derived(
-    this.damageDealtWithoutSpecial - (this.entity.damageStats.hyperAwakeningDamage ?? 0)
+    this.ws
+      ? this.damageDealtWithoutSpecial - this.ws.hyperAwakeningDamage
+      : this.damageDealtWithoutSpecial - (this.entity.damageStats.hyperAwakeningDamage ?? 0)
   );
   damagePercentage = $derived(((this.damageDealt / this.encounter.totalDamageDealt) * 100).toFixed(1));
   damageTakenString = $derived(abbreviateNumberSplit(this.entity.damageStats.damageTaken));
   unbuffedDps = $derived.by(() => {
+    if (this.ws) return this.ws.unbuffedDps;
     if (this.encounter.live) {
       if (this.entity.damageStats.unbuffedDamage === 0) return this.dps;
       return Math.round(this.entity.damageStats.unbuffedDamage / (this.encounter.duration / 1000));
@@ -73,53 +83,68 @@ export class EntityState {
   });
 
   hitsWithoutSpecial = $derived(
-    this.entity.skillStats.hits -
-      Object.values(this.entity.skills)
-        .filter((skill) => skill.special || skill.isHyperAwakening || hyperAwakeningIds.has(skill.id))
-        .reduce((acc, skill) => acc + skill.hits, 0)
+    this.ws
+      ? this.ws.hits - this.ws.hitsSpecialOrHa
+      : this.entity.skillStats.hits -
+          Object.values(this.entity.skills)
+            .filter((skill) => skill.special || skill.isHyperAwakening || hyperAwakeningIds.has(skill.id))
+            .reduce((acc, skill) => acc + skill.hits, 0)
   );
 
   deadFor: string = $derived.by(() => {
-    if (this.entity.isDead) {
-      return Math.abs((this.encounter.end - this.entity.damageStats.deathTime) / 1000).toFixed(0) + "s";
+    if (!this.entity.isDead) return "";
+    const deathTime = this.entity.damageStats.deathTime;
+    const tw = this.encounter.timeWindow;
+    if (tw && this.encounter.encounter) {
+      const fightStart = this.encounter.encounter.fightStart;
+      const windowStart = fightStart + tw.startMs;
+      const windowEnd = fightStart + tw.endMs;
+      if (deathTime >= windowEnd) return "";
+      if (deathTime < windowStart) return (this.wDurMs / 1000).toFixed(0) + "s";
+      return ((windowEnd - deathTime) / 1000).toFixed(0) + "s";
     }
-    return "";
+    return Math.abs((this.encounter.end - deathTime) / 1000).toFixed(0) + "s";
   });
 
   critPercentage = $derived.by(() => {
     if (this.hitsWithoutSpecial > 0) {
-      return customRound((this.entity.skillStats.crits / this.hitsWithoutSpecial) * 100);
+      const crits = this.ws?.crits ?? this.entity.skillStats.crits;
+      return customRound((crits / this.hitsWithoutSpecial) * 100);
     }
     return "0";
   });
   critDmgPercentage = $derived.by(() => {
     if (this.hitsWithoutSpecial > 0) {
-      return customRound((this.entity.damageStats.critDamage / this.damageDealtWithoutSpecialOrHa) * 100);
+      const critDamage = this.ws?.critDamage ?? this.entity.damageStats.critDamage;
+      return customRound((critDamage / this.damageDealtWithoutSpecialOrHa) * 100);
     }
     return "0";
   });
   baPercentage = $derived.by(() => {
     if (this.hitsWithoutSpecial > 0) {
-      return customRound((this.entity.skillStats.backAttacks / this.hitsWithoutSpecial) * 100);
+      const ba = this.ws?.backAttacks ?? this.entity.skillStats.backAttacks;
+      return customRound((ba / this.hitsWithoutSpecial) * 100);
     }
-
     return "0";
   });
   badPercentage = $derived.by(() => {
-    if (this.entity.damageStats.backAttackDamage > 0) {
-      return customRound((this.entity.damageStats.backAttackDamage / this.damageDealtWithoutSpecialOrHa) * 100);
+    const bad = this.ws?.backAttackDamage ?? this.entity.damageStats.backAttackDamage;
+    if (bad > 0) {
+      return customRound((bad / this.damageDealtWithoutSpecialOrHa) * 100);
     }
     return "0";
   });
   faPercentage = $derived.by(() => {
     if (this.hitsWithoutSpecial > 0) {
-      return customRound((this.entity.skillStats.frontAttacks / this.hitsWithoutSpecial) * 100);
+      const fa = this.ws?.frontAttacks ?? this.entity.skillStats.frontAttacks;
+      return customRound((fa / this.hitsWithoutSpecial) * 100);
     }
     return "0";
   });
   fadPercentage = $derived.by(() => {
-    if (this.entity.damageStats.frontAttackDamage > 0) {
-      return customRound((this.entity.damageStats.frontAttackDamage / this.damageDealtWithoutSpecialOrHa) * 100);
+    const fad = this.ws?.frontAttackDamage ?? this.entity.damageStats.frontAttackDamage;
+    if (fad > 0) {
+      return customRound((fad / this.damageDealtWithoutSpecialOrHa) * 100);
     }
     return "0";
   });
@@ -155,10 +180,18 @@ export class EntityState {
   anySupportHat = $derived(this.skills.some((skill) => skill.buffedByHat > 0));
 
   anyCooldownRatio = $derived(this.skills.some((skill) => skill.timeAvailable));
-  anyStagger = $derived(this.entity.damageStats.stagger > 0);
+  // Windowed-aware accessors for fields read directly in templates
+  buffedBySupport = $derived(this.ws?.buffedBySupport ?? this.entity.damageStats.buffedBySupport);
+  debuffedBySupport = $derived(this.ws?.debuffedBySupport ?? this.entity.damageStats.debuffedBySupport);
+  buffedByIdentity = $derived(this.ws?.buffedByIdentity ?? this.entity.damageStats.buffedByIdentity);
+  buffedByHat = $derived(this.ws?.buffedByHat ?? (this.entity.damageStats.buffedByHat ?? 0));
+  stagger = $derived(this.ws?.stagger ?? this.entity.damageStats.stagger);
+  unbuffedDamage = $derived(this.ws?.unbuffedDamage ?? this.entity.damageStats.unbuffedDamage);
+  deaths = $derived(this.ws?.deaths ?? this.entity.damageStats.deaths);
+
+  anyStagger = $derived(this.stagger > 0);
   anyUnbuffedDamage = $derived(
-    this.entity.damageStats.unbuffedDamage > 0 &&
-      this.entity.damageStats.unbuffedDamage !== this.entity.damageStats.damageDealt
+    this.unbuffedDamage > 0 && this.unbuffedDamage !== this.damageDealt
   );
 
   hasRdpsContributions = $derived(

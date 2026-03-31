@@ -273,8 +273,8 @@
 {/snippet}
 
 {#snippet deaths(state: EntityState)}
-  {#if state.entity.damageStats.deaths > 0}
-    {state.entity.damageStats.deaths}
+  {#if state.deaths > 0}
+    {state.deaths}
   {:else}
     -
   {/if}
@@ -346,25 +346,25 @@
 
 {#snippet buffPct(state: EntityState)}
   {@render percentValue(
-    customRound((state.entity.damageStats.buffedBySupport / state.damageDealtWithoutSpecialOrHa) * 100)
+    customRound((state.buffedBySupport / state.damageDealtWithoutSpecialOrHa) * 100)
   )}
 {/snippet}
 
 {#snippet brandPct(state: EntityState)}
   {@render percentValue(
-    customRound((state.entity.damageStats.debuffedBySupport / state.damageDealtWithoutSpecialOrHa) * 100)
+    customRound((state.debuffedBySupport / state.damageDealtWithoutSpecialOrHa) * 100)
   )}
 {/snippet}
 
 {#snippet identityPct(state: EntityState)}
   {@render percentValue(
-    customRound((state.entity.damageStats.buffedByIdentity / state.damageDealtWithoutSpecialOrHa) * 100)
+    customRound((state.buffedByIdentity / state.damageDealtWithoutSpecialOrHa) * 100)
   )}
 {/snippet}
 
 {#snippet hatPct(state: EntityState)}
   {@render percentValue(
-    customRound(((state.entity.damageStats.buffedByHat ?? 0) / state.damageDealtWithoutSpecial) * 100)
+    customRound((state.buffedByHat / state.damageDealtWithoutSpecial) * 100)
   )}
 {/snippet}
 
@@ -377,15 +377,15 @@
 {/snippet}
 
 {#snippet stagger(state: EntityState)}
-  {#if state.entity.damageStats.stagger > 0}
-    {@render damageValue(abbreviateNumberSplit(state.entity.damageStats.stagger))}
+  {#if state.stagger > 0}
+    {@render damageValue(abbreviateNumberSplit(state.stagger))}
   {:else}
     -
   {/if}
 {/snippet}
 
 {#snippet staggerTooltip(state: EntityState)}
-  {state.entity.damageStats.stagger ? state.entity.damageStats.stagger.toLocaleString() : "N/A"}
+  {state.stagger ? state.stagger.toLocaleString() : "N/A"}
 {/snippet}
 
 {#snippet unbuffedDamage(state: EntityState)}
@@ -394,7 +394,7 @@
   {:else if !state.anyUnbuffedDamage}
     -
   {:else}
-    {@render damageValue(abbreviateNumberSplit(state.entity.damageStats.unbuffedDamage))}
+    {@render damageValue(abbreviateNumberSplit(state.unbuffedDamage))}
   {/if}
 {/snippet}
 
@@ -406,7 +406,7 @@
   {:else if !state.anyUnbuffedDamage}
     N/A
   {:else}
-    {@const unbuffed = state.entity.damageStats.unbuffedDamage}
+    {@const unbuffed = state.unbuffedDamage}
     {@const buffed = state.damageDealt - unbuffed}
     <div class="-mx-px flex flex-col space-y-1 py-px text-xs font-normal">
       <span class="text-gray-300">Base: {abbreviateNumber(unbuffed, 2)}</span>
@@ -449,7 +449,7 @@
   {#if state.hasRdpsContributions}
     {@render percentValue(customRound(state.supportContribPercent))}
   {:else if state.anyUnbuffedDamage}
-    {@const buffed = state.damageDealt - state.entity.damageStats.unbuffedDamage}
+    {@const buffed = state.damageDealt - state.unbuffedDamage}
     {@render percentValue(customRound((buffed / state.damageDealt) * 100))}
   {:else}
     -
@@ -460,7 +460,7 @@
   {#if state.hasRdpsContributions}
     The support contributed {customRound(state.supportContribPercent)}% damage to the party
   {:else if state.anyUnbuffedDamage}
-    {@const buffed = state.damageDealt - state.entity.damageStats.unbuffedDamage}
+    {@const buffed = state.damageDealt - state.unbuffedDamage}
     The support contributed {customRound((buffed / state.damageDealt) * 100)}% of the damage
   {/if}
 {/snippet}
