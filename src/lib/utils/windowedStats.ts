@@ -26,6 +26,7 @@ export interface WindowedEntityStats {
   backAttacks: number;
   frontAttacks: number;
   hitsSpecialOrHa: number; // for hitsWithoutSpecial denominator
+  skillDamage: Map<number, number>; // skillId -> totalDamage in window
 }
 
 export function computeWindowedEntityStats(
@@ -57,7 +58,8 @@ export function computeWindowedEntityStats(
     crits: 0,
     backAttacks: 0,
     frontAttacks: 0,
-    hitsSpecialOrHa: 0
+    hitsSpecialOrHa: 0,
+    skillDamage: new Map()
   };
 
   const fightStart = encounter.fightStart;
@@ -75,6 +77,7 @@ export function computeWindowedEntityStats(
         if (hit.timestamp < windowStartMs || hit.timestamp >= windowEndMs) continue;
 
         result.damageDealt += hit.damage;
+        result.skillDamage.set(skill.id, (result.skillDamage.get(skill.id) ?? 0) + hit.damage);
         result.unbuffedDamage += hit.unbuffedDamage ?? hit.damage;
         result.rdpsDamageReceived += hit.rdpsDamageReceived;
         result.rdpsDamageReceivedSupport += hit.rdpsDamageReceivedSupport;
