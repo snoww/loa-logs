@@ -160,8 +160,8 @@ export class EntityState {
 
   skills = $derived.by(() => {
     if (!this.entity) return [];
-    const sd = this.ws?.skillDamage;
-    const dmg = (s: { id: number; totalDamage: number }) => sd ? (sd.get(s.id) ?? 0) : s.totalDamage;
+    const ss = this.ws?.skillStats;
+    const dmg = (s: { id: number; totalDamage: number }) => ss ? (ss.get(s.id)?.totalDamage ?? 0) : s.totalDamage;
     let arr = Object.values(this.entity.skills);
     if (this.entity.class === "Arcanist") {
       arr = arr.filter((skill) => !cardIds.includes(skill.id));
@@ -171,14 +171,14 @@ export class EntityState {
 
   mostDamageSkill = $derived.by(() => {
     if (this.skills.length === 0) return 0;
-    const sd = this.ws?.skillDamage;
-    return sd ? (sd.get(this.skills[0].id) ?? 0) : this.skills[0].totalDamage;
+    const ss = this.ws?.skillStats;
+    return ss ? (ss.get(this.skills[0].id)?.totalDamage ?? 0) : this.skills[0].totalDamage;
   });
 
   skillDamagePercentages = $derived.by(() => {
-    const sd = this.ws?.skillDamage;
+    const ss = this.ws?.skillStats;
     return this.skills.map((skill) => {
-      const dmg = sd ? (sd.get(skill.id) ?? 0) : skill.totalDamage;
+      const dmg = ss ? (ss.get(skill.id)?.totalDamage ?? 0) : skill.totalDamage;
       return this.mostDamageSkill > 0 ? (dmg / this.mostDamageSkill) * 100 : 0;
     });
   });

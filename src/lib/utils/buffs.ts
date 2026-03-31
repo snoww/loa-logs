@@ -154,11 +154,11 @@ export function getSynergyPercentageDetails(
 ) {
   const synergyPercentageDetails: BuffDetails[] = [];
   const isHyperAwakening = skill.isHyperAwakening || hyperAwakeningIds.has(skill.id);
-  const ws = entityState?.ws;
+  const wss = entityState?.ws?.skillStats.get(skill.id);
   const emptyBuffs: { [key: number]: number } = {};
-  const sBuffedBy = ws ? (ws.skillBuffedBy.get(skill.id) ?? emptyBuffs) : skill.buffedBy;
-  const sDebuffedBy = ws ? (ws.skillDebuffedBy.get(skill.id) ?? emptyBuffs) : skill.debuffedBy;
-  const sTotalDamage = ws ? (ws.skillDamage.get(skill.id) ?? 0) : skill.totalDamage;
+  const sBuffedBy = wss ? (wss.buffedBy ?? emptyBuffs) : skill.buffedBy;
+  const sDebuffedBy = wss ? (wss.debuffedBy ?? emptyBuffs) : skill.debuffedBy;
+  const sTotalDamage = wss ? wss.totalDamage : skill.totalDamage;
   groupedSynergies.forEach((synergies, key) => {
     let synergyDamage = 0;
     const buff = new BuffDetails();
@@ -240,8 +240,9 @@ export function getSynergyPercentageDetailsSum(
           continue;
         }
         const emptyBuffs: { [key: number]: number } = {};
-        const sBuffedBy = ws ? (ws.skillBuffedBy.get(skill.id) ?? emptyBuffs) : skill.buffedBy;
-        const sDebuffedBy = ws ? (ws.skillDebuffedBy.get(skill.id) ?? emptyBuffs) : skill.debuffedBy;
+        const wss = ws?.skillStats.get(skill.id);
+        const sBuffedBy = wss ? (wss.buffedBy ?? emptyBuffs) : skill.buffedBy;
+        const sDebuffedBy = wss ? (wss.debuffedBy ?? emptyBuffs) : skill.debuffedBy;
         if (sBuffedBy[id]) {
           totalBuffed += sBuffedBy[id];
           synergyDamage += sBuffedBy[id];

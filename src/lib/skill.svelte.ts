@@ -2,12 +2,28 @@ import { abbreviateNumberSplit, customRound } from "$lib/utils";
 import type { EntityState } from "./entity.svelte";
 import { settings } from "./stores.svelte";
 import type { Skill } from "./types";
+import type { WindowedSkillStats } from "./utils/windowedStats";
 
 export class SkillState {
   skill: Skill = $state()!;
   entity: EntityState = $state()!;
 
+  wss: WindowedSkillStats | undefined = $derived(this.entity.ws?.skillStats.get(this.skill.id));
+
+  // windowed getters
+  totalDamage = $derived(this.wss?.totalDamage ?? this.skill.totalDamage);
+  hits = $derived(this.wss?.hits ?? this.skill.hits);
+  crits = $derived(this.wss?.crits ?? this.skill.crits);
+  critDmg = $derived(this.wss?.critDamage ?? this.skill.critDamage);
+  ba = $derived(this.wss?.backAttacks ?? this.skill.backAttacks);
+  baDmg = $derived(this.wss?.backAttackDamage ?? this.skill.backAttackDamage);
+  fa = $derived(this.wss?.frontAttacks ?? this.skill.frontAttacks);
+  faDmg = $derived(this.wss?.frontAttackDamage ?? this.skill.frontAttackDamage);
+  casts = $derived(this.wss?.casts ?? this.skill.casts);
+  maxDmg = $derived(this.wss?.maxDamage ?? this.skill.maxDamage);
+
   skillDps = $derived.by(() => {
+    if (this.wss) return this.wss.dps;
     if (this.entity.encounter.live) {
       return Math.round(this.skill.totalDamage / (this.entity.encounter.duration / 1000));
     } else {
@@ -15,13 +31,12 @@ export class SkillState {
     }
   });
   skillDpsString = $derived(abbreviateNumberSplit(this.skillDps));
-  skillDamageString = $derived(abbreviateNumberSplit(this.skill.totalDamage));
-  skillUnbuffedDamage = $derived(this.skill.totalDamage - sumRdpsReceived(this.skill, [1, 3, 5]));
+  skillDamageString = $derived(abbreviateNumberSplit(this.totalDamage));
+  skillUnbuffedDamage = $derived(this.totalDamage - sumRdpsReceived(this.skill, [1, 3, 5]));
   skillUnbuffedDps = $derived.by(() => {
-    // the dps calculated here can slightly differ from one calculated in backend (prolly due to time/rounding? idk)
-    // so returning pre-calculated dps if unbuffed damage equals total damage
-    if (this.skillUnbuffedDamage === 0 || this.skillUnbuffedDamage === this.skill.totalDamage) return this.skillDps;
-    return Math.round(this.skillUnbuffedDamage / (this.entity.encounter.duration / 1000));
+    if (this.skillUnbuffedDamage === 0 || this.skillUnbuffedDamage === this.totalDamage) return this.skillDps;
+    const dur = this.wss ? this.entity.wDurMs : this.entity.encounter.duration;
+    return Math.round(this.skillUnbuffedDamage / (dur / 1000));
   });
   skillUnbuffedDamageString = $derived(abbreviateNumberSplit(this.skillUnbuffedDamage));
   skillUnbuffedDpsString = $derived(abbreviateNumberSplit(this.skillUnbuffedDps));
@@ -30,59 +45,64 @@ export class SkillState {
 
   skillBuffedDps = $derived.by(() => {
     if (this.skillBuffedDamage === 0) return 0;
-    return Math.round(this.skillBuffedDamage / (this.entity.encounter.duration / 1000));
+    const dur = this.wss ? this.entity.wDurMs : this.entity.encounter.duration;
+    return Math.round(this.skillBuffedDamage / (dur / 1000));
   });
 
   skillDamageReduced = $derived(sumRdpsContributed(this.skill, [4, 6]));
 
   critPercentage = $derived.by(() => {
-    if (this.skill.hits > 0) {
-      return customRound((this.skill.crits / this.skill.hits) * 100);
+    if (this.hits > 0) {
+      return customRound((this.crits / this.hits) * 100);
     }
     return "0";
   });
   critDmgPercentage = $derived.by(() => {
-    if (this.skill.hits > 0 && this.skill.totalDamage > 0) {
-      return customRound((this.skill.critDamage / this.skill.totalDamage) * 100);
+    if (this.hits > 0 && this.totalDamage > 0) {
+      return customRound((this.critDmg / this.totalDamage) * 100);
     }
     return "0";
   });
   baPercentage = $derived.by(() => {
-    if (this.skill.hits > 0) {
-      return customRound((this.skill.backAttacks / this.skill.hits) * 100);
+    if (this.hits > 0) {
+      return customRound((this.ba / this.hits) * 100);
     }
     return "0";
   });
   badPercentage = $derived.by(() => {
-    if (this.skill.backAttackDamage > 0) {
-      return customRound((this.skill.backAttackDamage / this.skill.totalDamage) * 100);
+    if (this.baDmg > 0) {
+      return customRound((this.baDmg / this.totalDamage) * 100);
     }
     return "0";
   });
   faPercentage = $derived.by(() => {
-    if (this.skill.hits > 0) {
-      return customRound((this.skill.frontAttacks / this.skill.hits) * 100);
+    if (this.hits > 0) {
+      return customRound((this.fa / this.hits) * 100);
     }
     return "0";
   });
   fadPercentage = $derived.by(() => {
-    if (this.skill.frontAttackDamage > 0) {
-      return customRound((this.skill.frontAttackDamage / this.skill.totalDamage) * 100);
+    if (this.faDmg > 0) {
+      return customRound((this.faDmg / this.totalDamage) * 100);
     }
     return "0";
   });
-  averagePerCast = $derived(this.skill.totalDamage / this.skill.casts);
+  averagePerCast = $derived(this.casts > 0 ? this.totalDamage / this.casts : 0);
   adjustedCrit = $derived.by(() => {
     if (settings.app.logs.breakdown.adjustedCritRate) {
-      if (this.skill.adjustedCrit) {
+      if (this.skill.adjustedCrit && !this.wss) {
         return customRound(this.skill.adjustedCrit * 100);
       } else {
         const filter = this.averagePerCast * 0.05;
         let adjustedCrits = 0;
         let adjustedHits = 0;
         if (this.skill.skillCastLog.length > 0) {
+          const ws = this.entity.ws;
+          const windowStartMs = ws ? this.entity.encounter.timeWindow?.startMs ?? 0 : 0;
+          const windowEndMs = ws ? this.entity.encounter.timeWindow?.endMs ?? Infinity : Infinity;
           for (const c of this.skill.skillCastLog) {
             for (const h of c.hits) {
+              if (ws && (h.timestamp < windowStartMs || h.timestamp >= windowEndMs)) continue;
               if (h.damage > filter) {
                 adjustedCrits += h.crit ? 1 : 0;
                 adjustedHits += 1;

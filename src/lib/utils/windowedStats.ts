@@ -1,6 +1,23 @@
 import { getSkillCastSupportBuffs, hyperAwakeningIds } from "$lib/utils/buffs";
 import type { Encounter, Entity } from "$lib/types";
 
+export interface WindowedSkillStats {
+  totalDamage: number;
+  dps: number;
+  hits: number;
+  casts: number;
+  crits: number;
+  critDamage: number;
+  backAttacks: number;
+  backAttackDamage: number;
+  frontAttacks: number;
+  frontAttackDamage: number;
+  buffedBy: { [key: number]: number };
+  debuffedBy: { [key: number]: number };
+  maxDamage: number;
+  stagger: number;
+}
+
 export interface WindowedEntityStats {
   // DamageStats overrides
   damageDealt: number;
@@ -26,12 +43,30 @@ export interface WindowedEntityStats {
   backAttacks: number;
   frontAttacks: number;
   hitsSpecialOrHa: number; // for hitsWithoutSpecial denominator
-  skillDamage: Map<number, number>; // skillId -> totalDamage in window
-  // per-buff damage (mirrors entity.damageStats.buffedBy/debuffedBy and skill.buffedBy/debuffedBy)
+  // per-buff damage (mirrors entity.damageStats.buffedBy/debuffedBy)
   buffedBy: { [key: number]: number };
   debuffedBy: { [key: number]: number };
-  skillBuffedBy: Map<number, { [key: number]: number }>; // skillId -> buffId -> damage
-  skillDebuffedBy: Map<number, { [key: number]: number }>; // skillId -> buffId -> damage
+  // per-skill stats
+  skillStats: Map<number, WindowedSkillStats>;
+}
+
+function newSkillStats(): WindowedSkillStats {
+  return {
+    totalDamage: 0,
+    dps: 0,
+    hits: 0,
+    casts: 0,
+    crits: 0,
+    critDamage: 0,
+    backAttacks: 0,
+    backAttackDamage: 0,
+    frontAttacks: 0,
+    frontAttackDamage: 0,
+    buffedBy: {},
+    debuffedBy: {},
+    maxDamage: 0,
+    stagger: 0
+  };
 }
 
 export function computeWindowedEntityStats(
@@ -64,11 +99,9 @@ export function computeWindowedEntityStats(
     backAttacks: 0,
     frontAttacks: 0,
     hitsSpecialOrHa: 0,
-    skillDamage: new Map(),
     buffedBy: {},
     debuffedBy: {},
-    skillBuffedBy: new Map(),
-    skillDebuffedBy: new Map()
+    skillStats: new Map()
   };
 
   const fightStart = encounter.fightStart;
@@ -81,28 +114,50 @@ export function computeWindowedEntityStats(
     const isSpecial = skill.special === true;
     const isHa = skill.isHyperAwakening || hyperAwakeningIds.has(skill.id);
 
+    let ss: WindowedSkillStats | undefined;
+
     for (const cast of skill.skillCastLog) {
+      let castHadHitInWindow = false;
+
       for (const hit of cast.hits) {
         if (hit.timestamp < windowStartMs || hit.timestamp >= windowEndMs) continue;
 
+        if (!ss) {
+          ss = newSkillStats();
+          result.skillStats.set(skill.id, ss);
+        }
+
+        castHadHitInWindow = true;
+
         result.damageDealt += hit.damage;
-        result.skillDamage.set(skill.id, (result.skillDamage.get(skill.id) ?? 0) + hit.damage);
         result.unbuffedDamage += hit.unbuffedDamage ?? hit.damage;
         result.rdpsDamageReceived += hit.rdpsDamageReceived;
         result.rdpsDamageReceivedSupport += hit.rdpsDamageReceivedSupport;
         result.hits++;
 
+        // per-skill stats
+        ss.totalDamage += hit.damage;
+        ss.hits++;
+        if (hit.damage > ss.maxDamage) ss.maxDamage = hit.damage;
+        ss.stagger += hit.stagger ?? 0;
+
         if (hit.crit) {
           result.crits++;
           result.critDamage += hit.damage;
+          ss.crits++;
+          ss.critDamage += hit.damage;
         }
         if (hit.backAttack) {
           result.backAttacks++;
           result.backAttackDamage += hit.damage;
+          ss.backAttacks++;
+          ss.backAttackDamage += hit.damage;
         }
         if (hit.frontAttack) {
           result.frontAttacks++;
           result.frontAttackDamage += hit.damage;
+          ss.frontAttacks++;
+          ss.frontAttackDamage += hit.damage;
         }
         if (hit.stagger) {
           result.stagger += hit.stagger;
@@ -126,17 +181,23 @@ export function computeWindowedEntityStats(
         // per-buff damage for buff percentage calculations
         for (const buffId of hit.buffedBy) {
           result.buffedBy[buffId] = (result.buffedBy[buffId] ?? 0) + hit.damage;
-          let sb = result.skillBuffedBy.get(skill.id);
-          if (!sb) { sb = {}; result.skillBuffedBy.set(skill.id, sb); }
-          sb[buffId] = (sb[buffId] ?? 0) + hit.damage;
+          ss.buffedBy[buffId] = (ss.buffedBy[buffId] ?? 0) + hit.damage;
         }
         for (const buffId of hit.debuffedBy) {
           result.debuffedBy[buffId] = (result.debuffedBy[buffId] ?? 0) + hit.damage;
-          let sd = result.skillDebuffedBy.get(skill.id);
-          if (!sd) { sd = {}; result.skillDebuffedBy.set(skill.id, sd); }
-          sd[buffId] = (sd[buffId] ?? 0) + hit.damage;
+          ss.debuffedBy[buffId] = (ss.debuffedBy[buffId] ?? 0) + hit.damage;
         }
       }
+
+      if (castHadHitInWindow && ss) {
+        ss.casts++;
+      }
+    }
+
+    // compute per-skill dps
+    if (ss) {
+      const durationSec = windowDurationMs / 1000;
+      ss.dps = durationSec > 0 ? Math.round(ss.totalDamage / durationSec) : 0;
     }
   }
 
