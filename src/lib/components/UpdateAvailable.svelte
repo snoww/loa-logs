@@ -3,7 +3,7 @@
   import { createDialog, melt } from "@melt-ui/svelte";
   import { fade } from "svelte/transition";
   import { markdown } from "./Markdown.svelte";
-  import { checkNinevehRunning, installBetaUpdate, relaunchApp } from "$lib/api";
+  import { checkLoaRunning, checkNinevehRunning, installBetaUpdate, relaunchApp } from "$lib/api";
 
   const {
     elements: { portalled, overlay, content, title, description },
@@ -28,8 +28,8 @@
   }
 
   async function onUpdateClick() {
-    const ninevehRunning = await checkNinevehRunning();
-    if (ninevehRunning) {
+    const [ninevehRunning, loaRunning] = await Promise.all([checkNinevehRunning(), checkLoaRunning()]);
+    if (ninevehRunning && loaRunning) {
       ninevehWarning = true;
     } else {
       await doUpdate();

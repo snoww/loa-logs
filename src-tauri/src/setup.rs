@@ -141,11 +141,15 @@ fn check_updates(app_handle: &AppHandle, is_beta: bool) -> Arc<AtomicBool> {
             match check_result {
                 #[cfg(not(debug_assertions))]
                 Ok(Some(update)) => {
-                    if shell_manager.check_nineveh_running() {
-                        info!("nineveh is running, skipping auto-update");
+                    if shell_manager.check_nineveh_running() && shell_manager.check_loa_running() {
+                        info!("nineveh and lost ark are running, skipping auto-update");
                         update_checked.store(true, Ordering::Relaxed);
                     } else {
                         info!("update available, downloading update: v{}", update.version);
+                        if shell_manager.check_nineveh_running() {
+                            info!("stopping nineveh before update");
+                            shell_manager.kill_nineveh_process();
+                        }
                         shell_manager.remove_driver().await;
                         if let Err(e) = update.download_and_install(|_, _| {}, || {}).await {
                             error!("failed to download update: {}", e);
