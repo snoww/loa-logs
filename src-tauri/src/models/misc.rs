@@ -49,6 +49,15 @@ pub struct SearchFilter {
     pub sort: String,
     pub order: String,
     pub raids_only: bool,
+    pub local_player: String,
+}
+
+#[derive(Debug, Default, Serialize, Clone)]
+#[serde(rename_all = "camelCase")]
+pub struct CharacterInfo {
+    pub name: String,
+    pub class_id: i32,
+    pub max_gear_score: f32,
 }
 
 #[derive(Default, Debug, Serialize)]

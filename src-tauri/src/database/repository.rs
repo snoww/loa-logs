@@ -154,6 +154,28 @@ impl Repository {
         Ok(value)
     }
 
+    pub fn get_local_characters(&self) -> Result<Vec<CharacterInfo>> {
+        let connection = self.0.get()?;
+        let mut statement = connection.prepare_cached(
+            "SELECT e.local_player, le.class_id, MAX(le.gear_score) as max_gs
+             FROM encounter_preview e
+             LEFT JOIN entity le ON le.encounter_id = e.id AND le.name = e.local_player
+             GROUP BY e.local_player
+             ORDER BY max_gs DESC",
+        )?;
+
+        let rows = statement.query_map([], |row| {
+            std::result::Result::Ok(CharacterInfo {
+                name: row.get(0)?,
+                class_id: row.get::<_, Option<i32>>(1)?.unwrap_or(0),
+                max_gear_score: row.get::<_, Option<f32>>(2)?.unwrap_or(0.0),
+            })
+        })?;
+
+        let characters: Vec<CharacterInfo> = rows.collect::<Result<_, _>>()?;
+        Ok(characters)
+    }
+
     pub fn delete_all_uncleared_encounters(&self, keep_favorites: bool) -> Result<()> {
         let connection = self.0.get()?;
 
