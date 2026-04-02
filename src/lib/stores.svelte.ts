@@ -137,6 +137,7 @@ export class EncounterFilter {
   difficulty = $state("");
   sort: sortColumns = $state("id");
   order: sortOrder = $state("desc");
+  localPlayer = $state("");
   minDuration = $derived(settings.app.logs.minEncounterDuration);
 
   reset() {
@@ -149,6 +150,7 @@ export class EncounterFilter {
     this.difficulty = "";
     this.sort = "id";
     this.order = "desc";
+    this.localPlayer = "";
   }
 }
 
@@ -189,6 +191,7 @@ export const defaultSettings: AppSettings = {
     startOnBoot: false,
     logsPerPage: 10,
     experimentalFeatures: false,
+    minCharacterIlevel: 0,
     mini: false,
     miniEdit: true,
     autoShow: false,

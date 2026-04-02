@@ -43,6 +43,7 @@
   {@const gate = raidGates[encounter.bossName]}
   {@const isSupport = isSupportSpec(encounter.spec)}
   {@const buffs = [encounter.supportAp, encounter.supportBrand, encounter.supportIdentity, encounter.supportHyper]}
+  {@const localPlayerIndex = encounter.names.indexOf(encounter.localPlayer)}
   <tr class="items-center border-b border-neutral-700/50 hover:bg-neutral-800">
     <!-- Encounter ID -->
     <td class="text-center">
@@ -102,7 +103,10 @@
     </td>
     <!-- Local Player Name -->
     <td class="p-1">
-      <div class="flex">
+      <div class="flex items-center gap-1">
+        {#if localPlayerIndex >= 0}
+          <img src={getClassIcon(encounter.classes[localPlayerIndex])} alt="" class="size-5 shrink-0" />
+        {/if}
         <QuickTooltip tooltip={encounter.localPlayer} class="truncate">
           {encounter.localPlayer}
         </QuickTooltip>

@@ -1,10 +1,11 @@
 <script lang="ts">
-  import { deleteEncounters } from "$lib/api";
+  import { deleteEncounters, getLocalCharacters, type CharacterInfo } from "$lib/api";
   import QuickTooltip from "$lib/components/QuickTooltip.svelte";
-  import { classList } from "$lib/constants/classes";
+  import { classList, classNameToClassId } from "$lib/constants/classes";
   import { bossList, difficultyMap, encounterMap } from "$lib/constants/encounters";
   import { IconFilter, IconTrash, IconX } from "$lib/icons";
   import { encounterFilter, settings } from "$lib/stores.svelte";
+  import { getClassIcon } from "$lib/utils";
   import { createDialog, createDropdownMenu, melt } from "@melt-ui/svelte";
   import type { FormEventHandler } from "svelte/elements";
   import { SvelteSet } from "svelte/reactivity";
@@ -35,14 +36,23 @@
 
   let currentTab = $state("Encounters");
   let search = $state(encounterFilter.search || "");
+  let characters: CharacterInfo[] = $state([]);
+  let filteredCharacters = $derived(
+    characters.filter((c) => c.maxGearScore >= settings.app.general.minCharacterIlevel)
+  );
   let active = $derived(
     encounterFilter.encounters.size > 0 ||
       encounterFilter.bosses.size > 0 ||
       encounterFilter.cleared ||
       encounterFilter.favorite ||
       encounterFilter.difficulty !== "" ||
+      encounterFilter.localPlayer !== "" ||
       search.length >= 1
   );
+
+  async function loadCharacters() {
+    characters = await getLocalCharacters();
+  }
 
   function debounce(fn: FormEventHandler<HTMLInputElement>, milliseconds: number) {
     let timer: number | undefined;
@@ -121,7 +131,7 @@
 {#if $open}
   <div
     use:melt={$menu}
-    class="z-20 flex max-h-80 w-96 flex-col rounded-md border border-neutral-600 bg-neutral-800/80 text-sm text-neutral-200 shadow-lg backdrop-blur-lg {settings
+    class="z-20 flex max-h-96 w-96 flex-col rounded-md border border-neutral-600 bg-neutral-800/80 text-sm text-neutral-200 shadow-lg backdrop-blur-lg {settings
       .app.general.accentColor}"
     transition:fly={{ duration: 150, y: -10 }}
   >
@@ -130,6 +140,7 @@
         {@render tab("Encounters")}
         {@render tab("Bosses")}
         {@render tab("Classes")}
+        {@render tab("Characters")}
       </div>
       <button
         class="hover:text-accent-500 px-2 {active ? 'text-accent-500' : ''}"
@@ -213,19 +224,49 @@
         {/each}
       </div>
     {:else if currentTab === "Classes"}
-      <div class="flex flex-wrap px-1 py-2 text-xs">
+      <div class="flex flex-wrap overflow-y-auto px-1 py-2 text-xs">
         {#each classList.sort() as className (className)}
           <button
-            class="m-1 rounded border border-neutral-700 p-1"
+            class="m-1 flex items-center gap-1 rounded border border-neutral-700 p-1"
             onclick={() => {
               search += ` ${className.toLowerCase()}:`;
               encounterFilter.search = search;
             }}
           >
+            <img src={getClassIcon(classNameToClassId[className])} alt="" class="size-5" />
             {className}
           </button>
         {/each}
       </div>
+    {:else if currentTab === "Characters"}
+      {#await loadCharacters() then}
+        <div class="flex flex-col gap-1 overflow-y-auto px-1 py-2 text-xs">
+          {#each filteredCharacters as character (character.name)}
+            <button
+              class="flex items-center justify-between rounded border border-neutral-700 px-2 py-1 {encounterFilter.localPlayer === character.name
+                ? 'bg-neutral-700'
+                : 'bg-neutral-800/80 hover:bg-neutral-700/80'}"
+              onclick={() => {
+                encounterFilter.localPlayer =
+                  encounterFilter.localPlayer === character.name ? "" : character.name;
+              }}
+            >
+              <span class="flex items-center gap-1">
+                {#if character.classId}
+                  <img src={getClassIcon(character.classId)} alt="" class="size-5" />
+                {/if}
+                {character.name}
+              </span>
+              {#if character.maxGearScore > 0}
+                <span class="text-neutral-400">{Math.round(character.maxGearScore)}</span>
+              {/if}
+            </button>
+          {/each}
+          {#if filteredCharacters.length === 0}
+            <p class="px-2 text-neutral-400">No characters found above min ilvl threshold.</p>
+          {/if}
+        </div>
+      {/await}
     {/if}
   </div>
 {/if}
