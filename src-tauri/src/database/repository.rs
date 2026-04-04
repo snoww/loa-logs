@@ -156,23 +156,21 @@ impl Repository {
 
     pub fn get_local_characters(&self) -> Result<Vec<CharacterInfo>> {
         let connection = self.0.get()?;
-        let mut statement = connection.prepare_cached(
-            "SELECT e.local_player, le.class_id, MAX(le.gear_score) as max_gs
-             FROM encounter_preview e
-             LEFT JOIN entity le ON le.encounter_id = e.id AND le.name = e.local_player
-             GROUP BY e.local_player
-             ORDER BY max_gs DESC",
-        )?;
+        let mut statement = connection.prepare_cached(SELECT_LOCAL_PLAYERS)?;
 
         let rows = statement.query_map([], |row| {
-            std::result::Result::Ok(CharacterInfo {
+            Result::Ok(CharacterInfo {
                 name: row.get(0)?,
                 class_id: row.get::<_, Option<i32>>(1)?.unwrap_or(0),
                 max_gear_score: row.get::<_, Option<f32>>(2)?.unwrap_or(0.0),
             })
         })?;
 
-        let characters: Vec<CharacterInfo> = rows.collect::<Result<_, _>>()?;
+        let characters: Vec<CharacterInfo> = rows
+            .collect::<Result<Vec<_>, _>>()?
+            .into_iter()
+            .filter(|c| c.name.len() >= 2 && !c.name.chars().any(|ch| ch.is_ascii_digit()))
+            .collect();
         Ok(characters)
     }
 
@@ -678,6 +676,7 @@ mod tests {
             sort: "id".to_string(),
             order: "desc".to_string(),
             raids_only: true,
+            local_player: "".to_string(),
         };
 
         let paged = repository

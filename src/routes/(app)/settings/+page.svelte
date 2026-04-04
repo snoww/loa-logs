@@ -379,21 +379,6 @@
         )}
         <label class="flex items-center gap-2">
           <input
-            type="number"
-            min="0"
-            max="2000"
-            class="form-input h-8 w-20 rounded-md border-0 bg-neutral-700 text-sm focus:ring-0"
-            bind:value={settings.app.general.minCharacterIlevel}
-          />
-          <div>
-            <div>Min Character Item Level</div>
-            <div class="text-xs text-neutral-300">
-              Hide characters below this item level from the character filter.
-            </div>
-          </div>
-        </label>
-        <label class="flex items-center gap-2">
-          <input
             type="checkbox"
             bind:checked={settings.app.general.autoIface}
             onchange={() => {}}

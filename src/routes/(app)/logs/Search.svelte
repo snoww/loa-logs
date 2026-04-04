@@ -37,9 +37,6 @@
   let currentTab = $state("Encounters");
   let search = $state(encounterFilter.search || "");
   let characters: CharacterInfo[] = $state([]);
-  let filteredCharacters = $derived(
-    characters.filter((c) => c.maxGearScore >= settings.app.general.minCharacterIlevel)
-  );
   let active = $derived(
     encounterFilter.encounters.size > 0 ||
       encounterFilter.bosses.size > 0 ||
@@ -53,6 +50,12 @@
   async function loadCharacters() {
     characters = await getLocalCharacters();
   }
+
+  $effect(() => {
+    if ($open) {
+      loadCharacters();
+    }
+  });
 
   function debounce(fn: FormEventHandler<HTMLInputElement>, milliseconds: number) {
     let timer: number | undefined;
@@ -239,34 +242,32 @@
         {/each}
       </div>
     {:else if currentTab === "Characters"}
-      {#await loadCharacters() then}
-        <div class="flex flex-col gap-1 overflow-y-auto px-1 py-2 text-xs">
-          {#each filteredCharacters as character (character.name)}
-            <button
-              class="flex items-center justify-between rounded border border-neutral-700 px-2 py-1 {encounterFilter.localPlayer === character.name
-                ? 'bg-neutral-700'
-                : 'bg-neutral-800/80 hover:bg-neutral-700/80'}"
-              onclick={() => {
-                encounterFilter.localPlayer =
-                  encounterFilter.localPlayer === character.name ? "" : character.name;
-              }}
-            >
-              <span class="flex items-center gap-1">
-                {#if character.classId}
-                  <img src={getClassIcon(character.classId)} alt="" class="size-5" />
-                {/if}
-                {character.name}
-              </span>
-              {#if character.maxGearScore > 0}
-                <span class="text-neutral-400">{Math.round(character.maxGearScore)}</span>
+      <div class="flex flex-col gap-1 overflow-y-auto px-1 py-2 text-xs">
+        {#each characters as character (character.name)}
+          <button
+            class="flex items-center justify-between rounded border border-neutral-700 px-2 py-1 {encounterFilter.localPlayer === character.name
+              ? 'bg-neutral-700'
+              : 'bg-neutral-800/80 hover:bg-neutral-700/80'}"
+            onclick={() => {
+              encounterFilter.localPlayer =
+                encounterFilter.localPlayer === character.name ? "" : character.name;
+            }}
+          >
+            <span class="flex items-center gap-1">
+              {#if character.classId}
+                <img src={getClassIcon(character.classId)} alt="" class="size-5" />
               {/if}
-            </button>
-          {/each}
-          {#if filteredCharacters.length === 0}
-            <p class="px-2 text-neutral-400">No characters found above min ilvl threshold.</p>
-          {/if}
-        </div>
-      {/await}
+              {character.name}
+            </span>
+            {#if character.maxGearScore > 0}
+              <span class="text-neutral-400">{Math.round(character.maxGearScore)}</span>
+            {/if}
+          </button>
+        {/each}
+        {#if characters.length === 0}
+          <p class="px-2 text-neutral-400">No characters found.</p>
+        {/if}
+      </div>
     {/if}
   </div>
 {/if}
