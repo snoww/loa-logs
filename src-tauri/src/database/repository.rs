@@ -154,6 +154,26 @@ impl Repository {
         Ok(value)
     }
 
+    pub fn get_local_characters(&self) -> Result<Vec<CharacterInfo>> {
+        let connection = self.0.get()?;
+        let mut statement = connection.prepare_cached(SELECT_LOCAL_PLAYERS)?;
+
+        let rows = statement.query_map([], |row| {
+            Result::Ok(CharacterInfo {
+                name: row.get(0)?,
+                class_id: row.get::<_, Option<i32>>(1)?.unwrap_or(0),
+                max_gear_score: row.get::<_, Option<f32>>(2)?.unwrap_or(0.0),
+            })
+        })?;
+
+        let characters: Vec<CharacterInfo> = rows
+            .collect::<Result<Vec<_>, _>>()?
+            .into_iter()
+            .filter(|c| c.name.len() >= 2 && !c.name.chars().any(|ch| ch.is_ascii_digit()))
+            .collect();
+        Ok(characters)
+    }
+
     pub fn delete_all_uncleared_encounters(&self, keep_favorites: bool) -> Result<()> {
         let connection = self.0.get()?;
 
@@ -656,6 +676,7 @@ mod tests {
             sort: "id".to_string(),
             order: "desc".to_string(),
             raids_only: true,
+            local_player: "".to_string(),
         };
 
         let paged = repository

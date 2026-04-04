@@ -98,6 +98,13 @@ pub fn prepare_get_encounter_preview_query(
         ""
     };
 
+    let local_player_filter = if !filter.local_player.is_empty() {
+        params.push(filter.local_player);
+        "AND e.local_player = ?"
+    } else {
+        ""
+    };
+
     let query = format!(
         "SELECT
     e.id,               -- 0
@@ -120,7 +127,7 @@ pub fn prepare_get_encounter_preview_query(
     LEFT JOIN entity le ON le.encounter_id = e.id AND le.name = e.local_player
     {}
     WHERE e.duration > ? {}
-    {} {} {} {} {}
+    {} {} {} {} {} {}
     ORDER BY {} {}
     LIMIT ?
     OFFSET ?",
@@ -131,6 +138,7 @@ pub fn prepare_get_encounter_preview_query(
         difficulty_filter,
         raids_only_filter,
         boss_only_damage_filter,
+        local_player_filter,
         filter.sort,
         filter.order
     );
@@ -139,7 +147,7 @@ pub fn prepare_get_encounter_preview_query(
         "SELECT COUNT(*)
         FROM encounter_preview e {join_clause}
         WHERE duration > ? {boss_filter}
-        {raid_clear_filter} {raids_only_filter} {favorite_filter} {difficulty_filter} {boss_only_damage_filter}"
+        {raid_clear_filter} {raids_only_filter} {favorite_filter} {difficulty_filter} {boss_only_damage_filter} {local_player_filter}"
     );
 
     (params, query, count_query)
