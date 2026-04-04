@@ -6,7 +6,7 @@
   import { getSkillIcon, rgbLinearShadeAdjust } from "$lib/utils";
   import { cubicOut } from "svelte/easing";
   import { Tween } from "svelte/motion";
-  import { playerBreakdownColumns } from "./PlayerBreakdownColumns.svelte";
+  import { getSortedBreakdownColumns } from "./PlayerBreakdownColumns.svelte";
   import QuickTooltip from "./QuickTooltip.svelte";
   import { skillTooltip } from "./Snippets.svelte";
 
@@ -21,6 +21,7 @@
   let { skill, entityState, width, shadow = false, index }: Props = $props();
 
   let skillState = $derived(new SkillState(skill, entityState));
+  let columns = $derived(getSortedBreakdownColumns(entityState.isSupport));
   let tweenedValue = new Tween(entityState.encounter.live ? 0 : width, {
     duration: 400,
     easing: cubicOut
@@ -44,7 +45,7 @@
   </div>
 </td>
 
-{#each playerBreakdownColumns as columnDef}
+{#each columns as columnDef (columnDef.headerText)}
   {#if columnDef.show(entityState)}
     <td class="cursor-default px-1 text-center">
       {#snippet tooltip()}
