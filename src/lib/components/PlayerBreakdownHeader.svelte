@@ -15,7 +15,18 @@
 <th class="w-full"></th>
 {#each columns as columnDef (columnDef.headerText)}
   {#if columnDef.show(entityState)}
-    <th class="font-normal {columnDef.width ? columnDef.width : 'w-12'} {entityState.isSupport && columnDef.isSort ? 'text-accent-400 underline underline-offset-2' : ''}">
+    {@const isActiveSort =
+      entityState.isSupport &&
+      ((entityState.sortByBuffed && columnDef.isSort) ||
+        (!entityState.sortByBuffed && columnDef.headerText === "DMG"))}
+    {@const isToggleable =
+      entityState.isSupport && (columnDef.headerText === "bDMG" || columnDef.headerText === "DMG")}
+    <th
+      class="font-normal {columnDef.width ? columnDef.width : 'w-12'} {isActiveSort
+        ? 'text-accent-400 underline underline-offset-2'
+        : ''} {isToggleable ? 'cursor-pointer' : ''}"
+      onclick={isToggleable ? () => (entityState.sortByBuffed = !entityState.sortByBuffed) : undefined}
+    >
       <QuickTooltip tooltip={columnDef.headerTooltip}>{columnDef.headerText}</QuickTooltip>
     </th>
   {/if}

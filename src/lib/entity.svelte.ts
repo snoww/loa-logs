@@ -133,10 +133,12 @@ export class EntityState {
     };
   });
 
+  sortByBuffed = $state(true);
+
   skills = $derived.by(() => {
     if (!this.entity) return [];
     const isSupport = Object.values(this.entity.skills).some((skill) => sumRdpsContributed(skill, [1, 3, 5]) > 0);
-    const sortFn = isSupport
+    const sortFn = isSupport && this.sortByBuffed
       ? (a: Skill, b: Skill) => sumRdpsContributed(b, [1, 3, 5]) - sumRdpsContributed(a, [1, 3, 5])
       : (a: Skill, b: Skill) => b.totalDamage - a.totalDamage;
     if (this.entity && this.entity.class === "Arcanist") {
@@ -151,14 +153,14 @@ export class EntityState {
   isSupport = $derived(this.skills.some((skill) => sumRdpsContributed(skill, [1, 3, 5]) > 0));
 
   mostDamageSkill = $derived(
-    this.isSupport
+    this.isSupport && this.sortByBuffed
       ? sumRdpsContributed(this.skills[0], [1, 3, 5])
       : (this.skills[0]?.totalDamage ?? 0)
   );
 
   skillDamagePercentages = $derived(
     this.skills.map((skill) =>
-      this.isSupport
+      this.isSupport && this.sortByBuffed
         ? (sumRdpsContributed(skill, [1, 3, 5]) / this.mostDamageSkill) * 100
         : (skill.totalDamage / this.mostDamageSkill) * 100
     )
