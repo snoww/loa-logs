@@ -72,68 +72,88 @@
           {/if}
         </div>
       </td>
-      {#if enc.curSettings.breakdown.damage}
-        <td class="px-1 text-center">
-          <QuickTooltip tooltip={entity.damageStats.damageDealt.toLocaleString()}>
-            {entityState.damageDealtString[0]}<span class="text-xxs text-gray-300"
-              >{entityState.damageDealtString[1]}</span
-            >
-          </QuickTooltip>
-        </td>
-      {/if}
-      {#if enc.curSettings.breakdown.unbuffedDamage && entityState.anyUnbuffedDamage}
-        {@const unbuffedDamage = abbreviateNumberSplit(entity.damageStats.unbuffedDamage)}
-        <td class="px-1 text-center">
-          <QuickTooltip tooltip={unbuffedDamageTooltip} tooltipProps={entityState}>
-            {unbuffedDamage[0]}<span class="text-xxs text-gray-300">{unbuffedDamage[1]}</span>
-          </QuickTooltip>
-        </td>
-      {/if}
-      {#if enc.curSettings.breakdown.unbuffedDamage && entityState.hasRdpsContributions}
-        <td class="px-1 text-center">
-          <QuickTooltip tooltip={entityState.totalDamageBuffed.toLocaleString()}>
-            {entityState.totalDamageBuffedString[0]}<span class="text-xxs text-gray-300"
-              >{entityState.totalDamageBuffedString[1]}</span
-            >
-          </QuickTooltip>
-        </td>
-      {/if}
-      {#if enc.curSettings.breakdown.dps}
-        <td class="px-1 text-center">
-          <QuickTooltip tooltip={entity.damageStats.dps.toLocaleString()}>
-            {entityState.dpsString[0]}<span class="text-xxs text-gray-300">{entityState.dpsString[1]}</span>
-          </QuickTooltip>
-        </td>
-      {/if}
-      {#if enc.curSettings.breakdown.unbuffedDps && entityState.anyUnbuffedDamage}
-        {@const unbuffedDps = abbreviateNumberSplit(entity.damageStats.unbuffedDps)}
-        <td class="px-1 text-center">
-          <QuickTooltip tooltip={unbuffedDpsTooltip} tooltipProps={entityState}>
-            {unbuffedDps[0]}<span class="text-xxs text-gray-300">{unbuffedDps[1]}</span>
-          </QuickTooltip>
-        </td>
-      {/if}
-      {#if enc.curSettings.breakdown.unbuffedDamage && entityState.hasRdpsContributions}
-        <td class="px-1 text-center">
-          <QuickTooltip tooltip={entityState.totalDpsBuffed.toLocaleString()}>
-            {entityState.totalDpsBuffedString[0]}<span class="text-xxs text-gray-300"
-              >{entityState.totalDpsBuffedString[1]}</span
-            >
-          </QuickTooltip>
-        </td>
-      {/if}
-      {#if enc.curSettings.breakdown.damagePercent}
-        <td class="px-1 text-center">
-          {entityState.damagePercentage}<span class="text-xs text-gray-300">%</span>
-        </td>
-      {/if}
-      {#if enc.curSettings.breakdown.unbuffedDamage && entityState.hasRdpsContributions}
-        {@const supportDamagePercent = ((entityState.totalDamageBuffed / enc.totalDamageDealt) * 100).toFixed(1)}
-        <td class="px-1 text-center">
-          <QuickTooltip tooltip="Contributed {supportDamagePercent}% of total raid damage">
-            {supportDamagePercent}<span class="text-xs text-gray-300">%</span>
-          </QuickTooltip>
-        </td>
+      {#if entityState.isSupport}
+        {#if enc.curSettings.breakdown.unbuffedDamage && entityState.hasRdpsContributions}
+          <td class="px-1 text-center">
+            <QuickTooltip tooltip={entityState.totalDamageBuffed.toLocaleString()}>
+              {entityState.totalDamageBuffedString[0]}<span class="text-xxs text-gray-300"
+                >{entityState.totalDamageBuffedString[1]}</span
+              >
+            </QuickTooltip>
+          </td>
+          <td class="px-1 text-center">
+            <QuickTooltip tooltip={entityState.totalDpsBuffed.toLocaleString()}>
+              {entityState.totalDpsBuffedString[0]}<span class="text-xxs text-gray-300"
+                >{entityState.totalDpsBuffedString[1]}</span
+              >
+            </QuickTooltip>
+          </td>
+          {@const supportDamagePercent = ((entityState.totalDamageBuffed / enc.totalDamageDealt) * 100).toFixed(1)}
+          <td class="px-1 text-center">
+            <QuickTooltip tooltip="Contributed {supportDamagePercent}% of total raid damage">
+              {supportDamagePercent}<span class="text-xs text-gray-300">%</span>
+            </QuickTooltip>
+          </td>
+        {/if}
+        {#if enc.curSettings.breakdown.damage}
+          <td class="px-1 text-center">
+            <QuickTooltip tooltip={entity.damageStats.damageDealt.toLocaleString()}>
+              {entityState.damageDealtString[0]}<span class="text-xxs text-gray-300"
+                >{entityState.damageDealtString[1]}</span
+              >
+            </QuickTooltip>
+          </td>
+        {/if}
+        {#if enc.curSettings.breakdown.dps}
+          <td class="px-1 text-center">
+            <QuickTooltip tooltip={entity.damageStats.dps.toLocaleString()}>
+              {entityState.dpsString[0]}<span class="text-xxs text-gray-300">{entityState.dpsString[1]}</span>
+            </QuickTooltip>
+          </td>
+        {/if}
+        {#if enc.curSettings.breakdown.damagePercent}
+          <td class="px-1 text-center">
+            {entityState.damagePercentage}<span class="text-xs text-gray-300">%</span>
+          </td>
+        {/if}
+      {:else}
+        {#if enc.curSettings.breakdown.damage}
+          <td class="px-1 text-center">
+            <QuickTooltip tooltip={entity.damageStats.damageDealt.toLocaleString()}>
+              {entityState.damageDealtString[0]}<span class="text-xxs text-gray-300"
+                >{entityState.damageDealtString[1]}</span
+              >
+            </QuickTooltip>
+          </td>
+        {/if}
+        {#if enc.curSettings.breakdown.unbuffedDamage && entityState.anyUnbuffedDamage}
+          {@const unbuffedDamage = abbreviateNumberSplit(entity.damageStats.unbuffedDamage)}
+          <td class="px-1 text-center">
+            <QuickTooltip tooltip={unbuffedDamageTooltip} tooltipProps={entityState}>
+              {unbuffedDamage[0]}<span class="text-xxs text-gray-300">{unbuffedDamage[1]}</span>
+            </QuickTooltip>
+          </td>
+        {/if}
+        {#if enc.curSettings.breakdown.dps}
+          <td class="px-1 text-center">
+            <QuickTooltip tooltip={entity.damageStats.dps.toLocaleString()}>
+              {entityState.dpsString[0]}<span class="text-xxs text-gray-300">{entityState.dpsString[1]}</span>
+            </QuickTooltip>
+          </td>
+        {/if}
+        {#if enc.curSettings.breakdown.unbuffedDps && entityState.anyUnbuffedDamage}
+          {@const unbuffedDps = abbreviateNumberSplit(entity.damageStats.unbuffedDps)}
+          <td class="px-1 text-center">
+            <QuickTooltip tooltip={unbuffedDpsTooltip} tooltipProps={entityState}>
+              {unbuffedDps[0]}<span class="text-xxs text-gray-300">{unbuffedDps[1]}</span>
+            </QuickTooltip>
+          </td>
+        {/if}
+        {#if enc.curSettings.breakdown.damagePercent}
+          <td class="px-1 text-center">
+            {entityState.damagePercentage}<span class="text-xs text-gray-300">%</span>
+          </td>
+        {/if}
       {/if}
       {#if enc.curSettings.breakdown.critRate}
         <td class="px-1 text-center">

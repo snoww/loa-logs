@@ -2,9 +2,10 @@
   import QuickTooltip from "$lib/components/QuickTooltip.svelte";
   import type { EntityState } from "$lib/entity.svelte.js";
   import Back from "./Back.svelte";
-  import { playerBreakdownColumns } from "./PlayerBreakdownColumns.svelte";
+  import { getSortedBreakdownColumns } from "./PlayerBreakdownColumns.svelte";
 
   let { entityState, handleRightClick }: { entityState: EntityState; handleRightClick: () => void } = $props();
+  let columns = $derived(getSortedBreakdownColumns(entityState.isSupport));
 </script>
 
 <th class="w-7 px-2 font-normal">
@@ -12,9 +13,9 @@
 </th>
 <th class="w-14 px-2 text-left font-normal"></th>
 <th class="w-full"></th>
-{#each playerBreakdownColumns as columnDef}
+{#each columns as columnDef (columnDef.headerText)}
   {#if columnDef.show(entityState)}
-    <th class="font-normal {columnDef.width ? columnDef.width : 'w-12'}">
+    <th class="font-normal {columnDef.width ? columnDef.width : 'w-12'} {entityState.isSupport && columnDef.isSort ? 'text-accent-400 underline underline-offset-2' : ''}">
       <QuickTooltip tooltip={columnDef.headerTooltip}>{columnDef.headerText}</QuickTooltip>
     </th>
   {/if}

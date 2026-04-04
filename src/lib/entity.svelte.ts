@@ -3,7 +3,7 @@ import { cardIds } from "./constants/cards";
 import type { EncounterState } from "./encounter.svelte";
 import { sumRdpsContributed } from "./skill.svelte";
 import { settings } from "./stores.svelte";
-import { type Entity, EntityType, type IncapacitatedEvent } from "./types";
+import { type Entity, EntityType, type IncapacitatedEvent, type Skill } from "./types";
 import { hyperAwakeningIds } from "./utils/buffs";
 
 export class EntityState {
@@ -135,18 +135,34 @@ export class EntityState {
 
   skills = $derived.by(() => {
     if (!this.entity) return [];
+    const isSupport = Object.values(this.entity.skills).some((skill) => sumRdpsContributed(skill, [1, 3, 5]) > 0);
+    const sortFn = isSupport
+      ? (a: Skill, b: Skill) => sumRdpsContributed(b, [1, 3, 5]) - sumRdpsContributed(a, [1, 3, 5])
+      : (a: Skill, b: Skill) => b.totalDamage - a.totalDamage;
     if (this.entity && this.entity.class === "Arcanist") {
       return Object.values(this.entity.skills)
         .sort((a, b) => b.totalDamage - a.totalDamage)
         .filter((skill) => !cardIds.includes(skill.id));
     } else {
-      return Object.values(this.entity.skills).sort((a, b) => b.totalDamage - a.totalDamage);
+      return Object.values(this.entity.skills).sort(sortFn);
     }
   });
 
-  mostDamageSkill = $derived(this.skills[0]?.totalDamage ?? 0);
+  isSupport = $derived(this.skills.some((skill) => sumRdpsContributed(skill, [1, 3, 5]) > 0));
 
-  skillDamagePercentages = $derived(this.skills.map((skill) => (skill.totalDamage / this.mostDamageSkill) * 100));
+  mostDamageSkill = $derived(
+    this.isSupport
+      ? sumRdpsContributed(this.skills[0], [1, 3, 5])
+      : (this.skills[0]?.totalDamage ?? 0)
+  );
+
+  skillDamagePercentages = $derived(
+    this.skills.map((skill) =>
+      this.isSupport
+        ? (sumRdpsContributed(skill, [1, 3, 5]) / this.mostDamageSkill) * 100
+        : (skill.totalDamage / this.mostDamageSkill) * 100
+    )
+  );
   anyBackAttacks = $derived(this.skills.some((skill) => skill.backAttacks > 0));
   anyFrontAttacks = $derived(this.skills.some((skill) => skill.frontAttacks > 0));
   anySupportBuff = $derived(this.skills.some((skill) => skill.buffedBySupport > 0));
