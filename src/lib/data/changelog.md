@@ -1,6 +1,6 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.41.1 - March 26th, 2026
+    v1.41.2-Nineveh Beta 4 - April 5th, 2026
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
@@ -13,23 +13,8 @@
 - **Administrator** on Ratik
 - **Poont** on Giena
 
-#### BUG FIXES AND IMPROVEMENTS
+#### About the Beta
 
-- fixed occasional combat analyzer data errors
-
----
-
-### v1.41.0 - March 25th, 2026
-
-#### NEW FEATURES
-
-- updated meter for weekly update
-- added dedicated column for support contribution % (toggleable in settings)
-- added incap visualization in player breakdown charts (@jeditobe1)
-
-#### BUG FIXES AND IMPROVEMENTS
-
-- fixed paladin holy sword brand
-- added loadout snapshot shortcut in logs
+The LOA Logs beta uses a completely overhauled system for reading Lost Ark's networking data, giving us significantly more control over how we read and query game information. It finally fixes the issue where damage numbers would sometimes completely glitch out, and provides us the necessary infrastructure to implement rDPS in the future. By helping us test its stability, we can be confident that our new "Nineveh" packet library works correctly and efficiently across all platforms, including Linux!
 
 **Older Changelogs**: [link](https://github.com/snoww/loa-logs/releases/tag/v1.40.4)

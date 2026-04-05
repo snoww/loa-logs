@@ -1,11 +1,11 @@
 {
-  "version": "v1.41.1",
-  "notes": "### v1.41.1 - March 26th, 2026\n\n#### P.S. If you see any of us in town or raid, feel free to drop an honor!\n\n- **Snowving** on Luterra\n- **Administrator** on Ratik\n- **Poont** on Giena\n\n#### BUG FIXES AND IMPROVEMENTS\n\n- fixed occasional combat analyzer data errors\n",
-  "pub_date": "2026-03-26T05:57:39.792Z",
+  "version": "v1.41.2-nineveh.beta.4",
+  "notes": "### v1.41.2-Nineveh Beta 4 - April 5th, 2026\n\n#### P.S. If you see any of us in town or raid, feel free to drop an honor!\n\n- **Snowving** on Luterra\n- **Administrator** on Ratik\n- **Poont** on Giena\n\nThe LOA Logs beta uses a completely overhauled system for reading Lost Ark's networking data, giving us significantly more control over how we read and query game information. It finally fixes the issue where damage numbers would sometimes completely glitch out, and provides us the necessary infrastructure to implement rDPS in the future. By helping us test its stability, we can be confident that our new \"Nineveh\" packet library works correctly and efficiently across all platforms, including Linux!\n",
+  "pub_date": "2026-04-05T21:41:13.723Z",
   "platforms": {
     "windows-x86_64": {
-      "url": "https://github.com/snoww/loa-logs/releases/download/v1.41.1/LOA.Logs_1.41.1_x64-setup.exe",
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYll0anRLa284aUpQL2RjU1dESm42YldMVkg5RFE5NFU2K0pvc1g1enZRLzVDOC9UUTFDRk16QTFZODRHb2w0cWRUTU05ZWdaQVlhYnJVcUhnZ2lrb3dBPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzc0NTU0NTAwCWZpbGU6TE9BIExvZ3NfMS40MS4xX3g2NC1zZXR1cC5leGUKd0VDVFlYdzduK0RPUHBYVGdmWDZycGVNZkJJaG1XZ1BQejRnMVBHMWhrUzZJWFZabXp3Q1hwRWt5ZFlEMWdrZWF3bmd3UlBZb3JFQnlpU3ZtbmJFQ3c9PQo="
+      "url": "https://github.com/snoww/loa-logs/releases/download/v1.41.2-nineveh.beta.4/LOA.Logs_1.41.2-nineveh.beta.4_x64-setup.exe",
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmMxbXRzclBZYklSUFVMamllSHRINUk0dHZBK3JxTlMvUUg3NVBLejJSWnRzNFUwdmxlZk5oZ1hnU3FDREJNZWFvMjVrVGxodExlSm5haHkzWXlmRlFJPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzc1NDI1MjQxCWZpbGU6TE9BIExvZ3NfMS40MS4yLW5pbmV2ZWguYmV0YS40X3g2NC1zZXR1cC5leGUKRFdVMDNnTkhrS0VzU0xyaGN5Y3paYSt6Tk9oOXJVRkxOUHAwZ05ybFprdFN0cUs4MjFoMzc4bU9ab1l4YXFGOWF2blBWV0tvRFkvOXgxNGRIQ1hpQ2c9PQo="
     },
     "linux-x86_64": {
       "url": "https://github.com/snoww/loa-logs/releases/download/v1.41.1/LOA.Logs_1.41.1_amd64.AppImage",
