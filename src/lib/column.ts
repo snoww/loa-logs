@@ -16,4 +16,6 @@ export interface LogColumn<S, E> {
   valueTooltip: null | Snippet<[E]>;
   // width of column
   width?: string;
+  // When set, this column is reordered by this priority for support entities (lower = earlier)
+  supportPriority?: number;
 }

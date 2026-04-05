@@ -3,9 +3,14 @@
   import { EntityState } from "$lib/entity.svelte.js";
   import { SkillState } from "$lib/skill.svelte.js";
   import { settings } from "$lib/stores.svelte.js";
-  import { abbreviateNumber, abbreviateNumberSplit, customRound, percentDifference } from "$lib/utils";
+  import { abbreviateNumber, abbreviateNumberSplit, customRound } from "$lib/utils";
   import { hyperAwakeningIds } from "$lib/utils/buffs";
   import { damageValue, percentValue } from "./Snippets.svelte";
+
+  export function getSortedBreakdownColumns(isSupport: boolean): LogColumn<EntityState, SkillState>[] {
+    if (!isSupport) return playerBreakdownColumns;
+    return [...playerBreakdownColumns].sort((a, b) => (a.supportPriority ?? 999) - (b.supportPriority ?? 999));
+  }
 
   export const playerBreakdownColumns: LogColumn<EntityState, SkillState>[] = [
     // Damage
@@ -16,7 +21,8 @@
       headerText: "DMG",
       headerTooltip: "Damage Dealt",
       value: damage,
-      valueTooltip: damageTooltip
+      valueTooltip: damageTooltip,
+      supportPriority: 4
     },
 
     // Unbuffed damage dealt
@@ -28,7 +34,8 @@
       headerText: "uDMG",
       headerTooltip: "Unbuffed Damage Dealt (damage dealt excluding buffs or debuffs from the support)",
       value: unbuffedDamage,
-      valueTooltip: unbuffedDamageTooltip
+      valueTooltip: unbuffedDamageTooltip,
+      supportPriority: 7
     },
 
     // Buffed damage (support's view)
@@ -40,7 +47,8 @@
       headerText: "bDMG",
       headerTooltip: "Total Damage Buffed",
       value: buffedDamage,
-      valueTooltip: buffedDamageTooltip
+      valueTooltip: buffedDamageTooltip,
+      supportPriority: 1
     },
 
     // DPS
@@ -51,7 +59,8 @@
       headerText: "DPS",
       headerTooltip: "Damage per second",
       value: dps,
-      valueTooltip: dpsTooltip
+      valueTooltip: dpsTooltip,
+      supportPriority: 5
     },
 
     // Unbuffed DPS
@@ -63,7 +72,8 @@
       headerText: "uDPS",
       headerTooltip: "Unbuffed Damage per second (DPS excluding buffs or debuffs from the support)",
       value: unbuffedDps,
-      valueTooltip: unbuffedDpsTooltip
+      valueTooltip: unbuffedDpsTooltip,
+      supportPriority: 8
     },
 
     // Buffed dps (support's view)
@@ -75,7 +85,8 @@
       headerText: "bDPS",
       headerTooltip: "Damage Per Second Buffed",
       value: buffedDps,
-      valueTooltip: buffedDpsTooltip
+      valueTooltip: buffedDpsTooltip,
+      supportPriority: 2
     },
 
     // Damage %
@@ -86,7 +97,8 @@
       headerText: "D%",
       headerTooltip: "Damage %",
       value: damagePct,
-      valueTooltip: null
+      valueTooltip: null,
+      supportPriority: 6
     },
 
     // Buffed damage % (support's view)
@@ -98,7 +110,8 @@
       headerText: "bD%",
       headerTooltip: "Percentage of Total Buffed",
       value: buffedPct,
-      valueTooltip: null
+      valueTooltip: null,
+      supportPriority: 3
     },
 
     // Crit %
