@@ -54,6 +54,19 @@ FROM entity
 WHERE encounter_id = ?;
 ";
 
+pub const SELECT_LOCAL_PLAYERS: &str = r"
+SELECT
+    e.local_player,
+    le.class_id,
+    MAX(le.gear_score) as max_gs
+FROM encounter_preview e
+LEFT JOIN entity le ON le.encounter_id = e.id AND le.name = e.local_player
+WHERE le.gear_score > 0
+  AND e.local_player IS NOT NULL
+  AND e.fight_start >= strftime('%s', 'now', '-2 months') * 1000
+GROUP BY e.local_player
+ORDER BY max_gs DESC";
+
 pub const INSERT_ENCOUNTER: &str = r"
 INSERT INTO encounter
 (
