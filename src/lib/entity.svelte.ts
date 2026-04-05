@@ -1,4 +1,10 @@
 import { abbreviateNumberSplit, customRound, formatPlayerName, getEstherFromNpcId } from "$lib/utils";
+
+export enum SkillSort {
+  Damage = "damage",
+  Buffed = "buffed",
+  Stagger = "stagger",
+}
 import { cardIds } from "./constants/cards";
 import type { EncounterState } from "./encounter.svelte";
 import { sumRdpsContributed } from "./skill.svelte";
@@ -133,15 +139,14 @@ export class EntityState {
     };
   });
 
-  sortByBuffed = $state(true);
-  sortByStagger = $state(false);
+  skillSort = $state(SkillSort.Buffed);
 
   skills = $derived.by(() => {
     if (!this.entity) return [];
     const isSupport = Object.values(this.entity.skills).some((skill) => sumRdpsContributed(skill, [1, 3, 5]) > 0);
-    const sortFn = this.sortByStagger
+    const sortFn = this.skillSort === SkillSort.Stagger
       ? (a: Skill, b: Skill) => b.stagger - a.stagger
-      : isSupport && this.sortByBuffed
+      : this.skillSort === SkillSort.Buffed && isSupport
         ? (a: Skill, b: Skill) => sumRdpsContributed(b, [1, 3, 5]) - sumRdpsContributed(a, [1, 3, 5])
         : (a: Skill, b: Skill) => b.totalDamage - a.totalDamage;
     if (this.entity && this.entity.class === "Arcanist") {
@@ -156,18 +161,18 @@ export class EntityState {
   isSupport = $derived(this.skills.some((skill) => sumRdpsContributed(skill, [1, 3, 5]) > 0));
 
   mostDamageSkill = $derived(
-    this.sortByStagger
+    this.skillSort === SkillSort.Stagger
       ? (this.skills[0]?.stagger ?? 0)
-      : this.isSupport && this.sortByBuffed
+      : this.skillSort === SkillSort.Buffed && this.isSupport
         ? sumRdpsContributed(this.skills[0], [1, 3, 5])
         : (this.skills[0]?.totalDamage ?? 0)
   );
 
   skillDamagePercentages = $derived(
     this.skills.map((skill) =>
-      this.sortByStagger
+      this.skillSort === SkillSort.Stagger
         ? ((skill.stagger ?? 0) / this.mostDamageSkill) * 100
-        : this.isSupport && this.sortByBuffed
+        : this.skillSort === SkillSort.Buffed && this.isSupport
           ? (sumRdpsContributed(skill, [1, 3, 5]) / this.mostDamageSkill) * 100
           : (skill.totalDamage / this.mostDamageSkill) * 100
     )
