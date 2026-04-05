@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { type EntityState, SkillSort } from "$lib/entity.svelte.js";
+  import type { EntityState } from "$lib/entity.svelte.js";
   import { SkillState } from "$lib/skill.svelte.js";
   import { settings } from "$lib/stores.svelte.js";
   import type { Skill } from "$lib/types";
@@ -32,14 +32,8 @@
   });
 
   function isActiveSort(columnDef: LogColumn<EntityState, SkillState>): boolean {
-    if (entityState.skillSort === SkillSort.Stagger) {
-      return columnDef.headerText === "STAG";
-    }
-    if (entityState.isSupport) {
-      const sortingByBuffed = entityState.skillSort === SkillSort.Buffed && !!columnDef.isSort;
-      const sortingByDamage = entityState.skillSort === SkillSort.Damage && columnDef.headerText === "DMG";
-      return sortingByBuffed || sortingByDamage;
-    }
+    if (entityState.skillSort === "stagger") return columnDef.headerText === "STAG";
+    if (entityState.skillSort === "buffed" && entityState.isSupport) return columnDef.headerText === "bDMG";
     return columnDef.headerText === "DMG";
   }
 </script>
@@ -62,7 +56,7 @@
   {#if columnDef.show(entityState)}
     <td
       class="cursor-default px-1 text-center"
-      style={isActiveSort(columnDef) ? `background-color: rgb(from ${entityState.color} r g b / 0.08)` : ''}
+      style={isActiveSort(columnDef) ? `background-color: rgb(from ${entityState.color} r g b / 0.05)` : ""}
     >
       {#snippet tooltip()}
         {#if columnDef.valueTooltip}

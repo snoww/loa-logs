@@ -1,10 +1,6 @@
 import { abbreviateNumberSplit, customRound, formatPlayerName, getEstherFromNpcId } from "$lib/utils";
 
-export enum SkillSort {
-  Damage = "damage",
-  Buffed = "buffed",
-  Stagger = "stagger",
-}
+export type SkillSort = "damage" | "buffed" | "stagger";
 import { cardIds } from "./constants/cards";
 import type { EncounterState } from "./encounter.svelte";
 import { sumRdpsContributed } from "./skill.svelte";
@@ -139,46 +135,37 @@ export class EntityState {
     };
   });
 
-  skillSort = $state(SkillSort.Buffed);
+  skillSort: SkillSort = $state("buffed");
 
   skills = $derived.by(() => {
     if (!this.entity) return [];
-    const isSupport = Object.values(this.entity.skills).some((skill) => sumRdpsContributed(skill, [1, 3, 5]) > 0);
-    const sortFn = this.skillSort === SkillSort.Stagger
-      ? (a: Skill, b: Skill) => b.stagger - a.stagger
-      : this.skillSort === SkillSort.Buffed && isSupport
-        ? (a: Skill, b: Skill) => sumRdpsContributed(b, [1, 3, 5]) - sumRdpsContributed(a, [1, 3, 5])
-        : (a: Skill, b: Skill) => b.totalDamage - a.totalDamage;
-    if (this.entity && this.entity.class === "Arcanist") {
-      const arcanistSortFn = this.skillSort === SkillSort.Stagger
-        ? (a: Skill, b: Skill) => b.stagger - a.stagger
-        : (a: Skill, b: Skill) => b.totalDamage - a.totalDamage;
-      return Object.values(this.entity.skills)
-        .sort(arcanistSortFn)
-        .filter((skill) => !cardIds.includes(skill.id));
-    } else {
-      return Object.values(this.entity.skills).sort(sortFn);
+    const skillValues = Object.values(this.entity.skills);
+    if (this.entity.class === "Arcanist") {
+      const sortFn =
+        this.skillSort === "stagger"
+          ? (a: Skill, b: Skill) => b.stagger - a.stagger
+          : (a: Skill, b: Skill) => b.totalDamage - a.totalDamage;
+      return skillValues.sort(sortFn).filter((skill) => !cardIds.includes(skill.id));
     }
+    const isSupport = skillValues.some((skill) => sumRdpsContributed(skill, [1, 3, 5]) > 0);
+    if (this.skillSort === "stagger") return skillValues.sort((a, b) => b.stagger - a.stagger);
+    if (this.skillSort === "buffed" && isSupport)
+      return skillValues.sort((a, b) => sumRdpsContributed(b, [1, 3, 5]) - sumRdpsContributed(a, [1, 3, 5]));
+    return skillValues.sort((a, b) => b.totalDamage - a.totalDamage);
   });
 
   isSupport = $derived(this.skills.some((skill) => sumRdpsContributed(skill, [1, 3, 5]) > 0));
 
-  mostDamageSkill = $derived(
-    this.skillSort === SkillSort.Stagger
-      ? (this.skills[0]?.stagger ?? 0)
-      : this.skillSort === SkillSort.Buffed && this.isSupport
-        ? sumRdpsContributed(this.skills[0], [1, 3, 5])
-        : (this.skills[0]?.totalDamage ?? 0)
-  );
+  private skillSortValue(skill: Skill): number {
+    if (this.skillSort === "stagger") return skill.stagger ?? 0;
+    if (this.skillSort === "buffed" && this.isSupport) return sumRdpsContributed(skill, [1, 3, 5]);
+    return skill.totalDamage;
+  }
+
+  mostDamageSkill = $derived(this.skills.length > 0 ? this.skillSortValue(this.skills[0]!) : 0);
 
   skillDamagePercentages = $derived(
-    this.skills.map((skill) =>
-      this.skillSort === SkillSort.Stagger
-        ? ((skill.stagger ?? 0) / this.mostDamageSkill) * 100
-        : this.skillSort === SkillSort.Buffed && this.isSupport
-          ? (sumRdpsContributed(skill, [1, 3, 5]) / this.mostDamageSkill) * 100
-          : (skill.totalDamage / this.mostDamageSkill) * 100
-    )
+    this.skills.map((skill) => (this.skillSortValue(skill) / this.mostDamageSkill) * 100)
   );
   anyBackAttacks = $derived(this.skills.some((skill) => skill.backAttacks > 0));
   anyFrontAttacks = $derived(this.skills.some((skill) => skill.frontAttacks > 0));

@@ -3,7 +3,7 @@
   import { EntityState } from "$lib/entity.svelte.js";
   import { SkillState } from "$lib/skill.svelte.js";
   import { settings } from "$lib/stores.svelte.js";
-  import { abbreviateNumber, abbreviateNumberSplit, customRound, percentDifference } from "$lib/utils";
+  import { abbreviateNumber, abbreviateNumberSplit, customRound } from "$lib/utils";
   import { hyperAwakeningIds } from "$lib/utils/buffs";
   import { damageValue, percentValue } from "./Snippets.svelte";
 
@@ -48,8 +48,7 @@
       headerTooltip: "Total Damage Buffed",
       value: buffedDamage,
       valueTooltip: buffedDamageTooltip,
-      supportPriority: 1,
-      isSort: true
+      supportPriority: 1
     },
 
     // DPS
