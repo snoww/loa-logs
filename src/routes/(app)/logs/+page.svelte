@@ -48,7 +48,8 @@
         difficulty: encounterFilter.difficulty,
         sort: encounterFilter.sort,
         order: encounterFilter.order,
-        raidsOnly: settings.app.general.showRaidsOnly
+        raidsOnly: settings.app.general.showRaidsOnly,
+        localPlayer: encounterFilter.localPlayer
       }
     };
 
@@ -79,6 +80,7 @@
     encounterFilter.difficulty;
     encounterFilter.sort;
     encounterFilter.order;
+    encounterFilter.localPlayer;
 
     // *searching* is true when its not the first load
     const searching = untrack(() => once);

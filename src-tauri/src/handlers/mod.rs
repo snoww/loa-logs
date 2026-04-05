@@ -56,6 +56,7 @@ pub fn generate_handlers() -> Box<dyn Fn(Invoke) -> bool + Send + Sync> {
         check_beta_update,
         install_beta_update,
         install_stable_update,
+        get_local_characters,
     ])
 }
 
@@ -77,6 +78,12 @@ pub fn load_encounters_preview(
     let encounter = repository.get_encounter_preview(args)?;
 
     Ok(encounter)
+}
+
+#[command]
+pub fn get_local_characters(repository: State<Repository>) -> Result<Vec<CharacterInfo>> {
+    let characters = repository.get_local_characters()?;
+    Ok(characters)
 }
 
 #[command]

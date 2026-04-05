@@ -89,11 +89,20 @@ interface LoadEncountersCriteria {
     sort?: string;
     order?: "asc" | "desc";
     raidsOnly?: boolean;
+    localPlayer?: string;
   };
 }
 
 export const loadEncountersPreview = (criteria: LoadEncountersCriteria): Promise<EncountersOverview> =>
   invoke("load_encounters_preview", { ...criteria });
+
+export interface CharacterInfo {
+  name: string;
+  classId: number;
+  maxGearScore: number;
+}
+
+export const getLocalCharacters = (): Promise<CharacterInfo[]> => invoke("get_local_characters");
 
 export interface SyncArgs {
   encounter: number;
