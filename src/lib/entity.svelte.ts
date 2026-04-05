@@ -134,13 +134,16 @@ export class EntityState {
   });
 
   sortByBuffed = $state(true);
+  sortByStagger = $state(false);
 
   skills = $derived.by(() => {
     if (!this.entity) return [];
     const isSupport = Object.values(this.entity.skills).some((skill) => sumRdpsContributed(skill, [1, 3, 5]) > 0);
-    const sortFn = isSupport && this.sortByBuffed
-      ? (a: Skill, b: Skill) => sumRdpsContributed(b, [1, 3, 5]) - sumRdpsContributed(a, [1, 3, 5])
-      : (a: Skill, b: Skill) => b.totalDamage - a.totalDamage;
+    const sortFn = this.sortByStagger
+      ? (a: Skill, b: Skill) => b.stagger - a.stagger
+      : isSupport && this.sortByBuffed
+        ? (a: Skill, b: Skill) => sumRdpsContributed(b, [1, 3, 5]) - sumRdpsContributed(a, [1, 3, 5])
+        : (a: Skill, b: Skill) => b.totalDamage - a.totalDamage;
     if (this.entity && this.entity.class === "Arcanist") {
       return Object.values(this.entity.skills)
         .sort((a, b) => b.totalDamage - a.totalDamage)
@@ -153,16 +156,20 @@ export class EntityState {
   isSupport = $derived(this.skills.some((skill) => sumRdpsContributed(skill, [1, 3, 5]) > 0));
 
   mostDamageSkill = $derived(
-    this.isSupport && this.sortByBuffed
-      ? sumRdpsContributed(this.skills[0], [1, 3, 5])
-      : (this.skills[0]?.totalDamage ?? 0)
+    this.sortByStagger
+      ? (this.skills[0]?.stagger ?? 0)
+      : this.isSupport && this.sortByBuffed
+        ? sumRdpsContributed(this.skills[0], [1, 3, 5])
+        : (this.skills[0]?.totalDamage ?? 0)
   );
 
   skillDamagePercentages = $derived(
     this.skills.map((skill) =>
-      this.isSupport && this.sortByBuffed
-        ? (sumRdpsContributed(skill, [1, 3, 5]) / this.mostDamageSkill) * 100
-        : (skill.totalDamage / this.mostDamageSkill) * 100
+      this.sortByStagger
+        ? ((skill.stagger ?? 0) / this.mostDamageSkill) * 100
+        : this.isSupport && this.sortByBuffed
+          ? (sumRdpsContributed(skill, [1, 3, 5]) / this.mostDamageSkill) * 100
+          : (skill.totalDamage / this.mostDamageSkill) * 100
     )
   );
   anyBackAttacks = $derived(this.skills.some((skill) => skill.backAttacks > 0));

@@ -15,17 +15,31 @@
 <th class="w-full"></th>
 {#each columns as columnDef (columnDef.headerText)}
   {#if columnDef.show(entityState)}
-    {@const isActiveSort =
-      entityState.isSupport &&
-      ((entityState.sortByBuffed && columnDef.isSort) ||
-        (!entityState.sortByBuffed && columnDef.headerText === "DMG"))}
-    {@const isToggleable =
-      entityState.isSupport && (columnDef.headerText === "bDMG" || columnDef.headerText === "DMG")}
+    {@const isStaggerSortable = columnDef.headerText === "STAG" && entityState.anyStagger}
+    {@const isDmgCol = columnDef.headerText === "DMG" || (entityState.isSupport && columnDef.headerText === "bDMG")}
+    {@const isToggleable = isStaggerSortable || isDmgCol}
+    {@const isActiveSort = entityState.sortByStagger
+      ? columnDef.headerText === "STAG"
+      : entityState.isSupport
+        ? ((entityState.sortByBuffed && columnDef.isSort) || (!entityState.sortByBuffed && columnDef.headerText === "DMG"))
+        : columnDef.headerText === "DMG"}
+    {@const handleClick = isActiveSort
+      ? undefined
+      : isStaggerSortable
+        ? () => { entityState.sortByStagger = true; }
+        : isDmgCol && entityState.sortByStagger
+          ? () => { entityState.sortByStagger = false; }
+          : isDmgCol && entityState.isSupport
+            ? () => { entityState.sortByBuffed = !entityState.sortByBuffed; }
+            : undefined}
     <th
       class="font-normal {columnDef.width ? columnDef.width : 'w-12'} {isActiveSort
-        ? 'text-accent-400 underline underline-offset-2'
-        : ''} {isToggleable ? 'cursor-pointer' : ''}"
-      onclick={isToggleable ? () => (entityState.sortByBuffed = !entityState.sortByBuffed) : undefined}
+        ? 'underline underline-offset-2'
+        : isToggleable
+          ? 'underline underline-offset-2'
+          : ''} {isToggleable ? 'cursor-pointer' : ''}"
+      style={isActiveSort ? `background-color: rgb(from ${entityState.color} r g b / 0.15)` : ''}
+      onclick={handleClick}
     >
       <QuickTooltip tooltip={columnDef.headerTooltip}>{columnDef.headerText}</QuickTooltip>
     </th>

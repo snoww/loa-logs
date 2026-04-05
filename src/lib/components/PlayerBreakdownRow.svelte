@@ -47,7 +47,15 @@
 
 {#each columns as columnDef (columnDef.headerText)}
   {#if columnDef.show(entityState)}
-    <td class="cursor-default px-1 text-center">
+    {@const isActiveSort = entityState.sortByStagger
+      ? columnDef.headerText === "STAG"
+      : entityState.isSupport
+        ? ((entityState.sortByBuffed && columnDef.isSort) || (!entityState.sortByBuffed && columnDef.headerText === "DMG"))
+        : columnDef.headerText === "DMG"}
+    <td
+      class="cursor-default px-1 text-center"
+      style={isActiveSort ? `background-color: rgb(from ${entityState.color} r g b / 0.08)` : ''}
+    >
       {#snippet tooltip()}
         {#if columnDef.valueTooltip}
           {@render columnDef.valueTooltip(skillState)}
