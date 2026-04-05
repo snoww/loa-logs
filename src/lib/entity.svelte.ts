@@ -149,7 +149,7 @@ export class EntityState {
     }
     const isSupport = skillValues.some((skill) => sumRdpsContributed(skill, [1, 3, 5]) > 0);
     if (this.skillSort === "stagger") return skillValues.sort((a, b) => b.stagger - a.stagger);
-    if (this.skillSort === "buffed" && isSupport)
+    if (this.skillSort === "buffed" && isSupport && this.encounter.curSettings.breakdown.unbuffedDamage)
       return skillValues.sort((a, b) => sumRdpsContributed(b, [1, 3, 5]) - sumRdpsContributed(a, [1, 3, 5]));
     return skillValues.sort((a, b) => b.totalDamage - a.totalDamage);
   });
@@ -158,7 +158,8 @@ export class EntityState {
 
   private skillSortValue(skill: Skill): number {
     if (this.skillSort === "stagger") return skill.stagger ?? 0;
-    if (this.skillSort === "buffed" && this.isSupport) return sumRdpsContributed(skill, [1, 3, 5]);
+    if (this.skillSort === "buffed" && this.isSupport && this.encounter.curSettings.breakdown.unbuffedDamage)
+      return sumRdpsContributed(skill, [1, 3, 5]);
     return skill.totalDamage;
   }
 
