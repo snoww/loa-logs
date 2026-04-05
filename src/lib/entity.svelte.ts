@@ -150,8 +150,11 @@ export class EntityState {
         ? (a: Skill, b: Skill) => sumRdpsContributed(b, [1, 3, 5]) - sumRdpsContributed(a, [1, 3, 5])
         : (a: Skill, b: Skill) => b.totalDamage - a.totalDamage;
     if (this.entity && this.entity.class === "Arcanist") {
+      const arcanistSortFn = this.skillSort === SkillSort.Stagger
+        ? (a: Skill, b: Skill) => b.stagger - a.stagger
+        : (a: Skill, b: Skill) => b.totalDamage - a.totalDamage;
       return Object.values(this.entity.skills)
-        .sort((a, b) => b.totalDamage - a.totalDamage)
+        .sort(arcanistSortFn)
         .filter((skill) => !cardIds.includes(skill.id));
     } else {
       return Object.values(this.entity.skills).sort(sortFn);
