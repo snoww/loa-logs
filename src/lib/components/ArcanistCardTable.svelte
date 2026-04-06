@@ -3,6 +3,7 @@
   import { settings } from "$lib/stores.svelte.js";
   import type { Entity } from "$lib/types";
   import { getSkillIcon, rgbLinearShadeAdjust } from "$lib/utils";
+  import QuickTooltip from "$lib/components/QuickTooltip.svelte";
 
   interface Props {
     player: Entity;
@@ -19,11 +20,19 @@
   let maxDraw = 0;
   let drawPercentages: number[] = $state([]);
   let relativeDrawPercentages: number[] = $state([]);
+  let emperorProcRate: number | null = $state(null);
   if (cards.length > 0) {
     totalDraws = cards.reduce((acc, skill) => acc + skill.casts, 0);
     maxDraw = cards[0]!.casts;
     drawPercentages = cards.map((skill) => (skill.casts / totalDraws) * 100);
     relativeDrawPercentages = cards.map((skill) => (skill.casts / maxDraw) * 100);
+
+    const emperor = cards.find((skill) => skill.id === 19282);
+    if (emperor) {
+      const procs = emperor.hits - emperor.casts;
+      const eligible = totalDraws - emperor.casts;
+      emperorProcRate = eligible > 0 ? (procs / eligible) * 100 : null;
+    }
   }
 </script>
 
@@ -36,6 +45,13 @@
     <div>
       Draws per min: <span class="font-semibold">{(totalDraws / (duration / 1000 / 60)).toFixed(1)} cards/min</span>
     </div>
+    {#if emperorProcRate !== null}
+      <div>
+        <QuickTooltip tooltip="Estimate based on total Emperor hits on the boss. May be inaccurate if fighting multiple bosses or if Emperor hits were missed.">
+          Emperor proc rate: <span class="font-semibold">{emperorProcRate.toFixed(1)}%</span>
+        </QuickTooltip>
+      </div>
+    {/if}
   </div>
   <table class="relative isolate mt-2 w-full table-fixed">
     <thead class="z-30 h-6">
