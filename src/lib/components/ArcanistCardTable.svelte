@@ -46,7 +46,7 @@
       Draws per min: <span class="font-semibold">{(totalDraws / (duration / 1000 / 60)).toFixed(1)} cards/min</span>
     </div>
     {#if emperorProcRate !== null}
-      <div>
+      <div class="flex">
         <QuickTooltip tooltip="Estimate based on total Emperor hits on the boss. May be inaccurate if fighting multiple bosses or if Emperor hits were missed.">
           Emperor proc rate: <span class="font-semibold">{emperorProcRate.toFixed(1)}%</span>
         </QuickTooltip>
