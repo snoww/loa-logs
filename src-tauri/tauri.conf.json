@@ -14,9 +14,6 @@
     "resources": [
       "meter-data/*.json"
     ],
-    "externalBin": [
-      "nineveh"
-    ],
     "icon": [
       "icons/icon.ico",
       "icons/icon.png"
@@ -26,7 +23,7 @@
     "licenseFile": "../LICENSE"
   },
   "productName": "LOA Logs",
-  "version": "1.41.2-nineveh.beta.4",
+  "version": "1.42.0-nineveh.beta.5",
   "identifier": "xyz.snow",
   "plugins": {
     "updater": {

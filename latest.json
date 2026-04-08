@@ -1,15 +1,15 @@
 {
-  "version": "v1.41.2-nineveh.beta.4",
-  "notes": "### v1.41.2-Nineveh Beta 4 - April 5th, 2026\n\n#### P.S. If you see any of us in town or raid, feel free to drop an honor!\n\n- **Snowving** on Luterra\n- **Administrator** on Ratik\n- **Poont** on Giena\n\nThe LOA Logs beta uses a completely overhauled system for reading Lost Ark's networking data, giving us significantly more control over how we read and query game information. It finally fixes the issue where damage numbers would sometimes completely glitch out, and provides us the necessary infrastructure to implement rDPS in the future. By helping us test its stability, we can be confident that our new \"Nineveh\" packet library works correctly and efficiently across all platforms, including Linux!\n",
-  "pub_date": "2026-04-05T21:41:13.723Z",
+  "version": "v1.42.0-nineveh.beta.5",
+  "notes": "### v1.42.0-Nineveh Beta 5 - April 5th, 2026\n\n#### P.S. If you see any of us in town or raid, feel free to drop an honor!\n\n- **Snowving** on Luterra\n- **Administrator** on Ratik\n- **Poont** on Giena\n\n#### NEW FEATURES\n- added filtering for local characters\n- supports breakdowns are sorted by bdmg by default\n- added column sorting for bdmg/dmg/stagger\n- added estimated emperor proc chance to arcana breakdowns\n- added pseudo identity brand skill buff damage to support breakdowns\n\n#### BUG FIXES AND IMPROVEMENTS\n\n- fixed live meter contribution % setting missing\n\nthanks vanillasalt and jeditobe1 for the contributions",
+  "pub_date": "2026-04-08T07:38:46.068Z",
   "platforms": {
     "windows-x86_64": {
-      "url": "https://github.com/snoww/loa-logs/releases/download/v1.41.2-nineveh.beta.4/LOA.Logs_1.41.2-nineveh.beta.4_x64-setup.exe",
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmMxbXRzclBZYklSUFVMamllSHRINUk0dHZBK3JxTlMvUUg3NVBLejJSWnRzNFUwdmxlZk5oZ1hnU3FDREJNZWFvMjVrVGxodExlSm5haHkzWXlmRlFJPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzc1NDI1MjQxCWZpbGU6TE9BIExvZ3NfMS40MS4yLW5pbmV2ZWguYmV0YS40X3g2NC1zZXR1cC5leGUKRFdVMDNnTkhrS0VzU0xyaGN5Y3paYSt6Tk9oOXJVRkxOUHAwZ05ybFprdFN0cUs4MjFoMzc4bU9ab1l4YXFGOWF2blBWV0tvRFkvOXgxNGRIQ1hpQ2c9PQo="
+      "url": "https://github.com/snoww/loa-logs/releases/download/v1.42.0-nineveh.beta.5/LOA.Logs_1.42.0-nineveh.beta.5_x64-setup.exe",
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmVtTVJvcERVWWx4NE51YWE5NHQwQzE1T2JSUlBRL3BSYTlIeGsxYURYZUZkV1IwTkpCVUtWV3pZVWV5Ui96cC9veVluNTFlWDdDdko2dENaVzg2Q2dJPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzc1NjMzODIwCWZpbGU6TE9BIExvZ3NfMS40Mi4wLW5pbmV2ZWguYmV0YS41X3g2NC1zZXR1cC5leGUKUUVENUlrb012VGttd2dFaTl3bnFrY05ZQyttaDdKb3RQWWsyQ0N3clBnS0x5UERlcmpRalRoOG5ROHUzaWNPNHdTSkN6NjBoWTNqNCtwZkNBck5IQWc9PQo="
     },
     "linux-x86_64": {
-      "url": "https://github.com/snoww/loa-logs/releases/download/v1.41.1/LOA.Logs_1.41.1_amd64.AppImage",
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYllMU3oyTHpiWHVGYjJYd1hNeDB6Qlp3UGg1WVF2blUzd3puZGJWcGFyUDJ4dTdQNkZBSkNsT0NEdUIxL0I2bEVEQVFyUkRtTE1DRFB0UE1nYzJDOVFVPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzc0NTU1MzcwCWZpbGU6TE9BIExvZ3NfMS40MS4xX2FtZDY0LkFwcEltYWdlCnk1V2h3ODcvV1h1QmNWZzdobGNoeXV1UWtwUXZabEtkVkVTNXRXVjByMkFTaEQwSk1BRmVDcXJuY0pTU3YydkdmVTlkbEw5WDQwcjFQWEZEM2hRNEF3PT0K"
+      "url": "https://github.com/snoww/loa-logs/releases/download/v1.42.0-nineveh.beta.5//LOA.Logs_1.42.0-nineveh.beta.5_amd64.AppImage",
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlE0RjIyUG4vWmp6MC9KcTZTVEhKNUVxaUEveE16NXMxOUFjUXJOWG9OUmJ6RHlsalhEZmxTbytIb21NY1MxbW5YNXQ2RFhpbjFSZ1dLVTROUi90VFFRPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzc1NjM2MDk5CWZpbGU6TE9BIExvZ3NfMS40Mi4wLW5pbmV2ZWguYmV0YS41X2FtZDY0LkFwcEltYWdlCllDRjQ4NlVKVkRwcmQwZmQzeWd4LzV6S0hHbkNwQy9DQnVvZHJNQzkxV0R4WE9yNFcrSUhiSFk3L1NIV1RNeHVkYU11eWpWbjBkOEFzQUZSU01rb0F3PT0K\n"
     }
   }
 }
