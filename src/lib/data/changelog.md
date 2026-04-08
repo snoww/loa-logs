@@ -1,6 +1,6 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.41.1 - March 26th, 2026
+    v1.41.2 - April 8th, 2026
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
@@ -12,6 +12,24 @@
 - **Snowving** on Luterra
 - **Administrator** on Ratik
 - **Poont** on Giena
+
+#### NEW FEATURES
+
+- added filtering for local characters
+- supports breakdowns are sorted by bdmg by default
+- added column sorting for bdmg/dmg/stagger
+- added estimated emperor proc chance to arcana breakdowns
+- added pseudo identity brand skill buff damage to support breakdowns
+
+#### BUG FIXES AND IMPROVEMENTS
+
+- fixed live meter contribution % setting missing
+
+thanks vanillasalt and jeditobe1 for the contributions
+
+---
+
+### v1.41.1 - March 26th, 2026
 
 #### BUG FIXES AND IMPROVEMENTS
 

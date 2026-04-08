@@ -1,15 +1,11 @@
 {
-  "version": "v1.41.1",
-  "notes": "### v1.41.1 - March 26th, 2026\n\n#### P.S. If you see any of us in town or raid, feel free to drop an honor!\n\n- **Snowving** on Luterra\n- **Administrator** on Ratik\n- **Poont** on Giena\n\n#### BUG FIXES AND IMPROVEMENTS\n\n- fixed occasional combat analyzer data errors\n",
-  "pub_date": "2026-03-26T05:57:39.792Z",
+  "version": "v1.41.2",
+  "notes": "### v1.41.2 - April 8th, 2026\n\n#### P.S. If you see any of us in town or raid, feel free to drop an honor!\n\n- **Snowving** on Luterra\n- **Administrator** on Ratik\n- **Poont** on Giena\n\n#### NEW FEATURES\n- added filtering for local characters\n- supports breakdowns are sorted by bdmg by default\n- added column sorting for bdmg/dmg/stagger\n- added estimated emperor proc chance to arcana breakdowns\n- added pseudo identity brand skill buff damage to support breakdowns\n\n#### BUG FIXES AND IMPROVEMENTS\n\n- fixed live meter contribution % setting missing\n\nthanks vanillasalt and jeditobe1 for the contributions",
+  "pub_date": "2026-04-08T07:33:26.034Z",
   "platforms": {
     "windows-x86_64": {
-      "url": "https://github.com/snoww/loa-logs/releases/download/v1.41.1/LOA.Logs_1.41.1_x64-setup.exe",
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYll0anRLa284aUpQL2RjU1dESm42YldMVkg5RFE5NFU2K0pvc1g1enZRLzVDOC9UUTFDRk16QTFZODRHb2w0cWRUTU05ZWdaQVlhYnJVcUhnZ2lrb3dBPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzc0NTU0NTAwCWZpbGU6TE9BIExvZ3NfMS40MS4xX3g2NC1zZXR1cC5leGUKd0VDVFlYdzduK0RPUHBYVGdmWDZycGVNZkJJaG1XZ1BQejRnMVBHMWhrUzZJWFZabXp3Q1hwRWt5ZFlEMWdrZWF3bmd3UlBZb3JFQnlpU3ZtbmJFQ3c9PQo="
-    },
-    "linux-x86_64": {
-      "url": "https://github.com/snoww/loa-logs/releases/download/v1.41.1/LOA.Logs_1.41.1_amd64.AppImage",
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYllMU3oyTHpiWHVGYjJYd1hNeDB6Qlp3UGg1WVF2blUzd3puZGJWcGFyUDJ4dTdQNkZBSkNsT0NEdUIxL0I2bEVEQVFyUkRtTE1DRFB0UE1nYzJDOVFVPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzc0NTU1MzcwCWZpbGU6TE9BIExvZ3NfMS40MS4xX2FtZDY0LkFwcEltYWdlCnk1V2h3ODcvV1h1QmNWZzdobGNoeXV1UWtwUXZabEtkVkVTNXRXVjByMkFTaEQwSk1BRmVDcXJuY0pTU3YydkdmVTlkbEw5WDQwcjFQWEZEM2hRNEF3PT0K"
+      "url": "https://github.com/snoww/loa-logs/releases/download/v1.41.2/LOA.Logs_1.41.2_x64-setup.exe",
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmM4eGVGNDk2ZWR5UDdyQlJ1M0taTFVCZGpzUjRjOW82V0Y2bW1qRml2RElyd29rOTE1M1MxU0lPU2pNTFBtZ2lFdFF0SHQwQXpSQ3k2Zm91ZHRHL2d3PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzc1NjMzNDg1CWZpbGU6TE9BIExvZ3NfMS40MS4yX3g2NC1zZXR1cC5leGUKOGFwN04xYVhLUFZDTEJnajRmTXlNbDdGWHBUQmRGbmt6eU80cW9wbExGUGFkSjQ1QTVmK3lCRFdrRzJNNzVvaWVaNnlkYnF6ZUhaRXozNW9uVjFxQ3c9PQo="
     }
   }
 }
