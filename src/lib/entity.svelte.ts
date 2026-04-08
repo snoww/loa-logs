@@ -2,11 +2,14 @@ import { abbreviateNumberSplit, customRound, formatPlayerName, getEstherFromNpcI
 
 export type SkillSort = "damage" | "buffed" | "stagger";
 import { cardIds } from "./constants/cards";
+import { classNameToClassId } from "./constants/classes";
 import type { EncounterState } from "./encounter.svelte";
 import { sumRdpsContributed } from "./skill.svelte";
 import { settings } from "./stores.svelte";
 import { type Entity, EntityType, type IncapacitatedEvent, type Skill } from "./types";
-import { hyperAwakeningIds } from "./utils/buffs";
+import { hyperAwakeningIds, supportSkills } from "./utils/buffs";
+
+export const IDENTITY_BRAND_SKILL_ID = -210230;
 
 export class EntityState {
   entity: Entity = $state()!;
@@ -137,6 +140,94 @@ export class EntityState {
 
   skillSort: SkillSort = $state("buffed");
 
+  /**
+   * Computes the "identity brand" bDMG — brand damage misattributed to identity skills
+   * because the support's identity (Moonfall, Serenade, Release Light, etc.) can apply
+   * brand on the boss entity. The game reports this bonus damage under the identity skill's
+   * rdpsContributed instead of brand, inflating identity and deflating brand.
+   *
+   * Returns null if the support has no identity-applied brand this encounter.
+   */
+  identityBrandInfo = $derived.by(() => {
+    if (!this.encounter.encounter) return null;
+    const rawSkills = Object.values(this.entity.skills);
+    const isSupport = rawSkills.some((s) => sumRdpsContributed(s, [1, 3, 5]) > 0);
+    if (!isSupport) return null;
+
+    const enc = this.encounter.encounter;
+    const allDebuffs = enc.encounterDamageStats.debuffs;
+
+    // Step 1: Partition brand debuffs into "regular brand" vs "identity brand".
+    // All brand debuffs share uniqueGroup 210230. Identity brand = sourceSkill is one of
+    // the known identity skills (Moonfall, Serenade of Courage, Blessed Aura, Release Light).
+    // Everything else is regular brand (Sonatina, Drawing Orchids, Dissonance, etc.).
+    const identityBrandDebuffIds = new Set<number>();
+    const regularBrandDebuffIds = new Set<number>();
+    const entityClassId = classNameToClassId[this.entity.class];
+    for (const [idStr, debuff] of Object.entries(allDebuffs)) {
+      if (debuff.uniqueGroup === 210230 && debuff.source.skill?.classId === entityClassId) {
+        const srcId = debuff.source.skill?.id ?? 0;
+        if (supportSkills.identityBrandSources.includes(srcId)) {
+          identityBrandDebuffIds.add(Number(idStr));
+        } else {
+          regularBrandDebuffIds.add(Number(idStr));
+        }
+      }
+    }
+
+    if (identityBrandDebuffIds.size === 0) return null;
+
+    // Step 2: Sum window-damage across DPS party members for each brand type.
+    const name = this.entity.name;
+    const parties = this.encounter.parties;
+    const partyMembers =
+      parties.length > 0
+        ? (parties.find((party) => party.some((p) => p.name === name)) ?? this.encounter.playersOnly)
+        : this.encounter.playersOnly;
+
+    let identityBrandWindowDmg = 0;
+    let regularBrandWindowDmg = 0;
+    for (const player of partyMembers) {
+      const playerIsSupport = Object.values(player.skills).some((s) => sumRdpsContributed(s, [1, 3, 5]) > 0);
+      if (playerIsSupport) continue;
+      for (const [idStr, dmg] of Object.entries(player.damageStats.debuffedBy)) {
+        const id = Number(idStr);
+        if (identityBrandDebuffIds.has(id)) identityBrandWindowDmg += dmg;
+        else if (regularBrandDebuffIds.has(id)) regularBrandWindowDmg += dmg;
+      }
+    }
+
+    if (identityBrandWindowDmg === 0 || regularBrandWindowDmg === 0) return null;
+
+    // Step 3: Total regular brand bDMG from this support's skills (type 3 = boss debuff).
+    const regularBrandBDmg = rawSkills.reduce((acc, s) => acc + (s.rdpsContributed[3] ?? 0), 0);
+    if (regularBrandBDmg === 0) return null;
+
+    // Step 4: Extrapolate: how much brand bDMG was hidden in identity rdpsContributed?
+    // identityBrandBDmg = regularBrandBDmg * (identityBrandWindowDmg / regularBrandWindowDmg)
+    const identityBrandBDmg = Math.round(
+      regularBrandBDmg * (identityBrandWindowDmg / regularBrandWindowDmg)
+    );
+    if (identityBrandBDmg <= 0) return null;
+
+    // Step 5: Identify which of this support's skills are identity skills by matching
+    // their skill id against the known identity brand source list.
+    const identitySkillIds = new Set<number>(supportSkills.identityBrandSources);
+
+    const totalIdentityRdps = rawSkills.reduce(
+      (acc, s) => acc + (identitySkillIds.has(s.id) ? (s.rdpsContributed[1] ?? 0) : 0),
+      0
+    );
+    if (totalIdentityRdps === 0) return null;
+
+    const identityCasts = rawSkills.reduce(
+      (acc, s) => acc + (identitySkillIds.has(s.id) ? s.casts : 0),
+      0
+    );
+
+    return { bDmg: identityBrandBDmg, totalIdentityRdps, identitySkillIds, casts: identityCasts };
+  });
+
   skills = $derived.by(() => {
     if (!this.entity) return [];
     const skillValues = Object.values(this.entity.skills);
@@ -147,11 +238,71 @@ export class EntityState {
           : (a: Skill, b: Skill) => b.totalDamage - a.totalDamage;
       return skillValues.sort(sortFn).filter((skill) => !cardIds.includes(skill.id));
     }
-    const isSupport = skillValues.some((skill) => sumRdpsContributed(skill, [1, 3, 5]) > 0);
-    if (this.skillSort === "stagger") return skillValues.sort((a, b) => b.stagger - a.stagger);
+
+    // For supports with identity brand, inject adjusted identity skills + synthetic skill.
+    const info = this.identityBrandInfo;
+    let adjustedSkills: Skill[];
+    if (info) {
+      adjustedSkills = skillValues.map((skill) => {
+        if (!info.identitySkillIds.has(skill.id)) return skill;
+        // Subtract the identity brand bDMG proportionally from each identity skill's type-1 rdps.
+        const skillIdentityRdps = skill.rdpsContributed[1] ?? 0;
+        if (skillIdentityRdps <= 0) return skill;
+        const reduction = Math.round(info.bDmg * (skillIdentityRdps / info.totalIdentityRdps));
+        return {
+          ...skill,
+          rdpsContributed: {
+            ...skill.rdpsContributed,
+            1: Math.max(0, skillIdentityRdps - reduction)
+          }
+        };
+      });
+      // Synthetic "identity brand" skill — bDMG stored as type 3 (boss debuff, same as brand).
+      const identityBrandMeta: Record<string, { name: string; icon: string }> = {
+        Artist: { name: "Brand Enhancement (Moonfall Brand)", icon: "ark_passive_yy_6.png" },
+        Paladin: { name: "Light's Vestige (Blessed Aura Brand)", icon: "ark_passive_hk_7.png" },
+        Bard: { name: "Serenade of Branding (Serenade Brand)", icon: "ark_passive_bd_9.png" },
+        Valkyrie: { name: "Liberator's Sign (Release Light Brand)", icon: "ark_passive_hkf_10.png" }
+      };
+      const meta = identityBrandMeta[this.entity.class] ?? { name: "Identity Brand", icon: "" };
+      const syntheticSkill: Skill = {
+        id: IDENTITY_BRAND_SKILL_ID,
+        name: meta.name,
+        icon: meta.icon,
+        totalDamage: 0,
+        maxDamage: 0,
+        maxDamageCast: 0,
+        buffedBy: {},
+        debuffedBy: {},
+        buffedBySupport: 0,
+        buffedByIdentity: 0,
+        buffedByHat: 0,
+        debuffedBySupport: 0,
+        casts: info.casts,
+        hits: 0,
+        crits: 0,
+        critDamage: 0,
+        backAttacks: 0,
+        frontAttacks: 0,
+        backAttackDamage: 0,
+        frontAttackDamage: 0,
+        dps: 0,
+        castLog: [],
+        skillCastLog: [],
+        stagger: 0,
+        rdpsReceived: {},
+        rdpsContributed: { 3: info.bDmg }
+      };
+      adjustedSkills.push(syntheticSkill);
+    } else {
+      adjustedSkills = skillValues;
+    }
+
+    const isSupport = adjustedSkills.some((skill) => sumRdpsContributed(skill, [1, 3, 5]) > 0);
+    if (this.skillSort === "stagger") return adjustedSkills.sort((a, b) => b.stagger - a.stagger);
     if (this.skillSort === "buffed" && isSupport && this.encounter.curSettings.breakdown.unbuffedDamage)
-      return skillValues.sort((a, b) => sumRdpsContributed(b, [1, 3, 5]) - sumRdpsContributed(a, [1, 3, 5]));
-    return skillValues.sort((a, b) => b.totalDamage - a.totalDamage);
+      return adjustedSkills.sort((a, b) => sumRdpsContributed(b, [1, 3, 5]) - sumRdpsContributed(a, [1, 3, 5]));
+    return adjustedSkills.sort((a, b) => b.totalDamage - a.totalDamage);
   });
 
   isSupport = $derived(this.skills.some((skill) => sumRdpsContributed(skill, [1, 3, 5]) > 0));
