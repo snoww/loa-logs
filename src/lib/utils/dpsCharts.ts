@@ -539,7 +539,7 @@ export function getBasicSkillLogChart(
         const bossTooltips: string[] = [];
         const skillTooltips: string[] = [];
         params.forEach((p) => {
-          if (p.seriesIndex >= skillCount) {
+          if (p.seriesIndex >= skillCount && p.value[1]) {
             // Boss HP series
             let value = p.value[1] + "%";
             const label = p.seriesName;
