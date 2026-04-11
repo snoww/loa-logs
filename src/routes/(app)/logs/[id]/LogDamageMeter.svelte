@@ -117,7 +117,14 @@
       if (chartType === ChartType.AVERAGE_DPS) {
         let chartPlayers = getAveragePlayerSeries(chartablePlayers, legendNames, encounter.fightStart);
         let bossChart = getBossHpSeries(bossHpLogs, legendNames, chartablePlayers[0].damageStats.dpsAverage.length, 5);
-        chartOptions = getAverageDpsChart(chartablePlayers, legendNames, chartPlayers, bossChart, deathInfo);
+        chartOptions = getAverageDpsChart(
+          chartablePlayers,
+          legendNames,
+          chartPlayers,
+          bossChart,
+          deathInfo,
+          encounter.entities
+        );
       } else if (chartType === ChartType.ROLLING_DPS) {
         let chartPlayers = getRollingPlayerSeries(chartablePlayers, legendNames, encounter.fightStart);
         let bossChart = getBossHpSeries(
@@ -126,7 +133,14 @@
           chartablePlayers[0].damageStats.dpsRolling10sAvg.length,
           1
         );
-        chartOptions = getRollingDpsChart(chartablePlayers, legendNames, chartPlayers, bossChart, deathInfo);
+        chartOptions = getRollingDpsChart(
+          chartablePlayers,
+          legendNames,
+          chartPlayers,
+          bossChart,
+          deathInfo,
+          encounter.entities
+        );
       } else if (chartType === ChartType.SKILL_LOG && player && player.entityType === EntityType.PLAYER) {
         const skillLogLen = Math.floor((encounter.lastCombatPacket - encounter.fightStart) / 1000);
         const skillLogLegend: string[] = [];
@@ -140,14 +154,16 @@
             encounter.lastCombatPacket,
             encounter.fightStart,
             encounter.encounterDamageStats,
-            skillLogBosses
+            skillLogBosses,
+            encounter.entities
           );
         } else {
           chartOptions = getBasicSkillLogChart(
             player,
             encounter.lastCombatPacket,
             encounter.fightStart,
-            skillLogBosses
+            skillLogBosses,
+            encounter.entities
           );
         }
       } else if (chartType === ChartType.BRAND_BUFF) {

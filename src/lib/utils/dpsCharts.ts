@@ -102,7 +102,8 @@ export function getAverageDpsChart(
   legendNames: string[],
   chartPlayers: any[],
   chartBosses: any[],
-  deathInfo: Record<string, DeathInfo[]>
+  deathInfo: Record<string, DeathInfo[]>,
+  entities?: Record<string, Entity>
 ) {
   return {
     ...defaultOptions,
@@ -129,7 +130,9 @@ export function getAverageDpsChart(
         const tree = new BTree(undefined, (a, b) => b - a);
         const length = Object.keys(chartablePlayers).length;
         const totalDps = { value: 0 };
-        params.forEach((param) => generateTooltip(param, bossTooltips, totalDps, tree, deathInfo, time, length));
+        params.forEach((param) =>
+          generateTooltip(param, bossTooltips, totalDps, tree, deathInfo, time, length, entities)
+        );
         const totalDpsString = `<div style="display:flex; justify-content: space-between;font-weight: 600;"><div style="padding-right: 1rem">Total DPS</div><div>${abbreviateNumber(totalDps.value, 2)}</div></div>`;
         tooltipStr += bossTooltips.join("") + totalDpsString + tree.valuesArray().join("") + "</div>";
         return tooltipStr;
@@ -184,7 +187,8 @@ export function getRollingDpsChart(
   legendNames: string[],
   chartPlayers: any[],
   chartBosses: any[],
-  deathInfo: Record<string, DeathInfo[]>
+  deathInfo: Record<string, DeathInfo[]>,
+  entities?: Record<string, Entity>
 ) {
   return {
     ...defaultOptions,
@@ -211,7 +215,9 @@ export function getRollingDpsChart(
         const length = Object.keys(chartablePlayers).length;
         const tree = new BTree(undefined, (a, b) => b - a);
         const totalDps = { value: 0 };
-        params.forEach((param) => generateTooltip(param, bossTooltips, totalDps, tree, deathInfo, time, length));
+        params.forEach((param) =>
+          generateTooltip(param, bossTooltips, totalDps, tree, deathInfo, time, length, entities)
+        );
         const totalDpsString = `<div style="display:flex; justify-content: space-between;font-weight: 600;"><div style="padding-right: 1rem">Total DPS</div><div>${abbreviateNumber(totalDps.value, 2)}</div></div>`;
         tooltipStr += bossTooltips.join("") + totalDpsString + tree.valuesArray().join("") + "</div>";
         return tooltipStr;
@@ -297,7 +303,8 @@ export function getDetailedSkillLogChart(
   lastCombatPacket: number,
   fightStart: number,
   encounterDamageStats: EncounterDamageStats,
-  chartBosses: any[] = []
+  chartBosses: any[] = [],
+  entities?: Record<string, Entity>
 ) {
   const sortedSkills = Object.values(player.skills)
     .filter((skill) => skill.skillCastLog.length > 0)
@@ -456,8 +463,9 @@ export function getDetailedSkillLogChart(
                   if (bossData) {
                     let value = bossData[1] + "%";
                     const label = boss.name;
-                    if (Object.hasOwn(bossHpMap, label)) {
-                      const bossMaxHpBars = bossHpMap[label];
+                    const bossMaxHpBars =
+                      entities?.[label]?.hpBars ?? (Object.hasOwn(bossHpMap, label) ? bossHpMap[label] : undefined);
+                    if (bossMaxHpBars !== undefined) {
                       const bossHpBars = Math.floor(bossMaxHpBars * (bossData[1] / 100));
                       value = bossHpBars + "x (" + value + ")";
                     }
@@ -491,7 +499,8 @@ export function getBasicSkillLogChart(
   player: Entity,
   lastCombatPacket: number,
   fightStart: number,
-  chartBosses: any[] = []
+  chartBosses: any[] = [],
+  entities?: Record<string, Entity>
 ) {
   const sortedSkills = Object.values(player.skills)
     .filter((skill) => skill.castLog.length > 0)
@@ -543,8 +552,9 @@ export function getBasicSkillLogChart(
             // Boss HP series
             let value = p.value[1] + "%";
             const label = p.seriesName;
-            if (Object.hasOwn(bossHpMap, label)) {
-              const bossMaxHpBars = bossHpMap[label];
+            const bossMaxHpBars =
+              entities?.[label]?.hpBars ?? (Object.hasOwn(bossHpMap, label) ? bossHpMap[label] : undefined);
+            if (bossMaxHpBars !== undefined) {
               const bossHpBars = Math.floor(bossMaxHpBars * (parseFloat(value) / 100));
               value = bossHpBars + "x (" + value + ")";
             }
@@ -680,14 +690,15 @@ function generateTooltip(
   tree: BTree,
   deathInfo: Record<string, DeathInfo[]>,
   time: string,
-  chartablePlayersLength: number
+  chartablePlayersLength: number,
+  entities?: Record<string, Entity>
 ) {
   const label = param.seriesName;
   let value = param.value;
   if (param.seriesIndex >= chartablePlayersLength) {
     value = value[1] + "%";
-    if (Object.hasOwn(bossHpMap, label)) {
-      const bossMaxHpBars = bossHpMap[label];
+    const bossMaxHpBars = entities?.[label]?.hpBars ?? (Object.hasOwn(bossHpMap, label) ? bossHpMap[label] : undefined);
+    if (bossMaxHpBars !== undefined) {
       const bossHpBars = Math.floor(bossMaxHpBars * (parseFloat(value) / 100));
       value = bossHpBars + "x (" + value + ")";
     }
@@ -801,11 +812,7 @@ function secondsToMinutesAndSeconds(seconds: number): string {
   return `${minutes.toString().padStart(1, "0")}:${remainingSeconds.toString().padStart(2, "0")}`;
 }
 
-export function getPlayerIncapSeries(
-  player: Entity,
-  fightStart: number,
-  lastCombatPacket: number
-): any[] {
+export function getPlayerIncapSeries(player: Entity, fightStart: number, lastCombatPacket: number): any[] {
   const incaps = player.damageStats.incapacitations;
   if (!incaps || incaps.length === 0) return [];
 
