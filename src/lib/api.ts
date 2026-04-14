@@ -215,3 +215,4 @@ export const onClearEncounter = (handler: (event: { payload: number }) => void) 
 
 export const onNinevehUpdate = (handler: (event: NinevehEvent) => void) => listen("nineveh-update", handler);
 
+export const onBannedEvent = (handler: () => void) => listen("banned-event", handler);

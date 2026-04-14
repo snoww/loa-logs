@@ -6,6 +6,7 @@
   import { uploadLog } from "$lib/utils/sync";
   import {
     adminAlert,
+    bannedEvent,
     bossDead,
     manualSave,
     pausing,
@@ -29,6 +30,7 @@
     onSaveEncounter,
     onPhaseTransition,
     onAdmin,
+    onBannedEvent,
     onClearEncounter,
     onNinevehUpdate,
     ninevehStateRequest
@@ -152,6 +154,11 @@
     });
     handles.push(handle);
 
+    handle = await onBannedEvent(() => {
+      addToast(bannedEvent);
+    });
+    handles.push(handle);
+
     handle = await onClearEncounter(async (event) => {
       if (!settings.sync.auto) {
         return;
@@ -205,4 +212,3 @@
 </script>
 
 <LiveDamageMeter {enc} />
-
