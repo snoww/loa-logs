@@ -27,6 +27,8 @@
     "process:allow-restart",
     "shell:allow-open",
     "shell:default",
-    "updater:default"
+    "updater:default",
+    "http:default",
+    "http:allow-fetch"
   ]
 }
