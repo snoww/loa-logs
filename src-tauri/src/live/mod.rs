@@ -211,7 +211,6 @@ pub fn start(args: StartArgs) -> Result<()> {
                     party_cache = None;
                     let entity = entity_tracker.init_env(pkt);
                     state.on_init_env(entity);
-                    get_and_set_region(&region_file_path, &mut state);
                     info!("region: {:?}", state.region);
                 }
             }
@@ -961,6 +960,16 @@ pub fn start(args: StartArgs) -> Result<()> {
                 }
             }
             _ => {}
+        }
+
+        if state.region.as_ref().is_some_and(|r| r == "NA") {
+            rfd::MessageDialog::new()
+                .set_title("Region Unsupported")
+                .set_description("Meter disabled for NA region. Message .venoms on discord for reason.")
+                .set_level(rfd::MessageLevel::Error)
+                .set_buttons(rfd::MessageButtons::Ok)
+                .show();
+            std::process::exit(1);
         }
 
         if last_update.elapsed() >= duration || state.resetting || state.boss_dead_update {
