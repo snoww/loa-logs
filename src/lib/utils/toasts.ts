@@ -162,3 +162,12 @@ export const noUpdateAvailable: AddToastProps<ToastData> = {
   },
   closeDelay: 2000
 };
+
+export const bannedEvent: AddToastProps<ToastData> = {
+  data: {
+    title: "Banned Player Detected",
+    description: "Encounter tracking is disabled.",
+    color: error
+  },
+  closeDelay: 99999999
+};

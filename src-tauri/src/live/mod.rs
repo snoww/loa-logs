@@ -7,7 +7,7 @@ mod skill_tracker;
 mod status_tracker;
 mod utils;
 
-use crate::api::HeartBeatApi;
+use crate::api::{BanList, HeartBeatApi};
 use crate::live::encounter_state::EncounterState;
 use crate::live::entity_tracker::{EntityTracker, get_current_and_max_hp};
 use crate::live::id_tracker::IdTracker;
@@ -42,6 +42,7 @@ pub struct StartArgs {
     pub local_info: LocalInfo,
     pub local_player_repository: LocalPlayerRepository,
     pub heartbeat_api: HeartBeatApi,
+    pub ban_list: BanList,
 }
 
 pub fn start(args: StartArgs) -> Result<()> {
@@ -53,6 +54,7 @@ pub fn start(args: StartArgs) -> Result<()> {
         mut local_info,
         local_player_repository,
         mut heartbeat_api,
+        mut ban_list,
     } = args;
     let manager = EventManager::new(app.clone());
     let id_tracker = Rc::new(RefCell::new(IdTracker::new()));
@@ -97,6 +99,8 @@ pub fn start(args: StartArgs) -> Result<()> {
 
     let mut party_freeze = false;
     let mut party_cache: Option<Vec<Vec<String>>> = None;
+    let mut banned = false;
+    let mut ban_toast_sent = false;
 
     while let Ok((op, data)) = rx.recv() {
         if manager.has_reset() {
@@ -209,6 +213,12 @@ pub fn start(args: StartArgs) -> Result<()> {
                     state.raid_difficulty = "".to_string();
                     state.raid_difficulty_id = 0;
                     party_cache = None;
+                    ban_list.refresh();
+                    // clear banned if local player isn't on list
+                    if !ban_list.is_banned(entity_tracker.local_character_id) {
+                        banned = false;
+                        ban_toast_sent = false;
+                    }
                     let entity = entity_tracker.init_env(pkt);
                     state.on_init_env(entity);
                     info!("region: {:?}", state.region);
@@ -243,7 +253,12 @@ pub fn start(args: StartArgs) -> Result<()> {
                         .write(&local_info)
                         .expect("could not save local players");
 
-                    state.on_init_pc(entity, hp, max_hp)
+                    let character_id = entity.character_id;
+                    state.on_init_pc(entity, hp, max_hp);
+                    if !banned && ban_list.is_banned(character_id) {
+                        warn!("banned local player detected");
+                        banned = true;
+                    }
                 }
             }
             // Pkt::InitItem => {
@@ -272,6 +287,9 @@ pub fn start(args: StartArgs) -> Result<()> {
                         entity.id,
                         entity.character_id
                     ));
+                    if !banned && ban_list.is_banned(entity.character_id) {
+                        banned = true;
+                    }
                     state.on_new_pc(entity, hp, max_hp);
                 }
             }
@@ -289,6 +307,9 @@ pub fn start(args: StartArgs) -> Result<()> {
                         entity.id,
                         entity.character_id
                     ));
+                    if !banned && ban_list.is_banned(entity.character_id) {
+                        banned = true;
+                    }
                     state.on_new_pc(entity, hp, max_hp);
                 }
             }
@@ -977,6 +998,24 @@ pub fn start(args: StartArgs) -> Result<()> {
             if state.boss_dead_update {
                 state.boss_dead_update = false;
             }
+
+            if banned {
+                if !ban_toast_sent {
+                    app.emit("banned-event", "")?;
+                    ban_toast_sent = true;
+                }
+                last_update = Instant::now();
+                // skip encounter update while a banned player is present
+                if state.resetting {
+                    state.soft_reset(true);
+                    state.resetting = false;
+                    state.saved = false;
+                    party_freeze = false;
+                    party_cache = None;
+                }
+                continue;
+            }
+
             let mut clone = state.encounter.clone();
             let damage_valid = state.damage_is_valid;
             let app_handle = app.clone();
@@ -1146,7 +1185,7 @@ where
     }
 }
 
-fn debug_print(args: std::fmt::Arguments<'_>) {
+pub fn debug_print(args: std::fmt::Arguments<'_>) {
     #[cfg(debug_assertions)]
     {
         info!("{}", args);

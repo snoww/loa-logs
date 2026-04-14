@@ -7,6 +7,7 @@
   import { uploadLog } from "$lib/utils/sync";
   import {
     adminAlert,
+    bannedEvent,
     bossDead,
     manualSave,
     pausing,
@@ -30,6 +31,7 @@
     onSaveEncounter,
     onPhaseTransition,
     onAdmin,
+    onBannedEvent,
     onClearEncounter
   } from "$lib/api";
   import type { UnlistenFn } from "@tauri-apps/api/event";
@@ -146,6 +148,11 @@
 
     handle = await onAdmin(() => {
       addToast(adminAlert);
+    });
+    handles.push(handle);
+
+    handle = await onBannedEvent(() => {
+      addToast(bannedEvent);
     });
     handles.push(handle);
 
