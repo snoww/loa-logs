@@ -42,7 +42,6 @@ pub struct StartArgs {
     pub local_info: LocalInfo,
     pub local_player_repository: LocalPlayerRepository,
     pub heartbeat_api: HeartBeatApi,
-    pub region_file_path: String,
 }
 
 pub fn start(args: StartArgs) -> Result<()> {
@@ -54,7 +53,6 @@ pub fn start(args: StartArgs) -> Result<()> {
         mut local_info,
         local_player_repository,
         mut heartbeat_api,
-        region_file_path,
     } = args;
     let manager = EventManager::new(app.clone());
     let id_tracker = Rc::new(RefCell::new(IdTracker::new()));
@@ -67,7 +65,7 @@ pub fn start(args: StartArgs) -> Result<()> {
     );
     let mut state = EncounterState::new(app.clone());
 
-    let rx = match start_capture(port, region_file_path.clone()) {
+    let rx = match start_capture(port) {
         Ok(rx) => rx,
         Err(e) => {
             warn!("Error starting capture: {e}");
@@ -97,8 +95,6 @@ pub fn start(args: StartArgs) -> Result<()> {
         info!("no settings found, using defaults");
     }
 
-    get_and_set_region(&region_file_path, &mut state);
-
     let mut party_freeze = false;
     let mut party_cache: Option<Vec<Vec<String>>> = None;
 
@@ -126,6 +122,11 @@ pub fn start(args: StartArgs) -> Result<()> {
         }
 
         match op {
+            Pkt::RegionNotify => {
+                let region = String::from_utf8_lossy(&data).into_owned();
+                state.region = Some(region.clone());
+                state.encounter.region = Some(region);
+            }
             Pkt::BattleItemUseNotify => {
                 if let Some(pkt) =
                     parse_pkt(&data, PKTBattleItemUseNotify::new, "PKTBattleItemUseNotify")
@@ -139,7 +140,10 @@ pub fn start(args: StartArgs) -> Result<()> {
                         if pkt.item_id == 101151 || pkt.item_id == 102151 {
                             debug_print(format_args!("from: {}, used: Dark Grenade", player.name))
                         } else if pkt.item_id == 101924 || pkt.item_id == 102924 {
-                            debug_print(format_args!("from: {}, used: Splendid Dark Grenade", player.name))
+                            debug_print(format_args!(
+                                "from: {}, used: Splendid Dark Grenade",
+                                player.name
+                            ))
                         }
                     }
                 }
@@ -1118,18 +1122,6 @@ fn on_shield_change(
     let target = entity_tracker.get_source_entity(target_id);
     state.on_boss_shield(&target, status_effect.value);
     state.on_shield_used(&source, &target, status_effect.status_effect_id, change);
-}
-
-fn get_and_set_region(path: &str, state: &mut EncounterState) {
-    match std::fs::read_to_string(path) {
-        Ok(region) => {
-            state.region = Some(region.clone());
-            state.encounter.region = Some(region);
-        }
-        Err(_) => {
-            // warn!("failed to read region file. {}", e);
-        }
-    }
 }
 
 fn parse_pkt<T, F>(data: &[u8], new_fn: F, pkt_name: &str) -> Option<T>
