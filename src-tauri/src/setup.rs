@@ -18,6 +18,7 @@ use crate::{
     shell::ShellManager,
     ui::{AppHandleExtensions, WindowExtensions, setup_tray},
 };
+use crate::api::BanList;
 
 pub fn setup(app: &mut App) -> Result<(), Box<dyn Error>> {
     #[cfg(not(debug_assertions))]
@@ -79,6 +80,7 @@ pub fn setup(app: &mut App) -> Result<(), Box<dyn Error>> {
             local_info.client_id.clone(),
             context.version.clone(),
         );
+        let ban_list = BanList::new();
         app_handle.manage(StatsApi::new(
             base_url,
             local_info.client_id.clone(),
@@ -91,6 +93,7 @@ pub fn setup(app: &mut App) -> Result<(), Box<dyn Error>> {
             local_info,
             local_player_repository,
             heartbeat_api,
+            ban_list
         };
 
         tokio::task::spawn_blocking(move || {
