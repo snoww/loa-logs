@@ -274,16 +274,12 @@ export function getBaseDamage(damageStats: DamageStats): number {
   );
 }
 
-export function getBossHpBars(bossName: string, bossMaxHp: number) {
-  if (bossName === "Phantom Legion Commander Brelshaza") {
-    if (bossMaxHp > 100_000_000_000) {
-      return 420;
-    } else {
-      return 250;
-    }
-  } else {
-    return bossHpMap[bossName];
+export function getBossHpBars(boss: { name: string; maxHp: number; hpBars?: number }) {
+  if (boss.hpBars) return boss.hpBars;
+  if (boss.name === "Phantom Legion Commander Brelshaza") {
+    return boss.maxHp > 100_000_000_000 ? 420 : 250;
   }
+  return bossHpMap[boss.name] ?? 1;
 } // shade rgb
 /** Check if a name is valid */
 export const isNameValid = (value: unknown): value is string =>

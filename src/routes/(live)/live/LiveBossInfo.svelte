@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { bossHpBarColors, bossHpMap } from "$lib/constants/encounters";
+  import { bossHpBarColors } from "$lib/constants/encounters";
   import { settings } from "$lib/stores.svelte.js";
   import type { Entity } from "$lib/types";
   import { broadcastLiveMessage } from "$lib/utils/live.svelte.js";
@@ -14,13 +14,7 @@
   let bossShield = $derived(boss.currentShield);
   let bossTotalBars = $derived.by(() => {
     if (settings.app.meter.bossHpBar) {
-      if (boss.hpBars) {
-        return boss.hpBars;
-      } else if (Object.hasOwn(bossHpMap, boss.name)) {
-        return getBossHpBars(boss.name, boss.maxHp);
-      } else {
-        return 1;
-      }
+      return getBossHpBars(boss);
     } else {
       return 1;
     }
