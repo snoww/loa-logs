@@ -15,7 +15,7 @@
   let bossHpBars = $derived.by(() => {
     let boss = encounter.entities[encounter.currentBossName];
     if (boss) {
-      return Math.ceil((boss.currentHp / boss.maxHp) * getBossHpBars(boss.name, boss.maxHp));
+      return Math.ceil((boss.currentHp / boss.maxHp) * getBossHpBars(boss));
     }
     return undefined;
   });

@@ -1,6 +1,5 @@
 <script lang="ts">
   import { percentValue } from "$lib/components/Snippets.svelte";
-  import { bossHpMap } from "$lib/constants/encounters";
   import { EncounterState } from "$lib/encounter.svelte";
   import { settings } from "$lib/stores.svelte";
   import { EntityType } from "$lib/types";
@@ -23,13 +22,7 @@
 
   let bossTotalBars = $derived.by(() => {
     if (settings.app.meter.bossHpBar) {
-      if (boss?.hpBars) {
-        return boss.hpBars;
-      } else if (boss && Object.hasOwn(bossHpMap, boss.name)) {
-        return getBossHpBars(boss.name, boss.maxHp);
-      } else {
-        return 1;
-      }
+      return boss ? getBossHpBars(boss) : 1;
     } else {
       return 1;
     }
