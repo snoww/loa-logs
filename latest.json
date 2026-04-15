@@ -1,15 +1,15 @@
 {
-  "version": "v1.42.0-nineveh.beta.5",
-  "notes": "### v1.42.0-Nineveh Beta 5 - April 5th, 2026\n\n#### P.S. If you see any of us in town or raid, feel free to drop an honor!\n\n- **Snowving** on Luterra\n- **Administrator** on Ratik\n- **Poont** on Giena\n\n#### NEW FEATURES\n- added filtering for local characters\n- supports breakdowns are sorted by bdmg by default\n- added column sorting for bdmg/dmg/stagger\n- added estimated emperor proc chance to arcana breakdowns\n- added pseudo identity brand skill buff damage to support breakdowns\n\n#### BUG FIXES AND IMPROVEMENTS\n\n- fixed live meter contribution % setting missing\n\nthanks vanillasalt and jeditobe1 for the contributions",
-  "pub_date": "2026-04-08T07:38:46.068Z",
+  "version": "v1.43.0-nineveh.beta.6",
+  "notes": "### v1.43.0-Nineveh Beta 6 - April 15th, 2026\n\n#### P.S. If you see any of us in town or raid, feel free to drop an honor!\n\n- **Snowving** on Luterra\n- **Administrator** on Ratik\n- **Poont** on Giena\n\nThe LOA Logs beta uses a completely overhauled system for reading Lost Ark's networking data, giving us significantly more control over how we read and query game information. It finally fixes the issue where damage numbers would sometimes completely glitch out, and provides us the necessary infrastructure to implement rDPS in the future. By helping us test its stability, we can be confident that our new \"Nineveh\" packet library works correctly and efficiently across all platforms, including Linux!\n\n#### NEW FEATURES\n\n- updated meter for serca patch\n- added ban list that disables meter when certain players are detected\n\n#### BUG FIXES AND IMPROVEMENTS\n\n- fixed tooltips for legacy skill cast log\n- maybe fixed upload token error in linux\n",
+  "pub_date": "2026-04-14T22:06:19.835Z",
   "platforms": {
     "windows-x86_64": {
-      "url": "https://github.com/snoww/loa-logs/releases/download/v1.42.0-nineveh.beta.5/LOA.Logs_1.42.0-nineveh.beta.5_x64-setup.exe",
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmVtTVJvcERVWWx4NE51YWE5NHQwQzE1T2JSUlBRL3BSYTlIeGsxYURYZUZkV1IwTkpCVUtWV3pZVWV5Ui96cC9veVluNTFlWDdDdko2dENaVzg2Q2dJPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzc1NjMzODIwCWZpbGU6TE9BIExvZ3NfMS40Mi4wLW5pbmV2ZWguYmV0YS41X3g2NC1zZXR1cC5leGUKUUVENUlrb012VGttd2dFaTl3bnFrY05ZQyttaDdKb3RQWWsyQ0N3clBnS0x5UERlcmpRalRoOG5ROHUzaWNPNHdTSkN6NjBoWTNqNCtwZkNBck5IQWc9PQo="
+      "url": "https://github.com/snoww/loa-logs/releases/download/v1.43.0-nineveh.beta.6/LOA.Logs_1.43.0-nineveh.beta.6_x64-setup.exe",
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYldNTXRCcWNacDBUaWZYNXB5TkFBZkk1dnlMWXdqUmRYUExuOUYvUkd2ekJ4Vk84YXg1V1puTW43a0xjcEhoTUVUL2xuQStWa2orSVFvb1F5MXVCSlFJPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzc2MjcwMzIwCWZpbGU6TE9BIExvZ3NfMS40My4wLW5pbmV2ZWguYmV0YS41X3g2NC1zZXR1cC5leGUKeTFUdys3RmlIQ2R6NUdqWjVvMTE1RUZSQTBSaXpLaW1OMTRjK3Mwc2JyRE4wOVE1YWN4bUVxNng4emFlYVBwNFo2WUlkeEF1RXRiUFhYOXBqWjVTQ2c9PQo="
     },
     "linux-x86_64": {
-      "url": "https://github.com/snoww/loa-logs/releases/download/v1.42.0-nineveh.beta.5//LOA.Logs_1.42.0-nineveh.beta.5_amd64.AppImage",
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlE0RjIyUG4vWmp6MC9KcTZTVEhKNUVxaUEveE16NXMxOUFjUXJOWG9OUmJ6RHlsalhEZmxTbytIb21NY1MxbW5YNXQ2RFhpbjFSZ1dLVTROUi90VFFRPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzc1NjM2MDk5CWZpbGU6TE9BIExvZ3NfMS40Mi4wLW5pbmV2ZWguYmV0YS41X2FtZDY0LkFwcEltYWdlCllDRjQ4NlVKVkRwcmQwZmQzeWd4LzV6S0hHbkNwQy9DQnVvZHJNQzkxV0R4WE9yNFcrSUhiSFk3L1NIV1RNeHVkYU11eWpWbjBkOEFzQUZSU01rb0F3PT0K\n"
+      "url": "https://github.com/snoww/loa-logs/releases/download/v1.43.0-nineveh.beta.6//LOA.Logs_1.43.0-nineveh.beta.6_amd64.AppImage",
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlJHQkpJRG91TFYxcUdVMmhKWHBLQnUrT2tBQVNZL25aN2ZXZGQreE12TGJ0Um5QcGVmZlVFZDR5ekhtZUxrYTk3NXdoM3dDMytvTzNtYW1PeUVldGdRPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzc2MjcxODczCWZpbGU6TE9BIExvZ3NfMS40My4wLW5pbmV2ZWguYmV0YS42X2FtZDY0LkFwcEltYWdlCmJmZDcwOHU0ME80anhWaWxyVjdiRUQ1RUxhZG00aDA0SnRCN010dHZ4MVQ3NDE1WnY3SU03OFFWenhFRStiK0IxMmZqcmtCd0VnU3Npall1UzJpZ0RBPT0K"
     }
   }
 }
