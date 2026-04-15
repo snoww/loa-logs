@@ -99,6 +99,10 @@ export const encounterMap: { [key: string]: { [key: string]: Array<string> } } =
   "Final Act: Kazeros": {
     "Final Act: Kazeros G1": ["Abyss Lord Kazeros", "Abyssal Afterimage"],
     "Final Act: Kazeros G2": ["Archdemon Kazeros", "Death Incarnate Kazeros"]
+  },
+  Serca: {
+    "Serca G1": ["Witch of Agony, Serca"],
+    "Serca G2": ["Corvus Tul Rak"]
   }
 };
 
@@ -180,7 +184,8 @@ export const difficultyMap: Array<string> = [
   "Solo",
   "Trial",
   "Extreme",
-  "The First"
+  "The First",
+  "Nightmare"
 ];
 
 export const raidGates: Record<string, string> = Object.fromEntries(
@@ -200,7 +205,8 @@ export const bossList = [
   "Sonavel",
   "Hanumatan",
   "Kungelanium",
-  "Deskaluda"
+  "Deskaluda",
+  "Lumencaligo"
 ];
 
 export const bossHpBarColors = ["#D16F23", "#9F3930", "#582469", "#2B3A63", "#246977", "#798816", "#E7B826"];
