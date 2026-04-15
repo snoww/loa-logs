@@ -61,9 +61,11 @@ impl BanList {
         match result {
             Ok(strings) => {
                 debug_print(format_args!("fetched {} ids from ban list", strings.len()));
-                self.ids = parse_ids(strings.iter().map(|s| s.as_str()));
+                let mut ids = parse_ids(strings.iter().map(|s| s.as_str()));
+                ids.extend(parse_ids(FALLBACK_BAN_LIST.iter().copied()));
+                self.ids = ids;
             }
-            Err(e) => {
+            Err(_) => {
                 debug_print(format_args!("failed to fetch ban list, using fallback"));
                 self.ids = parse_ids(FALLBACK_BAN_LIST.iter().copied());
             }
