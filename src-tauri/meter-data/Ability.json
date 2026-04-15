@@ -78203,7 +78203,7 @@
         "addons": null
       }
     },
-    "featureType": "vf_quick_silverhawk_delete__",
+    "featureType": "ap_identity_dragon_knight_frame_wing",
     "isEngrave": false,
     "isPenalty": false
   },
@@ -78303,7 +78303,7 @@
         "addons": null
       }
     },
-    "featureType": "vf_communion_delete__",
+    "featureType": "ap_identity_dragon_knight_fusion",
     "isEngrave": false,
     "isPenalty": false
   },
@@ -78448,7 +78448,7 @@
         "addons": null
       }
     },
-    "featureType": "vf_master_hunter_delete__",
+    "featureType": "ap_identity_dragon_knight_dragon_scale",
     "isEngrave": false,
     "isPenalty": false
   },
@@ -78503,7 +78503,7 @@
         "addons": null
       }
     },
-    "featureType": "vf_hawk_blow_delete__",
+    "featureType": "ap_identity_dragon_knight_dragon_fear",
     "isEngrave": false,
     "isPenalty": false
   },
@@ -78588,7 +78588,7 @@
         "addons": null
       }
     },
-    "featureType": "vf_wind_fury_delete__",
+    "featureType": "ap_identity_dragon_knight_ember",
     "isEngrave": false,
     "isPenalty": false
   },
@@ -78913,7 +78913,7 @@
         "addons": null
       }
     },
-    "featureType": "vf_energy_regen_delete__",
+    "featureType": "ap_identity_dragon_knight_stance_off",
     "isEngrave": false,
     "isPenalty": false
   },
@@ -88993,7 +88993,7 @@
         "addons": null
       }
     },
-    "featureType": "ap_identity_warlord_great_sheild",
+    "featureType": "ap_identity_scouter_parts",
     "isEngrave": false,
     "isPenalty": false
   },
@@ -89518,7 +89518,7 @@
         "addons": null
       }
     },
-    "featureType": "ap_identity_warlord_lance_stance",
+    "featureType": "ag_identity_scouter_parts_extension",
     "isEngrave": false,
     "isPenalty": false
   },

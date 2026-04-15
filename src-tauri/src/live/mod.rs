@@ -827,7 +827,7 @@ pub fn start(args: StartArgs) -> Result<()> {
                             state.raid_difficulty_id = 1;
                         }
                         2 => {
-                            state.raid_difficulty = "Inferno".to_string();
+                            state.raid_difficulty = "Nightmare".to_string();
                             state.raid_difficulty_id = 2;
                         }
                         3 => {
@@ -839,11 +839,7 @@ pub fn start(args: StartArgs) -> Result<()> {
                             state.raid_difficulty_id = 4;
                         }
                         5 => {
-                            if matches!(pkt.zone_id, (37121..=37124) | (37817..=37819)) {
-                                state.raid_difficulty = "Extreme".to_string();
-                            } else {
-                                state.raid_difficulty = "The First".to_string();
-                            }
+                            state.raid_difficulty = "The First".to_string();
                             state.raid_difficulty_id = 5;
                         }
                         _ => {}

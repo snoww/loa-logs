@@ -6,7 +6,6 @@
   import { IconArrowLeft, IconStar } from "$lib/icons";
   import type { Encounter } from "$lib/types";
   import { formatTimestamp, getBossHpBars } from "$lib/utils";
-  import { invoke } from "@tauri-apps/api/core";
   import { toggleEncounterFavorite } from "$lib/api";
 
   let { encounter }: { encounter: Encounter } = $props();
@@ -34,12 +33,12 @@
 {/snippet}
 
 <div class="sticky top-0 z-20 bg-neutral-900/70 px-6 shadow-md drop-shadow-lg backdrop-blur-lg">
-  <div class="h-18 mx-auto flex max-w-[180rem] items-center">
+  <div class="mx-auto flex h-18 max-w-[180rem] items-center">
     <div class="flex flex-col px-1 py-4">
-      <div class="flex gap-2 overflow-y-auto text-nowrap py-1 text-xs">
+      <div class="flex gap-2 overflow-y-auto py-1 text-xs text-nowrap">
         <a
           href="/logs"
-          class="bg-accent-500/70 hover:bg-accent-500/80 flex items-center gap-1 rounded-sm py-0.5 pl-1 pr-2"
+          class="flex items-center gap-1 rounded-sm bg-accent-500/70 py-0.5 pr-2 pl-1 hover:bg-accent-500/80"
         >
           <IconArrowLeft class="shrink-0" />
           Back
@@ -55,6 +54,7 @@
               encounter.difficulty === "Challenge" ||
               encounter.difficulty === "Trial"}
             class:text-cyan-400={encounter.difficulty === "Solo"}
+            class:text-violet-400={encounter.difficulty === "Nightmare"}
             class:text-purple-500={encounter.difficulty.includes("Extreme") || encounter.difficulty === "The First"}
           >
             {encounter.difficulty}

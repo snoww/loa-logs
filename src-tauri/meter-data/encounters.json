@@ -49,9 +49,17 @@
   },
   "Thaemine": {
     "Thaemine G1": ["Killineza the Dark Worshipper"],
-    "Thaemine G2": ["Valinak, Knight of Darkness", "Valinak, Taboo Usurper", "Valinak, Herald of the End"],
+    "Thaemine G2": [
+      "Valinak, Knight of Darkness",
+      "Valinak, Taboo Usurper",
+      "Valinak, Herald of the End"
+    ],
     "Thaemine G3": ["Thaemine the Lightqueller", "Dark Greatsword"],
-    "Thaemine G4": ["Darkness Legion Commander Thaemine", "Thaemine Prokel", "Thaemine, Conqueror of Stars"]
+    "Thaemine G4": [
+      "Darkness Legion Commander Thaemine",
+      "Thaemine Prokel",
+      "Thaemine, Conqueror of Stars"
+    ]
   },
   "Echidna": {
     "Echidna G1": ["Red Doom Narkiel", "Agris"],
@@ -79,12 +87,19 @@
   },
   "Act 2: Brelshaza": {
     "Act 2: Brelshaza G1": ["Narok the Butcher"],
-    "Act 2: Brelshaza G2": ["Phantom Legion Commander Brelshaza", "Phantom Manifester Brelshaza"]
+    "Act 2: Brelshaza G2": [
+      "Phantom Legion Commander Brelshaza",
+      "Phantom Manifester Brelshaza"
+    ]
   },
   "Act 3: Mordum": {
     "Act 3: Mordum G1": ["Thaemine, Master of Darkness", "Infernas"],
     "Act 3: Mordum G2": ["Blossoming Fear, Naitreya"],
-    "Act 3: Mordum G3": ["Mordum, the Abyssal Punisher", "Mordum's Hammer", "Flash of Punishment"]
+    "Act 3: Mordum G3": [
+      "Mordum, the Abyssal Punisher",
+      "Mordum's Hammer",
+      "Flash of Punishment"
+    ]
   },
   "Assault: Crimson Abyss": {
     "Assault: Crimson Abyss": ["Abyssal Beast, Narhash"]
@@ -93,11 +108,18 @@
     "Assault: Flame of Destruction": ["Flame of Darkness, Tarkal"]
   },
   "Act 4: Armoche": {
-    "Act 4: Armoche G1": ["Act 4: Covetous Master Echidna", "Brelshaza, Ember in the Ashes"],
+    "Act 4: Armoche G1": [
+      "Act 4: Covetous Master Echidna",
+      "Brelshaza, Ember in the Ashes"
+    ],
     "Act 4: Armoche G2": ["Armoche, Sentinel of the Abyss"]
   },
   "Final Act: Kazeros": {
     "Final Act: Kazeros G1": ["Abyss Lord Kazeros", "Abyssal Afterimage"],
     "Final Act: Kazeros G2": ["Archdemon Kazeros", "Death Incarnate Kazeros"]
+  },
+  "Serca": {
+    "Serca G1": ["Witch of Agony, Serca"],
+    "Serca G2": ["Corvus Tul Rak"]
   }
 }

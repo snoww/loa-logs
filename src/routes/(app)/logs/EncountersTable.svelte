@@ -67,6 +67,7 @@
                 encounter.difficulty === "Challenge" ||
                 encounter.difficulty === "Trial"}
               class:text-cyan-400={encounter.difficulty === "Solo"}
+              class:text-violet-400={encounter.difficulty === "Nightmare"}
               class:text-purple-500={encounter.difficulty.includes("Extreme") || encounter.difficulty === "The First"}
             >
               {encounter.difficulty}
