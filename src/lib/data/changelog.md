@@ -1,6 +1,6 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.43.0-Nineveh Beta 6 - April 15th, 2026
+    v1.43.0-Nineveh Beta 7 - April 16th, 2026
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
@@ -19,14 +19,8 @@ The LOA Logs beta uses a completely overhauled system for reading Lost Ark's net
 
 ### Note: ExitLag does not work with Nineveh at the moment
 
-#### NEW FEATURES
-
-- updated meter for serca patch
-- added ban list that disables meter when certain players are detected
-
 #### BUG FIXES AND IMPROVEMENTS
 
-- fixed tooltips for legacy skill cast log
-- maybe fixed upload token error in linux
+- fixed uploading not working
 
 **Older Changelogs**: [link](https://github.com/snoww/loa-logs/releases/tag/v1.40.4)
