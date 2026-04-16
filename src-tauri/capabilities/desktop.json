@@ -29,6 +29,9 @@
     "shell:default",
     "updater:default",
     "http:default",
-    "http:allow-fetch"
+    {
+      "identifier": "http:allow-fetch",
+      "allow": [{ "url": "https://**" }]
+    }
   ]
 }
