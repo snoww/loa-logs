@@ -255,7 +255,10 @@ pub fn start(args: StartArgs) -> Result<()> {
 
                     let character_id = entity.character_id;
                     state.on_init_pc(entity, hp, max_hp);
-                    if !banned && ban_list.is_banned(character_id) {
+                    if !banned
+                        && !state.raid_difficulty.is_empty()
+                        && ban_list.is_banned(character_id)
+                    {
                         warn!("banned local player detected");
                         banned = true;
                     }
@@ -287,7 +290,10 @@ pub fn start(args: StartArgs) -> Result<()> {
                         entity.id,
                         entity.character_id
                     ));
-                    if !banned && ban_list.is_banned(entity.character_id) {
+                    if !banned
+                        && !state.raid_difficulty.is_empty()
+                        && ban_list.is_banned(entity.character_id)
+                    {
                         banned = true;
                     }
                     state.on_new_pc(entity, hp, max_hp);
@@ -307,7 +313,10 @@ pub fn start(args: StartArgs) -> Result<()> {
                         entity.id,
                         entity.character_id
                     ));
-                    if !banned && ban_list.is_banned(entity.character_id) {
+                    if !banned
+                        && !state.raid_difficulty.is_empty()
+                        && ban_list.is_banned(entity.character_id)
+                    {
                         banned = true;
                     }
                     state.on_new_pc(entity, hp, max_hp);
