@@ -1,6 +1,6 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.42.0 - April 15th, 2026
+    v1.42.1 - April 19th, 2026
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
@@ -12,6 +12,14 @@
 - **Snowving** on Luterra
 - **Administrator** on Ratik
 - **Poont** on Giena
+
+#### BUG FIXES AND IMPROVEMENTS
+
+- maybe fixed parties bugging out when killing serca during rumble
+
+---
+
+### v1.42.0 - April 15th, 2026
 
 #### NEW FEATURES
 

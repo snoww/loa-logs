@@ -1,11 +1,11 @@
 {
-  "version": "v1.42.0",
-  "notes": "### v1.42.0 - April 15th, 2026\n\n#### P.S. If you see any of us in town or raid, feel free to drop an honor!\n\n- **Snowving** on Luterra\n- **Administrator** on Ratik\n- **Poont** on Giena\n\n#### NEW FEATURES\n\n- updated meter for serca patch (EU only)\n\n#### BUG FIXES AND IMPROVEMENTS\n\n- fixed tooltips for legacy skill cast log",
-  "pub_date": "2026-04-14T22:08:42.023Z",
+  "version": "v1.42.1",
+  "notes": "### v1.42.1 - April 19th, 2026\n\n#### P.S. If you see any of us in town or raid, feel free to drop an honor!\n\n- **Snowving** on Luterra\n- **Administrator** on Ratik\n- **Poont** on Giena\n\n#### BUG FIXES AND IMPROVEMENTS\n\n- maybe fixed parties bugging out when killing serca during rumble",
+  "pub_date": "2026-04-18T20:06:42.872Z",
   "platforms": {
     "windows-x86_64": {
-      "url": "https://github.com/snoww/loa-logs/releases/download/v1.42.0/LOA.Logs_1.42.0_x64-setup.exe",
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmRxbXBmR1E3YlJ2WnRQc0U2TU5HZC8xbzZDWTZ5ZEVhRVh1ZHFaN3QybGt0eXlsK3VtNW03YmVGLzFabTdmeE96YXUvdk96elBaSWhEcWhGOHJINFFrPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzc2MjcwNDQ0CWZpbGU6TE9BIExvZ3NfMS40Mi4wX3g2NC1zZXR1cC5leGUKUzdNcVZXc1I5TkRwb0c5RUdxazFkMXRFamtUcThhRUV4SnNMYzRQZFlHM2lQSDVMSzlVUU9IZ1pqTzUvM3RkWkc0Nk0veTBvZjZvcG96NTlsL2N1RHc9PQo="
+      "url": "https://github.com/snoww/loa-logs/releases/download/v1.42.1/LOA.Logs_1.42.1_x64-setup.exe",
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYldqdmxuZ2hBQ0cvQlRqZGUwM0N1aDYrT0crMENGaEgxcTVXTkZJQUxPSTJMN1BLUHNiUGxveWZBYVp6c0VOR3Z4MHdRZko3R2xpN1JNQ2lwaEUwV0FnPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzc2NTQzNDQzCWZpbGU6TE9BIExvZ3NfMS40Mi4xX3g2NC1zZXR1cC5leGUKbncxclV1UG16NGVkK2ZURnk5alVrbVVrc0FLWFRrWGRVdUdYNW91M2pCREVtZ2N4NlhqNGgzZHVGV3BHOXR3eVAxNW5GSEpGMURJYW9EcG9wQ1Q5QXc9PQo="
     }
   }
 }
