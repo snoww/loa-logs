@@ -66,8 +66,7 @@ impl BanList {
                 self.ids = ids;
             }
             Err(_) => {
-                debug_print(format_args!("failed to fetch ban list, using fallback"));
-                self.ids = parse_ids(FALLBACK_BAN_LIST.iter().copied());
+                debug_print(format_args!("failed to fetch ban list"));
             }
         }
     }
@@ -81,7 +80,9 @@ fn parse_ids<'a>(strings: impl Iterator<Item = &'a str>) -> HashSet<u64> {
     strings
         .filter_map(|s| {
             s.parse::<u64>()
-                .map_err(|e| warn!("invalid character id in ban list: {s:?}: {e}"))
+                .map_err(|e| {
+                    debug_print(format_args!("invalid character id in ban list: {s:?}: {e}"))
+                })
                 .ok()
         })
         .collect()
