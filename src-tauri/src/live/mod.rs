@@ -992,7 +992,14 @@ pub fn start(args: StartArgs) -> Result<()> {
                     // otherwise get party info
                     party_cache.clone().or_else(|| {
                         let party = update_party(&party_tracker, &entity_tracker);
-                        if party.len() > 1 {
+                        let player_count = state
+                            .encounter
+                            .entities
+                            .values()
+                            .filter(|e| e.entity_type == EntityType::Player)
+                            .count();
+                        let min_parties = player_count.div_ceil(4).max(1);
+                        if party.len() >= min_parties {
                             if party.iter().all(|p| p.len() == 4) {
                                 party_cache = Some(party.clone());
                             }
