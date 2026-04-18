@@ -991,7 +991,7 @@ pub fn start(args: StartArgs) -> Result<()> {
         if state.region.as_ref().is_some_and(|r| r == "NA") {
             rfd::MessageDialog::new()
                 .set_title("Region Unsupported")
-                .set_description("Meter disabled for NA region. Message .venoms on discord for reason.")
+                .set_description("Meter disabled for NA region this reset. Relaunch meter to view past logs.")
                 .set_level(rfd::MessageLevel::Error)
                 .set_buttons(rfd::MessageButtons::Ok)
                 .show();
