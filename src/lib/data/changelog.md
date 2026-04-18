@@ -1,6 +1,6 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.43.0-Nineveh Beta 7 - April 16th, 2026
+    v1.43.0-Nineveh Beta 8 - April 16th, 2026
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
@@ -17,10 +17,10 @@
 
 The LOA Logs beta uses a completely overhauled system for reading Lost Ark's networking data, giving us significantly more control over how we read and query game information. It finally fixes the issue where damage numbers would sometimes completely glitch out, and provides us the necessary infrastructure to implement rDPS in the future. By helping us test its stability, we can be confident that our new "Nineveh" packet library works correctly and efficiently across all platforms, including Linux!
 
-### Note: ExitLag does not work with Nineveh at the moment
+### Note: ExitLag users must check the ExitLag Compatibility setting
 
 #### BUG FIXES AND IMPROVEMENTS
 
-- fixed uploading not working
+- maybe fixed parties bugging out when killing serca during rumble
 
 **Older Changelogs**: [link](https://github.com/snoww/loa-logs/releases/tag/v1.40.4)

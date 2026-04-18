@@ -1,15 +1,15 @@
 {
-  "version": "v1.43.0-nineveh.beta.6",
-  "notes": "### v1.43.0-Nineveh Beta 7 - April 15th, 2026\n\n#### P.S. If you see any of us in town or raid, feel free to drop an honor!\n\n- **Snowving** on Luterra\n- **Administrator** on Ratik\n- **Poont** on Giena\n\nThe LOA Logs beta uses a completely overhauled system for reading Lost Ark's networking data, giving us significantly more control over how we read and query game information. It finally fixes the issue where damage numbers would sometimes completely glitch out, and provides us the necessary infrastructure to implement rDPS in the future. By helping us test its stability, we can be confident that our new \"Nineveh\" packet library works correctly and efficiently across all platforms, including Linux!\n\n#### BUG FIXES & IMPROVEMENTS\n\n- fixed uploading not working\n",
-  "pub_date": "2026-04-16T18:37:39.492Z",
+  "version": "v1.43.0-nineveh.beta.8",
+  "notes": "### v1.43.0-Nineveh Beta 8 - April 15th, 2026\n\n#### P.S. If you see any of us in town or raid, feel free to drop an honor!\n\n- **Snowving** on Luterra\n- **Administrator** on Ratik\n- **Poont** on Giena\n\nThe LOA Logs beta uses a completely overhauled system for reading Lost Ark's networking data, giving us significantly more control over how we read and query game information. It finally fixes the issue where damage numbers would sometimes completely glitch out, and provides us the necessary infrastructure to implement rDPS in the future. By helping us test its stability, we can be confident that our new \"Nineveh\" packet library works correctly and efficiently across all platforms, including Linux!\n\n### Note: ExitLag users must check the ExitLag Compatibility setting\n\n#### BUG FIXES & IMPROVEMENTS\n\n- maybe fixed parties bugging out when killing serca during rumble\n",
+  "pub_date": "2026-04-18T21:59:09.762Z",
   "platforms": {
     "windows-x86_64": {
-      "url": "https://github.com/snoww/loa-logs/releases/download/v1.43.0-nineveh.beta.6/LOA.Logs_1.43.0-nineveh.beta.6_x64-setup.exe",
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmNWOS9ueTBxc3ZmcDBBNGZEdktWN29NOGRFQU12UTVCTzlGWmRYSjlVOUNZTWRpQnhqb25pRDFyS1NsQ2hQZ1pFRm5MZWVlL3ZJdDNFNG9HaTdQb0FjPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzc2MzY0NjQ2CWZpbGU6TE9BIExvZ3NfMS40My4wLW5pbmV2ZWguYmV0YS43X3g2NC1zZXR1cC5leGUKeUdlTTI5ZUVYZ2p2dmRvRGV6REx3MDR2K0JTMVB3d0NkQkkzUzl3Vzl6OHFEazRHbjB6Z1NSb2g3S0hkeitjemxONTJyYVJlakxVTzdEaithOURERHc9PQo="
+      "url": "https://github.com/snoww/loa-logs/releases/download/v1.43.0-nineveh.beta.8/LOA.Logs_1.43.0-nineveh.beta.8_x64-setup.exe",
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmNlUExLODJBR1I5NWVsZ3BrYnljTUdQZVJqcDRBODB5ZUNycDRhMDd3ZGI1YURDeStpNEZUUktsY2Y5QkxjNEJ6dW9lcklWb2YzaTBSN1ZJRXZ2UndNPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzc2NTQ4MDg4CWZpbGU6TE9BIExvZ3NfMS40My4wLW5pbmV2ZWguYmV0YS44X3g2NC1zZXR1cC5leGUKWE1RWGQ3ZXd4Vlc2MGRiRkNBUjY3QXlzVEZaVGt4ZE9hSWZwd1MyNHRZMTlIMmV0dHB6anIra3UzWC9kV0ZvRFRYL3ZLRGJoR0FCVjR3T3RvMWdRQlE9PQo="
     },
     "linux-x86_64": {
-      "url": "https://github.com/snoww/loa-logs/releases/download/v1.43.0-nineveh.beta.6/LOA.Logs_1.43.0-nineveh.beta.6_amd64.AppImage",
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlJ2Z1dhYUxzMFlWNmhncWpLckQ4alBSQ3RxbGROTTE2M3JMNWVNK3h1UDI2Tm5lVFc1WUZkUkxyYldFc1JPNXVVb0FWTjN1N2JzeUp6ZVJSZ0xyQkFrPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzc2MzY2ODM4CWZpbGU6TE9BIExvZ3NfMS40My4wLW5pbmV2ZWguYmV0YS43X2FtZDY0LkFwcEltYWdlCnV6b3NvWlZ3ZER1Ukg5WnhKRU1QWlRBdHJZTWF6UGV5RUFoVW9iU3BLK2F0VFAzNEV1NHdIdThUeXhTVmpIRnp5c3krUXpOVTdnUFRlSERLVDRsOENRPT0K"
+      "url": "https://github.com/snoww/loa-logs/releases/download/v1.43.0-nineveh.beta.8/LOA.Logs_1.43.0-nineveh.beta.8_amd64.AppImage",
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYllTQi9nbnpqQllyeGgvcTl1Vi96SnBjL3VBTVhLSXZ1OTRQUWREMTBPTTZOemJTbmtrdmNub0VudmgyMHcrZWl5WXFtajB6cFN1RVZrRWx5MEp6NEFNPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzc2NTQ5MjM2CWZpbGU6TE9BIExvZ3NfMS40My4wLW5pbmV2ZWguYmV0YS44X2FtZDY0LkFwcEltYWdlCk4vQlA2Qy9CV2xWajdHNEZPN2xjeW5tcGppVmxvUFloTCttSjVUSVlHN2Z3bUVwNURabUFFMTlyb21BTUZYay9qSVpRcUhYd3p6cUQ3cERJYnVmVER3PT0K"
     }
   }
 }
