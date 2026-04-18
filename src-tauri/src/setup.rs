@@ -45,6 +45,10 @@ pub fn setup(app: &mut App) -> Result<(), Box<dyn Error>> {
             .unwrap_or(false);
     let update_checked: Arc<AtomicBool> = check_updates(app_handle, is_beta);
 
+    let exitlag_compat = settings
+        .as_ref()
+        .map(|s| s.general.exitlag_compat)
+        .unwrap_or(false);
     let app_handle = app_handle.clone();
     #[cfg(feature = "meter-core")]
     tokio::task::spawn(async move {
@@ -54,7 +58,7 @@ pub fn setup(app: &mut App) -> Result<(), Box<dyn Error>> {
 
         info!("done checking for updates, starting packet handling");
 
-        let ipc = crate::nineveh::setup_nineveh(app_handle.clone())
+        let ipc = crate::nineveh::setup_nineveh(app_handle.clone(), exitlag_compat)
             .await
             .expect("could not setup nineveh IPC");
 

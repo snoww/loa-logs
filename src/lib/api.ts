@@ -76,6 +76,8 @@ export const startLoaProcess = (): Promise<void> => invoke("start_loa_process");
 
 export const checkNinevehRunning = (): Promise<boolean> => invoke("check_nineveh_running");
 
+export const stopNineveh = (): Promise<void> => invoke("stop_nineveh");
+
 interface LoadEncountersCriteria {
   page: number;
   pageSize: number;

@@ -73,6 +73,7 @@ export interface GeneralSettings {
   autoShow: boolean;
   autoHideDelay: number;
   betaChannel: boolean;
+  exitlagCompat: boolean;
 }
 
 export interface Shortcuts {

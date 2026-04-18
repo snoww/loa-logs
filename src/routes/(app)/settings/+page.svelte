@@ -7,7 +7,8 @@
     setAlwaysOnTop,
     setBlur,
     setBossOnlyDamage,
-    setStartOnBoot
+    setStartOnBoot,
+    stopNineveh
   } from "$lib/api";
   import { addToast } from "$lib/components/Toaster.svelte";
   import { settings } from "$lib/stores.svelte";
@@ -108,6 +109,19 @@
     },
     states: { open: optInOpen }
   } = createDialog();
+
+  const {
+    elements: {
+      portalled: exitlagPortalled,
+      overlay: exitlagOverlay,
+      content: exitlagContent,
+      title: exitlagTitle,
+      description: exitlagDescription
+    },
+    states: { open: exitlagOpen }
+  } = createDialog();
+
+  let applyingExitlag = $state(false);
 
   onMount(() => {
     (async () => {
@@ -437,6 +451,23 @@
               <div class="text-xs text-neutral-300">
                 Opt-in to beta updates. Test out new features before they are officially released.
               </div>
+            </div>
+          </label>
+        </div>
+        <div class="w-fit">
+          <label class="flex items-center gap-2">
+            <input
+              type="checkbox"
+              checked={settings.app.general.exitlagCompat}
+              class="form-checkbox size-5 rounded-sm border-0 bg-neutral-700 checked:text-accent-600/80 focus:ring-0"
+              onclick={(e) => {
+                e.preventDefault();
+                $exitlagOpen = true;
+              }}
+            />
+            <div class="ml-5">
+              <div class="text-sm">ExitLag Compatibility</div>
+              <div class="text-xs text-neutral-300">Turn on this setting if you're using ExitLag with Lost Ark.</div>
             </div>
           </label>
         </div>
@@ -1117,6 +1148,47 @@
           }}
         >
           {installingStable ? "Switching..." : "Confirm"}
+        </button>
+      </div>
+    </div>
+  </div>
+{/if}
+
+{#if $exitlagOpen}
+  <div use:melt={$exitlagPortalled}>
+    <div use:melt={$exitlagOverlay} class="fixed inset-0 z-50 bg-black/50" transition:fade={{ duration: 150 }}></div>
+    <div
+      class="fixed top-1/2 left-1/2 z-50 w-[28rem] -translate-x-1/2 -translate-y-1/2 rounded-xl bg-neutral-800/40 p-6 shadow-lg drop-shadow-xl backdrop-blur-xl
+      {settings.app.general.accentColor} flex flex-col gap-4 text-white"
+      use:melt={$exitlagContent}
+    >
+      <h2 use:melt={$exitlagTitle} class="text-lg font-semibold">
+        {settings.app.general.exitlagCompat ? "Disable ExitLag Compatibility" : "Enable ExitLag Compatibility"}
+      </h2>
+      <p use:melt={$exitlagDescription} class="text-sm text-neutral-300">
+        LOA Logs needs to restart to apply this change. Your game will disconnect back to server select.
+      </p>
+      <div class="flex justify-end gap-3">
+        <button
+          class="rounded-md bg-neutral-700 px-3 py-1.5 text-sm hover:bg-neutral-600 focus:ring-0 disabled:opacity-50"
+          disabled={applyingExitlag}
+          onclick={() => {
+            $exitlagOpen = false;
+          }}
+        >
+          Cancel
+        </button>
+        <button
+          class="rounded-md bg-accent-500/70 px-3 py-1.5 text-sm hover:bg-accent-500/60 focus:ring-0 disabled:opacity-50"
+          disabled={applyingExitlag}
+          onclick={async () => {
+            applyingExitlag = true;
+            settings.app.general.exitlagCompat = !settings.app.general.exitlagCompat;
+            await stopNineveh();
+            await relaunchApp();
+          }}
+        >
+          {applyingExitlag ? "Restarting..." : "Confirm"}
         </button>
       </div>
     </div>

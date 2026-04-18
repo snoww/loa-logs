@@ -49,6 +49,7 @@ pub fn generate_handlers() -> Box<dyn Fn(Invoke) -> bool + Send + Sync> {
         check_loa_running,
         start_loa_process,
         check_nineveh_running,
+        stop_nineveh,
         get_sync_candidates,
         sync,
         remove_driver,
@@ -407,6 +408,11 @@ pub fn start_loa_process(shell_manager: State<ShellManager>) {
 #[command]
 pub fn check_nineveh_running(shell_manager: State<ShellManager>) -> bool {
     shell_manager.check_nineveh_running()
+}
+
+#[command]
+pub fn stop_nineveh(shell_manager: State<ShellManager>) {
+    shell_manager.kill_nineveh_process();
 }
 
 #[command]

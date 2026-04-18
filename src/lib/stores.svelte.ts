@@ -196,7 +196,8 @@ export const defaultSettings: AppSettings = {
     miniEdit: true,
     autoShow: false,
     autoHideDelay: 5,
-    betaChannel: false
+    betaChannel: false,
+    exitlagCompat: false
   },
   shortcuts: {
     hideMeter: "Control+ArrowDown",
