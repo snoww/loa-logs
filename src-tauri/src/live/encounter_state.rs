@@ -27,6 +27,7 @@ pub struct EncounterState {
     pub resetting: bool,
     pub boss_dead_update: bool,
     pub saved: bool,
+    pub disabled: bool,
 
     pub raid_clear: bool,
 
@@ -65,6 +66,7 @@ impl EncounterState {
             raid_clear: false,
             boss_dead_update: false,
             saved: false,
+            disabled: false,
 
             damage_log: HashMap::new(),
             boss_hp_log: HashMap::new(),
@@ -178,7 +180,7 @@ impl EncounterState {
 
     pub fn on_init_env(&mut self, entity: Entity) {
         // if not already saved to db, we save again
-        if !self.saved && !self.encounter.current_boss_name.is_empty() {
+        if !self.saved && !self.encounter.current_boss_name.is_empty() && !self.disabled {
             self.save_to_db(false);
         }
 
@@ -249,7 +251,7 @@ impl EncounterState {
 
         match phase_code {
             0 | 2 | 3 | 4 => {
-                if !self.encounter.current_boss_name.is_empty() {
+                if !self.encounter.current_boss_name.is_empty() && !self.disabled {
                     self.save_to_db(false);
                     self.saved = true;
                 }

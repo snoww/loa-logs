@@ -137,8 +137,10 @@ pub fn start(args: StartArgs) -> Result<()> {
 
         if manager.has_saved() {
             state.party_info = update_party(&party_tracker, &entity_tracker);
-            state.save_to_db(true);
-            state.saved = true;
+            if !banned {
+                state.save_to_db(true);
+                state.saved = true;
+            }
             state.resetting = true;
         }
 
@@ -223,6 +225,7 @@ pub fn start(args: StartArgs) -> Result<()> {
                     }
                     let entity = entity_tracker.init_env(pkt);
                     state.on_init_env(entity);
+                    state.disabled = banned;
                     get_and_set_region(&app, &mut state);
                 }
             }
@@ -257,12 +260,10 @@ pub fn start(args: StartArgs) -> Result<()> {
 
                     let character_id = entity.character_id;
                     state.on_init_pc(entity, hp, max_hp);
-                    if !banned
-                        && !state.raid_difficulty.is_empty()
-                        && ban_list.is_banned(character_id)
-                    {
+                    if !banned && ban_list.is_banned(character_id) {
                         warn!("banned local player detected");
                         banned = true;
+                        state.disabled = true;
                     }
                 }
             }
@@ -297,6 +298,7 @@ pub fn start(args: StartArgs) -> Result<()> {
                         && ban_list.is_banned(entity.character_id)
                     {
                         banned = true;
+                        state.disabled = true;
                     }
                     state.on_new_pc(entity, hp, max_hp);
                 }
@@ -320,6 +322,7 @@ pub fn start(args: StartArgs) -> Result<()> {
                         && ban_list.is_banned(entity.character_id)
                     {
                         banned = true;
+                        state.disabled = true;
                     }
                     state.on_new_pc(entity, hp, max_hp);
                 }
