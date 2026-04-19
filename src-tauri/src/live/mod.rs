@@ -221,6 +221,7 @@ pub fn start(args: StartArgs) -> Result<()> {
                     }
                     let entity = entity_tracker.init_env(pkt);
                     state.on_init_env(entity);
+                    state.disabled = banned;
                     info!("region: {:?}", state.region);
                 }
             }
@@ -255,12 +256,10 @@ pub fn start(args: StartArgs) -> Result<()> {
 
                     let character_id = entity.character_id;
                     state.on_init_pc(entity, hp, max_hp);
-                    if !banned
-                        && !state.raid_difficulty.is_empty()
-                        && ban_list.is_banned(character_id)
-                    {
+                    if !banned && ban_list.is_banned(character_id) {
                         warn!("banned local player detected");
                         banned = true;
+                        state.disabled = true;
                     }
                 }
             }
@@ -295,6 +294,7 @@ pub fn start(args: StartArgs) -> Result<()> {
                         && ban_list.is_banned(entity.character_id)
                     {
                         banned = true;
+                        state.disabled = true;
                     }
                     state.on_new_pc(entity, hp, max_hp);
                 }
@@ -318,6 +318,7 @@ pub fn start(args: StartArgs) -> Result<()> {
                         && ban_list.is_banned(entity.character_id)
                     {
                         banned = true;
+                        state.disabled = true;
                     }
                     state.on_new_pc(entity, hp, max_hp);
                 }
@@ -611,10 +612,20 @@ pub fn start(args: StartArgs) -> Result<()> {
             }
             Pkt::PartyInfo => {
                 if let Some(pkt) = parse_pkt(&data, PKTPartyInfo::new, "PKTPartyInfo") {
+                    let member_ids: Vec<u64> = pkt.party_member_datas.iter().map(|m| m.character_id).collect();
                     entity_tracker.party_info(pkt, &local_info);
                     let local_player_id = entity_tracker.local_entity_id;
                     if let Some(entity) = entity_tracker.entities.get(&local_player_id) {
                         state.update_local_player(entity);
+                    }
+                    if !banned {
+                        for character_id in member_ids {
+                            if ban_list.is_banned(character_id) {
+                                banned = true;
+                                state.disabled = true;
+                                break;
+                            }
+                        }
                     }
                     party_cache = None;
                 }

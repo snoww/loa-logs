@@ -27,6 +27,7 @@ pub struct EncounterState {
     pub resetting: bool,
     pub boss_dead_update: bool,
     pub saved: bool,
+    pub disabled: bool,
 
     pub raid_clear: bool,
 
@@ -65,6 +66,7 @@ impl EncounterState {
             raid_clear: false,
             boss_dead_update: false,
             saved: false,
+            disabled: false,
 
             damage_log: HashMap::new(),
             boss_hp_log: HashMap::new(),
@@ -609,6 +611,10 @@ impl EncounterState {
         entity_tracker: &EntityTracker,
         timestamp: i64,
     ) {
+        if self.disabled {
+            return;
+        }
+
         let hit_flag = match damage_data.modifier & 0xf {
             0 => HitFlag::NORMAL,
             1 => HitFlag::CRITICAL,
@@ -1628,6 +1634,10 @@ impl EncounterState {
     }
 
     pub fn save_to_db(&mut self, manual: bool) {
+        if self.disabled {
+            info!("banned player present in raid, not saving to db");
+            return;
+        }
         if !manual
             && (self.encounter.fight_start == 0
                 || self.encounter.current_boss_name.is_empty()
