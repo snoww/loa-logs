@@ -1,5 +1,5 @@
 import { type Encounter, type Entity, EntityType } from "$lib/types";
-import { sumRdpsContributed } from "./skill.svelte";
+import { sumUdpsContributed } from "./skill.svelte";
 import { settings } from "./stores.svelte";
 import { timestampToMinutesAndSeconds } from "./utils";
 
@@ -87,10 +87,16 @@ export class EncounterState {
   );
   anyStagger = $derived(this.players.some((player) => player.damageStats.stagger > 0));
   anyUnbuffedDamage = $derived(this.players.some((player) => player.damageStats.unbuffedDamage > 0));
-  anyRdpsContributions = $derived(
+  anyUdpsContributions = $derived(
     this.players.some((player) =>
-      Object.values(player.skills).some((skill) => sumRdpsContributed(skill, [1, 3, 5]) > 0)
+      Object.values(player.skills).some((skill) => sumUdpsContributed(skill, [1, 3, 5]) > 0)
     )
+  );
+  anyRdpsContributions = $derived(
+    this.encounter?.encounterDamageStats.misc?.rdpsValid !== false &&
+      this.players.some(
+        (player) => player.damageStats.rdpsDamageGiven > 0 || player.damageStats.rdpsDamageReceived > 0
+      )
   );
 
   topDamageDealt = $derived(this.encounter?.encounterDamageStats.topDamageDealt ?? 0);

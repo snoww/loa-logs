@@ -46,7 +46,7 @@ impl<'a> Migrator<'a> {
 
         migration_buff_summary(&tx)?;
 
-        migration_pseudo_rdps(&tx)?;
+        migration_legacy_udps(&tx)?;
 
         migration_boss_hp(&tx)?;
 
@@ -313,10 +313,10 @@ pub fn migration_buff_summary(tx: &Transaction) -> Result<(), rusqlite::Error> {
     stmt.finalize()
 }
 
-pub fn migration_pseudo_rdps(tx: &Transaction) -> Result<(), rusqlite::Error> {
+pub fn migration_legacy_udps(tx: &Transaction) -> Result<(), rusqlite::Error> {
     let mut stmt = tx.prepare("SELECT 1 FROM pragma_table_info(?) WHERE name=?")?;
     if !stmt.exists(["entity", "unbuffed_damage"])? {
-        info!("adding pseudo rdps columns");
+        info!("adding legacy udps columns");
         tx.execute(
             "ALTER TABLE entity ADD COLUMN unbuffed_damage INTEGER DEFAULT 0",
             [],

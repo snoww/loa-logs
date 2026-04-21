@@ -42,7 +42,7 @@
     {
       show(enc) {
         if (!enc.encounter.curSettings.breakdown.unbuffedDamage) return false;
-        return enc.hasRdpsContributions;
+        return enc.hasUdpsContributions;
       },
       headerText: "bDMG",
       headerTooltip: "Total Damage Buffed",
@@ -80,7 +80,7 @@
     {
       show(enc) {
         if (!enc.encounter.curSettings.breakdown.unbuffedDps) return false;
-        return enc.hasRdpsContributions;
+        return enc.hasUdpsContributions;
       },
       headerText: "bDPS",
       headerTooltip: "Damage Per Second Buffed",
@@ -105,7 +105,7 @@
     {
       show(enc) {
         if (!enc.encounter.curSettings.breakdown.unbuffedDamage) return false;
-        return enc.hasRdpsContributions;
+        return enc.hasUdpsContributions;
       },
       headerText: "bD%",
       headerTooltip: "Percentage of Total Buffed",

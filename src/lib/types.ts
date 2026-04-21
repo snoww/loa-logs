@@ -195,7 +195,7 @@ export interface Skill {
   timeAvailable?: number; // the total time in milliseconds this skill was off cooldown during the encounter
   stagger: number;
   rdpsReceived: Record<number, Record<number, number>>; // rdps type -> buffedBy skill -> damage
-  rdpsContributed: Record<number, number>; // rdps type -> amount
+  udpsContributed: Record<number, number>; // legacy udps type -> amount
 }
 
 export interface SkillCast {
@@ -258,6 +258,8 @@ export interface DamageStats {
   stagger: number;
   unbuffedDamage: number;
   unbuffedDps: number;
+  udpsDamageGiven?: number;
+  udpsUnresolvedBySkill?: { [skillId: number]: { [eventType: number]: number } };
   [key: string]: any;
 }
 

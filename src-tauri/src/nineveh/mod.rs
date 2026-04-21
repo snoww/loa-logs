@@ -32,8 +32,9 @@ fn error_and_exit(title: &str, description: &str) -> ! {
 
 /// Handle messages to/from Nineveh IPC server, update frontend about connection status, etc.
 /// The app_* channels are for forwarding messages to/from the Tauri app,
-/// while the conn_* channels are for communicating with the Nineveh IPC server. This loop will
-/// forward only packet-related messages to the app, while other control messages are handled here.
+/// while the conn_* channels are for communicating with the Nineveh IPC server. Packet messages
+/// are always forwarded to the app; connection lifecycle messages are handled here and then
+/// forwarded as well so the live meter can make injection decisions by port.
 async fn handle_nineveh_ipc_messages(
     app: AppHandle,
     mut app_rx: UnboundedReceiver<IPCClientToServerMessage>,
@@ -106,6 +107,8 @@ async fn handle_nineveh_ipc_messages(
                         active_connections.retain(|c| &c.id != id);
                     },
                 };
+
+                let _ = app_tx.send(message.clone());
 
                 // send new connection state to app
                 let conns = active_connections.lock().await.clone();

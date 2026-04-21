@@ -382,6 +382,7 @@ pub fn update_entity_stats(
     intermission_duration: i64,
     intermission: Option<(i64, i64)>,
     damage_log: &HashMap<String, Vec<(i64, i64)>>,
+    rdps_valid: bool,
 ) {
     let duration = fight_end - fight_start - intermission_duration;
     let duration_seconds = max(duration / 1000, 1);
@@ -415,7 +416,9 @@ pub fn update_entity_stats(
         // }
         //
         // let unbuffed_damage = entity.damage_stats.damage_dealt - buffed_damage;
-        let unbuffed_damage = entity.damage_stats.damage_dealt - entity.damage_stats.buffed_damage;
+        let _ = rdps_valid;
+        let buffed_damage = entity.damage_stats.buffed_damage;
+        let unbuffed_damage = entity.damage_stats.damage_dealt - buffed_damage;
         let unbuffed_dps = unbuffed_damage / duration_seconds;
         entity.damage_stats.unbuffed_damage = unbuffed_damage;
         entity.damage_stats.unbuffed_dps = unbuffed_dps;

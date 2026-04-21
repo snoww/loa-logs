@@ -1,6 +1,6 @@
+use anyhow::Result;
 use auto_launch::{AutoLaunch, AutoLaunchBuilder};
 use std::path::Path;
-use anyhow::Result;
 
 pub struct AutoLaunchManager(AutoLaunch);
 

@@ -4,7 +4,9 @@ use std::net::SocketAddr;
 use anyhow::{Result, anyhow};
 use log::error;
 use meter_defs::GamePacket;
-use meter_defs::defs::{PKTDamageEncryptionKeyRequest, PKTDamageEncryptionKeyResult};
+use meter_defs::defs::{
+    PKTDamageEncryptionKeyRequest, PKTDamageEncryptionKeyResult, PKTPCInspectResult,
+};
 use nineveh_formats::ipc::{
     IPCClientToServerMessage, IPCServerToClientMessage, PacketFilter, PacketSubscription,
 };
@@ -35,6 +37,7 @@ pub async fn connect_to_nineveh(
             modify: PacketFilter::Include(BTreeSet::from([
                 PKTDamageEncryptionKeyRequest::OPCODE,
                 PKTDamageEncryptionKeyResult::OPCODE,
+                PKTPCInspectResult::OPCODE,
             ])),
         },
     };

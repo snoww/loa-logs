@@ -6,6 +6,30 @@ use crate::models::*;
 use crate::utils::*;
 use hashbrown::HashMap;
 
+pub fn resolve_skill_id(skill_id: u32, skill_effect_id: u32) -> u32 {
+    let mut skill_id_real = skill_id;
+    if skill_id == 0 {
+        skill_id_real = skill_effect_id;
+        if let Some(effect) = SKILL_EFFECT_DATA.get(&skill_id_real)
+            && let Some(source_skills) = effect.source_skills.as_ref()
+            && let Some(source_skill) = source_skills.first()
+        {
+            skill_id_real = *source_skill;
+        }
+    } else if let Some(skill) = SKILL_DATA.get(&skill_id_real) {
+        if let Some(source_skills) = skill.source_skills.as_ref()
+            && let Some(source_skill) = source_skills.first()
+        {
+            skill_id_real = *source_skill;
+        } else if let Some(summon_source_skills) = skill.summon_source_skills.as_ref()
+            && let Some(source_skill) = summon_source_skills.first()
+        {
+            skill_id_real = *source_skill;
+        }
+    }
+    skill_id_real
+}
+
 pub fn encounter_entity_from_entity(entity: &Entity) -> EncounterEntity {
     let mut e = EncounterEntity {
         id: entity.id,
@@ -386,20 +410,7 @@ pub fn get_skill_name_and_icon(
             if let Some(source_skills) = effect.source_skills.as_ref()
                 && !source_skills.is_empty()
             {
-                let source_skill = if source_skills.len() == 1 {
-                    source_skills.first().cloned().unwrap_or_default()
-                } else {
-                    // take skill_effect_id e.g. 370015
-                    // get base skill id -> 37000
-                    let skill_effect_base = (skill_effect_id - (skill_effect_id % 1000)) / 10;
-                    // get first skill that is furthest away from base (i.e. weapon attack)
-                    source_skills
-                        .iter()
-                        .filter(|id| (**id as i32 - skill_effect_base as i32).abs() < 10000)
-                        .max()
-                        .cloned()
-                        .unwrap_or_default()
-                };
+                let source_skill = source_skills.first().cloned().unwrap_or_default();
                 if let Some(skill) = SKILL_DATA.get(&source_skill) {
                     return (
                         skill.name.clone().unwrap_or(skill.id.to_string()),
@@ -447,7 +458,10 @@ pub fn get_skill_name_and_icon(
                     );
                 }
             }
-            if let Some(skill) = SKILL_DATA.get(summon_source_skills.iter().min().unwrap_or(&0)) {
+            if let Some(skill) = summon_source_skills
+                .first()
+                .and_then(|source| SKILL_DATA.get(source))
+            {
                 (
                     skill.name.clone().unwrap_or(skill.id.to_string()) + " (Summon)",
                     skill.icon.clone().unwrap_or_default(),
@@ -462,7 +476,10 @@ pub fn get_skill_name_and_icon(
             && !source_skills.is_empty()
             && !source_skills.contains(&skill_id)
         {
-            if let Some(skill) = SKILL_DATA.get(source_skills.iter().min().unwrap_or(&0)) {
+            if let Some(skill) = source_skills
+                .first()
+                .and_then(|source| SKILL_DATA.get(source))
+            {
                 (
                     skill.name.clone().unwrap_or(skill.id.to_string()),
                     skill.icon.clone().unwrap_or_default(),

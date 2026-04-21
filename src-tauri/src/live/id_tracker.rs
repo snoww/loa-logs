@@ -14,10 +14,23 @@ impl IdTracker {
     }
 
     pub fn add_mapping(&mut self, character_id: u64, entity_id: u64) {
-        self.character_id_to_entity_id
-            .insert(character_id, entity_id);
+        if let Some(previous_entity_id) = self
+            .character_id_to_entity_id
+            .insert(character_id, entity_id)
+            && previous_entity_id != entity_id
+        {
+            self.entity_id_to_character_id.remove(&previous_entity_id);
+        }
         self.entity_id_to_character_id
             .insert(entity_id, character_id);
+    }
+
+    pub fn remove_entity_mapping(&mut self, entity_id: u64) -> Option<u64> {
+        let character_id = self.entity_id_to_character_id.remove(&entity_id)?;
+        if self.character_id_to_entity_id.get(&character_id).copied() == Some(entity_id) {
+            self.character_id_to_entity_id.remove(&character_id);
+        }
+        Some(character_id)
     }
 
     pub fn get_character_id(&self, entity_id: u64) -> Option<u64> {

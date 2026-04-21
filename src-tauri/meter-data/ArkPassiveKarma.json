@@ -1,0 +1,1247 @@
+{
+  "10000": {
+    "id": 10000,
+    "ranks": {
+      "1": {
+        "id": 1,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "evolution_dam_rate",
+            "keyIndex": 0,
+            "keyValue": 100
+          },
+          {
+            "type": "stat",
+            "statType": "stigma_power_rate",
+            "keyIndex": 0,
+            "keyValue": 100
+          }
+        ]
+      },
+      "2": {
+        "id": 2,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "evolution_dam_rate",
+            "keyIndex": 0,
+            "keyValue": 200
+          },
+          {
+            "type": "stat",
+            "statType": "stigma_power_rate",
+            "keyIndex": 0,
+            "keyValue": 200
+          }
+        ]
+      },
+      "3": {
+        "id": 3,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "evolution_dam_rate",
+            "keyIndex": 0,
+            "keyValue": 300
+          },
+          {
+            "type": "stat",
+            "statType": "stigma_power_rate",
+            "keyIndex": 0,
+            "keyValue": 300
+          }
+        ]
+      },
+      "4": {
+        "id": 4,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "evolution_dam_rate",
+            "keyIndex": 0,
+            "keyValue": 400
+          },
+          {
+            "type": "stat",
+            "statType": "stigma_power_rate",
+            "keyIndex": 0,
+            "keyValue": 400
+          }
+        ]
+      },
+      "5": {
+        "id": 5,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "evolution_dam_rate",
+            "keyIndex": 0,
+            "keyValue": 500
+          },
+          {
+            "type": "stat",
+            "statType": "stigma_power_rate",
+            "keyIndex": 0,
+            "keyValue": 500
+          }
+        ]
+      },
+      "6": {
+        "id": 6,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "evolution_dam_rate",
+            "keyIndex": 0,
+            "keyValue": 600
+          },
+          {
+            "type": "stat",
+            "statType": "stigma_power_rate",
+            "keyIndex": 0,
+            "keyValue": 600
+          }
+        ]
+      }
+    },
+    "levels": {
+      "1": {
+        "id": 1,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "max_hp",
+            "keyIndex": 0,
+            "keyValue": 400
+          }
+        ]
+      },
+      "2": {
+        "id": 2,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "max_hp",
+            "keyIndex": 0,
+            "keyValue": 800
+          }
+        ]
+      },
+      "3": {
+        "id": 3,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "max_hp",
+            "keyIndex": 0,
+            "keyValue": 1200
+          }
+        ]
+      },
+      "4": {
+        "id": 4,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "max_hp",
+            "keyIndex": 0,
+            "keyValue": 1600
+          }
+        ]
+      },
+      "5": {
+        "id": 5,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "max_hp",
+            "keyIndex": 0,
+            "keyValue": 2000
+          }
+        ]
+      },
+      "6": {
+        "id": 6,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "max_hp",
+            "keyIndex": 0,
+            "keyValue": 2400
+          }
+        ]
+      },
+      "7": {
+        "id": 7,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "max_hp",
+            "keyIndex": 0,
+            "keyValue": 2800
+          }
+        ]
+      },
+      "8": {
+        "id": 8,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "max_hp",
+            "keyIndex": 0,
+            "keyValue": 3200
+          }
+        ]
+      },
+      "9": {
+        "id": 9,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "max_hp",
+            "keyIndex": 0,
+            "keyValue": 3600
+          }
+        ]
+      },
+      "10": {
+        "id": 10,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "max_hp",
+            "keyIndex": 0,
+            "keyValue": 4000
+          }
+        ]
+      },
+      "11": {
+        "id": 11,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "max_hp",
+            "keyIndex": 0,
+            "keyValue": 4400
+          }
+        ]
+      },
+      "12": {
+        "id": 12,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "max_hp",
+            "keyIndex": 0,
+            "keyValue": 4800
+          }
+        ]
+      },
+      "13": {
+        "id": 13,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "max_hp",
+            "keyIndex": 0,
+            "keyValue": 5200
+          }
+        ]
+      },
+      "14": {
+        "id": 14,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "max_hp",
+            "keyIndex": 0,
+            "keyValue": 5600
+          }
+        ]
+      },
+      "15": {
+        "id": 15,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "max_hp",
+            "keyIndex": 0,
+            "keyValue": 6000
+          }
+        ]
+      },
+      "16": {
+        "id": 16,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "max_hp",
+            "keyIndex": 0,
+            "keyValue": 6400
+          }
+        ]
+      },
+      "17": {
+        "id": 17,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "max_hp",
+            "keyIndex": 0,
+            "keyValue": 6800
+          }
+        ]
+      },
+      "18": {
+        "id": 18,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "max_hp",
+            "keyIndex": 0,
+            "keyValue": 7200
+          }
+        ]
+      },
+      "19": {
+        "id": 19,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "max_hp",
+            "keyIndex": 0,
+            "keyValue": 7600
+          }
+        ]
+      },
+      "20": {
+        "id": 20,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "max_hp",
+            "keyIndex": 0,
+            "keyValue": 8000
+          }
+        ]
+      },
+      "21": {
+        "id": 21,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "max_hp",
+            "keyIndex": 0,
+            "keyValue": 8400
+          }
+        ]
+      },
+      "22": {
+        "id": 22,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "max_hp",
+            "keyIndex": 0,
+            "keyValue": 8800
+          }
+        ]
+      },
+      "23": {
+        "id": 23,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "max_hp",
+            "keyIndex": 0,
+            "keyValue": 9200
+          }
+        ]
+      },
+      "24": {
+        "id": 24,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "max_hp",
+            "keyIndex": 0,
+            "keyValue": 9600
+          }
+        ]
+      },
+      "25": {
+        "id": 25,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "max_hp",
+            "keyIndex": 0,
+            "keyValue": 10000
+          }
+        ]
+      },
+      "26": {
+        "id": 26,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "max_hp",
+            "keyIndex": 0,
+            "keyValue": 10400
+          }
+        ]
+      },
+      "27": {
+        "id": 27,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "max_hp",
+            "keyIndex": 0,
+            "keyValue": 10800
+          }
+        ]
+      },
+      "28": {
+        "id": 28,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "max_hp",
+            "keyIndex": 0,
+            "keyValue": 11200
+          }
+        ]
+      },
+      "29": {
+        "id": 29,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "max_hp",
+            "keyIndex": 0,
+            "keyValue": 11600
+          }
+        ]
+      },
+      "30": {
+        "id": 30,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "max_hp",
+            "keyIndex": 0,
+            "keyValue": 12000
+          }
+        ]
+      }
+    }
+  },
+  "20000": {
+    "id": 20000,
+    "ranks": {
+      "1": {
+        "id": 1,
+        "addons": [
+          {
+            "type": "ark_passive_point",
+            "statType": "none",
+            "keyIndex": 1,
+            "keyValue": 1
+          }
+        ]
+      },
+      "2": {
+        "id": 2,
+        "addons": [
+          {
+            "type": "ark_passive_point",
+            "statType": "none",
+            "keyIndex": 1,
+            "keyValue": 2
+          }
+        ]
+      },
+      "3": {
+        "id": 3,
+        "addons": [
+          {
+            "type": "ark_passive_point",
+            "statType": "none",
+            "keyIndex": 1,
+            "keyValue": 3
+          }
+        ]
+      },
+      "4": {
+        "id": 4,
+        "addons": [
+          {
+            "type": "ark_passive_point",
+            "statType": "none",
+            "keyIndex": 1,
+            "keyValue": 4
+          }
+        ]
+      },
+      "5": {
+        "id": 5,
+        "addons": [
+          {
+            "type": "ark_passive_point",
+            "statType": "none",
+            "keyIndex": 1,
+            "keyValue": 5
+          }
+        ]
+      },
+      "6": {
+        "id": 6,
+        "addons": [
+          {
+            "type": "ark_passive_point",
+            "statType": "none",
+            "keyIndex": 1,
+            "keyValue": 6
+          }
+        ]
+      }
+    },
+    "levels": {
+      "1": {
+        "id": 1,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "weapon_dam_x",
+            "keyIndex": 0,
+            "keyValue": 10
+          }
+        ]
+      },
+      "2": {
+        "id": 2,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "weapon_dam_x",
+            "keyIndex": 0,
+            "keyValue": 20
+          }
+        ]
+      },
+      "3": {
+        "id": 3,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "weapon_dam_x",
+            "keyIndex": 0,
+            "keyValue": 30
+          }
+        ]
+      },
+      "4": {
+        "id": 4,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "weapon_dam_x",
+            "keyIndex": 0,
+            "keyValue": 40
+          }
+        ]
+      },
+      "5": {
+        "id": 5,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "weapon_dam_x",
+            "keyIndex": 0,
+            "keyValue": 50
+          }
+        ]
+      },
+      "6": {
+        "id": 6,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "weapon_dam_x",
+            "keyIndex": 0,
+            "keyValue": 60
+          }
+        ]
+      },
+      "7": {
+        "id": 7,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "weapon_dam_x",
+            "keyIndex": 0,
+            "keyValue": 70
+          }
+        ]
+      },
+      "8": {
+        "id": 8,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "weapon_dam_x",
+            "keyIndex": 0,
+            "keyValue": 80
+          }
+        ]
+      },
+      "9": {
+        "id": 9,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "weapon_dam_x",
+            "keyIndex": 0,
+            "keyValue": 90
+          }
+        ]
+      },
+      "10": {
+        "id": 10,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "weapon_dam_x",
+            "keyIndex": 0,
+            "keyValue": 100
+          }
+        ]
+      },
+      "11": {
+        "id": 11,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "weapon_dam_x",
+            "keyIndex": 0,
+            "keyValue": 110
+          }
+        ]
+      },
+      "12": {
+        "id": 12,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "weapon_dam_x",
+            "keyIndex": 0,
+            "keyValue": 120
+          }
+        ]
+      },
+      "13": {
+        "id": 13,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "weapon_dam_x",
+            "keyIndex": 0,
+            "keyValue": 130
+          }
+        ]
+      },
+      "14": {
+        "id": 14,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "weapon_dam_x",
+            "keyIndex": 0,
+            "keyValue": 140
+          }
+        ]
+      },
+      "15": {
+        "id": 15,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "weapon_dam_x",
+            "keyIndex": 0,
+            "keyValue": 150
+          }
+        ]
+      },
+      "16": {
+        "id": 16,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "weapon_dam_x",
+            "keyIndex": 0,
+            "keyValue": 160
+          }
+        ]
+      },
+      "17": {
+        "id": 17,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "weapon_dam_x",
+            "keyIndex": 0,
+            "keyValue": 170
+          }
+        ]
+      },
+      "18": {
+        "id": 18,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "weapon_dam_x",
+            "keyIndex": 0,
+            "keyValue": 180
+          }
+        ]
+      },
+      "19": {
+        "id": 19,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "weapon_dam_x",
+            "keyIndex": 0,
+            "keyValue": 190
+          }
+        ]
+      },
+      "20": {
+        "id": 20,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "weapon_dam_x",
+            "keyIndex": 0,
+            "keyValue": 200
+          }
+        ]
+      },
+      "21": {
+        "id": 21,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "weapon_dam_x",
+            "keyIndex": 0,
+            "keyValue": 210
+          }
+        ]
+      },
+      "22": {
+        "id": 22,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "weapon_dam_x",
+            "keyIndex": 0,
+            "keyValue": 220
+          }
+        ]
+      },
+      "23": {
+        "id": 23,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "weapon_dam_x",
+            "keyIndex": 0,
+            "keyValue": 230
+          }
+        ]
+      },
+      "24": {
+        "id": 24,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "weapon_dam_x",
+            "keyIndex": 0,
+            "keyValue": 240
+          }
+        ]
+      },
+      "25": {
+        "id": 25,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "weapon_dam_x",
+            "keyIndex": 0,
+            "keyValue": 250
+          }
+        ]
+      },
+      "26": {
+        "id": 26,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "weapon_dam_x",
+            "keyIndex": 0,
+            "keyValue": 260
+          }
+        ]
+      },
+      "27": {
+        "id": 27,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "weapon_dam_x",
+            "keyIndex": 0,
+            "keyValue": 270
+          }
+        ]
+      },
+      "28": {
+        "id": 28,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "weapon_dam_x",
+            "keyIndex": 0,
+            "keyValue": 280
+          }
+        ]
+      },
+      "29": {
+        "id": 29,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "weapon_dam_x",
+            "keyIndex": 0,
+            "keyValue": 290
+          }
+        ]
+      },
+      "30": {
+        "id": 30,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "weapon_dam_x",
+            "keyIndex": 0,
+            "keyValue": 300
+          }
+        ]
+      }
+    }
+  },
+  "30000": {
+    "id": 30000,
+    "ranks": {
+      "1": {
+        "id": 1,
+        "addons": [
+          {
+            "type": "ark_passive_point",
+            "statType": "none",
+            "keyIndex": 2,
+            "keyValue": 2
+          }
+        ]
+      },
+      "2": {
+        "id": 2,
+        "addons": [
+          {
+            "type": "ark_passive_point",
+            "statType": "none",
+            "keyIndex": 2,
+            "keyValue": 4
+          }
+        ]
+      },
+      "3": {
+        "id": 3,
+        "addons": [
+          {
+            "type": "ark_passive_point",
+            "statType": "none",
+            "keyIndex": 2,
+            "keyValue": 6
+          }
+        ]
+      },
+      "4": {
+        "id": 4,
+        "addons": [
+          {
+            "type": "ark_passive_point",
+            "statType": "none",
+            "keyIndex": 2,
+            "keyValue": 8
+          }
+        ]
+      },
+      "5": {
+        "id": 5,
+        "addons": [
+          {
+            "type": "ark_passive_point",
+            "statType": "none",
+            "keyIndex": 2,
+            "keyValue": 10
+          }
+        ]
+      },
+      "6": {
+        "id": 6,
+        "addons": [
+          {
+            "type": "ark_passive_point",
+            "statType": "none",
+            "keyIndex": 2,
+            "keyValue": 12
+          }
+        ]
+      }
+    },
+    "levels": {
+      "1": {
+        "id": 1,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "ultimate_awakening_dam_rate",
+            "keyIndex": 0,
+            "keyValue": 50
+          }
+        ]
+      },
+      "2": {
+        "id": 2,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "ultimate_awakening_dam_rate",
+            "keyIndex": 0,
+            "keyValue": 100
+          }
+        ]
+      },
+      "3": {
+        "id": 3,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "ultimate_awakening_dam_rate",
+            "keyIndex": 0,
+            "keyValue": 150
+          }
+        ]
+      },
+      "4": {
+        "id": 4,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "ultimate_awakening_dam_rate",
+            "keyIndex": 0,
+            "keyValue": 200
+          }
+        ]
+      },
+      "5": {
+        "id": 5,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "ultimate_awakening_dam_rate",
+            "keyIndex": 0,
+            "keyValue": 250
+          }
+        ]
+      },
+      "6": {
+        "id": 6,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "ultimate_awakening_dam_rate",
+            "keyIndex": 0,
+            "keyValue": 300
+          }
+        ]
+      },
+      "7": {
+        "id": 7,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "ultimate_awakening_dam_rate",
+            "keyIndex": 0,
+            "keyValue": 350
+          }
+        ]
+      },
+      "8": {
+        "id": 8,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "ultimate_awakening_dam_rate",
+            "keyIndex": 0,
+            "keyValue": 400
+          }
+        ]
+      },
+      "9": {
+        "id": 9,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "ultimate_awakening_dam_rate",
+            "keyIndex": 0,
+            "keyValue": 450
+          }
+        ]
+      },
+      "10": {
+        "id": 10,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "ultimate_awakening_dam_rate",
+            "keyIndex": 0,
+            "keyValue": 500
+          }
+        ]
+      },
+      "11": {
+        "id": 11,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "ultimate_awakening_dam_rate",
+            "keyIndex": 0,
+            "keyValue": 550
+          }
+        ]
+      },
+      "12": {
+        "id": 12,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "ultimate_awakening_dam_rate",
+            "keyIndex": 0,
+            "keyValue": 600
+          }
+        ]
+      },
+      "13": {
+        "id": 13,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "ultimate_awakening_dam_rate",
+            "keyIndex": 0,
+            "keyValue": 650
+          }
+        ]
+      },
+      "14": {
+        "id": 14,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "ultimate_awakening_dam_rate",
+            "keyIndex": 0,
+            "keyValue": 700
+          }
+        ]
+      },
+      "15": {
+        "id": 15,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "ultimate_awakening_dam_rate",
+            "keyIndex": 0,
+            "keyValue": 750
+          }
+        ]
+      },
+      "16": {
+        "id": 16,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "ultimate_awakening_dam_rate",
+            "keyIndex": 0,
+            "keyValue": 800
+          }
+        ]
+      },
+      "17": {
+        "id": 17,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "ultimate_awakening_dam_rate",
+            "keyIndex": 0,
+            "keyValue": 850
+          }
+        ]
+      },
+      "18": {
+        "id": 18,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "ultimate_awakening_dam_rate",
+            "keyIndex": 0,
+            "keyValue": 900
+          }
+        ]
+      },
+      "19": {
+        "id": 19,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "ultimate_awakening_dam_rate",
+            "keyIndex": 0,
+            "keyValue": 950
+          }
+        ]
+      },
+      "20": {
+        "id": 20,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "ultimate_awakening_dam_rate",
+            "keyIndex": 0,
+            "keyValue": 1000
+          }
+        ]
+      },
+      "21": {
+        "id": 21,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "ultimate_awakening_dam_rate",
+            "keyIndex": 0,
+            "keyValue": 1050
+          }
+        ]
+      },
+      "22": {
+        "id": 22,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "ultimate_awakening_dam_rate",
+            "keyIndex": 0,
+            "keyValue": 1100
+          }
+        ]
+      },
+      "23": {
+        "id": 23,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "ultimate_awakening_dam_rate",
+            "keyIndex": 0,
+            "keyValue": 1150
+          }
+        ]
+      },
+      "24": {
+        "id": 24,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "ultimate_awakening_dam_rate",
+            "keyIndex": 0,
+            "keyValue": 1200
+          }
+        ]
+      },
+      "25": {
+        "id": 25,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "ultimate_awakening_dam_rate",
+            "keyIndex": 0,
+            "keyValue": 1250
+          }
+        ]
+      },
+      "26": {
+        "id": 26,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "ultimate_awakening_dam_rate",
+            "keyIndex": 0,
+            "keyValue": 1300
+          }
+        ]
+      },
+      "27": {
+        "id": 27,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "ultimate_awakening_dam_rate",
+            "keyIndex": 0,
+            "keyValue": 1350
+          }
+        ]
+      },
+      "28": {
+        "id": 28,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "ultimate_awakening_dam_rate",
+            "keyIndex": 0,
+            "keyValue": 1400
+          }
+        ]
+      },
+      "29": {
+        "id": 29,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "ultimate_awakening_dam_rate",
+            "keyIndex": 0,
+            "keyValue": 1450
+          }
+        ]
+      },
+      "30": {
+        "id": 30,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "ultimate_awakening_dam_rate",
+            "keyIndex": 0,
+            "keyValue": 1500
+          }
+        ]
+      }
+    }
+  }
+}

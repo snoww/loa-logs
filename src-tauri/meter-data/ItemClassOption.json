@@ -1,0 +1,7107 @@
+{
+  "6855001": {
+    "id": 6855001,
+    "classOptions": {
+      "102": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 250
+      },
+      "112": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 250
+      },
+      "103": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 250
+      },
+      "104": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 250
+      },
+      "105": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 250
+      },
+      "202": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 250
+      },
+      "203": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 250
+      },
+      "204": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 250
+      },
+      "205": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 250
+      },
+      "302": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 250
+      },
+      "303": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 250
+      },
+      "313": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 250
+      },
+      "304": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 250
+      },
+      "305": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 250
+      },
+      "312": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 250
+      },
+      "402": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 250
+      },
+      "403": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 250
+      },
+      "404": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 250
+      },
+      "405": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 250
+      },
+      "502": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 250
+      },
+      "503": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 250
+      },
+      "504": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 250
+      },
+      "505": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 250
+      },
+      "512": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 250
+      },
+      "602": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 250
+      },
+      "603": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 250
+      },
+      "604": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 250
+      },
+      "113": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 250
+      },
+      "702": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 250
+      }
+    }
+  },
+  "6855004": {
+    "id": 6855004,
+    "classOptions": {
+      "102": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 500
+      },
+      "112": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 500
+      },
+      "103": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 500
+      },
+      "104": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 500
+      },
+      "105": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 500
+      },
+      "202": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 500
+      },
+      "203": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 500
+      },
+      "204": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 500
+      },
+      "205": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 500
+      },
+      "302": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 500
+      },
+      "303": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 500
+      },
+      "313": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 500
+      },
+      "304": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 500
+      },
+      "305": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 500
+      },
+      "312": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 500
+      },
+      "402": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 500
+      },
+      "403": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 500
+      },
+      "404": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 500
+      },
+      "405": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 500
+      },
+      "502": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 500
+      },
+      "503": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 500
+      },
+      "504": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 500
+      },
+      "505": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 500
+      },
+      "512": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 500
+      },
+      "602": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 500
+      },
+      "603": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 500
+      },
+      "604": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 500
+      },
+      "113": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 500
+      },
+      "702": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 500
+      }
+    }
+  },
+  "6854001": {
+    "id": 6854001,
+    "classOptions": {
+      "102": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 500
+      },
+      "112": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 500
+      },
+      "103": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 500
+      },
+      "104": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 500
+      },
+      "105": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 500
+      },
+      "202": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 500
+      },
+      "203": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 500
+      },
+      "204": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 500
+      },
+      "205": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 500
+      },
+      "302": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 500
+      },
+      "303": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 500
+      },
+      "313": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 500
+      },
+      "304": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 500
+      },
+      "305": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 500
+      },
+      "312": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 500
+      },
+      "402": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 500
+      },
+      "403": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 500
+      },
+      "404": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 500
+      },
+      "405": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 500
+      },
+      "502": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 500
+      },
+      "503": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 500
+      },
+      "504": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 500
+      },
+      "505": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 500
+      },
+      "512": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 500
+      },
+      "602": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 500
+      },
+      "603": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 500
+      },
+      "604": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 500
+      },
+      "113": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 500
+      },
+      "702": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 500
+      }
+    }
+  },
+  "6854004": {
+    "id": 6854004,
+    "classOptions": {
+      "102": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 1000
+      },
+      "112": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 1000
+      },
+      "103": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 1000
+      },
+      "104": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 1000
+      },
+      "105": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 1000
+      },
+      "202": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 1000
+      },
+      "203": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 1000
+      },
+      "204": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 1000
+      },
+      "205": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 1000
+      },
+      "302": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 1000
+      },
+      "303": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 1000
+      },
+      "313": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 1000
+      },
+      "304": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 1000
+      },
+      "305": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 1000
+      },
+      "312": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 1000
+      },
+      "402": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 1000
+      },
+      "403": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 1000
+      },
+      "404": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 1000
+      },
+      "405": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 1000
+      },
+      "502": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 1000
+      },
+      "503": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 1000
+      },
+      "504": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 1000
+      },
+      "505": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 1000
+      },
+      "512": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 1000
+      },
+      "602": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 1000
+      },
+      "603": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 1000
+      },
+      "604": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 1000
+      },
+      "113": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 1000
+      },
+      "702": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 1000
+      }
+    }
+  },
+  "6855005": {
+    "id": 6855005,
+    "classOptions": {
+      "102": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 500
+      },
+      "112": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 500
+      },
+      "103": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 500
+      },
+      "104": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 500
+      },
+      "105": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 500
+      },
+      "202": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 500
+      },
+      "203": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 500
+      },
+      "204": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 500
+      },
+      "205": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 500
+      },
+      "302": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 500
+      },
+      "303": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 500
+      },
+      "313": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 500
+      },
+      "304": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 500
+      },
+      "305": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 500
+      },
+      "312": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 500
+      },
+      "402": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 500
+      },
+      "403": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 500
+      },
+      "404": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 500
+      },
+      "405": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 500
+      },
+      "502": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 500
+      },
+      "503": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 500
+      },
+      "504": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 500
+      },
+      "505": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 500
+      },
+      "512": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 500
+      },
+      "602": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 500
+      },
+      "603": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 500
+      },
+      "604": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 500
+      },
+      "113": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 500
+      },
+      "702": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 500
+      }
+    }
+  },
+  "6855008": {
+    "id": 6855008,
+    "classOptions": {
+      "102": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 1000
+      },
+      "112": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 1000
+      },
+      "103": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 1000
+      },
+      "104": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 1000
+      },
+      "105": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 1000
+      },
+      "202": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 1000
+      },
+      "203": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 1000
+      },
+      "204": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 1000
+      },
+      "205": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 1000
+      },
+      "302": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 1000
+      },
+      "303": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 1000
+      },
+      "313": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 1000
+      },
+      "304": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 1000
+      },
+      "305": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 1000
+      },
+      "312": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 1000
+      },
+      "402": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 1000
+      },
+      "403": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 1000
+      },
+      "404": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 1000
+      },
+      "405": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 1000
+      },
+      "502": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 1000
+      },
+      "503": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 1000
+      },
+      "504": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 1000
+      },
+      "505": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 1000
+      },
+      "512": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 1000
+      },
+      "602": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 1000
+      },
+      "603": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 1000
+      },
+      "604": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 1000
+      },
+      "113": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 1000
+      },
+      "702": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 1000
+      }
+    }
+  },
+  "6854005": {
+    "id": 6854005,
+    "classOptions": {
+      "102": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 1000
+      },
+      "112": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 1000
+      },
+      "103": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 1000
+      },
+      "104": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 1000
+      },
+      "105": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 1000
+      },
+      "202": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 1000
+      },
+      "203": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 1000
+      },
+      "204": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 1000
+      },
+      "205": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 1000
+      },
+      "302": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 1000
+      },
+      "303": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 1000
+      },
+      "313": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 1000
+      },
+      "304": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 1000
+      },
+      "305": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 1000
+      },
+      "312": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 1000
+      },
+      "402": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 1000
+      },
+      "403": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 1000
+      },
+      "404": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 1000
+      },
+      "405": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 1000
+      },
+      "502": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 1000
+      },
+      "503": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 1000
+      },
+      "504": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 1000
+      },
+      "505": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 1000
+      },
+      "512": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 1000
+      },
+      "602": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 1000
+      },
+      "603": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 1000
+      },
+      "604": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 1000
+      },
+      "113": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 1000
+      },
+      "702": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 1000
+      }
+    }
+  },
+  "6854008": {
+    "id": 6854008,
+    "classOptions": {
+      "102": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 2000
+      },
+      "112": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 2000
+      },
+      "103": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 2000
+      },
+      "104": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 2000
+      },
+      "105": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 2000
+      },
+      "202": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 2000
+      },
+      "203": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 2000
+      },
+      "204": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 2000
+      },
+      "205": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 2000
+      },
+      "302": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 2000
+      },
+      "303": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 2000
+      },
+      "313": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 2000
+      },
+      "304": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 2000
+      },
+      "305": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 2000
+      },
+      "312": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 2000
+      },
+      "402": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 2000
+      },
+      "403": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 2000
+      },
+      "404": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 2000
+      },
+      "405": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 2000
+      },
+      "502": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 2000
+      },
+      "503": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 2000
+      },
+      "504": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 2000
+      },
+      "505": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 2000
+      },
+      "512": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 2000
+      },
+      "602": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 2000
+      },
+      "603": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 2000
+      },
+      "604": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 2000
+      },
+      "113": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 2000
+      },
+      "702": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 2000
+      }
+    }
+  },
+  "6855009": {
+    "id": 6855009,
+    "classOptions": {
+      "102": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 1500
+      },
+      "112": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 1500
+      },
+      "103": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 1500
+      },
+      "104": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 1500
+      },
+      "105": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 1500
+      },
+      "202": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 1500
+      },
+      "203": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 1500
+      },
+      "204": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 1500
+      },
+      "205": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 1500
+      },
+      "302": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 1500
+      },
+      "303": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 1500
+      },
+      "313": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 1500
+      },
+      "304": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 1500
+      },
+      "305": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 1500
+      },
+      "312": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 1500
+      },
+      "402": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 1500
+      },
+      "403": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 1500
+      },
+      "404": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 1500
+      },
+      "405": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 1500
+      },
+      "502": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 1500
+      },
+      "503": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 1500
+      },
+      "504": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 1500
+      },
+      "505": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 1500
+      },
+      "512": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 1500
+      },
+      "602": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 1500
+      },
+      "603": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 1500
+      },
+      "604": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 1500
+      },
+      "113": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 1500
+      },
+      "702": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 1500
+      }
+    }
+  },
+  "6855012": {
+    "id": 6855012,
+    "classOptions": {
+      "102": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 3000
+      },
+      "112": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 3000
+      },
+      "103": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 3000
+      },
+      "104": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 3000
+      },
+      "105": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 3000
+      },
+      "202": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 3000
+      },
+      "203": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 3000
+      },
+      "204": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 3000
+      },
+      "205": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 3000
+      },
+      "302": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 3000
+      },
+      "303": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 3000
+      },
+      "313": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 3000
+      },
+      "304": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 3000
+      },
+      "305": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 3000
+      },
+      "312": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 3000
+      },
+      "402": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 3000
+      },
+      "403": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 3000
+      },
+      "404": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 3000
+      },
+      "405": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 3000
+      },
+      "502": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 3000
+      },
+      "503": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 3000
+      },
+      "504": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 3000
+      },
+      "505": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 3000
+      },
+      "512": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 3000
+      },
+      "602": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 3000
+      },
+      "603": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 3000
+      },
+      "604": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 3000
+      },
+      "113": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 3000
+      },
+      "702": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 3000
+      }
+    }
+  },
+  "6854009": {
+    "id": 6854009,
+    "classOptions": {
+      "102": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 3000
+      },
+      "112": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 3000
+      },
+      "103": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 3000
+      },
+      "104": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 3000
+      },
+      "105": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 3000
+      },
+      "202": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 3000
+      },
+      "203": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 3000
+      },
+      "204": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 3000
+      },
+      "205": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 3000
+      },
+      "302": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 3000
+      },
+      "303": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 3000
+      },
+      "313": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 3000
+      },
+      "304": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 3000
+      },
+      "305": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 3000
+      },
+      "312": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 3000
+      },
+      "402": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 3000
+      },
+      "403": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 3000
+      },
+      "404": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 3000
+      },
+      "405": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 3000
+      },
+      "502": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 3000
+      },
+      "503": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 3000
+      },
+      "504": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 3000
+      },
+      "505": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 3000
+      },
+      "512": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 3000
+      },
+      "602": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 3000
+      },
+      "603": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 3000
+      },
+      "604": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 3000
+      },
+      "113": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 3000
+      },
+      "702": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 3000
+      }
+    }
+  },
+  "6854012": {
+    "id": 6854012,
+    "classOptions": {
+      "102": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 6000
+      },
+      "112": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 6000
+      },
+      "103": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 6000
+      },
+      "104": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 6000
+      },
+      "105": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 6000
+      },
+      "202": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 6000
+      },
+      "203": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 6000
+      },
+      "204": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 6000
+      },
+      "205": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 6000
+      },
+      "302": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 6000
+      },
+      "303": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 6000
+      },
+      "313": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 6000
+      },
+      "304": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 6000
+      },
+      "305": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 6000
+      },
+      "312": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 6000
+      },
+      "402": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 6000
+      },
+      "403": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 6000
+      },
+      "404": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 6000
+      },
+      "405": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 6000
+      },
+      "502": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 6000
+      },
+      "503": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 6000
+      },
+      "504": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 6000
+      },
+      "505": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 6000
+      },
+      "512": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 6000
+      },
+      "602": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 6000
+      },
+      "603": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 6000
+      },
+      "604": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 6000
+      },
+      "113": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 6000
+      },
+      "702": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 6000
+      }
+    }
+  },
+  "6855013": {
+    "id": 6855013,
+    "classOptions": {
+      "102": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 2000
+      },
+      "112": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 2000
+      },
+      "103": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 2000
+      },
+      "104": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 2000
+      },
+      "105": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 2000
+      },
+      "202": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 2000
+      },
+      "203": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 2000
+      },
+      "204": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 2000
+      },
+      "205": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 2000
+      },
+      "302": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 2000
+      },
+      "303": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 2000
+      },
+      "313": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 2000
+      },
+      "304": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 2000
+      },
+      "305": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 2000
+      },
+      "312": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 2000
+      },
+      "402": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 2000
+      },
+      "403": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 2000
+      },
+      "404": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 2000
+      },
+      "405": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 2000
+      },
+      "502": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 2000
+      },
+      "503": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 2000
+      },
+      "504": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 2000
+      },
+      "505": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 2000
+      },
+      "512": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 2000
+      },
+      "602": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 2000
+      },
+      "603": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 2000
+      },
+      "604": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 2000
+      },
+      "113": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 2000
+      },
+      "702": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 2000
+      }
+    }
+  },
+  "6855016": {
+    "id": 6855016,
+    "classOptions": {
+      "102": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 4000
+      },
+      "112": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 4000
+      },
+      "103": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 4000
+      },
+      "104": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 4000
+      },
+      "105": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 4000
+      },
+      "202": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 4000
+      },
+      "203": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 4000
+      },
+      "204": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 4000
+      },
+      "205": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 4000
+      },
+      "302": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 4000
+      },
+      "303": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 4000
+      },
+      "313": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 4000
+      },
+      "304": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 4000
+      },
+      "305": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 4000
+      },
+      "312": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 4000
+      },
+      "402": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 4000
+      },
+      "403": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 4000
+      },
+      "404": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 4000
+      },
+      "405": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 4000
+      },
+      "502": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 4000
+      },
+      "503": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 4000
+      },
+      "504": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 4000
+      },
+      "505": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 4000
+      },
+      "512": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 4000
+      },
+      "602": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 4000
+      },
+      "603": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 4000
+      },
+      "604": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 4000
+      },
+      "113": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 4000
+      },
+      "702": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 4000
+      }
+    }
+  },
+  "6854013": {
+    "id": 6854013,
+    "classOptions": {
+      "102": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 4000
+      },
+      "112": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 4000
+      },
+      "103": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 4000
+      },
+      "104": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 4000
+      },
+      "105": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 4000
+      },
+      "202": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 4000
+      },
+      "203": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 4000
+      },
+      "204": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 4000
+      },
+      "205": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 4000
+      },
+      "302": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 4000
+      },
+      "303": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 4000
+      },
+      "313": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 4000
+      },
+      "304": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 4000
+      },
+      "305": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 4000
+      },
+      "312": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 4000
+      },
+      "402": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 4000
+      },
+      "403": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 4000
+      },
+      "404": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 4000
+      },
+      "405": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 4000
+      },
+      "502": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 4000
+      },
+      "503": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 4000
+      },
+      "504": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 4000
+      },
+      "505": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 4000
+      },
+      "512": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 4000
+      },
+      "602": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 4000
+      },
+      "603": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 4000
+      },
+      "604": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 4000
+      },
+      "113": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 4000
+      },
+      "702": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 4000
+      }
+    }
+  },
+  "6854016": {
+    "id": 6854016,
+    "classOptions": {
+      "102": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 8000
+      },
+      "112": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 8000
+      },
+      "103": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 8000
+      },
+      "104": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 8000
+      },
+      "105": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 8000
+      },
+      "202": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 8000
+      },
+      "203": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 8000
+      },
+      "204": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 8000
+      },
+      "205": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 8000
+      },
+      "302": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 8000
+      },
+      "303": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 8000
+      },
+      "313": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 8000
+      },
+      "304": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 8000
+      },
+      "305": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 8000
+      },
+      "312": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 8000
+      },
+      "402": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 8000
+      },
+      "403": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 8000
+      },
+      "404": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 8000
+      },
+      "405": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 8000
+      },
+      "502": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 8000
+      },
+      "503": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 8000
+      },
+      "504": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 8000
+      },
+      "505": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 8000
+      },
+      "512": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 8000
+      },
+      "602": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 8000
+      },
+      "603": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 8000
+      },
+      "604": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 8000
+      },
+      "113": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 8000
+      },
+      "702": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 8000
+      }
+    }
+  },
+  "6854017": {
+    "id": 6854017,
+    "classOptions": {
+      "102": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 6000
+      },
+      "112": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 6000
+      },
+      "103": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 6000
+      },
+      "104": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 6000
+      },
+      "105": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 6000
+      },
+      "202": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 6000
+      },
+      "203": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 6000
+      },
+      "204": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 6000
+      },
+      "205": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 6000
+      },
+      "302": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 6000
+      },
+      "303": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 6000
+      },
+      "313": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 6000
+      },
+      "304": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 6000
+      },
+      "305": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 6000
+      },
+      "312": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 6000
+      },
+      "402": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 6000
+      },
+      "403": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 6000
+      },
+      "404": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 6000
+      },
+      "405": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 6000
+      },
+      "502": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 6000
+      },
+      "503": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 6000
+      },
+      "504": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 6000
+      },
+      "505": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 6000
+      },
+      "512": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 6000
+      },
+      "602": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 6000
+      },
+      "603": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 6000
+      },
+      "604": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 6000
+      },
+      "113": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 6000
+      },
+      "702": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 6000
+      }
+    }
+  },
+  "6854020": {
+    "id": 6854020,
+    "classOptions": {
+      "102": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 12000
+      },
+      "112": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 12000
+      },
+      "103": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 12000
+      },
+      "104": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 12000
+      },
+      "105": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 12000
+      },
+      "202": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 12000
+      },
+      "203": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 12000
+      },
+      "204": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 12000
+      },
+      "205": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 12000
+      },
+      "302": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 12000
+      },
+      "303": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 12000
+      },
+      "313": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 12000
+      },
+      "304": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 12000
+      },
+      "305": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 12000
+      },
+      "312": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 12000
+      },
+      "402": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 12000
+      },
+      "403": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 12000
+      },
+      "404": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 12000
+      },
+      "405": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 12000
+      },
+      "502": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 12000
+      },
+      "503": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 12000
+      },
+      "504": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 12000
+      },
+      "505": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 12000
+      },
+      "512": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 12000
+      },
+      "602": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 12000
+      },
+      "603": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 12000
+      },
+      "604": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 12000
+      },
+      "113": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 12000
+      },
+      "702": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 12000
+      }
+    }
+  },
+  "900612": {
+    "id": 900612,
+    "classOptions": {
+      "102": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 6000
+      },
+      "112": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 6000
+      },
+      "103": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 6000
+      },
+      "104": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 6000
+      },
+      "105": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 6000
+      },
+      "202": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 6000
+      },
+      "203": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 6000
+      },
+      "204": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 6000
+      },
+      "205": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 6000
+      },
+      "302": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 6000
+      },
+      "303": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 6000
+      },
+      "313": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 6000
+      },
+      "304": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 6000
+      },
+      "305": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 6000
+      },
+      "312": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 6000
+      },
+      "402": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 6000
+      },
+      "403": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 6000
+      },
+      "404": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 6000
+      },
+      "405": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 6000
+      },
+      "502": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 6000
+      },
+      "503": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 6000
+      },
+      "504": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 6000
+      },
+      "505": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 6000
+      },
+      "512": {
+        "type": "stat",
+        "statType": "agi",
+        "keyIndex": 0,
+        "keyValue": 6000
+      },
+      "602": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 6000
+      },
+      "603": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 6000
+      },
+      "604": {
+        "type": "stat",
+        "statType": "int",
+        "keyIndex": 0,
+        "keyValue": 6000
+      },
+      "113": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 6000
+      },
+      "702": {
+        "type": "stat",
+        "statType": "str",
+        "keyIndex": 0,
+        "keyValue": 6000
+      }
+    }
+  },
+  "6000": {
+    "id": 6000,
+    "classOptions": {
+      "105": {
+        "type": "identity_gauge",
+        "statType": "none",
+        "keyIndex": 0,
+        "keyValue": 160
+      },
+      "204": {
+        "type": "identity_gauge",
+        "statType": "none",
+        "keyIndex": 0,
+        "keyValue": 160
+      },
+      "602": {
+        "type": "identity_gauge",
+        "statType": "none",
+        "keyIndex": 0,
+        "keyValue": 160
+      },
+      "113": {
+        "type": "identity_gauge",
+        "statType": "none",
+        "keyIndex": 0,
+        "keyValue": 160
+      }
+    }
+  },
+  "6001": {
+    "id": 6001,
+    "classOptions": {
+      "105": {
+        "type": "identity_gauge",
+        "statType": "none",
+        "keyIndex": 0,
+        "keyValue": 360
+      },
+      "204": {
+        "type": "identity_gauge",
+        "statType": "none",
+        "keyIndex": 0,
+        "keyValue": 360
+      },
+      "602": {
+        "type": "identity_gauge",
+        "statType": "none",
+        "keyIndex": 0,
+        "keyValue": 360
+      },
+      "113": {
+        "type": "identity_gauge",
+        "statType": "none",
+        "keyIndex": 0,
+        "keyValue": 360
+      }
+    }
+  },
+  "6002": {
+    "id": 6002,
+    "classOptions": {
+      "105": {
+        "type": "identity_gauge",
+        "statType": "none",
+        "keyIndex": 0,
+        "keyValue": 600
+      },
+      "204": {
+        "type": "identity_gauge",
+        "statType": "none",
+        "keyIndex": 0,
+        "keyValue": 600
+      },
+      "602": {
+        "type": "identity_gauge",
+        "statType": "none",
+        "keyIndex": 0,
+        "keyValue": 600
+      },
+      "113": {
+        "type": "identity_gauge",
+        "statType": "none",
+        "keyIndex": 0,
+        "keyValue": 600
+      }
+    }
+  },
+  "6010": {
+    "id": 6010,
+    "classOptions": {
+      "105": {
+        "type": "identity_gauge",
+        "statType": "none",
+        "keyIndex": 0,
+        "keyValue": 72
+      },
+      "204": {
+        "type": "identity_gauge",
+        "statType": "none",
+        "keyIndex": 0,
+        "keyValue": 72
+      },
+      "602": {
+        "type": "identity_gauge",
+        "statType": "none",
+        "keyIndex": 0,
+        "keyValue": 72
+      },
+      "113": {
+        "type": "identity_gauge",
+        "statType": "none",
+        "keyIndex": 0,
+        "keyValue": 72
+      }
+    }
+  },
+  "6011": {
+    "id": 6011,
+    "classOptions": {
+      "105": {
+        "type": "identity_gauge",
+        "statType": "none",
+        "keyIndex": 0,
+        "keyValue": 162
+      },
+      "204": {
+        "type": "identity_gauge",
+        "statType": "none",
+        "keyIndex": 0,
+        "keyValue": 162
+      },
+      "602": {
+        "type": "identity_gauge",
+        "statType": "none",
+        "keyIndex": 0,
+        "keyValue": 162
+      },
+      "113": {
+        "type": "identity_gauge",
+        "statType": "none",
+        "keyIndex": 0,
+        "keyValue": 162
+      }
+    }
+  },
+  "6012": {
+    "id": 6012,
+    "classOptions": {
+      "105": {
+        "type": "identity_gauge",
+        "statType": "none",
+        "keyIndex": 0,
+        "keyValue": 270
+      },
+      "204": {
+        "type": "identity_gauge",
+        "statType": "none",
+        "keyIndex": 0,
+        "keyValue": 270
+      },
+      "602": {
+        "type": "identity_gauge",
+        "statType": "none",
+        "keyIndex": 0,
+        "keyValue": 270
+      },
+      "113": {
+        "type": "identity_gauge",
+        "statType": "none",
+        "keyIndex": 0,
+        "keyValue": 270
+      }
+    }
+  },
+  "6020": {
+    "id": 6020,
+    "classOptions": {
+      "105": {
+        "type": "identity_gauge",
+        "statType": "none",
+        "keyIndex": 0,
+        "keyValue": 90
+      },
+      "204": {
+        "type": "identity_gauge",
+        "statType": "none",
+        "keyIndex": 0,
+        "keyValue": 90
+      },
+      "602": {
+        "type": "identity_gauge",
+        "statType": "none",
+        "keyIndex": 0,
+        "keyValue": 90
+      },
+      "113": {
+        "type": "identity_gauge",
+        "statType": "none",
+        "keyIndex": 0,
+        "keyValue": 90
+      }
+    }
+  },
+  "6021": {
+    "id": 6021,
+    "classOptions": {
+      "105": {
+        "type": "identity_gauge",
+        "statType": "none",
+        "keyIndex": 0,
+        "keyValue": 207
+      },
+      "204": {
+        "type": "identity_gauge",
+        "statType": "none",
+        "keyIndex": 0,
+        "keyValue": 207
+      },
+      "602": {
+        "type": "identity_gauge",
+        "statType": "none",
+        "keyIndex": 0,
+        "keyValue": 207
+      },
+      "113": {
+        "type": "identity_gauge",
+        "statType": "none",
+        "keyIndex": 0,
+        "keyValue": 207
+      }
+    }
+  },
+  "6022": {
+    "id": 6022,
+    "classOptions": {
+      "105": {
+        "type": "identity_gauge",
+        "statType": "none",
+        "keyIndex": 0,
+        "keyValue": 345
+      },
+      "204": {
+        "type": "identity_gauge",
+        "statType": "none",
+        "keyIndex": 0,
+        "keyValue": 345
+      },
+      "602": {
+        "type": "identity_gauge",
+        "statType": "none",
+        "keyIndex": 0,
+        "keyValue": 345
+      },
+      "113": {
+        "type": "identity_gauge",
+        "statType": "none",
+        "keyIndex": 0,
+        "keyValue": 345
+      }
+    }
+  },
+  "6030": {
+    "id": 6030,
+    "classOptions": {
+      "105": {
+        "type": "identity_gauge",
+        "statType": "none",
+        "keyIndex": 0,
+        "keyValue": 111
+      },
+      "204": {
+        "type": "identity_gauge",
+        "statType": "none",
+        "keyIndex": 0,
+        "keyValue": 111
+      },
+      "602": {
+        "type": "identity_gauge",
+        "statType": "none",
+        "keyIndex": 0,
+        "keyValue": 111
+      },
+      "113": {
+        "type": "identity_gauge",
+        "statType": "none",
+        "keyIndex": 0,
+        "keyValue": 111
+      }
+    }
+  },
+  "6031": {
+    "id": 6031,
+    "classOptions": {
+      "105": {
+        "type": "identity_gauge",
+        "statType": "none",
+        "keyIndex": 0,
+        "keyValue": 252
+      },
+      "204": {
+        "type": "identity_gauge",
+        "statType": "none",
+        "keyIndex": 0,
+        "keyValue": 252
+      },
+      "602": {
+        "type": "identity_gauge",
+        "statType": "none",
+        "keyIndex": 0,
+        "keyValue": 252
+      },
+      "113": {
+        "type": "identity_gauge",
+        "statType": "none",
+        "keyIndex": 0,
+        "keyValue": 252
+      }
+    }
+  },
+  "6032": {
+    "id": 6032,
+    "classOptions": {
+      "105": {
+        "type": "identity_gauge",
+        "statType": "none",
+        "keyIndex": 0,
+        "keyValue": 420
+      },
+      "204": {
+        "type": "identity_gauge",
+        "statType": "none",
+        "keyIndex": 0,
+        "keyValue": 420
+      },
+      "602": {
+        "type": "identity_gauge",
+        "statType": "none",
+        "keyIndex": 0,
+        "keyValue": 420
+      },
+      "113": {
+        "type": "identity_gauge",
+        "statType": "none",
+        "keyIndex": 0,
+        "keyValue": 420
+      }
+    }
+  },
+  "70001": {
+    "id": 70001,
+    "classOptions": {
+      "104": {
+        "type": "combat_effect",
+        "statType": "none",
+        "keyIndex": 70990,
+        "keyValue": 0
+      },
+      "602": {
+        "type": "combat_effect",
+        "statType": "none",
+        "keyIndex": 70991,
+        "keyValue": 0
+      },
+      "113": {
+        "type": "combat_effect",
+        "statType": "none",
+        "keyIndex": 70992,
+        "keyValue": 0
+      }
+    }
+  },
+  "9412100": {
+    "id": 9412100,
+    "classOptions": {
+      "102": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 16710,
+        "keyValue": 10
+      },
+      "103": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 18230,
+        "keyValue": 10
+      },
+      "104": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 17220,
+        "keyValue": 10
+      },
+      "105": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 36210,
+        "keyValue": 10
+      },
+      "202": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 19330,
+        "keyValue": 10
+      },
+      "203": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 20300,
+        "keyValue": 10
+      },
+      "204": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 21280,
+        "keyValue": 10
+      },
+      "302": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 22330,
+        "keyValue": 10
+      },
+      "303": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 23270,
+        "keyValue": 10
+      },
+      "304": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 24270,
+        "keyValue": 10
+      },
+      "305": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 34610,
+        "keyValue": 10
+      },
+      "402": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 25350,
+        "keyValue": 10
+      },
+      "403": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 27890,
+        "keyValue": 10
+      },
+      "503": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 29280,
+        "keyValue": 10
+      },
+      "502": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 28240,
+        "keyValue": 10
+      },
+      "504": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 30280,
+        "keyValue": 10
+      }
+    }
+  },
+  "9412101": {
+    "id": 9412101,
+    "classOptions": {
+      "102": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 16710,
+        "keyValue": 20
+      },
+      "103": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 18230,
+        "keyValue": 20
+      },
+      "104": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 17220,
+        "keyValue": 20
+      },
+      "105": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 36210,
+        "keyValue": 20
+      },
+      "202": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 19330,
+        "keyValue": 20
+      },
+      "203": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 20300,
+        "keyValue": 20
+      },
+      "204": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 21280,
+        "keyValue": 20
+      },
+      "302": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 22330,
+        "keyValue": 20
+      },
+      "303": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 23270,
+        "keyValue": 20
+      },
+      "304": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 24270,
+        "keyValue": 20
+      },
+      "305": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 34610,
+        "keyValue": 20
+      },
+      "402": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 25350,
+        "keyValue": 20
+      },
+      "403": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 27890,
+        "keyValue": 20
+      },
+      "503": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 29280,
+        "keyValue": 20
+      },
+      "502": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 28240,
+        "keyValue": 20
+      },
+      "504": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 30280,
+        "keyValue": 20
+      }
+    }
+  },
+  "9412102": {
+    "id": 9412102,
+    "classOptions": {
+      "102": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 16710,
+        "keyValue": 30
+      },
+      "103": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 18230,
+        "keyValue": 30
+      },
+      "104": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 17220,
+        "keyValue": 30
+      },
+      "105": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 36210,
+        "keyValue": 30
+      },
+      "202": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 19330,
+        "keyValue": 30
+      },
+      "203": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 20300,
+        "keyValue": 30
+      },
+      "204": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 21280,
+        "keyValue": 30
+      },
+      "302": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 22330,
+        "keyValue": 30
+      },
+      "303": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 23270,
+        "keyValue": 30
+      },
+      "304": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 24270,
+        "keyValue": 30
+      },
+      "305": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 34610,
+        "keyValue": 30
+      },
+      "402": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 25350,
+        "keyValue": 30
+      },
+      "403": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 27890,
+        "keyValue": 30
+      },
+      "503": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 29280,
+        "keyValue": 30
+      },
+      "502": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 28240,
+        "keyValue": 30
+      },
+      "504": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 30280,
+        "keyValue": 30
+      }
+    }
+  },
+  "9412103": {
+    "id": 9412103,
+    "classOptions": {
+      "102": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 16710,
+        "keyValue": 50
+      },
+      "103": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 18230,
+        "keyValue": 50
+      },
+      "104": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 17220,
+        "keyValue": 50
+      },
+      "105": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 36210,
+        "keyValue": 50
+      },
+      "202": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 19330,
+        "keyValue": 50
+      },
+      "203": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 20300,
+        "keyValue": 50
+      },
+      "204": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 21280,
+        "keyValue": 50
+      },
+      "302": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 22330,
+        "keyValue": 50
+      },
+      "303": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 23270,
+        "keyValue": 50
+      },
+      "304": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 24270,
+        "keyValue": 50
+      },
+      "305": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 34610,
+        "keyValue": 50
+      },
+      "402": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 25350,
+        "keyValue": 50
+      },
+      "403": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 27890,
+        "keyValue": 50
+      },
+      "503": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 29280,
+        "keyValue": 50
+      },
+      "502": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 28240,
+        "keyValue": 50
+      },
+      "504": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 30280,
+        "keyValue": 50
+      }
+    }
+  },
+  "9412104": {
+    "id": 9412104,
+    "classOptions": {
+      "102": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 16710,
+        "keyValue": 70
+      },
+      "103": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 18230,
+        "keyValue": 70
+      },
+      "104": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 17220,
+        "keyValue": 70
+      },
+      "105": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 36210,
+        "keyValue": 70
+      },
+      "202": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 19330,
+        "keyValue": 70
+      },
+      "203": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 20300,
+        "keyValue": 70
+      },
+      "204": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 21280,
+        "keyValue": 70
+      },
+      "302": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 22330,
+        "keyValue": 70
+      },
+      "303": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 23270,
+        "keyValue": 70
+      },
+      "304": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 24270,
+        "keyValue": 70
+      },
+      "305": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 34610,
+        "keyValue": 70
+      },
+      "402": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 25350,
+        "keyValue": 70
+      },
+      "403": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 27890,
+        "keyValue": 70
+      },
+      "503": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 29280,
+        "keyValue": 70
+      },
+      "502": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 28240,
+        "keyValue": 70
+      },
+      "504": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 30280,
+        "keyValue": 70
+      }
+    }
+  },
+  "9412105": {
+    "id": 9412105,
+    "classOptions": {
+      "102": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 16710,
+        "keyValue": 90
+      },
+      "103": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 18230,
+        "keyValue": 90
+      },
+      "104": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 17220,
+        "keyValue": 90
+      },
+      "105": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 36210,
+        "keyValue": 90
+      },
+      "202": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 19330,
+        "keyValue": 90
+      },
+      "203": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 20300,
+        "keyValue": 90
+      },
+      "204": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 21280,
+        "keyValue": 90
+      },
+      "302": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 22330,
+        "keyValue": 90
+      },
+      "303": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 23270,
+        "keyValue": 90
+      },
+      "304": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 24270,
+        "keyValue": 90
+      },
+      "305": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 34610,
+        "keyValue": 90
+      },
+      "402": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 25350,
+        "keyValue": 90
+      },
+      "403": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 27890,
+        "keyValue": 90
+      },
+      "503": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 29280,
+        "keyValue": 90
+      },
+      "502": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 28240,
+        "keyValue": 90
+      },
+      "504": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 30280,
+        "keyValue": 90
+      }
+    }
+  },
+  "9412106": {
+    "id": 9412106,
+    "classOptions": {
+      "102": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 16710,
+        "keyValue": 120
+      },
+      "103": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 18230,
+        "keyValue": 120
+      },
+      "104": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 17220,
+        "keyValue": 120
+      },
+      "105": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 36210,
+        "keyValue": 120
+      },
+      "202": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 19330,
+        "keyValue": 120
+      },
+      "203": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 20300,
+        "keyValue": 120
+      },
+      "204": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 21280,
+        "keyValue": 120
+      },
+      "302": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 22330,
+        "keyValue": 120
+      },
+      "303": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 23270,
+        "keyValue": 120
+      },
+      "304": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 24270,
+        "keyValue": 120
+      },
+      "305": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 34610,
+        "keyValue": 120
+      },
+      "402": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 25350,
+        "keyValue": 120
+      },
+      "403": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 27890,
+        "keyValue": 120
+      },
+      "503": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 29280,
+        "keyValue": 120
+      },
+      "502": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 28240,
+        "keyValue": 120
+      },
+      "504": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 30280,
+        "keyValue": 120
+      }
+    }
+  },
+  "9412107": {
+    "id": 9412107,
+    "classOptions": {
+      "102": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 16710,
+        "keyValue": 150
+      },
+      "103": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 18230,
+        "keyValue": 150
+      },
+      "104": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 17220,
+        "keyValue": 150
+      },
+      "105": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 36210,
+        "keyValue": 150
+      },
+      "202": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 19330,
+        "keyValue": 150
+      },
+      "203": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 20300,
+        "keyValue": 150
+      },
+      "204": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 21280,
+        "keyValue": 150
+      },
+      "302": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 22330,
+        "keyValue": 150
+      },
+      "303": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 23270,
+        "keyValue": 150
+      },
+      "304": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 24270,
+        "keyValue": 150
+      },
+      "305": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 34610,
+        "keyValue": 150
+      },
+      "402": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 25350,
+        "keyValue": 150
+      },
+      "403": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 27890,
+        "keyValue": 150
+      },
+      "503": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 29280,
+        "keyValue": 150
+      },
+      "502": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 28240,
+        "keyValue": 150
+      },
+      "504": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 30280,
+        "keyValue": 150
+      }
+    }
+  },
+  "9412108": {
+    "id": 9412108,
+    "classOptions": {
+      "102": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 16710,
+        "keyValue": 180
+      },
+      "103": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 18230,
+        "keyValue": 180
+      },
+      "104": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 17220,
+        "keyValue": 180
+      },
+      "105": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 36210,
+        "keyValue": 180
+      },
+      "202": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 19330,
+        "keyValue": 180
+      },
+      "203": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 20300,
+        "keyValue": 180
+      },
+      "204": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 21280,
+        "keyValue": 180
+      },
+      "302": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 22330,
+        "keyValue": 180
+      },
+      "303": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 23270,
+        "keyValue": 180
+      },
+      "304": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 24270,
+        "keyValue": 180
+      },
+      "305": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 34610,
+        "keyValue": 180
+      },
+      "402": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 25350,
+        "keyValue": 180
+      },
+      "403": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 27890,
+        "keyValue": 180
+      },
+      "503": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 29280,
+        "keyValue": 180
+      },
+      "502": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 28240,
+        "keyValue": 180
+      },
+      "504": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 30280,
+        "keyValue": 180
+      }
+    }
+  },
+  "9412109": {
+    "id": 9412109,
+    "classOptions": {
+      "102": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 16710,
+        "keyValue": 220
+      },
+      "103": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 18230,
+        "keyValue": 220
+      },
+      "104": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 17220,
+        "keyValue": 220
+      },
+      "105": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 36210,
+        "keyValue": 220
+      },
+      "202": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 19330,
+        "keyValue": 220
+      },
+      "203": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 20300,
+        "keyValue": 220
+      },
+      "204": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 21280,
+        "keyValue": 220
+      },
+      "302": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 22330,
+        "keyValue": 220
+      },
+      "303": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 23270,
+        "keyValue": 220
+      },
+      "304": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 24270,
+        "keyValue": 220
+      },
+      "305": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 34610,
+        "keyValue": 220
+      },
+      "402": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 25350,
+        "keyValue": 220
+      },
+      "403": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 27890,
+        "keyValue": 220
+      },
+      "503": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 29280,
+        "keyValue": 220
+      },
+      "502": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 28240,
+        "keyValue": 220
+      },
+      "504": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 30280,
+        "keyValue": 220
+      }
+    }
+  },
+  "9412110": {
+    "id": 9412110,
+    "classOptions": {
+      "102": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 16710,
+        "keyValue": 260
+      },
+      "103": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 18230,
+        "keyValue": 260
+      },
+      "104": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 17220,
+        "keyValue": 260
+      },
+      "105": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 36210,
+        "keyValue": 260
+      },
+      "202": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 19330,
+        "keyValue": 260
+      },
+      "203": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 20300,
+        "keyValue": 260
+      },
+      "204": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 21280,
+        "keyValue": 260
+      },
+      "302": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 22330,
+        "keyValue": 260
+      },
+      "303": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 23270,
+        "keyValue": 260
+      },
+      "304": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 24270,
+        "keyValue": 260
+      },
+      "305": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 34610,
+        "keyValue": 260
+      },
+      "402": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 25350,
+        "keyValue": 260
+      },
+      "403": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 27890,
+        "keyValue": 260
+      },
+      "503": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 29280,
+        "keyValue": 260
+      },
+      "502": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 28240,
+        "keyValue": 260
+      },
+      "504": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 30280,
+        "keyValue": 260
+      }
+    }
+  },
+  "9412200": {
+    "id": 9412200,
+    "classOptions": {
+      "102": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 16710,
+        "keyValue": 10
+      },
+      "103": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 18230,
+        "keyValue": 10
+      },
+      "104": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 17220,
+        "keyValue": 10
+      },
+      "105": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 36210,
+        "keyValue": 10
+      },
+      "202": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 19330,
+        "keyValue": 10
+      },
+      "203": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 20300,
+        "keyValue": 10
+      },
+      "204": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 21280,
+        "keyValue": 10
+      },
+      "302": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 22330,
+        "keyValue": 10
+      },
+      "303": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 23270,
+        "keyValue": 10
+      },
+      "304": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 24270,
+        "keyValue": 10
+      },
+      "305": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 34610,
+        "keyValue": 10
+      },
+      "402": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 25350,
+        "keyValue": 10
+      },
+      "403": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 27890,
+        "keyValue": 10
+      },
+      "503": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 29280,
+        "keyValue": 10
+      },
+      "502": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 28240,
+        "keyValue": 10
+      },
+      "504": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 30280,
+        "keyValue": 10
+      }
+    }
+  },
+  "9412201": {
+    "id": 9412201,
+    "classOptions": {
+      "102": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 16710,
+        "keyValue": 20
+      },
+      "103": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 18230,
+        "keyValue": 20
+      },
+      "104": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 17220,
+        "keyValue": 20
+      },
+      "105": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 36210,
+        "keyValue": 20
+      },
+      "202": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 19330,
+        "keyValue": 20
+      },
+      "203": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 20300,
+        "keyValue": 20
+      },
+      "204": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 21280,
+        "keyValue": 20
+      },
+      "302": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 22330,
+        "keyValue": 20
+      },
+      "303": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 23270,
+        "keyValue": 20
+      },
+      "304": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 24270,
+        "keyValue": 20
+      },
+      "305": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 34610,
+        "keyValue": 20
+      },
+      "402": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 25350,
+        "keyValue": 20
+      },
+      "403": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 27890,
+        "keyValue": 20
+      },
+      "503": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 29280,
+        "keyValue": 20
+      },
+      "502": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 28240,
+        "keyValue": 20
+      },
+      "504": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 30280,
+        "keyValue": 20
+      }
+    }
+  },
+  "9412202": {
+    "id": 9412202,
+    "classOptions": {
+      "102": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 16710,
+        "keyValue": 30
+      },
+      "103": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 18230,
+        "keyValue": 30
+      },
+      "104": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 17220,
+        "keyValue": 30
+      },
+      "105": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 36210,
+        "keyValue": 30
+      },
+      "202": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 19330,
+        "keyValue": 30
+      },
+      "203": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 20300,
+        "keyValue": 30
+      },
+      "204": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 21280,
+        "keyValue": 30
+      },
+      "302": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 22330,
+        "keyValue": 30
+      },
+      "303": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 23270,
+        "keyValue": 30
+      },
+      "304": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 24270,
+        "keyValue": 30
+      },
+      "305": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 34610,
+        "keyValue": 30
+      },
+      "402": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 25350,
+        "keyValue": 30
+      },
+      "403": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 27890,
+        "keyValue": 30
+      },
+      "503": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 29280,
+        "keyValue": 30
+      },
+      "502": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 28240,
+        "keyValue": 30
+      },
+      "504": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 30280,
+        "keyValue": 30
+      }
+    }
+  },
+  "9412203": {
+    "id": 9412203,
+    "classOptions": {
+      "102": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 16710,
+        "keyValue": 50
+      },
+      "103": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 18230,
+        "keyValue": 50
+      },
+      "104": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 17220,
+        "keyValue": 50
+      },
+      "105": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 36210,
+        "keyValue": 50
+      },
+      "202": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 19330,
+        "keyValue": 50
+      },
+      "203": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 20300,
+        "keyValue": 50
+      },
+      "204": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 21280,
+        "keyValue": 50
+      },
+      "302": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 22330,
+        "keyValue": 50
+      },
+      "303": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 23270,
+        "keyValue": 50
+      },
+      "304": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 24270,
+        "keyValue": 50
+      },
+      "305": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 34610,
+        "keyValue": 50
+      },
+      "402": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 25350,
+        "keyValue": 50
+      },
+      "403": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 27890,
+        "keyValue": 50
+      },
+      "503": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 29280,
+        "keyValue": 50
+      },
+      "502": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 28240,
+        "keyValue": 50
+      },
+      "504": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 30280,
+        "keyValue": 50
+      }
+    }
+  },
+  "9412204": {
+    "id": 9412204,
+    "classOptions": {
+      "102": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 16710,
+        "keyValue": 70
+      },
+      "103": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 18230,
+        "keyValue": 70
+      },
+      "104": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 17220,
+        "keyValue": 70
+      },
+      "105": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 36210,
+        "keyValue": 70
+      },
+      "202": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 19330,
+        "keyValue": 70
+      },
+      "203": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 20300,
+        "keyValue": 70
+      },
+      "204": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 21280,
+        "keyValue": 70
+      },
+      "302": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 22330,
+        "keyValue": 70
+      },
+      "303": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 23270,
+        "keyValue": 70
+      },
+      "304": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 24270,
+        "keyValue": 70
+      },
+      "305": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 34610,
+        "keyValue": 70
+      },
+      "402": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 25350,
+        "keyValue": 70
+      },
+      "403": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 27890,
+        "keyValue": 70
+      },
+      "503": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 29280,
+        "keyValue": 70
+      },
+      "502": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 28240,
+        "keyValue": 70
+      },
+      "504": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 30280,
+        "keyValue": 70
+      }
+    }
+  },
+  "9412205": {
+    "id": 9412205,
+    "classOptions": {
+      "102": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 16710,
+        "keyValue": 90
+      },
+      "103": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 18230,
+        "keyValue": 90
+      },
+      "104": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 17220,
+        "keyValue": 90
+      },
+      "105": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 36210,
+        "keyValue": 90
+      },
+      "202": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 19330,
+        "keyValue": 90
+      },
+      "203": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 20300,
+        "keyValue": 90
+      },
+      "204": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 21280,
+        "keyValue": 90
+      },
+      "302": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 22330,
+        "keyValue": 90
+      },
+      "303": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 23270,
+        "keyValue": 90
+      },
+      "304": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 24270,
+        "keyValue": 90
+      },
+      "305": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 34610,
+        "keyValue": 90
+      },
+      "402": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 25350,
+        "keyValue": 90
+      },
+      "403": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 27890,
+        "keyValue": 90
+      },
+      "503": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 29280,
+        "keyValue": 90
+      },
+      "502": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 28240,
+        "keyValue": 90
+      },
+      "504": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 30280,
+        "keyValue": 90
+      }
+    }
+  },
+  "9412206": {
+    "id": 9412206,
+    "classOptions": {
+      "102": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 16710,
+        "keyValue": 120
+      },
+      "103": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 18230,
+        "keyValue": 120
+      },
+      "104": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 17220,
+        "keyValue": 120
+      },
+      "105": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 36210,
+        "keyValue": 120
+      },
+      "202": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 19330,
+        "keyValue": 120
+      },
+      "203": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 20300,
+        "keyValue": 120
+      },
+      "204": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 21280,
+        "keyValue": 120
+      },
+      "302": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 22330,
+        "keyValue": 120
+      },
+      "303": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 23270,
+        "keyValue": 120
+      },
+      "304": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 24270,
+        "keyValue": 120
+      },
+      "305": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 34610,
+        "keyValue": 120
+      },
+      "402": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 25350,
+        "keyValue": 120
+      },
+      "403": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 27890,
+        "keyValue": 120
+      },
+      "503": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 29280,
+        "keyValue": 120
+      },
+      "502": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 28240,
+        "keyValue": 120
+      },
+      "504": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 30280,
+        "keyValue": 120
+      }
+    }
+  },
+  "9412207": {
+    "id": 9412207,
+    "classOptions": {
+      "102": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 16710,
+        "keyValue": 150
+      },
+      "103": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 18230,
+        "keyValue": 150
+      },
+      "104": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 17220,
+        "keyValue": 150
+      },
+      "105": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 36210,
+        "keyValue": 150
+      },
+      "202": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 19330,
+        "keyValue": 150
+      },
+      "203": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 20300,
+        "keyValue": 150
+      },
+      "204": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 21280,
+        "keyValue": 150
+      },
+      "302": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 22330,
+        "keyValue": 150
+      },
+      "303": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 23270,
+        "keyValue": 150
+      },
+      "304": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 24270,
+        "keyValue": 150
+      },
+      "305": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 34610,
+        "keyValue": 150
+      },
+      "402": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 25350,
+        "keyValue": 150
+      },
+      "403": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 27890,
+        "keyValue": 150
+      },
+      "503": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 29280,
+        "keyValue": 150
+      },
+      "502": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 28240,
+        "keyValue": 150
+      },
+      "504": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 30280,
+        "keyValue": 150
+      }
+    }
+  },
+  "9412208": {
+    "id": 9412208,
+    "classOptions": {
+      "102": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 16710,
+        "keyValue": 180
+      },
+      "103": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 18230,
+        "keyValue": 180
+      },
+      "104": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 17220,
+        "keyValue": 180
+      },
+      "105": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 36210,
+        "keyValue": 180
+      },
+      "202": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 19330,
+        "keyValue": 180
+      },
+      "203": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 20300,
+        "keyValue": 180
+      },
+      "204": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 21280,
+        "keyValue": 180
+      },
+      "302": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 22330,
+        "keyValue": 180
+      },
+      "303": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 23270,
+        "keyValue": 180
+      },
+      "304": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 24270,
+        "keyValue": 180
+      },
+      "305": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 34610,
+        "keyValue": 180
+      },
+      "402": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 25350,
+        "keyValue": 180
+      },
+      "403": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 27890,
+        "keyValue": 180
+      },
+      "503": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 29280,
+        "keyValue": 180
+      },
+      "502": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 28240,
+        "keyValue": 180
+      },
+      "504": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 30280,
+        "keyValue": 180
+      }
+    }
+  },
+  "9412209": {
+    "id": 9412209,
+    "classOptions": {
+      "102": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 16710,
+        "keyValue": 220
+      },
+      "103": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 18230,
+        "keyValue": 220
+      },
+      "104": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 17220,
+        "keyValue": 220
+      },
+      "105": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 36210,
+        "keyValue": 220
+      },
+      "202": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 19330,
+        "keyValue": 220
+      },
+      "203": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 20300,
+        "keyValue": 220
+      },
+      "204": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 21280,
+        "keyValue": 220
+      },
+      "302": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 22330,
+        "keyValue": 220
+      },
+      "303": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 23270,
+        "keyValue": 220
+      },
+      "304": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 24270,
+        "keyValue": 220
+      },
+      "305": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 34610,
+        "keyValue": 220
+      },
+      "402": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 25350,
+        "keyValue": 220
+      },
+      "403": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 27890,
+        "keyValue": 220
+      },
+      "503": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 29280,
+        "keyValue": 220
+      },
+      "502": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 28240,
+        "keyValue": 220
+      },
+      "504": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 30280,
+        "keyValue": 220
+      }
+    }
+  },
+  "9412210": {
+    "id": 9412210,
+    "classOptions": {
+      "102": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 16710,
+        "keyValue": 260
+      },
+      "103": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 18230,
+        "keyValue": 260
+      },
+      "104": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 17220,
+        "keyValue": 260
+      },
+      "105": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 36210,
+        "keyValue": 260
+      },
+      "202": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 19330,
+        "keyValue": 260
+      },
+      "203": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 20300,
+        "keyValue": 260
+      },
+      "204": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 21280,
+        "keyValue": 260
+      },
+      "302": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 22330,
+        "keyValue": 260
+      },
+      "303": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 23270,
+        "keyValue": 260
+      },
+      "304": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 24270,
+        "keyValue": 260
+      },
+      "305": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 34610,
+        "keyValue": 260
+      },
+      "402": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 25350,
+        "keyValue": 260
+      },
+      "403": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 27890,
+        "keyValue": 260
+      },
+      "503": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 29280,
+        "keyValue": 260
+      },
+      "502": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 28240,
+        "keyValue": 260
+      },
+      "504": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 30280,
+        "keyValue": 260
+      }
+    }
+  },
+  "9412300": {
+    "id": 9412300,
+    "classOptions": {
+      "102": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 16710,
+        "keyValue": 10
+      },
+      "103": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 18230,
+        "keyValue": 10
+      },
+      "104": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 17220,
+        "keyValue": 10
+      },
+      "105": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 36210,
+        "keyValue": 10
+      },
+      "202": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 19330,
+        "keyValue": 10
+      },
+      "203": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 20300,
+        "keyValue": 10
+      },
+      "204": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 21280,
+        "keyValue": 10
+      },
+      "302": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 22330,
+        "keyValue": 10
+      },
+      "303": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 23270,
+        "keyValue": 10
+      },
+      "304": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 24270,
+        "keyValue": 10
+      },
+      "305": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 34610,
+        "keyValue": 10
+      },
+      "402": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 25350,
+        "keyValue": 10
+      },
+      "403": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 27890,
+        "keyValue": 10
+      },
+      "503": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 29280,
+        "keyValue": 10
+      },
+      "502": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 28240,
+        "keyValue": 10
+      },
+      "504": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 30280,
+        "keyValue": 10
+      }
+    }
+  },
+  "9412301": {
+    "id": 9412301,
+    "classOptions": {
+      "102": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 16710,
+        "keyValue": 20
+      },
+      "103": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 18230,
+        "keyValue": 20
+      },
+      "104": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 17220,
+        "keyValue": 20
+      },
+      "105": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 36210,
+        "keyValue": 20
+      },
+      "202": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 19330,
+        "keyValue": 20
+      },
+      "203": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 20300,
+        "keyValue": 20
+      },
+      "204": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 21280,
+        "keyValue": 20
+      },
+      "302": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 22330,
+        "keyValue": 20
+      },
+      "303": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 23270,
+        "keyValue": 20
+      },
+      "304": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 24270,
+        "keyValue": 20
+      },
+      "305": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 34610,
+        "keyValue": 20
+      },
+      "402": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 25350,
+        "keyValue": 20
+      },
+      "403": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 27890,
+        "keyValue": 20
+      },
+      "503": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 29280,
+        "keyValue": 20
+      },
+      "502": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 28240,
+        "keyValue": 20
+      },
+      "504": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 30280,
+        "keyValue": 20
+      }
+    }
+  },
+  "9412302": {
+    "id": 9412302,
+    "classOptions": {
+      "102": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 16710,
+        "keyValue": 30
+      },
+      "103": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 18230,
+        "keyValue": 30
+      },
+      "104": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 17220,
+        "keyValue": 30
+      },
+      "105": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 36210,
+        "keyValue": 30
+      },
+      "202": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 19330,
+        "keyValue": 30
+      },
+      "203": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 20300,
+        "keyValue": 30
+      },
+      "204": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 21280,
+        "keyValue": 30
+      },
+      "302": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 22330,
+        "keyValue": 30
+      },
+      "303": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 23270,
+        "keyValue": 30
+      },
+      "304": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 24270,
+        "keyValue": 30
+      },
+      "305": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 34610,
+        "keyValue": 30
+      },
+      "402": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 25350,
+        "keyValue": 30
+      },
+      "403": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 27890,
+        "keyValue": 30
+      },
+      "503": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 29280,
+        "keyValue": 30
+      },
+      "502": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 28240,
+        "keyValue": 30
+      },
+      "504": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 30280,
+        "keyValue": 30
+      }
+    }
+  },
+  "9412303": {
+    "id": 9412303,
+    "classOptions": {
+      "102": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 16710,
+        "keyValue": 50
+      },
+      "103": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 18230,
+        "keyValue": 50
+      },
+      "104": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 17220,
+        "keyValue": 50
+      },
+      "105": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 36210,
+        "keyValue": 50
+      },
+      "202": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 19330,
+        "keyValue": 50
+      },
+      "203": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 20300,
+        "keyValue": 50
+      },
+      "204": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 21280,
+        "keyValue": 50
+      },
+      "302": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 22330,
+        "keyValue": 50
+      },
+      "303": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 23270,
+        "keyValue": 50
+      },
+      "304": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 24270,
+        "keyValue": 50
+      },
+      "305": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 34610,
+        "keyValue": 50
+      },
+      "402": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 25350,
+        "keyValue": 50
+      },
+      "403": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 27890,
+        "keyValue": 50
+      },
+      "503": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 29280,
+        "keyValue": 50
+      },
+      "502": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 28240,
+        "keyValue": 50
+      },
+      "504": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 30280,
+        "keyValue": 50
+      }
+    }
+  },
+  "9412304": {
+    "id": 9412304,
+    "classOptions": {
+      "102": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 16710,
+        "keyValue": 70
+      },
+      "103": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 18230,
+        "keyValue": 70
+      },
+      "104": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 17220,
+        "keyValue": 70
+      },
+      "105": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 36210,
+        "keyValue": 70
+      },
+      "202": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 19330,
+        "keyValue": 70
+      },
+      "203": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 20300,
+        "keyValue": 70
+      },
+      "204": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 21280,
+        "keyValue": 70
+      },
+      "302": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 22330,
+        "keyValue": 70
+      },
+      "303": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 23270,
+        "keyValue": 70
+      },
+      "304": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 24270,
+        "keyValue": 70
+      },
+      "305": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 34610,
+        "keyValue": 70
+      },
+      "402": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 25350,
+        "keyValue": 70
+      },
+      "403": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 27890,
+        "keyValue": 70
+      },
+      "503": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 29280,
+        "keyValue": 70
+      },
+      "502": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 28240,
+        "keyValue": 70
+      },
+      "504": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 30280,
+        "keyValue": 70
+      }
+    }
+  },
+  "9412305": {
+    "id": 9412305,
+    "classOptions": {
+      "102": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 16710,
+        "keyValue": 90
+      },
+      "103": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 18230,
+        "keyValue": 90
+      },
+      "104": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 17220,
+        "keyValue": 90
+      },
+      "105": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 36210,
+        "keyValue": 90
+      },
+      "202": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 19330,
+        "keyValue": 90
+      },
+      "203": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 20300,
+        "keyValue": 90
+      },
+      "204": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 21280,
+        "keyValue": 90
+      },
+      "302": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 22330,
+        "keyValue": 90
+      },
+      "303": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 23270,
+        "keyValue": 90
+      },
+      "304": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 24270,
+        "keyValue": 90
+      },
+      "305": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 34610,
+        "keyValue": 90
+      },
+      "402": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 25350,
+        "keyValue": 90
+      },
+      "403": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 27890,
+        "keyValue": 90
+      },
+      "503": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 29280,
+        "keyValue": 90
+      },
+      "502": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 28240,
+        "keyValue": 90
+      },
+      "504": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 30280,
+        "keyValue": 90
+      }
+    }
+  },
+  "9412306": {
+    "id": 9412306,
+    "classOptions": {
+      "102": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 16710,
+        "keyValue": 120
+      },
+      "103": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 18230,
+        "keyValue": 120
+      },
+      "104": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 17220,
+        "keyValue": 120
+      },
+      "105": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 36210,
+        "keyValue": 120
+      },
+      "202": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 19330,
+        "keyValue": 120
+      },
+      "203": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 20300,
+        "keyValue": 120
+      },
+      "204": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 21280,
+        "keyValue": 120
+      },
+      "302": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 22330,
+        "keyValue": 120
+      },
+      "303": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 23270,
+        "keyValue": 120
+      },
+      "304": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 24270,
+        "keyValue": 120
+      },
+      "305": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 34610,
+        "keyValue": 120
+      },
+      "402": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 25350,
+        "keyValue": 120
+      },
+      "403": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 27890,
+        "keyValue": 120
+      },
+      "503": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 29280,
+        "keyValue": 120
+      },
+      "502": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 28240,
+        "keyValue": 120
+      },
+      "504": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 30280,
+        "keyValue": 120
+      }
+    }
+  },
+  "9412307": {
+    "id": 9412307,
+    "classOptions": {
+      "102": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 16710,
+        "keyValue": 150
+      },
+      "103": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 18230,
+        "keyValue": 150
+      },
+      "104": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 17220,
+        "keyValue": 150
+      },
+      "105": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 36210,
+        "keyValue": 150
+      },
+      "202": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 19330,
+        "keyValue": 150
+      },
+      "203": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 20300,
+        "keyValue": 150
+      },
+      "204": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 21280,
+        "keyValue": 150
+      },
+      "302": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 22330,
+        "keyValue": 150
+      },
+      "303": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 23270,
+        "keyValue": 150
+      },
+      "304": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 24270,
+        "keyValue": 150
+      },
+      "305": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 34610,
+        "keyValue": 150
+      },
+      "402": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 25350,
+        "keyValue": 150
+      },
+      "403": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 27890,
+        "keyValue": 150
+      },
+      "503": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 29280,
+        "keyValue": 150
+      },
+      "502": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 28240,
+        "keyValue": 150
+      },
+      "504": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 30280,
+        "keyValue": 150
+      }
+    }
+  },
+  "9412308": {
+    "id": 9412308,
+    "classOptions": {
+      "102": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 16710,
+        "keyValue": 180
+      },
+      "103": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 18230,
+        "keyValue": 180
+      },
+      "104": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 17220,
+        "keyValue": 180
+      },
+      "105": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 36210,
+        "keyValue": 180
+      },
+      "202": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 19330,
+        "keyValue": 180
+      },
+      "203": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 20300,
+        "keyValue": 180
+      },
+      "204": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 21280,
+        "keyValue": 180
+      },
+      "302": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 22330,
+        "keyValue": 180
+      },
+      "303": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 23270,
+        "keyValue": 180
+      },
+      "304": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 24270,
+        "keyValue": 180
+      },
+      "305": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 34610,
+        "keyValue": 180
+      },
+      "402": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 25350,
+        "keyValue": 180
+      },
+      "403": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 27890,
+        "keyValue": 180
+      },
+      "503": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 29280,
+        "keyValue": 180
+      },
+      "502": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 28240,
+        "keyValue": 180
+      },
+      "504": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 30280,
+        "keyValue": 180
+      }
+    }
+  },
+  "9412309": {
+    "id": 9412309,
+    "classOptions": {
+      "102": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 16710,
+        "keyValue": 220
+      },
+      "103": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 18230,
+        "keyValue": 220
+      },
+      "104": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 17220,
+        "keyValue": 220
+      },
+      "105": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 36210,
+        "keyValue": 220
+      },
+      "202": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 19330,
+        "keyValue": 220
+      },
+      "203": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 20300,
+        "keyValue": 220
+      },
+      "204": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 21280,
+        "keyValue": 220
+      },
+      "302": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 22330,
+        "keyValue": 220
+      },
+      "303": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 23270,
+        "keyValue": 220
+      },
+      "304": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 24270,
+        "keyValue": 220
+      },
+      "305": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 34610,
+        "keyValue": 220
+      },
+      "402": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 25350,
+        "keyValue": 220
+      },
+      "403": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 27890,
+        "keyValue": 220
+      },
+      "503": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 29280,
+        "keyValue": 220
+      },
+      "502": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 28240,
+        "keyValue": 220
+      },
+      "504": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 30280,
+        "keyValue": 220
+      }
+    }
+  },
+  "9412310": {
+    "id": 9412310,
+    "classOptions": {
+      "102": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 16710,
+        "keyValue": 260
+      },
+      "103": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 18230,
+        "keyValue": 260
+      },
+      "104": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 17220,
+        "keyValue": 260
+      },
+      "105": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 36210,
+        "keyValue": 260
+      },
+      "202": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 19330,
+        "keyValue": 260
+      },
+      "203": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 20300,
+        "keyValue": 260
+      },
+      "204": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 21280,
+        "keyValue": 260
+      },
+      "302": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 22330,
+        "keyValue": 260
+      },
+      "303": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 23270,
+        "keyValue": 260
+      },
+      "304": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 24270,
+        "keyValue": 260
+      },
+      "305": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 34610,
+        "keyValue": 260
+      },
+      "402": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 25350,
+        "keyValue": 260
+      },
+      "403": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 27890,
+        "keyValue": 260
+      },
+      "503": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 29280,
+        "keyValue": 260
+      },
+      "502": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 28240,
+        "keyValue": 260
+      },
+      "504": {
+        "type": "skill_damage",
+        "statType": "none",
+        "keyIndex": 30280,
+        "keyValue": 260
+      }
+    }
+  }
+}

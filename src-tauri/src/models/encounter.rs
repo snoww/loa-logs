@@ -121,15 +121,25 @@ pub struct DamageStats {
     #[serde(default)]
     pub dps_rolling_10s_avg: Vec<i64>,
     #[serde(default)]
+    pub rdps_damage_received: i64,
+    #[serde(default)]
+    pub rdps_damage_received_support: i64,
+    #[serde(default)]
+    pub rdps_damage_given: i64,
+    #[serde(default)]
     pub incapacitations: Vec<IncapacitatedEvent>,
     #[serde(default)]
     pub stagger: i64,
     #[serde(skip)]
-    pub buffed_damage: i64, // amount of damage buffed by supports, used to tally unbuffed damage
+    pub buffed_damage: i64, // legacy uDPS-only buffed damage from PKTCombatAnalyzerNotify
     #[serde(default)]
-    pub unbuffed_damage: i64,
+    pub unbuffed_damage: i64, // legacy uDPS-only unbuffed damage derived from analyzer packets
     #[serde(default)]
-    pub unbuffed_dps: i64,
+    pub unbuffed_dps: i64, // legacy uDPS-only unbuffed dps derived from analyzer packets
+    #[serde(default)]
+    pub udps_damage_given: i64,
+    #[serde(default)]
+    pub udps_unresolved_by_skill: HashMap<u32, HashMap<u8, i64>>,
 }
 
 #[derive(Debug, Default, Serialize, Deserialize, Clone)]
@@ -152,7 +162,7 @@ pub struct SkillStats {
     pub identity_stats: Option<String>,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct DamageData {
     pub skill_id: u32,
     pub skill_effect_id: u32,

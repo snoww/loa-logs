@@ -26,14 +26,14 @@ export class SkillState {
   skillUnbuffedDamageString = $derived(abbreviateNumberSplit(this.skillUnbuffedDamage));
   skillUnbuffedDpsString = $derived(abbreviateNumberSplit(this.skillUnbuffedDps));
 
-  skillBuffedDamage = $derived(sumRdpsContributed(this.skill, [1, 3, 5]));
+  skillBuffedDamage = $derived(sumUdpsContributed(this.skill, [1, 3, 5]));
 
   skillBuffedDps = $derived.by(() => {
     if (this.skillBuffedDamage === 0) return 0;
     return Math.round(this.skillBuffedDamage / (this.entity.encounter.duration / 1000));
   });
 
-  skillDamageReduced = $derived(sumRdpsContributed(this.skill, [4, 6]));
+  skillDamageReduced = $derived(sumUdpsContributed(this.skill, [4, 6]));
 
   critPercentage = $derived.by(() => {
     if (this.skill.hits > 0) {
@@ -123,13 +123,13 @@ export function sumRdpsReceived(skill: Skill, types: number[] = [1, 3, 5]): numb
   return sum;
 }
 
-// sums up all rdps contributed values for types 1, 3, and 5 (ap buff, brand, identity, t)
-export function sumRdpsContributed(skill: Skill, types: number[] = [1, 3, 5]): number {
-  if (!skill.rdpsContributed) return 0;
+// sums up all legacy udps contributed values for types 1, 3, and 5 (ap buff, brand, identity, t)
+export function sumUdpsContributed(skill: Skill, types: number[] = [1, 3, 5]): number {
+  if (!skill.udpsContributed) return 0;
 
   let sum = 0;
   for (const t of types) {
-    const value = skill.rdpsContributed[t];
+    const value = skill.udpsContributed[t];
     if (!value) continue;
 
     sum += value;

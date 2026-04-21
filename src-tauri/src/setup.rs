@@ -10,6 +10,7 @@ use log::*;
 use tauri::{App, AppHandle, Manager};
 use tauri_plugin_updater::UpdaterExt;
 
+use crate::api::BanList;
 use crate::{
     app,
     constants::{BETA_ENDPOINT, DEFAULT_PORT},
@@ -18,7 +19,6 @@ use crate::{
     shell::ShellManager,
     ui::{AppHandleExtensions, WindowExtensions, setup_tray},
 };
-use crate::api::BanList;
 
 pub fn setup(app: &mut App) -> Result<(), Box<dyn Error>> {
     #[cfg(not(debug_assertions))]
@@ -97,7 +97,7 @@ pub fn setup(app: &mut App) -> Result<(), Box<dyn Error>> {
             local_info,
             local_player_repository,
             heartbeat_api,
-            ban_list
+            ban_list,
         };
 
         tokio::task::spawn_blocking(move || {

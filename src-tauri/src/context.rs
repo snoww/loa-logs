@@ -30,7 +30,8 @@ impl AppContext {
 
         // on Linux: store data in ~/.local/share/xyz.snow.loa-logs or the current executable dir as fallback
         #[cfg(target_os = "linux")]
-        let assets_path = dirs::data_dir().map_or_else(|| current_dir.clone(), |x| x.join("xyz.snow.loa-logs"));
+        let assets_path =
+            dirs::data_dir().map_or_else(|| current_dir.clone(), |x| x.join("xyz.snow.loa-logs"));
 
         std::fs::create_dir_all(&assets_path)?;
 

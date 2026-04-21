@@ -295,6 +295,7 @@ impl Repository {
             party_info,
             meter_version,
             rdps_valid,
+            rdps_message,
             ntp_fight_start,
             region,
             intermission_start,
@@ -331,7 +332,9 @@ impl Repository {
             rdps_message: if *rdps_valid {
                 None
             } else {
-                Some("invalid_stats".into())
+                rdps_message
+                    .clone()
+                    .or_else(|| Some("invalid_stats".into()))
             },
             ntp_fight_start: Some(*ntp_fight_start),
             manual_save: Some(args.manual),
@@ -502,6 +505,7 @@ pub fn calculate_entities(args: &mut InsertEncounterArgs) -> Result<()> {
         encounter,
         cast_log,
         damage_log,
+        rdps_valid,
         skill_cast_log,
         player_info,
         skill_cooldowns,
@@ -534,6 +538,7 @@ pub fn calculate_entities(args: &mut InsertEncounterArgs) -> Result<()> {
             intermission_duration,
             intermission_range_seconds,
             damage_log,
+            *rdps_valid,
         );
 
         if let Some(info) = player_info
@@ -1609,6 +1614,7 @@ mod tests {
                 meter_version: self.version.clone(),
                 ntp_fight_start: fight_start,
                 rdps_valid: true,
+                rdps_message: None,
                 manual: false,
                 skill_cast_log,
                 skill_cooldowns,

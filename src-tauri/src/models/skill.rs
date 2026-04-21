@@ -83,9 +83,9 @@ pub struct Skill {
     // rDPS type -> BuffedBy skill_id -> damage received
     #[serde(default)]
     pub rdps_received: HashMap<u8, HashMap<u32, i64>>,
-    // rDPS type -> amount contributed
-    #[serde(default)]
-    pub rdps_contributed: HashMap<u8, i64>,
+    // legacy uDPS type -> amount contributed from PKTCombatAnalyzerNotify
+    #[serde(default, alias = "rdpsContributed")]
+    pub udps_contributed: HashMap<u8, i64>,
 }
 
 #[derive(Debug, Default, Serialize, Deserialize, Clone)]
@@ -103,6 +103,10 @@ pub struct SkillHit {
     pub damage: i64,
     #[serde(default)]
     pub unbuffed_damage: Option<i64>,
+    #[serde(default)]
+    pub rdps_damage_received: i64,
+    #[serde(default)]
+    pub rdps_damage_received_support: i64,
     pub crit: bool,
     pub back_attack: bool,
     pub front_attack: bool,

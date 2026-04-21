@@ -73,7 +73,7 @@
         </div>
       </td>
       {#if entityState.isSupport}
-        {#if enc.curSettings.breakdown.unbuffedDamage && entityState.hasRdpsContributions}
+        {#if enc.curSettings.breakdown.unbuffedDamage && entityState.hasUdpsContributions}
           <td class="px-1 text-center">
             <QuickTooltip tooltip={entityState.totalDamageBuffed.toLocaleString()}>
               {entityState.totalDamageBuffedString[0]}<span class="text-xxs text-gray-300"

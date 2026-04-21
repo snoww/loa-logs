@@ -534,8 +534,8 @@
         {@render settingOption(
           "logs",
           "supportContrib",
-          "Support Contribution %",
-          "Show the support's % contribution to total party damage via buffs"
+          "Contribution %",
+          "Show legacy uDPS Con% and true rDPS rCon% contribution columns in the meter"
         )}
         {@render settingOption(
           "logs",
@@ -765,8 +765,8 @@
         {@render settingOption(
           "meter",
           "supportContrib",
-          "Support Contribution %",
-          "Show the support's % contribution to total party damage via buffs"
+          "Contribution %",
+          "Show legacy uDPS Con% and true rDPS rCon% contribution columns in the meter"
         )}
         {@render settingOption(
           "meter",
