@@ -51,8 +51,7 @@
             encounter.difficulty === "Trial"}
           class:text-cyan-400={encounter.difficulty === "Solo"}
           class:text-violet-400={encounter.difficulty === "Nightmare"}
-          class:text-purple-500={encounter.difficulty.includes("Extreme") ||
-            encounter.difficulty === "The First"}
+          class:text-purple-500={encounter.difficulty.includes("Extreme") || encounter.difficulty === "The First"}
         >
           [{encounter.difficulty}]
         </p>
@@ -62,7 +61,7 @@
           [{raidGate}]
         </p>
       {/if}
-      <p class="truncate font-semibold">
+      <p class="min-w-32 font-semibold">
         {encounter.currentBossName || "No Boss"}
       </p>
       {@render middot()}
@@ -70,7 +69,7 @@
         {formatTimestampDate(encounter.fightStart)}
       </p>
     </div>
-    <div class="flex items-center gap-1 font-mono text-xs">
+    <div class="flex w-fit shrink-0 items-center gap-1 font-mono text-xs">
       {#if !settings.app.general.hideLogo}
         <p>LOA Logs</p>
       {/if}
