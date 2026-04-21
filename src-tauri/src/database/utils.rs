@@ -275,6 +275,8 @@ pub fn map_encounter_preview(row: &rusqlite::Row) -> rusqlite::Result<EncounterP
         support_identity: row.get("support_identity").unwrap_or_default(),
         support_hyper: row.get("support_hyper").unwrap_or_default(),
         udps: row.get("unbuffed_dps").unwrap_or_default(),
+        my_rdps: row.get("my_rdps").unwrap_or_default(),
+        my_ndps: row.get("my_ndps").unwrap_or_default(),
     })
 }
 
@@ -416,12 +418,19 @@ pub fn update_entity_stats(
         // }
         //
         // let unbuffed_damage = entity.damage_stats.damage_dealt - buffed_damage;
-        let _ = rdps_valid;
         let buffed_damage = entity.damage_stats.buffed_damage;
         let unbuffed_damage = entity.damage_stats.damage_dealt - buffed_damage;
         let unbuffed_dps = unbuffed_damage / duration_seconds;
         entity.damage_stats.unbuffed_damage = unbuffed_damage;
         entity.damage_stats.unbuffed_dps = unbuffed_dps;
+
+        if rdps_valid {
+            let ndps_damage = entity.damage_stats.damage_dealt
+                - entity.damage_stats.rdps_damage_received;
+            let rdps_damage = ndps_damage + entity.damage_stats.rdps_damage_given;
+            entity.damage_stats.ndps = ndps_damage / duration_seconds;
+            entity.damage_stats.rdps = rdps_damage / duration_seconds;
+        }
     }
 
     entity.damage_stats.dps = entity.damage_stats.damage_dealt / duration_seconds;
