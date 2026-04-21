@@ -20,7 +20,7 @@ use crate::live::id_tracker::IdTracker;
 use crate::live::manager::EventManager;
 use crate::live::party_tracker::PartyTracker;
 use crate::live::status_tracker::{
-    StatusEffectDetails, StatusEffectTargetType, StatusEffectType, StatusTracker, WORKSHOP_BUFF_ID,
+    StatusEffectDetails, StatusEffectTargetType, StatusEffectType, StatusTracker,
     get_status_effect_value,
 };
 use crate::local::{LocalInfo, LocalPlayer, LocalPlayerRepository};
@@ -299,7 +299,6 @@ pub fn start(args: StartArgs) -> Result<()> {
 
                 if let Some(pkt) = packet.try_parse::<PKTInitEnv>().unwrap() {
                     party_tracker.borrow_mut().reset_party_mappings();
-                    entity_tracker.reset_workshop_support_inspect_cooldowns();
                     state.raid_difficulty = "".to_string();
                     state.raid_difficulty_id = 0;
                     party_cache = None;
@@ -884,11 +883,6 @@ pub fn start(args: StartArgs) -> Result<()> {
             }
             PKTPartyStatusEffectAddNotify::OPCODE => {
                 if let Some(pkt) = packet.try_parse::<PKTPartyStatusEffectAddNotify>().unwrap() {
-                    let character_id = pkt.character_id;
-                    let entered_workshop = pkt
-                        .status_effect_datas
-                        .iter()
-                        .any(|status_effect| status_effect.status_effect_id == WORKSHOP_BUFF_ID);
                     // info!("{:?}", pkt);
                     let shields =
                         entity_tracker.party_status_effect_add(pkt, &state.encounter.entities);
@@ -913,18 +907,6 @@ pub fn start(args: StartArgs) -> Result<()> {
                             status_effect.value,
                         );
                     }
-
-                    if entered_workshop
-                        && entity_tracker.schedule_workshop_support_inspect_on_enter(character_id)
-                    {
-                        queue_missing_party_inspects(
-                            &ipc.0,
-                            &connection_ids_by_port,
-                            &mut damage_handler,
-                            &mut entity_tracker,
-                            state.startup_barrier_active(),
-                        );
-                    }
                 }
             }
             PKTPartyStatusEffectRemoveNotify::OPCODE => {
@@ -932,8 +914,7 @@ pub fn start(args: StartArgs) -> Result<()> {
                     .try_parse::<PKTPartyStatusEffectRemoveNotify>()
                     .unwrap()
                 {
-                    let character_id = pkt.character_id;
-                    let (is_shield, shields_broken, _effects_removed, left_workshop) =
+                    let (is_shield, shields_broken, _effects_removed, _left_workshop) =
                         entity_tracker.party_status_effect_remove(pkt);
                     if is_shield {
                         for status_effect in shields_broken {
@@ -946,17 +927,6 @@ pub fn start(args: StartArgs) -> Result<()> {
                                 change,
                             );
                         }
-                    }
-                    if left_workshop
-                        && entity_tracker.schedule_workshop_support_reinspect(character_id)
-                    {
-                        queue_missing_party_inspects(
-                            &ipc.0,
-                            &connection_ids_by_port,
-                            &mut damage_handler,
-                            &mut entity_tracker,
-                            state.startup_barrier_active(),
-                        );
                     }
                 }
             }
@@ -979,8 +949,6 @@ pub fn start(args: StartArgs) -> Result<()> {
             PKTStatusEffectAddNotify::OPCODE => {
                 if let Some(pkt) = packet.try_parse::<PKTStatusEffectAddNotify>().unwrap() {
                     let object_id = pkt.object_id;
-                    let entered_workshop =
-                        pkt.status_effect_data.status_effect_id == WORKSHOP_BUFF_ID;
                     let status_effect = entity_tracker.build_and_register_status_effect(
                         &pkt.status_effect_data,
                         object_id,
@@ -1015,19 +983,6 @@ pub fn start(args: StartArgs) -> Result<()> {
                             state.on_cc_applied(&target, &status_effect);
                         }
                     }
-
-                    if entered_workshop
-                        && let Some(character_id) = id_tracker.borrow().get_character_id(object_id)
-                        && entity_tracker.schedule_workshop_support_inspect_on_enter(character_id)
-                    {
-                        queue_missing_party_inspects(
-                            &ipc.0,
-                            &connection_ids_by_port,
-                            &mut damage_handler,
-                            &mut entity_tracker,
-                            state.startup_barrier_active(),
-                        );
-                    }
                 }
             }
             // PKTStatusEffectDurationNotify::OPCODE => {
@@ -1046,7 +1001,7 @@ pub fn start(args: StartArgs) -> Result<()> {
             // }
             PKTStatusEffectRemoveNotify::OPCODE => {
                 if let Some(pkt) = packet.try_parse::<PKTStatusEffectRemoveNotify>().unwrap() {
-                    let (is_shield, shields_broken, effects_removed, left_workshop) =
+                    let (is_shield, shields_broken, effects_removed, _left_workshop) =
                         status_tracker.borrow_mut().remove_status_effects(
                             pkt.object_id,
                             pkt.status_effect_instance_ids,
@@ -1069,19 +1024,6 @@ pub fn start(args: StartArgs) -> Result<()> {
                                 );
                             }
                         }
-                    }
-                    if left_workshop
-                        && let Some(character_id) =
-                            id_tracker.borrow().get_character_id(pkt.object_id)
-                        && entity_tracker.schedule_workshop_support_reinspect(character_id)
-                    {
-                        queue_missing_party_inspects(
-                            &ipc.0,
-                            &connection_ids_by_port,
-                            &mut damage_handler,
-                            &mut entity_tracker,
-                            state.startup_barrier_active(),
-                        );
                     }
                     let now = Utc::now().timestamp_millis();
                     for effect_removed in effects_removed {
@@ -1289,7 +1231,6 @@ pub fn start(args: StartArgs) -> Result<()> {
                     state.set_lal_debug_zone(pkt.zone_id, None);
                     state.damage_is_valid = true;
                     damage_handler.update_zone_instance_id(pkt.zone_instance_id);
-                    entity_tracker.reset_workshop_support_inspect_cooldowns();
                     entity_tracker.on_new_transit();
                     // update party info
                     state.party_info = if let Some(party) = party_cache.clone() {

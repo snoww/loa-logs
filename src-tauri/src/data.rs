@@ -18,6 +18,7 @@ pub static SKILL_EFFECT_DATA: OnceLockWrapper<HashMap<u32, SkillEffectData>> =
 pub static SUPPORT_AP_GROUP: OnceLockWrapper<HashSet<u32>> = OnceLockWrapper::new();
 pub static SUPPORT_IDENTITY_GROUP: OnceLockWrapper<HashSet<u32>> = OnceLockWrapper::new();
 pub static STAT_TYPE_MAP: OnceLockWrapper<HashMap<String, u32>> = OnceLockWrapper::new();
+pub static STAT_TYPE_NAME_MAP: OnceLockWrapper<HashMap<u32, String>> = OnceLockWrapper::new();
 pub static ESTHER_DATA: OnceLockWrapper<Vec<Esther>> = OnceLockWrapper::new();
 pub static NPC_DATA: OnceLockWrapper<HashMap<u32, Npc>> = OnceLockWrapper::new();
 pub static GEM_SKILL_MAP: OnceLockWrapper<HashMap<u32, Vec<u32>>> = OnceLockWrapper::new();
@@ -156,25 +157,19 @@ fn build_stat_type_map(mut canonical: HashMap<String, u32>) -> HashMap<String, u
     canonical
 }
 
-pub fn stat_type_name_from_id(stat_id: u32) -> Option<String> {
-    let mut legacy_name = None;
-    let mut canonical_name = None;
-    for (name, id) in STAT_TYPE_MAP.iter() {
-        if *id != stat_id {
-            continue;
-        }
-        if name
-            .chars()
-            .all(|ch| ch.is_ascii_lowercase() || ch.is_ascii_digit() || ch == '_')
-        {
-            legacy_name = Some(name.clone());
-            break;
-        }
-        if canonical_name.is_none() {
-            canonical_name = Some(name.clone());
-        }
+fn build_stat_type_name_map(canonical: &HashMap<String, u32>) -> HashMap<u32, String> {
+    let mut names = HashMap::new();
+    for (name, id) in canonical {
+        let preferred_name = legacy_stat_alias(name)
+            .map(str::to_string)
+            .unwrap_or_else(|| name.to_ascii_lowercase());
+        names.entry(*id).or_insert(preferred_name);
     }
-    legacy_name.or(canonical_name)
+    names
+}
+
+pub fn stat_type_name_from_id(stat_id: u32) -> Option<String> {
+    STAT_TYPE_NAME_MAP.get(&stat_id).cloned()
 }
 
 impl AssetPreloader {
@@ -184,10 +179,9 @@ impl AssetPreloader {
         SKILL_BUFF_DATA.set(load_meter_data(resource_dir, "SkillBuff.json")?)?;
         SKILL_DATA.set(load_meter_data(resource_dir, "Skill.json")?)?;
         SKILL_EFFECT_DATA.set(load_meter_data(resource_dir, "SkillEffect.json")?)?;
-        STAT_TYPE_MAP.set(build_stat_type_map(load_meter_data(
-            resource_dir,
-            "StatType.json",
-        )?))?;
+        let stat_type_data: HashMap<String, u32> = load_meter_data(resource_dir, "StatType.json")?;
+        STAT_TYPE_NAME_MAP.set(build_stat_type_name_map(&stat_type_data))?;
+        STAT_TYPE_MAP.set(build_stat_type_map(stat_type_data))?;
         ESTHER_DATA.set(load_meter_data(resource_dir, "Esther.json")?)?;
         NPC_DATA.set(load_meter_data(resource_dir, "Npc.json")?)?;
         GEM_SKILL_MAP.set({

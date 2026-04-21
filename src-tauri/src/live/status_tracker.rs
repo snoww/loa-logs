@@ -10,7 +10,7 @@ use crate::live::utils::{get_new_id, get_status_effect_buff_type_flags};
 use crate::models::{EncounterEntity, EntityType};
 use chrono::{DateTime, Utc};
 use hashbrown::HashMap;
-use meter_defs::defs::{PCStruct, StatusEffectData};
+use meter_defs::defs::StatusEffectData;
 use std::cell::RefCell;
 use std::rc::Rc;
 
@@ -30,28 +30,6 @@ impl StatusTracker {
             party_tracker,
             local_status_effect_registry: HashMap::new(),
             party_status_effect_registry: HashMap::new(),
-        }
-    }
-
-    pub fn new_pc(&mut self, pc_struct: PCStruct, local_character_id: u64) {
-        let use_party_status_effects =
-            self.should_use_party_status_effect(pc_struct.character_id, local_character_id);
-        if use_party_status_effects {
-            self.remove_party_object(pc_struct.character_id);
-        } else {
-            self.remove_local_object(pc_struct.player_id);
-        }
-        let (target_id, target_type) = if use_party_status_effects {
-            (pc_struct.character_id, StatusEffectTargetType::Party)
-        } else {
-            (pc_struct.player_id, StatusEffectTargetType::Local)
-        };
-        let timestamp = Utc::now();
-        for sed in pc_struct.status_effect_datas.into_iter() {
-            let source_id = sed.source_id;
-            let status_effect =
-                build_status_effect(&sed, target_id, source_id, target_type, timestamp, None);
-            self.register_status_effect(status_effect);
         }
     }
 

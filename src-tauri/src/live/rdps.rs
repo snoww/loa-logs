@@ -37,6 +37,9 @@ pub struct HitDebugSkillGroupAttribution {
 #[derive(Debug, Clone, Default)]
 pub struct HitRdpsResult {
     pub unbuffed_damage: i64,
+    pub crit_rate_raw: Option<f64>,
+    pub crit_rate_capped: Option<f64>,
+    pub crit_damage_multiplier: Option<f64>,
     pub rdps_damage_received: i64,
     pub rdps_damage_received_support: i64,
     pub entity_attributions: Vec<HitEntityRdpsAttribution>,
@@ -58,6 +61,28 @@ const RDPS_TYPE_TARGET_DEBUFF: u8 = 3;
 const RDPS_TYPE_HYPER: u8 = 5;
 const SUPPORT_IDENTITY_SOURCE_SKILLS: [u32; 3] = [21140, 21141, 21142];
 const SUPPORT_IDENTITY_SKILL_GROUPS: [u32; 4] = [15000, 60000, 24000, 16000];
+
+fn get_hit_crit_metrics(
+    stats: &PlayerStats,
+    damage_type: u8,
+    can_crit: bool,
+) -> Option<(f64, f64, f64)> {
+    if !can_crit {
+        return None;
+    }
+
+    let crit_rate_raw = stats.critical_hit_rate.value();
+    let crit_rate_capped = crit_rate_raw.min(stats.critical_hit_rate_cap);
+    let crit_damage_multiplier = (1.0 + stats.critical_damage_rate.value())
+        * (1.0 + stats.critical_damage_rate_2.value())
+        * (1.0
+            + if damage_type == 0 {
+                stats.physical_critical_damage_amplify.value()
+            } else {
+                stats.magical_critical_damage_amplify.value()
+            });
+    Some((crit_rate_raw, crit_rate_capped, crit_damage_multiplier))
+}
 
 pub fn compute_hit_rdps(
     attacker: &Entity,
@@ -87,43 +112,6 @@ pub fn compute_hit_rdps(
 
     let (can_crit, is_affected_by_buffs) =
         resolve_skill_effect_flags(skill_effect_id, is_hyper_awakening);
-    if !is_affected_by_buffs {
-        let result = HitRdpsResult {
-            unbuffed_damage: damage,
-            ..Default::default()
-        };
-        if debug_enabled {
-            dump_rdps_hit_trace(
-                "not_affected_by_buffs",
-                attacker,
-                target,
-                damage,
-                skill_id,
-                skill_id_real,
-                skill_effect_id,
-                hit_option,
-                hit_flag,
-                damage_attr,
-                damage_type,
-                is_hyper_awakening,
-                event_timestamp,
-                None,
-                None,
-                None,
-                None,
-                None,
-                se_on_source,
-                se_on_target,
-                &[],
-                None,
-                None,
-                None,
-                &result,
-            );
-        }
-        return Some(result);
-    }
-
     let attacker_snapshot = attacker
         .inspect_snapshot
         .as_ref()
@@ -185,6 +173,47 @@ pub fn compute_hit_rdps(
     } else {
         None
     };
+    if !is_affected_by_buffs && !is_hyper_awakening {
+        let crit_metrics = get_hit_crit_metrics(&stats, damage_type, can_crit);
+        let result = HitRdpsResult {
+            unbuffed_damage: damage,
+            crit_rate_raw: crit_metrics.map(|(crit_rate_raw, _, _)| crit_rate_raw),
+            crit_rate_capped: crit_metrics.map(|(_, crit_rate_capped, _)| crit_rate_capped),
+            crit_damage_multiplier: crit_metrics
+                .map(|(_, _, crit_damage_multiplier)| crit_damage_multiplier),
+            ..Default::default()
+        };
+        if debug_enabled {
+            dump_rdps_hit_trace(
+                "not_affected_by_buffs",
+                attacker,
+                target,
+                damage,
+                skill_id,
+                skill_id_real,
+                skill_effect_id,
+                hit_option,
+                hit_flag,
+                damage_attr,
+                damage_type,
+                is_hyper_awakening,
+                event_timestamp,
+                Some(attacker_snapshot),
+                runtime_data,
+                stats_after_snapshot,
+                stats_after_runtime,
+                None,
+                se_on_source,
+                se_on_target,
+                &[],
+                None,
+                None,
+                None,
+                &result,
+            );
+        }
+        return Some(result);
+    }
     let effective_damage_attr = stats.resolve_damage_attr(damage_attr);
     let skill_groups = get_skill_groups(skill_id);
     let skill_real_groups = if skill_id_real != skill_id {
@@ -253,6 +282,7 @@ pub fn compute_hit_rdps(
     } else {
         None
     };
+    let crit_metrics = get_hit_crit_metrics(&stats, damage_type, can_crit);
 
     let total_attack_power = stats
         .calculate_final_attack_power(
@@ -269,6 +299,10 @@ pub fn compute_hit_rdps(
     if total_attack_power <= 0.0 {
         let result = HitRdpsResult {
             unbuffed_damage: damage,
+            crit_rate_raw: crit_metrics.map(|(crit_rate_raw, _, _)| crit_rate_raw),
+            crit_rate_capped: crit_metrics.map(|(_, crit_rate_capped, _)| crit_rate_capped),
+            crit_damage_multiplier: crit_metrics
+                .map(|(_, _, crit_damage_multiplier)| crit_damage_multiplier),
             ..Default::default()
         };
         if debug_enabled {
@@ -316,6 +350,11 @@ pub fn compute_hit_rdps(
     );
 
     let mut result = HitRdpsResult::default();
+    if let Some((crit_rate_raw, crit_rate_capped, crit_damage_multiplier)) = crit_metrics {
+        result.crit_rate_raw = Some(crit_rate_raw);
+        result.crit_rate_capped = Some(crit_rate_capped);
+        result.crit_damage_multiplier = Some(crit_damage_multiplier);
+    }
     if DEBUG_DUMP_DAMAGE_STATE_JSON {
         result.debug_skill_group_attributions = compute_debug_skill_group_attributions(
             &stats,
@@ -789,7 +828,6 @@ fn apply_source_passive_stat(
             } else if option
                 .key_stat
                 .eq_ignore_ascii_case("skill_damage_sub_rate_2")
-                && source_skill_has_identity_group(source_skill_id)
             {
                 value = ((value as f64)
                     * (1.0
@@ -1775,6 +1813,7 @@ fn entity_debug_value(entity: &Entity) -> Value {
         "max_hp": runtime_state.max_hp,
         "mp": runtime_state.current_mp,
         "max_mp": runtime_state.max_mp,
+        "combat_mp_recovery": runtime_state.combat_mp_recovery,
         "inspect_stale": entity.inspect_stale,
         "has_inspect_snapshot": entity.inspect_snapshot.is_some(),
         "combat_state": {

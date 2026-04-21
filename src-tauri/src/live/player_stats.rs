@@ -7,6 +7,7 @@ use crate::live::status_tracker::StatusEffectDetails;
 use crate::models::{CombatEffectAction, CombatEffectCondition, HitFlag, HitOption};
 use hashbrown::{HashMap, HashSet};
 use serde_json::{Value, json};
+use std::cmp::Ordering;
 use std::fmt;
 
 const DAMAGE_ATTR_SLOTS: usize = 8;
@@ -23,7 +24,7 @@ const ROSTER_CRITICAL_HIT_BONUS: f64 = 69.0;
 const SKIN_MAIN_STAT_MULTIPLIER_CAP: f64 = 0.08;
 const PET_MAIN_STAT_MULTIPLIER: f64 = 0.011057;
 const PET_SKILL_DAMAGE_RATE: f64 = 0.01;
-const FIXED_STAT_DATA_COUNT: usize = 42;
+const FIXED_STAT_DATA_COUNT: usize = 44;
 
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
 pub enum OperationType {
@@ -59,6 +60,29 @@ pub struct StatData {
 }
 
 impl StatData {
+    fn compare_stat_data_value(lhs: &StatDataValue, rhs: &StatDataValue) -> Ordering {
+        lhs.source
+            .cmp(&rhs.source)
+            .then_with(|| lhs.value.total_cmp(&rhs.value))
+    }
+
+    fn compare_stat_modification(lhs: &StatModification, rhs: &StatModification) -> Ordering {
+        lhs.source_entity_id.cmp(&rhs.source_entity_id)
+    }
+
+    fn sort_self_values(&mut self) {
+        self.self_values.sort_by(Self::compare_stat_data_value);
+    }
+
+    fn sort_modification_values(modification: &mut StatModification) {
+        modification.values.sort_by(Self::compare_stat_data_value);
+    }
+
+    fn sort_modifications(&mut self) {
+        self.modified_values
+            .sort_by(Self::compare_stat_modification);
+    }
+
     pub fn value(&self) -> f64 {
         let mut value = self.self_value();
         match self.operation_type {
@@ -114,6 +138,7 @@ impl StatData {
             return;
         }
         self.self_values.push(StatDataValue { value, source });
+        self.sort_self_values();
     }
 
     pub fn add(
@@ -155,12 +180,14 @@ impl StatData {
                 return;
             }
             modification.values.push(StatDataValue { value, source });
+            Self::sort_modification_values(modification);
             return;
         }
         self.modified_values.push(StatModification {
             values: vec![StatDataValue { value, source }],
             source_entity_id,
         });
+        self.sort_modifications();
     }
 
     pub fn get_value_for_entity_id(&self, entity_id: u64) -> f64 {
@@ -202,6 +229,7 @@ impl StatData {
             values: vec![StatDataValue { value, source }],
             source_entity_id,
         });
+        self.sort_modifications();
     }
 
     pub fn set(
@@ -444,6 +472,7 @@ pub struct RuntimeState {
     pub max_hp: i64,
     pub current_mp: i64,
     pub max_mp: i64,
+    pub combat_mp_recovery: i64,
     pub skill_start_identity_gauge_snapshots: HashMap<u32, IdentityGaugeSnapshot>,
 }
 
@@ -471,6 +500,7 @@ impl RuntimeState {
         self.max_hp = 0;
         self.current_mp = 0;
         self.max_mp = 0;
+        self.combat_mp_recovery = 0;
         self.skill_start_identity_gauge_snapshots.clear();
     }
 
@@ -637,6 +667,95 @@ impl Default for PlayerStats {
 }
 
 impl PlayerStats {
+    fn compare_combat_effect_condition(
+        lhs: &CombatEffectCondition,
+        rhs: &CombatEffectCondition,
+    ) -> Ordering {
+        lhs.condition_type
+            .cmp(&rhs.condition_type)
+            .then_with(|| lhs.actor_type.cmp(&rhs.actor_type))
+            .then_with(|| lhs.arg.cmp(&rhs.arg))
+    }
+
+    fn compare_combat_effect_action(
+        lhs: &CombatEffectAction,
+        rhs: &CombatEffectAction,
+    ) -> Ordering {
+        lhs.action_type
+            .cmp(&rhs.action_type)
+            .then_with(|| lhs.actor_type.cmp(&rhs.actor_type))
+            .then_with(|| lhs.args.len().cmp(&rhs.args.len()))
+            .then_with(|| {
+                lhs.args
+                    .iter()
+                    .zip(rhs.args.iter())
+                    .map(|(lhs_arg, rhs_arg)| lhs_arg.cmp(rhs_arg))
+                    .find(|ordering| *ordering != Ordering::Equal)
+                    .unwrap_or(Ordering::Equal)
+            })
+    }
+
+    fn compare_combat_effect_detail(
+        lhs: &crate::models::CombatEffectDetail,
+        rhs: &crate::models::CombatEffectDetail,
+    ) -> Ordering {
+        lhs.ratio
+            .cmp(&rhs.ratio)
+            .then_with(|| lhs.cooldown.cmp(&rhs.cooldown))
+            .then_with(|| lhs.conditions.len().cmp(&rhs.conditions.len()))
+            .then_with(|| {
+                lhs.conditions
+                    .iter()
+                    .zip(rhs.conditions.iter())
+                    .map(|(lhs_condition, rhs_condition)| {
+                        Self::compare_combat_effect_condition(lhs_condition, rhs_condition)
+                    })
+                    .find(|ordering| *ordering != Ordering::Equal)
+                    .unwrap_or(Ordering::Equal)
+            })
+            .then_with(|| lhs.actions.len().cmp(&rhs.actions.len()))
+            .then_with(|| {
+                lhs.actions
+                    .iter()
+                    .zip(rhs.actions.iter())
+                    .map(|(lhs_action, rhs_action)| {
+                        Self::compare_combat_effect_action(lhs_action, rhs_action)
+                    })
+                    .find(|ordering| *ordering != Ordering::Equal)
+                    .unwrap_or(Ordering::Equal)
+            })
+    }
+
+    fn sort_active_combat_effects(entries: &mut Vec<ActiveCombatEffect>) {
+        entries.sort_by(|lhs, rhs| {
+            lhs.owner_id
+                .cmp(&rhs.owner_id)
+                .then_with(|| lhs.combat_effect_id.cmp(&rhs.combat_effect_id))
+                .then_with(|| lhs.source.cmp(&rhs.source))
+                .then_with(|| Self::compare_combat_effect_detail(&lhs.effect, &rhs.effect))
+        });
+    }
+
+    fn sort_active_addon_skill_features(entries: &mut Vec<ActiveAddonSkillFeature>) {
+        entries.sort_by(|lhs, rhs| {
+            lhs.owner_id
+                .cmp(&rhs.owner_id)
+                .then_with(|| lhs.feature_id.cmp(&rhs.feature_id))
+        });
+    }
+
+    fn sort_active_ability_features(entries: &mut Vec<AbilityFeatureState>) {
+        entries.sort_by(|lhs, rhs| {
+            lhs.owner_id
+                .cmp(&rhs.owner_id)
+                .then_with(|| {
+                    normalize_feature_type(&lhs.feature_type)
+                        .cmp(&normalize_feature_type(&rhs.feature_type))
+                })
+                .then_with(|| lhs.level.cmp(&rhs.level))
+        });
+    }
+
     pub fn create() -> Self {
         Self::default()
     }
@@ -948,6 +1067,7 @@ impl PlayerStats {
                     source: source.to_string(),
                 });
             }
+            Self::sort_active_combat_effects(&mut self.active_combat_effects);
         }
     }
 
@@ -1020,6 +1140,7 @@ impl PlayerStats {
             values: values.to_vec(),
             owner_id,
         });
+        Self::sort_active_ability_features(&mut self.active_ability_features);
     }
 
     pub fn add_addon_skill_feature(&mut self, feature_id: u32, owner_id: u64) {
@@ -1028,6 +1149,7 @@ impl PlayerStats {
                 feature_id,
                 owner_id,
             });
+        Self::sort_active_addon_skill_features(&mut self.active_addon_skill_features);
     }
 
     fn evaluate_combat_effects(
@@ -1088,6 +1210,7 @@ impl PlayerStats {
                 }
             }
         }
+        Self::sort_active_combat_effects(&mut active_effects);
 
         for active in active_effects {
             if runtime_data.is_some_and(|runtime| {
@@ -1579,10 +1702,17 @@ impl PlayerStats {
                         let cap_evo_dmg = active.values[3] as f64 / 10000.0;
                         let move_speed_bonus = self.move_speed_rate.value();
                         let attack_speed_bonus = self.attack_speed_rate.value();
+                        let mut local_evo_dmg = StatData::default();
                         let base_bonus = ((move_speed_bonus.min(MOVE_SPEED_ATTACK_SPEED_CAP)
                             + attack_speed_bonus.min(MOVE_SPEED_ATTACK_SPEED_CAP))
                             * default_percent)
                             .max(0.0);
+                        local_evo_dmg.add(
+                            base_bonus,
+                            self.owner_id,
+                            active.owner_id,
+                            active.feature_type.clone(),
+                        );
                         self.evolution_damage.add(
                             base_bonus,
                             self.owner_id,
@@ -1599,6 +1729,12 @@ impl PlayerStats {
                         if move_speed_bonus > MOVE_SPEED_ATTACK_SPEED_CAP
                             && attack_speed_bonus > MOVE_SPEED_ATTACK_SPEED_CAP
                         {
+                            local_evo_dmg.add(
+                                over_cap_bonus,
+                                self.owner_id,
+                                active.owner_id,
+                                active.feature_type.clone(),
+                            );
                             self.evolution_damage.add(
                                 over_cap_bonus,
                                 self.owner_id,
@@ -1612,22 +1748,46 @@ impl PlayerStats {
                                     active.owner_id,
                                     active.feature_type.clone(),
                                 );
+                            let before_supersonic = self
+                                .evolution_damage_bonus_from_supersonic_breakthrough
+                                .value();
                             self.add_to_composite_stat_over_threshold(
                                 &self.attack_speed_rate.clone(),
                                 MOVE_SPEED_ATTACK_SPEED_CAP,
-                                cap_evo_dmg - self.evolution_damage.value(),
+                                cap_evo_dmg - local_evo_dmg.value(),
                                 over_cap_percent,
                                 &active.feature_type,
                                 CompositeTarget::EvolutionDamageOverCap,
                             );
+                            let added_from_attack_speed = (self
+                                .evolution_damage_bonus_from_supersonic_breakthrough
+                                .value()
+                                - before_supersonic)
+                                .max(0.0);
+                            if added_from_attack_speed > 0.0 {
+                                local_evo_dmg
+                                    .add_self(added_from_attack_speed, active.feature_type.clone());
+                            }
+                            let before_supersonic = self
+                                .evolution_damage_bonus_from_supersonic_breakthrough
+                                .value();
                             self.add_to_composite_stat_over_threshold(
                                 &self.move_speed_rate.clone(),
                                 MOVE_SPEED_ATTACK_SPEED_CAP,
-                                cap_evo_dmg - self.evolution_damage.value(),
+                                cap_evo_dmg - local_evo_dmg.value(),
                                 over_cap_percent,
                                 &active.feature_type,
                                 CompositeTarget::EvolutionDamageOverCap,
                             );
+                            let added_from_move_speed = (self
+                                .evolution_damage_bonus_from_supersonic_breakthrough
+                                .value()
+                                - before_supersonic)
+                                .max(0.0);
+                            if added_from_move_speed > 0.0 {
+                                local_evo_dmg
+                                    .add_self(added_from_move_speed, active.feature_type.clone());
+                            }
                         }
                     }
                 }
@@ -2350,6 +2510,7 @@ impl PlayerStats {
                 "max_hp": self.runtime_state.max_hp,
                 "current_mp": self.runtime_state.current_mp,
                 "max_mp": self.runtime_state.max_mp,
+                "combat_mp_recovery": self.runtime_state.combat_mp_recovery,
                 "identity_runtime_reliable": self.runtime_state.identity_runtime_reliable,
                 "skill_start_identity_gauge_snapshots": self.runtime_state.skill_start_identity_gauge_snapshots.iter().map(|(skill_id, snapshot)| {
                     json!({
@@ -2489,6 +2650,8 @@ impl PlayerStats {
             39 => &self.physical_critical_damage_amplify,
             40 => &self.magical_critical_damage_amplify,
             41 => &self.critical_hit_to_damage_rate,
+            42 => &self.evolution_damage_bonus_from_blunt_thorn,
+            43 => &self.evolution_damage_bonus_from_supersonic_breakthrough,
             _ => {
                 let index_in_arrays = index.saturating_sub(FIXED_STAT_DATA_COUNT);
                 if index_in_arrays < self.damage_attr_amplifications.len() {
@@ -2549,6 +2712,8 @@ impl PlayerStats {
             39 => &mut self.physical_critical_damage_amplify,
             40 => &mut self.magical_critical_damage_amplify,
             41 => &mut self.critical_hit_to_damage_rate,
+            42 => &mut self.evolution_damage_bonus_from_blunt_thorn,
+            43 => &mut self.evolution_damage_bonus_from_supersonic_breakthrough,
             _ => {
                 let index_in_arrays = index.saturating_sub(FIXED_STAT_DATA_COUNT);
                 if index_in_arrays < self.damage_attr_amplifications.len() {
@@ -2609,6 +2774,8 @@ impl PlayerStats {
             39 => "physical_critical_damage_amplify_".to_string(),
             40 => "magical_critical_damage_amplify_".to_string(),
             41 => "critical_hit_to_damage_rate_".to_string(),
+            42 => "evolution_damage_bonus_from_blunt_thorn_".to_string(),
+            43 => "evolution_damage_bonus_from_supersonic_breakthrough_".to_string(),
             _ => {
                 let index_in_arrays = index.saturating_sub(FIXED_STAT_DATA_COUNT);
                 if index_in_arrays < self.damage_attr_amplifications.len() {
@@ -2646,6 +2813,7 @@ impl PlayerStats {
                 out.push(modification.source_entity_id);
             }
         }
+        out.sort_unstable();
         out
     }
 
@@ -2857,6 +3025,7 @@ impl PlayerStats {
             "max_hp" => self.runtime_state.max_hp = stat_value,
             "mp" => self.runtime_state.current_mp = stat_value,
             "max_mp" => self.runtime_state.max_mp = stat_value,
+            "combat_mp_recovery" => self.runtime_state.combat_mp_recovery = stat_value,
             "critical_hit_rate" => {
                 self.critical_hit_rate
                     .add(value_as_multiplier, self.owner_id, owner_id, source)
@@ -3053,6 +3222,7 @@ impl PlayerStats {
                 "max_hp" => self.runtime_state.max_hp = *value,
                 "mp" => self.runtime_state.current_mp = *value,
                 "max_mp" => self.runtime_state.max_mp = *value,
+                "combat_mp_recovery" => self.runtime_state.combat_mp_recovery = *value,
                 _ => {}
             }
         }

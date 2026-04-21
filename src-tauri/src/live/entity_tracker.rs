@@ -5,7 +5,7 @@ use crate::live::party_tracker::PartyTracker;
 use crate::live::player_stats::RuntimeState;
 use crate::live::rdps::snapshot_owner_player_stats_for_buffs;
 use crate::live::status_tracker::{
-    StatusEffectDetails, StatusEffectTargetType, StatusEffectType, StatusTracker, WORKSHOP_BUFF_ID,
+    StatusEffectDetails, StatusEffectTargetType, StatusEffectType, StatusTracker,
     build_status_effect,
 };
 use crate::local::{LocalInfo, LocalPlayer};
@@ -14,8 +14,6 @@ use crate::models::{
     ArkPassiveData, ArkPassiveNode, EncounterEntity, EntityType, Esther, InspectInfo, TripodIndex,
     TripodLevel,
 };
-use crate::utils::is_support_class;
-
 use chrono::{DateTime, Utc};
 use hashbrown::{HashMap, HashSet};
 use log::{info, warn};
@@ -24,8 +22,6 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use std::sync::Arc;
 
-const WORKSHOP_SUPPORT_EXIT_INSPECT_DELAY_MS: i64 = 1000;
-const WORKSHOP_SUPPORT_ENTER_INSPECT_COOLDOWN_MS: i64 = 60_000;
 const BOOTSTRAP_INSPECT_DELAY_MS: i64 = 500;
 const DESTROYER_CLASS_ID: u32 = 103;
 const DESTROYER_VORTEX_GRAVITY_SKILL_ID: u32 = 18011;
@@ -52,6 +48,7 @@ pub struct EntityTracker {
     pub local_entity_id: u64,
     pub local_character_id: u64,
     pub character_id_to_name: HashMap<u64, String>,
+    status_effect_owner_round_robin: HashMap<(u32, bool, u32), usize>,
 }
 
 pub struct AppliedInspectResult {
@@ -201,6 +198,7 @@ impl EntityTracker {
             local_entity_id: 0,
             local_character_id: 0,
             character_id_to_name: HashMap::new(),
+            status_effect_owner_round_robin: HashMap::new(),
         }
     }
 
@@ -243,7 +241,6 @@ impl EntityTracker {
         local_player.inspect_requested = false;
         local_player.inspect_ready_at_ms = 0;
         local_player.inspect_stale = false;
-        local_player.workshop_reinspect_pending = false;
         local_player.inspect_info = None;
         local_player.inspect_result = None;
         local_player.inspect_snapshot = None;
@@ -261,6 +258,7 @@ impl EntityTracker {
         self.last_reconnect_rebind = None;
         self.removed_player_entities_by_character_id.clear();
         self.removed_player_entities_by_name_class.clear();
+        self.status_effect_owner_round_robin.clear();
         self.party_tracker.borrow_mut().reset_party_mappings();
         self.entities.insert(local_player.id, local_player.clone());
         self.character_id_to_name.clear();
@@ -327,37 +325,6 @@ impl EntityTracker {
                     && entity.class_id == class_id
             })
             .map(|entity| entity.id)
-    }
-
-    fn is_same_party_support_character(&self, character_id: u64) -> bool {
-        let local_character_id = if self.local_character_id != 0 {
-            self.local_character_id
-        } else {
-            self.id_tracker
-                .borrow()
-                .get_local_character_id(self.local_entity_id)
-        };
-        if local_character_id == 0 || character_id == 0 || character_id == local_character_id {
-            return false;
-        }
-
-        let party_tracker = self.party_tracker.borrow();
-        if !matches!(
-            (
-                party_tracker.get_party_id_for_character(local_character_id),
-                party_tracker.get_party_id_for_character(character_id)
-            ),
-            (Some(local_party_id), Some(target_party_id)) if local_party_id == target_party_id
-        ) {
-            return false;
-        }
-
-        self.entities.values().any(|entity| {
-            entity.entity_type == Player
-                && entity.character_id == character_id
-                && is_resolved_player_name(&entity.name)
-                && is_support_class(&entity.class_id)
-        })
     }
 
     // pub fn migration_execute(&mut self, pkt: PKTMigrationExecute) {
@@ -479,16 +446,37 @@ impl EntityTracker {
         self.character_id_to_name
             .insert(pc_struct.character_id, pc_struct.name.clone());
         // println!("party status: {:?}", self.party_tracker.borrow().character_id_to_party_id);
-        let local_character_id = if self.local_character_id != 0 {
-            self.local_character_id
+        let use_party_status_effects =
+            self.should_use_party_status_effect_for_character(pc_struct.character_id);
+        if use_party_status_effects {
+            self.status_tracker
+                .borrow_mut()
+                .remove_party_object(pc_struct.character_id);
         } else {
-            self.id_tracker
-                .borrow()
-                .get_local_character_id(self.local_entity_id)
+            self.status_tracker
+                .borrow_mut()
+                .remove_local_object(pc_struct.player_id);
+        }
+        let (status_effect_target_id, status_effect_target_type) = if use_party_status_effects {
+            (pc_struct.character_id, StatusEffectTargetType::Party)
+        } else {
+            (pc_struct.player_id, StatusEffectTargetType::Local)
         };
-        self.status_tracker
-            .borrow_mut()
-            .new_pc(pc_struct, local_character_id);
+        let timestamp = Utc::now();
+        for sed in &pc_struct.status_effect_datas {
+            let source_entity = self.resolve_status_effect_source_entity(sed);
+            let status_effect = self.build_status_effect_with_snapshots(
+                sed,
+                status_effect_target_id,
+                status_effect_target_type,
+                timestamp,
+                None,
+                Some(source_entity),
+            );
+            self.status_tracker
+                .borrow_mut()
+                .register_status_effect(status_effect);
+        }
         entity
     }
 
@@ -557,9 +545,9 @@ impl EntityTracker {
     ) -> Vec<StatusEffectDetails> {
         let timestamp = Utc::now();
         let mut shields: Vec<StatusEffectDetails> = Vec::new();
-        let local_character_id = self.get_local_character_id();
         let (target_id, target_type) = if pkt.character_id != 0
-            && pkt.character_id == local_character_id
+            && !self.should_use_party_status_effect_for_character(pkt.character_id)
+            && pkt.character_id == self.get_local_character_id()
             && self.local_entity_id != 0
         {
             (self.local_entity_id, StatusEffectTargetType::Local)
@@ -597,9 +585,9 @@ impl EntityTracker {
         Vec<StatusEffectDetails>,
         bool,
     ) {
-        let local_character_id = self.get_local_character_id();
         let (target_id, target_type) = if pkt.character_id != 0
-            && pkt.character_id == local_character_id
+            && !self.should_use_party_status_effect_for_character(pkt.character_id)
+            && pkt.character_id == self.get_local_character_id()
             && self.local_entity_id != 0
         {
             (self.local_entity_id, StatusEffectTargetType::Local)
@@ -844,28 +832,6 @@ impl EntityTracker {
                 entity.entity_type == Player
                     && (entity.character_id == character_id || entity.name == name)
             }) {
-                let workshop_buff_active = !bootstrap_active
-                    && !force_refresh
-                    && entity.inspect_stale
-                    && entity.character_id != 0
-                    && local_character_id != 0
-                    && entity.character_id != local_character_id
-                    && is_support_class(&entity.class_id)
-                    && self
-                        .party_tracker
-                        .borrow()
-                        .are_same_party_characters(local_character_id, entity.character_id)
-                    && self.status_tracker.borrow().has_status_effect(
-                        entity.character_id,
-                        entity.id,
-                        local_character_id,
-                        WORKSHOP_BUFF_ID,
-                    );
-                if workshop_buff_active {
-                    entity.workshop_reinspect_pending = false;
-                    already_ready = true;
-                    break;
-                }
                 if !force_refresh
                     && !bootstrap_refresh_needed
                     && ((entity.inspect_snapshot.is_some() && !entity.inspect_stale)
@@ -1010,71 +976,6 @@ impl EntityTracker {
         }
     }
 
-    pub fn schedule_workshop_support_inspect_on_enter(&mut self, character_id: u64) -> bool {
-        if !self.is_same_party_support_character(character_id) {
-            return false;
-        }
-
-        let now = Utc::now().timestamp_millis();
-        let Some(entity) = self
-            .entities
-            .values_mut()
-            .find(|entity| entity.character_id == character_id)
-        else {
-            return false;
-        };
-        if !is_resolved_player_name(&entity.name) {
-            return false;
-        }
-
-        if entity.last_workshop_enter_inspect_ms > 0
-            && now - entity.last_workshop_enter_inspect_ms
-                < WORKSHOP_SUPPORT_ENTER_INSPECT_COOLDOWN_MS
-        {
-            return false;
-        }
-
-        entity.inspect_requested = false;
-        entity.inspect_ready_at_ms = now;
-        entity.last_workshop_enter_inspect_ms = now;
-        entity.workshop_reinspect_pending = false;
-        self.forced_refresh_names.insert(entity.name.clone());
-        self.inspect_requested_names.remove(&entity.name);
-        true
-    }
-
-    pub fn schedule_workshop_support_reinspect(&mut self, character_id: u64) -> bool {
-        if !self.is_same_party_support_character(character_id) {
-            return false;
-        }
-
-        self.mark_inspect_stale(character_id);
-        let ready_at_ms = Utc::now().timestamp_millis() + WORKSHOP_SUPPORT_EXIT_INSPECT_DELAY_MS;
-        if let Some(entity) = self
-            .entities
-            .values_mut()
-            .find(|entity| entity.character_id == character_id)
-        {
-            entity.inspect_ready_at_ms = ready_at_ms;
-            entity.workshop_reinspect_pending = true;
-            return true;
-        }
-
-        let mut scheduled = false;
-        self.update_removed_player_copies_by_character(character_id, |entity| {
-            entity.inspect_ready_at_ms = ready_at_ms;
-            entity.workshop_reinspect_pending = true;
-            scheduled = true;
-        });
-        scheduled
-    }
-
-    pub fn reset_workshop_support_inspect_cooldowns(&mut self) {
-        for entity in self.entities.values_mut() {
-            entity.last_workshop_enter_inspect_ms = 0;
-        }
-    }
-
     pub fn on_new_transit(&mut self) {
         self.pending_inspect_results_by_name.clear();
         self.inspect_requested_names.clear();
@@ -1085,7 +986,6 @@ impl EntityTracker {
         self.next_bootstrap_inspect_at_ms = 0;
         for entity in self.entities.values_mut() {
             entity.inspect_requested = false;
-            entity.workshop_reinspect_pending = false;
         }
         let mut local_character = None;
         let mut local_name = None;
@@ -1096,7 +996,6 @@ impl EntityTracker {
         {
             local_entity.inspect_ready_at_ms = 0;
             local_entity.inspect_stale = false;
-            local_entity.workshop_reinspect_pending = false;
             local_entity.inspect_info = None;
             local_entity.inspect_result = None;
             local_entity.inspect_snapshot = None;
@@ -1179,6 +1078,24 @@ impl EntityTracker {
                 .borrow()
                 .get_local_character_id(self.local_entity_id)
         }
+    }
+
+    fn should_use_party_status_effect_for_character(&self, character_id: u64) -> bool {
+        let local_character_id = self.get_local_character_id();
+        let party_tracker = self.party_tracker.borrow();
+        let local_player_party_id = party_tracker
+            .character_id_to_party_id
+            .get(&local_character_id);
+        let affected_player_party_id = party_tracker.character_id_to_party_id.get(&character_id);
+
+        matches!(
+            (
+                local_player_party_id,
+                affected_player_party_id,
+                character_id == local_character_id,
+            ),
+            (Some(local_party), Some(affected_party), false) if local_party == affected_party
+        )
     }
 
     pub fn are_same_party_entities(&self, lhs_entity_id: u64, rhs_entity_id: u64) -> bool {
@@ -1621,8 +1538,19 @@ impl EntityTracker {
         source_encounter_entity: Option<&EncounterEntity>,
         resolved_source_entity: Option<Entity>,
     ) -> StatusEffectDetails {
-        let source_entity =
+        let mut source_entity =
             resolved_source_entity.unwrap_or_else(|| self.resolve_status_effect_source_entity(sed));
+        if source_entity.entity_type != EntityType::Player
+            && sed.source_id == 0
+            && let Some(skill_buff) = SKILL_BUFF_DATA.get(&sed.status_effect_id)
+            && !skill_buff.target.eq_ignore_ascii_case("party")
+            && !skill_buff.target.eq_ignore_ascii_case("self_party")
+            && let Some(target_entity) =
+                self.resolve_status_effect_target_entity(target_id, target_type)
+            && matches!(target_entity.entity_type, EntityType::Player)
+        {
+            source_entity = target_entity;
+        }
         let mut status_effect = build_status_effect(
             sed,
             target_id,
@@ -1651,6 +1579,42 @@ impl EntityTracker {
         }
 
         status_effect
+    }
+
+    fn resolve_status_effect_target_entity(
+        &self,
+        target_id: u64,
+        target_type: StatusEffectTargetType,
+    ) -> Option<Entity> {
+        match target_type {
+            StatusEffectTargetType::Local => self.entities.get(&target_id).cloned(),
+            StatusEffectTargetType::Party => self
+                .id_tracker
+                .borrow()
+                .get_entity_id(target_id)
+                .and_then(|entity_id| self.entities.get(&entity_id).cloned())
+                .or_else(|| {
+                    self.entities
+                        .values()
+                        .find(|entity| {
+                            entity.entity_type == Player && entity.character_id == target_id
+                        })
+                        .cloned()
+                })
+                .or_else(|| {
+                    self.removed_player_entities_by_character_id
+                        .get(&target_id)
+                        .cloned()
+                })
+                .or_else(|| {
+                    self.removed_player_entities_by_name_class
+                        .values()
+                        .find(|entity| {
+                            entity.entity_type == Player && entity.character_id == target_id
+                        })
+                        .cloned()
+                }),
+        }
     }
 
     fn resolve_status_effect_source_entity(&mut self, sed: &StatusEffectData) -> Entity {
@@ -1696,16 +1660,20 @@ impl EntityTracker {
                 .is_some_and(|tracked_party_id| tracked_party_id == party_id)
         };
 
-        let mut seen_entity_ids = HashSet::new();
+        let same_identity = |lhs: &Entity, rhs: &Entity| {
+            if lhs.character_id != 0 && rhs.character_id != 0 {
+                lhs.character_id == rhs.character_id
+            } else {
+                lhs.id == rhs.id && lhs.class_id == rhs.class_id && lhs.name == rhs.name
+            }
+        };
+
         let mut eligible = self
             .entities
             .values()
             .chain(self.removed_player_entities_by_character_id.values())
             .filter(|entity| {
-                entity.entity_type == Player
-                    && seen_entity_ids.insert(entity.id)
-                    && is_same_party(entity)
-                    && owns_effect(entity)
+                entity.entity_type == Player && is_same_party(entity) && owns_effect(entity)
             })
             .cloned()
             .collect::<Vec<_>>();
@@ -1714,8 +1682,44 @@ impl EntityTracker {
             return source_entity;
         }
 
-        eligible.sort_by_key(|entity| entity.id);
-        eligible.remove(0)
+        eligible.sort_by(|lhs, rhs| {
+            let lhs_character_id = if lhs.character_id != 0 {
+                lhs.character_id
+            } else {
+                u64::MAX
+            };
+            let rhs_character_id = if rhs.character_id != 0 {
+                rhs.character_id
+            } else {
+                u64::MAX
+            };
+
+            lhs_character_id
+                .cmp(&rhs_character_id)
+                .then_with(|| lhs.id.cmp(&rhs.id))
+                .then_with(|| lhs.class_id.cmp(&rhs.class_id))
+                .then_with(|| lhs.name.cmp(&rhs.name))
+        });
+        eligible.dedup_by(|lhs, rhs| same_identity(lhs, rhs));
+
+        if eligible.len() == 1 {
+            return eligible.remove(0);
+        }
+
+        let use_unique_group = skill_buff.unique_group != 0;
+        let effective_buff_key = if use_unique_group {
+            skill_buff.unique_group
+        } else {
+            sed.status_effect_id
+        };
+        let round_robin_key = (party_id, use_unique_group, effective_buff_key);
+        let next_index = self
+            .status_effect_owner_round_robin
+            .entry(round_robin_key)
+            .or_insert(0);
+        let selected_index = *next_index % eligible.len();
+        *next_index = (selected_index + 1) % eligible.len();
+        eligible.remove(selected_index)
     }
 
     fn build_and_register_status_effects(&mut self, seds: Vec<StatusEffectData>, target_id: u64) {
@@ -2096,7 +2100,6 @@ fn apply_inspect_payload_to_entity(
     entity.inspect_requested = false;
     entity.inspect_ready_at_ms = 0;
     entity.inspect_stale = false;
-    entity.workshop_reinspect_pending = false;
     entity.inspect_snapshot = Some(snapshot.clone());
     entity.inspect_info = Some(info.clone());
     entity.inspect_result = Some(result);
@@ -2105,9 +2108,7 @@ fn apply_inspect_payload_to_entity(
 fn merge_player_identity_state(target: &mut Entity, previous: Entity) {
     target.inspect_requested = previous.inspect_requested;
     target.inspect_ready_at_ms = previous.inspect_ready_at_ms;
-    target.last_workshop_enter_inspect_ms = previous.last_workshop_enter_inspect_ms;
     target.inspect_stale = previous.inspect_stale;
-    target.workshop_reinspect_pending = previous.workshop_reinspect_pending;
     target.inspect_info = previous.inspect_info;
     target.inspect_result = previous.inspect_result;
     target.inspect_snapshot = previous.inspect_snapshot;
@@ -2141,9 +2142,7 @@ pub struct Entity {
     pub stats: HashMap<u8, i64>,
     pub inspect_requested: bool,
     pub inspect_ready_at_ms: i64,
-    pub last_workshop_enter_inspect_ms: i64,
     pub inspect_stale: bool,
-    pub workshop_reinspect_pending: bool,
     pub inspect_info: Option<InspectInfo>,
     pub inspect_result: Option<Arc<PKTPCInspectResult>>,
     pub inspect_snapshot: Option<InspectSnapshot>,
@@ -2192,6 +2191,7 @@ impl Entity {
             max_hp: stat_value("max_hp"),
             current_mp: stat_value("mp"),
             max_mp: stat_value("max_mp"),
+            combat_mp_recovery: stat_value("combat_mp_recovery"),
             ..Default::default()
         }
     }
@@ -2254,28 +2254,30 @@ fn populate_skill_runtime_data(skill_runtime: &mut SkillRuntimeData, skill_id: u
     let Some(tripod_index) = skill_option_data.tripod_index.as_ref() else {
         return;
     };
-    let Some(tripod_level) = skill_option_data.tripod_level.as_ref() else {
-        return;
-    };
-
     let selected_tripods = [
-        (u32::from(tripod_index.first), u32::from(tripod_level.first)),
-        (
-            u32::from(tripod_index.second),
-            u32::from(tripod_level.second),
-        ),
-        (u32::from(tripod_index.third), u32::from(tripod_level.third)),
+        ("first", u32::from(tripod_index.first), 0_u32),
+        ("second", u32::from(tripod_index.second), 3_u32),
+        ("third", u32::from(tripod_index.third), 6_u32),
     ];
 
-    for (tripod_key, tripod_level) in selected_tripods {
+    for (row_name, selected_index, key_offset) in selected_tripods {
+        let tripod_key = selected_index + key_offset;
         if tripod_key == 0 {
             continue;
         }
         let Some(tripod) = skill_feature.tripods.get(&tripod_key) else {
+            let skill_name = SKILL_DATA
+                .get(&skill_id)
+                .and_then(|skill| skill.name.as_deref())
+                .unwrap_or("<unknown>");
+            warn!(
+                "missing tripod row '{}' for skill '{}' ({}): selected index {}, key {}",
+                row_name, skill_name, skill_id, selected_index, tripod_key
+            );
             continue;
         };
         for entry in &tripod.entries {
-            if (entry.level > 0 && entry.level != tripod_level)
+            if (entry.level > 0 && entry.level != 1)
                 || entry.target_mode_type.eq_ignore_ascii_case("b")
             {
                 continue;

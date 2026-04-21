@@ -41,6 +41,11 @@ struct DamageDataAccumulator {
     damage_split_by_entity_id_: HashMap<u64, i64>,
     damage_done_by_entity_skill_group_: HashMap<u64, HashMap<String, i64>>,
     damage_increase_by_entity_skill_group_: HashMap<u64, HashMap<String, i64>>,
+    damage_done_without_crits_: i64,
+    damage_done_with_all_crits_: i64,
+    damage_done_with_average_crits_: i64,
+    critical_hit_rate_adjusted_damage_raw_: i64,
+    critical_hit_rate_adjusted_damage_raw_capped_: i64,
     casts_: i64,
     skill_casts_: i64,
     skill_to_damage_map_: HashMap<u32, SkillStatsDump>,
@@ -781,6 +786,7 @@ impl EncounterState {
         player_entity_id: u64,
         skill_id: u32,
         damage: i64,
+        is_critical_hit: bool,
         rdps_result: Option<&crate::live::rdps::HitRdpsResult>,
         rdps_valid: bool,
     ) {
@@ -800,6 +806,38 @@ impl EncounterState {
             .damage_split_by_entity_id_
             .entry(player_entity_id)
             .or_default() += self_damage;
+
+        if let Some(result) = rdps_result
+            && let (Some(crit_rate_raw), Some(crit_rate_capped), Some(crit_damage_multiplier)) = (
+                result.crit_rate_raw,
+                result.crit_rate_capped,
+                result.crit_damage_multiplier,
+            )
+            && crit_damage_multiplier > 0.0
+        {
+            let damage_done_without_crits = if is_critical_hit {
+                (damage as f64 / crit_damage_multiplier) as i64
+            } else {
+                damage
+            };
+            let damage_done_with_all_crits = if is_critical_hit {
+                damage
+            } else {
+                (damage as f64 * crit_damage_multiplier) as i64
+            };
+            let damage_done_with_average_crits = (damage_done_without_crits as f64
+                + (damage_done_without_crits as f64
+                    * crit_rate_capped
+                    * (crit_damage_multiplier - 1.0)))
+                as i64;
+            entry.damage_done_without_crits_ += damage_done_without_crits;
+            entry.damage_done_with_all_crits_ += damage_done_with_all_crits;
+            entry.damage_done_with_average_crits_ += damage_done_with_average_crits;
+            entry.critical_hit_rate_adjusted_damage_raw_ +=
+                (damage_done_without_crits as f64 * crit_rate_raw) as i64;
+            entry.critical_hit_rate_adjusted_damage_raw_capped_ +=
+                (damage_done_without_crits as f64 * crit_rate_capped) as i64;
+        }
 
         let Some(result) = rdps_result else {
             return;
@@ -907,9 +945,21 @@ impl EncounterState {
             let damage_done_ = entity.damage_stats.damage_dealt;
             let damage_done_without_ultimate_awakening_ =
                 damage_done_.saturating_sub(entity.damage_stats.hyper_awakening_damage);
-            let damage_done_without_crits_ = damage_done_without_ultimate_awakening_;
-            let damage_done_with_all_crits_ = damage_done_without_ultimate_awakening_;
-            let damage_done_with_average_crits_ = damage_done_without_ultimate_awakening_;
+            let damage_done_without_crits_ = accumulator
+                .map(|value| value.damage_done_without_crits_)
+                .unwrap_or_default();
+            let damage_done_with_all_crits_ = accumulator
+                .map(|value| value.damage_done_with_all_crits_)
+                .unwrap_or_default();
+            let damage_done_with_average_crits_ = accumulator
+                .map(|value| value.damage_done_with_average_crits_)
+                .unwrap_or_default();
+            let critical_hit_rate_adjusted_damage_raw_ = accumulator
+                .map(|value| value.critical_hit_rate_adjusted_damage_raw_)
+                .unwrap_or_default();
+            let critical_hit_rate_adjusted_damage_raw_capped_ = accumulator
+                .map(|value| value.critical_hit_rate_adjusted_damage_raw_capped_)
+                .unwrap_or_default();
             let mut skill_to_damage_map_ = accumulator
                 .map(|value| value.skill_to_damage_map_.clone())
                 .unwrap_or_default();
@@ -946,8 +996,8 @@ impl EncounterState {
                     damage_done_without_crits_,
                     damage_done_with_all_crits_,
                     damage_done_with_average_crits_,
-                    critical_hit_rate_adjusted_damage_raw_: 0,
-                    critical_hit_rate_adjusted_damage_raw_capped_: 0,
+                    critical_hit_rate_adjusted_damage_raw_,
+                    critical_hit_rate_adjusted_damage_raw_capped_,
                     damage_split_by_entity_id_: accumulator
                         .map(|value| value.damage_split_by_entity_id_.clone())
                         .unwrap_or_else(|| {
@@ -1900,6 +1950,7 @@ impl EncounterState {
                     dmg_src_entity.id,
                     resolved_skill_id,
                     damage,
+                    hit_flag == HitFlag::CRITICAL || hit_flag == HitFlag::DOT_CRITICAL,
                     rdps_result.clone(),
                     self.rdps_valid,
                 ))
@@ -2287,14 +2338,22 @@ impl EncounterState {
             }
         }
 
-        if let Some((player_name, player_entity_id, skill_id, damage, rdps_result, rdps_valid)) =
-            lal_debug_damage_record
+        if let Some((
+            player_name,
+            player_entity_id,
+            skill_id,
+            damage,
+            hit_flag,
+            rdps_result,
+            rdps_valid,
+        )) = lal_debug_damage_record
         {
             self.record_lal_damage_debug(
                 &player_name,
                 player_entity_id,
                 skill_id,
                 damage,
+                hit_flag,
                 rdps_result.as_ref(),
                 rdps_valid,
             );
