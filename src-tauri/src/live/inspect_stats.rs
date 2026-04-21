@@ -990,6 +990,9 @@ fn get_sidereal_weapon_balance_level(hone_level: u32) -> u32 {
         7 => 1695,
         8 => 1715,
         9 => 1745,
+        10 => 1775,
+        11 => 1800,
+        12 => 1830,
         _ => panic!("unsupported sidereal weapon hone level: {hone_level}"),
     }
 }
