@@ -7,8 +7,10 @@ use crate::live::status_tracker::StatusEffectDetails;
 use crate::models::{CombatEffectAction, CombatEffectCondition, HitFlag, HitOption};
 use hashbrown::{HashMap, HashSet};
 use serde_json::{Value, json};
+use std::cell::RefCell;
 use std::cmp::Ordering;
 use std::fmt;
+use std::sync::OnceLock;
 
 const DAMAGE_ATTR_SLOTS: usize = 8;
 const DEFAULT_CRITICAL_DAMAGE_RATE: f64 = 1.0;
@@ -25,6 +27,43 @@ const SKIN_MAIN_STAT_MULTIPLIER_CAP: f64 = 0.08;
 const PET_MAIN_STAT_MULTIPLIER: f64 = 0.011057;
 const PET_SKILL_DAMAGE_RATE: f64 = 0.01;
 const FIXED_STAT_DATA_COUNT: usize = 44;
+const DAMAGE_SPLIT_CACHED_MAX_FACTORS: usize = 20;
+
+#[derive(Default)]
+struct DamageSplitScratch {
+    compact_factors: Vec<f64>,
+    compact_indices: Vec<usize>,
+    subset_prod: Vec<f64>,
+    subset_size: Vec<usize>,
+    weights: Vec<f64>,
+    factorial: Vec<f64>,
+}
+
+thread_local! {
+    static DAMAGE_SPLIT_SCRATCH: RefCell<DamageSplitScratch> = RefCell::new(DamageSplitScratch::default());
+}
+
+fn damage_split_weight_cache() -> &'static Vec<Vec<f64>> {
+    static CACHE: OnceLock<Vec<Vec<f64>>> = OnceLock::new();
+    CACHE.get_or_init(|| {
+        let mut factorial = vec![1.0; DAMAGE_SPLIT_CACHED_MAX_FACTORS + 1];
+        for index in 1..=DAMAGE_SPLIT_CACHED_MAX_FACTORS {
+            factorial[index] = factorial[index - 1] * index as f64;
+        }
+
+        let mut cache = Vec::with_capacity(DAMAGE_SPLIT_CACHED_MAX_FACTORS + 1);
+        cache.push(Vec::new());
+        for count in 1..=DAMAGE_SPLIT_CACHED_MAX_FACTORS {
+            let mut weights = vec![0.0; count];
+            for subset_size in 0..count {
+                weights[subset_size] =
+                    factorial[subset_size] * factorial[count - subset_size - 1] / factorial[count];
+            }
+            cache.push(weights);
+        }
+        cache
+    })
+}
 
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
 pub enum OperationType {
@@ -3408,42 +3447,99 @@ fn damage_attr_debug_name(index: usize) -> Option<&'static str> {
 fn get_damage_splits(damage: f64, factors: &[f64]) -> Vec<f64> {
     let count = factors.len();
     let mut pieces = vec![0.0; count + 1];
-    let mut shapley = vec![0.0; count];
-
-    let mut total_factor = 1.0;
-    for factor in factors {
-        total_factor *= 1.0 + *factor;
-    }
-    let base_damage = 1.0 / total_factor;
-
-    let mut factorial = vec![1.0; count + 1];
-    for index in 1..=count {
-        factorial[index] = index as f64 * factorial[index - 1];
+    if count == 0 {
+        pieces[0] = damage;
+        return pieces;
     }
 
-    let max_mask = 1usize << count;
-    for index in 0..count {
-        let mut sum = 0.0;
-        for mask in 0..max_mask {
-            if (mask & (1 << index)) != 0 {
-                continue;
-            }
-            let mut prod = 1.0;
-            let mut subset_size = 0usize;
-            for factor_index in 0..count {
-                if (mask & (1 << factor_index)) != 0 {
-                    prod *= 1.0 + factors[factor_index];
-                    subset_size += 1;
+    let compact_count = factors.iter().filter(|factor| **factor != 0.0).count();
+    if compact_count == 0 {
+        pieces[0] = damage;
+        return pieces;
+    }
+
+    DAMAGE_SPLIT_SCRATCH.with(|scratch_cell| {
+        let mut scratch = scratch_cell.borrow_mut();
+        let DamageSplitScratch {
+            compact_factors: scratch_compact_factors,
+            compact_indices: scratch_compact_indices,
+            subset_prod,
+            subset_size,
+            weights: scratch_weights,
+            factorial: scratch_factorial,
+        } = &mut *scratch;
+
+        let compact_factors: &[f64];
+        if compact_count == count {
+            compact_factors = factors;
+            scratch_compact_indices.clear();
+        } else {
+            scratch_compact_factors.clear();
+            scratch_compact_indices.clear();
+            scratch_compact_factors.reserve(compact_count);
+            scratch_compact_indices.reserve(compact_count);
+            for (index, factor) in factors.iter().copied().enumerate() {
+                if factor == 0.0 {
+                    continue;
                 }
+                scratch_compact_factors.push(factor);
+                scratch_compact_indices.push(index);
             }
-            sum += prod * factorial[subset_size] * factorial[count - subset_size - 1];
+            compact_factors = scratch_compact_factors.as_slice();
         }
-        shapley[index] = base_damage * factors[index] * sum / factorial[count];
-    }
 
-    pieces[0] = base_damage * damage;
-    for (index, value) in shapley.into_iter().enumerate() {
-        pieces[index + 1] = value * damage;
-    }
+        let max_mask = 1usize << compact_count;
+        subset_prod.resize(max_mask, 0.0);
+        subset_size.resize(max_mask, 0);
+        subset_prod[0] = 1.0;
+        subset_size[0] = 0;
+        for mask in 1..max_mask {
+            let prev_mask = mask & (mask - 1);
+            let bit_index = (mask ^ prev_mask).trailing_zeros() as usize;
+            subset_prod[mask] = subset_prod[prev_mask] * (1.0 + compact_factors[bit_index]);
+            subset_size[mask] = subset_size[prev_mask] + 1;
+        }
+
+        let base_damage = 1.0 / subset_prod[max_mask - 1];
+        pieces[0] = base_damage * damage;
+
+        let cached_weights = damage_split_weight_cache();
+        let weights: &[f64] = if compact_count <= DAMAGE_SPLIT_CACHED_MAX_FACTORS {
+            &cached_weights[compact_count]
+        } else {
+            scratch_factorial.resize(compact_count + 1, 1.0);
+            scratch_factorial[0] = 1.0;
+            for index in 1..=compact_count {
+                scratch_factorial[index] = scratch_factorial[index - 1] * index as f64;
+            }
+            scratch_weights.resize(compact_count, 0.0);
+            for subset_size in 0..compact_count {
+                scratch_weights[subset_size] = scratch_factorial[subset_size]
+                    * scratch_factorial[compact_count - subset_size - 1]
+                    / scratch_factorial[compact_count];
+            }
+            &scratch_weights[..compact_count]
+        };
+
+        for index in 0..compact_count {
+            let mut sum = 0.0;
+            let skip_bit = 1usize << index;
+            for mask in 0..max_mask {
+                if (mask & skip_bit) != 0 {
+                    continue;
+                }
+                sum += subset_prod[mask] * weights[subset_size[mask]];
+            }
+
+            let piece = base_damage * compact_factors[index] * sum * damage;
+            let output_index = if compact_count == count {
+                index + 1
+            } else {
+                scratch_compact_indices[index] + 1
+            };
+            pieces[output_index] = piece;
+        }
+    });
+
     pieces
 }
