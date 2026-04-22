@@ -798,7 +798,7 @@ impl EncounterState {
         skill_entry.damage_ += damage;
         skill_entry.hits_ += 1;
         let self_damage = if rdps_valid {
-            rdps_result.map_or(damage, |result| result.unbuffed_damage)
+            rdps_result.map_or(damage, |result| damage - result.rdps_damage_received)
         } else {
             damage
         };
@@ -1885,7 +1885,6 @@ impl EncounterState {
                     "udps_contributed": skill.udps_contributed,
                 })),
                 "rdps_result": rdps_result.as_ref().map(|result| json!({
-                    "unbuffed_damage": result.unbuffed_damage,
                     "rdps_damage_received": result.rdps_damage_received,
                     "rdps_damage_received_support": result.rdps_damage_received_support,
                     "entity_attributions": result.entity_attributions.iter().map(|attribution| json!({
@@ -2042,7 +2041,6 @@ impl EncounterState {
                         },
                         "skill_hit": {
                             "damage": skill_hit.damage,
-                            "unbuffed_damage": skill_hit.unbuffed_damage,
                             "rdps_damage_received": skill_hit.rdps_damage_received,
                             "rdps_damage_received_support": skill_hit.rdps_damage_received_support,
                             "crit": skill_hit.crit,

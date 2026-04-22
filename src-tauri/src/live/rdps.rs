@@ -36,7 +36,6 @@ pub struct HitDebugSkillGroupAttribution {
 
 #[derive(Debug, Clone, Default)]
 pub struct HitRdpsResult {
-    pub unbuffed_damage: i64,
     pub crit_rate_raw: Option<f64>,
     pub crit_rate_capped: Option<f64>,
     pub crit_damage_multiplier: Option<f64>,
@@ -176,7 +175,6 @@ pub fn compute_hit_rdps(
     if !is_affected_by_buffs && !is_hyper_awakening {
         let crit_metrics = get_hit_crit_metrics(&stats, damage_type, can_crit);
         let result = HitRdpsResult {
-            unbuffed_damage: damage,
             crit_rate_raw: crit_metrics.map(|(crit_rate_raw, _, _)| crit_rate_raw),
             crit_rate_capped: crit_metrics.map(|(_, crit_rate_capped, _)| crit_rate_capped),
             crit_damage_multiplier: crit_metrics
@@ -298,7 +296,6 @@ pub fn compute_hit_rdps(
         .value();
     if total_attack_power <= 0.0 {
         let result = HitRdpsResult {
-            unbuffed_damage: damage,
             crit_rate_raw: crit_metrics.map(|(crit_rate_raw, _, _)| crit_rate_raw),
             crit_rate_capped: crit_metrics.map(|(_, crit_rate_capped, _)| crit_rate_capped),
             crit_damage_multiplier: crit_metrics
@@ -370,19 +367,15 @@ pub fn compute_hit_rdps(
             can_crit,
         );
     }
-    let mut total_assigned = 0i64;
     for &(portion, entity_id) in &entity_portions {
         let entity_damage = (portion * damage as f64).round() as i64;
         if entity_id == attacker.id {
-            result.unbuffed_damage += entity_damage;
-            total_assigned += entity_damage;
             continue;
         }
         if entity_damage <= 0 {
             continue;
         }
 
-        total_assigned += entity_damage;
         result.rdps_damage_received += entity_damage;
         let grouped = contributions
             .iter()
@@ -427,13 +420,6 @@ pub fn compute_hit_rdps(
                 is_support: contribution.is_support,
             });
         }
-        if entity_assigned != entity_damage {
-            result.unbuffed_damage += entity_damage - entity_assigned;
-        }
-    }
-
-    if total_assigned != damage {
-        result.unbuffed_damage += damage - total_assigned;
     }
 
     if debug_enabled {
@@ -2070,7 +2056,6 @@ fn contribution_factor_debug_value(contribution: &ContributionFactor) -> Value {
 
 fn hit_rdps_result_debug_value(result: &HitRdpsResult) -> Value {
     json!({
-        "unbuffed_damage": result.unbuffed_damage,
         "rdps_damage_received": result.rdps_damage_received,
         "rdps_damage_received_support": result.rdps_damage_received_support,
         "entity_attributions": result.entity_attributions.iter().map(|attribution| {
