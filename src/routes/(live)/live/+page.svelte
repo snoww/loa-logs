@@ -1,9 +1,8 @@
 <script lang="ts">
   import LiveDamageMeter from "./LiveDamageMeter.svelte";
-  import { addToast } from "$lib/components/Toaster.svelte";
+  import { addToast, removeToast } from "$lib/components/Toaster.svelte";
   import { EncounterState } from "$lib/encounter.svelte";
   import { misc, settings } from "$lib/stores.svelte";
-  import type { Encounter, EncounterEvent, PartyEvent } from "$lib/types";
   import { uploadLog } from "$lib/utils/sync";
   import {
     adminAlert,
@@ -21,18 +20,18 @@
   import { onMount } from "svelte";
   import {
     loadEncounter,
-    onEncounterUpdate,
-    onPartyUpdate,
-    onInvalidDamage,
-    onZoneChange,
-    onRaidStart,
-    onResetEncounter,
-    onPauseEncounter,
-    onSaveEncounter,
-    onPhaseTransition,
     onAdmin,
     onBannedEvent,
-    onClearEncounter
+    onClearEncounter,
+    onEncounterUpdate,
+    onInvalidDamage,
+    onPartyUpdate,
+    onPauseEncounter,
+    onPhaseTransition,
+    onRaidStart,
+    onResetEncounter,
+    onSaveEncounter,
+    onZoneChange
   } from "$lib/api";
   import type { UnlistenFn } from "@tauri-apps/api/event";
 
@@ -40,6 +39,7 @@
   let time = $state(+Date.now());
   let unsubscribe: (() => void) | null = null;
   let pendingTimeouts: ReturnType<typeof setTimeout>[] = [];
+  let bannedToastId: string | undefined;
 
   function trackTimeout(fn: () => void, ms: number) {
     const id = setTimeout(() => {
@@ -96,6 +96,10 @@
       misc.missingInfo = false;
       if (!event.payload) {
         addToast(zoneChange);
+        if (bannedToastId) {
+          removeToast(bannedToastId);
+          bannedToastId = undefined;
+        }
       }
       trackTimeout(() => {
         misc.raidInProgress = true;
@@ -152,7 +156,7 @@
     handles.push(handle);
 
     handle = await onBannedEvent(() => {
-      addToast(bannedEvent);
+      bannedToastId = addToast(bannedEvent).id;
     });
     handles.push(handle);
 
