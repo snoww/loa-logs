@@ -613,6 +613,13 @@
         {@render settingOption("logs", "dps", "Skill DPS", "Show the damage per second of the skill", true)}
         {@render settingOption(
           "logs",
+          "ndps",
+          "Skill nDMG / nDPS",
+          "Net Damage and Net DPS per skill (self damage with incoming rDPS removed)",
+          true
+        )}
+        {@render settingOption(
+          "logs",
           "unbuffedDps",
           "Skill Unbuffed/Buffed DPS",
           "Pseudo rDPS from in-game Combat Analyzer. Show the dps of the skill without support buffs. For support skills, shows the dps buffed by skill",
@@ -849,6 +856,13 @@
           true
         )}
         {@render settingOption("meter", "dps", "Skill DPS", "Show the damage per second of the skill", true)}
+        {@render settingOption(
+          "meter",
+          "ndps",
+          "Skill nDMG / nDPS",
+          "Net Damage and Net DPS per skill (self damage with incoming rDPS removed)",
+          true
+        )}
         {@render settingOption(
           "meter",
           "unbuffedDps",

@@ -83,6 +83,9 @@ pub struct Skill {
     // rDPS type -> BuffedBy skill_id -> damage received
     #[serde(default)]
     pub rdps_received: HashMap<u8, HashMap<u32, i64>>,
+    // total rdps received by this skill from party members
+    #[serde(default)]
+    pub rdps_damage_received: i64,
     // legacy uDPS type -> amount contributed from PKTCombatAnalyzerNotify
     #[serde(default, alias = "rdpsContributed")]
     pub udps_contributed: HashMap<u8, i64>,

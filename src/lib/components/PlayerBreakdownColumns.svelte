@@ -38,6 +38,18 @@
       supportPriority: 7
     },
 
+    // Net damage
+    {
+      show(enc) {
+        if (!enc.encounter.curSettings.breakdown.ndps) return false;
+        return enc.encounter.anyRdpsContributions;
+      },
+      headerText: "nDMG",
+      headerTooltip: "Net Damage (self damage with incoming rDPS removed)",
+      value: ndmg,
+      valueTooltip: ndmgTooltip
+    },
+
     // Buffed damage (support's view)
     {
       show(enc) {
@@ -74,6 +86,18 @@
       value: unbuffedDps,
       valueTooltip: unbuffedDpsTooltip,
       supportPriority: 8
+    },
+
+    // Net DPS
+    {
+      show(enc) {
+        if (!enc.encounter.curSettings.breakdown.ndps) return false;
+        return enc.encounter.anyRdpsContributions;
+      },
+      headerText: "nDPS",
+      headerTooltip: "Net Damage per second (self damage with incoming rDPS removed)",
+      value: ndps,
+      valueTooltip: ndpsTooltip
     },
 
     // Buffed dps (support's view)
@@ -694,4 +718,36 @@
   {:else}
     N/A
   {/if}
+{/snippet}
+
+{#snippet ndmg(state: SkillState)}
+  {#if state.skill.rdpsDamageReceived > 0}
+    {@render damageValue(state.skillNdmgString)}
+  {:else}
+    -
+  {/if}
+{/snippet}
+
+{#snippet ndmgTooltip(state: SkillState)}
+  {#if state.skill.rdpsDamageReceived > 0}
+    {@const received = state.skill.rdpsDamageReceived}
+    <div class="-mx-px flex flex-col space-y-1 py-px text-xs font-normal">
+      <span class="text-gray-300">Net: {state.skillNdmg.toLocaleString()}</span>
+      <span class="text-gray-300">rDPS received: {received.toLocaleString()}</span>
+    </div>
+  {:else}
+    N/A
+  {/if}
+{/snippet}
+
+{#snippet ndps(state: SkillState)}
+  {#if state.skill.rdpsDamageReceived > 0}
+    {@render damageValue(state.skillNdpsString)}
+  {:else}
+    -
+  {/if}
+{/snippet}
+
+{#snippet ndpsTooltip(state: SkillState)}
+  {state.skill.rdpsDamageReceived > 0 ? state.skillNdps.toLocaleString() : "N/A"}
 {/snippet}

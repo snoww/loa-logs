@@ -29,6 +29,7 @@
   let anyUdmg = $derived(
     cast ? cast.hits.some((hit) => hit.unbuffedDamage && hit.unbuffedDamage !== hit.damage) : false
   );
+  let anyNdmg = $derived(cast ? cast.hits.some((hit) => hit.rdpsDamageReceived > 0) : false);
 
   // focused cast info
   let crits = $derived(cast ? cast.hits.filter((hit) => hit.crit).length : 0);
@@ -218,6 +219,13 @@
                     <QuickTooltip tooltip="Hit unbuffed damage" class="w-fit">uDMG</QuickTooltip>
                   </td>
                 {/if}
+                {#if anyNdmg}
+                  <td class="w-16 font-semibold">
+                    <QuickTooltip tooltip="Net damage (self damage with damage from buffs removed)" class="w-fit"
+                      >nDMG</QuickTooltip
+                    >
+                  </td>
+                {/if}
                 <td class="font-semibold">
                   <QuickTooltip tooltip="Choose which buffs to view" class="flex w-fit items-center gap-1">
                     {@render changeBuffType("Party")}
@@ -287,6 +295,18 @@
                       {#if hit.unbuffedDamage && hit.unbuffedDamage !== hit.damage}
                         <QuickTooltip tooltip={hit.unbuffedDamage.toLocaleString()} class="w-fit">
                           {abbreviateNumber(hit.unbuffedDamage)}
+                        </QuickTooltip>
+                      {:else}
+                        -
+                      {/if}
+                    </td>
+                  {/if}
+                  {#if anyNdmg}
+                    <td class="font-mono">
+                      {#if hit.rdpsDamageReceived > 0}
+                        {@const ndmg = hit.damage - hit.rdpsDamageReceived}
+                        <QuickTooltip tooltip={ndmg.toLocaleString()} class="w-fit">
+                          {abbreviateNumber(ndmg)}
                         </QuickTooltip>
                       {:else}
                         -

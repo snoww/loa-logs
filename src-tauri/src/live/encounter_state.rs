@@ -1927,7 +1927,8 @@ impl EncounterState {
             ..Default::default()
         };
         if let Some(rdps_result) = rdps_result.as_ref() {
-            skill_hit.unbuffed_damage = Some(rdps_result.unbuffed_damage);
+            skill.rdps_damage_received += rdps_result.rdps_damage_received;
+
             skill_hit.rdps_damage_received = rdps_result.rdps_damage_received;
             skill_hit.rdps_damage_received_support = rdps_result.rdps_damage_received_support;
         }

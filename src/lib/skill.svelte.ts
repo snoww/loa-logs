@@ -16,7 +16,7 @@ export class SkillState {
   });
   skillDpsString = $derived(abbreviateNumberSplit(this.skillDps));
   skillDamageString = $derived(abbreviateNumberSplit(this.skill.totalDamage));
-  skillUnbuffedDamage = $derived(this.skill.totalDamage - sumRdpsReceived(this.skill, [1, 3, 5]));
+  skillUnbuffedDamage = $derived(this.skill.totalDamage - sumBdpsReceived(this.skill, [1, 3, 5]));
   skillUnbuffedDps = $derived.by(() => {
     // the dps calculated here can slightly differ from one calculated in backend (prolly due to time/rounding? idk)
     // so returning pre-calculated dps if unbuffed damage equals total damage
@@ -25,6 +25,16 @@ export class SkillState {
   });
   skillUnbuffedDamageString = $derived(abbreviateNumberSplit(this.skillUnbuffedDamage));
   skillUnbuffedDpsString = $derived(abbreviateNumberSplit(this.skillUnbuffedDps));
+
+  skillNdmg = $derived(
+    this.skill.rdpsDamageReceived > 0 ? this.skill.totalDamage - this.skill.rdpsDamageReceived : this.skill.totalDamage
+  );
+  skillNdmgString = $derived(abbreviateNumberSplit(this.skillNdmg));
+  skillNdps = $derived.by(() => {
+    if (!this.skill.rdpsDamageReceived) return this.skillDps;
+    return Math.round(this.skillNdmg / (this.entity.encounter.duration / 1000));
+  });
+  skillNdpsString = $derived(abbreviateNumberSplit(this.skillNdps));
 
   skillBuffedDamage = $derived(sumUdpsContributed(this.skill, [1, 3, 5]));
 
@@ -110,7 +120,7 @@ export class SkillState {
   }
 }
 
-export function sumRdpsReceived(skill: Skill, types: number[] = [1, 3, 5]): number {
+export function sumBdpsReceived(skill: Skill, types: number[] = [1, 3, 5]): number {
   if (!skill.rdpsReceived) return 0;
   let sum = 0;
   for (const t of types) {

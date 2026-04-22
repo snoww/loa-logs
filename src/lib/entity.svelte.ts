@@ -240,9 +240,7 @@ export class EntityState {
 
     // Step 4: Extrapolate: how much brand bDMG was hidden in identity udpsContributed?
     // identityBrandBDmg = regularBrandBDmg * (identityBrandWindowDmg / regularBrandWindowDmg)
-    const identityBrandBDmg = Math.round(
-      regularBrandBDmg * (identityBrandWindowDmg / regularBrandWindowDmg)
-    );
+    const identityBrandBDmg = Math.round(regularBrandBDmg * (identityBrandWindowDmg / regularBrandWindowDmg));
     if (identityBrandBDmg <= 0) return null;
 
     // Step 5: Identify which of this support's skills are identity skills by matching
@@ -255,10 +253,7 @@ export class EntityState {
     );
     if (totalIdentityUdps === 0) return null;
 
-    const identityCasts = rawSkills.reduce(
-      (acc, s) => acc + (identitySkillIds.has(s.id) ? s.casts : 0),
-      0
-    );
+    const identityCasts = rawSkills.reduce((acc, s) => acc + (identitySkillIds.has(s.id) ? s.casts : 0), 0);
 
     return { bDmg: identityBrandBDmg, totalIdentityUdps, identitySkillIds, casts: identityCasts };
   });
@@ -326,7 +321,9 @@ export class EntityState {
         skillCastLog: [],
         stagger: 0,
         rdpsReceived: {},
-        udpsContributed: { 3: info.bDmg }
+        udpsContributed: { 3: info.bDmg },
+        rdpsDamageGiven: 0,
+        rdpsDamageReceived: 0
       };
       adjustedSkills.push(syntheticSkill);
     } else {
@@ -352,7 +349,9 @@ export class EntityState {
   mostDamageSkill = $derived(this.skills.length > 0 ? this.skillSortValue(this.skills[0]!) : 0);
 
   skillDamagePercentages = $derived(
-    this.skills.map((skill) => (this.mostDamageSkill > 0 ? (this.skillSortValue(skill) / this.mostDamageSkill) * 100 : 0))
+    this.skills.map((skill) =>
+      this.mostDamageSkill > 0 ? (this.skillSortValue(skill) / this.mostDamageSkill) * 100 : 0
+    )
   );
   anyBackAttacks = $derived(this.skills.some((skill) => skill.backAttacks > 0));
   anyFrontAttacks = $derived(this.skills.some((skill) => skill.frontAttacks > 0));
@@ -380,8 +379,7 @@ export class EntityState {
   supportContribPercent = $derived.by(() => {
     const partyDpsPlayers = getContributionScopeDpsPlayers(this.encounter, this.entity.name).filter(
       (player) =>
-        player.damageStats.unbuffedDamage > 0 &&
-        player.damageStats.unbuffedDamage !== player.damageStats.damageDealt
+        player.damageStats.unbuffedDamage > 0 && player.damageStats.unbuffedDamage !== player.damageStats.damageDealt
     );
     const partyTotalDmg = partyDpsPlayers.reduce((acc, p) => acc + p.damageStats.damageDealt, 0);
     const partyTotalUnbuffed = partyDpsPlayers.reduce((acc, p) => acc + p.damageStats.unbuffedDamage, 0);
@@ -401,9 +399,7 @@ export class EntityState {
     return (this.entity.damageStats.rdpsDamageReceived / this.damageDealt) * 100;
   });
   rdpsContribDamage = $derived.by(() =>
-    this.isSupport
-      ? this.entity.damageStats.rdpsDamageGiven
-      : this.entity.damageStats.rdpsDamageReceived
+    this.isSupport ? this.entity.damageStats.rdpsDamageGiven : this.entity.damageStats.rdpsDamageReceived
   );
   hasDrContributions = $derived(
     Object.values(this.entity.skills).some((skill) => sumUdpsContributed(skill, [4, 6]) > 0)

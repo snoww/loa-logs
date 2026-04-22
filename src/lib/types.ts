@@ -195,6 +195,8 @@ export interface Skill {
   timeAvailable?: number; // the total time in milliseconds this skill was off cooldown during the encounter
   stagger: number;
   rdpsReceived: Record<number, Record<number, number>>; // rdps type -> buffedBy skill -> damage
+  rdpsDamageGiven: number; // total true rDPS damage given by this skill to others
+  rdpsDamageReceived: number; // total rdps received by this skill from party members
   udpsContributed: Record<number, number>; // legacy udps type -> amount
 }
 
