@@ -61,7 +61,7 @@
     // Unbuffed damage dealt
     {
       show(enc) {
-        if (!enc.curSettings.unbuffedDamage) return false;
+        if (!enc.curSettings.udmg) return false;
         return enc.anyUnbuffedDamage || enc.anyUdpsContributions;
       },
       headerText: "uDMG",
@@ -86,11 +86,11 @@
     // Net damage per second
     {
       show(enc) {
-        if (!enc.curSettings.dps) return false;
+        if (!enc.curSettings.ndps) return false;
         return enc.anyRdpsContributions;
       },
       headerText: "nDPS",
-      headerTooltip: "Net Damage per second (self damage with incoming true rDPS removed)",
+      headerTooltip: "Net Damage per second (self damage with incoming rDPS removed)",
       value: ndps,
       valueTooltip: ndpsTooltip,
       width: "w-14"
@@ -99,11 +99,11 @@
     // Raid damage per second
     {
       show(enc) {
-        if (!enc.curSettings.dps) return false;
+        if (!enc.curSettings.rdps) return false;
         return enc.anyRdpsContributions;
       },
       headerText: "rDPS",
-      headerTooltip: "Raid Damage per second (net damage plus outgoing true rDPS given to others)",
+      headerTooltip: "Raid Damage per second (self damage plus outgoing rDPS given to others from synergies and buffs)",
       value: rdps,
       valueTooltip: rdpsTooltip,
       width: "w-14"
@@ -137,11 +137,11 @@
     // rDPS contribution percentage
     {
       show(enc) {
-        if (!enc.curSettings.supportContrib) return false;
+        if (!enc.curSettings.rdps) return false;
         return enc.anyRdpsContributions;
       },
       headerText: "rCon%",
-      headerTooltip: "True rDPS contribution % based on inspect-backed attribution",
+      headerTooltip: "True rDPS contribution % from party members' buffs and synergies",
       value: rdpsContribPct,
       valueTooltip: rdpsContribTooltip,
       width: "w-14"
@@ -294,7 +294,7 @@
     // Counters
     {
       show(enc) {
-        return enc.curSettings.counters;
+        return enc.curSettings.counters && enc.anyCounters;
       },
       headerText: "CTR",
       headerTooltip: "Counters",
@@ -362,7 +362,7 @@
 {#snippet ndpsTooltip(state: EntityState)}
   <div class="-mx-px flex flex-col space-y-1 py-px text-xs font-normal">
     <span class="text-gray-300">nDPS: {state.ndps.toLocaleString()}</span>
-    <span class="text-gray-300">Self only: {abbreviateNumber(state.baseDamage, 2)}</span>
+    <span class="text-gray-300">Self DMG: {abbreviateNumber(state.baseDamage, 2)}</span>
   </div>
 {/snippet}
 
@@ -373,7 +373,7 @@
 {#snippet rdpsTooltip(state: EntityState)}
   <div class="-mx-px flex flex-col space-y-1 py-px text-xs font-normal">
     <span class="text-gray-300">rDPS: {state.rdps.toLocaleString()}</span>
-    <span class="text-gray-300">Self only: {abbreviateNumber(state.baseDamage, 2)}</span>
+    <span class="text-gray-300">Self DMG: {abbreviateNumber(state.baseDamage, 2)}</span>
     <span class="text-gray-300">Outgoing: {abbreviateNumber(state.entity.damageStats.rdpsDamageGiven, 2)}</span>
   </div>
 {/snippet}
@@ -540,14 +540,14 @@
     <div class="-mx-px flex flex-col space-y-1 py-px text-xs font-normal">
       {#if state.isSupport}
         <span class="text-gray-300">
-          Contributed {customRound(state.rdpsContribPercent)}% true rDPS to the party
+          Contributed {customRound(state.rdpsContribPercent)}% damage to party members
         </span>
         <span class="text-gray-300">
           Given: {abbreviateNumber(state.entity.damageStats.rdpsDamageGiven, 2)}
         </span>
       {:else}
         <span class="text-gray-300">
-          Received {customRound(state.rdpsContribPercent)}% true rDPS on own damage
+          Received {customRound(state.rdpsContribPercent)}% damage from all party members
         </span>
         <span class="text-gray-300">
           Received: {abbreviateNumber(state.entity.damageStats.rdpsDamageReceived, 2)}

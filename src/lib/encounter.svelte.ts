@@ -76,6 +76,7 @@ export class EncounterState {
   multipleDeaths = $derived(this.players.some((player) => player.damageStats.deaths > 0 && !player.isDead));
   anyFrontAtk = $derived(this.players.some((player) => player.skillStats.frontAttacks > 0));
   anyBackAtk = $derived(this.players.some((player) => player.skillStats.backAttacks > 0));
+  anyCounters = $derived(this.players.some((player) => player.skillStats.counters > 0));
   anySupportBuff = $derived(this.players.some((player) => player.damageStats.buffedBySupport > 0));
   anySupportIdentity = $derived(this.players.some((player) => player.damageStats.buffedByIdentity > 0));
   anySupportBrand = $derived(this.players.some((player) => player.damageStats.debuffedBySupport > 0));

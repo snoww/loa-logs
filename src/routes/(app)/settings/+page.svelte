@@ -525,12 +525,7 @@
           "Damage",
           "Show the damage dealt by the player in the current encounter"
         )}
-        {@render settingOption(
-          "logs",
-          "unbuffedDamage",
-          "Unbuffed/Buffed Damage",
-          "Pseudo rDPS from in-game Combat Analyzer. Shows damage dealt without support buffs"
-        )}
+        {@render settingOption("logs", "udmg", "uDMG", "Unbuffed Damage Dealt (damage excluding support buffs/debuffs)")}
         {@render settingOption(
           "logs",
           "supportContrib",
@@ -544,6 +539,18 @@
           "Show the damage percentage of the player relative to the entire raid"
         )}
         {@render settingOption("logs", "dps", "DPS", "Show the current damage per second")}
+        {@render settingOption(
+          "logs",
+          "ndps",
+          "nDPS",
+          "Net Damage per second (self damage with incoming rDPS removed)"
+        )}
+        {@render settingOption(
+          "logs",
+          "rdps",
+          "rDPS",
+          "Raid Damage per second (self damage plus outgoing rDPS given to others from synergies and buffs)"
+        )}
         {@render settingOption(
           "logs",
           "unbuffedDps",
@@ -756,12 +763,7 @@
           "Show how long a party member has been incapacitated for (e.g. on the floor, stunned, trapped)"
         )}
         {@render settingOption("meter", "damage", "Damage", "Show the damage dealt by player in the current encounter")}
-        {@render settingOption(
-          "meter",
-          "unbuffedDamage",
-          "Unbuffed/Buffed Damage",
-          "Pseudo rDPS from in-game Combat Analyzer. Shows damage dealt without support buffs"
-        )}
+        {@render settingOption("meter", "udmg", "uDMG", "Unbuffed Damage Dealt (damage excluding support buffs/debuffs)")}
         {@render settingOption(
           "meter",
           "supportContrib",
@@ -775,6 +777,18 @@
           "Show the damage percentage of the player relative to the entire raid"
         )}
         {@render settingOption("meter", "dps", "DPS", "Show the current damage per second")}
+        {@render settingOption(
+          "meter",
+          "ndps",
+          "nDPS",
+          "Net Damage per second (self damage with incoming rDPS removed)"
+        )}
+        {@render settingOption(
+          "meter",
+          "rdps",
+          "rDPS",
+          "Raid Damage per second (self damage plus outgoing rDPS given to others from synergies and buffs)"
+        )}
         {@render settingOption(
           "meter",
           "unbuffedDps",

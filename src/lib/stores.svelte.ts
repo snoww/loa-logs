@@ -218,6 +218,9 @@ export const defaultSettings: AppSettings = {
     profileShortcut: false,
     damage: false,
     dps: true,
+    ndps: false,
+    rdps: false,
+    udmg: false,
     unbuffedDamage: false,
     unbuffedDps: false,
     damagePercent: true,
@@ -239,6 +242,9 @@ export const defaultSettings: AppSettings = {
     breakdown: {
       damage: true,
       dps: true,
+      ndps: false,
+      rdps: false,
+      udmg: false,
       unbuffedDamage: false,
       unbuffedDps: false,
       damagePercent: true,
@@ -270,6 +276,9 @@ export const defaultSettings: AppSettings = {
     profileShortcut: true,
     damage: true,
     dps: true,
+    ndps: true,
+    rdps: true,
+    udmg: true,
     unbuffedDamage: true,
     unbuffedDps: true,
     damagePercent: true,
@@ -291,6 +300,9 @@ export const defaultSettings: AppSettings = {
     breakdown: {
       damage: true,
       dps: true,
+      ndps: false,
+      rdps: false,
+      udmg: false,
       unbuffedDamage: true,
       unbuffedDps: true,
       damagePercent: true,
@@ -433,4 +445,3 @@ md.renderer.rules.link_open = function (tokens, idx, options, env, self) {
 };
 
 export const markdownIt = md;
-
