@@ -268,7 +268,7 @@ impl StatusTracker {
             None => return Vec::new(),
         };
 
-        ser.retain(|_, se| buff_at_max_stacks(se));
+        ser.retain(|_, se| se.expire_at.is_none_or(|expire_at| expire_at > timestamp));
         ser.values().cloned().collect()
     }
 
@@ -389,7 +389,7 @@ pub fn build_status_effect(
     let mut buff_type_flags = 0;
     if let Some(effect) = SKILL_BUFF_DATA.get(&se_data.status_effect_id) {
         name = effect.name.clone().unwrap_or_default();
-        unique_group = effect.unique_group;
+        unique_group = remap_effective_unique_group(se_data.status_effect_id, effect.unique_group);
         buff_type_flags = get_status_effect_buff_type_flags(effect);
         if effect.category.as_str() == "debuff" {
             status_effect_category = Debuff
@@ -458,7 +458,7 @@ pub fn build_status_effect(
                 }
             }
         } else {
-            source_skill_id = Some((effect.unique_group / 10).max((effect.id as u32) / 10));
+            source_skill_id = Some((unique_group / 10).max((effect.id as u32) / 10));
         }
     }
 
@@ -502,13 +502,12 @@ pub fn get_status_effect_value(value: &Option<Vec<u8>>) -> u64 {
     })
 }
 
-// only track certain buffs when they are at max stacks
-pub fn buff_at_max_stacks(status_effect: &StatusEffectDetails) -> bool {
-    match status_effect.unique_group {
-        2000440 => status_effect.stack_count == 6, // standing strike
-        2003220 => status_effect.stack_count == 5, // master
-        2003240 => status_effect.stack_count == 5, // luminary
-        _ => true,
+fn remap_effective_unique_group(status_effect_id: u32, unique_group: u32) -> u32 {
+    match status_effect_id {
+        // LAL keeps the Paladin self aura pieces independent from the party aura group.
+        2360068 | 2360124 => 0,
+        2360125 => 360102,
+        _ => unique_group,
     }
 }
 

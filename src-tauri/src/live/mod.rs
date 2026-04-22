@@ -1167,19 +1167,24 @@ pub fn start(args: StartArgs) -> Result<()> {
                             pkt.value,
                             entity_tracker.local_character_id,
                         );
-                    if let Some(status_effect) = status_effect
-                        && status_effect.status_effect_type == StatusEffectType::Shield
-                    {
-                        let change = old_value
-                            .checked_sub(status_effect.value)
-                            .unwrap_or_default();
-                        on_shield_change(
-                            &mut entity_tracker,
-                            &id_tracker,
-                            &mut state,
-                            status_effect,
-                            change,
-                        );
+                    if let Some(mut status_effect) = status_effect {
+                        entity_tracker
+                            .refresh_status_effect_snapshots(&mut status_effect, Utc::now());
+                        status_tracker
+                            .borrow_mut()
+                            .register_status_effect(status_effect.clone());
+                        if status_effect.status_effect_type == StatusEffectType::Shield {
+                            let change = old_value
+                                .checked_sub(status_effect.value)
+                                .unwrap_or_default();
+                            on_shield_change(
+                                &mut entity_tracker,
+                                &id_tracker,
+                                &mut state,
+                                status_effect,
+                                change,
+                            );
+                        }
                     }
                 }
             }
@@ -1207,19 +1212,26 @@ pub fn start(args: StartArgs) -> Result<()> {
                                     val,
                                     entity_tracker.local_character_id,
                                 );
-                            if let Some(status_effect) = status_effect
-                                && status_effect.status_effect_type == StatusEffectType::Shield
-                            {
-                                let change = old_value
-                                    .checked_sub(status_effect.value)
-                                    .unwrap_or_default();
-                                on_shield_change(
-                                    &mut entity_tracker,
-                                    &id_tracker,
-                                    &mut state,
-                                    status_effect,
-                                    change,
+                            if let Some(mut status_effect) = status_effect {
+                                entity_tracker.refresh_status_effect_snapshots(
+                                    &mut status_effect,
+                                    Utc::now(),
                                 );
+                                status_tracker
+                                    .borrow_mut()
+                                    .register_status_effect(status_effect.clone());
+                                if status_effect.status_effect_type == StatusEffectType::Shield {
+                                    let change = old_value
+                                        .checked_sub(status_effect.value)
+                                        .unwrap_or_default();
+                                    on_shield_change(
+                                        &mut entity_tracker,
+                                        &id_tracker,
+                                        &mut state,
+                                        status_effect,
+                                        change,
+                                    );
+                                }
                             }
                         }
                     }

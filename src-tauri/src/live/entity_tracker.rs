@@ -383,7 +383,8 @@ impl EntityTracker {
             let mapped_entity_id = self
                 .id_tracker
                 .borrow()
-                .get_entity_id(pc_struct.character_id);
+                .get_entity_id(pc_struct.character_id)
+                .filter(|entity_id| self.entities.contains_key(entity_id));
             mapped_entity_id
                 .or_else(|| {
                     self.find_reconnect_entity_id(
@@ -695,7 +696,11 @@ impl EntityTracker {
             }
 
             let entity_id = {
-                let mapped_entity_id = self.id_tracker.borrow().get_entity_id(member.character_id);
+                let mapped_entity_id = self
+                    .id_tracker
+                    .borrow()
+                    .get_entity_id(member.character_id)
+                    .filter(|entity_id| self.entities.contains_key(entity_id));
                 mapped_entity_id
                     .or_else(|| {
                         self.find_reconnect_entity_id(&member.name, member.class_id as u32, 0)
@@ -753,6 +758,12 @@ impl EntityTracker {
 
     pub fn remove_object(&mut self, entity_id: u64) {
         if let Some(entity) = self.entities.remove(&entity_id) {
+            self.id_tracker
+                .borrow_mut()
+                .remove_entity_mapping(entity_id);
+            self.party_tracker
+                .borrow_mut()
+                .remove_entity_mapping(entity_id);
             self.stash_removed_player_entity(&entity);
         }
     }
@@ -956,14 +967,16 @@ impl EntityTracker {
 
     pub fn mark_inspect_stale(&mut self, character_id: u64) {
         let mut inspect_name = None;
-        if let Some(entity) = self
+        for entity in self
             .entities
             .values_mut()
-            .find(|entity| entity.character_id == character_id)
+            .filter(|entity| entity.entity_type == Player && entity.character_id == character_id)
         {
             entity.inspect_requested = false;
             entity.inspect_stale = true;
-            inspect_name = Some(entity.name.clone());
+            if inspect_name.is_none() {
+                inspect_name = Some(entity.name.clone());
+            }
         }
         self.update_removed_player_copies_by_character(character_id, |entity| {
             entity.inspect_requested = false;
@@ -1044,25 +1057,24 @@ impl EntityTracker {
 
         let result = Arc::new(result);
 
-        if let Some(entity) = self
+        for entity in self
             .entities
             .values_mut()
-            .find(|entity| entity.entity_type == Player && entity.name == name)
+            .filter(|entity| entity.entity_type == Player && entity.name == name)
         {
             apply_inspect_payload_to_entity(entity, &snapshot, &info, result.clone());
-        } else {
-            for character_id in removed_character_ids {
-                if let Some(entity) = self
-                    .removed_player_entities_by_character_id
-                    .get_mut(&character_id)
-                {
-                    apply_inspect_payload_to_entity(entity, &snapshot, &info, result.clone());
-                }
+        }
+        for character_id in removed_character_ids {
+            if let Some(entity) = self
+                .removed_player_entities_by_character_id
+                .get_mut(&character_id)
+            {
+                apply_inspect_payload_to_entity(entity, &snapshot, &info, result.clone());
             }
-            for key in removed_name_class_keys {
-                if let Some(entity) = self.removed_player_entities_by_name_class.get_mut(&key) {
-                    apply_inspect_payload_to_entity(entity, &snapshot, &info, result.clone());
-                }
+        }
+        for key in removed_name_class_keys {
+            if let Some(entity) = self.removed_player_entities_by_name_class.get_mut(&key) {
+                apply_inspect_payload_to_entity(entity, &snapshot, &info, result.clone());
             }
         }
 
@@ -1560,25 +1572,47 @@ impl EntityTracker {
             source_encounter_entity,
         );
 
-        if source_entity.entity_type == EntityType::Player {
-            let self_effects = self.status_tracker.borrow_mut().get_source_status_effects(
-                &source_entity,
-                self.local_character_id,
-                timestamp,
-            );
-            status_effect.owner_player_stats_snapshot = snapshot_owner_player_stats_for_buffs(
-                &source_entity,
-                status_effect.source_skill_id,
-                &self_effects,
-                timestamp.timestamp_millis(),
-                self,
-            );
-            status_effect.source_skill_runtime_snapshot = status_effect
-                .source_skill_id
-                .and_then(|skill_id| source_entity.skill_runtime_data.get(&skill_id).cloned());
-        }
+        self.populate_status_effect_snapshots(&mut status_effect, &source_entity, timestamp);
 
         status_effect
+    }
+
+    fn populate_status_effect_snapshots(
+        &mut self,
+        status_effect: &mut StatusEffectDetails,
+        source_entity: &Entity,
+        timestamp: DateTime<Utc>,
+    ) {
+        if source_entity.entity_type != EntityType::Player {
+            status_effect.owner_player_stats_snapshot = None;
+            status_effect.source_skill_runtime_snapshot = None;
+            return;
+        }
+
+        let self_effects = self.status_tracker.borrow_mut().get_source_status_effects(
+            source_entity,
+            self.local_character_id,
+            timestamp,
+        );
+        status_effect.owner_player_stats_snapshot = snapshot_owner_player_stats_for_buffs(
+            source_entity,
+            status_effect.source_skill_id,
+            &self_effects,
+            timestamp.timestamp_millis(),
+            self,
+        );
+        status_effect.source_skill_runtime_snapshot = status_effect
+            .source_skill_id
+            .and_then(|skill_id| source_entity.skill_runtime_data.get(&skill_id).cloned());
+    }
+
+    pub fn refresh_status_effect_snapshots(
+        &mut self,
+        status_effect: &mut StatusEffectDetails,
+        timestamp: DateTime<Utc>,
+    ) {
+        let source_entity = self.get_source_entity(status_effect.source_id);
+        self.populate_status_effect_snapshots(status_effect, &source_entity, timestamp);
     }
 
     fn resolve_status_effect_target_entity(

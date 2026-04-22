@@ -11,6 +11,7 @@ use crate::models::ExternalResourceAddon;
 
 use hashbrown::HashMap;
 use meter_defs::defs::{ItemData, PKTPCInspectResult};
+use std::sync::OnceLock;
 
 const DEFAULT_ARK_PASSIVE_KARMA_EVOLUTION_DAMAGE: f64 = 0.06;
 const DEFAULT_ARK_PASSIVE_KARMA_BRAND_POWER: f64 = 0.06;
@@ -29,6 +30,15 @@ struct ParsedItemAddon {
     original_stat: u32,
     value: i64,
 }
+
+#[derive(Debug, Clone, Copy)]
+struct GemLayoutOffsets {
+    ability_offset: usize,
+    addon_offset: usize,
+    value_offset: usize,
+}
+
+static GEM_LAYOUT_OFFSETS: OnceLock<GemLayoutOffsets> = OnceLock::new();
 
 #[derive(Debug, Default, Clone)]
 pub struct DerivedAbilityFeature {
@@ -278,10 +288,12 @@ fn apply_item(
             && let Some(gem_bytes) = item_data.bytearraylist_3.as_deref()
         {
             item_debug.gem_line_count = split_fixed_chunks(gem_bytes, 9).count();
-            for chunk in split_fixed_chunks(gem_bytes, 9) {
-                if !apply_gem_addon(chunk, raw_stat_pairs, derived) {
-                    item_debug.issues.push("unresolved_gem_layout".to_string());
+            if let Some(gem_layout) = resolve_gem_layout_once(gem_bytes) {
+                for chunk in split_fixed_chunks(gem_bytes, 9) {
+                    apply_gem_addon(chunk, gem_layout, raw_stat_pairs, derived);
                 }
+            } else {
+                item_debug.issues.push("unresolved_gem_layout".to_string());
             }
         }
     } else if item_data.equippable_item_data.is_some() || item_data.b_0 == 7 {
@@ -1064,24 +1076,34 @@ fn apply_ability_level_addons(
 
 fn apply_gem_addon(
     gem_line: &[u8],
+    gem_layout: GemLayoutOffsets,
     raw_stat_pairs: &HashMap<u8, i64>,
     derived: &mut InspectDerivedStats,
-) -> bool {
-    let Some((ability_offset, addon_offset, value_offset)) = resolve_gem_layout(gem_line) else {
-        return false;
-    };
-    if gem_line.len() < ability_offset + 4 || gem_line.len() < value_offset + 4 {
-        return false;
-    }
+) {
+    let GemLayoutOffsets {
+        ability_offset,
+        addon_offset,
+        value_offset,
+    } = gem_layout;
+    debug_assert!(gem_line.len() >= ability_offset + 4 && gem_line.len() >= value_offset + 4);
 
     let addon_type = gem_line[addon_offset];
     let ability_id = read_u32(gem_line, ability_offset);
     let value = read_i32(gem_line, value_offset) as i64;
     apply_numeric_addon(addon_type, ability_id, value, raw_stat_pairs, derived);
-    true
 }
 
-fn resolve_gem_layout(gem_line: &[u8]) -> Option<(usize, usize, usize)> {
+fn resolve_gem_layout_once(gem_bytes: &[u8]) -> Option<GemLayoutOffsets> {
+    if let Some(layout) = GEM_LAYOUT_OFFSETS.get() {
+        return Some(*layout);
+    }
+
+    let layout = split_fixed_chunks(gem_bytes, 9).find_map(resolve_gem_layout)?;
+    let _ = GEM_LAYOUT_OFFSETS.set(layout);
+    Some(layout)
+}
+
+fn resolve_gem_layout(gem_line: &[u8]) -> Option<GemLayoutOffsets> {
     let mut ability_offset = None;
     for idx in 0..=gem_line.len().saturating_sub(4) {
         let skill_id = read_u32(gem_line, idx);
@@ -1110,7 +1132,11 @@ fn resolve_gem_layout(gem_line: &[u8]) -> Option<(usize, usize, usize)> {
             && !(*idx >= value_offset && *idx < value_offset + 4)
     })?;
 
-    Some((ability_offset, addon_offset, value_offset))
+    Some(GemLayoutOffsets {
+        ability_offset,
+        addon_offset,
+        value_offset,
+    })
 }
 
 fn apply_item_option_level<T: ItemOptionLevelLike>(

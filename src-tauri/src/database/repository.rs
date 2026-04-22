@@ -465,12 +465,14 @@ impl Repository {
             })
             .collect();
 
-        let local_player = players
-            .iter()
-            .find(|e| e.name == encounter.local_player);
+        let local_player = players.iter().find(|e| e.name == encounter.local_player);
         let local_player_dps = local_player.map(|e| e.damage_stats.dps).unwrap_or_default();
-        let local_player_rdps = local_player.map(|e| e.damage_stats.rdps).unwrap_or_default();
-        let local_player_ndps = local_player.map(|e| e.damage_stats.ndps).unwrap_or_default();
+        let local_player_rdps = local_player
+            .map(|e| e.damage_stats.rdps)
+            .unwrap_or_default();
+        let local_player_ndps = local_player
+            .map(|e| e.damage_stats.ndps)
+            .unwrap_or_default();
 
         players.sort_unstable_by_key(|e| Reverse(e.damage_stats.damage_dealt));
 
