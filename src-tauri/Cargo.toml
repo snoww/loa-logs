@@ -92,3 +92,8 @@ strip = true # Remove debug symbols
 
 [profile.dev.package."*"]
 debug = false # Disable debug symbols for dependencies
+
+[profile.profiling]
+inherits = "release"
+debug = true
+strip = false
