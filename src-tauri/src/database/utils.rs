@@ -425,10 +425,7 @@ pub fn update_entity_stats(
         entity.damage_stats.unbuffed_dps = unbuffed_dps;
 
         if rdps_valid {
-            let ndmg = entity.damage_stats.damage_dealt
-                - entity.damage_stats.rdps_damage_received_support
-                - (entity.damage_stats.rdps_damage_received
-                    - entity.damage_stats.rdps_damage_received_support);
+            let ndmg = entity.damage_stats.damage_dealt - entity.damage_stats.rdps_damage_received;
             let rdmg = ndmg + entity.damage_stats.rdps_damage_given;
             entity.damage_stats.ndps = ndmg / duration_seconds;
             entity.damage_stats.rdps = rdmg / duration_seconds;

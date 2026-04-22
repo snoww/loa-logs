@@ -258,20 +258,11 @@ export function timeToSeconds(time: string): number {
 }
 
 export function getRDamage(damageStats: DamageStats): number {
-  return (
-    damageStats.damageDealt -
-    damageStats.rdpsDamageReceivedSupport -
-    (damageStats.rdpsDamageReceived - damageStats.rdpsDamageReceivedSupport) +
-    damageStats.rdpsDamageGiven
-  );
+  return damageStats.damageDealt - damageStats.rdpsDamageReceived + damageStats.rdpsDamageGiven;
 }
 
 export function getBaseDamage(damageStats: DamageStats): number {
-  return (
-    damageStats.damageDealt -
-    damageStats.rdpsDamageReceivedSupport -
-    (damageStats.rdpsDamageReceived - damageStats.rdpsDamageReceivedSupport)
-  );
+  return damageStats.damageDealt - damageStats.rdpsDamageReceived;
 }
 
 export function getBossHpBars(boss: { name: string; maxHp: number; hpBars?: number }) {
