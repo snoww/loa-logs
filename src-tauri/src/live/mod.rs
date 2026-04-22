@@ -861,6 +861,15 @@ pub fn start(args: StartArgs) -> Result<()> {
                     if let Some(entity) = entity_tracker.entities.get(&local_player_id) {
                         state.update_local_player(entity);
                     }
+                    if !banned {
+                        for character_id in pkt.party_member_datas.iter().map(|m| m.character_id) {
+                            if ban_list.is_banned(character_id) {
+                                banned = true;
+                                state.disabled = true;
+                                break;
+                            }
+                        }
+                    }
                     party_cache = None;
                     queue_missing_party_inspects(
                         &ipc.0,

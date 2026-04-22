@@ -1,6 +1,6 @@
 <script lang="ts">
   import LiveDamageMeter from "./LiveDamageMeter.svelte";
-  import { addToast } from "$lib/components/Toaster.svelte";
+  import { addToast, removeToast } from "$lib/components/Toaster.svelte";
   import { EncounterState } from "$lib/encounter.svelte";
   import { misc, nineveh, settings } from "$lib/stores.svelte";
   import { uploadLog } from "$lib/utils/sync";
@@ -41,6 +41,7 @@
   let time = $state(+Date.now());
   let unsubscribe: (() => void) | null = null;
   let pendingTimeouts: ReturnType<typeof setTimeout>[] = [];
+  let bannedToastId: string | undefined;
 
   function trackTimeout(fn: () => void, ms: number) {
     const id = setTimeout(() => {
@@ -98,6 +99,10 @@
       if (!event.payload) {
         ninevehStateRequest();
         addToast(zoneChange);
+        if (bannedToastId) {
+          removeToast(bannedToastId);
+          bannedToastId = undefined;
+        }
       }
       trackTimeout(() => {
         misc.raidInProgress = true;
@@ -154,7 +159,7 @@
     handles.push(handle);
 
     handle = await onBannedEvent(() => {
-      addToast(bannedEvent);
+      bannedToastId = addToast(bannedEvent).id;
     });
     handles.push(handle);
 
