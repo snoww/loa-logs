@@ -387,7 +387,7 @@ pub fn start(args: StartArgs) -> Result<()> {
                         entity.character_id
                     ));
                     if !banned
-                        && !state.raid_difficulty.is_empty()
+                        && !state.encounter.current_boss_name.is_empty()
                         && ban_list.is_banned(entity.character_id)
                     {
                         banned = true;
@@ -432,7 +432,7 @@ pub fn start(args: StartArgs) -> Result<()> {
                         entity.character_id
                     ));
                     if !banned
-                        && !state.raid_difficulty.is_empty()
+                        && !state.encounter.current_boss_name.is_empty()
                         && ban_list.is_banned(entity.character_id)
                     {
                         banned = true;
