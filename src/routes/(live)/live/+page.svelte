@@ -62,8 +62,6 @@
       unsubscribe = unsub;
     });
 
-    ninevehStateRequest();
-
     return () => {
       unsubscribe?.();
       clearInterval(interval);
@@ -98,6 +96,7 @@
       misc.raidInProgress = false;
       misc.missingInfo = false;
       if (!event.payload) {
+        ninevehStateRequest();
         addToast(zoneChange);
       }
       trackTimeout(() => {

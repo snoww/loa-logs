@@ -7,7 +7,8 @@
   import MiniEncounterInfo from "./MiniEncounterInfo.svelte";
   import MiniPlayers from "./MiniPlayers.svelte";
   import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
-  import { onEncounterUpdate, onPhaseTransition, onRaidStart, onZoneChange } from "$lib/api";
+  import { ninevehStateRequest, onEncounterUpdate, onPhaseTransition, onRaidStart, onZoneChange } from "$lib/api";
+  import { zoneChange } from "$lib/utils/toasts";
 
   let enc = $derived(new EncounterState(undefined, true));
   let time = $state(+Date.now());
@@ -57,9 +58,12 @@
     });
     handles.push(handle);
 
-    handle = await onZoneChange(() => {
+    handle = await onZoneChange((event) => {
       misc.raidInProgress = false;
       misc.missingInfo = false;
+      if (!event.payload) {
+        ninevehStateRequest();
+      }
       trackTimeout(() => {
         misc.raidInProgress = true;
       }, 8000);
