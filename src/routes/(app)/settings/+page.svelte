@@ -543,13 +543,13 @@
           "logs",
           "ndps",
           "nDPS",
-          "Net Damage per second (self damage with incoming rDPS removed)"
+          "Neutral Damage per second (self damage with incoming buffs removed)"
         )}
         {@render settingOption(
           "logs",
           "rdps",
           "rDPS",
-          "Raid Damage per second (self damage plus outgoing rDPS given to others from synergies and buffs)"
+          "Raid Damage per second (self damage + damage given to others from synergies and buffs)"
         )}
         {@render settingOption(
           "logs",
@@ -615,7 +615,7 @@
           "logs",
           "ndps",
           "Skill nDMG / nDPS",
-          "Net Damage and Net DPS per skill (self damage with incoming rDPS removed)",
+          "Neutral Damage and Neutral DPS per skill (self damage with incoming buffs removed)",
           true
         )}
         {@render settingOption(
@@ -788,13 +788,13 @@
           "meter",
           "ndps",
           "nDPS",
-          "Net Damage per second (self damage with incoming rDPS removed)"
+          "Neutral Damage per second (self damage with incoming buffs removed)"
         )}
         {@render settingOption(
           "meter",
           "rdps",
           "rDPS",
-          "Raid Damage per second (self damage plus outgoing rDPS given to others from synergies and buffs)"
+          "Raid Damage per second (self damage + damage given to others from synergies and buffs)"
         )}
         {@render settingOption(
           "meter",
@@ -860,7 +860,7 @@
           "meter",
           "ndps",
           "Skill nDMG / nDPS",
-          "Net Damage and Net DPS per skill (self damage with incoming rDPS removed)",
+          "Neutral Damage and Neutral DPS per skill (self damage with incoming buffs removed)",
           true
         )}
         {@render settingOption(

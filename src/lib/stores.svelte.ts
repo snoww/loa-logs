@@ -300,7 +300,7 @@ export const defaultSettings: AppSettings = {
     breakdown: {
       damage: true,
       dps: true,
-      ndps: false,
+      ndps: true,
       rdps: false,
       udmg: false,
       unbuffedDamage: true,

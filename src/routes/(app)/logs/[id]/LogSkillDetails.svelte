@@ -221,7 +221,7 @@
                 {/if}
                 {#if anyNdmg}
                   <td class="w-16 font-semibold">
-                    <QuickTooltip tooltip="Net damage (self damage with damage from buffs removed)" class="w-fit"
+                    <QuickTooltip tooltip="Neutral damage (self damage with incoming buffs removed)" class="w-fit"
                       >nDMG</QuickTooltip
                     >
                   </td>

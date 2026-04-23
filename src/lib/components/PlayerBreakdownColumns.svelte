@@ -3,7 +3,7 @@
   import { EntityState } from "$lib/entity.svelte.js";
   import { SkillState } from "$lib/skill.svelte.js";
   import { settings } from "$lib/stores.svelte.js";
-  import { abbreviateNumber, abbreviateNumberSplit, customRound } from "$lib/utils";
+  import { abbreviateNumber, abbreviateNumberSplit, customRound, isSupportSpec } from "$lib/utils";
   import { hyperAwakeningIds } from "$lib/utils/buffs";
   import { damageValue, percentValue } from "./Snippets.svelte";
 
@@ -38,14 +38,15 @@
       supportPriority: 7
     },
 
-    // Net damage
+    // Neutral damage
     {
       show(enc) {
+        if (isSupportSpec(enc.entity.spec)) return false;
         if (!enc.encounter.curSettings.breakdown.ndps) return false;
         return enc.encounter.anyRdpsContributions;
       },
       headerText: "nDMG",
-      headerTooltip: "Net Damage (self damage with incoming rDPS removed)",
+      headerTooltip: "Neutral Damage (self damage with incoming buffs removed)",
       value: ndmg,
       valueTooltip: ndmgTooltip
     },
@@ -88,14 +89,15 @@
       supportPriority: 8
     },
 
-    // Net DPS
+    // Neutral DPS
     {
       show(enc) {
+        if (isSupportSpec(enc.entity.spec)) return false;
         if (!enc.encounter.curSettings.breakdown.ndps) return false;
         return enc.encounter.anyRdpsContributions;
       },
       headerText: "nDPS",
-      headerTooltip: "Net Damage per second (self damage with incoming rDPS removed)",
+      headerTooltip: "Neutral Damage per second (self damage with incoming buffs removed)",
       value: ndps,
       valueTooltip: ndpsTooltip
     },
@@ -732,7 +734,7 @@
   {#if state.skill.rdpsDamageReceived > 0}
     {@const received = state.skill.rdpsDamageReceived}
     <div class="-mx-px flex flex-col space-y-1 py-px text-xs font-normal">
-      <span class="text-gray-300">Net: {state.skillNdmg.toLocaleString()}</span>
+      <span class="text-gray-300">Neutral: {state.skillNdmg.toLocaleString()}</span>
       <span class="text-gray-300">rDPS received: {received.toLocaleString()}</span>
     </div>
   {:else}

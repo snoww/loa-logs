@@ -90,7 +90,7 @@
         return enc.anyRdpsContributions;
       },
       headerText: "nDPS",
-      headerTooltip: "Net Damage per second (self damage with incoming rDPS removed)",
+      headerTooltip: "Neutral Damage per second (self damage with incoming buffs removed)",
       value: ndps,
       valueTooltip: ndpsTooltip,
       width: "w-14"
@@ -103,7 +103,7 @@
         return enc.anyRdpsContributions;
       },
       headerText: "rDPS",
-      headerTooltip: "Raid Damage per second (self damage plus outgoing rDPS given to others from synergies and buffs)",
+      headerTooltip: "Raid Damage per second (self damage + damage given to others from synergies and buffs)",
       value: rdps,
       valueTooltip: rdpsTooltip,
       width: "w-14"
@@ -141,7 +141,7 @@
         return enc.anyRdpsContributions;
       },
       headerText: "rCon%",
-      headerTooltip: "True rDPS contribution % from party members' buffs and synergies",
+      headerTooltip: "Contribution % from all party members' buffs and synergies",
       value: rdpsContribPct,
       valueTooltip: rdpsContribTooltip,
       width: "w-14"

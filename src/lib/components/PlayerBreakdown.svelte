@@ -134,6 +134,18 @@
             </QuickTooltip>
           </td>
         {/if}
+        {#if enc.curSettings.breakdown.ndps && enc.anyRdpsContributions}
+          {#if entity.damageStats.rdpsDamageReceived > 0}
+            {@const ndmg = abbreviateNumberSplit(entityState.baseDamage)}
+            <td class="px-1 text-center">
+              <QuickTooltip tooltip={entityState.baseDamage.toLocaleString()}>
+                {ndmg[0]}<span class="text-xxs text-gray-300">{ndmg[1]}</span>
+              </QuickTooltip>
+            </td>
+          {:else}
+            <td class="px-1 text-center">-</td>
+          {/if}
+        {/if}
         {#if enc.curSettings.breakdown.dps}
           <td class="px-1 text-center">
             <QuickTooltip tooltip={entity.damageStats.dps.toLocaleString()}>
@@ -148,6 +160,17 @@
               {unbuffedDps[0]}<span class="text-xxs text-gray-300">{unbuffedDps[1]}</span>
             </QuickTooltip>
           </td>
+        {/if}
+        {#if enc.curSettings.breakdown.ndps && enc.anyRdpsContributions}
+          {#if entity.damageStats.rdpsDamageReceived > 0}
+            <td class="px-1 text-center">
+              <QuickTooltip tooltip={entityState.ndps.toLocaleString()}>
+                {entityState.ndpsString[0]}<span class="text-xxs text-gray-300">{entityState.ndpsString[1]}</span>
+              </QuickTooltip>
+            </td>
+          {:else}
+            <td class="px-1 text-center">-</td>
+          {/if}
         {/if}
         {#if enc.curSettings.breakdown.damagePercent}
           <td class="px-1 text-center">

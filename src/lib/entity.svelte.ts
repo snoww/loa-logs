@@ -4,7 +4,8 @@ import {
   formatPlayerName,
   getBaseDamage,
   getEstherFromNpcId,
-  getRDamage
+  getRDamage,
+  isSupportSpec
 } from "$lib/utils";
 
 export type SkillSort = "damage" | "buffed" | "stagger";
