@@ -89,6 +89,8 @@ pub struct Skill {
     // total new rdps received by this skill from party members
     #[serde(default)]
     pub rdps_damage_received: i64,
+    #[serde(default)]
+    pub rdps_damage_received_support: i64,
 }
 
 #[derive(Debug, Default, Serialize, Deserialize, Clone)]

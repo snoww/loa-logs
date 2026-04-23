@@ -196,7 +196,8 @@ export interface Skill {
   stagger: number;
   rdpsReceived: Record<number, Record<number, number>>; // legacy bdps type -> buffedBy skill -> damage
   rdpsContributed: Record<number, number>; // legacy udps type -> amount
-  rdpsDamageReceived: number; // total rdps received by this skill from party members
+  rdpsDamageReceived: number; // total rdps received from party members
+  rdpsDamageReceivedSupport: number; // rdps received from support buffs
 }
 
 export interface SkillCast {

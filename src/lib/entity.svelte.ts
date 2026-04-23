@@ -323,7 +323,8 @@ export class EntityState {
         stagger: 0,
         rdpsReceived: {},
         rdpsContributed: { 3: info.bDmg },
-        rdpsDamageReceived: 0
+        rdpsDamageReceived: 0,
+        rdpsDamageReceivedSupport: 0
       };
       adjustedSkills.push(syntheticSkill);
     } else {

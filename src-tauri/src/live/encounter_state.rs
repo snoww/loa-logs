@@ -1928,6 +1928,7 @@ impl EncounterState {
         };
         if let Some(rdps_result) = rdps_result.as_ref() {
             skill.rdps_damage_received += rdps_result.rdps_damage_received;
+            skill.rdps_damage_received_support += rdps_result.rdps_damage_received_support;
 
             skill_hit.rdps_damage_received = rdps_result.rdps_damage_received;
             skill_hit.rdps_damage_received_support = rdps_result.rdps_damage_received_support;
