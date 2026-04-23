@@ -1962,17 +1962,6 @@ impl EncounterState {
 
         source_entity.skill_stats.hits += 1;
         skill.hits += 1;
-        if let Some(rdps_result) = rdps_result.as_ref() {
-            for attribution in &rdps_result.attributions {
-                *skill
-                    .rdps_received
-                    .entry(attribution.rdps_type)
-                    .or_default()
-                    .entry(attribution.source_skill_id)
-                    .or_default() += attribution.damage;
-            }
-        }
-
         if hit_flag == HitFlag::CRITICAL || hit_flag == HitFlag::DOT_CRITICAL {
             source_entity.skill_stats.crits += 1;
             source_entity.damage_stats.crit_damage += damage;
@@ -2444,8 +2433,6 @@ impl EncounterState {
                             "unbuffed_damage": entity.damage_stats.unbuffed_damage,
                             "rdps_damage_received": entity.damage_stats.rdps_damage_received,
                             "rdps_damage_given": entity.damage_stats.rdps_damage_given,
-                            "udps_damage_given": entity.damage_stats.udps_damage_given,
-                            "udps_unresolved_by_skill": entity.damage_stats.udps_unresolved_by_skill,
                         },
                     })),
                 });
@@ -2473,46 +2460,41 @@ impl EncounterState {
                 });
             }
 
-            let resolved_skill_key = self
-                .encounter
-                .entities
-                .get(&contributor_name)
-                .and_then(|entity| Self::resolve_udps_skill_key(entity, event.skill_id));
 
-            // add legacy uDPS contribution to the support's skill
+            // add rdps_contributed to the support's skill
             if let Some(contributor_entity) = self.encounter.entities.get_mut(&contributor_name) {
-                if matches!(event.event_type, 1 | 3 | 5) {
-                    contributor_entity.damage_stats.udps_damage_given += event.value;
-                }
-
-                if let Some(skill_key) = resolved_skill_key
-                    && let Some(contributor_skill) = contributor_entity.skills.get_mut(&skill_key)
+                if let Some(contributor_skill) = contributor_entity.skills.get_mut(&event.skill_id)
                 {
                     *contributor_skill
                         .rdps_contributed
                         .entry(event.event_type)
                         .or_default() += event.value;
-                } else {
-                    *contributor_entity
-                        .damage_stats
-                        .udps_unresolved_by_skill
-                        .entry(event.skill_id)
-                        .or_default()
+                } else if let Some(skill_data) = SKILL_DATA.get(&event.skill_id)
+                    && let Some(skill_name) = skill_data.name.clone()
+                    && let Some(contributor_skill) = contributor_entity
+                    .skills
+                    .values_mut()
+                    .find(|s| s.name == skill_name)
+                {
+                    *contributor_skill
+                        .rdps_contributed
                         .entry(event.event_type)
                         .or_default() += event.value;
                 }
             }
 
+            // only track at entity level, can't reliably attribute to a specific skill
             if let Some(source_entity) = self.encounter.entities.get_mut(&source_name) {
                 if matches!(event.event_type, 1 | 3 | 5) {
                     source_entity.damage_stats.buffed_damage += event.value;
                 }
-                Self::recompute_entity_udps_unbuffed(source_entity);
+                source_entity.damage_stats.unbuffed_damage =
+                    source_entity.damage_stats.damage_dealt
+                        - source_entity.damage_stats.buffed_damage;
             }
 
             if let Some(debug_dump) = debug_dump.as_mut() {
                 debug_dump["udps_resolution"] = json!({
-                    "resolved_skill_key": resolved_skill_key,
                     "event_counts_as_damage_given": matches!(event.event_type, 1 | 3 | 5),
                 });
                 debug_dump["source_after"] = json!({
@@ -2526,8 +2508,6 @@ impl EncounterState {
                             "unbuffed_damage": entity.damage_stats.unbuffed_damage,
                             "rdps_damage_received": entity.damage_stats.rdps_damage_received,
                             "rdps_damage_given": entity.damage_stats.rdps_damage_given,
-                            "udps_damage_given": entity.damage_stats.udps_damage_given,
-                            "udps_unresolved_by_skill": entity.damage_stats.udps_unresolved_by_skill,
                         },
                     })),
                 });
@@ -2550,10 +2530,6 @@ impl EncounterState {
                                 "rdps_contributed": skill.rdps_contributed,
                             }))
                             .collect::<Vec<_>>(),
-                        "damage_stats": {
-                            "udps_damage_given": entity.damage_stats.udps_damage_given,
-                            "udps_unresolved_by_skill": entity.damage_stats.udps_unresolved_by_skill,
-                        },
                     })),
                 });
                 write_debug_json_dump(

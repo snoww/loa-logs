@@ -259,8 +259,6 @@ export interface DamageStats {
   stagger: number;
   unbuffedDamage: number;
   unbuffedDps: number;
-  udpsDamageGiven?: number;
-  udpsUnresolvedBySkill?: { [skillId: number]: { [eventType: number]: number } };
   [key: string]: any;
 }
 

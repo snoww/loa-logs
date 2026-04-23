@@ -137,10 +137,6 @@ pub struct DamageStats {
     #[serde(default)]
     pub unbuffed_dps: i64, // legacy uDPS-only unbuffed dps derived from analyzer packets
     #[serde(default)]
-    pub udps_damage_given: i64,
-    #[serde(default)]
-    pub udps_unresolved_by_skill: HashMap<u32, HashMap<u8, i64>>,
-    #[serde(default)]
     pub rdps: i64,
     #[serde(default)]
     pub ndps: i64,
