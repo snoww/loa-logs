@@ -20,6 +20,7 @@
       return [
         {
           title: "",
+          sortable: true,
           members: enc.players.map((player, i) => ({
             entity: player,
             width: enc.playerDamagePercentages[i]
@@ -32,6 +33,7 @@
     return enc.parties.map((party, partyId) => {
       return {
         title: `Party ${partyId + 1}`,
+        sortable: true,
         members: party.map((player, i) => ({
           entity: player,
           width: enc.partyDamagePercentages[partyId]![i]
@@ -50,6 +52,7 @@
       ...parties,
       {
         title: "Esthers",
+        sortable: false,
         members: esthers.map((esther) => ({
           entity: esther,
           width: (esther.damageStats.damageDealt / enc.topDamageDealt) * 100
@@ -64,8 +67,8 @@
     <table class="isolate w-full table-fixed">
       <thead class="z-40 h-6 {enc.live ? 'sticky top-0' : ''}">
         <tr class="bg-neutral-900">
-          <th class="w-7 whitespace-nowrap px-2 font-normal tracking-tight">{party.title}</th>
-          <DamageMeterHeader {enc} />
+          <th class="w-7 px-2 font-normal tracking-tight whitespace-nowrap">{party.title}</th>
+          <DamageMeterHeader {enc} sortable={party.sortable ?? true} />
         </tr>
       </thead>
       <tbody class="relative z-10 text-neutral-200">
@@ -75,7 +78,7 @@
             class="h-7 px-2 py-1 {settings.app.general.underlineHovered ? 'hover:underline' : ''}"
             onclick={() => inspectPlayer(member.entity.name)}
           >
-            <PlayerRow {enc} entity={member.entity} width={member.width} />
+            <PlayerRow {enc} entity={member.entity} width={member.width} sortable={party.sortable} />
           </tr>
         {/each}
       </tbody>

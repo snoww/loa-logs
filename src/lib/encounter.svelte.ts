@@ -1,13 +1,16 @@
 import { type Encounter, type Entity, EntityType } from "$lib/types";
 import { sumRdpsContributed } from "./skill.svelte";
 import { settings } from "./stores.svelte";
-import { timestampToMinutesAndSeconds } from "./utils";
+import { getRDamage, timestampToMinutesAndSeconds } from "./utils";
+
+export type PlayerSort = "damage" | "rdps" | "stagger";
 
 export class EncounterState {
   live = false;
 
   encounter: Encounter | undefined = $state();
   curSettings = $derived(this.live ? settings.app.meter : settings.app.logs);
+  playerSort: PlayerSort = $state("damage");
   end = $derived(this.encounter?.lastCombatPacket ?? 0);
 
   duration = $state(this.encounter?.duration ?? 0);
@@ -26,17 +29,22 @@ export class EncounterState {
    */
   players = $derived.by(() => {
     if (!this.encounter) return [];
-    return Object.values(this.encounter.entities)
-      .filter((e) => {
-        if (e.damageStats.damageDealt <= 0) return false;
-
-        const isValidPlayer = e.entityType === EntityType.PLAYER && e.classId !== 0;
-        if (settings.app.general.showEsther) {
-          return isValidPlayer || e.entityType === EntityType.ESTHER;
-        }
-        return isValidPlayer;
-      })
-      .sort((a, b) => b.damageStats.damageDealt - a.damageStats.damageDealt);
+    const entities = Object.values(this.encounter.entities).filter((e) => {
+      if (e.damageStats.damageDealt <= 0) return false;
+      const isValidPlayer = e.entityType === EntityType.PLAYER && e.classId !== 0;
+      if (settings.app.general.showEsther) {
+        return isValidPlayer || e.entityType === EntityType.ESTHER;
+      }
+      return isValidPlayer;
+    });
+    switch (this.playerSort) {
+      case "rdps":
+        return entities.sort((a, b) => getRDamage(b.damageStats) - getRDamage(a.damageStats));
+      case "stagger":
+        return entities.sort((a, b) => b.damageStats.stagger - a.damageStats.stagger);
+      default:
+        return entities.sort((a, b) => b.damageStats.damageDealt - a.damageStats.damageDealt);
+    }
   });
 
   /**
@@ -95,14 +103,30 @@ export class EncounterState {
 
   topDamageDealt = $derived(this.encounter?.encounterDamageStats.topDamageDealt ?? 0);
 
+  sortValue(entity: Entity): number {
+    switch (this.playerSort) {
+      case "rdps":
+        return getRDamage(entity.damageStats);
+      case "stagger":
+        return entity.damageStats.stagger;
+      default:
+        return entity.damageStats.damageDealt;
+    }
+  }
+
+  topSortValue = $derived.by(() => {
+    if (!this.players.length) return 0;
+    return Math.max(...this.players.map((p) => this.sortValue(p)));
+  });
+
   /**
    * Array of damage dealt percentages for each player in the encounter, relative to the highest damage dealt.
    *
    * Indexes in the array correspond to the indexes in the players array.
    */
   playerDamagePercentages = $derived.by(() => {
-    if (this.topDamageDealt === 0) return [];
-    return this.players.map((player) => (player.damageStats.damageDealt / this.topDamageDealt) * 100);
+    if (this.topSortValue === 0) return [];
+    return this.players.map((player) => (this.sortValue(player) / this.topSortValue) * 100);
   });
 
   /**
@@ -174,7 +198,16 @@ export class EncounterState {
 
     // sort parties by partyId
     for (const party of temp) {
-      party.sort((a, b) => b.damageStats.damageDealt - a.damageStats.damageDealt);
+      switch (this.playerSort) {
+        case "rdps":
+          party.sort((a, b) => getRDamage(b.damageStats) - getRDamage(a.damageStats));
+          break;
+        case "stagger":
+          party.sort((a, b) => b.damageStats.stagger - a.damageStats.stagger);
+          break;
+        default:
+          party.sort((a, b) => b.damageStats.damageDealt - a.damageStats.damageDealt);
+      }
     }
 
     return temp.length >= 1 ? temp : [this.players];
@@ -186,7 +219,7 @@ export class EncounterState {
    * Indexes in the array, and sub array correspond to the indexes in `this.parties`
    */
   partyDamagePercentages = $derived(
-    this.parties.map((party) => party.map((player) => (player.damageStats.damageDealt / this.topDamageDealt) * 100))
+    this.parties.map((party) => party.map((player) => (this.sortValue(player) / this.topSortValue) * 100))
   );
 
   /**
@@ -237,5 +270,6 @@ export class EncounterState {
     this.encounter = undefined;
     this.duration = 0;
     this.partyInfo = undefined;
+    this.playerSort = "damage";
   }
 }
