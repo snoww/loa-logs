@@ -182,6 +182,7 @@ pub struct EncounterState {
 
     custom_id_map: HashMap<u32, u32>,
     startup_barrier: Option<StartupBarrierState>,
+    rearm_startup_barrier_on_next_combat: bool,
     pending_phase_transition: Option<i32>,
 
     pub damage_is_valid: bool,
@@ -226,6 +227,7 @@ impl EncounterState {
 
             custom_id_map: HashMap::new(),
             startup_barrier: None,
+            rearm_startup_barrier_on_next_combat: false,
             pending_phase_transition: None,
 
             damage_is_valid: true,
@@ -264,6 +266,7 @@ impl EncounterState {
 
         self.custom_id_map = HashMap::new();
         self.startup_barrier = None;
+        self.rearm_startup_barrier_on_next_combat = false;
         self.pending_phase_transition = None;
         self.debug_players.clear();
         self.lal_debug_zone_id = 0;
@@ -366,6 +369,7 @@ impl EncounterState {
             if self.raid_difficulty != "The First" {
                 let now = Utc::now().timestamp_millis();
                 self.intermission_start = Some(now);
+                self.rearm_startup_barrier_on_next_combat = true;
                 info!("starting intermission");
                 for entity in self
                     .encounter
@@ -778,6 +782,28 @@ impl EncounterState {
         self.app
             .emit("raid-start", timestamp)
             .expect("failed to emit raid-start");
+    }
+
+    fn open_startup_barrier(
+        &mut self,
+        entity_tracker: &mut EntityTracker,
+        required_inspect_names: Vec<String>,
+        missing_inspects: &[String],
+    ) {
+        entity_tracker.reset_bootstrap_inspect_throttle();
+        self.rdps_valid = false;
+        self.rdps_message = if missing_inspects.is_empty() {
+            None
+        } else {
+            Some("inspect_pending".into())
+        };
+        self.startup_barrier = Some(StartupBarrierState {
+            required_character_ids: entity_tracker.get_required_rdps_player_character_ids(),
+            required_inspect_names,
+            pending_skill: Vec::new(),
+            pending_damage: Vec::new(),
+            freeze_registered_names: false,
+        });
     }
 
     fn record_lal_damage_debug(
@@ -1582,28 +1608,24 @@ impl EncounterState {
         missing_inspects: Vec<String>,
         packet_seq: i64,
     ) {
-        if self.encounter.fight_start == 0 {
+        let should_open_startup_barrier =
+            self.encounter.fight_start == 0 || self.rearm_startup_barrier_on_next_combat;
+        if should_open_startup_barrier {
             if inspect_transport_available {
-                self.start_fight(
-                    timestamp,
-                    dmg_target_entity.entity_type,
-                    damage_data.skill_id,
-                    dmg_src_entity.id,
-                );
-                entity_tracker.reset_bootstrap_inspect_throttle();
-                self.rdps_valid = false;
-                self.rdps_message = if missing_inspects.is_empty() {
-                    None
-                } else {
-                    Some("inspect_pending".into())
-                };
-                self.startup_barrier = Some(StartupBarrierState {
-                    required_character_ids: entity_tracker.get_required_rdps_player_character_ids(),
+                if self.encounter.fight_start == 0 {
+                    self.start_fight(
+                        timestamp,
+                        dmg_target_entity.entity_type,
+                        damage_data.skill_id,
+                        dmg_src_entity.id,
+                    );
+                }
+                self.rearm_startup_barrier_on_next_combat = false;
+                self.open_startup_barrier(
+                    entity_tracker,
                     required_inspect_names,
-                    pending_skill: Vec::new(),
-                    pending_damage: Vec::new(),
-                    freeze_registered_names: false,
-                });
+                    &missing_inspects,
+                );
                 self.enqueue_pending_damage(
                     packet_seq,
                     dmg_src_entity,
@@ -1628,6 +1650,7 @@ impl EncounterState {
                 self.rdps_valid = true;
                 self.rdps_message = None;
             }
+            self.rearm_startup_barrier_on_next_combat = false;
         }
 
         self.apply_damage(

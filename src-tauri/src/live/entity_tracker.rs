@@ -792,8 +792,7 @@ impl EntityTracker {
             let ready_for_request = force_refresh
                 || bootstrap_refresh_needed
                 || local_entity.inspect_ready_at_ms <= now;
-            let needs_request =
-                force_refresh || bootstrap_refresh_needed || local_entity.inspect_stale;
+            let needs_request = force_refresh || bootstrap_refresh_needed;
             if ready_for_request
                 && needs_request
                 && !already_ready
@@ -851,7 +850,6 @@ impl EntityTracker {
                     already_ready = true;
                     break;
                 }
-                should_request |= entity.inspect_stale;
             }
             if !already_ready {
                 let (stashed_ready, stashed_should_request) = self
@@ -997,8 +995,14 @@ impl EntityTracker {
         self.bootstrap_visible_fallback_requested = false;
         self.bootstrap_visible_fallback_names.clear();
         self.next_bootstrap_inspect_at_ms = 0;
+        for entity in self.removed_player_entities_by_character_id.values_mut() {
+            clear_player_inspect_state(entity);
+        }
+        for entity in self.removed_player_entities_by_name_class.values_mut() {
+            clear_player_inspect_state(entity);
+        }
         for entity in self.entities.values_mut() {
-            entity.inspect_requested = false;
+            clear_player_inspect_state(entity);
         }
         let mut local_character = None;
         let mut local_name = None;
@@ -1007,12 +1011,6 @@ impl EntityTracker {
             .get_mut(&self.local_entity_id)
             .filter(|entity| entity.entity_type == Player)
         {
-            local_entity.inspect_ready_at_ms = 0;
-            local_entity.inspect_stale = false;
-            local_entity.inspect_info = None;
-            local_entity.inspect_result = None;
-            local_entity.inspect_snapshot = None;
-            local_entity.skill_runtime_data.clear();
             local_character = (local_entity.character_id > 0).then_some(local_entity.character_id);
             local_name =
                 is_resolved_player_name(&local_entity.name).then_some(local_entity.name.clone());
@@ -1828,7 +1826,7 @@ impl EntityTracker {
         bootstrap_refresh_needed: bool,
     ) -> (bool, bool) {
         let mut already_ready = false;
-        let mut should_request = bootstrap_refresh_needed || force_refresh;
+        let should_request = bootstrap_refresh_needed || force_refresh;
 
         if let Some(entity) = self
             .removed_player_entities_by_character_id
@@ -1842,8 +1840,6 @@ impl EntityTracker {
                         || entity.inspect_ready_at_ms > now)
                 {
                     already_ready = true;
-                } else {
-                    should_request |= entity.inspect_stale;
                 }
             }
         }
@@ -1867,7 +1863,6 @@ impl EntityTracker {
                     already_ready = true;
                     break;
                 }
-                should_request |= entity.inspect_stale;
             }
         }
 
@@ -2138,6 +2133,20 @@ fn apply_inspect_payload_to_entity(
     entity.inspect_snapshot = Some(snapshot.clone());
     entity.inspect_info = Some(info.clone());
     entity.inspect_result = Some(result);
+}
+
+fn clear_player_inspect_state(entity: &mut Entity) {
+    entity.inspect_requested = false;
+    if entity.entity_type != Player {
+        return;
+    }
+
+    entity.inspect_ready_at_ms = 0;
+    entity.inspect_stale = false;
+    entity.inspect_info = None;
+    entity.inspect_result = None;
+    entity.inspect_snapshot = None;
+    entity.skill_runtime_data.clear();
 }
 
 fn merge_player_identity_state(target: &mut Entity, previous: Entity) {
