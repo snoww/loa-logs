@@ -19,9 +19,10 @@
     entity: Entity;
     width: number;
     shadow?: boolean;
+    sortable?: boolean;
   }
 
-  let { enc, entity, width, shadow = false }: Props = $props();
+  let { enc, entity, width, shadow = false, sortable = true }: Props = $props();
 
   let entityState = new EntityState(entity, enc);
   $effect(() => {
@@ -85,7 +86,12 @@
 
 {#each logColumns as columnDef}
   {#if columnDef.show(enc)}
-    <td class="cursor-default px-1 text-center">
+    {@const isActiveSort =
+      sortable &&
+      ((enc.playerSort === "damage" && columnDef.headerText === "DMG") ||
+        (enc.playerSort === "rdps" && columnDef.headerText === "rDPS") ||
+        (enc.playerSort === "stagger" && columnDef.headerText === "STAG"))}
+    <td class="cursor-default px-1 text-center {isActiveSort ? 'bg-white/3' : ''}">
       {#snippet tooltip()}
         {#if columnDef.valueTooltip}
           {@render columnDef.valueTooltip(entityState)}
