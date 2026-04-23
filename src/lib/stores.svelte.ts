@@ -278,7 +278,7 @@ export const defaultSettings: AppSettings = {
     dps: true,
     ndps: true,
     rdps: true,
-    udmg: true,
+    udmg: false,
     unbuffedDamage: true,
     unbuffedDps: true,
     damagePercent: true,
