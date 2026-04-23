@@ -235,21 +235,63 @@ impl StatusTracker {
     pub fn get_source_status_effects(
         &mut self,
         source_entity: &Entity,
-        local_character_id: u64,
         timestamp: DateTime<Utc>,
     ) -> Vec<StatusEffectDetails> {
-        let use_party_for_source = if source_entity.entity_type == EntityType::Player {
-            self.should_use_party_status_effect(source_entity.character_id, local_character_id)
-        } else {
-            false
-        };
-        let (source_id, source_type) = if use_party_for_source {
-            (source_entity.character_id, StatusEffectTargetType::Party)
-        } else {
-            (source_entity.id, StatusEffectTargetType::Local)
-        };
+        if source_entity.entity_type != EntityType::Player {
+            return self.actually_get_status_effects(
+                source_entity.id,
+                StatusEffectTargetType::Local,
+                timestamp,
+            );
+        }
 
-        self.actually_get_status_effects(source_id, source_type, timestamp)
+        let mut merged = HashMap::new();
+        for effect in self.actually_get_status_effects(
+            source_entity.id,
+            StatusEffectTargetType::Local,
+            timestamp,
+        ) {
+            merged.insert(
+                (
+                    effect.instance_id,
+                    effect.status_effect_id,
+                    effect.source_id,
+                ),
+                effect,
+            );
+        }
+        for effect in self.actually_get_status_effects(
+            source_entity.character_id,
+            StatusEffectTargetType::Party,
+            timestamp,
+        ) {
+            let key = (
+                effect.instance_id,
+                effect.status_effect_id,
+                effect.source_id,
+            );
+            match merged.entry(key) {
+                hashbrown::hash_map::Entry::Occupied(mut entry) => {
+                    if effect.timestamp > entry.get().timestamp {
+                        entry.insert(effect);
+                    }
+                }
+                hashbrown::hash_map::Entry::Vacant(entry) => {
+                    entry.insert(effect);
+                }
+            }
+        }
+
+        let mut effects = merged.into_values().collect::<Vec<_>>();
+        effects.sort_by_key(|effect| {
+            (
+                effect.timestamp,
+                effect.instance_id,
+                effect.status_effect_id,
+                effect.source_id,
+            )
+        });
+        effects
     }
 
     pub fn actually_get_status_effects(

@@ -1085,7 +1085,7 @@ impl EncounterState {
         timestamp: i64,
         entity_tracker: &mut EntityTracker,
         status_tracker: &mut StatusTracker,
-        local_character_id: u64,
+        _local_character_id: u64,
     ) {
         let buffered_player_entities = Self::collect_buffered_player_entities(
             dmg_src_entity,
@@ -1093,11 +1093,8 @@ impl EncounterState {
             &se_on_target,
             entity_tracker,
         );
-        let owner_self_effects_by_entity_id = Self::collect_buffered_owner_self_effects(
-            &buffered_player_entities,
-            status_tracker,
-            local_character_id,
-        );
+        let owner_self_effects_by_entity_id =
+            Self::collect_buffered_owner_self_effects(&buffered_player_entities, status_tracker);
         if let Some(barrier) = self.startup_barrier.as_mut() {
             let pending_damage = PendingDamageEvent {
                 packet_seq,
@@ -1192,7 +1189,6 @@ impl EncounterState {
     fn collect_buffered_owner_self_effects(
         buffered_player_entities: &HashMap<u64, Entity>,
         status_tracker: &mut StatusTracker,
-        local_character_id: u64,
     ) -> HashMap<u64, Vec<StatusEffectDetails>> {
         let timestamp = Utc::now();
         let mut owner_self_effects_by_entity_id = HashMap::new();
@@ -1204,7 +1200,7 @@ impl EncounterState {
 
             owner_self_effects_by_entity_id.insert(
                 entity.id,
-                status_tracker.get_source_status_effects(entity, local_character_id, timestamp),
+                status_tracker.get_source_status_effects(entity, timestamp),
             );
         }
 

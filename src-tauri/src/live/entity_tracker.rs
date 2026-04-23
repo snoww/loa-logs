@@ -1587,11 +1587,10 @@ impl EntityTracker {
             return;
         }
 
-        let self_effects = self.status_tracker.borrow_mut().get_source_status_effects(
-            source_entity,
-            self.local_character_id,
-            timestamp,
-        );
+        let self_effects = self
+            .status_tracker
+            .borrow_mut()
+            .get_source_status_effects(source_entity, timestamp);
         status_effect.owner_player_stats_snapshot = snapshot_owner_player_stats_for_buffs(
             source_entity,
             status_effect.source_skill_id,
