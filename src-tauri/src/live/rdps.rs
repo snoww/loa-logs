@@ -1,5 +1,6 @@
 use crate::data::{
-    SKILL_BUFF_DATA, SKILL_DATA, SKILL_EFFECT_DATA, SUPPORT_IDENTITY_GROUP, SUPPORT_MARKING_GROUP,
+    RDPS_ADDITIONAL_IDENTITY_GROUP, SKILL_BUFF_DATA, SKILL_DATA, SKILL_EFFECT_DATA,
+    SUPPORT_IDENTITY_GROUP, SUPPORT_MARKING_GROUP,
 };
 use crate::live::entity_tracker::{Entity, EntityTracker, InspectSnapshot, SkillRuntimeData};
 use crate::live::player_stats::PlayerStats;
@@ -2334,6 +2335,7 @@ fn is_support_source(
 
 fn is_identity_skill_buff(skill_buff: &crate::models::SkillBuffData) -> bool {
     SUPPORT_IDENTITY_GROUP.contains(&skill_buff.unique_group)
+        || RDPS_ADDITIONAL_IDENTITY_GROUP.contains(&skill_buff.unique_group)
         || skill_buff
             .source_skills
             .as_ref()

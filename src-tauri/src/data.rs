@@ -17,6 +17,7 @@ pub static SKILL_EFFECT_DATA: OnceLockWrapper<HashMap<u32, SkillEffectData>> =
     OnceLockWrapper::new();
 pub static SUPPORT_AP_GROUP: OnceLockWrapper<HashSet<u32>> = OnceLockWrapper::new();
 pub static SUPPORT_IDENTITY_GROUP: OnceLockWrapper<HashSet<u32>> = OnceLockWrapper::new();
+pub static RDPS_ADDITIONAL_IDENTITY_GROUP: OnceLockWrapper<HashSet<u32>> = OnceLockWrapper::new();
 pub static STAT_TYPE_MAP: OnceLockWrapper<HashMap<String, u32>> = OnceLockWrapper::new();
 pub static STAT_TYPE_NAME_MAP: OnceLockWrapper<HashMap<u32, String>> = OnceLockWrapper::new();
 pub static ESTHER_DATA: OnceLockWrapper<Vec<Esther>> = OnceLockWrapper::new();
@@ -213,12 +214,14 @@ impl AssetPreloader {
         ]))?;
         SUPPORT_IDENTITY_GROUP.set(HashSet::from([
             211400, // bard serenade of courage
-            214020, // bard major chord
-            360102, // paladin holy aura group
             368000, // paladin holy aura
             310501, // artist moonfall
-            480024, // valkyrie wings of freedom
             480018, // valkyrie release light
+        ]))?;
+        RDPS_ADDITIONAL_IDENTITY_GROUP.set(HashSet::from([
+            214020, // bard major chord
+            360102, // paladin holy aura group
+            480024, // valkyrie wings of freedom
         ]))?;
         IP_RANGES.set({
             let raw: AwsIpRanges = load_meter_data(resource_dir, "ip-ranges.json")?;
