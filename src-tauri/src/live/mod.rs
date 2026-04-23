@@ -856,13 +856,18 @@ pub fn start(args: StartArgs) -> Result<()> {
             }
             PKTPartyInfo::OPCODE => {
                 if let Some(pkt) = packet.try_parse::<PKTPartyInfo>().unwrap() {
+                    let member_ids = pkt
+                        .party_member_datas
+                        .iter()
+                        .map(|m| m.character_id)
+                        .collect::<Vec<_>>();
                     entity_tracker.party_info(pkt, &local_info);
                     let local_player_id = entity_tracker.local_entity_id;
                     if let Some(entity) = entity_tracker.entities.get(&local_player_id) {
                         state.update_local_player(entity);
                     }
                     if !banned {
-                        for character_id in pkt.party_member_datas.iter().map(|m| m.character_id) {
+                        for character_id in member_ids {
                             if ban_list.is_banned(character_id) {
                                 banned = true;
                                 state.disabled = true;

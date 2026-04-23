@@ -58,7 +58,7 @@ pub struct Skill {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub time_available: Option<i64>, // total time skill was available to cast
 
-    // rdps types:
+    // bdps types:
     // 1: damage bonuses that apply to the character
     //  value is the bonus damage done
     //  Support AP buffs (e.g. Heavenly Tune)
@@ -79,16 +79,16 @@ pub struct Skill {
     //  value is the amount of damage blocked
     //  Support DR (e.g. Heavenly Tune tripods)
     //  Some other classes (e.g. Drizzle Aeromancer Sun Shower debuff)
-
-    // rDPS type -> BuffedBy skill_id -> damage received
+    // legacy bDPS type -> BuffedBy skill_id -> damage received
     #[serde(default)]
     pub rdps_received: HashMap<u8, HashMap<u32, i64>>,
-    // total rdps received by this skill from party members
+    // legacy uDPS type -> amount contributed from PKTCombatAnalyzerNotify
+    #[serde(default, alias = "udpsContributed")]
+    pub rdps_contributed: HashMap<u8, i64>,
+
+    // total new rdps received by this skill from party members
     #[serde(default)]
     pub rdps_damage_received: i64,
-    // legacy uDPS type -> amount contributed from PKTCombatAnalyzerNotify
-    #[serde(default, alias = "rdpsContributed")]
-    pub udps_contributed: HashMap<u8, i64>,
 }
 
 #[derive(Debug, Default, Serialize, Deserialize, Clone)]

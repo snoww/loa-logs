@@ -194,10 +194,9 @@ export interface Skill {
   special?: boolean; // if special, this skill is not modifiable by buffs or crits
   timeAvailable?: number; // the total time in milliseconds this skill was off cooldown during the encounter
   stagger: number;
-  rdpsReceived: Record<number, Record<number, number>>; // rdps type -> buffedBy skill -> damage
-  rdpsDamageGiven: number; // total true rDPS damage given by this skill to others
+  rdpsReceived: Record<number, Record<number, number>>; // legacy bdps type -> buffedBy skill -> damage
+  rdpsContributed: Record<number, number>; // legacy udps type -> amount
   rdpsDamageReceived: number; // total rdps received by this skill from party members
-  udpsContributed: Record<number, number>; // legacy udps type -> amount
 }
 
 export interface SkillCast {

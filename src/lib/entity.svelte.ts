@@ -235,7 +235,7 @@ export class EntityState {
     if (identityBrandWindowDmg === 0 || regularBrandWindowDmg === 0) return null;
 
     // Step 3: Total regular brand bDMG from this support's skills (type 3 = boss debuff).
-    const regularBrandBDmg = rawSkills.reduce((acc, s) => acc + (s.udpsContributed[3] ?? 0), 0);
+    const regularBrandBDmg = rawSkills.reduce((acc, s) => acc + (s.rdpsContributed[3] ?? 0), 0);
     if (regularBrandBDmg === 0) return null;
 
     // Step 4: Extrapolate: how much brand bDMG was hidden in identity udpsContributed?
@@ -248,7 +248,7 @@ export class EntityState {
     const identitySkillIds = new Set<number>(supportSkills.identityBrandSources);
 
     const totalIdentityUdps = rawSkills.reduce(
-      (acc, s) => acc + (identitySkillIds.has(s.id) ? (s.udpsContributed[1] ?? 0) : 0),
+      (acc, s) => acc + (identitySkillIds.has(s.id) ? (s.rdpsContributed[1] ?? 0) : 0),
       0
     );
     if (totalIdentityUdps === 0) return null;
@@ -276,13 +276,13 @@ export class EntityState {
       adjustedSkills = skillValues.map((skill) => {
         if (!info.identitySkillIds.has(skill.id)) return skill;
         // Subtract the identity brand bDMG proportionally from each identity skill's type-1 rdps.
-        const skillIdentityUdps = skill.udpsContributed[1] ?? 0;
+        const skillIdentityUdps = skill.rdpsContributed[1] ?? 0;
         if (skillIdentityUdps <= 0) return skill;
         const reduction = Math.round(info.bDmg * (skillIdentityUdps / info.totalIdentityUdps));
         return {
           ...skill,
-          udpsContributed: {
-            ...skill.udpsContributed,
+          rdpsContributed: {
+            ...skill.rdpsContributed,
             1: Math.max(0, skillIdentityUdps - reduction)
           }
         };
@@ -321,8 +321,7 @@ export class EntityState {
         skillCastLog: [],
         stagger: 0,
         rdpsReceived: {},
-        udpsContributed: { 3: info.bDmg },
-        rdpsDamageGiven: 0,
+        rdpsContributed: { 3: info.bDmg },
         rdpsDamageReceived: 0
       };
       adjustedSkills.push(syntheticSkill);

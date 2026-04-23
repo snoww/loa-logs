@@ -1882,7 +1882,7 @@ impl EncounterState {
                     "hits": skill.hits,
                     "crits": skill.crits,
                     "rdps_received": skill.rdps_received,
-                    "udps_contributed": skill.udps_contributed,
+                    "rdps_contributed": skill.rdps_contributed,
                 })),
                 "rdps_result": rdps_result.as_ref().map(|result| json!({
                     "rdps_damage_received": result.rdps_damage_received,
@@ -2038,7 +2038,7 @@ impl EncounterState {
                             "back_attacks": skill.back_attacks,
                             "front_attacks": skill.front_attacks,
                             "rdps_received": skill.rdps_received,
-                            "udps_contributed": skill.udps_contributed,
+                            "rdps_contributed": skill.rdps_contributed,
                         },
                         "skill_hit": {
                             "damage": skill_hit.damage,
@@ -2465,7 +2465,7 @@ impl EncounterState {
                                     .map(|(skill_id, skill)| json!({
                                         "skill_id": skill_id,
                                         "name": skill.name,
-                                        "udps_contributed": skill.udps_contributed,
+                                        "rdps_contributed": skill.rdps_contributed,
                                     }))
                                     .collect::<Vec<_>>()
                             }),
@@ -2489,7 +2489,7 @@ impl EncounterState {
                     && let Some(contributor_skill) = contributor_entity.skills.get_mut(&skill_key)
                 {
                     *contributor_skill
-                        .udps_contributed
+                        .rdps_contributed
                         .entry(event.event_type)
                         .or_default() += event.value;
                 } else {
@@ -2547,7 +2547,7 @@ impl EncounterState {
                             .map(|(skill_id, skill)| json!({
                                 "skill_id": skill_id,
                                 "name": skill.name,
-                                "udps_contributed": skill.udps_contributed,
+                                "rdps_contributed": skill.rdps_contributed,
                             }))
                             .collect::<Vec<_>>(),
                         "damage_stats": {

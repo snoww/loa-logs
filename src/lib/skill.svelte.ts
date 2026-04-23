@@ -135,11 +135,11 @@ export function sumBdpsReceived(skill: Skill, types: number[] = [1, 3, 5]): numb
 
 // sums up all legacy udps contributed values for types 1, 3, and 5 (ap buff, brand, identity, t)
 export function sumUdpsContributed(skill: Skill, types: number[] = [1, 3, 5]): number {
-  if (!skill.udpsContributed) return 0;
+  if (!skill.rdpsContributed) return 0;
 
   let sum = 0;
   for (const t of types) {
-    const value = skill.udpsContributed[t];
+    const value = skill.rdpsContributed[t];
     if (!value) continue;
 
     sum += value;
