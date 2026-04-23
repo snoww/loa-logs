@@ -9,6 +9,7 @@ use crate::models::{HitFlag, HitOption, PerLevelData};
 use crate::utils::is_support_class;
 use hashbrown::HashMap;
 use serde_json::{Value, json};
+use std::sync::Arc;
 
 #[derive(Debug, Clone)]
 pub struct HitRdpsAttribution {
@@ -622,7 +623,7 @@ fn append_source_contributions(
         let source_class_id = source_entity
             .map(|entity| entity.class_id)
             .unwrap_or_default();
-        let source_player_stats = buffered_owner_self_effects
+        let source_player_stats: Option<Arc<PlayerStats>> = buffered_owner_self_effects
             .and_then(|_| {
                 rebuild_missing_effect_owner_snapshot(
                     &effect,
@@ -634,11 +635,16 @@ fn append_source_contributions(
                     entity_tracker,
                 )
             })
-            .or_else(|| effect.owner_player_stats_snapshot.as_ref().cloned())
+            .map(Arc::new)
+            .or_else(|| effect.owner_player_stats_snapshot.clone())
             .or_else(|| {
                 source_snapshot.and_then(|snapshot| {
                     source_entity.map(|entity| {
-                        load_player_stats_from_snapshot(snapshot, source_entity_id, entity.class_id)
+                        Arc::new(load_player_stats_from_snapshot(
+                            snapshot,
+                            source_entity_id,
+                            entity.class_id,
+                        ))
                     })
                 })
             });
@@ -662,7 +668,7 @@ fn append_source_contributions(
                     source_entity_id,
                     source_class_id,
                     source_skill_id,
-                    source_player_stats.as_ref(),
+                    source_player_stats.as_deref(),
                     &buff_source,
                 ),
                 "combat_effect" if option.key_index > 0 => stats.add_combat_effect_from_id(
@@ -760,7 +766,7 @@ fn append_source_contributions(
                 skill_buff,
                 source_skill_id,
                 source_class_id,
-                source_player_stats.as_ref(),
+                source_player_stats.as_deref(),
             );
         if normal_damage_factor > 0.0 {
             if !is_self_source {
@@ -902,7 +908,7 @@ fn append_target_contributions(
             get_buffered_or_live_entity(source_entity_id, buffered_entities, entity_tracker);
         let source_snapshot =
             get_buffered_or_live_snapshot(source_entity_id, buffered_entities, entity_tracker);
-        let source_player_stats = buffered_owner_self_effects
+        let source_player_stats: Option<Arc<PlayerStats>> = buffered_owner_self_effects
             .and_then(|_| {
                 rebuild_missing_effect_owner_snapshot(
                     &effect,
@@ -914,11 +920,16 @@ fn append_target_contributions(
                     entity_tracker,
                 )
             })
-            .or_else(|| effect.owner_player_stats_snapshot.as_ref().cloned())
+            .map(Arc::new)
+            .or_else(|| effect.owner_player_stats_snapshot.clone())
             .or_else(|| {
                 source_snapshot.and_then(|snapshot| {
                     source_entity.map(|entity| {
-                        load_player_stats_from_snapshot(snapshot, source_entity_id, entity.class_id)
+                        Arc::new(load_player_stats_from_snapshot(
+                            snapshot,
+                            source_entity_id,
+                            entity.class_id,
+                        ))
                     })
                 })
             });

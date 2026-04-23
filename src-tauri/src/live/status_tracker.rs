@@ -13,6 +13,7 @@ use hashbrown::HashMap;
 use meter_defs::defs::StatusEffectData;
 use std::cell::RefCell;
 use std::rc::Rc;
+use std::sync::Arc;
 
 pub const WORKSHOP_BUFF_ID: u32 = 9701;
 
@@ -574,6 +575,6 @@ pub struct StatusEffectDetails {
     pub timestamp: DateTime<Utc>,
     pub name: String,
     pub unique_group: u32,
-    pub owner_player_stats_snapshot: Option<PlayerStats>,
+    pub owner_player_stats_snapshot: Option<Arc<PlayerStats>>,
     pub source_skill_runtime_snapshot: Option<SkillRuntimeData>,
 }

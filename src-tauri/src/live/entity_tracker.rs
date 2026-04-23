@@ -1600,7 +1600,8 @@ impl EntityTracker {
             &self_effects,
             timestamp.timestamp_millis(),
             self,
-        );
+        )
+        .map(Arc::new);
         status_effect.source_skill_runtime_snapshot = status_effect
             .source_skill_id
             .and_then(|skill_id| source_entity.skill_runtime_data.get(&skill_id).cloned());
