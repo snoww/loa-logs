@@ -3,7 +3,7 @@ use crate::data::*;
 use crate::database::Repository;
 use crate::database::models::InsertEncounterArgs;
 use crate::live::entity_tracker::{Entity, EntityTracker, SkillOptionSnapshot};
-use crate::live::rdps::compute_hit_rdps;
+use crate::live::rdps::{compute_hit_rdps, filter_target_effects_for_attacker};
 use crate::live::skill_tracker::SkillTracker;
 use crate::live::status_tracker::{StatusEffectDetails, StatusTracker};
 use crate::live::utils::*;
@@ -2153,7 +2153,13 @@ impl EncounterState {
                         is_buffed_by_hat = true;
                     }
                 }
-                let se_on_target_ids = se_on_target
+                let filtered_se_on_target = filter_target_effects_for_attacker(
+                    dmg_src_entity,
+                    &se_on_target,
+                    entity_tracker,
+                    buffered_player_entities,
+                );
+                let se_on_target_ids = filtered_se_on_target
                     .iter()
                     .map(|se| map_status_effect(se, &mut self.custom_id_map))
                     .collect::<Vec<_>>();

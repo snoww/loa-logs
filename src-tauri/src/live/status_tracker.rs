@@ -182,51 +182,19 @@ impl StatusTracker {
         let status_effects_on_source =
             self.actually_get_status_effects(source_id, source_type, timestamp);
 
-        let use_party_for_target = if source_entity.entity_type == EntityType::Player {
-            self.should_use_party_status_effect(target_entity.character_id, local_character_id)
+        // Party filtering for cross-party effects on the target is done downstream
+        // via rdps::filter_target_effects_for_attacker (and compute_hit_rdps's own
+        // should_apply_target_effect), so we just pull every effect from the right
+        // registry here.
+        let use_party_for_target = source_entity.entity_type == EntityType::Player
+            && self.should_use_party_status_effect(target_entity.character_id, local_character_id);
+        let (target_id, target_type) = if use_party_for_target {
+            (target_entity.character_id, StatusEffectTargetType::Party)
         } else {
-            false
+            (target_entity.id, StatusEffectTargetType::Local)
         };
-        // println!("use_party_for_target: {:?}", use_party_for_target);
-        let source_party_id = self
-            .party_tracker
-            .borrow()
-            .entity_id_to_party_id
-            .get(&source_entity.id)
-            .cloned();
-        // println!("use_party_for_target: {:?}, source_party_id: {:?}", use_party_for_target, source_party_id);
-        let mut status_effects_on_target = if target_entity.entity_type != EntityType::Player {
-            self.actually_get_status_effects(
-                target_entity.id,
-                StatusEffectTargetType::Local,
-                timestamp,
-            )
-        } else {
-            match (use_party_for_target, source_party_id) {
-                (true, Some(source_party_id)) => self.get_status_effects_from_party(
-                    target_entity.character_id,
-                    StatusEffectTargetType::Party,
-                    &source_party_id,
-                    timestamp,
-                ),
-                (false, Some(source_party_id)) => self.get_status_effects_from_party(
-                    target_entity.id,
-                    StatusEffectTargetType::Local,
-                    &source_party_id,
-                    timestamp,
-                ),
-                (true, None) => self.actually_get_status_effects(
-                    target_entity.character_id,
-                    StatusEffectTargetType::Party,
-                    timestamp,
-                ),
-                (false, None) => self.actually_get_status_effects(
-                    target_entity.id,
-                    StatusEffectTargetType::Local,
-                    timestamp,
-                ),
-            }
-        };
+        let mut status_effects_on_target =
+            self.actually_get_status_effects(target_id, target_type, timestamp);
         // println!("status_effects_on_target: {:?}", status_effects_on_target);
         // println!(
         //     "status_effects_on_source: {:?}, status_effects_on_target: {:?}",
@@ -323,40 +291,6 @@ impl StatusTracker {
         ser.values().cloned().collect()
     }
 
-    pub fn get_status_effects_from_party(
-        &mut self,
-        target_id: u64,
-        sett: StatusEffectTargetType,
-        party_id: &u32,
-        timestamp: DateTime<Utc>,
-    ) -> Vec<StatusEffectDetails> {
-        let registry = match sett {
-            StatusEffectTargetType::Local => &mut self.local_status_effect_registry,
-            StatusEffectTargetType::Party => &mut self.party_status_effect_registry,
-        };
-        // println!("registry: {:?}", registry);
-        let ser = match registry.get_mut(&target_id) {
-            Some(ser) => ser,
-            None => return Vec::new(),
-        };
-
-        // println!("ser before: {:?}", ser);
-        ser.retain(|_, se| se.expire_at.is_none_or(|expire_at| expire_at > timestamp));
-        let party_tracker = self.party_tracker.borrow();
-        ser.values()
-            .filter(|x| {
-                is_valid_for_raid(x)
-                    || *party_id
-                        == party_tracker
-                            .entity_id_to_party_id
-                            .get(&x.source_id)
-                            .cloned()
-                            .unwrap_or(0)
-            })
-            .cloned()
-            .collect()
-    }
-
     fn should_use_party_status_effect(&self, character_id: u64, local_character_id: u64) -> bool {
         let party_tracker = self.party_tracker.borrow();
         let local_player_party_id = party_tracker
@@ -408,15 +342,6 @@ impl StatusTracker {
                 .any(|effect| effect.status_effect_id == status_effect_id)
         })
     }
-}
-
-fn is_valid_for_raid(status_effect: &StatusEffectDetails) -> bool {
-    (status_effect.buff_category == BattleItem
-        || status_effect.buff_category == Bracelet
-        || status_effect.buff_category == Elixir
-        || status_effect.buff_category == Etc)
-        && status_effect.category == Debuff
-        && status_effect.show_type == All
 }
 
 pub fn build_status_effect(

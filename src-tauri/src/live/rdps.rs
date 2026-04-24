@@ -1227,6 +1227,39 @@ fn should_apply_target_effect(
     true
 }
 
+pub fn filter_target_effects_for_attacker(
+    attacker: &Entity,
+    se_on_target: &[StatusEffectDetails],
+    entity_tracker: &EntityTracker,
+    buffered_entities: Option<&HashMap<u64, Entity>>,
+) -> Vec<StatusEffectDetails> {
+    if se_on_target.is_empty() {
+        return Vec::new();
+    }
+    se_on_target
+        .iter()
+        .filter(|effect| {
+            let Some(skill_buff) = SKILL_BUFF_DATA.get(&effect.status_effect_id) else {
+                return true;
+            };
+            // Skip the source resolution when the buff can't be filtered out anyway.
+            if !is_party_wide_skill_buff(skill_buff) && !is_self_target_skill_buff(skill_buff) {
+                return true;
+            }
+            let source_entity_id =
+                resolve_effect_source_id(effect, skill_buff, entity_tracker, buffered_entities);
+            should_apply_target_effect(
+                skill_buff,
+                attacker,
+                source_entity_id,
+                entity_tracker,
+                buffered_entities,
+            )
+        })
+        .cloned()
+        .collect()
+}
+
 fn apply_target_passive_option(
     option: &crate::models::PassiveOption,
     damage_type: u8,
