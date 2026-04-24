@@ -5,7 +5,6 @@ export interface DisplayFlags {
   dps: boolean;
   ndps: boolean;
   rdps: boolean;
-  udmg: boolean;
   unbuffedDamage: boolean;
   unbuffedDps: boolean;
   damagePercent: boolean;

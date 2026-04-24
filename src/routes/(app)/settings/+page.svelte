@@ -770,7 +770,7 @@
           "Show how long a party member has been incapacitated for (e.g. on the floor, stunned, trapped)"
         )}
         {@render settingOption("meter", "damage", "Damage", "Show the damage dealt by player in the current encounter")}
-        {@render settingOption("meter", "udmg", "uDMG", "Unbuffed Damage Dealt (damage excluding support buffs/debuffs)")}
+        {@render settingOption("meter", "unbuffedDamage", "uDMG", "Unbuffed Damage Dealt (damage excluding support buffs/debuffs)")}
         {@render settingOption(
           "meter",
           "supportContrib",

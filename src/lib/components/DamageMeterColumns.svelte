@@ -61,7 +61,7 @@
     // Unbuffed damage dealt
     {
       show(enc) {
-        if (!enc.curSettings.udmg) return false;
+        if (!enc.curSettings.unbuffedDamage) return false;
         return enc.anyUnbuffedDamage || enc.anyUdpsContributions;
       },
       headerText: "uDMG",
