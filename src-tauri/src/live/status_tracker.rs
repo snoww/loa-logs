@@ -195,29 +195,37 @@ impl StatusTracker {
             .get(&source_entity.id)
             .cloned();
         // println!("use_party_for_target: {:?}, source_party_id: {:?}", use_party_for_target, source_party_id);
-        let mut status_effects_on_target = match (use_party_for_target, source_party_id) {
-            (true, Some(source_party_id)) => self.get_status_effects_from_party(
-                target_entity.character_id,
-                StatusEffectTargetType::Party,
-                &source_party_id,
-                timestamp,
-            ),
-            (false, Some(source_party_id)) => self.get_status_effects_from_party(
-                target_entity.id,
-                StatusEffectTargetType::Local,
-                &source_party_id,
-                timestamp,
-            ),
-            (true, None) => self.actually_get_status_effects(
-                target_entity.character_id,
-                StatusEffectTargetType::Party,
-                timestamp,
-            ),
-            (false, None) => self.actually_get_status_effects(
+        let mut status_effects_on_target = if target_entity.entity_type != EntityType::Player {
+            self.actually_get_status_effects(
                 target_entity.id,
                 StatusEffectTargetType::Local,
                 timestamp,
-            ),
+            )
+        } else {
+            match (use_party_for_target, source_party_id) {
+                (true, Some(source_party_id)) => self.get_status_effects_from_party(
+                    target_entity.character_id,
+                    StatusEffectTargetType::Party,
+                    &source_party_id,
+                    timestamp,
+                ),
+                (false, Some(source_party_id)) => self.get_status_effects_from_party(
+                    target_entity.id,
+                    StatusEffectTargetType::Local,
+                    &source_party_id,
+                    timestamp,
+                ),
+                (true, None) => self.actually_get_status_effects(
+                    target_entity.character_id,
+                    StatusEffectTargetType::Party,
+                    timestamp,
+                ),
+                (false, None) => self.actually_get_status_effects(
+                    target_entity.id,
+                    StatusEffectTargetType::Local,
+                    timestamp,
+                ),
+            }
         };
         // println!("status_effects_on_target: {:?}", status_effects_on_target);
         // println!(

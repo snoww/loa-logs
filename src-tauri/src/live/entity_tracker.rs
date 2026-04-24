@@ -484,6 +484,7 @@ impl EntityTracker {
     pub fn new_npc(&mut self, pkt: PKTNewNpc, max_hp: i64) -> Entity {
         let (entity_type, name, grade, bars) =
             get_npc_entity_type_name_grade_bars(&pkt.npc_struct, max_hp);
+        let should_reset_status_effects = !self.entities.contains_key(&pkt.npc_struct.object_id);
         let npc = Entity {
             id: pkt.npc_struct.object_id,
             entity_type,
@@ -502,7 +503,9 @@ impl EntityTracker {
             ..Default::default()
         };
         self.entities.insert(npc.id, npc.clone());
-        self.status_tracker.borrow_mut().remove_local_object(npc.id);
+        if should_reset_status_effects {
+            self.status_tracker.borrow_mut().remove_local_object(npc.id);
+        }
         self.build_and_register_status_effects(pkt.npc_struct.status_effect_datas, npc.id);
         npc
     }
@@ -515,6 +518,7 @@ impl EntityTracker {
         } else {
             entity_type
         };
+        let should_reset_status_effects = !self.entities.contains_key(&pkt.npc_struct.object_id);
         let npc = Entity {
             id: pkt.npc_struct.object_id,
             entity_type,
@@ -534,7 +538,9 @@ impl EntityTracker {
             ..Default::default()
         };
         self.entities.insert(npc.id, npc.clone());
-        self.status_tracker.borrow_mut().remove_local_object(npc.id);
+        if should_reset_status_effects {
+            self.status_tracker.borrow_mut().remove_local_object(npc.id);
+        }
         self.build_and_register_status_effects(pkt.npc_struct.status_effect_datas, npc.id);
         npc
     }
