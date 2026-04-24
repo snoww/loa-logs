@@ -595,16 +595,11 @@ fn append_source_contributions(
         };
         let source_entity_id =
             resolve_effect_source_id(&effect, skill_buff, entity_tracker, buffered_entities);
-        let source_entity =
-            get_buffered_or_live_entity(source_entity_id, buffered_entities, entity_tracker);
         if source_entity_id == 0 {
             continue;
         }
-        if !source_entity
-            .is_some_and(|entity| matches!(entity.entity_type, crate::models::EntityType::Player))
-        {
-            continue;
-        }
+        let is_attributable_source =
+            is_player_source_entity_id(source_entity_id, buffered_entities, entity_tracker);
         let is_self_source = source_entity_id == attacker_id;
 
         let effect_runtime_data = effect.source_skill_runtime_snapshot.as_ref();
@@ -649,12 +644,13 @@ fn append_source_contributions(
                     })
                 })
             });
-        let is_support = is_support_source(
-            source_entity_id,
-            skill_buff,
-            entity_tracker,
-            buffered_entities,
-        );
+        let is_support = is_attributable_source
+            && is_support_source(
+                source_entity_id,
+                skill_buff,
+                entity_tracker,
+                buffered_entities,
+            );
         let buff_source = skill_buff
             .name
             .clone()
@@ -733,7 +729,7 @@ fn append_source_contributions(
                     source_entity_id,
                     buff_source.clone(),
                 );
-                if !is_self_source {
+                if is_attributable_source && !is_self_source {
                     contributions.push(ContributionFactor {
                         rdps_type: RDPS_TYPE_DAMAGE_BUFF,
                         source_entity_id,
@@ -770,7 +766,7 @@ fn append_source_contributions(
                 source_player_stats.as_deref(),
             );
         if normal_damage_factor > 0.0 {
-            if !is_self_source {
+            if is_attributable_source && !is_self_source {
                 contributions.push(ContributionFactor {
                     rdps_type: RDPS_TYPE_DAMAGE_BUFF,
                     source_entity_id,
@@ -781,7 +777,7 @@ fn append_source_contributions(
             }
         }
         if hyper_damage_factor > 0.0 {
-            if !is_self_source {
+            if is_attributable_source && !is_self_source {
                 contributions.push(ContributionFactor {
                     rdps_type: RDPS_TYPE_HYPER,
                     source_entity_id,
@@ -874,11 +870,8 @@ fn append_target_contributions(
             buffered_entities,
             entity_tracker,
         );
-        if !get_buffered_or_live_entity(source_entity_id, buffered_entities, entity_tracker)
-            .is_some_and(|entity| matches!(entity.entity_type, crate::models::EntityType::Player))
-        {
-            continue;
-        }
+        let is_attributable_source =
+            is_player_source_entity_id(source_entity_id, buffered_entities, entity_tracker);
         if !should_apply_target_effect(
             skill_buff,
             attacker,
@@ -899,12 +892,13 @@ fn append_target_contributions(
         ) else {
             continue;
         };
-        let is_support = is_support_source(
-            source_entity_id,
-            skill_buff,
-            entity_tracker,
-            buffered_entities,
-        );
+        let is_support = is_attributable_source
+            && is_support_source(
+                source_entity_id,
+                skill_buff,
+                entity_tracker,
+                buffered_entities,
+            );
         let source_entity =
             get_buffered_or_live_entity(source_entity_id, buffered_entities, entity_tracker);
         let source_snapshot =
@@ -976,7 +970,7 @@ fn append_target_contributions(
                                 .clone()
                                 .unwrap_or_else(|| skill_buff.id.to_string()),
                         );
-                        if !is_self_source {
+                        if is_attributable_source && !is_self_source {
                             contributions.push(ContributionFactor {
                                 rdps_type: RDPS_TYPE_TARGET_DEBUFF,
                                 source_entity_id,
@@ -1011,7 +1005,7 @@ fn append_target_contributions(
             damage_type,
         );
         if direct_factor > 0.0 {
-            if !is_self_source {
+            if is_attributable_source && !is_self_source {
                 contributions.push(ContributionFactor {
                     rdps_type: RDPS_TYPE_TARGET_DEBUFF,
                     source_entity_id,
@@ -1134,6 +1128,15 @@ fn get_buffered_or_live_snapshot<'a>(
     get_buffered_or_live_entity(entity_id, buffered_entities, entity_tracker)
         .and_then(|entity| entity.inspect_snapshot.as_ref())
         .or_else(|| entity_tracker.get_inspect_snapshot(entity_id))
+}
+
+fn is_player_source_entity_id(
+    entity_id: u64,
+    buffered_entities: Option<&HashMap<u64, Entity>>,
+    entity_tracker: &EntityTracker,
+) -> bool {
+    get_buffered_or_live_entity(entity_id, buffered_entities, entity_tracker)
+        .is_some_and(|entity| matches!(entity.entity_type, crate::models::EntityType::Player))
 }
 
 fn rebuild_missing_effect_owner_snapshot(
@@ -2202,12 +2205,24 @@ fn resolve_effect_source_id(
     };
 
     if effect.source_id != 0
-        && get_buffered_or_live_entity(effect.source_id, buffered_entities, entity_tracker)
-            .is_some_and(|entity| matches!(entity.entity_type, crate::models::EntityType::Player))
-        && get_buffered_or_live_entity(effect.source_id, buffered_entities, entity_tracker)
-            .is_some_and(owns_effect)
+        && let Some(source_entity) =
+            get_buffered_or_live_entity(effect.source_id, buffered_entities, entity_tracker)
     {
-        return effect.source_id;
+        if matches!(
+            source_entity.entity_type,
+            crate::models::EntityType::Boss
+                | crate::models::EntityType::Guardian
+                | crate::models::EntityType::Monster
+                | crate::models::EntityType::Npc
+                | crate::models::EntityType::Esther
+        ) {
+            return effect.source_id;
+        }
+        if matches!(source_entity.entity_type, crate::models::EntityType::Player)
+            && owns_effect(source_entity)
+        {
+            return effect.source_id;
+        }
     }
 
     if let Some(buffered_entities) = buffered_entities
