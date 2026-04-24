@@ -905,21 +905,6 @@ impl EncounterState {
             entity.damage_stats.damage_dealt - entity.damage_stats.buffed_damage;
     }
 
-    fn resolve_udps_skill_key(entity: &EncounterEntity, analyzer_skill_id: u32) -> Option<u32> {
-        if entity.skills.contains_key(&analyzer_skill_id) {
-            return Some(analyzer_skill_id);
-        }
-
-        let skill_name = SKILL_DATA
-            .get(&analyzer_skill_id)
-            .and_then(|skill_data| skill_data.name.as_deref())?;
-        entity
-            .skills
-            .iter()
-            .find(|(_, skill)| skill.name == skill_name)
-            .map(|(skill_id, _)| *skill_id)
-    }
-
     pub fn record_lal_skill_event_debug(
         &mut self,
         source_entity: &Entity,
@@ -2905,7 +2890,7 @@ impl EncounterState {
             let [Some(source_entity_state), Some(target_entity_state)] = self
                 .encounter
                 .entities
-                .get_many_mut([&source_entity.name, &target_entity.name])
+                .get_disjoint_mut([&source_entity.name, &target_entity.name])
             else {
                 warn!(
                     "{}, {} not found in encounter entities",
@@ -2980,7 +2965,7 @@ impl EncounterState {
             let [Some(source_entity_state), Some(target_entity_state)] = self
                 .encounter
                 .entities
-                .get_many_mut([&source_entity.name, &target_entity.name])
+                .get_disjoint_mut([&source_entity.name, &target_entity.name])
             else {
                 warn!(
                     "{}, {} not found in encounter entities",

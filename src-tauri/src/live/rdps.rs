@@ -219,7 +219,7 @@ pub fn compute_hit_rdps(
     let skill_real_groups = if skill_id_real != skill_id {
         get_skill_groups(skill_id_real)
     } else {
-        skill_groups.clone()
+        skill_groups
     };
     if can_crit
         && matches!(hit_option, HitOption::BACK_ATTACK)
@@ -256,7 +256,7 @@ pub fn compute_hit_rdps(
         effective_damage_attr,
         damage_type,
         is_hyper_awakening,
-        &skill_groups,
+        skill_groups,
         se_on_target,
         &mut damage_multiplier,
         event_timestamp,
@@ -268,8 +268,8 @@ pub fn compute_hit_rdps(
         skill_id,
         skill_id_real,
         skill_effect_id,
-        &skill_groups,
-        &skill_real_groups,
+        skill_groups,
+        skill_real_groups,
         runtime_data,
         Some(target),
         Some(hit_option),
@@ -403,14 +403,12 @@ pub fn compute_hit_rdps(
             continue;
         }
 
-        let mut entity_assigned = 0i64;
         for contribution in grouped {
             let attributed_damage =
                 ((contribution.factor.max(0.0) / factor_sum) * entity_damage as f64).round() as i64;
             if attributed_damage <= 0 {
                 continue;
             }
-            entity_assigned += attributed_damage;
             if contribution.is_support {
                 result.rdps_damage_received_support += attributed_damage;
             }
@@ -502,8 +500,8 @@ fn snapshot_owner_player_stats_from_snapshot(
             source_skill_id,
             source_skill_id,
             0,
-            &skill_groups,
-            &skill_groups,
+            skill_groups,
+            skill_groups,
             source_runtime_data,
             None,
             None,
@@ -1097,17 +1095,11 @@ fn resolve_skill_effect_flags(skill_effect_id: u32, is_hyper_awakening: bool) ->
     }
 }
 
-fn get_skill_groups(skill_id: u32) -> Vec<u32> {
+fn get_skill_groups(skill_id: u32) -> &'static [u32] {
     SKILL_DATA
         .get(&skill_id)
-        .and_then(|skill| skill.groups.as_ref())
-        .map(|groups| {
-            groups
-                .iter()
-                .filter_map(|group| u32::try_from(*group).ok())
-                .collect::<Vec<_>>()
-        })
-        .unwrap_or_default()
+        .and_then(|skill| skill.groups.as_deref())
+        .unwrap_or(&[])
 }
 
 fn get_buffered_or_live_entity<'a>(
@@ -1529,7 +1521,7 @@ fn get_skill_attack_power_multiplier(player_stats: &PlayerStats, source_skill_id
 
 fn get_skill_status_effect_multiplier(player_stats: &PlayerStats, source_skill_id: u32) -> f64 {
     player_stats
-        .get_skill_status_effect_multiplier(source_skill_id, &get_skill_groups(source_skill_id))
+        .get_skill_status_effect_multiplier(source_skill_id, get_skill_groups(source_skill_id))
 }
 
 fn get_source_damage_multiplier(
@@ -2143,10 +2135,10 @@ fn debug_json_f64(value: f64) -> Value {
     }
 }
 
-fn get_level_data<'a>(
-    skill_buff: &'a crate::models::SkillBuffData,
+fn get_level_data(
+    skill_buff: &crate::models::SkillBuffData,
     skill_level: u8,
-) -> Option<&'a PerLevelData> {
+) -> Option<&PerLevelData> {
     skill_buff
         .per_level_data
         .get(&skill_level.max(1).to_string())
@@ -2396,11 +2388,9 @@ fn source_skill_has_identity_group(source_skill_id: u32) -> bool {
         .get(&source_skill_id)
         .and_then(|skill| skill.groups.as_ref())
         .is_some_and(|groups| {
-            groups.iter().any(|group_id| {
-                u32::try_from(*group_id)
-                    .ok()
-                    .is_some_and(|group_id| SUPPORT_IDENTITY_SKILL_GROUPS.contains(&group_id))
-            })
+            groups
+                .iter()
+                .any(|group_id| SUPPORT_IDENTITY_SKILL_GROUPS.contains(group_id))
         })
 }
 

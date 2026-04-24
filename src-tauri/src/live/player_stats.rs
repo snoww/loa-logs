@@ -2091,7 +2091,7 @@ impl PlayerStats {
         let mut stat_left_to_add = source_stat_max_to_add;
         let mut added_left = add_to_stat_max_to_add;
 
-        let mut apply_chunk = |this: &mut Self,
+        let apply_chunk = |this: &mut Self,
                                value: f64,
                                owner_id: u64,
                                source_label: &str,
@@ -2184,7 +2184,7 @@ impl PlayerStats {
     ) {
         let mut accumulator = 0.0;
         let mut added_left = add_to_stat_max_to_add;
-        let mut apply_chunk = |this: &mut Self,
+        let apply_chunk = |this: &mut Self,
                                value: f64,
                                owner_id: u64,
                                source_label: &str,

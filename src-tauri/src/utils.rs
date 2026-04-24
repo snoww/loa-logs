@@ -345,7 +345,7 @@ pub fn get_player_spec(
         }
         "Bard" => {
             // dps if tempest skill has damage
-            if (player
+            if player
                 .skills
                 .get(&21147)
                 .is_some_and(|s| s.total_damage > 0)
@@ -356,7 +356,7 @@ pub fn get_player_spec(
                 || player
                     .skills
                     .get(&21149)
-                    .is_some_and(|s| s.total_damage > 0))
+                    .is_some_and(|s| s.total_damage > 0)
             {
                 return "True Courage".to_string();
             } else if player

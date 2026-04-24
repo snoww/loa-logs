@@ -20,7 +20,7 @@ pub struct SkillData {
     #[serde(default)]
     pub directional_mask: i32,
     #[serde(alias = "groups")]
-    pub groups: Option<Vec<i32>>,
+    pub groups: Option<Vec<u32>>,
     pub summon_source_skills: Option<Vec<u32>>,
     pub source_skills: Option<Vec<u32>>,
     #[serde(default)]
