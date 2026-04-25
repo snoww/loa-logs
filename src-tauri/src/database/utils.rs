@@ -476,19 +476,8 @@ pub fn apply_player_info(entity: &mut EncounterEntity, info: &InspectInfo) {
     entity.loadout_hash = info.loadout_snapshot.clone();
     entity.combat_power = info.combat_power.as_ref().map(|c| c.score);
 
-    // Set spec for special cases
-    if entity.class_id == 104
-        && let Some(engr) = &entity.engraving_data
-        && engr
-            .iter()
-            .any(|e| e == "Awakening" || e == "Drops of Ether")
-    {
-        entity.spec = Some("Princess".to_string());
-    }
-
-    // Fallback spec detection
-    if entity.spec.as_deref() == Some("Unknown")
-        && let Some(tree) = info.ark_passive_data.as_ref()
+    // get spec from inspect
+    if let Some(tree) = info.ark_passive_data.as_ref()
         && let Some(enlightenment) = tree.enlightenment.as_ref()
     {
         for node in enlightenment.iter() {
@@ -498,6 +487,16 @@ pub fn apply_player_info(entity: &mut EncounterEntity, info: &InspectInfo) {
                 break;
             }
         }
+    }
+
+    // princess gl check
+    if entity.class_id == 104
+        && let Some(engr) = &entity.engraving_data
+        && engr
+            .iter()
+            .any(|e| e == "Awakening" || e == "Drops of Ether")
+    {
+        entity.spec = Some("Princess".to_string());
     }
 }
 

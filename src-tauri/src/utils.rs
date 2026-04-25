@@ -84,6 +84,8 @@ pub fn get_spec_from_ark_passive(node: &ArkPassiveNode) -> String {
         2310600 => "Recurrence",
         2330000 => "Ferality",
         2330100 => "Phantom Beast Awakening",
+        2490000 => "Hellfire Successor",
+        2490100 => "Dreadful Roar",
         _ => "Unknown",
     }
     .to_string()
