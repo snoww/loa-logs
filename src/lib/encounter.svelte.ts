@@ -1,7 +1,16 @@
 import { type Encounter, type Entity, EntityType } from "$lib/types";
+import { classNameToClassId } from "./constants/classes";
 import { sumUdpsContributed } from "./skill.svelte";
 import { settings } from "./stores.svelte";
 import { getRDamage, timestampToMinutesAndSeconds } from "./utils";
+import { supportSkills } from "./utils/buffs";
+
+export interface IdentityBrandInfo {
+  bDmg: number;
+  totalIdentityUdps: number;
+  identitySkillIds: Set<number>;
+  casts: number;
+}
 
 export type PlayerSort = "damage" | "rdps" | "stagger";
 
@@ -78,35 +87,185 @@ export class EncounterState {
    */
   localPlayer = $derived(this.encounter?.localPlayer ?? "");
 
+  // Single-pass aggregation over players. Each flag previously had its own
+  // `.some()` derived, which meant ~14 passes over the players array on every
+  // encounter update. Fold them into one pass and have the public derivations
+  // read from this cache.
+  aggregates = $derived.by(() => {
+    let anyDead = false;
+    let multipleDeaths = false;
+    let anyFrontAtk = false;
+    let anyBackAtk = false;
+    let anyCounters = false;
+    let anySupportBuff = false;
+    let anySupportIdentity = false;
+    let anySupportBrand = false;
+    let anySupportHat = false;
+    let anyPlayerIncapacitated = false;
+    let anyStagger = false;
+    let anyUnbuffedDamage = false;
+    let anyRdpsContributionsRaw = false;
+    const supportNames = new Set<string>();
+
+    for (const p of this.players) {
+      const ds = p.damageStats;
+      const ss = p.skillStats;
+      if (p.isDead) anyDead = true;
+      if (ds.deaths > 0 && !p.isDead) multipleDeaths = true;
+      if (ss.frontAttacks > 0) anyFrontAtk = true;
+      if (ss.backAttacks > 0) anyBackAtk = true;
+      if (ss.counters > 0) anyCounters = true;
+      if (ds.buffedBySupport > 0) anySupportBuff = true;
+      if (ds.buffedByIdentity > 0) anySupportIdentity = true;
+      if (ds.debuffedBySupport > 0) anySupportBrand = true;
+      if (ds.buffedByHat && ds.buffedByHat > 0) anySupportHat = true;
+      if (ds.incapacitations && ds.incapacitations.length > 0) anyPlayerIncapacitated = true;
+      if (ds.stagger > 0) anyStagger = true;
+      if (ds.unbuffedDamage > 0) anyUnbuffedDamage = true;
+      if (ds.rdpsDamageGiven > 0 || ds.rdpsDamageReceived > 0) anyRdpsContributionsRaw = true;
+
+      for (const skill of Object.values(p.skills)) {
+        if (sumUdpsContributed(skill, [1, 3, 5]) > 0) {
+          supportNames.add(p.name);
+          break;
+        }
+      }
+    }
+
+    return {
+      anyDead,
+      multipleDeaths,
+      anyFrontAtk,
+      anyBackAtk,
+      anyCounters,
+      anySupportBuff,
+      anySupportIdentity,
+      anySupportBrand,
+      anySupportHat,
+      anyPlayerIncapacitated,
+      anyStagger,
+      anyUnbuffedDamage,
+      anyRdpsContributionsRaw,
+      supportNames
+    };
+  });
+
   // this section is used for conditional headers in the damage table
   isSolo = $derived(this.players.length === 1);
-  anyDead = $derived(this.players.some((player) => player.isDead));
-  multipleDeaths = $derived(this.players.some((player) => player.damageStats.deaths > 0 && !player.isDead));
-  anyFrontAtk = $derived(this.players.some((player) => player.skillStats.frontAttacks > 0));
-  anyBackAtk = $derived(this.players.some((player) => player.skillStats.backAttacks > 0));
-  anyCounters = $derived(this.players.some((player) => player.skillStats.counters > 0));
-  anySupportBuff = $derived(this.players.some((player) => player.damageStats.buffedBySupport > 0));
-  anySupportIdentity = $derived(this.players.some((player) => player.damageStats.buffedByIdentity > 0));
-  anySupportBrand = $derived(this.players.some((player) => player.damageStats.debuffedBySupport > 0));
-  anySupportHat = $derived(
-    this.players.some((player) => player.damageStats.buffedByHat && player.damageStats.buffedByHat > 0)
-  );
-  anyPlayerIncapacitated = $derived(
-    this.players.some((player) => player.damageStats.incapacitations && player.damageStats.incapacitations.length > 0)
-  );
-  anyStagger = $derived(this.players.some((player) => player.damageStats.stagger > 0));
-  anyUnbuffedDamage = $derived(this.players.some((player) => player.damageStats.unbuffedDamage > 0));
-  anyUdpsContributions = $derived(
-    this.players.some((player) =>
-      Object.values(player.skills).some((skill) => sumUdpsContributed(skill, [1, 3, 5]) > 0)
-    )
-  );
+  anyDead = $derived(this.aggregates.anyDead);
+  multipleDeaths = $derived(this.aggregates.multipleDeaths);
+  anyFrontAtk = $derived(this.aggregates.anyFrontAtk);
+  anyBackAtk = $derived(this.aggregates.anyBackAtk);
+  anyCounters = $derived(this.aggregates.anyCounters);
+  anySupportBuff = $derived(this.aggregates.anySupportBuff);
+  anySupportIdentity = $derived(this.aggregates.anySupportIdentity);
+  anySupportBrand = $derived(this.aggregates.anySupportBrand);
+  anySupportHat = $derived(this.aggregates.anySupportHat);
+  anyPlayerIncapacitated = $derived(this.aggregates.anyPlayerIncapacitated);
+  anyStagger = $derived(this.aggregates.anyStagger);
+  anyUnbuffedDamage = $derived(this.aggregates.anyUnbuffedDamage);
+  anyUdpsContributions = $derived(this.aggregates.supportNames.size > 0);
+  supportNames = $derived(this.aggregates.supportNames);
   anyRdpsContributions = $derived(
-    this.encounter?.encounterDamageStats.misc?.rdpsValid !== false &&
-      this.players.some(
-        (player) => player.damageStats.rdpsDamageGiven > 0 || player.damageStats.rdpsDamageReceived > 0
-      )
+    this.encounter?.encounterDamageStats.misc?.rdpsValid !== false && this.aggregates.anyRdpsContributionsRaw
   );
+
+  /**
+   * Computes per-support "identity brand" bDMG — brand damage misattributed to identity skills
+   * because the support's identity (Moonfall, Serenade, Release Light, etc.) can apply
+   * brand on the boss entity. The game reports this bonus damage under the identity skill's
+   * udpsContributed instead of brand, inflating identity and deflating brand.
+   *
+   * Runs once per encounter update for every support in the encounter; `EntityState` just
+   * looks up the result by player name. Supports without any identity-applied brand are
+   * absent from the map.
+   */
+  identityBrandContextByPlayer = $derived.by(() => {
+    const result = new Map<string, IdentityBrandInfo>();
+    if (!this.encounter) return result;
+    const supportNames = this.aggregates.supportNames;
+    if (supportNames.size === 0) return result;
+
+    const allDebuffs = this.encounter.encounterDamageStats.debuffs;
+    const identityBrandSourceSet = new Set(supportSkills.identityBrandSources);
+    const partiesList = this.parties;
+
+    for (const name of supportNames) {
+      const entity = this.encounter.entities[name];
+      if (!entity) continue;
+
+      // Step 1: Partition brand debuffs into "regular brand" vs "identity brand".
+      // All brand debuffs share uniqueGroup 210230. Identity brand = sourceSkill is one of
+      // the known identity skills (Moonfall, Serenade of Courage, Blessed Aura, Release Light).
+      // Everything else is regular brand (Sonatina, Drawing Orchids, Dissonance, etc.).
+      const entityClassId = classNameToClassId[entity.class];
+      const identityBrandDebuffIds = new Set<number>();
+      const regularBrandDebuffIds = new Set<number>();
+      for (const [idStr, debuff] of Object.entries(allDebuffs)) {
+        if (debuff.uniqueGroup === 210230 && debuff.source.skill?.classId === entityClassId) {
+          const srcId = debuff.source.skill?.id ?? 0;
+          if (identityBrandSourceSet.has(srcId)) {
+            identityBrandDebuffIds.add(Number(idStr));
+          } else {
+            regularBrandDebuffIds.add(Number(idStr));
+          }
+        }
+      }
+      if (identityBrandDebuffIds.size === 0) continue;
+
+      // Step 2: Sum window-damage across DPS party members for each brand type.
+      const partyMembers =
+        partiesList.length > 0
+          ? (partiesList.find((party) => party.some((p) => p.name === name)) ?? this.playersOnly)
+          : this.playersOnly;
+
+      let identityBrandWindowDmg = 0;
+      let regularBrandWindowDmg = 0;
+      for (const player of partyMembers) {
+        if (supportNames.has(player.name)) continue;
+        for (const [idStr, dmg] of Object.entries(player.damageStats.debuffedBy)) {
+          const id = Number(idStr);
+          if (identityBrandDebuffIds.has(id)) identityBrandWindowDmg += dmg;
+          else if (regularBrandDebuffIds.has(id)) regularBrandWindowDmg += dmg;
+        }
+      }
+      if (identityBrandWindowDmg === 0 || regularBrandWindowDmg === 0) continue;
+
+      // Step 3: Total regular brand bDMG from this support's skills (type 3 = boss debuff).
+      const rawSkills = Object.values(entity.skills);
+      let regularBrandBDmg = 0;
+      for (const s of rawSkills) regularBrandBDmg += s.rdpsContributed[3] ?? 0;
+      if (regularBrandBDmg === 0) continue;
+
+      // Step 4: Extrapolate: how much brand bDMG was hidden in identity udpsContributed?
+      // identityBrandBDmg = regularBrandBDmg * (identityBrandWindowDmg / regularBrandWindowDmg)
+      const identityBrandBDmg = Math.round(
+        regularBrandBDmg * (identityBrandWindowDmg / regularBrandWindowDmg)
+      );
+      if (identityBrandBDmg <= 0) continue;
+
+      // Step 5: Identify which of this support's skills are identity skills by matching
+      // their skill id against the known identity brand source list.
+      const identitySkillIds = new Set<number>(supportSkills.identityBrandSources);
+      let totalIdentityUdps = 0;
+      let identityCasts = 0;
+      for (const s of rawSkills) {
+        if (!identitySkillIds.has(s.id)) continue;
+        totalIdentityUdps += s.rdpsContributed[1] ?? 0;
+        identityCasts += s.casts;
+      }
+      if (totalIdentityUdps === 0) continue;
+
+      result.set(name, {
+        bDmg: identityBrandBDmg,
+        totalIdentityUdps,
+        identitySkillIds,
+        casts: identityCasts
+      });
+    }
+
+    return result;
+  });
 
   topDamageDealt = $derived(this.encounter?.encounterDamageStats.topDamageDealt ?? 0);
 

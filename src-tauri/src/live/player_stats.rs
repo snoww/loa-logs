@@ -367,6 +367,45 @@ impl StatData {
         }
     }
 
+    /// Take ownership of the values vec representing `entity_id`'s contribution,
+    /// leaving an empty vec in its place. An empty vec is semantically equivalent
+    /// to "no contribution from this source," so this is the cheap way to compute
+    /// "what would attack power be without this entity?" without cloning the stat.
+    /// Returns None if there's nothing to take.
+    pub fn take_values_for_entity(
+        &mut self,
+        stats_owner_id: u64,
+        entity_id: u64,
+    ) -> Option<Vec<StatDataValue>> {
+        if entity_id == 0 || stats_owner_id == entity_id {
+            (!self.self_values.is_empty()).then(|| std::mem::take(&mut self.self_values))
+        } else {
+            self.modified_values
+                .iter_mut()
+                .find(|modification| modification.source_entity_id == entity_id)
+                .filter(|modification| !modification.values.is_empty())
+                .map(|modification| std::mem::take(&mut modification.values))
+        }
+    }
+
+    /// Restore the values vec previously taken by `take_values_for_entity`.
+    pub fn restore_values_for_entity(
+        &mut self,
+        stats_owner_id: u64,
+        entity_id: u64,
+        values: Vec<StatDataValue>,
+    ) {
+        if entity_id == 0 || stats_owner_id == entity_id {
+            self.self_values = values;
+        } else if let Some(modification) = self
+            .modified_values
+            .iter_mut()
+            .find(|modification| modification.source_entity_id == entity_id)
+        {
+            modification.values = values;
+        }
+    }
+
     pub fn contributing_entities(&self, out: &mut HashSet<u64>) {
         for modification in &self.modified_values {
             if !modification.values.is_empty() {
@@ -2400,7 +2439,7 @@ impl PlayerStats {
     }
 
     pub fn get_damage_increase_contributed_from_entity_id(
-        &self,
+        &mut self,
         entity_id: u64,
         total_attack_power_original: f64,
         hit_option: &HitOption,
@@ -2412,27 +2451,23 @@ impl PlayerStats {
         can_crit: bool,
         include_average_crit: bool,
     ) -> f64 {
-        let mut copied = self.clone();
-        let owner_id = copied.owner_id;
-        copied.for_each_stat_mut(|stat| stat.set(0.0, owner_id, entity_id, "contribution"));
-        let without_value = copied
-            .calculate_final_attack_power(
-                hit_option,
-                hit_flag,
-                damage_attr,
-                damage_type,
-                is_hyper_awakening,
-                is_affected_by_buffs,
-                can_crit,
-                include_average_crit,
-            )
-            .value();
+        let without_value = self.recompute_attack_power_without_entity(
+            entity_id,
+            hit_option,
+            hit_flag,
+            damage_attr,
+            damage_type,
+            is_hyper_awakening,
+            is_affected_by_buffs,
+            can_crit,
+            include_average_crit,
+        );
         let delta = total_attack_power_original - without_value;
         delta / without_value
     }
 
     pub fn get_damage_portion_contributed_from_entity_id(
-        &self,
+        &mut self,
         entity_id: u64,
         total_attack_power_original: f64,
         hit_option: &HitOption,
@@ -2444,10 +2479,49 @@ impl PlayerStats {
         can_crit: bool,
         include_average_crit: bool,
     ) -> f64 {
-        let mut copied = self.clone();
-        let owner_id = copied.owner_id;
-        copied.for_each_stat_mut(|stat| stat.set(0.0, owner_id, entity_id, "contribution"));
-        let without_value = copied
+        let without_value = self.recompute_attack_power_without_entity(
+            entity_id,
+            hit_option,
+            hit_flag,
+            damage_attr,
+            damage_type,
+            is_hyper_awakening,
+            is_affected_by_buffs,
+            can_crit,
+            include_average_crit,
+        );
+        let delta = total_attack_power_original - without_value;
+        delta / total_attack_power_original
+    }
+
+    /// Recompute attack power as if `entity_id` had contributed nothing, then
+    /// restore self to its original state. Avoids cloning PlayerStats by swapping
+    /// each affected `values: Vec<StatDataValue>` out via mem::take and putting
+    /// it back after the read-only computation.
+    fn recompute_attack_power_without_entity(
+        &mut self,
+        entity_id: u64,
+        hit_option: &HitOption,
+        hit_flag: &HitFlag,
+        damage_attr: Option<u8>,
+        damage_type: u8,
+        is_hyper_awakening: bool,
+        is_affected_by_buffs: bool,
+        can_crit: bool,
+        include_average_crit: bool,
+    ) -> f64 {
+        let owner_id = self.owner_id;
+        let mut snapshots: Vec<(usize, Vec<StatDataValue>)> = Vec::new();
+        for stat_idx in self.iterate_stat_datas() {
+            if let Some(taken) = self
+                .get_stat_data_ref_mut(stat_idx)
+                .take_values_for_entity(owner_id, entity_id)
+            {
+                snapshots.push((stat_idx, taken));
+            }
+        }
+
+        let without_value = self
             .calculate_final_attack_power(
                 hit_option,
                 hit_flag,
@@ -2459,12 +2533,17 @@ impl PlayerStats {
                 include_average_crit,
             )
             .value();
-        let delta = total_attack_power_original - without_value;
-        delta / total_attack_power_original
+
+        for (stat_idx, original) in snapshots {
+            self.get_stat_data_ref_mut(stat_idx)
+                .restore_values_for_entity(owner_id, entity_id, original);
+        }
+
+        without_value
     }
 
     pub fn get_damage_portions_contributed_from_all_entities(
-        &self,
+        &mut self,
         total_attack_power_original: f64,
         hit_option: &HitOption,
         hit_flag: &HitFlag,

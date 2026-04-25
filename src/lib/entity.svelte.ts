@@ -10,18 +10,13 @@ import {
 
 export type SkillSort = "damage" | "buffed" | "stagger";
 import { cardIds } from "./constants/cards";
-import { classNameToClassId } from "./constants/classes";
 import type { EncounterState } from "./encounter.svelte";
 import { sumUdpsContributed } from "./skill.svelte";
 import { settings } from "./stores.svelte";
 import { type Entity, EntityType, type IncapacitatedEvent, type Skill } from "./types";
-import { hyperAwakeningIds, supportSkills } from "./utils/buffs";
+import { hyperAwakeningIds } from "./utils/buffs";
 
 export const IDENTITY_BRAND_SKILL_ID = -210230;
-
-function hasLegacyUdpsContribution(entity: Entity): boolean {
-  return Object.values(entity.skills).some((skill) => sumUdpsContributed(skill, [1, 3, 5]) > 0);
-}
 
 function getContributionScopeMembers(encounter: EncounterState, playerName: string): Entity[] {
   const parties = encounter.parties;
@@ -32,7 +27,8 @@ function getContributionScopeMembers(encounter: EncounterState, playerName: stri
 }
 
 function getContributionScopeDpsPlayers(encounter: EncounterState, playerName: string): Entity[] {
-  return getContributionScopeMembers(encounter, playerName).filter((player) => !hasLegacyUdpsContribution(player));
+  const supportNames = encounter.supportNames;
+  return getContributionScopeMembers(encounter, playerName).filter((player) => !supportNames.has(player.name));
 }
 
 export class EntityState {
@@ -182,82 +178,12 @@ export class EntityState {
    * brand on the boss entity. The game reports this bonus damage under the identity skill's
    * udpsContributed instead of brand, inflating identity and deflating brand.
    *
-   * Returns null if the support has no identity-applied brand this encounter.
+   * The heavy cross-entity computation lives on EncounterState so it runs once per
+   * encounter update rather than once per rendered row.
    */
-  identityBrandInfo = $derived.by(() => {
-    if (!this.encounter.encounter) return null;
-    const rawSkills = Object.values(this.entity.skills);
-    const isSupport = rawSkills.some((s) => sumUdpsContributed(s, [1, 3, 5]) > 0);
-    if (!isSupport) return null;
-
-    const enc = this.encounter.encounter;
-    const allDebuffs = enc.encounterDamageStats.debuffs;
-
-    // Step 1: Partition brand debuffs into "regular brand" vs "identity brand".
-    // All brand debuffs share uniqueGroup 210230. Identity brand = sourceSkill is one of
-    // the known identity skills (Moonfall, Serenade of Courage, Blessed Aura, Release Light).
-    // Everything else is regular brand (Sonatina, Drawing Orchids, Dissonance, etc.).
-    const identityBrandDebuffIds = new Set<number>();
-    const regularBrandDebuffIds = new Set<number>();
-    const entityClassId = classNameToClassId[this.entity.class];
-    for (const [idStr, debuff] of Object.entries(allDebuffs)) {
-      if (debuff.uniqueGroup === 210230 && debuff.source.skill?.classId === entityClassId) {
-        const srcId = debuff.source.skill?.id ?? 0;
-        if (supportSkills.identityBrandSources.includes(srcId)) {
-          identityBrandDebuffIds.add(Number(idStr));
-        } else {
-          regularBrandDebuffIds.add(Number(idStr));
-        }
-      }
-    }
-
-    if (identityBrandDebuffIds.size === 0) return null;
-
-    // Step 2: Sum window-damage across DPS party members for each brand type.
-    const name = this.entity.name;
-    const parties = this.encounter.parties;
-    const partyMembers =
-      parties.length > 0
-        ? (parties.find((party) => party.some((p) => p.name === name)) ?? this.encounter.playersOnly)
-        : this.encounter.playersOnly;
-
-    let identityBrandWindowDmg = 0;
-    let regularBrandWindowDmg = 0;
-    for (const player of partyMembers) {
-      const playerIsSupport = Object.values(player.skills).some((s) => sumUdpsContributed(s, [1, 3, 5]) > 0);
-      if (playerIsSupport) continue;
-      for (const [idStr, dmg] of Object.entries(player.damageStats.debuffedBy)) {
-        const id = Number(idStr);
-        if (identityBrandDebuffIds.has(id)) identityBrandWindowDmg += dmg;
-        else if (regularBrandDebuffIds.has(id)) regularBrandWindowDmg += dmg;
-      }
-    }
-
-    if (identityBrandWindowDmg === 0 || regularBrandWindowDmg === 0) return null;
-
-    // Step 3: Total regular brand bDMG from this support's skills (type 3 = boss debuff).
-    const regularBrandBDmg = rawSkills.reduce((acc, s) => acc + (s.rdpsContributed[3] ?? 0), 0);
-    if (regularBrandBDmg === 0) return null;
-
-    // Step 4: Extrapolate: how much brand bDMG was hidden in identity udpsContributed?
-    // identityBrandBDmg = regularBrandBDmg * (identityBrandWindowDmg / regularBrandWindowDmg)
-    const identityBrandBDmg = Math.round(regularBrandBDmg * (identityBrandWindowDmg / regularBrandWindowDmg));
-    if (identityBrandBDmg <= 0) return null;
-
-    // Step 5: Identify which of this support's skills are identity skills by matching
-    // their skill id against the known identity brand source list.
-    const identitySkillIds = new Set<number>(supportSkills.identityBrandSources);
-
-    const totalIdentityUdps = rawSkills.reduce(
-      (acc, s) => acc + (identitySkillIds.has(s.id) ? (s.rdpsContributed[1] ?? 0) : 0),
-      0
-    );
-    if (totalIdentityUdps === 0) return null;
-
-    const identityCasts = rawSkills.reduce((acc, s) => acc + (identitySkillIds.has(s.id) ? s.casts : 0), 0);
-
-    return { bDmg: identityBrandBDmg, totalIdentityUdps, identitySkillIds, casts: identityCasts };
-  });
+  identityBrandInfo = $derived(
+    this.entity ? (this.encounter.identityBrandContextByPlayer.get(this.entity.name) ?? null) : null
+  );
 
   skills = $derived.by(() => {
     if (!this.entity) return [];
@@ -338,7 +264,7 @@ export class EntityState {
     return adjustedSkills.sort((a, b) => b.totalDamage - a.totalDamage);
   });
 
-  isSupport = $derived(this.skills.some((skill) => sumUdpsContributed(skill, [1, 3, 5]) > 0));
+  isSupport = $derived(this.entity ? this.encounter.supportNames.has(this.entity.name) : false);
 
   private skillSortValue(skill: Skill): number {
     if (this.skillSort === "stagger") return skill.stagger ?? 0;
@@ -368,9 +294,7 @@ export class EntityState {
       this.entity.damageStats.unbuffedDamage !== this.entity.damageStats.damageDealt
   );
 
-  hasUdpsContributions = $derived(
-    Object.values(this.entity.skills).some((skill) => sumUdpsContributed(skill, [1, 3, 5]) > 0)
-  );
+  hasUdpsContributions = $derived(this.entity ? this.encounter.supportNames.has(this.entity.name) : false);
 
   /**
    * Weighted average buff contribution % for this support, scoped to their own party.

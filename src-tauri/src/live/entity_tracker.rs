@@ -1593,18 +1593,24 @@ impl EntityTracker {
             return;
         }
 
-        let self_effects = self
-            .status_tracker
-            .borrow_mut()
-            .get_source_status_effects(source_entity, timestamp);
-        status_effect.owner_player_stats_snapshot = snapshot_owner_player_stats_for_buffs(
-            source_entity,
-            status_effect.source_skill_id,
-            &self_effects,
-            timestamp.timestamp_millis(),
-            self,
-        )
-        .map(Arc::new);
+        // snapshot_owner_player_stats_for_buffs returns None without an inspect_snapshot,
+        // so skip building self_effects entirely in that case.
+        status_effect.owner_player_stats_snapshot = if source_entity.inspect_snapshot.is_some() {
+            let self_effects = self
+                .status_tracker
+                .borrow_mut()
+                .get_source_status_effects(source_entity, timestamp);
+            snapshot_owner_player_stats_for_buffs(
+                source_entity,
+                status_effect.source_skill_id,
+                &self_effects,
+                timestamp.timestamp_millis(),
+                self,
+            )
+            .map(Arc::new)
+        } else {
+            None
+        };
         status_effect.source_skill_runtime_snapshot = status_effect
             .source_skill_id
             .and_then(|skill_id| source_entity.skill_runtime_data.get(&skill_id).cloned());
