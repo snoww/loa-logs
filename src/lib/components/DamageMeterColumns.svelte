@@ -137,7 +137,7 @@
     // rDPS contribution percentage
     {
       show(enc) {
-        if (!enc.curSettings.rdps) return false;
+        if (!enc.curSettings.rdpsContrib) return false;
         return enc.anyRdpsContributions;
       },
       headerText: "rCon%",

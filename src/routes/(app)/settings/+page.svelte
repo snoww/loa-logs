@@ -525,13 +525,14 @@
           "Damage",
           "Show the damage dealt by the player in the current encounter"
         )}
-        {@render settingOption("logs", "udmg", "uDMG", "Unbuffed Damage Dealt (damage excluding support buffs/debuffs)")}
         {@render settingOption(
           "logs",
-          "supportContrib",
-          "Contribution %",
-          "Show legacy uDPS Con% and true rDPS rCon% contribution columns in the meter"
+          "udmg",
+          "uDMG",
+          "Unbuffed Damage Dealt (damage excluding support buffs/debuffs)"
         )}
+        {@render settingOption("logs", "supportContrib", "Contribution %", "Show legacy uDPS Con% contribution column")}
+        {@render settingOption("logs", "rdpsContrib", "rCon%", "Show rDPS rCon% contribution column")}
         {@render settingOption(
           "logs",
           "damagePercent",
@@ -770,13 +771,19 @@
           "Show how long a party member has been incapacitated for (e.g. on the floor, stunned, trapped)"
         )}
         {@render settingOption("meter", "damage", "Damage", "Show the damage dealt by player in the current encounter")}
-        {@render settingOption("meter", "unbuffedDamage", "uDMG", "Unbuffed Damage Dealt (damage excluding support buffs/debuffs)")}
+        {@render settingOption(
+          "meter",
+          "unbuffedDamage",
+          "uDMG",
+          "Unbuffed Damage Dealt (damage excluding support buffs/debuffs)"
+        )}
         {@render settingOption(
           "meter",
           "supportContrib",
           "Contribution %",
-          "Show legacy uDPS Con% and true rDPS rCon% contribution columns in the meter"
+          "Show legacy uDPS Con% contribution column"
         )}
+        {@render settingOption("meter", "rdpsContrib", "rCon%", "Show rDPS rCon% contribution column")}
         {@render settingOption(
           "meter",
           "damagePercent",

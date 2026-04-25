@@ -237,6 +237,7 @@ export const defaultSettings: AppSettings = {
     percentBrand: true,
     percentHatBySup: true,
     supportContrib: false,
+    rdpsContrib: false,
     stagger: false,
     breakdown: {
       damage: true,
@@ -260,7 +261,8 @@ export const defaultSettings: AppSettings = {
       percentIdentityBySup: false,
       percentBrand: false,
       percentHatBySup: false,
-      supportContrib: false
+      supportContrib: false,
+      rdpsContrib: false
     }
   },
   mini: {
@@ -293,6 +295,7 @@ export const defaultSettings: AppSettings = {
     percentHatBySup: true,
     percentBrand: true,
     supportContrib: true,
+    rdpsContrib: true,
     stagger: true,
     breakdown: {
       damage: true,
@@ -317,7 +320,8 @@ export const defaultSettings: AppSettings = {
       percentIdentityBySup: false,
       percentBrand: false,
       percentHatBySup: false,
-      supportContrib: false
+      supportContrib: false,
+      rdpsContrib: false
     }
   },
   buffs: {
