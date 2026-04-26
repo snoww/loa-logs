@@ -555,7 +555,12 @@ pub fn calculate_entities(args: &mut InsertEncounterArgs) -> Result<()> {
             .as_ref()
             .and_then(|stats| stats.get(&entity.name))
         {
-            entity.loadout_hash = info.loadout_snapshot.clone();
+            // if fight didnt request in-game inspect, apply api inspect
+            if entity.combat_power.is_none() {
+                apply_player_info(entity, info, false);
+            } else {
+                entity.loadout_hash = info.loadout_snapshot.clone();
+            }
         }
 
         apply_cast_logs(entity, cast_log, skill_cast_log);
@@ -571,11 +576,7 @@ pub fn calculate_entities(args: &mut InsertEncounterArgs) -> Result<()> {
             }
         }
 
-        if entity
-            .spec
-            .as_deref()
-            .is_none_or(|spec| spec == "Unknown")
-        {
+        if entity.spec.as_deref().is_none_or(|spec| spec == "Unknown") {
             let spec = get_player_spec(entity, &encounter.encounter_damage_stats.buffs, false);
             entity.spec = Some(spec);
         }

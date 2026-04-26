@@ -11,8 +11,8 @@ use crate::live::status_tracker::{
 use crate::local::{LocalInfo, LocalPlayer};
 use crate::models::EntityType::*;
 use crate::models::{
-    ArkPassiveData, ArkPassiveNode, EncounterEntity, EntityType, Esther, InspectInfo, TripodIndex,
-    TripodLevel,
+    ArkPassiveData, ArkPassiveNode, CombatPower, EncounterEntity, EntityType, Esther, InspectInfo,
+    TripodIndex, TripodLevel,
 };
 use chrono::{DateTime, Utc};
 use hashbrown::{HashMap, HashSet};
@@ -2590,7 +2590,10 @@ fn inspect_info_from_result(result: &PKTPCInspectResult) -> InspectInfo {
     });
 
     InspectInfo {
-        combat_power: None,
+        combat_power: Some(CombatPower {
+            id: 0,
+            score: result.battle_point as f32,
+        }),
         ark_passive_enabled: ark_passive_data.is_some(),
         ark_passive_data,
         engravings,
