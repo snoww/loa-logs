@@ -527,7 +527,7 @@
         )}
         {@render settingOption(
           "logs",
-          "udmg",
+          "unbuffedDamage",
           "uDMG",
           "Unbuffed Damage Dealt (damage excluding support buffs/debuffs)"
         )}
