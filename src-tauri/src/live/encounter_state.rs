@@ -806,7 +806,7 @@ impl EncounterState {
         });
     }
 
-    fn record_lal_damage_debug(
+    fn record_contribution_data(
         &mut self,
         player_name: &str,
         player_entity_id: u64,
@@ -879,7 +879,7 @@ impl EncounterState {
                 .or_default() += attribution.damage;
         }
 
-        for attribution in &result.debug_skill_group_attributions {
+        for attribution in &result.skill_group_attributions {
             if attribution.source_entity_id == 0
                 || (attribution.damage <= 0 && attribution.damage_increase <= 0)
             {
@@ -2007,8 +2007,8 @@ impl EncounterState {
             source_entity.damage_stats.hyper_awakening_damage += damage;
         }
 
-        let lal_debug_damage_record =
-            if DEBUG_DUMP_DAMAGE_STATE_JSON && source_entity.entity_type == EntityType::Player {
+        let contribution_data =
+            if source_entity.entity_type == EntityType::Player {
                 Some((
                     source_entity.name.clone(),
                     dmg_src_entity.id,
@@ -2404,9 +2404,9 @@ impl EncounterState {
             hit_flag,
             rdps_result,
             rdps_valid,
-        )) = lal_debug_damage_record
+        )) = contribution_data
         {
-            self.record_lal_damage_debug(
+            self.record_contribution_data(
                 &player_name,
                 player_entity_id,
                 skill_id,

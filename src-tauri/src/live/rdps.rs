@@ -29,7 +29,7 @@ pub struct HitEntityRdpsAttribution {
 }
 
 #[derive(Debug, Clone)]
-pub struct HitDebugSkillGroupAttribution {
+pub struct HitSkillGroupAttribution {
     pub source_entity_id: u64,
     pub group_name: String,
     pub damage: i64,
@@ -45,7 +45,7 @@ pub struct HitRdpsResult {
     pub rdps_damage_received_support: i64,
     pub entity_attributions: Vec<HitEntityRdpsAttribution>,
     pub attributions: Vec<HitRdpsAttribution>,
-    pub debug_skill_group_attributions: Vec<HitDebugSkillGroupAttribution>,
+    pub skill_group_attributions: Vec<HitSkillGroupAttribution>,
 }
 
 #[derive(Debug, Clone)]
@@ -361,21 +361,19 @@ pub fn compute_hit_rdps(
         result.crit_rate_capped = Some(crit_rate_capped);
         result.crit_damage_multiplier = Some(crit_damage_multiplier);
     }
-    if DEBUG_DUMP_DAMAGE_STATE_JSON {
-        result.debug_skill_group_attributions = compute_debug_skill_group_attributions(
-            &stats,
-            total_attack_power,
-            damage,
-            &entity_portions,
-            hit_option,
-            hit_flag,
-            effective_damage_attr,
-            damage_type,
-            is_hyper_awakening,
-            is_affected_by_buffs,
-            can_crit,
-        );
-    }
+    result.skill_group_attributions = compute_skill_group_attributions(
+        &mut stats,
+        total_attack_power,
+        damage,
+        &entity_portions,
+        hit_option,
+        hit_flag,
+        effective_damage_attr,
+        damage_type,
+        is_hyper_awakening,
+        is_affected_by_buffs,
+        can_crit,
+    );
     for &(portion, entity_id) in &entity_portions {
         let entity_damage = (portion * damage as f64).round() as i64;
         if entity_id == attacker.id {
@@ -1777,8 +1775,8 @@ fn get_damage_splits(dmg: f64, factors: &[f64]) -> Vec<f64> {
     pieces
 }
 
-fn compute_debug_skill_group_attributions(
-    stats: &PlayerStats,
+fn compute_skill_group_attributions(
+    stats: &mut PlayerStats,
     total_attack_power: f64,
     damage: i64,
     entity_portions: &[(f64, u64)],
@@ -1789,16 +1787,16 @@ fn compute_debug_skill_group_attributions(
     is_hyper_awakening: bool,
     is_affected_by_buffs: bool,
     can_crit: bool,
-) -> Vec<HitDebugSkillGroupAttribution> {
+) -> Vec<HitSkillGroupAttribution> {
     let mut output = Vec::new();
     for &(entity_damage_portion, entity_id) in entity_portions {
         if entity_id == 0 || entity_id == stats.owner_id || entity_damage_portion <= 0.0 {
             continue;
         }
 
-        let mut cloned_stats = stats.clone();
         let mut stat_contributions = Vec::<(f64, String, f64, Vec<(f64, String)>)>::new();
-        for stat_idx in stats.iterate_stat_datas() {
+        let stat_indices = stats.iterate_stat_datas();
+        for stat_idx in stat_indices {
             let source_stat = stats.get_stat_data_ref(stat_idx);
             if source_stat.get_value_for_entity_id(entity_id) <= 0.0 {
                 continue;
@@ -1821,7 +1819,7 @@ fn compute_debug_skill_group_attributions(
             }
 
             {
-                let modification = cloned_stats
+                let modification = stats
                     .get_stat_data_ref_mut(stat_idx)
                     .get_modification_for_entity_id_mut(entity_id);
                 for value in &mut modification.values {
@@ -1829,7 +1827,7 @@ fn compute_debug_skill_group_attributions(
                 }
             }
 
-            let attack_power_without = cloned_stats
+            let attack_power_without = stats
                 .calculate_final_attack_power(
                     hit_option,
                     hit_flag,
@@ -1843,7 +1841,7 @@ fn compute_debug_skill_group_attributions(
                 .value();
 
             {
-                let modification = cloned_stats
+                let modification = stats
                     .get_stat_data_ref_mut(stat_idx)
                     .get_modification_for_entity_id_mut(entity_id);
                 for (index, value) in modification.values.iter_mut().enumerate() {
@@ -1900,7 +1898,7 @@ fn compute_debug_skill_group_attributions(
                     continue;
                 }
 
-                output.push(HitDebugSkillGroupAttribution {
+                output.push(HitSkillGroupAttribution {
                     source_entity_id: entity_id,
                     group_name: name,
                     damage: damage_contribution,
@@ -2279,7 +2277,7 @@ fn hit_rdps_result_debug_value(result: &HitRdpsResult) -> Value {
                 "is_support": attribution.is_support,
             })
         }).collect::<Vec<_>>(),
-        "debug_skill_group_attributions": result.debug_skill_group_attributions.iter().map(|attribution| {
+        "skill_group_attributions": result.skill_group_attributions.iter().map(|attribution| {
             json!({
                 "source_entity_id": attribution.source_entity_id,
                 "group_name": attribution.group_name,
