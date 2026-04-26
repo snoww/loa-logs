@@ -439,7 +439,7 @@ pub fn update_entity_stats(
     }
 }
 
-pub fn apply_player_info(entity: &mut EncounterEntity, info: &InspectInfo) {
+pub fn apply_player_info(entity: &mut EncounterEntity, info: &InspectInfo, skip_support: bool) {
     for gem in info.gems.iter().flatten() {
         let skill_ids = if matches!(gem.gem_type, 34 | 35 | 65 | 63 | 61) {
             GEM_SKILL_MAP
@@ -479,6 +479,7 @@ pub fn apply_player_info(entity: &mut EncounterEntity, info: &InspectInfo) {
     // get spec from inspect
     if let Some(tree) = info.ark_passive_data.as_ref()
         && let Some(enlightenment) = tree.enlightenment.as_ref()
+        && !skip_support
     {
         for node in enlightenment.iter() {
             let spec = get_spec_from_ark_passive(node);

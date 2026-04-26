@@ -27,7 +27,7 @@ use crate::local::{LocalInfo, LocalPlayer, LocalPlayerRepository};
 use crate::models::{DamageData, EntityType, Identity, TripodIndex};
 use crate::nineveh::NinevehIPCPair;
 use crate::settings::Settings;
-use crate::utils::get_class_from_id;
+use crate::utils::{get_class_from_id, is_support, is_support_class};
 use anyhow::Result;
 use chrono::Utc;
 use hashbrown::HashMap;
@@ -183,7 +183,7 @@ pub fn start(args: StartArgs) -> Result<()> {
                     info!("inspect result applied: name={}", applied.name);
                 }
                 if let Some(entity) = state.encounter.entities.get_mut(&applied.name) {
-                    apply_player_info(entity, &applied.info);
+                    apply_player_info(entity, &applied.info, is_support_class(&entity.class_id));
                 }
             } else if DEBUG_TRACE_INSPECT_PACKETS {
                 info!("inspect result deferred: name={inspect_name}");

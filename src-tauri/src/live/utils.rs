@@ -410,7 +410,12 @@ pub fn get_skill_name_and_icon(
             if let Some(source_skills) = effect.source_skills.as_ref()
                 && !source_skills.is_empty()
             {
-                let source_skill = source_skills.first().cloned().unwrap_or_default();
+                let source_skill = source_skills
+                    .iter()
+                    .copied()
+                    .find(|id| SKILL_DATA.get(id).is_some_and(|s| s.name.is_some()))
+                    .or_else(|| source_skills.first().copied())
+                    .unwrap_or_default();
                 if let Some(skill) = SKILL_DATA.get(&source_skill) {
                     return (
                         skill.name.clone().unwrap_or(skill.id.to_string()),
@@ -459,8 +464,9 @@ pub fn get_skill_name_and_icon(
                 }
             }
             if let Some(skill) = summon_source_skills
-                .first()
-                .and_then(|source| SKILL_DATA.get(source))
+                .iter()
+                .find_map(|source| SKILL_DATA.get(source).filter(|s| s.name.is_some()))
+                .or_else(|| summon_source_skills.first().and_then(|source| SKILL_DATA.get(source)))
             {
                 (
                     skill.name.clone().unwrap_or(skill.id.to_string()) + " (Summon)",
@@ -477,8 +483,9 @@ pub fn get_skill_name_and_icon(
             && !source_skills.contains(&skill_id)
         {
             if let Some(skill) = source_skills
-                .first()
-                .and_then(|source| SKILL_DATA.get(source))
+                .iter()
+                .find_map(|source| SKILL_DATA.get(source).filter(|s| s.name.is_some()))
+                .or_else(|| source_skills.first().and_then(|source| SKILL_DATA.get(source)))
             {
                 (
                     skill.name.clone().unwrap_or(skill.id.to_string()),

@@ -555,7 +555,7 @@ pub fn calculate_entities(args: &mut InsertEncounterArgs) -> Result<()> {
             .as_ref()
             .and_then(|stats| stats.get(&entity.name))
         {
-            apply_player_info(entity, info);
+            entity.loadout_hash = info.loadout_snapshot.clone();
         }
 
         apply_cast_logs(entity, cast_log, skill_cast_log);
