@@ -1,13 +1,13 @@
 use crate::data::{
-    RDPS_ADDITIONAL_IDENTITY_GROUP, SKILL_BUFF_DATA, SKILL_DATA, SKILL_EFFECT_DATA,
+    ENGRAVING_DATA, RDPS_ADDITIONAL_IDENTITY_GROUP, SKILL_BUFF_DATA, SKILL_DATA, SKILL_EFFECT_DATA,
     SUPPORT_IDENTITY_GROUP, SUPPORT_MARKING_GROUP,
 };
 use crate::live::entity_tracker::{Entity, EntityTracker, InspectSnapshot, SkillRuntimeData};
-use crate::live::player_stats::PlayerStats;
+use crate::live::player_stats::{PlayerStats, STAT_PRIORITY_DEFAULT, STAT_PRIORITY_SUPPORT};
 use crate::live::status_tracker::StatusEffectDetails;
 use crate::live::{DEBUG_DUMP_DAMAGE_STATE_JSON, write_debug_json_dump};
-use crate::models::{HitFlag, HitOption, PerLevelData};
-use crate::utils::is_support_class;
+use crate::models::{ArkPassiveData, HitFlag, HitOption, PerLevelData};
+use crate::utils::{is_support_class, is_support_spec};
 use hashbrown::HashMap;
 use serde_json::{Value, json};
 use std::sync::Arc;
@@ -62,6 +62,13 @@ const RDPS_TYPE_TARGET_DEBUFF: u8 = 3;
 const RDPS_TYPE_HYPER: u8 = 5;
 const SUPPORT_IDENTITY_SOURCE_SKILLS: [u32; 3] = [21140, 21141, 21142];
 const SUPPORT_IDENTITY_SKILL_GROUPS: [u32; 4] = [15000, 60000, 24000, 16000];
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum SourceRole {
+    Unknown,
+    ConfirmedSupport,
+    ConfirmedDps,
+}
 
 fn get_hit_crit_metrics(
     stats: &PlayerStats,
@@ -596,6 +603,8 @@ fn append_source_contributions(
         if source_entity_id == 0 {
             continue;
         }
+        let source_priority =
+            source_priority_for_entity(source_entity_id, entity_tracker, buffered_entities);
         let is_attributable_source =
             is_player_source_entity_id(source_entity_id, buffered_entities, entity_tracker);
         let is_self_source = source_entity_id == attacker_id;
@@ -665,20 +674,23 @@ fn append_source_contributions(
                     source_skill_id,
                     source_player_stats.as_deref(),
                     &buff_source,
+                    source_priority,
                 ),
                 "combat_effect" if option.key_index > 0 => stats.add_combat_effect_from_id(
                     option.key_index as u32,
                     source_entity_id,
                     &buff_source,
                 ),
-                "attack_power_amplify_multiplier" => stats.add_attack_power_amplify_multiplier(
-                    option.value as f64 / 10000.0,
-                    source_entity_id,
-                    &buff_source,
-                ),
+                "attack_power_amplify_multiplier" => stats
+                    .add_attack_power_amplify_multiplier_with_priority(
+                        option.value as f64 / 10000.0,
+                        source_entity_id,
+                        &buff_source,
+                        source_priority,
+                    ),
                 "class_option" if option.key_index > 0 => {
                     if let Some(source_entity) = source_entity {
-                        stats.add_external_addon_from_source(
+                        stats.add_external_addon_from_source_with_priority(
                             "class_option",
                             &option.key_stat,
                             option.key_index as u32,
@@ -686,6 +698,7 @@ fn append_source_contributions(
                             source_entity_id,
                             source_entity.class_id,
                             &buff_source,
+                            source_priority,
                         );
                     }
                 }
@@ -721,11 +734,12 @@ fn append_source_contributions(
             let buff_value = source_base_attack_power * percent_buff;
             let factor = (source_base_attack_power * percent_buff) / attacker_attack_power;
             if factor > 0.0 {
-                stats.attack_power_addend.add(
+                stats.attack_power_addend.add_with_priority(
                     buff_value,
                     attacker_id,
                     source_entity_id,
                     buff_source.clone(),
+                    source_priority,
                 );
                 if is_attributable_source && !is_self_source {
                     contributions.push(ContributionFactor {
@@ -745,9 +759,13 @@ fn append_source_contributions(
                 .as_deref()
                 .is_some_and(|category| category.eq_ignore_ascii_case("arcana_normal"))
         {
-            stats
-                .critical_hit_rate
-                .add(0.2, attacker_id, source_entity_id, buff_source.clone());
+            stats.critical_hit_rate.add_with_priority(
+                0.2,
+                attacker_id,
+                source_entity_id,
+                buff_source.clone(),
+                source_priority,
+            );
         }
 
         let (normal_damage_factor, hyper_damage_factor) = get_source_passive_factors(
@@ -797,6 +815,7 @@ fn apply_source_passive_stat(
     source_skill_id: u32,
     source_player_stats: Option<&PlayerStats>,
     buff_source: &str,
+    source_priority: i32,
 ) {
     let mut value = i64::from(option.value);
     if matches!(
@@ -824,7 +843,13 @@ fn apply_source_passive_stat(
             }
         }
     }
-    stats.add_stat_from_source(&option.key_stat, value, source_entity_id, buff_source);
+    stats.add_stat_from_source_with_priority(
+        &option.key_stat,
+        value,
+        source_entity_id,
+        buff_source,
+        source_priority,
+    );
 }
 
 fn append_target_contributions(
@@ -862,6 +887,8 @@ fn append_target_contributions(
         if source_entity_id == 0 {
             continue;
         }
+        let source_priority =
+            source_priority_for_entity(source_entity_id, entity_tracker, buffered_entities);
         let is_self_source = is_same_player(
             attacker,
             source_entity_id,
@@ -959,7 +986,7 @@ fn append_target_contributions(
                     }
                     factor *= multiplier;
                     if factor > 0.0 {
-                        stats.skill_damage_amplify.add(
+                        stats.skill_damage_amplify.add_with_priority(
                             factor,
                             attacker.id,
                             source_entity_id,
@@ -967,6 +994,7 @@ fn append_target_contributions(
                                 .name
                                 .clone()
                                 .unwrap_or_else(|| skill_buff.id.to_string()),
+                            source_priority,
                         );
                         if is_attributable_source && !is_self_source {
                             contributions.push(ContributionFactor {
@@ -1001,6 +1029,7 @@ fn append_target_contributions(
             hit_flag,
             damage_attr,
             damage_type,
+            source_priority,
         );
         if direct_factor > 0.0 {
             if is_attributable_source && !is_self_source {
@@ -1120,6 +1149,131 @@ fn get_buffered_or_live_snapshot<'a>(
     get_buffered_or_live_entity(entity_id, buffered_entities, entity_tracker)
         .and_then(|entity| entity.inspect_snapshot.as_ref())
         .or_else(|| entity_tracker.get_inspect_snapshot(entity_id))
+}
+
+fn source_priority_for_entity(
+    entity_id: u64,
+    entity_tracker: &EntityTracker,
+    buffered_entities: Option<&HashMap<u64, Entity>>,
+) -> i32 {
+    match resolve_source_role(entity_id, entity_tracker, buffered_entities) {
+        SourceRole::ConfirmedSupport => STAT_PRIORITY_SUPPORT,
+        SourceRole::ConfirmedDps | SourceRole::Unknown => STAT_PRIORITY_DEFAULT,
+    }
+}
+
+fn resolve_source_role(
+    entity_id: u64,
+    entity_tracker: &EntityTracker,
+    buffered_entities: Option<&HashMap<u64, Entity>>,
+) -> SourceRole {
+    // Prefer live tracker state during bootstrap replay; buffered entities can be stale.
+    if let Some(role) = entity_tracker
+        .get_entity_ref(entity_id)
+        .and_then(role_from_entity_inspect)
+    {
+        return role;
+    }
+    if let Some(role) = entity_tracker
+        .get_inspect_snapshot(entity_id)
+        .and_then(role_from_inspect_snapshot)
+    {
+        return role;
+    }
+    if let Some(buffered_entity) = buffered_entities.and_then(|entities| entities.get(&entity_id))
+        && let Some(role) = role_from_rebound_live_entity(buffered_entity, entity_tracker)
+    {
+        return role;
+    }
+    SourceRole::Unknown
+}
+
+fn role_from_rebound_live_entity(
+    buffered_entity: &Entity,
+    entity_tracker: &EntityTracker,
+) -> Option<SourceRole> {
+    let live_entity = entity_tracker.entities.values().find(|entity| {
+        matches!(entity.entity_type, crate::models::EntityType::Player)
+            && ((buffered_entity.character_id != 0
+                && entity.character_id == buffered_entity.character_id)
+                || (!buffered_entity.name.is_empty()
+                    && entity.name == buffered_entity.name
+                    && entity.class_id == buffered_entity.class_id))
+    })?;
+    role_from_entity_inspect(live_entity).or_else(|| {
+        entity_tracker
+            .get_inspect_snapshot(live_entity.id)
+            .and_then(role_from_inspect_snapshot)
+    })
+}
+
+fn role_from_entity_inspect(entity: &Entity) -> Option<SourceRole> {
+    entity
+        .inspect_info
+        .as_ref()
+        .and_then(|inspect| {
+            inspect
+                .ark_passive_data
+                .as_ref()
+                .and_then(role_from_ark_passive_data)
+                .or_else(|| {
+                    inspect
+                        .engravings
+                        .as_ref()
+                        .and_then(|engravings| role_from_engraving_ids(engravings.iter().copied()))
+                })
+        })
+        .or_else(|| {
+            entity
+                .inspect_snapshot
+                .as_ref()
+                .and_then(role_from_inspect_snapshot)
+        })
+}
+
+fn role_from_inspect_snapshot(snapshot: &InspectSnapshot) -> Option<SourceRole> {
+    snapshot
+        .ark_passive_data
+        .as_ref()
+        .and_then(role_from_ark_passive_data)
+        .or_else(|| {
+            role_from_engraving_ids(snapshot.engravings.iter().map(|engraving| engraving.id))
+        })
+}
+
+fn role_from_ark_passive_data(data: &ArkPassiveData) -> Option<SourceRole> {
+    data.enlightenment.as_deref().and_then(|nodes| {
+        nodes
+            .iter()
+            .find_map(|node| role_from_ark_passive_id(node.id))
+    })
+}
+
+fn role_from_ark_passive_id(id: u32) -> Option<SourceRole> {
+    match id {
+        2360010 | 2210000 | 2310000 | 2480100 => Some(SourceRole::ConfirmedSupport),
+        2360000 | 2210100 | 2310600 | 2480000 => Some(SourceRole::ConfirmedDps),
+        _ => None,
+    }
+}
+
+fn role_from_engraving_ids(ids: impl Iterator<Item = u32>) -> Option<SourceRole> {
+    ids.filter_map(|id| ENGRAVING_DATA.get(&id))
+        .filter_map(|engraving| engraving.name.as_deref())
+        .find_map(role_from_spec)
+}
+
+fn role_from_spec(spec: &str) -> Option<SourceRole> {
+    if is_support_spec(spec) {
+        return Some(SourceRole::ConfirmedSupport);
+    }
+    if matches!(
+        spec,
+        "Judgment" | "True Courage" | "Recurrence" | "Shining Knight"
+    ) {
+        return Some(SourceRole::ConfirmedDps);
+    }
+    None
 }
 
 fn is_player_source_entity_id(
@@ -1403,6 +1557,7 @@ fn apply_target_direct_stats(
     _hit_flag: &HitFlag,
     _damage_attr: Option<u8>,
     _damage_type: u8,
+    source_priority: i32,
 ) {
     let Some(status_effect_values) = level_data.status_effect_values.as_ref() else {
         return;
@@ -1417,76 +1572,85 @@ fn apply_target_direct_stats(
             let front_value = get_status_effect_factor_with_divisor(status_effect_values, 0, 100.0);
             let back_value = get_status_effect_factor_with_divisor(status_effect_values, 4, 100.0);
             if front_value != 0.0 {
-                stats.front_attack_amplify.add(
+                stats.front_attack_amplify.add_with_priority(
                     front_value,
                     attacker_id,
                     source_entity_id,
                     buff_source.clone(),
+                    source_priority,
                 );
             }
             if back_value != 0.0 {
-                stats.back_attack_amplify.add(
+                stats.back_attack_amplify.add_with_priority(
                     back_value,
                     attacker_id,
                     source_entity_id,
                     buff_source.clone(),
+                    source_priority,
                 );
             }
         }
         "instant_stat_amplify" => {
             let crit_rate = get_status_effect_factor(status_effect_values, 0);
             if crit_rate != 0.0 {
-                stats.critical_hit_rate.add(
+                stats.critical_hit_rate.add_with_priority(
                     crit_rate,
                     attacker_id,
                     source_entity_id,
                     buff_source.clone(),
+                    source_priority,
                 );
             }
             let crit_damage = get_status_effect_factor(status_effect_values, 1);
             if crit_damage != 0.0 {
-                stats.critical_damage_rate.add(
+                stats.critical_damage_rate.add_with_priority(
                     crit_damage,
                     attacker_id,
                     source_entity_id,
                     buff_source.clone(),
+                    source_priority,
                 );
             }
-            stats.outgoing_dmg_stat_amp.add(
+            stats.outgoing_dmg_stat_amp.add_with_priority(
                 get_status_effect_factor(status_effect_values, 7),
                 attacker_id,
                 source_entity_id,
                 buff_source.clone(),
+                source_priority,
             );
             let physical_crit_damage_amp = get_status_effect_factor(status_effect_values, 9);
             if physical_crit_damage_amp != 0.0 {
-                stats.physical_critical_damage_amplify.add(
+                stats.physical_critical_damage_amplify.add_with_priority(
                     physical_crit_damage_amp,
                     attacker_id,
                     source_entity_id,
                     buff_source.clone(),
+                    source_priority,
                 );
             }
             let magical_crit_damage_amp = get_status_effect_factor(status_effect_values, 10);
             if magical_crit_damage_amp != 0.0 {
-                stats.magical_critical_damage_amplify.add(
+                stats.magical_critical_damage_amplify.add_with_priority(
                     magical_crit_damage_amp,
                     attacker_id,
                     source_entity_id,
                     buff_source.clone(),
+                    source_priority,
                 );
             }
-            stats.physical_defense_break.add(
+            stats.physical_defense_break.add_with_priority(
                 -get_status_effect_factor(status_effect_values, 2) * 0.5,
                 attacker_id,
                 source_entity_id,
                 buff_source.clone(),
+                source_priority,
             );
-            stats.magical_defense_break.add(
+            stats.magical_defense_break.add_with_priority(
                 -get_status_effect_factor(status_effect_values, 3) * 0.5,
                 attacker_id,
                 source_entity_id,
                 buff_source.clone(),
+                source_priority,
             );
         }
         "instant_stat_amplify_by_contents" => {
@@ -1495,11 +1659,12 @@ fn apply_target_direct_stats(
                 .copied()
                 .and_then(|value| damage_attr_index(value as u8))
             {
-                stats.damage_attr_amplifications[index].add(
+                stats.damage_attr_amplifications[index].add_with_priority(
                     -get_status_effect_factor(status_effect_values, 2),
                     attacker_id,
                     source_entity_id,
                     buff_source,
+                    source_priority,
                 );
             }
         }

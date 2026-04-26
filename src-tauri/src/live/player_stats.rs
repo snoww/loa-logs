@@ -28,6 +28,8 @@ const PET_MAIN_STAT_MULTIPLIER: f64 = 0.011057;
 const PET_SKILL_DAMAGE_RATE: f64 = 0.01;
 const FIXED_STAT_DATA_COUNT: usize = 44;
 const DAMAGE_SPLIT_CACHED_MAX_FACTORS: usize = 20;
+pub const STAT_PRIORITY_SUPPORT: i32 = 0;
+pub const STAT_PRIORITY_DEFAULT: i32 = 100;
 
 #[derive(Default)]
 struct DamageSplitScratch {
@@ -85,10 +87,21 @@ pub struct StatDataValue {
     pub source: String,
 }
 
-#[derive(Debug, Clone, Default)]
+#[derive(Debug, Clone)]
 pub struct StatModification {
     pub values: Vec<StatDataValue>,
     pub source_entity_id: u64,
+    pub source_priority: i32,
+}
+
+impl Default for StatModification {
+    fn default() -> Self {
+        Self {
+            values: Vec::new(),
+            source_entity_id: 0,
+            source_priority: STAT_PRIORITY_DEFAULT,
+        }
+    }
 }
 
 #[derive(Debug, Clone, Default)]
@@ -106,7 +119,9 @@ impl StatData {
     }
 
     fn compare_stat_modification(lhs: &StatModification, rhs: &StatModification) -> Ordering {
-        lhs.source_entity_id.cmp(&rhs.source_entity_id)
+        lhs.source_priority
+            .cmp(&rhs.source_priority)
+            .then_with(|| lhs.source_entity_id.cmp(&rhs.source_entity_id))
     }
 
     fn sort_self_values(&mut self) {
@@ -187,11 +202,28 @@ impl StatData {
         value_owner_id: u64,
         source: impl Into<String>,
     ) {
+        self.add_with_priority(
+            value,
+            stats_owner_id,
+            value_owner_id,
+            source,
+            STAT_PRIORITY_DEFAULT,
+        );
+    }
+
+    pub fn add_with_priority(
+        &mut self,
+        value: f64,
+        stats_owner_id: u64,
+        value_owner_id: u64,
+        source: impl Into<String>,
+        source_priority: i32,
+    ) {
         if stats_owner_id == value_owner_id || value_owner_id == 0 {
             self.add_self(value, source);
             return;
         }
-        self.add_modification(value, value_owner_id, source);
+        self.add_modification_with_priority(value, value_owner_id, source, source_priority);
     }
 
     pub fn add_modification(
@@ -200,15 +232,31 @@ impl StatData {
         source_entity_id: u64,
         source: impl Into<String>,
     ) {
+        self.add_modification_with_priority(value, source_entity_id, source, STAT_PRIORITY_DEFAULT);
+    }
+
+    pub fn add_modification_with_priority(
+        &mut self,
+        value: f64,
+        source_entity_id: u64,
+        source: impl Into<String>,
+        source_priority: i32,
+    ) {
         if value == 0.0 {
             return;
         }
         let source = source.into();
-        if let Some(modification) = self
+        if let Some(index) = self
             .modified_values
-            .iter_mut()
-            .find(|modification| modification.source_entity_id == source_entity_id)
+            .iter()
+            .position(|modification| modification.source_entity_id == source_entity_id)
         {
+            let modification = &mut self.modified_values[index];
+            let mut should_sort_modifications = false;
+            if source_priority < modification.source_priority {
+                modification.source_priority = source_priority;
+                should_sort_modifications = true;
+            }
             if self.operation_type == OperationType::Additive
                 && let Some(existing) = modification
                     .values
@@ -216,15 +264,22 @@ impl StatData {
                     .find(|entry| entry.source == source)
             {
                 existing.value += value;
+                if should_sort_modifications {
+                    self.sort_modifications();
+                }
                 return;
             }
             modification.values.push(StatDataValue { value, source });
             Self::sort_modification_values(modification);
+            if should_sort_modifications {
+                self.sort_modifications();
+            }
             return;
         }
         self.modified_values.push(StatModification {
             values: vec![StatDataValue { value, source }],
             source_entity_id,
+            source_priority,
         });
         self.sort_modifications();
     }
@@ -254,19 +309,35 @@ impl StatData {
         source_entity_id: u64,
         source: impl Into<String>,
     ) {
+        self.set_modification_with_priority(value, source_entity_id, source, STAT_PRIORITY_DEFAULT);
+    }
+
+    pub fn set_modification_with_priority(
+        &mut self,
+        value: f64,
+        source_entity_id: u64,
+        source: impl Into<String>,
+        source_priority: i32,
+    ) {
         let source = source.into();
-        if let Some(modification) = self
+        if let Some(index) = self
             .modified_values
-            .iter_mut()
-            .find(|modification| modification.source_entity_id == source_entity_id)
+            .iter()
+            .position(|modification| modification.source_entity_id == source_entity_id)
         {
+            let modification = &mut self.modified_values[index];
             modification.values.clear();
             modification.values.push(StatDataValue { value, source });
+            if source_priority < modification.source_priority {
+                modification.source_priority = source_priority;
+                self.sort_modifications();
+            }
             return;
         }
         self.modified_values.push(StatModification {
             values: vec![StatDataValue { value, source }],
             source_entity_id,
+            source_priority,
         });
         self.sort_modifications();
     }
@@ -278,11 +349,28 @@ impl StatData {
         value_owner_id: u64,
         source: impl Into<String>,
     ) {
+        self.set_with_priority(
+            value,
+            stats_owner_id,
+            value_owner_id,
+            source,
+            STAT_PRIORITY_DEFAULT,
+        );
+    }
+
+    pub fn set_with_priority(
+        &mut self,
+        value: f64,
+        stats_owner_id: u64,
+        value_owner_id: u64,
+        source: impl Into<String>,
+        source_priority: i32,
+    ) {
         if stats_owner_id == value_owner_id || value_owner_id == 0 {
             self.set_self(value, source);
             return;
         }
-        self.set_modification(value, value_owner_id, source);
+        self.set_modification_with_priority(value, value_owner_id, source, source_priority);
     }
 
     pub fn operation_type(&self) -> OperationType {
@@ -479,10 +567,11 @@ impl StatData {
         }
         for modification in &right.modified_values {
             for value in &modification.values {
-                out.add_modification(
+                out.add_modification_with_priority(
                     value.value,
                     modification.source_entity_id,
                     value.source.clone(),
+                    modification.source_priority,
                 );
             }
         }
@@ -496,10 +585,11 @@ impl StatData {
         }
         for modification in &right.modified_values {
             for value in &modification.values {
-                out.add_modification(
+                out.add_modification_with_priority(
                     -value.value,
                     modification.source_entity_id,
                     value.source.clone(),
+                    modification.source_priority,
                 );
             }
         }
@@ -613,10 +703,15 @@ pub struct ActiveAddonSkillFeature {
 enum CompositeTarget {
     CriticalRate,
     CriticalDamage,
-    EvolutionDamageOverCap,
     MoveSpeedDamage,
     CriticalHitToDamage,
     CriticalRateCapOverToEvolution,
+}
+
+#[derive(Debug, Clone, Copy)]
+enum CompositeOwnership {
+    PreserveSource,
+    ForceSelf,
 }
 
 #[derive(Debug, Clone)]
@@ -1119,15 +1214,49 @@ impl PlayerStats {
         owner_id: u64,
         source: &str,
     ) {
-        self.add_stat_by_name(name, stat_value, owner_id, source);
+        self.add_stat_by_name_with_priority(
+            name,
+            stat_value,
+            owner_id,
+            source,
+            STAT_PRIORITY_DEFAULT,
+        );
+    }
+
+    pub fn add_stat_from_source_with_priority(
+        &mut self,
+        name: &str,
+        stat_value: i64,
+        owner_id: u64,
+        source: &str,
+        source_priority: i32,
+    ) {
+        self.add_stat_by_name_with_priority(name, stat_value, owner_id, source, source_priority);
     }
 
     pub fn add_stat(&mut self, name: &str, stat_value: i64, owner_id: u64, source: &str) {
-        self.add_stat_by_name(name, stat_value, owner_id, source);
+        self.add_stat_by_name_with_priority(
+            name,
+            stat_value,
+            owner_id,
+            source,
+            STAT_PRIORITY_DEFAULT,
+        );
     }
 
     pub fn add_value(&mut self, stat_data: &mut StatData, value: f64, owner_id: u64, source: &str) {
         stat_data.add(value, self.owner_id, owner_id, source);
+    }
+
+    pub fn add_value_with_priority(
+        &mut self,
+        stat_data: &mut StatData,
+        value: f64,
+        owner_id: u64,
+        source: &str,
+        source_priority: i32,
+    ) {
+        stat_data.add_with_priority(value, self.owner_id, owner_id, source, source_priority);
     }
 
     pub fn add_combat_effect_from_id(
@@ -1158,8 +1287,28 @@ impl PlayerStats {
     }
 
     pub fn add_attack_power_amplify_multiplier(&mut self, value: f64, owner_id: u64, source: &str) {
-        self.ally_attack_power_power
-            .add(value, self.owner_id, owner_id, source);
+        self.add_attack_power_amplify_multiplier_with_priority(
+            value,
+            owner_id,
+            source,
+            STAT_PRIORITY_DEFAULT,
+        );
+    }
+
+    pub fn add_attack_power_amplify_multiplier_with_priority(
+        &mut self,
+        value: f64,
+        owner_id: u64,
+        source: &str,
+        source_priority: i32,
+    ) {
+        self.ally_attack_power_power.add_with_priority(
+            value,
+            self.owner_id,
+            owner_id,
+            source,
+            source_priority,
+        );
     }
 
     pub fn add_external_addon_from_source(
@@ -1172,13 +1321,42 @@ impl PlayerStats {
         class_id: u32,
         source: &str,
     ) {
+        self.add_external_addon_from_source_with_priority(
+            addon_type,
+            stat_type,
+            key_index,
+            key_value,
+            owner_id,
+            class_id,
+            source,
+            STAT_PRIORITY_DEFAULT,
+        );
+    }
+
+    pub fn add_external_addon_from_source_with_priority(
+        &mut self,
+        addon_type: &str,
+        stat_type: &str,
+        key_index: u32,
+        key_value: i64,
+        owner_id: u64,
+        class_id: u32,
+        source: &str,
+        source_priority: i32,
+    ) {
         let addon = crate::models::ExternalResourceAddon {
             addon_type: addon_type.to_string(),
             stat_type: stat_type.to_string(),
             key_index,
             key_value,
         };
-        self.handle_external_addon(&addon, owner_id, class_id, source);
+        self.handle_external_addon_with_priority(
+            &addon,
+            owner_id,
+            class_id,
+            source,
+            source_priority,
+        );
     }
 
     pub fn handle_addon(
@@ -1735,6 +1913,7 @@ impl PlayerStats {
                             move_speed_to_crit_rate_percent,
                             &active.feature_type,
                             CompositeTarget::CriticalRate,
+                            CompositeOwnership::ForceSelf,
                         );
                         self.add_to_composite_stat_with_function(
                             &self.attack_speed_rate.clone(),
@@ -1743,6 +1922,7 @@ impl PlayerStats {
                             atk_speed_to_crit_dmg_percent,
                             &active.feature_type,
                             CompositeTarget::CriticalDamage,
+                            CompositeOwnership::ForceSelf,
                         );
                     }
                 }
@@ -1785,88 +1965,52 @@ impl PlayerStats {
                             + attack_speed_bonus.min(MOVE_SPEED_ATTACK_SPEED_CAP))
                             * default_percent)
                             .max(0.0);
-                        local_evo_dmg.add(
-                            base_bonus,
-                            self.owner_id,
-                            active.owner_id,
-                            active.feature_type.clone(),
-                        );
-                        self.evolution_damage.add(
-                            base_bonus,
-                            self.owner_id,
-                            active.owner_id,
-                            active.feature_type.clone(),
-                        );
-                        self.evolution_damage_bonus_from_supersonic_breakthrough
-                            .add(
-                                base_bonus,
-                                self.owner_id,
-                                active.owner_id,
-                                active.feature_type.clone(),
-                            );
+                        local_evo_dmg.add_self(base_bonus, active.feature_type.clone());
                         if move_speed_bonus > MOVE_SPEED_ATTACK_SPEED_CAP
                             && attack_speed_bonus > MOVE_SPEED_ATTACK_SPEED_CAP
                         {
-                            local_evo_dmg.add(
-                                over_cap_bonus,
-                                self.owner_id,
-                                active.owner_id,
-                                active.feature_type.clone(),
-                            );
-                            self.evolution_damage.add(
-                                over_cap_bonus,
-                                self.owner_id,
-                                active.owner_id,
-                                active.feature_type.clone(),
-                            );
-                            self.evolution_damage_bonus_from_supersonic_breakthrough
-                                .add(
-                                    over_cap_bonus,
-                                    self.owner_id,
-                                    active.owner_id,
-                                    active.feature_type.clone(),
-                                );
-                            let before_supersonic = self
-                                .evolution_damage_bonus_from_supersonic_breakthrough
-                                .value();
-                            self.add_to_composite_stat_over_threshold(
-                                &self.attack_speed_rate.clone(),
-                                MOVE_SPEED_ATTACK_SPEED_CAP,
-                                cap_evo_dmg - local_evo_dmg.value(),
-                                over_cap_percent,
+                            local_evo_dmg.add_self(over_cap_bonus, active.feature_type.clone());
+                            let mut attack_speed_accumulator = 0.0;
+                            let attack_speed_evo_left = cap_evo_dmg - local_evo_dmg.value();
+                            Self::add_self_to_stat_with_function(
+                                &mut local_evo_dmg,
+                                &self.attack_speed_rate,
+                                1000.0,
+                                attack_speed_evo_left,
+                                |value| {
+                                    attack_speed_accumulator += value;
+                                    if attack_speed_accumulator > MOVE_SPEED_ATTACK_SPEED_CAP {
+                                        (attack_speed_accumulator - MOVE_SPEED_ATTACK_SPEED_CAP)
+                                            .min(value)
+                                            * over_cap_percent
+                                    } else {
+                                        0.0
+                                    }
+                                },
                                 &active.feature_type,
-                                CompositeTarget::EvolutionDamageOverCap,
                             );
-                            let added_from_attack_speed = (self
-                                .evolution_damage_bonus_from_supersonic_breakthrough
-                                .value()
-                                - before_supersonic)
-                                .max(0.0);
-                            if added_from_attack_speed > 0.0 {
-                                local_evo_dmg
-                                    .add_self(added_from_attack_speed, active.feature_type.clone());
-                            }
-                            let before_supersonic = self
-                                .evolution_damage_bonus_from_supersonic_breakthrough
-                                .value();
-                            self.add_to_composite_stat_over_threshold(
-                                &self.move_speed_rate.clone(),
-                                MOVE_SPEED_ATTACK_SPEED_CAP,
-                                cap_evo_dmg - local_evo_dmg.value(),
-                                over_cap_percent,
+                            let mut move_speed_accumulator = 0.0;
+                            let move_speed_evo_left = cap_evo_dmg - local_evo_dmg.value();
+                            Self::add_self_to_stat_with_function(
+                                &mut local_evo_dmg,
+                                &self.move_speed_rate,
+                                1000.0,
+                                move_speed_evo_left,
+                                |value| {
+                                    move_speed_accumulator += value;
+                                    if move_speed_accumulator > MOVE_SPEED_ATTACK_SPEED_CAP {
+                                        (move_speed_accumulator - MOVE_SPEED_ATTACK_SPEED_CAP)
+                                            .min(value)
+                                            * over_cap_percent
+                                    } else {
+                                        0.0
+                                    }
+                                },
                                 &active.feature_type,
-                                CompositeTarget::EvolutionDamageOverCap,
                             );
-                            let added_from_move_speed = (self
-                                .evolution_damage_bonus_from_supersonic_breakthrough
-                                .value()
-                                - before_supersonic)
-                                .max(0.0);
-                            if added_from_move_speed > 0.0 {
-                                local_evo_dmg
-                                    .add_self(added_from_move_speed, active.feature_type.clone());
-                            }
                         }
+                        self.evolution_damage = self.evolution_damage.added(&local_evo_dmg);
+                        self.evolution_damage_bonus_from_supersonic_breakthrough = local_evo_dmg;
                     }
                 }
                 "troop_leader" => {
@@ -1878,6 +2022,7 @@ impl PlayerStats {
                             *value as f64 / 10000.0,
                             &active.feature_type,
                             CompositeTarget::MoveSpeedDamage,
+                            CompositeOwnership::ForceSelf,
                         );
                     }
                 }
@@ -1996,6 +2141,7 @@ impl PlayerStats {
                 rate,
                 &source,
                 CompositeTarget::CriticalHitToDamage,
+                CompositeOwnership::PreserveSource,
             );
         }
 
@@ -2007,6 +2153,7 @@ impl PlayerStats {
                 critical_rate_cap_over_to_evo_damage_multiplier,
                 "blocky_thorn",
                 CompositeTarget::CriticalRateCapOverToEvolution,
+                CompositeOwnership::PreserveSource,
             );
         }
     }
@@ -2118,6 +2265,31 @@ impl PlayerStats {
         self.runtime_state.identity_runtime_reliable
     }
 
+    fn add_self_to_stat_with_function<F>(
+        add_to_stat: &mut StatData,
+        source_stat: &StatData,
+        source_stat_max_to_add: f64,
+        add_to_stat_max_to_add: f64,
+        mut calculate_stat_value_func: F,
+        source: &str,
+    ) where
+        F: FnMut(f64) -> f64,
+    {
+        let mut to_add = source_stat.self_value().min(source_stat_max_to_add);
+        let mut stat_left_to_add = source_stat_max_to_add - to_add;
+        let mut added_value = calculate_stat_value_func(to_add).min(add_to_stat_max_to_add);
+        let mut added_value_left_to_add = add_to_stat_max_to_add - added_value;
+        add_to_stat.add_self(added_value, source);
+
+        for modification in &source_stat.modified_values {
+            to_add = stat_left_to_add.min(modification.value(source_stat.operation_type));
+            stat_left_to_add -= to_add;
+            added_value = calculate_stat_value_func(to_add).min(added_value_left_to_add);
+            added_value_left_to_add -= added_value;
+            add_to_stat.add_self(added_value, source);
+        }
+    }
+
     fn add_to_composite_stat_with_function(
         &mut self,
         source_stat: &StatData,
@@ -2126,22 +2298,23 @@ impl PlayerStats {
         rate: f64,
         source: &str,
         target: CompositeTarget,
+        ownership: CompositeOwnership,
     ) {
         let mut stat_left_to_add = source_stat_max_to_add;
         let mut added_left = add_to_stat_max_to_add;
 
         let apply_chunk = |this: &mut Self,
-                               value: f64,
-                               owner_id: u64,
-                               source_label: &str,
-                               added_left: &mut f64| {
+                           value: f64,
+                           owner_id: u64,
+                           source_label: &str,
+                           source_priority: i32,
+                           added_left: &mut f64| {
             if value <= 0.0 || *added_left <= 0.0 {
                 return;
             }
             let added_value = match target {
                 CompositeTarget::CriticalRate => value * rate,
                 CompositeTarget::CriticalDamage => value * rate,
-                CompositeTarget::EvolutionDamageOverCap => value * rate,
                 CompositeTarget::MoveSpeedDamage => {
                     calculate_move_speed_to_damage_bonus(value, rate, true)
                 }
@@ -2150,49 +2323,77 @@ impl PlayerStats {
             }
             .min(*added_left);
             *added_left -= added_value;
+            let output_owner_id = match ownership {
+                CompositeOwnership::PreserveSource => owner_id,
+                CompositeOwnership::ForceSelf => this.owner_id,
+            };
+            let output_priority = match ownership {
+                CompositeOwnership::PreserveSource => source_priority,
+                CompositeOwnership::ForceSelf => STAT_PRIORITY_DEFAULT,
+            };
             match target {
-                CompositeTarget::CriticalRate => {
-                    this.critical_hit_rate
-                        .add(added_value, this.owner_id, owner_id, source_label)
+                CompositeTarget::CriticalRate => this.critical_hit_rate.add_with_priority(
+                    added_value,
+                    this.owner_id,
+                    output_owner_id,
+                    source_label,
+                    output_priority,
+                ),
+                CompositeTarget::CriticalDamage => this.critical_damage_rate.add_with_priority(
+                    added_value,
+                    this.owner_id,
+                    output_owner_id,
+                    source_label,
+                    output_priority,
+                ),
+                CompositeTarget::CriticalRateCapOverToEvolution => {
+                    this.evolution_damage.add_with_priority(
+                        added_value,
+                        this.owner_id,
+                        output_owner_id,
+                        source_label,
+                        output_priority,
+                    );
+                    this.evolution_damage_bonus_from_blunt_thorn
+                        .add_with_priority(
+                            added_value,
+                            this.owner_id,
+                            output_owner_id,
+                            source_label,
+                            output_priority,
+                        );
                 }
-                CompositeTarget::CriticalDamage => this.critical_damage_rate.add(
-                    added_value,
-                    this.owner_id,
-                    owner_id,
-                    source_label,
-                ),
-                CompositeTarget::EvolutionDamageOverCap
-                | CompositeTarget::CriticalRateCapOverToEvolution => {
-                    this.evolution_damage
-                        .add(added_value, this.owner_id, owner_id, source_label);
-                    match target {
-                        CompositeTarget::EvolutionDamageOverCap => this
-                            .evolution_damage_bonus_from_supersonic_breakthrough
-                            .add(added_value, this.owner_id, owner_id, source_label),
-                        CompositeTarget::CriticalRateCapOverToEvolution => this
-                            .evolution_damage_bonus_from_blunt_thorn
-                            .add(added_value, this.owner_id, owner_id, source_label),
-                        _ => {}
-                    }
+                CompositeTarget::MoveSpeedDamage => {
+                    this.move_speed_to_damage_rate.add_with_priority(
+                        added_value,
+                        this.owner_id,
+                        output_owner_id,
+                        source_label,
+                        output_priority,
+                    )
                 }
-                CompositeTarget::MoveSpeedDamage => this.move_speed_to_damage_rate.add(
-                    added_value,
-                    this.owner_id,
-                    owner_id,
-                    source_label,
-                ),
-                CompositeTarget::CriticalHitToDamage => this.critical_hit_to_damage_rate.add(
-                    added_value,
-                    this.owner_id,
-                    owner_id,
-                    source_label,
-                ),
+                CompositeTarget::CriticalHitToDamage => {
+                    this.critical_hit_to_damage_rate.add_with_priority(
+                        added_value,
+                        this.owner_id,
+                        output_owner_id,
+                        source_label,
+                        output_priority,
+                    )
+                }
             }
         };
 
         let self_value = source_stat.self_value().min(stat_left_to_add);
         stat_left_to_add -= self_value;
-        apply_chunk(self, self_value, self.owner_id, source, &mut added_left);
+        apply_chunk(
+            self,
+            self_value,
+            self.owner_id,
+            source,
+            STAT_PRIORITY_DEFAULT,
+            &mut added_left,
+        );
 
         for modification in &source_stat.modified_values {
             if stat_left_to_add <= 0.0 || added_left <= 0.0 {
@@ -2207,6 +2408,7 @@ impl PlayerStats {
                 to_add,
                 modification.source_entity_id,
                 source,
+                modification.source_priority,
                 &mut added_left,
             );
         }
@@ -2220,15 +2422,17 @@ impl PlayerStats {
         rate: f64,
         source: &str,
         target: CompositeTarget,
+        ownership: CompositeOwnership,
     ) {
         let mut accumulator = 0.0;
         let mut added_left = add_to_stat_max_to_add;
         let apply_chunk = |this: &mut Self,
-                               value: f64,
-                               owner_id: u64,
-                               source_label: &str,
-                               added_left: &mut f64,
-                               accumulator: &mut f64| {
+                           value: f64,
+                           owner_id: u64,
+                           source_label: &str,
+                           source_priority: i32,
+                           added_left: &mut f64,
+                           accumulator: &mut f64| {
             if value <= 0.0 || *added_left <= 0.0 {
                 return;
             }
@@ -2242,20 +2446,31 @@ impl PlayerStats {
             }
             let added_value = (over_cap * rate).min(*added_left);
             *added_left -= added_value;
+            let output_owner_id = match ownership {
+                CompositeOwnership::PreserveSource => owner_id,
+                CompositeOwnership::ForceSelf => this.owner_id,
+            };
+            let output_priority = match ownership {
+                CompositeOwnership::PreserveSource => source_priority,
+                CompositeOwnership::ForceSelf => STAT_PRIORITY_DEFAULT,
+            };
             match target {
-                CompositeTarget::EvolutionDamageOverCap
-                | CompositeTarget::CriticalRateCapOverToEvolution => {
-                    this.evolution_damage
-                        .add(added_value, this.owner_id, owner_id, source_label);
-                    match target {
-                        CompositeTarget::EvolutionDamageOverCap => this
-                            .evolution_damage_bonus_from_supersonic_breakthrough
-                            .add(added_value, this.owner_id, owner_id, source_label),
-                        CompositeTarget::CriticalRateCapOverToEvolution => this
-                            .evolution_damage_bonus_from_blunt_thorn
-                            .add(added_value, this.owner_id, owner_id, source_label),
-                        _ => {}
-                    }
+                CompositeTarget::CriticalRateCapOverToEvolution => {
+                    this.evolution_damage.add_with_priority(
+                        added_value,
+                        this.owner_id,
+                        output_owner_id,
+                        source_label,
+                        output_priority,
+                    );
+                    this.evolution_damage_bonus_from_blunt_thorn
+                        .add_with_priority(
+                            added_value,
+                            this.owner_id,
+                            output_owner_id,
+                            source_label,
+                            output_priority,
+                        );
                 }
                 _ => {}
             }
@@ -2266,6 +2481,7 @@ impl PlayerStats {
             source_stat.self_value(),
             self.owner_id,
             source,
+            STAT_PRIORITY_DEFAULT,
             &mut added_left,
             &mut accumulator,
         );
@@ -2278,6 +2494,7 @@ impl PlayerStats {
                 modification.value(source_stat.operation_type),
                 modification.source_entity_id,
                 source,
+                modification.source_priority,
                 &mut added_left,
                 &mut accumulator,
             );
@@ -2999,8 +3216,31 @@ impl PlayerStats {
         class_id: u32,
         source: &str,
     ) {
+        self.handle_external_addon_with_priority(
+            addon,
+            owner_id,
+            class_id,
+            source,
+            STAT_PRIORITY_DEFAULT,
+        );
+    }
+
+    fn handle_external_addon_with_priority(
+        &mut self,
+        addon: &crate::models::ExternalResourceAddon,
+        owner_id: u64,
+        class_id: u32,
+        source: &str,
+        source_priority: i32,
+    ) {
         match addon.addon_type.as_str() {
-            "stat" => self.add_stat_by_name(&addon.stat_type, addon.key_value, owner_id, source),
+            "stat" => self.add_stat_by_name_with_priority(
+                &addon.stat_type,
+                addon.key_value,
+                owner_id,
+                source,
+                source_priority,
+            ),
             "combat_effect" => {
                 if let Some(combat_effect) = COMBAT_EFFECT_DATA.get(&(addon.key_index as i32)) {
                     for effect in &combat_effect.effects {
@@ -3013,7 +3253,9 @@ impl PlayerStats {
                     }
                 }
             }
-            "ability_point" => self.handle_ability_point(addon, owner_id, class_id, source),
+            "ability_point" => {
+                self.handle_ability_point(addon, owner_id, class_id, source, source_priority)
+            }
             "ability_feature" => self.handle_ability_feature(addon, owner_id),
             "skill_feature" => {
                 if EXTERNAL_ADDON_SKILL_FEATURE_DATA.contains_key(&addon.key_index) {
@@ -3052,7 +3294,13 @@ impl PlayerStats {
             | "skill_group_cooldown_reduction"
             | "identity_gauge"
             | "mana_reduction" => {}
-            "class_option" => self.handle_class_option(addon.key_index, owner_id, class_id, source),
+            "class_option" => self.handle_class_option(
+                addon.key_index,
+                owner_id,
+                class_id,
+                source,
+                source_priority,
+            ),
             _ => {}
         }
     }
@@ -3080,6 +3328,7 @@ impl PlayerStats {
         owner_id: u64,
         class_id: u32,
         source: &str,
+        source_priority: i32,
     ) {
         let ability_id = addon
             .stat_type
@@ -3097,172 +3346,348 @@ impl PlayerStats {
         {
             let nested_source = format!("{}_{}", source, ability.name);
             for nested in &level.addons {
-                self.handle_external_addon(nested, owner_id, class_id, &nested_source);
+                self.handle_external_addon_with_priority(
+                    nested,
+                    owner_id,
+                    class_id,
+                    &nested_source,
+                    source_priority,
+                );
             }
         }
     }
 
-    fn handle_class_option(&mut self, key_index: u32, owner_id: u64, class_id: u32, source: &str) {
+    fn handle_class_option(
+        &mut self,
+        key_index: u32,
+        owner_id: u64,
+        class_id: u32,
+        source: &str,
+        source_priority: i32,
+    ) {
         if let Some(option) = EXTERNAL_ITEM_CLASS_OPTION_DATA.get(&key_index)
             && let Some(class_addon) = option.class_options.get(&class_id)
         {
-            self.handle_external_addon(class_addon, owner_id, class_id, source);
+            self.handle_external_addon_with_priority(
+                class_addon,
+                owner_id,
+                class_id,
+                source,
+                source_priority,
+            );
         }
     }
 
     fn add_stat_by_name(&mut self, name: &str, stat_value: i64, owner_id: u64, source: &str) {
+        self.add_stat_by_name_with_priority(
+            name,
+            stat_value,
+            owner_id,
+            source,
+            STAT_PRIORITY_DEFAULT,
+        );
+    }
+
+    fn add_stat_by_name_with_priority(
+        &mut self,
+        name: &str,
+        stat_value: i64,
+        owner_id: u64,
+        source: &str,
+        source_priority: i32,
+    ) {
         let value_as_multiplier = stat_value as f64 / 10000.0;
         match name {
-            "int" => self
-                .int_stat
-                .add(stat_value as f64, self.owner_id, owner_id, source),
-            "agi" => self
-                .dex_stat
-                .add(stat_value as f64, self.owner_id, owner_id, source),
-            "str" => self
-                .str_stat
-                .add(stat_value as f64, self.owner_id, owner_id, source),
-            "int_x" => {
-                self.int_multiplier_stat
-                    .add(value_as_multiplier, self.owner_id, owner_id, source)
-            }
-            "agi_x" => {
-                self.dex_multiplier_stat
-                    .add(value_as_multiplier, self.owner_id, owner_id, source)
-            }
-            "str_x" => {
-                self.str_multiplier_stat
-                    .add(value_as_multiplier, self.owner_id, owner_id, source)
-            }
+            "int" => self.int_stat.add_with_priority(
+                stat_value as f64,
+                self.owner_id,
+                owner_id,
+                source,
+                source_priority,
+            ),
+            "agi" => self.dex_stat.add_with_priority(
+                stat_value as f64,
+                self.owner_id,
+                owner_id,
+                source,
+                source_priority,
+            ),
+            "str" => self.str_stat.add_with_priority(
+                stat_value as f64,
+                self.owner_id,
+                owner_id,
+                source,
+                source_priority,
+            ),
+            "int_x" => self.int_multiplier_stat.add_with_priority(
+                value_as_multiplier,
+                self.owner_id,
+                owner_id,
+                source,
+                source_priority,
+            ),
+            "agi_x" => self.dex_multiplier_stat.add_with_priority(
+                value_as_multiplier,
+                self.owner_id,
+                owner_id,
+                source,
+                source_priority,
+            ),
+            "str_x" => self.str_multiplier_stat.add_with_priority(
+                value_as_multiplier,
+                self.owner_id,
+                owner_id,
+                source,
+                source_priority,
+            ),
             "char_attack_dam" => {}
-            "criticalhit" => {
-                self.critical_hit_stat
-                    .add(stat_value as f64, self.owner_id, owner_id, source)
-            }
+            "criticalhit" => self.critical_hit_stat.add_with_priority(
+                stat_value as f64,
+                self.owner_id,
+                owner_id,
+                source,
+                source_priority,
+            ),
             "hp" => self.runtime_state.current_hp = stat_value,
             "max_hp" => self.runtime_state.max_hp = stat_value,
             "mp" => self.runtime_state.current_mp = stat_value,
             "max_mp" => self.runtime_state.max_mp = stat_value,
             "combat_mp_recovery" => self.runtime_state.combat_mp_recovery = stat_value,
-            "critical_hit_rate" => {
-                self.critical_hit_rate
-                    .add(value_as_multiplier, self.owner_id, owner_id, source)
-            }
-            "critical_dam_rate" => {
-                self.critical_damage_rate
-                    .add(value_as_multiplier, self.owner_id, owner_id, source)
-            }
-            "weapon_dam" => {
-                self.weapon_power
-                    .add(stat_value as f64, self.owner_id, owner_id, source)
-            }
-            "weapon_dam_x" => {
-                self.weapon_dam_x
-                    .add(value_as_multiplier, self.owner_id, owner_id, source)
-            }
-            "attack_power_rate" => {
-                self.attack_power_rate
-                    .add(value_as_multiplier, self.owner_id, owner_id, source)
-            }
-            "evolution_dam_rate" => {
-                self.evolution_damage
-                    .add(value_as_multiplier, self.owner_id, owner_id, source)
-            }
-            "stigma_power_rate" => {
-                self.ally_brand_power
-                    .add(value_as_multiplier, self.owner_id, owner_id, source)
-            }
-            "move_speed_rate" => {
-                self.move_speed_rate
-                    .add(value_as_multiplier, self.owner_id, owner_id, source)
-            }
-            "base_damage_rate" => self.attack_power_base_multiplier.add(
+            "critical_hit_rate" => self.critical_hit_rate.add_with_priority(
                 value_as_multiplier,
                 self.owner_id,
                 owner_id,
                 source,
+                source_priority,
             ),
-            "attack_speed_rate" => {
-                self.attack_speed_rate
-                    .add(value_as_multiplier, self.owner_id, owner_id, source)
-            }
-            "attack_power_addend" => {
-                self.attack_power_addend
-                    .add(stat_value as f64, self.owner_id, owner_id, source)
-            }
-            "attack_power_addend_2" => {
-                self.attack_power_addend_2
-                    .add(stat_value as f64, self.owner_id, owner_id, source)
-            }
-            "attack_power_sub_rate_1" => self.attack_power_sub_rate_1.add(
+            "critical_dam_rate" => self.critical_damage_rate.add_with_priority(
                 value_as_multiplier,
                 self.owner_id,
                 owner_id,
                 source,
+                source_priority,
             ),
-            "attack_power_sub_rate_2" => self.attack_power_sub_rate_2.add(
+            "weapon_dam" => self.weapon_power.add_with_priority(
+                stat_value as f64,
+                self.owner_id,
+                owner_id,
+                source,
+                source_priority,
+            ),
+            "weapon_dam_x" => self.weapon_dam_x.add_with_priority(
                 value_as_multiplier,
                 self.owner_id,
                 owner_id,
                 source,
+                source_priority,
             ),
-            "skill_damage_sub_rate_1" => self.skill_damage_sub_rate_1.add(
+            "attack_power_rate" => self.attack_power_rate.add_with_priority(
                 value_as_multiplier,
                 self.owner_id,
                 owner_id,
                 source,
+                source_priority,
             ),
-            "skill_damage_sub_rate_2" => self.skill_damage_sub_rate_2.add(
+            "evolution_dam_rate" => self.evolution_damage.add_with_priority(
                 value_as_multiplier,
                 self.owner_id,
                 owner_id,
                 source,
+                source_priority,
             ),
-            "skill_damage_rate" => {
-                self.skill_damage_rate
-                    .add(value_as_multiplier, self.owner_id, owner_id, source)
+            "stigma_power_rate" => self.ally_brand_power.add_with_priority(
+                value_as_multiplier,
+                self.owner_id,
+                owner_id,
+                source,
+                source_priority,
+            ),
+            "move_speed_rate" => self.move_speed_rate.add_with_priority(
+                value_as_multiplier,
+                self.owner_id,
+                owner_id,
+                source,
+                source_priority,
+            ),
+            "base_damage_rate" => self.attack_power_base_multiplier.add_with_priority(
+                value_as_multiplier,
+                self.owner_id,
+                owner_id,
+                source,
+                source_priority,
+            ),
+            "attack_speed_rate" => self.attack_speed_rate.add_with_priority(
+                value_as_multiplier,
+                self.owner_id,
+                owner_id,
+                source,
+                source_priority,
+            ),
+            "attack_power_addend" => self.attack_power_addend.add_with_priority(
+                stat_value as f64,
+                self.owner_id,
+                owner_id,
+                source,
+                source_priority,
+            ),
+            "attack_power_addend_2" => self.attack_power_addend_2.add_with_priority(
+                stat_value as f64,
+                self.owner_id,
+                owner_id,
+                source,
+                source_priority,
+            ),
+            "attack_power_sub_rate_1" => self.attack_power_sub_rate_1.add_with_priority(
+                value_as_multiplier,
+                self.owner_id,
+                owner_id,
+                source,
+                source_priority,
+            ),
+            "attack_power_sub_rate_2" => self.attack_power_sub_rate_2.add_with_priority(
+                value_as_multiplier,
+                self.owner_id,
+                owner_id,
+                source,
+                source_priority,
+            ),
+            "skill_damage_sub_rate_1" => self.skill_damage_sub_rate_1.add_with_priority(
+                value_as_multiplier,
+                self.owner_id,
+                owner_id,
+                source,
+                source_priority,
+            ),
+            "skill_damage_sub_rate_2" => self.skill_damage_sub_rate_2.add_with_priority(
+                value_as_multiplier,
+                self.owner_id,
+                owner_id,
+                source,
+                source_priority,
+            ),
+            "skill_damage_rate" => self.skill_damage_rate.add_with_priority(
+                value_as_multiplier,
+                self.owner_id,
+                owner_id,
+                source,
+                source_priority,
+            ),
+            "ultimate_awakening_dam_rate" | "awakening_dam_rate" => {
+                self.ultimate_awakening_damage_rate.add_with_priority(
+                    value_as_multiplier,
+                    self.owner_id,
+                    owner_id,
+                    source,
+                    source_priority,
+                )
             }
-            "ultimate_awakening_dam_rate" | "awakening_dam_rate" => self
-                .ultimate_awakening_damage_rate
-                .add(value_as_multiplier, self.owner_id, owner_id, source),
-            "dark_dam_rate" => {
-                self.damage_attr_rates[6].add(value_as_multiplier, self.owner_id, owner_id, source)
-            }
-            "holy_dam_rate" => {
-                self.damage_attr_rates[7].add(value_as_multiplier, self.owner_id, owner_id, source)
-            }
-            "earth_dam_rate" => {
-                self.damage_attr_rates[5].add(value_as_multiplier, self.owner_id, owner_id, source)
-            }
-            "electricity_dam_rate" => {
-                self.damage_attr_rates[3].add(value_as_multiplier, self.owner_id, owner_id, source)
-            }
-            "fire_dam_rate" => {
-                self.damage_attr_rates[1].add(value_as_multiplier, self.owner_id, owner_id, source)
-            }
-            "ice_dam_rate" => {
-                self.damage_attr_rates[2].add(value_as_multiplier, self.owner_id, owner_id, source)
-            }
+            "dark_dam_rate" => self.damage_attr_rates[6].add_with_priority(
+                value_as_multiplier,
+                self.owner_id,
+                owner_id,
+                source,
+                source_priority,
+            ),
+            "holy_dam_rate" => self.damage_attr_rates[7].add_with_priority(
+                value_as_multiplier,
+                self.owner_id,
+                owner_id,
+                source,
+                source_priority,
+            ),
+            "earth_dam_rate" => self.damage_attr_rates[5].add_with_priority(
+                value_as_multiplier,
+                self.owner_id,
+                owner_id,
+                source,
+                source_priority,
+            ),
+            "electricity_dam_rate" => self.damage_attr_rates[3].add_with_priority(
+                value_as_multiplier,
+                self.owner_id,
+                owner_id,
+                source,
+                source_priority,
+            ),
+            "fire_dam_rate" => self.damage_attr_rates[1].add_with_priority(
+                value_as_multiplier,
+                self.owner_id,
+                owner_id,
+                source,
+                source_priority,
+            ),
+            "ice_dam_rate" => self.damage_attr_rates[2].add_with_priority(
+                value_as_multiplier,
+                self.owner_id,
+                owner_id,
+                source,
+                source_priority,
+            ),
             "elements_dam_rate" => {
-                self.add_stat_by_name("dark_dam_rate", stat_value, owner_id, source);
-                self.add_stat_by_name("holy_dam_rate", stat_value, owner_id, source);
-                self.add_stat_by_name("earth_dam_rate", stat_value, owner_id, source);
-                self.add_stat_by_name("electricity_dam_rate", stat_value, owner_id, source);
-                self.add_stat_by_name("fire_dam_rate", stat_value, owner_id, source);
-                self.add_stat_by_name("ice_dam_rate", stat_value, owner_id, source);
+                self.add_stat_by_name_with_priority(
+                    "dark_dam_rate",
+                    stat_value,
+                    owner_id,
+                    source,
+                    source_priority,
+                );
+                self.add_stat_by_name_with_priority(
+                    "holy_dam_rate",
+                    stat_value,
+                    owner_id,
+                    source,
+                    source_priority,
+                );
+                self.add_stat_by_name_with_priority(
+                    "earth_dam_rate",
+                    stat_value,
+                    owner_id,
+                    source,
+                    source_priority,
+                );
+                self.add_stat_by_name_with_priority(
+                    "electricity_dam_rate",
+                    stat_value,
+                    owner_id,
+                    source,
+                    source_priority,
+                );
+                self.add_stat_by_name_with_priority(
+                    "fire_dam_rate",
+                    stat_value,
+                    owner_id,
+                    source,
+                    source_priority,
+                );
+                self.add_stat_by_name_with_priority(
+                    "ice_dam_rate",
+                    stat_value,
+                    owner_id,
+                    source,
+                    source_priority,
+                );
             }
-            "identity_value1" => {
-                self.spec_bonus_identity_1
-                    .add(value_as_multiplier, self.owner_id, owner_id, source)
-            }
-            "identity_value2" => {
-                self.spec_bonus_identity_2
-                    .add(value_as_multiplier, self.owner_id, owner_id, source)
-            }
-            "identity_value3" => {
-                self.spec_bonus_identity_3
-                    .add(value_as_multiplier, self.owner_id, owner_id, source)
-            }
+            "identity_value1" => self.spec_bonus_identity_1.add_with_priority(
+                value_as_multiplier,
+                self.owner_id,
+                owner_id,
+                source,
+                source_priority,
+            ),
+            "identity_value2" => self.spec_bonus_identity_2.add_with_priority(
+                value_as_multiplier,
+                self.owner_id,
+                owner_id,
+                source,
+                source_priority,
+            ),
+            "identity_value3" => self.spec_bonus_identity_3.add_with_priority(
+                value_as_multiplier,
+                self.owner_id,
+                owner_id,
+                source,
+                source_priority,
+            ),
             _ => {}
         }
     }
@@ -3459,6 +3884,7 @@ fn debug_stat_data_value(stat: &StatData) -> Value {
         "modified_values": stat.modified_values.iter().map(|modification| {
             json!({
                 "source_entity_id": modification.source_entity_id,
+                "source_priority": modification.source_priority,
                 "value": debug_float_value(modification.get_value(stat.operation_type)),
                 "values": modification.values.iter().map(|value| {
                     json!({

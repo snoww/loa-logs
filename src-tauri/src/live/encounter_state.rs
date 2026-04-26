@@ -2471,7 +2471,6 @@ impl EncounterState {
                 });
             }
 
-
             // add rdps_contributed to the support's skill
             if let Some(contributor_entity) = self.encounter.entities.get_mut(&contributor_name) {
                 if let Some(contributor_skill) = contributor_entity.skills.get_mut(&event.skill_id)
@@ -2483,9 +2482,9 @@ impl EncounterState {
                 } else if let Some(skill_data) = SKILL_DATA.get(&event.skill_id)
                     && let Some(skill_name) = skill_data.name.clone()
                     && let Some(contributor_skill) = contributor_entity
-                    .skills
-                    .values_mut()
-                    .find(|s| s.name == skill_name)
+                        .skills
+                        .values_mut()
+                        .find(|s| s.name == skill_name)
                 {
                     *contributor_skill
                         .rdps_contributed
