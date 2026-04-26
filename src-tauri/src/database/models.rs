@@ -36,4 +36,5 @@ pub struct InsertEncounterArgs {
     pub skill_cooldowns: HashMap<u32, Vec<CastEvent>>,
     pub intermission_start: Option<i64>,
     pub intermission_end: Option<i64>,
+    pub contribution_splits: Vec<ContributionSplit>,
 }

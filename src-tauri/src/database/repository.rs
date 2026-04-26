@@ -300,6 +300,7 @@ impl Repository {
             region,
             intermission_start,
             intermission_end,
+            contribution_splits,
             ..
         } = args;
 
@@ -340,6 +341,11 @@ impl Repository {
             manual_save: Some(args.manual),
             intermission_start: *intermission_start,
             intermission_end: *intermission_end,
+            contribution_splits: if contribution_splits.is_empty() {
+                None
+            } else {
+                Some(contribution_splits.clone())
+            },
             ..Default::default()
         };
 
@@ -1583,6 +1589,7 @@ mod tests {
                 manual_save: None,
                 intermission_start: None,
                 intermission_end: None,
+                contribution_splits: None,
             };
 
             let encounter_damage_stats = EncounterDamageStats {
@@ -1637,6 +1644,7 @@ mod tests {
                 skill_cooldowns,
                 intermission_start: None,
                 intermission_end: None,
+                contribution_splits: vec![],
             };
 
             insert_args

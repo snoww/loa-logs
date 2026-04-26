@@ -186,7 +186,7 @@ pub struct EncounterState {
     pending_phase_transition: Option<i32>,
 
     pub damage_is_valid: bool,
-    debug_players: HashMap<String, DamageDataAccumulator>,
+    player_contributions: HashMap<String, DamageDataAccumulator>,
     lal_debug_zone_id: u32,
     lal_debug_zone_level: u32,
     lal_debug_end_time_ms: Option<i64>,
@@ -231,7 +231,7 @@ impl EncounterState {
             pending_phase_transition: None,
 
             damage_is_valid: true,
-            debug_players: HashMap::new(),
+            player_contributions: HashMap::new(),
             lal_debug_zone_id: 0,
             lal_debug_zone_level: 0,
             lal_debug_end_time_ms: None,
@@ -268,7 +268,7 @@ impl EncounterState {
         self.startup_barrier = None;
         self.rearm_startup_barrier_on_next_combat = false;
         self.pending_phase_transition = None;
-        self.debug_players.clear();
+        self.player_contributions.clear();
         self.lal_debug_zone_id = 0;
         self.lal_debug_zone_level = 0;
         self.lal_debug_end_time_ms = None;
@@ -817,7 +817,7 @@ impl EncounterState {
         rdps_valid: bool,
     ) {
         let entry = self
-            .debug_players
+            .player_contributions
             .entry(player_name.to_string())
             .or_default();
         let skill_entry = entry.skill_to_damage_map_.entry(skill_id).or_default();
@@ -919,7 +919,7 @@ impl EncounterState {
         }
 
         let entry = self
-            .debug_players
+            .player_contributions
             .entry(source_entity.name.clone())
             .or_default();
         if is_skill_cast_notify {
@@ -946,12 +946,71 @@ impl EncounterState {
         self.lal_debug_damage_key_base64 = damage_key_base64.unwrap_or_default();
     }
 
+    fn build_contribution_splits(&mut self) -> Vec<ContributionSplit> {
+        let id_to_name: HashMap<u64, &str> = self
+            .encounter
+            .entities
+            .values()
+            .map(|e| (e.id, e.name.as_str()))
+            .collect();
+
+        let resolve_ids =
+            |map: HashMap<u64, i64>| -> HashMap<String, i64> {
+                map.into_iter()
+                    .filter_map(|(id, v)| id_to_name.get(&id).map(|name| (name.to_string(), v)))
+                    .collect()
+            };
+
+        let resolve_ids_nested =
+            |map: HashMap<u64, HashMap<String, i64>>| -> HashMap<String, HashMap<String, i64>> {
+                map.into_iter()
+                    .filter_map(|(id, inner)| id_to_name.get(&id).map(|name| (name.to_string(), inner)))
+                    .collect()
+            };
+
+        let mut accumulators = std::mem::take(&mut self.player_contributions);
+
+        self.encounter
+            .entities
+            .values()
+            .filter(|e| e.entity_type == EntityType::Player && e.damage_stats.damage_dealt > 0)
+            .map(|entity| {
+                let (damage_split_by_name, damage_done_by_entity_skill_group, damage_increase_by_entity_skill_group) =
+                    if let Some(acc) = accumulators.remove(&entity.name) {
+                        (
+                            resolve_ids(acc.damage_split_by_entity_id_),
+                            resolve_ids_nested(acc.damage_done_by_entity_skill_group_),
+                            resolve_ids_nested(acc.damage_increase_by_entity_skill_group_),
+                        )
+                    } else {
+                        let self_damage = if self.rdps_valid {
+                            entity.damage_stats.damage_dealt - entity.damage_stats.rdps_damage_received
+                        } else {
+                            entity.damage_stats.damage_dealt
+                        };
+                        ([(entity.name.clone(), self_damage)].into(), HashMap::new(), HashMap::new())
+                    };
+                ContributionSplit {
+                    name: entity.name.clone(),
+                    party_number: self
+                        .party_info
+                        .iter()
+                        .position(|party| party.iter().any(|n| n == &entity.name))
+                        .map(|i| i as i32),
+                    damage_split_by_name,
+                    damage_done_by_entity_skill_group,
+                    damage_increase_by_entity_skill_group,
+                }
+            })
+            .collect()
+    }
+
     fn build_damage_state_dump(&self) -> DamageStateDump {
         let mut player_id_to_damage_data_ = HashMap::new();
         for entity in self.encounter.entities.values().filter(|entity| {
             entity.entity_type == EntityType::Player && entity.damage_stats.damage_dealt > 0
         }) {
-            let accumulator = self.debug_players.get(&entity.name);
+            let accumulator = self.player_contributions.get(&entity.name);
             let entity_id_ = entity.id;
             let damage_done_ = entity.damage_stats.damage_dealt;
             let damage_done_without_ultimate_awakening_ =
@@ -3061,6 +3120,8 @@ impl EncounterState {
             write_debug_json_dump("damage-state", &dump_label, &dump);
         }
 
+        let contribution_splits = self.build_contribution_splits();
+
         let app = self.app.clone();
         task::spawn(async move {
             let stats_api = app.state::<StatsApi>();
@@ -3095,6 +3156,7 @@ impl EncounterState {
                     skill_cooldowns,
                     intermission_start,
                     intermission_end,
+                    contribution_splits,
                 };
 
                 let encounter_id = repository

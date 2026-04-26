@@ -93,6 +93,15 @@ export interface EncounterMisc {
   region?: string;
   intermissionStart?: number;
   intermissionEnd?: number;
+  contributionSplits?: ContributionSplit[];
+}
+
+export interface ContributionSplit {
+  name: string;
+  partyNumber?: number;
+  damageSplitByName: Record<string, number>;
+  damageDoneByEntitySkillGroup: Record<string, Record<string, number>>;
+  damageIncreaseByEntitySkillGroup: Record<string, Record<string, number>>;
 }
 
 export interface PartyInfo {

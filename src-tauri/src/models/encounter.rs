@@ -254,6 +254,20 @@ pub struct EncounterMisc {
     pub intermission_start: Option<i64>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub intermission_end: Option<i64>,
+    // rdps contribution breakdown
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub contribution_splits: Option<Vec<ContributionSplit>>,
+}
+
+#[derive(Debug, Default, Serialize, Deserialize, Clone)]
+#[serde(rename_all = "camelCase", default)]
+pub struct ContributionSplit {
+    pub name: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub party_number: Option<i32>,
+    pub damage_split_by_name: HashMap<String, i64>,
+    pub damage_done_by_entity_skill_group: HashMap<String, HashMap<String, i64>>,
+    pub damage_increase_by_entity_skill_group: HashMap<String, HashMap<String, i64>>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
