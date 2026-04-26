@@ -41,6 +41,10 @@
         return "Punisher";
       case 2450010:
         return "Predator";
+      case 2480000:
+        return "Shining Knight";
+      case 2480100:
+        return "Liberator";
       case 2230000:
         return "Ultimate Skill: Taijutsu";
       case 2230100:
@@ -125,6 +129,14 @@
         return "Full Bloom";
       case 2310600:
         return "Recurrence";
+      case 2330000:
+        return "Ferality";
+      case 2330100:
+        return "Phantom Beast Awakening";
+      case 2490000:
+        return "Hellfire Successor";
+      case 2490100:
+        return "Dreadful Roar";
       default:
         return "Unknown";
     }
@@ -172,8 +184,8 @@
       </p>
     {/if}
     <div class="text-xs">
-      {#if state.entity.arkPassiveData && state.entity.spec}
-        {#if arkPassiveSpec == state.entity.spec}
+      {#if state.entity.arkPassiveData && state.entity.spec && !state.encounter.live}
+        {#if arkPassiveSpec === state.entity.spec}
           {@render renderTree("evolution", state.entity.arkPassiveData.evolution)}
           {@render renderTree("enlightenment", state.entity.arkPassiveData.enlightenment)}
           {@render renderTree("leap", state.entity.arkPassiveData.leap)}
