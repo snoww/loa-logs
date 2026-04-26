@@ -556,7 +556,7 @@ pub fn calculate_entities(args: &mut InsertEncounterArgs) -> Result<()> {
             .and_then(|stats| stats.get(&entity.name))
         {
             // if fight didnt request in-game inspect, apply api inspect
-            if entity.combat_power.is_none() {
+            if entity.combat_power.is_none() || !*rdps_valid {
                 apply_player_info(entity, info, false);
             } else {
                 entity.loadout_hash = info.loadout_snapshot.clone();
