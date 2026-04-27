@@ -104,6 +104,35 @@ impl PartyTracker {
         }
     }
 
+    pub fn get_characters_in_party(&self, party_id: u32) -> Vec<u64> {
+        let mut characters = self
+            .character_id_to_party_id
+            .iter()
+            .filter_map(|(character_id, tracked_party_id)| {
+                (*tracked_party_id == party_id).then_some(*character_id)
+            })
+            .collect::<Vec<_>>();
+        characters.sort_unstable();
+        characters
+    }
+
+    pub fn get_all_registered_party_characters(&self) -> Vec<u64> {
+        let mut parties = self
+            .character_id_to_party_id
+            .values()
+            .copied()
+            .collect::<HashSet<_>>()
+            .into_iter()
+            .collect::<Vec<_>>();
+        parties.sort_unstable();
+
+        let mut characters = Vec::new();
+        for party_id in parties {
+            characters.extend(self.get_characters_in_party(party_id));
+        }
+        characters
+    }
+
     fn register_party_id(&mut self, raid_instance_id: u32, party_id: u32) {
         let party_instance = self
             .raid_instance_to_party_ids

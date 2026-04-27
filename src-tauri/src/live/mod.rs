@@ -289,13 +289,6 @@ pub fn start(args: StartArgs) -> Result<()> {
                         entity.id,
                         entity.character_id
                     ));
-                    if !banned
-                        && !state.encounter.current_boss_name.is_empty()
-                        && ban_list.is_banned(entity.character_id)
-                    {
-                        banned = true;
-                        state.disabled = true;
-                    }
                     state.on_new_pc(entity, hp, max_hp);
                 }
             }
@@ -313,13 +306,6 @@ pub fn start(args: StartArgs) -> Result<()> {
                         entity.id,
                         entity.character_id
                     ));
-                    if !banned
-                        && !state.encounter.current_boss_name.is_empty()
-                        && ban_list.is_banned(entity.character_id)
-                    {
-                        banned = true;
-                        state.disabled = true;
-                    }
                     state.on_new_pc(entity, hp, max_hp);
                 }
             }
@@ -412,6 +398,18 @@ pub fn start(args: StartArgs) -> Result<()> {
                         _ => {
                             state.raid_difficulty = "".to_string();
                             state.raid_difficulty_id = 0;
+                        }
+                    }
+
+                    if !banned {
+                        for character_id in
+                            party_tracker.borrow().get_all_registered_party_characters()
+                        {
+                            if ban_list.is_banned(character_id) {
+                                banned = true;
+                                state.disabled = true;
+                                break;
+                            }
                         }
                     }
                 }
@@ -812,6 +810,18 @@ pub fn start(args: StartArgs) -> Result<()> {
                     || state.encounter.fight_start == 0
                     || state.encounter.current_boss_name == "Saydon"
                 {
+                    if !banned {
+                        for character_id in
+                            party_tracker.borrow().get_all_registered_party_characters()
+                        {
+                            if ban_list.is_banned(character_id) {
+                                warn!("banned player detected at encounter start");
+                                banned = true;
+                                state.disabled = true;
+                                break;
+                            }
+                        }
+                    }
                     state.on_phase_transition(3);
                     debug_print(format_args!(
                         "phase: 3 - resetting encounter - TriggerBossBattleStatus"
