@@ -466,7 +466,11 @@ pub fn get_skill_name_and_icon(
             if let Some(skill) = summon_source_skills
                 .iter()
                 .find_map(|source| SKILL_DATA.get(source).filter(|s| s.name.is_some()))
-                .or_else(|| summon_source_skills.first().and_then(|source| SKILL_DATA.get(source)))
+                .or_else(|| {
+                    summon_source_skills
+                        .first()
+                        .and_then(|source| SKILL_DATA.get(source))
+                })
             {
                 (
                     skill.name.clone().unwrap_or(skill.id.to_string()) + " (Summon)",
@@ -485,7 +489,11 @@ pub fn get_skill_name_and_icon(
             if let Some(skill) = source_skills
                 .iter()
                 .find_map(|source| SKILL_DATA.get(source).filter(|s| s.name.is_some()))
-                .or_else(|| source_skills.first().and_then(|source| SKILL_DATA.get(source)))
+                .or_else(|| {
+                    source_skills
+                        .first()
+                        .and_then(|source| SKILL_DATA.get(source))
+                })
             {
                 (
                     skill.name.clone().unwrap_or(skill.id.to_string()),

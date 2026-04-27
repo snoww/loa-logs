@@ -1811,10 +1811,14 @@ impl EncounterState {
         let mut skill_key = if is_battle_item {
             // pad battle item skill effect id to avoid overlap with skill ids
             skill_effect_id + 1_000_000
-        } else if resolved_skill_id == 0 {
-            skill_effect_id
+        } else if damage_data.skill_id == 0 {
+            if resolved_skill_id == 0 {
+                skill_effect_id
+            } else {
+                resolved_skill_id
+            }
         } else {
-            resolved_skill_id
+            damage_data.skill_id
         };
 
         let (skill_name, skill_icon, skill_summon_sources, special, is_hyper_awakening) =
