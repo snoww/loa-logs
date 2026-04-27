@@ -128,6 +128,7 @@ pub fn start(args: StartArgs) -> Result<()> {
                     &mut entity_tracker,
                     state.startup_barrier_active(),
                 );
+                state.try_flush_startup_barrier(&mut entity_tracker);
                 continue;
             }
             IPCServerToClientMessage::NewConnection { info } => {
@@ -139,6 +140,7 @@ pub fn start(args: StartArgs) -> Result<()> {
                     &mut entity_tracker,
                     state.startup_barrier_active(),
                 );
+                state.try_flush_startup_barrier(&mut entity_tracker);
                 continue;
             }
             IPCServerToClientMessage::ConnectionClosed { id } => {
@@ -1489,10 +1491,17 @@ fn queue_missing_party_inspects(
         return;
     };
 
+    let now = Utc::now().timestamp_millis();
+    if bootstrap_active {
+        for name in entity_tracker.take_timed_out_bootstrap_inspects(now) {
+            damage_handler.cancel_inspect_request(&name);
+            warn!("bootstrap inspect timed out: name={name}");
+        }
+    }
+
     let mut names = entity_tracker.collect_missing_party_inspects(bootstrap_active);
     if bootstrap_active {
         names.extend(entity_tracker.collect_missing_visible_player_fallback_inspects());
-        let now = Utc::now().timestamp_millis();
         if !entity_tracker.can_send_bootstrap_inspect(now) {
             for name in names {
                 entity_tracker.clear_inspect_request(&name);

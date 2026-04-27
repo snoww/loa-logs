@@ -23,6 +23,7 @@ use std::rc::Rc;
 use std::sync::Arc;
 
 const BOOTSTRAP_INSPECT_DELAY_MS: i64 = 500;
+const BOOTSTRAP_INSPECT_TIMEOUT_MS: i64 = 3_000;
 const DESTROYER_CLASS_ID: u32 = 103;
 const DESTROYER_VORTEX_GRAVITY_SKILL_ID: u32 = 18011;
 const DESTROYER_HYPERGRAVITY_BASIC_ATTACK_SKILL_ID: u32 = 18030;
@@ -38,6 +39,8 @@ pub struct EntityTracker {
     inspect_requested_names: HashSet<String>,
     forced_refresh_names: HashSet<String>,
     bootstrap_refresh_sent_names: HashSet<String>,
+    bootstrap_inspect_sent_at_ms_by_name: HashMap<String, i64>,
+    bootstrap_failed_inspect_names: HashSet<String>,
     bootstrap_visible_fallback_requested: bool,
     bootstrap_visible_fallback_names: Vec<String>,
     next_bootstrap_inspect_at_ms: i64,
@@ -189,6 +192,8 @@ impl EntityTracker {
             inspect_requested_names: HashSet::new(),
             forced_refresh_names: HashSet::new(),
             bootstrap_refresh_sent_names: HashSet::new(),
+            bootstrap_inspect_sent_at_ms_by_name: HashMap::new(),
+            bootstrap_failed_inspect_names: HashSet::new(),
             bootstrap_visible_fallback_requested: false,
             bootstrap_visible_fallback_names: Vec::new(),
             next_bootstrap_inspect_at_ms: 0,
@@ -252,6 +257,8 @@ impl EntityTracker {
         self.inspect_requested_names.clear();
         self.forced_refresh_names.clear();
         self.bootstrap_refresh_sent_names.clear();
+        self.bootstrap_inspect_sent_at_ms_by_name.clear();
+        self.bootstrap_failed_inspect_names.clear();
         self.bootstrap_visible_fallback_requested = false;
         self.bootstrap_visible_fallback_names.clear();
         self.next_bootstrap_inspect_at_ms = 0;
@@ -779,6 +786,7 @@ impl EntityTracker {
         let local_character_id = self.get_local_character_id();
         let forced_refresh_names = self.forced_refresh_names.clone();
         let bootstrap_refresh_sent_names = self.bootstrap_refresh_sent_names.clone();
+        let bootstrap_failed_inspect_names = self.bootstrap_failed_inspect_names.clone();
 
         let mut names = Vec::new();
         let mut queued_names = HashSet::new();
@@ -787,6 +795,7 @@ impl EntityTracker {
             .get_mut(&self.local_entity_id)
             .filter(|entity| entity.entity_type == Player)
             && is_resolved_player_name(&local_entity.name)
+            && !bootstrap_failed_inspect_names.contains(&local_entity.name)
         {
             let bootstrap_refresh_needed =
                 bootstrap_active && !bootstrap_refresh_sent_names.contains(&local_entity.name);
@@ -835,6 +844,7 @@ impl EntityTracker {
                 bootstrap_active && !bootstrap_refresh_sent_names.contains(&name);
             let force_refresh = forced_refresh_names.contains(&name);
             if !is_resolved_player_name(&name)
+                || bootstrap_failed_inspect_names.contains(&name)
                 || self.pending_inspect_results_by_name.contains_key(&name)
                 || self.inspect_requested_names.contains(&name)
                 || !queued_names.insert(name.clone())
@@ -936,6 +946,7 @@ impl EntityTracker {
         let pending_names = self.bootstrap_visible_fallback_names.clone();
         for name in pending_names {
             if self.bootstrap_refresh_sent_names.contains(&name)
+                || self.bootstrap_failed_inspect_names.contains(&name)
                 || self.pending_inspect_results_by_name.contains_key(&name)
                 || self.inspect_requested_names.contains(&name)
             {
@@ -998,6 +1009,8 @@ impl EntityTracker {
         self.inspect_requested_names.clear();
         self.forced_refresh_names.clear();
         self.bootstrap_refresh_sent_names.clear();
+        self.bootstrap_inspect_sent_at_ms_by_name.clear();
+        self.bootstrap_failed_inspect_names.clear();
         self.bootstrap_visible_fallback_requested = false;
         self.bootstrap_visible_fallback_names.clear();
         self.next_bootstrap_inspect_at_ms = 0;
@@ -1033,6 +1046,8 @@ impl EntityTracker {
     ) -> Option<AppliedInspectResult> {
         let name = result.name.clone();
         self.inspect_requested_names.remove(&name);
+        self.bootstrap_inspect_sent_at_ms_by_name.remove(&name);
+        self.bootstrap_failed_inspect_names.remove(&name);
         let snapshot = inspect_snapshot_from_result(&result);
         let info = inspect_info_from_result(&result);
         let has_live_match = self
@@ -1242,8 +1257,30 @@ impl EntityTracker {
     pub fn note_bootstrap_inspect_sent(&mut self, name: &str, now: i64) {
         self.next_bootstrap_inspect_at_ms = now + BOOTSTRAP_INSPECT_DELAY_MS;
         self.bootstrap_refresh_sent_names.insert(name.to_string());
+        self.bootstrap_inspect_sent_at_ms_by_name
+            .insert(name.to_string(), now);
         self.bootstrap_visible_fallback_names
             .retain(|queued_name| queued_name != name);
+    }
+
+    pub fn take_timed_out_bootstrap_inspects(&mut self, now: i64) -> Vec<String> {
+        let timed_out_names = self
+            .bootstrap_inspect_sent_at_ms_by_name
+            .iter()
+            .filter_map(|(name, sent_at)| {
+                (now.saturating_sub(*sent_at) >= BOOTSTRAP_INSPECT_TIMEOUT_MS
+                    && !self.has_inspect_snapshot_for_name(name))
+                .then_some(name.clone())
+            })
+            .collect::<Vec<_>>();
+
+        for name in &timed_out_names {
+            self.bootstrap_inspect_sent_at_ms_by_name.remove(name);
+            self.bootstrap_failed_inspect_names.insert(name.clone());
+            self.clear_inspect_request(name);
+        }
+
+        timed_out_names
     }
 
     pub fn reset_bootstrap_inspect_throttle(&mut self) {
@@ -1259,6 +1296,8 @@ impl EntityTracker {
         }
         self.next_bootstrap_inspect_at_ms = 0;
         self.bootstrap_refresh_sent_names.clear();
+        self.bootstrap_inspect_sent_at_ms_by_name.clear();
+        self.bootstrap_failed_inspect_names.clear();
         self.bootstrap_visible_fallback_requested = false;
         self.bootstrap_visible_fallback_names.clear();
     }
@@ -1295,10 +1334,12 @@ impl EntityTracker {
         }
 
         self.clear_inspect_request(name);
+        self.bootstrap_inspect_sent_at_ms_by_name.remove(name);
+        self.bootstrap_failed_inspect_names.remove(name);
         self.forced_refresh_names.insert(name.to_string());
     }
 
-    pub fn is_startup_barrier_ready(
+    pub fn is_startup_barrier_stats_ready(
         &self,
         required_character_ids: &[u64],
         required_names: &[String],
@@ -1313,6 +1354,38 @@ impl EntityTracker {
             && required_names
                 .iter()
                 .all(|name| self.has_inspect_snapshot_for_name(name))
+    }
+
+    pub fn is_startup_barrier_gate_ready(
+        &self,
+        required_character_ids: &[u64],
+        required_names: &[String],
+    ) -> bool {
+        if required_character_ids.is_empty() && required_names.is_empty() {
+            return false;
+        }
+
+        required_character_ids.iter().copied().all(|character_id| {
+            self.has_inspect_snapshot_for_character(character_id)
+                || self.has_failed_bootstrap_inspect_for_character(character_id)
+        }) && required_names.iter().all(|name| {
+            self.has_inspect_snapshot_for_name(name)
+                || self.bootstrap_failed_inspect_names.contains(name)
+        })
+    }
+
+    pub fn has_failed_startup_barrier_inspects(
+        &self,
+        required_character_ids: &[u64],
+        required_names: &[String],
+    ) -> bool {
+        required_character_ids.iter().copied().any(|character_id| {
+            !self.has_inspect_snapshot_for_character(character_id)
+                && self.has_failed_bootstrap_inspect_for_character(character_id)
+        }) || required_names.iter().any(|name| {
+            !self.has_inspect_snapshot_for_name(name)
+                && self.bootstrap_failed_inspect_names.contains(name)
+        })
     }
 
     pub fn get_inspect_snapshot(&self, entity_id: u64) -> Option<&InspectSnapshot> {
@@ -1826,6 +1899,15 @@ impl EntityTracker {
         };
 
         self.has_inspect_snapshot_for_name(&name)
+    }
+
+    fn has_failed_bootstrap_inspect_for_character(&self, character_id: u64) -> bool {
+        if character_id == 0 {
+            return false;
+        }
+
+        self.get_resolved_player_name_for_character(character_id)
+            .is_some_and(|name| self.bootstrap_failed_inspect_names.contains(&name))
     }
 
     fn evaluate_stashed_player_inspect_state(

@@ -1308,11 +1308,15 @@ impl EncounterState {
 
         let buffered_entities = Self::collect_pending_buffered_player_entities(barrier);
         Self::track_required_inspect_targets(barrier, entity_tracker, buffered_entities.iter());
-        let all_ready = entity_tracker.is_startup_barrier_ready(
+        let gate_ready = entity_tracker.is_startup_barrier_gate_ready(
             &barrier.required_character_ids,
             &barrier.required_inspect_names,
         );
-        if barrier.pending_damage.is_empty() && !barrier.pending_skill.is_empty() && !all_ready {
+        let stats_ready = entity_tracker.is_startup_barrier_stats_ready(
+            &barrier.required_character_ids,
+            &barrier.required_inspect_names,
+        );
+        if barrier.pending_damage.is_empty() && !barrier.pending_skill.is_empty() && !gate_ready {
             let pending_skill = std::mem::take(&mut barrier.pending_skill);
             for pending_skill in pending_skill {
                 self.replay_pending_skill_event(pending_skill, entity_tracker);
@@ -1322,7 +1326,7 @@ impl EncounterState {
             }
             return;
         }
-        if !all_ready {
+        if !gate_ready {
             return;
         }
 
@@ -1333,9 +1337,12 @@ impl EncounterState {
             .unwrap_or_default();
         entity_tracker.reset_bootstrap_inspect_throttle();
 
-        if all_ready {
+        if stats_ready {
             self.rdps_valid = true;
             self.rdps_message = None;
+        } else {
+            self.rdps_valid = false;
+            self.rdps_message = Some("inspect_timeout".into());
         }
 
         let mut ordered_events = Vec::with_capacity(pending_skill.len() + pending_damage.len());
@@ -1383,7 +1390,11 @@ impl EncounterState {
 
         let buffered_entities = Self::collect_pending_buffered_player_entities(barrier);
         Self::track_required_inspect_targets(barrier, entity_tracker, buffered_entities.iter());
-        let all_ready = entity_tracker.is_startup_barrier_ready(
+        let stats_ready = entity_tracker.is_startup_barrier_stats_ready(
+            &barrier.required_character_ids,
+            &barrier.required_inspect_names,
+        );
+        let has_inspect_failures = entity_tracker.has_failed_startup_barrier_inspects(
             &barrier.required_character_ids,
             &barrier.required_inspect_names,
         );
@@ -1394,9 +1405,12 @@ impl EncounterState {
             .unwrap_or_default();
         entity_tracker.reset_bootstrap_inspect_throttle();
 
-        if all_ready {
+        if stats_ready {
             self.rdps_valid = true;
             self.rdps_message = None;
+        } else if has_inspect_failures {
+            self.rdps_valid = false;
+            self.rdps_message = Some("inspect_timeout".into());
         } else {
             self.rdps_valid = false;
             self.rdps_message = Some(invalid_reason.into());
