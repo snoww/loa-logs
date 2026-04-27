@@ -334,7 +334,7 @@ impl EncounterState {
 
     pub fn on_init_env(&mut self, entity: Entity) {
         // if not already saved to db, we save again
-        if !self.saved && !self.encounter.current_boss_name.is_empty() && !self.disabled {
+        if !self.saved && !self.encounter.current_boss_name.is_empty() {
             self.save_to_db(false);
         }
 
@@ -406,7 +406,7 @@ impl EncounterState {
 
         match phase_code {
             0 | 2 | 3 | 4 => {
-                if !self.encounter.current_boss_name.is_empty() && !self.disabled {
+                if !self.encounter.current_boss_name.is_empty() {
                     self.lal_debug_end_time_ms = Some(Utc::now().timestamp_millis());
                     self.save_to_db(false);
                     self.saved = true;
@@ -954,17 +954,18 @@ impl EncounterState {
             .map(|e| (e.id, e.name.as_str()))
             .collect();
 
-        let resolve_ids =
-            |map: HashMap<u64, i64>| -> HashMap<String, i64> {
-                map.into_iter()
-                    .filter_map(|(id, v)| id_to_name.get(&id).map(|name| (name.to_string(), v)))
-                    .collect()
-            };
+        let resolve_ids = |map: HashMap<u64, i64>| -> HashMap<String, i64> {
+            map.into_iter()
+                .filter_map(|(id, v)| id_to_name.get(&id).map(|name| (name.to_string(), v)))
+                .collect()
+        };
 
         let resolve_ids_nested =
             |map: HashMap<u64, HashMap<String, i64>>| -> HashMap<String, HashMap<String, i64>> {
                 map.into_iter()
-                    .filter_map(|(id, inner)| id_to_name.get(&id).map(|name| (name.to_string(), inner)))
+                    .filter_map(|(id, inner)| {
+                        id_to_name.get(&id).map(|name| (name.to_string(), inner))
+                    })
                     .collect()
             };
 
@@ -975,21 +976,28 @@ impl EncounterState {
             .values()
             .filter(|e| e.entity_type == EntityType::Player && e.damage_stats.damage_dealt > 0)
             .map(|entity| {
-                let (damage_split_by_name, damage_done_by_entity_skill_group, damage_increase_by_entity_skill_group) =
-                    if let Some(acc) = accumulators.remove(&entity.name) {
-                        (
-                            resolve_ids(acc.damage_split_by_entity_id_),
-                            resolve_ids_nested(acc.damage_done_by_entity_skill_group_),
-                            resolve_ids_nested(acc.damage_increase_by_entity_skill_group_),
-                        )
+                let (
+                    damage_split_by_name,
+                    damage_done_by_entity_skill_group,
+                    damage_increase_by_entity_skill_group,
+                ) = if let Some(acc) = accumulators.remove(&entity.name) {
+                    (
+                        resolve_ids(acc.damage_split_by_entity_id_),
+                        resolve_ids_nested(acc.damage_done_by_entity_skill_group_),
+                        resolve_ids_nested(acc.damage_increase_by_entity_skill_group_),
+                    )
+                } else {
+                    let self_damage = if self.rdps_valid {
+                        entity.damage_stats.damage_dealt - entity.damage_stats.rdps_damage_received
                     } else {
-                        let self_damage = if self.rdps_valid {
-                            entity.damage_stats.damage_dealt - entity.damage_stats.rdps_damage_received
-                        } else {
-                            entity.damage_stats.damage_dealt
-                        };
-                        ([(entity.name.clone(), self_damage)].into(), HashMap::new(), HashMap::new())
+                        entity.damage_stats.damage_dealt
                     };
+                    (
+                        [(entity.name.clone(), self_damage)].into(),
+                        HashMap::new(),
+                        HashMap::new(),
+                    )
+                };
                 ContributionSplit {
                     name: entity.name.clone(),
                     party_number: self
@@ -1585,6 +1593,10 @@ impl EncounterState {
         inspect_transport_available: bool,
         timestamp: i64,
     ) {
+        if self.disabled {
+            return;
+        }
+
         if self.startup_barrier.is_some() {
             self.enqueue_pending_damage(
                 packet_seq,
@@ -2007,20 +2019,19 @@ impl EncounterState {
             source_entity.damage_stats.hyper_awakening_damage += damage;
         }
 
-        let contribution_data =
-            if source_entity.entity_type == EntityType::Player {
-                Some((
-                    source_entity.name.clone(),
-                    dmg_src_entity.id,
-                    resolved_skill_id,
-                    damage,
-                    hit_flag == HitFlag::CRITICAL || hit_flag == HitFlag::DOT_CRITICAL,
-                    rdps_result.clone(),
-                    self.rdps_valid,
-                ))
-            } else {
-                None
-            };
+        let contribution_data = if source_entity.entity_type == EntityType::Player {
+            Some((
+                source_entity.name.clone(),
+                dmg_src_entity.id,
+                resolved_skill_id,
+                damage,
+                hit_flag == HitFlag::CRITICAL || hit_flag == HitFlag::DOT_CRITICAL,
+                rdps_result.clone(),
+                self.rdps_valid,
+            ))
+        } else {
+            None
+        };
 
         target_entity.damage_stats.damage_taken += damage;
 
@@ -3057,6 +3068,9 @@ impl EncounterState {
     }
 
     pub fn save_to_db(&mut self, manual: bool) {
+        if self.disabled {
+            return;
+        }
         if !manual
             && (self.encounter.fight_start == 0
                 || self.encounter.current_boss_name.is_empty()

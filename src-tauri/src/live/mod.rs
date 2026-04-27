@@ -386,13 +386,6 @@ pub fn start(args: StartArgs) -> Result<()> {
                         entity.id,
                         entity.character_id
                     ));
-                    if !banned
-                        && !state.encounter.current_boss_name.is_empty()
-                        && ban_list.is_banned(entity.character_id)
-                    {
-                        banned = true;
-                        state.disabled = true;
-                    }
                     let rebound_gate_eligible = state.startup_barrier_active()
                         && entity_tracker.is_gate_eligible_player_entity(&entity);
                     let rebound_name = entity.name.clone();
@@ -431,13 +424,6 @@ pub fn start(args: StartArgs) -> Result<()> {
                         entity.id,
                         entity.character_id
                     ));
-                    if !banned
-                        && !state.encounter.current_boss_name.is_empty()
-                        && ban_list.is_banned(entity.character_id)
-                    {
-                        banned = true;
-                        state.disabled = true;
-                    }
                     let rebound_gate_eligible = state.startup_barrier_active()
                         && entity_tracker.is_gate_eligible_player_entity(&entity);
                     let rebound_name = entity.name.clone();
@@ -551,6 +537,17 @@ pub fn start(args: StartArgs) -> Result<()> {
                         _ => {
                             state.raid_difficulty = "".to_string();
                             state.raid_difficulty_id = 0;
+                        }
+                    }
+                    if !banned {
+                        for character_id in
+                            party_tracker.borrow().get_all_registered_party_characters()
+                        {
+                            if ban_list.is_banned(character_id) {
+                                banned = true;
+                                state.disabled = true;
+                                break;
+                            }
                         }
                     }
                 }
@@ -1056,6 +1053,17 @@ pub fn start(args: StartArgs) -> Result<()> {
                     || state.encounter.fight_start == 0
                     || state.encounter.current_boss_name == "Saydon"
                 {
+                    if !banned {
+                        for character_id in
+                            party_tracker.borrow().get_all_registered_party_characters()
+                        {
+                            if ban_list.is_banned(character_id) {
+                                banned = true;
+                                state.disabled = true;
+                                break;
+                            }
+                        }
+                    }
                     if state.request_phase_transition(3, &mut entity_tracker) {
                         queue_missing_party_inspects(
                             &ipc.0,
