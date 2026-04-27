@@ -1,11 +1,11 @@
 {
-  "version": "v1.42.3",
-  "notes": "### v1.42.3 - April 25th, 2026\n\n#### P.S. If you see any of us in town or raid, feel free to drop an honor!\n\n- **Snowving** on Luterra\n- **Administrator** on Ratik\n- **Poont** on Giena\n\n### Try out rDPS by opting into beta updates. Settings > Enable Beta Updates\n\n#### BUG FIXES AND IMPROVEMENTS\n\n- added column sorting for dps/stagger in logs\n- maybe fixed ban message showing up in random dungeons",
-  "pub_date": "2026-04-25T06:51:14.924Z",
+  "version": "v1.42.4",
+  "notes": "### v1.42.4 - April 27th, 2026\n\n#### P.S. If you see any of us in town or raid, feel free to drop an honor!\n\n- **Snowving** on Luterra\n- **Administrator** on Ratik\n- **Poont** on Giena\n\n### Try out rDPS by opting into beta updates. Settings > Enable Beta Updates\n\n#### BUG FIXES AND IMPROVEMENTS\n\n- fixed some issues with ban list",
+  "pub_date": "2026-04-27T09:29:00.644Z",
   "platforms": {
     "windows-x86_64": {
-      "url": "https://github.com/snoww/loa-logs/releases/download/v1.42.3/LOA.Logs_1.42.3_x64-setup.exe",
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmZGV09XY01udzQzMENWTWdHZElhRkZld3o3MzJ4U1lRWnJhY0hZcWhSdHIvV3VjVE9HRnFvTGhYUXhaVS94N2lrZlhzblBDSjNLRkZxd3FxUC9TRnc0PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzc3MTAwMDc0CWZpbGU6TE9BIExvZ3NfMS40Mi4zX3g2NC1zZXR1cC5leGUKY210WUg4REpoaHBwTDJGZWpONld1WkZRK3gvMkpyb1ZaSG1KMCtyeGdEekJSblpnNVJ4aE1KQXBWdEZUVjBucXRWVDA2M0hhMjlNem9kZ1A3V0p1QUE9PQo="
+      "url": "https://github.com/snoww/loa-logs/releases/download/v1.42.4/LOA.Logs_1.42.4_x64-setup.exe",
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmZCTGtDbWVZZG5yNFpIRUNGalZpVVNWKzZ3YnUwUjZOdklIWGNLbFYvMnFGSndRKzkrcmoxWmlqbDMxRS9HMHZURHVnRVJ2WmUzNldLUTBCMTJWSFFjPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzc3MjgxMDAyCWZpbGU6TE9BIExvZ3NfMS40Mi40X3g2NC1zZXR1cC5leGUKZTJTQmMxakFUVVBQc3d2RzJrYkhtZVZzblF3cVpwZHAyVDZTNHhOZXNtaGtaNWVnSlozYWpFVDcxSE1VYVIyVlN0dmdYZGNma1dmUVlQSzhNQjdNQlE9PQo="
     }
   }
 }

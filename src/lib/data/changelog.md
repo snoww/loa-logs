@@ -1,6 +1,6 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.42.3 - April 25th, 2026
+    v1.42.4 - April 27th, 2026
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
@@ -14,6 +14,14 @@
 - **Poont** on Giena
 
 #### Try out rDPS by opting into beta updates. Settings > Enable Beta Updates
+
+#### BUG FIXES AND IMPROVEMENTS
+
+- fixed some issues with ban list
+
+---
+
+### v1.42.3 - April 25th, 2026
 
 #### BUG FIXES AND IMPROVEMENTS
 
