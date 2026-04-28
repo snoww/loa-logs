@@ -1,3 +1,4 @@
+use crate::constants::DARK_GRENADE_ENTITY_ID;
 use crate::data::{
     ENGRAVING_DATA, RDPS_ADDITIONAL_IDENTITY_GROUP, SKILL_BUFF_DATA, SKILL_DATA, SKILL_EFFECT_DATA,
     SUPPORT_IDENTITY_GROUP, SUPPORT_MARKING_GROUP,
@@ -68,6 +69,10 @@ enum SourceRole {
     Unknown,
     ConfirmedSupport,
     ConfirmedDps,
+}
+
+pub fn is_dark_grenade_buff(status_effect_id: u32) -> bool {
+    matches!(status_effect_id, 32240 | 32246)
 }
 
 fn get_hit_crit_metrics(
@@ -880,21 +885,29 @@ fn append_target_contributions(
         let Some(skill_buff) = SKILL_BUFF_DATA.get(&effect.status_effect_id) else {
             continue;
         };
-        let source_entity_id =
-            resolve_effect_source_id(&effect, skill_buff, entity_tracker, buffered_entities);
+        let is_dark_grenade = is_dark_grenade_buff(effect.status_effect_id);
+        let source_entity_id = if is_dark_grenade {
+            DARK_GRENADE_ENTITY_ID
+        } else {
+            resolve_effect_source_id(&effect, skill_buff, entity_tracker, buffered_entities)
+        };
         if source_entity_id == 0 {
             continue;
         }
-        let source_priority =
-            source_priority_for_entity(source_entity_id, entity_tracker, buffered_entities);
-        let is_self_source = is_same_player(
-            attacker,
-            source_entity_id,
-            buffered_entities,
-            entity_tracker,
-        );
-        let is_attributable_source =
-            is_player_source_entity_id(source_entity_id, buffered_entities, entity_tracker);
+        let source_priority = if is_dark_grenade {
+            STAT_PRIORITY_DEFAULT
+        } else {
+            source_priority_for_entity(source_entity_id, entity_tracker, buffered_entities)
+        };
+        let is_self_source = !is_dark_grenade
+            && is_same_player(
+                attacker,
+                source_entity_id,
+                buffered_entities,
+                entity_tracker,
+            );
+        let is_attributable_source = is_dark_grenade
+            || is_player_source_entity_id(source_entity_id, buffered_entities, entity_tracker);
         if !should_apply_target_effect(
             skill_buff,
             attacker,
@@ -915,44 +928,78 @@ fn append_target_contributions(
         ) else {
             continue;
         };
-        let is_support = is_attributable_source
+        let is_support = !is_dark_grenade
+            && is_attributable_source
             && is_support_source(
                 source_entity_id,
                 skill_buff,
                 entity_tracker,
                 buffered_entities,
             );
-        let source_entity =
-            get_buffered_or_live_entity(source_entity_id, buffered_entities, entity_tracker);
-        let source_snapshot =
-            get_buffered_or_live_snapshot(source_entity_id, buffered_entities, entity_tracker);
-        let source_player_stats: Option<Arc<PlayerStats>> = buffered_owner_self_effects
-            .and_then(|_| {
-                rebuild_missing_effect_owner_snapshot(
-                    &effect,
-                    source_entity_id,
-                    source_entity,
-                    buffered_entities,
-                    buffered_owner_self_effects,
-                    event_timestamp,
-                    entity_tracker,
-                )
-            })
-            .map(Arc::new)
-            .or_else(|| effect.owner_player_stats_snapshot.clone())
-            .or_else(|| {
-                source_snapshot.and_then(|snapshot| {
-                    source_entity.map(|entity| {
-                        Arc::new(load_player_stats_from_snapshot(
-                            snapshot,
-                            source_entity_id,
-                            entity.class_id,
-                        ))
+        let source_entity = if is_dark_grenade {
+            None
+        } else {
+            get_buffered_or_live_entity(source_entity_id, buffered_entities, entity_tracker)
+        };
+        let source_snapshot = if is_dark_grenade {
+            None
+        } else {
+            get_buffered_or_live_snapshot(source_entity_id, buffered_entities, entity_tracker)
+        };
+        let source_player_stats: Option<Arc<PlayerStats>> = if is_dark_grenade {
+            None
+        } else {
+            buffered_owner_self_effects
+                .and_then(|_| {
+                    rebuild_missing_effect_owner_snapshot(
+                        &effect,
+                        source_entity_id,
+                        source_entity,
+                        buffered_entities,
+                        buffered_owner_self_effects,
+                        event_timestamp,
+                        entity_tracker,
+                    )
+                })
+                .map(Arc::new)
+                .or_else(|| effect.owner_player_stats_snapshot.clone())
+                .or_else(|| {
+                    source_snapshot.and_then(|snapshot| {
+                        source_entity.map(|entity| {
+                            Arc::new(load_player_stats_from_snapshot(
+                                snapshot,
+                                source_entity_id,
+                                entity.class_id,
+                            ))
+                        })
                     })
                 })
-            });
+        };
+        let buff_source = skill_buff
+            .name
+            .clone()
+            .unwrap_or_else(|| skill_buff.id.to_string());
         for option in &level_data.passive_options {
             apply_target_passive_option(option, damage_type, damage_attr, damage_multiplier);
+            if is_dark_grenade
+                && let Some(factor) = apply_dark_grenade_target_passive_stat(
+                    stats,
+                    attacker.id,
+                    option,
+                    damage_type,
+                    &buff_source,
+                    source_priority,
+                )
+                && factor > 0.0
+            {
+                contributions.push(ContributionFactor {
+                    rdps_type: RDPS_TYPE_TARGET_DEBUFF,
+                    source_entity_id,
+                    source_skill_id,
+                    factor,
+                    is_support,
+                });
+            }
         }
         if skill_buff.buff_type == "skill_damage_amplify" {
             let Some(status_effect_values) = level_data.status_effect_values.as_ref() else {
@@ -988,10 +1035,7 @@ fn append_target_contributions(
                             factor,
                             attacker.id,
                             source_entity_id,
-                            skill_buff
-                                .name
-                                .clone()
-                                .unwrap_or_else(|| skill_buff.id.to_string()),
+                            buff_source.clone(),
                             source_priority,
                         );
                         if is_attributable_source && !is_self_source {
@@ -1456,6 +1500,49 @@ fn apply_target_passive_option(
             | ("holy_res_rate", Some(7))
     ) {
         *damage_multiplier *= 1.0 - value;
+    }
+}
+
+fn apply_dark_grenade_target_passive_stat(
+    stats: &mut PlayerStats,
+    attacker_id: u64,
+    option: &crate::models::PassiveOption,
+    damage_type: u8,
+    buff_source: &str,
+    source_priority: i32,
+) -> Option<f64> {
+    if !option.option_type.eq_ignore_ascii_case("stat") {
+        return None;
+    }
+
+    let value = option.value as f64 / 10000.0;
+    if value == 0.0 {
+        return None;
+    }
+
+    let factor = -value * 0.5;
+    match option.key_stat.as_str() {
+        "def_x" => {
+            stats.physical_defense_break.add_with_priority(
+                factor,
+                attacker_id,
+                DARK_GRENADE_ENTITY_ID,
+                buff_source.to_string(),
+                source_priority,
+            );
+            (damage_type == 0).then_some(factor)
+        }
+        "res_x" => {
+            stats.magical_defense_break.add_with_priority(
+                factor,
+                attacker_id,
+                DARK_GRENADE_ENTITY_ID,
+                buff_source.to_string(),
+                source_priority,
+            );
+            (damage_type != 0).then_some(factor)
+        }
+        _ => None,
     }
 }
 
@@ -2485,12 +2572,24 @@ fn select_target_effects(
     buffered_entities: Option<&HashMap<u64, Entity>>,
 ) -> Vec<StatusEffectDetails> {
     let mut selected_by_group = std::collections::BTreeMap::new();
+    let mut selected_dark_grenade = None;
     let mut selected = Vec::new();
 
     for status_effect in status_effects {
         let Some(skill_buff) = SKILL_BUFF_DATA.get(&status_effect.status_effect_id) else {
             continue;
         };
+        if is_dark_grenade_buff(status_effect.status_effect_id) {
+            if selected_dark_grenade
+                .as_ref()
+                .is_none_or(|entry: &StatusEffectDetails| {
+                    status_effect.status_effect_id < entry.status_effect_id
+                })
+            {
+                selected_dark_grenade = Some(status_effect.clone());
+            }
+            continue;
+        }
         if status_effect.unique_group == 0 {
             selected.push(status_effect.clone());
             continue;
@@ -2519,6 +2618,9 @@ fn select_target_effects(
     }
 
     selected.extend(selected_by_group.into_values());
+    if let Some(status_effect) = selected_dark_grenade {
+        selected.push(status_effect);
+    }
     selected
 }
 

@@ -1,4 +1,5 @@
 use crate::api::{GetCharacterInfoArgs, StatsApi};
+use crate::constants::{DARK_GRENADE_ENTITY_ID, DARK_GRENADE_ENTITY_NAME};
 use crate::data::*;
 use crate::database::Repository;
 use crate::database::models::InsertEncounterArgs;
@@ -905,6 +906,27 @@ impl EncounterState {
             entity.damage_stats.damage_dealt - entity.damage_stats.buffed_damage;
     }
 
+    fn include_in_lal_damage_dump(entity: &EncounterEntity) -> bool {
+        match entity.entity_type {
+            EntityType::Player => entity.damage_stats.damage_dealt > 0,
+            EntityType::DarkGrenade => entity.damage_stats.rdps_damage_given > 0,
+            _ => false,
+        }
+    }
+
+    fn ensure_dark_grenade_entity(&mut self) -> &mut EncounterEntity {
+        self.encounter
+            .entities
+            .entry(DARK_GRENADE_ENTITY_NAME.to_string())
+            .or_insert_with(|| EncounterEntity {
+                id: DARK_GRENADE_ENTITY_ID,
+                name: DARK_GRENADE_ENTITY_NAME.to_string(),
+                entity_type: EntityType::DarkGrenade,
+                class: DARK_GRENADE_ENTITY_NAME.to_string(),
+                ..Default::default()
+            })
+    }
+
     pub fn record_lal_skill_event_debug(
         &mut self,
         source_entity: &Entity,
@@ -974,7 +996,7 @@ impl EncounterState {
         self.encounter
             .entities
             .values()
-            .filter(|e| e.entity_type == EntityType::Player && e.damage_stats.damage_dealt > 0)
+            .filter(|e| Self::include_in_lal_damage_dump(e))
             .map(|entity| {
                 let (
                     damage_split_by_name,
@@ -1000,11 +1022,14 @@ impl EncounterState {
                 };
                 ContributionSplit {
                     name: entity.name.clone(),
-                    party_number: self
-                        .party_info
-                        .iter()
-                        .position(|party| party.iter().any(|n| n == &entity.name))
-                        .map(|i| i as i32),
+                    party_number: if entity.entity_type == EntityType::DarkGrenade {
+                        Some(-1)
+                    } else {
+                        self.party_info
+                            .iter()
+                            .position(|party| party.iter().any(|n| n == &entity.name))
+                            .map(|i| i as i32)
+                    },
                     damage_split_by_name,
                     damage_done_by_entity_skill_group,
                     damage_increase_by_entity_skill_group,
@@ -1015,9 +1040,12 @@ impl EncounterState {
 
     fn build_damage_state_dump(&self) -> DamageStateDump {
         let mut player_id_to_damage_data_ = HashMap::new();
-        for entity in self.encounter.entities.values().filter(|entity| {
-            entity.entity_type == EntityType::Player && entity.damage_stats.damage_dealt > 0
-        }) {
+        for entity in self
+            .encounter
+            .entities
+            .values()
+            .filter(|entity| Self::include_in_lal_damage_dump(entity))
+        {
             let accumulator = self.player_contributions.get(&entity.name);
             let entity_id_ = entity.id;
             let damage_done_ = entity.damage_stats.damage_dealt;
@@ -1062,12 +1090,15 @@ impl EncounterState {
                 entity_id_,
                 DamageDataDump {
                     player_name_: entity.name.clone(),
-                    party_number_: self
-                        .party_info
-                        .iter()
-                        .position(|party| party.iter().any(|name| name == &entity.name))
-                        .map(|index| index as i32)
-                        .unwrap_or(-2),
+                    party_number_: if entity.entity_type == EntityType::DarkGrenade {
+                        -1
+                    } else {
+                        self.party_info
+                            .iter()
+                            .position(|party| party.iter().any(|name| name == &entity.name))
+                            .map(|index| index as i32)
+                            .unwrap_or(-2)
+                    },
                     entity_id_,
                     damage_done_,
                     damage_done_without_ultimate_awakening_,
@@ -2409,6 +2440,11 @@ impl EncounterState {
 
         if let Some(rdps_result) = rdps_result {
             for attribution in rdps_result.entity_attributions {
+                if attribution.source_entity_id == DARK_GRENADE_ENTITY_ID {
+                    let contributor_entity = self.ensure_dark_grenade_entity();
+                    contributor_entity.damage_stats.rdps_damage_given += attribution.damage;
+                    continue;
+                }
                 let Some(contributor_name) = entity_tracker
                     .get_entity_ref(attribution.source_entity_id)
                     .map(|entity| entity.name.clone())

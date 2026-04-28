@@ -385,7 +385,8 @@ export enum EntityType {
   GUARDIAN = "GUARDIAN",
   PLAYER = "PLAYER",
   NPC = "NPC",
-  ESTHER = "ESTHER"
+  ESTHER = "ESTHER",
+  DARK_GRENADE = "DARK_GRENADE"
 }
 
 export interface ClassColors {

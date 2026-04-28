@@ -1354,11 +1354,13 @@ pub fn start(args: StartArgs) -> Result<()> {
                         clone.current_boss_name = String::new();
                     }
                 }
-                clone.entities.retain(|_, e| {
-                    ((e.entity_type == EntityType::Player && e.class_id > 0)
-                        || e.entity_type == EntityType::Esther
-                        || e.entity_type == EntityType::Boss)
-                        && e.damage_stats.damage_dealt > 0
+                clone.entities.retain(|_, e| match e.entity_type {
+                    EntityType::DarkGrenade => e.damage_stats.rdps_damage_given > 0,
+                    EntityType::Player => {
+                        e.class_id > 0 && e.damage_stats.damage_dealt > 0
+                    }
+                    EntityType::Esther | EntityType::Boss => e.damage_stats.damage_dealt > 0,
+                    _ => false,
                 });
 
                 // strip data not needed for live meter to reduce payload size and frontend memory

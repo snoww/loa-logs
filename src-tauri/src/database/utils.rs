@@ -370,11 +370,16 @@ pub fn get_total_available_time(
 }
 
 pub fn should_insert_entity(entity: &EncounterEntity, local_player: &str) -> bool {
-    ((entity.entity_type == EntityType::Player && entity.class_id > 0)
+    if entity.entity_type == EntityType::DarkGrenade {
+        return entity.damage_stats.rdps_damage_given > 0;
+    }
+    let is_insertable_damage_entity = (entity.entity_type == EntityType::Player
+        && entity.class_id > 0)
         || entity.name == local_player
         || entity.entity_type == EntityType::Esther
-        || (entity.entity_type == EntityType::Boss && entity.max_hp > 0))
-        && entity.damage_stats.damage_dealt > 0
+        || (entity.entity_type == EntityType::Boss && entity.max_hp > 0);
+
+    is_insertable_damage_entity && entity.damage_stats.damage_dealt > 0
 }
 
 pub fn update_entity_stats(

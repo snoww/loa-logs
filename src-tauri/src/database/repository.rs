@@ -391,6 +391,13 @@ impl Repository {
             let damage_dealt = entity.damage_stats.damage_dealt;
             let damage_without_hyper =
                 (damage_dealt - entity.damage_stats.hyper_awakening_damage) as f64;
+            let support_ratio = |damage: i64| {
+                if damage_without_hyper > 0.0 {
+                    damage as f64 / damage_without_hyper
+                } else {
+                    0.0
+                }
+            };
             let compressed_skills = compress_json(&entity.skills)?;
             let compressed_damage_stats = compress_json(&entity.damage_stats)?;
 
@@ -421,16 +428,16 @@ impl Repository {
                 json!(entity.ark_passive_data),
                 support_buffs
                     .map(|b| b.buff)
-                    .unwrap_or(entity.damage_stats.buffed_by_support as f64 / damage_without_hyper),
-                support_buffs.map(|b| b.brand).unwrap_or(
-                    entity.damage_stats.debuffed_by_support as f64 / damage_without_hyper
-                ),
-                support_buffs.map(|b| b.identity).unwrap_or(
-                    entity.damage_stats.buffed_by_identity as f64 / damage_without_hyper
-                ),
+                    .unwrap_or_else(|| support_ratio(entity.damage_stats.buffed_by_support)),
+                support_buffs
+                    .map(|b| b.brand)
+                    .unwrap_or_else(|| support_ratio(entity.damage_stats.debuffed_by_support)),
+                support_buffs
+                    .map(|b| b.identity)
+                    .unwrap_or_else(|| support_ratio(entity.damage_stats.buffed_by_identity)),
                 support_buffs
                     .map(|b| b.hyper)
-                    .unwrap_or(entity.damage_stats.buffed_by_hat as f64 / damage_without_hyper),
+                    .unwrap_or_else(|| support_ratio(entity.damage_stats.buffed_by_hat)),
                 entity.damage_stats.unbuffed_damage,
                 entity.damage_stats.unbuffed_dps,
                 entity.damage_stats.rdps_damage_received,
