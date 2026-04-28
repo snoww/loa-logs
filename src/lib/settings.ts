@@ -2,6 +2,8 @@ export type FontScale = "0" | "1" | "2" | "3";
 
 export interface DisplayFlags {
   damage: boolean;
+  ndmg: boolean;
+  rdmg: boolean;
   dps: boolean;
   ndps: boolean;
   rdps: boolean;

@@ -525,6 +525,13 @@
           "Damage",
           "Show the damage dealt by the player in the current encounter"
         )}
+        {@render settingOption("logs", "ndmg", "nDMG", "Neutral Damage (self damage with incoming buffs removed)")}
+        {@render settingOption(
+          "logs",
+          "rdmg",
+          "rDMG",
+          "Raid Damage (self damage + damage given to others from synergies and buffs)"
+        )}
         {@render settingOption(
           "logs",
           "unbuffedDamage",
@@ -771,6 +778,13 @@
           "Show how long a party member has been incapacitated for (e.g. on the floor, stunned, trapped)"
         )}
         {@render settingOption("meter", "damage", "Damage", "Show the damage dealt by player in the current encounter")}
+        {@render settingOption("meter", "ndmg", "nDMG", "Neutral Damage (self damage with incoming buffs removed)")}
+        {@render settingOption(
+          "meter",
+          "rdmg",
+          "rDMG",
+          "Raid Damage (self damage + damage given to others from synergies and buffs)"
+        )}
         {@render settingOption(
           "meter",
           "unbuffedDamage",

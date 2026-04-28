@@ -78,7 +78,9 @@ export class EntityState {
   damageDealt = $derived(this.entity.damageStats.damageDealt);
   damageDealtString = $derived(abbreviateNumberSplit(this.damageDealt));
   baseDamage = $derived(getBaseDamage(this.entity.damageStats));
+  ndmgString = $derived(abbreviateNumberSplit(this.baseDamage));
   rdamage = $derived(getRDamage(this.entity.damageStats));
+  rdmgString = $derived(abbreviateNumberSplit(this.rdamage));
   ndps = $derived.by(() => {
     if (this.encounter.duration <= 0) return 0;
     return Math.round(this.baseDamage / (this.encounter.duration / 1000));
