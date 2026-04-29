@@ -5,7 +5,7 @@
   import { IconExternalLink, IconFileClock } from "$lib/icons";
   import { settings } from "$lib/stores.svelte.js";
   import { EntityType, type Entity } from "$lib/types";
-  import { abbreviateNumberSplit, customRound, isNameValid, LOA_BIBLE_URL, rgbLinearShadeAdjust } from "$lib/utils";
+  import { abbreviateNumberSplit, customRound, isNameValid, isSupportSpec, LOA_BIBLE_URL, rgbLinearShadeAdjust } from "$lib/utils";
   import { openUrl } from "@tauri-apps/plugin-opener";
   import { flip } from "svelte/animate";
   import { unbuffedDamageTooltip, unbuffedDpsTooltip } from "./DamageMeterColumns.svelte";
@@ -81,6 +81,8 @@
               >
             </QuickTooltip>
           </td>
+        {/if}
+        {#if enc.curSettings.breakdown.unbuffedDps && entityState.hasUdpsContributions}
           <td class="px-1 text-center">
             <QuickTooltip tooltip={entityState.totalDpsBuffed.toLocaleString()}>
               {entityState.totalDpsBuffedString[0]}<span class="text-xxs text-gray-300"
@@ -88,6 +90,8 @@
               >
             </QuickTooltip>
           </td>
+        {/if}
+        {#if enc.curSettings.breakdown.unbuffedDamage && entityState.hasUdpsContributions}
           {@const supportDamagePercent = ((entityState.totalDamageBuffed / enc.totalDamageDealt) * 100).toFixed(1)}
           <td class="px-1 text-center">
             <QuickTooltip tooltip="Contributed {supportDamagePercent}% of total raid damage">
@@ -115,6 +119,45 @@
           <td class="px-1 text-center">
             {entityState.damagePercentage}<span class="text-xs text-gray-300">%</span>
           </td>
+        {/if}
+        {#if enc.curSettings.breakdown.unbuffedDamage && entityState.anyUnbuffedDamage}
+          {@const unbuffedDamage = abbreviateNumberSplit(entity.damageStats.unbuffedDamage)}
+          <td class="px-1 text-center">
+            <QuickTooltip tooltip={unbuffedDamageTooltip} tooltipProps={entityState}>
+              {unbuffedDamage[0]}<span class="text-xxs text-gray-300">{unbuffedDamage[1]}</span>
+            </QuickTooltip>
+          </td>
+        {/if}
+        {#if enc.curSettings.breakdown.unbuffedDps && entityState.anyUnbuffedDamage}
+          {@const unbuffedDps = abbreviateNumberSplit(entity.damageStats.unbuffedDps)}
+          <td class="px-1 text-center">
+            <QuickTooltip tooltip={unbuffedDpsTooltip} tooltipProps={entityState}>
+              {unbuffedDps[0]}<span class="text-xxs text-gray-300">{unbuffedDps[1]}</span>
+            </QuickTooltip>
+          </td>
+        {/if}
+        {#if !isSupportSpec(entity.spec) && enc.curSettings.breakdown.ndps && enc.anyRdpsContributions}
+          {#if entity.damageStats.rdpsDamageReceived > 0}
+            {@const ndmg = abbreviateNumberSplit(entityState.baseDamage)}
+            <td class="px-1 text-center">
+              <QuickTooltip tooltip={entityState.baseDamage.toLocaleString()}>
+                {ndmg[0]}<span class="text-xxs text-gray-300">{ndmg[1]}</span>
+              </QuickTooltip>
+            </td>
+          {:else}
+            <td class="px-1 text-center">-</td>
+          {/if}
+        {/if}
+        {#if !isSupportSpec(entity.spec) && enc.curSettings.breakdown.ndps && enc.anyRdpsContributions}
+          {#if entity.damageStats.rdpsDamageReceived > 0}
+            <td class="px-1 text-center">
+              <QuickTooltip tooltip={entityState.ndps.toLocaleString()}>
+                {entityState.ndpsString[0]}<span class="text-xxs text-gray-300">{entityState.ndpsString[1]}</span>
+              </QuickTooltip>
+            </td>
+          {:else}
+            <td class="px-1 text-center">-</td>
+          {/if}
         {/if}
       {:else}
         {#if enc.curSettings.breakdown.damage}
