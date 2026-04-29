@@ -187,6 +187,13 @@
   }
 
   $effect(() => {
+    if (nineveh.connections.length === 0) {
+      const id = setInterval(() => ninevehStateRequest(), 3000);
+      return () => clearInterval(id);
+    }
+  });
+
+  $effect(() => {
     if (enc.encounter && enc.encounter.fightStart) {
       enc.duration = time - enc.encounter.fightStart;
     } else {
