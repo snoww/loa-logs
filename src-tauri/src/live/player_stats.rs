@@ -2628,20 +2628,20 @@ impl PlayerStats {
         let mut crit_rate_capped = self.critical_hit_rate.clone();
         crit_rate_capped.clamp(0.0, self.critical_hit_rate_cap);
 
-        let added_damage_from_crit_and_crit_dmg =
-            crit_rate_capped.multiplied_by_stat(&self.critical_damage_rate);
-        let added_damage_from_crit_and_crit_dmg_2 =
-            crit_rate_capped.multiplied_by_stat(&self.critical_damage_rate_2);
-        let crit_debuff = if damage_type == 0 {
-            crit_rate_capped.multiplied_by_stat(&self.physical_critical_damage_amplify)
+        let crit_damage_amp = if damage_type == 0 {
+            &self.physical_critical_damage_amplify
         } else {
-            crit_rate_capped.multiplied_by_stat(&self.magical_critical_damage_amplify)
+            &self.magical_critical_damage_amplify
         };
+        let mut one = StatData::default();
+        one.set_self(1.0, "base");
+        let full_crit_multiplier = one
+            .mad(&self.critical_damage_rate)
+            .mad(&self.critical_damage_rate_2)
+            .mad(crit_damage_amp);
+        let crit_bonus_over_noncrit = full_crit_multiplier.subtracted(&one);
 
-        attack_power
-            .mad(&added_damage_from_crit_and_crit_dmg)
-            .mad(&added_damage_from_crit_and_crit_dmg_2)
-            .mad(&crit_debuff)
+        attack_power.mad(&crit_rate_capped.multiplied_by_stat(&crit_bonus_over_noncrit))
     }
 
     pub fn resolve_damage_attr(&self, damage_attr: Option<u8>) -> Option<u8> {
