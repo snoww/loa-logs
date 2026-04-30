@@ -1,6 +1,6 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.43.0-Nineveh Beta 12 - April 29th, 2026
+    v1.43.0-Nineveh Beta 13 - April 30th, 2026
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
@@ -25,8 +25,6 @@ The LOA Logs beta uses a completely overhauled system for reading Lost Ark's net
 
 #### BUG FIXES & IMPROVEMENTS
 
-- tracking dark grenade buffs separately for rdps
-- added dedicated columns for ndmg, rdmg (default off)
-- moved d% column after dmg column
-
-**Older Changelogs**: [link](https://github.com/snoww/loa-logs/releases/tag/v1.40.4)
+- fixed rdps not reinspecting players after wipes
+- fixed crit dmg being undervalued in rdps
+- added dark grenade section in logs for dark grenade rdps
