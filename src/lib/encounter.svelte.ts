@@ -71,6 +71,17 @@ export class EncounterState {
   });
 
   /**
+   * Synthetic Dark Grenade entity, if any rDPS was attributed to it.
+   * Has no self damage, only rdpsDamageGiven from dark grenade buff attribution
+   */
+  darkGrenade = $derived.by(() => {
+    if (!this.encounter) return undefined;
+    return Object.values(this.encounter.entities).find(
+      (e) => e.entityType === EntityType.DARK_GRENADE && e.damageStats.rdpsDamageGiven > 0
+    );
+  });
+
+  /**
    * Array of bosses in the encounter, sorted by damage dealt (descending).
    */
   bosses = $derived.by(() => {

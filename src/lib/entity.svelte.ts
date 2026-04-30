@@ -39,6 +39,8 @@ export class EntityState {
     if (!this.entity) return "";
     if (this.entity.entityType === EntityType.ESTHER) {
       return getEstherFromNpcId(this.entity.npcId);
+    } else if (this.entity.entityType === EntityType.DARK_GRENADE) {
+      return "Dark Grenade";
     } else {
       return formatPlayerName(this.entity);
     }
@@ -47,6 +49,9 @@ export class EntityState {
   color = $derived.by(() => {
     if (this.entity.entityType === EntityType.ESTHER) {
       return "#4dc8d0";
+    }
+    if (this.entity.entityType === EntityType.DARK_GRENADE) {
+      return "#7a3a8c";
     }
     if (Object.hasOwn(settings.classColors, this.entity.class)) {
       if (settings.app.general.constantLocalPlayerColor && this.encounter.localPlayer == this.entity.name) {

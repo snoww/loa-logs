@@ -47,6 +47,10 @@
     <QuickTooltip tooltip={entityState.name}>
       <img class="table-cell size-5" src={getClassIcon(estherNameToIcon[entityState.name])} alt={entityState.name} />
     </QuickTooltip>
+  {:else if entity.entityType === EntityType.DARK_GRENADE}
+    <QuickTooltip tooltip={entityState.name}>
+      <img class="table-cell size-5" src="/images/skills/battle_item_01_47.png" alt={entityState.name} />
+    </QuickTooltip>
   {:else}
     <ClassTooltip {entity} />
   {/if}
@@ -55,7 +59,11 @@
 <td colspan="2" onmouseenter={() => (hovering = true)} onmouseleave={() => (hovering = false)}>
   <div class="flex gap-1">
     <div class="truncate">
-      <ArkPassiveTooltip state={entityState} />
+      {#if entity.entityType === EntityType.DARK_GRENADE}
+        {entityState.name}
+      {:else}
+        <ArkPassiveTooltip state={entityState} />
+      {/if}
     </div>
     {#if (enc.live && settings.app.meter.profileShortcut) || (!enc.live && isNameValid(entityState.entity.name) && hovering && entityState.entity.entityType === EntityType.PLAYER)}
       <button
@@ -91,6 +99,7 @@
       ((enc.playerSort === "damage" && columnDef.headerText === "DMG") ||
         (enc.playerSort === "rdps" && columnDef.headerText === "rDPS") ||
         (enc.playerSort === "stagger" && columnDef.headerText === "STAG"))}
+    {@const isDarkGrenade = entity.entityType === EntityType.DARK_GRENADE}
     <td class="cursor-default px-1 text-center {isActiveSort ? 'bg-white/3' : ''}">
       {#snippet tooltip()}
         {#if columnDef.valueTooltip}
@@ -98,9 +107,13 @@
         {/if}
       {/snippet}
 
-      <QuickTooltip tooltip={columnDef.valueTooltip ? tooltip : null}>
-        {@render columnDef.value(entityState)}
-      </QuickTooltip>
+      {#if isDarkGrenade && columnDef.headerText !== "rDPS"}
+        -
+      {:else}
+        <QuickTooltip tooltip={columnDef.valueTooltip ? tooltip : null}>
+          {@render columnDef.value(entityState)}
+        </QuickTooltip>
+      {/if}
     </td>
   {/if}
 {/each}
