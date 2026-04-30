@@ -15,11 +15,9 @@ use std::sync::OnceLock;
 const DAMAGE_ATTR_SLOTS: usize = 8;
 const DEFAULT_CRITICAL_DAMAGE_RATE: f64 = 1.0;
 const MOVE_SPEED_ATTACK_SPEED_CAP: f64 = 0.4;
-const DESTROYER_CLASS_ID: u32 = 103;
-const DESTROYER_COMBAT_SKILL_GROUP_ID: u32 = 2160060;
-const DESTROYER_VORTEX_GRAVITY_SKILL_ID: u32 = 18011;
-const DESTROYER_HYPERGRAVITY_BASIC_ATTACK_SKILL_ID: u32 = 18030;
-const RECENT_DESTROYER_SKILL_START_WINDOW_MS: i64 = 4_000;
+const DESTROYER_RELEASE_IDENTITY_CATEGORY_ID: &str = "7";
+const DESTROYER_RELEASE_IDENTITY_CATEGORY: &str = "destroyer_release";
+const DESTROYER_HYPERGRAVITY_VORTEX_SKILL_GROUP_ID: u32 = 2160060;
 const DESTROYER_RECENT_CONSUMED_CORE_WINDOW_MS: i64 = 5_000;
 const ROSTER_MAIN_STAT_BONUS: f64 = 1930.0;
 const ROSTER_CRITICAL_HIT_BONUS: f64 = 69.0;
@@ -978,6 +976,9 @@ impl PlayerStats {
     }
 
     pub fn record_skill_start(&mut self, skill_id: u32, timestamp: i64) {
+        const DESTROYER_VORTEX_GRAVITY_SKILL_ID: u32 = 18011;
+        const DESTROYER_HYPERGRAVITY_BASIC_ATTACK_SKILL_ID: u32 = 18030;
+
         self.runtime_state.last_skill_start_id = skill_id;
         self.runtime_state.last_skill_start_at_ms = timestamp;
         if skill_id == 0 {
@@ -1009,6 +1010,11 @@ impl PlayerStats {
         identity_gauge3: u32,
         timestamp: i64,
     ) {
+        const DESTROYER_CLASS_ID: u32 = 103;
+        const DESTROYER_VORTEX_GRAVITY_SKILL_ID: u32 = 18011;
+        const DESTROYER_HYPERGRAVITY_BASIC_ATTACK_SKILL_ID: u32 = 18030;
+        const RECENT_DESTROYER_SKILL_START_WINDOW_MS: i64 = 4_000;
+
         let previous_gauge2 = self.runtime_state.identity_gauge2;
         self.runtime_state.identity_gauge1_prev = self.runtime_state.identity_gauge1;
         self.runtime_state.identity_gauge2_prev = self.runtime_state.identity_gauge2;
@@ -1514,7 +1520,7 @@ impl PlayerStats {
         let identity_category = self.resolve_skill_identity_category(skill_id, runtime_data);
         let identity_category_real =
             self.resolve_skill_identity_category(skill_real_id, runtime_data);
-        let has_identity_runtime_state = self.has_reliable_identity_runtime_state();
+        let has_identity_gauge_runtime_state = self.has_reliable_identity_gauge_runtime_state();
         for condition in conditions {
             let satisfied = match condition.condition_type.as_str() {
                 "current_skill" => {
@@ -1532,12 +1538,9 @@ impl PlayerStats {
                         category == target || category.eq_ignore_ascii_case(&target)
                     })
                 }
-                "identity_stance" => {
-                    !has_identity_runtime_state
-                        || self.runtime_state.identity_stance == condition.arg as u8
-                }
+                "identity_stance" => self.runtime_state.identity_stance == condition.arg as u8,
                 "identity_element_value_less" => {
-                    if !has_identity_runtime_state {
+                    if !has_identity_gauge_runtime_state {
                         true
                     } else {
                         let max_identity_percent = condition.arg as f64 / 1000.0;
@@ -1555,7 +1558,7 @@ impl PlayerStats {
                     }
                 }
                 "identity_element_value" => {
-                    if !has_identity_runtime_state {
+                    if !has_identity_gauge_runtime_state {
                         true
                     } else {
                         self.get_identity_element_value(skill_id, skill_real_id, runtime_data)
@@ -2053,10 +2056,12 @@ impl PlayerStats {
                 }
                 "identity_lancemaster_climax" => {}
                 "identity_destroyer_angry_hammer" => {
-                    if matches_skill_or_real_group(DESTROYER_COMBAT_SKILL_GROUP_ID)
-                        && active.values.len() > 1
+                    if matches_identity_category(&[
+                        DESTROYER_RELEASE_IDENTITY_CATEGORY_ID,
+                        DESTROYER_RELEASE_IDENTITY_CATEGORY,
+                    ]) && active.values.len() > 1
                     {
-                        let consumed_cores = if self.has_reliable_identity_runtime_state() {
+                        let consumed_cores = if self.has_reliable_identity_gauge_runtime_state() {
                             let Some(consumed_cores) =
                                 self.get_recent_destroyer_consumed_cores(eval_tick_ms)
                             else {
@@ -2082,11 +2087,7 @@ impl PlayerStats {
                 }
                 "identity_destroyer_gravity_up" => {
                     let is_destroyer_basic_attack =
-                        matches_skill_or_real_id(DESTROYER_VORTEX_GRAVITY_SKILL_ID)
-                            || matches_skill_or_real_id(
-                                DESTROYER_HYPERGRAVITY_BASIC_ATTACK_SKILL_ID,
-                            )
-                            || matches_skill_or_real_group(DESTROYER_COMBAT_SKILL_GROUP_ID);
+                        matches_skill_or_real_group(DESTROYER_HYPERGRAVITY_VORTEX_SKILL_GROUP_ID);
                     if is_destroyer_basic_attack && active.values.len() > 1 {
                         self.critical_hit_rate.add(
                             active.values[1] as f64 / 10000.0,
@@ -2097,12 +2098,9 @@ impl PlayerStats {
                     }
                 }
                 "identity_destroyer_transform" => {
-                    let should_apply = if self.has_reliable_identity_runtime_state() {
-                        self.try_is_destroyer_transform_mode() == Some(true)
-                    } else {
-                        true
-                    };
-                    if should_apply && !active.values.is_empty() {
+                    if self.try_is_destroyer_transform_mode() == Some(true)
+                        && !active.values.is_empty()
+                    {
                         critical_hit_to_damage_rates.push((
                             active.values[0] as f64 / 10000.0,
                             active.feature_type.clone(),
@@ -2261,7 +2259,7 @@ impl PlayerStats {
         }
     }
 
-    fn has_reliable_identity_runtime_state(&self) -> bool {
+    fn has_reliable_identity_gauge_runtime_state(&self) -> bool {
         self.runtime_state.identity_runtime_reliable
     }
 
