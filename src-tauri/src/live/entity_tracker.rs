@@ -39,10 +39,12 @@ pub struct EntityTracker {
     inspect_requested_names: HashSet<String>,
     forced_refresh_names: HashSet<String>,
     bootstrap_refresh_sent_names: HashSet<String>,
+    bootstrap_refreshed_names: HashSet<String>,
     bootstrap_inspect_sent_at_ms_by_name: HashMap<String, i64>,
     bootstrap_failed_inspect_names: HashSet<String>,
     bootstrap_visible_fallback_requested: bool,
     bootstrap_visible_fallback_names: Vec<String>,
+    bootstrap_visible_fallback_required_names: Vec<String>,
     next_bootstrap_inspect_at_ms: i64,
     last_reconnect_rebind: Option<(u64, u64)>,
     removed_player_entities_by_character_id: HashMap<u64, Entity>,
@@ -192,10 +194,12 @@ impl EntityTracker {
             inspect_requested_names: HashSet::new(),
             forced_refresh_names: HashSet::new(),
             bootstrap_refresh_sent_names: HashSet::new(),
+            bootstrap_refreshed_names: HashSet::new(),
             bootstrap_inspect_sent_at_ms_by_name: HashMap::new(),
             bootstrap_failed_inspect_names: HashSet::new(),
             bootstrap_visible_fallback_requested: false,
             bootstrap_visible_fallback_names: Vec::new(),
+            bootstrap_visible_fallback_required_names: Vec::new(),
             next_bootstrap_inspect_at_ms: 0,
             last_reconnect_rebind: None,
             removed_player_entities_by_character_id: HashMap::new(),
@@ -257,10 +261,12 @@ impl EntityTracker {
         self.inspect_requested_names.clear();
         self.forced_refresh_names.clear();
         self.bootstrap_refresh_sent_names.clear();
+        self.bootstrap_refreshed_names.clear();
         self.bootstrap_inspect_sent_at_ms_by_name.clear();
         self.bootstrap_failed_inspect_names.clear();
         self.bootstrap_visible_fallback_requested = false;
         self.bootstrap_visible_fallback_names.clear();
+        self.bootstrap_visible_fallback_required_names.clear();
         self.next_bootstrap_inspect_at_ms = 0;
         self.last_reconnect_rebind = None;
         self.removed_player_entities_by_character_id.clear();
@@ -813,9 +819,10 @@ impl EntityTracker {
                 && !already_ready
                 && !local_entity.inspect_requested
                 && !self.inspect_requested_names.contains(&local_entity.name)
-                && !self
-                    .pending_inspect_results_by_name
-                    .contains_key(&local_entity.name)
+                && (bootstrap_refresh_needed
+                    || !self
+                        .pending_inspect_results_by_name
+                        .contains_key(&local_entity.name))
             {
                 local_entity.inspect_requested = true;
                 self.inspect_requested_names
@@ -845,7 +852,8 @@ impl EntityTracker {
             let force_refresh = forced_refresh_names.contains(&name);
             if !is_resolved_player_name(&name)
                 || bootstrap_failed_inspect_names.contains(&name)
-                || self.pending_inspect_results_by_name.contains_key(&name)
+                || (!bootstrap_refresh_needed
+                    && self.pending_inspect_results_by_name.contains_key(&name))
                 || self.inspect_requested_names.contains(&name)
                 || !queued_names.insert(name.clone())
             {
@@ -893,6 +901,7 @@ impl EntityTracker {
         if !self.bootstrap_visible_fallback_requested {
             self.bootstrap_visible_fallback_requested = true;
             self.bootstrap_visible_fallback_names.clear();
+            self.bootstrap_visible_fallback_required_names.clear();
             if self.party_tracker.borrow().get_registered_party_count() < 2 {
                 return Vec::new();
             }
@@ -940,6 +949,8 @@ impl EntityTracker {
                 self.bootstrap_visible_fallback_names
                     .push(entity.name.clone());
             }
+            self.bootstrap_visible_fallback_required_names =
+                self.bootstrap_visible_fallback_names.clone();
         }
 
         let mut names = Vec::new();
@@ -947,7 +958,6 @@ impl EntityTracker {
         for name in pending_names {
             if self.bootstrap_refresh_sent_names.contains(&name)
                 || self.bootstrap_failed_inspect_names.contains(&name)
-                || self.pending_inspect_results_by_name.contains_key(&name)
                 || self.inspect_requested_names.contains(&name)
             {
                 continue;
@@ -966,6 +976,10 @@ impl EntityTracker {
         }
 
         names
+    }
+
+    pub fn get_bootstrap_visible_fallback_required_names(&self) -> Vec<String> {
+        self.bootstrap_visible_fallback_required_names.clone()
     }
 
     pub fn clear_inspect_request(&mut self, name: &str) {
@@ -1009,10 +1023,12 @@ impl EntityTracker {
         self.inspect_requested_names.clear();
         self.forced_refresh_names.clear();
         self.bootstrap_refresh_sent_names.clear();
+        self.bootstrap_refreshed_names.clear();
         self.bootstrap_inspect_sent_at_ms_by_name.clear();
         self.bootstrap_failed_inspect_names.clear();
         self.bootstrap_visible_fallback_requested = false;
         self.bootstrap_visible_fallback_names.clear();
+        self.bootstrap_visible_fallback_required_names.clear();
         self.next_bootstrap_inspect_at_ms = 0;
         for entity in self.removed_player_entities_by_character_id.values_mut() {
             clear_player_inspect_state(entity);
@@ -1046,6 +1062,7 @@ impl EntityTracker {
     ) -> Option<AppliedInspectResult> {
         let name = result.name.clone();
         self.inspect_requested_names.remove(&name);
+        let was_bootstrap_refresh = self.bootstrap_refresh_sent_names.contains(&name);
         self.bootstrap_inspect_sent_at_ms_by_name.remove(&name);
         self.bootstrap_failed_inspect_names.remove(&name);
         let snapshot = inspect_snapshot_from_result(&result);
@@ -1070,11 +1087,17 @@ impl EntityTracker {
 
         if !has_live_match && removed_character_ids.is_empty() && removed_name_class_keys.is_empty()
         {
+            if was_bootstrap_refresh {
+                self.bootstrap_refreshed_names.insert(name.clone());
+            }
             self.pending_inspect_results_by_name.insert(name, result);
             return None;
         }
 
         let result = Arc::new(result);
+        if was_bootstrap_refresh {
+            self.bootstrap_refreshed_names.insert(name.clone());
+        }
 
         for entity in self
             .entities
@@ -1250,6 +1273,38 @@ impl EntityTracker {
                 })
     }
 
+    fn has_fresh_bootstrap_inspect_for_name(&self, name: &str) -> bool {
+        self.bootstrap_refreshed_names.contains(name) && self.has_inspect_snapshot_for_name(name)
+    }
+
+    fn has_fresh_bootstrap_inspect_for_character(&self, character_id: u64) -> bool {
+        if character_id == 0 {
+            return false;
+        }
+
+        if self.entities.values().any(|entity| {
+            entity.entity_type == Player
+                && entity.character_id == character_id
+                && self.has_fresh_bootstrap_inspect_for_name(&entity.name)
+        }) {
+            return true;
+        }
+
+        if self
+            .removed_player_entities_by_character_id
+            .get(&character_id)
+            .is_some_and(|entity| {
+                entity.entity_type == Player
+                    && self.has_fresh_bootstrap_inspect_for_name(&entity.name)
+            })
+        {
+            return true;
+        }
+
+        self.get_resolved_player_name_for_character(character_id)
+            .is_some_and(|name| self.has_fresh_bootstrap_inspect_for_name(&name))
+    }
+
     pub fn can_send_bootstrap_inspect(&self, now: i64) -> bool {
         now >= self.next_bootstrap_inspect_at_ms
     }
@@ -1269,7 +1324,7 @@ impl EntityTracker {
             .iter()
             .filter_map(|(name, sent_at)| {
                 (now.saturating_sub(*sent_at) >= BOOTSTRAP_INSPECT_TIMEOUT_MS
-                    && !self.has_inspect_snapshot_for_name(name))
+                    && !self.has_fresh_bootstrap_inspect_for_name(name))
                 .then_some(name.clone())
             })
             .collect::<Vec<_>>();
@@ -1296,10 +1351,12 @@ impl EntityTracker {
         }
         self.next_bootstrap_inspect_at_ms = 0;
         self.bootstrap_refresh_sent_names.clear();
+        self.bootstrap_refreshed_names.clear();
         self.bootstrap_inspect_sent_at_ms_by_name.clear();
         self.bootstrap_failed_inspect_names.clear();
         self.bootstrap_visible_fallback_requested = false;
         self.bootstrap_visible_fallback_names.clear();
+        self.bootstrap_visible_fallback_required_names.clear();
     }
 
     pub fn take_last_reconnect_rebind(&mut self) -> Option<(u64, u64)> {
@@ -1350,10 +1407,10 @@ impl EntityTracker {
         required_character_ids
             .iter()
             .copied()
-            .all(|character_id| self.has_inspect_snapshot_for_character(character_id))
+            .all(|character_id| self.has_fresh_bootstrap_inspect_for_character(character_id))
             && required_names
                 .iter()
-                .all(|name| self.has_inspect_snapshot_for_name(name))
+                .all(|name| self.has_fresh_bootstrap_inspect_for_name(name))
     }
 
     pub fn is_startup_barrier_gate_ready(
@@ -1366,10 +1423,10 @@ impl EntityTracker {
         }
 
         required_character_ids.iter().copied().all(|character_id| {
-            self.has_inspect_snapshot_for_character(character_id)
+            self.has_fresh_bootstrap_inspect_for_character(character_id)
                 || self.has_failed_bootstrap_inspect_for_character(character_id)
         }) && required_names.iter().all(|name| {
-            self.has_inspect_snapshot_for_name(name)
+            self.has_fresh_bootstrap_inspect_for_name(name)
                 || self.bootstrap_failed_inspect_names.contains(name)
         })
     }
@@ -1380,10 +1437,10 @@ impl EntityTracker {
         required_names: &[String],
     ) -> bool {
         required_character_ids.iter().copied().any(|character_id| {
-            !self.has_inspect_snapshot_for_character(character_id)
+            !self.has_fresh_bootstrap_inspect_for_character(character_id)
                 && self.has_failed_bootstrap_inspect_for_character(character_id)
         }) || required_names.iter().any(|name| {
-            !self.has_inspect_snapshot_for_name(name)
+            !self.has_fresh_bootstrap_inspect_for_name(name)
                 && self.bootstrap_failed_inspect_names.contains(name)
         })
     }
@@ -1870,35 +1927,6 @@ impl EntityTracker {
             return;
         };
         let _ = self.apply_inspect_result(result);
-    }
-
-    fn has_inspect_snapshot_for_character(&self, character_id: u64) -> bool {
-        if character_id == 0 {
-            return false;
-        }
-
-        if self.entities.values().any(|entity| {
-            entity.entity_type == Player
-                && entity.character_id == character_id
-                && entity.inspect_snapshot.is_some()
-                && !entity.inspect_stale
-        }) {
-            return true;
-        }
-
-        if self
-            .removed_player_entities_by_character_id
-            .get(&character_id)
-            .is_some_and(|entity| entity.inspect_snapshot.is_some() && !entity.inspect_stale)
-        {
-            return true;
-        }
-
-        let Some(name) = self.get_resolved_player_name_for_character(character_id) else {
-            return false;
-        };
-
-        self.has_inspect_snapshot_for_name(&name)
     }
 
     fn has_failed_bootstrap_inspect_for_character(&self, character_id: u64) -> bool {

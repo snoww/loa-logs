@@ -1301,6 +1301,7 @@ impl EncounterState {
             required_character_ids = entity_tracker.get_required_rdps_player_character_ids();
             required_names = entity_tracker.get_required_rdps_player_names();
         }
+        required_names.extend(entity_tracker.get_bootstrap_visible_fallback_required_names());
         for entity in entities {
             if !entity_tracker.is_gate_eligible_player_entity(entity) {
                 continue;
