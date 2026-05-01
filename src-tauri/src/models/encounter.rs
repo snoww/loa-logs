@@ -268,6 +268,13 @@ pub struct ContributionSplit {
     pub damage_split_by_name: HashMap<String, i64>,
     pub damage_done_by_entity_skill_group: HashMap<String, HashMap<String, i64>>,
     pub damage_increase_by_entity_skill_group: HashMap<String, HashMap<String, i64>>,
+    pub damage_done_without_ultimate_awakening: i64,
+    pub hyper_awakening_damage: i64,
+    pub damage_done_without_crits: i64,
+    pub damage_done_with_all_crits: i64,
+    pub damage_done_with_average_crits: i64,
+    pub critical_hit_rate_adjusted_damage_raw: i64,
+    pub critical_hit_rate_adjusted_damage_raw_capped: i64,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]

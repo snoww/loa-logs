@@ -1356,9 +1356,7 @@ pub fn start(args: StartArgs) -> Result<()> {
                 }
                 clone.entities.retain(|_, e| match e.entity_type {
                     EntityType::DarkGrenade => e.damage_stats.rdps_damage_given > 0,
-                    EntityType::Player => {
-                        e.class_id > 0 && e.damage_stats.damage_dealt > 0
-                    }
+                    EntityType::Player => e.class_id > 0 && e.damage_stats.damage_dealt > 0,
                     EntityType::Esther | EntityType::Boss => e.damage_stats.damage_dealt > 0,
                     _ => false,
                 });

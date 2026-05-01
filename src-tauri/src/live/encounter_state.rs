@@ -1002,11 +1002,21 @@ impl EncounterState {
                     damage_split_by_name,
                     damage_done_by_entity_skill_group,
                     damage_increase_by_entity_skill_group,
+                    damage_done_without_crits,
+                    damage_done_with_all_crits,
+                    damage_done_with_average_crits,
+                    critical_hit_rate_adjusted_damage_raw,
+                    critical_hit_rate_adjusted_damage_raw_capped,
                 ) = if let Some(acc) = accumulators.remove(&entity.name) {
                     (
                         resolve_ids(acc.damage_split_by_entity_id_),
                         resolve_ids_nested(acc.damage_done_by_entity_skill_group_),
                         resolve_ids_nested(acc.damage_increase_by_entity_skill_group_),
+                        acc.damage_done_without_crits_,
+                        acc.damage_done_with_all_crits_,
+                        acc.damage_done_with_average_crits_,
+                        acc.critical_hit_rate_adjusted_damage_raw_,
+                        acc.critical_hit_rate_adjusted_damage_raw_capped_,
                     )
                 } else {
                     let self_damage = if self.rdps_valid {
@@ -1018,8 +1028,18 @@ impl EncounterState {
                         [(entity.name.clone(), self_damage)].into(),
                         HashMap::new(),
                         HashMap::new(),
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
                     )
                 };
+                let hyper_awakening_damage = entity.damage_stats.hyper_awakening_damage;
+                let damage_done_without_ultimate_awakening = entity
+                    .damage_stats
+                    .damage_dealt
+                    .saturating_sub(hyper_awakening_damage);
                 ContributionSplit {
                     name: entity.name.clone(),
                     party_number: if entity.entity_type == EntityType::DarkGrenade {
@@ -1033,6 +1053,13 @@ impl EncounterState {
                     damage_split_by_name,
                     damage_done_by_entity_skill_group,
                     damage_increase_by_entity_skill_group,
+                    damage_done_without_ultimate_awakening,
+                    hyper_awakening_damage,
+                    damage_done_without_crits,
+                    damage_done_with_all_crits,
+                    damage_done_with_average_crits,
+                    critical_hit_rate_adjusted_damage_raw,
+                    critical_hit_rate_adjusted_damage_raw_capped,
                 }
             })
             .collect()

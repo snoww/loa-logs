@@ -102,6 +102,13 @@ export interface ContributionSplit {
   damageSplitByName: Record<string, number>;
   damageDoneByEntitySkillGroup: Record<string, Record<string, number>>;
   damageIncreaseByEntitySkillGroup: Record<string, Record<string, number>>;
+  damageDoneWithoutUltimateAwakening: number;
+  hyperAwakeningDamage: number;
+  damageDoneWithoutCrits: number;
+  damageDoneWithAllCrits: number;
+  damageDoneWithAverageCrits: number;
+  criticalHitRateAdjustedDamageRaw: number;
+  criticalHitRateAdjustedDamageRawCapped: number;
 }
 
 export interface PartyInfo {
