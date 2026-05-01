@@ -1,6 +1,6 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.43.0-Nineveh Beta 13 - April 30th, 2026
+    v1.43.0-Nineveh Beta 14 - May 1st, 2026
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
@@ -21,10 +21,7 @@ The LOA Logs beta uses a completely overhauled system for reading Lost Ark's net
 
 #### read about rdps in depth [here](https://github.com/snoww/loa-logs/wiki/rDPS-and-nDPS-Explained)
 
-**calculating rdps is quite cpu intensive, if you have performance issues such as fps drops in game, please report your pc specs and negative experiences in ramen shop**
-
 #### BUG FIXES & IMPROVEMENTS
 
-- fixed rdps not reinspecting players after wipes
-- fixed crit dmg being undervalued in rdps
-- added dark grenade section in logs for dark grenade rdps
+- fixed some destroyer identity rdps
+- added more rdps contribution data points
