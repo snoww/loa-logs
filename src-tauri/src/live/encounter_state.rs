@@ -21,6 +21,7 @@ use serde::Serialize;
 use serde_json::json;
 use std::cmp::max;
 use std::default::Default;
+use std::hash::Hash;
 use tauri::{AppHandle, Emitter, Manager};
 use tokio::task;
 
@@ -430,11 +431,16 @@ impl EncounterState {
 
     // add or update player to encounter
     pub fn on_new_pc(&mut self, entity: Entity, hp: i64, max_hp: i64) {
+        self.merge_unresolved_player_entity(&entity);
         self.encounter
             .entities
             .entry(entity.name.clone())
             .and_modify(|player| {
                 player.id = entity.id;
+                player.name.clone_from(&entity.name);
+                player.entity_type = entity.entity_type;
+                player.class_id = entity.class_id;
+                player.class = get_class_from_id(&entity.class_id);
                 player.gear_score = entity.gear_level;
                 player.current_hp = hp;
                 if max_hp > 0 {
@@ -443,6 +449,9 @@ impl EncounterState {
                 if entity.character_id > 0 {
                     player.character_id = entity.character_id;
                 }
+                if hp > 0 {
+                    Self::mark_entity_alive(player, Utc::now().timestamp_millis());
+                }
             })
             .or_insert_with(|| {
                 let mut player = encounter_entity_from_entity(&entity);
@@ -450,6 +459,396 @@ impl EncounterState {
                 player.max_hp = max_hp;
                 player
             });
+    }
+
+    fn mark_entity_alive(entity: &mut EncounterEntity, timestamp: i64) {
+        if !entity.is_dead {
+            return;
+        }
+
+        entity.is_dead = false;
+        if let Some(death) = entity
+            .damage_stats
+            .death_info
+            .as_mut()
+            .and_then(|info| info.last_mut())
+            .filter(|death| death.dead_for.is_none())
+        {
+            death.dead_for = Some((timestamp - death.death_time).max(0));
+        }
+    }
+
+    fn merge_unresolved_player_entity(&mut self, entity: &Entity) {
+        if entity.id == 0 || Self::is_unresolved_entity_name(&entity.name, entity.id) {
+            return;
+        }
+
+        let new_name = entity.name.clone();
+        let old_names = self
+            .encounter
+            .entities
+            .iter()
+            .filter(|(name, existing)| {
+                existing.id == entity.id
+                    && name.as_str() != new_name
+                    && Self::is_unresolved_entity_name(name, entity.id)
+            })
+            .map(|(name, _)| name.clone())
+            .collect::<Vec<_>>();
+
+        for old_name in old_names {
+            self.merge_player_entity_name(&old_name, &new_name);
+        }
+    }
+
+    fn merge_player_entity_name(&mut self, old_name: &str, new_name: &str) {
+        if old_name == new_name {
+            return;
+        }
+
+        if let Some(mut old_entity) = self.encounter.entities.remove(old_name) {
+            old_entity.name = new_name.to_string();
+            match self.encounter.entities.entry(new_name.to_string()) {
+                hashbrown::hash_map::Entry::Occupied(mut entry) => {
+                    Self::merge_encounter_entity(entry.get_mut(), old_entity);
+                }
+                hashbrown::hash_map::Entry::Vacant(entry) => {
+                    entry.insert(old_entity);
+                }
+            }
+        }
+
+        Self::merge_name_keyed_vec_map(&mut self.damage_log, old_name, new_name);
+        if let Some(log) = self.damage_log.get_mut(new_name) {
+            log.sort_unstable_by_key(|(timestamp, _)| *timestamp);
+        }
+
+        Self::merge_name_keyed_nested_vec_map(&mut self.cast_log, old_name, new_name);
+        if let Some(skill_logs) = self.cast_log.get_mut(new_name) {
+            for log in skill_logs.values_mut() {
+                log.sort_unstable();
+            }
+        }
+
+        if let Some(old_accumulator) = self.player_contributions.remove(old_name) {
+            let accumulator = self
+                .player_contributions
+                .entry(new_name.to_string())
+                .or_default();
+            Self::merge_damage_data_accumulator(accumulator, old_accumulator);
+        }
+
+        for party in &mut self.party_info {
+            for member in party {
+                if member == old_name {
+                    member.clear();
+                    member.push_str(new_name);
+                }
+            }
+        }
+
+        if self.encounter.local_player == old_name {
+            self.encounter.local_player = new_name.to_string();
+        }
+    }
+
+    fn merge_encounter_entity(target: &mut EncounterEntity, source: EncounterEntity) {
+        if target.id == 0 {
+            target.id = source.id;
+        }
+        if target.character_id == 0 {
+            target.character_id = source.character_id;
+        }
+        if target.npc_id == 0 {
+            target.npc_id = source.npc_id;
+        }
+        if target.hp_bars.is_none() {
+            target.hp_bars = source.hp_bars;
+        }
+        if target.entity_type == EntityType::Unknown {
+            target.entity_type = source.entity_type;
+        }
+        if target.class_id == 0 {
+            target.class_id = source.class_id;
+            target.class = source.class;
+        }
+        if target.gear_score == 0.0 {
+            target.gear_score = source.gear_score;
+        }
+        if target.current_hp == 0 {
+            target.current_hp = source.current_hp;
+        }
+        if target.max_hp == 0 {
+            target.max_hp = source.max_hp;
+        }
+        target.current_shield = target.current_shield.max(source.current_shield);
+        target.is_dead |= source.is_dead;
+
+        Self::merge_skills(&mut target.skills, source.skills);
+        Self::merge_damage_stats(&mut target.damage_stats, source.damage_stats);
+        Self::merge_skill_stats(&mut target.skill_stats, source.skill_stats);
+
+        if target.engraving_data.is_none() {
+            target.engraving_data = source.engraving_data;
+        }
+        if target.ark_passive_active.is_none() {
+            target.ark_passive_active = source.ark_passive_active;
+        }
+        if target.ark_passive_data.is_none() {
+            target.ark_passive_data = source.ark_passive_data;
+        }
+        if target.spec.is_none() {
+            target.spec = source.spec;
+        }
+        if target.loadout_hash.is_none() {
+            target.loadout_hash = source.loadout_hash;
+        }
+        if target.combat_power.is_none() {
+            target.combat_power = source.combat_power;
+        }
+    }
+
+    fn merge_damage_stats(target: &mut DamageStats, source: DamageStats) {
+        target.damage_dealt += source.damage_dealt;
+        target.hyper_awakening_damage += source.hyper_awakening_damage;
+        target.damage_taken += source.damage_taken;
+        Self::merge_numeric_map(&mut target.buffed_by, source.buffed_by);
+        Self::merge_numeric_map(&mut target.debuffed_by, source.debuffed_by);
+        target.buffed_by_support += source.buffed_by_support;
+        target.buffed_by_identity += source.buffed_by_identity;
+        target.debuffed_by_support += source.debuffed_by_support;
+        target.buffed_by_hat += source.buffed_by_hat;
+        target.crit_damage += source.crit_damage;
+        target.back_attack_damage += source.back_attack_damage;
+        target.front_attack_damage += source.front_attack_damage;
+        target.shields_given += source.shields_given;
+        target.shields_received += source.shields_received;
+        target.damage_absorbed += source.damage_absorbed;
+        target.damage_absorbed_on_others += source.damage_absorbed_on_others;
+        Self::merge_numeric_map(&mut target.shields_given_by, source.shields_given_by);
+        Self::merge_numeric_map(&mut target.shields_received_by, source.shields_received_by);
+        Self::merge_numeric_map(&mut target.damage_absorbed_by, source.damage_absorbed_by);
+        Self::merge_numeric_map(
+            &mut target.damage_absorbed_on_others_by,
+            source.damage_absorbed_on_others_by,
+        );
+        target.deaths += source.deaths;
+        target.death_time = target.death_time.max(source.death_time);
+        match (&mut target.death_info, source.death_info) {
+            (Some(target_deaths), Some(mut source_deaths)) => {
+                target_deaths.append(&mut source_deaths);
+                target_deaths.sort_unstable_by_key(|death| death.death_time);
+            }
+            (None, source_deaths @ Some(_)) => target.death_info = source_deaths,
+            _ => {}
+        }
+        if target.boss_hp_at_death.is_none() {
+            target.boss_hp_at_death = source.boss_hp_at_death;
+        }
+        target.dps += source.dps;
+        target.dps_average.extend(source.dps_average);
+        target
+            .dps_rolling_10s_avg
+            .extend(source.dps_rolling_10s_avg);
+        target.rdps_damage_received += source.rdps_damage_received;
+        target.rdps_damage_received_support += source.rdps_damage_received_support;
+        target.rdps_damage_given += source.rdps_damage_given;
+        target.incapacitations.extend(source.incapacitations);
+        target
+            .incapacitations
+            .sort_unstable_by_key(|event| event.timestamp);
+        target.stagger += source.stagger;
+        target.buffed_damage += source.buffed_damage;
+        target.unbuffed_damage += source.unbuffed_damage;
+        target.unbuffed_dps += source.unbuffed_dps;
+        target.rdps += source.rdps;
+        target.ndps += source.ndps;
+    }
+
+    fn merge_skill_stats(target: &mut SkillStats, source: SkillStats) {
+        target.casts += source.casts;
+        target.hits += source.hits;
+        target.crits += source.crits;
+        target.back_attacks += source.back_attacks;
+        target.front_attacks += source.front_attacks;
+        target.counters += source.counters;
+        if target.identity_stats.is_none() {
+            target.identity_stats = source.identity_stats;
+        }
+    }
+
+    fn merge_skills(target: &mut HashMap<u32, Skill>, source: HashMap<u32, Skill>) {
+        for (skill_id, source_skill) in source {
+            match target.entry(skill_id) {
+                hashbrown::hash_map::Entry::Occupied(mut entry) => {
+                    Self::merge_skill(entry.get_mut(), source_skill);
+                }
+                hashbrown::hash_map::Entry::Vacant(entry) => {
+                    entry.insert(source_skill);
+                }
+            }
+        }
+    }
+
+    fn merge_skill(target: &mut Skill, source: Skill) {
+        if target.name.is_empty() {
+            target.name = source.name;
+        }
+        if target.icon.is_empty() {
+            target.icon = source.icon;
+        }
+        target.total_damage += source.total_damage;
+        target.max_damage = target.max_damage.max(source.max_damage);
+        target.max_damage_cast = target.max_damage_cast.max(source.max_damage_cast);
+        Self::merge_numeric_map(&mut target.buffed_by, source.buffed_by);
+        Self::merge_numeric_map(&mut target.debuffed_by, source.debuffed_by);
+        target.buffed_by_support += source.buffed_by_support;
+        target.buffed_by_identity += source.buffed_by_identity;
+        target.buffed_by_hat += source.buffed_by_hat;
+        target.debuffed_by_support += source.debuffed_by_support;
+        target.casts += source.casts;
+        target.hits += source.hits;
+        target.crits += source.crits;
+        if target.adjusted_crit.is_none() {
+            target.adjusted_crit = source.adjusted_crit;
+        }
+        target.crit_damage += source.crit_damage;
+        target.back_attacks += source.back_attacks;
+        target.front_attacks += source.front_attacks;
+        target.back_attack_damage += source.back_attack_damage;
+        target.front_attack_damage += source.front_attack_damage;
+        target.dps += source.dps;
+        target.cast_log.extend(source.cast_log);
+        target.cast_log.sort_unstable();
+        if target.tripod_index.is_none() {
+            target.tripod_index = source.tripod_index;
+        }
+        if target.tripod_level.is_none() {
+            target.tripod_level = source.tripod_level;
+        }
+        if target.gem_cooldown.is_none() {
+            target.gem_cooldown = source.gem_cooldown;
+        }
+        if target.gem_tier.is_none() {
+            target.gem_tier = source.gem_tier;
+        }
+        if target.gem_damage.is_none() {
+            target.gem_damage = source.gem_damage;
+        }
+        if target.gem_tier_dmg.is_none() {
+            target.gem_tier_dmg = source.gem_tier_dmg;
+        }
+        target.skill_cast_log.extend(source.skill_cast_log);
+        target
+            .skill_cast_log
+            .sort_unstable_by_key(|cast| cast.timestamp);
+        target.stagger += source.stagger;
+        target.is_hyper_awakening |= source.is_hyper_awakening;
+        if target.special.is_none() {
+            target.special = source.special;
+        }
+        target.last_timestamp = target.last_timestamp.max(source.last_timestamp);
+        if target.time_available.is_none() {
+            target.time_available = source.time_available;
+        }
+        Self::merge_nested_numeric_map(&mut target.rdps_received, source.rdps_received);
+        Self::merge_numeric_map(&mut target.rdps_contributed, source.rdps_contributed);
+        target.rdps_damage_received += source.rdps_damage_received;
+        target.rdps_damage_received_support += source.rdps_damage_received_support;
+    }
+
+    fn merge_damage_data_accumulator(
+        target: &mut DamageDataAccumulator,
+        source: DamageDataAccumulator,
+    ) {
+        Self::merge_numeric_map(
+            &mut target.damage_split_by_entity_id_,
+            source.damage_split_by_entity_id_,
+        );
+        Self::merge_nested_numeric_map(
+            &mut target.damage_done_by_entity_skill_group_,
+            source.damage_done_by_entity_skill_group_,
+        );
+        Self::merge_nested_numeric_map(
+            &mut target.damage_increase_by_entity_skill_group_,
+            source.damage_increase_by_entity_skill_group_,
+        );
+        target.damage_done_without_crits_ += source.damage_done_without_crits_;
+        target.damage_done_with_all_crits_ += source.damage_done_with_all_crits_;
+        target.damage_done_with_average_crits_ += source.damage_done_with_average_crits_;
+        target.critical_hit_rate_adjusted_damage_raw_ +=
+            source.critical_hit_rate_adjusted_damage_raw_;
+        target.critical_hit_rate_adjusted_damage_raw_capped_ +=
+            source.critical_hit_rate_adjusted_damage_raw_capped_;
+        target.casts_ += source.casts_;
+        target.skill_casts_ += source.skill_casts_;
+        for (skill_id, source_skill) in source.skill_to_damage_map_ {
+            let target_skill = target.skill_to_damage_map_.entry(skill_id).or_default();
+            target_skill.damage_ += source_skill.damage_;
+            target_skill.skill_casts_ += source_skill.skill_casts_;
+            target_skill.hits_ += source_skill.hits_;
+        }
+    }
+
+    fn merge_name_keyed_vec_map<T>(
+        map: &mut HashMap<String, Vec<T>>,
+        old_name: &str,
+        new_name: &str,
+    ) {
+        if let Some(mut source) = map.remove(old_name) {
+            map.entry(new_name.to_string())
+                .or_default()
+                .append(&mut source);
+        }
+    }
+
+    fn merge_name_keyed_nested_vec_map<K, T>(
+        map: &mut HashMap<String, HashMap<K, Vec<T>>>,
+        old_name: &str,
+        new_name: &str,
+    ) where
+        K: Eq + Hash,
+    {
+        if let Some(source) = map.remove(old_name) {
+            let target = map.entry(new_name.to_string()).or_default();
+            for (key, mut values) in source {
+                target.entry(key).or_default().append(&mut values);
+            }
+        }
+    }
+
+    fn merge_numeric_map<K, V>(target: &mut HashMap<K, V>, source: HashMap<K, V>)
+    where
+        K: Eq + Hash,
+        V: Default + std::ops::AddAssign,
+    {
+        for (key, value) in source {
+            *target.entry(key).or_default() += value;
+        }
+    }
+
+    fn merge_nested_numeric_map<K1, K2, V>(
+        target: &mut HashMap<K1, HashMap<K2, V>>,
+        source: HashMap<K1, HashMap<K2, V>>,
+    ) where
+        K1: Eq + Hash,
+        K2: Eq + Hash,
+        V: Default + std::ops::AddAssign,
+    {
+        for (key, inner) in source {
+            Self::merge_numeric_map(target.entry(key).or_default(), inner);
+        }
+    }
+
+    fn is_unresolved_entity_name(name: &str, entity_id: u64) -> bool {
+        if name.is_empty() || entity_id == 0 {
+            return false;
+        }
+
+        match u64::from_str_radix(name, 16) {
+            Ok(parsed_id) => parsed_id == entity_id,
+            Err(_) => false,
+        }
     }
 
     // add or update npc to encounter
@@ -663,18 +1062,7 @@ impl EncounterState {
             entity.class = get_class_from_id(&source_entity.class_id);
         }
 
-        if entity.is_dead {
-            entity.is_dead = false;
-            if let Some(death) = entity
-                .damage_stats
-                .death_info
-                .as_mut()
-                .and_then(|info| info.last_mut())
-                .filter(|death| death.dead_for.is_none())
-            {
-                death.dead_for = Some(timestamp - death.death_time);
-            }
-        }
+        Self::mark_entity_alive(entity, timestamp);
         entity.skill_stats.casts += 1;
 
         // if skills have different ids but the same name, we group them together
@@ -1093,21 +1481,18 @@ impl EncounterState {
             let critical_hit_rate_adjusted_damage_raw_capped_ = accumulator
                 .map(|value| value.critical_hit_rate_adjusted_damage_raw_capped_)
                 .unwrap_or_default();
-            let mut skill_to_damage_map_ = accumulator
-                .map(|value| value.skill_to_damage_map_.clone())
-                .unwrap_or_default();
-            for skill in entity.skills.values() {
-                let skill_dump = skill_to_damage_map_.entry(skill.id).or_default();
-                if skill_dump.damage_ == 0 {
+            let skill_to_damage_map_ = if let Some(accumulator) = accumulator {
+                accumulator.skill_to_damage_map_.clone()
+            } else {
+                let mut skill_to_damage_map_ = HashMap::<u32, SkillStatsDump>::new();
+                for skill in entity.skills.values() {
+                    let skill_dump = skill_to_damage_map_.entry(skill.id).or_default();
                     skill_dump.damage_ = skill.total_damage;
-                }
-                if skill_dump.hits_ == 0 {
                     skill_dump.hits_ = skill.hits;
-                }
-                if skill_dump.skill_casts_ == 0 {
                     skill_dump.skill_casts_ = skill.casts;
                 }
-            }
+                skill_to_damage_map_
+            };
             let casts_ = accumulator.map(|value| value.casts_).unwrap_or_default();
             let skill_casts_ = accumulator
                 .map(|value| value.skill_casts_)

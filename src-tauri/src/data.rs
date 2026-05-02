@@ -20,6 +20,8 @@ pub static SUPPORT_IDENTITY_GROUP: OnceLockWrapper<HashSet<u32>> = OnceLockWrapp
 pub static RDPS_ADDITIONAL_IDENTITY_GROUP: OnceLockWrapper<HashSet<u32>> = OnceLockWrapper::new();
 pub static STAT_TYPE_MAP: OnceLockWrapper<HashMap<String, u32>> = OnceLockWrapper::new();
 pub static STAT_TYPE_NAME_MAP: OnceLockWrapper<HashMap<u32, String>> = OnceLockWrapper::new();
+pub static IDENTITY_CATEGORY_NAME_MAP: OnceLockWrapper<HashMap<u32, String>> =
+    OnceLockWrapper::new();
 pub static ESTHER_DATA: OnceLockWrapper<Vec<Esther>> = OnceLockWrapper::new();
 pub static NPC_DATA: OnceLockWrapper<HashMap<u32, Npc>> = OnceLockWrapper::new();
 pub static GEM_SKILL_MAP: OnceLockWrapper<HashMap<u32, Vec<u32>>> = OnceLockWrapper::new();
@@ -173,6 +175,69 @@ pub fn stat_type_name_from_id(stat_id: u32) -> Option<String> {
     STAT_TYPE_NAME_MAP.get(&stat_id).cloned()
 }
 
+fn build_identity_category_name_map(
+    enums: HashMap<String, HashMap<String, String>>,
+) -> HashMap<u32, String> {
+    let mut names = enums
+        .get("identitycategory")
+        .map(|identity_categories| {
+            identity_categories
+                .iter()
+                .filter_map(|(id, name)| {
+                    id.parse::<u32>()
+                        .ok()
+                        .map(|id| (id, name.to_ascii_lowercase()))
+                })
+                .collect::<HashMap<_, _>>()
+        })
+        .unwrap_or_default();
+
+    // Some bundled enum dumps can lag newer meter data, while Skill.json already references
+    // these names and skill features can emit their numeric ids.
+    for (id, name) in [
+        (64, "alchemist_i"),
+        (65, "alchemist_b"),
+        (66, "alchemist_f"),
+        (67, "holyknight_female_justice"),
+        (68, "holyknight_female_radiance"),
+        (69, "holyknight_female_guardian"),
+        (70, "holyknight_female_identity_z"),
+        (71, "holyknight_female_identity_x"),
+        (72, "dragon_knight_weapon"),
+        (73, "dragon_knight_dragon"),
+        (74, "dragon_knight_resonance"),
+        (75, "scouter_zero_sync"),
+    ] {
+        names.entry(id).or_insert_with(|| name.to_string());
+    }
+
+    names
+}
+
+fn identity_category_name_from_str(category: &str) -> Option<&'static str> {
+    category
+        .parse::<u32>()
+        .ok()
+        .and_then(|id| IDENTITY_CATEGORY_NAME_MAP.get(&id).map(String::as_str))
+}
+
+pub fn identity_category_matches(category: &str, expected: &str) -> bool {
+    if category == expected || category.eq_ignore_ascii_case(expected) {
+        return true;
+    }
+
+    let category_name = identity_category_name_from_str(category);
+    let expected_name = identity_category_name_from_str(expected);
+
+    category_name.is_some_and(|name| name.eq_ignore_ascii_case(expected))
+        || expected_name.is_some_and(|name| category.eq_ignore_ascii_case(name))
+        || category_name
+            .zip(expected_name)
+            .is_some_and(|(category_name, expected_name)| {
+                category_name.eq_ignore_ascii_case(expected_name)
+            })
+}
+
 impl AssetPreloader {
     pub fn new(resource_dir: &Path) -> Result<Self> {
         COMBAT_EFFECT_DATA.set(load_meter_data(resource_dir, "CombatEffect.json")?)?;
@@ -183,6 +248,10 @@ impl AssetPreloader {
         let stat_type_data: HashMap<String, u32> = load_meter_data(resource_dir, "StatType.json")?;
         STAT_TYPE_NAME_MAP.set(build_stat_type_name_map(&stat_type_data))?;
         STAT_TYPE_MAP.set(build_stat_type_map(stat_type_data))?;
+        IDENTITY_CATEGORY_NAME_MAP.set(build_identity_category_name_map(load_meter_data(
+            resource_dir,
+            "Enums.json",
+        )?))?;
         ESTHER_DATA.set(load_meter_data(resource_dir, "Esther.json")?)?;
         NPC_DATA.set(load_meter_data(resource_dir, "Npc.json")?)?;
         GEM_SKILL_MAP.set({

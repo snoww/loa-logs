@@ -1,6 +1,6 @@
 use crate::data::{
     COMBAT_EFFECT_DATA, EXTERNAL_ABILITY_DATA, EXTERNAL_ADDON_SKILL_FEATURE_DATA,
-    EXTERNAL_ITEM_CLASS_OPTION_DATA, SKILL_DATA, stat_type_name_from_id,
+    EXTERNAL_ITEM_CLASS_OPTION_DATA, SKILL_DATA, identity_category_matches, stat_type_name_from_id,
 };
 use crate::live::entity_tracker::{InspectSnapshot, SkillRuntimeData};
 use crate::live::status_tracker::StatusEffectDetails;
@@ -1532,11 +1532,12 @@ impl PlayerStats {
                 }
                 "skill_identity_category" => {
                     let target = condition.arg.to_string();
-                    identity_category.as_deref().is_some_and(|category| {
-                        category == target || category.eq_ignore_ascii_case(&target)
-                    }) || identity_category_real.as_deref().is_some_and(|category| {
-                        category == target || category.eq_ignore_ascii_case(&target)
-                    })
+                    identity_category
+                        .as_deref()
+                        .is_some_and(|category| identity_category_matches(category, &target))
+                        || identity_category_real
+                            .as_deref()
+                            .is_some_and(|category| identity_category_matches(category, &target))
                 }
                 "identity_stance" => self.runtime_state.identity_stance == condition.arg as u8,
                 "identity_element_value_less" => {
@@ -1769,15 +1770,15 @@ impl PlayerStats {
         };
         let matches_identity_category = |expected: &[&str]| {
             skill_identity_category.as_deref().is_some_and(|category| {
-                expected.iter().any(|expected| {
-                    category == *expected || category.eq_ignore_ascii_case(expected)
-                })
+                expected
+                    .iter()
+                    .any(|expected| identity_category_matches(category, expected))
             }) || skill_real_identity_category
                 .as_deref()
                 .is_some_and(|category| {
-                    expected.iter().any(|expected| {
-                        category == *expected || category.eq_ignore_ascii_case(expected)
-                    })
+                    expected
+                        .iter()
+                        .any(|expected| identity_category_matches(category, expected))
                 })
         };
 
@@ -1851,8 +1852,8 @@ impl PlayerStats {
                 }
                 "identity_summoner_senior" => {
                     if matches_identity_category(&[
-                        "17",
-                        "18",
+                        "26",
+                        "27",
                         "summoner_normal",
                         "summoner_ancient",
                     ]) && active.values.len() > 2
@@ -1866,7 +1867,7 @@ impl PlayerStats {
                     }
                 }
                 "identity_hawkeye_secondcolleague" => {
-                    if matches_identity_category(&["10", "hawkeye_summon"])
+                    if matches_identity_category(&["25", "hawkeye_summon"])
                         && !active.values.is_empty()
                     {
                         self.critical_hit_rate.add(
@@ -2030,7 +2031,8 @@ impl PlayerStats {
                     }
                 }
                 "identity_warlord_lonely_knight" => {
-                    if matches_identity_category(&["7", "warlord_lance"]) && active.values.len() > 4
+                    if matches_identity_category(&["41", "warlord_lance"])
+                        && active.values.len() > 4
                     {
                         critical_hit_to_damage_rates.push((
                             active.values[4] as f64 / 10000.0,
@@ -2045,7 +2047,7 @@ impl PlayerStats {
                             format!("{}.AllDamage", active.feature_type),
                         ));
                     }
-                    if matches_identity_category(&["57", "holyknight_female_identity_x"])
+                    if matches_identity_category(&["71", "holyknight_female_identity_x"])
                         && active.values.len() > 2
                     {
                         critical_hit_to_damage_rates.push((

@@ -1,7 +1,7 @@
 use crate::constants::DARK_GRENADE_ENTITY_ID;
 use crate::data::{
     ENGRAVING_DATA, RDPS_ADDITIONAL_IDENTITY_GROUP, SKILL_BUFF_DATA, SKILL_DATA, SKILL_EFFECT_DATA,
-    SUPPORT_IDENTITY_GROUP, SUPPORT_MARKING_GROUP,
+    SUPPORT_IDENTITY_GROUP, SUPPORT_MARKING_GROUP, identity_category_matches,
 };
 use crate::live::entity_tracker::{Entity, EntityTracker, InspectSnapshot, SkillRuntimeData};
 use crate::live::player_stats::{PlayerStats, STAT_PRIORITY_DEFAULT, STAT_PRIORITY_SUPPORT};
@@ -760,7 +760,7 @@ fn append_source_contributions(
             && stats
                 .get_skill_identity_category(skill_id_real, current_skill_runtime_data)
                 .as_deref()
-                .is_some_and(|category| category.eq_ignore_ascii_case("arcana_normal"))
+                .is_some_and(|category| identity_category_matches(category, "arcana_normal"))
         {
             stats.critical_hit_rate.add_with_priority(
                 0.2,
