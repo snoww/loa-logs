@@ -14,7 +14,7 @@ use tokio::{
 use crate::constants::{NINEVEH_COMPAT_EXE_NAME, NINEVEH_EXE_NAME};
 use crate::context::AppContext;
 use crate::data::get_region_from_ip;
-use crate::shell::find_nineveh_pid;
+use crate::shell::{ShellManager, find_nineveh_pid};
 
 mod ipc;
 
@@ -175,6 +175,9 @@ pub async fn setup_nineveh(app: AppHandle, exitlag_compat: bool) -> Result<Ninev
     // try to connect to existing server
     if let Ok((rx, tx, handle)) = ipc::connect_to_nineveh(NINEVEH_ENDPOINT).await {
         log::info!("Connected to existing Nineveh IPC server");
+        if let Some(pid) = find_nineveh_pid(&app_dir) {
+            app.state::<ShellManager>().set_nineveh_pid(pid.as_u32());
+        }
         tokio::spawn(handle_nineveh_ipc_messages(
             app, from_rx, to_tx, rx, tx, handle,
         ));
@@ -233,6 +236,9 @@ pub async fn setup_nineveh(app: AppHandle, exitlag_compat: bool) -> Result<Ninev
             );
         }
     };
+    if let Some(pid) = child.id() {
+        app.state::<ShellManager>().set_nineveh_pid(pid);
+    }
     loop {
         tokio::time::sleep(std::time::Duration::from_millis(500)).await;
         match ipc::connect_to_nineveh(NINEVEH_ENDPOINT).await {

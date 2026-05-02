@@ -5,6 +5,8 @@ use tauri_plugin_opener::OpenerExt;
 use tauri_plugin_shell::ShellExt;
 
 use std::path::{Path, PathBuf};
+use std::sync::Arc;
+use std::sync::atomic::{AtomicU32, Ordering};
 
 use crate::constants::{GAME_EXE_NAME, NINEVEH_COMPAT_EXE_NAME, NINEVEH_EXE_NAME, STEAM_GAME_URL};
 use crate::context::AppContext;
@@ -47,23 +49,42 @@ pub fn find_nineveh_pid(app_dir: &Path) -> Option<Pid> {
 }
 
 #[derive(Debug)]
-pub struct ShellManager(AppHandle, PathBuf);
+pub struct ShellManager {
+    app: AppHandle,
+    db_path: PathBuf,
+    /// PID of the nineveh process we own. 0 means unknown/not yet known. Tracked explicitly so
+    /// that `check_loa_running` can skip it in compat mode, where the nineveh binary is renamed
+    /// to LOSTARK.exe and would otherwise be indistinguishable from the game.
+    nineveh_pid: Arc<AtomicU32>,
+}
 
 impl ShellManager {
     pub fn new(shell: AppHandle, database_path: PathBuf) -> Self {
-        Self(shell, database_path)
+        Self {
+            app: shell,
+            db_path: database_path,
+            nineveh_pid: Arc::new(AtomicU32::new(0)),
+        }
     }
 
     fn app_dir(&self) -> PathBuf {
-        self.0.state::<AppContext>().current_dir.clone()
+        self.app.state::<AppContext>().current_dir.clone()
+    }
+
+    pub fn set_nineveh_pid(&self, pid: u32) {
+        self.nineveh_pid.store(pid, Ordering::Relaxed);
+    }
+
+    fn nineveh_pid(&self) -> u32 {
+        self.nineveh_pid.load(Ordering::Relaxed)
     }
 
     pub fn open_db_path(&self) {
-        let path = &self.1.parent().unwrap();
+        let path = &self.db_path.parent().unwrap();
         info!("open_db_path: {}", path.display());
 
         if let Err(err) = self
-            .0
+            .app
             .opener()
             .open_path(path.to_str().unwrap(), None::<String>)
         {
@@ -78,23 +99,38 @@ impl ShellManager {
 
         info!("starting lost ark process...");
 
-        if let Err(err) = self.0.opener().open_path(STEAM_GAME_URL, None::<String>) {
+        if let Err(err) = self.app.opener().open_path(STEAM_GAME_URL, None::<String>) {
             error!("could not open lost ark: {err}");
         }
     }
 
     pub fn check_loa_running(&self) -> bool {
-        // The game is any LOSTARK.exe whose executable is NOT inside meter install dir
-        // the lostark.exe inside install dir is renamed nineveh binary when exitlag_compat is enabled
+        // The game is any LOSTARK.exe that isn't our own nineveh process. In compat mode the
+        // nineveh binary is renamed to LOSTARK.exe, so we exclude its tracked PID. We also skip
+        // anything whose exe lives inside our install dir as a fallback for nineveh processes
+        // we didn't spawn ourselves (e.g. one that survived a prior meter run).
         let app_dir = self.app_dir();
+        let nineveh_pid = self.nineveh_pid();
         let system = process_snapshot();
-        system
-            .processes()
-            .values()
-            .any(|p| p.name().eq_ignore_ascii_case(GAME_EXE_NAME) && !process_in_dir(p, &app_dir))
+        system.processes().iter().any(|(pid, p)| {
+            if !p.name().eq_ignore_ascii_case(GAME_EXE_NAME) {
+                return false;
+            }
+            if nineveh_pid != 0 && pid.as_u32() == nineveh_pid {
+                return false;
+            }
+            !process_in_dir(p, &app_dir)
+        })
     }
 
     pub fn check_nineveh_running(&self) -> bool {
+        let nineveh_pid = self.nineveh_pid();
+        if nineveh_pid != 0 {
+            let system = process_snapshot();
+            if system.process(Pid::from_u32(nineveh_pid)).is_some() {
+                return true;
+            }
+        }
         find_nineveh_pid(&self.app_dir()).is_some()
     }
 
@@ -102,11 +138,14 @@ impl ShellManager {
         let app_dir = self.app_dir();
         let system = process_snapshot();
         let self_pid = std::process::id();
+        let tracked_pid = self.nineveh_pid();
         for (pid, process) in system.processes() {
             if pid.as_u32() == self_pid {
                 continue;
             }
-            if has_nineveh_name(process) && process_in_dir(process, &app_dir) {
+            let is_tracked = tracked_pid != 0 && pid.as_u32() == tracked_pid;
+            let is_in_dir = has_nineveh_name(process) && process_in_dir(process, &app_dir);
+            if is_tracked || is_in_dir {
                 let name = process.name().to_string_lossy();
                 if process.kill() {
                     info!("stopped {name} (pid: {pid})");
@@ -115,6 +154,7 @@ impl ShellManager {
                 }
             }
         }
+        self.nineveh_pid.store(0, Ordering::Relaxed);
     }
 
     pub async fn remove_driver(&self) {
@@ -122,7 +162,7 @@ impl ShellManager {
         {
             use tauri_plugin_shell::ShellExt;
 
-            let command = self.0.shell().command("sc").args(["delete", "windivert"]);
+            let command = self.app.shell().command("sc").args(["delete", "windivert"]);
 
             match command.output().await {
                 Ok(output) => {
@@ -153,7 +193,7 @@ impl ShellManager {
     pub async fn unload_driver(&self) {
         #[cfg(target_os = "windows")]
         {
-            let command = self.0.shell().command("sc").args(["stop", "windivert"]);
+            let command = self.app.shell().command("sc").args(["stop", "windivert"]);
 
             match command.output().await {
                 Ok(output) => {
