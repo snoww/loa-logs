@@ -4,7 +4,7 @@ use hashbrown::HashMap;
 
 use crate::{
     data::RAID_MAP,
-    models::{ArkPassiveNode, EncounterEntity, EntityType, StatusEffect},
+    models::{ArkPassiveNode, Encounter, EncounterEntity, EntityType, StatusEffect},
 };
 
 pub fn is_support(entity: &EncounterEntity) -> bool {
@@ -13,6 +13,39 @@ pub fn is_support(entity: &EncounterEntity) -> bool {
     } else {
         is_support_class(&entity.class_id)
     }
+}
+
+pub fn normalize_encounter_damage_totals(encounter: &mut Encounter) {
+    let mut total_damage_dealt = 0;
+    let mut top_damage_dealt = 0;
+    let mut total_damage_taken = 0;
+    let mut top_damage_taken = 0;
+
+    for entity in encounter
+        .entities
+        .values()
+        .filter(|entity| is_confirmed_player_entity(entity, &encounter.local_player))
+    {
+        let damage_dealt = entity.damage_stats.damage_dealt;
+        let damage_taken = entity.damage_stats.damage_taken;
+        total_damage_dealt += damage_dealt;
+        top_damage_dealt = top_damage_dealt.max(damage_dealt);
+        total_damage_taken += damage_taken;
+        top_damage_taken = top_damage_taken.max(damage_taken);
+    }
+
+    encounter.encounter_damage_stats.total_damage_dealt = total_damage_dealt;
+    encounter.encounter_damage_stats.top_damage_dealt = top_damage_dealt;
+    encounter.encounter_damage_stats.total_damage_taken = total_damage_taken;
+    encounter.encounter_damage_stats.top_damage_taken = top_damage_taken;
+    encounter.encounter_damage_stats.dps = total_damage_dealt / (encounter.duration / 1000).max(1);
+}
+
+pub fn is_confirmed_player_entity(entity: &EncounterEntity, local_player: &str) -> bool {
+    entity.entity_type == EntityType::Player
+        && (entity.character_id > 0
+            || entity.gear_score > 0.0
+            || (!local_player.is_empty() && entity.name == local_player))
 }
 
 pub fn is_support_class(class_id: &u32) -> bool {

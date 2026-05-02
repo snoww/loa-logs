@@ -226,6 +226,7 @@ impl Repository {
         encounter.sync = sync;
 
         encounter.entities = entities;
+        normalize_encounter_damage_totals(&mut encounter);
 
         Ok(encounter)
     }
@@ -269,6 +270,8 @@ impl Repository {
     }
 
     pub fn insert_data(&self, mut args: InsertEncounterArgs) -> Result<i64> {
+        normalize_encounter_damage_totals(&mut args.encounter);
+
         let mut connection = self.0.get()?;
         let transaction = connection.transaction()?;
 
@@ -472,7 +475,7 @@ impl Repository {
             .entities
             .values()
             .filter(|e| {
-                ((e.entity_type == EntityType::Player && e.class_id != 0)
+                (is_confirmed_player_entity(e, &encounter.local_player)
                     || e.name == encounter.local_player)
                     && e.damage_stats.damage_dealt > 0
             })
@@ -692,7 +695,8 @@ mod tests {
         let expected_encounter = {
             let mut cloned = args.clone();
             calculate_entities(&mut cloned).unwrap();
-            let encounter = cloned.encounter;
+            let mut encounter = cloned.encounter;
+            normalize_encounter_damage_totals(&mut encounter);
             encounter
         };
 

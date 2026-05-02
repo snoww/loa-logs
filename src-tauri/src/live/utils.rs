@@ -54,6 +54,9 @@ pub fn update_player_entity(old: &mut EncounterEntity, new: &Entity) {
     old.id = new.id;
     old.character_id = new.character_id;
     old.name.clone_from(&new.name);
+    if new.entity_type != EntityType::Unknown {
+        old.entity_type = new.entity_type;
+    }
     old.class_id = new.class_id;
     old.class = get_class_from_id(&new.class_id);
     old.gear_score = new.gear_level;

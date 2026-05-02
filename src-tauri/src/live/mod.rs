@@ -15,25 +15,25 @@ mod utils;
 use crate::api::{BanList, HeartBeatApi};
 use crate::database::utils::apply_player_info;
 use crate::live::encounter_state::EncounterState;
-use crate::live::entity_tracker::{EntityTracker, get_current_and_max_hp};
+use crate::live::entity_tracker::{get_current_and_max_hp, EntityTracker};
 use crate::live::id_tracker::IdTracker;
 use crate::live::manager::EventManager;
 use crate::live::party_tracker::PartyTracker;
 use crate::live::status_tracker::{
-    StatusEffectDetails, StatusEffectTargetType, StatusEffectType, StatusTracker,
-    get_status_effect_value,
+    get_status_effect_value, StatusEffectDetails, StatusEffectTargetType, StatusEffectType,
+    StatusTracker,
 };
 use crate::local::{LocalInfo, LocalPlayer, LocalPlayerRepository};
 use crate::models::{DamageData, EntityType, Identity, TripodIndex};
 use crate::nineveh::NinevehIPCPair;
 use crate::settings::Settings;
-use crate::utils::{get_class_from_id, is_support, is_support_class};
+use crate::utils::{get_class_from_id, is_confirmed_player_entity, is_support_class};
 use anyhow::Result;
 use chrono::Utc;
 use hashbrown::HashMap;
 use log::{info, warn};
 use meter_decryption::PacketProcessResult;
-use meter_defs::{GamePacket, IntoLoaPacket, defs::*};
+use meter_defs::{defs::*, GamePacket, IntoLoaPacket};
 use nineveh_formats::ipc::{
     ConnectionId, IPCClientToServerMessage, IPCServerToClientMessage, PacketAction, PacketDirection,
 };
@@ -47,7 +47,7 @@ use tauri::{AppHandle, Emitter, Manager};
 use crate::context::AppContext;
 
 // Flip these only when debugging live inspect / attribution issues.
-pub(crate) const DEBUG_TRACE_INSPECT_PACKETS: bool = false;
+pub(crate) const DEBUG_TRACE_INSPECT_PACKETS: bool = true;
 pub(crate) const DEBUG_DUMP_DAMAGE_STATE_JSON: bool = false;
 
 pub struct StartArgs {
@@ -346,7 +346,7 @@ pub fn start(args: StartArgs) -> Result<()> {
                         .expect("could not save local players");
 
                     let character_id = entity.character_id;
-                    state.on_init_pc(entity, hp, max_hp);
+                    state.on_init_pc(entity, hp, max_hp, &entity_tracker);
                     queue_missing_party_inspects(
                         &ipc.0,
                         &connection_ids_by_port,
@@ -389,9 +389,10 @@ pub fn start(args: StartArgs) -> Result<()> {
                         entity.character_id
                     ));
                     let rebound_gate_eligible = state.startup_barrier_active()
-                        && entity_tracker.is_gate_eligible_player_entity(&entity);
+                        && entity_tracker
+                            .is_bootstrap_party_inspect_eligible_player_entity(&entity);
                     let rebound_name = entity.name.clone();
-                    state.on_new_pc(entity, hp, max_hp);
+                    state.on_new_pc(entity, hp, max_hp, &entity_tracker);
                     let rebound = entity_tracker.take_last_reconnect_rebind();
                     if let Some((old_entity_id, new_entity_id)) = rebound {
                         state.rebind_startup_player_entity_ids(old_entity_id, new_entity_id);
@@ -427,9 +428,10 @@ pub fn start(args: StartArgs) -> Result<()> {
                         entity.character_id
                     ));
                     let rebound_gate_eligible = state.startup_barrier_active()
-                        && entity_tracker.is_gate_eligible_player_entity(&entity);
+                        && entity_tracker
+                            .is_bootstrap_party_inspect_eligible_player_entity(&entity);
                     let rebound_name = entity.name.clone();
-                    state.on_new_pc(entity, hp, max_hp);
+                    state.on_new_pc(entity, hp, max_hp, &entity_tracker);
                     let rebound = entity_tracker.take_last_reconnect_rebind();
                     if let Some((old_entity_id, new_entity_id)) = rebound {
                         state.rebind_startup_player_entity_ids(old_entity_id, new_entity_id);
@@ -469,12 +471,20 @@ pub fn start(args: StartArgs) -> Result<()> {
                         "new {}: {}, eid: {}, id: {}, hp: {}",
                         entity.entity_type, entity.name, entity.id, entity.npc_id, max_hp
                     ));
+                    let source_id = entity.id;
+                    let owner_id = entity.owner_id;
                     state.on_new_npc(entity, hp, max_hp);
+                    state.on_source_owner_resolved(source_id, owner_id, &entity_tracker);
                 }
             }
             PKTNewProjectile::OPCODE => {
                 if let Some(pkt) = packet.try_parse::<PKTNewProjectile>().unwrap() {
                     entity_tracker.new_projectile(&pkt);
+                    state.on_source_owner_resolved(
+                        pkt.projectile_info.projectile_id,
+                        pkt.projectile_info.owner_id,
+                        &entity_tracker,
+                    );
                     if entity_tracker.id_is_player(pkt.projectile_info.owner_id)
                         && pkt.projectile_info.skill_id > 0
                     {
@@ -491,6 +501,11 @@ pub fn start(args: StartArgs) -> Result<()> {
             PKTNewTrap::OPCODE => {
                 if let Some(pkt) = packet.try_parse::<PKTNewTrap>().unwrap() {
                     entity_tracker.new_trap(&pkt);
+                    state.on_source_owner_resolved(
+                        pkt.trap_struct.object_id,
+                        pkt.trap_struct.owner_id,
+                        &entity_tracker,
+                    );
                     if entity_tracker.id_is_player(pkt.trap_struct.owner_id)
                         && pkt.trap_struct.skill_id > 0
                     {
@@ -592,29 +607,44 @@ pub fn start(args: StartArgs) -> Result<()> {
             }
             PKTRemoveObject::OPCODE => {
                 if let Some(pkt) = packet.try_parse::<PKTRemoveObject>().unwrap() {
+                    let mut removed_startup_player = false;
                     for upo in pkt.unpublished_objects {
-                        let is_player = entity_tracker
-                            .get_entity_ref(upo.object_id)
-                            .is_some_and(|entity| entity.entity_type == EntityType::Player);
-                        if is_player && state.startup_barrier_active() {
-                            continue;
-                        }
-
-                        entity_tracker.remove_object(upo.object_id);
-                        if !is_player {
+                        let removed_entity = entity_tracker.remove_object(upo.object_id);
+                        let removed_player = removed_entity
+                            .as_ref()
+                            .filter(|entity| entity.entity_type == EntityType::Player);
+                        if let Some(player) = removed_player {
+                            if state.startup_barrier_active() {
+                                let keep_stats_required =
+                                    state.remove_startup_required_player(player);
+                                if crate::live::entity_tracker::is_resolved_player_name(
+                                    &player.name,
+                                ) {
+                                    damage_handler.cancel_inspect_request(&player.name);
+                                }
+                                entity_tracker.cancel_bootstrap_inspect_for_player(
+                                    player,
+                                    keep_stats_required,
+                                );
+                                removed_startup_player = true;
+                            }
+                        } else {
                             status_tracker
                                 .borrow_mut()
                                 .remove_local_object(upo.object_id);
                         }
                     }
+                    if removed_startup_player {
+                        state.try_flush_startup_barrier(&mut entity_tracker);
+                    }
                 }
             }
             PKTSkillCastNotify::OPCODE => {
                 if let Some(pkt) = packet.try_parse::<PKTSkillCastNotify>().unwrap() {
-                    let should_buffer_for_startup = state.startup_barrier_active()
-                        && entity_tracker.id_is_player(pkt.source_id);
                     let mut entity = entity_tracker.get_source_entity(pkt.source_id);
-                    entity_tracker.guess_is_player(&mut entity, pkt.skill_id);
+                    entity_tracker.infer_entity_class_from_skill(&mut entity, pkt.skill_id);
+                    let should_buffer_for_startup =
+                        state.startup_barrier_active() && entity.entity_type == EntityType::Player;
                     let timestamp = Utc::now().timestamp_millis();
                     startup_event_seq += 1;
                     if should_buffer_for_startup {
@@ -647,10 +677,10 @@ pub fn start(args: StartArgs) -> Result<()> {
             }
             PKTSkillStartNotify::OPCODE => {
                 if let Some(pkt) = packet.try_parse::<PKTSkillStartNotify>().unwrap() {
-                    let should_buffer_for_startup = state.startup_barrier_active()
-                        && entity_tracker.id_is_player(pkt.source_id);
                     let mut entity = entity_tracker.get_source_entity(pkt.source_id);
-                    entity_tracker.guess_is_player(&mut entity, pkt.skill_id);
+                    entity_tracker.infer_entity_class_from_skill(&mut entity, pkt.skill_id);
+                    let should_buffer_for_startup =
+                        state.startup_barrier_active() && entity.entity_type == EntityType::Player;
                     let tripod_index =
                         pkt.skill_option_data
                             .tripod_index
@@ -690,7 +720,11 @@ pub fn start(args: StartArgs) -> Result<()> {
                             state.on_skill_start(&entity, pkt.skill_id, tripod_index, timestamp);
                         state.record_lal_skill_event_debug(&entity, pkt.skill_id, false);
 
-                        if entity.entity_type == EntityType::Player && skill_id > 0 {
+                        if (entity.entity_type == EntityType::Player
+                            || entity.entity_type == EntityType::Unknown)
+                            && entity.class_id > 0
+                            && skill_id > 0
+                        {
                             state.skill_tracker.new_cast(
                                 entity.id,
                                 skill_id,
@@ -716,7 +750,8 @@ pub fn start(args: StartArgs) -> Result<()> {
                     .unwrap()
                 {
                     let now = Utc::now().timestamp_millis();
-                    let owner = entity_tracker.get_source_entity(pkt.source_id);
+                    let mut owner = entity_tracker.get_source_entity(pkt.source_id);
+                    entity_tracker.infer_entity_class_from_skill(&mut owner, pkt.skill_id);
                     let local_character_id = id_tracker
                         .borrow()
                         .get_local_character_id(entity_tracker.local_entity_id);
@@ -764,7 +799,6 @@ pub fn start(args: StartArgs) -> Result<()> {
                                 target_count,
                                 &mut entity_tracker,
                                 &mut status_tracker,
-                                local_character_id,
                                 connection_ids_by_port.contains_key(&6020),
                                 now,
                             );
@@ -789,7 +823,8 @@ pub fn start(args: StartArgs) -> Result<()> {
                 }
                 if let Some(pkt) = packet.try_parse::<PKTSkillDamageNotify>().unwrap() {
                     let now = Utc::now().timestamp_millis();
-                    let owner = entity_tracker.get_source_entity(pkt.source_id);
+                    let mut owner = entity_tracker.get_source_entity(pkt.source_id);
+                    entity_tracker.infer_entity_class_from_skill(&mut owner, pkt.skill_id);
                     let local_character_id = id_tracker
                         .borrow()
                         .get_local_character_id(entity_tracker.local_entity_id);
@@ -831,7 +866,6 @@ pub fn start(args: StartArgs) -> Result<()> {
                                 target_count,
                                 &mut entity_tracker,
                                 &mut status_tracker,
-                                local_character_id,
                                 connection_ids_by_port.contains_key(&6020),
                                 now,
                             );
@@ -863,7 +897,7 @@ pub fn start(args: StartArgs) -> Result<()> {
                     entity_tracker.party_info(pkt, &local_info);
                     let local_player_id = entity_tracker.local_entity_id;
                     if let Some(entity) = entity_tracker.entities.get(&local_player_id) {
-                        state.update_local_player(entity);
+                        state.update_local_player(entity, &entity_tracker);
                     }
                     if !banned {
                         for character_id in member_ids {
@@ -1313,33 +1347,35 @@ pub fn start(args: StartArgs) -> Result<()> {
             let damage_valid = state.damage_is_valid;
             let app_handle = app.clone();
 
-            let party_info: Option<Vec<Vec<String>>> =
-                if last_party_update.elapsed() >= party_duration && !party_freeze {
-                    last_party_update = Instant::now();
+            let party_info: Option<Vec<Vec<String>>> = if last_party_update.elapsed()
+                >= party_duration
+                && !party_freeze
+            {
+                last_party_update = Instant::now();
 
-                    // use cache if available
-                    // otherwise get party info
-                    party_cache.clone().or_else(|| {
-                        let party = update_party(&party_tracker, &entity_tracker);
-                        let player_count = state
-                            .encounter
-                            .entities
-                            .values()
-                            .filter(|e| e.entity_type == EntityType::Player)
-                            .count();
-                        let min_parties = player_count.div_ceil(4).max(1);
-                        if party.len() >= min_parties {
-                            if party.iter().all(|p| p.len() == 4) {
-                                party_cache = Some(party.clone());
-                            }
-                            Some(party)
-                        } else {
-                            None
+                // use cache if available
+                // otherwise get party info
+                party_cache.clone().or_else(|| {
+                    let party = update_party(&party_tracker, &entity_tracker);
+                    let player_count = state
+                        .encounter
+                        .entities
+                        .values()
+                        .filter(|e| is_confirmed_player_entity(e, &state.encounter.local_player))
+                        .count();
+                    let min_parties = player_count.div_ceil(4).max(1);
+                    if party.len() >= min_parties {
+                        if party.iter().all(|p| p.len() == 4) {
+                            party_cache = Some(party.clone());
                         }
-                    })
-                } else {
-                    None
-                };
+                        Some(party)
+                    } else {
+                        None
+                    }
+                })
+            } else {
+                None
+            };
 
             tokio::task::spawn(async move {
                 if !clone.current_boss_name.is_empty() {
@@ -1356,7 +1392,10 @@ pub fn start(args: StartArgs) -> Result<()> {
                 }
                 clone.entities.retain(|_, e| match e.entity_type {
                     EntityType::DarkGrenade => e.damage_stats.rdps_damage_given > 0,
-                    EntityType::Player => e.class_id > 0 && e.damage_stats.damage_dealt > 0,
+                    EntityType::Player => {
+                        is_confirmed_player_entity(e, &clone.local_player)
+                            && e.damage_stats.damage_dealt > 0
+                    }
                     EntityType::Esther | EntityType::Boss => e.damage_stats.damage_dealt > 0,
                     _ => false,
                 });

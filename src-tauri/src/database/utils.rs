@@ -373,8 +373,7 @@ pub fn should_insert_entity(entity: &EncounterEntity, local_player: &str) -> boo
     if entity.entity_type == EntityType::DarkGrenade {
         return entity.damage_stats.rdps_damage_given > 0;
     }
-    let is_insertable_damage_entity = (entity.entity_type == EntityType::Player
-        && entity.class_id > 0)
+    let is_insertable_damage_entity = is_confirmed_player_entity(entity, local_player)
         || entity.name == local_player
         || entity.entity_type == EntityType::Esther
         || (entity.entity_type == EntityType::Boss && entity.max_hp > 0);

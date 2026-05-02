@@ -781,7 +781,7 @@ impl EntityTracker {
         }
     }
 
-    pub fn remove_object(&mut self, entity_id: u64) {
+    pub fn remove_object(&mut self, entity_id: u64) -> Option<Entity> {
         if let Some(entity) = self.entities.remove(&entity_id) {
             self.id_tracker
                 .borrow_mut()
@@ -790,6 +790,9 @@ impl EntityTracker {
                 .borrow_mut()
                 .remove_entity_mapping(entity_id);
             self.stash_removed_player_entity(&entity);
+            Some(entity)
+        } else {
+            None
         }
     }
 
@@ -850,7 +853,12 @@ impl EntityTracker {
             if character_id == local_character_id {
                 continue;
             }
-            let Some(name) = self.get_resolved_player_name_for_character(character_id) else {
+            let inspect_name = if bootstrap_active {
+                self.get_live_bootstrap_inspect_name_for_character(character_id)
+            } else {
+                self.get_resolved_player_name_for_character(character_id)
+            };
+            let Some(name) = inspect_name else {
                 continue;
             };
             let bootstrap_refresh_needed =
@@ -1204,28 +1212,51 @@ impl EntityTracker {
                     .are_same_party_characters(lhs_character_id, rhs_character_id))
     }
 
-    pub fn is_gate_eligible_player_entity(&self, entity: &Entity) -> bool {
+    pub fn is_bootstrap_party_inspect_eligible_player_entity(&self, entity: &Entity) -> bool {
         if entity.entity_type != Player || !is_resolved_player_name(&entity.name) {
             return false;
         }
         if entity.id == self.local_entity_id {
             return true;
         }
-
-        entity.character_id != 0
-            && self
+        if entity.character_id == 0
+            || entity.visibility_generation != self.current_visibility_generation
+            || !self
                 .party_tracker
                 .borrow()
                 .get_all_registered_party_characters()
                 .contains(&entity.character_id)
+        {
+            return false;
+        }
+
+        self.entities.get(&entity.id).is_some_and(|live_entity| {
+            live_entity.entity_type == Player
+                && live_entity.character_id == entity.character_id
+                && live_entity.name == entity.name
+                && live_entity.visibility_generation == self.current_visibility_generation
+        })
     }
 
-    pub fn get_required_rdps_player_names(&self) -> Vec<String> {
+    pub fn get_required_bootstrap_player_names(&self) -> Vec<String> {
+        let local_character_id = self.get_local_character_id();
         let mut names = self
-            .get_required_rdps_player_character_ids()
+            .party_tracker
+            .borrow()
+            .get_all_registered_party_characters()
             .into_iter()
-            .filter_map(|character_id| self.get_resolved_player_name_for_character(character_id))
+            .filter_map(|character_id| {
+                (character_id != local_character_id)
+                    .then(|| self.get_live_bootstrap_inspect_name_for_character(character_id))
+                    .flatten()
+            })
             .collect::<Vec<_>>();
+        if local_character_id != 0
+            && let Some(name) =
+                self.get_live_bootstrap_inspect_name_for_character(local_character_id)
+        {
+            names.push(name);
+        }
         names.sort();
         names.dedup();
         names
@@ -1290,34 +1321,6 @@ impl EntityTracker {
         self.bootstrap_refreshed_names.contains(name) && self.has_inspect_snapshot_for_name(name)
     }
 
-    fn has_fresh_bootstrap_inspect_for_character(&self, character_id: u64) -> bool {
-        if character_id == 0 {
-            return false;
-        }
-
-        if self.entities.values().any(|entity| {
-            entity.entity_type == Player
-                && entity.character_id == character_id
-                && self.has_fresh_bootstrap_inspect_for_name(&entity.name)
-        }) {
-            return true;
-        }
-
-        if self
-            .removed_player_entities_by_character_id
-            .get(&character_id)
-            .is_some_and(|entity| {
-                entity.entity_type == Player
-                    && self.has_fresh_bootstrap_inspect_for_name(&entity.name)
-            })
-        {
-            return true;
-        }
-
-        self.get_resolved_player_name_for_character(character_id)
-            .is_some_and(|name| self.has_fresh_bootstrap_inspect_for_name(&name))
-    }
-
     pub fn can_send_bootstrap_inspect(&self, now: i64) -> bool {
         now >= self.next_bootstrap_inspect_at_ms
     }
@@ -1376,28 +1379,6 @@ impl EntityTracker {
         self.last_reconnect_rebind.take()
     }
 
-    pub fn get_required_rdps_player_character_ids(&self) -> Vec<u64> {
-        let mut character_ids = self
-            .party_tracker
-            .borrow()
-            .get_all_registered_party_characters()
-            .into_iter()
-            .filter(|character_id| {
-                self.id_tracker
-                    .borrow()
-                    .get_entity_id(*character_id)
-                    .is_some_and(|entity_id| entity_id != 0)
-            })
-            .collect::<Vec<_>>();
-        let local_character_id = self.get_local_character_id();
-        if local_character_id != 0 && self.local_entity_id != 0 {
-            character_ids.push(local_character_id);
-        }
-        character_ids.sort_unstable();
-        character_ids.dedup();
-        character_ids
-    }
-
     pub fn queue_forced_inspect_refresh(&mut self, name: &str) {
         if !is_resolved_player_name(name) {
             return;
@@ -1409,50 +1390,49 @@ impl EntityTracker {
         self.forced_refresh_names.insert(name.to_string());
     }
 
-    pub fn is_startup_barrier_stats_ready(
-        &self,
-        required_character_ids: &[u64],
-        required_names: &[String],
-    ) -> bool {
-        if required_character_ids.is_empty() && required_names.is_empty() {
-            return false;
+    pub fn cancel_bootstrap_inspect_for_player(
+        &mut self,
+        entity: &Entity,
+        keep_stats_required: bool,
+    ) {
+        if !is_resolved_player_name(&entity.name) {
+            return;
         }
-        required_character_ids
-            .iter()
-            .copied()
-            .all(|character_id| self.has_fresh_bootstrap_inspect_for_character(character_id))
-            && required_names
-                .iter()
-                .all(|name| self.has_fresh_bootstrap_inspect_for_name(name))
+
+        self.clear_inspect_request(&entity.name);
+        self.bootstrap_visible_fallback_names
+            .retain(|name| name != &entity.name);
+        self.bootstrap_visible_fallback_required_names
+            .retain(|name| name != &entity.name);
+        self.forced_refresh_names.remove(&entity.name);
+        if !keep_stats_required {
+            self.bootstrap_refresh_sent_names.remove(&entity.name);
+            self.bootstrap_refreshed_names.remove(&entity.name);
+            self.bootstrap_inspect_sent_at_ms_by_name
+                .remove(&entity.name);
+            self.bootstrap_failed_inspect_names.remove(&entity.name);
+            self.pending_inspect_results_by_name.remove(&entity.name);
+        }
     }
 
-    pub fn is_startup_barrier_gate_ready(
-        &self,
-        required_character_ids: &[u64],
-        required_names: &[String],
-    ) -> bool {
-        if required_character_ids.is_empty() && required_names.is_empty() {
+    pub fn is_startup_barrier_stats_ready(&self, required_names: &[String]) -> bool {
+        if required_names.is_empty() {
             return false;
         }
+        required_names
+            .iter()
+            .all(|name| self.has_fresh_bootstrap_inspect_for_name(name))
+    }
 
-        required_character_ids.iter().copied().all(|character_id| {
-            self.has_fresh_bootstrap_inspect_for_character(character_id)
-                || self.has_failed_bootstrap_inspect_for_character(character_id)
-        }) && required_names.iter().all(|name| {
+    pub fn is_startup_barrier_gate_ready(&self, required_names: &[String]) -> bool {
+        required_names.iter().all(|name| {
             self.has_fresh_bootstrap_inspect_for_name(name)
                 || self.bootstrap_failed_inspect_names.contains(name)
         })
     }
 
-    pub fn has_failed_startup_barrier_inspects(
-        &self,
-        required_character_ids: &[u64],
-        required_names: &[String],
-    ) -> bool {
-        required_character_ids.iter().copied().any(|character_id| {
-            !self.has_fresh_bootstrap_inspect_for_character(character_id)
-                && self.has_failed_bootstrap_inspect_for_character(character_id)
-        }) || required_names.iter().any(|name| {
+    pub fn has_failed_startup_barrier_inspects(&self, required_names: &[String]) -> bool {
+        required_names.iter().any(|name| {
             !self.has_fresh_bootstrap_inspect_for_name(name)
                 && self.bootstrap_failed_inspect_names.contains(name)
         })
@@ -1640,24 +1620,16 @@ impl EntityTracker {
         }
     }
 
-    pub fn guess_is_player(&mut self, entity: &mut Entity, skill_id: u32) {
+    pub fn infer_entity_class_from_skill(&mut self, entity: &mut Entity, skill_id: u32) {
         if (entity.entity_type != EntityType::Unknown && entity.entity_type != EntityType::Player)
-            || (entity.entity_type == EntityType::Player && entity.class_id != 0)
+            || entity.class_id != 0
         {
             return;
         }
 
         let class_id = get_skill_class_id(&skill_id);
         if class_id != 0 {
-            if entity.entity_type == EntityType::Player {
-                if entity.class_id == class_id {
-                    return;
-                }
-                entity.class_id = class_id;
-            } else {
-                entity.entity_type = Player;
-                entity.class_id = class_id;
-            }
+            entity.class_id = class_id;
             self.entities.insert(entity.id, entity.clone());
         }
     }
@@ -1942,15 +1914,6 @@ impl EntityTracker {
         let _ = self.apply_inspect_result(result);
     }
 
-    fn has_failed_bootstrap_inspect_for_character(&self, character_id: u64) -> bool {
-        if character_id == 0 {
-            return false;
-        }
-
-        self.get_resolved_player_name_for_character(character_id)
-            .is_some_and(|name| self.bootstrap_failed_inspect_names.contains(&name))
-    }
-
     fn evaluate_stashed_player_inspect_state(
         &self,
         character_id: u64,
@@ -2122,17 +2085,6 @@ impl EntityTracker {
         Some(removed_entity)
     }
 
-    fn is_gate_tracked_character(&self, character_id: u64) -> bool {
-        character_id != 0
-            && (self
-                .entities
-                .values()
-                .any(|entity| entity.entity_type == Player && entity.character_id == character_id)
-                || self
-                    .removed_player_entities_by_character_id
-                    .contains_key(&character_id))
-    }
-
     pub fn get_resolved_player_name_for_character(&self, character_id: u64) -> Option<String> {
         if character_id == 0 {
             return None;
@@ -2164,6 +2116,23 @@ impl EntityTracker {
             .get(&character_id)
             .filter(|name| is_resolved_player_name(name))
             .cloned()
+    }
+
+    fn get_live_bootstrap_inspect_name_for_character(&self, character_id: u64) -> Option<String> {
+        if character_id == 0 {
+            return None;
+        }
+
+        self.entities
+            .values()
+            .find(|entity| {
+                entity.entity_type == Player
+                    && entity.character_id == character_id
+                    && is_resolved_player_name(&entity.name)
+                    && (entity.id == self.local_entity_id
+                        || entity.visibility_generation == self.current_visibility_generation)
+            })
+            .map(|entity| entity.name.clone())
     }
 }
 

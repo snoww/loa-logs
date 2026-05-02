@@ -10,7 +10,10 @@ use crate::live::status_tracker::{StatusEffectDetails, StatusTracker};
 use crate::live::utils::*;
 use crate::live::{DEBUG_DUMP_DAMAGE_STATE_JSON, debug_print, write_debug_json_dump};
 use crate::models::*;
-use crate::utils::{get_class_from_id, get_player_spec, is_support_class};
+use crate::utils::{
+    get_class_from_id, get_player_spec, is_confirmed_player_entity, is_support_class,
+    normalize_encounter_damage_totals,
+};
 use chrono::Utc;
 use hashbrown::HashMap;
 use log::{info, warn};
@@ -20,6 +23,7 @@ use rsntp::SntpClient;
 use serde::Serialize;
 use serde_json::json;
 use std::cmp::max;
+use std::collections::BTreeMap;
 use std::default::Default;
 use std::hash::Hash;
 use tauri::{AppHandle, Emitter, Manager};
@@ -113,13 +117,14 @@ struct DamageStateDump {
     npc_to_skill_cast_data_: HashMap<u32, serde_json::Value>,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug)]
 struct PendingDamageEvent {
     packet_seq: i64,
     dmg_src_entity: Entity,
     proj_entity: Entity,
     dmg_target_entity: Entity,
     damage_data: DamageData,
+    hit_context: DamageHitContext,
     se_on_source: Vec<StatusEffectDetails>,
     se_on_target: Vec<StatusEffectDetails>,
     target_count: i32,
@@ -140,13 +145,25 @@ struct PendingSkillEvent {
     create_skill_tracker_cast: bool,
 }
 
-#[derive(Debug, Default, Clone)]
+#[derive(Debug, Default)]
 struct StartupBarrierState {
-    required_character_ids: Vec<u64>,
-    required_inspect_names: Vec<String>,
+    inspect_targets: HashMap<String, StartupInspectTarget>,
     pending_skill: Vec<PendingSkillEvent>,
     pending_damage: Vec<PendingDamageEvent>,
     freeze_registered_names: bool,
+}
+
+#[derive(Debug, Default)]
+struct StartupInspectTarget {
+    gate_required: bool,
+    live_stats_required: bool,
+    buffered_stats_required: bool,
+}
+
+#[derive(Debug)]
+struct DamageHitContext {
+    hit_flag: HitFlag,
+    hit_option: HitOption,
 }
 
 #[derive(Debug)]
@@ -183,6 +200,8 @@ pub struct EncounterState {
     pub skill_tracker: SkillTracker,
 
     custom_id_map: HashMap<u32, u32>,
+    source_owner_aliases: HashMap<u64, u64>,
+    resolved_source_owner_aliases: HashMap<u64, u64>,
     startup_barrier: Option<StartupBarrierState>,
     rearm_startup_barrier_on_next_combat: bool,
     pending_phase_transition: Option<i32>,
@@ -228,6 +247,8 @@ impl EncounterState {
             skill_tracker: SkillTracker::new(),
 
             custom_id_map: HashMap::new(),
+            source_owner_aliases: HashMap::new(),
+            resolved_source_owner_aliases: HashMap::new(),
             startup_barrier: None,
             rearm_startup_barrier_on_next_combat: false,
             pending_phase_transition: None,
@@ -267,6 +288,8 @@ impl EncounterState {
         self.skill_tracker = SkillTracker::new();
 
         self.custom_id_map = HashMap::new();
+        self.source_owner_aliases.clear();
+        self.resolved_source_owner_aliases.clear();
         self.startup_barrier = None;
         self.rearm_startup_barrier_on_next_combat = false;
         self.pending_phase_transition = None;
@@ -301,8 +324,269 @@ impl EncounterState {
         }
     }
 
+    fn refresh_encounter_player_damage_totals(&mut self) {
+        normalize_encounter_damage_totals(&mut self.encounter);
+    }
+
+    fn refresh_encounter_entity_metadata(
+        encounter_entity: &mut EncounterEntity,
+        entity: &Entity,
+        current_hp: Option<i64>,
+        max_hp: Option<i64>,
+    ) {
+        if entity.id != 0 {
+            encounter_entity.id = entity.id;
+        }
+        if entity.character_id != 0 {
+            encounter_entity.character_id = entity.character_id;
+        }
+        if entity.npc_id != 0 {
+            encounter_entity.npc_id = entity.npc_id;
+        }
+        if entity.hp_bars.is_some() {
+            encounter_entity.hp_bars = entity.hp_bars;
+        }
+        if entity.entity_type != EntityType::Unknown {
+            encounter_entity.entity_type = entity.entity_type;
+        }
+        if entity.class_id != 0 {
+            encounter_entity.class_id = entity.class_id;
+            encounter_entity.class = get_class_from_id(&entity.class_id);
+        }
+        if entity.gear_level > 0.0 {
+            encounter_entity.gear_score = entity.gear_level;
+        }
+        if let Some(current_hp) = current_hp {
+            encounter_entity.current_hp = current_hp;
+        }
+        if let Some(max_hp) = max_hp.filter(|max_hp| *max_hp > 0) {
+            encounter_entity.max_hp = max_hp;
+        }
+    }
+
+    pub fn on_source_owner_resolved(
+        &mut self,
+        source_id: u64,
+        owner_id: u64,
+        entity_tracker: &EntityTracker,
+    ) {
+        if source_id == 0 || owner_id == 0 || source_id == owner_id {
+            return;
+        }
+
+        self.source_owner_aliases.insert(source_id, owner_id);
+
+        let Some(owner) = self.resolve_confirmed_owner_player(owner_id, entity_tracker) else {
+            return;
+        };
+
+        self.merge_source_alias_into_player(source_id, owner);
+        self.source_owner_aliases.remove(&source_id);
+        self.resolve_source_aliases_for_player(owner, entity_tracker);
+    }
+
+    fn resolve_confirmed_owner_player<'a>(
+        &self,
+        owner_id: u64,
+        entity_tracker: &'a EntityTracker,
+    ) -> Option<&'a Entity> {
+        let mut current_id = owner_id;
+        let mut seen_ids = Vec::new();
+
+        for _ in 0..16 {
+            if current_id == 0 || seen_ids.contains(&current_id) {
+                return None;
+            }
+            seen_ids.push(current_id);
+
+            if let Some(entity) = entity_tracker.get_entity_ref(current_id) {
+                if entity.entity_type == EntityType::Player {
+                    return Some(entity);
+                }
+
+                if let Some(alias_owner_id) = self
+                    .source_owner_aliases
+                    .get(&current_id)
+                    .copied()
+                    .filter(|alias_owner_id| *alias_owner_id != current_id)
+                {
+                    current_id = alias_owner_id;
+                    continue;
+                }
+
+                if let Some(resolved_owner_id) = self
+                    .resolved_source_owner_aliases
+                    .get(&current_id)
+                    .copied()
+                    .filter(|resolved_owner_id| *resolved_owner_id != current_id)
+                {
+                    current_id = resolved_owner_id;
+                    continue;
+                }
+
+                if matches!(
+                    entity.entity_type,
+                    EntityType::Projectile | EntityType::Summon
+                ) && entity.owner_id != 0
+                {
+                    current_id = entity.owner_id;
+                    continue;
+                }
+            } else if let Some(alias_owner_id) = self
+                .source_owner_aliases
+                .get(&current_id)
+                .copied()
+                .filter(|alias_owner_id| *alias_owner_id != current_id)
+            {
+                current_id = alias_owner_id;
+                continue;
+            } else if let Some(resolved_owner_id) = self
+                .resolved_source_owner_aliases
+                .get(&current_id)
+                .copied()
+                .filter(|resolved_owner_id| *resolved_owner_id != current_id)
+            {
+                current_id = resolved_owner_id;
+                continue;
+            }
+
+            return None;
+        }
+
+        None
+    }
+
+    fn resolve_source_aliases_for_player(
+        &mut self,
+        player: &Entity,
+        entity_tracker: &EntityTracker,
+    ) {
+        if player.id == 0 || player.entity_type != EntityType::Player {
+            return;
+        }
+
+        loop {
+            let source_ids = self
+                .source_owner_aliases
+                .iter()
+                .filter_map(|(source_id, owner_id)| {
+                    self.resolve_confirmed_owner_player(*owner_id, entity_tracker)
+                        .filter(|owner| owner.id == player.id)
+                        .map(|_| *source_id)
+                })
+                .collect::<Vec<_>>();
+
+            if source_ids.is_empty() {
+                break;
+            }
+
+            for source_id in source_ids {
+                self.merge_source_alias_into_player(source_id, player);
+                self.source_owner_aliases.remove(&source_id);
+            }
+        }
+    }
+
+    fn merge_source_alias_into_player(&mut self, source_id: u64, player: &Entity) {
+        if source_id == 0 || player.id == 0 || source_id == player.id {
+            return;
+        }
+
+        self.encounter
+            .entities
+            .entry(player.name.clone())
+            .or_insert_with(|| encounter_entity_from_entity(player));
+
+        let old_names = self
+            .encounter
+            .entities
+            .iter()
+            .filter(|(name, entity)| {
+                name.as_str() != player.name
+                    && Self::is_mergeable_owned_source(entity)
+                    && (entity.id == source_id || Self::is_unresolved_entity_name(name, source_id))
+            })
+            .map(|(name, _)| name.clone())
+            .collect::<Vec<_>>();
+
+        for old_name in old_names {
+            self.merge_owned_source_entity_name_into_player(&old_name, player);
+        }
+
+        self.skill_tracker.rebind_entity_id(source_id, player.id);
+        self.rebind_startup_player_entity_ids(source_id, player.id);
+        self.rebind_contribution_entity_id(source_id, player.id);
+        self.resolved_source_owner_aliases
+            .insert(source_id, player.id);
+        for owner_id in self.source_owner_aliases.values_mut() {
+            if *owner_id == source_id {
+                *owner_id = player.id;
+            }
+        }
+        for owner_id in self.resolved_source_owner_aliases.values_mut() {
+            if *owner_id == source_id {
+                *owner_id = player.id;
+            }
+        }
+        self.refresh_encounter_player_damage_totals();
+    }
+
+    fn is_mergeable_owned_source(entity: &EncounterEntity) -> bool {
+        !matches!(
+            entity.entity_type,
+            EntityType::Player | EntityType::Boss | EntityType::Esther | EntityType::DarkGrenade
+        )
+    }
+
+    fn rebind_contribution_entity_id(&mut self, old_entity_id: u64, new_entity_id: u64) {
+        if old_entity_id == 0 || old_entity_id == new_entity_id {
+            return;
+        }
+
+        for accumulator in self.player_contributions.values_mut() {
+            Self::rebind_numeric_map_entity_id(
+                &mut accumulator.damage_split_by_entity_id_,
+                old_entity_id,
+                new_entity_id,
+            );
+            Self::rebind_nested_numeric_map_entity_id(
+                &mut accumulator.damage_done_by_entity_skill_group_,
+                old_entity_id,
+                new_entity_id,
+            );
+            Self::rebind_nested_numeric_map_entity_id(
+                &mut accumulator.damage_increase_by_entity_skill_group_,
+                old_entity_id,
+                new_entity_id,
+            );
+        }
+    }
+
+    fn rebind_numeric_map_entity_id(
+        map: &mut HashMap<u64, i64>,
+        old_entity_id: u64,
+        new_entity_id: u64,
+    ) {
+        if let Some(value) = map.remove(&old_entity_id) {
+            *map.entry(new_entity_id).or_default() += value;
+        }
+    }
+
+    fn rebind_nested_numeric_map_entity_id(
+        map: &mut HashMap<u64, HashMap<String, i64>>,
+        old_entity_id: u64,
+        new_entity_id: u64,
+    ) {
+        if let Some(old_values) = map.remove(&old_entity_id) {
+            let new_values = map.entry(new_entity_id).or_default();
+            for (key, value) in old_values {
+                *new_values.entry(key).or_default() += value;
+            }
+        }
+    }
+
     // update local player as we get more info
-    pub fn update_local_player(&mut self, entity: &Entity) {
+    pub fn update_local_player(&mut self, entity: &Entity, entity_tracker: &EntityTracker) {
         // we replace the existing local player if it exists, since its name might have changed (from hex or "You" to character name)
         if let Some(mut local) = self.encounter.entities.remove(&self.encounter.local_player) {
             // update local player name, insert back into encounter
@@ -332,6 +616,8 @@ impl EncounterState {
                     .insert(self.encounter.local_player.clone(), new_local);
             }
         }
+        self.resolve_source_aliases_for_player(entity, entity_tracker);
+        self.refresh_encounter_player_damage_totals();
     }
 
     pub fn on_init_env(&mut self, entity: Entity) {
@@ -420,17 +706,31 @@ impl EncounterState {
     }
 
     // replace local player
-    pub fn on_init_pc(&mut self, entity: Entity, hp: i64, max_hp: i64) {
+    pub fn on_init_pc(
+        &mut self,
+        entity: Entity,
+        hp: i64,
+        max_hp: i64,
+        entity_tracker: &EntityTracker,
+    ) {
         self.encounter.entities.remove(&self.encounter.local_player);
         self.encounter.local_player.clone_from(&entity.name);
         let mut player = encounter_entity_from_entity(&entity);
         player.current_hp = hp;
         player.max_hp = max_hp;
         self.encounter.entities.insert(player.name.clone(), player);
+        self.resolve_source_aliases_for_player(&entity, entity_tracker);
+        self.refresh_encounter_player_damage_totals();
     }
 
     // add or update player to encounter
-    pub fn on_new_pc(&mut self, entity: Entity, hp: i64, max_hp: i64) {
+    pub fn on_new_pc(
+        &mut self,
+        entity: Entity,
+        hp: i64,
+        max_hp: i64,
+        entity_tracker: &EntityTracker,
+    ) {
         self.merge_unresolved_player_entity(&entity);
         self.encounter
             .entities
@@ -459,6 +759,8 @@ impl EncounterState {
                 player.max_hp = max_hp;
                 player
             });
+        self.resolve_source_aliases_for_player(&entity, entity_tracker);
+        self.refresh_encounter_player_damage_totals();
     }
 
     fn mark_entity_alive(entity: &mut EncounterEntity, timestamp: i64) {
@@ -523,12 +825,7 @@ impl EncounterState {
             log.sort_unstable_by_key(|(timestamp, _)| *timestamp);
         }
 
-        Self::merge_name_keyed_nested_vec_map(&mut self.cast_log, old_name, new_name);
-        if let Some(skill_logs) = self.cast_log.get_mut(new_name) {
-            for log in skill_logs.values_mut() {
-                log.sort_unstable();
-            }
-        }
+        Self::merge_name_keyed_cast_log(&mut self.cast_log, old_name, new_name);
 
         if let Some(old_accumulator) = self.player_contributions.remove(old_name) {
             let accumulator = self
@@ -550,6 +847,72 @@ impl EncounterState {
         if self.encounter.local_player == old_name {
             self.encounter.local_player = new_name.to_string();
         }
+
+        self.refresh_encounter_player_damage_totals();
+    }
+
+    fn merge_owned_source_entity_name_into_player(&mut self, old_name: &str, player: &Entity) {
+        if old_name == player.name {
+            return;
+        }
+
+        self.encounter
+            .entities
+            .entry(player.name.clone())
+            .or_insert_with(|| encounter_entity_from_entity(player));
+
+        if let Some(old_entity) = self.encounter.entities.remove(old_name)
+            && let Some(player_entity) = self.encounter.entities.get_mut(&player.name)
+        {
+            Self::merge_owned_source_entity(player_entity, old_entity);
+        }
+
+        Self::merge_name_keyed_vec_map(&mut self.damage_log, old_name, &player.name);
+        if let Some(log) = self.damage_log.get_mut(&player.name) {
+            log.sort_unstable_by_key(|(timestamp, _)| *timestamp);
+        }
+
+        Self::merge_name_keyed_cast_log(&mut self.cast_log, old_name, &player.name);
+
+        if let Some(old_accumulator) = self.player_contributions.remove(old_name) {
+            let accumulator = self
+                .player_contributions
+                .entry(player.name.clone())
+                .or_default();
+            Self::merge_damage_data_accumulator(accumulator, old_accumulator);
+        }
+
+        self.refresh_encounter_player_damage_totals();
+    }
+
+    fn merge_owned_source_entity(target: &mut EncounterEntity, source: EncounterEntity) {
+        Self::merge_skills(&mut target.skills, source.skills);
+        Self::merge_owned_source_damage_stats(&mut target.damage_stats, source.damage_stats);
+        Self::merge_skill_stats(&mut target.skill_stats, source.skill_stats);
+    }
+
+    fn merge_owned_source_damage_stats(target: &mut DamageStats, source: DamageStats) {
+        target.damage_dealt += source.damage_dealt;
+        target.hyper_awakening_damage += source.hyper_awakening_damage;
+        Self::merge_numeric_map(&mut target.buffed_by, source.buffed_by);
+        Self::merge_numeric_map(&mut target.debuffed_by, source.debuffed_by);
+        target.buffed_by_support += source.buffed_by_support;
+        target.buffed_by_identity += source.buffed_by_identity;
+        target.debuffed_by_support += source.debuffed_by_support;
+        target.buffed_by_hat += source.buffed_by_hat;
+        target.crit_damage += source.crit_damage;
+        target.back_attack_damage += source.back_attack_damage;
+        target.front_attack_damage += source.front_attack_damage;
+        target.dps += source.dps;
+        target.rdps_damage_received += source.rdps_damage_received;
+        target.rdps_damage_received_support += source.rdps_damage_received_support;
+        target.rdps_damage_given += source.rdps_damage_given;
+        target.stagger += source.stagger;
+        target.buffed_damage += source.buffed_damage;
+        target.unbuffed_damage += source.unbuffed_damage;
+        target.unbuffed_dps += source.unbuffed_dps;
+        target.rdps += source.rdps;
+        target.ndps += source.ndps;
     }
 
     fn merge_encounter_entity(target: &mut EncounterEntity, source: EncounterEntity) {
@@ -657,6 +1020,9 @@ impl EncounterState {
         target
             .incapacitations
             .sort_unstable_by_key(|event| event.timestamp);
+        target.incapacitations.dedup_by(|a, b| {
+            a.timestamp == b.timestamp && a.duration == b.duration && a.event_type == b.event_type
+        });
         target.stagger += source.stagger;
         target.buffed_damage += source.buffed_damage;
         target.unbuffed_damage += source.unbuffed_damage;
@@ -718,8 +1084,7 @@ impl EncounterState {
         target.back_attack_damage += source.back_attack_damage;
         target.front_attack_damage += source.front_attack_damage;
         target.dps += source.dps;
-        target.cast_log.extend(source.cast_log);
-        target.cast_log.sort_unstable();
+        Self::merge_cast_log(&mut target.cast_log, source.cast_log);
         if target.tripod_index.is_none() {
             target.tripod_index = source.tripod_index;
         }
@@ -738,10 +1103,7 @@ impl EncounterState {
         if target.gem_tier_dmg.is_none() {
             target.gem_tier_dmg = source.gem_tier_dmg;
         }
-        target.skill_cast_log.extend(source.skill_cast_log);
-        target
-            .skill_cast_log
-            .sort_unstable_by_key(|cast| cast.timestamp);
+        Self::merge_skill_cast_log(&mut target.skill_cast_log, source.skill_cast_log);
         target.stagger += source.stagger;
         target.is_hyper_awakening |= source.is_hyper_awakening;
         if target.special.is_none() {
@@ -755,6 +1117,60 @@ impl EncounterState {
         Self::merge_numeric_map(&mut target.rdps_contributed, source.rdps_contributed);
         target.rdps_damage_received += source.rdps_damage_received;
         target.rdps_damage_received_support += source.rdps_damage_received_support;
+    }
+
+    fn merge_cast_log(target: &mut Vec<i32>, source: Vec<i32>) {
+        target.extend(source);
+        target.sort_unstable();
+        target.dedup();
+    }
+
+    fn merge_skill_cast_log(target: &mut Vec<SkillCast>, source: Vec<SkillCast>) {
+        let mut merged = target
+            .drain(..)
+            .map(|cast| (cast.timestamp, cast))
+            .collect::<BTreeMap<_, _>>();
+
+        for source_cast in source {
+            match merged.entry(source_cast.timestamp) {
+                std::collections::btree_map::Entry::Occupied(mut entry) => {
+                    let cast = entry.get_mut();
+                    cast.last = cast.last.max(source_cast.last);
+                    Self::append_missing_skill_hits(&mut cast.hits, source_cast.hits);
+                }
+                std::collections::btree_map::Entry::Vacant(entry) => {
+                    entry.insert(source_cast);
+                }
+            }
+        }
+
+        target.extend(merged.into_values());
+    }
+
+    fn append_missing_skill_hits(target: &mut Vec<SkillHit>, source: Vec<SkillHit>) {
+        for hit in source {
+            if !target
+                .iter()
+                .any(|existing| Self::skill_hits_match(existing, &hit))
+            {
+                target.push(hit);
+            }
+        }
+        target.sort_unstable_by_key(|hit| hit.timestamp);
+    }
+
+    fn skill_hits_match(a: &SkillHit, b: &SkillHit) -> bool {
+        a.timestamp == b.timestamp
+            && a.damage == b.damage
+            && a.unbuffed_damage == b.unbuffed_damage
+            && a.rdps_damage_received == b.rdps_damage_received
+            && a.rdps_damage_received_support == b.rdps_damage_received_support
+            && a.crit == b.crit
+            && a.back_attack == b.back_attack
+            && a.front_attack == b.front_attack
+            && a.buffed_by == b.buffed_by
+            && a.debuffed_by == b.debuffed_by
+            && a.stagger == b.stagger
     }
 
     fn merge_damage_data_accumulator(
@@ -802,17 +1218,18 @@ impl EncounterState {
         }
     }
 
-    fn merge_name_keyed_nested_vec_map<K, T>(
-        map: &mut HashMap<String, HashMap<K, Vec<T>>>,
+    fn merge_name_keyed_cast_log(
+        map: &mut HashMap<String, HashMap<u32, Vec<i32>>>,
         old_name: &str,
         new_name: &str,
-    ) where
-        K: Eq + Hash,
-    {
+    ) {
         if let Some(source) = map.remove(old_name) {
             let target = map.entry(new_name.to_string()).or_default();
-            for (key, mut values) in source {
-                target.entry(key).or_default().append(&mut values);
+            for (skill_id, mut values) in source {
+                let log = target.entry(skill_id).or_default();
+                log.append(&mut values);
+                log.sort_unstable();
+                log.dedup();
             }
         }
     }
@@ -1186,9 +1603,22 @@ impl EncounterState {
         } else {
             Some("inspect_pending".into())
         };
+        let inspect_targets = required_inspect_names
+            .into_iter()
+            .filter(|name| crate::live::entity_tracker::is_resolved_player_name(name))
+            .map(|name| {
+                (
+                    name,
+                    StartupInspectTarget {
+                        gate_required: true,
+                        live_stats_required: true,
+                        buffered_stats_required: false,
+                    },
+                )
+            })
+            .collect();
         self.startup_barrier = Some(StartupBarrierState {
-            required_character_ids: entity_tracker.get_required_rdps_player_character_ids(),
-            required_inspect_names,
+            inspect_targets,
             pending_skill: Vec::new(),
             pending_damage: Vec::new(),
             freeze_registered_names: false,
@@ -1294,9 +1724,12 @@ impl EncounterState {
             entity.damage_stats.damage_dealt - entity.damage_stats.buffed_damage;
     }
 
-    fn include_in_lal_damage_dump(entity: &EncounterEntity) -> bool {
+    fn include_in_lal_damage_dump(entity: &EncounterEntity, local_player: &str) -> bool {
         match entity.entity_type {
-            EntityType::Player => entity.damage_stats.damage_dealt > 0,
+            EntityType::Player => {
+                is_confirmed_player_entity(entity, local_player)
+                    && entity.damage_stats.damage_dealt > 0
+            }
             EntityType::DarkGrenade => entity.damage_stats.rdps_damage_given > 0,
             _ => false,
         }
@@ -1384,7 +1817,7 @@ impl EncounterState {
         self.encounter
             .entities
             .values()
-            .filter(|e| Self::include_in_lal_damage_dump(e))
+            .filter(|e| Self::include_in_lal_damage_dump(e, &self.encounter.local_player))
             .map(|entity| {
                 let (
                     damage_split_by_name,
@@ -1455,11 +1888,10 @@ impl EncounterState {
 
     fn build_damage_state_dump(&self) -> DamageStateDump {
         let mut player_id_to_damage_data_ = HashMap::new();
-        for entity in self
-            .encounter
-            .entities
-            .values()
-            .filter(|entity| Self::include_in_lal_damage_dump(entity))
+        for entity in
+            self.encounter.entities.values().filter(|entity| {
+                Self::include_in_lal_damage_dump(entity, &self.encounter.local_player)
+            })
         {
             let accumulator = self.player_contributions.get(&entity.name);
             let entity_id_ = entity.id;
@@ -1574,13 +2006,13 @@ impl EncounterState {
         proj_entity: &Entity,
         dmg_target_entity: &Entity,
         damage_data: DamageData,
+        hit_context: DamageHitContext,
         se_on_source: Vec<StatusEffectDetails>,
         se_on_target: Vec<StatusEffectDetails>,
         target_count: i32,
         timestamp: i64,
         entity_tracker: &mut EntityTracker,
         status_tracker: &mut StatusTracker,
-        _local_character_id: u64,
     ) {
         let buffered_player_entities = Self::collect_buffered_player_entities(
             dmg_src_entity,
@@ -1597,6 +2029,7 @@ impl EncounterState {
                 proj_entity: proj_entity.clone(),
                 dmg_target_entity: dmg_target_entity.clone(),
                 damage_data,
+                hit_context,
                 se_on_source,
                 se_on_target,
                 target_count,
@@ -1604,7 +2037,7 @@ impl EncounterState {
                 buffered_player_entities,
                 owner_self_effects_by_entity_id,
             };
-            Self::track_required_inspect_targets(
+            Self::mark_startup_buffered_inspect_targets(
                 barrier,
                 entity_tracker,
                 pending_damage.buffered_player_entities.values(),
@@ -1640,6 +2073,30 @@ impl EncounterState {
 
     pub fn startup_barrier_active(&self) -> bool {
         self.startup_barrier.is_some()
+    }
+
+    pub fn remove_startup_required_player(&mut self, player: &Entity) -> bool {
+        let Some(barrier) = self.startup_barrier.as_mut() else {
+            return false;
+        };
+
+        if !crate::live::entity_tracker::is_resolved_player_name(&player.name) {
+            return false;
+        }
+
+        let keep_stats_required = barrier
+            .inspect_targets
+            .get(&player.name)
+            .is_some_and(|target| target.buffered_stats_required);
+        if let Some(target) = barrier.inspect_targets.get_mut(&player.name) {
+            target.gate_required = false;
+            target.live_stats_required = false;
+        }
+        barrier
+            .inspect_targets
+            .retain(|_, target| target.gate_required || Self::target_stats_required(target));
+
+        keep_stats_required
     }
 
     fn collect_buffered_player_entities(
@@ -1702,47 +2159,87 @@ impl EncounterState {
         owner_self_effects_by_entity_id
     }
 
-    fn track_required_inspect_targets<'a>(
+    fn reconcile_startup_live_inspect_targets(
         barrier: &mut StartupBarrierState,
         entity_tracker: &mut EntityTracker,
-        entities: impl IntoIterator<Item = &'a Entity>,
     ) {
-        let mut required_character_ids = barrier.required_character_ids.clone();
-        let mut required_names = barrier.required_inspect_names.clone();
         if !barrier.freeze_registered_names {
-            required_character_ids = entity_tracker.get_required_rdps_player_character_ids();
-            required_names = entity_tracker.get_required_rdps_player_names();
-        }
-        required_names.extend(entity_tracker.get_bootstrap_visible_fallback_required_names());
-        for entity in entities {
-            if !entity_tracker.is_gate_eligible_player_entity(entity) {
-                continue;
+            for target in barrier.inspect_targets.values_mut() {
+                target.gate_required = false;
+                target.live_stats_required = false;
             }
-            if entity.character_id != 0 {
-                required_character_ids.push(entity.character_id);
-            }
-            if crate::live::entity_tracker::is_resolved_player_name(&entity.name) {
-                required_names.push(entity.name.clone());
+            for name in entity_tracker.get_required_bootstrap_player_names() {
+                Self::mark_startup_live_inspect_target(barrier, name);
             }
         }
-        required_character_ids.sort_unstable();
-        required_character_ids.dedup();
-        required_names.sort();
-        required_names.dedup();
-        barrier.required_character_ids = required_character_ids;
-        barrier.required_inspect_names = required_names;
+        for name in entity_tracker.get_bootstrap_visible_fallback_required_names() {
+            Self::mark_startup_live_inspect_target(barrier, name);
+        }
+        barrier
+            .inspect_targets
+            .retain(|_, target| target.gate_required || Self::target_stats_required(target));
     }
 
-    fn collect_pending_buffered_player_entities(barrier: &StartupBarrierState) -> Vec<Entity> {
-        let mut buffered_player_entities = HashMap::new();
-        for pending_damage in &barrier.pending_damage {
-            for entity in pending_damage.buffered_player_entities.values() {
-                buffered_player_entities
-                    .entry(entity.id)
-                    .or_insert_with(|| entity.clone());
+    fn mark_startup_buffered_inspect_targets<'a>(
+        barrier: &mut StartupBarrierState,
+        entity_tracker: &EntityTracker,
+        entities: impl IntoIterator<Item = &'a Entity>,
+    ) {
+        for entity in entities {
+            if entity.entity_type != EntityType::Player {
+                continue;
+            }
+            let is_gate_eligible =
+                entity_tracker.is_bootstrap_party_inspect_eligible_player_entity(entity);
+            if crate::live::entity_tracker::is_resolved_player_name(&entity.name) {
+                let target = barrier
+                    .inspect_targets
+                    .entry(entity.name.clone())
+                    .or_default();
+                target.buffered_stats_required = true;
+                if is_gate_eligible {
+                    target.gate_required = true;
+                }
             }
         }
-        buffered_player_entities.into_values().collect()
+        barrier
+            .inspect_targets
+            .retain(|_, target| target.gate_required || Self::target_stats_required(target));
+    }
+
+    fn mark_startup_live_inspect_target(barrier: &mut StartupBarrierState, name: String) {
+        if !crate::live::entity_tracker::is_resolved_player_name(&name) {
+            return;
+        }
+
+        let target = barrier.inspect_targets.entry(name).or_default();
+        target.gate_required = true;
+        target.live_stats_required = true;
+    }
+
+    fn target_stats_required(target: &StartupInspectTarget) -> bool {
+        target.live_stats_required || target.buffered_stats_required
+    }
+
+    fn startup_gate_required_names(barrier: &StartupBarrierState) -> Vec<String> {
+        Self::startup_required_names(barrier, |target| target.gate_required)
+    }
+
+    fn startup_stats_required_names(barrier: &StartupBarrierState) -> Vec<String> {
+        Self::startup_required_names(barrier, Self::target_stats_required)
+    }
+
+    fn startup_required_names(
+        barrier: &StartupBarrierState,
+        mut is_required: impl FnMut(&StartupInspectTarget) -> bool,
+    ) -> Vec<String> {
+        let mut names = barrier
+            .inspect_targets
+            .iter()
+            .filter_map(|(name, target)| is_required(target).then_some(name.clone()))
+            .collect::<Vec<_>>();
+        names.sort();
+        names
     }
 
     pub fn try_flush_startup_barrier(&mut self, entity_tracker: &mut EntityTracker) {
@@ -1750,16 +2247,11 @@ impl EncounterState {
             return;
         };
 
-        let buffered_entities = Self::collect_pending_buffered_player_entities(barrier);
-        Self::track_required_inspect_targets(barrier, entity_tracker, buffered_entities.iter());
-        let gate_ready = entity_tracker.is_startup_barrier_gate_ready(
-            &barrier.required_character_ids,
-            &barrier.required_inspect_names,
-        );
-        let stats_ready = entity_tracker.is_startup_barrier_stats_ready(
-            &barrier.required_character_ids,
-            &barrier.required_inspect_names,
-        );
+        Self::reconcile_startup_live_inspect_targets(barrier, entity_tracker);
+        let gate_names = Self::startup_gate_required_names(barrier);
+        let stats_names = Self::startup_stats_required_names(barrier);
+        let gate_ready = entity_tracker.is_startup_barrier_gate_ready(&gate_names);
+        let stats_ready = entity_tracker.is_startup_barrier_stats_ready(&stats_names);
         if barrier.pending_damage.is_empty() && !barrier.pending_skill.is_empty() && !gate_ready {
             let pending_skill = std::mem::take(&mut barrier.pending_skill);
             for pending_skill in pending_skill {
@@ -1807,6 +2299,7 @@ impl EncounterState {
                     &pending_damage.proj_entity,
                     &pending_damage.dmg_target_entity,
                     pending_damage.damage_data,
+                    pending_damage.hit_context,
                     pending_damage.se_on_source,
                     pending_damage.se_on_target,
                     pending_damage.target_count,
@@ -1832,16 +2325,10 @@ impl EncounterState {
             return;
         };
 
-        let buffered_entities = Self::collect_pending_buffered_player_entities(barrier);
-        Self::track_required_inspect_targets(barrier, entity_tracker, buffered_entities.iter());
-        let stats_ready = entity_tracker.is_startup_barrier_stats_ready(
-            &barrier.required_character_ids,
-            &barrier.required_inspect_names,
-        );
-        let has_inspect_failures = entity_tracker.has_failed_startup_barrier_inspects(
-            &barrier.required_character_ids,
-            &barrier.required_inspect_names,
-        );
+        Self::reconcile_startup_live_inspect_targets(barrier, entity_tracker);
+        let stats_names = Self::startup_stats_required_names(barrier);
+        let stats_ready = entity_tracker.is_startup_barrier_stats_ready(&stats_names);
+        let has_inspect_failures = entity_tracker.has_failed_startup_barrier_inspects(&stats_names);
         let (pending_skill, pending_damage) = self
             .startup_barrier
             .take()
@@ -1878,6 +2365,7 @@ impl EncounterState {
                     &pending_damage.proj_entity,
                     &pending_damage.dmg_target_entity,
                     pending_damage.damage_data,
+                    pending_damage.hit_context,
                     pending_damage.se_on_source,
                     pending_damage.se_on_target,
                     pending_damage.target_count,
@@ -1903,8 +2391,7 @@ impl EncounterState {
             return false;
         };
 
-        let buffered_entities = Self::collect_pending_buffered_player_entities(barrier);
-        Self::track_required_inspect_targets(barrier, entity_tracker, buffered_entities.iter());
+        Self::reconcile_startup_live_inspect_targets(barrier, entity_tracker);
         barrier.freeze_registered_names = true;
         self.pending_phase_transition = Some(phase_code);
         true
@@ -1913,6 +2400,17 @@ impl EncounterState {
     pub fn rebind_startup_player_entity_ids(&mut self, old_entity_id: u64, new_entity_id: u64) {
         if old_entity_id == 0 || old_entity_id == new_entity_id {
             return;
+        }
+
+        for owner_id in self.source_owner_aliases.values_mut() {
+            if *owner_id == old_entity_id {
+                *owner_id = new_entity_id;
+            }
+        }
+        for owner_id in self.resolved_source_owner_aliases.values_mut() {
+            if *owner_id == old_entity_id {
+                *owner_id = new_entity_id;
+            }
         }
 
         let Some(barrier) = self.startup_barrier.as_mut() else {
@@ -2022,7 +2520,9 @@ impl EncounterState {
             !pending_skill.create_skill_tracker_cast,
         );
         if pending_skill.create_skill_tracker_cast
-            && pending_skill.source_entity.entity_type == EntityType::Player
+            && (pending_skill.source_entity.entity_type == EntityType::Player
+                || pending_skill.source_entity.entity_type == EntityType::Unknown)
+            && pending_skill.source_entity.class_id > 0
             && skill_id > 0
         {
             self.skill_tracker.new_cast(
@@ -2047,13 +2547,18 @@ impl EncounterState {
         _target_count: i32,
         entity_tracker: &mut EntityTracker,
         status_tracker: &mut StatusTracker,
-        local_character_id: u64,
         inspect_transport_available: bool,
         timestamp: i64,
     ) {
         if self.disabled {
             return;
         }
+
+        let Some(hit_context) =
+            self.get_valid_damage_hit(dmg_src_entity, dmg_target_entity, &damage_data)
+        else {
+            return;
+        };
 
         if self.startup_barrier.is_some() {
             self.enqueue_pending_damage(
@@ -2062,18 +2567,18 @@ impl EncounterState {
                 proj_entity,
                 dmg_target_entity,
                 damage_data,
+                hit_context,
                 se_on_source,
                 se_on_target,
                 _target_count,
                 timestamp,
                 entity_tracker,
                 status_tracker,
-                local_character_id,
             );
             return;
         }
 
-        let required_inspect_names = entity_tracker.get_required_rdps_player_names();
+        let required_inspect_names = entity_tracker.get_required_bootstrap_player_names();
         let missing_inspects = required_inspect_names
             .iter()
             .filter(|name| !entity_tracker.has_inspect_snapshot_for_name(name))
@@ -2088,9 +2593,9 @@ impl EncounterState {
             se_on_source,
             se_on_target,
             _target_count,
+            hit_context,
             entity_tracker,
             status_tracker,
-            local_character_id,
             inspect_transport_available,
             timestamp,
             required_inspect_names,
@@ -2109,9 +2614,9 @@ impl EncounterState {
         se_on_source: Vec<StatusEffectDetails>,
         se_on_target: Vec<StatusEffectDetails>,
         target_count: i32,
+        hit_context: DamageHitContext,
         entity_tracker: &mut EntityTracker,
         status_tracker: &mut StatusTracker,
-        local_character_id: u64,
         inspect_transport_available: bool,
         timestamp: i64,
         required_inspect_names: Vec<String>,
@@ -2121,46 +2626,51 @@ impl EncounterState {
         let should_open_startup_barrier =
             self.encounter.fight_start == 0 || self.rearm_startup_barrier_on_next_combat;
         if should_open_startup_barrier {
-            if inspect_transport_available {
-                if self.encounter.fight_start == 0 {
-                    self.start_fight(
-                        timestamp,
-                        dmg_target_entity.entity_type,
-                        damage_data.skill_id,
-                        dmg_src_entity.id,
+            let startup_barrier_eligible = self.should_open_startup_barrier_for_hit(
+                dmg_src_entity.entity_type,
+                dmg_target_entity.entity_type,
+            );
+            if startup_barrier_eligible {
+                if inspect_transport_available {
+                    if self.encounter.fight_start == 0 {
+                        self.start_fight(
+                            timestamp,
+                            dmg_target_entity.entity_type,
+                            damage_data.skill_id,
+                            dmg_src_entity.id,
+                        );
+                    }
+                    self.rearm_startup_barrier_on_next_combat = false;
+                    self.open_startup_barrier(
+                        entity_tracker,
+                        required_inspect_names,
+                        &missing_inspects,
                     );
+                    self.enqueue_pending_damage(
+                        packet_seq,
+                        dmg_src_entity,
+                        proj_entity,
+                        dmg_target_entity,
+                        damage_data,
+                        hit_context,
+                        se_on_source,
+                        se_on_target,
+                        target_count,
+                        timestamp,
+                        entity_tracker,
+                        status_tracker,
+                    );
+                    return;
+                }
+                if !missing_inspects.is_empty() {
+                    self.rdps_valid = false;
+                    self.rdps_message = Some("inspect_unavailable".into());
+                } else {
+                    self.rdps_valid = true;
+                    self.rdps_message = None;
                 }
                 self.rearm_startup_barrier_on_next_combat = false;
-                self.open_startup_barrier(
-                    entity_tracker,
-                    required_inspect_names,
-                    &missing_inspects,
-                );
-                self.enqueue_pending_damage(
-                    packet_seq,
-                    dmg_src_entity,
-                    proj_entity,
-                    dmg_target_entity,
-                    damage_data,
-                    se_on_source,
-                    se_on_target,
-                    target_count,
-                    timestamp,
-                    entity_tracker,
-                    status_tracker,
-                    local_character_id,
-                );
-                return;
             }
-
-            if !missing_inspects.is_empty() {
-                self.rdps_valid = false;
-                self.rdps_message = Some("inspect_unavailable".into());
-            } else {
-                self.rdps_valid = true;
-                self.rdps_message = None;
-            }
-            self.rearm_startup_barrier_on_next_combat = false;
         }
 
         self.apply_damage(
@@ -2168,6 +2678,7 @@ impl EncounterState {
             proj_entity,
             dmg_target_entity,
             damage_data,
+            hit_context,
             se_on_source,
             se_on_target,
             target_count,
@@ -2178,21 +2689,12 @@ impl EncounterState {
         );
     }
 
-    #[allow(clippy::too_many_arguments)]
-    fn apply_damage(
-        &mut self,
+    fn get_valid_damage_hit(
+        &self,
         dmg_src_entity: &Entity,
-        proj_entity: &Entity,
         dmg_target_entity: &Entity,
-        damage_data: DamageData,
-        se_on_source: Vec<StatusEffectDetails>,
-        se_on_target: Vec<StatusEffectDetails>,
-        _target_count: i32,
-        entity_tracker: &EntityTracker,
-        timestamp: i64,
-        buffered_player_entities: Option<&HashMap<u64, Entity>>,
-        buffered_owner_self_effects: Option<&HashMap<u64, Vec<StatusEffectDetails>>>,
-    ) {
+        damage_data: &DamageData,
+    ) -> Option<DamageHitContext> {
         let hit_flag = match damage_data.modifier & 0xf {
             0 => HitFlag::NORMAL,
             1 => HitFlag::CRITICAL,
@@ -2208,9 +2710,7 @@ impl EncounterState {
             11 => HitFlag::DAMAGE_SHARE,
             12 => HitFlag::DODGE_HIT,
             13 => HitFlag::MAX,
-            _ => {
-                return;
-            }
+            _ => return None,
         };
         let hit_option_raw = ((damage_data.modifier >> 4) & 0x7) - 1;
         let hit_option = match hit_option_raw {
@@ -2219,21 +2719,55 @@ impl EncounterState {
             1 => HitOption::FRONTAL_ATTACK,
             2 => HitOption::FLANK_ATTACK,
             3 => HitOption::MAX,
-            _ => {
-                return;
-            }
+            _ => return None,
         };
 
         if hit_flag == HitFlag::INVINCIBLE {
-            return;
+            return None;
         }
         if hit_flag == HitFlag::DAMAGE_SHARE
             && damage_data.skill_id == 0
             && damage_data.skill_effect_id == 0
         {
-            return;
+            return None;
+        }
+        if dmg_src_entity.name == dmg_target_entity.name {
+            info!("ignoring self damage from {}", dmg_src_entity.name);
+            return None;
         }
 
+        Some(DamageHitContext {
+            hit_flag,
+            hit_option,
+        })
+    }
+
+    fn should_open_startup_barrier_for_hit(
+        &self,
+        source_type: EntityType,
+        target_type: EntityType,
+    ) -> bool {
+        !self.boss_only_damage
+            || ((target_type == EntityType::Boss || target_type == EntityType::Player)
+                && (target_type != EntityType::Player || source_type == EntityType::Boss))
+    }
+
+    #[allow(clippy::too_many_arguments)]
+    fn apply_damage(
+        &mut self,
+        dmg_src_entity: &Entity,
+        proj_entity: &Entity,
+        dmg_target_entity: &Entity,
+        damage_data: DamageData,
+        hit_context: DamageHitContext,
+        se_on_source: Vec<StatusEffectDetails>,
+        se_on_target: Vec<StatusEffectDetails>,
+        _target_count: i32,
+        entity_tracker: &EntityTracker,
+        timestamp: i64,
+        buffered_player_entities: Option<&HashMap<u64, Entity>>,
+        buffered_owner_self_effects: Option<&HashMap<u64, Vec<StatusEffectDetails>>>,
+    ) {
         let mut skill_effect_id = damage_data.skill_effect_id;
         let is_battle_item = is_battle_item(&proj_entity.skill_effect_id, "attack");
         if proj_entity.entity_type == EntityType::Projectile && is_battle_item {
@@ -2246,7 +2780,13 @@ impl EncounterState {
             .entities
             .entry(dmg_src_entity.name.clone())
             .or_insert_with(|| encounter_entity_from_entity(dmg_src_entity));
+        let source_was_player = source_entity.entity_type == EntityType::Player;
+        let previous_source_damage_dealt = source_entity.damage_stats.damage_dealt;
+        Self::refresh_encounter_entity_metadata(source_entity, dmg_src_entity, None, None);
         let source_type = source_entity.entity_type;
+        let source_promoted_to_player = !source_was_player
+            && source_entity.entity_type == EntityType::Player
+            && previous_source_damage_dealt > 0;
 
         let resolved_skill_id = resolve_skill_id(damage_data.skill_id, skill_effect_id);
 
@@ -2304,23 +2844,45 @@ impl EncounterState {
             .and_modify(|s| s.stagger += damage_data.stagger as i64);
         source_entity.damage_stats.stagger += damage_data.stagger as i64;
 
-        // ensure target entity exists in encounter
-        let target_type = self
-            .encounter
-            .entities
-            .entry(dmg_target_entity.name.clone())
-            .or_insert_with(|| {
-                let mut target_entity = encounter_entity_from_entity(dmg_target_entity);
-                target_entity.current_hp = damage_data.target_current_hp;
-                target_entity.max_hp = damage_data.target_max_hp;
-                target_entity
-            })
-            .entity_type;
+        let mut player_totals_stale = source_promoted_to_player;
 
-        if dmg_src_entity.name == dmg_target_entity.name {
-            info!("ignoring self damage from {}", dmg_src_entity.name);
-            return;
+        // ensure target entity exists in encounter
+        let (target_type, target_promoted_to_player) = {
+            let target_entity = self
+                .encounter
+                .entities
+                .entry(dmg_target_entity.name.clone())
+                .or_insert_with(|| {
+                    let mut target_entity = encounter_entity_from_entity(dmg_target_entity);
+                    target_entity.current_hp = damage_data.target_current_hp;
+                    target_entity.max_hp = damage_data.target_max_hp;
+                    target_entity
+                });
+            let was_player = target_entity.entity_type == EntityType::Player;
+            let previous_damage_taken = target_entity.damage_stats.damage_taken;
+            Self::refresh_encounter_entity_metadata(
+                target_entity,
+                dmg_target_entity,
+                Some(damage_data.target_current_hp),
+                Some(damage_data.target_max_hp),
+            );
+            (
+                target_entity.entity_type,
+                !was_player
+                    && target_entity.entity_type == EntityType::Player
+                    && previous_damage_taken > 0,
+            )
+        };
+        player_totals_stale |= target_promoted_to_player;
+
+        if player_totals_stale {
+            self.refresh_encounter_player_damage_totals();
         }
+
+        let DamageHitContext {
+            hit_flag,
+            hit_option,
+        } = hit_context;
 
         // if boss only damage is enabled
         // check if target is boss and not player
@@ -2577,6 +3139,20 @@ impl EncounterState {
                     },
                 }),
             );
+        }
+
+        let unresolved_damage_log_source = (source_entity.entity_type == EntityType::Unknown
+            && (source_entity.class_id > 0
+                || self.source_owner_aliases.contains_key(&source_entity.id)
+                || self
+                    .resolved_source_owner_aliases
+                    .contains_key(&source_entity.id)))
+        .then(|| source_entity.name.clone());
+        if let Some(source_name) = unresolved_damage_log_source {
+            self.damage_log
+                .entry(source_name)
+                .or_default()
+                .push((timestamp, damage));
         }
 
         if source_entity.entity_type == EntityType::Player {
@@ -3546,7 +4122,8 @@ impl EncounterState {
                     .entities
                     .contains_key(&self.encounter.current_boss_name)
                 || !self.encounter.entities.values().any(|e| {
-                    e.entity_type == EntityType::Player && e.damage_stats.damage_dealt > 0
+                    is_confirmed_player_entity(e, &self.encounter.local_player)
+                        && e.damage_stats.damage_dealt > 0
                 }))
         {
             info!("not saving to db, no players with damage dealt");
@@ -3557,6 +4134,7 @@ impl EncounterState {
             warn!("damage decryption is invalid, not saving to db");
         }
 
+        self.refresh_encounter_player_damage_totals();
         let mut encounter = self.encounter.clone();
 
         let damage_log = self.damage_log.clone();
