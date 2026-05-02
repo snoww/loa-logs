@@ -46,6 +46,7 @@ pub struct EntityTracker {
     bootstrap_visible_fallback_names: Vec<String>,
     bootstrap_visible_fallback_required_names: Vec<String>,
     next_bootstrap_inspect_at_ms: i64,
+    current_visibility_generation: u64,
     last_reconnect_rebind: Option<(u64, u64)>,
     removed_player_entities_by_character_id: HashMap<u64, Entity>,
     removed_player_entities_by_name_class: HashMap<(String, u32), Entity>,
@@ -201,6 +202,7 @@ impl EntityTracker {
             bootstrap_visible_fallback_names: Vec::new(),
             bootstrap_visible_fallback_required_names: Vec::new(),
             next_bootstrap_inspect_at_ms: 0,
+            current_visibility_generation: 0,
             last_reconnect_rebind: None,
             removed_player_entities_by_character_id: HashMap::new(),
             removed_player_entities_by_name_class: HashMap::new(),
@@ -212,6 +214,7 @@ impl EntityTracker {
     }
 
     pub fn init_env(&mut self, pkt: PKTInitEnv) -> Entity {
+        self.bump_visibility_generation();
         if self.local_entity_id != 0 {
             let party_id = self
                 .party_tracker
@@ -254,6 +257,7 @@ impl EntityTracker {
         local_player.inspect_result = None;
         local_player.inspect_snapshot = None;
         local_player.skill_runtime_data.clear();
+        local_player.visibility_generation = self.current_visibility_generation;
         self.local_entity_id = pkt.player_id;
 
         self.entities.clear();
@@ -303,6 +307,7 @@ impl EntityTracker {
             class_id: pkt.class_id as u32,
             gear_level: truncate_gear_level(pkt.gear_level),
             character_id: pkt.character_id,
+            visibility_generation: self.current_visibility_generation,
             ..Default::default()
         };
 
@@ -384,6 +389,7 @@ impl EntityTracker {
             class_id: pc_struct.class_id as u32,
             gear_level: truncate_gear_level(pc_struct.max_item_level), // todo?
             character_id: pc_struct.character_id,
+            visibility_generation: self.current_visibility_generation,
             stats: pc_struct
                 .stat_pairs
                 .iter()
@@ -935,6 +941,7 @@ impl EntityTracker {
             for entity in self.entities.values() {
                 if entity.entity_type != Player
                     || entity.id == self.local_entity_id
+                    || entity.visibility_generation != self.current_visibility_generation
                     || !is_resolved_player_name(&entity.name)
                     || tracked_party_entity_ids.contains(&entity.id)
                     || (entity.character_id != 0
@@ -1019,6 +1026,7 @@ impl EntityTracker {
     }
 
     pub fn on_new_transit(&mut self) {
+        self.bump_visibility_generation();
         self.pending_inspect_results_by_name.clear();
         self.inspect_requested_names.clear();
         self.forced_refresh_names.clear();
@@ -1054,6 +1062,11 @@ impl EntityTracker {
             self.character_id_to_name.insert(character_id, name.clone());
             self.party_tracker.borrow_mut().set_name(name);
         }
+    }
+
+    fn bump_visibility_generation(&mut self) {
+        self.current_visibility_generation =
+            self.current_visibility_generation.wrapping_add(1).max(1);
     }
 
     pub fn apply_inspect_result(
@@ -2311,6 +2324,7 @@ pub struct Entity {
     pub inspect_info: Option<InspectInfo>,
     pub inspect_result: Option<Arc<PKTPCInspectResult>>,
     pub inspect_snapshot: Option<InspectSnapshot>,
+    pub visibility_generation: u64,
     pub skill_runtime_data: HashMap<u32, SkillRuntimeData>,
     pub stance: u8,
     pub identity_gauge1: u32,
