@@ -266,7 +266,7 @@ export class EntityState {
 
     const isSupport = adjustedSkills.some((skill) => sumUdpsContributed(skill, [1, 3, 5]) > 0);
     if (this.skillSort === "stagger") return adjustedSkills.sort((a, b) => b.stagger - a.stagger);
-    if (this.skillSort === "buffed" && isSupport && this.encounter.curSettings.breakdown.unbuffedDamage)
+    if (this.skillSort === "buffed" && isSupport)
       return adjustedSkills.sort((a, b) => sumUdpsContributed(b, [1, 3, 5]) - sumUdpsContributed(a, [1, 3, 5]));
     return adjustedSkills.sort((a, b) => b.totalDamage - a.totalDamage);
   });
@@ -275,7 +275,7 @@ export class EntityState {
 
   private skillSortValue(skill: Skill): number {
     if (this.skillSort === "stagger") return skill.stagger ?? 0;
-    if (this.skillSort === "buffed" && this.isSupport && this.encounter.curSettings.breakdown.unbuffedDamage)
+    if (this.skillSort === "buffed" && this.isSupport)
       return sumUdpsContributed(skill, [1, 3, 5]);
     return skill.totalDamage;
   }

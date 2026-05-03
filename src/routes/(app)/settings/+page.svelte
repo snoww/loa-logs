@@ -607,8 +607,8 @@
         {@render settingOption(
           "logs",
           "unbuffedDamage",
-          "Skill Unbuffed/Buffed Damage",
-          "Pseudo rDPS from in-game Combat Analyzer. Show the total damage dealt by the skill without support buffs. For support skills, shows amount of damage buffed by skill",
+          "Skill Unbuffed Damage",
+          "Pseudo rDPS from in-game Combat Analyzer. Show the total damage dealt by the skill without support buffs.",
           true
         )}
         {@render settingOption(
@@ -629,8 +629,8 @@
         {@render settingOption(
           "logs",
           "unbuffedDps",
-          "Skill Unbuffed/Buffed DPS",
-          "Pseudo rDPS from in-game Combat Analyzer. Show the dps of the skill without support buffs. For support skills, shows the dps buffed by skill",
+          "Skill Unbuffed DPS",
+          "Pseudo rDPS from in-game Combat Analyzer. Show the dps of the skill without support buffs.",
           true
         )}
         {@render settingOption(
@@ -865,8 +865,8 @@
         {@render settingOption(
           "meter",
           "unbuffedDamage",
-          "Skill Unbuffed/Buffed Damage",
-          "Pseudo rDPS from in-game Combat Analyzer. Show the total damage dealt by the skill without support buffs. For support skills, shows amount of damage buffed by skill",
+          "Skill Unbuffed Damage",
+          "Pseudo rDPS from in-game Combat Analyzer. Show the total damage dealt by the skill without support buffs.",
           true
         )}
         {@render settingOption(
@@ -887,8 +887,8 @@
         {@render settingOption(
           "meter",
           "unbuffedDps",
-          "Skill Unbuffed/Buffed DPS",
-          "Pseudo rDPS from in-game Combat Analyzer. Show the dps of the skill without support buffs. For support skills, shows the dps buffed by skill",
+          "Skill Unbuffed DPS",
+          "Pseudo rDPS from in-game Combat Analyzer. Show the dps of the skill without support buffs.",
           true
         )}
         {@render settingOption(
