@@ -579,12 +579,12 @@
 
 {#snippet rdpsContribTooltip(state: EntityState)}
   {#if state.rdpsContribDamage > 0}
-    <div class="-mx-px flex flex-col font-normal">
+    <div class="-mx-px flex flex-col space-y-1 py-px text-xs font-normal">
       {#if state.isSupport}
-        <div>
+        <div class="text-sm">
           The support contributed {customRound(state.rdpsContribPercent)}% damage to the party
         </div>
-        <div>
+        <div class="text-sm">
           Given: {abbreviateNumber(state.entity.damageStats.rdpsDamageGiven, 2)}
         </div>
       {:else}
