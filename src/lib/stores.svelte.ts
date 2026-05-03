@@ -300,7 +300,7 @@ export const defaultSettings: AppSettings = {
     percentIdentityBySup: true,
     percentHatBySup: true,
     percentBrand: true,
-    supportContrib: true,
+    supportContrib: false,
     rdpsContrib: true,
     stagger: true,
     breakdown: {

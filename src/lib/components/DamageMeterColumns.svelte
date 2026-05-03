@@ -588,9 +588,13 @@
           Given: {abbreviateNumber(state.entity.damageStats.rdpsDamageGiven, 2)}
         </div>
       {:else}
-        <div>
-          Received {customRound(state.rdpsContribPercent)}% damage from all party members
-        </div>
+        {#if state.entity.damageStats.rdpsDamageReceivedSupport > 0 && state.damageDealt > 0}
+          {@const dpsContrib = state.entity.damageStats.rdpsDamageReceived - state.entity.damageStats.rdpsDamageReceivedSupport}
+          <div>Support: {customRound((state.entity.damageStats.rdpsDamageReceivedSupport / state.damageDealt) * 100)}%</div>
+          {#if dpsContrib > 0}
+            <div>DPS: {customRound((dpsContrib / state.damageDealt) * 100)}%</div>
+          {/if}
+        {/if}
         <div>
           Received: {abbreviateNumber(state.entity.damageStats.rdpsDamageReceived, 2)}
         </div>
