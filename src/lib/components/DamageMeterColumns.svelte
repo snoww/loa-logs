@@ -581,18 +581,18 @@
   {#if state.rdpsContribDamage > 0}
     <div class="-mx-px flex flex-col space-y-1 py-px text-xs font-normal">
       {#if state.isSupport}
-        <div class="text-sm">
+        <div>
           The support contributed {customRound(state.rdpsContribPercent)}% damage to the party
         </div>
-        <div class="text-sm">
+        <div>
           Given: {abbreviateNumber(state.entity.damageStats.rdpsDamageGiven, 2)}
         </div>
       {:else}
         {#if state.entity.damageStats.rdpsDamageReceivedSupport > 0 && state.damageDealt > 0}
           {@const dpsContrib = state.entity.damageStats.rdpsDamageReceived - state.entity.damageStats.rdpsDamageReceivedSupport}
-          <div>Support: {customRound((state.entity.damageStats.rdpsDamageReceivedSupport / state.damageDealt) * 100)}%</div>
+          <div>Support Contribution: {customRound((state.entity.damageStats.rdpsDamageReceivedSupport / state.damageDealt) * 100)}%</div>
           {#if dpsContrib > 0}
-            <div>DPS: {customRound((dpsContrib / state.damageDealt) * 100)}%</div>
+            <div>DPS Contribution: {customRound((dpsContrib / state.damageDealt) * 100)}%</div>
           {/if}
         {/if}
         <div>

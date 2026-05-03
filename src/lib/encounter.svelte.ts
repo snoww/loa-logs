@@ -296,8 +296,9 @@ export class EncounterState {
   }
 
   topSortValue = $derived.by(() => {
-    if (!this.players.length) return 0;
-    return Math.max(...this.players.map((p) => this.sortValue(p)));
+    const realPlayers = this.players.filter((p) => p.entityType === EntityType.PLAYER);
+    if (!realPlayers.length) return 0;
+    return Math.max(...realPlayers.map((p) => this.sortValue(p)));
   });
 
   /**
@@ -380,6 +381,9 @@ export class EncounterState {
     // sort parties by partyId
     for (const party of temp) {
       switch (this.playerSort) {
+        case "ndps":
+          party.sort((a, b) => getBaseDamage(b.damageStats) - getBaseDamage(a.damageStats));
+          break;
         case "rdps":
           party.sort((a, b) => getRDamage(b.damageStats) - getRDamage(a.damageStats));
           break;
