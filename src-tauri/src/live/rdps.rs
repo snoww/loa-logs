@@ -2630,12 +2630,18 @@ fn is_support_source(
     entity_tracker: &EntityTracker,
     buffered_entities: Option<&HashMap<u64, Entity>>,
 ) -> bool {
-    skill_buff
-        .buff_category
-        .as_deref()
-        .is_some_and(|category| category == "supportbuff")
-        || get_buffered_or_live_entity(source_entity_id, buffered_entities, entity_tracker)
-            .is_some_and(|entity| is_support_class(&entity.class_id))
+    match resolve_source_role(source_entity_id, entity_tracker, buffered_entities) {
+        SourceRole::ConfirmedSupport => true,
+        SourceRole::ConfirmedDps => false,
+        SourceRole::Unknown => {
+            get_buffered_or_live_entity(source_entity_id, buffered_entities, entity_tracker)
+                .is_some_and(|entity| is_support_class(&entity.class_id))
+                || skill_buff
+                    .buff_category
+                    .as_deref()
+                    .is_some_and(|category| category == "supportbuff")
+        }
+    }
 }
 
 fn is_identity_skill_buff(skill_buff: &crate::models::SkillBuffData) -> bool {

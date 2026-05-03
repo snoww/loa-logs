@@ -15,13 +15,13 @@ mod utils;
 use crate::api::{BanList, HeartBeatApi};
 use crate::database::utils::apply_player_info;
 use crate::live::encounter_state::EncounterState;
-use crate::live::entity_tracker::{get_current_and_max_hp, EntityTracker};
+use crate::live::entity_tracker::{EntityTracker, get_current_and_max_hp};
 use crate::live::id_tracker::IdTracker;
 use crate::live::manager::EventManager;
 use crate::live::party_tracker::PartyTracker;
 use crate::live::status_tracker::{
-    get_status_effect_value, StatusEffectDetails, StatusEffectTargetType, StatusEffectType,
-    StatusTracker,
+    StatusEffectDetails, StatusEffectTargetType, StatusEffectType, StatusTracker,
+    get_status_effect_value,
 };
 use crate::local::{LocalInfo, LocalPlayer, LocalPlayerRepository};
 use crate::models::{DamageData, EntityType, Identity, TripodIndex};
@@ -33,7 +33,7 @@ use chrono::Utc;
 use hashbrown::HashMap;
 use log::{info, warn};
 use meter_decryption::PacketProcessResult;
-use meter_defs::{defs::*, GamePacket, IntoLoaPacket};
+use meter_defs::{GamePacket, IntoLoaPacket, defs::*};
 use nineveh_formats::ipc::{
     ConnectionId, IPCClientToServerMessage, IPCServerToClientMessage, PacketAction, PacketDirection,
 };
