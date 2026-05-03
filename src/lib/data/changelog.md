@@ -1,6 +1,6 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.43.0-Nineveh Beta 15 - May 3rd, 2026
+    v1.43.0-Nineveh Beta 16 - May 3rd, 2026
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
@@ -23,6 +23,5 @@ The LOA Logs beta uses a completely overhauled system for reading Lost Ark's net
 
 #### BUG FIXES & IMPROVEMENTS
 
-- fixed inspect popup when users disconnect from raid
-- fixed lost ark launcher showing always running when exitlag compat is enabled
-- adjusted rcon tooltip to show support and dps contribtuion
+- fixed contribution of dps specs of supports being counted as support contribution
+- added separate rContribution for darks
