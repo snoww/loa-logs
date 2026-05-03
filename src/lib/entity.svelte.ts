@@ -333,6 +333,10 @@ export class EntityState {
   rdpsContribDamage = $derived.by(() =>
     this.isSupport ? this.entity.damageStats.rdpsDamageGiven : this.entity.damageStats.rdpsDamageReceived
   );
+  darkGrenadeDamageReceived = $derived.by(() => {
+    const split = this.encounter.contributionSplitByName.get(this.entity.name);
+    return split?.damageSplitByName["DarkGrenadeSynergy"] ?? 0;
+  });
   hasDrContributions = $derived(
     Object.values(this.entity.skills).some((skill) => sumUdpsContributed(skill, [4, 6]) > 0)
   );

@@ -1,4 +1,4 @@
-import { type Encounter, type Entity, EntityType } from "$lib/types";
+import { type ContributionSplit, type Encounter, type Entity, EntityType } from "$lib/types";
 import { classNameToClassId } from "./constants/classes";
 import { sumUdpsContributed } from "./skill.svelte";
 import { settings } from "./stores.svelte";
@@ -281,6 +281,14 @@ export class EncounterState {
   });
 
   topDamageDealt = $derived(this.encounter?.encounterDamageStats.topDamageDealt ?? 0);
+
+  contributionSplitByName = $derived.by(() => {
+    const map = new Map<string, ContributionSplit>();
+    const splits = this.encounter?.encounterDamageStats.misc?.contributionSplits;
+    if (!splits) return map;
+    for (const s of splits) map.set(s.name, s);
+    return map;
+  });
 
   sortValue(entity: Entity): number {
     switch (this.playerSort) {

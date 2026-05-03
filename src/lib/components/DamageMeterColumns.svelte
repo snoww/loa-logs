@@ -386,7 +386,7 @@
 {/snippet}
 
 {#snippet rdmgTooltip(state: EntityState)}
-   {state.rdamage.toLocaleString()}
+  {state.rdamage.toLocaleString()}
 {/snippet}
 
 {#snippet dps(state: EntityState)}
@@ -589,10 +589,20 @@
         </div>
       {:else}
         {#if state.entity.damageStats.rdpsDamageReceivedSupport > 0 && state.damageDealt > 0}
-          {@const dpsContrib = state.entity.damageStats.rdpsDamageReceived - state.entity.damageStats.rdpsDamageReceivedSupport}
-          <div>Support Contribution: {customRound((state.entity.damageStats.rdpsDamageReceivedSupport / state.damageDealt) * 100)}%</div>
+          {@const dpsContrib =
+            state.entity.damageStats.rdpsDamageReceived -
+            state.entity.damageStats.rdpsDamageReceivedSupport -
+            state.darkGrenadeDamageReceived}
+          <div>
+            Support Contribution: {customRound(
+              (state.entity.damageStats.rdpsDamageReceivedSupport / state.damageDealt) * 100
+            )}%
+          </div>
           {#if dpsContrib > 0}
             <div>DPS Contribution: {customRound((dpsContrib / state.damageDealt) * 100)}%</div>
+          {/if}
+          {#if state.darkGrenadeDamageReceived > 0}
+            <div>Dark Contribution: {customRound((state.darkGrenadeDamageReceived / state.damageDealt) * 100)}%</div>
           {/if}
         {/if}
         <div>
