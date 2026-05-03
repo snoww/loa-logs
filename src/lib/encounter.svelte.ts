@@ -2,7 +2,7 @@ import { type Encounter, type Entity, EntityType } from "$lib/types";
 import { classNameToClassId } from "./constants/classes";
 import { sumUdpsContributed } from "./skill.svelte";
 import { settings } from "./stores.svelte";
-import { getRDamage, timestampToMinutesAndSeconds } from "./utils";
+import { getBaseDamage, getRDamage, timestampToMinutesAndSeconds } from "./utils";
 import { supportSkills } from "./utils/buffs";
 
 export interface IdentityBrandInfo {
@@ -12,14 +12,14 @@ export interface IdentityBrandInfo {
   casts: number;
 }
 
-export type PlayerSort = "damage" | "rdps" | "stagger";
+export type PlayerSort = "dps" | "ndps" | "rdps" | "stagger";
 
 export class EncounterState {
   live = false;
 
   encounter: Encounter | undefined = $state();
   curSettings = $derived(this.live ? settings.app.meter : settings.app.logs);
-  playerSort: PlayerSort = $state("damage");
+  playerSort: PlayerSort = $state("dps");
   end = $derived(this.encounter?.lastCombatPacket ?? 0);
 
   duration = $state(this.encounter?.duration ?? 0);
@@ -47,6 +47,8 @@ export class EncounterState {
       return isValidPlayer;
     });
     switch (this.playerSort) {
+      case "ndps":
+        return entities.sort((a, b) => getBaseDamage(b.damageStats) - getBaseDamage(a.damageStats));
       case "rdps":
         return entities.sort((a, b) => getRDamage(b.damageStats) - getRDamage(a.damageStats));
       case "stagger":
@@ -282,6 +284,8 @@ export class EncounterState {
 
   sortValue(entity: Entity): number {
     switch (this.playerSort) {
+      case "ndps":
+        return getBaseDamage(entity.damageStats);
       case "rdps":
         return getRDamage(entity.damageStats);
       case "stagger":
@@ -447,6 +451,6 @@ export class EncounterState {
     this.encounter = undefined;
     this.duration = 0;
     this.partyInfo = undefined;
-    this.playerSort = "damage";
+    this.playerSort = "dps";
   }
 }

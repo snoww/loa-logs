@@ -96,7 +96,8 @@
   {#if columnDef.show(enc)}
     {@const isActiveSort =
       sortable &&
-      ((enc.playerSort === "damage" && columnDef.headerText === "DMG") ||
+      ((enc.playerSort === "dps" && columnDef.headerText === "DPS") ||
+        (enc.playerSort === "ndps" && columnDef.headerText === "nDPS") ||
         (enc.playerSort === "rdps" && columnDef.headerText === "rDPS") ||
         (enc.playerSort === "stagger" && columnDef.headerText === "STAG"))}
     {@const isDarkGrenade = entity.entityType === EntityType.DARK_GRENADE}
