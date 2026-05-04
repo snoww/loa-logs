@@ -32,6 +32,7 @@
   import LogShields from "./LogShields.svelte";
   import LogSkillDetails from "./LogSkillDetails.svelte";
   import OpenerSkills from "./OpenerSkills.svelte";
+  import LogRDPSBreakdown from "./LogRDPSBreakdown.svelte";
 
   let { encounter }: { encounter: Encounter } = $props();
 
@@ -306,6 +307,11 @@
       </div>
     </div>
   </Card>
+
+  <!-- Damage breakdown -->
+  {#if player && player.entityType === EntityType.PLAYER && encounter.encounterDamageStats.misc!.contributionSplits}
+    <LogRDPSBreakdown {player} {enc} />
+  {/if}
 
   <!-- Opener skills -->
   {#if chartType === ChartType.SKILL_LOG && player && player.entityType === EntityType.PLAYER}

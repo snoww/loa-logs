@@ -1,7 +1,7 @@
 import * as echarts from "echarts/core";
 
-import { LineChart, ScatterChart } from "echarts/charts";
-
+import { LineChart, ScatterChart, PieChart } from "echarts/charts";
+import { LabelLayout } from "echarts/features";
 import {
   DatasetComponent,
   DataZoomComponent,
@@ -26,7 +26,9 @@ echarts.use([
   MarkPointComponent,
   SVGRenderer,
   LineChart,
-  ScatterChart
+  ScatterChart,
+  PieChart,
+  LabelLayout
 ]);
 
 export type EChartsOptions = echarts.EChartsCoreOption;
