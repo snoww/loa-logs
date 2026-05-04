@@ -443,7 +443,7 @@ pub fn update_entity_stats(
     }
 }
 
-pub fn apply_player_info(entity: &mut EncounterEntity, info: &InspectInfo, skip_support: bool) {
+pub fn apply_gems_to_skills(entity: &mut EncounterEntity, info: &InspectInfo) {
     for gem in info.gems.iter().flatten() {
         let skill_ids = if matches!(gem.gem_type, 34 | 35 | 65 | 63 | 61) {
             GEM_SKILL_MAP
@@ -473,6 +473,10 @@ pub fn apply_player_info(entity: &mut EncounterEntity, info: &InspectInfo, skip_
             }
         }
     }
+}
+
+pub fn apply_player_info(entity: &mut EncounterEntity, info: &InspectInfo, skip_support: bool) {
+    apply_gems_to_skills(entity, info);
 
     entity.ark_passive_active = Some(info.ark_passive_enabled);
     entity.engraving_data = get_engravings(&info.engravings);

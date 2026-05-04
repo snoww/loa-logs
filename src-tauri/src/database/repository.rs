@@ -576,6 +576,7 @@ pub fn calculate_entities(args: &mut InsertEncounterArgs) -> Result<()> {
                 apply_player_info(entity, info, false);
             } else {
                 entity.loadout_hash = info.loadout_snapshot.clone();
+                apply_gems_to_skills(entity, info);
             }
         }
 
