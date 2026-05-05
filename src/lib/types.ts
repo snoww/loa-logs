@@ -65,6 +65,7 @@ export interface EncounterPreview {
   supportIdentity?: number;
   supportHyper?: number;
   udps?: number;
+  myNdps?: number;
 }
 
 export interface EncounterDamageStats {

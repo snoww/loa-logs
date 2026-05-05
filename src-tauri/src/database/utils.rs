@@ -122,7 +122,8 @@ pub fn prepare_get_encounter_preview_query(
     le.support_brand,   -- 12
     le.support_identity,-- 13
     le.support_hyper,   -- 14
-    le.unbuffed_dps     -- 15
+    le.unbuffed_dps,    -- 15
+    e.my_ndps           -- 16
     FROM encounter_preview e
     LEFT JOIN entity le ON le.encounter_id = e.id AND le.name = e.local_player
     {}

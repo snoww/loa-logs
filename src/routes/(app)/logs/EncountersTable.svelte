@@ -133,8 +133,8 @@
       {/if}
     </td>
     <td class="hidden p-1 text-right lg:table-cell">
-      {#if encounter.udps && encounter.udps !== encounter.myDps}
-        {abbreviateNumber(encounter.udps)}
+      {#if !isSupport && encounter.myNdps}
+        {abbreviateNumber(encounter.myNdps)}
       {:else}
         -
       {/if}
@@ -192,10 +192,10 @@
         onclick={() => changeSort("my_dps")}>Performance</th
       >
       <th
-        class="hidden w-20 px-1 text-right lg:table-cell {encounterFilter.sort === 'unbuffed_dps'
+        class="hidden w-20 cursor-pointer px-1 text-right lg:table-cell {encounterFilter.sort === 'my_ndps'
           ? 'text-accent-500/80'
           : 'hover:opacity-80'}"
-        onclick={() => changeSort("unbuffed_dps")}>uDPS</th
+        onclick={() => changeSort("my_ndps")}>nDPS</th
       >
       <th
         class="w-24 cursor-pointer px-1 text-right {encounterFilter.sort === 'duration'
