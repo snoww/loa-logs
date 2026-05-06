@@ -1,6 +1,6 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.43.0-Nineveh Beta 16 - May 3rd, 2026
+    v1.43.0-Nineveh Beta 17 - May 6th, 2026
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
@@ -21,7 +21,11 @@ The LOA Logs beta uses a completely overhauled system for reading Lost Ark's net
 
 #### read about rdps in depth [here](https://github.com/snoww/loa-logs/wiki/rDPS-and-nDPS-Explained)
 
+#### NEW FEATURES
+
+- added damage contribution breakdowns (ty molen)
+
 #### BUG FIXES & IMPROVEMENTS
 
-- fixed contribution of dps specs of supports being counted as support contribution
-- added separate rContribution for darks
+- fixed gems missing from skill breakdowns
+- replaced udps with ndps where applicable
