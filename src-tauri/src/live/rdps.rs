@@ -406,6 +406,7 @@ pub fn analyze_hit_rdps(
         &mut stats,
         &mut contributions,
         attacker_context.entity_id,
+        attacker_context.class_id,
         attacker_context.character_id,
         &attacker_stats_for_source_effects,
         skill_id_real,
@@ -679,7 +680,12 @@ fn snapshot_owner_player_stats_from_snapshot(
     let source_runtime_data =
         source_skill_id.and_then(|skill_id| owner_entity.skill_runtime_data.get(&skill_id));
     stats.apply_skill_runtime_data(0, source_runtime_data);
-    apply_owner_snapshot_self_buffs(&mut stats, self_effects, entity_tracker);
+    apply_owner_snapshot_self_buffs(
+        &mut stats,
+        self_effects,
+        entity_tracker,
+        owner_entity.class_id,
+    );
 
     if let Some(source_skill_id) = source_skill_id {
         let skill_groups = get_skill_groups(source_skill_id);
@@ -705,6 +711,7 @@ fn apply_owner_snapshot_self_buffs(
     stats: &mut PlayerStats,
     self_effects: &[StatusEffectDetails],
     entity_tracker: &EntityTracker,
+    owner_class_id: u32,
 ) {
     for effect in select_unique_group_effects(self_effects) {
         let Some(skill_buff) = SKILL_BUFF_DATA.get(&effect.status_effect_id) else {
@@ -751,7 +758,14 @@ fn apply_owner_snapshot_self_buffs(
                         &buff_source,
                     );
                 }
-                _ => {}
+                _ => apply_passive_addon_option(
+                    stats,
+                    option,
+                    source_entity_id,
+                    owner_class_id,
+                    &buff_source,
+                    STAT_PRIORITY_DEFAULT,
+                ),
             }
         }
     }
@@ -803,6 +817,7 @@ fn append_source_contributions(
     stats: &mut PlayerStats,
     contributions: &mut Vec<ContributionFactor>,
     attacker_id: u64,
+    attacker_class_id: u32,
     attacker_character_id: u64,
     attacker_stats: &PlayerStats,
     skill_id_real: u32,
@@ -931,21 +946,14 @@ fn append_source_contributions(
                         &buff_source,
                         source_priority,
                     ),
-                "class_option" if option.key_index > 0 => {
-                    if let Some(source_entity) = source_entity {
-                        stats.add_external_addon_from_source_with_priority(
-                            "class_option",
-                            &option.key_stat,
-                            option.key_index as u32,
-                            i64::from(option.value),
-                            source_entity_id,
-                            source_entity.class_id,
-                            &buff_source,
-                            source_priority,
-                        );
-                    }
-                }
-                _ => {}
+                _ => apply_passive_addon_option(
+                    stats,
+                    option,
+                    source_entity_id,
+                    attacker_class_id,
+                    &buff_source,
+                    source_priority,
+                ),
             }
         }
 
@@ -2144,6 +2152,26 @@ fn get_passive_option_value(
     value
 }
 
+fn apply_passive_addon_option(
+    stats: &mut PlayerStats,
+    option: &crate::models::PassiveOption,
+    source_entity_id: u64,
+    owner_class_id: u32,
+    buff_source: &str,
+    source_priority: i32,
+) {
+    stats.add_external_addon_from_source_with_priority(
+        &option.option_type,
+        &option.key_stat,
+        option.key_index as u32,
+        i64::from(option.value),
+        source_entity_id,
+        owner_class_id,
+        buff_source,
+        source_priority,
+    );
+}
+
 fn damage_attr_index(damage_attr: u8) -> Option<usize> {
     match damage_attr {
         0..=7 => Some(damage_attr as usize),
@@ -3139,6 +3167,24 @@ mod tests {
         assert_eq!(
             get_passive_option_stat_value(&option, 123, Some(&owner_stats)),
             3000
+        );
+    }
+
+    #[test]
+    fn passive_addon_fallback_handles_status_effect_multiplier() {
+        let mut stats = PlayerStats::default();
+        let option = crate::models::PassiveOption {
+            option_type: "skill_status_effect_stat_multiplier".to_string(),
+            key_stat: String::new(),
+            key_index: 123,
+            value: 2500,
+        };
+
+        apply_passive_addon_option(&mut stats, &option, 1, 0, "test", STAT_PRIORITY_DEFAULT);
+
+        assert_eq!(
+            stats.skill_status_effect_multiplier.get(&123).copied(),
+            Some(0.25)
         );
     }
 
