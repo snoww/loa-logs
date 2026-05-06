@@ -160,6 +160,7 @@ const RDPS_TYPE_TARGET_DEBUFF: u8 = 3;
 const RDPS_TYPE_HYPER: u8 = 5;
 const SUPPORT_IDENTITY_SOURCE_SKILLS: [u32; 3] = [21140, 21141, 21142];
 const SUPPORT_IDENTITY_SKILL_GROUPS: [u32; 4] = [15000, 60000, 24000, 16000];
+const BERSERKER_BURST_SPEC_SCALING_STATUS_EFFECT_IDS: [u32; 3] = [10080101, 10080102, 10080112];
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 enum SourceRole {
@@ -726,12 +727,16 @@ fn apply_owner_snapshot_self_buffs(
 
         for option in &level_data.passive_options {
             match option.option_type.as_str() {
-                "stat" => stats.add_stat_from_source(
-                    &option.key_stat,
-                    i64::from(option.value),
-                    source_entity_id,
-                    &buff_source,
-                ),
+                "stat" => {
+                    let value =
+                        get_passive_option_stat_value(option, effect.status_effect_id, Some(stats));
+                    stats.add_stat_from_source(
+                        &option.key_stat,
+                        value,
+                        source_entity_id,
+                        &buff_source,
+                    );
+                }
                 "combat_effect" if option.key_index > 0 => {
                     stats.add_combat_effect_from_id(
                         option.key_index as u32,
@@ -1074,7 +1079,7 @@ fn apply_source_passive_stat(
     buff_source: &str,
     source_priority: i32,
 ) -> Result<(), RdpsInvalidReason> {
-    let mut value = i64::from(option.value);
+    let mut value = get_passive_option_stat_value(option, status_effect_id, source_player_stats);
     if matches!(
         option.key_stat.as_str(),
         "skill_damage_sub_rate_1" | "skill_damage_sub_rate_2"
@@ -2117,6 +2122,28 @@ fn get_status_effect_factor_with_divisor(
     status_effect_values.get(index).copied().unwrap_or_default() as f64 / divisor
 }
 
+fn get_passive_option_stat_value(
+    option: &crate::models::PassiveOption,
+    status_effect_id: u32,
+    owner_player_stats: Option<&PlayerStats>,
+) -> i64 {
+    get_passive_option_value(option, status_effect_id, owner_player_stats) as i64
+}
+
+fn get_passive_option_value(
+    option: &crate::models::PassiveOption,
+    status_effect_id: u32,
+    owner_player_stats: Option<&PlayerStats>,
+) -> f64 {
+    let mut value = option.value as f64;
+    if BERSERKER_BURST_SPEC_SCALING_STATUS_EFFECT_IDS.contains(&status_effect_id)
+        && let Some(owner_player_stats) = owner_player_stats
+    {
+        value *= 1.0 + owner_player_stats.spec_bonus_identity_2.value();
+    }
+    value
+}
+
 fn damage_attr_index(damage_attr: u8) -> Option<usize> {
     match damage_attr {
         0..=7 => Some(damage_attr as usize),
@@ -3091,6 +3118,28 @@ mod tests {
         );
 
         assert!(result.is_ok());
+    }
+
+    #[test]
+    fn berserker_burst_passive_stat_scales_with_identity_2() {
+        let mut owner_stats = PlayerStats::default();
+        owner_stats.spec_bonus_identity_2.add_self(0.5, "test");
+        let option = crate::models::PassiveOption {
+            option_type: "stat".to_string(),
+            key_stat: "critical_hit_rate".to_string(),
+            key_index: 0,
+            value: 3000,
+        };
+
+        assert_eq!(
+            get_passive_option_stat_value(&option, 10080102, Some(&owner_stats)),
+            4500
+        );
+        assert_eq!(get_passive_option_stat_value(&option, 10080102, None), 3000);
+        assert_eq!(
+            get_passive_option_stat_value(&option, 123, Some(&owner_stats)),
+            3000
+        );
     }
 
     #[test]
