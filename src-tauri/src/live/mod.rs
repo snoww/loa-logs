@@ -899,6 +899,12 @@ pub fn start(args: StartArgs) -> Result<()> {
                     if let Some(entity) = entity_tracker.entities.get(&local_player_id) {
                         state.update_local_player(entity, &entity_tracker);
                     }
+                    party_tracker
+                        .borrow_mut()
+                        .try_derive_party_compositions_from_loading(
+                            None,
+                            entity_tracker.local_character_id,
+                        );
                     if !banned {
                         for character_id in member_ids {
                             if ban_list.is_banned(character_id) {
@@ -983,13 +989,17 @@ pub fn start(args: StartArgs) -> Result<()> {
                     .unwrap()
                 {
                     // info!("{:?}", pkt);
-                    party_tracker.borrow_mut().add(
-                        pkt.raid_instance_id,
-                        pkt.party_instance_id,
-                        pkt.character_id,
-                        0,
-                        None,
-                    );
+                    {
+                        let mut tracker = party_tracker.borrow_mut();
+                        tracker.confirm_party_membership(pkt.character_id, pkt.party_instance_id);
+                        tracker.add(
+                            pkt.raid_instance_id,
+                            pkt.party_instance_id,
+                            pkt.character_id,
+                            0,
+                            None,
+                        );
+                    }
                     state.try_flush_startup_barrier(&mut entity_tracker);
                 }
             }
@@ -1172,6 +1182,15 @@ pub fn start(args: StartArgs) -> Result<()> {
             }
             PKTZoneMemberLoadStatusNotify::OPCODE => {
                 if let Some(pkt) = packet.try_parse::<PKTZoneMemberLoadStatusNotify>().unwrap() {
+                    if pkt.load_complete != 0 {
+                        party_tracker
+                            .borrow_mut()
+                            .try_derive_party_compositions_from_loading(
+                                Some(pkt.all_characters.clone()),
+                                entity_tracker.local_character_id,
+                            );
+                        party_cache = None;
+                    }
                     if state.raid_difficulty_id >= pkt.zone_id && !state.raid_difficulty.is_empty()
                     {
                         continue;

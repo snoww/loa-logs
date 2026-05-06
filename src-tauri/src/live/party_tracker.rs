@@ -1,5 +1,6 @@
 use crate::live::id_tracker::IdTracker;
 use hashbrown::{HashMap, HashSet};
+use log::warn;
 use std::cell::RefCell;
 use std::rc::Rc;
 
@@ -11,6 +12,8 @@ pub struct PartyTracker {
     character_id_to_name: HashMap<u64, String>,
     raid_instance_to_party_ids: HashMap<u32, HashSet<u32>>,
     name: Option<String>,
+    pending_load_characters: Option<Vec<u64>>,
+    derived_characters: HashSet<u64>,
 }
 
 impl PartyTracker {
@@ -22,6 +25,8 @@ impl PartyTracker {
             character_id_to_name: HashMap::new(),
             raid_instance_to_party_ids: HashMap::new(),
             name: None,
+            pending_load_characters: None,
+            derived_characters: HashSet::new(),
         }
     }
 
@@ -100,6 +105,8 @@ impl PartyTracker {
         self.entity_id_to_party_id.clear();
         self.character_id_to_name.clear();
         self.raid_instance_to_party_ids.clear();
+        self.pending_load_characters = None;
+        self.derived_characters.clear();
     }
 
     pub fn remove_party_mappings(&mut self, party_id: u32) {
@@ -228,6 +235,125 @@ impl PartyTracker {
             .copied()
             .collect::<HashSet<_>>()
             .len()
+    }
+
+    /// The load-screen character list is ordered by party (4 per party). Once we know our own
+    /// party_instance_id (from PKTPartyInfo) and the full set of loaded characters, we can
+    /// derive the composition of the *other* party without waiting for it to populate piece-
+    /// by-piece via PKTPartyStatusEffectResultNotify.
+    ///
+    /// This relies on two empirical assumptions: (1) the load screen lists characters in party
+    /// order, (2) party_instance_ids in the same raid are sequential. If a later
+    /// StatusEffectResult disagrees with our derivation, [`Self::confirm_party_membership`]
+    /// tears the derived data down.
+    ///
+    /// `all_characters` may be `None` to retry derivation from a previously-stashed list (e.g.,
+    /// after PartyInfo finally arrives following load_complete).
+    pub fn try_derive_party_compositions_from_loading(
+        &mut self,
+        all_characters: Option<Vec<u64>>,
+        local_character_id: u64,
+    ) {
+        if let Some(chars) = all_characters {
+            self.pending_load_characters = Some(chars);
+        }
+
+        if local_character_id == 0 {
+            return;
+        }
+
+        let Some(chars) = self.pending_load_characters.as_ref().cloned() else {
+            return;
+        };
+
+        if chars.len() < 8 || !chars.len().is_multiple_of(4) {
+            return;
+        }
+
+        let Some(local_party_id) = self
+            .character_id_to_party_id
+            .get(&local_character_id)
+            .copied()
+        else {
+            return;
+        };
+
+        let Some(our_character_index) = chars.iter().position(|id| *id == local_character_id)
+        else {
+            warn!("could not find local player in loading screen members");
+            return;
+        };
+
+        let our_party_index = our_character_index / 4;
+        let Some(base_party_id) = local_party_id.checked_sub(our_party_index as u32) else {
+            warn!("unexpected party_id arithmetic: local={local_party_id}, idx={our_party_index}");
+            return;
+        };
+
+        let raid_instance_id = self
+            .raid_instance_to_party_ids
+            .iter()
+            .find(|(_, party_ids)| party_ids.contains(&local_party_id))
+            .map(|(raid_id, _)| *raid_id);
+        let Some(raid_instance_id) = raid_instance_id else {
+            warn!("could not find raid_instance_id for local party {local_party_id}");
+            return;
+        };
+
+        for party_idx in 0..(chars.len() / 4) {
+            let party_id = base_party_id + party_idx as u32;
+            // Skip our own party — it's authoritative from PartyInfo, not derived.
+            if party_id == local_party_id {
+                continue;
+            }
+            for character_id in &chars[party_idx * 4..(party_idx + 1) * 4] {
+                if *character_id == 0 {
+                    continue;
+                }
+                self.add(raid_instance_id, party_id, *character_id, 0, None);
+                self.derived_characters.insert(*character_id);
+            }
+        }
+
+        self.pending_load_characters = None;
+    }
+
+    /// If a derived character is being reassigned to a
+    /// different party, drop all derived data and let other packets repopulate it.
+    pub fn confirm_party_membership(&mut self, character_id: u64, real_party_id: u32) {
+        if !self.derived_characters.contains(&character_id) {
+            return;
+        }
+        let current = self.character_id_to_party_id.get(&character_id).copied();
+        if current == Some(real_party_id) {
+            self.derived_characters.remove(&character_id);
+            return;
+        }
+        warn!(
+            "load-order derivation invalidated: character {character_id} derived as party {current:?}, real party {real_party_id}"
+        );
+        self.invalidate_derived();
+    }
+
+    fn invalidate_derived(&mut self) {
+        let derived = std::mem::take(&mut self.derived_characters);
+        for cid in derived {
+            let Some(party_id) = self.character_id_to_party_id.remove(&cid) else {
+                continue;
+            };
+            self.character_id_to_name.remove(&cid);
+            if let Some(eid) = self.id_tracker.borrow().get_entity_id(cid) {
+                self.entity_id_to_party_id.remove(&eid);
+            }
+            if !self.character_id_to_party_id.values().any(|p| *p == party_id) {
+                for party_ids in self.raid_instance_to_party_ids.values_mut() {
+                    party_ids.remove(&party_id);
+                }
+                self.raid_instance_to_party_ids
+                    .retain(|_, p| !p.is_empty());
+            }
+        }
+        self.pending_load_characters = None;
     }
 
     pub fn get_group_number_for_character(&self, character_id: u64) -> Option<usize> {
