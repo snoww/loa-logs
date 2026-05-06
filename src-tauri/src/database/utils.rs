@@ -444,6 +444,46 @@ pub fn update_entity_stats(
     }
 }
 
+pub fn sanitize_invalid_rdps(
+    encounter: &mut Encounter,
+    contribution_splits: &mut Vec<ContributionSplit>,
+) {
+    for entity in encounter.entities.values_mut() {
+        entity.damage_stats.rdps_damage_received = 0;
+        entity.damage_stats.rdps_damage_received_support = 0;
+        entity.damage_stats.rdps_damage_given = 0;
+        entity.damage_stats.rdps = 0;
+        entity.damage_stats.ndps = 0;
+
+        for skill in entity.skills.values_mut() {
+            skill.rdps_damage_received = 0;
+            skill.rdps_damage_received_support = 0;
+            for cast in &mut skill.skill_cast_log {
+                for hit in &mut cast.hits {
+                    hit.rdps_damage_received = 0;
+                    hit.rdps_damage_received_support = 0;
+                }
+            }
+        }
+    }
+
+    contribution_splits.retain_mut(|split| {
+        split.damage_done_by_entity_skill_group.clear();
+        split.damage_increase_by_entity_skill_group.clear();
+        split.damage_split_by_name.clear();
+        let Some(entity) = encounter.entities.get(&split.name) else {
+            return false;
+        };
+        if entity.entity_type != EntityType::Player || entity.damage_stats.damage_dealt <= 0 {
+            return false;
+        }
+        split
+            .damage_split_by_name
+            .insert(split.name.clone(), entity.damage_stats.damage_dealt);
+        true
+    });
+}
+
 pub fn apply_gems_to_skills(entity: &mut EncounterEntity, info: &InspectInfo) {
     for gem in info.gems.iter().flatten() {
         let skill_ids = if matches!(gem.gem_type, 34 | 35 | 65 | 63 | 61) {

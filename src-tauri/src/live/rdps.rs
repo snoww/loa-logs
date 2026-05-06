@@ -7,7 +7,7 @@ use crate::live::entity_tracker::{Entity, EntityTracker, InspectSnapshot, SkillR
 use crate::live::player_stats::{PlayerStats, STAT_PRIORITY_DEFAULT, STAT_PRIORITY_SUPPORT};
 use crate::live::status_tracker::StatusEffectDetails;
 use crate::live::{DEBUG_DUMP_DAMAGE_STATE_JSON, write_debug_json_dump};
-use crate::models::{ArkPassiveData, HitFlag, HitOption, PerLevelData};
+use crate::models::{ArkPassiveData, EntityType, HitFlag, HitOption, PerLevelData};
 use crate::utils::{is_support_class, is_support_spec};
 use hashbrown::HashMap;
 use serde_json::{Value, json};
@@ -39,14 +39,111 @@ pub struct HitSkillGroupAttribution {
 
 #[derive(Debug, Clone, Default)]
 pub struct HitRdpsResult {
-    pub crit_rate_raw: Option<f64>,
-    pub crit_rate_capped: Option<f64>,
-    pub crit_damage_multiplier: Option<f64>,
     pub rdps_damage_received: i64,
     pub rdps_damage_received_support: i64,
     pub entity_attributions: Vec<HitEntityRdpsAttribution>,
     pub attributions: Vec<HitRdpsAttribution>,
     pub skill_group_attributions: Vec<HitSkillGroupAttribution>,
+}
+
+#[derive(Debug, Clone, Copy)]
+pub struct HitCritMetrics {
+    pub crit_rate_raw: f64,
+    pub crit_rate_capped: f64,
+    pub crit_damage_multiplier: f64,
+}
+
+#[derive(Debug, Clone)]
+pub struct HitAnalysisResult {
+    pub crit_metrics: Option<HitCritMetrics>,
+    pub rdps: HitRdpsOutcome,
+}
+
+#[derive(Debug, Clone)]
+pub enum HitRdpsOutcome {
+    Computed(HitRdpsResult),
+    NotApplicable(RdpsNotApplicableReason),
+    Invalid(RdpsInvalidReason),
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum RdpsNotApplicableReason {
+    NonPositiveDamage,
+    SpecialSkill,
+    NonAttributableSource,
+    BuffsCannotAffectSkill,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum SourceStatsRequirement {
+    AttackPowerAmplify,
+    SkillDamageAmplify,
+    IdentityDamageMultiplier,
+    IdentityPassiveStat,
+}
+
+#[derive(Debug, Clone)]
+pub enum RdpsInvalidReason {
+    MissingAttackerSnapshot {
+        attacker_entity_id: u64,
+        attacker_name: String,
+        skill_id: u32,
+        skill_effect_id: u32,
+    },
+    NonPositiveTotalAttackPower {
+        attacker_entity_id: u64,
+        attacker_name: String,
+        skill_id: u32,
+        skill_effect_id: u32,
+    },
+    MissingRequiredSourceStats {
+        source_entity_id: u64,
+        source_skill_id: u32,
+        status_effect_id: u32,
+        requirement: SourceStatsRequirement,
+    },
+}
+
+impl RdpsInvalidReason {
+    pub fn message_key(&self) -> &'static str {
+        match self {
+            Self::MissingAttackerSnapshot { .. } => "missing_attacker_snapshot",
+            Self::NonPositiveTotalAttackPower { .. } => "invalid_attack_power",
+            Self::MissingRequiredSourceStats { .. } => "missing_source_stats",
+        }
+    }
+
+    pub fn diagnostic_context(&self) -> String {
+        match self {
+            Self::MissingAttackerSnapshot {
+                attacker_entity_id,
+                attacker_name,
+                skill_id,
+                skill_effect_id,
+            } => format!(
+                "attacker={}({}), skill_id={}, skill_effect_id={}",
+                attacker_name, attacker_entity_id, skill_id, skill_effect_id
+            ),
+            Self::NonPositiveTotalAttackPower {
+                attacker_entity_id,
+                attacker_name,
+                skill_id,
+                skill_effect_id,
+            } => format!(
+                "attacker={}({}), skill_id={}, skill_effect_id={}",
+                attacker_name, attacker_entity_id, skill_id, skill_effect_id
+            ),
+            Self::MissingRequiredSourceStats {
+                source_entity_id,
+                source_skill_id,
+                status_effect_id,
+                requirement,
+            } => format!(
+                "source_entity_id={}, source_skill_id={}, status_effect_id={}, requirement={:?}",
+                source_entity_id, source_skill_id, status_effect_id, requirement
+            ),
+        }
+    }
 }
 
 #[derive(Debug, Clone)]
@@ -79,7 +176,7 @@ fn get_hit_crit_metrics(
     stats: &PlayerStats,
     damage_type: u8,
     can_crit: bool,
-) -> Option<(f64, f64, f64)> {
+) -> Option<HitCritMetrics> {
     if !can_crit {
         return None;
     }
@@ -94,10 +191,49 @@ fn get_hit_crit_metrics(
             } else {
                 stats.magical_critical_damage_amplify.value()
             });
-    Some((crit_rate_raw, crit_rate_capped, crit_damage_multiplier))
+    Some(HitCritMetrics {
+        crit_rate_raw,
+        crit_rate_capped,
+        crit_damage_multiplier,
+    })
 }
 
-pub fn compute_hit_rdps(
+struct RdpsAttackerContext<'a> {
+    entity_id: u64,
+    name: &'a str,
+    class_id: u32,
+    character_id: u64,
+    inspect_snapshot: Option<&'a InspectSnapshot>,
+    entity: &'a Entity,
+}
+
+fn resolve_rdps_attacker_context<'a>(
+    attacker: &'a Entity,
+    buffered_entities: Option<&'a HashMap<u64, Entity>>,
+    entity_tracker: &'a EntityTracker,
+) -> Option<RdpsAttackerContext<'a>> {
+    let player_entity = if matches!(attacker.entity_type, EntityType::Player) {
+        Some(attacker)
+    } else if attacker.owner_id != 0 {
+        get_buffered_or_live_entity(attacker.owner_id, buffered_entities, entity_tracker)
+            .filter(|entity| matches!(entity.entity_type, EntityType::Player))
+    } else {
+        None
+    }?;
+
+    Some(RdpsAttackerContext {
+        entity_id: player_entity.id,
+        name: &player_entity.name,
+        class_id: player_entity.class_id,
+        character_id: player_entity.character_id,
+        inspect_snapshot: player_entity.inspect_snapshot.as_ref().or_else(|| {
+            get_buffered_or_live_snapshot(player_entity.id, buffered_entities, entity_tracker)
+        }),
+        entity: player_entity,
+    })
+}
+
+pub fn analyze_hit_rdps(
     attacker: &Entity,
     target: &Entity,
     damage: i64,
@@ -116,19 +252,67 @@ pub fn compute_hit_rdps(
     entity_tracker: &EntityTracker,
     buffered_entities: Option<&HashMap<u64, Entity>>,
     buffered_owner_self_effects: Option<&HashMap<u64, Vec<StatusEffectDetails>>>,
-) -> Option<HitRdpsResult> {
-    if damage <= 0 || special {
-        return None;
+) -> HitAnalysisResult {
+    if damage <= 0 {
+        return HitAnalysisResult {
+            crit_metrics: None,
+            rdps: HitRdpsOutcome::NotApplicable(RdpsNotApplicableReason::NonPositiveDamage),
+        };
+    }
+    if special {
+        return HitAnalysisResult {
+            crit_metrics: None,
+            rdps: HitRdpsOutcome::NotApplicable(RdpsNotApplicableReason::SpecialSkill),
+        };
     }
     let debug_enabled = DEBUG_DUMP_DAMAGE_STATE_JSON
         && matches!(attacker.entity_type, crate::models::EntityType::Player);
 
     let (can_crit, is_affected_by_buffs) =
         resolve_skill_effect_flags(skill_effect_id, is_hyper_awakening);
-    let attacker_snapshot = attacker
-        .inspect_snapshot
-        .as_ref()
-        .or_else(|| get_buffered_or_live_snapshot(attacker.id, buffered_entities, entity_tracker));
+    let Some(attacker_context) =
+        resolve_rdps_attacker_context(attacker, buffered_entities, entity_tracker)
+    else {
+        return HitAnalysisResult {
+            crit_metrics: None,
+            rdps: HitRdpsOutcome::NotApplicable(RdpsNotApplicableReason::NonAttributableSource),
+        };
+    };
+    let attacker_snapshot = attacker_context.inspect_snapshot;
+    if !is_affected_by_buffs && !is_hyper_awakening {
+        let crit_metrics = attacker_snapshot
+            .map(|snapshot| {
+                let mut stats = PlayerStats::default();
+                stats.load_from_snapshot(
+                    snapshot,
+                    attacker_context.entity_id,
+                    attacker_context.class_id,
+                );
+                let mut runtime_state = attacker_context.entity.runtime_state();
+                runtime_state.identity_runtime_reliable = attacker_context.entity_id != 0
+                    && attacker_context.entity_id == entity_tracker.local_entity_id;
+                stats.apply_runtime_state(runtime_state);
+                let runtime_data = attacker_context
+                    .entity
+                    .skill_runtime_data
+                    .get(&skill_id_real)
+                    .or_else(|| {
+                        get_buffered_or_live_skill_runtime_data(
+                            attacker_context.entity_id,
+                            skill_id_real,
+                            buffered_entities,
+                            entity_tracker,
+                        )
+                    });
+                stats.apply_skill_runtime_data(skill_effect_id, runtime_data);
+                get_hit_crit_metrics(&stats, damage_type, can_crit)
+            })
+            .flatten();
+        return HitAnalysisResult {
+            crit_metrics,
+            rdps: HitRdpsOutcome::NotApplicable(RdpsNotApplicableReason::BuffsCannotAffectSkill),
+        };
+    }
     let Some(attacker_snapshot) = attacker_snapshot else {
         if debug_enabled {
             dump_rdps_hit_trace(
@@ -159,73 +343,49 @@ pub fn compute_hit_rdps(
                 &HitRdpsResult::default(),
             );
         }
-        return None;
+        return HitAnalysisResult {
+            crit_metrics: None,
+            rdps: HitRdpsOutcome::Invalid(RdpsInvalidReason::MissingAttackerSnapshot {
+                attacker_entity_id: attacker_context.entity_id,
+                attacker_name: attacker_context.name.to_string(),
+                skill_id,
+                skill_effect_id,
+            }),
+        };
     };
     let mut stats = PlayerStats::default();
-    stats.load_from_snapshot(attacker_snapshot, attacker.id, attacker.class_id);
+    stats.load_from_snapshot(
+        attacker_snapshot,
+        attacker_context.entity_id,
+        attacker_context.class_id,
+    );
     let stats_after_snapshot = if debug_enabled {
         Some(stats.debug_dump_value())
     } else {
         None
     };
-    let mut runtime_state = attacker.runtime_state();
-    runtime_state.identity_runtime_reliable =
-        attacker.id != 0 && attacker.id == entity_tracker.local_entity_id;
+    let mut runtime_state = attacker_context.entity.runtime_state();
+    runtime_state.identity_runtime_reliable = attacker_context.entity_id != 0
+        && attacker_context.entity_id == entity_tracker.local_entity_id;
     stats.apply_runtime_state(runtime_state);
-    let runtime_data = attacker.skill_runtime_data.get(&skill_id_real).or_else(|| {
-        get_buffered_or_live_skill_runtime_data(
-            attacker.id,
-            skill_id_real,
-            buffered_entities,
-            entity_tracker,
-        )
-    });
+    let runtime_data = attacker_context
+        .entity
+        .skill_runtime_data
+        .get(&skill_id_real)
+        .or_else(|| {
+            get_buffered_or_live_skill_runtime_data(
+                attacker_context.entity_id,
+                skill_id_real,
+                buffered_entities,
+                entity_tracker,
+            )
+        });
     stats.apply_skill_runtime_data(skill_effect_id, runtime_data);
     let stats_after_runtime = if debug_enabled {
         Some(stats.debug_dump_value())
     } else {
         None
     };
-    if !is_affected_by_buffs && !is_hyper_awakening {
-        let crit_metrics = get_hit_crit_metrics(&stats, damage_type, can_crit);
-        let result = HitRdpsResult {
-            crit_rate_raw: crit_metrics.map(|(crit_rate_raw, _, _)| crit_rate_raw),
-            crit_rate_capped: crit_metrics.map(|(_, crit_rate_capped, _)| crit_rate_capped),
-            crit_damage_multiplier: crit_metrics
-                .map(|(_, _, crit_damage_multiplier)| crit_damage_multiplier),
-            ..Default::default()
-        };
-        if debug_enabled {
-            dump_rdps_hit_trace(
-                "not_affected_by_buffs",
-                attacker,
-                target,
-                damage,
-                skill_id,
-                skill_id_real,
-                skill_effect_id,
-                hit_option,
-                hit_flag,
-                damage_attr,
-                damage_type,
-                is_hyper_awakening,
-                event_timestamp,
-                Some(attacker_snapshot),
-                runtime_data,
-                stats_after_snapshot,
-                stats_after_runtime,
-                None,
-                se_on_source,
-                se_on_target,
-                &[],
-                None,
-                None,
-                None,
-                &result,
-            );
-        }
-        return Some(result);
-    }
     let effective_damage_attr = stats.resolve_damage_attr(damage_attr);
     let skill_groups = get_skill_groups(skill_id);
     let skill_real_groups = if skill_id_real != skill_id {
@@ -240,10 +400,13 @@ pub fn compute_hit_rdps(
         stats.critical_hit_rate.add_self(0.1, "back_attack");
     }
     let mut contributions = Vec::new();
-    append_source_contributions(
+    let attacker_stats_for_source_effects = stats.clone();
+    if let Err(reason) = append_source_contributions(
         &mut stats,
         &mut contributions,
-        attacker.id,
+        attacker_context.entity_id,
+        attacker_context.character_id,
+        &attacker_stats_for_source_effects,
         skill_id_real,
         hit_flag,
         effective_damage_attr,
@@ -254,12 +417,20 @@ pub fn compute_hit_rdps(
         entity_tracker,
         buffered_entities,
         buffered_owner_self_effects,
-    );
+    ) {
+        return HitAnalysisResult {
+            crit_metrics: None,
+            rdps: HitRdpsOutcome::Invalid(reason),
+        };
+    }
     let mut damage_multiplier = 1.0;
-    append_target_contributions(
+    let attacker_stats_for_target_effects = stats.clone();
+    if let Err(reason) = append_target_contributions(
         &mut stats,
         &mut contributions,
-        attacker,
+        attacker_context.entity,
+        attacker_context.character_id,
+        &attacker_stats_for_target_effects,
         skill_id,
         skill_effect_id,
         hit_option,
@@ -275,7 +446,12 @@ pub fn compute_hit_rdps(
         entity_tracker,
         buffered_entities,
         buffered_owner_self_effects,
-    );
+    ) {
+        return HitAnalysisResult {
+            crit_metrics: None,
+            rdps: HitRdpsOutcome::Invalid(reason),
+        };
+    }
     stats.apply_dynamic_effects(
         skill_id,
         skill_id_real,
@@ -309,13 +485,7 @@ pub fn compute_hit_rdps(
         )
         .value();
     if total_attack_power <= 0.0 {
-        let result = HitRdpsResult {
-            crit_rate_raw: crit_metrics.map(|(crit_rate_raw, _, _)| crit_rate_raw),
-            crit_rate_capped: crit_metrics.map(|(_, crit_rate_capped, _)| crit_rate_capped),
-            crit_damage_multiplier: crit_metrics
-                .map(|(_, _, crit_damage_multiplier)| crit_damage_multiplier),
-            ..Default::default()
-        };
+        let result = HitRdpsResult::default();
         if debug_enabled {
             dump_rdps_hit_trace(
                 "non_positive_total_attack_power",
@@ -345,7 +515,15 @@ pub fn compute_hit_rdps(
                 &result,
             );
         }
-        return Some(result);
+        return HitAnalysisResult {
+            crit_metrics,
+            rdps: HitRdpsOutcome::Invalid(RdpsInvalidReason::NonPositiveTotalAttackPower {
+                attacker_entity_id: attacker_context.entity_id,
+                attacker_name: attacker_context.name.to_string(),
+                skill_id,
+                skill_effect_id,
+            }),
+        };
     }
 
     let entity_portions = stats.get_damage_portions_contributed_from_all_entities(
@@ -361,11 +539,6 @@ pub fn compute_hit_rdps(
     );
 
     let mut result = HitRdpsResult::default();
-    if let Some((crit_rate_raw, crit_rate_capped, crit_damage_multiplier)) = crit_metrics {
-        result.crit_rate_raw = Some(crit_rate_raw);
-        result.crit_rate_capped = Some(crit_rate_capped);
-        result.crit_damage_multiplier = Some(crit_damage_multiplier);
-    }
     result.skill_group_attributions = compute_skill_group_attributions(
         &mut stats,
         total_attack_power,
@@ -381,7 +554,7 @@ pub fn compute_hit_rdps(
     );
     for &(portion, entity_id) in &entity_portions {
         let entity_damage = (portion * damage as f64).round() as i64;
-        if entity_id == attacker.id {
+        if entity_id == attacker_context.entity_id {
             continue;
         }
         if entity_damage <= 0 {
@@ -462,7 +635,10 @@ pub fn compute_hit_rdps(
         );
     }
 
-    Some(result)
+    HitAnalysisResult {
+        crit_metrics,
+        rdps: HitRdpsOutcome::Computed(result),
+    }
 }
 
 pub fn snapshot_owner_player_stats_for_buffs(
@@ -576,10 +752,54 @@ fn apply_owner_snapshot_self_buffs(
     }
 }
 
+fn resolve_self_source_stats<'a>(
+    source_player_stats: Option<&'a Arc<PlayerStats>>,
+    source_entity: Option<&Entity>,
+    source_entity_id: u64,
+    attacker_id: u64,
+    attacker_character_id: u64,
+    attacker_stats: &'a PlayerStats,
+) -> Option<&'a PlayerStats> {
+    let is_self_source = source_entity_id == attacker_id
+        || source_entity.is_some_and(|entity| {
+            attacker_character_id != 0
+                && entity.character_id != 0
+                && entity.character_id == attacker_character_id
+        });
+    if is_self_source {
+        return Some(attacker_stats);
+    }
+    source_player_stats.map(Arc::as_ref)
+}
+
+fn require_source_player_stats<'a>(
+    requirement: SourceStatsRequirement,
+    source_player_stats: Option<&'a PlayerStats>,
+    source_entity_id: u64,
+    source_skill_id: u32,
+    status_effect_id: u32,
+    is_required: bool,
+) -> Result<Option<&'a PlayerStats>, RdpsInvalidReason> {
+    if let Some(source_player_stats) = source_player_stats {
+        return Ok(Some(source_player_stats));
+    }
+    if is_required {
+        return Err(RdpsInvalidReason::MissingRequiredSourceStats {
+            source_entity_id,
+            source_skill_id,
+            status_effect_id,
+            requirement,
+        });
+    }
+    Ok(None)
+}
+
 fn append_source_contributions(
     stats: &mut PlayerStats,
     contributions: &mut Vec<ContributionFactor>,
     attacker_id: u64,
+    attacker_character_id: u64,
+    attacker_stats: &PlayerStats,
     skill_id_real: u32,
     hit_flag: &HitFlag,
     damage_attr: Option<u8>,
@@ -590,7 +810,7 @@ fn append_source_contributions(
     entity_tracker: &EntityTracker,
     buffered_entities: Option<&HashMap<u64, Entity>>,
     buffered_owner_self_effects: Option<&HashMap<u64, Vec<StatusEffectDetails>>>,
-) {
+) -> Result<(), RdpsInvalidReason> {
     let selected_effects = select_unique_group_effects(se_on_source);
     let attacker_attack_power = stats
         .calculate_attack_power_pre_multipliers()
@@ -610,7 +830,6 @@ fn append_source_contributions(
             source_priority_for_entity(source_entity_id, entity_tracker, buffered_entities);
         let is_attributable_source =
             is_player_source_entity_id(source_entity_id, buffered_entities, entity_tracker);
-        let is_self_source = source_entity_id == attacker_id;
 
         let effect_runtime_data = effect.source_skill_runtime_snapshot.as_ref();
         let Some(level_data) = get_level_data_resolved(
@@ -624,6 +843,12 @@ fn append_source_contributions(
         let source_skill_id = source_skill_id_from_effect(&effect);
         let source_entity =
             get_buffered_or_live_entity(source_entity_id, buffered_entities, entity_tracker);
+        let is_self_source = source_entity_id == attacker_id
+            || source_entity.is_some_and(|entity| {
+                attacker_character_id != 0
+                    && entity.character_id != 0
+                    && entity.character_id == attacker_character_id
+            });
         let source_snapshot =
             get_buffered_or_live_snapshot(source_entity_id, buffered_entities, entity_tracker);
         let source_class_id = source_entity
@@ -654,6 +879,14 @@ fn append_source_contributions(
                     })
                 })
             });
+        let source_player_stats_ref = resolve_self_source_stats(
+            source_player_stats.as_ref(),
+            source_entity,
+            source_entity_id,
+            attacker_id,
+            attacker_character_id,
+            attacker_stats,
+        );
         let is_support = is_attributable_source
             && is_support_source(
                 source_entity_id,
@@ -673,12 +906,14 @@ fn append_source_contributions(
                     option,
                     skill_buff,
                     source_entity_id,
+                    effect.status_effect_id,
                     source_class_id,
                     source_skill_id,
-                    source_player_stats.as_deref(),
+                    source_player_stats_ref,
+                    is_attributable_source,
                     &buff_source,
                     source_priority,
-                ),
+                )?,
                 "combat_effect" if option.key_index > 0 => stats.add_combat_effect_from_id(
                     option.key_index as u32,
                     source_entity_id,
@@ -710,9 +945,6 @@ fn append_source_contributions(
         }
 
         if skill_buff.buff_type == "attack_power_amplify" && !is_hyper_awakening {
-            let Some(source_player_stats) = source_player_stats.as_ref() else {
-                continue;
-            };
             let Some(status_effect_values) = level_data.status_effect_values.as_ref() else {
                 continue;
             };
@@ -723,6 +955,18 @@ fn append_source_contributions(
             if percent_buff <= 0.0 {
                 continue;
             }
+
+            let source_player_stats = require_source_player_stats(
+                SourceStatsRequirement::AttackPowerAmplify,
+                source_player_stats_ref,
+                source_entity_id,
+                source_skill_id,
+                effect.status_effect_id,
+                is_attributable_source,
+            )?;
+            let Some(source_player_stats) = source_player_stats else {
+                continue;
+            };
 
             let source_base_attack_power =
                 source_player_stats.calculate_base_attack_power().value();
@@ -777,13 +1021,20 @@ fn append_source_contributions(
             damage_attr,
             is_hyper_awakening,
         );
-        let normal_damage_factor = normal_damage_factor
-            * get_source_damage_multiplier(
-                skill_buff,
-                source_skill_id,
-                source_class_id,
-                source_player_stats.as_deref(),
-            );
+        let normal_damage_factor = if normal_damage_factor > 0.0 {
+            normal_damage_factor
+                * get_source_damage_multiplier(
+                    skill_buff,
+                    source_skill_id,
+                    effect.status_effect_id,
+                    source_class_id,
+                    source_entity_id,
+                    source_player_stats_ref,
+                    is_attributable_source,
+                )?
+        } else {
+            normal_damage_factor
+        };
         if normal_damage_factor > 0.0 {
             if is_attributable_source && !is_self_source {
                 contributions.push(ContributionFactor {
@@ -807,6 +1058,7 @@ fn append_source_contributions(
             }
         }
     }
+    Ok(())
 }
 
 fn apply_source_passive_stat(
@@ -814,18 +1066,32 @@ fn apply_source_passive_stat(
     option: &crate::models::PassiveOption,
     skill_buff: &crate::models::SkillBuffData,
     source_entity_id: u64,
+    status_effect_id: u32,
     source_class_id: u32,
     source_skill_id: u32,
     source_player_stats: Option<&PlayerStats>,
+    is_attributable_source: bool,
     buff_source: &str,
     source_priority: i32,
-) {
+) -> Result<(), RdpsInvalidReason> {
     let mut value = i64::from(option.value);
     if matches!(
         option.key_stat.as_str(),
         "skill_damage_sub_rate_1" | "skill_damage_sub_rate_2"
     ) {
-        if let Some(source_player_stats) = source_player_stats {
+        if let Some(source_player_stats) = require_source_player_stats(
+            SourceStatsRequirement::IdentityPassiveStat,
+            source_player_stats,
+            source_entity_id,
+            source_skill_id,
+            status_effect_id,
+            is_attributable_source
+                && option.value != 0
+                && (is_identity_skill_buff(skill_buff)
+                    || option
+                        .key_stat
+                        .eq_ignore_ascii_case("skill_damage_sub_rate_2")),
+        )? {
             if is_identity_skill_buff(skill_buff) {
                 value = ((value as f64)
                     * get_identity_buff_multiplier(
@@ -853,12 +1119,15 @@ fn apply_source_passive_stat(
         buff_source,
         source_priority,
     );
+    Ok(())
 }
 
 fn append_target_contributions(
     stats: &mut PlayerStats,
     contributions: &mut Vec<ContributionFactor>,
     attacker: &Entity,
+    attacker_character_id: u64,
+    attacker_stats: &PlayerStats,
     skill_id: u32,
     skill_effect_id: u32,
     hit_option: &HitOption,
@@ -874,9 +1143,9 @@ fn append_target_contributions(
     entity_tracker: &EntityTracker,
     buffered_entities: Option<&HashMap<u64, Entity>>,
     buffered_owner_self_effects: Option<&HashMap<u64, Vec<StatusEffectDetails>>>,
-) {
+) -> Result<(), RdpsInvalidReason> {
     if is_hyper_awakening {
-        return;
+        return Ok(());
     }
 
     let selected_effects =
@@ -975,6 +1244,14 @@ fn append_target_contributions(
                     })
                 })
         };
+        let source_player_stats_ref = resolve_self_source_stats(
+            source_player_stats.as_ref(),
+            source_entity,
+            source_entity_id,
+            attacker.id,
+            attacker_character_id,
+            attacker_stats,
+        );
         let buff_source = skill_buff
             .name
             .clone()
@@ -1020,10 +1297,21 @@ fn append_target_contributions(
                 if (skill_id_to_buff == 0 || skill_id_to_buff == skill_id)
                     && (skill_effect_id_to_buff == 0 || skill_effect_id_to_buff == skill_effect_id)
                 {
-                    let Some(source_player_stats) = source_player_stats.as_ref() else {
+                    let mut factor = status_effect_values[1] as f64 / 10000.0;
+                    if factor <= 0.0 {
+                        continue;
+                    }
+                    let Some(source_player_stats) = require_source_player_stats(
+                        SourceStatsRequirement::SkillDamageAmplify,
+                        source_player_stats_ref,
+                        source_entity_id,
+                        source_skill_id,
+                        effect.status_effect_id,
+                        is_attributable_source && !is_dark_grenade,
+                    )?
+                    else {
                         continue;
                     };
-                    let mut factor = status_effect_values[1] as f64 / 10000.0;
                     let mut multiplier = 1.0
                         + get_skill_status_effect_multiplier(source_player_stats, source_skill_id);
                     if SUPPORT_MARKING_GROUP.contains(&skill_buff.unique_group) {
@@ -1085,6 +1373,7 @@ fn append_target_contributions(
             }
         }
     }
+    Ok(())
 }
 
 fn get_source_passive_factors(
@@ -1777,22 +2066,39 @@ fn get_skill_status_effect_multiplier(player_stats: &PlayerStats, source_skill_i
 fn get_source_damage_multiplier(
     skill_buff: &crate::models::SkillBuffData,
     source_skill_id: u32,
+    status_effect_id: u32,
     source_class_id: u32,
+    source_entity_id: u64,
     source_player_stats: Option<&PlayerStats>,
-) -> f64 {
-    let Some(source_player_stats) = source_player_stats else {
-        return 1.0;
+    is_attributable_source: bool,
+) -> Result<f64, RdpsInvalidReason> {
+    let requires_stats =
+        is_identity_skill_buff(skill_buff) || source_skill_has_identity_group(source_skill_id);
+    let Some(source_player_stats) = require_source_player_stats(
+        SourceStatsRequirement::IdentityDamageMultiplier,
+        source_player_stats,
+        source_entity_id,
+        source_skill_id,
+        status_effect_id,
+        is_attributable_source && requires_stats,
+    )?
+    else {
+        return Ok(1.0);
     };
 
     if is_identity_skill_buff(skill_buff) {
-        return get_identity_buff_multiplier(source_player_stats, source_class_id, source_skill_id);
+        return Ok(get_identity_buff_multiplier(
+            source_player_stats,
+            source_class_id,
+            source_skill_id,
+        ));
     }
     if source_skill_has_identity_group(source_skill_id) {
-        return 1.0
+        return Ok(1.0
             + get_ally_identity_damage_power(source_player_stats)
-            + get_skill_status_effect_multiplier(source_player_stats, source_skill_id);
+            + get_skill_status_effect_multiplier(source_player_stats, source_skill_id));
     }
-    1.0
+    Ok(1.0)
 }
 
 fn is_critical_hit(hit_flag: &HitFlag) -> bool {
@@ -2714,4 +3020,86 @@ fn load_player_stats_from_snapshot(
         );
     }
     player_stats
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn missing_required_source_stats_invalidates() {
+        let result = require_source_player_stats(
+            SourceStatsRequirement::AttackPowerAmplify,
+            None,
+            123,
+            456,
+            789,
+            true,
+        );
+
+        assert!(matches!(
+            result,
+            Err(RdpsInvalidReason::MissingRequiredSourceStats {
+                source_entity_id: 123,
+                source_skill_id: 456,
+                status_effect_id: 789,
+                requirement: SourceStatsRequirement::AttackPowerAmplify,
+            })
+        ));
+    }
+
+    #[test]
+    fn missing_optional_source_stats_does_not_invalidate() {
+        let result = require_source_player_stats(
+            SourceStatsRequirement::IdentityDamageMultiplier,
+            None,
+            123,
+            456,
+            789,
+            false,
+        );
+
+        assert!(matches!(result, Ok(None)));
+    }
+
+    #[test]
+    fn zero_identity_passive_stat_does_not_require_source_stats() {
+        let mut stats = PlayerStats::default();
+        let option = crate::models::PassiveOption {
+            option_type: "stat".to_string(),
+            key_stat: "skill_damage_sub_rate_2".to_string(),
+            key_index: 0,
+            value: 0,
+        };
+        let skill_buff = crate::models::SkillBuffData {
+            source_skills: Some(vec![SUPPORT_IDENTITY_SOURCE_SKILLS[0]]),
+            ..Default::default()
+        };
+
+        let result = apply_source_passive_stat(
+            &mut stats,
+            &option,
+            &skill_buff,
+            123,
+            456,
+            0,
+            789,
+            None,
+            true,
+            "test",
+            STAT_PRIORITY_DEFAULT,
+        );
+
+        assert!(result.is_ok());
+    }
+
+    #[test]
+    fn self_source_uses_attacker_stats() {
+        let source_stats = Arc::new(PlayerStats::default());
+        let attacker_stats = PlayerStats::default();
+        let result =
+            resolve_self_source_stats(Some(&source_stats), None, 123, 123, 0, &attacker_stats);
+
+        assert!(result.is_some_and(|stats| std::ptr::eq(stats, &attacker_stats)));
+    }
 }

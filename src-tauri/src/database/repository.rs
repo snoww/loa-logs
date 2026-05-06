@@ -271,6 +271,9 @@ impl Repository {
 
     pub fn insert_data(&self, mut args: InsertEncounterArgs) -> Result<i64> {
         normalize_encounter_damage_totals(&mut args.encounter);
+        if !args.rdps_valid {
+            sanitize_invalid_rdps(&mut args.encounter, &mut args.contribution_splits);
+        }
 
         let mut connection = self.0.get()?;
         let transaction = connection.transaction()?;

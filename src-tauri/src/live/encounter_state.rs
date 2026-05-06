@@ -4,7 +4,10 @@ use crate::data::*;
 use crate::database::Repository;
 use crate::database::models::InsertEncounterArgs;
 use crate::live::entity_tracker::{Entity, EntityTracker, SkillOptionSnapshot};
-use crate::live::rdps::{compute_hit_rdps, filter_target_effects_for_attacker};
+use crate::live::rdps::{
+    HitCritMetrics, HitRdpsOutcome, HitRdpsResult, RdpsInvalidReason, analyze_hit_rdps,
+    filter_target_effects_for_attacker,
+};
 use crate::live::skill_tracker::SkillTracker;
 use crate::live::status_tracker::{StatusEffectDetails, StatusTracker};
 use crate::live::utils::*;
@@ -1632,7 +1635,8 @@ impl EncounterState {
         skill_id: u32,
         damage: i64,
         is_critical_hit: bool,
-        rdps_result: Option<&crate::live::rdps::HitRdpsResult>,
+        crit_metrics: Option<&HitCritMetrics>,
+        rdps_result: Option<&HitRdpsResult>,
         rdps_valid: bool,
     ) {
         let entry = self
@@ -1652,36 +1656,31 @@ impl EncounterState {
             .entry(player_entity_id)
             .or_default() += self_damage;
 
-        if let Some(result) = rdps_result
-            && let (Some(crit_rate_raw), Some(crit_rate_capped), Some(crit_damage_multiplier)) = (
-                result.crit_rate_raw,
-                result.crit_rate_capped,
-                result.crit_damage_multiplier,
-            )
-            && crit_damage_multiplier > 0.0
+        if let Some(crit_metrics) = crit_metrics
+            && crit_metrics.crit_damage_multiplier > 0.0
         {
             let damage_done_without_crits = if is_critical_hit {
-                (damage as f64 / crit_damage_multiplier) as i64
+                (damage as f64 / crit_metrics.crit_damage_multiplier) as i64
             } else {
                 damage
             };
             let damage_done_with_all_crits = if is_critical_hit {
                 damage
             } else {
-                (damage as f64 * crit_damage_multiplier) as i64
+                (damage as f64 * crit_metrics.crit_damage_multiplier) as i64
             };
             let damage_done_with_average_crits = (damage_done_without_crits as f64
                 + (damage_done_without_crits as f64
-                    * crit_rate_capped
-                    * (crit_damage_multiplier - 1.0)))
+                    * crit_metrics.crit_rate_capped
+                    * (crit_metrics.crit_damage_multiplier - 1.0)))
                 as i64;
             entry.damage_done_without_crits_ += damage_done_without_crits;
             entry.damage_done_with_all_crits_ += damage_done_with_all_crits;
             entry.damage_done_with_average_crits_ += damage_done_with_average_crits;
             entry.critical_hit_rate_adjusted_damage_raw_ +=
-                (damage_done_without_crits as f64 * crit_rate_raw) as i64;
+                (damage_done_without_crits as f64 * crit_metrics.crit_rate_raw) as i64;
             entry.critical_hit_rate_adjusted_damage_raw_capped_ +=
-                (damage_done_without_crits as f64 * crit_rate_capped) as i64;
+                (damage_done_without_crits as f64 * crit_metrics.crit_rate_capped) as i64;
         }
 
         let Some(result) = rdps_result else {
@@ -1716,6 +1715,61 @@ impl EncounterState {
                 .or_default()
                 .entry(attribution.group_name.clone())
                 .or_default() += attribution.damage_increase;
+        }
+    }
+
+    fn invalidate_rdps(&mut self, reason: RdpsInvalidReason) {
+        if !self.rdps_valid {
+            return;
+        }
+
+        let reason_key = reason.message_key();
+        let reason_context = reason.diagnostic_context();
+        self.rdps_valid = false;
+        warn!(
+            "rDPS invalidated: reason={} context=\"{}\" boss=\"{}\" local_player=\"{}\" fight_start={} last_combat_packet={}",
+            reason_key,
+            reason_context,
+            self.encounter.current_boss_name,
+            self.encounter.local_player,
+            self.encounter.fight_start,
+            self.encounter.last_combat_packet
+        );
+        self.rdps_message = Some(reason_key.to_string());
+        self.scrub_rdps_derived_state();
+    }
+
+    fn scrub_rdps_derived_state(&mut self) {
+        for entity in self.encounter.entities.values_mut() {
+            entity.damage_stats.rdps_damage_received = 0;
+            entity.damage_stats.rdps_damage_received_support = 0;
+            entity.damage_stats.rdps_damage_given = 0;
+            entity.damage_stats.rdps = 0;
+            entity.damage_stats.ndps = 0;
+
+            for skill in entity.skills.values_mut() {
+                skill.rdps_damage_received = 0;
+                skill.rdps_damage_received_support = 0;
+                for cast in &mut skill.skill_cast_log {
+                    for hit in &mut cast.hits {
+                        hit.rdps_damage_received = 0;
+                        hit.rdps_damage_received_support = 0;
+                    }
+                }
+            }
+        }
+
+        for (name, accumulator) in self.player_contributions.iter_mut() {
+            if let Some(entity) = self.encounter.entities.get(name) {
+                accumulator.damage_split_by_entity_id_.clear();
+                accumulator
+                    .damage_split_by_entity_id_
+                    .insert(entity.id, entity.damage_stats.damage_dealt);
+            } else {
+                accumulator.damage_split_by_entity_id_.clear();
+            }
+            accumulator.damage_done_by_entity_skill_group_.clear();
+            accumulator.damage_increase_by_entity_skill_group_.clear();
         }
     }
 
@@ -2900,6 +2954,48 @@ impl EncounterState {
 
         self.encounter.last_combat_packet = timestamp;
 
+        let mut damage = damage_data.damage + damage_data.shield_damage.unwrap_or(0);
+        if target_type != EntityType::Player && damage_data.target_current_hp < 0 {
+            damage += damage_data.target_current_hp;
+        }
+
+        let mut crit_metrics = None;
+        let mut rdps_result = None;
+        if self.rdps_valid {
+            let hit_analysis = analyze_hit_rdps(
+                dmg_src_entity,
+                dmg_target_entity,
+                damage.max(0),
+                damage_data.skill_id,
+                resolved_skill_id,
+                damage_data.skill_effect_id,
+                &hit_option,
+                &hit_flag,
+                damage_data.damage_attribute,
+                damage_data.damage_type,
+                is_hyper_awakening,
+                special,
+                &se_on_source,
+                &se_on_target,
+                timestamp,
+                entity_tracker,
+                buffered_player_entities,
+                buffered_owner_self_effects,
+            );
+            crit_metrics = hit_analysis.crit_metrics;
+            match hit_analysis.rdps {
+                HitRdpsOutcome::Computed(result) => {
+                    rdps_result = Some(result);
+                }
+                HitRdpsOutcome::NotApplicable(reason) => {
+                    let _ = reason;
+                }
+                HitRdpsOutcome::Invalid(reason) => {
+                    self.invalidate_rdps(reason);
+                }
+            }
+        }
+
         let [Some(source_entity), Some(target_entity)] = self
             .encounter
             .entities
@@ -2925,35 +3021,6 @@ impl EncounterState {
             target_entity.current_hp = damage_data.target_current_hp;
             target_entity.max_hp = damage_data.target_max_hp;
         }
-
-        let mut damage = damage_data.damage + damage_data.shield_damage.unwrap_or(0);
-        if target_entity.entity_type != EntityType::Player && damage_data.target_current_hp < 0 {
-            damage += damage_data.target_current_hp;
-        }
-        let rdps_result = if self.rdps_valid {
-            compute_hit_rdps(
-                dmg_src_entity,
-                dmg_target_entity,
-                damage.max(0),
-                damage_data.skill_id,
-                resolved_skill_id,
-                damage_data.skill_effect_id,
-                &hit_option,
-                &hit_flag,
-                damage_data.damage_attribute,
-                damage_data.damage_type,
-                is_hyper_awakening,
-                special,
-                &se_on_source,
-                &se_on_target,
-                timestamp,
-                entity_tracker,
-                buffered_player_entities,
-                buffered_owner_self_effects,
-            )
-        } else {
-            None
-        };
 
         let damage_apply_debug_before = if DEBUG_DUMP_DAMAGE_STATE_JSON
             && source_entity.entity_type == EntityType::Player
@@ -3050,6 +3117,7 @@ impl EncounterState {
                 resolved_skill_id,
                 damage,
                 hit_flag == HitFlag::CRITICAL || hit_flag == HitFlag::DOT_CRITICAL,
+                crit_metrics,
                 rdps_result.clone(),
                 self.rdps_valid,
             ))
@@ -3456,6 +3524,7 @@ impl EncounterState {
             skill_id,
             damage,
             hit_flag,
+            crit_metrics,
             rdps_result,
             rdps_valid,
         )) = contribution_data
@@ -3466,6 +3535,7 @@ impl EncounterState {
                 skill_id,
                 damage,
                 hit_flag,
+                crit_metrics.as_ref(),
                 rdps_result.as_ref(),
                 rdps_valid,
             );

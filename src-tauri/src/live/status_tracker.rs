@@ -183,7 +183,7 @@ impl StatusTracker {
             self.actually_get_status_effects(source_id, source_type, timestamp);
 
         // Party filtering for cross-party effects on the target is done downstream
-        // via rdps::filter_target_effects_for_attacker (and compute_hit_rdps's own
+        // via rdps::filter_target_effects_for_attacker (and analyze_hit_rdps's own
         // should_apply_target_effect), so we just pull every effect from the right
         // registry here.
         let use_party_for_target = source_entity.entity_type == EntityType::Player
