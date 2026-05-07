@@ -1,14 +1,14 @@
 {
-  "version": "v1.43.0-nineveh.beta.17",
-  "notes": "### v1.43.0-Nineveh Beta 17 - May 6th, 2026\n\n#### P.S. If you see any of us in town or raid, feel free to drop an honor!\n\n- **Snowving** on Luterra\n- **Administrator** on Ratik\n- **Poont** on Giena\n\nThe LOA Logs beta uses a completely overhauled system for reading Lost Ark's networking data, giving us significantly more control over how we read and query game information. It finally fixes the issue where damage numbers would sometimes completely glitch out, and provides us the necessary infrastructure to implement rDPS in the future. By helping us test its stability, we can be confident that our new \"Nineveh\" packet library works correctly and efficiently across all platforms, including Linux!\n\n### Note: ExitLag users must check the ExitLag Compatibility setting\n\n#### read about rdps in depth [here](https://github.com/snoww/loa-logs/wiki/rDPS-and-nDPS-Explained)\n\n#### NEW FEATURES\n\n- added damage contribution breakdowns (ty molen)\n\n#### BUG FIXES & IMPROVEMENTS\n\n- fixed gems missing from skill breakdowns\n- replaced udps with ndps where applicable\n",
-  "pub_date": "2026-05-06T04:37:44.638Z",
+  "version": "v1.43.0-nineveh.beta.18",
+  "notes": "### v1.43.0-Nineveh Beta 18 - May 7th, 2026\n\n#### P.S. If you see any of us in town or raid, feel free to drop an honor!\n\n- **Snowving** on Luterra\n- **Administrator** on Ratik\n- **Poont** on Giena\n\nThe LOA Logs beta uses a completely overhauled system for reading Lost Ark's networking data, giving us significantly more control over how we read and query game information. It finally fixes the issue where damage numbers would sometimes completely glitch out, and provides us the necessary infrastructure to implement rDPS in the future. By helping us test its stability, we can be confident that our new \"Nineveh\" packet library works correctly and efficiently across all platforms, including Linux!\n\n### Note: ExitLag users must check the ExitLag Compatibility setting\n\n#### read about rdps in depth [here](https://github.com/snoww/loa-logs/wiki/rDPS-and-nDPS-Explained)\n\n#### BUG FIXES & IMPROVEMENTS\n\n- fixed some addons not being properly handled for rdps calcs\n- fixed berserker spec crit scaling\n",
+  "pub_date": "2026-05-07T04:37:44.638Z",
   "platforms": {
     "windows-x86_64": {
-      "url": "https://github.com/snoww/loa-logs/releases/download/v1.43.0-nineveh.beta.17/LOA.Logs_1.43.0-nineveh.beta.17_x64-setup.exe",
+      "url": "https://github.com/snoww/loa-logs/releases/download/v1.43.0-nineveh.beta.18/LOA.Logs_1.43.0-nineveh.beta.18_x64-setup.exe",
       "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlFtZWtMV1FDV0Niblp2dUFqTnUvQnhUTnFjNlRrbzlpR1RiMm1HUklKVlBIRllXQXhieU9UOE4ybGhxMUZyNXlWYXRkSUI2ME92eXpwem5xQTZoSHdFPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzc4MDM5NDQ3CWZpbGU6TE9BIExvZ3NfMS40My4wLW5pbmV2ZWguYmV0YS4xN194NjQtc2V0dXAuZXhlCm9QdzI3R3pMbFBOWlNWektkUlgxM1p1ckxqOWRNUGFhN1U2UmRhOUN4YStWRkd4MW42ZEs5LytuTExaMTJwekV3OUd4YVpMVmpKU0ZyQUI2VmlYbkJ3PT0K"
     },
     "linux-x86_64": {
-      "url": "https://github.com/snoww/loa-logs/releases/download/v1.43.0-nineveh.beta.17/LOA.Logs_1.43.0-nineveh.beta.17_amd64.AppImage",
+      "url": "https://github.com/snoww/loa-logs/releases/download/v1.43.0-nineveh.beta.18/LOA.Logs_1.43.0-nineveh.beta.18_amd64.AppImage",
       "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlFzTDJOQ1NjdlI2NlkyMlJWc1ZIVnRxSmJBcmtzQWY1U2QvMkt3NFo0NTZvdjVCclc2WllKcThKUDMwWDFmbnZOYnF6Y1JWU0ROcmZnNUxhdzlUV1FFPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzc4MDM5OTQ3CWZpbGU6TE9BIExvZ3NfMS40My4wLW5pbmV2ZWguYmV0YS4xN19hbWQ2NC5BcHBJbWFnZQpZME8rNFllVjJxUzgyakFuNzhDUGZJZ3FNWTlwZkJQYmovdkNzMFNZbmVvZnFkV2xjRUFHZElMenNOam8zc1BIdTVqWVMzOUpVVkZNeUYrOERrK1hBQT09Cg=="
     }
   }
