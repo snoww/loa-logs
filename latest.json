@@ -5,7 +5,7 @@
   "platforms": {
     "windows-x86_64": {
       "url": "https://github.com/snoww/loa-logs/releases/download/v1.43.0-nineveh.beta.18/LOA.Logs_1.43.0-nineveh.beta.18_x64-setup.exe",
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlFtZWtMV1FDV0Niblp2dUFqTnUvQnhUTnFjNlRrbzlpR1RiMm1HUklKVlBIRllXQXhieU9UOE4ybGhxMUZyNXlWYXRkSUI2ME92eXpwem5xQTZoSHdFPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzc4MDM5NDQ3CWZpbGU6TE9BIExvZ3NfMS40My4wLW5pbmV2ZWguYmV0YS4xN194NjQtc2V0dXAuZXhlCm9QdzI3R3pMbFBOWlNWektkUlgxM1p1ckxqOWRNUGFhN1U2UmRhOUN4YStWRkd4MW42ZEs5LytuTExaMTJwekV3OUd4YVpMVmpKU0ZyQUI2VmlYbkJ3PT0K"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlRMR1pyTGdQeEJxVC82ZjVtaDc2bFhYZFJzQTZTNFJNV2NUN0Q3NXNwcFZtZ1VIZHMvaThWSE0xQWQ1NVdNNzZWSkE3dHhYMnZ6Smw0Y09QdGoxTGd3PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzc4MTQyMDA4CWZpbGU6TE9BIExvZ3NfMS40My4wLW5pbmV2ZWguYmV0YS4xOF94NjQtc2V0dXAuZXhlCjd2elQ0eFFGb1JnL2p1YmJuaFZ0b1RZbEsrMGlTbUZtaWtGeGtaUFpkc3ZxeW5TZTdkS1k4R3F0cExzYWdud01aaUxGOVNtYjg2WTBlWERuWkczUkRRPT0K"
     },
     "linux-x86_64": {
       "url": "https://github.com/snoww/loa-logs/releases/download/v1.43.0-nineveh.beta.18/LOA.Logs_1.43.0-nineveh.beta.18_amd64.AppImage",
