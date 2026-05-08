@@ -11,13 +11,39 @@ import { screenshotError, screenshotSuccess } from "./utils/toasts";
 
 export const LOA_BIBLE_URL = "https://lostark.bible";
 
+function inlineParentStylesheets(clonedDoc: Document) {
+  // html2canvas's iframe re-fetches <link rel="stylesheet"> hrefs and renders
+  // before they finish loading, producing unstyled captures. Inline the parent's
+  // already-loaded sheets as <style> tags so the clone needs no network.
+  const head = clonedDoc.head;
+  for (const sheet of Array.from(document.styleSheets)) {
+    let cssText = "";
+    try {
+      cssText = Array.from(sheet.cssRules)
+        .map((r) => r.cssText)
+        .join("\n");
+    } catch {
+      continue;
+    }
+    if (!cssText) continue;
+    const style = clonedDoc.createElement("style");
+    style.textContent = cssText;
+    head.appendChild(style);
+  }
+  clonedDoc.querySelectorAll('link[rel="stylesheet"]').forEach((l) => l.remove());
+}
+
 export async function takeScreenshot(div?: HTMLElement) {
   if (!div) {
     return;
   }
   screenshot.take();
   setTimeout(async () => {
-    const canvas = await html2canvas(div, { useCORS: true, backgroundColor: "#27272A" });
+    const canvas = await html2canvas(div, {
+      useCORS: true,
+      backgroundColor: "#27272A",
+      onclone: inlineParentStylesheets
+    });
     canvas.toBlob(async (blob) => {
       if (!blob) return;
       try {
