@@ -259,6 +259,25 @@ pub struct EncounterMisc {
     pub contribution_splits: Option<Vec<ContributionSplit>>,
 }
 
+#[derive(Debug, Default, Serialize, Deserialize, Clone, Copy)]
+#[serde(rename_all = "camelCase", default)]
+pub struct StatDamageContribution {
+    pub damage_done_by_stat: i64,
+    pub damage_done_by_stat_plus_value: i64,
+}
+
+impl StatDamageContribution {
+    pub fn add(&mut self, damage_new: f64, damage_base: f64) {
+        self.damage_done_by_stat += damage_base as i64;
+        self.damage_done_by_stat_plus_value += damage_new as i64;
+    }
+
+    pub fn merge(&mut self, other: Self) {
+        self.damage_done_by_stat += other.damage_done_by_stat;
+        self.damage_done_by_stat_plus_value += other.damage_done_by_stat_plus_value;
+    }
+}
+
 #[derive(Debug, Default, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase", default)]
 pub struct ContributionSplit {
@@ -275,6 +294,19 @@ pub struct ContributionSplit {
     pub damage_done_with_average_crits: i64,
     pub critical_hit_rate_adjusted_damage_raw: i64,
     pub critical_hit_rate_adjusted_damage_raw_capped: i64,
+    pub additional_damage_1percent_damage: StatDamageContribution,
+    pub critical_hit_rate_1percent_damage: StatDamageContribution,
+    pub critical_damage_rate_1percent_damage: StatDamageContribution,
+    pub evo_damage_1percent_damage: StatDamageContribution,
+    pub weapon_power_1000_damage: StatDamageContribution,
+    pub weapon_power_1percent_damage: StatDamageContribution,
+    pub attack_power_1000_damage: StatDamageContribution,
+    pub attack_power_1percent_damage: StatDamageContribution,
+    pub main_stat_1000_damage: StatDamageContribution,
+    pub raid_captain_efficiency: StatDamageContribution,
+    pub blunt_thorn_efficiency: StatDamageContribution,
+    pub supersonic_breakthrough_efficiency: StatDamageContribution,
+    pub standing_striker_efficiency: StatDamageContribution,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]

@@ -345,12 +345,15 @@ impl PartyTracker {
             if let Some(eid) = self.id_tracker.borrow().get_entity_id(cid) {
                 self.entity_id_to_party_id.remove(&eid);
             }
-            if !self.character_id_to_party_id.values().any(|p| *p == party_id) {
+            if !self
+                .character_id_to_party_id
+                .values()
+                .any(|p| *p == party_id)
+            {
                 for party_ids in self.raid_instance_to_party_ids.values_mut() {
                     party_ids.remove(&party_id);
                 }
-                self.raid_instance_to_party_ids
-                    .retain(|_, p| !p.is_empty());
+                self.raid_instance_to_party_ids.retain(|_, p| !p.is_empty());
             }
         }
         self.pending_load_characters = None;

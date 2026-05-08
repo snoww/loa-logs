@@ -6,8 +6,12 @@ use crate::data::{
 use crate::live::entity_tracker::{Entity, EntityTracker, InspectSnapshot, SkillRuntimeData};
 use crate::live::player_stats::{PlayerStats, STAT_PRIORITY_DEFAULT, STAT_PRIORITY_SUPPORT};
 use crate::live::status_tracker::StatusEffectDetails;
-use crate::live::{DEBUG_DUMP_DAMAGE_STATE_JSON, write_debug_json_dump};
-use crate::models::{ArkPassiveData, EntityType, HitFlag, HitOption, PerLevelData};
+use crate::live::{
+    DEBUG_DUMP_DAMAGE_STATE_JSON, compute_stat_damage_metrics, write_debug_json_dump,
+};
+use crate::models::{
+    ArkPassiveData, EntityType, HitFlag, HitOption, PerLevelData, StatDamageContribution,
+};
 use crate::utils::{is_support_class, is_support_spec};
 use hashbrown::HashMap;
 use serde_json::{Value, json};
@@ -56,7 +60,25 @@ pub struct HitCritMetrics {
 #[derive(Debug, Clone)]
 pub struct HitAnalysisResult {
     pub crit_metrics: Option<HitCritMetrics>,
+    pub stat_damage_metrics: Option<HitStatDamageMetrics>,
     pub rdps: HitRdpsOutcome,
+}
+
+#[derive(Debug, Clone, Default)]
+pub struct HitStatDamageMetrics {
+    pub additional_damage_1percent_damage: StatDamageContribution,
+    pub critical_hit_rate_1percent_damage: StatDamageContribution,
+    pub critical_damage_rate_1percent_damage: StatDamageContribution,
+    pub evo_damage_1percent_damage: StatDamageContribution,
+    pub weapon_power_1000_damage: StatDamageContribution,
+    pub weapon_power_1percent_damage: StatDamageContribution,
+    pub attack_power_1000_damage: StatDamageContribution,
+    pub attack_power_1percent_damage: StatDamageContribution,
+    pub main_stat_1000_damage: StatDamageContribution,
+    pub raid_captain_efficiency: StatDamageContribution,
+    pub blunt_thorn_efficiency: StatDamageContribution,
+    pub supersonic_breakthrough_efficiency: StatDamageContribution,
+    pub standing_striker_efficiency: StatDamageContribution,
 }
 
 #[derive(Debug, Clone)]
@@ -158,6 +180,7 @@ struct ContributionFactor {
 const RDPS_TYPE_DAMAGE_BUFF: u8 = 1;
 const RDPS_TYPE_TARGET_DEBUFF: u8 = 3;
 const RDPS_TYPE_HYPER: u8 = 5;
+const RDPS_MOVE_SPEED_ATTACK_SPEED_CAP: f64 = 0.4;
 const SUPPORT_IDENTITY_SOURCE_SKILLS: [u32; 3] = [21140, 21141, 21142];
 const SUPPORT_IDENTITY_SKILL_GROUPS: [u32; 4] = [15000, 60000, 24000, 16000];
 const BERSERKER_BURST_SPEC_SCALING_STATUS_EFFECT_IDS: [u32; 3] = [10080101, 10080102, 10080112];
@@ -197,6 +220,271 @@ fn get_hit_crit_metrics(
         crit_rate_capped,
         crit_damage_multiplier,
     })
+}
+
+#[allow(clippy::too_many_arguments)]
+fn compute_hit_stat_damage_metrics(
+    final_player_stats: &PlayerStats,
+    pre_dynamic_player_stats: Option<&PlayerStats>,
+    final_attack_power: f64,
+    damage_done: i64,
+    skill_id: u32,
+    skill_id_real: u32,
+    skill_effect_id: u32,
+    skill_groups: &[u32],
+    skill_real_groups: &[u32],
+    runtime_data: Option<&SkillRuntimeData>,
+    target: &Entity,
+    hit_option: &HitOption,
+    hit_flag: &HitFlag,
+    damage_attr: Option<u8>,
+    damage_type: u8,
+    can_crit: bool,
+    se_on_source: &[StatusEffectDetails],
+    se_on_target: &[StatusEffectDetails],
+    event_timestamp: i64,
+) -> HitStatDamageMetrics {
+    let mut metrics = HitStatDamageMetrics::default();
+
+    if compute_stat_damage_metrics()
+        && let Some(pre_dynamic_player_stats) = pre_dynamic_player_stats
+    {
+        let calculate_adjusted_damage = |adjust_stats: &dyn Fn(&mut PlayerStats)| -> f64 {
+            let mut clean_player_stats = pre_dynamic_player_stats.clone();
+            adjust_stats(&mut clean_player_stats);
+            clean_player_stats.apply_dynamic_effects(
+                skill_id,
+                skill_id_real,
+                skill_effect_id,
+                skill_groups,
+                skill_real_groups,
+                runtime_data,
+                Some(target),
+                Some(hit_option),
+                se_on_source,
+                se_on_target,
+                event_timestamp,
+            );
+            let new_final_attack_power = clean_player_stats
+                .calculate_final_attack_power(
+                    hit_option,
+                    hit_flag,
+                    damage_attr,
+                    damage_type,
+                    false,
+                    true,
+                    can_crit,
+                    can_crit,
+                )
+                .value();
+            new_final_attack_power / final_attack_power * damage_done as f64
+        };
+
+        metrics.additional_damage_1percent_damage.add(
+            calculate_adjusted_damage(&|stats| stats.skill_damage_rate.add_self(0.01, "stat_diff")),
+            damage_done as f64,
+        );
+        metrics.critical_hit_rate_1percent_damage.add(
+            calculate_adjusted_damage(&|stats| stats.critical_hit_rate.add_self(0.01, "stat_diff")),
+            damage_done as f64,
+        );
+        metrics.critical_damage_rate_1percent_damage.add(
+            calculate_adjusted_damage(&|stats| {
+                stats.critical_damage_rate.add_self(0.01, "stat_diff")
+            }),
+            damage_done as f64,
+        );
+        metrics.evo_damage_1percent_damage.add(
+            calculate_adjusted_damage(&|stats| stats.evolution_damage.add_self(0.01, "stat_diff")),
+            damage_done as f64,
+        );
+        metrics.weapon_power_1000_damage.add(
+            calculate_adjusted_damage(&|stats| stats.weapon_power.add_self(1000.0, "stat_diff")),
+            damage_done as f64,
+        );
+        metrics.weapon_power_1percent_damage.add(
+            calculate_adjusted_damage(&|stats| stats.weapon_dam_x.add_self(0.01, "stat_diff")),
+            damage_done as f64,
+        );
+        metrics.attack_power_1000_damage.add(
+            calculate_adjusted_damage(&|stats| {
+                stats.attack_power_addend_2.add_self(1000.0, "stat_diff")
+            }),
+            damage_done as f64,
+        );
+        metrics.attack_power_1percent_damage.add(
+            calculate_adjusted_damage(&|stats| stats.attack_power_rate.add_self(0.01, "stat_diff")),
+            damage_done as f64,
+        );
+        metrics.main_stat_1000_damage.add(
+            calculate_adjusted_damage(&|stats| {
+                let int_self = stats.int_stat.self_value();
+                let dex_self = stats.dex_stat.self_value();
+                let str_self = stats.str_stat.self_value();
+                if int_self >= dex_self && int_self >= str_self {
+                    stats.int_stat.add_self(1000.0, "stat_diff");
+                } else if dex_self >= int_self && dex_self >= str_self {
+                    stats.dex_stat.add_self(1000.0, "stat_diff");
+                } else {
+                    stats.str_stat.add_self(1000.0, "stat_diff");
+                }
+            }),
+            damage_done as f64,
+        );
+    }
+
+    let evo_dmg_total = final_player_stats.evolution_damage.value();
+
+    let rc_dmg_mod = final_player_stats.move_speed_to_damage_rate.value();
+    let base_dmg_without_rc = damage_done as f64 / (1.0 + rc_dmg_mod);
+    let rc_final_dmg_bonus = PlayerStats::calculate_move_speed_to_damage_bonus(
+        final_player_stats.move_speed_rate.value(),
+        0.1,
+        true,
+    );
+    let rc_new_dmg_bonus = PlayerStats::calculate_move_speed_to_damage_bonus(
+        RDPS_MOVE_SPEED_ATTACK_SPEED_CAP,
+        0.1,
+        true,
+    );
+    metrics.raid_captain_efficiency.add(
+        base_dmg_without_rc * rc_new_dmg_bonus,
+        base_dmg_without_rc * rc_final_dmg_bonus,
+    );
+
+    let blunt_thorn_bonus_evo_dmg = final_player_stats
+        .evolution_damage_bonus_from_blunt_thorn
+        .value();
+    let blunt_thorn_bonus_evo_dmg_cap =
+        final_player_stats.evolution_damage_bonus_from_blunt_thorn_cap;
+    let evo_dmg_without_blunt_thorn_bonus = evo_dmg_total - blunt_thorn_bonus_evo_dmg;
+    let base_dmg_without_blunt_thorn =
+        damage_done as f64 / ((1.0 + evo_dmg_total) / (1.0 + evo_dmg_without_blunt_thorn_bonus));
+    metrics.blunt_thorn_efficiency.add(
+        base_dmg_without_blunt_thorn
+            * (((1.0 + evo_dmg_without_blunt_thorn_bonus + blunt_thorn_bonus_evo_dmg_cap)
+                / (1.0 + evo_dmg_without_blunt_thorn_bonus))
+                - 1.0),
+        base_dmg_without_blunt_thorn
+            * (((1.0 + evo_dmg_total) / (1.0 + evo_dmg_without_blunt_thorn_bonus)) - 1.0),
+    );
+
+    let supersonic_breakthrough_bonus_evo_dmg = final_player_stats
+        .evolution_damage_bonus_from_supersonic_breakthrough
+        .value();
+    let supersonic_breakthrough_bonus_evo_dmg_cap =
+        final_player_stats.evolution_damage_bonus_from_supersonic_breakthrough_cap;
+    let evo_dmg_without_supersonic_breakthrough_bonus =
+        evo_dmg_total - supersonic_breakthrough_bonus_evo_dmg;
+    let base_dmg_without_supersonic_breakthrough = damage_done as f64
+        / ((1.0 + evo_dmg_total) / (1.0 + evo_dmg_without_supersonic_breakthrough_bonus));
+    metrics.supersonic_breakthrough_efficiency.add(
+        base_dmg_without_supersonic_breakthrough
+            * (((1.0
+                + evo_dmg_without_supersonic_breakthrough_bonus
+                + supersonic_breakthrough_bonus_evo_dmg_cap)
+                / (1.0 + evo_dmg_without_supersonic_breakthrough_bonus))
+                - 1.0),
+        base_dmg_without_supersonic_breakthrough
+            * (((1.0 + evo_dmg_total) / (1.0 + evo_dmg_without_supersonic_breakthrough_bonus))
+                - 1.0),
+    );
+
+    let standing_striker_buff_id = final_player_stats.standing_striker_buff_id;
+    if standing_striker_buff_id != 0 {
+        if let Some(skill_buff_data) = SKILL_BUFF_DATA.get(&standing_striker_buff_id) {
+            let matching_effect = se_on_source
+                .iter()
+                .find(|effect| effect.status_effect_id == standing_striker_buff_id);
+            let mut standing_striker_bonus_evo_dmg = 0.0;
+            let mut standing_striker_bonus_evo_dmg_per_stack = 0.0;
+
+            if let Some(effect) = matching_effect {
+                let skill_level = effect.skill_level.max(1);
+                if effect.stack_count > 0 {
+                    if let Some(per_level_data) = get_level_data_resolved(
+                        skill_buff_data,
+                        skill_level,
+                        effect.source_skill_runtime_snapshot.as_ref(),
+                        effect.stack_count,
+                    ) {
+                        let stack_count = effect.stack_count as f64;
+                        for option in &per_level_data.passive_options {
+                            if option.option_type != "stat"
+                                || option.key_stat != "evolution_dam_rate"
+                            {
+                                continue;
+                            }
+
+                            let bonus_evo_dmg = get_passive_option_stat_value(
+                                option,
+                                effect.status_effect_id,
+                                effect
+                                    .owner_player_stats_snapshot
+                                    .as_deref()
+                                    .or(Some(final_player_stats)),
+                            ) as f64
+                                / 10000.0;
+                            standing_striker_bonus_evo_dmg += bonus_evo_dmg;
+                            standing_striker_bonus_evo_dmg_per_stack += bonus_evo_dmg / stack_count;
+                        }
+                    }
+                } else if let Some(per_level_data) = get_level_data(skill_buff_data, skill_level) {
+                    for option in &per_level_data.passive_options {
+                        if option.option_type != "stat" || option.key_stat != "evolution_dam_rate" {
+                            continue;
+                        }
+
+                        // Buff can be fully inactive between hits; keep the cap and record zero actual.
+                        standing_striker_bonus_evo_dmg_per_stack += get_passive_option_stat_value(
+                            option,
+                            standing_striker_buff_id,
+                            Some(final_player_stats),
+                        )
+                            as f64
+                            / 10000.0;
+                    }
+                }
+            } else if let Some(per_level_data) = get_level_data(skill_buff_data, 1) {
+                for option in &per_level_data.passive_options {
+                    if option.option_type != "stat" || option.key_stat != "evolution_dam_rate" {
+                        continue;
+                    }
+
+                    // Buff can be fully inactive between hits; keep the cap and record zero actual.
+                    standing_striker_bonus_evo_dmg_per_stack += get_passive_option_stat_value(
+                        option,
+                        standing_striker_buff_id,
+                        Some(final_player_stats),
+                    ) as f64
+                        / 10000.0;
+                }
+            }
+
+            if standing_striker_bonus_evo_dmg_per_stack > 0.0 && skill_buff_data.overlap_flag != 0 {
+                let standing_striker_bonus_evo_dmg_cap =
+                    standing_striker_bonus_evo_dmg_per_stack * skill_buff_data.overlap_flag as f64;
+                let evo_dmg_without_standing_striker_bonus =
+                    evo_dmg_total - standing_striker_bonus_evo_dmg;
+                let base_dmg_without_standing_striker = damage_done as f64
+                    / ((1.0 + evo_dmg_total) / (1.0 + evo_dmg_without_standing_striker_bonus));
+                metrics.standing_striker_efficiency.add(
+                    base_dmg_without_standing_striker
+                        * (((1.0
+                            + evo_dmg_without_standing_striker_bonus
+                            + standing_striker_bonus_evo_dmg_cap)
+                            / (1.0 + evo_dmg_without_standing_striker_bonus))
+                            - 1.0),
+                    base_dmg_without_standing_striker
+                        * (((1.0 + evo_dmg_total)
+                            / (1.0 + evo_dmg_without_standing_striker_bonus))
+                            - 1.0),
+                );
+            }
+        }
+    }
+
+    metrics
 }
 
 struct RdpsAttackerContext<'a> {
@@ -257,12 +545,14 @@ pub fn analyze_hit_rdps(
     if damage <= 0 {
         return HitAnalysisResult {
             crit_metrics: None,
+            stat_damage_metrics: None,
             rdps: HitRdpsOutcome::NotApplicable(RdpsNotApplicableReason::NonPositiveDamage),
         };
     }
     if special {
         return HitAnalysisResult {
             crit_metrics: None,
+            stat_damage_metrics: None,
             rdps: HitRdpsOutcome::NotApplicable(RdpsNotApplicableReason::SpecialSkill),
         };
     }
@@ -276,41 +566,15 @@ pub fn analyze_hit_rdps(
     else {
         return HitAnalysisResult {
             crit_metrics: None,
+            stat_damage_metrics: None,
             rdps: HitRdpsOutcome::NotApplicable(RdpsNotApplicableReason::NonAttributableSource),
         };
     };
     let attacker_snapshot = attacker_context.inspect_snapshot;
     if !is_affected_by_buffs && !is_hyper_awakening {
-        let crit_metrics = attacker_snapshot
-            .map(|snapshot| {
-                let mut stats = PlayerStats::default();
-                stats.load_from_snapshot(
-                    snapshot,
-                    attacker_context.entity_id,
-                    attacker_context.class_id,
-                );
-                let mut runtime_state = attacker_context.entity.runtime_state();
-                runtime_state.identity_runtime_reliable = attacker_context.entity_id != 0
-                    && attacker_context.entity_id == entity_tracker.local_entity_id;
-                stats.apply_runtime_state(runtime_state);
-                let runtime_data = attacker_context
-                    .entity
-                    .skill_runtime_data
-                    .get(&skill_id_real)
-                    .or_else(|| {
-                        get_buffered_or_live_skill_runtime_data(
-                            attacker_context.entity_id,
-                            skill_id_real,
-                            buffered_entities,
-                            entity_tracker,
-                        )
-                    });
-                stats.apply_skill_runtime_data(skill_effect_id, runtime_data);
-                get_hit_crit_metrics(&stats, damage_type, can_crit)
-            })
-            .flatten();
         return HitAnalysisResult {
-            crit_metrics,
+            crit_metrics: None,
+            stat_damage_metrics: None,
             rdps: HitRdpsOutcome::NotApplicable(RdpsNotApplicableReason::BuffsCannotAffectSkill),
         };
     }
@@ -346,6 +610,7 @@ pub fn analyze_hit_rdps(
         }
         return HitAnalysisResult {
             crit_metrics: None,
+            stat_damage_metrics: None,
             rdps: HitRdpsOutcome::Invalid(RdpsInvalidReason::MissingAttackerSnapshot {
                 attacker_entity_id: attacker_context.entity_id,
                 attacker_name: attacker_context.name.to_string(),
@@ -422,6 +687,7 @@ pub fn analyze_hit_rdps(
     ) {
         return HitAnalysisResult {
             crit_metrics: None,
+            stat_damage_metrics: None,
             rdps: HitRdpsOutcome::Invalid(reason),
         };
     }
@@ -451,9 +717,16 @@ pub fn analyze_hit_rdps(
     ) {
         return HitAnalysisResult {
             crit_metrics: None,
+            stat_damage_metrics: None,
             rdps: HitRdpsOutcome::Invalid(reason),
         };
     }
+    let stat_damage_eligible = is_affected_by_buffs && !is_hyper_awakening;
+    let stat_damage_base_stats = if compute_stat_damage_metrics() && stat_damage_eligible {
+        Some(stats.clone())
+    } else {
+        None
+    };
     stats.apply_dynamic_effects(
         skill_id,
         skill_id_real,
@@ -519,6 +792,7 @@ pub fn analyze_hit_rdps(
         }
         return HitAnalysisResult {
             crit_metrics,
+            stat_damage_metrics: None,
             rdps: HitRdpsOutcome::Invalid(RdpsInvalidReason::NonPositiveTotalAttackPower {
                 attacker_entity_id: attacker_context.entity_id,
                 attacker_name: attacker_context.name.to_string(),
@@ -527,6 +801,31 @@ pub fn analyze_hit_rdps(
             }),
         };
     }
+    let stat_damage_metrics = if stat_damage_eligible {
+        Some(compute_hit_stat_damage_metrics(
+            &stats,
+            stat_damage_base_stats.as_ref(),
+            total_attack_power,
+            damage,
+            skill_id,
+            skill_id_real,
+            skill_effect_id,
+            skill_groups,
+            skill_real_groups,
+            runtime_data,
+            target,
+            hit_option,
+            hit_flag,
+            effective_damage_attr,
+            damage_type,
+            can_crit,
+            se_on_source,
+            se_on_target,
+            event_timestamp,
+        ))
+    } else {
+        None
+    };
 
     let entity_portions = stats.get_damage_portions_contributed_from_all_entities(
         total_attack_power,
@@ -639,6 +938,7 @@ pub fn analyze_hit_rdps(
 
     HitAnalysisResult {
         crit_metrics,
+        stat_damage_metrics,
         rdps: HitRdpsOutcome::Computed(result),
     }
 }
@@ -1448,7 +1748,7 @@ fn get_source_passive_factors(
     (normal_damage_factor, hyper_damage_factor)
 }
 
-fn resolve_skill_effect_flags(skill_effect_id: u32, is_hyper_awakening: bool) -> (bool, bool) {
+pub fn resolve_skill_effect_flags(skill_effect_id: u32, is_hyper_awakening: bool) -> (bool, bool) {
     if is_hyper_awakening {
         return (false, false);
     }

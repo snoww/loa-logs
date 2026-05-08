@@ -110,6 +110,24 @@ export interface ContributionSplit {
   damageDoneWithAverageCrits: number;
   criticalHitRateAdjustedDamageRaw: number;
   criticalHitRateAdjustedDamageRawCapped: number;
+  additionalDamage1percentDamage: StatDamageContribution;
+  criticalHitRate1percentDamage: StatDamageContribution;
+  criticalDamageRate1percentDamage: StatDamageContribution;
+  evoDamage1percentDamage: StatDamageContribution;
+  weaponPower1000Damage: StatDamageContribution;
+  weaponPower1percentDamage: StatDamageContribution;
+  attackPower1000Damage: StatDamageContribution;
+  attackPower1percentDamage: StatDamageContribution;
+  mainStat1000Damage: StatDamageContribution;
+  raidCaptainEfficiency: StatDamageContribution;
+  bluntThornEfficiency: StatDamageContribution;
+  supersonicBreakthroughEfficiency: StatDamageContribution;
+  standingStrikerEfficiency: StatDamageContribution;
+}
+
+export interface StatDamageContribution {
+  damageDoneByStat: number;
+  damageDoneByStatPlusValue: number;
 }
 
 export interface PartyInfo {

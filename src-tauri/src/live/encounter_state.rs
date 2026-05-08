@@ -5,8 +5,8 @@ use crate::database::Repository;
 use crate::database::models::InsertEncounterArgs;
 use crate::live::entity_tracker::{Entity, EntityTracker, SkillOptionSnapshot};
 use crate::live::rdps::{
-    HitCritMetrics, HitRdpsOutcome, HitRdpsResult, RdpsInvalidReason, analyze_hit_rdps,
-    filter_target_effects_for_attacker,
+    HitCritMetrics, HitRdpsOutcome, HitRdpsResult, HitStatDamageMetrics, RdpsInvalidReason,
+    analyze_hit_rdps, filter_target_effects_for_attacker, resolve_skill_effect_flags,
 };
 use crate::live::skill_tracker::SkillTracker;
 use crate::live::status_tracker::{StatusEffectDetails, StatusTracker};
@@ -38,6 +38,15 @@ struct StatDamageDump {
     damage_done_by_stat_plus_value_: i64,
 }
 
+impl From<StatDamageContribution> for StatDamageDump {
+    fn from(value: StatDamageContribution) -> Self {
+        Self {
+            damage_done_by_stat_: value.damage_done_by_stat,
+            damage_done_by_stat_plus_value_: value.damage_done_by_stat_plus_value,
+        }
+    }
+}
+
 #[derive(Debug, Serialize, Clone, Default)]
 struct SkillStatsDump {
     damage_: i64,
@@ -51,10 +60,24 @@ struct DamageDataAccumulator {
     damage_done_by_entity_skill_group_: HashMap<u64, HashMap<String, i64>>,
     damage_increase_by_entity_skill_group_: HashMap<u64, HashMap<String, i64>>,
     damage_done_without_crits_: i64,
+    damage_done_without_ultimate_awakening_: i64,
     damage_done_with_all_crits_: i64,
     damage_done_with_average_crits_: i64,
     critical_hit_rate_adjusted_damage_raw_: i64,
     critical_hit_rate_adjusted_damage_raw_capped_: i64,
+    additional_damage_1percent_damage_: StatDamageContribution,
+    critical_hit_rate_1percent_damage_: StatDamageContribution,
+    critical_damage_rate_1percent_damage_: StatDamageContribution,
+    evo_damage_1percent_damage_: StatDamageContribution,
+    weapon_power_1000_damage_: StatDamageContribution,
+    weapon_power_1percent_damage_: StatDamageContribution,
+    attack_power_1000_damage_: StatDamageContribution,
+    attack_power_1percent_damage_: StatDamageContribution,
+    main_stat_1000_damage_: StatDamageContribution,
+    raid_captain_efficiency_: StatDamageContribution,
+    blunt_thorn_efficiency_: StatDamageContribution,
+    supersonic_breakthrough_efficiency_: StatDamageContribution,
+    standing_striker_efficiency_: StatDamageContribution,
     casts_: i64,
     skill_casts_: i64,
     skill_to_damage_map_: HashMap<u32, SkillStatsDump>,
@@ -88,6 +111,7 @@ struct DamageDataDump {
     raid_captain_efficiency_: StatDamageDump,
     blunt_thorn_efficiency_: StatDamageDump,
     supersonic_breakthrough_efficiency_: StatDamageDump,
+    standing_striker_efficiency_: StatDamageDump,
     ally_identity_damage_power_1percent_damage_: StatDamageDump,
     ally_attack_power_power_1percent_damage_: StatDamageDump,
     ally_brand_power_1percent_damage_: StatDamageDump,
@@ -1193,12 +1217,53 @@ impl EncounterState {
             source.damage_increase_by_entity_skill_group_,
         );
         target.damage_done_without_crits_ += source.damage_done_without_crits_;
+        target.damage_done_without_ultimate_awakening_ +=
+            source.damage_done_without_ultimate_awakening_;
         target.damage_done_with_all_crits_ += source.damage_done_with_all_crits_;
         target.damage_done_with_average_crits_ += source.damage_done_with_average_crits_;
         target.critical_hit_rate_adjusted_damage_raw_ +=
             source.critical_hit_rate_adjusted_damage_raw_;
         target.critical_hit_rate_adjusted_damage_raw_capped_ +=
             source.critical_hit_rate_adjusted_damage_raw_capped_;
+        target
+            .additional_damage_1percent_damage_
+            .merge(source.additional_damage_1percent_damage_);
+        target
+            .critical_hit_rate_1percent_damage_
+            .merge(source.critical_hit_rate_1percent_damage_);
+        target
+            .critical_damage_rate_1percent_damage_
+            .merge(source.critical_damage_rate_1percent_damage_);
+        target
+            .evo_damage_1percent_damage_
+            .merge(source.evo_damage_1percent_damage_);
+        target
+            .weapon_power_1000_damage_
+            .merge(source.weapon_power_1000_damage_);
+        target
+            .weapon_power_1percent_damage_
+            .merge(source.weapon_power_1percent_damage_);
+        target
+            .attack_power_1000_damage_
+            .merge(source.attack_power_1000_damage_);
+        target
+            .attack_power_1percent_damage_
+            .merge(source.attack_power_1percent_damage_);
+        target
+            .main_stat_1000_damage_
+            .merge(source.main_stat_1000_damage_);
+        target
+            .raid_captain_efficiency_
+            .merge(source.raid_captain_efficiency_);
+        target
+            .blunt_thorn_efficiency_
+            .merge(source.blunt_thorn_efficiency_);
+        target
+            .supersonic_breakthrough_efficiency_
+            .merge(source.supersonic_breakthrough_efficiency_);
+        target
+            .standing_striker_efficiency_
+            .merge(source.standing_striker_efficiency_);
         target.casts_ += source.casts_;
         target.skill_casts_ += source.skill_casts_;
         for (skill_id, source_skill) in source.skill_to_damage_map_ {
@@ -1634,8 +1699,10 @@ impl EncounterState {
         player_entity_id: u64,
         skill_id: u32,
         damage: i64,
+        can_crit: bool,
         is_critical_hit: bool,
         crit_metrics: Option<&HitCritMetrics>,
+        stat_damage_metrics: Option<&HitStatDamageMetrics>,
         rdps_result: Option<&HitRdpsResult>,
         rdps_valid: bool,
     ) {
@@ -1655,6 +1722,10 @@ impl EncounterState {
             .damage_split_by_entity_id_
             .entry(player_entity_id)
             .or_default() += self_damage;
+
+        if can_crit {
+            entry.damage_done_without_ultimate_awakening_ += damage;
+        }
 
         if let Some(crit_metrics) = crit_metrics
             && crit_metrics.crit_damage_multiplier > 0.0
@@ -1681,6 +1752,48 @@ impl EncounterState {
                 (damage_done_without_crits as f64 * crit_metrics.crit_rate_raw) as i64;
             entry.critical_hit_rate_adjusted_damage_raw_capped_ +=
                 (damage_done_without_crits as f64 * crit_metrics.crit_rate_capped) as i64;
+        }
+
+        if let Some(stat_damage_metrics) = stat_damage_metrics {
+            entry
+                .additional_damage_1percent_damage_
+                .merge(stat_damage_metrics.additional_damage_1percent_damage);
+            entry
+                .critical_hit_rate_1percent_damage_
+                .merge(stat_damage_metrics.critical_hit_rate_1percent_damage);
+            entry
+                .critical_damage_rate_1percent_damage_
+                .merge(stat_damage_metrics.critical_damage_rate_1percent_damage);
+            entry
+                .evo_damage_1percent_damage_
+                .merge(stat_damage_metrics.evo_damage_1percent_damage);
+            entry
+                .weapon_power_1000_damage_
+                .merge(stat_damage_metrics.weapon_power_1000_damage);
+            entry
+                .weapon_power_1percent_damage_
+                .merge(stat_damage_metrics.weapon_power_1percent_damage);
+            entry
+                .attack_power_1000_damage_
+                .merge(stat_damage_metrics.attack_power_1000_damage);
+            entry
+                .attack_power_1percent_damage_
+                .merge(stat_damage_metrics.attack_power_1percent_damage);
+            entry
+                .main_stat_1000_damage_
+                .merge(stat_damage_metrics.main_stat_1000_damage);
+            entry
+                .raid_captain_efficiency_
+                .merge(stat_damage_metrics.raid_captain_efficiency);
+            entry
+                .blunt_thorn_efficiency_
+                .merge(stat_damage_metrics.blunt_thorn_efficiency);
+            entry
+                .supersonic_breakthrough_efficiency_
+                .merge(stat_damage_metrics.supersonic_breakthrough_efficiency);
+            entry
+                .standing_striker_efficiency_
+                .merge(stat_damage_metrics.standing_striker_efficiency);
         }
 
         let Some(result) = rdps_result else {
@@ -1877,21 +1990,49 @@ impl EncounterState {
                     damage_split_by_name,
                     damage_done_by_entity_skill_group,
                     damage_increase_by_entity_skill_group,
+                    damage_done_without_ultimate_awakening,
                     damage_done_without_crits,
                     damage_done_with_all_crits,
                     damage_done_with_average_crits,
                     critical_hit_rate_adjusted_damage_raw,
                     critical_hit_rate_adjusted_damage_raw_capped,
+                    additional_damage_1percent_damage,
+                    critical_hit_rate_1percent_damage,
+                    critical_damage_rate_1percent_damage,
+                    evo_damage_1percent_damage,
+                    weapon_power_1000_damage,
+                    weapon_power_1percent_damage,
+                    attack_power_1000_damage,
+                    attack_power_1percent_damage,
+                    main_stat_1000_damage,
+                    raid_captain_efficiency,
+                    blunt_thorn_efficiency,
+                    supersonic_breakthrough_efficiency,
+                    standing_striker_efficiency,
                 ) = if let Some(acc) = accumulators.remove(&entity.name) {
                     (
                         resolve_ids(acc.damage_split_by_entity_id_),
                         resolve_ids_nested(acc.damage_done_by_entity_skill_group_),
                         resolve_ids_nested(acc.damage_increase_by_entity_skill_group_),
+                        acc.damage_done_without_ultimate_awakening_,
                         acc.damage_done_without_crits_,
                         acc.damage_done_with_all_crits_,
                         acc.damage_done_with_average_crits_,
                         acc.critical_hit_rate_adjusted_damage_raw_,
                         acc.critical_hit_rate_adjusted_damage_raw_capped_,
+                        acc.additional_damage_1percent_damage_,
+                        acc.critical_hit_rate_1percent_damage_,
+                        acc.critical_damage_rate_1percent_damage_,
+                        acc.evo_damage_1percent_damage_,
+                        acc.weapon_power_1000_damage_,
+                        acc.weapon_power_1percent_damage_,
+                        acc.attack_power_1000_damage_,
+                        acc.attack_power_1percent_damage_,
+                        acc.main_stat_1000_damage_,
+                        acc.raid_captain_efficiency_,
+                        acc.blunt_thorn_efficiency_,
+                        acc.supersonic_breakthrough_efficiency_,
+                        acc.standing_striker_efficiency_,
                     )
                 } else {
                     let self_damage = if self.rdps_valid {
@@ -1903,18 +2044,31 @@ impl EncounterState {
                         [(entity.name.clone(), self_damage)].into(),
                         HashMap::new(),
                         HashMap::new(),
+                        entity
+                            .damage_stats
+                            .damage_dealt
+                            .saturating_sub(entity.damage_stats.hyper_awakening_damage),
                         0,
                         0,
                         0,
                         0,
                         0,
+                        StatDamageContribution::default(),
+                        StatDamageContribution::default(),
+                        StatDamageContribution::default(),
+                        StatDamageContribution::default(),
+                        StatDamageContribution::default(),
+                        StatDamageContribution::default(),
+                        StatDamageContribution::default(),
+                        StatDamageContribution::default(),
+                        StatDamageContribution::default(),
+                        StatDamageContribution::default(),
+                        StatDamageContribution::default(),
+                        StatDamageContribution::default(),
+                        StatDamageContribution::default(),
                     )
                 };
                 let hyper_awakening_damage = entity.damage_stats.hyper_awakening_damage;
-                let damage_done_without_ultimate_awakening = entity
-                    .damage_stats
-                    .damage_dealt
-                    .saturating_sub(hyper_awakening_damage);
                 ContributionSplit {
                     name: entity.name.clone(),
                     party_number: if entity.entity_type == EntityType::DarkGrenade {
@@ -1935,6 +2089,19 @@ impl EncounterState {
                     damage_done_with_average_crits,
                     critical_hit_rate_adjusted_damage_raw,
                     critical_hit_rate_adjusted_damage_raw_capped,
+                    additional_damage_1percent_damage,
+                    critical_hit_rate_1percent_damage,
+                    critical_damage_rate_1percent_damage,
+                    evo_damage_1percent_damage,
+                    weapon_power_1000_damage,
+                    weapon_power_1percent_damage,
+                    attack_power_1000_damage,
+                    attack_power_1percent_damage,
+                    main_stat_1000_damage,
+                    raid_captain_efficiency,
+                    blunt_thorn_efficiency,
+                    supersonic_breakthrough_efficiency,
+                    standing_striker_efficiency,
                 }
             })
             .collect()
@@ -1950,8 +2117,11 @@ impl EncounterState {
             let accumulator = self.player_contributions.get(&entity.name);
             let entity_id_ = entity.id;
             let damage_done_ = entity.damage_stats.damage_dealt;
-            let damage_done_without_ultimate_awakening_ =
-                damage_done_.saturating_sub(entity.damage_stats.hyper_awakening_damage);
+            let damage_done_without_ultimate_awakening_ = accumulator
+                .map(|value| value.damage_done_without_ultimate_awakening_)
+                .unwrap_or_else(|| {
+                    damage_done_.saturating_sub(entity.damage_stats.hyper_awakening_damage)
+                });
             let damage_done_without_crits_ = accumulator
                 .map(|value| value.damage_done_without_crits_)
                 .unwrap_or_default();
@@ -1966,6 +2136,45 @@ impl EncounterState {
                 .unwrap_or_default();
             let critical_hit_rate_adjusted_damage_raw_capped_ = accumulator
                 .map(|value| value.critical_hit_rate_adjusted_damage_raw_capped_)
+                .unwrap_or_default();
+            let additional_damage_1percent_damage_ = accumulator
+                .map(|value| StatDamageDump::from(value.additional_damage_1percent_damage_))
+                .unwrap_or_default();
+            let critical_hit_rate_1percent_damage_ = accumulator
+                .map(|value| StatDamageDump::from(value.critical_hit_rate_1percent_damage_))
+                .unwrap_or_default();
+            let critical_damage_rate_1percent_damage_ = accumulator
+                .map(|value| StatDamageDump::from(value.critical_damage_rate_1percent_damage_))
+                .unwrap_or_default();
+            let evo_damage_1percent_damage_ = accumulator
+                .map(|value| StatDamageDump::from(value.evo_damage_1percent_damage_))
+                .unwrap_or_default();
+            let weapon_power_1000_damage_ = accumulator
+                .map(|value| StatDamageDump::from(value.weapon_power_1000_damage_))
+                .unwrap_or_default();
+            let weapon_power_1percent_damage_ = accumulator
+                .map(|value| StatDamageDump::from(value.weapon_power_1percent_damage_))
+                .unwrap_or_default();
+            let attack_power_1000_damage_ = accumulator
+                .map(|value| StatDamageDump::from(value.attack_power_1000_damage_))
+                .unwrap_or_default();
+            let attack_power_1percent_damage_ = accumulator
+                .map(|value| StatDamageDump::from(value.attack_power_1percent_damage_))
+                .unwrap_or_default();
+            let main_stat_1000_damage_ = accumulator
+                .map(|value| StatDamageDump::from(value.main_stat_1000_damage_))
+                .unwrap_or_default();
+            let raid_captain_efficiency_ = accumulator
+                .map(|value| StatDamageDump::from(value.raid_captain_efficiency_))
+                .unwrap_or_default();
+            let blunt_thorn_efficiency_ = accumulator
+                .map(|value| StatDamageDump::from(value.blunt_thorn_efficiency_))
+                .unwrap_or_default();
+            let supersonic_breakthrough_efficiency_ = accumulator
+                .map(|value| StatDamageDump::from(value.supersonic_breakthrough_efficiency_))
+                .unwrap_or_default();
+            let standing_striker_efficiency_ = accumulator
+                .map(|value| StatDamageDump::from(value.standing_striker_efficiency_))
                 .unwrap_or_default();
             let skill_to_damage_map_ = if let Some(accumulator) = accumulator {
                 accumulator.skill_to_damage_map_.clone()
@@ -2025,6 +2234,19 @@ impl EncounterState {
                     damage_increase_by_entity_skill_group_: accumulator
                         .map(|value| value.damage_increase_by_entity_skill_group_.clone())
                         .unwrap_or_default(),
+                    additional_damage_1percent_damage_,
+                    critical_hit_rate_1percent_damage_,
+                    critical_damage_rate_1percent_damage_,
+                    evo_damage_1percent_damage_,
+                    weapon_power_1000_damage_,
+                    weapon_power_1percent_damage_,
+                    attack_power_1000_damage_,
+                    attack_power_1percent_damage_,
+                    main_stat_1000_damage_,
+                    raid_captain_efficiency_,
+                    blunt_thorn_efficiency_,
+                    supersonic_breakthrough_efficiency_,
+                    standing_striker_efficiency_,
                     damage_done_under_atk_power_: 0,
                     damage_done_under_brand_: 0,
                     damage_done_under_identity_: 0,
@@ -2959,7 +3181,10 @@ impl EncounterState {
             damage += damage_data.target_current_hp;
         }
 
+        let (can_crit, _) =
+            resolve_skill_effect_flags(damage_data.skill_effect_id, is_hyper_awakening);
         let mut crit_metrics = None;
+        let mut stat_damage_metrics = None;
         let mut rdps_result = None;
         if self.rdps_valid {
             let hit_analysis = analyze_hit_rdps(
@@ -2983,6 +3208,7 @@ impl EncounterState {
                 buffered_owner_self_effects,
             );
             crit_metrics = hit_analysis.crit_metrics;
+            stat_damage_metrics = hit_analysis.stat_damage_metrics;
             match hit_analysis.rdps {
                 HitRdpsOutcome::Computed(result) => {
                     rdps_result = Some(result);
@@ -3116,8 +3342,10 @@ impl EncounterState {
                 dmg_src_entity.id,
                 resolved_skill_id,
                 damage,
+                can_crit,
                 hit_flag == HitFlag::CRITICAL || hit_flag == HitFlag::DOT_CRITICAL,
                 crit_metrics,
+                stat_damage_metrics,
                 rdps_result.clone(),
                 self.rdps_valid,
             ))
@@ -3523,8 +3751,10 @@ impl EncounterState {
             player_entity_id,
             skill_id,
             damage,
+            can_crit,
             hit_flag,
             crit_metrics,
+            stat_damage_metrics,
             rdps_result,
             rdps_valid,
         )) = contribution_data
@@ -3534,8 +3764,10 @@ impl EncounterState {
                 player_entity_id,
                 skill_id,
                 damage,
+                can_crit,
                 hit_flag,
                 crit_metrics.as_ref(),
+                stat_damage_metrics.as_ref(),
                 rdps_result.as_ref(),
                 rdps_valid,
             );

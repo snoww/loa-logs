@@ -40,7 +40,7 @@ use nineveh_formats::ipc::{
 use serde::Serialize;
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::sync::atomic::{AtomicU64, Ordering};
+use std::sync::atomic::{AtomicBool, AtomicU64, Ordering};
 use std::time::{Duration, Instant};
 use tauri::{AppHandle, Emitter, Manager};
 
@@ -49,6 +49,16 @@ use crate::context::AppContext;
 // Flip these only when debugging live inspect / attribution issues.
 pub(crate) const DEBUG_TRACE_INSPECT_PACKETS: bool = true;
 pub(crate) const DEBUG_DUMP_DAMAGE_STATE_JSON: bool = false;
+
+static COMPUTE_STAT_DAMAGE_METRICS: AtomicBool = AtomicBool::new(true);
+
+pub(crate) fn compute_stat_damage_metrics() -> bool {
+    COMPUTE_STAT_DAMAGE_METRICS.load(Ordering::Relaxed)
+}
+
+fn set_compute_stat_damage_metrics(enabled: bool) {
+    COMPUTE_STAT_DAMAGE_METRICS.store(enabled, Ordering::Relaxed);
+}
 
 pub struct StartArgs {
     pub app: AppHandle,
@@ -100,6 +110,7 @@ pub fn start(args: StartArgs) -> Result<()> {
         }
         if settings.general.low_performance_mode {
             duration = Duration::from_millis(1500);
+            set_compute_stat_damage_metrics(false);
             info!("low performance mode enabled")
         }
     } else {

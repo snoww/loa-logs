@@ -763,7 +763,10 @@ pub struct PlayerStats {
     pub damage_attr_amplifications: Vec<StatData>,
     pub damage_conversion_type: Option<u8>,
     pub evolution_damage_bonus_from_blunt_thorn: StatData,
+    pub evolution_damage_bonus_from_blunt_thorn_cap: f64,
     pub evolution_damage_bonus_from_supersonic_breakthrough: StatData,
+    pub evolution_damage_bonus_from_supersonic_breakthrough_cap: f64,
+    pub standing_striker_buff_id: u32,
     pub skill_status_effect_multiplier: HashMap<u32, f64>,
     pub skill_attack_power_multiplier: HashMap<u32, f64>,
     pub skill_group_status_effect_multiplier: HashMap<u32, f64>,
@@ -824,7 +827,10 @@ impl Default for PlayerStats {
             damage_attr_amplifications: vec![StatData::default(); DAMAGE_ATTR_SLOTS],
             damage_conversion_type: None,
             evolution_damage_bonus_from_blunt_thorn: StatData::default(),
+            evolution_damage_bonus_from_blunt_thorn_cap: 0.0,
             evolution_damage_bonus_from_supersonic_breakthrough: StatData::default(),
+            evolution_damage_bonus_from_supersonic_breakthrough_cap: 0.0,
+            standing_striker_buff_id: 0,
             skill_status_effect_multiplier: HashMap::new(),
             skill_attack_power_multiplier: HashMap::new(),
             skill_group_status_effect_multiplier: HashMap::new(),
@@ -945,8 +951,11 @@ impl PlayerStats {
         self.active_ability_features.clear();
         self.damage_conversion_type = None;
         self.evolution_damage_bonus_from_blunt_thorn.clear();
+        self.evolution_damage_bonus_from_blunt_thorn_cap = 0.0;
         self.evolution_damage_bonus_from_supersonic_breakthrough
             .clear();
+        self.evolution_damage_bonus_from_supersonic_breakthrough_cap = 0.0;
+        self.standing_striker_buff_id = 0;
 
         self.for_each_stat_mut(|stat| stat.clear());
         self.modify_damage_combat_effect.operation_type = OperationType::Multiplicative;
@@ -1838,6 +1847,8 @@ impl PlayerStats {
                             active.values[1] as f64 / 10000.0;
                         critical_rate_cap_over_to_damage_multiplier_cap =
                             active.values[2] as f64 / 10000.0;
+                        self.evolution_damage_bonus_from_blunt_thorn_cap =
+                            critical_rate_cap_over_to_damage_multiplier_cap;
                     }
                 }
                 "identity_soul_eater_tricall" => {
@@ -1962,6 +1973,7 @@ impl PlayerStats {
                         let over_cap_bonus = active.values[1] as f64 / 10000.0;
                         let over_cap_percent = active.values[2] as f64 / 10000.0;
                         let cap_evo_dmg = active.values[3] as f64 / 10000.0;
+                        self.evolution_damage_bonus_from_supersonic_breakthrough_cap = cap_evo_dmg;
                         let move_speed_bonus = self.move_speed_rate.value();
                         let attack_speed_bonus = self.attack_speed_rate.value();
                         let mut local_evo_dmg = StatData::default();
@@ -2015,6 +2027,11 @@ impl PlayerStats {
                         }
                         self.evolution_damage = self.evolution_damage.added(&local_evo_dmg);
                         self.evolution_damage_bonus_from_supersonic_breakthrough = local_evo_dmg;
+                    }
+                }
+                "standing_striker" => {
+                    if let Some(value) = active.values.first() {
+                        self.standing_striker_buff_id = *value as u32;
                     }
                 }
                 "troop_leader" => {
@@ -2818,6 +2835,9 @@ impl PlayerStats {
                 "attack_power_pre_multipliers": debug_float_value(self.calculate_attack_power_pre_multipliers().value()),
                 "self_attack_power": debug_float_value(self.calculate_self_attack_power()),
                 "stat_sheet_attack_power": debug_float_value(self.calculate_stat_sheet_attack_power()),
+                "evolution_damage_bonus_from_blunt_thorn_cap": debug_float_value(self.evolution_damage_bonus_from_blunt_thorn_cap),
+                "evolution_damage_bonus_from_supersonic_breakthrough_cap": debug_float_value(self.evolution_damage_bonus_from_supersonic_breakthrough_cap),
+                "standing_striker_buff_id": self.standing_striker_buff_id,
                 "move_speed_to_damage_bonus_capped": debug_float_value(Self::calculate_move_speed_to_damage_bonus(
                     self.move_speed_rate.value(),
                     self.move_speed_to_damage_rate.value(),
