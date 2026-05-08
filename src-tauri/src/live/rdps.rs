@@ -15,7 +15,12 @@ use crate::models::{
 use crate::utils::{is_support_class, is_support_spec};
 use hashbrown::HashMap;
 use serde_json::{Value, json};
+use std::cell::RefCell;
 use std::sync::Arc;
+
+thread_local! {
+    static STAT_DAMAGE_SCRATCH: RefCell<PlayerStats> = RefCell::new(PlayerStats::default());
+}
 
 #[derive(Debug, Clone)]
 pub struct HitRdpsAttribution {
@@ -250,34 +255,37 @@ fn compute_hit_stat_damage_metrics(
         && let Some(pre_dynamic_player_stats) = pre_dynamic_player_stats
     {
         let calculate_adjusted_damage = |adjust_stats: &dyn Fn(&mut PlayerStats)| -> f64 {
-            let mut clean_player_stats = pre_dynamic_player_stats.clone();
-            adjust_stats(&mut clean_player_stats);
-            clean_player_stats.apply_dynamic_effects(
-                skill_id,
-                skill_id_real,
-                skill_effect_id,
-                skill_groups,
-                skill_real_groups,
-                runtime_data,
-                Some(target),
-                Some(hit_option),
-                se_on_source,
-                se_on_target,
-                event_timestamp,
-            );
-            let new_final_attack_power = clean_player_stats
-                .calculate_final_attack_power(
-                    hit_option,
-                    hit_flag,
-                    damage_attr,
-                    damage_type,
-                    false,
-                    true,
-                    can_crit,
-                    can_crit,
-                )
-                .value();
-            new_final_attack_power / final_attack_power * damage_done as f64
+            STAT_DAMAGE_SCRATCH.with(|scratch| {
+                let mut scratch = scratch.borrow_mut();
+                scratch.restore_from(pre_dynamic_player_stats);
+                adjust_stats(&mut scratch);
+                scratch.apply_dynamic_effects(
+                    skill_id,
+                    skill_id_real,
+                    skill_effect_id,
+                    skill_groups,
+                    skill_real_groups,
+                    runtime_data,
+                    Some(target),
+                    Some(hit_option),
+                    se_on_source,
+                    se_on_target,
+                    event_timestamp,
+                );
+                let new_final_attack_power = scratch
+                    .calculate_final_attack_power(
+                        hit_option,
+                        hit_flag,
+                        damage_attr,
+                        damage_type,
+                        false,
+                        true,
+                        can_crit,
+                        can_crit,
+                    )
+                    .value();
+                new_final_attack_power / final_attack_power * damage_done as f64
+            })
         };
 
         metrics.additional_damage_1percent_damage.add(
@@ -391,61 +399,44 @@ fn compute_hit_stat_damage_metrics(
     );
 
     let standing_striker_buff_id = final_player_stats.standing_striker_buff_id;
-    if standing_striker_buff_id != 0 {
-        if let Some(skill_buff_data) = SKILL_BUFF_DATA.get(&standing_striker_buff_id) {
-            let matching_effect = se_on_source
-                .iter()
-                .find(|effect| effect.status_effect_id == standing_striker_buff_id);
-            let mut standing_striker_bonus_evo_dmg = 0.0;
-            let mut standing_striker_bonus_evo_dmg_per_stack = 0.0;
+    if standing_striker_buff_id != 0
+        && let Some(skill_buff_data) = SKILL_BUFF_DATA.get(&standing_striker_buff_id)
+    {
+        let matching_effect = se_on_source
+            .iter()
+            .find(|effect| effect.status_effect_id == standing_striker_buff_id);
+        let mut standing_striker_bonus_evo_dmg = 0.0;
+        let mut standing_striker_bonus_evo_dmg_per_stack = 0.0;
 
-            if let Some(effect) = matching_effect {
-                let skill_level = effect.skill_level.max(1);
-                if effect.stack_count > 0 {
-                    if let Some(per_level_data) = get_level_data_resolved(
-                        skill_buff_data,
-                        skill_level,
-                        effect.source_skill_runtime_snapshot.as_ref(),
-                        effect.stack_count,
-                    ) {
-                        let stack_count = effect.stack_count as f64;
-                        for option in &per_level_data.passive_options {
-                            if option.option_type != "stat"
-                                || option.key_stat != "evolution_dam_rate"
-                            {
-                                continue;
-                            }
-
-                            let bonus_evo_dmg = get_passive_option_stat_value(
-                                option,
-                                effect.status_effect_id,
-                                effect
-                                    .owner_player_stats_snapshot
-                                    .as_deref()
-                                    .or(Some(final_player_stats)),
-                            ) as f64
-                                / 10000.0;
-                            standing_striker_bonus_evo_dmg += bonus_evo_dmg;
-                            standing_striker_bonus_evo_dmg_per_stack += bonus_evo_dmg / stack_count;
-                        }
-                    }
-                } else if let Some(per_level_data) = get_level_data(skill_buff_data, skill_level) {
+        if let Some(effect) = matching_effect {
+            let skill_level = effect.skill_level.max(1);
+            if effect.stack_count > 0 {
+                if let Some(per_level_data) = get_level_data_resolved(
+                    skill_buff_data,
+                    skill_level,
+                    effect.source_skill_runtime_snapshot.as_ref(),
+                    effect.stack_count,
+                ) {
+                    let stack_count = effect.stack_count as f64;
                     for option in &per_level_data.passive_options {
                         if option.option_type != "stat" || option.key_stat != "evolution_dam_rate" {
                             continue;
                         }
 
-                        // Buff can be fully inactive between hits; keep the cap and record zero actual.
-                        standing_striker_bonus_evo_dmg_per_stack += get_passive_option_stat_value(
+                        let bonus_evo_dmg = get_passive_option_stat_value(
                             option,
-                            standing_striker_buff_id,
-                            Some(final_player_stats),
-                        )
-                            as f64
+                            effect.status_effect_id,
+                            effect
+                                .owner_player_stats_snapshot
+                                .as_deref()
+                                .or(Some(final_player_stats)),
+                        ) as f64
                             / 10000.0;
+                        standing_striker_bonus_evo_dmg += bonus_evo_dmg;
+                        standing_striker_bonus_evo_dmg_per_stack += bonus_evo_dmg / stack_count;
                     }
                 }
-            } else if let Some(per_level_data) = get_level_data(skill_buff_data, 1) {
+            } else if let Some(per_level_data) = get_level_data(skill_buff_data, skill_level) {
                 for option in &per_level_data.passive_options {
                     if option.option_type != "stat" || option.key_stat != "evolution_dam_rate" {
                         continue;
@@ -460,30 +451,42 @@ fn compute_hit_stat_damage_metrics(
                         / 10000.0;
                 }
             }
+        } else if let Some(per_level_data) = get_level_data(skill_buff_data, 1) {
+            for option in &per_level_data.passive_options {
+                if option.option_type != "stat" || option.key_stat != "evolution_dam_rate" {
+                    continue;
+                }
 
-            if standing_striker_bonus_evo_dmg_per_stack > 0.0 && skill_buff_data.overlap_flag != 0 {
-                let standing_striker_bonus_evo_dmg_cap =
-                    standing_striker_bonus_evo_dmg_per_stack * skill_buff_data.overlap_flag as f64;
-                let evo_dmg_without_standing_striker_bonus =
-                    evo_dmg_total - standing_striker_bonus_evo_dmg;
-                let base_dmg_without_standing_striker = damage_done as f64
-                    / ((1.0 + evo_dmg_total) / (1.0 + evo_dmg_without_standing_striker_bonus));
-                metrics.standing_striker_efficiency.add(
-                    base_dmg_without_standing_striker
-                        * (((1.0
-                            + evo_dmg_without_standing_striker_bonus
-                            + standing_striker_bonus_evo_dmg_cap)
-                            / (1.0 + evo_dmg_without_standing_striker_bonus))
-                            - 1.0),
-                    base_dmg_without_standing_striker
-                        * (((1.0 + evo_dmg_total)
-                            / (1.0 + evo_dmg_without_standing_striker_bonus))
-                            - 1.0),
-                );
+                // Buff can be fully inactive between hits; keep the cap and record zero actual.
+                standing_striker_bonus_evo_dmg_per_stack += get_passive_option_stat_value(
+                    option,
+                    standing_striker_buff_id,
+                    Some(final_player_stats),
+                ) as f64
+                    / 10000.0;
             }
         }
-    }
 
+        if standing_striker_bonus_evo_dmg_per_stack > 0.0 && skill_buff_data.overlap_flag != 0 {
+            let standing_striker_bonus_evo_dmg_cap =
+                standing_striker_bonus_evo_dmg_per_stack * skill_buff_data.overlap_flag as f64;
+            let evo_dmg_without_standing_striker_bonus =
+                evo_dmg_total - standing_striker_bonus_evo_dmg;
+            let base_dmg_without_standing_striker = damage_done as f64
+                / ((1.0 + evo_dmg_total) / (1.0 + evo_dmg_without_standing_striker_bonus));
+            metrics.standing_striker_efficiency.add(
+                base_dmg_without_standing_striker
+                    * (((1.0
+                        + evo_dmg_without_standing_striker_bonus
+                        + standing_striker_bonus_evo_dmg_cap)
+                        / (1.0 + evo_dmg_without_standing_striker_bonus))
+                        - 1.0),
+                base_dmg_without_standing_striker
+                    * (((1.0 + evo_dmg_total) / (1.0 + evo_dmg_without_standing_striker_bonus))
+                        - 1.0),
+            );
+        }
+    }
     metrics
 }
 
@@ -1348,27 +1351,23 @@ fn append_source_contributions(
         } else {
             normal_damage_factor
         };
-        if normal_damage_factor > 0.0 {
-            if is_attributable_source && !is_self_source {
-                contributions.push(ContributionFactor {
-                    rdps_type: RDPS_TYPE_DAMAGE_BUFF,
-                    source_entity_id,
-                    source_skill_id,
-                    factor: normal_damage_factor,
-                    is_support,
-                });
-            }
+        if normal_damage_factor > 0.0 && is_attributable_source && !is_self_source {
+            contributions.push(ContributionFactor {
+                rdps_type: RDPS_TYPE_DAMAGE_BUFF,
+                source_entity_id,
+                source_skill_id,
+                factor: normal_damage_factor,
+                is_support,
+            });
         }
-        if hyper_damage_factor > 0.0 {
-            if is_attributable_source && !is_self_source {
-                contributions.push(ContributionFactor {
-                    rdps_type: RDPS_TYPE_HYPER,
-                    source_entity_id,
-                    source_skill_id,
-                    factor: hyper_damage_factor,
-                    is_support,
-                });
-            }
+        if hyper_damage_factor > 0.0 && is_attributable_source && !is_self_source {
+            contributions.push(ContributionFactor {
+                rdps_type: RDPS_TYPE_HYPER,
+                source_entity_id,
+                source_skill_id,
+                factor: hyper_damage_factor,
+                is_support,
+            });
         }
     }
     Ok(())
@@ -1391,38 +1390,36 @@ fn apply_source_passive_stat(
     if matches!(
         option.key_stat.as_str(),
         "skill_damage_sub_rate_1" | "skill_damage_sub_rate_2"
-    ) {
-        if let Some(source_player_stats) = require_source_player_stats(
-            SourceStatsRequirement::IdentityPassiveStat,
-            source_player_stats,
-            source_entity_id,
-            source_skill_id,
-            status_effect_id,
-            is_attributable_source
-                && option.value != 0
-                && (is_identity_skill_buff(skill_buff)
-                    || option
-                        .key_stat
-                        .eq_ignore_ascii_case("skill_damage_sub_rate_2")),
-        )? {
-            if is_identity_skill_buff(skill_buff) {
-                value = ((value as f64)
-                    * get_identity_buff_multiplier(
-                        source_player_stats,
-                        source_class_id,
-                        source_skill_id,
-                    ))
-                .round() as i64;
-            } else if option
-                .key_stat
-                .eq_ignore_ascii_case("skill_damage_sub_rate_2")
-            {
-                value = ((value as f64)
-                    * (1.0
-                        + get_ally_identity_damage_power(source_player_stats)
-                        + get_skill_status_effect_multiplier(source_player_stats, source_skill_id)))
-                .round() as i64;
-            }
+    ) && let Some(source_player_stats) = require_source_player_stats(
+        SourceStatsRequirement::IdentityPassiveStat,
+        source_player_stats,
+        source_entity_id,
+        source_skill_id,
+        status_effect_id,
+        is_attributable_source
+            && option.value != 0
+            && (is_identity_skill_buff(skill_buff)
+                || option
+                    .key_stat
+                    .eq_ignore_ascii_case("skill_damage_sub_rate_2")),
+    )? {
+        if is_identity_skill_buff(skill_buff) {
+            value = ((value as f64)
+                * get_identity_buff_multiplier(
+                    source_player_stats,
+                    source_class_id,
+                    source_skill_id,
+                ))
+            .round() as i64;
+        } else if option
+            .key_stat
+            .eq_ignore_ascii_case("skill_damage_sub_rate_2")
+        {
+            value = ((value as f64)
+                * (1.0
+                    + get_ally_identity_damage_power(source_player_stats)
+                    + get_skill_status_effect_multiplier(source_player_stats, source_skill_id)))
+            .round() as i64;
         }
     }
     stats.add_stat_from_source_with_priority(
@@ -1674,16 +1671,14 @@ fn append_target_contributions(
             damage_type,
             source_priority,
         );
-        if direct_factor > 0.0 {
-            if is_attributable_source && !is_self_source {
-                contributions.push(ContributionFactor {
-                    rdps_type: RDPS_TYPE_TARGET_DEBUFF,
-                    source_entity_id,
-                    source_skill_id,
-                    factor: direct_factor,
-                    is_support,
-                });
-            }
+        if direct_factor > 0.0 && is_attributable_source && !is_self_source {
+            contributions.push(ContributionFactor {
+                rdps_type: RDPS_TYPE_TARGET_DEBUFF,
+                source_entity_id,
+                source_skill_id,
+                factor: direct_factor,
+                is_support,
+            });
         }
     }
     Ok(())

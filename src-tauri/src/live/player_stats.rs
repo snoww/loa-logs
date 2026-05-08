@@ -79,17 +79,47 @@ pub struct IdentityGaugeSnapshot {
     pub identity_gauge3: u32,
 }
 
-#[derive(Debug, Clone, Default)]
+#[derive(Debug, Default)]
 pub struct StatDataValue {
     pub value: f64,
     pub source: String,
 }
 
-#[derive(Debug, Clone)]
+impl Clone for StatDataValue {
+    fn clone(&self) -> Self {
+        Self {
+            value: self.value,
+            source: self.source.clone(),
+        }
+    }
+
+    fn clone_from(&mut self, source: &Self) {
+        self.value = source.value;
+        self.source.clone_from(&source.source);
+    }
+}
+
+#[derive(Debug)]
 pub struct StatModification {
     pub values: Vec<StatDataValue>,
     pub source_entity_id: u64,
     pub source_priority: i32,
+}
+
+impl Clone for StatModification {
+    fn clone(&self) -> Self {
+        Self {
+            values: self.values.clone(),
+            source_entity_id: self.source_entity_id,
+            source_priority: self.source_priority,
+        }
+    }
+
+    fn clone_from(&mut self, source: &Self) {
+        self.values.clone_from(&source.values);
+        self.source_entity_id = source.source_entity_id;
+        self.source_priority = source.source_priority;
+    }
 }
 
 impl Default for StatModification {
@@ -102,11 +132,27 @@ impl Default for StatModification {
     }
 }
 
-#[derive(Debug, Clone, Default)]
+#[derive(Debug, Default)]
 pub struct StatData {
     pub self_values: Vec<StatDataValue>,
     pub modified_values: Vec<StatModification>,
     pub operation_type: OperationType,
+}
+
+impl Clone for StatData {
+    fn clone(&self) -> Self {
+        Self {
+            self_values: self.self_values.clone(),
+            modified_values: self.modified_values.clone(),
+            operation_type: self.operation_type,
+        }
+    }
+
+    fn clone_from(&mut self, source: &Self) {
+        self.self_values.clone_from(&source.self_values);
+        self.modified_values.clone_from(&source.modified_values);
+        self.operation_type = source.operation_type;
+    }
 }
 
 impl StatData {
@@ -844,6 +890,79 @@ impl Default for PlayerStats {
 }
 
 impl PlayerStats {
+    /// Field-wise `clone_from` so callers that hold a long-lived scratch
+    /// `PlayerStats` can refresh it without freeing/reallocating the inner
+    /// `Vec`/`String`/`HashMap` storage. Hot path: `compute_hit_stat_damage_metrics`
+    /// resets a thread-local scratch up to nine times per hit.
+    pub fn restore_from(&mut self, source: &Self) {
+        macro_rules! restore {
+            ($($field:ident),* $(,)?) => {
+                $( self.$field.clone_from(&source.$field); )*
+            };
+        }
+        restore!(
+            owner_id,
+            runtime_state,
+            weapon_power,
+            weapon_dam_x,
+            attack_power_base_multiplier,
+            attack_power_rate,
+            str_stat,
+            dex_stat,
+            int_stat,
+            str_multiplier_stat,
+            dex_multiplier_stat,
+            int_multiplier_stat,
+            critical_hit_stat,
+            move_speed_rate,
+            attack_speed_rate,
+            ally_identity_damage_power,
+            ally_attack_power_power,
+            ally_brand_power,
+            evolution_damage,
+            modify_damage_combat_effect,
+            spec_bonus_identity_1,
+            spec_bonus_identity_2,
+            spec_bonus_identity_3,
+            critical_hit_rate,
+            critical_hit_rate_cap,
+            critical_damage_rate,
+            critical_damage_rate_2,
+            attack_power_addend,
+            attack_power_addend_2,
+            attack_power_sub_rate_1,
+            attack_power_sub_rate_2,
+            skill_damage_sub_rate_1,
+            skill_damage_sub_rate_2,
+            skill_damage_rate,
+            ultimate_awakening_damage_rate,
+            move_speed_to_damage_rate,
+            critical_hit_to_damage_rate,
+            physical_defense_break,
+            magical_defense_break,
+            outgoing_dmg_stat_amp,
+            skill_damage_amplify,
+            front_attack_amplify,
+            back_attack_amplify,
+            physical_critical_damage_amplify,
+            magical_critical_damage_amplify,
+            damage_attr_rates,
+            damage_attr_amplifications,
+            damage_conversion_type,
+            evolution_damage_bonus_from_blunt_thorn,
+            evolution_damage_bonus_from_blunt_thorn_cap,
+            evolution_damage_bonus_from_supersonic_breakthrough,
+            evolution_damage_bonus_from_supersonic_breakthrough_cap,
+            standing_striker_buff_id,
+            skill_status_effect_multiplier,
+            skill_attack_power_multiplier,
+            skill_group_status_effect_multiplier,
+            active_combat_effects,
+            active_addon_skill_features,
+            active_ability_features,
+        );
+    }
+
     fn compare_combat_effect_condition(
         lhs: &CombatEffectCondition,
         rhs: &CombatEffectCondition,
