@@ -337,7 +337,7 @@
           "general",
           "lowPerformanceMode",
           "Low Performance Mode",
-          "Lowers meter update frequency to reduce CPU usage. (Requires Restart)"
+          "Lowers meter UI update frequency, skips extra rDPS stat calculations. (Requires Restart)"
         )}
         {@render settingOption(
           "general",
