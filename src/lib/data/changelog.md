@@ -1,6 +1,6 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.43.0-Nineveh Beta 18 - May 7th, 2026
+    v1.43.0-Nineveh Beta 19 - May 9th, 2026
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
@@ -23,6 +23,6 @@ The LOA Logs beta uses a completely overhauled system for reading Lost Ark's net
 
 #### BUG FIXES & IMPROVEMENTS
 
-- fixed some addons not being properly handled for rdps calcs
-- fixed berserker spec crit scaling
+- added more interesting stats to be tracked in rdps (disabled in low performance mode)
+- maybe fixed unstyled screenshot error
 

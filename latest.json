@@ -1,15 +1,15 @@
 {
-  "version": "v1.43.0-nineveh.beta.18",
+  "version": "v1.43.0-nineveh.beta.19",
   "notes": "### v1.43.0-Nineveh Beta 18 - May 7th, 2026\n\n#### P.S. If you see any of us in town or raid, feel free to drop an honor!\n\n- **Snowving** on Luterra\n- **Administrator** on Ratik\n- **Poont** on Giena\n\nThe LOA Logs beta uses a completely overhauled system for reading Lost Ark's networking data, giving us significantly more control over how we read and query game information. It finally fixes the issue where damage numbers would sometimes completely glitch out, and provides us the necessary infrastructure to implement rDPS in the future. By helping us test its stability, we can be confident that our new \"Nineveh\" packet library works correctly and efficiently across all platforms, including Linux!\n\n### Note: ExitLag users must check the ExitLag Compatibility setting\n\n#### read about rdps in depth [here](https://github.com/snoww/loa-logs/wiki/rDPS-and-nDPS-Explained)\n\n#### BUG FIXES & IMPROVEMENTS\n\n- fixed some addons not being properly handled for rdps calcs\n- fixed berserker spec crit scaling\n",
-  "pub_date": "2026-05-07T04:37:44.638Z",
+  "pub_date": "2026-05-09T04:37:44.638Z",
   "platforms": {
     "windows-x86_64": {
-      "url": "https://github.com/snoww/loa-logs/releases/download/v1.43.0-nineveh.beta.18/LOA.Logs_1.43.0-nineveh.beta.18_x64-setup.exe",
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlRMR1pyTGdQeEJxVC82ZjVtaDc2bFhYZFJzQTZTNFJNV2NUN0Q3NXNwcFZtZ1VIZHMvaThWSE0xQWQ1NVdNNzZWSkE3dHhYMnZ6Smw0Y09QdGoxTGd3PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzc4MTQyMDA4CWZpbGU6TE9BIExvZ3NfMS40My4wLW5pbmV2ZWguYmV0YS4xOF94NjQtc2V0dXAuZXhlCjd2elQ0eFFGb1JnL2p1YmJuaFZ0b1RZbEsrMGlTbUZtaWtGeGtaUFpkc3ZxeW5TZTdkS1k4R3F0cExzYWdud01aaUxGOVNtYjg2WTBlWERuWkczUkRRPT0K"
+      "url": "https://github.com/snoww/loa-logs/releases/download/v1.43.0-nineveh.beta.19/LOA.Logs_1.43.0-nineveh.beta.19_x64-setup.exe",
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlFWTVA2ZWRXbG03RlEySHBid0MvSFlPbFhSWVhsQWpHSGdUT09KSlh2bE1kT2JBeVR3c3NkQzFmT3VpZCtoeHVjSkVSbVJCeGluUUhjVHRYek1JTEFJPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzc4MzExOTUxCWZpbGU6TE9BIExvZ3NfMS40My4wLW5pbmV2ZWguYmV0YS4xOV94NjQtc2V0dXAuZXhlCk0ydWExeXA2dnczazdBNW50MXpiMWJaVUw1UEFXaSszaWI4REZ3aEVHWVVRYWo2S001R0pjUHlxYk0xTUVubXYrTWs5YmJRdnpSVTVNWjhFNVlNdUFBPT0K"
     },
     "linux-x86_64": {
-      "url": "https://github.com/snoww/loa-logs/releases/download/v1.43.0-nineveh.beta.18/LOA.Logs_1.43.0-nineveh.beta.18_amd64.AppImage",
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmFLdUZRajdjMXg2TjlWMkJMSTljaXRGRE5nTEViZjZNa0t0dVlBVGR1UExNbjU5bGhwUHJobkp0eDNwZTZnV3M2VmIrc002NkdVMm40bktrWDB1YWdJPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzc4MTQxNTY5CWZpbGU6TE9BIExvZ3NfMS40My4wLW5pbmV2ZWguYmV0YS4xOF9hbWQ2NC5BcHBJbWFnZQprcDQzWjRxdGluU2g5cUtRV3dTSnVMWWswUmVCcHg4QmovS2hPY3hpRWFCejVQZ084ZDVSQUlyZ0sxazB0Z1Z1S29ZTHVheHRBckRpOHZtZUxiN0FBUT09Cg=="
+      "url": "https://github.com/snoww/loa-logs/releases/download/v1.43.0-nineveh.beta.19/LOA.Logs_1.43.0-nineveh.beta.19_amd64.AppImage",
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlozc2RhdkNJWHBoRy83YVl3cWJvdGlvYmx6Y0lhanY2TlozMy9lckpqckZiNTJKVkhEYXNSNnczcTQrWS9UbmIvMlViWXdNMy8vWkMxNEw2WDdvZ3djPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzc4MzEyMzI3CWZpbGU6TE9BIExvZ3NfMS40My4wLW5pbmV2ZWguYmV0YS4xOV9hbWQ2NC5BcHBJbWFnZQpRWVozYU5SMG5YOUFXeUFudlZIektXakV5by9zcFM2dHJiR09PR1dxUUlKSnduV1Y2VW9ZZzcxQ3g0ZnVIMExqYkV0a21CTmVzQk5RZGJPM3FRemFEZz09Cg=="
     }
   }
 }
