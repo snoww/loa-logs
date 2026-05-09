@@ -1797,20 +1797,6 @@ impl EntityTracker {
             return source_entity;
         };
 
-        let owns_effect = |entity: &Entity| {
-            entity.inspect_snapshot.as_ref().is_some_and(|snapshot| {
-                snapshot
-                    .derived_stats
-                    .buff_id_ownership
-                    .contains(&sed.status_effect_id)
-                    || (skill_buff.unique_group > 0
-                        && snapshot
-                            .derived_stats
-                            .buff_unique_group_ownership
-                            .contains(&skill_buff.unique_group))
-            })
-        };
-
         let is_same_party = |entity: &Entity| {
             let party_tracker = self.party_tracker.borrow();
             party_tracker
@@ -1832,7 +1818,13 @@ impl EntityTracker {
             .values()
             .chain(self.removed_player_entities_by_character_id.values())
             .filter(|entity| {
-                entity.entity_type == Player && is_same_party(entity) && owns_effect(entity)
+                entity.entity_type == Player
+                    && is_same_party(entity)
+                    && entity_owns_status_effect(
+                        entity,
+                        sed.status_effect_id,
+                        skill_buff.unique_group,
+                    )
             })
             .cloned()
             .collect::<Vec<_>>();
@@ -2309,6 +2301,24 @@ pub struct Entity {
     pub grade: String,
     pub push_immune: bool,
     pub level: u16,
+}
+
+pub(crate) fn entity_owns_status_effect(
+    entity: &Entity,
+    status_effect_id: u32,
+    unique_group: u32,
+) -> bool {
+    entity.inspect_snapshot.as_ref().is_some_and(|snapshot| {
+        snapshot
+            .derived_stats
+            .buff_id_ownership
+            .contains(&status_effect_id)
+            || (unique_group > 0
+                && snapshot
+                    .derived_stats
+                    .buff_unique_group_ownership
+                    .contains(&unique_group))
+    })
 }
 
 impl Entity {

@@ -3,7 +3,9 @@ use crate::data::{
     ENGRAVING_DATA, RDPS_ADDITIONAL_IDENTITY_GROUP, SKILL_BUFF_DATA, SKILL_DATA, SKILL_EFFECT_DATA,
     SUPPORT_IDENTITY_GROUP, SUPPORT_MARKING_GROUP, identity_category_matches,
 };
-use crate::live::entity_tracker::{Entity, EntityTracker, InspectSnapshot, SkillRuntimeData};
+use crate::live::entity_tracker::{
+    Entity, EntityTracker, InspectSnapshot, SkillRuntimeData, entity_owns_status_effect,
+};
 use crate::live::player_stats::{PlayerStats, STAT_PRIORITY_DEFAULT, STAT_PRIORITY_SUPPORT};
 use crate::live::status_tracker::StatusEffectDetails;
 use crate::live::{
@@ -983,12 +985,7 @@ fn snapshot_owner_player_stats_from_snapshot(
     let source_runtime_data =
         source_skill_id.and_then(|skill_id| owner_entity.skill_runtime_data.get(&skill_id));
     stats.apply_skill_runtime_data(0, source_runtime_data);
-    apply_owner_snapshot_self_buffs(
-        &mut stats,
-        self_effects,
-        entity_tracker,
-        owner_entity.class_id,
-    );
+    apply_owner_snapshot_self_buffs(&mut stats, self_effects, entity_tracker, owner_entity);
 
     if let Some(source_skill_id) = source_skill_id {
         let skill_groups = get_skill_groups(source_skill_id);
@@ -1014,13 +1011,19 @@ fn apply_owner_snapshot_self_buffs(
     stats: &mut PlayerStats,
     self_effects: &[StatusEffectDetails],
     entity_tracker: &EntityTracker,
-    owner_class_id: u32,
+    owner_entity: &Entity,
 ) {
     for effect in select_unique_group_effects(self_effects) {
         let Some(skill_buff) = SKILL_BUFF_DATA.get(&effect.status_effect_id) else {
             continue;
         };
-        let source_entity_id = resolve_effect_source_id(&effect, skill_buff, entity_tracker, None);
+        let source_entity_id = resolve_effect_source_id(
+            &effect,
+            skill_buff,
+            owner_scope_for_effect(skill_buff, owner_entity.id, owner_entity.character_id),
+            entity_tracker,
+            None,
+        );
         let effect_runtime_data = effect.source_skill_runtime_snapshot.as_ref();
         let Some(level_data) = get_level_data_resolved(
             skill_buff,
@@ -1065,7 +1068,7 @@ fn apply_owner_snapshot_self_buffs(
                     stats,
                     option,
                     source_entity_id,
-                    owner_class_id,
+                    owner_entity.class_id,
                     &buff_source,
                     STAT_PRIORITY_DEFAULT,
                 ),
@@ -1134,21 +1137,21 @@ fn append_source_contributions(
     buffered_entities: Option<&HashMap<u64, Entity>>,
     buffered_owner_self_effects: Option<&HashMap<u64, Vec<StatusEffectDetails>>>,
 ) -> Result<(), RdpsInvalidReason> {
-    let selected_effects = select_unique_group_effects(se_on_source);
     let attacker_attack_power = stats
         .calculate_attack_power_pre_multipliers()
         .value()
         .max(1.0);
 
-    for effect in selected_effects {
+    for (effect, source_entity_id) in select_source_effects_for_affected_entity(
+        attacker_id,
+        attacker_character_id,
+        se_on_source,
+        entity_tracker,
+        buffered_entities,
+    ) {
         let Some(skill_buff) = SKILL_BUFF_DATA.get(&effect.status_effect_id) else {
             continue;
         };
-        let source_entity_id =
-            resolve_effect_source_id(&effect, skill_buff, entity_tracker, buffered_entities);
-        if source_entity_id == 0 {
-            continue;
-        }
         let source_priority =
             source_priority_for_entity(source_entity_id, entity_tracker, buffered_entities);
         let is_attributable_source =
@@ -1460,16 +1463,11 @@ fn append_target_contributions(
 
     let selected_effects =
         select_target_effects(attacker, se_on_target, entity_tracker, buffered_entities);
-    for effect in selected_effects {
+    for (effect, source_entity_id) in selected_effects {
         let Some(skill_buff) = SKILL_BUFF_DATA.get(&effect.status_effect_id) else {
             continue;
         };
         let is_dark_grenade = is_dark_grenade_buff(effect.status_effect_id);
-        let source_entity_id = if is_dark_grenade {
-            DARK_GRENADE_ENTITY_ID
-        } else {
-            resolve_effect_source_id(&effect, skill_buff, entity_tracker, buffered_entities)
-        };
         if source_entity_id == 0 {
             continue;
         }
@@ -2031,8 +2029,16 @@ pub fn filter_target_effects_for_attacker(
             if !is_party_wide_skill_buff(skill_buff) && !is_self_target_skill_buff(skill_buff) {
                 return true;
             }
-            let source_entity_id =
-                resolve_effect_source_id(effect, skill_buff, entity_tracker, buffered_entities);
+            let source_entity_id = resolve_effect_source_id(
+                effect,
+                skill_buff,
+                owner_scope_for_effect(skill_buff, attacker.id, attacker.character_id),
+                entity_tracker,
+                buffered_entities,
+            );
+            if source_entity_id == 0 {
+                return false;
+            }
             should_apply_target_effect(
                 skill_buff,
                 attacker,
@@ -3115,26 +3121,76 @@ fn source_skill_id_from_effect(effect: &StatusEffectDetails) -> u32 {
         .unwrap_or((effect.status_effect_id / 10).max(1))
 }
 
+#[derive(Debug, Clone, Copy)]
+enum OwnerScope {
+    Any,
+    SamePlayer { entity_id: u64, character_id: u64 },
+    SameParty { entity_id: u64, character_id: u64 },
+}
+
+fn owner_scope_for_effect(
+    skill_buff: &crate::models::SkillBuffData,
+    entity_id: u64,
+    character_id: u64,
+) -> OwnerScope {
+    if is_self_target_skill_buff(skill_buff) {
+        OwnerScope::SamePlayer {
+            entity_id,
+            character_id,
+        }
+    } else if is_party_wide_skill_buff(skill_buff) {
+        OwnerScope::SameParty {
+            entity_id,
+            character_id,
+        }
+    } else {
+        OwnerScope::Any
+    }
+}
+
+fn entity_matches_owner_scope(
+    entity: &Entity,
+    scope: OwnerScope,
+    entity_tracker: &EntityTracker,
+) -> bool {
+    match scope {
+        OwnerScope::Any => true,
+        OwnerScope::SamePlayer {
+            entity_id,
+            character_id,
+        } => {
+            entity.id == entity_id
+                || (character_id != 0
+                    && entity.character_id != 0
+                    && entity.character_id == character_id)
+        }
+        OwnerScope::SameParty {
+            entity_id,
+            character_id,
+        } => {
+            entity.id == entity_id
+                || entity_tracker.are_same_party_entities(entity_id, entity.id)
+                || (character_id != 0
+                    && entity.character_id != 0
+                    && (entity.character_id == character_id
+                        || entity_tracker
+                            .are_same_party_characters(character_id, entity.character_id)))
+        }
+    }
+}
+
 fn resolve_effect_source_id(
     effect: &StatusEffectDetails,
     skill_buff: &crate::models::SkillBuffData,
+    scope: OwnerScope,
     entity_tracker: &EntityTracker,
     buffered_entities: Option<&HashMap<u64, Entity>>,
 ) -> u64 {
     let owns_effect = |entity: &Entity| {
-        entity.inspect_snapshot.as_ref().is_some_and(|snapshot| {
-            snapshot
-                .derived_stats
-                .buff_id_ownership
-                .contains(&effect.status_effect_id)
-                || (skill_buff.unique_group > 0
-                    && snapshot
-                        .derived_stats
-                        .buff_unique_group_ownership
-                        .contains(&skill_buff.unique_group))
-        })
+        entity_owns_status_effect(entity, effect.status_effect_id, skill_buff.unique_group)
     };
 
+    let mut direct_source_player_out_of_scope = false;
     if effect.source_id != 0
         && let Some(source_entity) =
             get_buffered_or_live_entity(effect.source_id, buffered_entities, entity_tracker)
@@ -3149,16 +3205,21 @@ fn resolve_effect_source_id(
         ) {
             return effect.source_id;
         }
-        if matches!(source_entity.entity_type, crate::models::EntityType::Player)
-            && owns_effect(source_entity)
-        {
-            return effect.source_id;
+        if matches!(source_entity.entity_type, crate::models::EntityType::Player) {
+            let direct_player_matches_scope =
+                entity_matches_owner_scope(source_entity, scope, entity_tracker);
+            direct_source_player_out_of_scope = !direct_player_matches_scope;
+            if direct_player_matches_scope && owns_effect(source_entity) {
+                return effect.source_id;
+            }
         }
     }
 
     if let Some(buffered_entities) = buffered_entities
         && let Some(entity) = buffered_entities.values().find(|entity| {
-            matches!(entity.entity_type, crate::models::EntityType::Player) && owns_effect(entity)
+            matches!(entity.entity_type, crate::models::EntityType::Player)
+                && owns_effect(entity)
+                && entity_matches_owner_scope(entity, scope, entity_tracker)
         })
     {
         return entity.id;
@@ -3168,10 +3229,18 @@ fn resolve_effect_source_id(
         .entities
         .values()
         .find(|entity| {
-            matches!(entity.entity_type, crate::models::EntityType::Player) && owns_effect(entity)
+            matches!(entity.entity_type, crate::models::EntityType::Player)
+                && owns_effect(entity)
+                && entity_matches_owner_scope(entity, scope, entity_tracker)
         })
         .map(|entity| entity.id)
-        .unwrap_or(effect.source_id)
+        .unwrap_or_else(|| {
+            if direct_source_player_out_of_scope {
+                0
+            } else {
+                effect.source_id
+            }
+        })
 }
 
 fn is_directional_skill(
@@ -3221,12 +3290,72 @@ fn select_unique_group_effects(status_effects: &[StatusEffectDetails]) -> Vec<St
     selected
 }
 
+fn select_source_effects_for_affected_entity(
+    affected_entity_id: u64,
+    affected_character_id: u64,
+    status_effects: &[StatusEffectDetails],
+    entity_tracker: &EntityTracker,
+    buffered_entities: Option<&HashMap<u64, Entity>>,
+) -> Vec<(StatusEffectDetails, u64)> {
+    select_source_effects_for_affected_entity_with(
+        affected_entity_id,
+        affected_character_id,
+        status_effects,
+        entity_tracker,
+        buffered_entities,
+        |status_effect_id| SKILL_BUFF_DATA.get(&status_effect_id),
+    )
+}
+
+fn select_source_effects_for_affected_entity_with<'a>(
+    affected_entity_id: u64,
+    affected_character_id: u64,
+    status_effects: &[StatusEffectDetails],
+    entity_tracker: &EntityTracker,
+    buffered_entities: Option<&HashMap<u64, Entity>>,
+    skill_buff_for: impl Fn(u32) -> Option<&'a crate::models::SkillBuffData>,
+) -> Vec<(StatusEffectDetails, u64)> {
+    let mut selected_by_group = std::collections::BTreeMap::new();
+    let mut selected = Vec::new();
+
+    for status_effect in status_effects {
+        let Some(skill_buff) = skill_buff_for(status_effect.status_effect_id) else {
+            continue;
+        };
+        let source_entity_id = resolve_effect_source_id(
+            status_effect,
+            skill_buff,
+            owner_scope_for_effect(skill_buff, affected_entity_id, affected_character_id),
+            entity_tracker,
+            buffered_entities,
+        );
+        if source_entity_id == 0 {
+            continue;
+        }
+
+        if status_effect.unique_group == 0 {
+            selected.push((status_effect.clone(), source_entity_id));
+            continue;
+        }
+
+        let entry = selected_by_group
+            .entry(status_effect.unique_group)
+            .or_insert_with(|| (status_effect.clone(), source_entity_id));
+        if status_effect.status_effect_id < entry.0.status_effect_id {
+            *entry = (status_effect.clone(), source_entity_id);
+        }
+    }
+
+    selected.extend(selected_by_group.into_values());
+    selected
+}
+
 fn select_target_effects(
     attacker: &Entity,
     status_effects: &[StatusEffectDetails],
     entity_tracker: &EntityTracker,
     buffered_entities: Option<&HashMap<u64, Entity>>,
-) -> Vec<StatusEffectDetails> {
+) -> Vec<(StatusEffectDetails, u64)> {
     let mut selected_by_group = std::collections::BTreeMap::new();
     let mut selected_dark_grenade = None;
     let mut selected = Vec::new();
@@ -3238,21 +3367,30 @@ fn select_target_effects(
         if is_dark_grenade_buff(status_effect.status_effect_id) {
             if selected_dark_grenade
                 .as_ref()
-                .is_none_or(|entry: &StatusEffectDetails| {
-                    status_effect.status_effect_id < entry.status_effect_id
+                .is_none_or(|entry: &(StatusEffectDetails, u64)| {
+                    status_effect.status_effect_id < entry.0.status_effect_id
                 })
             {
-                selected_dark_grenade = Some(status_effect.clone());
+                selected_dark_grenade = Some((status_effect.clone(), DARK_GRENADE_ENTITY_ID));
             }
             continue;
         }
+
+        let source_entity_id = resolve_effect_source_id(
+            status_effect,
+            skill_buff,
+            owner_scope_for_effect(skill_buff, attacker.id, attacker.character_id),
+            entity_tracker,
+            buffered_entities,
+        );
+        if source_entity_id == 0 {
+            continue;
+        }
         if status_effect.unique_group == 0 {
-            selected.push(status_effect.clone());
+            selected.push((status_effect.clone(), source_entity_id));
             continue;
         }
 
-        let source_entity_id =
-            resolve_effect_source_id(status_effect, skill_buff, entity_tracker, buffered_entities);
         let should_group = !is_party_wide_skill_buff(skill_buff)
             || is_same_party_target_effect_source(
                 attacker,
@@ -3261,15 +3399,15 @@ fn select_target_effects(
                 buffered_entities,
             );
         if !should_group {
-            selected.push(status_effect.clone());
+            selected.push((status_effect.clone(), source_entity_id));
             continue;
         }
 
         let entry = selected_by_group
             .entry(status_effect.unique_group)
-            .or_insert_with(|| status_effect.clone());
-        if status_effect.status_effect_id < entry.status_effect_id {
-            *entry = status_effect.clone();
+            .or_insert_with(|| (status_effect.clone(), source_entity_id));
+        if status_effect.status_effect_id < entry.0.status_effect_id {
+            *entry = (status_effect.clone(), source_entity_id);
         }
     }
 
@@ -3375,6 +3513,11 @@ fn load_player_stats_from_snapshot(
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::live::id_tracker::IdTracker;
+    use crate::live::party_tracker::PartyTracker;
+    use crate::live::status_tracker::StatusTracker;
+    use std::cell::RefCell;
+    use std::rc::Rc;
 
     #[test]
     fn missing_required_source_stats_invalidates() {
@@ -3491,5 +3634,454 @@ mod tests {
             resolve_self_source_stats(Some(&source_stats), None, 123, 123, 0, &attacker_stats);
 
         assert!(result.is_some_and(|stats| std::ptr::eq(stats, &attacker_stats)));
+    }
+
+    #[test]
+    fn party_scoped_owner_resolution_prefers_same_party_dance_owner() {
+        let tracker = test_entity_tracker(vec![
+            test_player(1, 101, "support_a", Some(vec![2000361]), None),
+            test_player(2, 201, "support_b", Some(vec![2000361]), None),
+            test_player(3, 102, "attacker", None, None),
+        ]);
+        let skill_buff = dance_skill_buff(2000361);
+        let effect = StatusEffectDetails {
+            status_effect_id: 2000361,
+            unique_group: 2000360,
+            source_id: 2,
+            ..Default::default()
+        };
+
+        let source_id = resolve_effect_source_id(
+            &effect,
+            &skill_buff,
+            owner_scope_for_effect(&skill_buff, 3, 102),
+            &tracker,
+            None,
+        );
+
+        assert_eq!(source_id, 1);
+    }
+
+    #[test]
+    fn party_scoped_owner_resolution_rejects_cross_party_dance_owner() {
+        let tracker = test_entity_tracker(vec![
+            test_player(1, 101, "support_a", None, None),
+            test_player(2, 201, "support_b", Some(vec![2000361]), None),
+            test_player(3, 102, "attacker", None, None),
+        ]);
+        let skill_buff = dance_skill_buff(2000361);
+        let effect = StatusEffectDetails {
+            status_effect_id: 2000361,
+            unique_group: 2000360,
+            source_id: 2,
+            ..Default::default()
+        };
+
+        let source_id = resolve_effect_source_id(
+            &effect,
+            &skill_buff,
+            owner_scope_for_effect(&skill_buff, 3, 102),
+            &tracker,
+            None,
+        );
+
+        assert_eq!(source_id, 0);
+    }
+
+    #[test]
+    fn source_selection_filters_invalid_owner_before_unique_grouping() {
+        let tracker = test_entity_tracker(vec![
+            test_player(1, 101, "support_a", Some(vec![2000362]), None),
+            test_player(2, 201, "support_b", Some(vec![2000361]), None),
+            test_player(3, 102, "attacker", None, None),
+        ]);
+        let effects = vec![
+            StatusEffectDetails {
+                status_effect_id: 2000361,
+                unique_group: 2000360,
+                source_id: 2,
+                ..Default::default()
+            },
+            StatusEffectDetails {
+                status_effect_id: 2000362,
+                unique_group: 2000360,
+                source_id: 1,
+                ..Default::default()
+            },
+        ];
+        let mut skill_buffs = HashMap::new();
+        skill_buffs.insert(2000361, dance_skill_buff(2000361));
+        skill_buffs.insert(2000362, dance_skill_buff(2000362));
+
+        let selected = select_source_effects_for_affected_entity_with(
+            3,
+            102,
+            &effects,
+            &tracker,
+            None,
+            |status_effect_id| skill_buffs.get(&status_effect_id),
+        );
+
+        assert_eq!(selected.len(), 1);
+        assert_eq!(selected[0].0.status_effect_id, 2000362);
+        assert_eq!(selected[0].1, 1);
+    }
+
+    #[test]
+    fn source_rdps_preserves_direct_same_party_source_without_owner_metadata() {
+        ensure_rdps_test_data();
+        let tracker = test_entity_tracker(vec![
+            test_player(1, 101, "source", None, None),
+            test_player(3, 102, "attacker", None, None),
+        ]);
+        let mut stats = PlayerStats {
+            owner_id: 3,
+            ..Default::default()
+        };
+        let attacker_stats = PlayerStats {
+            owner_id: 3,
+            ..Default::default()
+        };
+        let mut contributions = Vec::new();
+        let effects = vec![StatusEffectDetails {
+            status_effect_id: 2000361,
+            unique_group: 2000360,
+            source_id: 1,
+            source_skill_id: Some(777),
+            ..Default::default()
+        }];
+
+        append_source_contributions(
+            &mut stats,
+            &mut contributions,
+            3,
+            0,
+            102,
+            &attacker_stats,
+            0,
+            &HitFlag::NORMAL,
+            None,
+            false,
+            None,
+            &effects,
+            0,
+            &tracker,
+            None,
+            None,
+        )
+        .unwrap();
+
+        assert_approx_eq(stats.evolution_damage.get_value_for_entity_id(1), 0.07);
+        assert_eq!(contributions.len(), 1);
+        assert_eq!(contributions[0].rdps_type, RDPS_TYPE_DAMAGE_BUFF);
+        assert_eq!(contributions[0].source_entity_id, 1);
+        assert_eq!(contributions[0].source_skill_id, 777);
+        assert_approx_eq(contributions[0].factor, 0.07);
+    }
+
+    #[test]
+    fn source_rdps_preserves_unresolved_source_stat_application_without_attribution() {
+        ensure_rdps_test_data();
+        let tracker = test_entity_tracker(vec![test_player(3, 102, "attacker", None, None)]);
+        let mut stats = PlayerStats {
+            owner_id: 3,
+            ..Default::default()
+        };
+        let attacker_stats = PlayerStats {
+            owner_id: 3,
+            ..Default::default()
+        };
+        let mut contributions = Vec::new();
+        let effects = vec![StatusEffectDetails {
+            status_effect_id: 2000361,
+            unique_group: 2000360,
+            source_id: 999,
+            source_skill_id: Some(777),
+            ..Default::default()
+        }];
+
+        append_source_contributions(
+            &mut stats,
+            &mut contributions,
+            3,
+            0,
+            102,
+            &attacker_stats,
+            0,
+            &HitFlag::NORMAL,
+            None,
+            false,
+            None,
+            &effects,
+            0,
+            &tracker,
+            None,
+            None,
+        )
+        .unwrap();
+
+        assert_approx_eq(stats.evolution_damage.get_value_for_entity_id(999), 0.07);
+        assert!(contributions.is_empty());
+    }
+
+    #[test]
+    fn target_rdps_preserves_direct_same_party_source_without_owner_metadata() {
+        ensure_rdps_test_data();
+        let tracker = test_entity_tracker(vec![
+            test_player(1, 101, "source", None, None),
+            test_player(3, 102, "attacker", None, None),
+        ]);
+        let attacker = tracker.entities.get(&3).unwrap().clone();
+        let mut stats = PlayerStats {
+            owner_id: attacker.id,
+            ..Default::default()
+        };
+        let attacker_stats = PlayerStats {
+            owner_id: attacker.id,
+            ..Default::default()
+        };
+        let mut contributions = Vec::new();
+        let mut damage_multiplier = 1.0;
+        let effects = vec![StatusEffectDetails {
+            status_effect_id: 521301,
+            unique_group: 521301,
+            source_id: 1,
+            source_skill_id: Some(555),
+            ..Default::default()
+        }];
+
+        append_target_contributions(
+            &mut stats,
+            &mut contributions,
+            &attacker,
+            attacker.character_id,
+            &attacker_stats,
+            0,
+            0,
+            &HitOption::NONE,
+            &HitFlag::NORMAL,
+            true,
+            None,
+            0,
+            false,
+            &[],
+            &effects,
+            &mut damage_multiplier,
+            0,
+            &tracker,
+            None,
+            None,
+        )
+        .unwrap();
+
+        assert_approx_eq(stats.outgoing_dmg_stat_amp.get_value_for_entity_id(1), 0.05);
+        assert_approx_eq(damage_multiplier, 1.0);
+        assert_eq!(contributions.len(), 1);
+        assert_eq!(contributions[0].rdps_type, RDPS_TYPE_TARGET_DEBUFF);
+        assert_eq!(contributions[0].source_entity_id, 1);
+        assert_eq!(contributions[0].source_skill_id, 555);
+        assert_approx_eq(contributions[0].factor, 0.05);
+    }
+
+    #[test]
+    fn unscoped_source_selection_preserves_unique_group_resolution() {
+        let tracker = test_entity_tracker(vec![test_player(1, 101, "source", None, None)]);
+        let effects = vec![
+            StatusEffectDetails {
+                status_effect_id: 112,
+                unique_group: 10,
+                source_id: 1,
+                ..Default::default()
+            },
+            StatusEffectDetails {
+                status_effect_id: 111,
+                unique_group: 10,
+                source_id: 1,
+                ..Default::default()
+            },
+        ];
+        let mut skill_buffs = HashMap::new();
+        skill_buffs.insert(
+            111,
+            crate::models::SkillBuffData {
+                id: 111,
+                unique_group: 10,
+                ..Default::default()
+            },
+        );
+        skill_buffs.insert(
+            112,
+            crate::models::SkillBuffData {
+                id: 112,
+                unique_group: 10,
+                ..Default::default()
+            },
+        );
+
+        let selected = select_source_effects_for_affected_entity_with(
+            3,
+            102,
+            &effects,
+            &tracker,
+            None,
+            |status_effect_id| skill_buffs.get(&status_effect_id),
+        );
+
+        assert_eq!(selected.len(), 1);
+        assert_eq!(selected[0].0.status_effect_id, 111);
+        assert_eq!(selected[0].1, 1);
+    }
+
+    #[test]
+    fn party_scoped_resolution_preserves_same_party_raw_source_without_owner_metadata() {
+        let tracker = test_entity_tracker(vec![
+            test_player(1, 101, "support_a", None, None),
+            test_player(2, 201, "support_b", Some(vec![2000361]), None),
+            test_player(3, 102, "attacker", None, None),
+        ]);
+        let skill_buff = dance_skill_buff(2000361);
+        let effect = StatusEffectDetails {
+            status_effect_id: 2000361,
+            unique_group: 2000360,
+            source_id: 1,
+            ..Default::default()
+        };
+
+        let source_id = resolve_effect_source_id(
+            &effect,
+            &skill_buff,
+            owner_scope_for_effect(&skill_buff, 3, 102),
+            &tracker,
+            None,
+        );
+
+        assert_eq!(source_id, 1);
+    }
+
+    #[test]
+    fn party_scoped_resolution_preserves_unresolved_raw_source_for_stat_application() {
+        let tracker = test_entity_tracker(vec![test_player(3, 102, "attacker", None, None)]);
+        let skill_buff = dance_skill_buff(2000361);
+        let effect = StatusEffectDetails {
+            status_effect_id: 2000361,
+            unique_group: 2000360,
+            source_id: 999,
+            ..Default::default()
+        };
+
+        let source_id = resolve_effect_source_id(
+            &effect,
+            &skill_buff,
+            owner_scope_for_effect(&skill_buff, 3, 102),
+            &tracker,
+            None,
+        );
+
+        assert_eq!(source_id, 999);
+    }
+
+    #[test]
+    fn unscoped_resolution_preserves_existing_raw_source_fallback() {
+        let tracker = test_entity_tracker(vec![test_player(1, 101, "source", None, None)]);
+        let skill_buff = crate::models::SkillBuffData::default();
+        let effect = StatusEffectDetails {
+            status_effect_id: 123,
+            source_id: 1,
+            ..Default::default()
+        };
+
+        let source_id =
+            resolve_effect_source_id(&effect, &skill_buff, OwnerScope::Any, &tracker, None);
+
+        assert_eq!(source_id, 1);
+    }
+
+    fn test_entity_tracker(players: Vec<Entity>) -> EntityTracker {
+        let id_tracker = Rc::new(RefCell::new(IdTracker::new()));
+        let party_tracker = Rc::new(RefCell::new(PartyTracker::new(id_tracker.clone())));
+        let status_tracker = Rc::new(RefCell::new(StatusTracker::new(party_tracker.clone())));
+        let mut tracker =
+            EntityTracker::new(status_tracker, id_tracker.clone(), party_tracker.clone());
+
+        for player in players {
+            id_tracker
+                .borrow_mut()
+                .add_mapping(player.character_id, player.id);
+            let party_id = if player.character_id < 200 { 1 } else { 2 };
+            party_tracker.borrow_mut().add(
+                1,
+                party_id,
+                player.character_id,
+                player.id,
+                Some(player.name.clone()),
+            );
+            tracker.entities.insert(player.id, player);
+        }
+
+        tracker
+    }
+
+    fn test_player(
+        id: u64,
+        character_id: u64,
+        name: &str,
+        buff_id_ownership: Option<Vec<u32>>,
+        buff_unique_group_ownership: Option<Vec<u32>>,
+    ) -> Entity {
+        let inspect_snapshot =
+            if buff_id_ownership.is_some() || buff_unique_group_ownership.is_some() {
+                let mut snapshot = InspectSnapshot::default();
+                snapshot.derived_stats.buff_id_ownership = buff_id_ownership.unwrap_or_default();
+                snapshot.derived_stats.buff_unique_group_ownership =
+                    buff_unique_group_ownership.unwrap_or_default();
+                Some(snapshot)
+            } else {
+                None
+            };
+
+        Entity {
+            id,
+            character_id,
+            name: name.to_string(),
+            entity_type: EntityType::Player,
+            inspect_snapshot,
+            ..Default::default()
+        }
+    }
+
+    fn dance_skill_buff(id: i32) -> crate::models::SkillBuffData {
+        crate::models::SkillBuffData {
+            id,
+            target: "self_party".to_string(),
+            unique_group: 2000360,
+            ..Default::default()
+        }
+    }
+
+    fn ensure_rdps_test_data() {
+        static INIT: std::sync::Once = std::sync::Once::new();
+        INIT.call_once(|| {
+            let skill_buff_path =
+                std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("meter-data/SkillBuff.json");
+            let skill_buff_json =
+                std::fs::read_to_string(&skill_buff_path).expect("SkillBuff test data exists");
+            let skill_buffs: HashMap<u32, crate::models::SkillBuffData> =
+                serde_json::from_str(&skill_buff_json).expect("SkillBuff test data parses");
+
+            let _ = SKILL_BUFF_DATA.set(skill_buffs);
+            let _ = SKILL_DATA.set(HashMap::new());
+            let _ = SUPPORT_IDENTITY_GROUP
+                .set(hashbrown::HashSet::from([211400, 368000, 310501, 480018]));
+            let _ = RDPS_ADDITIONAL_IDENTITY_GROUP
+                .set(hashbrown::HashSet::from([214020, 360102, 480024]));
+            let _ = SUPPORT_MARKING_GROUP.set(hashbrown::HashSet::from([210230]));
+        });
+    }
+
+    fn assert_approx_eq(actual: f64, expected: f64) {
+        assert!(
+            (actual - expected).abs() < 1e-9,
+            "expected {actual} to equal {expected}"
+        );
     }
 }
