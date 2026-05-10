@@ -61,7 +61,7 @@
           [{raidGate}]
         </p>
       {/if}
-      <p class="min-w-32 font-semibold">
+      <p class="font-semibold">
         {encounter.currentBossName || "No Boss"}
       </p>
       {@render middot()}

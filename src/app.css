@@ -63,7 +63,7 @@
   }
 
   [data-view="logs"] {
-    
+
     *::-webkit-scrollbar {
       @apply right-0! block! size-2! bg-neutral-800!;
     }
@@ -75,6 +75,19 @@
     *::-webkit-scrollbar-corner {
       @apply bg-neutral-800!;
     }
+  }
+
+  /* During html2canvas capture (set in takeScreenshot), let the captured
+     subtree expand so truncated cells render their full text. */
+  [data-screenshot] .truncate {
+    overflow: visible;
+    text-overflow: clip;
+  }
+  [data-screenshot] table.table-fixed {
+    table-layout: auto;
+  }
+  [data-screenshot] .overflow-x-auto {
+    overflow-x: visible;
   }
 
   [data-theme="red"] {

@@ -38,24 +38,33 @@ export async function takeScreenshot(div?: HTMLElement) {
     return;
   }
   screenshot.take();
+  div.dataset.screenshot = "true";
   setTimeout(async () => {
-    const canvas = await html2canvas(div, {
-      useCORS: true,
-      backgroundColor: "#27272A",
-      onclone: inlineParentStylesheets
-    });
-    canvas.toBlob(async (blob) => {
-      if (!blob) return;
-      try {
-        await writeImage(await blob.arrayBuffer());
-        addToast(screenshotSuccess);
-      } catch (error) {
-        addToast(screenshotError);
-        await writeLog("failed to take screenshot: " + error);
-      } finally {
-        screenshot.done();
-      }
-    });
+    try {
+      const canvas = await html2canvas(div, {
+        useCORS: true,
+        backgroundColor: "#27272A",
+        onclone: inlineParentStylesheets
+      });
+      canvas.toBlob(async (blob) => {
+        if (!blob) return;
+        try {
+          await writeImage(await blob.arrayBuffer());
+          addToast(screenshotSuccess);
+        } catch (error) {
+          addToast(screenshotError);
+          await writeLog("failed to take screenshot: " + error);
+        } finally {
+          delete div.dataset.screenshot;
+          screenshot.done();
+        }
+      });
+    } catch (error) {
+      addToast(screenshotError);
+      await writeLog("failed to take screenshot: " + error);
+      delete div.dataset.screenshot;
+      screenshot.done();
+    }
   }, 100);
 }
 
