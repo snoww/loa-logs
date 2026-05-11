@@ -293,12 +293,11 @@ impl AssetPreloader {
             480024, // valkyrie wings of freedom
         ]))?;
         IP_RANGES.set({
-            let raw: AwsIpRanges = load_meter_data(resource_dir, "ip-ranges.json")?;
+            const AWS_RANGES: &str = include_str!(concat!(env!("OUT_DIR"), "/ip-ranges.min.json"));
+            let raw: AwsIpRanges =
+                serde_json::from_str(AWS_RANGES).context("invalid embedded ip-ranges")?;
             raw.prefixes
                 .into_iter()
-                .filter(|p| {
-                    p.region == "us-east-1" || p.region == "us-west-2" || p.region == "eu-central-1"
-                })
                 .filter_map(|p| {
                     Ipv4Net::from_str(&p.ip_prefix)
                         .ok()
