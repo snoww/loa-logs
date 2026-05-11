@@ -1,6 +1,6 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.43.0-Nineveh Beta 19 - May 9th, 2026
+    v1.43.0-Nineveh Beta 20 - May 11th, 2026
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
@@ -23,6 +23,5 @@ The LOA Logs beta uses a completely overhauled system for reading Lost Ark's net
 
 #### BUG FIXES & IMPROVEMENTS
 
-- added more interesting stats to be tracked in rdps (disabled in low performance mode)
-- maybe fixed unstyled screenshot error
-
+- maybe fixed yearning buff attributing across parties
+- maybe fixed some screenshot quirks
