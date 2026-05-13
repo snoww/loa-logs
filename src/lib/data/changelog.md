@@ -1,6 +1,6 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.44.0-Nineveh Beta 20 - May 13th, 2026
+    v1.44.0-Nineveh Beta 21 - May 13th, 2026
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New

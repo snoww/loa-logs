@@ -23,7 +23,7 @@
     "licenseFile": "../LICENSE"
   },
   "productName": "LOA Logs",
-  "version": "1.44.0-nineveh.beta.20",
+  "version": "1.44.0-nineveh.beta.21",
   "identifier": "xyz.snow",
   "plugins": {
     "updater": {
