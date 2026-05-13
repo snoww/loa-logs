@@ -1,11 +1,11 @@
 {
-  "version": "v1.42.4",
-  "notes": "### v1.42.4 - April 27th, 2026\n\n#### P.S. If you see any of us in town or raid, feel free to drop an honor!\n\n- **Snowving** on Luterra\n- **Administrator** on Ratik\n- **Poont** on Giena\n\n### Try out rDPS by opting into beta updates. Settings > Enable Beta Updates\n\n#### BUG FIXES AND IMPROVEMENTS\n\n- fixed some issues with ban list",
-  "pub_date": "2026-04-27T09:29:00.644Z",
+  "version": "v1.43.0",
+  "notes": "### v1.43.0 - May 13th, 2026\n\n#### P.S. If you see any of us in town or raid, feel free to drop an honor!\n\n- **Snowving** on Luterra\n- **Administrator** on Ratik\n- **Poont** on Giena\n\n### Try out rDPS by opting into beta updates. Settings > Enable Beta Updates\n\n#### NEW FEATURES\n\n- updated meter for return of argos update",
+  "pub_date": "2026-05-12T21:56:09.318Z",
   "platforms": {
     "windows-x86_64": {
-      "url": "https://github.com/snoww/loa-logs/releases/download/v1.42.4/LOA.Logs_1.42.4_x64-setup.exe",
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmZCTGtDbWVZZG5yNFpIRUNGalZpVVNWKzZ3YnUwUjZOdklIWGNLbFYvMnFGSndRKzkrcmoxWmlqbDMxRS9HMHZURHVnRVJ2WmUzNldLUTBCMTJWSFFjPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzc3MjgxMDAyCWZpbGU6TE9BIExvZ3NfMS40Mi40X3g2NC1zZXR1cC5leGUKZTJTQmMxakFUVVBQc3d2RzJrYkhtZVZzblF3cVpwZHAyVDZTNHhOZXNtaGtaNWVnSlozYWpFVDcxSE1VYVIyVlN0dmdYZGNma1dmUVlQSzhNQjdNQlE9PQo="
+      "url": "https://github.com/snoww/loa-logs/releases/download/v1.43.0/LOA.Logs_1.43.0_x64-setup.exe",
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlo0UnFiMERuVHY5Zm9oRnVPV1hRNmZBOGxIbUpwZ3pRL2lpU2JXWXl0N0Z4Z2UweHVHeWhFa2MycWYwTDgzMUc3dGo3UHZ2cjZkZWtFWm9Wdmo2dmdBPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzc4NjgwMDc5CWZpbGU6TE9BIExvZ3NfMS40My4wX3g2NC1zZXR1cC5leGUKaVZxYWNFMVVzWVZSZTM3anIzcFoxLzdFRkpLSm5zT0pYNXIxeDYyTC83NEZTMWJuK3lNKzNWVkpUVlZJNERDTjdOd2lsdVl1QXA5MjRNa1lCMDk5QkE9PQo="
     }
   }
 }
