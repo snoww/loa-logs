@@ -124,7 +124,7 @@
               ]
             },
             "5": {
-              "desc": "Atk. Power +<FONT COLOR='#99FF99'>4%</FONT> for <FONT COLOR='#ffff99'>8</FONT>s, up to <FONT COLOR='#99FF99'>12%</FONT> when attacking a monster Boss rank or above. (Cooldown: <FONT COLOR='#ffff99'>3</FONT>s)",
+              "desc": "Atk. Power +<FONT COLOR='#99FF99'>4%</FONT> for <FONT COLOR='#ffff99'>8s</FONT>, up to <FONT COLOR='#99FF99'>12%</FONT> when attacking a monster Boss rank or above. (Cooldown: <FONT COLOR='#ffff99'>3s</FONT>)",
               "options": [
                 {
                   "type": "combat_effect",
@@ -369,7 +369,7 @@
         "value": {
           "setCountDatas": {
             "2": {
-              "desc": "Atk. Speed and Move Speed <FONT COLOR='#99FF99'>+4%</FONT>.",
+              "desc": "Atk. Speed and Move Speed <FONT COLOR='#99FF99'>+4%</FONT>",
               "options": [
                 {
                   "type": "stat",
@@ -398,7 +398,7 @@
               ]
             },
             "5": {
-              "desc": "Has a chance to trigger Velcruze's Magic Lightning effect when an attack lands successfully. (Cooldown: <FONT COLOR='#ffff99'>12</FONT>s)",
+              "desc": "Has a chance to trigger Velcruze's Evil Energy effect when an attack lands successfully. (Cooldown: <FONT COLOR='#ffff99'>12s</FONT>)",
               "options": [
                 {
                   "type": "combat_effect",
@@ -506,7 +506,7 @@
               ]
             },
             "2": {
-              "desc": "Increases Attack and Move Speed by <FONT COLOR='#99FF99'>8%</FONT> for <FONT COLOR='#ffff99'>4</FONT>s when using Movement Skill.",
+              "desc": "Increases Attack and Move Speed by <FONT COLOR='#99FF99'>8%</FONT> for <FONT COLOR='#ffff99'>4s</FONT> when using Movement Skill.",
               "options": [
                 {
                   "type": "combat_effect",
@@ -535,7 +535,7 @@
               ]
             },
             "5": {
-              "desc": "Crit Rate +<FONT COLOR='#99FF99'>15%</FONT>.",
+              "desc": "Crit Rate <FONT COLOR='#99FF99'>+15%</FONT>",
               "options": [
                 {
                   "type": "stat",
@@ -722,7 +722,7 @@
         "value": {
           "setCountDatas": {
             "2": {
-              "desc": "Chance to drop a Purified Ether every <FONT COLOR='#ffff99'>10</FONT>s at the monsters' location when attacking Normal rank monsters with less than <FONT COLOR='#99FF99'>30%</FONT> HP.",
+              "desc": "Chance to drop a Purified Ether every <FONT COLOR='#ffff99'>10s</FONT> at the monsters' location when attacking Normal rank monsters with less than <FONT COLOR='#99FF99'>30%</FONT> HP.",
               "options": [
                 {
                   "type": "combat_effect",
@@ -903,7 +903,7 @@
               ]
             },
             "5": {
-              "desc": "+<FONT COLOR='#ffff99'>12</FONT>s of Festival when using a skill.\nAt <FONT COLOR='#ffff99'>6</FONT> stacks, gain Finale: +<FONT COLOR='#99FF99'>10%</FONT> Damage to foes for <FONT COLOR='#ffff99'>1</FONT>m. Additionally, when the skill is used <FONT COLOR='#ffff99'>17</FONT> times, gain Mayhem: +<FONT COLOR='#99FF99'>15%</FONT> Damage to foes for <FONT COLOR='#ffff99'>20</FONT>s. Mayhem and Festival do not stack.",
+              "desc": "+<FONT COLOR='#ffff99'>12s</FONT> of Festival when using a skill.\nAt <FONT COLOR='#ffff99'>6</FONT> stacks, gain Finale: +<FONT COLOR='#99FF99'>10%</FONT> Damage to foes for <FONT COLOR='#ffff99'>1m</FONT>. Additionally, when the skill is used <FONT COLOR='#ffff99'>17</FONT> times, gain Mayhem: +<FONT COLOR='#99FF99'>15%</FONT> Damage to foes for <FONT COLOR='#ffff99'>20s</FONT>. Mayhem and Festival do not stack.",
               "options": [
                 {
                   "type": "combat_effect",
@@ -1213,7 +1213,7 @@
               ]
             },
             "5": {
-              "desc": "+<FONT COLOR='#ffff99'>12</FONT>s of Festival when using a skill.\nAt <FONT COLOR='#ffff99'>6</FONT> stacks, gain Finale: +<FONT COLOR='#99FF99'>10%</FONT> Damage to foes for <FONT COLOR='#ffff99'>1</FONT>m. Additionally, when the skill is used <FONT COLOR='#ffff99'>17</FONT> times, gain Mayhem: +<FONT COLOR='#99FF99'>15%</FONT> Damage to foes for <FONT COLOR='#ffff99'>20</FONT>s. Mayhem and Festival do not stack.",
+              "desc": "+<FONT COLOR='#ffff99'>12s</FONT> of Festival when using a skill.\nAt <FONT COLOR='#ffff99'>6</FONT> stacks, gain Finale: +<FONT COLOR='#99FF99'>10%</FONT> Damage to foes for <FONT COLOR='#ffff99'>1m</FONT>. Additionally, when the skill is used <FONT COLOR='#ffff99'>17</FONT> times, gain Mayhem: +<FONT COLOR='#99FF99'>15%</FONT> Damage to foes for <FONT COLOR='#ffff99'>20s</FONT>. Mayhem and Festival do not stack.",
               "options": [
                 {
                   "type": "combat_effect",
@@ -1637,7 +1637,7 @@
         "value": {
           "setCountDatas": {
             "2": {
-              "desc": "Outgoing Damage +<FONT COLOR='#99ff99'>10%</FONT>.",
+              "desc": "Damage to foes +<FONT COLOR='#99ff99'>10%</FONT>.",
               "options": [
                 {
                   "type": "combat_effect",
@@ -7415,7 +7415,7 @@
         "value": {
           "setCountDatas": {
             "2": {
-              "desc": "Move Speed: +<FONT COLOR='#99FF99'>5%</FONT>",
+              "desc": "Move Speed +<FONT COLOR='#99FF99'>5%</FONT>",
               "options": [
                 {
                   "type": "stat",

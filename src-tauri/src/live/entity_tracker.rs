@@ -2664,10 +2664,10 @@ fn inspect_snapshot_from_result(result: &PKTPCInspectResult) -> InspectSnapshot 
 
 fn inspect_item_snapshot_from_item_data(item_data: &ItemData) -> InspectItemSnapshot {
     InspectItemSnapshot {
-        unique_id: item_data.s64_2,
-        raw_item_id: item_data.u32_1,
-        raw_hone_level: item_data.u16_0,
-        raw_slot_index: item_data.u16_1,
+        unique_id: item_data.unique_id,
+        raw_item_id: item_data.item_id,
+        raw_hone_level: item_data.hone_level,
+        raw_slot_index: item_data.slot_index,
         data_type: item_data.item_data_typed.as_ref().map(|typed| typed.b_0),
         has_equippable_item_data: item_data
             .item_data_typed

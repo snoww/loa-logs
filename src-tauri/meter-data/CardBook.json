@@ -18337,6 +18337,76 @@
       }
     ]
   },
+  "260": {
+    "id": 260,
+    "name": "Path of Faith",
+    "cardIds": [
+      3200014,
+      3200018,
+      3200008,
+      3200613,
+      3200058,
+      3200104
+    ],
+    "levels": [
+      {
+        "level": 0,
+        "required_card_count_": 6,
+        "required_awakening_level_sum_": 0,
+        "damageAttr": "none",
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "criticalhit",
+            "keyIndex": 0,
+            "keyValue": 3
+          }
+        ]
+      },
+      {
+        "level": 1,
+        "required_card_count_": 6,
+        "required_awakening_level_sum_": 12,
+        "damageAttr": "none",
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "npc_species_humanoid_dam_rate",
+            "keyIndex": 0,
+            "keyValue": 13
+          }
+        ]
+      },
+      {
+        "level": 2,
+        "required_card_count_": 6,
+        "required_awakening_level_sum_": 24,
+        "damageAttr": "none",
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "npc_species_humanoid_dam_rate",
+            "keyIndex": 0,
+            "keyValue": 13
+          }
+        ]
+      },
+      {
+        "level": 3,
+        "required_card_count_": 6,
+        "required_awakening_level_sum_": 30,
+        "damageAttr": "none",
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "npc_species_humanoid_dam_rate",
+            "keyIndex": 0,
+            "keyValue": 14
+          }
+        ]
+      }
+    ]
+  },
   "1001": {
     "id": 1001,
     "name": "Guardian's Mayhem",
@@ -22890,6 +22960,124 @@
             "statType": "max_mp_x_x",
             "keyIndex": 0,
             "keyValue": 300
+          }
+        ]
+      }
+    ]
+  },
+  "1058": {
+    "id": 1058,
+    "name": "Path of Faith",
+    "cardIds": [
+      3200014,
+      3200018,
+      3200008,
+      3200613,
+      3200058,
+      3200104
+    ],
+    "levels": [
+      {
+        "level": 0,
+        "required_card_count_": 2,
+        "required_awakening_level_sum_": 0,
+        "damageAttr": "none",
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "holy_res_rate",
+            "keyIndex": 0,
+            "keyValue": 800
+          }
+        ]
+      },
+      {
+        "level": 1,
+        "required_card_count_": 4,
+        "required_awakening_level_sum_": 0,
+        "damageAttr": "none",
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "holy_res_rate",
+            "keyIndex": 0,
+            "keyValue": 800
+          }
+        ]
+      },
+      {
+        "level": 2,
+        "required_card_count_": 6,
+        "required_awakening_level_sum_": 0,
+        "damageAttr": "none",
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "holy_res_rate",
+            "keyIndex": 0,
+            "keyValue": 900
+          }
+        ]
+      },
+      {
+        "level": 3,
+        "required_card_count_": 6,
+        "required_awakening_level_sum_": 12,
+        "damageAttr": "none",
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "def_x",
+            "keyIndex": 0,
+            "keyValue": 400
+          },
+          {
+            "type": "stat",
+            "statType": "res_x",
+            "keyIndex": 0,
+            "keyValue": 400
+          }
+        ]
+      },
+      {
+        "level": 4,
+        "required_card_count_": 6,
+        "required_awakening_level_sum_": 18,
+        "damageAttr": "none",
+        "addons": [
+          {
+            "type": "combat_effect",
+            "statType": "none",
+            "keyIndex": 610001320,
+            "keyValue": 0
+          }
+        ]
+      },
+      {
+        "level": 5,
+        "required_card_count_": 6,
+        "required_awakening_level_sum_": 24,
+        "damageAttr": "none",
+        "addons": [
+          {
+            "type": "combat_effect",
+            "statType": "none",
+            "keyIndex": 610001321,
+            "keyValue": 0
+          }
+        ]
+      },
+      {
+        "level": 6,
+        "required_card_count_": 6,
+        "required_awakening_level_sum_": 30,
+        "damageAttr": "none",
+        "addons": [
+          {
+            "type": "combat_effect",
+            "statType": "none",
+            "keyIndex": 610001322,
+            "keyValue": 0
           }
         ]
       }

@@ -192,7 +192,7 @@ fn apply_item(
     raw_stat_pairs: &HashMap<u8, i64>,
     derived: &mut InspectDerivedStats,
 ) {
-    let Some(item_id) = item.u32_1 else {
+    let Some(item_id) = item.item_id else {
         return;
     };
     let Some(item_data) = item.item_data_typed.as_ref() else {
@@ -202,7 +202,7 @@ fn apply_item(
     let mut item_debug = InspectItemBuildDebug {
         item_id,
         data_type: item_data.b_0,
-        raw_hone_level: item.u16_0.unwrap_or_default(),
+        raw_hone_level: item.hone_level.unwrap_or_default(),
         level_option_id: 0,
         ..Default::default()
     };
@@ -218,13 +218,13 @@ fn apply_item(
     item_debug.item_definition_found = true;
     item_debug.item_name = item_definition.name.clone();
     item_debug.category = item_definition.category;
-    let hone_level = item.u16_0.unwrap_or_default();
+    let hone_level = item.hone_level.unwrap_or_default();
     let advanced_honing_level = item_data
         .equippable_item_data
         .as_ref()
         .and_then(|equippable| {
             equippable
-                .sub_p_k_t_inventory_item_list_result_5_5_15
+                .sub_p_k_t_ability_engrave_item_result_5_5_15
                 .as_ref()
                 .map(|advanced| advanced.b_0.max(advanced.b_1))
         })
@@ -245,7 +245,7 @@ fn apply_item(
 
     if should_parse_extended_item_data {
         if let Some(equippable) = item_data.equippable_item_data.as_ref() {
-            let ark_passive_data = &equippable.sub_p_k_t_inventory_item_list_result_5_3_32;
+            let ark_passive_data = &equippable.sub_p_k_t_ability_engrave_item_result_5_3_32;
             if ark_passive_data.b_0 == 1 {
                 item_debug.ark_passive_line_count = ark_passive_data
                     .bytearraylist_0
@@ -262,11 +262,11 @@ fn apply_item(
                 }
             }
 
-            let bracer_data = &equippable.sub_p_k_t_inventory_item_list_result_5_2_74;
+            let bracer_data = &equippable.sub_p_k_t_ability_engrave_item_result_5_2_74;
             if bracer_data.b_0 != 0
                 && let Some(bracer) = bracer_data
-                    .sub_p_k_t_inventory_item_list_result_6_6_73
-                    .as_ref()
+                .sub_p_k_t_ability_engrave_item_result_6_6_73
+                .as_ref()
             {
                 item_debug.bracer_line_count =
                     bracer.bytearraylist_0.len() + bracer.bytearraylist_1.len();
@@ -285,7 +285,7 @@ fn apply_item(
         }
 
         if item_data.b_0 == 7
-            && let Some(gem_bytes) = item_data.bytearraylist_3.as_deref()
+            && let Some(gem_bytes) = item_data.bytearraylist_4.as_deref()
         {
             item_debug.gem_line_count = split_fixed_chunks(gem_bytes, 9).count();
             if let Some(gem_layout) = resolve_gem_layout_once(gem_bytes) {
@@ -315,12 +315,12 @@ fn apply_item(
 
     if item_definition.level_option_id != 0
         && apply_item_level_option(
-            item_definition.level_option_id,
-            resolved_balance_level.balance_level,
-            bonus_mult,
-            raw_stat_pairs,
-            derived,
-        )
+        item_definition.level_option_id,
+        resolved_balance_level.balance_level,
+        bonus_mult,
+        raw_stat_pairs,
+        derived,
+    )
     {
         if let Some(level_data) = get_item_level_option(
             item_definition.level_option_id,
@@ -847,12 +847,12 @@ fn parse_ark_passive_addon(bytes: &[u8]) -> ParsedItemAddon {
         "invalid ark passive addon byte length: {}",
         bytes.len()
     );
-    let addon_type = bytes[0];
-    let _max_value = read_i32(bytes, 5) as i64;
-    let mut value = read_i32(bytes, 9) as i64;
-    let original_stat = read_u32(bytes, 13);
-    let _item_grade_option_id = read_u32(bytes, 17);
-    let _min_value = read_i32(bytes, 25) as i64;
+    let addon_type = bytes[5];
+    let _item_grade_option_id = read_u32(bytes, 6);
+    let _max_value = read_i32(bytes, 10) as i64;
+    let original_stat = read_u32(bytes, 18);
+    let _min_value = read_i32(bytes, 22) as i64;
+    let mut value = read_i32(bytes, 26) as i64;
     let mut stat_type = original_stat;
 
     match AddonType::from_raw(addon_type) {
@@ -905,11 +905,11 @@ fn parse_bracer_addon(bytes: &[u8]) -> ParsedItemAddon {
         "invalid bracer addon byte length: {}",
         bytes.len()
     );
-    let addon_type = bytes[0];
-    let _max_value = read_i32(bytes, 5) as i64;
-    let value = read_i32(bytes, 9) as i64;
-    let original_stat = read_u32(bytes, 13);
-    let _min_value = read_i32(bytes, 25) as i64;
+    let addon_type = bytes[5];
+    let _max_value = read_i32(bytes, 10) as i64;
+    let original_stat = read_u32(bytes, 18);
+    let _min_value = read_i32(bytes, 22) as i64;
+    let value = read_i32(bytes, 26) as i64;
     let mut stat_type = original_stat;
 
     match AddonType::from_raw(addon_type) {
@@ -939,7 +939,7 @@ fn parse_quality_addon(bytes: &[u8]) -> ParsedItemAddon {
         "invalid quality addon byte length: {}",
         bytes.len()
     );
-    let addon_type = bytes[0];
+    let addon_type = bytes[4];
     assert!(
         AddonType::from_raw(addon_type) == Some(AddonType::STAT),
         "unhandled quality addon type: {addon_type}"
@@ -947,9 +947,9 @@ fn parse_quality_addon(bytes: &[u8]) -> ParsedItemAddon {
 
     ParsedItemAddon {
         addon_type,
-        stat_type: read_u32(bytes, 13),
-        original_stat: read_u32(bytes, 13),
-        value: read_i32(bytes, 5) as i64,
+        stat_type: read_u32(bytes, 17),
+        original_stat: read_u32(bytes, 17),
+        value: read_i32(bytes, 9) as i64,
     }
 }
 
@@ -978,7 +978,7 @@ fn resolve_item_balance_level(
     if item_definition.item_amplification_base_id != 0
         && advanced_honing_level > 0
         && let Some(item_amp_base) =
-            EXTERNAL_ITEM_AMPLIFICATION_BASE_DATA.get(&item_definition.item_amplification_base_id)
+        EXTERNAL_ITEM_AMPLIFICATION_BASE_DATA.get(&item_definition.item_amplification_base_id)
         && let Some(level) = item_amp_base.levels.get(&(advanced_honing_level as u32))
     {
         resolved.advanced_balance_level_delta = level.balance_level.max(0) as u32;
@@ -1252,7 +1252,7 @@ fn damage_attr_from_name(name: &str) -> Option<u8> {
     }
 }
 
-fn split_fixed_chunks(bytes: &[u8], chunk_len: usize) -> impl Iterator<Item = &[u8]> {
+fn split_fixed_chunks(bytes: &[u8], chunk_len: usize) -> impl Iterator<Item=&[u8]> {
     bytes
         .chunks_exact(chunk_len)
         .filter(|chunk| !chunk.iter().all(|value| *value == 0))
