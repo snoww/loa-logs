@@ -141,6 +141,81 @@ VIAddVersionKey "ProductVersion" "${VERSION}"
 !define MUI_LANGDLL_REGISTRY_KEY "${MANUPRODUCTKEY}"
 !define MUI_LANGDLL_REGISTRY_VALUENAME "Installer Language"
 
+
+Function IsLoaProcessRunning
+  IfFileExists "$INSTDIR\${MAINBINARYNAME}.exe" 0 check_nineveh
+  Goto scan_processes
+
+check_nineveh:
+  ; upgrade from old versions without nineveh, or from installs missing one of these binaries
+  IfFileExists "$INSTDIR\nineveh.exe" 0 not_running
+
+scan_processes:
+  ; hack to only scan for running LOA Logs processes in our install dir, since that'll conflict
+  System::Call 'kernel32::SetEnvironmentVariable(t "LOA_LOGS_EXE", t "$INSTDIR\${MAINBINARYNAME}.exe")'
+  System::Call 'kernel32::SetEnvironmentVariable(t "NINEVEH_EXE", t "$INSTDIR\nineveh.exe")'
+  nsExec::ExecToStack `"$SYSDIR\WindowsPowerShell\v1.0\powershell.exe" -NoLogo -NoProfile -NonInteractive -Command "& { $$paths = @($$env:LOA_LOGS_EXE, $$env:NINEVEH_EXE); $$procs = @(Get-CimInstance -ClassName Win32_Process -Property ProcessId,Name,ExecutablePath -ErrorAction SilentlyContinue | Where-Object { $$procPath = $$_.ExecutablePath; $$procPath -and ($$paths | Where-Object { [string]::Equals($$procPath, $$_, [System.StringComparison]::OrdinalIgnoreCase) }) }); if ($$procs.Count -gt 0) { exit 0 } else { exit 1 } }"`
+  Pop $0
+  Pop $1
+
+  ${If} $0 = 0
+    Push 1
+  ${Else}
+    Push 0
+  ${EndIf}
+  Return
+
+not_running:
+  Push 0
+FunctionEnd
+
+Function KillRunningLoaProcesses
+  System::Call 'kernel32::SetEnvironmentVariable(t "LOA_LOGS_EXE", t "$INSTDIR\${MAINBINARYNAME}.exe")'
+  System::Call 'kernel32::SetEnvironmentVariable(t "NINEVEH_EXE", t "$INSTDIR\nineveh.exe")'
+
+  nsExec::ExecToStack `"$SYSDIR\WindowsPowerShell\v1.0\powershell.exe" -NoLogo -NoProfile -NonInteractive -Command "& { $$paths = @($$env:LOA_LOGS_EXE, $$env:NINEVEH_EXE); $$procs = @(Get-CimInstance -ClassName Win32_Process -Property ProcessId,Name,ExecutablePath -ErrorAction SilentlyContinue | Where-Object { $$procPath = $$_.ExecutablePath; $$procPath -and ($$paths | Where-Object { [string]::Equals($$procPath, $$_, [System.StringComparison]::OrdinalIgnoreCase) }) }); foreach ($$proc in $$procs) { Stop-Process -Id $$proc.ProcessId -Force -ErrorAction SilentlyContinue }; Start-Sleep -Milliseconds 500; $$still = @(Get-CimInstance -ClassName Win32_Process -Property ProcessId,Name,ExecutablePath -ErrorAction SilentlyContinue | Where-Object { $$procPath = $$_.ExecutablePath; $$procPath -and ($$paths | Where-Object { [string]::Equals($$procPath, $$_, [System.StringComparison]::OrdinalIgnoreCase) }) }); if ($$still.Count -eq 0) { exit 0 } else { exit 1 } }"`
+  Pop $0
+  Pop $1
+
+  Push $0
+FunctionEnd
+
+Function CheckLoaProcessesBeforeFileChanges
+  ; do nothing for silent installs
+  ${If} ${Silent}
+  ${OrIf} $PassiveMode = 1
+    Return
+  ${EndIf}
+
+check_again:
+  Call IsLoaProcessRunning
+  Pop $0
+
+  ${If} $0 = 0
+    Return
+  ${EndIf}
+
+  MessageBox MB_ABORTRETRYIGNORE|MB_ICONEXCLAMATION|MB_DEFBUTTON2 \
+    "LOA Logs is still running. It will need to be stopped to fully complete the install. You can either stop it now by making sure that Lost Ark is fully closed, or have the installer force close it. If you are currently ingame, force closing LOA Logs will result in you disconnecting.$\r$\n$\r$\nAbort: Cancel installation$\r$\nRetry: I closed Lost Ark and LOA Logs, please check again$\r$\nIgnore: force-close LOA Logs and continue" \
+    IDABORT abort_install \
+    IDRETRY check_again
+
+  ; Ignore = force close.
+  Call KillRunningLoaProcesses
+  Pop $0
+
+  ${If} $0 = 0
+    Goto check_again
+  ${EndIf}
+
+  MessageBox MB_RETRYCANCEL|MB_ICONEXCLAMATION \
+    "The installer could not force-close LOA Logs. Please manually close LOA Logs and `nineveh.exe`, then click Retry." \
+    IDRETRY check_again
+
+abort_install:
+  Abort "LOA Logs is running; installation cancelled."
+FunctionEnd
+
 ; Installer pages, must be ordered as they appear
 ; 1. Welcome Page
 !define MUI_PAGE_CUSTOMFUNCTION_PRE SkipIfPassive
@@ -322,6 +397,8 @@ Function PageLeaveReinstall
   ${EndIf}
 
   reinst_uninstall:
+    Call CheckLoaProcessesBeforeFileChanges
+
     HideWindow
     ClearErrors
 
@@ -618,6 +695,8 @@ Section Install
   !ifmacrodef NSIS_HOOK_PREINSTALL
     !insertmacro NSIS_HOOK_PREINSTALL
   !endif
+
+  Call CheckLoaProcessesBeforeFileChanges
 
   !insertmacro CheckIfAppIsRunning "${MAINBINARYNAME}.exe" "${PRODUCTNAME}"
 
