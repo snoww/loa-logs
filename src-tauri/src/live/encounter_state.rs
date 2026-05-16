@@ -1,4 +1,4 @@
-use crate::api::{GetCharacterInfoArgs, StatsApi};
+use crate::api::{GetCharacterInfoArgs, NtpClock, StatsApi};
 use crate::constants::{DARK_GRENADE_ENTITY_ID, DARK_GRENADE_ENTITY_NAME};
 use crate::data::*;
 use crate::database::Repository;
@@ -22,13 +22,13 @@ use hashbrown::HashMap;
 use log::{info, warn};
 use meter_defs::defs::{CombatAnalyzerEntry, SkillCooldownStruct};
 use meter_defs::types::SkillMoveOptionData;
-use rsntp::SntpClient;
 use serde::Serialize;
 use serde_json::json;
 use std::cmp::max;
 use std::collections::BTreeMap;
 use std::default::Default;
 use std::hash::Hash;
+use std::time::Instant;
 use tauri::{AppHandle, Emitter, Manager};
 use tokio::task;
 
@@ -218,8 +218,9 @@ pub struct EncounterState {
     pub boss_only_damage: bool,
     pub region: Option<String>,
 
-    sntp_client: SntpClient,
+    ntp_clock: NtpClock,
     ntp_fight_start: i64,
+    fight_start_instant: Option<Instant>,
 
     pub rdps_valid: bool,
     pub rdps_message: Option<String>,
@@ -264,8 +265,9 @@ impl EncounterState {
             boss_only_damage: false,
             region: None,
 
-            sntp_client: SntpClient::new(),
+            ntp_clock: NtpClock::start(),
             ntp_fight_start: 0,
+            fight_start_instant: None,
 
             // todo
             rdps_valid: false,
@@ -308,6 +310,7 @@ impl EncounterState {
         self.party_info = Vec::new();
 
         self.ntp_fight_start = 0;
+        self.fight_start_instant = None;
 
         self.rdps_valid = false;
         self.rdps_message = None;
@@ -1642,20 +1645,30 @@ impl EncounterState {
                 .new_cast(source_entity_id, skill_key, None, timestamp);
         }
 
-        match self.sntp_client.synchronize("time.cloudflare.com") {
-            Ok(result) => {
-                let dt = result.datetime().into_chrono_datetime().unwrap_or_default();
-                self.ntp_fight_start = dt.timestamp_millis();
-            }
-            Err(e) => {
-                warn!("failed to get NTP timestamp: {}", e);
-            }
-        };
+        self.fight_start_instant = Some(Instant::now());
+        self.set_ntp_fight_start_from_cache();
 
         self.encounter.boss_only_damage = self.boss_only_damage;
         self.app
             .emit("raid-start", timestamp)
             .expect("failed to emit raid-start");
+    }
+
+    fn set_ntp_fight_start_from_cache(&mut self) {
+        if self.ntp_fight_start != 0 || self.encounter.fight_start == 0 {
+            return;
+        }
+
+        let Some(fight_start_instant) = self.fight_start_instant else {
+            return;
+        };
+
+        if let Some(ntp_fight_start) = self
+            .ntp_clock
+            .timestamp_for_event(self.encounter.fight_start, fight_start_instant)
+        {
+            self.ntp_fight_start = ntp_fight_start;
+        }
     }
 
     fn open_startup_barrier(
@@ -4450,6 +4463,7 @@ impl EncounterState {
         let region = self.region.clone();
         let meter_version = self.app.app_handle().package_info().version.to_string();
 
+        self.set_ntp_fight_start_from_cache();
         let ntp_fight_start = self.ntp_fight_start;
 
         let rdps_valid = self.rdps_valid;
