@@ -21,7 +21,7 @@
   let bossShield = $derived(boss?.currentShield ?? 0);
 
   let bossTotalBars = $derived.by(() => {
-    if (settings.app.meter.bossHpBar) {
+    if (settings.app.mini.bossHpBar) {
       return boss ? getBossHpBars(boss) : 1;
     } else {
       return 1;
