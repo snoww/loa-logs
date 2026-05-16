@@ -67,6 +67,7 @@ Var UpdateMode
 Var NoShortcutMode
 Var WixMode
 Var OldMainBinaryName
+Var NinevehUpdateNeeded
 
 Name "${PRODUCTNAME}"
 BrandingText "${COPYRIGHT}"
@@ -178,6 +179,27 @@ Function KillRunningLoaProcesses
   Pop $1
 
   Push $0
+FunctionEnd
+
+Function IsNinevehReplacementNeeded
+  IfFileExists "$PLUGINSDIR\nineveh.exe" 0 needs_update
+  IfFileExists "$INSTDIR\nineveh.exe" 0 needs_update
+
+  System::Call 'kernel32::SetEnvironmentVariable(t "CURRENT_NINEVEH_EXE", t "$INSTDIR\nineveh.exe")'
+  System::Call 'kernel32::SetEnvironmentVariable(t "NEW_NINEVEH_EXE", t "$PLUGINSDIR\nineveh.exe")'
+  nsExec::ExecToStack `"$SYSDIR\WindowsPowerShell\v1.0\powershell.exe" -NoLogo -NoProfile -NonInteractive -Command "& { $$current = (Get-FileHash -Algorithm SHA256 -LiteralPath $$env:CURRENT_NINEVEH_EXE -ErrorAction Stop).Hash; $$new = (Get-FileHash -Algorithm SHA256 -LiteralPath $$env:NEW_NINEVEH_EXE -ErrorAction Stop).Hash; if ([string]::Equals($$current, $$new, [System.StringComparison]::OrdinalIgnoreCase)) { exit 0 } else { exit 1 } }"`
+  Pop $0
+  Pop $1
+
+  ${If} $0 = 0
+    Push 0
+  ${Else}
+    Push 1
+  ${EndIf}
+  Return
+
+needs_update:
+  Push 1
 FunctionEnd
 
 Function CheckLoaProcessesBeforeFileChanges
@@ -691,12 +713,23 @@ SectionEnd
 
 Section Install
   SetOutPath $INSTDIR
+  StrCpy $NinevehUpdateNeeded 0
 
   !ifmacrodef NSIS_HOOK_PREINSTALL
     !insertmacro NSIS_HOOK_PREINSTALL
   !endif
 
-  Call CheckLoaProcessesBeforeFileChanges
+  InitPluginsDir
+  {{#each binaries}}
+    ${If} "{{this}}" == "nineveh.exe"
+      File /a "/oname=$PLUGINSDIR\nineveh.exe" "{{no-escape @key}}"
+      Call IsNinevehReplacementNeeded
+      Pop $NinevehUpdateNeeded
+      ${If} $NinevehUpdateNeeded = 1
+        Call CheckLoaProcessesBeforeFileChanges
+      ${EndIf}
+    ${EndIf}
+  {{/each}}
 
   !insertmacro CheckIfAppIsRunning "${MAINBINARYNAME}.exe" "${PRODUCTNAME}"
 
@@ -708,12 +741,28 @@ Section Install
     CreateDirectory "$INSTDIR\\{{this}}"
   {{/each}}
   {{#each resources}}
-    File /a "/oname={{this.[1]}}" "{{no-escape @key}}"
+    ${If} "{{this.[1]}}" == "WinDivert.dll"
+      ${If} ${FileExists} "$INSTDIR\WinDivert.dll"
+        DetailPrint "WinDivert.dll exists; skipping"
+      ${Else}
+        File /a "/oname={{this.[1]}}" "{{no-escape @key}}"
+      ${EndIf}
+    ${Else}
+      File /a "/oname={{this.[1]}}" "{{no-escape @key}}"
+    ${EndIf}
   {{/each}}
 
   ; Copy external binaries
   {{#each binaries}}
-    File /a "/oname={{this}}" "{{no-escape @key}}"
+    ${If} "{{this}}" == "nineveh.exe"
+      ${If} $NinevehUpdateNeeded = 1
+        CopyFiles /SILENT "$PLUGINSDIR\nineveh.exe" "$INSTDIR\nineveh.exe"
+      ${Else}
+        DetailPrint "nineveh.exe unchanged; skipping"
+      ${EndIf}
+    ${Else}
+      File /a "/oname={{this}}" "{{no-escape @key}}"
+    ${EndIf}
   {{/each}}
 
   ; Create file associations
