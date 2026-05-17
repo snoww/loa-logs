@@ -3,7 +3,8 @@ import { estherMap } from "$lib/constants/esthers";
 import { BossHpLog, type DamageStats, type Entity, type IdentityLogType, type IdentityLogTypeValue } from "$lib/types";
 import { writeImage } from "@tauri-apps/plugin-clipboard-manager";
 import { check as checkUpdate } from "@tauri-apps/plugin-updater";
-import html2canvas from "html2canvas-pro";
+import { snapdom } from "@zumer/snapdom";
+import { tick } from "svelte";
 import { checkBetaUpdate, writeLog } from "./api";
 import { addToast } from "./components/Toaster.svelte";
 import { screenshot, settings, updateInfo } from "./stores.svelte";
@@ -11,61 +12,57 @@ import { screenshotError, screenshotSuccess } from "./utils/toasts";
 
 export const LOA_BIBLE_URL = "https://lostark.bible";
 
-function inlineParentStylesheets(clonedDoc: Document) {
-  // html2canvas's iframe re-fetches <link rel="stylesheet"> hrefs and renders
-  // before they finish loading, producing unstyled captures. Inline the parent's
-  // already-loaded sheets as <style> tags so the clone needs no network.
-  const head = clonedDoc.head;
-  for (const sheet of Array.from(document.styleSheets)) {
-    let cssText = "";
-    try {
-      cssText = Array.from(sheet.cssRules)
-        .map((r) => r.cssText)
-        .join("\n");
-    } catch {
-      continue;
-    }
-    if (!cssText) continue;
-    const style = clonedDoc.createElement("style");
-    style.textContent = cssText;
-    head.appendChild(style);
+// show full table even when window is too small to show all columns during screenshot
+function expandScreenshotBounds(div: HTMLElement) {
+  const width = Math.ceil(div.scrollWidth);
+  if (width <= div.clientWidth) {
+    return () => {};
   }
-  clonedDoc.querySelectorAll('link[rel="stylesheet"]').forEach((l) => l.remove());
+
+  const previousWidth = div.style.width;
+  const previousMinWidth = div.style.minWidth;
+  const previousMaxWidth = div.style.maxWidth;
+
+  div.style.width = `${width}px`;
+  div.style.minWidth = `${width}px`;
+  div.style.maxWidth = "none";
+
+  return () => {
+    div.style.width = previousWidth;
+    div.style.minWidth = previousMinWidth;
+    div.style.maxWidth = previousMaxWidth;
+  };
 }
 
 export async function takeScreenshot(div?: HTMLElement) {
   if (!div) {
     return;
   }
+
   screenshot.take();
-  div.dataset.screenshot = "true";
-  setTimeout(async () => {
-    try {
-      const canvas = await html2canvas(div, {
-        useCORS: true,
-        backgroundColor: "#27272A",
-        onclone: inlineParentStylesheets
-      });
-      canvas.toBlob(async (blob) => {
-        if (!blob) return;
-        try {
-          await writeImage(await blob.arrayBuffer());
-          addToast(screenshotSuccess);
-        } catch (error) {
-          addToast(screenshotError);
-          await writeLog("failed to take screenshot: " + error);
-        } finally {
-          delete div.dataset.screenshot;
-          screenshot.done();
-        }
-      });
-    } catch (error) {
-      addToast(screenshotError);
-      await writeLog("failed to take screenshot: " + error);
-      delete div.dataset.screenshot;
-      screenshot.done();
-    }
-  }, 100);
+  let restoreScreenshotBounds = () => {};
+
+  try {
+    await tick();
+    await document.fonts?.ready;
+    await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
+    restoreScreenshotBounds = expandScreenshotBounds(div);
+    await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
+
+    const blob = await snapdom.toBlob(div, {
+      type: "png",
+      embedFonts: true,
+      backgroundColor: "#27272A"
+    });
+    await writeImage(await blob.arrayBuffer());
+    addToast(screenshotSuccess);
+  } catch (error) {
+    addToast(screenshotError);
+    await writeLog("failed to take screenshot: " + error);
+  } finally {
+    restoreScreenshotBounds();
+    screenshot.done();
+  }
 }
 
 export async function checkForUpdate(isBeta = false) {

@@ -76,21 +76,6 @@
         }
     }
 
-    /* During html2canvas capture (set in takeScreenshot), let the captured
-       subtree expand so truncated cells render their full text. */
-    [data-screenshot] .truncate {
-        overflow: visible;
-        text-overflow: clip;
-    }
-
-    [data-screenshot] table.table-fixed {
-        table-layout: auto;
-    }
-
-    [data-screenshot] .overflow-x-auto {
-        overflow-x: visible;
-    }
-
     [data-theme="red"] {
         --accent-50: theme(--color-red-50);
         --accent-100: theme(--color-red-100);
