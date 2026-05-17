@@ -273,9 +273,9 @@
       <LogScreenshotInfo {encounter} />
       <!-- main content -->
       <div
-        class="relative top-0 overflow-x-auto overflow-y-visible rounded text-sm md:px-2 {screenshot.state
-          ? 'px-3! pb-2!'
-          : ''}"
+        class="relative top-0 overflow-y-visible rounded text-sm md:px-2 {screenshot.state
+          ? 'overflow-x-visible px-3! pb-2!'
+          : 'overflow-x-auto'}"
       >
         {#if tab === MeterTab.DAMAGE}
           {#if meterState === MeterState.PARTY}

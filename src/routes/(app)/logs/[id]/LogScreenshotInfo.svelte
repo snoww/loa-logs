@@ -33,18 +33,19 @@
 
 <div class="flex flex-col gap-1 px-4 tracking-tight" class:hidden={!screenshot.state}>
   <div class="flex items-center justify-between gap-1">
-    <div class="flex items-center gap-1 truncate">
+    <div class="flex min-w-0 items-center gap-1">
       {#if encounter.cleared}
-        <p class="text-lime-400">[Cleared]</p>
+        <p class="shrink-0 text-lime-400">[Cleared]</p>
       {/if}
       {#if !encounter.cleared && bossHpBars}
-        <p class="text-neutral-400">[Wipe - {bossHpBars}x]</p>
+        <p class="shrink-0 text-neutral-400">[Wipe - {bossHpBars}x]</p>
       {/if}
       {#if encounter.bossOnlyDamage}
         <BossOnlyDamage />
       {/if}
       {#if encounter.difficulty}
         <p
+          class="shrink-0"
           class:text-yellow-300={encounter.difficulty === "Hard"}
           class:text-amber-600={encounter.difficulty === "Inferno" ||
             encounter.difficulty === "Challenge" ||
@@ -57,15 +58,15 @@
         </p>
       {/if}
       {#if !settings.app.general.showGate && raidGate}
-        <p class="text-sky-200">
+        <p class="shrink-0 text-sky-200">
           [{raidGate}]
         </p>
       {/if}
-      <p class="font-semibold">
+      <p class="min-w-0 truncate font-semibold" title={encounter.currentBossName || "No Boss"}>
         {encounter.currentBossName || "No Boss"}
       </p>
       {@render middot()}
-      <p class="text-neutral-300">
+      <p class="shrink-0 text-neutral-300">
         {formatTimestampDate(encounter.fightStart)}
       </p>
     </div>

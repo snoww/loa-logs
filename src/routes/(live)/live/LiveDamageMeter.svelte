@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { EncounterState } from "$lib/encounter.svelte.js";
-  import { misc, settings } from "$lib/stores.svelte.js";
+  import { misc, screenshot, settings } from "$lib/stores.svelte.js";
   import { MeterState, MeterTab } from "$lib/types";
   import { missingInfo } from "$lib/utils/toasts";
   import BossBreakdown from "$lib/components/BossBreakdown.svelte";
@@ -98,7 +98,7 @@
   {/if}
   <!-- svelte-ignore a11y_no_static_element_interactions -->
   <div
-    class="select-none overflow-scroll"
+    class="{screenshot.state ? 'overflow-visible' : 'overflow-scroll'} select-none"
     style="height: calc(100% - 1.5rem - 1.75rem {enc.encounter?.currentBoss && settings.app.meter.bossInfo
       ? ' - 1.75rem'
       : ''});"
